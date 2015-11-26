@@ -25,7 +25,7 @@ defined('ABSPATH') or die("you do not have acces to this page!");
   public $htaccess_test_success             = FALSE;
 
   public $plugin_dir                        = "really-simple-ssl";
-  public $plugin_filename                   = "rlrsssl-really-simple-ssl.php";
+  public $plugin_filename                   = "really-simple-ssl.php";
   public $ABSpath;
 
   public $do_not_edit_htaccess              = FALSE;
@@ -769,7 +769,7 @@ protected function get_server_variable_fix_code(){
 
   public function load_translation()
   {
-      load_plugin_textdomain('rlrsssl-really-simple-ssl', FALSE, dirname(plugin_basename(__FILE__)).'/lang/');
+      load_plugin_textdomain('really-simple-ssl', FALSE, dirname(plugin_basename(__FILE__)).'/lang/');
   }
 
   /**
@@ -1423,9 +1423,9 @@ public function show_notices()
       ?>
       <div id="message" class="error fade notice is-dismissible rlrsssl-fail">
       <p>
-        <?php _e("No SSL was detected. If you are just waiting for your ssl certificate to kick in you can dismiss this warning.","rlrsssl-really-simple-ssl");?>
+        <?php _e("No SSL was detected. If you are just waiting for your ssl certificate to kick in you can dismiss this warning.","really-simple-ssl");?>
       </p>
-      <a href="options-general.php?page=rlrsssl_really_simple_ssl"><?php echo __("Scan SSL setup again","rlrsssl-really-simple-ssl");?></a>
+      <a href="options-general.php?page=rlrsssl_really_simple_ssl"><?php echo __("Scan SSL setup again","really-simple-ssl");?></a>
       </div>
       <?php
   }
@@ -1434,12 +1434,12 @@ public function show_notices()
     ?>
     <div id="message" class="error fade notice is-dismissible rlrsssl-fail">
       <h1>
-        <?php _e("Major security issue!","rlrsssl-really-simple-ssl");?>
+        <?php _e("Major security issue!","really-simple-ssl");?>
       </h1>
       <p>
-    <?php _e("The 'force-deactivate.php' file has to be renamed to .txt. Otherwise your ssl can be deactived by anyone on the internet.","rlrsssl-really-simple-ssl");?>
+    <?php _e("The 'force-deactivate.php' file has to be renamed to .txt. Otherwise your ssl can be deactived by anyone on the internet.","really-simple-ssl");?>
     </p>
-    <a href="options-general.php?page=rlrsssl_really_simple_ssl"><?php echo __("Check again","rlrsssl-really-simple-ssl");?></a>
+    <a href="options-general.php?page=rlrsssl_really_simple_ssl"><?php echo __("Check again","really-simple-ssl");?></a>
     </div>
     <?php
   }
@@ -1451,9 +1451,9 @@ public function show_notices()
     ?>
     <div id="message" class="error fade notice">
       <p>
-        <?php _e('You run a Multisite installation with subfolders, which prevents this plugin from handling the .htaccess.','rlrsssl-really-simple-ssl');?>
-        <?php _e('Because the domain is the same on all sites. You can just as easily activate ssl on all your sites.','rlrsssl-really-simple-ssl');?>
-        <?php _e('So to get rid of this annoying message, just activate networkwide.','rlrsssl-really-simple-ssl');?>
+        <?php _e('You run a Multisite installation with subfolders, which prevents this plugin from handling the .htaccess.','really-simple-ssl');?>
+        <?php _e('Because the domain is the same on all sites. You can just as easily activate ssl on all your sites.','really-simple-ssl');?>
+        <?php _e('So to get rid of this annoying message, just activate networkwide.','really-simple-ssl');?>
       </p>
     </div>
     <?php
@@ -1468,7 +1468,7 @@ public function show_notices()
         ?>
         <div id="message" class="updated fade notice is-dismissible rlrsssl-success">
           <p>
-            <?php echo __("SSL was detected and successfully activated!","rlrsssl-really-simple-ssl");?>
+            <?php echo __("SSL was detected and successfully activated!","really-simple-ssl");?>
           </p>
         </div>
         <?php
@@ -1481,9 +1481,9 @@ public function show_notices()
         if (isset($this->plugin_conflict["YOAST_FORCE_REWRITE_TITLE"]) && $this->plugin_conflict["YOAST_FORCE_REWRITE_TITLE"]) {
             ?>
             <div id="message" class="error fade notice"><p>
-            <?php _e("Really Simple SSL has a conflict with another plugin.","rlrsssl-really-simple-ssl");?><br>
-            <?php _e("The force rewrite titles option in Yoast SEO prevents Really Simple SSL plugin from fixing mixed content.","rlrsssl-really-simple-ssl");?><br>
-            <a href="admin.php?page=wpseo_titles"><?php _e("Show me this setting","rlrsssl-really-simple-ssl");?></a>
+            <?php _e("Really Simple SSL has a conflict with another plugin.","really-simple-ssl");?><br>
+            <?php _e("The force rewrite titles option in Yoast SEO prevents Really Simple SSL plugin from fixing mixed content.","really-simple-ssl");?><br>
+            <a href="admin.php?page=wpseo_titles"><?php _e("Show me this setting","really-simple-ssl");?></a>
 
             </p></div>
             <?php
@@ -1491,9 +1491,9 @@ public function show_notices()
         if (isset($this->plugin_conflict["WOOCOMMERCE_FORCEHTTP"]) && $this->plugin_conflict["WOOCOMMERCE_FORCEHTTP"] && isset($this->plugin_conflict["WOOCOMMERCE_FORCESSL"]) && $this->plugin_conflict["WOOCOMMERCE_FORCESSL"]) {
           ?>
           <div id="message" class="error fade notice"><p>
-          <?php _e("Really Simple SSL has a conflict with another plugin.","rlrsssl-really-simple-ssl");?><br>
-          <?php _e("The force http after leaving checkout in Woocommerce will create a redirect loop.","rlrsssl-really-simple-ssl");?><br>
-          <a href="admin.php?page=wc-settings&tab=checkout"><?php _e("Show me this setting","rlrsssl-really-simple-ssl");?></a>
+          <?php _e("Really Simple SSL has a conflict with another plugin.","really-simple-ssl");?><br>
+          <?php _e("The force http after leaving checkout in Woocommerce will create a redirect loop.","really-simple-ssl");?><br>
+          <a href="admin.php?page=wc-settings&tab=checkout"><?php _e("Show me this setting","really-simple-ssl");?></a>
 
           </p></div>
           <?php
@@ -1503,9 +1503,9 @@ public function show_notices()
       if ($this->wpconfig_issue) {
         ?>
         <div id="message" class="error fade notice"><p>
-        <?php echo __("We detected a definition of siteurl or homeurl in your wp-config.php, but the file is not writable. Because of this, we cannot set the siteurl to https.","rlrsssl-really-simple-ssl");?>
+        <?php echo __("We detected a definition of siteurl or homeurl in your wp-config.php, but the file is not writable. Because of this, we cannot set the siteurl to https.","really-simple-ssl");?>
         </p>
-        <a href="options-general.php?page=rlrsssl_really_simple_ssl"><?php echo __("Check again","rlrsssl-really-simple-ssl");?></a>
+        <a href="options-general.php?page=rlrsssl_really_simple_ssl"><?php echo __("Check again","really-simple-ssl");?></a>
         </div>
         <?php
       }
@@ -1513,7 +1513,7 @@ public function show_notices()
       if ($this->wpconfig_loadbalancer_fix_failed) {
         ?>
         <div id="message" class="error fade notice"><p>
-        <?php echo __("Because your site is behind a loadbalancer and is_ssl() returns false, you should add the following line of code to your wp-config.php. Your wp-config.php could not be written automatically.","rlrsssl-really-simple-ssl");?>
+        <?php echo __("Because your site is behind a loadbalancer and is_ssl() returns false, you should add the following line of code to your wp-config.php. Your wp-config.php could not be written automatically.","really-simple-ssl");?>
 
         <br><br><code>
             //Begin Really Simple SSL Load balancing fix <br>
@@ -1523,7 +1523,7 @@ public function show_notices()
             //END Really Simple SSL
         </code><br>
         </p>
-        <a href="options-general.php?page=rlrsssl_really_simple_ssl"><?php echo __("Check again","rlrsssl-really-simple-ssl");?></a>
+        <a href="options-general.php?page=rlrsssl_really_simple_ssl"><?php echo __("Check again","really-simple-ssl");?></a>
         </div>
         <?php
       }
@@ -1531,7 +1531,7 @@ public function show_notices()
       if ($this->wpconfig_server_variable_fix_failed) {
         ?>
         <div id="message" class="error fade notice"><p>
-        <?php echo __('Because your server does not pass the $_SERVER["HTTPS"] variable, Wordpress cannot function on SSL. You should add the following line of code to your wp-config.php. Your wp-config.php could not be written automatically.','rlrsssl-really-simple-ssl');?>
+        <?php echo __('Because your server does not pass the $_SERVER["HTTPS"] variable, Wordpress cannot function on SSL. You should add the following line of code to your wp-config.php. Your wp-config.php could not be written automatically.','really-simple-ssl');?>
         <br><br><code>
             <?php
             $rule = $this->get_server_variable_fix_code();
@@ -1541,7 +1541,7 @@ public function show_notices()
             ?>
         </code><br>
         </p>
-        <a href="options-general.php?page=rlrsssl_really_simple_ssl"><?php echo __("Check again","rlrsssl-really-simple-ssl");?></a>
+        <a href="options-general.php?page=rlrsssl_really_simple_ssl"><?php echo __("Check again","really-simple-ssl");?></a>
         </div>
         <?php
       }
@@ -1558,7 +1558,7 @@ public function show_notices()
    */
 
 public function insert_dismiss_success() {
-  $ajax_nonce = wp_create_nonce( "rlrsssl-really-simple-ssl" );
+  $ajax_nonce = wp_create_nonce( "really-simple-ssl" );
   ?>
   <script type='text/javascript'>
     jQuery(document).ready(function($) {
@@ -1587,7 +1587,7 @@ public function insert_dismiss_success() {
  */
 
 public function insert_dismiss_fail() {
-  $ajax_nonce = wp_create_nonce( "rlrsssl-really-simple-ssl" );
+  $ajax_nonce = wp_create_nonce( "really-simple-ssl" );
   ?>
   <script type='text/javascript'>
     jQuery(document).ready(function($) {
@@ -1616,7 +1616,7 @@ public function insert_dismiss_fail() {
 
 public function dismiss_success_message_callback() {
   global $wpdb; // this is how you get access to the database
-  check_ajax_referer( 'rlrsssl-really-simple-ssl', 'security' );
+  check_ajax_referer( 'really-simple-ssl', 'security' );
   $this->ssl_success_message_shown = TRUE;
   $this->save_options();
   wp_die(); // this is required to terminate immediately and return a proper response
@@ -1634,7 +1634,7 @@ public function dismiss_success_message_callback() {
 public function dismiss_fail_message_callback() {
 
   global $wpdb;
-  check_ajax_referer( 'rlrsssl-really-simple-ssl', 'security' );
+  check_ajax_referer( 'really-simple-ssl', 'security' );
   $this->ssl_fail_message_shown = TRUE;
   $this->save_options();
   wp_die(); // this is required to terminate immediately and return a proper response
@@ -1673,8 +1673,8 @@ public function process_submit_without_form() {
 public function add_settings_page() {
   if (!current_user_can($this->capability)) return;
   $admin_page = add_options_page(
-    __("SSL settings","rlrsssl-really-simple-ssl"), //link title
-    __("SSL","rlrsssl-really-simple-ssl"), //page title
+    __("SSL settings","really-simple-ssl"), //link title
+    __("SSL","really-simple-ssl"), //page title
     $this->capability, //capability
     'rlrsssl_really_simple_ssl', //url
     array($this,'settings_page')); //function
@@ -1698,32 +1698,32 @@ public function admin_add_help_tab() {
     // Add my_help_tab if current screen is My Admin Page
     $screen->add_help_tab( array(
         'id'	=> "detected_setup",
-        'title'	=> __("Detected setup","rlrsssl-really-simple-ssl"),
-        'content'	=> '<p>' . __("In the detected setup section you can see what we detected for your site.<br><br><b>SSL detection:</b> if it is possible to open a page on your site with https, it is assumed you have a valid ssl certificate. No guarantees can be given.<br><br><B>SSL redirect in .htaccess:</b> (Only show when ssl is detected) If possible, the redirect will take place in the .htaccess file. If this file is not available or not writable, javascript is used to enforce ssl.","rlrsssl-really-simple-ssl") . '</p>',
+        'title'	=> __("Detected setup","really-simple-ssl"),
+        'content'	=> '<p>' . __("In the detected setup section you can see what we detected for your site.<br><br><b>SSL detection:</b> if it is possible to open a page on your site with https, it is assumed you have a valid ssl certificate. No guarantees can be given.<br><br><B>SSL redirect in .htaccess:</b> (Only show when ssl is detected) If possible, the redirect will take place in the .htaccess file. If this file is not available or not writable, javascript is used to enforce ssl.","really-simple-ssl") . '</p>',
     ) );
 
     $screen->add_help_tab( array(
         'id'	=> "Mixed content fix",
-        'title'	=> __("Mixed content fixer","rlrsssl-really-simple-ssl"),
-        'content'	=> '<p>' . __("In most sites, a lot of links are saved into the content, pluginoptions or even worse, in the theme. When you switch to ssl , these are still http, instead of https. To ensure a smooth transition, this plugin auto replaces all these links. If you see in the scan results that you have fixed most of these links, you can try to run your site without this replace script, which will give you a small performance advantage. If you do not have a lot of reported insecure links, you can try this. If you encounter mixed content warnings, just switch it back on. <br><br><b>How to check for mixed content?</b><br>Go to the the front end of your website, and click on the lock in your browser's address bar. When you have mixed content, this lock is not closed, or has a red cross over it.","rlrsssl-really-simple-ssl") . '</p>',
+        'title'	=> __("Mixed content fixer","really-simple-ssl"),
+        'content'	=> '<p>' . __("In most sites, a lot of links are saved into the content, pluginoptions or even worse, in the theme. When you switch to ssl , these are still http, instead of https. To ensure a smooth transition, this plugin auto replaces all these links. If you see in the scan results that you have fixed most of these links, you can try to run your site without this replace script, which will give you a small performance advantage. If you do not have a lot of reported insecure links, you can try this. If you encounter mixed content warnings, just switch it back on. <br><br><b>How to check for mixed content?</b><br>Go to the the front end of your website, and click on the lock in your browser's address bar. When you have mixed content, this lock is not closed, or has a red cross over it.","really-simple-ssl") . '</p>',
     ) );
 
     $screen->add_help_tab( array(
         'id'	=> "HSTS",
-        'title'	=> __("HTTP Strict Transport Security (HSTS)","rlrsssl-really-simple-ssl"),
-        'content'	=> '<p>' . __("Using this option will prevent users from visiting your website over http for one year, so use this option with caution! HTTP Strict Transport Security (HSTS) is an opt-in security enhancement that is specified by a web application through the use of a special response header. Once a supported browser receives this header that browser will prevent any communications from being sent over HTTP to the specified domain and will instead send all communications over HTTPS. It also prevents HTTPS click through prompts on browsers. ","rlrsssl-really-simple-ssl") . '</p>',
+        'title'	=> __("HTTP Strict Transport Security (HSTS)","really-simple-ssl"),
+        'content'	=> '<p>' . __("Using this option will prevent users from visiting your website over http for one year, so use this option with caution! HTTP Strict Transport Security (HSTS) is an opt-in security enhancement that is specified by a web application through the use of a special response header. Once a supported browser receives this header that browser will prevent any communications from being sent over HTTP to the specified domain and will instead send all communications over HTTPS. It also prevents HTTPS click through prompts on browsers. ","really-simple-ssl") . '</p>',
     ) );
 
     $screen->add_help_tab( array(
         'id'	=> "ssl_certificate",
-        'title'	=> __("How to get an SSL certificate","rlrsssl-really-simple-ssl"),
-        'content'	=> '<p>' . __("To secure your site with ssl, you need an SSL certificate. How you can get a certificate depends on your hosting provider, but can often be requested on the control panel of your website. If you are not sure what to do, you can contact your hosting provider.","rlrsssl-really-simple-ssl") . '</p>',
+        'title'	=> __("How to get an SSL certificate","really-simple-ssl"),
+        'content'	=> '<p>' . __("To secure your site with ssl, you need an SSL certificate. How you can get a certificate depends on your hosting provider, but can often be requested on the control panel of your website. If you are not sure what to do, you can contact your hosting provider.","really-simple-ssl") . '</p>',
     ) );
 /*
     $screen->add_help_tab( array(
         'id'	=> "force_ssl_without_detection",
-        'title'	=> __("Force SSL without detection","rlrsssl-really-simple-ssl"),
-        'content'	=> '<p>' . __("This plugin tries to open a page within the plugin directory over https. If that fails, it is assumed that ssl is not availble. But as this may not cover all eventualities, it is possible to force the site over ssl anyway.<br><br> If you force your site over ssl without a valid ssl certificate, your site may break. In that case, remove the 'really simple ssl' rules from your .htaccess file (if present), and remove or rename the really simple ssl plugin.","rlrsssl-really-simple-ssl") . '</p>',
+        'title'	=> __("Force SSL without detection","really-simple-ssl"),
+        'content'	=> '<p>' . __("This plugin tries to open a page within the plugin directory over https. If that fails, it is assumed that ssl is not availble. But as this may not cover all eventualities, it is possible to force the site over ssl anyway.<br><br> If you force your site over ssl without a valid ssl certificate, your site may break. In that case, remove the 'really simple ssl' rules from your .htaccess file (if present), and remove or rename the really simple ssl plugin.","really-simple-ssl") . '</p>',
     ) );
 */
 }
@@ -1738,7 +1738,7 @@ public function admin_add_help_tab() {
    */
 
   public function admin_tabs( $current = 'homepage' ) {
-      $tabs = array( 'configuration' => __("Configuration","rlrsssl-really-simple-ssl"),'settings'=>__("Settings","rlrsssl-really-simple-ssl"), 'mixedcontent' => __("Detected mixed content","rlrsssl-really-simple-ssl"), 'debug' => __("Debug","rlrsssl-really-simple-ssl") );
+      $tabs = array( 'configuration' => __("Configuration","really-simple-ssl"),'settings'=>__("Settings","really-simple-ssl"), 'mixedcontent' => __("Detected mixed content","really-simple-ssl"), 'debug' => __("Debug","really-simple-ssl") );
       echo '<h2 class="nav-tab-wrapper">';
 
       foreach( $tabs as $tab => $name ){
@@ -1776,20 +1776,20 @@ public function settings_page() {
       */
 
       ?>
-        <h2><?php echo __("Detected setup","rlrsssl-really-simple-ssl");?></h2>
+        <h2><?php echo __("Detected setup","really-simple-ssl");?></h2>
         <table class="really-simple-ssl-table" <?php if ($this->site_has_ssl||$this->force_ssl_without_detection) {echo 'id="scan-result"';}?>>
           <tr>
             <td><?php echo $this->site_has_ssl ? $this->img("success") : $this->img("error");?></td>
             <td><?php
                     if (!$this->site_has_ssl) {
                       if (!$this->force_ssl_without_detection)
-                        echo __("No SSL detected.","rlrsssl-really-simple-ssl")."&nbsp;";
+                        echo __("No SSL detected.","really-simple-ssl")."&nbsp;";
                       else
-                        echo __("No SSL detected, but SSL is forced.","rlrsssl-really-simple-ssl")."&nbsp;";
+                        echo __("No SSL detected, but SSL is forced.","really-simple-ssl")."&nbsp;";
                     }
                     else {
                       //ssl detected, no problems!
-                      _e("An SSL certificate was detected on your site. ","rlrsssl-really-simple-ssl");
+                      _e("An SSL certificate was detected on your site. ","really-simple-ssl");
                     }
                 ?>
               </td><td></td>
@@ -1802,16 +1802,16 @@ public function settings_page() {
             <td>
             <?php
                 if($this->ssl_redirect_set_in_htaccess) {
-                 _e("https redirect set in .htaccess","rlrsssl-really-simple-ssl");
+                 _e("https redirect set in .htaccess","really-simple-ssl");
               } elseif ($this->do_not_edit_htaccess) {
-                 _e("Editing of .htaccess is blocked in Really Simple ssl settings, so you're in control of the .htaccess file.","rlrsssl-really-simple-ssl");
+                 _e("Editing of .htaccess is blocked in Really Simple ssl settings, so you're in control of the .htaccess file.","really-simple-ssl");
               } else {
                  if (!is_writable($this->ABSpath.".htaccess")) {
-                   _e("Https redirect was set in javascript because the .htaccess was not writable. Set manually if you want to redirect in .htaccess.","rlrsssl-really-simple-ssl");
+                   _e("Https redirect was set in javascript because the .htaccess was not writable. Set manually if you want to redirect in .htaccess.","really-simple-ssl");
                  } elseif($this->set_rewriterule_per_site && $this->is_multisite_subfolder_install()) {
-                   _e("Https redirect was set in javascript because you have activated per site on a multiste subfolder install. Install networkwide to set the .htaccess redirect.","rlrsssl-really-simple-ssl");
+                   _e("Https redirect was set in javascript because you have activated per site on a multiste subfolder install. Install networkwide to set the .htaccess redirect.","really-simple-ssl");
                  } else {
-                   _e("Https redirect was set in javascript because the htaccess redirect rule could not be verified. Set manually if you want to redirect in .htaccess.","rlrsssl-really-simple-ssl");
+                   _e("Https redirect was set in javascript because the htaccess redirect rule could not be verified. Set manually if you want to redirect in .htaccess.","really-simple-ssl");
                 }
                  if ($this->ssl_type!="NA") {
                     $manual = true;
@@ -1820,7 +1820,7 @@ public function settings_page() {
                     $arr_search = array("<",">","\n");
                     $arr_replace = array("&lt","&gt","<br>");
                     $rules = str_replace($arr_search, $arr_replace, $rules);
-                    _e("Try to add these rules at the bottom of your .htaccess. If it doesn't work, just remove them again.","rlrsssl-really-simple-ssl");
+                    _e("Try to add these rules at the bottom of your .htaccess. If it doesn't work, just remove them again.","really-simple-ssl");
                      ?>
                      <br><br><code>
                          <?php echo $rules; ?>
@@ -1843,16 +1843,16 @@ public function settings_page() {
             <td>
             <?php
               if($this->hsts) {
-                 _e("HTTP Strict Transport Security was set in the .htaccess","rlrsssl-really-simple-ssl");
+                 _e("HTTP Strict Transport Security was set in the .htaccess","really-simple-ssl");
               } else {
-                 _e("HTTP Strict Transport Security was not set in your .htaccess. Do this only if your setup is fully working, and only when you do not plan to revert to http.","rlrsssl-really-simple-ssl");
+                 _e("HTTP Strict Transport Security was not set in your .htaccess. Do this only if your setup is fully working, and only when you do not plan to revert to http.","really-simple-ssl");
                  ?>
                 <br>
-                <a href="https://en.wikipedia.org/wiki/HTTP_Strict_Transport_Security" target="_blank"><?php _e("More info about HSTS","rlrsssl-really-simple-ssl");?></a>
+                <a href="https://en.wikipedia.org/wiki/HTTP_Strict_Transport_Security" target="_blank"><?php _e("More info about HSTS","really-simple-ssl");?></a>
                  <?php
               }
             ?>
-            </td><td><a href="?page=rlrsssl_really_simple_ssl&tab=settings"><?php _e("Manage settings","rlrsssl-really-simple-ssl");?></a></td>
+            </td><td><a href="?page=rlrsssl_really_simple_ssl&tab=settings"><?php _e("Manage settings","really-simple-ssl");?></a></td>
           </tr>
 
           <?php
@@ -1874,7 +1874,7 @@ public function settings_page() {
             do_settings_sections('rlrsssl');
         ?>
 
-        <input class="button button-primary" name="Submit" type="submit" value="<?php echo __("Save","rlrsssl-really-simple-ssl"); ?>" />
+        <input class="button button-primary" name="Submit" type="submit" value="<?php echo __("Save","really-simple-ssl"); ?>" />
         </form>
       <?php
         break;
@@ -1888,7 +1888,7 @@ public function settings_page() {
           <table id="scan-list"><tr><td colspan="3"></td></tr></table>
           <?php
         } else {
-          echo "<p>".__("The mixed content scan is available when SSL is detected or forced.","rlrsssl-really-simple-ssl")."</p>";
+          echo "<p>".__("The mixed content scan is available when SSL is detected or forced.","really-simple-ssl")."</p>";
         }
 
         break;
@@ -1900,8 +1900,8 @@ public function settings_page() {
     <div>
       <?php
       if ($this->debug) {
-        echo "<h2>".__("Log for debugging purposes","rlrsssl-really-simple-ssl")."</h2>";
-        echo "<p>".__("Send me a copy of these lines if you have any issues. The log will be erased when debug is set to false","rlrsssl-really-simple-ssl")."</p>";
+        echo "<h2>".__("Log for debugging purposes","really-simple-ssl")."</h2>";
+        echo "<p>".__("Send me a copy of these lines if you have any issues. The log will be erased when debug is set to false","really-simple-ssl")."</p>";
         echo "<div class='debug-log'>";
         echo $this->debug_log;
         echo "</div>";
@@ -1909,7 +1909,7 @@ public function settings_page() {
         $this->save_options();
       }
       else {
-        _e("To view results here, enable the debug option in the settings tab.","rlrsssl-really-simple-ssl");
+        _e("To view results here, enable the debug option in the settings tab.","really-simple-ssl");
       }
 
        ?>
@@ -1995,24 +1995,24 @@ public function setup_admin_page(){
 public function create_form(){
 
       register_setting( 'rlrsssl_options', 'rlrsssl_options', array($this,'options_validate') );
-      add_settings_section('rlrsssl_settings', __("Settings","rlrsssl-really-simple-ssl"), array($this,'section_text'), 'rlrsssl');
-      add_settings_field('id_do_not_edit_htaccess', __("Stop editing the .htaccess file","rlrsssl-really-simple-ssl"), array($this,'get_option_do_not_edit_htaccess'), 'rlrsssl', 'rlrsssl_settings');
+      add_settings_section('rlrsssl_settings', __("Settings","really-simple-ssl"), array($this,'section_text'), 'rlrsssl');
+      add_settings_field('id_do_not_edit_htaccess', __("Stop editing the .htaccess file","really-simple-ssl"), array($this,'get_option_do_not_edit_htaccess'), 'rlrsssl', 'rlrsssl_settings');
 
       //only show option to enable or disable autoreplace when ssl is detected
       if($this->site_has_ssl || $this->force_ssl_without_detection) {
-        add_settings_field('id_autoreplace_insecure_links', __("Auto replace mixed content","rlrsssl-really-simple-ssl"), array($this,'get_option_autoreplace_insecure_links'), 'rlrsssl', 'rlrsssl_settings');
+        add_settings_field('id_autoreplace_insecure_links', __("Auto replace mixed content","really-simple-ssl"), array($this,'get_option_autoreplace_insecure_links'), 'rlrsssl', 'rlrsssl_settings');
       }
 
       if($this->site_has_ssl && file_exists($this->ABSpath.".htaccess") && is_writable($this->ABSpath.".htaccess")) {
-        add_settings_field('id_hsts', __("Turn HTTP Strict Transport Security on","rlrsssl-really-simple-ssl"), array($this,'get_option_hsts'), 'rlrsssl', 'rlrsssl_settings');
+        add_settings_field('id_hsts', __("Turn HTTP Strict Transport Security on","really-simple-ssl"), array($this,'get_option_hsts'), 'rlrsssl', 'rlrsssl_settings');
       }
 
       if(!$this->site_has_ssl) {
         //no sense in showing force or ignore warning options when ssl is detected: everything should work fine
-        add_settings_field('id_force_ssl_without_detection', __("Force SSL without detection","rlrsssl-really-simple-ssl"), array($this,'get_option_force_ssl_withouth_detection'), 'rlrsssl', 'rlrsssl_settings');
+        add_settings_field('id_force_ssl_without_detection', __("Force SSL without detection","really-simple-ssl"), array($this,'get_option_force_ssl_withouth_detection'), 'rlrsssl', 'rlrsssl_settings');
       }
 
-      add_settings_field('id_debug', __("Debug","rlrsssl-really-simple-ssl"), array($this,'get_option_debug'), 'rlrsssl', 'rlrsssl_settings');
+      add_settings_field('id_debug', __("Debug","really-simple-ssl"), array($this,'get_option_debug'), 'rlrsssl', 'rlrsssl_settings');
     }
 
   /**
@@ -2029,13 +2029,13 @@ public function section_text() {
   <p>
   <?php
     if ($this->site_has_ssl || $this->force_ssl_without_detection)
-      _e('By unchecking the \'auto replace mixed content\' checkbox you can test if your site can run without this extra functionality. Uncheck, empty your cache when you use one, and go to the front end of your site. You should then check if you have mixed content errors, by clicking on the lock icon in the addres bar.','rlrsssl-really-simple-ssl');
+      _e('By unchecking the \'auto replace mixed content\' checkbox you can test if your site can run without this extra functionality. Uncheck, empty your cache when you use one, and go to the front end of your site. You should then check if you have mixed content errors, by clicking on the lock icon in the addres bar.','really-simple-ssl');
     else {
-      _e('The force ssl without detection option can be used when the ssl was not detected, but you are sure you have ssl.','rlrsssl-really-simple-ssl');
+      _e('The force ssl without detection option can be used when the ssl was not detected, but you are sure you have ssl.','really-simple-ssl');
     }
 
     if ($this->site_has_ssl && is_multisite() && $this->set_rewriterule_per_site) {
-      _e('The HSTS option is not available for per site activated ssl, as it would force other sites over ssl as well.','rlrsssl-really-simple-ssl');
+      _e('The HSTS option is not available for per site activated ssl, as it would force other sites over ssl as well.','really-simple-ssl');
     }
   ?>
   </p>
@@ -2131,9 +2131,9 @@ echo '<input id="rlrsssl_options" name="rlrsssl_options[debug]" size="40" type="
 public function get_option_hsts() {
   $options = get_option('rlrsssl_options');
   $disabled = ((is_multisite() && $this->set_rewriterule_per_site) || $this->do_not_edit_htaccess) ? "disabled" : "";
-  echo '<input id="rlrsssl_options" name="rlrsssl_options[hsts]" onClick="return confirm(\''.__("Are you sure? Your visitors will keep going to a https site for a year after you turn this off.","rlrsssl-really-simple-ssl").'\');" size="40" type="checkbox" '.$disabled.' value="1"' . checked( 1, $this->hsts, false ) ." />";
-  if (is_multisite() && $this->set_rewriterule_per_site) _e("On multisite with per site activation, activating HSTS is not possible","rlrsssl-really-simple-ssl");
-  if ($this->do_not_edit_htaccess) _e("You have to enable htaccess editing to use this option.","rlrsssl-really-simple-ssl");
+  echo '<input id="rlrsssl_options" name="rlrsssl_options[hsts]" onClick="return confirm(\''.__("Are you sure? Your visitors will keep going to a https site for a year after you turn this off.","really-simple-ssl").'\');" size="40" type="checkbox" '.$disabled.' value="1"' . checked( 1, $this->hsts, false ) ." />";
+  if (is_multisite() && $this->set_rewriterule_per_site) _e("On multisite with per site activation, activating HSTS is not possible","really-simple-ssl");
+  if ($this->do_not_edit_htaccess) _e("You have to enable htaccess editing to use this option.","really-simple-ssl");
 }
 
 /**
@@ -2147,7 +2147,7 @@ public function get_option_hsts() {
 
 public function get_option_force_ssl_withouth_detection() {
 $options = get_option('rlrsssl_options');
-echo '<input id="rlrsssl_options" onClick="return confirm(\''.__("Are you sure you have an SSL certifcate? Forcing ssl on a non-ssl site can break your site.","rlrsssl-really-simple-ssl").'\');" name="rlrsssl_options[force_ssl_without_detection]" size="40" type="checkbox" value="1"' . checked( 1, $this->force_ssl_without_detection, false ) ." />";
+echo '<input id="rlrsssl_options" onClick="return confirm(\''.__("Are you sure you have an SSL certifcate? Forcing ssl on a non-ssl site can break your site.","really-simple-ssl").'\');" name="rlrsssl_options[force_ssl_without_detection]" size="40" type="checkbox" value="1"' . checked( 1, $this->force_ssl_without_detection, false ) ." />";
 }
 
 /**
@@ -2187,7 +2187,7 @@ public function get_option_autoreplace_insecure_links() {
      */
 
 public function plugin_settings_link($links) {
-  $settings_link = '<a href="options-general.php?page=rlrsssl_really_simple_ssl">'.__("Settings","rlrsssl-really-simple-ssl").'</a>';
+  $settings_link = '<a href="options-general.php?page=rlrsssl_really_simple_ssl">'.__("Settings","really-simple-ssl").'</a>';
   array_unshift($links, $settings_link);
   return $links;
 }

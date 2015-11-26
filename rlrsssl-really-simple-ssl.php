@@ -4,7 +4,7 @@
  * Plugin URI: https://www.really-simple-ssl.com
  * Description: Lightweight plugin without any setup to make your site ssl proof
  * Version: 2.2.7
- * Text Domain: rlrsssl-really-simple-ssl
+ * Text Domain: really-simple-ssl
  * Domain Path: /lang
  * Author: Rogier Lankhorst
  * Author URI: https://www.rogierlankhorst.com

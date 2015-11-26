@@ -129,6 +129,7 @@ Yes, default the plugin redirects permanently with [R=301].
 
 == Changelog ==
 = 2.2.7 =
+Changed text domain to comply with Wordpress translations
 Added 404 detection to ssl detection function, so subdomains can get checked properly on subdomain multisite installs
 
 = 2.2.6 =
