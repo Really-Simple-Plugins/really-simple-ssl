@@ -25,7 +25,7 @@ defined('ABSPATH') or die("you do not have acces to this page!");
   public $htaccess_test_success             = FALSE;
 
   public $plugin_dir                        = "really-simple-ssl";
-  public $plugin_filename                   = "really-simple-ssl.php";
+  public $plugin_filename                   = "rlrsssl-really-simple-ssl.php";
   public $ABSpath;
 
   public $do_not_edit_htaccess              = FALSE;
@@ -467,17 +467,23 @@ defined('ABSPATH') or die("you do not have acces to this page!");
       if (empty($wpconfig_path)) return;
 
       $wpconfig = file_get_contents($wpconfig_path);
+      $homeurl_pattern = '/define*\(\s*\'WP_HOME\'\s*,\s*\'http\:\/\//';
+      $siteurl_pattern = '/define*\(\s*\'WP_SITEURL\'\s*,\s*\'http\:\/\//';
 
-      $homeurl_pos = strpos($wpconfig, "define('WP_HOME','http://");
-      $siteurl_pos = strpos($wpconfig, "define('WP_SITEURL','http://");
+      //$homeurl_pos = strpos($wpconfig, "define('WP_HOME','http://");
+      //$siteurl_pos = strpos($wpconfig, "define('WP_SITEURL','http://");
       $this->wpconfig_issue = FALSE;
-      if (($homeurl_pos !== false) || ($siteurl_pos !== false)) {
+      if ( (preg_match($homeurl_pattern, $wpconfig)!==false) || (preg_match($siteurl_pattern, $wpconfig)!==false) ) {
+
+      //if (($homeurl_pos !== false) || ($siteurl_pos !== false)) {
         if (is_writable($wpconfig_path)) {
           if ($this->debug) {$this->trace_log("wp config siteurl/homeurl edited.");}
-          $search_array = array("define('WP_HOME','http://","define('WP_SITEURL','http://");
-          $ssl_array = array("define('WP_HOME','https://","define('WP_SITEURL','https://");
+          //$search_array = array("define('WP_HOME','http://","define('WP_SITEURL','http://");
+          //$ssl_array = array("define('WP_HOME','https://","define('WP_SITEURL','https://");
           //now replace these urls
-          $wpconfig = str_replace ($search_array , $ssl_array , $wpconfig);
+          //$wpconfig = str_replace ($search_array , $ssl_array , $wpconfig);
+          preg_replace($homeurl_pattern, "define('WP_HOME','https://", $wpconfig);
+          preg_replace($siteurl_pattern, "define('WP_SITEURL','https://", $wpconfig);
           file_put_contents($wpconfig_path, $wpconfig);
         }
         else {
@@ -967,12 +973,14 @@ protected function get_server_variable_fix_code(){
         //if we are here, SSL was detected, but without any known server variables set.
         //So we can use this info to set a server variable ourselfes.
         $this->no_server_variable = TRUE;
+        if ($this->debug) {$this->trace_log("No server variable detected ");}
         $this->ssl_type = "NA";
       }else {
         //no valid response, so set to NA
         $this->ssl_type = "NA";
       }
 	    if ($this->debug) {$this->trace_log("ssl type: ".$this->ssl_type);}
+
     }
     if ($old_ssl_setting != $this->site_has_ssl) {
       	//value has changed, note this so we can flush the cache later.
@@ -1382,7 +1390,8 @@ public function getABSPATH(){
         } else {
           if ($this->debug) {$this->trace_log("single site or networkwide activation");}
         }
-        $rule .= "RewriteRule ^(.*)$ https://%{HTTP_HOST}/$1 [R=301,L]"."\n";
+        $rule .= "RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]"."\n";
+        //$rule .= "RewriteRule ^(.*)$ https://%{HTTP_HOST}/$1 [R=301,L]"."\n";
         $rule .= "</IfModule>"."\n";
       } else {
         $this->ssl_redirect_set_in_htaccess = FALSE;
@@ -1443,22 +1452,36 @@ public function show_notices()
     </div>
     <?php
   }
+
   /*
     encourage network wide for subfolder install.
   */
 
   if ($this->set_rewriterule_per_site && $this->is_multisite_subfolder_install()) {
+    //with no server variables, the website could get into redirect loops.
+    if ($this->no_server_variable) {
+      ?>
+        <div id="message" class="error fade notice">
+          <p>
+            <?php _e('You run a Multisite installation with subfolders, which prevents this plugin from fixing your missing server variable in the wp-config.php.','really-simple-ssl');?>
+            <?php _e('Because the $_SERVER["HTTPS"] variable is not set, your website may experience redirect loops.','really-simple-ssl');?>
+            <?php _e('Activate networkwide to fix this.','really-simple-ssl');?>
+          </p>
+        </div>
+      <?php
+    } else {
+      //otherwise, the htaccess cannot be fixed.
     ?>
-    <div id="message" class="error fade notice">
-      <p>
-        <?php _e('You run a Multisite installation with subfolders, which prevents this plugin from handling the .htaccess.','really-simple-ssl');?>
-        <?php _e('Because the domain is the same on all sites. You can just as easily activate ssl on all your sites.','really-simple-ssl');?>
-        <?php _e('So to get rid of this annoying message, just activate networkwide.','really-simple-ssl');?>
-      </p>
-    </div>
+      <div id="message" class="error fade notice">
+        <p>
+          <?php _e('You run a Multisite installation with subfolders, which prevents this plugin from handling the .htaccess.','really-simple-ssl');?>
+          <?php _e('Because the domain is the same on all sites. You can just as easily activate ssl on all your sites.','really-simple-ssl');?>
+          <?php _e('So to get rid of this annoying message, just activate networkwide.','really-simple-ssl');?>
+        </p>
+      </div>
     <?php
+    }
   }
-
   /*
       SSL success message
   */
