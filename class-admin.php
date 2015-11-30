@@ -467,23 +467,18 @@ defined('ABSPATH') or die("you do not have acces to this page!");
       if (empty($wpconfig_path)) return;
 
       $wpconfig = file_get_contents($wpconfig_path);
-      $homeurl_pattern = '/define*\(\s*\'WP_HOME\'\s*,\s*\'http\:\/\//';
-      $siteurl_pattern = '/define*\(\s*\'WP_SITEURL\'\s*,\s*\'http\:\/\//';
+      $homeurl_pattern = '/(define\(\s*\'WP_HOME\'\s*,\s*\'http\:\/\/)/';
+      $siteurl_pattern = '/(define\(\s*\'WP_SITEURL\'\s*,\s*\'http\:\/\/)/';
 
-      //$homeurl_pos = strpos($wpconfig, "define('WP_HOME','http://");
-      //$siteurl_pos = strpos($wpconfig, "define('WP_SITEURL','http://");
+      //check for double quotes ?
       $this->wpconfig_issue = FALSE;
       if ( (preg_match($homeurl_pattern, $wpconfig)!==false) || (preg_match($siteurl_pattern, $wpconfig)!==false) ) {
 
-      //if (($homeurl_pos !== false) || ($siteurl_pos !== false)) {
+      /*//if (($homeurl_pos !== false) || ($siteurl_pos !== false)) */
         if (is_writable($wpconfig_path)) {
           if ($this->debug) {$this->trace_log("wp config siteurl/homeurl edited.");}
-          //$search_array = array("define('WP_HOME','http://","define('WP_SITEURL','http://");
-          //$ssl_array = array("define('WP_HOME','https://","define('WP_SITEURL','https://");
-          //now replace these urls
-          //$wpconfig = str_replace ($search_array , $ssl_array , $wpconfig);
-          preg_replace($homeurl_pattern, "define('WP_HOME','https://", $wpconfig);
-          preg_replace($siteurl_pattern, "define('WP_SITEURL','https://", $wpconfig);
+          $wpconfig = preg_replace($homeurl_pattern, "define('WP_HOME','https://", $wpconfig);
+          $wpconfig = preg_replace($siteurl_pattern, "define('WP_SITEURL','https://", $wpconfig);
           file_put_contents($wpconfig_path, $wpconfig);
         }
         else {
@@ -775,7 +770,7 @@ protected function get_server_variable_fix_code(){
 
   public function load_translation()
   {
-      load_plugin_textdomain('really-simple-ssl', FALSE, dirname(plugin_basename(__FILE__)).'/lang/');
+      load_plugin_textdomain('really-simple-ssl', FALSE, dirname(plugin_basename(__FILE__)).'/languages/');
   }
 
   /**
@@ -1390,8 +1385,8 @@ public function getABSPATH(){
         } else {
           if ($this->debug) {$this->trace_log("single site or networkwide activation");}
         }
-        $rule .= "RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]"."\n";
-        //$rule .= "RewriteRule ^(.*)$ https://%{HTTP_HOST}/$1 [R=301,L]"."\n";
+        //$rule .= "RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]"."\n";
+        $rule .= "RewriteRule ^(.*)$ https://%{HTTP_HOST}/$1 [R=301,L]"."\n";
         $rule .= "</IfModule>"."\n";
       } else {
         $this->ssl_redirect_set_in_htaccess = FALSE;

@@ -5,7 +5,7 @@
  * Description: Lightweight plugin without any setup to make your site ssl proof
  * Version: 2.2.7
  * Text Domain: really-simple-ssl
- * Domain Path: /lang
+ * Domain Path: /languages
  * Author: Rogier Lankhorst
  * Author URI: https://www.rogierlankhorst.com
  * License: GPL2
@@ -25,8 +25,6 @@
     You should have received a copy of the GNU General Public License
     along with this program; if not, write to the Free Software
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
-
-    rlrsssl: rl really simple ssl
 */
 
 defined('ABSPATH') or die("you do not have acces to this page!");

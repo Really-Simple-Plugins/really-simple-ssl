@@ -66,7 +66,7 @@ In some cases it happens that you cannot access your admin anymore, which would 
 plugin is shipped with a simple method to uninstall:
 
 1. In the wp-content/plugins/really-simple-ssl folder, rename the file "force-deactivate.txt" to "force-deactivate.php".
-2. In your browser, go to www.yourdomain.com/wp-content/plugins/really-simple-ssl/force-deactivate.php
+2. In your browser, go to www.yourdomain.com/wp-content/plugins/really-simple-ssl/force-deactivate.php (replace yourdomain.com with your own domain).
 
 The plugin is now deactivated and all changes were removed.
 
@@ -96,7 +96,7 @@ Let me know if you find a plugin conflict, so I can put it in my conflict list.
 Though this plugin is extensively tested, this can still happen. However, this is very easy to fix (you'll need ftp access):
 
 1. In the wp-content/plugins/really-simple-ssl folder, rename the file "force-deactivate.txt" to "force-deactivate.php".
-2. In your browser, go to www.yourdomain.com/wp-content/plugins/really-simple-ssl/force-deactivate.php
+2. In your browser, go to www.yourdomain.com/wp-content/plugins/really-simple-ssl/force-deactivate.php (replace yourdomain.com with your own domain).
 
 The plugin is now deactivated and all changes were removed.
 
@@ -129,6 +129,7 @@ Yes, default the plugin redirects permanently with [R=301].
 
 == Changelog ==
 = 2.2.7 =
+Extended detection of homeurl and siteurl constants in wp-config.php with regex to allow for spaces in code. 
 Changed text domain to make this plugin language packs ready
 Added 404 detection to ssl detection function, so subdomains can get checked properly on subdomain multisite installs
 

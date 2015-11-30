@@ -16,7 +16,7 @@ class rlrsssl_scan {
 
   public function load_translation()
   {
-      load_plugin_textdomain('really-simple-ssl', FALSE, dirname(plugin_basename(__FILE__)).'/lang/');
+      load_plugin_textdomain('really-simple-ssl', FALSE, dirname(plugin_basename(__FILE__)).'/languages/');
   }
 
   public function set_images($success,$error,$warning) {
