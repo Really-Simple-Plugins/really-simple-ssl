@@ -472,9 +472,7 @@ defined('ABSPATH') or die("you do not have acces to this page!");
 
       //check for double quotes ?
       $this->wpconfig_issue = FALSE;
-      if ( (preg_match($homeurl_pattern, $wpconfig)!==false) || (preg_match($siteurl_pattern, $wpconfig)!==false) ) {
-
-      /*//if (($homeurl_pos !== false) || ($siteurl_pos !== false)) */
+      if (preg_match($homeurl_pattern, $wpconfig) || preg_match($siteurl_pattern, $wpconfig) ) {
         if (is_writable($wpconfig_path)) {
           if ($this->debug) {$this->trace_log("wp config siteurl/homeurl edited.");}
           $wpconfig = preg_replace($homeurl_pattern, "define('WP_HOME','https://", $wpconfig);

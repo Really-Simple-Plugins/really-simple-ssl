@@ -8,8 +8,7 @@ class rl_rsssl_front_end {
   public
    $force_ssl_without_detection     = FALSE,
    $site_has_ssl                    = FALSE,
-   $autoreplace_insecure_links      = TRUE,
-   $http_urls                       = array();
+   $autoreplace_insecure_links      = TRUE;
 
   public function __construct()
   {
@@ -28,33 +27,11 @@ class rl_rsssl_front_end {
 
   public function force_ssl() {
 
-    // javascript redirect, when ssl is true. 
+    // javascript redirect, when ssl is true.
     add_action('wp_print_scripts', array($this,'force_ssl_with_javascript'));
 
     // mixed content replacement when ssl is true and fixer is enabled.
     add_filter('template_include', array($this,'replace_insecure_links'));
-  }
-
-  /**
-   * Creates an array of insecure links that should be https and an array of secure links to replace with
-   *
-   * @since  2.0
-   *
-   * @access public
-   *
-   */
-
-  public function build_url_list() {
-    $home_no_www  = str_replace ( "://www." , "://" , get_option('home'));
-    $home_yes_www = str_replace ( "://" , "://www." , $home_no_www);
-
-    $this->http_urls = array(
-        str_replace ( "https://" , "http://" , $home_yes_www),
-        str_replace ( "https://" , "http://" , $home_no_www),
-        "src='http://",
-        'src="http://',
-        "src=http://",
-    );
   }
 
   /**
@@ -73,10 +50,6 @@ class rl_rsssl_front_end {
       $this->force_ssl_without_detection  = isset($options['force_ssl_without_detection']) ? $options['force_ssl_without_detection'] : FALSE;
       $this->site_has_ssl                 = isset($options['site_has_ssl']) ? $options['site_has_ssl'] : FALSE;
       $this->autoreplace_insecure_links   = isset($options['autoreplace_insecure_links']) ? $options['autoreplace_insecure_links'] : TRUE;
-    }
-
-    if ($this->autoreplace_insecure_links || is_admin()) {
-      $this->build_url_list();
     }
   }
 
@@ -97,10 +70,8 @@ class rl_rsssl_front_end {
   }
 
   /**
-   * Just before the page is sent to the visitor's browser, all homeurl links are replaced with https.
-   *
-   * filter: rlrsssl_replace_url_args
-   * This filter allows for extending the range of urls that are replaced with https.
+   * Just before the page is sent to the visitor's browser,
+   * all homeurl links are replaced with protocol-independent lnks
    *
    * @since  1.0
    *
@@ -109,10 +80,8 @@ class rl_rsssl_front_end {
    */
 
   public function end_buffer_capture($buffer) {
-    $search_array = apply_filters('rlrsssl_replace_url_args', $this->http_urls);
-	  $ssl_array = str_replace ( "http://" , "https://", $search_array);
-    //now replace these links
-    $buffer = str_replace ($search_array , $ssl_array , $buffer);
+    //now replace all http links to protocol-independent links.
+    $buffer = str_replace ("http://", "//" , $buffer);
     return $buffer;
   }
 

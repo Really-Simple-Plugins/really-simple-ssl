@@ -128,8 +128,11 @@ You can activate ssl per site on subdomain installs. On subfolder installs netwo
 Yes, default the plugin redirects permanently with [R=301].
 
 == Changelog ==
+= 2.2.8 =
+Changed preg_match code for detecting wp_siteurl and wp_home in the wp-config.php 
+
 = 2.2.7 =
-Extended detection of homeurl and siteurl constants in wp-config.php with regex to allow for spaces in code. 
+Extended detection of homeurl and siteurl constants in wp-config.php with regex to allow for spaces in code.
 Changed text domain to make this plugin language packs ready
 Added 404 detection to ssl detection function, so subdomains can get checked properly on subdomain multisite installs
 
