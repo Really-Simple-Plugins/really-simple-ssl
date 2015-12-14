@@ -8,7 +8,8 @@ class rl_rsssl_front_end {
   public
    $force_ssl_without_detection     = FALSE,
    $site_has_ssl                    = FALSE,
-   $autoreplace_insecure_links      = TRUE;
+   $autoreplace_insecure_links      = TRUE,
+   $http_urls                       = array();
 
   public function __construct()
   {
@@ -35,6 +36,25 @@ class rl_rsssl_front_end {
   }
 
   /**
+   * Creates an array of insecure links that should be https and an array of secure links to replace with
+   *
+   * @since  2.0
+   *
+   * @access public
+   *
+   */
+
+  public function build_url_list() {
+    $home_no_www  = str_replace ( "://www." , "://" , get_option('home'));
+    $home_yes_www = str_replace ( "://" , "://www." , $home_no_www);
+
+    $this->http_urls = array(
+        str_replace ( "https://" , "http://" , $home_yes_www),
+        str_replace ( "https://" , "http://" , $home_no_www),
+    );
+  }
+
+  /**
    * Get the options for this plugin
    *
    * @since  2.0
@@ -50,6 +70,10 @@ class rl_rsssl_front_end {
       $this->force_ssl_without_detection  = isset($options['force_ssl_without_detection']) ? $options['force_ssl_without_detection'] : FALSE;
       $this->site_has_ssl                 = isset($options['site_has_ssl']) ? $options['site_has_ssl'] : FALSE;
       $this->autoreplace_insecure_links   = isset($options['autoreplace_insecure_links']) ? $options['autoreplace_insecure_links'] : TRUE;
+    }
+
+    if ($this->autoreplace_insecure_links || is_admin()) {
+      $this->build_url_list();
     }
   }
 
@@ -70,8 +94,10 @@ class rl_rsssl_front_end {
   }
 
   /**
-   * Just before the page is sent to the visitor's browser,
-   * all homeurl links are replaced with protocol-independent lnks
+   * Just before the page is sent to the visitor's browser, all homeurl links are replaced with https.
+   *
+   * filter: rlrsssl_replace_url_args
+   * This filter allows for extending the range of urls that are replaced with https.
    *
    * @since  1.0
    *
@@ -80,9 +106,43 @@ class rl_rsssl_front_end {
    */
 
   public function end_buffer_capture($buffer) {
-    //now replace all http links to protocol-independent links.
-    $buffer = str_replace ("http://", "//" , $buffer);
+    $search_array = apply_filters('rlrsssl_replace_url_args', $this->http_urls);
+	  $ssl_array = str_replace ( "http://" , "https://", $search_array);
+    //now replace these links
+    $buffer = str_replace ($search_array , $ssl_array , $buffer);
+
+    //replace all http links except hyerlinks (<a href="">link</a>)
+    $pattern = array(
+      '/url\([\'"]?\K(http:\/\/)(?=[^)]+)/i',
+      '/<link .*?href=[\'"]\K(http:\/\/)(?=[^\'"]+)/i',
+      '/<(?:img|iframe) .*?src=[\'"]\K(http:\/\/)(?=[^\'"]+)/i',
+      '/<script [^>]*?src=[\'"]\K(http:\/\/)(?=[^\'"]+)/i',
+    );
+    $buffer = preg_replace($pattern, 'https://', $buffer);
+
+    // fix embeds
+    /*
+    static $embed_pattern = array(
+    '/<object .*?<\/object>/is',
+    '/<embed .*?(?:\/>|<\/embed>)/is',
+    );
+
+    $buffer = preg_replace_callback($embed_pattern, array(__CLASS__, 'replace_embed_callback'), $buffer);
+*/
+    $buffer = "<!-- Really Simple SSL mixed content fixer active -->".$buffer;
+
     return $buffer;
+  }
+
+  /**
+  * callback for embeds
+  */
+
+  public static function replace_embed_callback($matches) {
+    // match from start of http: URL until either end quotes or query parameter separator, thus allowing for URLs in parameters
+    $html = preg_replace_callback('#http://[^\'"&\?]+#i', array(__CLASS__, 'fixContent_src_callback'), $matches[0]);
+
+    return $html;
   }
 
   /**

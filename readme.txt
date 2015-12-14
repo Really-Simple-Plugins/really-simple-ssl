@@ -5,7 +5,7 @@ Tags: secure website, website security, ssl, https, tls, security, secure socket
 Requires at least: 4.2
 License: GPL2
 Tested up to: 4.4
-Stable tag: 2.2.7
+Stable tag: 2.2.10
 
 No setup required! You only need an SSL certificate, and this plugin will do the rest.
 
@@ -21,24 +21,20 @@ If ssl is detected it will configure your site to support ssl.
 * The plugin handles most issues that Wordpress has with ssl, like the much discussed loadbalancer issue, or when there are no server variables set at all.
 * All incoming requests are redirected to https. If possible with .htaccess, or else with javascript.
 * The site url and home url are changed to https.
-* Your insecure content is fixed by replacing all included resources with https. Dynamically, so no database changes are made (except for the siteurl and homeurl).
+* Your insecure content is fixed by replacing all http:// urls with the protocol-independent //. Dynamically, so no database changes are made (except for the siteurl and homeurl).
 
 = Feedback is welcome! =
-Though the plugin is extensively tested and currently successfully active on over 5000 websites, it is impossible to test or even conceive of every different server configuration. So it might be possible you have issues with a non-standard server configuration.
-Rather than being mad about it, I would appreciate it if you contact me with the issue, so I can help you fix it and improve the plugin at the same time.
+Though the plugin is extensively tested and currently successfully active on over 6000 websites, it is impossible to test or even conceive of every different server configuration. So it might be possible you have issues with a non-standard server configuration.
+I would appreciate it if you contact me with the issue, so I can help you fix it and improve the plugin at the same time.
 I will need the following information:
 
 * Debug report: activate debug and copy the results
 * Domain
-* Plugin list
 
 [contact](https://www.really-simple-ssl.com/contact/) me if you have any questions, issues, or suggestions. More information about me or my work can be found on my [website](https://www.rogierlankhorst.com).
 
-= Betatesting =
-If you like to betatest, that would be great! Please enter my betatest mailinglist [here](https://www.really-simple-ssl.com/betatesting/).
-
-= I need help translating =
-I'd like to include more translations, translations can be added [here](https://translate.wordpress.org/projects/wp-plugins/really-simple-ssl).
+= Like to have this plugin in your language? =
+Translations can be added very easily [here](https://translate.wordpress.org/projects/wp-plugins/really-simple-ssl).
 
 = Translation credits =
 Thanks for the French translation to [Cédric](http://www.blig.fr/)
@@ -74,23 +70,26 @@ For more information: go to the [website](http://www.really-simple-ssl.com/), or
 [contact](http://www.really-simple-ssl.com/contact/) me if you have any questions or suggestions.
 
 == Frequently Asked Questions ==
-= Troubleshooting shortlist =
-You can find the cause of most issues when looking in the Chrome console:
-In Chrome, right click on your webpage, then select "inspect element" to see what links are causing this (you can ignore hyperlinks).
 
-* If you are experiencing redirects on your site, you might want to try disabling the .htaccess:
+= Knowledge base =
+For more detailed explanations and documentation, please search the [documentation](http://www.really-simple-ssl.com/knowledge-base/)
+
+= Does the mixed content fixer make my site slower? =
+On a site where the source consists of about 60.000 characters, the delay caused by the mixed content fixer is about 0.00188 seconds. If this is too much for you, fix the mixed content manuallya and deactivate it in the settings.
+
+= Mixed content issues =
+Most mixed content issues are caused by urls in css or js files.
+For detailed instructions on how to find mixed content read this [article](https://really-simple-ssl.com/knowledge-base/how-to-track-down-mixed-content-or-insecure-content/).
+
+= Redirect loop issues =
+* If you are experiencing redirect loops on your site, you might want to try disabling the .htaccess:
 
 1. Remove this plugins's rules from your .htaccess.
 2. Add to your wp-config.php:
 define( 'RLRSSSL_DO_NOT_EDIT_HTACCESS', TRUE);
 
+= Parts of my site aren’t loading =
 * If parts of your site aren't loading, you might have external resources that are not able to load on ssl. Check the Google console.
-* If your browser still gives mixed content warnings:
-
-1. Clear the cache of your browser and of your Wordpress site, if you use a caching plugin.
-2. Check the Google console for errors. If you have non https links to your own site, or "src='http://" in the source of your website,
-the insecure content fixer is probably blocked by another plugin. You can check this by deactivating your plugins one by one, and see if really simple ssl starts working.
-Let me know if you find a plugin conflict, so I can put it in my conflict list.
 
 = How to uninstall when website/backend is not accessible =
 Though this plugin is extensively tested, this can still happen. However, this is very easy to fix (you'll need ftp access):
@@ -122,19 +121,28 @@ That is not possible. This plugin simply forces your complete site over https, w
 
 = Is the plugin suitable for wordpress multisite? =
 Yes, the plugin is wpmu ready.
-You can activate ssl per site on subdomain installs. On subfolder installs networkwide activation is strongly advised (domain.com/site1).
+You can activate ssl per site on subdomain and domain mapping installs. On subfolder installs networkwide activation is encouraged (domain.com/site1).
 
 = Does the plugin do a seo friendly 301 redirect in the .htaccess? =
 Yes, default the plugin redirects permanently with [R=301].
 
 == Changelog ==
+= 2.2.11 =
+Brand new content fixer, which fixes all links on in the source of your website.
+
+= 2.2.10 =
+* Roll back of mixed content fixer.
+
+= 2.2.9 =
+Improved the mixed content fixer. Faster and more effective.
+
 = 2.2.8 =
-Changed preg_match code for detecting wp_siteurl and wp_home in the wp-config.php 
+Edited the wpconfig define check to prevent warnings when none are needed.
 
 = 2.2.7 =
-Extended detection of homeurl and siteurl constants in wp-config.php with regex to allow for spaces in code.
-Changed text domain to make this plugin language packs ready
-Added 404 detection to ssl detection function, so subdomains can get checked properly on subdomain multisite installs
+* Extended detection of homeurl and siteurl constants in wp-config.php with regex to allow  for spaces in code.
+* Changed text domain to make this plugin language packs ready
+* Added 404 detection to ssl detection function, so subdomains can get checked properly on subdomain multisite installs
 
 = 2.2.6 =
 Added slash in redirect rule
