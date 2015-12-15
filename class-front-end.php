@@ -111,7 +111,7 @@ class rl_rsssl_front_end {
     //now replace these links
     $buffer = str_replace ($search_array , $ssl_array , $buffer);
 
-    //replace all http links except hyerlinks (<a href="">link</a>)
+    //replace all http links except hyperlinks
     $pattern = array(
       '/url\([\'"]?\K(http:\/\/)(?=[^)]+)/i',
       '/<link .*?href=[\'"]\K(http:\/\/)(?=[^\'"]+)/i',

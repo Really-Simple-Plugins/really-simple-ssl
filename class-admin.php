@@ -222,6 +222,12 @@ defined('ABSPATH') or die("you do not have acces to this page!");
    */
 
   public function activate($networkwide) {
+    $wpconfig_path = $this->find_wp_config_path();
+    if (!is_writable($wpconfig_path)) {
+      deactivate_plugins( $this->plugin_filename );
+      wp_die( _e("To prevent you from being locked out of the Wordpress admin, it is not possible to activate when the wp-config.php file is not writable (644 permissions)!. You can return it to 444 after activation.","really-simple-ssl") );
+    }
+
     $this->detect_if_rewrite_per_site($networkwide);
     add_option('really_simple_ssl_activated', 'activated' );
   }
@@ -325,7 +331,6 @@ defined('ABSPATH') or die("you do not have acces to this page!");
           } else {
             $this->trace_log("No ssl detected and not forced, stopping configuration");
           }
-
 
           if ($this->site_has_ssl || $this->force_ssl_without_detection) {
             if ($this->do_wpconfig_loadbalancer_fix) {

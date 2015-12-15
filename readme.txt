@@ -5,7 +5,7 @@ Tags: secure website, website security, ssl, https, tls, security, secure socket
 Requires at least: 4.2
 License: GPL2
 Tested up to: 4.4
-Stable tag: 2.2.10
+Stable tag: 2.2.11
 
 No setup required! You only need an SSL certificate, and this plugin will do the rest.
 
@@ -16,6 +16,11 @@ If ssl is detected it will configure your site to support ssl.
 = Two simple steps for setup: =
 * Get an SSL certificate from your hosting provider (can't do that for you, sorry).
 * Activate this plugin.
+
+= Happy with the plugin? Buy me a cup of coffee! =
+A lot of effort goes in developing this plugin and in the support, which is all free.
+With a small amount you enable me to continue developing and maintaining this plugin.
+[cup of coffee ;)](https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=ZEQHXWTSQVAZJ&lc=NL&item_name=rogierlankhorst%2ecom&item_number=really%2dsimple%2dssl%2dplugin&currency_code=EUR&bn=PP%2dDonationsBF%3abtn_donateCC_LG%2egif%3aNonHosted)
 
 = What does the plugin actually do =
 * The plugin handles most issues that Wordpress has with ssl, like the much discussed loadbalancer issue, or when there are no server variables set at all.
@@ -127,6 +132,9 @@ You can activate ssl per site on subdomain and domain mapping installs. On subfo
 Yes, default the plugin redirects permanently with [R=301].
 
 == Changelog ==
+= 2.2.12 =
+To prevent lockouts, it is no longer possible to activate plugin when wp-config.php is not writable. In case of loadbalancers, activating ssl without adding the necessary fix in the wp-config would cause a redirect loop which would lock you out of the admin.
+
 = 2.2.11 =
 Brand new content fixer, which fixes all links on in the source of your website.
 
