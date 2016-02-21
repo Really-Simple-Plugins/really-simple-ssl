@@ -3,97 +3,118 @@ defined('ABSPATH') or die("you do not have acces to this page!");
 
 class rlrsssl_database {
   public
-    $postsWithHTTP                 = Array(),
+    $filesWithHTTP                 = Array(),
     $optionsWithHTTP               = Array(),
-    $search_array                  = Array(),
-    $results_limit                 = 25;
+    $blocked_urls                  = Array(),
+    $url_pattern                   = '([\w_-]+(?:(?:\.[\w_-]+)+))([\w.,@?^=%&:\/~+#-]*[\w@?^=%&\/~+#-]?[\'"]+)',
+    $search_array                  = Array();
+
 
   public function __construct()
   {
-
+    require_once( dirname( __FILE__ ) .  '/class-url.php' );
+    $this->url = new rlrsssl_url;
   }
 
   public function build_query( $where = '' ){
       global $wpdb;
       $where.= ' AND (';
-
-      $arr = $this->search_array;
-      $i = 0;
-      foreach ($arr as $needle) {
-        $needle = addslashes($needle);
-        $i++;
-        $where.= sprintf(' %1$s.post_content ',$wpdb->posts);
-        $where.= " LIKE '%{$needle}%'";
-        if ($i<count($arr)) {
-          $where.= " OR ";
-        }
-      }
+      $where.= sprintf(' %1$s.post_content ',$wpdb->posts);
+      $where.= " LIKE '%http://%'";
       $where.=") ";
       return $where;
   }
 
-    public function fix_insecure_post_links() {
-        global $wpdb;
-        /*
-        $wpdb->query(
-          $wpdb->prepare(
-            "
-            UPDATE $wpdb->posts
-            SET Value = REPLACE(Value, '%1$s', '%2$s')
-            WHERE ID <=4
-            ",
-                  $string1, $string2
-                )
-        );*/
-      }
+
 
       public function scan($search_array) {
-        $this->search_array = $search_array;
+        global $wpdb;
+        $tbl_query = "show tables";
+        $tables = $wpdb->get_results($tbl_query);
+        foreach ($tables as $table) {
+          $col_query = "show columns from {$table}";
+          $columns = $wpdb->get_results($col_query);
 
-        add_filter('posts_where', array($this,'build_query'));
-        $args = array(
-            'post_type'   => get_post_types( '','names' ),
-            'suppress_filters' => false
-        );
-        $the_query = new WP_Query($args);
-        //limit results
-        $count = 0;
-        if ($the_query->have_posts() ) {
-          while ( $the_query->have_posts() && $count<$this->results_limit) {
-            $count++;
-            $the_query->the_post();
-            $this->postsWithHTTP[get_the_title()] = get_the_ID();
-          }
+          $pattern = '/<(?:img|iframe) .*?src=[\'"]\K(http:\/\/)(?!'.$url.')'.$url_pattern.'/i';
+          $query = "select * from {$table} where someName REGEXP '{$pattern}'";
         }
-        remove_filter( 'posts_where', array($this,'build_query'));
-        wp_reset_postdata();
+        $posts = array();
+
+
+
+
+        $this->filesWithHTTP = $this->get_posts_with_blocked_resources($posts, $url_list);
+
 
         //scan options
         global $wpdb;
         $where = sprintf('Select * FROM %1$s WHERE (',$wpdb->options);
-        $arr = $this->search_array;
-        $i = 0;
-        foreach ($arr as $needle) {
-          $needle = addslashes($needle);
-          $i++;
-          $where.= sprintf(' %1$s.option_value ',$wpdb->options);
-          $where.= " LIKE '%{$needle}%'";
-          if ($i<count($arr)) {
-            $where.= " OR ";
-          }
-        }
-        //ignore siteurl and home, because we take care of these
+        $where.= sprintf(' %1$s.option_value ',$wpdb->options);
+        $where.= " LIKE '%http://%'";
+
         $where.= sprintf(') AND NOT (%1$s.option_name = "siteurl" OR %1$s.option_name = "home" ',$wpdb->options);
         $where.= " OR ".$wpdb->options.".option_name LIKE '_transient%' OR ".$wpdb->options.".option_name LIKE '_site_transient%')";
         $results = $wpdb->get_results($where);
-        //limit to 25
-        $count=0;
+
         foreach ($results as $result) {
-          if ($count<$this->results_limit ) {
-            array_push($this->optionsWithHTTP,$result->option_name);
-            $count++;
+          array_push($this->optionsWithHTTP,$result->option_name);
+        }
+      }
+
+
+
+
+        private function get_posts_with_blocked_resources($filesWithHTTP, $url_list, $url_only = false) {
+
+          $url_pattern = $this->url_pattern;
+
+          $url_list = str_replace("http://", "", $url_list);
+          if ($url_only) {
+            $patterns = array($url_pattern);
+          } else {
+            $patterns = array();
+            foreach($url_list as $url) {
+              $url = preg_quote($url, "/");
+              $patterns = array_merge($patterns, array(
+                '/url\([\'"]?\K(http:\/\/)'.$url_pattern.'(?!'.$url.')/i',
+                '/<link .*?href=[\'"]\K(http:\/\/)'.$url_pattern.'(?!'.$url.')/i',
+                '/<meta property="og:image" .*?content=[\'"]\K(http:\/\/)'.$url_pattern.'(?!'.$url.')/i',
+                '/<(?:img|iframe) .*?src=[\'"]\K(http:\/\/)(?!'.$url.')'.$url_pattern.'/i',
+                '/<script [^>]*?src=[\'"]\K(http:\/\/)(?!'.$url.')'.$url_pattern.'/i',
+              ));
+            }
           }
+
+          //search for occurence of blocked links
+          foreach ($filesWithHTTP as $fName => $id) {
+
+            $str = get_the_content($id);
+            foreach ($patterns as $pattern){
+              if (preg_match_all($pattern, $str, $matches, PREG_PATTERN_ORDER)) {
+                foreach($matches[0] as $match) {
+                  $timeout = 2;
+                  $test_url = rtrim($match,'"');
+                  $test_url = rtrim($test_url,"'");
+                  $test_url = str_replace("http://", "http://", $test_url);
+
+                  if (isset($this->blocked_urls[$file]) && in_array($test_url, $this->blocked_urls[$file])) break;
+                  $filecontents = $this->url->get_contents($test_url, $timeout);
+                  if($this->url->error_number!=0) {
+                    $filesWithHTTP[$fName] = $file;
+                    if (!isset($this->blocked_urls[$file]) || (isset($this->blocked_urls[$file]) && !in_array($test_url, $this->blocked_urls[$file]))) {
+                      $this->blocked_urls[$file][] = $test_url;
+                    }
+                  }
+                }
+              }
+            }
+
+          }
+
+          return $filesWithHTTP;
+
         }
 
-      }
+
+
 }

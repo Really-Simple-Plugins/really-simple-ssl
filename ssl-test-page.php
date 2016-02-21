@@ -1,5 +1,6 @@
 <html>
 <head>
+ <meta charset="UTF-8">
  <META NAME="ROBOTS" CONTENT="NOINDEX, NOFOLLOW">
 </head>
 <body>
@@ -9,7 +10,8 @@
 	$ssl = FALSE;
 	if (isset($_SERVER['HTTPS']) ) {
 		if ( strtolower($_SERVER['HTTPS']) == 'on') {
-			echo "#SERVER-HTTPS-ON#"." (".$_SERVER['HTTPS'].")<br>";
+
+			echo "#SERVER-HTTPS-ON#"." (".htmlentities($_SERVER['HTTPS'], ENT_QUOTES, 'UTF-8').")<br>";
 			$ssl = TRUE;
 		}
 		if ( '1' == $_SERVER['HTTPS'] ) {
@@ -38,9 +40,9 @@
 ?>
 <br><br><br>
 <?php
-  echo "HTTP_HOST: ".$_SERVER["HTTP_HOST"];
+  echo "HTTP_HOST: ".htmlentities($_SERVER["HTTP_HOST"], ENT_QUOTES, 'UTF-8');
   echo "<br>";
-  echo "REQUEST_URI: ".$_SERVER["REQUEST_URI"];
+  echo "REQUEST_URI: ".htmlentities($_SERVER["REQUEST_URI"], ENT_QUOTES, 'UTF-8');
 ?>
 </body>
 </html>

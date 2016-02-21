@@ -24,6 +24,7 @@ class rlrsssl_cache {
       add_action( 'shutdown', array($this,'flush_w3tc_cache'));
       add_action( 'shutdown', array($this,'flush_fastest_cache'));
       add_action( 'shutdown', array($this,'flush_zen_cache'));
+      add_action( 'shutdown', array($this,'flush_wp_rocket'));
     }
   }
 
@@ -47,6 +48,12 @@ class rlrsssl_cache {
     if (class_exists('\\zencache\\plugin') )
     {
       $GLOBALS['zencache']->clear_cache();
+    }
+  }
+
+  public function flush_wp_rocket() {
+    if (function_exists("rocket_clean_domain")) {
+      rocket_clean_domain();
     }
   }
 
