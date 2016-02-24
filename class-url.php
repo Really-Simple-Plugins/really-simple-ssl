@@ -2,13 +2,12 @@
 defined('ABSPATH') or die("you do not have acces to this page!");
 /*
 
-    class of general functions
+    class for handling url retrieval
 
 */
 
-
 class rlrsssl_url {
-public $error_number = 0;
+  public $error_number = 0;
 
 
   public function __construct()
@@ -30,34 +29,57 @@ public $error_number = 0;
       $this->error_number = $errno;
   }
 
-  public function get_contents($url, $timeout = 5) {
-    $this->curl_installed = $this->is_curl_installed();
+  /*
+      retrieves the content of an url
+      If a redirection is in place, the new url serves as input for this function
+      max 5 iterations
+  */
 
+
+  public function get_contents($url, $timeout = 5, $iteration=0) {
+    //prevent infinite loops.
+    if ($iteration>5) return "";
     //preferrably with curl, but else with file get contents
-    if ($this->curl_installed) {
+    if ($this->is_curl_installed()) {
 
         $ch = curl_init();
         curl_setopt($ch,CURLOPT_URL,$url);
-        curl_setopt($ch, CURLOPT_HEADER, true);
+        curl_setopt($ch,CURLOPT_HEADER, true);
         curl_setopt($ch,CURLOPT_RETURNTRANSFER,1);
         curl_setopt($ch,CURLOPT_CONNECTTIMEOUT,$timeout);
-        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
         curl_setopt($ch,CURLOPT_FRESH_CONNECT, TRUE);
         curl_setopt($ch,CURLOPT_SSL_VERIFYPEER, false);
         curl_setopt($ch,CURLOPT_SSL_VERIFYHOST, false);
-        curl_setopt($ch, CURLOPT_MAXREDIRS, 3);
         $filecontents = curl_exec($ch);
+
         $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 
         if(curl_errno($ch)) {
           $this->error_number = curl_errno($ch);
-        } elseif ($http_code>400) {
-          $this->error_number = $http_code;
         } else {
           $this->error_number = 0;
         }
 
         curl_close($ch);
+        if ($http_code != 200) { //301, 302, 403, 404, etc.
+            if ($http_code == 301 || $http_code == 302) {
+                list($header) = explode("\r\n\r\n", $filecontents, 2);
+                $matches = array();
+                preg_match("/(Location:|URI:)[^(\n)]*/", $header, $matches);
+                $url = trim(str_replace($matches[1],"",$matches[0]));
+                $url_parsed = parse_url($url);
+                //return isset($url_parsed) ? $this->get_contents($url, $timeout, $iteration+1) : '';
+                if (isset($url_parsed)) {
+                  return $this->get_contents($url, $timeout, $iteration+1);
+                } else {
+                  $this->error_number = 404;
+                  return "";
+                }
+            } else {
+              $this->error_number = $http_code;
+              return "";
+            }
+        }
       } else {
         set_error_handler(array($this,'custom_error_handling'));
         $filecontents = file_get_contents($url);
@@ -86,7 +108,7 @@ public $error_number = 0;
   }
 
   public function get_curl_error($error_no) {
-    if ($error_no<0 || $error_no>88) {return "unknown error";}
+
     $error_codes=array(
       0 => 'CURLE_SUCCESS',
       1 => 'CURLE_UNSUPPORTED_PROTOCOL',
@@ -166,8 +188,11 @@ public $error_number = 0;
       86 => 'CURLE_RTSP_SESSION_ERROR',
       87 => 'CURLE_FTP_BAD_FILE_LIST',
       88 => 'CURLE_CHUNK_FAILED',
+      401 => 'NOT AUTHORISED',
+      403 => 'FORBIDDEN',
       404 => 'NOT FOUND',
     );
+      if (!isset($error_codes[$error_no])) return "Unknown error";
       return $error_codes[$error_no];
     }
   }

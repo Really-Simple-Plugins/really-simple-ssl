@@ -5,7 +5,7 @@ Tags: mixed content, insecure content, secure website, website security, ssl, ht
 Requires at least: 4.2
 License: GPL2
 Tested up to: 4.4
-Stable tag: 2.2.16
+Stable tag: 2.2.18
 
 No setup required! You only need an SSL certificate, and this plugin will do the rest.
 
@@ -20,7 +20,7 @@ To keep it lightweight, the options are kept to a minimum. The entire site will 
 But always backup before you go! If you do not have a sound backup policy, start having one! For a snapshot, install duplicator.
 
 = Love Really Simple SSL? =
-I’ve invested hundreds of hours in the development of this plugin, which was a lot of fun and hopefully saved you at least some hours work. If you want to support the continuing development of this plugin, I’d really appreciate it if you buy me a cup of coffee.
+Hopefully this plugin saved you at least some hours work. If you want to support the continuing development of this plugin, you could buy me a cup of coffee, or leave a review.
 [To the coffeecorner ;)](https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=ZEQHXWTSQVAZJ&lc=NL&item_name=rogierlankhorst%2ecom&item_number=really%2dsimple%2dssl%2dplugin&currency_code=EUR&bn=PP%2dDonationsBF%3abtn_donateCC_LG%2egif%3aNonHosted)
 
 = What does the plugin actually do =
@@ -30,7 +30,7 @@ I’ve invested hundreds of hours in the development of this plugin, which was a
 * Your insecure content is fixed by replacing all http:// urls with the protocol-independent //. Dynamically, so no database changes are made (except for the siteurl and homeurl).
 
 = Feedback is welcome! =
-Though the plugin is extensively tested and currently successfully active on over 6000 websites, it is impossible to test or even conceive of every different server configuration. So it might be possible you have issues with a non-standard server configuration.
+Though the plugin is extensively tested and currently successfully active on over 15000 websites, it might be possible you have issues with a specific configuration (server/plugins).
 I would appreciate it if you contact me with the issue, so I can help you fix it and improve the plugin at the same time.
 I will need the following information:
 
@@ -133,8 +133,14 @@ You can activate ssl per site on subdomain and domain mapping installs. On subfo
 Yes, default the plugin redirects permanently with [R=301].
 
 == Changelog ==
+= 2.2.19 =
+Changed followlocation in curl to an alternative method, as this gives issues when safemode or open_basedir is enabled.
+
+= 2.2.18 =
+Fixed bug in logging of curl detection
+
 = 2.2.17 =
-Some security fixes thanks to Steven
+Security fixes in ssl-test-page.php
 
 = 2.2.16 =
 Bugfix with of insecure content fixer.

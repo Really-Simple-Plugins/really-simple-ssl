@@ -121,7 +121,7 @@ class rl_rsssl_front_end {
       '/<meta property="og:image" .*?content=[\'"]\K(http:\/\/)(?=[^\'"]+)/i',
     );
     $buffer = preg_replace($pattern, 'https://', $buffer);
-    $buffer = $buffer."<!-- Really Simple SSL mixed content fixer active -->";
+    $buffer = $buffer.'<!-- Really Simple SSL mixed content fixer active -->';
 
     return apply_filters("rsssl_fixer_output", $buffer);;
   }

@@ -19,7 +19,6 @@ defined('ABSPATH') or die("you do not have acces to this page!");
   //general settings
   public $capability                        = 'manage_options';
 
-  public $curl_installed                    = FALSE;
   public $ssl_test_page_error;
   public $htaccess_test_success             = FALSE;
 
@@ -28,6 +27,7 @@ defined('ABSPATH') or die("you do not have acces to this page!");
   public $ABSpath;
 
   public $do_not_edit_htaccess              = FALSE;
+  public $htaccess_warning_shown            = FALSE;
   public $ssl_fail_message_shown            = FALSE;
   public $wpmu_subfolder_warning_shown      = FALSE;
   public $ssl_success_message_shown         = FALSE;
@@ -40,6 +40,7 @@ defined('ABSPATH') or die("you do not have acces to this page!");
   public $plugin_version;
   public $plugin_db_version;
   public $plugin_upgraded;
+  public $mixed_content_fixer_status        =0;
 
   public $ssl_redirect_set_in_htaccess      = FALSE;
   public $settings_changed                  = FALSE;
@@ -119,6 +120,7 @@ defined('ABSPATH') or die("you do not have acces to this page!");
     $this->check_for_uninstall_file();
 
     //callbacks for the ajax dismiss buttons
+    add_action('wp_ajax_dismiss_htaccess_warning', array($this,'dismiss_htaccess_warning_callback') );
     add_action('wp_ajax_dismiss_fail_message', array($this,'dismiss_fail_message_callback') );
     add_action('wp_ajax_dismiss_wpmu_subfolder_warning', array($this,'dismiss_wpmu_subfolder_warning_callback') );
     add_action('wp_ajax_dismiss_success_message', array($this,'dismiss_success_message_callback') );
@@ -163,6 +165,7 @@ defined('ABSPATH') or die("you do not have acces to this page!");
     $options = get_option('rlrsssl_options');
     if (isset($options)) {
       $this->hsts                               = isset($options['hsts']) ? $options['hsts'] : FALSE;
+      $this->htaccess_warning_shown             = isset($options['htaccess_warning_shown']) ? $options['htaccess_warning_shown'] : FALSE;
       $this->ssl_fail_message_shown             = isset($options['ssl_fail_message_shown']) ? $options['ssl_fail_message_shown'] : FALSE;
       $this->wpmu_subfolder_warning_shown       = isset($options['wpmu_subfolder_warning_shown']) ? $options['wpmu_subfolder_warning_shown'] : FALSE;
       $this->ssl_success_message_shown          = isset($options['ssl_success_message_shown']) ? $options['ssl_success_message_shown'] : FALSE;
@@ -188,7 +191,7 @@ defined('ABSPATH') or die("you do not have acces to this page!");
   /**
   *       @since 2.13
   *
-  *       Fixes a multisite bug where networkwide options were save in each blog locally.
+  *       Fixes a multisite bug where networkwide options were saved in each blog locally.
   *
   **/
 
@@ -849,6 +852,7 @@ protected function get_server_variable_fix_code(){
       'force_ssl_without_detection'       => $this->force_ssl_without_detection,
       'site_has_ssl'                      => $this->site_has_ssl,
       'hsts'                              => $this->hsts,
+      'htaccess_warning_shown'            => $this->htaccess_warning_shown,
       'ssl_fail_message_shown'            => $this->ssl_fail_message_shown,
       'wpmu_subfolder_warning_shown'      => $this->wpmu_subfolder_warning_shown,
       'ssl_success_message_shown'         => $this->ssl_success_message_shown,
@@ -899,6 +903,7 @@ protected function get_server_variable_fix_code(){
     $this->force_ssl_without_detection          = FALSE;
     $this->site_has_ssl                         = FALSE;
     $this->hsts                                 = FALSE;
+    $this->htaccess_warning_shown               = FALSE;
     $this->ssl_fail_message_shown               = FALSE;
     $this->wpmu_subfolder_warning_shown         = FALSE;
     $this->ssl_success_message_shown            = FALSE;
@@ -1196,7 +1201,7 @@ public function getABSPATH(){
         $this->ssl_redirect_set_in_htaccess =  FALSE;
         $this->save_options();
       } else {
-        $this->errors['htaccess not writable'] = TRUE;
+        $this->errors['HTACCESS_NOT_WRITABLE'] = TRUE;
         if ($this->debug) $this->trace_log("could not remove rules from htaccess, file not writable");
       }
   }
@@ -1283,7 +1288,10 @@ public function getABSPATH(){
         if ($this->debug) {$this->trace_log("no rules there, adding rules...");}
 
         if (!is_writable($this->ABSpath.".htaccess")) {
+          //set the javascript redirect as fallback, because .htaccess couldn't be edited.
+          $this->javascript_redirect = true;
           if($this->debug) $this->trace_log(".htaccess not writable.");
+          $this->errors["NO_REDIRECT_IN_HTACCESS"] = true;
           return;
         }
 
@@ -1299,10 +1307,10 @@ public function getABSPATH(){
 
         file_put_contents($this->ABSpath.".htaccess", $htaccess);
 
-    } elseif ((is_multisite() && $this->set_rewriterule_per_site) || $this->contains_previous_version($htaccess) || ($this->hsts!=$this->contains_hsts($htaccess))) {
+    } elseif ((is_multisite() && $this->set_rewriterule_per_site) || ($this->hsts!=$this->contains_hsts($htaccess))) {
         /*
             Remove all rules and add new IF
-            old version,
+            //disabled changes for version upgrade. , $this->contains_previous_version($htaccess) ||
             or the hsts option has changed, so we need to edit the htaccess anyway.
             or rewrite per site (if a site is added or removed on per site activated
             mulsite we need to rewrite even if the rules are already there.)
@@ -1345,8 +1353,9 @@ public function getABSPATH(){
     //check if the mixed content fixer is active
     $web_source = $this->url->get_contents(home_url());
     if ($this->url->error_number!=0 || (strpos($web_source, "<!-- Really Simple SSL mixed content fixer active -->") === false)) {
+      if ($this->url->error_number!=0) $this->mixed_content_fixer_status = $this->url->get_curl_error($this->url->error_number);
       return false;
-      $this->trace_log("Mixed content was not detected on the front end.");
+      $this->trace_log("Check for Mixed Content detection failed");
     } else {
       $this->trace_log("Mixed content was successfully detected on the front end.");
       return true;
@@ -1452,6 +1461,7 @@ public function getABSPATH(){
           if ($this->debug) {$this->trace_log("single site or networkwide activation");}
         }
         $rule .= "RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]"."\n";
+
         //$rule .= "RewriteRule ^(.*)$ https://%{HTTP_HOST}/$1 [R=301,L]"."\n";
         $rule .= "</IfModule>"."\n";
       } else {
@@ -1521,6 +1531,22 @@ public function show_notices()
     <a href="options-general.php?page=rlrsssl_really_simple_ssl"><?php echo __("Check again","really-simple-ssl");?></a>
     </div>
     <?php
+  }
+
+  /*
+      show a notice when the .htaccess file does not contain redirect rules
+  */
+
+  if (!$this->htaccess_warning_shown && isset($this->errors["NO_REDIRECT_IN_HTACCESS"]) && ($this->errors["NO_REDIRECT_IN_HTACCESS"] == true)) {
+        add_action('admin_print_footer_scripts', array($this, 'insert_dismiss_htaccess'));
+        ?>
+        <div id="message" class="error fade notice is-dismissible rlrsssl-htaccess">
+          <p>
+            <?php echo __("Your .htaccess does not contain a redirect to https, and could not be written, so a javascript redirect will be added. For SEO purposes it is advisable to use .htaccess redirects. Check the settings page for the .htaccess code and the javascript redirect setting.","really-simple-ssl");?>
+            <a href="options-general.php?page=rlrsssl_really_simple_ssl">Settings</a>
+          </p>
+        </div>
+        <?php
   }
 
   /*
@@ -1669,7 +1695,33 @@ public function insert_dismiss_success() {
   </script>
   <?php
 }
+/**
+ * Insert some ajax script to dismis the htaccess failed fail message, and stop nagging about it
+ *
+ * @since  2.0
+ *
+ * @access public
+ *
+ */
 
+public function insert_dismiss_htaccess() {
+  $ajax_nonce = wp_create_nonce( "really-simple-ssl" );
+  ?>
+  <script type='text/javascript'>
+    jQuery(document).ready(function($) {
+        $(".rlrsssl-htaccess.notice.is-dismissible").on("click", ".notice-dismiss", function(event){
+              var data = {
+                'action': 'dismiss_htaccess_warning',
+                'security': '<?php echo $ajax_nonce; ?>'
+              };
+              $.post(ajaxurl, data, function(response) {
+
+              });
+          });
+    });
+  </script>
+  <?php
+}
 /**
  * Insert some ajax script to dismis the ssl fail message, and stop nagging about it
  *
@@ -1739,6 +1791,25 @@ public function dismiss_success_message_callback() {
   global $wpdb; // this is how you get access to the database
   check_ajax_referer( 'really-simple-ssl', 'security' );
   $this->ssl_success_message_shown = TRUE;
+  $this->save_options();
+  wp_die(); // this is required to terminate immediately and return a proper response
+}
+
+/**
+ * Process the ajax dismissal of the htaccess message.
+ *
+ * @since  2.1
+ *
+ * @access public
+ *
+ */
+
+public function dismiss_htaccess_warning_callback() {
+
+  global $wpdb;
+  check_ajax_referer( 'really-simple-ssl', 'security' );
+  error_log("saving htaccess warning");
+  $this->htaccess_warning_shown = TRUE;
   $this->save_options();
   wp_die(); // this is required to terminate immediately and return a proper response
 }
@@ -1905,8 +1976,11 @@ public function settings_page() {
             <td><?php
                   if ($this->mixed_content_fixer_detected()) {
                     _e("Mixed content fixer was successfully detected on the front-end","really-simple-ssl")."&nbsp;";
+                  } elseif ($this->mixed_content_fixer_status!=0) {
+                    _e("The mixed content is activated, but the frontpage could not be loaded for verification. The following error was returned: ","really-simple-ssl")."&nbsp;";
+                    echo $this->mixed_content_fixer_status;
                   } else {
-                    _e("The mixed content is activated, but not functioning at the front end.","really-simple-ssl")."&nbsp;";
+                    _e("The mixed content is activated, but was not detected on the frontpage. Please check if you have mixed content, which could indicate a plugin conflict.","really-simple-ssl")."&nbsp;";
                   }
                 ?>
               </td><td></td>
@@ -2194,6 +2268,7 @@ public function options_validate($input) {
   $newinput = array();
   $newinput['site_has_ssl']                       = $this->site_has_ssl;
   $newinput['ssl_success_message_shown']          = $this->ssl_success_message_shown;
+  $newinput['htaccess_warning_shown']             = $this->htaccess_warning_shown;
   $newinput['ssl_fail_message_shown']             = $this->ssl_fail_message_shown;
   $newinput['wpmu_subfolder_warning_shown']       = $this->wpmu_subfolder_warning_shown;
   $newinput['plugin_db_version']                  = $this->plugin_db_version;
@@ -2273,7 +2348,7 @@ public function get_option_hsts() {
 
   echo '<input id="rlrsssl_options" name="rlrsssl_options[hsts]" onClick="return confirm(\''.__("Are you sure? Your visitors will keep going to a https site for a year after you turn this off.","really-simple-ssl").'\');" size="40" type="checkbox" '.$disabled.' value="1"' . checked( 1, $this->hsts, false ) ." />";
   if (is_multisite() && $this->set_rewriterule_per_site) _e("On multisite with per site activation, activating HSTS is not possible","really-simple-ssl");
-  if ($this->do_not_edit_htaccess || !is_writable($this->ABSpath.".htaccess")) _e("You have to enable htaccess editing to use this option.","really-simple-ssl");
+  if ($this->do_not_edit_htaccess || !is_writable($this->ABSpath.".htaccess")) _e("You cannot use this option when .htaccess is not writable, or 'stop editing the .htaccess file' is enabled.","really-simple-ssl");
 
 }
 
@@ -2314,8 +2389,9 @@ echo '<input id="rlrsssl_options" onClick="return confirm(\''.__("Are you sure y
  */
 
 public function get_option_do_not_edit_htaccess() {
-$options = get_option('rlrsssl_options');
-echo '<input id="rlrsssl_options" name="rlrsssl_options[do_not_edit_htaccess]" size="40" type="checkbox" value="1"' . checked( 1, $this->do_not_edit_htaccess, false ) ." />";
+  $options = get_option('rlrsssl_options');
+  echo '<input id="rlrsssl_options" name="rlrsssl_options[do_not_edit_htaccess]" size="40" type="checkbox" value="1"' . checked( 1, $this->do_not_edit_htaccess, false ) ." />";
+  if (!$this->do_not_edit_htaccess && !is_writable($this->ABSpath.".htaccess")) _e(".htaccess is currently not writable.","really-simple-ssl");
 }
 
 /**
@@ -2359,7 +2435,7 @@ public function check_plugin_conflicts() {
       if ($this->debug) {$this->trace_log("No conflict issues with Yoast SEO detected");}
     }
   }
-  
+
   //not necessary anymore after woocommerce 2.5
   if (class_exists('WooCommerce') && defined( 'WOOCOMMERCE_VERSION' ) && version_compare( WOOCOMMERCE_VERSION, '2.5', '<' ) ) {
     $woocommerce_force_ssl_checkout = get_option("woocommerce_force_ssl_checkout");
