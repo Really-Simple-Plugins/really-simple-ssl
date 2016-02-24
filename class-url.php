@@ -38,7 +38,10 @@ class rlrsssl_url {
 
   public function get_contents($url, $timeout = 5, $iteration=0) {
     //prevent infinite loops.
-    if ($iteration>5) return "";
+    if ($iteration>5) {
+      $this->error_number = 404;
+      return "";
+    }
     //preferrably with curl, but else with file get contents
     if ($this->is_curl_installed()) {
 
