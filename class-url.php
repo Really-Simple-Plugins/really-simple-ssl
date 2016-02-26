@@ -64,8 +64,9 @@ class rlrsssl_url {
         }
 
         curl_close($ch);
-        if ($http_code != 200) { //301, 302, 403, 404, etc.
+        if ($this->error_number==0 && $http_code != 200) { //301, 302, 403, 404, etc.
             if ($http_code == 301 || $http_code == 302) {
+                error_log("301 or 302");
                 list($header) = explode("\r\n\r\n", $filecontents, 2);
                 $matches = array();
                 preg_match("/(Location:|URI:)[^(\n)]*/", $header, $matches);
