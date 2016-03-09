@@ -1,9 +1,20 @@
 <?php
 defined('ABSPATH') or die("you do not have acces to this page!");
+if ( ! class_exists( 'rsssl_cache' ) ) {
+  class rsssl_cache {
+    private $capability  = 'manage_options';
+    private static $_this;
 
-class rlrsssl_cache {
-  private
-       $capability  = 'manage_options';
+  function __construct() {
+    if ( isset( self::$_this ) )
+        wp_die( sprintf( __( '%s is a singleton class and you cannot create a second instance.','really-simple-ssl' ), get_class( $this ) ) );
+
+    self::$_this = $this;
+  }
+
+  static function this() {
+    return self::$_this;
+  }
 
   /**
    * Flushes the cache for popular caching plugins to prevent mixed content errors
@@ -57,4 +68,5 @@ class rlrsssl_cache {
     }
   }
 
+}//class closure 
 }

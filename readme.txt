@@ -5,7 +5,7 @@ Tags: mixed content, insecure content, secure website, website security, ssl, ht
 Requires at least: 4.2
 License: GPL2
 Tested up to: 4.4
-Stable tag: 2.2.18
+Stable tag: 2.2.20
 
 No setup required! You only need an SSL certificate, and this plugin will do the rest.
 
@@ -13,9 +13,10 @@ No setup required! You only need an SSL certificate, and this plugin will do the
 The really simple ssl plugin automatically detects your settings and configures your website.
 To keep it lightweight, the options are kept to a minimum. The entire site will move to SSL.
 
-= Two simple steps for setup: =
-* Get an SSL certificate from your hosting provider (can't do that for you, sorry).
-* Activate this plugin.
+= Three simple steps for setup: =
+* Get an SSL certificate (can't do that for you, sorry).
+* Activate this plugin
+* Enable SSL with one click
 
 But always backup before you go! If you do not have a sound backup policy, start having one! For a snapshot, install duplicator.
 
@@ -95,7 +96,7 @@ For detailed instructions on how to find mixed content read this [article](https
 define( 'RLRSSSL_DO_NOT_EDIT_HTACCESS', TRUE);
 
 = Parts of my site aren’t loading =
-* If parts of your site aren't loading, you might have external resources that are not able to load on ssl. Check the Google console.
+* If parts of your site aren't loading, you might have external resources that are not able to load on ssl.
 
 = How to uninstall when website/backend is not accessible =
 Though this plugin is extensively tested, this can still happen. However, this is very easy to fix (you'll need ftp access):
@@ -133,8 +134,19 @@ You can activate ssl per site on subdomain and domain mapping installs. On subfo
 Yes, default the plugin redirects permanently with [R=301].
 
 == Changelog ==
+= 2.3.1 =
+* Removed "activate ssl" option when no ssl is detected.
+
+= 2.3.0 =
+* After activation, you're asked if you want to enable
+* Added a notice if .htaccess is not writable
+
+= 2.2.20 =
+Fixed a bug in SSL detection
+
 = 2.2.19 =
 Changed followlocation in curl to an alternative method, as this gives issues when safemode or open_basedir is enabled.
+Added dismissable message when redirects cannot be inserted in the .htaccess
 
 = 2.2.18 =
 Fixed bug in logging of curl detection

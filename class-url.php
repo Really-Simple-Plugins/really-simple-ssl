@@ -6,13 +6,20 @@ defined('ABSPATH') or die("you do not have acces to this page!");
 
 */
 
-class rlrsssl_url {
-  public $error_number = 0;
+if ( ! class_exists( 'rsssl_url' ) ) {
+  class rsssl_url {
+    public $error_number = 0;
+    private static $_this;
 
+  function __construct() {
+    if ( isset( self::$_this ) )
+        wp_die( sprintf( __( '%s is a singleton class and you cannot create a second instance.','really-simple-ssl' ), get_class( $this ) ) );
 
-  public function __construct()
-  {
+    self::$_this = $this;
+  }
 
+  static function this() {
+    return self::$_this;
   }
 
 
@@ -53,6 +60,7 @@ class rlrsssl_url {
         curl_setopt($ch,CURLOPT_FRESH_CONNECT, TRUE);
         curl_setopt($ch,CURLOPT_SSL_VERIFYPEER, false);
         curl_setopt($ch,CURLOPT_SSL_VERIFYHOST, false);
+        curl_setopt($ch,CURLOPT_USERAGENT, 'User-Agent: curl/7.39.0');
         $filecontents = curl_exec($ch);
 
         $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
@@ -66,7 +74,6 @@ class rlrsssl_url {
         curl_close($ch);
         if ($this->error_number==0 && $http_code != 200) { //301, 302, 403, 404, etc.
             if ($http_code == 301 || $http_code == 302) {
-                error_log("301 or 302");
                 list($header) = explode("\r\n\r\n", $filecontents, 2);
                 $matches = array();
                 preg_match("/(Location:|URI:)[^(\n)]*/", $header, $matches);
@@ -79,7 +86,7 @@ class rlrsssl_url {
                   $this->error_number = 404;
                   return "";
                 }
-            } else {
+            } else { //403, 404
               $this->error_number = $http_code;
               return "";
             }
@@ -200,3 +207,4 @@ class rlrsssl_url {
       return $error_codes[$error_no];
     }
   }
+}
