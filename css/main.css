@@ -2,9 +2,6 @@
   list-style-type: square;
   margin-left:30px;
 }
-.rsssl-result ul .error {
-  color:red;
-}
 
 .activate-ssl .button {
   margin-bottom:20px;

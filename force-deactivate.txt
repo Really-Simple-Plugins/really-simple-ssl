@@ -24,14 +24,13 @@
   #Load plugin functionality
   require_once( dirname( __FILE__ ) .  '/class-front-end.php' );
   require_once( dirname( __FILE__ ) .  '/class-admin.php' );
-  $rl_rsssl = new rl_rsssl_admin();
-
-
+  $rl_rsssl = new rsssl_admin();
 
   $step = 1;
   echo "<h1>Force deactivation of Really Simple SSL</h1>";
   echo $step.". Resetting options"."<br>";
-  $rl_rsssl->deactivate();
+  $networkwide = is_multisite();
+  $rl_rsssl->deactivate($networkwide);
   $step++;
 
   //add feedback on writable files.
