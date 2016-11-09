@@ -89,6 +89,9 @@ if ( ! class_exists( 'rsssl_url' ) ) {
             } else { //403, 404
               $this->error_number = $http_code;
             }
+        } elseif( ($this->error_number==0) && ($http_code == 200)) {
+          error_log("returning filecontents through curl.");
+          return $filecontents;
         }
       }
       //if we are here, curl didn't return a valid response, so we try with file_get_contents
