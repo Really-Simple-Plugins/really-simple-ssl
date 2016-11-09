@@ -30,7 +30,6 @@ defined('ABSPATH') or die("you do not have acces to this page!");
   public $do_not_edit_htaccess              = FALSE;
   public $htaccess_warning_shown            = FALSE;
   public $wpmu_subfolder_warning_shown      = FALSE;
-  public $yoasterror_shown                  = FALSE;
   public $ssl_success_message_shown         = FALSE;
   public $hsts                              = FALSE;
   public $debug							                = TRUE;
@@ -144,7 +143,6 @@ defined('ABSPATH') or die("you do not have acces to this page!");
     add_action('wp_ajax_dismiss_htaccess_warning', array($this,'dismiss_htaccess_warning_callback') );
     add_action('wp_ajax_dismiss_wpmu_subfolder_warning', array($this,'dismiss_wpmu_subfolder_warning_callback') );
     add_action('wp_ajax_dismiss_success_message', array($this,'dismiss_success_message_callback') );
-    add_action('wp_ajax_dismiss_yoasterror', array($this,'dismiss_yoasterror_callback') );
 
     //handle notices
     add_action('admin_notices', array($this,'show_notices'));
@@ -376,7 +374,6 @@ defined('ABSPATH') or die("you do not have acces to this page!");
       $this->hsts                               = isset($options['hsts']) ? $options['hsts'] : FALSE;
       $this->htaccess_warning_shown             = isset($options['htaccess_warning_shown']) ? $options['htaccess_warning_shown'] : FALSE;
       $this->wpmu_subfolder_warning_shown       = isset($options['wpmu_subfolder_warning_shown']) ? $options['wpmu_subfolder_warning_shown'] : FALSE;
-      $this->yoasterror_shown                   = isset($options['yoasterror_shown']) ? $options['yoasterror_shown'] : FALSE;
       $this->ssl_success_message_shown          = isset($options['ssl_success_message_shown']) ? $options['ssl_success_message_shown'] : FALSE;
       $this->plugin_db_version                  = isset($options['plugin_db_version']) ? $options['plugin_db_version'] : "1.0";
       $this->debug                              = isset($options['debug']) ? $options['debug'] : FALSE;
@@ -994,7 +991,6 @@ protected function get_server_variable_fix_code(){
       'hsts'                              => $this->hsts,
       'htaccess_warning_shown'            => $this->htaccess_warning_shown,
       'wpmu_subfolder_warning_shown'      => $this->wpmu_subfolder_warning_shown,
-      'yoasterror_shown'                  => $this->yoasterror_shown,
       'ssl_success_message_shown'         => $this->ssl_success_message_shown,
       'autoreplace_insecure_links'        => $this->autoreplace_insecure_links,
       'plugin_db_version'                 => $this->plugin_db_version,
@@ -1050,7 +1046,6 @@ protected function get_server_variable_fix_code(){
     $this->hsts                                 = FALSE;
     $this->htaccess_warning_shown               = FALSE;
     $this->wpmu_subfolder_warning_shown         = FALSE;
-    $this->yoasterror_shown                     = FALSE;
     $this->ssl_success_message_shown            = FALSE;
     $this->autoreplace_insecure_links           = TRUE;
     $this->do_not_edit_htaccess                 = FALSE;
@@ -1800,18 +1795,6 @@ public function show_notices()
           </p></div>
           <?php
         }
-
-        if (!$this->yoasterror_shown && isset($this->plugin_conflict["YOAST_FORCE_REWRITE_TITLE"]) && $this->plugin_conflict["YOAST_FORCE_REWRITE_TITLE"]) {
-            add_action('admin_print_footer_scripts', array($this, 'insert_dismiss_yoasterror'));
-            ?>
-            <div id="message" class="error fade notice is-dismissible rlrsssl-yoast"><p>
-            <?php _e("Really Simple SSL has a conflict with another plugin.","really-simple-ssl");?><br>
-            <?php _e("The force rewrite titles option in Yoast SEO prevents Really Simple SSL plugin from fixing mixed content.","really-simple-ssl");?><br>
-            <a href="admin.php?page=wpseo_titles"><?php _e("Show me this setting","really-simple-ssl");?></a>
-
-            </p></div>
-            <?php
-          }
       }
     }
 }
@@ -1900,34 +1883,6 @@ public function insert_dismiss_wpmu_subfolder_warning() {
   <?php
 }
 
-/**
- * Insert some ajax script to dismis the ssl fail message, and stop nagging about it
- *
- * @since  2.0
- *
- * @access public
- *
- */
-
-public function insert_dismiss_yoasterror() {
-  $ajax_nonce = wp_create_nonce( "really-simple-ssl" );
-  ?>
-  <script type='text/javascript'>
-    jQuery(document).ready(function($) {
-        $(".rlrsssl-yoast.notice.is-dismissible").on("click", ".notice-dismiss", function(event){
-              var data = {
-                'action': 'dismiss_yoasterror',
-                'security': '<?php echo $ajax_nonce; ?>'
-              };
-              $.post(ajaxurl, data, function(response) {
-
-              });
-          });
-    });
-  </script>
-  <?php
-}
-
   /**
    * Process the ajax dismissal of the success message.
    *
@@ -1974,22 +1929,6 @@ public function dismiss_wpmu_subfolder_warning_callback() {
   global $wpdb;
   check_ajax_referer( 'really-simple-ssl', 'security' );
   $this->wpmu_subfolder_warning_shown = TRUE;
-  $this->save_options();
-  wp_die(); // this is required to terminate immediately and return a proper response
-}
-
-/**
- * Process the ajax dismissal of the wpmu subfolder message
- *
- * @since  2.1
- *
- * @access public
- *
- */
-
-public function dismiss_yoasterror_callback() {
-  check_ajax_referer( 'really-simple-ssl', 'security' );
-  $this->yoasterror_shown = TRUE;
   $this->save_options();
   wp_die(); // this is required to terminate immediately and return a proper response
 }
@@ -2325,6 +2264,11 @@ public function configuration_page_more(){
   </td><td></td>
   </tr>
 </table>
+<!--
+<a href="https://www.webwatchdog.io/?ref=rogierlankhorst&campaign=really-simple-ssl">
+Web Watch Dog
+</a>
+-->
 
   <?php
       //}
@@ -2402,7 +2346,6 @@ public function options_validate($input) {
   $newinput['ssl_success_message_shown']          = $this->ssl_success_message_shown;
   $newinput['htaccess_warning_shown']             = $this->htaccess_warning_shown;
   $newinput['wpmu_subfolder_warning_shown']       = $this->wpmu_subfolder_warning_shown;
-  $newinput['yoasterror_shown']                   = $this->yoasterror_shown;
   $newinput['plugin_db_version']                  = $this->plugin_db_version;
   $newinput['ssl_enabled']                        = $this->ssl_enabled;
   $newinput['ssl_enabled_networkwide']            = $this->ssl_enabled_networkwide;
@@ -2542,16 +2485,6 @@ echo '<input id="rlrsssl_options" onClick="return confirm(\''.__("Are you sure y
   }
 
   public function check_plugin_conflicts() {
-    //Yoast conflict only occurs when mixed content fixer is active
-    if ($this->autoreplace_insecure_links && defined('WPSEO_VERSION') ) {
-      $wpseo_options  = get_option("wpseo_titles");
-      $forcerewritetitle = isset($wpseo_options['forcerewritetitle']) ? $wpseo_options['forcerewritetitle'] : FALSE;
-      if ($forcerewritetitle) {
-        $this->plugin_conflict["YOAST_FORCE_REWRITE_TITLE"] = TRUE;
-        if ($this->debug) {$this->trace_log("Force rewrite titles set in Yoast plugin, which prevents really simple ssl from replacing mixed content");}
-      }
-    }
-
     //not necessary anymore after woocommerce 2.5
     if (class_exists('WooCommerce') && defined( 'WOOCOMMERCE_VERSION' ) && version_compare( WOOCOMMERCE_VERSION, '2.5', '<' ) ) {
       $woocommerce_force_ssl_checkout = get_option("woocommerce_force_ssl_checkout");

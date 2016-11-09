@@ -115,7 +115,7 @@ if ( ! class_exists( 'rsssl_admin_mixed_content_fixer' ) ) {
      //'/<script [^>]*?src=[\'"]\K(http:\/\/)(?=[^\'"]+)/i',
    );
    $str = preg_replace($pattern, 'https://', $str);
-   $str = str_replace ( "<body " , '<body data-rsssl="1" ', $str);
+   $str = str_replace ( "<body " , '<body data-rsssl=1 ', $str);
    return apply_filters("rsssl_fixer_output", $str);
  }
 
