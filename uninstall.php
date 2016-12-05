@@ -5,6 +5,7 @@ if ( !defined( 'WP_UNINSTALL_PLUGIN' ) ) {
 }
 
 delete_all_options('rlrsssl_options');
+delete_all_options('rlrsssl_network_options');
 
 function delete_all_options($option_name) {
   delete_option( $option_name );

@@ -1248,12 +1248,16 @@ protected function get_server_variable_fix_code(){
 
    public function get_plugin_url(){
      $this->plugin_url = trailingslashit(plugin_dir_url( __FILE__ ));
+     $https_home_url = str_replace("http://", "https://", home_url());
+     $https_plugin_url = str_replace("http://", "https://", $this->plugin_url);
      //do not force to ssl yet, we need it also in non ssl situations.
 
      //in some case we get a relative url here, so we check that.
      //we compare to urls replaced to https, in case one of them is still on http.
- 	   if (strpos(str_replace("http://","https://",$this->plugin_url),str_replace("http://","https://",home_url()))===FALSE) {
+ 	   if ( (strpos($https_plugin_url, "https://")===FALSE ) && (strpos($https_plugin_url, $https_home_url)===FALSE) ) {
        //make sure we do not have a slash at the start
+       //homeurl https://xn--hndlavede-52a.dk
+       //plugin url https:/h%C3%A5ndlavede.dk/
        $this->plugin_url = ltrim($this->plugin_url,"/");
        $this->plugin_url = trailingslashit(home_url()).$this->plugin_url;
      }
@@ -1262,7 +1266,7 @@ protected function get_server_variable_fix_code(){
      if (is_multisite() && ( !is_main_site(get_current_blog_id()) ) && (!$this->is_multisite_subfolder_install()) ) {
        $mainsiteurl = trailingslashit(str_replace("http://","https://",network_site_url()));
 
-       $home = trailingslashit(str_replace("http://","https://",home_url()));
+       $home = trailingslashit($https_home_url);
        $this->plugin_url = str_replace($mainsiteurl, $home, $this->plugin_url);
 
        //return http link if original url is http.
@@ -2264,11 +2268,7 @@ public function configuration_page_more(){
   </td><td></td>
   </tr>
 </table>
-<!--
-<a href="https://www.webwatchdog.io/?ref=rogierlankhorst&campaign=really-simple-ssl">
-Web Watch Dog
-</a>
--->
+
 
   <?php
       //}
@@ -2284,6 +2284,11 @@ Web Watch Dog
   <?php
     }
   }
+  //show a little add for the free users
+  ?>
+  <a href="https://www.webwatchdog.io/?ref=rogierlankhorst" title="Web Watchdog"><img src="https://www.webwatchdog.io/wp-content/uploads/2016/11/wwd-300x250-ver1.jpg" alt="Web Watchdog" /></a>
+
+  <?php
 }
 
   /**

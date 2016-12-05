@@ -72,6 +72,7 @@ If you are experiencing redirect loops on your site, try these [instructions](ht
 == Changelog ==
 = 2.4.2 =
 * Removed Yoast notices
+* Fixed bug where network options were not removed properly on deactivation 
 * Changed mixed content marker to variation without quotes, to prevent issues with scripting etc.
 
 = 2.4.1 =
