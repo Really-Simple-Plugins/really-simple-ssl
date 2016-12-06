@@ -3,7 +3,7 @@ Contributors: RogierLankhorst
 Tags: SSL, https, force SSL, mixed content, insecure content, secure website, website security, tls, security, secure socket layers, hsts
 Requires at least: 4.2
 License: GPL2
-Tested up to: 4.6
+Tested up to: 4.7
 Stable tag: 2.4.2
 
 No setup required! You only need an SSL certificate, and this plugin will do the rest.
@@ -72,7 +72,7 @@ If you are experiencing redirect loops on your site, try these [instructions](ht
 == Changelog ==
 = 2.4.2 =
 * Removed Yoast notices
-* Fixed bug where network options were not removed properly on deactivation 
+* Fixed bug where network options were not removed properly on deactivation
 * Changed mixed content marker to variation without quotes, to prevent issues with scripting etc.
 
 = 2.4.1 =
