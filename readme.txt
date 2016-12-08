@@ -4,7 +4,7 @@ Tags: SSL, https, force SSL, mixed content, insecure content, secure website, we
 Requires at least: 4.2
 License: GPL2
 Tested up to: 4.7
-Stable tag: 2.4.2
+Stable tag: 2.4.3
 
 No setup required! You only need an SSL certificate, and this plugin will do the rest.
 
@@ -70,10 +70,16 @@ For detailed instructions on how to find mixed content read this [article](https
 If you are experiencing redirect loops on your site, try these [instructions](https://really-simple-ssl.com/knowledge-base/my-website-is-in-a-redirect-loop/).
 
 == Changelog ==
+= 2.4.3 =
+* Removed banner in admin
+
 = 2.4.2 =
-* Removed Yoast notices
-* Fixed bug where network options were not removed properly on deactivation
-* Changed mixed content marker to variation without quotes, to prevent issues with scripting etc.
+* Tweak: Added reload over https link for when SSL was not detected
+* Fixed: After reloading page when the .htaccess message shows, .htaccess is now rewritten.
+* Tweak: Removed Yoast notices
+* Tested for WP 4.7
+* Fixed: bug where network options were not removed properly on deactivation
+* Tweak: Changed mixed content marker to variation without quotes, to prevent issues with scripting etc.
 
 = 2.4.1 =
 * Tweak: improved HSTS check

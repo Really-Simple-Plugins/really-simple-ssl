@@ -1,3 +1,33 @@
+.rsssl-main {
+  width:80%;
+  float:left;
+}
+
+.rsssl-sidebar {
+  width:20%;
+  float:left;
+}
+
+.rsssl-sidebar h4 {
+  font-size:14px
+  font-style:italic;
+}
+
+.rsssl-wrapper {
+  padding:30px;
+}
+
+@media screen and (max-width: 800px) {
+  .rsssl-sidebar, .rsssl-main {
+    width:100%;
+  }
+}
+
+.rsssl-sidebar img {
+  max-width:100%;
+  height:inherit;
+}
+
 .activate-ssl ul, .rsssl-result ul, .rsssl_bullets {
   list-style-type: square;
   margin-left:30px;

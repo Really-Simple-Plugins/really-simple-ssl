@@ -96,7 +96,9 @@ defined('ABSPATH') or die("you do not have acces to this page!");
       - No SSL detected
     */
 
-    if ($this->clicked_activate_ssl() || !$this->ssl_enabled || !$this->site_has_ssl || $is_on_settings_page) {
+    if (//when htaccess should be written again
+        (!$this->htaccess_warning_shown && $this->ssl_enabled && !$this->htaccess_contains_redirect_rules() && $this->htaccess_redirect_allowed())
+        || ($this->clicked_activate_ssl() || !$this->ssl_enabled || !$this->site_has_ssl || $is_on_settings_page)) {
       $this->trace_log("** Really Simple SSL debug mode **");
       if (is_multisite()) $this->build_domain_list();//has to come after clicked_activate_ssl, otherwise this domain won't get counted.
       $this->detect_configuration();
@@ -281,10 +283,13 @@ defined('ABSPATH') or die("you do not have acces to this page!");
     if (!$this->wpconfig_ok()) return;
     if (!current_user_can($this->capability)) return;
 
-    if (!$this->site_has_ssl) {  ?>
+    if (!$this->site_has_ssl) {
+      global $wp;
+      $current_url = "https://".$_SERVER["HTTP_HOST"].$_SERVER["REQUEST_URI"]
+      ?>
       <div id="message" class="error fade notice activate-ssl">
-      <p><?php _e("No SSL was detected. If you do have an ssl certificate, try to change your current url in the browser address bar to https.","really-simple-ssl");?>
-        <?php _e("You can check your certificate on ","really-simple-ssl");?><a target="_blank" href="https://www.ssllabs.com/ssltest/">Qualys SSL Labs</a>
+      <p><?php _e("No SSL was detected. If you do have an ssl certificate, try to reload this page over https by clicking this link:","really-simple-ssl");?>&nbsp;<a href="<?php echo $current_url?>"><?php _e("reload over https.","really-simple-ssl");?></a>
+        <?php _e("You can check your certificate on","really-simple-ssl");?>&nbsp;<a target="_blank" href="https://www.ssllabs.com/ssltest/">Qualys SSL Labs</a>
       </p>
     </div>
     <?php } ?>
@@ -334,7 +339,7 @@ defined('ABSPATH') or die("you do not have acces to this page!");
 
   public function show_pro(){
     ?>
-  <p ><?php _e('You can also let the automatic scan of the pro version handle this for you, and get premium support and increased security with HSTS included','really-simple-ssl');?>, <a target="_blank" href="<?php echo $this->pro_url;?>"><?php _e("check out Really Simple SSL Premium","really-simple-ssl");?></a></p>
+  <p ><?php _e('You can also let the automatic scan of the pro version handle this for you, and get premium support and increased security with HSTS included.','really-simple-ssl');?>&nbsp;<a target="_blank" href="<?php echo $this->pro_url;?>"><?php _e("Check out Really Simple SSL Premium","really-simple-ssl");?></a></p>
     <?php
   }
 
@@ -502,6 +507,7 @@ defined('ABSPATH') or die("you do not have acces to this page!");
       $this->trace_log("** Configuring SSL **");
       if ($this->site_has_ssl || $this->force_ssl_without_detection) {
         //when a known ssl_type was found, test if the redirect works
+
         if ($this->ssl_type != "NA")
             $this->test_htaccess_redirect();
 
@@ -1358,13 +1364,16 @@ protected function get_server_variable_fix_code(){
 
     $htaccess = file_get_contents($this->ABSpath.".htaccess");
     //use old way of detection for older version of htaccess rules.
+    //this way, when users have enabled "stop editing htaccess", no changes will be made.
     if ($this->contains_previous_version($htaccess)){
       return $this->contains_rsssl_rules($htaccess);
     } else {
       $needle = "RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]";
       if(strpos($htaccess, $needle) === FALSE){
+        $this->trace_log(".htaccess does not contain default Really Simple SSL redirect");
         return false;
       } else {
+        $this->trace_log(".htaccess contains redirect");
         return true;
       }
     }
@@ -1467,7 +1476,7 @@ protected function get_server_variable_fix_code(){
       }
 
       $htaccess = file_get_contents($this->ABSpath.".htaccess");
-      if(!$this->contains_rsssl_rules($htaccess)){
+      if(!$this->htaccess_contains_redirect_rules()){
 
         if (!is_writable($this->ABSpath.".htaccess")) {
           //set the javascript redirect as fallback, because .htaccess couldn't be edited.
@@ -1576,11 +1585,9 @@ protected function get_server_variable_fix_code(){
 
   public function get_redirect_rules($manual=false) {
       if (!current_user_can($this->capability)) return;
-
+      $this->trace_log("retrieving redirect rules");
       //only add the redirect rules when a known type of ssl was detected. Otherwise, we use https.
-      $rule="\n";
-
-      $rule .= "# BEGIN rlrssslReallySimpleSSL rsssl_version[".$this->plugin_version."]\n";
+      $rule = "";
 
       //if the htaccess test was successfull, and we know the redirectype, edit
       if ($manual || ($this->htaccess_test_success && ($this->ssl_type != "NA"))) {
@@ -1646,7 +1653,9 @@ protected function get_server_variable_fix_code(){
         $rule .= "</IfModule>"."\n";
       }
 
-      $rule .= "# END rlrssslReallySimpleSSL"."\n";
+      if (strlen($rule)>0) {
+        $rule = "\n"."# BEGIN rlrssslReallySimpleSSL rsssl_version[".$this->plugin_version."]\n".$rule."# END rlrssslReallySimpleSSL"."\n";
+      }
 
       $rule = preg_replace("/\n+/","\n", $rule);
       return $rule;
@@ -1780,7 +1789,9 @@ public function show_notices()
         ?>
         <div id="message" class="updated fade notice is-dismissible rlrsssl-success">
           <p>
-            <?php echo __("SSL activated!","really-simple-ssl");?>
+            <?php _e("SSL activated!","really-simple-ssl");?>&nbsp;
+            <?php _e("Don't forget to change your settings in Google Analytics en Webmaster tools.","really-simple-ssl");?>&nbsp;
+            <a target="_blank" href="https://really-simple-ssl.com/knowledge-base/how-to-setup-google-analytics-and-google-search-consolewebmaster-tools/"><?php _e("More info.","really-simple-ssl");?></a>
           </p>
         </div>
         <?php
@@ -2022,6 +2033,8 @@ public function settings_page() {
   if ( isset ( $_GET['tab'] ) ) $this->admin_tabs($_GET['tab']); else $this->admin_tabs('configuration');
   if ( isset ( $_GET['tab'] ) ) $tab = $_GET['tab']; else $tab = 'configuration';
 
+  ?><div class="rsssl-container"><div class="rsssl-main"><?php
+
   switch ( $tab ){
       case 'configuration' :
       /*
@@ -2176,6 +2189,13 @@ public function settings_page() {
   //possibility to hook into the tabs.
   do_action("show_tab_{$tab}");
      ?>
+  </div><!-- end main-->
+    <div class="rsssl-sidebar">
+      <div class="rsssl-wrapper">
+
+      </div>
+    </div>
+  </div><!-- end container -->
 <?php
 }
 
@@ -2215,7 +2235,7 @@ public function img($type) {
        global $rsssl_admin_page;
        if( $hook != $rsssl_admin_page && $this->ssl_enabled )
            return;
-       wp_register_style( 'rlrsssl-css', $this->plugin_url . 'css/main.css');
+       wp_register_style( 'rlrsssl-css', $this->plugin_url . 'css/main.css', "", $this->plugin_version);
        wp_enqueue_style( 'rlrsssl-css');
    }
 
@@ -2242,6 +2262,16 @@ public function setup_admin_page(){
     add_filter("plugin_action_links_$plugin", array($this,'plugin_settings_link'));
   }
 }
+
+
+
+  /*
+
+        feedback for the free users. Pro users see something different.
+
+  */
+
+
 
 public function configuration_page_more(){
 
@@ -2284,11 +2314,7 @@ public function configuration_page_more(){
   <?php
     }
   }
-  //show a little add for the free users
-  ?>
-  <a href="https://www.webwatchdog.io/?ref=rogierlankhorst" title="Web Watchdog"><img src="https://www.webwatchdog.io/wp-content/uploads/2016/11/wwd-300x250-ver1.jpg" alt="Web Watchdog" /></a>
 
-  <?php
 }
 
   /**
@@ -2311,11 +2337,6 @@ public function create_form(){
         add_settings_field('id_autoreplace_insecure_links', __("Auto replace mixed content","really-simple-ssl"), array($this,'get_option_autoreplace_insecure_links'), 'rlrsssl', 'rlrsssl_settings');
         add_settings_field('id_javascript_redirect', __("Enable javascript redirection to ssl","really-simple-ssl"), array($this,'get_option_javascript_redirect'), 'rlrsssl', 'rlrsssl_settings');
       }
-
-      //if(!$this->site_has_ssl) {
-        //no sense in showing force or ignore warning options when ssl is detected: everything should work fine
-        //add_settings_field('id_force_ssl_without_detection', __("Force SSL without detection","really-simple-ssl"), array($this,'get_option_force_ssl_withouth_detection'), 'rlrsssl', 'rlrsssl_settings');
-      //}
 
       add_settings_field('id_debug', __("Debug","really-simple-ssl"), array($this,'get_option_debug'), 'rlrsssl', 'rlrsssl_settings');
     }
