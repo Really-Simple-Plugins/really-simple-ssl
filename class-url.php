@@ -43,10 +43,11 @@ if ( ! class_exists( 'rsssl_url' ) ) {
   */
 
 
-  public function get_contents($url, $timeout = 5, $iteration=0) {
+  public function get_contents($url, $timeout = 30, $iteration=0) {
+    $filecontents="";
     $use_curl = $this->is_curl_installed();
     //prevent infinite loops.
-    if ($iteration>3) {
+    if ($iteration>5) {
       $this->error_number = 404;
       $use_curl = false;
     }
@@ -59,9 +60,9 @@ if ( ! class_exists( 'rsssl_url' ) ) {
         curl_setopt($ch,CURLOPT_RETURNTRANSFER,1);
         curl_setopt($ch,CURLOPT_CONNECTTIMEOUT,$timeout);
         curl_setopt($ch,CURLOPT_FRESH_CONNECT, TRUE);
-        curl_setopt($ch,CURLOPT_SSL_VERIFYPEER, false);
-        curl_setopt($ch,CURLOPT_SSL_VERIFYHOST, false);
-        //curl_setopt($ch,CURLOPT_USERAGENT, 'User-Agent: curl/7.39.0');
+        curl_setopt($ch,CURLOPT_SSL_VERIFYPEER, true);
+        curl_setopt($ch,CURLOPT_SSL_VERIFYHOST, 2);
+        curl_setopt($ch,CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.8.1.13) Gecko/20080311 Firefox/2.0.0.13');
         $filecontents = curl_exec($ch);
 
         $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
@@ -90,15 +91,14 @@ if ( ! class_exists( 'rsssl_url' ) ) {
               $this->error_number = $http_code;
             }
         } elseif( ($this->error_number==0) && ($http_code == 200)) {
-          error_log("returning filecontents through curl.");
           return $filecontents;
         }
       }
       //if we are here, curl didn't return a valid response, so we try with file_get_contents
-      set_error_handler(array($this,'custom_error_handling'));
-      $filecontents = file_get_contents($url);
+      //set_error_handler(array($this,'custom_error_handling'));
+      //$filecontents = file_get_contents($url);
       //errors back to normal
-      restore_error_handler();
+      //restore_error_handler();
       return $filecontents;
   }
 

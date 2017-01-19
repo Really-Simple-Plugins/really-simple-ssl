@@ -36,7 +36,6 @@ defined('ABSPATH') or die("you do not have acces to this page!");
   public $debug_log;
 
   public $plugin_conflict                   = ARRAY();
-  public $plugin_url;
   public $plugin_version;
   public $plugin_db_version;
   public $plugin_upgraded;
@@ -87,13 +86,13 @@ defined('ABSPATH') or die("you do not have acces to this page!");
   public function init() {
     if (!current_user_can($this->capability)) return;
     $is_on_settings_page = $this->is_settings_page();
-    $this->get_plugin_url();//has to be after the domain list was built.
 
     /*
       Detect configuration when:
       - SSL activation just confirmed.
       - on settings page
       - No SSL detected
+
     */
 
     if (//when htaccess should be written again
@@ -762,6 +761,7 @@ defined('ABSPATH') or die("you do not have acces to this page!");
    *
    */
 
+
   public function wpconfig_loadbalancer_fix() {
       $wpconfig_path = $this->find_wp_config_path();
       if (empty($wpconfig_path)) return;
@@ -771,9 +771,13 @@ defined('ABSPATH') or die("you do not have acces to this page!");
       if (strpos($wpconfig, "//Begin Really Simple SSL Load balancing fix")===FALSE ) {
         if (is_writable($wpconfig_path)) {
           $rule  = "\n"."//Begin Really Simple SSL Load balancing fix"."\n";
-          $rule .= 'if (isset($_SERVER["HTTP_X_FORWARDED_PROTO"] ) && "https" == $_SERVER["HTTP_X_FORWARDED_PROTO"] ) {'."\n";
-          $rule .= '$_SERVER["HTTPS"] = "on";'."\n";
-          $rule .= "}"."\n";
+          $rule .= '$server_opts = array("HTTP_CLOUDFRONT_FORWARDED_PROTO" => "https", "HTTP_CF_VISITOR"=>"https", "HTTP_X_FORWARDED_PROTO"=>"https", "HTTP_X_FORWARDED_SSL"=>"on");'."\n";
+          $rule .= 'foreach( $server_opts as $option => $value ) {'."\n";
+          $rule .=   'if ( isset( $_SERVER[ $option ] ) && ( strpos( $_SERVER[ $option ], $value ) !== false ) ) {'."\n";
+          $rule .=     '$_SERVER[ "HTTPS" ] = "on";'."\n";
+          $rule .=     'break;'."\n";
+          $rule .=   '}'."\n";
+          $rule .= '}'."\n";
           $rule .= "//END Really Simple SSL"."\n";
 
           $insert_after = "<?php";
@@ -990,6 +994,7 @@ protected function get_server_variable_fix_code(){
    */
 
   public function save_options() {
+
     //any options added here should also be added to function options_validate()
     $options = array(
       'force_ssl_without_detection'       => $this->force_ssl_without_detection,
@@ -1092,12 +1097,20 @@ protected function get_server_variable_fix_code(){
    */
 
   public function is_ssl_extended(){
-    if(!empty($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] == 'https' || !empty($_SERVER['HTTP_X_FORWARDED_SSL']) && $_SERVER['HTTP_X_FORWARDED_SSL'] == 'on') {
-      $loadbalancer = TRUE;
-    }
-    else {
-      $loadbalancer = FALSE;
-    }
+    $loadbalancer = FALSE;
+		$server_opts = array(
+      'HTTP_CLOUDFRONT_FORWARDED_PROTO' => 'https',
+      'HTTP_CF_VISITOR'=>'https',
+      'HTTP_X_FORWARDED_PROTO'=>'https',
+      'HTTP_X_FORWARDED_SSL'=>'on'
+    );
+
+		foreach( $server_opts as $option => $value ) {
+			if ( isset( $_SERVER[ $option ] ) && ( strpos( $_SERVER[ $option ], $value ) !== false ) ) {
+				$loadbalancer = TRUE;
+				break;
+			}
+		}
 
     if (is_ssl() || $loadbalancer){
       return true;
@@ -1129,15 +1142,14 @@ protected function get_server_variable_fix_code(){
     } else {
       //we're not on SSL, or no server vars were returned, so test with the test-page.
       //plugin url: domain.com/wp-content/etc
-      $plugin_url = str_replace ( "http://" , "https://" , $this->plugin_url);
-      $testpage_url = trailingslashit($plugin_url)."ssl-test-page.php";
+      $testpage_url = trailingslashit($this->test_url())."ssl-test-page.php";
       $this->trace_log("Opening testpage to check for ssl: ".$testpage_url);
       $filecontents = $rsssl_url->get_contents($testpage_url);
 
       if($rsssl_url->error_number!=0) {
         $errormsg = $rsssl_url->get_curl_error($rsssl_url->error_number);
         $this->site_has_ssl = FALSE;
-        $this->trace_log("No ssl detected. the ssl testpage returned an error: ".$errormsg);
+        $this->trace_log("No ssl detected. Possibly blocked by security settings. The ssl testpage returned the error: ".$errormsg);
       } else {
         $this->site_has_ssl = TRUE;
         $this->trace_log("SSL test page loaded successfully");
@@ -1146,18 +1158,12 @@ protected function get_server_variable_fix_code(){
 
     if ($this->site_has_ssl) {
       //check the type of ssl, either by parsing the returned string, or by reading the server vars.
-      if ((strpos($filecontents, "#LOADBALANCER#") !== false) || (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && ($_SERVER['HTTP_X_FORWARDED_PROTO'] == 'https'))) {
+      if ((strpos($filecontents, "#CLOUDFRONT#") !== false) || (isset($_SERVER['HTTP_CLOUDFRONT_FORWARDED_PROTO']) && ($_SERVER['HTTP_CLOUDFRONT_FORWARDED_PROTO'] == 'https'))) {
+        $this->ssl_type = "CLOUDFRONT";
+      } elseif ((strpos($filecontents, "#LOADBALANCER#") !== false) || (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && ($_SERVER['HTTP_X_FORWARDED_PROTO'] == 'https'))) {
         $this->ssl_type = "LOADBALANCER";
-        //check for is_ssl()
-        if (((strpos($filecontents, "#SERVER-HTTPS-ON#") === false) &&
-            (strpos($filecontents, "#SERVER-HTTPS-1#") === false) &&
-            (strpos($filecontents, "#SERVERPORT443#") === false)) || !is_ssl()) {
-          //when Loadbalancer is detected, but is_ssl would return false, we should add some code to wp-config.php
-          if (!$this->wpconfig_has_fixes()) {
-            $this->do_wpconfig_loadbalancer_fix = TRUE;
-          }
-          if ($this->debug) {$this->trace_log("No server variable detected ");}
-        }
+      } elseif ((strpos($filecontents, "#CLOUDFLARE#") !== false) || (isset($_SERVER['HTTP_CF_VISITOR']) && ($_SERVER['HTTP_CF_VISITOR'] == 'https'))) {
+        $this->ssl_type = "CLOUDFLARE";
       } elseif ((strpos($filecontents, "#CDN#") !== false) || (isset($_SERVER['HTTP_X_FORWARDED_SSL']) && ($_SERVER['HTTP_X_FORWARDED_SSL'] == 'on'))) {
         $this->ssl_type = "CDN";
       } elseif ((strpos($filecontents, "#SERVER-HTTPS-ON#") !== false) || (isset($_SERVER['HTTPS']) && strtolower($_SERVER['HTTPS']) == 'on')) {
@@ -1178,11 +1184,21 @@ protected function get_server_variable_fix_code(){
         //no valid response, so set to NA
         $this->ssl_type = "NA";
       }
+
+      //check for is_ssl()
+      if (((strpos($filecontents, "#SERVER-HTTPS-ON#") === false) &&
+          (strpos($filecontents, "#SERVER-HTTPS-1#") === false) &&
+          (strpos($filecontents, "#SERVERPORT443#") === false)) || !is_ssl()) {
+        //when is_ssl would return false, we should add some code to wp-config.php
+        if (!$this->wpconfig_has_fixes()) {
+          $this->do_wpconfig_loadbalancer_fix = TRUE;
+        }
+      }
+
 	    $this->trace_log("ssl type: ".$this->ssl_type);
     }
 
     $this->check_for_siteurl_in_wpconfig();
-
     $this->save_options();
   }
 
@@ -1202,9 +1218,15 @@ protected function get_server_variable_fix_code(){
     if (!current_user_can($this->capability)) return;
 	  if ($this->debug) {$this->trace_log("testing htaccess rules...");}
     $filecontents = "";
-    $plugin_url = str_replace ( "http://" , "https://" , $this->plugin_url);
-    $testpage_url = $plugin_url."testssl/";
+
+    $testpage_url = $this->test_url()."testssl/";
     switch ($this->ssl_type) {
+    case "CLOUDFRONT":
+        $testpage_url .= "cloudfront";
+        break;
+    case "CLOUDFLARE":
+        $testpage_url .= "cloudflare";
+        break;
     case "LOADBALANCER":
         $testpage_url .= "loadbalancer";
         break;
@@ -1225,6 +1247,7 @@ protected function get_server_variable_fix_code(){
     $testpage_url .= ("/ssl-test-page.html");
 
     $filecontents = $rsssl_url->get_contents($testpage_url);
+    $this->trace_log("test page url, click to check manually: ".$testpage_url);
     if (($rsssl_url->error_number==0) && (strpos($filecontents, "#SSL TEST PAGE#") !== false)) {
       $this->htaccess_test_success = TRUE;
 		  if ($this->debug) {$this->trace_log("htaccess rules tested successfully.");}
@@ -1244,7 +1267,7 @@ protected function get_server_variable_fix_code(){
 
 
   /**
-   * Get the url of this plugin
+   * Get an url with which we can test the SSL connection and htaccess redirect rules.
    *
    * @since  2.0
    *
@@ -1252,20 +1275,18 @@ protected function get_server_variable_fix_code(){
    *
    */
 
-   public function get_plugin_url(){
-     $this->plugin_url = trailingslashit(plugin_dir_url( __FILE__ ));
+   public function test_url(){
+     $plugin_url = str_replace("http://", "https://", trailingslashit(rsssl_url) );;
      $https_home_url = str_replace("http://", "https://", home_url());
-     $https_plugin_url = str_replace("http://", "https://", $this->plugin_url);
-     //do not force to ssl yet, we need it also in non ssl situations.
 
      //in some case we get a relative url here, so we check that.
      //we compare to urls replaced to https, in case one of them is still on http.
- 	   if ( (strpos($https_plugin_url, "https://")===FALSE ) && (strpos($https_plugin_url, $https_home_url)===FALSE) ) {
+ 	   if ( (strpos($plugin_url, "https://")===FALSE ) &&
+          (strpos($plugin_url, $https_home_url)===FALSE)
+        ) {
        //make sure we do not have a slash at the start
-       //homeurl https://xn--hndlavede-52a.dk
-       //plugin url https:/h%C3%A5ndlavede.dk/
-       $this->plugin_url = ltrim($this->plugin_url,"/");
-       $this->plugin_url = trailingslashit(home_url()).$this->plugin_url;
+       $plugin_url = ltrim($plugin_url,"/");
+       $plugin_url = trailingslashit(home_url()).$plugin_url;
      }
 
      //for subdomains or domain mapping situations, we have to convert the plugin_url from main site to the subdomain url.
@@ -1273,11 +1294,13 @@ protected function get_server_variable_fix_code(){
        $mainsiteurl = trailingslashit(str_replace("http://","https://",network_site_url()));
 
        $home = trailingslashit($https_home_url);
-       $this->plugin_url = str_replace($mainsiteurl, $home, $this->plugin_url);
+       $plugin_url = str_replace($mainsiteurl, $home, $plugin_url);
 
        //return http link if original url is http.
-       if (strpos(home_url(), "https://")===FALSE) $this->plugin_url = str_replace("https://","http://",$this->plugin_url);
+       //if (strpos(home_url(), "https://")===FALSE) $plugin_url = str_replace("https://","http://",$plugin_url);
      }
+
+     return $plugin_url;
    }
 
 
@@ -1354,28 +1377,26 @@ protected function get_server_variable_fix_code(){
 
   /*
     Checks if the htaccess contains redirect rules.
+
+    returns true when not existing.
+
   */
 
   public function htaccess_contains_redirect_rules() {
+
     if (!file_exists($this->ABSpath.".htaccess")) {
       $this->trace_log(".htaccess not found in ".$this->ABSpath);
       return true; //do not give an error in this case
     }
 
     $htaccess = file_get_contents($this->ABSpath.".htaccess");
-    //use old way of detection for older version of htaccess rules.
-    //this way, when users have enabled "stop editing htaccess", no changes will be made.
-    if ($this->contains_previous_version($htaccess)){
-      return $this->contains_rsssl_rules($htaccess);
+
+    $needle = "RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]";
+    if(strpos($htaccess, $needle) !== FALSE || $this->contains_rsssl_rules($htaccess)){
+      return true;
     } else {
-      $needle = "RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]";
-      if(strpos($htaccess, $needle) === FALSE){
-        $this->trace_log(".htaccess does not contain default Really Simple SSL redirect");
-        return false;
-      } else {
-        $this->trace_log(".htaccess contains redirect");
-        return true;
-      }
+      $this->trace_log(".htaccess does not contain default Really Simple SSL redirect");
+      return false;
     }
 
   }
@@ -1489,14 +1510,16 @@ protected function get_server_variable_fix_code(){
         $rules = $this->get_redirect_rules();
 
         //insert rules before wordpress part.
-        $wptag = "# BEGIN WordPress";
-        if (strpos($htaccess, $wptag)!==false) {
-            $htaccess = str_replace($wptag, $rules.$wptag, $htaccess);
-        } else {
-            $htaccess = $htaccess.$rules;
-        }
+        if (strlen($rules)>0) {
+          $wptag = "# BEGIN WordPress";
+          if (strpos($htaccess, $wptag)!==false) {
+              $htaccess = str_replace($wptag, $rules.$wptag, $htaccess);
+          } else {
+              $htaccess = $htaccess.$rules;
+          }
 
-        file_put_contents($this->ABSpath.".htaccess", $htaccess);
+          file_put_contents($this->ABSpath.".htaccess", $htaccess);
+        }
 
     } elseif (($this->is_settings_page()) || (is_multisite() && !$this->ssl_enabled_networkwide) || ($this->hsts!=$this->contains_hsts())) {
 
@@ -1522,13 +1545,15 @@ protected function get_server_variable_fix_code(){
         $rules = $this->get_redirect_rules();
 
         //insert rules before wordpress part.
-        $wptag = "# BEGIN WordPress";
-        if (strpos($htaccess, $wptag)!==false) {
-            $htaccess = str_replace($wptag, $rules.$wptag, $htaccess);
-        } else {
-            $htaccess = $htaccess.$rules;
+        if (strlen($rules)>0) {
+          $wptag = "# BEGIN WordPress";
+          if (strpos($htaccess, $wptag)!==false) {
+              $htaccess = str_replace($wptag, $rules.$wptag, $htaccess);
+          } else {
+              $htaccess = $htaccess.$rules;
+          }
+          file_put_contents($this->ABSpath.".htaccess", $htaccess);
         }
-        file_put_contents($this->ABSpath.".htaccess", $htaccess);
       }
   }
 
@@ -1599,12 +1624,16 @@ protected function get_server_variable_fix_code(){
             $rule .= "RewriteCond %{HTTPS} !=on [NC]"."\n";
         } elseif ($this->ssl_type == "SERVER-HTTPS-1") {
             $rule .= "RewriteCond %{HTTPS} !=1"."\n";
+        } elseif ($this->ssl_type == "LOADBALANCER") {
+           $rule .="RewriteCond %{HTTP:X-Forwarded-Proto} !https"."\n";
+        } elseif ($this->ssl_type == "CLOUDFLARE") {
+            $rule .= "RewriteCond %{HTTP:CF-Visitor} '".'"scheme":"http"'."'"."\n";//some concatenation to get the quotes right.
         } elseif ($this->ssl_type == "SERVERPORT443") {
            $rule .= "RewriteCond %{SERVER_PORT} !443"."\n";
-        } elseif ($this->ssl_type == "LOADBALANCER") {
-            $rule .="RewriteCond %{HTTP:X-Forwarded-Proto} !https"."\n";
+        } elseif ($this->ssl_type == "CLOUDFRONT") {
+           $rule .="RewriteCond %{HTTP:CloudFront-Forwarded-Proto} !https"."\n";
         } elseif ($this->ssl_type == "CDN") {
-            $rule .= "RewriteCond %{HTTP:X-Forwarded-SSL} !on"."\n";
+           $rule .= "RewriteCond %{HTTP:X-Forwarded-SSL} !on"."\n";
         }
 
         //if multisite, and NOT subfolder install (checked for in the detec_config function)
@@ -1685,11 +1714,15 @@ public function show_notice_wpconfig_needs_fixes(){ ?>
       <p><?php echo __("Because your site is behind a loadbalancer and is_ssl() returns false, you should add the following line of code to your wp-config.php.","really-simple-ssl");?>
 
     <br><br><code>
-        //Begin Really Simple SSL Load balancing fix <br>
-        if (isset($_SERVER["HTTP_X_FORWARDED_PROTO"] ) &amp;&amp; "https" == $_SERVER["HTTP_X_FORWARDED_PROTO"] ) {<br>
-        &nbsp;&nbsp;$_SERVER["HTTPS"] = "on";<br>
+      //Begin Really Simple SSL Load balancing fix<br>
+      $server_opts = array("HTTP_CLOUDFRONT_FORWARDED_PROTO" => "https", "HTTP_CF_VISITOR"=>"https", "HTTP_X_FORWARDED_PROTO"=>"https", "HTTP_X_FORWARDED_SSL"=>"on");<br>
+      foreach( $server_opts as $option => $value ) {<br>
+      &nbsp;if ( isset( $_SERVER[ $option ] ) && ( strpos( $_SERVER[ $option ], $value ) !== false ) ) {<br>
+      &nbsp;&nbsp;$_SERVER[ "HTTPS" ] = "on";<br>
+      &nbsp;&nbsp;break;<br>
+      &nbsp;}<br>
       }<br>
-        //END Really Simple SSL
+      //END Really Simple SSL
     </code><br>
     </p>
     <p><?php echo __("Or set your wp-config.php to writable and reload this page.", "really-simple-ssl");?></p>
@@ -2068,9 +2101,6 @@ public function settings_page() {
             <td><?php
                   if ($mixed_content_fixer_detected) {
                     _e("Mixed content fixer was successfully detected on the front-end","really-simple-ssl")."&nbsp;";
-                  } elseif ($this->mixed_content_fixer_status!="OK") {
-                    _e("The mixed content is activated, but the frontpage could not be loaded for verification. The following error was returned: ","really-simple-ssl")."&nbsp;";
-                    echo $this->mixed_content_fixer_status;
                   } else {
                     _e('The mixed content fixer is activated, but was not detected on the frontpage. Please follow these steps to check if the mixed content fixer is working.',"really-simple-ssl").":&nbsp;";
                     echo '&nbsp;<a target="_blank" href="https://www.really-simple-ssl.com/knowledge-base/how-to-check-if-the-mixed-content-fixer-is-active/">';
@@ -2213,11 +2243,11 @@ public function settings_page() {
 
 public function img($type) {
   if ($type=='success') {
-    return "<img class='icons' src='".$this->plugin_url."img/check-icon.png' alt='success'>";
+    return "<img class='icons' src='" . rsssl_url . "/img/check-icon.png' alt='success'>";
   } elseif ($type=="error") {
-    return "<img class='icons' src='".$this->plugin_url."img/cross-icon.png' alt='error'>";
+    return "<img class='icons' src='". rsssl_url . "/img/cross-icon.png' alt='error'>";
   } else {
-    return "<img class='icons' src='".$this->plugin_url."img/warning-icon.png' alt='warning'>";
+    return "<img class='icons' src='". rsssl_url ."/img/warning-icon.png' alt='warning'>";
   }
 }
 
@@ -2235,7 +2265,7 @@ public function img($type) {
        global $rsssl_admin_page;
        if( $hook != $rsssl_admin_page && $this->ssl_enabled )
            return;
-       wp_register_style( 'rlrsssl-css', $this->plugin_url . 'css/main.css', "", $this->plugin_version);
+       wp_register_style( 'rlrsssl-css', rsssl_url . '/css/main.css', "", $this->plugin_version);
        wp_enqueue_style( 'rlrsssl-css');
    }
 

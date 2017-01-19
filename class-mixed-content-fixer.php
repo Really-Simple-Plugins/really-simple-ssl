@@ -77,12 +77,17 @@ if ( ! class_exists( 'rsssl_admin_mixed_content_fixer' ) ) {
    */
 
   public function build_url_list() {
-    $home_no_www  = str_replace ( "://www." , "://" , get_option('home'));
+    $home = str_replace ( "https://" , "http://" , get_option('home'));
+    $home_no_www  = str_replace ( "://www." , "://" , $home);
     $home_yes_www = str_replace ( "://" , "://www." , $home_no_www);
 
+    //for the escaped version, we only replace the home_url, not it's www or non www counterpart, as it is most likely not used
+    $escaped_home = str_replace ( "/" , "\/" , $home);
+
     $this->http_urls = array(
-        str_replace ( "https://" , "http://" , $home_yes_www),
-        str_replace ( "https://" , "http://" , $home_no_www),
+        $home_yes_www,
+        $home_no_www,
+        $escaped_home,
         "src='http://",
         'src="http://',
     );
