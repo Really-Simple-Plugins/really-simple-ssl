@@ -1,10 +1,9 @@
 <?php
 defined('ABSPATH') or die("you do not have acces to this page!");
 
-if ( ! class_exists( 'rsssl_admin_mixed_content_fixer' ) ) {
+if ( ! class_exists( 'rsssl_server' ) ) {
   class rsssl_server {
     private static $_this;
-    public $http_urls = array();
 
   function __construct() {
     if ( isset( self::$_this ) )

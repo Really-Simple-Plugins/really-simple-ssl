@@ -19,16 +19,11 @@
 			$ssl = TRUE;
 		}
 	}
-  
+
 	if (isset($_SERVER['SERVER_PORT']) && ( '443' == $_SERVER['SERVER_PORT'] )) {
 			echo "#SERVERPORT443#<br>";
 			$ssl = TRUE;
 	}
-
-  if (isset($_SERVER['ENV:HTTPS'] ) && $_SERVER['ENV:HTTPS'] == "on") {
-      echo "#ENVHTTPS#<br>";
-      $ssl = TRUE;
-  }
 
   if (!empty($_SERVER['HTTP_CLOUDFRONT_FORWARDED_PROTO']) && ($_SERVER['HTTP_CLOUDFRONT_FORWARDED_PROTO'] == 'https')){
     echo "#CLOUDFRONT#<br>";

@@ -82,7 +82,7 @@ if ( ! class_exists( 'rsssl_admin_mixed_content_fixer' ) ) {
     $home_yes_www = str_replace ( "://" , "://www." , $home_no_www);
 
     //for the escaped version, we only replace the home_url, not it's www or non www counterpart, as it is most likely not used
-    $escaped_home = str_replace ( "/" , "\/" , $home);
+    $escaped_home = preg_quote($home, '/');
 
     $this->http_urls = array(
         $home_yes_www,
