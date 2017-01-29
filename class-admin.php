@@ -39,6 +39,7 @@ defined('ABSPATH') or die("you do not have acces to this page!");
   public $plugin_db_version;
   public $plugin_upgraded;
   public $mixed_content_fixer_status        = "OK";
+  public $ssl_type                          = "NA";
 
   private $pro_url = "https://www.really-simple-ssl.com/pro";
 
@@ -63,6 +64,7 @@ defined('ABSPATH') or die("you do not have acces to this page!");
   static function this() {
     return self::$_this;
   }
+
 
   /**
    * Initializes the admin class
@@ -496,7 +498,7 @@ defined('ABSPATH') or die("you do not have acces to this page!");
       if ($this->site_has_ssl || $this->force_ssl_without_detection) {
         //when one of the used server variables was found, test if the redirect works
 
-        if ($rsssl_server->get_server()=="apache" && !$this->no_server_variable)
+        if ($rsssl_server->get_server()=="apache" && $this->ssl_type != "NA")
             $this->test_htaccess_redirect();
 
         //in a configuration of loadbalancer without a set server variable https = 0, add code to wpconfig
@@ -513,7 +515,7 @@ defined('ABSPATH') or die("you do not have acces to this page!");
         if ($rsssl_server->get_server() == "apache") {
           $this->editHtaccess();
         } elseif ($this->clicked_activate_ssl()) {
-          //set wp redirect as fallback, but only when just activated.
+          //set wp redirect, but only when just activated.
           $this->wp_redirect = TRUE;
         }
 
@@ -1152,37 +1154,31 @@ protected function get_server_variable_fix_code(){
 
     if ($this->site_has_ssl) {
       //check the type of ssl, either by parsing the returned string, or by reading the server vars.
-
-      if (
-
-           ((strpos($filecontents, "#CLOUDFRONT#") !== false) || (isset($_SERVER['HTTP_CLOUDFRONT_FORWARDED_PROTO']) && ($_SERVER['HTTP_CLOUDFRONT_FORWARDED_PROTO'] == 'https')))
-
-        || ((strpos($filecontents, "#LOADBALANCER#") !== false) || (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && ($_SERVER['HTTP_X_FORWARDED_PROTO'] == 'https')))
-
-        || ((strpos($filecontents, "#CLOUDFLARE#") !== false) || (isset($_SERVER['HTTP_CF_VISITOR']) && ($_SERVER['HTTP_CF_VISITOR'] == 'https')))
-
-        || ((strpos($filecontents, "#CDN#") !== false) || (isset($_SERVER['HTTP_X_FORWARDED_SSL']) && ($_SERVER['HTTP_X_FORWARDED_SSL'] == 'on')))
-
-        || ((strpos($filecontents, "#SERVER-HTTPS-ON#") !== false) || (isset($_SERVER['HTTPS']) && strtolower($_SERVER['HTTPS']) == 'on'))
-
-        || ((strpos($filecontents, "#SERVER-HTTPS-1#") !== false) || (isset($_SERVER['HTTPS']) && strtolower($_SERVER['HTTPS']) == '1'))
-
-        || ((strpos($filecontents, "#SERVERPORT443#") !== false) || (isset($_SERVER['SERVER_PORT']) && ( '443' == $_SERVER['SERVER_PORT'] )))
-
-      ) {
-
-        $this->no_server_variable = FALSE;
-
-      } else ((strpos($filecontents, "#NO KNOWN SSL CONFIGURATION DETECTED#") !== false)) {
+      if ((strpos($filecontents, "#CLOUDFRONT#") !== false) || (isset($_SERVER['HTTP_CLOUDFRONT_FORWARDED_PROTO']) && ($_SERVER['HTTP_CLOUDFRONT_FORWARDED_PROTO'] == 'https'))) {
+        $this->ssl_type = "CLOUDFRONT";
+      } elseif ((strpos($filecontents, "#LOADBALANCER#") !== false) || (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && ($_SERVER['HTTP_X_FORWARDED_PROTO'] == 'https'))) {
+        $this->ssl_type = "LOADBALANCER";
+      } elseif ((strpos($filecontents, "#CLOUDFLARE#") !== false) || (isset($_SERVER['HTTP_CF_VISITOR']) && ($_SERVER['HTTP_CF_VISITOR'] == 'https'))) {
+        $this->ssl_type = "CLOUDFLARE";
+      } elseif ((strpos($filecontents, "#CDN#") !== false) || (isset($_SERVER['HTTP_X_FORWARDED_SSL']) && ($_SERVER['HTTP_X_FORWARDED_SSL'] == 'on'))) {
+        $this->ssl_type = "CDN";
+      } elseif ((strpos($filecontents, "#SERVER-HTTPS-ON#") !== false) || (isset($_SERVER['HTTPS']) && strtolower($_SERVER['HTTPS']) == 'on')) {
+        $this->ssl_type = "SERVER-HTTPS-ON";
+      } elseif ((strpos($filecontents, "#SERVER-HTTPS-1#") !== false) || (isset($_SERVER['HTTPS']) && strtolower($_SERVER['HTTPS']) == '1')) {
+        $this->ssl_type = "SERVER-HTTPS-1";
+      } elseif ((strpos($filecontents, "#SERVERPORT443#") !== false) || (isset($_SERVER['SERVER_PORT']) && ( '443' == $_SERVER['SERVER_PORT'] ))) {
+        $this->ssl_type = "SERVERPORT443";
+      } elseif ((strpos($filecontents, "#NO KNOWN SSL CONFIGURATION DETECTED#") !== false)) {
         //if we are here, SSL was detected, but without any known server variables set.
         //So we can use this info to set a server variable ourselfes.
         if (!$this->wpconfig_has_fixes()) {
           $this->no_server_variable = TRUE;
         }
         $this->trace_log("No server variable detected ");
+        $this->ssl_type = "NA";
       } else {
         //no valid response, so set to NA
-        $this->no_server_variable = TRUE;
+        $this->ssl_type = "NA";
       }
 
       //check for is_ssl()
@@ -1218,7 +1214,32 @@ protected function get_server_variable_fix_code(){
 	  if ($this->debug) {$this->trace_log("testing htaccess rules...");}
     $filecontents = "";
 
-    $testpage_url = $this->test_url()."testssl/ssl-test-page.html";
+    $testpage_url = $this->test_url()."testssl/";
+    switch ($this->ssl_type) {
+    case "CLOUDFRONT":
+        $testpage_url .= "cloudfront";
+        break;
+    case "CLOUDFLARE":
+        $testpage_url .= "cloudflare";
+        break;
+    case "LOADBALANCER":
+        $testpage_url .= "loadbalancer";
+        break;
+    case "CDN":
+        $testpage_url .= "cdn";
+        break;
+    case "SERVER-HTTPS-ON":
+        $testpage_url .= "serverhttpson";
+        break;
+    case "SERVER-HTTPS-1":
+        $testpage_url .= "serverhttps1";
+        break;
+    case "SERVERPORT443":
+        $testpage_url .= "serverport443";
+        break;
+    }
+
+    $testpage_url .= ("/ssl-test-page.html");
 
     $filecontents = $rsssl_url->get_contents($testpage_url);
     $this->trace_log("test page url, click to check manually: ".$testpage_url);
@@ -1230,7 +1251,7 @@ protected function get_server_variable_fix_code(){
       $this->htaccess_test_success = FALSE;
 
       if ($rsssl_url->error_number!=0) {
-        $this->trace_log("htaccess rules test failed. Try manual insertion.";
+        $this->trace_log("htaccess rules test failed. Try manual insertion.");
       } else {
         $this->trace_log("htaccess test rules failed.");
       }
@@ -1483,10 +1504,11 @@ protected function get_server_variable_fix_code(){
         return;
       }
 
-      //if subfolder multisite, per site activated, exit.
+      //if subfolder multisite, per site activated
       if (is_multisite() && !$this->ssl_enabled_networkwide && $this->is_multisite_subfolder_install()) {
-          $this->trace_log("per site activation on subfolder install, wp redirect activated");
-          $this->wp_redirect = true;
+          $this->trace_log("per site activation on subfolder install");
+          if ($this->clicked_activate_ssl()) $this->wp_redirect = true;
+          $this->save_options();
           return;
       }
 
@@ -1495,7 +1517,8 @@ protected function get_server_variable_fix_code(){
 
         if (!is_writable($this->ABSpath.".htaccess")) {
           //set the javascript redirect as fallback, because .htaccess couldn't be edited.
-          $this->wp_redirect = true;
+          if ($this->clicked_activate_ssl()) $this->wp_redirect = true;
+          $this->save_options();
           $this->trace_log(".htaccess not writable.");
           $this->errors["NO_REDIRECT_IN_HTACCESS"] = true;
           return;
@@ -1609,18 +1632,26 @@ protected function get_server_variable_fix_code(){
       $rule = "";
 
       //if the htaccess test was successfull, and we know the redirectype, edit
-      if ($manual || ($this->htaccess_test_success && !$this->no_server_variable)) {
+      if ($manual || ($this->htaccess_test_success && ($this->ssl_type != "NA"))) {
         $rule .= "<IfModule mod_rewrite.c>"."\n";
         $rule .= "RewriteEngine on"."\n";
 
-        $rule .= "RewriteCond %{HTTPS} !=on [NC]"."\n" .
-                 "RewriteCond %{HTTPS} !=1"."\n" .
-                 "RewriteCond %{HTTP:X-Forwarded-Proto} !https"."\n" .
-                 "RewriteCond %{HTTP:CF-Visitor} '".'"scheme":"http"'."'"."\n" .
-                 "RewriteCond %{SERVER_PORT} !443"."\n" .
-                 "RewriteCond %{HTTP:CloudFront-Forwarded-Proto} !https"."\n" .
-                 "RewriteCond %{HTTP:X-Forwarded-SSL} !on"."\n" .
-                 "RewriteCond %{ENV:HTTPS} !=on "."\n";
+        //select rewrite condition based on detected type of ssl
+        if ($this->ssl_type == "SERVER-HTTPS-ON") {
+            $rule .= "RewriteCond %{HTTPS} !=on [NC]"."\n";
+        } elseif ($this->ssl_type == "SERVER-HTTPS-1") {
+            $rule .= "RewriteCond %{HTTPS} !=1"."\n";
+        } elseif ($this->ssl_type == "LOADBALANCER") {
+           $rule .="RewriteCond %{HTTP:X-Forwarded-Proto} !https"."\n";
+        } elseif ($this->ssl_type == "CLOUDFLARE") {
+            $rule .= "RewriteCond %{HTTP:CF-Visitor} '".'"scheme":"http"'."'"."\n";//some concatenation to get the quotes right.
+        } elseif ($this->ssl_type == "SERVERPORT443") {
+           $rule .= "RewriteCond %{SERVER_PORT} !443"."\n";
+        } elseif ($this->ssl_type == "CLOUDFRONT") {
+           $rule .="RewriteCond %{HTTP:CloudFront-Forwarded-Proto} !https"."\n";
+        } elseif ($this->ssl_type == "CDN") {
+           $rule .= "RewriteCond %{HTTP:X-Forwarded-SSL} !on"."\n";
+        }
 
         //if multisite, and NOT subfolder install (checked for in the detec_config function)
         //, add a condition so it only applies to sites where plugin is activated
@@ -2069,17 +2100,22 @@ public function settings_page() {
             <?php
                 global $rsssl_server;
                 if($this->has_301_redirect()) {
-                 _e("301 redirect to https set","really-simple-ssl");
+                 _e("301 redirect to https set: ","really-simple-ssl");
+                 if ($rsssl_server->get_server()=="apache" && $this->htaccess_contains_redirect_rules())
+                    _e(".htaccess redirect","really-simple-ssl");
+                 if ($this->wp_redirect)
+                    _e("WordPress redirect","really-simple-ssl");
+
                } elseif ($rsssl_server->get_server()=="apache") {
 
                  if (!is_writable($this->ABSpath.".htaccess")) {
                    _e(".htaccess is not writable. Set 301 WordPress redirect, or set the .htaccess manually if you want to redirect in .htaccess.","really-simple-ssl");
                  } elseif(!$this->ssl_enabled_networkwide && $this->is_multisite_subfolder_install()) {
-                   _e("Https redirect was set in javascript because you have activated per site on a multiste subfolder install. Install networkwide to set the .htaccess redirect.","really-simple-ssl");
+                   _e("Https redirect cannot be set in the .htaccess file because you have activated per site on a multiste subfolder install. Enable WordPress redirect in the settings.","really-simple-ssl");
                  } else {
-                   _e("Https redirect was set in javascript because the htaccess redirect rule could not be verified. Set manually if you want to redirect in .htaccess.","really-simple-ssl");
+                   _e("Https redirect was cannot be set in the .htaccess because the htaccess redirect rule could not be verified. Set the .htaccess redirect manually or enable WordPress redirect in the settings.","really-simple-ssl");
                 }
-                 if (!$this->no_server_variable && !(!$this->ssl_enabled_networkwide && $this->is_multisite_subfolder_install())) {
+                 if ($this->ssl_type!="NA" && !(!$this->ssl_enabled_networkwide && $this->is_multisite_subfolder_install())) {
                     $manual = true;
                     $rules = $this->get_redirect_rules($manual);
                     echo "&nbsp;";
@@ -2246,7 +2282,7 @@ public function configuration_page_more(){
   <table>
   <tr>
     <td>
-      <?php echo $this->hsts ? $this->img("success") :$this->img("warning");?>
+      <?php echo $this->contains_hsts() ? $this->img("success") :$this->img("warning");?>
     </td>
     <td>
     <?php
@@ -2414,7 +2450,7 @@ public function get_option_javascript_redirect() {
 
 /**
  * Insert option into settings form
- * @since  3.0
+ * @since  2.5.0
  *
  * @access public
  *
