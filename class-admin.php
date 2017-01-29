@@ -1620,21 +1620,15 @@ protected function get_server_variable_fix_code(){
         $rule .= "RewriteEngine on"."\n";
 
         //select rewrite condition based on detected type of ssl
-        if ($this->ssl_type == "SERVER-HTTPS-ON") {
-            $rule .= "RewriteCond %{HTTPS} !=on [NC]"."\n";
-        } elseif ($this->ssl_type == "SERVER-HTTPS-1") {
-            $rule .= "RewriteCond %{HTTPS} !=1"."\n";
-        } elseif ($this->ssl_type == "LOADBALANCER") {
-           $rule .="RewriteCond %{HTTP:X-Forwarded-Proto} !https"."\n";
-        } elseif ($this->ssl_type == "CLOUDFLARE") {
-            $rule .= "RewriteCond %{HTTP:CF-Visitor} '".'"scheme":"http"'."'"."\n";//some concatenation to get the quotes right.
-        } elseif ($this->ssl_type == "SERVERPORT443") {
-           $rule .= "RewriteCond %{SERVER_PORT} !443"."\n";
-        } elseif ($this->ssl_type == "CLOUDFRONT") {
-           $rule .="RewriteCond %{HTTP:CloudFront-Forwarded-Proto} !https"."\n";
-        } elseif ($this->ssl_type == "CDN") {
-           $rule .= "RewriteCond %{HTTP:X-Forwarded-SSL} !on"."\n";
-        }
+
+        $rule .= "RewriteCond %{HTTPS} !=on [NC]"."\n" .
+                 "RewriteCond %{HTTPS} !=1"."\n" .
+                 "RewriteCond %{HTTP:X-Forwarded-Proto} !https"."\n" .
+                 "RewriteCond %{HTTP:CF-Visitor} '".'"scheme":"http"'."'"."\n" .
+                 "RewriteCond %{SERVER_PORT} !443"."\n" .
+                 "RewriteCond %{HTTP:CloudFront-Forwarded-Proto} !https"."\n" .
+                 "RewriteCond %{HTTP:X-Forwarded-SSL} !on"."\n" .
+                 "RewriteCond %{ENV:HTTPS} !=on "."\n";
 
         //if multisite, and NOT subfolder install (checked for in the detec_config function)
         //, add a condition so it only applies to sites where plugin is activated
