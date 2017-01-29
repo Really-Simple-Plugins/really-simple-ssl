@@ -3,8 +3,8 @@ Contributors: RogierLankhorst
 Tags: SSL, https, force SSL, mixed content, insecure content, secure website, website security, tls, security, secure socket layers, hsts
 Requires at least: 4.2
 License: GPL2
-Tested up to: 4.8
-Stable tag: 2.4.4
+Tested up to: 4.7.2
+Stable tag: 2.5.0
 
 No setup required! You only need an SSL certificate, and this plugin will do the rest.
 
@@ -19,10 +19,12 @@ To keep it lightweight, the options are kept to a minimum. The entire site will 
 
 Always backup before you go! If you do not have a sound backup policy, start having one! For a snapshot, install duplicator.
 
+Really Simple SSL is on [GitHub](https://github.com/rlankhorst/really-simple-ssl) as well!
+
 = Love Really Simple SSL? =
 Hopefully this plugin save you some hours of work. If you want to support the continuing development of this plugin, you might consider buying the [premium](https://www.really-simple-ssl.com/pro/), which includes
-some cool features:
-=   =
+some cool features.
+= Pro features =
 * The mixed content scan, which shows you what you have to do if you don't have the green lock yet
 * The option to enable HTTP Strict Transport Security
 * The option to configure your site for the HSTS preload list
@@ -71,9 +73,11 @@ For detailed instructions on how to find mixed content read this [article](https
 If you are experiencing redirect loops on your site, try these [instructions](https://really-simple-ssl.com/knowledge-base/my-website-is-in-a-redirect-loop/).
 
 == Changelog ==
-= 2.4.4 =
+= 2.5.0 =
+* Improved support for cloudflare
 * Added support for Cloudfront, thanks to Sharif Alexandre
 * Prevent writing of empty .htaccess redirect
+* Added option for 301 internal wp redirect
 
 = 2.4.3 =
 * Removed banner in admin

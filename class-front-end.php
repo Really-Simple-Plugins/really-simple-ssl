@@ -61,7 +61,7 @@ if ( ! class_exists( 'rsssl_front_end' ) ) {
    /**
     * Redirect using wp redirect
     *
-    * @since  3.0
+    * @since  2.5.0
     *
     * @access public
     *
@@ -69,10 +69,11 @@ if ( ! class_exists( 'rsssl_front_end' ) ) {
 
 
    public function wp_redirect_to_ssl() {
-    if (!is_ssl()) {
-      wp_redirect("https://" . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'] , "301");
-      exit;
-  }
+      if (!is_ssl()) {
+        wp_redirect("https://" . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'] , "301");
+        exit;
+      }
+    }
 
 
 
@@ -93,7 +94,7 @@ if ( ! class_exists( 'rsssl_front_end' ) ) {
       $this->autoreplace_insecure_links   = isset($options['autoreplace_insecure_links']) ? $options['autoreplace_insecure_links'] : TRUE;
       $this->ssl_enabled                  = isset($options['ssl_enabled']) ? $options['ssl_enabled'] : $this->site_has_ssl;
       $this->javascript_redirect          = isset($options['javascript_redirect']) ? $options['javascript_redirect'] : TRUE;
-      $this->wp_redirect                  = isset($options['wp_redirect']) ? $options['wp_redirect'] : TRUE;
+      $this->wp_redirect                  = isset($options['wp_redirect']) ? $options['wp_redirect'] : FALSE;
     }
 
     // $network_options = get_site_option('rlrsssl_network_options');
