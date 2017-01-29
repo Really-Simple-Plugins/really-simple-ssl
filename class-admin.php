@@ -1155,19 +1155,21 @@ protected function get_server_variable_fix_code(){
     if ($this->site_has_ssl) {
       //check the type of ssl, either by parsing the returned string, or by reading the server vars.
       if ((strpos($filecontents, "#CLOUDFRONT#") !== false) || (isset($_SERVER['HTTP_CLOUDFRONT_FORWARDED_PROTO']) && ($_SERVER['HTTP_CLOUDFRONT_FORWARDED_PROTO'] == 'https'))) {
-        $this->ssl_type = "CLOUDFRONT";
+        $this->ssl_type = "cloudfront";
       } elseif ((strpos($filecontents, "#LOADBALANCER#") !== false) || (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && ($_SERVER['HTTP_X_FORWARDED_PROTO'] == 'https'))) {
-        $this->ssl_type = "LOADBALANCER";
+        $this->ssl_type = "loadbalancer";
       } elseif ((strpos($filecontents, "#CLOUDFLARE#") !== false) || (isset($_SERVER['HTTP_CF_VISITOR']) && ($_SERVER['HTTP_CF_VISITOR'] == 'https'))) {
-        $this->ssl_type = "CLOUDFLARE";
+        $this->ssl_type = "cloudflare";
       } elseif ((strpos($filecontents, "#CDN#") !== false) || (isset($_SERVER['HTTP_X_FORWARDED_SSL']) && ($_SERVER['HTTP_X_FORWARDED_SSL'] == 'on'))) {
-        $this->ssl_type = "CDN";
+        $this->ssl_type = "cdn";
       } elseif ((strpos($filecontents, "#SERVER-HTTPS-ON#") !== false) || (isset($_SERVER['HTTPS']) && strtolower($_SERVER['HTTPS']) == 'on')) {
-        $this->ssl_type = "SERVER-HTTPS-ON";
+        $this->ssl_type = "serverhttpson";
       } elseif ((strpos($filecontents, "#SERVER-HTTPS-1#") !== false) || (isset($_SERVER['HTTPS']) && strtolower($_SERVER['HTTPS']) == '1')) {
-        $this->ssl_type = "SERVER-HTTPS-1";
+        $this->ssl_type = "serverhttps1";
       } elseif ((strpos($filecontents, "#SERVERPORT443#") !== false) || (isset($_SERVER['SERVER_PORT']) && ( '443' == $_SERVER['SERVER_PORT'] ))) {
-        $this->ssl_type = "SERVERPORT443";
+        $this->ssl_type = "serverport443";
+      } elseif ((strpos($filecontents, "#ENVHTTPS#") !== false) || (isset($_ENV['HTTPS']) && ( 'on' == $_ENV['HTTPS'] ))) {
+        $this->ssl_type = "envhttps";
       } elseif ((strpos($filecontents, "#NO KNOWN SSL CONFIGURATION DETECTED#") !== false)) {
         //if we are here, SSL was detected, but without any known server variables set.
         //So we can use this info to set a server variable ourselfes.
@@ -1214,32 +1216,7 @@ protected function get_server_variable_fix_code(){
 	  if ($this->debug) {$this->trace_log("testing htaccess rules...");}
     $filecontents = "";
 
-    $testpage_url = $this->test_url()."testssl/";
-    switch ($this->ssl_type) {
-    case "CLOUDFRONT":
-        $testpage_url .= "cloudfront";
-        break;
-    case "CLOUDFLARE":
-        $testpage_url .= "cloudflare";
-        break;
-    case "LOADBALANCER":
-        $testpage_url .= "loadbalancer";
-        break;
-    case "CDN":
-        $testpage_url .= "cdn";
-        break;
-    case "SERVER-HTTPS-ON":
-        $testpage_url .= "serverhttpson";
-        break;
-    case "SERVER-HTTPS-1":
-        $testpage_url .= "serverhttps1";
-        break;
-    case "SERVERPORT443":
-        $testpage_url .= "serverport443";
-        break;
-    }
-
-    $testpage_url .= ("/ssl-test-page.html");
+    $testpage_url = $this->test_url()."testssl/".$this->ssl_type."/ssl-test-page.html";
 
     $filecontents = $rsssl_url->get_contents($testpage_url);
     $this->trace_log("test page url, click to check manually: ".$testpage_url);
@@ -1637,19 +1614,21 @@ protected function get_server_variable_fix_code(){
         $rule .= "RewriteEngine on"."\n";
 
         //select rewrite condition based on detected type of ssl
-        if ($this->ssl_type == "SERVER-HTTPS-ON") {
+        if ($this->ssl_type == "serverhttpson") {
             $rule .= "RewriteCond %{HTTPS} !=on [NC]"."\n";
-        } elseif ($this->ssl_type == "SERVER-HTTPS-1") {
+        } elseif ($this->ssl_type == "serverhttps1") {
             $rule .= "RewriteCond %{HTTPS} !=1"."\n";
-        } elseif ($this->ssl_type == "LOADBALANCER") {
+        } elseif ($this->ssl_type == "loadbalancer") {
            $rule .="RewriteCond %{HTTP:X-Forwarded-Proto} !https"."\n";
-        } elseif ($this->ssl_type == "CLOUDFLARE") {
+        } elseif ($this->ssl_type == "cloudflare") {
             $rule .= "RewriteCond %{HTTP:CF-Visitor} '".'"scheme":"http"'."'"."\n";//some concatenation to get the quotes right.
-        } elseif ($this->ssl_type == "SERVERPORT443") {
+        } elseif ($this->ssl_type == "serverport443") {
            $rule .= "RewriteCond %{SERVER_PORT} !443"."\n";
-        } elseif ($this->ssl_type == "CLOUDFRONT") {
+         } elseif ($this->ssl_type == "envhttps") {
+            $rule .= "RewriteCond %{ENV:HTTPS} !=on"."\n";
+        } elseif ($this->ssl_type == "cloudfront") {
            $rule .="RewriteCond %{HTTP:CloudFront-Forwarded-Proto} !https"."\n";
-        } elseif ($this->ssl_type == "CDN") {
+        } elseif ($this->ssl_type == "cdn") {
            $rule .= "RewriteCond %{HTTP:X-Forwarded-SSL} !on"."\n";
         }
 

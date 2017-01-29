@@ -25,6 +25,11 @@
 			$ssl = TRUE;
 	}
 
+  if (isset($_ENV['HTTPS']) && ( 'on' == $_ENV['HTTPS'] )) {
+      echo "#ENVHTTPS#<br>";
+      $ssl = TRUE;
+  }
+
   if (!empty($_SERVER['HTTP_CLOUDFRONT_FORWARDED_PROTO']) && ($_SERVER['HTTP_CLOUDFRONT_FORWARDED_PROTO'] == 'https')){
     echo "#CLOUDFRONT#<br>";
     $ssl = TRUE;
