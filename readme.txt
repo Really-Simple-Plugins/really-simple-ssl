@@ -73,11 +73,13 @@ For detailed instructions on how to find mixed content read this [article](https
 If you are experiencing redirect loops on your site, try these [instructions](https://really-simple-ssl.com/knowledge-base/my-website-is-in-a-redirect-loop/).
 
 == Changelog ==
+
 = 2.5.0 =
 * Improved support for cloudflare
 * Added support for Cloudfront, thanks to Sharif Alexandre
 * Prevent writing of empty .htaccess redirect
 * Added option for 301 internal wp redirect
+* Improved NGINX support
 
 = 2.4.3 =
 * Removed banner in admin

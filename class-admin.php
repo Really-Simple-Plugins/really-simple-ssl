@@ -65,6 +65,7 @@ defined('ABSPATH') or die("you do not have acces to this page!");
     return self::$_this;
   }
 
+
   /**
    * Initializes the admin class
    *
