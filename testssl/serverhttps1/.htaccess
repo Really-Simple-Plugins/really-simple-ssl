@@ -1,5 +1,0 @@
-<IfModule mod_rewrite.c>
-RewriteEngine on
-RewriteCond %{HTTPS} !=1
-RewriteRule ^(.*) https://%{HTTP_HOST}%{REQUEST_URI} [L]
-</IfModule>

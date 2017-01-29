@@ -13,8 +13,8 @@ defined('ABSPATH') or die("you do not have acces to this page!");
   public $ssl_enabled                         = FALSE;
 
   //multisite variables
-  public $ssl_enabled_networkwide           = FALSE;
   public $selected_networkwide_or_per_site  = FALSE;
+  public $ssl_enabled_networkwide         = FALSE;
   public $sites                             = Array(); //for multisite, list of all activated sites.
 
   //general settings
@@ -29,7 +29,6 @@ defined('ABSPATH') or die("you do not have acces to this page!");
 
   public $do_not_edit_htaccess              = FALSE;
   public $htaccess_warning_shown            = FALSE;
-  public $wpmu_subfolder_warning_shown      = FALSE;
   public $ssl_success_message_shown         = FALSE;
   public $hsts                              = FALSE;
   public $debug							                = TRUE;
@@ -41,15 +40,6 @@ defined('ABSPATH') or die("you do not have acces to this page!");
   public $plugin_upgraded;
   public $mixed_content_fixer_status        = "OK";
 
-  //public $settings_changed                  = FALSE;
-  public $ssl_type                          = "NA";
-                                            //possible values:
-                                            //"NA":     test page did not return valid response
-                                            //"SERVER-HTTPS-ON"
-                                            //"SERVER-HTTPS-1"
-                                            //"SERVERPORT443"
-                                            //"LOADBALANCER"
-                                            //"CDN"
   private $pro_url = "https://www.really-simple-ssl.com/pro";
 
   function __construct() {
@@ -95,7 +85,7 @@ defined('ABSPATH') or die("you do not have acces to this page!");
 
     */
 
-    if (//when htaccess should be written again
+    if (//when configuration should run again
         (!$this->htaccess_warning_shown && $this->ssl_enabled && !$this->htaccess_contains_redirect_rules() && $this->htaccess_redirect_allowed())
         || ($this->clicked_activate_ssl() || !$this->ssl_enabled || !$this->site_has_ssl || $is_on_settings_page)) {
       $this->trace_log("** Really Simple SSL debug mode **");
@@ -142,7 +132,6 @@ defined('ABSPATH') or die("you do not have acces to this page!");
 
     //callbacks for the ajax dismiss buttons
     add_action('wp_ajax_dismiss_htaccess_warning', array($this,'dismiss_htaccess_warning_callback') );
-    add_action('wp_ajax_dismiss_wpmu_subfolder_warning', array($this,'dismiss_wpmu_subfolder_warning_callback') );
     add_action('wp_ajax_dismiss_success_message', array($this,'dismiss_success_message_callback') );
 
     //handle notices
@@ -377,7 +366,6 @@ defined('ABSPATH') or die("you do not have acces to this page!");
     if (isset($options)) {
       $this->hsts                               = isset($options['hsts']) ? $options['hsts'] : FALSE;
       $this->htaccess_warning_shown             = isset($options['htaccess_warning_shown']) ? $options['htaccess_warning_shown'] : FALSE;
-      $this->wpmu_subfolder_warning_shown       = isset($options['wpmu_subfolder_warning_shown']) ? $options['wpmu_subfolder_warning_shown'] : FALSE;
       $this->ssl_success_message_shown          = isset($options['ssl_success_message_shown']) ? $options['ssl_success_message_shown'] : FALSE;
       $this->plugin_db_version                  = isset($options['plugin_db_version']) ? $options['plugin_db_version'] : "1.0";
       $this->debug                              = isset($options['debug']) ? $options['debug'] : FALSE;
@@ -502,12 +490,13 @@ defined('ABSPATH') or die("you do not have acces to this page!");
    */
 
   public function configure_ssl() {
+      global $rsssl_server;
       if (!current_user_can($this->capability)) return;
       $this->trace_log("** Configuring SSL **");
       if ($this->site_has_ssl || $this->force_ssl_without_detection) {
-        //when a known ssl_type was found, test if the redirect works
+        //when one of the used server variables was found, test if the redirect works
 
-        if ($this->ssl_type != "NA")
+        if ($rsssl_server->get_server()=="apache" && !$this->no_server_variable)
             $this->test_htaccess_redirect();
 
         //in a configuration of loadbalancer without a set server variable https = 0, add code to wpconfig
@@ -520,7 +509,13 @@ defined('ABSPATH') or die("you do not have acces to this page!");
         if ( class_exists( 'Jetpack' ) )
             $this->wpconfig_jetpack();
 
-        $this->editHtaccess();
+
+        if ($rsssl_server->get_server() == "apache") {
+          $this->editHtaccess();
+        } elseif ($this->clicked_activate_ssl()) {
+          //set wp redirect as fallback, but only when just activated.
+          $this->wp_redirect = TRUE;
+        }
 
         if ($this->wpconfig_siteurl_not_fixed)
           $this->fix_siteurl_defines_in_wpconfig();
@@ -1001,7 +996,6 @@ protected function get_server_variable_fix_code(){
       'site_has_ssl'                      => $this->site_has_ssl,
       'hsts'                              => $this->hsts,
       'htaccess_warning_shown'            => $this->htaccess_warning_shown,
-      'wpmu_subfolder_warning_shown'      => $this->wpmu_subfolder_warning_shown,
       'ssl_success_message_shown'         => $this->ssl_success_message_shown,
       'autoreplace_insecure_links'        => $this->autoreplace_insecure_links,
       'plugin_db_version'                 => $this->plugin_db_version,
@@ -1009,7 +1003,7 @@ protected function get_server_variable_fix_code(){
       'do_not_edit_htaccess'              => $this->do_not_edit_htaccess,
       'ssl_enabled'                       => $this->ssl_enabled,
       'javascript_redirect'               => $this->javascript_redirect,
-      //'debug_log'                         => $this->debug_log,
+      'wp_redirect'                       => $this->wp_redirect,
     );
 
     update_option('rlrsssl_options',$options);
@@ -1056,11 +1050,11 @@ protected function get_server_variable_fix_code(){
     $this->site_has_ssl                         = FALSE;
     $this->hsts                                 = FALSE;
     $this->htaccess_warning_shown               = FALSE;
-    $this->wpmu_subfolder_warning_shown         = FALSE;
     $this->ssl_success_message_shown            = FALSE;
     $this->autoreplace_insecure_links           = TRUE;
     $this->do_not_edit_htaccess                 = FALSE;
     $this->javascript_redirect                  = FALSE;
+    $this->wp_redirect                          = FALSE;
     $this->ssl_enabled                          = FALSE;
     //deprecated
     $this->rewrite_rule_per_site                = FALSE;
@@ -1158,31 +1152,37 @@ protected function get_server_variable_fix_code(){
 
     if ($this->site_has_ssl) {
       //check the type of ssl, either by parsing the returned string, or by reading the server vars.
-      if ((strpos($filecontents, "#CLOUDFRONT#") !== false) || (isset($_SERVER['HTTP_CLOUDFRONT_FORWARDED_PROTO']) && ($_SERVER['HTTP_CLOUDFRONT_FORWARDED_PROTO'] == 'https'))) {
-        $this->ssl_type = "CLOUDFRONT";
-      } elseif ((strpos($filecontents, "#LOADBALANCER#") !== false) || (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && ($_SERVER['HTTP_X_FORWARDED_PROTO'] == 'https'))) {
-        $this->ssl_type = "LOADBALANCER";
-      } elseif ((strpos($filecontents, "#CLOUDFLARE#") !== false) || (isset($_SERVER['HTTP_CF_VISITOR']) && ($_SERVER['HTTP_CF_VISITOR'] == 'https'))) {
-        $this->ssl_type = "CLOUDFLARE";
-      } elseif ((strpos($filecontents, "#CDN#") !== false) || (isset($_SERVER['HTTP_X_FORWARDED_SSL']) && ($_SERVER['HTTP_X_FORWARDED_SSL'] == 'on'))) {
-        $this->ssl_type = "CDN";
-      } elseif ((strpos($filecontents, "#SERVER-HTTPS-ON#") !== false) || (isset($_SERVER['HTTPS']) && strtolower($_SERVER['HTTPS']) == 'on')) {
-        $this->ssl_type = "SERVER-HTTPS-ON";
-      } elseif ((strpos($filecontents, "#SERVER-HTTPS-1#") !== false) || (isset($_SERVER['HTTPS']) && strtolower($_SERVER['HTTPS']) == '1')) {
-        $this->ssl_type = "SERVER-HTTPS-1";
-      } elseif ((strpos($filecontents, "#SERVERPORT443#") !== false) || (isset($_SERVER['SERVER_PORT']) && ( '443' == $_SERVER['SERVER_PORT'] ))) {
-        $this->ssl_type = "SERVERPORT443";
-      } elseif ((strpos($filecontents, "#NO KNOWN SSL CONFIGURATION DETECTED#") !== false)) {
+
+      if (
+
+           ((strpos($filecontents, "#CLOUDFRONT#") !== false) || (isset($_SERVER['HTTP_CLOUDFRONT_FORWARDED_PROTO']) && ($_SERVER['HTTP_CLOUDFRONT_FORWARDED_PROTO'] == 'https')))
+
+        || ((strpos($filecontents, "#LOADBALANCER#") !== false) || (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && ($_SERVER['HTTP_X_FORWARDED_PROTO'] == 'https')))
+
+        || ((strpos($filecontents, "#CLOUDFLARE#") !== false) || (isset($_SERVER['HTTP_CF_VISITOR']) && ($_SERVER['HTTP_CF_VISITOR'] == 'https')))
+
+        || ((strpos($filecontents, "#CDN#") !== false) || (isset($_SERVER['HTTP_X_FORWARDED_SSL']) && ($_SERVER['HTTP_X_FORWARDED_SSL'] == 'on')))
+
+        || ((strpos($filecontents, "#SERVER-HTTPS-ON#") !== false) || (isset($_SERVER['HTTPS']) && strtolower($_SERVER['HTTPS']) == 'on'))
+
+        || ((strpos($filecontents, "#SERVER-HTTPS-1#") !== false) || (isset($_SERVER['HTTPS']) && strtolower($_SERVER['HTTPS']) == '1'))
+
+        || ((strpos($filecontents, "#SERVERPORT443#") !== false) || (isset($_SERVER['SERVER_PORT']) && ( '443' == $_SERVER['SERVER_PORT'] )))
+
+      ) {
+
+        $this->no_server_variable = FALSE;
+
+      } else ((strpos($filecontents, "#NO KNOWN SSL CONFIGURATION DETECTED#") !== false)) {
         //if we are here, SSL was detected, but without any known server variables set.
         //So we can use this info to set a server variable ourselfes.
         if (!$this->wpconfig_has_fixes()) {
           $this->no_server_variable = TRUE;
         }
         $this->trace_log("No server variable detected ");
-        $this->ssl_type = "NA";
       } else {
         //no valid response, so set to NA
-        $this->ssl_type = "NA";
+        $this->no_server_variable = TRUE;
       }
 
       //check for is_ssl()
@@ -1195,7 +1195,6 @@ protected function get_server_variable_fix_code(){
         }
       }
 
-	    $this->trace_log("ssl type: ".$this->ssl_type);
     }
 
     $this->check_for_siteurl_in_wpconfig();
@@ -1219,32 +1218,7 @@ protected function get_server_variable_fix_code(){
 	  if ($this->debug) {$this->trace_log("testing htaccess rules...");}
     $filecontents = "";
 
-    $testpage_url = $this->test_url()."testssl/";
-    switch ($this->ssl_type) {
-    case "CLOUDFRONT":
-        $testpage_url .= "cloudfront";
-        break;
-    case "CLOUDFLARE":
-        $testpage_url .= "cloudflare";
-        break;
-    case "LOADBALANCER":
-        $testpage_url .= "loadbalancer";
-        break;
-    case "CDN":
-        $testpage_url .= "cdn";
-        break;
-    case "SERVER-HTTPS-ON":
-        $testpage_url .= "serverhttpson";
-        break;
-    case "SERVER-HTTPS-1":
-        $testpage_url .= "serverhttps1";
-        break;
-    case "SERVERPORT443":
-        $testpage_url .= "serverport443";
-        break;
-    }
-
-    $testpage_url .= ("/ssl-test-page.html");
+    $testpage_url = $this->test_url()."testssl/ssl-test-page.html";
 
     $filecontents = $rsssl_url->get_contents($testpage_url);
     $this->trace_log("test page url, click to check manually: ".$testpage_url);
@@ -1256,7 +1230,7 @@ protected function get_server_variable_fix_code(){
       $this->htaccess_test_success = FALSE;
 
       if ($rsssl_url->error_number!=0) {
-        $this->trace_log("htaccess rules test failed with error: ".$rsssl_url->get_curl_error($rsssl_url->error_number));
+        $this->trace_log("htaccess rules test failed. Try manual insertion.";
       } else {
         $this->trace_log("htaccess test rules failed.");
       }
@@ -1417,6 +1391,23 @@ protected function get_server_variable_fix_code(){
     }
   }
 
+  /*
+  *    Checks if a 301 redirect is set
+  *    this is the case if either the wp_redirect is set, or the htaccess redirect is set.
+  *
+  */
+
+  public function has_301_redirect() {
+    if ($this->wp_redirect) return true;
+
+    global $rsssl_server;
+    if ($rsssl_server->get_server()=="apache" && $this->htaccess_contains_redirect_rules() ) {
+      return true;
+    }
+
+    return false;
+  }
+
   /**
    * Checks if the hsts rule is already in the htaccess file
    * Set the hsts variable in the db accordingly. applies to preload version as well.
@@ -1430,17 +1421,20 @@ protected function get_server_variable_fix_code(){
   public function contains_hsts() {
     if (!file_exists($this->ABSpath.".htaccess")) {
       $this->trace_log(".htaccess not found in ".$this->ABSpath);
-      return $this->hsts; //just return the setting.
-    }
-
-    $htaccess = file_get_contents($this->ABSpath.".htaccess");
-
-    preg_match("/Strict-Transport-Security/", $htaccess, $check);
-    if(count($check) === 0){
-      return false;
+      $result = $this->hsts; //just return the setting.
     } else {
-      return true;
+      $htaccess = file_get_contents($this->ABSpath.".htaccess");
+
+      preg_match("/Strict-Transport-Security/", $htaccess, $check);
+      if(count($check) === 0){
+        $result = false;
+      } else {
+        $result = true;
+      }
+      $result = apply_filters("rsssl_contains_hsts_filter", $result);
     }
+
+    return $result;
   }
 
   /**
@@ -1491,8 +1485,8 @@ protected function get_server_variable_fix_code(){
 
       //if subfolder multisite, per site activated, exit.
       if (is_multisite() && !$this->ssl_enabled_networkwide && $this->is_multisite_subfolder_install()) {
-          $this->trace_log("per site activation on subfolder install, adding of htaccess rules skipped");
-          $this->javascript_redirect = true;
+          $this->trace_log("per site activation on subfolder install, wp redirect activated");
+          $this->wp_redirect = true;
           return;
       }
 
@@ -1501,7 +1495,7 @@ protected function get_server_variable_fix_code(){
 
         if (!is_writable($this->ABSpath.".htaccess")) {
           //set the javascript redirect as fallback, because .htaccess couldn't be edited.
-          $this->javascript_redirect = true;
+          $this->wp_redirect = true;
           $this->trace_log(".htaccess not writable.");
           $this->errors["NO_REDIRECT_IN_HTACCESS"] = true;
           return;
@@ -1615,26 +1609,18 @@ protected function get_server_variable_fix_code(){
       $rule = "";
 
       //if the htaccess test was successfull, and we know the redirectype, edit
-      if ($manual || ($this->htaccess_test_success && ($this->ssl_type != "NA"))) {
+      if ($manual || ($this->htaccess_test_success && !$this->no_server_variable)) {
         $rule .= "<IfModule mod_rewrite.c>"."\n";
         $rule .= "RewriteEngine on"."\n";
 
-        //select rewrite condition based on detected type of ssl
-        if ($this->ssl_type == "SERVER-HTTPS-ON") {
-            $rule .= "RewriteCond %{HTTPS} !=on [NC]"."\n";
-        } elseif ($this->ssl_type == "SERVER-HTTPS-1") {
-            $rule .= "RewriteCond %{HTTPS} !=1"."\n";
-        } elseif ($this->ssl_type == "LOADBALANCER") {
-           $rule .="RewriteCond %{HTTP:X-Forwarded-Proto} !https"."\n";
-        } elseif ($this->ssl_type == "CLOUDFLARE") {
-            $rule .= "RewriteCond %{HTTP:CF-Visitor} '".'"scheme":"http"'."'"."\n";//some concatenation to get the quotes right.
-        } elseif ($this->ssl_type == "SERVERPORT443") {
-           $rule .= "RewriteCond %{SERVER_PORT} !443"."\n";
-        } elseif ($this->ssl_type == "CLOUDFRONT") {
-           $rule .="RewriteCond %{HTTP:CloudFront-Forwarded-Proto} !https"."\n";
-        } elseif ($this->ssl_type == "CDN") {
-           $rule .= "RewriteCond %{HTTP:X-Forwarded-SSL} !on"."\n";
-        }
+        $rule .= "RewriteCond %{HTTPS} !=on [NC]"."\n" .
+                 "RewriteCond %{HTTPS} !=1"."\n" .
+                 "RewriteCond %{HTTP:X-Forwarded-Proto} !https"."\n" .
+                 "RewriteCond %{HTTP:CF-Visitor} '".'"scheme":"http"'."'"."\n" .
+                 "RewriteCond %{SERVER_PORT} !443"."\n" .
+                 "RewriteCond %{HTTP:CloudFront-Forwarded-Proto} !https"."\n" .
+                 "RewriteCond %{HTTP:X-Forwarded-SSL} !on"."\n" .
+                 "RewriteCond %{ENV:HTTPS} !=on "."\n";
 
         //if multisite, and NOT subfolder install (checked for in the detec_config function)
         //, add a condition so it only applies to sites where plugin is activated
@@ -1757,12 +1743,13 @@ public function show_notices()
       show a notice when the .htaccess file does not contain redirect rules
   */
 
-  if ($this->ssl_enabled && !$this->htaccess_warning_shown && !$this->htaccess_contains_redirect_rules() && $this->htaccess_redirect_allowed()) {
+  global $rsssl_server;
+  if ($rsssl_server->get_server()=="apache" && !$this->wp_redirect && $this->ssl_enabled && !$this->htaccess_warning_shown && !$this->htaccess_contains_redirect_rules() && $this->htaccess_redirect_allowed()) {
         add_action('admin_print_footer_scripts', array($this, 'insert_dismiss_htaccess'));
         ?>
         <div id="message" class="error fade notice is-dismissible rlrsssl-htaccess">
           <p>
-            <?php echo __("Your .htaccess does not contain the Really Simple SSL redirect to https, and could not be written, so a javascript redirect is currently added. For SEO purposes it is advisable to use .htaccess redirects. Set the .htaccess file to writable and visit the settings page to write it again, or copy the code lines from the settings page.","really-simple-ssl");?>
+            <?php echo __("Your .htaccess does not contain the Really Simple SSL redirect to https, and could not be written. For SEO purposes it is advisable to use 301 redirects. You can also use the interal WordPress 301 redirect, which can be enabled in the settings.","really-simple-ssl");?>
             <a href="options-general.php?page=rlrsssl_really_simple_ssl"><?php echo __("View settings page","really-simple-ssl");?></a>
           </p>
         </div>
@@ -1784,7 +1771,7 @@ public function show_notices()
   }
 
   /*
-    encourage networkwide for subfolder install.
+    when a server variable is not passed, redirect loops could result
   */
 
   if (is_multisite() && !$this->ssl_enabled_networkwide && $this->selected_networkwide_or_per_site && $this->is_multisite_subfolder_install()) {
@@ -1799,17 +1786,6 @@ public function show_notices()
           </p>
         </div>
       <?php
-    } elseif (!$this->wpmu_subfolder_warning_shown) {
-      //otherwise, the htaccess cannot be fixed.
-      add_action('admin_print_footer_scripts', array($this, 'insert_dismiss_wpmu_subfolder_warning'));
-    ?>
-      <div id="message" class="error fade notice is-dismissible rlrsssl-wpmu-subfolder-warning">
-        <p>
-          <?php _e('You run a Multisite installation with subfolders, which prevents this plugin from handling the .htaccess.','really-simple-ssl');?>
-          <?php _e('To enable .htaccess redirection, activate SSL networkwide. To ignore this message, just dismiss it.','really-simple-ssl');?>
-        </p>
-      </div>
-    <?php
     }
   }
 
@@ -1903,34 +1879,6 @@ public function insert_dismiss_htaccess() {
   <?php
 }
 
-/**
- * Insert some ajax script to dismis the ssl fail message, and stop nagging about it
- *
- * @since  2.0
- *
- * @access public
- *
- */
-
-public function insert_dismiss_wpmu_subfolder_warning() {
-  $ajax_nonce = wp_create_nonce( "really-simple-ssl" );
-  ?>
-  <script type='text/javascript'>
-    jQuery(document).ready(function($) {
-        $(".rlrsssl-wpmu-subfolder-warning.notice.is-dismissible").on("click", ".notice-dismiss", function(event){
-              var data = {
-                'action': 'dismiss_wpmu_subfolder_warning',
-                'security': '<?php echo $ajax_nonce; ?>'
-              };
-              $.post(ajaxurl, data, function(response) {
-
-              });
-          });
-    });
-  </script>
-  <?php
-}
-
   /**
    * Process the ajax dismissal of the success message.
    *
@@ -1964,22 +1912,6 @@ public function dismiss_htaccess_warning_callback() {
   wp_die(); // this is required to terminate immediately and return a proper response
 }
 
-/**
- * Process the ajax dismissal of the wpmu subfolder message
- *
- * @since  2.1
- *
- * @access public
- *
- */
-
-public function dismiss_wpmu_subfolder_warning_callback() {
-  global $wpdb;
-  check_ajax_referer( 'really-simple-ssl', 'security' );
-  $this->wpmu_subfolder_warning_shown = TRUE;
-  $this->save_options();
-  wp_die(); // this is required to terminate immediately and return a proper response
-}
 
   /**
    * Adds the admin options page
@@ -2131,23 +2063,23 @@ public function settings_page() {
           <?php if($this->ssl_enabled && ($this->site_has_ssl || $this->force_ssl_without_detection)) { ?>
           <tr>
             <td>
-              <?php echo ($this->htaccess_contains_redirect_rules()) ? $this->img("success") :$this->img("warning");?>
+              <?php echo ($this->has_301_redirect()) ? $this->img("success") :$this->img("warning");?>
             </td>
             <td>
             <?php
-                if($this->htaccess_contains_redirect_rules()) {
-                 _e("https redirect set in .htaccess","really-simple-ssl");
-              } elseif ($this->do_not_edit_htaccess) {
-                 _e("Editing of .htaccess is blocked in Really Simple ssl settings, so you're in control of the .htaccess file.","really-simple-ssl");
-              } else {
+                global $rsssl_server;
+                if($this->has_301_redirect()) {
+                 _e("301 redirect to https set","really-simple-ssl");
+               } elseif ($rsssl_server->get_server()=="apache") {
+
                  if (!is_writable($this->ABSpath.".htaccess")) {
-                   _e("Https redirect was set in javascript because the .htaccess was not writable. Set manually if you want to redirect in .htaccess.","really-simple-ssl");
+                   _e(".htaccess is not writable. Set 301 WordPress redirect, or set the .htaccess manually if you want to redirect in .htaccess.","really-simple-ssl");
                  } elseif(!$this->ssl_enabled_networkwide && $this->is_multisite_subfolder_install()) {
                    _e("Https redirect was set in javascript because you have activated per site on a multiste subfolder install. Install networkwide to set the .htaccess redirect.","really-simple-ssl");
                  } else {
                    _e("Https redirect was set in javascript because the htaccess redirect rule could not be verified. Set manually if you want to redirect in .htaccess.","really-simple-ssl");
                 }
-                 if ($this->ssl_type!="NA" && !(!$this->ssl_enabled_networkwide && $this->is_multisite_subfolder_install())) {
+                 if (!$this->no_server_variable && !(!$this->ssl_enabled_networkwide && $this->is_multisite_subfolder_install())) {
                     $manual = true;
                     $rules = $this->get_redirect_rules($manual);
                     echo "&nbsp;";
@@ -2161,6 +2093,8 @@ public function settings_page() {
                        </code>
                      <?php
                   }
+              } else {
+                _e("No 301 redirect is set. Add a redirect to your nginx.conf, or enable the WordPress 301 redirect in the settings","really-simple-ssl");
               }
             ?>
             </td><td></td>
@@ -2208,6 +2142,7 @@ public function settings_page() {
         $this->save_options();
       }
       else {
+        echo "<br>";
         _e("To view results here, enable the debug option in the settings tab.","really-simple-ssl");
       }
 
@@ -2316,7 +2251,7 @@ public function configuration_page_more(){
     <td>
     <?php
       if($this->contains_hsts()) {
-         _e("HTTP Strict Transport Security was set in the .htaccess","really-simple-ssl");
+         _e("HTTP Strict Transport Security was enabled","really-simple-ssl");
       } else {
          echo __('<a href="https://en.wikipedia.org/wiki/HTTP_Strict_Transport_Security" target="_blank">HTTP Strict Transport Security</a> was not set in your .htaccess.',"really-simple-ssl")."&nbsp;".__("To enable, ","really-simple-ssl");
          ?>
@@ -2357,15 +2292,18 @@ public function configuration_page_more(){
    */
 
 public function create_form(){
-
+    global $rsssl_server;
       register_setting( 'rlrsssl_options', 'rlrsssl_options', array($this,'options_validate') );
       add_settings_section('rlrsssl_settings', __("Settings","really-simple-ssl"), array($this,'section_text'), 'rlrsssl');
-      add_settings_field('id_do_not_edit_htaccess', __("Stop editing the .htaccess file","really-simple-ssl"), array($this,'get_option_do_not_edit_htaccess'), 'rlrsssl', 'rlrsssl_settings');
+
+      if ($rsssl_server->get_server()=="apache")
+        add_settings_field('id_do_not_edit_htaccess', __("Stop editing the .htaccess file","really-simple-ssl"), array($this,'get_option_do_not_edit_htaccess'), 'rlrsssl', 'rlrsssl_settings');
 
       //only show option to enable or disable mixed content and redirect when ssl is detected
       if($this->site_has_ssl || $this->force_ssl_without_detection) {
         add_settings_field('id_autoreplace_insecure_links', __("Auto replace mixed content","really-simple-ssl"), array($this,'get_option_autoreplace_insecure_links'), 'rlrsssl', 'rlrsssl_settings');
         add_settings_field('id_javascript_redirect', __("Enable javascript redirection to ssl","really-simple-ssl"), array($this,'get_option_javascript_redirect'), 'rlrsssl', 'rlrsssl_settings');
+        add_settings_field('id_wp_redirect', __("Enable WordPress 301 redirection to SSL","really-simple-ssl"), array($this,'get_option_wp_redirect'), 'rlrsssl', 'rlrsssl_settings');
       }
 
       add_settings_field('id_debug', __("Debug","really-simple-ssl"), array($this,'get_option_debug'), 'rlrsssl', 'rlrsssl_settings');
@@ -2401,7 +2339,6 @@ public function options_validate($input) {
   $newinput['site_has_ssl']                       = $this->site_has_ssl;
   $newinput['ssl_success_message_shown']          = $this->ssl_success_message_shown;
   $newinput['htaccess_warning_shown']             = $this->htaccess_warning_shown;
-  $newinput['wpmu_subfolder_warning_shown']       = $this->wpmu_subfolder_warning_shown;
   $newinput['plugin_db_version']                  = $this->plugin_db_version;
   $newinput['ssl_enabled']                        = $this->ssl_enabled;
   $newinput['ssl_enabled_networkwide']            = $this->ssl_enabled_networkwide;
@@ -2418,6 +2355,12 @@ public function options_validate($input) {
     $newinput['javascript_redirect'] = TRUE;
   } else {
     $newinput['javascript_redirect'] = FALSE;
+  }
+
+  if (!empty($input['wp_redirect']) && $input['wp_redirect']=='1') {
+    $newinput['wp_redirect'] = TRUE;
+  } else {
+    $newinput['wp_redirect'] = FALSE;
   }
 
   if (!empty($input['autoreplace_insecure_links']) && $input['autoreplace_insecure_links']=='1') {
@@ -2452,8 +2395,8 @@ public function options_validate($input) {
  */
 
 public function get_option_debug() {
-$options = get_option('rlrsssl_options');
-echo '<input id="rlrsssl_options" name="rlrsssl_options[debug]" size="40" type="checkbox" value="1"' . checked( 1, $this->debug, false ) ." />";
+  $options = get_option('rlrsssl_options');
+  echo '<input id="rlrsssl_options" name="rlrsssl_options[debug]" size="40" type="checkbox" value="1"' . checked( 1, $this->debug, false ) ." />";
 }
 
 /**
@@ -2465,8 +2408,21 @@ echo '<input id="rlrsssl_options" name="rlrsssl_options[debug]" size="40" type="
  */
 
 public function get_option_javascript_redirect() {
-$options = get_option('rlrsssl_options');
-echo '<input id="rlrsssl_options" name="rlrsssl_options[javascript_redirect]" size="40" type="checkbox" value="1"' . checked( 1, $this->javascript_redirect, false ) ." />";
+  $options = get_option('rlrsssl_options');
+  echo '<input id="rlrsssl_options" name="rlrsssl_options[javascript_redirect]" size="40" type="checkbox" value="1"' . checked( 1, $this->javascript_redirect, false ) ." />";
+}
+
+/**
+ * Insert option into settings form
+ * @since  3.0
+ *
+ * @access public
+ *
+ */
+
+public function get_option_wp_redirect() {
+  $options = get_option('rlrsssl_options');
+  echo '<input id="rlrsssl_options" name="rlrsssl_options[wp_redirect]" size="40" type="checkbox" value="1"' . checked( 1, $this->wp_redirect, false ) ." />";
 }
 
 /**

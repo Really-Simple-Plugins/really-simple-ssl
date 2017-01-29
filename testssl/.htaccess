@@ -1,0 +1,12 @@
+<IfModule mod_rewrite.c>
+  RewriteEngine on
+  RewriteCond %{HTTPS} !=on [NC]
+  RewriteCond %{HTTPS} !=1
+  RewriteCond %{HTTP:X-Forwarded-Proto} !https
+  RewriteCond %{HTTP:CF-Visitor} "scheme":"http"
+  RewriteCond %{SERVER_PORT} !443
+  RewriteCond %{HTTP:CloudFront-Forwarded-Proto} !https
+  RewriteCond %{HTTP:X-Forwarded-SSL} !on
+  RewriteCond %{ENV:HTTPS} !=on
+  RewriteRule ^(.*) https://%{HTTP_HOST}%{REQUEST_URI} [L]
+</IfModule>

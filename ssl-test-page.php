@@ -19,6 +19,7 @@
 			$ssl = TRUE;
 		}
 	}
+
 	if (isset($_SERVER['SERVER_PORT']) && ( '443' == $_SERVER['SERVER_PORT'] )) {
 			echo "#SERVERPORT443#<br>";
 			$ssl = TRUE;

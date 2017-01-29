@@ -7,7 +7,9 @@ if ( ! class_exists( 'rsssl_front_end' ) ) {
     public $force_ssl_without_detection     = FALSE;
     public $site_has_ssl                    = FALSE;
     public $javascript_redirect             = TRUE;
+    public $wp_redirect                     = TRUE;
     public $autoreplace_insecure_links      = TRUE;
+    //public $ssl_enabled_networkwide         = FALSE;
 
   function __construct() {
     if ( isset( self::$_this ) )
@@ -24,6 +26,22 @@ if ( ! class_exists( 'rsssl_front_end' ) ) {
   }
 
   /**
+   * Sets the SSL variable to on for WordPress, so the native function is_ssl() will return true
+   * It should run as first plugin in WP, otherwise issues might result.
+   *
+   * @since  3.0
+   *
+   * @access public
+   *
+   */
+
+  // public function set_ssl_var(){
+  //   if (($this->ssl_enabled && $this->site_has_ssl) || $this->ssl_enabled_networkwide) {
+  //     $_SERVER["HTTPS"] = "on";
+  //   }
+  // }
+
+  /**
    * Javascript redirect, when ssl is true.
    *
    * @since  2.2
@@ -35,8 +53,28 @@ if ( ! class_exists( 'rsssl_front_end' ) ) {
    public function force_ssl() {
      if ($this->ssl_enabled && ($this->site_has_ssl || $this->force_ssl_without_detection) ) {
        if ($this->javascript_redirect) add_action('wp_print_scripts', array($this,'force_ssl_with_javascript'));
+       if ($this->wp_redirect) add_action('wp', array($this, 'wp_redirect_to_ssl'), 40,3);
      }
    }
+
+
+   /**
+    * Redirect using wp redirect
+    *
+    * @since  3.0
+    *
+    * @access public
+    *
+    */
+
+
+   public function wp_redirect_to_ssl() {
+    if (!is_ssl()) {
+      wp_redirect("https://" . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'] , "301");
+      exit;
+  }
+
+
 
   /**
    * Get the options for this plugin
@@ -55,7 +93,13 @@ if ( ! class_exists( 'rsssl_front_end' ) ) {
       $this->autoreplace_insecure_links   = isset($options['autoreplace_insecure_links']) ? $options['autoreplace_insecure_links'] : TRUE;
       $this->ssl_enabled                  = isset($options['ssl_enabled']) ? $options['ssl_enabled'] : $this->site_has_ssl;
       $this->javascript_redirect          = isset($options['javascript_redirect']) ? $options['javascript_redirect'] : TRUE;
+      $this->wp_redirect                  = isset($options['wp_redirect']) ? $options['wp_redirect'] : TRUE;
     }
+
+    // $network_options = get_site_option('rlrsssl_network_options');
+    // if (isset($network_options) ) {
+    //   $this->ssl_enabled_networkwide  = isset($network_options['ssl_enabled_networkwide']) ? $network_options['ssl_enabled_networkwide'] : FALSE;
+    // }
   }
 
 
