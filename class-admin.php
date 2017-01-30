@@ -517,6 +517,7 @@ defined('ABSPATH') or die("you do not have acces to this page!");
         } elseif ($this->clicked_activate_ssl()) {
           //set wp redirect, but only when just activated.
           $this->wp_redirect = TRUE;
+          $this->save_options();
         }
 
         if ($this->wpconfig_siteurl_not_fixed)
