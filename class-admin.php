@@ -770,7 +770,7 @@ defined('ABSPATH') or die("you do not have acces to this page!");
           $rule  = "\n"."//Begin Really Simple SSL Load balancing fix"."\n";
           $rule .= '$server_opts = array("HTTP_CLOUDFRONT_FORWARDED_PROTO" => "https", "HTTP_CF_VISITOR"=>"https", "HTTP_X_FORWARDED_PROTO"=>"https", "HTTP_X_FORWARDED_SSL"=>"on");'."\n";
           $rule .= 'foreach( $server_opts as $option => $value ) {'."\n";
-          $rule .=   'if ( isset( $_SERVER[ $option ] ) && ( strpos( $_SERVER[ $option ], $value ) !== false ) ) {'."\n";
+          $rule .=   'if ( (isset($_ENV["HTTPS"]) && ( "on" == $_ENV["HTTPS"] )) || (isset( $_SERVER[ $option ] ) && ( strpos( $_SERVER[ $option ], $value ) !== false )) ) {'."\n";
           $rule .=     '$_SERVER[ "HTTPS" ] = "on";'."\n";
           $rule .=     'break;'."\n";
           $rule .=   '}'."\n";
@@ -1093,22 +1093,23 @@ protected function get_server_variable_fix_code(){
    */
 
   public function is_ssl_extended(){
-    $loadbalancer = FALSE;
+    $server_var = FALSE;
 		$server_opts = array(
+      'HTTP_X_FORWARDED_PROTO'=>'https',
       'HTTP_CLOUDFRONT_FORWARDED_PROTO' => 'https',
       'HTTP_CF_VISITOR'=>'https',
-      'HTTP_X_FORWARDED_PROTO'=>'https',
       'HTTP_X_FORWARDED_SSL'=>'on'
     );
 
 		foreach( $server_opts as $option => $value ) {
-			if ( isset( $_SERVER[ $option ] ) && ( strpos( $_SERVER[ $option ], $value ) !== false ) ) {
-				$loadbalancer = TRUE;
+			if ( (isset($_ENV['HTTPS']) && ( 'on' == $_ENV['HTTPS'] ))
+        || (isset( $_SERVER[ $option ] ) && ( strpos( $_SERVER[ $option ], $value ) !== false ) )) {
+				$server_var = TRUE;
 				break;
 			}
 		}
 
-    if (is_ssl() || $loadbalancer){
+    if (is_ssl() || $server_var){
       return true;
     } else {
       return false;
@@ -1713,7 +1714,7 @@ public function show_notice_wpconfig_needs_fixes(){ ?>
       //Begin Really Simple SSL Load balancing fix<br>
       $server_opts = array("HTTP_CLOUDFRONT_FORWARDED_PROTO" => "https", "HTTP_CF_VISITOR"=>"https", "HTTP_X_FORWARDED_PROTO"=>"https", "HTTP_X_FORWARDED_SSL"=>"on");<br>
       foreach( $server_opts as $option => $value ) {<br>
-      &nbsp;if ( isset( $_SERVER[ $option ] ) && ( strpos( $_SERVER[ $option ], $value ) !== false ) ) {<br>
+      &nbsp;if ((isset($_ENV["HTTPS"]) && ( "on" == $_ENV["HTTPS"] )) || (isset( $_SERVER[ $option ] ) && ( strpos( $_SERVER[ $option ], $value ) !== false )) ) {<br>
       &nbsp;&nbsp;$_SERVER[ "HTTPS" ] = "on";<br>
       &nbsp;&nbsp;break;<br>
       &nbsp;}<br>
