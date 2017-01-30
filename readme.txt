@@ -80,6 +80,7 @@ If you are experiencing redirect loops on your site, try these [instructions](ht
 * Prevent writing of empty .htaccess redirect
 * Added option for 301 internal wp redirect
 * Improved NGINX support
+* Added support for when only the $_ENV[HTTPS] variable is present
 
 = 2.4.3 =
 * Removed banner in admin
