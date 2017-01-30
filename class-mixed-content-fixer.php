@@ -82,7 +82,7 @@ if ( ! class_exists( 'rsssl_admin_mixed_content_fixer' ) ) {
     $home_yes_www = str_replace ( "://" , "://www." , $home_no_www);
 
     //for the escaped version, we only replace the home_url, not it's www or non www counterpart, as it is most likely not used
-    $escaped_home = preg_quote($home, '/');
+    $escaped_home = str_replace ( "/" , "\/" , $home);
 
     $this->http_urls = array(
         $home_yes_www,
@@ -104,7 +104,7 @@ if ( ! class_exists( 'rsssl_admin_mixed_content_fixer' ) ) {
 
  public function replace_insecure_links($str) {
    $search_array = apply_filters('rlrsssl_replace_url_args', $this->http_urls);
-   $ssl_array = str_replace ( "http://" , "https://", $search_array);
+   $ssl_array = str_replace ( array("http://", "http:\/\/") , array("https://", "https:\/\/"), $search_array);
    //now replace these links
    $str = str_replace ($search_array , $ssl_array , $str);
 

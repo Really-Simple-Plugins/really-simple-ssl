@@ -75,12 +75,13 @@ If you are experiencing redirect loops on your site, try these [instructions](ht
 == Changelog ==
 
 = 2.5.0 =
-* Improved support for cloudflare
-* Added support for Cloudfront, thanks to Sharif Alexandre
-* Prevent writing of empty .htaccess redirect
-* Added option for 301 internal wp redirect
-* Improved NGINX support
-* Added support for when only the $_ENV[HTTPS] variable is present
+* Tweak: Improved support for cloudflare
+* Tweak: Added support for Cloudfront, thanks to Sharif Alexandre
+* Fix: Prevent writing of empty .htaccess redirect
+* Tweak: Added option for 301 internal wp redirect
+* Tweak: Improved NGINX support
+* Tweak: Added support for when only the $_ENV[HTTPS] variable is present
+* Fix: Mixed content fixing of escaped URLS did not work properly
 
 = 2.4.3 =
 * Removed banner in admin
