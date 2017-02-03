@@ -1614,17 +1614,18 @@ protected function get_server_variable_fix_code(){
       $rule = "";
 
       //if the htaccess test was successfull, and we know the redirectype, edit
-      if ($manual || ($this->htaccess_test_success && !isset($this->ssl_type["NA"]) )) {
+      if (($manual || $this->htaccess_test_success ) && count($this->ssl_type)>0 && !isset($this->ssl_type["NA"])) {
         $rule .= "<IfModule mod_rewrite.c>"."\n";
         $rule .= "RewriteEngine on"."\n";
 
         // Fetch last array key
-        $types = array_keys($this->ssl_type);
-        $last_type = array_pop($types);
+        //$types = array_keys($this->ssl_type);
+        //$last_type = array_pop($types);
 
         //select rewrite condition based on detected type of ssl
         //foreach($this->ssl_type as $type => $value) {
-          $type = $this->ssl_types[0];
+          reset($this->ssl_type);
+          $type = key($this->ssl_type);
           $or = "";
           //if ($last_type != $type) $or = " [OR] ";
           if ($type == "serverhttpson") {
