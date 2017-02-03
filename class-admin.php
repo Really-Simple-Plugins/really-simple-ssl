@@ -1254,6 +1254,7 @@ protected function get_server_variable_fix_code(){
     if ($this->htaccess_test_success) {
 		  $this->trace_log("htaccess rules tested successfully.");
     } else {
+      //.htaccess rewrite rule seems to be giving problems.
       $this->trace_log("htaccess rules test failed try manual insertion.");
     }
 
@@ -1451,7 +1452,6 @@ protected function get_server_variable_fix_code(){
       } else {
         $result = true;
       }
-      $result = apply_filters("rsssl_contains_hsts_filter", $result);
     }
 
     return $result;
@@ -1623,7 +1623,28 @@ protected function get_server_variable_fix_code(){
         $last_type = array_pop($types);
 
         //select rewrite condition based on detected type of ssl
-        }
+        //foreach($this->ssl_type as $type => $value) {
+          $type = $this->ssl_types[0];
+          $or = "";
+          //if ($last_type != $type) $or = " [OR] ";
+          if ($type == "serverhttpson") {
+              $rule .= "RewriteCond %{HTTPS} !=on [NC]".$or."\n";
+          } elseif ($type == "serverhttps1") {
+              $rule .= "RewriteCond %{HTTPS} !=1".$or."\n";
+          } elseif ($type == "loadbalancer") {
+             $rule .="RewriteCond %{HTTP:X-Forwarded-Proto} !https".$or."\n";
+          } elseif ($type== "cloudflare") {
+              $rule .= "RewriteCond %{HTTP:CF-Visitor} '".'"scheme":"http"'."'".$or."\n";//some concatenation to get the quotes right.
+          } elseif ($type == "serverport443") {
+             $rule .= "RewriteCond %{SERVER_PORT} !443".$or."\n";
+           } elseif ($type == "envhttps") {
+              $rule .= "RewriteCond %{ENV:HTTPS} !=on".$or."\n";
+          } elseif ($type == "cloudfront") {
+             $rule .="RewriteCond %{HTTP:CloudFront-Forwarded-Proto} !https".$or."\n";
+          } elseif ($type == "cdn") {
+             $rule .= "RewriteCond %{HTTP:X-Forwarded-SSL} !on".$or."\n";
+          }
+        //}
 
         //if multisite, and NOT subfolder install (checked for in the detec_config function)
         //, add a condition so it only applies to sites where plugin is activated
@@ -2087,6 +2108,7 @@ public function settings_page() {
                  } else {
                    _e("Https redirect was cannot be set in the .htaccess because the htaccess redirect rule could not be verified. Set the .htaccess redirect manually or enable WordPress redirect in the settings.","really-simple-ssl");
                 }
+                 if (!isset($this->ssl_type["NA"]) && !(!$this->ssl_enabled_networkwide && $this->is_multisite_subfolder_install())) {
                     $manual = true;
                     $rules = $this->get_redirect_rules($manual);
                     echo "&nbsp;";
@@ -2248,6 +2270,7 @@ public function setup_admin_page(){
 public function configuration_page_more(){
 
   global $really_simple_ssl;
+
   ?>
   <table>
   <tr>
@@ -2272,6 +2295,7 @@ public function configuration_page_more(){
 
 
   <?php
+
   if (!$this->site_has_ssl) {
     $this->show_pro();
   } else {
