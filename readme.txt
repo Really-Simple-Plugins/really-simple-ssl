@@ -4,7 +4,7 @@ Tags: SSL, https, force SSL, mixed content, insecure content, secure website, we
 Requires at least: 4.2
 License: GPL2
 Tested up to: 4.7.2
-Stable tag: 2.5.0
+Stable tag: 2.5.1
 
 No setup required! You only need an SSL certificate, and this plugin will do the rest.
 
@@ -81,7 +81,7 @@ If you are experiencing redirect loops on your site, try these [instructions](ht
 * Tweak: Added option for 301 internal wp redirect
 * Tweak: Improved NGINX support
 * Tweak: Added support for when only the $_ENV[HTTPS] variable is present
-* Fix: Mixed content fixing of escaped URLS did not work properly
+* Fix: Mixed content fixing of escaped URLS
 
 = 2.4.3 =
 * Removed banner in admin

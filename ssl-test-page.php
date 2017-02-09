@@ -33,10 +33,14 @@
   if (!empty($_SERVER['HTTP_CLOUDFRONT_FORWARDED_PROTO']) && ($_SERVER['HTTP_CLOUDFRONT_FORWARDED_PROTO'] == 'https')){
     echo "#CLOUDFRONT#<br>";
     $ssl = TRUE;
-  } elseif(!empty($_SERVER['HTTP_CF_VISITOR']) && ($_SERVER['HTTP_CF_VISITOR'] == 'https')){
+  }
+
+  if(!empty($_SERVER['HTTP_CF_VISITOR']) && ($_SERVER['HTTP_CF_VISITOR'] == 'https')){
     echo "#CLOUDFLARE#<br>";
     $ssl = TRUE;
-  } elseif(!empty($_SERVER['HTTP_X_FORWARDED_PROTO']) && ($_SERVER['HTTP_X_FORWARDED_PROTO'] == 'https')){
+  }
+
+  if(!empty($_SERVER['HTTP_X_FORWARDED_PROTO']) && ($_SERVER['HTTP_X_FORWARDED_PROTO'] == 'https')){
     echo "#LOADBALANCER#<br>";
     $ssl = TRUE;
   }

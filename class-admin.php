@@ -1619,15 +1619,14 @@ protected function get_server_variable_fix_code(){
         $rule .= "RewriteEngine on"."\n";
 
         // Fetch last array key
-        //$types = array_keys($this->ssl_type);
-        //$last_type = array_pop($types);
+        $types = array_keys($this->ssl_type);
+
+        $last_type = array_pop($types);
 
         //select rewrite condition based on detected type of ssl
-        //foreach($this->ssl_type as $type => $value) {
-          reset($this->ssl_type);
-          $type = key($this->ssl_type);
+        foreach($this->ssl_type as $type => $value) {
           $or = "";
-          //if ($last_type != $type) $or = " [OR] ";
+          if ($last_type != $type) $or = " [OR] ";
           if ($type == "serverhttpson") {
               $rule .= "RewriteCond %{HTTPS} !=on [NC]".$or."\n";
           } elseif ($type == "serverhttps1") {
@@ -1635,17 +1634,17 @@ protected function get_server_variable_fix_code(){
           } elseif ($type == "loadbalancer") {
              $rule .="RewriteCond %{HTTP:X-Forwarded-Proto} !https".$or."\n";
           } elseif ($type== "cloudflare") {
-              $rule .= "RewriteCond %{HTTP:CF-Visitor} '".'"scheme":"http"'."'".$or."\n";//some concatenation to get the quotes right.
+            $rule .= "RewriteCond %{HTTP:CF-Visitor} '".'"scheme":"http"'."'".$or."\n";//some concatenation to get the quotes right.
           } elseif ($type == "serverport443") {
              $rule .= "RewriteCond %{SERVER_PORT} !443".$or."\n";
            } elseif ($type == "envhttps") {
-              $rule .= "RewriteCond %{ENV:HTTPS} !=on".$or."\n";
+            $rule .= "RewriteCond %{ENV:HTTPS} !=on".$or."\n";
           } elseif ($type == "cloudfront") {
              $rule .="RewriteCond %{HTTP:CloudFront-Forwarded-Proto} !https".$or."\n";
           } elseif ($type == "cdn") {
              $rule .= "RewriteCond %{HTTP:X-Forwarded-SSL} !on".$or."\n";
           }
-        //}
+        }
 
         //if multisite, and NOT subfolder install (checked for in the detec_config function)
         //, add a condition so it only applies to sites where plugin is activated
@@ -2092,11 +2091,16 @@ public function settings_page() {
             </td>
             <td>
             <?php
-                global $rsssl_server;
-                if($this->has_301_redirect()) {
+
+              global $rsssl_server;
+              if($this->has_301_redirect()) {
                  _e("301 redirect to https set: ","really-simple-ssl");
                  if ($rsssl_server->get_server()=="apache" && $this->htaccess_contains_redirect_rules())
                     _e(".htaccess redirect","really-simple-ssl");
+
+                 if ($rsssl_server->get_server()=="apache" && $this->htaccess_contains_redirect_rules() && $this->wp_redirect)
+                    _e(" and ", "really-simple-ssl");
+
                  if ($this->wp_redirect)
                     _e("WordPress redirect","really-simple-ssl");
 
