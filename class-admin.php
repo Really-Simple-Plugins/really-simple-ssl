@@ -2094,7 +2094,7 @@ public function settings_page() {
               global $rsssl_server;
               if($this->has_301_redirect()) {
                  _e("301 redirect to https set: ","really-simple-ssl");
-                 if ( && $this->htaccess_contains_redirect_rules())
+                 if ($rsssl_server->uses_htaccess() && $this->htaccess_contains_redirect_rules())
                     _e(".htaccess redirect","really-simple-ssl");
 
                  if ($rsssl_server->uses_htaccess() && $this->htaccess_contains_redirect_rules() && $this->wp_redirect)
