@@ -41,6 +41,10 @@ public function get_server() {
 
     return 'nginx';
 
+  } elseif ( strpos( $server_raw, 'litespeed' ) !== false ) {
+
+    return 'litespeed';
+
   } else { //unsupported server
 
     return false;

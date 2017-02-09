@@ -73,6 +73,11 @@ For detailed instructions on how to find mixed content read this [article](https
 If you are experiencing redirect loops on your site, try these [instructions](https://really-simple-ssl.com/knowledge-base/my-website-is-in-a-redirect-loop/).
 
 == Changelog ==
+= 2.5.1 =
+* Fix: typos in explanations
+* Added detected server to debug Log
+* Added test folder for CloudFlare
+* Added htaccess redirect to use all available server vars for checking SSL.
 
 = 2.5.0 =
 * Tweak: Improved support for cloudflare

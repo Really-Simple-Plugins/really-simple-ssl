@@ -498,7 +498,7 @@ defined('ABSPATH') or die("you do not have acces to this page!");
       if ($this->site_has_ssl || $this->force_ssl_without_detection) {
         //when one of the used server variables was found, test if the redirect works
 
-        if ($rsssl_server->get_server()=="apache" && !isset($this->ssl_type["NA"]))
+        if ($rsssl_server->uses_htaccess() && !isset($this->ssl_type["NA"]))
             $this->test_htaccess_redirect();
 
         //in a configuration of loadbalancer without a set server variable https = 0, add code to wpconfig
@@ -510,8 +510,7 @@ defined('ABSPATH') or die("you do not have acces to this page!");
 
         if ( class_exists( 'Jetpack' ) )
             $this->wpconfig_jetpack();
-
-        if ($rsssl_server->get_server() == "apache") {
+        if ($rsssl_server->uses_htaccess()) {
           $this->editHtaccess();
         } elseif ($this->clicked_activate_ssl()) {
           //set wp redirect, but only when just activated.
@@ -1422,7 +1421,7 @@ protected function get_server_variable_fix_code(){
     if ($this->wp_redirect) return true;
 
     global $rsssl_server;
-    if ($rsssl_server->get_server()=="apache" && $this->htaccess_contains_redirect_rules() ) {
+    if ($rsssl_server->uses_htaccess() && $this->htaccess_contains_redirect_rules() ) {
       return true;
     }
 
@@ -1768,12 +1767,12 @@ public function show_notices()
   */
 
   global $rsssl_server;
-  if ($rsssl_server->get_server()=="apache" && !$this->wp_redirect && $this->ssl_enabled && !$this->htaccess_warning_shown && !$this->htaccess_contains_redirect_rules() && $this->htaccess_redirect_allowed()) {
+  if ($rsssl_server->uses_htaccess() && !$this->wp_redirect && $this->ssl_enabled && !$this->htaccess_warning_shown && !$this->htaccess_contains_redirect_rules() && $this->htaccess_redirect_allowed()) {
         add_action('admin_print_footer_scripts', array($this, 'insert_dismiss_htaccess'));
         ?>
         <div id="message" class="error fade notice is-dismissible rlrsssl-htaccess">
           <p>
-            <?php echo __("Your .htaccess does not contain the Really Simple SSL redirect to https, and could not be written. For SEO purposes it is advisable to use 301 redirects. You can also use the interal WordPress 301 redirect, which can be enabled in the settings.","really-simple-ssl");?>
+            <?php echo __("Your .htaccess does not contain the Really Simple SSL redirect to https, and could not be written. For SEO purposes it is advisable to use 301 redirects. You can also use the internal WordPress 301 redirect, which can be enabled in the settings.","really-simple-ssl");?>
             <a href="options-general.php?page=rlrsssl_really_simple_ssl"><?php echo __("View settings page","really-simple-ssl");?></a>
           </p>
         </div>
@@ -2095,23 +2094,23 @@ public function settings_page() {
               global $rsssl_server;
               if($this->has_301_redirect()) {
                  _e("301 redirect to https set: ","really-simple-ssl");
-                 if ($rsssl_server->get_server()=="apache" && $this->htaccess_contains_redirect_rules())
+                 if ( && $this->htaccess_contains_redirect_rules())
                     _e(".htaccess redirect","really-simple-ssl");
 
-                 if ($rsssl_server->get_server()=="apache" && $this->htaccess_contains_redirect_rules() && $this->wp_redirect)
+                 if ($rsssl_server->uses_htaccess() && $this->htaccess_contains_redirect_rules() && $this->wp_redirect)
                     _e(" and ", "really-simple-ssl");
 
                  if ($this->wp_redirect)
                     _e("WordPress redirect","really-simple-ssl");
 
-               } elseif ($rsssl_server->get_server()=="apache") {
+               } elseif ($rsssl_server->uses_htaccess()) {
 
                  if (!is_writable($this->ABSpath.".htaccess")) {
                    _e(".htaccess is not writable. Set 301 WordPress redirect, or set the .htaccess manually if you want to redirect in .htaccess.","really-simple-ssl");
                  } elseif(!$this->ssl_enabled_networkwide && $this->is_multisite_subfolder_install()) {
                    _e("Https redirect cannot be set in the .htaccess file because you have activated per site on a multiste subfolder install. Enable WordPress redirect in the settings.","really-simple-ssl");
                  } else {
-                   _e("Https redirect was cannot be set in the .htaccess because the htaccess redirect rule could not be verified. Set the .htaccess redirect manually or enable WordPress redirect in the settings.","really-simple-ssl");
+                   _e("Https redirect cannot be set in the .htaccess because the htaccess redirect rule could not be verified. Set the .htaccess redirect manually or enable WordPress redirect in the settings.","really-simple-ssl");
                 }
                  if (!isset($this->ssl_type["NA"]) && !(!$this->ssl_enabled_networkwide && $this->is_multisite_subfolder_install())) {
                     $manual = true;
@@ -2169,6 +2168,7 @@ public function settings_page() {
         echo "<h2>".__("Log for debugging purposes","really-simple-ssl")."</h2>";
         echo "<p>".__("Send me a copy of these lines if you have any issues. The log will be erased when debug is set to false","really-simple-ssl")."</p>";
         echo "<div class='debug-log'>";
+        echo "SERVER: ".$rsssl_server->get_server();
         echo $this->debug_log;
         echo "</div>";
         //$this->debug_log.="<br><b>-----------------------</b>";
@@ -2330,7 +2330,7 @@ public function create_form(){
       register_setting( 'rlrsssl_options', 'rlrsssl_options', array($this,'options_validate') );
       add_settings_section('rlrsssl_settings', __("Settings","really-simple-ssl"), array($this,'section_text'), 'rlrsssl');
 
-      if ($rsssl_server->get_server()=="apache")
+      if ($rsssl_server->uses_htaccess())
         add_settings_field('id_do_not_edit_htaccess', __("Stop editing the .htaccess file","really-simple-ssl"), array($this,'get_option_do_not_edit_htaccess'), 'rlrsssl', 'rlrsssl_settings');
 
       //only show option to enable or disable mixed content and redirect when ssl is detected
