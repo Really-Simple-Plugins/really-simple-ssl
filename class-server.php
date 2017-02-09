@@ -17,6 +17,15 @@ if ( ! class_exists( 'rsssl_server' ) ) {
     return self::$_this;
   }
 
+public function uses_htaccess(){
+
+  if ($this->get_server()=="apache" || $this->get_server()=="litespeed") {
+    return true;
+  }
+
+  return false;
+}
+
 /**
  * Returns the server type of the plugin user.
  *
@@ -40,6 +49,10 @@ public function get_server() {
   } elseif ( strpos( $server_raw, 'nginx' ) !== false ) {
 
     return 'nginx';
+
+  } elseif ( strpos( $server_raw, 'litespeed' ) !== false ) {
+
+    return 'litespeed';
 
   } else { //unsupported server
 
