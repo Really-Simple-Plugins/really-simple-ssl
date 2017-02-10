@@ -84,7 +84,6 @@ defined('ABSPATH') or die("you do not have acces to this page!");
       - SSL activation just confirmed.
       - on settings page
       - No SSL detected
-
     */
 
     if (//when configuration should run again
@@ -2165,6 +2164,7 @@ public function settings_page() {
     <div>
       <?php
       if ($this->debug) {
+        global $rsssl_server;
         echo "<h2>".__("Log for debugging purposes","really-simple-ssl")."</h2>";
         echo "<p>".__("Send me a copy of these lines if you have any issues. The log will be erased when debug is set to false","really-simple-ssl")."</p>";
         echo "<div class='debug-log'>";
