@@ -17,6 +17,15 @@ if ( ! class_exists( 'rsssl_server' ) ) {
     return self::$_this;
   }
 
+
+/*
+
+  @Since 2.5.1
+  Checks if the server uses .htaccess
+  returns: Boolean
+
+*/
+
 public function uses_htaccess(){
 
   if ($this->get_server()=="apache" || $this->get_server()=="litespeed") {
