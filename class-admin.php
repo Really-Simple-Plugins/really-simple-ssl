@@ -35,7 +35,6 @@ defined('ABSPATH') or die("you do not have acces to this page!");
   public $debug_log;
 
   public $plugin_conflict                   = ARRAY();
-  public $plugin_version;
   public $plugin_db_version;
   public $plugin_upgraded;
   public $mixed_content_fixer_status        = "OK";
@@ -52,7 +51,6 @@ defined('ABSPATH') or die("you do not have acces to this page!");
     $this->get_options();
     $this->get_admin_options();
     $this->ABSpath = $this->getABSPATH();
-    $this->get_plugin_version();
     $this->get_plugin_upgraded(); //call always, otherwise db version will not match anymore.
 
     register_activation_hook(  dirname( __FILE__ )."/".$this->plugin_filename, array($this,'activate') );
@@ -467,8 +465,8 @@ defined('ABSPATH') or die("you do not have acces to this page!");
    */
 
   public function get_plugin_upgraded() {
-  	if ($this->plugin_db_version!=$this->plugin_version) {
-  		$this->plugin_db_version = $this->plugin_version;
+  	if ($this->plugin_db_version!= rsssl_version) {
+  		$this->plugin_db_version = rsssl_version;
   		$this->plugin_upgraded = true;
       $this->save_options();
   	}
@@ -551,24 +549,6 @@ defined('ABSPATH') or die("you do not have acces to this page!");
         return true;
     }
     return false;
-  }
-
-
-
-  /**
-   * Retrieves the current version of this plugin
-   *
-   * @since  2.1
-   *
-   * @access public
-   *
-   */
-
-  public function get_plugin_version() {
-      if ( ! function_exists( 'get_plugins' ) )
-          require_once( ABSPATH . 'wp-admin/includes/plugin.php' );
-      $plugin_folder = get_plugins( '/' . plugin_basename( dirname( __FILE__ ) ) );
-      $this->plugin_version = $plugin_folder[$this->plugin_filename]['Version'];
   }
 
   /**
@@ -1136,7 +1116,7 @@ protected function get_server_variable_fix_code(){
   public function detect_configuration() {
     global $rsssl_url;
     $this->trace_log("** Detecting configuration **");
-    $this->trace_log("plugin version: ".$this->plugin_version);
+    $this->trace_log("plugin version: ".rsssl_version);
     $old_ssl_setting = $this->site_has_ssl;
     $filecontents = "";
 
@@ -1366,7 +1346,7 @@ protected function get_server_variable_fix_code(){
       //find closing marker of version
       $close = strpos($htaccess, "]", $versionpos);
       $version = substr($htaccess, $versionpos+14, $close-($versionpos+14));
-      if ($version != $this->plugin_version) {
+      if ($version != rsssl_version) {
         return true;
       }
       else {
@@ -1707,7 +1687,7 @@ protected function get_server_variable_fix_code(){
       }
 
       if (strlen($rule)>0) {
-        $rule = "\n"."# BEGIN rlrssslReallySimpleSSL rsssl_version[".$this->plugin_version."]\n".$rule."# END rlrssslReallySimpleSSL"."\n";
+        $rule = "\n"."# BEGIN rlrssslReallySimpleSSL rsssl_version[".rsssl_version."]\n".$rule."# END rlrssslReallySimpleSSL"."\n";
       }
 
       $rule = preg_replace("/\n+/","\n", $rule);
@@ -2250,7 +2230,7 @@ public function img($type) {
        global $rsssl_admin_page;
        if( $hook != $rsssl_admin_page && $this->ssl_enabled )
            return;
-       wp_register_style( 'rlrsssl-css', rsssl_url . '/css/main.css', "", $this->plugin_version);
+       wp_register_style( 'rlrsssl-css', rsssl_url . '/css/main.css', "", rsssl_version);
        wp_enqueue_style( 'rlrsssl-css');
    }
 
@@ -2450,7 +2430,7 @@ public function get_option_javascript_redirect() {
 public function get_option_wp_redirect() {
   $options = get_option('rlrsssl_options');
   echo '<input id="rlrsssl_options" name="rlrsssl_options[wp_redirect]" size="40" type="checkbox" value="1"' . checked( 1, $this->wp_redirect, false ) ." />";
-  rsssl_help::this()->get_help_tip(__("Enable this if you want to use the internal WordPress 301 redirect. Need on NGINX servers, or if the .htaccess redirect cannot be used.", "really-simple-ssl"));
+  rsssl_help::this()->get_help_tip(__("Enable this if you want to use the internal WordPress 301 redirect. Needed on NGINX servers, or if the .htaccess redirect cannot be used.", "really-simple-ssl"));
 
 }
 
