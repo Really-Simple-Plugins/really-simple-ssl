@@ -22,6 +22,7 @@ defined('ABSPATH') or die("you do not have acces to this page!");
 
   public $ssl_test_page_error;
   public $htaccess_test_success             = FALSE;
+  public $plugin_version                    = rsssl_version; //deprecated, but used in pro plugin until 1.0.25 
 
   public $plugin_dir                        = "really-simple-ssl";
   public $plugin_filename                   = "rlrsssl-really-simple-ssl.php";
