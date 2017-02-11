@@ -89,6 +89,7 @@ defined('ABSPATH') or die("you do not have acces to this page!");
     if (//when configuration should run again
         (!$this->htaccess_warning_shown && $this->ssl_enabled && !$this->htaccess_contains_redirect_rules() && $this->htaccess_redirect_allowed())
         || ($this->clicked_activate_ssl() || !$this->ssl_enabled || !$this->site_has_ssl || $is_on_settings_page)) {
+
       $this->trace_log("** Really Simple SSL debug mode **");
       if (is_multisite()) $this->build_domain_list();//has to come after clicked_activate_ssl, otherwise this domain won't get counted.
       $this->detect_configuration();
@@ -126,7 +127,16 @@ defined('ABSPATH') or die("you do not have acces to this page!");
     add_action('plugins_loaded', array($this,'check_plugin_conflicts'),30);
 
     //add the settings page for the plugin
-    add_action('admin_menu', array($this,'setup_admin_page'),30);
+    add_action('admin_enqueue_scripts', array($this, 'enqueue_assets'));
+    add_action('admin_init', array($this, 'load_translation'),20);
+    add_action('rsssl_configuration_page', array($this, 'configuration_page_more'));
+
+    //settings page, form  and settings link in the plugins page
+    add_action('admin_menu', array($this, 'add_settings_page'),40);
+    add_action('admin_init', array($this, 'create_form'),40);
+
+    $plugin = $this->plugin_dir."/".$this->plugin_filename;
+    add_filter("plugin_action_links_$plugin", array($this,'plugin_settings_link'));
 
     //check if the uninstallfile is safely renamed to php.
     $this->check_for_uninstall_file();
@@ -1204,9 +1214,14 @@ protected function get_server_variable_fix_code(){
       }
 
       //check for is_ssl()
-      if (((strpos($filecontents, "#SERVER-HTTPS-ON#") === false) &&
-          (strpos($filecontents, "#SERVER-HTTPS-1#") === false) &&
-          (strpos($filecontents, "#SERVERPORT443#") === false)) || !is_ssl()) {
+      if (
+           (
+             !is_ssl() &&
+             (strpos($filecontents, "#SERVER-HTTPS-ON#") === false) &&
+             (strpos($filecontents, "#SERVER-HTTPS-1#") === false) &&
+             (strpos($filecontents, "#SERVERPORT443#") === false)
+           )
+           || !is_ssl() ) {
         //when is_ssl would return false, we should add some code to wp-config.php
         if (!$this->wpconfig_has_fixes()) {
           $this->do_wpconfig_loadbalancer_fix = TRUE;
@@ -1340,6 +1355,7 @@ protected function get_server_variable_fix_code(){
         if ($this->debug) $this->trace_log("could not remove rules from htaccess, file not writable");
       }
   }
+
 
   public function contains_previous_version($htaccess) {
     $versionpos = strpos($htaccess, "rsssl_version");
@@ -2168,7 +2184,7 @@ public function settings_page() {
         echo "<h2>".__("Log for debugging purposes","really-simple-ssl")."</h2>";
         echo "<p>".__("Send me a copy of these lines if you have any issues. The log will be erased when debug is set to false","really-simple-ssl")."</p>";
         echo "<div class='debug-log'>";
-        echo "SERVER: ".$rsssl_server->get_server();
+        echo "SERVER: ".$rsssl_server->get_server() . "<br>";
         echo $this->debug_log;
         echo "</div>";
         //$this->debug_log.="<br><b>-----------------------</b>";
@@ -2238,30 +2254,6 @@ public function img($type) {
        wp_enqueue_style( 'rlrsssl-css');
    }
 
-  /**
-   * Initialize admin errormessage, settings page
-   *
-   * @since  2.0
-   *
-   * @access public
-   *
-   */
-
-public function setup_admin_page(){
-  if (current_user_can($this->capability)) {
-    add_action('admin_enqueue_scripts', array($this, 'enqueue_assets'));
-    add_action('admin_init', array($this, 'load_translation'),20);
-    add_action('rsssl_configuration_page', array($this, 'configuration_page_more'));
-
-    //settings page, from creation and settings link in the plugins page
-    add_action('admin_menu', array($this, 'add_settings_page'),40);
-    add_action('admin_init', array($this, 'create_form'),40);
-
-    $plugin = $this->plugin_dir."/".$this->plugin_filename;
-    add_filter("plugin_action_links_$plugin", array($this,'plugin_settings_link'));
-  }
-}
-
 
 
   /*
@@ -2273,9 +2265,6 @@ public function setup_admin_page(){
 
 
 public function configuration_page_more(){
-
-  global $really_simple_ssl;
-
   ?>
   <table>
   <tr>
@@ -2431,6 +2420,8 @@ public function options_validate($input) {
 public function get_option_debug() {
   $options = get_option('rlrsssl_options');
   echo '<input id="rlrsssl_options" name="rlrsssl_options[debug]" size="40" type="checkbox" value="1"' . checked( 1, $this->debug, false ) ." />";
+  rsssl_help::this()->get_help_tip(__("Enable this option to get debug info in the debug tab.", "really-simple-ssl"));
+
 }
 
 /**
@@ -2444,6 +2435,8 @@ public function get_option_debug() {
 public function get_option_javascript_redirect() {
   $options = get_option('rlrsssl_options');
   echo '<input id="rlrsssl_options" name="rlrsssl_options[javascript_redirect]" size="40" type="checkbox" value="1"' . checked( 1, $this->javascript_redirect, false ) ." />";
+  rsssl_help::this()->get_help_tip(__("This is a fallback you should only use if other redirection methods do not work.", "really-simple-ssl"));
+
 }
 
 /**
@@ -2457,21 +2450,10 @@ public function get_option_javascript_redirect() {
 public function get_option_wp_redirect() {
   $options = get_option('rlrsssl_options');
   echo '<input id="rlrsssl_options" name="rlrsssl_options[wp_redirect]" size="40" type="checkbox" value="1"' . checked( 1, $this->wp_redirect, false ) ." />";
+  rsssl_help::this()->get_help_tip(__("Enable this if you want to use the internal WordPress 301 redirect. Need on NGINX servers, or if the .htaccess redirect cannot be used.", "really-simple-ssl"));
+
 }
 
-/**
- * Insert option into settings form
- *
- * @since  2.0
- *
- * @access public
- *
- */
-
-public function get_option_force_ssl_withouth_detection() {
-$options = get_option('rlrsssl_options');
-echo '<input id="rlrsssl_options" onClick="return confirm(\''.__("Are you sure you have an SSL certifcate? Forcing ssl on a non-ssl site can break your site.","really-simple-ssl").'\');" name="rlrsssl_options[force_ssl_without_detection]" size="40" type="checkbox" value="1"' . checked( 1, $this->force_ssl_without_detection, false ) ." />";
-}
 
 /**
  * Insert option into settings form
@@ -2485,6 +2467,8 @@ echo '<input id="rlrsssl_options" onClick="return confirm(\''.__("Are you sure y
   public function get_option_do_not_edit_htaccess() {
     $options = get_option('rlrsssl_options');
     echo '<input id="rlrsssl_options" name="rlrsssl_options[do_not_edit_htaccess]" size="40" type="checkbox" value="1"' . checked( 1, $this->do_not_edit_htaccess, false ) ." />";
+
+    rsssl_help::this()->get_help_tip(__("If you want to customize the Really Simple SSL .htaccess, you need to prevent Really Simple SSL from rewriting it. Enabling this option will do that.", "really-simple-ssl"));
     if (!$this->do_not_edit_htaccess && !is_writable($this->ABSpath.".htaccess")) _e(".htaccess is currently not writable.","really-simple-ssl");
   }
 
@@ -2500,6 +2484,9 @@ echo '<input id="rlrsssl_options" onClick="return confirm(\''.__("Are you sure y
   public function get_option_autoreplace_insecure_links() {
     $options = get_option('rlrsssl_options');
     echo "<input id='rlrsssl_options' name='rlrsssl_options[autoreplace_insecure_links]' size='40' type='checkbox' value='1'" . checked( 1, $this->autoreplace_insecure_links, false ) ." />";
+
+    rsssl_help::this()->get_help_tip(__("In most cases you need to leave this enabled, to prevent mixed content issues on your site.", "really-simple-ssl"));
+
   }
     /**
      * Add settings link on plugins overview page

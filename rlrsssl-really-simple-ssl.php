@@ -53,6 +53,7 @@
     require_once( dirname( __FILE__ ) .  '/class-cache.php' );
     require_once( dirname( __FILE__ ) .  '/class-url.php' );
     require_once( dirname( __FILE__ ) .  '/class-server.php' );
+    require_once( dirname( __FILE__ ) .  '/class-help.php' );
     //require_once( dirname( __FILE__ ) .  '/class-maintain-plugin-load-position.php' );
     //$rsssl_maintain_plugin_position     = new rsssl_maintain_plugin_position;
 
@@ -60,6 +61,7 @@
     $rsssl_cache                        = new rsssl_cache;
     $rsssl_server                       = new rsssl_server;
     $really_simple_ssl                  = new rsssl_admin;
+    $rsssl_help                         = new rsssl_help;
 
     add_action("plugins_loaded", array($really_simple_ssl, "init"),10);
   }
