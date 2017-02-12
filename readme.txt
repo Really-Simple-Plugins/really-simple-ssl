@@ -74,6 +74,7 @@ If you are experiencing redirect loops on your site, try these [instructions](ht
 
 == Changelog ==
 = 2.5.1 =
+* Added help tooltips
 * Fix: typos in explanations
 * Added detected server to debug Log
 * Added test folder for CloudFlare
