@@ -1147,34 +1147,42 @@ protected function get_server_variable_fix_code(){
 
       //check the type of ssl, either by parsing the returned string, or by reading the server vars.
       if ((strpos($filecontents, "#CLOUDFRONT#") !== false) || (isset($_SERVER['HTTP_CLOUDFRONT_FORWARDED_PROTO']) && ($_SERVER['HTTP_CLOUDFRONT_FORWARDED_PROTO'] == 'https'))) {
+        $this->trace_log("cloudfront");
         $this->ssl_type["cloudfront"] =TRUE;
       }
 
       if ((strpos($filecontents, "#LOADBALANCER#") !== false) || (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && ($_SERVER['HTTP_X_FORWARDED_PROTO'] == 'https'))) {
+        $this->trace_log("loadbalancer");
         $this->ssl_type["loadbalancer"] =TRUE;
       }
 
       if ((strpos($filecontents, "#CLOUDFLARE#") !== false) || (isset($_SERVER['HTTP_CF_VISITOR']) && ($_SERVER['HTTP_CF_VISITOR'] == 'https'))) {
+        $this->trace_log("cloudflare");
         $this->ssl_type["cloudflare"] =TRUE;
       }
 
       if ((strpos($filecontents, "#CDN#") !== false) || (isset($_SERVER['HTTP_X_FORWARDED_SSL']) && ($_SERVER['HTTP_X_FORWARDED_SSL'] == 'on'))) {
+        $this->trace_log("cdn");
         $this->ssl_type["cdn"]=TRUE;
       }
 
       if ((strpos($filecontents, "#SERVER-HTTPS-ON#") !== false) || (isset($_SERVER['HTTPS']) && strtolower($_SERVER['HTTPS']) == 'on')) {
+        $this->trace_log("serverhttpson");
         $this->ssl_type["serverhttpson"]=TRUE;
       }
 
       if ((strpos($filecontents, "#SERVER-HTTPS-1#") !== false) || (isset($_SERVER['HTTPS']) && strtolower($_SERVER['HTTPS']) == '1')) {
+        $this->trace_log("serverhttps1");
         $this->ssl_type["serverhttps1"]=TRUE;
       }
 
       if ((strpos($filecontents, "#SERVERPORT443#") !== false) || (isset($_SERVER['SERVER_PORT']) && ( '443' == $_SERVER['SERVER_PORT'] ))) {
+        $this->trace_log("serverport443");
         $this->ssl_type["serverport443"]=TRUE;
       }
 
       if ((strpos($filecontents, "#ENVHTTPS#") !== false) || (isset($_ENV['HTTPS']) && ( 'on' == $_ENV['HTTPS'] ))) {
+        $this->trace_log("envhttps");
         $this->ssl_type["envhttps"]=TRUE;
       }
 
@@ -1204,6 +1212,7 @@ protected function get_server_variable_fix_code(){
            )
            || !is_ssl() ) {
         //when is_ssl would return false, we should add some code to wp-config.php
+        $this->trace_log('$_SERVER["HTTPS"] is not set, so we need to set it to prevent issues with WordPress');
         if (!$this->wpconfig_has_fixes()) {
           $this->do_wpconfig_loadbalancer_fix = TRUE;
         }
@@ -1236,8 +1245,9 @@ protected function get_server_variable_fix_code(){
     foreach($this->ssl_type as $type => $valid) {
       $testpage_url = $this->test_url()."testssl/".$type."/ssl-test-page.html";
       $filecontents = $rsssl_url->get_contents($testpage_url);
+
       if (($rsssl_url->error_number==0) && (strpos($filecontents, "#SSL TEST PAGE#") !== false)) {
-        //if at least one test is successfull, we can insert a rule.
+        //if at least one test is successfull, we can insert a rule
         $this->htaccess_test_success = TRUE;
       } else {
         unset($this->ssl_type[$type]);
