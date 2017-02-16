@@ -14,7 +14,7 @@ defined('ABSPATH') or die("you do not have acces to this page!");
 
   //multisite variables
   public $selected_networkwide_or_per_site  = FALSE;
-  public $ssl_enabled_networkwide         = FALSE;
+  public $ssl_enabled_networkwide           = FALSE;
   public $sites                             = Array(); //for multisite, list of all activated sites.
 
   //general settings
@@ -22,7 +22,7 @@ defined('ABSPATH') or die("you do not have acces to this page!");
 
   public $ssl_test_page_error;
   public $htaccess_test_success             = FALSE;
-  public $plugin_version                    = rsssl_version; //deprecated, but used in pro plugin until 1.0.25 
+  public $plugin_version                    = rsssl_version; //deprecated, but used in pro plugin until 1.0.25
 
   public $plugin_dir                        = "really-simple-ssl";
   public $plugin_filename                   = "rlrsssl-really-simple-ssl.php";
@@ -1614,32 +1614,33 @@ protected function get_server_variable_fix_code(){
         $rule .= "RewriteEngine on"."\n";
 
         // Fetch last array key
-        $types = array_keys($this->ssl_type);
+        //$types = array_keys($this->ssl_type);
 
-        $last_type = array_pop($types);
-
+        //$last_type = array_pop($types);
+        // reset($this->ssl_type);
+        // $type = key($this->ssl_type);
         //select rewrite condition based on detected type of ssl
-        foreach($this->ssl_type as $type => $value) {
+        //foreach($this->ssl_type as $type => $value) {
           $or = "";
-          if ($last_type != $type) $or = " [OR] ";
-          if ($type == "serverhttpson") {
-              $rule .= "RewriteCond %{HTTPS} !=on [NC]".$or."\n";
-          } elseif ($type == "serverhttps1") {
-              $rule .= "RewriteCond %{HTTPS} !=1".$or."\n";
-          } elseif ($type == "loadbalancer") {
-             $rule .="RewriteCond %{HTTP:X-Forwarded-Proto} !https".$or."\n";
-          } elseif ($type== "cloudflare") {
+          //if ($last_type != $type) $or = " [OR] ";
+          if (isset($this->ssl_type["serverhttpson"])) {
+            $rule .= "RewriteCond %{HTTPS} !=on [NC]".$or."\n";
+          } elseif (isset($this->ssl_type["serverhttps1"])) {
+            $rule .= "RewriteCond %{HTTPS} !=1".$or."\n";
+          } elseif (isset($this->ssl_type["serverport443"])) {
+            $rule .= "RewriteCond %{SERVER_PORT} !443".$or."\n";
+          } elseif (isset($this->ssl_type["cloudflare"])) {
             $rule .= "RewriteCond %{HTTP:CF-Visitor} '".'"scheme":"http"'."'".$or."\n";//some concatenation to get the quotes right.
-          } elseif ($type == "serverport443") {
-             $rule .= "RewriteCond %{SERVER_PORT} !443".$or."\n";
-           } elseif ($type == "envhttps") {
+          } elseif (isset($this->ssl_type["cloudfront"])) {
+            $rule .="RewriteCond %{HTTP:CloudFront-Forwarded-Proto} !https".$or."\n";
+          } elseif (isset($this->ssl_type["envhttps"])) {
             $rule .= "RewriteCond %{ENV:HTTPS} !=on".$or."\n";
-          } elseif ($type == "cloudfront") {
-             $rule .="RewriteCond %{HTTP:CloudFront-Forwarded-Proto} !https".$or."\n";
-          } elseif ($type == "cdn") {
+          } elseif (isset($this->ssl_type["loadbalancer"])) {
+             $rule .="RewriteCond %{HTTP:X-Forwarded-Proto} !https".$or."\n";
+          } elseif (isset($this->ssl_type["cdn"])) {
              $rule .= "RewriteCond %{HTTP:X-Forwarded-SSL} !on".$or."\n";
           }
-        }
+        //}
 
         //if multisite, and NOT subfolder install (checked for in the detec_config function)
         //, add a condition so it only applies to sites where plugin is activated

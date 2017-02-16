@@ -43,7 +43,7 @@ if ( ! class_exists( 'rsssl_url' ) ) {
   */
 
 
-  public function get_contents($url, $timeout = 30, $iteration=0) {
+  public function get_contents($url, $timeout = 10, $iteration=0) {
     $filecontents="";
     $use_curl = $this->is_curl_installed();
     //prevent infinite loops.
@@ -95,10 +95,10 @@ if ( ! class_exists( 'rsssl_url' ) ) {
         }
       }
       //if we are here, curl didn't return a valid response, so we try with file_get_contents
-      set_error_handler(array($this,'custom_error_handling'));
-      $filecontents = file_get_contents($url);
+      //set_error_handler(array($this,'custom_error_handling'));
+      //$filecontents = file_get_contents($url);
       //errors back to normal
-      restore_error_handler();
+      //restore_error_handler();
       return $filecontents;
   }
 

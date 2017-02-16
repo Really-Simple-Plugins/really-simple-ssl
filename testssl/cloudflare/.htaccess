@@ -1,5 +1,0 @@
-<IfModule mod_rewrite.c>
-RewriteEngine on
-RewriteCond %{HTTP:CF-Visitor} '"scheme":"http"'
-RewriteRule ^(.*) https://%{HTTP_HOST}%{REQUEST_URI} [L]
-</IfModule>

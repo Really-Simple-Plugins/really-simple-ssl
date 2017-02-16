@@ -20,7 +20,6 @@ if ( ! class_exists( 'rsssl_help' ) ) {
     <span class="rsssl-tooltip-right tooltip-right" data-rsssl-tooltip="<?php echo $str?>">
       <span class="dashicons dashicons-editor-help"></span>
     </span>
-
     <?php
 
   }
@@ -29,4 +28,4 @@ if ( ! class_exists( 'rsssl_help' ) ) {
 
 
 }//class closure
-}
+} //if class exists closure
