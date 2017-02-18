@@ -4,7 +4,7 @@ Tags: SSL, https, force SSL, mixed content, insecure content, secure website, we
 Requires at least: 4.2
 License: GPL2
 Tested up to: 4.7.2
-Stable tag: 2.5.3
+Stable tag: 2.5.5
 
 No setup required! You only need an SSL certificate, and this plugin will do the rest.
 
@@ -73,6 +73,15 @@ For detailed instructions on how to find mixed content read this [article](https
 If you are experiencing redirect loops on your site, try these [instructions](https://really-simple-ssl.com/knowledge-base/my-website-is-in-a-redirect-loop/).
 
 == Changelog ==
+= 2.5.5 =
+* Reverted some changes to 2.4.3, as it was causing issues for some users.
+
+= 2.5.4 =
+fix: Adjusted selection order of .htaccess rules, preventing redirect loops
+
+= 2.5.3 =
+* Changed .htaccess redirects to use only one condition
+
 = 2.5.2 =
 * removed file_get_contents function from class_url.php, as in some cases this causes issues.
 
