@@ -213,10 +213,12 @@ defined('ABSPATH') or die("you do not have acces to this page!");
 
   public function wpconfig_ok(){
     if (($this->do_wpconfig_loadbalancer_fix || $this->no_server_variable || $this->wpconfig_siteurl_not_fixed) && !$this->wpconfig_is_writable() ) {
-      return false;
+      $result = false;
     } else {
-      return true;
+      $result = true;
     }
+
+    return apply_filters('rsssl_wpconfig_ok_check', $result);
   }
 
 
@@ -1204,8 +1206,8 @@ protected function get_server_variable_fix_code(){
     if (!current_user_can($this->capability)) return;
 	  if ($this->debug) {$this->trace_log("testing htaccess rules...");}
     $filecontents = "";
-    $plugin_url = str_replace ( "http://" , "https://" , $this->plugin_url);
-    $testpage_url = $plugin_url."testssl/";
+
+    $testpage_url = trailingslashit($this->test_url())."testssl/";
     switch ($this->ssl_type) {
     case "CLOUDFRONT":
         $testpage_url .= "cloudfront";
