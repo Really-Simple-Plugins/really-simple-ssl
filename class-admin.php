@@ -29,6 +29,7 @@ defined('ABSPATH') or die("you do not have acces to this page!");
   public $ABSpath;
 
   public $do_not_edit_htaccess              = FALSE;
+  public $safe_mode                         = FALSE;
   public $htaccess_warning_shown            = FALSE;
   public $ssl_success_message_shown         = FALSE;
   public $hsts                              = FALSE;
@@ -371,18 +372,22 @@ defined('ABSPATH') or die("you do not have acces to this page!");
    */
 
   public function get_admin_options(){
-    //if the define is true, it overrides the db setting.
-    $this->do_not_edit_htaccess = (defined( 'RLRSSSL_DO_NOT_EDIT_HTACCESS' ) &&  RLRSSSL_DO_NOT_EDIT_HTACCESS) ? TRUE : FALSE;
 
     $options = get_option('rlrsssl_options');
     if (isset($options)) {
-      $this->hsts                               = isset($options['hsts']) ? $options['hsts'] : FALSE;
-      $this->htaccess_warning_shown             = isset($options['htaccess_warning_shown']) ? $options['htaccess_warning_shown'] : FALSE;
-      $this->ssl_success_message_shown          = isset($options['ssl_success_message_shown']) ? $options['ssl_success_message_shown'] : FALSE;
-      $this->plugin_db_version                  = isset($options['plugin_db_version']) ? $options['plugin_db_version'] : "1.0";
-      $this->debug                              = isset($options['debug']) ? $options['debug'] : FALSE;
-      $this->do_not_edit_htaccess               = isset($options['do_not_edit_htaccess']) ? $options['do_not_edit_htaccess'] : $this->do_not_edit_htaccess;
-      $this->debug_log                          = isset($options['debug_log']) ? $options['debug_log'] : $this->debug_log;
+      $this->hsts                      = isset($options['hsts']) ? $options['hsts'] : FALSE;
+      $this->htaccess_warning_shown    = isset($options['htaccess_warning_shown']) ? $options['htaccess_warning_shown'] : FALSE;
+      $this->ssl_success_message_shown = isset($options['ssl_success_message_shown']) ? $options['ssl_success_message_shown'] : FALSE;
+      $this->plugin_db_version         = isset($options['plugin_db_version']) ? $options['plugin_db_version'] : "1.0";
+      $this->debug                     = isset($options['debug']) ? $options['debug'] : FALSE;
+      $this->do_not_edit_htaccess      = isset($options['do_not_edit_htaccess']) ? $options['do_not_edit_htaccess'] : FALSE;
+      $this->safe_mode                 = isset($options['safe_mode']) ? $options['safe_mode'] : FALSE;
+      $this->debug_log                 = isset($options['debug_log']) ? $options['debug_log'] : $this->debug_log;
+    }
+
+    //if the define is true, it overrides the db setting.
+    if (defined( 'RLRSSSL_DO_NOT_EDIT_HTACCESS')) {
+      $this->do_not_edit_htaccess = RLRSSSL_DO_NOT_EDIT_HTACCESS;
     }
 
     if (is_multisite()) {
@@ -520,18 +525,20 @@ defined('ABSPATH') or die("you do not have acces to this page!");
 
         if ( class_exists( 'Jetpack' ) )
             $this->wpconfig_jetpack();
-        if ($rsssl_server->uses_htaccess()) {
+
+        if (!$this->safe_mode && $rsssl_server->uses_htaccess()) {
           $this->editHtaccess();
-        } elseif ($this->clicked_activate_ssl()) {
+        } elseif (!$this->safe_mode && $this->clicked_activate_ssl()) {
           //set wp redirect, but only when just activated.
           $this->wp_redirect = TRUE;
           $this->save_options();
         }
 
-        if ($this->wpconfig_siteurl_not_fixed)
+        if (!$this->safe_mode && $this->wpconfig_siteurl_not_fixed)
           $this->fix_siteurl_defines_in_wpconfig();
 
-        $this->set_siteurl_to_ssl();
+        if (!$this->safe_mode)
+          $this->set_siteurl_to_ssl();
       }
   }
 
@@ -949,6 +956,8 @@ protected function get_server_variable_fix_code(){
    */
 
   public function set_siteurl_to_ssl() {
+      if (defined("RSSSL_DO_NOT_CHANGE_SITEURL") && RSSSL_DO_NOT_CHANGE_SITEURL) return;
+
       if ($this->debug) {$this->trace_log("converting siteurl and homeurl to https");}
       $siteurl_ssl = str_replace ( "http://" , "https://" , get_option('siteurl'));
       $homeurl_ssl = str_replace ( "http://" , "https://" , get_option('home'));
@@ -994,6 +1003,7 @@ protected function get_server_variable_fix_code(){
       'plugin_db_version'                 => $this->plugin_db_version,
       'debug'                             => $this->debug,
       'do_not_edit_htaccess'              => $this->do_not_edit_htaccess,
+      'safe_mode'                         => $this->safe_mode,
       'ssl_enabled'                       => $this->ssl_enabled,
       'javascript_redirect'               => $this->javascript_redirect,
       'wp_redirect'                       => $this->wp_redirect,
@@ -1046,6 +1056,7 @@ protected function get_server_variable_fix_code(){
     $this->ssl_success_message_shown            = FALSE;
     $this->autoreplace_insecure_links           = TRUE;
     $this->do_not_edit_htaccess                 = FALSE;
+    $this->safe_mode                            = FALSE;
     $this->javascript_redirect                  = FALSE;
     $this->wp_redirect                          = FALSE;
     $this->ssl_enabled                          = FALSE;
@@ -1116,79 +1127,75 @@ protected function get_server_variable_fix_code(){
    *
    */
 
-  public function detect_configuration() {
-    global $rsssl_url;
-    $this->trace_log("** Detecting configuration **");
-    $this->trace_log("plugin version: ".rsssl_version);
-    $old_ssl_setting = $this->site_has_ssl;
-    $filecontents = "";
-
-    //if current page is on ssl, we can assume ssl is available, even when an errormsg was returned
-    if($this->is_ssl_extended()){
-      $this->trace_log("Already on SSL, start detecting configuration");
-      $this->site_has_ssl = TRUE;
-    } else {
-      //we're not on SSL, or no server vars were returned, so test with the test-page.
-      //plugin url: domain.com/wp-content/etc
-      $testpage_url = trailingslashit($this->test_url())."ssl-test-page.php";
-      $this->trace_log("Opening testpage to check for ssl: ".$testpage_url);
-      $filecontents = $rsssl_url->get_contents($testpage_url);
-
-      if($rsssl_url->error_number!=0) {
-        $errormsg = $rsssl_url->get_curl_error($rsssl_url->error_number);
-        $this->site_has_ssl = FALSE;
-        $this->trace_log("No ssl detected. Possibly blocked by security settings. The ssl testpage returned the error: ".$errormsg);
-      } else {
-        $this->site_has_ssl = TRUE;
-        $this->trace_log("SSL test page loaded successfully");
-      }
-    }
-
-    if ($this->site_has_ssl) {
-      //check the type of ssl, either by parsing the returned string, or by reading the server vars.
-      if ((strpos($filecontents, "#CLOUDFRONT#") !== false) || (isset($_SERVER['HTTP_CLOUDFRONT_FORWARDED_PROTO']) && ($_SERVER['HTTP_CLOUDFRONT_FORWARDED_PROTO'] == 'https'))) {
-        $this->ssl_type = "CLOUDFRONT";
-      } elseif ((strpos($filecontents, "#CLOUDFLARE#") !== false) || (isset($_SERVER['HTTP_CF_VISITOR']) && ($_SERVER['HTTP_CF_VISITOR'] == 'https'))) {
-        $this->ssl_type = "CLOUDFLARE";
-      } elseif ((strpos($filecontents, "#LOADBALANCER#") !== false) || (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && ($_SERVER['HTTP_X_FORWARDED_PROTO'] == 'https'))) {
-        $this->ssl_type = "LOADBALANCER";
-      } elseif ((strpos($filecontents, "#CDN#") !== false) || (isset($_SERVER['HTTP_X_FORWARDED_SSL']) && ($_SERVER['HTTP_X_FORWARDED_SSL'] == 'on'))) {
-        $this->ssl_type = "CDN";
-      } elseif ((strpos($filecontents, "#SERVER-HTTPS-ON#") !== false) || (isset($_SERVER['HTTPS']) && strtolower($_SERVER['HTTPS']) == 'on')) {
-        $this->ssl_type = "SERVER-HTTPS-ON";
-      } elseif ((strpos($filecontents, "#SERVER-HTTPS-1#") !== false) || (isset($_SERVER['HTTPS']) && strtolower($_SERVER['HTTPS']) == '1')) {
-        $this->ssl_type = "SERVER-HTTPS-1";
-      } elseif ((strpos($filecontents, "#SERVERPORT443#") !== false) || (isset($_SERVER['SERVER_PORT']) && ( '443' == $_SERVER['SERVER_PORT'] ))) {
-        $this->ssl_type = "SERVERPORT443";
-      } elseif ((strpos($filecontents, "#NO KNOWN SSL CONFIGURATION DETECTED#") !== false)) {
-        //if we are here, SSL was detected, but without any known server variables set.
-        //So we can use this info to set a server variable ourselfes.
-        if (!$this->wpconfig_has_fixes()) {
-          $this->no_server_variable = TRUE;
-        }
-        $this->trace_log("No server variable detected ");
-        $this->ssl_type = "NA";
-      } else {
-        //no valid response, so set to NA
-        $this->ssl_type = "NA";
-      }
-
-      //check for is_ssl()
-      if (((strpos($filecontents, "#SERVER-HTTPS-ON#") === false) &&
-          (strpos($filecontents, "#SERVER-HTTPS-1#") === false) &&
-          (strpos($filecontents, "#SERVERPORT443#") === false)) || !is_ssl()) {
-        //when is_ssl would return false, we should add some code to wp-config.php
-        if (!$this->wpconfig_has_fixes()) {
-          $this->do_wpconfig_loadbalancer_fix = TRUE;
-        }
-      }
-
-	    $this->trace_log("ssl type: ".$this->ssl_type);
-    }
-
-    $this->check_for_siteurl_in_wpconfig();
-    $this->save_options();
-  }
+   public function detect_configuration() {
+     global $rsssl_url;
+     $this->trace_log("** Detecting configuration **");
+     $this->trace_log("plugin version: ".rsssl_version);
+     $old_ssl_setting = $this->site_has_ssl;
+     $filecontents = "";
+     //if current page is on ssl, we can assume ssl is available, even when an errormsg was returned
+     if($this->is_ssl_extended()){
+       $this->trace_log("Already on SSL, start detecting configuration");
+       $this->site_has_ssl = TRUE;
+     } else {
+       //we're not on SSL, or no server vars were returned, so test with the test-page.
+       //plugin url: domain.com/wp-content/etc
+       $testpage_url = trailingslashit($this->test_url())."ssl-test-page.php";
+       $this->trace_log("Opening testpage to check for ssl: ".$testpage_url);
+       $filecontents = $rsssl_url->get_contents($testpage_url);
+       if($rsssl_url->error_number!=0) {
+         $errormsg = $rsssl_url->get_curl_error($rsssl_url->error_number);
+         $this->site_has_ssl = FALSE;
+         $this->trace_log("No ssl detected. Possibly blocked by security settings. The ssl testpage returned the error: ".$errormsg);
+       } else {
+         $this->site_has_ssl = TRUE;
+         $this->trace_log("SSL test page loaded successfully");
+       }
+     }
+     if ($this->site_has_ssl) {
+       //check the type of ssl, either by parsing the returned string, or by reading the server vars.
+       if ((strpos($filecontents, "#CLOUDFRONT#") !== false) || (isset($_SERVER['HTTP_CLOUDFRONT_FORWARDED_PROTO']) && ($_SERVER['HTTP_CLOUDFRONT_FORWARDED_PROTO'] == 'https'))) {
+         $this->ssl_type = "CLOUDFRONT";
+       } elseif ((strpos($filecontents, "#CLOUDFLARE#") !== false) || (isset($_SERVER['HTTP_CF_VISITOR']) && ($_SERVER['HTTP_CF_VISITOR'] == 'https'))) {
+         $this->ssl_type = "CLOUDFLARE";
+       } elseif ((strpos($filecontents, "#LOADBALANCER#") !== false) || (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && ($_SERVER['HTTP_X_FORWARDED_PROTO'] == 'https'))) {
+         $this->ssl_type = "LOADBALANCER";
+       } elseif ((strpos($filecontents, "#CDN#") !== false) || (isset($_SERVER['HTTP_X_FORWARDED_SSL']) && ($_SERVER['HTTP_X_FORWARDED_SSL'] == 'on'))) {
+         $this->ssl_type = "CDN";
+       } elseif ((strpos($filecontents, "#SERVER-HTTPS-ON#") !== false) || (isset($_SERVER['HTTPS']) && strtolower($_SERVER['HTTPS']) == 'on')) {
+         $this->ssl_type = "SERVER-HTTPS-ON";
+       } elseif ((strpos($filecontents, "#SERVER-HTTPS-1#") !== false) || (isset($_SERVER['HTTPS']) && strtolower($_SERVER['HTTPS']) == '1')) {
+         $this->ssl_type = "SERVER-HTTPS-1";
+       } elseif ((strpos($filecontents, "#SERVERPORT443#") !== false) || (isset($_SERVER['SERVER_PORT']) && ( '443' == $_SERVER['SERVER_PORT'] ))) {
+         $this->ssl_type = "SERVERPORT443";
+       } elseif ((strpos($filecontents, "#ENVHTTPS#") !== false) || (isset($_ENV['HTTPS']) && ( 'on' == $_ENV['HTTPS'] ))) {
+          $this->ssl_type = "ENVHTTPS";
+       } elseif ((strpos($filecontents, "#NO KNOWN SSL CONFIGURATION DETECTED#") !== false)) {
+         //if we are here, SSL was detected, but without any known server variables set.
+         //So we can use this info to set a server variable ourselfes.
+         if (!$this->wpconfig_has_fixes()) {
+           $this->no_server_variable = TRUE;
+         }
+         $this->trace_log("No server variable detected ");
+         $this->ssl_type = "NA";
+       } else {
+         //no valid response, so set to NA
+         $this->ssl_type = "NA";
+       }
+       //check for is_ssl()
+       if (((strpos($filecontents, "#SERVER-HTTPS-ON#") === false) &&
+           (strpos($filecontents, "#SERVER-HTTPS-1#") === false) &&
+           (strpos($filecontents, "#SERVERPORT443#") === false)) || !is_ssl()) {
+         //when is_ssl would return false, we should add some code to wp-config.php
+         if (!$this->wpconfig_has_fixes()) {
+           $this->do_wpconfig_loadbalancer_fix = TRUE;
+         }
+       }
+ 	    $this->trace_log("ssl type: ".$this->ssl_type);
+     }
+     $this->check_for_siteurl_in_wpconfig();
+     $this->save_options();
+   }
 
 
   /**
@@ -1201,58 +1208,55 @@ protected function get_server_variable_fix_code(){
    *
    */
 
-  public function test_htaccess_redirect() {
-    global $rsssl_url;
-    if (!current_user_can($this->capability)) return;
-	  if ($this->debug) {$this->trace_log("testing htaccess rules...");}
-    $filecontents = "";
+   public function test_htaccess_redirect() {
+     global $rsssl_url;
+     if (!current_user_can($this->capability)) return;
+ 	   if ($this->debug) {$this->trace_log("testing htaccess rules...");}
+     $filecontents = "";
+     $testpage_url = trailingslashit($this->test_url())."testssl/";
+     switch ($this->ssl_type) {
+     case "CLOUDFRONT":
+         $testpage_url .= "cloudfront";
+         break;
+     case "CLOUDFLARE":
+         $testpage_url .= "cloudflare";
+         break;
+     case "LOADBALANCER":
+         $testpage_url .= "loadbalancer";
+         break;
+     case "CDN":
+         $testpage_url .= "cdn";
+         break;
+     case "SERVER-HTTPS-ON":
+         $testpage_url .= "serverhttpson";
+         break;
+     case "SERVER-HTTPS-1":
+         $testpage_url .= "serverhttps1";
+         break;
+     case "SERVERPORT443":
+         $testpage_url .= "serverport443";
+         break;
+     case "ENVHTTPS":
+         $testpage_url .= "envhttps";
+         break;
+     }
 
-    $testpage_url = trailingslashit($this->test_url())."testssl/";
-    switch ($this->ssl_type) {
-    case "CLOUDFRONT":
-        $testpage_url .= "cloudfront";
-        break;
-    case "CLOUDFLARE":
-        $testpage_url .= "cloudflare";
-        break;
-    case "LOADBALANCER":
-        $testpage_url .= "loadbalancer";
-        break;
-    case "CDN":
-        $testpage_url .= "cdn";
-        break;
-    case "SERVER-HTTPS-ON":
-        $testpage_url .= "serverhttpson";
-        break;
-    case "SERVER-HTTPS-1":
-        $testpage_url .= "serverhttps1";
-        break;
-    case "SERVERPORT443":
-        $testpage_url .= "serverport443";
-        break;
-    }
-
-    $testpage_url .= ("/ssl-test-page.html");
-
-    $filecontents = $rsssl_url->get_contents($testpage_url);
-    $this->trace_log("test page url, click to check manually: ".$testpage_url);
-    if (($rsssl_url->error_number==0) && (strpos($filecontents, "#SSL TEST PAGE#") !== false)) {
-      $this->htaccess_test_success = TRUE;
-		  if ($this->debug) {$this->trace_log("htaccess rules tested successfully.");}
-    } else {
-      //.htaccess rewrite rule seems to be giving problems.
-      $this->htaccess_test_success = FALSE;
-
-      if ($rsssl_url->error_number!=0) {
-        $this->trace_log("htaccess rules test failed with error: ".$rsssl_url->get_curl_error($rsssl_url->error_number));
-      } else {
-        $this->trace_log("htaccess test rules failed. Set WordPress redirect in settings/ssl");
-      }
-
-    }
-
-
-  }
+     $testpage_url .= ("/ssl-test-page.html");
+     $filecontents = $rsssl_url->get_contents($testpage_url);
+     $this->trace_log("test page url, click to check manually: ".$testpage_url);
+     if (($rsssl_url->error_number==0) && (strpos($filecontents, "#SSL TEST PAGE#") !== false)) {
+       $this->htaccess_test_success = TRUE;
+ 		  if ($this->debug) {$this->trace_log("htaccess rules tested successfully.");}
+     } else {
+       //.htaccess rewrite rule seems to be giving problems.
+       $this->htaccess_test_success = FALSE;
+       if ($rsssl_url->error_number!=0) {
+         $this->trace_log("htaccess rules test failed with error: ".$rsssl_url->get_curl_error($rsssl_url->error_number));
+       } else {
+         $this->trace_log("htaccess test rules failed. Set WordPress redirect in settings/ssl");
+       }
+     }
+   }
 
 
   /**
@@ -1613,22 +1617,34 @@ protected function get_server_variable_fix_code(){
         $rule .= "<IfModule mod_rewrite.c>"."\n";
         $rule .= "RewriteEngine on"."\n";
 
+        // Fetch last array key
+        //$types = array_keys($this->ssl_type);
+
+        //$last_type = array_pop($types);
+        // reset($this->ssl_type);
+        // $type = key($this->ssl_type);
         //select rewrite condition based on detected type of ssl
-        if ($this->ssl_type == "SERVER-HTTPS-ON") {
-            $rule .= "RewriteCond %{HTTPS} !=on [NC]"."\n";
-        } elseif ($this->ssl_type == "SERVER-HTTPS-1") {
-            $rule .= "RewriteCond %{HTTPS} !=1"."\n";
-        } elseif ($this->ssl_type == "LOADBALANCER") {
-           $rule .="RewriteCond %{HTTP:X-Forwarded-Proto} !https"."\n";
-        } elseif ($this->ssl_type == "CLOUDFLARE") {
-            $rule .= "RewriteCond %{HTTP:CF-Visitor} '".'"scheme":"http"'."'"."\n";//some concatenation to get the quotes right.
-        } elseif ($this->ssl_type == "SERVERPORT443") {
-           $rule .= "RewriteCond %{SERVER_PORT} !443"."\n";
-        } elseif ($this->ssl_type == "CLOUDFRONT") {
-           $rule .="RewriteCond %{HTTP:CloudFront-Forwarded-Proto} !https"."\n";
-        } elseif ($this->ssl_type == "CDN") {
-           $rule .= "RewriteCond %{HTTP:X-Forwarded-SSL} !on"."\n";
-        }
+        //foreach($this->ssl_type as $type => $value) {
+          $or = "";
+          //if ($last_type != $type) $or = " [OR] ";
+          if ($this->ssl_type == "SERVER-HTTPS-ON") {
+              $rule .= "RewriteCond %{HTTPS} !=on [NC]"."\n";
+          } elseif ($this->ssl_type == "SERVER-HTTPS-1") {
+              $rule .= "RewriteCond %{HTTPS} !=1"."\n";
+          } elseif ($this->ssl_type == "LOADBALANCER") {
+             $rule .="RewriteCond %{HTTP:X-Forwarded-Proto} !https"."\n";
+          } elseif ($this->ssl_type == "CLOUDFLARE") {
+              $rule .= "RewriteCond %{HTTP:CF-Visitor} '".'"scheme":"http"'."'"."\n";//some concatenation to get the quotes right.
+          } elseif ($this->ssl_type == "SERVERPORT443") {
+             $rule .= "RewriteCond %{SERVER_PORT} !443"."\n";
+          } elseif ($this->ssl_type == "CLOUDFRONT") {
+             $rule .="RewriteCond %{HTTP:CloudFront-Forwarded-Proto} !https"."\n";
+          } elseif ($this->ssl_type == "CDN") {
+             $rule .= "RewriteCond %{HTTP:X-Forwarded-SSL} !on"."\n";
+           } elseif ($type == "ENVHTTPS") {
+             $rule .= "RewriteCond %{ENV:HTTPS} !=on"."\n";
+          }
+        //}
 
         //if multisite, and NOT subfolder install (checked for in the detec_config function)
         //, add a condition so it only applies to sites where plugin is activated
@@ -1960,7 +1976,7 @@ public function admin_add_help_tab() {
     $screen->add_help_tab( array(
         'id'	=> "really-simple-ssl-documentation",
         'title'	=> __("Documentation","really-simple-ssl"),
-        'content'	=> '<p>' . __("On <a href='https://www.really-simple-ssl.com'>www.really-simple-ssl.com</a> you can find a lot of articles and documentation about installing this plugin, and installing SSL in general.","really-simple-ssl") . '</p>',
+        'content'	=> '<p>' . __("On <a href='https://really-simple-ssl.com'>really-simple-ssl.com</a> you can find a lot of articles and documentation about installing this plugin, and installing SSL in general.","really-simple-ssl") . '</p>',
     ) );
 }
 
@@ -2300,6 +2316,8 @@ public function create_form(){
       }
 
       add_settings_field('id_debug', __("Debug","really-simple-ssl"), array($this,'get_option_debug'), 'rlrsssl', 'rlrsssl_settings');
+      add_settings_field('id_safe_mode', __("Configure with safe mode","really-simple-ssl"), array($this,'get_option_safe_mode'), 'rlrsssl', 'rlrsssl_settings');
+
     }
 
   /**
@@ -2375,6 +2393,12 @@ public function options_validate($input) {
     $newinput['do_not_edit_htaccess'] = FALSE;
   }
 
+  if (!empty($input['safe_mode']) && $input['safe_mode']=='1') {
+    $newinput['safe_mode'] = TRUE;
+  } else {
+    $newinput['safe_mode'] = FALSE;
+  }
+
   return $newinput;
 }
 
@@ -2424,6 +2448,21 @@ public function get_option_wp_redirect() {
 
 }
 
+/**
+ * Insert option into settings form
+ *
+ * @since  2.5.8
+ *
+ * @access public
+ *
+ */
+
+  public function get_option_safe_mode() {
+    $options = get_option('rlrsssl_options');
+    echo '<input id="rlrsssl_options" name="rlrsssl_options[safe_mode]" size="40" type="checkbox" value="1"' . checked( 1, $this->safe_mode, false ) ." />";
+
+    rsssl_help::this()->get_help_tip(__("If activating Really Simple SSL causes issues on your site, try the safe mode.", "really-simple-ssl")." ".__("The siteurl will be left as it is, and no redirect will be added. Only the mixed content fixer will be active.", "really-simple-ssl")." ".__("Then try activating the WordPress redirect.", "really-simple-ssl"));
+  }
 
 /**
  * Insert option into settings form

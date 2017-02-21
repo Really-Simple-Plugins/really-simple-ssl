@@ -73,6 +73,11 @@ For detailed instructions on how to find mixed content read this [article](https
 If you are experiencing redirect loops on your site, try these [instructions](https://really-simple-ssl.com/knowledge-base/my-website-is-in-a-redirect-loop/).
 
 == Changelog ==
+= 2.5.8 =
+* Added safe mode option to enable activating in a minimized way
+* Added Constant RSSSL_DO_NOT_CHANGE_SITEURL which gives the option not to change the site url to https. In certain configurations a https url leads to redirect loops.
+* Fix: RLRSSSL_DO_NOT_EDIT_HTACCESS constant did not override setting correctly
+
 = 2.5.7 =
 * Tweak: changes testurl to the function test_url()
 
