@@ -51,9 +51,10 @@ defined('ABSPATH') or die("you do not have acces to this page!");
 
     self::$_this = $this;
 
+    $this->ABSpath = $this->getABSPATH();
     $this->get_options();
     $this->get_admin_options();
-    $this->ABSpath = $this->getABSPATH();
+
     $this->get_plugin_upgraded(); //call always, otherwise db version will not match anymore.
 
     register_activation_hook(  dirname( __FILE__ )."/".$this->plugin_filename, array($this,'activate') );
@@ -372,9 +373,6 @@ defined('ABSPATH') or die("you do not have acces to this page!");
    */
 
   public function get_admin_options(){
-    //this value is used to migrate to the new situation, where the .htaccess redirect is an setting.
-    //this way we make sure that users who already have rules, will have the option enabled. When they disable it, it will get removed.
-    $default_htaccess_redirect = $this->htaccess_contains_redirect_rules();
 
     $options = get_option('rlrsssl_options');
     if (isset($options)) {
@@ -385,13 +383,21 @@ defined('ABSPATH') or die("you do not have acces to this page!");
       $this->debug                     = isset($options['debug']) ? $options['debug'] : FALSE;
       $this->do_not_edit_htaccess      = isset($options['do_not_edit_htaccess']) ? $options['do_not_edit_htaccess'] : FALSE;
       $this->safe_mode                 = isset($options['safe_mode']) ? $options['safe_mode'] : FALSE;
-      $this->htaccess_redirect         = isset($options['htaccess_redirect']) ? $options['htaccess_redirect'] : $default_htaccess_redirect;
+      $this->htaccess_redirect         = isset($options['htaccess_redirect']) ? $options['htaccess_redirect'] : FALSE;
       $this->debug_log                 = isset($options['debug_log']) ? $options['debug_log'] : $this->debug_log;
     }
 
     //if the define is true, it overrides the db setting.
     if (defined( 'RLRSSSL_DO_NOT_EDIT_HTACCESS')) {
       $this->do_not_edit_htaccess = RLRSSSL_DO_NOT_EDIT_HTACCESS;
+    }
+
+    //this value is used to migrate to the new situation, where the .htaccess redirect is an setting.
+    //this way we make sure that users who already have rules, will have the option enabled. When they disable it, htaccess rules will get removed.
+    if (!get_option('rsssl_migrated_htaccess_setting')){
+      $this->htaccess_redirect = $this->htaccess_contains_redirect_rules();
+      $this->save_options();
+      update_option("rsssl_migrated_htaccess_setting", TRUE);
     }
 
     if (is_multisite()) {
@@ -1354,22 +1360,20 @@ protected function get_server_variable_fix_code(){
       }
   }
 
+  public function get_htaccess_version() {
+    if (!file_exists($this->ABSpath.".htaccess")) return false;
 
-  public function contains_previous_version($htaccess) {
+    $htaccess = file_get_contents($this->ABSpath.".htaccess");
     $versionpos = strpos($htaccess, "rsssl_version");
+
     if ($versionpos===false) {
-      //no version found, so old version
-      return true;
+      //no version found, so not .htaccess rules.
+      return false;
     } else {
       //find closing marker of version
       $close = strpos($htaccess, "]", $versionpos);
       $version = substr($htaccess, $versionpos+14, $close-($versionpos+14));
-      if ($version != rsssl_version) {
-        return true;
-      }
-      else {
-        return false;
-      }
+      return $version;
     }
   }
 
@@ -1528,15 +1532,13 @@ protected function get_server_variable_fix_code(){
           file_put_contents($this->ABSpath.".htaccess", $htaccess);
         }
 
-    } elseif (($this->is_settings_page()) || (is_multisite() && !$this->ssl_enabled_networkwide) || ($this->hsts!=$this->contains_hsts())) {
+    } elseif ((is_multisite() && !$this->ssl_enabled_networkwide) || ($this->hsts!=$this->contains_hsts())) {
 
         /*
             Remove all rules and add new IF
-            //disabled changes for version upgrade. , $this->contains_previous_version($htaccess) ||
             - or the hsts option has changed, so we need to edit the htaccess anyway.
             - or rewrite per site (if a site is added or removed on per site activated
-            - or we are on the settings page
-            - in mulsite we need to rewrite even if the rules are already there.
+            - in multisite we need to rewrite even if the rules are already there.
         */
 
         if ($this->debug) {$this->trace_log("settings page, per site activation or hsts option change, updating htaccess...");}
@@ -2313,20 +2315,20 @@ public function create_form(){
     global $rsssl_server;
       register_setting( 'rlrsssl_options', 'rlrsssl_options', array($this,'options_validate') );
       add_settings_section('rlrsssl_settings', __("Settings","really-simple-ssl"), array($this,'section_text'), 'rlrsssl');
-
-      if ($rsssl_server->uses_htaccess())
-        add_settings_field('id_do_not_edit_htaccess', __("Stop editing the .htaccess file","really-simple-ssl"), array($this,'get_option_do_not_edit_htaccess'), 'rlrsssl', 'rlrsssl_settings');
+      add_settings_field('id_autoreplace_insecure_links', __("Auto replace mixed content","really-simple-ssl"), array($this,'get_option_autoreplace_insecure_links'), 'rlrsssl', 'rlrsssl_settings');
 
       //only show option to enable or disable mixed content and redirect when ssl is detected
       if($this->site_has_ssl || $this->force_ssl_without_detection) {
-        add_settings_field('id_autoreplace_insecure_links', __("Auto replace mixed content","really-simple-ssl"), array($this,'get_option_autoreplace_insecure_links'), 'rlrsssl', 'rlrsssl_settings');
-        add_settings_field('id_javascript_redirect', __("Enable javascript redirection to ssl","really-simple-ssl"), array($this,'get_option_javascript_redirect'), 'rlrsssl', 'rlrsssl_settings');
         add_settings_field('id_wp_redirect', __("Enable WordPress 301 redirection to SSL","really-simple-ssl"), array($this,'get_option_wp_redirect'), 'rlrsssl', 'rlrsssl_settings');
-        add_settings_field('id_htaccess_redirect', __("Insert .htaccess redirect","really-simple-ssl"), array($this,'get_option_htaccess_redirect'), 'rlrsssl', 'rlrsssl_settings');
+        add_settings_field('id_htaccess_redirect', __("Enable 301 .htaccess redirect","really-simple-ssl"), array($this,'get_option_htaccess_redirect'), 'rlrsssl', 'rlrsssl_settings');
+        add_settings_field('id_javascript_redirect', __("Enable javascript redirection to ssl","really-simple-ssl"), array($this,'get_option_javascript_redirect'), 'rlrsssl', 'rlrsssl_settings');
       }
 
       add_settings_field('id_debug', __("Debug","really-simple-ssl"), array($this,'get_option_debug'), 'rlrsssl', 'rlrsssl_settings');
       add_settings_field('id_safe_mode', __("Configure with safe mode","really-simple-ssl"), array($this,'get_option_safe_mode'), 'rlrsssl', 'rlrsssl_settings');
+
+      if ($rsssl_server->uses_htaccess())
+        add_settings_field('id_do_not_edit_htaccess', __("Stop editing the .htaccess file","really-simple-ssl"), array($this,'get_option_do_not_edit_htaccess'), 'rlrsssl', 'rlrsssl_settings');
 
     }
 
