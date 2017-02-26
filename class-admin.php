@@ -29,7 +29,6 @@ defined('ABSPATH') or die("you do not have acces to this page!");
   public $ABSpath;
 
   public $do_not_edit_htaccess              = FALSE;
-  public $safe_mode                         = FALSE;
   public $htaccess_redirect                 = FALSE;
   public $htaccess_warning_shown            = FALSE;
   public $ssl_success_message_shown         = FALSE;
@@ -99,8 +98,8 @@ defined('ABSPATH') or die("you do not have acces to this page!");
       //flush the permalinks
       if ($this->clicked_activate_ssl()) {
         add_action( 'admin_init', 'flush_rewrite_rules' ,39);
-        global $rsssl_cache;
-        add_action('admin_init', array($rsssl_cache,'flush'),40);
+        //global $rsssl_cache;
+        //add_action('admin_init', array($rsssl_cache,'flush'),40);
       }
 
       if (!$this->wpconfig_ok()) {
@@ -382,7 +381,6 @@ defined('ABSPATH') or die("you do not have acces to this page!");
       $this->plugin_db_version         = isset($options['plugin_db_version']) ? $options['plugin_db_version'] : "1.0";
       $this->debug                     = isset($options['debug']) ? $options['debug'] : FALSE;
       $this->do_not_edit_htaccess      = isset($options['do_not_edit_htaccess']) ? $options['do_not_edit_htaccess'] : FALSE;
-      $this->safe_mode                 = isset($options['safe_mode']) ? $options['safe_mode'] : FALSE;
       $this->htaccess_redirect         = isset($options['htaccess_redirect']) ? $options['htaccess_redirect'] : FALSE;
       $this->debug_log                 = isset($options['debug_log']) ? $options['debug_log'] : $this->debug_log;
     }
@@ -395,7 +393,7 @@ defined('ABSPATH') or die("you do not have acces to this page!");
     //this value is used to migrate to the new situation, where the .htaccess redirect is an setting.
     //this way we make sure that users who already have rules, will have the option enabled. When they disable it, htaccess rules will get removed.
     if (!get_option('rsssl_migrated_htaccess_setting')){
-      $this->htaccess_redirect = $this->htaccess_contains_redirect_rules();
+      $this->htaccess_redirect = $this->contains_rsssl_rules();
       $this->save_options();
       update_option("rsssl_migrated_htaccess_setting", TRUE);
     }
@@ -517,6 +515,9 @@ defined('ABSPATH') or die("you do not have acces to this page!");
    */
 
   public function configure_ssl() {
+      $safe_mode = FALSE;
+      if (defined('RSSSL_SAFE_MODE') && RSSSL_SAFE_MODE) $safe_mode = RSSSL_SAFE_MODE;
+
       global $rsssl_server;
       if (!current_user_can($this->capability)) return;
       $this->trace_log("** Configuring SSL **");
@@ -544,16 +545,16 @@ defined('ABSPATH') or die("you do not have acces to this page!");
         //only use .htaccess when explicitly acitvated in settings
         if ($this->htaccess_redirect && $this->htaccess_test_success) {
           $this->editHtaccess();
-        } elseif (!$this->safe_mode && $this->clicked_activate_ssl()) {
+        } elseif (!$safe_mode && $this->clicked_activate_ssl()) {
           //set wp redirect, but only when just activated.
           $this->wp_redirect = TRUE;
           $this->save_options();
         }
 
-        if (!$this->safe_mode && $this->wpconfig_siteurl_not_fixed)
+        if (!$safe_mode && $this->wpconfig_siteurl_not_fixed)
           $this->fix_siteurl_defines_in_wpconfig();
 
-        if (!$this->safe_mode)
+        if (!$safe_mode)
           $this->set_siteurl_to_ssl();
       }
   }
@@ -972,7 +973,6 @@ protected function get_server_variable_fix_code(){
    */
 
   public function set_siteurl_to_ssl() {
-      if (defined("RSSSL_DO_NOT_CHANGE_SITEURL") && RSSSL_DO_NOT_CHANGE_SITEURL) return;
 
       if ($this->debug) {$this->trace_log("converting siteurl and homeurl to https");}
       $siteurl_ssl = str_replace ( "http://" , "https://" , get_option('siteurl'));
@@ -1019,7 +1019,6 @@ protected function get_server_variable_fix_code(){
       'plugin_db_version'                 => $this->plugin_db_version,
       'debug'                             => $this->debug,
       'do_not_edit_htaccess'              => $this->do_not_edit_htaccess,
-      'safe_mode'                         => $this->safe_mode,
       'htaccess_redirect'                 => $this->htaccess_redirect,
       'ssl_enabled'                       => $this->ssl_enabled,
       'javascript_redirect'               => $this->javascript_redirect,
@@ -1073,7 +1072,6 @@ protected function get_server_variable_fix_code(){
     $this->ssl_success_message_shown            = FALSE;
     $this->autoreplace_insecure_links           = TRUE;
     $this->do_not_edit_htaccess                 = FALSE;
-    $this->safe_mode                            = FALSE;
     $this->htaccess_redirect                    = FALSE;
     $this->javascript_redirect                  = FALSE;
     $this->wp_redirect                          = FALSE;
@@ -1164,7 +1162,7 @@ protected function get_server_variable_fix_code(){
        if($rsssl_url->error_number!=0) {
          $errormsg = $rsssl_url->get_curl_error($rsssl_url->error_number);
          $this->site_has_ssl = FALSE;
-         $this->trace_log("No ssl detected. Possibly blocked by security settings. The ssl testpage returned the error: ".$errormsg);
+         $this->trace_log("No ssl detected. No certificate, or the testpage is blocked by security settings. The ssl testpage returned the error: ".$errormsg);
        } else {
          $this->site_has_ssl = TRUE;
          $this->trace_log("SSL test page loaded successfully");
@@ -1200,10 +1198,11 @@ protected function get_server_variable_fix_code(){
          //no valid response, so set to NA
          $this->ssl_type = "NA";
        }
+
        //check for is_ssl()
        if (((strpos($filecontents, "#SERVER-HTTPS-ON#") === false) &&
            (strpos($filecontents, "#SERVER-HTTPS-1#") === false) &&
-           (strpos($filecontents, "#SERVERPORT443#") === false)) || !is_ssl()) {
+           (strpos($filecontents, "#SERVERPORT443#") === false)) || (!is_ssl() && $this->is_ssl_extended())) {
          //when is_ssl would return false, we should add some code to wp-config.php
          if (!$this->wpconfig_has_fixes()) {
            $this->do_wpconfig_loadbalancer_fix = TRUE;
@@ -1387,7 +1386,7 @@ protected function get_server_variable_fix_code(){
   }
 
   /*
-    Checks if the htaccess contains redirect rules.
+    Checks if the htaccess contains redirect rules, either actual redirect or a rsssl marker.
   */
 
   public function htaccess_contains_redirect_rules() {
@@ -1399,7 +1398,7 @@ protected function get_server_variable_fix_code(){
     $htaccess = file_get_contents($this->ABSpath.".htaccess");
 
     $needle = "RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]";
-    if(strpos($htaccess, $needle) !== FALSE || $this->contains_rsssl_rules($htaccess)){
+    if(strpos($htaccess, $needle) !== FALSE || $this->contains_rsssl_rules()){
       return true;
     } else {
       $this->trace_log(".htaccess does not contain default Really Simple SSL redirect");
@@ -1414,7 +1413,13 @@ protected function get_server_variable_fix_code(){
   *
   */
 
-  public function contains_rsssl_rules($htaccess) {
+  public function contains_rsssl_rules() {
+    if (!file_exists($this->ABSpath.".htaccess")) {
+      return false;
+    }
+
+    $htaccess = file_get_contents($this->ABSpath.".htaccess");
+
     $check=null;
     preg_match("/BEGIN rlrssslReallySimpleSSL/", $htaccess, $check);
     if(count($check) === 0){
@@ -2325,7 +2330,6 @@ public function create_form(){
       }
 
       add_settings_field('id_debug', __("Debug","really-simple-ssl"), array($this,'get_option_debug'), 'rlrsssl', 'rlrsssl_settings');
-      add_settings_field('id_safe_mode', __("Configure with safe mode","really-simple-ssl"), array($this,'get_option_safe_mode'), 'rlrsssl', 'rlrsssl_settings');
 
       if ($rsssl_server->uses_htaccess())
         add_settings_field('id_do_not_edit_htaccess', __("Stop editing the .htaccess file","really-simple-ssl"), array($this,'get_option_do_not_edit_htaccess'), 'rlrsssl', 'rlrsssl_settings');
@@ -2405,12 +2409,6 @@ public function options_validate($input) {
     $newinput['do_not_edit_htaccess'] = FALSE;
   }
 
-  if (!empty($input['safe_mode']) && $input['safe_mode']=='1') {
-    $newinput['safe_mode'] = TRUE;
-  } else {
-    $newinput['safe_mode'] = FALSE;
-  }
-
   if (!empty($input['htaccess_redirect']) && $input['htaccess_redirect']=='1') {
     $newinput['htaccess_redirect'] = TRUE;
   } else {
@@ -2466,21 +2464,7 @@ public function get_option_wp_redirect() {
 
 }
 
-/**
- * Insert option into settings form
- *
- * @since  2.5.8
- *
- * @access public
- *
- */
 
-  public function get_option_safe_mode() {
-    $options = get_option('rlrsssl_options');
-    echo '<input id="rlrsssl_options" name="rlrsssl_options[safe_mode]" size="40" type="checkbox" value="1"' . checked( 1, $this->safe_mode, false ) ." />";
-
-    rsssl_help::this()->get_help_tip(__("If activating Really Simple SSL causes issues on your site, try the safe mode.", "really-simple-ssl")." ".__("The siteurl will be left as it is, and no redirect will be added. Only the mixed content fixer will be active.", "really-simple-ssl")." ".__("Then try activating the WordPress redirect.", "really-simple-ssl"));
-  }
 
   /**
    * Insert option into settings form
@@ -2495,7 +2479,15 @@ public function get_option_wp_redirect() {
       $options = get_option('rlrsssl_options');
       echo '<input id="rlrsssl_options" name="rlrsssl_options[htaccess_redirect]" size="40" type="checkbox" value="1"' . checked( 1, $this->htaccess_redirect, false ) ." />";
 
-      rsssl_help::this()->get_help_tip(__("A .htaccess redirect is faster. Really Simple SSL detects the best redirect code, but there are configurations where redirect loops might occur.", "really-simple-ssl")." ".__("If that happens, remove the redirect from the .htaccess again and add DEFINE('RLRSSSL_DO_NOT_EDIT_HTACCESS', TRUE); to your wp-config.php.", "really-simple-ssl"));
+      rsssl_help::this()->get_help_tip(__("A .htaccess redirect is faster. Really Simple SSL detects the best redirect code, but make sure you know how to regain access to your site if anything goes wrong!", "really-simple-ssl"));
+
+      $link_start = '<a target="_blank" href="https://really-simple-ssl.com/knowledge-base/remove-htaccess-redirect-site-lockout/">';
+      $link_end = '</a>';
+      printf(
+      __( 'Before you enable this, make sure you know how to %1$sregain access%2$s to your site in case of a redirect loop.', 'really-simple-ssl' ),
+          $link_start,
+          $link_end
+      );
     }
 
 /**

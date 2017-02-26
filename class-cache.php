@@ -33,7 +33,9 @@ if ( ! class_exists( 'rsssl_cache' ) ) {
     add_action( 'admin_head', array($this,'flush_w3tc_cache'));
     add_action( 'admin_head', array($this,'flush_fastest_cache'));
     add_action( 'admin_head', array($this,'flush_zen_cache'));
-    add_action( 'admin_head', array($this,'flush_wp_rocket'));
+    
+    //keep getting errors from wp-rocket.
+    //add_action( 'admin_head', array($this,'flush_wp_rocket'));
   }
 
   public function flush_w3tc_cache() {
