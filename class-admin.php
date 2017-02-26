@@ -476,7 +476,7 @@ defined('ABSPATH') or die("you do not have acces to this page!");
   public function trace_log($msg) {
     if (!$this->debug) return;
     $this->debug_log = $this->debug_log."<br>".$msg;
-    $this->debug_log = strstr($this->debug_log,'** Really Simple SSL debug mode **');
+    $this->debug_log = strstr($this->debug_log,'** Detecting configuration **');
     error_log($msg);
   }
 
@@ -2145,31 +2145,16 @@ public function settings_page() {
                  if ($this->wp_redirect)
                     _e("WordPress redirect","really-simple-ssl");
 
-               } elseif ($rsssl_server->uses_htaccess()) {
-
-                 if (!is_writable($this->ABSpath.".htaccess")) {
+               } elseif ($rsssl_server->uses_htaccess() && !$this->is_per_site_activated_multisite_subfolder_install()) {
+                 if (is_writable($this->ABSpath.".htaccess")) {
+                   _e("Enable a .htaccess redirect or WordPress redirect in the settings to create a 301 redirect.","really-simple-ssl");
+                 } elseif (!is_writable($this->ABSpath.".htaccess")) {
                    _e(".htaccess is not writable. Set 301 WordPress redirect, or set the .htaccess manually if you want to redirect in .htaccess.","really-simple-ssl");
-                 } elseif(!$this->ssl_enabled_networkwide && $this->is_multisite_subfolder_install()) {
-                   _e("Https redirect cannot be set in the .htaccess file because you have activated per site on a multiste subfolder install. Enable WordPress redirect in the settings.","really-simple-ssl");
                  } else {
-                   _e("Https redirect cannot be set in the .htaccess because the htaccess redirect rule could not be verified. Set the .htaccess redirect manually or enable WordPress redirect in the settings.","really-simple-ssl");
-                }
-                 if ($this->ssl_type!="NA" && !(!$this->ssl_enabled_networkwide && $this->is_multisite_subfolder_install())) {
-                    $manual = true;
-                    $rules = $this->get_redirect_rules($manual);
-                    echo "&nbsp;";
-                    $arr_search = array("<",">","\n");
-                    $arr_replace = array("&lt","&gt","<br>");
-                    $rules = str_replace($arr_search, $arr_replace, $rules);
-                    _e("Try to add these rules above the wordpress lines in your .htaccess. If it doesn't work, just remove them again.","really-simple-ssl");
-                     ?>
-                     <br><br><code>
-                         <?php echo $rules; ?>
-                       </code>
-                     <?php
-                  }
+                   _e("Https redirect cannot be set in the .htaccess. Set the .htaccess redirect manually or enable WordPress redirect in the settings.","really-simple-ssl");
+                 }
               } else {
-                _e("No 301 redirect is set. Add a redirect to your nginx.conf, or enable the WordPress 301 redirect in the settings","really-simple-ssl");
+                _e("No 301 redirect is set. Enable the WordPress 301 redirect in the settings to get a 301 permanent redirect.","really-simple-ssl");
               }
             ?>
             </td><td></td>
@@ -2516,17 +2501,39 @@ public function get_option_wp_redirect() {
 
     public function get_option_htaccess_redirect() {
       $options = get_option('rlrsssl_options');
+
       echo '<input id="rlrsssl_options" name="rlrsssl_options[htaccess_redirect]" size="40" type="checkbox" value="1"' . checked( 1, $this->htaccess_redirect, false ) ." />";
 
-      rsssl_help::this()->get_help_tip(__("A .htaccess redirect is faster. Really Simple SSL detects the best redirect code, but make sure you know how to regain access to your site if anything goes wrong!", "really-simple-ssl"));
+      rsssl_help::this()->get_help_tip(__("A .htaccess redirect is faster. Really Simple SSL detects the redirect code that is most likely to work (95% of websites), but this is not 100%. Make sure you know how to regain access to your site if anything goes wrong!", "really-simple-ssl"));
 
-      $link_start = '<a target="_blank" href="https://really-simple-ssl.com/knowledge-base/remove-htaccess-redirect-site-lockout/">';
-      $link_end = '</a>';
-      printf(
-      __( 'Before you enable this, make sure you know how to %1$sregain access%2$s to your site in case of a redirect loop.', 'really-simple-ssl' ),
-          $link_start,
-          $link_end
-      );
+      if ($this->htaccess_redirect && !is_writable($this->ABSpath.".htaccess")) {
+        _e("The .htaccess file is not writable. Add these lines to your .htaccess manually, or set give writing permissions", "really-simple-ssl");
+        if ($this->ssl_type!="NA") {
+           $manual = true;
+           $rules = $this->get_redirect_rules($manual);
+           echo "&nbsp;";
+           $arr_search = array("<",">","\n");
+           $arr_replace = array("&lt","&gt","<br>");
+           $rules = str_replace($arr_search, $arr_replace, $rules);
+           _e("If you want to redirect with .htaccess, this is the .htaccess redirect that most likely is needed on your website:","really-simple-ssl");
+            ?>
+            <br><code>
+                <?php echo $rules; ?>
+              </code>
+            <?php
+         }
+      }
+
+      if (!$this->htaccess_redirect) {
+        $link_start = '<a target="_blank" href="https://really-simple-ssl.com/knowledge-base/remove-htaccess-redirect-site-lockout/">';
+        $link_end = '</a>';
+        printf(
+        __( 'Before you enable this, make sure you know how to %1$sregain access%2$s to your site in case of a redirect loop.', 'really-simple-ssl' ),
+            $link_start,
+            $link_end
+        );
+      }
+
     }
 
 /**

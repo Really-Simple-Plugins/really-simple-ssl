@@ -4,7 +4,7 @@ Tags: SSL, https, force SSL, mixed content, insecure content, secure website, we
 Requires at least: 4.2
 License: GPL2
 Tested up to: 4.7.2
-Stable tag: 2.5.8
+Stable tag: 2.5.9
 
 No setup required! You only need an SSL certificate, and this plugin will do the rest.
 
@@ -76,7 +76,7 @@ If you are experiencing redirect loops on your site, try these [instructions](ht
 = 2.5.8 =
 * Removed automatic insertion of .htaccess redirects. The .htaccess redirects work fine for most people, but can cause issues in some edge cases.
 * Added option to explicitly insert .htaccess redirect
-* Added safe mode constand RSSSL_SAFE_MODE to enable activating in a minimized way
+* Added safe mode constant RSSSL_SAFE_MODE to enable activating in a minimized way
 * Fix: RLRSSSL_DO_NOT_EDIT_HTACCESS constant did not override setting correctly when setting was used before.
 * Dropped cache flushing on activation, as this does not always work as expected
 
