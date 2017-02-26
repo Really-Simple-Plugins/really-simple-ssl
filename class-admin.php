@@ -99,8 +99,8 @@ defined('ABSPATH') or die("you do not have acces to this page!");
       //flush the permalinks
       if ($this->clicked_activate_ssl()) {
         add_action( 'admin_init', 'flush_rewrite_rules' ,39);
-        global $rsssl_cache;
-        add_action('admin_init', array($rsssl_cache,'flush'),40);
+        //global $rsssl_cache;
+        //add_action('admin_init', array($rsssl_cache,'flush'),40);
       }
 
       if (!$this->wpconfig_ok()) {
@@ -395,7 +395,7 @@ defined('ABSPATH') or die("you do not have acces to this page!");
     //this value is used to migrate to the new situation, where the .htaccess redirect is an setting.
     //this way we make sure that users who already have rules, will have the option enabled. When they disable it, htaccess rules will get removed.
     if (!get_option('rsssl_migrated_htaccess_setting')){
-      $this->htaccess_redirect = $this->htaccess_contains_redirect_rules();
+      $this->htaccess_redirect = $this->contains_rsssl_rules();
       $this->save_options();
       update_option("rsssl_migrated_htaccess_setting", TRUE);
     }
@@ -1164,7 +1164,7 @@ protected function get_server_variable_fix_code(){
        if($rsssl_url->error_number!=0) {
          $errormsg = $rsssl_url->get_curl_error($rsssl_url->error_number);
          $this->site_has_ssl = FALSE;
-         $this->trace_log("No ssl detected. Possibly blocked by security settings. The ssl testpage returned the error: ".$errormsg);
+         $this->trace_log("No ssl detected. No certificate, or the testpage is blocked by security settings. The ssl testpage returned the error: ".$errormsg);
        } else {
          $this->site_has_ssl = TRUE;
          $this->trace_log("SSL test page loaded successfully");
@@ -1200,10 +1200,11 @@ protected function get_server_variable_fix_code(){
          //no valid response, so set to NA
          $this->ssl_type = "NA";
        }
+
        //check for is_ssl()
        if (((strpos($filecontents, "#SERVER-HTTPS-ON#") === false) &&
            (strpos($filecontents, "#SERVER-HTTPS-1#") === false) &&
-           (strpos($filecontents, "#SERVERPORT443#") === false)) || !is_ssl()) {
+           (strpos($filecontents, "#SERVERPORT443#") === false)) || (!is_ssl() && $this->is_ssl_extended())) {
          //when is_ssl would return false, we should add some code to wp-config.php
          if (!$this->wpconfig_has_fixes()) {
            $this->do_wpconfig_loadbalancer_fix = TRUE;
@@ -1387,7 +1388,7 @@ protected function get_server_variable_fix_code(){
   }
 
   /*
-    Checks if the htaccess contains redirect rules.
+    Checks if the htaccess contains redirect rules, either actual redirect or a rsssl marker.
   */
 
   public function htaccess_contains_redirect_rules() {
@@ -1399,7 +1400,7 @@ protected function get_server_variable_fix_code(){
     $htaccess = file_get_contents($this->ABSpath.".htaccess");
 
     $needle = "RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]";
-    if(strpos($htaccess, $needle) !== FALSE || $this->contains_rsssl_rules($htaccess)){
+    if(strpos($htaccess, $needle) !== FALSE || $this->contains_rsssl_rules()){
       return true;
     } else {
       $this->trace_log(".htaccess does not contain default Really Simple SSL redirect");
@@ -1414,7 +1415,13 @@ protected function get_server_variable_fix_code(){
   *
   */
 
-  public function contains_rsssl_rules($htaccess) {
+  public function contains_rsssl_rules() {
+    if (!file_exists($this->ABSpath.".htaccess")) {
+      return false;
+    }
+
+    $htaccess = file_get_contents($this->ABSpath.".htaccess");
+
     $check=null;
     preg_match("/BEGIN rlrssslReallySimpleSSL/", $htaccess, $check);
     if(count($check) === 0){

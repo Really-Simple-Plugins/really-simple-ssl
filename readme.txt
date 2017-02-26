@@ -75,10 +75,11 @@ If you are experiencing redirect loops on your site, try these [instructions](ht
 == Changelog ==
 = 2.5.8 =
 * Removed automatic insertion of .htaccess redirects. The .htaccess redirects work fine for most people, but can cause issues in some edge cases.
-* Added option to explicitly insert .htaccess redirect 
+* Added option to explicitly insert .htaccess redirect
 * Added safe mode option to enable activating in a minimized way
 * Added Constant RSSSL_DO_NOT_CHANGE_SITEURL which gives the option not to change the site url to https. In certain configurations a https url leads to redirect loops.
 * Fix: RLRSSSL_DO_NOT_EDIT_HTACCESS constant did not override setting correctly when setting was used before.
+* Dropped cache flushing on activation, as this does not always work as expected
 
 = 2.5.7 =
 * Tweak: changes testurl to the function test_url()
