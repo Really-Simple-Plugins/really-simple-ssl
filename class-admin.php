@@ -327,6 +327,7 @@ defined('ABSPATH') or die("you do not have acces to this page!");
     <form action="" method="post">
       <?php wp_nonce_field( 'rsssl_nonce', 'rsssl_nonce' );?>
       <input type="submit" class='button button-primary' value="<?php _e("Go ahead, activate SSL!","really-simple-ssl");?>" id="rsssl_do_activate_ssl" name="rsssl_do_activate_ssl">
+      <br><?php _e("You may need to login in again.", "really-simple-ssl")?>
     </form>
   </p>
     <?php
@@ -537,6 +538,7 @@ defined('ABSPATH') or die("you do not have acces to this page!");
             $this->set_siteurl_to_ssl_networkwide();
           }
         }
+
       }
   }
 
@@ -1715,6 +1717,12 @@ protected function get_server_variable_fix_code(){
         } else {
           if ($this->debug) {$this->trace_log("single site or networkwide activation");}
         }
+
+        //fastest cache compatibility
+        if(class_exists('WpFastestCache') ) {
+          $rule .= "RewriteCond %{REQUEST_URI} !wp-content\/cache\/(all|wpfc-mobile-cache)"."\n";
+        }
+
         $rule .= "RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]"."\n";
 
         $rule .= "</IfModule>"."\n";
