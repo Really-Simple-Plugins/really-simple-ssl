@@ -3,7 +3,7 @@
  * Plugin Name: Really Simple SSL
  * Plugin URI: https://www.really-simple-ssl.com
  * Description: Lightweight plugin without any setup to make your site ssl proof
- * Version: 2.5.10
+ * Version: 2.5.11
  * Text Domain: really-simple-ssl
  * Domain Path: /languages
  * Author: Rogier Lankhorst
@@ -51,13 +51,11 @@
   if (is_admin()) {
     require_once( dirname( __FILE__ ) .  '/class-admin.php' );
     require_once( dirname( __FILE__ ) .  '/class-cache.php' );
-    require_once( dirname( __FILE__ ) .  '/class-url.php' );
     require_once( dirname( __FILE__ ) .  '/class-server.php' );
     require_once( dirname( __FILE__ ) .  '/class-help.php' );
     //require_once( dirname( __FILE__ ) .  '/class-maintain-plugin-load-position.php' );
     //$rsssl_maintain_plugin_position     = new rsssl_maintain_plugin_position;
 
-    $rsssl_url                          = new rsssl_url;
     $rsssl_cache                        = new rsssl_cache;
     $rsssl_server                       = new rsssl_server;
     $really_simple_ssl                  = new rsssl_admin;

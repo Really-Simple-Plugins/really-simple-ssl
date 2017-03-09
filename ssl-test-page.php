@@ -4,7 +4,7 @@
  <META NAME="ROBOTS" CONTENT="NOINDEX, NOFOLLOW">
 </head>
 <body>
-<h1>SSL test page</h1>
+<h1>#SSL TEST PAGE#</h1>
 <p>This page is used purely to test for ssl availability.</p>
 <?php
 	$ssl = FALSE;

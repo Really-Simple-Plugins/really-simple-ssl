@@ -1171,16 +1171,26 @@ protected function get_server_variable_fix_code(){
        //plugin url: domain.com/wp-content/etc
        $testpage_url = trailingslashit($this->test_url())."ssl-test-page.php";
        $this->trace_log("Opening testpage to check for ssl: ".$testpage_url);
-       $filecontents = $rsssl_url->get_contents($testpage_url);
-       if($rsssl_url->error_number!=0) {
-         $errormsg = $rsssl_url->get_curl_error($rsssl_url->error_number);
-         $this->site_has_ssl = FALSE;
-         $this->trace_log("No ssl detected. No certificate, or the testpage is blocked by security settings. The ssl testpage returned the error: ".$errormsg);
-       } else {
+
+       $response = wp_remote_get( $testpage_url );
+       if( is_array($response) ) {
+         $status = wp_remote_retrieve_response_code( $response );
+         $filecontents = wp_remote_retrieve_body($response);
+       }
+       //$filecontents = $rsssl_url->get_contents($testpage_url);
+       $this->trace_log("test page url, enter in browser to check manually: ".$testpage_url);
+
+       if(!is_wp_error( $response ) && (strpos($filecontents, "#SSL TEST PAGE#") !== false)) {
          $this->site_has_ssl = TRUE;
          $this->trace_log("SSL test page loaded successfully");
+       } else {
+         $this->site_has_ssl = FALSE;
+         $error = "";
+         if (s_wp_error( $response ) ) $error = $response->get_error_message();
+         $this->trace_log("No ssl detected. No certificate, or the testpage is blocked by security settings. The ssl testpage returned the error: ".$error);
        }
      }
+
      if ($this->site_has_ssl) {
        //check the type of ssl, either by parsing the returned string, or by reading the server vars.
        if ((strpos($filecontents, "#CLOUDFRONT#") !== false) || (isset($_SERVER['HTTP_CLOUDFRONT_FORWARDED_PROTO']) && ($_SERVER['HTTP_CLOUDFRONT_FORWARDED_PROTO'] == 'https'))) {
@@ -1275,16 +1285,23 @@ protected function get_server_variable_fix_code(){
      }
 
      $testpage_url .= ("/ssl-test-page.html");
-     $filecontents = $rsssl_url->get_contents($testpage_url);
-     $this->trace_log("test page url, click to check manually: ".$testpage_url);
-     if (($rsssl_url->error_number==0) && (strpos($filecontents, "#SSL TEST PAGE#") !== false)) {
+
+     $response = wp_remote_get( $testpage_url );
+     if( is_array($response) ) {
+       $status = wp_remote_retrieve_response_code( $response );
+       $filecontents = wp_remote_retrieve_body($response);
+     }
+
+     $this->trace_log("test page url, enter in browser to check manually: ".$testpage_url);
+
+     if (!is_wp_error( $response ) && (strpos($filecontents, "#SSL TEST PAGE#") !== false)) {
        $this->htaccess_test_success = TRUE;
- 		  if ($this->debug) {$this->trace_log("htaccess rules tested successfully.");}
+ 		   $this->trace_log("htaccess rules tested successfully.");
      } else {
        //.htaccess rewrite rule seems to be giving problems.
        $this->htaccess_test_success = FALSE;
-       if ($rsssl_url->error_number!=0) {
-         $this->trace_log("htaccess rules test failed with error: ".$rsssl_url->get_curl_error($rsssl_url->error_number));
+       if (is_wp_error( $response )) {
+         $this->trace_log("htaccess rules test failed with error: ".$response->get_error_message());
        } else {
          $this->trace_log("htaccess test rules failed. Set WordPress redirect in settings/ssl");
        }
@@ -1597,12 +1614,19 @@ protected function get_server_variable_fix_code(){
   */
 
   public function mixed_content_fixer_detected(){
-    global $rsssl_url;
+
+    $status = 0;
+    $web_source = "";
     //check if the mixed content fixer is active
-    $web_source = $rsssl_url->get_contents(home_url());
-    if ($rsssl_url->error_number!=0 || (strpos($web_source, "data-rsssl=") === false)) {
-      if ($rsssl_url->error_number!=0) $this->mixed_content_fixer_status = $rsssl_url->get_curl_error($rsssl_url->error_number);
-      $this->trace_log("Check for Mixed Content detection failed ".$this->mixed_content_fixer_status);
+    $response = wp_remote_get( home_url() );
+
+    if( is_array($response) ) {
+      $status = wp_remote_retrieve_response_code( $response );
+      $web_source = wp_remote_retrieve_body($response);
+    }
+
+    if ($status!=200 || (strpos($web_source, "data-rsssl=") === false)) {
+      $this->trace_log("Check for Mixed Content detection failed, http statuscode ".$status);
       return false;
     } else {
       $this->trace_log("Mixed content fixer was successfully detected on the front end.");
