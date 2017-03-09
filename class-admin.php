@@ -327,6 +327,7 @@ defined('ABSPATH') or die("you do not have acces to this page!");
     <form action="" method="post">
       <?php wp_nonce_field( 'rsssl_nonce', 'rsssl_nonce' );?>
       <input type="submit" class='button button-primary' value="<?php _e("Go ahead, activate SSL!","really-simple-ssl");?>" id="rsssl_do_activate_ssl" name="rsssl_do_activate_ssl">
+      <br><?php _e("You may need to login in again.", "really-simple-ssl")?>
     </form>
   </p>
     <?php
@@ -476,7 +477,7 @@ defined('ABSPATH') or die("you do not have acces to this page!");
   public function trace_log($msg) {
     if (!$this->debug) return;
     $this->debug_log = $this->debug_log."<br>".$msg;
-    $this->debug_log = strstr($this->debug_log,'** Really Simple SSL debug mode **');
+    $this->debug_log = strstr($this->debug_log,'** Detecting configuration **');
     error_log($msg);
   }
 
@@ -537,6 +538,7 @@ defined('ABSPATH') or die("you do not have acces to this page!");
             $this->set_siteurl_to_ssl_networkwide();
           }
         }
+
       }
   }
 
@@ -1169,16 +1171,26 @@ protected function get_server_variable_fix_code(){
        //plugin url: domain.com/wp-content/etc
        $testpage_url = trailingslashit($this->test_url())."ssl-test-page.php";
        $this->trace_log("Opening testpage to check for ssl: ".$testpage_url);
-       $filecontents = $rsssl_url->get_contents($testpage_url);
-       if($rsssl_url->error_number!=0) {
-         $errormsg = $rsssl_url->get_curl_error($rsssl_url->error_number);
-         $this->site_has_ssl = FALSE;
-         $this->trace_log("No ssl detected. No certificate, or the testpage is blocked by security settings. The ssl testpage returned the error: ".$errormsg);
-       } else {
+
+       $response = wp_remote_get( $testpage_url );
+       if( is_array($response) ) {
+         $status = wp_remote_retrieve_response_code( $response );
+         $filecontents = wp_remote_retrieve_body($response);
+       }
+       //$filecontents = $rsssl_url->get_contents($testpage_url);
+       $this->trace_log("test page url, enter in browser to check manually: ".$testpage_url);
+
+       if(!is_wp_error( $response ) && (strpos($filecontents, "#SSL TEST PAGE#") !== false)) {
          $this->site_has_ssl = TRUE;
          $this->trace_log("SSL test page loaded successfully");
+       } else {
+         $this->site_has_ssl = FALSE;
+         $error = "";
+         if (s_wp_error( $response ) ) $error = $response->get_error_message();
+         $this->trace_log("No ssl detected. No certificate, or the testpage is blocked by security settings. The ssl testpage returned the error: ".$error);
        }
      }
+
      if ($this->site_has_ssl) {
        //check the type of ssl, either by parsing the returned string, or by reading the server vars.
        if ((strpos($filecontents, "#CLOUDFRONT#") !== false) || (isset($_SERVER['HTTP_CLOUDFRONT_FORWARDED_PROTO']) && ($_SERVER['HTTP_CLOUDFRONT_FORWARDED_PROTO'] == 'https'))) {
@@ -1273,16 +1285,23 @@ protected function get_server_variable_fix_code(){
      }
 
      $testpage_url .= ("/ssl-test-page.html");
-     $filecontents = $rsssl_url->get_contents($testpage_url);
-     $this->trace_log("test page url, click to check manually: ".$testpage_url);
-     if (($rsssl_url->error_number==0) && (strpos($filecontents, "#SSL TEST PAGE#") !== false)) {
+
+     $response = wp_remote_get( $testpage_url );
+     if( is_array($response) ) {
+       $status = wp_remote_retrieve_response_code( $response );
+       $filecontents = wp_remote_retrieve_body($response);
+     }
+
+     $this->trace_log("test page url, enter in browser to check manually: ".$testpage_url);
+
+     if (!is_wp_error( $response ) && (strpos($filecontents, "#SSL TEST PAGE#") !== false)) {
        $this->htaccess_test_success = TRUE;
- 		  if ($this->debug) {$this->trace_log("htaccess rules tested successfully.");}
+ 		   $this->trace_log("htaccess rules tested successfully.");
      } else {
        //.htaccess rewrite rule seems to be giving problems.
        $this->htaccess_test_success = FALSE;
-       if ($rsssl_url->error_number!=0) {
-         $this->trace_log("htaccess rules test failed with error: ".$rsssl_url->get_curl_error($rsssl_url->error_number));
+       if (is_wp_error( $response )) {
+         $this->trace_log("htaccess rules test failed with error: ".$response->get_error_message());
        } else {
          $this->trace_log("htaccess test rules failed. Set WordPress redirect in settings/ssl");
        }
@@ -1595,12 +1614,19 @@ protected function get_server_variable_fix_code(){
   */
 
   public function mixed_content_fixer_detected(){
-    global $rsssl_url;
+
+    $status = 0;
+    $web_source = "";
     //check if the mixed content fixer is active
-    $web_source = $rsssl_url->get_contents(home_url());
-    if ($rsssl_url->error_number!=0 || (strpos($web_source, "data-rsssl=") === false)) {
-      if ($rsssl_url->error_number!=0) $this->mixed_content_fixer_status = $rsssl_url->get_curl_error($rsssl_url->error_number);
-      $this->trace_log("Check for Mixed Content detection failed ".$this->mixed_content_fixer_status);
+    $response = wp_remote_get( home_url() );
+
+    if( is_array($response) ) {
+      $status = wp_remote_retrieve_response_code( $response );
+      $web_source = wp_remote_retrieve_body($response);
+    }
+
+    if ($status!=200 || (strpos($web_source, "data-rsssl=") === false)) {
+      $this->trace_log("Check for Mixed Content detection failed, http statuscode ".$status);
       return false;
     } else {
       $this->trace_log("Mixed content fixer was successfully detected on the front end.");
@@ -1715,6 +1741,12 @@ protected function get_server_variable_fix_code(){
         } else {
           if ($this->debug) {$this->trace_log("single site or networkwide activation");}
         }
+
+        //fastest cache compatibility
+        if(class_exists('WpFastestCache') ) {
+          $rule .= "RewriteCond %{REQUEST_URI} !wp-content\/cache\/(all|wpfc-mobile-cache)"."\n";
+        }
+
         $rule .= "RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]"."\n";
 
         $rule .= "</IfModule>"."\n";
@@ -2145,31 +2177,16 @@ public function settings_page() {
                  if ($this->wp_redirect)
                     _e("WordPress redirect","really-simple-ssl");
 
-               } elseif ($rsssl_server->uses_htaccess()) {
-
-                 if (!is_writable($this->ABSpath.".htaccess")) {
+               } elseif ($rsssl_server->uses_htaccess() && !$this->is_per_site_activated_multisite_subfolder_install()) {
+                 if (is_writable($this->ABSpath.".htaccess")) {
+                   _e("Enable a .htaccess redirect or WordPress redirect in the settings to create a 301 redirect.","really-simple-ssl");
+                 } elseif (!is_writable($this->ABSpath.".htaccess")) {
                    _e(".htaccess is not writable. Set 301 WordPress redirect, or set the .htaccess manually if you want to redirect in .htaccess.","really-simple-ssl");
-                 } elseif(!$this->ssl_enabled_networkwide && $this->is_multisite_subfolder_install()) {
-                   _e("Https redirect cannot be set in the .htaccess file because you have activated per site on a multiste subfolder install. Enable WordPress redirect in the settings.","really-simple-ssl");
                  } else {
-                   _e("Https redirect cannot be set in the .htaccess because the htaccess redirect rule could not be verified. Set the .htaccess redirect manually or enable WordPress redirect in the settings.","really-simple-ssl");
-                }
-                 if ($this->ssl_type!="NA" && !(!$this->ssl_enabled_networkwide && $this->is_multisite_subfolder_install())) {
-                    $manual = true;
-                    $rules = $this->get_redirect_rules($manual);
-                    echo "&nbsp;";
-                    $arr_search = array("<",">","\n");
-                    $arr_replace = array("&lt","&gt","<br>");
-                    $rules = str_replace($arr_search, $arr_replace, $rules);
-                    _e("Try to add these rules above the wordpress lines in your .htaccess. If it doesn't work, just remove them again.","really-simple-ssl");
-                     ?>
-                     <br><br><code>
-                         <?php echo $rules; ?>
-                       </code>
-                     <?php
-                  }
+                   _e("Https redirect cannot be set in the .htaccess. Set the .htaccess redirect manually or enable WordPress redirect in the settings.","really-simple-ssl");
+                 }
               } else {
-                _e("No 301 redirect is set. Add a redirect to your nginx.conf, or enable the WordPress 301 redirect in the settings","really-simple-ssl");
+                _e("No 301 redirect is set. Enable the WordPress 301 redirect in the settings to get a 301 permanent redirect.","really-simple-ssl");
               }
             ?>
             </td><td></td>
@@ -2516,17 +2533,39 @@ public function get_option_wp_redirect() {
 
     public function get_option_htaccess_redirect() {
       $options = get_option('rlrsssl_options');
+
       echo '<input id="rlrsssl_options" name="rlrsssl_options[htaccess_redirect]" size="40" type="checkbox" value="1"' . checked( 1, $this->htaccess_redirect, false ) ." />";
 
-      rsssl_help::this()->get_help_tip(__("A .htaccess redirect is faster. Really Simple SSL detects the best redirect code, but make sure you know how to regain access to your site if anything goes wrong!", "really-simple-ssl"));
+      rsssl_help::this()->get_help_tip(__("A .htaccess redirect is faster. Really Simple SSL detects the redirect code that is most likely to work (95% of websites), but this is not 100%. Make sure you know how to regain access to your site if anything goes wrong!", "really-simple-ssl"));
 
-      $link_start = '<a target="_blank" href="https://really-simple-ssl.com/knowledge-base/remove-htaccess-redirect-site-lockout/">';
-      $link_end = '</a>';
-      printf(
-      __( 'Before you enable this, make sure you know how to %1$sregain access%2$s to your site in case of a redirect loop.', 'really-simple-ssl' ),
-          $link_start,
-          $link_end
-      );
+      if ($this->htaccess_redirect && !is_writable($this->ABSpath.".htaccess")) {
+        _e("The .htaccess file is not writable. Add these lines to your .htaccess manually, or set give writing permissions", "really-simple-ssl");
+        if ($this->ssl_type!="NA") {
+           $manual = true;
+           $rules = $this->get_redirect_rules($manual);
+           echo "&nbsp;";
+           $arr_search = array("<",">","\n");
+           $arr_replace = array("&lt","&gt","<br>");
+           $rules = str_replace($arr_search, $arr_replace, $rules);
+           _e("If you want to redirect with .htaccess, this is the .htaccess redirect that most likely is needed on your website:","really-simple-ssl");
+            ?>
+            <br><code>
+                <?php echo $rules; ?>
+              </code>
+            <?php
+         }
+      }
+
+      if (!$this->htaccess_redirect) {
+        $link_start = '<a target="_blank" href="https://really-simple-ssl.com/knowledge-base/remove-htaccess-redirect-site-lockout/">';
+        $link_end = '</a>';
+        printf(
+        __( 'Before you enable this, make sure you know how to %1$sregain access%2$s to your site in case of a redirect loop.', 'really-simple-ssl' ),
+            $link_start,
+            $link_end
+        );
+      }
+
     }
 
 /**
