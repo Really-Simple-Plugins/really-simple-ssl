@@ -97,8 +97,8 @@ defined('ABSPATH') or die("you do not have acces to this page!");
       //flush the permalinks
       if ($this->clicked_activate_ssl()) {
         add_action( 'admin_init', 'flush_rewrite_rules' ,39);
-        //global $rsssl_cache;
-        //add_action('admin_init', array($rsssl_cache,'flush'),40);
+        global $rsssl_cache;
+        add_action('admin_init', array($rsssl_cache,'flush'),40);
       }
 
       if (!$this->wpconfig_ok()) {
@@ -1177,7 +1177,7 @@ protected function get_server_variable_fix_code(){
          $status = wp_remote_retrieve_response_code( $response );
          $filecontents = wp_remote_retrieve_body($response);
        }
-       //$filecontents = $rsssl_url->get_contents($testpage_url);
+
        $this->trace_log("test page url, enter in browser to check manually: ".$testpage_url);
 
        if(!is_wp_error( $response ) && (strpos($filecontents, "#SSL TEST PAGE#") !== false)) {
@@ -1186,7 +1186,7 @@ protected function get_server_variable_fix_code(){
        } else {
          $this->site_has_ssl = FALSE;
          $error = "";
-         if (s_wp_error( $response ) ) $error = $response->get_error_message();
+         if (is_wp_error( $response ) ) $error = $response->get_error_message();
          $this->trace_log("No ssl detected. No certificate, or the testpage is blocked by security settings. The ssl testpage returned the error: ".$error);
        }
      }
