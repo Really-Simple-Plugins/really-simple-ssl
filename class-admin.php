@@ -1547,63 +1547,28 @@ protected function get_server_variable_fix_code(){
       }
 
       $htaccess = file_get_contents($this->ABSpath.".htaccess");
-      if(!$this->htaccess_contains_redirect_rules()){
 
-        if (!is_writable($this->ABSpath.".htaccess")) {
-          //set the javascript redirect as fallback, because .htaccess couldn't be edited.
-          if ($this->clicked_activate_ssl()) $this->wp_redirect = true;
-          $this->save_options();
-          $this->trace_log(".htaccess not writable.");
-          $this->errors["NO_REDIRECT_IN_HTACCESS"] = true;
-          return;
-        }
-
-        $rules = $this->get_redirect_rules();
-
-        //insert rules before wordpress part.
-        if (strlen($rules)>0) {
-          $wptag = "# BEGIN WordPress";
-          if (strpos($htaccess, $wptag)!==false) {
-              $htaccess = str_replace($wptag, $rules.$wptag, $htaccess);
-          } else {
-              $htaccess = $htaccess.$rules;
-          }
-
-          file_put_contents($this->ABSpath.".htaccess", $htaccess);
-        }
-
-    } elseif ((is_multisite() && !$this->ssl_enabled_networkwide) || ($this->hsts!=$this->contains_hsts())) {
-
-        /*
-            Remove all rules and add new IF
-            - or the hsts option has changed, so we need to edit the htaccess anyway.
-            - or rewrite per site (if a site is added or removed on per site activated
-            - in multisite we need to rewrite even if the rules are already there.
-        */
-
-        if ($this->debug) {$this->trace_log("settings page, per site activation or hsts option change, updating htaccess...");}
-
-        if (!is_writable($this->ABSpath.".htaccess")) {
-          if($this->debug) $this->trace_log(".htaccess not writable.");
-          return;
-        }
-
-	      $htaccess = preg_replace("/#\s?BEGIN\s?rlrssslReallySimpleSSL.*?#\s?END\s?rlrssslReallySimpleSSL/s", "", $htaccess);
-        $htaccess = preg_replace("/\n+/","\n", $htaccess);
-
-        $rules = $this->get_redirect_rules();
-
-        //insert rules before wordpress part.
-        if (strlen($rules)>0) {
-          $wptag = "# BEGIN WordPress";
-          if (strpos($htaccess, $wptag)!==false) {
-              $htaccess = str_replace($wptag, $rules.$wptag, $htaccess);
-          } else {
-              $htaccess = $htaccess.$rules;
-          }
-          file_put_contents($this->ABSpath.".htaccess", $htaccess);
-        }
+      if (!is_writable($this->ABSpath.".htaccess")) {
+        if($this->debug) $this->trace_log(".htaccess not writable.");
+        return;
       }
+
+      $htaccess = preg_replace("/#\s?BEGIN\s?rlrssslReallySimpleSSL.*?#\s?END\s?rlrssslReallySimpleSSL/s", "", $htaccess);
+      $htaccess = preg_replace("/\n+/","\n", $htaccess);
+
+      $rules = $this->get_redirect_rules();
+
+      //insert rules before wordpress part.
+      if (strlen($rules)>0) {
+        $wptag = "# BEGIN WordPress";
+        if (strpos($htaccess, $wptag)!==false) {
+            $htaccess = str_replace($wptag, $rules.$wptag, $htaccess);
+        } else {
+            $htaccess = $htaccess.$rules;
+        }
+        file_put_contents($this->ABSpath.".htaccess", $htaccess);
+      }
+
   }
 
   /**
