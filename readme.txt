@@ -30,6 +30,7 @@ some cool features.
 * The option to configure your site for the HSTS preload list
 * Mixed Content Fixer for the back-end
 * More detailed feedback on the configuration page.
+* Certificate expiration check: get an email when your SSL certificate is about to expire.
 * Premium support
 
 = What does the plugin actually do =
@@ -74,7 +75,7 @@ If you are experiencing redirect loops on your site, try these [instructions](ht
 
 == Changelog ==
 = 2.5.11 =
-* Removed curl in favor of wp_remote_get 
+* Removed curl in favor of wp_remote_get
 
 = 2.5.10 =
 * Fastest cache compatibility fix
