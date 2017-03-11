@@ -177,7 +177,8 @@ defined('ABSPATH') or die("you do not have acces to this page!");
   */
 
   private function clicked_activate_ssl() {
-    if (!isset( $_POST['rsssl_nonce'] ) || !wp_verify_nonce( $_POST['rsssl_nonce'], 'rsssl_nonce' )) return false;
+    //$bypass_nonce = (defined("rsssl_bypass_nonce") && rsssl_bypass_nonce) ? true : false;
+    //if (!$bypass_nonce && !(isset( $_POST['rsssl_nonce'] ) && wp_verify_nonce( $_POST['rsssl_nonce'], 'rsssl_nonce' ))) return false;
 
     if (isset($_POST['rsssl_do_activate_ssl'])) {
       $this->ssl_enabled=true;
