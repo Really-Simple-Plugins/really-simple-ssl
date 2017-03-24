@@ -46,7 +46,7 @@
 
   //$rsssl_front_end->set_ssl_var();
 
-  add_action("wp_loaded", array($rsssl_front_end, "force_ssl"),20);
+  add_action("plugins_loaded", array($rsssl_front_end, "force_ssl"),20);
 
   if (is_admin()) {
     require_once( dirname( __FILE__ ) .  '/class-admin.php' );

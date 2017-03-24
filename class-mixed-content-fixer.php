@@ -90,6 +90,8 @@ if ( ! class_exists( 'rsssl_admin_mixed_content_fixer' ) ) {
         $escaped_home,
         "src='http://",
         'src="http://',
+        "srcset='http://",
+        'srcset="http://',
     );
   }
 
