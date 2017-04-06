@@ -24,20 +24,26 @@
   #Load plugin functionality
   require_once( dirname( __FILE__ ) .  '/class-front-end.php' );
   require_once( dirname( __FILE__ ) .  '/class-admin.php' );
-  $rl_rsssl = new rsssl_admin();
+
+  $really_simple_ssl = new rsssl_admin();
+
+  if (is_multisite()) {
+    require_once( dirname( __FILE__ ) .  '/class-multisite.php' );
+    $rsssl_multisite = new rsssl_multisite();
+  }
 
   $step = 1;
   echo "<h1>Force deactivation of Really Simple SSL</h1>";
   echo $step.". Resetting options"."<br>";
   $networkwide = is_multisite();
-  $rl_rsssl->deactivate($networkwide);
+  $really_simple_ssl->deactivate($networkwide);
   $step++;
 
   //add feedback on writable files.
-  if (count($rl_rsssl->errors)>0) {
+  if (count($really_simple_ssl->errors)>0) {
     echo $step.". Errors occured while deactivating:<ul>";
     $step++;
-    foreach($rl_rsssl->errors as $errorname=>$error) {
+    foreach($really_simple_ssl->errors as $errorname=>$error) {
       echo "<li>".$errorname."</li>";
     }
     echo "</ul>";
@@ -45,10 +51,10 @@
   }
 
   echo $step.". Deactivating plugin"."<br>";
-  rl_deactivate_plugin($rl_rsssl->plugin_dir."/".$rl_rsssl->plugin_filename);
+  rl_deactivate_plugin($really_simple_ssl->plugin_dir."/".$really_simple_ssl->plugin_filename);
 
   $step++;
-  echo $step.". Completed with <b>".count($rl_rsssl->errors)."</b> error(s)"."<br>";
+  echo $step.". Completed with <b>".count($really_simple_ssl->errors)."</b> error(s)"."<br>";
 
 
 
