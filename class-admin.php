@@ -782,7 +782,7 @@ defined('ABSPATH') or die("you do not have acces to this page!");
 
 protected function get_server_variable_fix_code(){
   if (is_multisite()) global $rsssl_multisite;
-  if (!$rsssl_multisite->ssl_enabled_networkwide && $rsssl_multisite->is_multisite_subfolder_install()) {
+  if (is_multisite() && !$rsssl_multisite->ssl_enabled_networkwide && $rsssl_multisite->is_multisite_subfolder_install()) {
       if ($this->debug) $this->trace_log("per site activation on subfolder install, wp config server variable fix skipped");
       return "";
   }
@@ -846,16 +846,15 @@ protected function get_server_variable_fix_code(){
     file_put_contents($wpconfig_path, $wpconfig);
 
     //in multisite environment, with per site activation, re-add
-    if (is_multisite()) {
-      global $rsssl_multisite;
-      if (!$rsssl_multisite->ssl_enabled_networkwide) {
-        if ($this->do_wpconfig_loadbalancer_fix)
-          $this->wpconfig_loadbalancer_fix();
+    if (is_multisite()) global $rsssl_multisite;
+    if (is_multisite() && !$rsssl_multisite->ssl_enabled_networkwide) {
+      if ($this->do_wpconfig_loadbalancer_fix)
+        $this->wpconfig_loadbalancer_fix();
 
-        if ($this->no_server_variable)
-          $this->wpconfig_server_variable_fix();
-      }
+      if ($this->no_server_variable)
+        $this->wpconfig_server_variable_fix();
     }
+
 }
 
   /**
@@ -971,7 +970,7 @@ protected function get_server_variable_fix_code(){
     if (is_multisite()) {
       global $rsssl_multisite;
       $rsssl_multisite->deactivate();
-      if (is_multisite() && !$rsssl_multisite->ssl_enabled_networkwide) $this->build_domain_list();
+      if (!$rsssl_multisite->ssl_enabled_networkwide) $this->build_domain_list();
     }
 
     $this->remove_wpconfig_edit();
@@ -1280,7 +1279,7 @@ protected function get_server_variable_fix_code(){
 
   function htaccess_redirect_allowed(){
     if (is_multisite()) global $rsssl_multisite;
-    if ($rsssl_multisite->is_per_site_activated_multisite_subfolder_install()) {
+    if (is_multisite() && $rsssl_multisite->is_per_site_activated_multisite_subfolder_install()) {
       return false;
     } else {
       return true;
@@ -2020,7 +2019,7 @@ public function settings_page() {
                  if ($this->wp_redirect)
                     _e("WordPress redirect","really-simple-ssl");
 
-               } elseif ($rsssl_server->uses_htaccess() && !$rsssl_multisite->is_per_site_activated_multisite_subfolder_install()) {
+               } elseif ($rsssl_server->uses_htaccess() && (!is_multisite() || !$rsssl_multisite->is_per_site_activated_multisite_subfolder_install())) {
                  if (is_writable($this->ABSpath.".htaccess")) {
                    _e("Enable a .htaccess redirect or WordPress redirect in the settings to create a 301 redirect.","really-simple-ssl");
                  } elseif (!is_writable($this->ABSpath.".htaccess")) {
@@ -2223,12 +2222,12 @@ public function create_form(){
     if($this->site_has_ssl) {
 
       //when enabled networkwide, it's handled on the network settings page
-      if (!$rsssl_multisite->ssl_enabled_networkwide) {
+      if (!is_multisite() || !$rsssl_multisite->ssl_enabled_networkwide) {
         add_settings_field('id_wp_redirect', __("Enable WordPress 301 redirection to SSL","really-simple-ssl"), array($this,'get_option_wp_redirect'), 'rlrsssl', 'rlrsssl_settings');
       }
 
       //when enabled networkwide, it's handled on the network settings page
-      if ($rsssl_server->uses_htaccess() && !$rsssl_multisite->ssl_enabled_networkwide) {
+      if ($rsssl_server->uses_htaccess() && (!is_multisite() || !$rsssl_multisite->ssl_enabled_networkwide)) {
         add_settings_field('id_htaccess_redirect', __("Enable 301 .htaccess redirect","really-simple-ssl"), array($this,'get_option_htaccess_redirect'), 'rlrsssl', 'rlrsssl_settings');
       }
 
@@ -2238,7 +2237,8 @@ public function create_form(){
     add_settings_field('id_debug', __("Debug","really-simple-ssl"), array($this,'get_option_debug'), 'rlrsssl', 'rlrsssl_settings');
 
     //when enabled networkwide, it's handled on the network settings page
-    if ($rsssl_server->uses_htaccess() && !$rsssl_multisite->ssl_enabled_networkwide) {
+    if (is_multisite()) global $rsssl_multisite;
+    if ($rsssl_server->uses_htaccess() && (!is_multisite() || !$rsssl_multisite->ssl_enabled_networkwide)) {
       add_settings_field('id_do_not_edit_htaccess', __("Stop editing the .htaccess file","really-simple-ssl"), array($this,'get_option_do_not_edit_htaccess'), 'rlrsssl', 'rlrsssl_settings');
     }
 }
