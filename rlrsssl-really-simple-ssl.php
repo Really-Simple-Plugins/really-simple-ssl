@@ -46,13 +46,19 @@
 
   //$rsssl_front_end->set_ssl_var();
 
-  add_action("plugins_loaded", array($rsssl_front_end, "force_ssl"),20);
+  add_action("wp_loaded", array($rsssl_front_end, "force_ssl"),20);
 
   if (is_admin()) {
     require_once( dirname( __FILE__ ) .  '/class-admin.php' );
     require_once( dirname( __FILE__ ) .  '/class-cache.php' );
     require_once( dirname( __FILE__ ) .  '/class-server.php' );
     require_once( dirname( __FILE__ ) .  '/class-help.php' );
+
+    if (is_multisite()) {
+      require_once( dirname( __FILE__ ) .  '/class-multisite.php' );
+      $rsssl_multisite                    = new rsssl_multisite;
+    }
+    
     //require_once( dirname( __FILE__ ) .  '/class-maintain-plugin-load-position.php' );
     //$rsssl_maintain_plugin_position     = new rsssl_maintain_plugin_position;
 
@@ -60,6 +66,7 @@
     $rsssl_server                       = new rsssl_server;
     $really_simple_ssl                  = new rsssl_admin;
     $rsssl_help                         = new rsssl_help;
+
 
     add_action("plugins_loaded", array($really_simple_ssl, "init"),10);
   }

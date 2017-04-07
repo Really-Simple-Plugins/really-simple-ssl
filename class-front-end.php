@@ -96,13 +96,18 @@ if ( ! class_exists( 'rsssl_front_end' ) ) {
       $this->ssl_enabled                  = isset($options['ssl_enabled']) ? $options['ssl_enabled'] : $this->site_has_ssl;
       $this->javascript_redirect          = isset($options['javascript_redirect']) ? $options['javascript_redirect'] : TRUE;
       $this->wp_redirect                  = isset($options['wp_redirect']) ? $options['wp_redirect'] : FALSE;
-    }
 
-    // $network_options = get_site_option('rlrsssl_network_options');
-    // if (isset($network_options) ) {
-    //   $this->ssl_enabled_networkwide  = isset($network_options['ssl_enabled_networkwide']) ? $network_options['ssl_enabled_networkwide'] : FALSE;
-    // }
-  }
+      if  (is_multisite()) {
+        $options = get_site_option('rlrsssl_network_options');
+        $site_wp_redirect  = isset($options["wp_redirect"]) ? $options["wp_redirect"] : false;
+        $ssl_enabled_networkwide = isset($options["ssl_enabled_networkwide"]) ? $options["ssl_enabled_networkwide"] : false;
+        if ($ssl_enabled_networkwide && $site_wp_redirect) {
+          $this->wp_redirect = $site_wp_redirect;
+        }
+      }
+    }
+}
+
 
 
   /**
