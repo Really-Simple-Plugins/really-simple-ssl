@@ -475,7 +475,7 @@ public function show_notices(){
  *
  */
 
-protected function is_multisite_subfolder_install() {
+public function is_multisite_subfolder_install() {
   if (!is_multisite()) return FALSE;
   //we check this manually, as the SUBDOMAIN_INSTALL constant of wordpress might return false for domain mapping configs
   $is_subfolder = FALSE;
@@ -492,6 +492,26 @@ protected function is_multisite_subfolder_install() {
   return $is_subfolder;
 }
 
+/**
+ * Test if a domain has a subfolder structure
+ *
+ * @since  2.2
+ *
+ * @param string $domain
+ *
+ * @access private
+ *
+ */
+
+public function is_subfolder($domain) {
+
+    //remove slashes of the http(s)
+    $domain = preg_replace("/(http:\/\/|https:\/\/)/","",$domain);
+    if (strpos($domain,"/")!==FALSE) {
+      return true;
+    }
+    return false;
+}
 
 public function is_per_site_activated_multisite_subfolder_install() {
   global $rsssl_multisite;

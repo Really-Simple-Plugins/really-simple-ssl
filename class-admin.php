@@ -1498,30 +1498,6 @@ protected function get_server_variable_fix_code(){
     }
   }
 
-
-
-
-  /**
-   * Test if a domain has a subfolder structure
-   *
-   * @since  2.2
-   *
-   * @param string $domain
-   *
-   * @access private
-   *
-   */
-
-  private function is_subfolder($domain) {
-
-      //remove slashes of the http(s)
-      $domain = preg_replace("/(http:\/\/|https:\/\/)/","",$domain);
-      if (strpos($domain,"/")!==FALSE) {
-        return true;
-      }
-      return false;
-  }
-
   /**
    * Create redirect rules for the .htaccess.
    *
@@ -2382,7 +2358,9 @@ public function get_option_wp_redirect() {
     public function get_option_htaccess_redirect() {
       $options = get_option('rlrsssl_options');
 
-      echo '<input id="rlrsssl_options" name="rlrsssl_options[htaccess_redirect]" size="40" type="checkbox" value="1"' . checked( 1, $this->htaccess_redirect, false ) ." />";
+      $disabled = ($this->do_not_edit_htaccess) ? "disabled" : "";
+
+      echo '<input '.$disabled.' id="rlrsssl_options" name="rlrsssl_options[htaccess_redirect]" size="40" type="checkbox" value="1"' . checked( 1, $this->htaccess_redirect, false ) ." />";
 
       rsssl_help::this()->get_help_tip(__("A .htaccess redirect is faster. Really Simple SSL detects the redirect code that is most likely to work (95% of websites), but this is not 100%. Make sure you know how to regain access to your site if anything goes wrong!", "really-simple-ssl"));
 
@@ -2395,7 +2373,9 @@ public function get_option_wp_redirect() {
            $arr_search = array("<",">","\n");
            $arr_replace = array("&lt","&gt","<br>");
            $rules = str_replace($arr_search, $arr_replace, $rules);
+
            _e("If you want to redirect with .htaccess, this is the .htaccess redirect that most likely is needed on your website:","really-simple-ssl");
+
             ?>
             <br><code>
                 <?php echo $rules; ?>
@@ -2404,7 +2384,9 @@ public function get_option_wp_redirect() {
          }
       }
 
-      if (!$this->htaccess_redirect) {
+      if ($this->do_not_edit_htaccess) {
+        _e("If the setting 'do not edit htaccess' is enabled, you can't change this setting.","really-simple-ssl");
+      } elseif (!$this->htaccess_redirect) {
         $link_start = '<a target="_blank" href="https://really-simple-ssl.com/knowledge-base/remove-htaccess-redirect-site-lockout/">';
         $link_end = '</a>';
         printf(
