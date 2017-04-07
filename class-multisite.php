@@ -26,8 +26,8 @@ if ( ! class_exists( 'rsssl_multisite' ) ) {
     register_activation_hook(  dirname( __FILE__ )."/".rsssl_plugin, array($this,'activate') );
     add_filter("admin_url", array($this, "check_protocol_multisite"), 20, 3 );
 
-    add_action("plugins_loaded", array($this, "init"), 10, 0);
-    add_action("plugins_loaded", array($this, "process_networkwide_choice"), 20, 0);
+    add_action("plugins_loaded", array($this, "process_networkwide_choice"), 10, 0);
+    add_action("plugins_loaded", array($this, "networkwide_choice_notice"), 20, 0);
 
     add_action('network_admin_menu', array( &$this, 'add_multisite_menu' ) );
     add_action('network_admin_edit_rsssl_update_network_settings',  array($this,'update_network_options'));
@@ -38,8 +38,9 @@ if ( ! class_exists( 'rsssl_multisite' ) ) {
     return self::$_this;
   }
 
-  public function init(){
-    if (!$this->selected_networkwide_or_per_site) {
+  public function networkwide_choice_notice(){
+
+    if ($this->plugin_network_wide_active() && !$this->selected_networkwide_or_per_site) {
       add_action('network_admin_notices', array($this, 'show_notice_activate_networkwide'), 10);
     }
   }
@@ -319,9 +320,12 @@ if ( ! class_exists( 'rsssl_multisite' ) ) {
 
 
   public function process_networkwide_choice(){
+
     if (!$this->plugin_network_wide_active()) return;
 
+
     if ( isset($_POST['rsssl_do_activate_ssl_networkwide'])) {
+
       $this->selected_networkwide_or_per_site = true;
       $this->ssl_enabled_networkwide = true;
       $this->wp_redirect = true;
@@ -333,10 +337,13 @@ if ( ! class_exists( 'rsssl_multisite' ) ) {
     }
 
     if (isset($_POST['rsssl_do_activate_ssl_per_site'])) {
+
       $this->selected_networkwide_or_per_site = true;
       $this->ssl_enabled_networkwide = false;
       $this->save_options();
     }
+
+
   }
 
 
