@@ -368,9 +368,24 @@ if ( ! class_exists( 'rsssl_multisite' ) ) {
 
     foreach ( $sites as $site ) {
       $this->switch_to_blog_bw_compatible($site);
-      $really_simple_ssl->activate_ssl();
+
+      //if (!$this->root_domains_only_ssl || $this->is_root_url(home_url())) {
+        $really_simple_ssl->activate_ssl();
+      //}
+
       restore_current_blog(); //switches back to previous blog, not current, so we have to do it each loop
     }
+
+  }
+
+  public function is_root_url($url) {
+
+    $root_url = network_site_url();
+    if (strpos($url, $root_url)===false) {
+      return false;
+    }
+
+    return true
 
   }
 

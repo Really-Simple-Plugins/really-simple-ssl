@@ -1604,6 +1604,8 @@ protected function get_server_variable_fix_code(){
         $rule = "\n"."# BEGIN rlrssslReallySimpleSSL rsssl_version[".rsssl_version."]\n".$rule."# END rlrssslReallySimpleSSL"."\n";
       }
 
+      $rule = apply_filters("rsssl_htaccess_output", $rule);
+
       $rule = preg_replace("/\n+/","\n", $rule);
       return $rule;
     }
