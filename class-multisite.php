@@ -26,6 +26,8 @@ if ( ! class_exists( 'rsssl_multisite' ) ) {
     register_activation_hook(  dirname( __FILE__ )."/".rsssl_plugin, array($this,'activate') );
     add_filter("admin_url", array($this, "check_protocol_multisite"), 20, 3 );
 
+    //add_action("plugins_loaded", array($this, "ssl_menu_on_site_admin"));
+
     add_action("plugins_loaded", array($this, "process_networkwide_choice"), 10, 0);
     add_action("plugins_loaded", array($this, "networkwide_choice_notice"), 20, 0);
 
@@ -54,9 +56,20 @@ if ( ! class_exists( 'rsssl_multisite' ) ) {
     $this->do_not_edit_htaccess = isset($options["do_not_edit_htaccess"]) ? $options["do_not_edit_htaccess"] : false;
     $this->selected_networkwide_or_per_site = isset($options["selected_networkwide_or_per_site"]) ? $options["selected_networkwide_or_per_site"] : false;
 
+/* define default value for sl_menu_on_site_admin */
+
+    //$this->ssl_menu_on_site_admin = isset($options["ssl_menu_on_site_admin"]) ? $options["ssl_menu_on_site_admin"] : false;
+
   }
 
+/* function to display or hide the SSL options on a per-site basis.  */
 
+  /* public function ssl_menu_on_site_admin() {
+    global $really_simple_ssl;
+    //if ($this->no_ssl_menu_on_site_admin) {
+      remove_action('admin_menu', array($really_simple_ssl, 'add_settings_page'),40);
+    //} */
+//}
   /**
    * On plugin activation, we can check if it is networkwide or not.
    *
@@ -75,10 +88,6 @@ if ( ! class_exists( 'rsssl_multisite' ) ) {
     }
 
   }
-
-
-
-
 
   /*
 
@@ -106,7 +115,11 @@ if ( ! class_exists( 'rsssl_multisite' ) ) {
         add_settings_field('id_do_not_edit_htaccess', __("Stop editing the .htaccess file","really-simple-ssl"), array($this,'get_option_do_not_edit_htaccess'), $this->page_slug, 'rsssl_network_settings');
 
       }
-    }
+/* add a settings field for sl_menu_on_site_admin */
+
+      //if ($this->ssl_menu_on_site_admin);
+        //add_settings_field('id_ssl_menu_on_site_admin', __("Display or hide the SSL menu on a per-site basis","really-simple-ssl"), array($this,'get_option_ssl_menu_on_site_admin'), $this->page_slug, 'rsssl_network_settings');
+    //}
     global $rsssl_network_admin_page;
     $rsssl_network_admin_page = add_submenu_page('settings.php', "SSL", "SSL", 'manage_options', $this->page_slug, array( &$this, 'multisite_menu_page' ) );
   }
@@ -246,9 +259,13 @@ if ( ! class_exists( 'rsssl_multisite' ) ) {
   exit;
 }
 
-  public function sanitize_boolean($n)
+  public function sanitize_boolean($value)
 {
-  return boolval($n);
+  if ($value == true) {
+    return true;
+  } else {
+    return false;
+  }
 }
 
 
@@ -368,24 +385,9 @@ if ( ! class_exists( 'rsssl_multisite' ) ) {
 
     foreach ( $sites as $site ) {
       $this->switch_to_blog_bw_compatible($site);
-
-      //if (!$this->root_domains_only_ssl || $this->is_root_url(home_url())) {
-        $really_simple_ssl->activate_ssl();
-      //}
-
+      $really_simple_ssl->activate_ssl();
       restore_current_blog(); //switches back to previous blog, not current, so we have to do it each loop
     }
-
-  }
-
-  public function is_root_url($url) {
-
-    $root_url = network_site_url();
-    if (strpos($url, $root_url)===false) {
-      return false;
-    }
-
-    return true;
 
   }
 
