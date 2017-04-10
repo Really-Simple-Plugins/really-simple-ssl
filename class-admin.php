@@ -101,6 +101,7 @@ defined('ABSPATH') or die("you do not have acces to this page!");
       if (!$this->wpconfig_ok()) {
         //if we were to activate ssl, this could result in a redirect loop. So warn first.
         add_action("admin_notices", array($this, 'show_notice_wpconfig_needs_fixes'));
+        do_action("rsssl_wpconfig_not_ok");
         if (is_multisite()) add_action('network_admin_notices', array($this, 'show_notice_wpconfig_needs_fixes'), 10);
 
         $this->ssl_enabled = false;
@@ -214,8 +215,6 @@ defined('ABSPATH') or die("you do not have acces to this page!");
 
     return apply_filters('rsssl_wpconfig_ok_check', $result);
   }
-
-
 
 
   /*

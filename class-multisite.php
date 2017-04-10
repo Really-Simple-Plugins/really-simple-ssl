@@ -385,7 +385,7 @@ if ( ! class_exists( 'rsssl_multisite' ) ) {
       return false;
     }
 
-    return true
+    return true;
 
   }
 
