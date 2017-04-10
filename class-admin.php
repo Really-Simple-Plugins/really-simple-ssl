@@ -16,7 +16,7 @@ defined('ABSPATH') or die("you do not have acces to this page!");
   public $sites                             = Array(); //for multisite, list of all activated sites.
 
   //general settings
-  public $capability                        = 'manage_options';
+  public $capability                        = 'activate_plugins';
 
   public $ssl_test_page_error;
   public $htaccess_test_success             = FALSE;
@@ -55,7 +55,6 @@ defined('ABSPATH') or die("you do not have acces to this page!");
     $this->get_plugin_upgraded(); //call always, otherwise db version will not match anymore.
 
     register_deactivation_hook(dirname( __FILE__ )."/".$this->plugin_filename, array($this,'deactivate') );
-
 
   }
 
@@ -222,13 +221,13 @@ defined('ABSPATH') or die("you do not have acces to this page!");
   */
 
   public function show_notice_activate_ssl(){
+    //only for users with admin level access
+    if (!current_user_can($this->capability)) return;
 
     //for multisite, show no ssl message only on main blog.
     if (is_multisite() && !is_network_admin() && !$this->site_has_ssl) return;
 
     if (!$this->wpconfig_ok()) return;
-
-    if (!current_user_can($this->capability)) return;
 
     if (!$this->site_has_ssl) {
       global $wp;
@@ -1618,7 +1617,9 @@ protected function get_server_variable_fix_code(){
 *
 */
 
-public function show_notice_wpconfig_needs_fixes(){ ?>
+public function show_notice_wpconfig_needs_fixes(){
+  if (!current_user_can($this->capability)) return;
+  ?>
   <div id="message" class="error fade notice">
   <h1><?php echo __("System detection encountered issues","really-simple-ssl");?></h1>
 
@@ -1672,6 +1673,7 @@ public function show_notice_wpconfig_needs_fixes(){ ?>
 
 public function show_notices()
 {
+  if (!current_user_can($this->capability)) return;
   /*
       show a notice when the .htaccess file does not contain redirect rules
   */
@@ -1702,8 +1704,6 @@ public function show_notices()
     </div>
     <?php
   }
-
-
 
   /*
       SSL success message

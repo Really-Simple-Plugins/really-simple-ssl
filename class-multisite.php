@@ -115,11 +115,11 @@ if ( ! class_exists( 'rsssl_multisite' ) ) {
         add_settings_field('id_do_not_edit_htaccess', __("Stop editing the .htaccess file","really-simple-ssl"), array($this,'get_option_do_not_edit_htaccess'), $this->page_slug, 'rsssl_network_settings');
 
       }
-/* add a settings field for sl_menu_on_site_admin */
+      /* add a settings field for sl_menu_on_site_admin */
 
       //if ($this->ssl_menu_on_site_admin);
         //add_settings_field('id_ssl_menu_on_site_admin', __("Display or hide the SSL menu on a per-site basis","really-simple-ssl"), array($this,'get_option_ssl_menu_on_site_admin'), $this->page_slug, 'rsssl_network_settings');
-    //}
+    }
     global $rsssl_network_admin_page;
     $rsssl_network_admin_page = add_submenu_page('settings.php', "SSL", "SSL", 'manage_options', $this->page_slug, array( &$this, 'multisite_menu_page' ) );
   }
@@ -189,9 +189,7 @@ if ( ! class_exists( 'rsssl_multisite' ) ) {
 
 
 /**
- * Displays the options page. The big difference here is where you post the data
- * because, unlike for normal option pages, there is nowhere to process it by
- * default so we have to create our own hook to process the saving of our options.
+ * Displays the options page.
  */
 
  public function multisite_menu_page() {
@@ -207,9 +205,7 @@ if ( ! class_exists( 'rsssl_multisite' ) ) {
           do_settings_sections($this->page_slug);
 
           submit_button();
-        // settings_fields('rsssl_network_settings_page');
-        // do_settings_sections('rsssl_network_settings_page');
-        // submit_button();
+
       ?>
       <?php //wp_nonce_field( 'rsssl_save_network_settings', 'rsssl_save_network_settings_nonce' ); ?>
     </form>

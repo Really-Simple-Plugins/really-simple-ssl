@@ -74,6 +74,10 @@ For detailed instructions on how to find mixed content read this [article](https
 If you are experiencing redirect loops on your site, try these [instructions](https://really-simple-ssl.com/knowledge-base/my-website-is-in-a-redirect-loop/).
 
 == Changelog ==
+= 2.5.12 =
+* Added multisite settings page
+* Added filter for .htaccess code output
+
 = 2.5.11 =
 * Removed curl in favor of wp_remote_get
 
