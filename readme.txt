@@ -77,6 +77,7 @@ If you are experiencing redirect loops on your site, try these [instructions](ht
 = 2.5.12 =
 * Added multisite settings page
 * Added filter for .htaccess code output
+* Increased user capability to "activate_plugins"
 
 = 2.5.11 =
 * Removed curl in favor of wp_remote_get

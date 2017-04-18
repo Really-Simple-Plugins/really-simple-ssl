@@ -9,17 +9,19 @@ if ( ! class_exists( 'rsssl_multisite' ) ) {
     public $option_group = "rsssl_network_options";
     public $page_slug = "really-simple-ssl";
     public $section = "rsssl_network_options_section";
+    public $ssl_enabled_networkwide;
+    public $selected_networkwide_or_per_site;
+
     public $wp_redirect;
     public $htaccess_redirect;
-    public $ssl_enabled_networkwide;
     public $do_not_edit_htaccess;
-    public $selected_networkwide_or_per_site;
     public $autoreplace_mixed_content;
     public $javascript_redirect;
-    public $hsts_multisite;
+    public $hsts;
     public $mixed_content_admin;
-    public $cert_expiration;
+    public $cert_expiration_warning;
     public $hide_menu_for_subsites;
+
     private $pro_url = "https://www.really-simple-ssl.com/pro-multisite";
 
   function __construct() {
@@ -56,18 +58,8 @@ if ( ! class_exists( 'rsssl_multisite' ) ) {
 
   public function load_options(){
     $options = get_site_option('rlrsssl_network_options');
-
-    $this->wp_redirect  = isset($options["wp_redirect"]) ? $options["wp_redirect"] : false;
-    $this->htaccess_redirect = isset($options["htaccess_redirect"]) ? $options["htaccess_redirect"] : false;
-    $this->ssl_enabled_networkwide = isset($options["ssl_enabled_networkwide"]) ? $options["ssl_enabled_networkwide"] : false;
-    $this->do_not_edit_htaccess = isset($options["do_not_edit_htaccess"]) ? $options["do_not_edit_htaccess"] : false;
     $this->selected_networkwide_or_per_site = isset($options["selected_networkwide_or_per_site"]) ? $options["selected_networkwide_or_per_site"] : false;
-    $this->autoreplace_mixed_content = isset($options["autoreplace_mixed_content"]) ? $options["autoreplace_mixed_content"] : false;
-    $this->javascript_redirect = isset($options["javascript_redirect"]) ? $options["javascript_redirect"] : false;
-    $this->hsts_multisite = isset($options["hsts_multisite"]) ? $options["hsts_multisite"] : false;
-    $this->mixed_content_admin = isset($options["mixed_content_admin"]) ? $options["mixed_content_admin"] : false;
-    $this->cert_expiration = isset($options["cert_expiration"]) ? $options["cert_expiration"] : false;
-    $this->hide_menu_for_subsites = isset($options["hide_menu_for_subsites"]) ? $options["hide_menu_for_subsites"] : false;
+    $this->ssl_enabled_networkwide = isset($options["ssl_enabled_networkwide"]) ? $options["ssl_enabled_networkwide"] : false;
 
   }
 
@@ -108,23 +100,13 @@ if ( ! class_exists( 'rsssl_multisite' ) ) {
     global $really_simple_ssl;
     if ($really_simple_ssl->site_has_ssl) {
         add_settings_field('id_ssl_enabled_networkwide', __("Enable SSL", "really-simple-ssl"), array($this,'get_option_enable_multisite'), $this->page_slug, 'rsssl_network_settings');
-        // add_settings_field('id_autoreplace_mixed_content', __("Auto replace mixed content","really-simple-ssl"), array($this,'get_option_autoreplace_mixed_content'), $this->page_slug, 'rsssl_network_settings');
-        // add_settings_field('id_hide_menu_for_subsites', __("Hide menu for subsites","really-simple-ssl"), array($this,'get_option_hide_menu_for_subsites'), $this->page_slug, 'rsssl_network_settings');
         if ($this->selected_networkwide_or_per_site) {
-          // add_settings_field('id_301_redirect', __("Enable WordPress 301 redirection to SSL for all SSL sites","really-simple-ssl"), array($this,'get_option_301_redirect'), $this->page_slug, 'rsssl_network_settings');
-          // add_settings_field('id_javascript_redirect', __("Enable javascript redirection to SSL","really-simple-ssl"), array($this,'get_option_javascript_redirect'), $this->page_slug, 'rsssl_network_settings');
-          // add_settings_field('id_hsts_multisite', __("Turn HTTP Strict Transport Security on","really-simple-ssl"), array($this,'get_option_hsts_multisite'), $this->page_slug, 'rsssl_network_settings');
-          // add_settings_field('id_cert_expiration', __("Receive an email when your certificate is about to expire","really-simple-ssl"), array($this,'get_option_cert_expiration'), $this->page_slug, 'rsssl_network_settings');
-          // add_settings_field('id_mixed_content_admin', __("Enable the mixed content fixer on the WordPress back-end","really-simple-ssl"), array($this,'get_option_mixed_content_admin'), $this->page_slug, 'rsssl_network_settings');
-          // add_settings_field('id_do_not_edit_htaccess', __("Stop editing the .htaccess file","really-simple-ssl"), array($this,'get_option_do_not_edit_htaccess'), $this->page_slug, 'rsssl_network_settings');
-          // add_settings_field('id_htaccess_redirect', __("Enable htacces redirection to SSL on the network","really-simple-ssl"), array($this,'get_option_htaccess_redirect'), $this->page_slug, 'rsssl_network_settings');
-
           global $rsssl_network_admin_page;
           $rsssl_network_admin_page = add_submenu_page('settings.php', "SSL", "SSL", 'manage_options', $this->page_slug, array( &$this, 'multisite_menu_page' ) );
         }
       }
     }
-    
+
   /*
       Shows the content of the multisite menu page
   */
@@ -161,73 +143,6 @@ if ( ! class_exists( 'rsssl_multisite' ) ) {
       rsssl_help::this()->get_help_tip(__("Select to enable SSL networkwide or per site.", "really-simple-ssl"));
   }
 
-  // public function get_option_htaccess_redirect(){
-  //     echo '<input id="rlrsssl_options" name="rlrsssl_network_options[htaccess_redirect]" size="40" type="checkbox" value="1"' . checked( 1, $this->htaccess_redirect, false ) ." />";
-  //
-  //     if($this->ssl_enabled_networkwide) {
-  //       rsssl_help::this()->get_help_tip(__("Enable this if you want to redirect ALL websites to SSL using .htaccess", "really-simple-ssl"));
-  //     } else {
-  //       rsssl_help::this()->get_help_tip(__("Enable this if you want to redirect SSL websites using .htaccess. ", "really-simple-ssl"));
-  //     }
-  //   }
-  //
-  // public function get_option_301_redirect(){
-  //     echo '<input id="rlrsssl_options" name="rlrsssl_network_options[wp_redirect]" size="40" type="checkbox" value="1"' . checked( 1, $this->wp_redirect, false ) ." />";
-  //     if($this->ssl_enabled_networkwide) {
-  //     rsssl_help::this()->get_help_tip(__("Enable this if you want to use the internal WordPress 301 redirect for ALL websites. Needed on NGINX servers, or if the .htaccess redirect cannot be used.", "really-simple-ssl"));
-  // }   else {
-  //     rsssl_help::this()->get_help_tip(__("Enable this if you want to use the internal WordPress 301 redirect for SSL websites. Needed on NGINX servers, or if the .htaccess redirect cannot be used.", "really-simple-ssl"));
-  //   }
-  // }
-  //
-  // public function get_option_autoreplace_mixed_content(){
-  //   echo '<input id="rlrsssl_options" name="rlrsssl_network_options[autoreplace_mixed_content]" size="40" type="checkbox" value="1"' . checked( 1, $this->autoreplace_mixed_content, false ) ." />";
-  //   if($this->ssl_enabled_networkwide) {
-  //   rsssl_help::this()->get_help_tip(__("Enable this if you want to automaticly replace mixed content.", "really-simple-ssl"));
-  //   }
-  // }
-  //
-  // public function  get_option_javascript_redirect(){
-  //   echo '<input id="rlrsssl_options" name="rlrsssl_network_options[javascript_redirect]" size="40" type="checkbox" value="1"' . checked( 1, $this->javascript_redirect, false ) ." />";
-  //   if($this->ssl_enabled_networkwide) {
-  //   rsssl_help::this()->get_help_tip(__("Enable this if you want to enable javascript redirection.", "really-simple-ssl"));
-  //   }
-  // }
-  //
-  // public function get_option_hsts_multisite(){
-  //   echo '<input id="rlrsssl_options" name="rlrsssl_network_options[hsts_multisite]" size="40" type="checkbox" value="1"' . checked( 1, $this->hsts_multisite, false ) ." />";
-  //   if($this->ssl_enabled_networkwide) {
-  //   rsssl_help::this()->get_help_tip(__("Enable this if you want to enable HSTS.", "really-simple-ssl"));
-  //   }
-  // }
-  //
-  // public function get_option_mixed_content_admin(){
-  //   echo '<input id="rlrsssl_options" name="rlrsssl_network_options[mixed_content_admin]" size="40" type="checkbox" value="1"' . checked( 1, $this->mixed_content_admin, false ) ." />";
-  //   if($this->ssl_enabled_networkwide) {
-  //   rsssl_help::this()->get_help_tip(__("Enable this if you want the mixed content fixer for admin.", "really-simple-ssl"));
-  //   }
-  // }
-  //
-  // public function get_option_cert_expiration(){
-  //   echo '<input id="rlrsssl_options" name="rlrsssl_network_options[cert_expiration]" size="40" type="checkbox" value="1"' . checked( 1, $this->cert_expiration, false ) ." />";
-  //   if($this->ssl_enabled_networkwide) {
-  //   rsssl_help::this()->get_help_tip(__("Enable this if you want to enable certificate expiration notices.", "really-simple-ssl"));
-  //   }
-  // }
-  //
-  // public function get_option_hide_menu_for_subsites(){
-  //   echo '<input id="rlrsssl_options" name="rlrsssl_network_options[hide_menu_for_subsites]" size="40" type="checkbox" value="1"' . checked( 1, $this->hide_menu_for_subsites, false ) ." />";
-  //   if($this->ssl_enabled_networkwide) {
-  //   rsssl_help::this()->get_help_tip(__("Enable this if you want to hide menus on subsites.", "really-simple-ssl"));
-  //   }
-  // }
-  //
-  //
-  // public function get_option_do_not_edit_htaccess(){
-  //     echo '<input id="rlrsssl_options" name="rlrsssl_network_options[do_not_edit_htaccess]" size="40" type="checkbox" value="1"' . checked( 1, $this->do_not_edit_htaccess, false ) ." />";
-  //     rsssl_help::this()->get_help_tip(__("Enable this if you want to block the htaccess file from being edited.", "really-simple-ssl"));
-  // }
-
 
 /**
  * Displays the options page. The big difference here is where you post the data
@@ -246,13 +161,8 @@ if ( ! class_exists( 'rsssl_multisite' ) ) {
 
           settings_fields($this->option_group);
           do_settings_sections($this->page_slug);
-
           submit_button();
-        // settings_fields('rsssl_network_settings_page');
-        // do_settings_sections('rsssl_network_settings_page');
-        // submit_button();
       ?>
-      <?php //wp_nonce_field( 'rsssl_save_network_settings', 'rsssl_save_network_settings_nonce' ); ?>
     </form>
   </div>
 <?php
@@ -270,18 +180,9 @@ if ( ! class_exists( 'rsssl_multisite' ) ) {
     $options = array_map(array($this, "sanitize_boolean"), $_POST["rlrsssl_network_options"]);
     $options["selected_networkwide_or_per_site"] = true;
 
-    $this->wp_redirect  = isset($options["wp_redirect"]) ? $options["wp_redirect"] : false;
-    $this->htaccess_redirect = isset($options["htaccess_redirect"]) ? $options["htaccess_redirect"] : false;
     $this->ssl_enabled_networkwide = isset($options["ssl_enabled_networkwide"]) ? $options["ssl_enabled_networkwide"] : false;
-    $this->do_not_edit_htaccess = isset($options["do_not_edit_htaccess"]) ? $options["do_not_edit_htaccess"] : false;
-    $this->autoreplace_mixed_content = isset($options["autoreplace_mixed_content"]) ? $options["autoreplace_mixed_content"] : false;
-    $this->javascript_redirect = isset($options["javascript_redirect"]) ? $options["javascript_redirect"] : false;
-    $this->hsts_multisite = isset($options["hsts_multisite"]) ? $options["hsts_multisite"] : false;
-    $this->mixed_content_admin = isset($options["mixed_content_admin"]) ? $options["mixed_content_admin"] : false;
-    $this->cert_expiration = isset($options["cert_expiration"]) ? $options["cert_expiration"] : false;
-    $this->hide_menu_for_subsites = isset($options["hide_menu_for_subsites"]) ? $options["hide_menu_for_subsites"] : false;
 
-
+    do_action("rsssl_update_network_options");
     $this->selected_networkwide_or_per_site = isset($options["selected_networkwide_or_per_site"]) ? $options["selected_networkwide_or_per_site"] : false;
   }
 
@@ -433,15 +334,7 @@ if ( ! class_exists( 'rsssl_multisite' ) ) {
 
     $options["selected_networkwide_or_per_site"] = $this->selected_networkwide_or_per_site;
     $options["ssl_enabled_networkwide"] = $this->ssl_enabled_networkwide;
-    $options["wp_redirect"] = $this->wp_redirect;
-    $options["htaccess_redirect"] = $this->htaccess_redirect;
-    $options["do_not_edit_htaccess"] = $this->do_not_edit_htaccess;
-    $options["autoreplace_mixed_content"] = $this->autoreplace_mixed_content;
-    $options["javascript_redirect"] = $this->javascript_redirect;
-    $options["hsts_multisite"] = $this->hsts_multisite;
-    $options["mixed_content_admin"] = $this->mixed_content_admin;
-    $options["cert_expiration"] = $this->cert_expiration;
-    $options["hide_menu_for_subsites"] = $this->hide_menu_for_subsites;
+
     update_site_option("rlrsssl_network_options", $options);
   }
 
@@ -494,9 +387,9 @@ if ( ! class_exists( 'rsssl_multisite' ) ) {
     $options["do_not_edit_htaccess"] = false;
     $options["autoreplace_mixed_content"] = false;
     $options["javascript_redirect"] = false;
-    $options["hsts_multisite"] = false;
+    $options["hsts"] = false;
     $options["mixed_content_admin"] = false;
-    $options["cert_expiration"] = false;
+    $options["cert_expiration_warning"] = false;
     $options["hide_menu_for_subsites"] = false;
 
     unset($options["ssl_enabled_networkwide"]);
