@@ -11,9 +11,8 @@ if ( ! class_exists( 'rsssl_admin_mixed_content_fixer' ) ) {
         wp_die( sprintf( __( '%s is a singleton class and you cannot create a second instance.','really-simple-ssl' ), get_class( $this ) ) );
 
     self::$_this = $this;
-	  global $rsssl_front_end;
 
-    if (!is_admin() && is_ssl() && $rsssl_front_end->autoreplace_insecure_links) {
+    if (!is_admin() && is_ssl() && RSSSL()->rsssl_front_end->autoreplace_insecure_links) {
       $this->fix_mixed_content();
     }
 
@@ -54,7 +53,6 @@ if ( ! class_exists( 'rsssl_admin_mixed_content_fixer' ) ) {
    */
 
   public function filter_buffer($buffer) {
-    global $rsssl_front_end;
     $buffer = $this->replace_insecure_links($buffer);
     return $buffer;
   }
