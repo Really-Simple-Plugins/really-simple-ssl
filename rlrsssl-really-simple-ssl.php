@@ -48,18 +48,35 @@
 			self::$instance->setup_constants();
 			self::$instance->includes();
 
-			self::$instance->rsssl_front_end         = new rsssl_front_end();
-			self::$instance->rsssl_mixed_content_fixer          = new rsssl_mixed_content_fixer();
+			self::$instance->rsssl_front_end           = new rsssl_front_end();
+			self::$instance->rsssl_mixed_content_fixer = new rsssl_mixed_content_fixer();
+
+			// Backwards compatibility for add-ons
+			global $rsssl_front_end, $rsssl_mixed_content_fixer;
+			$rsssl_front_end           = self::$instance->rsssl_front_end;
+			$rsssl_mixed_content_fixer = self::$instance->rsssl_mixed_content_fixer;
+
 
 			if ( is_admin() ) {
 				if ( is_multisite() ) {
 					self::$instance->rsssl_multisite = new rsssl_multisite();
+
+					// Backwards compatibility for add-ons
+					global $rsssl_multisite;
+					$rsssl_multisite = self::$instance->rsssl_multisite;
 				}
 
-				self::$instance->rsssl_cache = new rsssl_cache();
-				self::$instance->rsssl_server = new rsssl_server();
+				self::$instance->rsssl_cache       = new rsssl_cache();
+				self::$instance->rsssl_server      = new rsssl_server();
 				self::$instance->really_simple_ssl = new rsssl_admin();
-				self::$instance->rsssl_help = new rsssl_help();
+				self::$instance->rsssl_help        = new rsssl_help();
+
+				// Backwards compatibility for add-ons
+				global $rsssl_cache, $rsssl_server, $really_simple_ssl, $rsssl_help;
+				$rsssl_cache       = self::$instance->rsssl_cache;
+				$rsssl_server      = self::$instance->rsssl_server;
+				$really_simple_ssl = self::$instance->really_simple_ssl;
+				$rsssl_help        = self::$instance->rsssl_help;
 			}
 
 			self::$instance->hooks();
