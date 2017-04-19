@@ -1826,6 +1826,7 @@ public function dismiss_htaccess_warning_callback() {
    if (!current_user_can($this->capability)) return;
    //hides the settings page if the hide menu for subsites setting is enabled
    if(is_multisite() && rsssl_multisite::this()->hide_menu_for_subsites) return;
+
    global $rsssl_admin_page;
    $rsssl_admin_page = add_options_page(
      __("SSL settings","really-simple-ssl"), //link title
@@ -2109,6 +2110,7 @@ public function img($type) {
        //prevent from loading on other pages than settings page.
        if( (!is_network_admin() && ($hook != $rsssl_admin_page)) && $this->ssl_enabled )
            return;
+
        wp_register_style( 'rlrsssl-css', rsssl_url . '/css/main.css', "", rsssl_version);
        wp_enqueue_style( 'rlrsssl-css');
    }
