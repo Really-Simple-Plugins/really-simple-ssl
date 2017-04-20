@@ -25,7 +25,7 @@
   require_once( dirname( __FILE__ ) .  '/class-front-end.php' );
   require_once( dirname( __FILE__ ) .  '/class-admin.php' );
 
-  $really_simple_ssl = new rsssl_admin();
+  really_simple_ssl = new rsssl_admin();
 
   if (is_multisite()) {
     require_once( dirname( __FILE__ ) .  '/class-multisite.php' );
