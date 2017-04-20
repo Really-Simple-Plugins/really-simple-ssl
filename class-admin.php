@@ -2403,8 +2403,8 @@ public function get_option_wp_redirect() {
          }
       }
 
-      //on multisite, the .htaccess option is not available per site when networkwide is enabled.
-      if (!is_multisite() && rsssl_multisite::this()->ssl_enabled_networkwide) {
+      //on multisite, the .htaccess do not edit option is not available
+      if (!is_multisite()) {
         if ($this->do_not_edit_htaccess) {
           _e("If the setting 'do not edit htaccess' is enabled, you can't change this setting.","really-simple-ssl");
         } elseif (!$this->htaccess_redirect) {
