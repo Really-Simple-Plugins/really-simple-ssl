@@ -105,12 +105,23 @@ if ( ! class_exists( 'rsssl_multisite' ) ) {
     register_setting( $this->option_group, 'rsssl_options');
     add_settings_section('rsssl_network_settings', __("Settings","really-simple-ssl"), array($this,'section_text'), $this->page_slug);
 
-    global $really_simple_ssl;
-    if ($really_simple_ssl->site_has_ssl) {
+    if (RSSSL()->really_simple_ssl->site_has_ssl) {
         add_settings_field('id_ssl_enabled_networkwide', __("Enable SSL", "really-simple-ssl"), array($this,'get_option_enable_multisite'), $this->page_slug, 'rsssl_network_settings');
         if ($this->selected_networkwide_or_per_site) {
+
           global $rsssl_network_admin_page;
           $rsssl_network_admin_page = add_submenu_page('settings.php', "SSL", "SSL", 'manage_options', $this->page_slug, array( &$this, 'multisite_menu_page' ) );
+
+          // add_settings_field('id_301_redirect', __("Enable WordPress 301 redirection to SSL for all SSL sites","really-simple-ssl"), array($this,'get_option_301_redirect'), $this->page_slug, 'rsssl_network_settings');
+          // add_settings_field('id_javascript_redirect', __("Enable javascript redirection to SSL","really-simple-ssl"), array($this,'get_option_javascript_redirect'), $this->page_slug, 'rsssl_network_settings');
+          // add_settings_field('id_hsts_multisite', __("Turn HTTP Strict Transport Security on","really-simple-ssl"), array($this,'get_option_hsts_multisite'), $this->page_slug, 'rsssl_network_settings');
+          // add_settings_field('id_cert_expiration', __("Receive an email when your certificate is about to expire","really-simple-ssl"), array($this,'get_option_cert_expiration'), $this->page_slug, 'rsssl_network_settings');
+          // add_settings_field('id_mixed_content_admin', __("Enable the mixed content fixer on the WordPress back-end","really-simple-ssl"), array($this,'get_option_mixed_content_admin'), $this->page_slug, 'rsssl_network_settings');
+          // add_settings_field('id_do_not_edit_htaccess', __("Stop editing the .htaccess file","really-simple-ssl"), array($this,'get_option_do_not_edit_htaccess'), $this->page_slug, 'rsssl_network_settings');
+          // add_settings_field('id_htaccess_redirect', __("Enable htacces redirection to SSL on the network","really-simple-ssl"), array($this,'get_option_htaccess_redirect'), $this->page_slug, 'rsssl_network_settings');
+
+          RSSSL()->rsssl_network_admin_page = add_submenu_page('settings.php', "SSL", "SSL", 'manage_options', $this->page_slug, array( &$this, 'multisite_menu_page' ) );
+
         }
       }
     }
@@ -120,8 +131,7 @@ if ( ! class_exists( 'rsssl_multisite' ) ) {
   */
 
   public function section_text(){
-    global $really_simple_ssl;
-    if (!$really_simple_ssl->site_has_ssl) {
+    if (!RSSSL()->really_simple_ssl->site_has_ssl) {
       ?>
       <p>
         <?php _e("No SSL was detected. If you do have an ssl certificate, try to reload this page over https by clicking this link:","really-simple-ssl");?>&nbsp;<a href="<?php echo $current_url?>"><?php _e("reload over https.","really-simple-ssl");?></a>
@@ -214,10 +224,9 @@ if ( ! class_exists( 'rsssl_multisite' ) ) {
   } elseif ($prev_ssl_enabled_networkwide!=$this->ssl_enabled_networkwide) {
     //if we switch to per page, we deactivate SSL on all pages first, but only if the setting was changed. 
     $sites = $this->get_sites_bw_compatible();
-    global $really_simple_ssl;
     foreach ( $sites as $site ) {
       $this->switch_to_blog_bw_compatible($site);
-      $really_simple_ssl->deactivate_ssl();
+      RSSSL()->really_simple_ssl->deactivate_ssl();
       restore_current_blog(); //switches back to previous blog, not current, so we have to do it each loop
     }
   }
@@ -249,9 +258,8 @@ if ( ! class_exists( 'rsssl_multisite' ) ) {
  */
 
  public function show_notice_activate_networkwide(){
-  global $really_simple_ssl;
   //if no SSL was detected, don't activate it yet.
-  if (!$really_simple_ssl->site_has_ssl) {
+  if (!RSSSL()->really_simple_ssl->site_has_ssl) {
     global $wp;
     $current_url = "https://".$_SERVER["HTTP_HOST"].$_SERVER["REQUEST_URI"]
     ?>
@@ -262,8 +270,8 @@ if ( ! class_exists( 'rsssl_multisite' ) ) {
   </div>
   <?php } ?>
 
-  <?php if ($really_simple_ssl->site_has_ssl) {
-    if (is_main_site(get_current_blog_id()) && $really_simple_ssl->wpconfig_ok()) {
+  <?php if (RSSSL()->really_simple_ssl->site_has_ssl) {
+    if (is_main_site(get_current_blog_id()) && RSSSL()->really_simple_ssl->wpconfig_ok()) {
       ?>
       <div id="message" class="updated fade notice activate-ssl">
         <h1><?php _e("Choose your preferred setup","really-simple-ssl");?></h1>
@@ -369,14 +377,13 @@ if ( ! class_exists( 'rsssl_multisite' ) ) {
 
 
   public function activate_ssl_networkwide(){
-    global $really_simple_ssl;
 
     //set all sites as enabled
     $sites = $this->get_sites_bw_compatible();
 
     foreach ( $sites as $site ) {
       $this->switch_to_blog_bw_compatible($site);
-      $really_simple_ssl->activate_ssl();
+      RSSSL()->really_simple_ssl->activate_ssl();
       restore_current_blog(); //switches back to previous blog, not current, so we have to do it each loop
     }
 
@@ -425,10 +432,9 @@ if ( ! class_exists( 'rsssl_multisite' ) ) {
     update_site_option("rlrsssl_network_options", $options);
 
     $sites = $this->get_sites_bw_compatible();
-    global $really_simple_ssl;
     foreach ( $sites as $site ) {
       $this->switch_to_blog_bw_compatible($site);
-      $really_simple_ssl->deactivate_ssl();
+      RSSSL()->really_simple_ssl->deactivate_ssl();
       restore_current_blog(); //switches back to previous blog, not current, so we have to do it each loop
     }
 
@@ -528,7 +534,6 @@ public function is_subfolder($domain) {
 }
 
 public function is_per_site_activated_multisite_subfolder_install() {
-  global $rsssl_multisite;
   if (is_multisite() && $this->is_multisite_subfolder_install() && !$this->ssl_enabled_networkwide){
     return true;
   }
