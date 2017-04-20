@@ -710,7 +710,7 @@ defined('ABSPATH') or die("you do not have acces to this page!");
       if (strpos($wpconfig, "//Begin Really Simple SSL Load balancing fix")===FALSE ) {
         if (is_writable($wpconfig_path)) {
           $rule  = "\n"."//Begin Really Simple SSL Load balancing fix"."\n";
-          $rule .= '$server_opts = array("HTTP_CLOUDFRONT_FORWARDED_PROTO" => "https", "HTTP_CF_VISITOR"=>"https", "HTTP_X_FORWARDED_PROTO"=>"https", "HTTP_X_FORWARDED_SSL"=>"on");'."\n";
+          $rule .= '$server_opts = array("HTTP_CLOUDFRONT_FORWARDED_PROTO" => "https", "HTTP_CF_VISITOR"=>"https", "HTTP_X_FORWARDED_PROTO"=>"https", "HTTP_X_FORWARDED_SSL"=>"on", "HTTP_X_FORWARDED_SSL"=>"1");'."\n";
           $rule .= 'foreach( $server_opts as $option => $value ) {'."\n";
           $rule .=   'if ( (isset($_ENV["HTTPS"]) && ( "on" == $_ENV["HTTPS"] )) || (isset( $_SERVER[ $option ] ) && ( strpos( $_SERVER[ $option ], $value ) !== false )) ) {'."\n";
           $rule .=     '$_SERVER[ "HTTPS" ] = "on";'."\n";
@@ -999,7 +999,8 @@ protected function get_server_variable_fix_code(){
       'HTTP_X_FORWARDED_PROTO'=>'https',
       'HTTP_CLOUDFRONT_FORWARDED_PROTO' => 'https',
       'HTTP_CF_VISITOR'=>'https',
-      'HTTP_X_FORWARDED_SSL'=>'on'
+      'HTTP_X_FORWARDED_SSL'=>'on',
+      'HTTP_X_FORWARDED_SSL'=>'1'
     );
 
 		foreach( $server_opts as $option => $value ) {
@@ -1068,7 +1069,7 @@ protected function get_server_variable_fix_code(){
          $this->ssl_type = "CLOUDFLARE";
        } elseif ((strpos($filecontents, "#LOADBALANCER#") !== false) || (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && ($_SERVER['HTTP_X_FORWARDED_PROTO'] == 'https'))) {
          $this->ssl_type = "LOADBALANCER";
-       } elseif ((strpos($filecontents, "#CDN#") !== false) || (isset($_SERVER['HTTP_X_FORWARDED_SSL']) && ($_SERVER['HTTP_X_FORWARDED_SSL'] == 'on'))) {
+       } elseif ((strpos($filecontents, "#CDN#") !== false) || (isset($_SERVER['HTTP_X_FORWARDED_SSL']) && ($_SERVER['HTTP_X_FORWARDED_SSL'] == 'on' || $_SERVER['HTTP_X_FORWARDED_SSL'] == '1'))) {
          $this->ssl_type = "CDN";
        } elseif ((strpos($filecontents, "#SERVER-HTTPS-ON#") !== false) || (isset($_SERVER['HTTPS']) && strtolower($_SERVER['HTTPS']) == 'on')) {
          $this->ssl_type = "SERVER-HTTPS-ON";
@@ -1624,7 +1625,7 @@ public function show_notice_wpconfig_needs_fixes(){ ?>
 
     <br><br><code>
       //Begin Really Simple SSL Load balancing fix<br>
-      $server_opts = array("HTTP_CLOUDFRONT_FORWARDED_PROTO" => "https", "HTTP_CF_VISITOR"=>"https", "HTTP_X_FORWARDED_PROTO"=>"https", "HTTP_X_FORWARDED_SSL"=>"on");<br>
+      $server_opts = array("HTTP_CLOUDFRONT_FORWARDED_PROTO" => "https", "HTTP_CF_VISITOR"=>"https", "HTTP_X_FORWARDED_PROTO"=>"https", "HTTP_X_FORWARDED_SSL"=>"on", "HTTP_X_FORWARDED_SSL"=>"1");<br>
       foreach( $server_opts as $option => $value ) {<br>
       &nbsp;if ((isset($_ENV["HTTPS"]) && ( "on" == $_ENV["HTTPS"] )) || (isset( $_SERVER[ $option ] ) && ( strpos( $_SERVER[ $option ], $value ) !== false )) ) {<br>
       &nbsp;&nbsp;$_SERVER[ "HTTPS" ] = "on";<br>

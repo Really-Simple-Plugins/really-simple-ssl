@@ -44,6 +44,8 @@ if ( ! class_exists( 'rsssl_multisite' ) ) {
     add_action('network_admin_edit_rsssl_update_network_settings',  array($this,'update_network_options'));
     add_action('network_admin_notices', array($this, 'show_notices'), 10);
 
+    add_action('wp_ajax_dismiss_success_message', array($this,'dismiss_success_message_callback') );
+
   }
 
   static function this() {
@@ -550,12 +552,18 @@ public function show_notices()
       SSL success message
   */
 
-  if (RSSSL()->really_simple_ssl->ssl_enabled && !RSSSL()->really_simple_ssl->ssl_success_message_shown) {
+  if ($this->selected_networkwide_or_per_site && !get_site_option("rsssl_success_message_shown")) {
         add_action('admin_print_footer_scripts', array($this, 'insert_dismiss_success'));
         ?>
         <div id="message" class="updated fade notice is-dismissible rlrsssl-success">
           <p>
             <?php _e("SSL activated!","really-simple-ssl");?>&nbsp;
+            <?php
+              if ($this->ssl_enabled_networkwide)
+                _e("SSL was activated on your entire network.", "really-simple-ssl");
+              else
+                _e("SSL was activated per site.", "really-simple-ssl");
+              ?>
             <?php _e("Don't forget to change your settings in Google Analytics en Webmaster tools.","really-simple-ssl");?>&nbsp;
             <a target="_blank" href="https://really-simple-ssl.com/knowledge-base/how-to-setup-google-analytics-and-google-search-consolewebmaster-tools/"><?php _e("More info.","really-simple-ssl");?></a>
           </p>
@@ -565,7 +573,7 @@ public function show_notices()
 
   if (!$this->ssl_enabled_networkwide && $this->selected_networkwide_or_per_site && $this->is_multisite_subfolder_install()) {
     //with no server variables, the website could get into redirect loops.
-    if ($this->no_server_variable) {
+    if (RSSSL()->really_simple_ssl->no_server_variable) {
       ?>
         <div id="message" class="error fade notice">
           <p>
@@ -577,6 +585,52 @@ public function show_notices()
       <?php
     }
   }
+}
+
+
+/**
+ * Insert some ajax script to dismis the ssl success message, and stop nagging about it
+ *
+ * @since  2.0
+ *
+ * @access public
+ *
+ */
+
+public function insert_dismiss_success() {
+$ajax_nonce = wp_create_nonce( "really-simple-ssl-dismiss" );
+?>
+<script type='text/javascript'>
+  jQuery(document).ready(function($) {
+    $(".rlrsssl-success.notice.is-dismissible").on("click", ".notice-dismiss", function(event){
+          var data = {
+            'action': 'dismiss_success_message',
+            'security': '<?php echo $ajax_nonce; ?>'
+          };
+
+          $.post(ajaxurl, data, function(response) {
+
+          });
+      });
+  });
+</script>
+<?php
+}
+
+/**
+ * Process the ajax dismissal of the success message.
+ *
+ * @since  2.0
+ *
+ * @access public
+ *
+ */
+
+public function dismiss_success_message_callback() {
+//nonce check fails if url is changed to ssl.
+//check_ajax_referer( 'really-simple-ssl-dismiss', 'security' );
+update_site_option("rsssl_success_message_shown", true);
+wp_die();
 }
 
 
