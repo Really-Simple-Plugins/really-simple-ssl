@@ -3,7 +3,7 @@ Contributors: RogierLankhorst
 Tags: SSL, https, force SSL, mixed content, insecure content, secure website, website security, tls, security, secure socket layers, hsts
 Requires at least: 4.2
 License: GPL2
-Tested up to: 4.7.3
+Tested up to: 4.7.4
 Stable tag: 2.5.12
 
 No setup required! You only need an SSL certificate, and this plugin will do the rest.

@@ -35,8 +35,6 @@ if ( ! class_exists( 'rsssl_multisite' ) ) {
     register_activation_hook(  dirname( __FILE__ )."/".rsssl_plugin, array($this,'activate') );
     add_filter("admin_url", array($this, "check_protocol_multisite"), 20, 3 );
 
-    //add_action("plugins_loaded", array($this, "ssl_menu_on_site_admin"));
-
     add_action("plugins_loaded", array($this, "process_networkwide_choice"), 10, 0);
     add_action("plugins_loaded", array($this, "networkwide_choice_notice"), 20, 0);
 
@@ -114,14 +112,6 @@ if ( ! class_exists( 'rsssl_multisite' ) ) {
 
           RSSSL()->rsssl_network_admin_page = add_submenu_page('settings.php', "SSL", "SSL", 'manage_options', $this->page_slug, array( &$this, 'multisite_menu_page' ) );
 
-          // add_settings_field('id_301_redirect', __("Enable WordPress 301 redirection to SSL for all SSL sites","really-simple-ssl"), array($this,'get_option_301_redirect'), $this->page_slug, 'rsssl_network_settings');
-          // add_settings_field('id_javascript_redirect', __("Enable javascript redirection to SSL","really-simple-ssl"), array($this,'get_option_javascript_redirect'), $this->page_slug, 'rsssl_network_settings');
-          // add_settings_field('id_hsts_multisite', __("Turn HTTP Strict Transport Security on","really-simple-ssl"), array($this,'get_option_hsts_multisite'), $this->page_slug, 'rsssl_network_settings');
-          // add_settings_field('id_cert_expiration', __("Receive an email when your certificate is about to expire","really-simple-ssl"), array($this,'get_option_cert_expiration'), $this->page_slug, 'rsssl_network_settings');
-          // add_settings_field('id_mixed_content_admin', __("Enable the mixed content fixer on the WordPress back-end","really-simple-ssl"), array($this,'get_option_mixed_content_admin'), $this->page_slug, 'rsssl_network_settings');
-          // add_settings_field('id_do_not_edit_htaccess', __("Stop editing the .htaccess file","really-simple-ssl"), array($this,'get_option_do_not_edit_htaccess'), $this->page_slug, 'rsssl_network_settings');
-          // add_settings_field('id_htaccess_redirect', __("Enable htacces redirection to SSL on the network","really-simple-ssl"), array($this,'get_option_htaccess_redirect'), $this->page_slug, 'rsssl_network_settings');
-
         }
       }
     }
@@ -140,6 +130,12 @@ if ( ! class_exists( 'rsssl_multisite' ) ) {
       <?php
     } else {
       _e("Below you can set the multisite options for Really Simple SSL","really-simple-ssl");
+    }
+    ?><br><br><?php 
+    if (defined(rsssl_pro_version) && !defined(rsssl_pro_ms_version)) {
+      _e("A dedicated add-on for multisite has been released. If you want more options to have full control over your multisite network, you can upgrade your license to a multisite license.", "really-simple-ssl");
+    } else {
+      _e("If you want more options to have full control over your multisite network, you can upgrade your license to a multisite license.", "really-simple-ssl");
     }
   }
 
@@ -519,8 +515,6 @@ public function is_per_site_activated_multisite_subfolder_install() {
 
   return false;
 }
-
-
 
   /**
    * Show notices
