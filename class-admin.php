@@ -701,7 +701,7 @@ defined('ABSPATH') or die("you do not have acces to this page!");
 
 
   public function wpconfig_loadbalancer_fix() {
-    
+
       $wpconfig_path = $this->find_wp_config_path();
       if (empty($wpconfig_path)) return;
       $wpconfig = file_get_contents($wpconfig_path);
@@ -2478,8 +2478,12 @@ public function get_option_wp_redirect() {
     array_unshift( $links, $faq_link );
 
     if ( class_exists( 'rsssl_premium_options' ) ) {
-      if(RSSSL()->rsssl_licensing->license_is_valid()) {
-         return $links;
+      if (class_exists('RSSSL_PRO')) {
+        if(RSSSL_PRO()->rsssl_licensing->license_is_valid()) return $links;
+      } else {
+        //1.0.27 and earlier.
+        global $rsssl_licensing;
+        if($rsssl_licensing->license_is_valid()) return $links;
       }
     }
 
