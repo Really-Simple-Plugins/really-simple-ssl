@@ -42,6 +42,9 @@ if ( ! class_exists( 'rsssl_multisite' ) ) {
 
     add_action('network_admin_menu', array( &$this, 'add_multisite_menu' ) );
     add_action('network_admin_edit_rsssl_update_network_settings',  array($this,'update_network_options'));
+    add_action('network_admin_notices', array($this, 'show_notices'), 10);
+
+    add_action('wp_ajax_dismiss_success_message', array($this,'dismiss_success_message_callback') );
 
   }
 
@@ -109,8 +112,7 @@ if ( ! class_exists( 'rsssl_multisite' ) ) {
         add_settings_field('id_ssl_enabled_networkwide', __("Enable SSL", "really-simple-ssl"), array($this,'get_option_enable_multisite'), $this->page_slug, 'rsssl_network_settings');
         if ($this->selected_networkwide_or_per_site) {
 
-          global $rsssl_network_admin_page;
-          $rsssl_network_admin_page = add_submenu_page('settings.php', "SSL", "SSL", 'manage_options', $this->page_slug, array( &$this, 'multisite_menu_page' ) );
+          RSSSL()->rsssl_network_admin_page = add_submenu_page('settings.php', "SSL", "SSL", 'manage_options', $this->page_slug, array( &$this, 'multisite_menu_page' ) );
 
           // add_settings_field('id_301_redirect', __("Enable WordPress 301 redirection to SSL for all SSL sites","really-simple-ssl"), array($this,'get_option_301_redirect'), $this->page_slug, 'rsssl_network_settings');
           // add_settings_field('id_javascript_redirect', __("Enable javascript redirection to SSL","really-simple-ssl"), array($this,'get_option_javascript_redirect'), $this->page_slug, 'rsssl_network_settings');
@@ -119,8 +121,6 @@ if ( ! class_exists( 'rsssl_multisite' ) ) {
           // add_settings_field('id_mixed_content_admin', __("Enable the mixed content fixer on the WordPress back-end","really-simple-ssl"), array($this,'get_option_mixed_content_admin'), $this->page_slug, 'rsssl_network_settings');
           // add_settings_field('id_do_not_edit_htaccess', __("Stop editing the .htaccess file","really-simple-ssl"), array($this,'get_option_do_not_edit_htaccess'), $this->page_slug, 'rsssl_network_settings');
           // add_settings_field('id_htaccess_redirect', __("Enable htacces redirection to SSL on the network","really-simple-ssl"), array($this,'get_option_htaccess_redirect'), $this->page_slug, 'rsssl_network_settings');
-
-          RSSSL()->rsssl_network_admin_page = add_submenu_page('settings.php', "SSL", "SSL", 'manage_options', $this->page_slug, array( &$this, 'multisite_menu_page' ) );
 
         }
       }
@@ -222,7 +222,7 @@ if ( ! class_exists( 'rsssl_multisite' ) ) {
     //enable SSL on all  sites on the network
     $this->activate_ssl_networkwide();
   } elseif ($prev_ssl_enabled_networkwide!=$this->ssl_enabled_networkwide) {
-    //if we switch to per page, we deactivate SSL on all pages first, but only if the setting was changed. 
+    //if we switch to per page, we deactivate SSL on all pages first, but only if the setting was changed.
     $sites = $this->get_sites_bw_compatible();
     foreach ( $sites as $site ) {
       $this->switch_to_blog_bw_compatible($site);
@@ -464,27 +464,6 @@ public function check_protocol_multisite($url, $path, $blog_id){
 }
 
 
-public function show_notices(){
-  /*
-    when a server variable is not passed, redirect loops could result
-  */
-
-  if (is_multisite() && !$this->ssl_enabled_networkwide && $this->selected_networkwide_or_per_site && $this->is_multisite_subfolder_install()) {
-    //with no server variables, the website could get into redirect loops.
-    if ($this->no_server_variable) {
-      ?>
-        <div id="message" class="error fade notice">
-          <p>
-            <?php _e('You run a Multisite installation with subfolders, which prevents this plugin from fixing your missing server variable in the wp-config.php.','really-simple-ssl');?>
-            <?php _e('Because the $_SERVER["HTTPS"] variable is not set, your website may experience redirect loops.','really-simple-ssl');?>
-            <?php _e('Activate networkwide to fix this.','really-simple-ssl');?>
-          </p>
-        </div>
-      <?php
-    }
-  }
-}
-
 
 /**
  * Checks if we are on a subfolder install. (domain.com/site1 )
@@ -539,6 +518,119 @@ public function is_per_site_activated_multisite_subfolder_install() {
   }
 
   return false;
+}
+
+
+
+  /**
+   * Show notices
+   *
+   * @since  2.0
+   *
+   * @access public
+   *
+   */
+
+public function show_notices()
+{
+
+  if (isset(RSSSL()->really_simple_ssl->errors["DEACTIVATE_FILE_NOT_RENAMED"])) {
+    ?>
+    <div id="message" class="error fade notice is-dismissible rlrsssl-fail">
+      <h1>
+        <?php _e("Major security issue!","really-simple-ssl");?>
+      </h1>
+      <p>
+    <?php _e("The 'force-deactivate.php' file has to be renamed to .txt. Otherwise your ssl can be deactived by anyone on the internet.","really-simple-ssl");?>
+    </p>
+    <a href="options-general.php?page=rlrsssl_really_simple_ssl"><?php echo __("Check again","really-simple-ssl");?></a>
+    </div>
+    <?php
+  }
+
+  /*
+      SSL success message
+  */
+
+  if ($this->selected_networkwide_or_per_site && !get_site_option("rsssl_success_message_shown")) {
+        add_action('admin_print_footer_scripts', array($this, 'insert_dismiss_success'));
+        ?>
+        <div id="message" class="updated fade notice is-dismissible rlrsssl-success">
+          <p>
+            <?php _e("SSL activated!","really-simple-ssl");?>&nbsp;
+            <?php
+              if ($this->ssl_enabled_networkwide)
+                _e("SSL was activated on your entire network.", "really-simple-ssl");
+              else
+                _e("SSL was activated per site.", "really-simple-ssl");
+              ?>
+            <?php _e("Don't forget to change your settings in Google Analytics en Webmaster tools.","really-simple-ssl");?>&nbsp;
+            <a target="_blank" href="https://really-simple-ssl.com/knowledge-base/how-to-setup-google-analytics-and-google-search-consolewebmaster-tools/"><?php _e("More info.","really-simple-ssl");?></a>
+          </p>
+        </div>
+        <?php
+  }
+
+  if (!$this->ssl_enabled_networkwide && $this->selected_networkwide_or_per_site && $this->is_multisite_subfolder_install()) {
+    //with no server variables, the website could get into redirect loops.
+    if (RSSSL()->really_simple_ssl->no_server_variable) {
+      ?>
+        <div id="message" class="error fade notice">
+          <p>
+            <?php _e('You run a Multisite installation with subfolders, which prevents this plugin from fixing your missing server variable in the wp-config.php.','really-simple-ssl');?>
+            <?php _e('Because the $_SERVER["HTTPS"] variable is not set, your website may experience redirect loops.','really-simple-ssl');?>
+            <?php _e('Activate networkwide to fix this.','really-simple-ssl');?>
+          </p>
+        </div>
+      <?php
+    }
+  }
+}
+
+
+/**
+ * Insert some ajax script to dismis the ssl success message, and stop nagging about it
+ *
+ * @since  2.0
+ *
+ * @access public
+ *
+ */
+
+public function insert_dismiss_success() {
+$ajax_nonce = wp_create_nonce( "really-simple-ssl-dismiss" );
+?>
+<script type='text/javascript'>
+  jQuery(document).ready(function($) {
+    $(".rlrsssl-success.notice.is-dismissible").on("click", ".notice-dismiss", function(event){
+          var data = {
+            'action': 'dismiss_success_message',
+            'security': '<?php echo $ajax_nonce; ?>'
+          };
+
+          $.post(ajaxurl, data, function(response) {
+
+          });
+      });
+  });
+</script>
+<?php
+}
+
+/**
+ * Process the ajax dismissal of the success message.
+ *
+ * @since  2.0
+ *
+ * @access public
+ *
+ */
+
+public function dismiss_success_message_callback() {
+//nonce check fails if url is changed to ssl.
+//check_ajax_referer( 'really-simple-ssl-dismiss', 'security' );
+update_site_option("rsssl_success_message_shown", true);
+wp_die();
 }
 
 
