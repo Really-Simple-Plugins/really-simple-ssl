@@ -1692,6 +1692,7 @@ public function show_notices()
     <?php
   }
 
+  if (is_multisite() && !is_main_site(get_current_blog_id())) return;
 
 
   /*
