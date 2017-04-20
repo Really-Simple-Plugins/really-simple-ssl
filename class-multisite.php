@@ -60,7 +60,15 @@ if ( ! class_exists( 'rsssl_multisite' ) ) {
     $options = get_site_option('rlrsssl_network_options');
     $this->selected_networkwide_or_per_site = isset($options["selected_networkwide_or_per_site"]) ? $options["selected_networkwide_or_per_site"] : false;
     $this->ssl_enabled_networkwide = isset($options["ssl_enabled_networkwide"]) ? $options["ssl_enabled_networkwide"] : false;
-
+    $this->wp_redirect  = isset($options["wp_redirect"]) ? $options["wp_redirect"] : false;
+    $this->htaccess_redirect = isset($options["htaccess_redirect"]) ? $options["htaccess_redirect"] : false;
+    $this->do_not_edit_htaccess = isset($options["do_not_edit_htaccess"]) ? $options["do_not_edit_htaccess"] : false;
+    $this->autoreplace_mixed_content = isset($options["autoreplace_mixed_content"]) ? $options["autoreplace_mixed_content"] : false;
+    $this->javascript_redirect = isset($options["javascript_redirect"]) ? $options["javascript_redirect"] : false;
+    $this->hsts = isset($options["hsts"]) ? $options["hsts"] : false;
+    $this->mixed_content_admin = isset($options["mixed_content_admin"]) ? $options["mixed_content_admin"] : false;
+    $this->cert_expiration_warning = isset($options["cert_expiration_warning"]) ? $options["cert_expiration_warning"] : false;
+    $this->hide_menu_for_subsites = isset($options["hide_menu_for_subsites"]) ? $options["hide_menu_for_subsites"] : false;
   }
 
 
@@ -177,12 +185,24 @@ if ( ! class_exists( 'rsssl_multisite' ) ) {
   check_admin_referer($this->option_group.'-options');
 
   if (isset($_POST["rlrsssl_network_options"])) {
+    $prev_ssl_enabled_networkwide = $this->ssl_enabled_networkwide;
     $options = array_map(array($this, "sanitize_boolean"), $_POST["rlrsssl_network_options"]);
     $options["selected_networkwide_or_per_site"] = true;
 
     $this->ssl_enabled_networkwide = isset($options["ssl_enabled_networkwide"]) ? $options["ssl_enabled_networkwide"] : false;
 
-    do_action("rsssl_update_network_options");
+    $this->wp_redirect  = isset($options["wp_redirect"]) ? $options["wp_redirect"] : false;
+    $this->htaccess_redirect = isset($options["htaccess_redirect"]) ? $options["htaccess_redirect"] : false;
+
+    $this->do_not_edit_htaccess = isset($options["do_not_edit_htaccess"]) ? $options["do_not_edit_htaccess"] : false;
+    $this->autoreplace_mixed_content = isset($options["autoreplace_mixed_content"]) ? $options["autoreplace_mixed_content"] : false;
+    $this->javascript_redirect = isset($options["javascript_redirect"]) ? $options["javascript_redirect"] : false;
+    $this->hsts = isset($options["hsts"]) ? $options["hsts"] : false;
+    $this->mixed_content_admin = isset($options["mixed_content_admin"]) ? $options["mixed_content_admin"] : false;
+    $this->cert_expiration_warning = isset($options["cert_expiration_warning"]) ? $options["cert_expiration_warning"] : false;
+    $this->hide_menu_for_subsites = isset($options["hide_menu_for_subsites"]) ? $options["hide_menu_for_subsites"] : false;
+
+
     $this->selected_networkwide_or_per_site = isset($options["selected_networkwide_or_per_site"]) ? $options["selected_networkwide_or_per_site"] : false;
   }
 
@@ -191,8 +211,8 @@ if ( ! class_exists( 'rsssl_multisite' ) ) {
   if ($this->ssl_enabled_networkwide) {
     //enable SSL on all  sites on the network
     $this->activate_ssl_networkwide();
-  } else {
-    //if we switch to per page, we deactivate SSL on all pages first.
+  } elseif ($prev_ssl_enabled_networkwide!=$this->ssl_enabled_networkwide) {
+    //if we switch to per page, we deactivate SSL on all pages first, but only if the setting was changed. 
     $sites = $this->get_sites_bw_compatible();
     global $really_simple_ssl;
     foreach ( $sites as $site ) {
@@ -334,6 +354,15 @@ if ( ! class_exists( 'rsssl_multisite' ) ) {
 
     $options["selected_networkwide_or_per_site"] = $this->selected_networkwide_or_per_site;
     $options["ssl_enabled_networkwide"] = $this->ssl_enabled_networkwide;
+    $options["wp_redirect"] = $this->wp_redirect;
+    $options["htaccess_redirect"] = $this->htaccess_redirect;
+    $options["do_not_edit_htaccess"] = $this->do_not_edit_htaccess;
+    $options["autoreplace_mixed_content"] = $this->autoreplace_mixed_content;
+    $options["javascript_redirect"] = $this->javascript_redirect;
+    $options["hsts"] = $this->hsts;
+    $options["mixed_content_admin"] = $this->mixed_content_admin;
+    $options["cert_expiration_warning"] = $this->cert_expiration_warning;
+    $options["hide_menu_for_subsites"] = $this->hide_menu_for_subsites;
 
     update_site_option("rlrsssl_network_options", $options);
   }

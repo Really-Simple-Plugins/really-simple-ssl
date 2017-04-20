@@ -337,11 +337,20 @@ defined('ABSPATH') or die("you do not have acces to this page!");
     }
 
     if  (is_multisite()) {
-      $options = get_site_option('rlrsssl_network_options');
-      $network_htaccess_redirect  = isset($options["htaccess_redirect"]) ? $options["htaccess_redirect"] : false;
-      $ssl_enabled_networkwide = isset($options["ssl_enabled_networkwide"]) ? $options["ssl_enabled_networkwide"] : false;
-      if ($ssl_enabled_networkwide && $network_htaccess_redirect) {
+      $network_options = get_site_option('rlrsssl_network_options');
+      $network_htaccess_redirect  = isset($network_options["htaccess_redirect"]) ? $network_options["htaccess_redirect"] : false;
+      $network_do_not_edit_htaccess  = isset($network_options["do_not_edit_htaccess"]) ? $network_options["do_not_edit_htaccess"] : false;
+      /*
+          If multiste, and networkwide, only the networkwide setting counts.
+          if multisite, and per site, only the networkwide setting counts if it is true.
+      */
+      $ssl_enabled_networkwide = isset($network_options["ssl_enabled_networkwide"]) ? $network_options["ssl_enabled_networkwide"] : false;
+      if ($ssl_enabled_networkwide) {
         $this->htaccess_redirect  = $network_htaccess_redirect;
+        $this->do_not_edit_htaccess  = $network_do_not_edit_htaccess;
+      } else {
+        if ($network_do_not_edit_htaccess) $this->do_not_edit_htaccess  = $network_do_not_edit_htaccess;
+        if ($network_htaccess_redirect) $this->htaccess_redirect  = $network_htaccess_redirect;
       }
     }
 
@@ -455,14 +464,15 @@ defined('ABSPATH') or die("you do not have acces to this page!");
             $this->wpconfig_jetpack();
 
         //if htaccess redirect is explicitly false, remove rules.
-        if (!$this->htaccess_redirect){
-          $this->removeHtaccessEdit();
+        // if (!$this->htaccess_redirect){
+        //   $this->removeHtaccessEdit();
+        // }
+
+        if (!$safe_mode) {
+          $this->editHtaccess();
         }
 
-        //only use .htaccess when explicitly acitvated in settings
-        if ($this->htaccess_redirect && $this->htaccess_test_success) {
-          $this->editHtaccess();
-        } elseif (!$safe_mode && $this->clicked_activate_ssl()) {
+        if (!$safe_mode && $this->clicked_activate_ssl()) {
           $this->wp_redirect = TRUE;
           $this->save_options();
         }
@@ -694,6 +704,7 @@ defined('ABSPATH') or die("you do not have acces to this page!");
 
 
   public function wpconfig_loadbalancer_fix() {
+    
       $wpconfig_path = $this->find_wp_config_path();
       if (empty($wpconfig_path)) return;
       $wpconfig = file_get_contents($wpconfig_path);
@@ -1390,12 +1401,12 @@ protected function get_server_variable_fix_code(){
 
   public function editHtaccess(){
       if (!current_user_can($this->capability)) return;
-      if (is_multisite()) global $rsssl_multisite;
+      global $rsssl_multisite;
 
       //check if htacces exists and  if htaccess is writable
       //update htaccess to redirect to ssl
 
-      if($this->debug) $this->trace_log("checking if .htaccess can or should be edited...");
+      $this->trace_log("checking if .htaccess can or should be edited...");
 
       //does it exist?
       if (!file_exists($this->ABSpath.".htaccess")) {
@@ -1438,16 +1449,9 @@ protected function get_server_variable_fix_code(){
           file_put_contents($this->ABSpath.".htaccess", $htaccess);
         }
 
-    } elseif ((is_multisite() && !$rsssl_multisite->ssl_enabled_networkwide) || ($this->hsts!=$this->contains_hsts())) {
+    } elseif ($this->is_settings_page() || is_network_admin()) {
 
-        /*
-            Remove all rules and add new IF
-            - or the hsts option has changed, so we need to edit the htaccess anyway.
-            - or rewrite per site (if a site is added or removed on per site activated
-            - in multisite we need to rewrite even if the rules are already there.
-        */
-
-        if ($this->debug) {$this->trace_log("settings page, per site activation or hsts option change, updating htaccess...");}
+        if ($this->debug) {$this->trace_log("settings page, or network admin, updating htaccess...");}
 
         if (!is_writable($this->ABSpath.".htaccess")) {
           if($this->debug) $this->trace_log(".htaccess not writable.");
@@ -1460,15 +1464,14 @@ protected function get_server_variable_fix_code(){
         $rules = $this->get_redirect_rules();
 
         //insert rules before wordpress part.
-        if (strlen($rules)>0) {
-          $wptag = "# BEGIN WordPress";
-          if (strpos($htaccess, $wptag)!==false) {
-              $htaccess = str_replace($wptag, $rules.$wptag, $htaccess);
-          } else {
-              $htaccess = $htaccess.$rules;
-          }
-          file_put_contents($this->ABSpath.".htaccess", $htaccess);
+        $wptag = "# BEGIN WordPress";
+        if (strpos($htaccess, $wptag)!==false) {
+            $htaccess = str_replace($wptag, $rules.$wptag, $htaccess);
+        } else {
+            $htaccess = $htaccess.$rules;
         }
+        file_put_contents($this->ABSpath.".htaccess", $htaccess);
+
       }
   }
 
@@ -1516,7 +1519,8 @@ protected function get_server_variable_fix_code(){
       $rule = "";
 
       //if the htaccess test was successfull, and we know the redirectype, edit
-      if (($manual || $this->htaccess_test_success ) && $this->ssl_type!="NA") {
+      if ($this->htaccess_redirect && ($manual || $this->htaccess_test_success) && $this->ssl_type!="NA") {
+        $this->trace_log("starting insertion of .htaccess redirects.");
         $rule .= "<IfModule mod_rewrite.c>"."\n";
         $rule .= "RewriteEngine on"."\n";
 
@@ -2198,7 +2202,7 @@ public function create_form(){
     add_settings_field('id_autoreplace_insecure_links', __("Auto replace mixed content","really-simple-ssl"), array($this,'get_option_autoreplace_insecure_links'), 'rlrsssl', 'rlrsssl_settings');
 
     //only show option to enable or disable mixed content and redirect when ssl is detected
-    if($this->site_has_ssl) {
+    if($this->ssl_enabled) {
 
       //when enabled networkwide, it's handled on the network settings page
 
@@ -2386,10 +2390,10 @@ public function get_option_wp_redirect() {
       $disabled = "";
       $comment = "";
 
-      if (is_multisite()) {
+      if (is_multisite() && rsssl_multisite::this()->ssl_enabled_networkwide) {
         $disabled = "disabled";
         $htaccess_redirect = TRUE;
-        $comment = __( "On multisite the .htaccess redirect can only be activated networkwide.", "really-simple-ssl" );
+        $comment = __( "On multisite networkwide activated SSL the .htaccess redirect can only be configured networkwide.", "really-simple-ssl" );
       } else {
         $disabled = ($this->do_not_edit_htaccess) ? "disabled" : "";
       }
@@ -2418,8 +2422,8 @@ public function get_option_wp_redirect() {
          }
       }
 
-      //on multisite, the .htaccess option is not available per site.
-      if (!is_multisite() ) {
+      //on multisite, the .htaccess option is not available per site when networkwide is enabled.
+      if (!is_multisite() && rsssl_multisite::this()->ssl_enabled_networkwide) {
         if ($this->do_not_edit_htaccess) {
           _e("If the setting 'do not edit htaccess' is enabled, you can't change this setting.","really-simple-ssl");
         } elseif (!$this->htaccess_redirect) {
