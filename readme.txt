@@ -78,6 +78,7 @@ If you are experiencing redirect loops on your site, try these [instructions](ht
 * Added multisite settings page
 * Added filter for .htaccess code output
 * Increased user capability to "activate_plugins"
+* Added SSL_FORWARDED_PROTO = 1 in addition to SSL_FORWARDED_PROTO = on as supported SSL recognition variable.
 
 = 2.5.11 =
 * Removed curl in favor of wp_remote_get
