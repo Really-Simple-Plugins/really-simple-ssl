@@ -1579,22 +1579,11 @@ protected function get_server_variable_fix_code(){
         $rule .= "</IfModule>"."\n";
       }
 
-      if ($this->hsts) {
-        $hsts_preload = get_option("rsssl_hsts_preload");
-        //owasp security best practice https://www.owasp.org/index.php/HTTP_Strict_Transport_Security
-        $rule .= "<IfModule mod_headers.c>"."\n";
-        if ($hsts_preload){
-          $rule .= 'Header set Strict-Transport-Security: "max-age=63072000; includeSubDomains; preload" env=HTTPS'."\n";
-        } else {
-          $rule .= 'Header set Strict-Transport-Security: "max-age=31536000" env=HTTPS'."\n";
-        }
-
-        $rule .= "</IfModule>"."\n";
-      }
-
       if (strlen($rule)>0) {
         $rule = "\n"."# BEGIN rlrssslReallySimpleSSL rsssl_version[".rsssl_version."]\n".$rule."# END rlrssslReallySimpleSSL"."\n";
       }
+
+      $rule = apply_filters("rsssl_htaccess_output", $rule);
 
       $rule = preg_replace("/\n+/","\n", $rule);
       return $rule;
@@ -2482,7 +2471,7 @@ public function get_option_wp_redirect() {
     if ( class_exists( 'rsssl_premium_options' ) ) {
       if (class_exists('RSSSL_PRO')) {
         if(RSSSL_PRO()->rsssl_licensing->license_is_valid()) return $links;
-      } 
+      }
     }
 
     $premium_link = '<a target="_blank" href="https://really-simple-ssl.com/premium-support">' . __( 'Premium Support', 'really-simple-ssl' ) . '</a>';
