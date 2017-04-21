@@ -2482,11 +2482,7 @@ public function get_option_wp_redirect() {
     if ( class_exists( 'rsssl_premium_options' ) ) {
       if (class_exists('RSSSL_PRO')) {
         if(RSSSL_PRO()->rsssl_licensing->license_is_valid()) return $links;
-      } else {
-        //1.0.27 and earlier.
-        global $rsssl_licensing;
-        if($rsssl_licensing->license_is_valid()) return $links;
-      }
+      } 
     }
 
     $premium_link = '<a target="_blank" href="https://really-simple-ssl.com/premium-support">' . __( 'Premium Support', 'really-simple-ssl' ) . '</a>';

@@ -52,18 +52,13 @@
 			self::$instance->rsssl_mixed_content_fixer = new rsssl_mixed_content_fixer();
 
 			// Backwards compatibility for add-ons
-			global $rsssl_front_end, $rsssl_mixed_content_fixer;
-			$rsssl_front_end           = self::$instance->rsssl_front_end;
-			$rsssl_mixed_content_fixer = self::$instance->rsssl_mixed_content_fixer;
+			RSSSL()->really_simple_ssl->rsssl_front_end           = self::$instance->rsssl_front_end;
+			RSSSL()->really_simple_ssl->rsssl_mixed_content_fixer = self::$instance->rsssl_mixed_content_fixer;
 
 
 			if ( is_admin() ) {
 				if ( is_multisite() ) {
 					self::$instance->rsssl_multisite = new rsssl_multisite();
-
-					// Backwards compatibility for add-ons
-					global $rsssl_multisite;
-					$rsssl_multisite = self::$instance->rsssl_multisite;
 				}
 
 				self::$instance->rsssl_cache       = new rsssl_cache();
@@ -94,8 +89,6 @@
       }
 
       private function includes() {
-		  require_once( ABSPATH.'wp-admin/includes/plugin.php' );
-
 		  require_once( rsssl_path .  '/class-front-end.php' );
 		  require_once( rsssl_path .  '/class-mixed-content-fixer.php' );
 
@@ -116,7 +109,7 @@
 
   	  	if ( is_admin() ) {
   	  		add_action( 'plugins_loaded', array( self::$instance->really_simple_ssl, 'init' ), 10 );
-	    }
+	       }
       }
   }
 
