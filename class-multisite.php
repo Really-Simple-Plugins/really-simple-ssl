@@ -44,6 +44,8 @@ if ( ! class_exists( 'rsssl_multisite' ) ) {
 
     add_action('wp_ajax_dismiss_success_message', array($this,'dismiss_success_message_callback') );
 
+    add_action('wp_ajax_rsssl_pro_dismiss_pro_option_notice', array($this,'dismiss_pro_option_notice') );
+    add_action("network_admin_notices", array($this, 'show_pro_option_notice'));
   }
 
   static function this() {
@@ -102,7 +104,6 @@ if ( ! class_exists( 'rsssl_multisite' ) ) {
   public function add_multisite_menu(){
     if (!$this->plugin_network_wide_active()) return;
 
-
     register_setting( $this->option_group, 'rsssl_options');
     add_settings_section('rsssl_network_settings', __("Settings","really-simple-ssl"), array($this,'section_text'), $this->page_slug);
 
@@ -131,18 +132,20 @@ if ( ! class_exists( 'rsssl_multisite' ) ) {
     } else {
       _e("Below you can set the multisite options for Really Simple SSL","really-simple-ssl");
     }
+<<<<<<< Updated upstream
     ?><br><br><?php
     if (defined(rsssl_pro_version) && !defined(rsssl_pro_ms_version)) {
       _e("A dedicated add-on for multisite has been released. If you want more options to have full control over your multisite network, you can upgrade your license to a multisite license.", "really-simple-ssl");
     } else {
       _e("If you want more options to have full control over your multisite network, you can upgrade your license to a multisite license.", "really-simple-ssl");
     }
+=======
+    ?><?php
+
+>>>>>>> Stashed changes
   }
 
   public function get_option_enable_multisite(){
-    $this->ssl_enabled_networkwide;
-    $this->selected_networkwide_or_per_site;
-
       ?>
       <select name="rlrsssl_network_options[ssl_enabled_networkwide]">
         <?php if (!$this->selected_networkwide_or_per_site) {?>
@@ -314,6 +317,7 @@ if ( ! class_exists( 'rsssl_multisite' ) ) {
 
 */
 
+<<<<<<< Updated upstream
 
 
     public function plugin_network_wide_active(){
@@ -325,6 +329,16 @@ if ( ! class_exists( 'rsssl_multisite' ) ) {
       } else {
         return false;
       }
+=======
+  public function plugin_network_wide_active(){
+    if ( ! function_exists( 'is_plugin_active_for_network' ) ) {
+    require_once( ABSPATH . '/wp-admin/includes/plugin.php' );
+}
+    if ( is_plugin_active_for_network(rsssl_plugin) ){
+      return true;
+    } else {
+      return false;
+>>>>>>> Stashed changes
     }
 
 
@@ -632,6 +646,62 @@ update_site_option("rsssl_success_message_shown", true);
 wp_die();
 }
 
+
+
+public function dismiss_pro_option_notice() {
+	check_ajax_referer( 'rsssl-pro-dismiss-pro-option-notice', 'nonce' );
+	update_option( 'rsssl_pro_pro_option_notice_dismissed', true);
+	wp_die();
+}
+
+public function dismiss_pro_option_script() {
+  $ajax_nonce = wp_create_nonce( "rsssl-pro-dismiss-pro-option-notice" );
+  ?>
+  <script type='text/javascript'>
+    jQuery(document).ready(function($) {
+
+      $(".rsssl-pro-dismiss-notice.notice.is-dismissible").on("click", ".notice-dismiss", function(event){
+            var data = {
+              'action': 'rsssl_pro_dismiss_pro_option_notice',
+              'nonce': '<?php echo $ajax_nonce; ?>'
+            };
+
+            $.post(ajaxurl, data, function(response) {
+
+            });
+        });
+    });
+  </script>
+  <?php
+}
+
+
+public function show_pro_option_notice(){
+  $dismissed	= get_option( 'rsssl_pro_pro_option_notice_dismissed' );
+  if (!$dismissed) {
+
+   if (defined('rsssl_pro_version')) {
+     if (!defined('rsssl_pro_ms_version')) {
+       add_action('admin_print_footer_scripts', array($this, 'dismiss_license_notice_script'));
+           ?>
+           <div id="message" class="updated fade notice is-dismissible rsssl-pro-dismiss-notice">
+             <p>
+               <?php echo sprintf( __( 'You are running Really Simple SSL pro. A dedicated add-on for multisite has been released. If you want more options to have full control over your multisite network, ask for a discount code to %supgrade%s your license to a multisite license.', 'really-simple-ssl' ), '<a href="https://really-simple-ssl.com/contact" title="Really Simple SSL">', '</a>' )?>
+             </p>
+           </p></div>
+           <?php
+           }
+   } else {
+     ?>
+     <div id="message" class="updated fade notice is-dismissible rsssl-pro-dismiss-notice">
+       <p>
+         <?php echo sprintf( __( 'If you want more options to have full control over your multisite network, you can %sUpgrade%s your license to a multisite license.', 'really-simple-ssl' ), '<a href="https://really-simple-ssl.com/pro-multisite" title="Really Simple SSL">', '</a>' )?>
+       </p>
+     </p></div>
+     <?php
+   }
+  }
+}
 
 } //class closure
 }

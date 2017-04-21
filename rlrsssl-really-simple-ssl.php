@@ -29,7 +29,7 @@
 
   defined('ABSPATH') or die("you do not have access to this page!");
 
-  class RLRSSSL {
+  class REALLY_SIMPLE_SSL {
 
   	  private static $instance;
   	  public $rssl_front_end;
@@ -43,8 +43,8 @@
   	  private function __construct() {}
 
       public static function instance() {
-		if ( ! isset( self::$instance ) && ! ( self::$instance instanceof RLRSSSL ) ) {
-			self::$instance = new RLRSSSL;
+		if ( ! isset( self::$instance ) && ! ( self::$instance instanceof REALLY_SIMPLE_SSL ) ) {
+			self::$instance = new REALLY_SIMPLE_SSL;
 			self::$instance->setup_constants();
 			self::$instance->includes();
 
@@ -114,6 +114,6 @@
   }
 
 function RSSSL() {
-	return RLRSSSL::instance();
+	return REALLY_SIMPLE_SSL::instance();
 }
 add_action( 'plugins_loaded', 'RSSSL', 9 );

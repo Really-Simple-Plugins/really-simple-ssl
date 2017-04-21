@@ -2174,9 +2174,6 @@ public function create_form(){
 
     //only show option to enable or disable mixed content and redirect when ssl is detected
     if($this->ssl_enabled) {
-
-      //when enabled networkwide, it's handled on the network settings page
-
       add_settings_field('id_wp_redirect', __("Enable WordPress 301 redirection to SSL","really-simple-ssl"), array($this,'get_option_wp_redirect'), 'rlrsssl', 'rlrsssl_settings');
 
       //when enabled networkwide, it's handled on the network settings page
@@ -2189,9 +2186,8 @@ public function create_form(){
 
     add_settings_field('id_debug', __("Debug","really-simple-ssl"), array($this,'get_option_debug'), 'rlrsssl', 'rlrsssl_settings');
 
-    //when enabled networkwide, it's handled on the network settings page
-
-    if (RSSSL()->rsssl_server->uses_htaccess() && (!is_multisite() || !RSSSL()->rsssl_multisite->ssl_enabled_networkwide)) {
+    //on multisite this setting can only be set networkwide
+    if (RSSSL()->rsssl_server->uses_htaccess() && !is_multisite()) {
       add_settings_field('id_do_not_edit_htaccess', __("Stop editing the .htaccess file","really-simple-ssl"), array($this,'get_option_do_not_edit_htaccess'), 'rlrsssl', 'rlrsssl_settings');
     }
 }
@@ -2287,7 +2283,7 @@ public function options_validate($input) {
 public function get_option_debug() {
   $options = get_option('rlrsssl_options');
   echo '<input id="rlrsssl_options" name="rlrsssl_options[debug]" size="40" type="checkbox" value="1"' . checked( 1, $this->debug, false ) ." />";
-  rsssl_help::this()->get_help_tip(__("Enable this option to get debug info in the debug tab.", "really-simple-ssl"));
+  RSSSL()->rsssl_help->get_help_tip(__("Enable this option to get debug info in the debug tab.", "really-simple-ssl"));
 
 }
 
@@ -2300,8 +2296,6 @@ public function get_option_debug() {
  */
 
 public function get_option_javascript_redirect() {
-  $disabled = (is_multisite() && rsssl_multisite::this()->javascript_redirect) ? "disabled" : "";
-
   $javascript_redirect = $this->javascript_redirect;
   $disabled = "";
   $comment = "";
@@ -2309,11 +2303,11 @@ public function get_option_javascript_redirect() {
   if (is_multisite() && rsssl_multisite::this()->javascript_redirect) {
     $disabled = "disabled";
     $javascript_redirect = TRUE;
-    $comment = __( "This option is enabled in the netwerk menu.", "really-simple-ssl" );
+    $comment = __( "This option is enabled on the netwerk menu.", "really-simple-ssl" );
   }
 
   echo '<input '.$disabled.' id="rlrsssl_options" name="rlrsssl_options[javascript_redirect]" size="40" type="checkbox" value="1"' . checked( 1, $javascript_redirect, false ) ." />";
-  rsssl_help::this()->get_help_tip(__("This is a fallback you should only use if other redirection methods do not work.", "really-simple-ssl"));
+  RSSSL()->rsssl_help->get_help_tip(__("This is a fallback you should only use if other redirection methods do not work.", "really-simple-ssl"));
   echo $comment;
 
 }
@@ -2327,7 +2321,6 @@ public function get_option_javascript_redirect() {
  */
 
 public function get_option_wp_redirect() {
-  //$options = get_option('rlrsssl_options');
   $wp_redirect = $this->wp_redirect;
   $disabled = "";
   $comment = "";
@@ -2335,11 +2328,11 @@ public function get_option_wp_redirect() {
   if (is_multisite() && rsssl_multisite::this()->wp_redirect) {
     $disabled = "disabled";
     $wp_redirect = TRUE;
-    $comment = __( "This option is enabled in the netwerk menu.", "really-simple-ssl" );
+    $comment = __( "This option is enabled on the netwerk menu.", "really-simple-ssl" );
   }
 
   echo '<input '.$disabled.' id="rlrsssl_options" name="rlrsssl_options[wp_redirect]" size="40" type="checkbox" value="1"' . checked( 1, $wp_redirect, false ) ." />";
-  rsssl_help::this()->get_help_tip(__("Enable this if you want to use the internal WordPress 301 redirect. Needed on NGINX servers, or if the .htaccess redirect cannot be used.", "really-simple-ssl"));
+  RSSSL()->rsssl_help->get_help_tip(__("Enable this if you want to use the internal WordPress 301 redirect. Needed on NGINX servers, or if the .htaccess redirect cannot be used.", "really-simple-ssl"));
   echo $comment;
 
 }
@@ -2371,7 +2364,7 @@ public function get_option_wp_redirect() {
       }
 
       echo '<input '.$disabled.' id="rlrsssl_options" name="rlrsssl_options[htaccess_redirect]" size="40" type="checkbox" value="1"' . checked( 1, $this->htaccess_redirect, false ) ." />";
-      rsssl_help::this()->get_help_tip(__("A .htaccess redirect is faster. Really Simple SSL detects the redirect code that is most likely to work (95% of websites), but this is not 100%. Make sure you know how to regain access to your site if anything goes wrong!", "really-simple-ssl"));
+      RSSSL()->rsssl_help->get_help_tip(__("A .htaccess redirect is faster. Really Simple SSL detects the redirect code that is most likely to work (95% of websites), but this is not 100%. Make sure you know how to regain access to your site if anything goes wrong!", "really-simple-ssl"));
       echo $comment;
 
       if ($this->htaccess_redirect && !is_writable($this->ABSpath.".htaccess")) {
@@ -2424,7 +2417,7 @@ public function get_option_wp_redirect() {
     $options = get_option('rlrsssl_options');
     echo '<input id="rlrsssl_options" name="rlrsssl_options[do_not_edit_htaccess]" size="40" type="checkbox" value="1"' . checked( 1, $this->do_not_edit_htaccess, false ) ." />";
 
-    rsssl_help::this()->get_help_tip(__("If you want to customize the Really Simple SSL .htaccess, you need to prevent Really Simple SSL from rewriting it. Enabling this option will do that.", "really-simple-ssl"));
+    RSSSL()->rsssl_help->get_help_tip(__("If you want to customize the Really Simple SSL .htaccess, you need to prevent Really Simple SSL from rewriting it. Enabling this option will do that.", "really-simple-ssl"));
     if (!$this->do_not_edit_htaccess && !is_writable($this->ABSpath.".htaccess")) _e(".htaccess is currently not writable.","really-simple-ssl");
   }
 
@@ -2446,10 +2439,10 @@ public function get_option_wp_redirect() {
     if (is_multisite() && rsssl_multisite::this()->autoreplace_mixed_content) {
       $disabled = "disabled";
       $autoreplace_mixed_content = TRUE;
-      $comment = __( "This option is enabled in the netwerk menu.", "really-simple-ssl" );
+      $comment = __( "This option is enabled on the netwerk menu.", "really-simple-ssl" );
     }
     echo '<input '.$disabled.' id="rlrsssl_options" name="rlrsssl_options[autoreplace_insecure_links]" size="40" type="checkbox" value="1"' . checked( 1, $autoreplace_mixed_content, false ) .' />';
-    rsssl_help::this()->get_help_tip(__("In most cases you need to leave this enabled, to prevent mixed content issues on your site.", "really-simple-ssl"));
+    RSSSL()->rsssl_help->get_help_tip(__("In most cases you need to leave this enabled, to prevent mixed content issues on your site.", "really-simple-ssl"));
     echo $comment;
   }
     /**
