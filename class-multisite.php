@@ -624,7 +624,6 @@ wp_die();
 }
 
 
-
 public function dismiss_pro_option_notice() {
 	check_ajax_referer( 'rsssl-pro-dismiss-pro-option-notice', 'nonce' );
 	update_option( 'rsssl_pro_pro_option_notice_dismissed', true);
@@ -654,16 +653,18 @@ public function dismiss_pro_option_script() {
 
 
 public function show_pro_option_notice(){
+  if (!$this->is_settings_page()) return;
+
   $dismissed	= get_option( 'rsssl_pro_pro_option_notice_dismissed' );
   if (!$dismissed) {
 
    if (defined('rsssl_pro_version')) {
      if (!defined('rsssl_pro_ms_version')) {
-       add_action('admin_print_footer_scripts', array($this, 'dismiss_license_notice_script'));
+       add_action('admin_print_footer_scripts', array($this, 'dismiss_pro_option_script'));
            ?>
            <div id="message" class="updated fade notice is-dismissible rsssl-pro-dismiss-notice">
              <p>
-               <?php echo sprintf( __( 'You are running Really Simple SSL pro. A dedicated add-on for multisite has been released. If you want more options to have full control over your multisite network, ask for a discount code to %supgrade%s your license to a multisite license.', 'really-simple-ssl' ), '<a href="https://really-simple-ssl.com/contact" title="Really Simple SSL">', '</a>' )?>
+               <?php echo sprintf( __( 'You are running Really Simple SSL pro. A dedicated add-on for multisite has been released. If you want more options to have full control over your multisite network, you can ask for a discount code to %supgrade%s your license to a multisite license.', 'really-simple-ssl' ), '<a href="https://really-simple-ssl.com/contact" title="Really Simple SSL">', '</a>' )?>
              </p>
            </p></div>
            <?php
@@ -672,12 +673,16 @@ public function show_pro_option_notice(){
      ?>
      <div id="message" class="updated fade notice is-dismissible rsssl-pro-dismiss-notice">
        <p>
-         <?php echo sprintf( __( 'If you want more options to have full control over your multisite network, you can %sUpgrade%s your license to a multisite license.', 'really-simple-ssl' ), '<a href="https://really-simple-ssl.com/pro-multisite" title="Really Simple SSL">', '</a>' )?>
+         <?php echo sprintf( __( 'If you want more options to have full control over your multisite network, you can %supgrade%s your license to a multisite license, or dismiss this message', 'really-simple-ssl' ), '<a href="https://really-simple-ssl.com/pro-multisite" title="Really Simple SSL">', '</a>' )?>
        </p>
      </p></div>
      <?php
    }
   }
+}
+
+public function is_settings_page(){
+  return ( isset( $_GET['page'] ) && $_GET['page'] == 'really-simple-ssl' ) ? true : false;
 }
 
 } //class closure
