@@ -132,17 +132,6 @@ if ( ! class_exists( 'rsssl_multisite' ) ) {
     } else {
       _e("Below you can set the multisite options for Really Simple SSL","really-simple-ssl");
     }
-<<<<<<< Updated upstream
-    ?><br><br><?php
-    if (defined(rsssl_pro_version) && !defined(rsssl_pro_ms_version)) {
-      _e("A dedicated add-on for multisite has been released. If you want more options to have full control over your multisite network, you can upgrade your license to a multisite license.", "really-simple-ssl");
-    } else {
-      _e("If you want more options to have full control over your multisite network, you can upgrade your license to a multisite license.", "really-simple-ssl");
-    }
-=======
-    ?><?php
-
->>>>>>> Stashed changes
   }
 
   public function get_option_enable_multisite(){
@@ -317,8 +306,6 @@ if ( ! class_exists( 'rsssl_multisite' ) ) {
 
 */
 
-<<<<<<< Updated upstream
-
 
     public function plugin_network_wide_active(){
       if ( ! function_exists( 'is_plugin_active_for_network' ) )
@@ -329,16 +316,6 @@ if ( ! class_exists( 'rsssl_multisite' ) ) {
       } else {
         return false;
       }
-=======
-  public function plugin_network_wide_active(){
-    if ( ! function_exists( 'is_plugin_active_for_network' ) ) {
-    require_once( ABSPATH . '/wp-admin/includes/plugin.php' );
-}
-    if ( is_plugin_active_for_network(rsssl_plugin) ){
-      return true;
-    } else {
-      return false;
->>>>>>> Stashed changes
     }
 
 
