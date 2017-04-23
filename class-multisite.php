@@ -46,6 +46,8 @@ if ( ! class_exists( 'rsssl_multisite' ) ) {
 
     add_action('wp_ajax_rsssl_pro_dismiss_pro_option_notice', array($this,'dismiss_pro_option_notice') );
     add_action("network_admin_notices", array($this, 'show_pro_option_notice'));
+
+    add_action("rsssl_show_network_tab_settings", array($this, 'settings_tab'));
   }
 
   static function this() {
@@ -157,7 +159,16 @@ if ( ! class_exists( 'rsssl_multisite' ) ) {
  */
 
  public function multisite_menu_page() {
-   if (isset($_GET['updated'])): ?>
+   $tab = "settings";
+  if ( isset ( $_GET['tab'] ) ) $tab = $_GET['tab'];
+  $this->admin_tabs($tab);
+
+  do_action("rsssl_show_network_tab_{$tab}");
+}
+
+
+public function settings_tab(){
+  if (isset($_GET['updated'])): ?>
    <div id="message" class="updated notice is-dismissible"><p><?php _e('Options saved.') ?></p></div>
   <?php endif; ?>
   <div class="wrap">
@@ -171,7 +182,7 @@ if ( ! class_exists( 'rsssl_multisite' ) ) {
       ?>
     </form>
   </div>
-<?php
+  <?php
 }
 
 
@@ -343,7 +354,6 @@ if ( ! class_exists( 'rsssl_multisite' ) ) {
       $this->ssl_enabled_networkwide = false;
       $this->save_options();
     }
-
 
   }
 
@@ -683,6 +693,35 @@ public function show_pro_option_notice(){
 
 public function is_settings_page(){
   return ( isset( $_GET['page'] ) && $_GET['page'] == 'really-simple-ssl' ) ? true : false;
+}
+
+
+
+/**
+ * Create tabs on the settings page
+ *
+ * @since  1.0.0
+ *
+ * @access public
+ *
+ */
+
+public function admin_tabs( $current = 'settings' ) {
+    $tabs = array(
+      'settings'=>__("Settings","really-simple-ssl"),
+    );
+
+    $tabs = apply_filters("rsssl_network_tabs", $tabs);
+
+    if (count($tabs)>1) {
+      echo '<h2 class="nav-tab-wrapper">';
+
+      foreach( $tabs as $tab => $name ){
+          $class = ( $tab == $current ) ? ' nav-tab-active' : '';
+          echo "<a class='nav-tab$class' href='?page=really-simple-ssl&tab=$tab'>$name</a>";
+      }
+      echo '</h2>';
+    }
 }
 
 } //class closure

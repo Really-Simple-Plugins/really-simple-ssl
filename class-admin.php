@@ -111,10 +111,7 @@ defined('ABSPATH') or die("you do not have acces to this page!");
     }
 
     //when ssl is enabled, and not enabled by user, ask for activation.
-    if (!$this->ssl_enabled && (!is_multisite() || RSSSL()->rsssl_multisite->selected_networkwide_or_per_site) ) {
-      $this->trace_log("ssl not enabled, show notice");
-      add_action("admin_notices", array($this, 'show_notice_activate_ssl'),10);
-    }
+    add_action("admin_notices", array($this, 'show_notice_activate_ssl'),10);
 
     add_action('plugins_loaded', array($this,'check_plugin_conflicts'),30);
 
@@ -222,9 +219,15 @@ defined('ABSPATH') or die("you do not have acces to this page!");
   */
 
   public function show_notice_activate_ssl(){
+    if ($this->ssl_enabled) return;
 
-    //for multisite, show no ssl message only on main blog.
-    if (is_multisite() && !is_network_admin() && !$this->site_has_ssl) return;
+    //for multisite, show only activate when a choice has been made to activate networkwide or per site.
+    if (is_multisite() && !RSSSL()->rsssl_multisite->selected_networkwide_or_per_site) return;
+
+    //on multistie, only show this message on the network admin. Per site activated sites have to go to the settings page.
+    //otherwise sites that do not need SSL possibly get to see this message.
+
+    if (is_multisite() && !is_network_admin()) return;
 
     if (!$this->wpconfig_ok()) return;
 
