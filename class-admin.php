@@ -2344,6 +2344,7 @@ public function get_option_wp_redirect() {
 
   /**
    * Insert option into settings form
+   * The .htaccess redirect is not shown for multisite sites that are enabled network wide.
    *
    * @since  2.5.8
    *
@@ -2358,10 +2359,11 @@ public function get_option_wp_redirect() {
       $disabled = "";
       $comment = "";
 
-      if (is_multisite() && rsssl_multisite::this()->ssl_enabled_networkwide) {
+      //networkwide is not shown, so this only applies to per site activated sites.
+      if (is_multisite() && RSSSL()->rsssl_multisite->htaccess_redirect) {
         $disabled = "disabled";
         $htaccess_redirect = TRUE;
-        $comment = __( "On multisite networkwide activated SSL the .htaccess redirect can only be configured networkwide.", "really-simple-ssl" );
+        $comment = __( "This option is enabled on the netwerk menu.", "really-simple-ssl" );
       } else {
         $disabled = ($this->do_not_edit_htaccess) ? "disabled" : "";
       }
