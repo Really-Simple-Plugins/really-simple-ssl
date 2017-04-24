@@ -35,8 +35,6 @@ if ( ! class_exists( 'rsssl_multisite' ) ) {
     register_activation_hook(  dirname( __FILE__ )."/".rsssl_plugin, array($this,'activate') );
     add_filter("admin_url", array($this, "check_protocol_multisite"), 20, 3 );
 
-    //add_action("plugins_loaded", array($this, "ssl_menu_on_site_admin"));
-
     add_action("plugins_loaded", array($this, "process_networkwide_choice"), 10, 0);
     add_action("plugins_loaded", array($this, "networkwide_choice_notice"), 20, 0);
 
@@ -46,6 +44,10 @@ if ( ! class_exists( 'rsssl_multisite' ) ) {
 
     add_action('wp_ajax_dismiss_success_message', array($this,'dismiss_success_message_callback') );
 
+    add_action('wp_ajax_rsssl_pro_dismiss_pro_option_notice', array($this,'dismiss_pro_option_notice') );
+    add_action("network_admin_notices", array($this, 'show_pro_option_notice'));
+
+    add_action("rsssl_show_network_tab_settings", array($this, 'settings_tab'));
   }
 
   static function this() {
@@ -104,7 +106,6 @@ if ( ! class_exists( 'rsssl_multisite' ) ) {
   public function add_multisite_menu(){
     if (!$this->plugin_network_wide_active()) return;
 
-
     register_setting( $this->option_group, 'rsssl_options');
     add_settings_section('rsssl_network_settings', __("Settings","really-simple-ssl"), array($this,'section_text'), $this->page_slug);
 
@@ -113,14 +114,6 @@ if ( ! class_exists( 'rsssl_multisite' ) ) {
         if ($this->selected_networkwide_or_per_site) {
 
           RSSSL()->rsssl_network_admin_page = add_submenu_page('settings.php', "SSL", "SSL", 'manage_options', $this->page_slug, array( &$this, 'multisite_menu_page' ) );
-
-          // add_settings_field('id_301_redirect', __("Enable WordPress 301 redirection to SSL for all SSL sites","really-simple-ssl"), array($this,'get_option_301_redirect'), $this->page_slug, 'rsssl_network_settings');
-          // add_settings_field('id_javascript_redirect', __("Enable javascript redirection to SSL","really-simple-ssl"), array($this,'get_option_javascript_redirect'), $this->page_slug, 'rsssl_network_settings');
-          // add_settings_field('id_hsts_multisite', __("Turn HTTP Strict Transport Security on","really-simple-ssl"), array($this,'get_option_hsts_multisite'), $this->page_slug, 'rsssl_network_settings');
-          // add_settings_field('id_cert_expiration', __("Receive an email when your certificate is about to expire","really-simple-ssl"), array($this,'get_option_cert_expiration'), $this->page_slug, 'rsssl_network_settings');
-          // add_settings_field('id_mixed_content_admin', __("Enable the mixed content fixer on the WordPress back-end","really-simple-ssl"), array($this,'get_option_mixed_content_admin'), $this->page_slug, 'rsssl_network_settings');
-          // add_settings_field('id_do_not_edit_htaccess', __("Stop editing the .htaccess file","really-simple-ssl"), array($this,'get_option_do_not_edit_htaccess'), $this->page_slug, 'rsssl_network_settings');
-          // add_settings_field('id_htaccess_redirect', __("Enable htacces redirection to SSL on the network","really-simple-ssl"), array($this,'get_option_htaccess_redirect'), $this->page_slug, 'rsssl_network_settings');
 
         }
       }
@@ -144,9 +137,6 @@ if ( ! class_exists( 'rsssl_multisite' ) ) {
   }
 
   public function get_option_enable_multisite(){
-    $this->ssl_enabled_networkwide;
-    $this->selected_networkwide_or_per_site;
-
       ?>
       <select name="rlrsssl_network_options[ssl_enabled_networkwide]">
         <?php if (!$this->selected_networkwide_or_per_site) {?>
@@ -169,7 +159,16 @@ if ( ! class_exists( 'rsssl_multisite' ) ) {
  */
 
  public function multisite_menu_page() {
-   if (isset($_GET['updated'])): ?>
+   $tab = "settings";
+  if ( isset ( $_GET['tab'] ) ) $tab = $_GET['tab'];
+  $this->admin_tabs($tab);
+
+  do_action("rsssl_show_network_tab_{$tab}");
+}
+
+
+public function settings_tab(){
+  if (isset($_GET['updated'])): ?>
    <div id="message" class="updated notice is-dismissible"><p><?php _e('Options saved.') ?></p></div>
   <?php endif; ?>
   <div class="wrap">
@@ -183,7 +182,7 @@ if ( ! class_exists( 'rsssl_multisite' ) ) {
       ?>
     </form>
   </div>
-<?php
+  <?php
 }
 
 
@@ -318,13 +317,17 @@ if ( ! class_exists( 'rsssl_multisite' ) ) {
 
 */
 
-  public function plugin_network_wide_active(){
-    if ( is_plugin_active_for_network(rsssl_plugin) ){
-      return true;
-    } else {
-      return false;
+
+    public function plugin_network_wide_active(){
+      if ( ! function_exists( 'is_plugin_active_for_network' ) )
+        require_once( ABSPATH . '/wp-admin/includes/plugin.php' );
+
+      if ( is_plugin_active_for_network(rsssl_plugin) ){
+        return true;
+      } else {
+        return false;
+      }
     }
-  }
 
 
 
@@ -351,7 +354,6 @@ if ( ! class_exists( 'rsssl_multisite' ) ) {
       $this->ssl_enabled_networkwide = false;
       $this->save_options();
     }
-
 
   }
 
@@ -520,8 +522,6 @@ public function is_per_site_activated_multisite_subfolder_install() {
   return false;
 }
 
-
-
   /**
    * Show notices
    *
@@ -633,6 +633,96 @@ update_site_option("rsssl_success_message_shown", true);
 wp_die();
 }
 
+
+public function dismiss_pro_option_notice() {
+	check_ajax_referer( 'rsssl-pro-dismiss-pro-option-notice', 'nonce' );
+	update_option( 'rsssl_pro_pro_option_notice_dismissed', true);
+	wp_die();
+}
+
+public function dismiss_pro_option_script() {
+  $ajax_nonce = wp_create_nonce( "rsssl-pro-dismiss-pro-option-notice" );
+  ?>
+  <script type='text/javascript'>
+    jQuery(document).ready(function($) {
+
+      $(".rsssl-pro-dismiss-notice.notice.is-dismissible").on("click", ".notice-dismiss", function(event){
+            var data = {
+              'action': 'rsssl_pro_dismiss_pro_option_notice',
+              'nonce': '<?php echo $ajax_nonce; ?>'
+            };
+
+            $.post(ajaxurl, data, function(response) {
+
+            });
+        });
+    });
+  </script>
+  <?php
+}
+
+
+public function show_pro_option_notice(){
+  if (!$this->is_settings_page()) return;
+
+  $dismissed	= get_option( 'rsssl_pro_pro_option_notice_dismissed' );
+  if (!$dismissed) {
+
+   if (defined('rsssl_pro_version')) {
+     if (!defined('rsssl_pro_ms_version')) {
+       add_action('admin_print_footer_scripts', array($this, 'dismiss_pro_option_script'));
+           ?>
+           <div id="message" class="updated fade notice is-dismissible rsssl-pro-dismiss-notice">
+             <p>
+               <?php echo sprintf( __( 'You are running Really Simple SSL pro. A dedicated add-on for multisite has been released. If you want more options to have full control over your multisite network, you can ask for a discount code to %supgrade%s your license to a multisite license.', 'really-simple-ssl' ), '<a href="https://really-simple-ssl.com/contact" title="Really Simple SSL">', '</a>' )?>
+             </p>
+           </p></div>
+           <?php
+           }
+   } else {
+     ?>
+     <div id="message" class="updated fade notice is-dismissible rsssl-pro-dismiss-notice">
+       <p>
+         <?php echo sprintf( __( 'If you want more options to have full control over your multisite network, you can %supgrade%s your license to a multisite license, or dismiss this message', 'really-simple-ssl' ), '<a href="https://really-simple-ssl.com/pro-multisite" title="Really Simple SSL">', '</a>' )?>
+       </p>
+     </p></div>
+     <?php
+   }
+  }
+}
+
+public function is_settings_page(){
+  return ( isset( $_GET['page'] ) && $_GET['page'] == 'really-simple-ssl' ) ? true : false;
+}
+
+
+
+/**
+ * Create tabs on the settings page
+ *
+ * @since  1.0.0
+ *
+ * @access public
+ *
+ */
+
+public function admin_tabs( $current = 'settings' ) {
+    $tabs = array(
+      'settings'=>__("Settings","really-simple-ssl"),
+    );
+
+    $tabs = apply_filters("rsssl_network_tabs", $tabs);
+
+    if (count($tabs)>1) {
+      echo '<h2 class="nav-tab-wrapper">';
+
+      foreach( $tabs as $tab => $name ){
+          $class = ( $tab == $current ) ? ' nav-tab-active' : '';
+          echo "<a class='nav-tab$class' href='?page=really-simple-ssl&tab=$tab'>$name</a>";
+      }
+      echo '</h2>';
+    }
+}
 
 } //class closure
 }

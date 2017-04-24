@@ -29,7 +29,7 @@
 
   defined('ABSPATH') or die("you do not have access to this page!");
 
-  class RLRSSSL {
+  class REALLY_SIMPLE_SSL {
 
   	  private static $instance;
   	  public $rssl_front_end;
@@ -43,8 +43,8 @@
   	  private function __construct() {}
 
       public static function instance() {
-		if ( ! isset( self::$instance ) && ! ( self::$instance instanceof RLRSSSL ) ) {
-			self::$instance = new RLRSSSL;
+		if ( ! isset( self::$instance ) && ! ( self::$instance instanceof REALLY_SIMPLE_SSL ) ) {
+			self::$instance = new REALLY_SIMPLE_SSL;
 			self::$instance->setup_constants();
 			self::$instance->includes();
 
@@ -52,18 +52,13 @@
 			self::$instance->rsssl_mixed_content_fixer = new rsssl_mixed_content_fixer();
 
 			// Backwards compatibility for add-ons
-			global $rsssl_front_end, $rsssl_mixed_content_fixer;
-			$rsssl_front_end           = self::$instance->rsssl_front_end;
-			$rsssl_mixed_content_fixer = self::$instance->rsssl_mixed_content_fixer;
-
+      global $rsssl_front_end, $rsssl_mixed_content_fixer;
+      $rsssl_front_end           = self::$instance->rsssl_front_end;
+      $rsssl_mixed_content_fixer = self::$instance->rsssl_mixed_content_fixer;
 
 			if ( is_admin() ) {
 				if ( is_multisite() ) {
 					self::$instance->rsssl_multisite = new rsssl_multisite();
-
-					// Backwards compatibility for add-ons
-					global $rsssl_multisite;
-					$rsssl_multisite = self::$instance->rsssl_multisite;
 				}
 
 				self::$instance->rsssl_cache       = new rsssl_cache();
@@ -94,8 +89,6 @@
       }
 
       private function includes() {
-		  require_once( ABSPATH.'wp-admin/includes/plugin.php' );
-
 		  require_once( rsssl_path .  '/class-front-end.php' );
 		  require_once( rsssl_path .  '/class-mixed-content-fixer.php' );
 
@@ -116,11 +109,11 @@
 
   	  	if ( is_admin() ) {
   	  		add_action( 'plugins_loaded', array( self::$instance->really_simple_ssl, 'init' ), 10 );
-	    }
+	       }
       }
   }
 
 function RSSSL() {
-	return RLRSSSL::instance();
+	return REALLY_SIMPLE_SSL::instance();
 }
 add_action( 'plugins_loaded', 'RSSSL', 9 );
