@@ -1046,6 +1046,7 @@ protected function get_server_variable_fix_code(){
        $this->trace_log("Opening testpage to check for ssl: ".$testpage_url);
 
        $response = wp_remote_get( $testpage_url );
+
        if( is_array($response) ) {
          $status = wp_remote_retrieve_response_code( $response );
          $filecontents = wp_remote_retrieve_body($response);
@@ -2132,7 +2133,7 @@ public function configuration_page_more(){
       if($this->contains_hsts()) {
          _e("HTTP Strict Transport Security was enabled","really-simple-ssl");
       } else {
-         echo __('<a href="https://en.wikipedia.org/wiki/HTTP_Strict_Transport_Security" target="_blank">HTTP Strict Transport Security</a> was not set in your .htaccess.',"really-simple-ssl")."&nbsp;".__("To enable, ","really-simple-ssl");
+         echo __('<a href="https://en.wikipedia.org/wiki/HTTP_Strict_Transport_Security" target="_blank">HTTP Strict Transport Security</a> is not enabled.',"really-simple-ssl")."&nbsp;".__("To enable, ","really-simple-ssl");
          ?>
          <a target="_blank" href="<?php echo $this->pro_url?>"><?php _e("get Premium", "really-simple-ssl");?></a>
 
@@ -2466,7 +2467,7 @@ public function get_option_wp_redirect() {
     $faq_link = '<a target="_blank" href="https://really-simple-ssl.com/knowledge-base/">' . __( 'Docs', 'really-simple-ssl' ) . '</a>';
     array_unshift( $links, $faq_link );
 
-    if ( class_exists( 'rsssl_premium_options' ) ) {
+    if ( defined("rsssl_pro_version") ) {
       if (class_exists('RSSSL_PRO')) {
         if(RSSSL_PRO()->rsssl_licensing->license_is_valid()) return $links;
       }
