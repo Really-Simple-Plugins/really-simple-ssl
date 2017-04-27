@@ -36,7 +36,7 @@ if ( ! class_exists( 'rsssl_admin_mixed_content_fixer' ) ) {
     $this->build_url_list();
 
     if (is_admin()) {
-      add_action("admin_init", array($this, "start_buffer"));
+      add_action("admin_init", array($this, "start_buffer"), 100);
     } else {
       add_action("init", array($this, "start_buffer"));
     }
