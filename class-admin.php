@@ -2138,6 +2138,7 @@ public function img($type) {
 
 
 public function configuration_page_more(){
+  if ( !defined("rsssl_pro_version") ) {
   ?>
   <table>
   <tr>
@@ -2155,6 +2156,8 @@ public function configuration_page_more(){
 
          <?php
       }
+    }
+
     ?>
   </td><td></td>
   </tr>
@@ -2166,6 +2169,7 @@ public function configuration_page_more(){
   if (!$this->site_has_ssl) {
     $this->show_pro();
   } else {
+    if ( !defined("rsssl_pro_version") ) {
     if (!$this->ssl_enabled) { ?>
       <p><?php _e("If you want to be sure you're ready to migrate to SSL, get Premium, which includes an extensive scan and premium support.", "really-simple-ssl")?>
         &nbsp;<a target="_blank" href="<?php echo $this->pro_url?>">Learn more</a></p>
@@ -2175,7 +2179,7 @@ public function configuration_page_more(){
   <?php
     }
   }
-
+}
 }
 
   /**
@@ -2488,10 +2492,12 @@ public function get_option_wp_redirect() {
         if(RSSSL_PRO()->rsssl_licensing->license_is_valid()) return $links;
       }
     }
-
+    if ( !defined("rsssl_pro_version") ) {
+      if (!class_exists('RSSSL_PRO')) {
     $premium_link = '<a target="_blank" href="https://really-simple-ssl.com/premium-support">' . __( 'Premium Support', 'really-simple-ssl' ) . '</a>';
     array_unshift( $links, $premium_link );
-
+      }
+    }
     return $links;
   }
 
