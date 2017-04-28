@@ -259,9 +259,7 @@ defined('ABSPATH') or die("you do not have acces to this page!");
       </p>
       <?php $this->show_pro(); ?>
 
-    <?php if ($this->site_has_ssl) {
-        $this->show_enable_ssl_button();
-     } ?>
+      <?php RSSSL()->really_simple_ssl->show_enable_ssl_button();?>
     </div>
   <?php }
 
@@ -272,6 +270,7 @@ defined('ABSPATH') or die("you do not have acces to this page!");
   */
 
   public function show_enable_ssl_button(){
+    if ($this->site_has_ssl || (defined('rsssl_force_activate') && rsssl_force_activate)) {
     ?>
     <p>
     <form action="" method="post">
@@ -281,6 +280,7 @@ defined('ABSPATH') or die("you do not have acces to this page!");
     </form>
   </p>
     <?php
+    }
   }
 
   /**
