@@ -153,6 +153,7 @@ defined('ABSPATH') or die("you do not have acces to this page!");
   */
 
   public function switch_to_blog_bw_compatible($site){
+
     global $wp_version;
     if ($wp_version >= 4.6 ) {
       switch_to_blog( $site->blog_id );
@@ -167,6 +168,7 @@ defined('ABSPATH') or die("you do not have acces to this page!");
   */
 
   private function clicked_activate_ssl() {
+    if (!current_user_can($this->capability)) return;
     //if (!isset( $_POST['rsssl_nonce'] ) || !wp_verify_nonce( $_POST['rsssl_nonce'], 'rsssl_nonce' )) return false;
 
     if (isset($_POST['rsssl_do_activate_ssl'])) {
@@ -256,7 +258,6 @@ defined('ABSPATH') or die("you do not have acces to this page!");
         </ul>
       </p>
       <?php $this->show_pro(); ?>
-
 
     <?php if ($this->site_has_ssl) {
         $this->show_enable_ssl_button();
@@ -442,6 +443,8 @@ defined('ABSPATH') or die("you do not have acces to this page!");
    */
 
   public function configure_ssl() {
+    if (!current_user_can($this->capability)) return;
+
       $safe_mode = FALSE;
       if (defined('RSSSL_SAFE_MODE') && RSSSL_SAFE_MODE) $safe_mode = RSSSL_SAFE_MODE;
 
@@ -540,6 +543,8 @@ defined('ABSPATH') or die("you do not have acces to this page!");
    */
 
   public function remove_ssl_from_siteurl_in_wpconfig() {
+    if (!current_user_can($this->capability)) return;
+
       $wpconfig_path = $this->find_wp_config_path();
       if (!empty($wpconfig_path)) {
         $wpconfig = file_get_contents($wpconfig_path);
@@ -572,6 +577,7 @@ defined('ABSPATH') or die("you do not have acces to this page!");
   */
 
   private function check_for_siteurl_in_wpconfig(){
+
     $wpconfig_path = $this->find_wp_config_path();
 
     if (empty($wpconfig_path)) return;
@@ -663,6 +669,8 @@ defined('ABSPATH') or die("you do not have acces to this page!");
    */
 
   private function wpconfig_jetpack() {
+    if (!current_user_can($this->capability)) return;
+
       $wpconfig_path = $this->find_wp_config_path();
       if (empty($wpconfig_path)) return;
       $wpconfig = file_get_contents($wpconfig_path);
@@ -704,6 +712,7 @@ defined('ABSPATH') or die("you do not have acces to this page!");
 
 
   public function wpconfig_loadbalancer_fix() {
+      if (!current_user_can($this->capability)) return;
 
       $wpconfig_path = $this->find_wp_config_path();
       if (empty($wpconfig_path)) return;
@@ -753,6 +762,8 @@ defined('ABSPATH') or die("you do not have acces to this page!");
      */
 
     public function wpconfig_server_variable_fix() {
+      if (!current_user_can($this->capability)) return;
+
       $wpconfig_path = $this->find_wp_config_path();
       if (empty($wpconfig_path)) return;
       $wpconfig = file_get_contents($wpconfig_path);
@@ -840,6 +851,7 @@ protected function get_server_variable_fix_code(){
 
   public function remove_wpconfig_edit() {
 
+    if (!current_user_can($this->capability)) return;
 
     $wpconfig_path = $this->find_wp_config_path();
     if (empty($wpconfig_path)) return;
@@ -878,8 +890,9 @@ protected function get_server_variable_fix_code(){
    */
 
   public function set_siteurl_to_ssl() {
+      if (!current_user_can($this->capability)) return;
 
-      if ($this->debug) {$this->trace_log("converting siteurl and homeurl to https");}
+      $this->trace_log("converting siteurl and homeurl to https");
 
       $siteurl_ssl = str_replace ( "http://" , "https://" , get_option('siteurl'));
       $homeurl_ssl = str_replace ( "http://" , "https://" , get_option('home'));
@@ -899,6 +912,8 @@ protected function get_server_variable_fix_code(){
    */
 
   public function remove_ssl_from_siteurl() {
+      if (!current_user_can($this->capability)) return;
+
       $siteurl_no_ssl = str_replace ( "https://" , "http://" , get_option('siteurl'));
       $homeurl_no_ssl = str_replace ( "https://" , "http://" , get_option('home'));
       update_option('siteurl',$siteurl_no_ssl);
@@ -915,6 +930,7 @@ protected function get_server_variable_fix_code(){
    */
 
   public function save_options() {
+    if (!current_user_can($this->capability)) return;
 
     //any options added here should also be added to function options_validate()
     $options = array(
