@@ -118,7 +118,7 @@ defined('ABSPATH') or die("you do not have acces to this page!");
     //add the settings page for the plugin
     add_action('admin_enqueue_scripts', array($this, 'enqueue_assets'));
     add_action('admin_init', array($this, 'load_translation'),20);
-    add_action('rsssl_configuration_page', array($this, 'configuration_page_more'));
+    add_action('rsssl_configuration_page', array($this, 'configuration_page_more'),10);
 
     //settings page, form  and settings link in the plugins page
     add_action('admin_menu', array($this, 'add_settings_page'),40);
@@ -2136,7 +2136,6 @@ public function img($type) {
 
 
 public function configuration_page_more(){
-  if ( !defined("rsssl_pro_version") ) {
   ?>
   <table>
   <tr>
@@ -2157,8 +2156,6 @@ public function configuration_page_more(){
          echo "&nbsp;";
          printf(__("To enable, %sget Premium%s ","really-simple-ssl"), $link_open, $link_close);
       }
-    }
-
     ?>
   </td><td></td>
   </tr>
@@ -2170,7 +2167,6 @@ public function configuration_page_more(){
   if (!$this->site_has_ssl) {
     $this->show_pro();
   } else {
-    if ( !defined("rsssl_pro_version") ) {
     if (!$this->ssl_enabled) { ?>
       <p><?php _e("If you want to be sure you're ready to migrate to SSL, get Premium, which includes an extensive scan and premium support.", "really-simple-ssl")?>
         &nbsp;<a target="_blank" href="<?php echo $this->pro_url?>">Learn more</a></p>
@@ -2180,7 +2176,6 @@ public function configuration_page_more(){
   <?php
     }
   }
-}
 }
 
   /**
