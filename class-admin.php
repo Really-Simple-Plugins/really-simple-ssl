@@ -290,10 +290,12 @@ defined('ABSPATH') or die("you do not have acces to this page!");
   */
 
   public function show_pro(){
+    if ( !defined("rsssl_pro_version") ) {
     ?>
     <p><?php _e('You can also let the automatic scan of the pro version handle this for you, and get premium support and increased security with HSTS included.','really-simple-ssl');?>&nbsp;<a target="_blank" href="<?php echo $this->pro_url;?>"><?php _e("Check out Really Simple SSL Premium","really-simple-ssl");?></a></p>
     <?php
   }
+}
 
 
   public function wpconfig_is_writable() {
