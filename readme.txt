@@ -4,7 +4,7 @@ Tags: SSL, https, force SSL, mixed content, insecure content, secure website, we
 Requires at least: 4.2
 License: GPL2
 Tested up to: 4.7.4
-Stable tag: 2.5.12
+Stable tag: 2.5.13
 
 No setup required! You only need an SSL certificate, and this plugin will do the rest.
 
@@ -74,6 +74,9 @@ For detailed instructions on how to find mixed content read this [article](https
 If you are experiencing redirect loops on your site, try these [instructions](https://really-simple-ssl.com/knowledge-base/my-website-is-in-a-redirect-loop/).
 
 == Changelog ==
+= 2.5.13 =
+* Tweak: configuration more function
+
 = 2.5.12 =
 * Added multisite settings page
 * Added filter for .htaccess code output
