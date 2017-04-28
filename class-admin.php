@@ -259,9 +259,7 @@ defined('ABSPATH') or die("you do not have acces to this page!");
       </p>
       <?php $this->show_pro(); ?>
 
-    <?php if ($this->site_has_ssl) {
-        $this->show_enable_ssl_button();
-     } ?>
+      <?php RSSSL()->really_simple_ssl->show_enable_ssl_button();?>
     </div>
   <?php }
 
@@ -272,6 +270,7 @@ defined('ABSPATH') or die("you do not have acces to this page!");
   */
 
   public function show_enable_ssl_button(){
+    if ($this->site_has_ssl || (defined('rsssl_force_activate') && rsssl_force_activate)) {
     ?>
     <p>
     <form action="" method="post">
@@ -281,6 +280,7 @@ defined('ABSPATH') or die("you do not have acces to this page!");
     </form>
   </p>
     <?php
+    }
   }
 
   /**
@@ -851,8 +851,6 @@ protected function get_server_variable_fix_code(){
 
   public function remove_wpconfig_edit() {
 
-    if (!current_user_can($this->capability)) return;
-
     $wpconfig_path = $this->find_wp_config_path();
     if (empty($wpconfig_path)) return;
     $wpconfig = file_get_contents($wpconfig_path);
@@ -912,8 +910,7 @@ protected function get_server_variable_fix_code(){
    */
 
   public function remove_ssl_from_siteurl() {
-      if (!current_user_can($this->capability)) return;
-
+    error_log("start remove");
       $siteurl_no_ssl = str_replace ( "https://" , "http://" , get_option('siteurl'));
       $homeurl_no_ssl = str_replace ( "https://" , "http://" , get_option('home'));
       update_option('siteurl',$siteurl_no_ssl);
@@ -975,9 +972,10 @@ protected function get_server_variable_fix_code(){
    */
 
   public function deactivate($networkwide) {
-
+    error_log("test1");
     $this->remove_ssl_from_siteurl();
     $this->remove_ssl_from_siteurl_in_wpconfig();
+
     $this->site_has_ssl                         = FALSE;
     $this->hsts                                 = FALSE;
     $this->htaccess_warning_shown               = FALSE;
@@ -988,8 +986,7 @@ protected function get_server_variable_fix_code(){
     $this->javascript_redirect                  = FALSE;
     $this->wp_redirect                          = FALSE;
     $this->ssl_enabled                          = FALSE;
-    //deprecated
-    $this->rewrite_rule_per_site                = FALSE;
+
     $this->save_options();
 
     //when on multisite, per site activation, recreate domain list for htaccess and wpconfig rewrite actions
@@ -2136,8 +2133,8 @@ public function img($type) {
   */
 
 
-
 public function configuration_page_more(){
+  if ( !defined("rsssl_pro_version") ) {
   ?>
   <table>
   <tr>
@@ -2149,12 +2146,17 @@ public function configuration_page_more(){
       if($this->contains_hsts()) {
          _e("HTTP Strict Transport Security was enabled","really-simple-ssl");
       } else {
-         echo __('<a href="https://en.wikipedia.org/wiki/HTTP_Strict_Transport_Security" target="_blank">HTTP Strict Transport Security</a> is not enabled.',"really-simple-ssl")."&nbsp;".__("To enable, ","really-simple-ssl");
-         ?>
-         <a target="_blank" href="<?php echo $this->pro_url?>"><?php _e("get Premium", "really-simple-ssl");?></a>
 
-         <?php
+        $wiki_open = '<a href="https://en.wikipedia.org/wiki/HTTP_Strict_Transport_Security" target="_blank">';
+        $link_open = '<a target="_blank" href="'.$this->pro_url.'">';
+        $link_close = '</a>';
+
+         printf( __('%sHTTP Strict Transport Security%s is not enabled.',"really-simple-ssl"), $wiki_open, $link_close);
+         echo "&nbsp;";
+         printf(__("To enable, %sget Premium%s ","really-simple-ssl"), $link_open, $link_close);
       }
+    }
+
     ?>
   </td><td></td>
   </tr>
@@ -2166,6 +2168,7 @@ public function configuration_page_more(){
   if (!$this->site_has_ssl) {
     $this->show_pro();
   } else {
+    if ( !defined("rsssl_pro_version") ) {
     if (!$this->ssl_enabled) { ?>
       <p><?php _e("If you want to be sure you're ready to migrate to SSL, get Premium, which includes an extensive scan and premium support.", "really-simple-ssl")?>
         &nbsp;<a target="_blank" href="<?php echo $this->pro_url?>">Learn more</a></p>
@@ -2175,7 +2178,7 @@ public function configuration_page_more(){
   <?php
     }
   }
-
+}
 }
 
   /**
@@ -2488,10 +2491,12 @@ public function get_option_wp_redirect() {
         if(RSSSL_PRO()->rsssl_licensing->license_is_valid()) return $links;
       }
     }
-
+    if ( !defined("rsssl_pro_version") ) {
+      if (!class_exists('RSSSL_PRO')) {
     $premium_link = '<a target="_blank" href="https://really-simple-ssl.com/premium-support">' . __( 'Premium Support', 'really-simple-ssl' ) . '</a>';
     array_unshift( $links, $premium_link );
-
+      }
+    }
     return $links;
   }
 

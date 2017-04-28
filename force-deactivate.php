@@ -20,41 +20,47 @@
 
   # Load WordPress Core
   require_once( BASE_PATH.'wp-load.php' );
+  require_once(ABSPATH.'wp-admin/includes/plugin.php');
+  $core_plugin = 'really-simple-ssl/rlrsssl-really-simple-ssl.php';
+
+  if (!is_plugin_active($core_plugin) ) {
+    echo "<h1>Really Simple SSL is already deactivated!</h1>";
+    exit;
+  }
 
   #Load plugin functionality
   require_once( dirname( __FILE__ ) .  '/class-front-end.php' );
   require_once( dirname( __FILE__ ) .  '/class-admin.php' );
 
-  really_simple_ssl = new rsssl_admin();
+  $really_simple_ssl = new rsssl_admin();
+   if (is_multisite()) {
+     require_once( dirname( __FILE__ ) .  '/class-multisite.php' );
+     $rsssl_multisite = new rsssl_multisite();
+   }
 
-  if (is_multisite()) {
-    require_once( dirname( __FILE__ ) .  '/class-multisite.php' );
-    $rsssl_multisite = new rsssl_multisite();
-  }
+   $step = 1;
+   echo "<h1>Force deactivation of Really Simple SSL</h1>";
+   echo $step.". Resetting options"."<br>";
+   $networkwide = is_multisite();
+   $really_simple_ssl->deactivate($networkwide);
+   $step++;
 
-  $step = 1;
-  echo "<h1>Force deactivation of Really Simple SSL</h1>";
-  echo $step.". Resetting options"."<br>";
-  $networkwide = is_multisite();
-  $really_simple_ssl->deactivate($networkwide);
-  $step++;
-
-  //add feedback on writable files.
-  if (count($really_simple_ssl->errors)>0) {
-    echo $step.". Errors occured while deactivating:<ul>";
+   //add feedback on writable files.
+   if (count($really_simple_ssl->errors)>0) {
+     echo $step.". Errors occured while deactivating:<ul>";
     $step++;
-    foreach($really_simple_ssl->errors as $errorname=>$error) {
-      echo "<li>".$errorname."</li>";
-    }
-    echo "</ul>";
-    echo "Errors while removing the really simple ssl lines from your wp-config.php and .htacces, wich you can normally find in your webroot."."<br><br>";
-  }
+     foreach($really_simple_ssl->errors as $errorname=>$error) {
+       echo "<li>".$errorname."</li>";
+     }
+     echo "</ul>";
+     echo "Errors while removing the really simple ssl lines from your wp-config.php and .htacces, wich you can normally find in your webroot."."<br><br>";
+   }
 
-  echo $step.". Deactivating plugin"."<br>";
-  rl_deactivate_plugin($really_simple_ssl->plugin_dir."/".$really_simple_ssl->plugin_filename);
+   echo $step.". Deactivating plugin"."<br>";
+   rl_deactivate_plugin($really_simple_ssl->plugin_dir."/".$really_simple_ssl->plugin_filename);
 
-  $step++;
-  echo $step.". Completed with <b>".count($really_simple_ssl->errors)."</b> error(s)"."<br>";
+   $step++;
+   echo $step.". Completed with <b>".count($really_simple_ssl->errors)."</b> error(s)"."<br>";
 
 
 
