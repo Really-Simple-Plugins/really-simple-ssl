@@ -73,6 +73,9 @@ For detailed instructions on how to find mixed content read this [article](https
 = Redirect loop issues =
 If you are experiencing redirect loops on your site, try these [instructions](https://really-simple-ssl.com/knowledge-base/my-website-is-in-a-redirect-loop/).
 
+= Is the plugin multisite compatible? =
+Yes. There is a dedicated network settings page where you can switch between network activated SSL and per page SSL. In the dedicated pro for multisite plugin, you can override all site settings for SSL on the network level, and can activate and deactivate SSL in the network menu for each site.
+
 == Changelog ==
 = 2.5.13 =
 * Tweak: configuration more function

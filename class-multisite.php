@@ -111,11 +111,9 @@ if ( ! class_exists( 'rsssl_multisite' ) ) {
 
     if (RSSSL()->really_simple_ssl->site_has_ssl) {
         add_settings_field('id_ssl_enabled_networkwide', __("Enable SSL", "really-simple-ssl"), array($this,'get_option_enable_multisite'), $this->page_slug, 'rsssl_network_settings');
-        if ($this->selected_networkwide_or_per_site) {
-
-          RSSSL()->rsssl_network_admin_page = add_submenu_page('settings.php', "SSL", "SSL", 'manage_options', $this->page_slug, array( &$this, 'multisite_menu_page' ) );
-
-        }
+        //if ($this->selected_networkwide_or_per_site) {
+        RSSSL()->rsssl_network_admin_page = add_submenu_page('settings.php', "SSL", "SSL", 'manage_options', $this->page_slug, array( &$this, 'multisite_menu_page' ) );
+        //}
       }
     }
 
