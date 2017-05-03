@@ -112,12 +112,9 @@ if ( ! class_exists( 'rsssl_admin_mixed_content_fixer' ) ) {
    //all tags with src attr are already fixed by str_replace
    $pattern = array(
      '/url\([\'"]?\K(http:\/\/)(?=[^)]+)/i',
-     '/<link .*?href=[\'"]\K(http:\/\/)(?=[^\'"]+)/i',
-     '/<meta property="og:image" .*?content=[\'"]\K(http:\/\/)(?=[^\'"]+)/i',
+     '/<link [^>]*?href=[\'"]\K(http:\/\/)(?=[^\'"]+)/i'
+     '/<meta property="og:image" [^>]*?content=[\'"]\K(http:\/\/)(?=[^\'"]+)/i',
      '/<form [^>]*?action=[\'"]\K(http:\/\/)(?=[^\'"]+)/i',
-     /*Don't use these, these links are taken care of by the src replace */
-     //'/<(?:img|iframe) .*?src=[\'"]\K(http:\/\/)(?=[^\'"]+)/i',
-     //'/<script [^>]*?src=[\'"]\K(http:\/\/)(?=[^\'"]+)/i',
    );
    $str = preg_replace($pattern, 'https://', $str);
    $str = str_replace ( "<body " , '<body data-rsssl=1 ', $str);
