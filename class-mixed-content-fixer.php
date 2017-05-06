@@ -112,7 +112,7 @@ if ( ! class_exists( 'rsssl_admin_mixed_content_fixer' ) ) {
    //all tags with src attr are already fixed by str_replace
    $pattern = array(
      '/url\([\'"]?\K(http:\/\/)(?=[^)]+)/i',
-     '/<link [^>]*?href=[\'"]\K(http:\/\/)(?=[^\'"]+)/i'
+     '/<link [^>]*?href=[\'"]\K(http:\/\/)(?=[^\'"]+)/i',
      '/<meta property="og:image" [^>]*?content=[\'"]\K(http:\/\/)(?=[^\'"]+)/i',
      '/<form [^>]*?action=[\'"]\K(http:\/\/)(?=[^\'"]+)/i',
    );
