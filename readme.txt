@@ -79,6 +79,8 @@ Yes. There is a dedicated network settings page where you can switch between net
 == Changelog ==
 = 2.5.14 =
 * Fix: fixed issue in the mixed content fixer where on optimized html the match would match across elements.
+* replaced wp_redirect with wp_safe_redirect
+* Added force SSL on wp_rest_api
 
 = 2.5.13 =
 * Tweak: configuration more function

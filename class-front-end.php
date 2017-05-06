@@ -17,6 +17,8 @@ if ( ! class_exists( 'rsssl_front_end' ) ) {
 
     $this->get_options();
 
+    add_action( 'rest_api_init', array($this, 'wp_rest_api_force_ssl'), ~PHP_INT_MAX );
+
   }
 
   static function this() {
@@ -57,6 +59,25 @@ if ( ! class_exists( 'rsssl_front_end' ) ) {
 
 
    /**
+    * Force SSL on wp rest api
+    *
+    * @since  2.5.14
+    *
+    * @access public
+    *
+    */
+
+   public function wp_rest_api_force_ssl() {
+    	if ( ! is_ssl() && !(defined("rsssl_no_wp_redirect") && rsssl_no_wp_redirect)) {
+    		$url = set_url_scheme( esc_url_raw( $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'] ), 'https' );
+    		wp_safe_redirect( $url, 301 );
+    		exit;
+    	}
+    }
+
+
+
+   /**
     * Redirect using wp redirect
     *
     * @since  2.5.0
@@ -69,9 +90,9 @@ if ( ! class_exists( 'rsssl_front_end' ) ) {
    public function wp_redirect_to_ssl() {
 
       if (!is_ssl() && !(defined("rsssl_no_wp_redirect") && rsssl_no_wp_redirect)) {
-        $redirect_url = "https://" . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
+        $redirect_url = set_url_scheme( esc_url_raw( $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'] ), 'https' );
         $redirect_url = apply_filters("rsssl_wp_redirect_url", $redirect_url);
-        wp_redirect($redirect_url, "301");
+        wp_safe_redirect($redirect_url, 301);
         exit;
       }
     }
