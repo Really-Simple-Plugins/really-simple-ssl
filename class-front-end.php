@@ -68,6 +68,9 @@ if ( ! class_exists( 'rsssl_front_end' ) ) {
     */
 
    public function wp_rest_api_force_ssl() {
+      //check for Command Line 
+      if (php_sapi_name() === 'cli') return;
+
     	if ($this->ssl_enabled && !is_ssl() && !(defined("rsssl_no_wp_redirect") && rsssl_no_wp_redirect)) {
     		$url = set_url_scheme( esc_url_raw( $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'] ), 'https' );
     		wp_safe_redirect( $url, 301 );

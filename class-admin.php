@@ -124,7 +124,7 @@ defined('ABSPATH') or die("you do not have acces to this page!");
     add_action('admin_menu', array($this, 'add_settings_page'),40);
     add_action('admin_init', array($this, 'create_form'),40);
 
-    $plugin = $this->plugin_dir."/".$this->plugin_filename;
+    $plugin = rsssl_plugin;
     add_filter("plugin_action_links_$plugin", array($this,'plugin_settings_link'));
 
     //check if the uninstallfile is safely renamed to php.
@@ -382,7 +382,6 @@ defined('ABSPATH') or die("you do not have acces to this page!");
     if ($this->debug) $this->trace_log("building domain list for multisite...");
     foreach ( $sites as $site ) {
         $this->switch_to_blog_bw_compatible($site);
-        $plugin = $this->plugin_dir."/".$this->plugin_filename;
         $options = get_option('rlrsssl_options');
 
         $ssl_enabled = FALSE;
@@ -391,7 +390,7 @@ defined('ABSPATH') or die("you do not have acces to this page!");
           $ssl_enabled = isset($options['ssl_enabled']) ? $options['ssl_enabled'] : $site_has_ssl;
         }
 
-        if (is_plugin_active($plugin) && $ssl_enabled) {
+        if (is_plugin_active(rsssl_plugin) && $ssl_enabled) {
           if ($this->debug) $this->trace_log("adding: ".home_url());
           $this->sites[] = home_url();
         }
@@ -1709,6 +1708,8 @@ public function show_notices()
   */
 
   if ($this->ssl_enabled && $this->site_has_ssl && !$this->ssl_success_message_shown) {
+        if (!current_user_can("manage_options")) return;
+
         add_action('admin_print_footer_scripts', array($this, 'insert_dismiss_success'));
         ?>
         <div id="message" class="updated fade notice is-dismissible rlrsssl-success">
