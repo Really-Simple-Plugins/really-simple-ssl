@@ -88,7 +88,6 @@ if ( ! class_exists( 'rsssl_front_end' ) ) {
     *
     */
 
-
    public function wp_redirect_to_ssl() {
 
       if (!is_ssl() && !(defined("rsssl_no_wp_redirect") && rsssl_no_wp_redirect)) {

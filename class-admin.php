@@ -17,7 +17,7 @@ defined('ABSPATH') or die("you do not have acces to this page!");
   public $sites                             = Array(); //for multisite, list of all activated sites.
 
   //general settings
-  public $capability                        = 'manage_options';
+  public $capability                        = 'activate_plugins';
 
   public $ssl_test_page_error;
   public $htaccess_test_success             = FALSE;

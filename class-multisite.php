@@ -48,11 +48,34 @@ if ( ! class_exists( 'rsssl_multisite' ) ) {
     add_action("network_admin_notices", array($this, 'show_pro_option_notice'));
 
     add_action("rsssl_show_network_tab_settings", array($this, 'settings_tab'));
+
+
+    add_action( 'wpmu_new_blog', array($this, 'maybe_activate_ssl_in_new_blog'), 10, 6 );
+
+
   }
 
   static function this() {
     return self::$_this;
   }
+
+  /*
+
+      When a new site is added, maybe activate SSL as well.
+
+  */
+
+  public function maybe_activate_ssl_in_new_blog( $blog_id, $user_id, $domain, $path, $site_id, $meta ) {
+    if ($this->ssl_enabled_networkwide) {
+        $site = get_blog_details($blog_id);
+        $this->switch_to_blog_bw_compatible($site);
+        RSSSL()->really_simple_ssl->activate_ssl();
+        restore_current_blog(); //switches back to previous blog, not current, so we have to do it each loop
+      }
+    }
+
+
+
 
   public function networkwide_choice_notice(){
 
