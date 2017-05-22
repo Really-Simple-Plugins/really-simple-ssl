@@ -77,6 +77,12 @@ If you are experiencing redirect loops on your site, try these [instructions](ht
 Yes. There is a dedicated network settings page where you can switch between network activated SSL and per page SSL. In the dedicated pro for multisite plugin, you can override all site settings for SSL on the network level, and can activate and deactivate SSL in the network menu for each site.
 
 == Changelog ==
+= 2.5.17 =
+* Added a function where in multisite the home_url and/or site_url are defaulted to http:// when SSL is enabled on a per site.
+
+= 2.5.16 =
+* Changed wp_safe_redirect into wp_redirect as wp_safe_redirect has the admin url as fallback, and cannot be used on the front-end.
+
 = 2.5.14 =
 * Fix: fixed issue in the mixed content fixer where on optimized html the match would match across elements.
 * replaced wp_redirect with wp_safe_redirect

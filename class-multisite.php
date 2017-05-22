@@ -33,7 +33,9 @@ if ( ! class_exists( 'rsssl_multisite' ) ) {
 
     $this->load_options();
     register_activation_hook(  dirname( __FILE__ )."/".rsssl_plugin, array($this,'activate') );
-    add_filter("admin_url", array($this, "check_protocol_multisite"), 20, 3 );
+    add_filter("admin_url", array($this, "check_admin_protocol"), 20, 3 );
+    add_filter('home_url', array($this, 'check_site_protocol') , 20,4);
+    add_filter('site_url', array($this, 'check_site_protocol') , 20,4);
 
     add_action("plugins_loaded", array($this, "process_networkwide_choice"), 10, 0);
     add_action("plugins_loaded", array($this, "networkwide_choice_notice"), 20, 0);
@@ -471,16 +473,42 @@ public function settings_tab(){
 *
 */
 
-public function check_protocol_multisite($url, $path, $blog_id){
-  if (is_multisite() && !$this->ssl_enabled_networkwide) {
+public function check_admin_protocol($url, $path, $blog_id){
+  if (!$this->ssl_enabled_networkwide) {
+    $ssl_enabled = false;
     $options = get_blog_option($blog_id, "rlrsssl_options");
 
     if ($options && isset($options)) {
       $site_has_ssl = isset($options['site_has_ssl']) ? $options['site_has_ssl'] : FALSE;
       $ssl_enabled = isset($options['ssl_enabled']) ? $options['ssl_enabled'] : $site_has_ssl;
-      if (!$ssl_enabled) {
-        $url = str_replace("https://","http://",$url);
-      }
+    }
+
+    if (!$ssl_enabled) {
+      $url = str_replace("https://","http://",$url);
+    }
+  }
+  return $url;
+}
+
+/**
+* filters the home_url and/or site_url function to correct the false https urls wordpress returns for non ssl websites.
+*
+* @since 2.3.17
+*
+*/
+
+public function check_site_protocol($url, $path, $orig_scheme, $blog_id){
+  if (!$this->ssl_enabled_networkwide) {
+    $ssl_enabled = false;
+    $options = get_blog_option($blog_id, "rlrsssl_options");
+
+    if ($options && isset($options)) {
+      $site_has_ssl = isset($options['site_has_ssl']) ? $options['site_has_ssl'] : FALSE;
+      $ssl_enabled = isset($options['ssl_enabled']) ? $options['ssl_enabled'] : $site_has_ssl;
+    }
+
+    if (!$ssl_enabled) {
+      $url = str_replace("https://","http://",$url);
     }
   }
   return $url;
