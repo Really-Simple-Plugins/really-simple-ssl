@@ -1706,7 +1706,7 @@ public function show_notices()
   */
 
   if ($this->ssl_enabled && $this->site_has_ssl && !$this->ssl_success_message_shown) {
-        if (!current_user_can("manage_options")) return;
+        if (!current_user_can("activate_plugins")) return;
 
         add_action('admin_print_footer_scripts', array($this, 'insert_dismiss_success'));
         ?>
