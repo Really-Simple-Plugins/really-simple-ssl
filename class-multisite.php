@@ -42,10 +42,12 @@ if ( ! class_exists( 'rsssl_multisite' ) ) {
 
     add_action('network_admin_menu', array( &$this, 'add_multisite_menu' ) );
     add_action('network_admin_edit_rsssl_update_network_settings',  array($this,'update_network_options'));
-    add_action('network_admin_notices', array($this, 'show_notices'), 10);
-    add_action('admin_print_footer_scripts', array($this, 'insert_dismiss_success'));
+    if (is_network_admin()) {
+      add_action('network_admin_notices', array($this, 'show_notices'), 10);
+      add_action('admin_print_footer_scripts', array($this, 'insert_dismiss_success'));
+      add_action('wp_ajax_dismiss_success_message_multisite', array($this,'dismiss_success_message_callback') );
+    }
 
-    add_action('wp_ajax_dismiss_success_message', array($this,'dismiss_success_message_callback') );
 
     add_action('wp_ajax_rsssl_pro_dismiss_pro_option_notice', array($this,'dismiss_pro_option_notice') );
     add_action("network_admin_notices", array($this, 'show_pro_option_notice'));
@@ -605,7 +607,7 @@ public function show_notices()
   if ($this->selected_networkwide_or_per_site && !get_site_option("rsssl_success_message_shown")) {
 
         ?>
-        <div id="message" class="updated fade notice is-dismissible rlrsssl-success">
+        <div id="message" class="updated fade notice is-dismissible rlrsssl-multisite-success">
           <p>
             <?php _e("SSL activated!","really-simple-ssl");?>&nbsp;
             <?php
@@ -653,9 +655,9 @@ $ajax_nonce = wp_create_nonce( "really-simple-ssl-dismiss" );
 ?>
 <script type='text/javascript'>
   jQuery(document).ready(function($) {
-    $(".rlrsssl-success.notice.is-dismissible").on("click", ".notice-dismiss", function(event){
+    $(".rlrsssl-multisite-success.notice.is-dismissible").on("click", ".notice-dismiss", function(event){
           var data = {
-            'action': 'dismiss_success_message',
+            'action': 'dismiss_success_message_multisite',
             'security': '<?php echo $ajax_nonce; ?>'
           };
 

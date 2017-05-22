@@ -911,7 +911,6 @@ protected function get_server_variable_fix_code(){
    */
 
   public function remove_ssl_from_siteurl() {
-    error_log("start remove");
       $siteurl_no_ssl = str_replace ( "https://" , "http://" , get_option('siteurl'));
       $homeurl_no_ssl = str_replace ( "https://" , "http://" , get_option('home'));
       update_option('siteurl',$siteurl_no_ssl);
@@ -973,7 +972,6 @@ protected function get_server_variable_fix_code(){
    */
 
   public function deactivate($networkwide) {
-    error_log("test1");
     $this->remove_ssl_from_siteurl();
     $this->remove_ssl_from_siteurl_in_wpconfig();
 
