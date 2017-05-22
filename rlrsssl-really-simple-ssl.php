@@ -3,7 +3,7 @@
  * Plugin Name: Really Simple SSL
  * Plugin URI: https://www.really-simple-ssl.com
  * Description: Lightweight plugin without any setup to make your site ssl proof
- * Version: 2.5.15
+ * Version: 2.5.17
  * Text Domain: really-simple-ssl
  * Domain Path: /languages
  * Author: Rogier Lankhorst
@@ -119,4 +119,4 @@
 function RSSSL() {
 	return REALLY_SIMPLE_SSL::instance();
 }
-add_action( 'plugins_loaded', 'RSSSL', 9 );
+add_action( 'plugins_loaded', 'RSSSL', 8 );

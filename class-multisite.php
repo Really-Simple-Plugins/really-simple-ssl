@@ -43,6 +43,7 @@ if ( ! class_exists( 'rsssl_multisite' ) ) {
     add_action('network_admin_menu', array( &$this, 'add_multisite_menu' ) );
     add_action('network_admin_edit_rsssl_update_network_settings',  array($this,'update_network_options'));
     add_action('network_admin_notices', array($this, 'show_notices'), 10);
+    add_action('admin_print_footer_scripts', array($this, 'insert_dismiss_success'));
 
     add_action('wp_ajax_dismiss_success_message', array($this,'dismiss_success_message_callback') );
 
@@ -74,7 +75,7 @@ if ( ! class_exists( 'rsssl_multisite' ) ) {
         RSSSL()->really_simple_ssl->activate_ssl();
         restore_current_blog(); //switches back to previous blog, not current, so we have to do it each loop
       }
-    }
+  }
 
 
 
@@ -602,7 +603,7 @@ public function show_notices()
   */
 
   if ($this->selected_networkwide_or_per_site && !get_site_option("rsssl_success_message_shown")) {
-        add_action('admin_print_footer_scripts', array($this, 'insert_dismiss_success'));
+
         ?>
         <div id="message" class="updated fade notice is-dismissible rlrsssl-success">
           <p>
@@ -647,6 +648,7 @@ public function show_notices()
  */
 
 public function insert_dismiss_success() {
+if ($this->selected_networkwide_or_per_site && !get_site_option("rsssl_success_message_shown")) {
 $ajax_nonce = wp_create_nonce( "really-simple-ssl-dismiss" );
 ?>
 <script type='text/javascript'>
@@ -664,6 +666,7 @@ $ajax_nonce = wp_create_nonce( "really-simple-ssl-dismiss" );
   });
 </script>
 <?php
+}
 }
 
 /**
