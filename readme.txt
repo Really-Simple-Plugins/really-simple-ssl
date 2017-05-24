@@ -78,11 +78,16 @@ Yes. There is a dedicated network settings page where you can switch between net
 
 == Changelog ==
 = 2.5.17 =
+* Added a function where the home_url and site_url on multisite check if it should be http or https when SSL is enabled on a per site basis.
+
+= 2.5.16 =
+* Changed wp_safe_redirect into wp_redirect as wp_safe_redirect has the admin url as fallback, and cannot be used on the front-end.
 * Added hook for new multisite site so a new site will be activated as SSL when network wide is activated.
 
 
 = 2.5.16 =
 * Changed wp_safe_redirect into wp_redirect, as wp_safe_redirect causes issues.
+>>>>>>> origin/2.5.15
 
 = 2.5.14 =
 * Fix: fixed issue in the mixed content fixer where on optimized html the match would match across elements.

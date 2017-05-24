@@ -33,19 +33,22 @@ if ( ! class_exists( 'rsssl_multisite' ) ) {
 
     $this->load_options();
     register_activation_hook(  dirname( __FILE__ )."/".rsssl_plugin, array($this,'activate') );
-    add_filter("admin_url", array($this, "check_protocol_multisite"), 20, 3 );
+    add_filter("admin_url", array($this, "check_admin_protocol"), 20, 3 );
+    add_filter('home_url', array($this, 'check_site_protocol') , 20,4);
+    add_filter('site_url', array($this, 'check_site_protocol') , 20,4);
 
     add_action("plugins_loaded", array($this, "process_networkwide_choice"), 10, 0);
     add_action("plugins_loaded", array($this, "networkwide_choice_notice"), 20, 0);
 
     add_action('network_admin_menu', array( &$this, 'add_multisite_menu' ) );
     add_action('network_admin_edit_rsssl_update_network_settings',  array($this,'update_network_options'));
+
+
     if (is_network_admin()) {
       add_action('network_admin_notices', array($this, 'show_notices'), 10);
       add_action('admin_print_footer_scripts', array($this, 'insert_dismiss_success'));
+      add_action('wp_ajax_dismiss_success_message_multisite', array($this,'dismiss_success_message_callback') );
     }
-
-    add_action('wp_ajax_dismiss_success_message_multisite', array($this,'dismiss_success_message_callback') );
 
     add_action('wp_ajax_rsssl_pro_dismiss_pro_option_notice', array($this,'dismiss_pro_option_notice') );
     add_action("network_admin_notices", array($this, 'show_pro_option_notice'));
@@ -474,16 +477,42 @@ public function settings_tab(){
 *
 */
 
-public function check_protocol_multisite($url, $path, $blog_id){
-  if (is_multisite() && !$this->ssl_enabled_networkwide) {
+public function check_admin_protocol($url, $path, $blog_id){
+  if (!$this->ssl_enabled_networkwide) {
+    $ssl_enabled = false;
     $options = get_blog_option($blog_id, "rlrsssl_options");
 
     if ($options && isset($options)) {
       $site_has_ssl = isset($options['site_has_ssl']) ? $options['site_has_ssl'] : FALSE;
       $ssl_enabled = isset($options['ssl_enabled']) ? $options['ssl_enabled'] : $site_has_ssl;
-      if (!$ssl_enabled) {
-        $url = str_replace("https://","http://",$url);
-      }
+    }
+
+    if (!$ssl_enabled) {
+      $url = str_replace("https://","http://",$url);
+    }
+  }
+  return $url;
+}
+
+/**
+* filters the home_url and/or site_url function to correct the false https urls wordpress returns for non ssl websites.
+*
+* @since 2.3.17
+*
+*/
+
+public function check_site_protocol($url, $path, $orig_scheme, $blog_id){
+  if (!$this->ssl_enabled_networkwide) {
+    $ssl_enabled = false;
+    $options = get_blog_option($blog_id, "rlrsssl_options");
+
+    if ($options && isset($options)) {
+      $site_has_ssl = isset($options['site_has_ssl']) ? $options['site_has_ssl'] : FALSE;
+      $ssl_enabled = isset($options['ssl_enabled']) ? $options['ssl_enabled'] : $site_has_ssl;
+    }
+
+    if (!$ssl_enabled) {
+      $url = str_replace("https://","http://",$url);
     }
   }
   return $url;
@@ -579,7 +608,7 @@ public function show_notices()
   if ($this->selected_networkwide_or_per_site && !get_site_option("rsssl_success_message_shown")) {
 
         ?>
-        <div id="message" class="updated fade notice is-dismissible rlrsssl-success">
+        <div id="message" class="updated fade notice is-dismissible rlrsssl-multisite-success">
           <p>
             <?php _e("SSL activated!","really-simple-ssl");?>&nbsp;
             <?php
@@ -627,7 +656,7 @@ $ajax_nonce = wp_create_nonce( "really-simple-ssl-dismiss" );
 ?>
 <script type='text/javascript'>
   jQuery(document).ready(function($) {
-    $(".rlrsssl-success.notice.is-dismissible").on("click", ".notice-dismiss", function(event){
+    $(".rlrsssl-multisite-success.notice.is-dismissible").on("click", ".notice-dismiss", function(event){
           var data = {
             'action': 'dismiss_success_message_multisite',
             'security': '<?php echo $ajax_nonce; ?>'
