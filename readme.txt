@@ -1,5 +1,6 @@
 === Really Simple SSL ===
 Contributors: RogierLankhorst
+Donate link: https://www.paypal.me/reallysimplessl
 Tags: SSL, https, force SSL, mixed content, insecure content, secure website, website security, tls, security, secure socket layers, hsts
 Requires at least: 4.2
 License: GPL2
@@ -411,3 +412,6 @@ Always back up before any upgrade. Especially .htaccess, wp-config.php and the p
 == Screenshots ==
 1. After activation, if SSL was detected, you can enable SSL.
 2. View your configuration on the settings page
+
+== Frequently asked questions ==
+* Really Simple SSL maintains an extensive knowledge-base at https://www.really-simple-ssl.com.

@@ -292,7 +292,7 @@ defined('ABSPATH') or die("you do not have acces to this page!");
   public function show_pro(){
     if ( !defined("rsssl_pro_version") ) {
     ?>
-    <p><?php _e('You can also let the automatic scan of the pro version handle this for you, and get premium support and increased security with HSTS included.','really-simple-ssl');?>&nbsp;<a target="_blank" href="<?php echo $this->pro_url;?>"><?php _e("Check out Really Simple SSL Premium","really-simple-ssl");?></a></p>
+    <p><?php _e('You can also let the automatic scan of the pro version handle this for you, and get premium support, increased security with HSTS and more!','really-simple-ssl');?>&nbsp;<a target="_blank" href="<?php echo $this->pro_url;?>"><?php _e("Check out Really Simple SSL Premium","really-simple-ssl");?></a></p>
     <?php
   }
 }
@@ -1119,6 +1119,7 @@ protected function get_server_variable_fix_code(){
            $this->do_wpconfig_loadbalancer_fix = TRUE;
          }
        }
+
  	    $this->trace_log("ssl type: ".$this->ssl_type);
      }
      $this->check_for_siteurl_in_wpconfig();
@@ -2388,23 +2389,26 @@ public function get_option_wp_redirect() {
       RSSSL()->rsssl_help->get_help_tip(__("A .htaccess redirect is faster. Really Simple SSL detects the redirect code that is most likely to work (95% of websites), but this is not 100%. Make sure you know how to regain access to your site if anything goes wrong!", "really-simple-ssl"));
       echo $comment;
 
-      if ($this->htaccess_redirect && !is_writable($this->ABSpath.".htaccess")) {
-        _e("The .htaccess file is not writable. Add these lines to your .htaccess manually, or set give writing permissions", "really-simple-ssl");
+      if ($this->htaccess_redirect && (!is_writable($this->ABSpath.".htaccess") || !$this->htaccess_test_success)) {
+        echo "<br><br>";
+        if (!is_writable($this->ABSpath.".htaccess")) _e("The .htaccess file is not writable. Add these lines to your .htaccess manually, or set give writing permissions", "really-simple-ssl");
+        if (!$this->htaccess_test_success) _e("The .htaccess redirect rules that were selected by this plugin failed in the test. The following redirect rules were tested:", "really-simple-ssl");
+        echo "<br><br>";
         if ($this->ssl_type!="NA") {
            $manual = true;
            $rules = $this->get_redirect_rules($manual);
-           echo "&nbsp;";
+
            $arr_search = array("<",">","\n");
            $arr_replace = array("&lt","&gt","<br>");
            $rules = str_replace($arr_search, $arr_replace, $rules);
 
-           _e("If you want to redirect with .htaccess, this is the .htaccess redirect that most likely is needed on your website:","really-simple-ssl");
-
             ?>
-            <br><code>
+              <code>
                 <?php echo $rules; ?>
               </code>
             <?php
+         } else {
+           _e("The plugin could not detect any possible redirect rule.", "really-simple-ssl");
          }
       }
 
