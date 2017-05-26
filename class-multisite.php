@@ -43,6 +43,7 @@ if ( ! class_exists( 'rsssl_multisite' ) ) {
     add_action('network_admin_menu', array( &$this, 'add_multisite_menu' ) );
     add_action('network_admin_edit_rsssl_update_network_settings',  array($this,'update_network_options'));
 
+
     if (is_network_admin()) {
       add_action('network_admin_notices', array($this, 'show_notices'), 10);
       add_action('admin_print_footer_scripts', array($this, 'insert_dismiss_success'));
