@@ -1988,7 +1988,7 @@ public function settings_page() {
                     _e(".htaccess redirect","really-simple-ssl");
 
                  if (RSSSL()->rsssl_server->uses_htaccess() && $this->htaccess_contains_redirect_rules() && $this->wp_redirect)
-                    _e(" and ", "really-simple-ssl");
+                    echo "&nbsp;" . __("and", "really-simple-ssl") . "&nbsp;";
 
                  if ($this->wp_redirect)
                     _e("WordPress redirect","really-simple-ssl");
