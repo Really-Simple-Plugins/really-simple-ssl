@@ -71,7 +71,7 @@ if ( ! class_exists( 'rsssl_front_end' ) ) {
       //check for Command Line
       if (php_sapi_name() === 'cli') return;
 
-    	if ($this->ssl_enabled && !is_ssl() && !(defined("rsssl_no_wp_redirect") && rsssl_no_wp_redirect)) {
+    	if ($this->ssl_enabled && !is_ssl() && !(defined("rsssl_no_rest_api_redirect") && rsssl_no_rest_api_redirect)) {
     		$redirect_url = "https://" . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
     		wp_redirect( $redirect_url, 301 );
     		exit;
