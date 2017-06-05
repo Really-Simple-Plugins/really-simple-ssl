@@ -82,6 +82,8 @@ Yes. There is a dedicated network settings page where you can switch between net
 * Tweak: Added a function where the home_url and site_url on multisite check if it should be http or https when SSL is enabled on a per site basis.
 * Tweak: Added a notice that there will be no network menu when Really Simple SSL is activated per site.
 * Tweak: Added hook for new multisite site so a new site will be activated as SSL when network wide is activated.
+* Tweak: limited the JetPack listen on port 80 tweak to reverse proxy servers.
+* Tweak: created a dedicated rest api redirect constant in case users want to prevent the rest api from redirecting to https.
 * Fix: dismissal of SSL activated notice on multisite did not work properly
 
 = 2.5.16 =

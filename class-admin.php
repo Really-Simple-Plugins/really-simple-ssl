@@ -457,15 +457,18 @@ defined('ABSPATH') or die("you do not have acces to this page!");
         if (RSSSL()->rsssl_server->uses_htaccess() && $this->ssl_type != "NA")
             $this->test_htaccess_redirect();
 
-        //in a configuration of loadbalancer without a set server variable https = 0, add code to wpconfig
-        if ($this->do_wpconfig_loadbalancer_fix)
+        //in a configuration reverse proxy without a set server variable https, add code to wpconfig
+        if ($this->do_wpconfig_loadbalancer_fix){
             $this->wpconfig_loadbalancer_fix();
+        }
 
         if ($this->no_server_variable)
             $this->wpconfig_server_variable_fix();
 
-        if ( class_exists( 'Jetpack' ) )
-            $this->wpconfig_jetpack();
+        //in case of reverse proxy, add jetpack config fix.
+        if ($this->do_wpconfig_loadbalancer_fix || $this->no_server_variable || $this->wpconfig_has_fixes()) {
+          if ( class_exists( 'Jetpack' ) ) $this->wpconfig_jetpack();
+        }
 
         //if htaccess redirect is explicitly false, remove rules.
         // if (!$this->htaccess_redirect){
@@ -1988,7 +1991,7 @@ public function settings_page() {
                     _e(".htaccess redirect","really-simple-ssl");
 
                  if (RSSSL()->rsssl_server->uses_htaccess() && $this->htaccess_contains_redirect_rules() && $this->wp_redirect)
-                    _e(" and ", "really-simple-ssl");
+                    echo "&nbsp;" . __("and", "really-simple-ssl") . "&nbsp;";
 
                  if ($this->wp_redirect)
                     _e("WordPress redirect","really-simple-ssl");
