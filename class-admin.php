@@ -465,16 +465,6 @@ defined('ABSPATH') or die("you do not have acces to this page!");
         if ($this->no_server_variable)
             $this->wpconfig_server_variable_fix();
 
-        //in case of reverse proxy, add jetpack config fix.
-        if ($this->do_wpconfig_loadbalancer_fix || $this->no_server_variable || $this->wpconfig_has_fixes()) {
-          if ( class_exists( 'Jetpack' ) ) $this->wpconfig_jetpack();
-        }
-
-        //if htaccess redirect is explicitly false, remove rules.
-        // if (!$this->htaccess_redirect){
-        //   $this->removeHtaccessEdit();
-        // }
-
         if (!$safe_mode) {
           $this->editHtaccess();
         }
@@ -660,49 +650,6 @@ defined('ABSPATH') or die("you do not have acces to this page!");
 
     return false;
   }
-
-
-
-  /**
-   * When Jetpack is installed, add some code to wpconfig to make it ssl proof
-   *
-   * @since  2.13
-   *
-   * @access private
-   *
-   */
-
-  private function wpconfig_jetpack() {
-    if (!current_user_can($this->capability)) return;
-
-      $wpconfig_path = $this->find_wp_config_path();
-      if (empty($wpconfig_path)) return;
-      $wpconfig = file_get_contents($wpconfig_path);
-
-      if (strpos($wpconfig, "//Begin Really Simple SSL JetPack fix")===FALSE ) {
-        if (is_writable($wpconfig_path)) {
-          $rule  = "\n"."//Begin Really Simple SSL JetPack fix"."\n";
-          $rule .= 'define( "JETPACK_SIGNATURE__HTTPS_PORT", 80 );'."\n";
-          $rule .= "//END Really Simple SSL"."\n";
-
-          $insert_after = "<?php";
-          $pos = strpos($wpconfig, $insert_after);
-          if ($pos !== false) {
-              $wpconfig = substr_replace($wpconfig,$rule,$pos+1+strlen($insert_after),0);
-          }
-
-          file_put_contents($wpconfig_path, $wpconfig);
-          $this->trace_log("wp config jetpack fix inserted");
-        } else {
-          $this->trace_log("wp config jetpack fix FAILED");
-        }
-      } else {
-        $this->trace_log("wp config jetpack fix already in place");
-      }
-      $this->save_options();
-
-  }
-
 
 
   /**
