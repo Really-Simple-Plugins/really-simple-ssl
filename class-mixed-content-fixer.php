@@ -33,6 +33,8 @@ if ( ! class_exists( 'rsssl_admin_mixed_content_fixer' ) ) {
    */
 
   public function fix_mixed_content(){
+    if (wp_api_request() ) return;
+
     $this->build_url_list();
 
     if (is_admin()) {
