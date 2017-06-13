@@ -5,7 +5,7 @@ Tags: SSL, https, force SSL, mixed content, insecure content, secure website, we
 Requires at least: 4.2
 License: GPL2
 Tested up to: 4.8
-Stable tag: 2.5.17
+Stable tag: 2.5.18
 
 No setup required! You only need an SSL certificate, and this plugin will do the rest.
 
@@ -78,6 +78,9 @@ If you are experiencing redirect loops on your site, try these [instructions](ht
 Yes. There is a dedicated network settings page where you can switch between network activated SSL and per page SSL. In the dedicated pro for multisite plugin, you can override all site settings for SSL on the network level, and can activate and deactivate SSL in the network menu for each site.
 
 == Changelog ==
+= 2.5.18 =
+Removed JetPack fix, as it is now incorporated in JetPack.
+
 = 2.5.17 =
 * Tweak: Added a function where the home_url and site_url on multisite check if it should be http or https when SSL is enabled on a per site basis.
 * Tweak: Added a notice that there will be no network menu when Really Simple SSL is activated per site.
