@@ -36,7 +36,7 @@ if ( ! class_exists( 'rsssl_admin_mixed_content_fixer' ) ) {
 
     /* Do not fix mixed content when call is coming from wp_api or from xmlrpc */
 
-    if (wp_api_request() ) return;
+    if ( defined( 'JSON_REQUEST' ) && JSON_REQUEST ) return;
     if ( defined( 'XMLRPC_REQUEST' ) && XMLRPC_REQUEST ) return;
 
     $this->build_url_list();
