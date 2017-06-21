@@ -94,7 +94,7 @@ defined('ABSPATH') or die("you do not have acces to this page!");
       //flush caches when just activated ssl
       //flush the permalinks
       if ($this->clicked_activate_ssl()) {
-        add_action( 'admin_init', 'flush_rewrite_rules' ,39);
+        add_action( 'shutdown', 'flush_rewrite_rules');
         add_action('admin_init', array(RSSSL()->rsssl_cache,'flush'),40);
       }
 
