@@ -79,7 +79,11 @@ Yes. There is a dedicated network settings page where you can switch between net
 
 == Changelog ==
 = 2.5.18 =
-Removed JetPack fix, as it is now incorporated in JetPack.
+* Tweak: Removed JetPack fix, as it is now incorporated in JetPack.
+* Tweak: Moved mixed content fixer hook to template_redirect
+* Fix: Changed flush rewrite rules hook from admin_init to shutdown, on activation of SSL.
+* Multisite fix: Changed function which checks if admin_url and site_url should return http or https to check for https in home_url.
+* Tweak: Explicitly excluded json and xmlrpc requests from the mixed content fixer
 
 = 2.5.17 =
 * Tweak: Added a function where the home_url and site_url on multisite check if it should be http or https when SSL is enabled on a per site basis.
