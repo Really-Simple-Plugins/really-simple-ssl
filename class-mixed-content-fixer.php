@@ -44,7 +44,14 @@ if ( ! class_exists( 'rsssl_admin_mixed_content_fixer' ) ) {
     if (is_admin()) {
       add_action("admin_init", array($this, "start_buffer"), 100);
     } else {
-      add_action("template_redirect", array($this, "start_buffer"));
+
+      //allow for a different hook to be used on the mixed content fixer
+      if ( defined( 'RSSSL_CONTENT_FIXER_ON_INIT' ) && RSSSL_CONTENT_FIXER_ON_INIT) {
+        add_action("init", array($this, "start_buffer"));
+      } else {
+        add_action("template_redirect", array($this, "start_buffer"));
+      }
+
     }
     add_action("shutdown", array($this, "end_buffer"));
   }
