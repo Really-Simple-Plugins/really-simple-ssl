@@ -33,9 +33,9 @@ if ( ! class_exists( 'rsssl_multisite' ) ) {
 
     $this->load_options();
     register_activation_hook(  dirname( __FILE__ )."/".rsssl_plugin, array($this,'activate') );
-//    add_filter("admin_url", array($this, "check_admin_protocol"), 20, 3 );
-//    add_filter('home_url', array($this, 'check_site_protocol') , 20,4);
-//    add_filter('site_url', array($this, 'check_site_protocol') , 20,4);
+    add_filter("admin_url", array($this, "check_admin_protocol"), 20, 3 );
+    // add_filter('home_url', array($this, 'check_site_protocol') , 20,4);
+    // add_filter('site_url', array($this, 'check_site_protocol') , 20,4);
 
     add_action("plugins_loaded", array($this, "process_networkwide_choice"), 10, 0);
     add_action("plugins_loaded", array($this, "networkwide_choice_notice"), 20, 0);
@@ -47,8 +47,9 @@ if ( ! class_exists( 'rsssl_multisite' ) ) {
     if (is_network_admin()) {
       add_action('network_admin_notices', array($this, 'show_notices'), 10);
       add_action('admin_print_footer_scripts', array($this, 'insert_dismiss_success'));
-      add_action('wp_ajax_dismiss_success_message_multisite', array($this,'dismiss_success_message_callback') );
     }
+
+    add_action('wp_ajax_dismiss_success_message_multisite', array($this,'dismiss_success_message_callback') );
 
     add_action('wp_ajax_rsssl_pro_dismiss_pro_option_notice', array($this,'dismiss_pro_option_notice') );
     add_action("network_admin_notices", array($this, 'show_pro_option_notice'));
@@ -643,6 +644,7 @@ $ajax_nonce = wp_create_nonce( "really-simple-ssl-dismiss" );
 <script type='text/javascript'>
   jQuery(document).ready(function($) {
     $(".rlrsssl-multisite-success.notice.is-dismissible").on("click", ".notice-dismiss", function(event){
+
           var data = {
             'action': 'dismiss_success_message_multisite',
             'security': '<?php echo $ajax_nonce; ?>'
