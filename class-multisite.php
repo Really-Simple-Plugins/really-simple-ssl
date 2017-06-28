@@ -34,10 +34,10 @@ if ( ! class_exists( 'rsssl_multisite' ) ) {
     $this->load_options();
     register_activation_hook(  dirname( __FILE__ )."/".rsssl_plugin, array($this,'activate') );
 
-    /*filters to make sure wordpress returns the correct protocol */
-    add_filter("admin_url", array($this, "check_admin_protocol"), 20, 3 );
-    add_filter('home_url', array($this, 'check_site_protocol') , 20,4);
-    add_filter('site_url', array($this, 'check_site_protocol') , 20,4);
+      /*filters to make sure wordpress returns the correct protocol */
+      add_filter("admin_url", array($this, "check_admin_protocol"), 20, 3 );
+      add_filter('home_url', array($this, 'check_site_protocol') , 20,4);
+      add_filter('site_url', array($this, 'check_site_protocol') , 20,4);
 
     add_action("plugins_loaded", array($this, "process_networkwide_choice"), 10, 0);
     add_action("plugins_loaded", array($this, "networkwide_choice_notice"), 20, 0);
