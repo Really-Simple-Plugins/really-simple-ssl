@@ -80,6 +80,7 @@ Yes. There is a dedicated network settings page where you can switch between net
 == Changelog ==
 = 2.5.19 =
 * Multisite fix: due to a merge admin_url and site_url filters were dropped, re-added them
+* Added constant RSSSL_CONTENT_FIXER_ON_INIT so users can keep on using the init hook for the mixed content fixer.
 
 = 2.5.18 =
 * Tweak: Removed JetPack fix, as it is now incorporated in JetPack.
