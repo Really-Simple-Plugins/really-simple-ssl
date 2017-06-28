@@ -79,7 +79,7 @@ Yes. There is a dedicated network settings page where you can switch between net
 
 == Changelog ==
 = 2.5.19 =
-* Multisite fix: admin_url and site_url filters were re-added which make sure wordpress returns the correct protocol
+* Multisite fix: due to a merge admin_url and site_url filters were dropped, re-added them
 
 = 2.5.18 =
 * Tweak: Removed JetPack fix, as it is now incorporated in JetPack.
