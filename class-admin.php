@@ -237,7 +237,7 @@ defined('ABSPATH') or die("you do not have acces to this page!");
 
     if (!$this->site_has_ssl) {
       global $wp;
-      $current_url = "https://".$_SERVER["HTTP_HOST"].$_SERVER["REQUEST_URI"]
+      $current_url = "https://".$_SERVER["HTTP_HOST"].$_SERVER["REQUEST_URI"];
       ?>
       <div id="message" class="error fade notice activate-ssl">
       <p><?php _e("No SSL was detected. If you do have an ssl certificate, try to reload this page over https by clicking this link:","really-simple-ssl");?>&nbsp;<a href="<?php echo $current_url?>"><?php _e("reload over https.","really-simple-ssl");?></a>
