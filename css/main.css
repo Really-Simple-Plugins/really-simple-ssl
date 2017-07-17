@@ -3,10 +3,11 @@
   border-left: 4px solid green;
   padding: 1px 15px;
 }
-.rsssl-main {
-  width:80%;
+
+/* .rsssl-main {
+  width:95%;
   float:left;
-}
+} */
 
 .rsssl-sidebar {
   width:20%;
