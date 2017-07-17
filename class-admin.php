@@ -213,15 +213,14 @@ defined('ABSPATH') or die("you do not have acces to this page!");
     return apply_filters('rsssl_wpconfig_ok_check', $result);
   }
 
-
-
-
   /*
       This message is shown when no ssl is not enabled by the user yet
   */
 
   public function show_notice_activate_ssl(){
     if ($this->ssl_enabled) return;
+
+    if (defined("RSSSL_DISMISS_ACTIVATE_SSL_NOTICE") && RSSSL_DISMISS_ACTIVATE_SSL_NOTICE) return;
 
     //for multisite, show only activate when a choice has been made to activate networkwide or per site.
     if (is_multisite() && !RSSSL()->rsssl_multisite->selected_networkwide_or_per_site) return;
