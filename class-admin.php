@@ -328,15 +328,16 @@ defined('ABSPATH') or die("you do not have acces to this page!");
 
     $options = get_option('rlrsssl_options');
     if (isset($options)) {
-      $this->site_has_ssl              = isset($options['site_has_ssl']) ? $options['site_has_ssl'] : FALSE;
-      $this->hsts                      = isset($options['hsts']) ? $options['hsts'] : FALSE;
-      $this->htaccess_warning_shown    = isset($options['htaccess_warning_shown']) ? $options['htaccess_warning_shown'] : FALSE;
-      $this->ssl_success_message_shown = isset($options['ssl_success_message_shown']) ? $options['ssl_success_message_shown'] : FALSE;
-      $this->plugin_db_version         = isset($options['plugin_db_version']) ? $options['plugin_db_version'] : "1.0";
-      $this->debug                     = isset($options['debug']) ? $options['debug'] : FALSE;
-      $this->do_not_edit_htaccess      = isset($options['do_not_edit_htaccess']) ? $options['do_not_edit_htaccess'] : FALSE;
-      $this->htaccess_redirect         = isset($options['htaccess_redirect']) ? $options['htaccess_redirect'] : FALSE;
-      $this->debug_log                 = isset($options['debug_log']) ? $options['debug_log'] : $this->debug_log;
+      $this->site_has_ssl                     = isset($options['site_has_ssl']) ? $options['site_has_ssl'] : FALSE;
+      $this->hsts                             = isset($options['hsts']) ? $options['hsts'] : FALSE;
+      $this->htaccess_warning_shown           = isset($options['htaccess_warning_shown']) ? $options['htaccess_warning_shown'] : FALSE;
+      $this->ssl_success_message_shown        = isset($options['ssl_success_message_shown']) ? $options['ssl_success_message_shown'] : FALSE;
+      $this->plugin_db_version                = isset($options['plugin_db_version']) ? $options['plugin_db_version'] : "1.0";
+      $this->debug                            = isset($options['debug']) ? $options['debug'] : FALSE;
+      $this->do_not_edit_htaccess             = isset($options['do_not_edit_htaccess']) ? $options['do_not_edit_htaccess'] : FALSE;
+      $this->htaccess_redirect                = isset($options['htaccess_redirect']) ? $options['htaccess_redirect'] : FALSE;
+      $this->switch_mixed_content_fixer_hook  = isset($options['switch_mixed_content_fixer_hook']) ? $options['switch_mixed_content_fixer_hook'] : FALSE;
+      $this->debug_log                        = isset($options['debug_log']) ? $options['debug_log'] : $this->debug_log;
     }
 
     if  (is_multisite()) {
@@ -892,6 +893,7 @@ protected function get_server_variable_fix_code(){
       'ssl_enabled'                       => $this->ssl_enabled,
       'javascript_redirect'               => $this->javascript_redirect,
       'wp_redirect'                       => $this->wp_redirect,
+      'switch_mixed_content_fixer_hook'   => $this->switch_mixed_content_fixer_hook,
     );
 
     update_option('rlrsssl_options',$options);
@@ -934,6 +936,7 @@ protected function get_server_variable_fix_code(){
     $this->javascript_redirect                  = FALSE;
     $this->wp_redirect                          = FALSE;
     $this->ssl_enabled                          = FALSE;
+    $this->switch_mixed_content_fixer_hook      = FALSE;
 
     $this->save_options();
 
@@ -2154,10 +2157,11 @@ public function create_form(){
     }
 
     add_settings_field('id_debug', __("Debug","really-simple-ssl"), array($this,'get_option_debug'), 'rlrsssl', 'rlrsssl_settings');
-
     //on multisite this setting can only be set networkwide
     if (RSSSL()->rsssl_server->uses_htaccess() && !is_multisite()) {
       add_settings_field('id_do_not_edit_htaccess', __("Stop editing the .htaccess file","really-simple-ssl"), array($this,'get_option_do_not_edit_htaccess'), 'rlrsssl', 'rlrsssl_settings');
+      add_settings_field('id_switch_mixed_content_fixer_hook', __("Switch mixed content fixer hook","really-simple-ssl"), array($this,'get_option_switch_mixed_content_fixer_hook'), 'rlrsssl', 'rlrsssl_settings');
+
     }
 }
   /**
@@ -2229,6 +2233,12 @@ public function options_validate($input) {
     $newinput['do_not_edit_htaccess'] = TRUE;
   } else {
     $newinput['do_not_edit_htaccess'] = FALSE;
+  }
+
+  if (!empty($input['switch_mixed_content_fixer_hook']) && $input['switch_mixed_content_fixer_hook']=='1') {
+    $newinput['switch_mixed_content_fixer_hook'] = TRUE;
+  } else {
+    $newinput['switch_mixed_content_fixer_hook'] = FALSE;
   }
 
   if (!empty($input['htaccess_redirect']) && $input['htaccess_redirect']=='1') {
@@ -2403,6 +2413,12 @@ public function get_option_wp_redirect() {
    * @access public
    *
    */
+
+   public function get_option_switch_mixed_content_fixer_hook() {
+     $options = get_option('rslrsssl_options');
+     echo '<input id="rlrsssl_options" name="rlrsssl_options[switch_mixed_content_fixer_hook]" size="40" type="checkbox" value="1"' . checked( 1, $this->switch_mixed_content_fixer_hook, false ) ." />";
+     RSSSL()->rsssl_help->get_help_tip(__("If this option is set to true, the mixed content fixer will fire on the init hook instead of the template_redirect hook. Only use this option when you experience problems with the mixed content fixer.", "really-simple-ssl"));
+   }
 
   public function get_option_autoreplace_insecure_links() {
     //$options = get_option('rlrsssl_options');

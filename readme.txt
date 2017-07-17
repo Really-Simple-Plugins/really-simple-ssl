@@ -5,7 +5,7 @@ Tags: SSL, https, force SSL, mixed content, insecure content, secure website, we
 Requires at least: 4.2
 License: GPL2
 Tested up to: 4.8
-Stable tag: 2.5.19
+Stable tag: 2.5.20
 
 No setup required! You only need an SSL certificate, and this plugin will do the rest.
 
@@ -78,6 +78,11 @@ If you are experiencing redirect loops on your site, try these [instructions](ht
 Yes. There is a dedicated network settings page where you can switch between network activated SSL and per page SSL. In the dedicated pro for multisite plugin, you can override all site settings for SSL on the network level, and can activate and deactivate SSL in the network menu for each site.
 
 == Changelog ==
+
+= 2.5.20 =
+* Added constant RSSSL_DISMISS_ACTIVATE_SSL_NOTICE to allow users to hide notices.
+* Added a setting to switch the mixed content fixer hook from template_redirect to init.
+
 = 2.5.19 =
 * Multisite fix: due to a merge admin_url and site_url filters were dropped, re-added them
 * Added constant RSSSL_CONTENT_FIXER_ON_INIT so users can keep on using the init hook for the mixed content fixer.
