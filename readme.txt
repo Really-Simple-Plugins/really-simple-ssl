@@ -35,8 +35,8 @@ some cool features.
 * Premium support
 
 = What does the plugin actually do =
-* The plugin handles most issues that Wordpress has with ssl, like the much discussed loadbalancer issue, or when there are no server variables set at all.
-* All incoming requests are redirected to https. If possible with .htaccess, or else with javascript.
+* The plugin handles most issues that Wordpress has with ssl, like when you're behind a revers proxy/loadbalancer, or when no headers are passed which WordPress can use to detect SSL.
+* All incoming requests are redirected to https. Default with an internal WordPress redirect, but you can also enable a .htaccess redirect.
 * The site url and home url are changed to https.
 * Your insecure content is fixed by replacing all http:// urls with https://, except hyperlinks to other domains. Dynamically, so no database changes are made (except for the siteurl and homeurl).
 
