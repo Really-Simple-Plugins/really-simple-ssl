@@ -80,8 +80,9 @@ Yes. There is a dedicated network settings page where you can switch between net
 == Changelog ==
 
 = 2.5.20 =
-* Added constant RSSSL_DISMISS_ACTIVATE_SSL_NOTICE to allow users to hide notices.
-* Added a setting to switch the mixed content fixer hook from template_redirect to init.
+* Tweak: constant RSSSL_DISMISS_ACTIVATE_SSL_NOTICE to allow users to hide notices.
+* Tweak: setting to switch the mixed content fixer hook from template_redirect to init.
+* Fix: nag in multisite didn't dismiss properly
 
 = 2.5.19 =
 * Multisite fix: due to a merge admin_url and site_url filters were dropped, re-added them
