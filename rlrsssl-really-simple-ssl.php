@@ -83,7 +83,7 @@
 
       private function setup_constants() {
 		  define('rsssl_url', plugin_dir_url(__FILE__ ));
-		  define('rsssl_path', plugin_dir_path(__FILE__ ));
+		  define('rsssl_path', trailingslashit(plugin_dir_path(__FILE__ )));
 		  define('rsssl_plugin', plugin_basename( __FILE__ ) );
 
       require_once(ABSPATH.'wp-admin/includes/plugin.php');
@@ -92,17 +92,18 @@
       }
 
       private function includes() {
-		  require_once( rsssl_path .  '/class-front-end.php' );
-		  require_once( rsssl_path .  '/class-mixed-content-fixer.php' );
+		  require_once( rsssl_path .  'class-front-end.php' );
+      
+		  require_once( rsssl_path .  'class-mixed-content-fixer.php' );
 
 		  if ( is_admin() ) {
-		    require_once( rsssl_path .  '/class-admin.php' );
-		    require_once( rsssl_path .  '/class-cache.php' );
-		    require_once( rsssl_path .  '/class-server.php' );
-		    require_once( rsssl_path .  '/class-help.php' );
+		    require_once( rsssl_path .  'class-admin.php' );
+		    require_once( rsssl_path .  'class-cache.php' );
+		    require_once( rsssl_path .  'class-server.php' );
+		    require_once( rsssl_path .  'class-help.php' );
 
 		    if ( is_multisite() ) {
-		    	require_once( rsssl_path .  '/class-multisite.php' );
+		    	require_once( rsssl_path .  'class-multisite.php' );
 		    }
 		  }
       }
