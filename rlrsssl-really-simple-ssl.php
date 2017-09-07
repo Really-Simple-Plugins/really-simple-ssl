@@ -93,7 +93,7 @@
 
       private function includes() {
 		  require_once( rsssl_path .  'class-front-end.php' );
-      
+
 		  require_once( rsssl_path .  'class-mixed-content-fixer.php' );
 
 		  if ( is_admin() ) {
