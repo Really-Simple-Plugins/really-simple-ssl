@@ -1666,7 +1666,7 @@ public function show_notices()
         <div id="message" class="updated fade notice is-dismissible rlrsssl-success">
           <p>
             <?php _e("SSL activated!","really-simple-ssl");?>&nbsp;
-            <?php _e("Don't forget to change your settings in Google Analytics en Webmaster tools.","really-simple-ssl");?>&nbsp;
+            <?php _e("Don't forget to change your settings in Google Analytics and Webmaster tools.","really-simple-ssl");?>&nbsp;
             <a target="_blank" href="https://really-simple-ssl.com/knowledge-base/how-to-setup-google-analytics-and-google-search-consolewebmaster-tools/"><?php _e("More info.","really-simple-ssl");?></a>
           </p>
         </div>

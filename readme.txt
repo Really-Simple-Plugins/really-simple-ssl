@@ -79,6 +79,9 @@ Yes. There is a dedicated network settings page where you can switch between net
 
 == Changelog ==
 
+= 2.5.21 =
+* Fixed double slash in paths to files
+
 = 2.5.20 =
 * Tweak: constant RSSSL_DISMISS_ACTIVATE_SSL_NOTICE to allow users to hide notices.
 * Tweak: setting to switch the mixed content fixer hook from template_redirect to init.
