@@ -94,7 +94,9 @@ defined('ABSPATH') or die("you do not have acces to this page!");
       //flush caches when just activated ssl
       //flush the permalinks
       if ($this->clicked_activate_ssl()) {
-        add_action( 'shutdown', 'flush_rewrite_rules');
+        if (isset($_POST["rsssl_flush_rewrite_rules"])) {
+          add_action( 'shutdown', 'flush_rewrite_rules');
+        }
         add_action('admin_init', array(RSSSL()->rsssl_cache,'flush'),40);
       }
 
@@ -274,6 +276,9 @@ defined('ABSPATH') or die("you do not have acces to this page!");
     <p>
     <form action="" method="post">
       <?php wp_nonce_field( 'rsssl_nonce', 'rsssl_nonce' );?>
+      <div>
+        <input type="checkbox" name="rsssl_flush_rewrite_rules" checked><label><?php _e("Flush rewrite rules on activation (deselect when you encounter errors)","really-simple-ssl")?></label>
+      </div>
       <input type="submit" class='button button-primary' value="<?php _e("Go ahead, activate SSL!","really-simple-ssl");?>" id="rsssl_do_activate_ssl" name="rsssl_do_activate_ssl">
       <br><?php _e("You may need to login in again.", "really-simple-ssl")?>
     </form>
@@ -1652,8 +1657,6 @@ public function show_notices()
   }
 
   if (is_multisite() && !is_main_site(get_current_blog_id())) return;
-
-
   /*
       SSL success message
   */
@@ -2282,7 +2285,7 @@ public function get_option_javascript_redirect() {
   if (is_multisite() && rsssl_multisite::this()->javascript_redirect) {
     $disabled = "disabled";
     $javascript_redirect = TRUE;
-    $comment = __( "This option is enabled on the netwerk menu.", "really-simple-ssl" );
+    $comment = __( "This option is enabled on the network menu.", "really-simple-ssl" );
   }
 
   echo '<input '.$disabled.' id="rlrsssl_options" name="rlrsssl_options[javascript_redirect]" size="40" type="checkbox" value="1"' . checked( 1, $javascript_redirect, false ) ." />";
@@ -2307,7 +2310,7 @@ public function get_option_wp_redirect() {
   if (is_multisite() && rsssl_multisite::this()->wp_redirect) {
     $disabled = "disabled";
     $wp_redirect = TRUE;
-    $comment = __( "This option is enabled on the netwerk menu.", "really-simple-ssl" );
+    $comment = __( "This option is enabled on the network menu.", "really-simple-ssl" );
   }
 
   echo '<input '.$disabled.' id="rlrsssl_options" name="rlrsssl_options[wp_redirect]" size="40" type="checkbox" value="1"' . checked( 1, $wp_redirect, false ) ." />";
@@ -2339,7 +2342,7 @@ public function get_option_wp_redirect() {
       if (is_multisite() && RSSSL()->rsssl_multisite->htaccess_redirect) {
         $disabled = "disabled";
         $htaccess_redirect = TRUE;
-        $comment = __( "This option is enabled on the netwerk menu.", "really-simple-ssl" );
+        $comment = __( "This option is enabled on the network menu.", "really-simple-ssl" );
       } else {
         $disabled = ($this->do_not_edit_htaccess) ? "disabled" : "";
       }
@@ -2429,7 +2432,7 @@ public function get_option_wp_redirect() {
     if (is_multisite() && rsssl_multisite::this()->autoreplace_mixed_content) {
       $disabled = "disabled";
       $autoreplace_mixed_content = TRUE;
-      $comment = __( "This option is enabled on the netwerk menu.", "really-simple-ssl" );
+      $comment = __( "This option is enabled on the network menu.", "really-simple-ssl" );
     }
     echo '<input '.$disabled.' id="rlrsssl_options" name="rlrsssl_options[autoreplace_insecure_links]" size="40" type="checkbox" value="1"' . checked( 1, $autoreplace_mixed_content, false ) .' />';
     RSSSL()->rsssl_help->get_help_tip(__("In most cases you need to leave this enabled, to prevent mixed content issues on your site.", "really-simple-ssl"));

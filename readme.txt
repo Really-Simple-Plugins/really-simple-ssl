@@ -81,6 +81,7 @@ Yes. There is a dedicated network settings page where you can switch between net
 
 = 2.5.21 =
 * Fixed double slash in paths to files
+* Fixed typo in activation notice.
 
 = 2.5.20 =
 * Tweak: constant RSSSL_DISMISS_ACTIVATE_SSL_NOTICE to allow users to hide notices.
