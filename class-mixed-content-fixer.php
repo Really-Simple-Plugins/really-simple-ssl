@@ -53,7 +53,8 @@ if ( ! class_exists( 'rsssl_admin_mixed_content_fixer' ) ) {
       }
 
     }
-    add_action("shutdown", array($this, "end_buffer"));
+
+    add_action( "wp_print_footer_scripts", array($this, "end_buffer"), 999);
   }
 
   /**
