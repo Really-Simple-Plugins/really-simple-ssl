@@ -53,8 +53,14 @@ if ( ! class_exists( 'rsssl_admin_mixed_content_fixer' ) ) {
       }
 
     }
-
-    add_action( "wp_print_footer_scripts", array($this, "end_buffer"), 999);
+    /*
+    add_filter("rsssl_ob_flush_hook", "rsssl_ob_flush_hook");
+    function rsssl_ob_flush_hook($hook){
+      $hook = "shutdown";
+      return $hook;
+    }
+    */
+    add_action( apply_filters("rsssl_ob_flush_hook", "wp_print_footer_scripts"), array($this, "end_buffer"), 999);
   }
 
   /**
