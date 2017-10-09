@@ -82,7 +82,8 @@ Yes. There is a dedicated network settings page where you can switch between net
 = 2.5.21 =
 * Fixed double slash in paths to files
 * Fixed typo in activation notice.
-* Tweak: added option 
+* Tweak: added option to not flush the rewrite rules
+* Fix: prevent forcing admin_url to http when FORCE_SSL_ADMIN is defined
 
 = 2.5.20 =
 * Tweak: constant RSSSL_DISMISS_ACTIVATE_SSL_NOTICE to allow users to hide notices.
