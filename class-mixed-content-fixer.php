@@ -50,43 +50,27 @@ if ( ! class_exists( 'rsssl_admin_mixed_content_fixer' ) ) {
     */
 
     if (is_admin()) {
+
       add_action("admin_init", array($this, "start_buffer"), 100);
       add_action("shutdown", array($this, "end_buffer"), 999);
+
     } else {
-      add_action(apply_filters("rsssl_ob_start_hook", "template_redirect"), array($this, "start_buffer"));
-      add_action( apply_filters("rsssl_ob_flush_hook", "wp_print_footer_scripts"), array($this, "end_buffer"), 999);
+
+      if (RSSSL()->rsssl_front_end->switch_mixed_content_fixer_hook || (defined( 'RSSSL_CONTENT_FIXER_ON_INIT' ) && RSSSL_CONTENT_FIXER_ON_INIT) ) {
+        add_action("init", array($this, "start_buffer"));
+      } else {
+        add_action("template_redirect", array($this, "start_buffer"));
+      }
+
+      if (RSSSL()->rsssl_front_end->switch_mixed_content_fixer_hook) {
+        add_action("shutdown", array($this, "end_buffer"), 999);
+      } else {
+        add_action("wp_print_footer_scripts", array($this, "end_buffer"), 999);
+      }
+
     }
   }
 
-
-  /**
-   * allow for a different hook to be used on the mixed content fixer
-   *
-   * @since  2.5
-   *
-   * @access public
-   *
-   */
-
-  public function ob_start_hook($hook){
-
-    if ( RSSSL()->rsssl_front_end->switch_mixed_content_fixer_hook || (defined( 'RSSSL_CONTENT_FIXER_ON_INIT' ) && RSSSL_CONTENT_FIXER_ON_INIT) ) {
-      $hook = "init";
-    }
-
-    return $hook;
-
-  }
-
-  public function ob_flush_hook($hook){
-
-    if ( RSSSL()->rsssl_front_end->switch_mixed_content_fixer_hook) {
-      $hook = "shutdown";
-    }
-
-    return $hook;
-
-  }
 
   /**
    * Apply the mixed content fixer.
