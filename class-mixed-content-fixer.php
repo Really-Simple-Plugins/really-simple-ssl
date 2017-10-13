@@ -17,9 +17,6 @@ if ( ! class_exists( 'rsssl_admin_mixed_content_fixer' ) ) {
       $this->fix_mixed_content();
     }
 
-    add_filter("rsssl_ob_start_hook", array($this, "ob_start_hook"), 10,1 );
-    add_filter("rsssl_ob_flush_hook", array($this, "ob_flush_hook"), 10,1);
-
   }
 
   static function this() {
