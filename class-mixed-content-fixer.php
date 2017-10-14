@@ -59,12 +59,7 @@ if ( ! class_exists( 'rsssl_admin_mixed_content_fixer' ) ) {
         add_action("template_redirect", array($this, "start_buffer"));
       }
 
-      if (RSSSL()->rsssl_front_end->switch_mixed_content_fixer_hook) {
-        add_action("shutdown", array($this, "end_buffer"), 999);
-      } else {
-        add_action("wp_print_footer_scripts", array($this, "end_buffer"), 999);
-      }
-
+      add_action("shutdown", array($this, "end_buffer"), 999);
     }
   }
 

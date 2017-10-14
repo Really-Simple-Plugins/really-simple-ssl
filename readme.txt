@@ -79,7 +79,7 @@ Yes. There is a dedicated network settings page where you can switch between net
 
 == Changelog ==
 = 2.5.22 =
-* Extended option to switch mixed content fixer hook to flushing of mixed content fixer as well.
+* Changed mixed content fixer hook back from wp_print_footer_scripts to shutdown
 
 = 2.5.21 =
 * Fixed double slash in paths to files
