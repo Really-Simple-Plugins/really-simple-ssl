@@ -2114,6 +2114,24 @@ public function configuration_page_more(){
     ?>
   </td><td></td>
   </tr>
+  <tr>
+
+    <td><?php echo ($this->contains_secure_cookie_settings()) ? $this->img("success") : $this->img("warning");?></td>
+    <td><?php
+          if ($this->contains_secure_cookie_settings()) {
+            _e("Secure cookies set","really-simple-ssl")."&nbsp;";
+          } else {
+
+            $link_open = '<a target="_blank" href="'.$this->pro_url.'">';
+            $link_close = '</a>';
+
+            _e('Secure cookie settings not enabled.',"really-simple-ssl");
+            echo "&nbsp;";
+            printf(__("To enable, %sget Premium%s ","really-simple-ssl"), $link_open, $link_close);
+          }
+        ?>
+      </td><td></td>
+  </tr>
 </table>
 
 
@@ -2468,22 +2486,41 @@ public function get_option_wp_redirect() {
     return $links;
   }
 
-  public function check_plugin_conflicts() {
-    //not necessary anymore after woocommerce 2.5
-    if (class_exists('WooCommerce') && defined( 'WOOCOMMERCE_VERSION' ) && version_compare( WOOCOMMERCE_VERSION, '2.5', '<' ) ) {
-      $woocommerce_force_ssl_checkout = get_option("woocommerce_force_ssl_checkout");
-      $woocommerce_unforce_ssl_checkout = get_option("woocommerce_unforce_ssl_checkout");
-      if (isset($woocommerce_force_ssl_checkout) && $woocommerce_force_ssl_checkout!="no") {
-        $this->plugin_conflict["WOOCOMMERCE_FORCESSL"] = TRUE;
-      }
+  /**
+   * Check for possible plugin conflicts
+   *
+   * @since  2.0
+   *
+   * @access public
+   * @return none
+   *
+   */
 
-      //setting force ssl in certain pages with woocommerce will result in redirect errors.
-      if (isset($woocommerce_unforce_ssl_checkout) && $woocommerce_unforce_ssl_checkout!="no") {
-        $this->plugin_conflict["WOOCOMMERCE_FORCEHTTP"] = TRUE;
-        if ($this->debug) {$this->trace_log("Force HTTP when leaving the checkout set in woocommerce, disable this setting to prevent redirect loops.");}
-      }
+  public function check_plugin_conflicts() {
+    // $this->plugin_conflict["WOOCOMMERCE_FORCESSL"] = TRUE;
+  }
+
+  /**
+   * Check if wpconfig contains httponly cooky settings
+   *
+   * @since  2.5
+   *
+   * @access public
+   * @return boolean
+   *
+   */
+
+  public function contains_secure_cookie_settings() {
+    $wpconfig_path = $this->find_wp_config_path();
+
+    if (!$wpconfig_path) return false;
+
+    $wpconfig = file_get_contents($wpconfig_path);
+    if ( (strpos($wpconfig, "//Begin Really Simple SSL session cookie settings")===FALSE) && (strpos($wpconfig, "cookie_httponly")===FALSE) ) {
+      return false;
     }
 
+    return true;
   }
 
 
