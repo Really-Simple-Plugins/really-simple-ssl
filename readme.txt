@@ -5,7 +5,7 @@ Tags: SSL, https, force SSL, mixed content, insecure content, secure website, we
 Requires at least: 4.2
 License: GPL2
 Tested up to: 4.9
-Stable tag: 2.5.22
+Stable tag: 2.5.23
 
 No setup required! You only need an SSL certificate, and this plugin will do the rest.
 
@@ -78,6 +78,8 @@ If you are experiencing redirect loops on your site, try these [instructions](ht
 Yes. There is a dedicated network settings page where you can switch between network activated SSL and per page SSL. In the dedicated pro for multisite plugin, you can override all site settings for SSL on the network level, and can activate and deactivate SSL in the network menu for each site.
 
 == Changelog ==
+= 2.5.23 =
+
 = 2.5.22 =
 * Changed mixed content fixer hook back from wp_print_footer_scripts to shutdown
 
