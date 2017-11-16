@@ -79,6 +79,8 @@ Yes. There is a dedicated network settings page where you can switch between net
 
 == Changelog ==
 = 2.5.23 =
+* Tested up to WP 4.9
+* Added secure cookie notice
 
 = 2.5.22 =
 * Changed mixed content fixer hook back from wp_print_footer_scripts to shutdown
