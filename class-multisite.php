@@ -45,7 +45,6 @@ if ( ! class_exists( 'rsssl_multisite' ) ) {
     add_action('network_admin_menu', array( &$this, 'add_multisite_menu' ) );
     add_action('network_admin_edit_rsssl_update_network_settings',  array($this,'update_network_options'));
 
-
     if (is_network_admin()) {
       add_action('network_admin_notices', array($this, 'show_notices'), 10);
       add_action('admin_print_footer_scripts', array($this, 'insert_dismiss_success'));
@@ -58,9 +57,7 @@ if ( ! class_exists( 'rsssl_multisite' ) ) {
 
     add_action("rsssl_show_network_tab_settings", array($this, 'settings_tab'));
 
-
     add_action( 'wpmu_new_blog', array($this, 'maybe_activate_ssl_in_new_blog'), 10, 6 );
-
 
   }
 
@@ -481,16 +478,23 @@ public function settings_tab(){
 */
 
 public function check_admin_protocol($url, $path, $blog_id){
-  if (!defined('FORCE_SSL_ADMIN')) {
 
-    if (!$this->ssl_enabled_networkwide) {
-      $home_url = get_blog_option($blog_id, 'home');
-      if (strpos($home_url, "https://")===false) {
-        $url = str_replace("https://","http://",$url);
-      }
+  //if the force_ssl_admin is defined, the admin_url should not be forced back to http: all admin panels should be https.
+  if (defined('FORCE_SSL_ADMIN')) return $url;
+
+  //do not force to http if the request is made for an url of the current blog.
+  //if a site is loaded over https, it should return https links, unless the url is requested for another blog.
+  //In that case, we only return a https link if the site_url is https, and http otherwise.
+  if (get_current_blog_id()==$blog_id) return $url;
+
+  //now check if the blog is http or https, and change the url accordingly
+  if (!$this->ssl_enabled_networkwide) {
+    $home_url = get_blog_option($blog_id, 'home');
+    if (strpos($home_url, "https://")===false) {
+      $url = str_replace("https://","http://",$url);
     }
-
   }
+
 
   return $url;
 }
