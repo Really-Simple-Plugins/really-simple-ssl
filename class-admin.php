@@ -2054,11 +2054,11 @@ public function settings_page() {
 
 public function img($type) {
   if ($type=='success') {
-    return "<img class='icons' src='" . rsssl_url . "/img/check-icon.png' alt='success'>";
+    return "<img class='rsssl-icons' src='" . trailingslashit(rsssl_url) . "img/check-icon.png' alt='success'>";
   } elseif ($type=="error") {
-    return "<img class='icons' src='". rsssl_url . "/img/cross-icon.png' alt='error'>";
+    return "<img class='rsssl-icons' src='". trailingslashit(rsssl_url) . "img/cross-icon.png' alt='error'>";
   } else {
-    return "<img class='icons' src='". rsssl_url ."/img/warning-icon.png' alt='warning'>";
+    return "<img class='rsssl-icons' src='". trailingslashit(rsssl_url) ."img/warning-icon.png' alt='warning'>";
   }
 }
 
@@ -2077,7 +2077,7 @@ public function img($type) {
        if( (!is_network_admin() && ($hook != $rsssl_admin_page)) && $this->ssl_enabled )
            return;
 
-       wp_register_style( 'rlrsssl-css', rsssl_url . '/css/main.css', "", rsssl_version);
+       wp_register_style( 'rlrsssl-css', trailingslashit(rsssl_url) . 'css/main.css', "", rsssl_version);
        wp_enqueue_style( 'rlrsssl-css');
    }
 
