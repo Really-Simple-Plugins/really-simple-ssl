@@ -2181,9 +2181,10 @@ public function create_form(){
     //on multisite this setting can only be set networkwide
     if (RSSSL()->rsssl_server->uses_htaccess() && !is_multisite()) {
       add_settings_field('id_do_not_edit_htaccess', __("Stop editing the .htaccess file","really-simple-ssl"), array($this,'get_option_do_not_edit_htaccess'), 'rlrsssl', 'rlrsssl_settings');
-      add_settings_field('id_switch_mixed_content_fixer_hook', __("Switch mixed content fixer hook","really-simple-ssl"), array($this,'get_option_switch_mixed_content_fixer_hook'), 'rlrsssl', 'rlrsssl_settings');
-
     }
+
+    add_settings_field('id_switch_mixed_content_fixer_hook', __("Switch mixed content fixer hook","really-simple-ssl"), array($this,'get_option_switch_mixed_content_fixer_hook'), 'rlrsssl', 'rlrsssl_settings');
+
 }
   /**
    * Insert some explanation above the form

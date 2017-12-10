@@ -156,4 +156,4 @@ if ( ! class_exists( 'rsssl_front_end' ) ) {
       <?php
   }
 
-}}
+}
