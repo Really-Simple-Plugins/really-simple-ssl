@@ -40,7 +40,7 @@ some cool features.
 * The site url and home url are changed to https.
 * Your insecure content is fixed by replacing all http:// urls with https://, except hyperlinks to other domains. Dynamically, so no database changes are made (except for the siteurl and homeurl).
 
-[contact](https://www.really-simple-ssl.com/contact/) me if you have any questions, issues, or suggestions. More information about me or my work can be found on my [website](https://www.rogierlankhorst.com).
+[contact](https://www.really-simple-ssl.com/contact/) me if you have any questions, issues, or suggestions. Really Simple SSL is developed by [Really Simple Plugins](https://www.really-simple-plugins.com).
 
 = Like to have this plugin in your language? =
 Translations can be added very easily [here](https://translate.wordpress.org/projects/wp-plugins/really-simple-ssl). If you do, I can get you added as translation editor to approve the translations.
