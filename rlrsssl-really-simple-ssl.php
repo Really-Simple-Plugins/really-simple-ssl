@@ -7,7 +7,7 @@
  * Text Domain: really-simple-ssl
  * Domain Path: /languages
  * Author: Rogier Lankhorst
- * Author URI: https://www.rogierlankhorst.com
+ * Author URI: https://really-simple-plugins.com
  * License: GPL2
  */
 
