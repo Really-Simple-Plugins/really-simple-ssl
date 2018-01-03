@@ -518,14 +518,14 @@ public function check_site_protocol($url, $path, $orig_scheme, $blog_id){
 
 
 
-/**
+/*
  * Checks if we are on a subfolder install. (domain.com/site1 )
  *
  * @since  2.2
  *
- * @access protected
+ * @access public
  *
- */
+ **/
 
 public function is_multisite_subfolder_install() {
   if (!is_multisite()) return FALSE;
