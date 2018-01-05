@@ -53,7 +53,7 @@
        echo "<li>".$errorname."</li>";
      }
      echo "</ul>";
-     echo "Errors while removing the really simple ssl lines from your wp-config.php and .htacces, wich you can normally find in your webroot."."<br><br>";
+     echo "Errors while removing the Really Simple SSL lines from your wp-config.php and .htaccess files, which you can normally find in your webroot."."<br><br>";
    }
 
    echo $step.". Deactivating plugin"."<br>";
