@@ -5,7 +5,7 @@
 </head>
 <body>
 <h1>#SSL TEST PAGE#</h1>
-<p>This page is used purely to test for ssl availability.</p>
+<p>This page is used purely to test for SSL availability.</p>
 <?php
 	$ssl = FALSE;
 	if (isset($_SERVER['HTTPS']) ) {
