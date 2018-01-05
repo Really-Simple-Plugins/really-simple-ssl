@@ -1,6 +1,6 @@
 <?php
 
-defined('ABSPATH') or die("you do not have acces to this page!");
+defined('ABSPATH') or die("you do not have access to this page!");
 
 if ( ! class_exists( 'rsssl_multisite' ) ) {
   class rsssl_multisite {
@@ -34,7 +34,7 @@ if ( ! class_exists( 'rsssl_multisite' ) ) {
     $this->load_options();
     register_activation_hook(  dirname( __FILE__ )."/".rsssl_plugin, array($this,'activate') );
 
-    /*filters to make sure wordpress returns the correct protocol */
+    /*filters to make sure WordPress returns the correct protocol */
     add_filter("admin_url", array($this, "check_admin_protocol"), 20, 3 );
     add_filter('home_url', array($this, 'check_site_protocol') , 20,4);
     add_filter('site_url', array($this, 'check_site_protocol') , 20,4);
@@ -154,7 +154,7 @@ if ( ! class_exists( 'rsssl_multisite' ) ) {
     if (!RSSSL()->really_simple_ssl->site_has_ssl) {
       ?>
       <p>
-        <?php _e("No SSL was detected. If you do have an ssl certificate, try to reload this page over https by clicking this link:","really-simple-ssl");?>&nbsp;<a href="<?php echo $current_url?>"><?php _e("reload over https.","really-simple-ssl");?></a>
+        <?php _e("No SSL was detected. If you do have an SSL certificate, try to reload this page over https by clicking this link:","really-simple-ssl");?>&nbsp;<a href="<?php echo $current_url?>"><?php _e("reload over https.","really-simple-ssl");?></a>
         <?php _e("You can check your certificate on","really-simple-ssl");?>&nbsp;<a target="_blank" href="https://www.ssllabs.com/ssltest/">Qualys SSL Labs</a>
       </p>
       <?php
@@ -196,7 +196,7 @@ if ( ! class_exists( 'rsssl_multisite' ) ) {
 
 public function settings_tab(){
   if (isset($_GET['updated'])): ?>
-   <div id="message" class="updated notice is-dismissible"><p><?php _e('Options saved.') ?></p></div>
+   <div id="message" class="updated notice is-dismissible"><p><?php _e('Options saved.', 'really-simple-ssl') ?></p></div>
   <?php endif; ?>
   <div class="wrap">
     <h1><?php _e('Really Simple SSL multisite options', 'really-simple-ssl'); ?></h1>
@@ -290,7 +290,7 @@ public function settings_tab(){
     $current_url = "https://".$_SERVER["HTTP_HOST"].$_SERVER["REQUEST_URI"]
     ?>
     <div id="message" class="error fade notice activate-ssl">
-    <p><?php _e("No SSL was detected. If you do have an ssl certificate, try to reload this page over https by clicking this link:","really-simple-ssl");?>&nbsp;<a href="<?php echo $current_url?>"><?php _e("reload over https.","really-simple-ssl");?></a>
+    <p><?php _e("No SSL was detected. If you do have an SSL certificate, try to reload this page over https by clicking this link:","really-simple-ssl");?>&nbsp;<a href="<?php echo $current_url?>"><?php _e("reload over https.","really-simple-ssl");?></a>
       <?php _e("You can check your certificate on","really-simple-ssl");?>&nbsp;<a target="_blank" href="https://www.ssllabs.com/ssltest/">Qualys SSL Labs</a>
     </p>
   </div>
@@ -305,7 +305,7 @@ public function settings_tab(){
         <p>
           <ul>
             <li><?php _e('Http references in your .css and .js files: change any http:// into //','really-simple-ssl');?></li>
-            <li><?php _e('Images, stylesheets or scripts from a domain without an ssl certificate: remove them or move to your own server.','really-simple-ssl');?></li>
+            <li><?php _e('Images, stylesheets or scripts from a domain without an SSL certificate: remove them or move to your own server.','really-simple-ssl');?></li>
           </ul>
         </p>
         <?php $this->show_pro(); ?>
@@ -370,7 +370,7 @@ public function settings_tab(){
       $this->wp_redirect = true;
       $this->save_options();
 
-      //enable SSL on all  sites on the network
+      //enable SSL on all sites on the network
       $this->activate_ssl_networkwide();
 
     }
@@ -471,7 +471,7 @@ public function settings_tab(){
 
 
 /**
-* filters the get_admin_url function to correct the false https urls wordpress returns for non ssl websites.
+* filters the get_admin_url function to correct the false https urls wordpress returns for non SSL websites.
 *
 * @since 2.3.10
 *
@@ -500,7 +500,7 @@ public function check_admin_protocol($url, $path, $blog_id){
 }
 
 /**
-* filters the home_url and/or site_url function to correct the false https urls wordpress returns for non ssl websites.
+* filters the home_url and/or site_url function to correct the false https urls wordpress returns for non SSL websites.
 *
 * @since 2.3.17
 *
@@ -623,7 +623,7 @@ public function show_notices()
   }
 
   if (!$this->ssl_enabled_networkwide && $this->selected_networkwide_or_per_site && $this->is_multisite_subfolder_install()) {
-    //with no server variables, the website could get into redirect loops.
+    //with no server variables, the website could get into a redirect loop.
     if (RSSSL()->really_simple_ssl->no_server_variable) {
       ?>
         <div id="message" class="error fade notice">
@@ -640,7 +640,7 @@ public function show_notices()
 
 
 /**
- * Insert some ajax script to dismis the ssl success message, and stop nagging about it
+ * Insert some ajax script to dismis the SSL success message, and stop nagging about it
  *
  * @since  2.0
  *
@@ -681,7 +681,7 @@ $ajax_nonce = wp_create_nonce( "really-simple-ssl-dismiss" );
  */
 
 public function dismiss_success_message_callback() {
-//nonce check fails if url is changed to ssl.
+//nonce check fails if url is changed to SSL.
 //check_ajax_referer( 'really-simple-ssl-dismiss', 'security' );
 update_site_option("rsssl_success_message_shown", true);
 wp_die();
