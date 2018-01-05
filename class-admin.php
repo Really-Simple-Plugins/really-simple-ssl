@@ -709,7 +709,7 @@ defined('ABSPATH') or die("you do not have acces to this page!");
 
 
     /**
-     * Getting Wordpress to recognize setup as being ssl when no https server variable is available
+     * Getting WordPress to recognize setup as being ssl when no https server variable is available
      *
      * @since  2.1
      *
@@ -1604,7 +1604,7 @@ public function show_notice_wpconfig_needs_fixes(){ ?>
 
   if ( $this->no_server_variable ) {
     ?>
-      <p><?php echo __('Because your server does not pass a variable with which Wordpress can detect SSL, Wordpress may create redirect loops on SSL.','really-simple-ssl');?></p>
+      <p><?php echo __('Because your server does not pass a variable with which WordPress can detect SSL, WordPress may create redirect loops on SSL.','really-simple-ssl');?></p>
       <p><?php echo __("Set your wp-config.php to writable and reload this page.", "really-simple-ssl");?></p>
     <?php
   }
@@ -1635,7 +1635,7 @@ public function show_notices()
         ?>
         <div id="message" class="error fade notice is-dismissible rlrsssl-htaccess">
           <p>
-            <?php echo __("Your do not have a 301 redirect to https activated in the settings. For SEO purposes it is advisable to use 301 redirects. You can enable a 301 redirect in the settings.","really-simple-ssl");?>
+            <?php echo __("You do not have a 301 redirect to https active in the settings. For SEO purposes it is advised to use 301 redirects. You can enable a 301 redirect in the settings.","really-simple-ssl");?>
             <a href="options-general.php?page=rlrsssl_really_simple_ssl"><?php echo __("View settings page","really-simple-ssl");?></a>
           </p>
         </div>
@@ -1679,12 +1679,12 @@ public function show_notices()
   //some notices for ssl situations
   if ($this->site_has_ssl) {
       if (sizeof($this->plugin_conflict)>0) {
-        //pre Woocommerce 2.5
+        //pre WooCommerce 2.5
         if (isset($this->plugin_conflict["WOOCOMMERCE_FORCEHTTP"]) && $this->plugin_conflict["WOOCOMMERCE_FORCEHTTP"] && isset($this->plugin_conflict["WOOCOMMERCE_FORCESSL"]) && $this->plugin_conflict["WOOCOMMERCE_FORCESSL"]) {
           ?>
           <div id="message" class="error fade notice"><p>
           <?php _e("Really Simple SSL has a conflict with another plugin.","really-simple-ssl");?><br>
-          <?php _e("The force http after leaving checkout in Woocommerce will create a redirect loop.","really-simple-ssl");?><br>
+          <?php _e("The force http after leaving checkout in WooCommerce will create a redirect loop.","really-simple-ssl");?><br>
           <a href="admin.php?page=wc-settings&tab=checkout"><?php _e("Show me this setting","really-simple-ssl");?></a>
           </p></div>
           <?php
@@ -1907,7 +1907,7 @@ public function settings_page() {
                   if ($mixed_content_fixer_detected) {
                     _e("Mixed content fixer was successfully detected on the front-end","really-simple-ssl")."&nbsp;";
                   } else {
-                    _e('The mixed content fixer is activated, but was not detected on the frontpage. Please follow these steps to check if the mixed content fixer is working.',"really-simple-ssl").":&nbsp;";
+                    _e('The mixed content fixer is active, but was not detected on the frontpage. Please follow these steps to check if the mixed content fixer is working.',"really-simple-ssl").":&nbsp;";
                     echo '&nbsp;<a target="_blank" href="https://www.really-simple-ssl.com/knowledge-base/how-to-check-if-the-mixed-content-fixer-is-active/">';
                     _e('Instructions', 'really-simple-ssl');
                     echo '</a>';
