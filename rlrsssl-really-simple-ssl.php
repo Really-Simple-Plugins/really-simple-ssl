@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Really Simple SSL
  * Plugin URI: https://www.really-simple-ssl.com
- * Description: Lightweight plugin without any setup to make your site ssl proof
+ * Description: Lightweight plugin without any setup to make your site SSL proof
  * Version: 2.5.24
  * Text Domain: really-simple-ssl
  * Domain Path: /languages
