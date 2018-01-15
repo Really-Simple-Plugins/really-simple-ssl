@@ -1,5 +1,5 @@
 <?php
-defined('ABSPATH') or die("you do not have acces to this page!");
+defined('ABSPATH') or die("you do not have access to this page!");
 
 if ( ! class_exists( 'rsssl_server' ) ) {
   class rsssl_server {

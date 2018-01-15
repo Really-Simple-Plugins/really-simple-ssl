@@ -1,5 +1,5 @@
 <?php
-defined('ABSPATH') or die("you do not have acces to this page!");
+defined('ABSPATH') or die("you do not have access to this page!");
 
 if ( ! class_exists( 'rsssl_front_end' ) ) {
   class rsssl_front_end {
@@ -43,7 +43,7 @@ if ( ! class_exists( 'rsssl_front_end' ) ) {
   // }
 
   /**
-   * Javascript redirect, when ssl is true.
+   * Javascript redirect, when SSL is true.
    *
    * @since  2.2
    *
