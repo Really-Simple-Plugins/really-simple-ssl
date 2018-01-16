@@ -1975,6 +1975,7 @@ public function settings_page() {
       /*
         Second tab, Settings
       */
+
     ?>
         <form action="options.php" method="post">
         <?php
@@ -2372,7 +2373,7 @@ public function get_option_wp_redirect() {
 
       if ($this->htaccess_redirect && (!is_writable($this->ABSpath.".htaccess") || !$this->htaccess_test_success)) {
         echo "<br><br>";
-        if (!is_writable($this->ABSpath.".htaccess")) _e("The .htaccess file is not writable. Add these lines to your .htaccess manually, or set write permissions", "really-simple-ssl");
+        if (!is_writable($this->ABSpath.".htaccess")) _e("The .htaccess file is not writable. Add these lines to your .htaccess manually, or set 644 writing permissions", "really-simple-ssl");
         if (!$this->htaccess_test_success) _e("The .htaccess redirect rules that were selected by this plugin failed in the test. The following redirect rules were tested:", "really-simple-ssl");
         echo "<br><br>";
         if ($this->ssl_type!="NA") {
