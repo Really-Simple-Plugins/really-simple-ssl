@@ -5,7 +5,7 @@ Tags: SSL, https, force SSL, mixed content, insecure content, secure website, we
 Requires at least: 4.2
 License: GPL2
 Tested up to: 4.9
-Stable tag: 2.5.24
+Stable tag: 2.5.25
 
 No setup required! You only need an SSL certificate, and this plugin will do the rest.
 
@@ -79,7 +79,8 @@ Yes. There is a dedicated network settings page where you can switch between net
 
 == Changelog ==
 = 2.5.25 =
-* Fix: switch mixed content fixer hook nog visible for multisites
+* Fix: "switch mixed content fixer hook" option not visible on the multisites settings page
+* Tweak: several typo's and uppercasing
 
 = 2.5.24 =
 * Fix: On multisite, admin_url forced current blog URL's over http even when the current blog was loaded over https. This will now only force http for other blog_urls than the current one, when they are on http and not https.
