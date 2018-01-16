@@ -3,7 +3,7 @@
  * Plugin Name: Really Simple SSL
  * Plugin URI: https://www.really-simple-ssl.com
  * Description: Lightweight plugin without any setup to make your site SSL proof
- * Version: 2.5.24
+ * Version: 2.5.25
  * Text Domain: really-simple-ssl
  * Domain Path: /languages
  * Author: Rogier Lankhorst
@@ -52,9 +52,9 @@
 			self::$instance->rsssl_mixed_content_fixer = new rsssl_mixed_content_fixer();
 
 			// Backwards compatibility for add-ons
-      global $rsssl_front_end, $rsssl_mixed_content_fixer;
-      $rsssl_front_end           = self::$instance->rsssl_front_end;
-      $rsssl_mixed_content_fixer = self::$instance->rsssl_mixed_content_fixer;
+            global $rsssl_front_end, $rsssl_mixed_content_fixer;
+            $rsssl_front_end           = self::$instance->rsssl_front_end;
+            $rsssl_mixed_content_fixer = self::$instance->rsssl_mixed_content_fixer;
 
 			if ( is_admin() ) {
 				if ( is_multisite() ) {
