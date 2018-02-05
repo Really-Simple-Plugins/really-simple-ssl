@@ -2143,10 +2143,10 @@ public function configuration_page_more(){
   } else {
     if (!$this->ssl_enabled) { ?>
       <p><?php _e("If you want to be sure you're ready to migrate to SSL, get Premium, which includes an extensive scan and premium support.", "really-simple-ssl")?>
-        &nbsp;<a target="_blank" href="<?php echo $this->pro_url?>">Learn more</a></p>
+        &nbsp;<a target="_blank" href="<?php echo $this->pro_url?>"><?php _e("Learn more", "really-simple-ssl")?></a></p>
   <?php  } else { ?>
     <p><?php _e('Still having issues with mixed content? Check out Premium, which includes an extensive scan and premium support. ', "really-simple-ssl")?>
-      &nbsp;<a target="_blank" href="<?php echo $this->pro_url?>">Learn more</a></p>
+      &nbsp;<a target="_blank" href="<?php echo $this->pro_url?>"><?php _e("Learn more", "really-simple-ssl")?></a></p>
   <?php
     }
   }
