@@ -18,7 +18,7 @@ To keep it lightweight, the options are kept to a minimum. The entire site will 
 * Activate this plugin
 * Enable SSL with one click
 
-Always backup before you go! If you do not have a sound backup policy, start having one! For a snapshot, install duplicator.
+Always backup before you go! If you do not have a sound backup policy, start having one! See https://really-simple-ssl.com/knowledge-base/backing-up-your-site/ for our recommendations.
 
 Really Simple SSL is on [GitHub](https://github.com/rlankhorst/really-simple-ssl) as well!
 
