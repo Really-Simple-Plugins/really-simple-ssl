@@ -5,7 +5,7 @@ Tags: SSL, https, force SSL, mixed content, insecure content, secure website, we
 Requires at least: 4.2
 License: GPL2
 Tested up to: 4.9
-Stable tag: 2.5.25
+Stable tag: 2.5.26
 
 No setup required! You only need an SSL certificate, and this plugin will do the rest.
 
@@ -18,7 +18,7 @@ To keep it lightweight, the options are kept to a minimum. The entire site will 
 * Activate this plugin
 * Enable SSL with one click
 
-Always backup before you go! If you do not have a sound backup policy, start having one! See https://really-simple-ssl.com/knowledge-base/backing-up-your-site/ for our recommendations.
+Always backup before you go! If you do not have a sound backup policy, start having one! See [our recommendations] (https://really-simple-ssl.com/knowledge-base/backing-up-your-site/).
 
 Really Simple SSL is on [GitHub](https://github.com/rlankhorst/really-simple-ssl) as well!
 
@@ -78,6 +78,9 @@ If you are experiencing redirect loops on your site, try these [instructions](ht
 Yes. There is a dedicated network settings page where you can switch between network activated SSL and per page SSL. In the dedicated pro for multisite plugin, you can override all site settings for SSL on the network level, and can activate and deactivate SSL in the network menu for each site.
 
 == Changelog ==
+= 2.5.26 =
+* Tested the plugin with Gutenberg
+
 = 2.5.25 =
 * Fix: "switch mixed content fixer hook" option not visible on the multisites settings page
 * Tweak: several typo's and uppercasing
