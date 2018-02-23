@@ -477,6 +477,7 @@ public function settings_tab(){
 */
 
 public function check_admin_protocol($url, $path, $blog_id){
+  if (!$blog_id) $blog_id = get_current_blog_id();
 
   //if the force_ssl_admin is defined, the admin_url should not be forced back to http: all admin panels should be https.
   if (defined('FORCE_SSL_ADMIN')) return $url;
@@ -506,7 +507,8 @@ public function check_admin_protocol($url, $path, $blog_id){
 */
 
 public function check_site_protocol($url, $path, $orig_scheme, $blog_id){
-  if (is_network_admin() || is_admin()) return $url;
+  if (!$blog_id) $blog_id = get_current_blog_id();
+
   if (get_current_blog_id()==$blog_id) return $url;
 
   if (!$this->ssl_enabled_networkwide) {
