@@ -506,6 +506,8 @@ public function check_admin_protocol($url, $path, $blog_id){
 */
 
 public function check_site_protocol($url, $path, $orig_scheme, $blog_id){
+  if (get_current_blog_id()==$blog_id) return $url;
+
   if (!$this->ssl_enabled_networkwide) {
     $home_url = get_blog_option($blog_id, 'home');
     if (strpos($home_url, "https://")===false) {
