@@ -18,7 +18,7 @@ To keep it lightweight, the options are kept to a minimum. The entire site will 
 * Activate this plugin
 * Enable SSL with one click
 
-Always backup before you go! If you do not have a sound backup policy, start having one! See [our recommendations] (https://really-simple-ssl.com/knowledge-base/backing-up-your-site/).
+Always backup before you go! If you do not have a sound backup policy, start having one! See [our recommendations](https://really-simple-ssl.com/knowledge-base/backing-up-your-site/).
 
 Really Simple SSL is on [GitHub](https://github.com/rlankhorst/really-simple-ssl) as well!
 
@@ -79,7 +79,10 @@ Yes. There is a dedicated network settings page where you can switch between net
 
 == Changelog ==
 = 2.5.26 =
-* Tested the plugin with Gutenberg
+* Fix: multisite menu not showing when main site is not SSL.
+* Fix: the admin_url and site_url filter get an empty blog_id when checking the URL for the current blog.
+* Tweak: added comment to encourage backing up to activation notice.
+* Tested the plugin with Gutenberg.
 
 = 2.5.25 =
 * Fix: "switch mixed content fixer hook" option not visible on the multisites settings page
