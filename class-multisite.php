@@ -30,7 +30,6 @@ if ( ! class_exists( 'rsssl_multisite' ) ) {
 
     self::$_this = $this;
 
-
     $this->load_options();
     register_activation_hook(  dirname( __FILE__ )."/".rsssl_plugin, array($this,'activate') );
 
@@ -137,13 +136,13 @@ if ( ! class_exists( 'rsssl_multisite' ) ) {
 
     register_setting( $this->option_group, 'rsssl_options');
     add_settings_section('rsssl_network_settings', __("Settings","really-simple-ssl"), array($this,'section_text'), $this->page_slug);
-
-    if (RSSSL()->really_simple_ssl->site_has_ssl) {
+    
+    //if (RSSSL()->really_simple_ssl->site_has_ssl) {
         add_settings_field('id_ssl_enabled_networkwide', __("Enable SSL", "really-simple-ssl"), array($this,'get_option_enable_multisite'), $this->page_slug, 'rsssl_network_settings');
         //if ($this->selected_networkwide_or_per_site) {
         RSSSL()->rsssl_network_admin_page = add_submenu_page('settings.php', "SSL", "SSL", 'manage_options', $this->page_slug, array( &$this, 'multisite_menu_page' ) );
         //}
-      }
+     // }
     }
 
   /*
@@ -478,6 +477,7 @@ public function settings_tab(){
 */
 
 public function check_admin_protocol($url, $path, $blog_id){
+  if (!$blog_id) $blog_id = get_current_blog_id();
 
   //if the force_ssl_admin is defined, the admin_url should not be forced back to http: all admin panels should be https.
   if (defined('FORCE_SSL_ADMIN')) return $url;
@@ -507,6 +507,10 @@ public function check_admin_protocol($url, $path, $blog_id){
 */
 
 public function check_site_protocol($url, $path, $orig_scheme, $blog_id){
+  if (!$blog_id) $blog_id = get_current_blog_id();
+
+  if (get_current_blog_id()==$blog_id) return $url;
+
   if (!$this->ssl_enabled_networkwide) {
     $home_url = get_blog_option($blog_id, 'home');
     if (strpos($home_url, "https://")===false) {

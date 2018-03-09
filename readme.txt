@@ -276,7 +276,7 @@ fix: Adjusted selection order of .htaccess rules, preventing redirect loops
 * Fixed some bugs in deactivation and activation of multisite
 
 = 2.3.0 =
-* Gave more control over activation process by explicity asking to enable SSL.
+* Gave more control over activation process by explicitly asking to enable SSL.
 * Added a notice if .htaccess is not writable
 
 = 2.2.20 =
