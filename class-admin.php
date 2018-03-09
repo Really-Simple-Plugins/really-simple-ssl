@@ -237,6 +237,7 @@ defined('ABSPATH') or die("you do not have access to this page!");
     if (!current_user_can($this->capability)) return;
 
     if (!$this->site_has_ssl) {
+
       global $wp;
       $current_url = "https://".$_SERVER["HTTP_HOST"].$_SERVER["REQUEST_URI"];
       ?>
@@ -255,7 +256,13 @@ defined('ABSPATH') or die("you do not have access to this page!");
       <p>
         <ul>
           <li><?php _e('Http references in your .css and .js files: change any http:// into //','really-simple-ssl');?></li>
-          <li><?php _e('Images, stylesheets or scripts from a domain without an SSL certificate: remove them or move to your own server.','really-simple-ssl');?></li>
+          <li><?php _e('Images, stylesheets or scripts from a domain without an SSL certificate: remove them or move to your own server.','really-simple-ssl');?></li><?php
+
+  $backup_link = "https://really-simple-ssl.com/knowledge-base/backing-up-your-site/";
+  $link_open = '<a target="_blank" href="'.$backup_link.'">';
+  $link_close = '</a>';
+
+            ?> <li> <?php printf(__("It is recommended to take a %sbackup%s of your site before activating SSL", 'really-simple-ssl'), $link_open, $link_close); ?> </li>
         </ul>
       </p>
       <?php $this->show_pro(); ?>
