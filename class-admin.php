@@ -141,6 +141,50 @@ defined('ABSPATH') or die("you do not have access to this page!");
   }
 
 
+  public function list_for_deactivation(){
+      //check if we are on ssl settings page
+      if (!$this->is_settings_page()) return;
+
+      //check user role
+      if (!current_user_can($this->capability)) return;
+
+      //check nonce
+      if (wp_verify_nonce())
+
+      //check for action
+      if (isset($_GET["action"] && $_GET["action"]=='uninstall_keep_ssl')){
+          //deactivate plugin, but don't revert to http.
+          $plugin = $this->plugin_dir."/".$this->plugin_filename
+          $plugin = plugin_basename( trim( $plugin ) );
+
+          if ( is_multisite() ) {
+
+              $network_current = get_site_option( 'active_sitewide_plugins', array() );
+              if ( is_plugin_active_for_network( $plugin ) ) { unset( $network_current[ $plugin ] );}
+              update_site_option( 'active_sitewide_plugins', $network_current );
+
+              //remove plugin one by one on each site
+              $sites = wp_get_sites();
+              foreach ( $sites as $site ) {
+                  switch_to_blog( $site[ 'blog_id' ] );
+
+                  $current = get_option( 'active_plugins', array() );
+                  $current = rl_remove_plugin_from_array($plugin, $current);
+                  update_option('active_plugins', $current);
+
+                  restore_current_blog(); //switches back to previous blog, not current, so we have to do it each loop
+              }
+
+          } else {
+              $current = get_option( 'active_plugins', array() );
+              $current = rl_remove_plugin_from_array($plugin, $current);
+              update_option('active_plugins', $current);
+          }
+
+      }
+  }
+
+
   //change deprecated function depending on version.
 
   public function get_sites_bw_compatible(){
@@ -193,6 +237,8 @@ defined('ABSPATH') or die("you do not have access to this page!");
     $this->set_siteurl_to_ssl();
     $this->save_options();
   }
+
+
 
   public function deactivate_ssl(){
     $this->ssl_enabled = false;
@@ -2468,7 +2514,8 @@ public function get_option_wp_redirect() {
      */
 
   public function plugin_settings_link($links) {
-    $settings_link = '<a href="options-general.php?page=rlrsssl_really_simple_ssl">'.__("Settings","really-simple-ssl").'</a>';
+    $token = wp_create_nonce('rsssl_deactivate_plugin');
+    $settings_link = '<a href="'.admin_url("options-general.php?page=rlrsssl_really_simple_ssl&action=uninstall_keep_ssl&token=".$token).'">'.__("Settings","really-simple-ssl").'</a>';
     array_unshift($links, $settings_link);
 
     $faq_link = '<a target="_blank" href="https://really-simple-ssl.com/knowledge-base/">' . __( 'Docs', 'really-simple-ssl' ) . '</a>';
