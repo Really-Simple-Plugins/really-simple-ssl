@@ -2039,11 +2039,57 @@ public function settings_page() {
   do_action("show_tab_{$tab}");
      ?>
   </div><!-- end main-->
-    <div class="rsssl-sidebar">
-      <div class="rsssl-wrapper">
 
-      </div>
-    </div>
+    <?php
+
+    /**
+     *
+     * Generate a sidebar for free users to advertise pro
+     * When using Ultimate Member, also show Ultimate Member add-ons
+     * Pro users never see the sidebar
+     *
+     * @since 2.5.27
+     *
+     */
+
+    //Do not show when any of the premium Really Simple Plugins are active
+
+    if ( !defined("rsssl_pro_version") && (!defined("rsssl_pp_version")) && (!defined("rsssl_soc_version")) && (!class_exists('RSSSL_PRO')) ) {
+        ?>
+
+        <div class="rsssl-sidebar">
+        <div class="rsssl-sidebar-content rsssl-content-pro">
+            <?php echo "<img class='rsssl-pro-image' src='" . trailingslashit(rsssl_url) . "assets/rsssl-pro.png' alt='Really Simple SSL pro'>"; ?>
+            <a id="rsssl-premium-button" class="button button-primary"
+               href="https://really-simple-ssl.com/premium/"
+               target="_blank"> <?php echo __("Get pro", "really-simple-ssl"); ?> </a>
+        </div>
+
+        <?php if (defined("ultimatemember_version") && (!defined("um_mail_alerts_version")) && (!defined("um_most_visited_version")) && (!defined("um_tagging_version")) )  { ?>
+
+            <div class="rsssl-sidebar-content rsssl-content-um"> <?php
+                echo "<img class='rsssl-ultimate-member' src='" . trailingslashit(rsssl_url) . "assets/UM-tagging.jpg' alt='UM Tagging'>"; ?>
+                <a id="rsssl-premium-button" class="button button-success"
+                   href="https://really-simple-plugins.com/download/um-tagging/"
+                   target="_blank"> <?php echo __("View details", "really-simple-ssl") ?> </a>
+            </div>
+            <div class="rsssl-sidebar-content rsssl-content-um"> <?php
+                echo "<img class='rsssl-ultimate-member' src='" . trailingslashit(rsssl_url) . "assets/UM-most-visited-members.jpg' alt='UM Most Visited'>"; ?>
+                <a id="rsssl-premium-button" class="button button-success"
+                   href="https://really-simple-plugins.com/download/most-visited-members/"
+                   target="_blank"> <?php echo __("View details", "really-simple-ssl") ?> </a>
+            </div>
+            <div class="rsssl-sidebar-content rsssl-content-um"> <?php
+                echo "<img class='rsssl-ultimate-member' src='" . trailingslashit(rsssl_url) . "assets/UM-mail-alerts.jpg' alt='UM Mail Alerts'>"; ?>
+                <a id="rsssl-premium-button" class="button button-success"
+                   href="https://really-simple-plugins.com/download/um-mail-alerts/"
+                   target="_blank"> <?php echo __("View details", "really-simple-ssl") ?> </a>
+            </div>
+            </div>
+            <?php
+        }
+    }
+         ?>
   </div><!-- end container -->
 <?php
 }

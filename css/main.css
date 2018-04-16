@@ -4,29 +4,10 @@
   padding: 1px 15px;
 }
 
-/* .rsssl-main {
-  width:95%;
+.rsssl-main {
+  flex: 1;
+  width: 80%;
   float:left;
-} */
-
-.rsssl-sidebar {
-  width:20%;
-  float:left;
-}
-
-.rsssl-sidebar h4 {
-  font-size:14px;
-  font-style:italic;
-}
-
-.rsssl-wrapper {
-  padding:30px;
-}
-
-@media screen and (max-width: 800px) {
-  .rsssl-sidebar, .rsssl-main {
-    width:100%;
-  }
 }
 
 .rsssl-sidebar img {
@@ -262,4 +243,84 @@
 .rsssl-tooltip-right:after {
   margin-left: 0;
   margin-bottom: -16px;
+}
+
+/* Styling for the sidebar in the admin tab of the free plugin */
+
+.rsssl-sidebar {
+  width: 200px;
+  padding-top: 10px;
+  padding-left: 15px;
+  padding-right: 15px;
+  padding-bottom: 15px;
+}
+
+@media screen and (max-width: 1024px) and (min-width: 541px) {
+  /* Let the main container be 100% width again */
+  .rsssl-main {
+    width: 100%;
+  }
+  .rsssl-container {
+    flex-direction: column;
+  }
+  .rsssl-sidebar {
+    width: 100%;
+    padding-left: 10%;
+  }
+  .rsssl-sidebar-content {
+    width: 35%;
+    padding-left: 25px;
+  }
+  hr {
+    display: none !important;
+  }
+}
+
+@media screen and (max-width: 540px) {
+  .rsssl-container {
+    flex-direction: column;
+  }
+  .rsssl-sidebar {
+  display: grid;
+  text-align: -webkit-center;
+  width: 70%;
+  }
+}
+
+.rsssl-sidebar h4 {
+  font-size:14px;
+  font-style:italic;
+}
+
+.rsssl-wrapper {
+  padding:30px;
+}
+
+
+.rsssl-sidebar-list {
+  font-size: 0.9em;
+}
+
+#rsssl-premium-button {
+  width: 100%;
+  text-align: center;
+  font-weight: 600;
+}
+
+.rsssl-sidebar-content {
+  float: left;
+  padding-top: 10px;
+}
+
+hr {
+  display: block;
+  height: 1px;
+  border: 0;
+  border-top: 1px solid #ccc;
+  margin: 1em 0;
+  padding: 0;
+}
+
+.rsssl-container {
+  display: flex;
 }
