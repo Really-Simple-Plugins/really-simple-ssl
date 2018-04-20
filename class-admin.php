@@ -2052,44 +2052,81 @@ public function settings_page() {
      *
      */
 
-    //Do not show when any of the premium Really Simple Plugins are active
-
     if ( !defined("rsssl_pro_version") && (!defined("rsssl_pp_version")) && (!defined("rsssl_soc_version")) && (!class_exists('RSSSL_PRO')) ) {
-        ?>
 
-        <div class="rsssl-sidebar">
-        <div class="rsssl-sidebar-content rsssl-content-pro">
-            <?php echo "<img class='rsssl-pro-image' src='" . trailingslashit(rsssl_url) . "assets/rsssl-pro.png' alt='Really Simple SSL pro'>"; ?>
-            <a id="rsssl-premium-button" class="button button-primary"
-               href="https://really-simple-ssl.com/premium/"
-               target="_blank"> <?php echo __("Get pro", "really-simple-ssl"); ?> </a>
+    //Generate the Really Simple Plugins logo and recommended plugins text
+
+    ?>
+    <div class="rsssl-sidebar">
+        <div class="rsssl-really-simple-plugins-logo">
+            <?php echo "<img class='rsssl-pro-image' src='" . trailingslashit(rsssl_url) . "assets/really-simple-plugins.png' alt='Really Simple SSL pro'>"; ?>
+        </div>
+        <div class="rsssl-sidebar-title">
+            <?php $user = wp_get_current_user();
+            $firstname = strlen($user->first_name)>0 ? " ".$user->first_name : "";
+            $link_open = '<a target="_blank" href="https://really-simple-plugins.com/contact">';
+
+            ?>
+            <h3> <?php echo sprintf(__("Hi%s, we have some suggestions for your setup. Let us know if you have a suggestion for %sus%s!", "really-simple-ssl-pro"), $firstname, $link_open, "</a>") ?></h3>
         </div>
 
-        <?php if (defined("ultimatemember_version") && (!defined("um_mail_alerts_version")) && (!defined("um_most_visited_version")) && (!defined("um_tagging_version")) )  { ?>
+        <?php
 
-            <div class="rsssl-sidebar-content rsssl-content-um"> <?php
-                echo "<img class='rsssl-ultimate-member' src='" . trailingslashit(rsssl_url) . "assets/UM-tagging.jpg' alt='UM Tagging'>"; ?>
-                <a id="rsssl-premium-button" class="button button-success"
-                   href="https://really-simple-plugins.com/download/um-tagging/"
-                   target="_blank"> <?php echo __("View details", "really-simple-ssl") ?> </a>
-            </div>
-            <div class="rsssl-sidebar-content rsssl-content-um"> <?php
-                echo "<img class='rsssl-ultimate-member' src='" . trailingslashit(rsssl_url) . "assets/UM-most-visited-members.jpg' alt='UM Most Visited'>"; ?>
-                <a id="rsssl-premium-button" class="button button-success"
-                   href="https://really-simple-plugins.com/download/most-visited-members/"
-                   target="_blank"> <?php echo __("View details", "really-simple-ssl") ?> </a>
-            </div>
-            <div class="rsssl-sidebar-content rsssl-content-um"> <?php
-                echo "<img class='rsssl-ultimate-member' src='" . trailingslashit(rsssl_url) . "assets/UM-mail-alerts.jpg' alt='UM Mail Alerts'>"; ?>
-                <a id="rsssl-premium-button" class="button button-success"
-                   href="https://really-simple-plugins.com/download/um-mail-alerts/"
-                   target="_blank"> <?php echo __("View details", "really-simple-ssl") ?> </a>
-            </div>
-            </div>
-            <?php
+        /*
+         * Generate a container for both pro and UM
+         * Pro container has different image size, text position and button color
+         * Before generating, check if Really Simple SSL pro or Ultimate Member is active
+         * */
+
+        $url = is_multisite() ? 'https://really-simple-ssl.com/downloads/really-simple-ssl-pro-multisite/' : 'https://really-simple-ssl.com/downloads/really-simple-ssl-pro/';
+        $this->get_banner_html(array(
+                'img' => 'rsssl-pro.jpg',
+                'title' => 'Really Simple SSL Pro',
+                'description' => __("Really Simple SSL pro optimizes your SSL configuration: extensive scan for mixed content issues, access to premium support, HSTS and more!", "really-simple-ssl"),
+                'url' => $url,
+                'pro' => true,
+            )
+        );
+
+        if (defined("ultimatemember_version")) {
+
+            if (!defined("um_tagging_version")) {
+
+                $this->get_banner_html(array(
+                        'img' => 'um-tagging.jpg',
+                        'title' => 'UM Tagging',
+                        'description' => __("UM Tagging allows you to @tag or @mention all users on your platform.", "really-simple-ssl"),
+                        'url' => 'https://really-simple-plugins.com/download/most-tagging/',
+                    )
+                );
+            }
+
+            if (!defined("um_most_visited_version")) {
+
+                $this->get_banner_html(array(
+                        'img' => 'um-most-visited.jpg',
+                        'title' => 'UM Most Visited',
+                        'description' => __("Show the most visited users and add a 'last visited users' tab to each user profile.", "really-simple-ssl"),
+                        'url' => 'https://really-simple-plugins.com/download/most-visited-members/',
+                    )
+                );
+            }
+
+            if (!defined("um_tagging_version")) {
+                $this->get_banner_html(array(
+                        'img' => 'um-mail-alerts.jpg',
+                        'title' => 'UM Mail Alerts',
+                        'description' => __("Automatically send a notification when a user's post on the activity feed is liked or commented on.", "really-simple-ssl"),
+                        'url' => 'https://really-simple-plugins.com/download/mail-alerts/',
+                    )
+                );
+
+            }
         }
-    }
-         ?>
+        }
+                        ?>
+
+        </div>
   </div><!-- end container -->
 <?php
 }
@@ -2114,6 +2151,31 @@ public function img($type) {
   } else {
     return "<img class='rsssl-icons' src='". trailingslashit(rsssl_url) ."img/warning-icon.png' alt='warning'>";
   }
+}
+
+
+private function get_banner_html($args){
+
+    $default = array(
+            'pro' => false,
+    );
+
+    $args = wp_parse_args($args, $default);
+
+    $pro = $args['pro'] ? '-pro' : '';
+    ?>
+    <div class="rsssl-sidebar-single-content-container<?php echo $pro ?>">
+        <img class="rsssl-sidebar-image<?php echo $pro ?>" src="<?php echo trailingslashit(rsssl_url).'assets/'.$args['img']?>" alt="<?php echo $args['title']?>">
+        <div class="rsssl-sidebar-text-content<?php echo $pro ?>">
+            <?php echo $args['description']?>
+        </div>
+        <div class="rsssl-more-info-button">
+            <a id="rsssl-premium-button<?php echo $pro?>" class="button"
+               href="<?php echo $args['url']?>"
+               target="_blank"> <?php echo __("More info", "really-simple-ssl") ?> </a>
+        </div>
+    </div>
+    <?php
 }
 
   /**
