@@ -50,12 +50,9 @@ if ( ! class_exists( 'rsssl_multisite' ) ) {
     }
 
     add_action('wp_ajax_dismiss_success_message_multisite', array($this,'dismiss_success_message_callback') );
-
     add_action('wp_ajax_rsssl_pro_dismiss_pro_option_notice', array($this,'dismiss_pro_option_notice') );
     add_action("network_admin_notices", array($this, 'show_pro_option_notice'));
-
     add_action("rsssl_show_network_tab_settings", array($this, 'settings_tab'));
-
     add_action( 'wpmu_new_blog', array($this, 'maybe_activate_ssl_in_new_blog'), 10, 6 );
 
   }
@@ -418,13 +415,15 @@ public function settings_tab(){
   }
 
 
-
-
   //change deprecated function depending on version.
-
   public function get_sites_bw_compatible(){
     global $wp_version;
-    $sites = ($wp_version >= 4.6 ) ? get_sites() : wp_get_sites();
+
+    //make sure all blogs are returned, not only the first 100.
+    $args = array(
+            'number' => get_blog_count()
+    );
+    $sites = ($wp_version >= 4.6 ) ? get_sites($args) : wp_get_sites();
     return $sites;
   }
 
@@ -465,6 +464,7 @@ public function settings_tab(){
       RSSSL()->really_simple_ssl->deactivate_ssl();
       restore_current_blog(); //switches back to previous blog, not current, so we have to do it each loop
     }
+
 
 }
 
