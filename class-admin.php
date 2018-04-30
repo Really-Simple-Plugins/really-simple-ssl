@@ -1016,6 +1016,11 @@ protected function get_server_variable_fix_code(){
        $this->trace_log("Already on SSL, start detecting configuration");
        $this->site_has_ssl = TRUE;
      } else {
+         /*
+          * if certificate is valid
+          * $this->site_has_ssl = rsssl_certificate->this()::certificate->is_valid();
+          *
+          * */
        //we're not on SSL, or no server vars were returned, so test with the test-page.
        //plugin url: domain.com/wp-content/etc
        $testpage_url = trailingslashit($this->test_url())."ssl-test-page.php";
@@ -1042,6 +1047,7 @@ protected function get_server_variable_fix_code(){
      }
 
      if ($this->site_has_ssl) {
+         //get filecontents to check .htaccess redirection method and wpconfig fix
        //check the type of SSL, either by parsing the returned string, or by reading the server vars.
        if ((strpos($filecontents, "#CLOUDFRONT#") !== false) || (isset($_SERVER['HTTP_CLOUDFRONT_FORWARDED_PROTO']) && ($_SERVER['HTTP_CLOUDFRONT_FORWARDED_PROTO'] == 'https'))) {
          $this->ssl_type = "CLOUDFRONT";
@@ -1061,7 +1067,7 @@ protected function get_server_variable_fix_code(){
           $this->ssl_type = "ENVHTTPS";
        } elseif ((strpos($filecontents, "#NO KNOWN SSL CONFIGURATION DETECTED#") !== false)) {
          //if we are here, SSL was detected, but without any known server variables set.
-         //So we can use this info to set a server variable ourselfes.
+         //So we can use this info to set a server variable ourselves.
          if (!$this->wpconfig_has_fixes()) {
            $this->no_server_variable = TRUE;
          }
@@ -2062,12 +2068,11 @@ public function settings_page() {
             <?php echo "<img class='rsssl-pro-image' src='" . trailingslashit(rsssl_url) . "assets/really-simple-plugins.png' alt='Really Simple SSL pro'>"; ?>
         </div>
         <div class="rsssl-sidebar-title">
-            <?php $user = wp_get_current_user();
-            $firstname = strlen($user->first_name)>0 ? " ".$user->first_name : "";
-            $link_open = '<a target="_blank" href="https://really-simple-plugins.com/contact">';
+            <?php
+            $link_open = '<a target="_blank" href="https://really-simple-ssl.com/contact">';
 
             ?>
-            <h3> <?php echo sprintf(__("Hi%s, we have some suggestions for your setup. Let us know if you have a suggestion for %sus%s!", "really-simple-ssl-pro"), $firstname, $link_open, "</a>") ?></h3>
+            <h3> <?php echo sprintf(__("We have some suggestions for your setup. Let us know if you have a suggestion for %sus%s!", "really-simple-ssl-pro"), $link_open, "</a>") ?></h3>
         </div>
 
         <?php
@@ -2096,7 +2101,7 @@ public function settings_page() {
                         'img' => 'um-tagging.jpg',
                         'title' => 'UM Tagging',
                         'description' => __("UM Tagging allows you to @tag or @mention all users on your platform.", "really-simple-ssl"),
-                        'url' => 'https://really-simple-plugins.com/download/most-tagging/',
+                        'url' => 'https://really-simple-plugins.com/download/um-tagging/',
                     )
                 );
             }
@@ -2117,7 +2122,7 @@ public function settings_page() {
                         'img' => 'um-mail-alerts.jpg',
                         'title' => 'UM Mail Alerts',
                         'description' => __("Automatically send a notification when a user's post on the activity feed is liked or commented on.", "really-simple-ssl"),
-                        'url' => 'https://really-simple-plugins.com/download/mail-alerts/',
+                        'url' => 'https://really-simple-plugins.com/download/um-mail-alerts/',
                     )
                 );
 

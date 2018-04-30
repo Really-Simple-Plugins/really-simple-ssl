@@ -30,6 +30,7 @@ if ( ! class_exists( 'rsssl_multisite' ) ) {
 
     self::$_this = $this;
 
+
     $this->load_options();
     register_activation_hook(  dirname( __FILE__ )."/".rsssl_plugin, array($this,'activate') );
 

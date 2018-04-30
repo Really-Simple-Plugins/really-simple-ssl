@@ -39,6 +39,7 @@
   	  public $rsssl_server;
   	  public $really_simple_ssl;
   	  public $rsssl_help;
+  	  public $rsssl_certificate;
 
   	  private function __construct() {}
 
@@ -65,13 +66,15 @@
 				self::$instance->rsssl_server      = new rsssl_server();
 				self::$instance->really_simple_ssl = new rsssl_admin();
 				self::$instance->rsssl_help        = new rsssl_help();
+				self::$instance->rsssl_certificate = new rsssl_certificate();
 
 				// Backwards compatibility for add-ons
-				global $rsssl_cache, $rsssl_server, $really_simple_ssl, $rsssl_help;
+				global $rsssl_cache, $rsssl_server, $really_simple_ssl, $rsssl_help, $rsssl_certificate;
 				$rsssl_cache       = self::$instance->rsssl_cache;
 				$rsssl_server      = self::$instance->rsssl_server;
 				$really_simple_ssl = self::$instance->really_simple_ssl;
 				$rsssl_help        = self::$instance->rsssl_help;
+				$rsssl_certificate = self::$instance->rsssl_certificate;
 			}
 
 			self::$instance->hooks();
@@ -101,6 +104,7 @@
 		    require_once( rsssl_path .  'class-cache.php' );
 		    require_once( rsssl_path .  'class-server.php' );
 		    require_once( rsssl_path .  'class-help.php' );
+		    require_once( rsssl_path .  'class-certificate.php' );
 
 		    if ( is_multisite() ) {
 		    	require_once( rsssl_path .  'class-multisite.php' );
