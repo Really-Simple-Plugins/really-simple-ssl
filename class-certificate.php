@@ -18,8 +18,6 @@ if ( ! class_exists( 'rsssl_certificate' ) ) {
 
             add_action('admin_init', array($this, 'is_valid'));
 
-
-
         }
 
         static function this()
@@ -53,14 +51,6 @@ if ( ! class_exists( 'rsssl_certificate' ) ) {
                 //check op trailingslashit enzo
 
 
-
-                $is_wildcard = $this->is_wildcard($certinfo);
-
-                if ($is_wildcard && is_multisite()) {
-
-                    $this->admin_notice_wildcard;
-
-                    }
             }
 
             return false;
@@ -95,30 +85,16 @@ if ( ! class_exists( 'rsssl_certificate' ) ) {
             $start_date = isset($certinfo['validFrom_time_t']) ? $certinfo['validFrom_time_t'] : false;
             $end_date = isset($certinfo['validTo_time_t']) ? $certinfo['validTo_time_t'] : false;
 
-            //Determine current date
+            //Get current date
             $current_date = time();
 
-            //Check if the current date is between the start date and end date
+            //Check if the current date is between the start date and end date. If so, return true
             if ($current_date > $start_date && ($current_date < $end_date)) return true;
 
         }
 
 
-        /*
-         * When multisite is activated with subdomains, and the cert is not wildcard, show a warning.
-         *
-         *
-         * */
 
-
-        public function admin_notice_wildcard()
-        {
-
-            if (!really_simple_ssl::ssl_enabled && !rsssl_multisite::is_multisite_subfolder_install() && !$this->is_wildcard()) {
-                //show notice
-            }
-
-        }
 
         /*
          *
@@ -139,12 +115,17 @@ if ( ! class_exists( 'rsssl_certificate' ) ) {
 
 
         /*
-         *     multisite: check for subdomains?
+         *     Check if the certificate is a wildcard certificate
+         *     Used in admin_notice_wildcard function
          *
          * */
 
-        public function is_wildcard($certinfo)
+        public function is_wildcard()
         {
+            //$domain = "http://cnet.com";
+            $domain = network_site_url();
+
+            $certinfo = $this->get_certinfo($domain);
             //Get the certificate common name
             $certificate_common_name = isset($certinfo['subject']['CN']) ? $certinfo['subject']['CN'] : false;
 
@@ -162,7 +143,6 @@ if ( ! class_exists( 'rsssl_certificate' ) ) {
 
         public function get_certinfo($domain)
         {
-
             //check if the certificate is still valid, and send an email to the administrator if this is not the case.
             $url = $domain;
             $original_parse = parse_url($url, PHP_URL_HOST);

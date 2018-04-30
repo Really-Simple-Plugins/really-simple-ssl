@@ -641,6 +641,19 @@ public function show_notices()
       <?php
     }
   }
+
+    if (!RSSSL()->really_simple_ssl->ssl_enabled && $this->is_multisite_subfolder_install() && !RSSSL()->rsssl_certificate->is_wildcard()) {
+        ?>
+        <div id="message" class="error fade notice">
+            <p>
+                <?php _e('You run a Multisite installation with subfolders, which prevents this plugin from fixing your missing server variable in the wp-config.php.','really-simple-ssl');?>
+                <?php _e('Because the $_SERVER["HTTPS"] variable is not set, your website may experience redirect loops.','really-simple-ssl');?>
+                <?php _e('Activate networkwide to fix this.','really-simple-ssl');?>
+            </p>
+        </div>
+        <?php
+  }
+
 }
 
 
