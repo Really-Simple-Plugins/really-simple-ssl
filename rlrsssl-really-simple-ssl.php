@@ -69,12 +69,11 @@
 				self::$instance->rsssl_certificate = new rsssl_certificate();
 
 				// Backwards compatibility for add-ons
-				global $rsssl_cache, $rsssl_server, $really_simple_ssl, $rsssl_help, $rsssl_certificate;
+				global $rsssl_cache, $rsssl_server, $really_simple_ssl, $rsssl_help;
 				$rsssl_cache       = self::$instance->rsssl_cache;
 				$rsssl_server      = self::$instance->rsssl_server;
 				$really_simple_ssl = self::$instance->really_simple_ssl;
 				$rsssl_help        = self::$instance->rsssl_help;
-				$rsssl_certificate = self::$instance->rsssl_certificate;
 			}
 
 			self::$instance->hooks();

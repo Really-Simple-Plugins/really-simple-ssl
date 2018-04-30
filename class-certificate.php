@@ -28,15 +28,14 @@ if ( ! class_exists( 'rsssl_certificate' ) ) {
         public function is_valid()
         {
 
-
-            //$domain = site_url();
-            $domain = "http://cnet.com";
+            //Get current domain
+            $domain = site_url();
 
             if (!function_exists('stream_context_get_params')) {
-                //load test page
+            //load test page
             } else {
 
-                //get certinfo
+                //get certificate info
                 $certinfo = $this->get_certinfo($domain);
 
                 if (!$certinfo) return false;
@@ -50,7 +49,6 @@ if ( ! class_exists( 'rsssl_certificate' ) ) {
 
                 //check op trailingslashit enzo
 
-
             }
 
             return false;
@@ -58,12 +56,11 @@ if ( ! class_exists( 'rsssl_certificate' ) ) {
 
 
         /*
-         * Check common name(s) and alternative name(s) on certificate
+         * Check common name(s) and alternative name(s) on certificate and match them to the site_url ($domain)
          */
 
         public function is_domain_valid($certinfo, $domain)
         {
-            error_log(print_r($certinfo, true));
 
             //Get both the common name(s) and the alternative names from the certificate
             $certificate_common_names = isset($certinfo['subject']['CN']) ? $certinfo['subject']['CN'] : false;
@@ -94,8 +91,6 @@ if ( ! class_exists( 'rsssl_certificate' ) ) {
         }
 
 
-
-
         /*
          *
          *
@@ -116,7 +111,7 @@ if ( ! class_exists( 'rsssl_certificate' ) ) {
 
         /*
          *     Check if the certificate is a wildcard certificate
-         *     Used in admin_notice_wildcard function
+         *     Function is used in class-multisite.php to determine whether to show a notice for multisite subfolder installations without a wildcard certificate
          *
          * */
 
@@ -151,7 +146,7 @@ if ( ! class_exists( 'rsssl_certificate' ) ) {
 
                 $get = stream_context_create(array("ssl" => array("capture_peer_cert" => TRUE)));
                 if ($get) {
-                    set_error_handler('rsssl_pro_custom_error_handling');
+                    set_error_handler(array($this, 'rsssl_custom_error_handling'));
                     $read = stream_socket_client("ssl://" . $original_parse . ":443", $errno, $errstr, 30, STREAM_CLIENT_CONNECT, $get);
                     restore_error_handler();
 
@@ -163,6 +158,10 @@ if ( ! class_exists( 'rsssl_certificate' ) ) {
                 }
             }
             return $certinfo;
+        }
+
+        public function rsssl_custom_error_handling($errno, $errstr, $errfile, $errline, array $errcontext) {
+            return true;
         }
 
     //class closure

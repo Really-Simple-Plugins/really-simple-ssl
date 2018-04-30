@@ -646,9 +646,9 @@ public function show_notices()
         ?>
         <div id="message" class="error fade notice">
             <p>
-                <?php _e('You run a Multisite installation with subfolders, which prevents this plugin from fixing your missing server variable in the wp-config.php.','really-simple-ssl');?>
-                <?php _e('Because the $_SERVER["HTTPS"] variable is not set, your website may experience redirect loops.','really-simple-ssl');?>
-                <?php _e('Activate networkwide to fix this.','really-simple-ssl');?>
+                <?php _e("You run a Multisite installation with subfolders, but your site doesn't have a wildcard certificate.",'really-simple-ssl');?>
+                <?php _e("This leads to issues when activating SSL networkwide since subdomains will be forced over SSL as well while they don't have a valid certificate.",'really-simple-ssl');?>
+                <?php _e("Activate SSL per site or install a wildcard certificate to fix this.",'really-simple-ssl');?>
             </p>
         </div>
         <?php
@@ -658,7 +658,7 @@ public function show_notices()
 
 
 /**
- * Insert some ajax script to dismis the SSL success message, and stop nagging about it
+ * Insert some ajax script to dismiss the SSL success message, and stop nagging about it
  *
  * @since  2.0
  *

@@ -100,6 +100,11 @@ defined('ABSPATH') or die("you do not have access to this page!");
         add_action('admin_init', array(RSSSL()->rsssl_cache,'flush'),40);
       }
 
+      //show notices when certificate has issues
+      if (!$this->site_has_ssl){
+          add_action('admin_notices', array($this, 'show_notice_certificate'), 10);
+      }
+
       if (!$this->wpconfig_ok()) {
         //if we were to activate ssl, this could result in a redirect loop. So warn first.
         add_action("admin_notices", array($this, 'show_notice_wpconfig_needs_fixes'));
@@ -1018,9 +1023,12 @@ protected function get_server_variable_fix_code(){
      } else {
          /*
           * if certificate is valid
-          * $this->site_has_ssl = rsssl_certificate->this()::certificate->is_valid();
-          *
           * */
+         $this->site_has_ssl = RSSSL()->rsssl_certificate->is_valid();
+
+         error_log("In detect_configuration, is valid?");
+         error_log(RSSSL()->rsssl_certificate->is_valid());
+
        //we're not on SSL, or no server vars were returned, so test with the test-page.
        //plugin url: domain.com/wp-content/etc
        $testpage_url = trailingslashit($this->test_url())."ssl-test-page.php";
@@ -1626,6 +1634,18 @@ public function show_notice_wpconfig_needs_fixes(){ ?>
 </div>
 <?php
 }
+
+public function show_notice_certificate() { ?>
+    <div id="message" class="error fade notice is-dismissible">
+      <h1><?php echo __("Detected possible certificate issues","really-simple-ssl");?></h1>
+      <?php
+    if (!RSSSL()->rsssl_certificate->is_domain_valid()) {
+           echo __("Really Simple SSL failed to detect your site url on the certificate. Please check if your certificate is valid manually at https://ssllabs.com.","really-simple-ssl");
+    } elseif (!RSSSL()->rsssl_certificate->is_date_valid()) {
+            echo __("Your certificate date seems to be invalid. Perhaps the certificate has expired or there is another issue with your certificate. Please check if your certificate is valid manually at https://ssllabs.com", "really-simple-ssl");
+        } ?>
+        </div>
+    <?php }
 
 
   /**
