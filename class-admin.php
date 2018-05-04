@@ -148,6 +148,7 @@ class rsssl_admin extends rsssl_front_end
 
         //handle notices
         add_action('admin_notices', array($this, 'show_notices'));
+        add_action("update_option_rlrsssl_options", array($this, "update_htaccess_after_settings_save"), 20, 3);
     }
 
 
@@ -1390,8 +1391,9 @@ class rsssl_admin extends rsssl_front_end
 
         $htaccess = file_get_contents($this->ABSpath . ".htaccess");
 
-        $needle = "RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]";
-        if (strpos($htaccess, $needle) !== FALSE || $this->contains_rsssl_rules()) {
+        $needle_old = "RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]";
+        $needle_new = "RewriteRule ^(.*)$ https://%{HTTP_HOST}/$1 [R=301,L]";
+        if(strpos($htaccess, $needle_old) !== FALSE || strpos($htaccess, $needle_new) !== FALSE || $this->contains_rsssl_rules()){
             return true;
         } else {
             $this->trace_log(".htaccess does not contain default Really Simple SSL redirect");
@@ -1529,32 +1531,31 @@ class rsssl_admin extends rsssl_front_end
                 file_put_contents($this->ABSpath . ".htaccess", $htaccess);
             }
 
-        } elseif ($this->is_settings_page() || is_network_admin()) {
-
-            if ($this->debug) {
-                $this->trace_log("settings page, or network admin, updating htaccess...");
-            }
-
-            if (!is_writable($this->ABSpath . ".htaccess")) {
-                if ($this->debug) $this->trace_log(".htaccess not writable.");
-                return;
-            }
-
-            $htaccess = preg_replace("/#\s?BEGIN\s?rlrssslReallySimpleSSL.*?#\s?END\s?rlrssslReallySimpleSSL/s", "", $htaccess);
-            $htaccess = preg_replace("/\n+/", "\n", $htaccess);
-
-            $rules = $this->get_redirect_rules();
-
-            //insert rules before WordPress part.
-            $wptag = "# BEGIN WordPress";
-            if (strpos($htaccess, $wptag) !== false) {
-                $htaccess = str_replace($wptag, $rules . $wptag, $htaccess);
-            } else {
-                $htaccess = $htaccess . $rules;
-            }
-            file_put_contents($this->ABSpath . ".htaccess", $htaccess);
-
         }
+    }
+
+
+    public function update_htaccess_after_settings_save($oldvalue, $newvalue, $option){
+
+        if (!is_writable($this->ABSpath . ".htaccess")) {
+            if ($this->debug) $this->trace_log(".htaccess not writable.");
+            return;
+        }
+
+        $htaccess = preg_replace("/#\s?BEGIN\s?rlrssslReallySimpleSSL.*?#\s?END\s?rlrssslReallySimpleSSL/s", "", $htaccess);
+        $htaccess = preg_replace("/\n+/", "\n", $htaccess);
+
+        $rules = $this->get_redirect_rules();
+
+        //insert rules before WordPress part.
+        $wptag = "# BEGIN WordPress";
+        if (strpos($htaccess, $wptag) !== false) {
+            $htaccess = str_replace($wptag, $rules . $wptag, $htaccess);
+        } else {
+            $htaccess = $htaccess . $rules;
+        }
+        file_put_contents($this->ABSpath . ".htaccess", $htaccess);
+
     }
 
     /**
