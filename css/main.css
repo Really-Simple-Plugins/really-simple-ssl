@@ -452,5 +452,8 @@ hr {
 
 #TB_ajaxContent {
   text-align: center !important;
-  height: 270px !important;
+}
+
+#TB_window {
+  height: 370px !important;
 }

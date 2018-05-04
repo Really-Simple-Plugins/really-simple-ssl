@@ -198,7 +198,8 @@ class rsssl_admin extends rsssl_front_end
                 $current = $this->remove_plugin_from_array($plugin, $current);
                 update_option('active_plugins', $current);
             }
-
+            wp_redirect(admin_url('plugins.php'));
+            exit;
         }
     }
 
@@ -2148,8 +2149,8 @@ class rsssl_admin extends rsssl_front_end
                         break;
                     case 'settings' :
                         /*
-            Second tab, Settings
-          */
+                            Second tab, Settings
+                          */
 
                         ?>
                         <form action="options.php" method="post">
@@ -2311,11 +2312,12 @@ class rsssl_admin extends rsssl_front_end
                         );
 
                     }
-                }
-                }
+                }?>
+            </div>
+                <?php }
                 ?>
 
-            </div>
+
         </div><!-- end container -->
         <?php
     }
@@ -2676,6 +2678,7 @@ class rsssl_admin extends rsssl_front_end
 
     public function get_option_htaccess_redirect()
     {
+
         $options = get_option('rlrsssl_options');
 
         $htaccess_redirect = $this->htaccess_redirect;
@@ -2773,25 +2776,36 @@ class rsssl_admin extends rsssl_front_end
 
         ?>
         <div><input class="thickbox" title="" type="button" style="display: block; float: left;" alt="#TB_inline?
-        height=300&width=400&inlineId=deactivate_keep_ssl" value="Deactivate Plugin and keep SSL" /></div>
+        height=370&width=400&inlineId=deactivate_keep_ssl" value="Deactivate Plugin and keep SSL" /></div>
         <div id="deactivate_keep_ssl" style="display: none;">
 
-        <h2 style="margin: 10px 0; text-align: center;">Are you sure?</h2>
-        <h3 style="margin: 20px 0; text-align: center;">Deactivating the plugin while keeping SSL will do the following:</h3>
+        <h1 style="margin: 10px 0; text-align: center;"><?php _e("Are you sure?", "really-simple-ssl") ?></h1>
+        <h2 style="margin: 20px 0; text-align: left;"><?php _e("Deactivating the plugin while keeping SSL will do the following:", "really-simple-ssl") ?></h2>
         <ul style="text-align: left; font-size: 1.2em;">
-            <li>* Your site address will remain https://</li>
-            <li>* The .htaccess redirect will remain active</li>
-            <li>* The mixed content fixer will stop working</li>
-            Deactivating the plugin via the plugins overview will still revert the site back to http://.
+            <li><?php _e("* The mixed content fixer will stop working", "really-simple-ssl") ?></li>
+            <li><?php _e("* The WordPress 301 and Javascript redirect will stop working", "really-simple-ssl")?></li>
+            <li><?php _e("* Your site address will remain https://", "really-simple-ssl") ?> </li>
+            <li><?php _e("* The .htaccess redirect will remain active", "really-simple-ssl") ?></li>
+            <?php _e("Deactivating the plugin via the plugins overview will revert the site back to http://.", "really-simple-ssl") ?>
         </ul>
 
+            <script>
+                jQuery(document).ready(function($) {
+                    $('#rsssl_close_tb_window').click(tb_remove);
+                });
+            </script>
         <?php
         $token = wp_create_nonce('rsssl_deactivate_plugin');
         $deactivate_keep_ssl_link = admin_url("options-general.php?page=rlrsssl_really_simple_ssl&action=uninstall_keep_ssl&token=".$token);
 
         ?>
-        <a class="button" href="<?php add_thickbox() ?>
-         <?php echo $deactivate_keep_ssl_link?>"><?php _e("I'm sure I want to deactivate")?></a>
+            <a class="button rsssl-button-deactivate-keep-ssl" href="<?php add_thickbox() ?>
+                <?php echo $deactivate_keep_ssl_link?>"><?php _e("I'm sure I want to deactivate", "really-simple-ssl")?>
+            </a>
+            &nbsp;&nbsp;
+            <a class="button" href ="#" id="rsssl_close_tb_window"><?php _e("Cancel", "really-simple-ssl") ?></a>
+
+
         </div>
  <?php
        RSSSL()->rsssl_help->get_help_tip(__("Clicking this button will deactivate the plugin but keep your site on SSL. The WordPress 301 redirect, Javascript redirect and mixed content fixer will stop working. The site address will remain https:// and the .htaccess redirect will both keep working. Deactivating the plugin via the plugins overview will still revert the site back to http://.", "really-simple-ssl"));
