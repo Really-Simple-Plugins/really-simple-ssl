@@ -449,3 +449,8 @@ hr {
 .rsssl-more-info-button {
   clear: both;
 }
+
+#TB_ajaxContent {
+  text-align: center !important;
+  height: 225px !important;
+}

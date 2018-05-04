@@ -51,10 +51,6 @@ class rsssl_admin extends rsssl_front_end
 
         self::$_this = $this;
 
-
-        error_log("LOCALE");
-        //error_log(print_r(pll_current_language()));
-
         $this->ABSpath = $this->getABSPATH();
         $this->get_options();
         $this->get_admin_options();
@@ -138,6 +134,7 @@ class rsssl_admin extends rsssl_front_end
         //settings page, form  and settings link in the plugins page
         add_action('admin_menu', array($this, 'add_settings_page'), 40);
         add_action('admin_init', array($this, 'create_form'), 40);
+        add_action('admin_init', array($this, 'listen_for_deactivation'), 40);
 
         $plugin = rsssl_plugin;
         add_filter("plugin_action_links_$plugin", array($this, 'plugin_settings_link'));
@@ -156,6 +153,8 @@ class rsssl_admin extends rsssl_front_end
 
     public function listen_for_deactivation()
     {
+
+        error_log("Begin listen for deactivation");
         //check if we are on ssl settings page
         if (!$this->is_settings_page()) return;
 
@@ -163,7 +162,9 @@ class rsssl_admin extends rsssl_front_end
         if (!current_user_can($this->capability)) return;
 
         //check nonce
-        //if (wp_verify_nonce())
+        if (isset($_POST['rsssl_deactivate_plugin']) && (wp_verify_nonce($_POST['rsssl_deactivate_plugin'], 'rsssl_deactivate_plugin'))) {
+            error_log("NONCE FOUND");
+        }
 
         //check for action
         if (isset($_GET["action"]) && $_GET["action"] == 'uninstall_keep_ssl') {
@@ -180,12 +181,12 @@ class rsssl_admin extends rsssl_front_end
                 update_site_option('active_sitewide_plugins', $network_current);
 
                 //remove plugin one by one on each site
-                $sites = wp_get_sites();
+                $sites = get_sites();
                 foreach ($sites as $site) {
                     switch_to_blog($site['blog_id']);
 
                     $current = get_option('active_plugins', array());
-                    $current = rl_remove_plugin_from_array($plugin, $current);
+                    $current = $this->remove_plugin_from_array($plugin, $current);
                     update_option('active_plugins', $current);
 
                     restore_current_blog(); //switches back to previous blog, not current, so we have to do it each loop
@@ -193,11 +194,29 @@ class rsssl_admin extends rsssl_front_end
 
             } else {
                 $current = get_option('active_plugins', array());
-                $current = rl_remove_plugin_from_array($plugin, $current);
+                $current = $this->remove_plugin_from_array($plugin, $current);
                 update_option('active_plugins', $current);
             }
 
         }
+    }
+
+
+
+    /*
+     *
+     *
+     *
+     *
+     * */
+
+
+    public function remove_plugin_from_array($plugin, $current) {
+        $key = array_search( $plugin, $current );
+        if ( false !== $key ) {
+            unset( $current[ $key ] );
+        }
+        return $current;
     }
 
 
@@ -2255,7 +2274,8 @@ class rsssl_admin extends rsssl_front_end
                         );
 
                     }
-                    if (defined("EDD_SL_PLUGIN_DIR") && (defined(get_locale() == 'nl_NL'))) {
+
+                    if (defined("EDD_SL_PLUGIN_DIR") && (get_locale() === 'nl_NL')) {
                         $this->get_banner_html(array(
                                 'img' => 'edd-moneybird.jpg',
                                 'title' => 'EDD Moneybird',
@@ -2266,7 +2286,7 @@ class rsssl_admin extends rsssl_front_end
 
                     }
 
-                    if (defined('WC_PLUGIN_FILE') && (defined(get_locale() == 'nl_NL'))) {
+                    if (defined('WC_PLUGIN_FILE') && (get_locale() === 'nl_NL')) {
                         $this->get_banner_html(array(
                                 'img' => 'woocommerce-moneybird.jpg',
                                 'title' => 'WooCommerce Moneybird',
@@ -2735,14 +2755,30 @@ class rsssl_admin extends rsssl_front_end
     }
 
     public function get_option_deactivate_keep_ssl(){
-                            $token = wp_create_nonce('rsssl_deactivate_plugin');
-                            $settings_link = admin_url("options-general.php?page=rlrsssl_really_simple_ssl&action=uninstall_keep_ssl&token=".$token);
 
-                                ?>
-                            <a class="button" href="<?php echo $settings_link?>"><?php _e("Deactivate Plugin and keep SSL")?></a>
+        ?>
+        <div><input class="thickbox" title="" type="button" style="display: block; float: left;" alt="#TB_inline?
+        height=200&width=300&inlineId=deactivate_keep_ssl" value="Deactivate Plugin and keep SSL" /></div>
+        <div id="deactivate_keep_ssl" style="display: none;">
 
-<?php
-        RSSSL()->rsssl_help->get_help_tip(__("This button will deactivate Really Simple SSL while your site and home url will remain https://. The mixed content fixer will stop working.", "really-simple-ssl"));
+        <h2 style="margin: 10px 0; text-align: center;">Are you sure?</h2>
+        <h3 style="margin: 20px 0; text-align: center;">Deactivating the plugin while keeping SSL while do the following:</h3>
+        <ul style="text-align: center; font-size: 1.2em;">
+            <li>* Your site address will remain https://</li>
+            <li>* The .htaccess redirect will remain active</li>
+            <li>* The mixed content fixer will stop working</li>
+        </ul>
+
+        <?php
+        $token = wp_create_nonce('rsssl_deactivate_plugin');
+        $deactivate_keep_ssl_link = admin_url("options-general.php?page=rlrsssl_really_simple_ssl&action=uninstall_keep_ssl&token=".$token);
+
+        ?>
+        <a class="button" href="<?php add_thickbox() ?>
+         <?php echo $deactivate_keep_ssl_link?>"><?php _e("I'm sure I want to deactivate")?></a>
+        </div>
+ <?php
+       RSSSL()->rsssl_help->get_help_tip(__("This button will deactivate Really Simple SSL while your site and home url will remain https://. The mixed content fixer will stop working.", "really-simple-ssl"));
 
     }
 
