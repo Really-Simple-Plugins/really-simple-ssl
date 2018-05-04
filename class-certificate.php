@@ -157,7 +157,10 @@ if ( ! class_exists( 'rsssl_certificate' ) ) {
                     }
                 }
             }
-            return $certinfo;
+
+            if (!empty($certinfo)) return $certinfo;
+
+            return false;
         }
 
         public function rsssl_custom_error_handling($errno, $errstr, $errfile, $errline, array $errcontext) {
