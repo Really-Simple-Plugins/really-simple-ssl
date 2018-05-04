@@ -53,7 +53,7 @@ class rsssl_admin extends rsssl_front_end
 
 
         error_log("LOCALE");
-        error_log(print_r(pll_current_language()));
+        //error_log(print_r(pll_current_language()));
 
         $this->ABSpath = $this->getABSPATH();
         $this->get_options();
@@ -154,6 +154,53 @@ class rsssl_admin extends rsssl_front_end
     }
 
 
+    public function listen_for_deactivation()
+    {
+        //check if we are on ssl settings page
+        if (!$this->is_settings_page()) return;
+
+        //check user role
+        if (!current_user_can($this->capability)) return;
+
+        //check nonce
+        //if (wp_verify_nonce())
+
+        //check for action
+        if (isset($_GET["action"]) && $_GET["action"] == 'uninstall_keep_ssl') {
+            //deactivate plugin, but don't revert to http.
+            $plugin = $this->plugin_dir . "/" . $this->plugin_filename;
+            $plugin = plugin_basename(trim($plugin));
+
+            if (is_multisite()) {
+
+                $network_current = get_site_option('active_sitewide_plugins', array());
+                if (is_plugin_active_for_network($plugin)) {
+                    unset($network_current[$plugin]);
+                }
+                update_site_option('active_sitewide_plugins', $network_current);
+
+                //remove plugin one by one on each site
+                $sites = wp_get_sites();
+                foreach ($sites as $site) {
+                    switch_to_blog($site['blog_id']);
+
+                    $current = get_option('active_plugins', array());
+                    $current = rl_remove_plugin_from_array($plugin, $current);
+                    update_option('active_plugins', $current);
+
+                    restore_current_blog(); //switches back to previous blog, not current, so we have to do it each loop
+                }
+
+            } else {
+                $current = get_option('active_plugins', array());
+                $current = rl_remove_plugin_from_array($plugin, $current);
+                update_option('active_plugins', $current);
+            }
+
+        }
+    }
+
+
     //change deprecated function depending on version.
 
     public function get_sites_bw_compatible()
@@ -210,6 +257,7 @@ class rsssl_admin extends rsssl_front_end
         $this->set_siteurl_to_ssl();
         $this->save_options();
     }
+
 
     public function deactivate_ssl()
     {
@@ -1960,279 +2008,279 @@ class rsssl_admin extends rsssl_front_end
 
         ?>
         <div class="rsssl-container">
-        <div class="rsssl-main"><?php
+            <div class="rsssl-main"><?php
 
-            switch ($tab) {
-                case 'configuration' :
-                    /*
-              First tab, configuration
-      */
-                    ?>
-                    <h2><?php echo __("Detected setup", "really-simple-ssl"); ?></h2>
-                    <table class="really-simple-ssl-table">
+                switch ($tab) {
+                    case 'configuration' :
+                        /*
+                  First tab, configuration
+          */
+                        ?>
+                        <h2><?php echo __("Detected setup", "really-simple-ssl"); ?></h2>
+                        <table class="really-simple-ssl-table">
 
-                        <?php if ($this->site_has_ssl) { ?>
-                            <tr>
-                                <td><?php echo $this->ssl_enabled ? $this->img("success") : $this->img("error"); ?></td>
-                                <td><?php
-                                    if ($this->ssl_enabled) {
-                                        _e("SSL is enabled on your site.", "really-simple-ssl") . "&nbsp;";
-                                    } else {
-                                        _e("SSL is not enabled yet", "really-simple-ssl") . "&nbsp;";
-                                        $this->show_enable_ssl_button();
-                                    }
-                                    ?>
-                                </td>
-                                <td></td>
-                            </tr>
-                        <?php }
-
-                        /* check if the mixed content fixer is working */
-                        if ($this->ssl_enabled && $this->autoreplace_insecure_links && $this->site_has_ssl) {
-                            $mixed_content_fixer_detected = $this->mixed_content_fixer_detected();
-                            ?>
-                            <tr>
-                                <td><?php echo $mixed_content_fixer_detected ? $this->img("success") : $this->img("error"); ?></td>
-                                <td><?php
-                                    if ($mixed_content_fixer_detected) {
-                                        _e("Mixed content fixer was successfully detected on the front-end", "really-simple-ssl") . "&nbsp;";
-                                    } else {
-                                        _e('The mixed content fixer is active, but was not detected on the frontpage. Please follow these steps to check if the mixed content fixer is working.', "really-simple-ssl") . ":&nbsp;";
-                                        echo '&nbsp;<a target="_blank" href="https://www.really-simple-ssl.com/knowledge-base/how-to-check-if-the-mixed-content-fixer-is-active/">';
-                                        _e('Instructions', 'really-simple-ssl');
-                                        echo '</a>';
-                                    }
-                                    ?>
-                                </td>
-                                <td></td>
-                            </tr>
-                        <?php } ?>
-                        <tr>
-                            <td><?php echo ($this->site_has_ssl && $this->wpconfig_ok()) ? $this->img("success") : $this->img("error"); ?></td>
-                            <td><?php
-                                if (!$this->wpconfig_ok()) {
-                                    _e("Failed activating SSL", "really-simple-ssl") . "&nbsp;";
-                                } elseif (!$this->site_has_ssl) {
-                                    _e("No SSL detected.", "really-simple-ssl") . "&nbsp;";
-                                } else {
-                                    _e("An SSL certificate was detected on your site. ", "really-simple-ssl");
-                                }
-                                ?>
-                            </td>
-                            <td></td>
-                        </tr>
-                        <?php if ($this->ssl_enabled) { ?>
-                            <tr>
-                                <td>
-                                    <?php echo ($this->has_301_redirect()) ? $this->img("success") : $this->img("warning"); ?>
-                                </td>
-                                <td>
-                                    <?php
-
-                                    if ($this->has_301_redirect()) {
-                                        _e("301 redirect to https set: ", "really-simple-ssl");
-                                        if (RSSSL()->rsssl_server->uses_htaccess() && $this->htaccess_contains_redirect_rules())
-                                            _e(".htaccess redirect", "really-simple-ssl");
-
-                                        if (RSSSL()->rsssl_server->uses_htaccess() && $this->htaccess_contains_redirect_rules() && $this->wp_redirect)
-                                            echo "&nbsp;" . __("and", "really-simple-ssl") . "&nbsp;";
-
-                                        if ($this->wp_redirect)
-                                            _e("WordPress redirect", "really-simple-ssl");
-
-                                    } elseif (RSSSL()->rsssl_server->uses_htaccess() && (!is_multisite() || !RSSSL()->rsssl_multisite->is_per_site_activated_multisite_subfolder_install())) {
-                                        if (is_writable($this->ABSpath . ".htaccess")) {
-                                            _e("Enable a .htaccess redirect or WordPress redirect in the settings to create a 301 redirect.", "really-simple-ssl");
-                                        } elseif (!is_writable($this->ABSpath . ".htaccess")) {
-                                            _e(".htaccess is not writable. Set 301 WordPress redirect, or set the .htaccess manually if you want to redirect in .htaccess.", "really-simple-ssl");
+                            <?php if ($this->site_has_ssl) { ?>
+                                <tr>
+                                    <td><?php echo $this->ssl_enabled ? $this->img("success") : $this->img("error"); ?></td>
+                                    <td><?php
+                                        if ($this->ssl_enabled) {
+                                            _e("SSL is enabled on your site.", "really-simple-ssl") . "&nbsp;";
                                         } else {
-                                            _e("Https redirect cannot be set in the .htaccess. Set the .htaccess redirect manually or enable WordPress redirect in the settings.", "really-simple-ssl");
+                                            _e("SSL is not enabled yet", "really-simple-ssl") . "&nbsp;";
+                                            $this->show_enable_ssl_button();
                                         }
+                                        ?>
+                                    </td>
+                                    <td></td>
+                                </tr>
+                            <?php }
+
+                            /* check if the mixed content fixer is working */
+                            if ($this->ssl_enabled && $this->autoreplace_insecure_links && $this->site_has_ssl) {
+                                $mixed_content_fixer_detected = $this->mixed_content_fixer_detected();
+                                ?>
+                                <tr>
+                                    <td><?php echo $mixed_content_fixer_detected ? $this->img("success") : $this->img("error"); ?></td>
+                                    <td><?php
+                                        if ($mixed_content_fixer_detected) {
+                                            _e("Mixed content fixer was successfully detected on the front-end", "really-simple-ssl") . "&nbsp;";
+                                        } else {
+                                            _e('The mixed content fixer is active, but was not detected on the frontpage. Please follow these steps to check if the mixed content fixer is working.', "really-simple-ssl") . ":&nbsp;";
+                                            echo '&nbsp;<a target="_blank" href="https://www.really-simple-ssl.com/knowledge-base/how-to-check-if-the-mixed-content-fixer-is-active/">';
+                                            _e('Instructions', 'really-simple-ssl');
+                                            echo '</a>';
+                                        }
+                                        ?>
+                                    </td>
+                                    <td></td>
+                                </tr>
+                            <?php } ?>
+                            <tr>
+                                <td><?php echo ($this->site_has_ssl && $this->wpconfig_ok()) ? $this->img("success") : $this->img("error"); ?></td>
+                                <td><?php
+                                    if (!$this->wpconfig_ok()) {
+                                        _e("Failed activating SSL", "really-simple-ssl") . "&nbsp;";
+                                    } elseif (!$this->site_has_ssl) {
+                                        _e("No SSL detected.", "really-simple-ssl") . "&nbsp;";
                                     } else {
-                                        _e("No 301 redirect is set. Enable the WordPress 301 redirect in the settings to get a 301 permanent redirect.", "really-simple-ssl");
+                                        _e("An SSL certificate was detected on your site. ", "really-simple-ssl");
                                     }
                                     ?>
                                 </td>
                                 <td></td>
                             </tr>
+                            <?php if ($this->ssl_enabled) { ?>
+                                <tr>
+                                    <td>
+                                        <?php echo ($this->has_301_redirect()) ? $this->img("success") : $this->img("warning"); ?>
+                                    </td>
+                                    <td>
+                                        <?php
 
+                                        if ($this->has_301_redirect()) {
+                                            _e("301 redirect to https set: ", "really-simple-ssl");
+                                            if (RSSSL()->rsssl_server->uses_htaccess() && $this->htaccess_contains_redirect_rules())
+                                                _e(".htaccess redirect", "really-simple-ssl");
+
+                                            if (RSSSL()->rsssl_server->uses_htaccess() && $this->htaccess_contains_redirect_rules() && $this->wp_redirect)
+                                                echo "&nbsp;" . __("and", "really-simple-ssl") . "&nbsp;";
+
+                                            if ($this->wp_redirect)
+                                                _e("WordPress redirect", "really-simple-ssl");
+
+                                        } elseif (RSSSL()->rsssl_server->uses_htaccess() && (!is_multisite() || !RSSSL()->rsssl_multisite->is_per_site_activated_multisite_subfolder_install())) {
+                                            if (is_writable($this->ABSpath . ".htaccess")) {
+                                                _e("Enable a .htaccess redirect or WordPress redirect in the settings to create a 301 redirect.", "really-simple-ssl");
+                                            } elseif (!is_writable($this->ABSpath . ".htaccess")) {
+                                                _e(".htaccess is not writable. Set 301 WordPress redirect, or set the .htaccess manually if you want to redirect in .htaccess.", "really-simple-ssl");
+                                            } else {
+                                                _e("Https redirect cannot be set in the .htaccess. Set the .htaccess redirect manually or enable WordPress redirect in the settings.", "really-simple-ssl");
+                                            }
+                                        } else {
+                                            _e("No 301 redirect is set. Enable the WordPress 301 redirect in the settings to get a 301 permanent redirect.", "really-simple-ssl");
+                                        }
+                                        ?>
+                                    </td>
+                                    <td></td>
+                                </tr>
+
+                                <?php
+                            }
+                            ?>
+
+                        </table>
+                        <?php do_action("rsssl_configuration_page"); ?>
+                        <?php
+                        break;
+                    case 'settings' :
+                        /*
+            Second tab, Settings
+          */
+
+                        ?>
+                        <form action="options.php" method="post">
                             <?php
-                        }
-                        ?>
+                            settings_fields('rlrsssl_options');
+                            do_settings_sections('rlrsssl');
+                            ?>
 
-                    </table>
-                    <?php do_action("rsssl_configuration_page"); ?>
-                    <?php
-                    break;
-                case 'settings' :
-                    /*
-        Second tab, Settings
-      */
-
-                    ?>
-                    <form action="options.php" method="post">
+                            <input class="button button-primary" name="Submit" type="submit"
+                                   value="<?php echo __("Save", "really-simple-ssl"); ?>"/>
+                        </form>
                         <?php
-                        settings_fields('rlrsssl_options');
-                        do_settings_sections('rlrsssl');
+                        break;
+
+                    case 'debug' :
+                        /*
+            third tab: debug
+          */
                         ?>
+                        <div>
+                            <?php
+                            if ($this->debug) {
+                                echo "<h2>" . __("Log for debugging purposes", "really-simple-ssl") . "</h2>";
+                                echo "<p>" . __("Send me a copy of these lines if you have any issues. The log will be erased when debug is set to false", "really-simple-ssl") . "</p>";
+                                echo "<div class='debug-log'>";
+                                if (defined('RSSSL_SAFE_MODE') && RSSSL_SAFE_MODE) echo "SAFE MODE<br>";
+                                echo "Options:<br>";
+                                if ($this->htaccess_redirect) echo "* htaccess redirect<br>";
+                                if ($this->wp_redirect) echo "* WordPress redirect<br>";
+                                if ($this->autoreplace_insecure_links) echo "* Mixed content fixer<br>";
 
-                        <input class="button button-primary" name="Submit" type="submit"
-                               value="<?php echo __("Save", "really-simple-ssl"); ?>"/>
-                    </form>
-                    <?php
-                    break;
+                                echo "SERVER: " . RSSSL()->rsssl_server->get_server() . "<br>";
+                                if (is_multisite()) {
+                                    echo "MULTISITE<br>";
+                                    echo (!RSSSL()->rsssl_multisite->ssl_enabled_networkwide) ? "SSL is being activated per site<br>" : "SSL is activated network wide<br>";
+                                }
 
-                case 'debug' :
-                    /*
-        third tab: debug
-      */
-                    ?>
-                    <div>
-                        <?php
-                        if ($this->debug) {
-                            echo "<h2>" . __("Log for debugging purposes", "really-simple-ssl") . "</h2>";
-                            echo "<p>" . __("Send me a copy of these lines if you have any issues. The log will be erased when debug is set to false", "really-simple-ssl") . "</p>";
-                            echo "<div class='debug-log'>";
-                            if (defined('RSSSL_SAFE_MODE') && RSSSL_SAFE_MODE) echo "SAFE MODE<br>";
-                            echo "Options:<br>";
-                            if ($this->htaccess_redirect) echo "* htaccess redirect<br>";
-                            if ($this->wp_redirect) echo "* WordPress redirect<br>";
-                            if ($this->autoreplace_insecure_links) echo "* Mixed content fixer<br>";
-
-                            echo "SERVER: " . RSSSL()->rsssl_server->get_server() . "<br>";
-                            if (is_multisite()) {
-                                echo "MULTISITE<br>";
-                                echo (!RSSSL()->rsssl_multisite->ssl_enabled_networkwide) ? "SSL is being activated per site<br>" : "SSL is activated network wide<br>";
+                                echo ($this->ssl_enabled) ? "SSL is enabled for this site<br>" : "SSL is not yet enabled for this site<br>";
+                                echo $this->debug_log;
+                                echo "</div>";
+                                //$this->debug_log.="<br><b>-----------------------</b>";
+                                $this->debug_log = "";
+                                $this->save_options();
+                            } else {
+                                echo "<br>";
+                                _e("To view results here, enable the debug option in the settings tab.", "really-simple-ssl");
                             }
 
-                            echo ($this->ssl_enabled) ? "SSL is enabled for this site<br>" : "SSL is not yet enabled for this site<br>";
-                            echo $this->debug_log;
-                            echo "</div>";
-                            //$this->debug_log.="<br><b>-----------------------</b>";
-                            $this->debug_log = "";
-                            $this->save_options();
-                        } else {
-                            echo "<br>";
-                            _e("To view results here, enable the debug option in the settings tab.", "really-simple-ssl");
-                        }
-
-                        ?>
-                    </div>
-                    <?php
-                    break;
-            }
-            //possibility to hook into the tabs.
-            do_action("show_tab_{$tab}");
-            ?>
-        </div><!-- end main-->
-
-        <?php
-
-        /**
-         *
-         * Generate a sidebar for free users to advertise pro
-         * When using Ultimate Member, also show Ultimate Member add-ons
-         * Pro users never see the sidebar
-         *
-         * @since 2.5.27
-         *
-         */
-
-        if (!defined("rsssl_pro_version") && (!defined("rsssl_pp_version")) && (!defined("rsssl_soc_version")) && (!class_exists('RSSSL_PRO'))) {
-
-        //Generate the Really Simple Plugins logo and recommended plugins text
-
-        ?>
-        <div class="rsssl-sidebar">
-            <div class="rsssl-really-simple-plugins-logo">
-                <?php echo "<img class='rsssl-pro-image' src='" . trailingslashit(rsssl_url) . "assets/really-simple-plugins.png' alt='Really Simple SSL pro'>"; ?>
-            </div>
-            <div class="rsssl-sidebar-title">
-                <?php
-                $link_open = '<a target="_blank" href="https://really-simple-ssl.com/contact">';
-
+                            ?>
+                        </div>
+                        <?php
+                        break;
+                }
+                //possibility to hook into the tabs.
+                do_action("show_tab_{$tab}");
                 ?>
-                <h3> <?php echo sprintf(__("We have some suggestions for your setup. Let us know if you have a suggestion for %sus%s!", "really-simple-ssl-pro"), $link_open, "</a>") ?></h3>
-            </div>
+            </div><!-- end main-->
 
             <?php
 
-            /*
-         * Generate a container for both pro and UM
-         * Pro container has different image size, text position and button color
-         * Before generating, check if Really Simple SSL pro or Ultimate Member is active
-         * */
+            /**
+             *
+             * Generate a sidebar for free users to advertise pro
+             * When using Ultimate Member, also show Ultimate Member add-ons
+             * Pro users never see the sidebar
+             *
+             * @since 2.5.27
+             *
+             */
 
-            $url = is_multisite() ? 'https://really-simple-ssl.com/downloads/really-simple-ssl-pro-multisite/' : 'https://really-simple-ssl.com/downloads/really-simple-ssl-pro/';
-            $this->get_banner_html(array(
-                    'img' => 'rsssl-pro.jpg',
-                    'title' => 'Really Simple SSL Pro',
-                    'description' => __("Really Simple SSL pro optimizes your SSL configuration: extensive scan for mixed content issues, access to premium support, HSTS and more!", "really-simple-ssl"),
-                    'url' => $url,
-                    'pro' => true,
-                )
-            );
+            if (!defined("rsssl_pro_version") && (!defined("rsssl_pp_version")) && (!defined("rsssl_soc_version")) && (!class_exists('RSSSL_PRO'))) {
 
-            if (defined("ultimatemember_version")) {
+            //Generate the Really Simple Plugins logo and recommended plugins text
 
-                if (!defined("um_tagging_version")) {
-
-                    $this->get_banner_html(array(
-                            'img' => 'um-tagging.jpg',
-                            'title' => 'UM Tagging',
-                            'description' => __("UM Tagging allows you to @tag or @mention all users on your platform.", "really-simple-ssl"),
-                            'url' => 'https://really-simple-plugins.com/download/um-tagging/',
-                        )
-                    );
-                }
-
-                if (!defined("um_most_visited_version")) {
-
-                    $this->get_banner_html(array(
-                            'img' => 'um-most-visited.jpg',
-                            'title' => 'UM Most Visited',
-                            'description' => __("Show the most visited users and add a 'last visited users' tab to each user profile.", "really-simple-ssl"),
-                            'url' => 'https://really-simple-plugins.com/download/most-visited-members/',
-                        )
-                    );
-                }
-
-                if (!defined("um_tagging_version")) {
-                    $this->get_banner_html(array(
-                            'img' => 'um-mail-alerts.jpg',
-                            'title' => 'UM Mail Alerts',
-                            'description' => __("Automatically send a notification when a user's post on the activity feed is liked or commented on.", "really-simple-ssl"),
-                            'url' => 'https://really-simple-plugins.com/download/um-mail-alerts/',
-                        )
-                    );
-
-                }
-                if (defined("EDD_SL_PLUGIN_DIR") && (defined(get_locale() == 'nl_NL'))) {
-                    $this->get_banner_html(array(
-                            'img' => 'edd-moneybird.jpg',
-                            'title' => 'EDD Moneybird',
-                            'description' => __("Export your Easy Digital Downloads sales directly to Moneybird.", "really-simple-ssl"),
-                            'url' => 'https://really-simple-plugins.com/download/edd-moneybird/',
-                        )
-                    );
-
-                }
-
-                if (defined('WC_PLUGIN_FILE') && (defined(get_locale() == 'nl_NL'))) {
-                    $this->get_banner_html(array(
-                            'img' => 'woocommerce-moneybird.jpg',
-                            'title' => 'WooCommerce Moneybird',
-                            'description' => __("Export your WooCommerce sales directly to Moneybird.", "really-simple-ssl"),
-                            'url' => 'https://really-simple-plugins.com/download/woocommerce-moneybird/',
-                        )
-                    );
-
-                }
-            }
-            }
             ?>
+            <div class="rsssl-sidebar">
+                <div class="rsssl-really-simple-plugins-logo">
+                    <?php echo "<img class='rsssl-pro-image' src='" . trailingslashit(rsssl_url) . "assets/really-simple-plugins.png' alt='Really Simple SSL pro'>"; ?>
+                </div>
+                <div class="rsssl-sidebar-title">
+                    <?php
+                    $link_open = '<a target="_blank" href="https://really-simple-ssl.com/contact">';
 
-        </div>
+                    ?>
+                    <h3> <?php echo sprintf(__("We have some suggestions for your setup. Let us know if you have a suggestion for %sus%s!", "really-simple-ssl-pro"), $link_open, "</a>") ?></h3>
+                </div>
+
+                <?php
+
+                /*
+             * Generate a container for both pro and UM
+             * Pro container has different image size, text position and button color
+             * Before generating, check if Really Simple SSL pro or Ultimate Member is active
+             * */
+
+                $url = is_multisite() ? 'https://really-simple-ssl.com/downloads/really-simple-ssl-pro-multisite/' : 'https://really-simple-ssl.com/downloads/really-simple-ssl-pro/';
+                $this->get_banner_html(array(
+                        'img' => 'rsssl-pro.jpg',
+                        'title' => 'Really Simple SSL Pro',
+                        'description' => __("Really Simple SSL pro optimizes your SSL configuration: extensive scan for mixed content issues, access to premium support, HSTS and more!", "really-simple-ssl"),
+                        'url' => $url,
+                        'pro' => true,
+                    )
+                );
+
+                if (defined("ultimatemember_version")) {
+
+                    if (!defined("um_tagging_version")) {
+
+                        $this->get_banner_html(array(
+                                'img' => 'um-tagging.jpg',
+                                'title' => 'UM Tagging',
+                                'description' => __("UM Tagging allows you to @tag or @mention all users on your platform.", "really-simple-ssl"),
+                                'url' => 'https://really-simple-plugins.com/download/um-tagging/',
+                            )
+                        );
+                    }
+
+                    if (!defined("um_most_visited_version")) {
+
+                        $this->get_banner_html(array(
+                                'img' => 'um-most-visited.jpg',
+                                'title' => 'UM Most Visited',
+                                'description' => __("Show the most visited users and add a 'last visited users' tab to each user profile.", "really-simple-ssl"),
+                                'url' => 'https://really-simple-plugins.com/download/most-visited-members/',
+                            )
+                        );
+                    }
+
+                    if (!defined("um_tagging_version")) {
+                        $this->get_banner_html(array(
+                                'img' => 'um-mail-alerts.jpg',
+                                'title' => 'UM Mail Alerts',
+                                'description' => __("Automatically send a notification when a user's post on the activity feed is liked or commented on.", "really-simple-ssl"),
+                                'url' => 'https://really-simple-plugins.com/download/um-mail-alerts/',
+                            )
+                        );
+
+                    }
+                    if (defined("EDD_SL_PLUGIN_DIR") && (defined(get_locale() == 'nl_NL'))) {
+                        $this->get_banner_html(array(
+                                'img' => 'edd-moneybird.jpg',
+                                'title' => 'EDD Moneybird',
+                                'description' => __("Export your Easy Digital Downloads sales directly to Moneybird.", "really-simple-ssl"),
+                                'url' => 'https://really-simple-plugins.com/download/edd-moneybird/',
+                            )
+                        );
+
+                    }
+
+                    if (defined('WC_PLUGIN_FILE') && (defined(get_locale() == 'nl_NL'))) {
+                        $this->get_banner_html(array(
+                                'img' => 'woocommerce-moneybird.jpg',
+                                'title' => 'WooCommerce Moneybird',
+                                'description' => __("Export your WooCommerce sales directly to Moneybird.", "really-simple-ssl"),
+                                'url' => 'https://really-simple-plugins.com/download/woocommerce-moneybird/',
+                            )
+                        );
+
+                    }
+                }
+                }
+                ?>
+
+            </div>
         </div><!-- end container -->
         <?php
     }
@@ -2416,6 +2464,10 @@ class rsssl_admin extends rsssl_front_end
         }
 
         add_settings_field('id_switch_mixed_content_fixer_hook', __("Switch mixed content fixer hook", "really-simple-ssl"), array($this, 'get_option_switch_mixed_content_fixer_hook'), 'rlrsssl', 'rlrsssl_settings');
+
+        add_settings_field('id_deactivate_keep_ssl', __("Deactivate plugin and keep SSL", "really-simple-ssl"), array($this, 'get_option_deactivate_keep_ssl'), 'rlrsssl', 'rlrsssl_settings');
+
+
 
     }
 
@@ -2682,6 +2734,18 @@ class rsssl_admin extends rsssl_front_end
         RSSSL()->rsssl_help->get_help_tip(__("If this option is set to true, the mixed content fixer will fire on the init hook instead of the template_redirect hook. Only use this option when you experience problems with the mixed content fixer.", "really-simple-ssl"));
     }
 
+    public function get_option_deactivate_keep_ssl(){
+                            $token = wp_create_nonce('rsssl_deactivate_plugin');
+                            $settings_link = admin_url("options-general.php?page=rlrsssl_really_simple_ssl&action=uninstall_keep_ssl&token=".$token);
+
+                                ?>
+                            <a class="button" href="<?php echo $settings_link?>"><?php _e("Deactivate Plugin and keep SSL")?></a>
+
+<?php
+        RSSSL()->rsssl_help->get_help_tip(__("This button will deactivate Really Simple SSL while your site and home url will remain https://. The mixed content fixer will stop working.", "really-simple-ssl"));
+
+    }
+
     public function get_option_autoreplace_insecure_links()
     {
         //$options = get_option('rlrsssl_options');
@@ -2708,9 +2772,10 @@ class rsssl_admin extends rsssl_front_end
      *
      */
 
+
     public function plugin_settings_link($links)
     {
-        $settings_link = '<a href="options-general.php?page=rlrsssl_really_simple_ssl">' . __("Settings", "really-simple-ssl") . '</a>';
+        $settings_link = '<a href="' . admin_url("options-general.php?page=rlrsssl_really_simple_ssl") . '">' . __("Settings", "really-simple-ssl") . '</a>';
         array_unshift($links, $settings_link);
 
         $faq_link = '<a target="_blank" href="https://really-simple-ssl.com/knowledge-base/">' . __('Docs', 'really-simple-ssl') . '</a>';
@@ -2744,6 +2809,7 @@ class rsssl_admin extends rsssl_front_end
     {
         // $this->plugin_conflict["WOOCOMMERCE_FORCESSL"] = TRUE;
     }
+
 
     /**
      * Check if wpconfig contains httponly cooky settings
@@ -2820,7 +2886,8 @@ class rsssl_admin extends rsssl_front_end
      */
 
 
-    protected function get_test_page_contents(){
+    protected function get_test_page_contents()
+    {
         $filecontents = "";
 
         $testpage_url = trailingslashit($this->test_url()) . "ssl-test-page.php";
