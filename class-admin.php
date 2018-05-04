@@ -2773,15 +2773,16 @@ class rsssl_admin extends rsssl_front_end
 
         ?>
         <div><input class="thickbox" title="" type="button" style="display: block; float: left;" alt="#TB_inline?
-        height=200&width=300&inlineId=deactivate_keep_ssl" value="Deactivate Plugin and keep SSL" /></div>
+        height=300&width=400&inlineId=deactivate_keep_ssl" value="Deactivate Plugin and keep SSL" /></div>
         <div id="deactivate_keep_ssl" style="display: none;">
 
         <h2 style="margin: 10px 0; text-align: center;">Are you sure?</h2>
-        <h3 style="margin: 20px 0; text-align: center;">Deactivating the plugin while keeping SSL while do the following:</h3>
-        <ul style="text-align: center; font-size: 1.2em;">
+        <h3 style="margin: 20px 0; text-align: center;">Deactivating the plugin while keeping SSL will do the following:</h3>
+        <ul style="text-align: left; font-size: 1.2em;">
             <li>* Your site address will remain https://</li>
             <li>* The .htaccess redirect will remain active</li>
             <li>* The mixed content fixer will stop working</li>
+            Deactivating the plugin via the plugins overview will still revert the site back to http://.
         </ul>
 
         <?php
@@ -2793,7 +2794,7 @@ class rsssl_admin extends rsssl_front_end
          <?php echo $deactivate_keep_ssl_link?>"><?php _e("I'm sure I want to deactivate")?></a>
         </div>
  <?php
-       RSSSL()->rsssl_help->get_help_tip(__("This button will deactivate Really Simple SSL while your site and home url will remain https://. The mixed content fixer will stop working.", "really-simple-ssl"));
+       RSSSL()->rsssl_help->get_help_tip(__("Clicking this button will deactivate the plugin but keep your site on SSL. The WordPress 301 redirect, Javascript redirect and mixed content fixer will stop working. The site address will remain https:// and the .htaccess redirect will both keep working. Deactivating the plugin via the plugins overview will still revert the site back to http://.", "really-simple-ssl"));
 
     }
 
