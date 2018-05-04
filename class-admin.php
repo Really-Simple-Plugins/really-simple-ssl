@@ -1527,7 +1527,6 @@ class rsssl_admin extends rsssl_front_end
                 } else {
                     $htaccess = $htaccess . $rules;
                 }
-
                 file_put_contents($this->ABSpath . ".htaccess", $htaccess);
             }
 
@@ -1536,12 +1535,27 @@ class rsssl_admin extends rsssl_front_end
 
 
     public function update_htaccess_after_settings_save($oldvalue, $newvalue, $option){
+        if (!current_user_can($this->capability)) return;
+
+        //does it exist?
+        if (!file_exists($this->ABSpath . ".htaccess")) {
+            $this->trace_log(".htaccess not found.");
+            return;
+        }
+
 
         if (!is_writable($this->ABSpath . ".htaccess")) {
             if ($this->debug) $this->trace_log(".htaccess not writable.");
             return;
         }
 
+        //check if editing is blocked.
+        if ($this->do_not_edit_htaccess) {
+            $this->trace_log("Edit of .htaccess blocked by setting or define 'do not edit htaccess' in Really Simple SSL.");
+            return;
+        }
+
+        $htaccess = file_get_contents($this->ABSpath . ".htaccess");
         $htaccess = preg_replace("/#\s?BEGIN\s?rlrssslReallySimpleSSL.*?#\s?END\s?rlrssslReallySimpleSSL/s", "", $htaccess);
         $htaccess = preg_replace("/\n+/", "\n", $htaccess);
 
