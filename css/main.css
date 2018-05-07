@@ -304,7 +304,7 @@
 }
 
 .rsssl-pro-image {
-  height: 30px;nu
+  height: 30px;
   margin-top: 6px;
 }
 
@@ -456,4 +456,8 @@ hr {
 
 #TB_window {
   height: 370px !important;
+}
+
+.rsssl-button-deactivate-keep-ssl {
+  margin-right: 15px;
 }

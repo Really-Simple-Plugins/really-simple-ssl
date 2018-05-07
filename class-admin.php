@@ -151,6 +151,11 @@ class rsssl_admin extends rsssl_front_end
         add_action("update_option_rlrsssl_options", array($this, "update_htaccess_after_settings_save"), 20, 3);
     }
 
+    /*
+     * Deactivate the plugin while keeping SSL
+     * Activated when the 'uninstall_keep_ssl' button is clicked in the settings tab
+     *
+     */
 
     public function listen_for_deactivation()
     {
@@ -206,9 +211,7 @@ class rsssl_admin extends rsssl_front_end
 
 
     /*
-     *
-     *
-     *
+     * Remove the plugin from the active plugins array when called from listen_for_deactivation
      *
      * */
 
@@ -2241,10 +2244,12 @@ class rsssl_admin extends rsssl_front_end
                 <?php
 
                 /*
-             * Generate a container for both pro and UM
-             * Pro container has different image size, text position and button color
-             * Before generating, check if Really Simple SSL pro or Ultimate Member is active
-             * */
+                 *
+                 * Generate a container for Really Simple SSL pro, Ultimate Member and Moneybird plugins
+                 * Pro container has different image size, text position and button color then UM and Moneybird
+                 * Before generating, check if Really Simple SSL pro, Ultimate Member is active. For Moneybird, check if locale = nl_NL
+                 *
+                 */
 
                 $url = is_multisite() ? 'https://really-simple-ssl.com/downloads/really-simple-ssl-pro-multisite/' : 'https://really-simple-ssl.com/downloads/really-simple-ssl-pro/';
                 $this->get_banner_html(array(
@@ -2772,6 +2777,15 @@ class rsssl_admin extends rsssl_front_end
         RSSSL()->rsssl_help->get_help_tip(__("If this option is set to true, the mixed content fixer will fire on the init hook instead of the template_redirect hook. Only use this option when you experience problems with the mixed content fixer.", "really-simple-ssl"));
     }
 
+    /*
+     *
+     * Add a button and thickbox to deactivate SSL while keeping SSL
+     *
+     *
+     *
+     */
+
+
     public function get_option_deactivate_keep_ssl(){
 
         ?>
@@ -2808,7 +2822,7 @@ class rsssl_admin extends rsssl_front_end
 
         </div>
  <?php
-       RSSSL()->rsssl_help->get_help_tip(__("Clicking this button will deactivate the plugin but keep your site on SSL. The WordPress 301 redirect, Javascript redirect and mixed content fixer will stop working. The site address will remain https:// and the .htaccess redirect will both keep working. Deactivating the plugin via the plugins overview will still revert the site back to http://.", "really-simple-ssl"));
+       RSSSL()->rsssl_help->get_help_tip(__("Clicking this button will deactivate the plugin while keeping your site on SSL. The WordPress 301 redirect, Javascript redirect and mixed content fixer will stop working. The site address will remain https:// and the .htaccess redirect will keep working. Deactivating the plugin via the plugins overview will revert the site back to http://.", "really-simple-ssl"));
 
     }
 
@@ -2839,8 +2853,14 @@ class rsssl_admin extends rsssl_front_end
      */
 
 
-    public function plugin_settings_link($links)
-    {
+    public function plugin_settings_link($links){
+
+        //add 'Revert to http' after the Deactivate link on the plugins overview page
+        if (isset($links['deactivate'])){
+            $deactivate_link = $links['deactivate'];
+            $links['deactivate'] = str_replace('</a>',"&nbsp".__("(revert to http)","really-simple-ssl").'</a>', $deactivate_link);
+        }
+
         $settings_link = '<a href="' . admin_url("options-general.php?page=rlrsssl_really_simple_ssl") . '">' . __("Settings", "really-simple-ssl") . '</a>';
         array_unshift($links, $settings_link);
 
