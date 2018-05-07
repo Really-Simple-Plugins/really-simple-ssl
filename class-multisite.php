@@ -30,6 +30,7 @@ if ( ! class_exists( 'rsssl_multisite' ) ) {
 
     self::$_this = $this;
 
+
     $this->load_options();
     register_activation_hook(  dirname( __FILE__ )."/".rsssl_plugin, array($this,'activate') );
 
@@ -640,11 +641,24 @@ public function show_notices()
       <?php
     }
   }
+
+    if (!RSSSL()->really_simple_ssl->ssl_enabled && $this->is_multisite_subfolder_install() && !RSSSL()->rsssl_certificate->is_wildcard()) {
+        ?>
+        <div id="message" class="error fade notice">
+            <p>
+                <?php _e("You run a Multisite installation with subfolders, but your site doesn't have a wildcard certificate.",'really-simple-ssl');?>
+                <?php _e("This leads to issues when activating SSL networkwide since subdomains will be forced over SSL as well while they don't have a valid certificate.",'really-simple-ssl');?>
+                <?php _e("Activate SSL per site or install a wildcard certificate to fix this.",'really-simple-ssl');?>
+            </p>
+        </div>
+        <?php
+  }
+
 }
 
 
 /**
- * Insert some ajax script to dismis the SSL success message, and stop nagging about it
+ * Insert some ajax script to dismiss the SSL success message, and stop nagging about it
  *
  * @since  2.0
  *
