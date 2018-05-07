@@ -14,8 +14,6 @@ if ( ! class_exists( 'rsssl_certificate' ) ) {
 
             self::$_this = $this;
 
-            add_action('rsssl_configuration_page', array($this, 'show_www_non_www_status'));
-
             add_action('admin_init', array($this, 'is_valid'));
 
         }
@@ -24,6 +22,10 @@ if ( ! class_exists( 'rsssl_certificate' ) ) {
         {
             return self::$_this;
         }
+
+        /*
+         * Check if the certificate is valid
+         */
 
         public function is_valid()
         {
@@ -46,8 +48,6 @@ if ( ! class_exists( 'rsssl_certificate' ) ) {
                 $date_valid = $this->is_date_valid($certinfo);
                 //Domain and date valid? Return true
                 if ($domain_valid && $date_valid) return true;
-
-                //check op trailingslashit enzo
 
             }
 
@@ -75,6 +75,10 @@ if ( ! class_exists( 'rsssl_certificate' ) ) {
 
         }
 
+        /*
+         * Check if the date is valid by looking at the validFrom and validTo times
+         */
+
         public function is_date_valid($certinfo)
         {
 
@@ -88,24 +92,6 @@ if ( ! class_exists( 'rsssl_certificate' ) ) {
             //Check if the current date is between the start date and end date. If so, return true
             if ($current_date > $start_date && ($current_date < $end_date)) return true;
 
-        }
-
-
-        /*
-         *
-         *
-         * */
-
-        public function show_www_non_www_status()
-        {
-            ?>
-
-            <tr>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
-            <?php
         }
 
 
@@ -134,6 +120,10 @@ if ( ! class_exists( 'rsssl_certificate' ) ) {
             if ($pos !== false) return true;
 
         }
+
+        /*
+         * Get the certificate info
+         */
 
 
         public function get_certinfo($domain)

@@ -160,7 +160,6 @@ class rsssl_admin extends rsssl_front_end
     public function listen_for_deactivation()
     {
 
-        error_log("Begin listen for deactivation");
         //check if we are on ssl settings page
         if (!$this->is_settings_page()) return;
 
@@ -1429,7 +1428,7 @@ class rsssl_admin extends rsssl_front_end
         }
     }
 
-    /*
+ /*
   *    Checks if a 301 redirect is set
   *    this is the case if either the wp_redirect is set, or the htaccess redirect is set.
   *
@@ -1489,7 +1488,7 @@ class rsssl_admin extends rsssl_front_end
     {
         if (!current_user_can($this->capability)) return;
 
-        //check if htacces exists and  if htaccess is writable
+        //check if htaccess exists and  if htaccess is writable
         //update htaccess to redirect to ssl
 
         $this->trace_log("checking if .htaccess can or should be edited...");
@@ -2822,7 +2821,7 @@ class rsssl_admin extends rsssl_front_end
 
         </div>
  <?php
-       RSSSL()->rsssl_help->get_help_tip(__("Clicking this button will deactivate the plugin while keeping your site on SSL. The WordPress 301 redirect, Javascript redirect and mixed content fixer will stop working. The site address will remain https:// and the .htaccess redirect will keep working. Deactivating the plugin via the plugins overview will revert the site back to http://.", "really-simple-ssl"));
+       RSSSL()->rsssl_help->get_help_tip(__("Clicking this button will deactivate the plugin while keeping your site on SSL. The WordPress 301 redirect, Javascript redirect and mixed content fixer will stop working. The site address will remain https:// and the .htaccess redirect will remain active. Deactivating the plugin via the plugins overview will revert the site back to http://.", "really-simple-ssl"));
 
     }
 
@@ -2855,7 +2854,7 @@ class rsssl_admin extends rsssl_front_end
 
     public function plugin_settings_link($links){
 
-        //add 'Revert to http' after the Deactivate link on the plugins overview page
+        //add 'revert to http' after the Deactivate link on the plugins overview page
         if (isset($links['deactivate'])){
             $deactivate_link = $links['deactivate'];
             $links['deactivate'] = str_replace('</a>',"&nbsp".__("(revert to http)","really-simple-ssl").'</a>', $deactivate_link);
