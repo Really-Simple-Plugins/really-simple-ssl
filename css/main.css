@@ -4,34 +4,15 @@
   padding: 1px 15px;
 }
 
-/* .rsssl-main {
-  width:95%;
+.rsssl-main {
+  flex: 1;
+  width: 80%;
   float:left;
-} */
-
-.rsssl-sidebar {
-  width:20%;
-  float:left;
-}
-
-.rsssl-sidebar h4 {
-  font-size:14px;
-  font-style:italic;
-}
-
-.rsssl-wrapper {
-  padding:30px;
-}
-
-@media screen and (max-width: 800px) {
-  .rsssl-sidebar, .rsssl-main {
-    width:100%;
-  }
 }
 
 .rsssl-sidebar img {
   max-width:100%;
-  height:inherit;
+  /*height:inherit;*/
 }
 
 .activate-ssl ul, .rsssl-result ul, .rsssl_bullets {
@@ -262,4 +243,221 @@
 .rsssl-tooltip-right:after {
   margin-left: 0;
   margin-bottom: -16px;
+}
+
+/* Styling for the sidebar in the admin tab of the free plugin */
+
+.rsssl-really-simple-plugins-logo {
+  background-color: #DCDCDC;
+  margin-left: -15px;
+  margin-right: -15px;
+}
+
+.rsssl-sidebar {
+  width: 240px;
+  margin-top: 20px;
+  padding-left: 15px;
+  padding-right: 15px;
+  margin-right: 15px;
+  padding-bottom: 15px;
+  background-color: #ECECEC;
+}
+
+.rsssl-sidebar-single-content-container {
+  min-height: 125px;
+  padding-bottom: 35px;
+  margin-bottom: 10px;
+  background-color: #DCDCDC;
+  width: 100%;
+  border-radius: 3%;
+}
+
+.rsssl-sidebar-single-content-container-pro {
+  min-height: 125px;
+  padding-bottom: 35px;
+  margin-bottom: 10px;
+  background-color: #DCDCDC;
+  width: 100%;
+  border-radius: 3%;
+}
+
+.rsssl-sidebar-title h3 {
+  font-size: 0.9em;
+}
+
+.rsssl-sidebar-text-content-pro {
+  font-weight: 700;
+  font-size: 0.8em;
+  width: 90%;
+  /*min-height: 100px;*/
+  margin: auto;
+}
+
+.rsssl-sidebar-text-content {
+  width: 45%;
+  padding-top: 5px;
+  padding-right: 7px;
+  font-weight: 700;
+  font-size: 0.8em;
+  float: right;
+  margin: 10px auto;
+}
+
+.rsssl-pro-image {
+  height: 30px;
+  margin-top: 6px;
+}
+
+.rsssl-sidebar-image-pro {
+  width: 90%;
+  margin: 10px;
+}
+
+.rsssl-sidebar-image {
+  width: 100px;
+  float: left;
+  padding: 10px;
+  height: 100px;
+}
+
+@media screen and (max-width: 1024px) and (min-width: 541px) {
+  /* Let the main container be 100% width again */
+  .rsssl-main {
+    width: 100%;
+  }
+
+  .rsssl-sidebar-title {
+    /*margin: auto;*/
+    text-align: center;
+  }
+
+  .rsssl-container {
+    flex-direction: column;
+  }
+  .rsssl-sidebar {
+    width: 100%;
+    /*padding-left: 10%;*/
+  }
+  .rsssl-really-simple-plugins-logo {
+   width: 40%;
+ }
+  .rsssl-sidebar-single-content-container {
+    width: 40%;
+    padding-left: 25px;
+    float: left;
+    margin-right: 25px;
+  }
+
+  .rsssl-sidebar-single-content-container-pro {
+    width: 40%;
+    padding-left: 25px;
+    margin: auto auto 25px;
+  }
+
+  .rsssl-sidebar-um-text-content {
+    width: 40%;
+  }
+  .rsssl-pro-image {
+    display: none;
+  }
+}
+
+@media screen and (max-width: 540px) {
+  .rsssl-main {
+    width: 100%;
+  }
+  .rsssl-container {
+    flex-direction: column;
+  }
+  .rsssl-sidebar {
+  display: grid;
+  text-align: -webkit-center;
+  width: 70%;
+  }
+  .rsssl-sidebar-um-text-content {
+    width: 45%;
+  }
+.rsssl-sidebar-single-content-container-pro {
+  padding-bottom: 10px;
+}
+  .rsssl-sidebar-single-content-container {
+    padding-bottom: 10px;
+  }
+}
+
+.rsssl-sidebar h4 {
+  font-size:14px;
+  font-style:italic;
+}
+
+.rsssl-wrapper {
+  padding: 30px;
+}
+
+.rsssl-sidebar-list {
+  font-size: 0.9em;
+}
+
+#rsssl-premium-button-pro {
+  display: inline-table;
+  width: 40%;
+  text-align: center;
+  float: right;
+  font-size: inherit;
+  height: 25px;
+  -webkit-border-radius: 12px;
+  -moz-border-radius: 12px;
+  border-radius: 12px;
+  background-color: #7BD561;
+  color: white;
+  margin-right: 5px;
+}
+
+.rsssl-sidebar-content {
+  float: left;
+  padding-bottom: 10px;
+}
+
+hr {
+  display: block;
+  height: 1px;
+  border: 0;
+  border-top: 1px solid #ccc;
+  margin: 1em 0;
+  padding: 0;
+}
+
+.rsssl-container {
+  display: flex;
+}
+
+#rsssl-premium-button {
+  display: inline-table;
+  width: 40%;
+  text-align: center;
+  float: right;
+  font-size: inherit;
+  height: 25px;
+  -webkit-border-radius: 12px;
+  -moz-border-radius: 12px;
+  border-radius: 12px;
+  background-color: #017FAF;
+  color: white;
+  margin-right: 5px;
+}
+
+.rsssl-more-info-button {
+  clear: both;
+}
+
+#TB_ajaxContent {
+  text-align: center !important;
+}
+
+#TB_window {
+  height: 370px !important;
+}
+
+.rsssl-button-deactivate-keep-ssl {
+  margin-right: 15px;
 }
