@@ -79,6 +79,7 @@ class rsssl_admin extends rsssl_front_end
 
     public function init()
     {
+
         if (!current_user_can($this->capability)) return;
         $is_on_settings_page = $this->is_settings_page();
 
@@ -167,9 +168,7 @@ class rsssl_admin extends rsssl_front_end
         if (!current_user_can($this->capability)) return;
 
         //check nonce
-        if (isset($_POST['rsssl_deactivate_plugin']) && (wp_verify_nonce($_POST['rsssl_deactivate_plugin'], 'rsssl_deactivate_plugin'))) {
-            error_log("NONCE FOUND");
-        }
+        if (!isset($_POST['rsssl_deactivate_plugin']) || (!wp_verify_nonce($_POST['rsssl_deactivate_plugin'], 'rsssl_deactivate_plugin'))) return;
 
         //check for action
         if (isset($_GET["action"]) && $_GET["action"] == 'uninstall_keep_ssl') {
@@ -1537,7 +1536,7 @@ class rsssl_admin extends rsssl_front_end
     }
 
 
-    public function update_htaccess_after_settings_save($oldvalue, $newvalue, $option){
+    public function update_htaccess_after_settings_save($oldvalue=false, $newvalue=false, $option=false){
         if (!current_user_can($this->capability)) return;
 
         //does it exist?
@@ -1751,25 +1750,27 @@ class rsssl_admin extends rsssl_front_end
     }
 
     public function show_notice_certificate()
-    { ?>
-        <div id="message" class="error fade notice is-dismissible">
+    {
+        if (!RSSSL()->rsssl_certificate->is_valid()) {
+        ?>
+        <div id="message" class="error fade notice rsssl-notice-certificate">
             <h1><?php echo __("Detected possible certificate issues", "really-simple-ssl"); ?></h1>
+            <p>
             <?php
 
-            if (!RSSSL()->rsssl_certificate->is_domain_valid() || (!RSSSL()->rsssl_certificate->is_date_valid())) {
-
                 $reload_https_url = "https://" . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
-                $link_open = '<a target="_blank" href="' . $reload_https_url . '">';
-                $link_close = '</a>';
+                $link_open = '<p><a class="button" target="_blank" href="' . $reload_https_url . '">';
+                $link_close = '</a></p>';
 
-                printf(__("Really Simple SSL failed to detect a valid certificate. If you do have an SSL certificate, try to reload this page over https by clicking this link: %sreload over https%s. ", "really-simple-ssl"), $link_open, $link_close);
+                printf(__("Really Simple SSL failed to detect a valid SSL certificate. If you do have an SSL certificate, try to reload this page over https by clicking this button: %sReload over https%s ", "really-simple-ssl"), $link_open, $link_close);
 
                 $ssl_test_url = "https://www.ssllabs.com/ssltest/";
                 $link_open = '<a target="_blank" href="' . $ssl_test_url . '">';
                 $link_close = '</a>';
 
-                printf(__("Really Simple SSL requires a valid certificate. You can check your certificate on %sQualys SSL Labs%s.", "really-simple-ssl"), $link_open, $link_close);
+                printf(__("Really Simple SSL requires a valid SSL certificate. You can check your certificate on %sQualys SSL Labs%s.", "really-simple-ssl"), $link_open, $link_close);
             } ?>
+        </p>
         </div>
     <?php }
 
