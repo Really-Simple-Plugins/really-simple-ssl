@@ -155,13 +155,13 @@ if ( ! class_exists( 'rsssl_front_end' ) ) {
 
         public function force_ssl_with_javascript()
         {
-            ?>
-            <script>
-                if (document.location.protocol != "https:") {
-                    document.location = document.URL.replace(/^http:/i, "https:");
-                }
-            </script>
-            <?php
+            $script = '<script>';
+            $script .= 'if (document.location.protocol != "https:") {';
+            $script .= 'document.location = document.URL.replace(/^http:/i, "https:");';
+            $script .= '}';
+            $script .= '</script>';
+
+            echo apply_filters('rsssl_javascript_redirect', $script);
         }
 
     }

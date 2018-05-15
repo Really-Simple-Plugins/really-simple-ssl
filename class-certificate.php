@@ -9,12 +9,12 @@ if ( ! class_exists( 'rsssl_certificate' ) ) {
 
         function __construct()
         {
+
+            error_log("In de class certificate");
             if (isset(self::$_this))
                 wp_die(sprintf(__('%s is a singleton class and you cannot create a second instance.', 'really-simple-ssl'), get_class($this)));
 
             self::$_this = $this;
-
-            add_action('admin_init', array($this, 'is_valid'));
 
         }
 
@@ -23,8 +23,14 @@ if ( ! class_exists( 'rsssl_certificate' ) ) {
             return self::$_this;
         }
 
-        /*
+       /**
+         *
+         * @since 3.0
+         *
          * Check if the certificate is valid
+         *
+         * @return bool
+         *
          */
 
         public function is_valid()
@@ -33,10 +39,7 @@ if ( ! class_exists( 'rsssl_certificate' ) ) {
             //Get current domain
             $domain = site_url();
 
-            if (!function_exists('stream_context_get_params')) {
-            //load test page
-            } else {
-
+            if (function_exists('stream_context_get_params')) {
                 //get certificate info
                 $certinfo = $this->get_certinfo($domain);
 
@@ -48,16 +51,22 @@ if ( ! class_exists( 'rsssl_certificate' ) ) {
                 $date_valid = $this->is_date_valid($certinfo);
                 //Domain and date valid? Return true
                 if ($domain_valid && $date_valid) return true;
-
             }
 
             return false;
         }
 
-
-        /*
-         * Check common name(s) and alternative name(s) on certificate and match them to the site_url ($domain)
-         */
+       /**
+        *
+        * Check common name(s) and alternative name(s) on certificate and match them to the site_url ($domain)
+        *
+        * @since 3.0
+        *
+        * @access public
+        *
+        * @return bool
+        *
+        */
 
         public function is_domain_valid($certinfo, $domain)
         {
@@ -73,11 +82,21 @@ if ( ! class_exists( 'rsssl_certificate' ) ) {
             //If the domain is found, return true
             if (($pos_cn !== false) || ($pos_an !== false)) return true;
 
+            return false;
+
         }
 
-        /*
-         * Check if the date is valid by looking at the validFrom and validTo times
-         */
+       /**
+        *
+        * Check if the date is valid by looking at the validFrom and validTo times
+        *
+        * @since 3.0
+        *
+        * @access public
+        *
+        * @return bool
+        *
+        */
 
         public function is_date_valid($certinfo)
         {
@@ -92,14 +111,23 @@ if ( ! class_exists( 'rsssl_certificate' ) ) {
             //Check if the current date is between the start date and end date. If so, return true
             if ($current_date > $start_date && ($current_date < $end_date)) return true;
 
+            return false;
+
         }
 
 
-        /*
-         *     Check if the certificate is a wildcard certificate
-         *     Function is used in class-multisite.php to determine whether to show a notice for multisite subfolder installations without a wildcard certificate
+        /**
          *
-         * */
+         * Check if the certificate is a wildcard certificate
+         * Function is used in class-multisite.php to determine whether to show a notice for multisite subfolder installations without a wildcard certificate
+         *
+         * @since 3.0
+         *
+         * @access public
+         *
+         * @return bool
+         *
+         */
 
         public function is_wildcard()
         {
@@ -119,10 +147,18 @@ if ( ! class_exists( 'rsssl_certificate' ) ) {
             //If so, return true
             if ($pos !== false) return true;
 
+            return false;
+
         }
 
-        /*
+        /**
+         *
          * Get the certificate info
+         *
+         * @since 3.0
+         *
+         * @access public
+         *
          */
 
 
@@ -136,7 +172,7 @@ if ( ! class_exists( 'rsssl_certificate' ) ) {
 
                 $get = stream_context_create(array("ssl" => array("capture_peer_cert" => TRUE)));
                 if ($get) {
-                    set_error_handler(array($this, 'rsssl_custom_error_handling'));
+                    set_error_handler(array($this, 'custom_error_handling'));
                     $read = stream_socket_client("ssl://" . $original_parse . ":443", $errno, $errstr, 30, STREAM_CLIENT_CONNECT, $get);
                     restore_error_handler();
 
@@ -153,7 +189,18 @@ if ( ! class_exists( 'rsssl_certificate' ) ) {
             return false;
         }
 
-        public function rsssl_custom_error_handling($errno, $errstr, $errfile, $errline, array $errcontext) {
+        /**
+         *
+         * Catch errors
+         *
+         * @since 3.0
+         *
+         * @access public
+         *
+         */
+
+
+        public function custom_error_handling($errno, $errstr, $errfile, $errline, array $errcontext) {
             return true;
         }
 

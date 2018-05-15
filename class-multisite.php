@@ -25,6 +25,7 @@ if ( ! class_exists( 'rsssl_multisite' ) ) {
     private $pro_url = "https://www.really-simple-ssl.com/pro-multisite";
 
   function __construct() {
+
     if ( isset( self::$_this ) )
         wp_die( sprintf( __( '%s is a singleton class and you cannot create a second instance.','really-simple-ssl' ), get_class( $this ) ) );
 
@@ -282,6 +283,7 @@ public function settings_tab(){
 
  public function show_notice_activate_networkwide(){
   //if no SSL was detected, don't activate it yet.
+
   if (!RSSSL()->really_simple_ssl->site_has_ssl) {
     global $wp;
     $current_url = "https://".$_SERVER["HTTP_HOST"].$_SERVER["REQUEST_URI"]
@@ -642,11 +644,11 @@ public function show_notices()
     }
   }
 
-    if (!RSSSL()->really_simple_ssl->ssl_enabled && $this->is_multisite_subfolder_install() && !RSSSL()->rsssl_certificate->is_wildcard()) {
+    if (!RSSSL()->really_simple_ssl->ssl_enabled && !$this->is_multisite_subfolder_install() && !RSSSL()->rsssl_certificate->is_wildcard() && !get_site_option("rsssl_wildcard_message_shown")) {
         ?>
-        <div id="message" class="error fade notice">
+        <div id="message" class="error fade notice is-dismissible">
             <p>
-                <?php _e("You run a Multisite installation with subfolders, but your site doesn't have a wildcard certificate.",'really-simple-ssl');?>
+                <?php _e("You run a Multisite installation with subdomains, but your site doesn't have a wildcard certificate.",'really-simple-ssl');?>
                 <?php _e("This leads to issues when activating SSL networkwide since subdomains will be forced over SSL as well while they don't have a valid certificate.",'really-simple-ssl');?>
                 <?php _e("Activate SSL per site or install a wildcard certificate to fix this.",'really-simple-ssl');?>
             </p>
