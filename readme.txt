@@ -5,6 +5,7 @@ Tags: SSL, https, force SSL, mixed content, insecure content, secure website, we
 Requires at least: 4.2
 License: GPL2
 Tested up to: 4.9.5
+Requires PHP: 5.4
 Stable tag: 3.0
 
 No setup required! You only need an SSL certificate, and this plugin will do the rest.
