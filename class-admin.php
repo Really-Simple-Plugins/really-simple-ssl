@@ -83,12 +83,19 @@ class rsssl_admin extends rsssl_front_end
         if (!current_user_can($this->capability)) return;
         $is_on_settings_page = $this->is_settings_page();
 
+
+        if (defined("RSSSL_FORCE_ACTIVATE") && RSSSL_FORCE_ACTIVATE){
+            $options = get_option('rlrsssl_options');
+            $options['ssl_enabled'] = true;
+            update_option('rlrsssl_options');
+        }
+
         /*
-      Detect configuration when:
-      - SSL activation just confirmed.
-      - on settings page
-      - No SSL detected
-    */
+            Detect configuration when:
+            - SSL activation just confirmed.
+            - on settings page
+            - No SSL detected
+            */
 
         //when configuration should run again
         if ($this->clicked_activate_ssl() || !$this->ssl_enabled || !$this->site_has_ssl || $is_on_settings_page || is_network_admin()) {
