@@ -10,7 +10,6 @@ if ( ! class_exists( 'rsssl_certificate' ) ) {
         function __construct()
         {
 
-            error_log("In de class certificate");
             if (isset(self::$_this))
                 wp_die(sprintf(__('%s is a singleton class and you cannot create a second instance.', 'really-simple-ssl'), get_class($this)));
 
