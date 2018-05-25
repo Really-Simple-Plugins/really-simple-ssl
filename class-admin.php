@@ -2245,7 +2245,7 @@ class rsssl_admin extends rsssl_front_end
                     $link_open = '<a target="_blank" href="https://really-simple-ssl.com/contact">';
 
                     ?>
-                    <h3> <?php echo sprintf(__("We have some suggestions for your setup. Let us know if you have a suggestion for %sus%s!", "really-simple-ssl-pro"), $link_open, "</a>") ?></h3>
+                    <h3> <?php echo sprintf(__("We have some suggestions for your setup. Let us know if you have a suggestion for %sus%s!", "really-simple-ssl"), $link_open, "</a>") ?></h3>
                 </div>
 
                 <?php
