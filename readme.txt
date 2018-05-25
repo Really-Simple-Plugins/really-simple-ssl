@@ -463,7 +463,8 @@ Always back up before any upgrade. Especially .htaccess, wp-config.php and the p
 
 == Screenshots ==
 1. After activation, if SSL was detected, you can enable SSL.
-2. View your configuration on the settings page
+2. View your configuration on the settings page.
+3. Mixed content scan.
 
 == Frequently asked questions ==
 * Really Simple SSL maintains an extensive knowledge-base at https://www.really-simple-ssl.com.
