@@ -59,12 +59,30 @@ class rsssl_admin extends rsssl_front_end
 
         register_deactivation_hook(dirname(__FILE__) . "/" . $this->plugin_filename, array($this, 'deactivate'));
 
+        add_action( 'admin_init', array($this, 'add_privacy_info') );
+
 
     }
 
     static function this()
     {
         return self::$_this;
+    }
+
+    public function add_privacy_info(){
+            if ( ! function_exists( 'wp_add_privacy_policy_content' ) ) {
+                return;
+            }
+
+            $content = sprintf(
+                __( 'Really Simple SSL and Really Simple SSL add-ons do not process any personal identifiable information, so does not apply to these plugins or usage of these plugins on your website. You can find the privacy policy at <a href="%s" target="_blank">here</a>.', 'really-simple-ssl' ),
+                'https://really-simple-ssl.com/privacy-statement/'
+            );
+
+            wp_add_privacy_policy_content(
+                'Really Simple SSL',
+                wp_kses_post( wpautop( $content, false ) )
+            );
     }
 
 
