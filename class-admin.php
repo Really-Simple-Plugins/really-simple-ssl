@@ -29,6 +29,7 @@ class rsssl_admin extends rsssl_front_end
     public $ABSpath;
 
     public $do_not_edit_htaccess = FALSE;
+    public $javascript_redirect = FALSE;
     public $htaccess_redirect = FALSE;
     public $htaccess_warning_shown = FALSE;
     public $ssl_success_message_shown = FALSE;
