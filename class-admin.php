@@ -130,7 +130,7 @@ class rsssl_admin extends rsssl_front_end
             }
 
             //show notices when certificate has issues
-            if (!$this->site_has_ssl) {
+            if (!$this->ssl_enabled && !$this->site_has_ssl) {
                 add_action('admin_notices', array($this, 'show_notice_certificate'), 10);
             }
 
