@@ -98,15 +98,13 @@ class rsssl_admin extends rsssl_front_end
 
     public function init()
     {
-
         if (!current_user_can($this->capability)) return;
         $is_on_settings_page = $this->is_settings_page();
-
 
         if (defined("RSSSL_FORCE_ACTIVATE") && RSSSL_FORCE_ACTIVATE){
             $options = get_option('rlrsssl_options');
             $options['ssl_enabled'] = true;
-            update_option('rlrsssl_options');
+            update_option('rlrsssl_options', $options);
         }
 
         /*
@@ -1164,6 +1162,7 @@ class rsssl_admin extends rsssl_front_end
             $this->site_has_ssl = TRUE;
         } else {
             //if certificate is valid
+            $this->trace_log("Check SSL by retrieving SSL certificate info");
             $this->site_has_ssl = RSSSL()->rsssl_certificate->is_valid();
         }
 
@@ -1777,6 +1776,12 @@ class rsssl_admin extends rsssl_front_end
 
     public function show_notice_certificate()
     {
+        //show notice only to users with sufficient caps
+        if (!current_user_can("activate_plugins")) return;
+
+        //on multisite, show only for network admins
+        if (is_multisite() && !is_network_admin()) return;
+
         if (!RSSSL()->rsssl_certificate->is_valid()) {
         ?>
         <div id="message" class="error fade notice rsssl-notice-certificate">
