@@ -812,12 +812,14 @@ class rsssl_admin extends rsssl_front_end
         if (strpos($wpconfig, "//Begin Really Simple SSL Load balancing fix") === FALSE) {
             if (is_writable($wpconfig_path)) {
                 $rule = "\n" . "//Begin Really Simple SSL Load balancing fix" . "\n";
-                $rule .= '$server_opts = array("HTTP_CLOUDFRONT_FORWARDED_PROTO" => "https", "HTTP_CF_VISITOR"=>"https", "HTTP_X_FORWARDED_PROTO"=>"https", "HTTP_X_FORWARDED_SSL"=>"on", "HTTP_X_FORWARDED_SSL"=>"1");' . "\n";
-                $rule .= 'foreach( $server_opts as $option => $value ) {' . "\n";
-                $rule .= 'if ( (isset($_ENV["HTTPS"]) && ( "on" == $_ENV["HTTPS"] )) || (isset( $_SERVER[ $option ] ) && ( strpos( $_SERVER[ $option ], $value ) !== false )) ) {' . "\n";
-                $rule .= '$_SERVER[ "HTTPS" ] = "on";' . "\n";
-                $rule .= 'break;' . "\n";
-                $rule .= '}' . "\n";
+                $rule .= 'if ((isset($_ENV["HTTPS"]) && ("on" == $_ENV["HTTPS"]))' . "\n";
+                $rule .= '|| (isset($_SERVER["HTTP_X_FORWARDED_SSL"]) && (strpos($_SERVER["HTTP_X_FORWARDED_SSL"], "1") !== false))' . "\n";
+                $rule .= '|| (isset($_SERVER["HTTP_X_FORWARDED_SSL"]) && (strpos($_SERVER["HTTP_X_FORWARDED_SSL"], "on") !== false))' . "\n";
+                $rule .= '|| (isset($_SERVER["HTTP_CF_VISITOR"]) && (strpos($_SERVER["HTTP_CF_VISITOR"], "https") !== false))' . "\n";
+                $rule .= '|| (isset($_SERVER["HTTP_CLOUDFRONT_FORWARDED_PROTO"]) && (strpos($_SERVER["HTTP_CLOUDFRONT_FORWARDED_PROTO"], "https") !== false))' . "\n";
+                $rule .= '|| (isset($_SERVER["HTTP_X_FORWARDED_PROTO"]) && (strpos($_SERVER["HTTP_X_FORWARDED_PROTO"], "https") !== false))' . "\n";
+                $rule .= ') {' . "\n";
+                $rule .= '$_SERVER["HTTPS"] = "on";' . "\n";
                 $rule .= '}' . "\n";
                 $rule .= "//END Really Simple SSL" . "\n";
 
@@ -1119,21 +1121,18 @@ class rsssl_admin extends rsssl_front_end
     public function is_ssl_extended()
     {
         $server_var = FALSE;
-        $server_opts = array(
-            'HTTP_X_FORWARDED_PROTO' => 'https',
-            'HTTP_CLOUDFRONT_FORWARDED_PROTO' => 'https',
-            'HTTP_CF_VISITOR' => 'https',
-            'HTTP_X_FORWARDED_SSL' => 'on',
-            'HTTP_X_FORWARDED_SSL' => '1'
-        );
 
-        foreach ($server_opts as $option => $value) {
-            if ((isset($_ENV['HTTPS']) && ('on' == $_ENV['HTTPS']))
-                || (isset($_SERVER[$option]) && (strpos($_SERVER[$option], $value) !== false))) {
-                $server_var = TRUE;
-                break;
-            }
+        if (   (isset($_ENV['HTTPS']) && ('on' == $_ENV['HTTPS']))
+            || (isset($_SERVER['HTTP_X_FORWARDED_SSL']) && (strpos($_SERVER['HTTP_X_FORWARDED_SSL'], '1') !== false))
+            || (isset($_SERVER['HTTP_X_FORWARDED_SSL']) && (strpos($_SERVER['HTTP_X_FORWARDED_SSL'], 'on') !== false))
+            || (isset($_SERVER['HTTP_CF_VISITOR']) && (strpos($_SERVER['HTTP_CF_VISITOR'], 'https') !== false))
+            || (isset($_SERVER['HTTP_CLOUDFRONT_FORWARDED_PROTO']) && (strpos($_SERVER['HTTP_CLOUDFRONT_FORWARDED_PROTO'], 'https') !== false))
+            || (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && (strpos($_SERVER['HTTP_X_FORWARDED_PROTO'], 'https') !== false))
+        )
+        {
+            $server_var = TRUE;
         }
+
 
         if (is_ssl() || $server_var) {
             return true;
