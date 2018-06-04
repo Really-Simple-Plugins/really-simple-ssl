@@ -82,7 +82,7 @@ Yes. There is a dedicated network settings page where you can switch between net
 = 3.0.1 =
 * Tweak: Add privacy notice
 * Tweak: Set javascript redirect to false by default
-* Fix: Hide SSL notice on multiste for all subsites, and show only for "activate_plugins" cap users
+    * Fix: Hide SSL notice on multiste for all subsites, and show only for "activate_plugins" cap users
 
 = 3.0 =
 * Added a built-in certificate check in the class-certificate.php file that checks if the domain is present in the common names and/or the alternative names section.
