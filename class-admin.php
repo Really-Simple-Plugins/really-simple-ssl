@@ -77,7 +77,7 @@ class rsssl_admin extends rsssl_front_end
         }
 
         $content = sprintf(
-            __('Really Simple SSL and Really Simple SSL add-ons do not process any personal identifiable information, so does not apply to these plugins or usage of these plugins on your website. You can find the privacy policy at <a href="%s" target="_blank">here</a>.', 'really-simple-ssl'),
+            __('Really Simple SSL and Really Simple SSL add-ons do not process any personal identifiable information, so the GDPR does not apply to these plugins or usage of these plugins on your website. You can find our privacy policy <a href="%s" target="_blank">here</a>.', 'really-simple-ssl'),
             'https://really-simple-ssl.com/privacy-statement/'
         );
 
