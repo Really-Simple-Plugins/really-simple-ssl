@@ -29,6 +29,7 @@ class rsssl_admin extends rsssl_front_end
     public $ABSpath;
 
     public $do_not_edit_htaccess = FALSE;
+    public $javascript_redirect = FALSE;
     public $htaccess_redirect = FALSE;
     public $htaccess_warning_shown = FALSE;
     public $ssl_success_message_shown = FALSE;
@@ -59,12 +60,30 @@ class rsssl_admin extends rsssl_front_end
 
         register_deactivation_hook(dirname(__FILE__) . "/" . $this->plugin_filename, array($this, 'deactivate'));
 
+        add_action( 'admin_init', array($this, 'add_privacy_info') );
+
 
     }
 
     static function this()
     {
         return self::$_this;
+    }
+
+    public function add_privacy_info(){
+            if ( ! function_exists( 'wp_add_privacy_policy_content' ) ) {
+                return;
+            }
+
+            $content = sprintf(
+                __( 'Really Simple SSL and Really Simple SSL add-ons do not process any personal identifiable information, so does not apply to these plugins or usage of these plugins on your website. You can find the privacy policy at <a href="%s" target="_blank">here</a>.', 'really-simple-ssl' ),
+                'https://really-simple-ssl.com/privacy-statement/'
+            );
+
+            wp_add_privacy_policy_content(
+                'Really Simple SSL',
+                wp_kses_post( wpautop( $content, false ) )
+            );
     }
 
 
@@ -79,15 +98,13 @@ class rsssl_admin extends rsssl_front_end
 
     public function init()
     {
-
         if (!current_user_can($this->capability)) return;
         $is_on_settings_page = $this->is_settings_page();
-
 
         if (defined("RSSSL_FORCE_ACTIVATE") && RSSSL_FORCE_ACTIVATE){
             $options = get_option('rlrsssl_options');
             $options['ssl_enabled'] = true;
-            update_option('rlrsssl_options');
+            update_option('rlrsssl_options', $options);
         }
 
         /*
@@ -809,12 +826,14 @@ class rsssl_admin extends rsssl_front_end
         if (strpos($wpconfig, "//Begin Really Simple SSL Load balancing fix") === FALSE) {
             if (is_writable($wpconfig_path)) {
                 $rule = "\n" . "//Begin Really Simple SSL Load balancing fix" . "\n";
-                $rule .= '$server_opts = array("HTTP_CLOUDFRONT_FORWARDED_PROTO" => "https", "HTTP_CF_VISITOR"=>"https", "HTTP_X_FORWARDED_PROTO"=>"https", "HTTP_X_FORWARDED_SSL"=>"on", "HTTP_X_FORWARDED_SSL"=>"1");' . "\n";
-                $rule .= 'foreach( $server_opts as $option => $value ) {' . "\n";
-                $rule .= 'if ( (isset($_ENV["HTTPS"]) && ( "on" == $_ENV["HTTPS"] )) || (isset( $_SERVER[ $option ] ) && ( strpos( $_SERVER[ $option ], $value ) !== false )) ) {' . "\n";
-                $rule .= '$_SERVER[ "HTTPS" ] = "on";' . "\n";
-                $rule .= 'break;' . "\n";
-                $rule .= '}' . "\n";
+                $rule .= 'if ((isset($_ENV["HTTPS"]) && ("on" == $_ENV["HTTPS"]))' . "\n";
+                $rule .= '|| (isset($_SERVER["HTTP_X_FORWARDED_SSL"]) && (strpos($_SERVER["HTTP_X_FORWARDED_SSL"], "1") !== false))' . "\n";
+                $rule .= '|| (isset($_SERVER["HTTP_X_FORWARDED_SSL"]) && (strpos($_SERVER["HTTP_X_FORWARDED_SSL"], "on") !== false))' . "\n";
+                $rule .= '|| (isset($_SERVER["HTTP_CF_VISITOR"]) && (strpos($_SERVER["HTTP_CF_VISITOR"], "https") !== false))' . "\n";
+                $rule .= '|| (isset($_SERVER["HTTP_CLOUDFRONT_FORWARDED_PROTO"]) && (strpos($_SERVER["HTTP_CLOUDFRONT_FORWARDED_PROTO"], "https") !== false))' . "\n";
+                $rule .= '|| (isset($_SERVER["HTTP_X_FORWARDED_PROTO"]) && (strpos($_SERVER["HTTP_X_FORWARDED_PROTO"], "https") !== false))' . "\n";
+                $rule .= ') {' . "\n";
+                $rule .= '$_SERVER["HTTPS"] = "on";' . "\n";
                 $rule .= '}' . "\n";
                 $rule .= "//END Really Simple SSL" . "\n";
 
@@ -1116,21 +1135,18 @@ class rsssl_admin extends rsssl_front_end
     public function is_ssl_extended()
     {
         $server_var = FALSE;
-        $server_opts = array(
-            'HTTP_X_FORWARDED_PROTO' => 'https',
-            'HTTP_CLOUDFRONT_FORWARDED_PROTO' => 'https',
-            'HTTP_CF_VISITOR' => 'https',
-            'HTTP_X_FORWARDED_SSL' => 'on',
-            'HTTP_X_FORWARDED_SSL' => '1'
-        );
 
-        foreach ($server_opts as $option => $value) {
-            if ((isset($_ENV['HTTPS']) && ('on' == $_ENV['HTTPS']))
-                || (isset($_SERVER[$option]) && (strpos($_SERVER[$option], $value) !== false))) {
-                $server_var = TRUE;
-                break;
-            }
+        if (   (isset($_ENV['HTTPS']) && ('on' == $_ENV['HTTPS']))
+            || (isset($_SERVER['HTTP_X_FORWARDED_SSL']) && (strpos($_SERVER['HTTP_X_FORWARDED_SSL'], '1') !== false))
+            || (isset($_SERVER['HTTP_X_FORWARDED_SSL']) && (strpos($_SERVER['HTTP_X_FORWARDED_SSL'], 'on') !== false))
+            || (isset($_SERVER['HTTP_CF_VISITOR']) && (strpos($_SERVER['HTTP_CF_VISITOR'], 'https') !== false))
+            || (isset($_SERVER['HTTP_CLOUDFRONT_FORWARDED_PROTO']) && (strpos($_SERVER['HTTP_CLOUDFRONT_FORWARDED_PROTO'], 'https') !== false))
+            || (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && (strpos($_SERVER['HTTP_X_FORWARDED_PROTO'], 'https') !== false))
+        )
+        {
+            $server_var = TRUE;
         }
+
 
         if (is_ssl() || $server_var) {
             return true;
@@ -1159,6 +1175,7 @@ class rsssl_admin extends rsssl_front_end
             $this->site_has_ssl = TRUE;
         } else {
             //if certificate is valid
+            $this->trace_log("Check SSL by retrieving SSL certificate info");
             $this->site_has_ssl = RSSSL()->rsssl_certificate->is_valid();
         }
 
@@ -1769,7 +1786,6 @@ class rsssl_admin extends rsssl_front_end
         </div>
         <?php
     }
-
 
 
 
