@@ -112,11 +112,6 @@ class rsssl_admin extends rsssl_front_end
                 add_action('admin_init', array(RSSSL()->rsssl_cache, 'flush'), 40);
             }
 
-            //show notices when certificate has issues
-            if (!$this->site_has_ssl) {
-                add_action('admin_notices', array($this, 'show_notice_certificate'), 10);
-            }
-
             if (!$this->wpconfig_ok()) {
                 //if we were to activate ssl, this could result in a redirect loop. So warn first.
                 add_action("admin_notices", array($this, 'show_notice_wpconfig_needs_fixes'));
@@ -330,9 +325,28 @@ class rsssl_admin extends rsssl_front_end
 
         if (!$this->wpconfig_ok()) return;
 
-        if (!current_user_can($this->capability)) return;
+        if (!current_user_can($this->capability)) return; ?>
 
-        ?>
+        <?php if (!$this->site_has_ssl) { ?>
+            <div id="message" class="error fade notice rsssl-notice-certificate">
+            <h1><?php echo __("Detected possible certificate issues", "really-simple-ssl"); ?></h1>
+            <p>
+            <?php
+            $reload_https_url = "https://" . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
+            $link_open = '<p><a class="button" target="_blank" href="' . $reload_https_url . '">';
+            $link_close = '</a></p>';
+
+            printf(__("Really Simple SSL failed to detect a valid SSL certificate. If you do have an SSL certificate, try to reload this page over https by clicking this button: %sReload over https%s ", "really-simple-ssl"), $link_open, $link_close);
+
+            $ssl_test_url = "https://www.ssllabs.com/ssltest/";
+            $link_open = '<a target="_blank" href="' . $ssl_test_url . '">';
+            $link_close = '</a>';
+
+            printf(__("Really Simple SSL requires a valid SSL certificate. You can check your certificate on %sQualys SSL Labs%s.", "really-simple-ssl"), $link_open, $link_close);
+            ?>
+            </p>
+            </div>
+        <?php } ?>
 
         <div id="message" class="updated fade notice activate-ssl">
             <?php if ($this->site_has_ssl) { ?>
@@ -1756,30 +1770,8 @@ class rsssl_admin extends rsssl_front_end
         <?php
     }
 
-    public function show_notice_certificate()
-    {
-        if (!RSSSL()->rsssl_certificate->is_valid()) {
-        ?>
-        <div id="message" class="error fade notice rsssl-notice-certificate">
-            <h1><?php echo __("Detected possible certificate issues", "really-simple-ssl"); ?></h1>
-            <p>
-            <?php
 
-                $reload_https_url = "https://" . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
-                $link_open = '<p><a class="button" target="_blank" href="' . $reload_https_url . '">';
-                $link_close = '</a></p>';
 
-                printf(__("Really Simple SSL failed to detect a valid SSL certificate. If you do have an SSL certificate, try to reload this page over https by clicking this button: %sReload over https%s ", "really-simple-ssl"), $link_open, $link_close);
-
-                $ssl_test_url = "https://www.ssllabs.com/ssltest/";
-                $link_open = '<a target="_blank" href="' . $ssl_test_url . '">';
-                $link_close = '</a>';
-
-                printf(__("Really Simple SSL requires a valid SSL certificate. You can check your certificate on %sQualys SSL Labs%s.", "really-simple-ssl"), $link_open, $link_close);
-            } ?>
-        </p>
-        </div>
-    <?php }
 
 
     /**
