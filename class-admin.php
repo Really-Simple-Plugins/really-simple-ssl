@@ -183,13 +183,11 @@ class rsssl_admin extends rsssl_front_end
 
         //check if we are on ssl settings page
         if (!$this->is_settings_page()) return;
-
         //check user role
         if (!current_user_can($this->capability)) return;
 
         //check nonce
-        if (!isset($_POST['rsssl_deactivate_plugin']) || (!wp_verify_nonce($_POST['rsssl_deactivate_plugin'], 'rsssl_deactivate_plugin'))) return;
-
+        if (!isset($_GET['token']) || (!wp_verify_nonce($_GET['token'], 'rsssl_deactivate_plugin'))) return;
         //check for action
         if (isset($_GET["action"]) && $_GET["action"] == 'uninstall_keep_ssl') {
             //deactivate plugin, but don't revert to http.
@@ -217,6 +215,9 @@ class rsssl_admin extends rsssl_front_end
                 }
 
             } else {
+
+                error_log("remove from active plugins");
+
                 $current = get_option('active_plugins', array());
                 $current = $this->remove_plugin_from_array($plugin, $current);
                 update_option('active_plugins', $current);
