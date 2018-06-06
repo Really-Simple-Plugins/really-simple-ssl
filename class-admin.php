@@ -2273,8 +2273,16 @@ class rsssl_admin extends rsssl_front_end
                             'description' => __("Really Simple SSL pro optimizes your SSL configuration: extensive scan for mixed content issues, access to premium support, HSTS and more!", "really-simple-ssl"),
                             'url' => $url,
                             'pro' => true,
-                        )
-                    );
+                           )
+                        );
+                      $this->get_banner_html(array(
+                              'img' => 'complianz-white.jpg',
+                              'title' => 'ComplianZ',
+                              'description' => __("GDPR Ready with the Complianz WordPress Plugin. Always up-to-date documentation by one of the most prominent EU IT Law firms.", "really-simple-ssl"),
+                              'url' => 'https://complianz.io/en/pricing/',
+                              'pro' => true,
+                           )
+                        );
 
                     if (defined("ultimatemember_version")) {
 
