@@ -2812,7 +2812,7 @@ class rsssl_admin extends rsssl_front_end
     {
 
         ?>
-        <div><input class="thickbox" title="" type="button" style="display: block; float: left;" alt="#TB_inline?
+        <div><input class="thickbox button" title="" type="button" style="display: block; float: left;" alt="#TB_inline?
         height=370&width=400&inlineId=deactivate_keep_ssl" value="Deactivate Plugin and keep SSL"/></div>
         <div id="deactivate_keep_ssl" style="display: none;">
 
