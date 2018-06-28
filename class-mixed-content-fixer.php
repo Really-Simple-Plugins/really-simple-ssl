@@ -156,11 +156,12 @@ if ( ! class_exists( 'rsssl_admin_mixed_content_fixer' ) ) {
        );
 
        $str = preg_replace($pattern, 'https://', $str);
-
+     
        /* handle multiple images in srcset */
        $str = preg_replace_callback('/<img[^\>]*[^\>\S]+srcset=[\'"]\K((?:[^"\'\s,]+\s*(?:\s+\d+[wx])(?:,\s*)?)+)["\']/', function ($matches) { return str_replace("http://", "https://", $matches[0]);}, $str);
 
-       $str = str_replace ( "<body " , '<body data-rsssl=1 ', $str);
+       $str = str_replace ( "<body" , '<body data-rsssl=1', $str);
+
        return apply_filters("rsssl_fixer_output", $str);
 
    }
