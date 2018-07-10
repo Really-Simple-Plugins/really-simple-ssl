@@ -61,8 +61,6 @@ class rsssl_admin extends rsssl_front_end
         register_deactivation_hook(dirname(__FILE__) . "/" . $this->plugin_filename, array($this, 'deactivate'));
 
         add_action('admin_init', array($this, 'add_privacy_info'));
-
-
     }
 
     static function this()
@@ -109,6 +107,18 @@ class rsssl_admin extends rsssl_front_end
         }
 
         /*
+         * check if we're one minute past the activation. Then flush rewrite rules
+         * this way we lower the memory impact on activation
+         * Flush should happen on shutdown, not on init, as often happens in other plugins
+         * https://codex.wordpress.org/Function_Reference/flush_rewrite_rules
+         * */
+
+        if (get_option('rsssl_flush_rewrite_rules') && get_option('rsssl_flush_rewrite_rules') < strtotime("+1 minute")){
+            delete_option('rsssl_flush_rewrite_rules');
+            add_action('shutdown', 'flush_rewrite_rules');
+        }
+
+        /*
             Detect configuration when:
             - SSL activation just confirmed.
             - on settings page
@@ -125,7 +135,7 @@ class rsssl_admin extends rsssl_front_end
             //flush the permalinks
             if ($this->clicked_activate_ssl()) {
                 if (isset($_POST["rsssl_flush_rewrite_rules"])) {
-                    add_action('shutdown', 'flush_rewrite_rules');
+                    update_option('rsssl_flush_rewrite_rules', time());
                 }
                 add_action('admin_init', array(RSSSL()->rsssl_cache, 'flush'), 40);
             }
