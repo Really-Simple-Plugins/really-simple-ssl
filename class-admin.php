@@ -1980,7 +1980,7 @@ class rsssl_admin extends rsssl_front_end
     {
         if (!current_user_can($this->capability)) return;
         //hides the settings page if the hide menu for subsites setting is enabled
-        if (is_multisite() && rsssl_multisite::this()->hide_menu_for_subsites) return;
+        if (is_multisite() && rsssl_multisite::this()->hide_menu_for_subsites && !is_super_admin()) return;
 
         global $rsssl_admin_page;
         $rsssl_admin_page = add_options_page(
