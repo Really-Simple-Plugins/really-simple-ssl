@@ -154,10 +154,11 @@ class rsssl_admin extends rsssl_front_end
 
         //when SSL is enabled, and not enabled by user, ask for activation.
         add_action("admin_notices", array($this, 'show_notice_activate_ssl'), 10);
-
-
-
-
+        add_action('rsssl_activation_notice', array($this, 'no_ssl_detected'), 10);
+        add_action('rsssl_activation_notice', array($this, 'ssl_detected'), 10);
+        add_action('rsssl_activation_notice_inner', array($this, 'almost_ready_to_migrate'), 30);
+        add_action('rsssl_activation_notice_inner', array($this, 'show_pro'), 40);
+        add_action('rsssl_activation_notice_inner', array($this, 'show_enable_ssl_button'), 50);
 
         add_action('plugins_loaded', array($this, 'check_plugin_conflicts'), 30);
 
@@ -344,12 +345,6 @@ class rsssl_admin extends rsssl_front_end
     public function show_notice_activate_ssl()
     {
 
-        add_action('rsssl_activation_notice', array($this, 'no_ssl_detected'), 10);
-        add_action('rsssl_activation_notice', array($this, 'ssl_detected'), 10);
-        add_action('rsssl_activation_notice_inner', array($this, 'almost_ready_to_migrate'), 30);
-        add_action('rsssl_activation_notice_inner', array($this, 'show_pro'), 40);
-        add_action('rsssl_activation_notice_inner', array($this, 'show_enable_ssl_button'), 50);
-
         if ($this->ssl_enabled) return;
 
         if (defined("RSSSL_DISMISS_ACTIVATE_SSL_NOTICE") && RSSSL_DISMISS_ACTIVATE_SSL_NOTICE) return;
@@ -441,6 +436,7 @@ class rsssl_admin extends rsssl_front_end
         if ($this->site_has_ssl || (defined('rsssl_force_activate') && rsssl_force_activate)) {
             ?>
             <p>
+            <div class="rsssl-activate-ssl-button">
             <form action="" method="post">
                 <?php wp_nonce_field('rsssl_nonce', 'rsssl_nonce'); ?>
                 <input type="submit" class='button button-primary'
@@ -448,6 +444,7 @@ class rsssl_admin extends rsssl_front_end
                        name="rsssl_do_activate_ssl">
                 <br><?php _e("You may need to login in again.", "really-simple-ssl") ?>
             </form>
+            </div>
             </p>
             <?php
         }
