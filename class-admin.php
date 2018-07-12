@@ -134,7 +134,7 @@ class rsssl_admin extends rsssl_front_end
             //flush caches when just activated ssl
             //flush the permalinks
             if ($this->clicked_activate_ssl()) {
-                if (isset($_POST["rsssl_flush_rewrite_rules"])) {
+                if (!defined('RSSSL_NO_FLUSH') || !RSSSL_NO_FLUSH) {
                     update_option('rsssl_flush_rewrite_rules', time());
                 }
                 add_action('admin_init', array(RSSSL()->rsssl_cache, 'flush'), 40);
@@ -154,6 +154,10 @@ class rsssl_admin extends rsssl_front_end
 
         //when SSL is enabled, and not enabled by user, ask for activation.
         add_action("admin_notices", array($this, 'show_notice_activate_ssl'), 10);
+
+
+
+
 
         add_action('plugins_loaded', array($this, 'check_plugin_conflicts'), 30);
 
@@ -225,8 +229,6 @@ class rsssl_admin extends rsssl_front_end
                 }
 
             } else {
-
-                error_log("remove from active plugins");
 
                 $current = get_option('active_plugins', array());
                 $current = $this->remove_plugin_from_array($plugin, $current);
@@ -338,8 +340,16 @@ class rsssl_admin extends rsssl_front_end
       This message is shown when no SSL is not enabled by the user yet
   */
 
+
     public function show_notice_activate_ssl()
     {
+
+        add_action('rsssl_activation_notice', array($this, 'no_ssl_detected'), 10);
+        add_action('rsssl_activation_notice', array($this, 'ssl_detected'), 10);
+        add_action('rsssl_activation_notice_inner', array($this, 'almost_ready_to_migrate'), 30);
+        add_action('rsssl_activation_notice_inner', array($this, 'show_pro'), 40);
+        add_action('rsssl_activation_notice_inner', array($this, 'show_enable_ssl_button'), 50);
+
         if ($this->ssl_enabled) return;
 
         if (defined("RSSSL_DISMISS_ACTIVATE_SSL_NOTICE") && RSSSL_DISMISS_ACTIVATE_SSL_NOTICE) return;
@@ -347,40 +357,63 @@ class rsssl_admin extends rsssl_front_end
         //for multisite, show only activate when a choice has been made to activate networkwide or per site.
         if (is_multisite() && !RSSSL()->rsssl_multisite->selected_networkwide_or_per_site) return;
 
-        //on multistie, only show this message on the network admin. Per site activated sites have to go to the settings page.
+        //on multisite, only show this message on the network admin. Per site activated sites have to go to the settings page.
         //otherwise sites that do not need SSL possibly get to see this message.
 
         if (is_multisite() && !is_network_admin()) return;
 
         if (!$this->wpconfig_ok()) return;
 
-        if (!current_user_can($this->capability)) return; ?>
+        if (!current_user_can($this->capability)) return;
 
-        <?php if (!$this->site_has_ssl) { ?>
-        <div id="message" class="error fade notice rsssl-notice-certificate">
-            <h1><?php echo __("Detected possible certificate issues", "really-simple-ssl"); ?></h1>
-            <p>
+        do_action('rsssl_activation_notice');
+
+    }
+
+    public function ssl_detected()
+    {
+        if ($this->site_has_ssl) { ?>
+            <div id="message" class="updated fade notice activate-ssl">
                 <?php
-                $reload_https_url = "https://" . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
-                $link_open = '<p><a class="button" target="_blank" href="' . $reload_https_url . '">';
-                $link_close = '</a></p>';
-
-                printf(__("Really Simple SSL failed to detect a valid SSL certificate. If you do have an SSL certificate, try to reload this page over https by clicking this button: %sReload over https%s ", "really-simple-ssl"), $link_open, $link_close);
-
-                $ssl_test_url = "https://www.ssllabs.com/ssltest/";
-                $link_open = '<a target="_blank" href="' . $ssl_test_url . '">';
-                $link_close = '</a>';
-
-                printf(__("Really Simple SSL requires a valid SSL certificate. You can check your certificate on %sQualys SSL Labs%s.", "really-simple-ssl"), $link_open, $link_close);
+                  do_action('rsssl_activation_notice_inner');
                 ?>
-            </p>
-        </div>
-    <?php } ?>
+            </div>
+            <?php
+        }
+    }
 
-        <div id="message" class="updated fade notice activate-ssl">
-            <?php if ($this->site_has_ssl) { ?>
-                <h1><?php _e("Almost ready to migrate to SSL!", "really-simple-ssl"); ?></h1>
-            <?php } ?>
+    public function no_ssl_detected()
+    {
+        if (!$this->site_has_ssl) { ?>
+            <div id="message" class="error fade notice rsssl-notice-certificate">
+                <h1><?php echo __("Detected possible certificate issues", "really-simple-ssl"); ?></h1>
+                <p>
+                    <?php
+                    $reload_https_url = "https://" . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
+                    $link_open = '<p><a class="button" target="_blank" href="' . $reload_https_url . '">';
+                    $link_close = '</a></p>';
+
+                    printf(__("Really Simple SSL failed to detect a valid SSL certificate. If you do have an SSL certificate, try to reload this page over https by clicking this button: %sReload over https%s ", "really-simple-ssl"), $link_open, $link_close);
+
+                    $ssl_test_url = "https://www.ssllabs.com/ssltest/";
+                    $link_open = '<a target="_blank" href="' . $ssl_test_url . '">';
+                    $link_close = '</a>';
+
+                    printf(__("Really Simple SSL requires a valid SSL certificate. You can check your certificate on %sQualys SSL Labs%s.", "really-simple-ssl"), $link_open, $link_close);
+                    ?>
+                </p>
+            </div>
+        <?php }
+    }
+
+
+    public function almost_ready_to_migrate()
+    { ?>
+            <h1><?php _e("Almost ready to migrate to SSL!", "really-simple-ssl"); ?></h1>
+
+            <?php //action?>
+
+
             <?php _e("Some things can't be done automatically. Before you migrate, please check for: ", 'really-simple-ssl'); ?>
             <p>
             <ul>
@@ -395,12 +428,8 @@ class rsssl_admin extends rsssl_front_end
                 <li> <?php printf(__("It is recommended to take a %sbackup%s of your site before activating SSL", 'really-simple-ssl'), $link_open, $link_close); ?> </li>
             </ul>
             </p>
-            <?php $this->show_pro(); ?>
-
-            <?php RSSSL()->really_simple_ssl->show_enable_ssl_button(); ?>
-        </div>
-    <?php }
-
+            <?php
+    }
 
     /**
      * @since 2.3
@@ -414,10 +443,6 @@ class rsssl_admin extends rsssl_front_end
             <p>
             <form action="" method="post">
                 <?php wp_nonce_field('rsssl_nonce', 'rsssl_nonce'); ?>
-                <div>
-                    <input type="checkbox" name="rsssl_flush_rewrite_rules"
-                           checked><label><?php _e("Flush rewrite rules on activation (deselect when you encounter errors)", "really-simple-ssl") ?></label>
-                </div>
                 <input type="submit" class='button button-primary'
                        value="<?php _e("Go ahead, activate SSL!", "really-simple-ssl"); ?>" id="rsssl_do_activate_ssl"
                        name="rsssl_do_activate_ssl">
@@ -435,7 +460,7 @@ class rsssl_admin extends rsssl_front_end
 
     public function show_pro()
     {
-        if (!defined("rsssl_pro_version")) {
+        if ($this->site_has_ssl) {
             ?>
             <p><?php _e('You can also let the automatic scan of the pro version handle this for you, and get premium support, increased security with HSTS and more!', 'really-simple-ssl'); ?>
                 &nbsp;<a target="_blank"
