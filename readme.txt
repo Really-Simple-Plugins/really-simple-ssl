@@ -6,7 +6,7 @@ Requires at least: 4.2
 License: GPL2
 Tested up to: 4.9.5
 Requires PHP: 5.4
-Stable tag: 3.0.2
+Stable tag: 3.0.3
 
 No setup required! You only need an SSL certificate, and this plugin will do the rest.
 
@@ -79,6 +79,10 @@ If you are experiencing redirect loops on your site, try these [instructions](ht
 Yes. There is a dedicated network settings page where you can switch between network activated SSL and per page SSL. In the dedicated pro for multisite plugin, you can override all site settings for SSL on the network level, and can activate and deactivate SSL in the network menu for each site.
 
 == Changelog ==
+= 3.0.3 =
+* Tweak: network menu on subsites now always shows to Super Admins
+* Tweak: flush rewrite rules upon activation is delayed by one minute to reduce server load
+
 = 3.0.2 =
 * Fix: fixed an image containing uppercase characters, which can lead to the image not showing on some servers.
 * Fix: fixed an issue where the 'data-rsssl=1' marker wasn't inserted when the <body> tag was empty.
