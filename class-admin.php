@@ -2311,7 +2311,7 @@ class rsssl_admin extends rsssl_front_end
                               'img' => 'complianz.jpg',
                               'title' => 'ComplianZ',
                               'description' => __("Do you have visitors from the European Union? Get GDPR ready in 30 minutes with Complianz GDPR. Always up-to-date legal documents by one of the most prominent EU IT Law firms.", "really-simple-ssl"),
-                              'url' => 'https://complianz.io/',
+                              'url' => 'https://wordpress.org/plugins/complianz-gdpr/',
                               'pro' => true,
                            )
                         );
