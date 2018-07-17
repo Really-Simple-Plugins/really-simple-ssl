@@ -80,6 +80,7 @@ Yes. There is a dedicated network settings page where you can switch between net
 
 == Changelog ==
 = 3.0.3 =
+= Tweak: mixed content fixer will no longer fire on XML content
 * Tweak: network menu on subsites now always shows to Super Admins
 * Tweak: flush rewrite rules upon activation is delayed by one minute to reduce server load
 
