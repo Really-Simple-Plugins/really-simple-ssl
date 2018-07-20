@@ -2845,7 +2845,7 @@ class rsssl_admin extends rsssl_front_end
 
         ?>
         <div><input class="thickbox button" title="" type="button" style="display: block; float: left;" alt="#TB_inline?
-        height=370&width=400&inlineId=deactivate_keep_ssl" value="Deactivate Plugin and keep SSL"/></div>
+        height=370&width=400&inlineId=deactivate_keep_ssl" value="<?php echo __('Deactivate Plugin and keep SSL', 'really-simple-ssl'); ?>"/></div>
         <div id="deactivate_keep_ssl" style="display: none;">
 
             <h1 style="margin: 10px 0; text-align: center;"><?php _e("Are you sure?", "really-simple-ssl") ?></h1>
