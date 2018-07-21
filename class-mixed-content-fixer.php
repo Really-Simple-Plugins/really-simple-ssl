@@ -170,14 +170,21 @@ if (!class_exists('rsssl_admin_mixed_content_fixer')) {
             $str = preg_replace($pattern, 'https://', $str);
 
             /* handle multiple images in srcset */
-            $str = preg_replace_callback('/<img[^\>]*[^\>\S]+srcset=[\'"]\K((?:[^"\'\s,]+\s*(?:\s+\d+[wx])(?:,\s*)?)+)["\']/', function ($matches) {
-                return str_replace("http://", "https://", $matches[0]);
-            }, $str);
+            $str = preg_replace_callback('/<img[^\>]*[^\>\S]+srcset=[\'"]\K((?:[^"\'\s,]+\s*(?:\s+\d+[wx])(?:,\s*)?)+)["\']/', array($this, 'replace_src_set'), $str);
 
             $str = str_replace("<body", '<body data-rsssl=1', $str);
 
             return apply_filters("rsssl_fixer_output", $str);
 
+        }
+
+        /*
+         * Helper function to maintain PHP 5.2 compatibility. Yes. 5.2.. It's still used...
+         *
+         * */
+
+        public function replace_src_set($matches) {
+            return str_replace("http://", "https://", $matches[0]);
         }
 
     }
