@@ -507,7 +507,7 @@ if (!class_exists('rsssl_multisite')) {
         public function deactivate_ssl_networkwide(){
             error_log("running ssl deactivation chunk");
             //run chunked
-            $nr_of_sites = 100;
+            $nr_of_sites = 200;
             $current_offset = get_site_option('rsssl_siteprocessing_progress');
 
             //set batch of sites
@@ -538,7 +538,7 @@ if (!class_exists('rsssl_multisite')) {
         {
             error_log("running ssl activation chunk");
             //run chunked
-            $nr_of_sites = 100;
+            $nr_of_sites = 200;
             $current_offset = get_site_option('rsssl_siteprocessing_progress');
 
             //set batch of sites
@@ -693,7 +693,7 @@ if (!class_exists('rsssl_multisite')) {
             if (!is_multisite()) return FALSE;
             //we check this manually, as the SUBDOMAIN_INSTALL constant of wordpress might return false for domain mapping configs
             $is_subfolder = FALSE;
-            $sites = $this->get_sites_bw_compatible();
+            $sites = $this->get_sites_bw_compatible(0, 10);
             foreach ($sites as $site) {
                 $this->switch_to_blog_bw_compatible($site);
                 if ($this->is_subfolder(home_url())) {
