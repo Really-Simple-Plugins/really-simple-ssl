@@ -1,5 +1,9 @@
 <?php
 
+function rsssl_run_ssl_process(){
+    RSSSL()->rsssl_multisite->run_ssl_process();
+}
+
 defined('ABSPATH') or die("you do not have access to this page!");
 
 if (!class_exists('rsssl_multisite')) {
@@ -50,6 +54,7 @@ if (!class_exists('rsssl_multisite')) {
 
             if (is_network_admin()) {
                 add_action('network_admin_notices', array($this, 'show_notices'), 10);
+
                 add_action('admin_print_footer_scripts', array($this, 'insert_dismiss_success'));
             }
 
@@ -59,12 +64,43 @@ if (!class_exists('rsssl_multisite')) {
             add_action("rsssl_show_network_tab_settings", array($this, 'settings_tab'));
             add_action('wpmu_new_blog', array($this, 'maybe_activate_ssl_in_new_blog'), 10, 6);
 
+            add_filter('cron_schedules', array($this, 'filter_cron_schedules' ));
+            add_action('plugins_loaded', array($this, 'schedule_cron'), 30, 0);
+
+
         }
 
         static function this()
         {
             return self::$_this;
         }
+
+
+        // add custom time to cron
+        public function filter_cron_schedules( $schedules ) {
+
+            $schedules['rsssl_ms_every_minute'] = array(
+                'interval' => 60, // seconds
+                'display'  => __( 'Once every minute' )
+            );
+
+            return $schedules;
+        }
+
+
+        public function schedule_cron() {
+
+            if ($this->ssl_process_active() && !wp_next_scheduled('rsssl_run_ssl_process') ) {
+                error_log("schedule a hook");
+                wp_schedule_event( time(), 'rsssl_ms_every_minute', 'rsssl_run_ssl_process' );
+            } else {
+                wp_clear_scheduled_hook( 'rsssl_run_ssl_process' );
+            }
+
+            //add_action( 'rsssl_run_ssl_process', array($this, 'run_ssl_process'));
+            add_action( 'admin_init', array($this, 'run_ssl_process'));
+        }
+
 
         /*
 
@@ -242,19 +278,17 @@ if (!class_exists('rsssl_multisite')) {
 
             $this->save_options();
 
-            if ($this->ssl_enabled_networkwide) {
+            if ($this->ssl_enabled_networkwide && !$prev_ssl_enabled_networkwide) {
+                //reset
+                $this->start_ssl_activation();
                 //enable SSL on all  sites on the network
-                $this->activate_ssl_networkwide();
-            } elseif ($prev_ssl_enabled_networkwide != $this->ssl_enabled_networkwide) {
-                //if we switch to per page, we deactivate SSL on all pages first, but only if the setting was changed.
-                $sites = $this->get_sites_bw_compatible();
-                foreach ($sites as $site) {
-                    $this->switch_to_blog_bw_compatible($site);
-                    RSSSL()->really_simple_ssl->deactivate_ssl();
-                    restore_current_blog(); //switches back to previous blog, not current, so we have to do it each loop
-                }
             }
 
+            if (!$this->ssl_enabled_networkwide && $prev_ssl_enabled_networkwide ) {
+                //if we switch to per page, we deactivate SSL on all pages first, but only if the setting was changed.
+                $this->start_ssl_deactivation();
+
+            }
 
             // At last we redirect back to our options page.
             wp_redirect(add_query_arg(array('page' => $this->page_slug, 'updated' => 'true'), network_admin_url('settings.php')));
@@ -382,7 +416,8 @@ if (!class_exists('rsssl_multisite')) {
                 $this->save_options();
 
                 //enable SSL on all sites on the network
-                $this->activate_ssl_networkwide();
+                update_site_option('rsssl_ssl_enabled_progress', 0);
+                //$this->activate_ssl_networkwide();
 
             }
 
@@ -417,29 +452,130 @@ if (!class_exists('rsssl_multisite')) {
         }
 
 
-        public function activate_ssl_networkwide()
-        {
+        public function ssl_process_active(){
+            error_log("check if ssl process active");
+            if (get_site_option('rsssl_ssl_activation_active') || get_site_option('rsssl_ssl_deactivation_active')){
+                error_log("ssl process active");
+                return true;
+            }
 
-            //set all sites as enabled
-            $sites = $this->get_sites_bw_compatible();
+            error_log("ssl process active");
 
-            foreach ($sites as $site) {
-                $this->switch_to_blog_bw_compatible($site);
-                RSSSL()->really_simple_ssl->activate_ssl();
-                restore_current_blog(); //switches back to previous blog, not current, so we have to do it each loop
+            return false;
+        }
+
+        public function run_ssl_process(){
+            error_log("running ssl activation or deactivation process");
+
+            if (get_site_option('rsssl_ssl_activation_active')){
+                error_log("do activation");
+                $this->activate_ssl_networkwide();
+            }
+
+            if (get_site_option('rsssl_ssl_deactivation_active')){
+                error_log("do deactivation");
+                $this->deactivate_ssl_networkwide();
+            }
+        }
+
+        public function get_process_completed_percentage(){
+            $complete_count = get_site_option('rsssl_siteprocessing_progress');
+            return round(($complete_count/get_blog_count())*100,2);
+        }
+
+        public function start_ssl_activation(){
+            error_log("start activation process");
+            update_site_option('rsssl_siteprocessing_progress', 0);
+            update_site_option('rsssl_ssl_activation_active', true);
+        }
+
+        public function end_ssl_activation(){
+            error_log("end ssl activation");
+            update_site_option('rsssl_ssl_activation_active', false);
+        }
+
+        public function start_ssl_deactivation(){
+            update_site_option('rsssl_siteprocessing_progress', 0);
+            update_site_option('rsssl_ssl_deactivation_active', true);
+        }
+
+        public function end_ssl_deactivation(){
+            error_log("end ssl deactivation");
+            update_site_option('rsssl_ssl_deactivation_active', false);
+        }
+
+        public function deactivate_ssl_networkwide(){
+            error_log("running ssl deactivation chunk");
+            //run chunked
+            $nr_of_sites = 100;
+            $current_offset = get_site_option('rsssl_siteprocessing_progress');
+
+            //set batch of sites
+            $sites = $this->get_sites_bw_compatible($current_offset, $nr_of_sites);
+
+            //if no sites are found, we assume we're done.
+            if (count($sites)==0) {
+                error_log("no sites left, stop deactivation");
+                $this->end_ssl_deactivation();
+            } else {
+                foreach ($sites as $site) {
+                    error_log("deactivating ".$site->blog_id);
+                    $this->switch_to_blog_bw_compatible($site);
+                    RSSSL()->really_simple_ssl->deactivate_ssl();
+                    restore_current_blog(); //switches back to previous blog, not current, so we have to do it each loop
+                    update_site_option('rsssl_siteprocessing_progress', $current_offset+$nr_of_sites);
+                }
             }
 
         }
 
 
+
+
+
+
+        public function activate_ssl_networkwide()
+        {
+            error_log("running ssl activation chunk");
+            //run chunked
+            $nr_of_sites = 100;
+            $current_offset = get_site_option('rsssl_siteprocessing_progress');
+
+            //set batch of sites
+            $sites = $this->get_sites_bw_compatible($current_offset, $nr_of_sites);
+
+            //if no sites are found, we assume we're done.
+            if (count($sites)==0) {
+                error_log("no sites left, stop activation");
+                $this->end_ssl_activation();
+            } else {
+                foreach ($sites as $site) {
+                    error_log("activating ".$site->blog_id);
+                    $this->switch_to_blog_bw_compatible($site);
+                    RSSSL()->really_simple_ssl->activate_ssl();
+                    restore_current_blog(); //switches back to previous blog, not current, so we have to do it each loop
+                    update_site_option('rsssl_siteprocessing_progress', $current_offset+$nr_of_sites);
+                }
+            }
+
+
+        }
+
+
         //change deprecated function depending on version.
-        public function get_sites_bw_compatible()
+        /*
+         * Offset is used to chunk the site loops.
+         * But offset is not used in the pre 4.6 function.
+         *
+         *
+         * */
+        public function get_sites_bw_compatible($offset=0, $nr_of_sites=100)
         {
             global $wp_version;
 
-            //make sure all blogs are returned, not only the first 100.
             $args = array(
-                'number' => get_blog_count()
+                'number' => $nr_of_sites,
+                'offset' => $offset,
             );
             $sites = ($wp_version >= 4.6) ? get_sites($args) : wp_get_sites();
             return $sites;
@@ -462,7 +598,6 @@ if (!class_exists('rsssl_multisite')) {
 
         public function deactivate()
         {
-
             $options = get_site_option("rlrsssl_network_options");
             $options["selected_networkwide_or_per_site"] = false;
             $options["wp_redirect"] = false;
@@ -478,7 +613,8 @@ if (!class_exists('rsssl_multisite')) {
             unset($options["ssl_enabled_networkwide"]);
             update_site_option("rlrsssl_network_options", $options);
 
-            $sites = $this->get_sites_bw_compatible();
+            //because the deactivation should be a one click procedure, chunking this would cause dificulties
+            $sites = $this->get_sites_bw_compatible(0, get_blog_count());
             foreach ($sites as $site) {
                 $this->switch_to_blog_bw_compatible($site);
                 RSSSL()->really_simple_ssl->deactivate_ssl();
@@ -623,6 +759,22 @@ if (!class_exists('rsssl_multisite')) {
                         <?php _e("The 'force-deactivate.php' file has to be renamed to .txt. Otherwise your ssl can be deactived by anyone on the internet.", "really-simple-ssl"); ?>
                     </p>
                     <a href="options-general.php?page=rlrsssl_really_simple_ssl"><?php echo __("Check again", "really-simple-ssl"); ?></a>
+                </div>
+                <?php
+            }
+
+            /*
+             * ssl switch for sites processing active
+             * */
+
+            if ($this->ssl_process_active()) {
+                ?>
+                <div id="message" class="error fade notice is-dismissible rlrsssl-fail">
+                    <p>
+                        <?php printf(__("%s percent complete.", "really-simple-ssl"), $this->get_process_completed_percentage()); ?>
+
+                        <?php _e("You have just started enabling or disabling SSL on multiple websites at once, and this process is not completed yet. Please refresh this page to check if the process has finished. It will proceed in the background.", "really-simple-ssl"); ?>
+                    </p>
                 </div>
                 <?php
             }
