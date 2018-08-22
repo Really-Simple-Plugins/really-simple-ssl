@@ -124,3 +124,7 @@ function RSSSL() {
 	return REALLY_SIMPLE_SSL::instance();
 }
 add_action( 'plugins_loaded', 'RSSSL', 8 );
+
+if ( is_multisite() ) {
+    require_once( trailingslashit(plugin_dir_path(__FILE__ )) .  'multisite-cron.php' );
+}
