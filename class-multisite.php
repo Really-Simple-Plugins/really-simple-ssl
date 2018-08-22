@@ -1,9 +1,5 @@
 <?php
 
-function rsssl_run_ssl_process(){
-    RSSSL()->rsssl_multisite->run_ssl_process();
-}
-
 defined('ABSPATH') or die("you do not have access to this page!");
 
 if (!class_exists('rsssl_multisite')) {
@@ -64,8 +60,7 @@ if (!class_exists('rsssl_multisite')) {
             add_action("rsssl_show_network_tab_settings", array($this, 'settings_tab'));
             add_action('wpmu_new_blog', array($this, 'maybe_activate_ssl_in_new_blog'), 10, 6);
 
-            add_filter('cron_schedules', array($this, 'filter_cron_schedules' ));
-            add_action('plugins_loaded', array($this, 'schedule_cron'), 30, 0);
+            add_action('admin_init', array($this, 'run_ssl_process'));
 
 
         }
@@ -73,32 +68,6 @@ if (!class_exists('rsssl_multisite')) {
         static function this()
         {
             return self::$_this;
-        }
-
-
-        // add custom time to cron
-        public function filter_cron_schedules( $schedules ) {
-
-            $schedules['rsssl_ms_every_minute'] = array(
-                'interval' => 60, // seconds
-                'display'  => __( 'Once every minute' )
-            );
-
-            return $schedules;
-        }
-
-
-        public function schedule_cron() {
-
-            if ($this->ssl_process_active() && !wp_next_scheduled('rsssl_run_ssl_process') ) {
-                error_log("schedule a hook");
-                wp_schedule_event( time(), 'rsssl_ms_every_minute', 'rsssl_run_ssl_process' );
-            } else {
-                wp_clear_scheduled_hook( 'rsssl_run_ssl_process' );
-            }
-
-            //add_action( 'rsssl_run_ssl_process', array($this, 'run_ssl_process'));
-            add_action( 'admin_init', array($this, 'run_ssl_process'));
         }
 
 
@@ -453,18 +422,23 @@ if (!class_exists('rsssl_multisite')) {
 
 
         public function ssl_process_active(){
-            error_log("check if ssl process active");
-            if (get_site_option('rsssl_ssl_activation_active') || get_site_option('rsssl_ssl_deactivation_active')){
-                error_log("ssl process active");
+
+            if (get_site_option('rsssl_ssl_activation_active')){
+                error_log("ssl activation process active");
                 return true;
             }
 
-            error_log("ssl process active");
+            if ( get_site_option('rsssl_ssl_deactivation_active')){
+                error_log("ssl deactivation process active");
+                return true;
+            }
 
             return false;
         }
 
         public function run_ssl_process(){
+            if (!get_site_option('rsssl_run')) return;
+
             error_log("running ssl activation or deactivation process");
 
             if (get_site_option('rsssl_ssl_activation_active')){
@@ -476,11 +450,15 @@ if (!class_exists('rsssl_multisite')) {
                 error_log("do deactivation");
                 $this->deactivate_ssl_networkwide();
             }
+
+            update_site_option('rsssl_run', false);
         }
 
         public function get_process_completed_percentage(){
             $complete_count = get_site_option('rsssl_siteprocessing_progress');
-            return round(($complete_count/get_blog_count())*100,2);
+            $percentage = round(($complete_count/get_blog_count())*100,0);
+            if ($percentage > 99) $percentage = 99;
+            return $percentage;
         }
 
         public function start_ssl_activation(){
@@ -500,12 +478,10 @@ if (!class_exists('rsssl_multisite')) {
         }
 
         public function end_ssl_deactivation(){
-            error_log("end ssl deactivation");
             update_site_option('rsssl_ssl_deactivation_active', false);
         }
 
         public function deactivate_ssl_networkwide(){
-            error_log("running ssl deactivation chunk");
             //run chunked
             $nr_of_sites = 200;
             $current_offset = get_site_option('rsssl_siteprocessing_progress');
@@ -515,11 +491,9 @@ if (!class_exists('rsssl_multisite')) {
 
             //if no sites are found, we assume we're done.
             if (count($sites)==0) {
-                error_log("no sites left, stop deactivation");
                 $this->end_ssl_deactivation();
             } else {
                 foreach ($sites as $site) {
-                    error_log("deactivating ".$site->blog_id);
                     $this->switch_to_blog_bw_compatible($site);
                     RSSSL()->really_simple_ssl->deactivate_ssl();
                     restore_current_blog(); //switches back to previous blog, not current, so we have to do it each loop
@@ -530,13 +504,8 @@ if (!class_exists('rsssl_multisite')) {
         }
 
 
-
-
-
-
         public function activate_ssl_networkwide()
         {
-            error_log("running ssl activation chunk");
             //run chunked
             $nr_of_sites = 200;
             $current_offset = get_site_option('rsssl_siteprocessing_progress');
@@ -546,11 +515,9 @@ if (!class_exists('rsssl_multisite')) {
 
             //if no sites are found, we assume we're done.
             if (count($sites)==0) {
-                error_log("no sites left, stop activation");
                 $this->end_ssl_activation();
             } else {
                 foreach ($sites as $site) {
-                    error_log("activating ".$site->blog_id);
                     $this->switch_to_blog_bw_compatible($site);
                     RSSSL()->really_simple_ssl->activate_ssl();
                     restore_current_blog(); //switches back to previous blog, not current, so we have to do it each loop
@@ -771,7 +738,7 @@ if (!class_exists('rsssl_multisite')) {
                 ?>
                 <div id="message" class="error fade notice is-dismissible rlrsssl-fail">
                     <p>
-                        <?php printf(__("%s percent complete.", "really-simple-ssl"), $this->get_process_completed_percentage()); ?>
+                        <?php printf(__("Conversion of websites %s percent complete.", "really-simple-ssl"), $this->get_process_completed_percentage()); ?>
 
                         <?php _e("You have just started enabling or disabling SSL on multiple websites at once, and this process is not completed yet. Please refresh this page to check if the process has finished. It will proceed in the background.", "really-simple-ssl"); ?>
                     </p>
