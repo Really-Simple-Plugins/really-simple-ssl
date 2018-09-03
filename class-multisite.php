@@ -51,9 +51,11 @@ if (!class_exists('rsssl_multisite')) {
             if (is_network_admin()) {
                 add_action('network_admin_notices', array($this, 'show_notices'), 10);
                 add_action('admin_print_footer_scripts', array($this, 'insert_dismiss_success'));
+                add_action('admin_print_footer_scripts', array($this, 'insert_dismiss_wildcard_warning'));
             }
 
             add_action('wp_ajax_dismiss_success_message_multisite', array($this, 'dismiss_success_message_callback'));
+            add_action('wp_ajax_dismiss_wildcard_warning', array($this, 'dismiss_wildcard_message_callback'));
             add_action('wp_ajax_rsssl_pro_dismiss_pro_option_notice', array($this, 'dismiss_pro_option_notice'));
             add_action("network_admin_notices", array($this, 'show_pro_option_notice'));
             add_action("rsssl_show_network_tab_settings", array($this, 'settings_tab'));
@@ -669,7 +671,7 @@ if (!class_exists('rsssl_multisite')) {
 
             if (!RSSSL()->really_simple_ssl->ssl_enabled && !$this->is_multisite_subfolder_install() && !RSSSL()->rsssl_certificate->is_wildcard() && !get_site_option("rsssl_wildcard_message_shown")) {
                 ?>
-                <div id="message" class="error fade notice is-dismissible">
+                <div id="message" class="error fade notice is-dismissible rlrsssl-multisite-wildcard-warning">
                     <p>
                         <?php _e("You run a Multisite installation with subdomains, but your site doesn't have a wildcard certificate.", 'really-simple-ssl'); ?>
                         <?php _e("This leads to issues when activating SSL networkwide since subdomains will be forced over SSL as well while they don't have a valid certificate.", 'really-simple-ssl'); ?>
@@ -715,6 +717,31 @@ if (!class_exists('rsssl_multisite')) {
             }
         }
 
+        public function insert_dismiss_wildcard_warning()
+        {
+            if ($this->selected_networkwide_or_per_site && !get_site_option("rsssl_success_message_shown")) {
+                $ajax_nonce = wp_create_nonce("really-simple-ssl-dismiss");
+                ?>
+                <script type='text/javascript'>
+                    jQuery(document).ready(function ($) {
+                        $(".rlrsssl-multisite-wildcard-warning.notice.is-dismissible").on("click", ".notice-dismiss", function (event) {
+
+                            var data = {
+                                'action': 'dismiss_wildcard_warning',
+                                'security': '<?php echo $ajax_nonce; ?>'
+                            };
+
+                            $.post(ajaxurl, data, function (response) {
+
+                            });
+                        });
+                    });
+                </script>
+                <?php
+            }
+        }
+
+
         /**
          * Process the ajax dismissal of the success message.
          *
@@ -726,8 +753,6 @@ if (!class_exists('rsssl_multisite')) {
 
         public function dismiss_success_message_callback()
         {
-//nonce check fails if url is changed to SSL.
-//check_ajax_referer( 'really-simple-ssl-dismiss', 'security' );
             update_site_option("rsssl_success_message_shown", true);
             wp_die();
         }
@@ -737,6 +762,12 @@ if (!class_exists('rsssl_multisite')) {
         {
             check_ajax_referer('rsssl-pro-dismiss-pro-option-notice', 'nonce');
             update_option('rsssl_pro_pro_option_notice_dismissed', true);
+            wp_die();
+        }
+
+        public function dismiss_wildcard_message_callback()
+        {
+            update_site_option("rsssl_wildcard_message_shown", true);
             wp_die();
         }
 
