@@ -32,6 +32,7 @@ class rsssl_admin extends rsssl_front_end
     public $javascript_redirect = FALSE;
     public $htaccess_redirect = FALSE;
     public $htaccess_warning_shown = FALSE;
+    public $review_notice_shown = FALSE;
     public $ssl_success_message_shown = FALSE;
     public $hsts = FALSE;
     public $debug = TRUE;
@@ -181,9 +182,11 @@ class rsssl_admin extends rsssl_front_end
         //callbacks for the ajax dismiss buttons
         add_action('wp_ajax_dismiss_htaccess_warning', array($this, 'dismiss_htaccess_warning_callback'));
         add_action('wp_ajax_dismiss_success_message', array($this, 'dismiss_success_message_callback'));
+        add_action('wp_ajax_dismiss_review_notice', array($this, 'dismiss_review_notice_callback'));
 
         //handle notices
         add_action('admin_notices', array($this, 'show_notices'));
+        add_action('admin_notices', array($this, 'show_leave_review_notice'));
         add_action("update_option_rlrsssl_options", array($this, "update_htaccess_after_settings_save"), 20, 3);
     }
 
@@ -294,6 +297,11 @@ class rsssl_admin extends rsssl_front_end
 
         if (isset($_POST['rsssl_do_activate_ssl'])) {
             $this->activate_ssl();
+
+            //if (empty(get_option('rsssl_activation_timestamp'))) {
+                update_option('rsssl_activation_timestamp', time());
+            //}
+
             return true;
         }
 
@@ -303,7 +311,7 @@ class rsssl_admin extends rsssl_front_end
 
     /*
         Activate the SSL for this site
-  */
+     */
 
     public function activate_ssl()
     {
@@ -505,6 +513,7 @@ class rsssl_admin extends rsssl_front_end
             $this->site_has_ssl = isset($options['site_has_ssl']) ? $options['site_has_ssl'] : FALSE;
             $this->hsts = isset($options['hsts']) ? $options['hsts'] : FALSE;
             $this->htaccess_warning_shown = isset($options['htaccess_warning_shown']) ? $options['htaccess_warning_shown'] : FALSE;
+            $this->review_notice_shown = isset($options['review_notice_shown']) ? $options['review_notice_shown'] : FALSE;
             $this->ssl_success_message_shown = isset($options['ssl_success_message_shown']) ? $options['ssl_success_message_shown'] : FALSE;
             $this->plugin_db_version = isset($options['plugin_db_version']) ? $options['plugin_db_version'] : "1.0";
             $this->debug = isset($options['debug']) ? $options['debug'] : FALSE;
@@ -1089,6 +1098,7 @@ class rsssl_admin extends rsssl_front_end
             'site_has_ssl' => $this->site_has_ssl,
             'hsts' => $this->hsts,
             'htaccess_warning_shown' => $this->htaccess_warning_shown,
+            'review_notice_shown' => $this->review_notice_shown,
             'ssl_success_message_shown' => $this->ssl_success_message_shown,
             'autoreplace_insecure_links' => $this->autoreplace_insecure_links,
             'plugin_db_version' => $this->plugin_db_version,
@@ -1135,6 +1145,7 @@ class rsssl_admin extends rsssl_front_end
         $this->site_has_ssl = FALSE;
         $this->hsts = FALSE;
         $this->htaccess_warning_shown = FALSE;
+        $this->review_notice_shown = FALSE;
         $this->ssl_success_message_shown = FALSE;
         $this->autoreplace_insecure_links = TRUE;
         $this->do_not_edit_htaccess = FALSE;
@@ -1821,6 +1832,27 @@ class rsssl_admin extends rsssl_front_end
         <?php
     }
 
+    public function show_leave_review_notice()
+    {
+
+        //if (!$this->review_notice_shown && get_option('rsssl_flush_rewrite_rules') > strtotime(+ 1 month))) {
+            add_action('admin_print_footer_scripts', array($this, 'insert_dismiss_review'));
+            ?>
+            <div id="message" class="updated fade notice is-dismissible rlrsssl-review">
+                <p><?php
+                    $link_open = '<a target="_blank" href="https://wordpress.org/support/plugin/really-simple-ssl/reviews/#new-post">';
+                    $link_close = '</a>';
+                    echo __('Hi, You have been using Really Simple SSL for a month now, awesome! If you have a moment, please consider leaving a review on WordPress.org to spread the word. We greatly appreciate it!', 'really-simple-ssl'); ?></p>
+<!--                Inline style because the main.css stylesheet is only included on Really Simpel SSL admin pages.-->
+                <ul style="margin-left: 30px; list-style: square;">
+                    <li><p><?php echo sprintf(__('%sLeave a review%s'),$link_open, $link_close); ?> </p></li>
+                    <li><p><?php echo sprintf(__('Maybe later'),$link_open, $link_close); ?> </p></li>
+                    <li><p><?php echo sprintf(__('I already did'),$link_open, $link_close); ?> </p></li>
+                </ul>
+            </div>
+            <?php
+        //}
+    }
 
     /**
      * Show notices
@@ -1935,7 +1967,7 @@ class rsssl_admin extends rsssl_front_end
     }
 
     /**
-     * Insert some ajax script to dismis the htaccess failed fail message, and stop nagging about it
+     * Insert some ajax script to dismiss the htaccess failed fail message, and stop nagging about it
      *
      * @since  2.0
      *
@@ -1952,6 +1984,35 @@ class rsssl_admin extends rsssl_front_end
                 $(".rlrsssl-htaccess.notice.is-dismissible").on("click", ".notice-dismiss", function (event) {
                     var data = {
                         'action': 'dismiss_htaccess_warning',
+                        'security': '<?php echo $ajax_nonce; ?>'
+                    };
+                    $.post(ajaxurl, data, function (response) {
+
+                    });
+                });
+            });
+        </script>
+        <?php
+    }
+
+    /**
+     * Insert some ajax script to dismiss the review notice, and stop nagging about it
+     *
+     * @since  2.0
+     *
+     * @access public
+     *
+     */
+
+    public function insert_dismiss_review()
+    {
+        $ajax_nonce = wp_create_nonce("really-simple-ssl");
+        ?>
+        <script type='text/javascript'>
+            jQuery(document).ready(function ($) {
+                $(".rlrsssl-review.notice.is-dismissible").on("click", ".notice-dismiss", function (event) {
+                    var data = {
+                        'action': 'dismiss_review_notice',
                         'security': '<?php echo $ajax_nonce; ?>'
                     };
                     $.post(ajaxurl, data, function (response) {
@@ -1998,6 +2059,22 @@ class rsssl_admin extends rsssl_front_end
         wp_die(); // this is required to terminate immediately and return a proper response
     }
 
+    /**
+     * Process the ajax dismissal of the htaccess message.
+     *
+     * @since  2.1
+     *
+     * @access public
+     *
+     */
+
+    public function dismiss_review_notice_callback()
+    {
+        check_ajax_referer('really-simple-ssl', 'security');
+        $this->review_notice_shown = TRUE;
+        $this->save_options();
+        wp_die(); // this is required to terminate immediately and return a proper response
+    }
 
     /**
      * Adds the admin options page
@@ -2599,6 +2676,7 @@ class rsssl_admin extends rsssl_front_end
         $newinput['site_has_ssl'] = $this->site_has_ssl;
         $newinput['ssl_success_message_shown'] = $this->ssl_success_message_shown;
         $newinput['htaccess_warning_shown'] = $this->htaccess_warning_shown;
+        $newinput['review_notice_shown'] = $this->review_notice_shown;
         $newinput['plugin_db_version'] = $this->plugin_db_version;
         $newinput['ssl_enabled'] = $this->ssl_enabled;
         $newinput['debug_log'] = $this->debug_log;
@@ -3057,6 +3135,5 @@ class rsssl_admin extends rsssl_front_end
 
         return $filecontents;
     }
-
 
 } //class closure
