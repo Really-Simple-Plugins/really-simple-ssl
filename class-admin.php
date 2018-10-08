@@ -145,7 +145,6 @@ class rsssl_admin extends rsssl_front_end
                 //if we were to activate ssl, this could result in a redirect loop. So warn first.
                 add_action("admin_notices", array($this, 'show_notice_wpconfig_needs_fixes'));
                 if (is_multisite()) add_action('network_admin_notices', array($this, 'show_notice_wpconfig_needs_fixes'), 10);
-
                 $this->ssl_enabled = false;
                 $this->save_options();
             } elseif ($this->ssl_enabled) {
@@ -182,11 +181,13 @@ class rsssl_admin extends rsssl_front_end
         //callbacks for the ajax dismiss buttons
         add_action('wp_ajax_dismiss_htaccess_warning', array($this, 'dismiss_htaccess_warning_callback'));
         add_action('wp_ajax_dismiss_success_message', array($this, 'dismiss_success_message_callback'));
-        add_action('wp_ajax_dismiss_review_notice', array($this, 'dismiss_review_notice_callback'));
+        //add_action('wp_ajax_dismiss_review_notice', array($this, 'dismiss_review_notice_callback'));
 
         //handle notices
         add_action('admin_notices', array($this, 'show_notices'));
-        add_action('admin_notices', array($this, 'show_leave_review_notice'));
+        if (!defined("rsssl_pro_version") && (!defined("rsssl_pp_version")) && (!defined("rsssl_soc_version")) && (!class_exists('RSSSL_PRO'))) {
+            add_action('admin_notices', array($this, 'show_leave_review_notice'));
+        }
         add_action("update_option_rlrsssl_options", array($this, "update_htaccess_after_settings_save"), 20, 3);
     }
 
@@ -337,8 +338,10 @@ class rsssl_admin extends rsssl_front_end
     public function wpconfig_ok()
     {
         if (($this->do_wpconfig_loadbalancer_fix || $this->no_server_variable || $this->wpconfig_siteurl_not_fixed) && !$this->wpconfig_is_writable()) {
+            error_log("WP config NOT ok");
             $result = false;
         } else {
+            error_log("WP Config OK");
             $result = true;
         }
 
@@ -1215,12 +1218,16 @@ class rsssl_admin extends rsssl_front_end
 
         //if current page is on SSL, we can assume SSL is available, even when an errormsg was returned
         if ($this->is_ssl_extended()) {
+            error_log("Already on SSL, site_has_ssl is true");
             $this->trace_log("Already on SSL, start detecting configuration");
             $this->site_has_ssl = TRUE;
         } else {
+            error_log("Determine if site has SSL by checking certificate");
             //if certificate is valid
             $this->trace_log("Check SSL by retrieving SSL certificate info");
             $this->site_has_ssl = RSSSL()->rsssl_certificate->is_valid();
+            error_log("Site has ssl?");
+            error_log(print_r($this->site_has_ssl, true));
         }
 
         if ($this->site_has_ssl) {
@@ -1835,19 +1842,21 @@ class rsssl_admin extends rsssl_front_end
     public function show_leave_review_notice()
     {
 
-        //if (!$this->review_notice_shown && get_option('rsssl_flush_rewrite_rules') > strtotime(+ 1 month))) {
+        //if (!$this->review_notice_shown && get_option('rsssl_activation_timestamp') > strtotime(+ 1 month))) {
             add_action('admin_print_footer_scripts', array($this, 'insert_dismiss_review'));
             ?>
             <div id="message" class="updated fade notice is-dismissible rlrsssl-review">
                 <p><?php
                     $link_open = '<a target="_blank" href="https://wordpress.org/support/plugin/really-simple-ssl/reviews/#new-post">';
                     $link_close = '</a>';
+
+
                     echo __('Hi, You have been using Really Simple SSL for a month now, awesome! If you have a moment, please consider leaving a review on WordPress.org to spread the word. We greatly appreciate it!', 'really-simple-ssl'); ?></p>
-<!--                Inline style because the main.css stylesheet is only included on Really Simpel SSL admin pages.-->
+<!--                Inline style because the main.css stylesheet is only included on Really Simple SSL admin pages.-->
                 <ul style="margin-left: 30px; list-style: square;">
-                    <li><p><?php echo sprintf(__('%sLeave a review%s'),$link_open, $link_close); ?> </p></li>
-                    <li><p><?php echo sprintf(__('Maybe later'),$link_open, $link_close); ?> </p></li>
-                    <li><p><?php echo sprintf(__('I already did'),$link_open, $link_close); ?> </p></li>
+                    <li><p style="margin-top: -5px;"><?php echo sprintf(__('%sLeave a review%s'),$link_open, $link_close); ?> </p></li>
+                    <li><p style="margin-top: -5px;"><?php echo sprintf(__('Maybe later'),$link_open, $link_close); ?> </p></li>
+                    <li><p style="margin-top: -5px;"><?php echo sprintf(__('No thanks'),$link_open, $link_close); ?> </p></li>
                 </ul>
             </div>
             <?php
@@ -2387,7 +2396,7 @@ class rsssl_admin extends rsssl_front_end
                       $this->get_banner_html(array(
                               'img' => 'complianz.jpg',
                               'title' => 'ComplianZ',
-                              'description' => __("Do you have visitors from the European Union? Get GDPR ready in 30 minutes with Complianz GDPR. Always up-to-date legal documents by one of the most prominent EU IT Law firms.", "really-simple-ssl"),
+                              'description' => __("The Complianz GDPR Privacy Suite for WordPress. Simple, Quick and Complete. Up-to-date legal documents by one of the most prominent EU IT Law firms.", "really-simple-ssl"),
                               'url' => 'https://wordpress.org/plugins/complianz-gdpr/',
                               'pro' => true,
                            )
@@ -2427,6 +2436,7 @@ class rsssl_admin extends rsssl_front_end
                             );
 
                         }
+                    }
 
                         if (defined("EDD_SL_PLUGIN_DIR") && (get_locale() === 'nl_NL')) {
                             $this->get_banner_html(array(
@@ -2449,7 +2459,7 @@ class rsssl_admin extends rsssl_front_end
                             );
 
                         }
-                    } ?>
+                     ?>
                 </div>
             <?php }
             ?>
@@ -2744,7 +2754,7 @@ class rsssl_admin extends rsssl_front_end
 
     public function get_option_debug()
     {
-        $options = get_option('rlrsssl_options');
+    $options = get_option('rlrsssl_options');
         echo '<input id="rlrsssl_options" name="rlrsssl_options[debug]" size="40" type="checkbox" value="1"' . checked(1, $this->debug, false) . " />";
         RSSSL()->rsssl_help->get_help_tip(__("Enable this option to get debug info in the debug tab.", "really-simple-ssl"));
 
@@ -2769,7 +2779,6 @@ class rsssl_admin extends rsssl_front_end
             $javascript_redirect = TRUE;
             $comment = __("This option is enabled on the network menu.", "really-simple-ssl");
         }
-
         echo '<input ' . $disabled . ' id="rlrsssl_options" name="rlrsssl_options[javascript_redirect]" size="40" type="checkbox" value="1"' . checked(1, $javascript_redirect, false) . " />";
         RSSSL()->rsssl_help->get_help_tip(__("This is a fallback you should only use if other redirection methods do not work.", "really-simple-ssl"));
         echo $comment;
