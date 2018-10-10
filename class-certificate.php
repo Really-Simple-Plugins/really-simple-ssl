@@ -40,8 +40,6 @@ if ( ! class_exists( 'rsssl_certificate' ) ) {
             //Parse to strip off any /subfolder/
             $parse = parse_url($domain);
             $domain = $parse['host'];
-            //Add https:// again to retrieve the certinfo
-            $domain = 'https://'.$domain;
 
             if (function_exists('stream_context_get_params')) {
                 //get certificate info
@@ -79,9 +77,6 @@ if ( ! class_exists( 'rsssl_certificate' ) ) {
             //Get both the common name(s) and the alternative names from the certificate
             $certificate_common_names = isset($certinfo['subject']['CN']) ? $certinfo['subject']['CN'] : false;
             $certificate_alternative_names = isset($certinfo['extensions']['subjectAltName']) ? $certinfo['extensions']['subjectAltName'] : false;
-
-            //Strip https://.
-            $domain = str_replace('https://' , '' , $domain);
 
             //Check if the domain is found in either the certificate common name(s) (CN) or alternative name(s) (AN)
 
@@ -170,10 +165,10 @@ if ( ! class_exists( 'rsssl_certificate' ) ) {
          */
 
 
-        public function get_certinfo($domain)
+        public function get_certinfo($url)
         {
+            $url = 'https://'.$url;
             //check if the certificate is still valid, and send an email to the administrator if this is not the case.
-            $url = $domain;
             $original_parse = parse_url($url, PHP_URL_HOST);
 
             if ($original_parse) {

@@ -62,7 +62,7 @@ if (!class_exists('rsssl_multisite')) {
             add_action("rsssl_show_network_tab_settings", array($this, 'settings_tab'));
             add_action('wpmu_new_blog', array($this, 'maybe_activate_ssl_in_new_blog'), 10, 6);
 
-            add_action('admin_init', array($this, 'run_ssl_process'));
+            //add_action('admin_init', array($this, 'run_ssl_process'));
 
 
         }
@@ -439,7 +439,7 @@ if (!class_exists('rsssl_multisite')) {
         }
 
         public function run_ssl_process(){
-            if (!get_site_option('rsssl_run')) return;
+            // if (!get_site_option('rsssl_run')) return;
 
             error_log("running ssl activation or deactivation process");
 
@@ -514,6 +514,9 @@ if (!class_exists('rsssl_multisite')) {
 
             //set batch of sites
             $sites = $this->get_sites_bw_compatible($current_offset, $nr_of_sites);
+
+            error_log("Current offset");
+            error_log($current_offset);
 
             //if no sites are found, we assume we're done.
             if (count($sites)==0) {

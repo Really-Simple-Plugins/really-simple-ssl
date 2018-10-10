@@ -62,6 +62,7 @@ class rsssl_admin extends rsssl_front_end
         register_deactivation_hook(dirname(__FILE__) . "/" . $this->plugin_filename, array($this, 'deactivate'));
 
         add_action('admin_init', array($this, 'add_privacy_info'));
+
     }
 
     static function this()
@@ -114,7 +115,7 @@ class rsssl_admin extends rsssl_front_end
          * https://codex.wordpress.org/Function_Reference/flush_rewrite_rules
          * */
 
-        if (get_option('rsssl_flush_rewrite_rules') && get_option('rsssl_flush_rewrite_rules') < strtotime("+1 minute")){
+        if (get_option('rsssl_flush_rewrite_rules') && get_option('rsssl_flush_rewrite_rules') < strtotime("-1 minute")){
             delete_option('rsssl_flush_rewrite_rules');
             add_action('shutdown', 'flush_rewrite_rules');
         }
@@ -181,10 +182,11 @@ class rsssl_admin extends rsssl_front_end
         //callbacks for the ajax dismiss buttons
         add_action('wp_ajax_dismiss_htaccess_warning', array($this, 'dismiss_htaccess_warning_callback'));
         add_action('wp_ajax_dismiss_success_message', array($this, 'dismiss_success_message_callback'));
-        //add_action('wp_ajax_dismiss_review_notice', array($this, 'dismiss_review_notice_callback'));
+        add_action('wp_ajax_dismiss_review_notice', array($this, 'dismiss_review_notice_callback'));
 
         //handle notices
         add_action('admin_notices', array($this, 'show_notices'));
+        //show review notice, only to free users
         if (!defined("rsssl_pro_version") && (!defined("rsssl_pp_version")) && (!defined("rsssl_soc_version")) && (!class_exists('RSSSL_PRO'))) {
             add_action('admin_notices', array($this, 'show_leave_review_notice'));
         }
@@ -338,10 +340,8 @@ class rsssl_admin extends rsssl_front_end
     public function wpconfig_ok()
     {
         if (($this->do_wpconfig_loadbalancer_fix || $this->no_server_variable || $this->wpconfig_siteurl_not_fixed) && !$this->wpconfig_is_writable()) {
-            error_log("WP config NOT ok");
             $result = false;
         } else {
-            error_log("WP Config OK");
             $result = true;
         }
 
@@ -1218,16 +1218,12 @@ class rsssl_admin extends rsssl_front_end
 
         //if current page is on SSL, we can assume SSL is available, even when an errormsg was returned
         if ($this->is_ssl_extended()) {
-            error_log("Already on SSL, site_has_ssl is true");
             $this->trace_log("Already on SSL, start detecting configuration");
             $this->site_has_ssl = TRUE;
         } else {
-            error_log("Determine if site has SSL by checking certificate");
             //if certificate is valid
             $this->trace_log("Check SSL by retrieving SSL certificate info");
             $this->site_has_ssl = RSSSL()->rsssl_certificate->is_valid();
-            error_log("Site has ssl?");
-            error_log(print_r($this->site_has_ssl, true));
         }
 
         if ($this->site_has_ssl) {
@@ -1841,26 +1837,21 @@ class rsssl_admin extends rsssl_front_end
 
     public function show_leave_review_notice()
     {
-
-        //if (!$this->review_notice_shown && get_option('rsssl_activation_timestamp') > strtotime(+ 1 month))) {
+        if (!$this->review_notice_shown && get_option('rsssl_activation_timestamp') && get_option('rsssl_activation_timestamp') < strtotime("-1 month")) {
             add_action('admin_print_footer_scripts', array($this, 'insert_dismiss_review'));
             ?>
             <div id="message" class="updated fade notice is-dismissible rlrsssl-review">
-                <p><?php
-                    $link_open = '<a target="_blank" href="https://wordpress.org/support/plugin/really-simple-ssl/reviews/#new-post">';
-                    $link_close = '</a>';
-
-
-                    echo __('Hi, You have been using Really Simple SSL for a month now, awesome! If you have a moment, please consider leaving a review on WordPress.org to spread the word. We greatly appreciate it!', 'really-simple-ssl'); ?></p>
-<!--                Inline style because the main.css stylesheet is only included on Really Simple SSL admin pages.-->
+                <p><?php printf(__('Hi, you have been using Really Simple SSL for a month now, awesome! If you have a moment, please consider leaving a review on WordPress.org to spread the word. We greatly appreciate it! If you have any questions or feedback, leave us a %smessage%s.', 'really-simple-ssl'),'<a href="https://really-simple-ssl.com/contact" target="_blank">','</a>'); ?></p>
+                <i>- Rogier</i>
+                <?php //Inline style because the main.css stylesheet is only included on Really Simple SSL admin pages.?>
                 <ul style="margin-left: 30px; list-style: square;">
-                    <li><p style="margin-top: -5px;"><?php echo sprintf(__('%sLeave a review%s'),$link_open, $link_close); ?> </p></li>
-                    <li><p style="margin-top: -5px;"><?php echo sprintf(__('Maybe later'),$link_open, $link_close); ?> </p></li>
-                    <li><p style="margin-top: -5px;"><?php echo sprintf(__('No thanks'),$link_open, $link_close); ?> </p></li>
+                    <li><p style="margin-top: -5px;"><a target="_blank" href="https://wordpress.org/support/plugin/really-simple-ssl/reviews/#new-post"><?php _e('Leave a review', 'really-simple-ssl'); ?></a></p></li>
+                    <li><p style="margin-top: -5px;"><a href="#" id="maybe-later"><?php _e('Maybe later', 'really-simple-ssl'); ?></a></p></li>
+                    <li><p style="margin-top: -5px;"><a href="#" class="review-dismiss"><?php _e('No thanks', 'really-simple-ssl'); ?></a></p></li>
                 </ul>
             </div>
             <?php
-        //}
+        }
     }
 
     /**
@@ -2011,6 +2002,8 @@ class rsssl_admin extends rsssl_front_end
      *
      * @access public
      *
+     * type: dismiss, later
+     *
      */
 
     public function insert_dismiss_review()
@@ -2020,14 +2013,25 @@ class rsssl_admin extends rsssl_front_end
         <script type='text/javascript'>
             jQuery(document).ready(function ($) {
                 $(".rlrsssl-review.notice.is-dismissible").on("click", ".notice-dismiss", function (event) {
+                    rsssl_dismiss_review('dismiss');
+                });
+                $(".rlrsssl-review.notice.is-dismissible").on("click", "#maybe-later", function (event) {
+                    rsssl_dismiss_review('later');
+                    $(this).closest('.rlrsssl-review').remove();
+                });
+                $(".rlrsssl-review.notice.is-dismissible").on("click", ".review-dismiss", function (event) {
+                    rsssl_dismiss_review('dismiss');
+                    $(this).closest('.rlrsssl-review').remove();
+                });
+
+                function rsssl_dismiss_review(type){
                     var data = {
                         'action': 'dismiss_review_notice',
+                        'type' : type,
                         'security': '<?php echo $ajax_nonce; ?>'
                     };
-                    $.post(ajaxurl, data, function (response) {
-
-                    });
-                });
+                    $.post(ajaxurl, data, function (response) {});
+                }
             });
         </script>
         <?php
@@ -2080,7 +2084,17 @@ class rsssl_admin extends rsssl_front_end
     public function dismiss_review_notice_callback()
     {
         check_ajax_referer('really-simple-ssl', 'security');
-        $this->review_notice_shown = TRUE;
+
+        $type = isset($_POST['type']) ? $_POST['type'] : false;
+
+        if ($type === 'dismiss'){
+            $this->review_notice_shown = TRUE;
+        }
+        if ($type === 'later') {
+            //Reset activation timestamp, notice will show again in one month.
+            update_option('rsssl_activation_timestamp', time());
+        }
+
         $this->save_options();
         wp_die(); // this is required to terminate immediately and return a proper response
     }
