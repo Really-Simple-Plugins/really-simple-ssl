@@ -1807,7 +1807,7 @@ class rsssl_admin extends rsssl_front_end
                     <br><br><code>
                         //Begin Really Simple SSL Load balancing fix<br>
                         $server_opts = array("HTTP_CLOUDFRONT_FORWARDED_PROTO" => "https", "HTTP_CF_VISITOR"=>"https",
-                        "HTTP_X_FORWARDED_PROTO"=>"https", "HTTP_X_FORWARDED_SSL"=>"on",
+                        "HTTP_X_FORWARDED_PROTO"=>"https", "HTTP_X_FORWARDED_SSL"=>"on", "HTTP_X_PROTO"=>"SSL",
                         "HTTP_X_FORWARDED_SSL"=>"1");<br>
                         foreach( $server_opts as $option => $value ) {<br>
                         &nbsp;if ((isset($_ENV["HTTPS"]) && ( "on" == $_ENV["HTTPS"] )) || (isset( $_SERVER[ $option ] )
