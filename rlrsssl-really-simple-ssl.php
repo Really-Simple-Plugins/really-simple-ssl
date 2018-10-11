@@ -62,7 +62,7 @@ class REALLY_SIMPLE_SSL
             $rsssl_mixed_content_fixer = self::$instance->rsssl_mixed_content_fixer;
 
 
-            if (is_admin() || get_site_option('rsssl_ssl_activation_active')) {
+            if (is_admin() || get_site_option('rsssl_ssl_activation_active') || get_site_option('rsssl_ssl_deactivation_active')) {
                 if (is_multisite()) {
                     self::$instance->rsssl_multisite = new rsssl_multisite();
                 }
@@ -105,7 +105,7 @@ class REALLY_SIMPLE_SSL
         require_once(rsssl_path . 'class-mixed-content-fixer.php');
 
 
-        if (is_admin() || get_site_option('rsssl_ssl_activation_active')) {
+        if (is_admin() || get_site_option('rsssl_ssl_activation_active') || get_site_option('rsssl_ssl_deactivation_active')) {
             if (is_multisite()) {
                 require_once(rsssl_path . 'class-multisite.php');
                 require_once(rsssl_path . 'multisite-cron.php');

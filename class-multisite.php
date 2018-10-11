@@ -426,12 +426,10 @@ if (!class_exists('rsssl_multisite')) {
         public function ssl_process_active(){
 
             if (get_site_option('rsssl_ssl_activation_active')){
-                error_log("ssl activation process active");
                 return true;
             }
 
             if ( get_site_option('rsssl_ssl_deactivation_active')){
-                error_log("ssl deactivation process active");
                 return true;
             }
 
@@ -441,15 +439,11 @@ if (!class_exists('rsssl_multisite')) {
         public function run_ssl_process(){
             // if (!get_site_option('rsssl_run')) return;
 
-            error_log("running ssl activation or deactivation process");
-
             if (get_site_option('rsssl_ssl_activation_active')){
-                error_log("do activation");
                 $this->activate_ssl_networkwide();
             }
 
             if (get_site_option('rsssl_ssl_deactivation_active')){
-                error_log("do deactivation");
                 $this->deactivate_ssl_networkwide();
             }
 
@@ -464,13 +458,11 @@ if (!class_exists('rsssl_multisite')) {
         }
 
         public function start_ssl_activation(){
-            error_log("start activation process");
             update_site_option('rsssl_siteprocessing_progress', 0);
             update_site_option('rsssl_ssl_activation_active', true);
         }
 
         public function end_ssl_activation(){
-            error_log("end ssl activation");
             update_site_option('rsssl_ssl_activation_active', false);
         }
 
@@ -514,9 +506,6 @@ if (!class_exists('rsssl_multisite')) {
 
             //set batch of sites
             $sites = $this->get_sites_bw_compatible($current_offset, $nr_of_sites);
-
-            error_log("Current offset");
-            error_log($current_offset);
 
             //if no sites are found, we assume we're done.
             if (count($sites)==0) {
