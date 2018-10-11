@@ -81,6 +81,8 @@ Yes. There is a dedicated network settings page where you can switch between net
 == Changelog ==
 = 3.1.0 =
 * Fix: fixed a bug in certificate detection
+* Tweak: added HTTP_X_PROTO as supported header
+* Tweak: split HTTP_X_FORWARDED_SSL into a variation which can be either '1' or 'on'
 * Tweak: improved certificate detection by stripping domains of subfolders.
 * Tweak: Multisite bulk SSL activation now chunked in 200 site blocks, to prevent time out issues on large multisite networks.
 * Tweak: a 'leave review' notice for new free users

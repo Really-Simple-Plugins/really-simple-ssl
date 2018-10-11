@@ -1239,8 +1239,12 @@ class rsssl_admin extends rsssl_front_end
                 $this->ssl_type = "CLOUDFLARE";
             } elseif ((strpos($filecontents, "#LOADBALANCER#") !== false) || (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && ($_SERVER['HTTP_X_FORWARDED_PROTO'] == 'https'))) {
                 $this->ssl_type = "LOADBALANCER";
-            } elseif ((strpos($filecontents, "#CDN#") !== false) || (isset($_SERVER['HTTP_X_FORWARDED_SSL']) && ($_SERVER['HTTP_X_FORWARDED_SSL'] == 'on' || $_SERVER['HTTP_X_FORWARDED_SSL'] == '1'))) {
-                $this->ssl_type = "CDN";
+            } elseif ((strpos($filecontents, "#HTTP_X_PROTO#") !== false) || (isset($_SERVER['HTTP_X_PROTO']) && ($_SERVER['HTTP_X_PROTO'] == 'SSL'))) {
+                $this->ssl_type = "HTTP_X_PROTO";
+            } elseif ((strpos($filecontents, "#HTTP_X_FORWARDED_SSL_1#") !== false) || (isset($_SERVER['HTTP_X_FORWARDED_SSL']) && $_SERVER['HTTP_X_FORWARDED_SSL'] == 'on')) {
+                $this->ssl_type = "HTTP_X_FORWARDED_SSL_ON";
+            } elseif ((strpos($filecontents, "#HTTP_X_FORWARDED_SSL_1#") !== false) || (isset($_SERVER['HTTP_X_FORWARDED_SSL']) && $_SERVER['HTTP_X_FORWARDED_SSL'] == '1')) {
+                $this->ssl_type = "HTTP_X_FORWARDED_SSL_1";
             } elseif ((strpos($filecontents, "#SERVER-HTTPS-ON#") !== false) || (isset($_SERVER['HTTPS']) && strtolower($_SERVER['HTTPS']) == 'on')) {
                 $this->ssl_type = "SERVER-HTTPS-ON";
             } elseif ((strpos($filecontents, "#SERVER-HTTPS-1#") !== false) || (isset($_SERVER['HTTPS']) && strtolower($_SERVER['HTTPS']) == '1')) {
@@ -1310,8 +1314,11 @@ class rsssl_admin extends rsssl_front_end
             case "LOADBALANCER":
                 $testpage_url .= "loadbalancer";
                 break;
-            case "CDN":
-                $testpage_url .= "cdn";
+            case "HTTP_X_FORWARDED_SSL_ON":
+                $testpage_url .= "serverhttpxforwardedsslon";
+                break;
+            case "HTTP_X_FORWARDED_SSL_1":
+                $testpage_url .= "serverhttpxforwardedssl1";
                 break;
             case "SERVER-HTTPS-ON":
                 $testpage_url .= "serverhttpson";
@@ -1720,14 +1727,18 @@ class rsssl_admin extends rsssl_front_end
                 $rule .= "RewriteCond %{HTTPS} !=1" . "\n";
             } elseif ($this->ssl_type == "LOADBALANCER") {
                 $rule .= "RewriteCond %{HTTP:X-Forwarded-Proto} !https" . "\n";
+            } elseif ($this->ssl_type == "HTTP_X_PROTO") {
+                $rule .= "RewriteCond %{HTTP:X-Proto} !SSL" . "\n";
             } elseif ($this->ssl_type == "CLOUDFLARE") {
                 $rule .= "RewriteCond %{HTTP:CF-Visitor} '" . '"scheme":"http"' . "'" . "\n";//some concatenation to get the quotes right.
             } elseif ($this->ssl_type == "SERVERPORT443") {
                 $rule .= "RewriteCond %{SERVER_PORT} !443" . "\n";
             } elseif ($this->ssl_type == "CLOUDFRONT") {
                 $rule .= "RewriteCond %{HTTP:CloudFront-Forwarded-Proto} !https" . "\n";
-            } elseif ($this->ssl_type == "CDN") {
+            } elseif ($this->ssl_type == "HTTP_X_FORWARDED_SSL_ON") {
                 $rule .= "RewriteCond %{HTTP:X-Forwarded-SSL} !on" . "\n";
+            } elseif ($this->ssl_type == "HTTP_X_FORWARDED_SSL_1") {
+                $rule .= "RewriteCond %{HTTP:X-Forwarded-SSL} !=1" . "\n";
             } elseif ($type == "ENVHTTPS") {
                 $rule .= "RewriteCond %{ENV:HTTPS} !=on" . "\n";
             }
