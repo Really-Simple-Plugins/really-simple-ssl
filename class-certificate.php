@@ -37,6 +37,9 @@ if ( ! class_exists( 'rsssl_certificate' ) ) {
 
             //Get current domain
             $domain = site_url();
+            //Parse to strip off any /subfolder/
+            $parse = parse_url($domain);
+            $domain = $parse['host'];
 
             if (function_exists('stream_context_get_params')) {
                 //get certificate info
@@ -49,9 +52,10 @@ if ( ! class_exists( 'rsssl_certificate' ) ) {
                 //Check if date is valid
                 $date_valid = $this->is_date_valid($certinfo);
                 //Domain and date valid? Return true
-                if ($domain_valid && $date_valid) return true;
+                if ($domain_valid && $date_valid) {
+                    return true;
+                }
             }
-
             return false;
         }
 
@@ -75,8 +79,9 @@ if ( ! class_exists( 'rsssl_certificate' ) ) {
             $certificate_alternative_names = isset($certinfo['extensions']['subjectAltName']) ? $certinfo['extensions']['subjectAltName'] : false;
 
             //Check if the domain is found in either the certificate common name(s) (CN) or alternative name(s) (AN)
-            $pos_cn = strpos($domain, $certificate_common_names);
-            $pos_an = strpos($domain, $certificate_alternative_names);
+
+            $pos_cn = strpos($certificate_common_names, $domain);
+            $pos_an = strpos($certificate_alternative_names, $domain);
 
             //If the domain is found, return true
             if (($pos_cn !== false) || ($pos_an !== false)) return true;
@@ -130,7 +135,6 @@ if ( ! class_exists( 'rsssl_certificate' ) ) {
 
         public function is_wildcard()
         {
-            //$domain = "http://cnet.com";
             $domain = network_site_url();
 
             $certinfo = $this->get_certinfo($domain);
@@ -161,10 +165,10 @@ if ( ! class_exists( 'rsssl_certificate' ) ) {
          */
 
 
-        public function get_certinfo($domain)
+        public function get_certinfo($url)
         {
+            $url = 'https://'.$url;
             //check if the certificate is still valid, and send an email to the administrator if this is not the case.
-            $url = $domain;
             $original_parse = parse_url($url, PHP_URL_HOST);
 
             if ($original_parse) {

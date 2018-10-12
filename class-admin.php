@@ -32,6 +32,7 @@ class rsssl_admin extends rsssl_front_end
     public $javascript_redirect = FALSE;
     public $htaccess_redirect = FALSE;
     public $htaccess_warning_shown = FALSE;
+    public $review_notice_shown = FALSE;
     public $ssl_success_message_shown = FALSE;
     public $hsts = FALSE;
     public $debug = TRUE;
@@ -61,6 +62,7 @@ class rsssl_admin extends rsssl_front_end
         register_deactivation_hook(dirname(__FILE__) . "/" . $this->plugin_filename, array($this, 'deactivate'));
 
         add_action('admin_init', array($this, 'add_privacy_info'));
+
     }
 
     static function this()
@@ -113,7 +115,7 @@ class rsssl_admin extends rsssl_front_end
          * https://codex.wordpress.org/Function_Reference/flush_rewrite_rules
          * */
 
-        if (get_option('rsssl_flush_rewrite_rules') && get_option('rsssl_flush_rewrite_rules') < strtotime("+1 minute")){
+        if (get_option('rsssl_flush_rewrite_rules') && get_option('rsssl_flush_rewrite_rules') < strtotime("-1 minute")){
             delete_option('rsssl_flush_rewrite_rules');
             add_action('shutdown', 'flush_rewrite_rules');
         }
@@ -144,7 +146,6 @@ class rsssl_admin extends rsssl_front_end
                 //if we were to activate ssl, this could result in a redirect loop. So warn first.
                 add_action("admin_notices", array($this, 'show_notice_wpconfig_needs_fixes'));
                 if (is_multisite()) add_action('network_admin_notices', array($this, 'show_notice_wpconfig_needs_fixes'), 10);
-
                 $this->ssl_enabled = false;
                 $this->save_options();
             } elseif ($this->ssl_enabled) {
@@ -181,9 +182,14 @@ class rsssl_admin extends rsssl_front_end
         //callbacks for the ajax dismiss buttons
         add_action('wp_ajax_dismiss_htaccess_warning', array($this, 'dismiss_htaccess_warning_callback'));
         add_action('wp_ajax_dismiss_success_message', array($this, 'dismiss_success_message_callback'));
+        add_action('wp_ajax_dismiss_review_notice', array($this, 'dismiss_review_notice_callback'));
 
         //handle notices
         add_action('admin_notices', array($this, 'show_notices'));
+        //show review notice, only to free users
+        if (!defined("rsssl_pro_version") && (!defined("rsssl_pp_version")) && (!defined("rsssl_soc_version")) && (!class_exists('RSSSL_PRO'))) {
+            add_action('admin_notices', array($this, 'show_leave_review_notice'));
+        }
         add_action("update_option_rlrsssl_options", array($this, "update_htaccess_after_settings_save"), 20, 3);
     }
 
@@ -294,6 +300,11 @@ class rsssl_admin extends rsssl_front_end
 
         if (isset($_POST['rsssl_do_activate_ssl'])) {
             $this->activate_ssl();
+
+            //if (empty(get_option('rsssl_activation_timestamp'))) {
+                update_option('rsssl_activation_timestamp', time());
+            //}
+
             return true;
         }
 
@@ -303,7 +314,7 @@ class rsssl_admin extends rsssl_front_end
 
     /*
         Activate the SSL for this site
-  */
+     */
 
     public function activate_ssl()
     {
@@ -505,6 +516,7 @@ class rsssl_admin extends rsssl_front_end
             $this->site_has_ssl = isset($options['site_has_ssl']) ? $options['site_has_ssl'] : FALSE;
             $this->hsts = isset($options['hsts']) ? $options['hsts'] : FALSE;
             $this->htaccess_warning_shown = isset($options['htaccess_warning_shown']) ? $options['htaccess_warning_shown'] : FALSE;
+            $this->review_notice_shown = isset($options['review_notice_shown']) ? $options['review_notice_shown'] : FALSE;
             $this->ssl_success_message_shown = isset($options['ssl_success_message_shown']) ? $options['ssl_success_message_shown'] : FALSE;
             $this->plugin_db_version = isset($options['plugin_db_version']) ? $options['plugin_db_version'] : "1.0";
             $this->debug = isset($options['debug']) ? $options['debug'] : FALSE;
@@ -866,6 +878,7 @@ class rsssl_admin extends rsssl_front_end
                 $rule .= '|| (isset($_SERVER["HTTP_CF_VISITOR"]) && (strpos($_SERVER["HTTP_CF_VISITOR"], "https") !== false))' . "\n";
                 $rule .= '|| (isset($_SERVER["HTTP_CLOUDFRONT_FORWARDED_PROTO"]) && (strpos($_SERVER["HTTP_CLOUDFRONT_FORWARDED_PROTO"], "https") !== false))' . "\n";
                 $rule .= '|| (isset($_SERVER["HTTP_X_FORWARDED_PROTO"]) && (strpos($_SERVER["HTTP_X_FORWARDED_PROTO"], "https") !== false))' . "\n";
+                $rule .= '|| (isset($_SERVER["HTTP_X_PROTO"]) && (strpos($_SERVER["HTTP_X_PROTO"], "SSL") !== false))' . "\n";
                 $rule .= ') {' . "\n";
                 $rule .= '$_SERVER["HTTPS"] = "on";' . "\n";
                 $rule .= '}' . "\n";
@@ -1089,6 +1102,7 @@ class rsssl_admin extends rsssl_front_end
             'site_has_ssl' => $this->site_has_ssl,
             'hsts' => $this->hsts,
             'htaccess_warning_shown' => $this->htaccess_warning_shown,
+            'review_notice_shown' => $this->review_notice_shown,
             'ssl_success_message_shown' => $this->ssl_success_message_shown,
             'autoreplace_insecure_links' => $this->autoreplace_insecure_links,
             'plugin_db_version' => $this->plugin_db_version,
@@ -1135,6 +1149,7 @@ class rsssl_admin extends rsssl_front_end
         $this->site_has_ssl = FALSE;
         $this->hsts = FALSE;
         $this->htaccess_warning_shown = FALSE;
+        $this->review_notice_shown = FALSE;
         $this->ssl_success_message_shown = FALSE;
         $this->autoreplace_insecure_links = TRUE;
         $this->do_not_edit_htaccess = FALSE;
@@ -1176,6 +1191,7 @@ class rsssl_admin extends rsssl_front_end
             || (isset($_SERVER['HTTP_CF_VISITOR']) && (strpos($_SERVER['HTTP_CF_VISITOR'], 'https') !== false))
             || (isset($_SERVER['HTTP_CLOUDFRONT_FORWARDED_PROTO']) && (strpos($_SERVER['HTTP_CLOUDFRONT_FORWARDED_PROTO'], 'https') !== false))
             || (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && (strpos($_SERVER['HTTP_X_FORWARDED_PROTO'], 'https') !== false))
+            || (isset($_SERVER['HTTP_X_PROTO']) && (strpos($_SERVER['HTTP_X_PROTO'], 'SSL') !== false))
         ) {
             $server_var = TRUE;
         }
@@ -1223,8 +1239,12 @@ class rsssl_admin extends rsssl_front_end
                 $this->ssl_type = "CLOUDFLARE";
             } elseif ((strpos($filecontents, "#LOADBALANCER#") !== false) || (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && ($_SERVER['HTTP_X_FORWARDED_PROTO'] == 'https'))) {
                 $this->ssl_type = "LOADBALANCER";
-            } elseif ((strpos($filecontents, "#CDN#") !== false) || (isset($_SERVER['HTTP_X_FORWARDED_SSL']) && ($_SERVER['HTTP_X_FORWARDED_SSL'] == 'on' || $_SERVER['HTTP_X_FORWARDED_SSL'] == '1'))) {
-                $this->ssl_type = "CDN";
+            } elseif ((strpos($filecontents, "#HTTP_X_PROTO#") !== false) || (isset($_SERVER['HTTP_X_PROTO']) && ($_SERVER['HTTP_X_PROTO'] == 'SSL'))) {
+                $this->ssl_type = "HTTP_X_PROTO";
+            } elseif ((strpos($filecontents, "#HTTP_X_FORWARDED_SSL_ON#") !== false) || (isset($_SERVER['HTTP_X_FORWARDED_SSL']) && $_SERVER['HTTP_X_FORWARDED_SSL'] == 'on')) {
+                $this->ssl_type = "HTTP_X_FORWARDED_SSL_ON";
+            } elseif ((strpos($filecontents, "#HTTP_X_FORWARDED_SSL_1#") !== false) || (isset($_SERVER['HTTP_X_FORWARDED_SSL']) && $_SERVER['HTTP_X_FORWARDED_SSL'] == '1')) {
+                $this->ssl_type = "HTTP_X_FORWARDED_SSL_1";
             } elseif ((strpos($filecontents, "#SERVER-HTTPS-ON#") !== false) || (isset($_SERVER['HTTPS']) && strtolower($_SERVER['HTTPS']) == 'on')) {
                 $this->ssl_type = "SERVER-HTTPS-ON";
             } elseif ((strpos($filecontents, "#SERVER-HTTPS-1#") !== false) || (isset($_SERVER['HTTPS']) && strtolower($_SERVER['HTTPS']) == '1')) {
@@ -1294,8 +1314,14 @@ class rsssl_admin extends rsssl_front_end
             case "LOADBALANCER":
                 $testpage_url .= "loadbalancer";
                 break;
-            case "CDN":
-                $testpage_url .= "cdn";
+            case "HTTP_X_PROTO":
+                $testpage_url .= "serverhttpxproto";
+                break;
+            case "HTTP_X_FORWARDED_SSL_ON":
+                $testpage_url .= "serverhttpxforwardedsslon";
+                break;
+            case "HTTP_X_FORWARDED_SSL_1":
+                $testpage_url .= "serverhttpxforwardedssl1";
                 break;
             case "SERVER-HTTPS-ON":
                 $testpage_url .= "serverhttpson";
@@ -1704,14 +1730,18 @@ class rsssl_admin extends rsssl_front_end
                 $rule .= "RewriteCond %{HTTPS} !=1" . "\n";
             } elseif ($this->ssl_type == "LOADBALANCER") {
                 $rule .= "RewriteCond %{HTTP:X-Forwarded-Proto} !https" . "\n";
+            } elseif ($this->ssl_type == "HTTP_X_PROTO") {
+                $rule .= "RewriteCond %{HTTP:X-Proto} !SSL" . "\n";
             } elseif ($this->ssl_type == "CLOUDFLARE") {
                 $rule .= "RewriteCond %{HTTP:CF-Visitor} '" . '"scheme":"http"' . "'" . "\n";//some concatenation to get the quotes right.
             } elseif ($this->ssl_type == "SERVERPORT443") {
                 $rule .= "RewriteCond %{SERVER_PORT} !443" . "\n";
             } elseif ($this->ssl_type == "CLOUDFRONT") {
                 $rule .= "RewriteCond %{HTTP:CloudFront-Forwarded-Proto} !https" . "\n";
-            } elseif ($this->ssl_type == "CDN") {
+            } elseif ($this->ssl_type == "HTTP_X_FORWARDED_SSL_ON") {
                 $rule .= "RewriteCond %{HTTP:X-Forwarded-SSL} !on" . "\n";
+            } elseif ($this->ssl_type == "HTTP_X_FORWARDED_SSL_1") {
+                $rule .= "RewriteCond %{HTTP:X-Forwarded-SSL} !=1" . "\n";
             } elseif ($type == "ENVHTTPS") {
                 $rule .= "RewriteCond %{ENV:HTTPS} !=on" . "\n";
             }
@@ -1793,7 +1823,7 @@ class rsssl_admin extends rsssl_front_end
                     <br><br><code>
                         //Begin Really Simple SSL Load balancing fix<br>
                         $server_opts = array("HTTP_CLOUDFRONT_FORWARDED_PROTO" => "https", "HTTP_CF_VISITOR"=>"https",
-                        "HTTP_X_FORWARDED_PROTO"=>"https", "HTTP_X_FORWARDED_SSL"=>"on",
+                        "HTTP_X_FORWARDED_PROTO"=>"https", "HTTP_X_FORWARDED_SSL"=>"on", "HTTP_X_PROTO"=>"SSL",
                         "HTTP_X_FORWARDED_SSL"=>"1");<br>
                         foreach( $server_opts as $option => $value ) {<br>
                         &nbsp;if ((isset($_ENV["HTTPS"]) && ( "on" == $_ENV["HTTPS"] )) || (isset( $_SERVER[ $option ] )
@@ -1821,6 +1851,24 @@ class rsssl_admin extends rsssl_front_end
         <?php
     }
 
+    public function show_leave_review_notice()
+    {
+        if (!$this->review_notice_shown && get_option('rsssl_activation_timestamp') && get_option('rsssl_activation_timestamp') < strtotime("-1 month")) {
+            add_action('admin_print_footer_scripts', array($this, 'insert_dismiss_review'));
+            ?>
+            <div id="message" class="updated fade notice is-dismissible rlrsssl-review">
+                <p><?php printf(__('Hi, you have been using Really Simple SSL for a month now, awesome! If you have a moment, please consider leaving a review on WordPress.org to spread the word. We greatly appreciate it! If you have any questions or feedback, leave us a %smessage%s.', 'really-simple-ssl'),'<a href="https://really-simple-ssl.com/contact" target="_blank">','</a>'); ?></p>
+                <i>- Rogier</i>
+                <?php //Inline style because the main.css stylesheet is only included on Really Simple SSL admin pages.?>
+                <ul style="margin-left: 30px; list-style: square;">
+                    <li><p style="margin-top: -5px;"><a target="_blank" href="https://wordpress.org/support/plugin/really-simple-ssl/reviews/#new-post"><?php _e('Leave a review', 'really-simple-ssl'); ?></a></p></li>
+                    <li><p style="margin-top: -5px;"><a href="#" id="maybe-later"><?php _e('Maybe later', 'really-simple-ssl'); ?></a></p></li>
+                    <li><p style="margin-top: -5px;"><a href="#" class="review-dismiss"><?php _e('No thanks', 'really-simple-ssl'); ?></a></p></li>
+                </ul>
+            </div>
+            <?php
+        }
+    }
 
     /**
      * Show notices
@@ -1935,7 +1983,7 @@ class rsssl_admin extends rsssl_front_end
     }
 
     /**
-     * Insert some ajax script to dismis the htaccess failed fail message, and stop nagging about it
+     * Insert some ajax script to dismiss the htaccess failed fail message, and stop nagging about it
      *
      * @since  2.0
      *
@@ -1958,6 +2006,48 @@ class rsssl_admin extends rsssl_front_end
 
                     });
                 });
+            });
+        </script>
+        <?php
+    }
+
+    /**
+     * Insert some ajax script to dismiss the review notice, and stop nagging about it
+     *
+     * @since  2.0
+     *
+     * @access public
+     *
+     * type: dismiss, later
+     *
+     */
+
+    public function insert_dismiss_review()
+    {
+        $ajax_nonce = wp_create_nonce("really-simple-ssl");
+        ?>
+        <script type='text/javascript'>
+            jQuery(document).ready(function ($) {
+                $(".rlrsssl-review.notice.is-dismissible").on("click", ".notice-dismiss", function (event) {
+                    rsssl_dismiss_review('dismiss');
+                });
+                $(".rlrsssl-review.notice.is-dismissible").on("click", "#maybe-later", function (event) {
+                    rsssl_dismiss_review('later');
+                    $(this).closest('.rlrsssl-review').remove();
+                });
+                $(".rlrsssl-review.notice.is-dismissible").on("click", ".review-dismiss", function (event) {
+                    rsssl_dismiss_review('dismiss');
+                    $(this).closest('.rlrsssl-review').remove();
+                });
+
+                function rsssl_dismiss_review(type){
+                    var data = {
+                        'action': 'dismiss_review_notice',
+                        'type' : type,
+                        'security': '<?php echo $ajax_nonce; ?>'
+                    };
+                    $.post(ajaxurl, data, function (response) {});
+                }
             });
         </script>
         <?php
@@ -1998,6 +2088,32 @@ class rsssl_admin extends rsssl_front_end
         wp_die(); // this is required to terminate immediately and return a proper response
     }
 
+    /**
+     * Process the ajax dismissal of the htaccess message.
+     *
+     * @since  2.1
+     *
+     * @access public
+     *
+     */
+
+    public function dismiss_review_notice_callback()
+    {
+        check_ajax_referer('really-simple-ssl', 'security');
+
+        $type = isset($_POST['type']) ? $_POST['type'] : false;
+
+        if ($type === 'dismiss'){
+            $this->review_notice_shown = TRUE;
+        }
+        if ($type === 'later') {
+            //Reset activation timestamp, notice will show again in one month.
+            update_option('rsssl_activation_timestamp', time());
+        }
+
+        $this->save_options();
+        wp_die(); // this is required to terminate immediately and return a proper response
+    }
 
     /**
      * Adds the admin options page
@@ -2310,7 +2426,7 @@ class rsssl_admin extends rsssl_front_end
                       $this->get_banner_html(array(
                               'img' => 'complianz.jpg',
                               'title' => 'ComplianZ',
-                              'description' => __("Do you have visitors from the European Union? Get GDPR ready in 30 minutes with Complianz GDPR. Always up-to-date legal documents by one of the most prominent EU IT Law firms.", "really-simple-ssl"),
+                              'description' => __("The Complianz GDPR Privacy Suite for WordPress. Simple, Quick and Complete. Up-to-date legal documents by one of the most prominent EU IT Law firms.", "really-simple-ssl"),
                               'url' => 'https://wordpress.org/plugins/complianz-gdpr/',
                               'pro' => true,
                            )
@@ -2350,6 +2466,7 @@ class rsssl_admin extends rsssl_front_end
                             );
 
                         }
+                    }
 
                         if (defined("EDD_SL_PLUGIN_DIR") && (get_locale() === 'nl_NL')) {
                             $this->get_banner_html(array(
@@ -2372,7 +2489,7 @@ class rsssl_admin extends rsssl_front_end
                             );
 
                         }
-                    } ?>
+                     ?>
                 </div>
             <?php }
             ?>
@@ -2599,6 +2716,7 @@ class rsssl_admin extends rsssl_front_end
         $newinput['site_has_ssl'] = $this->site_has_ssl;
         $newinput['ssl_success_message_shown'] = $this->ssl_success_message_shown;
         $newinput['htaccess_warning_shown'] = $this->htaccess_warning_shown;
+        $newinput['review_notice_shown'] = $this->review_notice_shown;
         $newinput['plugin_db_version'] = $this->plugin_db_version;
         $newinput['ssl_enabled'] = $this->ssl_enabled;
         $newinput['debug_log'] = $this->debug_log;
@@ -2666,7 +2784,7 @@ class rsssl_admin extends rsssl_front_end
 
     public function get_option_debug()
     {
-        $options = get_option('rlrsssl_options');
+    $options = get_option('rlrsssl_options');
         echo '<input id="rlrsssl_options" name="rlrsssl_options[debug]" size="40" type="checkbox" value="1"' . checked(1, $this->debug, false) . " />";
         RSSSL()->rsssl_help->get_help_tip(__("Enable this option to get debug info in the debug tab.", "really-simple-ssl"));
 
@@ -2691,7 +2809,6 @@ class rsssl_admin extends rsssl_front_end
             $javascript_redirect = TRUE;
             $comment = __("This option is enabled on the network menu.", "really-simple-ssl");
         }
-
         echo '<input ' . $disabled . ' id="rlrsssl_options" name="rlrsssl_options[javascript_redirect]" size="40" type="checkbox" value="1"' . checked(1, $javascript_redirect, false) . " />";
         RSSSL()->rsssl_help->get_help_tip(__("This is a fallback you should only use if other redirection methods do not work.", "really-simple-ssl"));
         echo $comment;
@@ -3057,6 +3174,5 @@ class rsssl_admin extends rsssl_front_end
 
         return $filecontents;
     }
-
 
 } //class closure
