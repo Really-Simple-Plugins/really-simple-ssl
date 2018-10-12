@@ -730,8 +730,6 @@ class rsssl_admin extends rsssl_front_end
 
     public function remove_ssl_from_siteurl_in_wpconfig()
     {
-        if (!current_user_can($this->capability)) return;
-
         $wpconfig_path = $this->find_wp_config_path();
         if (!empty($wpconfig_path)) {
             $wpconfig = file_get_contents($wpconfig_path);
@@ -1056,8 +1054,6 @@ class rsssl_admin extends rsssl_front_end
 
     public function set_siteurl_to_ssl()
     {
-        if (!current_user_can($this->capability)) return;
-
         $this->trace_log("converting siteurl and homeurl to https");
 
         $siteurl_ssl = str_replace("http://", "https://", get_option('siteurl'));
@@ -1095,8 +1091,6 @@ class rsssl_admin extends rsssl_front_end
 
     public function save_options()
     {
-        if (!current_user_can($this->capability)) return;
-
         //any options added here should also be added to function options_validate()
         $options = array(
             'site_has_ssl' => $this->site_has_ssl,
@@ -1116,6 +1110,8 @@ class rsssl_admin extends rsssl_front_end
         );
 
         update_option('rlrsssl_options', $options);
+
+
     }
 
     /**
@@ -1712,7 +1708,6 @@ class rsssl_admin extends rsssl_front_end
 
     public function get_redirect_rules($manual = false)
     {
-        if (!current_user_can($this->capability)) return;
         $this->trace_log("retrieving redirect rules");
         //only add the redirect rules when a known type of SSL was detected. Otherwise, we use https.
         $rule = "";
