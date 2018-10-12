@@ -1314,6 +1314,9 @@ class rsssl_admin extends rsssl_front_end
             case "LOADBALANCER":
                 $testpage_url .= "loadbalancer";
                 break;
+            case "HTTP_X_PROTO":
+                $testpage_url .= "serverhttpxproto";
+                break;
             case "HTTP_X_FORWARDED_SSL_ON":
                 $testpage_url .= "serverhttpxforwardedsslon";
                 break;
