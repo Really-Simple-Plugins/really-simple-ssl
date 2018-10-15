@@ -2779,8 +2779,14 @@ class rsssl_admin extends rsssl_front_end
 
     public function get_option_debug()
     {
-    $options = get_option('rlrsssl_options');
-        echo '<input id="rlrsssl_options" name="rlrsssl_options[debug]" size="40" type="checkbox" value="1"' . checked(1, $this->debug, false) . " />";
+
+        ?>
+        <label class="rsssl-switch">
+            <input id="rlrsssl_options" name="rlrsssl_options[debug]" size="40" value="1"
+                   type="checkbox" <?php checked(1, $this->debug, true) ?> />
+            <span class="rsssl-slider rsssl-round"></span>
+        </label>
+        <?php
         RSSSL()->rsssl_help->get_help_tip(__("Enable this option to get debug info in the debug tab.", "really-simple-ssl"));
 
     }
@@ -2804,7 +2810,14 @@ class rsssl_admin extends rsssl_front_end
             $javascript_redirect = TRUE;
             $comment = __("This option is enabled on the network menu.", "really-simple-ssl");
         }
-        echo '<input ' . $disabled . ' id="rlrsssl_options" name="rlrsssl_options[javascript_redirect]" size="40" type="checkbox" value="1"' . checked(1, $javascript_redirect, false) . " />";
+
+        ?>
+        <label class="rsssl-switch">
+            <input id="rlrsssl_options" name="rlrsssl_options[debug]" size="40" value="1"
+                   type="checkbox" <?php checked(1, $javascript_redirect, false) ?> />
+            <span class="rsssl-slider rsssl-round"></span>
+        </label>
+        <?php
         RSSSL()->rsssl_help->get_help_tip(__("This is a fallback you should only use if other redirection methods do not work.", "really-simple-ssl"));
         echo $comment;
 
@@ -2830,7 +2843,13 @@ class rsssl_admin extends rsssl_front_end
             $comment = __("This option is enabled on the network menu.", "really-simple-ssl");
         }
 
-        echo '<input ' . $disabled . ' id="rlrsssl_options" name="rlrsssl_options[wp_redirect]" size="40" type="checkbox" value="1"' . checked(1, $wp_redirect, false) . " />";
+        ?>
+        <label class="rsssl-switch">
+            <input id="rlrsssl_options" name="rlrsssl_options[debug]" size="40" value="1"
+                   type="checkbox" <?php checked(1, $wp_redirect, false) ?> />
+            <span class="rsssl-slider rsssl-round"></span>
+        </label>
+        <?php
         RSSSL()->rsssl_help->get_help_tip(__("Enable this if you want to use the internal WordPress 301 redirect. Needed on NGINX servers, or if the .htaccess redirect cannot be used.", "really-simple-ssl"));
         echo $comment;
 
@@ -2865,7 +2884,13 @@ class rsssl_admin extends rsssl_front_end
             $disabled = ($this->do_not_edit_htaccess) ? "disabled" : "";
         }
 
-        echo '<input ' . $disabled . ' id="rlrsssl_options" name="rlrsssl_options[htaccess_redirect]" size="40" type="checkbox" value="1"' . checked(1, $this->htaccess_redirect, false) . " />";
+        ?>
+        <label class="rsssl-switch">
+            <input id="rlrsssl_options" name="rlrsssl_options[debug]" size="40" value="1"
+                   type="checkbox" <?php checked(1, $this->htaccess_redirect, false) ?> />
+            <span class="rsssl-slider rsssl-round"></span>
+        </label>
+        <?php
         RSSSL()->rsssl_help->get_help_tip(__("A .htaccess redirect is faster. Really Simple SSL detects the redirect code that is most likely to work (99% of websites), but this is not 100%. Make sure you know how to regain access to your site if anything goes wrong!", "really-simple-ssl"));
         echo $comment;
 
@@ -2920,9 +2945,13 @@ class rsssl_admin extends rsssl_front_end
 
     public function get_option_do_not_edit_htaccess()
     {
-        $options = get_option('rlrsssl_options');
-        echo '<input id="rlrsssl_options" name="rlrsssl_options[do_not_edit_htaccess]" size="40" type="checkbox" value="1"' . checked(1, $this->do_not_edit_htaccess, false) . " />";
-
+        ?>
+        <label class="rsssl-switch">
+            <input id="rlrsssl_options" name="rlrsssl_options[debug]" size="40" value="1"
+                   type="checkbox" <?php checked(1, $this->do_not_edit_htaccess, false) ?> />
+            <span class="rsssl-slider rsssl-round"></span>
+        </label>
+        <?php
         RSSSL()->rsssl_help->get_help_tip(__("If you want to customize the Really Simple SSL .htaccess, you need to prevent Really Simple SSL from rewriting it. Enabling this option will do that.", "really-simple-ssl"));
         if (!$this->do_not_edit_htaccess && !is_writable($this->ABSpath . ".htaccess")) _e(".htaccess is currently not writable.", "really-simple-ssl");
     }
@@ -2938,8 +2967,14 @@ class rsssl_admin extends rsssl_front_end
 
     public function get_option_switch_mixed_content_fixer_hook()
     {
-        $options = get_option('rslrsssl_options');
-        echo '<input id="rlrsssl_options" name="rlrsssl_options[switch_mixed_content_fixer_hook]" size="40" type="checkbox" value="1"' . checked(1, $this->switch_mixed_content_fixer_hook, false) . " />";
+
+        ?>
+        <label class="rsssl-switch">
+            <input id="rlrsssl_options" name="rlrsssl_options[debug]" size="40" value="1"
+                   type="checkbox" <?php checked(1, $this->switch_mixed_content_fixer_hook, false) ?> />
+            <span class="rsssl-slider rsssl-round"></span>
+        </label>
+        <?php
         RSSSL()->rsssl_help->get_help_tip(__("If this option is set to true, the mixed content fixer will fire on the init hook instead of the template_redirect hook. Only use this option when you experience problems with the mixed content fixer.", "really-simple-ssl"));
     }
 
@@ -3005,7 +3040,14 @@ class rsssl_admin extends rsssl_front_end
             $autoreplace_mixed_content = TRUE;
             $comment = __("This option is enabled on the network menu.", "really-simple-ssl");
         }
-        echo '<input ' . $disabled . ' id="rlrsssl_options" name="rlrsssl_options[autoreplace_insecure_links]" size="40" type="checkbox" value="1"' . checked(1, $autoreplace_mixed_content, false) . ' />';
+
+        ?>
+        <label class="rsssl-switch">
+            <input id="rlrsssl_options" name="rlrsssl_options[debug]" size="40" value="1"
+                   type="checkbox" <?php checked(1, $autoreplace_mixed_content, false) ?> />
+            <span class="rsssl-slider rsssl-round"></span>
+        </label>
+        <?php
         RSSSL()->rsssl_help->get_help_tip(__("In most cases you need to leave this enabled, to prevent mixed content issues on your site.", "really-simple-ssl"));
         echo $comment;
     }
