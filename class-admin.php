@@ -2813,8 +2813,8 @@ class rsssl_admin extends rsssl_front_end
 
         ?>
         <label class="rsssl-switch">
-            <input id="rlrsssl_options" name="rlrsssl_options[debug]" size="40" value="1"
-                   type="checkbox" <?php checked(1, $javascript_redirect, false) ?> />
+            <input id="rlrsssl_options" name="rlrsssl_options[javascript_redirect]" size="40" value="1"
+                   type="checkbox" <?php checked(1, $javascript_redirect, true) ?> />
             <span class="rsssl-slider rsssl-round"></span>
         </label>
         <?php
@@ -2845,8 +2845,8 @@ class rsssl_admin extends rsssl_front_end
 
         ?>
         <label class="rsssl-switch">
-            <input id="rlrsssl_options" name="rlrsssl_options[debug]" size="40" value="1"
-                   type="checkbox" <?php checked(1, $wp_redirect, false) ?> />
+            <input id="rlrsssl_options" name="rlrsssl_options[wp_redirect]" size="40" value="1"
+                   type="checkbox" <?php checked(1, $wp_redirect, true) ?> />
             <span class="rsssl-slider rsssl-round"></span>
         </label>
         <?php
@@ -2886,8 +2886,8 @@ class rsssl_admin extends rsssl_front_end
 
         ?>
         <label class="rsssl-switch">
-            <input id="rlrsssl_options" name="rlrsssl_options[debug]" size="40" value="1"
-                   type="checkbox" <?php checked(1, $this->htaccess_redirect, false) ?> />
+            <input id="rlrsssl_options" name="rlrsssl_options[htaccess_redirect]" size="40" value="1"
+                   type="checkbox" <?php checked(1, $this->htaccess_redirect, true) ?> />
             <span class="rsssl-slider rsssl-round"></span>
         </label>
         <?php
@@ -2947,8 +2947,8 @@ class rsssl_admin extends rsssl_front_end
     {
         ?>
         <label class="rsssl-switch">
-            <input id="rlrsssl_options" name="rlrsssl_options[debug]" size="40" value="1"
-                   type="checkbox" <?php checked(1, $this->do_not_edit_htaccess, false) ?> />
+            <input id="rlrsssl_options" name="rlrsssl_options[do_not_edit_htaccess]" size="40" value="1"
+                   type="checkbox" <?php checked(1, $this->do_not_edit_htaccess, true) ?> />
             <span class="rsssl-slider rsssl-round"></span>
         </label>
         <?php
@@ -2970,8 +2970,8 @@ class rsssl_admin extends rsssl_front_end
 
         ?>
         <label class="rsssl-switch">
-            <input id="rlrsssl_options" name="rlrsssl_options[debug]" size="40" value="1"
-                   type="checkbox" <?php checked(1, $this->switch_mixed_content_fixer_hook, false) ?> />
+            <input id="rlrsssl_options" name="rlrsssl_options[switch_mixed_content_fixer_hook]" size="40" value="1"
+                   type="checkbox" <?php checked(1, $this->switch_mixed_content_fixer_hook, true) ?> />
             <span class="rsssl-slider rsssl-round"></span>
         </label>
         <?php
@@ -3043,8 +3043,8 @@ class rsssl_admin extends rsssl_front_end
 
         ?>
         <label class="rsssl-switch">
-            <input id="rlrsssl_options" name="rlrsssl_options[debug]" size="40" value="1"
-                   type="checkbox" <?php checked(1, $autoreplace_mixed_content, false) ?> />
+            <input id="rlrsssl_options" name="rlrsssl_options[autoreplace_insecure_links]" size="40" value="1"
+                   type="checkbox" <?php checked(1, $autoreplace_mixed_content, true) ?> />
             <span class="rsssl-slider rsssl-round"></span>
         </label>
         <?php
