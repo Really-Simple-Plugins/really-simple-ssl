@@ -1737,11 +1737,11 @@ class rsssl_admin extends rsssl_front_end
                 $rule .= "RewriteCond %{HTTP:X-Forwarded-SSL} !on" . "\n";
             } elseif ($this->ssl_type == "HTTP_X_FORWARDED_SSL_1") {
                 $rule .= "RewriteCond %{HTTP:X-Forwarded-SSL} !=1" . "\n";
-            } elseif ($type == "ENVHTTPS") {
+            } elseif ($this->ssl_type == "ENVHTTPS") {
                 $rule .= "RewriteCond %{ENV:HTTPS} !=on" . "\n";
             }
 
-            //if multisite, and NOT subfolder install (checked for in the detec_config function)
+            //if multisite, and NOT subfolder install (checked for in the detect_config function)
             //, add a condition so it only applies to sites where plugin is activated
             if (is_multisite() && !RSSSL()->rsssl_multisite->ssl_enabled_networkwide) {
                 $this->trace_log("multisite, per site activation");
@@ -1777,9 +1777,14 @@ class rsssl_admin extends rsssl_front_end
                 $rule .= "RewriteCond %{REQUEST_URI} !wp-content\/cache\/(all|wpfc-mobile-cache)" . "\n";
             }
 
+            //Exclude .well-known/acme-challenge for Let's Encrypt validation
+            if ($this->has_acme_challenge_directory() && !$this->has_well_known_needle()) {
+                $rule .= "RewriteCond %{REQUEST_URI} !^/\.well-known/acme-challenge/" . "\n";
+            }
+
             $rule .= "RewriteRule ^(.*)$ https://%{HTTP_HOST}/$1 [R=301,L]" . "\n";
 
-            $rule .= "</IfModule>" . "\n";
+                $rule .= "</IfModule>" . "\n";
         }
 
         if (strlen($rule) > 0) {
@@ -1846,6 +1851,46 @@ class rsssl_admin extends rsssl_front_end
         <?php
     }
 
+
+    /**
+     *
+     * @return bool
+     * since 3.1
+     * Check if .well-known/acme-challenge directory exists
+     *
+     */
+
+    public function has_acme_challenge_directory()
+    {
+        if (file_exists("$this->ABSpath.well-known/acme-challenge")) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     *
+     * @return bool
+     * since 3.1
+     * Check if there are already .well-known rules in .htaccess file
+     *
+     */
+
+    public function has_well_known_needle()
+    {
+        $htaccess = file_get_contents($this->ABSpath . ".htaccess");
+
+        $well_known_needle = ".well-known";
+
+        if (strpos($htaccess, $well_known_needle) !== false) {
+            return true;
+        }
+
+        return false;
+
+    }
+
     public function show_leave_review_notice()
     {
         if (!$this->review_notice_shown && get_option('rsssl_activation_timestamp') && get_option('rsssl_activation_timestamp') < strtotime("-1 month")) {
@@ -1876,9 +1921,9 @@ class rsssl_admin extends rsssl_front_end
 
     public function show_notices()
     {
-        /*
+     /*
       show a notice when the .htaccess file does not contain redirect rules
-  */
+     */
 
         if (!$this->wp_redirect && $this->ssl_enabled && !$this->htaccess_warning_shown && !$this->htaccess_contains_redirect_rules()) {
             add_action('admin_print_footer_scripts', array($this, 'insert_dismiss_htaccess'));
