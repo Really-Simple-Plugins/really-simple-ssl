@@ -79,6 +79,10 @@ If you are experiencing redirect loops on your site, try these [instructions](ht
 Yes. There is a dedicated network settings page where you can switch between network activated SSL and per page SSL. In the dedicated pro for multisite plugin, you can override all site settings for SSL on the network level, and can activate and deactivate SSL in the network menu for each site.
 
 == Changelog ==
+= 3.1.2 =
+* Tweak: added cool checkboxes
+* Tweak: .well-known/acme-challenge/ is excluded from .htaccess https:// redirect
+
 = 3.1.1 =
 * Fix: Multisite network wide activation/deactivation cron not saving settings because user capability not set this early in the process.
 
