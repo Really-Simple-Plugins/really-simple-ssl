@@ -164,29 +164,35 @@ if ( ! class_exists( 'rsssl_certificate' ) ) {
          *
          */
 
-
         public function get_certinfo($url)
         {
-            $url = 'https://'.$url;
-            //check if the certificate is still valid, and send an email to the administrator if this is not the case.
-            $original_parse = parse_url($url, PHP_URL_HOST);
 
-            if ($original_parse) {
+            $certinfo = get_transient('rsssl_certinfo');
+            if (!$certinfo) {
+                $url = 'https://'.$url;
+                $original_parse = parse_url($url, PHP_URL_HOST);
+                if ($original_parse) {
 
-                $get = stream_context_create(array("ssl" => array("capture_peer_cert" => TRUE)));
-                if ($get) {
-                    set_error_handler(array($this, 'custom_error_handling'));
-                    $read = stream_socket_client("ssl://" . $original_parse . ":443", $errno, $errstr, 30, STREAM_CLIENT_CONNECT, $get);
-                    restore_error_handler();
+                    $get = stream_context_create(array("ssl" => array("capture_peer_cert" => TRUE)));
+                    if ($get) {
+                        set_error_handler(array($this, 'custom_error_handling'));
+                        $read = stream_socket_client("ssl://" . $original_parse . ":443", $errno, $errstr, 30, STREAM_CLIENT_CONNECT, $get);
+                        restore_error_handler();
 
-                    if ($errno == 0 && $read) {
+                        if ($errno == 0 && $read) {
 
-                        $cert = stream_context_get_params($read);
-                        $certinfo = openssl_x509_parse($cert['options']['ssl']['peer_certificate']);
+                            $cert = stream_context_get_params($read);
+                            $certinfo = openssl_x509_parse($cert['options']['ssl']['peer_certificate']);
+                        }
                     }
                 }
+
+                //make sure it's not stored as "false"
+                if (empty($certinfo)) $certinfo = 'not-valid';
+                set_transient('rsssl_certinfo', $certinfo, 600);
             }
 
+            if ($certinfo==='not-valid') return false;
             if (!empty($certinfo)) return $certinfo;
 
             return false;
