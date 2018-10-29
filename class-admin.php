@@ -1295,65 +1295,74 @@ class rsssl_admin extends rsssl_front_end
     public function test_htaccess_redirect()
     {
         if (!current_user_can($this->capability)) return;
-        if ($this->debug) {
-            $this->trace_log("testing htaccess rules...");
-        }
-        $filecontents = "";
-        $testpage_url = trailingslashit($this->test_url()) . "testssl/";
-        switch ($this->ssl_type) {
-            case "CLOUDFRONT":
-                $testpage_url .= "cloudfront";
-                break;
-            case "CLOUDFLARE":
-                $testpage_url .= "cloudflare";
-                break;
-            case "LOADBALANCER":
-                $testpage_url .= "loadbalancer";
-                break;
-            case "HTTP_X_PROTO":
-                $testpage_url .= "serverhttpxproto";
-                break;
-            case "HTTP_X_FORWARDED_SSL_ON":
-                $testpage_url .= "serverhttpxforwardedsslon";
-                break;
-            case "HTTP_X_FORWARDED_SSL_1":
-                $testpage_url .= "serverhttpxforwardedssl1";
-                break;
-            case "SERVER-HTTPS-ON":
-                $testpage_url .= "serverhttpson";
-                break;
-            case "SERVER-HTTPS-1":
-                $testpage_url .= "serverhttps1";
-                break;
-            case "SERVERPORT443":
-                $testpage_url .= "serverport443";
-                break;
-            case "ENVHTTPS":
-                $testpage_url .= "envhttps";
-                break;
-        }
+        $filecontents = get_transient('rsssl_htaccess_redirect_test');
+        if (!$filecontents) {
 
-        $testpage_url .= ("/ssl-test-page.html");
-
-        $response = wp_remote_get($testpage_url);
-        if (is_array($response)) {
-            $status = wp_remote_retrieve_response_code($response);
-            $filecontents = wp_remote_retrieve_body($response);
-        }
-
-        $this->trace_log("test page url, enter in browser to check manually: " . $testpage_url);
-
-        if (!is_wp_error($response) && (strpos($filecontents, "#SSL TEST PAGE#") !== false)) {
-            $this->htaccess_test_success = TRUE;
-            $this->trace_log("htaccess rules tested successfully.");
-        } else {
-            //.htaccess rewrite rule seems to be giving problems.
-            $this->htaccess_test_success = FALSE;
-            if (is_wp_error($response)) {
-                $this->trace_log("htaccess rules test failed with error: " . $response->get_error_message());
-            } else {
-                $this->trace_log("htaccess test rules failed. Set WordPress redirect in settings/SSL");
+            if ($this->debug) {
+                $this->trace_log("testing htaccess rules...");
             }
+
+            $filecontents = "";
+            $testpage_url = trailingslashit($this->test_url()) . "testssl/";
+            switch ($this->ssl_type) {
+                case "CLOUDFRONT":
+                    $testpage_url .= "cloudfront";
+                    break;
+                case "CLOUDFLARE":
+                    $testpage_url .= "cloudflare";
+                    break;
+                case "LOADBALANCER":
+                    $testpage_url .= "loadbalancer";
+                    break;
+                case "HTTP_X_PROTO":
+                    $testpage_url .= "serverhttpxproto";
+                    break;
+                case "HTTP_X_FORWARDED_SSL_ON":
+                    $testpage_url .= "serverhttpxforwardedsslon";
+                    break;
+                case "HTTP_X_FORWARDED_SSL_1":
+                    $testpage_url .= "serverhttpxforwardedssl1";
+                    break;
+                case "SERVER-HTTPS-ON":
+                    $testpage_url .= "serverhttpson";
+                    break;
+                case "SERVER-HTTPS-1":
+                    $testpage_url .= "serverhttps1";
+                    break;
+                case "SERVERPORT443":
+                    $testpage_url .= "serverport443";
+                    break;
+                case "ENVHTTPS":
+                    $testpage_url .= "envhttps";
+                    break;
+            }
+
+            $testpage_url .= ("/ssl-test-page.html");
+
+            $response = wp_remote_get($testpage_url);
+            if (is_array($response)) {
+                $status = wp_remote_retrieve_response_code($response);
+                $filecontents = wp_remote_retrieve_body($response);
+            }
+
+            $this->trace_log("test page url, enter in browser to check manually: " . $testpage_url);
+
+            if (!is_wp_error($response) && (strpos($filecontents, "#SSL TEST PAGE#") !== false)) {
+                $this->htaccess_test_success = TRUE;
+                $this->trace_log("htaccess rules tested successfully.");
+            } else {
+                //.htaccess rewrite rule seems to be giving problems.
+                $this->htaccess_test_success = FALSE;
+                if (is_wp_error($response)) {
+                    $this->trace_log("htaccess rules test failed with error: " . $response->get_error_message());
+                } else {
+                    $this->trace_log("htaccess test rules failed. Set WordPress redirect in settings/SSL");
+                }
+            }
+            if (empty($filecontents)) {
+                $filecontents = 'not-valid';
+            }
+            set_transient('rsssl_htaccess_redirect_test', $filecontents, 600);
         }
     }
 
@@ -1677,23 +1686,32 @@ class rsssl_admin extends rsssl_front_end
 
     public function mixed_content_fixer_detected()
     {
-
         $status = 0;
-        $web_source = "";
-        //check if the mixed content fixer is active
-        $response = wp_remote_get(home_url());
 
-        if (is_array($response)) {
-            $status = wp_remote_retrieve_response_code($response);
-            $web_source = wp_remote_retrieve_body($response);
-        }
+        $web_source = get_transient('rsssl_mixed_content_fixer_detected');
+        if (!$web_source) {
 
-        if ($status != 200 || (strpos($web_source, "data-rsssl=") === false)) {
-            $this->trace_log("Check for Mixed Content detection failed, http statuscode " . $status);
-            return false;
-        } else {
-            $this->trace_log("Mixed content fixer was successfully detected on the front end.");
-            return true;
+            $web_source = "";
+            //check if the mixed content fixer is active
+            $response = wp_remote_get(home_url());
+
+            if (is_array($response)) {
+                $status = wp_remote_retrieve_response_code($response);
+                $web_source = wp_remote_retrieve_body($response);
+            }
+
+            if (empty($web_source)) {
+                $web_source = 'not-valid';
+                set_transient('rsssl_htaccess_redirect_test', $web_source, 600);
+            }
+
+            if ($status != 200 || (strpos($web_source, "data-rsssl=") === false)) {
+                $this->trace_log("Check for Mixed Content detection failed, http statuscode " . $status);
+                return false;
+            } else {
+                $this->trace_log("Mixed content fixer was successfully detected on the front end.");
+                return true;
+            }
         }
     }
 
@@ -1926,6 +1944,7 @@ class rsssl_admin extends rsssl_front_end
      */
 
         if (!$this->wp_redirect && $this->ssl_enabled && !$this->htaccess_warning_shown && !$this->htaccess_contains_redirect_rules()) {
+
             add_action('admin_print_footer_scripts', array($this, 'insert_dismiss_htaccess'));
             ?>
             <div id="message" class="error fade notice is-dismissible rlrsssl-htaccess">
@@ -3229,31 +3248,37 @@ class rsssl_admin extends rsssl_front_end
 
     protected function get_test_page_contents()
     {
-        $filecontents = "";
 
-        $testpage_url = trailingslashit($this->test_url()) . "ssl-test-page.php";
-        $this->trace_log("Opening testpage to check server configuration: " . $testpage_url);
+        $filecontents = get_transient('rsssl_testpage');
+        if (!$filecontents) {
+            $filecontents = "";
 
-        $response = wp_remote_get($testpage_url);
+            $testpage_url = trailingslashit($this->test_url()) . "ssl-test-page.php";
+            $this->trace_log("Opening testpage to check server configuration: " . $testpage_url);
 
-        if (is_array($response)) {
-            $status = wp_remote_retrieve_response_code($response);
-            $filecontents = wp_remote_retrieve_body($response);
+            $response = wp_remote_get($testpage_url);
+
+            if (is_array($response)) {
+                $status = wp_remote_retrieve_response_code($response);
+                $filecontents = wp_remote_retrieve_body($response);
+            }
+
+            $this->trace_log("test page url, enter in browser to check manually: " . $testpage_url);
+
+            if (!is_wp_error($response) && (strpos($filecontents, "#SSL TEST PAGE#") !== false)) {
+
+                $this->trace_log("SSL test page loaded successfully");
+            } else {
+
+                $error = "";
+                if (is_wp_error($response)) $error = $response->get_error_message();
+                $this->trace_log("Could not open testpage " . $error);
+            }
+            if (empty($filecontents)) {
+                $filecontents = 'not-valid';
+            }
+            set_transient('rsssl_testpage', $filecontents, 600);
         }
-
-        $this->trace_log("test page url, enter in browser to check manually: " . $testpage_url);
-
-        if (!is_wp_error($response) && (strpos($filecontents, "#SSL TEST PAGE#") !== false)) {
-
-            $this->trace_log("SSL test page loaded successfully");
-        } else {
-
-            $error = "";
-            if (is_wp_error($response)) $error = $response->get_error_message();
-            $this->trace_log("Could not open testpage " . $error);
-        }
-
-
         return $filecontents;
     }
 
