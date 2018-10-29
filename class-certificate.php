@@ -186,10 +186,14 @@ if ( ! class_exists( 'rsssl_certificate' ) ) {
                         }
                     }
                 }
-
+                $expiration = 600;
                 //make sure it's not stored as "false"
-                if (empty($certinfo)) $certinfo = 'not-valid';
-                set_transient('rsssl_certinfo', $certinfo, 600);
+                if (empty($certinfo)) {
+                    //set the expiration to a much shorter time if it's not valid yet
+                    $expiration = 180;
+                    $certinfo = 'not-valid';
+                }
+                set_transient('rsssl_certinfo', $certinfo, $expiration);
             }
 
             if ($certinfo==='not-valid') return false;
