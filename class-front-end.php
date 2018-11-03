@@ -100,6 +100,7 @@ if ( ! class_exists( 'rsssl_front_end' ) ) {
 
         public function wp_redirect_to_ssl()
         {
+            if (!array_key_exists('HTTP_HOST', $_SERVER)) return;
 
             if (!is_ssl() && !(defined("rsssl_no_wp_redirect") && rsssl_no_wp_redirect)) {
                 $redirect_url = "https://" . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];

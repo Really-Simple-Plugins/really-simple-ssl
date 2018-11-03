@@ -197,6 +197,7 @@ if ( ! class_exists( 'rsssl_certificate' ) ) {
             }
 
             if ($certinfo==='not-valid') return false;
+
             if (!empty($certinfo)) return $certinfo;
 
             return false;
