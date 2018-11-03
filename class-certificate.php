@@ -189,6 +189,7 @@ if ( ! class_exists( 'rsssl_certificate' ) ) {
                 $expiration = 600;
                 //make sure it's not stored as "false"
                 if (empty($certinfo)) {
+                    //set the expiration to a much shorter time if it's not valid yet
                     $expiration = 180;
                     $certinfo = 'not-valid';
                 }
