@@ -81,8 +81,6 @@ if ( ! class_exists( 'rsssl_front_end' ) ) {
 
             if (!array_key_exists('HTTP_HOST', $_SERVER)) return;
 
-            if (!isset($_SERVER['HTTP_HOST'])) return;
-
             if ($this->ssl_enabled && !is_ssl() && !(defined("rsssl_no_rest_api_redirect") && rsssl_no_rest_api_redirect)) {
                 $redirect_url = "https://" . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
                 wp_redirect($redirect_url, 301);
@@ -102,7 +100,9 @@ if ( ! class_exists( 'rsssl_front_end' ) ) {
 
         public function wp_redirect_to_ssl()
         {
-            if (!is_ssl() && isset($_SERVER['HTTP_HOST']) && !(defined("rsssl_no_wp_redirect") && rsssl_no_wp_redirect)) {
+            if (!array_key_exists('HTTP_HOST', $_SERVER)) return;
+
+            if (!is_ssl() && !(defined("rsssl_no_wp_redirect") && rsssl_no_wp_redirect)) {
                 $redirect_url = "https://" . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
                 $redirect_url = apply_filters("rsssl_wp_redirect_url", $redirect_url);
                 wp_redirect($redirect_url, 301);
