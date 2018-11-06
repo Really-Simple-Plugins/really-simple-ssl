@@ -1295,8 +1295,9 @@ class rsssl_admin extends rsssl_front_end
     public function test_htaccess_redirect()
     {
         if (!current_user_can($this->capability)) return;
-        $filecontents = get_transient('rsssl_htaccess_redirect_test');
-        if (!$filecontents) {
+
+        $this->htaccess_test_success = get_transient('rsssl_htaccess_test_success');
+        if (!$this->htaccess_test_success) {
 
             if ($this->debug) {
                 $this->trace_log("testing htaccess rules...");
@@ -1348,11 +1349,11 @@ class rsssl_admin extends rsssl_front_end
             $this->trace_log("test page url, enter in browser to check manually: " . $testpage_url);
 
             if (!is_wp_error($response) && (strpos($filecontents, "#SSL TEST PAGE#") !== false)) {
-                $this->htaccess_test_success = TRUE;
+                $htaccess_test_success = 'success';
                 $this->trace_log("htaccess rules tested successfully.");
             } else {
                 //.htaccess rewrite rule seems to be giving problems.
-                $this->htaccess_test_success = FALSE;
+                $htaccess_test_success = 'error';
                 if (is_wp_error($response)) {
                     $this->trace_log("htaccess rules test failed with error: " . $response->get_error_message());
                 } else {
@@ -1360,10 +1361,22 @@ class rsssl_admin extends rsssl_front_end
                 }
             }
             if (empty($filecontents)) {
-                $filecontents = 'not-valid';
+                $htaccess_test_success = 'no-response';
             }
-            set_transient('rsssl_htaccess_redirect_test', $filecontents, 600);
+            set_transient('rsssl_htaccess_test_success', $this->htaccess_test_success, 600);
         }
+
+
+        if ($htaccess_test_success == 'no-response'){
+            $this->htaccess_test_success = FALSE;
+        }
+        if ($htaccess_test_success == 'success'){
+            $this->htaccess_test_success = true;
+        }
+        if ($htaccess_test_success == 'error'){
+            $this->htaccess_test_success = FALSE;
+        }
+
     }
 
 
