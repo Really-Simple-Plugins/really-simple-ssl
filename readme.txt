@@ -83,6 +83,8 @@ Yes. There is a dedicated network settings page where you can switch between net
 * Tweak: added cool checkboxes
 * Tweak: .well-known/acme-challenge/ is excluded from .htaccess https:// redirect
 * Tweak: implemented transients for functions that use curl/wp_remote_get()
+* Tweak: improved mixed content fixer detection notifications
+* Tweak: removed review notice for multisite
 
 = 3.1.1 =
 * Fix: Multisite network wide activation/deactivation cron not saving settings because user capability not set this early in the process.
