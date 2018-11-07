@@ -168,7 +168,7 @@ if ( ! class_exists( 'rsssl_certificate' ) ) {
         {
 
             $certinfo = get_transient('rsssl_certinfo');
-            if (!$certinfo) {
+            if (!$certinfo || RSSSL()->really_simple_ssl->is_settings_page()) {
                 $url = 'https://'.$url;
                 $original_parse = parse_url($url, PHP_URL_HOST);
                 if ($original_parse) {
@@ -186,14 +186,8 @@ if ( ! class_exists( 'rsssl_certificate' ) ) {
                         }
                     }
                 }
-                $expiration = 600;
-                //make sure it's not stored as "false"
-                if (empty($certinfo)) {
-                    //set the expiration to a much shorter time if it's not valid yet
-                    $expiration = 180;
-                    $certinfo = 'not-valid';
-                }
-                set_transient('rsssl_certinfo', $certinfo, $expiration);
+
+                set_transient('rsssl_certinfo', $certinfo, DAY_IN_SECONDS);
             }
 
             if ($certinfo==='not-valid') return false;
