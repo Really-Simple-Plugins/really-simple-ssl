@@ -1701,8 +1701,9 @@ class rsssl_admin extends rsssl_front_end
     {
         $status = 0;
 
-        $web_source = get_transient('rsssl_mixed_content_fixer_detected');
-        if (!$web_source) {
+        $mixed_content_fixer_detected = get_transient('rsssl_mixed_content_fixer_detected');
+
+        if (!$mixed_content_fixer_detected) {
 
             $web_source = "";
             //check if the mixed content fixer is active
@@ -1713,18 +1714,28 @@ class rsssl_admin extends rsssl_front_end
                 $web_source = wp_remote_retrieve_body($response);
             }
 
-            if (empty($web_source)) {
-                $web_source = 'not-valid';
-                set_transient('rsssl_htaccess_redirect_test', $web_source, 600);
+            if ($status != 200) {
+                $mixed_content_fixer_detected = 'no-response';
+            } elseif (strpos($web_source, "data-rsssl=") === false) {
+                $mixed_content_fixer_detected = 'error';
+            } else {
+                $mixed_content_fixer_detected = 'success';
             }
 
-            if ($status != 200 || (strpos($web_source, "data-rsssl=") === false)) {
-                $this->trace_log("Check for Mixed Content detection failed, http statuscode " . $status);
-                return false;
-            } else {
-                $this->trace_log("Mixed content fixer was successfully detected on the front end.");
-                return true;
-            }
+            set_transient('rsssl_mixed_content_fixer_detected', $mixed_content_fixer_detected, 600);
+
+        }
+
+        if ($mixed_content_fixer_detected === 'no-response'){
+            $this->mixed_content_fixer_detected = FALSE;
+        }
+        if ($mixed_content_fixer_detected === 'error'){
+            $this->trace_log("Check for Mixed Content detection failed, http statuscode " . $status);
+            $this->mixed_content_fixer_detected = FALSE;
+        }
+        if ($mixed_content_fixer_detected === 'success'){
+            $this->trace_log("Mixed content fixer was successfully detected on the front end.");
+            $this->mixed_content_fixer_detected = true;
         }
     }
 
@@ -2310,15 +2321,21 @@ class rsssl_admin extends rsssl_front_end
 
                             /* check if the mixed content fixer is working */
                             if ($this->ssl_enabled && $this->autoreplace_insecure_links && $this->site_has_ssl) {
-                                $mixed_content_fixer_detected = $this->mixed_content_fixer_detected();
+                                $this->mixed_content_fixer_detected();
+                                $mixed_content_fixer_detected = get_transient('rsssl_mixed_content_fixer_detected');
                                 ?>
                                 <tr>
-                                    <td><?php echo $mixed_content_fixer_detected ? $this->img("success") : $this->img("error"); ?></td>
+                                    <td><?php echo $mixed_content_fixer_detected==="success" ? $this->img("success") : $this->img("error"); ?></td>
                                     <td><?php
-                                        if ($mixed_content_fixer_detected) {
-                                            _e("Mixed content fixer was successfully detected on the front-end", "really-simple-ssl") . "&nbsp;";
-                                        } else {
-                                            _e('The mixed content fixer is active, but was not detected on the frontpage. Please follow these steps to check if the mixed content fixer is working.', "really-simple-ssl") . ":&nbsp;";
+                                        if ($mixed_content_fixer_detected === 'success') {
+                                            echo __("Mixed content fixer was successfully detected on the front-end", "really-simple-ssl") . "&nbsp;";
+                                        } elseif ($mixed_content_fixer_detected === 'no-response') {
+                                            $link_open = '<a target="_blank" href="https://really-simple-ssl.com/knowledge-base/how-to-fix-no-response-from-webpage-warning/">';
+                                            $link_close = '</a>';
+                                            echo sprintf(__("Really Simple SSL has received no response from the webpage. See our knowledge base for %sinstructions on how to fix this warning%s.", 'really-simple-ssl'), $link_open, $link_close);
+                                        }
+                                        else {
+                                            echo __('The mixed content fixer is active, but was not detected on the frontpage. Please follow these steps to check if the mixed content fixer is working.', "really-simple-ssl") . ":&nbsp;";
                                             echo '&nbsp;<a target="_blank" href="https://www.really-simple-ssl.com/knowledge-base/how-to-check-if-the-mixed-content-fixer-is-active/">';
                                             _e('Instructions', 'really-simple-ssl');
                                             echo '</a>';
@@ -2580,7 +2597,7 @@ class rsssl_admin extends rsssl_front_end
      *
      * @param string $type the type of image
      *
-     * @return html string
+     * @return string
      */
 
     public function img($type)
