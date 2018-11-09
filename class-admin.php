@@ -1723,14 +1723,14 @@ class rsssl_admin extends rsssl_front_end
             }
 
             set_transient('rsssl_mixed_content_fixer_detected', $mixed_content_fixer_detected, 600);
-
         }
 
         if ($mixed_content_fixer_detected === 'no-response'){
+            $this->trace_log("Could not connect to website");
             $this->mixed_content_fixer_detected = FALSE;
         }
         if ($mixed_content_fixer_detected === 'error'){
-            $this->trace_log("Check for Mixed Content detection failed, http statuscode " . $status);
+            $this->trace_log("Mixed content fixer marker not found in the websource");
             $this->mixed_content_fixer_detected = FALSE;
         }
         if ($mixed_content_fixer_detected === 'success'){
@@ -2515,7 +2515,7 @@ class rsssl_admin extends rsssl_front_end
                       $this->get_banner_html(array(
                               'img' => 'complianz.jpg',
                               'title' => 'ComplianZ',
-                              'description' => __("The Complianz Privacy Suite (GDPR/CaCPA) for WordPress. Simple, Quick and Complete. Up-to-date legal documents by one of the most prominent EU IT Law firms.", "really-simple-ssl"),
+                              'description' => __("The Complianz Privacy Suite (GDPR/CaCPA) for WordPress. Simple, Quick and Complete. Up-to-date customized legal documents by a prominent IT Law firm.", "really-simple-ssl"),
                               'url' => 'https://wordpress.org/plugins/complianz-gdpr/',
                               'pro' => true,
                            )
