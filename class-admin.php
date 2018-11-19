@@ -2011,6 +2011,11 @@ class rsssl_admin extends rsssl_front_end
                     &nbsp;
                     <a target="_blank"
                        href="https://really-simple-ssl.com/knowledge-base/how-to-setup-google-analytics-and-google-search-consolewebmaster-tools/"><?php _e("More info.", "really-simple-ssl"); ?></a>
+                    <?php
+
+                    $settings_link = home_url() . "/wp-admin/options-general.php?page=rlrsssl_really_simple_ssl/";
+
+                        sprintf(__("SSL has been configured. See the %ssettings page%s for further optimization" , "really-simple-ssl"), $settings_link, "</a>"); ?>
                 </p>
             </div>
             <?php
