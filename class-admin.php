@@ -1935,6 +1935,10 @@ class rsssl_admin extends rsssl_front_end
 
     public function show_leave_review_notice()
     {
+        //prevent showing the review on edit screen, as gutenberg removes the class which makes it editable.
+        $screen = get_current_screen();
+        if ( $screen->parent_base === 'edit' ) return;
+
         if (!$this->review_notice_shown && get_option('rsssl_activation_timestamp') && get_option('rsssl_activation_timestamp') < strtotime("-1 month")) {
             add_action('admin_print_footer_scripts', array($this, 'insert_dismiss_review'));
             ?>
