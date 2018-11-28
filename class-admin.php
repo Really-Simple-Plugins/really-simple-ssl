@@ -355,6 +355,9 @@ class rsssl_admin extends rsssl_front_end
 
     public function show_notice_activate_ssl()
     {
+        //prevent showing the review on edit screen, as gutenberg removes the class which makes it editable.
+        $screen = get_current_screen();
+        if ( $screen->parent_base === 'edit' ) return;
 
         if ($this->ssl_enabled) return;
 
@@ -1848,7 +1851,11 @@ class rsssl_admin extends rsssl_front_end
      */
 
     public function show_notice_wpconfig_needs_fixes()
-    { ?>
+    {
+        //prevent showing the review on edit screen, as gutenberg removes the class which makes it editable.
+        $screen = get_current_screen();
+        if ( $screen->parent_base === 'edit' ) return;
+        ?>
         <div id="message" class="error fade notice">
             <h1><?php echo __("System detection encountered issues", "really-simple-ssl"); ?></h1>
 
@@ -1967,6 +1974,9 @@ class rsssl_admin extends rsssl_front_end
 
     public function show_notices()
     {
+        //prevent showing the review on edit screen, as gutenberg removes the class which makes it editable.
+        $screen = get_current_screen();
+        if ( $screen->parent_base === 'edit' ) return;
      /*
       show a notice when the .htaccess file does not contain redirect rules
      */
