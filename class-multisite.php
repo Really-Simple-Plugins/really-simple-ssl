@@ -541,6 +541,7 @@ if (!class_exists('rsssl_multisite')) {
             $args = array(
                 'number' => $nr_of_sites,
                 'offset' => $offset,
+                'public' => 1,
             );
             $sites = ($wp_version >= 4.6) ? get_sites($args) : wp_get_sites();
             return $sites;
