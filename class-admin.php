@@ -355,6 +355,9 @@ class rsssl_admin extends rsssl_front_end
 
     public function show_notice_activate_ssl()
     {
+        //prevent showing the review on edit screen, as gutenberg removes the class which makes it editable.
+        $screen = get_current_screen();
+        if ( $screen->parent_base === 'edit' ) return;
 
         if ($this->ssl_enabled) return;
 
@@ -1848,7 +1851,11 @@ class rsssl_admin extends rsssl_front_end
      */
 
     public function show_notice_wpconfig_needs_fixes()
-    { ?>
+    {
+        //prevent showing the review on edit screen, as gutenberg removes the class which makes it editable.
+        $screen = get_current_screen();
+        if ( $screen->parent_base === 'edit' ) return;
+        ?>
         <div id="message" class="error fade notice">
             <h1><?php echo __("System detection encountered issues", "really-simple-ssl"); ?></h1>
 
@@ -1935,6 +1942,10 @@ class rsssl_admin extends rsssl_front_end
 
     public function show_leave_review_notice()
     {
+        //prevent showing the review on edit screen, as gutenberg removes the class which makes it editable.
+        $screen = get_current_screen();
+        if ( $screen->parent_base === 'edit' ) return;
+
         if (!$this->review_notice_shown && get_option('rsssl_activation_timestamp') && get_option('rsssl_activation_timestamp') < strtotime("-1 month")) {
             add_action('admin_print_footer_scripts', array($this, 'insert_dismiss_review'));
             ?>
@@ -1963,6 +1974,9 @@ class rsssl_admin extends rsssl_front_end
 
     public function show_notices()
     {
+        //prevent showing the review on edit screen, as gutenberg removes the class which makes it editable.
+        $screen = get_current_screen();
+        if ( $screen->parent_base === 'edit' ) return;
      /*
       show a notice when the .htaccess file does not contain redirect rules
      */
@@ -2753,7 +2767,7 @@ class rsssl_admin extends rsssl_front_end
     {
         register_setting('rlrsssl_options', 'rlrsssl_options', array($this, 'options_validate'));
         add_settings_section('rlrsssl_settings', __("Settings", "really-simple-ssl"), array($this, 'section_text'), 'rlrsssl');
-        add_settings_field('id_autoreplace_insecure_links', __("Auto replace mixed content", "really-simple-ssl"), array($this, 'get_option_autoreplace_insecure_links'), 'rlrsssl', 'rlrsssl_settings');
+        add_settings_field('id_autoreplace_insecure_links', __("Mixed content fixer", "really-simple-ssl"), array($this, 'get_option_autoreplace_insecure_links'), 'rlrsssl', 'rlrsssl_settings');
 
         //only show option to enable or disable mixed content and redirect when SSL is detected
         if ($this->ssl_enabled) {

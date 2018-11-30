@@ -288,6 +288,10 @@ if (!class_exists('rsssl_multisite')) {
 
         public function show_notice_activate_networkwide()
         {
+            //prevent showing the review on edit screen, as gutenberg removes the class which makes it editable.
+            $screen = get_current_screen();
+            if ( $screen->parent_base === 'edit' ) return;
+
             //if no SSL was detected, don't activate it yet.
 
             if (!RSSSL()->really_simple_ssl->site_has_ssl) {
@@ -537,6 +541,7 @@ if (!class_exists('rsssl_multisite')) {
             $args = array(
                 'number' => $nr_of_sites,
                 'offset' => $offset,
+                'public' => 1,
             );
             $sites = ($wp_version >= 4.6) ? get_sites($args) : wp_get_sites();
             return $sites;
@@ -709,6 +714,9 @@ if (!class_exists('rsssl_multisite')) {
 
         public function show_notices()
         {
+            //prevent showing the review on edit screen, as gutenberg removes the class which makes it editable.
+            $screen = get_current_screen();
+            if ( $screen->parent_base === 'edit' ) return;
 
             if (isset(RSSSL()->really_simple_ssl->errors["DEACTIVATE_FILE_NOT_RENAMED"])) {
                 ?>
@@ -907,6 +915,10 @@ if (!class_exists('rsssl_multisite')) {
 
         public function show_pro_option_notice()
         {
+            //prevent showing the review on edit screen, as gutenberg removes the class which makes it editable.
+            $screen = get_current_screen();
+            if ( $screen->parent_base === 'edit' ) return;
+
             if (!$this->is_settings_page()) return;
 
             $dismissed = get_option('rsssl_pro_pro_option_notice_dismissed');
