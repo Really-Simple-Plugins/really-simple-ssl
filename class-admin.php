@@ -2021,10 +2021,16 @@ class rsssl_admin extends rsssl_front_end
             <div id="message" class="updated fade notice is-dismissible rlrsssl-success">
                 <p>
                     <?php _e("SSL activated!", "really-simple-ssl"); ?>&nbsp;
-                    <?php _e("Don't forget to change your settings in Google Analytics and Webmaster tools.", "really-simple-ssl"); ?>
-                    &nbsp;
+                    <?php _e("Don't forget to change your settings in Google Analytics and Webmaster tools.", "really-simple-ssl");
+                    ?>&nbsp;
                     <a target="_blank"
                        href="https://really-simple-ssl.com/knowledge-base/how-to-setup-google-analytics-and-google-search-consolewebmaster-tools/"><?php _e("More info.", "really-simple-ssl"); ?></a>
+                    <?php
+
+                    $home_url = home_url();
+                    $settings_link = "<a href='$home_url/wp-admin/options-general.php?page=rlrsssl_really_simple_ssl'>";
+
+                    echo sprintf(__("See the %ssettings page%s for further SSL optimizations." , "really-simple-ssl"), $settings_link, "</a>"); ?>
                 </p>
             </div>
             <?php
@@ -2111,7 +2117,7 @@ class rsssl_admin extends rsssl_front_end
     /**
      * Insert some ajax script to dismiss the review notice, and stop nagging about it
      *
-     * @since  2.0
+     * @since  3.0
      *
      * @access public
      *
@@ -2149,6 +2155,7 @@ class rsssl_admin extends rsssl_front_end
         </script>
         <?php
     }
+
 
     /**
      * Process the ajax dismissal of the success message.
