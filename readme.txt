@@ -82,7 +82,7 @@ Yes. There is a dedicated network settings page where you can switch between net
 = 3.1.3 =
 * Tweak: no longer shows notices on Gutenberg edit screens
 * Tweak: updated Google Analytics with link to SSL settings page
-* Fix: fixed blog count
+* Fix: multisite blog count now only counts public sites
 
 = 3.1.2 =
 * Tweak: added cool checkboxes
