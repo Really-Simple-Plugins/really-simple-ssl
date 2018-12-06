@@ -1988,7 +1988,7 @@ class rsssl_admin extends rsssl_front_end
             <div id="message" class="error fade notice is-dismissible rlrsssl-htaccess">
                 <p>
                     <?php echo __("You do not have a 301 redirect to https active in the settings. For SEO purposes it is advised to use 301 redirects. You can enable a 301 redirect in the settings.", "really-simple-ssl"); ?>
-                    <a href="options-general.php?page=rlrsssl_really_simple_ssl"><?php echo __("View settings page", "really-simple-ssl"); ?></a>
+                    <a href="<?php echo admin_url('options-general.php?page=rlrsssl_really_simple_ssl')?>"><?php echo __("View settings page", "really-simple-ssl"); ?></a>
                 </p>
             </div>
             <?php
@@ -2003,7 +2003,7 @@ class rsssl_admin extends rsssl_front_end
                 <p>
                     <?php _e("The 'force-deactivate.php' file has to be renamed to .txt. Otherwise your ssl can be deactived by anyone on the internet.", "really-simple-ssl"); ?>
                 </p>
-                <a href="options-general.php?page=rlrsssl_really_simple_ssl"><?php echo __("Check again", "really-simple-ssl"); ?></a>
+                <a href="<?php echo admin_url('options-general.php?page=rlrsssl_really_simple_ssl')?>"><?php echo __("Check again", "really-simple-ssl"); ?></a>
             </div>
             <?php
         }
@@ -2027,9 +2027,7 @@ class rsssl_admin extends rsssl_front_end
                        href="https://really-simple-ssl.com/knowledge-base/how-to-setup-google-analytics-and-google-search-consolewebmaster-tools/"><?php _e("More info.", "really-simple-ssl"); ?></a>
                     <?php
 
-                    $home_url = home_url();
-                    $settings_link = "<a href='$home_url/wp-admin/options-general.php?page=rlrsssl_really_simple_ssl'>";
-
+                    $settings_link = '<a href="'.admin_url('options-general.php?page=rlrsssl_really_simple_ssl').'">';
                     echo sprintf(__("See the %ssettings page%s for further SSL optimizations." , "really-simple-ssl"), $settings_link, "</a>"); ?>
                 </p>
             </div>
