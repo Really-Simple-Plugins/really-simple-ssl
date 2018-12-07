@@ -456,7 +456,8 @@ if (!class_exists('rsssl_multisite')) {
 
         public function get_process_completed_percentage(){
             $complete_count = get_site_option('rsssl_siteprocessing_progress');
-            $percentage = round(($complete_count/get_blog_count())*100,0);
+
+            $percentage = round(($complete_count/$this->get_total_blog_count())*100,0);
             if ($percentage > 99) $percentage = 99;
             return $percentage;
         }
@@ -580,7 +581,7 @@ if (!class_exists('rsssl_multisite')) {
             update_site_option("rlrsssl_network_options", $options);
 
             //because the deactivation should be a one click procedure, chunking this would cause dificulties
-            $sites = $this->get_sites_bw_compatible(0, get_blog_count());
+            $sites = $this->get_sites_bw_compatible(0, $this->get_total_blog_count());
             foreach ($sites as $site) {
                 $this->switch_to_blog_bw_compatible($site);
                 RSSSL()->really_simple_ssl->deactivate_ssl();
@@ -979,6 +980,23 @@ if (!class_exists('rsssl_multisite')) {
                 }
                 echo '</h2>';
             }
+        }
+
+        public function get_total_blog_count()
+        {
+            //Get the total blog count from all multisite networks
+            $networks = get_networks();
+
+            $total_blog_count = 0;
+
+            foreach($networks as $network){
+
+                $network_id = ($network->__get('id'));
+                $blog_count = get_blog_count($network_id);
+                $total_blog_count += $blog_count;
+            }
+
+            return $total_blog_count;
         }
 
     } //class closure
