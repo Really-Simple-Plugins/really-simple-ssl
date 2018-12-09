@@ -21,7 +21,7 @@ To keep it lightweight, the options are kept to a minimum. The entire site will 
 
 Always backup before you go! If you do not have a sound backup policy, start having one! See [our recommendations](https://really-simple-ssl.com/knowledge-base/backing-up-your-site/).
 
-Really Simple SSL is on [GitHub](https://github.com/rlankhorst/really-simple-ssl) as well!
+Really Simple SSL is ClassicPress compatible. Any code suggestions? We're on [GitHub](https://github.com/rlankhorst/really-simple-ssl) as well!
 
 = Love Really Simple SSL? =
 Hopefully this plugin save you some hours of work. If you want to support the continuing development of this plugin, you might consider buying the [premium](https://www.really-simple-ssl.com/pro/), which includes
