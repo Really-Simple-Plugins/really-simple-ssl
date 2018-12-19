@@ -33,7 +33,7 @@ class REALLY_SIMPLE_SSL
 {
 
     private static $instance;
-    public $rssl_front_end;
+    public $rsssl_front_end;
     public $rssl_mixed_content_fixer;
     public $rsssl_multisite;
     public $rsssl_cache;

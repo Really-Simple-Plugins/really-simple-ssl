@@ -2051,6 +2051,14 @@ class rsssl_admin extends rsssl_front_end
                 }
             }
         }
+
+       if (!$this->rsssl_uses_default_folder_name()) {
+           ?>
+           <div id="message" class="error fade notice is-dismissible"><p>
+            <?php _e("Really Simple SSL has detected the default really-simple-ssl folder has been renamed to <....>. This can lead to issues when activating add-ons.", "really-simple-ssl"); ?>
+               </p></div>
+        <?php
+       }
     }
 
     /**
@@ -3329,6 +3337,27 @@ class rsssl_admin extends rsssl_front_end
             set_transient('rsssl_testpage', $filecontents, 600);
         }
         return $filecontents;
+    }
+
+/**
+ *
+ * Check the current plugin folder path and compare it to default path to detect if the plugin folder has been renamed
+ *
+ * @since 3.1
+ *
+ * @access public
+ *
+ */
+    public function rsssl_uses_default_folder_name() {
+
+        $default_plugin_path = plugin_dir_path( __DIR__ ) . $this->plugin_dir;
+        $current_plugin_path = plugin_dir_path( __FILE__ );
+
+        if ($default_plugin_path === $current_plugin_path) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
 } //class closure
