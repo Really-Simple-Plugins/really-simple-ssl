@@ -3331,4 +3331,18 @@ class rsssl_admin extends rsssl_front_end
         return $filecontents;
     }
 
+    /**
+     *
+     * @return string
+     *
+     * since 3.1
+     *
+     *
+     * return dirname to admin_notices() in really-simple-ssl-pro.php to show a warning when free folder has been renamed
+     */
+
+    public function get_current_rsssl_free_dirname() {
+        return basename( __DIR__ );
+    }
+
 } //class closure
