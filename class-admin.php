@@ -172,6 +172,7 @@ class rsssl_admin extends rsssl_front_end
         add_action('admin_menu', array($this, 'add_settings_page'), 40);
         add_action('admin_init', array($this, 'create_form'), 40);
         add_action('admin_init', array($this, 'listen_for_deactivation'), 40);
+        add_action('admin_init', array($this, 'uses_htaccess_conf'), 40);
 
         $plugin = rsssl_plugin;
         add_filter("plugin_action_links_$plugin", array($this, 'plugin_settings_link'));
@@ -260,6 +261,24 @@ class rsssl_admin extends rsssl_front_end
             unset($current[$key]);
         }
         return $current;
+    }
+
+    /*
+     * @Since 3.1
+     *
+     * Check if site uses an htaccess.conf file, used in bitnami installations
+     *
+     *
+     */
+
+    public function uses_htaccess_conf() {
+        $htaccess_conf_file = dirname(ABSPATH) . "/conf/htaccess.conf";
+
+        if (is_file($htaccess_conf_file)) {
+            error_log("Htaccess.conf found");
+        } else {
+            error_log("Htaccess.conf not found");
+        }
     }
 
 
@@ -402,7 +421,7 @@ class rsssl_admin extends rsssl_front_end
                     $link_open = '<p><a class="button" target="_blank" href="' . $reload_https_url . '">';
                     $link_close = '</a></p>';
 
-                    printf(__("Really Simple SSL failed to detect a valid SSL certificate. If you do have an SSL certificate, try to reload this page over https by clicking this button: %sReload over https%s. The built-in certificate check will run once daily, to force a new certificate check visit the SSL settings page. ", "really-simple-ssl"), $link_open, $link_close);
+                    printf(__("Really Simple SSL failed to detect a valid SSL certificate. If you do have an SSL certificate, try to reload this page over https by clicking this button: %sReload over https%s The built-in certificate check will run once daily, to force a new certificate check visit the SSL settings page. ", "really-simple-ssl"), $link_open, $link_close);
 
                     $ssl_test_url = "https://www.ssllabs.com/ssltest/";
                     $link_open = '<a target="_blank" href="' . $ssl_test_url . '">';
