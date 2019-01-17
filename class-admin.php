@@ -28,6 +28,8 @@ class rsssl_admin extends rsssl_front_end
     public $plugin_filename = "rlrsssl-really-simple-ssl.php";
     public $ABSpath;
 
+    public $htaccess_file = '';
+
     public $do_not_edit_htaccess = FALSE;
     public $javascript_redirect = FALSE;
     public $htaccess_redirect = FALSE;
@@ -268,16 +270,15 @@ class rsssl_admin extends rsssl_front_end
      *
      * Check if site uses an htaccess.conf file, used in bitnami installations
      *
-     *
      */
 
     public function uses_htaccess_conf() {
         $htaccess_conf_file = dirname(ABSPATH) . "/conf/htaccess.conf";
 
         if (is_file($htaccess_conf_file)) {
-            error_log("Htaccess.conf found");
+            return true;
         } else {
-            error_log("Htaccess.conf not found");
+            return false;
         }
     }
 
@@ -1524,11 +1525,11 @@ class rsssl_admin extends rsssl_front_end
     public function htaccess_contains_redirect_rules()
     {
 
-        if (!file_exists($this->ABSpath . ".htaccess")) {
+        if (!file_exists($this->htaccess_file))  {
             return false;
         }
 
-        $htaccess = file_get_contents($this->ABSpath . ".htaccess");
+        $htaccess = file_get_contents($this->htaccess_file);
 
         $needle_old = "RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]";
         $needle_new = "RewriteRule ^(.*)$ https://%{HTTP_HOST}/$1 [R=301,L]";
@@ -1630,7 +1631,7 @@ class rsssl_admin extends rsssl_front_end
         $this->trace_log("checking if .htaccess can or should be edited...");
 
         //does it exist?
-        if (!file_exists($this->ABSpath . ".htaccess")) {
+        if (!file_exists($this->ABSpath . ".htaccess") && (!$this->uses_htaccess_conf())) {
             $this->trace_log(".htaccess not found.");
             return;
         }
@@ -1641,10 +1642,21 @@ class rsssl_admin extends rsssl_front_end
             return;
         }
 
-        $htaccess = file_get_contents($this->ABSpath . ".htaccess");
+        //First check for the htaccess.conf file.
+        //WordPress creates a default .htaccess file, even on Bitnami. We want to ignore that.
+        //If the .htaccess.conf file doesn't exist, we use the regular .htaccess file.
+        //Also set $htaccess_file to the correct value. It is used again in htaccess_contains_redirect_rules()
+        if ($this->uses_htaccess_conf()) {
+            $this->htaccess_file = dirname(ABSPATH) . "/conf/htaccess.conf";
+            $htaccess = file_get_contents($this->htaccess_file);
+        } else {
+            $this->htaccess_file = $this->ABSpath . ".htaccess";
+            $htaccess = file_get_contents($this->htaccess_file);
+        }
+
         if (!$this->htaccess_contains_redirect_rules()) {
 
-            if (!is_writable($this->ABSpath . ".htaccess")) {
+            if (!is_writable($this->htaccess_file)) {
                 //set the wp redirect as fallback, because .htaccess couldn't be edited.
                 if ($this->clicked_activate_ssl()) $this->wp_redirect = true;
                 if (is_multisite()) {
@@ -1666,7 +1678,7 @@ class rsssl_admin extends rsssl_front_end
                 } else {
                     $htaccess = $htaccess . $rules;
                 }
-                file_put_contents($this->ABSpath . ".htaccess", $htaccess);
+                file_put_contents($this->htaccess_file, $htaccess);
             }
 
         }
