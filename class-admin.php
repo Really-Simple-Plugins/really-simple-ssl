@@ -1453,9 +1453,8 @@ class rsssl_admin extends rsssl_front_end
 
     public function removeHtaccessEdit()
     {
-        if (file_exists($this->ABSpath . ".htaccess") && is_writable($this->ABSpath . ".htaccess")) {
-            $htaccess = file_get_contents($this->ABSpath . ".htaccess");
-
+        if (file_exists($this->htaccess_file) && is_writable($this->htaccess_file)) {
+            $htaccess = file_get_contents($this->htaccess_file);
 
             //if multisite, per site activation and more than one blog remaining on ssl, remove condition for this site only
             //the domain list has been rebuilt already, so current site is already removed.
@@ -1479,7 +1478,7 @@ class rsssl_admin extends rsssl_front_end
             }
 
             $htaccess = preg_replace("/\n+/", "\n", $htaccess);
-            file_put_contents($this->ABSpath . ".htaccess", $htaccess);
+            file_put_contents($this->htaccess_file, $htaccess);
             $this->save_options();
         } else {
             $this->errors['HTACCESS_NOT_WRITABLE'] = TRUE;
@@ -1489,9 +1488,9 @@ class rsssl_admin extends rsssl_front_end
 
     public function get_htaccess_version()
     {
-        if (!file_exists($this->ABSpath . ".htaccess")) return false;
+        if (!file_exists($this->htaccess_file)) return false;
 
-        $htaccess = file_get_contents($this->ABSpath . ".htaccess");
+        $htaccess = file_get_contents($this->htaccess_file);
         $versionpos = strpos($htaccess, "rsssl_version");
 
         if ($versionpos === false) {
@@ -1550,11 +1549,11 @@ class rsssl_admin extends rsssl_front_end
 
     public function contains_rsssl_rules()
     {
-        if (!file_exists($this->ABSpath . ".htaccess")) {
+        if (!file_exists($this->htaccess_file)) {
             return false;
         }
 
-        $htaccess = file_get_contents($this->ABSpath . ".htaccess");
+        $htaccess = file_get_contents($this->htaccess_file);
 
         $check = null;
         preg_match("/BEGIN rlrssslReallySimpleSSL/", $htaccess, $check);
@@ -1594,11 +1593,11 @@ class rsssl_admin extends rsssl_front_end
 
     public function contains_hsts()
     {
-        if (!file_exists($this->ABSpath . ".htaccess")) {
+        if (!file_exists($this->htaccess_file)) {
             $this->trace_log(".htaccess not found in " . $this->ABSpath);
             $result = $this->hsts; //just return the setting.
         } else {
-            $htaccess = file_get_contents($this->ABSpath . ".htaccess");
+            $htaccess = file_get_contents($this->htaccess_file);
 
             preg_match("/Strict-Transport-Security/", $htaccess, $check);
             if (count($check) === 0) {
@@ -1613,7 +1612,7 @@ class rsssl_admin extends rsssl_front_end
 
 
     /**
-     * Adds redirect to https rules to the .htaccess file.
+     * Adds redirect to https rules to the .htaccess file or htaccess.conf on Bitnami.
      *
      * @since  2.0
      *
@@ -1645,7 +1644,7 @@ class rsssl_admin extends rsssl_front_end
         //First check for the htaccess.conf file.
         //WordPress creates a default .htaccess file, even on Bitnami. We want to ignore that.
         //If the .htaccess.conf file doesn't exist, we use the regular .htaccess file.
-        //Also set $htaccess_file to the correct value. It is used again in htaccess_contains_redirect_rules()
+        //Also set $htaccess_file to the correct value. It is used again in other htaccess functions.
         if ($this->uses_htaccess_conf()) {
             $this->htaccess_file = dirname(ABSPATH) . "/conf/htaccess.conf";
             $htaccess = file_get_contents($this->htaccess_file);
