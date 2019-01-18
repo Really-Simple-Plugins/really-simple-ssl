@@ -24,8 +24,5 @@ if ( ! class_exists( 'rsssl_help' ) ) {
 
   }
 
-
-
-
 }//class closure
 } //if class exists closure
