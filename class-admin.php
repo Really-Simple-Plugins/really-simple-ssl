@@ -174,7 +174,6 @@ class rsssl_admin extends rsssl_front_end
         add_action('admin_menu', array($this, 'add_settings_page'), 40);
         add_action('admin_init', array($this, 'create_form'), 40);
         add_action('admin_init', array($this, 'listen_for_deactivation'), 40);
-        add_action('admin_init', array($this, 'uses_htaccess_conf'), 40);
 
         $plugin = rsssl_plugin;
         add_filter("plugin_action_links_$plugin", array($this, 'plugin_settings_link'));
@@ -667,8 +666,10 @@ class rsssl_admin extends rsssl_front_end
         if ($this->site_has_ssl) {
             //when one of the used server variables was found, test if the redirect works
 
-            if (RSSSL()->rsssl_server->uses_htaccess() && $this->ssl_type != "NA")
+            if (RSSSL()->rsssl_server->uses_htaccess() && $this->ssl_type != "NA") {
+                $this->htaccess_file();
                 $this->test_htaccess_redirect();
+            }
 
             //in a configuration reverse proxy without a set server variable https, add code to wpconfig
             if ($this->do_wpconfig_loadbalancer_fix) {
@@ -1631,8 +1632,8 @@ class rsssl_admin extends rsssl_front_end
 
         $this->trace_log("checking if .htaccess can or should be edited...");
 
-        //does it exist?
-        if (!file_exists($this->ABSpath . ".htaccess") && (!$this->uses_htaccess_conf())) {
+        //does it exist? $this->htaccess_file is set in htaccess_file()
+        if (!file_exists($this->htaccess_file) ) {
             $this->trace_log(".htaccess not found.");
             return;
         }
@@ -1643,17 +1644,7 @@ class rsssl_admin extends rsssl_front_end
             return;
         }
 
-        //First check for the htaccess.conf file.
-        //WordPress creates a default .htaccess file, even on Bitnami. We want to ignore that.
-        //If the .htaccess.conf file doesn't exist, we use the regular .htaccess file.
-        //Also set $htaccess_file to the correct value. It is used again in other htaccess functions.
-        if ($this->uses_htaccess_conf()) {
-            $this->htaccess_file = dirname(ABSPATH) . "/conf/htaccess.conf";
-            $htaccess = file_get_contents($this->htaccess_file);
-        } else {
-            $this->htaccess_file = $this->ABSpath . ".htaccess";
-            $htaccess = file_get_contents($this->htaccess_file);
-        }
+         $htaccess = file_get_contents($this->htaccess_file);
 
         if (!$this->htaccess_contains_redirect_rules()) {
 
@@ -1690,28 +1681,16 @@ class rsssl_admin extends rsssl_front_end
     {
         if (!current_user_can($this->capability)) return;
 
-        error_log("In func update htaccess after settings save");
-
-        if ($this->uses_htaccess_conf()) {
-            $this->htaccess_file = dirname(ABSPATH) . "/conf/htaccess.conf";
-        } else {
-            $this->htaccess_file = $this->ABSpath . ".htaccess";
-        }
-
         //does it exist?
         if (!file_exists($this->htaccess_file)) {
-            error_log("Bestaat niet>");
             $this->trace_log(".htaccess not found.");
             return;
         }
 
         if (!is_writable($this->htaccess_file)) {
-            error_log("is niet schrijfbaar");
             if ($this->debug) $this->trace_log(".htaccess not writable.");
             return;
         }
-
-        error_log("ook writeable");
 
         //check if editing is blocked.
         if ($this->do_not_edit_htaccess) {
@@ -1719,13 +1698,7 @@ class rsssl_admin extends rsssl_front_end
             return;
         }
 
-        error_log("editing is niet blocked");
-
         $htaccess = file_get_contents($this->htaccess_file);
-
-        error_log("Htaccess in update htaccess after settings save");
-        error_log(print_r($htaccess, true));
-
         $htaccess = preg_replace("/#\s?BEGIN\s?rlrssslReallySimpleSSL.*?#\s?END\s?rlrssslReallySimpleSSL/s", "", $htaccess);
         $htaccess = preg_replace("/\n+/", "\n", $htaccess);
 
@@ -3392,6 +3365,18 @@ class rsssl_admin extends rsssl_front_end
 
     public function get_current_rsssl_free_dirname() {
         return basename( __DIR__ );
+    }
+
+    public function htaccess_file() {
+        //First check for the htaccess.conf file.
+        //WordPress creates a default .htaccess file, even on Bitnami. We want to ignore that.
+        //If the .htaccess.conf file doesn't exist, we use the regular .htaccess file.
+        //Also set $htaccess_file to the correct value. It is used again in other htaccess functions.
+        if ($this->uses_htaccess_conf()) {
+            $this->htaccess_file = dirname(ABSPATH) . "/conf/htaccess.conf";
+        } else {
+            $this->htaccess_file = $this->ABSpath . ".htaccess";
+        }
     }
 
 } //class closure
