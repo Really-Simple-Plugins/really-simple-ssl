@@ -1454,6 +1454,8 @@ class rsssl_admin extends rsssl_front_end
     public function removeHtaccessEdit()
     {
         if (file_exists($this->htaccess_file) && is_writable($this->htaccess_file)) {
+            error_log("This htaccess" . $this->htaccess_file);
+            error_log("htaccess exists and is writeable");
             $htaccess = file_get_contents($this->htaccess_file);
 
             //if multisite, per site activation and more than one blog remaining on ssl, remove condition for this site only
@@ -1688,17 +1690,28 @@ class rsssl_admin extends rsssl_front_end
     {
         if (!current_user_can($this->capability)) return;
 
+        error_log("In func update htaccess after settings save");
+
+        if ($this->uses_htaccess_conf()) {
+            $this->htaccess_file = dirname(ABSPATH) . "/conf/htaccess.conf";
+        } else {
+            $this->htaccess_file = $this->ABSpath . ".htaccess";
+        }
+
         //does it exist?
         if (!file_exists($this->htaccess_file)) {
+            error_log("Bestaat niet>");
             $this->trace_log(".htaccess not found.");
             return;
         }
 
-
         if (!is_writable($this->htaccess_file)) {
+            error_log("is niet schrijfbaar");
             if ($this->debug) $this->trace_log(".htaccess not writable.");
             return;
         }
+
+        error_log("ook writeable");
 
         //check if editing is blocked.
         if ($this->do_not_edit_htaccess) {
@@ -1706,7 +1719,13 @@ class rsssl_admin extends rsssl_front_end
             return;
         }
 
+        error_log("editing is niet blocked");
+
         $htaccess = file_get_contents($this->htaccess_file);
+
+        error_log("Htaccess in update htaccess after settings save");
+        error_log(print_r($htaccess, true));
+
         $htaccess = preg_replace("/#\s?BEGIN\s?rlrssslReallySimpleSSL.*?#\s?END\s?rlrssslReallySimpleSSL/s", "", $htaccess);
         $htaccess = preg_replace("/\n+/", "\n", $htaccess);
 
