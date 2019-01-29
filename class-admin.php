@@ -280,14 +280,7 @@ class rsssl_admin extends rsssl_front_end
     }
 
 
-    //change deprecated function depending on version.
 
-    public function get_sites_bw_compatible()
-    {
-        global $wp_version;
-        $sites = ($wp_version >= 4.6) ? get_sites() : wp_get_sites();
-        return $sites;
-    }
 
     /*
         The new get_sites function returns an object.
@@ -583,28 +576,37 @@ class rsssl_admin extends rsssl_front_end
     public function build_domain_list()
     {
         if (!is_multisite()) return;
-        //create list of all activated sites with SSL
-        $this->sites = array();
-        $sites = $this->get_sites_bw_compatible();
-        if ($this->debug) $this->trace_log("building domain list for multisite...");
-        foreach ($sites as $site) {
-            $this->switch_to_blog_bw_compatible($site);
-            $options = get_option('rlrsssl_options');
 
-            $ssl_enabled = FALSE;
-            if (isset($options)) {
-                $site_has_ssl = isset($options['site_has_ssl']) ? $options['site_has_ssl'] : FALSE;
-                $ssl_enabled = isset($options['ssl_enabled']) ? $options['ssl_enabled'] : $site_has_ssl;
+        $this->sites = get_transient('rsssl_domain_list');
+        if (!$this->sites) {
+
+            //create list of all activated sites with SSL
+            $this->sites = array();
+            $nr_of_sites = RSSSL()->rsssl_multisite->get_total_blog_count();
+            $sites = RSSSL()->rsssl_multisite->get_sites_bw_compatible(0, $nr_of_sites);
+
+            if ($this->debug) $this->trace_log("building domain list for multisite...");
+            foreach ($sites as $site) {
+                $this->switch_to_blog_bw_compatible($site);
+                $options = get_option('rlrsssl_options');
+
+                $ssl_enabled = FALSE;
+                if (isset($options)) {
+                    $site_has_ssl = isset($options['site_has_ssl']) ? $options['site_has_ssl'] : FALSE;
+                    $ssl_enabled = isset($options['ssl_enabled']) ? $options['ssl_enabled'] : $site_has_ssl;
+                }
+
+                if (is_plugin_active(rsssl_plugin) && $ssl_enabled) {
+                    if ($this->debug) $this->trace_log("adding: " . home_url());
+                    $this->sites[] = home_url();
+                }
+                restore_current_blog(); //switches back to previous blog, not current, so we have to do it each loop
             }
 
-            if (is_plugin_active(rsssl_plugin) && $ssl_enabled) {
-                if ($this->debug) $this->trace_log("adding: " . home_url());
-                $this->sites[] = home_url();
-            }
-            restore_current_blog(); //switches back to previous blog, not current, so we have to do it each loop
+            set_transient('rsssl_domain_list', $this->sites, HOUR_IN_SECONDS);
+
+            $this->save_options();
         }
-
-        $this->save_options();
     }
 
     /**
@@ -1412,7 +1414,7 @@ class rsssl_admin extends rsssl_front_end
 
     public function test_url()
     {
-        $plugin_url = str_replace("http://", "https://", trailingslashit(rsssl_url));;
+        $plugin_url = str_replace("http://", "https://", trailingslashit(rsssl_url));
         $https_home_url = str_replace("http://", "https://", home_url());
 
         //in some case we get a relative url here, so we check that.
@@ -2749,6 +2751,21 @@ class rsssl_admin extends rsssl_front_end
                     ?>
                 </td>
                 <td></td>
+            </tr>
+            <tr>
+
+            <td><?php echo (defined('rsssl_pro_path')) ? $this->img("success") : $this->img("warning"); ?></td>
+            <td>
+            <?php
+                $link_open = '<a target="_blank" href="' . $this->pro_url . '">';
+                $link_close = '</a>';
+
+                _e('Content Security Policy violation reporting not enabled.', "really-simple-ssl");
+                echo "&nbsp;";
+                printf(__("To enable, %sget Premium%s ", "really-simple-ssl"), $link_open, $link_close);
+
+            ?>
+            </td>
             </tr>
         </table>
 
