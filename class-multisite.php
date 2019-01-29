@@ -537,6 +537,8 @@ if (!class_exists('rsssl_multisite')) {
          * */
         public function get_sites_bw_compatible($offset=0, $nr_of_sites=100)
         {
+
+
             global $wp_version;
 
             $args = array(
