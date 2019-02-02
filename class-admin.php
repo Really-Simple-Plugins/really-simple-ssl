@@ -115,7 +115,10 @@ class rsssl_admin extends rsssl_front_end
          * https://codex.wordpress.org/Function_Reference/flush_rewrite_rules
          * */
 
-        if (get_option('rsssl_flush_rewrite_rules') && get_option('rsssl_flush_rewrite_rules') < strtotime("-1 minute")){
+        $activation_time = get_option('rsssl_flush_rewrite_rules');
+        $more_than_one_minute_ago = $activation_time < strtotime("-1 minute");
+        $less_than_5_minutes_ago = $activation_time > strtotime("-5 minute");
+        if (get_option('rsssl_flush_rewrite_rules') && $more_than_one_minute_ago && $less_than_5_minutes_ago){
             delete_option('rsssl_flush_rewrite_rules');
             add_action('shutdown', 'flush_rewrite_rules');
         }
