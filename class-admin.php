@@ -279,8 +279,12 @@ class rsssl_admin extends rsssl_front_end
         }
     }
 
-
-
+    public function get_sites_bw_compatible()
+    {
+        global $wp_version;
+        $sites = ($wp_version >= 4.6) ? get_sites() : wp_get_sites();
+        return $sites;
+    }
 
     /*
         The new get_sites function returns an object.
