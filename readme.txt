@@ -21,7 +21,7 @@ To keep it lightweight, the options are kept to a minimum. The entire site will 
 
 Always backup before you go! If you do not have a sound backup policy, start having one! See [our recommendations](https://really-simple-ssl.com/knowledge-base/backing-up-your-site/).
 
-Really Simple SSL is ClassicPress compatible. Any code suggestions? We're on [GitHub](https://github.com/rlankhorst/really-simple-ssl) as well!
+Any code suggestions? We're on [GitHub](https://github.com/rlankhorst/really-simple-ssl) as well!
 
 = Love Really Simple SSL? =
 Hopefully this plugin save you some hours of work. If you want to support the continuing development of this plugin, you might consider buying the [premium](https://www.really-simple-ssl.com/pro/), which includes
@@ -81,6 +81,7 @@ Yes. There is a dedicated network settings page where you can switch between net
 == Changelog ==
 = 3.1.4 =
 * Tweak: added support for Bitnami/AWS htaccess.conf file
+* Tweak: multisite blog count now only counts public sites
 
 = 3.1.3 =
 * Tweak: no longer shows notices on Gutenberg edit screens
