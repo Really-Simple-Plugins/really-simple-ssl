@@ -2756,6 +2756,9 @@ class rsssl_admin extends rsssl_front_end
                 </td>
                 <td></td>
             </tr>
+            <?php
+            /**
+            ?>
             <tr>
 
             <td><?php echo (defined('rsssl_pro_path')) ? $this->img("success") : $this->img("warning"); ?></td>
@@ -2771,7 +2774,9 @@ class rsssl_admin extends rsssl_front_end
             ?>
             </td>
             </tr>
+            **/?>
         </table>
+
 
 
         <?php
