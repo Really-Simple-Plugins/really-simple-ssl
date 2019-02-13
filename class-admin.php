@@ -399,7 +399,7 @@ class rsssl_admin extends rsssl_front_end
     public function ssl_detected()
     {
         if ($this->site_has_ssl) { ?>
-            <div id="message" class="updated fade notice activate-ssl">
+            <div id="message" class="updated notice activate-ssl">
                 <?php
                   do_action('rsssl_activation_notice_inner');
                 ?>
@@ -411,7 +411,7 @@ class rsssl_admin extends rsssl_front_end
     public function no_ssl_detected()
     {
         if (!$this->site_has_ssl) { ?>
-            <div id="message" class="error fade notice rsssl-notice-certificate">
+            <div id="message" class="error notice rsssl-notice-certificate">
                 <h1><?php echo __("Detected possible certificate issues", "really-simple-ssl"); ?></h1>
                 <p>
                     <?php
@@ -1884,7 +1884,7 @@ class rsssl_admin extends rsssl_front_end
         $screen = get_current_screen();
         if ( $screen->parent_base === 'edit' ) return;
         ?>
-        <div id="message" class="error fade notice">
+        <div id="message" class="error notice">
             <h1><?php echo __("System detection encountered issues", "really-simple-ssl"); ?></h1>
 
             <?php if ($this->wpconfig_siteurl_not_fixed) { ?>
@@ -1977,7 +1977,7 @@ class rsssl_admin extends rsssl_front_end
         if (!$this->review_notice_shown && get_option('rsssl_activation_timestamp') && get_option('rsssl_activation_timestamp') < strtotime("-1 month")) {
             add_action('admin_print_footer_scripts', array($this, 'insert_dismiss_review'));
             ?>
-            <div id="message" class="updated fade notice is-dismissible rlrsssl-review">
+            <div id="message" class="updated notice is-dismissible rlrsssl-review">
                 <p><?php printf(__('Hi, you have been using Really Simple SSL for a month now, awesome! If you have a moment, please consider leaving a review on WordPress.org to spread the word. We greatly appreciate it! If you have any questions or feedback, leave us a %smessage%s.', 'really-simple-ssl'),'<a href="https://really-simple-ssl.com/contact" target="_blank">','</a>'); ?></p>
                 <i>- Rogier</i>
                 <?php //Inline style because the main.css stylesheet is only included on Really Simple SSL admin pages.?>
@@ -2013,7 +2013,7 @@ class rsssl_admin extends rsssl_front_end
 
             add_action('admin_print_footer_scripts', array($this, 'insert_dismiss_htaccess'));
             ?>
-            <div id="message" class="error fade notice is-dismissible rlrsssl-htaccess">
+            <div id="message" class="error notice is-dismissible rlrsssl-htaccess">
                 <p>
                     <?php echo __("You do not have a 301 redirect to https active in the settings. For SEO purposes it is advised to use 301 redirects. You can enable a 301 redirect in the settings.", "really-simple-ssl"); ?>
                     <a href="<?php echo admin_url('options-general.php?page=rlrsssl_really_simple_ssl')?>"><?php echo __("View settings page", "really-simple-ssl"); ?></a>
@@ -2024,7 +2024,7 @@ class rsssl_admin extends rsssl_front_end
 
         if (isset($this->errors["DEACTIVATE_FILE_NOT_RENAMED"])) {
             ?>
-            <div id="message" class="error fade notice is-dismissible rlrsssl-fail">
+            <div id="message" class="error notice is-dismissible rlrsssl-fail">
                 <h1>
                     <?php _e("Major security issue!", "really-simple-ssl"); ?>
                 </h1>
@@ -2046,7 +2046,7 @@ class rsssl_admin extends rsssl_front_end
 
             add_action('admin_print_footer_scripts', array($this, 'insert_dismiss_success'));
             ?>
-            <div id="message" class="updated fade notice is-dismissible rlrsssl-success">
+            <div id="message" class="updated notice is-dismissible rlrsssl-success">
                 <p>
                     <?php _e("SSL activated!", "really-simple-ssl"); ?>&nbsp;
                     <?php _e("Don't forget to change your settings in Google Analytics and Webmaster tools.", "really-simple-ssl");
@@ -2068,7 +2068,7 @@ class rsssl_admin extends rsssl_front_end
                 //pre WooCommerce 2.5
                 if (isset($this->plugin_conflict["WOOCOMMERCE_FORCEHTTP"]) && $this->plugin_conflict["WOOCOMMERCE_FORCEHTTP"] && isset($this->plugin_conflict["WOOCOMMERCE_FORCESSL"]) && $this->plugin_conflict["WOOCOMMERCE_FORCESSL"]) {
                     ?>
-                    <div id="message" class="error fade notice"><p>
+                    <div id="message" class="error notice"><p>
                             <?php _e("Really Simple SSL has a conflict with another plugin.", "really-simple-ssl"); ?>
                             <br>
                             <?php _e("The force http after leaving checkout in WooCommerce will create a redirect loop.", "really-simple-ssl"); ?>
@@ -2759,6 +2759,9 @@ class rsssl_admin extends rsssl_front_end
                 </td>
                 <td></td>
             </tr>
+            <?php
+            /**
+            ?>
             <tr>
 
             <td><?php echo (defined('rsssl_pro_path')) ? $this->img("success") : $this->img("warning"); ?></td>
@@ -2774,7 +2777,9 @@ class rsssl_admin extends rsssl_front_end
             ?>
             </td>
             </tr>
+            **/?>
         </table>
+
 
 
         <?php

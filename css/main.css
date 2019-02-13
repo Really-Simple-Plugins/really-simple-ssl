@@ -14,7 +14,7 @@
   max-width:100%;
   /*height:inherit;*/
 }
-#message.updated.fade.notice.activate-ssl {
+#message.updated.notice.activate-ssl {
     padding-top: 10px;
 }
 .activate-ssl ul, .rsssl-result ul, .rsssl_bullets {
