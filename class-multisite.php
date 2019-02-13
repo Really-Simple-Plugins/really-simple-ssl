@@ -297,7 +297,7 @@ if (!class_exists('rsssl_multisite')) {
             if (!RSSSL()->really_simple_ssl->site_has_ssl) {
                 $current_url = "https://" . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"]
                 ?>
-                <div id="message" class="error fade notice activate-ssl">
+                <div id="message" class="error notice activate-ssl">
                     <p><?php _e("No SSL was detected. If you do have an SSL certificate, try to reload this page over https by clicking this link:", "really-simple-ssl"); ?>
                         &nbsp;<a
                                 href="<?php echo $current_url ?>"><?php _e("reload over https.", "really-simple-ssl"); ?></a>
@@ -311,7 +311,7 @@ if (!class_exists('rsssl_multisite')) {
             <?php if (RSSSL()->really_simple_ssl->site_has_ssl) {
             if (is_main_site(get_current_blog_id()) && RSSSL()->really_simple_ssl->wpconfig_ok()) {
                 ?>
-                <div id="message" class="updated fade notice activate-ssl">
+                <div id="message" class="updated notice activate-ssl">
                     <h1><?php _e("Choose your preferred setup", "really-simple-ssl"); ?></h1>
                     <?php _e("Some things can't be done automatically. Before you migrate, please check for: ", 'really-simple-ssl'); ?>
                     <p>
@@ -723,7 +723,7 @@ if (!class_exists('rsssl_multisite')) {
 
             if (isset(RSSSL()->really_simple_ssl->errors["DEACTIVATE_FILE_NOT_RENAMED"])) {
                 ?>
-                <div id="message" class="error fade notice is-dismissible rlrsssl-fail">
+                <div id="message" class="error notice is-dismissible rlrsssl-fail">
                     <h1>
                         <?php _e("Major security issue!", "really-simple-ssl"); ?>
                     </h1>
@@ -741,7 +741,7 @@ if (!class_exists('rsssl_multisite')) {
 
             if ($this->ssl_process_active()) {
                 ?>
-                <div id="message" class="error fade notice is-dismissible rlrsssl-fail">
+                <div id="message" class="error notice is-dismissible rlrsssl-fail">
                     <p>
                         <?php printf(__("Conversion of websites %s percent complete.", "really-simple-ssl"), $this->get_process_completed_percentage()); ?>
 
@@ -758,7 +758,7 @@ if (!class_exists('rsssl_multisite')) {
             if ($this->selected_networkwide_or_per_site && !get_site_option("rsssl_success_message_shown")) {
 
                 ?>
-                <div id="message" class="updated fade notice is-dismissible rlrsssl-multisite-success">
+                <div id="message" class="updated notice is-dismissible rlrsssl-multisite-success">
                     <p>
                         <?php _e("SSL activated!", "really-simple-ssl"); ?>&nbsp;
                         <?php
@@ -780,7 +780,7 @@ if (!class_exists('rsssl_multisite')) {
                 //with no server variables, the website could get into a redirect loop.
                 if (RSSSL()->really_simple_ssl->no_server_variable) {
                     ?>
-                    <div id="message" class="error fade notice">
+                    <div id="message" class="error notice">
                         <p>
                             <?php _e('You run a Multisite installation with subfolders, which prevents this plugin from fixing your missing server variable in the wp-config.php.', 'really-simple-ssl'); ?>
                             <?php _e('Because the $_SERVER["HTTPS"] variable is not set, your website may experience redirect loops.', 'really-simple-ssl'); ?>
@@ -793,7 +793,7 @@ if (!class_exists('rsssl_multisite')) {
 
             if (!RSSSL()->really_simple_ssl->ssl_enabled && !$this->is_multisite_subfolder_install() && !RSSSL()->rsssl_certificate->is_wildcard() && !get_site_option("rsssl_wildcard_message_shown")) {
                 ?>
-                <div id="message" class="error fade notice is-dismissible rlrsssl-multisite-wildcard-warning">
+                <div id="message" class="error notice is-dismissible rlrsssl-multisite-wildcard-warning">
                     <p>
                         <?php _e("You run a Multisite installation with subdomains, but your site doesn't have a wildcard certificate.", 'really-simple-ssl'); ?>
                         <?php _e("This leads to issues when activating SSL networkwide since subdomains will be forced over SSL as well while they don't have a valid certificate.", 'really-simple-ssl'); ?>
@@ -931,7 +931,7 @@ if (!class_exists('rsssl_multisite')) {
                     if (!defined('rsssl_pro_ms_version')) {
                         add_action('admin_print_footer_scripts', array($this, 'dismiss_pro_option_script'));
                         ?>
-                        <div id="message" class="updated fade notice is-dismissible rsssl-pro-dismiss-notice">
+                        <div id="message" class="updated notice is-dismissible rsssl-pro-dismiss-notice">
                             <p>
                                 <?php echo sprintf(__('You are running Really Simple SSL pro. A dedicated add-on for multisite has been released. If you want more options to have full control over your multisite network, you can ask for a discount code to %supgrade%s your license to a multisite license.', 'really-simple-ssl'), '<a href="https://really-simple-ssl.com/contact" title="Really Simple SSL">', '</a>') ?>
                             </p>
@@ -940,7 +940,7 @@ if (!class_exists('rsssl_multisite')) {
                     }
                 } else {
                     ?>
-                    <div id="message" class="updated fade notice is-dismissible rsssl-pro-dismiss-notice">
+                    <div id="message" class="updated notice is-dismissible rsssl-pro-dismiss-notice">
                         <p>
                             <?php echo sprintf(__('If you want more options to have full control over your multisite network, you can %supgrade%s your license to a multisite license, or dismiss this message', 'really-simple-ssl'), '<a href="https://really-simple-ssl.com/pro-multisite" title="Really Simple SSL">', '</a>') ?>
                         </p>
