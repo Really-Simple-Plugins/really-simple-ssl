@@ -82,6 +82,8 @@ Yes. There is a dedicated network settings page where you can switch between net
 = 3.1.4 =
 * Tweak: added support for Bitnami/AWS htaccess.conf file
 * Tweak: multisite blog count now only counts public sites
+* Tweak: changed rewrite rules flush time to 1-5 minutes
+* Tweak: improved multisite site count
 
 = 3.1.3 =
 * Tweak: no longer shows notices on Gutenberg edit screens
