@@ -1461,8 +1461,6 @@ class rsssl_admin extends rsssl_front_end
     public function removeHtaccessEdit()
     {
         if (file_exists($this->htaccess_file()) && is_writable($this->htaccess_file())) {
-            error_log("This htaccess" . $this->htaccess_file());
-            error_log("htaccess exists and is writeable");
             $htaccess = file_get_contents($this->htaccess_file());
 
             //if multisite, per site activation and more than one blog remaining on ssl, remove condition for this site only
@@ -3404,7 +3402,7 @@ class rsssl_admin extends rsssl_front_end
 
     public function htaccess_file() {
         if ($this->uses_htaccess_conf()) {
-            $htaccess_file = dirname(ABSPATH) . "/conf/htaccess.conf";
+            $htaccess_file = realpath(dirname(ABSPATH) . "/conf/htaccess.conf");
         } else {
             $htaccess_file = $this->ABSpath . ".htaccess";
         }
