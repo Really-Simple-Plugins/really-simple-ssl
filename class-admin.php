@@ -277,7 +277,9 @@ class rsssl_admin extends rsssl_front_end
         //conf/htaccess.conf can be outside of open basedir, return false if so
         $open_basedir = ini_get("open_basedir");
 
-        if (is_file($htaccess_conf_file) && empty($open_basedir) ) {
+        if (!empty($open_basedir)) return false;
+
+        if (is_file($htaccess_conf_file) ) {
             return true;
         } else {
             return false;
