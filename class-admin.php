@@ -274,8 +274,10 @@ class rsssl_admin extends rsssl_front_end
 
     public function uses_htaccess_conf() {
         $htaccess_conf_file = dirname(ABSPATH) . "/conf/htaccess.conf";
+        //conf/htaccess.conf can be outside of open basedir, return false if so
+        $open_basedir = ini_get("open_basedir");
 
-        if (is_file($htaccess_conf_file)) {
+        if (is_file($htaccess_conf_file) && empty($open_basedir) ) {
             return true;
         } else {
             return false;
