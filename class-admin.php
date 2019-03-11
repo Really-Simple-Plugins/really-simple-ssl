@@ -419,7 +419,7 @@ class rsssl_admin extends rsssl_front_end
                 <h1><?php echo __("Detected possible certificate issues", "really-simple-ssl"); ?></h1>
                 <p>
                     <?php
-                    $reload_https_url = "https://" . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
+                    $reload_https_url = esc_url_raw("https://" . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"]);
                     $link_open = '<p><a class="button" target="_blank" href="' . $reload_https_url . '">';
                     $link_close = '</a></p>';
 
@@ -1370,6 +1370,8 @@ class rsssl_admin extends rsssl_front_end
                 case "ENVHTTPS":
                     $testpage_url .= "envhttps";
                     break;
+                default:
+                    $testpage_url .= "serverhttpson";
             }
 
             $testpage_url .= ("/ssl-test-page.html");
@@ -2344,10 +2346,67 @@ class rsssl_admin extends rsssl_front_end
             <div class="rsssl-main"><?php
 
                 switch ($tab) {
-                    case 'configuration' :
+
+                    case 'settings' :
                         /*
-                  First tab, configuration
-          */
+                            Second tab, Settings
+                          */
+
+                        ?>
+                        <form action="options.php" method="post">
+                            <?php
+                            settings_fields('rlrsssl_options');
+                            do_settings_sections('rlrsssl');
+                            ?>
+
+                            <input class="button button-primary" name="Submit" type="submit"
+                                   value="<?php echo __("Save", "really-simple-ssl"); ?>"/>
+                        </form>
+                        <?php
+                        break;
+
+                    case 'debug' :
+                        /*
+                            third tab: debug
+                          */
+                        ?>
+                        <div>
+                            <?php
+                            if ($this->debug) {
+                                echo "<h2>" . __("Log for debugging purposes", "really-simple-ssl") . "</h2>";
+                                echo "<p>" . __("Send me a copy of these lines if you have any issues. The log will be erased when debug is set to false", "really-simple-ssl") . "</p>";
+                                echo "<div class='debug-log'>";
+                                if (defined('RSSSL_SAFE_MODE') && RSSSL_SAFE_MODE) echo "SAFE MODE<br>";
+                                echo "Options:<br>";
+                                if ($this->htaccess_redirect) echo "* htaccess redirect<br>";
+                                if ($this->wp_redirect) echo "* WordPress redirect<br>";
+                                if ($this->autoreplace_insecure_links) echo "* Mixed content fixer<br>";
+
+                                echo "SERVER: " . RSSSL()->rsssl_server->get_server() . "<br>";
+                                if (is_multisite()) {
+                                    echo "MULTISITE<br>";
+                                    echo (!RSSSL()->rsssl_multisite->ssl_enabled_networkwide) ? "SSL is being activated per site<br>" : "SSL is activated network wide<br>";
+                                }
+
+                                echo ($this->ssl_enabled) ? "SSL is enabled for this site<br>" : "SSL is not yet enabled for this site<br>";
+                                echo $this->debug_log;
+                                echo "</div>";
+                                //$this->debug_log.="<br><b>-----------------------</b>";
+                                $this->debug_log = "";
+                                $this->save_options();
+                            } else {
+                                echo "<br>";
+                                _e("To view results here, enable the debug option in the settings tab.", "really-simple-ssl");
+                            }
+
+                            ?>
+                        </div>
+                        <?php
+                        break;
+                    default :
+                        /*
+                          First tab, configuration
+                         */
                         ?>
                         <h2><?php echo __("Detected setup", "really-simple-ssl"); ?></h2>
                         <table class="really-simple-ssl-table">
@@ -2450,63 +2509,6 @@ class rsssl_admin extends rsssl_front_end
                         </table>
                         <?php do_action("rsssl_configuration_page"); ?>
                         <?php
-                        break;
-                    case 'settings' :
-                        /*
-                            Second tab, Settings
-                          */
-
-                        ?>
-                        <form action="options.php" method="post">
-                            <?php
-                            settings_fields('rlrsssl_options');
-                            do_settings_sections('rlrsssl');
-                            ?>
-
-                            <input class="button button-primary" name="Submit" type="submit"
-                                   value="<?php echo __("Save", "really-simple-ssl"); ?>"/>
-                        </form>
-                        <?php
-                        break;
-
-                    case 'debug' :
-                        /*
-            third tab: debug
-          */
-                        ?>
-                        <div>
-                            <?php
-                            if ($this->debug) {
-                                echo "<h2>" . __("Log for debugging purposes", "really-simple-ssl") . "</h2>";
-                                echo "<p>" . __("Send me a copy of these lines if you have any issues. The log will be erased when debug is set to false", "really-simple-ssl") . "</p>";
-                                echo "<div class='debug-log'>";
-                                if (defined('RSSSL_SAFE_MODE') && RSSSL_SAFE_MODE) echo "SAFE MODE<br>";
-                                echo "Options:<br>";
-                                if ($this->htaccess_redirect) echo "* htaccess redirect<br>";
-                                if ($this->wp_redirect) echo "* WordPress redirect<br>";
-                                if ($this->autoreplace_insecure_links) echo "* Mixed content fixer<br>";
-
-                                echo "SERVER: " . RSSSL()->rsssl_server->get_server() . "<br>";
-                                if (is_multisite()) {
-                                    echo "MULTISITE<br>";
-                                    echo (!RSSSL()->rsssl_multisite->ssl_enabled_networkwide) ? "SSL is being activated per site<br>" : "SSL is activated network wide<br>";
-                                }
-
-                                echo ($this->ssl_enabled) ? "SSL is enabled for this site<br>" : "SSL is not yet enabled for this site<br>";
-                                echo $this->debug_log;
-                                echo "</div>";
-                                //$this->debug_log.="<br><b>-----------------------</b>";
-                                $this->debug_log = "";
-                                $this->save_options();
-                            } else {
-                                echo "<br>";
-                                _e("To view results here, enable the debug option in the settings tab.", "really-simple-ssl");
-                            }
-
-                            ?>
-                        </div>
-                        <?php
-                        break;
                 }
                 //possibility to hook into the tabs.
                 do_action("show_tab_{$tab}");
