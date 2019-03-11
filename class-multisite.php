@@ -295,7 +295,7 @@ if (!class_exists('rsssl_multisite')) {
             //if no SSL was detected, don't activate it yet.
 
             if (!RSSSL()->really_simple_ssl->site_has_ssl) {
-                $current_url = "https://" . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"]
+                $current_url = esc_url_raw("https://" . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"]);
                 ?>
                 <div id="message" class="error notice activate-ssl">
                     <p><?php _e("No SSL was detected. If you do have an SSL certificate, try to reload this page over https by clicking this link:", "really-simple-ssl"); ?>
