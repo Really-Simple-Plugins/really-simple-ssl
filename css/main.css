@@ -524,3 +524,7 @@ input:disabled + .rsssl-slider {
 input:focus + .rsssl-slider {
   box-shadow: 0 0 1px #2DAAE1;
 }
+
+.debug-log {
+  width: 90%;
+}
