@@ -2567,12 +2567,22 @@ class rsssl_admin extends rsssl_front_end
                         );
                       $this->get_banner_html(array(
                               'img' => 'complianz.jpg',
-                              'title' => 'ComplianZ',
+                              'title' => 'Complianz',
                               'description' => __("The Complianz Privacy Suite (GDPR/CaCPA) for WordPress. Simple, Quick and Complete. Up-to-date customized legal documents by a prominent IT Law firm.", "really-simple-ssl"),
                               'url' => 'https://wordpress.org/plugins/complianz-gdpr/',
                               'pro' => true,
                            )
                         );
+
+                      if (!defined("ZRDN_PLUGIN_DIRECTORY")) {
+                          $this->get_banner_html(array(
+                                  'img' => 'ziprecipes.png',
+                                  'title' => 'Zip Recipes',
+                                  'description' => __("Easily create beautiful SEO friendly recipe cards for your recipes with Zip Recipes.", "really-simple-ssl"),
+                                  'url' => 'https://wordpress.org/plugins/zip-recipes/',
+                              )
+                          );
+                      }
 
                     if (defined("ultimatemember_version")) {
 
