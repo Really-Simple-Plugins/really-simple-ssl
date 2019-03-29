@@ -24,7 +24,7 @@ Always backup before you go! If you do not have a sound backup policy, start hav
 Any code suggestions? We're on [GitHub](https://github.com/rlankhorst/really-simple-ssl) as well!
 
 = Love Really Simple SSL? =
-Hopefully this plugin save you some hours of work. If you want to support the continuing development of this plugin, you might consider buying the [premium](https://www.really-simple-ssl.com/pro/), which includes
+Hopefully this plugin saves you some hours of work. If you want to support the continuing development of this plugin, you might consider buying the [premium](https://www.really-simple-ssl.com/pro/), which includes
 some cool features.
 = Pro features =
 * The mixed content scan, which shows you what you have to do if you don't have the green lock yet
@@ -40,6 +40,8 @@ some cool features.
 * All incoming requests are redirected to https. Default with an internal WordPress redirect, but you can also enable a .htaccess redirect.
 * The site url and home url are changed to https.
 * Your insecure content is fixed by replacing all http:// urls with https://, except hyperlinks to other domains. Dynamically, so no database changes are made (except for the siteurl and homeurl).
+
+Check out other plugins developed by Really Simple Plugins as well: [Complianz](https://wordpress.org/plugins/complianz-gdpr/) and [Zip Recipes](https://wordpress.org/plugins/zip-recipes/).
 
 [contact](https://www.really-simple-ssl.com/contact/) me if you have any questions, issues, or suggestions. Really Simple SSL is developed by [Really Simple Plugins](https://www.really-simple-plugins.com).
 
