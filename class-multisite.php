@@ -61,7 +61,7 @@ if (!class_exists('rsssl_multisite')) {
             add_action("network_admin_notices", array($this, 'show_pro_option_notice'));
             add_action("rsssl_show_network_tab_settings", array($this, 'settings_tab'));
             add_action('wpmu_new_blog', array($this, 'maybe_activate_ssl_in_new_blog'), 10, 6);
-            //Listen for SSL activation hook switch
+            //Listen for run_ssl_process hook switch
             add_action('admin_init', array($this, 'listen_for_ssl_conversion_hook_switch'), 40);
 
 
@@ -706,20 +706,24 @@ if (!class_exists('rsssl_multisite')) {
             return false;
         }
 
+        /**
+         *
+         * Sometimes conversion of websites hangs on 0%. If user clicks the link, the hook where run_ssl_process (multisite-cron.php)
+         * fires on will be switched to admin_init
+         *
+         */
+
         public function listen_for_ssl_conversion_hook_switch()
         {
                 //check if we are on ssl settings page
                 if (!$this->is_settings_page()) return;
                 //check user role
-                if (!current_user_can($this->capability)) return;
-
+                if (!current_user_can('manage_options')) return;
                 //check nonce
                 if (!isset($_GET['token']) || (!wp_verify_nonce($_GET['token'], 'run_ssl_to_admin_init'))) return;
                 //check for action
                 if (isset($_GET["action"]) && $_GET["action"] == 'ssl_conversion_hook_switch') {
-                    error_log("FOUND! Now adding admin_init run ssl process");
-                    add_action('admin_init' , array($this, 'run_ssl_process') );
-                exit;
+                    update_option('run_ssl_process_hook_switched', true);
                 }
         }
 
@@ -754,23 +758,25 @@ if (!class_exists('rsssl_multisite')) {
 
             /*
              * ssl switch for sites processing active
-             * */
+             */
 
             if ($this->ssl_process_active()) {
                 ?>
                 <div id="message" class="error notice is-dismissible rlrsssl-fail">
                     <p>
-                        <?php printf(__("Conversion of websites %s percent complete.", "really-simple-ssl"), $this->get_process_completed_percentage()); ?>
 
-                        <?php _e("You have just started enabling or disabling SSL on multiple websites at once, and this process is not completed yet. Please refresh this page to check if the process has finished. It will proceed in the background.", "really-simple-ssl");
-
+                        <?php
+                        //In some cases the rsssl_ssl_process_hook hook can fail. Therefore we offer the option to switch the hook to admin_init when the conversion is stuck.
                         $token = wp_create_nonce('run_ssl_to_admin_init');
-                        $ssl_conversion_hook_switch = admin_url("options-general.php?page=rlrsssl_really_simple_ssl&action=ssl_conversion_hook_switch&token=" . $token);
+                        $run_ssl_process_hook_switch_link = network_admin_url("settings.php?page=really-simple-ssl&action=ssl_conversion_hook_switch&token=" . $token);
 
-                        $link_open = '<a target="_blank" href="' . $ssl_conversion_hook_switch . '">';
+                        $link_open = '<a target="_blank" href="' . $run_ssl_process_hook_switch_link . '">';
                         $link_close = '</a>';
+                        ?>
 
-                        printf(__("If the conversion hangs on 0% after a few minutes, click %shere%s to ", "really-simple-ssl"), $link_open, $link_close); ?>
+                        <?php printf(__("Conversion of websites %s percent complete.", "really-simple-ssl"), $this->get_process_completed_percentage()); ?>
+                        <?php _e("You have just started enabling or disabling SSL on multiple websites at once, and this process is not completed yet. Please refresh this page to check if the process has finished. It will proceed in the background.", "really-simple-ssl"); ?>
+                        <?php printf(__("If the conversion is stuck on 0 percent after a few minutes, click %shere%s to switch the hook on which the SSL conversion fires on. You only have to click the link once. ", "really-simple-ssl"), $link_open, $link_close); ?>
 
                     </p>
                 </div>
