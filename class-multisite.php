@@ -61,8 +61,8 @@ if (!class_exists('rsssl_multisite')) {
             add_action("network_admin_notices", array($this, 'show_pro_option_notice'));
             add_action("rsssl_show_network_tab_settings", array($this, 'settings_tab'));
             add_action('wpmu_new_blog', array($this, 'maybe_activate_ssl_in_new_blog'), 10, 6);
-
-            //add_action('admin_init', array($this, 'run_ssl_process'));
+            //Listen for SSL activation hook switch
+            add_action('admin_init', array($this, 'listen_for_ssl_conversion_hook_switch'), 40);
 
 
         }
@@ -706,6 +706,23 @@ if (!class_exists('rsssl_multisite')) {
             return false;
         }
 
+        public function listen_for_ssl_conversion_hook_switch()
+        {
+                //check if we are on ssl settings page
+                if (!$this->is_settings_page()) return;
+                //check user role
+                if (!current_user_can($this->capability)) return;
+
+                //check nonce
+                if (!isset($_GET['token']) || (!wp_verify_nonce($_GET['token'], 'run_ssl_to_admin_init'))) return;
+                //check for action
+                if (isset($_GET["action"]) && $_GET["action"] == 'ssl_conversion_hook_switch') {
+                    error_log("FOUND! Now adding admin_init run ssl process");
+                    add_action('admin_init' , array($this, 'run_ssl_process') );
+                exit;
+                }
+        }
+
         /**
          * Show notices
          *
@@ -728,7 +745,7 @@ if (!class_exists('rsssl_multisite')) {
                         <?php _e("Major security issue!", "really-simple-ssl"); ?>
                     </h1>
                     <p>
-                        <?php _e("The 'force-deactivate.php' file has to be renamed to .txt. Otherwise your ssl can be deactived by anyone on the internet.", "really-simple-ssl"); ?>
+                        <?php _e("The 'force-deactivate.php' file has to be renamed to .txt. Otherwise your ssl can be deactivated by anyone on the internet.", "really-simple-ssl"); ?>
                     </p>
                     <a href="options-general.php?page=rlrsssl_really_simple_ssl"><?php echo __("Check again", "really-simple-ssl"); ?></a>
                 </div>
@@ -745,7 +762,16 @@ if (!class_exists('rsssl_multisite')) {
                     <p>
                         <?php printf(__("Conversion of websites %s percent complete.", "really-simple-ssl"), $this->get_process_completed_percentage()); ?>
 
-                        <?php _e("You have just started enabling or disabling SSL on multiple websites at once, and this process is not completed yet. Please refresh this page to check if the process has finished. It will proceed in the background.", "really-simple-ssl"); ?>
+                        <?php _e("You have just started enabling or disabling SSL on multiple websites at once, and this process is not completed yet. Please refresh this page to check if the process has finished. It will proceed in the background.", "really-simple-ssl");
+
+                        $token = wp_create_nonce('run_ssl_to_admin_init');
+                        $ssl_conversion_hook_switch = admin_url("options-general.php?page=rlrsssl_really_simple_ssl&action=ssl_conversion_hook_switch&token=" . $token);
+
+                        $link_open = '<a target="_blank" href="' . $ssl_conversion_hook_switch . '">';
+                        $link_close = '</a>';
+
+                        printf(__("If the conversion hangs on 0% after a few minutes, click %shere%s to ", "really-simple-ssl"), $link_open, $link_close); ?>
+
                     </p>
                 </div>
                 <?php
@@ -767,6 +793,7 @@ if (!class_exists('rsssl_multisite')) {
                         else
                             _e("SSL was activated per site.", "really-simple-ssl");
                         ?>
+
                         <?php _e("Don't forget to change your settings in Google Analytics and Webmaster tools.", "really-simple-ssl"); ?>
                         &nbsp;
                         <a target="_blank"
