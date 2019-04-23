@@ -470,6 +470,7 @@ if (!class_exists('rsssl_multisite')) {
 
         public function end_ssl_activation(){
             update_site_option('rsssl_ssl_activation_active', false);
+            update_site_option('run_ssl_process_hook_switched', false);
         }
 
         public function start_ssl_deactivation(){
@@ -479,6 +480,7 @@ if (!class_exists('rsssl_multisite')) {
 
         public function end_ssl_deactivation(){
             update_site_option('rsssl_ssl_deactivation_active', false);
+            update_site_option('run_ssl_process_hook_switched', false);
         }
 
         public function deactivate_ssl_networkwide(){
@@ -771,13 +773,13 @@ if (!class_exists('rsssl_multisite')) {
                         $token = wp_create_nonce('run_ssl_to_admin_init');
                         $run_ssl_process_hook_switch_link = network_admin_url("settings.php?page=really-simple-ssl&action=ssl_conversion_hook_switch&token=" . $token);
 
-                        $link_open = '<a target="_blank" href="' . $run_ssl_process_hook_switch_link . '">';
+                        $link_open = '<a target="_self" href="' . $run_ssl_process_hook_switch_link . '">';
                         $link_close = '</a>';
                         ?>
 
                         <?php printf(__("Conversion of websites %s percent complete.", "really-simple-ssl"), $this->get_process_completed_percentage()); ?>
                         <?php _e("You have just started enabling or disabling SSL on multiple websites at once, and this process is not completed yet. Please refresh this page to check if the process has finished. It will proceed in the background.", "really-simple-ssl"); ?>
-                        <?php printf(__("If the conversion is stuck on 0 percent after a few minutes, click %shere%s to switch the hook on which the SSL conversion fires on. You only have to click the link once. ", "really-simple-ssl"), $link_open, $link_close); ?>
+                        <?php printf(__("If the conversion is stuck on 0 percent after a few minutes, click %shere%s to switch the hook on which the SSL conversion fires on. ", "really-simple-ssl"), $link_open, $link_close); ?>
 
                     </p>
                 </div>
