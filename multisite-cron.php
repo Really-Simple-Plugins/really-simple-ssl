@@ -32,6 +32,9 @@ function rsssl_schedule_cron()
 
     if (get_option('run_ssl_process_hook_switched') !== false) {
         add_action('admin_init', array(RSSSL()->rsssl_multisite, 'run_ssl_process'));
+        if (RSSSL()->rsssl_multisite->get_process_completed_percentage() > 99) {
+            update_site_option("run_ssl_process_hook_switched", false);
+        }
     } else {
         add_action('rsssl_ssl_process_hook', array(RSSSL()->rsssl_multisite, 'run_ssl_process'));
     }

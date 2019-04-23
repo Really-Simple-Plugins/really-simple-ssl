@@ -452,6 +452,7 @@ if (!class_exists('rsssl_multisite')) {
             }
 
             update_site_option('rsssl_run', false);
+
         }
 
         public function get_process_completed_percentage(){
@@ -723,7 +724,7 @@ if (!class_exists('rsssl_multisite')) {
                 if (!isset($_GET['token']) || (!wp_verify_nonce($_GET['token'], 'run_ssl_to_admin_init'))) return;
                 //check for action
                 if (isset($_GET["action"]) && $_GET["action"] == 'ssl_conversion_hook_switch') {
-                    update_option('run_ssl_process_hook_switched', true);
+                    update_site_option('run_ssl_process_hook_switched', true);
                 }
         }
 
