@@ -61,8 +61,8 @@ if (!class_exists('rsssl_multisite')) {
             add_action("network_admin_notices", array($this, 'show_pro_option_notice'));
             add_action("rsssl_show_network_tab_settings", array($this, 'settings_tab'));
             add_action('wpmu_new_blog', array($this, 'maybe_activate_ssl_in_new_blog'), 10, 6);
-
-            //add_action('admin_init', array($this, 'run_ssl_process'));
+            //Listen for run_ssl_process hook switch
+            add_action('admin_init', array($this, 'listen_for_ssl_conversion_hook_switch'), 40);
 
 
         }
@@ -452,6 +452,7 @@ if (!class_exists('rsssl_multisite')) {
             }
 
             update_site_option('rsssl_run', false);
+
         }
 
         public function get_process_completed_percentage(){
@@ -469,6 +470,7 @@ if (!class_exists('rsssl_multisite')) {
 
         public function end_ssl_activation(){
             update_site_option('rsssl_ssl_activation_active', false);
+            update_site_option('run_ssl_process_hook_switched', false);
         }
 
         public function start_ssl_deactivation(){
@@ -478,6 +480,7 @@ if (!class_exists('rsssl_multisite')) {
 
         public function end_ssl_deactivation(){
             update_site_option('rsssl_ssl_deactivation_active', false);
+            update_site_option('run_ssl_process_hook_switched', false);
         }
 
         public function deactivate_ssl_networkwide(){
@@ -707,6 +710,27 @@ if (!class_exists('rsssl_multisite')) {
         }
 
         /**
+         *
+         * Sometimes conversion of websites hangs on 0%. If user clicks the link, the hook where run_ssl_process (multisite-cron.php)
+         * fires on will be switched to admin_init
+         *
+         */
+
+        public function listen_for_ssl_conversion_hook_switch()
+        {
+                //check if we are on ssl settings page
+                if (!$this->is_settings_page()) return;
+                //check user role
+                if (!current_user_can('manage_options')) return;
+                //check nonce
+                if (!isset($_GET['token']) || (!wp_verify_nonce($_GET['token'], 'run_ssl_to_admin_init'))) return;
+                //check for action
+                if (isset($_GET["action"]) && $_GET["action"] == 'ssl_conversion_hook_switch') {
+                    update_site_option('run_ssl_process_hook_switched', true);
+                }
+        }
+
+        /**
          * Show notices
          *
          * @since  2.0
@@ -728,7 +752,7 @@ if (!class_exists('rsssl_multisite')) {
                         <?php _e("Major security issue!", "really-simple-ssl"); ?>
                     </h1>
                     <p>
-                        <?php _e("The 'force-deactivate.php' file has to be renamed to .txt. Otherwise your ssl can be deactived by anyone on the internet.", "really-simple-ssl"); ?>
+                        <?php _e("The 'force-deactivate.php' file has to be renamed to .txt. Otherwise your ssl can be deactivated by anyone on the internet.", "really-simple-ssl"); ?>
                     </p>
                     <a href="options-general.php?page=rlrsssl_really_simple_ssl"><?php echo __("Check again", "really-simple-ssl"); ?></a>
                 </div>
@@ -737,15 +761,26 @@ if (!class_exists('rsssl_multisite')) {
 
             /*
              * ssl switch for sites processing active
-             * */
+             */
 
             if ($this->ssl_process_active()) {
                 ?>
                 <div id="message" class="error notice is-dismissible rlrsssl-fail">
                     <p>
-                        <?php printf(__("Conversion of websites %s percent complete.", "really-simple-ssl"), $this->get_process_completed_percentage()); ?>
 
+                        <?php
+                        //In some cases the rsssl_ssl_process_hook hook can fail. Therefore we offer the option to switch the hook to admin_init when the conversion is stuck.
+                        $token = wp_create_nonce('run_ssl_to_admin_init');
+                        $run_ssl_process_hook_switch_link = network_admin_url("settings.php?page=really-simple-ssl&action=ssl_conversion_hook_switch&token=" . $token);
+
+                        $link_open = '<a target="_self" href="' . $run_ssl_process_hook_switch_link . '">';
+                        $link_close = '</a>';
+                        ?>
+
+                        <?php printf(__("Conversion of websites %s percent complete.", "really-simple-ssl"), $this->get_process_completed_percentage()); ?>
                         <?php _e("You have just started enabling or disabling SSL on multiple websites at once, and this process is not completed yet. Please refresh this page to check if the process has finished. It will proceed in the background.", "really-simple-ssl"); ?>
+                        <?php printf(__("If the conversion is stuck on 0 percent after a few minutes, click %shere%s to switch the hook on which the SSL conversion fires on. ", "really-simple-ssl"), $link_open, $link_close); ?>
+
                     </p>
                 </div>
                 <?php
@@ -767,6 +802,7 @@ if (!class_exists('rsssl_multisite')) {
                         else
                             _e("SSL was activated per site.", "really-simple-ssl");
                         ?>
+
                         <?php _e("Don't forget to change your settings in Google Analytics and Webmaster tools.", "really-simple-ssl"); ?>
                         &nbsp;
                         <a target="_blank"

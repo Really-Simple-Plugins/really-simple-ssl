@@ -24,5 +24,15 @@ function rsssl_schedule_cron()
         wp_clear_scheduled_hook('rsssl_ssl_process_hook');
     }
 
-    add_action('rsssl_ssl_process_hook', array(RSSSL()->rsssl_multisite, 'run_ssl_process'));
+    /*
+     * On some sites rsssl_ssl_process_hook will prevent conversion from happening (stuck on 0%).
+     * If that happens, user can click a link (in class-multisite.php) to fire ssl process on admin_init hook
+     *
+     */
+
+    if (get_site_option('run_ssl_process_hook_switched') !== false) {
+        add_action('admin_init', array(RSSSL()->rsssl_multisite, 'run_ssl_process'));
+    } else {
+        add_action('rsssl_ssl_process_hook', array(RSSSL()->rsssl_multisite, 'run_ssl_process'));
+    }
 }
