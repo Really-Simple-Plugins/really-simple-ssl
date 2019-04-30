@@ -4,9 +4,9 @@ Donate link: https://www.paypal.me/reallysimplessl
 Tags: SSL, https, force SSL, mixed content, insecure content, secure website, website security, TLS, security, secure socket layers, HSTS
 Requires at least: 4.6
 License: GPL2
-Tested up to: 5.1
+Tested up to: 5.2
 Requires PHP: 5.4
-Stable tag: 3.1.7
+Stable tag: 3.1.6
 
 No setup required! You only need an SSL certificate, and this plugin will do the rest.
 
@@ -81,10 +81,8 @@ If you are experiencing redirect loops on your site, try these [instructions](ht
 Yes. There is a dedicated network settings page where you can switch between network activated SSL and per page SSL. In the dedicated pro for multisite plugin, you can override all site settings for SSL on the network level, and can activate and deactivate SSL in the network menu for each site.
 
 == Changelog ==
-= 3.1.7 =
-* Tweak: added link on multisite networkwide activation notice to switch function hook to fix conversions hanging on 0%
-
 = 3.1.6 =
+* Tweak: added link on multisite networkwide activation notice to switch function hook to fix conversions hanging on 0%
 * Tweak: required WordPress version now 4.6 because of get_networks() version
 
 = 3.1.5 =

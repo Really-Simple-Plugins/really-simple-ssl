@@ -60,7 +60,9 @@ if (!class_exists('rsssl_multisite')) {
             add_action('wp_ajax_rsssl_pro_dismiss_pro_option_notice', array($this, 'dismiss_pro_option_notice'));
             add_action("network_admin_notices", array($this, 'show_pro_option_notice'));
             add_action("rsssl_show_network_tab_settings", array($this, 'settings_tab'));
-            add_action('wpmu_new_blog', array($this, 'maybe_activate_ssl_in_new_blog'), 10, 6);
+
+            add_action('wpmu_new_blog', array($this, 'maybe_activate_ssl_in_new_blog_deprecated'), 10, 6);
+            add_action('wp_insert_site', array($this, 'maybe_activate_ssl_in_new_blog'), 10, 1);
             //Listen for run_ssl_process hook switch
             add_action('admin_init', array($this, 'listen_for_ssl_conversion_hook_switch'), 40);
 
@@ -79,10 +81,29 @@ if (!class_exists('rsssl_multisite')) {
 
         */
 
-        public function maybe_activate_ssl_in_new_blog($blog_id, $user_id, $domain, $path, $site_id, $meta)
+        public function maybe_activate_ssl_in_new_blog_deprecated($blog_id, $user_id=false, $domain=false, $path=false, $site_id=false, $meta=false)
         {
             if ($this->ssl_enabled_networkwide) {
                 $site = get_blog_details($blog_id);
+                $this->switch_to_blog_bw_compatible($site);
+                RSSSL()->really_simple_ssl->activate_ssl();
+                restore_current_blog(); //switches back to previous blog, not current, so we have to do it each loop
+            }
+        }
+
+        /**
+         * Activate SSl in new block
+         * @since 3.1.6
+         * @param $new_site
+         * @return void
+         */
+
+        public function maybe_activate_ssl_in_new_blog($site)
+        {
+            if ($this->ssl_enabled_networkwide) {
+                if ( ! has_filter( 'update_blog_metadata_cache', 'wp_check_site_meta_support_prefilter' ) ) {
+                    add_filter( 'update_blog_metadata_cache', 'wp_check_site_meta_support_prefilter' );
+ 		        }
                 $this->switch_to_blog_bw_compatible($site);
                 RSSSL()->really_simple_ssl->activate_ssl();
                 restore_current_blog(); //switches back to previous blog, not current, so we have to do it each loop
@@ -779,7 +800,7 @@ if (!class_exists('rsssl_multisite')) {
 
                         <?php printf(__("Conversion of websites %s percent complete.", "really-simple-ssl"), $this->get_process_completed_percentage()); ?>
                         <?php _e("You have just started enabling or disabling SSL on multiple websites at once, and this process is not completed yet. Please refresh this page to check if the process has finished. It will proceed in the background.", "really-simple-ssl"); ?>
-                        <?php printf(__("If the conversion is stuck on 0 percent after a few minutes, click %shere%s to switch the hook on which the SSL conversion fires on. ", "really-simple-ssl"), $link_open, $link_close); ?>
+                        <?php printf(__("If the conversion does not proceed after a few minutes, click %shere%s to force the conversion process.", "really-simple-ssl"), $link_open, $link_close); ?>
 
                     </p>
                 </div>
