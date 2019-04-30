@@ -105,7 +105,6 @@ if (!class_exists('rsssl_multisite')) {
 
         public function maybe_activate_ssl_in_new_blog($site)
         {
-            if(version_compare(get_bloginfo('version'),'5.1.0', '<=') ) return;
 
             if ($this->ssl_enabled_networkwide) {
                 if ( ! has_filter( 'update_blog_metadata_cache', 'wp_check_site_meta_support_prefilter' ) ) {
