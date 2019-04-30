@@ -82,6 +82,7 @@ Yes. There is a dedicated network settings page where you can switch between net
 
 == Changelog ==
 = 3.1.6 =
+* Tweak: Multisite SSL site activation hook changed to wp_insert_site for WordPress 5.1 and higher
 * Tweak: added link on multisite networkwide activation notice to switch function hook to fix conversions hanging on 0%
 * Tweak: required WordPress version now 4.6 because of get_networks() version
 

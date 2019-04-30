@@ -61,8 +61,12 @@ if (!class_exists('rsssl_multisite')) {
             add_action("network_admin_notices", array($this, 'show_pro_option_notice'));
             add_action("rsssl_show_network_tab_settings", array($this, 'settings_tab'));
 
-            add_action('wpmu_new_blog', array($this, 'maybe_activate_ssl_in_new_blog_deprecated'), 10, 6);
-            add_action('wp_insert_site', array($this, 'maybe_activate_ssl_in_new_blog'), 10, 1);
+            //If WP version is 5.1 or higher, use wp_insert_site hook for multisite SSL activation in new blogs
+            if(version_compare(get_bloginfo('version'),'5.1', '>=') ) {
+                add_action('wp_insert_site', array($this, 'maybe_activate_ssl_in_new_blog'), 10, 1);
+            } else {
+                add_action('wpmu_new_blog', array($this, 'maybe_activate_ssl_in_new_blog_deprecated'), 10, 6);
+            }
             //Listen for run_ssl_process hook switch
             add_action('admin_init', array($this, 'listen_for_ssl_conversion_hook_switch'), 40);
 
@@ -83,6 +87,7 @@ if (!class_exists('rsssl_multisite')) {
 
         public function maybe_activate_ssl_in_new_blog_deprecated($blog_id, $user_id=false, $domain=false, $path=false, $site_id=false, $meta=false)
         {
+
             if ($this->ssl_enabled_networkwide) {
                 $site = get_blog_details($blog_id);
                 $this->switch_to_blog_bw_compatible($site);
@@ -100,6 +105,8 @@ if (!class_exists('rsssl_multisite')) {
 
         public function maybe_activate_ssl_in_new_blog($site)
         {
+            if(version_compare(get_bloginfo('version'),'5.1.0', '<=') ) return;
+
             if ($this->ssl_enabled_networkwide) {
                 if ( ! has_filter( 'update_blog_metadata_cache', 'wp_check_site_meta_support_prefilter' ) ) {
                     add_filter( 'update_blog_metadata_cache', 'wp_check_site_meta_support_prefilter' );
