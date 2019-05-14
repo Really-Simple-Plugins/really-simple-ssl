@@ -107,9 +107,9 @@ if (!class_exists('rsssl_multisite')) {
         {
 
             if ($this->ssl_enabled_networkwide) {
-                if ( ! has_filter( 'update_blog_metadata_cache', 'wp_check_site_meta_support_prefilter' ) ) {
-                    add_filter( 'update_blog_metadata_cache', 'wp_check_site_meta_support_prefilter' );
- 		        }
+//                if ( ! has_filter( 'update_blog_metadata_cache', 'wp_check_site_meta_support_prefilter' ) ) {
+//                    add_filter( 'update_blog_metadata_cache', 'wp_check_site_meta_support_prefilter' );
+// 		        }
                 $this->switch_to_blog_bw_compatible($site);
                 RSSSL()->really_simple_ssl->activate_ssl();
                 restore_current_blog(); //switches back to previous blog, not current, so we have to do it each loop
