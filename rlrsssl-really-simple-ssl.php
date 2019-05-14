@@ -49,10 +49,9 @@ class REALLY_SIMPLE_SSL
             global $rsssl_front_end, $rsssl_mixed_content_fixer;
             $rsssl_front_end = self::$instance->rsssl_front_end;
             $rsssl_mixed_content_fixer = self::$instance->rsssl_mixed_content_fixer;
-            if (is_admin() || get_site_option('rsssl_ssl_activation_active') || get_site_option('rsssl_ssl_deactivation_active')) {
-                if (is_multisite()) {
-                    self::$instance->rsssl_multisite = new rsssl_multisite();
-                }
+            if (is_admin() || is_multisite()) {
+                self::$instance->rsssl_multisite = new rsssl_multisite();
+
                 self::$instance->rsssl_cache = new rsssl_cache();
                 self::$instance->rsssl_server = new rsssl_server();
                 self::$instance->really_simple_ssl = new rsssl_admin();
@@ -69,6 +68,7 @@ class REALLY_SIMPLE_SSL
         }
         return self::$instance;
     }
+
     private function setup_constants()
     {
         define('rsssl_url', plugin_dir_url(__FILE__));
@@ -82,11 +82,9 @@ class REALLY_SIMPLE_SSL
     {
         require_once(rsssl_path . 'class-front-end.php');
         require_once(rsssl_path . 'class-mixed-content-fixer.php');
-        if (is_admin() || get_site_option('rsssl_ssl_activation_active') || get_site_option('rsssl_ssl_deactivation_active')) {
-            if (is_multisite()) {
+        if (is_admin() || is_multisite()) {
                 require_once(rsssl_path . 'class-multisite.php');
                 require_once(rsssl_path . 'multisite-cron.php');
-            }
             require_once(rsssl_path . 'class-admin.php');
             require_once(rsssl_path . 'class-cache.php');
             require_once(rsssl_path . 'class-server.php');
@@ -97,7 +95,7 @@ class REALLY_SIMPLE_SSL
     private function hooks()
     {
         add_action('wp_loaded', array(self::$instance->rsssl_front_end, 'force_ssl'), 20);
-        if (is_admin()) {
+        if (is_admin() || is_multisite()) {
             add_action('plugins_loaded', array(self::$instance->really_simple_ssl, 'init'), 10);
         }
     }
