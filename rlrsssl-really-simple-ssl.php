@@ -23,6 +23,7 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 defined('ABSPATH') or die("you do not have access to this page!");
+
 class REALLY_SIMPLE_SSL
 {
     private static $instance;
@@ -34,9 +35,11 @@ class REALLY_SIMPLE_SSL
     public $really_simple_ssl;
     public $rsssl_help;
     public $rsssl_certificate;
+
     private function __construct()
     {
     }
+
     public static function instance()
     {
         if (!isset(self::$instance) && !(self::$instance instanceof REALLY_SIMPLE_SSL)) {
@@ -88,6 +91,7 @@ class REALLY_SIMPLE_SSL
         $plugin_data = get_plugin_data(__FILE__);
         define('rsssl_version', $plugin_data['Version']);
     }
+
     private function includes()
     {
         require_once(rsssl_path . 'class-front-end.php');
@@ -108,6 +112,7 @@ class REALLY_SIMPLE_SSL
             require_once(rsssl_path . 'class-certificate.php');
         }
     }
+
     private function hooks()
     {
         add_action('wp_loaded', array(self::$instance->rsssl_front_end, 'force_ssl'), 20);
@@ -116,8 +121,10 @@ class REALLY_SIMPLE_SSL
         }
     }
 }
+
 function RSSSL()
 {
     return REALLY_SIMPLE_SSL::instance();
 }
+
 add_action('plugins_loaded', 'RSSSL', 8);
