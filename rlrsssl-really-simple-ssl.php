@@ -34,7 +34,6 @@ class REALLY_SIMPLE_SSL
     public $really_simple_ssl;
     public $rsssl_help;
     public $rsssl_certificate;
-    //public $rsssl_wp_cli;
     private function __construct()
     {
     }
@@ -46,14 +45,16 @@ class REALLY_SIMPLE_SSL
             self::$instance->includes();
             self::$instance->rsssl_front_end = new rsssl_front_end();
             self::$instance->rsssl_mixed_content_fixer = new rsssl_mixed_content_fixer();
-            //self::$instance->rsssl_wp_cli = new rsssl_wp_cli();
+
+
             // Backwards compatibility for add-ons
-            global $rsssl_front_end, $rsssl_mixed_content_fixer, $rsssl_wp_cli;
+            global $rsssl_front_end, $rsssl_mixed_content_fixer;
             $rsssl_front_end = self::$instance->rsssl_front_end;
             $rsssl_mixed_content_fixer = self::$instance->rsssl_mixed_content_fixer;
-            //$rsssl_wp_cli = self::$instance->rsssl_wp_cli;
 
-            if (is_admin() || is_multisite()) {
+            $wpcli = defined( 'WP_CLI' ) && WP_CLI;
+
+            if (is_admin() || is_multisite() || $wpcli) {
                 self::$instance->rsssl_multisite = new rsssl_multisite();
 
                 self::$instance->rsssl_cache = new rsssl_cache();
@@ -67,7 +68,12 @@ class REALLY_SIMPLE_SSL
                 $rsssl_server = self::$instance->rsssl_server;
                 $really_simple_ssl = self::$instance->really_simple_ssl;
                 $rsssl_help = self::$instance->rsssl_help;
+
+                if ( $wpcli ) {
+                    self::$instance->rsssl_wp_cli = new rsssl_wp_cli();
+                }
             }
+
             self::$instance->hooks();
         }
         return self::$instance;
@@ -86,10 +92,15 @@ class REALLY_SIMPLE_SSL
     {
         require_once(rsssl_path . 'class-front-end.php');
         require_once(rsssl_path . 'class-mixed-content-fixer.php');
-        require_once(rsssl_path . 'class-rsssl-wp-cli.php');
-        if (is_admin() || is_multisite()) {
-                require_once(rsssl_path . 'class-multisite.php');
-                require_once(rsssl_path . 'multisite-cron.php');
+        $wpcli = defined( 'WP_CLI' ) && WP_CLI;
+
+        if ( $wpcli ) {
+            require_once(rsssl_path . 'class-rsssl-wp-cli.php');
+        }
+
+        if (is_admin() || is_multisite() || $wpcli) {
+            require_once(rsssl_path . 'class-multisite.php');
+            require_once(rsssl_path . 'multisite-cron.php');
             require_once(rsssl_path . 'class-admin.php');
             require_once(rsssl_path . 'class-cache.php');
             require_once(rsssl_path . 'class-server.php');

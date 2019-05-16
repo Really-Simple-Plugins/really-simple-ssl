@@ -2,8 +2,6 @@
 
 defined('ABSPATH') or die("you do not have access to this page!");
 
-if ( defined( 'WP_CLI' ) && WP_CLI ) {
-
     class rsssl_wp_cli
     {
 
@@ -28,5 +26,3 @@ if ( defined( 'WP_CLI' ) && WP_CLI ) {
     }//Class closure
 
     WP_CLI::add_command( 'rsssl', 'rsssl_wp_cli' );
-
-}
