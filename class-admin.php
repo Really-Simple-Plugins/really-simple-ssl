@@ -2748,9 +2748,9 @@ class rsssl_admin extends rsssl_front_end
                         $link_open = '<a target="_blank" href="' . $this->pro_url . '">';
                         $link_close = '</a>';
 
-                        printf(__('%sHTTP Strict Transport Security%s is not enabled.', "really-simple-ssl"), $wiki_open, $link_close);
+                        printf(__('%sHTTP Strict Transport Security%s is not enabled', "really-simple-ssl"), $wiki_open, $link_close);
                         echo "&nbsp;";
-                        printf(__("To enable, %sget Premium%s ", "really-simple-ssl"), $link_open, $link_close);
+                        printf(__("(%spremium%s) ", "really-simple-ssl"), $link_open, $link_close);
                     }
                     ?>
                 </td>
@@ -2767,9 +2767,9 @@ class rsssl_admin extends rsssl_front_end
                         $link_open = '<a target="_blank" href="' . $this->pro_url . '">';
                         $link_close = '</a>';
 
-                        _e('Secure cookie settings not enabled.', "really-simple-ssl");
+                        _e('Secure cookie settings not enabled', "really-simple-ssl");
                         echo "&nbsp;";
-                        printf(__("To enable, %sget Premium%s ", "really-simple-ssl"), $link_open, $link_close);
+                        printf(__("(%spremium%s) ", "really-simple-ssl"), $link_open, $link_close);
                     }
                     ?>
                 </td>
@@ -2786,9 +2786,9 @@ class rsssl_admin extends rsssl_front_end
                 $link_open = '<a target="_blank" href="' . $this->pro_url . '">';
                 $link_close = '</a>';
 
-                _e('Content Security Policy violation reporting not enabled.', "really-simple-ssl");
+                _e('Content Security Policy violation reporting not enabled', "really-simple-ssl");
                 echo "&nbsp;";
-                printf(__("To enable, %sget Premium%s ", "really-simple-ssl"), $link_open, $link_close);
+                printf(__("%(premium%s) ", "really-simple-ssl"), $link_open, $link_close);
 
             ?>
             </td>
