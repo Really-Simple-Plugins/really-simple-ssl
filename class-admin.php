@@ -179,6 +179,9 @@ class rsssl_admin extends rsssl_front_end
         $plugin = rsssl_plugin;
         add_filter("plugin_action_links_$plugin", array($this, 'plugin_settings_link'));
 
+        //Add update notification to Settings admin menu
+        add_action('admin_menu', array($this, 'rsssl_edit_admin_menu') );
+
         //check if the uninstallfile is safely renamed to php.
         $this->check_for_uninstall_file();
 
@@ -2265,9 +2268,18 @@ class rsssl_admin extends rsssl_front_end
         if (is_multisite() && rsssl_multisite::this()->hide_menu_for_subsites && !is_super_admin()) return;
 
         global $rsssl_admin_page;
+
+        $count = $this->get_settings_update_count();
+
+        if ($count > 0) {
+            $update_count = "<span class='update-plugins rsssl-update-count'><span class='update-count'>$count</span></span>";
+        } else {
+            $update_count = "";
+        }
+
         $rsssl_admin_page = add_options_page(
             __("SSL settings", "really-simple-ssl"), //link title
-            __("SSL", "really-simple-ssl"), //page title
+            __("SSL", "really-simple-ssl") . $update_count, //page title
             $this->capability, //capability
             'rlrsssl_really_simple_ssl', //url
             array($this, 'settings_page')); //function
@@ -2276,6 +2288,54 @@ class rsssl_admin extends rsssl_front_end
         add_action('load-' . $rsssl_admin_page, array($this, 'admin_add_help_tab'));
 
     }
+
+    /**
+     *
+     * @since 3.1.6
+     *
+     * Add an update count to the WordPress admin Settings menu item
+     * Doesn't work when the Admin Menu Editor plugin is active
+     *
+     */
+
+    public function rsssl_edit_admin_menu()
+    {
+        if (!current_user_can($this->capability)) return;
+
+        global $menu;
+
+        $count = $this->get_settings_update_count();
+
+        if ($count > 0) {
+            $update_count = "<span class='update-plugins rsssl-update-count'><span class='update-count'>$count</span></span>";
+        } else {
+            $update_count = "";
+        }
+            $menu[80][0] = str_replace("Settings", "Settings $update_count", $menu[80][0]);
+
+    }
+
+    /**
+     * @return string
+     *
+     * @since 3.1.6
+     *
+     * Calculate the number of setting updates available
+     *
+     */
+
+    public function get_settings_update_count()
+    {
+
+        $count = "0";
+
+        if (!$this->htaccess_redirect) {
+            $count++;
+        }
+
+        return intval($count);
+    }
+
 
     /**
      * Admin help tab
@@ -2413,7 +2473,12 @@ class rsssl_admin extends rsssl_front_end
                             <?php if ($this->ssl_enabled) { ?>
                                 <tr>
                                     <td>
-                                        <?php echo ($this->has_301_redirect()) ? $this->img("success") : $this->img("warning"); ?>
+                                        <?php if ( ($this->htaccess_redirect) || ($this->has_301_redirect() && !RSSSL()->rsssl_server->uses_htaccess())) {
+                                             echo $this->img("success");
+                                        } else {
+                                             echo $this->img("warning");
+                                        } ?>
+
                                     </td>
                                     <td>
                                         <?php
@@ -2426,11 +2491,16 @@ class rsssl_admin extends rsssl_front_end
                                             if (RSSSL()->rsssl_server->uses_htaccess() && $this->htaccess_contains_redirect_rules() && $this->wp_redirect)
                                                 echo "&nbsp;" . __("and", "really-simple-ssl") . "&nbsp;";
 
-                                            if ($this->wp_redirect)
-                                                _e("WordPress redirect", "really-simple-ssl");
+                                            if ($this->wp_redirect) {
+                                                _e("WordPress redirect. ", "really-simple-ssl");
+                                            }
+
+                                            if ($this->wp_redirect && RSSSL()->rsssl_server->uses_htaccess() && !$this->htaccess_redirect) {
+                                                _e("We recommend to enable the .htaccess redirect option on your specific setup.", "really-simple-ssl");
+                                            }
 
                                         } elseif (RSSSL()->rsssl_server->uses_htaccess() && (!is_multisite() || !RSSSL()->rsssl_multisite->is_per_site_activated_multisite_subfolder_install())) {
-                                            if (is_writable($this->htaccess_file())) {
+                                            if ( (is_writable($this->htaccess_file()) && $this->htaccess_test_success) ) {
                                                 _e("Enable a .htaccess redirect or WordPress redirect in the settings to create a 301 redirect.", "really-simple-ssl");
                                             } elseif (!is_writable($this->htaccess_file())) {
                                                 _e(".htaccess is not writable. Set 301 WordPress redirect, or set the .htaccess manually if you want to redirect in .htaccess.", "really-simple-ssl");
@@ -2578,7 +2648,7 @@ class rsssl_admin extends rsssl_front_end
                           $this->get_banner_html(array(
                                   'img' => 'ziprecipes.png',
                                   'title' => 'Zip Recipes',
-                                  'description' => __("Easily create beautiful SEO friendly recipe cards for your recipes with Zip Recipes.", "really-simple-ssl"),
+                                  'description' => __("Create beautiful SEO friendly recipe cards for your recipes with Zip Recipes.", "really-simple-ssl"),
                                   'url' => 'https://wordpress.org/plugins/zip-recipes/',
                               )
                           );

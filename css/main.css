@@ -39,6 +39,10 @@
   height:15px;
 }
 
+.rsssl-update-count {
+  margin-left: 4px !important;
+}
+
 /* rsssl-rsssl-tooltip for settings page */
 /* Base styles for the element that has a rsssl-tooltip */
 [data-rsssl-tooltip],
