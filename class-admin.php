@@ -2307,11 +2307,14 @@ class rsssl_admin extends rsssl_front_end
         $count = $this->get_settings_update_count();
 
         if ($count > 0) {
+
+            //@TODO
+            //If class update-count exists, add our count to that value (regex)
             $update_count = "<span class='update-plugins rsssl-update-count'><span class='update-count'>$count</span></span>";
         } else {
             $update_count = "";
         }
-            $menu[80][0] = str_replace("Settings", "Settings $update_count", $menu[80][0]);
+            $menu[80][0] = str_replace(__("Settings"), __("Settings") . $update_count, $menu[80][0]);
 
     }
 
@@ -2329,7 +2332,7 @@ class rsssl_admin extends rsssl_front_end
 
         $count = "0";
 
-        if (!$this->htaccess_redirect) {
+        if (!$this->htaccess_redirect && RSSSL()->rsssl_server->uses_htaccess()) {
             $count++;
         }
 
@@ -2480,7 +2483,7 @@ class rsssl_admin extends rsssl_front_end
                                         } ?>
 
                                     </td>
-                                    <td>
+                                    <td class="is-dismissible">
                                         <?php
 
                                         if ($this->has_301_redirect()) {
