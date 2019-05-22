@@ -1839,7 +1839,7 @@ class rsssl_admin extends rsssl_front_end
                     $rule .= "#end wpmu rewritecond " . $domain . "\n";
                 }
 
-                //now remove last [OR] if at least on one site the plugin was activated, so we have at lease one condition
+                //now remove last [OR] if at least on one site the plugin was activated, so we have at least one condition
                 if (count($this->sites) > 0) {
                     $rule = strrev(implode("", explode(strrev("[OR]"), strrev($rule), 2)));
                 }
@@ -1876,7 +1876,7 @@ class rsssl_admin extends rsssl_front_end
 
 
     /**
-     *     Show warning when wpconfig could not be fixed
+     * Show warning when wpconfig could not be fixed
      *
      * @since 2.2
      *
@@ -2353,7 +2353,8 @@ class rsssl_admin extends rsssl_front_end
                         ?>
                         <h2><?php echo __("Detected setup", "really-simple-ssl"); ?></h2>
                         <table class="really-simple-ssl-table">
-
+                            <thead></thead>
+                            <tbody>
                             <?php if ($this->site_has_ssl) { ?>
                                 <tr>
                                     <td><?php echo $this->ssl_enabled ? $this->img("success") : $this->img("error"); ?></td>
@@ -2410,7 +2411,7 @@ class rsssl_admin extends rsssl_front_end
                                 </td>
                                 <td></td>
                             </tr>
-                            <?php if ($this->ssl_enabled) { ?>
+                            <?php if ( ($this->ssl_enabled) && (!get_option('rsssl_redirect_warning_dismissed') ) ){ ?>
                                 <tr>
                                     <td>
                                         <?php echo ($this->has_301_redirect()) ? $this->img("success") : $this->img("warning"); ?>
@@ -2442,13 +2443,17 @@ class rsssl_admin extends rsssl_front_end
                                         }
                                         ?>
                                     </td>
-                                    <td></td>
+                                    <td class="rsssl-dashboard-dismiss">
+                                        <button type="button" class="close">
+                                            <span class="rsssl-close-warning">x</span>
+                                        </button>
+                                    </td>
                                 </tr>
 
                                 <?php
                             }
                             ?>
-
+                            </tbody>
                         </table>
                         <?php do_action("rsssl_configuration_page"); ?>
                         <?php
