@@ -49,6 +49,8 @@ class rsssl_admin extends rsssl_front_end
     function __construct()
     {
 
+//        update_option('rsssl_redirect_warning_dismissed', false);
+
         if (isset(self::$_this))
             wp_die(sprintf(__('%s is a singleton class and you cannot create a second instance.', 'really-simple-ssl'), get_class($this)));
 
@@ -179,6 +181,9 @@ class rsssl_admin extends rsssl_front_end
 
         $plugin = rsssl_plugin;
         add_filter("plugin_action_links_$plugin", array($this, 'plugin_settings_link'));
+
+        //Add update notification to Settings admin menu
+        add_action('admin_menu', array($this, 'rsssl_edit_admin_menu') );
 
         //check if the uninstallfile is safely renamed to php.
         $this->check_for_uninstall_file();
@@ -467,6 +472,7 @@ class rsssl_admin extends rsssl_front_end
     /**
      * @since 2.3
      * Returns button to enable SSL.
+     * @access public
      */
 
     public function show_enable_ssl_button()
@@ -491,6 +497,8 @@ class rsssl_admin extends rsssl_front_end
     /**
      * @since 2.3
      * Shows option to buy pro
+     * @access public
+     *
      */
 
     public function show_pro()
@@ -505,6 +513,13 @@ class rsssl_admin extends rsssl_front_end
         }
     }
 
+    /**
+     * @return bool
+     *
+     * Check if wp-config.php is writeable
+     *
+     * @access public
+     */
 
     public function wpconfig_is_writable()
     {
@@ -1001,6 +1016,15 @@ class rsssl_admin extends rsssl_front_end
         $this->save_options();
     }
 
+
+    /**
+     * @return string
+     *
+     * Get code for server variable fix
+     *
+     * @access protected
+     *
+     */
 
     protected function get_server_variable_fix_code()
     {
@@ -1502,6 +1526,15 @@ class rsssl_admin extends rsssl_front_end
         }
     }
 
+    /**
+     * @return bool|string
+     *
+     * Get the .htaccess version
+     *
+     * @access public
+     *
+     */
+
     public function get_htaccess_version()
     {
         if (!file_exists($this->htaccess_file())) return false;
@@ -1731,8 +1764,8 @@ class rsssl_admin extends rsssl_front_end
     /**
      *
      * @since 2.2
-     *  Check if the mixed content fixer is functioning on the front end, by scanning the source of the homepage for the fixer comment.
-     *
+     * Check if the mixed content fixer is functioning on the front end, by scanning the source of the homepage for the fixer comment.
+     * @access public
      */
 
     public function mixed_content_fixer_detected()
@@ -1883,6 +1916,8 @@ class rsssl_admin extends rsssl_front_end
      *
      * @since 2.2
      *
+     * @access public
+     *
      */
 
     public function show_notice_wpconfig_needs_fixes()
@@ -1941,7 +1976,7 @@ class rsssl_admin extends rsssl_front_end
      * @return bool
      * since 3.1
      * Check if .well-known/acme-challenge directory exists
-     *
+     * @access public
      */
 
     public function has_acme_challenge_directory()
@@ -1958,6 +1993,7 @@ class rsssl_admin extends rsssl_front_end
      * @return bool
      * since 3.1
      * Check if there are already .well-known rules in .htaccess file
+     * @access public
      *
      */
 
@@ -2315,9 +2351,18 @@ class rsssl_admin extends rsssl_front_end
         if (is_multisite() && rsssl_multisite::this()->hide_menu_for_subsites && !is_super_admin()) return;
 
         global $rsssl_admin_page;
+
+        $count = $this->get_settings_update_count();
+
+        if ($count > 0) {
+            $update_count = "<span class='update-plugins rsssl-update-count'><span class='update-count'>$count</span></span>";
+        } else {
+            $update_count = "";
+        }
+
         $rsssl_admin_page = add_options_page(
             __("SSL settings", "really-simple-ssl"), //link title
-            __("SSL", "really-simple-ssl"), //page title
+            __("SSL", "really-simple-ssl") . $update_count, //page title
             $this->capability, //capability
             'rlrsssl_really_simple_ssl', //url
             array($this, 'settings_page')); //function
@@ -2326,6 +2371,57 @@ class rsssl_admin extends rsssl_front_end
         add_action('load-' . $rsssl_admin_page, array($this, 'admin_add_help_tab'));
 
     }
+
+    /**
+     *
+     * @since 3.1.6
+     *
+     * Add an update count to the WordPress admin Settings menu item
+     * Doesn't work when the Admin Menu Editor plugin is active
+     *
+     */
+
+    public function rsssl_edit_admin_menu()
+    {
+        if (!current_user_can($this->capability)) return;
+
+        global $menu;
+
+        $count = $this->get_settings_update_count();
+
+        if ($count > 0) {
+
+            //@TODO
+            //If class update-count exists, add our count to that value (regex)
+            $update_count = "<span class='update-plugins rsssl-update-count'><span class='update-count'>$count</span></span>";
+        } else {
+            $update_count = "";
+        }
+            $menu[80][0] = str_replace(__("Settings"), __("Settings") . $update_count, $menu[80][0]);
+
+    }
+
+    /**
+     * @return string
+     *
+     * @since 3.1.6
+     *
+     * Calculate the number of setting updates available
+     *
+     */
+
+    public function get_settings_update_count()
+    {
+
+        $count = "0";
+
+        if (!$this->htaccess_redirect && RSSSL()->rsssl_server->uses_htaccess()) {
+            $count++;
+        }
+
+        return intval($count);
+    }
+
 
     /**
      * Admin help tab
@@ -2467,9 +2563,14 @@ class rsssl_admin extends rsssl_front_end
 
                             <tr>
                                     <td>
-                                        <?php echo ($this->has_301_redirect()) ? $this->img("success") : $this->img("warning"); ?>
+                                        <?php if ( ($this->htaccess_redirect) || ($this->has_301_redirect() && !RSSSL()->rsssl_server->uses_htaccess())) {
+                                             echo $this->img("success");
+                                        } else {
+                                             echo $this->img("warning");
+                                        } ?>
+
                                     </td>
-                                    <td>
+                                    <td class="is-dismissible">
                                         <?php
 
                                         if ($this->has_301_redirect()) {
@@ -2480,8 +2581,13 @@ class rsssl_admin extends rsssl_front_end
                                             if (RSSSL()->rsssl_server->uses_htaccess() && $this->htaccess_contains_redirect_rules() && $this->wp_redirect)
                                                 echo "&nbsp;" . __("and", "really-simple-ssl") . "&nbsp;";
 
-                                            if ($this->wp_redirect)
-                                                _e("WordPress redirect", "really-simple-ssl");
+                                            if ($this->wp_redirect) {
+                                                _e("WordPress redirect. ", "really-simple-ssl");
+                                            }
+
+                                            if ($this->wp_redirect && RSSSL()->rsssl_server->uses_htaccess() && !$this->htaccess_redirect) {
+                                                _e("We recommend to enable the .htaccess redirect option on your specific setup.", "really-simple-ssl") . $this->rsssl_dismiss_button();
+                                            }
 
                                         } elseif (RSSSL()->rsssl_server->uses_htaccess() && (!is_multisite() || !RSSSL()->rsssl_multisite->is_per_site_activated_multisite_subfolder_install())) {
                                             if (is_writable($this->htaccess_file())) {
@@ -2631,7 +2737,7 @@ class rsssl_admin extends rsssl_front_end
                           $this->get_banner_html(array(
                                   'img' => 'ziprecipes.png',
                                   'title' => 'Zip Recipes',
-                                  'description' => __("Easily create beautiful SEO friendly recipe cards for your recipes with Zip Recipes.", "really-simple-ssl"),
+                                  'description' => __("Create beautiful SEO friendly recipe cards for your recipes with Zip Recipes.", "really-simple-ssl"),
                                   'url' => 'https://wordpress.org/plugins/zip-recipes/',
                               )
                           );
@@ -2727,16 +2833,33 @@ class rsssl_admin extends rsssl_front_end
         }
     }
 
+    /**
+     *
+     * Add a dismiss button which will dismiss the nearest <tr>. Used on 'Configuration' dashboard page
+     *
+     * @since 3.1.6
+     *
+     */
+
     public function rsssl_dismiss_button()
     {
         ?>
-<!--        <td class="rsssl-dashboard-dismiss">-->
+        <td class="rsssl-dashboard-dismiss">
             <button type="button" class="close">
                 <span class="rsssl-close-warning">x</span>
             </button>
-<!--        </td>-->
+        </td>
         <?php
     }
+
+    /**
+     * @param $args
+     *
+     * @since 3.0
+     *
+     * Generate the HTML for the settings page sidebar
+     *
+     */
 
     private function get_banner_html($args)
     {
@@ -2785,13 +2908,11 @@ class rsssl_admin extends rsssl_front_end
         wp_enqueue_style('rlrsssl-css');
     }
 
-
-    /*
-
-        feedback for the free users. Pro users see something different.
-
-  */
-
+    /**
+     *
+     * Feedback for free users. Pro users see something different.
+     *
+     */
 
     public function configuration_page_more()
     {
@@ -2858,8 +2979,6 @@ class rsssl_admin extends rsssl_front_end
             </tr>
             **/?>
         </table>
-
-
 
         <?php
 
@@ -3218,11 +3337,13 @@ class rsssl_admin extends rsssl_front_end
         RSSSL()->rsssl_help->get_help_tip(__("If this option is set to true, the mixed content fixer will fire on the init hook instead of the template_redirect hook. Only use this option when you experience problems with the mixed content fixer.", "really-simple-ssl"));
     }
 
-    /*
+    /**
      *
-     * Add a button and thickbox to deactivate SSL while keeping SSL
+     * Add a button and thickbox to deactivate the plugin while keeping SSL
      *
+     * @since 3.0
      *
+     * @access public
      *
      */
 
