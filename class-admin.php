@@ -49,7 +49,7 @@ class rsssl_admin extends rsssl_front_end
     function __construct()
     {
 
-//        update_option('rsssl_redirect_warning_dismissed', false);
+        //update_option('rsssl_redirect_warning_dismissed', false);
 
         if (isset(self::$_this))
             wp_die(sprintf(__('%s is a singleton class and you cannot create a second instance.', 'really-simple-ssl'), get_class($this)));
@@ -2261,7 +2261,7 @@ class rsssl_admin extends rsssl_front_end
 
     public function dismiss_success_message_callback()
     {
-        if (!$this->capability) return;
+        if (!current_user_can($this->capability) ) return;
         //nonce check fails if url is changed to SSL.
         //check_ajax_referer( 'really-simple-ssl-dismiss', 'security' );
         $this->ssl_success_message_shown = TRUE;
@@ -2280,7 +2280,7 @@ class rsssl_admin extends rsssl_front_end
 
     public function dismiss_htaccess_warning_callback()
     {
-        if (!$this->capability) return;
+        if (!current_user_can($this->capability) ) return;
         check_ajax_referer('really-simple-ssl', 'security');
         $this->htaccess_warning_shown = TRUE;
         $this->save_options();
@@ -2298,7 +2298,7 @@ class rsssl_admin extends rsssl_front_end
 
     public function dismiss_settings_notice_callback()
     {
-        if (!$this->capability) return;
+        if (!current_user_can($this->capability) ) return;
         check_ajax_referer('really-simple-ssl', 'security');
         update_option('rsssl_redirect_warning_dismissed', true);
         $this->save_options();
@@ -2317,7 +2317,7 @@ class rsssl_admin extends rsssl_front_end
 
     public function dismiss_review_notice_callback()
     {
-        if (!$this->capability) return;
+        if (!current_user_can($this->capability) ) return;
 
         check_ajax_referer('really-simple-ssl', 'security');
 
@@ -2390,9 +2390,6 @@ class rsssl_admin extends rsssl_front_end
         $count = $this->get_settings_update_count();
 
         if ($count > 0) {
-
-            //@TODO
-            //If class update-count exists, add our count to that value (regex)
             $update_count = "<span class='update-plugins rsssl-update-count'><span class='update-count'>$count</span></span>";
         } else {
             $update_count = "";
@@ -2402,26 +2399,55 @@ class rsssl_admin extends rsssl_front_end
     }
 
     /**
-     * @return string
+     * @return int
      *
      * @since 3.1.6
      *
-     * Calculate the number of setting updates available
+     * Calculate the number of suggested setting updates available
      *
      */
 
     public function get_settings_update_count()
     {
+        //Start counting, we start at 0 suggested setting updates
+        $suggested_updates_count = "0";
 
-        $count = "0";
-
-        if (!$this->htaccess_redirect && RSSSL()->rsssl_server->uses_htaccess()) {
-            $count++;
+        //When the .htaccess redirect can be enabled, and the settings page notice hasn't been dismissed, we recommend to enable the .htaccess redirect. Count++
+        if (!$this->htaccess_redirect && RSSSL()->rsssl_server->uses_htaccess() && (!get_option('rsssl_redirect_warning_dismissed'))) {
+            $suggested_updates_count++;
         }
 
-        return intval($count);
+        //Any privacy updates or other updates? Get the current update count from Settings first
+        $existing_count = $this->get_existing_settings_update_count();
+
+        $cumulative_count = $suggested_updates_count + $existing_count;
+
+        return intval($cumulative_count);
     }
 
+    /**
+     * @return int
+     *
+     * @since 3.1.6
+     *
+     * Check if there is an existing update count after the Settings menu item
+     *
+     */
+
+    public function get_existing_settings_update_count()
+    {
+        global $menu;
+
+        $existing_count = "0";
+
+        //Get the existing count with regex
+        if (strpos($menu[80][0], "plugin-count") != false) {
+            $pattern = "(?<=\'plugin-count'>)(.*?)(?=\<)\g";
+            $existing_count = preg_match($pattern, $menu[80][0]);
+        }
+
+        return intval($existing_count);
+    }
 
     /**
      * Admin help tab
