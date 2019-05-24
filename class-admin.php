@@ -2261,7 +2261,7 @@ class rsssl_admin extends rsssl_front_end
 
     public function dismiss_success_message_callback()
     {
-        if (!$this->capability) return;
+        if (!current_user_can($this->capability) ) return;
         //nonce check fails if url is changed to SSL.
         //check_ajax_referer( 'really-simple-ssl-dismiss', 'security' );
         $this->ssl_success_message_shown = TRUE;
@@ -2280,7 +2280,7 @@ class rsssl_admin extends rsssl_front_end
 
     public function dismiss_htaccess_warning_callback()
     {
-        if (!$this->capability) return;
+        if (!current_user_can($this->capability) ) return;
         check_ajax_referer('really-simple-ssl', 'security');
         $this->htaccess_warning_shown = TRUE;
         $this->save_options();
@@ -2298,7 +2298,7 @@ class rsssl_admin extends rsssl_front_end
 
     public function dismiss_settings_notice_callback()
     {
-        if (!$this->capability) return;
+        if (!current_user_can($this->capability) ) return;
         check_ajax_referer('really-simple-ssl', 'security');
         update_option('rsssl_redirect_warning_dismissed', true);
         $this->save_options();
@@ -2317,7 +2317,7 @@ class rsssl_admin extends rsssl_front_end
 
     public function dismiss_review_notice_callback()
     {
-        if (!$this->capability) return;
+        if (!current_user_can($this->capability) ) return;
 
         check_ajax_referer('really-simple-ssl', 'security');
 
