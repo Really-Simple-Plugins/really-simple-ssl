@@ -48,6 +48,7 @@ class rsssl_admin extends rsssl_front_end
 
     function __construct()
     {
+
         if (isset(self::$_this))
             wp_die(sprintf(__('%s is a singleton class and you cannot create a second instance.', 'really-simple-ssl'), get_class($this)));
 
@@ -186,6 +187,8 @@ class rsssl_admin extends rsssl_front_end
         add_action('wp_ajax_dismiss_htaccess_warning', array($this, 'dismiss_htaccess_warning_callback'));
         add_action('wp_ajax_dismiss_success_message', array($this, 'dismiss_success_message_callback'));
         add_action('wp_ajax_dismiss_review_notice', array($this, 'dismiss_review_notice_callback'));
+        add_action('wp_ajax_dismiss_settings_notice', array($this, 'dismiss_settings_notice_callback'));
+
 
         //handle notices
         add_action('admin_notices', array($this, 'show_notices'));
@@ -1839,7 +1842,7 @@ class rsssl_admin extends rsssl_front_end
                     $rule .= "#end wpmu rewritecond " . $domain . "\n";
                 }
 
-                //now remove last [OR] if at least on one site the plugin was activated, so we have at lease one condition
+                //now remove last [OR] if at least on one site the plugin was activated, so we have at least one condition
                 if (count($this->sites) > 0) {
                     $rule = strrev(implode("", explode(strrev("[OR]"), strrev($rule), 2)));
                 }
@@ -1876,7 +1879,7 @@ class rsssl_admin extends rsssl_front_end
 
 
     /**
-     *     Show warning when wpconfig could not be fixed
+     * Show warning when wpconfig could not be fixed
      *
      * @since 2.2
      *
@@ -2186,6 +2189,30 @@ class rsssl_admin extends rsssl_front_end
         <?php
     }
 
+    public function insert_dismiss_settings_notice()
+    {
+        $ajax_nonce = wp_create_nonce("really-simple-ssl");
+
+        ?>
+        <script type='text/javascript'>
+        jQuery(document).ready(function ($) {
+                $(".rsssl-dashboard-dismiss").on("click", ".rsssl-close-warning",function (event) {
+                    rsssl_dismiss_review();
+                $(this).closest('tr').remove();
+            });
+
+            function rsssl_dismiss_review(){
+                var data = {
+                    'action': 'dismiss_settings_notice',
+                    'security': '<?php echo $ajax_nonce; ?>'
+                };
+                $.post(ajaxurl, data, function (response) {});
+            }
+
+         });
+        </script>
+        <?php
+    }
 
     /**
      * Process the ajax dismissal of the success message.
@@ -2198,6 +2225,7 @@ class rsssl_admin extends rsssl_front_end
 
     public function dismiss_success_message_callback()
     {
+        if (!$this->capability) return;
         //nonce check fails if url is changed to SSL.
         //check_ajax_referer( 'really-simple-ssl-dismiss', 'security' );
         $this->ssl_success_message_shown = TRUE;
@@ -2216,10 +2244,30 @@ class rsssl_admin extends rsssl_front_end
 
     public function dismiss_htaccess_warning_callback()
     {
+        if (!$this->capability) return;
         check_ajax_referer('really-simple-ssl', 'security');
         $this->htaccess_warning_shown = TRUE;
         $this->save_options();
         wp_die(); // this is required to terminate immediately and return a proper response
+    }
+
+    /**
+     * Process the ajax dismissal of settings notice
+     *
+     * Since 3.1
+     *
+     * @access public
+     *
+     */
+
+    public function dismiss_settings_notice_callback()
+    {
+        if (!$this->capability) return;
+        check_ajax_referer('really-simple-ssl', 'security');
+        update_option('rsssl_redirect_warning_dismissed', true);
+        $this->save_options();
+        wp_die(); // this is required to terminate immediately and return a proper response
+
     }
 
     /**
@@ -2233,6 +2281,8 @@ class rsssl_admin extends rsssl_front_end
 
     public function dismiss_review_notice_callback()
     {
+        if (!$this->capability) return;
+
         check_ajax_referer('really-simple-ssl', 'security');
 
         $type = isset($_POST['type']) ? $_POST['type'] : false;
@@ -2353,7 +2403,8 @@ class rsssl_admin extends rsssl_front_end
                         ?>
                         <h2><?php echo __("Detected setup", "really-simple-ssl"); ?></h2>
                         <table class="really-simple-ssl-table">
-
+                            <thead></thead>
+                            <tbody>
                             <?php if ($this->site_has_ssl) { ?>
                                 <tr>
                                     <td><?php echo $this->ssl_enabled ? $this->img("success") : $this->img("error"); ?></td>
@@ -2410,8 +2461,11 @@ class rsssl_admin extends rsssl_front_end
                                 </td>
                                 <td></td>
                             </tr>
-                            <?php if ($this->ssl_enabled) { ?>
-                                <tr>
+                            <?php if ( ($this->ssl_enabled) && (!get_option('rsssl_redirect_warning_dismissed') ) ){
+                            add_action('admin_print_footer_scripts', array($this, 'insert_dismiss_settings_notice'));
+                            ?>
+
+                            <tr>
                                     <td>
                                         <?php echo ($this->has_301_redirect()) ? $this->img("success") : $this->img("warning"); ?>
                                     </td>
@@ -2431,7 +2485,7 @@ class rsssl_admin extends rsssl_front_end
 
                                         } elseif (RSSSL()->rsssl_server->uses_htaccess() && (!is_multisite() || !RSSSL()->rsssl_multisite->is_per_site_activated_multisite_subfolder_install())) {
                                             if (is_writable($this->htaccess_file())) {
-                                                _e("Enable a .htaccess redirect or WordPress redirect in the settings to create a 301 redirect.", "really-simple-ssl");
+                                                _e("Enable a .htaccess redirect or WordPress redirect in the settings to create a 301 redirect.", "really-simple-ssl") . $this->rsssl_dismiss_button();
                                             } elseif (!is_writable($this->htaccess_file())) {
                                                 _e(".htaccess is not writable. Set 301 WordPress redirect, or set the .htaccess manually if you want to redirect in .htaccess.", "really-simple-ssl");
                                             } else {
@@ -2442,13 +2496,12 @@ class rsssl_admin extends rsssl_front_end
                                         }
                                         ?>
                                     </td>
-                                    <td></td>
                                 </tr>
 
                                 <?php
                             }
                             ?>
-
+                            </tbody>
                         </table>
                         <?php do_action("rsssl_configuration_page"); ?>
                         <?php
@@ -2674,6 +2727,16 @@ class rsssl_admin extends rsssl_front_end
         }
     }
 
+    public function rsssl_dismiss_button()
+    {
+        ?>
+<!--        <td class="rsssl-dashboard-dismiss">-->
+            <button type="button" class="close">
+                <span class="rsssl-close-warning">x</span>
+            </button>
+<!--        </td>-->
+        <?php
+    }
 
     private function get_banner_html($args)
     {

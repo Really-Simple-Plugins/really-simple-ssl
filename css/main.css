@@ -528,3 +528,7 @@ input:focus + .rsssl-slider {
 .debug-log {
   width: 90%;
 }
+
+.rsssl-close-warning {
+  color: red;
+}
