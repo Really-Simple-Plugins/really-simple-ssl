@@ -103,23 +103,19 @@ if (!class_exists('rsssl_multisite')) {
          * @return void
          */
 
-        public function maybe_activate_ssl_in_new_blog($site)
-        {
-
-            if ($this->ssl_enabled_networkwide) {
-//                if ( ! has_filter( 'update_blog_metadata_cache', 'wp_check_site_meta_support_prefilter' ) ) {
-//                    add_filter( 'update_blog_metadata_cache', 'wp_check_site_meta_support_prefilter' );
-// 		        }
-                $this->switch_to_blog_bw_compatible($site);
-                RSSSL()->really_simple_ssl->activate_ssl();
-                restore_current_blog(); //switches back to previous blog, not current, so we have to do it each loop
-            }
-        }
+//        public function maybe_activate_ssl_in_new_blog($site)
+//        {
+//
+//            if ($this->ssl_enabled_networkwide) {
+//                $this->switch_to_blog_bw_compatible($site);
+//                RSSSL()->really_simple_ssl->activate_ssl();
+//                restore_current_blog(); //switches back to previous blog, not current, so we have to do it each loop
+//            }
+//        }
 
 
         public function networkwide_choice_notice()
         {
-
             if ($this->plugin_network_wide_active() && !$this->selected_networkwide_or_per_site) {
                 add_action('network_admin_notices', array($this, 'show_notice_activate_networkwide'), 10);
             }
@@ -143,12 +139,13 @@ if (!class_exists('rsssl_multisite')) {
 
 
         /**
+         * @param $networkwide
+         *
          * On plugin activation, we can check if it is networkwide or not.
          *
          * @since  2.1
          *
          * @access public
-         *
          */
 
         public function activate($networkwide)
@@ -408,7 +405,6 @@ if (!class_exists('rsssl_multisite')) {
         {
 
             if (!$this->plugin_network_wide_active()) return;
-
 
             if (isset($_POST['rsssl_do_activate_ssl_networkwide'])) {
 
