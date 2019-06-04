@@ -49,7 +49,7 @@ class rsssl_admin extends rsssl_front_end
     function __construct()
     {
 
-        //update_option('rsssl_redirect_warning_dismissed', false);
+        update_option('rsssl_redirect_warning_dismissed', false);
 
         if (isset(self::$_this))
             wp_die(sprintf(__('%s is a singleton class and you cannot create a second instance.', 'really-simple-ssl'), get_class($this)));
@@ -2530,7 +2530,7 @@ class rsssl_admin extends rsssl_front_end
                             <?php if ($this->site_has_ssl) { ?>
                                 <tr>
                                     <td><?php echo $this->ssl_enabled ? $this->img("success") : $this->img("error"); ?></td>
-                                    <td><?php
+                                    <td class="rsssl-table-td-main-content "><?php
                                         if ($this->ssl_enabled) {
                                             _e("SSL is enabled on your site.", "really-simple-ssl") . "&nbsp;";
                                         } else {
@@ -2550,7 +2550,7 @@ class rsssl_admin extends rsssl_front_end
                                 ?>
                                 <tr>
                                     <td><?php echo $mixed_content_fixer_detected==="success" ? $this->img("success") : $this->img("error"); ?></td>
-                                    <td><?php
+                                    <td class="rsssl-table-td-main-content"><?php
                                         if ($mixed_content_fixer_detected === 'success') {
                                             echo __("Mixed content fixer was successfully detected on the front-end", "really-simple-ssl") . "&nbsp;";
                                         } elseif ($mixed_content_fixer_detected === 'no-response') {
@@ -2566,12 +2566,12 @@ class rsssl_admin extends rsssl_front_end
                                         }
                                         ?>
                                     </td>
-                                    <td></td>
+                                    <td class="rsssl-dashboard-dismiss"><?php echo $this->rsssl_dismiss_button();?></td>
                                 </tr>
                             <?php } ?>
                             <tr>
                                 <td><?php echo ($this->site_has_ssl && $this->wpconfig_ok()) ? $this->img("success") : $this->img("error"); ?></td>
-                                <td><?php
+                                <td class="rsssl-table-td-main-content"><?php
                                     if (!$this->wpconfig_ok()) {
                                         _e("Failed activating SSL", "really-simple-ssl") . "&nbsp;";
                                     } elseif (!$this->site_has_ssl) {
@@ -2583,9 +2583,10 @@ class rsssl_admin extends rsssl_front_end
                                 </td>
                                 <td></td>
                             </tr>
-                            <?php if ( ($this->ssl_enabled) && (!get_option('rsssl_redirect_warning_dismissed') ) ){
-                            add_action('admin_print_footer_scripts', array($this, 'insert_dismiss_settings_notice'));
-                            ?>
+                            <?php
+                            if ( ($this->ssl_enabled) && (!get_option('rsssl_redirect_warning_dismissed') ) ){
+                                add_action('admin_print_footer_scripts', array($this, 'insert_dismiss_settings_notice'));
+                                ?>
 
                             <tr>
                                     <td>
@@ -2596,7 +2597,7 @@ class rsssl_admin extends rsssl_front_end
                                         } ?>
 
                                     </td>
-                                    <td class="is-dismissible">
+                                    <td class="rsssl-table-td-main-content">
                                         <?php
 
                                         if ($this->has_301_redirect()) {
@@ -2612,12 +2613,12 @@ class rsssl_admin extends rsssl_front_end
                                             }
 
                                             if ($this->wp_redirect && RSSSL()->rsssl_server->uses_htaccess() && !$this->htaccess_redirect) {
-                                                _e("We recommend to enable the .htaccess redirect option on your specific setup.", "really-simple-ssl") . $this->rsssl_dismiss_button();
+                                                _e("We recommend to enable the .htaccess redirect option on your specific setup.", "really-simple-ssl");
                                             }
 
                                         } elseif (RSSSL()->rsssl_server->uses_htaccess() && (!is_multisite() || !RSSSL()->rsssl_multisite->is_per_site_activated_multisite_subfolder_install())) {
                                             if (is_writable($this->htaccess_file())) {
-                                                _e("Enable a .htaccess redirect or WordPress redirect in the settings to create a 301 redirect.", "really-simple-ssl") . $this->rsssl_dismiss_button();
+                                                _e("Enable a .htaccess redirect or WordPress redirect in the settings to create a 301 redirect.", "really-simple-ssl");
                                             } elseif (!is_writable($this->htaccess_file())) {
                                                 _e(".htaccess is not writable. Set 301 WordPress redirect, or set the .htaccess manually if you want to redirect in .htaccess.", "really-simple-ssl");
                                             } else {
@@ -2628,14 +2629,17 @@ class rsssl_admin extends rsssl_front_end
                                         }
                                         ?>
                                     </td>
+                                <td><?php echo $this->rsssl_dismiss_button(); ?></td>
                                 </tr>
 
                                 <?php
                             }
+
+                            do_action("rsssl_configuration_page");
                             ?>
                             </tbody>
                         </table>
-                        <?php do_action("rsssl_configuration_page"); ?>
+
                         <?php
                         break;
                     case 'settings' :
@@ -2870,11 +2874,9 @@ class rsssl_admin extends rsssl_front_end
     public function rsssl_dismiss_button()
     {
         ?>
-        <td class="rsssl-dashboard-dismiss">
             <button type="button" class="close">
-                <span class="rsssl-close-warning">x</span>
+                <span class="rsssl-close-warning">X</span>
             </button>
-        </td>
         <?php
     }
 
@@ -2948,7 +2950,7 @@ class rsssl_admin extends rsssl_front_end
                 <td>
                     <?php echo $this->contains_hsts() ? $this->img("success") : $this->img("warning"); ?>
                 </td>
-                <td>
+                <td class="rsssl-table-td-main-content">
                     <?php
                     if ($this->contains_hsts()) {
                         _e("HTTP Strict Transport Security was enabled", "really-simple-ssl");
@@ -2969,7 +2971,7 @@ class rsssl_admin extends rsssl_front_end
             <tr>
 
                 <td><?php echo ($this->contains_secure_cookie_settings()) ? $this->img("success") : $this->img("warning"); ?></td>
-                <td><?php
+                <td class="rsssl-table-td-main-content"><?php
                     if ($this->contains_secure_cookie_settings()) {
                         _e("Secure cookies set", "really-simple-ssl") . "&nbsp;";
                     } else {
