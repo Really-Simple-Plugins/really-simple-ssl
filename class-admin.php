@@ -192,7 +192,7 @@ class rsssl_admin extends rsssl_front_end
         add_action('wp_ajax_dismiss_htaccess_warning', array($this, 'dismiss_htaccess_warning_callback'));
         add_action('wp_ajax_dismiss_success_message', array($this, 'dismiss_success_message_callback'));
         add_action('wp_ajax_dismiss_review_notice', array($this, 'dismiss_review_notice_callback'));
-        add_action('wp_ajax_dismiss_settings_notice', array($this, 'dismiss_settings_notice_callback'));
+        add_action('wp_ajax_rsssl_dismiss_settings_notice', array($this, 'dismiss_settings_notice_callback'));
 
 
         //handle notices
@@ -2225,7 +2225,7 @@ class rsssl_admin extends rsssl_front_end
         <?php
     }
 
-    public function insert_dismiss_settings_notice()
+    public function insert_dismiss_settings_script()
     {
         $ajax_nonce = wp_create_nonce("really-simple-ssl");
 
@@ -2233,17 +2233,16 @@ class rsssl_admin extends rsssl_front_end
         <script type='text/javascript'>
         jQuery(document).ready(function ($) {
                 $(".rsssl-dashboard-dismiss").on("click", ".rsssl-close-warning",function (event) {
-                    rsssl_dismiss_review();
-                $(this).closest('tr').remove();
-            });
-
-            function rsssl_dismiss_review(){
+                var type = $(this).data('dismiss_type');
                 var data = {
-                    'action': 'dismiss_settings_notice',
+                    'action': 'rsssl_dismiss_settings_notice',
+                    'type' : type,
                     'security': '<?php echo $ajax_nonce; ?>'
                 };
                 $.post(ajaxurl, data, function (response) {});
-            }
+                $(this).closest('tr').remove();
+            });
+
 
          });
         </script>
@@ -2299,11 +2298,11 @@ class rsssl_admin extends rsssl_front_end
     public function dismiss_settings_notice_callback()
     {
         if (!current_user_can($this->capability) ) return;
-        check_ajax_referer('really-simple-ssl', 'security');
-        update_option('rsssl_redirect_warning_dismissed', true);
-        $this->save_options();
-        wp_die(); // this is required to terminate immediately and return a proper response
 
+        check_ajax_referer('really-simple-ssl', 'security');
+        $dismiss_type = sanitize_title($_POST['type']);
+        update_option("rsssl_".$dismiss_type."_dismissed", true);
+        wp_die(); // this is required to terminate immediately and return a proper response
     }
 
     /**
@@ -2497,6 +2496,157 @@ class rsssl_admin extends rsssl_front_end
         echo '</h2>';
     }
 
+
+    /**
+     * Get array of notices
+     * - condition: function returning boolean, if notice should be shown or not
+     * - callback: function, returning boolean or string, with multiple possible answers, and resulting messages and icons
+     *
+     * @return array
+     */
+
+
+    public function get_notices_list()
+    {
+        $defaults = array(
+            'id' => '',
+            'dismissable' => false,
+            'condition' => array(),
+            'callback' => false,
+            'plusone' => false,
+        );
+        $notices = array(
+            array(
+                'id' => 'mixed_content_fixer_detected',
+                'dismissable' => true,
+                'condition' => array('rsssl_site_has_ssl', 'rsssl_autoreplace_insecure_links'),
+                'callback' => 'rsssl_mixed_content_fixer_detected',
+                'output' => array(
+                    'success' => array(
+                        'msg' =>__('message if success', 'really-simple-ssl'),
+                        'icon' => 'success'
+                    ),
+                    'no-response' => array(
+                        'msg' => __('message if no response', 'really-simple-ssl'),
+                        'icon' => 'warning'
+                    ),
+                    'default' => array(
+                        'msg' => __('message default', 'really-simple-ssl'),
+                        'icon' => 'warning'
+                    ),
+                ),
+                'plusone' => false,
+            ),
+            array(
+                'id' => 'mixed_content_fixer_detected',
+                'dismissable' => true,
+                'callback' => 'rsssl_mixed_content_fixer_detected',
+                'output' => array(
+                    'success' => array(
+                        'msg' =>__('message if success', 'really-simple-ssl'),
+                        'icon' => 'success'
+                    ),
+                    'no-response' => array(
+                        'msg' => __('message if no response', 'really-simple-ssl'),
+                        'icon' => 'warning'
+                    ),
+                    'default' => array(
+                        'msg' => __('message default', 'really-simple-ssl'),
+                        'icon' => 'warning'
+                    ),
+                ),
+                'plusone' => false,
+            ),
+        );
+
+        $notices = apply_filters('rsssl_notices', $notices);
+        $notices = wp_parse_args($notices, $defaults);
+        return $notices;
+    }
+
+    function rsssl_mixed_content_fixer_detected(){
+        return RSSSL()->really_simple_ssl->mixed_content_fixer_detected();
+    }
+
+    function rsssl_site_has_ssl(){
+        return RSSSL()->really_simple_ssl->site_has_ssl();
+    }
+
+
+    private function notice_row($notice){
+        if (!current_user_can('manage_options')) return;
+
+        //check condition
+        $condition_functions = $notice['condition'];
+        foreach ($condition_functions as $func) {
+            $condition = $func();
+            if (!$condition) return;
+        }
+
+        $func = $notice['callback'];
+        $output = $func();
+        $msg = $notice['output'][$output]['msg'];
+        $icon_type = $notice['output'][$output]['icon'];
+
+        if (get_option("rsssl_".$notice['id']."_dismissed")) return;
+
+        //call_user_func_array(array($classInstance, $methodName), $arg1, $arg2, $arg3);
+        $icon = ($icon_type=='success') ? 'img1' : 'imng2';
+        $dismiss = ($notice['dismissable']) ? 'img1' : 'imng2';
+
+        ?>
+        <tr>
+            <td><?php echo $icon?></td><td><?php echo $msg?></td>
+            <td class="rsssl-dashboard-dismiss" data-dismiss_type="<?php echo $notice['id']?>"><?php echo $dismiss?></td>
+        </tr>
+
+        <?php
+    }
+
+    public function reset_plusone_cache(){
+        delete_transient('rsssl_plusone_count');
+    }
+
+
+
+    public function count_plusones(){
+        if (!current_user_can('manage_options')) return 0;
+
+        $count = get_transient('rsssl_plusone_count');
+        if (!$count) {
+            $count = 0;
+
+            $notices = $this->get_notices_list();
+            foreach ($notices as $notice) {
+                if (!$notice['plusone']) continue;
+
+                if (get_option("rsssl_".$notice['id']."_dismissed")) continue;
+
+                $condition_functions = $notice['condition'];
+                foreach ($condition_functions as $func) {
+                    $condition = $func();
+                    if (!$condition) continue;
+                }
+
+                $func = $notice['callback'];
+                $output = $func();
+                $success = ($notice['output'][$output]['icon'] === 'success') ? true : false;
+
+                if (!$success) {
+                    $count++;
+                }
+
+            }
+            set_transient('rsssl_plusone_count', $count, 'WEEK_IN_SECONDS');
+        }
+
+        return $count;
+
+
+    }
+
+
+
     /**
      * Build the settings page
      *
@@ -2506,9 +2656,12 @@ class rsssl_admin extends rsssl_front_end
      *
      */
 
+
     public function settings_page()
     {
         if (!current_user_can($this->capability)) return;
+
+        add_action('admin_print_footer_scripts', array($this, 'insert_dismiss_settings_script'));
 
         if (isset ($_GET['tab'])) $this->admin_tabs($_GET['tab']); else $this->admin_tabs('configuration');
         if (isset ($_GET['tab'])) $tab = $_GET['tab']; else $tab = 'configuration';
@@ -2527,7 +2680,16 @@ class rsssl_admin extends rsssl_front_end
                         <table class="really-simple-ssl-table">
                             <thead></thead>
                             <tbody>
-                            <?php if ($this->site_has_ssl) { ?>
+                            <?php if ($this->site_has_ssl) {
+
+                                if (!current_user_can('manage_options')) return;
+
+                                $this->reset_plusone_cache();
+                                $notices = $this->get_notices_list();
+                                foreach ($notices as $notice){
+                                $this->notice_row($notice)
+                                }?>
+
                                 <tr>
                                     <td><?php echo $this->ssl_enabled ? $this->img("success") : $this->img("error"); ?></td>
                                     <td class="rsssl-table-td-main-content "><?php
@@ -2584,11 +2746,10 @@ class rsssl_admin extends rsssl_front_end
                                 <td></td>
                             </tr>
                             <?php
-                            if ( ($this->ssl_enabled) && (!get_option('rsssl_redirect_warning_dismissed') ) ){
-                                add_action('admin_print_footer_scripts', array($this, 'insert_dismiss_settings_notice'));
+                            if ( $this->ssl_enabled ){
                                 ?>
 
-                            <tr>
+                                <tr>
                                     <td>
                                         <?php if ( ($this->htaccess_redirect) || ($this->has_301_redirect() && !RSSSL()->rsssl_server->uses_htaccess())) {
                                              echo $this->img("success");
