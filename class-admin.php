@@ -2524,11 +2524,11 @@ class rsssl_admin extends rsssl_front_end
                 'callback' => 'rsssl_mixed_content_fixer_detected',
                 'output' => array(
                     'success' => array(
-                        'msg' =>__('message if success', 'really-simple-ssl'),
+                        'msg' =>__('Mixed content fixer was successfully detected on the front-end', 'really-simple-ssl'),
                         'icon' => 'success'
                     ),
                     'no-response' => array(
-                        'msg' => __('message if no response', 'really-simple-ssl'),
+                        'msg' => __('Really Simple SSL has received no response from the webpage. See our knowledge base for %sinstructions on how to fix this warning%s', 'really-simple-ssl'),
                         'icon' => 'warning'
                     ),
                     'default' => array(
@@ -2550,6 +2550,33 @@ class rsssl_admin extends rsssl_front_end
                     '0' => array(
                         'msg' => __('SSL is not enabled yet', 'really-simple-ssl'),
                         'icon' => 'warning'
+                    ),
+                ),
+                'plusone' => false,
+            ),
+
+
+            //Hier beneden, in notice_row(), wordt de row niet meer gegenereerd als de condition false is.
+            //Hoe check je in deze array specifieke condities?
+            //Bijvoorbeeld, voor benedenstaande kan het zo zijn dat wpconfig_ok() false is, dan moet daar een specifieke notice voor getoond worden.
+
+
+            array(
+                'id' => 'ssl_detected',
+                'dismissible' => false,
+                'callback' => 'rsssl_ssl_detected',
+                'output' => array(
+                    'fail' => array(
+                        'msg' =>__('Failed activating SSL.', 'really-simple-ssl'),
+                        'icon' => 'success'
+                    ),
+                    'no-ssl-detected' => array(
+                        'msg' => __('No SSL detected', 'really-simple-ssl'),
+                        'icon' => 'warning'
+                    ),
+                    'ssl-detected' => array(
+                        'msg' => __('An SSL certificate was detected on your site.', 'really-simple-ssl'),
+                        'icon' => 'success'
                     ),
                 ),
                 'plusone' => false,
@@ -2675,21 +2702,13 @@ class rsssl_admin extends rsssl_front_end
                                 $notices = $this->get_notices_list();
                                 foreach ($notices as $notice){
                                     $this->notice_row($notice);
-                                }?>
+                                }
 
-                                <tr>
-                                    <td><?php echo $this->ssl_enabled ? $this->img("success") : $this->img("error"); ?></td>
-                                    <td class="rsssl-table-td-main-content "><?php
-                                        if ($this->ssl_enabled) {
-                                            _e("SSL is enabled on your site.", "really-simple-ssl") . "&nbsp;";
-                                        } else {
-                                            _e("SSL is not enabled yet", "really-simple-ssl") . "&nbsp;";
-                                            $this->show_enable_ssl_button();
-                                        }
-                                        ?>
-                                    </td>
-                                    <td></td>
-                                </tr>
+                                if (!$this->ssl_enabled) {
+                                    $this->show_enable_ssl_button();
+                                }
+                                    ?>
+
                             <?php }
 
                             /* check if the mixed content fixer is working */
@@ -2718,20 +2737,6 @@ class rsssl_admin extends rsssl_front_end
 <!--                                    <td class="rsssl-dashboard-dismiss">--><?php //echo $this->rsssl_dismiss_button();?><!--</td>-->
                                 </tr>
                             <?php } ?>
-                            <tr>
-                                <td><?php echo ($this->site_has_ssl && $this->wpconfig_ok()) ? $this->img("success") : $this->img("error"); ?></td>
-                                <td class="rsssl-table-td-main-content"><?php
-                                    if (!$this->wpconfig_ok()) {
-                                        _e("Failed activating SSL", "really-simple-ssl") . "&nbsp;";
-                                    } elseif (!$this->site_has_ssl) {
-                                        _e("No SSL detected.", "really-simple-ssl") . "&nbsp;";
-                                    } else {
-                                        _e("An SSL certificate was detected on your site. ", "really-simple-ssl");
-                                    }
-                                    ?>
-                                </td>
-                                <td></td>
-                            </tr>
                             <?php
                             if ( $this->ssl_enabled ){
                                 ?>
@@ -3808,4 +3813,16 @@ function rsssl_ssl_enabled(){
     error_log("SSL enabled?");
     error_log(RSSSL()->really_simple_ssl->ssl_enabled);
     return RSSSL()->really_simple_ssl->ssl_enabled;
+}
+
+function rsssl_ssl_detected(){
+    if (!RSSSL()->really_simple_ssl->wpconfig_ok()) {
+        return 'fail';
+    } elseif (!RSSSL()->really_simple_ssl->site_has_ssl) {
+        return 'no-ssl-detected';
+    } else {
+        return 'ssl-detected';
+    }
+
+    return false;
 }
