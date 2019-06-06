@@ -2538,26 +2538,22 @@ class rsssl_admin extends rsssl_front_end
                 ),
                 'plusone' => false,
             ),
-//            array(
-//                'id' => 'mixed_content_fixer_detected',
-//                'dismissible' => true,
-//                'callback' => 'rsssl_mixed_content_fixer_detected',
-//                'output' => array(
-//                    'success' => array(
-//                        'msg' =>__('message if success', 'really-simple-ssl'),
-//                        'icon' => 'success'
-//                    ),
-//                    'no-response' => array(
-//                        'msg' => __('message if no response', 'really-simple-ssl'),
-//                        'icon' => 'warning'
-//                    ),
-//                    'default' => array(
-//                        'msg' => __('message default', 'really-simple-ssl'),
-//                        'icon' => 'warning'
-//                    ),
-//                ),
-//                'plusone' => false,
-//            ),
+            array(
+                'id' => 'ssl_enabled',
+                'dismissible' => false,
+                'callback' => 'rsssl_ssl_enabled',
+                'output' => array(
+                    '1' => array(
+                        'msg' =>__('SSL is enabled on your site.', 'really-simple-ssl'),
+                        'icon' => 'success'
+                    ),
+                    '0' => array(
+                        'msg' => __('SSL is not enabled yet', 'really-simple-ssl'),
+                        'icon' => 'warning'
+                    ),
+                ),
+                'plusone' => false,
+            ),
         );
 
         $notices = apply_filters('rsssl_notices', $notices);
@@ -2580,9 +2576,6 @@ class rsssl_admin extends rsssl_front_end
         $func = $notice['callback'];
         $output = $func();
 
-        error_log("Notice output ");
-        error_log(print_r($notice['output'][$output], true));
-
         $msg = $notice['output'][$output]['msg'];
         $icon_type = $notice['output'][$output]['icon'];
 
@@ -2590,12 +2583,12 @@ class rsssl_admin extends rsssl_front_end
 
         //call_user_func_array(array($classInstance, $methodName), $arg1, $arg2, $arg3);
         $icon = ($icon_type=='success') ? $this->img('success') : $this->img('error');
-        $dismiss = ($notice['dismissible']) ? 'dismissible' : '';
+        $dismiss = ($notice['dismissible']) ? $this->rsssl_dismiss_button() : '';
 
         ?>
         <tr>
             <td><?php echo $icon?></td><td><?php echo $msg?></td>
-            <td class="rsssl-dashboard-dismiss" data-dismiss_type="<?php echo $notice['id']?>"><?php echo $dismiss?></td>
+            <td class="rsssl-dashboard-dismiss" data-dismiss_type="<?php echo $notice['id']?>"><?php echo "FFFFFF" . $dismiss?></td>
         </tr>
 
         <?php
@@ -2604,8 +2597,6 @@ class rsssl_admin extends rsssl_front_end
     public function reset_plusone_cache(){
         delete_transient('rsssl_plusone_count');
     }
-
-
 
     public function count_plusones(){
         if (!current_user_can('manage_options')) return 0;
@@ -2640,9 +2631,7 @@ class rsssl_admin extends rsssl_front_end
 
         return $count;
 
-
     }
-
 
 
     /**
@@ -2726,7 +2715,7 @@ class rsssl_admin extends rsssl_front_end
                                         }
                                         ?>
                                     </td>
-                                    <td class="rsssl-dashboard-dismiss"><?php echo $this->rsssl_dismiss_button();?></td>
+<!--                                    <td class="rsssl-dashboard-dismiss">--><?php //echo $this->rsssl_dismiss_button();?><!--</td>-->
                                 </tr>
                             <?php } ?>
                             <tr>
@@ -2788,7 +2777,7 @@ class rsssl_admin extends rsssl_front_end
                                         }
                                         ?>
                                     </td>
-                                <td><?php echo $this->rsssl_dismiss_button(); ?></td>
+<!--                                <td>--><?php //echo $this->rsssl_dismiss_button(); ?><!--</td>-->
                                 </tr>
 
                                 <?php
@@ -3032,7 +3021,7 @@ class rsssl_admin extends rsssl_front_end
 
     public function rsssl_dismiss_button()
     {
-        ?>
+         ?>
             <button type="button" class="close">
                 <span class="rsssl-close-warning">X</span>
             </button>
@@ -3816,5 +3805,7 @@ function rsssl_autoreplace_insecure_links(){
 }
 
 function rsssl_ssl_enabled(){
+    error_log("SSL enabled?");
+    error_log(RSSSL()->really_simple_ssl->ssl_enabled);
     return RSSSL()->really_simple_ssl->ssl_enabled;
 }
