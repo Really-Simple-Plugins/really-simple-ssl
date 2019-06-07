@@ -934,26 +934,32 @@ if (!class_exists('rsssl_multisite')) {
 
         public function dismiss_success_message_callback()
         {
+            if (!current_user_can($this->capability) ) return;
+
             update_site_option("rsssl_success_message_shown", true);
             wp_die();
         }
-
-
+        
         public function dismiss_pro_option_notice()
         {
-            check_ajax_referer('rsssl-pro-dismiss-pro-option-notice', 'nonce');
+            if (!current_user_can($this->capability) ) return;
+            check_ajax_referer('rsssl-pro-dismiss-pro-option-notice');
+
             update_option('rsssl_pro_pro_option_notice_dismissed', true);
             wp_die();
         }
 
         public function dismiss_wildcard_message_callback()
         {
+            if (!current_user_can($this->capability) ) return;
+
             update_site_option("rsssl_wildcard_message_shown", true);
             wp_die();
         }
 
         public function dismiss_pro_option_script()
         {
+
             $ajax_nonce = wp_create_nonce("rsssl-pro-dismiss-pro-option-notice");
             ?>
             <script type='text/javascript'>
@@ -984,11 +990,13 @@ if (!class_exists('rsssl_multisite')) {
             if (!$this->is_settings_page()) return;
 
             $dismissed = get_option('rsssl_pro_pro_option_notice_dismissed');
+
             if (!$dismissed) {
+
+                add_action('admin_print_footer_scripts', array($this, 'dismiss_pro_option_script'));
 
                 if (defined('rsssl_pro_version')) {
                     if (!defined('rsssl_pro_ms_version')) {
-                        add_action('admin_print_footer_scripts', array($this, 'dismiss_pro_option_script'));
                         ?>
                         <div id="message" class="updated notice is-dismissible rsssl-pro-dismiss-notice">
                             <p>
