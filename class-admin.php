@@ -2518,11 +2518,11 @@ class rsssl_admin extends rsssl_front_end
                     ),
                     'no-response' => array(
                         'msg' => sprintf(__('Really Simple SSL has received no response from the webpage. See our knowledge base for %sinstructions on how to fix this warning%s', 'really-simple-ssl'),'<a target="_blank" href="https://really-simple-ssl.com/knowledge-base/how-to-fix-no-response-from-webpage-warning/">','</a>'),
-                        'icon' => 'warning'
+                        'icon' => 'error'
                     ),
                     'default' => array(
                     'msg' => sprintf(__('The mixed content fixer is active, but was not detected on the frontpage. Please follow %sthese steps%s to check if the mixed content fixer is working.', "really-simple-ssl"),'<a target="_blank" href="https://www.really-simple-ssl.com/knowledge-base/how-to-check-if-the-mixed-content-fixer-is-active/">', '</a>' ),
-                    'icon' => 'warning'
+                    'icon' => 'error'
                     ),
                 ),
             ),
