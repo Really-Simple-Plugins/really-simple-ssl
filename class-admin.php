@@ -2096,7 +2096,7 @@ class rsssl_admin extends rsssl_front_end
                        href="https://really-simple-ssl.com/knowledge-base/how-to-setup-google-analytics-and-google-search-consolewebmaster-tools/"><?php _e("More info.", "really-simple-ssl"); ?></a>
                     <?php
 
-                    $settings_link = '<a href="'.admin_url('options-general.php?page=rlrsssl_really_simple_ssl').'">';
+                    $settings_link = '<a href="'.admin_url('options-general.php?page=rlrsssl_really_simple_ssl&tab=settings').'">';
                     echo sprintf(__("See the %ssettings page%s for further SSL optimizations." , "really-simple-ssl"), $settings_link, "</a>"); ?>
                 </p>
             </div>

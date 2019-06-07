@@ -970,7 +970,7 @@ if (!class_exists('rsssl_multisite')) {
                     $(".rsssl-pro-dismiss-notice.notice.is-dismissible").on("click", ".notice-dismiss", function (event) {
                         var data = {
                             'action': 'rsssl_pro_dismiss_pro_option_notice',
-                            'nonce': '<?php echo $ajax_nonce; ?>'
+                            'security': '<?php echo $ajax_nonce; ?>'
                         };
 
                         $.post(ajaxurl, data, function (response) {
