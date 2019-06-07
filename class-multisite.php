@@ -935,6 +935,7 @@ if (!class_exists('rsssl_multisite')) {
         public function dismiss_success_message_callback()
         {
             if (!current_user_can($this->capability) ) return;
+            check_ajax_referer('really-simple-ssl-dismiss', 'security');
 
             update_site_option("rsssl_success_message_shown", true);
             wp_die();
@@ -943,7 +944,7 @@ if (!class_exists('rsssl_multisite')) {
         public function dismiss_pro_option_notice()
         {
             if (!current_user_can($this->capability) ) return;
-            check_ajax_referer('rsssl-pro-dismiss-pro-option-notice');
+            check_ajax_referer('rsssl-pro-dismiss-pro-option-notice' ,'security');
 
             update_option('rsssl_pro_pro_option_notice_dismissed', true);
             wp_die();
@@ -952,6 +953,7 @@ if (!class_exists('rsssl_multisite')) {
         public function dismiss_wildcard_message_callback()
         {
             if (!current_user_can($this->capability) ) return;
+            check_ajax_referer('really-simple-ssl-dismiss', 'security');
 
             update_site_option("rsssl_wildcard_message_shown", true);
             wp_die();
