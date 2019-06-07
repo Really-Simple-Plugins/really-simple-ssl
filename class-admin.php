@@ -170,7 +170,6 @@ class rsssl_admin extends rsssl_front_end
         //add the settings page for the plugin
         add_action('admin_enqueue_scripts', array($this, 'enqueue_assets'));
         add_action('admin_init', array($this, 'load_translation'), 20);
-        add_action('rsssl_configuration_page', array($this, 'configuration_page_more'), 10);
 
         //settings page, form  and settings link in the plugins page
         add_action('admin_menu', array($this, 'add_settings_page'), 40);
@@ -2096,7 +2095,7 @@ class rsssl_admin extends rsssl_front_end
                        href="https://really-simple-ssl.com/knowledge-base/how-to-setup-google-analytics-and-google-search-consolewebmaster-tools/"><?php _e("More info.", "really-simple-ssl"); ?></a>
                     <?php
 
-                    $settings_link = '<a href="'.admin_url('options-general.php?page=rlrsssl_really_simple_ssl&tab=settings').'">';
+                    $settings_link = '<a href="'.admin_url('options-general.php?page=rlrsssl_really_simple_ssl').'">';
                     echo sprintf(__("See the %ssettings page%s for further SSL optimizations." , "really-simple-ssl"), $settings_link, "</a>"); ?>
                 </p>
             </div>
@@ -2582,7 +2581,7 @@ class rsssl_admin extends rsssl_front_end
                         'icon' => 'success'
                     ),
                     'no-hsts' => array(
-                        'msg' => sprintf(__('%sHTTP Strict Transport Security%s is not enabled. %s(premium)%s', "really-simple-ssl"), '<a href="https://en.wikipedia.org/wiki/HTTP_Strict_Transport_Security" target="_blank">', '</a>', '<a target="_blank" href="' . $this->pro_url . '">', '</a>'),
+                        'msg' => sprintf(__('%sHTTP Strict Transport Security%s is not enabled %s(premium)%s', "really-simple-ssl"), '<a href="https://en.wikipedia.org/wiki/HTTP_Strict_Transport_Security" target="_blank">', '</a>', '<a target="_blank" href="' . $this->pro_url . '">', '</a>'),
                         'icon' => 'warning'
                     ),
                 ),
@@ -2597,6 +2596,16 @@ class rsssl_admin extends rsssl_front_end
                     ),
                     'not-set' => array(
                         'msg' => sprintf(__("Secure cookie settings not enabled (%spremium%s) ", "really-simple-ssl"), '<a target="_blank" href="' . $this->pro_url .'">', '</a>'),
+                        'icon' => 'warning'
+                    ),
+                ),
+            ),
+
+            'mixed_content_scan' => array(
+                'callback' => 'rsssl_scan_upsell',
+                'output' => array(
+                    'upsell' => array(
+                        'msg' => sprintf(__("No mixed content scan performed (%spremium%s) ", "really-simple-ssl"), '<a target="_blank" href="' . $this->pro_url .'">', '</a>'),
                         'icon' => 'warning'
                     ),
                 ),
@@ -2725,9 +2734,7 @@ class rsssl_admin extends rsssl_front_end
                 <table class="really-simple-ssl-table">
                     <thead></thead>
                     <tbody>
-                    <?php if ($this->site_has_ssl) {
-
-                        if (!current_user_can('manage_options')) return;
+                    <?php
 
                         $this->reset_plusone_cache();
                         $notices = $this->get_notices_list();
@@ -2738,12 +2745,12 @@ class rsssl_admin extends rsssl_front_end
                         if (!$this->ssl_enabled) {
                             $this->show_enable_ssl_button();
                         }
-                    }
 
-                    do_action("rsssl_configuration_page");
                     ?>
                     </tbody>
                 </table>
+
+                <?php do_action("rsssl_configuration_page"); ?>
 
                     <?php
                     break;
@@ -3016,30 +3023,6 @@ class rsssl_admin extends rsssl_front_end
 
         wp_register_style('rlrsssl-css', trailingslashit(rsssl_url) . 'css/main.css', "", rsssl_version);
         wp_enqueue_style('rlrsssl-css');
-    }
-
-    /**
-     *
-     * Feedback for free users. Pro users see something different.
-     *
-     */
-
-    public function configuration_page_more()
-    {
-        if (!$this->site_has_ssl) {
-            $this->show_pro();
-        } else {
-            if (!$this->ssl_enabled) { ?>
-                <p><?php _e("If you want to be sure you're ready to migrate to SSL, get Premium, which includes an extensive scan and premium support.", "really-simple-ssl") ?>
-                    &nbsp;<a target="_blank"
-                             href="<?php echo $this->pro_url ?>"><?php _e("Learn more", "really-simple-ssl") ?></a></p>
-            <?php } else { ?>
-                <p><?php _e('Still having issues with mixed content? Check out Premium, which includes an extensive scan and premium support. ', "really-simple-ssl") ?>
-                    &nbsp;<a target="_blank"
-                             href="<?php echo $this->pro_url ?>"><?php _e("Learn more", "really-simple-ssl") ?></a></p>
-                <?php
-            }
-        }
     }
 
     /**
@@ -3726,4 +3709,9 @@ function rsssl_secure_cookies_set()
     } else {
         return 'not-set';
     }
+}
+
+function rsssl_scan_upsell()
+{
+    return 'upsell';
 }
