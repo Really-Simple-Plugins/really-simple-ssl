@@ -301,7 +301,7 @@ if (!class_exists('rsssl_multisite')) {
 
 
         /**
-         * Give the user an option to activate network wide or not.
+         * Give the user an option to activate networkwide or not.
          * Needs to be called after detect_configuration function
          *
          * @since  2.3
