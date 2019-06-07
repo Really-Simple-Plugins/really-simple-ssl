@@ -49,7 +49,9 @@ class rsssl_admin extends rsssl_front_end
     function __construct()
     {
 
-        //update_option('rsssl_redirect_warning_dismissed', false);
+        //update_option("rsssl_mixed_content_fixer_detected_dismissed", false);
+        //update_option("rsssl_check_redirect_dismissed", false);
+
 
         if (isset(self::$_this))
             wp_die(sprintf(__('%s is a singleton class and you cannot create a second instance.', 'really-simple-ssl'), get_class($this)));
@@ -2233,7 +2235,7 @@ class rsssl_admin extends rsssl_front_end
         <script type='text/javascript'>
         jQuery(document).ready(function ($) {
                 $(".rsssl-dashboard-dismiss").on("click", ".rsssl-close-warning",function (event) {
-                var type = $(this).data('dismiss_type');
+                var type = $(this).closest('.rsssl-dashboard-dismiss').data('dismiss_type');
                 var data = {
                     'action': 'rsssl_dismiss_settings_notice',
                     'type' : type,
@@ -2351,7 +2353,7 @@ class rsssl_admin extends rsssl_front_end
 
         global $rsssl_admin_page;
 
-        $count = $this->get_settings_update_count();
+        $count = $this->count_plusones();
 
         if ($count > 0) {
             $update_count = "<span class='update-plugins rsssl-update-count'><span class='update-count'>$count</span></span>";
@@ -2386,7 +2388,7 @@ class rsssl_admin extends rsssl_front_end
 
         global $menu;
 
-        $count = $this->get_settings_update_count();
+        $count = $this->count_plusones();
 
         if ($count > 0) {
             $update_count = "<span class='update-plugins rsssl-update-count'><span class='update-count'>$count</span></span>";
@@ -2402,38 +2404,11 @@ class rsssl_admin extends rsssl_front_end
      *
      * @since 3.1.6
      *
-     * Calculate the number of suggested setting updates available
-     *
-     */
-
-    public function get_settings_update_count()
-    {
-        //Start counting, we start at 0 suggested setting updates
-        $suggested_updates_count = "0";
-
-        //When the .htaccess redirect can be enabled, and the settings page notice hasn't been dismissed, we recommend to enable the .htaccess redirect. Count++
-        if (!$this->htaccess_redirect && RSSSL()->rsssl_server->uses_htaccess() && (!get_option('rsssl_redirect_warning_dismissed'))) {
-            $suggested_updates_count++;
-        }
-
-        //Any privacy updates or other updates? Get the current update count from Settings first
-        $existing_count = $this->get_existing_settings_update_count();
-
-        $cumulative_count = $suggested_updates_count + $existing_count;
-
-        return intval($cumulative_count);
-    }
-
-    /**
-     * @return int
-     *
-     * @since 3.1.6
-     *
      * Check if there is an existing update count after the Settings menu item
      *
      */
 
-    public function get_existing_settings_update_count()
+    public function get_existing_settings_plusones()
     {
         global $menu;
 
@@ -2513,12 +2488,12 @@ class rsssl_admin extends rsssl_front_end
             'dismissible' => false,
             'condition' => array(),
             'callback' => false,
-            'plusone' => false,
         );
 
         $notices = array(
             'ssl_enabled' => array(
                 'dismissible' => false,
+                'condition' => false,
                 'callback' => 'rsssl_ssl_enabled',
                 'output' => array(
                     '1' => array(
@@ -2530,11 +2505,10 @@ class rsssl_admin extends rsssl_front_end
                         'icon' => 'warning'
                     ),
                 ),
-                'plusone' => false,
             ),
 
             'mixed_content_fixer_detected' => array(
-                'dismissible' => true,
+                'dismissible' => false,
                 'condition' => array('rsssl_site_has_ssl', 'rsssl_autoreplace_insecure_links', 'rsssl_ssl_enabled'),
                 'callback' => 'rsssl_mixed_content_fixer_detected',
                 'output' => array(
@@ -2551,11 +2525,11 @@ class rsssl_admin extends rsssl_front_end
                     'icon' => 'warning'
                     ),
                 ),
-                'plusone' => false,
             ),
 
             'ssl_detected' => array(
                 'dismissible' => false,
+                'condition' => false,
                 'callback' => 'rsssl_ssl_detected',
                 'output' => array(
                     'fail' => array(
@@ -2571,11 +2545,11 @@ class rsssl_admin extends rsssl_front_end
                         'icon' => 'success'
                     ),
                 ),
-                'plusone' => false,
             ),
 
             'check_redirect' => array(
-                'dismissible' => false,
+                'dismissible' => true,
+                'condition' => false,
                 'callback' => 'rsssl_check_redirect',
                 'output' => array(
                     'htaccess-redirect-set' => array(
@@ -2588,7 +2562,9 @@ class rsssl_admin extends rsssl_front_end
                     ),
                     'wp-redirect-to-htaccess' => array(
                         'msg' => __('WordPress 301 redirect enabled. We recommend to enable the .htaccess redirect option on your specific setup.', 'really-simple-ssl'),
-                        'icon' => 'warning'
+                        'icon' => 'warning',
+                        'plusone' => true,
+//                        'dismissible' => true,
                     ),
                     'no-redirect-enabled' => array(
                         'msg' => __('Enable a .htaccess redirect or WordPress redirect in the settings to create a 301 redirect.', 'really-simple-ssl'),
@@ -2607,11 +2583,11 @@ class rsssl_admin extends rsssl_front_end
                         'icon' => 'warning'
                     ),
                 ),
-                'plusone' => false,
             ),
 
             'hsts_enabled' => array(
                 'dismissible' => false,
+                'condition' => false,
                 'callback' => 'rsssl_hsts_enabled',
                 'output' => array(
                     'contains-hsts' => array(
@@ -2623,11 +2599,11 @@ class rsssl_admin extends rsssl_front_end
                         'icon' => 'warning'
                     ),
                 ),
-                'plusone' => false,
             ),
 
             'secure_cookies_set' => array(
                 'dismissible' => false,
+                'condition' => false,
                 'callback' => 'rsssl_secure_cookies_set',
                 'output' => array(
                     'set' => array(
@@ -2639,7 +2615,6 @@ class rsssl_admin extends rsssl_front_end
                         'icon' => 'warning'
                     ),
                 ),
-                'plusone' => false,
             ),
         );
 
@@ -2656,10 +2631,13 @@ class rsssl_admin extends rsssl_front_end
         if (!current_user_can('manage_options')) return;
 
         //check condition
-        $condition_functions = $notice['condition'];
-        foreach ($condition_functions as $func) {
-            $condition = $func();
-            if (!$condition) return;
+        if (!empty($notice['condition']) ) {
+            $condition_functions = $notice['condition'];
+
+            foreach ($condition_functions as $func) {
+                $condition = $func();
+                if (!$condition) return;
+            }
         }
 
         $func = $notice['callback'];
@@ -2696,7 +2674,6 @@ class rsssl_admin extends rsssl_front_end
 
             $notices = $this->get_notices_list();
             foreach ($notices as $id => $notice) {
-                if (!$notice['plusone']) continue;
 
                 if (get_option("rsssl_".$id."_dismissed")) continue;
 
@@ -2710,9 +2687,15 @@ class rsssl_admin extends rsssl_front_end
                 $output = $func();
                 $success = ($notice['output'][$output]['icon'] === 'success') ? true : false;
 
-                if (!$success) {
+                //&& notice not dismissed
+                if (!$success && isset($notice['output'][$output]['plusone']) && $notice['output'][$output]['plusone']) {
                     $count++;
                 }
+
+                //Check if there's an existing count after the Settings item
+                $existing_count = $this->get_existing_settings_plusones();
+
+                $count = $count + $existing_count;
 
             }
             set_transient('rsssl_plusone_count', $count, 'WEEK_IN_SECONDS');
