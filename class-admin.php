@@ -1763,6 +1763,7 @@ class rsssl_admin extends rsssl_front_end
      * @since 2.2
      * Check if the mixed content fixer is functioning on the front end, by scanning the source of the homepage for the fixer comment.
      * @access public
+     * @return string $mixed_content_fixer_detected
      */
 
     public function mixed_content_fixer_detected()
@@ -1785,9 +1786,9 @@ class rsssl_admin extends rsssl_front_end
             if ($status != 200) {
                 $mixed_content_fixer_detected = 'no-response';
             } elseif (strpos($web_source, "data-rsssl=") === false) {
-                $mixed_content_fixer_detected = 'error';
+                $mixed_content_fixer_detected = 'not-found';
             } else {
-                $mixed_content_fixer_detected = 'success';
+                $mixed_content_fixer_detected = 'found';
             }
 
             set_transient('rsssl_mixed_content_fixer_detected', $mixed_content_fixer_detected, 600);
@@ -1797,14 +1798,16 @@ class rsssl_admin extends rsssl_front_end
             $this->trace_log("Could not connect to website");
             $this->mixed_content_fixer_detected = FALSE;
         }
-        if ($mixed_content_fixer_detected === 'error'){
+        if ($mixed_content_fixer_detected === 'not-found'){
             $this->trace_log("Mixed content fixer marker not found in the websource");
             $this->mixed_content_fixer_detected = FALSE;
         }
-        if ($mixed_content_fixer_detected === 'success'){
+        if ($mixed_content_fixer_detected === 'found'){
             $this->trace_log("Mixed content fixer was successfully detected on the front end.");
             $this->mixed_content_fixer_detected = true;
         }
+
+        return $mixed_content_fixer_detected;
     }
 
     /**
@@ -2502,7 +2505,7 @@ class rsssl_admin extends rsssl_front_end
                 'condition' => array('rsssl_site_has_ssl', 'rsssl_autoreplace_insecure_links', 'rsssl_ssl_enabled'),
                 'callback' => 'rsssl_mixed_content_fixer_detected',
                 'output' => array(
-                    'success' => array(
+                    'found' => array(
                         'msg' =>__('Mixed content fixer was successfully detected on the front-end', 'really-simple-ssl'),
                         'icon' => 'success'
                     ),
@@ -2512,9 +2515,9 @@ class rsssl_admin extends rsssl_front_end
                         'dismissible' => true,
                         'plusone' => true
                     ),
-                    'default' => array(
-                    'msg' => sprintf(__('The mixed content fixer is active, but was not detected on the frontpage. Please follow %sthese steps%s to check if the mixed content fixer is working.', "really-simple-ssl"),'<a target="_blank" href="https://www.really-simple-ssl.com/knowledge-base/how-to-check-if-the-mixed-content-fixer-is-active/">', '</a>' ),
-                    'icon' => 'error'
+                    'not-found' => array(
+                        'msg' => sprintf(__('The mixed content fixer is active, but was not detected on the frontpage. Please follow %sthese steps%s to check if the mixed content fixer is working.', "really-simple-ssl"),'<a target="_blank" href="https://www.really-simple-ssl.com/knowledge-base/how-to-check-if-the-mixed-content-fixer-is-active/">', '</a>' ),
+                        'icon' => 'error'
                     ),
                 ),
             ),
@@ -2637,6 +2640,12 @@ class rsssl_admin extends rsssl_front_end
 
         $func = $notice['callback'];
         $output = $func();
+
+        if (!isset($notice['output'][$output])) {
+            error_log('Output index not set');
+            return;
+        }
+
         $msg = $notice['output'][$output]['msg'];
         $icon_type = $notice['output'][$output]['icon'];
 
@@ -3641,10 +3650,13 @@ class rsssl_admin extends rsssl_front_end
 
 } //class closure
 
+/**
+ * Wrapper function for mixed_content_fixer_detected()
+ * @return string
+ */
+
 function rsssl_mixed_content_fixer_detected(){
-    RSSSL()->really_simple_ssl->mixed_content_fixer_detected();
-    $mixed_content_fixer_detected = get_transient('rsssl_mixed_content_fixer_detected');
-    return $mixed_content_fixer_detected;
+    return RSSSL()->really_simple_ssl->mixed_content_fixer_detected();
 }
 
 function rsssl_site_has_ssl(){
