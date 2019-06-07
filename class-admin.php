@@ -49,9 +49,7 @@ class rsssl_admin extends rsssl_front_end
     function __construct()
     {
 
-        //update_option("rsssl_mixed_content_fixer_detected_dismissed", false);
         //update_option("rsssl_check_redirect_dismissed", false);
-
 
         if (isset(self::$_this))
             wp_die(sprintf(__('%s is a singleton class and you cannot create a second instance.', 'really-simple-ssl'), get_class($this)));
@@ -2484,16 +2482,12 @@ class rsssl_admin extends rsssl_front_end
     public function get_notices_list()
     {
         $defaults = array(
-            'id' => '',
-            'dismissible' => false,
             'condition' => array(),
             'callback' => false,
         );
 
         $notices = array(
             'ssl_enabled' => array(
-                'dismissible' => false,
-                'condition' => false,
                 'callback' => 'rsssl_ssl_enabled',
                 'output' => array(
                     '1' => array(
@@ -2508,7 +2502,6 @@ class rsssl_admin extends rsssl_front_end
             ),
 
             'mixed_content_fixer_detected' => array(
-                'dismissible' => false,
                 'condition' => array('rsssl_site_has_ssl', 'rsssl_autoreplace_insecure_links', 'rsssl_ssl_enabled'),
                 'callback' => 'rsssl_mixed_content_fixer_detected',
                 'output' => array(
@@ -2518,7 +2511,9 @@ class rsssl_admin extends rsssl_front_end
                     ),
                     'no-response' => array(
                         'msg' => sprintf(__('Really Simple SSL has received no response from the webpage. See our knowledge base for %sinstructions on how to fix this warning%s', 'really-simple-ssl'),'<a target="_blank" href="https://really-simple-ssl.com/knowledge-base/how-to-fix-no-response-from-webpage-warning/">','</a>'),
-                        'icon' => 'error'
+                        'icon' => 'error',
+                        'dismissible' => true,
+                        'plusone' => true
                     ),
                     'default' => array(
                     'msg' => sprintf(__('The mixed content fixer is active, but was not detected on the frontpage. Please follow %sthese steps%s to check if the mixed content fixer is working.', "really-simple-ssl"),'<a target="_blank" href="https://www.really-simple-ssl.com/knowledge-base/how-to-check-if-the-mixed-content-fixer-is-active/">', '</a>' ),
@@ -2528,8 +2523,6 @@ class rsssl_admin extends rsssl_front_end
             ),
 
             'ssl_detected' => array(
-                'dismissible' => false,
-                'condition' => false,
                 'callback' => 'rsssl_ssl_detected',
                 'output' => array(
                     'fail' => array(
@@ -2548,8 +2541,6 @@ class rsssl_admin extends rsssl_front_end
             ),
 
             'check_redirect' => array(
-                'dismissible' => true,
-                'condition' => false,
                 'callback' => 'rsssl_check_redirect',
                 'output' => array(
                     'htaccess-redirect-set' => array(
@@ -2562,9 +2553,9 @@ class rsssl_admin extends rsssl_front_end
                     ),
                     'wp-redirect-to-htaccess' => array(
                         'msg' => __('WordPress 301 redirect enabled. We recommend to enable the .htaccess redirect option on your specific setup.', 'really-simple-ssl'),
-                        'icon' => 'warning',
+                        'icon' => 'error',
                         'plusone' => true,
-//                        'dismissible' => true,
+                        'dismissible' => true,
                     ),
                     'no-redirect-enabled' => array(
                         'msg' => __('Enable a .htaccess redirect or WordPress redirect in the settings to create a 301 redirect.', 'really-simple-ssl'),
@@ -2586,8 +2577,6 @@ class rsssl_admin extends rsssl_front_end
             ),
 
             'hsts_enabled' => array(
-                'dismissible' => false,
-                'condition' => false,
                 'callback' => 'rsssl_hsts_enabled',
                 'output' => array(
                     'contains-hsts' => array(
@@ -2602,8 +2591,6 @@ class rsssl_admin extends rsssl_front_end
             ),
 
             'secure_cookies_set' => array(
-                'dismissible' => false,
-                'condition' => false,
                 'callback' => 'rsssl_secure_cookies_set',
                 'output' => array(
                     'set' => array(
@@ -2619,9 +2606,10 @@ class rsssl_admin extends rsssl_front_end
         );
 
         $notices = apply_filters('rsssl_notices', $notices);
-        foreach ($notices as $notice) {
-            $notice = wp_parse_args($notice, $defaults);
+        foreach ($notices as $id => $notice) {
+            $notices[$id] = wp_parse_args($notice, $defaults);
         }
+
         return $notices;
     }
 
@@ -2642,7 +2630,6 @@ class rsssl_admin extends rsssl_front_end
 
         $func = $notice['callback'];
         $output = $func();
-
         $msg = $notice['output'][$output]['msg'];
         $icon_type = $notice['output'][$output]['icon'];
 
@@ -2650,7 +2637,7 @@ class rsssl_admin extends rsssl_front_end
 
         //call_user_func_array(array($classInstance, $methodName), $arg1, $arg2, $arg3);
         $icon = $this->img($icon_type);
-        $dismiss = ($notice['dismissible']) ? $this->rsssl_dismiss_button() : '';
+        $dismiss = (isset($notice['output'][$output]['dismissible']) && $notice['output'][$output]['dismissible']) ? $this->rsssl_dismiss_button() : '';
 
         ?>
         <tr>
@@ -2904,28 +2891,6 @@ class rsssl_admin extends rsssl_front_end
                                     'url' => 'https://really-simple-plugins.com/download/um-tagging/',
                                 )
                             );
-                        }
-
-                        if (!defined("um_most_visited_version")) {
-
-                            $this->get_banner_html(array(
-                                    'img' => 'most-visited.jpg',
-                                    'title' => 'UM Most Visited',
-                                    'description' => __("Show the most visited users and add a 'last visited users' tab to each user profile.", "really-simple-ssl"),
-                                    'url' => 'https://really-simple-plugins.com/download/most-visited-members/',
-                                )
-                            );
-                        }
-
-                        if (!defined("um_tagging_version")) {
-                            $this->get_banner_html(array(
-                                    'img' => 'mail-alerts.jpg',
-                                    'title' => 'UM Mail Alerts',
-                                    'description' => __("Automatically send a notification when a user's post on the activity feed is liked or commented on.", "really-simple-ssl"),
-                                    'url' => 'https://really-simple-plugins.com/download/um-mail-alerts/',
-                                )
-                            );
-
                         }
                     }
 
