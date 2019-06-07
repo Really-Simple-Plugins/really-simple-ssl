@@ -939,7 +939,7 @@ if (!class_exists('rsssl_multisite')) {
             update_site_option("rsssl_success_message_shown", true);
             wp_die();
         }
-        
+
         public function dismiss_pro_option_notice()
         {
             if (!current_user_can($this->capability) ) return;
