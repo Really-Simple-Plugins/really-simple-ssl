@@ -49,8 +49,6 @@ class rsssl_admin extends rsssl_front_end
     function __construct()
     {
 
-        //update_option("rsssl_check_redirect_dismissed", false);
-
         if (isset(self::$_this))
             wp_die(sprintf(__('%s is a singleton class and you cannot create a second instance.', 'really-simple-ssl'), get_class($this)));
 
