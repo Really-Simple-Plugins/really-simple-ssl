@@ -1149,6 +1149,8 @@ class rsssl_admin extends rsssl_front_end
 
     public function save_options()
     {
+        delete_transient('rsssl_plusone_count');
+
         //any options added here should also be added to function options_validate()
         $options = array(
             'site_has_ssl' => $this->site_has_ssl,
