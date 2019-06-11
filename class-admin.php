@@ -2304,6 +2304,7 @@ class rsssl_admin extends rsssl_front_end
         check_ajax_referer('really-simple-ssl', 'security');
         $dismiss_type = sanitize_title($_POST['type']);
         update_option("rsssl_".$dismiss_type."_dismissed", true);
+        delete_transient('rsssl_plusone_count');
         wp_die(); // this is required to terminate immediately and return a proper response
     }
 
