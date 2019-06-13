@@ -414,8 +414,7 @@ if (!class_exists('rsssl_multisite')) {
                 $this->save_options();
 
                 //enable SSL on all sites on the network
-                update_site_option('rsssl_ssl_enabled_progress', 0);
-                //$this->activate_ssl_networkwide();
+                $this->start_ssl_activation();
 
             }
 
