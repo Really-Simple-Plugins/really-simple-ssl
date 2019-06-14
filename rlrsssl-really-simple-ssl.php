@@ -58,8 +58,9 @@ class REALLY_SIMPLE_SSL
             $wpcli = defined( 'WP_CLI' ) && WP_CLI;
 
             if (is_admin() || is_multisite() || $wpcli) {
-                self::$instance->rsssl_multisite = new rsssl_multisite();
-
+                if (is_multisite()) {
+                    self::$instance->rsssl_multisite = new rsssl_multisite();
+                }
                 self::$instance->rsssl_cache = new rsssl_cache();
                 self::$instance->rsssl_server = new rsssl_server();
                 self::$instance->really_simple_ssl = new rsssl_admin();
