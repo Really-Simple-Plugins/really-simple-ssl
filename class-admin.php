@@ -2416,7 +2416,7 @@ class rsssl_admin extends rsssl_front_end
 
         //Get the existing count with regex
         if (strpos($menu[80][0], "plugin-count") != false) {
-            $pattern = "(?<=\'plugin-count'>)(.*?)(?=\<)\g";
+            $pattern = '/(?<=\'plugin-count\'>)(.*?)(?=\<)/g';
             $existing_count = preg_match($pattern, $menu[80][0]);
         }
 
