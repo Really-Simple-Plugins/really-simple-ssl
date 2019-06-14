@@ -103,8 +103,10 @@ class REALLY_SIMPLE_SSL
         }
 
         if (is_admin() || is_multisite() || $wpcli) {
-            require_once(rsssl_path . 'class-multisite.php');
-            require_once(rsssl_path . 'multisite-cron.php');
+            if (is_multisite()) {
+                require_once(rsssl_path . 'class-multisite.php');
+                require_once(rsssl_path . 'multisite-cron.php');
+            }
             require_once(rsssl_path . 'class-admin.php');
             require_once(rsssl_path . 'class-cache.php');
             require_once(rsssl_path . 'class-server.php');
