@@ -2355,7 +2355,7 @@ class rsssl_admin extends rsssl_front_end
 
         $count = $this->count_plusones();
 
-        if ($count > 0) {
+        if ($count > 0 ) {
             $update_count = "<span class='update-plugins rsssl-update-count'><span class='update-count'>$count</span></span>";
         } else {
             $update_count = "";
@@ -2389,8 +2389,9 @@ class rsssl_admin extends rsssl_front_end
         global $menu;
 
         $count = $this->count_plusones();
+        $existing_counts = $this->get_existing_settings_plusones();
 
-        if ($count > 0) {
+        if ($count > 0 && ($existing_counts==0)) {
             $update_count = "<span class='update-plugins rsssl-update-count'><span class='update-count'>$count</span></span>";
         } else {
             $update_count = "";
@@ -2416,8 +2417,12 @@ class rsssl_admin extends rsssl_front_end
 
         //Get the existing count with regex
         if (strpos($menu[80][0], "plugin-count") != false) {
-            $pattern = '/(?<=\'plugin-count\'>)(.*?)(?=\<)/g';
+            $pattern = '/(?<=[\'|\"]plugin-count[\'|\"]>)(.*?)(?=\<)/i';
             $existing_count = preg_match($pattern, $menu[80][0]);
+            $str = $menu[80][0];
+            if (preg_match($pattern, $str, $matches)){
+                $existing_count = $matches[1];
+            }
         }
 
         return intval($existing_count);
@@ -2672,7 +2677,6 @@ class rsssl_admin extends rsssl_front_end
 
     public function count_plusones(){
         if (!current_user_can('manage_options')) return 0;
-
         $count = get_transient('rsssl_plusone_count');
         if (!$count) {
             $count = 0;
