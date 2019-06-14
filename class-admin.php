@@ -2556,7 +2556,7 @@ class rsssl_admin extends rsssl_front_end
                     ),
                     'wp-redirect-to-htaccess' => array(
                         'msg' => __('WordPress 301 redirect enabled. We recommend to enable the .htaccess redirect option on your specific setup.', 'really-simple-ssl'),
-                        'icon' => 'error',
+                        'icon' => 'warning',
                         'plusone' => true,
                         'dismissible' => true,
                     ),
