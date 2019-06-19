@@ -565,3 +565,7 @@ input:focus + .rsssl-slider {
   color: black;
   font-size: 1.3em;
 }
+
+.rsssl-close-warning:hover {
+  cursor: pointer;
+}

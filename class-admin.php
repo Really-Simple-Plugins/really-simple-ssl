@@ -2552,33 +2552,39 @@ class rsssl_admin extends rsssl_front_end
                 'output' => array(
                     'htaccess-redirect-set' => array(
                         'msg' =>__('301 redirect to https set: .htaccess redirect.', 'really-simple-ssl'),
-                        'icon' => 'success'
+                        'icon' => 'success',
+                        'dismissible' => true
                     ),
                     '301-wp-redirect' => array(
                         'msg' => __('301 redirect to https set: WordPress redirect.', 'really-simple-ssl'),
-                        'icon' => 'success'
+                        'icon' => 'success',
+                        'dismissible' => true
                     ),
                     'wp-redirect-to-htaccess' => array(
-                        'msg' => __('WordPress 301 redirect enabled. We recommend to enable the .htaccess redirect option on your specific setup.', 'really-simple-ssl'),
+                        'msg' => sprintf(__('WordPress 301 redirect enabled. We recommend to <a href="%s" target="_blank">enable the 301 .htaccess redirect option</a> on your specific setup.', 'really-simple-ssl'), admin_url("options-general.php?page=rlrsssl_really_simple_ssl&tab=settings")),
                         'icon' => 'warning',
                         'plusone' => true,
                         'dismissible' => true,
                     ),
                     'no-redirect-enabled' => array(
                         'msg' => __('Enable a .htaccess redirect or WordPress redirect in the settings to create a 301 redirect.', 'really-simple-ssl'),
-                        'icon' => 'warning'
+                        'icon' => 'warning',
+                        'dismissible' => true
                     ),
                     'htaccess-not-writeable' => array(
                         'msg' => __('.htaccess is not writable. Set 301 WordPress redirect, or set the .htaccess manually if you want to redirect in .htaccess.', 'really-simple-ssl'),
-                        'icon' => 'warning'
+                        'icon' => 'warning',
+                        'dismissible' => true
                     ),
                     'htaccess-cannot-be-set' => array(
                         'msg' => __('Https redirect cannot be set in the .htaccess. Set the .htaccess redirect manually or enable WordPress redirect in the settings.', 'really-simple-ssl'),
-                        'icon' => 'warning'
+                        'icon' => 'warning',
+                        'dismissible' => true
                     ),
                     'default' => array(
                         'msg' => __('No 301 redirect is set. Enable the WordPress 301 redirect in the settings to get a 301 permanent redirect.', 'really-simple-ssl'),
-                        'icon' => 'warning'
+                        'icon' => 'warning',
+                        'dismissible' => true
                     ),
                 ),
             ),
