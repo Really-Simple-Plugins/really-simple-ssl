@@ -2698,7 +2698,7 @@ class rsssl_admin extends rsssl_front_end
 
                 $func = $notice['callback'];
                 $output = $func();
-                $success = ($notice['output'][$output]['icon'] === 'success') ? true : false;
+                $success = (isset($notice['output'][$output]['icon']) && ($notice['output'][$output]['icon'] === 'success')) ? true : false;
 
                 //&& notice not dismissed
                 if (!$success && isset($notice['output'][$output]['plusone']) && $notice['output'][$output]['plusone']) {
