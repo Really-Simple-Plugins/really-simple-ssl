@@ -1551,10 +1551,7 @@ class rsssl_admin extends rsssl_front_end
             return $version;
         }
     }
-
-
-    /*   deprecated   */
-
+    
     function htaccess_redirect_allowed()
     {
         if (is_multisite() && RSSSL()->rsssl_multisite->is_per_site_activated_multisite_subfolder_install()) {
