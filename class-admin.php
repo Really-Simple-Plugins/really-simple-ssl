@@ -2549,7 +2549,7 @@ class rsssl_admin extends rsssl_front_end
 
             'check_redirect' => array(
                 'callback' => 'rsssl_check_redirect',
-                'condition' => array('rsssl_is_not_multisite'),
+                'condition' => array('rsssl_htaccess_redirect_allowed'),
                 'output' => array(
                     'htaccess-redirect-set' => array(
                         'msg' =>__('301 redirect to https set: .htaccess redirect.', 'really-simple-ssl'),
@@ -3741,11 +3741,7 @@ function rsssl_scan_upsell()
     return 'upsell';
 }
 
-function rsssl_is_not_multisite()
+function rsssl_htaccess_redirect_allowed()
 {
-    if (!is_multisite()) {
-        return true;
-    } else {
-        return false;
-    }
+    return RSSSL()->really_simple_ssl->htaccess_redirect_allowed();
 }
