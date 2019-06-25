@@ -48,6 +48,8 @@ class rsssl_admin extends rsssl_front_end
 
     function __construct()
     {
+        update_option('rsssl_mixed_content_fixer_detected_dismissed', false);
+        update_option('rsssl_check_redirect_dismissed', false);
 
         if (isset(self::$_this))
             wp_die(sprintf(__('%s is a singleton class and you cannot create a second instance.', 'really-simple-ssl'), get_class($this)));
@@ -2229,8 +2231,8 @@ class rsssl_admin extends rsssl_front_end
 
         ?>
         <script type='text/javascript'>
-        jQuery(document).ready(function ($) {
-                $(".rsssl-dashboard-dismiss").on("click", ".rsssl-close-warning",function (event) {
+            jQuery(document).ready(function ($) {
+            $(".rsssl-dashboard-dismiss").on("click", ".rsssl-close-warning",function (event) {
                 var type = $(this).closest('.rsssl-dashboard-dismiss').data('dismiss_type');
                 var data = {
                     'action': 'rsssl_dismiss_settings_notice',
@@ -2240,8 +2242,6 @@ class rsssl_admin extends rsssl_front_end
                 $.post(ajaxurl, data, function (response) {});
                 $(this).closest('tr').remove();
             });
-
-
          });
         </script>
         <?php
@@ -2298,6 +2298,7 @@ class rsssl_admin extends rsssl_front_end
         if (!current_user_can($this->capability) ) return;
 
         check_ajax_referer('really-simple-ssl', 'security');
+        error_log(print_r($_POST['type'], true));
         $dismiss_type = sanitize_title($_POST['type']);
         update_option("rsssl_".$dismiss_type."_dismissed", true);
         delete_transient('rsssl_plusone_count');
@@ -2394,7 +2395,6 @@ class rsssl_admin extends rsssl_front_end
             $update_count = "";
         }
             $menu[80][0] = str_replace(__("Settings"), __("Settings") . $update_count, $menu[80][0]);
-
     }
 
     /**
@@ -2514,7 +2514,7 @@ class rsssl_admin extends rsssl_front_end
                         'icon' => 'success'
                     ),
                     'no-response' => array(
-                        'msg' => sprintf(__('Really Simple SSL has received no response from the webpage. See our knowledge base for %sinstructions on how to fix this warning%s', 'really-simple-ssl'),'<a target="_blank" href="https://really-simple-ssl.com/knowledge-base/how-to-fix-no-response-from-webpage-warning/">','</a>'),
+                        'msg' => sprintf(__('Really Simple SSL has received no response from the webpage. See our knowledge base for %sinstructions on how to fix this warning%s', 'really-simple-ssl'),'<a target="_blank" href="https://really-simple-ssl.com/knowledge-base/how-to-fix-no-response-from-webpage-warning/">','</a>') . "<span class='rsssl-dashboard-plusone update-plugins rsssl-update-count'><span class='update-count'>1</span></span>" . "<span class='rsssl-dashboard-dismiss'><a href='#' class='rsssl-dismiss-text rsssl-close-warning'>dismiss</a></span>",
                         'icon' => 'error',
                         'dismissible' => true,
                         'plusone' => true
@@ -2559,7 +2559,7 @@ class rsssl_admin extends rsssl_front_end
                         'dismissible' => true
                     ),
                     'wp-redirect-to-htaccess' => array(
-                        'msg' => sprintf(__('WordPress 301 redirect enabled. We recommend to <a href="%s" target="_blank">enable the 301 .htaccess redirect option</a> on your specific setup.', 'really-simple-ssl'), admin_url("options-general.php?page=rlrsssl_really_simple_ssl&tab=settings")),
+                        'msg' => sprintf(__('WordPress 301 redirect enabled. We recommend to <a href="%s" target="_blank">enable the 301 .htaccess redirect option</a> on your specific setup.', 'really-simple-ssl'), admin_url("options-general.php?page=rlrsssl_really_simple_ssl&tab=settings")) . "<span class='rsssl-dashboard-plusone update-plugins rsssl-update-count'><span class='update-count'>1</span></span>" . "<span class='rsssl-dashboard-dismiss'><a href='#' class='rsssl-dismiss-text rsssl-close-warning'>dismiss</a></span>",
                         'icon' => 'warning',
                         'plusone' => true,
                         'dismissible' => true,
@@ -2943,7 +2943,6 @@ class rsssl_admin extends rsssl_front_end
                 </div>
             <?php }
             ?>
-
 
         </div><!-- end container -->
         <?php

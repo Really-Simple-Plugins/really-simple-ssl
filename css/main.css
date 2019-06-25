@@ -69,6 +69,20 @@
 
 .rsssl-update-count {
   margin-left: 4px !important;
+  display: inline-block;
+  vertical-align: top;
+  box-sizing: border-box;
+  margin: 1px 0 -1px 2px;
+  padding: 0 5px;
+  min-width: 18px;
+  height: 18px;
+  border-radius: 9px;
+  background-color: #ca4a1f;
+  color: #fff;
+  font-size: 11px;
+  line-height: 1.6;
+  text-align: center;
+  z-index: 26
 }
 
 /* rsssl-rsssl-tooltip for settings page */
@@ -568,4 +582,14 @@ input:focus + .rsssl-slider {
 
 .rsssl-close-warning:hover {
   cursor: pointer;
+}
+
+.rsssl-dismiss-text {
+  font-size: 1em;
+  color: #0073aa;
+  margin-left: 6px;
+}
+
+.rsssl-dashboard-plusone {
+  margin-left: 8px;
 }
