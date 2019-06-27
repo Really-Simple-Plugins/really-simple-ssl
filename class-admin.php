@@ -2298,7 +2298,6 @@ class rsssl_admin extends rsssl_front_end
         if (!current_user_can($this->capability) ) return;
 
         check_ajax_referer('really-simple-ssl', 'security');
-        error_log(print_r($_POST['type'], true));
         $dismiss_type = sanitize_title($_POST['type']);
         update_option("rsssl_".$dismiss_type."_dismissed", true);
         delete_transient('rsssl_plusone_count');
@@ -3039,7 +3038,11 @@ class rsssl_admin extends rsssl_front_end
         if ((!is_network_admin() && ($hook != $rsssl_admin_page)) && $this->ssl_enabled)
             return;
 
-        wp_register_style('rlrsssl-css', trailingslashit(rsssl_url) . 'css/main.css', "", rsssl_version);
+        if (is_rtl()) {
+            wp_register_style('rlrsssl-css', trailingslashit(rsssl_url) . 'css/main-rtl.min.css', "", rsssl_version);
+        } else {
+	        wp_register_style('rlrsssl-css', trailingslashit(rsssl_url) . 'css/main.min.css', "", rsssl_version);
+        }
         wp_enqueue_style('rlrsssl-css');
     }
 
