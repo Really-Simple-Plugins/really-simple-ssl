@@ -2489,7 +2489,9 @@ class rsssl_admin extends rsssl_front_end
             'callback' => false,
         );
 
-        $notices = array(
+	    $dismiss = __("dismiss", "really-simple-ssl");
+
+	    $notices = array(
             'ssl_enabled' => array(
                 'callback' => 'rsssl_ssl_enabled',
                 'output' => array(
@@ -2513,7 +2515,7 @@ class rsssl_admin extends rsssl_front_end
                         'icon' => 'success'
                     ),
                     'no-response' => array(
-                        'msg' => sprintf(__('Really Simple SSL has received no response from the webpage. See our knowledge base for %sinstructions on how to fix this warning%s', 'really-simple-ssl'),'<a target="_blank" href="https://really-simple-ssl.com/knowledge-base/how-to-fix-no-response-from-webpage-warning/">','</a>') . "<span class='rsssl-dashboard-plusone update-plugins rsssl-update-count'><span class='update-count'>1</span></span>" . "<span class='rsssl-dashboard-dismiss'><a href='#' class='rsssl-dismiss-text rsssl-close-warning'>dismiss</a></span>",
+                        'msg' => sprintf(__('Really Simple SSL has received no response from the webpage. See our knowledge base for %sinstructions on how to fix this warning%s', 'really-simple-ssl'),'<a target="_blank" href="https://really-simple-ssl.com/knowledge-base/how-to-fix-no-response-from-webpage-warning/">','</a>') . "<span class='rsssl-dashboard-plusone update-plugins rsssl-update-count'><span class='update-count'>1</span></span>" . "<span class='rsssl-dashboard-dismiss'><a href='#' class='rsssl-dismiss-text rsssl-close-warning'>$dismiss</a></span>",
                         'icon' => 'error',
                         'dismissible' => true,
                         'plusone' => true
@@ -2558,7 +2560,7 @@ class rsssl_admin extends rsssl_front_end
                         'dismissible' => true
                     ),
                     'wp-redirect-to-htaccess' => array(
-                        'msg' => sprintf(__('WordPress 301 redirect enabled. We recommend to <a href="%s" target="_blank">enable the 301 .htaccess redirect option</a> on your specific setup.', 'really-simple-ssl'), admin_url("options-general.php?page=rlrsssl_really_simple_ssl&tab=settings")) . "<span class='rsssl-dashboard-plusone update-plugins rsssl-update-count'><span class='update-count'>1</span></span>" . "<span class='rsssl-dashboard-dismiss'><a href='#' class='rsssl-dismiss-text rsssl-close-warning'>dismiss</a></span>",
+                        'msg' => sprintf(__('WordPress 301 redirect enabled. We recommend to <a href="%s" target="_blank">enable the 301 .htaccess redirect option</a> on your specific setup.', 'really-simple-ssl'), admin_url("options-general.php?page=rlrsssl_really_simple_ssl&tab=settings")) . "<span class='rsssl-dashboard-plusone update-plugins rsssl-update-count'><span class='update-count'>1</span></span>" . "<span class='rsssl-dashboard-dismiss'><a href='#' class='rsssl-dismiss-text rsssl-close-warning'>$dismiss</a></span>",
                         'icon' => 'warning',
                         'plusone' => true,
                         'dismissible' => true,
