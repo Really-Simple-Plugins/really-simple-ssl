@@ -1,3 +1,8 @@
+body {
+    direction: rtl;
+    unicode-bidi: embed;
+}
+
 .rsssl-notice {
     background-color: #fff;
     border-right: 4px solid green;
