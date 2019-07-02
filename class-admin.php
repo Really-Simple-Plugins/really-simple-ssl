@@ -48,8 +48,14 @@ class rsssl_admin extends rsssl_front_end
 
     function __construct()
     {
-        update_option('rsssl_mixed_content_fixer_detected_dismissed', false);
-        update_option('rsssl_check_redirect_dismissed', false);
+
+//        update_option('rsssl_mixed_content_fixer_detected_dismissed', false);
+//        update_option('rsssl_check_redirect_dismissed', false);
+//	    update_option('rsssl_ssl_detected_dismissed', false);
+//	    update_option('rsssl_check_redirect_dismissed', false);
+//	    update_option('rsssl_hsts_enabled_dismissed', false);
+//	    update_option('rsssl_secure_cookies_set_dismissed', false);
+//	    update_option('rsssl_mixed_content_scan_dismissed', false);
 
         if (isset(self::$_this))
             wp_die(sprintf(__('%s is a singleton class and you cannot create a second instance.', 'really-simple-ssl'), get_class($this)));
@@ -564,7 +570,8 @@ class rsssl_admin extends rsssl_front_end
             $this->do_not_edit_htaccess = isset($options['do_not_edit_htaccess']) ? $options['do_not_edit_htaccess'] : FALSE;
             $this->htaccess_redirect = isset($options['htaccess_redirect']) ? $options['htaccess_redirect'] : FALSE;
             $this->switch_mixed_content_fixer_hook = isset($options['switch_mixed_content_fixer_hook']) ? $options['switch_mixed_content_fixer_hook'] : FALSE;
-            $this->debug_log = isset($options['debug_log']) ? $options['debug_log'] : $this->debug_log;
+	        $this->dismiss_all_notices = isset($options['dismiss_all_notices']) ? $options['dismiss_all_notices'] : FALSE;
+	        $this->debug_log = isset($options['debug_log']) ? $options['debug_log'] : $this->debug_log;
         }
 
         if (is_multisite()) {
@@ -1169,6 +1176,8 @@ class rsssl_admin extends rsssl_front_end
             'javascript_redirect' => $this->javascript_redirect,
             'wp_redirect' => $this->wp_redirect,
             'switch_mixed_content_fixer_hook' => $this->switch_mixed_content_fixer_hook,
+            'dismiss_all_notices' => $this->dismiss_all_notices,
+
         );
 
         update_option('rlrsssl_options', $options);
@@ -1216,8 +1225,10 @@ class rsssl_admin extends rsssl_front_end
         $this->wp_redirect = FALSE;
         $this->ssl_enabled = FALSE;
         $this->switch_mixed_content_fixer_hook = FALSE;
+	    $this->dismiss_all_notices = FALSE;
 
-        $this->save_options();
+
+	    $this->save_options();
 
         //when on multisite, per site activation, recreate domain list for htaccess and wpconfig rewrite actions
         if (is_multisite()) {
@@ -2298,9 +2309,11 @@ class rsssl_admin extends rsssl_front_end
         if (!current_user_can($this->capability) ) return;
 
         check_ajax_referer('really-simple-ssl', 'security');
-        $dismiss_type = sanitize_title($_POST['type']);
-        update_option("rsssl_".$dismiss_type."_dismissed", true);
-        delete_transient('rsssl_plusone_count');
+        if (isset($_POST['type'])) {
+	        $dismiss_type = sanitize_title( $_POST['type'] );
+	        update_option( "rsssl_".$dismiss_type."_dismissed", true );
+	        delete_transient( 'rsssl_plusone_count' );
+        }
         wp_die(); // this is required to terminate immediately and return a proper response
     }
 
@@ -2515,7 +2528,7 @@ class rsssl_admin extends rsssl_front_end
                         'icon' => 'success'
                     ),
                     'no-response' => array(
-                        'msg' => sprintf(__('Really Simple SSL has received no response from the webpage. See our knowledge base for %sinstructions on how to fix this warning%s', 'really-simple-ssl'),'<a target="_blank" href="https://really-simple-ssl.com/knowledge-base/how-to-fix-no-response-from-webpage-warning/">','</a>') . "<span class='rsssl-dashboard-plusone update-plugins rsssl-update-count'><span class='update-count'>1</span></span>" . "<span class='rsssl-dashboard-dismiss'><a href='#' class='rsssl-dismiss-text rsssl-close-warning'>$dismiss</a></span>",
+                        'msg' => sprintf(__('Really Simple SSL has received no response from the webpage. See our knowledge base for %sinstructions on how to fix this warning%s', 'really-simple-ssl'),'<a target="_blank" href="https://really-simple-ssl.com/knowledge-base/how-to-fix-no-response-from-webpage-warning/">','</a>') . "<span class='rsssl-dashboard-plusone update-plugins rsssl-update-count'><span class='update-count'>1</span></span>" . "<span class='rsssl-dashboard-dismiss' data-dismiss_type='mixed_content_fixer_detected'><a href='#' class='rsssl-dismiss-text rsssl-close-warning'>$dismiss</a></span>",
                         'icon' => 'error',
                         'dismissible' => true,
                         'plusone' => true
@@ -2560,7 +2573,7 @@ class rsssl_admin extends rsssl_front_end
                         'dismissible' => true
                     ),
                     'wp-redirect-to-htaccess' => array(
-                        'msg' => sprintf(__('WordPress 301 redirect enabled. We recommend to <a href="%s" target="_blank">enable the 301 .htaccess redirect option</a> on your specific setup.', 'really-simple-ssl'), admin_url("options-general.php?page=rlrsssl_really_simple_ssl&tab=settings")) . "<span class='rsssl-dashboard-plusone update-plugins rsssl-update-count'><span class='update-count'>1</span></span>" . "<span class='rsssl-dashboard-dismiss'><a href='#' class='rsssl-dismiss-text rsssl-close-warning'>$dismiss</a></span>",
+                        'msg' => sprintf(__('WordPress 301 redirect enabled. We recommend to <a href="%s" target="_blank">enable the 301 .htaccess redirect option</a> on your specific setup.', 'really-simple-ssl'), admin_url("options-general.php?page=rlrsssl_really_simple_ssl&tab=settings")) . "<span class='rsssl-dashboard-plusone update-plugins rsssl-update-count'><span class='update-count'>1</span></span>" . "<span class='rsssl-dashboard-dismiss' data-dismiss_type='check_redirect'><a href='#' class='rsssl-dismiss-text rsssl-close-warning'>$dismiss</a></span>",
                         'icon' => 'warning',
                         'plusone' => true,
                         'dismissible' => true,
@@ -2588,6 +2601,7 @@ class rsssl_admin extends rsssl_front_end
                 ),
             ),
 
+
             'hsts_enabled' => array(
                 'callback' => 'rsssl_hsts_enabled',
                 'output' => array(
@@ -2601,6 +2615,7 @@ class rsssl_admin extends rsssl_front_end
                     ),
                 ),
             ),
+
 
             'secure_cookies_set' => array(
                 'callback' => 'rsssl_secure_cookies_set',
@@ -2635,7 +2650,6 @@ class rsssl_admin extends rsssl_front_end
         return $notices;
     }
 
-//    $notices['check-redirect'] = array()
 
     private function notice_row($id, $notice){
         if (!current_user_can('manage_options')) return;
@@ -2669,7 +2683,7 @@ class rsssl_admin extends rsssl_front_end
 
         ?>
         <tr>
-            <td><?php echo $icon?></td><td class="rsssl-table-td-main-content"><?php echo $msg?></td>
+            <td><?php echo $icon?></td><td class="rsssl-table-td-main-content"><?php echo $msg ?></td>
             <td class="rsssl-dashboard-dismiss" data-dismiss_type="<?php echo $id?>"><?php echo $dismiss?></td>
         </tr>
 
@@ -2686,6 +2700,8 @@ class rsssl_admin extends rsssl_front_end
         if (!$count) {
             $count = 0;
 
+	        $options = get_option('rlrsssl_options');
+
             $notices = $this->get_notices_list();
             foreach ($notices as $id => $notice) {
 
@@ -2701,9 +2717,14 @@ class rsssl_admin extends rsssl_front_end
                 $output = $func();
                 $success = (isset($notice['output'][$output]['icon']) && ($notice['output'][$output]['icon'] === 'success')) ? true : false;
 
+	            if ( (isset($notice['output'][$output]['plusone']) && $notice['output'][$output]['plusone'] && ($options['dismiss_all_notices'] !== false) ) ) {
+		            update_option('rsssl_'.$id.'_dismissed', true);
+                    continue;
+	            }
+
                 //&& notice not dismissed
                 if (!$success && isset($notice['output'][$output]['plusone']) && $notice['output'][$output]['plusone']) {
-                    $count++;
+                    $count ++;
                 }
 
                 //Check if there's an existing count after the Settings item
@@ -3082,6 +3103,7 @@ class rsssl_admin extends rsssl_front_end
         }
 
         add_settings_field('id_switch_mixed_content_fixer_hook', __("Use alternative method to fix mixed content", "really-simple-ssl"), array($this, 'get_option_switch_mixed_content_fixer_hook'), 'rlrsssl', 'rlrsssl_settings');
+	    add_settings_field('id_dismiss_all_notices', __("Dismiss all (1) notices", "really-simple-ssl"), array($this, 'get_option_dismiss_all_notices'), 'rlrsssl', 'rlrsssl_settings');
 
         add_settings_field('id_deactivate_keep_ssl', __("Deactivate plugin and keep SSL", "really-simple-ssl"), array($this, 'get_option_deactivate_keep_ssl'), 'rlrsssl', 'rlrsssl_settings');
 
@@ -3167,6 +3189,12 @@ class rsssl_admin extends rsssl_front_end
         } else {
             $newinput['switch_mixed_content_fixer_hook'] = FALSE;
         }
+
+	    if (!empty($input['dismiss_all_notices']) && $input['dismiss_all_notices'] == '1') {
+		    $newinput['dismiss_all_notices'] = TRUE;
+	    } else {
+		    $newinput['dismiss_all_notices'] = FALSE;
+	    }
 
         if (!empty($input['htaccess_redirect']) && $input['htaccess_redirect'] == '1') {
             $newinput['htaccess_redirect'] = TRUE;
@@ -3376,7 +3404,6 @@ class rsssl_admin extends rsssl_front_end
 
     public function get_option_switch_mixed_content_fixer_hook()
     {
-
         ?>
         <label class="rsssl-switch">
             <input id="rlrsssl_options" name="rlrsssl_options[switch_mixed_content_fixer_hook]" size="40" value="1"
@@ -3386,6 +3413,18 @@ class rsssl_admin extends rsssl_front_end
         <?php
         RSSSL()->rsssl_help->get_help_tip(__("If this option is set to true, the mixed content fixer will fire on the init hook instead of the template_redirect hook. Only use this option when you experience problems with the mixed content fixer.", "really-simple-ssl"));
     }
+
+	public function get_option_dismiss_all_notices()
+	{
+		?>
+        <label class="rsssl-switch">
+            <input id="rlrsssl_options" name="rlrsssl_options[dismiss_all_notices]" size="40" value="1"
+                   type="checkbox" <?php checked(1, $this->dismiss_all_notices, true) ?> />
+            <span class="rsssl-slider rsssl-round"></span>
+        </label>
+		<?php
+		RSSSL()->rsssl_help->get_help_tip(__("Enable this option to dismiss all +1 notices in the Configuration tab", "really-simple-ssl"));
+	}
 
     /**
      *
