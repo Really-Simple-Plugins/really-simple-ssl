@@ -85,6 +85,7 @@ Yes. There is a dedicated network settings page where you can switch between net
 * Added right-to-left text support
 * Show a plusone behind the notice that generated it
 * Added a dismiss text link to dismissible notices
+* Added option to dismiss all notices
 
 = 3.2.2 =
 * Fix: some single sites setup were having issues with multisite files being include.
