@@ -49,14 +49,6 @@ class rsssl_admin extends rsssl_front_end
     function __construct()
     {
 
-//        update_option('rsssl_mixed_content_fixer_detected_dismissed', false);
-//        update_option('rsssl_check_redirect_dismissed', false);
-//	    update_option('rsssl_ssl_detected_dismissed', false);
-//	    update_option('rsssl_check_redirect_dismissed', false);
-//	    update_option('rsssl_hsts_enabled_dismissed', false);
-//	    update_option('rsssl_secure_cookies_set_dismissed', false);
-//	    update_option('rsssl_mixed_content_scan_dismissed', false);
-
         if (isset(self::$_this))
             wp_die(sprintf(__('%s is a singleton class and you cannot create a second instance.', 'really-simple-ssl'), get_class($this)));
 
@@ -2717,7 +2709,7 @@ class rsssl_admin extends rsssl_front_end
                 $output = $func();
                 $success = (isset($notice['output'][$output]['icon']) && ($notice['output'][$output]['icon'] === 'success')) ? true : false;
 
-	            if ( (isset($notice['output'][$output]['plusone']) && $notice['output'][$output]['plusone'] && ($options['dismiss_all_notices'] !== false) ) ) {
+	            if ( (isset($notice['output'][$output]['dismissible']) && $notice['output'][$output]['dismissible'] && ($options['dismiss_all_notices'] !== false) ) ) {
 		            update_option('rsssl_'.$id.'_dismissed', true);
                     continue;
 	            }
