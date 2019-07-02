@@ -2724,7 +2724,7 @@ class rsssl_admin extends rsssl_front_end
 
                 //&& notice not dismissed
                 if (!$success && isset($notice['output'][$output]['plusone']) && $notice['output'][$output]['plusone']) {
-                    $count ++;
+                    $count++;
                 }
 
                 //Check if there's an existing count after the Settings item
