@@ -33,31 +33,31 @@ if (!class_exists("rsssl_site_health")) {
 
 		public function rsssl_hsts_test() {
 			$result = array(
-				'label'       => __( 'HTTP Strict Transport Security is enabled', 'really-simple-ssl' ),
+				'label'       => __( '301 SSL redirect enabled', 'really-simple-ssl' ),
 				'status'      => 'good',
 				'badge'       => array(
-					'label' => __( 'Security' ),
+					'label' => __( 'SSL' ),
 					'color' => 'blue',
 				),
 				'description' => sprintf(
 					'<p>%s</p>',
-					__( 'HTTP Strict Transport Security helps to make your site more secure.', 'really-simple-ssl' )
+					__( 'You have set a 301 redirect to SSL. This is important for SEO purposes', 'really-simple-ssl' )
 				),
 				'actions'     => '',
 				'test'        => 'really-simple-ssl',
 			);
 
-			if (!RSSSL()->really_simple_ssl->hsts) {
+			if (RSSSL()->really_simple_ssl->has_301_redirect() && RSSSL()->really_simple_ssl->wp_redirect && RSSSL()->rsssl_server->uses_htaccess() && !RSSSL()->really_simple_ssl->htaccess_redirect) {
 				$result['status']      = 'recommended';
-				$result['label']       = __( 'HTTP Strict Transport Security is not enabled.' , 'really-simple-ssl' );
+				$result['label']       = __( '301 .htaccess redirect is not enabled.' , 'really-simple-ssl' );
 				$result['description'] = sprintf(
 					'<p>%s</p>',
-					__( 'HTTP Strict Transport Security is not enabled. ' )
+					__( 'The 301 .htaccess redirect is often the fastest and most reliable redirect option.' )
 				);
 				$result['actions']     .= sprintf(
 					'<p><a href="%s">%s</a></p>',
-					esc_url( admin_url("options-general.php?page=rlrsssl_really_simple_ssl") ),
-					__( 'Enable HSTS', 'really-simple-ssl' )
+					esc_url( admin_url("options-general.php?page=rlrsssl_really_simple_ssl&tab=settings") ),
+					__( 'Enable 301 .htaccess redirect', 'really-simple-ssl' )
 				);
 			}
 
