@@ -62,7 +62,7 @@ class rsssl_admin extends rsssl_front_end
 
         register_deactivation_hook(dirname(__FILE__) . "/" . $this->plugin_filename, array($this, 'deactivate'));
 
-        add_action('admin_init', array($this, 'add_privacy_info'));
+	    add_action('admin_init', array($this, 'add_privacy_info'));
 
     }
 
@@ -2566,7 +2566,7 @@ class rsssl_admin extends rsssl_front_end
                         'dismissible' => true
                     ),
                     'wp-redirect-to-htaccess' => array(
-                        'msg' => sprintf(__('WordPress 301 redirect enabled. We recommend to <a href="%s" target="_blank">enable the 301 .htaccess redirect option</a> on your specific setup.', 'really-simple-ssl'), admin_url("options-general.php?page=rlrsssl_really_simple_ssl&tab=settings")) . "<span class='rsssl-dashboard-plusone update-plugins rsssl-update-count'><span class='update-count'>1</span></span>" . "<span class='rsssl-dashboard-dismiss' data-dismiss_type='check_redirect'><a href='#' class='rsssl-dismiss-text rsssl-close-warning'>$dismiss</a></span>",
+                        'msg' => sprintf(__('WordPress 301 redirect enabled. We recommend to <a href="%s" target="_blank">enable the 301 .htaccess redirect option</a> on your specific setup.', 'really-simple-ssl'), admin_url("options-general.php?page=rlrsssl_really_simple_ssl&tab=settings&highlight")) . "<span class='rsssl-dashboard-plusone update-plugins rsssl-update-count'><span class='update-count'>1</span></span>" . "<span class='rsssl-dashboard-dismiss' data-dismiss_type='check_redirect'><a href='#' class='rsssl-dismiss-text rsssl-close-warning'>$dismiss</a></span>",
                         'icon' => 'warning',
                         'plusone' => true,
                         'dismissible' => true,
@@ -3073,6 +3073,10 @@ class rsssl_admin extends rsssl_front_end
 
     public function create_form()
     {
+	    if ($this->is_settings_page()) {
+		    add_action( 'admin_head', array( $this, 'highlight_js' ) );
+	    }
+
         register_setting('rlrsssl_options', 'rlrsssl_options', array($this, 'options_validate'));
         add_settings_section('rlrsssl_settings', __("Settings", "really-simple-ssl"), array($this, 'section_text'), 'rlrsssl');
         add_settings_field('id_autoreplace_insecure_links', __("Mixed content fixer", "really-simple-ssl"), array($this, 'get_option_autoreplace_insecure_links'), 'rlrsssl', 'rlrsssl_settings');
@@ -3315,7 +3319,7 @@ class rsssl_admin extends rsssl_front_end
         }
 
         ?>
-        <label class="rsssl-switch">
+        <label class="rsssl-switch" id="rsssl-maybe-highlight">
             <input id="rlrsssl_options" name="rlrsssl_options[htaccess_redirect]" size="40" value="1"
                    type="checkbox" <?php checked(1, $this->htaccess_redirect, true) ?> />
             <span class="rsssl-slider rsssl-round"></span>
@@ -3692,6 +3696,23 @@ class rsssl_admin extends rsssl_front_end
         }
 
         return $htaccess_file;
+    }
+
+    public function highlight_js(){
+        ?>
+        <script>
+            jQuery(document).ready(function ($) {
+                'use strict';
+                $(function() {
+                    if (document.location.href.indexOf('&highlight') > -1 ) {
+                        $('#rsssl-maybe-highlight').closest('tr').addClass('rsssl-highlight');
+                        //$('#rsssl-maybe-highlight').find('span').addClass('rsssl-highlight');
+
+                    }
+                });
+            });
+        </script>
+<?php
     }
 
 } //class closure

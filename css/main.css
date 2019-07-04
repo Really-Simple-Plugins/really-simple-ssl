@@ -593,3 +593,7 @@ input:focus + .rsssl-slider {
 .rsssl-dashboard-plusone {
   margin-left: 8px;
 }
+
+.rsssl-highlight {
+  border: 3px solid orange;
+}
