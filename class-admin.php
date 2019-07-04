@@ -2527,7 +2527,8 @@ class rsssl_admin extends rsssl_front_end
                     ),
                     'not-found' => array(
                         'msg' => sprintf(__('The mixed content fixer is active, but was not detected on the frontpage. Please follow %sthese steps%s to check if the mixed content fixer is working.', "really-simple-ssl"),'<a target="_blank" href="https://www.really-simple-ssl.com/knowledge-base/how-to-check-if-the-mixed-content-fixer-is-active/">', '</a>' ),
-                        'icon' => 'error'
+                        'icon' => 'warning',
+                        'dismissible' => true
                     ),
                 ),
             ),
