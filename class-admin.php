@@ -3715,7 +3715,7 @@ class rsssl_admin extends rsssl_front_end
                 });
             });
         </script>
-<?php
+    <?php
     }
 
     public function maybe_remove_highlight_from_url() {
@@ -3734,7 +3734,7 @@ class rsssl_admin extends rsssl_front_end
 } //class closure
 
 /**
- * Wrapper function for mixed_content_fixer_detected()
+ * Wrapper functions for dashboard notices()
  * @return string
  */
 
