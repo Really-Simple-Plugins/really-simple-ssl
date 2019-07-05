@@ -99,7 +99,6 @@ class REALLY_SIMPLE_SSL
     {
         require_once(rsssl_path . 'class-front-end.php');
         require_once(rsssl_path . 'class-mixed-content-fixer.php');
-	    require_once(rsssl_path . 'class-site-health.php');
 
 	    $wpcli = defined( 'WP_CLI' ) && WP_CLI;
 
@@ -112,7 +111,8 @@ class REALLY_SIMPLE_SSL
                 require_once(rsssl_path . 'class-multisite.php');
                 require_once(rsssl_path . 'multisite-cron.php');
             }
-            require_once(rsssl_path . 'class-admin.php');
+	        require_once(rsssl_path . 'class-site-health.php');
+	        require_once(rsssl_path . 'class-admin.php');
             require_once(rsssl_path . 'class-cache.php');
             require_once(rsssl_path . 'class-server.php');
             require_once(rsssl_path . 'class-help.php');
