@@ -111,12 +111,12 @@ class REALLY_SIMPLE_SSL
                 require_once(rsssl_path . 'class-multisite.php');
                 require_once(rsssl_path . 'multisite-cron.php');
             }
-	        require_once(rsssl_path . 'class-site-health.php');
 	        require_once(rsssl_path . 'class-admin.php');
             require_once(rsssl_path . 'class-cache.php');
             require_once(rsssl_path . 'class-server.php');
             require_once(rsssl_path . 'class-help.php');
             require_once(rsssl_path . 'class-certificate.php');
+	        require_once(rsssl_path . 'class-site-health.php');
         }
     }
 
