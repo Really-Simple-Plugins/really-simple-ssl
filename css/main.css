@@ -588,7 +588,19 @@ input:focus + .rsssl-slider {
 .rsssl-highlight {
   border-left: 4px solid #46B450;
   box-shadow: 0 1px 1px 0 rgba(0,0,0,0.1);
-  background-color: #d6efd6;
+  background-image:none !important;
+  -o-animation: fadeIt 5s ease-in-out;
+  animation: fadeIt 5s ease-in-out;}
+
+@-o-keyframes fadeIt {
+  0%   { background-color: #FFFFFF; }
+  25%  { background-color: #d6efd6; }
+  100% { background-color: #FFFFFF; }
+}
+@keyframes fadeIt {
+  0%   { background-color: #FFFFFF; }
+  25%  { background-color: #d6efd6; }
+  100% { background-color: #FFFFFF; }
 }
 
 .form-table th {
