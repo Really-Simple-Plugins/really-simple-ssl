@@ -184,6 +184,8 @@ class rsssl_admin extends rsssl_front_end
         add_action('admin_init', array($this, 'create_form'), 40);
         add_action('admin_init', array($this, 'listen_for_deactivation'), 40);
 
+        add_action('update_option_rlrsssl_options' , array($this, 'safe_redirect_to_settings_page'));
+
         $plugin = rsssl_plugin;
         add_filter("plugin_action_links_$plugin", array($this, 'plugin_settings_link'));
 
@@ -2574,7 +2576,7 @@ class rsssl_admin extends rsssl_front_end
                         'dismissible' => true
                     ),
                     'wp-redirect-to-htaccess' => array(
-                        'msg' => sprintf(__('WordPress 301 redirect enabled. We recommend to <a href="%s" target="_self">enable the 301 .htaccess redirect option</a> on your specific setup.', 'really-simple-ssl'), admin_url("options-general.php?page=rlrsssl_really_simple_ssl&tab=settings&highlight")) . "<span class='rsssl-dashboard-plusone update-plugins rsssl-update-count'><span class='update-count'>1</span></span>" . "<span class='rsssl-dashboard-dismiss' data-dismiss_type='check_redirect'><a href='#' class='rsssl-dismiss-text rsssl-close-warning'>$dismiss</a></span>",
+                        'msg' => sprintf(__('WordPress 301 redirect enabled. We recommend to <a href="%s" target="_self">enable the 301 .htaccess redirect option</a> on your specific setup.', 'really-simple-ssl'), add_query_arg(array("page"=>"rlrsssl_really_simple_ssl", "tab"=>"settings", "highlight"=>"1"),admin_url("options-general.php"))) . "<span class='rsssl-dashboard-plusone update-plugins rsssl-update-count'><span class='update-count'>1</span></span>" . "<span class='rsssl-dashboard-dismiss' data-dismiss_type='check_redirect'><a href='#' class='rsssl-dismiss-text rsssl-close-warning'>$dismiss</a></span>",
                         'icon' => 'warning',
                         'plusone' => true,
                         'dismissible' => true,
@@ -3721,6 +3723,13 @@ class rsssl_admin extends rsssl_front_end
             });
         </script>
 <?php
+    }
+
+    public function safe_redirect_to_settings_page()
+    {
+        $url = add_query_arg(array("page"=>"rlrsssl_really_simple_ssl", "tab"=>"settings"),admin_url("options-general.php"));
+	    wp_safe_redirect( $url );
+	    exit;
     }
 
 } //class closure
