@@ -48,7 +48,7 @@ class rsssl_admin extends rsssl_front_end
 
     function __construct()
     {
-        
+
         if (isset(self::$_this))
             wp_die(sprintf(__('%s is a singleton class and you cannot create a second instance.', 'really-simple-ssl'), get_class($this)));
 
@@ -3708,8 +3708,6 @@ class rsssl_admin extends rsssl_front_end
                 $(function() {
                     if (document.location.href.indexOf('&highlight') > -1 ) {
                         $('#rsssl-maybe-highlight').closest('tr').addClass('rsssl-highlight');
-                        //$('#rsssl-maybe-highlight').find('span').addClass('rsssl-highlight');
-
                     }
                 });
             });
