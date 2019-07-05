@@ -177,9 +177,9 @@ class rsssl_admin extends rsssl_front_end
         add_action('admin_init', array($this, 'listen_for_deactivation'), 40);
 
 	    //Only redirect while on own settings page, otherwise deactivate link in plugins overview will break.
-	    if ($this->is_settings_page()) {
-		    add_action( 'update_option_rlrsssl_options', array( $this, 'safe_redirect_to_settings_page' ) );
-	    }
+	    //if ($this->is_settings_page()) {
+		    add_action( 'update_option_rlrsssl_options', array( $this, 'maybe_remove_highlight_from_url' ) );
+	    //}
 
         $plugin = rsssl_plugin;
         add_filter("plugin_action_links_$plugin", array($this, 'plugin_settings_link'));
@@ -3718,11 +3718,17 @@ class rsssl_admin extends rsssl_front_end
 <?php
     }
 
-    public function safe_redirect_to_settings_page()
-    {
-        $url = add_query_arg(array("page"=>"rlrsssl_really_simple_ssl", "tab"=>"settings"),admin_url("options-general.php"));
-	    wp_safe_redirect( $url );
-	    exit;
+    public function maybe_remove_highlight_from_url() {
+
+	    $http_referrer = $_POST['_wp_http_referer'];
+	    if ( strpos( $http_referrer, "&highlight=" ) ) {
+		    $url = add_query_arg( array(
+			    "page" => "rlrsssl_really_simple_ssl",
+			    "tab"  => "settings"
+		    ), admin_url( "options-general.php" ) );
+		    wp_safe_redirect( $url );
+		    exit;
+	    }
     }
 
 } //class closure
