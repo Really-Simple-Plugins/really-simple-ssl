@@ -575,15 +575,6 @@ input:focus + .rsssl-slider {
   width: 90%;
 }
 
-.rsssl-close-warning {
-  color: black;
-  font-size: 1.3em;
-}
-
-.rsssl-close-warning:hover {
-  cursor: pointer;
-}
-
 .rsssl-dismiss-text {
   font-size: 1em;
   color: #0073aa;
@@ -595,5 +586,31 @@ input:focus + .rsssl-slider {
 }
 
 .rsssl-highlight {
-  border: 3px solid orange;
+  border-left: 4px solid #46B450;
+  box-shadow: 0 1px 1px 0 rgba(0,0,0,0.1);
+  background-color: #d6efd6;
+}
+
+.form-table th {
+  padding-left: 10px;
+}
+
+  /*Reset the bootstrap styling to make dashboard dismiss buttons identical*/
+
+button {
+  all: initial;
+}
+
+.rsssl-dashboard-dismiss .close {
+  all: initial;
+}
+
+.rsssl-dashboard-dismiss span {
+  font-size: 1.5em;
+  color: darkgrey;
+}
+
+.rsssl-dashboard-dismiss span:hover {
+  cursor: pointer;
+  color: grey;
 }

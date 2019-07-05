@@ -49,6 +49,14 @@ class rsssl_admin extends rsssl_front_end
     function __construct()
     {
 
+	    update_option('rsssl_mixed_content_fixer_detected_dismissed', false);
+	    update_option('rsssl_check_redirect_dismissed', false);
+	    update_option('rsssl_ssl_detected_dismissed', false);
+	    update_option('rsssl_check_redirect_dismissed', false);
+	    update_option('rsssl_hsts_enabled_dismissed', false);
+	    update_option('rsssl_secure_cookies_set_dismissed', false);
+	    update_option('rsssl_mixed_content_scan_dismissed', false);
+
         if (isset(self::$_this))
             wp_die(sprintf(__('%s is a singleton class and you cannot create a second instance.', 'really-simple-ssl'), get_class($this)));
 
@@ -2566,7 +2574,7 @@ class rsssl_admin extends rsssl_front_end
                         'dismissible' => true
                     ),
                     'wp-redirect-to-htaccess' => array(
-                        'msg' => sprintf(__('WordPress 301 redirect enabled. We recommend to <a href="%s" target="_blank">enable the 301 .htaccess redirect option</a> on your specific setup.', 'really-simple-ssl'), admin_url("options-general.php?page=rlrsssl_really_simple_ssl&tab=settings&highlight")) . "<span class='rsssl-dashboard-plusone update-plugins rsssl-update-count'><span class='update-count'>1</span></span>" . "<span class='rsssl-dashboard-dismiss' data-dismiss_type='check_redirect'><a href='#' class='rsssl-dismiss-text rsssl-close-warning'>$dismiss</a></span>",
+                        'msg' => sprintf(__('WordPress 301 redirect enabled. We recommend to <a href="%s" target="_self">enable the 301 .htaccess redirect option</a> on your specific setup.', 'really-simple-ssl'), admin_url("options-general.php?page=rlrsssl_really_simple_ssl&tab=settings&highlight")) . "<span class='rsssl-dashboard-plusone update-plugins rsssl-update-count'><span class='update-count'>1</span></span>" . "<span class='rsssl-dashboard-dismiss' data-dismiss_type='check_redirect'><a href='#' class='rsssl-dismiss-text rsssl-close-warning'>$dismiss</a></span>",
                         'icon' => 'warning',
                         'plusone' => true,
                         'dismissible' => true,
