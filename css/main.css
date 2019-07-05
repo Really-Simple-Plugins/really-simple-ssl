@@ -594,13 +594,13 @@ input:focus + .rsssl-slider {
 
 @-o-keyframes fadeIt {
   0%   { background-color: #FFFFFF; }
-  25%  { background-color: #d6efd6; }
-  100% { background-color: #FFFFFF; }
+  30%  { background-color: #d6efd6; }
+  100% { background-color: inherit; }
 }
 @keyframes fadeIt {
   0%   { background-color: #FFFFFF; }
-  25%  { background-color: #d6efd6; }
-  100% { background-color: #FFFFFF; }
+  30%  { background-color: #d6efd6; }
+  100% { background-color: inherit; }
 }
 
 .form-table th {
