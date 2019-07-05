@@ -620,6 +620,7 @@ button {
 .rsssl-dashboard-dismiss span {
   font-size: 1.5em;
   color: darkgrey;
+  font-family: sans-serif;
 }
 
 .rsssl-dashboard-dismiss span:hover {

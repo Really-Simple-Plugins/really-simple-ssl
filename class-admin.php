@@ -176,7 +176,10 @@ class rsssl_admin extends rsssl_front_end
         add_action('admin_init', array($this, 'create_form'), 40);
         add_action('admin_init', array($this, 'listen_for_deactivation'), 40);
 
-        add_action('update_option_rlrsssl_options' , array($this, 'safe_redirect_to_settings_page'));
+	    //Only redirect while on own settings page, otherwise deactivate link in plugins overview will break.
+	    if ($this->is_settings_page()) {
+		    add_action( 'update_option_rlrsssl_options', array( $this, 'safe_redirect_to_settings_page' ) );
+	    }
 
         $plugin = rsssl_plugin;
         add_filter("plugin_action_links_$plugin", array($this, 'plugin_settings_link'));
