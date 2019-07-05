@@ -1,0 +1,600 @@
+body {
+    direction: rtl;
+    unicode-bidi: embed;
+}
+
+.rsssl-notice {
+    background-color: #fff;
+    border-right: 4px solid green;
+    padding: 1px 15px;
+}
+
+.rsssl-main {
+    flex: 1;
+    width: 80%;
+    float:right;
+}
+
+.rsssl-sidebar img {
+    max-width:100%;
+    /*height:inherit;*/
+}
+#message.updated.notice.activate-ssl {
+    padding-top: 10px;
+}
+.activate-ssl ul, .rsssl-result ul, .rsssl_bullets {
+    list-style-type: square;
+    margin-right:30px;
+}
+
+.activate-ssl .button {
+    margin-bottom:20px;
+}
+
+.really-simple-ssl-table {
+    display: flex;
+    flex-direction: column;
+    max-width: 1140px;
+}
+
+.rsssl-table-td-main-content {
+    width: 100%;
+}
+
+.really-simple-ssl-table tr:first-child {
+    border-top-right-radius: .55rem;
+    border-top-left-radius: .55rem;
+}
+
+.really-simple-ssl-table tr:last-child {
+    margin-bottom: 0;
+    border-bottom-right-radius: .55rem;
+    border-bottom-left-radius: .55rem;
+}
+
+.really-simple-ssl-table tr {
+    position: relative;
+    display: block;
+    padding: .75rem 1.25rem;
+    margin-bottom: -1px;
+    background-color: #fff;
+    border: 1px solid rgba(0,0,0,.125);
+}
+
+.debug-log {
+    background-color: #fff;
+    padding:15px;
+    border:1px solid black;
+}
+
+.rsssl-icons {
+    width:15px;
+    height:15px;
+}
+
+.rsssl-update-count {
+    margin-right: 4px !important;
+    display: inline-block;
+    vertical-align: top;
+    box-sizing: border-box;
+    margin: 1px 2px -1px 0;
+    padding: 0 5px;
+    min-width: 18px;
+    height: 18px;
+    border-radius: 9px;
+    background-color: #ca4a1f;
+    color: #fff;
+    font-size: 11px;
+    line-height: 1.6;
+    text-align: center;
+    z-index: 26
+}
+
+/* rsssl-rsssl-tooltip for settings page */
+/* Base styles for the element that has a rsssl-tooltip */
+[data-rsssl-tooltip],
+.rsssl-tooltip {
+    position: relative;
+    cursor: pointer;
+}
+
+/* Base styles for the entire tooltip */
+[data-rsssl-tooltip]:before,
+[data-rsssl-tooltip]:after,
+.rsssl-tooltip:before,
+.rsssl-tooltip:after {
+    position: absolute;
+    visibility: hidden;
+    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
+    filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=0);
+    opacity: 0;
+    -webkit-transition:
+            opacity 0.2s ease-in-out,
+            visibility 0.2s ease-in-out,
+            -webkit-transform 0.2s cubic-bezier(0.71, 1.7, 0.77, 1.24);
+    -moz-transition:
+            opacity 0.2s ease-in-out,
+            visibility 0.2s ease-in-out,
+            -moz-transform 0.2s cubic-bezier(0.71, 1.7, 0.77, 1.24);
+    transition:
+            opacity 0.2s ease-in-out,
+            visibility 0.2s ease-in-out,
+            transform 0.2s cubic-bezier(0.71, 1.7, 0.77, 1.24);
+    -webkit-transform: translate3d(0, 0, 0);
+    -moz-transform:    translate3d(0, 0, 0);
+    transform:         translate3d(0, 0, 0);
+    pointer-events: none;
+}
+
+/* Show the entire rsssl-tooltip on hover and focus */
+[data-rsssl-tooltip]:hover:before,
+[data-rsssl-tooltip]:hover:after,
+[data-rsssl-tooltip]:focus:before,
+[data-rsssl-tooltip]:focus:after,
+.rsssl-tooltip:hover:before,
+.rsssl-tooltip:hover:after,
+.rsssl-tooltip:focus:before,
+.rsssl-tooltip:focus:after {
+    visibility: visible;
+    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=100)";
+    filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=100);
+    opacity: 1;
+}
+
+/* Base styles for the rsssl-tooltip's directional arrow */
+.rsssl-tooltip:before,
+[data-rsssl-tooltip]:before {
+    z-index: 1001;
+    border: 6px solid transparent;
+    background: transparent;
+    content: "";
+}
+
+/* Base styles for the rsssl-tooltip's content area */
+.rsssl-tooltip:after,
+[data-rsssl-tooltip]:after {
+    z-index: 1000;
+    padding: 8px;
+    width: 160px;
+    background-color: #000;
+    background-color: hsla(0, 0%, 20%, 0.9);
+    color: #fff;
+    content: attr(data-rsssl-tooltip);
+    font-size: 14px;
+    line-height: 1.2;
+}
+
+/* Directions */
+
+/* Top (default) */
+[data-rsssl-tooltip]:before,
+[data-rsssl-tooltip]:after,
+.rsssl-tooltip:before,
+.rsssl-tooltip:after,
+.rsssl-tooltip-top:before,
+.rsssl-tooltip-top:after {
+    bottom: 100%;
+    right: 50%;
+}
+
+[data-rsssl-tooltip]:before,
+.rsssl-tooltip:before,
+.rsssl-tooltip-top:before {
+    margin-right: -6px;
+    margin-bottom: -12px;
+    border-top-color: #000;
+    border-top-color: hsla(0, 0%, 20%, 0.9);
+}
+
+/* Horizontally align top/bottom rsssl-tooltips */
+[data-rsssl-tooltip]:after,
+.rsssl-tooltip:after,
+.rsssl-tooltip-top:after {
+    margin-right: -80px;
+}
+
+[data-rsssl-tooltip]:hover:before,
+[data-rsssl-tooltip]:hover:after,
+[data-rsssl-tooltip]:focus:before,
+[data-rsssl-tooltip]:focus:after,
+.rsssl-tooltip:hover:before,
+.rsssl-tooltip:hover:after,
+.rsssl-tooltip:focus:before,
+.rsssl-tooltip:focus:after,
+.rsssl-tooltip-top:hover:before,
+.rsssl-tooltip-top:hover:after,
+.rsssl-tooltip-top:focus:before,
+.rsssl-tooltip-top:focus:after {
+    -webkit-transform: translateY(-12px);
+    -moz-transform:    translateY(-12px);
+    transform:         translateY(-12px);
+}
+
+/* Left */
+.rsssl-tooltip-left:before,
+.rsssl-tooltip-left:after {
+    left: 100%;
+    bottom: 50%;
+    right: auto;
+}
+
+.rsssl-tooltip-left:before {
+    margin-right: 0;
+    margin-left: -12px;
+    margin-bottom: 0;
+    border-top-color: transparent;
+    border-right-color: #000;
+    border-right-color: hsla(0, 0%, 20%, 0.9);
+}
+
+.rsssl-tooltip-left:hover:before,
+.rsssl-tooltip-left:hover:after,
+.rsssl-tooltip-left:focus:before,
+.rsssl-tooltip-left:focus:after {
+    -webkit-transform: translateX(12px);
+    -moz-transform:    translateX(12px);
+    transform:         translateX(12px);
+}
+
+/* Bottom */
+.rsssl-tooltip-bottom:before,
+.rsssl-tooltip-bottom:after {
+    top: 100%;
+    bottom: auto;
+    right: 50%;
+}
+
+.rsssl-tooltip-bottom:before {
+    margin-top: -12px;
+    margin-bottom: 0;
+    border-top-color: transparent;
+    border-bottom-color: #000;
+    border-bottom-color: hsla(0, 0%, 20%, 0.9);
+}
+
+.rsssl-tooltip-bottom:hover:before,
+.rsssl-tooltip-bottom:hover:after,
+.rsssl-tooltip-bottom:focus:before,
+.rsssl-tooltip-bottom:focus:after {
+    -webkit-transform: translateY(12px);
+    -moz-transform:    translateY(12px);
+    transform:         translateY(12px);
+}
+
+/* Right */
+.rsssl-tooltip-right:before,
+.rsssl-tooltip-right:after {
+    bottom: 50%;
+    right: 100%;
+}
+
+.rsssl-tooltip-right:before {
+    margin-bottom: 0;
+    margin-right: -12px;
+    border-top-color: transparent;
+    border-left-color: #000;
+    border-left-color: hsla(0, 0%, 20%, 0.9);
+}
+
+.rsssl-tooltip-right:hover:before,
+.rsssl-tooltip-right:hover:after,
+.rsssl-tooltip-right:focus:before,
+.rsssl-tooltip-right:focus:after {
+    -webkit-transform: translateX(-12px);
+    -moz-transform:    translateX(-12px);
+    transform:         translateX(-12px);
+}
+
+/* Move directional arrows down a bit for left/right rsssl-tooltips */
+.rsssl-tooltip-left:before,
+.rsssl-tooltip-right:before {
+    top: 3px;
+}
+
+/* Vertically center rsssl-tooltip content for left/right rsssl-tooltips */
+.rsssl-tooltip-left:after,
+.rsssl-tooltip-right:after {
+    margin-right: 0;
+    margin-bottom: -16px;
+}
+
+/* Styling for the sidebar in the admin tab of the free plugin */
+
+.rsssl-really-simple-plugins-logo {
+    background-color: #DCDCDC;
+    margin-right: -15px;
+    margin-left: -15px;
+}
+
+.rsssl-sidebar {
+    width: 240px;
+    margin-top: 20px;
+    padding-right: 15px;
+    padding-left: 15px;
+    margin-left: 15px;
+    padding-bottom: 15px;
+    background-color: #ECECEC;
+}
+
+.rsssl-sidebar-single-content-container {
+    min-height: 125px;
+    padding-bottom: 35px;
+    margin-bottom: 10px;
+    background-color: #DCDCDC;
+    width: 100%;
+    border-radius: 3%;
+}
+
+.rsssl-sidebar-single-content-container-pro {
+    min-height: 125px;
+    padding-bottom: 35px;
+    margin-bottom: 10px;
+    background-color: #DCDCDC;
+    width: 100%;
+    border-radius: 3%;
+}
+
+.rsssl-sidebar-title h3 {
+    font-size: 0.9em;
+}
+
+.rsssl-sidebar-text-content-pro {
+    font-weight: 700;
+    font-size: 0.8em;
+    width: 90%;
+    /*min-height: 100px;*/
+    margin: auto;
+}
+
+.rsssl-sidebar-text-content {
+    width: 45%;
+    padding-top: 5px;
+    padding-left: 7px;
+    font-weight: 700;
+    font-size: 0.8em;
+    float: left;
+    margin: 10px auto;
+}
+
+.rsssl-pro-image {
+    height: 30px;
+    margin-top: 6px;
+}
+
+.rsssl-sidebar-image-pro {
+    width: 90%;
+    margin: 10px;
+}
+
+.rsssl-sidebar-image {
+    width: 100px;
+    float: right;
+    padding: 10px;
+    height: 100px;
+}
+
+@media screen and (max-width: 1024px) and (min-width: 541px) {
+    /* Let the main container be 100% width again */
+    .rsssl-main {
+        width: 100%;
+    }
+
+    .rsssl-sidebar-title {
+        /*margin: auto;*/
+        text-align: center;
+    }
+
+    .rsssl-container {
+        flex-direction: column;
+    }
+    .rsssl-sidebar {
+        width: 100%;
+        /*padding-left: 10%;*/
+    }
+    .rsssl-really-simple-plugins-logo {
+        width: 40%;
+    }
+    .rsssl-sidebar-single-content-container {
+        width: 40%;
+        padding-right: 25px;
+        float: right;
+        margin-left: 25px;
+    }
+
+    .rsssl-sidebar-single-content-container-pro {
+        width: 40%;
+        padding-right: 25px;
+        margin: auto auto 25px;
+    }
+
+    .rsssl-sidebar-um-text-content {
+        width: 40%;
+    }
+    .rsssl-pro-image {
+        display: none;
+    }
+}
+
+@media screen and (max-width: 540px) {
+    .rsssl-main {
+        width: 100%;
+    }
+    .rsssl-container {
+        flex-direction: column;
+    }
+    .rsssl-sidebar {
+        display: grid;
+        text-align: -webkit-center;
+        width: 70%;
+    }
+    .rsssl-sidebar-um-text-content {
+        width: 45%;
+    }
+    .rsssl-sidebar-single-content-container-pro {
+        padding-bottom: 10px;
+    }
+    .rsssl-sidebar-single-content-container {
+        padding-bottom: 10px;
+    }
+}
+
+.rsssl-sidebar h4 {
+    font-size:14px;
+    font-style:italic;
+}
+
+.rsssl-wrapper {
+    padding: 30px;
+}
+
+.rsssl-sidebar-list {
+    font-size: 0.9em;
+}
+
+#rsssl-premium-button-pro {
+    display: inline-table;
+    width: 40%;
+    text-align: center;
+    float: left;
+    font-size: inherit;
+    height: 25px;
+    -webkit-border-radius: 12px;
+    -moz-border-radius: 12px;
+    border-radius: 12px;
+    background-color: #7BD561;
+    color: white;
+    margin-left: 5px;
+}
+
+.rsssl-sidebar-content {
+    float: right;
+    padding-bottom: 10px;
+}
+
+hr {
+    display: block;
+    height: 1px;
+    border: 0;
+    border-top: 1px solid #ccc;
+    margin: 1em 0;
+    padding: 0;
+}
+
+.rsssl-container {
+    display: flex;
+}
+
+#rsssl-premium-button {
+    display: inline-table;
+    width: 40%;
+    text-align: center;
+    float: left;
+    font-size: inherit;
+    height: 25px;
+    -webkit-border-radius: 12px;
+    -moz-border-radius: 12px;
+    border-radius: 12px;
+    background-color: #017FAF;
+    color: white;
+    margin-left: 5px;
+}
+
+.rsssl-more-info-button {
+    clear: both;
+}
+
+#TB_ajaxContent {
+    text-align: center !important;
+}
+
+#TB_window {
+    height: 370px !important;
+}
+
+.rsssl-button-deactivate-keep-ssl {
+    margin-left: 15px;
+}
+
+.rsssl-scan-button{
+    float: right;
+    margin-top: 17px;
+    margin-left: 5px;
+}
+
+/*
+    cool checkbox sliders
+*/
+.rsssl-switch {
+    position: relative;
+    display: inline-block;
+    width: 40px;
+    height: 21px;
+}
+.rsssl-switch input {
+    display: none;
+}
+.rsssl-slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    right: 0;
+    left: 0;
+    bottom: 0;
+    background-color: #ccc;
+    -webkit-transition: .4s;
+    transition: .4s;
+}
+.rsssl-slider:before {
+    position: absolute;
+    content: "";
+    height: 15px;
+    width: 15px;
+    right: 4px;
+    bottom: 3px;
+    background-color: white;
+    -webkit-transition: .4s;
+    transition: .4s;
+}
+.rsssl-slider.rsssl-round {
+    border-radius: 20px;
+}
+.rsssl-slider.rsssl-round:before {
+    border-radius: 50%;
+}
+input:checked + .rsssl-slider {
+    background-color: #2DAAE1;
+}
+input:checked + .rsssl-slider:before {
+    -webkit-transform: translateX(-17px);
+    -ms-transform: translateX(-17px);
+    transform: translateX(-17px);
+}
+input:disabled + .rsssl-slider {
+    background-color: #b3e0f4;
+}
+input:focus + .rsssl-slider {
+    box-shadow: 0 0 1px #2DAAE1;
+}
+
+.debug-log {
+    width: 90%;
+}
+
+.rsssl-close-warning {
+    color: black;
+    font-size: 1.3em;
+}
+
+.rsssl-close-warning:hover {
+    cursor: pointer;
+}
+
+.rsssl-dismiss-text {
+    font-size: 1em;
+    color: #0073aa;
+    margin-right: 6px;
+}
+
+.rsssl-dashboard-plusone {
+    margin-right: 8px;
+}

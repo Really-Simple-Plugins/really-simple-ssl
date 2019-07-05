@@ -69,6 +69,20 @@
 
 .rsssl-update-count {
   margin-left: 4px !important;
+  display: inline-block;
+  vertical-align: top;
+  box-sizing: border-box;
+  margin: 1px 0 -1px 2px;
+  padding: 0 5px;
+  min-width: 18px;
+  height: 18px;
+  border-radius: 9px;
+  background-color: #ca4a1f;
+  color: #fff;
+  font-size: 11px;
+  line-height: 1.6;
+  text-align: center;
+  z-index: 26
 }
 
 /* rsssl-rsssl-tooltip for settings page */
@@ -561,7 +575,54 @@ input:focus + .rsssl-slider {
   width: 90%;
 }
 
-.rsssl-close-warning {
-  color: black;
-  font-size: 1.3em;
+.rsssl-dismiss-text {
+  font-size: 1em;
+  color: #0073aa;
+  margin-left: 6px;
+}
+
+.rsssl-dashboard-plusone {
+  margin-left: 8px;
+}
+
+.rsssl-highlight {
+  border-left: 4px solid #46B450;
+  box-shadow: 0 1px 1px 0 rgba(0,0,0,0.1);
+  background-image:none !important;
+  -o-animation: fadeIt 5s ease-in-out;
+  animation: fadeIt 5s ease-in-out;}
+
+@-o-keyframes fadeIt {
+  0%   { background-color: #FFFFFF; }
+  30%  { background-color: #d6efd6; }
+  100% { background-color: inherit; }
+}
+@keyframes fadeIt {
+  0%   { background-color: #FFFFFF; }
+  30%  { background-color: #d6efd6; }
+  100% { background-color: inherit; }
+}
+
+.form-table th {
+  padding-left: 10px;
+}
+
+  /*Reset the bootstrap styling to make dashboard dismiss buttons identical*/
+
+button {
+  all: initial;
+}
+
+.rsssl-dashboard-dismiss .close {
+  all: initial;
+}
+
+.rsssl-dashboard-dismiss span {
+  font-size: 1.5em;
+  color: darkgrey;
+}
+
+.rsssl-dashboard-dismiss span:hover {
+  cursor: pointer;
+  color: grey;
 }
