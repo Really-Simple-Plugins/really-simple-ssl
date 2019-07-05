@@ -2571,7 +2571,7 @@ class rsssl_admin extends rsssl_front_end
                         'msg' => sprintf(__('WordPress 301 redirect enabled. We recommend to <a href="%s" target="_self">enable the 301 .htaccess redirect option</a> on your specific setup.', 'really-simple-ssl'), add_query_arg(array("page"=>"rlrsssl_really_simple_ssl", "tab"=>"settings", "highlight"=>"1"),admin_url("options-general.php"))) . "<span class='rsssl-dashboard-plusone update-plugins rsssl-update-count'><span class='update-count'>1</span></span>" . "<span class='rsssl-dashboard-dismiss' data-dismiss_type='check_redirect'><a href='#' class='rsssl-dismiss-text rsssl-close-warning'>$dismiss</a></span>",
                         'icon' => 'warning',
                         'plusone' => true,
-                        'dismissible' => true,
+                        'dismissible' => true
                     ),
                     'no-redirect-enabled' => array(
                         'msg' => __('Enable a .htaccess redirect or WordPress redirect in the settings to create a 301 redirect.', 'really-simple-ssl'),
@@ -2678,7 +2678,7 @@ class rsssl_admin extends rsssl_front_end
 
         ?>
         <tr>
-            <td><?php echo $icon?></td><td class="rsssl-table-td-main-content"><?php echo $msg ?></td>
+            <td><?php echo $icon?></td><td class="rsssl-table-td-main-content"><?php echo $msg?></td>
             <td class="rsssl-dashboard-dismiss" data-dismiss_type="<?php echo $id?>"><?php echo $dismiss?></td>
         </tr>
 
