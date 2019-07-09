@@ -3730,8 +3730,8 @@ class rsssl_admin extends rsssl_front_end
 
     public function maybe_remove_highlight_from_url() {
 
-	    $http_referrer = $_POST['_wp_http_referer'];
-	    if (isset($http_referrer) && strpos( $http_referrer, "&highlight=" ) ) {
+	    $http_referrer = isset($_POST['_wp_http_referer']) ? $_POST['_wp_http_referer'] : false;
+	    if ($http_referrer && strpos( $http_referrer, "&highlight=" ) ) {
 		    $url = add_query_arg( array(
 			    "page" => "rlrsssl_really_simple_ssl",
 			    "tab"  => "settings"
