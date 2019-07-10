@@ -49,6 +49,14 @@ class rsssl_admin extends rsssl_front_end
     function __construct()
     {
 
+//	    update_option('rsssl_mixed_content_fixer_detected_dismissed', false);
+//	    update_option('rsssl_check_redirect_dismissed', false);
+//	    update_option('rsssl_ssl_detected_dismissed', false);
+//	    update_option('rsssl_check_redirect_dismissed', false);
+//	    update_option('rsssl_hsts_enabled_dismissed', false);
+//	    update_option('rsssl_secure_cookies_set_dismissed', false);
+//	    update_option('rsssl_mixed_content_scan_dismissed', false);
+
         if (isset(self::$_this))
             wp_die(sprintf(__('%s is a singleton class and you cannot create a second instance.', 'really-simple-ssl'), get_class($this)));
 
@@ -1561,6 +1569,15 @@ class rsssl_admin extends rsssl_front_end
             return $version;
         }
     }
+
+	/**
+	 * @return bool
+     *
+     * Check if the .htaccess redirect is allowed on this setup
+     *
+     * @since 2.0
+     *
+	 */
     
     function htaccess_redirect_allowed()
     {
@@ -1571,10 +1588,14 @@ class rsssl_admin extends rsssl_front_end
         }
     }
 
-
-    /*
-    Checks if the htaccess contains redirect rules, either actual redirect or a rsssl marker.
-  */
+	/**
+	 * @return bool
+     *
+     * Checks if the htaccess contains redirect rules, either actual redirect or a rsssl marker.
+     *
+     * @since 2.0
+     *
+	 */
 
     public function htaccess_contains_redirect_rules()
     {
@@ -1619,11 +1640,13 @@ class rsssl_admin extends rsssl_front_end
         }
     }
 
-    /*
-     *    Checks if a 301 redirect is set
-     *    this is the case if either the wp_redirect is set, or the htaccess redirect is set.
+	/**
+	 * @return bool
      *
-     */
+     * Checks if a 301 redirect is set
+	 * this is the case if either the wp_redirect is set, or the htaccess redirect is set.
+     *
+	 */
 
     public function has_301_redirect()
     {
@@ -1728,6 +1751,14 @@ class rsssl_admin extends rsssl_front_end
         }
     }
 
+	/**
+	 * @param bool $oldvalue
+	 * @param bool $newvalue
+	 * @param bool $option
+     *
+     * Update the .htaccess file after saving settings
+     *
+	 */
 
     public function update_htaccess_after_settings_save($oldvalue = false, $newvalue = false, $option = false)
     {
@@ -1787,14 +1818,43 @@ class rsssl_admin extends rsssl_front_end
             //check if the mixed content fixer is active
             $response = wp_remote_get(home_url());
 
+
+
+            error_log(print_r($response, true));
+//            Can be error, e.g.:
+//	        [10-Jul-2019 08:57:12 UTC] WP_Error Object
+//	        (
+//		        [errors] => Array
+//	        (
+//		        [http_request_failed] => Array
+//		        (
+//			        [0] => cURL error 60: SSL certificate problem: unable to get local issuer certificate
+//                )
+//
+//        )
+
+//            if (is_wp_error($response)) {
+//            Likely a curl error?
+//              _e("Really Simple SSL could not retrieve the webpage: " , "really-simple-ssl") . $response->errors->http_request_failed[0];
+//            }
+
+
+
+
             if (is_array($response)) {
                 $status = wp_remote_retrieve_response_code($response);
+                error_log("Status " . $status);
                 $web_source = wp_remote_retrieve_body($response);
             }
 
             if ($status != 200) {
                 $mixed_content_fixer_detected = 'no-response';
-            } elseif (strpos($web_source, "data-rsssl=") === false) {
+            }
+//              elseif ($status == 403) {
+//                $mixed_content_fixer_detected = '403';
+//            }
+
+            elseif (strpos($web_source, "data-rsssl=") === false) {
                 $mixed_content_fixer_detected = 'not-found';
             } else {
                 $mixed_content_fixer_detected = 'found';
@@ -2233,6 +2293,11 @@ class rsssl_admin extends rsssl_front_end
         <?php
     }
 
+	/**
+	 *
+     * Insert the script to dismiss dashboard notices
+	 */
+
     public function insert_dismiss_settings_script()
     {
         $ajax_nonce = wp_create_nonce("really-simple-ssl");
@@ -2560,7 +2625,7 @@ class rsssl_admin extends rsssl_front_end
                     ),
                 ),
             ),
-            
+
             'check_redirect' => array(
                 'callback' => 'rsssl_check_redirect',
                 'condition' => array('rsssl_ssl_enabled' , 'rsssl_htaccess_redirect_allowed'),
@@ -2657,6 +2722,15 @@ class rsssl_admin extends rsssl_front_end
         return $notices;
     }
 
+	/**
+	 * @param $id
+	 * @param $notice
+     *
+     * Generate a notice row in the configuration dashboard tab
+     *
+     * @since 3.2
+     *
+	 */
 
     private function notice_row($id, $notice){
         if (!current_user_can('manage_options')) return;
@@ -2697,9 +2771,25 @@ class rsssl_admin extends rsssl_front_end
         <?php
     }
 
+	/**
+	 *
+     * Reset the plusone count transient
+     *
+     * @since 3.2
+     *
+	 */
+
     public function reset_plusone_cache(){
         delete_transient('rsssl_plusone_count');
     }
+
+	/**
+	 * @return int|mixed
+     *
+     * Count the plusones
+     *
+     * @since 3.2
+	 */
 
     public function count_plusones(){
         if (!current_user_can('manage_options')) return 0;
@@ -3425,6 +3515,16 @@ class rsssl_admin extends rsssl_front_end
         RSSSL()->rsssl_help->get_help_tip(__("If this option is set to true, the mixed content fixer will fire on the init hook instead of the template_redirect hook. Only use this option when you experience problems with the mixed content fixer.", "really-simple-ssl"));
     }
 
+	/**
+	 *
+     * Get the option to dismiss all Really Simple SSL notices
+     *
+     * @since 3.2
+     *
+     * @access public
+     *
+	 */
+
 	public function get_option_dismiss_all_notices()
 	{
 		?>
@@ -3488,6 +3588,12 @@ class rsssl_admin extends rsssl_front_end
         RSSSL()->rsssl_help->get_help_tip(__("Clicking this button will deactivate the plugin while keeping your site on SSL. The WordPress 301 redirect, Javascript redirect and mixed content fixer will stop working. The site address will remain https:// and the .htaccess redirect will remain active. Deactivating the plugin via the plugins overview will revert the site back to http://.", "really-simple-ssl"));
 
     }
+
+	/**
+	 *
+     * Mixed content fixer option
+     *
+	 */
 
     public function get_option_autoreplace_insecure_links()
     {
@@ -3638,10 +3744,12 @@ class rsssl_admin extends rsssl_front_end
         return false;
     }
 
-    /*
+	/**
+	 * @return mixed|string
+     *
      * Retrieve the contents of the test page
-     */
-
+     *
+	 */
 
     protected function get_test_page_contents()
     {
@@ -3726,6 +3834,16 @@ class rsssl_admin extends rsssl_front_end
         </script>
     <?php
     }
+
+	/**
+	 *
+     * Determine whether or not to remove the &highlight= parameter from URL
+     *
+     * @since 3.2
+     *
+     * @access public
+     *
+	 */
 
     public function maybe_remove_highlight_from_url() {
 
