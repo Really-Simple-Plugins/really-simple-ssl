@@ -3820,6 +3820,16 @@ class rsssl_admin extends rsssl_front_end
         return $htaccess_file;
     }
 
+	/**
+	 *
+     * Insert script to highlight option after dashboard click
+     *
+     * @since 3.2
+     *
+     * @access public
+     *
+	 */
+
     public function highlight_js(){
         ?>
         <script>
