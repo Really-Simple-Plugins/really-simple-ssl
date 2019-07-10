@@ -2560,11 +2560,10 @@ class rsssl_admin extends rsssl_front_end
                     ),
                 ),
             ),
-
-
+            
             'check_redirect' => array(
                 'callback' => 'rsssl_check_redirect',
-                'condition' => array('rsssl_htaccess_redirect_allowed'),
+                'condition' => array('rsssl_ssl_enabled' , 'rsssl_htaccess_redirect_allowed'),
                 'output' => array(
                     'htaccess-redirect-set' => array(
                         'msg' =>__('301 redirect to https set: .htaccess redirect.', 'really-simple-ssl'),
