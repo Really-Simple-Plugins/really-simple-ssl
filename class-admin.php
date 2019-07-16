@@ -2568,6 +2568,12 @@ class rsssl_admin extends rsssl_front_end
 	    $dismiss = __("dismiss", "really-simple-ssl");
 	    $enable_link = add_query_arg(array("page"=>"rlrsssl_really_simple_ssl", "tab"=>"settings", "highlight"=>"1"),admin_url("options-general.php"));
 
+	    if (RSSSL()->rsssl_server->uses_htaccess()) {
+		    $redirect_plusone = true;
+	    } else {
+	        $redirect_plusone = false;
+        }
+
 	    $notices = array(
             'ssl_enabled' => array(
                 'callback' => 'rsssl_ssl_enabled',
@@ -2647,7 +2653,7 @@ class rsssl_admin extends rsssl_front_end
                                  . "<span class='rsssl-dashboard-dismiss' data-dismiss_type='check_redirect'><a href='#' class='rsssl-dismiss-text rsssl-close-warning'>$dismiss</a></span>"
                                  . "<span class='rsssl-dashboard-plusone update-plugins rsssl-update-count'><span class='update-count'>1</span></span>",
                         'icon' => 'warning',
-                        'plusone' => true,
+                        'plusone' => $redirect_plusone,
                         'dismissible' => true
                     ),
                     'no-redirect-enabled' => array(
@@ -2672,7 +2678,6 @@ class rsssl_admin extends rsssl_front_end
                     ),
                 ),
             ),
-
 
             'hsts_enabled' => array(
                 'callback' => 'rsssl_hsts_enabled',
@@ -3806,7 +3811,6 @@ class rsssl_admin extends rsssl_front_end
      * since 3.1
      *
      * Determine the htaccess file. This can be either the regular .htaccess file, or an htaccess.conf file on bitnami installations.
-     *
      *
      */
 
