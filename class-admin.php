@@ -49,14 +49,6 @@ class rsssl_admin extends rsssl_front_end
     function __construct()
     {
 
-//	    update_option('rsssl_mixed_content_fixer_detected_dismissed', false);
-//	    update_option('rsssl_check_redirect_dismissed', false);
-//	    update_option('rsssl_ssl_detected_dismissed', false);
-//	    update_option('rsssl_check_redirect_dismissed', false);
-//	    update_option('rsssl_hsts_enabled_dismissed', false);
-//	    update_option('rsssl_secure_cookies_set_dismissed', false);
-//	    update_option('rsssl_mixed_content_scan_dismissed', false);
-
         if (isset(self::$_this))
             wp_die(sprintf(__('%s is a singleton class and you cannot create a second instance.', 'really-simple-ssl'), get_class($this)));
 
@@ -1818,10 +1810,7 @@ class rsssl_admin extends rsssl_front_end
             //check if the mixed content fixer is active
             $response = wp_remote_get(home_url());
 
-
-
-            error_log(print_r($response, true));
-//            Can be error, e.g.:
+            //            Can be error, e.g.:
 //	        [10-Jul-2019 08:57:12 UTC] WP_Error Object
 //	        (
 //		        [errors] => Array
@@ -1838,8 +1827,7 @@ class rsssl_admin extends rsssl_front_end
 //              _e("Really Simple SSL could not retrieve the webpage: " , "really-simple-ssl") . $response->errors->http_request_failed[0];
 //            }
 
-
-
+            //First check for any certificate issues
 
             if (is_array($response)) {
                 $status = wp_remote_retrieve_response_code($response);
@@ -1847,12 +1835,10 @@ class rsssl_admin extends rsssl_front_end
                 $web_source = wp_remote_retrieve_body($response);
             }
 
+
             if ($status != 200) {
                 $mixed_content_fixer_detected = 'no-response';
             }
-//              elseif ($status == 403) {
-//                $mixed_content_fixer_detected = '403';
-//            }
 
             elseif (strpos($web_source, "data-rsssl=") === false) {
                 $mixed_content_fixer_detected = 'not-found';
@@ -1871,6 +1857,10 @@ class rsssl_admin extends rsssl_front_end
             $this->trace_log("Mixed content fixer marker not found in the websource");
             $this->mixed_content_fixer_detected = FALSE;
         }
+	    if ($mixed_content_fixer_detected === 'invalid-certificate'){
+		    $this->trace_log("Site has an invalid SSL certificate");
+		    $this->mixed_content_fixer_detected = FALSE;
+	    }
         if ($mixed_content_fixer_detected === 'found'){
             $this->trace_log("Mixed content fixer was successfully detected on the front end.");
             $this->mixed_content_fixer_detected = true;
@@ -2620,6 +2610,10 @@ class rsssl_admin extends rsssl_front_end
                     'fail' => array(
                         'msg' =>__('Failed activating SSL.', 'really-simple-ssl'),
                         'icon' => 'success'
+                    ),
+                    'invalid-certificate' => array(
+	                    'msg' =>__('Invalid SSL certificate detected. Really Simple SSL requires a valid SSL certificate. Contact your hosting provider to install a valid SSL certificate.', 'really-simple-ssl'),
+	                    'icon' => 'error'
                     ),
                     'no-ssl-detected' => array(
                         'msg' => __('No SSL detected', 'really-simple-ssl'),
@@ -3411,7 +3405,6 @@ class rsssl_admin extends rsssl_front_end
 
     public function get_option_htaccess_redirect()
     {
-
         $options = get_option('rlrsssl_options');
 
         $htaccess_redirect = $this->htaccess_redirect;
@@ -3898,9 +3891,14 @@ function rsssl_ssl_enabled(){
 function rsssl_ssl_detected(){
     if (!RSSSL()->really_simple_ssl->wpconfig_ok()) {
         return 'fail';
-    } elseif (!RSSSL()->really_simple_ssl->site_has_ssl) {
+    }
+    if (!RSSSL()->rsssl_certificate->is_valid()) {
+        return 'invalid-certificate';
+    }
+    if (!RSSSL()->really_simple_ssl->site_has_ssl) {
         return 'no-ssl-detected';
-    } else {
+    }
+    if (RSSSL()->really_simple_ssl->site_has_ssl) {
         return 'ssl-detected';
     }
 
