@@ -1810,40 +1810,28 @@ class rsssl_admin extends rsssl_front_end
             //check if the mixed content fixer is active
             $response = wp_remote_get(home_url());
 
-            //            Can be error, e.g.:
-//	        [10-Jul-2019 08:57:12 UTC] WP_Error Object
-//	        (
-//		        [errors] => Array
-//	        (
-//		        [http_request_failed] => Array
-//		        (
-//			        [0] => cURL error 60: SSL certificate problem: unable to get local issuer certificate
-//                )
-//
-//        )
+            if (!is_wp_error($response)) {
+	            if ( is_array( $response ) ) {
+		            $status = wp_remote_retrieve_response_code( $response );
+		            error_log( "Status " . $status );
+		            $web_source = wp_remote_retrieve_body( $response );
+	            }
 
-//            if (is_wp_error($response)) {
-//            Likely a curl error?
-//              _e("Really Simple SSL could not retrieve the webpage: " , "really-simple-ssl") . $response->errors->http_request_failed[0];
-//            }
-
-            //First check for any certificate issues
-
-            if (is_array($response)) {
-                $status = wp_remote_retrieve_response_code($response);
-                error_log("Status " . $status);
-                $web_source = wp_remote_retrieve_body($response);
+	            if ( $status != 200 ) {
+		            $mixed_content_fixer_detected = 'no-response';
+	            } elseif ( strpos( $web_source, "data-rsssl=" ) === false ) {
+		            $mixed_content_fixer_detected = 'not-found';
+	            } else {
+		            $mixed_content_fixer_detected = 'found';
+	            }
             }
 
-
-            if ($status != 200) {
-                $mixed_content_fixer_detected = 'no-response';
-            }
-
-            elseif (strpos($web_source, "data-rsssl=") === false) {
-                $mixed_content_fixer_detected = 'not-found';
-            } else {
-                $mixed_content_fixer_detected = 'found';
+            if (is_wp_error($response)) {
+                $mixed_content_fixer_detected = 'error';
+                $error = $response->get_error_message();
+                if (!empty($error) && (strpos($error, "cURL error") !== false) ) {
+                    $mixed_content_fixer_detected = 'curl-error';
+                }
             }
 
             set_transient('rsssl_mixed_content_fixer_detected', $mixed_content_fixer_detected, 600);
@@ -1857,8 +1845,12 @@ class rsssl_admin extends rsssl_front_end
             $this->trace_log("Mixed content fixer marker not found in the websource");
             $this->mixed_content_fixer_detected = FALSE;
         }
-	    if ($mixed_content_fixer_detected === 'invalid-certificate'){
-		    $this->trace_log("Site has an invalid SSL certificate");
+	    if ($mixed_content_fixer_detected === 'error'){
+		    $this->trace_log("Error encountered while retrieving the webpage");
+		    $this->mixed_content_fixer_detected = FALSE;
+	    }
+	    if ($mixed_content_fixer_detected === 'curl-error'){
+		    $this->trace_log("Site has has a cURL error");
 		    $this->mixed_content_fixer_detected = FALSE;
 	    }
         if ($mixed_content_fixer_detected === 'found'){
@@ -2568,11 +2560,11 @@ class rsssl_admin extends rsssl_front_end
             'ssl_enabled' => array(
                 'callback' => 'rsssl_ssl_enabled',
                 'output' => array(
-                    '1' => array(
+                    'ssl-enabled' => array(
                         'msg' =>__('SSL is enabled on your site.', 'really-simple-ssl'),
                         'icon' => 'success'
                     ),
-                    '0' => array(
+                    'ssl-not-enabled' => array(
                         'msg' => __('SSL is not enabled yet', 'really-simple-ssl'),
                         'icon' => 'warning'
                     ),
@@ -2600,6 +2592,14 @@ class rsssl_admin extends rsssl_front_end
                         'msg' => sprintf(__('The mixed content fixer is active, but was not detected on the frontpage. Please follow %sthese steps%s to check if the mixed content fixer is working.', "really-simple-ssl"),'<a target="_blank" href="https://www.really-simple-ssl.com/knowledge-base/how-to-check-if-the-mixed-content-fixer-is-active/">', '</a>' ),
                         'icon' => 'warning',
                         'dismissible' => true
+                    ),
+                    'error' => array(
+	                    'msg' =>__('Error occured when retrieving the webpage.', 'really-simple-ssl'),
+	                    'icon' => 'warning'
+                    ),
+                    'curl-error' => array(
+	                    'msg' =>__('Really Simple SSL could not retrieve the webpage due to a cURL error. cURL errors are often caused by an outdated PHP or cURL library. Contact your host to fix.', 'really-simple-ssl'),
+	                    'icon' => 'error'
                     ),
                 ),
             ),
@@ -3885,7 +3885,11 @@ function rsssl_autoreplace_insecure_links(){
 }
 
 function rsssl_ssl_enabled(){
-    return RSSSL()->really_simple_ssl->ssl_enabled;
+    if (RSSSL()->really_simple_ssl->ssl_enabled) {
+        return 'ssl-enabled';
+    } else {
+        return 'ssl-not-enabled';
+    }
 }
 
 function rsssl_ssl_detected(){
