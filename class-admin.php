@@ -2611,10 +2611,6 @@ class rsssl_admin extends rsssl_front_end
                         'msg' =>__('Failed activating SSL.', 'really-simple-ssl'),
                         'icon' => 'success'
                     ),
-                    'invalid-certificate' => array(
-	                    'msg' =>__('Invalid SSL certificate detected. Really Simple SSL requires a valid SSL certificate. Contact your hosting provider to install a valid SSL certificate.', 'really-simple-ssl'),
-	                    'icon' => 'error'
-                    ),
                     'no-ssl-detected' => array(
                         'msg' => __('No SSL detected', 'really-simple-ssl'),
                         'icon' => 'warning'
@@ -3893,18 +3889,15 @@ function rsssl_ssl_enabled(){
 }
 
 function rsssl_ssl_detected(){
-    if (!RSSSL()->really_simple_ssl->wpconfig_ok()) {
-        return 'fail';
-    }
-    if (!RSSSL()->rsssl_certificate->is_valid()) {
-        return 'invalid-certificate';
-    }
-    if (!RSSSL()->really_simple_ssl->site_has_ssl) {
-        return 'no-ssl-detected';
-    }
-    if (RSSSL()->really_simple_ssl->site_has_ssl) {
-        return 'ssl-detected';
-    }
+	if (!RSSSL()->really_simple_ssl->wpconfig_ok()) {
+		return 'fail';
+	}
+	if (!RSSSL()->really_simple_ssl->site_has_ssl) {
+		return 'no-ssl-detected';
+	}
+	if (RSSSL()->really_simple_ssl->site_has_ssl) {
+		return 'ssl-detected';
+	}
 
     return false;
 }
