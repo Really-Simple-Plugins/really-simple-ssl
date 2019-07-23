@@ -42,6 +42,7 @@ class rsssl_admin extends rsssl_front_end
     public $plugin_db_version;
     public $plugin_upgraded;
     public $mixed_content_fixer_status = "OK";
+    public $mixed_content_fixer_error = '';
     public $ssl_type = "NA";
 
     private $pro_url = "https://www.really-simple-ssl.com/pro";
@@ -1829,6 +1830,7 @@ class rsssl_admin extends rsssl_front_end
             if (is_wp_error($response)) {
                 $mixed_content_fixer_detected = 'error';
                 $error = $response->get_error_message();
+                $this->mixed_content_fixer_error = $error;
                 if (!empty($error) && (strpos($error, "cURL error") !== false) ) {
                     $mixed_content_fixer_detected = 'curl-error';
                 }
@@ -1850,7 +1852,8 @@ class rsssl_admin extends rsssl_front_end
 		    $this->mixed_content_fixer_detected = FALSE;
 	    }
 	    if ($mixed_content_fixer_detected === 'curl-error'){
-		    $this->trace_log("Site has has a cURL error");
+		    $error = (!empty($this->mixed_content_fixer_error) ) ? $this->mixed_content_fixer_error : '';
+		    $this->trace_log("Site has has a cURL error. $error. Contact your hosting provider to fix.");
 		    $this->mixed_content_fixer_detected = FALSE;
 	    }
         if ($mixed_content_fixer_detected === 'found'){
