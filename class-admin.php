@@ -3832,7 +3832,8 @@ class rsssl_admin extends rsssl_front_end
             jQuery(document).ready(function ($) {
                 'use strict';
                 $(function() {
-                    if (document.location.href.indexOf('&highlight') > -1 ) {
+                    var setting_name = '';
+                    if (document.location.href.indexOf('&highlight=setting_name') > -1 ) {
                         $('#rsssl-maybe-highlight').closest('tr').addClass('rsssl-highlight');
                     }
                 });

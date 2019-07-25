@@ -607,12 +607,6 @@ input:focus + .rsssl-slider {
   padding-left: 10px;
 }
 
-  /*Reset the bootstrap styling to make dashboard dismiss buttons identical*/
-
-button {
-  all: initial;
-}
-
 .rsssl-dashboard-dismiss .close {
   all: initial;
 }
