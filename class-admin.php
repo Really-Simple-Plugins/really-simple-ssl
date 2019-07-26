@@ -2551,7 +2551,6 @@ class rsssl_admin extends rsssl_front_end
 
         $enable = __("Enable", "really-simple-ssl");
 	    $dismiss = __("dismiss", "really-simple-ssl");
-	    $enable_link = add_query_arg(array("page"=>"rlrsssl_really_simple_ssl", "tab"=>"settings", "highlight"=>"1"),admin_url("options-general.php"));
 
 	    if (RSSSL()->rsssl_server->uses_htaccess()) {
 		    $redirect_plusone = true;
@@ -2639,9 +2638,12 @@ class rsssl_admin extends rsssl_front_end
                         'icon' => 'success',
                         'dismissible' => true
                     ),
+
+                    //generate an enable link to highlight the setting, setting name is same as array key
+                    $enable_link = $this->generate_enable_link($setting_name = 'wp-redirect-to-htaccess'),
                     'wp-redirect-to-htaccess' => array(
                         'msg' => __('WordPress 301 redirect enabled. We recommend to enable the 301 .htaccess redirect option on your specific setup.', 'really-simple-ssl') . " "
-                                 . "<span><a href='$enable_link'>$enable</a></span>" . " "
+                                 . "<span><a href=$enable_link>$enable</a></span>" . " "
                                  . __("or", "really-simple-ssl")
                                  . "<span class='rsssl-dashboard-dismiss' data-dismiss_type='check_redirect'><a href='#' class='rsssl-dismiss-text rsssl-close-warning'>$dismiss</a></span>"
                                  . "<span class='rsssl-dashboard-plusone update-plugins rsssl-update-count'><span class='update-count'>1</span></span>",
@@ -2718,6 +2720,22 @@ class rsssl_admin extends rsssl_front_end
         }
 
         return $notices;
+    }
+
+
+	/**
+	 * @param $setting_name
+	 *
+	 * @return string
+     *
+     * Generate an enable link for the specific setting, redirects to settings page and highlights the setting.
+     *
+	 */
+
+    public function generate_enable_link($setting_name)
+    {
+	    return add_query_arg(array("page"=>"rlrsssl_really_simple_ssl", "tab"=>"settings", "highlight"=>"$setting_name"),admin_url("options-general.php"));
+
     }
 
 	/**
@@ -3420,7 +3438,7 @@ class rsssl_admin extends rsssl_front_end
         }
 
         ?>
-        <label class="rsssl-switch" id="rsssl-maybe-highlight">
+        <label class="rsssl-switch" id="rsssl-maybe-highlight-wp-redirect-to-htaccess">
             <input id="rlrsssl_options" name="rlrsssl_options[htaccess_redirect]" size="40" value="1"
                    type="checkbox" <?php checked(1, $this->htaccess_redirect, true) ?> />
             <span class="rsssl-slider rsssl-round"></span>
@@ -3831,11 +3849,15 @@ class rsssl_admin extends rsssl_front_end
         <script>
             jQuery(document).ready(function ($) {
                 'use strict';
+                <?php
+	                $setting_name = sanitize_text_field($_GET['highlight']);
+	                echo "var setting_name = '$setting_name'".";";
+                ?>
+
                 $(function() {
-                    var setting_name = '';
-                    if (document.location.href.indexOf('&highlight=setting_name') > -1 ) {
-                        $('#rsssl-maybe-highlight').closest('tr').addClass('rsssl-highlight');
-                    }
+                        if (document.location.href.indexOf('&highlight=' + setting_name) > -1 ) {
+                            $('#rsssl-maybe-highlight-' + setting_name).closest('tr').addClass('rsssl-highlight');
+                        }
                 });
             });
         </script>
