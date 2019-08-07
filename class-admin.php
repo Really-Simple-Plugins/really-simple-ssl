@@ -50,7 +50,7 @@ class rsssl_admin extends rsssl_front_end
     function __construct()
     {
 
-        if (isset(self::$_this))
+	    if (isset(self::$_this))
             wp_die(sprintf(__('%s is a singleton class and you cannot create a second instance.', 'really-simple-ssl'), get_class($this)));
 
         self::$_this = $this;
@@ -2597,11 +2597,13 @@ class rsssl_admin extends rsssl_front_end
                     ),
                     'error' => array(
 	                    'msg' =>__('Error occured when retrieving the webpage.', 'really-simple-ssl'),
-	                    'icon' => 'warning'
+	                    'icon' => 'warning',
+                        'dismissible' => true
                     ),
                     'curl-error' => array(
 	                    'msg' =>__('Really Simple SSL could not retrieve the webpage due to a cURL error. cURL errors are often caused by an outdated PHP or cURL library. Contact your host to fix.', 'really-simple-ssl'),
-	                    'icon' => 'error'
+	                    'icon' => 'error',
+                        'dismissible' => true
                     ),
                 ),
             ),
@@ -2674,6 +2676,20 @@ class rsssl_admin extends rsssl_front_end
                 ),
             ),
 
+            'elementor' => array(
+	            'condition' => array('uses_elementor' , 'ssl_activation_time_no_longer_then_3_days_ago'),
+	            'callback' => 'rsssl_elementor_notice',
+	            'output' => array(
+		            'elementor-notice' => array(
+			            'msg' => sprintf(__("Your site uses Elementor. This can require some additional steps before getting the secure lock. %sSee our guide for detailed instructions%s ", "really-simple-ssl"), '<a target="_blank" href="https://really-simple-ssl.com/knowledge-base/how-to-fix-mixed-content-in-elementor-after-moving-to-ssl/">', '</a>')
+			                     . __("or", "really-simple-ssl")
+			                     . "<span class='rsssl-dashboard-dismiss' data-dismiss_type='elementor'><a href='#' class='rsssl-dismiss-text rsssl-close-warning'>$dismiss</a></span>",
+			            'icon' => 'warning',
+			            'dismissible' => true
+		            ),
+	            ),
+            ),
+
             'hsts_enabled' => array(
                 'callback' => 'rsssl_hsts_enabled',
                 'output' => array(
@@ -2687,7 +2703,6 @@ class rsssl_admin extends rsssl_front_end
                     ),
                 ),
             ),
-
 
             'secure_cookies_set' => array(
                 'callback' => 'rsssl_secure_cookies_set',
@@ -3053,27 +3068,27 @@ class rsssl_admin extends rsssl_front_end
                         }
                     }
 
-                        if (defined("EDD_SL_PLUGIN_DIR") && (get_locale() === 'nl_NL')) {
-                            $this->get_banner_html(array(
-                                    'img' => 'edd-moneybird.jpg',
-                                    'title' => 'EDD Moneybird',
-                                    'description' => __("Export your Easy Digital Downloads sales directly to Moneybird.", "really-simple-ssl"),
-                                    'url' => 'https://really-simple-plugins.com/download/edd-moneybird/',
-                                )
-                            );
+                    if (defined("EDD_SL_PLUGIN_DIR") && (get_locale() === 'nl_NL')) {
+                        $this->get_banner_html(array(
+                                'img' => 'edd-moneybird.jpg',
+                                'title' => 'EDD Moneybird',
+                                'description' => __("Export your Easy Digital Downloads sales directly to Moneybird.", "really-simple-ssl"),
+                                'url' => 'https://really-simple-plugins.com/download/edd-moneybird/',
+                            )
+                        );
 
-                        }
+                    }
 
-                        if (defined('WC_PLUGIN_FILE') && (get_locale() === 'nl_NL')) {
-                            $this->get_banner_html(array(
-                                    'img' => 'woocommerce-moneybird.jpg',
-                                    'title' => 'WooCommerce Moneybird',
-                                    'description' => __("Export your WooCommerce sales directly to Moneybird.", "really-simple-ssl"),
-                                    'url' => 'https://really-simple-plugins.com/download/woocommerce-moneybird/',
-                                )
-                            );
+                    if (defined('WC_PLUGIN_FILE') && (get_locale() === 'nl_NL')) {
+                        $this->get_banner_html(array(
+                                'img' => 'woocommerce-moneybird.jpg',
+                                'title' => 'WooCommerce Moneybird',
+                                'description' => __("Export your WooCommerce sales directly to Moneybird.", "really-simple-ssl"),
+                                'url' => 'https://really-simple-plugins.com/download/woocommerce-moneybird/',
+                            )
+                        );
 
-                        }
+                    }
                      ?>
                 </div>
             <?php }
@@ -3786,10 +3801,8 @@ class rsssl_admin extends rsssl_front_end
             $this->trace_log("test page url, enter in browser to check manually: " . $testpage_url);
 
             if (!is_wp_error($response) && (strpos($filecontents, "#SSL TEST PAGE#") !== false)) {
-
                 $this->trace_log("SSL test page loaded successfully");
             } else {
-
                 $error = "";
                 if (is_wp_error($response)) $error = $response->get_error_message();
                 $this->trace_log("Could not open testpage " . $error);
@@ -3850,8 +3863,10 @@ class rsssl_admin extends rsssl_front_end
             jQuery(document).ready(function ($) {
                 'use strict';
                 <?php
-	                $setting_name = sanitize_text_field($_GET['highlight']);
-	                echo "var setting_name = '$setting_name'".";";
+                    if (isset($_GET['highlight'])) {
+	                    $setting_name = sanitize_text_field( $_GET['highlight'] );
+	                    echo "var setting_name = '$setting_name'" . ";";
+                    }
                 ?>
 
                 $(function() {
@@ -3976,4 +3991,31 @@ function rsssl_scan_upsell()
 function rsssl_htaccess_redirect_allowed()
 {
     return RSSSL()->really_simple_ssl->htaccess_redirect_allowed();
+}
+
+function uses_elementor()
+{
+    if (defined('ELEMENTOR_VERSION')) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+function ssl_activation_time_no_longer_then_3_days_ago()
+{
+
+    $activation_time = get_option('rsssl_activation_timestamp');
+    $three_days_after_activation = $activation_time + 3 * DAY_IN_SECONDS;
+
+    if (time() < $three_days_after_activation) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+function rsssl_elementor_notice()
+{
+    return 'elementor-notice';
 }
