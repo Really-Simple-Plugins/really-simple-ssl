@@ -30,9 +30,10 @@ some cool features.
 * The mixed content scan, which shows you what you have to do if you don't have the green lock yet
 * The option to enable HTTP Strict Transport Security
 * The option to configure your site for the HSTS preload list
+* Advanced security headers for additional security
 * Mixed Content Fixer for the back-end
-* More detailed feedback on the configuration page.
-* Certificate expiration check: get an email when your SSL certificate is about to expire.
+* More detailed feedback on the configuration page
+* Certificate expiration check: get an email when your SSL certificate is about to expire
 * Premium support
 
 = What does the plugin actually do =

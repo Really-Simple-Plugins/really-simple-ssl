@@ -1830,7 +1830,7 @@ class rsssl_admin extends rsssl_front_end
             if (is_wp_error($response)) {
                 $mixed_content_fixer_detected = 'error';
                 $error = $response->get_error_message();
-                $this->mixed_content_fixer_error = $error;
+                set_transient('rsssl_curl_error' , $error, 600);
                 if (!empty($error) && (strpos($error, "cURL error") !== false) ) {
                     $mixed_content_fixer_detected = 'curl-error';
                 }
@@ -1840,24 +1840,23 @@ class rsssl_admin extends rsssl_front_end
         }
 
         if ($mixed_content_fixer_detected === 'no-response'){
-            $this->trace_log("Could not connect to website");
+            //Could not connect to website
             $this->mixed_content_fixer_detected = FALSE;
         }
         if ($mixed_content_fixer_detected === 'not-found'){
-            $this->trace_log("Mixed content fixer marker not found in the websource");
+            //Mixed content fixer marker not found in the websource
             $this->mixed_content_fixer_detected = FALSE;
         }
 	    if ($mixed_content_fixer_detected === 'error'){
-		    $this->trace_log("Error encountered while retrieving the webpage");
+		    //Error encountered while retrieving the webpage. Fallback since most errors should be cURL errors
 		    $this->mixed_content_fixer_detected = FALSE;
 	    }
 	    if ($mixed_content_fixer_detected === 'curl-error'){
-		    $error = (!empty($this->mixed_content_fixer_error) ) ? $this->mixed_content_fixer_error : '';
-		    $this->trace_log("Site has has a cURL error. $error. Contact your hosting provider to fix.");
+		    //Site has has a cURL error
 		    $this->mixed_content_fixer_detected = FALSE;
 	    }
         if ($mixed_content_fixer_detected === 'found'){
-            $this->trace_log("Mixed content fixer was successfully detected on the front end.");
+            //Mixed content fixer was successfully detected on the front end
             $this->mixed_content_fixer_detected = true;
         }
 
@@ -2551,6 +2550,7 @@ class rsssl_admin extends rsssl_front_end
 
         $enable = __("Enable", "really-simple-ssl");
 	    $dismiss = __("dismiss", "really-simple-ssl");
+	    $curl_error = get_transient('rsssl_curl_error');
 
 	    if (RSSSL()->rsssl_server->uses_htaccess()) {
 		    $redirect_plusone = true;
@@ -2601,8 +2601,8 @@ class rsssl_admin extends rsssl_front_end
                         'dismissible' => true
                     ),
                     'curl-error' => array(
-	                    'msg' =>__('Really Simple SSL could not retrieve the webpage due to a cURL error. cURL errors are often caused by an outdated PHP or cURL library. Contact your host to fix.', 'really-simple-ssl'),
-	                    'icon' => 'error',
+	                    'msg' =>sprintf(__("Really Simple SSL could not retrieve the webpage due to a cURL error: %s. cURL errors are often caused by an outdated version of PHP or cURL. Contact your hosting provider for a fix. %sMore information about this warning%s", 'really-simple-ssl'), "<b>" . $curl_error . "</b>", '<a target="_blank" href="https://www.really-simple-ssl.com/knowledge-base/how-to-check-if-the-mixed-content-fixer-is-active/">', '</a>' ),
+	                    'icon' => 'warning',
                         'dismissible' => true
                     ),
                 ),
@@ -2632,15 +2632,12 @@ class rsssl_admin extends rsssl_front_end
                 'output' => array(
                     'htaccess-redirect-set' => array(
                         'msg' =>__('301 redirect to https set: .htaccess redirect.', 'really-simple-ssl'),
-                        'icon' => 'success',
-                        'dismissible' => true
+                        'icon' => 'success'
                     ),
                     '301-wp-redirect' => array(
                         'msg' => __('301 redirect to https set: WordPress redirect.', 'really-simple-ssl'),
-                        'icon' => 'success',
-                        'dismissible' => true
+                        'icon' => 'success'
                     ),
-
                     //generate an enable link to highlight the setting, setting name is same as array key
                     $enable_link = $this->generate_enable_link($setting_name = 'wp-redirect-to-htaccess'),
                     'wp-redirect-to-htaccess' => array(
