@@ -2601,7 +2601,7 @@ class rsssl_admin extends rsssl_front_end
                         'dismissible' => true
                     ),
                     'curl-error' => array(
-	                    'msg' =>sprintf(__("Really Simple SSL could not retrieve the webpage due to a cURL error: %s. cURL errors are often caused by an outdated version of PHP or cURL. Contact your hosting provider for a fix. %sMore information about this warning%s", 'really-simple-ssl'), "<b>" . $curl_error . "</b>", '<a target="_blank" href="https://www.really-simple-ssl.com/knowledge-base/how-to-check-if-the-mixed-content-fixer-is-active/">', '</a>' ),
+	                    'msg' =>sprintf(__("Really Simple SSL could not retrieve the webpage due to a cURL error: %s. cURL errors are often caused by an outdated version of PHP or cURL. Contact your hosting provider for a fix. %sMore information about this warning%s", 'really-simple-ssl'), "<b>" . $curl_error . "</b>", '<a target="_blank" href="https://www.really-simple-ssl.com/knowledge-base/curl-errors/">', '</a>' ),
 	                    'icon' => 'warning',
                         'dismissible' => true
                     ),
@@ -2747,7 +2747,6 @@ class rsssl_admin extends rsssl_front_end
     public function generate_enable_link($setting_name)
     {
 	    return add_query_arg(array("page"=>"rlrsssl_really_simple_ssl", "tab"=>"settings", "highlight"=>"$setting_name"),admin_url("options-general.php"));
-
     }
 
 	/**
@@ -2795,7 +2794,6 @@ class rsssl_admin extends rsssl_front_end
             <td><?php echo $icon?></td><td class="rsssl-table-td-main-content"><?php echo $msg?></td>
             <td class="rsssl-dashboard-dismiss" data-dismiss_type="<?php echo $id?>"><?php echo $dismiss?></td>
         </tr>
-
         <?php
     }
 
@@ -3131,7 +3129,6 @@ class rsssl_admin extends rsssl_front_end
          return '<button type="button" class="close">
                 <span class="rsssl-close-warning">X</span>
             </button>';
-
     }
 
     /**
@@ -3145,7 +3142,6 @@ class rsssl_admin extends rsssl_front_end
 
     private function get_banner_html($args)
     {
-
         $default = array(
             'pro' => false,
         );
@@ -3235,8 +3231,7 @@ class rsssl_admin extends rsssl_front_end
 	    add_settings_field('id_dismiss_all_notices', __("Dismiss all Really Simple SSL notices", "really-simple-ssl"), array($this, 'get_option_dismiss_all_notices'), 'rlrsssl', 'rlrsssl_settings');
 
         add_settings_field('id_deactivate_keep_ssl', __("Deactivate plugin and keep SSL", "really-simple-ssl"), array($this, 'get_option_deactivate_keep_ssl'), 'rlrsssl', 'rlrsssl_settings');
-
-
+        
     }
 
     /**
