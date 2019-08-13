@@ -42,7 +42,6 @@ class rsssl_admin extends rsssl_front_end
     public $plugin_db_version;
     public $plugin_upgraded;
     public $mixed_content_fixer_status = "OK";
-    public $mixed_content_fixer_error = '';
     public $ssl_type = "NA";
 
     private $pro_url = "https://www.really-simple-ssl.com/pro";
@@ -1572,12 +1571,14 @@ class rsssl_admin extends rsssl_front_end
      *
 	 */
     
-    function htaccess_redirect_allowed()
+    public function htaccess_redirect_allowed()
     {
         if (is_multisite() && RSSSL()->rsssl_multisite->is_per_site_activated_multisite_subfolder_install()) {
             return false;
-        } else {
+        } if (RSSSL()->rsssl_server->uses_htaccess()) {
             return true;
+        } else {
+            return false;
         }
     }
 
@@ -1814,7 +1815,6 @@ class rsssl_admin extends rsssl_front_end
             if (!is_wp_error($response)) {
 	            if ( is_array( $response ) ) {
 		            $status = wp_remote_retrieve_response_code( $response );
-		            error_log( "Status " . $status );
 		            $web_source = wp_remote_retrieve_body( $response );
 	            }
 
@@ -2105,7 +2105,9 @@ class rsssl_admin extends rsssl_front_end
       show a notice when the .htaccess file does not contain redirect rules
      */
 
-        if (!$this->wp_redirect && $this->ssl_enabled && !$this->htaccess_warning_shown && !$this->htaccess_contains_redirect_rules()) {
+	    $options = get_option('rlrsssl_options');
+
+        if (!$this->wp_redirect && $this->ssl_enabled && !$this->htaccess_warning_shown && !$this->htaccess_contains_redirect_rules() && $options['dismiss_all_notices'] !== true) {
 
             add_action('admin_print_footer_scripts', array($this, 'insert_dismiss_htaccess'));
             ?>
@@ -2137,7 +2139,7 @@ class rsssl_admin extends rsssl_front_end
           SSL success message
       */
 
-        if ($this->ssl_enabled && $this->site_has_ssl && !$this->ssl_success_message_shown) {
+        if ($this->ssl_enabled && $this->site_has_ssl && !$this->ssl_success_message_shown && $options['dismiss_all_notices'] !== true) {
             if (!current_user_can("activate_plugins")) return;
 
             add_action('admin_print_footer_scripts', array($this, 'insert_dismiss_success'));
@@ -2601,7 +2603,7 @@ class rsssl_admin extends rsssl_front_end
                         'dismissible' => true
                     ),
                     'curl-error' => array(
-	                    'msg' =>sprintf(__("Really Simple SSL could not retrieve the webpage due to a cURL error: %s. cURL errors are often caused by an outdated version of PHP or cURL. Contact your hosting provider for a fix. %sMore information about this warning%s", 'really-simple-ssl'), "<b>" . $curl_error . "</b>", '<a target="_blank" href="https://www.really-simple-ssl.com/knowledge-base/curl-errors/">', '</a>' ),
+	                    'msg' =>sprintf(__("The mixed content fixer could not be detected due to a cURL error: %s. cURL errors are often caused by an outdated version of PHP or cURL and don't affect the front-end of your site. Contact your hosting provider for a fix. %sMore information about this warning%s", 'really-simple-ssl'), "<b>" . $curl_error . "</b>", '<a target="_blank" href="https://www.really-simple-ssl.com/knowledge-base/curl-errors/">', '</a>' ),
 	                    'icon' => 'warning',
                         'dismissible' => true
                     ),
@@ -2626,16 +2628,27 @@ class rsssl_admin extends rsssl_front_end
                 ),
             ),
 
+            'wordpress_redirect' => array(
+	            'condition' => array('rsssl_wp_redirect_condition'),
+	            'callback' => 'rsssl_wordpress_redirect',
+                'output' => array(
+                     '301-wp-redirect' => array(
+                        'msg' => __('301 redirect to https set: WordPress redirect.', 'really-simple-ssl'),
+                        'icon' => 'success'
+                        ),
+                     'no-redirect' => array(
+                         'msg' => __('No 301 redirect is set. Enable the WordPress 301 redirect in the settings to get a 301 permanent redirect.', 'really-simple-ssl'),
+                         'icon' => 'warning'
+                     ),
+                )
+            ),
+
             'check_redirect' => array(
-                'callback' => 'rsssl_check_redirect',
-                'condition' => array('rsssl_ssl_enabled' , 'rsssl_htaccess_redirect_allowed'),
+	            'condition' => array('rsssl_ssl_enabled' , 'rsssl_htaccess_redirect_allowed'),
+	            'callback' => 'rsssl_check_redirect',
                 'output' => array(
                     'htaccess-redirect-set' => array(
                         'msg' =>__('301 redirect to https set: .htaccess redirect.', 'really-simple-ssl'),
-                        'icon' => 'success'
-                    ),
-                    '301-wp-redirect' => array(
-                        'msg' => __('301 redirect to https set: WordPress redirect.', 'really-simple-ssl'),
                         'icon' => 'success'
                     ),
                     //generate an enable link to highlight the setting, setting name is same as array key
@@ -2650,10 +2663,10 @@ class rsssl_admin extends rsssl_front_end
                         'plusone' => $redirect_plusone,
                         'dismissible' => true
                     ),
-                    'no-redirect-enabled' => array(
+                    'no-redirect-set' => array(
                         'msg' => __('Enable a .htaccess redirect or WordPress redirect in the settings to create a 301 redirect.', 'really-simple-ssl'),
                         'icon' => 'warning',
-                        'dismissible' => true
+                        'dismissible' => false
                     ),
                     'htaccess-not-writeable' => array(
                         'msg' => __('.htaccess is not writable. Set 301 WordPress redirect, or set the .htaccess manually if you want to redirect in .htaccess.', 'really-simple-ssl'),
@@ -2661,7 +2674,7 @@ class rsssl_admin extends rsssl_front_end
                         'dismissible' => true
                     ),
                     'htaccess-cannot-be-set' => array(
-                        'msg' => __('Https redirect cannot be set in the .htaccess. Set the .htaccess redirect manually or enable WordPress redirect in the settings.', 'really-simple-ssl'),
+                        'msg' => __('Https redirect cannot be set in the .htaccess file. Set the .htaccess redirect manually or enable the WordPress 301 redirect in the settings.', 'really-simple-ssl'),
                         'icon' => 'warning',
                         'dismissible' => true
                     ),
@@ -3231,7 +3244,7 @@ class rsssl_admin extends rsssl_front_end
 	    add_settings_field('id_dismiss_all_notices', __("Dismiss all Really Simple SSL notices", "really-simple-ssl"), array($this, 'get_option_dismiss_all_notices'), 'rlrsssl', 'rlrsssl_settings');
 
         add_settings_field('id_deactivate_keep_ssl', __("Deactivate plugin and keep SSL", "really-simple-ssl"), array($this, 'get_option_deactivate_keep_ssl'), 'rlrsssl', 'rlrsssl_settings');
-        
+
     }
 
     /**
@@ -3936,22 +3949,21 @@ function rsssl_ssl_detected(){
 }
 
 function rsssl_check_redirect(){
+    if (!RSSSL()->really_simple_ssl->has_301_redirect()) {
+        return 'no-redirect-set';
+    }
     if (RSSSL()->really_simple_ssl->has_301_redirect() && RSSSL()->rsssl_server->uses_htaccess() && RSSSL()->really_simple_ssl->htaccess_contains_redirect_rules()) {
         return 'htaccess-redirect-set';
     }
     if (RSSSL()->really_simple_ssl->has_301_redirect() && RSSSL()->really_simple_ssl->wp_redirect && RSSSL()->rsssl_server->uses_htaccess() && !RSSSL()->really_simple_ssl->htaccess_redirect) {
         return 'wp-redirect-to-htaccess';
     }
-    if (RSSSL()->really_simple_ssl->has_301_redirect() && RSSSL()->really_simple_ssl->wp_redirect) {
-        return '301-wp-redirect';
-    } elseif (RSSSL()->rsssl_server->uses_htaccess() && (!is_multisite() || !RSSSL()->rsssl_multisite->is_per_site_activated_multisite_subfolder_install())) {
-    if (is_writable(RSSSL()->really_simple_ssl->htaccess_file())) {
-        return 'no-redirect-enabled';
-    } elseif (!is_writable(RSSSL()->really_simple_ssl->htaccess_file())) {
-        return 'htaccess-not-writeable';
-    } else {
-        return 'htaccess-cannot-be-set';
-    }
+    if (RSSSL()->rsssl_server->uses_htaccess() && (!is_multisite() || !RSSSL()->rsssl_multisite->is_per_site_activated_multisite_subfolder_install())) {
+        if (!is_writable(RSSSL()->really_simple_ssl->htaccess_file())) {
+            return 'htaccess-not-writeable';
+        } else {
+            return 'htaccess-cannot-be-set';
+        }
     } else {
         return 'default';
     }
@@ -3987,7 +3999,7 @@ function rsssl_htaccess_redirect_allowed()
 
 function uses_elementor()
 {
-    if (defined('ELEMENTOR_VERSION')) {
+    if (defined('ELEMENTOR_VERSION') || defined('ELEMENTOR_PRO_VERSION')) {
         return true;
     } else {
         return false;
@@ -4010,4 +4022,20 @@ function ssl_activation_time_no_longer_then_3_days_ago()
 function rsssl_elementor_notice()
 {
     return 'elementor-notice';
+}
+
+function rsssl_wp_redirect_condition() {
+	if (RSSSL()->really_simple_ssl->has_301_redirect() && RSSSL()->really_simple_ssl->wp_redirect && !RSSSL()->really_simple_ssl->htaccess_redirect) {
+		return true;
+	} else {
+	    return false;
+    }
+}
+
+function rsssl_wordpress_redirect() {
+	if (RSSSL()->really_simple_ssl->has_301_redirect() && RSSSL()->really_simple_ssl->wp_redirect) {
+		return '301-wp-redirect';
+	} else {
+	    return 'no-redirect';
+    }
 }
