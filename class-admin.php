@@ -663,6 +663,8 @@ class rsssl_admin extends rsssl_front_end
     /**
      * Log events during plugin execution
      *
+     * @param string $msg
+     *
      * @since  2.1
      *
      * @access public
@@ -672,6 +674,7 @@ class rsssl_admin extends rsssl_front_end
     public function trace_log($msg)
     {
         if (!$this->debug) return;
+        if (strpos($this->debug_log, $msg)) return;
         $this->debug_log = $this->debug_log . "<br>" . $msg;
         $this->debug_log = strstr($this->debug_log, '** Detecting configuration **');
         error_log($msg);
@@ -1282,11 +1285,9 @@ class rsssl_admin extends rsssl_front_end
     public function detect_configuration()
     {
         $this->trace_log("** Detecting configuration **");
-        $this->trace_log("plugin version: " . rsssl_version);
 
         //if current page is on SSL, we can assume SSL is available, even when an errormsg was returned
         if ($this->is_ssl_extended()) {
-            $this->trace_log("Already on SSL, start detecting configuration");
             $this->site_has_ssl = TRUE;
         } else {
             //if certificate is valid
@@ -1845,6 +1846,7 @@ class rsssl_admin extends rsssl_front_end
         }
         if ($mixed_content_fixer_detected === 'not-found'){
             //Mixed content fixer marker not found in the websource
+            $this->trace_log("Mixed content marker not found in websource");
             $this->mixed_content_fixer_detected = FALSE;
         }
 	    if ($mixed_content_fixer_detected === 'error'){
@@ -1853,6 +1855,7 @@ class rsssl_admin extends rsssl_front_end
 	    }
 	    if ($mixed_content_fixer_detected === 'curl-error'){
 		    //Site has has a cURL error
+            $this->trace_log("cURL error");
 		    $this->mixed_content_fixer_detected = FALSE;
 	    }
         if ($mixed_content_fixer_detected === 'found'){
@@ -2961,21 +2964,35 @@ class rsssl_admin extends rsssl_front_end
                                 echo "<p>" . __("Send me a copy of these lines if you have any issues. The log will be erased when debug is set to false", "really-simple-ssl") . "</p>";
                                 echo "<div class='debug-log'>";
                                 if (defined('RSSSL_SAFE_MODE') && RSSSL_SAFE_MODE) echo "SAFE MODE<br>";
-                                echo "Options:<br>";
-                                if ($this->htaccess_redirect) echo "* htaccess redirect<br>";
-                                if ($this->wp_redirect) echo "* WordPress redirect<br>";
-                                if ($this->autoreplace_insecure_links) echo "* Mixed content fixer<br>";
 
+                                echo "<b>General</b><br>";
+	                            echo "Plugin version: " . rsssl_version ."<br>";
+
+	                            if (RSSSL()->rsssl_certificate->is_valid()) {
+                                    echo "SSL certificate is valid<br><br>";
+                                } else {
+                                    echo "Invalid SSL certificate<br>";
+                                }
+	                            echo ($this->ssl_enabled) ? "SSL is enabled<br><bR>" : "SSL is not yet enabled<br><br>";
+
+	                            echo "<b>Options</b><br>";
+	                            if ($this->autoreplace_insecure_links) echo "* Mixed content fixer<br>";
+	                            if ($this->wp_redirect) echo "* WordPress redirect<br>";
+	                            if ($this->htaccess_redirect) echo "* htaccess redirect<br>";
+                                if ($this->do_not_edit_htaccess) echo "* Stop editing the .htaccess file<br>";
+                                if ($this->switch_mixed_content_fixer_hook) echo "* Use alternative method to fix mixed content<br>";
+                                if ($this->dismiss_all_notices) echo "* Dismiss all Really Simple SSL notices<br>";
+                                echo "<br>";
+
+                                echo "<b>Server information</b><br>";
                                 echo "SERVER: " . RSSSL()->rsssl_server->get_server() . "<br>";
                                 if (is_multisite()) {
                                     echo "MULTISITE<br>";
                                     echo (!RSSSL()->rsssl_multisite->ssl_enabled_networkwide) ? "SSL is being activated per site<br>" : "SSL is activated network wide<br>";
                                 }
 
-                                echo ($this->ssl_enabled) ? "SSL is enabled for this site<br>" : "SSL is not yet enabled for this site<br>";
                                 echo $this->debug_log;
                                 echo "</div>";
-                                //$this->debug_log.="<br><b>-----------------------</b>";
                                 $this->debug_log = "";
                                 $this->save_options();
                             } else {
