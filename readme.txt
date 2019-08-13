@@ -95,7 +95,7 @@ Yes. There is a dedicated network settings page where you can switch between net
 * Added site health notice
 
 = 3.2.2 =
-* Fix: some single sites setup were having issues with multisite files being include.
+* Fix: some single sites setup were having issues with multisite files being included.
 
 = 3.2.1 =
 * Fix: error in regex, cause a fatal error in cases where a plus one already was showing in the settings menu
