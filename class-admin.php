@@ -676,7 +676,6 @@ class rsssl_admin extends rsssl_front_end
         if (!$this->debug) return;
         if (strpos($this->debug_log, $msg)) return;
         $this->debug_log = $this->debug_log . "<br>" . $msg;
-        $this->debug_log = strstr($this->debug_log, '** Detecting configuration **');
         error_log($msg);
     }
 
@@ -697,7 +696,7 @@ class rsssl_admin extends rsssl_front_end
         if (defined('RSSSL_SAFE_MODE') && RSSSL_SAFE_MODE) $safe_mode = RSSSL_SAFE_MODE;
 
         if (!current_user_can($this->capability)) return;
-        $this->trace_log("** Configuring SSL **");
+        $this->trace_log("<br>" . "<b>" . "SSL Configuration" . "</b>");
         if ($this->site_has_ssl) {
             //when one of the used server variables was found, test if the redirect works
 
@@ -1284,8 +1283,7 @@ class rsssl_admin extends rsssl_front_end
 
     public function detect_configuration()
     {
-        $this->trace_log("** Detecting configuration **");
-
+        $this->trace_log("<b>" . "Detecting configuration" . "</b>");
         //if current page is on SSL, we can assume SSL is available, even when an errormsg was returned
         if ($this->is_ssl_extended()) {
             $this->site_has_ssl = TRUE;
@@ -1345,7 +1343,6 @@ class rsssl_admin extends rsssl_front_end
                 }
             }
 
-            $this->trace_log("SSL type: " . $this->ssl_type);
         }
         $this->check_for_siteurl_in_wpconfig();
 
@@ -1842,6 +1839,7 @@ class rsssl_admin extends rsssl_front_end
 
         if ($mixed_content_fixer_detected === 'no-response'){
             //Could not connect to website
+            $this->trace_loh("Could not connect to webpage to detect mixed content fixer");
             $this->mixed_content_fixer_detected = FALSE;
         }
         if ($mixed_content_fixer_detected === 'not-found'){
@@ -1850,15 +1848,17 @@ class rsssl_admin extends rsssl_front_end
             $this->mixed_content_fixer_detected = FALSE;
         }
 	    if ($mixed_content_fixer_detected === 'error'){
+	        $this->trace_log("Mixed content marker not found: unknown error");
 		    //Error encountered while retrieving the webpage. Fallback since most errors should be cURL errors
 		    $this->mixed_content_fixer_detected = FALSE;
 	    }
 	    if ($mixed_content_fixer_detected === 'curl-error'){
 		    //Site has has a cURL error
-            $this->trace_log("cURL error");
+            $this->trace_log("Mixed content fixer could not be detected: cURL error");
 		    $this->mixed_content_fixer_detected = FALSE;
 	    }
         if ($mixed_content_fixer_detected === 'found'){
+            $this->trace_log("Mixed content fixer succesfully detected");
             //Mixed content fixer was successfully detected on the front end
             $this->mixed_content_fixer_detected = true;
         }
@@ -2961,7 +2961,7 @@ class rsssl_admin extends rsssl_front_end
                             <?php
                             if ($this->debug) {
                                 echo "<h2>" . __("Log for debugging purposes", "really-simple-ssl") . "</h2>";
-                                echo "<p>" . __("Send me a copy of these lines if you have any issues. The log will be erased when debug is set to false", "really-simple-ssl") . "</p>";
+                                echo "<p>" . __("Send us a copy of these lines if you have any issues. The log will be erased when debug is set to false", "really-simple-ssl") . "</p>";
                                 echo "<div class='debug-log'>";
                                 if (defined('RSSSL_SAFE_MODE') && RSSSL_SAFE_MODE) echo "SAFE MODE<br>";
 
@@ -2985,14 +2985,33 @@ class rsssl_admin extends rsssl_front_end
                                 echo "<br>";
 
                                 echo "<b>Server information</b><br>";
-                                echo "SERVER: " . RSSSL()->rsssl_server->get_server() . "<br>";
+                                echo "Server: " . RSSSL()->rsssl_server->get_server() . "<br>";
+                                echo "SSL Type: $this->ssl_type<br>";
                                 if (is_multisite()) {
                                     echo "MULTISITE<br>";
                                     echo (!RSSSL()->rsssl_multisite->ssl_enabled_networkwide) ? "SSL is being activated per site<br>" : "SSL is activated network wide<br>";
                                 }
 
                                 echo $this->debug_log;
-                                echo "</div>";
+
+                                echo "<br><br><b>Constants</b><br>";
+
+                                if (defined('RSSSL_FORCE_ACTIVATE')) echo "RSSSL_FORCE_ACTIVATE defined";
+	                            if (defined('RSSSL_NO_FLUSH')) echo "RSSSL_NO_FLUSH defined";
+	                            if (defined('RSSSL_DISMISS_ACTIVATE_SSL_NOTICE')) echo "RSSSL_DISMISS_ACTIVATE_SSL_NOTICE defined";
+	                            if (defined('RLRSSSL_DO_NOT_EDIT_HTACCESS')) echo "RLRSSSL_DO_NOT_EDIT_HTACCESS defined";
+	                            if (defined('RSSSL_SAFE_MODE')) echo "RSSSL_SAFE_MODE defined";
+	                            if (defined("RSSSL_SERVER_OVERRIDE")) echo "RSSSL_SERVER_OVERRIDE defined";
+
+	                            if(    !defined('RSSSL_FORCE_ACTIVATE')
+                                    && !defined('RSSSL_NO_FLUSH')
+                                    && !defined('RSSSL_DISMISS_ACTIVATE_SSL_NOTICE')
+                                    && !defined('RLRSSSL_DO_NOT_EDIT_HTACCESS')
+                                    && !defined('RSSSL_SAFE_MODE')
+                                    && !defined("RSSSL_SERVER_OVERRIDE")
+                                ) echo "No constants defined";
+
+	                            echo "</div>";
                                 $this->debug_log = "";
                                 $this->save_options();
                             } else {
