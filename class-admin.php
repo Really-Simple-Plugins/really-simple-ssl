@@ -2647,7 +2647,7 @@ class rsssl_admin extends rsssl_front_end
             ),
 
             'check_redirect' => array(
-	            'condition' => array('rsssl_ssl_enabled' , 'rsssl_htaccess_redirect_allowed'),
+	            'condition' => array('rsssl_ssl_enabled' , 'rsssl_htaccess_redirect_allowed', 'rsssl_no_multisite'),
 	            'callback' => 'rsssl_check_redirect',
                 'output' => array(
                     'htaccess-redirect-set' => array(
@@ -2704,6 +2704,7 @@ class rsssl_admin extends rsssl_front_end
             ),
 
             'hsts_enabled' => array(
+                'condition' => array('rsssl_no_multisite'),
                 'callback' => 'rsssl_hsts_enabled',
                 'output' => array(
                     'contains-hsts' => array(
@@ -4073,5 +4074,13 @@ function rsssl_wordpress_redirect() {
 		return '301-wp-redirect';
 	} else {
 	    return 'no-redirect';
+    }
+}
+
+function rsssl_no_multisite(){
+    if (!is_multisite()) {
+        return true;
+    } else {
+        return false;
     }
 }
