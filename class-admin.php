@@ -2970,7 +2970,7 @@ class rsssl_admin extends rsssl_front_end
 	                            echo "Plugin version: " . rsssl_version ."<br>";
 
 	                            if (RSSSL()->rsssl_certificate->is_valid()) {
-                                    echo "SSL certificate is valid<br><br>";
+                                    echo "SSL certificate is valid<br>";
                                 } else {
                                     echo "Invalid SSL certificate<br>";
                                 }
