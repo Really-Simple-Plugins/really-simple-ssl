@@ -2363,7 +2363,7 @@ class rsssl_admin extends rsssl_front_end
         if (isset($_POST['type'])) {
 	        $dismiss_type = sanitize_title( $_POST['type'] );
 	        update_option( "rsssl_".$dismiss_type."_dismissed", true );
-	        delete_transient( 'rsssl_plusone_count' );
+            delete_transient( 'rsssl_plusone_count' );
         }
         wp_die(); // this is required to terminate immediately and return a proper response
     }
@@ -2793,7 +2793,6 @@ class rsssl_admin extends rsssl_front_end
         $output = $func();
 
         if (!isset($notice['output'][$output])) {
-            error_log('Output index not set');
             return;
         }
 
@@ -2836,8 +2835,9 @@ class rsssl_admin extends rsssl_front_end
 
     public function count_plusones(){
         if (!current_user_can('manage_options')) return 0;
+
         $count = get_transient('rsssl_plusone_count');
-        if (!$count) {
+        if ($count===FALSE) {
             $count = 0;
 
 	        $options = get_option('rlrsssl_options');
