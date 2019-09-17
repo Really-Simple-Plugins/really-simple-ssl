@@ -1839,7 +1839,7 @@ class rsssl_admin extends rsssl_front_end
 
         if ($mixed_content_fixer_detected === 'no-response'){
             //Could not connect to website
-            $this->trace_loh("Could not connect to webpage to detect mixed content fixer");
+            $this->trace_log("Could not connect to webpage to detect mixed content fixer");
             $this->mixed_content_fixer_detected = FALSE;
         }
         if ($mixed_content_fixer_detected === 'not-found'){
