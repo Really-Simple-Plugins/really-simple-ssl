@@ -6,7 +6,7 @@ if ( ! class_exists( 'rsssl_front_end' ) ) {
     class rsssl_front_end
     {
         private static $_this;
-        public $javascript_redirect = TRUE;
+        public $javascript_redirect = FALSE;
         public $wp_redirect = TRUE;
         public $autoreplace_insecure_links = TRUE;
         public $switch_mixed_content_fixer_hook = FALSE;
@@ -126,7 +126,7 @@ if ( ! class_exists( 'rsssl_front_end' ) ) {
             if (isset($options)) {
                 $this->autoreplace_insecure_links = isset($options['autoreplace_insecure_links']) ? $options['autoreplace_insecure_links'] : TRUE;
                 $this->ssl_enabled = isset($options['ssl_enabled']) ? $options['ssl_enabled'] : false;
-                $this->javascript_redirect = isset($options['javascript_redirect']) ? $options['javascript_redirect'] : TRUE;
+                $this->javascript_redirect = isset($options['javascript_redirect']) ? $options['javascript_redirect'] : FALSE;
                 $this->wp_redirect = isset($options['wp_redirect']) ? $options['wp_redirect'] : FALSE;
                 $this->switch_mixed_content_fixer_hook = isset($options['switch_mixed_content_fixer_hook']) ? $options['switch_mixed_content_fixer_hook'] : FALSE;
 
