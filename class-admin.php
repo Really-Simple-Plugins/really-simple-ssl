@@ -3912,9 +3912,11 @@ class rsssl_admin extends rsssl_front_end
                 ?>
 
                 $(function() {
-                        if (document.location.href.indexOf('&highlight=' + setting_name) > -1 ) {
+                    if(typeof setting_name !== 'undefined' && setting_name != '') {
+                        if (document.location.href.indexOf('&highlight=' + setting_name) > -1) {
                             $('#rsssl-maybe-highlight-' + setting_name).closest('tr').addClass('rsssl-highlight');
                         }
+                    }
                 });
             });
         </script>
