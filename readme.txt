@@ -87,7 +87,7 @@ Yes. There is a dedicated network settings page where you can switch between net
 * Disabled Javascript redirect by default
 
 = 3.2.5 =
-* Fixed type in trace_log() function call
+* Fixed typo in trace_log() function call
 
 = 3.2.4 =
 * Improved and added dashboard notices
