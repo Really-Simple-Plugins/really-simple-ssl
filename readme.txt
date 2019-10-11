@@ -84,6 +84,7 @@ Yes. There is a dedicated network settings page where you can switch between net
 == Changelog ==
 = 3.2.6 =
 * Optimized plusone count function
+* Disabled Javascript redirect by default
 
 = 3.2.5 =
 * Fixed type in trace_log() function call
