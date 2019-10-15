@@ -84,9 +84,11 @@ Yes. There is a dedicated network settings page where you can switch between net
 == Changelog ==
 = 3.2.6 =
 * Optimized plusone count function
+* Disabled Javascript redirect by default
+* Fixed a bug in the setting highlight function where an undefined setting name could cause a warning
 
 = 3.2.5 =
-* Fixed type in trace_log() function call
+* Fixed typo in trace_log() function call
 
 = 3.2.4 =
 * Improved and added dashboard notices
