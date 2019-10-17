@@ -26,6 +26,7 @@ if ( ! class_exists( 'rsssl_server' ) ) {
 
 */
 
+
 public function uses_htaccess(){
 
   if ($this->get_server()=="apache" || $this->get_server()=="litespeed") {
