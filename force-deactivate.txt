@@ -115,12 +115,21 @@ function rl_deactivate_plugin( $plugin ) {
 
 }
 
+/**
+ * Helper function to find Wordpress base path.
+ */
 function find_wordpress_base_path() {
   $dir = dirname(__FILE__);
   do {
       //it is possible to check for other files here
-      if( file_exists($dir."/wp-config.php") ) {
+      if( file_exists($dir."/wp-load.php") ) {
           return $dir;
+      }
+      // The Bedrock wordpress structure's WP base path is not simply up the tree
+      // from the plugins directory; it's in the /web/wp directory.
+      // See https://roots.io/bedrock/docs/folder-structure/ for more info.
+      if (file_exists($dir."/wp")) {
+          return $dir."/wp";
       }
   } while( $dir = realpath("$dir/..") );
   return null;
