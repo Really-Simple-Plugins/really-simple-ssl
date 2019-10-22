@@ -354,6 +354,9 @@ class rsssl_admin extends rsssl_front_end
 
         $this->set_siteurl_to_ssl();
         $this->save_options();
+
+        $this->maybe_activate_pro_security_headers();
+
     }
 
 
@@ -3941,6 +3944,19 @@ class rsssl_admin extends rsssl_front_end
 		    wp_safe_redirect( $url );
 		    exit;
 	    }
+    }
+
+	/**
+	 *
+     * We want to activate the upgrade-insecure-requests and expect-ct headers after activating SSL. Only when pro is installed.
+     *
+	 */
+
+    public function maybe_activate_pro_security_headers() {
+        if (defined("rsssl_pro_version") ) {
+	        update_option('rsssl_content_security_policy', true);
+	        update_option('rsssl_expect_ct', true);
+        }
     }
 
 } //class closure
