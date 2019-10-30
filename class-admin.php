@@ -239,7 +239,7 @@ class rsssl_admin extends rsssl_front_end
                 //remove plugin one by one on each site
                 $sites = get_sites();
                 foreach ($sites as $site) {
-                    switch_to_blog($site['blog_id']);
+                    RSSSL()->rsssl_multisite->switch_to_blog_bw_compatible($site);
 
                     $current = get_option('active_plugins', array());
                     $current = $this->remove_plugin_from_array($plugin, $current);
@@ -247,9 +247,7 @@ class rsssl_admin extends rsssl_front_end
 
                     restore_current_blog(); //switches back to previous blog, not current, so we have to do it each loop
                 }
-
             } else {
-
                 $current = get_option('active_plugins', array());
                 $current = $this->remove_plugin_from_array($plugin, $current);
                 update_option('active_plugins', $current);
@@ -1858,7 +1856,7 @@ class rsssl_admin extends rsssl_front_end
 		    $this->mixed_content_fixer_detected = FALSE;
 	    }
         if ($mixed_content_fixer_detected === 'found'){
-            $this->trace_log("Mixed content fixer succesfully detected");
+            $this->trace_log("Mixed content fixer successfully detected");
             //Mixed content fixer was successfully detected on the front end
             $this->mixed_content_fixer_detected = true;
         }
