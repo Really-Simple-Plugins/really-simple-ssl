@@ -707,6 +707,7 @@ if (!class_exists('rsssl_multisite')) {
          *
          * @access private
          *
+         * @return bool
          */
 
         public function is_subfolder($domain)
