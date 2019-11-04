@@ -27,7 +27,7 @@ Any code suggestions? We're on [GitHub](https://github.com/rlankhorst/really-sim
 Hopefully this plugin saves you some hours of work. If you want to support the continuing development of this plugin, you might consider buying the [premium](https://www.really-simple-ssl.com/pro/), which includes
 some cool features.
 = Pro features =
-* The mixed content scan, which shows you what you have to do if you don't have the green lock yet
+* The mixed content scan, which shows you what you have to do if you don't have the secure lock yet
 * The option to enable HTTP Strict Transport Security
 * The option to configure your site for the HSTS preload list
 * Advanced security headers for additional security
