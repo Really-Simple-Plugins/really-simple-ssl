@@ -3502,9 +3502,15 @@ class rsssl_admin extends rsssl_front_end
         RSSSL()->rsssl_help->get_help_tip(__("A .htaccess redirect is faster. Really Simple SSL detects the redirect code that is most likely to work (99% of websites), but this is not 100%. Make sure you know how to regain access to your site if anything goes wrong!", "really-simple-ssl"));
         echo $comment;
 
+        if ($this->uses_htaccess_conf()) {
+            $htaccess_file = "htaccess.conf (/conf/htaccess.conf/)";
+        } else {
+	        $htaccess_file = ".htaccess";
+        }
+
         if ($this->htaccess_redirect && (!is_writable($this->htaccess_file()) || !$this->htaccess_test_success)) {
             echo "<br><br>";
-            if (!is_writable($this->htaccess_file())) _e("The .htaccess file is not writable. Add these lines to your .htaccess manually, or set 644 writing permissions", "really-simple-ssl");
+            if (!is_writable($this->htaccess_file())) _e("The $htaccess_file file is not writable. Add these lines to your htaccess manually, or set 644 writing permissions.", "really-simple-ssl");
             if (!$this->htaccess_test_success) _e("The .htaccess redirect rules that were selected by this plugin failed in the test. The following redirect rules were tested:", "really-simple-ssl");
             echo "<br><br>";
             if ($this->ssl_type != "NA") {
