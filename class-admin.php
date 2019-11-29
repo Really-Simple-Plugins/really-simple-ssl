@@ -2075,7 +2075,7 @@ class rsssl_admin extends rsssl_front_end
             add_action('admin_print_footer_scripts', array($this, 'insert_dismiss_review'));
             ?>
             <div id="message" class="updated notice is-dismissible rlrsssl-review">
-                <p><?php printf(__('Hi, you have been using Really Simple SSL for a month now, awesome! If you have a moment, please consider leaving a review on WordPress.org to spread the word. We greatly appreciate it! If you have any questions or feedback, leave us a %smessage%s.', 'really-simple-ssl'),'<a href="https://really-simple-ssl.com/contact" target="_blank">','</a>'); ?></p>
+                <p><?php printf(__('Hi, Really Simple SSL has kept your site secure for a month now, awesome! If you have a moment, please consider leaving a review on WordPress.org to spread the word. We greatly appreciate it! If you have any questions or feedback, leave us a %smessage%s.', 'really-simple-ssl'),'<a href="https://really-simple-ssl.com/contact" target="_blank">','</a>'); ?></p>
                 <i>- Rogier</i>
                 <?php //Inline style because the main.css stylesheet is only included on Really Simple SSL admin pages.?>
                 <ul style="margin-left: 30px; list-style: square;">
