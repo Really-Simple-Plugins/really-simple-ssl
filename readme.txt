@@ -6,7 +6,7 @@ Requires at least: 4.6
 License: GPL2
 Tested up to: 5.3
 Requires PHP: 5.4
-Stable tag: 3.2.6
+Stable tag: 3.2.7
 
 No setup required! You only need an SSL certificate, and this plugin will do the rest.
 
@@ -82,6 +82,14 @@ If you are experiencing redirect loops on your site, try these [instructions](ht
 Yes. There is a dedicated network settings page where you can switch between network activated SSL and per page SSL. In the dedicated pro for multisite plugin, you can override all site settings for SSL on the network level, and can activate and deactivate SSL in the network menu for each site.
 
 == Changelog ==
+= 3.2.7 =
+* Updated switch_to_blog function in to a backwards compatible version for older WP installations
+* Updated review notice
+* Improved .htaccess not writeable notice for Bitnami installations to show htaccess.conf location
+* Updated green lock to secure lock text
+* Removed border for dashboard sidebar button
+* Activate some security headers by default when pro is enabled
+
 = 3.2.6 =
 * Optimized plusone count function
 * Disabled Javascript redirect by default
