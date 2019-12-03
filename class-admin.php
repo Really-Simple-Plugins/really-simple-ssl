@@ -2074,15 +2074,40 @@ class rsssl_admin extends rsssl_front_end
         if (!$this->review_notice_shown && get_option('rsssl_activation_timestamp') && get_option('rsssl_activation_timestamp') < strtotime("-1 month")) {
             add_action('admin_print_footer_scripts', array($this, 'insert_dismiss_review'));
             ?>
-            <div id="message" class="updated notice is-dismissible rlrsssl-review">
-                <p><?php printf(__('Hi, Really Simple SSL has kept your site secure for a month now, awesome! If you have a moment, please consider leaving a review on WordPress.org to spread the word. We greatly appreciate it! If you have any questions or feedback, leave us a %smessage%s.', 'really-simple-ssl'),'<a href="https://really-simple-ssl.com/contact" target="_blank">','</a>'); ?></p>
-                <i>- Rogier</i>
-                <?php //Inline style because the main.css stylesheet is only included on Really Simple SSL admin pages.?>
-                <ul style="margin-left: 30px; list-style: square;">
-                    <li><p style="margin-top: -5px;"><a target="_blank" href="https://wordpress.org/support/plugin/really-simple-ssl/reviews/#new-post"><?php _e('Leave a review', 'really-simple-ssl'); ?></a></p></li>
-                    <li><p style="margin-top: -5px;"><a href="#" id="maybe-later"><?php _e('Maybe later', 'really-simple-ssl'); ?></a></p></li>
-                    <li><p style="margin-top: -5px;"><a href="#" class="review-dismiss"><?php _e('No thanks and never ask me again', 'really-simple-ssl'); ?></a></p></li>
-                </ul>
+            <style>
+                .rsssl-container {
+                    display: flex;
+                    padding:12px;
+                }
+                .rsssl-container .dashicons {
+                    margin-left:10px;
+                    margin-right:5px;
+                }
+                .rsssl-review-image img{
+                    margin-top:0.5em;
+                }
+                .rsssl-buttons-row {
+                    margin-top:10px;
+                    display: flex;
+                    align-items: center;
+                }
+            </style>
+            <div id="message" class="updated fade notice is-dismissible rlrsssl-review really-simple-plugins" style="border-left:4px solid #333">
+                <div class="rsssl-container">
+                    <div class="rsssl-review-image"><img width=80px" src="<?php echo rsssl_url?>/assets/icon-128x128.png" alt="review-logo"></div>
+                    <div style="margin-left:30px">
+                        <p><?php printf(__('Hi, Really Simple SSL has kept your site secure for a month now, awesome! If you have a moment, please consider leaving a review on WordPress.org to spread the word. We greatly appreciate it! If you have any questions or feedback, leave us a %smessage%s.', 'really-simple-ssl'),'<a href="https://really-simple-ssl.com/contact" target="_blank">','</a>'); ?></p>
+                        <i>- Rogier</i>
+                        <div class="rsssl-buttons-row">
+                            <a class="button button-primary" target="_blank"
+                               href="https://wordpress.org/support/plugin/really-simple-ssl/reviews/#new-post"><?php _e('Leave a review', 'really-simple-ssl'); ?></a>
+
+                            <div class="dashicons dashicons-calendar"></div><a href="#" id="maybe-later"><?php _e('Maybe later', 'really-simple-ssl'); ?></a>
+
+                            <div class="dashicons dashicons-no-alt"></div><a href="#" class="review-dismiss"><?php _e('Don\'t show again', 'really-simple-ssl'); ?></a>
+                        </div>
+                    </div>
+                </div>
             </div>
             <?php
         }
