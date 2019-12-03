@@ -2054,7 +2054,6 @@ class rsssl_admin extends rsssl_front_end
     public function has_well_known_needle()
     {
         $htaccess = file_get_contents($this->htaccess_file());
-
         $well_known_needle = ".well-known";
 
         if (strpos($htaccess, $well_known_needle) !== false) {
@@ -2062,7 +2061,6 @@ class rsssl_admin extends rsssl_front_end
         }
 
         return false;
-
     }
 
     public function show_leave_review_notice()
@@ -2070,6 +2068,14 @@ class rsssl_admin extends rsssl_front_end
         //prevent showing the review on edit screen, as gutenberg removes the class which makes it editable.
         $screen = get_current_screen();
         if ( $screen->parent_base === 'edit' ) return;
+
+        //this user has never had the review notice yet.
+        if ($this->ssl_enabled && !get_option('rsssl_activation_timestamp')){
+            $month = rand ( 0, 11);
+            $trigger_notice_date = time() + $month * MONTH_IN_SECONDS;
+	        update_option('rsssl_activation_timestamp', $trigger_notice_date);
+	        update_option('rsssl_before_review_notice_user', $trigger_notice_date);
+        }
 
         if (!$this->review_notice_shown && get_option('rsssl_activation_timestamp') && get_option('rsssl_activation_timestamp') < strtotime("-1 month")) {
             add_action('admin_print_footer_scripts', array($this, 'insert_dismiss_review'));
@@ -2096,7 +2102,12 @@ class rsssl_admin extends rsssl_front_end
                 <div class="rsssl-container">
                     <div class="rsssl-review-image"><img width=80px" src="<?php echo rsssl_url?>/assets/icon-128x128.png" alt="review-logo"></div>
                     <div style="margin-left:30px">
-                        <p><?php printf(__('Hi, Really Simple SSL has kept your site secure for a month now, awesome! If you have a moment, please consider leaving a review on WordPress.org to spread the word. We greatly appreciate it! If you have any questions or feedback, leave us a %smessage%s.', 'really-simple-ssl'),'<a href="https://really-simple-ssl.com/contact" target="_blank">','</a>'); ?></p>
+                        <?php if (get_option("rsssl_before_review_notice_user")){?>
+                            <p><?php printf(__('Hi, Really Simple SSL has kept your site secure for some time now, awesome! If you have a moment, please consider leaving a review on WordPress.org to spread the word. We greatly appreciate it! If you have any questions or feedback, leave us a %smessage%s.', 'really-simple-ssl'),'<a href="https://really-simple-ssl.com/contact" target="_blank">','</a>'); ?></p>
+                        <?php } else {?>
+                            <p><?php printf(__('Hi, Really Simple SSL has kept your site secure for a month now, awesome! If you have a moment, please consider leaving a review on WordPress.org to spread the word. We greatly appreciate it! If you have any questions or feedback, leave us a %smessage%s.', 'really-simple-ssl'),'<a href="https://really-simple-ssl.com/contact" target="_blank">','</a>'); ?></p>
+	                    <?php }?>
+
                         <i>- Rogier</i>
                         <div class="rsssl-buttons-row">
                             <a class="button button-primary" target="_blank"
