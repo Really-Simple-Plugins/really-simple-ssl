@@ -2074,7 +2074,7 @@ class rsssl_admin extends rsssl_front_end
             $month = rand ( 0, 11);
             $trigger_notice_date = time() + $month * MONTH_IN_SECONDS;
 	        update_option('rsssl_activation_timestamp', $trigger_notice_date);
-	        update_option('rsssl_before_review_notice_user', $trigger_notice_date);
+	        update_option('rsssl_before_review_notice_user', true);
         }
 
         if (!$this->review_notice_shown && get_option('rsssl_activation_timestamp') && get_option('rsssl_activation_timestamp') < strtotime("-1 month")) {
