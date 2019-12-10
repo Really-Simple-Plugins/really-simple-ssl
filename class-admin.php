@@ -3133,6 +3133,17 @@ class rsssl_admin extends rsssl_front_end
                           );
                       }
 
+
+                    if (!defined("wp_search_insights_plugin")) {
+	                    $this->get_banner_html(array(
+			                    'img' => 'wpsearchinsights.jpg',
+			                    'title' => 'WP Search Insights',
+			                    'description' => __("Records all searches made on your site. See valuable insights in a clean dashboard", "really-simple-ssl"),
+			                    'url' => 'https://wordpress.org/plugins/wp-search-insights/',
+		                    )
+	                    );
+                    }
+
                     if (defined("ultimatemember_version")) {
 
                         if (!defined("um_tagging_version")) {
