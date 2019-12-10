@@ -3105,7 +3105,7 @@ class rsssl_admin extends rsssl_front_end
                      *
                      */
 
-                    $url = is_multisite() ? 'https://really-simple-ssl.com/downloads/really-simple-ssl-pro-multisite/' : 'https://really-simple-ssl.com/downloads/really-simple-ssl-pro/';
+                    $url = is_multisite() ? 'https://really-simple-ssl.com/downloads/really-simple-ssl-pro-multisite/' : 'https://really-simple-ssl.com/premium/';
                     $this->get_banner_html(array(
                             'img' => 'rsssl-pro.jpg',
                             'title' => 'Really Simple SSL Pro',
