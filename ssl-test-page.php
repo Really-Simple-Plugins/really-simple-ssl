@@ -61,7 +61,7 @@ if (!empty($_SERVER['HTTP_X_FORWARDED_SSL']) && ($_SERVER['HTTP_X_FORWARDED_SSL'
 }
 
 if ($ssl) {
-    echo "<br>#SUCCESFULLY DETECTED SSL#";
+    echo "<br>#SUCCESSFULLY DETECTED SSL#";
 } else {
     echo "<br>#NO KNOWN SSL CONFIGURATION DETECTED#";
 }

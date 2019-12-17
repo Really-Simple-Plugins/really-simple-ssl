@@ -239,7 +239,7 @@ class rsssl_admin extends rsssl_front_end
                 //remove plugin one by one on each site
                 $sites = get_sites();
                 foreach ($sites as $site) {
-                    switch_to_blog($site['blog_id']);
+                    RSSSL()->rsssl_multisite->switch_to_blog_bw_compatible($site);
 
                     $current = get_option('active_plugins', array());
                     $current = $this->remove_plugin_from_array($plugin, $current);
@@ -247,9 +247,7 @@ class rsssl_admin extends rsssl_front_end
 
                     restore_current_blog(); //switches back to previous blog, not current, so we have to do it each loop
                 }
-
             } else {
-
                 $current = get_option('active_plugins', array());
                 $current = $this->remove_plugin_from_array($plugin, $current);
                 update_option('active_plugins', $current);
@@ -354,6 +352,9 @@ class rsssl_admin extends rsssl_front_end
 
         $this->set_siteurl_to_ssl();
         $this->save_options();
+
+        $this->maybe_activate_pro_security_headers();
+
     }
 
 
@@ -1855,7 +1856,7 @@ class rsssl_admin extends rsssl_front_end
 		    $this->mixed_content_fixer_detected = FALSE;
 	    }
         if ($mixed_content_fixer_detected === 'found'){
-            $this->trace_log("Mixed content fixer succesfully detected");
+            $this->trace_log("Mixed content fixer successfully detected");
             //Mixed content fixer was successfully detected on the front end
             $this->mixed_content_fixer_detected = true;
         }
@@ -2053,7 +2054,6 @@ class rsssl_admin extends rsssl_front_end
     public function has_well_known_needle()
     {
         $htaccess = file_get_contents($this->htaccess_file());
-
         $well_known_needle = ".well-known";
 
         if (strpos($htaccess, $well_known_needle) !== false) {
@@ -2061,7 +2061,6 @@ class rsssl_admin extends rsssl_front_end
         }
 
         return false;
-
     }
 
     public function show_leave_review_notice()
@@ -2070,18 +2069,56 @@ class rsssl_admin extends rsssl_front_end
         $screen = get_current_screen();
         if ( $screen->parent_base === 'edit' ) return;
 
+        //this user has never had the review notice yet.
+        if ($this->ssl_enabled && !get_option('rsssl_activation_timestamp')){
+            $month = rand ( 0, 11);
+            $trigger_notice_date = time() + $month * MONTH_IN_SECONDS;
+	        update_option('rsssl_activation_timestamp', $trigger_notice_date);
+	        update_option('rsssl_before_review_notice_user', true);
+        }
+
         if (!$this->review_notice_shown && get_option('rsssl_activation_timestamp') && get_option('rsssl_activation_timestamp') < strtotime("-1 month")) {
             add_action('admin_print_footer_scripts', array($this, 'insert_dismiss_review'));
             ?>
-            <div id="message" class="updated notice is-dismissible rlrsssl-review">
-                <p><?php printf(__('Hi, you have been using Really Simple SSL for a month now, awesome! If you have a moment, please consider leaving a review on WordPress.org to spread the word. We greatly appreciate it! If you have any questions or feedback, leave us a %smessage%s.', 'really-simple-ssl'),'<a href="https://really-simple-ssl.com/contact" target="_blank">','</a>'); ?></p>
-                <i>- Rogier</i>
-                <?php //Inline style because the main.css stylesheet is only included on Really Simple SSL admin pages.?>
-                <ul style="margin-left: 30px; list-style: square;">
-                    <li><p style="margin-top: -5px;"><a target="_blank" href="https://wordpress.org/support/plugin/really-simple-ssl/reviews/#new-post"><?php _e('Leave a review', 'really-simple-ssl'); ?></a></p></li>
-                    <li><p style="margin-top: -5px;"><a href="#" id="maybe-later"><?php _e('Maybe later', 'really-simple-ssl'); ?></a></p></li>
-                    <li><p style="margin-top: -5px;"><a href="#" class="review-dismiss"><?php _e('No thanks and never ask me again', 'really-simple-ssl'); ?></a></p></li>
-                </ul>
+            <style>
+                .rsssl-container {
+                    display: flex;
+                    padding:12px;
+                }
+                .rsssl-container .dashicons {
+                    margin-left:10px;
+                    margin-right:5px;
+                }
+                .rsssl-review-image img{
+                    margin-top:0.5em;
+                }
+                .rsssl-buttons-row {
+                    margin-top:10px;
+                    display: flex;
+                    align-items: center;
+                }
+            </style>
+            <div id="message" class="updated fade notice is-dismissible rlrsssl-review really-simple-plugins" style="border-left:4px solid #333">
+                <div class="rsssl-container">
+                    <div class="rsssl-review-image"><img width=80px" src="<?php echo rsssl_url?>/assets/icon-128x128.png" alt="review-logo"></div>
+                    <div style="margin-left:30px">
+                        <?php if (get_option("rsssl_before_review_notice_user")){?>
+                            <p><?php printf(__('Hi, Really Simple SSL has kept your site secure for some time now, awesome! If you have a moment, please consider leaving a review on WordPress.org to spread the word. We greatly appreciate it! If you have any questions or feedback, leave us a %smessage%s.', 'really-simple-ssl'),'<a href="https://really-simple-ssl.com/contact" target="_blank">','</a>'); ?></p>
+                        <?php } else {?>
+                            <p><?php printf(__('Hi, Really Simple SSL has kept your site secure for a month now, awesome! If you have a moment, please consider leaving a review on WordPress.org to spread the word. We greatly appreciate it! If you have any questions or feedback, leave us a %smessage%s.', 'really-simple-ssl'),'<a href="https://really-simple-ssl.com/contact" target="_blank">','</a>'); ?></p>
+	                    <?php }?>
+
+                        <i>- Rogier</i>
+                        <div class="rsssl-buttons-row">
+                            <a class="button button-primary" target="_blank"
+                               href="https://wordpress.org/support/plugin/really-simple-ssl/reviews/#new-post"><?php _e('Leave a review', 'really-simple-ssl'); ?></a>
+
+                            <div class="dashicons dashicons-calendar"></div><a href="#" id="maybe-later"><?php _e('Maybe later', 'really-simple-ssl'); ?></a>
+
+                            <div class="dashicons dashicons-no-alt"></div><a href="#" class="review-dismiss"><?php _e('Don\'t show again', 'really-simple-ssl'); ?></a>
+                        </div>
+                    </div>
+                </div>
             </div>
             <?php
         }
@@ -3068,7 +3105,7 @@ class rsssl_admin extends rsssl_front_end
                      *
                      */
 
-                    $url = is_multisite() ? 'https://really-simple-ssl.com/downloads/really-simple-ssl-pro-multisite/' : 'https://really-simple-ssl.com/downloads/really-simple-ssl-pro/';
+                    $url = is_multisite() ? 'https://really-simple-ssl.com/downloads/really-simple-ssl-pro-multisite/' : 'https://really-simple-ssl.com/premium/';
                     $this->get_banner_html(array(
                             'img' => 'rsssl-pro.jpg',
                             'title' => 'Really Simple SSL Pro',
@@ -3095,6 +3132,17 @@ class rsssl_admin extends rsssl_front_end
                               )
                           );
                       }
+
+
+                    if (!defined("wp_search_insights_plugin")) {
+	                    $this->get_banner_html(array(
+			                    'img' => 'wpsearchinsights.jpg',
+			                    'title' => 'WP Search Insights',
+			                    'description' => __("Records all searches made on your site. See valuable insights in a clean dashboard", "really-simple-ssl"),
+			                    'url' => 'https://wordpress.org/plugins/wp-search-insights/',
+		                    )
+	                    );
+                    }
 
                     if (defined("ultimatemember_version")) {
 
@@ -3501,9 +3549,15 @@ class rsssl_admin extends rsssl_front_end
         RSSSL()->rsssl_help->get_help_tip(__("A .htaccess redirect is faster. Really Simple SSL detects the redirect code that is most likely to work (99% of websites), but this is not 100%. Make sure you know how to regain access to your site if anything goes wrong!", "really-simple-ssl"));
         echo $comment;
 
+        if ($this->uses_htaccess_conf()) {
+            $htaccess_file = "htaccess.conf (/conf/htaccess.conf/)";
+        } else {
+	        $htaccess_file = ".htaccess";
+        }
+
         if ($this->htaccess_redirect && (!is_writable($this->htaccess_file()) || !$this->htaccess_test_success)) {
             echo "<br><br>";
-            if (!is_writable($this->htaccess_file())) _e("The .htaccess file is not writable. Add these lines to your .htaccess manually, or set 644 writing permissions", "really-simple-ssl");
+            if (!is_writable($this->htaccess_file())) _e("The $htaccess_file file is not writable. Add these lines to your htaccess manually, or set 644 writing permissions.", "really-simple-ssl");
             if (!$this->htaccess_test_success) _e("The .htaccess redirect rules that were selected by this plugin failed in the test. The following redirect rules were tested:", "really-simple-ssl");
             echo "<br><br>";
             if ($this->ssl_type != "NA") {
@@ -3941,6 +3995,19 @@ class rsssl_admin extends rsssl_front_end
 		    wp_safe_redirect( $url );
 		    exit;
 	    }
+    }
+
+	/**
+	 *
+     * We want to activate the upgrade-insecure-requests and expect-ct headers after activating SSL. Only when pro is installed.
+     *
+	 */
+
+    public function maybe_activate_pro_security_headers() {
+        if (defined("rsssl_pro_version") ) {
+	        update_option('rsssl_content_security_policy', true);
+	        update_option('rsssl_expect_ct', true);
+        }
     }
 
 } //class closure

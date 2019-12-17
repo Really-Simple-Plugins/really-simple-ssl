@@ -456,6 +456,7 @@
   -webkit-border-radius: 12px;
   -moz-border-radius: 12px;
   border-radius: 12px;
+  border: none;
   background-color: #7BD561;
   color: white;
   margin-right: 5px;
@@ -489,6 +490,7 @@ hr {
   -webkit-border-radius: 12px;
   -moz-border-radius: 12px;
   border-radius: 12px;
+  border: none;
   background-color: #017FAF;
   color: white;
   margin-right: 5px;
