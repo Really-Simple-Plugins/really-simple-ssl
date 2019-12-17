@@ -353,8 +353,6 @@ class rsssl_admin extends rsssl_front_end
         $this->set_siteurl_to_ssl();
         $this->save_options();
 
-        $this->maybe_activate_pro_security_headers();
-
     }
 
 
@@ -3105,7 +3103,7 @@ class rsssl_admin extends rsssl_front_end
                      *
                      */
 
-                    $url = is_multisite() ? 'https://really-simple-ssl.com/downloads/really-simple-ssl-pro-multisite/' : 'https://really-simple-ssl.com/premium/';
+                    $url = is_multisite() ? 'https://really-simple-ssl.com/downloads/really-simple-ssl-pro-multisite/' : 'https://really-simple-ssl.com/pro/';
                     $this->get_banner_html(array(
                             'img' => 'rsssl-pro.jpg',
                             'title' => 'Really Simple SSL Pro',
@@ -3996,20 +3994,6 @@ class rsssl_admin extends rsssl_front_end
 		    exit;
 	    }
     }
-
-	/**
-	 *
-     * We want to activate the upgrade-insecure-requests and expect-ct headers after activating SSL. Only when pro is installed.
-     *
-	 */
-
-    public function maybe_activate_pro_security_headers() {
-        if (defined("rsssl_pro_version") ) {
-	        update_option('rsssl_content_security_policy', true);
-	        update_option('rsssl_expect_ct', true);
-        }
-    }
-
 } //class closure
 
 /**
