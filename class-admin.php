@@ -353,6 +353,9 @@ class rsssl_admin extends rsssl_front_end
         $this->set_siteurl_to_ssl();
         $this->save_options();
 
+        if (!is_multisite()) {
+	        $this->redirect_to_settings_page_after_activation();
+        }
     }
 
 
@@ -364,6 +367,14 @@ class rsssl_admin extends rsssl_front_end
 
         $this->remove_ssl_from_siteurl();
         $this->save_options();
+    }
+
+    public function redirect_to_settings_page_after_activation() {
+	        $url = add_query_arg( array(
+		        "page" => "rlrsssl_really_simple_ssl",
+	        ), admin_url( "options-general.php" ) );
+	        wp_safe_redirect( $url );
+	        exit;
     }
 
 
