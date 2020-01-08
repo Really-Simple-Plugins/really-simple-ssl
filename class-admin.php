@@ -4039,7 +4039,7 @@ function rsssl_ssl_detected(){
 	if (!RSSSL()->really_simple_ssl->site_has_ssl) {
 		return 'no-ssl-detected';
 	}
-	if (RSSSL()->really_simple_ssl->site_has_ssl) {
+	if (RSSSL()->rsssl_certificate->is_valid()) {
 		return 'ssl-detected';
 	}
 
