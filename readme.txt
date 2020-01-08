@@ -84,7 +84,7 @@ Yes. There is a dedicated network settings page where you can switch between net
 == Changelog ==
 = 3.2.8 =
 * Added redirect to settings page after activating SSL
-* Improved dashboard SSL certificate check by using the is_valid() check from rsssl_certificate
+* Improved dashboard SSL certificate check by using the is_valid() check from rsssl_certificate instead of relying on site_has_ssl
 
 = 3.2.7 =
 * Updated switch_to_blog function in to a backwards compatible version for older WP installations
