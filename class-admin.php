@@ -422,8 +422,9 @@ class rsssl_admin extends rsssl_front_end
 
     public function ssl_detected()
     {
-        if ($this->site_has_ssl) { ?>
-            <div id="message" class="notice activate-ssl">
+        if ($this->site_has_ssl) {
+	        ?>
+            <div id="message" class="notice activate-ssl <?php echo apply_filters('rsssl_activate_notice_class', '');?>">
                 <?php
                   do_action('rsssl_activation_notice_inner');
                 ?>

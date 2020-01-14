@@ -20,8 +20,15 @@
 
 /*Activate notice*/
 
+
+/*Show RSSSL brand color as border-left*/
 .activate-ssl {
   border-left: 4px solid #F8BE2E;
+}
+
+/*If scan has been completed successfully, make border-left green*/
+.rsssl-scan-completed {
+  border-left: 4px solid #46b450;
 }
 
 .activate-ssl ul, .rsssl-result ul, .rsssl_bullets {
