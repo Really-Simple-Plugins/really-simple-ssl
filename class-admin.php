@@ -498,7 +498,9 @@ class rsssl_admin extends rsssl_front_end
                 <input type="submit" class='button button-primary'
                        value="<?php _e("Go ahead, activate SSL!", "really-simple-ssl"); ?>" id="rsssl_do_activate_ssl"
                        name="rsssl_do_activate_ssl">
+                <?php if (!defined("rsssl_pro_version") ) { ?>
                 <a class="button action btn-premium" href="https://really-simple-ssl.com/pro" target="_blank"><?php _e("Get ready with Pro", "really-simple-ssl"); ?></a>
+                <?php } ?>
                 <br><?php _e("You may need to login in again.", "really-simple-ssl") ?>
                 <div id="rsssl-logo" style="float: right; margin-top: -35px;"><img width=180px" src="<?php echo rsssl_url?>/assets/logo-really-simple-ssl.png" alt="review-logo"></div>
             </form>
