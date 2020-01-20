@@ -2004,6 +2004,19 @@ class rsssl_admin extends rsssl_front_end
                         &nbsp;}<br>
                         }<br>
                         //END Really Simple SSL
+
+                        //Begin Really Simple SSL Load balancing fix<br>
+                        if ((isset($_ENV["HTTPS"]) && ("on" == $_ENV["HTTPS"]))
+                        $rule .= '|| (isset($_SERVER["HTTP_X_FORWARDED_SSL"]) && (strpos($_SERVER["HTTP_X_FORWARDED_SSL"], "1") !== false))' . "\n";
+                        $rule .= '|| (isset($_SERVER["HTTP_X_FORWARDED_SSL"]) && (strpos($_SERVER["HTTP_X_FORWARDED_SSL"], "on") !== false))' . "\n";
+                        $rule .= '|| (isset($_SERVER["HTTP_CF_VISITOR"]) && (strpos($_SERVER["HTTP_CF_VISITOR"], "https") !== false))' . "\n";
+                        $rule .= '|| (isset($_SERVER["HTTP_CLOUDFRONT_FORWARDED_PROTO"]) && (strpos($_SERVER["HTTP_CLOUDFRONT_FORWARDED_PROTO"], "https") !== false))' . "\n";
+                        $rule .= '|| (isset($_SERVER["HTTP_X_FORWARDED_PROTO"]) && (strpos($_SERVER["HTTP_X_FORWARDED_PROTO"], "https") !== false))' . "\n";
+                        $rule .= '|| (isset($_SERVER["HTTP_X_PROTO"]) && (strpos($_SERVER["HTTP_X_PROTO"], "SSL") !== false))' . "\n";
+                        $rule .= ') {' . "\n";
+                        $rule .= '$_SERVER["HTTPS"] = "on";' . "\n";
+                        $rule .= '}' . "\n";
+                        $rule .= "//END Really Simple SSL" . "\n";
                     </code><br>
                 </p>
                 <p><?php echo __("Or set your wp-config.php to writable and reload this page.", "really-simple-ssl"); ?></p>
@@ -2036,7 +2049,6 @@ class rsssl_admin extends rsssl_front_end
         if (file_exists("$this->ABSpath.well-known/acme-challenge")) {
             return true;
         }
-
         return false;
     }
 
