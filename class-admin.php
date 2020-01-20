@@ -3117,6 +3117,7 @@ class rsssl_admin extends rsssl_front_end
                      *
                      */
 
+                    $admin_url = admin_url();
                     $url = is_multisite() ? 'https://really-simple-ssl.com/downloads/really-simple-ssl-pro-multisite/' : 'https://really-simple-ssl.com/pro/';
                     $this->get_banner_html(array(
                             'img' => 'rsssl-pro.jpg',
@@ -3127,15 +3128,16 @@ class rsssl_admin extends rsssl_front_end
                            )
                         );
 
-                     $admin_url = admin_url();
-                      $this->get_banner_html(array(
-                              'img' => 'complianz.jpg',
-                              'title' => 'Complianz',
-                              'description' => __("The Complianz Privacy Suite (GDPR/CaCPA) for WordPress. Simple, Quick and Complete. Up-to-date customized legal documents by a prominent IT Law firm.", "really-simple-ssl"),
-                              'url' => "$admin_url" . "plugin-install.php?s=complianz+RogierLankhorst&tab=search&type=term",
-                              'pro' => true,
-                           )
-                        );
+                    if (!class_exists('COMPLIANZ')) {
+	                    $this->get_banner_html( array(
+			                    'img'         => 'complianz.jpg',
+			                    'title'       => 'Complianz',
+			                    'description' => __( "The Complianz Privacy Suite (GDPR/CaCPA) for WordPress. Simple, Quick and Complete. Up-to-date customized legal documents by a prominent IT Law firm.", "really-simple-ssl" ),
+			                    'url'         => "$admin_url" . "plugin-install.php?s=complianz+RogierLankhorst&tab=search&type=term",
+			                    'pro'         => true,
+		                    )
+	                    );
+                    }
 
                       if (!defined("ZRDN_PLUGIN_DIRECTORY")) {
                           $this->get_banner_html(array(
