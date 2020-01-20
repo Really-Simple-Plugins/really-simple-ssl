@@ -488,8 +488,6 @@ hr {
   float: right;
   font-size: inherit;
   height: 25px;
-  -webkit-border-radius: 12px;
-  -moz-border-radius: 12px;
   border-radius: 12px;
   border: none;
   background-color: #000000;
@@ -498,6 +496,8 @@ hr {
 }
 
 .rsssl-more-info-button {
+  border: none;
+  border-radius: 50px;
   clear: both;
   margin-top: 10px;
 }
