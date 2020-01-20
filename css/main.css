@@ -314,7 +314,7 @@
 /* Styling for the sidebar in the admin tab of the free plugin */
 
 .rsssl-really-simple-plugins-logo {
-  background-color: #DCDCDC;
+  background-color: #ececec;
   margin-left: -15px;
   margin-right: -15px;
 }
@@ -333,16 +333,16 @@
   min-height: 125px;
   padding-bottom: 35px;
   margin-bottom: 10px;
-  background-color: #DCDCDC;
+  background-color: #fff;
   width: 100%;
   border-radius: 3%;
 }
 
 .rsssl-sidebar-single-content-container-pro {
+  background-color: #fff;
   min-height: 125px;
   padding-bottom: 35px;
   margin-bottom: 10px;
-  background-color: #DCDCDC;
   width: 100%;
   border-radius: 3%;
 }
@@ -408,6 +408,7 @@
    width: 40%;
  }
   .rsssl-sidebar-single-content-container {
+    background-color: #fff;
     width: 40%;
     padding-left: 25px;
     float: left;
@@ -475,7 +476,7 @@
   -moz-border-radius: 12px;
   border-radius: 12px;
   border: none;
-  background-color: #7BD561;
+  background-color: #000000;
   color: white;
   margin-right: 5px;
 }
@@ -505,17 +506,18 @@ hr {
   float: right;
   font-size: inherit;
   height: 25px;
-  -webkit-border-radius: 12px;
-  -moz-border-radius: 12px;
   border-radius: 12px;
   border: none;
-  background-color: #017FAF;
+  background-color: #000000;
   color: white;
   margin-right: 5px;
 }
 
 .rsssl-more-info-button {
+  border: none;
+  border-radius: 50px;
   clear: both;
+  margin-top: 10px;
 }
 
 #TB_ajaxContent {
