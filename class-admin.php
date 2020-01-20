@@ -1296,7 +1296,7 @@ class rsssl_admin extends rsssl_front_end
             //check the type of SSL, either by parsing the returned string, or by reading the server vars.
             if ((strpos($filecontents, "#CLOUDFRONT#") !== false) || (isset($_SERVER['HTTP_CLOUDFRONT_FORWARDED_PROTO']) && ($_SERVER['HTTP_CLOUDFRONT_FORWARDED_PROTO'] == 'https'))) {
                 $this->ssl_type = "CLOUDFRONT";
-            } elseif ((strpos($filecontents, "#CLOUDFLARE#") !== false) || (isset($_SERVER['HTTP_CF_VISITOR']) && ($_SERVER['HTTP_CF_VISITOR'] == 'https'))) {
+            } elseif ((strpos($filecontents, "#CLOUDFLARE#") !== false) || (isset($_SERVER['HTTP_CF_VISITOR']) && (strpos($_SERVER["HTTP_CF_VISITOR"], "https") !== false))) {
                 $this->ssl_type = "CLOUDFLARE";
             } elseif ((strpos($filecontents, "#LOADBALANCER#") !== false) || (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && ($_SERVER['HTTP_X_FORWARDED_PROTO'] == 'https'))) {
                 $this->ssl_type = "LOADBALANCER";
@@ -1990,18 +1990,17 @@ class rsssl_admin extends rsssl_front_end
             if ($this->do_wpconfig_loadbalancer_fix) { ?>
                 <p><?php echo __("Your wp-config.php has to be edited, but is not writable.", "really-simple-ssl"); ?></p>
                 <p><?php echo __("Because your site is behind a loadbalancer and is_ssl() returns false, you should add the following line of code to your wp-config.php.", "really-simple-ssl"); ?>
-
                     <br><br><code>
                         //Begin Really Simple SSL Load balancing fix<br>
-                        $server_opts = array("HTTP_CLOUDFRONT_FORWARDED_PROTO" => "https", "HTTP_CF_VISITOR"=>"https",
-                        "HTTP_X_FORWARDED_PROTO"=>"https", "HTTP_X_FORWARDED_SSL"=>"on", "HTTP_X_PROTO"=>"SSL",
-                        "HTTP_X_FORWARDED_SSL"=>"1");<br>
-                        foreach( $server_opts as $option => $value ) {<br>
-                        &nbsp;if ((isset($_ENV["HTTPS"]) && ( "on" == $_ENV["HTTPS"] )) || (isset( $_SERVER[ $option ] )
-                        && ( strpos( $_SERVER[ $option ], $value ) !== false )) ) {<br>
-                        &nbsp;&nbsp;$_SERVER[ "HTTPS" ] = "on";<br>
-                        &nbsp;&nbsp;break;<br>
-                        &nbsp;}<br>
+                        if ((isset($_ENV["HTTPS"]) && ("on" == $_ENV["HTTPS"]))<br>
+                        || (isset($_SERVER["HTTP_X_FORWARDED_SSL"]) && (strpos($_SERVER["HTTP_X_FORWARDED_SSL"], "1") !== false))<br>
+                        || (isset($_SERVER["HTTP_X_FORWARDED_SSL"]) && (strpos($_SERVER["HTTP_X_FORWARDED_SSL"], "on") !== false))<br>
+                        || (isset($_SERVER["HTTP_CF_VISITOR"]) && (strpos($_SERVER["HTTP_CF_VISITOR"], "https") !== false))<br>
+                        || (isset($_SERVER["HTTP_CLOUDFRONT_FORWARDED_PROTO"]) && (strpos($_SERVER["HTTP_CLOUDFRONT_FORWARDED_PROTO"], "https") !== false))<br>
+                        || (isset($_SERVER["HTTP_X_FORWARDED_PROTO"]) && (strpos($_SERVER["HTTP_X_FORWARDED_PROTO"], "https") !== false))<br>
+                        || (isset($_SERVER["HTTP_X_PROTO"]) && (strpos($_SERVER["HTTP_X_PROTO"], "SSL") !== false))<br>
+                        ) {<br>
+                        &nbsp;&nbsp; $_SERVER["HTTPS"] = "on";<br>
                         }<br>
                         //END Really Simple SSL
                     </code><br>
@@ -2036,7 +2035,6 @@ class rsssl_admin extends rsssl_front_end
         if (file_exists("$this->ABSpath.well-known/acme-challenge")) {
             return true;
         }
-
         return false;
     }
 
@@ -3112,11 +3110,13 @@ class rsssl_admin extends rsssl_front_end
                             'pro' => true,
                            )
                         );
+
+                     $admin_url = admin_url();
                       $this->get_banner_html(array(
                               'img' => 'complianz.jpg',
                               'title' => 'Complianz',
                               'description' => __("The Complianz Privacy Suite (GDPR/CaCPA) for WordPress. Simple, Quick and Complete. Up-to-date customized legal documents by a prominent IT Law firm.", "really-simple-ssl"),
-                              'url' => 'https://wordpress.org/plugins/complianz-gdpr/',
+                              'url' => "$admin_url" . "plugin-install.php?s=complianz+RogierLankhorst&tab=search&type=term",
                               'pro' => true,
                            )
                         );
@@ -3126,7 +3126,7 @@ class rsssl_admin extends rsssl_front_end
                                   'img' => 'ziprecipes.png',
                                   'title' => 'Zip Recipes',
                                   'description' => __("Create beautiful SEO friendly recipe cards for your recipes with Zip Recipes.", "really-simple-ssl"),
-                                  'url' => 'https://wordpress.org/plugins/zip-recipes/',
+                                  'url' => "$admin_url" . "plugin-install.php?s=zip+recipes+RogierLankhorst&tab=search&type=term",
                               )
                           );
                       }
@@ -3137,7 +3137,7 @@ class rsssl_admin extends rsssl_front_end
 			                    'img' => 'wpsearchinsights.jpg',
 			                    'title' => 'WP Search Insights',
 			                    'description' => __("Records all searches made on your site. See valuable insights in a clean dashboard", "really-simple-ssl"),
-			                    'url' => 'https://wordpress.org/plugins/wp-search-insights/',
+			                    'url' => "$admin_url" . "plugin-install.php?s=wp+search+insights+Rogier+Lankhorst&tab=search&type=term",
 		                    )
 	                    );
                     }
