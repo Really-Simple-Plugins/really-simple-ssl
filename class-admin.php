@@ -523,7 +523,7 @@ class rsssl_admin extends rsssl_front_end
         if ($this->site_has_ssl) {
             ?>
             <p><?php _e('You can also let the automatic scan of the pro version handle this for you, and get premium support, increased security with HSTS and more!', 'really-simple-ssl'); ?>
-                &nbsp;<a target="_blank"
+                <a target="_blank"
                          href="<?php echo $this->pro_url; ?>"><?php _e("Check out Really Simple SSL Pro", "really-simple-ssl"); ?></a>
             </p>
             <?php
