@@ -14,12 +14,10 @@
   max-width:100%;
   /*height:inherit;*/
 }
+
 #message.updated.notice.activate-ssl {
     padding-top: 10px;
 }
-
-/*Activate notice*/
-
 
 /*Show RSSSL brand color as border-left*/
 .activate-ssl {
