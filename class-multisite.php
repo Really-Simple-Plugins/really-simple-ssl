@@ -477,6 +477,14 @@ if (!class_exists('rsssl_multisite')) {
 
         }
 
+        public function redirect_to_network_settings_page_after_activation() {
+	        $url = add_query_arg( array(
+		        "page" => "really-simple-ssl",
+	        ), network_admin_url( "settings.php" ) );
+	        wp_safe_redirect( $url );
+	        exit;
+        }
+
         public function get_process_completed_percentage(){
             $complete_count = get_site_option('rsssl_siteprocessing_progress');
 
@@ -530,7 +538,8 @@ if (!class_exists('rsssl_multisite')) {
 
         public function activate_ssl_networkwide()
         {
-            //run chunked
+
+	        //run chunked
             $nr_of_sites = 200;
             $current_offset = get_site_option('rsssl_siteprocessing_progress');
 
@@ -548,8 +557,7 @@ if (!class_exists('rsssl_multisite')) {
                     update_site_option('rsssl_siteprocessing_progress', $current_offset+$nr_of_sites);
                 }
             }
-
-
+	        $this->redirect_to_network_settings_page_after_activation();
         }
 
 

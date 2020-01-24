@@ -353,6 +353,9 @@ class rsssl_admin extends rsssl_front_end
         $this->set_siteurl_to_ssl();
         $this->save_options();
 
+        if (!is_multisite()) {
+	        $this->redirect_to_settings_page_after_activation();
+        }
     }
 
 
@@ -364,6 +367,14 @@ class rsssl_admin extends rsssl_front_end
 
         $this->remove_ssl_from_siteurl();
         $this->save_options();
+    }
+
+    public function redirect_to_settings_page_after_activation() {
+	        $url = add_query_arg( array(
+		        "page" => "rlrsssl_really_simple_ssl",
+	        ), admin_url( "options-general.php" ) );
+	        wp_safe_redirect( $url );
+	        exit;
     }
 
 
@@ -411,8 +422,9 @@ class rsssl_admin extends rsssl_front_end
 
     public function ssl_detected()
     {
-        if ($this->site_has_ssl) { ?>
-            <div id="message" class="updated notice activate-ssl">
+        if ($this->site_has_ssl) {
+	        ?>
+            <div id="message" class="notice activate-ssl <?php echo apply_filters('rsssl_activate_notice_class', '');?>">
                 <?php
                   do_action('rsssl_activation_notice_inner');
                 ?>
@@ -457,14 +469,14 @@ class rsssl_admin extends rsssl_front_end
             <p>
             <ul>
                 <li><?php _e('Http references in your .css and .js files: change any http:// into //', 'really-simple-ssl'); ?></li>
-                <li><?php _e('Images, stylesheets or scripts from a domain without an SSL certificate: remove them or move to your own server.', 'really-simple-ssl'); ?></li><?php
+                <li><?php _e('Images, stylesheets or scripts from a domain without an SSL certificate: remove them or move to your own server', 'really-simple-ssl'); ?></li><?php
 
                 $backup_link = "https://really-simple-ssl.com/knowledge-base/backing-up-your-site/";
                 $link_open = '<a target="_blank" href="' . $backup_link . '">';
                 $link_close = '</a>';
 
                 ?>
-                <li> <?php printf(__("It is recommended to take a %sbackup%s of your site before activating SSL", 'really-simple-ssl'), $link_open, $link_close); ?> </li>
+                <li> <?php printf(__("We strongly recommend to take a %sbackup%s of your site before activating SSL", 'really-simple-ssl'), $link_open, $link_close); ?> </li>
             </ul>
             </p>
             <?php
@@ -487,7 +499,11 @@ class rsssl_admin extends rsssl_front_end
                 <input type="submit" class='button button-primary'
                        value="<?php _e("Go ahead, activate SSL!", "really-simple-ssl"); ?>" id="rsssl_do_activate_ssl"
                        name="rsssl_do_activate_ssl">
+                <?php if (!defined("rsssl_pro_version") ) { ?>
+                <a class="button action btn-premium" href="https://really-simple-ssl.com/pro" target="_blank"><?php _e("Get ready with Pro", "really-simple-ssl"); ?></a>
+                <?php } ?>
                 <br><?php _e("You may need to login in again.", "really-simple-ssl") ?>
+                <div id="rsssl-logo" style="float: right; margin-top: -35px;"><img width=180px" src="<?php echo rsssl_url?>/assets/logo-really-simple-ssl.png" alt="review-logo"></div>
             </form>
             </div>
             </p>
@@ -507,8 +523,8 @@ class rsssl_admin extends rsssl_front_end
         if ($this->site_has_ssl) {
             ?>
             <p><?php _e('You can also let the automatic scan of the pro version handle this for you, and get premium support, increased security with HSTS and more!', 'really-simple-ssl'); ?>
-                &nbsp;<a target="_blank"
-                         href="<?php echo $this->pro_url; ?>"><?php _e("Check out Really Simple SSL Premium", "really-simple-ssl"); ?></a>
+                <a target="_blank"
+                         href="<?php echo $this->pro_url; ?>"><?php _e("Check out Really Simple SSL Pro", "really-simple-ssl"); ?></a>
             </p>
             <?php
         }
@@ -2179,14 +2195,14 @@ class rsssl_admin extends rsssl_front_end
             ?>
             <div id="message" class="updated notice is-dismissible rlrsssl-success">
                 <p>
-                    <?php _e("SSL activated!", "really-simple-ssl"); ?>&nbsp;
+                    <?php _e("SSL activated!", "really-simple-ssl"); ?>
                     <?php _e("Don't forget to change your settings in Google Analytics and Webmaster tools.", "really-simple-ssl");
                     ?>
                     <a target="_blank"
                        href="https://really-simple-ssl.com/knowledge-base/how-to-setup-google-analytics-and-google-search-consolewebmaster-tools/"><?php _e("More info.", "really-simple-ssl"); ?></a>
                     <?php
-                    $settings_link = '<a href="'.admin_url('options-general.php?page=rlrsssl_really_simple_ssl').'">';
-                    echo sprintf(__("See the %ssettings page%s for further SSL optimizations." , "really-simple-ssl"), $settings_link, "</a>"); ?>
+//                    $settings_link = '<a href="'.admin_url('options-general.php?page=rlrsssl_really_simple_ssl').'">';
+//                    echo sprintf(__("See the %ssettings page%s for further SSL optimizations." , "really-simple-ssl"), $settings_link, "</a>"); ?>
                 </p>
             </div>
             <?php
@@ -3101,25 +3117,27 @@ class rsssl_admin extends rsssl_front_end
                      *
                      */
 
+                    $admin_url = admin_url();
                     $url = is_multisite() ? 'https://really-simple-ssl.com/downloads/really-simple-ssl-pro-multisite/' : 'https://really-simple-ssl.com/pro/';
                     $this->get_banner_html(array(
                             'img' => 'rsssl-pro.jpg',
                             'title' => 'Really Simple SSL Pro',
-                            'description' => __("Really Simple SSL pro optimizes your SSL configuration: extensive scan for mixed content issues, access to premium support, HSTS and more!", "really-simple-ssl"),
+                            'description' => __("Really Simple SSL Pro optimizes your SSL configuration: extensive scan for mixed content issues, access to premium support, HSTS and more!", "really-simple-ssl"),
                             'url' => $url,
                             'pro' => true,
                            )
                         );
 
-                     $admin_url = admin_url();
-                      $this->get_banner_html(array(
-                              'img' => 'complianz.jpg',
-                              'title' => 'Complianz',
-                              'description' => __("The Complianz Privacy Suite (GDPR/CaCPA) for WordPress. Simple, Quick and Complete. Up-to-date customized legal documents by a prominent IT Law firm.", "really-simple-ssl"),
-                              'url' => "$admin_url" . "plugin-install.php?s=complianz+RogierLankhorst&tab=search&type=term",
-                              'pro' => true,
-                           )
-                        );
+                    if (!class_exists('COMPLIANZ')) {
+	                    $this->get_banner_html( array(
+			                    'img'         => 'complianz.jpg',
+			                    'title'       => 'Complianz',
+			                    'description' => __( "The Complianz Privacy Suite (GDPR/CaCPA) for WordPress. Simple, Quick and Complete. Up-to-date customized legal documents by a prominent IT Law firm.", "really-simple-ssl" ),
+			                    'url'         => "$admin_url" . "plugin-install.php?s=complianz+RogierLankhorst&tab=search&type=term",
+			                    'pro'         => true,
+		                    )
+	                    );
+                    }
 
                       if (!defined("ZRDN_PLUGIN_DIRECTORY")) {
                           $this->get_banner_html(array(
@@ -4028,7 +4046,7 @@ function rsssl_ssl_detected(){
 	if (!RSSSL()->really_simple_ssl->site_has_ssl) {
 		return 'no-ssl-detected';
 	}
-	if (RSSSL()->really_simple_ssl->site_has_ssl) {
+	if (RSSSL()->rsssl_certificate->is_valid()) {
 		return 'ssl-detected';
 	}
 
