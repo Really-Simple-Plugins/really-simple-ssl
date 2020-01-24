@@ -2176,7 +2176,7 @@ class rsssl_admin extends rsssl_front_end
                     <?php _e("Major security issue!", "really-simple-ssl"); ?>
                 </h1>
                 <p>
-                    <?php _e("The 'force-deactivate.php' file has to be renamed to .txt. Otherwise your ssl can be deactived by anyone on the internet.", "really-simple-ssl"); ?>
+                    <?php _e("The 'force-deactivate.php' file has to be renamed to .txt. Otherwise your ssl can be deactivated by anyone on the internet.", "really-simple-ssl"); ?>
                 </p>
                 <a href="<?php echo admin_url('options-general.php?page=rlrsssl_really_simple_ssl')?>"><?php echo __("Check again", "really-simple-ssl"); ?></a>
             </div>
