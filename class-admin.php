@@ -2497,27 +2497,21 @@ class rsssl_admin extends rsssl_front_end
 
 		    $count = $this->count_plusones();
 
-		    $existing_count = 0;
-		    $menu_slug = 'settings.php';
+		    $menu_slug = 'tools.php';
+		    $menu_title = __('Settings');
 
 		    foreach($menu as $index => $menu_item){
 			    if (!isset($menu_item[2]) || !isset($menu_item[0])) continue;
-
 			    if ($menu_item[2]===$menu_slug){
-				    $menu_string = $menu_item[0];
-				    if (strpos($menu_string, "plugin-count") != false) {
-					    $pattern = '/(?<=[\'|\"]plugin-count[\'|\"]>)(.*?)(?=\<)/i';
-					    if (preg_match($pattern, $menu_string, $matches)){
-						    $existing_count = $matches[1];
+				    if (strpos($menu_item[0], "-count") != false) {
+					    $pattern = '/<span.*>([1-9])<\/span><\/span>/i';
+					    if (preg_match($pattern, $menu_item[0], $matches)){
+						    if (isset($matches[1])) $count = intval($count) + intval($matches[1]);
 					    }
 				    }
 
-				    if ($count > 0 && ($existing_count==0)) {
-					    $update_count = "<span class='update-plugins rsssl-update-count'><span class='update-count'>$count</span></span>";
-				    } else {
-					    $update_count = "";
-				    }
-				    $menu[$index][0] = str_replace($menu_item[0], $menu_item[0] . $update_count, $menu_item[0]);
+				    $update_count = $count > 0 ? "<span class='update-plugins rsssl-update-count'><span class='update-count'>$count</span></span>":'';
+				    $menu[$index][0] = $menu_title . $update_count;
 			    }
 
 		    }
