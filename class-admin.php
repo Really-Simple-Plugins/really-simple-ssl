@@ -2489,50 +2489,42 @@ class rsssl_admin extends rsssl_front_end
      *
      */
 
-    public function rsssl_edit_admin_menu()
-    {
-        if (!current_user_can($this->capability)) return;
+	    public function rsssl_edit_admin_menu()
+	    {
+		    if (!current_user_can($this->capability)) return;
 
-        global $menu;
+		    global $menu;
 
-        $count = $this->count_plusones();
-        $existing_counts = $this->get_existing_settings_plusones();
+		    $count = $this->count_plusones();
 
-        if ($count > 0 && ($existing_counts==0)) {
-            $update_count = "<span class='update-plugins rsssl-update-count'><span class='update-count'>$count</span></span>";
-        } else {
-            $update_count = "";
-        }
-            $menu[80][0] = str_replace(__("Settings"), __("Settings") . $update_count, $menu[80][0]);
-    }
+		    $existing_count = 0;
+		    $menu_slug = 'settings.php';
 
-    /**
-     * @return int
-     *
-     * @since 3.1.6
-     *
-     * Check if there is an existing update count after the Settings menu item
-     *
-     */
+		    foreach($menu as $index => $menu_item){
+			    if (!isset($menu_item[2]) || !isset($menu_item[0])) continue;
 
-    public function get_existing_settings_plusones()
-    {
-        global $menu;
+			    if ($menu_item[2]===$menu_slug){
+				    $menu_string = $menu_item[0];
+				    if (strpos($menu_string, "plugin-count") != false) {
+					    $pattern = '/(?<=[\'|\"]plugin-count[\'|\"]>)(.*?)(?=\<)/i';
+					    if (preg_match($pattern, $menu_string, $matches)){
+						    $existing_count = $matches[1];
+					    }
+				    }
 
-        $existing_count = "0";
+				    if ($count > 0 && ($existing_count==0)) {
+					    $update_count = "<span class='update-plugins rsssl-update-count'><span class='update-count'>$count</span></span>";
+				    } else {
+					    $update_count = "";
+				    }
+				    $menu[$index][0] = str_replace($menu_item[0], $menu_item[0] . $update_count, $menu_item[0]);
+			    }
 
-        //Get the existing count with regex
-        if (strpos($menu[80][0], "plugin-count") != false) {
-            $pattern = '/(?<=[\'|\"]plugin-count[\'|\"]>)(.*?)(?=\<)/i';
-            $existing_count = preg_match($pattern, $menu[80][0]);
-            $str = $menu[80][0];
-            if (preg_match($pattern, $str, $matches)){
-                $existing_count = $matches[1];
-            }
-        }
+		    }
 
-        return intval($existing_count);
-    }
+	    }
+
+
 
     /**
      * Admin help tab
