@@ -2497,18 +2497,16 @@ class rsssl_admin extends rsssl_front_end
 
 		    $count = $this->count_plusones();
 
-		    $menu_slug = 'tools.php';
+		    $menu_slug = 'options-general.php';
 		    $menu_title = __('Settings');
 
 		    foreach($menu as $index => $menu_item){
 			    if (!isset($menu_item[2]) || !isset($menu_item[0])) continue;
 			    if ($menu_item[2]===$menu_slug){
-				    if (strpos($menu_item[0], "-count") != false) {
-					    $pattern = '/<span.*>([1-9])<\/span><\/span>/i';
+				    $pattern = '/<span.*>([1-9])<\/span><\/span>/i';
 					    if (preg_match($pattern, $menu_item[0], $matches)){
 						    if (isset($matches[1])) $count = intval($count) + intval($matches[1]);
 					    }
-				    }
 
 				    $update_count = $count > 0 ? "<span class='update-plugins rsssl-update-count'><span class='update-count'>$count</span></span>":'';
 				    $menu[$index][0] = $menu_title . $update_count;
@@ -2867,7 +2865,6 @@ class rsssl_admin extends rsssl_front_end
 
     public function count_plusones(){
         if (!current_user_can('manage_options')) return 0;
-
         $count = get_transient('rsssl_plusone_count');
         if ($count===FALSE) {
             $count = 0;
@@ -2898,12 +2895,6 @@ class rsssl_admin extends rsssl_front_end
                 if (!$success && isset($notice['output'][$output]['plusone']) && $notice['output'][$output]['plusone']) {
                     $count++;
                 }
-
-                //Check if there's an existing count after the Settings item
-                $existing_count = $this->get_existing_settings_plusones();
-
-                $count = $count + $existing_count;
-
             }
             set_transient('rsssl_plusone_count', $count, 'WEEK_IN_SECONDS');
         }
