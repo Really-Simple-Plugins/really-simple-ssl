@@ -124,7 +124,6 @@ class REALLY_SIMPLE_SSL
 	{
 		// Consent API compatibility
 		add_filter("wp_consent_api_registered_".rsssl_plugin, function(){
-			error_log("Consent API compat returning TRU");
 			return true;
 		});
 
