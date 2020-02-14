@@ -131,6 +131,7 @@ class rsssl_admin extends rsssl_front_end
             - No SSL detected
             */
 
+
         //when configuration should run again
         if ($this->clicked_activate_ssl() || !$this->ssl_enabled || !$this->site_has_ssl || $is_on_settings_page || is_network_admin()) {
 
@@ -353,9 +354,7 @@ class rsssl_admin extends rsssl_front_end
         $this->set_siteurl_to_ssl();
         $this->save_options();
 
-        if (!is_multisite()) {
-	        $this->redirect_to_settings_page_after_activation();
-        }
+
     }
 
 
@@ -370,16 +369,18 @@ class rsssl_admin extends rsssl_front_end
     }
 
     public function redirect_to_settings_page_after_activation() {
+        if (isset($_GET['page']) && $_GET['page'] == 'rlrsssl_really_simple_ssl') return;
 	        $url = add_query_arg( array(
 		        "page" => "rlrsssl_really_simple_ssl",
 	        ), admin_url( "options-general.php" ) );
-	        wp_safe_redirect( $url );
+	        wp_redirect( $url );
 	        exit;
     }
 
 
     public function wpconfig_ok()
     {
+
         if (($this->do_wpconfig_loadbalancer_fix || $this->no_server_variable || $this->wpconfig_siteurl_not_fixed) && !$this->wpconfig_is_writable()) {
             $result = false;
         } else {
@@ -706,7 +707,6 @@ class rsssl_admin extends rsssl_front_end
     public function configure_ssl()
     {
         if (!current_user_can($this->capability)) return;
-
         $safe_mode = FALSE;
         if (defined('RSSSL_SAFE_MODE') && RSSSL_SAFE_MODE) $safe_mode = RSSSL_SAFE_MODE;
 
@@ -714,7 +714,6 @@ class rsssl_admin extends rsssl_front_end
         $this->trace_log("<br>" . "<b>" . "SSL Configuration" . "</b>");
         if ($this->site_has_ssl) {
             //when one of the used server variables was found, test if the redirect works
-
             if (RSSSL()->rsssl_server->uses_htaccess() && $this->ssl_type != "NA") {
                 $this->test_htaccess_redirect();
             }
@@ -742,6 +741,10 @@ class rsssl_admin extends rsssl_front_end
             if (!$safe_mode) {
                 $this->set_siteurl_to_ssl();
             }
+
+	        if (!is_multisite()) {
+		        $this->redirect_to_settings_page_after_activation();
+	        }
 
         }
     }
@@ -1275,7 +1278,6 @@ class rsssl_admin extends rsssl_front_end
         ) {
             $server_var = TRUE;
         }
-
 
         if (is_ssl() || $server_var) {
             return true;
@@ -2176,7 +2178,7 @@ class rsssl_admin extends rsssl_front_end
                     <?php _e("Major security issue!", "really-simple-ssl"); ?>
                 </h1>
                 <p>
-                    <?php _e("The 'force-deactivate.php' file has to be renamed to .txt. Otherwise your ssl can be deactived by anyone on the internet.", "really-simple-ssl"); ?>
+                    <?php _e("The 'force-deactivate.php' file has to be renamed to .txt. Otherwise your ssl can be deactivated by anyone on the internet.", "really-simple-ssl"); ?>
                 </p>
                 <a href="<?php echo admin_url('options-general.php?page=rlrsssl_really_simple_ssl')?>"><?php echo __("Check again", "really-simple-ssl"); ?></a>
             </div>
