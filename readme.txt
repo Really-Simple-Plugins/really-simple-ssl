@@ -15,7 +15,7 @@ Really Simple SSL automatically detects your settings and configures your websit
 To keep it lightweight, the options are kept to a minimum. The entire site will move to SSL.
 
 = Three simple steps for setup: =
-* Get an SSL certificate (can't do that for you, sorry).
+* Get an SSL certificate (get a free SSL certificate with our partner plugin [SSL Zen](https://r.freemius.com/4586/2698155/https://wordpress.org/plugins/ssl-zen/))
 * Activate this plugin
 * Enable SSL with one click
 
