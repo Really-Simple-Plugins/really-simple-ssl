@@ -6,7 +6,7 @@ Requires at least: 4.6
 License: GPL2
 Tested up to: 5.4
 Requires PHP: 5.4
-Stable tag: 3.2.9
+Stable tag: 3.3
 
 No setup required! You only need an SSL certificate, and this plugin will do the rest.
 
@@ -39,7 +39,7 @@ some cool features.
 = What does the plugin actually do =
 * The plugin handles most issues that WordPress has with SSL, like when you're behind a reverse proxy/loadbalancer, or when no headers are passed which WordPress can use to detect SSL.
 * All incoming requests are redirected to https. Default with an internal WordPress redirect, but you can also enable a .htaccess redirect.
-* The site url and home url are changed to https.
+* The siteurl and homeurl are changed to https.
 * Your insecure content is fixed by replacing all http:// urls with https://, except hyperlinks to other domains. Dynamically, so no database changes are made (except for the siteurl and homeurl).
 
 Check out other plugins developed by Really Simple Plugins as well: [Complianz](https://wordpress.org/plugins/complianz-gdpr/), [Zip Recipes](https://wordpress.org/plugins/zip-recipes/) and [WP Search Insights](https://wordpress.org/plugins/wp-search-insights/).
@@ -573,6 +573,3 @@ Always back up before any upgrade. Especially .htaccess, wp-config.php and the p
 1. After activation, if SSL was detected, you can enable SSL.
 2. View your configuration on the settings page.
 3. Mixed content scan.
-
-== Frequently asked questions ==
-* Really Simple SSL maintains an extensive knowledge-base at https://www.really-simple-ssl.com.

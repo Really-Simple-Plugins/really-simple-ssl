@@ -2220,8 +2220,10 @@ class rsssl_admin extends rsssl_front_end
                     <ul class="message-ul">
                         <li class="message-li"><?php _e("Don't forget to change your settings in Google Analytics and Webmaster tools.", "really-simple-ssl");
                         ?>
-                        <a target="_blank"
-                           href="https://really-simple-ssl.com/knowledge-base/how-to-setup-google-analytics-and-google-search-consolewebmaster-tools/"><?php _e("More info", "really-simple-ssl"); ?></a>
+                            &nbsp
+                            <a target="_blank"
+                           href="https://really-simple-ssl.com/knowledge-base/how-to-setup-google-analytics-and-google-search-consolewebmaster-tools/">
+                            <?php _e("More info", "really-simple-ssl"); ?></a>
                         </li>
 
                         <?php if (uses_elementor()) {
@@ -2229,16 +2231,17 @@ class rsssl_admin extends rsssl_front_end
                         <li class="message-li">
                             <?php
                                     _e("We have detected Elementor.", "really-simple-ssl");?>
-                                <a target="_blank"
+                            &nbsp
+                            <a target="_blank"
                                    href="https://really-simple-ssl.com/knowledge-base/how-to-fix-mixed-content-in-elementor-after-moving-to-ssl/"><?php _e("See our article for instructions", "really-simple-ssl"); ?></a>
                         </li>
                         <?php }
                         ?>
-                    
+
                         <li class="message-li">
 	                        <?php
 		                        _e("Improve your security", "really-simple-ssl"); ?>
-                                <a target="_blank"
+                            <a target="_blank"
                                    href="https://really-simple-ssl.com/new-security-headers-for-really-simple-ssl-pro-coming-up/"><?php _e("with security headers", "really-simple-ssl"); ?></a>
                         </li>
                     </ul>
