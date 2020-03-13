@@ -15,17 +15,6 @@
   /*height:inherit;*/
 }
 
-.message-ul {
-  padding: 0;
-  margin: 0;
-  list-style-type: none;
-}
-
-#message > ul > li::before {
-  content: "\f307";
-  font: 400 21px/1 dashicons;
-}
-
 #message.updated.notice.activate-ssl {
     padding-top: 10px;
 }
