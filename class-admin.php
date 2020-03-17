@@ -2247,7 +2247,7 @@ class rsssl_admin extends rsssl_front_end
                     </ul>
                 </p>
                     <a class="button action btn-premium btn-premium-activated" style="margin-bottom: 10px;" href="https://really-simple-ssl.com/pro" target="_blank"><?php _e("Really Simple SSL Pro", "really-simple-ssl"); ?></a>
-                    <div id="rsssl-logo" style="float: right; margin-top: -35px;"><img width=180px" src="<?php echo rsssl_url?>/assets/logo-really-simple-ssl.png" alt="review-logo"></div>
+                    <div id="rsssl-logo" style="float: right; margin-top: -15px;"><img width=180px" src="<?php echo rsssl_url?>/assets/logo-really-simple-ssl.png" alt="review-logo"></div>
             </div>
             <style>
                 .message-ul {
