@@ -29,13 +29,13 @@
   border-left: 4px solid #46b450;
 }
 
-.activate-ssl ul, .rsssl-result ul, .rsssl_bullets {
-  list-style-type: square;
-  margin-left:30px;
-}
-
 .btn-premium {
   margin-left: 10px !important;
+}
+
+.btn-premium-activated {
+  padding-top: 10px;
+  padding-bottom: 10px;
 }
 
 .activate-ssl .button {
