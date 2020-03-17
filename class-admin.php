@@ -520,9 +520,9 @@ class rsssl_admin extends rsssl_front_end
                 <?php if (!defined("rsssl_pro_version") ) { ?>
                 <a class="button action btn-premium" href="https://really-simple-ssl.com/pro" target="_blank"><?php _e("Get ready with Pro", "really-simple-ssl"); ?></a>
                 <?php } ?>
-                <br><?php _e("You may need to login in again.", "really-simple-ssl") ?>
-                <div id="rsssl-logo" style="float: right; margin-top: -35px;"><img width=180px" src="<?php echo rsssl_url?>/assets/logo-really-simple-ssl.png" alt="review-logo"></div>
             </form>
+		        <b><?php _e("You may need to login in again.", "really-simple-ssl") ?></b>
+                <div id="rsssl-logo" style="float: right; margin-top: -35px;"><img width=180px" src="<?php echo rsssl_url?>/assets/logo-really-simple-ssl.png" alt="review-logo"></div>
             </div>
             </p>
             <?php
@@ -2220,7 +2220,7 @@ class rsssl_admin extends rsssl_front_end
                     <ul class="message-ul">
                         <li class="message-li"><?php _e("Don't forget to change your settings in Google Analytics and Webmaster tools.", "really-simple-ssl");
                         ?>
-                            &nbsp
+                            &nbsp;
                             <a target="_blank"
                            href="https://really-simple-ssl.com/knowledge-base/how-to-setup-google-analytics-and-google-search-consolewebmaster-tools/">
                             <?php _e("More info", "really-simple-ssl"); ?></a>
@@ -2231,18 +2231,18 @@ class rsssl_admin extends rsssl_front_end
                         <li class="message-li">
                             <?php
                                     _e("We have detected Elementor.", "really-simple-ssl");?>
-                            &nbsp
+                            &nbsp;
                             <a target="_blank"
                                    href="https://really-simple-ssl.com/knowledge-base/how-to-fix-mixed-content-in-elementor-after-moving-to-ssl/"><?php _e("See our article for instructions", "really-simple-ssl"); ?></a>
                         </li>
                         <?php }
                         ?>
-
-                        <li class="message-li">
+                    <li class="message-li">
 	                        <?php
 		                        _e("Improve your security", "really-simple-ssl"); ?>
+                        &nbsp;
                             <a target="_blank"
-                                   href="https://really-simple-ssl.com/new-security-headers-for-really-simple-ssl-pro-coming-up/"><?php _e("with security headers", "really-simple-ssl"); ?></a>
+                                   href="https://really-simple-ssl.com/new-security-headers-for-really-simple-ssl-pro-coming-up/"> <?php _e("with security headers", "really-simple-ssl"); ?></a>
                         </li>
                     </ul>
                 </p>
