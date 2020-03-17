@@ -122,11 +122,7 @@ class REALLY_SIMPLE_SSL
 
 	private function hooks()
 	{
-		// Consent API compatibility
-		add_filter("wp_consent_api_registered_".rsssl_plugin, function(){
-			return true;
-		});
-
+		
 		add_action('wp_loaded', array(self::$instance->rsssl_front_end, 'force_ssl'), 20);
 		if (is_admin() || is_multisite()) {
 			add_action('plugins_loaded', array(self::$instance->really_simple_ssl, 'init'), 10);
