@@ -2238,9 +2238,8 @@ class rsssl_admin extends rsssl_front_end
                         ?>
                     <li class="message-li">
 	                        <?php
-		                        _e("Improve your security", "really-simple-ssl"); ?>
-                        &nbsp;
-                            <a target="_blank"
+		                        _e("Improve your security", "really-simple-ssl"); ?> &nbsp;
+                        <a target="_blank"
                                    href="https://really-simple-ssl.com/new-security-headers-for-really-simple-ssl-pro-coming-up/"> <?php _e("with security headers", "really-simple-ssl"); ?></a>
                         </li>
                     </ul>
