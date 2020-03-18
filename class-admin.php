@@ -476,7 +476,7 @@ class rsssl_admin extends rsssl_front_end
                 $link_open = '<a target="_blank" href="'.$backup_link.'">';
                 $link_close = '</a>';
                 ?>
-                <li class="message-li"> <?php printf(__("We strongly recommend to take a %sbackup%s of your site before activating SSL", 'really-simple-ssl'), $link_open, $link_close); ?> </li>
+                <li class="message-li"><?php printf(__("We strongly recommend to take a %sbackup%s of your site before activating SSL", 'really-simple-ssl'), $link_open, $link_close); ?> </li>
             </ul>
             </p>
             <style>
