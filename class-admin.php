@@ -472,28 +472,24 @@ class rsssl_admin extends rsssl_front_end
                 <li class="message-li"><?php _e('Http references in your .css and .js files: change any http:// into //', 'really-simple-ssl'); ?></li>
                 <li class="message-li"><?php _e('Images, stylesheets or scripts from a domain without an SSL certificate: remove them or move to your own server', 'really-simple-ssl'); ?></li><?php
 
-                $backup_link = "https://really-simple-ssl.com/knowledge-base/backing-up-your-site/";
-                $link_open = '&nbsp;<a target="_blank" href="'.$backup_link.'">';
-                $link_close = '</a>&nbsp;';
+                $backup_link = "https://freally-simple-ssl.com/knowledge-base/backing-up-your-site/";
+                $link_open = '<a target="_blank" href="'.$backup_link.'">';
+                $link_close = '</a>';
                 ?>
-                <li class="message-li"> <?php printf(__("We strongly recommend to take a %s backup %s of your site before activating SSL", 'really-simple-ssl'), $link_open, $link_close); ?> </li>
+                <li class="message-li"> <?php printf(__("We strongly recommend to take a %sbackup%s of your site before activating SSL", 'really-simple-ssl'), $link_open, $link_close); ?> </li>
             </ul>
             </p>
             <style>
                 .message-ul {
-                list-style-type: none;
-                }
-
-                #message .message-li {
-                display: flex;
-                align-items: center;
+                    list-style-type: none;
                 }
 
                 #message .message-li::before {
-                margin-right: 25px;
-                color: lightgrey;
-                content: "\f345";
-                font: 400 21px/1 dashicons;
+                    vertical-align: middle;
+                    margin-right: 25px;
+                    color: lightgrey;
+                    content: "\f345";
+                    font: 400 21px/1 dashicons;
                 }
             </style>
             <?php
@@ -2219,7 +2215,6 @@ class rsssl_admin extends rsssl_front_end
                     <ul class="message-ul">
                         <li class="message-li"><?php _e("Don't forget to change your settings in Google Analytics and Webmaster tools.", "really-simple-ssl");
                         ?>
-                            &nbsp;
                             <a target="_blank"
                            href="https://really-simple-ssl.com/knowledge-base/how-to-setup-google-analytics-and-google-search-consolewebmaster-tools/">
                             <?php _e("More info", "really-simple-ssl"); ?></a>
@@ -2227,37 +2222,27 @@ class rsssl_admin extends rsssl_front_end
 
                         <?php if (uses_elementor()) {
                         ?>
-                        <li class="message-li">
-                            <?php
-                                    _e("We have detected Elementor.", "really-simple-ssl");?>
-                            &nbsp;
+                        <li class="message-li"><?php _e("We have detected Elementor.", "really-simple-ssl");?>
                             <a target="_blank"
                                    href="https://really-simple-ssl.com/knowledge-base/how-to-fix-mixed-content-in-elementor-after-moving-to-ssl/"><?php _e("See our article for instructions", "really-simple-ssl"); ?></a>
                         </li>
                         <?php }
                         ?>
-                    <li class="message-li">
-	                        <?php
-		                        _e("Improve your security", "really-simple-ssl"); ?> &nbsp;
-                        <a target="_blank"
-                                   href="https://really-simple-ssl.com/new-security-headers-for-really-simple-ssl-pro-coming-up/"> <?php _e("with security headers", "really-simple-ssl"); ?></a>
+                    <li class="message-li"><?php _e("Improve your security", "really-simple-ssl");?>
+                        <a target="_blank" href="https://really-simple-ssl.com/new-security-headers-for-really-simple-ssl-pro-coming-up/"><?php _e("with security headers", "really-simple-ssl"); ?></a>
                         </li>
                     </ul>
                 </p>
                     <a class="button action btn-premium btn-premium-activated" style="margin-bottom: 10px;" href="https://really-simple-ssl.com/pro" target="_blank"><?php _e("Really Simple SSL Pro", "really-simple-ssl"); ?></a>
-                    <div id="rsssl-logo" style="float: right; margin-top: -15px;"><img width=180px" src="<?php echo rsssl_url?>/assets/logo-really-simple-ssl.png" alt="review-logo"></div>
+                    <div id="rsssl-logo" style="float: right; margin-top: -20px;"><img width=180px" src="<?php echo rsssl_url?>/assets/logo-really-simple-ssl.png" alt="review-logo"></div>
             </div>
             <style>
                 .message-ul {
                     list-style-type: none;
                 }
 
-                #message .message-li {
-                    display: flex;
-                    align-items: center;
-                }
-
                 #message .message-li::before {
+                    vertical-align: middle;
                     margin-right: 25px;
                     color: lightgrey;
                     content: "\f345";
