@@ -15,7 +15,7 @@ Really Simple SSL automatically detects your settings and configures your websit
 To keep it lightweight, the options are kept to a minimum. The entire site will move to SSL.
 
 = Three simple steps for setup: =
-* Get an SSL certificate (can't do that for you, sorry. [See our recommendations for a free SSL certificate](https://really-simple-ssl.com/knowledge-base/how-to-install-a-free-ssl-certificate-on-your-wordpress-cpanel-hosting/).
+* Get an SSL certificate (can't do that for you, sorry.) [See our recommendations for a free SSL certificate](https://really-simple-ssl.com/knowledge-base/how-to-install-a-free-ssl-certificate-on-your-wordpress-cpanel-hosting/).
 * Activate this plugin
 * Enable SSL with one click
 
