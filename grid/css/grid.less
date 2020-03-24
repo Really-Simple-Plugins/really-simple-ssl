@@ -2,12 +2,24 @@
 @gridblock_width: 800px;
 @gridblock_width_small:400px;
 @grid_margin: 10px;
-@grey-light:#cecece;
+@grey_light:#cecece;
 @box_shadow_color: rgba(222, 222, 222, 0.2);
+@border_color: #dedede;
+@color-success: #61ce70;
+
+#wpcontent {
+  padding: 0;
+  .nav-tab-wrapper {
+    background-color: #fff;
+  }
+}
 
 .rsssl-grid {
   margin-left: 25px;
   position: relative;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
 
   .rsssl-item {
     width: @gridblock_width;
@@ -23,15 +35,69 @@
       box-shadow: 0px 0px 5px 5px @box_shadow_color;
       width: @gridblock_width - 2* @grid_margin;
       height: @gridblock_height - 2 * @grid_margin;
-      .rsssl-item-content {
-        margin:15px;
+      .rsssl-grid-item-header {
+        display: flex;
+        align-items: center;
+        margin: @grid_margin;
+        height: 60px;
+        border-bottom: 1px solid @border_color;
+      }
+      .rsssl-grid-item-content {
+        height: 310px;
+        margin: @grid_margin;
+        border-bottom: 1px solid @border_color;
+        /*
+    Progress bar
+        */
+
+        .progress-bar-container {
+          padding-top: 15px;
+          margin: 0 auto;
+
+        }
+
+        .progress {
+          overflow: hidden;
+          height: 20px;
+          border-radius: 5px;
+          background-color: #f7f7f7;
+        }
+
+        .progress .bar {
+          height: 100%;
+          background-color: @color-success;
+
+        }
+
+        .progress-text {
+          display: flex;
+          align-items: center;
+          .rsssl-progress-percentage {
+            font-size: 26px;
+          }
+          .rsssl-progress-text {
+            margin-left: @grid_margin;
+          }
+        }
+
+        // End progess bar
+
+      }
+      .rsssl-grid-item-footer {
+        margin: @grid_margin;
+        height: 50px;
+        border: 2px solid;
+        bottom: 0;
       }
 
     }
     &.half-height {
       .item-container {
         height: @gridblock_height / 2;
-      }
+        .rsssl-grid-item-content {
+          height: 100px;
+        }
+        }
     }
     &.small {
       .item-container {

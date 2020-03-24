@@ -2960,23 +2960,23 @@ class rsssl_admin extends rsssl_front_end
 	public function general_grid(){
 		$grid_items = array(
 			1 => array(
-				'title' => __("Your Progress", "wp-search-insights"),
-				'content' => 'X',
+				'title' => __("Your Progress", "really-simple-ssl"),
+				'content' => $this->generate_progress(),
 				'class' => 'regular',
 				'type' => 'all',
 				'can_hide' => true,
 
 			),
 			2 => array(
-				'title' => __("Settings", "wp-search-insights"),
-				'content' => 'Y',
+				'title' => __("Settings", "really-simple-ssl"),
+				'content' => $this->generate_settings(),
 				'class' => 'small',
 				'type' => 'results',
 				'can_hide' => true,
 
 			),
 			3 => array(
-				'title' => __("Tips & Tricks", "wp-search-insights"),
+				'title' => __("Tips & Tricks", "really-simple-ssl"),
 				'content' => 'F',
 				'class' => 'small',
 				'type' => 'popular',
@@ -2984,7 +2984,7 @@ class rsssl_admin extends rsssl_front_end
 
 			),
 			4 => array(
-				'title' => __("System Status", "wp-search-insights"),
+				'title' => __("System Status", "really-simple-ssl"),
 				'content' => 'H',
 				'type' => 'tasks',
 				'class' => 'half-height',
@@ -3001,6 +3001,33 @@ class rsssl_admin extends rsssl_front_end
 		);
 		return $grid_items;
 	}
+
+	public function generate_progress() {
+
+	    $percentage_completed = $this->get_task_progress();
+	    $percentage_incomplete = 100 - $percentage_completed;
+
+		$element = $this->get_template('progress.php', rsssl_path . 'grid/');
+		return str_replace(
+            array(
+                '{percentage_completed}',
+                '{percentage_incomplete}',
+
+            ),
+            array(
+                $percentage_completed,
+                $percentage_incomplete,
+            )
+            , $element);
+    }
+
+    public function get_task_progress() {
+	    return "45";
+    }
+
+    public function generate_settings() {
+	    
+    }
 
     public function settings_page()
     {
@@ -3027,7 +3054,7 @@ class rsssl_admin extends rsssl_front_end
                 $element = $this->get_template('grid-element.php', rsssl_path . 'grid/');
                 $output = '';
                 foreach ($grid_items as $index => $grid_item) {
-                    $output .= str_replace(array('{class}', '{content}'), array($grid_item['class'], $grid_item['content']), $element);
+                    $output .= str_replace(array('{class}', '{title}', '{content}'), array($grid_item['class'], $grid_item['title'], $grid_item['content']), $element);
                 }
                 echo str_replace('{content}', $output, $container);
 
