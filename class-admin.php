@@ -5,6 +5,7 @@ class rsssl_admin extends rsssl_front_end
 {
 
     private static $_this;
+    public $grid_items;
 
     public $wpconfig_siteurl_not_fixed = FALSE;
     public $no_server_variable = FALSE;
@@ -174,7 +175,7 @@ class rsssl_admin extends rsssl_front_end
 
         //settings page, form  and settings link in the plugins page
         add_action('admin_menu', array($this, 'add_settings_page'), 40);
-        add_action('admin_init', array($this, 'create_form'), 40);
+	    add_action('admin_init', array($this, 'create_form'), 40);
         add_action('admin_init', array($this, 'listen_for_deactivation'), 40);
 
 	    //Only redirect while on own settings page, otherwise deactivate link in plugins overview will break.
@@ -196,7 +197,6 @@ class rsssl_admin extends rsssl_front_end
         add_action('wp_ajax_dismiss_success_message', array($this, 'dismiss_success_message_callback'));
         add_action('wp_ajax_dismiss_review_notice', array($this, 'dismiss_review_notice_callback'));
         add_action('wp_ajax_rsssl_dismiss_settings_notice', array($this, 'dismiss_settings_notice_callback'));
-
 
         //handle notices
         add_action('admin_notices', array($this, 'show_notices'));
@@ -2947,7 +2947,6 @@ class rsssl_admin extends rsssl_front_end
 
     }
 
-
     /**
      * Build the settings page
      *
@@ -2957,6 +2956,51 @@ class rsssl_admin extends rsssl_front_end
      *
      */
 
+
+	public function general_grid(){
+		$grid_items = array(
+			1 => array(
+				'title' => __("Your Progress", "wp-search-insights"),
+				'content' => 'X',
+				'class' => 'regular',
+				'type' => 'all',
+				'can_hide' => true,
+
+			),
+			2 => array(
+				'title' => __("Settings", "wp-search-insights"),
+				'content' => 'Y',
+				'class' => 'small',
+				'type' => 'results',
+				'can_hide' => true,
+
+			),
+			3 => array(
+				'title' => __("Tips & Tricks", "wp-search-insights"),
+				'content' => 'F',
+				'class' => 'small',
+				'type' => 'popular',
+				'can_hide' => true,
+
+			),
+			4 => array(
+				'title' => __("System Status", "wp-search-insights"),
+				'content' => 'H',
+				'type' => 'tasks',
+				'class' => 'half-height',
+				'can_hide' => true,
+
+			),
+			5 => array(
+				'title' => 'Other',
+//				'content' => $this->generate_other_plugins(),
+				'class' => 'half-height no-border no-background upsell-grid-container',
+				'type' => 'plugins',
+				'can_hide' => false,
+			),
+		);
+		return $grid_items;
+	}
 
     public function settings_page()
     {
@@ -2977,26 +3021,37 @@ class rsssl_admin extends rsssl_front_end
                 /*
           First tab, configuration
   */
-                ?>
-                <h2><?php echo __("Detected setup", "really-simple-ssl"); ?></h2>
-                <table class="really-simple-ssl-table">
-                    <thead></thead>
-                    <tbody>
-                    <?php
 
-                        $this->reset_plusone_cache();
-                        $notices = $this->get_notices_list();
-                        foreach ($notices as $id => $notice) {
-                            $this->notice_row($id, $notice);
-                        }
+                $grid_items = $this->general_grid();
+                $container = $this->get_template('grid-container.php', rsssl_path . 'grid/');
+                $element = $this->get_template('grid-element.php', rsssl_path . 'grid/');
+                $output = '';
+                foreach ($grid_items as $index => $grid_item) {
+                    $output .= str_replace(array('{class}', '{content}'), array($grid_item['class'], $grid_item['content']), $element);
+                }
+                echo str_replace('{content}', $output, $container);
 
-                        if (!$this->ssl_enabled) {
-                            $this->show_enable_ssl_button();
-                        }
 
                     ?>
-                    </tbody>
-                </table>
+<!--                <h2>--><?php //echo __("Detected setup", "really-simple-ssl"); ?><!--</h2>-->
+<!--                <table class="really-simple-ssl-table">-->
+<!--                    <thead></thead>-->
+<!--                    <tbody>-->
+<!--                    --><?php
+//
+//                        $this->reset_plusone_cache();
+//                        $notices = $this->get_notices_list();
+//                        foreach ($notices as $id => $notice) {
+//                            $this->notice_row($id, $notice);
+//                        }
+//
+//                        if (!$this->ssl_enabled) {
+//                            $this->show_enable_ssl_button();
+//                        }
+//
+//                    ?>
+<!--                    </tbody>-->
+<!--                </table>-->
 
                 <?php do_action("rsssl_configuration_page"); ?>
 
@@ -3020,72 +3075,72 @@ class rsssl_admin extends rsssl_front_end
                         <?php
                         break;
 
-                    case 'debug' :
-                        /*
-                            third tab: debug
-                          */
-                        ?>
-                        <div>
-                            <?php
-                            if ($this->debug) {
-                                echo "<h2>" . __("Log for debugging purposes", "really-simple-ssl") . "</h2>";
-                                echo "<p>" . __("Send us a copy of these lines if you have any issues. The log will be erased when debug is set to false", "really-simple-ssl") . "</p>";
-                                echo "<div class='debug-log'>";
-                                if (defined('RSSSL_SAFE_MODE') && RSSSL_SAFE_MODE) echo "SAFE MODE<br>";
-
-                                echo "<b>General</b><br>";
-	                            echo "Plugin version: " . rsssl_version ."<br>";
-
-	                            if (RSSSL()->rsssl_certificate->is_valid()) {
-                                    echo "SSL certificate is valid<br>";
-                                } else {
-                                    echo "Invalid SSL certificate<br>";
-                                }
-	                            echo ($this->ssl_enabled) ? "SSL is enabled<br><bR>" : "SSL is not yet enabled<br><br>";
-
-	                            echo "<b>Options</b><br>";
-	                            if ($this->autoreplace_insecure_links) echo "* Mixed content fixer<br>";
-	                            if ($this->wp_redirect) echo "* WordPress redirect<br>";
-	                            if ($this->htaccess_redirect) echo "* htaccess redirect<br>";
-                                if ($this->do_not_edit_htaccess) echo "* Stop editing the .htaccess file<br>";
-                                if ($this->switch_mixed_content_fixer_hook) echo "* Use alternative method to fix mixed content<br>";
-                                if ($this->dismiss_all_notices) echo "* Dismiss all Really Simple SSL notices<br>";
-                                echo "<br>";
-
-                                echo "<b>Server information</b><br>";
-                                echo "Server: " . RSSSL()->rsssl_server->get_server() . "<br>";
-                                echo "SSL Type: $this->ssl_type<br>";
-                                if (is_multisite()) {
-                                    echo "MULTISITE<br>";
-                                    echo (!RSSSL()->rsssl_multisite->ssl_enabled_networkwide) ? "SSL is being activated per site<br>" : "SSL is activated network wide<br>";
-                                }
-
-                                echo $this->debug_log;
-
-                                echo "<br><br><b>Constants</b><br>";
-
-                                if (defined('RSSSL_FORCE_ACTIVATE')) echo "RSSSL_FORCE_ACTIVATE defined";
-	                            if (defined('RSSSL_NO_FLUSH')) echo "RSSSL_NO_FLUSH defined";
-	                            if (defined('RSSSL_DISMISS_ACTIVATE_SSL_NOTICE')) echo "RSSSL_DISMISS_ACTIVATE_SSL_NOTICE defined";
-	                            if (defined('RLRSSSL_DO_NOT_EDIT_HTACCESS')) echo "RLRSSSL_DO_NOT_EDIT_HTACCESS defined";
-	                            if (defined('RSSSL_SAFE_MODE')) echo "RSSSL_SAFE_MODE defined";
-	                            if (defined("RSSSL_SERVER_OVERRIDE")) echo "RSSSL_SERVER_OVERRIDE defined";
-
-	                            if(    !defined('RSSSL_FORCE_ACTIVATE')
-                                    && !defined('RSSSL_NO_FLUSH')
-                                    && !defined('RSSSL_DISMISS_ACTIVATE_SSL_NOTICE')
-                                    && !defined('RLRSSSL_DO_NOT_EDIT_HTACCESS')
-                                    && !defined('RSSSL_SAFE_MODE')
-                                    && !defined("RSSSL_SERVER_OVERRIDE")
-                                ) echo "No constants defined";
-
-	                            echo "</div>";
-                                $this->debug_log = "";
-                                $this->save_options();
-                            } else {
-                                echo "<br>";
-                                _e("To view results here, enable the debug option in the settings tab.", "really-simple-ssl");
-                            }
+//                    case 'debug' :
+//                        /*
+//                            third tab: debug
+//                          */
+//                        ?>
+<!--                        <div>-->
+<!--                            --><?php
+//                            if ($this->debug) {
+//                                echo "<h2>" . __("Log for debugging purposes", "really-simple-ssl") . "</h2>";
+//                                echo "<p>" . __("Send us a copy of these lines if you have any issues. The log will be erased when debug is set to false", "really-simple-ssl") . "</p>";
+//                                echo "<div class='debug-log'>";
+//                                if (defined('RSSSL_SAFE_MODE') && RSSSL_SAFE_MODE) echo "SAFE MODE<br>";
+//
+//                                echo "<b>General</b><br>";
+//	                            echo "Plugin version: " . rsssl_version ."<br>";
+//
+//	                            if (RSSSL()->rsssl_certificate->is_valid()) {
+//                                    echo "SSL certificate is valid<br>";
+//                                } else {
+//                                    echo "Invalid SSL certificate<br>";
+//                                }
+//	                            echo ($this->ssl_enabled) ? "SSL is enabled<br><bR>" : "SSL is not yet enabled<br><br>";
+//
+//	                            echo "<b>Options</b><br>";
+//	                            if ($this->autoreplace_insecure_links) echo "* Mixed content fixer<br>";
+//	                            if ($this->wp_redirect) echo "* WordPress redirect<br>";
+//	                            if ($this->htaccess_redirect) echo "* htaccess redirect<br>";
+//                                if ($this->do_not_edit_htaccess) echo "* Stop editing the .htaccess file<br>";
+//                                if ($this->switch_mixed_content_fixer_hook) echo "* Use alternative method to fix mixed content<br>";
+//                                if ($this->dismiss_all_notices) echo "* Dismiss all Really Simple SSL notices<br>";
+//                                echo "<br>";
+//
+//                                echo "<b>Server information</b><br>";
+//                                echo "Server: " . RSSSL()->rsssl_server->get_server() . "<br>";
+//                                echo "SSL Type: $this->ssl_type<br>";
+//                                if (is_multisite()) {
+//                                    echo "MULTISITE<br>";
+//                                    echo (!RSSSL()->rsssl_multisite->ssl_enabled_networkwide) ? "SSL is being activated per site<br>" : "SSL is activated network wide<br>";
+//                                }
+//
+//                                echo $this->debug_log;
+//
+//                                echo "<br><br><b>Constants</b><br>";
+//
+//                                if (defined('RSSSL_FORCE_ACTIVATE')) echo "RSSSL_FORCE_ACTIVATE defined";
+//	                            if (defined('RSSSL_NO_FLUSH')) echo "RSSSL_NO_FLUSH defined";
+//	                            if (defined('RSSSL_DISMISS_ACTIVATE_SSL_NOTICE')) echo "RSSSL_DISMISS_ACTIVATE_SSL_NOTICE defined";
+//	                            if (defined('RLRSSSL_DO_NOT_EDIT_HTACCESS')) echo "RLRSSSL_DO_NOT_EDIT_HTACCESS defined";
+//	                            if (defined('RSSSL_SAFE_MODE')) echo "RSSSL_SAFE_MODE defined";
+//	                            if (defined("RSSSL_SERVER_OVERRIDE")) echo "RSSSL_SERVER_OVERRIDE defined";
+//
+//	                            if(    !defined('RSSSL_FORCE_ACTIVATE')
+//                                    && !defined('RSSSL_NO_FLUSH')
+//                                    && !defined('RSSSL_DISMISS_ACTIVATE_SSL_NOTICE')
+//                                    && !defined('RLRSSSL_DO_NOT_EDIT_HTACCESS')
+//                                    && !defined('RSSSL_SAFE_MODE')
+//                                    && !defined("RSSSL_SERVER_OVERRIDE")
+//                                ) echo "No constants defined";
+//
+//	                            echo "</div>";
+//                                $this->debug_log = "";
+//                                $this->save_options();
+//                            } else {
+//                                echo "<br>";
+//                                _e("To view results here, enable the debug option in the settings tab.", "really-simple-ssl");
+//                            }
 
                             ?>
                         </div>
@@ -3319,7 +3374,9 @@ class rsssl_admin extends rsssl_front_end
         } else {
 	        wp_register_style('rlrsssl-css', trailingslashit(rsssl_url) . 'css/main.min.css', "", rsssl_version);
         }
-        wp_enqueue_style('rlrsssl-css');
+	    wp_register_style('rsssl-grid', trailingslashit(rsssl_url) . 'grid/css/grid.min.css', "", rsssl_version);
+	    wp_enqueue_style('rlrsssl-css');
+	    wp_enqueue_style('rsssl-grid');
     }
 
     /**
@@ -4033,6 +4090,27 @@ class rsssl_admin extends rsssl_front_end
 		    exit;
 	    }
     }
+
+	public function get_template($file, $path = rsssl_path, $args = array())
+	{
+
+		$file = trailingslashit($path) . 'templates/' . $file;
+		$theme_file = trailingslashit(get_stylesheet_directory()) . dirname(rsssl_path) . $file;
+
+		if (file_exists($theme_file)) {
+			$file = $theme_file;
+		}
+
+		if (strpos($file, '.php') !== false) {
+			ob_start();
+			require $file;
+			$contents = ob_get_clean();
+		} else {
+			$contents = file_get_contents($file);
+		}
+
+		return $contents;
+	}
 } //class closure
 
 /**
