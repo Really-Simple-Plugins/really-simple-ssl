@@ -37,8 +37,10 @@
   height: 310px;
   margin: 10px;
   border-bottom: 1px solid #dedede;
+  overflow-y: scroll;
+  overflow-x: hidden;
   /*
-    Progress bar
+          Progress bar
         */
 }
 .rsssl-grid .rsssl-item .item-container .rsssl-grid-item-content .progress-bar-container {

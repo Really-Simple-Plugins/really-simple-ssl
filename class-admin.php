@@ -2985,7 +2985,7 @@ class rsssl_admin extends rsssl_front_end
 			),
 			4 => array(
 				'title' => __("System Status", "really-simple-ssl"),
-				'content' => 'H',
+				'content' => $this->get_system_status(),
 				'type' => 'tasks',
 				'class' => 'half-height',
 				'can_hide' => true,
@@ -3026,7 +3026,92 @@ class rsssl_admin extends rsssl_front_end
     }
 
     public function generate_settings() {
-	    
+	    ob_start();
+	    ?>
+        <div class="rsssl-settings">
+            <form action="options.php" method="post">
+                <?php
+                settings_fields('rlrsssl_options');
+                do_settings_sections('rlrsssl');
+                ?>
+
+                <input class="button button-primary" name="Submit" type="submit"
+                       value="<?php echo __("Save", "really-simple-ssl"); ?>"/>
+            </form>
+        </div>
+	    <?php
+        $content = ob_get_clean();
+        return $content;
+    }
+
+    public function get_system_status() {
+        ob_start();
+	    ?>
+        <div>
+		    <?php
+		    if ($this->debug) {
+			    echo "<div class='debug-log'>";
+			    if (defined('RSSSL_SAFE_MODE') && RSSSL_SAFE_MODE) echo "SAFE MODE<br>";
+
+			    echo "<b>General</b><br>";
+			    echo "Plugin version: " . rsssl_version ."<br>";
+
+			    if (RSSSL()->rsssl_certificate->is_valid()) {
+				    echo "SSL certificate is valid<br>";
+			    } else {
+				    echo "Invalid SSL certificate<br>";
+			    }
+			    echo ($this->ssl_enabled) ? "SSL is enabled<br><bR>" : "SSL is not yet enabled<br><br>";
+
+			    echo "<b>Options</b><br>";
+			    if ($this->autoreplace_insecure_links) echo "* Mixed content fixer<br>";
+			    if ($this->wp_redirect) echo "* WordPress redirect<br>";
+			    if ($this->htaccess_redirect) echo "* htaccess redirect<br>";
+			    if ($this->do_not_edit_htaccess) echo "* Stop editing the .htaccess file<br>";
+			    if ($this->switch_mixed_content_fixer_hook) echo "* Use alternative method to fix mixed content<br>";
+			    if ($this->dismiss_all_notices) echo "* Dismiss all Really Simple SSL notices<br>";
+			    echo "<br>";
+
+			    echo "<b>Server information</b><br>";
+			    echo "Server: " . RSSSL()->rsssl_server->get_server() . "<br>";
+			    echo "SSL Type: $this->ssl_type<br>";
+			    if (is_multisite()) {
+				    echo "MULTISITE<br>";
+				    echo (!RSSSL()->rsssl_multisite->ssl_enabled_networkwide) ? "SSL is being activated per site<br>" : "SSL is activated network wide<br>";
+			    }
+
+			    echo $this->debug_log;
+
+			    echo "<br><br><b>Constants</b><br>";
+
+			    if (defined('RSSSL_FORCE_ACTIVATE')) echo "RSSSL_FORCE_ACTIVATE defined";
+			    if (defined('RSSSL_NO_FLUSH')) echo "RSSSL_NO_FLUSH defined";
+			    if (defined('RSSSL_DISMISS_ACTIVATE_SSL_NOTICE')) echo "RSSSL_DISMISS_ACTIVATE_SSL_NOTICE defined";
+			    if (defined('RLRSSSL_DO_NOT_EDIT_HTACCESS')) echo "RLRSSSL_DO_NOT_EDIT_HTACCESS defined";
+			    if (defined('RSSSL_SAFE_MODE')) echo "RSSSL_SAFE_MODE defined";
+			    if (defined("RSSSL_SERVER_OVERRIDE")) echo "RSSSL_SERVER_OVERRIDE defined";
+
+			    if(    !defined('RSSSL_FORCE_ACTIVATE')
+			           && !defined('RSSSL_NO_FLUSH')
+			           && !defined('RSSSL_DISMISS_ACTIVATE_SSL_NOTICE')
+			           && !defined('RLRSSSL_DO_NOT_EDIT_HTACCESS')
+			           && !defined('RSSSL_SAFE_MODE')
+			           && !defined("RSSSL_SERVER_OVERRIDE")
+			    ) echo "No constants defined";
+
+			    echo "</div>";
+			    $this->debug_log = "";
+			    $this->save_options();
+		    } else {
+			    echo "<br>";
+			    _e("To view results here, enable the debug option in the settings tab.", "really-simple-ssl");
+		    }
+
+		    ?>
+        </div>
+	    <?php
+        $contents = ob_get_clean();
+        return $contents;
     }
 
     public function settings_page()
@@ -3089,89 +3174,14 @@ class rsssl_admin extends rsssl_front_end
                             Second tab, Settings
                           */
 
-                        ?>
-                        <form action="options.php" method="post">
-                            <?php
-                            settings_fields('rlrsssl_options');
-                            do_settings_sections('rlrsssl');
-                            ?>
 
-                            <input class="button button-primary" name="Submit" type="submit"
-                                   value="<?php echo __("Save", "really-simple-ssl"); ?>"/>
-                        </form>
-                        <?php
                         break;
 
 //                    case 'debug' :
 //                        /*
 //                            third tab: debug
 //                          */
-//                        ?>
-<!--                        <div>-->
-<!--                            --><?php
-//                            if ($this->debug) {
-//                                echo "<h2>" . __("Log for debugging purposes", "really-simple-ssl") . "</h2>";
-//                                echo "<p>" . __("Send us a copy of these lines if you have any issues. The log will be erased when debug is set to false", "really-simple-ssl") . "</p>";
-//                                echo "<div class='debug-log'>";
-//                                if (defined('RSSSL_SAFE_MODE') && RSSSL_SAFE_MODE) echo "SAFE MODE<br>";
-//
-//                                echo "<b>General</b><br>";
-//	                            echo "Plugin version: " . rsssl_version ."<br>";
-//
-//	                            if (RSSSL()->rsssl_certificate->is_valid()) {
-//                                    echo "SSL certificate is valid<br>";
-//                                } else {
-//                                    echo "Invalid SSL certificate<br>";
-//                                }
-//	                            echo ($this->ssl_enabled) ? "SSL is enabled<br><bR>" : "SSL is not yet enabled<br><br>";
-//
-//	                            echo "<b>Options</b><br>";
-//	                            if ($this->autoreplace_insecure_links) echo "* Mixed content fixer<br>";
-//	                            if ($this->wp_redirect) echo "* WordPress redirect<br>";
-//	                            if ($this->htaccess_redirect) echo "* htaccess redirect<br>";
-//                                if ($this->do_not_edit_htaccess) echo "* Stop editing the .htaccess file<br>";
-//                                if ($this->switch_mixed_content_fixer_hook) echo "* Use alternative method to fix mixed content<br>";
-//                                if ($this->dismiss_all_notices) echo "* Dismiss all Really Simple SSL notices<br>";
-//                                echo "<br>";
-//
-//                                echo "<b>Server information</b><br>";
-//                                echo "Server: " . RSSSL()->rsssl_server->get_server() . "<br>";
-//                                echo "SSL Type: $this->ssl_type<br>";
-//                                if (is_multisite()) {
-//                                    echo "MULTISITE<br>";
-//                                    echo (!RSSSL()->rsssl_multisite->ssl_enabled_networkwide) ? "SSL is being activated per site<br>" : "SSL is activated network wide<br>";
-//                                }
-//
-//                                echo $this->debug_log;
-//
-//                                echo "<br><br><b>Constants</b><br>";
-//
-//                                if (defined('RSSSL_FORCE_ACTIVATE')) echo "RSSSL_FORCE_ACTIVATE defined";
-//	                            if (defined('RSSSL_NO_FLUSH')) echo "RSSSL_NO_FLUSH defined";
-//	                            if (defined('RSSSL_DISMISS_ACTIVATE_SSL_NOTICE')) echo "RSSSL_DISMISS_ACTIVATE_SSL_NOTICE defined";
-//	                            if (defined('RLRSSSL_DO_NOT_EDIT_HTACCESS')) echo "RLRSSSL_DO_NOT_EDIT_HTACCESS defined";
-//	                            if (defined('RSSSL_SAFE_MODE')) echo "RSSSL_SAFE_MODE defined";
-//	                            if (defined("RSSSL_SERVER_OVERRIDE")) echo "RSSSL_SERVER_OVERRIDE defined";
-//
-//	                            if(    !defined('RSSSL_FORCE_ACTIVATE')
-//                                    && !defined('RSSSL_NO_FLUSH')
-//                                    && !defined('RSSSL_DISMISS_ACTIVATE_SSL_NOTICE')
-//                                    && !defined('RLRSSSL_DO_NOT_EDIT_HTACCESS')
-//                                    && !defined('RSSSL_SAFE_MODE')
-//                                    && !defined("RSSSL_SERVER_OVERRIDE")
-//                                ) echo "No constants defined";
-//
-//	                            echo "</div>";
-//                                $this->debug_log = "";
-//                                $this->save_options();
-//                            } else {
-//                                echo "<br>";
-//                                _e("To view results here, enable the debug option in the settings tab.", "really-simple-ssl");
-//                            }
 
-                            ?>
-                        </div>
-                        <?php
                         break;
                     default:
                         echo '';
@@ -3422,7 +3432,7 @@ class rsssl_admin extends rsssl_front_end
 	    }
 
         register_setting('rlrsssl_options', 'rlrsssl_options', array($this, 'options_validate'));
-        add_settings_section('rlrsssl_settings', __("Settings", "really-simple-ssl"), array($this, 'section_text'), 'rlrsssl');
+        add_settings_section('rlrsssl_settings', __("", "really-simple-ssl"), array($this, 'section_text'), 'rlrsssl');
         add_settings_field('id_autoreplace_insecure_links', __("Mixed content fixer", "really-simple-ssl"), array($this, 'get_option_autoreplace_insecure_links'), 'rlrsssl', 'rlrsssl_settings');
 
         //only show option to enable or disable mixed content and redirect when SSL is detected
@@ -3461,9 +3471,7 @@ class rsssl_admin extends rsssl_front_end
 
     public function section_text()
     {
-        ?>
-        <p><?php _e('Settings to optimize your SSL configuration', 'really-simple-ssl'); ?></p>
-        <?php
+
     }
 
     /**
