@@ -2977,7 +2977,7 @@ class rsssl_admin extends rsssl_front_end
 			),
 			3 => array(
 				'title' => __("Tips & Tricks", "really-simple-ssl"),
-				'content' => 'F',
+				'content' => $this->generate_tips_tricks(),
 				'class' => 'small',
 				'type' => 'popular',
 				'can_hide' => true,
@@ -3113,6 +3113,54 @@ class rsssl_admin extends rsssl_front_end
         $contents = ob_get_clean();
         return $contents;
     }
+
+	public function generate_tips_tricks()
+	{
+		$items = array(
+			1 => array(
+				'content' => __("Improve security by enabling HTTP Strict Transport security on your site", "wp-search-insights"),
+				'link'    => 'https://really-simple-ssl.com/hsts-http-strict-transport-security-good/',
+//                'condition' => $this->does_not_use_hsts(),
+			),
+			2 => array(
+				'content' => __("Add security headers for improved security", "wp-search-insights"),
+				'link' => 'https://really-simple-ssl.com/new-security-headers-for-really-simple-ssl-pro-coming-up/',
+                'condition' => '',
+			),
+//			3 => array(
+//				'content' => __("Using CSV/Excel Exports", "wp-search-insights"),
+//				'link' => 'https://wpsearchinsights.com/using-csv-excel-exports/',
+//                'condition' => '',
+//			),
+//			4 => array(
+//				'content' => __("Improving your Search Result Page", "wp-search-insights"),
+//				'link' => 'https://wpsearchinsights.com/improving-your-search-result-page/',
+//			),
+//			5 => array(
+//				'content' => __("The Search Filter", "wp-search-insights"),
+//				'link' => 'https://wpsearchinsights.com/the-search-filter/',
+//			),
+//			6 => array(
+//				'content' => __("Positioning your search form", "wp-search-insights"),
+//				'link' => 'https://wpsearchinsights.com/about-search-forms/',
+//			),
+
+		);
+		$button_link = "https://really-simple-ssl.com/knowledge-base-overview/";
+		$container = $this->get_template('tipstricks-container.php', rsssl_path . 'grid/');
+		$element = $this->get_template('tipstricks-element.php', rsssl_path . 'grid/');
+		$output = '';
+		foreach ($items as $item) {
+			$output .= str_replace(array(
+				'{link}',
+				'{content}',
+			), array(
+				$item['link'],
+				$item['content'],
+			), $element);
+		}
+		return str_replace(array('{content}' , '{button_link}'), array($output, $button_link), $container);
+	}
 
     public function settings_page()
     {
@@ -3564,7 +3612,6 @@ class rsssl_admin extends rsssl_front_end
 
     public function get_option_debug()
     {
-
         ?>
         <label class="rsssl-switch">
             <input id="rlrsssl_options" name="rlrsssl_options[debug]" size="40" value="1"

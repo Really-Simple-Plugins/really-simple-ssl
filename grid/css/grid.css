@@ -1,3 +1,11 @@
+tbody {
+  display: flex;
+  flex-direction: column;
+}
+tbody th {
+  padding: 10px 0 0 0 !important;
+  vertical-align: middle !important;
+}
 #wpcontent {
   padding: 0;
 }
@@ -42,6 +50,9 @@
   /*
           Progress bar
         */
+  /*
+          Tips and Tricks
+       */
 }
 .rsssl-grid .rsssl-item .item-container .rsssl-grid-item-content .progress-bar-container {
   padding-top: 15px;
@@ -66,6 +77,19 @@
 }
 .rsssl-grid .rsssl-item .item-container .rsssl-grid-item-content .progress-text .rsssl-progress-text {
   margin-left: 10px;
+}
+.rsssl-grid .rsssl-item .item-container .rsssl-grid-item-content .rsssl-tips-tricks-content {
+  font-size: 0.9em;
+  color: #3c3c3c;
+  padding-bottom: 7px;
+  list-style: decimal;
+  list-style-position: inside;
+}
+.rsssl-grid .rsssl-item .item-container .rsssl-grid-item-content .tips-tricks-content {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  margin-bottom: 10px;
 }
 .rsssl-grid .rsssl-item .item-container .rsssl-grid-item-footer {
   margin: 10px;

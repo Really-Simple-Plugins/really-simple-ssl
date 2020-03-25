@@ -6,6 +6,17 @@
 @box_shadow_color: rgba(222, 222, 222, 0.2);
 @border_color: #dedede;
 @color-success: #61ce70;
+@light-text-color: #3c3c3c;
+
+// Override default WP settings style
+tbody {
+  display: flex;
+  flex-direction: column;
+  th {
+    padding: 10px 0 0 0 !important;
+    vertical-align: middle !important;
+  }
+}
 
 #wpcontent {
   padding: 0;
@@ -83,7 +94,26 @@
           }
         }
 
-        // End progess bar
+        /*
+          Tips and Tricks
+       */
+
+        .rsssl-tips-tricks-content {
+          font-size: 0.9em;
+          color: @light-text-color;
+          padding-bottom: 7px;
+          list-style: decimal;
+          list-style-position: inside;
+        }
+
+        .tips-tricks-content {
+          display: flex;
+          flex-direction: column;
+          flex-wrap: wrap;
+          margin-bottom: 10px;
+        }
+
+        // End tips and tricks
 
       }
       .rsssl-grid-item-footer {
