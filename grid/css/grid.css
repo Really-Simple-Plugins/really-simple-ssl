@@ -92,6 +92,10 @@ tbody th {
   margin-bottom: 10px;
 }
 .rsssl-grid .rsssl-item .item-container .rsssl-grid-item-footer {
+  display: flex;
+  align-items: center;
+  position: absolute;
+  width: 90%;
   margin: 10px;
   height: 50px;
   border: 2px solid;

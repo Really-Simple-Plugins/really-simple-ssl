@@ -10,6 +10,7 @@ class rsssl_admin extends rsssl_front_end
     public $wpconfig_siteurl_not_fixed = FALSE;
     public $no_server_variable = FALSE;
     public $errors = Array();
+    public $tasks = array();
 
     public $do_wpconfig_loadbalancer_fix = FALSE;
     public $site_has_ssl = FALSE;
@@ -3007,6 +3008,21 @@ class rsssl_admin extends rsssl_front_end
 	    $percentage_completed = $this->get_task_progress();
 	    $percentage_incomplete = 100 - $percentage_completed;
 
+	    $footer_items = array(
+            1 => array(
+                'status' => 'success',
+                'text' => __("", "really-simple-ssl"),
+            ),
+		    2 => array(
+			    'status' => 'success',
+			    'text' => __("", "really-simple-ssl"),
+		    ),
+		    3 => array(
+			    'status' => 'fail',
+			    'text' => __("", "really-simple-ssl"),
+		    ),
+        );
+
 		$element = $this->get_template('progress.php', rsssl_path . 'grid/');
 		return str_replace(
             array(
@@ -3024,6 +3040,7 @@ class rsssl_admin extends rsssl_front_end
     public function get_task_progress() {
 	    return "45";
     }
+
 
     public function generate_settings() {
 	    ob_start();
@@ -3481,7 +3498,7 @@ class rsssl_admin extends rsssl_front_end
 
         register_setting('rlrsssl_options', 'rlrsssl_options', array($this, 'options_validate'));
         add_settings_section('rlrsssl_settings', __("", "really-simple-ssl"), array($this, 'section_text'), 'rlrsssl');
-        add_settings_field('id_autoreplace_insecure_links', __("Mixed content fixer", "really-simple-ssl"), array($this, 'get_option_autoreplace_insecure_links'), 'rlrsssl', 'rlrsssl_settings');
+	    add_settings_field('id_autoreplace_insecure_links', __("Mixed content fixer", "really-simple-ssl"), array($this, 'get_option_autoreplace_insecure_links'), 'rlrsssl', 'rlrsssl_settings');
 
         //only show option to enable or disable mixed content and redirect when SSL is detected
         if ($this->ssl_enabled) {

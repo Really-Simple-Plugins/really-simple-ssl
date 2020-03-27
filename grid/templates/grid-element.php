@@ -6,8 +6,5 @@
 		<div class="rsssl-grid-item-content">
 			{content}
 		</div>
-		<div class="rsssl-grid-item-footer">
-
-		</div>
 	</div>
 </div>
