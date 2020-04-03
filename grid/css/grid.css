@@ -91,6 +91,21 @@ tbody th {
   flex-wrap: wrap;
   margin-bottom: 10px;
 }
+.rsssl-grid .rsssl-item .item-container .rsssl-grid-item-content .rsssl-progress-status {
+  border-radius: 15px;
+  padding: 5px;
+}
+.rsssl-grid .rsssl-item .item-container .rsssl-grid-item-content .rsssl-premium {
+  background-color: #29B6F6;
+  color: white;
+}
+.rsssl-grid .rsssl-item .item-container .rsssl-grid-item-content .rsssl-success {
+  background-color: #61ce70;
+  color: white;
+}
+.rsssl-grid .rsssl-item .item-container .rsssl-grid-item-content .rsssl-open {
+  background-color: #FBC43D;
+}
 .rsssl-grid .rsssl-item .item-container .rsssl-grid-item-footer {
   display: flex;
   align-items: center;

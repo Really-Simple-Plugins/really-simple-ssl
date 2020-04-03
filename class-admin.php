@@ -2737,7 +2737,7 @@ class rsssl_admin extends rsssl_front_end
                                  . __("or", "really-simple-ssl")
                                  . "<span class='rsssl-dashboard-dismiss' data-dismiss_type='check_redirect'><a href='#' class='rsssl-dismiss-text rsssl-close-warning'>$dismiss</a></span>"
                                  . "<span class='rsssl-dashboard-plusone update-plugins rsssl-update-count'><span class='update-count'>1</span></span>",
-                        'icon' => 'warning',
+                        'icon' => 'open',
                         'plusone' => $redirect_plusone,
                         'dismissible' => true
                     ),
@@ -2788,7 +2788,7 @@ class rsssl_admin extends rsssl_front_end
                     ),
                     'no-hsts' => array(
                         'msg' => sprintf(__('%sHTTP Strict Transport Security%s is not enabled %s(premium)%s', "really-simple-ssl"), '<a href="https://en.wikipedia.org/wiki/HTTP_Strict_Transport_Security" target="_blank">', '</a>', '<a target="_blank" href="' . $this->pro_url . '">', '</a>'),
-                        'icon' => 'warning'
+                        'icon' => 'premium'
                     ),
                 ),
             ),
@@ -2802,7 +2802,7 @@ class rsssl_admin extends rsssl_front_end
                     ),
                     'not-set' => array(
                         'msg' => sprintf(__("Secure cookie settings not enabled (%spremium%s) ", "really-simple-ssl"), '<a target="_blank" href="' . $this->pro_url .'">', '</a>'),
-                        'icon' => 'warning'
+                        'icon' => 'premium'
                     ),
                 ),
             ),
@@ -2812,7 +2812,7 @@ class rsssl_admin extends rsssl_front_end
                 'output' => array(
                     'upsell' => array(
                         'msg' => sprintf(__("No mixed content scan performed (%spremium%s) ", "really-simple-ssl"), '<a target="_blank" href="' . $this->pro_url .'">', '</a>'),
-                        'icon' => 'warning'
+                        'icon' => 'premium'
                     ),
                 ),
             ),
@@ -2963,6 +2963,7 @@ class rsssl_admin extends rsssl_front_end
 			1 => array(
 				'title' => __("Your Progress", "really-simple-ssl"),
 				'content' => $this->generate_progress(),
+				'footer' => $this->generate_progress_footer(),
 				'class' => 'regular',
 				'type' => 'all',
 				'can_hide' => true,
@@ -3035,6 +3036,50 @@ class rsssl_admin extends rsssl_front_end
                 $percentage_incomplete,
             )
             , $element);
+    }
+
+    public function generate_progress_footer() {
+
+	    if ($this->ssl_enabled) {
+
+	    }
+
+	    $progress_footer = array(
+	            '' => '',
+                '' => '',
+                '' => '',
+        );
+
+	    ob_start();
+        ?>
+
+            <div class="rsssl-progress-footer">
+			<span class="rsssl-progress-item">
+				<span class="icon">
+				</span>
+				<span class="title">
+					{footer_item_1_text}
+				</span>
+			</span>
+                <span class="rsssl-progress-item">
+				<span class="icon">
+					{footer_item_2_status}
+				</span>
+				<span class="title">
+					{footer_item_2_text}
+				</span>
+			</span>
+                <span class="rsssl-progress-item">
+				<span class="icon">
+					{footer_item_3_status}
+				</span>
+				<span class="title">
+					{footer_item_3_text}
+				</span>
+			</span>
+            </div>
+        <?php
+        ob_get_clean();
     }
 
     public function get_task_progress() {
@@ -3204,7 +3249,7 @@ class rsssl_admin extends rsssl_front_end
                 $element = $this->get_template('grid-element.php', rsssl_path . 'grid/');
                 $output = '';
                 foreach ($grid_items as $index => $grid_item) {
-                    $output .= str_replace(array('{class}', '{title}', '{content}'), array($grid_item['class'], $grid_item['title'], $grid_item['content']), $element);
+                    $output .= str_replace(array('{class}', '{title}', '{content}', '{footer}'), array($grid_item['class'], $grid_item['title'], $grid_item['content'], $grid_item['footer']), $element);
                 }
                 echo str_replace('{content}', $output, $container);
 
@@ -3255,129 +3300,6 @@ class rsssl_admin extends rsssl_front_end
                 do_action("show_tab_{$tab}");
                 ?>
             </div><!-- end main-->
-
-            <?php
-
-            /**
-             *
-             * Generate a sidebar for free users to advertise pro
-             * When using Ultimate Member, also show Ultimate Member add-ons
-             * Pro users never see the sidebar
-             *
-             * @since 2.5.27
-             *
-             */
-
-            if (!defined("rsssl_pro_version") && (!defined("rsssl_pp_version")) && (!defined("rsssl_soc_version")) && (!class_exists('RSSSL_PRO'))) {
-
-                //Generate the Really Simple Plugins logo and recommended plugins text
-
-                ?>
-                <div class="rsssl-sidebar">
-                    <div class="rsssl-really-simple-plugins-logo">
-                        <?php echo "<img class='rsssl-pro-image' src='" . trailingslashit(rsssl_url) . "assets/really-simple-plugins.png' alt='Really Simple SSL pro'>"; ?>
-                    </div>
-                    <div class="rsssl-sidebar-title">
-                        <?php
-                        $link_open = '<a target="_blank" href="https://really-simple-ssl.com/contact">';
-
-                        ?>
-                        <h3> <?php echo sprintf(__("We have some suggestions for your setup. Let us know if you have a suggestion for %sus%s!", "really-simple-ssl"), $link_open, "</a>") ?></h3>
-                    </div>
-
-                    <?php
-
-                    /*
-                     *
-                     * Generate a container for Really Simple SSL pro, Ultimate Member and Moneybird plugins
-                     * Pro container has different image size, text position and button color then UM and Moneybird
-                     * Before generating, check if Really Simple SSL pro, Ultimate Member is active. For Moneybird, check if locale = nl_NL
-                     *
-                     */
-
-                    $admin_url = admin_url();
-                    $url = is_multisite() ? 'https://really-simple-ssl.com/downloads/really-simple-ssl-pro-multisite/' : 'https://really-simple-ssl.com/pro/';
-                    $this->get_banner_html(array(
-                            'img' => 'rsssl-pro.jpg',
-                            'title' => 'Really Simple SSL Pro',
-                            'description' => __("Really Simple SSL Pro optimizes your SSL configuration: extensive scan for mixed content issues, access to premium support, HSTS and more!", "really-simple-ssl"),
-                            'url' => $url,
-                            'pro' => true,
-                           )
-                        );
-
-                    if (!class_exists('COMPLIANZ')) {
-	                    $this->get_banner_html( array(
-			                    'img'         => 'complianz.jpg',
-			                    'title'       => 'Complianz',
-			                    'description' => __( "The Complianz Privacy Suite (GDPR/CaCPA) for WordPress. Simple, Quick and Complete. Up-to-date customized legal documents by a prominent IT Law firm.", "really-simple-ssl" ),
-			                    'url'         => "$admin_url" . "plugin-install.php?s=complianz+RogierLankhorst&tab=search&type=term",
-			                    'pro'         => true,
-		                    )
-	                    );
-                    }
-
-                      if (!defined("ZRDN_PLUGIN_DIRECTORY")) {
-                          $this->get_banner_html(array(
-                                  'img' => 'ziprecipes.png',
-                                  'title' => 'Zip Recipes',
-                                  'description' => __("Create beautiful SEO friendly recipe cards for your recipes with Zip Recipes.", "really-simple-ssl"),
-                                  'url' => "$admin_url" . "plugin-install.php?s=zip+recipes+RogierLankhorst&tab=search&type=term",
-                              )
-                          );
-                      }
-
-
-                    if (!defined("wp_search_insights_plugin")) {
-	                    $this->get_banner_html(array(
-			                    'img' => 'wpsearchinsights.jpg',
-			                    'title' => 'WP Search Insights',
-			                    'description' => __("Records all searches made on your site. See valuable insights in a clean dashboard", "really-simple-ssl"),
-			                    'url' => "$admin_url" . "plugin-install.php?s=wp+search+insights+Rogier+Lankhorst&tab=search&type=term",
-		                    )
-	                    );
-                    }
-
-                    if (defined("ultimatemember_version")) {
-
-                        if (!defined("um_tagging_version")) {
-
-                            $this->get_banner_html(array(
-                                    'img' => 'tagging.jpg',
-                                    'title' => 'UM Tagging',
-                                    'description' => __("UM Tagging allows you to @tag or @mention all users on your platform.", "really-simple-ssl"),
-                                    'url' => 'https://really-simple-plugins.com/download/um-tagging/',
-                                )
-                            );
-                        }
-                    }
-
-                    if (defined("EDD_SL_PLUGIN_DIR") && (get_locale() === 'nl_NL')) {
-                        $this->get_banner_html(array(
-                                'img' => 'edd-moneybird.jpg',
-                                'title' => 'EDD Moneybird',
-                                'description' => __("Export your Easy Digital Downloads sales directly to Moneybird.", "really-simple-ssl"),
-                                'url' => 'https://really-simple-plugins.com/download/edd-moneybird/',
-                            )
-                        );
-
-                    }
-
-                    if (defined('WC_PLUGIN_FILE') && (get_locale() === 'nl_NL')) {
-                        $this->get_banner_html(array(
-                                'img' => 'woocommerce-moneybird.jpg',
-                                'title' => 'WooCommerce Moneybird',
-                                'description' => __("Export your WooCommerce sales directly to Moneybird.", "really-simple-ssl"),
-                                'url' => 'https://really-simple-plugins.com/download/woocommerce-moneybird/',
-                            )
-                        );
-
-                    }
-                     ?>
-                </div>
-            <?php }
-            ?>
-
         </div><!-- end container -->
         <?php
     }
@@ -3396,13 +3318,19 @@ class rsssl_admin extends rsssl_front_end
 
     public function img($type)
     {
+        error_log("Type: ". $type);
         if ($type == 'success') {
-            return "<img class='rsssl-icons' src='" . trailingslashit(rsssl_url) . "img/check-icon.png' alt='success'>";
+            return "<span class='rsssl-progress-status rsssl-success'>Completed</span>";
         } elseif ($type == "error") {
-            return "<img class='rsssl-icons' src='" . trailingslashit(rsssl_url) . "img/cross-icon.png' alt='error'>";
-        } else {
-            return "<img class='rsssl-icons' src='" . trailingslashit(rsssl_url) . "img/warning-icon.png' alt='warning'>";
+            return "<span class='rsssl-progress-status rsssl-error'>Error detected/Impossible to complete task</span>";
+        } elseif ($type == "open") {
+            return "<span class='rsssl-progress-status rsssl-open'>Open Task</span>";
+        } elseif ($type == "premium") {
+	        return "<span class='rsssl-progress-status rsssl-premium'>Premium</span>";
         }
+//        else {
+//            return "Default";
+//        }
     }
 
     /**

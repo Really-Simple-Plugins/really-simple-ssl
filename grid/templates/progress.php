@@ -35,32 +35,4 @@
 			</tbody>
         </table>
 	</div>
-	<div class="rsssl-grid-item-footer">
-		<div class="rsssl-progress-footer">
-			<span class="rsssl-progress-item">
-				<span class="icon">
-					{footer_item_1_status}
-				</span>
-				<span class="title">
-					{footer_item_1_text}
-				</span>
-			</span>
-			<span class="rsssl-progress-item">
-				<span class="icon">
-					{footer_item_2_status}
-				</span>
-				<span class="title">
-					{footer_item_2_text}
-				</span>
-			</span>
-			<span class="rsssl-progress-item">
-				<span class="icon">
-					{footer_item_3_status}
-				</span>
-				<span class="title">
-					{footer_item_3_text}
-				</span>
-			</span>
-		</div>
-	</div>
 </div>
