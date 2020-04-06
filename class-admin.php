@@ -472,7 +472,7 @@ class rsssl_admin extends rsssl_front_end
                 <li class="message-li"><?php _e('Http references in your .css and .js files: change any http:// into //', 'really-simple-ssl'); ?></li>
                 <li class="message-li"><?php _e('Images, stylesheets or scripts from a domain without an SSL certificate: remove them or move to your own server', 'really-simple-ssl'); ?></li><?php
 
-                $backup_link = "https://freally-simple-ssl.com/knowledge-base/backing-up-your-site/";
+                $backup_link = "https://really-simple-ssl.com/knowledge-base/backing-up-your-site/";
                 $link_open = '<a target="_blank" href="'.$backup_link.'">';
                 $link_close = '</a>';
                 ?>
