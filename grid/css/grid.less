@@ -86,6 +86,7 @@ tbody {
         .progress-text {
           display: flex;
           align-items: center;
+          margin: @grid_margin;
           .rsssl-progress-percentage {
             font-size: 26px;
           }
@@ -142,7 +143,7 @@ tbody {
         width: 90%;
         margin: @grid_margin;
         height: 50px;
-        border: 2px solid;
+        //border: 2px solid;
         bottom: 0;
       }
 
@@ -175,5 +176,28 @@ tbody {
     .item-container {
       box-shadow: none;
     }
+  }
+  /*
+    Footers
+   */
+  #rsssl-progress-footer {
+    width: 100%;
+    text-align: right;
+    margin-right: @grid_margin;
+  }
+  /*
+    Dots
+   */
+  .dot {
+    height: 10px;
+    width: 10px;
+    border-radius: 50%;
+    display: inline-block;
+  }
+  .dot-success {
+    background-color: #61ce70;
+  }
+  .dot-error {
+    background-color: #d7263d;
   }
 }

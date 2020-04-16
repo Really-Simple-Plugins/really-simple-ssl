@@ -5,9 +5,4 @@
 		{content}
 		</ul>
 	</div>
-	<div class="rsssl-grid-item-footer">
-		<a href="{button_link}" target="_blank">
-			<button class="button button-upsell"><?php _e("View all" , "wp-search-insights");?></button>
-		</a>
-	</div>
 </div>

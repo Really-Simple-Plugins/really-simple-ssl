@@ -2962,6 +2962,7 @@ class rsssl_admin extends rsssl_front_end
 		$grid_items = array(
 			1 => array(
 				'title' => __("Your Progress", "really-simple-ssl"),
+//				'secondary_header_item' => $this->generate_secondary_progress_header_item(),
 				'content' => $this->generate_progress(),
 				'footer' => $this->generate_progress_footer(),
 				'class' => 'regular',
@@ -2972,6 +2973,8 @@ class rsssl_admin extends rsssl_front_end
 			2 => array(
 				'title' => __("Settings", "really-simple-ssl"),
 				'content' => $this->generate_settings(),
+				'footer' => $this->generate_settings_footer(),
+				'footer' => '',
 				'class' => 'small',
 				'type' => 'results',
 				'can_hide' => true,
@@ -2980,7 +2983,8 @@ class rsssl_admin extends rsssl_front_end
 			3 => array(
 				'title' => __("Tips & Tricks", "really-simple-ssl"),
 				'content' => $this->generate_tips_tricks(),
-				'class' => 'small',
+                'footer' => $this->generate_tips_tricks_footer(),
+                'class' => 'small',
 				'type' => 'popular',
 				'can_hide' => true,
 
@@ -2988,18 +2992,19 @@ class rsssl_admin extends rsssl_front_end
 			4 => array(
 				'title' => __("System Status", "really-simple-ssl"),
 				'content' => $this->get_system_status(),
-				'type' => 'tasks',
+                'footer' => '',
+                'type' => 'tasks',
 				'class' => 'half-height',
 				'can_hide' => true,
 
 			),
-			5 => array(
-				'title' => 'Other',
-//				'content' => $this->generate_other_plugins(),
-				'class' => 'half-height no-border no-background upsell-grid-container',
-				'type' => 'plugins',
-				'can_hide' => false,
-			),
+//			5 => array(
+//				'title' => 'Other',
+////				'content' => $this->generate_other_plugins(),
+//				'class' => 'half-height no-border no-background upsell-grid-container',
+//				'type' => 'plugins',
+//				'can_hide' => false,
+//			),
 		);
 		return $grid_items;
 	}
@@ -3008,21 +3013,6 @@ class rsssl_admin extends rsssl_front_end
 
 	    $percentage_completed = $this->get_task_progress();
 	    $percentage_incomplete = 100 - $percentage_completed;
-
-	    $footer_items = array(
-            1 => array(
-                'status' => 'success',
-                'text' => __("", "really-simple-ssl"),
-            ),
-		    2 => array(
-			    'status' => 'success',
-			    'text' => __("", "really-simple-ssl"),
-		    ),
-		    3 => array(
-			    'status' => 'fail',
-			    'text' => __("", "really-simple-ssl"),
-		    ),
-        );
 
 		$element = $this->get_template('progress.php', rsssl_path . 'grid/');
 		return str_replace(
@@ -3040,46 +3030,45 @@ class rsssl_admin extends rsssl_front_end
 
     public function generate_progress_footer() {
 
-	    if ($this->ssl_enabled) {
+        if ($this->ssl_enabled) {
+            $ssl_enabled = "dot-success";
+            $ssl_text = __("SSL Activated", "really-simple-ssl");
+        } else {
+            $ssl_enabled = "dot-error";
+            $ssl_text = __("SSL Not activated", "really-simple-ssl");
+        }
 
-	    }
+        if ($this->has_301_redirect()) {
+            $redirect_301 = "dot-success";
+        } else {
+            $redirect_301 = "dot-error";
+        }
 
-	    $progress_footer = array(
-	            '' => '',
-                '' => '',
-                '' => '',
+        $items = array(
+            1 => array(
+                'class' => $ssl_enabled,
+                'text' => $ssl_text,
+            ),
+            2 => array(
+                'class' => $redirect_301,
+                'text' => __("301 Redirect", "really-simple-ssl"),
+            ),
         );
+        $id = 'rsssl-progress-footer';
+        $container = $this->get_template('footer-container.php', rsssl_path . 'grid/');
+        $element = $this->get_template('footer-element.php', rsssl_path . 'grid/');
+        $output = '';
+        foreach ($items as $item) {
+            $output .= str_replace(array(
+                '{class}',
+                '{text}',
+            ), array(
+                $item['class'],
+                $item['text'],
+            ), $element);
+        }
+        return str_replace(array('{id}', '{content}'), array($id, $output), $container);
 
-	    ob_start();
-        ?>
-
-            <div class="rsssl-progress-footer">
-			<span class="rsssl-progress-item">
-				<span class="icon">
-				</span>
-				<span class="title">
-					{footer_item_1_text}
-				</span>
-			</span>
-                <span class="rsssl-progress-item">
-				<span class="icon">
-					{footer_item_2_status}
-				</span>
-				<span class="title">
-					{footer_item_2_text}
-				</span>
-			</span>
-                <span class="rsssl-progress-item">
-				<span class="icon">
-					{footer_item_3_status}
-				</span>
-				<span class="title">
-					{footer_item_3_text}
-				</span>
-			</span>
-            </div>
-        <?php
-        ob_get_clean();
     }
 
     public function get_task_progress() {
@@ -3102,6 +3091,17 @@ class rsssl_admin extends rsssl_front_end
             </form>
         </div>
 	    <?php
+        $content = ob_get_clean();
+        return $content;
+    }
+
+    public function generate_settings_footer() {
+	    ob_start();
+	    ?>
+        <span class="rsssl-deactivate-keep-ssl-button">
+
+        </span>
+        <?php
         $content = ob_get_clean();
         return $content;
     }
@@ -3180,30 +3180,30 @@ class rsssl_admin extends rsssl_front_end
 	{
 		$items = array(
 			1 => array(
-				'content' => __("Improve security by enabling HTTP Strict Transport security on your site", "wp-search-insights"),
+				'content' => __("Improve security by enabling HTTP Strict Transport security on your site", "really-simple-ssl"),
 				'link'    => 'https://really-simple-ssl.com/hsts-http-strict-transport-security-good/',
 //                'condition' => $this->does_not_use_hsts(),
 			),
 			2 => array(
-				'content' => __("Add security headers for improved security", "wp-search-insights"),
+				'content' => __("Add security headers for improved security", "really-simple-ssl"),
 				'link' => 'https://really-simple-ssl.com/new-security-headers-for-really-simple-ssl-pro-coming-up/',
                 'condition' => '',
 			),
 //			3 => array(
-//				'content' => __("Using CSV/Excel Exports", "wp-search-insights"),
+//				'content' => __("Using CSV/Excel Exports", "really-simple-ssl"),
 //				'link' => 'https://wpsearchinsights.com/using-csv-excel-exports/',
 //                'condition' => '',
 //			),
 //			4 => array(
-//				'content' => __("Improving your Search Result Page", "wp-search-insights"),
+//				'content' => __("Improving your Search Result Page", "really-simple-ssl"),
 //				'link' => 'https://wpsearchinsights.com/improving-your-search-result-page/',
 //			),
 //			5 => array(
-//				'content' => __("The Search Filter", "wp-search-insights"),
+//				'content' => __("The Search Filter", "really-simple-ssl"),
 //				'link' => 'https://wpsearchinsights.com/the-search-filter/',
 //			),
 //			6 => array(
-//				'content' => __("Positioning your search form", "wp-search-insights"),
+//				'content' => __("Positioning your search form", "really-simple-ssl"),
 //				'link' => 'https://wpsearchinsights.com/about-search-forms/',
 //			),
 
@@ -3221,8 +3221,19 @@ class rsssl_admin extends rsssl_front_end
 				$item['content'],
 			), $element);
 		}
-		return str_replace(array('{content}' , '{button_link}'), array($output, $button_link), $container);
+		return str_replace(array('{content}'), array($output), $container);
 	}
+
+	public function generate_tips_tricks_footer() {
+	    ob_start();
+	    ?>
+            <a href="https://really-simple-ssl.com/knowledge-base-overview" target="_blank">
+                <button class="button button-upsell"><?php _e("View all" , "really-simple-ssl");?></button>
+            </a>
+        <?php
+        $content = ob_get_clean();
+        return $content;
+    }
 
     public function settings_page()
     {
@@ -3426,7 +3437,7 @@ class rsssl_admin extends rsssl_front_end
 
         register_setting('rlrsssl_options', 'rlrsssl_options', array($this, 'options_validate'));
         add_settings_section('rlrsssl_settings', __("", "really-simple-ssl"), array($this, 'section_text'), 'rlrsssl');
-	    add_settings_field('id_autoreplace_insecure_links', __("Mixed content fixer", "really-simple-ssl"), array($this, 'get_option_autoreplace_insecure_links'), 'rlrsssl', 'rlrsssl_settings');
+	    add_settings_field('id_autoreplace_insecure_links', __("Mixed content fixer", "really-simple-ssl"), array($this, 'get_option_autoreplace_insecure_links'), 'rlrsssl', 'rlrsssl_settings', ['class' => 'rsssl-option-row']);
 
         //only show option to enable or disable mixed content and redirect when SSL is detected
         if ($this->ssl_enabled) {
@@ -3858,6 +3869,10 @@ class rsssl_admin extends rsssl_front_end
                    type="checkbox" <?php checked(1, $autoreplace_mixed_content, true) ?> />
             <span class="rsssl-slider rsssl-round"></span>
         </label>
+        <script>
+            var help_tip =  $(".dashicons-editor-help").detach();
+            $(".rsssl-option-row").append(help_tip);
+        </script>
         <?php
         RSSSL()->rsssl_help->get_help_tip(__("In most cases you need to leave this enabled, to prevent mixed content issues on your site.", "really-simple-ssl"));
         echo $comment;

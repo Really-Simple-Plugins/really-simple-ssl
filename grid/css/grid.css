@@ -18,6 +18,12 @@ tbody th {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
+  /*
+    Footers
+   */
+  /*
+    Dots
+   */
 }
 .rsssl-grid .rsssl-item {
   width: 800px;
@@ -71,6 +77,7 @@ tbody th {
 .rsssl-grid .rsssl-item .item-container .rsssl-grid-item-content .progress-text {
   display: flex;
   align-items: center;
+  margin: 10px;
 }
 .rsssl-grid .rsssl-item .item-container .rsssl-grid-item-content .progress-text .rsssl-progress-percentage {
   font-size: 26px;
@@ -113,7 +120,6 @@ tbody th {
   width: 90%;
   margin: 10px;
   height: 50px;
-  border: 2px solid;
   bottom: 0;
 }
 .rsssl-grid .rsssl-item.half-height .item-container {
@@ -133,5 +139,22 @@ tbody th {
 }
 .rsssl-grid .upsell-grid-container .item-container {
   box-shadow: none;
+}
+.rsssl-grid #rsssl-progress-footer {
+  width: 100%;
+  text-align: right;
+  margin-right: 10px;
+}
+.rsssl-grid .dot {
+  height: 10px;
+  width: 10px;
+  border-radius: 50%;
+  display: inline-block;
+}
+.rsssl-grid .dot-success {
+  background-color: #61ce70;
+}
+.rsssl-grid .dot-error {
+  background-color: #d7263d;
 }
 /*# sourceMappingURL=grid.css.map */
