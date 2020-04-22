@@ -2223,7 +2223,7 @@ class rsssl_admin extends rsssl_front_end
                             <?php _e("More info", "really-simple-ssl"); ?></a>
                         </li>
 
-                        <?php if (uses_elementor()) {
+                        <?php if (rsssl_uses_elementor()) {
                         ?>
                         <li class="message-li"><?php _e("We have detected Elementor.", "really-simple-ssl");?>
                             <a target="_blank"
@@ -2767,7 +2767,7 @@ class rsssl_admin extends rsssl_front_end
             ),
 
             'elementor' => array(
-	            'condition' => array('uses_elementor' , 'ssl_activation_time_no_longer_then_3_days_ago'),
+	            'condition' => array('uses_elementor' , 'rsssl_ssl_activation_time_no_longer_then_3_days_ago'),
 	            'callback' => 'rsssl_elementor_notice',
 	            'output' => array(
 		            'elementor-notice' => array(
@@ -4043,136 +4043,172 @@ class rsssl_admin extends rsssl_front_end
  * @return string
  */
 
-function rsssl_mixed_content_fixer_detected(){
-    return RSSSL()->really_simple_ssl->mixed_content_fixer_detected();
-}
-
-function rsssl_site_has_ssl(){
-    return RSSSL()->really_simple_ssl->site_has_ssl;
-}
-
-function rsssl_autoreplace_insecure_links(){
-    return RSSSL()->really_simple_ssl->autoreplace_insecure_links;
-}
-
-function rsssl_ssl_enabled(){
-    if (RSSSL()->really_simple_ssl->ssl_enabled) {
-        return 'ssl-enabled';
-    } else {
-        return 'ssl-not-enabled';
-    }
-}
-
-function rsssl_ssl_detected(){
-	if (!RSSSL()->really_simple_ssl->wpconfig_ok()) {
-		return 'fail';
+if (!function_exists('rsssl_mixed_content_fixer_detected')) {
+	function rsssl_mixed_content_fixer_detected() {
+		return RSSSL()->really_simple_ssl->mixed_content_fixer_detected();
 	}
-	if (!RSSSL()->really_simple_ssl->site_has_ssl) {
-		return 'no-ssl-detected';
+}
+
+if (!function_exists('rsssl_site_has_ssl')) {
+	function rsssl_site_has_ssl() {
+		return RSSSL()->really_simple_ssl->site_has_ssl;
 	}
-	if (RSSSL()->rsssl_certificate->is_valid()) {
-		return 'ssl-detected';
+}
+
+if (!function_exists('rsssl_autoreplace_insecure_links')) {
+	function rsssl_autoreplace_insecure_links() {
+		return RSSSL()->really_simple_ssl->autoreplace_insecure_links;
 	}
-
-    return false;
 }
 
-function rsssl_check_redirect(){
-    if (!RSSSL()->really_simple_ssl->has_301_redirect()) {
-        return 'no-redirect-set';
-    }
-    if (RSSSL()->really_simple_ssl->has_301_redirect() && RSSSL()->rsssl_server->uses_htaccess() && RSSSL()->really_simple_ssl->htaccess_contains_redirect_rules()) {
-        return 'htaccess-redirect-set';
-    }
-    if (RSSSL()->really_simple_ssl->has_301_redirect() && RSSSL()->really_simple_ssl->wp_redirect && RSSSL()->rsssl_server->uses_htaccess() && !RSSSL()->really_simple_ssl->htaccess_redirect) {
-        return 'wp-redirect-to-htaccess';
-    }
-    if (RSSSL()->rsssl_server->uses_htaccess() && (!is_multisite() || !RSSSL()->rsssl_multisite->is_per_site_activated_multisite_subfolder_install())) {
-        if (!is_writable(RSSSL()->really_simple_ssl->htaccess_file())) {
-            return 'htaccess-not-writeable';
-        } else {
-            return 'htaccess-cannot-be-set';
-        }
-    } else {
-        return 'default';
-    }
+if (!function_exists('rsssl_ssl_enabled')) {
+	function rsssl_ssl_enabled() {
+		if ( RSSSL()->really_simple_ssl->ssl_enabled ) {
+			return 'ssl-enabled';
+		} else {
+			return 'ssl-not-enabled';
+		}
+	}
 }
 
-function rsssl_hsts_enabled()
-{
-    if (RSSSL()->really_simple_ssl->contains_hsts()) {
-        return 'contains-hsts';
-    } else {
-        return 'no-hsts';
-    }
+if (!function_exists('rsssl_ssl_detected')) {
+	function rsssl_ssl_detected() {
+		if ( ! RSSSL()->really_simple_ssl->wpconfig_ok() ) {
+			return 'fail';
+		}
+		if ( ! RSSSL()->really_simple_ssl->site_has_ssl ) {
+			return 'no-ssl-detected';
+		}
+		if ( RSSSL()->rsssl_certificate->is_valid() ) {
+			return 'ssl-detected';
+		}
+
+		return false;
+	}
 }
 
-function rsssl_secure_cookies_set()
-{
-    if (RSSSL()->really_simple_ssl->contains_secure_cookie_settings()) {
-        return 'set';
-    } else {
-        return 'not-set';
-    }
+if (!function_exists('rsssl_check_redirect')) {
+	function rsssl_check_redirect() {
+		if ( ! RSSSL()->really_simple_ssl->has_301_redirect() ) {
+			return 'no-redirect-set';
+		}
+		if ( RSSSL()->really_simple_ssl->has_301_redirect() && RSSSL()->rsssl_server->uses_htaccess() && RSSSL()->really_simple_ssl->htaccess_contains_redirect_rules() ) {
+			return 'htaccess-redirect-set';
+		}
+		if ( RSSSL()->really_simple_ssl->has_301_redirect() && RSSSL()->really_simple_ssl->wp_redirect && RSSSL()->rsssl_server->uses_htaccess() && ! RSSSL()->really_simple_ssl->htaccess_redirect ) {
+			return 'wp-redirect-to-htaccess';
+		}
+		if ( RSSSL()->rsssl_server->uses_htaccess() && ( ! is_multisite() || ! RSSSL()->rsssl_multisite->is_per_site_activated_multisite_subfolder_install() ) ) {
+			if ( ! is_writable( RSSSL()->really_simple_ssl->htaccess_file() ) ) {
+				return 'htaccess-not-writeable';
+			} else {
+				return 'htaccess-cannot-be-set';
+			}
+		} else {
+			return 'default';
+		}
+	}
 }
 
-function rsssl_scan_upsell()
-{
-    return 'upsell';
+if (!function_exists('rsssl_hsts_enabled')) {
+	function rsssl_hsts_enabled() {
+		if ( RSSSL()->really_simple_ssl->contains_hsts() ) {
+			return 'contains-hsts';
+		} else {
+			return 'no-hsts';
+		}
+	}
 }
 
-function rsssl_htaccess_redirect_allowed()
-{
-    return RSSSL()->really_simple_ssl->htaccess_redirect_allowed();
+if (!function_exists('rsssl_secure_cookies_set')) {
+	function rsssl_secure_cookies_set() {
+		if ( RSSSL()->really_simple_ssl->contains_secure_cookie_settings() ) {
+			return 'set';
+		} else {
+			return 'not-set';
+		}
+	}
 }
 
-function uses_elementor()
-{
-    if (defined('ELEMENTOR_VERSION') || defined('ELEMENTOR_PRO_VERSION')) {
-        return true;
-    } else {
-        return false;
-    }
+if (!function_exists('rsssl_scan_upsell')) {
+	function rsssl_scan_upsell() {
+		return 'upsell';
+	}
 }
 
-function ssl_activation_time_no_longer_then_3_days_ago()
-{
-
-    $activation_time = get_option('rsssl_activation_timestamp');
-    $three_days_after_activation = $activation_time + 3 * DAY_IN_SECONDS;
-
-    if (time() < $three_days_after_activation) {
-        return true;
-    } else {
-        return false;
-    }
+if (!function_exists('rsssl_htaccess_redirect_allowed')) {
+	function rsssl_htaccess_redirect_allowed() {
+		return RSSSL()->really_simple_ssl->htaccess_redirect_allowed();
+	}
 }
 
-function rsssl_elementor_notice()
-{
-    return 'elementor-notice';
+// Non-prefixed for backwards compatibility
+if (!function_exists('uses_elementor')) {
+	function uses_elementor() {
+		if ( defined( 'ELEMENTOR_VERSION' ) || defined( 'ELEMENTOR_PRO_VERSION' ) ) {
+			return true;
+		} else {
+			return false;
+		}
+	}
 }
 
-function rsssl_wp_redirect_condition() {
-	if (RSSSL()->really_simple_ssl->has_301_redirect() && RSSSL()->really_simple_ssl->wp_redirect && !RSSSL()->really_simple_ssl->htaccess_redirect) {
-		return true;
-	} else {
-	    return false;
-    }
+if (!function_exists('rsssl_uses_elementor')) {
+	function rsssl_uses_elementor() {
+		if ( defined( 'ELEMENTOR_VERSION' ) || defined( 'ELEMENTOR_PRO_VERSION' ) ) {
+			return true;
+		} else {
+			return false;
+		}
+	}
 }
 
-function rsssl_wordpress_redirect() {
-	if (RSSSL()->really_simple_ssl->has_301_redirect() && RSSSL()->really_simple_ssl->wp_redirect) {
-		return '301-wp-redirect';
-	} else {
-	    return 'no-redirect';
-    }
+if (!function_exists('rsssl_ssl_activation_time_no_longer_then_3_days_ago')) {
+	function rsssl_ssl_activation_time_no_longer_then_3_days_ago() {
+
+		$activation_time             = get_option( 'rsssl_activation_timestamp' );
+		$three_days_after_activation = $activation_time + 3 * DAY_IN_SECONDS;
+
+		if ( time() < $three_days_after_activation ) {
+			return true;
+		} else {
+			return false;
+		}
+	}
 }
 
-function rsssl_no_multisite(){
-    if (!is_multisite()) {
-        return true;
-    } else {
-        return false;
-    }
+if (!function_exists('rsssl_elementor_notice')) {
+	function rsssl_elementor_notice() {
+		return 'elementor-notice';
+	}
+}
+
+if (!function_exists('rsssl_wp_redirect_condition')) {
+	function rsssl_wp_redirect_condition() {
+		if ( RSSSL()->really_simple_ssl->has_301_redirect() && RSSSL()->really_simple_ssl->wp_redirect && ! RSSSL()->really_simple_ssl->htaccess_redirect ) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+}
+
+if (!function_exists('rsssl_wordpress_redirect')) {
+	function rsssl_wordpress_redirect() {
+		if ( RSSSL()->really_simple_ssl->has_301_redirect() && RSSSL()->really_simple_ssl->wp_redirect ) {
+			return '301-wp-redirect';
+		} else {
+			return 'no-redirect';
+		}
+	}
+}
+
+if (!function_exists('rsssl_no_multisite')) {
+	function rsssl_no_multisite() {
+		if ( ! is_multisite() ) {
+			return true;
+		} else {
+			return false;
+		}
+	}
 }
