@@ -2910,45 +2910,51 @@ class rsssl_admin extends rsssl_front_end
      * @since 3.2
 	 */
 
-    public function count_plusones(){
-        if (!current_user_can('manage_options')) return 0;
-        $count = get_transient('rsssl_plusone_count');
-        if ($count===FALSE) {
-            $count = 0;
+	public function count_plusones(){
+		if (!current_user_can('manage_options')) return 0;
+		$count = get_transient('rsssl_plusone_count');
+		if ($count===FALSE) {
+			$count = 0;
 
-	        $options = get_option('rlrsssl_options');
+			$options = get_option('rlrsssl_options');
 
-            $notices = $this->get_notices_list();
-            foreach ($notices as $id => $notice) {
+			$notices = $this->get_notices_list();
+			foreach ($notices as $id => $notice) {
+				$condition=true;
+				if (get_option("rsssl_".$id."_dismissed")) continue;
 
-                if (get_option("rsssl_".$id."_dismissed")) continue;
+				$condition_functions = $notice['condition'];
+				foreach ($condition_functions as $func) {
+					$condition = $func();
+					if (!$condition) break;
+				}
 
-                $condition_functions = $notice['condition'];
-                foreach ($condition_functions as $func) {
-                    $condition = $func();
-                    if (!$condition) continue;
-                }
+				if ( $condition ) {
+					$func    = $notice['callback'];
+					$output  = $func();
+					$success = ( isset( $notice['output'][ $output ]['icon'] )
+					             && ( $notice['output'][ $output ]['icon']
+					                  === 'success' ) ) ? true : false;
 
-                $func = $notice['callback'];
-                $output = $func();
-                $success = (isset($notice['output'][$output]['icon']) && ($notice['output'][$output]['icon'] === 'success')) ? true : false;
+					if ( ( isset( $notice['output'][ $output ]['dismissible'] )
+					       && $notice['output'][ $output ]['dismissible']
+					       && ( $options['dismiss_all_notices'] !== false ) )
+					) {
+						update_option( 'rsssl_' . $id . '_dismissed', true );
+						continue;
+					}
 
-	            if ( (isset($notice['output'][$output]['dismissible']) && $notice['output'][$output]['dismissible'] && ($options['dismiss_all_notices'] !== false) ) ) {
-		            update_option('rsssl_'.$id.'_dismissed', true);
-                    continue;
-	            }
-
-                //&& notice not dismissed
-                if (!$success && isset($notice['output'][$output]['plusone']) && $notice['output'][$output]['plusone']) {
-                    $count++;
-                }
-            }
-            set_transient('rsssl_plusone_count', $count, 'WEEK_IN_SECONDS');
-        }
-
-        return $count;
-
-    }
+					//&& notice not dismissed
+					if ( ! $success
+					     && isset( $notice['output'][ $output ]['plusone'] )
+					     && $notice['output'][ $output ]['plusone']
+					) {
+						$count ++;
+					}
+				}
+			}
+			set_transient('rsssl_plusone_count', $count, 'WEEK_IN_SECONDS');
+		}
 
 
     /**
