@@ -2961,6 +2961,7 @@ class rsssl_admin extends rsssl_front_end
 			}
 			set_transient( 'rsssl_plusone_count', $count, 'WEEK_IN_SECONDS' );
 		}
+		return $count;
 	}
 
     /**
