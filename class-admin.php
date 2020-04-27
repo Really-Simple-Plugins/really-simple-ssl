@@ -2910,23 +2910,29 @@ class rsssl_admin extends rsssl_front_end
      * @since 3.2
 	 */
 
-	public function count_plusones(){
-		if (!current_user_can('manage_options')) return 0;
-		$count = get_transient('rsssl_plusone_count');
-		if ($count===FALSE) {
+	public function count_plusones() {
+		if ( ! current_user_can( 'manage_options' ) ) {
+			return 0;
+		}
+		$count = get_transient( 'rsssl_plusone_count' );
+		if ( $count === false ) {
 			$count = 0;
 
-			$options = get_option('rlrsssl_options');
+			$options = get_option( 'rlrsssl_options' );
 
 			$notices = $this->get_notices_list();
-			foreach ($notices as $id => $notice) {
-				$condition=true;
-				if (get_option("rsssl_".$id."_dismissed")) continue;
+			foreach ( $notices as $id => $notice ) {
+				$condition = true;
+				if ( get_option( "rsssl_" . $id . "_dismissed" ) ) {
+					continue;
+				}
 
 				$condition_functions = $notice['condition'];
-				foreach ($condition_functions as $func) {
+				foreach ( $condition_functions as $func ) {
 					$condition = $func();
-					if (!$condition) break;
+					if ( ! $condition ) {
+						break;
+					}
 				}
 
 				if ( $condition ) {
@@ -2953,9 +2959,9 @@ class rsssl_admin extends rsssl_front_end
 					}
 				}
 			}
-			set_transient('rsssl_plusone_count', $count, 'WEEK_IN_SECONDS');
+			set_transient( 'rsssl_plusone_count', $count, 'WEEK_IN_SECONDS' );
 		}
-
+	}
 
     /**
      * Build the settings page
