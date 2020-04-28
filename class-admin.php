@@ -33,6 +33,7 @@ class rsssl_admin extends rsssl_front_end
     public $htaccess_redirect = FALSE;
     public $htaccess_warning_shown = FALSE;
     public $review_notice_shown = FALSE;
+    public $dismiss_review_notice = FALSE;
     public $ssl_success_message_shown = FALSE;
     public $hsts = FALSE;
     public $debug = TRUE;
@@ -600,6 +601,7 @@ class rsssl_admin extends rsssl_front_end
             $this->switch_mixed_content_fixer_hook = isset($options['switch_mixed_content_fixer_hook']) ? $options['switch_mixed_content_fixer_hook'] : FALSE;
 	        $this->dismiss_all_notices = isset($options['dismiss_all_notices']) ? $options['dismiss_all_notices'] : FALSE;
 	        $this->debug_log = isset($options['debug_log']) ? $options['debug_log'] : $this->debug_log;
+            $this->dismiss_review_notice = isset($options['dismiss_review_notice']) ? $options['dismiss_review_notice'] : $this->dismiss_review_notice;
         }
 
         if (is_multisite()) {
@@ -1209,6 +1211,7 @@ class rsssl_admin extends rsssl_front_end
             'wp_redirect' => $this->wp_redirect,
             'switch_mixed_content_fixer_hook' => $this->switch_mixed_content_fixer_hook,
             'dismiss_all_notices' => $this->dismiss_all_notices,
+            'dismiss_review_notice' => $this->dismiss_review_notice,
 
         );
         update_option('rlrsssl_options', $options);
@@ -1255,6 +1258,7 @@ class rsssl_admin extends rsssl_front_end
         $this->ssl_enabled = FALSE;
         $this->switch_mixed_content_fixer_hook = FALSE;
 	    $this->dismiss_all_notices = FALSE;
+	    $this->dismiss_review_notice = FALSE;
 
 
 	    $this->save_options();
@@ -2107,6 +2111,7 @@ class rsssl_admin extends rsssl_front_end
         }
 
         if (!$this->review_notice_shown && get_option('rsssl_activation_timestamp') && get_option('rsssl_activation_timestamp') < strtotime("-1 month")) {
+            if ($this->dismiss_review_notice) return;
             add_action('admin_print_footer_scripts', array($this, 'insert_dismiss_review'));
             ?>
             <style>
@@ -3341,6 +3346,12 @@ class rsssl_admin extends rsssl_front_end
 	    }
 
         register_setting('rlrsssl_options', 'rlrsssl_options', array($this, 'options_validate'));
+
+	    // Show a dismiss review
+	    if (!$this->dismiss_review_notice && !$this->review_notice_shown && get_option('rsssl_activation_timestamp') && get_option('rsssl_activation_timestamp') < strtotime("-1 month")) {
+            add_settings_field('id_dismiss_review_notice', __("Dismiss review notice", "really-simple-ssl"), array($this, 'get_option_dismiss_review_notice'), 'rlrsssl', 'rlrsssl_settings');
+        }
+
         add_settings_section('rlrsssl_settings', __("Settings", "really-simple-ssl"), array($this, 'section_text'), 'rlrsssl');
         add_settings_field('id_autoreplace_insecure_links', __("Mixed content fixer", "really-simple-ssl"), array($this, 'get_option_autoreplace_insecure_links'), 'rlrsssl', 'rlrsssl_settings');
 
@@ -3405,6 +3416,7 @@ class rsssl_admin extends rsssl_front_end
         $newinput['plugin_db_version'] = $this->plugin_db_version;
         $newinput['ssl_enabled'] = $this->ssl_enabled;
         $newinput['debug_log'] = $this->debug_log;
+        $newinput['dismiss_review_notice'] = $this->dismiss_review_notice;
 
         if (!empty($input['hsts']) && $input['hsts'] == '1') {
             $newinput['hsts'] = TRUE;
@@ -3454,6 +3466,12 @@ class rsssl_admin extends rsssl_front_end
 	    } else {
 		    $newinput['dismiss_all_notices'] = FALSE;
 	    }
+
+        if (!empty($input['dismiss_review_notice']) && $input['dismiss_review_notice'] == '1') {
+            $newinput['dismiss_review_notice'] = TRUE;
+        } else {
+            $newinput['dismiss_review_notice'] = FALSE;
+        }
 
         if (!empty($input['htaccess_redirect']) && $input['htaccess_redirect'] == '1') {
             $newinput['htaccess_redirect'] = TRUE;
@@ -3750,6 +3768,21 @@ class rsssl_admin extends rsssl_front_end
         <?php
         RSSSL()->rsssl_help->get_help_tip(__("Clicking this button will deactivate the plugin while keeping your site on SSL. The WordPress 301 redirect, Javascript redirect and mixed content fixer will stop working. The site address will remain https:// and the .htaccess redirect will remain active. Deactivating the plugin via the plugins overview will revert the site back to http://.", "really-simple-ssl"));
 
+    }
+
+    /**
+     * Since 3.3.2
+     */
+
+    public function get_option_dismiss_review_notice() {
+        ?>
+        <label class="rsssl-switch">
+            <input id="rlrsssl_options" name="rlrsssl_options[dismiss_review_notice]" size="40" value="1"
+                   type="checkbox" <?php checked(1, $this->dismiss_review_notice, true) ?> />
+            <span class="rsssl-slider rsssl-round"></span>
+        </label>
+        <?php
+        RSSSL()->rsssl_help->get_help_tip(__("Enable this option to dismiss the review notice.", "really-simple-ssl"));
     }
 
 	/**
