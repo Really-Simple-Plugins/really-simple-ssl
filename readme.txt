@@ -83,6 +83,7 @@ Yes. There is a dedicated network settings page where you can switch between net
 
 == Changelog ==
 = 3.3.2 =
+* Added an additional option to dismiss the review notice
 * Fixed a bug on multisite where a plusone was shown when it should only shown on non-multisite
 * Added prefix to uses_elementor() function and added checks if function_exists
 
