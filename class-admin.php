@@ -2772,13 +2772,27 @@ class rsssl_admin extends rsssl_front_end
             ),
 
             'elementor' => array(
-	            'condition' => array('uses_elementor' , 'rsssl_ssl_activation_time_no_longer_then_3_days_ago'),
+	            'condition' => array('rsssl_uses_elementor' , 'rsssl_ssl_activation_time_no_longer_then_3_days_ago'),
 	            'callback' => 'rsssl_elementor_notice',
 	            'output' => array(
 		            'elementor-notice' => array(
 			            'msg' => sprintf(__("Your site uses Elementor. This can require some additional steps before getting the secure lock. %sSee our guide for detailed instructions%s ", "really-simple-ssl"), '<a target="_blank" href="https://really-simple-ssl.com/knowledge-base/how-to-fix-mixed-content-in-elementor-after-moving-to-ssl/">', '</a>')
 			                     . __("or", "really-simple-ssl")
 			                     . "<span class='rsssl-dashboard-dismiss' data-dismiss_type='elementor'><a href='#' class='rsssl-dismiss-text rsssl-close-warning'>$dismiss</a></span>",
+			            'icon' => 'warning',
+			            'dismissible' => true
+		            ),
+	            ),
+            ),
+
+            'divi' => array(
+	            'condition' => array('rsssl_uses_divi' , 'rsssl_ssl_activation_time_no_longer_then_3_days_ago'),
+	            'callback' => 'rsssl_elementor_notice',
+	            'output' => array(
+		            'elementor-notice' => array(
+			            'msg' => sprintf(__("Your site uses Divi. This can require some additional steps before getting the secure lock. %sSee our guide for detailed instructions%s ", "really-simple-ssl"), '<a target="_blank" href="https://really-simple-ssl.com/knowledge-base/mixed-content-when-using-divi-theme/">', '</a>')
+			                     . __("or", "really-simple-ssl")
+			                     . "<span class='rsssl-dashboard-dismiss' data-dismiss_type='divi'><a href='#' class='rsssl-dismiss-text rsssl-close-warning'>$dismiss</a></span>",
 			            'icon' => 'warning',
 			            'dismissible' => true
 		            ),
@@ -4202,6 +4216,16 @@ if (!function_exists('uses_elementor')) {
 if (!function_exists('rsssl_uses_elementor')) {
 	function rsssl_uses_elementor() {
 		if ( defined( 'ELEMENTOR_VERSION' ) || defined( 'ELEMENTOR_PRO_VERSION' ) ) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+}
+
+if (!function_exists('rsssl_uses_divi')) {
+	function rsssl_uses_divi() {
+		if ( defined( 'ET_CORE_PATH' ) ) {
 			return true;
 		} else {
 			return false;
