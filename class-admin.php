@@ -2477,10 +2477,6 @@ class rsssl_admin extends rsssl_front_end
 
     public function dismiss_review_notice_callback()
     {
-        if (!current_user_can($this->capability) ) return;
-
-        check_ajax_referer('really-simple-ssl', 'security');
-
         $type = isset($_POST['type']) ? $_POST['type'] : false;
 
         if ($type === 'dismiss'){
