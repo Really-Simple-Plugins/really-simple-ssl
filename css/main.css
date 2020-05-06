@@ -15,6 +15,10 @@
   /*height:inherit;*/
 }
 
+.nav-tab-active {
+  background: #fff;
+}
+
 #message.updated.notice.activate-ssl {
     padding-top: 10px;
 }
