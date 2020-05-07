@@ -83,6 +83,8 @@ Yes. There is a dedicated network settings page where you can switch between net
 
 == Changelog ==
 = 3.3.2 =
+* Added a notice when using Divi theme with a link to knowledge base instructions
+* Fixed a CSS issue where the active tab in setting didn't have an active color
 * Added an additional option to dismiss the review notice
 * Fixed a bug on multisite where a plusone was shown when it should only shown on non-multisite
 * Added prefix to uses_elementor() function and added checks if function_exists
