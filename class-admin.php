@@ -49,7 +49,7 @@ class rsssl_admin extends rsssl_front_end
 
     function __construct()
     {
-
+        
 	    if (isset(self::$_this))
             wp_die(sprintf(__('%s is a singleton class and you cannot create a second instance.', 'really-simple-ssl'), get_class($this)));
 
@@ -2768,7 +2768,7 @@ class rsssl_admin extends rsssl_front_end
             ),
 
             'elementor' => array(
-	            'condition' => array('rsssl_uses_elementor' , 'rsssl_ssl_activation_time_no_longer_then_3_days_ago'),
+	            'condition' => array('rsssl_uses_elementor' , 'rsssl_ssl_activation_time_no_longer_then_3_days_ago' ,'rsssl_does_not_use_pro'),
 	            'callback' => 'rsssl_elementor_notice',
 	            'output' => array(
 		            'elementor-notice' => array(
@@ -4274,6 +4274,19 @@ if (!function_exists('rsssl_no_multisite')) {
 		if ( ! is_multisite() ) {
 			return true;
 		} else {
+			return false;
+		}
+	}
+}
+
+if (!function_exists('rsssl_does_not_use_pro')) {
+	function rsssl_does_not_use_pro() {
+		if ( ! defined("rsssl_pro_version") ) {
+		    // Does not use RSSSL pro
+			return true;
+		} else {
+		    error_log("Does not use pro");
+		    // Uses RSSSL pro
 			return false;
 		}
 	}
