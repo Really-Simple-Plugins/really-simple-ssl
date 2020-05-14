@@ -49,7 +49,7 @@ class rsssl_admin extends rsssl_front_end
 
     function __construct()
     {
-        
+
 	    if (isset(self::$_this))
             wp_die(sprintf(__('%s is a singleton class and you cannot create a second instance.', 'really-simple-ssl'), get_class($this)));
 
@@ -2228,7 +2228,7 @@ class rsssl_admin extends rsssl_front_end
                             <?php _e("More info", "really-simple-ssl"); ?></a>
                         </li>
 
-                        <?php if (rsssl_uses_elementor()) {
+                        <?php if (rsssl_uses_elementor() && rsssl_does_not_use_pro()) {
                         ?>
                         <li class="message-li"><?php _e("We have detected Elementor.", "really-simple-ssl");?>
                             <a target="_blank"
