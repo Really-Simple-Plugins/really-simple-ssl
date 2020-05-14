@@ -2228,7 +2228,7 @@ class rsssl_admin extends rsssl_front_end
                             <?php _e("More info", "really-simple-ssl"); ?></a>
                         </li>
 
-                        <?php if (rsssl_uses_elementor()) {
+                        <?php if (rsssl_uses_elementor() && rsssl_does_not_use_pro()) {
                         ?>
                         <li class="message-li"><?php _e("We have detected Elementor.", "really-simple-ssl");?>
                             <a target="_blank"
@@ -2768,7 +2768,7 @@ class rsssl_admin extends rsssl_front_end
             ),
 
             'elementor' => array(
-	            'condition' => array('rsssl_uses_elementor' , 'rsssl_ssl_activation_time_no_longer_then_3_days_ago'),
+	            'condition' => array('rsssl_uses_elementor' , 'rsssl_ssl_activation_time_no_longer_then_3_days_ago' ,'rsssl_does_not_use_pro'),
 	            'callback' => 'rsssl_elementor_notice',
 	            'output' => array(
 		            'elementor-notice' => array(
@@ -4274,6 +4274,19 @@ if (!function_exists('rsssl_no_multisite')) {
 		if ( ! is_multisite() ) {
 			return true;
 		} else {
+			return false;
+		}
+	}
+}
+
+if (!function_exists('rsssl_does_not_use_pro')) {
+	function rsssl_does_not_use_pro() {
+		if ( ! defined("rsssl_pro_version") ) {
+		    // Does not use RSSSL pro
+			return true;
+		} else {
+		    error_log("Does not use pro");
+		    // Uses RSSSL pro
 			return false;
 		}
 	}
