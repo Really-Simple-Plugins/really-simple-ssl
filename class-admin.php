@@ -61,6 +61,10 @@ class rsssl_admin extends rsssl_front_end
 
         $this->get_plugin_upgraded(); //call always, otherwise db version will not match anymore.
 
+	    if (isset($_GET['rsssl_dismiss_review_notice'])){
+		    $this->get_dismiss_review_notice();
+	    }
+
         register_deactivation_hook(dirname(__FILE__) . "/" . $this->plugin_filename, array($this, 'deactivate'));
 
 	    add_action('admin_init', array($this, 'add_privacy_info'));
@@ -89,6 +93,11 @@ class rsssl_admin extends rsssl_front_end
         );
     }
 
+    public function get_dismiss_review_notice() {
+        $this->review_notice_shown = true;
+        $this->dismiss_review_notice = true;
+        $this->save_options();
+    }
 
     /**
      * Initializes the admin class
@@ -2146,10 +2155,8 @@ class rsssl_admin extends rsssl_front_end
                         <div class="rsssl-buttons-row">
                             <a class="button button-primary" target="_blank"
                                href="https://wordpress.org/support/plugin/really-simple-ssl/reviews/#new-post"><?php _e('Leave a review', 'really-simple-ssl'); ?></a>
-
                             <div class="dashicons dashicons-calendar"></div><a href="#" id="maybe-later"><?php _e('Maybe later', 'really-simple-ssl'); ?></a>
-
-                            <div class="dashicons dashicons-no-alt"></div><a href="#" class="review-dismiss"><?php _e('Don\'t show again', 'really-simple-ssl'); ?></a>
+                            <div class="dashicons dashicons-no-alt"></div><a href="<?php echo esc_url(add_query_arg(array("page"=>"rlrsssl_really_simple_ssl", "tab"=>"configuration", "rsssl_dismiss_review_notice"=>1),admin_url("options-general.php") ) );?>" class="review-dismiss"><?php _e('Don\'t show again', 'really-simple-ssl'); ?></a>
                         </div>
                     </div>
                 </div>
