@@ -597,6 +597,7 @@ class rsssl_admin extends rsssl_front_end
     {
 
         $options = get_option('rlrsssl_options');
+
         if (isset($options)) {
             $this->site_has_ssl = isset($options['site_has_ssl']) ? $options['site_has_ssl'] : FALSE;
             $this->hsts = isset($options['hsts']) ? $options['hsts'] : FALSE;
@@ -4292,8 +4293,6 @@ if (!function_exists('rsssl_does_not_use_pro')) {
 		    // Does not use RSSSL pro
 			return true;
 		} else {
-		    error_log("Does not use pro");
-		    // Uses RSSSL pro
 			return false;
 		}
 	}
