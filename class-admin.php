@@ -204,7 +204,7 @@ class rsssl_admin extends rsssl_front_end
         //callbacks for the ajax dismiss buttons
         add_action('wp_ajax_dismiss_htaccess_warning', array($this, 'dismiss_htaccess_warning_callback'));
         add_action('wp_ajax_dismiss_success_message', array($this, 'dismiss_success_message_callback'));
-        add_action('wp_ajax_dismiss_review_notice', array($this, 'dismiss_review_notice_callback'));
+        add_action('wp_ajax_rsssl_dismiss_review_notice', array($this, 'dismiss_review_notice_callback'));
         add_action('wp_ajax_rsssl_dismiss_settings_notice', array($this, 'dismiss_settings_notice_callback'));
 
 
@@ -2377,7 +2377,7 @@ class rsssl_admin extends rsssl_front_end
 
                 function rsssl_dismiss_review(type){
                     var data = {
-                        'action': 'dismiss_review_notice',
+                        'action': 'rsssl_dismiss_review_notice',
                         'type' : type,
                         'security': '<?php echo $ajax_nonce; ?>'
                     };
