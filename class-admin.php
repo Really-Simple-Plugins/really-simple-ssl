@@ -516,7 +516,7 @@ class rsssl_admin extends rsssl_front_end
 
     public function show_enable_ssl_button()
     {
-        if ($this->site_has_ssl || (defined('rsssl_force_activate') && rsssl_force_activate)) {
+        if ($this->site_has_ssl || (defined('RSSSL_FORCE_ACTIVATE') && RSSSL_FORCE_ACTIVATE)) {
             ?>
             <p>
             <div class="rsssl-activate-ssl-button">
