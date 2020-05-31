@@ -447,6 +447,13 @@ class rsssl_admin extends rsssl_front_end
     public function no_ssl_detected()
     {
         if (!$this->site_has_ssl) { ?>
+            <style>
+                .rsssl-notice {
+                    background-color: #fff;
+                    border-left: 4px solid green;
+                    padding: 1px 15px;
+                }
+            </style>
             <div id="message" class="error notice rsssl-notice-certificate">
                 <h1><?php echo __("Detected possible certificate issues", "really-simple-ssl"); ?></h1>
                 <p>

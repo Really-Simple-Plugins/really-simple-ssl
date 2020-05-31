@@ -3,12 +3,6 @@ body {
     unicode-bidi: embed;
 }
 
-.rsssl-notice {
-    background-color: #fff;
-    border-right: 4px solid green;
-    padding: 1px 15px;
-}
-
 .rsssl-main {
     flex: 1;
     width: 80%;
@@ -19,9 +13,7 @@ body {
     max-width:100%;
     /*height:inherit;*/
 }
-#message.updated.notice.activate-ssl {
-    padding-top: 10px;
-}
+
 .activate-ssl ul, .rsssl-result ul, .rsssl_bullets {
     list-style-type: square;
     margin-right:30px;
