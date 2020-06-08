@@ -6,7 +6,7 @@
  * Version: 3.3.4
  * Text Domain: really-simple-ssl
  * Domain Path: /languages
- * Author: Rogier Lankhorst, Mark Wolters
+ * Author: Really Simple Plugins
  * Author URI: https://really-simple-plugins.com
  * License: GPL2
  */
