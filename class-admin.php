@@ -435,6 +435,14 @@ class rsssl_admin extends rsssl_front_end
     {
         if ($this->site_has_ssl) {
 	        ?>
+            <style>
+                .activate-ssl {
+                    border-left: 4px solid #F8BE2E;
+                }
+                .activate-ssl .button {
+                    margin-bottom:20px;
+                }
+            </style>
             <div id="message" class="notice activate-ssl <?php echo apply_filters('rsssl_activate_notice_class', '');?>">
                 <?php
                   do_action('rsssl_activation_notice_inner');
@@ -525,6 +533,15 @@ class rsssl_admin extends rsssl_front_end
     {
         if ($this->site_has_ssl || (defined('RSSSL_FORCE_ACTIVATE') && RSSSL_FORCE_ACTIVATE)) {
             ?>
+            <style>
+                .btn-premium {
+                    margin-left: 10px !important;
+                }
+                .btn-premium-activated {
+                    padding-top: 10px;
+                    padding-bottom: 10px;
+                }
+            </style>
             <p>
             <div class="rsssl-activate-ssl-button">
             <form action="" method="post">

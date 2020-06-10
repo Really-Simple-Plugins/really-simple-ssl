@@ -13,27 +13,9 @@
   background: #fff;
 }
 
-/*Show RSSSL brand color as border-left*/
-.activate-ssl {
-  border-left: 4px solid #F8BE2E;
-}
-
 /*If scan has been completed successfully, make border-left green*/
 .rsssl-scan-completed {
   border-left: 4px solid #46b450;
-}
-
-.btn-premium {
-  margin-left: 10px !important;
-}
-
-.btn-premium-activated {
-  padding-top: 10px;
-  padding-bottom: 10px;
-}
-
-.activate-ssl .button {
-  margin-bottom:20px;
 }
 
 .really-simple-ssl-table {
