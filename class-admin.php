@@ -2271,13 +2271,11 @@ class rsssl_admin extends rsssl_front_end
                         ?>
                     <li class="message-li"><?php _e("Improve your security", "really-simple-ssl");?>
 	        <?php if (!defined('rsssl_pro_plugin')) {
-                $link = "https://really-simple-ssl.com/new-security-headers-for-really-simple-ssl-pro-coming-up/";
                 $margin = '-20px';
 	        } else {
-	            $link = admin_url() . '/options-general.php?page=rlrsssl_really_simple_ssl&tab=security_headers';
 	            $margin = '-60px';
 	        }?>
-                <a target="_blank" href="<?php echo $link?>"><?php _e("with security headers", "really-simple-ssl"); ?></a>
+                <a target="_blank" href="https://really-simple-ssl.com/new-security-headers-for-really-simple-ssl-pro-coming-up/"><?php _e("with security headers", "really-simple-ssl"); ?></a>
                         </li>
                     </ul>
                 </p>
