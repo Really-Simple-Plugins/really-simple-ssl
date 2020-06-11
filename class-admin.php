@@ -2270,12 +2270,21 @@ class rsssl_admin extends rsssl_front_end
                         <?php }
                         ?>
                     <li class="message-li"><?php _e("Improve your security", "really-simple-ssl");?>
-                        <a target="_blank" href="https://really-simple-ssl.com/new-security-headers-for-really-simple-ssl-pro-coming-up/"><?php _e("with security headers", "really-simple-ssl"); ?></a>
+	        <?php if (!defined('rsssl_pro_plugin')) {
+                $link = "https://really-simple-ssl.com/new-security-headers-for-really-simple-ssl-pro-coming-up/";
+                $margin = '-20px';
+	        } else {
+	            $link = admin_url() . '/options-general.php?page=rlrsssl_really_simple_ssl&tab=security_headers';
+	            $margin = '-60px';
+	        }?>
+                <a target="_blank" href="<?php echo $link?>"><?php _e("with security headers", "really-simple-ssl"); ?></a>
                         </li>
                     </ul>
                 </p>
+                <?php if (!defined('rsssl_pro_plugin')) { ?>
                     <a class="button action btn-premium btn-premium-activated" style="margin-bottom: 10px;" href="https://really-simple-ssl.com/pro" target="_blank"><?php _e("Really Simple SSL Pro", "really-simple-ssl"); ?></a>
-                    <div id="rsssl-logo" style="float: right; margin-top: -20px;"><img width=180px" src="<?php echo rsssl_url?>/assets/logo-really-simple-ssl.png" alt="review-logo"></div>
+                <?php } ?>
+                <div id="rsssl-logo" style="float: right; margin-top: <?php echo $margin ?>;"><img width=180px" src="<?php echo rsssl_url?>/assets/logo-really-simple-ssl.png" alt="review-logo"></div>
             </div>
             <style>
                 .message-ul {
@@ -3379,9 +3388,7 @@ class rsssl_admin extends rsssl_front_end
          * load if this is the SSL settings page
          */
 
-        if ( $hook != $rsssl_admin_page)
-
-            return;
+        if ( $hook != $rsssl_admin_page) return;
 
         if (is_rtl()) {
             wp_register_style('rlrsssl-css', trailingslashit(rsssl_url) . 'css/main-rtl.min.css', "", rsssl_version);
