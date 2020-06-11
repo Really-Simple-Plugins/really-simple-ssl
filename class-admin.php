@@ -442,6 +442,7 @@ class rsssl_admin extends rsssl_front_end
                 .activate-ssl .button {
                     margin-bottom:20px;
                 }
+                <?php echo apply_filters('rsssl_pro_inline_style', ''); ?>
             </style>
             <div id="message" class="notice activate-ssl <?php echo apply_filters('rsssl_activate_notice_class', '');?>">
                 <?php

@@ -13,11 +13,6 @@
   background: #fff;
 }
 
-/*If scan has been completed successfully, make border-left green*/
-.rsssl-scan-completed {
-  border-left: 4px solid #46b450;
-}
-
 .really-simple-ssl-table {
   display: flex;
   flex-direction: column;
