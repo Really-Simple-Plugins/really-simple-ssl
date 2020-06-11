@@ -459,7 +459,7 @@ class rsssl_admin extends rsssl_front_end
             <style>
                 .rsssl-notice {
                     background-color: #fff;
-                    border-left: 4px solid green;
+                    border-left: 4px solid #F8BE2E;
                     padding: 1px 15px;
                 }
             </style>
