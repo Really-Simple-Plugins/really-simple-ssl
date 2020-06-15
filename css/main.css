@@ -1,9 +1,3 @@
-.rsssl-notice {
-  background-color: #fff;
-  border-left: 4px solid green;
-  padding: 1px 15px;
-}
-
 .rsssl-main {
   flex: 1;
   width: 80%;
@@ -17,33 +11,6 @@
 
 .nav-tab-active {
   background: #fff;
-}
-
-#message.updated.notice.activate-ssl {
-    padding-top: 10px;
-}
-
-/*Show RSSSL brand color as border-left*/
-.activate-ssl {
-  border-left: 4px solid #F8BE2E;
-}
-
-/*If scan has been completed successfully, make border-left green*/
-.rsssl-scan-completed {
-  border-left: 4px solid #46b450;
-}
-
-.btn-premium {
-  margin-left: 10px !important;
-}
-
-.btn-premium-activated {
-  padding-top: 10px;
-  padding-bottom: 10px;
-}
-
-.activate-ssl .button {
-  margin-bottom:20px;
 }
 
 .really-simple-ssl-table {
@@ -522,26 +489,8 @@ hr {
   margin-top: 10px;
 }
 
-#TB_ajaxContent {
-  text-align: center !important;
-}
-
-#TB_window {
-  height: 370px !important;
-}
-
 .rsssl-button-deactivate-keep-ssl {
   margin-right: 15px;
-}
-
-.rsssl-scan-completed .rsssl-scan-button {
-  margin-top: 17px;
-}
-
-.rsssl-scan-button{
-    float: left;
-    margin-top: 10px;
-    margin-right: 15px;
 }
 
 /*
