@@ -82,6 +82,24 @@ If you are experiencing redirect loops on your site, try these [instructions](ht
 Yes. There is a dedicated network settings page where you can switch between network activated SSL and per page SSL. In the dedicated pro for multisite plugin, you can override all site settings for SSL on the network level, and can activate and deactivate SSL in the network menu for each site.
 
 == Changelog ==
+= 3.3.4 =
+* Fix: prefix review notice dismiss to prevent conflicts with other plugins
+
+= 3.3.3 =
+* Dismiss review notice now uses get variable to dismiss it
+
+= 3.3.2 =
+* Added a notice when using Divi theme with a link to knowledge base instructions
+* Fixed a CSS issue where the active tab in setting didn't have an active color
+* Added an additional option to dismiss the review notice
+* Removed review notice capability check
+* Fixed a bug on multisite where a plusone was shown when it should only shown on non-multisite
+* Added prefix to uses_elementor() function and added checks if function_exists
+
+= 3.3.1 =
+* Fixed a typo in the backup link
+* Added instructions on how to add a free SSL certificate
+
 = 3.3 =
 * Updated SSL activated notice
 * Updated readme

@@ -6,7 +6,7 @@
  * Version: 3.4
  * Text Domain: really-simple-ssl
  * Domain Path: /languages
- * Author: Rogier Lankhorst, Mark Wolters
+ * Author: Really Simple Plugins
  * Author URI: https://really-simple-plugins.com
  * License: GPL2
  */
@@ -122,7 +122,7 @@ class REALLY_SIMPLE_SSL
 
 	private function hooks()
 	{
-		
+
 		add_action('wp_loaded', array(self::$instance->rsssl_front_end, 'force_ssl'), 20);
 		if (is_admin() || is_multisite()) {
 			add_action('plugins_loaded', array(self::$instance->really_simple_ssl, 'init'), 10);

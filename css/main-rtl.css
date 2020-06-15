@@ -1,14 +1,3 @@
-body {
-    direction: rtl;
-    unicode-bidi: embed;
-}
-
-.rsssl-notice {
-    background-color: #fff;
-    border-right: 4px solid green;
-    padding: 1px 15px;
-}
-
 .rsssl-main {
     flex: 1;
     width: 80%;
@@ -19,16 +8,9 @@ body {
     max-width:100%;
     /*height:inherit;*/
 }
-#message.updated.notice.activate-ssl {
-    padding-top: 10px;
-}
-.activate-ssl ul, .rsssl-result ul, .rsssl_bullets {
-    list-style-type: square;
-    margin-right:30px;
-}
 
-.activate-ssl .button {
-    margin-bottom:20px;
+.nav-tab-active {
+    background: #fff;
 }
 
 .really-simple-ssl-table {
@@ -301,7 +283,7 @@ body {
 /* Styling for the sidebar in the admin tab of the free plugin */
 
 .rsssl-really-simple-plugins-logo {
-    background-color: #DCDCDC;
+    background-color: #ececec;
     margin-right: -15px;
     margin-left: -15px;
 }
@@ -320,16 +302,16 @@ body {
     min-height: 125px;
     padding-bottom: 35px;
     margin-bottom: 10px;
-    background-color: #DCDCDC;
+    background-color: #fff;
     width: 100%;
     border-radius: 3%;
 }
 
 .rsssl-sidebar-single-content-container-pro {
+    background-color: #fff;
     min-height: 125px;
     padding-bottom: 35px;
     margin-bottom: 10px;
-    background-color: #DCDCDC;
     width: 100%;
     border-radius: 3%;
 }
@@ -395,6 +377,7 @@ body {
         width: 40%;
     }
     .rsssl-sidebar-single-content-container {
+        background-color: #fff;
         width: 40%;
         padding-right: 25px;
         float: right;
@@ -461,7 +444,8 @@ body {
     -webkit-border-radius: 12px;
     -moz-border-radius: 12px;
     border-radius: 12px;
-    background-color: #7BD561;
+    border: none;
+    background-color: #000000;
     color: white;
     margin-left: 5px;
 }
@@ -491,34 +475,22 @@ hr {
     float: left;
     font-size: inherit;
     height: 25px;
-    -webkit-border-radius: 12px;
-    -moz-border-radius: 12px;
     border-radius: 12px;
-    background-color: #017FAF;
+    border: none;
+    background-color: #000000;
     color: white;
     margin-left: 5px;
 }
 
 .rsssl-more-info-button {
+    border: none;
+    border-radius: 50px;
     clear: both;
-}
-
-#TB_ajaxContent {
-    text-align: center !important;
-}
-
-#TB_window {
-    height: 370px !important;
+    margin-top: 10px;
 }
 
 .rsssl-button-deactivate-keep-ssl {
     margin-left: 15px;
-}
-
-.rsssl-scan-button{
-    float: right;
-    margin-top: 17px;
-    margin-left: 5px;
 }
 
 /*
@@ -580,15 +552,6 @@ input:focus + .rsssl-slider {
     width: 90%;
 }
 
-.rsssl-close-warning {
-    color: black;
-    font-size: 1.3em;
-}
-
-.rsssl-close-warning:hover {
-    cursor: pointer;
-}
-
 .rsssl-dismiss-text {
     font-size: 1em;
     color: #0073aa;
@@ -597,4 +560,41 @@ input:focus + .rsssl-slider {
 
 .rsssl-dashboard-plusone {
     margin-right: 8px;
+}
+
+.rsssl-highlight {
+    border-right: 4px solid #46B450;
+    box-shadow: 0 1px 1px 0 rgba(0,0,0,0.1);
+    background-image:none !important;
+    -o-animation: fadeIt 5s ease-in-out;
+    animation: fadeIt 5s ease-in-out;}
+
+@-o-keyframes fadeIt {
+    0%   { background-color: #FFFFFF; }
+    30%  { background-color: #d6efd6; }
+    100% { background-color: inherit; }
+}
+@keyframes fadeIt {
+    0%   { background-color: #FFFFFF; }
+    30%  { background-color: #d6efd6; }
+    100% { background-color: inherit; }
+}
+
+.form-table th {
+    padding-right: 10px;
+}
+
+.rsssl-dashboard-dismiss .close {
+    all: initial;
+}
+
+.rsssl-dashboard-dismiss span {
+    font-size: 1.5em;
+    color: darkgrey;
+    font-family: sans-serif;
+}
+
+.rsssl-dashboard-dismiss span:hover {
+    cursor: pointer;
+    color: grey;
 }

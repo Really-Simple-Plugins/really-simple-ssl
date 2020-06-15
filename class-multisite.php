@@ -335,6 +335,11 @@ if (!class_exists('rsssl_multisite')) {
             <?php if (RSSSL()->really_simple_ssl->site_has_ssl) {
             if (is_main_site(get_current_blog_id()) && RSSSL()->really_simple_ssl->wpconfig_ok()) {
                 ?>
+                <style>
+                    #message.updated.notice.activate-ssl {
+                        padding-top: 10px;
+                    }
+                </style>
                 <div id="message" class="updated notice activate-ssl">
                     <h1><?php _e("Choose your preferred setup", "really-simple-ssl"); ?></h1>
                     <?php _e("Some things can't be done automatically. Before you migrate, please check for: ", 'really-simple-ssl'); ?>
