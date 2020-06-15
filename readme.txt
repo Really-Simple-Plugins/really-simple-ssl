@@ -84,6 +84,8 @@ Yes. There is a dedicated network settings page where you can switch between net
 == Changelog ==
 = 3.3.4 =
 * Fix: prefix review notice dismiss to prevent conflicts with other plugins
+* Updated multisite SSL activation hook for new blogs to wp_insert_site
+* Moved notices CSS inline
 
 = 3.3.3 =
 * Dismiss review notice now uses get variable to dismiss it
