@@ -18,6 +18,58 @@ tbody {
   }
 }
 
+/*
+    Other plugins
+   */
+
+
+.rsssl-bullet {
+  height: 15px;
+  width: 15px;
+  border-radius: 50%;
+  margin-right: 10px;
+  background-color: grey;
+}
+
+#rsssl-support-forums-container {
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+  .rsssl-support-forums {
+    display: flex;
+    width: 400px;
+
+  }
+}
+
+.upsell-grid-container{
+  //display: flex !important; //we need important here, because the grid switch overrides it on element level
+  //justify-content: space-between;
+  .rsssl-upsell {
+    display: flex !important; //we need important here, because the grid switch overrides it on element level
+    flex-direction: row;
+    padding: 6px;
+    align-items: center;
+    color: @light-text-color;
+
+    .wpsi-red {
+      background-color: red;
+    }
+
+    .cmplz-blue  {
+      background-color: #27ADEA;
+    }
+
+    .zip-pink {
+      background-color: #E366A1;
+    }
+
+    .plugin-status {
+      margin-left: auto;
+    }
+  }
+}
+
 #wpcontent {
   padding: 0;
 
@@ -130,17 +182,18 @@ tbody {
         // End tips and tricks
 
         /*
-    Other plugins
-   */
+          Other plugins
+        */
+
         .upsell-grid-container {
           display: flex;
           justify-content: space-between;
           //width: 800px;
         }
 
-        .upsell-grid-container .item-content {
-          width: 100% !important;
-        }
+        //.upsell-grid-container .item-content {
+        //  width: 100% !important;
+        //}
 
 
         .rsssl-other-plugins-container {
@@ -148,10 +201,6 @@ tbody {
           justify-content: space-between;
           height: 100%;
           width: 800px;
-        }
-
-        .rsssl-upsell {
-          width: 475px;
         }
 
         .rsssl-upsell-title {
@@ -164,23 +213,13 @@ tbody {
         }
 
 
-        .rsssl-upsell span.dashicons {
-          //margin-top: 10px;
-          color: #FFB900;
-        }
 
-        .upsell-img {
-          padding-right: 30px;
-          padding-top: 10px;
-          height: 25px;
-          width: 25px;
-        }
 
         .rsssl-rsssl {
           padding-left: 25px;
         }
 
-        .rsssl-wpsi {
+        .rsssl-rsssl {
           margin-right: 25px;
 
           .upsell-img {
@@ -289,19 +328,6 @@ tbody {
       }
     }
   }
-  .upsell-grid-container {
-    .rsssl-grid-item-header {
-      display: none !important;
-    }
-    .rsssl-grid-item-content {
-      height: 100% !important;
-      overflow-x: inherit !important;
-    }
-    .rsssl-grid-item-footer {
-      display: none !important;
-    }
-  }
-
   .upsell-grid-container {
     .item-container {
       box-shadow: none;

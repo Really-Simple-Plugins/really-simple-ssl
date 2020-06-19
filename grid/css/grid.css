@@ -6,6 +6,44 @@ tbody th {
   padding: 10px 0 0 0 !important;
   vertical-align: middle !important;
 }
+/*
+    Other plugins
+   */
+.rsssl-bullet {
+  height: 15px;
+  width: 15px;
+  border-radius: 50%;
+  margin-right: 10px;
+  background-color: grey;
+}
+#rsssl-support-forums-container {
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+}
+#rsssl-support-forums-container .rsssl-support-forums {
+  display: flex;
+  width: 400px;
+}
+.upsell-grid-container .rsssl-upsell {
+  display: flex !important;
+  flex-direction: row;
+  padding: 6px;
+  align-items: center;
+  color: #3c3c3c;
+}
+.upsell-grid-container .rsssl-upsell .wpsi-red {
+  background-color: red;
+}
+.upsell-grid-container .rsssl-upsell .cmplz-blue {
+  background-color: #27ADEA;
+}
+.upsell-grid-container .rsssl-upsell .zip-pink {
+  background-color: #E366A1;
+}
+.upsell-grid-container .rsssl-upsell .plugin-status {
+  margin-left: auto;
+}
 #wpcontent {
   padding: 0;
 }
@@ -70,8 +108,8 @@ tbody th {
           Tips and Tricks
        */
   /*
-    Other plugins
-   */
+          Other plugins
+        */
   /*
           Progress labels
          */
@@ -118,17 +156,11 @@ tbody th {
   display: flex;
   justify-content: space-between;
 }
-.rsssl-grid .rsssl-item .item-container .rsssl-grid-item-content .upsell-grid-container .item-content {
-  width: 100% !important;
-}
 .rsssl-grid .rsssl-item .item-container .rsssl-grid-item-content .rsssl-other-plugins-container {
   display: flex;
   justify-content: space-between;
   height: 100%;
   width: 800px;
-}
-.rsssl-grid .rsssl-item .item-container .rsssl-grid-item-content .rsssl-upsell {
-  width: 475px;
 }
 .rsssl-grid .rsssl-item .item-container .rsssl-grid-item-content .rsssl-upsell-title {
   height: 15%;
@@ -136,25 +168,16 @@ tbody th {
   justify-content: space-between;
   padding-bottom: 15px;
 }
-.rsssl-grid .rsssl-item .item-container .rsssl-grid-item-content .rsssl-upsell span.dashicons {
-  color: #FFB900;
-}
-.rsssl-grid .rsssl-item .item-container .rsssl-grid-item-content .upsell-img {
-  padding-right: 30px;
-  padding-top: 10px;
-  height: 25px;
-  width: 25px;
-}
 .rsssl-grid .rsssl-item .item-container .rsssl-grid-item-content .rsssl-rsssl {
   padding-left: 25px;
 }
-.rsssl-grid .rsssl-item .item-container .rsssl-grid-item-content .rsssl-wpsi {
+.rsssl-grid .rsssl-item .item-container .rsssl-grid-item-content .rsssl-rsssl {
   margin-right: 25px;
 }
-.rsssl-grid .rsssl-item .item-container .rsssl-grid-item-content .rsssl-wpsi .upsell-img {
+.rsssl-grid .rsssl-item .item-container .rsssl-grid-item-content .rsssl-rsssl .upsell-img {
   padding-right: 0;
 }
-.rsssl-grid .rsssl-item .item-container .rsssl-grid-item-content .rsssl-wpsi .rsssl-upsell-content {
+.rsssl-grid .rsssl-item .item-container .rsssl-grid-item-content .rsssl-rsssl .rsssl-upsell-content {
   padding-right: 0px;
 }
 .rsssl-grid .rsssl-item .item-container .rsssl-grid-item-content .rsssl-top-title {
@@ -225,16 +248,6 @@ tbody th {
 }
 .rsssl-grid .rsssl-item.no-background .item-container {
   background-color: #E5E5E5;
-}
-.rsssl-grid .upsell-grid-container .rsssl-grid-item-header {
-  display: none !important;
-}
-.rsssl-grid .upsell-grid-container .rsssl-grid-item-content {
-  height: 100% !important;
-  overflow-x: inherit !important;
-}
-.rsssl-grid .upsell-grid-container .rsssl-grid-item-footer {
-  display: none !important;
 }
 .rsssl-grid .upsell-grid-container .item-container {
   box-shadow: none;

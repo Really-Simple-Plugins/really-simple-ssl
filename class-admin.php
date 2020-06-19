@@ -3067,17 +3067,24 @@ class rsssl_admin extends rsssl_front_end
 				'can_hide' => true,
 
 			),
-			4 => array(
-				'title' => __("System Status", "really-simple-ssl"),
-				'content' => $this->get_system_status(),
-                'footer' => $this->get_system_status_footer(),
+//			4 => array(
+//				'title' => __("System Status", "really-simple-ssl"),
+//				'content' => $this->get_system_status(),
+//                'footer' => $this->get_system_status_footer(),
+//                'type' => 'tasks',
+//				'class' => 'half-height',
+//				'can_hide' => true,
+//			),
+            4 => array(
+                'title' => __("Support Forum", "really-simple-ssl"),
+                'content' => $this->get_support_forum_block(),
+                'footer' => $this->get_support_forum_block_footer(),
                 'type' => 'tasks',
-				'class' => 'half-height',
-				'can_hide' => true,
-
-			),
+                'class' => 'half-height',
+                'can_hide' => true,
+            ),
 			5 => array(
-				'title' => '',
+				'title' => __("Our Plugins", "really-simple-ssl"),
 				'content' => $this->generate_other_plugins(),
 				'footer' => '',
 				'class' => 'half-height no-border no-background upsell-grid-container',
@@ -3185,6 +3192,12 @@ class rsssl_admin extends rsssl_front_end
         return $content;
     }
 
+    /**
+     * @return false|string
+     *
+     * Get the system status (debug)
+     */
+
     public function get_system_status() {
         ob_start();
 	    ?>
@@ -3279,6 +3292,61 @@ class rsssl_admin extends rsssl_front_end
         return $content;
     }
 
+    public function get_support_forum_block() {
+        $items = array(
+            1 => array(
+                'content' => __("General Issues", "really-simple-ssl"),
+                'link'    => 'https://really-simple-ssl.com/forums/forum/general-issues/',
+            ),
+            2 => array(
+                'content' => __("Redirect loops", "really-simple-ssl"),
+                'link'    => 'https://really-simple-ssl.com/forums/forum/redirect-loops/',
+            ),
+            3 => array(
+                'content' => __("Multisite", "really-simple-ssl"),
+                'link'    => 'https://really-simple-ssl.com/forums/forum/multisite/',
+            ),
+            4 => array(
+                'content' => __("Really Simple SSL Pro", "really-simple-ssl"),
+                'link'    => 'https://really-simple-ssl.com/forums/forum/really-simple-ssl-pro/',
+            ),
+            5 => array(
+                'content' => __("Mixed Content", "really-simple-ssl"),
+                'link'    => 'https://really-simple-ssl.com/forums/forum/mixed-content-site/',
+            ),
+//            6 => array(
+//                'content' => __("", "really-simple-ssl"),
+//                'link'    => '',
+//            ),
+        );
+
+        $container = $this->get_template('support-forums-container.php', rsssl_path . 'grid/');
+        $element = $this->get_template('support-forums-element.php', rsssl_path . 'grid/');
+        $output = '';
+        foreach ($items as $item) {
+            $output .= str_replace(array(
+                '{link}',
+                '{content}',
+            ), array(
+                $item['link'],
+                $item['content'],
+            ), $element);
+        }
+        return str_replace(array('{content}'), array($output), $container);
+
+    }
+
+    public function get_support_forum_block_footer() {
+        ob_start();
+        ?>
+        <a href="https://really-simple-ssl.com/forums/" target="_blank">
+            <button class="button button-upsell"><?php _e("View all" , "really-simple-ssl");?></button>
+        </a>
+        <?php
+        $content = ob_get_clean();
+        return $content;
+    }
+
 	public function generate_tips_tricks()
 	{
 		$items = array(
@@ -3341,46 +3409,77 @@ class rsssl_admin extends rsssl_front_end
     public function generate_other_plugins()
     {
 
-        $plugin_url = trailingslashit(rsssl_url);
         $items = array(
             1 => array(
-                'title' => __("WP Search Insights", "really-simple-ssl"),
-                'content' => __("Track visitor searches on your site", "really-simple-ssl"),
-                'link' => admin_url() . "plugin-install.php?s=WP+Search+Insights+Mark+Wolters&tab=search&type=term",
-                'logo' => '',
-//                'logo' => "$plugin_url"."assets/wpsearchinsights.jpg",
+                'title' => '<div class="wpsi-red rsssl-bullet"></div>',
+                'content' => __("WP Search Insights - Track searches on your website"),
                 'class' => 'wpsi',
+                'constant_free' => 'wpsi_plugin',
+                'constant_premium' => 'wpsi_pro_plugin',
+                'website' => 'https://wpsearchinsights.com/pro',
+                'search' => 'WP+Search+Insights',
             ),
             2 => array(
-                'title' => __("Complianz Privacy Suite", "really-simple-ssl"),
-                'content' => __("Get compliant today in the European Union and/or in the United States,  Canada, and United Kingdom with the only Privacy Suite that offers a fully-featured privacy plugin!", "really-simple-ssl"),
-                'link' => admin_url() . "plugin-install.php?s=complianz&tab=search&type=term",
-                'logo' => '',
-//                'logo' => "$plugin_url"."assets/complianz.jpg",
+                'title' => '<div class="cmplz-blue rsssl-bullet"></div>',
+                'content' => __("Complianz Privacy Suite - Consent Management as it should be ", "really-simple-ssl"),
                 'class' => 'cmplz',
+                'constant_free' => 'cmplz_plugin',
+                'constant_premium' => 'cmplz_premium',
+                'website' => 'https://complianz.io/pricing',
+                'search' => 'complianz',
             ),
+            3 => array(
+                'title' => '<div class="zip-pink rsssl-bullet"></div>',
+                'content' => __("Zip Recipes - Beautiful recipes optimized for Google ", "really-simple-ssl"),
+                'class' => 'zip',
+                'constant_free' => 'ZRDN_PLUGIN_BASENAME',
+                'constant_premium' => 'ZRDN_PREMIUM',
+                'website' => 'https://ziprecipes.net/premium/',
+                'search' => 'zip+recipes+recipe+maker+really+simple+plugins',
+                ),
         );
 
-        $container = $this->get_template('upsell-container.php', rsssl_path . 'grid/');
         $element = $this->get_template('upsell-element.php', rsssl_path . 'grid/');
         $output = '';
         foreach ($items as $item) {
             $output .= str_replace(array(
                 '{title}',
-                '{logo}',
                 '{content}',
-                '{link}',
+                '{status}',
                 '{class}',
+                '{controls}',
             ), array(
                 $item['title'],
-                $item['logo'],
                 $item['content'],
-                $item['link'],
+                $this->get_status_link($item),
                 $item['class'],
+                '',
             ), $element);
-
         }
-        return str_replace('{content}', $output, $container);
+
+        return '<div>'.$output.'</div>';
+    }
+
+    /**
+     * Get status link for plugin, depending on installed, or premium availability
+     * @param $item
+     *
+     * @return string
+     */
+
+    public function get_status_link($item){
+        if (defined($item['constant_free']) && defined($item['constant_premium'])) {
+            $status = __("Installed", "really-simple-ssl");
+        } elseif (defined($item['constant_free']) && !defined($item['constant_premium'])) {
+            $link = $item['website'];
+            $text = __('Upgrade to pro', 'really-simple-ssl');
+            $status = "<a href=$link>$text</a>";
+        } else {
+            $link = admin_url() . "plugin-install.php?s=".$item['search']."&tab=search&type=term";
+            $text = __('Install', 'really-simple-ssl');
+            $status = "<a href=$link>$text</a>";
+        }
+        return $status;
     }
 
     public function settings_page()
