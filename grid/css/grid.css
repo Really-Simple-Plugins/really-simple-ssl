@@ -1,3 +1,20 @@
+#wpcontent {
+  padding: 0;
+}
+#wpcontent .nav-tab-wrapper {
+  padding-top: 0;
+  height: 60px;
+  background-color: #fff;
+  display: flex;
+  align-items: center;
+}
+#wpcontent .nav-tab {
+  background: inherit;
+  border: 0;
+}
+#wpcontent .rsssl-logo-container {
+  margin-bottom: 10px;
+}
 tbody {
   display: flex;
   flex-direction: column;
@@ -7,14 +24,19 @@ tbody th {
   vertical-align: middle !important;
 }
 /*
-    Other plugins
-   */
+Support forum block
+ */
 .rsssl-bullet {
   height: 15px;
   width: 15px;
   border-radius: 50%;
   margin-right: 10px;
-  background-color: grey;
+  background-color: lightgrey;
+  text-decoration: none;
+}
+.rsssl-bullet:hover {
+  background-color: #FBC43D;
+  text-decoration: underline;
 }
 #rsssl-support-forums-container {
   display: flex;
@@ -23,8 +45,18 @@ tbody th {
 }
 #rsssl-support-forums-container .rsssl-support-forums {
   display: flex;
-  width: 400px;
+  height: 25px;
+  width: 50%;
 }
+#rsssl-support-forums-container .rsssl-support-forums a {
+  text-decoration: none;
+}
+#rsssl-support-forums-container .rsssl-support-forums .rsssl-forums-content {
+  color: #3c3c3c;
+}
+/*
+    Other plugins
+ */
 .upsell-grid-container .rsssl-upsell {
   display: flex !important;
   flex-direction: row;
@@ -43,23 +75,6 @@ tbody th {
 }
 .upsell-grid-container .rsssl-upsell .plugin-status {
   margin-left: auto;
-}
-#wpcontent {
-  padding: 0;
-}
-#wpcontent .nav-tab-wrapper {
-  padding-top: 0;
-  height: 60px;
-  background-color: #fff;
-  display: flex;
-  align-items: center;
-}
-#wpcontent .nav-tab {
-  background: inherit;
-  border: 0;
-}
-#wpcontent .rsssl-logo-container {
-  margin-bottom: 10px;
 }
 .rsssl-grid {
   margin-left: 25px;
@@ -92,9 +107,17 @@ tbody th {
 .rsssl-grid .rsssl-item .item-container .rsssl-grid-item-header {
   display: flex;
   align-items: center;
+  justify-content: space-between;
   margin: 10px;
   height: 60px;
   border-bottom: 1px solid #dedede;
+}
+.rsssl-grid .rsssl-item .item-container .rsssl-grid-item-header .rsssl-secondary-header-item {
+  color: #3c3c3c;
+  margin-right: 10px;
+}
+.rsssl-grid .rsssl-item .item-container .rsssl-table-td-main-content {
+  padding-left: 15px;
 }
 .rsssl-grid .rsssl-item .item-container .rsssl-grid-item-content {
   height: 310px;
@@ -103,6 +126,9 @@ tbody th {
   overflow-x: hidden;
   /*
           Progress bar
+        */
+  /*
+          Settings
         */
   /*
           Tips and Tricks
@@ -139,18 +165,27 @@ tbody th {
 .rsssl-grid .rsssl-item .item-container .rsssl-grid-item-content .progress-text .rsssl-progress-text {
   margin-left: 10px;
 }
-.rsssl-grid .rsssl-item .item-container .rsssl-grid-item-content .rsssl-tips-tricks-content {
-  font-size: 0.9em;
+.rsssl-grid .rsssl-item .item-container .rsssl-grid-item-content .rsssl-settings h2 {
+  display: none;
+}
+.rsssl-grid .rsssl-item .item-container .rsssl-grid-item-content .rsssl-settings .button-primary {
+  display: none;
+}
+.rsssl-grid .rsssl-item .item-container .rsssl-grid-item-content .rsssl-tips-tricks-element {
+  display: flex;
+  justify-content: space-between;
+}
+.rsssl-grid .rsssl-item .item-container .rsssl-grid-item-content .rsssl-tips-tricks-element .rsssl-tips-tricks-content {
+  width: 80%;
   color: #3c3c3c;
   padding-bottom: 7px;
-  list-style: decimal;
-  list-style-position: inside;
 }
-.rsssl-grid .rsssl-item .item-container .rsssl-grid-item-content .tips-tricks-content {
-  display: flex;
-  flex-direction: column;
-  flex-wrap: wrap;
-  margin-bottom: 10px;
+.rsssl-grid .rsssl-item .item-container .rsssl-grid-item-content .rsssl-tips-tricks-read-more a {
+  text-decoration: none;
+}
+.rsssl-grid .rsssl-item .item-container .rsssl-grid-item-content .tips-tricks-bottom {
+  position: absolute;
+  bottom: 85px;
 }
 .rsssl-grid .rsssl-item .item-container .rsssl-grid-item-content .upsell-grid-container {
   display: flex;
@@ -162,47 +197,6 @@ tbody th {
   height: 100%;
   width: 800px;
 }
-.rsssl-grid .rsssl-item .item-container .rsssl-grid-item-content .rsssl-upsell-title {
-  height: 15%;
-  display: flex;
-  justify-content: space-between;
-  padding-bottom: 15px;
-}
-.rsssl-grid .rsssl-item .item-container .rsssl-grid-item-content .rsssl-rsssl {
-  padding-left: 25px;
-}
-.rsssl-grid .rsssl-item .item-container .rsssl-grid-item-content .rsssl-rsssl {
-  margin-right: 25px;
-}
-.rsssl-grid .rsssl-item .item-container .rsssl-grid-item-content .rsssl-rsssl .upsell-img {
-  padding-right: 0;
-}
-.rsssl-grid .rsssl-item .item-container .rsssl-grid-item-content .rsssl-rsssl .rsssl-upsell-content {
-  padding-right: 0px;
-}
-.rsssl-grid .rsssl-item .item-container .rsssl-grid-item-content .rsssl-top-title {
-  padding-bottom: 15px;
-  font-weight: 700;
-}
-.rsssl-grid .rsssl-item .item-container .rsssl-grid-item-content .rsssl-upsell-content {
-  padding-right: 25px;
-  padding-bottom: 15px;
-  height: 100px;
-  display: flex;
-  flex-direction: column;
-}
-.rsssl-grid .rsssl-item .item-container .rsssl-grid-item-content .rsssl-upsell-content .rsssl-sub-title {
-  padding-top: 10px;
-  padding-bottom: 15px;
-}
-.rsssl-grid .rsssl-item .item-container .rsssl-grid-item-content .rsssl-upsell-button {
-  height: 50px;
-  display: flex;
-  align-items: center;
-}
-.rsssl-grid .rsssl-item .item-container .rsssl-grid-item-content .rsssl-upsell-button > a {
-  width: 80%;
-}
 .rsssl-grid .rsssl-item .item-container .rsssl-grid-item-content .rsssl-progress-status {
   display: block;
   width: 60px;
@@ -211,8 +205,7 @@ tbody th {
   padding: 5px;
 }
 .rsssl-grid .rsssl-item .item-container .rsssl-grid-item-content .rsssl-premium {
-  background-color: #29B6F6;
-  color: white;
+  background-color: #FBC43D;
 }
 .rsssl-grid .rsssl-item .item-container .rsssl-grid-item-content .rsssl-success {
   background-color: #61ce70;
@@ -220,6 +213,10 @@ tbody th {
 }
 .rsssl-grid .rsssl-item .item-container .rsssl-grid-item-content .rsssl-open {
   background-color: #FBC43D;
+}
+.rsssl-grid .rsssl-item .item-container .rsssl-grid-item-content .rsssl-warning {
+  background-color: red;
+  color: white;
 }
 .rsssl-grid .rsssl-item .item-container .rsssl-grid-item-footer {
   display: flex;

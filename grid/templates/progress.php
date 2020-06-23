@@ -12,8 +12,8 @@
 		<span class="rsssl-progress-text">
 			<?php
 				$percentage_incomplete = "{percentage_incomplete}";
-				echo __("You're doing well.", "really-simple-ssl");
-				echo sprintf(__("Only %s left!", "really-simple-ssl"), $percentage_incomplete."%");
+				echo "<b>" . __("Finished!.", "really-simple-ssl") . "</b>";
+				echo __("You have completed your basic configuration. Improve security with Really Simple SSL Pro.")
 			?>
 		</span>
 	</div>

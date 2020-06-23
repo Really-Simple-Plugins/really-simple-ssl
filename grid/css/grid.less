@@ -6,9 +6,28 @@
 @box_shadow_color: rgba(222, 222, 222, 0.2);
 @border_color: #dedede;
 @color-success: #61ce70;
+@color_open: #FBC43D;
 @light-text-color: #3c3c3c;
 
 // Override default WP settings style
+#wpcontent {
+  padding: 0;
+
+  .nav-tab-wrapper {
+    padding-top: 0;
+    height: 60px;
+    background-color: #fff;
+    display: flex;
+    align-items: center;
+  }.nav-tab {
+     background: inherit;
+     border: 0;
+   }
+  .rsssl-logo-container {
+    margin-bottom: 10px;
+  }
+}
+
 tbody {
   display: flex;
   flex-direction: column;
@@ -19,16 +38,19 @@ tbody {
 }
 
 /*
-    Other plugins
-   */
-
-
+Support forum block
+ */
 .rsssl-bullet {
   height: 15px;
   width: 15px;
   border-radius: 50%;
   margin-right: 10px;
-  background-color: grey;
+  background-color: lightgrey;
+  text-decoration: none;
+  &:hover {
+    background-color: @color_open;
+    text-decoration: underline;
+  }
 }
 
 #rsssl-support-forums-container {
@@ -37,10 +59,20 @@ tbody {
   flex-direction: row;
   .rsssl-support-forums {
     display: flex;
-    width: 400px;
-
+    height: 25px;
+    width: 50%;
+    a {
+      text-decoration: none;
+    }
+    .rsssl-forums-content {
+        color: @light-text-color;
+    }
   }
 }
+
+/*
+    Other plugins
+ */
 
 .upsell-grid-container{
   //display: flex !important; //we need important here, because the grid switch overrides it on element level
@@ -70,24 +102,6 @@ tbody {
   }
 }
 
-#wpcontent {
-  padding: 0;
-
-  .nav-tab-wrapper {
-    padding-top: 0;
-    height: 60px;
-    background-color: #fff;
-    display: flex;
-    align-items: center;
-  }.nav-tab {
-      background: inherit;
-      border: 0;
-     }
-  .rsssl-logo-container {
-    margin-bottom: 10px;
-  }
-}
-
 .rsssl-grid {
   margin-left: 25px;
   position: relative;
@@ -112,12 +126,18 @@ tbody {
       .rsssl-grid-item-header {
         display: flex;
         align-items: center;
+        justify-content: space-between;
         margin: @grid_margin;
         height: 60px;
         border-bottom: 1px solid @border_color;
+        .rsssl-secondary-header-item {
+          color: @light-text-color;
+          margin-right: 10px;
+        }
       }
-      // Override other plugins
-
+      .rsssl-table-td-main-content {
+        padding-left: 15px;
+      }
       .rsssl-grid-item-content {
         height: 310px;
         margin: @grid_margin;
@@ -161,24 +181,37 @@ tbody {
         }
 
         /*
+          Settings
+        */
+
+        .rsssl-settings {
+          h2 {
+            display: none;
+          }
+          // Hide save button
+          .button-primary {
+            display: none;
+          }
+        }
+        /*
           Tips and Tricks
        */
-
-        .rsssl-tips-tricks-content {
-          font-size: 0.9em;
-          color: @light-text-color;
-          padding-bottom: 7px;
-          list-style: decimal;
-          list-style-position: inside;
+          .rsssl-tips-tricks-element {
+            display: flex;
+            justify-content: space-between;
+            .rsssl-tips-tricks-content {
+              width: 80%;
+              color: @light-text-color;
+              padding-bottom: 7px;
+            }
+          }
+        .rsssl-tips-tricks-read-more a {
+          text-decoration: none;
         }
-
-        .tips-tricks-content {
-          display: flex;
-          flex-direction: column;
-          flex-wrap: wrap;
-          margin-bottom: 10px;
+        .tips-tricks-bottom {
+          position: absolute;
+          bottom: 85px;
         }
-
         // End tips and tricks
 
         /*
@@ -188,13 +221,7 @@ tbody {
         .upsell-grid-container {
           display: flex;
           justify-content: space-between;
-          //width: 800px;
         }
-
-        //.upsell-grid-container .item-content {
-        //  width: 100% !important;
-        //}
-
 
         .rsssl-other-plugins-container {
           display: flex;
@@ -203,64 +230,59 @@ tbody {
           width: 800px;
         }
 
-        .rsssl-upsell-title {
-          height: 15%;
-          display: flex;
-          justify-content: space-between;
-          //border-bottom: 1px solid @border-color;
-          //margin-bottom: 20px;
-          padding-bottom: 15px;
-        }
-
-
-
-
-        .rsssl-rsssl {
-          padding-left: 25px;
-        }
-
-        .rsssl-rsssl {
-          margin-right: 25px;
-
-          .upsell-img {
-            padding-right: 0;
-          }
-
-          .rsssl-upsell-content {
-            padding-right: 0px;
-          }
-        }
-
-        .rsssl-top-title {
-          //padding-left: 25px;
-          padding-bottom: 15px;
-          font-weight: 700;
-        }
-
-        .rsssl-upsell-content {
-          //padding-left: 25px;
-          padding-right: 25px;
-          padding-bottom: 15px;
-          height: 100px;
-          display: flex;
-          flex-direction: column;
-          //border-bottom: 1px solid @border-color;
-
-          .rsssl-sub-title {
-            padding-top: 10px;
-            padding-bottom: 15px;
-          }
-        }
-
-        .rsssl-upsell-button {
-          height: 50px;
-          display: flex;
-          align-items: center;
-        }
-
-        .rsssl-upsell-button > a {
-          width: 80%;
-        }
+        //.rsssl-upsell-title {
+        //  height: 15%;
+        //  display: flex;
+        //  justify-content: space-between;
+        //  padding-bottom: 15px;
+        //}
+        //
+        //.rsssl-rsssl {
+        //  padding-left: 25px;
+        //}
+        //
+        //.rsssl-rsssl {
+        //  margin-right: 25px;
+        //
+        //  .upsell-img {
+        //    padding-right: 0;
+        //  }
+        //
+        //  .rsssl-upsell-content {
+        //    padding-right: 0px;
+        //  }
+        //}
+        //
+        //.rsssl-top-title {
+        //  //padding-left: 25px;
+        //  padding-bottom: 15px;
+        //  font-weight: 700;
+        //}
+        //
+        //.rsssl-upsell-content {
+        //  //padding-left: 25px;
+        //  padding-right: 25px;
+        //  padding-bottom: 15px;
+        //  height: 100px;
+        //  display: flex;
+        //  flex-direction: column;
+        //  //border-bottom: 1px solid @border-color;
+        //
+        //  .rsssl-sub-title {
+        //    padding-top: 10px;
+        //    padding-bottom: 15px;
+        //  }
+        //}
+        //
+        //.rsssl-upsell-button {
+        //  height: 50px;
+        //  display: flex;
+        //  align-items: center;
+        //}
+        //
+        //.rsssl-upsell-button > a {
+        //  width: 80%;
+        //}
 
         /*
           Progress labels
@@ -274,8 +296,7 @@ tbody {
         }
 
         .rsssl-premium {
-          background-color: #29B6F6;
-          color: white;
+          background-color: @color_open;
         }
         .rsssl-success {
           background-color: @color-success;
@@ -283,7 +304,12 @@ tbody {
         }
 
         .rsssl-open {
-          background-color: #FBC43D;
+          background-color: @color_open;
+        }
+
+        .rsssl-warning {
+          background-color: red;
+          color: white;
         }
 
       }

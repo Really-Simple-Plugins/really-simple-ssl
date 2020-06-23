@@ -1,3 +1,8 @@
-<li class="rsssl-tips-tricks-content">
-	<a href="{link}" target="_self">{content}</a>
-</li>
+<div class="rsssl-tips-tricks-element">
+    <div class="rsssl-tips-tricks-content">
+        {content}
+    </div>
+    <div class="rsssl-tips-tricks-read-more">
+        <a href="{link}" target="_self"><?php _e("Read more", "really-simple-ssl");?></a>
+    </div>
+</div>

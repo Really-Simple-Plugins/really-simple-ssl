@@ -1,4 +1,4 @@
-<div class="rsssl-upsell wpsi-{class}">
+<div class="rsssl-upsell rsssl-{class}">
     <div class="plugin-color">
         {title}
     </div>

@@ -1,8 +1,14 @@
 <div class="rsssl-tips-tricks">
-	<ul class="rsssl-tips-tricks-container-title"><h3><?php _e("Tips and Tricks" , "wp-search-insights"); ?></h3></ul>
 	<div class="tips-tricks-content">
 		<ul>
 		{content}
 		</ul>
+        <div class="tips-tricks-bottom">
+            <?php echo sprintf(
+            __('Any questions? see the <a href="%s" target="_blank">documentation</a> or the <a href="%s" target="_blank">WordPress Forums</a>', 'really-simple-ssl'),
+            'https://really-simple-ssl.com/knowledge-base/', 'https://wordpress.org/support/plugin/really-simple-ssl/'
+            );
+            ?>
+        </div>
 	</div>
 </div>
