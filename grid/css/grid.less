@@ -26,6 +26,14 @@
   .rsssl-logo-container {
     margin-bottom: 10px;
   }
+  .header-links {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    .documentation {
+      padding-right: 25px;
+    }
+  }
 }
 
 tbody {
@@ -62,10 +70,18 @@ Support forum block
     height: 25px;
     width: 50%;
     a {
+      display: flex;
       text-decoration: none;
-    }
-    .rsssl-forums-content {
+      .rsssl-forums-content {
         color: @light-text-color;
+        &:hover {
+          color: @color_open;
+          text-decoration: underline;
+          .rsssl-bullet {
+            background-color: @color_open;
+          }
+        }
+      }
     }
   }
 }
@@ -229,60 +245,6 @@ Support forum block
           height: 100%;
           width: 800px;
         }
-
-        //.rsssl-upsell-title {
-        //  height: 15%;
-        //  display: flex;
-        //  justify-content: space-between;
-        //  padding-bottom: 15px;
-        //}
-        //
-        //.rsssl-rsssl {
-        //  padding-left: 25px;
-        //}
-        //
-        //.rsssl-rsssl {
-        //  margin-right: 25px;
-        //
-        //  .upsell-img {
-        //    padding-right: 0;
-        //  }
-        //
-        //  .rsssl-upsell-content {
-        //    padding-right: 0px;
-        //  }
-        //}
-        //
-        //.rsssl-top-title {
-        //  //padding-left: 25px;
-        //  padding-bottom: 15px;
-        //  font-weight: 700;
-        //}
-        //
-        //.rsssl-upsell-content {
-        //  //padding-left: 25px;
-        //  padding-right: 25px;
-        //  padding-bottom: 15px;
-        //  height: 100px;
-        //  display: flex;
-        //  flex-direction: column;
-        //  //border-bottom: 1px solid @border-color;
-        //
-        //  .rsssl-sub-title {
-        //    padding-top: 10px;
-        //    padding-bottom: 15px;
-        //  }
-        //}
-        //
-        //.rsssl-upsell-button {
-        //  height: 50px;
-        //  display: flex;
-        //  align-items: center;
-        //}
-        //
-        //.rsssl-upsell-button > a {
-        //  width: 80%;
-        //}
 
         /*
           Progress labels

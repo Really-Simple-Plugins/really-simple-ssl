@@ -2646,19 +2646,29 @@ class rsssl_admin extends rsssl_front_end
 
         $tabs = apply_filters("rsssl_tabs", $tabs);
 
-        echo '<h2 class="nav-tab-wrapper">';
+        echo '<div class="nav-tab-wrapper">';
 
         ?>
             <div class="rsssl-logo-container">
                 <div id="rsssl-logo"><img height="50px" src="<?php echo rsssl_url?>/assets/logo-really-simple-ssl.png" alt="review-logo"></div>
             </div>
+        <div class="header-links">
+            <div class="documentation">
+                <a href="https://really-simple-ssl.com/knowledge-base"><?php _e("Documentation", "really-simple-ssl");?></a>
+            </div>
+            <div class="header-upsell">
+                <a href="https://really-simple-ssl.com/pro" target="_blank">
+                    <button class="button button-primary donate"><?php _e("Upgrade", "really-simple-ssl");?></button>
+                </a>
+            </div>
+        </div>
         <?php
 
         foreach ($tabs as $tab => $name) {
             $class = ($tab == $current) ? ' nav-tab-active' : '';
             echo "<a class='nav-tab$class' href='?page=rlrsssl_really_simple_ssl&tab=$tab'>$name</a>";
         }
-        echo '</h2>';
+        echo '</div>';
     }
 
 
@@ -2866,7 +2876,7 @@ class rsssl_admin extends rsssl_front_end
                         'icon' => 'success'
                     ),
                     'not-set' => array(
-                        'msg' => sprintf(__("Secure cookie settings not enabled (%spremium%s) ", "really-simple-ssl"), '<a target="_blank" href="' . $this->pro_url .'">', '</a>'),
+                        'msg' => sprintf(__("Secure cookie settings not enabled (%Read more%s) ", "really-simple-ssl"), '<a target="_blank" href="' . $this->pro_url .'">', '</a>'),
                         'icon' => 'premium'
                     ),
                 ),
@@ -2876,7 +2886,7 @@ class rsssl_admin extends rsssl_front_end
                 'callback' => 'rsssl_scan_upsell',
                 'output' => array(
                     'upsell' => array(
-                        'msg' => sprintf(__("No mixed content scan performed (%spremium%s) ", "really-simple-ssl"), '<a target="_blank" href="' . $this->pro_url .'">', '</a>'),
+                        'msg' => sprintf(__("No mixed content scan performed (%Read more%s) ", "really-simple-ssl"), '<a target="_blank" href="' . $this->pro_url .'">', '</a>'),
                         'icon' => 'premium'
                     ),
                 ),
@@ -3069,14 +3079,6 @@ class rsssl_admin extends rsssl_front_end
 				'can_hide' => true,
 
 			),
-//			4 => array(
-//				'title' => __("System Status", "really-simple-ssl"),
-//				'content' => $this->get_system_status(),
-//                'footer' => $this->get_system_status_footer(),
-//                'type' => 'tasks',
-//				'class' => 'half-height',
-//				'can_hide' => true,
-//			),
             4 => array(
                 'title' => __("Support Forum", "really-simple-ssl"),
                 'secondary_header_item' => '',
@@ -3099,12 +3101,18 @@ class rsssl_admin extends rsssl_front_end
 		return $grid_items;
 	}
 
+    /**
+     * @return false|string
+     *
+     * Generate a secondary header item for the progress block
+     */
+
 	public function generate_secondary_progress_header_item() {
 	    ob_start();
         ?>
         <div class="rsssl-secondary-header-item">
-            <?php _e("Remaning tasks" , "really-simple-ssl");
-            echo $this->get_remaning_tasks_count();
+            <?php _e("Remaining tasks" , "really-simple-ssl");
+            echo " " . "(" . $this->get_remaining_tasks_count() . ")";
             ?>
         </div>
         <?php
@@ -3112,8 +3120,58 @@ class rsssl_admin extends rsssl_front_end
         return $content;
     }
 
-    public function get_remaning_tasks_count() {
-	    echo "(2)";
+    /**
+     * @return int|mixed
+     *
+     * Get the remaining open task count, shown in the progress header
+     *
+     */
+
+    public function get_remaining_tasks_count() {
+        if ( ! current_user_can( 'manage_options' ) ) {
+            return 0;
+        }
+        $count = get_transient( 'rsssl_open_task_count' );
+        if ( $count === false ) {
+            $count = 0;
+
+            $options = get_option( 'rlrsssl_options' );
+
+            $notices = $this->get_notices_list();
+            foreach ( $notices as $id => $notice ) {
+                $condition = true;
+                if ( get_option( "rsssl_" . $id . "_dismissed" ) ) {
+                    continue;
+                }
+
+                $condition_functions = $notice['condition'];
+                foreach ( $condition_functions as $func ) {
+                    $condition = $func();
+                    if ( ! $condition ) {
+                        break;
+                    }
+                }
+
+                if ( $condition ) {
+                    $func    = $notice['callback'];
+                    $output  = $func();
+                    $success = ( isset( $notice['output'][ $output ]['icon'] )
+                        && ( $notice['output'][ $output ]['icon']
+                            === 'success' ) ) ? true : false;
+
+                    //&& notice not dismissed
+                    if ( ! $success
+                        && isset( $notice['output'][ $output ]['icon'] )
+                        && $notice['output'][ $output ]['icon'] == 'open'
+                    ) {
+                        $count ++;
+                        error_log("Count open: " . $count);
+                    }
+                }
+            }
+            set_transient( 'rsssl_open_task_count', $count, 'WEEK_IN_SECONDS' );
+        }
+        return $count;
     }
 
 	public function generate_progress() {

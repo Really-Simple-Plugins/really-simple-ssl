@@ -15,6 +15,14 @@
 #wpcontent .rsssl-logo-container {
   margin-bottom: 10px;
 }
+#wpcontent .header-links {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+#wpcontent .header-links .documentation {
+  padding-right: 25px;
+}
 tbody {
   display: flex;
   flex-direction: column;
@@ -49,10 +57,18 @@ Support forum block
   width: 50%;
 }
 #rsssl-support-forums-container .rsssl-support-forums a {
+  display: flex;
   text-decoration: none;
 }
-#rsssl-support-forums-container .rsssl-support-forums .rsssl-forums-content {
+#rsssl-support-forums-container .rsssl-support-forums a .rsssl-forums-content {
   color: #3c3c3c;
+}
+#rsssl-support-forums-container .rsssl-support-forums a .rsssl-forums-content:hover {
+  color: #FBC43D;
+  text-decoration: underline;
+}
+#rsssl-support-forums-container .rsssl-support-forums a .rsssl-forums-content:hover .rsssl-bullet {
+  background-color: #FBC43D;
 }
 /*
     Other plugins
