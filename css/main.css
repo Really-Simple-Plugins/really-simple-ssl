@@ -47,8 +47,8 @@
 .really-simple-ssl-table tr {
   position: relative;
   display: block;
-  padding: .75rem 1.25rem;
-  margin-bottom: -1px;
+  padding-left: 5px;
+  padding-top: 10px;
   background-color: #fff;
 }
 

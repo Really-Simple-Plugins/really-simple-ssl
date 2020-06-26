@@ -8,13 +8,13 @@
 @color-success: #61ce70;
 @color_open: #FBC43D;
 @light-text-color: #3c3c3c;
+@light-grey: lightgrey;
 
 // Override default WP settings style
 #wpcontent {
   padding: 0;
 
   .nav-tab-wrapper {
-    padding-top: 0;
     height: 60px;
     background-color: #fff;
     display: flex;
@@ -24,12 +24,16 @@
      border: 0;
    }
   .rsssl-logo-container {
+    margin-left: 25px;
     margin-bottom: 10px;
   }
   .header-links {
     display: flex;
+    flex: 1;
+    justify-content: flex-end;
     flex-direction: row;
     align-items: center;
+    margin-right: 140px;
     .documentation {
       padding-right: 25px;
     }
@@ -42,79 +46,6 @@ tbody {
   th {
     padding: 10px 0 0 0 !important;
     vertical-align: middle !important;
-  }
-}
-
-/*
-Support forum block
- */
-.rsssl-bullet {
-  height: 15px;
-  width: 15px;
-  border-radius: 50%;
-  margin-right: 10px;
-  background-color: lightgrey;
-  text-decoration: none;
-  &:hover {
-    background-color: @color_open;
-    text-decoration: underline;
-  }
-}
-
-#rsssl-support-forums-container {
-  display: flex;
-  flex-wrap: wrap;
-  flex-direction: row;
-  .rsssl-support-forums {
-    display: flex;
-    height: 25px;
-    width: 50%;
-    a {
-      display: flex;
-      text-decoration: none;
-      .rsssl-forums-content {
-        color: @light-text-color;
-        &:hover {
-          color: @color_open;
-          text-decoration: underline;
-          .rsssl-bullet {
-            background-color: @color_open;
-          }
-        }
-      }
-    }
-  }
-}
-
-/*
-    Other plugins
- */
-
-.upsell-grid-container{
-  //display: flex !important; //we need important here, because the grid switch overrides it on element level
-  //justify-content: space-between;
-  .rsssl-upsell {
-    display: flex !important; //we need important here, because the grid switch overrides it on element level
-    flex-direction: row;
-    padding: 6px;
-    align-items: center;
-    color: @light-text-color;
-
-    .wpsi-red {
-      background-color: red;
-    }
-
-    .cmplz-blue  {
-      background-color: #27ADEA;
-    }
-
-    .zip-pink {
-      background-color: #E366A1;
-    }
-
-    .plugin-status {
-      margin-left: auto;
-    }
   }
 }
 
@@ -166,9 +97,7 @@ Support forum block
         */
 
         .progress-bar-container {
-          padding-top: 15px;
-          margin: 0 auto;
-
+          margin: 15px;
         }
 
         .progress {
@@ -209,18 +138,19 @@ Support forum block
             display: none;
           }
         }
+
         /*
           Tips and Tricks
        */
-          .rsssl-tips-tricks-element {
-            display: flex;
-            justify-content: space-between;
-            .rsssl-tips-tricks-content {
-              width: 80%;
-              color: @light-text-color;
-              padding-bottom: 7px;
-            }
+        .rsssl-tips-tricks-element {
+          display: flex;
+          justify-content: space-between;
+          .rsssl-tips-tricks-content {
+            width: 80%;
+            color: @light-text-color;
+            padding-bottom: 7px;
           }
+        }
         .rsssl-tips-tricks-read-more a {
           text-decoration: none;
         }
@@ -231,20 +161,88 @@ Support forum block
         // End tips and tricks
 
         /*
+        Default bullet style
+         */
+        .rsssl-bullet {
+          height: 15px;
+          width: 15px;
+          border-radius: 50%;
+          margin-right: 10px;
+          background-color: lightgrey;
+          text-decoration: none;
+        }
+
+        /*
+        Support forum block
+         */
+
+        #rsssl-support-forums-container {
+          display: flex;
+          flex-wrap: wrap;
+          flex-direction: row;
+          .rsssl-support-forums {
+            display: flex;
+            width: 50%;
+            a {
+              color: @light-text-color;
+              display: flex;
+              align-items: center;
+              &:hover {
+                //color: @color_open;
+              }
+            }
+
+            .rsssl-bullet {
+              margin: 7px;
+              background-color: @light-grey;
+              float: left;
+              &:hover {
+                background-color: @color_open;
+              }
+            }
+
+            .rsssl-forums-content {
+              margin: 7px 0;
+              float: left;
+              color: @light-text-color;
+              &:hover {
+                  text-decoration: underline;
+                }
+              }
+            }
+          }
+
+        /*
+            Other plugins
+         */
+
+          .rsssl-upsell {
+            display: flex !important; //we need important here, because the grid switch overrides it on element level
+            flex-direction: row;
+            padding: 6px;
+            align-items: center;
+            color: @light-text-color;
+
+            .wpsi-red {
+              background-color: red;
+            }
+
+            .cmplz-blue {
+              background-color: #27ADEA;
+            }
+
+            .zip-pink {
+              background-color: #E366A1;
+            }
+
+            .plugin-status {
+              margin-left: auto;
+            }
+          }
+
+        /*
           Other plugins
         */
-
-        .upsell-grid-container {
-          display: flex;
-          justify-content: space-between;
-        }
-
-        .rsssl-other-plugins-container {
-          display: flex;
-          justify-content: space-between;
-          height: 100%;
-          width: 800px;
-        }
 
         /*
           Progress labels
@@ -255,6 +253,7 @@ Support forum block
           text-align: center;
           border-radius: 15px;
           padding: 5px;
+          font-size: 0.9em;
         }
 
         .rsssl-premium {

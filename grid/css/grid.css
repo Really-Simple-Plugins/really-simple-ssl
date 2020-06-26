@@ -2,7 +2,6 @@
   padding: 0;
 }
 #wpcontent .nav-tab-wrapper {
-  padding-top: 0;
   height: 60px;
   background-color: #fff;
   display: flex;
@@ -13,12 +12,16 @@
   border: 0;
 }
 #wpcontent .rsssl-logo-container {
+  margin-left: 25px;
   margin-bottom: 10px;
 }
 #wpcontent .header-links {
   display: flex;
+  flex: 1;
+  justify-content: flex-end;
   flex-direction: row;
   align-items: center;
+  margin-right: 140px;
 }
 #wpcontent .header-links .documentation {
   padding-right: 25px;
@@ -30,67 +33,6 @@ tbody {
 tbody th {
   padding: 10px 0 0 0 !important;
   vertical-align: middle !important;
-}
-/*
-Support forum block
- */
-.rsssl-bullet {
-  height: 15px;
-  width: 15px;
-  border-radius: 50%;
-  margin-right: 10px;
-  background-color: lightgrey;
-  text-decoration: none;
-}
-.rsssl-bullet:hover {
-  background-color: #FBC43D;
-  text-decoration: underline;
-}
-#rsssl-support-forums-container {
-  display: flex;
-  flex-wrap: wrap;
-  flex-direction: row;
-}
-#rsssl-support-forums-container .rsssl-support-forums {
-  display: flex;
-  height: 25px;
-  width: 50%;
-}
-#rsssl-support-forums-container .rsssl-support-forums a {
-  display: flex;
-  text-decoration: none;
-}
-#rsssl-support-forums-container .rsssl-support-forums a .rsssl-forums-content {
-  color: #3c3c3c;
-}
-#rsssl-support-forums-container .rsssl-support-forums a .rsssl-forums-content:hover {
-  color: #FBC43D;
-  text-decoration: underline;
-}
-#rsssl-support-forums-container .rsssl-support-forums a .rsssl-forums-content:hover .rsssl-bullet {
-  background-color: #FBC43D;
-}
-/*
-    Other plugins
- */
-.upsell-grid-container .rsssl-upsell {
-  display: flex !important;
-  flex-direction: row;
-  padding: 6px;
-  align-items: center;
-  color: #3c3c3c;
-}
-.upsell-grid-container .rsssl-upsell .wpsi-red {
-  background-color: red;
-}
-.upsell-grid-container .rsssl-upsell .cmplz-blue {
-  background-color: #27ADEA;
-}
-.upsell-grid-container .rsssl-upsell .zip-pink {
-  background-color: #E366A1;
-}
-.upsell-grid-container .rsssl-upsell .plugin-status {
-  margin-left: auto;
 }
 .rsssl-grid {
   margin-left: 25px;
@@ -150,6 +92,15 @@ Support forum block
           Tips and Tricks
        */
   /*
+        Default bullet style
+         */
+  /*
+        Support forum block
+         */
+  /*
+            Other plugins
+         */
+  /*
           Other plugins
         */
   /*
@@ -157,8 +108,7 @@ Support forum block
          */
 }
 .rsssl-grid .rsssl-item .item-container .rsssl-grid-item-content .progress-bar-container {
-  padding-top: 15px;
-  margin: 0 auto;
+  margin: 15px;
 }
 .rsssl-grid .rsssl-item .item-container .rsssl-grid-item-content .progress {
   overflow: hidden;
@@ -203,15 +153,62 @@ Support forum block
   position: absolute;
   bottom: 85px;
 }
-.rsssl-grid .rsssl-item .item-container .rsssl-grid-item-content .upsell-grid-container {
-  display: flex;
-  justify-content: space-between;
+.rsssl-grid .rsssl-item .item-container .rsssl-grid-item-content .rsssl-bullet {
+  height: 15px;
+  width: 15px;
+  border-radius: 50%;
+  margin-right: 10px;
+  background-color: lightgrey;
+  text-decoration: none;
 }
-.rsssl-grid .rsssl-item .item-container .rsssl-grid-item-content .rsssl-other-plugins-container {
+.rsssl-grid .rsssl-item .item-container .rsssl-grid-item-content #rsssl-support-forums-container {
   display: flex;
-  justify-content: space-between;
-  height: 100%;
-  width: 800px;
+  flex-wrap: wrap;
+  flex-direction: row;
+}
+.rsssl-grid .rsssl-item .item-container .rsssl-grid-item-content #rsssl-support-forums-container .rsssl-support-forums {
+  display: flex;
+  width: 50%;
+}
+.rsssl-grid .rsssl-item .item-container .rsssl-grid-item-content #rsssl-support-forums-container .rsssl-support-forums a {
+  color: #3c3c3c;
+  display: flex;
+  align-items: center;
+}
+.rsssl-grid .rsssl-item .item-container .rsssl-grid-item-content #rsssl-support-forums-container .rsssl-support-forums .rsssl-bullet {
+  margin: 7px;
+  background-color: lightgrey;
+  float: left;
+}
+.rsssl-grid .rsssl-item .item-container .rsssl-grid-item-content #rsssl-support-forums-container .rsssl-support-forums .rsssl-bullet:hover {
+  background-color: #FBC43D;
+}
+.rsssl-grid .rsssl-item .item-container .rsssl-grid-item-content #rsssl-support-forums-container .rsssl-support-forums .rsssl-forums-content {
+  margin: 7px 0;
+  float: left;
+  color: #3c3c3c;
+}
+.rsssl-grid .rsssl-item .item-container .rsssl-grid-item-content #rsssl-support-forums-container .rsssl-support-forums .rsssl-forums-content:hover {
+  text-decoration: underline;
+}
+.rsssl-grid .rsssl-item .item-container .rsssl-grid-item-content .rsssl-upsell {
+  display: flex !important;
+  flex-direction: row;
+  padding: 6px;
+  align-items: center;
+  color: #3c3c3c;
+}
+.rsssl-grid .rsssl-item .item-container .rsssl-grid-item-content .rsssl-upsell .wpsi-red {
+  background-color: red;
+}
+.rsssl-grid .rsssl-item .item-container .rsssl-grid-item-content .rsssl-upsell .cmplz-blue {
+  background-color: #27ADEA;
+}
+.rsssl-grid .rsssl-item .item-container .rsssl-grid-item-content .rsssl-upsell .zip-pink {
+  background-color: #E366A1;
+}
+.rsssl-grid .rsssl-item .item-container .rsssl-grid-item-content .rsssl-upsell .plugin-status {
+  margin-left: auto;
 }
 .rsssl-grid .rsssl-item .item-container .rsssl-grid-item-content .rsssl-progress-status {
   display: block;
@@ -219,6 +216,7 @@ Support forum block
   text-align: center;
   border-radius: 15px;
   padding: 5px;
+  font-size: 0.9em;
 }
 .rsssl-grid .rsssl-item .item-container .rsssl-grid-item-content .rsssl-premium {
   background-color: #FBC43D;
