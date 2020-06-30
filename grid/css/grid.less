@@ -116,7 +116,8 @@ tbody {
         .progress-text {
           display: flex;
           align-items: center;
-          margin: @grid_margin;
+          margin: 10px;
+          padding-top: 10px;
           .rsssl-progress-percentage {
             font-size: 26px;
           }
@@ -130,12 +131,26 @@ tbody {
         */
 
         .rsssl-settings {
+          .form-table {
+            tr {
+              width: 100%;
+              display: flex;
+              flex-direction: row;
+              th {
+                //white-space: nowrap;
+                width: 80%;
+                .rsssl-tooltip-right {
+                  padding-right: 50px;
+                }
+              }
+            }
+          }
           h2 {
             display: none;
           }
           // Hide save button
           .button-primary {
-            display: none;
+            //display: none;
           }
         }
 
@@ -157,6 +172,7 @@ tbody {
         .tips-tricks-bottom {
           position: absolute;
           bottom: 85px;
+          color: @light-text-color;
         }
         // End tips and tricks
 
@@ -184,6 +200,7 @@ tbody {
             display: flex;
             width: 50%;
             a {
+              text-decoration: none;
               color: @light-text-color;
               display: flex;
               align-items: center;
@@ -249,7 +266,7 @@ tbody {
          */
         .rsssl-progress-status {
           display: block;
-          width: 60px;
+          min-width: 60px;
           text-align: center;
           border-radius: 15px;
           padding: 5px;

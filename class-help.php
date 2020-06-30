@@ -15,13 +15,19 @@ if ( ! class_exists( 'rsssl_help' ) ) {
     return self::$_this;
   }
 
-  public function get_help_tip($str){
+  public function get_help_tip($str, $return=false){
+      if ($return) {
+          ob_start();
+      }
     ?>
     <span class="rsssl-tooltip-right tooltip-right" data-rsssl-tooltip="<?php echo $str?>">
       <span class="dashicons dashicons-editor-help"></span>
     </span>
     <?php
-
+    if ($return) {
+        $content = ob_get_clean();
+        return $content;
+    }
   }
 
 }//class closure

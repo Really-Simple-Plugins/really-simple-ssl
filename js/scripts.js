@@ -11,29 +11,4 @@ jQuery(document).ready(function ($) {
         $(this).find('.rsssl-bullet').css("background-color",""); //to remove property set it to ''
     });
 
-    $('#rlrsssl_options').click(function() {
-        console.log("Clicked switch");
-        var checked = $(this).parent('#rlrsssl_options').attr('checked');
-        console.log(checked);
-        if (this.checked) {
-            console.log("Checked");
-        } else {
-            console.log("Unchecked");
-        }
-            // $.ajax({
-            //     type: "post",
-            //     data: {
-            //         'action': 'rsssl_save_options',
-            //     },
-            //     // dataType: "json",
-            //     url: travlr.ajaxurl,
-            //     success: function (data) {
-            //         if (data != '') {
-            //
-            //         } else {
-            //
-            //         }
-            //     }
-            // });
-    });
 });

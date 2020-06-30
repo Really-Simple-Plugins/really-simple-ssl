@@ -3,6 +3,6 @@
         {content}
     </div>
     <div class="rsssl-tips-tricks-read-more">
-        <a href="{link}" target="_self"><?php _e("Read more", "really-simple-ssl");?></a>
+        <a href="{link}" target="_blank"><?php _e("Read more", "really-simple-ssl");?></a>
     </div>
 </div>

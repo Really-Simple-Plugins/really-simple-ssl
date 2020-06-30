@@ -598,7 +598,7 @@ input:focus + .rsssl-slider {
 
 .rsssl-dashboard-dismiss span {
   font-size: 1.5em;
-  color: darkgrey;
+  color: black;
   font-family: sans-serif;
 }
 

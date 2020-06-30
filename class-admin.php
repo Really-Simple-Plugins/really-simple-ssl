@@ -2571,7 +2571,7 @@ class rsssl_admin extends rsssl_front_end
             array($this, 'settings_page')); //function
 
         // Adds my_help_tab when my_admin_page loads
-        add_action('load-' . $rsssl_admin_page, array($this, 'admin_add_help_tab'));
+//        add_action('load-' . $rsssl_admin_page, array($this, 'admin_add_help_tab'));
 
     }
 
@@ -2707,6 +2707,7 @@ class rsssl_admin extends rsssl_front_end
 	    $notices = array(
             'ssl_enabled' => array(
                 'callback' => 'rsssl_ssl_enabled',
+                'score' => 25,
                 'output' => array(
                     'ssl-enabled' => array(
                         'msg' =>__('SSL is enabled on your site.', 'really-simple-ssl'),
@@ -2723,6 +2724,7 @@ class rsssl_admin extends rsssl_front_end
             'mixed_content_fixer_detected' => array(
                 'condition' => array('rsssl_site_has_ssl', 'rsssl_autoreplace_insecure_links', 'rsssl_ssl_enabled'),
                 'callback' => 'rsssl_mixed_content_fixer_detected',
+                'score' => 5,
                 'output' => array(
                     'found' => array(
                         'msg' =>__('Mixed content fixer was successfully detected on the front-end', 'really-simple-ssl'),
@@ -2800,9 +2802,9 @@ class rsssl_admin extends rsssl_front_end
                     $enable_link = $this->generate_enable_link($setting_name = 'wp-redirect-to-htaccess'),
                     'wp-redirect-to-htaccess' => array(
                         'msg' => __('WordPress 301 redirect enabled. We recommend to enable the 301 .htaccess redirect option on your specific setup.', 'really-simple-ssl') . " "
-                                 . "<span><a href=$enable_link>$enable</a></span>" . " "
-                                 . __("or", "really-simple-ssl")
-                                 . "<span class='rsssl-dashboard-dismiss' data-dismiss_type='check_redirect'><a href='#' class='rsssl-dismiss-text rsssl-close-warning'>$dismiss</a></span>"
+//                                 . "<span><a href=$enable_link>$enable</a></span>" . " "
+//                                 . __("or", "really-simple-ssl")
+//                                 . "<span class='rsssl-dashboard-dismiss' data-dismiss_type='check_redirect'><a href='#' class='rsssl-dismiss-text rsssl-close-warning'>$dismiss</a></span>"
                                  . "<span class='rsssl-dashboard-plusone update-plugins rsssl-update-count'><span class='update-count'>1</span></span>",
                         'icon' => 'open',
                         'plusone' => $redirect_plusone,
@@ -2882,7 +2884,7 @@ class rsssl_admin extends rsssl_front_end
                         'icon' => 'success'
                     ),
                     'not-set' => array(
-                        'msg' => sprintf(__("Secure cookie settings not enabled (%Read more%s) ", "really-simple-ssl"), '<a target="_blank" href="' . $this->pro_url .'">', '</a>'),
+                        'msg' => sprintf(__("Secure cookie settings not enabled (%sRead more%s) ", "really-simple-ssl"), '<a target="_blank" href="' . $this->pro_url .'">', '</a>'),
                         'icon' => 'premium'
                     ),
                 ),
@@ -2892,7 +2894,7 @@ class rsssl_admin extends rsssl_front_end
                 'callback' => 'rsssl_scan_upsell',
                 'output' => array(
                     'upsell' => array(
-                        'msg' => sprintf(__("No mixed content scan performed (%Read more%s) ", "really-simple-ssl"), '<a target="_blank" href="' . $this->pro_url .'">', '</a>'),
+                        'msg' => sprintf(__("No mixed content scan performed (%sRead more%s) ", "really-simple-ssl"), '<a target="_blank" href="' . $this->pro_url .'">', '</a>'),
                         'icon' => 'premium'
                     ),
                 ),
@@ -3083,20 +3085,19 @@ class rsssl_admin extends rsssl_front_end
                 'class' => 'small',
 				'type' => 'popular',
 				'can_hide' => true,
-
 			),
             4 => array(
                 'title' => __("Support Forum", "really-simple-ssl"),
                 'secondary_header_item' => '',
                 'content' => $this->get_support_forum_block(),
-                'footer' => $this->get_support_forum_block_footer(),
+                'footer' => $this->get_system_status_footer(),
                 'type' => 'tasks',
                 'class' => 'half-height',
                 'can_hide' => true,
             ),
 			5 => array(
 				'title' => __("Our Plugins", "really-simple-ssl"),
-                'secondary_header_item' => '',
+                'secondary_header_item' => $this->generate_secondary_our_plugins_header(),
                 'content' => $this->generate_other_plugins(),
 				'footer' => '',
 				'class' => 'half-height no-border no-background upsell-grid-container',
@@ -3117,8 +3118,12 @@ class rsssl_admin extends rsssl_front_end
 	    ob_start();
         ?>
         <div class="rsssl-secondary-header-item">
-            <?php _e("Remaining tasks" , "really-simple-ssl");
-            echo " " . "(" . $this->get_remaining_tasks_count() . ")";
+            <?php
+            $open_task_count = $this->get_remaining_tasks_count();
+            if ($open_task_count ==! 0) {
+	            _e( "Remaining tasks", "really-simple-ssl" );
+	            echo " " . "(" . $open_task_count . ")";
+            }
             ?>
         </div>
         <?php
@@ -3171,7 +3176,6 @@ class rsssl_admin extends rsssl_front_end
                         && $notice['output'][ $output ]['icon'] == 'open'
                     ) {
                         $count ++;
-                        error_log("Count open: " . $count);
                     }
                 }
             }
@@ -3266,10 +3270,6 @@ class rsssl_admin extends rsssl_front_end
                 settings_fields('rlrsssl_options');
                 do_settings_sections('rlrsssl');
                 ?>
-
-                <input class="button button-primary" name="Submit" type="submit"
-                       value="<?php echo __("Save", "really-simple-ssl"); ?>"/>
-            </form>
         </div>
 	    <?php
         $content = ob_get_clean();
@@ -3279,9 +3279,9 @@ class rsssl_admin extends rsssl_front_end
     public function generate_settings_footer() {
 	    ob_start();
 	    ?>
-        <span class="rsssl-deactivate-keep-ssl-button">
-
-        </span>
+        <input class="button button-primary" name="Submit" type="submit"
+               value="<?php echo __("Save", "really-simple-ssl"); ?>"/>
+        </form>
         <?php
         $content = ob_get_clean();
         return $content;
@@ -3366,7 +3366,7 @@ class rsssl_admin extends rsssl_front_end
     public function get_system_status_footer() {
         ob_start();
         ?>
-        <button class="button button-upsell" id="rsssl-debug-log-to-clipboard" onclick="copyDivToClipboard()"><?php _e("Copy for debugging", "really-simple-ssl")?></button>
+        <button class="button button-upsell" id="rsssl-debug-log-to-clipboard" onclick="copyDivToClipboard()"><?php _e("Copy system status", "really-simple-ssl")?></button>
         <script>
             function copyDivToClipboard() {
                 var range = document.createRange();
@@ -3487,6 +3487,20 @@ class rsssl_admin extends rsssl_front_end
 //        $content = ob_get_clean();
 //        return $content;
     }
+
+    public function generate_secondary_our_plugins_header() {
+        ob_start();
+	    ?>
+        <div class="rsp-image"><img width=200px" src="<?php echo rsssl_url?>/assets/really-simple-plugins.png" alt="really-simple-plugins-logo"></div>
+        <?php
+	    $content = ob_get_clean();
+        return $content;
+    }
+
+	/**
+	 * @return string
+     * Generate the other plugins container
+	 */
 
     public function generate_other_plugins()
     {
@@ -3662,7 +3676,6 @@ class rsssl_admin extends rsssl_front_end
 
     public function img($type)
     {
-        error_log("Type: ". $type);
         if ($type == 'success') {
             return "<span class='rsssl-progress-status rsssl-success'>Completed</span>";
         } elseif ($type == "warning") {
@@ -3789,31 +3802,37 @@ class rsssl_admin extends rsssl_front_end
             add_settings_field('id_dismiss_review_notice', __("Dismiss review notice", "really-simple-ssl"), array($this, 'get_option_dismiss_review_notice'), 'rlrsssl', 'rlrsssl_settings');
         }
 
-        add_settings_section('rlrsssl_settings', __("Settings", "really-simple-ssl"), array($this, 'section_text'), 'rlrsssl');
-        add_settings_field('id_autoreplace_insecure_links', __("Mixed content fixer", "really-simple-ssl"), array($this, 'get_option_autoreplace_insecure_links'), 'rlrsssl', 'rlrsssl_settings');
+	    add_settings_section('rlrsssl_settings', __("Settings", "really-simple-ssl"), array($this, 'section_text'), 'rlrsssl');
+	    $help_tip = RSSSL()->rsssl_help->get_help_tip(__("In most cases you need to leave this enabled, to prevent mixed content issues on your site.", "really-simple-ssl"), $return=true);
+	    add_settings_field('id_autoreplace_insecure_links', $help_tip . __("Mixed content fixer", "really-simple-ssl"), array($this, 'get_option_autoreplace_insecure_links'), 'rlrsssl', 'rlrsssl_settings');
 
         //only show option to enable or disable mixed content and redirect when SSL is detected
         if ($this->ssl_enabled) {
-            add_settings_field('id_wp_redirect', __("Enable WordPress 301 redirection to SSL", "really-simple-ssl"), array($this, 'get_option_wp_redirect'), 'rlrsssl', 'rlrsssl_settings');
+	        $help_tip = RSSSL()->rsssl_help->get_help_tip(__("Enable this if you want to use the internal WordPress 301 redirect. Needed on NGINX servers, or if the .htaccess redirect cannot be used.", "really-simple-ssl"), $return=true);
+	        add_settings_field('id_wp_redirect', $help_tip . __("Enable WordPress 301 redirect", "really-simple-ssl"), array($this, 'get_option_wp_redirect'), 'rlrsssl', 'rlrsssl_settings', ['class' => 'rsssl-settings-row'] );
 
             //when enabled networkwide, it's handled on the network settings page
             if (RSSSL()->rsssl_server->uses_htaccess() && (!is_multisite() || !RSSSL()->rsssl_multisite->ssl_enabled_networkwide)) {
-                add_settings_field('id_htaccess_redirect', __("Enable 301 .htaccess redirect", "really-simple-ssl"), array($this, 'get_option_htaccess_redirect'), 'rlrsssl', 'rlrsssl_settings');
+	            $help_tip = RSSSL()->rsssl_help->get_help_tip(__("A .htaccess redirect is faster. Really Simple SSL detects the redirect code that is most likely to work (99% of websites), but this is not 100%. Make sure you know how to regain access to your site if anything goes wrong!", "really-simple-ssl"), $return=true);
+	            add_settings_field('id_htaccess_redirect', $help_tip . __("Enable 301 .htaccess redirect", "really-simple-ssl"), array($this, 'get_option_htaccess_redirect'), 'rlrsssl', 'rlrsssl_settings');
             }
 
-            add_settings_field('id_javascript_redirect', __("Enable Javascript redirection to SSL", "really-simple-ssl"), array($this, 'get_option_javascript_redirect'), 'rlrsssl', 'rlrsssl_settings');
+            $help_tip = RSSSL()->rsssl_help->get_help_tip(__("Enable this option to get debug info in the debug tab.", "really-simple-ssl"), $return=true);
+	        add_settings_field('id_javascript_redirect', $help_tip . __("Enable Javascript redirection to SSL", "really-simple-ssl"), array($this, 'get_option_javascript_redirect'), 'rlrsssl', 'rlrsssl_settings');
         }
 
-        add_settings_field('id_debug', __("Debug", "really-simple-ssl"), array($this, 'get_option_debug'), 'rlrsssl', 'rlrsssl_settings');
+//        add_settings_field('id_debug', __("Debug", "really-simple-ssl"), array($this, 'get_option_debug'), 'rlrsssl', 'rlrsssl_settings');
         //on multisite this setting can only be set networkwide
         if (RSSSL()->rsssl_server->uses_htaccess() && !is_multisite()) {
-            add_settings_field('id_do_not_edit_htaccess', __("Stop editing the .htaccess file", "really-simple-ssl"), array($this, 'get_option_do_not_edit_htaccess'), 'rlrsssl', 'rlrsssl_settings');
+	        $help_tip = RSSSL()->rsssl_help->get_help_tip(__("If you want to customize the Really Simple SSL .htaccess, you need to prevent Really Simple SSL from rewriting it. Enabling this option will do that.", "really-simple-ssl"), $return=true);
+	        add_settings_field('id_do_not_edit_htaccess', $help_tip . __("Stop editing the .htaccess file", "really-simple-ssl"), array($this, 'get_option_do_not_edit_htaccess'), 'rlrsssl', 'rlrsssl_settings');
         }
 
-        add_settings_field('id_switch_mixed_content_fixer_hook', __("Use alternative method to fix mixed content", "really-simple-ssl"), array($this, 'get_option_switch_mixed_content_fixer_hook'), 'rlrsssl', 'rlrsssl_settings');
-	    add_settings_field('id_dismiss_all_notices', __("Dismiss all Really Simple SSL notices", "really-simple-ssl"), array($this, 'get_option_dismiss_all_notices'), 'rlrsssl', 'rlrsssl_settings');
-
-        add_settings_field('id_deactivate_keep_ssl', __("Deactivate plugin and keep SSL", "really-simple-ssl"), array($this, 'get_option_deactivate_keep_ssl'), 'rlrsssl', 'rlrsssl_settings', ["class" => "rsssl-deactivate-keep-ssl"]);
+	    $help_tip = RSSSL()->rsssl_help->get_help_tip(__("If this option is set to true, the mixed content fixer will fire on the init hook instead of the template_redirect hook. Only use this option when you experience problems with the mixed content fixer.\"", "really-simple-ssl"), $return=true);
+        add_settings_field('id_switch_mixed_content_fixer_hook', $help_tip . __("Use alternative method to fix mixed content", "really-simple-ssl"), array($this, 'get_option_switch_mixed_content_fixer_hook'), 'rlrsssl', 'rlrsssl_settings');
+	    $help_tip = RSSSL()->rsssl_help->get_help_tip(__("Enable this option to dismiss all +1 notices in the Configuration tab.", "really-simple-ssl"), $return=true);
+	    add_settings_field('id_dismiss_all_notices', $help_tip .  __("Dismiss all Really Simple SSL notices", "really-simple-ssl"), array($this, 'get_option_dismiss_all_notices'), 'rlrsssl', 'rlrsssl_settings');
+//        add_settings_field('id_deactivate_keep_ssl', __("Deactivate plugin and keep SSL", "really-simple-ssl"), array($this, 'get_option_deactivate_keep_ssl'), 'rlrsssl', 'rlrsssl_settings', ["class" => "rsssl-deactivate-keep-ssl"]);
 
     }
 
@@ -3936,7 +3955,6 @@ class rsssl_admin extends rsssl_front_end
         </label>
         <?php
         RSSSL()->rsssl_help->get_help_tip(__("Enable this option to get debug info in the debug tab.", "really-simple-ssl"));
-
     }
 
     /**
@@ -3966,7 +3984,7 @@ class rsssl_admin extends rsssl_front_end
             <span class="rsssl-slider rsssl-round"></span>
         </label>
         <?php
-        RSSSL()->rsssl_help->get_help_tip(__("This is a fallback you should only use if other redirection methods do not work.", "really-simple-ssl"));
+//        RSSSL()->rsssl_help->get_help_tip(__("This is a fallback you should only use if other redirection methods do not work.", "really-simple-ssl"));
         echo $comment;
 
     }
@@ -3998,7 +4016,6 @@ class rsssl_admin extends rsssl_front_end
             <span class="rsssl-slider rsssl-round"></span>
         </label>
         <?php
-        RSSSL()->rsssl_help->get_help_tip(__("Enable this if you want to use the internal WordPress 301 redirect. Needed on NGINX servers, or if the .htaccess redirect cannot be used.", "really-simple-ssl"));
         echo $comment;
 
     }
@@ -4038,7 +4055,6 @@ class rsssl_admin extends rsssl_front_end
             <span class="rsssl-slider rsssl-round"></span>
         </label>
         <?php
-        RSSSL()->rsssl_help->get_help_tip(__("A .htaccess redirect is faster. Really Simple SSL detects the redirect code that is most likely to work (99% of websites), but this is not 100%. Make sure you know how to regain access to your site if anything goes wrong!", "really-simple-ssl"));
         echo $comment;
 
         if ($this->uses_htaccess_conf()) {
@@ -4075,13 +4091,13 @@ class rsssl_admin extends rsssl_front_end
             if ($this->do_not_edit_htaccess) {
                 _e("If the setting 'do not edit htaccess' is enabled, you can't change this setting.", "really-simple-ssl");
             } elseif (!$this->htaccess_redirect) {
-                $link_start = '<a target="_blank" href="https://really-simple-ssl.com/knowledge-base/remove-htaccess-redirect-site-lockout/">';
-                $link_end = '</a>';
-                printf(
-                    __('Before you enable this, make sure you know how to %1$sregain access%2$s to your site in case of a redirect loop.', 'really-simple-ssl'),
-                    $link_start,
-                    $link_end
-                );
+//htaccess_redirect                $link_start = '<a target="_blank" href="https://really-simple-ssl.com/knowledge-base/remove-htaccess-redirect-site-lockout/">';
+//                $link_end = '</a>';
+//                printf(
+//                    __('Before you enable this, make sure you know how to %1$sregain access%2$s to your site in case of a redirect loop.', 'really-simple-ssl'),
+//                    $link_start,
+//                    $link_end
+//                );
             }
         }
 
@@ -4105,7 +4121,6 @@ class rsssl_admin extends rsssl_front_end
             <span class="rsssl-slider rsssl-round"></span>
         </label>
         <?php
-        RSSSL()->rsssl_help->get_help_tip(__("If you want to customize the Really Simple SSL .htaccess, you need to prevent Really Simple SSL from rewriting it. Enabling this option will do that.", "really-simple-ssl"));
         if (!$this->do_not_edit_htaccess && !is_writable($this->htaccess_file())) _e(".htaccess is currently not writable.", "really-simple-ssl");
     }
 
@@ -4127,7 +4142,6 @@ class rsssl_admin extends rsssl_front_end
             <span class="rsssl-slider rsssl-round"></span>
         </label>
         <?php
-        RSSSL()->rsssl_help->get_help_tip(__("If this option is set to true, the mixed content fixer will fire on the init hook instead of the template_redirect hook. Only use this option when you experience problems with the mixed content fixer.", "really-simple-ssl"));
     }
 
 	/**
@@ -4149,7 +4163,6 @@ class rsssl_admin extends rsssl_front_end
             <span class="rsssl-slider rsssl-round"></span>
         </label>
 		<?php
-		RSSSL()->rsssl_help->get_help_tip(__("Enable this option to dismiss all +1 notices in the Configuration tab", "really-simple-ssl"));
 	}
 
     /**
@@ -4234,8 +4247,6 @@ class rsssl_admin extends rsssl_front_end
 
     public function get_option_autoreplace_insecure_links()
     {
-        RSSSL()->rsssl_help->get_help_tip(__("In most cases you need to leave this enabled, to prevent mixed content issues on your site.", "really-simple-ssl"));
-
         //$options = get_option('rlrsssl_options');
         $autoreplace_mixed_content = $this->autoreplace_insecure_links;
         $disabled = "";
