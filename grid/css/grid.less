@@ -133,15 +133,21 @@ tbody {
         .rsssl-settings {
           .form-table {
             tr {
+              padding: @grid_margin;
               width: 100%;
               display: flex;
+              align-items: center;
               flex-direction: row;
               th {
-                //white-space: nowrap;
+                display: flex;
                 width: 80%;
                 .rsssl-tooltip-right {
                   padding-right: 50px;
                 }
+              }
+              td {
+                padding: 0;
+                margin: 0;
               }
             }
           }
@@ -352,7 +358,7 @@ tbody {
     width: 100%;
     text-align: right;
     .system-status-info {
-      margin-left: 20px;
+      margin-left: 6px;
     }
   }
   /*

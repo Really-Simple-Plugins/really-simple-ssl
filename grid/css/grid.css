@@ -133,15 +133,22 @@ tbody th {
   margin-left: 10px;
 }
 .rsssl-grid .rsssl-item .item-container .rsssl-grid-item-content .rsssl-settings .form-table tr {
+  padding: 10px;
   width: 100%;
   display: flex;
+  align-items: center;
   flex-direction: row;
 }
 .rsssl-grid .rsssl-item .item-container .rsssl-grid-item-content .rsssl-settings .form-table tr th {
+  display: flex;
   width: 80%;
 }
 .rsssl-grid .rsssl-item .item-container .rsssl-grid-item-content .rsssl-settings .form-table tr th .rsssl-tooltip-right {
   padding-right: 50px;
+}
+.rsssl-grid .rsssl-item .item-container .rsssl-grid-item-content .rsssl-settings .form-table tr td {
+  padding: 0;
+  margin: 0;
 }
 .rsssl-grid .rsssl-item .item-container .rsssl-grid-item-content .rsssl-settings h2 {
   display: none;
@@ -287,7 +294,7 @@ tbody th {
   text-align: right;
 }
 .rsssl-grid .rsssl-system-status-footer-info .system-status-info {
-  margin-left: 20px;
+  margin-left: 6px;
 }
 .rsssl-grid .dot {
   height: 10px;

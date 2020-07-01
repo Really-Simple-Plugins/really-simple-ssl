@@ -11,10 +11,13 @@
 		</span>
 		<span class="rsssl-progress-text">
 			<?php
-				$percentage_incomplete = "{percentage_incomplete}";
-				echo "<b>" . __("Finished!", "really-simple-ssl") . "</b> ";
-				echo sprintf(__("You have completed your basic configuration. Improve security with %sReally Simple SSL Pro%s."), '<a target="_blank" href="https://really-simple-ssl.com/pro/">','</a>' );
-			?>
+            if (RSSSL()->really_simple_ssl->ssl_enabled) {
+                echo "<b>" . __("Finished!", "really-simple-ssl") . "</b> ";
+                echo sprintf(__("You have completed your basic configuration. Improve security with %sReally Simple SSL Pro%s."), '<a target="_blank" href="https://really-simple-ssl.com/pro/">', '</a>');
+            } else {
+                echo __("SSL not yet enabled." , "really-simple-ssl");
+            }
+				?>
 		</span>
 	</div>
 
