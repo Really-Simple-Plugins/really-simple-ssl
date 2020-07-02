@@ -15,7 +15,7 @@
                 echo "<b>" . __("Finished!", "really-simple-ssl") . "</b> ";
                 echo sprintf(__("You have completed your basic configuration. Improve security with %sReally Simple SSL Pro%s."), '<a target="_blank" href="https://really-simple-ssl.com/pro/">', '</a>');
             } else {
-                echo __("SSL not yet enabled." , "really-simple-ssl");
+                echo __("SSL is not yet enabled." , "really-simple-ssl");
             }
 				?>
 		</span>

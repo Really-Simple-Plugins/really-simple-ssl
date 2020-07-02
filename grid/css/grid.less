@@ -40,15 +40,6 @@
   }
 }
 
-tbody {
-  display: flex;
-  flex-direction: column;
-  th {
-    padding: 10px 0 0 0 !important;
-    vertical-align: middle !important;
-  }
-}
-
 .rsssl-grid {
   margin-left: 25px;
   position: relative;
@@ -65,18 +56,24 @@ tbody {
     height: @gridblock_height;
     z-index: 1;
     .item-container {
+      //border: 1px solid @border_color;
       background-color: #fff;
       position: relative;
       box-shadow: 0px 0px 5px 5px @box_shadow_color;
+      //margin-left: @grid_margin;
       width: @gridblock_width - 2* @grid_margin;
       height: @gridblock_height - 2 * @grid_margin;
       .rsssl-grid-item-header {
         display: flex;
         align-items: center;
         justify-content: space-between;
-        margin: @grid_margin;
+        margin-top: @grid_margin;
+        //margin-left: @grid_margin;
         height: 60px;
         border-bottom: 1px solid @border_color;
+        h3 {
+          margin-left: 15px;
+        }
         .rsssl-secondary-header-item {
           color: @light-text-color;
           margin-right: 10px;
@@ -87,7 +84,8 @@ tbody {
       }
       .rsssl-grid-item-content {
         height: 310px;
-        margin: @grid_margin;
+        margin: 10px 10px 15px 15px;
+        //margin: @grid_margin;
         border-bottom: 1px solid @border_color;
         //overflow-y: scroll;
         overflow-x: hidden;
@@ -118,6 +116,7 @@ tbody {
           align-items: center;
           margin: 10px;
           padding-top: 10px;
+          padding-bottom: 10px;
           .rsssl-progress-percentage {
             font-size: 26px;
           }
@@ -132,22 +131,37 @@ tbody {
 
         .rsssl-settings {
           .form-table {
-            tr {
-              padding: @grid_margin;
-              width: 100%;
+            .dashicons-editor-help {
+              font-size: 25px;
+            }
+
+            tbody {
               display: flex;
-              align-items: center;
-              flex-direction: row;
-              th {
+              flex-direction: column;
+
+              tr {
+                padding-bottom: @grid_margin;
+                width: 100%;
                 display: flex;
-                width: 80%;
-                .rsssl-tooltip-right {
-                  padding-right: 50px;
+                align-items: center;
+                flex-direction: row;
+
+                th {
+                  // Important to override default WP style
+                  padding: 10px 0 0 0 !important;
+                  vertical-align: middle !important;
+                  display: flex;
+                  width: 80%;
+
+                  .rsssl-tooltip-right {
+                    padding-right: 50px;
+                  }
                 }
-              }
-              td {
-                padding: 0;
-                margin: 0;
+
+                td {
+                  padding: 0;
+                  margin: 0;
+                }
               }
             }
           }
@@ -169,7 +183,7 @@ tbody {
           .rsssl-tips-tricks-content {
             width: 80%;
             color: @light-text-color;
-            padding-bottom: 7px;
+            padding-bottom: 15px;
           }
         }
         .rsssl-tips-tricks-read-more a {
@@ -225,7 +239,6 @@ tbody {
             }
 
             .rsssl-forums-content {
-              margin: 7px 0;
               float: left;
               color: @light-text-color;
               &:hover {
@@ -275,7 +288,7 @@ tbody {
           min-width: 60px;
           text-align: center;
           border-radius: 15px;
-          padding: 5px;
+          padding: 3px;
           font-size: 0.9em;
         }
 
@@ -370,10 +383,10 @@ tbody {
     border-radius: 50%;
     display: inline-block;
   }
-  .dot-success {
+  .rsssl-dot-success {
     background-color: #61ce70;
   }
-  .dot-error {
+  .rsssl-dot-error {
     background-color: #d7263d;
   }
 }
