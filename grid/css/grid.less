@@ -95,7 +95,7 @@
         */
 
         .progress-bar-container {
-          margin: 15px;
+          margin: 15px 15px 15px 0;
         }
 
         .progress {
@@ -131,6 +131,7 @@
 
         .rsssl-settings {
           .form-table {
+            overflow: hidden;
             .dashicons-editor-help {
               font-size: 25px;
             }
@@ -151,7 +152,7 @@
                   padding: 10px 0 0 0 !important;
                   vertical-align: middle !important;
                   display: flex;
-                  width: 80%;
+                  width: 85%;
 
                   .rsssl-tooltip-right {
                     padding-right: 50px;
@@ -159,6 +160,7 @@
                 }
 
                 td {
+                  text-align: right;
                   padding: 0;
                   margin: 0;
                 }
@@ -180,6 +182,7 @@
         .rsssl-tips-tricks-element {
           display: flex;
           justify-content: space-between;
+          margin-right: @grid_margin;
           .rsssl-tips-tricks-content {
             width: 80%;
             color: @light-text-color;

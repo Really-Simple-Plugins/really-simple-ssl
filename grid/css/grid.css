@@ -103,7 +103,7 @@
          */
 }
 .rsssl-grid .rsssl-item .item-container .rsssl-grid-item-content .progress-bar-container {
-  margin: 15px;
+  margin: 15px 15px 15px 0;
 }
 .rsssl-grid .rsssl-item .item-container .rsssl-grid-item-content .progress {
   overflow: hidden;
@@ -128,6 +128,9 @@
 .rsssl-grid .rsssl-item .item-container .rsssl-grid-item-content .progress-text .rsssl-progress-text {
   margin-left: 10px;
 }
+.rsssl-grid .rsssl-item .item-container .rsssl-grid-item-content .rsssl-settings .form-table {
+  overflow: hidden;
+}
 .rsssl-grid .rsssl-item .item-container .rsssl-grid-item-content .rsssl-settings .form-table .dashicons-editor-help {
   font-size: 25px;
 }
@@ -146,12 +149,13 @@
   padding: 10px 0 0 0 !important;
   vertical-align: middle !important;
   display: flex;
-  width: 80%;
+  width: 85%;
 }
 .rsssl-grid .rsssl-item .item-container .rsssl-grid-item-content .rsssl-settings .form-table tbody tr th .rsssl-tooltip-right {
   padding-right: 50px;
 }
 .rsssl-grid .rsssl-item .item-container .rsssl-grid-item-content .rsssl-settings .form-table tbody tr td {
+  text-align: right;
   padding: 0;
   margin: 0;
 }
@@ -161,6 +165,7 @@
 .rsssl-grid .rsssl-item .item-container .rsssl-grid-item-content .rsssl-tips-tricks-element {
   display: flex;
   justify-content: space-between;
+  margin-right: 10px;
 }
 .rsssl-grid .rsssl-item .item-container .rsssl-grid-item-content .rsssl-tips-tricks-element .rsssl-tips-tricks-content {
   width: 80%;
