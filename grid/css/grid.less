@@ -153,9 +153,11 @@
                   vertical-align: middle !important;
                   display: flex;
                   width: 85%;
-
+                  .rsssl-settings-text {
+                    font-weight: 400;
+                  }
                   .rsssl-tooltip-right {
-                    padding-right: 50px;
+                    padding-right: 20px;
                   }
                 }
 
@@ -316,12 +318,14 @@
       .rsssl-grid-item-footer {
         display: flex;
         align-items: center;
-        position: absolute;
-        width: 90%;
+        justify-content: flex-end;
+        //position: absolute;
         margin: @grid_margin;
         height: 50px;
-        //border: 2px solid;
         bottom: 0;
+        .button-primary {
+          justify-content: flex-start;
+        }
       }
       .rsssl-deactivate-keep-ssl {
         th, span {

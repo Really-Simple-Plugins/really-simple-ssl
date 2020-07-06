@@ -3455,7 +3455,6 @@ class rsssl_admin extends rsssl_front_end
      */
 
     public function get_system_status_footer() {
-//        $ajax_nonce = wp_create_nonce("really-simple-ssl-dismiss");
         ob_start();
         ?>
         <button class="button button-upsell" id="rsssl-debug-log-to-clipboard"><?php _e("Copy system status", "really-simple-ssl")?></button>
@@ -3486,7 +3485,7 @@ class rsssl_admin extends rsssl_front_end
 			),
 			2 => array(
 				'content' => __("Extensive scan for your back-end", "really-simple-ssl"),
-				'link' => 'really-simple-ssl.com/pro',
+				'link' => 'https://really-simple-ssl.com/pro',
                 'condition' => '',
 			),
 			3 => array(
@@ -3495,7 +3494,6 @@ class rsssl_admin extends rsssl_front_end
                 'condition' => '',
 			),
 		);
-		$button_link = "https://really-simple-ssl.com/knowledge-base-overview/";
 		$container = $this->get_template('tipstricks-container.php', rsssl_path . 'grid/');
 		$element = $this->get_template('tipstricks-element.php', rsssl_path . 'grid/');
 		$output = '';
@@ -4157,23 +4155,23 @@ class rsssl_admin extends rsssl_front_end
         }
 
         if ($this->htaccess_redirect && (!is_writable($this->htaccess_file()) || !$this->htaccess_test_success)) {
-            echo "<br><br>";
+//            echo "<br><br>";
 //            if (!is_writable($this->htaccess_file())) _e("The $htaccess_file file is not writable. Add these lines to your htaccess manually, or set 644 writing permissions.", "really-simple-ssl");
 //            if (!$this->htaccess_test_success) _e("The .htaccess redirect rules that were selected by this plugin failed in the test. The following redirect rules were tested:", "really-simple-ssl");
-            echo "<br><br>";
+//            echo "<br><br>";
             if ($this->ssl_type != "NA") {
-                $manual = true;
-                $rules = $this->get_redirect_rules($manual);
-
-                $arr_search = array("<", ">", "\n");
-                $arr_replace = array("&lt", "&gt", "<br>");
-                $rules = str_replace($arr_search, $arr_replace, $rules);
-
-                ?>
-                <code>
-                    <?php echo $rules; ?>
-                </code>
-                <?php
+//                $manual = true;
+//                $rules = $this->get_redirect_rules($manual);
+//
+//                $arr_search = array("<", ">", "\n");
+//                $arr_replace = array("&lt", "&gt", "<br>");
+//                $rules = str_replace($arr_search, $arr_replace, $rules);
+//
+//                ?>
+<!--                <code>-->
+<!--                    --><?php //echo $rules; ?>
+<!--                </code>-->
+<!--                --><?php
             } else {
                 _e("The plugin could not detect any possible redirect rule.", "really-simple-ssl");
             }
@@ -4182,7 +4180,7 @@ class rsssl_admin extends rsssl_front_end
         //on multisite, the .htaccess do not edit option is not available
         if (!is_multisite()) {
             if ($this->do_not_edit_htaccess) {
-                _e("If the setting 'do not edit htaccess' is enabled, you can't change this setting.", "really-simple-ssl");
+//                _e("If the setting 'do not edit htaccess' is enabled, you can't change this setting.", "really-simple-ssl");
             } elseif (!$this->htaccess_redirect) {
 //htaccess_redirect                $link_start = '<a target="_blank" href="https://really-simple-ssl.com/knowledge-base/remove-htaccess-redirect-site-lockout/">';
 //                $link_end = '</a>';
