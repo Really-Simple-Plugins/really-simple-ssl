@@ -211,6 +211,7 @@ class rsssl_admin extends rsssl_front_end
         add_action('wp_ajax_rsssl_dismiss_settings_notice', array($this, 'dismiss_settings_notice_callback'));
         add_action('wp_ajax_rsssl_get_system_status', array($this, 'get_system_status'));
         add_action('wp_ajax_rsssl_get_updated_percentage', array($this, 'get_score_percentage'));
+        add_action('wp_ajax_rsssl_get_updated_task_count', array($this, 'get_remaining_tasks_count'));
 
         //handle notices
         add_action('admin_notices', array($this, 'show_notices'));
@@ -3118,7 +3119,7 @@ class rsssl_admin extends rsssl_front_end
                 'secondary_header_item' => $this->generate_secondary_settings_header_item(),
                 'content' => $this->generate_settings(),
 				'footer' => $this->generate_settings_footer(),
-				'class' => 'small',
+				'class' => 'small settings',
 				'type' => 'results',
 				'can_hide' => true,
 
@@ -3167,8 +3168,13 @@ class rsssl_admin extends rsssl_front_end
             <?php
             $open_task_count = $this->get_remaining_tasks_count();
             if ($open_task_count ==! 0) {
+                ?> <div class="open-task-text"> <?php
 	            _e( "Remaining tasks", "really-simple-ssl" );
+	            ?> </div>
+                <div class="open-task-count">
+                <?php
 	            echo " " . "(" . $open_task_count . ")";
+	            ?> </div> <?php
             }
             ?>
         </div>
@@ -3188,7 +3194,21 @@ class rsssl_admin extends rsssl_front_end
         if ( ! current_user_can( 'manage_options' ) ) {
             return 0;
         }
+
+        if (wp_doing_ajax()) {
+            if (!isset($_POST['token']) || (!wp_verify_nonce($_POST['token'], 'rsssl_nonce'))) {
+                return;
+            }
+
+            if (!isset($_POST["action"]) && $_POST["action"] ==! 'rsssl_get_updated_percentage') return;
+
+            // When invoked via AJAX the count should be updated, therefore clear cache
+            $this->reset_open_task_cache();
+
+        }
+
         $count = get_transient( 'rsssl_open_task_count' );
+
         if ( $count === false ) {
             $count = 0;
 
@@ -3227,6 +3247,10 @@ class rsssl_admin extends rsssl_front_end
             }
             set_transient( 'rsssl_open_task_count', $count, 'WEEK_IN_SECONDS' );
         }
+        if (wp_doing_ajax()) {
+            wp_die($count);
+        }
+
         return $count;
     }
 
@@ -3277,13 +3301,22 @@ class rsssl_admin extends rsssl_front_end
             $redirect_301 = "rsssl-dot-error";
         }
 
+        $button_text = __("Go PRO!", "really-simple-ssl");
+
         $items = array(
             1 => array(
-                'class' => $ssl_enabled,
-                'text' => $ssl_text,
+                'class' => 'footer-left',
+                'dot_class' => '',
+                'text' => "<a href='https://really-simple-ssl.com/pro' target='_blank'><button class='button button-primary upsell'>$button_text</button></a>",
             ),
             2 => array(
-                'class' => $redirect_301,
+                'class' => '',
+                'dot_class' => $ssl_enabled,
+                'text' => $ssl_text,
+            ),
+            3 => array(
+                'class' => '',
+                'dot_class' => $redirect_301,
                 'text' => __("301 Redirect", "really-simple-ssl"),
             ),
         );
@@ -3294,9 +3327,11 @@ class rsssl_admin extends rsssl_front_end
         foreach ($items as $item) {
             $output .= str_replace(array(
                 '{class}',
+                '{dot_class}',
                 '{text}',
             ), array(
                 $item['class'],
+                $item['dot_class'],
                 $item['text'],
             ), $element);
         }
@@ -3356,7 +3391,7 @@ class rsssl_admin extends rsssl_front_end
     public function generate_settings_footer() {
 	    ob_start();
 	    ?>
-        <input class="button button-primary" name="Submit" type="submit"
+        <input class="button button-secondary" name="Submit" type="submit"
                value="<?php echo __("Save", "really-simple-ssl"); ?>"/>
         </form>
         <?php
@@ -3458,6 +3493,7 @@ class rsssl_admin extends rsssl_front_end
         ob_start();
         ?>
         <button class="button button-upsell" id="rsssl-debug-log-to-clipboard"><?php _e("Copy system status", "really-simple-ssl")?></button>
+        <div id="rsssl-feedback"></div>
         <div class="rsssl-system-status-footer-info">
             <span class="system-status-info"><?php echo __("Server type:", "really-simple-ssl") . " " . RSSSL()->rsssl_server->get_server(); ?></span>
             <span class="system-status-info"><?php echo __("SSL type:", "really-simple-ssl") . " " . $this->ssl_type; ?></span>
@@ -3866,6 +3902,7 @@ class rsssl_admin extends rsssl_front_end
             array(
                 'ajaxurl' => admin_url( 'admin-ajax.php' ),
                 'token'   => wp_create_nonce( 'rsssl_nonce'),
+                'copied_text' => __("Copied!", "really-simple-ssl"),
             )
         );
     }

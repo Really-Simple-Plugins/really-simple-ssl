@@ -52,6 +52,13 @@
     &.small {
       width: @gridblock_width_small;
     }
+    &.settings {
+      .item-container {
+        .rsssl-grid-item-footer {
+          justify-content: flex-start;
+        }
+      }
+    }
     //position: absolute;
     height: @gridblock_height;
     z-index: 1;
@@ -75,8 +82,12 @@
           margin-left: 15px;
         }
         .rsssl-secondary-header-item {
+          display: flex;
           color: @light-text-color;
           margin-right: 10px;
+          .open-task-count {
+            padding-left: 3px;
+          }
         }
       }
       .rsssl-table-td-main-content {
@@ -118,7 +129,8 @@
           padding-top: 10px;
           padding-bottom: 10px;
           .rsssl-progress-percentage {
-            font-size: 26px;
+            font-size: 32px;
+            font-weight: 900;
           }
           .rsssl-progress-text {
             margin-left: @grid_margin;
@@ -133,7 +145,7 @@
           .form-table {
             overflow: hidden;
             .dashicons-editor-help {
-              font-size: 25px;
+              font-size: 20px;
             }
 
             tbody {
@@ -154,10 +166,10 @@
                   display: flex;
                   width: 85%;
                   .rsssl-settings-text {
-                    font-weight: 400;
+                    font-weight: normal;
                   }
                   .rsssl-tooltip-right {
-                    padding-right: 20px;
+                    padding-right: 15px;
                   }
                 }
 
@@ -253,6 +265,10 @@
             }
           }
 
+        #rsssl-feedback {
+          color: red;
+        }
+
         /*
             Other plugins
          */
@@ -294,7 +310,8 @@
           text-align: center;
           border-radius: 15px;
           padding: 3px;
-          font-size: 0.9em;
+          font-size: 0.8em;
+          font-weight: 600;
         }
 
         .rsssl-premium {
@@ -323,8 +340,14 @@
         margin: @grid_margin;
         height: 50px;
         bottom: 0;
+        width: 95%;
         .button-primary {
           justify-content: flex-start;
+        }
+        #rsssl-feedback {
+          font-weight: 600;
+          color: @color-success;
+          padding-left: 10px;
         }
       }
       .rsssl-deactivate-keep-ssl {
@@ -370,11 +393,21 @@
     width: 100%;
     text-align: right;
     margin-right: @grid_margin;
+    .footer-left {
+      margin-left: 0 !important;
+      float: left;
+      margin-top: -5px;
+      font-weight: 600;
+      .upsell {
+        min-width: 80px;
+      }
+    }
     .rsssl-footer-item {
       margin-left: 20px;
     }
   }
   .rsssl-system-status-footer-info {
+    font-size: 0.9em;
     width: 100%;
     text-align: right;
     .system-status-info {

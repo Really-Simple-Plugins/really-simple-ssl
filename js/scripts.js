@@ -18,6 +18,7 @@ jQuery(document).ready(function ($) {
                        copyFrom.select();
                        document.execCommand("copy");
                        copyFrom.remove();
+                    $('#rsssl-feedback').text(rsssl.copied_text).fadeIn("fast");
                 }
             }
         });
@@ -34,11 +35,36 @@ jQuery(document).ready(function ($) {
             url: rsssl.ajaxurl,
             success: function (data) {
                 if (data != '') {
-                    $('.rsssl-progress-percentage').text(data + "%")
+                    $('.rsssl-progress-percentage').text(data + "%");
+                    update_open_task_count();
                 }
             }
         });
     });
+
+    // Update the count in the 'Remaining tasks' section of progress block
+    function update_open_task_count() {
+        $.ajax({
+            type: "post",
+            data: {
+                'action': 'rsssl_get_updated_task_count',
+                token  : rsssl.token,
+            },
+            url: rsssl.ajaxurl,
+            success: function (data) {
+                if (data != '') {
+                    // Hide completely when there are no tasks left
+                    if (data == 0) {
+                        $('.open-task-text').text("");
+                        $('.open-task-count').text("");
+                    } else {
+                        // Replace the count if there are open tasks left
+                        $('.open-task-count').text("(" + data + ")");
+                    }
+                }
+            }
+        });
+    }
 
     // Color bullet in support forum block
     $(".rsssl-support-forums a").hover(function() {

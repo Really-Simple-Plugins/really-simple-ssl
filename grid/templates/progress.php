@@ -13,7 +13,7 @@
 			<?php
             if (RSSSL()->really_simple_ssl->ssl_enabled) {
                 echo "<b>" . __("Finished!", "really-simple-ssl") . "</b> ";
-                echo sprintf(__("You have completed your basic configuration. Improve security with %sReally Simple SSL Pro%s."), '<a target="_blank" href="https://really-simple-ssl.com/pro/">', '</a>');
+                echo sprintf(__("You're doing well. You still have %d tasks open."), RSSSL()->really_simple_ssl->get_remaining_tasks_count());
             } else {
                 echo __("SSL is not yet enabled." , "really-simple-ssl");
             }

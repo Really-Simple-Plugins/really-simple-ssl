@@ -47,6 +47,9 @@
 .rsssl-grid .rsssl-item.small {
   width: 400px;
 }
+.rsssl-grid .rsssl-item.settings .item-container .rsssl-grid-item-footer {
+  justify-content: flex-start;
+}
 .rsssl-grid .rsssl-item .item-container {
   background-color: #fff;
   position: relative;
@@ -66,8 +69,12 @@
   margin-left: 15px;
 }
 .rsssl-grid .rsssl-item .item-container .rsssl-grid-item-header .rsssl-secondary-header-item {
+  display: flex;
   color: #3c3c3c;
   margin-right: 10px;
+}
+.rsssl-grid .rsssl-item .item-container .rsssl-grid-item-header .rsssl-secondary-header-item .open-task-count {
+  padding-left: 3px;
 }
 .rsssl-grid .rsssl-item .item-container .rsssl-table-td-main-content {
   padding-left: 15px;
@@ -123,7 +130,8 @@
   padding-bottom: 10px;
 }
 .rsssl-grid .rsssl-item .item-container .rsssl-grid-item-content .progress-text .rsssl-progress-percentage {
-  font-size: 26px;
+  font-size: 32px;
+  font-weight: 900;
 }
 .rsssl-grid .rsssl-item .item-container .rsssl-grid-item-content .progress-text .rsssl-progress-text {
   margin-left: 10px;
@@ -132,7 +140,7 @@
   overflow: hidden;
 }
 .rsssl-grid .rsssl-item .item-container .rsssl-grid-item-content .rsssl-settings .form-table .dashicons-editor-help {
-  font-size: 25px;
+  font-size: 20px;
 }
 .rsssl-grid .rsssl-item .item-container .rsssl-grid-item-content .rsssl-settings .form-table tbody {
   display: flex;
@@ -152,10 +160,10 @@
   width: 85%;
 }
 .rsssl-grid .rsssl-item .item-container .rsssl-grid-item-content .rsssl-settings .form-table tbody tr th .rsssl-settings-text {
-  font-weight: 400;
+  font-weight: normal;
 }
 .rsssl-grid .rsssl-item .item-container .rsssl-grid-item-content .rsssl-settings .form-table tbody tr th .rsssl-tooltip-right {
-  padding-right: 20px;
+  padding-right: 15px;
 }
 .rsssl-grid .rsssl-item .item-container .rsssl-grid-item-content .rsssl-settings .form-table tbody tr td {
   text-align: right;
@@ -221,6 +229,9 @@
 .rsssl-grid .rsssl-item .item-container .rsssl-grid-item-content #rsssl-support-forums-container .rsssl-support-forums .rsssl-forums-content:hover {
   text-decoration: underline;
 }
+.rsssl-grid .rsssl-item .item-container .rsssl-grid-item-content #rsssl-feedback {
+  color: red;
+}
 .rsssl-grid .rsssl-item .item-container .rsssl-grid-item-content .rsssl-upsell {
   display: flex !important;
   flex-direction: row;
@@ -246,7 +257,8 @@
   text-align: center;
   border-radius: 15px;
   padding: 3px;
-  font-size: 0.9em;
+  font-size: 0.8em;
+  font-weight: 600;
 }
 .rsssl-grid .rsssl-item .item-container .rsssl-grid-item-content .rsssl-premium {
   background-color: #FBC43D;
@@ -269,9 +281,15 @@
   margin: 10px;
   height: 50px;
   bottom: 0;
+  width: 95%;
 }
 .rsssl-grid .rsssl-item .item-container .rsssl-grid-item-footer .button-primary {
   justify-content: flex-start;
+}
+.rsssl-grid .rsssl-item .item-container .rsssl-grid-item-footer #rsssl-feedback {
+  font-weight: 600;
+  color: #61ce70;
+  padding-left: 10px;
 }
 .rsssl-grid .rsssl-item .item-container .rsssl-deactivate-keep-ssl th,
 .rsssl-grid .rsssl-item .item-container .rsssl-deactivate-keep-ssl span {
@@ -300,10 +318,20 @@
   text-align: right;
   margin-right: 10px;
 }
+.rsssl-grid #rsssl-progress-footer .footer-left {
+  margin-left: 0 !important;
+  float: left;
+  margin-top: -5px;
+  font-weight: 600;
+}
+.rsssl-grid #rsssl-progress-footer .footer-left .upsell {
+  min-width: 80px;
+}
 .rsssl-grid #rsssl-progress-footer .rsssl-footer-item {
   margin-left: 20px;
 }
 .rsssl-grid .rsssl-system-status-footer-info {
+  font-size: 0.9em;
   width: 100%;
   text-align: right;
 }
