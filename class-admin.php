@@ -2879,7 +2879,7 @@ class rsssl_admin extends rsssl_front_end
      * Determine max score by adding $notice['score'] to the $max_score variable
      * Determine actual score by adding $notice['score'] of each item with a 'success' output to $actual_score
      *
-     * @since 3.4
+     * @since 4.0
      *
      */
 
@@ -3022,7 +3022,7 @@ class rsssl_admin extends rsssl_front_end
      *
      * Reset the open task count transient
      *
-     * @since 3.4
+     * @since 4.0
      *
      */
 
@@ -3257,7 +3257,7 @@ class rsssl_admin extends rsssl_front_end
     /**
      * Generate the progress block on plugin dashboard
      *
-     * @since 3.4
+     * @since 4.0
      *
      */
 
@@ -3281,7 +3281,7 @@ class rsssl_admin extends rsssl_front_end
      * @return string|string[]
      * Generate the dashboard progress block footer
      *
-     * @since 3.4
+     * @since 4.0
      *
      */
 
@@ -3343,7 +3343,7 @@ class rsssl_admin extends rsssl_front_end
      * @return false|string
      *
      * Generate secondary header item in plugin dashboard settings block
-     * @since 3.4
+     * @since 4.0
      *
      */
 
@@ -3362,7 +3362,7 @@ class rsssl_admin extends rsssl_front_end
      * @return false|string
      * Generate the settings block in plugin dashboard
      *
-     * @since 3.4
+     * @since 4.0
      */
 
     public function generate_settings() {
@@ -3384,7 +3384,7 @@ class rsssl_admin extends rsssl_front_end
      * @return false|string
      * Generate the settings footer in plugin dashboard
      *
-     * @since 3.4
+     * @since 4.0
      *
      */
 
@@ -3486,7 +3486,7 @@ class rsssl_admin extends rsssl_front_end
      * @return false|string
      * Get system status footer in support forums block
      *
-     * @since 3.4
+     * @since 4.0
      */
 
     public function get_system_status_footer() {
@@ -3508,7 +3508,7 @@ class rsssl_admin extends rsssl_front_end
      * @return string|string[]
      * Get the tips and tricks block in plugin dashboard
      *
-     * @since 3.4
+     * @since 4.0
      */
 
 	public function generate_tips_tricks()
@@ -3549,7 +3549,7 @@ class rsssl_admin extends rsssl_front_end
      * @return string|string[]
      * Generate the support forum block in plugin dashboard
      *
-     * @since 3.4
+     * @since 4.0
      */
 
     public function get_support_forum_block() {
@@ -3600,7 +3600,7 @@ class rsssl_admin extends rsssl_front_end
      * @return false|string
      * Generate the support forum block footer in plugin dashboard
      *
-     * @since 3.4
+     * @since 4.0
      */
     public function get_support_forum_block_footer() {
         ob_start();
@@ -3898,11 +3898,13 @@ class rsssl_admin extends rsssl_front_end
             trailingslashit(rsssl_url)
             . 'js/scripts.js', array("jquery"), rsssl_version);
         wp_enqueue_script('rsssl');
+
         wp_localize_script('rsssl', 'rsssl',
             array(
                 'ajaxurl' => admin_url( 'admin-ajax.php' ),
                 'token'   => wp_create_nonce( 'rsssl_nonce'),
                 'copied_text' => __("Copied!", "really-simple-ssl"),
+                'finished_text' => __("Basic SSL configuration finished! Improve your score with ", "really-simple-ssl"),
             )
         );
     }
@@ -4427,7 +4429,7 @@ class rsssl_admin extends rsssl_front_end
         }
         if (!defined("rsssl_pro_version")) {
             if (!class_exists('RSSSL_PRO')) {
-                $premium_link = '<a target="_blank" href="https://really-simple-ssl.com/downloads/really-simple-ssl-pro/">' . __('Premium Support', 'really-simple-ssl') . '</a>';
+                $premium_link = '<a target="_blank" href="https://really-simple-ssl.com/pro/">' . __('Premium Support', 'really-simple-ssl') . '</a>';
                 array_unshift($links, $premium_link);
             }
         }

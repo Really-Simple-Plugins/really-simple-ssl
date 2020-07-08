@@ -11,11 +11,20 @@
 		</span>
 		<span class="rsssl-progress-text">
 			<?php
+            $open_task_count = RSSSL()->really_simple_ssl->get_remaining_tasks_count();
             if (RSSSL()->really_simple_ssl->ssl_enabled) {
-                echo "<b>" . __("Finished!", "really-simple-ssl") . "</b> ";
-                echo sprintf(__("You're doing well. You still have %d tasks open."), RSSSL()->really_simple_ssl->get_remaining_tasks_count());
+                if ($open_task_count > 0) {
+                _e("You're doing well. You still have");
+                ?>
+                <div class="rsssl-progress-count">
+                    <?php echo  $open_task_count?>
+                </div>
+                <?php _e("tasks open", "really-simple-ssl");
+                } else {
+                    echo printf(__("Basic SSL configuration finished! Improve your score with %sReally Simple SSL Pro%s. ", "really-simple-ssl"), '<a target="_blank" href="https://really-simple-ssl.com/pro/">', '</a>');
+                }
             } else {
-                echo __("SSL is not yet enabled." , "really-simple-ssl");
+                _e("SSL is not yet enabled." , "really-simple-ssl");
             }
 				?>
 		</span>

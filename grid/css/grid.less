@@ -133,7 +133,16 @@
             font-weight: 900;
           }
           .rsssl-progress-text {
+            display: flex;
+            flex-direction: row;
             margin-left: @grid_margin;
+            a {
+              margin-left: 3px;
+            }
+            .rsssl-progress-count {
+              margin-left: 3px;
+              margin-right: 3px;
+            }
           }
         }
 

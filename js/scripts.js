@@ -57,9 +57,13 @@ jQuery(document).ready(function ($) {
                     if (data == 0) {
                         $('.open-task-text').text("");
                         $('.open-task-count').text("");
+                        $(".rsssl-progress-text").text(rsssl.finished_text);
+                        $(".rsssl-progress-text").append("<a href='https://really-simple-ssl.com/pro'>Really Simple SSL Pro</a>");
+
                     } else {
                         // Replace the count if there are open tasks left
                         $('.open-task-count').text("(" + data + ")");
+                        $(".rsssl-progress-count").text(data);
                     }
                 }
             }
