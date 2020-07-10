@@ -12,17 +12,28 @@ jQuery(document).ready(function ($) {
             url: rsssl.ajaxurl,
             success: function (data) {
                 if (data != '') {
+                    // Copy to clipboard
                        let copyFrom = document.createElement("textarea");
                        document.body.appendChild(copyFrom);
                        copyFrom.textContent = data;
                        copyFrom.select();
                        document.execCommand("copy");
                        copyFrom.remove();
-                    $('#rsssl-feedback').text(rsssl.copied_text).fadeIn("fast");
+                        // Fade Copied! text in/out
+                        $('#rsssl-feedback').text(rsssl.copied_text).fadeIn();
+                        setTimeout(function() {
+                            $("#rsssl-feedback").fadeOut();
+                        }, 3000);
                 }
             }
         });
     });
+
+    $(document).on('click','.rsssl-slider',function () {
+        $('.rsssl-save-settings-feedback').fadeIn();
+    });
+
+
 
     // Re-calculate percentage on dimissing notice. Use document, function to allow AJAX call to run more than once.
     $(document).on('click','.rsssl-close-warning',function () {        

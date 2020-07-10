@@ -3351,7 +3351,9 @@ class rsssl_admin extends rsssl_front_end
         ob_start();
         ?>
             <div class="rsssl-secondary-header-item">
-                <?php _e("Enable/Disable" , "really-simple-ssl"); ?>
+                <div class="rsssl-save-settings-feedback" style="display: none;">
+                    <?php _e("Save settings" , "really-simple-ssl") ?>
+                </div>
             </div>
         <?php
         $content = ob_get_clean();
@@ -3887,10 +3889,16 @@ class rsssl_admin extends rsssl_front_end
 
         if (is_rtl()) {
             wp_register_style('rlrsssl-css', trailingslashit(rsssl_url) . 'css/main-rtl.min.css', "", rsssl_version);
+            wp_register_style('rsssl-grid', trailingslashit(rsssl_url) . 'grid/css/grid-rtl.min.css', "", rsssl_version);
         } else {
 	        wp_register_style('rlrsssl-css', trailingslashit(rsssl_url) . 'css/main.min.css', "", rsssl_version);
+            wp_register_style('rsssl-grid', trailingslashit(rsssl_url) . 'grid/css/grid.min.css', "", rsssl_version);
         }
-	    wp_register_style('rsssl-grid', trailingslashit(rsssl_url) . 'grid/css/grid.min.css', "", rsssl_version);
+
+
+        wp_register_style('rsssl-scrollbar', trailingslashit(rsssl_url) . 'includes/simple-scrollbar.css', "", rsssl_version);
+        wp_enqueue_style('rsssl-scrollbar');
+
 	    wp_enqueue_style('rlrsssl-css');
 	    wp_enqueue_style('rsssl-grid');
 
@@ -3907,6 +3915,11 @@ class rsssl_admin extends rsssl_front_end
                 'finished_text' => __("Basic SSL configuration finished! Improve your score with ", "really-simple-ssl"),
             )
         );
+
+        wp_register_script('rsssl-scrollbar',
+            trailingslashit(rsssl_url)
+            . 'includes/simple-scrollbar.js', array("jquery"), rsssl_version);
+        wp_enqueue_script('rsssl-scrollbar');
     }
 
     /**

@@ -25,7 +25,7 @@
      border: 0;
    }
   .rsssl-logo-container {
-    margin-left: 25px;
+    margin-right: 25px;
     margin-bottom: 10px;
   }
   .header-links {
@@ -34,15 +34,15 @@
     justify-content: flex-end;
     flex-direction: row;
     align-items: center;
-    margin-right: 140px;
+    margin-left: 140px;
     .documentation {
-      padding-right: 25px;
+      padding-left: 25px;
     }
   }
 }
 
 .rsssl-grid {
-  margin-left: 25px;
+  margin-right: 25px;
   position: relative;
   display: flex;
   flex-direction: row;
@@ -68,7 +68,7 @@
       background-color: #fff;
       position: relative;
       box-shadow: 0px 0px 5px 5px @box_shadow_color;
-      //margin-left: @grid_margin;
+      //margin-right: @grid_margin;
       width: @gridblock_width - 2* @grid_margin;
       height: @gridblock_height - 2 * @grid_margin;
       .rsssl-grid-item-header {
@@ -76,18 +76,18 @@
         align-items: center;
         justify-content: space-between;
         margin-top: @grid_margin;
-        //margin-left: @grid_margin;
+        //margin-right: @grid_margin;
         height: 60px;
         border-bottom: 1px solid @border_color;
         h3 {
-          margin-left: 15px;
+          margin-right: 15px;
         }
         .rsssl-secondary-header-item {
           display: flex;
           color: @light-text-color;
-          margin-right: 10px;
+          margin-left: 10px;
           .open-task-count {
-            padding-left: 3px;
+            padding-right: 3px;
           }
           .rsssl-save-settings-feedback {
             color: @color_warning;
@@ -95,11 +95,11 @@
         }
       }
       .rsssl-table-td-main-content {
-        padding-left: 15px;
+        padding-right: 15px;
       }
       .rsssl-grid-item-content {
         height: 310px;
-        margin: 10px 10px 15px 15px;
+        margin: 10px 15px 15px 10px;
         //margin: @grid_margin;
         border-bottom: 1px solid @border_color;
         //overflow-y: scroll;
@@ -110,7 +110,7 @@
         */
 
         .progress-bar-container {
-          margin: 15px 15px 15px 0;
+          margin: 15px 0 15px 15px;
         }
 
         .progress {
@@ -139,13 +139,13 @@
           .rsssl-progress-text {
             display: flex;
             flex-direction: row;
-            margin-left: @grid_margin;
+            margin-right: @grid_margin;
             a {
-              margin-left: 3px;
+              margin-right: 3px;
             }
             .rsssl-progress-count {
-              margin-left: 3px;
               margin-right: 3px;
+              margin-left: 3px;
             }
           }
         }
@@ -182,12 +182,12 @@
                     font-weight: normal;
                   }
                   .rsssl-tooltip-right {
-                    padding-right: 15px;
+                    padding-left: 15px;
                   }
                 }
 
                 td {
-                  text-align: right;
+                  text-align: left;
                   padding: 0;
                   margin: 0;
                 }
@@ -209,7 +209,7 @@
         .rsssl-tips-tricks-element {
           display: flex;
           justify-content: space-between;
-          margin-right: @grid_margin;
+          margin-left: @grid_margin;
           .rsssl-tips-tricks-content {
             width: 80%;
             color: @light-text-color;
@@ -233,7 +233,7 @@
           height: 15px;
           width: 15px;
           border-radius: 50%;
-          margin-right: 10px;
+          margin-left: 10px;
           background-color: lightgrey;
           text-decoration: none;
         }
@@ -262,21 +262,21 @@
             .rsssl-bullet {
               margin: 7px;
               background-color: @light-grey;
-              float: left;
+              float: right;
               &:hover {
                 background-color: @color_open;
               }
             }
 
             .rsssl-forums-content {
-              float: left;
+              float: right;
               color: @light-text-color;
               &:hover {
-                  text-decoration: underline;
-                }
+                text-decoration: underline;
               }
             }
           }
+        }
 
         #rsssl-feedback {
           color: red;
@@ -286,29 +286,29 @@
             Other plugins
          */
 
-          .rsssl-upsell {
-            display: flex !important; //we need important here, because the grid switch overrides it on element level
-            flex-direction: row;
-            padding: 6px;
-            align-items: center;
-            color: @light-text-color;
+        .rsssl-upsell {
+          display: flex !important; //we need important here, because the grid switch overrides it on element level
+          flex-direction: row;
+          padding: 6px;
+          align-items: center;
+          color: @light-text-color;
 
-            .wpsi-red {
-              background-color: red;
-            }
-
-            .cmplz-blue {
-              background-color: #27ADEA;
-            }
-
-            .zip-pink {
-              background-color: #E366A1;
-            }
-
-            .plugin-status {
-              margin-left: auto;
-            }
+          .wpsi-red {
+            background-color: red;
           }
+
+          .cmplz-blue {
+            background-color: #27ADEA;
+          }
+
+          .zip-pink {
+            background-color: #E366A1;
+          }
+
+          .plugin-status {
+            margin-right: auto;
+          }
+        }
 
         /*
           Other plugins
@@ -360,7 +360,7 @@
         #rsssl-feedback {
           font-weight: 600;
           color: @color-success;
-          padding-left: 10px;
+          padding-right: 10px;
         }
       }
       .rsssl-deactivate-keep-ssl {
@@ -376,7 +376,7 @@
         .rsssl-grid-item-content {
           height: 100px;
         }
-        }
+      }
     }
     &.small {
       .item-container {
@@ -405,11 +405,11 @@
    */
   #rsssl-progress-footer {
     width: 100%;
-    text-align: right;
-    margin-right: @grid_margin;
+    text-align: left;
+    margin-left: @grid_margin;
     .footer-left {
-      margin-left: 0 !important;
-      float: left;
+      margin-right: 0 !important;
+      float: right;
       margin-top: -5px;
       font-weight: 600;
       .upsell {
@@ -417,15 +417,15 @@
       }
     }
     .rsssl-footer-item {
-      margin-left: 20px;
+      margin-right: 20px;
     }
   }
   .rsssl-system-status-footer-info {
     font-size: 0.9em;
     width: 100%;
-    text-align: right;
+    text-align: left;
     .system-status-info {
-      margin-left: 6px;
+      margin-right: 6px;
     }
   }
   /*
