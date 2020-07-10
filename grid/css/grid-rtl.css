@@ -322,9 +322,6 @@
 .rsssl-grid .rsssl-item.no-background .item-container {
   background-color: #f2f2f2;
 }
-.rsssl-grid .upsell-grid-container .item-container {
-  box-shadow: none;
-}
 .rsssl-grid #rsssl-progress-footer {
   width: 100%;
   text-align: left;
