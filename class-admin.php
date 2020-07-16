@@ -212,6 +212,7 @@ class rsssl_admin extends rsssl_front_end
         add_action('wp_ajax_rsssl_get_system_status', array($this, 'get_system_status'));
         add_action('wp_ajax_rsssl_get_updated_percentage', array($this, 'get_score_percentage'));
         add_action('wp_ajax_rsssl_get_updated_task_count', array($this, 'get_remaining_tasks_count'));
+        add_action('wp_ajax_rsssl_download_system_status', array($this, 'download_system_status'));
 
         //handle notices
         add_action('admin_notices', array($this, 'show_notices'));
@@ -3165,6 +3166,14 @@ class rsssl_admin extends rsssl_front_end
 	    ob_start();
         ?>
         <div class="rsssl-secondary-header-item">
+            <?php $all_task_count = $this->get_all_task_count(); ?>
+            <div class="all-task-text"> <?php
+                _e( "All tasks", "really-simple-ssl" );
+                ?> </div>
+            <div class="all-task-count">
+                <?php
+                echo " " . "(" . $all_task_count . ")";
+                ?> </div>
             <?php
             $open_task_count = $this->get_remaining_tasks_count();
             if ($open_task_count ==! 0) {
@@ -3181,6 +3190,58 @@ class rsssl_admin extends rsssl_front_end
         <?php
         $content = ob_get_clean();
         return $content;
+    }
+
+    public function get_all_task_count() {
+        if ( ! current_user_can( 'manage_options' ) ) {
+            return 0;
+        }
+
+        $count = get_transient( 'rsssl_all_task_count' );
+
+        if ( $count === false ) {
+            $count = 0;
+
+            $options = get_option( 'rlrsssl_options' );
+
+            $notices = $this->get_notices_list();
+            foreach ( $notices as $id => $notice ) {
+                $condition = true;
+//                if ( get_option( "rsssl_" . $id . "_dismissed" ) ) {
+//                    continue;
+//                }
+
+                $condition_functions = $notice['condition'];
+                foreach ( $condition_functions as $func ) {
+                    $condition = $func();
+                    if ( ! $condition ) {
+                        break;
+                    }
+                }
+
+                if ( $condition ) {
+                    $func    = $notice['callback'];
+                    $output  = $func();
+                    $success = ( isset( $notice['output'][ $output ]['icon'] )
+                        && ( $notice['output'][ $output ]['icon']
+                            === 'success' ) ) ? true : false;
+
+                    //&& notice not dismissed
+                    if ( ! $success
+                        && isset( $notice['output'][ $output ]['icon'] )
+                        && $notice['output'][ $output ]['icon'] == 'open'
+                    ) {
+                        $count ++;
+                    }
+                }
+            }
+            set_transient( 'rsssl_all_task_count', $count, 'WEEK_IN_SECONDS' );
+        }
+        if (wp_doing_ajax()) {
+            wp_die($count);
+        }
+
+        return $count;
     }
 
     /**
@@ -3393,7 +3454,7 @@ class rsssl_admin extends rsssl_front_end
     public function generate_settings_footer() {
 	    ob_start();
 	    ?>
-        <input class="button button-secondary" name="Submit" type="submit"
+        <input class="button button-secondary button-save" name="Submit" type="submit"
                value="<?php echo __("Save", "really-simple-ssl"); ?>"/>
         </form>
         <?php
@@ -3471,7 +3532,7 @@ class rsssl_admin extends rsssl_front_end
                 echo "</div>";
                 $this->debug_log = "";
                 $this->save_options();
-            ?>
+                ?>
         </div>
         <?php
 
@@ -3485,6 +3546,51 @@ class rsssl_admin extends rsssl_front_end
     }
 
     /**
+     * Download the system status to a .txt file. Invoked via AJAX
+     * @since 4.0
+     *
+     */
+
+    public function download_system_status()
+    {
+        if (wp_doing_ajax()) {
+            if (!isset($_POST['token']) || (!wp_verify_nonce($_POST['token'], 'rsssl_nonce'))) {
+                return;
+            }
+
+            if (!isset($_POST["action"]) && $_POST["action"] == !'rsssl_get_updated_percentage') return;
+        }
+
+        $system_status = sanitize_text_field($_POST['system_status']);
+
+        $file = rsssl_path . "rsssl-debug-log.txt";
+        $txt = fopen($file, "w") or die("Unable to open file!");
+        fwrite($txt, $system_status);
+        fclose($txt);
+
+        if (file_exists($file)) {
+
+            ob_start();
+
+            header('Content-Description: File Transfer');
+            header("Content-Disposition: attachment; filename=$file");
+            header('Expires: 0');
+            header('Cache-Control: must-revalidate');
+            header('Pragma: public');
+            header('Content-Length: ' . filesize($file));
+            header("Content-Type: text/plain");
+            error_log("Readfile" . $file);
+
+            ob_clean();
+            ob_end_flush();
+
+            readfile($file);
+            exit;
+//        wp_die();
+        }
+    }
+
+    /**
      * @return false|string
      * Get system status footer in support forums block
      *
@@ -3494,12 +3600,11 @@ class rsssl_admin extends rsssl_front_end
     public function get_system_status_footer() {
         ob_start();
         ?>
-        <button class="button button-upsell" id="rsssl-debug-log-to-clipboard"><?php _e("Copy system status", "really-simple-ssl")?></button>
+        <button class="button button-upsell" id="rsssl-debug-log-to-clipboard"><?php _e("Download system status", "really-simple-ssl")?></button>
         <div id="rsssl-feedback"></div>
         <div class="rsssl-system-status-footer-info">
-            <span class="system-status-info"><?php echo __("Server type:", "really-simple-ssl") . " " . RSSSL()->rsssl_server->get_server(); ?></span>
-            <span class="system-status-info"><?php echo __("SSL type:", "really-simple-ssl") . " " . $this->ssl_type; ?></span>
-            <span class="system-status-info"><?php echo __("Plugin version:", "really-simple-ssl") . " " . $this->plugin_version; ?></span>
+            <span class="system-status-info"><?php echo "<b>" . __("Server type:", "really-simple-ssl") . "</b> " . RSSSL()->rsssl_server->get_server(); ?></span>
+            <span class="system-status-info"><?php echo "<b>" . __("SSL type:", "really-simple-ssl") . "</b> " . $this->ssl_type; ?></span>
         </div>
         <?php
         $content = ob_get_clean();
@@ -3622,7 +3727,7 @@ class rsssl_admin extends rsssl_front_end
     public function generate_secondary_our_plugins_header() {
         ob_start();
 	    ?>
-        <div class="rsp-image"><img width=200px" src="<?php echo rsssl_url?>/assets/really-simple-plugins.png" alt="really-simple-plugins-logo"></div>
+        <div class="rsp-image"><img width=170px" src="<?php echo rsssl_url?>/assets/really-simple-plugins.png" alt="really-simple-plugins-logo"></div>
         <?php
 	    $content = ob_get_clean();
         return $content;

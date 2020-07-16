@@ -53,6 +53,11 @@
     &.small {
       width: @gridblock_width_small;
     }
+    .rsssl-close-warning {
+      color: #ccc;
+      margin-right: 25px;
+      font-size: 0.9em;
+    }
     &.settings {
       .item-container {
         .rsssl-grid-item-footer {
@@ -88,6 +93,10 @@
           margin-right: 10px;
           .open-task-count {
             padding-left: 3px;
+          }
+          .all-task-count {
+            padding-left: 3px;
+            margin-right: 5px;
           }
           .rsssl-save-settings-feedback {
             color: @color_warning;
@@ -179,10 +188,11 @@
                   display: flex;
                   width: 85%;
                   .rsssl-settings-text {
+                    font-size: 13px;
                     font-weight: normal;
                   }
                   .rsssl-tooltip-right {
-                    padding-right: 15px;
+                    padding-right: 20px;
                   }
                 }
 
@@ -328,7 +338,9 @@
         }
 
         .rsssl-premium {
-          background-color: @color_open;
+          //background-color: @color_open;
+          background-color: #29b6f6;
+          color: white;
         }
         .rsssl-success {
           background-color: @color-success;

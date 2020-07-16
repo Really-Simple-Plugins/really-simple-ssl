@@ -1,6 +1,8 @@
 jQuery(document).ready(function ($) {
     "use strict";
 
+    $('.button-save').prop('disabled', true);
+
     // Copy debug log to clipboard
     $(document).on('click','#rsssl-debug-log-to-clipboard',function () {
         $.ajax({
@@ -12,25 +14,39 @@ jQuery(document).ready(function ($) {
             url: rsssl.ajaxurl,
             success: function (data) {
                 if (data != '') {
+                    $.ajax({
+                        type: "post",
+                        data: {
+                            'action': 'rsssl_download_system_status',
+                            token  : rsssl.token,
+                            'system_status' : data,
+                        },
+                        url: rsssl.ajaxurl,
+                        success: function (data) {
+                            console.log("Should be downloading");
+                        }
                     // Copy to clipboard
-                       let copyFrom = document.createElement("textarea");
-                       document.body.appendChild(copyFrom);
-                       copyFrom.textContent = data;
-                       copyFrom.select();
-                       document.execCommand("copy");
-                       copyFrom.remove();
-                        // Fade Copied! text in/out
-                        $('#rsssl-feedback').text(rsssl.copied_text).fadeIn();
-                        setTimeout(function() {
-                            $("#rsssl-feedback").fadeOut();
-                        }, 3000);
-                }
+                    //    let copyFrom = document.createElement("textarea");
+                    //    document.body.appendChild(copyFrom);
+                    //    copyFrom.textContent = data;
+                    //    copyFrom.select();
+                    //    document.execCommand("copy");
+                    //    copyFrom.remove();
+                    //     // Fade Copied! text in/out
+                    //     $('#rsssl-feedback').text(rsssl.copied_text).fadeIn();
+                    //     setTimeout(function() {
+                    //         $("#rsssl-feedback").fadeOut();
+                    //     }, 3000);
+                });
             }
-        });
+        }
     });
+});
+
 
     $(document).on('click','.rsssl-slider',function () {
         $('.rsssl-save-settings-feedback').fadeIn();
+        $('.button-save').prop('disabled', false);
     });
 
 

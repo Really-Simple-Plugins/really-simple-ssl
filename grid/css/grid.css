@@ -47,6 +47,11 @@
 .rsssl-grid .rsssl-item.small {
   width: 400px;
 }
+.rsssl-grid .rsssl-item .rsssl-close-warning {
+  color: #ccc;
+  margin-right: 25px;
+  font-size: 0.9em;
+}
 .rsssl-grid .rsssl-item.settings .item-container .rsssl-grid-item-footer {
   justify-content: flex-start;
 }
@@ -75,6 +80,10 @@
 }
 .rsssl-grid .rsssl-item .item-container .rsssl-grid-item-header .rsssl-secondary-header-item .open-task-count {
   padding-left: 3px;
+}
+.rsssl-grid .rsssl-item .item-container .rsssl-grid-item-header .rsssl-secondary-header-item .all-task-count {
+  padding-left: 3px;
+  margin-right: 5px;
 }
 .rsssl-grid .rsssl-item .item-container .rsssl-grid-item-header .rsssl-secondary-header-item .rsssl-save-settings-feedback {
   color: red;
@@ -172,10 +181,11 @@
   width: 85%;
 }
 .rsssl-grid .rsssl-item .item-container .rsssl-grid-item-content .rsssl-settings .form-table tbody tr th .rsssl-settings-text {
+  font-size: 13px;
   font-weight: normal;
 }
 .rsssl-grid .rsssl-item .item-container .rsssl-grid-item-content .rsssl-settings .form-table tbody tr th .rsssl-tooltip-right {
-  padding-right: 15px;
+  padding-right: 20px;
 }
 .rsssl-grid .rsssl-item .item-container .rsssl-grid-item-content .rsssl-settings .form-table tbody tr td {
   text-align: right;
@@ -273,7 +283,8 @@
   font-weight: 600;
 }
 .rsssl-grid .rsssl-item .item-container .rsssl-grid-item-content .rsssl-premium {
-  background-color: #FBC43D;
+  background-color: #29b6f6;
+  color: white;
 }
 .rsssl-grid .rsssl-item .item-container .rsssl-grid-item-content .rsssl-success {
   background-color: #61ce70;
