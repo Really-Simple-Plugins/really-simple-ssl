@@ -3583,9 +3583,7 @@ class rsssl_admin extends rsssl_front_end
     public function get_support_forum_block_footer() {
         ob_start();
         ?>
-        <a href="https://really-simple-ssl.com/forums/" target="_blank">
-            <button class="button button-upsell"><?php _e("View all" , "really-simple-ssl");?></button>
-        </a>
+        <a href="https://really-simple-ssl.com/forums/" target="_blank" class="button button-upsell"><?php _e("View all" , "really-simple-ssl");?></a>
         <?php
         $content = ob_get_clean();
         return $content;
