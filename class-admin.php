@@ -46,6 +46,7 @@ class rsssl_admin extends rsssl_front_end
     public $plugin_upgraded;
     public $mixed_content_fixer_status = "OK";
     public $ssl_type = "NA";
+    public $dismiss_all_notices = false;
 
     private $pro_url = "https://www.really-simple-ssl.com/pro";
 
@@ -209,10 +210,8 @@ class rsssl_admin extends rsssl_front_end
         add_action('wp_ajax_dismiss_success_message', array($this, 'dismiss_success_message_callback'));
         add_action('wp_ajax_rsssl_dismiss_review_notice', array($this, 'dismiss_review_notice_callback'));
         add_action('wp_ajax_rsssl_dismiss_settings_notice', array($this, 'dismiss_settings_notice_callback'));
-        add_action('wp_ajax_rsssl_get_system_status', array($this, 'get_system_status'));
         add_action('wp_ajax_rsssl_get_updated_percentage', array($this, 'get_score_percentage'));
         add_action('wp_ajax_rsssl_get_updated_task_count', array($this, 'get_remaining_tasks_count'));
-        add_action('wp_ajax_rsssl_download_system_status', array($this, 'download_system_status'));
 
         //handle notices
         add_action('admin_notices', array($this, 'show_notices'));
@@ -3368,7 +3367,7 @@ class rsssl_admin extends rsssl_front_end
             1 => array(
                 'class' => 'footer-left',
                 'dot_class' => '',
-                'text' => "<a href='https://really-simple-ssl.com/pro' target='_blank'><button class='button button-primary upsell'>$button_text</button></a>",
+                'text' => "<a href='https://really-simple-ssl.com/pro' target='_blank' class='button button-primary upsell'>$button_text</a>",
             ),
             2 => array(
                 'class' => '',
@@ -3463,134 +3462,6 @@ class rsssl_admin extends rsssl_front_end
     }
 
     /**
-     * @return mixed
-     *
-     * Get the system status (debug). Invoked via AJAX
-     */
-
-    public function get_system_status() {
-
-        if (!isset($_POST['token']) || (!wp_verify_nonce($_POST['token'], 'rsssl_nonce'))) {
-            return;
-        }
-
-        if (!isset($_POST["action"]) && $_POST["action"] ==! 'rsssl_get_system_status') return;
-
-        ob_start();
-            ?>
-            <div>
-            <?php
-                echo "<div id='debug-log'>";
-                if (defined('RSSSL_SAFE_MODE') && RSSSL_SAFE_MODE) echo "SAFE MODE<br>";
-
-                echo "<b>General</b><br>";
-                echo "Plugin version: " . rsssl_version ."<br>";
-
-                if (RSSSL()->rsssl_certificate->is_valid()) {
-                    echo "SSL certificate is valid<br>";
-                } else {
-                    echo "Invalid SSL certificate<br>";
-                }
-                echo ($this->ssl_enabled) ? "SSL is enabled<br><bR>" : "SSL is not yet enabled<br><br>";
-
-                echo "<b>Options</b><br>";
-                if ($this->autoreplace_insecure_links) echo "* Mixed content fixer<br>";
-                if ($this->wp_redirect) echo "* WordPress redirect<br>";
-                if ($this->htaccess_redirect) echo "* htaccess redirect<br>";
-                if ($this->do_not_edit_htaccess) echo "* Stop editing the .htaccess file<br>";
-                if ($this->switch_mixed_content_fixer_hook) echo "* Use alternative method to fix mixed content<br>";
-                if ($this->dismiss_all_notices) echo "* Dismiss all Really Simple SSL notices<br>";
-                echo "<br>";
-
-                echo "<b>Server information</b><br>";
-                echo "Server: " . RSSSL()->rsssl_server->get_server() . "<br>";
-                echo "SSL Type: $this->ssl_type<br>";
-                if (is_multisite()) {
-                    echo "MULTISITE<br>";
-                    echo (!RSSSL()->rsssl_multisite->ssl_enabled_networkwide) ? "SSL is being activated per site<br>" : "SSL is activated network wide<br>";
-                }
-
-                echo $this->debug_log;
-
-                echo "<br><br><b>Constants</b><br>";
-
-                if (defined('RSSSL_FORCE_ACTIVATE')) echo "RSSSL_FORCE_ACTIVATE defined";
-                if (defined('RSSSL_NO_FLUSH')) echo "RSSSL_NO_FLUSH defined";
-                if (defined('RSSSL_DISMISS_ACTIVATE_SSL_NOTICE')) echo "RSSSL_DISMISS_ACTIVATE_SSL_NOTICE defined";
-                if (defined('RLRSSSL_DO_NOT_EDIT_HTACCESS')) echo "RLRSSSL_DO_NOT_EDIT_HTACCESS defined";
-                if (defined('RSSSL_SAFE_MODE')) echo "RSSSL_SAFE_MODE defined";
-                if (defined("RSSSL_SERVER_OVERRIDE")) echo "RSSSL_SERVER_OVERRIDE defined";
-
-                if(    !defined('RSSSL_FORCE_ACTIVATE')
-                       && !defined('RSSSL_NO_FLUSH')
-                       && !defined('RSSSL_DISMISS_ACTIVATE_SSL_NOTICE')
-                       && !defined('RLRSSSL_DO_NOT_EDIT_HTACCESS')
-                       && !defined('RSSSL_SAFE_MODE')
-                       && !defined("RSSSL_SERVER_OVERRIDE")
-                ) echo "No constants defined";
-
-                echo "</div>";
-                $this->debug_log = "";
-                $this->save_options();
-                ?>
-        </div>
-        <?php
-
-        $contents = ob_get_clean();
-
-        if (wp_doing_ajax()) {
-            wp_die($contents);
-        } else {
-            return $contents;
-        }
-    }
-
-    /**
-     * Download the system status to a .txt file. Invoked via AJAX
-     * @since 4.0
-     *
-     */
-
-    public function download_system_status()
-    {
-        if (wp_doing_ajax()) {
-            if (!isset($_POST['token']) || (!wp_verify_nonce($_POST['token'], 'rsssl_nonce'))) {
-                return;
-            }
-
-            if (!isset($_POST["action"]) && $_POST["action"] == !'rsssl_get_updated_percentage') return;
-        }
-
-        $system_status = sanitize_text_field($_POST['system_status']);
-
-        $file = rsssl_path . "rsssl-debug-log.txt";
-        $txt = fopen($file, "w") or die("Unable to open file!");
-        fwrite($txt, $system_status);
-        fclose($txt);
-
-        if (file_exists($file)) {
-
-            ob_start();
-
-            header('Content-Description: File Transfer');
-            header("Content-Disposition: attachment; filename=$file");
-            header('Expires: 0');
-            header('Cache-Control: must-revalidate');
-            header('Pragma: public');
-            header('Content-Length: ' . filesize($file));
-            header("Content-Type: text/plain");
-            error_log("Readfile" . $file);
-
-            ob_clean();
-            ob_end_flush();
-
-            readfile($file);
-            exit;
-//        wp_die();
-        }
-    }
-
-    /**
      * @return false|string
      * Get system status footer in support forums block
      *
@@ -3600,7 +3471,7 @@ class rsssl_admin extends rsssl_front_end
     public function get_system_status_footer() {
         ob_start();
         ?>
-        <button class="button button-upsell" id="rsssl-debug-log-to-clipboard"><?php _e("Download system status", "really-simple-ssl")?></button>
+        <a href="<?php echo trailingslashit(rsssl_url).'system-status.php' ?>" class="button button-upsell"><?php _e("Download system status", "really-simple-ssl")?></a>
         <div id="rsssl-feedback"></div>
         <div class="rsssl-system-status-footer-info">
             <span class="system-status-info"><?php echo "<b>" . __("Server type:", "really-simple-ssl") . "</b> " . RSSSL()->rsssl_server->get_server(); ?></span>
