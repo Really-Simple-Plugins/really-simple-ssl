@@ -52,9 +52,6 @@
   margin-right: 25px;
   font-size: 0.9em;
 }
-.rsssl-grid .rsssl-item.settings .item-container .rsssl-grid-item-footer {
-  justify-content: flex-start;
-}
 .rsssl-grid .rsssl-item .item-container {
   background-color: #fff;
   position: relative;
@@ -160,6 +157,9 @@
 .rsssl-grid .rsssl-item .item-container .rsssl-grid-item-content .rsssl-settings th {
   width: 85%;
 }
+.rsssl-grid .rsssl-item .item-container .rsssl-grid-item-content .rsssl-settings th tr {
+  width: 100%;
+}
 .rsssl-grid .rsssl-item .item-container .rsssl-grid-item-content .form-table {
   overflow: hidden;
 }
@@ -189,7 +189,6 @@
   padding-right: 20px;
 }
 .rsssl-grid .rsssl-item .item-container .rsssl-grid-item-content .form-table tbody tr td {
-  text-align: right;
   padding: 0;
   margin: 0;
 }
@@ -301,7 +300,6 @@
 .rsssl-grid .rsssl-item .item-container .rsssl-grid-item-footer {
   display: flex;
   align-items: center;
-  justify-content: flex-end;
   margin: 10px;
   height: 50px;
   bottom: 0;
