@@ -2590,7 +2590,7 @@ class rsssl_admin extends rsssl_front_end
     public function admin_tabs($current = 'homepage')
     {
         $tabs = array(
-//            'configuration' => __("Configuration", "really-simple-ssl"),
+            'configuration' => __("Home", "really-simple-ssl"),
 //            'settings' => __("Settings", "really-simple-ssl"),
 //            'debug' => __("Debug", "really-simple-ssl")
         );
@@ -2603,6 +2603,13 @@ class rsssl_admin extends rsssl_front_end
             <div class="rsssl-logo-container">
                 <div id="rsssl-logo"><img height="50px" src="<?php echo rsssl_url?>/assets/logo-really-simple-ssl.png" alt="review-logo"></div>
             </div>
+        <?php
+        foreach ($tabs as $tab => $name) {
+            $class = ($tab == $current) ? ' nav-tab-active' : '';
+            echo "<a class='nav-tab$class' href='?page=rlrsssl_really_simple_ssl&tab=$tab'>$name</a>";
+        }
+//        echo '</div>';
+        ?>
         <div class="header-links">
             <div class="documentation">
                 <a href="https://really-simple-ssl.com/knowledge-base"><?php _e("Documentation", "really-simple-ssl");?></a>
@@ -2613,13 +2620,8 @@ class rsssl_admin extends rsssl_front_end
                 </a>
             </div>
         </div>
+        </div>
         <?php
-
-        foreach ($tabs as $tab => $name) {
-            $class = ($tab == $current) ? ' nav-tab-active' : '';
-            echo "<a class='nav-tab$class' href='?page=rlrsssl_really_simple_ssl&tab=$tab'>$name</a>";
-        }
-        echo '</div>';
     }
 
 
@@ -3461,7 +3463,6 @@ class rsssl_admin extends rsssl_front_end
 	    ?>
         <input class="button button-secondary button-save" name="Submit" type="submit"
                value="<?php echo __("Save", "really-simple-ssl"); ?>"/>
-        </form>
         <?php
         $content = ob_get_clean();
         return $content;
