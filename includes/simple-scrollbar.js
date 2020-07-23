@@ -62,10 +62,10 @@
         this.mB = this.moveBar.bind(this);
 
         this.wrapper = d.createElement('div');
-        this.wrapper.setAttribute('class', 'ss-wrapper');
+        this.wrapper.setAttribute('class', 'rsssl-ss-wrapper');
 
         this.el = d.createElement('div');
-        this.el.setAttribute('class', 'ss-content');
+        this.el.setAttribute('class', 'rsssl-ss-content');
 
         if (this.direction === 'rtl') {
             this.el.classList.add('rtl');
