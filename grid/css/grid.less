@@ -61,7 +61,7 @@
     &.settings {
       .item-container {
         .rsssl-grid-item-footer {
-          justify-content: flex-start;
+          //justify-content: flex-start;
         }
       }
     }
@@ -163,7 +163,15 @@
           Settings
         */
 
+        //.rsssl-settings {
         .rsssl-settings {
+          th {
+            width: 85%;
+              tr {
+                width: 100%;
+              }
+          }
+        }
           .form-table {
             overflow: hidden;
             .dashicons-editor-help {
@@ -176,7 +184,6 @@
 
               tr {
                 padding-bottom: @grid_margin;
-                width: 100%;
                 display: flex;
                 align-items: center;
                 flex-direction: row;
@@ -186,7 +193,7 @@
                   padding: 10px 0 0 0 !important;
                   vertical-align: middle !important;
                   display: flex;
-                  width: 85%;
+                  //width: 85%;
                   .rsssl-settings-text {
                     font-size: 13px;
                     font-weight: normal;
@@ -211,7 +218,7 @@
           .button-primary {
             //display: none;
           }
-        }
+        //}
 
         /*
           Tips and Tricks
@@ -360,7 +367,7 @@
       .rsssl-grid-item-footer {
         display: flex;
         align-items: center;
-        justify-content: flex-end;
+        //justify-content: flex-end;
         //position: absolute;
         margin: @grid_margin;
         height: 50px;

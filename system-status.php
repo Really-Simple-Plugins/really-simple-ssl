@@ -52,6 +52,9 @@ if ( current_user_can( 'manage_options' ) ) {
 	echo "Server information\n";
 	echo "Server: " . $server->get_server() . "\n";
 	echo "SSL Type: $really_simple_ssl->ssl_type\n";
+	if (defined('rsssl_pro_path')) {
+	    echo "TLS Version: " . RSSSL_PRO()->rsssl_premium_options->get_tls_version() . "\n";
+    }
 	if (is_multisite()) {
 		echo "MULTISITE\n";
 		echo (!RSSSL()->rsssl_multisite->ssl_enabled_networkwide) ? "SSL is being activated per site\n" : "SSL is activated network wide\n";

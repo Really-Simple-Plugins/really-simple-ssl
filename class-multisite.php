@@ -1022,7 +1022,7 @@ if (!class_exists('rsssl_multisite')) {
                     ?>
                     <div id="message" class="updated notice is-dismissible rsssl-pro-dismiss-notice">
                         <p>
-                            <?php echo sprintf(__('If you want more options to have full control over your multisite network, you can %supgrade%s your license to a multisite license, or dismiss this message', 'really-simple-ssl'), '<a href="https://really-simple-ssl.com/pro-multisite" title="Really Simple SSL">', '</a>') ?>
+                            <?php echo sprintf(__('If you want more options to have full control over your multisite network, you can %supgrade%s your license to a multisite license, or dismiss this message', 'really-simple-ssl'), '<a href="$pro_url-multisite" title="Really Simple SSL">', '</a>') ?>
                         </p>
                         </p></div>
                     <?php

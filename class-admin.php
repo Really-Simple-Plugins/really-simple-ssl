@@ -48,7 +48,7 @@ class rsssl_admin extends rsssl_front_end
     public $ssl_type = "NA";
     public $dismiss_all_notices = false;
 
-    private $pro_url = "https://www.really-simple-ssl.com/pro";
+    public $pro_url;
 
     function __construct()
     {
@@ -67,6 +67,12 @@ class rsssl_admin extends rsssl_front_end
 	    if (isset($_GET['rsssl_dismiss_review_notice'])){
 		    $this->get_dismiss_review_notice();
 	    }
+
+	    if (is_multisite()) {
+	        $this->pro_url = 'https://really-simple-ssl.com/pro-multisite';
+        } else {
+	        $this->pro_url = 'https://really-simple-ssl.com/pro';
+        }
 
         register_deactivation_hook(dirname(__FILE__) . "/" . $this->plugin_filename, array($this, 'deactivate'));
 
@@ -556,7 +562,7 @@ class rsssl_admin extends rsssl_front_end
                        value="<?php _e("Go ahead, activate SSL!", "really-simple-ssl"); ?>" id="rsssl_do_activate_ssl"
                        name="rsssl_do_activate_ssl">
                 <?php if (!defined("rsssl_pro_version") ) { ?>
-                <a class="button action btn-premium" href="https://really-simple-ssl.com/pro" target="_blank"><?php _e("Get ready with Pro", "really-simple-ssl"); ?></a>
+                <a class="button action btn-premium" href="<?php echo $this->pro_url ?>" target="_blank"><?php _e("Get ready with Pro", "really-simple-ssl"); ?></a>
                 <?php } ?>
             </form>
 		        <b><?php _e("You may need to login in again.", "really-simple-ssl") ?></b>
@@ -2602,7 +2608,7 @@ class rsssl_admin extends rsssl_front_end
                 <a href="https://really-simple-ssl.com/knowledge-base"><?php _e("Documentation", "really-simple-ssl");?></a>
             </div>
             <div class="header-upsell">
-                <a href="https://really-simple-ssl.com/pro" target="_blank">
+                <a href="<?php echo $this->pro_url ?>" target="_blank">
                     <button class="button button-primary donate"><?php _e("Upgrade", "really-simple-ssl");?></button>
                 </a>
             </div>
@@ -3367,7 +3373,7 @@ class rsssl_admin extends rsssl_front_end
             1 => array(
                 'class' => 'footer-left',
                 'dot_class' => '',
-                'text' => "<a href='https://really-simple-ssl.com/pro' target='_blank' class='button button-primary upsell'>$button_text</a>",
+                'text' => "<a href='$this->pro_url' target='_blank' class='button button-primary upsell'>$button_text</a>",
             ),
             2 => array(
                 'class' => '',
@@ -3499,7 +3505,7 @@ class rsssl_admin extends rsssl_front_end
 			),
 			2 => array(
 				'content' => __("Extensive scan for your back-end", "really-simple-ssl"),
-				'link' => 'https://really-simple-ssl.com/pro',
+				'link' => "$this->pro_url",
                 'condition' => '',
 			),
 			3 => array(
@@ -4416,7 +4422,7 @@ class rsssl_admin extends rsssl_front_end
         }
         if (!defined("rsssl_pro_version")) {
             if (!class_exists('RSSSL_PRO')) {
-                $premium_link = '<a target="_blank" href="https://really-simple-ssl.com/pro/">' . __('Premium Support', 'really-simple-ssl') . '</a>';
+                $premium_link = "<a target='_blank' href='$this->pro_url'>" . __('Premium Support', 'really-simple-ssl') . '</a>';
                 array_unshift($links, $premium_link);
             }
         }

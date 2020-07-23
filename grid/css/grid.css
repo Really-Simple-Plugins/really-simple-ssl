@@ -157,42 +157,43 @@
   margin-left: 3px;
   margin-right: 3px;
 }
-.rsssl-grid .rsssl-item .item-container .rsssl-grid-item-content .rsssl-settings .form-table {
+.rsssl-grid .rsssl-item .item-container .rsssl-grid-item-content .rsssl-settings th {
+  width: 85%;
+}
+.rsssl-grid .rsssl-item .item-container .rsssl-grid-item-content .form-table {
   overflow: hidden;
 }
-.rsssl-grid .rsssl-item .item-container .rsssl-grid-item-content .rsssl-settings .form-table .dashicons-editor-help {
+.rsssl-grid .rsssl-item .item-container .rsssl-grid-item-content .form-table .dashicons-editor-help {
   font-size: 20px;
 }
-.rsssl-grid .rsssl-item .item-container .rsssl-grid-item-content .rsssl-settings .form-table tbody {
+.rsssl-grid .rsssl-item .item-container .rsssl-grid-item-content .form-table tbody {
   display: flex;
   flex-direction: column;
 }
-.rsssl-grid .rsssl-item .item-container .rsssl-grid-item-content .rsssl-settings .form-table tbody tr {
+.rsssl-grid .rsssl-item .item-container .rsssl-grid-item-content .form-table tbody tr {
   padding-bottom: 10px;
-  width: 100%;
   display: flex;
   align-items: center;
   flex-direction: row;
 }
-.rsssl-grid .rsssl-item .item-container .rsssl-grid-item-content .rsssl-settings .form-table tbody tr th {
+.rsssl-grid .rsssl-item .item-container .rsssl-grid-item-content .form-table tbody tr th {
   padding: 10px 0 0 0 !important;
   vertical-align: middle !important;
   display: flex;
-  width: 85%;
 }
-.rsssl-grid .rsssl-item .item-container .rsssl-grid-item-content .rsssl-settings .form-table tbody tr th .rsssl-settings-text {
+.rsssl-grid .rsssl-item .item-container .rsssl-grid-item-content .form-table tbody tr th .rsssl-settings-text {
   font-size: 13px;
   font-weight: normal;
 }
-.rsssl-grid .rsssl-item .item-container .rsssl-grid-item-content .rsssl-settings .form-table tbody tr th .rsssl-tooltip-right {
+.rsssl-grid .rsssl-item .item-container .rsssl-grid-item-content .form-table tbody tr th .rsssl-tooltip-right {
   padding-right: 20px;
 }
-.rsssl-grid .rsssl-item .item-container .rsssl-grid-item-content .rsssl-settings .form-table tbody tr td {
+.rsssl-grid .rsssl-item .item-container .rsssl-grid-item-content .form-table tbody tr td {
   text-align: right;
   padding: 0;
   margin: 0;
 }
-.rsssl-grid .rsssl-item .item-container .rsssl-grid-item-content .rsssl-settings h2 {
+.rsssl-grid .rsssl-item .item-container .rsssl-grid-item-content h2 {
   display: none;
 }
 .rsssl-grid .rsssl-item .item-container .rsssl-grid-item-content .rsssl-tips-tricks-element {
