@@ -226,6 +226,8 @@ class rsssl_admin extends rsssl_front_end
             add_action('admin_notices', array($this, 'show_leave_review_notice'));
         }
         add_action("update_option_rlrsssl_options", array($this, "update_htaccess_after_settings_save"), 20, 3);
+//        add_action('shutdown', array($this, 'redirect_to_settings_page'));
+
     }
 
     /*
@@ -389,7 +391,7 @@ class rsssl_admin extends rsssl_front_end
         $this->save_options();
     }
 
-    public function redirect_to_settings_page_after_activation() {
+    public function redirect_to_settings_page() {
         if (isset($_GET['page']) && $_GET['page'] == 'rlrsssl_really_simple_ssl') return;
 	        $url = add_query_arg( array(
 		        "page" => "rlrsssl_really_simple_ssl",
@@ -806,7 +808,7 @@ class rsssl_admin extends rsssl_front_end
             }
 
 	        if (!is_multisite()) {
-		        $this->redirect_to_settings_page_after_activation();
+		        $this->redirect_to_settings_page();
 	        }
 
         }
@@ -3128,7 +3130,7 @@ class rsssl_admin extends rsssl_front_end
                 'content' => $this->generate_settings(),
 				'footer' => $this->generate_settings_footer(),
 				'class' => 'small settings',
-				'type' => 'results',
+				'type' => 'settings',
 				'can_hide' => true,
 
 			),
@@ -3439,7 +3441,6 @@ class rsssl_admin extends rsssl_front_end
 	    ob_start();
 	    ?>
         <div class="rsssl-settings">
-            <form action="options.php" method="post">
                 <?php
                 settings_fields('rlrsssl_options');
                 do_settings_sections('rlrsssl');
@@ -3711,6 +3712,7 @@ class rsssl_admin extends rsssl_front_end
   */
 
                 $grid_items = $this->general_grid();
+
                 $container = $this->get_template('grid-container.php', rsssl_path . 'grid/');
                 $element = $this->get_template('grid-element.php', rsssl_path . 'grid/');
                 $output = '';
@@ -3719,8 +3721,18 @@ class rsssl_admin extends rsssl_front_end
                     if (!$grid_item['footer']) {
                         $grid_item['footer'] = '';
                     }
-                    $output .= str_replace(array('{class}', '{title}', '{secondary_header_item}' , '{content}', '{footer}'), array($grid_item['class'], $grid_item['title'], $grid_item['secondary_header_item'], $grid_item['content'], $grid_item['footer']), $element);
+
+                    // Add form if type is settings
+                    if (isset($grid_item['type']) && $grid_item['type'] == 'settings') {
+                        $output .= '<form action="' . esc_url(add_query_arg(array('wpsi_redirect_to' => sanitize_title($grid_item['type'])), admin_url('options.php'))) . '" method="post">';
+                        $output .= str_replace(array('{class}', '{title}', '{secondary_header_item}', '{content}', '{footer}'), array($grid_item['class'], $grid_item['title'], $grid_item['secondary_header_item'], $grid_item['content'], $grid_item['footer']), $element);
+                        $output .= '</form>';
+                    } else {
+                        $output .= str_replace(array('{class}', '{title}', '{secondary_header_item}', '{content}', '{footer}'), array($grid_item['class'], $grid_item['title'], $grid_item['secondary_header_item'], $grid_item['content'], $grid_item['footer']), $element);
+                    }
+
                 }
+
                 echo str_replace('{content}', $output, $container);
 
 
