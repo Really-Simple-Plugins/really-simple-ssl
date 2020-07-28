@@ -3371,13 +3371,19 @@ class rsssl_admin extends rsssl_front_end
             $redirect_301 = "rsssl-dot-error";
         }
 
-        $button_text = __("Go PRO!", "really-simple-ssl");
+        $button_text = '';
+        $text = '';
+
+        if (!defined('rsssl_pro_version')) {
+            $button_text = __("Go PRO!", "really-simple-ssl");
+            $text = "<a href='$this->pro_url' target='_blank' class='button button-primary upsell'>$button_text</a>";
+        }
 
         $items = array(
             1 => array(
                 'class' => 'footer-left',
                 'dot_class' => '',
-                'text' => "<a href='$this->pro_url' target='_blank' class='button button-primary upsell'>$button_text</a>",
+                'text' => $text,
             ),
             2 => array(
                 'class' => '',
@@ -3724,7 +3730,7 @@ class rsssl_admin extends rsssl_front_end
 
                     // Add form if type is settings
                     if (isset($grid_item['type']) && $grid_item['type'] == 'settings') {
-                        $output .= '<form action="' . esc_url(add_query_arg(array('wpsi_redirect_to' => sanitize_title($grid_item['type'])), admin_url('options.php'))) . '" method="post">';
+                        $output .= '<form action="options.php" method="post">';
                         $output .= str_replace(array('{class}', '{title}', '{secondary_header_item}', '{content}', '{footer}'), array($grid_item['class'], $grid_item['title'], $grid_item['secondary_header_item'], $grid_item['content'], $grid_item['footer']), $element);
                         $output .= '</form>';
                     } else {
