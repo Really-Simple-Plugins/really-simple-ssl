@@ -183,7 +183,6 @@ class rsssl_admin extends rsssl_front_end
 //        add_action('rsssl_activation_notice', array($this, 'no_ssl_detected'), 10);
         add_action('rsssl_activation_notice', array($this, 'ssl_detected'), 10);
         add_action('rsssl_activation_notice_inner', array($this, 'almost_ready_to_migrate'), 30);
-        add_action('rsssl_activation_notice_inner', array($this, 'show_pro'), 40);
         add_action('rsssl_activation_notice_inner', array($this, 'show_enable_ssl_button'), 50);
 
         add_action('plugins_loaded', array($this, 'check_plugin_conflicts'), 30);
@@ -500,41 +499,82 @@ class rsssl_admin extends rsssl_front_end
         <?php }
     }
 
-
     public function almost_ready_to_migrate()
-    { ?>
-            <h1><?php _e("Almost ready to migrate to SSL!", "really-simple-ssl"); ?></h1>
+    {
+        ?>
+        <div class="rsssl-activation-notice">
+            <div class="rsssl-activation-notice-header">
+                <h1><?php _e("Almost ready to migrate to SSL!", "really-simple-ssl"); ?></h1>
+                <div id="rsssl-logo-activation"><img width=180px" src="<?php echo rsssl_url?>/assets/logo-really-simple-ssl.png" alt="really-simple-ssl-logo"></div>
+            </div>
+            <div class="rsssl-activation-notice-content">
+                <?php _e("Some things can't be done automatically. Before you migrate, please check for: ", 'really-simple-ssl'); ?>
+                <p>
+                    <ul class="message-ul">
+                        <li class="rsssl-activation-notice-li"><div class="rsssl-bullet"></div><?php _e('Http references in your .css and .js files: change any http:// into //', 'really-simple-ssl'); ?></li>
+                        <li class="rsssl-activation-notice-li"><div class="rsssl-bullet"></div><?php _e('Images, stylesheets or scripts from a domain without an SSL certificate: remove them or move to your own server', 'really-simple-ssl'); ?></li><?php
 
-            <?php //action?>
+                        $backup_link = "https://really-simple-ssl.com/knowledge-base/backing-up-your-site/";
+                        $link_open = '<a target="_blank" href="'.$backup_link.'">';
+                        $link_close = '</a>';
+                        ?>
+                        <li class="rsssl-activation-notice-li"><div class="rsssl-bullet"></div><?php printf(__("We strongly recommend to take a %sbackup%s of your site before activating SSL", 'really-simple-ssl'), $link_open, $link_close); ?> </li>
+                        <li class="rsssl-activation-notice-li"><div class="rsssl-bullet"></div><b><?php _e("You may need to login in again.", "really-simple-ssl") ?></b></li>
+                    </ul>
+                <p><?php _e('You can also let the automatic scan of the pro version handle this for you, and get premium support, increased security with HSTS and more!', 'really-simple-ssl'); ?>
+                    <a target="_blank"
+                       href="<?php echo $this->pro_url; ?>"><?php _e("Check out Really Simple SSL Pro", "really-simple-ssl"); ?></a>
+                </p>
+                </p>
+            </div>
+        </div>
+        <style>
+            .rsssl-activation-notice-header {
+                height: 60px;
+                border-bottom: 1px solid #dedede;
+                display: flex;
+                flex-direction: row;
+                justify-content: space-between;
+                align-items: center;
+            }
 
+            .rsssl-activation-notice-content {
+                margin-top: 10px;
+                border-bottom: 1px solid #dedede;
+            }
 
-            <?php _e("Some things can't be done automatically. Before you migrate, please check for: ", 'really-simple-ssl'); ?>
-            <p>
-            <ul class="message-ul">
-                <li class="message-li"><?php _e('Http references in your .css and .js files: change any http:// into //', 'really-simple-ssl'); ?></li>
-                <li class="message-li"><?php _e('Images, stylesheets or scripts from a domain without an SSL certificate: remove them or move to your own server', 'really-simple-ssl'); ?></li><?php
+            .rsssl-activation-notice-footer {
+                height: 35px;
+                display: flex;
+                align-items: center;
+            }
 
-                $backup_link = "https://really-simple-ssl.com/knowledge-base/backing-up-your-site/";
-                $link_open = '<a target="_blank" href="'.$backup_link.'">';
-                $link_close = '</a>';
-                ?>
-                <li class="message-li"><?php printf(__("We strongly recommend to take a %sbackup%s of your site before activating SSL", 'really-simple-ssl'), $link_open, $link_close); ?> </li>
-            </ul>
-            </p>
-            <style>
-                .message-ul {
-                    list-style-type: none;
-                }
+            .rsssl-activation-notice-li {
+                display: flex;
+                align-items: center;
+            }
 
-                #message .message-li::before {
-                    vertical-align: middle;
-                    margin-right: 25px;
-                    color: lightgrey;
-                    content: "\f345";
-                    font: 400 21px/1 dashicons;
-                }
-            </style>
-            <?php
+            .rsssl-bullet {
+                border-radius: 50%;
+                height: 13px;
+                width: 13px;
+                background-color: #FBC43D;
+                margin-right: 10px;
+            }
+
+            .message-ul {
+                list-style-type: none;
+            }
+
+            #message .message-li::before {
+                vertical-align: middle;
+                margin-right: 25px;
+                color: lightgrey;
+                content: "\f345";
+                font: 400 21px/1 dashicons;
+            }
+        </style>
+        <?php
     }
 
     /**
@@ -548,15 +588,14 @@ class rsssl_admin extends rsssl_front_end
         if ($this->site_has_ssl || (defined('RSSSL_FORCE_ACTIVATE') && RSSSL_FORCE_ACTIVATE)) {
             ?>
             <style>
-                .btn-premium {
-                    margin-left: 10px !important;
-                }
-                .btn-premium-activated {
-                    padding-top: 10px;
-                    padding-bottom: 10px;
+                .button-rsssl-secondary {
+                    border-color: @button-border-color;
+                    color: #7B8CB7;
+                    background-color: #fff;
                 }
             </style>
             <p>
+            <div class="rsssl-activation-notice-footer">
             <div class="rsssl-activate-ssl-button">
             <form action="" method="post">
                 <?php wp_nonce_field('rsssl_nonce', 'rsssl_nonce'); ?>
@@ -564,32 +603,12 @@ class rsssl_admin extends rsssl_front_end
                        value="<?php _e("Go ahead, activate SSL!", "really-simple-ssl"); ?>" id="rsssl_do_activate_ssl"
                        name="rsssl_do_activate_ssl">
                 <?php if (!defined("rsssl_pro_version") ) { ?>
-                <a class="button action btn-premium" href="<?php echo $this->pro_url ?>" target="_blank"><?php _e("Get ready with Pro", "really-simple-ssl"); ?></a>
+                <a class="button button-rsssl-secondary" href="<?php echo $this->pro_url ?>" target="_blank"><?php _e("Get ready with PRO!", "really-simple-ssl"); ?></a>
                 <?php } ?>
             </form>
-		        <b><?php _e("You may need to login in again.", "really-simple-ssl") ?></b>
-                <div id="rsssl-logo" style="float: right; margin-top: -35px;"><img width=180px" src="<?php echo rsssl_url?>/assets/logo-really-simple-ssl.png" alt="review-logo"></div>
             </div>
             </p>
-            <?php
-        }
-    }
-
-    /**
-     * @since 2.3
-     * Shows option to buy pro
-     * @access public
-     *
-     */
-
-    public function show_pro()
-    {
-        if ($this->site_has_ssl) {
-            ?>
-            <p><?php _e('You can also let the automatic scan of the pro version handle this for you, and get premium support, increased security with HSTS and more!', 'really-simple-ssl'); ?>
-                <a target="_blank"
-                         href="<?php echo $this->pro_url; ?>"><?php _e("Check out Really Simple SSL Pro", "really-simple-ssl"); ?></a>
-            </p>
+            </div>
             <?php
         }
     }
@@ -2193,7 +2212,7 @@ class rsssl_admin extends rsssl_front_end
 
                         <i>- Rogier</i>
                         <div class="rsssl-buttons-row">
-                            <a class="button button-primary" target="_blank"
+                            <a class="button button-rsssl-primary" target="_blank"
                                href="https://wordpress.org/support/plugin/really-simple-ssl/reviews/#new-post"><?php _e('Leave a review', 'really-simple-ssl'); ?></a>
                             <div class="dashicons dashicons-calendar"></div><a href="#" id="maybe-later"><?php _e('Maybe later', 'really-simple-ssl'); ?></a>
                             <div class="dashicons dashicons-no-alt"></div><a href="<?php echo esc_url(add_query_arg(array("page"=>"rlrsssl_really_simple_ssl", "tab"=>"configuration", "rsssl_dismiss_review_notice"=>1),admin_url("options-general.php") ) );?>" class="review-dismiss"><?php _e('Don\'t show again', 'really-simple-ssl'); ?></a>
@@ -2592,7 +2611,7 @@ class rsssl_admin extends rsssl_front_end
     public function admin_tabs($current = 'homepage')
     {
         $tabs = array(
-            'configuration' => __("Home", "really-simple-ssl"),
+            'configuration' => __("General", "really-simple-ssl"),
 //            'settings' => __("Settings", "really-simple-ssl"),
 //            'debug' => __("Debug", "really-simple-ssl")
         );
@@ -2616,11 +2635,13 @@ class rsssl_admin extends rsssl_front_end
             <div class="documentation">
                 <a href="https://really-simple-ssl.com/knowledge-base"><?php _e("Documentation", "really-simple-ssl");?></a>
             </div>
+            <?php if (!defined('rsssl_pro_version')) { ?>
             <div class="header-upsell">
                 <a href="<?php echo $this->pro_url ?>" target="_blank">
-                    <button class="button button-primary donate"><?php _e("Upgrade", "really-simple-ssl");?></button>
+                    <button class="button button-rsssl-primary donate"><?php _e("Upgrade", "really-simple-ssl");?></button>
                 </a>
             </div>
+            <?php } ?>
         </div>
         </div>
         <?php
@@ -3401,7 +3422,7 @@ class rsssl_admin extends rsssl_front_end
 
         if (!defined('rsssl_pro_version')) {
             $button_text = __("Go PRO!", "really-simple-ssl");
-            $text = "<a href='$this->pro_url' target='_blank' class='button button-primary upsell'>$button_text</a>";
+            $text = "<a href='$this->pro_url' target='_blank' class='button button-rsssl-primary upsell'>$button_text</a>";
         }
 
         $items = array(
@@ -3493,7 +3514,7 @@ class rsssl_admin extends rsssl_front_end
     public function generate_settings_footer() {
 	    ob_start();
 	    ?>
-        <input class="button button-secondary button-save" name="Submit" type="submit"
+        <input class="button button-rsssl-secondary button-save" name="Submit" type="submit"
                value="<?php echo __("Save", "really-simple-ssl"); ?>"/>
         <?php
         $content = ob_get_clean();
@@ -3510,7 +3531,7 @@ class rsssl_admin extends rsssl_front_end
     public function get_system_status_footer() {
         ob_start();
         ?>
-        <a href="<?php echo trailingslashit(rsssl_url).'system-status.php' ?>" class="button button-upsell"><?php _e("Download system status", "really-simple-ssl")?></a>
+        <a href="<?php echo trailingslashit(rsssl_url).'system-status.php' ?>" class="button button-rsssl-secondary"><?php _e("Download system status", "really-simple-ssl")?></a>
         <div id="rsssl-feedback"></div>
         <div class="rsssl-system-status-footer-info">
             <span class="system-status-info"><?php echo "<b>" . __("Server type:", "really-simple-ssl") . "</b> " . RSSSL()->rsssl_server->get_server(); ?></span>
@@ -3622,7 +3643,7 @@ class rsssl_admin extends rsssl_front_end
     public function get_support_forum_block_footer() {
         ob_start();
         ?>
-        <a href="https://really-simple-ssl.com/forums/" target="_blank" class="button button-upsell"><?php _e("View all" , "really-simple-ssl");?></a>
+        <a href="https://really-simple-ssl.com/forums/" target="_blank" class="button button-rsssl-secondary"><?php _e("View all" , "really-simple-ssl");?></a>
         <?php
         $content = ob_get_clean();
         return $content;
@@ -3658,6 +3679,7 @@ class rsssl_admin extends rsssl_front_end
                 'constant_premium' => 'wpsi_pro_plugin',
                 'website' => 'https://wpsearchinsights.com/pro',
                 'search' => 'WP+Search+Insights',
+                'link' => 'https://wordpress.org/plugins/wp-search-insights/',
             ),
             2 => array(
                 'title' => '<div class="cmplz-blue rsssl-bullet"></div>',
@@ -3667,6 +3689,7 @@ class rsssl_admin extends rsssl_front_end
                 'constant_premium' => 'cmplz_premium',
                 'website' => 'https://complianz.io/pricing',
                 'search' => 'complianz',
+                'link' => 'https://wordpress.org/plugins/complianz-gdpr/',
             ),
             3 => array(
                 'title' => '<div class="zip-pink rsssl-bullet"></div>',
@@ -3676,6 +3699,7 @@ class rsssl_admin extends rsssl_front_end
                 'constant_premium' => 'ZRDN_PREMIUM',
                 'website' => 'https://ziprecipes.net/premium/',
                 'search' => 'zip+recipes+recipe+maker+really+simple+plugins',
+                'link' => 'https://wordpress.org/plugins/zip-recipes/',
                 ),
         );
 
@@ -3688,12 +3712,14 @@ class rsssl_admin extends rsssl_front_end
                 '{status}',
                 '{class}',
                 '{controls}',
+                '{link}'
             ), array(
                 $item['title'],
                 $item['content'],
                 $this->get_status_link($item),
                 $item['class'],
                 '',
+                $item['link'],
             ), $element);
         }
 

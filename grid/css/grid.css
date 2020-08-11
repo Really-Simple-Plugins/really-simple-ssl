@@ -15,6 +15,10 @@
   margin-left: 25px;
   margin-bottom: 10px;
 }
+#wpcontent .rsssl-logo-container #rsssl-logo {
+  height: 35px;
+  margin-top: -25px;
+}
 #wpcontent .header-links {
   display: flex;
   flex: 1;
@@ -25,6 +29,9 @@
 }
 #wpcontent .header-links .documentation {
   padding-right: 25px;
+}
+#wpcontent .header-links .documentation a {
+  color: black;
 }
 .rsssl-grid {
   margin-left: 25px;
@@ -39,6 +46,19 @@
     Dots
    */
 }
+.rsssl-grid .button-rsssl-primary {
+  text-align: center;
+  background-color: #3a5998;
+  color: white;
+  min-width: 80px;
+}
+.rsssl-grid .button-rsssl-secondary {
+  text-align: center;
+  border-color: #6477AA;
+  color: #7B8CB7;
+  background-color: #fff;
+  min-width: 80px;
+}
 .rsssl-grid .rsssl-item {
   width: 800px;
   height: 475px;
@@ -48,9 +68,7 @@
   width: 400px;
 }
 .rsssl-grid .rsssl-item .rsssl-close-warning {
-  color: #ccc;
   margin-right: 25px;
-  font-size: 0.9em;
 }
 .rsssl-grid .rsssl-item .item-container {
   background-color: #fff;
@@ -140,7 +158,7 @@
 }
 .rsssl-grid .rsssl-item .item-container .rsssl-grid-item-content .progress-text .rsssl-progress-percentage {
   font-size: 32px;
-  font-weight: 900;
+  font-weight: 700;
 }
 .rsssl-grid .rsssl-item .item-container .rsssl-grid-item-content .progress-text .rsssl-progress-text {
   display: flex;
@@ -210,12 +228,12 @@
 }
 .rsssl-grid .rsssl-item .item-container .rsssl-grid-item-content .tips-tricks-bottom {
   position: absolute;
-  bottom: 85px;
+  bottom: 10px;
   color: #3c3c3c;
 }
 .rsssl-grid .rsssl-item .item-container .rsssl-grid-item-content .rsssl-bullet {
-  height: 15px;
-  width: 15px;
+  height: 13px;
+  width: 13px;
   border-radius: 50%;
   margin-right: 10px;
   background-color: lightgrey;
@@ -260,6 +278,12 @@
   padding: 6px;
   align-items: center;
   color: #3c3c3c;
+}
+.rsssl-grid .rsssl-item .item-container .rsssl-grid-item-content .rsssl-upsell .plugin-text a {
+  text-decoration: none;
+}
+.rsssl-grid .rsssl-item .item-container .rsssl-grid-item-content .rsssl-upsell .rsp-image {
+  margin-right: 5px;
 }
 .rsssl-grid .rsssl-item .item-container .rsssl-grid-item-content .rsssl-upsell .wpsi-red {
   background-color: red;
@@ -345,6 +369,7 @@
 }
 .rsssl-grid #rsssl-progress-footer .footer-left .upsell {
   min-width: 80px;
+  text-align: center;
 }
 .rsssl-grid #rsssl-progress-footer .rsssl-footer-item {
   margin-left: 20px;
