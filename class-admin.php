@@ -505,7 +505,7 @@ class rsssl_admin extends rsssl_front_end
         <div class="rsssl-activation-notice">
             <div class="rsssl-activation-notice-header">
                 <h1><?php _e("Almost ready to migrate to SSL!", "really-simple-ssl"); ?></h1>
-                <div id="rsssl-logo-activation"><img width=180px" src="<?php echo rsssl_url?>/assets/logo-really-simple-ssl.png" alt="really-simple-ssl-logo"></div>
+                <div id="rsssl-logo-activation"><img width="180px" src="<?php echo rsssl_url?>/assets/logo-really-simple-ssl.png" alt="really-simple-ssl-logo"></div>
             </div>
             <div class="rsssl-activation-notice-content">
                 <?php _e("Some things can't be done automatically. Before you migrate, please check for: ", 'really-simple-ssl'); ?>
@@ -2610,8 +2610,15 @@ class rsssl_admin extends rsssl_front_end
 
     public function admin_tabs($current = 'homepage')
     {
+        // Only show general text if there are other tabs as well
+        if (defined('rsssl_pro_version')) {
+           $general = __("General", "really-simple-ssl");
+        } else {
+            $general = '';
+        }
+
         $tabs = array(
-            'configuration' => __("General", "really-simple-ssl"),
+            'configuration' => $general,
 //            'settings' => __("Settings", "really-simple-ssl"),
 //            'debug' => __("Debug", "really-simple-ssl")
         );
@@ -2638,7 +2645,8 @@ class rsssl_admin extends rsssl_front_end
             <?php if (!defined('rsssl_pro_version')) { ?>
             <div class="header-upsell">
                 <a href="<?php echo $this->pro_url ?>" target="_blank">
-                    <button class="button button-rsssl-primary donate"><?php _e("Upgrade", "really-simple-ssl");?></button>
+<!--                    <button class="button button-rsssl-primary donate">--><?php //_e("Upgrade", "really-simple-ssl");?><!--</button>-->
+                    <div class="header-upsell-pro"><?php _e("PRO", "really-simple-ssl"); ?></div>
                 </a>
             </div>
             <?php } ?>
@@ -2788,7 +2796,7 @@ class rsssl_admin extends rsssl_front_end
                         'icon' => 'success'
                     ),
                     //generate an enable link to highlight the setting, setting name is same as array key
-                    $enable_link = $this->generate_enable_link($setting_name = 'wp-redirect-to-htaccess'),
+                    $enable_link = $this->generate_enable_link($setting_name = 'wp-redirect-to-htaccess', $type='free'),
                     'wp-redirect-to-htaccess' => array(
                         'msg' => __('WordPress 301 redirect enabled. We recommend to enable the 301 .htaccess redirect option on your specific setup.', 'really-simple-ssl') . " "
 //                                 . "<span><a href=$enable_link>$enable</a></span>" . " "
@@ -2985,9 +2993,14 @@ class rsssl_admin extends rsssl_front_end
      *
 	 */
 
-    public function generate_enable_link($setting_name)
+    public function generate_enable_link($setting_name, $type)
     {
-	    return add_query_arg(array("page"=>"rlrsssl_really_simple_ssl", "tab"=>"settings", "highlight"=>"$setting_name"),admin_url("options-general.php"));
+        if ($type == 'free') {
+            return add_query_arg(array("page" => "rlrsssl_really_simple_ssl", "highlight" => "$setting_name"), admin_url("options-general.php"));
+        } elseif ($type == 'premium') {
+            return add_query_arg(array("page" => "rlrsssl_really_simple_ssl", "tab" => "premium", "highlight" => "$setting_name"), admin_url("options-general.php"));
+
+        }
     }
 
 	/**
@@ -3200,7 +3213,7 @@ class rsssl_admin extends rsssl_front_end
                 'title' => __("Tips & Tricks", "really-simple-ssl"),
                 'secondary_header_item' => '',
                 'content' => $this->generate_tips_tricks(),
-                'footer' => false,
+                'footer' => $this->generate_tips_tricks_footer(),
                 'class' => 'small',
                 'type' => 'popular',
                 'can_hide' => true,
@@ -3531,7 +3544,7 @@ class rsssl_admin extends rsssl_front_end
     public function get_system_status_footer() {
         ob_start();
         ?>
-        <a href="<?php echo trailingslashit(rsssl_url).'system-status.php' ?>" class="button button-rsssl-secondary"><?php _e("Download system status", "really-simple-ssl")?></a>
+        <a href="<?php echo trailingslashit(rsssl_url).'system-status.php' ?>" class="button button-rsssl-secondary rsssl-wide-button"><?php _e("Download system status", "really-simple-ssl")?></a>
         <div id="rsssl-feedback"></div>
         <div class="rsssl-system-status-footer-info">
             <span class="system-status-info"><?php echo "<b>" . __("Server type:", "really-simple-ssl") . "</b> " . RSSSL()->rsssl_server->get_server(); ?></span>
@@ -3582,6 +3595,15 @@ class rsssl_admin extends rsssl_front_end
 		}
 		return str_replace(array('{content}'), array($output), $container);
 	}
+
+	public function generate_tips_tricks_footer() {
+	    ob_start();
+	    ?>
+        <a href="https://really-simple-ssl.com/knowledge-base-overview/" target="_blank"><button class="button button-rsssl-secondary"><?php _e("Documentation", "really-simple-ssl"); ?> </button></a>
+        <?php
+	    $contents = ob_get_clean();
+	    return $contents;
+    }
 
     /**
      * @return string|string[]

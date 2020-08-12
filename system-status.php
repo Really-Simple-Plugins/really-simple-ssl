@@ -60,6 +60,19 @@ if ( current_user_can( 'manage_options' ) ) {
 		echo (!RSSSL()->rsssl_multisite->ssl_enabled_networkwide) ? "SSL is being activated per site\n" : "SSL is activated network wide\n";
 	}
 
+	if (defined('rsssl_pro_version')) {
+	    echo "TLS version: " . RSSSL_PRO()->really_simple_ssl->get_tls_version();
+	    if (RSSSL_PRO()->really_simple_ssl->redirects_to_homepage()) {
+	        echo "Redirect to homepage detected \n";
+        }
+	    if (RSSSL_PRO()->really_simple_ssl->has_redirect_to_http()) {
+	        echo "Redirect to http:// detected \n";
+        }
+	    if (RSSSL_PRO()->really_simple_ssl->site_uses_cache()) {
+	        echo "Site uses caching \n";
+        }
+    }
+
 	echo $really_simple_ssl->debug_log;
 
 	echo "\n\nConstants\n";

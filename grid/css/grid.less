@@ -46,6 +46,21 @@
         color: black;
       }
     }
+    .header-upsell {
+      a {
+        text-decoration: none;
+      }
+      .header-upsell-pro {
+        color: black;
+        border: 3px solid @border_color;
+        margin: 10px;
+        width: 80px;
+        text-align: center;
+        padding: 5px;
+        border-radius: 20px;
+        font-weight: 600;
+      }
+    }
   }
 }
 
@@ -60,7 +75,7 @@
     text-align: center;
     background-color: #3a5998;
     color: white;
-    min-width: 80px;
+    min-width: 100px;
   }
 
   .button-rsssl-secondary {
@@ -68,7 +83,11 @@
     border-color: @button-border-color;
     color: #7B8CB7;
     background-color: #fff;
-    min-width: 80px;
+    min-width: 100px;
+  }
+
+  .rsssl-wide-button {
+    width: 220px;
   }
 
   .rsssl-item {
@@ -197,6 +216,7 @@
         }
           .form-table {
             overflow: hidden;
+            display: flex;
             .dashicons-editor-help {
               font-size: 20px;
             }
@@ -338,6 +358,10 @@
             .plugin-text {
               a {
                 text-decoration: none;
+                color: @light-text-color;
+                &:hover {
+                  color: @color_open;
+                }
               }
             }
 
