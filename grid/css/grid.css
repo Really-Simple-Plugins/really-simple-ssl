@@ -38,7 +38,7 @@
 }
 #wpcontent .header-links .header-upsell .header-upsell-pro {
   color: black;
-  border: 3px solid #dedede;
+  border: 3px solid black;
   margin: 10px;
   width: 80px;
   text-align: center;
@@ -62,7 +62,7 @@
 .rsssl-grid .button-rsssl-primary {
   text-align: center;
   background-color: #3a5998;
-  color: white;
+  color: white !important;
   min-width: 100px;
 }
 .rsssl-grid .button-rsssl-secondary {
@@ -85,6 +85,10 @@
 }
 .rsssl-grid .rsssl-item .rsssl-close-warning {
   margin-right: 25px;
+}
+.rsssl-grid .rsssl-item .rsssl-close-warning-x {
+  color: #ccc;
+  font-size: 0.9em;
 }
 .rsssl-grid .rsssl-item .item-container {
   background-color: #fff;
@@ -118,6 +122,9 @@
 }
 .rsssl-grid .rsssl-item .item-container .rsssl-grid-item-header .rsssl-secondary-header-item .rsssl-save-settings-feedback {
   color: red;
+}
+.rsssl-grid .rsssl-item .item-container .rsssl-dashboard-dismiss {
+  padding-left: 25px;
 }
 .rsssl-grid .rsssl-item .item-container .rsssl-table-td-main-content {
   padding-left: 15px;
@@ -198,7 +205,10 @@
   overflow: hidden;
   display: flex;
 }
-.rsssl-grid .rsssl-item .item-container .rsssl-grid-item-content .form-table .dashicons-editor-help {
+.rsssl-grid .rsssl-item .item-container .rsssl-grid-item-content .form-table th {
+  margin-left: 10px;
+}
+.rsssl-grid .rsssl-item .item-container .rsssl-grid-item-content .form-table th .dashicons-editor-help {
   font-size: 20px;
 }
 .rsssl-grid .rsssl-item .item-container .rsssl-grid-item-content .form-table tbody {

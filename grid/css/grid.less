@@ -52,7 +52,7 @@
       }
       .header-upsell-pro {
         color: black;
-        border: 3px solid @border_color;
+        border: 3px solid black;
         margin: 10px;
         width: 80px;
         text-align: center;
@@ -74,7 +74,7 @@
   .button-rsssl-primary {
     text-align: center;
     background-color: #3a5998;
-    color: white;
+    color: white !important;
     min-width: 100px;
   }
 
@@ -96,18 +96,16 @@
       width: @gridblock_width_small;
     }
     .rsssl-close-warning {
-      //color: #ccc;
       margin-right: 25px;
-      //font-size: 0.9em;
+    }
+    .rsssl-close-warning-x {
+      color: #ccc;
+      font-size: 0.9em;
     }
     &.settings {
       .item-container {
-        .rsssl-grid-item-footer {
-          //justify-content: flex-start;
-        }
       }
     }
-    //position: absolute;
     height: @gridblock_height;
     z-index: 1;
     .item-container {
@@ -144,6 +142,9 @@
             color: @color_warning;
           }
         }
+      }
+      .rsssl-dashboard-dismiss {
+        padding-left: 25px;
       }
       .rsssl-table-td-main-content {
         padding-left: 15px;
@@ -217,8 +218,11 @@
           .form-table {
             overflow: hidden;
             display: flex;
-            .dashicons-editor-help {
-              font-size: 20px;
+            th {
+              margin-left: 10px;
+              .dashicons-editor-help {
+                font-size: 20px;
+              }
             }
 
             tbody {

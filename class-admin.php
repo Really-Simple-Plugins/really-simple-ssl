@@ -519,7 +519,7 @@ class rsssl_admin extends rsssl_front_end
                         $link_close = '</a>';
                         ?>
                         <li class="rsssl-activation-notice-li"><div class="rsssl-bullet"></div><?php printf(__("We strongly recommend to take a %sbackup%s of your site before activating SSL", 'really-simple-ssl'), $link_open, $link_close); ?> </li>
-                        <li class="rsssl-activation-notice-li"><div class="rsssl-bullet"></div><b><?php _e("You may need to login in again.", "really-simple-ssl") ?></b></li>
+                        <li class="rsssl-activation-notice-li"><div class="rsssl-bullet"></div><?php _e("You may need to login in again.", "really-simple-ssl") ?></li>
                     </ul>
                 <p><?php _e('You can also let the automatic scan of the pro version handle this for you, and get premium support, increased security with HSTS and more!', 'really-simple-ssl'); ?>
                     <a target="_blank"
@@ -3184,7 +3184,7 @@ class rsssl_admin extends rsssl_front_end
                 'content' => RSSSL_PRO()->rsssl_premium_options->add_pro_settings_page(),
                 'footer' => RSSSL_PRO()->rsssl_premium_options->add_pro_settings_footer(),
                 'type' => 'settings',
-                'class' => 'half-height rsssl-premium-settings',
+                'class' => 'rsssl-premium-settings',
                 'can_hide' => true,
             );
         }
@@ -3901,7 +3901,7 @@ class rsssl_admin extends rsssl_front_end
     public function rsssl_dismiss_button()
     {
          return '<button type="button" class="close">
-                <span class="rsssl-close-warning">X</span>
+                <span class="rsssl-close-warning-x">X</span>
             </button>';
     }
 
@@ -3963,8 +3963,8 @@ class rsssl_admin extends rsssl_front_end
             wp_register_style('rlrsssl-css', trailingslashit(rsssl_url) . 'css/main-rtl.min.css', "", rsssl_version);
             wp_register_style('rsssl-grid', trailingslashit(rsssl_url) . 'grid/css/grid-rtl.min.css', "", rsssl_version);
         } else {
-	        wp_register_style('rlrsssl-css', trailingslashit(rsssl_url) . 'css/main.min.css', "", rsssl_version);
-            wp_register_style('rsssl-grid', trailingslashit(rsssl_url) . 'grid/css/grid.min.css', "", rsssl_version);
+	        wp_register_style('rlrsssl-css', trailingslashit(rsssl_url) . 'css/main.min.css', "", time());
+            wp_register_style('rsssl-grid', trailingslashit(rsssl_url) . 'grid/css/grid.min.css', "", time());
         }
 
 
