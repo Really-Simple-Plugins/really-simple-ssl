@@ -1260,7 +1260,7 @@ class rsssl_admin extends rsssl_front_end
     public function save_options()
     {
         $this->reset_plusone_cache();
-	    $this->reset_open_task_cache();
+	    $this->reset_open_remaining_task_cache();
 
 	    //any options added here should also be added to function options_validate()
         $options = array(
@@ -3070,8 +3070,9 @@ class rsssl_admin extends rsssl_front_end
      *
      */
 
-    public function reset_open_task_cache(){
+    public function reset_open_remaining_task_cache(){
         delete_transient('rsssl_open_task_count');
+        delete_transient('rsssl_remaining_task_count');
     }
 
 	/**
@@ -3265,8 +3266,8 @@ class rsssl_admin extends rsssl_front_end
             return 0;
         }
 
-        $count = get_transient( 'rsssl_all_task_count' );
-
+//        $count = get_transient( 'rsssl_all_task_count' );
+$count=false;
         if ( $count === false ) {
             $count = 0;
 
@@ -3303,7 +3304,7 @@ class rsssl_admin extends rsssl_front_end
                     }
                 }
             }
-            set_transient( 'rsssl_all_task_count', $count, 'WEEK_IN_SECONDS' );
+            set_transient( 'rsssl_all_task_count', $count, 'DAY_IN_SECONDS' );
         }
         if (wp_doing_ajax()) {
             wp_die($count);
@@ -3332,11 +3333,11 @@ class rsssl_admin extends rsssl_front_end
             if (!isset($_POST["action"]) && $_POST["action"] ==! 'rsssl_get_updated_percentage') return;
 
             // When invoked via AJAX the count should be updated, therefore clear cache
-            $this->reset_open_task_cache();
+            $this->reset_open_remaining_task_cache();
 
         }
 
-        $count = get_transient( 'rsssl_open_task_count' );
+        $count = get_transient( 'rsssl_remaining_task_count' );
 
         if ( $count === false ) {
             $count = 0;
@@ -3374,8 +3375,9 @@ class rsssl_admin extends rsssl_front_end
                     }
                 }
             }
-            set_transient( 'rsssl_open_task_count', $count, 'WEEK_IN_SECONDS' );
+            set_transient( 'rsssl_remaining_task_count', $count, 'DAY_IN_SECONDS' );
         }
+
         if (wp_doing_ajax()) {
             wp_die($count);
         }
@@ -3527,7 +3529,7 @@ class rsssl_admin extends rsssl_front_end
     public function generate_settings_footer() {
 	    ob_start();
 	    ?>
-        <input class="button button-rsssl-secondary button-save" name="Submit" type="submit"
+        <input class="button button-rsssl-secondary rsssl-button-save" name="Submit" type="submit"
                value="<?php echo __("Save", "really-simple-ssl"); ?>"/>
         <?php
         $content = ob_get_clean();

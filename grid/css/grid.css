@@ -89,6 +89,7 @@
 .rsssl-grid .rsssl-item .rsssl-close-warning-x {
   color: #ccc;
   font-size: 0.9em;
+  margin-right: 25px;
 }
 .rsssl-grid .rsssl-item .item-container {
   background-color: #fff;
@@ -122,9 +123,6 @@
 }
 .rsssl-grid .rsssl-item .item-container .rsssl-grid-item-header .rsssl-secondary-header-item .rsssl-save-settings-feedback {
   color: red;
-}
-.rsssl-grid .rsssl-item .item-container .rsssl-dashboard-dismiss {
-  padding-left: 25px;
 }
 .rsssl-grid .rsssl-item .item-container .rsssl-table-td-main-content {
   padding-left: 15px;
@@ -223,7 +221,6 @@
 }
 .rsssl-grid .rsssl-item .item-container .rsssl-grid-item-content .form-table tbody tr th {
   padding: 10px 0 0 0 !important;
-  vertical-align: middle !important;
   display: flex;
 }
 .rsssl-grid .rsssl-item .item-container .rsssl-grid-item-content .form-table tbody tr th .rsssl-settings-text {
