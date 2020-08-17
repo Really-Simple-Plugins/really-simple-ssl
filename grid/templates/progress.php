@@ -22,7 +22,7 @@
                 <?php _e("tasks open", "really-simple-ssl");
                 } else {
                     $pro_url = RSSSL()->really_simple_ssl->pro_url;
-                    echo printf(__("Basic SSL configuration finished! Improve your score with %sReally Simple SSL Pro%s. ", "really-simple-ssl"), '<a target="_blank" href="' . $pro_url . '">', '</a>');
+                    echo sprintf(__("Basic SSL configuration finished! Improve your score with %sReally Simple SSL Pro%s. ", "really-simple-ssl"), '<a target="_blank" href="' . $pro_url . '">', '</a>');
                 }
             } else {
                 _e("SSL is not yet enabled." , "really-simple-ssl");
