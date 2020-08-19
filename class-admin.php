@@ -3247,7 +3247,7 @@ class rsssl_admin extends rsssl_front_end
 			                    'img' => 'wpsearchinsights.jpg',
 			                    'title' => 'WP Search Insights',
 			                    'description' => __("Records all searches made on your site. See valuable insights in a clean dashboard", "really-simple-ssl"),
-			                    'url' => "$admin_url" . "plugin-install.php?s=wp+search+insights+Rogier+Lankhorst&tab=search&type=term",
+			                    'url' => "$admin_url" . "plugin-install.php?s=wp+search+insights&tab=search&type=term",
 		                    )
 	                    );
                     }

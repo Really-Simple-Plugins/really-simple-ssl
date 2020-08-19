@@ -63,7 +63,7 @@ if (!class_exists('rsssl_multisite')) {
 
             //If WP version is 5.1 or higher, use wp_insert_site hook for multisite SSL activation in new blogs
             if(version_compare(get_bloginfo('version'),'5.1', '>=') ) {
-	            add_action('wp_insert_site', array($this, 'maybe_activate_ssl_in_new_blog'), 20, 1);
+	            add_action('wp_initialize_site', array($this, 'maybe_activate_ssl_in_new_blog'), 20, 1);
             } else {
                 add_action('wpmu_new_blog', array($this, 'maybe_activate_ssl_in_new_blog_deprecated'), 10, 6);
             }
