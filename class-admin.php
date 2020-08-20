@@ -2844,7 +2844,7 @@ class rsssl_admin extends rsssl_front_end
                         'icon' => 'success'
                     ),
                     'no-hsts' => array(
-                        'msg' => sprintf(__('%sHTTP Strict Transport Security%s is not enabled %s(premium)%s', "really-simple-ssl"), '<a href="https://en.wikipedia.org/wiki/HTTP_Strict_Transport_Security" target="_blank">', '</a>', '<a target="_blank" href="' . $this->pro_url . '">', '</a>'),
+                        'msg' => sprintf(__('%sHTTP Strict Transport Security%s is not enabled %s(premium)%s', "really-simple-ssl"), '<a href="https://really-simple-ssl.com/knowledge-base/what-does-hsts-mean/" target="_blank">', '</a>', '<a target="_blank" href="' . $this->pro_url . '">', '</a>'),
                         'icon' => 'warning'
                     ),
                 ),
