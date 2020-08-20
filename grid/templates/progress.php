@@ -36,7 +36,7 @@
 	?>
 
 	<div class="rsssl-task-list">
-        <table class="really-simple-ssl-table">
+        <table class="rsssl-progress-table">
         <thead></thead>
 			<tbody>
 			<?php
