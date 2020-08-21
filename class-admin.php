@@ -3185,7 +3185,7 @@ class rsssl_admin extends rsssl_front_end
                 'content' => RSSSL_PRO()->rsssl_premium_options->add_pro_settings_page(),
                 'footer' => RSSSL_PRO()->rsssl_premium_options->add_pro_settings_footer(),
                 'type' => 'settings',
-                'class' => 'rsssl-premium-settings',
+                'class' => 'rsssl-premium-settings half-height',
                 'can_hide' => true,
             );
         }

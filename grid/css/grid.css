@@ -65,6 +65,9 @@
   color: white !important;
   min-width: 100px;
 }
+.rsssl-grid .button-rsssl-primary:hover {
+  color: black !important;
+}
 .rsssl-grid .button-rsssl-secondary {
   text-align: center;
   border-color: #6477AA;
