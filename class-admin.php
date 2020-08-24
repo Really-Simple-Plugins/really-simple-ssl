@@ -2844,7 +2844,7 @@ class rsssl_admin extends rsssl_front_end
                         'icon' => 'success'
                     ),
                     'no-hsts' => array(
-                        'msg' => sprintf(__('%sHTTP Strict Transport Security%s is not enabled %s(premium)%s', "really-simple-ssl"), '<a href="https://en.wikipedia.org/wiki/HTTP_Strict_Transport_Security" target="_blank">', '</a>', '<a target="_blank" href="' . $this->pro_url . '">', '</a>'),
+                        'msg' => sprintf(__('%sHTTP Strict Transport Security%s is not enabled %s(premium)%s', "really-simple-ssl"), '<a href="https://really-simple-ssl.com/knowledge-base/what-does-hsts-mean/" target="_blank">', '</a>', '<a target="_blank" href="' . $this->pro_url . '">', '</a>'),
                         'icon' => 'warning'
                     ),
                 ),
@@ -3247,7 +3247,7 @@ class rsssl_admin extends rsssl_front_end
 			                    'img' => 'wpsearchinsights.jpg',
 			                    'title' => 'WP Search Insights',
 			                    'description' => __("Records all searches made on your site. See valuable insights in a clean dashboard", "really-simple-ssl"),
-			                    'url' => "$admin_url" . "plugin-install.php?s=wp+search+insights+Rogier+Lankhorst&tab=search&type=term",
+			                    'url' => "$admin_url" . "plugin-install.php?s=wp+search+insights&tab=search&type=term",
 		                    )
 	                    );
                     }
