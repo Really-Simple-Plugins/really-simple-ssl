@@ -8,7 +8,7 @@ jQuery(document).ready(function ($) {
         $('.rsssl-button-save').prop('disabled', false);
     });
 
-    $('.really-simple-ssl-table').DataTable();
+    // $('.really-simple-ssl-table').DataTable();
 
     // Re-calculate percentage on dimissing notice. Use document, function to allow AJAX call to run more than once.
     $(document).on('click','.rsssl-close-warning',function () {        
