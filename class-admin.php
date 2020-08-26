@@ -452,7 +452,7 @@ class rsssl_admin extends rsssl_front_end
                     border-left: 4px solid #F8BE2E;
                 }
                 .activate-ssl .button {
-                    margin-bottom:20px;
+                    margin-bottom: 5px;
                 }
                 <?php echo apply_filters('rsssl_pro_inline_style', ''); ?>
             </style>
@@ -2799,9 +2799,9 @@ class rsssl_admin extends rsssl_front_end
                     $enable_link = $this->generate_enable_link($setting_name = 'wp-redirect-to-htaccess', $type='free'),
                     'wp-redirect-to-htaccess' => array(
                         'msg' => __('WordPress 301 redirect enabled. We recommend to enable the 301 .htaccess redirect option on your specific setup.', 'really-simple-ssl') . " "
-//                                 . "<span><a href=$enable_link>$enable</a></span>" . " "
-//                                 . __("or", "really-simple-ssl")
-//                                 . "<span class='rsssl-dashboard-dismiss' data-dismiss_type='check_redirect'><a href='#' class='rsssl-dismiss-text rsssl-close-warning'>$dismiss</a></span>"
+                                 . "<span><a href=$enable_link>$enable</a></span>" . " "
+                                 . __("or", "really-simple-ssl")
+                                 . "<span class='rsssl-dashboard-dismiss' data-dismiss_type='check_redirect'><a href='#' class='rsssl-dismiss-text rsssl-close-warning'>$dismiss</a></span>"
                                  . "<span class='rsssl-dashboard-plusone update-plugins rsssl-update-count'><span class='update-count'>1</span></span>",
                         'icon' => 'open',
                         'plusone' => $redirect_plusone,
