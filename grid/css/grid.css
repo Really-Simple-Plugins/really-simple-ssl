@@ -75,6 +75,10 @@
   background-color: #fff;
   min-width: 100px;
 }
+.rsssl-grid .button-rsssl-tertiary {
+  background-color: #D7263D;
+  color: white;
+}
 .rsssl-grid .rsssl-wide-button {
   width: 220px;
 }
@@ -416,6 +420,7 @@
 }
 .rsssl-grid #rsssl-progress-footer .rsssl-footer-item {
   margin-left: 20px;
+  padding-right: 20px;
 }
 .rsssl-grid .rsssl-system-status-footer-info {
   font-size: 0.9em;
