@@ -78,6 +78,15 @@
 .rsssl-grid .rsssl-wide-button {
   width: 220px;
 }
+.rsssl-grid .rsssl-progress .rsssl-ss-wrapper {
+  height: 200px;
+  top: 75px;
+}
+.rsssl-grid .rsssl-progress .rsssl-progress-bar-text {
+  position: fixed;
+  top: 170px;
+  width: 750px;
+}
 .rsssl-grid .rsssl-item {
   width: 800px;
   height: 475px;
@@ -136,8 +145,8 @@
   border-bottom: 1px solid #dedede;
   overflow-x: hidden;
   /*
-          Progress bar
-        */
+            Progress bar
+          */
   /*
           Settings
         */

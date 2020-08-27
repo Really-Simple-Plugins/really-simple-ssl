@@ -3196,7 +3196,7 @@ class rsssl_admin extends rsssl_front_end
 				'secondary_header_item' => $this->generate_secondary_progress_header_item(),
 				'content' => $this->generate_progress(),
 				'footer' => $this->generate_progress_footer(),
-				'class' => 'regular',
+				'class' => 'regular rsssl-progress',
 				'type' => 'all',
 				'can_hide' => true,
 
