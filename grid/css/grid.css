@@ -82,15 +82,6 @@
 .rsssl-grid .rsssl-wide-button {
   width: 220px;
 }
-.rsssl-grid .rsssl-progress .rsssl-ss-wrapper {
-  height: 200px;
-  top: 75px;
-}
-.rsssl-grid .rsssl-progress .rsssl-progress-bar-text {
-  position: fixed;
-  top: 170px;
-  width: 750px;
-}
 .rsssl-grid .rsssl-item {
   width: 800px;
   height: 475px;
@@ -256,20 +247,23 @@
 .rsssl-grid .rsssl-item .item-container .rsssl-grid-item-content h2 {
   display: none;
 }
-.rsssl-grid .rsssl-item .item-container .rsssl-grid-item-content .rsssl-tips-tricks-element {
+.rsssl-grid .rsssl-item .item-container .rsssl-grid-item-content .rsssl-tips-tricks {
+  padding-left: 10px;
+}
+.rsssl-grid .rsssl-item .item-container .rsssl-grid-item-content .rsssl-tips-tricks .rsssl-tips-tricks-element {
   display: flex;
   justify-content: space-between;
   margin-right: 10px;
 }
-.rsssl-grid .rsssl-item .item-container .rsssl-grid-item-content .rsssl-tips-tricks-element .rsssl-tips-tricks-content {
+.rsssl-grid .rsssl-item .item-container .rsssl-grid-item-content .rsssl-tips-tricks .rsssl-tips-tricks-element .rsssl-tips-tricks-content {
   width: 80%;
   color: #3c3c3c;
   padding-bottom: 15px;
 }
-.rsssl-grid .rsssl-item .item-container .rsssl-grid-item-content .rsssl-tips-tricks-read-more a {
+.rsssl-grid .rsssl-item .item-container .rsssl-grid-item-content .rsssl-tips-tricks .rsssl-tips-tricks-read-more a {
   text-decoration: none;
 }
-.rsssl-grid .rsssl-item .item-container .rsssl-grid-item-content .tips-tricks-bottom {
+.rsssl-grid .rsssl-item .item-container .rsssl-grid-item-content .rsssl-tips-tricks .tips-tricks-bottom {
   position: absolute;
   bottom: 10px;
   color: #3c3c3c;
@@ -421,6 +415,9 @@
 .rsssl-grid #rsssl-progress-footer .rsssl-footer-item {
   margin-left: 20px;
   padding-right: 20px;
+}
+.rsssl-grid #rsssl-progress-footer .hidden {
+  display: none;
 }
 .rsssl-grid .rsssl-system-status-footer-info {
   font-size: 0.9em;

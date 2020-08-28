@@ -453,6 +453,7 @@ class rsssl_admin extends rsssl_front_end
                 }
                 .activate-ssl .button {
                     margin-bottom: 5px;
+                    padding-right: 10px;
                 }
                 <?php echo apply_filters('rsssl_pro_inline_style', ''); ?>
             </style>
@@ -3232,27 +3233,56 @@ class rsssl_admin extends rsssl_front_end
      */
 
 	public function generate_secondary_progress_header_item() {
-	    ob_start();
+//	    ob_start();
+//        ?>
+<!--        <div class="rsssl-secondary-header-item">-->
+<!--            --><?php //$all_task_count = $this->get_all_task_count(); ?>
+<!--            <div class="all-task-text"> --><?php
+//                _e( "All tasks", "really-simple-ssl" );
+//                ?><!-- </div>-->
+<!--            <div class="all-task-count">-->
+<!--                --><?php
+//                echo " " . "(" . $all_task_count . ")";
+//                ?><!-- </div>-->
+<!--            --><?php
+//            $open_task_count = $this->get_remaining_tasks_count();
+//            if ($open_task_count ==! 0) {
+//                ?><!-- <div class="open-task-text"> --><?php
+//	            _e( "Remaining tasks", "really-simple-ssl" );
+//	            ?><!-- </div>-->
+<!--                <div class="open-task-count">-->
+<!--                --><?php
+//	            echo " " . "(" . $open_task_count . ")";
+//	            ?><!-- </div> --><?php
+//            }
+//            ?>
+<!--        </div>-->
+<!--        --><?php
+//        $content = ob_get_clean();
+//        return $content;
+        ob_start();
         ?>
         <div class="rsssl-secondary-header-item">
             <?php $all_task_count = $this->get_all_task_count(); ?>
-            <div class="all-task-text"> <?php
-                _e( "All tasks", "really-simple-ssl" );
-                ?> </div>
+            <div class="all-task-text">
+<!--                <input type="checkbox" id="rlrsssl_options" name="rlrsssl_options[all_tasks]" --><?php //checked(1, $this->all_tasks, true) ?><!--/>-->
+                <label for="rsssl_all_tasks"><?php _e( "All tasks", "really-simple-ssl" ); ?></label>
+            </div>
             <div class="all-task-count">
                 <?php
                 echo " " . "(" . $all_task_count . ")";
                 ?> </div>
             <?php
             $open_task_count = $this->get_remaining_tasks_count();
-            if ($open_task_count ==! 0) {
-                ?> <div class="open-task-text"> <?php
-	            _e( "Remaining tasks", "really-simple-ssl" );
-	            ?> </div>
+            if ($open_task_count ==! 0) {?>
+                <div class="open-task-text">
+<!--                    <input type="checkbox" id="rlrsssl_options" name="rlrsssl_options[remaining_tasks]" --><?php //checked(1, $this->remaining_tasks, true) ?><!-- />-->
+                    <label for="rsssl_remaining_tasks"><?php _e( "Remaining tasks", "really-simple-ssl" ); ?></label>
+                </div>
                 <div class="open-task-count">
-                <?php
-	            echo " " . "(" . $open_task_count . ")";
-	            ?> </div> <?php
+                    <?php
+                    echo " " . "(" . $open_task_count . ")";
+                    ?> </div> <?php
             }
             ?>
         </div>

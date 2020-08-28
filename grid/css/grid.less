@@ -101,14 +101,14 @@
 
   .rsssl-progress {
     .rsssl-ss-wrapper {
-      height: 200px;
-      top: 75px;
+      //height: 200px;
+      //top: 75px;
     }
 
     .rsssl-progress-bar-text {
-      position: fixed;
-      top: 170px;
-      width: 750px;
+      //position: fixed;
+      //top: 170px;
+      //width: 750px;
     }
   }
 
@@ -288,23 +288,29 @@
         /*
           Tips and Tricks
        */
-        .rsssl-tips-tricks-element {
-          display: flex;
-          justify-content: space-between;
-          margin-right: @grid_margin;
-          .rsssl-tips-tricks-content {
-            width: 80%;
-            color: @light-text-color;
-            padding-bottom: 15px;
+        .rsssl-tips-tricks {
+          padding-left: 10px;
+          .rsssl-tips-tricks-element {
+            display: flex;
+            justify-content: space-between;
+            margin-right: @grid_margin;
+
+            .rsssl-tips-tricks-content {
+              width: 80%;
+              color: @light-text-color;
+              padding-bottom: 15px;
+            }
           }
-        }
-        .rsssl-tips-tricks-read-more a {
-          text-decoration: none;
-        }
-        .tips-tricks-bottom {
-          position: absolute;
-          bottom: 10px;
-          color: @light-text-color;
+
+          .rsssl-tips-tricks-read-more a {
+            text-decoration: none;
+          }
+
+          .tips-tricks-bottom {
+            position: absolute;
+            bottom: 10px;
+            color: @light-text-color;
+          }
         }
         // End tips and tricks
 
@@ -509,6 +515,9 @@
       margin-left: 20px;
       padding-right: 20px;
     }
+    .hidden {
+      display: none;
+    }
   }
   .rsssl-system-status-footer-info {
     font-size: 0.9em;
@@ -521,6 +530,7 @@
   /*
     Dots
    */
+
   .dot {
     height: 10px;
     width: 10px;
