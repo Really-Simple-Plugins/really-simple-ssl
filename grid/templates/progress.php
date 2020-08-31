@@ -37,7 +37,7 @@
 	$tasks = RSSSL()->really_simple_ssl->get_notices_list();
 	?>
 
-	<div class="rsssl-task-list">
+	<div ss-container class="rsssl-task-list">
         <table class="rsssl-progress-table">
         <thead></thead>
 			<tbody>

@@ -82,6 +82,9 @@
 .rsssl-grid .rsssl-wide-button {
   width: 220px;
 }
+.rsssl-grid .rsssl-progress .rsssl-task-list {
+  height: 200px;
+}
 .rsssl-grid .rsssl-item {
   width: 800px;
   height: 475px;
@@ -138,7 +141,6 @@
   height: 310px;
   margin: 10px 10px 15px 15px;
   border-bottom: 1px solid #dedede;
-  overflow-x: hidden;
   /*
             Progress bar
           */
@@ -210,7 +212,6 @@
   width: 100%;
 }
 .rsssl-grid .rsssl-item .item-container .rsssl-grid-item-content .form-table {
-  overflow: hidden;
   display: flex;
 }
 .rsssl-grid .rsssl-item .item-container .rsssl-grid-item-content .form-table th {
@@ -265,7 +266,7 @@
 }
 .rsssl-grid .rsssl-item .item-container .rsssl-grid-item-content .rsssl-tips-tricks .tips-tricks-bottom {
   position: absolute;
-  bottom: 10px;
+  bottom: 80px;
   color: #3c3c3c;
 }
 .rsssl-grid .rsssl-item .item-container .rsssl-grid-item-content .rsssl-bullet {
