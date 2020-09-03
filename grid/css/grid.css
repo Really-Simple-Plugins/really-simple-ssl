@@ -85,6 +85,13 @@
 .rsssl-grid .rsssl-progress .rsssl-task-list {
   height: 200px;
 }
+.rsssl-grid .rsssl-progress .rsssl-toggle-active {
+  text-decoration: underline;
+}
+.rsssl-grid .rsssl-progress #rsssl-all-tasks,
+.rsssl-grid .rsssl-progress #rsssl-remaining-tasks {
+  display: none;
+}
 .rsssl-grid .rsssl-item {
   width: 800px;
   height: 475px;

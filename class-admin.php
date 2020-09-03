@@ -217,6 +217,8 @@ class rsssl_admin extends rsssl_front_end
         add_action('wp_ajax_rsssl_dismiss_settings_notice', array($this, 'dismiss_settings_notice_callback'));
         add_action('wp_ajax_rsssl_get_updated_percentage', array($this, 'get_score_percentage'));
         add_action('wp_ajax_rsssl_get_updated_task_count', array($this, 'get_remaining_tasks_count'));
+        add_action('wp_ajax_rsssl_update_task_toggle_option', array($this, 'update_task_toggle_option'));
+
 
         //handle notices
         add_action('admin_notices', array($this, 'show_notices'));
@@ -227,6 +229,16 @@ class rsssl_admin extends rsssl_front_end
         add_action("update_option_rlrsssl_options", array($this, "update_htaccess_after_settings_save"), 20, 3);
 //        add_action('shutdown', array($this, 'redirect_to_settings_page'));
 
+    }
+
+    public function check_upgrade() {
+
+        $prev_version = get_option( 'rsssl_current_version', false );
+
+        if ( $prev_version && version_compare( $prev_version, '4.0', '<' ) ) {
+            update_option('rsssl_remaining_tasks', true);
+        }
+        update_option( 'rsssl_current_version', rsssl_version );
     }
 
     /*
@@ -3039,6 +3051,9 @@ class rsssl_admin extends rsssl_front_end
 
         if (get_option("rsssl_".$id."_dismissed")) return;
 
+        // Do not show completed tasks if remaining tasks are selected.
+        if ($icon_type === 'success' && !get_option('rsssl_all_tasks') && get_option('rsssl_remaining_tasks')) return;
+
         //call_user_func_array(array($classInstance, $methodName), $arg1, $arg2, $arg3);
         $icon = $this->icon($icon_type);
         $dismiss = (isset($notice['output'][$output]['dismissible']) && $notice['output'][$output]['dismissible']) ? $this->rsssl_dismiss_button() : '';
@@ -3233,40 +3248,13 @@ class rsssl_admin extends rsssl_front_end
      */
 
 	public function generate_secondary_progress_header_item() {
-//	    ob_start();
-//        ?>
-<!--        <div class="rsssl-secondary-header-item">-->
-<!--            --><?php //$all_task_count = $this->get_all_task_count(); ?>
-<!--            <div class="all-task-text"> --><?php
-//                _e( "All tasks", "really-simple-ssl" );
-//                ?><!-- </div>-->
-<!--            <div class="all-task-count">-->
-<!--                --><?php
-//                echo " " . "(" . $all_task_count . ")";
-//                ?><!-- </div>-->
-<!--            --><?php
-//            $open_task_count = $this->get_remaining_tasks_count();
-//            if ($open_task_count ==! 0) {
-//                ?><!-- <div class="open-task-text"> --><?php
-//	            _e( "Remaining tasks", "really-simple-ssl" );
-//	            ?><!-- </div>-->
-<!--                <div class="open-task-count">-->
-<!--                --><?php
-//	            echo " " . "(" . $open_task_count . ")";
-//	            ?><!-- </div> --><?php
-//            }
-//            ?>
-<!--        </div>-->
-<!--        --><?php
-//        $content = ob_get_clean();
-//        return $content;
-        ob_start();
+	    ob_start();
         ?>
         <div class="rsssl-secondary-header-item">
             <?php $all_task_count = $this->get_all_task_count(); ?>
             <div class="all-task-text">
-<!--                <input type="checkbox" id="rlrsssl_options" name="rlrsssl_options[all_tasks]" --><?php //checked(1, $this->all_tasks, true) ?><!--/>-->
-                <label for="rsssl_all_tasks"><?php _e( "All tasks", "really-simple-ssl" ); ?></label>
+                <input type="checkbox" class="rsssl-task-toggle" id="rsssl-all-tasks" name="rsssl_all_tasks" <?php if (get_option('rsssl_all_tasks') ) echo "checked"?>>
+                <label for="rsssl-all-tasks"><?php _e( "All tasks", "really-simple-ssl" ); ?></label>
             </div>
             <div class="all-task-count">
                 <?php
@@ -3276,8 +3264,8 @@ class rsssl_admin extends rsssl_front_end
             $open_task_count = $this->get_remaining_tasks_count();
             if ($open_task_count ==! 0) {?>
                 <div class="open-task-text">
-<!--                    <input type="checkbox" id="rlrsssl_options" name="rlrsssl_options[remaining_tasks]" --><?php //checked(1, $this->remaining_tasks, true) ?><!-- />-->
-                    <label for="rsssl_remaining_tasks"><?php _e( "Remaining tasks", "really-simple-ssl" ); ?></label>
+                    <input type="checkbox" class="rsssl-task-toggle" id="rsssl-remaining-tasks" name="rsssl_remaining_tasks" <?php if (get_option('rsssl_remaining_tasks') ) echo "checked"?>>
+                    <label for="rsssl-remaining-tasks"><?php _e( "Remaining tasks", "really-simple-ssl" ); ?></label>
                 </div>
                 <div class="open-task-count">
                     <?php
@@ -3289,6 +3277,36 @@ class rsssl_admin extends rsssl_front_end
         <?php
         $content = ob_get_clean();
         return $content;
+    }
+
+    /**
+     * Save the task toggle option
+     * @since 4.0
+     */
+
+    public function update_task_toggle_option() {
+
+        if (!isset($_POST['token']) || (!wp_verify_nonce($_POST['token'], 'rsssl_nonce'))) {
+            return;
+        }
+
+        if (!isset($_POST["action"]) && $_POST["action"] ==! 'rsssl_update_task_toggle_option') return;
+
+        if (!isset($_POST['alltasks']) || (!isset($_POST['remainingtasks']) ) ) return;
+
+        if ($_POST['alltasks'] === 'checked') {
+            update_option('rsssl_all_tasks', true);
+        } else {
+            update_option('rsssl_all_tasks', false);
+        }
+
+        if ($_POST['remainingtasks'] === 'checked') {
+            update_option('rsssl_remaining_tasks', true);
+        } else {
+            update_option('rsssl_remaining_tasks', false);
+        }
+
+        wp_die();
     }
 
     public function get_all_task_count() {
@@ -3819,8 +3837,8 @@ $count=false;
                 case 'configuration' :
 
                 /*
-          First tab, configuration
-  */
+                    First tab, general
+                 */
 
                 $grid_items = $this->general_grid();
 
@@ -3846,48 +3864,8 @@ $count=false;
 
                 echo str_replace('{content}', $output, $container);
 
+                do_action("rsssl_configuration_page");
 
-                    ?>
-<!--                <h2>--><?php //echo __("Detected setup", "really-simple-ssl"); ?><!--</h2>-->
-<!--                <table class="really-simple-ssl-table">-->
-<!--                    <thead></thead>-->
-<!--                    <tbody>-->
-<!--                    --><?php
-//
-//                        $this->reset_plusone_cache();
-//                        $notices = $this->get_notices_list();
-//                        foreach ($notices as $id => $notice) {
-//                            $this->notice_row($id, $notice);
-//                        }
-//
-//                        if (!$this->ssl_enabled) {
-//                            $this->show_enable_ssl_button();
-//                        }
-//
-//                    ?>
-<!--                    </tbody>-->
-<!--                </table>-->
-
-                <?php do_action("rsssl_configuration_page"); ?>
-
-<!--                    --><?php
-//                    break;
-//                    case 'settings' :
-//                        /*
-//                            Second tab, Settings
-//                          */
-//
-//
-//                        break;
-//
-////                    case 'debug' :
-////                        /*
-////                            third tab: debug
-////                          */
-//
-//                        break;
-//                    default:
-//                        echo '';
                 }
                 //possibility to hook into the tabs.
                 do_action("show_tab_{$tab}");
