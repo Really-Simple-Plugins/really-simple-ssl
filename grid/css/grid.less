@@ -161,11 +161,11 @@
           display: flex;
           color: @light-text-color;
           margin-right: 10px;
-          .open-task-count {
+          .all-task-count, .open-task-count {
             padding-left: 3px;
+            padding-top: 3px;
           }
           .all-task-count {
-            padding-left: 3px;
             margin-right: 5px;
           }
           .rsssl-save-settings-feedback {
@@ -515,20 +515,22 @@
       margin-top: -5px;
       font-weight: 600;
       .upsell {
+        margin-left: -10px;
         min-width: 80px;
         text-align: center;
       }
     }
     .rsssl-footer-item {
       margin-left: 20px;
-      padding-right: 20px;
+      padding-right: 5px;
     }
     .hidden {
       display: none;
     }
   }
   .rsssl-system-status-footer-info {
-    font-size: 0.9em;
+    margin-right: 20px;
+    //font-size: 0.9em;
     width: 100%;
     text-align: right;
     .system-status-info {

@@ -8,20 +8,6 @@ jQuery(document).ready(function ($) {
         $('.rsssl-button-save').prop('disabled', false);
     });
 
-    // $('.really-simple-ssl-table').DataTable();
-
-    if ($('#rsssl-all-tasks').is(":checked")) {
-        $('label[for=rsssl-all-tasks]').css({textDecoration: 'underline'});
-    } else {
-        $('label[for=rsssl-all-tasks]').css({textDecoration: 'none'});
-    }
-
-    if ($('#rsssl-remaining-tasks').is(":checked")) {
-        $('label[for=rsssl-remaining-tasks]').css({textDecoration: 'underline'});
-    } else {
-        $('label[for=rsssl-remaining-tasks]').css({textDecoration: 'none'});
-    }
-
     // Re-calculate percentage on dimissing notice. Use document, function to allow AJAX call to run more than once.
     $(document).on('click','.rsssl-close-warning',function () {
 
@@ -76,42 +62,66 @@ jQuery(document).ready(function ($) {
         $(this).find('.rsssl-bullet').css("background-color",""); //to remove property set it to ''
     });
 
-    $(document).on('click', ".rsssl-task-toggle", function (e) {
-
-        var allTasks;
-        var remainingTasks;
-
+    $(document).on('click', "#rsssl-remaining-tasks", function (e) {
         if ($('#rsssl-all-tasks').is(":checked")) {
-            //uncheck remaining
-            $('label[for=rsssl-remaining-tasks]').css({textDecoration:'none'});
-            $('label[for=rsssl-all-tasks]').css({textDecoration:'underline'});
-            allTasks = 'checked';
-        } else {
-            allTasks = 'unchecked';
+            $('#rsssl-all-tasks').prop("checked", false);
         }
-
-        if ($('#rsssl-remaining-tasks').is(":checked")) {
-            //uncheck all
-            $('label[for=rsssl-all-tasks]').css({textDecoration:'none'});
-            $('label[for=rsssl-remaining-tasks]').css({textDecoration:'underline'});
-            remainingTasks = 'checked';
-        } else {
-            remainingTasks = 'unchecked';
-        }
-
-        $.ajax({
-            type: "post",
-            data: {
-                'action': 'rsssl_update_task_toggle_option',
-                token  : rsssl.token,
-                'alltasks' : allTasks,
-                'remainingtasks' : remainingTasks,
-            },
-            url: rsssl.ajaxurl,
-            success: function () {
-                location.reload();
-            }
-        });
+        update_task_toggle_option();
     });
+
+    $(document).on('click', "#rsssl-all-tasks", function (e) {
+        if ($('#rsssl-remaining-tasks').is(":checked")) {
+            $('#rsssl-remaining-tasks').prop("checked", false);
+        }
+        update_task_toggle_option();
+    });
+
+   function update_task_toggle_option() {
+
+    var allTasks;
+    var remainingTasks;
+
+    if ($('#rsssl-all-tasks').is(":checked")) {
+        $('label[for=rsssl-all-tasks]').css({textDecoration:'underline'});
+        allTasks = 'checked';
+    } else {
+        $('label[for=rsssl-all-tasks]').css({textDecoration:'none'});
+        allTasks = 'unchecked';
+    }
+
+    if ($('#rsssl-remaining-tasks').is(":checked")) {
+        $('label[for=rsssl-remaining-tasks]').css({textDecoration:'underline'});
+        remainingTasks = 'checked';
+    } else {
+        $('label[for=rsssl-remaining-tasks]').css({textDecoration:'none'});
+        remainingTasks = 'unchecked';
+    }
+
+    $.ajax({
+        type: "post",
+        data: {
+            'action': 'rsssl_update_task_toggle_option',
+            token  : rsssl.token,
+            'alltasks' : allTasks,
+            'remainingtasks' : remainingTasks,
+        },
+        url: rsssl.ajaxurl,
+        success: function () {
+            location.reload();
+        }
+    });
+}
+
+    if ($('#rsssl-all-tasks').is(":checked")) {
+        $('label[for=rsssl-all-tasks]').css({textDecoration: 'underline'});
+    } else {
+        $('label[for=rsssl-all-tasks]').css({textDecoration: 'none'});
+    }
+
+    if ($('#rsssl-remaining-tasks').is(":checked")) {
+        $('label[for=rsssl-remaining-tasks]').css({textDecoration: 'underline'});
+    } else {
+        $('label[for=rsssl-remaining-tasks]').css({textDecoration: 'none'});
+    }
 
 });

@@ -131,11 +131,12 @@
   color: #3c3c3c;
   margin-right: 10px;
 }
+.rsssl-grid .rsssl-item .item-container .rsssl-grid-item-header .rsssl-secondary-header-item .all-task-count,
 .rsssl-grid .rsssl-item .item-container .rsssl-grid-item-header .rsssl-secondary-header-item .open-task-count {
   padding-left: 3px;
+  padding-top: 3px;
 }
 .rsssl-grid .rsssl-item .item-container .rsssl-grid-item-header .rsssl-secondary-header-item .all-task-count {
-  padding-left: 3px;
   margin-right: 5px;
 }
 .rsssl-grid .rsssl-item .item-container .rsssl-grid-item-header .rsssl-secondary-header-item .rsssl-save-settings-feedback {
@@ -417,18 +418,19 @@
   font-weight: 600;
 }
 .rsssl-grid #rsssl-progress-footer .footer-left .upsell {
+  margin-left: -10px;
   min-width: 80px;
   text-align: center;
 }
 .rsssl-grid #rsssl-progress-footer .rsssl-footer-item {
   margin-left: 20px;
-  padding-right: 20px;
+  padding-right: 5px;
 }
 .rsssl-grid #rsssl-progress-footer .hidden {
   display: none;
 }
 .rsssl-grid .rsssl-system-status-footer-info {
-  font-size: 0.9em;
+  margin-right: 20px;
   width: 100%;
   text-align: right;
 }
