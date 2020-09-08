@@ -56,7 +56,7 @@ if (!class_exists("rsssl_site_health")) {
 				);
 				$result['actions']     .= sprintf(
 					'<p><a href="%s">%s</a></p>',
-					esc_url( admin_url("options-general.php?page=rlrsssl_really_simple_ssl&tab=settings") ),
+					esc_url( admin_url("options-general.php?page=rlrsssl_really_simple_ssl") ),
 					__( 'Enable 301 .htaccess redirect', 'really-simple-ssl' )
 				);
 			}

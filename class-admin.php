@@ -411,6 +411,7 @@ class rsssl_admin extends rsssl_front_end
         if (isset($_GET['page']) && $_GET['page'] == 'rlrsssl_really_simple_ssl') return;
 	        $url = add_query_arg( array(
 		        "page" => "rlrsssl_really_simple_ssl",
+                "tab" => "configuration",
 	        ), admin_url( "options-general.php" ) );
 	        wp_redirect( $url );
 	        exit;
@@ -2948,57 +2949,67 @@ class rsssl_admin extends rsssl_front_end
             }
 
             if (!isset($_POST["action"]) && $_POST["action"] ==! 'rsssl_get_updated_percentage') return;
+
+            // Delete the transient when invoked via AJAX, as the count should now be updated
+            delete_transient('rsssl_percentage_completed');
         }
 
         if ( ! current_user_can( 'manage_options' ) ) {
             return 0;
         }
 
-        $max_score = 0;
-        $actual_score = 0;
+        $score = get_transient('rsssl_percentage_completed');
 
-        $notices = $this->get_notices_list();
+        if (!$score) {
 
-            foreach ( $notices as $id => $notice ) {
+	        $max_score    = 0;
+	        $actual_score = 0;
 
-                $condition = true;
-                if ( get_option( "rsssl_" . $id . "_dismissed" ) ) {
-                    continue;
-                }
+	        $notices = $this->get_notices_list();
 
-                $condition_functions = $notice['condition'];
-                foreach ( $condition_functions as $func ) {
-                    $condition = $func();
-                    if ( ! $condition ) {
-                        break;
-                    }
-                }
+	        foreach ( $notices as $id => $notice ) {
 
-                if ( $condition ) {
-                    // Only items matching condition will show in the dashboard. Only use these to determine max count.
-                    $max_score = $max_score + intval($notice['score']);
-                    $func    = $notice['callback'];
-                    $output  = $func();
+		        $condition = true;
+		        if ( get_option( "rsssl_" . $id . "_dismissed" ) ) {
+			        continue;
+		        }
 
-                    $success = ( isset( $notice['output'][ $output ]['icon'] )
-                        && ( $notice['output'][ $output ]['icon']
-                            === 'success' ) ) ? true : false;
+		        $condition_functions = $notice['condition'];
+		        foreach ( $condition_functions as $func ) {
+			        $condition = $func();
+			        if ( ! $condition ) {
+				        break;
+			        }
+		        }
 
-                    if ( $success) {
-                        // If the output is success, task is completed. Add to actual count.
-                        $actual_score = $actual_score + intval( $notice['score'] );
-                    }
-                }
-            }
-            $score = $actual_score / $max_score;
-            $score = $score * 100;
+		        if ( $condition ) {
+			        // Only items matching condition will show in the dashboard. Only use these to determine max count.
+			        $max_score = $max_score + intval( $notice['score'] );
+			        $func      = $notice['callback'];
+			        $output    = $func();
 
-            $score = intval( round( $score ) );
+			        $success = ( isset( $notice['output'][ $output ]['icon'] )
+			                     && ( $notice['output'][ $output ]['icon']
+			                          === 'success' ) ) ? true : false;
 
-            if (wp_doing_ajax()) {
-                wp_die( $score );
-            }
+			        if ( $success ) {
+				        // If the output is success, task is completed. Add to actual count.
+				        $actual_score = $actual_score + intval( $notice['score'] );
+			        }
+		        }
+	        }
+	        $score = $actual_score / $max_score;
+	        $score = $score * 100;
 
+	        $score = intval( round( $score ) );
+
+	        set_transient('rsssl_percentage_completed', $score, DAY_IN_SECONDS);
+
+	        if ( wp_doing_ajax() ) {
+		        wp_die( $score );
+	        }
+
+        }
             return $score;
     }
 
@@ -3220,7 +3231,6 @@ class rsssl_admin extends rsssl_front_end
 				'class' => 'regular rsssl-progress',
 				'type' => 'all',
 				'can_hide' => true,
-
 			),
 			2 => array(
 				'title' => __("Settings", "really-simple-ssl"),
@@ -4737,7 +4747,7 @@ class rsssl_admin extends rsssl_front_end
 	    if ($http_referrer && strpos( $http_referrer, "&highlight=" ) ) {
 		    $url = add_query_arg( array(
 			    "page" => "rlrsssl_really_simple_ssl",
-			    "tab"  => "settings"
+			    "tab"  => "configuration"
 		    ), admin_url( "options-general.php" ) );
 		    wp_safe_redirect( $url );
 		    exit;
