@@ -226,7 +226,7 @@
   margin-left: 10px;
 }
 .rsssl-grid .rsssl-item .item-container .rsssl-grid-item-content .form-table th .dashicons-editor-help {
-  font-size: 20px;
+  font-size: 25px;
 }
 .rsssl-grid .rsssl-item .item-container .rsssl-grid-item-content .form-table tbody {
   display: flex;
@@ -241,6 +241,7 @@
 .rsssl-grid .rsssl-item .item-container .rsssl-grid-item-content .form-table tbody tr th {
   padding: 10px 0 0 0 !important;
   display: flex;
+  align-items: center;
 }
 .rsssl-grid .rsssl-item .item-container .rsssl-grid-item-content .form-table tbody tr th .rsssl-settings-text {
   font-size: 13px;

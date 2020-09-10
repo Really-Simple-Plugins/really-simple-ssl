@@ -471,6 +471,9 @@ class rsssl_admin extends rsssl_front_end
                 }
                 .activate-ssl .button {
                     margin-bottom: 5px;
+                    /*margin-right: 10px;*/
+                }
+                #rsssl_do_activate_ssl {
                     margin-right: 10px;
                 }
                 <?php echo apply_filters('rsssl_pro_inline_style', ''); ?>
@@ -566,6 +569,7 @@ class rsssl_admin extends rsssl_front_end
                 height: 35px;
                 display: flex;
                 align-items: center;
+                padding-bottom: 10px;
             }
 
             .rsssl-activation-notice-li {
@@ -2673,7 +2677,6 @@ class rsssl_admin extends rsssl_front_end
         </div>
         <?php
     }
-
 
     /**
      * Get array of notices
