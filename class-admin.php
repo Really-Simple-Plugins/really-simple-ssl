@@ -543,9 +543,16 @@ class rsssl_admin extends rsssl_front_end
                         <li class="rsssl-activation-notice-li"><div class="rsssl-bullet"></div><?php printf(__("We strongly recommend to take a %sbackup%s of your site before activating SSL", 'really-simple-ssl'), $link_open, $link_close); ?> </li>
                         <li class="rsssl-activation-notice-li"><div class="rsssl-bullet"></div><?php _e("You may need to login in again.", "really-simple-ssl") ?></li>
                     </ul>
-                <p><?php _e('You can also let the automatic scan of the pro version handle this for you, and get premium support, increased security with HSTS and more!', 'really-simple-ssl'); ?>
+                <p><?php
+                    if (!defined('rsssl_pro_version')) {
+                        _e('You can also let the automatic scan of the pro version handle this for you, and get premium support, increased security with HSTS and more!', 'really-simple-ssl');
+                    ?>
                     <a target="_blank"
-                       href="<?php echo $this->pro_url; ?>"><?php _e("Check out Really Simple SSL Pro", "really-simple-ssl"); ?></a>
+                       href="<?php
+                       echo $this->pro_url; ?>"><?php _e("Check out Really Simple SSL Pro", "really-simple-ssl");
+                    }
+                    ?>
+                    </a>
                 </p>
                 </p>
             </div>
@@ -2961,9 +2968,14 @@ class rsssl_admin extends rsssl_front_end
             return 0;
         }
 
-        $score = get_transient('rsssl_percentage_completed');
+//        $remaining_task_count = $this->get_remaining_tasks_count();
+//        if ($remaining_task_count === 0) {
+//            return 100;
+//        }
 
-        if (!$score) {
+//        $score = get_transient('rsssl_percentage_completed');
+
+//        if (!$score) {
 
 	        $max_score    = 0;
 	        $actual_score = 0;
@@ -3012,7 +3024,7 @@ class rsssl_admin extends rsssl_front_end
 		        wp_die( $score );
 	        }
 
-        }
+//        }
             return $score;
     }
 
@@ -3396,9 +3408,9 @@ class rsssl_admin extends rsssl_front_end
 
         }
 
-        $count = get_transient( 'rsssl_remaining_task_count' );
-
-        if ( $count === false ) {
+//        $count = get_transient( 'rsssl_remaining_task_count' );
+//
+//        if ( $count === false ) {
             $count = 0;
 
             $notices = $this->get_notices_list();
@@ -3433,8 +3445,8 @@ class rsssl_admin extends rsssl_front_end
                     }
                 }
             }
-            set_transient( 'rsssl_remaining_task_count', $count, 'DAY_IN_SECONDS' );
-        }
+            //set_transient( 'rsssl_remaining_task_count', $count, 'DAY_IN_SECONDS' );
+        //}
 
         if (wp_doing_ajax()) {
             wp_die($count);
@@ -3999,12 +4011,18 @@ class rsssl_admin extends rsssl_front_end
             . 'js/scripts.js', array("jquery"), rsssl_version);
         wp_enqueue_script('rsssl');
 
+        if (!defined('rsssl_pro_version')) {
+            $finished_text = __("Basic SSL configuration finished! Improve your score with ", "really-simple-ssl");
+        } else {
+            $finished_text = '';
+        }
+
         wp_localize_script('rsssl', 'rsssl',
             array(
                 'ajaxurl' => admin_url( 'admin-ajax.php' ),
                 'token'   => wp_create_nonce( 'rsssl_nonce'),
                 'copied_text' => __("Copied!", "really-simple-ssl"),
-                'finished_text' => __("Basic SSL configuration finished! Improve your score with ", "really-simple-ssl"),
+                'finished_text' => $finished_text,
             )
         );
 
