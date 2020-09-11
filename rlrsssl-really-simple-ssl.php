@@ -106,15 +106,22 @@ class REALLY_SIMPLE_SSL
 			require_once(rsssl_path . 'class-rsssl-wp-cli.php');
 		}
 
+		if (defined('rsssl_pro_version')) {
+            if (is_admin() || is_multisite() || $wpcli) {
+                //require_once(rsssl_path . 'class-admin-old.php');
+                //require_once(rsssl_path . 'class-help-old.php');
+            }
+        }
+
 		if (is_admin() || is_multisite() || $wpcli) {
 			if (is_multisite()) {
 				require_once(rsssl_path . 'class-multisite.php');
 				require_once(rsssl_path . 'multisite-cron.php');
 			}
-			require_once(rsssl_path . 'class-admin.php');
+            require_once(rsssl_path . 'class-admin.php');
 			require_once(rsssl_path . 'class-cache.php');
 			require_once(rsssl_path . 'class-server.php');
-			require_once(rsssl_path . 'class-help.php');
+            require_once(rsssl_path . 'class-help.php');
 			require_once(rsssl_path . 'class-certificate.php');
 			require_once(rsssl_path . 'class-site-health.php');
 		}
