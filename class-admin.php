@@ -3175,49 +3175,8 @@ class rsssl_admin extends rsssl_front_end
 
 	public function general_grid(){
 
-	    // Replace free blocks with pro if Really Simple SSL Pro is active
-	    if (!defined('rsssl_pro_version')) {
-            $four = array(
-                'title' => __("Support forum", "really-simple-ssl"),
-                'secondary_header_item' => '',
-                'content' => $this->get_support_forum_block(),
-                'footer' => $this->get_system_status_footer(),
-                'type' => 'tasks',
-                'class' => 'half-height',
-                'can_hide' => true,
-            );
-            $five = array(
-                'title' => __("Our plugins", "really-simple-ssl"),
-                'secondary_header_item' => $this->generate_secondary_our_plugins_header(),
-                'content' => $this->generate_other_plugins(),
-                'footer' => '',
-                'class' => 'half-height no-border no-background upsell-grid-container',
-                'type' => 'plugins',
-                'can_hide' => false,
-            );
-        } else {
-            $four = array(
-                'title' => __("Support form", "really-simple-ssl"),
-                'secondary_header_item' => '',
-                'content' => RSSSL_PRO()->rsssl_support->support_form(),
-                'footer' => RSSSL_PRO()->rsssl_support->support_form_footer(),
-                'class' => 'regular support-form',
-                'type' => 'support',
-                'can_hide' => true,
-            );
-            $five = array(
-                'title' => __("Premium settings", "really-simple-ssl"),
-                'secondary_header_item' => $this->generate_secondary_settings_header_item(),
-                'content' => RSSSL_PRO()->rsssl_premium_options->add_pro_settings_page(),
-                'footer' => RSSSL_PRO()->rsssl_premium_options->add_pro_settings_footer(),
-                'type' => 'settings',
-                'class' => 'rsssl-premium-settings half-height',
-                'can_hide' => true,
-            );
-        }
-
 		$grid_items = array(
-			1 => array(
+			1 =>array(
 				'title' => __("Your progress", "really-simple-ssl"),
 				'secondary_header_item' => $this->generate_secondary_progress_header_item(),
 				'content' => $this->generate_progress(),
@@ -3244,10 +3203,26 @@ class rsssl_admin extends rsssl_front_end
                 'type' => 'popular',
                 'can_hide' => true,
             ),
-            4 => $four,
-			5 => $five,
+			'support' => array(
+				'title' => __("Support forum", "really-simple-ssl"),
+				'secondary_header_item' => '',
+				'content' => $this->get_support_forum_block(),
+				'footer' => $this->get_system_status_footer(),
+				'type' => 'tasks',
+				'class' => 'half-height',
+				'can_hide' => true,
+			),
+            'plugins' => array(
+                'title' => __("Our plugins", "really-simple-ssl"),
+                'secondary_header_item' => $this->generate_secondary_our_plugins_header(),
+                'content' => $this->generate_other_plugins(),
+                'footer' => '',
+                'class' => 'half-height no-border no-background upsell-grid-container',
+                'type' => 'plugins',
+                'can_hide' => false,
+            ),
 		);
-		return $grid_items;
+		return apply_filters( 'rsssl_grid_items',  $grid_items );
 	}
 
     /**
