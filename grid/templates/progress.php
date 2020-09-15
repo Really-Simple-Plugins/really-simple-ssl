@@ -1,14 +1,16 @@
+<?php $percentage_completed = RSSSL()->really_simple_ssl->get_score_percentage(); ?>
+
 <div class="rsssl-progress">
     <div class="rsssl-progress-bar-text">
         <div class="progress-bar-container">
             <div class="progress">
-                <div class="bar" style="width:{percentage_completed}%"></div>
+                <div class="bar" style="width:<?php echo $percentage_completed?>%"></div>
             </div>
         </div>
 
         <div class="progress-text">
             <span class="rsssl-progress-percentage">
-                {percentage_completed}%
+                <?php echo $percentage_completed?>%
             </span>
             <span class="rsssl-progress-text">
                 <?php

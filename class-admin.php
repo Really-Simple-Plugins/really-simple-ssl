@@ -3179,8 +3179,9 @@ class rsssl_admin extends rsssl_front_end
 			1 =>array(
 				'title' => __("Your progress", "really-simple-ssl"),
 				'secondary_header_item' => $this->generate_secondary_progress_header_item(),
-				'content' => $this->generate_progress(),
-				'footer' => $this->generate_progress_footer(),
+				'content' => 'progress.php',
+				'path' => rsssl_template_path,
+				'footer' => 'progress-footer.php',
 				'class' => 'regular rsssl-progress',
 				'type' => 'all',
 				'can_hide' => true,
@@ -3409,99 +3410,7 @@ class rsssl_admin extends rsssl_front_end
         return $count;
     }
 
-    /**
-     * Generate the progress block on plugin dashboard
-     *
-     * @since 4.0
-     *
-     */
 
-	public function generate_progress() {
-
-	    $percentage_completed = $this->get_score_percentage();
-
-		$element = $this->get_template('progress.php', rsssl_path . 'grid/');
-		return str_replace(
-            array(
-                '{percentage_completed}',
-
-            ),
-            array(
-                $percentage_completed,
-            )
-            , $element);
-    }
-
-    /**
-     * @return string|string[]
-     * Generate the dashboard progress block footer
-     *
-     * @since 4.0
-     *
-     */
-
-    public function generate_progress_footer() {
-
-        if ($this->ssl_enabled) {
-            $ssl_enabled = "rsssl-dot-success";
-            $ssl_text = __("SSL Activated", "really-simple-ssl");
-        } else {
-            $ssl_enabled = "rsssl-dot-error";
-            $ssl_text = __("SSL Not activated", "really-simple-ssl");
-        }
-
-        if ($this->has_301_redirect()) {
-            $redirect_301 = "rsssl-dot-success";
-        } else {
-            $redirect_301 = "rsssl-dot-error";
-        }
-
-        $btns = '';
-	    if ($this->site_has_ssl || (defined('RSSSL_FORCE_ACTIVATE') && RSSSL_FORCE_ACTIVATE)) {
-		    $button_text = __( "Activate SSL", "really-simple-ssl" );
-		    $btns .= '<input type="submit" class="button button-primary" value="'.$button_text.'" id="rsssl_do_activate_ssl" name="rsssl_do_activate_ssl">';
-	    }
-
-        if (!defined('rsssl_pro_version')) {
-            $button_text = __("Go PRO!", "really-simple-ssl");
-	        $btns .= "<a href='$this->pro_url' target='_blank' class='button button-rsssl-primary upsell'>$button_text</a>";
-        }
-
-        $items = array(
-            1 => array(
-                'class' => 'footer-left',
-                'dot_class' => '',
-                'text' => '<form action="" method="post">'.$btns.'</form>',
-            ),
-            2 => array(
-                'class' => '',
-                'dot_class' => $ssl_enabled,
-                'text' => $ssl_text,
-            ),
-            3 => array(
-                'class' => '',
-                'dot_class' => $redirect_301,
-                'text' => __("301 Redirect", "really-simple-ssl"),
-            ),
-        );
-        $id = 'rsssl-progress-footer';
-        $container = $this->get_template('footer-container.php', rsssl_path . 'grid/');
-        $element = $this->get_template('footer-element.php', rsssl_path . 'grid/');
-        $output = '';
-        foreach ($items as $item) {
-            $output .= str_replace(array(
-                '{class}',
-                '{dot_class}',
-                '{text}',
-            ), array(
-                $item['class'],
-                $item['dot_class'],
-                $item['text'],
-            ), $element);
-        }
-        return str_replace(array('{id}', '{content}'), array($id, $output), $container);
-
-    }
 
     /**
      * @return false|string
@@ -3824,19 +3733,31 @@ class rsssl_admin extends rsssl_front_end
                 $output = '';
 
                 foreach ($grid_items as $index => $grid_item) {
-                    if (!$grid_item['footer']) {
-                        $grid_item['footer'] = '';
+                    $footer = $grid_item['footer'];
+                    if (!$footer) {
+	                    $footer = '';
+                    } else {
+	                    if ( isset($grid_item['path']) && strpos( $footer, '.php' ) !== false ) {
+		                    ob_start();
+		                    require $grid_item['path'].$footer;
+		                    $footer = ob_get_clean();
+	                    }
+                    }
+
+                    $content = $grid_item['content'];
+                    if ( isset($grid_item['path']) && strpos( $content, '.php' ) !== false ) {
+                        ob_start();
+                        require $grid_item['path'].$content;
+	                    $content = ob_get_clean();
                     }
 
                     // Add form if type is settings
-                    if (isset($grid_item['type']) && $grid_item['type'] == 'settings') {
-                        $output .= '<form action="options.php" method="post">';
-                        $output .= str_replace(array('{class}', '{title}', '{secondary_header_item}', '{content}', '{footer}'), array($grid_item['class'], $grid_item['title'], $grid_item['secondary_header_item'], $grid_item['content'], $grid_item['footer']), $element);
-                        $output .= '</form>';
+	                $block = str_replace(array('{class}', '{title}', '{secondary_header_item}', '{content}', '{footer}'), array($grid_item['class'], $grid_item['title'], $grid_item['secondary_header_item'], $content, $footer), $element);
+	                if (isset($grid_item['type']) && $grid_item['type'] == 'settings') {
+                        $output .= '<form action="options.php" method="post">'.$block.'</form>';
                     } else {
-                        $output .= str_replace(array('{class}', '{title}', '{secondary_header_item}', '{content}', '{footer}'), array($grid_item['class'], $grid_item['title'], $grid_item['secondary_header_item'], $grid_item['content'], $grid_item['footer']), $element);
+	                    $output .= $block;
                     }
-
                 }
 
                 echo str_replace('{content}', $output, $container);
