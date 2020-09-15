@@ -412,6 +412,10 @@
   text-align: right;
   margin-right: 10px;
 }
+.rsssl-grid #rsssl-progress-footer .rsssl-footer-item {
+  margin-left: 20px;
+  padding-right: 5px;
+}
 .rsssl-grid #rsssl-progress-footer .footer-left {
   margin-left: 0 !important;
   float: left;
@@ -422,10 +426,6 @@
   margin-left: -10px;
   min-width: 80px;
   text-align: center;
-}
-.rsssl-grid #rsssl-progress-footer .rsssl-footer-item {
-  margin-left: 20px;
-  padding-right: 5px;
 }
 .rsssl-grid #rsssl-progress-footer .hidden {
   display: none;
