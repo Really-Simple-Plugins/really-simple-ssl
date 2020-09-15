@@ -3480,17 +3480,11 @@ class rsssl_admin extends rsssl_front_end
         } else {
             $redirect_301 = "rsssl-dot-error";
         }
-	    '<form action="" method="post"><input type="submit" class='button button-primary'
-               value="<?php _e("Go ahead, activate SSL!", "really-simple-ssl"); ?>" id="rsssl_do_activate_ssl"
-               name="rsssl_do_activate_ssl">';
-	    <?php if (!defined("rsssl_pro_version") ) { ?>
-            <a class="button action btn-premium" href="https://really-simple-ssl.com/pro" target="_blank"><?php _e("Get ready with Pro", "really-simple-ssl"); ?></a>
-	    <?php } ?>
-        </form>
+
         $btns = '';
 	    if ($this->site_has_ssl || (defined('RSSSL_FORCE_ACTIVATE') && RSSSL_FORCE_ACTIVATE)) {
 		    $button_text = __( "Activate SSL", "really-simple-ssl" );
-		    $btns .= "<a href='$this->pro_url' target='_blank' class='button button-rsssl-primary'>$button_text</a>";
+		    $btns .= '<input type="submit" class="button button-primary" value="'.$button_text.'" id="rsssl_do_activate_ssl" name="rsssl_do_activate_ssl">';
 	    }
 
         if (!defined('rsssl_pro_version')) {
@@ -3502,7 +3496,7 @@ class rsssl_admin extends rsssl_front_end
             1 => array(
                 'class' => 'footer-left',
                 'dot_class' => '',
-                'text' => $btns,
+                'text' => '<form action="" method="post">'.$btns.'</form>',
             ),
             2 => array(
                 'class' => '',
