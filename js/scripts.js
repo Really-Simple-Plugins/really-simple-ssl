@@ -70,6 +70,7 @@ jQuery(document).ready(function ($) {
     });
 
     $(document).on('click', "#rsssl-all-tasks", function (e) {
+        console.log("clicked");
         if ($('#rsssl-remaining-tasks').is(":checked")) {
             $('#rsssl-remaining-tasks').prop("checked", false);
         }
@@ -77,40 +78,41 @@ jQuery(document).ready(function ($) {
     });
 
    function update_task_toggle_option() {
+       console.log("update task toggle");
+        var allTasks;
+        var remainingTasks;
 
-    var allTasks;
-    var remainingTasks;
-
-    if ($('#rsssl-all-tasks').is(":checked")) {
-        $('label[for=rsssl-all-tasks]').css({textDecoration:'underline'});
-        allTasks = 'checked';
-    } else {
-        $('label[for=rsssl-all-tasks]').css({textDecoration:'none'});
-        allTasks = 'unchecked';
-    }
-
-    if ($('#rsssl-remaining-tasks').is(":checked")) {
-        $('label[for=rsssl-remaining-tasks]').css({textDecoration:'underline'});
-        remainingTasks = 'checked';
-    } else {
-        $('label[for=rsssl-remaining-tasks]').css({textDecoration:'none'});
-        remainingTasks = 'unchecked';
-    }
-
-    $.ajax({
-        type: "post",
-        data: {
-            'action': 'rsssl_update_task_toggle_option',
-            token  : rsssl.token,
-            'alltasks' : allTasks,
-            'remainingtasks' : remainingTasks,
-        },
-        url: rsssl.ajaxurl,
-        success: function () {
-            location.reload();
+        if ($('#rsssl-all-tasks').is(":checked")) {
+            $('label[for=rsssl-all-tasks]').css({textDecoration:'underline'});
+            allTasks = 'checked';
+        } else {
+            $('label[for=rsssl-all-tasks]').css({textDecoration:'none'});
+            allTasks = 'unchecked';
         }
-    });
-}
+
+        if ($('#rsssl-remaining-tasks').is(":checked")) {
+            $('label[for=rsssl-remaining-tasks]').css({textDecoration:'underline'});
+            remainingTasks = 'checked';
+        } else {
+            $('label[for=rsssl-remaining-tasks]').css({textDecoration:'none'});
+            remainingTasks = 'unchecked';
+        }
+
+
+        $.ajax({
+            type: "post",
+            data: {
+                'action': 'rsssl_update_task_toggle_option',
+                'token'  : rsssl.token,
+                'alltasks' : allTasks,
+                'remainingtasks' : remainingTasks,
+            },
+            url: rsssl.ajaxurl,
+            success: function () {
+                location.reload();
+            }
+        });
+    }
 
     if ($('#rsssl-all-tasks').is(":checked")) {
         $('label[for=rsssl-all-tasks]').css({textDecoration: 'underline'});
@@ -123,5 +125,18 @@ jQuery(document).ready(function ($) {
     } else {
         $('label[for=rsssl-remaining-tasks]').css({textDecoration: 'none'});
     }
+
+
+
+    $(".rsssl-dashboard-dismiss").on("click", ".rsssl-close-warning, .rsssl-close-warning-x",function (event) {
+        var type = $(this).closest('.rsssl-dashboard-dismiss').data('dismiss_type');
+        var data = {
+            'action': 'rsssl_dismiss_settings_notice',
+            'type' : type,
+            'token'  : rsssl.token,
+        };
+        $.post(ajaxurl, data, function (response) {});
+        $(this).closest('tr').remove();
+    });
 
 });

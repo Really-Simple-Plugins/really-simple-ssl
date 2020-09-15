@@ -502,8 +502,9 @@ class rsssl_admin extends rsssl_front_end
             <li class="message-li"><?php _e('Images, stylesheets or scripts from a domain without an SSL certificate: remove them or move to your own server', 'really-simple-ssl'); ?></li><?php
 
             $backup_link = "https://really-simple-ssl.com/knowledge-base/backing-up-your-site/";
-            $link_open = '<a target="_blank" href="'.$backup_link.'">';
-            $link_close = '</a>';
+            //without the &nbsp we don't have a space here
+            $link_open = '&nbsp;<a target="_blank" href="'.$backup_link.'">';
+            $link_close = '</a>&nbsp;';
             ?>
             <li class="message-li"><?php printf(__("We strongly recommend to take a %sbackup%s of your site before activating SSL", 'really-simple-ssl'), $link_open, $link_close); ?> </li>
         </ul>

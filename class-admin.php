@@ -2423,32 +2423,6 @@ class rsssl_admin extends rsssl_front_end
         <?php
     }
 
-	/**
-	 *
-     * Insert the script to dismiss dashboard notices
-	 */
-
-    public function insert_dismiss_settings_script()
-    {
-        $ajax_nonce = wp_create_nonce("really-simple-ssl");
-
-        ?>
-        <script type='text/javascript'>
-            jQuery(document).ready(function ($) {
-            $(".rsssl-dashboard-dismiss").on("click", ".rsssl-close-warning, .rsssl-close-warning-x",function (event) {
-                var type = $(this).closest('.rsssl-dashboard-dismiss').data('dismiss_type');
-                var data = {
-                    'action': 'rsssl_dismiss_settings_notice',
-                    'type' : type,
-                    'security': '<?php echo $ajax_nonce; ?>'
-                };
-                $.post(ajaxurl, data, function (response) {});
-                $(this).closest('tr').remove();
-            });
-         });
-        </script>
-        <?php
-    }
 
     /**
      * Process the ajax dismissal of the success message.
@@ -2500,13 +2474,18 @@ class rsssl_admin extends rsssl_front_end
     {
         if (!current_user_can($this->capability) ) return;
 
-        check_ajax_referer('really-simple-ssl', 'security');
-        if (isset($_POST['type'])) {
+	    if (!isset($_POST['token']) || (!wp_verify_nonce($_POST['token'], 'rsssl_nonce'))) {
+		    return;
+	    }
+
+	    if (isset($_POST['type'])) {
 	        $dismiss_type = sanitize_title( $_POST['type'] );
 	        update_option( "rsssl_".$dismiss_type."_dismissed", true );
+
+
             delete_transient( 'rsssl_plusone_count' );
         }
-        wp_die(); // this is required to terminate immediately and return a proper response
+        wp_die();
     }
 
     /**
@@ -3846,8 +3825,6 @@ class rsssl_admin extends rsssl_front_end
     {
         if (!current_user_can($this->capability)) return;
 
-        add_action('admin_print_footer_scripts', array($this, 'insert_dismiss_settings_script'));
-
         if (isset ($_GET['tab'])) $this->admin_tabs($_GET['tab']); else $this->admin_tabs('configuration');
         if (isset ($_GET['tab'])) $tab = $_GET['tab']; else $tab = 'configuration';
 
@@ -3992,11 +3969,11 @@ class rsssl_admin extends rsssl_front_end
         if ( $hook != $rsssl_admin_page) return;
 
         if (is_rtl()) {
-            wp_register_style('rlrsssl-css', trailingslashit(rsssl_url) . 'css/main-rtl.min.css', "", rsssl_version);
-            wp_register_style('rsssl-grid', trailingslashit(rsssl_url) . 'grid/css/grid-rtl.min.css', "", rsssl_version);
+            wp_register_style('rlrsssl-css', trailingslashit(rsssl_url) . 'css/main-rtl.min.css', array(), rsssl_version);
+            wp_register_style('rsssl-grid', trailingslashit(rsssl_url) . 'grid/css/grid-rtl.min.css', array(), rsssl_version);
         } else {
-	        wp_register_style('rlrsssl-css', trailingslashit(rsssl_url) . 'css/main.min.css', "", time());
-            wp_register_style('rsssl-grid', trailingslashit(rsssl_url) . 'grid/css/grid.min.css', "", time());
+	        wp_register_style('rlrsssl-css', trailingslashit(rsssl_url) . 'css/main.min.css', array(), rsssl_version );
+            wp_register_style('rsssl-grid', trailingslashit(rsssl_url) . 'grid/css/grid.min.css', array(), rsssl_version );
         }
 
 
@@ -4025,7 +4002,6 @@ class rsssl_admin extends rsssl_front_end
                 'finished_text' => $finished_text,
             )
         );
-
         wp_register_script('rsssl-scrollbar',
             trailingslashit(rsssl_url)
             . 'includes/simple-scrollbar.js', array("jquery"), rsssl_version);
@@ -4071,11 +4047,8 @@ class rsssl_admin extends rsssl_front_end
 	            add_settings_field('id_htaccess_redirect', $help_tip . "<div class='rsssl-settings-text'>" . __("Enable 301 .htaccess redirect", "really-simple-ssl"), array($this, 'get_option_htaccess_redirect'), 'rlrsssl', 'rlrsssl_settings');
             }
 
-//            $help_tip = RSSSL()->rsssl_help->get_help_tip(__("Enable this option to get debug info in the debug tab.", "really-simple-ssl"), $return=true);
-//	        add_settings_field('id_javascript_redirect', $help_tip . "<div class='rsssl-settings-text'>" . __("Enable Javascript redirection to SSL", "really-simple-ssl"), array($this, 'get_option_javascript_redirect'), 'rlrsssl', 'rlrsssl_settings');
         }
 
-//        add_settings_field('id_debug', __("Debug", "really-simple-ssl"), array($this, 'get_option_debug'), 'rlrsssl', 'rlrsssl_settings');
         //on multisite this setting can only be set networkwide
         if (RSSSL()->rsssl_server->uses_htaccess() && !is_multisite()) {
 	        $help_tip = RSSSL()->rsssl_help->get_help_tip(__("If you want to customize the Really Simple SSL .htaccess, you need to prevent Really Simple SSL from rewriting it. Enabling this option will do that.", "really-simple-ssl"), $return=true);
