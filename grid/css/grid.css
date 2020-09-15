@@ -64,6 +64,7 @@
   background-color: #3a5998;
   color: white !important;
   min-width: 100px;
+  margin-right: 20px;
 }
 .rsssl-grid .button-rsssl-primary:hover {
   color: black !important;

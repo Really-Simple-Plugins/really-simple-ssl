@@ -329,22 +329,17 @@ class rsssl_admin extends rsssl_front_end
     }
 
 
-    /*
-    checks if the user just clicked the "activate SSL" button.
-  */
+	/**
+	 * checks if the user just clicked the "activate SSL" button.
+     * */
 
     private function clicked_activate_ssl()
     {
-        if (!current_user_can($this->capability)) return;
-        //if (!isset( $_POST['rsssl_nonce'] ) || !wp_verify_nonce( $_POST['rsssl_nonce'], 'rsssl_nonce' )) return false;
+        if (!current_user_can($this->capability)) return false;
 
         if (isset($_POST['rsssl_do_activate_ssl'])) {
             $this->activate_ssl();
-
-            //if (empty(get_option('rsssl_activation_timestamp'))) {
             update_option('rsssl_activation_timestamp', time());
-            //}
-
             return true;
         }
 
