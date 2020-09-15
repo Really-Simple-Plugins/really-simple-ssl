@@ -131,6 +131,10 @@ class REALLY_SIMPLE_SSL
 
 	private function hooks()
 	{
+		/**
+		 * Fire custom hook
+		 */
+		do_action('rsssl_admin_init' );
 
 		add_action('wp_loaded', array(self::$instance->rsssl_front_end, 'force_ssl'), 20);
 		if (is_admin() || is_multisite()) {

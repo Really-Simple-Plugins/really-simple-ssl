@@ -3172,9 +3172,7 @@ class rsssl_admin extends rsssl_front_end
      *
      */
 
-
 	public function general_grid(){
-
 		$grid_items = array(
 			1 =>array(
 				'title' => __("Your progress", "really-simple-ssl"),
@@ -3189,7 +3187,8 @@ class rsssl_admin extends rsssl_front_end
 			2 => array(
 				'title' => __("Settings", "really-simple-ssl"),
                 'secondary_header_item' => $this->generate_secondary_settings_header_item(),
-                'content' => $this->generate_settings(),
+                'content' => 'settings.php',
+				'path' => rsssl_template_path,
 				'footer' => $this->generate_settings_footer(),
 				'class' => 'small settings',
 				'type' => 'settings',
@@ -3433,26 +3432,6 @@ class rsssl_admin extends rsssl_front_end
         return $content;
     }
 
-    /**
-     * @return false|string
-     * Generate the settings block in plugin dashboard
-     *
-     * @since 4.0
-     */
-
-    public function generate_settings() {
-	    ob_start();
-	    ?>
-        <div class="rsssl-settings">
-                <?php
-                settings_fields('rlrsssl_options');
-                do_settings_sections('rlrsssl');
-                ?>
-        </div>
-	    <?php
-        $content = ob_get_clean();
-        return $content;
-    }
 
     /**
      * @return false|string
