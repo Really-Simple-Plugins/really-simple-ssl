@@ -2680,7 +2680,7 @@ class rsssl_admin extends rsssl_front_end
             'callback' => false,
         );
 
-        $enable = __("Enable", "really-simple-ssl");
+        $enable = __("Show", "really-simple-ssl");
 	    $dismiss = __("dismiss", "really-simple-ssl");
 	    $curl_error = get_transient('rsssl_curl_error');
 
