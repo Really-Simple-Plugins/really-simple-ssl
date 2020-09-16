@@ -2521,9 +2521,7 @@ class rsssl_admin extends rsssl_front_end
         if (is_multisite() && rsssl_multisite::this()->hide_menu_for_subsites && !is_super_admin()) return;
 
         global $rsssl_admin_page;
-
         $count = $this->count_plusones();
-
         if ($count > 0 ) {
             $update_count = "<span class='update-plugins rsssl-update-count'><span class='update-count'>$count</span></span>";
         } else {
@@ -2537,9 +2535,6 @@ class rsssl_admin extends rsssl_front_end
             'rlrsssl_really_simple_ssl', //url
             array($this, 'settings_page')); //function
 
-        // Adds my_help_tab when my_admin_page loads
-//        add_action('load-' . $rsssl_admin_page, array($this, 'admin_add_help_tab'));
-
     }
 
     /**
@@ -2551,34 +2546,26 @@ class rsssl_admin extends rsssl_front_end
      *
      */
 
-	    public function rsssl_edit_admin_menu()
-	    {
-		    if (!current_user_can($this->capability)) return;
+    public function rsssl_edit_admin_menu()
+    {
+        if (!current_user_can($this->capability)) return;
+        global $menu;
+        $count = $this->count_plusones();
+        $menu_slug = 'options-general.php';
+        $menu_title = __('Settings');
+        foreach($menu as $index => $menu_item){
+            if (!isset($menu_item[2]) || !isset($menu_item[0])) continue;
+            if ($menu_item[2]===$menu_slug){
+                $pattern = '/<span.*>([1-9])<\/span><\/span>/i';
+                    if (preg_match($pattern, $menu_item[0], $matches)){
+                        if (isset($matches[1])) $count = intval($count) + intval($matches[1]);
+                    }
 
-		    global $menu;
-
-		    $count = $this->count_plusones();
-
-		    $menu_slug = 'options-general.php';
-		    $menu_title = __('Settings');
-
-		    foreach($menu as $index => $menu_item){
-			    if (!isset($menu_item[2]) || !isset($menu_item[0])) continue;
-			    if ($menu_item[2]===$menu_slug){
-				    $pattern = '/<span.*>([1-9])<\/span><\/span>/i';
-					    if (preg_match($pattern, $menu_item[0], $matches)){
-						    if (isset($matches[1])) $count = intval($count) + intval($matches[1]);
-					    }
-
-				    $update_count = $count > 0 ? "<span class='update-plugins rsssl-update-count'><span class='update-count'>$count</span></span>":'';
-				    $menu[$index][0] = $menu_title . $update_count;
-			    }
-
-		    }
-
-	    }
-
-
+                $update_count = $count > 0 ? "<span class='update-plugins rsssl-update-count'><span class='update-count'>$count</span></span>":'';
+                $menu[$index][0] = $menu_title . $update_count;
+            }
+        }
+    }
 
     /**
      * Admin help tab
@@ -2614,9 +2601,13 @@ class rsssl_admin extends rsssl_front_end
         $tabs = array(
             'configuration' => '',
         );
-
         $tabs = apply_filters("rsssl_grid_tabs", $tabs);
-	    // Only show general text if there are other tabs as well
+
+        //allow the license tab to show up for older version, to allow for upgrading
+	    $legacy_tabs = apply_filters("rsssl_tabs", array());
+	    if (isset($legacy_tabs['license'])) $tabs['license']= $legacy_tabs['license'];
+
+	    // Only show general tab if there are other tabs as well
 	    if (count($tabs) > 1) {
             $tabs['configuration'] = __("General", "really-simple-ssl");
         }
@@ -2960,7 +2951,7 @@ class rsssl_admin extends rsssl_front_end
 			        }
 		        }
 
-		        if ( $condition ) {
+		        if ( $condition && isset( $notice['score'] )) {
 			        // Only items matching condition will show in the dashboard. Only use these to determine max count.
 			        $max_score = $max_score + intval( $notice['score'] );
 			        $func      = $notice['callback'];
@@ -2969,7 +2960,6 @@ class rsssl_admin extends rsssl_front_end
 			        $success = ( isset( $notice['output'][ $output ]['icon'] )
 			                     && ( $notice['output'][ $output ]['icon']
 			                          === 'success' ) ) ? true : false;
-
 			        if ( $success ) {
 				        // If the output is success, task is completed. Add to actual count.
 				        $actual_score = $actual_score + intval( $notice['score'] );
