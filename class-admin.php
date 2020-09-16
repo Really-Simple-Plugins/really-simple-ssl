@@ -5,8 +5,6 @@ class rsssl_admin extends rsssl_front_end
 {
 
     private static $_this;
-    public $grid_items;
-
     public $wpconfig_siteurl_not_fixed = FALSE;
     public $no_server_variable = FALSE;
     public $errors = Array();
@@ -22,14 +20,12 @@ class rsssl_admin extends rsssl_front_end
     //general settings
     public $capability = 'activate_plugins';
 
-    public $ssl_test_page_error;
     public $htaccess_test_success = FALSE;
     public $plugin_version = rsssl_version; //deprecated, but used in pro plugin until 1.0.25
 
     public $plugin_dir = "really-simple-ssl";
     public $plugin_filename = "rlrsssl-really-simple-ssl.php";
     public $ABSpath;
-
     public $do_not_edit_htaccess = FALSE;
     public $javascript_redirect = FALSE;
     public $htaccess_redirect = FALSE;
@@ -44,10 +40,8 @@ class rsssl_admin extends rsssl_front_end
     public $plugin_conflict = ARRAY();
     public $plugin_db_version;
     public $plugin_upgraded;
-    public $mixed_content_fixer_status = "OK";
     public $ssl_type = "NA";
     public $dismiss_all_notices = false;
-
     public $pro_url;
 
     function __construct()
@@ -75,16 +69,17 @@ class rsssl_admin extends rsssl_front_end
         }
 
         register_deactivation_hook(dirname(__FILE__) . "/" . $this->plugin_filename, array($this, 'deactivate'));
-
 	    add_action('admin_init', array($this, 'add_privacy_info'));
-
-
     }
 
     static function this()
     {
         return self::$_this;
     }
+
+	/**
+	 * Add some privacy info, telling our users we aren't tracking them
+	 */
 
     public function add_privacy_info()
     {
@@ -150,12 +145,11 @@ class rsssl_admin extends rsssl_front_end
         }
 
         /*
-            Detect configuration when:
-            - SSL activation just confirmed.
-            - on settings page
-            - No SSL detected
-            */
-
+        Detect configuration when:
+        - SSL activation just confirmed.
+        - on settings page
+        - No SSL detected
+        */
 
         //when configuration should run again
         if ($this->clicked_activate_ssl() || !$this->ssl_enabled || !$this->site_has_ssl || $is_on_settings_page || is_network_admin()) {
@@ -200,11 +194,7 @@ class rsssl_admin extends rsssl_front_end
         add_action('admin_menu', array($this, 'add_settings_page'), 40);
 	    add_action('admin_init', array($this, 'create_form'), 40);
         add_action('admin_init', array($this, 'listen_for_deactivation'), 40);
-
-	    //Only redirect while on own settings page, otherwise deactivate link in plugins overview will break.
-	    //if ($this->is_settings_page()) {
-		    add_action( 'update_option_rlrsssl_options', array( $this, 'maybe_remove_highlight_from_url' ), 50 );
-        //}
+        add_action( 'update_option_rlrsssl_options', array( $this, 'maybe_remove_highlight_from_url' ), 50 );
 
         $plugin = rsssl_plugin;
         add_filter("plugin_action_links_$plugin", array($this, 'plugin_settings_link'));
@@ -212,7 +202,7 @@ class rsssl_admin extends rsssl_front_end
         //Add update notification to Settings admin menu
         add_action('admin_menu', array($this, 'rsssl_edit_admin_menu') );
 
-        //check if the uninstallfile is safely renamed to php.
+        //check if the uninstallfile is safely renamed to txt.
         $this->check_for_uninstall_file();
 
         //callbacks for the ajax dismiss buttons
@@ -224,7 +214,6 @@ class rsssl_admin extends rsssl_front_end
         add_action('wp_ajax_rsssl_get_updated_task_count', array($this, 'get_remaining_tasks_count'));
         add_action('wp_ajax_rsssl_update_task_toggle_option', array($this, 'update_task_toggle_option'));
 
-
         //handle notices
         add_action('admin_notices', array($this, 'show_notices'));
         //show review notice, only to free users
@@ -232,21 +221,17 @@ class rsssl_admin extends rsssl_front_end
             add_action('admin_notices', array($this, 'show_leave_review_notice'));
         }
         add_action("update_option_rlrsssl_options", array($this, "update_htaccess_after_settings_save"), 20, 3);
-//        add_action('shutdown', array($this, 'redirect_to_settings_page'));
-
     }
 
     public function check_upgrade() {
-
         $prev_version = get_option( 'rsssl_current_version', false );
-
         if ( $prev_version && version_compare( $prev_version, '4.0', '<' ) ) {
             update_option('rsssl_remaining_tasks', true);
         }
         update_option( 'rsssl_current_version', rsssl_version );
     }
 
-    /*
+    /**
      * Deactivate the plugin while keeping SSL
      * Activated when the 'uninstall_keep_ssl' button is clicked in the settings tab
      *
@@ -254,7 +239,6 @@ class rsssl_admin extends rsssl_front_end
 
     public function listen_for_deactivation()
     {
-
         //check if we are on ssl settings page
         if (!$this->is_settings_page()) return;
         //check user role

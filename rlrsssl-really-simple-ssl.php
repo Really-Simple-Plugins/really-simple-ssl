@@ -3,7 +3,7 @@
  * Plugin Name: Really Simple SSL
  * Plugin URI: https://www.really-simple-ssl.com
  * Description: Lightweight plugin without any setup to make your site SSL proof
- * Version: 4.0
+ * Version: 4.0.0
  * Text Domain: really-simple-ssl
  * Domain Path: /languages
  * Author: Really Simple Plugins
@@ -23,6 +23,26 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 defined('ABSPATH') or die("you do not have access to this page!");
+
+if (!function_exists('rsssl_activation_check')) {
+	/**
+	 * Checks if the plugin can safely be activated, at least php 5.6 and wp 4.8
+	 */
+	function rsssl_activation_check()
+	{
+		if (version_compare(PHP_VERSION, '5.6', '<')) {
+			deactivate_plugins(plugin_basename(__FILE__));
+			wp_die(__('Really Simple SSL cannot be activated. The plugin requires PHP 5.6 or higher', 'really-simple-ssl'));
+		}
+
+		global $wp_version;
+		if (version_compare($wp_version, '4.8', '<')) {
+			deactivate_plugins(plugin_basename(__FILE__));
+			wp_die(__('Really Simple SSL cannot be activated. The plugin requires WordPress 4.9 or higher', 'really-simple-ssl'));
+		}
+	}
+	register_activation_hook( __FILE__, 'rsssl_activation_check' );
+}
 
 class REALLY_SIMPLE_SSL
 {
@@ -103,17 +123,9 @@ class REALLY_SIMPLE_SSL
 		require_once(rsssl_path . 'class-mixed-content-fixer.php');
 
 		$wpcli = defined( 'WP_CLI' ) && WP_CLI;
-
 		if ( $wpcli ) {
 			require_once(rsssl_path . 'class-rsssl-wp-cli.php');
 		}
-
-		if (defined('rsssl_pro_version')) {
-            if (is_admin() || is_multisite() || $wpcli) {
-                //require_once(rsssl_path . 'class-admin-old.php');
-                //require_once(rsssl_path . 'class-help-old.php');
-            }
-        }
 
 		if (is_admin() || is_multisite() || $wpcli) {
 			if (is_multisite()) {
@@ -134,7 +146,9 @@ class REALLY_SIMPLE_SSL
 		/**
 		 * Fire custom hook
 		 */
-		do_action('rsssl_admin_init' );
+		if ( is_admin() ) {
+			do_action('rsssl_admin_init' );
+		}
 
 		add_action('wp_loaded', array(self::$instance->rsssl_front_end, 'force_ssl'), 20);
 		if (is_admin() || is_multisite()) {
