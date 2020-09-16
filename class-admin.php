@@ -193,6 +193,7 @@ class rsssl_admin extends rsssl_front_end
         //settings page, form  and settings link in the plugins page
         add_action('admin_menu', array($this, 'add_settings_page'), 40);
 	    add_action('admin_init', array($this, 'create_form'), 40);
+	    add_action('admin_init', array($this, 'backward_compatibility'), 40);
         add_action('admin_init', array($this, 'listen_for_deactivation'), 40);
         add_action( 'update_option_rlrsssl_options', array( $this, 'maybe_remove_highlight_from_url' ), 50 );
 
@@ -229,6 +230,13 @@ class rsssl_admin extends rsssl_front_end
             update_option('rsssl_remaining_tasks', true);
         }
         update_option( 'rsssl_current_version', rsssl_version );
+    }
+
+	/**
+	 * Because of breaking changes in 4.0 we need to remove some legacy actions to ensure no issues occur
+	 */
+    public function backward_compatibility(){
+	    if ( function_exists('RSSSL_PRO') ) remove_action( 'admin_init', array(RSSSL_PRO()->rsssl_premium_options, 'add_pro_settings'),60);
     }
 
     /**
@@ -2603,47 +2611,39 @@ class rsssl_admin extends rsssl_front_end
 
     public function admin_tabs($current = 'homepage')
     {
-        // Only show general text if there are other tabs as well
-        if (defined('rsssl_pro_version')) {
-           $general = __("General", "really-simple-ssl");
-        } else {
-            $general = '';
-        }
-
         $tabs = array(
-            'configuration' => $general,
-//            'settings' => __("Settings", "really-simple-ssl"),
-//            'debug' => __("Debug", "really-simple-ssl")
+            'configuration' => '',
         );
 
-        $tabs = apply_filters("rsssl_tabs", $tabs);
-
-        echo '<div class="nav-tab-wrapper">';
+        $tabs = apply_filters("rsssl_grid_tabs", $tabs);
+	    // Only show general text if there are other tabs as well
+	    if (count($tabs) > 1) {
+            $tabs['configuration'] = __("General", "really-simple-ssl");
+        }
 
         ?>
+        <div class="nav-tab-wrapper">
             <div class="rsssl-logo-container">
                 <div id="rsssl-logo"><img height="50px" src="<?php echo rsssl_url?>/assets/logo-really-simple-ssl.png" alt="review-logo"></div>
             </div>
-        <?php
-        foreach ($tabs as $tab => $name) {
-            $class = ($tab == $current) ? ' nav-tab-active' : '';
-            echo "<a class='nav-tab$class' href='?page=rlrsssl_really_simple_ssl&tab=$tab'>$name</a>";
-        }
-//        echo '</div>';
-        ?>
-        <div class="header-links">
-            <div class="documentation">
-                <a href="https://really-simple-ssl.com/knowledge-base" target="_blank"><?php _e("Documentation", "really-simple-ssl");?></a>
+            <?php
+                foreach ($tabs as $tab => $name) {
+                    $class = ($tab == $current) ? ' nav-tab-active' : '';
+                    echo "<a class='nav-tab$class' href='?page=rlrsssl_really_simple_ssl&tab=$tab'>$name</a>";
+                }
+            ?>
+            <div class="header-links">
+                <div class="documentation">
+                    <a href="https://really-simple-ssl.com/knowledge-base" target="_blank"><?php _e("Documentation", "really-simple-ssl");?></a>
+                </div>
+                <?php if (!defined('rsssl_pro_version')) { ?>
+                <div class="header-upsell">
+                    <a href="<?php echo $this->pro_url ?>" target="_blank">
+                        <div class="header-upsell-pro"><?php _e("PRO", "really-simple-ssl"); ?></div>
+                    </a>
+                </div>
+                <?php } ?>
             </div>
-            <?php if (!defined('rsssl_pro_version')) { ?>
-            <div class="header-upsell">
-                <a href="<?php echo $this->pro_url ?>" target="_blank">
-<!--                    <button class="button button-rsssl-primary donate">--><?php //_e("Upgrade", "really-simple-ssl");?><!--</button>-->
-                    <div class="header-upsell-pro"><?php _e("PRO", "really-simple-ssl"); ?></div>
-                </a>
-            </div>
-            <?php } ?>
-        </div>
         </div>
         <?php
     }
