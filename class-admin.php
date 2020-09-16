@@ -195,6 +195,7 @@ class rsssl_admin extends rsssl_front_end
 	    add_action('admin_init', array($this, 'create_form'), 40);
 	    add_action('admin_init', array($this, 'backward_compatibility'), 40);
         add_action('admin_init', array($this, 'listen_for_deactivation'), 40);
+        add_action('admin_init', array($this, 'deactivate_popup'), 40);
         add_action( 'update_option_rlrsssl_options', array( $this, 'maybe_remove_highlight_from_url' ), 50 );
 
         $plugin = rsssl_plugin;
@@ -2003,10 +2004,11 @@ class rsssl_admin extends rsssl_front_end
         $this->trace_log("retrieving redirect rules");
         //only add the redirect rules when a known type of SSL was detected. Otherwise, we use https.
         $rule = "";
-
+	    $this->ssl_type = "SERVER-HTTPS-ON";
+	    $this->htaccess_redirect = true;
         //if the htaccess test was successfull, and we know the redirectype, edit
         if ($this->htaccess_redirect && ($manual || $this->htaccess_test_success) && $this->ssl_type != "NA") {
-            $this->trace_log("starting insertion of .htaccess redirects.");
+	        $this->trace_log("starting insertion of .htaccess redirects.");
             $rule .= "<IfModule mod_rewrite.c>" . "\n";
             $rule .= "RewriteEngine on" . "\n";
 
@@ -2650,6 +2652,32 @@ class rsssl_admin extends rsssl_front_end
 
     public function get_notices_list()
     {
+	    $htaccess_message = '';
+	    //redirect, not writable, test failed
+	    //if (RSSSL()->really_simple_ssl->htaccess_redirect && (!is_writable($this->htaccess_file()) || !RSSSL()->really_simple_ssl->htaccess_test_success)) {
+		    if ( ! is_writable( RSSSL()->really_simple_ssl->htaccess_file() ) ) {
+			    $htaccess_file = RSSSL()->really_simple_ssl->uses_htaccess_conf() ? "htaccess.conf (/conf/htaccess.conf/)" : $htaccess_file = ".htaccess";
+			    $htaccess_message .= sprintf( __( "The %s file is not writable. Add these lines to your htaccess manually, or set 644 writing permissions.", "really-simple-ssl" ), $htaccess_file ) . '<br>';
+		    }
+
+		    //if ( ! RSSSL()->really_simple_ssl->htaccess_test_success ) {
+			    $htaccess_message .= __( "The .htaccess redirect rules that were selected by this plugin failed in the test. The following redirect rules were tested:", "really-simple-ssl" ) . '<br><br>';
+		   // }
+
+		   // if ( RSSSL()->really_simple_ssl->ssl_type != "NA" ) {
+			    $manual           = true;
+			    $rules            = RSSSL()->really_simple_ssl->get_redirect_rules( $manual );
+			    $arr_search       = array( "<", ">", "\n" );
+			    $arr_replace      = array( "&lt", "&gt", "<br>" );
+			    $rules            = str_replace( $arr_search, $arr_replace, $rules );
+	            $rules            = substr($rules, 4, -4);
+			    $htaccess_message .= '<code>' . $rules . '</code>';
+//		    } else {
+//			    $htaccess_message .= __( "The plugin could not detect any possible redirect rule.",
+//					    "really-simple-ssl" ) . '<br>';
+//		    }
+	   // }
+        if (strlen($htaccess_message) >0 ) $htaccess_message = '<br>'.$htaccess_message;
         $defaults = array(
             'condition' => array(),
             'callback' => false,
@@ -2666,7 +2694,6 @@ class rsssl_admin extends rsssl_front_end
         }
 
         $reload_https_url = esc_url_raw("https://" . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"]);
-
         $notices = array(
 	            'ssl_detected' => array(
                 'callback' => 'rsssl_ssl_detected',
@@ -2770,19 +2797,17 @@ class rsssl_admin extends rsssl_front_end
             ),
 
             'check_redirect' => array(
-	            'condition' => array('rsssl_ssl_enabled' , 'rsssl_htaccess_redirect_allowed', 'rsssl_no_multisite'),
+	            //'condition' => array('rsssl_ssl_enabled' , 'rsssl_htaccess_redirect_allowed', 'rsssl_no_multisite'),
 	            'callback' => 'rsssl_check_redirect',
                 'score' => 10,
 	            'output' => array(
                     'htaccess-redirect-set' => array(
-                        'msg' =>__('301 redirect to https set: .htaccess redirect.', 'really-simple-ssl'),
+                        'msg' =>__('301 redirect to https set: .htaccess redirect.', 'really-simple-ssl') . $htaccess_message,
                         'icon' => 'success'
                     ),
-                    //generate an enable link to highlight the setting, setting name is same as array key
-                    $enable_link = $this->generate_enable_link($setting_name = 'wp-redirect-to-htaccess', $type='free'),
                     'wp-redirect-to-htaccess' => array(
-                        'msg' => __('WordPress 301 redirect enabled. We recommend to enable the 301 .htaccess redirect option on your specific setup.', 'really-simple-ssl') . " "
-                                 . "<span><a href=$enable_link>$enable</a></span>" . " "
+                        'msg' => __('WordPress 301 redirect enabled. We recommend to enable the 301 .htaccess redirect option on your specific setup.', 'really-simple-ssl') .$htaccess_message . " "
+                                 . '<span><a href="'.$this->generate_enable_link($setting_name = 'wp-redirect-to-htaccess', $type='free').'">'.$enable.'</a></span>' . " "
                                  . __("or", "really-simple-ssl")
                                  . "<span class='rsssl-dashboard-dismiss' data-dismiss_type='check_redirect'><a href='#' class='rsssl-dismiss-text rsssl-close-warning'>$dismiss</a></span>"
                                  . "<span class='rsssl-dashboard-plusone update-plugins rsssl-update-count'><span class='update-count'>1</span></span>",
@@ -2791,22 +2816,22 @@ class rsssl_admin extends rsssl_front_end
                         'dismissible' => true
                     ),
                     'no-redirect-set' => array(
-                        'msg' => __('Enable a .htaccess redirect or WordPress redirect in the settings to create a 301 redirect.', 'really-simple-ssl'),
+                        'msg' => __('Enable a .htaccess redirect or WordPress redirect in the settings to create a 301 redirect.', 'really-simple-ssl') . $htaccess_message,
                         'icon' => 'open',
                         'dismissible' => false
                     ),
                     'htaccess-not-writeable' => array(
-                        'msg' => __('.htaccess is not writable. Set 301 WordPress redirect, or set the .htaccess manually if you want to redirect in .htaccess.', 'really-simple-ssl'),
+                        'msg' => __('.htaccess is not writable. Set 301 WordPress redirect, or set the .htaccess manually if you want to redirect in .htaccess.', 'really-simple-ssl') . $htaccess_message,
                         'icon' => 'warning',
                         'dismissible' => true
                     ),
                     'htaccess-cannot-be-set' => array(
-                        'msg' => __('Https redirect cannot be set in the .htaccess file. Set the .htaccess redirect manually or enable the WordPress 301 redirect in the settings.', 'really-simple-ssl'),
+                        'msg' => __('Https redirect cannot be set in the .htaccess file. Set manually or dismiss to leave on WordPress redirect.', 'really-simple-ssl') . $htaccess_message,
                         'icon' => 'warning',
                         'dismissible' => true
                     ),
                     'default' => array(
-                        'msg' => __('No 301 redirect is set. Enable the WordPress 301 redirect in the settings to get a 301 permanent redirect.', 'really-simple-ssl'),
+                        'msg' => __('No 301 redirect is set. Enable the WordPress 301 redirect in the settings to get a 301 permanent redirect.', 'really-simple-ssl') . $htaccess_message,
                         'icon' => 'warning',
                         'dismissible' => true
                     ),
@@ -3625,7 +3650,7 @@ class rsssl_admin extends rsssl_front_end
 	 */
 
     public function get_template_part($grid_item, $key) {
-	    if ( !$grid_item[$key] ) {
+	    if ( !isset($grid_item[$key]) || !$grid_item[$key] ) {
 		    return '';
 	    } else {
 		    if ( strpos( $grid_item[ $key ], '.php' ) !== false && file_exists($grid_item[ $key ])  ) {
@@ -3800,17 +3825,17 @@ class rsssl_admin extends rsssl_front_end
 	    add_settings_field('id_autoreplace_insecure_links', $help_tip . "<div class='rsssl-settings-text'>" . __("Mixed content fixer", "really-simple-ssl"), array($this, 'get_option_autoreplace_insecure_links'), 'rlrsssl', 'rlrsssl_settings');
 
         //only show option to enable or disable mixed content and redirect when SSL is detected
-        if ($this->ssl_enabled) {
+       // if ($this->ssl_enabled) {
 	        $help_tip = RSSSL()->rsssl_help->get_help_tip(__("Enable this if you want to use the internal WordPress 301 redirect. Needed on NGINX servers, or if the .htaccess redirect cannot be used.", "really-simple-ssl"), $return=true);
 	        add_settings_field('id_wp_redirect', $help_tip . "<div class='rsssl-settings-text'>" . __("Enable WordPress 301 redirect", "really-simple-ssl"), array($this, 'get_option_wp_redirect'), 'rlrsssl', 'rlrsssl_settings', ['class' => 'rsssl-settings-row'] );
 
             //when enabled networkwide, it's handled on the network settings page
-            if (RSSSL()->rsssl_server->uses_htaccess() && (!is_multisite() || !RSSSL()->rsssl_multisite->ssl_enabled_networkwide)) {
+            //if (RSSSL()->rsssl_server->uses_htaccess() && (!is_multisite() || !RSSSL()->rsssl_multisite->ssl_enabled_networkwide)) {
 	            $help_tip = RSSSL()->rsssl_help->get_help_tip(__("A .htaccess redirect is faster. Really Simple SSL detects the redirect code that is most likely to work (99% of websites), but this is not 100%. Make sure you know how to regain access to your site if anything goes wrong!", "really-simple-ssl"), $return=true);
 	            add_settings_field('id_htaccess_redirect', $help_tip . "<div class='rsssl-settings-text'>" . __("Enable 301 .htaccess redirect", "really-simple-ssl"), array($this, 'get_option_htaccess_redirect'), 'rlrsssl', 'rlrsssl_settings');
-            }
+            //}
 
-        }
+       // }
 
         //on multisite this setting can only be set networkwide
         if (RSSSL()->rsssl_server->uses_htaccess() && !is_multisite()) {
@@ -3822,7 +3847,6 @@ class rsssl_admin extends rsssl_front_end
         add_settings_field('id_switch_mixed_content_fixer_hook', $help_tip . "<div class='rsssl-settings-text'>" . __("Use alternative method to fix mixed content", "really-simple-ssl"), array($this, 'get_option_switch_mixed_content_fixer_hook'), 'rlrsssl', 'rlrsssl_settings');
 	    $help_tip = RSSSL()->rsssl_help->get_help_tip(__("Enable this option to permanently dismiss all +1 notices in the 'Your progress' tab", "really-simple-ssl"), $return=true);
 	    add_settings_field('id_dismiss_all_notices', $help_tip . "<div class='rsssl-settings-text'>" .  __("Dismiss all Really Simple SSL notices", "really-simple-ssl"), array($this, 'get_option_dismiss_all_notices'), 'rlrsssl', 'rlrsssl_settings');
-//        add_settings_field('id_deactivate_keep_ssl', __("Deactivate plugin and keep SSL", "really-simple-ssl"), array($this, 'get_option_deactivate_keep_ssl'), 'rlrsssl', 'rlrsssl_settings', ["class" => "rsssl-deactivate-keep-ssl"]);
 
     }
 
@@ -3989,32 +4013,34 @@ class rsssl_admin extends rsssl_front_end
      *
      */
 
-    public function get_option_htaccess_redirect()
-    {
-        $htaccess_redirect = $this->htaccess_redirect;
-        $comment = "";
-	    $disabled = "";
+	public function get_option_htaccess_redirect()
+	{
+		$comment = $disabled = "";
+		//networkwide is not shown, so this only applies to per site activated sites.
+		if (is_multisite()) {
+		    if (RSSSL()->rsssl_multisite->htaccess_redirect) {
+			    $disabled = "disabled";
+			    $comment = __("This option is enabled on the network menu.", "really-simple-ssl");
+            }
+		} else {
+		    //on multisite, the .htaccess do not edit option is not available
+			if ($this->do_not_edit_htaccess) {
+				$comment = __("If the setting 'do not edit htaccess' is enabled, you can't change this setting.", "really-simple-ssl");
+				$disabled = "disabled";
+			}
+		}
 
-	    //networkwide is not shown, so this only applies to per site activated sites.
-        if (is_multisite() && RSSSL()->rsssl_multisite->htaccess_redirect) {
-            $htaccess_redirect = TRUE;
-	        $disabled = "disabled";
-	        $comment = __("This option is enabled on the network menu.", "really-simple-ssl");
-        }
-        ?>
+		?>
         <label class="rsssl-switch" id="rsssl-maybe-highlight-wp-redirect-to-htaccess">
             <input id="rlrsssl_options" name="rlrsssl_options[htaccess_redirect]" size="40" value="1"
-                   type="checkbox" <?php echo $disabled?> <?php checked(1, $this->htaccess_redirect, true) ?> />
+                   type="checkbox" <?php checked(1, $this->htaccess_redirect, true) ?> <?php echo $disabled?>/>
             <span class="rsssl-slider rsssl-round"></span>
         </label>
-        <?php
-        echo $comment;
-        if ($htaccess_redirect && (!is_writable($this->htaccess_file()) || !$this->htaccess_test_success)) {
-            if ($this->ssl_type === "NA") {
-                _e("The plugin could not detect any possible redirect rule.", "really-simple-ssl");
-            }
+		<?php
+        if (strlen($comment)>0 ){
+	        echo '</tr><tr class="rsssl-comment"><td colspan="2" >'.$comment.'</td></tr><tr>';
         }
-    }
+	}
 
     /**
      * Insert option into settings form
@@ -4089,52 +4115,47 @@ class rsssl_admin extends rsssl_front_end
      */
 
 
-    public function get_option_deactivate_keep_ssl()
+    public function deactivate_popup()
     {
 
         ?>
-<!--        <style>-->
-<!--            #TB_ajaxContent {-->
-<!--                text-align: center !important;-->
-<!--            }-->
-<!--            #TB_window {-->
-<!--                height: 370px !important;-->
-<!--            }-->
-<!--        </style>-->
-<!--        <div><input class="thickbox button" title="" type="button" style="display: block; float: left;" alt="#TB_inline?-->
-<!--        height=370&width=400&inlineId=deactivate_keep_ssl" value="--><?php //echo __('Deactivate Plugin and keep SSL', 'really-simple-ssl'); ?><!--"/></div>-->
-<!--        <div id="deactivate_keep_ssl" style="display: none;">-->
-<!--            <h1 style="margin: 10px 0; text-align: center;">--><?php //_e("Are you sure?", "really-simple-ssl") ?><!--</h1>-->
-<!--            <h2 style="margin: 20px 0; text-align: left;">--><?php //_e("Deactivating the plugin while keeping SSL will do the following:", "really-simple-ssl") ?><!--</h2>-->
-<!--            <ul style="text-align: left; font-size: 1.2em;">-->
-<!--                <li>--><?php //_e("* The mixed content fixer will stop working", "really-simple-ssl") ?><!--</li>-->
-<!--                <li>--><?php //_e("* The WordPress 301 and Javascript redirect will stop working", "really-simple-ssl") ?><!--</li>-->
-<!--                <li>--><?php //_e("* Your site address will remain https://", "really-simple-ssl") ?><!-- </li>-->
-<!--                <li>--><?php //_e("* The .htaccess redirect will remain active", "really-simple-ssl") ?><!--</li>-->
-<!--                --><?php //_e("Deactivating the plugin via the plugins overview will revert the site back to http://.", "really-simple-ssl") ?>
-<!--            </ul>-->
-<!---->
-<!--            <script>-->
-<!--                jQuery(document).ready(function ($) {-->
-<!--                    $('#rsssl_close_tb_window').click(tb_remove);-->
-<!--                });-->
-<!--            </script>-->
-<!--            --><?php
-//            $token = wp_create_nonce('rsssl_deactivate_plugin');
-//            $deactivate_keep_ssl_link = admin_url("options-general.php?page=rlrsssl_really_simple_ssl&action=uninstall_keep_ssl&token=" . $token);
-//
-//            ?>
-<!--            <a class="button rsssl-button-deactivate-keep-ssl" href="--><?php //add_thickbox() ?>
-<!--                --><?php //echo $deactivate_keep_ssl_link ?><!--">--><?php //_e("I'm sure I want to deactivate", "really-simple-ssl") ?>
-<!--            </a>-->
-<!--            &nbsp;&nbsp;-->
-<!--            <a class="button" href="#" id="rsssl_close_tb_window">--><?php //_e("Cancel", "really-simple-ssl") ?><!--</a>-->
-<!---->
-<!---->
-<!--        </div>-->
-        <?php
-        RSSSL()->rsssl_help->get_help_tip(__("Clicking this button will deactivate the plugin while keeping your site on SSL. The WordPress 301 redirect, Javascript redirect and mixed content fixer will stop working. The site address will remain https:// and the .htaccess redirect will remain active. Deactivating the plugin via the plugins overview will revert the site back to http://.", "really-simple-ssl"));
+        <style>
+            #TB_ajaxContent {
+                text-align: center !important;
+            }
+            #TB_window {
+                height: 370px !important;
+            }
+        </style>
 
+        <div id="deactivate_keep_ssl" style="display: none;">
+            <h1 style="margin: 10px 0; text-align: center;"><?php _e("Are you sure?", "really-simple-ssl") ?></h1>
+            <h2 style="margin: 20px 0; text-align: left;"><?php _e("Deactivating the plugin while keeping SSL will do the following:", "really-simple-ssl") ?></h2>
+            <ul style="text-align: left; font-size: 1.2em;">
+                <li><?php _e("* The mixed content fixer will stop working", "really-simple-ssl") ?></li>
+                <li><?php _e("* The WordPress 301 and Javascript redirect will stop working", "really-simple-ssl") ?></li>
+                <li><?php _e("* Your site address will remain https://", "really-simple-ssl") ?> </li>
+                <li><?php _e("* The .htaccess redirect will remain active", "really-simple-ssl") ?></li>
+                <?php _e("Deactivating the plugin via the plugins overview will revert the site back to http://.", "really-simple-ssl") ?>
+            </ul>
+
+            <script>
+                jQuery(document).ready(function ($) {
+                    $('#rsssl_close_tb_window').click(tb_remove);
+                });
+            </script>
+            <?php
+            $token = wp_create_nonce('rsssl_deactivate_plugin');
+            $deactivate_keep_ssl_link = admin_url("options-general.php?page=rlrsssl_really_simple_ssl&action=uninstall_keep_ssl&token=" . $token);
+
+            ?>
+            <a class="button rsssl-button-deactivate-keep-ssl" href="<?php add_thickbox() ?>
+                <?php echo $deactivate_keep_ssl_link ?>"><?php _e("I'm sure I want to deactivate", "really-simple-ssl") ?>
+            </a>
+            &nbsp;&nbsp;
+            <a class="button" href="#" id="rsssl_close_tb_window"><?php _e("Cancel", "really-simple-ssl") ?></a>
+        </div>
+        <?php
     }
 
     /**
@@ -4196,7 +4217,8 @@ class rsssl_admin extends rsssl_front_end
         //add 'revert to http' after the Deactivate link on the plugins overview page
         if (isset($links['deactivate'])) {
             $deactivate_link = $links['deactivate'];
-            $links['deactivate'] = str_replace('</a>', "&nbsp" . __("(revert to http)", "really-simple-ssl") . '</a>', $deactivate_link);
+	        $link = 'alt="#TB_inline?height=370&width=400&inlineId=deactivate_keep_ssl"';
+            $links['deactivate'] = str_replace(array('<a ', '</a>'), array('<button '.$link.' ', '</button>'), $deactivate_link);
         }
 
         $settings_link = '<a href="' . admin_url("options-general.php?page=rlrsssl_really_simple_ssl") . '">' . __("Settings", "really-simple-ssl") . '</a>';
@@ -4518,24 +4540,26 @@ if (!function_exists('rsssl_ssl_detected')) {
 
 if (!function_exists('rsssl_check_redirect')) {
 	function rsssl_check_redirect() {
-		if ( ! RSSSL()->really_simple_ssl->has_301_redirect() ) {
-			return 'no-redirect-set';
-		}
-		if ( RSSSL()->really_simple_ssl->has_301_redirect() && RSSSL()->rsssl_server->uses_htaccess() && RSSSL()->really_simple_ssl->htaccess_contains_redirect_rules() ) {
-			return 'htaccess-redirect-set';
-		}
-		if ( RSSSL()->really_simple_ssl->has_301_redirect() && RSSSL()->really_simple_ssl->wp_redirect && RSSSL()->rsssl_server->uses_htaccess() && ! RSSSL()->really_simple_ssl->htaccess_redirect ) {
+
+//		if ( ! RSSSL()->really_simple_ssl->has_301_redirect() ) {
+//			return 'no-redirect-set';
+//		}
+//		if ( RSSSL()->really_simple_ssl->has_301_redirect() && RSSSL()->rsssl_server->uses_htaccess() && RSSSL()->really_simple_ssl->htaccess_contains_redirect_rules() ) {
+//			return 'htaccess-redirect-set';
+//		}
+
+//		if ( RSSSL()->rsssl_server->uses_htaccess() && ( ! is_multisite() || ! RSSSL()->rsssl_multisite->is_per_site_activated_multisite_subfolder_install() ) ) {
+//			if ( ! is_writable( RSSSL()->really_simple_ssl->htaccess_file() ) ) {
+//				return 'htaccess-not-writeable';
+//			} else {
+	        	return 'htaccess-cannot-be-set';
+//			}
+//	    }
+        if ( RSSSL()->really_simple_ssl->has_301_redirect() && RSSSL()->really_simple_ssl->wp_redirect && RSSSL()->rsssl_server->uses_htaccess() && ! RSSSL()->really_simple_ssl->htaccess_redirect ) {
 			return 'wp-redirect-to-htaccess';
 		}
-		if ( RSSSL()->rsssl_server->uses_htaccess() && ( ! is_multisite() || ! RSSSL()->rsssl_multisite->is_per_site_activated_multisite_subfolder_install() ) ) {
-			if ( ! is_writable( RSSSL()->really_simple_ssl->htaccess_file() ) ) {
-				return 'htaccess-not-writeable';
-			} else {
-				return 'htaccess-cannot-be-set';
-			}
-		} else {
-			return 'default';
-		}
+        return 'default';
+
 	}
 }
 

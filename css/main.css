@@ -1,3 +1,10 @@
+/* comments on settings pages */
+.rsssl-settings .rsssl-comment {
+  font-style:italic;
+  color:#888;
+  padding-bottom:0;
+  margin-top:-12px;
+}
 /* Hide review on own settings page */
 #rsssl_do_activate_ssl {
   margin-right:20px;
