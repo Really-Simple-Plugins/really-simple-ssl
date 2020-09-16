@@ -3150,27 +3150,25 @@ class rsssl_admin extends rsssl_front_end
 		$grid_items = array(
 			1 =>array(
 				'title' => __("Your progress", "really-simple-ssl"),
-				'secondary_header_item' => $this->generate_secondary_progress_header_item(),
-				'content' => 'progress.php',
-				'path' => rsssl_template_path,
-				'footer' => 'progress-footer.php',
+				'header' => rsssl_template_path . 'header.php',
+				'content' => rsssl_template_path . 'progress.php',
+				'footer' => rsssl_template_path . 'progress-footer.php',
 				'class' => 'regular rsssl-progress',
 				'type' => 'all',
 				'can_hide' => true,
 			),
 			2 => array(
 				'title' => __("Settings", "really-simple-ssl"),
-                'secondary_header_item' => $this->generate_secondary_settings_header_item(),
-                'content' => 'settings.php',
-				'path' => rsssl_template_path,
-				'footer' => $this->generate_settings_footer(),
+				'header' => rsssl_template_path . 'settings-header.php',
+                'content' => rsssl_template_path . 'settings.php',
+				'footer' => rsssl_template_path . 'settings-footer.php',
 				'class' => 'small settings',
 				'type' => 'settings',
 				'can_hide' => true,
 			),
             3 => array(
                 'title' => __("Tips & Tricks", "really-simple-ssl"),
-                'secondary_header_item' => '',
+                'header' => '',
                 'content' => $this->generate_tips_tricks(),
                 'footer' => $this->generate_tips_tricks_footer(),
                 'class' => 'small',
@@ -3179,7 +3177,7 @@ class rsssl_admin extends rsssl_front_end
             ),
 			'support' => array(
 				'title' => __("Support forum", "really-simple-ssl"),
-				'secondary_header_item' => '',
+				'header' => '',
 				'content' => $this->get_support_forum_block(),
 				'footer' => $this->get_system_status_footer(),
 				'type' => 'tasks',
@@ -3188,7 +3186,7 @@ class rsssl_admin extends rsssl_front_end
 			),
             'plugins' => array(
                 'title' => __("Our plugins", "really-simple-ssl"),
-                'secondary_header_item' => $this->generate_secondary_our_plugins_header(),
+                'header' => $this->generate_secondary_our_plugins_header(),
                 'content' => $this->generate_other_plugins(),
                 'footer' => '',
                 'class' => 'half-height no-border no-background upsell-grid-container',
@@ -3198,44 +3196,6 @@ class rsssl_admin extends rsssl_front_end
 		);
 		return apply_filters( 'rsssl_grid_items',  $grid_items );
 	}
-
-    /**
-     * @return false|string
-     *
-     * Generate a secondary header item for the progress block
-     */
-
-	public function generate_secondary_progress_header_item() {
-	    ob_start();
-        ?>
-        <div class="rsssl-secondary-header-item">
-            <?php $all_task_count = $this->get_all_task_count(); ?>
-            <div class="all-task-text">
-                <input type="checkbox" class="rsssl-task-toggle" id="rsssl-all-tasks" name="rsssl_all_tasks" <?php if (get_option('rsssl_all_tasks') ) echo "checked"?>>
-                <label for="rsssl-all-tasks"><?php _e( "All tasks", "really-simple-ssl" ); ?></label>
-            </div>
-            <div class="all-task-count">
-                <?php
-                echo " " . "(" . $all_task_count . ")";
-                ?> </div>
-            <?php
-            $open_task_count = $this->get_remaining_tasks_count();
-            if ($open_task_count ==! 0) {?>
-                <div class="open-task-text">
-                    <input type="checkbox" class="rsssl-task-toggle" id="rsssl-remaining-tasks" name="rsssl_remaining_tasks" <?php if (get_option('rsssl_remaining_tasks') ) echo "checked"?>>
-                    <label for="rsssl-remaining-tasks"><?php _e( "Remaining tasks", "really-simple-ssl" ); ?></label>
-                </div>
-                <div class="open-task-count">
-                    <?php
-                    echo " " . "(" . $open_task_count . ")";
-                    ?> </div> <?php
-            }
-            ?>
-        </div>
-        <?php
-        $content = ob_get_clean();
-        return $content;
-    }
 
     /**
      * Save the task toggle option
@@ -3272,8 +3232,7 @@ class rsssl_admin extends rsssl_front_end
             return 0;
         }
 
-//        $count = get_transient( 'rsssl_all_task_count' );
-        $count = false;
+        $count = get_transient( 'rsssl_all_task_count' );
         if ( $count === false ) {
             $count = 0;
 
@@ -3330,15 +3289,12 @@ class rsssl_admin extends rsssl_front_end
             }
 
             if (!isset($_POST["action"]) && $_POST["action"] ==! 'rsssl_get_updated_percentage') return;
-
             // When invoked via AJAX the count should be updated, therefore clear cache
             $this->reset_open_remaining_task_cache();
-
         }
 
-//        $count = get_transient( 'rsssl_remaining_task_count' );
-//
-//        if ( $count === false ) {
+        $count = get_transient( 'rsssl_remaining_task_count' );
+        if ( $count === false ) {
             $count = 0;
 
             $notices = $this->get_notices_list();
@@ -3373,56 +3329,14 @@ class rsssl_admin extends rsssl_front_end
                     }
                 }
             }
-            //set_transient( 'rsssl_remaining_task_count', $count, 'DAY_IN_SECONDS' );
-        //}
+            set_transient( 'rsssl_remaining_task_count', $count, 'DAY_IN_SECONDS' );
+        }
 
         if (wp_doing_ajax()) {
             wp_die($count);
         }
 
         return $count;
-    }
-
-
-
-    /**
-     * @return false|string
-     *
-     * Generate secondary header item in plugin dashboard settings block
-     * @since 4.0
-     *
-     */
-
-    public function generate_secondary_settings_header_item() {
-        ob_start();
-        ?>
-            <div class="rsssl-secondary-header-item">
-                <div class="rsssl-save-settings-feedback" style="display: none;">
-                    <?php _e("Save settings" , "really-simple-ssl") ?>
-                </div>
-            </div>
-        <?php
-        $content = ob_get_clean();
-        return $content;
-    }
-
-
-    /**
-     * @return false|string
-     * Generate the settings footer in plugin dashboard
-     *
-     * @since 4.0
-     *
-     */
-
-    public function generate_settings_footer() {
-	    ob_start();
-	    ?>
-        <input class="button button-rsssl-secondary rsssl-button-save" name="Submit" type="submit"
-               value="<?php echo __("Save", "really-simple-ssl"); ?>"/>
-        <?php
-        $content = ob_get_clean();
-        return $content;
     }
 
     /**
@@ -3664,7 +3578,6 @@ class rsssl_admin extends rsssl_front_end
     public function settings_page()
     {
         if (!current_user_can($this->capability)) return;
-
         if (isset ($_GET['tab'])) $this->admin_tabs($_GET['tab']); else $this->admin_tabs('configuration');
         if (isset ($_GET['tab'])) $tab = $_GET['tab']; else $tab = 'configuration';
 
@@ -3673,57 +3586,55 @@ class rsssl_admin extends rsssl_front_end
             <div class="rsssl-main"><?php
 
                 switch ($tab) {
-                case 'configuration' :
+                    case 'configuration' :
 
-                /*
-                    First tab, general
-                 */
+                    $container = $this->get_template('grid-container.php', rsssl_path . 'grid/');
+                    $element = $this->get_template('grid-element.php', rsssl_path . 'grid/');
+                    $output = '';
 
-                $grid_items = $this->general_grid();
+                    foreach ($this->general_grid() as $index => $grid_item) {
+                        $footer = $this->get_template_part($grid_item, 'footer');
+                        $content = $this->get_template_part($grid_item, 'content');
+                        $header = $this->get_template_part($grid_item, 'header');
 
-                $container = $this->get_template('grid-container.php', rsssl_path . 'grid/');
-                $element = $this->get_template('grid-element.php', rsssl_path . 'grid/');
-                $output = '';
-
-                foreach ($grid_items as $index => $grid_item) {
-                    $footer = $grid_item['footer'];
-                    if (!$footer) {
-	                    $footer = '';
-                    } else {
-	                    if ( isset($grid_item['path']) && strpos( $footer, '.php' ) !== false ) {
-		                    ob_start();
-		                    require $grid_item['path'].$footer;
-		                    $footer = ob_get_clean();
-	                    }
+                        // Add form if type is settings
+                        $block = str_replace(array('{class}', '{title}', '{header}', '{content}', '{footer}'), array($grid_item['class'], $grid_item['title'], $header, $content, $footer), $element);
+                        if (isset($grid_item['type']) && $grid_item['type'] == 'settings') {
+                            $output .= '<form action="options.php" method="post">'.$block.'</form>';
+                        } else {
+                            $output .= $block;
+                        }
                     }
-
-                    $content = $grid_item['content'];
-                    if ( isset($grid_item['path']) && strpos( $content, '.php' ) !== false ) {
-                        ob_start();
-                        require $grid_item['path'].$content;
-	                    $content = ob_get_clean();
-                    }
-
-                    // Add form if type is settings
-	                $block = str_replace(array('{class}', '{title}', '{secondary_header_item}', '{content}', '{footer}'), array($grid_item['class'], $grid_item['title'], $grid_item['secondary_header_item'], $content, $footer), $element);
-	                if (isset($grid_item['type']) && $grid_item['type'] == 'settings') {
-                        $output .= '<form action="options.php" method="post">'.$block.'</form>';
-                    } else {
-	                    $output .= $block;
-                    }
-                }
-
-                echo str_replace('{content}', $output, $container);
-
-                do_action("rsssl_configuration_page");
-
+                    echo str_replace('{content}', $output, $container);
+                    do_action("rsssl_configuration_page");
                 }
                 //possibility to hook into the tabs.
                 do_action("show_tab_{$tab}");
                 ?>
-            </div><!-- end main-->
-        </div><!-- end container -->
+            </div>
+        </div>
         <?php
+    }
+
+	/**
+     * Render grid item based on template
+	 * @param $grid_item
+	 * @param $key
+	 *
+	 * @return string
+	 */
+
+    public function get_template_part($grid_item, $key) {
+	    if ( !$grid_item[$key] ) {
+		    return '';
+	    } else {
+		    if ( strpos( $grid_item[ $key ], '.php' ) !== false && file_exists($grid_item[ $key ])  ) {
+			    ob_start();
+			    require $grid_item[ $key ];
+			    return ob_get_clean();
+		    }
+	    }
+	    return $grid_item[ $key ];
     }
 
     /**
@@ -4036,37 +3947,6 @@ class rsssl_admin extends rsssl_front_end
         RSSSL()->rsssl_help->get_help_tip(__("Enable this option to get debug info in the debug tab.", "really-simple-ssl"));
     }
 
-    /**
-     * Insert option into settings form
-     * @since  2.2
-     *
-     * @access public
-     *
-     */
-
-    public function get_option_javascript_redirect()
-    {
-        $javascript_redirect = $this->javascript_redirect;
-        $disabled = "";
-        $comment = "";
-
-        if (is_multisite() && rsssl_multisite::this()->javascript_redirect) {
-            $disabled = "disabled";
-            $javascript_redirect = TRUE;
-            $comment = __("This option is enabled on the network menu.", "really-simple-ssl");
-        }
-
-        ?>
-        <label class="rsssl-switch">
-            <input id="rlrsssl_options" name="rlrsssl_options[javascript_redirect]" size="40" value="1"
-                   type="checkbox" <?php checked(1, $javascript_redirect, true) ?> />
-            <span class="rsssl-slider rsssl-round"></span>
-        </label>
-        <?php
-//        RSSSL()->rsssl_help->get_help_tip(__("This is a fallback you should only use if other redirection methods do not work.", "really-simple-ssl"));
-        echo $comment;
-
-    }
 
     /**
      * Insert option into settings form
@@ -4091,7 +3971,7 @@ class rsssl_admin extends rsssl_front_end
         ?>
         <label class="rsssl-switch">
             <input id="rlrsssl_options" name="rlrsssl_options[wp_redirect]" size="40" value="1"
-                   type="checkbox" <?php checked(1, $wp_redirect, true) ?> />
+                   type="checkbox" <?php echo $disabled?> <?php checked(1, $wp_redirect, true) ?> />
             <span class="rsssl-slider rsssl-round"></span>
         </label>
         <?php
@@ -4111,74 +3991,29 @@ class rsssl_admin extends rsssl_front_end
 
     public function get_option_htaccess_redirect()
     {
-        $options = get_option('rlrsssl_options');
-
         $htaccess_redirect = $this->htaccess_redirect;
-        $disabled = "";
         $comment = "";
+	    $disabled = "";
 
-        //networkwide is not shown, so this only applies to per site activated sites.
+	    //networkwide is not shown, so this only applies to per site activated sites.
         if (is_multisite() && RSSSL()->rsssl_multisite->htaccess_redirect) {
-            $disabled = "disabled";
             $htaccess_redirect = TRUE;
-            $comment = __("This option is enabled on the network menu.", "really-simple-ssl");
-        } else {
-            $disabled = ($this->do_not_edit_htaccess) ? "disabled" : "";
+	        $disabled = "disabled";
+	        $comment = __("This option is enabled on the network menu.", "really-simple-ssl");
         }
-
         ?>
         <label class="rsssl-switch" id="rsssl-maybe-highlight-wp-redirect-to-htaccess">
             <input id="rlrsssl_options" name="rlrsssl_options[htaccess_redirect]" size="40" value="1"
-                   type="checkbox" <?php checked(1, $this->htaccess_redirect, true) ?> />
+                   type="checkbox" <?php echo $disabled?> <?php checked(1, $this->htaccess_redirect, true) ?> />
             <span class="rsssl-slider rsssl-round"></span>
         </label>
         <?php
         echo $comment;
-
-        if ($this->uses_htaccess_conf()) {
-            $htaccess_file = "htaccess.conf (/conf/htaccess.conf/)";
-        } else {
-	        $htaccess_file = ".htaccess";
-        }
-
-        if ($this->htaccess_redirect && (!is_writable($this->htaccess_file()) || !$this->htaccess_test_success)) {
-//            echo "<br><br>";
-//            if (!is_writable($this->htaccess_file())) _e("The $htaccess_file file is not writable. Add these lines to your htaccess manually, or set 644 writing permissions.", "really-simple-ssl");
-//            if (!$this->htaccess_test_success) _e("The .htaccess redirect rules that were selected by this plugin failed in the test. The following redirect rules were tested:", "really-simple-ssl");
-//            echo "<br><br>";
-            if ($this->ssl_type != "NA") {
-//                $manual = true;
-//                $rules = $this->get_redirect_rules($manual);
-//
-//                $arr_search = array("<", ">", "\n");
-//                $arr_replace = array("&lt", "&gt", "<br>");
-//                $rules = str_replace($arr_search, $arr_replace, $rules);
-//
-//                ?>
-<!--                <code>-->
-<!--                    --><?php //echo $rules; ?>
-<!--                </code>-->
-<!--                --><?php
-            } else {
+        if ($htaccess_redirect && (!is_writable($this->htaccess_file()) || !$this->htaccess_test_success)) {
+            if ($this->ssl_type === "NA") {
                 _e("The plugin could not detect any possible redirect rule.", "really-simple-ssl");
             }
         }
-
-        //on multisite, the .htaccess do not edit option is not available
-        if (!is_multisite()) {
-            if ($this->do_not_edit_htaccess) {
-//                _e("If the setting 'do not edit htaccess' is enabled, you can't change this setting.", "really-simple-ssl");
-            } elseif (!$this->htaccess_redirect) {
-//htaccess_redirect                $link_start = '<a target="_blank" href="https://really-simple-ssl.com/knowledge-base/remove-htaccess-redirect-site-lockout/">';
-//                $link_end = '</a>';
-//                printf(
-//                    __('Before you enable this, make sure you know how to %1$sregain access%2$s to your site in case of a redirect loop.', 'really-simple-ssl'),
-//                    $link_start,
-//                    $link_end
-//                );
-            }
-        }
-
     }
 
     /**
