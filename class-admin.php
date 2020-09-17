@@ -2814,7 +2814,7 @@ class rsssl_admin extends rsssl_front_end
                         'icon' => 'warning',
                         'dismissible' => true
                     ),
-                    'htaccess-cannot-be-set' => array(
+                    'htaccess-rules-test-failed' => array(
                 	    'msg' => __('The .htaccess redirect rules selected by this plugin failed in the test. Set manually or dismiss to leave on WordPress redirect.', 'really-simple-ssl') . $rules,
                         'icon' => 'warning',
                         'dismissible' => true
@@ -4358,6 +4358,9 @@ if (!function_exists('rsssl_ssl_detected')) {
 if (!function_exists('rsssl_check_redirect')) {
 	function rsssl_check_redirect() {
 
+
+
+
 		if ( ! RSSSL()->really_simple_ssl->has_301_redirect() ) {
 			return 'no-redirect-set';
 		}
@@ -4366,15 +4369,15 @@ if (!function_exists('rsssl_check_redirect')) {
 			return 'htaccess-redirect-set';
 		}
 
-		if ( RSSSL()->rsssl_server->uses_htaccess() && ( ! is_multisite() || ! RSSSL()->rsssl_multisite->is_per_site_activated_multisite_subfolder_install() ) ) {
-			if ( ! is_writable( RSSSL()->really_simple_ssl->htaccess_file() ) ) {
-				return 'htaccess-not-writeable';
-			} else {
-	        	return 'htaccess-cannot-be-set';
-			}
+		if ( RSSSL()->rsssl_server->uses_htaccess() && ! is_writable( RSSSL()->really_simple_ssl->htaccess_file()) && ( ! is_multisite() || ! RSSSL()->rsssl_multisite->is_per_site_activated_multisite_subfolder_install() ) ) {
+		    return 'htaccess-not-writeable';
 	    }
 
-        if ( RSSSL()->really_simple_ssl->has_301_redirect() && RSSSL()->really_simple_ssl->wp_redirect && RSSSL()->rsssl_server->uses_htaccess() && ! RSSSL()->really_simple_ssl->htaccess_redirect ) {
+		if ( RSSSL()->really_simple_ssl->htaccess_redirect && !RSSSL()->really_simple_ssl->htaccess_test_success) {
+            return 'htaccess-rules-test-failed';
+		}
+
+        if ( RSSSL()->really_simple_ssl->has_301_redirect() && RSSSL()->really_simple_ssl->wp_redirect && RSSSL()->rsssl_server->uses_htaccess() && ! RSSSL()->really_simple_ssl->htaccess_redirect && ( ! is_multisite() || ! RSSSL()->rsssl_multisite->is_per_site_activated_multisite_subfolder_install() )) {
 			return 'wp-redirect-to-htaccess';
 		}
 
