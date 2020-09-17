@@ -4358,23 +4358,26 @@ if (!function_exists('rsssl_ssl_detected')) {
 if (!function_exists('rsssl_check_redirect')) {
 	function rsssl_check_redirect() {
 
-//		if ( ! RSSSL()->really_simple_ssl->has_301_redirect() ) {
-//			return 'no-redirect-set';
-//		}
-//		if ( RSSSL()->really_simple_ssl->has_301_redirect() && RSSSL()->rsssl_server->uses_htaccess() && RSSSL()->really_simple_ssl->htaccess_contains_redirect_rules() ) {
-//			return 'htaccess-redirect-set';
-//		}
+		if ( ! RSSSL()->really_simple_ssl->has_301_redirect() ) {
+			return 'no-redirect-set';
+		}
 
-//		if ( RSSSL()->rsssl_server->uses_htaccess() && ( ! is_multisite() || ! RSSSL()->rsssl_multisite->is_per_site_activated_multisite_subfolder_install() ) ) {
-//			if ( ! is_writable( RSSSL()->really_simple_ssl->htaccess_file() ) ) {
-//				return 'htaccess-not-writeable';
-//			} else {
+		if ( RSSSL()->really_simple_ssl->has_301_redirect() && RSSSL()->rsssl_server->uses_htaccess() && RSSSL()->really_simple_ssl->htaccess_contains_redirect_rules() ) {
+			return 'htaccess-redirect-set';
+		}
+
+		if ( RSSSL()->rsssl_server->uses_htaccess() && ( ! is_multisite() || ! RSSSL()->rsssl_multisite->is_per_site_activated_multisite_subfolder_install() ) ) {
+			if ( ! is_writable( RSSSL()->really_simple_ssl->htaccess_file() ) ) {
+				return 'htaccess-not-writeable';
+			} else {
 	        	return 'htaccess-cannot-be-set';
-//			}
-//	    }
+			}
+	    }
+
         if ( RSSSL()->really_simple_ssl->has_301_redirect() && RSSSL()->really_simple_ssl->wp_redirect && RSSSL()->rsssl_server->uses_htaccess() && ! RSSSL()->really_simple_ssl->htaccess_redirect ) {
 			return 'wp-redirect-to-htaccess';
 		}
+
         return 'default';
 
 	}
