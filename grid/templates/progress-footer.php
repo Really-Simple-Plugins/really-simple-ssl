@@ -50,9 +50,7 @@ $items = array(
 	foreach ($items as $item) { ?>
 		<span class="rsssl-footer-item <?php echo $item['class']?>">
 		    <span class="rsssl-grid-footer dot <?php echo $item['dot_class']?>"></span>
-		    <span class="title">
-		        <?php echo $item['text']?>
-		    </span>
+            <?php echo $item['text']?>
 		</span>
 
 	<?php }  ?>

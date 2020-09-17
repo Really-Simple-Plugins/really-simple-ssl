@@ -171,7 +171,7 @@
 
       .rsssl-grid-item-content {
         height: 310px;
-        margin: 10px 10px 15px 15px;
+        margin: 15px;
         border-bottom: 1px solid @border_color;
 
           /*
@@ -179,7 +179,7 @@
           */
 
           .progress-bar-container {
-            margin: 15px 15px 15px 0;
+            margin: 0 0 15px 0;
           }
 
           .progress {
@@ -198,7 +198,7 @@
           .progress-text {
             display: flex;
             align-items: center;
-            margin: 10px;
+            margin: 10px 0;
             padding-top: 10px;
             padding-bottom: 10px;
 
@@ -225,7 +225,8 @@
 
           .rsssl-progress-table {
             td {
-              padding: 5px 0 5px 15px;
+              padding: 5px 10px 5px 0;
+              vertical-align: top;
             }
           }
 
@@ -245,9 +246,9 @@
           .form-table {
             display: flex;
             th {
-              margin-left: 10px;
+              margin-left: 0;
               .dashicons-editor-help {
-                font-size: 25px;
+                font-size: 20px;
               }
             }
 
@@ -271,7 +272,7 @@
                     font-weight: normal;
                   }
                   .rsssl-tooltip-right {
-                    padding-right: 20px;
+                    padding-right: 10px;
                   }
                 }
 
@@ -291,26 +292,33 @@
        */
         .rsssl-tips-tricks {
           padding-left: 10px;
-          .rsssl-tips-tricks-element {
-            display: flex;
-            justify-content: space-between;
-            margin-right: @grid_margin;
 
-            .rsssl-tips-tricks-content {
-              width: 80%;
-              color: @light-text-color;
-              padding-bottom: 15px;
+
+            color: @light-text-color;
+            padding-bottom: 15px;
+            .tips-tricks-content{
+              display: flex;
+              flex-direction: column;
+              height: 300px;
+              .tips-tricks-top {
+                flex-grow:1;
+
+                .rsssl-tips-tricks-element {
+                  margin-bottom: 15px;
+                  display: flex;
+                  flex-direction: row;
+                  justify-content: space-between;
+                }
+              }
+              .tips-tricks-bottom {
+                color: @light-text-color;
+              }
             }
-          }
+
 
           .rsssl-tips-tricks-read-more a {
             text-decoration: none;
-          }
-
-          .tips-tricks-bottom {
-            position: absolute;
-            bottom: 80px;
-            color: @light-text-color;
+            white-space: nowrap;
           }
         }
         // End tips and tricks
@@ -450,7 +458,7 @@
       .rsssl-grid-item-footer {
         display: flex;
         align-items: center;
-        margin: 0 0 0 25px;
+        margin: 0 0 0 15px;
         height: 50px;
         bottom: 0;
         width: 95%;
