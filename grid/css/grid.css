@@ -92,6 +92,14 @@
 .rsssl-grid .rsssl-progress #rsssl-remaining-tasks {
   display: none;
 }
+.rsssl-grid .rsssl-progress .rsssl-tasks {
+  text-decoration: none;
+  margin-left: 10px;
+}
+.rsssl-grid .rsssl-progress .rsssl-tasks-inactive {
+  text-decoration: underline;
+  color: lightgrey;
+}
 .rsssl-grid .rsssl-item {
   width: 800px;
   height: 475px;

@@ -1,3 +1,5 @@
+<?php defined('ABSPATH') or die("you do not have access to this page!"); ?>
+
 <div id="rsssl-support-forums-container">
 	<div class="rsssl-support-forums">
 		<a href="https://really-simple-ssl.com/forums/forum/general-issues/" target="_blank">

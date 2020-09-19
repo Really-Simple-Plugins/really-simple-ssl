@@ -70,7 +70,6 @@ jQuery(document).ready(function ($) {
     });
 
     $(document).on('click', "#rsssl-all-tasks", function (e) {
-        console.log("clicked");
         if ($('#rsssl-remaining-tasks').is(":checked")) {
             $('#rsssl-remaining-tasks').prop("checked", false);
         }
@@ -78,26 +77,17 @@ jQuery(document).ready(function ($) {
     });
 
    function update_task_toggle_option() {
-       console.log("update task toggle");
         var allTasks;
         var remainingTasks;
+       rsssl_update_toggle_style();
 
-        if ($('#rsssl-all-tasks').is(":checked")) {
-            $('label[for=rsssl-all-tasks]').css({textDecoration:'underline'});
-            allTasks = 'checked';
-        } else {
-            $('label[for=rsssl-all-tasks]').css({textDecoration:'none'});
-            allTasks = 'unchecked';
-        }
-
-        if ($('#rsssl-remaining-tasks').is(":checked")) {
-            $('label[for=rsssl-remaining-tasks]').css({textDecoration:'underline'});
-            remainingTasks = 'checked';
-        } else {
-            $('label[for=rsssl-remaining-tasks]').css({textDecoration:'none'});
-            remainingTasks = 'unchecked';
-        }
-
+       if ($('#rsssl-all-tasks').is(":checked")) {
+           allTasks = 'checked';
+           remainingTasks = 'unchecked';
+       } else {
+           allTasks = 'unchecked';
+           remainingTasks = 'checked';
+       }
 
         $.ajax({
             type: "post",
@@ -114,18 +104,18 @@ jQuery(document).ready(function ($) {
         });
     }
 
-    if ($('#rsssl-all-tasks').is(":checked")) {
-        $('label[for=rsssl-all-tasks]').css({textDecoration: 'underline'});
-    } else {
-        $('label[for=rsssl-all-tasks]').css({textDecoration: 'none'});
+    rsssl_update_toggle_style();
+    function rsssl_update_toggle_style(){
+        var allTasks = $('#rsssl-all-tasks');
+        var remainingTasks = $('#rsssl-remaining-tasks');
+        if (allTasks.is(":checked")) {
+            allTasks.closest('.rsssl-tasks').removeClass('rsssl-tasks-inactive');
+            remainingTasks.closest('.rsssl-tasks').addClass('rsssl-tasks-inactive');
+        } else {
+            allTasks.closest('.rsssl-tasks').removeClass('rsssl-tasks-inactive');
+            remainingTasks.closest('.rsssl-tasks').addClass('rsssl-tasks-inactive');
+        }
     }
-
-    if ($('#rsssl-remaining-tasks').is(":checked")) {
-        $('label[for=rsssl-remaining-tasks]').css({textDecoration: 'underline'});
-    } else {
-        $('label[for=rsssl-remaining-tasks]').css({textDecoration: 'none'});
-    }
-
 
 
     $(".rsssl-dashboard-dismiss").on("click", ".rsssl-close-warning, .rsssl-close-warning-x",function (event) {

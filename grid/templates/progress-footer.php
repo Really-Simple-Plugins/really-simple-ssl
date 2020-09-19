@@ -1,3 +1,5 @@
+<?php defined('ABSPATH') or die("you do not have access to this page!"); ?>
+
 <?php
 if (RSSSL()->really_simple_ssl->ssl_enabled) {
 	$ssl_enabled = "rsssl-dot-success";

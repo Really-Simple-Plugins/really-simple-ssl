@@ -1,3 +1,5 @@
+<?php defined('ABSPATH') or die("you do not have access to this page!"); ?>
+
 <?php $percentage_completed = RSSSL()->really_simple_ssl->get_score_percentage(); ?>
 
 <div class="rsssl-progress">

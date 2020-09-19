@@ -58,10 +58,6 @@ class rsssl_admin extends rsssl_front_end
 
         $this->get_plugin_upgraded(); //call always, otherwise db version will not match anymore.
 
-	    if (isset($_GET['rsssl_dismiss_review_notice'])){
-		    $this->get_dismiss_review_notice();
-	    }
-
 	    if (is_multisite()) {
 	        $this->pro_url = 'https://really-simple-ssl.com/pro-multisite';
         } else {
@@ -70,6 +66,7 @@ class rsssl_admin extends rsssl_front_end
 
         register_deactivation_hook(dirname(__FILE__) . "/" . $this->plugin_filename, array($this, 'deactivate'));
 	    add_action('admin_init', array($this, 'add_privacy_info'));
+	    add_action('admin_init', array($this, 'maybe_dismiss_review_notice'));
 	    add_action('admin_footer', array($this, 'deactivate_popup'), 40);
 
     }
@@ -100,10 +97,15 @@ class rsssl_admin extends rsssl_front_end
         );
     }
 
-    public function get_dismiss_review_notice() {
-        $this->review_notice_shown = true;
-        $this->dismiss_review_notice = true;
-        $this->save_options();
+	/**
+	 * Dismiss review notice of dismissed by the user
+	 */
+
+    public function maybe_dismiss_review_notice() {
+	    if (isset($_GET['rsssl_dismiss_review_notice'])){
+		    $this->review_notice_shown = true;
+		    $this->save_options();
+	    }
     }
 
     /**
@@ -2206,7 +2208,6 @@ class rsssl_admin extends rsssl_front_end
         }
 
         if (!$this->review_notice_shown && get_option('rsssl_activation_timestamp') && get_option('rsssl_activation_timestamp') < strtotime("-1 month")) {
-            if ($this->dismiss_review_notice) return;
             add_action('admin_print_footer_scripts', array($this, 'insert_dismiss_review'));
             ?>
             <style>
@@ -2242,7 +2243,7 @@ class rsssl_admin extends rsssl_front_end
                             <a class="button button-rsssl-primary" target="_blank"
                                href="https://wordpress.org/support/plugin/really-simple-ssl/reviews/#new-post"><?php _e('Leave a review', 'really-simple-ssl'); ?></a>
                             <div class="dashicons dashicons-calendar"></div><a href="#" id="maybe-later"><?php _e('Maybe later', 'really-simple-ssl'); ?></a>
-                            <div class="dashicons dashicons-no-alt"></div><a href="<?php echo esc_url(add_query_arg(array("page"=>"rlrsssl_really_simple_ssl", "tab"=>"configuration", "rsssl_dismiss_review_notice"=>1),admin_url("options-general.php") ) );?>" class="review-dismiss"><?php _e('Don\'t show again', 'really-simple-ssl'); ?></a>
+                            <div class="dashicons dashicons-no-alt"></div><a href="<?php echo esc_url(add_query_arg(array("page"=>"rlrsssl_really_simple_ssl", "tab"=>"configuration", "rsssl_dismiss_review_notice"=>1),admin_url("options-general.php") ) );?>"><?php _e('Don\'t show again', 'really-simple-ssl'); ?></a>
                         </div>
                     </div>
                 </div>
@@ -3407,6 +3408,7 @@ class rsssl_admin extends rsssl_front_end
     public function settings_page()
     {
         if (!current_user_can($this->capability)) return;
+
         if (isset ($_GET['tab'])) $this->admin_tabs($_GET['tab']); else $this->admin_tabs('configuration');
         if (isset ($_GET['tab'])) $tab = $_GET['tab']; else $tab = 'configuration';
 
@@ -3422,6 +3424,7 @@ class rsssl_admin extends rsssl_front_end
                     $output = '';
 
                     foreach ($this->general_grid() as $index => $grid_item) {
+                        _log($grid_item);
                         $footer = $this->get_template_part($grid_item, 'footer');
                         $content = $this->get_template_part($grid_item, 'content');
                         $header = $this->get_template_part($grid_item, 'header');
@@ -3454,11 +3457,12 @@ class rsssl_admin extends rsssl_front_end
 	 */
 
     public function get_template_part($grid_item, $key) {
+
 	    if ( !isset($grid_item[$key]) || !$grid_item[$key] ) {
 		    return '';
 	    } else {
 		    if ( strpos( $grid_item[ $key ], '.php' ) !== false && file_exists($grid_item[ $key ])  ) {
-			    ob_start();
+		        ob_start();
 			    require $grid_item[ $key ];
 			    return ob_get_clean();
 		    }
@@ -3616,30 +3620,23 @@ class rsssl_admin extends rsssl_front_end
 	    }
 
         register_setting('rlrsssl_options', 'rlrsssl_options', array($this, 'options_validate'));
-
-	    // Show a dismiss review
-	    if (!$this->dismiss_review_notice && !$this->review_notice_shown && get_option('rsssl_activation_timestamp') && get_option('rsssl_activation_timestamp') < strtotime("-1 month")) {
-            $help_tip = RSSSL()->rsssl_help->get_help_tip(__("Enable this option to dismiss the review notice.", "really-simple-ssl"), $return=true);
-            add_settings_field('id_dismiss_review_notice', $help_tip . "<div class='rsssl-settings-text'>" . __("Dismiss review notice", "really-simple-ssl"), array($this, 'get_option_dismiss_review_notice'), 'rlrsssl', 'rlrsssl_settings');
-        }
-
 	    add_settings_section('rlrsssl_settings', __("Settings", "really-simple-ssl"), array($this, 'section_text'), 'rlrsssl');
 
 	    $help_tip = RSSSL()->rsssl_help->get_help_tip(__("In most cases you need to leave this enabled, to prevent mixed content issues on your site.", "really-simple-ssl"), $return=true);
 	    add_settings_field('id_autoreplace_insecure_links', $help_tip . "<div class='rsssl-settings-text'>" . __("Mixed content fixer", "really-simple-ssl"), array($this, 'get_option_autoreplace_insecure_links'), 'rlrsssl', 'rlrsssl_settings');
 
         //only show option to enable or disable mixed content and redirect when SSL is detected
-       // if ($this->ssl_enabled) {
+        if ($this->ssl_enabled) {
 	        $help_tip = RSSSL()->rsssl_help->get_help_tip(__("Enable this if you want to use the internal WordPress 301 redirect. Needed on NGINX servers, or if the .htaccess redirect cannot be used.", "really-simple-ssl"), $return=true);
 	        add_settings_field('id_wp_redirect', $help_tip . "<div class='rsssl-settings-text'>" . __("Enable WordPress 301 redirect", "really-simple-ssl"), array($this, 'get_option_wp_redirect'), 'rlrsssl', 'rlrsssl_settings', ['class' => 'rsssl-settings-row'] );
 
             //when enabled networkwide, it's handled on the network settings page
-            //if (RSSSL()->rsssl_server->uses_htaccess() && (!is_multisite() || !RSSSL()->rsssl_multisite->ssl_enabled_networkwide)) {
+            if (RSSSL()->rsssl_server->uses_htaccess() && (!is_multisite() || !RSSSL()->rsssl_multisite->ssl_enabled_networkwide)) {
 	            $help_tip = RSSSL()->rsssl_help->get_help_tip(__("A .htaccess redirect is faster. Really Simple SSL detects the redirect code that is most likely to work (99% of websites), but this is not 100%. Make sure you know how to regain access to your site if anything goes wrong!", "really-simple-ssl"), $return=true);
 	            add_settings_field('id_htaccess_redirect', $help_tip . "<div class='rsssl-settings-text'>" . __("Enable 301 .htaccess redirect", "really-simple-ssl"), array($this, 'get_option_htaccess_redirect'), 'rlrsssl', 'rlrsssl_settings');
-            //}
+            }
 
-       // }
+        }
 
         //on multisite this setting can only be set networkwide
         if (RSSSL()->rsssl_server->uses_htaccess() && !is_multisite()) {
@@ -3688,7 +3685,6 @@ class rsssl_admin extends rsssl_front_end
         $newinput['plugin_db_version'] = $this->plugin_db_version;
         $newinput['ssl_enabled'] = $this->ssl_enabled;
         $newinput['debug_log'] = $this->debug_log;
-        $newinput['dismiss_review_notice'] = $this->dismiss_review_notice;
 
         if (!empty($input['hsts']) && $input['hsts'] == '1') {
             $newinput['hsts'] = TRUE;
@@ -3738,12 +3734,6 @@ class rsssl_admin extends rsssl_front_end
 	    } else {
 		    $newinput['dismiss_all_notices'] = FALSE;
 	    }
-
-        if (!empty($input['dismiss_review_notice']) && $input['dismiss_review_notice'] == '1') {
-            $newinput['dismiss_review_notice'] = TRUE;
-        } else {
-            $newinput['dismiss_review_notice'] = FALSE;
-        }
 
         if (!empty($input['htaccess_redirect']) && $input['htaccess_redirect'] == '1') {
             $newinput['htaccess_redirect'] = TRUE;
@@ -3980,20 +3970,6 @@ class rsssl_admin extends rsssl_front_end
                 <a class="button rsssl-button-deactivate-keep-ssl" href="<?php echo $deactivate_keep_ssl_link ?>"><?php _e("Deactivate, keep https", "really-simple-ssl") ?></a>
                 <a class="button" href="#" id="rsssl_close_tb_window"><?php _e("Cancel", "really-simple-ssl") ?></a>
         </div>
-        <?php
-    }
-
-    /**
-     * Since 3.3.2
-     */
-
-    public function get_option_dismiss_review_notice() {
-        ?>
-        <label class="rsssl-switch">
-            <input id="rlrsssl_options" name="rlrsssl_options[dismiss_review_notice]" size="40" value="1"
-                   type="checkbox" <?php checked(1, $this->dismiss_review_notice, true) ?> />
-            <span class="rsssl-slider rsssl-round"></span>
-        </label>
         <?php
     }
 

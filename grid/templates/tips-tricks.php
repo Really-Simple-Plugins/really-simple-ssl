@@ -1,3 +1,5 @@
+<?php defined('ABSPATH') or die("you do not have access to this page!"); ?>
+
 <div class="rsssl-tips-tricks">
 	<div class="tips-tricks-content">
         <div class="tips-tricks-top">

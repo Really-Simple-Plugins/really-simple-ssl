@@ -12,7 +12,6 @@ if (!class_exists('rsssl_multisite')) {
         public $section = "rsssl_network_options_section";
         public $ssl_enabled_networkwide;
         public $selected_networkwide_or_per_site;
-
         public $wp_redirect;
         public $htaccess_redirect;
         public $do_not_edit_htaccess;
@@ -22,8 +21,6 @@ if (!class_exists('rsssl_multisite')) {
         public $mixed_content_admin;
         public $cert_expiration_warning;
         public $hide_menu_for_subsites;
-
-        private $pro_url = "https://www.really-simple-ssl.com/pro-multisite";
 
         function __construct()
         {
@@ -380,7 +377,7 @@ if (!class_exists('rsssl_multisite')) {
             ?>
             <p><?php _e('You can also let the automatic scan of the pro version handle this for you, and get premium support and increased security with HSTS included.', 'really-simple-ssl'); ?>
                 &nbsp;<a target="_blank"
-                         href="<?php echo $this->pro_url; ?>"><?php _e("Check out Really Simple SSL Premium", "really-simple-ssl"); ?></a>
+                         href="https://www.really-simple-ssl.com/pro-multisite"><?php _e("Check out Really Simple SSL Premium", "really-simple-ssl"); ?></a>
             </p>
             <?php
         }
@@ -945,27 +942,21 @@ if (!class_exists('rsssl_multisite')) {
 
         public function dismiss_success_message_callback()
         {
-            if (!current_user_can($this->capability) ) return;
             check_ajax_referer('really-simple-ssl-dismiss', 'security');
-
             update_site_option("rsssl_success_message_shown", true);
             wp_die();
         }
 
         public function dismiss_pro_option_notice()
         {
-            if (!current_user_can($this->capability) ) return;
             check_ajax_referer('rsssl-pro-dismiss-pro-option-notice' ,'security');
-
             update_option('rsssl_pro_pro_option_notice_dismissed', true);
             wp_die();
         }
 
         public function dismiss_wildcard_message_callback()
         {
-            if (!current_user_can($this->capability) ) return;
             check_ajax_referer('really-simple-ssl-dismiss', 'security');
-
             update_site_option("rsssl_wildcard_message_shown", true);
             wp_die();
         }
@@ -1013,18 +1004,18 @@ if (!class_exists('rsssl_multisite')) {
                         ?>
                         <div id="message" class="updated notice is-dismissible rsssl-pro-dismiss-notice">
                             <p>
-                                <?php echo sprintf(__('You are running Really Simple SSL pro. A dedicated add-on for multisite has been released. If you want more options to have full control over your multisite network, you can ask for a discount code to %supgrade%s your license to a multisite license.', 'really-simple-ssl'), '<a href="https://really-simple-ssl.com/contact" title="Really Simple SSL">', '</a>') ?>
+                                <?php echo sprintf(__('You are running Really Simple SSL pro. A dedicated add-on for multisite has been released. If you want more options to have full control over your multisite network, you can %supgrade%s on the licenses tab of your account.', 'really-simple-ssl'), '<a target="_blank" href="https://really-simple-ssl.com/account/" title="Really Simple SSL">', '</a>') ?>
                             </p>
-                            </p></div>
+                        </div>
                         <?php
                     }
                 } else {
                     ?>
                     <div id="message" class="updated notice is-dismissible rsssl-pro-dismiss-notice">
                         <p>
-                            <?php echo sprintf(__('If you want more options to have full control over your multisite network, you can %supgrade%s your license to a multisite license, or dismiss this message', 'really-simple-ssl'), '<a href="$pro_url-multisite" title="Really Simple SSL">', '</a>') ?>
+                            <?php echo sprintf(__('If you want more options to have full control over your multisite network, you can %supgrade%s your license to a multisite license, or dismiss this message', 'really-simple-ssl'), '<a target="_blank" href="https://www.really-simple-ssl.com/pro-multisite" title="Really Simple SSL">', '</a>') ?>
                         </p>
-                        </p></div>
+                    </div>
                     <?php
                 }
             }
