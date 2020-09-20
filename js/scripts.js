@@ -4,8 +4,8 @@ jQuery(document).ready(function ($) {
     $('.rsssl-button-save').prop('disabled', true);
 
     $(document).on('click','.rsssl-slider',function () {
-        $('.rsssl-save-settings-feedback').fadeIn();
-        $('.rsssl-button-save').prop('disabled', false);
+        $(this).closest('.rsssl-item').find('.rsssl-save-settings-feedback').fadeIn();
+        $(this).closest('.rsssl-item').find('.rsssl-button-save').prop('disabled', false);
     });
 
     // Re-calculate percentage on dimissing notice. Use document, function to allow AJAX call to run more than once.
