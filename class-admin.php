@@ -3424,7 +3424,6 @@ class rsssl_admin extends rsssl_front_end
                     $output = '';
 
                     foreach ($this->general_grid() as $index => $grid_item) {
-                        _log($grid_item);
                         $footer = $this->get_template_part($grid_item, 'footer');
                         $content = $this->get_template_part($grid_item, 'content');
                         $header = $this->get_template_part($grid_item, 'header');

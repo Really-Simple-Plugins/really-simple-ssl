@@ -1,16 +1,24 @@
 jQuery(document).ready(function ($) {
     "use strict";
 
+    $(document).on('click','.rsssl-slider',function () {
+        rssslSaveChangesNotice((this));
+    });
+    $(document).on('click','.rsssl-text-input',function () {
+        rssslSaveChangesNotice($(this));
+    });
+    $(document).on('change','.rsssl-text-input',function () {
+        rssslSaveChangesNotice($(this));
+    });
     $('.rsssl-button-save').prop('disabled', true);
 
-    $(document).on('click','.rsssl-slider',function () {
-        $(this).closest('.rsssl-item').find('.rsssl-save-settings-feedback').fadeIn();
-        $(this).closest('.rsssl-item').find('.rsssl-button-save').prop('disabled', false);
-    });
+    function rssslSaveChangesNotice(obj){
+        obj.closest('.rsssl-item').find('.rsssl-save-settings-feedback').fadeIn();
+        obj.closest('.rsssl-item').find('.rsssl-button-save').prop('disabled', false);
+    }
 
     // Re-calculate percentage on dimissing notice. Use document, function to allow AJAX call to run more than once.
     $(document).on('click','.rsssl-close-warning',function () {
-
         $.ajax({
             type: "post",
             data: {
