@@ -1,12 +1,13 @@
 <?php defined('ABSPATH') or die("you do not have access to this page!"); ?>
 
 <?php
+
 $plugins = array(
 	'WPSI' => array(
 		'constant_free' => 'wpsi_plugin',
 		'constant_premium' => 'wpsi_pro_plugin',
 		'website' => 'https://wpsearchinsights.com/pro',
-		'search' => 'WP+Search+Insights+really+simple+plugins+searches',
+		'search' => 'WP+Search+Insights+really+simple+plugins+searches+complianz',
 	),
 	'COMPLIANZ' => array(
 		'constant_free' => 'cmplz_plugin',
@@ -18,7 +19,7 @@ $plugins = array(
 		'constant_free' => 'ZRDN_PLUGIN_BASENAME',
 		'constant_premium' => 'ZRDN_PREMIUM',
 		'website' => 'https://ziprecipes.net/premium/',
-		'search' => 'zip+recipes+recipe+maker+really+simple+plugins',
+		'search' => 'zip+recipes+recipe+maker+really+simple+plugins+complianz',
 	),
 );
 ?>
