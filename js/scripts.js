@@ -2,7 +2,7 @@ jQuery(document).ready(function ($) {
     "use strict";
 
     $(document).on('click','.rsssl-slider',function () {
-        rssslSaveChangesNotice((this));
+        rssslSaveChangesNotice($(this));
     });
     $(document).on('click','.rsssl-text-input',function () {
         rssslSaveChangesNotice($(this));

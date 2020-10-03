@@ -78,6 +78,7 @@
 .rsssl-grid .button-rsssl-tertiary {
   background-color: #D7263D;
   color: white;
+  border: 0;
 }
 .rsssl-grid .rsssl-wide-button {
   width: 220px;
