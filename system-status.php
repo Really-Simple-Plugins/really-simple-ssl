@@ -33,11 +33,16 @@ if ( current_user_can( 'manage_options' ) ) {
 	echo "General\n";
 	echo "Plugin version: " . rsssl_version ."\n";
 
-	if ($certificate->is_valid()) {
+	if ( $certificate->is_valid() ) {
 		echo "SSL certificate is valid\n";
 	} else {
-		echo "Invalid SSL certificate\n";
+		if ( $certificate->detection_failed() ) {
+			echo "Not able to detect certificate\n";
+		} else {
+			echo "Invalid SSL certificate\n";
+		}
 	}
+
 	echo ($really_simple_ssl->ssl_enabled) ? "SSL is enabled\n\n" : "SSL is not yet enabled\n\n";
 
 	echo "Options\n";

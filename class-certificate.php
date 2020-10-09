@@ -90,6 +90,15 @@ if ( ! class_exists( 'rsssl_certificate' ) ) {
 
         }
 
+        public function detection_failed(){
+	        $certinfo = get_transient('rsssl_certinfo');
+	        if ($certinfo && $certinfo === 'no-response' ) {
+	        	return true;
+	        }
+
+	        return false;
+        }
+
        /**
         *
         * Check if the date is valid by looking at the validFrom and validTo times
@@ -178,7 +187,7 @@ if ( ! class_exists( 'rsssl_certificate' ) ) {
                     $get = stream_context_create(array("ssl" => array("capture_peer_cert" => TRUE)));
                     if ($get) {
                         set_error_handler(array($this, 'custom_error_handling'));
-                        $read = stream_socket_client("ssl://" . $original_parse . ":443", $errno, $errstr, 10, STREAM_CLIENT_CONNECT, $get);
+                        $read = stream_socket_client("ssl://" . $original_parse . ":443", $errno, $errstr, 5, STREAM_CLIENT_CONNECT, $get);
                         restore_error_handler();
 
 	                    if (!$read){
