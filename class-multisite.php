@@ -317,54 +317,44 @@ if (!class_exists('rsssl_multisite')) {
 
             if (!RSSSL()->really_simple_ssl->site_has_ssl) {
                 $current_url = esc_url_raw("https://" . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"]);
-                ?>
-                <div id="message" class="error notice activate-ssl">
-                    <p><?php _e("No SSL was detected. If you do have an SSL certificate, try to reload this page over https by clicking this link:", "really-simple-ssl"); ?>
-                        &nbsp;<a
-                                href="<?php echo $current_url ?>"><?php _e("reload over https.", "really-simple-ssl"); ?></a>
-                        <?php _e("You can check your certificate on", "really-simple-ssl"); ?>&nbsp;<a target="_blank"
-                                                                                                       href="https://www.ssllabs.com/ssltest/">Qualys
-                            SSL Labs</a>
-                    </p>
-                </div>
-            <?php } ?>
 
-            <?php if (RSSSL()->really_simple_ssl->site_has_ssl) {
-            if (is_main_site(get_current_blog_id()) && RSSSL()->really_simple_ssl->wpconfig_ok()) {
-                ?>
-                <style>
-                    #message.updated.notice.activate-ssl {
-                        padding-top: 10px;
-                    }
-                </style>
-                <div id="message" class="updated notice activate-ssl">
-                    <h1><?php _e("Choose your preferred setup", "really-simple-ssl"); ?></h1>
-                    <?php _e("Some things can't be done automatically. Before you migrate, please check for: ", 'really-simple-ssl'); ?>
-                    <p>
-                    <ul>
-                        <li><?php _e('Http references in your .css and .js files: change any http:// into //', 'really-simple-ssl'); ?></li>
-                        <li><?php _e('Images, stylesheets or scripts from a domain without an SSL certificate: remove them or move to your own server.', 'really-simple-ssl'); ?></li>
-                    </ul>
-                    </p>
-                    <?php $this->show_pro(); ?>
-                    <p>
-                    <form action="" method="post">
-                        <?php wp_nonce_field('rsssl_nonce', 'rsssl_nonce'); ?>
-                        <input type="submit" class='button button-primary'
-                               value="<?php _e("Activate SSL networkwide", "really-simple-ssl"); ?>"
-                               id="rsssl_do_activate_ssl_networkwide" name="rsssl_do_activate_ssl_networkwide">
-                        <input type="submit" class='button button-primary'
-                               value="<?php _e("Activate SSL per site", "really-simple-ssl"); ?>"
-                               id="rsssl_do_activate_ssl_per_site" name="rsssl_do_activate_ssl_per_site">
-                    </form>
-                    </p>
-                    <p>
-                        <?php _e("Networkwide activation does not check if a site has an SSL certificate. It just migrates all sites to SSL.", "really-simple-ssl"); ?>
-                    </p>
-                </div>
-                <?php
+                $class = "error notice activate-ssl";
+                $title = __("No SSL detected", "really-simple-ssl");
+
+                $content = __("No SSL was detected. If you do have an SSL certificate, try to reload this page over https by clicking this link:", "really-simple-ssl") . " ";
+                $content .= '<a href="' . $current_url . '">'. __("reload over https.", "really-simple-ssl") .'</a>' . " ";
+                $content .= __("You can check your certificate on", "really-simple-ssl") . " " . '<a target="_blank" href="https://www.ssllabs.com/ssltest/">Qualys SSL Labs</a>';
+
+                $footer = '';
             }
-        }
+
+            if (RSSSL()->really_simple_ssl->site_has_ssl) {
+                if (is_main_site(get_current_blog_id()) && RSSSL()->really_simple_ssl->wpconfig_ok()) {
+                    $class = "updated notice activate-ssl";
+                    $title = __("Setup", "really-simple-ssl");
+                    $content = '<h2>' . __("Some things can't be done automatically. Before you migrate, please check for: ", "really-simple-ssl") . '</h2>';
+                    $content .= '<ul>
+                        <li class="rsssl-notice-li">'. __("Http references in your .css and .js files: change any http:// into //", "really-simple-ssl") .'</li>
+                        <li class="rsssl-notice-li">'. __("Images, stylesheets or scripts from a domain without an SSL certificate: remove them or move to your own server.", "really-simple-ssl") .'</li>
+                        </ul>';
+                    $content .= __('You can also let the automatic scan of the pro version handle this for you, and get premium support and increased security with HSTS included.', 'really-simple-ssl') . " "
+                        . '<a target="_blank"
+                         href="https://www.really-simple-ssl.com/pro-multisite">' . __("Check out Really Simple SSL Premium", "really-simple-ssl") . '</a>' . "<br>";
+
+                    $footer = '<form action="" method="post">
+                    '. wp_nonce_field('rsssl_nonce', 'rsssl_nonce').'
+                    <input type="submit" class="button button-primary"
+                           value="'. __("Activate SSL networkwide", "really-simple-ssl").'"
+                           id="rsssl_do_activate_ssl_networkwide" name="rsssl_do_activate_ssl_networkwide">
+                    <input type="submit" class="button button-primary"
+                           value="'. __("Activate SSL per site", "really-simple-ssl").'"
+                           id="rsssl_do_activate_ssl_per_site" name="rsssl_do_activate_ssl_per_site">
+                </form>';
+                    $content .= __("Networkwide activation does not check if a site has an SSL certificate. It just migrates all sites to SSL.", "really-simple-ssl");
+                }
+            }
+            echo $this->notice_html($class, $title, $content, $footer);
+
         }
 
         /**
@@ -375,7 +365,7 @@ if (!class_exists('rsssl_multisite')) {
         public function show_pro()
         {
             ?>
-            <p><?php _e('You can also let the automatic scan of the pro version handle this for you, and get premium support and increased security with HSTS included.', 'really-simple-ssl'); ?>
+            <p><?php _e('You can also let the automatic scan of the pro version handle this for you, and get premium support and increased security with HSTS included.', 'really-simple-ssl') ?>
                 &nbsp;<a target="_blank"
                          href="https://www.really-simple-ssl.com/pro-multisite"><?php _e("Check out Really Simple SSL Premium", "really-simple-ssl"); ?></a>
             </p>
@@ -480,11 +470,11 @@ if (!class_exists('rsssl_multisite')) {
         }
 
         public function redirect_to_network_settings_page_after_activation() {
-	        $url = add_query_arg( array(
-		        "page" => "really-simple-ssl",
-	        ), network_admin_url( "settings.php" ) );
-	        wp_safe_redirect( $url );
-	        exit;
+            $url = add_query_arg( array(
+                "page" => "really-simple-ssl",
+            ), network_admin_url( "settings.php" ) );
+            wp_safe_redirect( $url );
+            exit;
         }
 
         public function get_process_completed_percentage(){
@@ -541,7 +531,7 @@ if (!class_exists('rsssl_multisite')) {
         public function activate_ssl_networkwide()
         {
 
-	        //run chunked
+            //run chunked
             $nr_of_sites = 200;
             $current_offset = get_site_option('rsssl_siteprocessing_progress');
 
@@ -559,7 +549,7 @@ if (!class_exists('rsssl_multisite')) {
                     update_site_option('rsssl_siteprocessing_progress', $current_offset+$nr_of_sites);
                 }
             }
-	        $this->redirect_to_network_settings_page_after_activation();
+            $this->redirect_to_network_settings_page_after_activation();
         }
 
 
@@ -749,16 +739,16 @@ if (!class_exists('rsssl_multisite')) {
 
         public function listen_for_ssl_conversion_hook_switch()
         {
-                //check if we are on ssl settings page
-                if (!$this->is_settings_page()) return;
-                //check user role
-                if (!current_user_can('manage_options')) return;
-                //check nonce
-                if (!isset($_GET['token']) || (!wp_verify_nonce($_GET['token'], 'run_ssl_to_admin_init'))) return;
-                //check for action
-                if (isset($_GET["action"]) && $_GET["action"] == 'ssl_conversion_hook_switch') {
-                    update_site_option('run_ssl_process_hook_switched', true);
-                }
+            //check if we are on ssl settings page
+            if (!$this->is_settings_page()) return;
+            //check user role
+            if (!current_user_can('manage_options')) return;
+            //check nonce
+            if (!isset($_GET['token']) || (!wp_verify_nonce($_GET['token'], 'run_ssl_to_admin_init'))) return;
+            //check for action
+            if (isset($_GET["action"]) && $_GET["action"] == 'ssl_conversion_hook_switch') {
+                update_site_option('run_ssl_process_hook_switched', true);
+            }
         }
 
         /**
@@ -777,17 +767,12 @@ if (!class_exists('rsssl_multisite')) {
             if ( $screen->parent_base === 'edit' ) return;
 
             if (isset(RSSSL()->really_simple_ssl->errors["DEACTIVATE_FILE_NOT_RENAMED"])) {
-                ?>
-                <div id="message" class="error notice is-dismissible rlrsssl-fail">
-                    <h1>
-                        <?php _e("Major security issue!", "really-simple-ssl"); ?>
-                    </h1>
-                    <p>
-                        <?php _e("The 'force-deactivate.php' file has to be renamed to .txt. Otherwise your ssl can be deactivated by anyone on the internet.", "really-simple-ssl"); ?>
-                    </p>
-                    <a href="options-general.php?page=rlrsssl_really_simple_ssl"><?php echo __("Check again", "really-simple-ssl"); ?></a>
-                </div>
-                <?php
+
+                $class = "error notice is-dismissible rlrsssl-fail";
+                $title = __("Major security issue!", "really-simple-ssl");
+                $content = __("The 'force-deactivate.php' file has to be renamed to .txt. Otherwise your ssl can be deactivated by anyone on the internet.", "really-simple-ssl");
+
+                echo $this->notice_html($class, $title, $content);
             }
 
             /*
@@ -795,26 +780,22 @@ if (!class_exists('rsssl_multisite')) {
              */
 
             if ($this->ssl_process_active()) {
-                ?>
-                <div id="message" class="error notice is-dismissible rlrsssl-fail">
-                    <p>
+                $class = "error notice is-dismissible rlrsssl-fail";
+                $title = "Website conversion";
 
-                        <?php
-                        //In some cases the rsssl_ssl_process_hook hook can fail. Therefore we offer the option to switch the hook to admin_init when the conversion is stuck.
-                        $token = wp_create_nonce('run_ssl_to_admin_init');
-                        $run_ssl_process_hook_switch_link = network_admin_url("settings.php?page=really-simple-ssl&action=ssl_conversion_hook_switch&token=" . $token);
+                //In some cases the rsssl_ssl_process_hook hook can fail. Therefore we offer the option to switch the hook to admin_init when the conversion is stuck.
+                $token = wp_create_nonce('run_ssl_to_admin_init');
+                $run_ssl_process_hook_switch_link = network_admin_url("settings.php?page=really-simple-ssl&action=ssl_conversion_hook_switch&token=" . $token);
 
-                        $link_open = '<a target="_self" href="' . $run_ssl_process_hook_switch_link . '">';
-                        $link_close = '</a>';
-                        ?>
+                $link_open = '<a target="_self" href="' . $run_ssl_process_hook_switch_link . '">';
+                $link_close = '</a>';
 
-                        <?php printf(__("Conversion of websites %s percent complete.", "really-simple-ssl"), $this->get_process_completed_percentage()); ?>
-                        <?php _e("You have just started enabling or disabling SSL on multiple websites at once, and this process is not completed yet. Please refresh this page to check if the process has finished. It will proceed in the background.", "really-simple-ssl"); ?>
-                        <?php printf(__("If the conversion does not proceed after a few minutes, click %shere%s to force the conversion process.", "really-simple-ssl"), $link_open, $link_close); ?>
+                $content = sprintf(__("Conversion of websites %s percent complete.", "really-simple-ssl"), $this->get_process_completed_percentage()) . " ";
+                $content .= __("You have just started enabling or disabling SSL on multiple websites at once, and this process is not completed yet. Please refresh this page to check if the process has finished. It will proceed in the background.", "really-simple-ssl") . " ";
+                $content .= sprintf(__("If the conversion does not proceed after a few minutes, click %shere%s to force the conversion process.", "really-simple-ssl"), $link_open, $link_close);
 
-                    </p>
-                </div>
-                <?php
+                echo $this->notice_html($class, $title, $content);
+
             }
 
             /*
@@ -823,53 +804,129 @@ if (!class_exists('rsssl_multisite')) {
 
             if ($this->selected_networkwide_or_per_site && !get_site_option("rsssl_success_message_shown")) {
 
-                ?>
-                <div id="message" class="updated notice is-dismissible rlrsssl-multisite-success">
-                    <p>
-                        <?php _e("SSL activated!", "really-simple-ssl"); ?>&nbsp;
-                        <?php
-                        if ($this->ssl_enabled_networkwide)
-                            _e("SSL was activated on your entire network.", "really-simple-ssl");
-                        else
-                            _e("SSL was activated per site.", "really-simple-ssl");
-                        ?>
+                $class = "updated notice is-dismissible rlrsssl-multisite-success";
+                $title = __("SSL activated!", "really-simple-ssl");
 
-                        <?php _e("Don't forget to change your settings in Google Analytics and Webmaster tools.", "really-simple-ssl"); ?>
-                        &nbsp;
-                        <a target="_blank"
-                           href="https://really-simple-ssl.com/knowledge-base/how-to-setup-google-analytics-and-google-search-consolewebmaster-tools/"><?php _e("More info.", "really-simple-ssl"); ?></a>
-                    </p>
-                </div>
-                <?php
+                if ($this->ssl_enabled_networkwide)
+                    $content = __("SSL was activated on your entire network.", "really-simple-ssl");
+                else
+                    $content = __("SSL was activated per site.", "really-simple-ssl") . " ";
+
+                $content .= __("Don't forget to change your settings in Google Analytics and Webmaster tools.", "really-simple-ssl") . " ";
+                $content .= '<a target="_blank"
+                   href="https://really-simple-ssl.com/knowledge-base/how-to-setup-google-analytics-and-google-search-consolewebmaster-tools/">' . __("More info.", "really-simple-ssl") . '</a>';
+
+                echo $this->notice_html($class, $title, $content);
             }
 
             if (!$this->ssl_enabled_networkwide && $this->selected_networkwide_or_per_site && $this->is_multisite_subfolder_install()) {
                 //with no server variables, the website could get into a redirect loop.
                 if (RSSSL()->really_simple_ssl->no_server_variable) {
-                    ?>
-                    <div id="message" class="error notice">
-                        <p>
-                            <?php _e('You run a Multisite installation with subfolders, which prevents this plugin from fixing your missing server variable in the wp-config.php.', 'really-simple-ssl'); ?>
-                            <?php _e('Because the $_SERVER["HTTPS"] variable is not set, your website may experience redirect loops.', 'really-simple-ssl'); ?>
-                            <?php _e('Activate networkwide to fix this.', 'really-simple-ssl'); ?>
-                        </p>
-                    </div>
-                    <?php
+                    $class = "error notice";
+                    $title = __("Warning!", "really-simple-ssl");
+
+                    $content =  __('You run a Multisite installation with subfolders, which prevents this plugin from fixing your missing server variable in the wp-config.php.', 'really-simple-ssl') . " ";
+                    $content .=  __('Because the $_SERVER["HTTPS"] variable is not set, your website may experience redirect loops.', 'really-simple-ssl') . " ";
+                    $content .= __('Activate networkwide to fix this.', 'really-simple-ssl');
+
+                    echo $this->notice_html($class, $title, $content);
                 }
             }
 
             if (!RSSSL()->really_simple_ssl->ssl_enabled && !$this->is_multisite_subfolder_install() && !RSSSL()->rsssl_certificate->is_wildcard() && !get_site_option("rsssl_wildcard_message_shown")) {
-                ?>
-                <div id="message" class="error notice is-dismissible rlrsssl-multisite-wildcard-warning">
-                    <p>
-                        <?php _e("You run a Multisite installation with subdomains, but your site doesn't have a wildcard certificate.", 'really-simple-ssl'); ?>
-                        <?php _e("This leads to issues when activating SSL networkwide since subdomains will be forced over SSL as well while they don't have a valid certificate.", 'really-simple-ssl'); ?>
-                        <?php _e("Activate SSL per site or install a wildcard certificate to fix this.", 'really-simple-ssl'); ?>
-                    </p>
-                </div>
-                <?php
+                $class = "error notice is-dismissible rlrsssl-multisite-wildcard-warning";
+                $title = __("Multisite installation with subdomains", "really-simple-ssl");
+                $content = __("You run a Multisite installation with subdomains, but your site doesn't have a wildcard certificate.", 'really-simple-ssl') . " ";
+                $content .= __("This leads to issues when activating SSL networkwide since subdomains will be forced over SSL as well while they don't have a valid certificate.", 'really-simple-ssl') . " ";
+                $content .= __("Activate SSL per site or install a wildcard certificate to fix this.", 'really-simple-ssl');
+
+//                $footer = '<button class="button-rsssl-secondary rsssl-close-notice>' . __("Close", "really-simple-ssl") .'</button>"';
+
+                echo $this->notice_html($class, $title, $content);
             }
 
+        }
+
+        /**
+         * @param $class
+         * @param $title
+         * @param $content
+         * @return false|string
+         *
+         * @since 4.0
+         * Return the notice HTML
+         *
+         */
+
+        public function notice_html($class, $title, $content, $footer=false) {
+            ob_start();
+            ?>
+            <style>
+                .rsssl-notice-header {
+                    height: 60px;
+                    border-bottom: 1px solid #dedede;
+                    display: flex;
+                    flex-direction: row;
+                    justify-content: space-between;
+                    align-items: center;
+                }
+
+                .rsssl-notice-content {
+                    margin-top: 10px;
+                    padding-bottom: 10px;
+                    min-height: 50px;
+                }
+
+                .rsssl-notice-footer {
+                    border-top: 1px solid #dedede;
+                    height: 35px;
+                    display: flex;
+                    align-items: center;
+                    padding-top: 10px;
+                    padding-bottom: 10px;
+                }
+
+                .rsssl-notice-li {
+                    display: flex;
+                    align-items: center;
+                }
+
+                ul {
+                    list-style: disc;
+                    list-style-position: inside;
+                }
+
+                #message .rsssl-notice-li::before {
+                    vertical-align: middle;
+                    margin-right: 25px;
+                    color: lightgrey;
+                    content: "\f345";
+                    font: 400 21px/1 dashicons;
+                }
+            </style>
+
+            <div id="message" class="<?php echo $class?>">
+                <div class="rsssl-notice">
+                    <div class="rsssl-notice-header">
+                        <h1><?php echo $title ?></h1>
+                        <div id="rsssl-logo-activation"><img width="180px" src="<?php echo rsssl_url?>/assets/logo-really-simple-ssl.png" alt="really-simple-ssl-logo"></div>
+                    </div>
+                    <div class="rsssl-notice-content">
+                        <?php echo $content ?>
+                    </div>
+                    <?php
+                    if ($footer ) { ?>
+                        <div class="rsssl-notice-footer">
+                            <?php
+                            echo $footer;
+                            ?>
+                        </div>
+                    <?php } ?>
+                </div>
+            </div>
+            <?php
+            $content = ob_get_clean();
+            return $content;
         }
 
 
@@ -984,7 +1041,6 @@ if (!class_exists('rsssl_multisite')) {
             <?php
         }
 
-
         public function show_pro_option_notice()
         {
             //prevent showing the review on edit screen, as gutenberg removes the class which makes it editable.
@@ -1001,22 +1057,18 @@ if (!class_exists('rsssl_multisite')) {
 
                 if (defined('rsssl_pro_version')) {
                     if (!defined('rsssl_pro_ms_version')) {
-                        ?>
-                        <div id="message" class="updated notice is-dismissible rsssl-pro-dismiss-notice">
-                            <p>
-                                <?php echo sprintf(__('You are running Really Simple SSL pro. A dedicated add-on for multisite has been released. If you want more options to have full control over your multisite network, you can %supgrade%s on the licenses tab of your account.', 'really-simple-ssl'), '<a target="_blank" href="https://really-simple-ssl.com/account/" title="Really Simple SSL">', '</a>') ?>
-                            </p>
-                        </div>
-                        <?php
+                        $class = "updated notice is-dismissible rsssl-pro-dismiss-notice";
+                        $title = __("Dedicated multisite plugin", "really-simple-ssl");
+                        $content = sprintf(__('You are running Really Simple SSL pro. A dedicated add-on for multisite has been released. If you want more options to have full control over your multisite network, you can %supgrade%s on the licenses tab of your account.', 'really-simple-ssl'), '<a target="_blank" href="https://really-simple-ssl.com/account/" title="Really Simple SSL">', '</a>');
+
+                        echo $this->notice_html($class, $title, $content);
                     }
                 } else {
-                    ?>
-                    <div id="message" class="updated notice is-dismissible rsssl-pro-dismiss-notice">
-                        <p>
-                            <?php echo sprintf(__('If you want more options to have full control over your multisite network, you can %supgrade%s your license to a multisite license, or dismiss this message', 'really-simple-ssl'), '<a target="_blank" href="https://www.really-simple-ssl.com/pro-multisite" title="Really Simple SSL">', '</a>') ?>
-                        </p>
-                    </div>
-                    <?php
+                    $class = "updated notice is-dismissible rsssl-pro-dismiss-notice";
+                    $title = __("Get more control", "really-simple-ssl");
+                    $content = sprintf(__('If you want more options to have full control over your multisite network, you can %supgrade%s your license to a multisite license, or dismiss this message', 'really-simple-ssl'), '<a target="_blank" href="https://www.really-simple-ssl.com/pro-multisite" title="Really Simple SSL">', '</a>');
+
+                    echo $this->notice_html($class, $title, $content);
                 }
             }
         }
