@@ -326,34 +326,35 @@ if (!class_exists('rsssl_multisite')) {
                 $content .= __("You can check your certificate on", "really-simple-ssl") . " " . '<a target="_blank" href="https://www.ssllabs.com/ssltest/">Qualys SSL Labs</a>';
 
                 $footer = '';
+	            echo $this->notice_html($class, $title, $content, $footer);
             }
 
             if (RSSSL()->really_simple_ssl->site_has_ssl) {
                 if (is_main_site(get_current_blog_id()) && RSSSL()->really_simple_ssl->wpconfig_ok()) {
-                    $class = "updated notice activate-ssl";
+                    $class = "updated notice activate-ssl really-simple-plugins";
                     $title = __("Setup", "really-simple-ssl");
                     $content = '<h2>' . __("Some things can't be done automatically. Before you migrate, please check for: ", "really-simple-ssl") . '</h2>';
                     $content .= '<ul>
-                        <li class="rsssl-notice-li">'. __("Http references in your .css and .js files: change any http:// into //", "really-simple-ssl") .'</li>
-                        <li class="rsssl-notice-li">'. __("Images, stylesheets or scripts from a domain without an SSL certificate: remove them or move to your own server.", "really-simple-ssl") .'</li>
-                        </ul>';
+                                    <li class="rsssl-notice-li">'. __("Http references in your .css and .js files: change any http:// into //", "really-simple-ssl") .'</li>
+                                    <li class="rsssl-notice-li">'. __("Images, stylesheets or scripts from a domain without an SSL certificate: remove them or move to your own server.", "really-simple-ssl") .'</li>
+                                </ul>';
                     $content .= __('You can also let the automatic scan of the pro version handle this for you, and get premium support and increased security with HSTS included.', 'really-simple-ssl') . " "
                         . '<a target="_blank"
                          href="https://www.really-simple-ssl.com/pro-multisite">' . __("Check out Really Simple SSL Premium", "really-simple-ssl") . '</a>' . "<br>";
 
                     $footer = '<form action="" method="post">
-                    '. wp_nonce_field('rsssl_nonce', 'rsssl_nonce').'
-                    <input type="submit" class="button button-primary"
-                           value="'. __("Activate SSL networkwide", "really-simple-ssl").'"
-                           id="rsssl_do_activate_ssl_networkwide" name="rsssl_do_activate_ssl_networkwide">
-                    <input type="submit" class="button button-primary"
-                           value="'. __("Activate SSL per site", "really-simple-ssl").'"
-                           id="rsssl_do_activate_ssl_per_site" name="rsssl_do_activate_ssl_per_site">
-                </form>';
+                                '. wp_nonce_field('rsssl_nonce', 'rsssl_nonce').'
+                                <input type="submit" class="button button-primary"
+                                       value="'. __("Activate SSL networkwide", "really-simple-ssl").'"
+                                       id="rsssl_do_activate_ssl_networkwide" name="rsssl_do_activate_ssl_networkwide">
+                                <input type="submit" class="button button-primary"
+                                       value="'. __("Activate SSL per site", "really-simple-ssl").'"
+                                       id="rsssl_do_activate_ssl_per_site" name="rsssl_do_activate_ssl_per_site">
+                            </form>';
                     $content .= __("Networkwide activation does not check if a site has an SSL certificate. It just migrates all sites to SSL.", "really-simple-ssl");
+	                echo $this->notice_html($class, $title, $content, $footer);
                 }
             }
-            echo $this->notice_html($class, $title, $content, $footer);
 
         }
 
