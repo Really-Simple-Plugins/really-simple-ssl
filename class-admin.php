@@ -3914,13 +3914,74 @@ class rsssl_admin extends rsssl_front_end
         ?>
 	    <?php add_thickbox();?>
         <style>
+            #TB_ajaxContent {
+                width: 100% !important;
+                padding: 0;
+            }
             #TB_ajaxContent.rsssl-deactivation-popup {
                 text-align: center !important;
                 width:750px;
             }
             #TB_window.rsssl-deactivation-popup {
-                height: 420px !important;
+                height: 400px !important;
             }
+            #TB_title {
+                display: none;
+            }
+
+            .button {
+                text-decoration: none !important;
+            }
+            .button-rsssl-primary {
+                text-align: center !important;
+                background-color: #3a5998 !important;
+                color: white !important;
+                min-width: 100px !important;
+            }
+            .button-rsssl-primary:hover {
+                background: #f1f1f1 !important;
+                border-color: #016087 !important;
+                color: black !important;
+            }
+            .button-rsssl-secondary:hover {
+                background: #f1f1f1 !important;
+                border-color: #016087 !important;
+            }
+            .button-rsssl-tertiary {
+                background-color: #D7263D !important;
+                color: white !important;
+            }
+            .button-rsssl-tertiary:hover {
+                background-color: #f1f1f1 !important;
+                color: #d7263d !important;
+            }
+
+            .rsssl-deactivate-notice-title {
+                height: 60px;
+                border-bottom: 1px solid #dedede;
+                display: flex;
+                flex-direction: row;
+                justify-content: space-between;
+                align-items: center;
+                padding-left: 10px;
+            }
+
+            .rsssl-deactivate-notice-content {
+                margin-top: 10px;
+                border-bottom: 1px solid #dedede;
+                margin-right: 10px;
+                margin-left: 10px;
+            }
+
+            .rsssl-deactivate-notice-footer {
+                height: 30px;
+                display: flex;
+                align-items: center;
+                /*padding-bottom: 10px;*/
+                padding-top: 20px;
+                padding-left: 10px;
+            }
+
             .rsssl-deactivation-popup ul {
                 list-style: circle;
                 padding-left: 20px;
@@ -3945,29 +4006,35 @@ class rsssl_admin extends rsssl_front_end
             });
         </script>
         <div id="deactivate_keep_ssl" style="display: none;">
+            <div class="rsssl-deactivate-notice-title">
                 <h1 style="margin: 10px 0; text-align: center;"><?php _e("Are you sure?", "really-simple-ssl") ?></h1>
-                <h3 style="margin: 20px 0; text-align: left;">
-                    <?php _e("To deactivate the plugin correctly, please select if you want to:", "really-simple-ssl") ?></h3>
-                <ul style="text-align: left; font-size: 1.2em;">
-                    <li><?php _e("Deactivate, but stay on SSL.", "really-simple-ssl") ?></li>
-                    <li><?php _e("Deactivate, and revert to http. This will remove all changes by the plugin.", "really-simple-ssl") ?></li>
-                </ul>
-                <h3><?php _e("Deactivating the plugin while keeping SSL will do the following:", "really-simple-ssl") ?></h3>
-                <ul style="text-align: left; font-size: 1.2em;">
-                    <li><?php _e("The mixed content fixer will stop working", "really-simple-ssl") ?></li>
-                    <li><?php _e("The WordPress 301 and Javascript redirect will stop working", "really-simple-ssl") ?></li>
-                    <li><?php _e("Your site address will remain https://", "really-simple-ssl") ?> </li>
-                    <li><?php _e("The .htaccess redirect will remain active", "really-simple-ssl") ?></li>
-                </ul>
+            </div>
+                <div class="rsssl-deactivate-notice-content">
+                    <h3 style="margin: 20px 0; text-align: left;">
+                        <?php _e("To deactivate the plugin correctly, please select if you want to:", "really-simple-ssl") ?></h3>
+                    <ul style="text-align: left; font-size: 1.2em;">
+                        <li><?php _e("Deactivate, but stay on SSL.", "really-simple-ssl") ?></li>
+                        <li><?php _e("Deactivate, and revert to http. This will remove all changes by the plugin.", "really-simple-ssl") ?></li>
+                    </ul>
+                    <h3><?php _e("Deactivating the plugin while keeping SSL will do the following:", "really-simple-ssl") ?></h3>
+                    <ul style="text-align: left; font-size: 1.2em;">
+                        <li><?php _e("The mixed content fixer will stop working", "really-simple-ssl") ?></li>
+                        <li><?php _e("The WordPress 301 and Javascript redirect will stop working", "really-simple-ssl") ?></li>
+                        <li><?php _e("Your site address will remain https://", "really-simple-ssl") ?> </li>
+                        <li><?php _e("The .htaccess redirect will remain active", "really-simple-ssl") ?></li>
+                    </ul>
+                </div>
 
                 <?php
                 $token = wp_create_nonce('rsssl_deactivate_plugin');
                 $deactivate_keep_ssl_link = admin_url("options-general.php?page=rlrsssl_really_simple_ssl&action=uninstall_keep_ssl&token=" . $token);
 
                 ?>
-                <a class="button rsssl-button-deactivate-revert" href="#"><?php _e("Deactivate, revert to http", "really-simple-ssl") ?></a>
-                <a class="button rsssl-button-deactivate-keep-ssl" href="<?php echo $deactivate_keep_ssl_link ?>"><?php _e("Deactivate, keep https", "really-simple-ssl") ?></a>
-                <a class="button" href="#" id="rsssl_close_tb_window"><?php _e("Cancel", "really-simple-ssl") ?></a>
+                <div class="rsssl-deactivate-notice-footer">
+                    <a class="button button-rsssl-primary rsssl-button-deactivate-revert" href="#"><?php _e("Deactivate, revert to http", "really-simple-ssl") ?></a>
+                    <a class="button button-rsssl-secondary rsssl-button-deactivate-keep-ssl" href="<?php echo $deactivate_keep_ssl_link ?>"><?php _e("Deactivate, keep https", "really-simple-ssl") ?></a>
+                    <a class="button button-rsssl-tertiary" href="#" id="rsssl_close_tb_window"><?php _e("Cancel", "really-simple-ssl") ?></a>
+                </div>
         </div>
         <?php
     }
