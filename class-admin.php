@@ -474,7 +474,7 @@ class rsssl_admin extends rsssl_front_end
                 }
                 <?php echo apply_filters('rsssl_pro_inline_style', ''); ?>
             </style>
-            <div id="message" class="notice activate-ssl <?php echo apply_filters('rsssl_activate_notice_class', '');?>">
+            <div id="message" class="notice activate-ssl really-simple-plugins <?php echo apply_filters('rsssl_activate_notice_class', '');?>">
                 <?php
                   do_action('rsssl_activation_notice_inner');
                 ?>
@@ -493,7 +493,7 @@ class rsssl_admin extends rsssl_front_end
                     padding: 1px 15px;
                 }
             </style>
-            <div id="message" class="error notice rsssl-notice-certificate">
+            <div id="message" class="error notice rsssl-notice-certificate really-simple-plugins">
                 <h1><?php echo __("Detected possible certificate issues", "really-simple-ssl"); ?></h1>
                 <p>
                     <?php
@@ -2112,7 +2112,7 @@ class rsssl_admin extends rsssl_front_end
         $screen = get_current_screen();
         if ( $screen->parent_base === 'edit' ) return;
         ?>
-        <div id="message" class="error notice">
+        <div id="message" class="error notice really-simple-plugins">
             <h1><?php echo __("System detection encountered issues", "really-simple-ssl"); ?></h1>
 
             <?php if ($this->wpconfig_siteurl_not_fixed) { ?>
@@ -2266,9 +2266,9 @@ class rsssl_admin extends rsssl_front_end
         //prevent showing the review on edit screen, as gutenberg removes the class which makes it editable.
         $screen = get_current_screen();
         if ( $screen->parent_base === 'edit' ) return;
-     /*
-      show a notice when the .htaccess file does not contain redirect rules
-     */
+         /**
+          show a notice when the .htaccess file does not contain redirect rules
+         */
 
 	    $options = get_option('rlrsssl_options');
 
@@ -2276,7 +2276,7 @@ class rsssl_admin extends rsssl_front_end
 
             add_action('admin_print_footer_scripts', array($this, 'insert_dismiss_htaccess'));
             ?>
-            <div id="message" class="error notice is-dismissible rlrsssl-htaccess">
+            <div id="message" class="error notice is-dismissible rlrsssl-htaccess really-simple-plugins">
                 <p>
                     <?php echo __("You do not have a 301 redirect to https active in the settings. For SEO purposes it is advised to use 301 redirects. You can enable a 301 redirect in the settings.", "really-simple-ssl"); ?>
                     <a href="<?php echo admin_url('options-general.php?page=rlrsssl_really_simple_ssl')?>"><?php echo __("View settings page", "really-simple-ssl"); ?></a>
@@ -2287,7 +2287,7 @@ class rsssl_admin extends rsssl_front_end
 
         if (isset($this->errors["DEACTIVATE_FILE_NOT_RENAMED"])) {
             ?>
-            <div id="message" class="error notice is-dismissible rlrsssl-fail">
+            <div id="message" class="error notice is-dismissible rlrsssl-fail really-simple-plugins">
                 <h1>
                     <?php _e("Major security issue!", "really-simple-ssl"); ?>
                 </h1>
@@ -2307,7 +2307,7 @@ class rsssl_admin extends rsssl_front_end
                 //pre WooCommerce 2.5
                 if (isset($this->plugin_conflict["WOOCOMMERCE_FORCEHTTP"]) && $this->plugin_conflict["WOOCOMMERCE_FORCEHTTP"] && isset($this->plugin_conflict["WOOCOMMERCE_FORCESSL"]) && $this->plugin_conflict["WOOCOMMERCE_FORCESSL"]) {
                     ?>
-                    <div id="message" class="error notice"><p>
+                    <div id="message" class="error notice really-simple-plugins"><p>
                             <?php _e("Really Simple SSL has a conflict with another plugin.", "really-simple-ssl"); ?>
                             <br>
                             <?php _e("The force http after leaving checkout in WooCommerce will create a redirect loop.", "really-simple-ssl"); ?>
@@ -2896,6 +2896,18 @@ class rsssl_admin extends rsssl_front_end
                     'upsell' => array(
                         'msg' => sprintf(__("No mixed content scan performed (%sRead more%s) ", "really-simple-ssl"), '<a target="_blank" href="' . $this->pro_url .'">', '</a>'),
                         'icon' => 'premium'
+                    ),
+                ),
+            ),
+
+            'htaccess_not_writable' => array(
+                'callback' => 'rsssl_htaccess_not_writable',
+                'score' => 5,
+                'output' => array(
+                    'htaccess' => array(
+                        'msg' => sprintf(__("Your .htaccess file is not writable. This prevents Really Simple SSL from writing redirects or security headers to your .htaccess file.", "really-simple-ssl"), '<a target="_blank" href="' . $this->pro_url .'">', '</a>'),
+                        'icon' => 'open',
+                        'dismissible' => 'true',
                     ),
                 ),
             ),
@@ -4384,6 +4396,18 @@ if (!function_exists('rsssl_secure_cookies_set')) {
 if (!function_exists('rsssl_scan_upsell')) {
 	function rsssl_scan_upsell() {
 		return 'upsell';
+	}
+}
+
+if (!function_exists('rsssl_htaccess_not_writable')) {
+	function rsssl_htaccess_not_writable() {
+	    //don't trigger if htaccess not used
+	    if ( !RSSSL()->rsssl_server->uses_htaccess() ) return false;
+
+		if (RSSSL()->really_simple_ssl->do_not_edit_htaccess || !is_writable(RSSSL()->really_simple_ssl->ABSpath.".htaccess")){
+			return true;
+		}
+		return false;
 	}
 }
 
