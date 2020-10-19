@@ -3914,72 +3914,73 @@ class rsssl_admin extends rsssl_front_end
         ?>
 	    <?php add_thickbox();?>
         <style>
-            #TB_ajaxContent {
-                width: 100% !important;
-                padding: 0;
-            }
+
             #TB_ajaxContent.rsssl-deactivation-popup {
                 text-align: center !important;
                 width:750px;
             }
             #TB_window.rsssl-deactivation-popup {
-                height: 400px !important;
+                height: 440px !important;
+                border-left: 7px solid black;
             }
-            #TB_title {
-                display: none;
+            .rsssl-deactivation-popup #TB_title{
+                height: 70px;
+                border-bottom: 1px solid #dedede;
+            }
+            .rsssl-deactivation-popup #TB_ajaxWindowTitle {
+                font-weight:bold;
+                font-size:30px;
+                padding: 20px;
             }
 
-            .button {
-                text-decoration: none !important;
+            .rsssl-deactivation-popup .tb-close-icon {
+                color:#dedede;
+                width: 50px;
+                height: 50px;
+                top: 12px;
+                right: 20px;
             }
-            .button-rsssl-primary {
-                text-align: center !important;
-                background-color: #3a5998 !important;
-                color: white !important;
-                min-width: 100px !important;
+            .rsssl-deactivation-popup .tb-close-icon:before {
+                font: normal 50px/50px dashicons;
             }
-            .button-rsssl-primary:hover {
-                background: #f1f1f1 !important;
-                border-color: #016087 !important;
-                color: black !important;
+            .rsssl-deactivation-popup #TB_closeWindowButton:focus .tb-close-icon {
+                outline:0;
+                box-shadow: 0 0 0 0 #5b9dd9, 0 0 0 0 rgba(30, 140, 190, .8);
+                color:#dedede;
             }
-            .button-rsssl-secondary:hover {
-                background: #f1f1f1 !important;
-                border-color: #016087 !important;
+            .rsssl-deactivation-popup #TB_closeWindowButton .tb-close-icon:hover {
+                color:#666;
             }
-            .button-rsssl-tertiary {
+            .rsssl-deactivation-popup #TB_closeWindowButton:focus {
+                outline:0;
+            }
+            .rsssl-deactivation-popup #TB_ajaxContent {
+                width: 100% !important;
+                padding: 0;
+            }
+
+            .rsssl-deactivation-popup .button-rsssl-tertiary.button {
                 background-color: #D7263D !important;
                 color: white !important;
+                border-color: #D7263D;
             }
-            .button-rsssl-tertiary:hover {
+
+            .rsssl-deactivation-popup .button-rsssl-tertiary.button:hover {
                 background-color: #f1f1f1 !important;
                 color: #d7263d !important;
             }
 
-            .rsssl-deactivate-notice-title {
-                height: 60px;
-                border-bottom: 1px solid #dedede;
-                display: flex;
-                flex-direction: row;
-                justify-content: space-between;
-                align-items: center;
-                padding-left: 10px;
-            }
-
             .rsssl-deactivate-notice-content {
-                margin-top: 10px;
-                border-bottom: 1px solid #dedede;
-                margin-right: 10px;
-                margin-left: 10px;
+                margin: 20px
             }
 
             .rsssl-deactivate-notice-footer {
-                height: 30px;
-                display: flex;
-                align-items: center;
-                /*padding-bottom: 10px;*/
                 padding-top: 20px;
-                padding-left: 10px;
+                position:absolute;
+                bottom:15px;
+                width: 94%;
+                margin-left: 3%;
+                border-top: 1px solid #dedede;
             }
 
             .rsssl-deactivation-popup ul {
@@ -3995,7 +3996,7 @@ class rsssl_admin extends rsssl_front_end
                 $('#rsssl_close_tb_window').click(tb_remove);
                 $(document).on('click', '#deactivate-really-simple-ssl', function(e){
                     e.preventDefault();
-                    tb_show('', '#TB_inline?height=420&inlineId=deactivate_keep_ssl', 'null');
+                    tb_show( '<?php _e("Are you sure?", "really-simple-ssl") ?>', '#TB_inline?height=420&inlineId=deactivate_keep_ssl', 'null');
                     $("#TB_window").addClass('rsssl-deactivation-popup');
 
                 });
@@ -4006,9 +4007,6 @@ class rsssl_admin extends rsssl_front_end
             });
         </script>
         <div id="deactivate_keep_ssl" style="display: none;">
-            <div class="rsssl-deactivate-notice-title">
-                <h1 style="margin: 10px 0; text-align: center;"><?php _e("Are you sure?", "really-simple-ssl") ?></h1>
-            </div>
                 <div class="rsssl-deactivate-notice-content">
                     <h3 style="margin: 20px 0; text-align: left;">
                         <?php _e("To deactivate the plugin correctly, please select if you want to:", "really-simple-ssl") ?></h3>
@@ -4019,7 +4017,7 @@ class rsssl_admin extends rsssl_front_end
                     <h3><?php _e("Deactivating the plugin while keeping SSL will do the following:", "really-simple-ssl") ?></h3>
                     <ul style="text-align: left; font-size: 1.2em;">
                         <li><?php _e("The mixed content fixer will stop working", "really-simple-ssl") ?></li>
-                        <li><?php _e("The WordPress 301 and Javascript redirect will stop working", "really-simple-ssl") ?></li>
+                        <li><?php _e("The WordPress 301 redirect will stop working", "really-simple-ssl") ?></li>
                         <li><?php _e("Your site address will remain https://", "really-simple-ssl") ?> </li>
                         <li><?php _e("The .htaccess redirect will remain active", "really-simple-ssl") ?></li>
                     </ul>
@@ -4031,9 +4029,9 @@ class rsssl_admin extends rsssl_front_end
 
                 ?>
                 <div class="rsssl-deactivate-notice-footer">
-                    <a class="button button-rsssl-primary rsssl-button-deactivate-revert" href="#"><?php _e("Deactivate, revert to http", "really-simple-ssl") ?></a>
-                    <a class="button button-rsssl-secondary rsssl-button-deactivate-keep-ssl" href="<?php echo $deactivate_keep_ssl_link ?>"><?php _e("Deactivate, keep https", "really-simple-ssl") ?></a>
-                    <a class="button button-rsssl-tertiary" href="#" id="rsssl_close_tb_window"><?php _e("Cancel", "really-simple-ssl") ?></a>
+                    <a class="button button-default" href="#" id="rsssl_close_tb_window"><?php _e("Cancel", "really-simple-ssl") ?></a>
+                    <a class="button button-primary rsssl-button-deactivate-keep-ssl" href="<?php echo $deactivate_keep_ssl_link ?>"><?php _e("Deactivate, keep https", "really-simple-ssl") ?></a>
+                    <a class="button  button-rsssl-tertiary rsssl-button-deactivate-revert" href="#"><?php _e("Deactivate, revert to http", "really-simple-ssl") ?></a>
                 </div>
         </div>
         <?php
