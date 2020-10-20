@@ -2,7 +2,7 @@
 
 <?php $percentage_completed = RSSSL()->really_simple_ssl->get_score_percentage(); ?>
 
-<div class="rsssl-progress">
+<div class="rsssl-progress-block">
     <div class="rsssl-progress-bar-text">
         <div class="progress-bar-container">
             <div class="progress">

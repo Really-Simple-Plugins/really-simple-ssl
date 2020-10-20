@@ -28,7 +28,22 @@
 					<a href="https://really-simple-ssl.com/new-security-headers-for-really-simple-ssl-pro-coming-up/" target="_blank"><?php _e("Read more", "really-simple-ssl");?></a>
 				</div>
 			</div>
-
+            <div class="rsssl-tips-tricks-element">
+                <div class="rsssl-tips-tricks-content">
+                    <?php _e("Secure cookies with HttpOnly, secure and use_only_cookies", "really-simple-ssl");?>
+                </div>
+                <div class="rsssl-tips-tricks-read-more">
+                    <a href="https://really-simple-ssl.com/secure-cookies-with-httponly-secure-and-use_only_cookies/" target="_blank"><?php _e("Read more", "really-simple-ssl");?></a>
+                </div>
+            </div>
+            <div class="rsssl-tips-tricks-element">
+                <div class="rsssl-tips-tricks-content">
+                    <?php _e("Information about landing page redirects", "really-simple-ssl");?>
+                </div>
+                <div class="rsssl-tips-tricks-read-more">
+                    <a href="https://really-simple-ssl.com/knowledge-base/avoid-landing-page-redirects/" target="_blank"><?php _e("Read more", "really-simple-ssl");?></a>
+                </div>
+            </div>
         </div>
         <div class="tips-tricks-bottom">
             <?php printf(
