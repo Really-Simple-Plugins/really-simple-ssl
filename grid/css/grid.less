@@ -6,7 +6,7 @@
 @box_shadow_color: rgba(222, 222, 222, 0.2);
 @border_color: #dedede;
 @color-success: #61ce70;
-@color_warning: red;
+@color_warning: #d7263d;
 @color_open: #FBC43D;
 @light-text-color: #3c3c3c;
 @light-grey: lightgrey;
@@ -156,13 +156,11 @@
         margin-top: @grid_margin;
         height: 60px;
         border-bottom: 1px solid @border_color;
-        h3 {
-          margin-left: 15px;
-        }
+        padding: 0 25px 0 25px;
+
         .rsssl-secondary-header-item {
           display: flex;
           color: @light-text-color;
-          margin-right: 10px;
           .all-task-count, .open-task-count {
             padding-left: 3px;
             padding-top: 3px;
@@ -181,15 +179,18 @@
 
       .rsssl-grid-item-content {
         height: 310px;
-        margin: 15px;
+        margin: 25px 25px 10px 25px;
         border-bottom: 1px solid @border_color;
 
-          /*
-            Progress bar
-          */
+        /*
+          Progress block
+        */
+
+        .rsssl-progress-block {
+          padding-top: 10px;
 
           .progress-bar-container {
-            margin: 0 0 15px 0;
+            margin: 0 0 25px 0;
           }
 
           .progress {
@@ -235,26 +236,30 @@
 
           .rsssl-progress-table {
             td {
-              padding: 5px 10px 5px 0;
+              padding: 8px 15px 5px 0;
               vertical-align: top;
             }
           }
+        }
 
         /*
           Settings
         */
 
-        //.rsssl-settings {
         .rsssl-settings {
-          th {
-            width: 85%;
+            th {
+              width: 85%;
+
               tr {
                 width: 100%;
               }
+            }
           }
-        }
           .form-table {
             display: flex;
+            tbody {
+              width: 100% !important;
+            }
             th {
               margin-left: 0;
               .dashicons-editor-help {
@@ -265,7 +270,7 @@
             tbody {
               display: flex;
               flex-direction: column;
-
+              width: 100% !important;
 
               tr {
                 padding-bottom: @grid_margin;
@@ -302,9 +307,6 @@
           Tips and Tricks
        */
         .rsssl-tips-tricks {
-          padding-left: 10px;
-
-
             color: @light-text-color;
             padding-bottom: 15px;
             .tips-tricks-content{
@@ -365,7 +367,7 @@
             }
 
             .rsssl-bullet {
-              margin: 7px;
+              margin: 7px 7px 7px 0;
               background-color: @light-grey;
               float: left;
               &:hover {
@@ -394,7 +396,7 @@
           .rsssl-upsell {
             display: flex !important; //we need important here, because the grid switch overrides it on element level
             flex-direction: row;
-            padding: 6px;
+            padding: 5px 0 5px 0;
             align-items: center;
             color: @light-text-color;
 
@@ -469,8 +471,8 @@
       .rsssl-grid-item-footer {
         display: flex;
         align-items: center;
-        margin: 0 0 0 15px;
-        height: 50px;
+        margin: 0 25px 0 25px;
+        height: 40px;
         bottom: 0;
         width: 95%;
         .button-primary {

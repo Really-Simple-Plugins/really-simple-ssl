@@ -67,7 +67,10 @@ class rsssl_admin extends rsssl_front_end
         register_deactivation_hook(dirname(__FILE__) . "/" . $this->plugin_filename, array($this, 'deactivate'));
 	    add_action('admin_init', array($this, 'add_privacy_info'));
 	    add_action('admin_init', array($this, 'maybe_dismiss_review_notice'));
-	    add_action('admin_footer', array($this, 'deactivate_popup'), 40);
+	    // Only show deactivate popup when SSL has been enabled.
+	    if ($this->ssl_enabled) {
+            add_action('admin_footer', array($this, 'deactivate_popup'), 40);
+        }
 
     }
 
@@ -463,11 +466,11 @@ class rsssl_admin extends rsssl_front_end
 	        ?>
             <style>
                 .activate-ssl {
-                    border-left: 4px solid #F8BE2E;
+                    border-left: 4px solid #333333;
+                    padding: 0;
                 }
                 .activate-ssl .button {
                     margin-bottom: 5px;
-                    /*margin-right: 10px;*/
                 }
                 #rsssl_do_activate_ssl {
                     margin-right: 10px;
@@ -533,15 +536,15 @@ class rsssl_admin extends rsssl_front_end
                         <li class="rsssl-activation-notice-li"><div class="rsssl-bullet"></div><?php _e('Images, stylesheets or scripts from a domain without an SSL certificate: remove them or move to your own server', 'really-simple-ssl'); ?></li><?php
 
                         $backup_link = "https://really-simple-ssl.com/knowledge-base/backing-up-your-site/";
-                        $link_open = '<a target="_blank" href="'.$backup_link.'">';
+                        $link_open = '<a target="_blank" class="rsssl-backup" href="'.$backup_link.'">';
                         $link_close = '</a>';
                         ?>
-                        <li class="rsssl-activation-notice-li"><div class="rsssl-bullet"></div><?php printf(__("We strongly recommend to take a %sbackup%s of your site before activating SSL", 'really-simple-ssl'), $link_open, $link_close); ?> </li>
+                        <li class="rsssl-activation-notice-li"><div class="rsssl-bullet"></div><?php printf(__("We strongly recommend to make a %sbackup%s of your site before activating SSL", 'really-simple-ssl'), $link_open, $link_close); ?> </li>
                         <li class="rsssl-activation-notice-li"><div class="rsssl-bullet"></div><?php _e("You may need to login in again.", "really-simple-ssl") ?></li>
                     </ul>
                 <p><?php
                     if (!defined('rsssl_pro_version')) {
-                        _e('You can also let the automatic scan of the pro version handle this for you, and get premium support, increased security with HSTS and more!', 'really-simple-ssl');
+                        _e('You can also let the automatic scan of the pro version handle this for you. Get premium support, increased security with HSTS and more!', 'really-simple-ssl');
                     ?>
                     <a target="_blank"
                        href="<?php
@@ -561,11 +564,20 @@ class rsssl_admin extends rsssl_front_end
                 flex-direction: row;
                 justify-content: space-between;
                 align-items: center;
+                padding-left: 25px;
+            }
+
+            #rsssl-logo-activation {
+                margin-right: 25px;
             }
 
             .rsssl-activation-notice-content {
-                margin-top: 10px;
+                margin: 10px 25px 0 25px;
                 border-bottom: 1px solid #dedede;
+            }
+
+            .rsssl-backup  {
+                margin: 0 3px 0 3px;
             }
 
             .rsssl-activation-notice-footer {
@@ -573,6 +585,7 @@ class rsssl_admin extends rsssl_front_end
                 display: flex;
                 align-items: center;
                 padding-bottom: 10px;
+                padding-left: 25px;
             }
 
             .rsssl-activation-notice-li {
@@ -3407,12 +3420,12 @@ class rsssl_admin extends rsssl_front_end
 	        $link = admin_url() . "plugin-install.php?s=".$item['search']."&tab=search&type=term";
 	        $text = __('Install', 'really-simple-ssl');
 	        $status = "<a href=$link>$text</a>";
+        } elseif ($item['constant_free'] == 'wpsi_plugin' || defined($item['constant_premium'] ) ) {
+            $status = __("Installed", "really-simple-ssl");
         } elseif (defined($item['constant_free']) && !defined($item['constant_premium'])) {
 	        $link = $item['website'];
 	        $text = __('Upgrade to pro', 'really-simple-ssl');
 	        $status = "<a href=$link>$text</a>";
-        } elseif (defined($item['constant_premium'])) {
-            $status = __("Installed", "really-simple-ssl");
         }
         return $status;
     }
