@@ -21,6 +21,7 @@
     background-color: #fff;
     display: flex;
     align-items: center;
+    border: 0;
   }.nav-tab {
      background: inherit;
      border: 0;
@@ -29,8 +30,8 @@
     margin-left: 25px;
     margin-bottom: 10px;
     #rsssl-logo {
-      height: 35px;
-      margin-top: -25px;
+      height: 40px;
+      width: 174px;
     }
   }
   .header-links {
@@ -39,7 +40,8 @@
     justify-content: flex-end;
     flex-direction: row;
     align-items: center;
-    margin-right: 140px;
+    margin-right: 138px;
+    text-decoration: underline;
     .documentation {
       padding-right: 25px;
       a {
@@ -114,7 +116,6 @@
     }
     .rsssl-tasks {
       text-decoration: none;
-      margin-left:10px;
     }
 
     .rsssl-tasks-inactive {
@@ -497,7 +498,10 @@
         .rsssl-grid-item-content {
           height: 100px;
         }
-        }
+      }
+      .rsssl-grid-item-footer {
+        margin: -5px 25px 0 25px;
+      }
     }
     &.small {
       .item-container {

@@ -513,7 +513,6 @@ class rsssl_admin extends rsssl_front_end
 	 *
 	 */
 
-
 	public function notice_html($class, $title, $content, $footer=false) {
 		ob_start();
 		?>
@@ -2603,7 +2602,7 @@ class rsssl_admin extends rsssl_front_end
         ?>
         <div class="nav-tab-wrapper">
             <div class="rsssl-logo-container">
-                <div id="rsssl-logo"><img height="50px" src="<?php echo rsssl_url?>/assets/logo-really-simple-ssl.png" alt="logo"></div>
+                <div id="rsssl-logo"><img src="<?php echo rsssl_url?>/assets/logo-really-simple-ssl.png" alt="review-logo"></div>
             </div>
             <?php
                 foreach ($tabs as $tab => $name) {
@@ -2617,9 +2616,13 @@ class rsssl_admin extends rsssl_front_end
                 </div>
                 <?php if (!defined('rsssl_pro_version')) { ?>
                 <div class="header-upsell">
-                    <a href="<?php echo $this->pro_url ?>" target="_blank">
+                    <?php if (defined('RSSSL_PRO_VERSION')) { ?>
                         <div class="header-upsell-pro"><?php _e("PRO", "really-simple-ssl"); ?></div>
-                    </a>
+                    <?php } else { ?>
+                    <div class="documentation">
+                        <a href="https://really-simple-ssl.com/support" target="_blank"><?php _e("Support", "really-simple-ssl") ?></a>
+                    </div>
+                    <?php } ?>
                 </div>
                 <?php } ?>
             </div>
