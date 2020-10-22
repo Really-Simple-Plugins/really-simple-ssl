@@ -30,7 +30,6 @@ if (!class_exists('rsssl_multisite')) {
 
             self::$_this = $this;
 
-
             $this->load_options();
             register_activation_hook(dirname(__FILE__) . "/" . rsssl_plugin, array($this, 'activate'));
 
@@ -47,10 +46,12 @@ if (!class_exists('rsssl_multisite')) {
 
             if (is_network_admin()) {
                 add_action('network_admin_notices', array($this, 'show_notices'), 10);
-
                 add_action('admin_print_footer_scripts', array($this, 'insert_dismiss_success'));
                 add_action('admin_print_footer_scripts', array($this, 'insert_dismiss_wildcard_warning'));
             }
+
+            $plugin = rsssl_plugin;
+	        add_filter("network_admin_plugin_action_links_$plugin", array($this, 'plugin_settings_link'));
 
             add_action('wp_ajax_dismiss_success_message_multisite', array($this, 'dismiss_success_message_callback'));
             add_action('wp_ajax_dismiss_wildcard_warning', array($this, 'dismiss_wildcard_message_callback'));
@@ -75,6 +76,34 @@ if (!class_exists('rsssl_multisite')) {
             return self::$_this;
         }
 
+
+	    /**
+         * Add settings link on plugins overview page
+	     * @param array $links
+         * @since  2.0
+	     * @access public
+	     * @return array
+	     */
+
+	    public function plugin_settings_link($links)
+	    {
+		    $settings_link = '<a href="' . admin_url("options-general.php?page=rlrsssl_really_simple_ssl") . '">' . __("Settings", "really-simple-ssl") . '</a>';
+		    array_unshift($links, $settings_link);
+
+		    if ( apply_filters('rsssl_settings_link', 'free') === 'free' ) {
+			    $support = '<a target="_blank" href="https://wordpress.org/support/plugin/really-simple-ssl/">' . __('Support', 'really-simple-ssl') . '</a>';
+		    } else {
+			    $support = '<a target="_blank" href="https://really-simple-ssl.com/support">' . __('Premium Support', 'really-simple-ssl') . '</a>';
+		    }
+		    array_unshift($links, $support);
+
+		    if ( ! defined( 'rsssl_pro_version' ) ) {
+			    $upgrade_link = '<a style="color:#f8be2e;font-weight:bold" target="_blank" href="https://really-simple-ssl.com/pro/#multisite">'
+			                    . __( 'Upgrade to premium', 'really-simple-ssl' ) . '</a>';
+			    array_unshift( $links, $upgrade_link );
+		    }
+		    return $links;
+	    }
 
         /*
 
@@ -156,11 +185,9 @@ if (!class_exists('rsssl_multisite')) {
 
         }
 
-        /*
-
+        /**
             Add network menu for SSL
             Only when plugin is network activated.
-
         */
 
         public function add_multisite_menu()
@@ -173,6 +200,36 @@ if (!class_exists('rsssl_multisite')) {
             add_settings_field('id_ssl_enabled_networkwide', __("Enable SSL", "really-simple-ssl"), array($this, 'get_option_enable_multisite'), $this->page_slug, 'rsssl_network_settings');
             RSSSL()->rsssl_network_admin_page = add_submenu_page('settings.php', "SSL", "SSL", 'manage_options', $this->page_slug, array(&$this, 'multisite_menu_page'));
 
+
+//
+//            <div class="rsssl-container">
+//                <div class="rsssl-main">
+//                    <?php
+//                    $container = $this->get_template('grid-container.php', rsssl_path . 'grid/');
+//                    $element = $this->get_template('grid-element.php', rsssl_path . 'grid/');
+//                    $output = '';
+//
+//                    foreach ($this->general_grid() as $index => $grid_item) {
+//                        $footer = $this->get_template_part($grid_item, 'footer');
+//                        $content = $this->get_template_part($grid_item, 'content');
+//                        $header = $this->get_template_part($grid_item, 'header');
+//
+//                        // Add form if type is settings
+//                        $block = str_replace(array('{class}', '{title}', '{header}', '{content}', '{footer}'), array($grid_item['class'], $grid_item['title'], $header, $content, $footer), $element);
+//                        if (isset($grid_item['type']) && $grid_item['type'] == 'settings') {
+//                            $output .= '<form action="options.php" method="post">'.$block.'</form>';
+//                        } else {
+//                            $output .= $block;
+//                        }
+//                    }
+//                    echo str_replace('{content}', $output, $container);
+//                    do_action("rsssl_ms_configuration_page");
+//
+//                </div>
+//            </div>
+?>
+
+            <?php
         }
 
         /*
@@ -217,23 +274,128 @@ if (!class_exists('rsssl_multisite')) {
         }
 
 
-        public function settings_tab()
+		/**
+		 * Build the settings page
+		 *
+		 * @since  2.0
+		 *
+		 * @access public
+		 *
+		 */
+
+		public function general_grid(){
+			$grid_items = array(
+				1 =>array(
+					'title' => __("Your progress", "really-simple-ssl"),
+					'header' => rsssl_template_path . 'progress-header.php',
+					'content' => rsssl_template_path . 'progress.php',
+					'footer' => rsssl_template_path . 'progress-footer.php',
+					'class' => 'regular rsssl-progress',
+					'type' => 'all',
+					'can_hide' => true,
+				),
+				2 => array(
+					'title' => __("Settings", "really-simple-ssl"),
+					'header' => rsssl_template_path . 'header.php',
+					'content' => rsssl_template_path . 'settings.php',
+					'footer' => rsssl_template_path . 'settings-footer.php',
+					'class' => 'small settings',
+					'type' => 'settings',
+					'can_hide' => true,
+				),
+				3 => array(
+					'title' => __("Tips & Tricks", "really-simple-ssl"),
+					'header' => '',
+					'content' => rsssl_template_path . 'tips-tricks.php',
+					'footer' => rsssl_template_path . 'tips-tricks-footer.php',
+					'class' => 'small',
+					'type' => 'popular',
+					'can_hide' => true,
+				),
+				'support' => array(
+					'title' => __("Support forum", "really-simple-ssl"),
+					'header' => '',
+					'content' => rsssl_template_path . 'support.php',
+					'footer' => rsssl_template_path . 'support-footer.php',
+					'type' => 'tasks',
+					'class' => 'half-height',
+					'can_hide' => true,
+				),
+				'plugins' => array(
+					'title' => __("Our plugins", "really-simple-ssl"),
+					'header' => rsssl_template_path . 'header.php',
+					'content' => rsssl_template_path . 'other-plugins.php',
+					'footer' => '',
+					'class' => 'half-height no-border no-background upsell-grid-container',
+					'type' => 'plugins',
+					'can_hide' => false,
+				),
+			);
+			return apply_filters( 'rsssl_grid_items',  $grid_items );
+		}
+
+
+
+		public function settings_tab()
         {
             if (isset($_GET['updated'])): ?>
                 <div id="message" class="updated notice is-dismissible">
-                    <p><?php _e('Options saved.', 'really-simple-ssl') ?></p></div>
+                    <p><?php _e('Options saved.', 'really-simple-ssl') ?></p>
+                </div>
             <?php endif; ?>
-            <div class="wrap">
-                <h1><?php _e('Really Simple SSL multisite options', 'really-simple-ssl'); ?></h1>
-                <form method="POST" action="edit.php?action=rsssl_update_network_settings">
-                    <?php
 
-                    settings_fields($this->option_group);
-                    do_settings_sections($this->page_slug);
-                    submit_button();
-                    ?>
-                </form>
+            <div class="nav-tab-wrapper">
+                <div class="rsssl-logo-container">
+                    <div id="rsssl-logo"><img height="50px" src="<?php echo rsssl_url?>/assets/logo-really-simple-ssl.png" alt="logo"></div>
+                </div>
+
+                <div class="header-links">
+                    <div class="documentation">
+                        <a href="https://really-simple-ssl.com/knowledge-base" target="_blank"><?php _e("Documentation", "really-simple-ssl");?></a>
+                    </div>
+                    <?php if (!defined('rsssl_pro_version')) { ?>
+                        <div class="header-upsell">
+                            <a href="https://really-simple-ssl.com/pro#multisite" target="_blank">
+                                <div class="header-upsell-pro"><?php _e("PRO", "really-simple-ssl"); ?></div>
+                            </a>
+                        </div>
+                    <?php } ?>
+                </div>
             </div>
+
+            <div class="rsssl-container">
+                <div class="rsssl-main"><?php
+                    $container = RSSSL()->really_simple_ssl->get_template('grid-container.php', rsssl_path . 'grid/');
+                    $element = RSSSL()->really_simple_ssl->get_template('grid-element.php', rsssl_path . 'grid/');
+                    $output = '';
+
+                    foreach ( $this->general_grid() as $index => $grid_item) {
+                        $footer = RSSSL()->really_simple_ssl->get_template_part($grid_item, 'footer');
+                        $content = RSSSL()->really_simple_ssl->get_template_part($grid_item, 'content');
+                        $header = RSSSL()->really_simple_ssl->get_template_part($grid_item, 'header');
+
+                        // Add form if type is settings
+                        $block = str_replace(array('{class}', '{title}', '{header}', '{content}', '{footer}'), array($grid_item['class'], $grid_item['title'], $header, $content, $footer), $element);
+                        if (isset($grid_item['type']) && $grid_item['type'] == 'settings') {
+                            $output .= '<form action="options.php" method="post">'.$block.'</form>';
+                        } else {
+                            $output .= $block;
+                        }
+                    }
+                    echo str_replace('{content}', $output, $container);
+                    do_action("rsssl_configuration_page");
+			        ?>
+                </div>
+            </div>
+            <form method="POST" action="edit.php?action=rsssl_update_network_settings">
+                <?php
+
+                settings_fields($this->option_group);
+                do_settings_sections($this->page_slug);
+                submit_button();
+                ?>
+            </form>
+
             <?php
         }
 
@@ -315,7 +477,7 @@ if (!class_exists('rsssl_multisite')) {
 
             //if no SSL was detected, don't activate it yet.
 
-            if (!RSSSL()->really_simple_ssl->site_has_ssl) {
+            if ( $this->is_multisite_subfolder_install() && !RSSSL()->really_simple_ssl->site_has_ssl) {
                 $current_url = esc_url_raw("https://" . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"]);
 
                 $class = "error notice activate-ssl";
@@ -325,8 +487,7 @@ if (!class_exists('rsssl_multisite')) {
                 $content .= '<a href="' . $current_url . '">'. __("reload over https.", "really-simple-ssl") .'</a>' . " ";
                 $content .= __("You can check your certificate on", "really-simple-ssl") . " " . '<a target="_blank" href="https://www.ssllabs.com/ssltest/">Qualys SSL Labs</a>';
 
-                $footer = '';
-	            echo $this->notice_html($class, $title, $content, $footer);
+	            echo RSSSL()->really_simple_ssl->notice_html($class, $title, $content );
             }
 
             if (RSSSL()->really_simple_ssl->site_has_ssl) {
@@ -335,8 +496,8 @@ if (!class_exists('rsssl_multisite')) {
                     $title = __("Setup", "really-simple-ssl");
                     $content = '<h2>' . __("Some things can't be done automatically. Before you migrate, please check for: ", "really-simple-ssl") . '</h2>';
                     $content .= '<ul>
-                                    <li class="rsssl-notice-li">'. __("Http references in your .css and .js files: change any http:// into //", "really-simple-ssl") .'</li>
-                                    <li class="rsssl-notice-li">'. __("Images, stylesheets or scripts from a domain without an SSL certificate: remove them or move to your own server.", "really-simple-ssl") .'</li>
+                                    <li>'. __("Http references in your .css and .js files: change any http:// into //", "really-simple-ssl") .'</li>
+                                    <li>'. __("Images, stylesheets or scripts from a domain without an SSL certificate: remove them or move to your own server.", "really-simple-ssl") .'</li>
                                 </ul>';
                     $content .= __('You can also let the automatic scan of the pro version handle this for you, and get premium support and increased security with HSTS included.', 'really-simple-ssl') . " "
                         . '<a target="_blank"
@@ -352,7 +513,7 @@ if (!class_exists('rsssl_multisite')) {
                                        id="rsssl_do_activate_ssl_per_site" name="rsssl_do_activate_ssl_per_site">
                             </form>';
                     $content .= __("Networkwide activation does not check if a site has an SSL certificate. It just migrates all sites to SSL.", "really-simple-ssl");
-	                echo $this->notice_html($class, $title, $content, $footer);
+	                echo RSSSL()->really_simple_ssl->notice_html($class, $title, $content, $footer);
                 }
             }
 
@@ -773,7 +934,7 @@ if (!class_exists('rsssl_multisite')) {
                 $title = __("Major security issue!", "really-simple-ssl");
                 $content = __("The 'force-deactivate.php' file has to be renamed to .txt. Otherwise your ssl can be deactivated by anyone on the internet.", "really-simple-ssl");
 
-                echo $this->notice_html($class, $title, $content);
+                echo RSSSL()->really_simple_ssl->notice_html($class, $title, $content);
             }
 
             /*
@@ -795,7 +956,7 @@ if (!class_exists('rsssl_multisite')) {
                 $content .= __("You have just started enabling or disabling SSL on multiple websites at once, and this process is not completed yet. Please refresh this page to check if the process has finished. It will proceed in the background.", "really-simple-ssl") . " ";
                 $content .= sprintf(__("If the conversion does not proceed after a few minutes, click %shere%s to force the conversion process.", "really-simple-ssl"), $link_open, $link_close);
 
-                echo $this->notice_html($class, $title, $content);
+                echo RSSSL()->really_simple_ssl->notice_html($class, $title, $content);
 
             }
 
@@ -817,7 +978,7 @@ if (!class_exists('rsssl_multisite')) {
                 $content .= '<a target="_blank"
                    href="https://really-simple-ssl.com/knowledge-base/how-to-setup-google-analytics-and-google-search-consolewebmaster-tools/">' . __("More info.", "really-simple-ssl") . '</a>';
 
-                echo $this->notice_html($class, $title, $content);
+                echo RSSSL()->really_simple_ssl->notice_html($class, $title, $content);
             }
 
             if (!$this->ssl_enabled_networkwide && $this->selected_networkwide_or_per_site && $this->is_multisite_subfolder_install()) {
@@ -830,7 +991,7 @@ if (!class_exists('rsssl_multisite')) {
                     $content .=  __('Because the $_SERVER["HTTPS"] variable is not set, your website may experience redirect loops.', 'really-simple-ssl') . " ";
                     $content .= __('Activate networkwide to fix this.', 'really-simple-ssl');
 
-                    echo $this->notice_html($class, $title, $content);
+                    echo RSSSL()->really_simple_ssl->notice_html($class, $title, $content);
                 }
             }
 
@@ -843,91 +1004,9 @@ if (!class_exists('rsssl_multisite')) {
 
 //                $footer = '<button class="button-rsssl-secondary rsssl-close-notice>' . __("Close", "really-simple-ssl") .'</button>"';
 
-                echo $this->notice_html($class, $title, $content);
+                echo RSSSL()->really_simple_ssl->notice_html($class, $title, $content);
             }
 
-        }
-
-        /**
-         * @param $class
-         * @param $title
-         * @param $content
-         * @return false|string
-         *
-         * @since 4.0
-         * Return the notice HTML
-         *
-         */
-
-        public function notice_html($class, $title, $content, $footer=false) {
-            ob_start();
-            ?>
-            <style>
-                .rsssl-notice-header {
-                    height: 60px;
-                    border-bottom: 1px solid #dedede;
-                    display: flex;
-                    flex-direction: row;
-                    justify-content: space-between;
-                    align-items: center;
-                }
-
-                .rsssl-notice-content {
-                    margin-top: 10px;
-                    padding-bottom: 10px;
-                    min-height: 50px;
-                }
-
-                .rsssl-notice-footer {
-                    border-top: 1px solid #dedede;
-                    height: 35px;
-                    display: flex;
-                    align-items: center;
-                    padding-top: 10px;
-                    padding-bottom: 10px;
-                }
-
-                .rsssl-notice-li {
-                    display: flex;
-                    align-items: center;
-                }
-
-                ul {
-                    list-style: disc;
-                    list-style-position: inside;
-                }
-
-                #message .rsssl-notice-li::before {
-                    vertical-align: middle;
-                    margin-right: 25px;
-                    color: lightgrey;
-                    content: "\f345";
-                    font: 400 21px/1 dashicons;
-                }
-            </style>
-
-            <div id="message" class="<?php echo $class?>">
-                <div class="rsssl-notice">
-                    <div class="rsssl-notice-header">
-                        <h1><?php echo $title ?></h1>
-                        <div id="rsssl-logo-activation"><img width="180px" src="<?php echo rsssl_url?>/assets/logo-really-simple-ssl.png" alt="really-simple-ssl-logo"></div>
-                    </div>
-                    <div class="rsssl-notice-content">
-                        <?php echo $content ?>
-                    </div>
-                    <?php
-                    if ($footer ) { ?>
-                        <div class="rsssl-notice-footer">
-                            <?php
-                            echo $footer;
-                            ?>
-                        </div>
-                    <?php } ?>
-                </div>
-            </div>
-            <?php
-            $content = ob_get_clean();
-            return $content;
         }
 
 
@@ -1049,11 +1128,9 @@ if (!class_exists('rsssl_multisite')) {
             if ( $screen->parent_base === 'edit' ) return;
 
             if (!$this->is_settings_page()) return;
-
             $dismissed = get_option('rsssl_pro_pro_option_notice_dismissed');
 
             if (!$dismissed) {
-
                 add_action('admin_print_footer_scripts', array($this, 'dismiss_pro_option_script'));
 
                 if (defined('rsssl_pro_version')) {
@@ -1062,14 +1139,14 @@ if (!class_exists('rsssl_multisite')) {
                         $title = __("Dedicated multisite plugin", "really-simple-ssl");
                         $content = sprintf(__('You are running Really Simple SSL pro. A dedicated add-on for multisite has been released. If you want more options to have full control over your multisite network, you can %supgrade%s on the licenses tab of your account.', 'really-simple-ssl'), '<a target="_blank" href="https://really-simple-ssl.com/account/" title="Really Simple SSL">', '</a>');
 
-                        echo $this->notice_html($class, $title, $content);
+                        echo RSSSL()->really_simple_ssl->notice_html($class, $title, $content);
                     }
                 } else {
                     $class = "updated notice is-dismissible rsssl-pro-dismiss-notice";
                     $title = __("Get more control", "really-simple-ssl");
-                    $content = sprintf(__('If you want more options to have full control over your multisite network, you can %supgrade%s your license to a multisite license, or dismiss this message', 'really-simple-ssl'), '<a target="_blank" href="https://www.really-simple-ssl.com/pro-multisite" title="Really Simple SSL">', '</a>');
+                    $content = sprintf(__('If you want more options to have full control over your multisite network, you can %supgrade%s your license to a multisite license, or dismiss this message', 'really-simple-ssl'), '<a target="_blank" href="https://really-simple-ssl.com/pro/#multisite" title="Really Simple SSL">', '</a>');
 
-                    echo $this->notice_html($class, $title, $content);
+                    echo RSSSL()->really_simple_ssl->notice_html($class, $title, $content);
                 }
             }
         }

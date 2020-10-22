@@ -21,11 +21,6 @@
 .rlrsssl-review {
   display: none;
 }
-.rsssl-notice {
-  background-color: #fff;
-  border-left: 4px solid green;
-  padding: 1px 15px;
-}
 .rsssl-main {
   flex: 1;
   width: 80%;

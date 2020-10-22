@@ -1,25 +1,31 @@
-#wpcontent {
+#wpcontent,
+.settings_page_really-simple-ssl {
   padding: 0;
 }
-#wpcontent .nav-tab-wrapper {
+#wpcontent .nav-tab-wrapper,
+.settings_page_really-simple-ssl .nav-tab-wrapper {
   height: 60px;
   background-color: #fff;
   display: flex;
   align-items: center;
 }
-#wpcontent .nav-tab {
+#wpcontent .nav-tab,
+.settings_page_really-simple-ssl .nav-tab {
   background: inherit;
   border: 0;
 }
-#wpcontent .rsssl-logo-container {
+#wpcontent .rsssl-logo-container,
+.settings_page_really-simple-ssl .rsssl-logo-container {
   margin-left: 25px;
   margin-bottom: 10px;
 }
-#wpcontent .rsssl-logo-container #rsssl-logo {
+#wpcontent .rsssl-logo-container #rsssl-logo,
+.settings_page_really-simple-ssl .rsssl-logo-container #rsssl-logo {
   height: 35px;
   margin-top: -25px;
 }
-#wpcontent .header-links {
+#wpcontent .header-links,
+.settings_page_really-simple-ssl .header-links {
   display: flex;
   flex: 1;
   justify-content: flex-end;
@@ -27,16 +33,20 @@
   align-items: center;
   margin-right: 140px;
 }
-#wpcontent .header-links .documentation {
+#wpcontent .header-links .documentation,
+.settings_page_really-simple-ssl .header-links .documentation {
   padding-right: 25px;
 }
-#wpcontent .header-links .documentation a {
+#wpcontent .header-links .documentation a,
+.settings_page_really-simple-ssl .header-links .documentation a {
   color: black;
 }
-#wpcontent .header-links .header-upsell a {
+#wpcontent .header-links .header-upsell a,
+.settings_page_really-simple-ssl .header-links .header-upsell a {
   text-decoration: none;
 }
-#wpcontent .header-links .header-upsell .header-upsell-pro {
+#wpcontent .header-links .header-upsell .header-upsell-pro,
+.settings_page_really-simple-ssl .header-links .header-upsell .header-upsell-pro {
   color: black;
   border: 3px solid black;
   margin: 10px;
