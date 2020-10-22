@@ -526,7 +526,7 @@ class rsssl_admin extends rsssl_front_end
         <div class="rsssl-activation-notice">
             <div class="rsssl-activation-notice-header">
                 <h1><?php _e("Almost ready to migrate to SSL!", "really-simple-ssl"); ?></h1>
-                <div id="rsssl-logo-activation"><img width="180px" src="<?php echo rsssl_url?>/assets/logo-really-simple-ssl.png" alt="really-simple-ssl-logo"></div>
+                <div id="rsssl-logo-activation"><img src="<?php echo rsssl_url?>/assets/logo-really-simple-ssl.png" alt="really-simple-ssl-logo"></div>
             </div>
             <div class="rsssl-activation-notice-content">
                 <?php _e("Some things can't be done automatically. Before you migrate, please check for: ", 'really-simple-ssl'); ?>
@@ -2634,7 +2634,7 @@ class rsssl_admin extends rsssl_front_end
         ?>
         <div class="nav-tab-wrapper">
             <div class="rsssl-logo-container">
-                <div id="rsssl-logo"><img height="50px" src="<?php echo rsssl_url?>/assets/logo-really-simple-ssl.png" alt="review-logo"></div>
+                <div id="rsssl-logo"><img src="<?php echo rsssl_url?>/assets/logo-really-simple-ssl.png" alt="review-logo"></div>
             </div>
             <?php
                 foreach ($tabs as $tab => $name) {
@@ -2648,9 +2648,13 @@ class rsssl_admin extends rsssl_front_end
                 </div>
                 <?php if (!defined('rsssl_pro_version')) { ?>
                 <div class="header-upsell">
-                    <a href="<?php echo $this->pro_url ?>" target="_blank">
+                    <?php if (defined('RSSSL_PRO_VERSION')) { ?>
                         <div class="header-upsell-pro"><?php _e("PRO", "really-simple-ssl"); ?></div>
-                    </a>
+                    <?php } else { ?>
+                    <div class="documentation">
+                        <a href="https://really-simple-ssl.com/support" target="_blank"><?php _e("Support", "really-simple-ssl") ?></a>
+                    </div>
+                    <?php } ?>
                 </div>
                 <?php } ?>
             </div>

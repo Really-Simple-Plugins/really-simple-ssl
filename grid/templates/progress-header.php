@@ -6,7 +6,7 @@
 		<input type="checkbox" class="rsssl-task-toggle" id="rsssl-all-tasks" name="rsssl_all_tasks" <?php if (get_option('rsssl_all_tasks') ) echo "checked"?>>
 		<label class="rsssl-tasks" for="rsssl-all-tasks"><?php _e( "All tasks", "really-simple-ssl" ); ?><?php echo " " . "(" . $all_task_count . ")"; ?></label>
 	</div>
-
+    <div class="rsssl-spacer" style="width: 10px"></div>
 	<?php
 	$open_task_count = RSSSL()->really_simple_ssl->get_remaining_tasks_count();
 	if ($open_task_count ==! 0) {?>

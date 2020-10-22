@@ -112,16 +112,18 @@ jQuery(document).ready(function ($) {
         });
     }
 
+
+
     rsssl_update_toggle_style();
     function rsssl_update_toggle_style(){
         var allTasks = $('#rsssl-all-tasks');
         var remainingTasks = $('#rsssl-remaining-tasks');
         if (allTasks.is(":checked")) {
-            allTasks.closest('.rsssl-tasks').removeClass('rsssl-tasks-inactive');
-            remainingTasks.closest('.rsssl-tasks').addClass('rsssl-tasks-inactive');
+            $(".all-task-text").css({"border-bottom": "1px solid lightgrey", "color": "lightgrey"});
+            $(".open-task-text ").css({"text-decoration": "none"});
         } else {
-            allTasks.closest('.rsssl-tasks').removeClass('rsssl-tasks-inactive');
-            remainingTasks.closest('.rsssl-tasks').addClass('rsssl-tasks-inactive');
+            $(".all-task-text").css({"text-decoration": "none"});
+            $(".open-task-text ").css({"border-bottom": "1px solid lightgrey", "color": "lightgrey"});
         }
     }
 

@@ -6,6 +6,7 @@
   background-color: #fff;
   display: flex;
   align-items: center;
+  border: 0;
 }
 #wpcontent .nav-tab {
   background: inherit;
@@ -16,8 +17,8 @@
   margin-bottom: 10px;
 }
 #wpcontent .rsssl-logo-container #rsssl-logo {
-  height: 35px;
-  margin-top: -25px;
+  height: 40px;
+  width: 174px;
 }
 #wpcontent .header-links {
   display: flex;
@@ -25,7 +26,8 @@
   justify-content: flex-end;
   flex-direction: row;
   align-items: center;
-  margin-right: 140px;
+  margin-right: 138px;
+  text-decoration: underline;
 }
 #wpcontent .header-links .documentation {
   padding-right: 25px;
@@ -95,7 +97,6 @@
 }
 .rsssl-grid .rsssl-progress .rsssl-tasks {
   text-decoration: none;
-  margin-left: 10px;
 }
 .rsssl-grid .rsssl-progress .rsssl-tasks-inactive {
   text-decoration: underline;
@@ -415,6 +416,9 @@
 }
 .rsssl-grid .rsssl-item.half-height .item-container .rsssl-grid-item-content {
   height: 100px;
+}
+.rsssl-grid .rsssl-item.half-height .rsssl-grid-item-footer {
+  margin: -5px 25px 0 25px;
 }
 .rsssl-grid .rsssl-item.small .item-container {
   width: 380px;
