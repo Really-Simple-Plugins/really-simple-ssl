@@ -16,12 +16,12 @@ require_once( dirname( __FILE__ ) .  '/class-certificate.php' );
 require_once( dirname( __FILE__ ) .  '/class-server.php' );
 require_once( dirname( __FILE__ ) .  '/class-admin.php' );
 
-$really_simple_ssl = new rsssl_admin();
-$server = new rsssl_server();
-$certificate = new rsssl_certificate();
+//$really_simple_ssl = new rsssl_admin();
+//$server = new rsssl_server();
+//$certificate = new rsssl_certificate();
 if (is_multisite()) {
 	require_once( dirname( __FILE__ ) .  '/class-multisite.php' );
-	$rsssl_multisite = new rsssl_multisite();
+	//$rsssl_multisite = new rsssl_multisite();
 }
 
 if ( current_user_can( 'manage_options' ) ) {
@@ -31,32 +31,33 @@ if ( current_user_can( 'manage_options' ) ) {
 	if (defined('RSSSL_SAFE_MODE') && RSSSL_SAFE_MODE) echo "SAFE MODE\n";
 
 	echo "General\n";
+	echo "Domain: " . site_url() ."\n";
 	echo "Plugin version: " . rsssl_version ."\n";
 
-	if ( $certificate->is_valid() ) {
+	if ( RSSSL()->rsssl_certificate->is_valid() ) {
 		echo "SSL certificate is valid\n";
 	} else {
-		if ( $certificate->detection_failed() ) {
+		if ( RSSSL()->rsssl_certificate->detection_failed() ) {
 			echo "Not able to detect certificate\n";
 		} else {
 			echo "Invalid SSL certificate\n";
 		}
 	}
 
-	echo ($really_simple_ssl->ssl_enabled) ? "SSL is enabled\n\n" : "SSL is not yet enabled\n\n";
+	echo (RSSSL()->really_simple_ssl->ssl_enabled) ? "SSL is enabled\n\n" : "SSL is not yet enabled\n\n";
 
 	echo "Options\n";
-	if ($really_simple_ssl->autoreplace_insecure_links) echo "* Mixed content fixer\n";
-	if ($really_simple_ssl->wp_redirect) echo "* WordPress redirect\n";
-	if ($really_simple_ssl->htaccess_redirect) echo "* htaccess redirect\n";
-	if ($really_simple_ssl->do_not_edit_htaccess) echo "* Stop editing the .htaccess file\n";
-	if ($really_simple_ssl->switch_mixed_content_fixer_hook) echo "* Use alternative method to fix mixed content\n";
-	if ($really_simple_ssl->dismiss_all_notices) echo "* Dismiss all Really Simple SSL notices\n";
+	if (RSSSL()->really_simple_ssl->autoreplace_insecure_links) echo "* Mixed content fixer\n";
+	if (RSSSL()->really_simple_ssl->wp_redirect) echo "* WordPress redirect\n";
+	if (RSSSL()->really_simple_ssl->htaccess_redirect) echo "* htaccess redirect\n";
+	if (RSSSL()->really_simple_ssl->do_not_edit_htaccess) echo "* Stop editing the .htaccess file\n";
+	if (RSSSL()->really_simple_ssl->switch_mixed_content_fixer_hook) echo "* Use alternative method to fix mixed content\n";
+	if (RSSSL()->really_simple_ssl->dismiss_all_notices) echo "* Dismiss all Really Simple SSL notices\n";
 	echo "\n";
 
 	echo "Server information\n";
-	echo "Server: " . $server->get_server() . "\n";
-	echo "SSL Type: $really_simple_ssl->ssl_type\n";
+	echo "Server: " . RSSSL()->rsssl_server->get_server() . "\n";
+	echo "SSL Type: " . RSSSL()->really_simple_ssl->ssl_type . "\n";
 	if (defined('rsssl_pro_path')) {
 	    echo "TLS Version: " . RSSSL_PRO()->rsssl_premium_options->get_tls_version() . "\n";
     }
@@ -78,7 +79,7 @@ if ( current_user_can( 'manage_options' ) ) {
         }
     }
 
-	echo $really_simple_ssl->debug_log;
+	echo RSSSL()->really_simple_ssl->debug_log;
 
 	echo "\n\nConstants\n";
 
