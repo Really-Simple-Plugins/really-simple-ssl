@@ -444,6 +444,10 @@ class rsssl_admin extends rsssl_front_end
 
     }
 
+	/**
+	 *  Show a notice that the website is ready to migrate to SSL.
+	 */
+
     public function ssl_detected()
     {
         if ($this->site_has_ssl) {
@@ -2595,9 +2599,10 @@ class rsssl_admin extends rsssl_front_end
 	                'output' => array(
 		                'fail' => array(
                             'title' => __("Major security issue!", "really-simple-ssl"),
-			                'msg' => '<p>'.__("The 'force-deactivate.php' file has to be renamed to .txt. Otherwise your ssl can be deactivated by anyone on the internet.", "really-simple-ssl").'</p>' .
+			                'msg' => __("The 'force-deactivate.php' file has to be renamed to .txt. Otherwise your ssl can be deactivated by anyone on the internet.", "really-simple-ssl") .' '.
 			                         '<a href="'.add_query_arg(array('page'=>'rlrsssl_really_simple_ssl'), admin_url('options-general.php?page=')).'">'.__("Check again", "really-simple-ssl").'</a>',
-			                'icon' => 'warning'
+			                'icon' => 'warning',
+                            'admin_notice' =>true,
 		                ),
 	                ),
                 ),
@@ -2748,11 +2753,11 @@ class rsssl_admin extends rsssl_front_end
             ),
 
             'elementor' => array(
-	            'condition' => array('rsssl_uses_elementor' , 'rsssl_ssl_activation_time_no_longer_then_3_days_ago' ,'rsssl_does_not_use_pro'),
-	            'callback' => 'rsssl_elementor_notice',
+	            'condition' => array( 'rsssl_ssl_activation_time_no_longer_then_3_days_ago' ,'rsssl_does_not_use_pro'),
+	            'callback' => 'rsssl_uses_elementor',
 	            'score' => 5,
 	            'output' => array(
-		            'elementor-notice' => array(
+		            'uses-elementor' => array(
 			            'msg' => sprintf(__("Your site uses Elementor. This can require some additional steps before getting the secure lock. %sSee our guide for detailed instructions%s ", "really-simple-ssl"), '<a target="_blank" href="https://really-simple-ssl.com/knowledge-base/how-to-fix-mixed-content-in-elementor-after-moving-to-ssl/">', '</a>')
 			                     . __("or", "really-simple-ssl")
 			                     . "<span class='rsssl-dashboard-dismiss' data-dismiss_type='elementor'><a href='#' class='rsssl-dismiss-text rsssl-close-warning'>$dismiss</a></span>",
@@ -2763,11 +2768,11 @@ class rsssl_admin extends rsssl_front_end
             ),
 
             'divi' => array(
-	            'condition' => array('rsssl_uses_divi' , 'rsssl_ssl_activation_time_no_longer_then_3_days_ago'),
-	            'callback' => 'rsssl_elementor_notice',
+	            'condition' => array( 'rsssl_ssl_activation_time_no_longer_then_3_days_ago'),
+	            'callback' => 'rsssl_uses_divi',
 	            'score' => 5,
 	            'output' => array(
-		            'elementor-notice' => array(
+		            'users-divi' => array(
 			            'msg' => sprintf(__("Your site uses Divi. This can require some additional steps before getting the secure lock. %sSee our guide for detailed instructions%s ", "really-simple-ssl"), '<a target="_blank" href="https://really-simple-ssl.com/knowledge-base/mixed-content-when-using-divi-theme/">', '</a>')
 			                     . __("or", "really-simple-ssl")
 			                     . "<span class='rsssl-dashboard-dismiss' data-dismiss_type='divi'><a href='#' class='rsssl-dismiss-text rsssl-close-warning'>$dismiss</a></span>",
@@ -3239,35 +3244,6 @@ class rsssl_admin extends rsssl_front_end
         return $count;
     }
 
-
-    /**
-     * @return false|string
-     * Generate the support forum block footer in plugin dashboard
-     *
-     * @since 4.0
-     */
-    public function get_support_forum_block_footer() {
-        ob_start();
-        ?>
-        <a href="https://really-simple-ssl.com/forums/" target="_blank" class="button button-rsssl-secondary"><?php _e("View all" , "really-simple-ssl");?></a>
-        <?php
-        $content = ob_get_clean();
-        return $content;
-    }
-
-    /**
-     * @return false|string
-     * Generate the RSP logo in
-     */
-    public function generate_secondary_our_plugins_header() {
-        ob_start();
-	    ?>
-        <div class="rsp-image"><img width=170px" src="<?php echo rsssl_url?>/assets/really-simple-plugins.png" alt="really-simple-plugins-logo"></div>
-        <?php
-	    $content = ob_get_clean();
-        return $content;
-    }
-
     /**
      * Get status link for plugin, depending on installed, or premium availability
      * @param $item
@@ -3304,24 +3280,7 @@ class rsssl_admin extends rsssl_front_end
                 switch ($tab) {
                     case 'configuration' :
 
-                    $container = $this->get_template('grid-container.php', rsssl_path . 'grid/');
-                    $element = $this->get_template('grid-element.php', rsssl_path . 'grid/');
-                    $output = '';
-
-                    foreach ($this->general_grid() as $index => $grid_item) {
-                        $footer = $this->get_template_part($grid_item, 'footer');
-                        $content = $this->get_template_part($grid_item, 'content');
-                        $header = $this->get_template_part($grid_item, 'header');
-
-                        // Add form if type is settings
-                        $block = str_replace(array('{class}', '{title}', '{header}', '{content}', '{footer}'), array($grid_item['class'], $grid_item['title'], $header, $content, $footer), $element);
-                        if (isset($grid_item['type']) && $grid_item['type'] == 'settings') {
-                            $output .= '<form action="options.php" method="post">'.$block.'</form>';
-                        } else {
-                            $output .= $block;
-                        }
-                    }
-                    echo str_replace('{content}', $output, $container);
+                    $this->render_grid($this->general_grid());
                     do_action("rsssl_configuration_page");
                 }
                 //possibility to hook into the tabs.
@@ -3330,6 +3289,38 @@ class rsssl_admin extends rsssl_front_end
             </div>
         </div>
         <?php
+    }
+
+	/**
+     * Render grid from grid array
+	 * @param array $grid
+	 */
+    public function render_grid($grid){
+
+	    $container = $this->get_template('grid-container.php', rsssl_path . 'grid/');
+	    $element = $this->get_template('grid-element.php', rsssl_path . 'grid/');
+	    $output = '';
+
+	    foreach ($grid as $index => $grid_item) {
+		    $footer = $this->get_template_part($grid_item, 'footer');
+		    $content = $this->get_template_part($grid_item, 'content');
+		    $header = $this->get_template_part($grid_item, 'header');
+
+		    // Add form if type is settings
+		    $block = str_replace(array('{class}', '{title}', '{header}', '{content}', '{footer}'), array($grid_item['class'], $grid_item['title'], $header, $content, $footer), $element);
+		    if (isset($grid_item['type']) && $grid_item['type'] == 'settings') {
+			    if ( is_network_admin() ) {
+				    $output .= '<form action="edit.php?action=rsssl_update_network_settings" method="post">'.$block.'</form>';
+			    } else {
+				    $output .= '<form action="options.php" method="post">'.$block.'</form>';
+			    }
+		    } else if (isset($grid_item['type']) && $grid_item['type'] == 'scan') {
+			    $output .= '<div id="rsssl"><form id="rsssl_scan_form" action="" method="POST">'.$block.'</form></div>';
+		    } else {
+			    $output .= $block;
+		    }
+	    }
+	    echo str_replace('{content}', $output, $container);
     }
 
 	/**
@@ -3369,13 +3360,13 @@ class rsssl_admin extends rsssl_front_end
     public function icon($type)
     {
         if ($type == 'success') {
-            return "<span class='rsssl-progress-status rsssl-success'>Completed</span>";
+            return "<span class='rsssl-progress-status rsssl-success'>".__("Completed", "really-simple-ssl")."</span>";
         } elseif ($type == "warning") {
-            return "<span class='rsssl-progress-status rsssl-warning'>Warning</span>";
+            return "<span class='rsssl-progress-status rsssl-warning'>".__("Warning", "really-simple-ssl")."</span>";
         } elseif ($type == "open") {
-            return "<span class='rsssl-progress-status rsssl-open'>Open</span>";
+            return "<span class='rsssl-progress-status rsssl-open'>".__("Open", "really-simple-ssl")."</span>";
         } elseif ($type == "premium") {
-	        return "<span class='rsssl-progress-status rsssl-premium'>Premium</span>";
+	        return "<span class='rsssl-progress-status rsssl-premium'>".__("Premium", "really-simple-ssl")."</span>";
         }
     }
 
@@ -3450,7 +3441,6 @@ class rsssl_admin extends rsssl_front_end
 	        wp_register_style('rlrsssl-css', trailingslashit(rsssl_url) . 'css/main.min.css', array(), rsssl_version );
             wp_register_style('rsssl-grid', trailingslashit(rsssl_url) . 'grid/css/grid.min.css', array(), rsssl_version );
         }
-
 
         wp_register_style('rsssl-scrollbar', trailingslashit(rsssl_url) . 'includes/simple-scrollbar.css', "", rsssl_version);
         wp_enqueue_style('rsssl-scrollbar');
@@ -4334,23 +4324,12 @@ if (!function_exists('rsssl_htaccess_redirect_allowed')) {
 	}
 }
 
-// Non-prefixed for backwards compatibility
-if (!function_exists('uses_elementor')) {
-	function uses_elementor() {
-		if ( defined( 'ELEMENTOR_VERSION' ) || defined( 'ELEMENTOR_PRO_VERSION' ) ) {
-			return true;
-		} else {
-			return false;
-		}
-	}
-}
-
 if (!function_exists('rsssl_uses_elementor')) {
 	function rsssl_uses_elementor() {
 		if ( defined( 'ELEMENTOR_VERSION' ) || defined( 'ELEMENTOR_PRO_VERSION' ) ) {
-			return true;
+			return 'uses-elementor';
 		} else {
-			return false;
+			return 'no-elementor';
 		}
 	}
 }
@@ -4358,9 +4337,9 @@ if (!function_exists('rsssl_uses_elementor')) {
 if (!function_exists('rsssl_uses_divi')) {
 	function rsssl_uses_divi() {
 		if ( defined( 'ET_CORE_PATH' ) ) {
-			return true;
+			return 'uses-divi';
 		} else {
-			return false;
+			return 'no-divi';
 		}
 	}
 }

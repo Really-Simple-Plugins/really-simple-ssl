@@ -7,8 +7,6 @@ if (!class_exists('rsssl_multisite')) {
     {
         private static $_this;
 
-        public $option_group = "rsssl_network_options";
-        public $page_slug = "really-simple-ssl";
         public $section = "rsssl_network_options_section";
         public $ssl_enabled_networkwide;
         public $selected_networkwide_or_per_site;
@@ -73,6 +71,9 @@ if (!class_exists('rsssl_multisite')) {
         {
             return self::$_this;
         }
+
+
+
 
 
 	    /**
@@ -192,55 +193,24 @@ if (!class_exists('rsssl_multisite')) {
         {
             if (!$this->plugin_network_wide_active()) return;
 
-            register_setting($this->option_group, 'rsssl_options');
-            add_settings_section('rsssl_network_settings', __("Settings", "really-simple-ssl"), array($this, 'section_text'), $this->page_slug);
+            register_setting('rsssl_network_options', 'rsssl_options');
+            add_settings_section('rsssl_network_settings', __("Settings", "really-simple-ssl"), array($this, 'section_text'), "really-simple-ssl");
 
-            add_settings_field('id_ssl_enabled_networkwide', __("Enable SSL", "really-simple-ssl"), array($this, 'get_option_enable_multisite'), $this->page_slug, 'rsssl_network_settings');
-            RSSSL()->rsssl_network_admin_page = add_submenu_page('settings.php', "SSL", "SSL", 'manage_options', $this->page_slug, array(&$this, 'multisite_menu_page'));
+            add_settings_field('id_ssl_enabled_networkwide', __("Enable SSL", "really-simple-ssl"), array($this, 'get_option_enable_multisite'), "really-simple-ssl", 'rsssl_network_settings');
+            RSSSL()->rsssl_network_admin_page = add_submenu_page('settings.php', "SSL", "SSL", 'manage_options', "really-simple-ssl", array(&$this, 'multisite_menu_page'));
 
 
-//
-//            <div class="rsssl-container">
-//                <div class="rsssl-main">
-//                    <?php
-//                    $container = $this->get_template('grid-container.php', rsssl_path . 'grid/');
-//                    $element = $this->get_template('grid-element.php', rsssl_path . 'grid/');
-//                    $output = '';
-//
-//                    foreach ($this->general_grid() as $index => $grid_item) {
-//                        $footer = $this->get_template_part($grid_item, 'footer');
-//                        $content = $this->get_template_part($grid_item, 'content');
-//                        $header = $this->get_template_part($grid_item, 'header');
-//
-//                        // Add form if type is settings
-//                        $block = str_replace(array('{class}', '{title}', '{header}', '{content}', '{footer}'), array($grid_item['class'], $grid_item['title'], $header, $content, $footer), $element);
-//                        if (isset($grid_item['type']) && $grid_item['type'] == 'settings') {
-//                            $output .= '<form action="options.php" method="post">'.$block.'</form>';
-//                        } else {
-//                            $output .= $block;
-//                        }
-//                    }
-//                    echo str_replace('{content}', $output, $container);
-//                    do_action("rsssl_ms_configuration_page");
-//
-//                </div>
-//            </div>
-?>
-
-            <?php
         }
 
-        /*
+        /**
             Shows the content of the multisite menu page
         */
 
-        public function section_text()
-        {
-            _e("Below you can set the multisite options for Really Simple SSL", "really-simple-ssl");
-        }
+        public function section_text() {}
 
         public function get_option_enable_multisite()
         {
+	        rsssl_help::this()->get_help_tip(__("Select to enable SSL networkwide or per site.", "really-simple-ssl"));
             ?>
             <select name="rlrsssl_network_options[ssl_enabled_networkwide]">
                 <?php if (!$this->selected_networkwide_or_per_site) { ?>
@@ -250,9 +220,6 @@ if (!class_exists('rsssl_multisite')) {
                 <option value="0" <?php if (!$this->ssl_enabled_networkwide) echo "selected"; ?>><?php _e("per site", "really-simple-ssl") ?>
             </select>
             <?php
-
-            //echo '<input id="rlrsssl_options" name="rlrsssl_network_options[ssl_enabled_networkwide]" size="40" type="checkbox" value="1"' . checked( 1, $this->ssl_enabled_networkwide, false ) ." />";
-            rsssl_help::this()->get_help_tip(__("Select to enable SSL networkwide or per site.", "really-simple-ssl"));
         }
 
 
@@ -283,31 +250,13 @@ if (!class_exists('rsssl_multisite')) {
 
 		public function general_grid(){
 			$grid_items = array(
-				1 =>array(
-					'title' => __("Your progress", "really-simple-ssl"),
-					'header' => rsssl_template_path . 'progress-header.php',
-					'content' => rsssl_template_path . 'progress.php',
-					'footer' => rsssl_template_path . 'progress-footer.php',
-					'class' => 'regular rsssl-progress',
-					'type' => 'all',
-					'can_hide' => true,
-				),
-				2 => array(
+				'ms_settings' => array(
 					'title' => __("Settings", "really-simple-ssl"),
 					'header' => rsssl_template_path . 'header.php',
-					'content' => rsssl_template_path . 'settings.php',
+					'content' => rsssl_template_path . 'ms-settings.php',
 					'footer' => rsssl_template_path . 'settings-footer.php',
-					'class' => 'small settings',
+					'class' => ' settings',
 					'type' => 'settings',
-					'can_hide' => true,
-				),
-				3 => array(
-					'title' => __("Tips & Tricks", "really-simple-ssl"),
-					'header' => '',
-					'content' => rsssl_template_path . 'tips-tricks.php',
-					'footer' => rsssl_template_path . 'tips-tricks-footer.php',
-					'class' => 'small',
-					'type' => 'popular',
 					'can_hide' => true,
 				),
 				'support' => array(
@@ -331,8 +280,6 @@ if (!class_exists('rsssl_multisite')) {
 			);
 			return apply_filters( 'rsssl_grid_items',  $grid_items );
 		}
-
-
 
 		public function settings_tab()
         {
@@ -363,36 +310,11 @@ if (!class_exists('rsssl_multisite')) {
 
             <div class="rsssl-container">
                 <div class="rsssl-main"><?php
-                    $container = RSSSL()->really_simple_ssl->get_template('grid-container.php', rsssl_path . 'grid/');
-                    $element = RSSSL()->really_simple_ssl->get_template('grid-element.php', rsssl_path . 'grid/');
-                    $output = '';
-
-                    foreach ( $this->general_grid() as $index => $grid_item) {
-                        $footer = RSSSL()->really_simple_ssl->get_template_part($grid_item, 'footer');
-                        $content = RSSSL()->really_simple_ssl->get_template_part($grid_item, 'content');
-                        $header = RSSSL()->really_simple_ssl->get_template_part($grid_item, 'header');
-
-                        // Add form if type is settings
-                        $block = str_replace(array('{class}', '{title}', '{header}', '{content}', '{footer}'), array($grid_item['class'], $grid_item['title'], $header, $content, $footer), $element);
-                        if (isset($grid_item['type']) && $grid_item['type'] == 'settings') {
-                            $output .= '<form action="options.php" method="post">'.$block.'</form>';
-                        } else {
-                            $output .= $block;
-                        }
-                    }
-                    echo str_replace('{content}', $output, $container);
+                    RSSSL()->really_simple_ssl->render_grid($this->general_grid());
                     do_action("rsssl_configuration_page");
 			        ?>
                 </div>
             </div>
-            <form method="POST" action="edit.php?action=rsssl_update_network_settings">
-                <?php
-
-                settings_fields($this->option_group);
-                do_settings_sections($this->page_slug);
-                submit_button();
-                ?>
-            </form>
 
             <?php
         }
@@ -404,18 +326,15 @@ if (!class_exists('rsssl_multisite')) {
 
         public function update_network_options()
         {
-            check_admin_referer($this->option_group . '-options');
+            check_admin_referer('rsssl_network_options' . '-options');
 
             if (isset($_POST["rlrsssl_network_options"])) {
                 $prev_ssl_enabled_networkwide = $this->ssl_enabled_networkwide;
                 $options = array_map(array($this, "sanitize_boolean"), $_POST["rlrsssl_network_options"]);
                 $options["selected_networkwide_or_per_site"] = true;
-
                 $this->ssl_enabled_networkwide = isset($options["ssl_enabled_networkwide"]) ? $options["ssl_enabled_networkwide"] : false;
-
                 $this->wp_redirect = isset($options["wp_redirect"]) ? $options["wp_redirect"] : false;
                 $this->htaccess_redirect = isset($options["htaccess_redirect"]) ? $options["htaccess_redirect"] : false;
-
                 $this->do_not_edit_htaccess = isset($options["do_not_edit_htaccess"]) ? $options["do_not_edit_htaccess"] : false;
                 $this->autoreplace_mixed_content = isset($options["autoreplace_mixed_content"]) ? $options["autoreplace_mixed_content"] : false;
                 $this->javascript_redirect = isset($options["javascript_redirect"]) ? $options["javascript_redirect"] : false;
@@ -423,8 +342,6 @@ if (!class_exists('rsssl_multisite')) {
                 $this->mixed_content_admin = isset($options["mixed_content_admin"]) ? $options["mixed_content_admin"] : false;
                 $this->cert_expiration_warning = isset($options["cert_expiration_warning"]) ? $options["cert_expiration_warning"] : false;
                 $this->hide_menu_for_subsites = isset($options["hide_menu_for_subsites"]) ? $options["hide_menu_for_subsites"] : false;
-
-
                 $this->selected_networkwide_or_per_site = isset($options["selected_networkwide_or_per_site"]) ? $options["selected_networkwide_or_per_site"] : false;
             }
 
@@ -443,7 +360,7 @@ if (!class_exists('rsssl_multisite')) {
             }
 
             // At last we redirect back to our options page.
-            wp_redirect(add_query_arg(array('page' => $this->page_slug, 'updated' => 'true'), network_admin_url('settings.php')));
+            wp_redirect(add_query_arg(array('page' => "really-simple-ssl", 'updated' => 'true'), network_admin_url('settings.php')));
             exit;
         }
 
@@ -472,21 +389,6 @@ if (!class_exists('rsssl_multisite')) {
             //prevent showing the review on edit screen, as gutenberg removes the class which makes it editable.
             $screen = get_current_screen();
             if ( $screen->parent_base === 'edit' ) return;
-
-            //if no SSL was detected, don't activate it yet.
-
-            if ( $this->is_multisite_subfolder_install() && !RSSSL()->really_simple_ssl->site_has_ssl) {
-                $current_url = esc_url_raw("https://" . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"]);
-
-                $class = "error notice activate-ssl";
-                $title = __("No SSL detected", "really-simple-ssl");
-
-                $content = __("No SSL was detected. If you do have an SSL certificate, try to reload this page over https by clicking this link:", "really-simple-ssl") . " ";
-                $content .= '<a href="' . $current_url . '">'. __("reload over https.", "really-simple-ssl") .'</a>' . " ";
-                $content .= __("You can check your certificate on", "really-simple-ssl") . " " . '<a target="_blank" href="https://www.ssllabs.com/ssltest/">Qualys SSL Labs</a>';
-
-	            echo RSSSL()->really_simple_ssl->notice_html($class, $title, $content );
-            }
 
             if (RSSSL()->really_simple_ssl->site_has_ssl) {
                 if (is_main_site(get_current_blog_id()) && RSSSL()->really_simple_ssl->wpconfig_ok()) {
@@ -926,13 +828,13 @@ if (!class_exists('rsssl_multisite')) {
             $screen = get_current_screen();
             if ( $screen->parent_base === 'edit' ) return;
 
-            if (isset(RSSSL()->really_simple_ssl->errors["DEACTIVATE_FILE_NOT_RENAMED"])) {
-
-                $class = "error notice is-dismissible rlrsssl-fail";
-                $title = __("Major security issue!", "really-simple-ssl");
-                $content = __("The 'force-deactivate.php' file has to be renamed to .txt. Otherwise your ssl can be deactivated by anyone on the internet.", "really-simple-ssl");
-
-                echo RSSSL()->really_simple_ssl->notice_html($class, $title, $content);
+	        if ( !$this->is_settings_page() ) {
+		        $notices = RSSSL()->really_simple_ssl->get_notices_list( array('admin_notices'=>true) );
+		        foreach ( $notices as $id => $notice ){
+			        $notice = $notice['output'];
+			        $class = ( $notice['status'] !== 'completed' ) ? 'error' : 'updated';
+			        echo RSSSL()->really_simple_ssl->notice_html( $class.' '.$id, $notice['title'], $notice['msg'] );
+		        }
             }
 
             /*
@@ -999,12 +901,8 @@ if (!class_exists('rsssl_multisite')) {
                 $content = __("You run a Multisite installation with subdomains, but your site doesn't have a wildcard certificate.", 'really-simple-ssl') . " ";
                 $content .= __("This leads to issues when activating SSL networkwide since subdomains will be forced over SSL as well while they don't have a valid certificate.", 'really-simple-ssl') . " ";
                 $content .= __("Activate SSL per site or install a wildcard certificate to fix this.", 'really-simple-ssl');
-
-//                $footer = '<button class="button-rsssl-secondary rsssl-close-notice>' . __("Close", "really-simple-ssl") .'</button>"';
-
                 echo RSSSL()->really_simple_ssl->notice_html($class, $title, $content);
             }
-
         }
 
 
@@ -1093,7 +991,6 @@ if (!class_exists('rsssl_multisite')) {
         {
             return (isset($_GET['page']) && $_GET['page'] == 'really-simple-ssl') ? true : false;
         }
-
 
         /**
          * Create tabs on the settings page

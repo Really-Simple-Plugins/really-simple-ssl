@@ -10,6 +10,9 @@ jQuery(document).ready(function ($) {
     $(document).on('change','.rsssl-text-input',function () {
         rssslSaveChangesNotice($(this));
     });
+    $(document).on('change','select',function () {
+        rssslSaveChangesNotice($(this));
+    });
     $('.rsssl-button-save').prop('disabled', true);
 
     function rssslSaveChangesNotice(obj){
