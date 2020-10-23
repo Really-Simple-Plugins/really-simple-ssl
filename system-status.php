@@ -11,23 +11,9 @@ require_once( BASE_PATH . 'wp-includes/class-phpass.php' );
 require_once( BASE_PATH . 'wp-admin/includes/image.php' );
 require_once( BASE_PATH . 'wp-admin/includes/plugin.php');
 
-#Load plugin functionality
-require_once( dirname( __FILE__ ) .  '/class-certificate.php' );
-require_once( dirname( __FILE__ ) .  '/class-server.php' );
-require_once( dirname( __FILE__ ) .  '/class-admin.php' );
-
-//$really_simple_ssl = new rsssl_admin();
-//$server = new rsssl_server();
-//$certificate = new rsssl_certificate();
-if (is_multisite()) {
-	require_once( dirname( __FILE__ ) .  '/class-multisite.php' );
-	//$rsssl_multisite = new rsssl_multisite();
-}
-
 if ( current_user_can( 'manage_options' ) ) {
 
 	ob_start();
-
 	if (defined('RSSSL_SAFE_MODE') && RSSSL_SAFE_MODE) echo "SAFE MODE\n";
 
 	echo "General\n";
@@ -127,7 +113,9 @@ if ( current_user_can( 'manage_options' ) ) {
 	echo $content;
 
 } else {
-	echo 'Permissions error, access denied';
+	//should not be here, so redirect to home
+	wp_redirect(home_url());
+	exit;
 }
 
 function find_wordpress_base_path() {

@@ -206,11 +206,8 @@ class rsssl_admin extends rsssl_front_end
         //Add update notification to Settings admin menu
         add_action('admin_menu', array($this, 'rsssl_edit_admin_menu') );
 
-        //check if the uninstallfile is safely renamed to txt.
-        $this->check_for_uninstall_file();
 
         //callbacks for the ajax dismiss buttons
-        add_action('wp_ajax_dismiss_htaccess_warning', array($this, 'dismiss_htaccess_warning_callback'));
         add_action('wp_ajax_dismiss_success_message', array($this, 'dismiss_success_message_callback'));
         add_action('wp_ajax_rsssl_dismiss_review_notice', array($this, 'dismiss_review_notice_callback'));
         add_action('wp_ajax_rsssl_dismiss_settings_notice', array($this, 'dismiss_settings_notice_callback'));
@@ -250,13 +247,12 @@ class rsssl_admin extends rsssl_front_end
 
     public function listen_for_deactivation()
     {
-        //check if we are on ssl settings page
-        if (!$this->is_settings_page()) return;
         //check user role
         if (!current_user_can($this->capability)) return;
 
         //check nonce
         if (!isset($_GET['token']) || (!wp_verify_nonce($_GET['token'], 'rsssl_deactivate_plugin'))) return;
+
         //check for action
         if (isset($_GET["action"]) && $_GET["action"] == 'uninstall_keep_ssl') {
             //deactivate plugin, but don't revert to http.
@@ -264,7 +260,6 @@ class rsssl_admin extends rsssl_front_end
             $plugin = plugin_basename(trim($plugin));
 
             if (is_multisite()) {
-
                 $network_current = get_site_option('active_sitewide_plugins', array());
                 if (is_plugin_active_for_network($plugin)) {
                     unset($network_current[$plugin]);
@@ -292,12 +287,10 @@ class rsssl_admin extends rsssl_front_end
         }
     }
 
-
-    /*
+    /**
      * Remove the plugin from the active plugins array when called from listen_for_deactivation
      *
      * */
-
 
     public function remove_plugin_from_array($plugin, $current)
     {
@@ -308,7 +301,7 @@ class rsssl_admin extends rsssl_front_end
         return $current;
     }
 
-    /*
+    /**
      * @Since 3.1
      *
      * Check if site uses an htaccess.conf file, used in bitnami installations
@@ -336,10 +329,10 @@ class rsssl_admin extends rsssl_front_end
         return $sites;
     }
 
-    /*
-        The new get_sites function returns an object.
-
-  */
+	/**
+     * The new get_sites function returns an object.
+	 * @param $site
+	 */
 
     public function switch_to_blog_bw_compatible($site)
     {
@@ -540,7 +533,7 @@ class rsssl_admin extends rsssl_front_end
                 flex-direction: row;
                 justify-content: space-between;
                 align-items: center;
-                padding-left: 25px;
+                margin-left: 10px;
             }
 
             #rsssl-logo-activation {
@@ -553,6 +546,8 @@ class rsssl_admin extends rsssl_front_end
             .rsssl-notice-content {
                 margin-top: 20px;
                 padding-bottom: 20px;
+                padding-left: 10px;
+
             }
 
             .rsssl-notice-footer {
@@ -596,8 +591,6 @@ class rsssl_admin extends rsssl_front_end
                 position: absolute;
                 margin-left:-30px;
             }
-
-
             <?php echo apply_filters('rsssl_pro_inline_style', ''); ?>
 
         </style>
@@ -674,15 +667,18 @@ class rsssl_admin extends rsssl_front_end
             return false;
     }
 
-    /*
-  *     Check if the uninstall file is renamed to .php
-  */
+	/**
+     * Check if the uninstall file is renamed to .php
+     *
+	 * @return string
+	 */
 
-    protected function check_for_uninstall_file()
+    public function check_for_uninstall_file()
     {
         if (file_exists(dirname(__FILE__) . '/force-deactivate.php')) {
-            $this->errors["DEACTIVATE_FILE_NOT_RENAMED"] = true;
+            return 'fail';
         }
+        return 'success';
     }
 
     /**
@@ -2288,76 +2284,15 @@ class rsssl_admin extends rsssl_front_end
         $screen = get_current_screen();
         if ( $screen->parent_base === 'edit' ) return;
 
-	    $options = get_option('rlrsssl_options');
+        //don't show admin notices on our own settings page: we have the warnings there
+        if ( $this->is_settings_page() ) return;
 
-	    /**
-          show a notice when the .htaccess file does not contain redirect rules
-         * Not on the settings page
-         */
-
-	    if ( !$this->is_settings_page() ) {
-		    if ( ! $this->wp_redirect && $this->ssl_enabled
-		         && ! $this->htaccess_warning_shown
-		         && ! $this->htaccess_contains_redirect_rules()
-		         && $options['dismiss_all_notices'] !== true
-		    ) {
-			    add_action( 'admin_print_footer_scripts', array( $this, 'insert_dismiss_htaccess' ) );
-			    ob_start();
-			    ?>
-                <p>
-				    <?php echo __( "You do not have a 301 redirect to https active in the settings. For SEO purposes it is advised to use 301 redirects. You can enable a 301 redirect in the settings.",
-					    "really-simple-ssl" ); ?>
-                    <a href="<?php echo admin_url( 'options-general.php?page=rlrsssl_really_simple_ssl' ) ?>"><?php echo __( "View settings page",
-						    "really-simple-ssl" ); ?></a>
-                </p>
-			    <?php
-			    $content = ob_get_clean();
-			    $class   = "error is-dismissible rlrsssl-htaccess";
-			    $title   = __( "Recommended .htaccess redirect not enabled", "really-simple-ssl" );
-			    echo $this->notice_html( $class, $title, $content );
-		    }
-	    }
-
-        if (isset($this->errors["DEACTIVATE_FILE_NOT_RENAMED"])) {
-            ob_start();
-            ?>
-                <p><?php _e("The 'force-deactivate.php' file has to be renamed to .txt. Otherwise your ssl can be deactivated by anyone on the internet.", "really-simple-ssl"); ?></p>
-                <a href="<?php echo admin_url('options-general.php?page=rlrsssl_really_simple_ssl')?>"><?php echo __("Check again", "really-simple-ssl"); ?></a>
-            <?php
-	        $content = ob_get_clean();
-	        $class   = "error rlrsssl-fail";
-	        $title   = __("Major security issue!", "really-simple-ssl");
-	        echo $this->notice_html( $class, $title, $content );
+	    $notices = $this->get_notices_list( array('admin_notices'=>true) );
+        foreach ( $notices as $id => $notice ){
+            $notice = $notice['output'];
+            $class = ( $notice['status'] !== 'completed' ) ? 'error' : 'updated';
+	        echo $this->notice_html( $class.' '.$id, $notice['title'], $notice['msg'] );
         }
-    }
-
-    /**
-     * Insert some ajax script to dismiss the htaccess failed fail message, and stop nagging about it
-     *
-     * @since  2.0
-     *
-     * @access public
-     *
-     */
-
-    public function insert_dismiss_htaccess()
-    {
-        $ajax_nonce = wp_create_nonce("really-simple-ssl");
-        ?>
-        <script type='text/javascript'>
-            jQuery(document).ready(function ($) {
-                $(".rlrsssl-htaccess.notice.is-dismissible").on("click", ".notice-dismiss", function (event) {
-                    var data = {
-                        'action': 'dismiss_htaccess_warning',
-                        'security': '<?php echo $ajax_nonce; ?>'
-                    };
-                    $.post(ajaxurl, data, function (response) {
-
-                    });
-                });
-            });
-        </script>
-        <?php
     }
 
     /**
@@ -2415,27 +2350,7 @@ class rsssl_admin extends rsssl_front_end
     public function dismiss_success_message_callback()
     {
         if (!current_user_can($this->capability) ) return;
-        //nonce check fails if url is changed to SSL.
-        //check_ajax_referer( 'really-simple-ssl-dismiss', 'security' );
         $this->ssl_success_message_shown = TRUE;
-        $this->save_options();
-        wp_die();
-    }
-
-    /**
-     * Process the ajax dismissal of the htaccess message.
-     *
-     * @since  2.1
-     *
-     * @access public
-     *
-     */
-
-    public function dismiss_htaccess_warning_callback()
-    {
-        if (!current_user_can($this->capability) ) return;
-        check_ajax_referer('really-simple-ssl', 'security');
-        $this->htaccess_warning_shown = TRUE;
         $this->save_options();
         wp_die();
     }
@@ -2460,8 +2375,6 @@ class rsssl_admin extends rsssl_front_end
 	    if (isset($_POST['type'])) {
 	        $dismiss_type = sanitize_title( $_POST['type'] );
 	        update_option( "rsssl_".$dismiss_type."_dismissed", true );
-
-
             delete_transient( 'rsssl_plusone_count' );
         }
         wp_die();
@@ -2634,15 +2547,21 @@ class rsssl_admin extends rsssl_front_end
      * Get array of notices
      * - condition: function returning boolean, if notice should be shown or not
      * - callback: function, returning boolean or string, with multiple possible answers, and resulting messages and icons
-     *
+     * @param array $args
      * @return array
      */
 
-    public function get_notices_list()
+    public function get_notices_list( $args = array() )
     {
-	    $htaccess_file = RSSSL()->really_simple_ssl->uses_htaccess_conf() ? "htaccess.conf (/conf/htaccess.conf/)" : $htaccess_file = ".htaccess";
-        if ( RSSSL()->really_simple_ssl->ssl_type != "NA" ) {
-            $rules            = RSSSL()->really_simple_ssl->get_redirect_rules( true );
+        $defaults = array(
+            'admin_notices' => false,
+            'status' => 'open', //status can be "all" (all tasks, regardless of dismissed or open), "open" (not success/completed) or "completed"
+        );
+        $args = wp_parse_args($args, $defaults);
+
+	    $htaccess_file = $this->uses_htaccess_conf() ? "htaccess.conf (/conf/htaccess.conf/)" : $htaccess_file = ".htaccess";
+        if ( $this->ssl_type != "NA" ) {
+            $rules            = $this->get_redirect_rules( true );
             $arr_search       = array( "<", ">", "\n" );
             $arr_replace      = array( "&lt", "&gt", "<br>" );
             $rules            = str_replace( $arr_search, $arr_replace, $rules );
@@ -2653,7 +2572,7 @@ class rsssl_admin extends rsssl_front_end
 	    $rules            = '<br><code>' . $rules . '</code><br>';
 
 
-	    $defaults = array(
+	    $notice_defaults = array(
             'condition' => array(),
             'callback' => false,
         );
@@ -2670,24 +2589,39 @@ class rsssl_admin extends rsssl_front_end
 
         $reload_https_url = esc_url_raw("https://" . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"]);
         $notices = array(
+                'deactivation_file_detected' => array(
+	                'callback' => 'RSSSL()->really_simple_ssl->check_for_uninstall_file',
+	                'score' => 30,
+	                'output' => array(
+		                'fail' => array(
+                            'title' => __("Major security issue!", "really-simple-ssl"),
+			                'msg' => '<p>'.__("The 'force-deactivate.php' file has to be renamed to .txt. Otherwise your ssl can be deactivated by anyone on the internet.", "really-simple-ssl").'</p>' .
+			                         '<a href="'.add_query_arg(array('page'=>'rlrsssl_really_simple_ssl'), admin_url('options-general.php?page=')).'">'.__("Check again", "really-simple-ssl").'</a>',
+			                'icon' => 'warning'
+		                ),
+	                ),
+                ),
+
 	            'ssl_detected' => array(
-                'callback' => 'rsssl_ssl_detected',
-                'score' => 30,
-                'output' => array(
-                    'fail' => array(
-                        'msg' =>__('Failed activating SSL.', 'really-simple-ssl'),
-                        'icon' => 'warning'
-                    ),
-                    'no-ssl-detected' => array(
-                        'msg' => sprintf(__("No SSL detected. See our guide on how to %sget a free SSL certificate%s. If you do have an SSL certificate, try to reload this page over https by clicking this link: %sReload over https.%s", "really-simple-ssl"), '<a target="_blank" href="https://really-simple-ssl.com/knowledge-base/how-to-install-a-free-ssl-certificate-on-your-wordpress-cpanel-hosting/">', '</a>', '<a href="' .$reload_https_url . '">' , '</a>'),
-                        'icon' => 'warning'
-                    ),
-                    'ssl-detected' => array(
-                        'msg' => __('An SSL certificate was detected on your site.', 'really-simple-ssl'),
-                        'icon' => 'success'
+                    'callback' => 'rsssl_ssl_detected',
+                    'score' => 30,
+                    'output' => array(
+                        'fail' => array(
+                            'msg' =>__('Failed activating SSL.', 'really-simple-ssl'),
+                            'icon' => 'warning'
+                        ),
+                        'no-ssl-detected' => array(
+                            'title' => __("No SSL detected", "really-simple-ssl"),
+                            'msg' => sprintf(__("No SSL detected. See our guide on how to %sget a free SSL certificate%s. If you do have an SSL certificate, try to reload this page over https by clicking this link: %sReload over https.%s", "really-simple-ssl"), '<a target="_blank" href="https://really-simple-ssl.com/knowledge-base/how-to-install-a-free-ssl-certificate-on-your-wordpress-cpanel-hosting/">', '</a>', '<a href="' .$reload_https_url . '">' , '</a>'),
+                            'icon' => 'warning',
+                            'admin_notice' => true,
+                        ),
+                        'ssl-detected' => array(
+                            'msg' => __('An SSL certificate was detected on your site.', 'really-simple-ssl'),
+                            'icon' => 'success'
+                        ),
                     ),
                 ),
-            ),
 
             'google_analytics' => array(
                 'callback' => 'rsssl_google_analytics_notice',
@@ -2900,28 +2834,89 @@ class rsssl_admin extends rsssl_front_end
 
         $notices = apply_filters('rsssl_notices', $notices);
         foreach ($notices as $id => $notice) {
-            $notices[$id] = wp_parse_args($notice, $defaults);
+            $notices[$id] = wp_parse_args($notice, $notice_defaults);
+        }
+
+	    /**
+	     * Filter out notice that do not apply, or are dismissed
+	     */
+	    $options = get_option( 'rlrsssl_options' );
+	    foreach ( $notices as $id => $notice ) {
+
+		    if ( $args['status'] === 'all' && get_option( "rsssl_" . $id . "_dismissed" )) {
+			    unset($notices[$id]);
+			    continue;
+		    }
+
+		    $func   = $notice['callback'];
+		    //check if this is a class/function setup
+            if ( preg_match( '/(.*)\(\)\-\>(.*)->(.*)/i', $func, $matches)) {
+                $base = $matches[1];
+                $class = $matches[2];
+                $function = $matches[3];
+	            $output = call_user_func( array( $base()->{$class}, $function ) );
+            } else {
+	            $output = $func();
+            }
+
+            if ( !isset($notice['output'][ $output ]) ) {
+	            unset($notices[$id]);
+	            continue;
+            } else {
+                $notices[$id]['output'] = $notice['output'][ $output ];
+            }
+
+		    $notices[$id]['output']['status'] = ( $notices[$id]['output']['icon'] !== 'success') ? 'open' : 'completed';
+
+		    if ( $args['status'] === 'open' && ($notices[$id]['output']['status'] === 'completed' ) ){
+			    unset($notices[$id]);
+			    continue;
+            }
+
+		    //check if all notices should be dismissed
+		    if ( ( isset( $notice['output']['dismissible'] )
+		           && $notice['output']['dismissible']
+		           && ( $options['dismiss_all_notices'] !== false ) )
+		    ) {
+			    update_option( 'rsssl_' . $id . '_dismissed', true );
+			    unset($notices[$id]);
+			    continue;
+		    }
+
+		    $condition_functions = $notice['condition'];
+		    foreach ( $condition_functions as $func ) {
+			    $condition = $func();
+			    if ( ! $condition ) {
+				    unset($notices[$id]);
+			    }
+		    }
+	    }
+        //if only admin_notices are required, filter out the rest.
+	    if ( $args['admin_notices'] ) {
+            foreach ( $notices as $id => $notice ) {
+                if (!isset($notice['output']['admin_notice'])){
+                    unset( $notices[$id]);
+                }
+            }
         }
 
         return $notices;
     }
 
     /**
-     * @return int
-     *
      * Calculate the percentage completed in the dashboard progress section
      * Determine max score by adding $notice['score'] to the $max_score variable
      * Determine actual score by adding $notice['score'] of each item with a 'success' output to $actual_score
+     * @return int
      *
      * @since 4.0
      *
      */
 
     public function get_score_percentage() {
-
         if (wp_doing_ajax()) {
             if (!isset($_POST['token']) || (!wp_verify_nonce($_POST['token'], 'rsssl_nonce'))) {
-                return;
+                return 0;
             }
 
             if (!isset($_POST["action"]) && $_POST["action"] ==! 'rsssl_get_updated_percentage') return;
@@ -2934,63 +2929,33 @@ class rsssl_admin extends rsssl_front_end
             return 0;
         }
 
-//        $remaining_task_count = $this->get_remaining_tasks_count();
-//        if ($remaining_task_count === 0) {
-//            return 100;
-//        }
+        $max_score    = 0;
+        $actual_score = 0;
+        $notices = $this->get_notices_list();
+        foreach ( $notices as $id => $notice ) {
+            if (isset( $notice['score'] )) {
+                // Only items matching condition will show in the dashboard. Only use these to determine max count.
+                $max_score = $max_score + intval( $notice['score'] );
+                $success = ( isset( $notice['output']['icon'] )
+                             && ( $notice['output']['icon']
+                                  === 'success' ) ) ? true : false;
+                if ( $success ) {
+                    // If the output is success, task is completed. Add to actual count.
+                    $actual_score = $actual_score + intval( $notice['score'] );
+                }
+            }
+        }
 
-//        $score = get_transient('rsssl_percentage_completed');
+        $score = $actual_score / $max_score;
+        $score = $score * 100;
+        $score = intval( round( $score ) );
+        set_transient('rsssl_percentage_completed', $score, DAY_IN_SECONDS);
 
-//        if (!$score) {
+        if ( wp_doing_ajax() ) {
+            wp_die( $score );
+        }
 
-	        $max_score    = 0;
-	        $actual_score = 0;
-
-	        $notices = $this->get_notices_list();
-
-	        foreach ( $notices as $id => $notice ) {
-
-		        $condition = true;
-		        if ( get_option( "rsssl_" . $id . "_dismissed" ) ) {
-			        continue;
-		        }
-
-		        $condition_functions = $notice['condition'];
-		        foreach ( $condition_functions as $func ) {
-			        $condition = $func();
-			        if ( ! $condition ) {
-				        break;
-			        }
-		        }
-
-		        if ( $condition && isset( $notice['score'] )) {
-			        // Only items matching condition will show in the dashboard. Only use these to determine max count.
-			        $max_score = $max_score + intval( $notice['score'] );
-			        $func      = $notice['callback'];
-			        $output    = $func();
-
-			        $success = ( isset( $notice['output'][ $output ]['icon'] )
-			                     && ( $notice['output'][ $output ]['icon']
-			                          === 'success' ) ) ? true : false;
-			        if ( $success ) {
-				        // If the output is success, task is completed. Add to actual count.
-				        $actual_score = $actual_score + intval( $notice['score'] );
-			        }
-		        }
-	        }
-	        $score = $actual_score / $max_score;
-	        $score = $score * 100;
-
-	        $score = intval( round( $score ) );
-
-	        set_transient('rsssl_percentage_completed', $score, DAY_IN_SECONDS);
-
-	        if ( wp_doing_ajax() ) {
-		        wp_die( $score );
-	        }
-
-//        }
-            return $score;
+        return $score;
     }
 
 	/**
@@ -3025,34 +2990,18 @@ class rsssl_admin extends rsssl_front_end
     private function notice_row($id, $notice){
         if (!current_user_can('manage_options')) return;
 
-        //check condition
-        if (!empty($notice['condition']) ) {
-            $condition_functions = $notice['condition'];
-
-            foreach ($condition_functions as $func) {
-                $condition = $func();
-                if (!$condition) return;
-            }
-        }
-
-        $func = $notice['callback'];
-        $output = $func();
-
-        if (!isset($notice['output'][$output])) {
+        if (!isset($notice['output'])) {
             return;
         }
 
-        $msg = $notice['output'][$output]['msg'];
-        $icon_type = $notice['output'][$output]['icon'];
-
-        if (get_option("rsssl_".$id."_dismissed")) return;
+        $msg = $notice['output']['msg'];
+        $icon_type = $notice['output']['icon'];
 
         // Do not show completed tasks if remaining tasks are selected.
         if ($icon_type === 'success' && !get_option('rsssl_all_tasks') && get_option('rsssl_remaining_tasks')) return;
 
-        //call_user_func_array(array($classInstance, $methodName), $arg1, $arg2, $arg3);
         $icon = $this->icon($icon_type);
-        $dismiss = (isset($notice['output'][$output]['dismissible']) && $notice['output'][$output]['dismissible']) ? $this->rsssl_dismiss_button() : '';
+        $dismiss = (isset($notice['output']['dismissible']) && $notice['output']['dismissible']) ? $this->rsssl_dismiss_button() : '';
 
         ?>
         <tr>
@@ -3102,47 +3051,15 @@ class rsssl_admin extends rsssl_front_end
 		$count = get_transient( 'rsssl_plusone_count' );
 		if ( $count === false ) {
 			$count = 0;
-
-			$options = get_option( 'rlrsssl_options' );
-
 			$notices = $this->get_notices_list();
 			foreach ( $notices as $id => $notice ) {
-				$condition = true;
-				if ( get_option( "rsssl_" . $id . "_dismissed" ) ) {
-					continue;
-				}
-
-				$condition_functions = $notice['condition'];
-				foreach ( $condition_functions as $func ) {
-					$condition = $func();
-					if ( ! $condition ) {
-						break;
-					}
-				}
-
-				if ( $condition ) {
-					$func    = $notice['callback'];
-					$output  = $func();
-					$success = ( isset( $notice['output'][ $output ]['icon'] )
-					             && ( $notice['output'][ $output ]['icon']
-					                  === 'success' ) ) ? true : false;
-
-					if ( ( isset( $notice['output'][ $output ]['dismissible'] )
-					       && $notice['output'][ $output ]['dismissible']
-					       && ( $options['dismiss_all_notices'] !== false ) )
-					) {
-						update_option( 'rsssl_' . $id . '_dismissed', true );
-						continue;
-					}
-
-					//&& notice not dismissed
-					if ( ! $success
-					     && isset( $notice['output'][ $output ]['plusone'] )
-					     && $notice['output'][ $output ]['plusone']
-					) {
-						$count ++;
-					}
-				}
+                $success = ( isset( $notice['output']['icon'] ) && ( $notice['output']['icon'] === 'success' ) ) ? true : false;
+                if ( ! $success
+                     && isset( $notice['output']['plusone'] )
+                     && $notice['output']['plusone']
+                ) {
+                    $count ++;
+                }
 			}
 			set_transient( 'rsssl_plusone_count', $count, 'WEEK_IN_SECONDS' );
 		}
@@ -3239,6 +3156,10 @@ class rsssl_admin extends rsssl_front_end
         wp_die();
     }
 
+	/**
+     * Get count of all tasks
+	 * @return int
+	 */
     public function get_all_task_count() {
         if ( ! current_user_can( 'manage_options' ) ) {
             return 0;
@@ -3247,31 +3168,15 @@ class rsssl_admin extends rsssl_front_end
         $count = get_transient( 'rsssl_all_task_count' );
         if ( $count === false ) {
             $count = 0;
-
             $notices = $this->get_notices_list();
             foreach ( $notices as $id => $notice ) {
-                $condition = true;
-
-                $condition_functions = $notice['condition'];
-                foreach ( $condition_functions as $func ) {
-                    $condition = $func();
-                    if ( ! $condition ) {
-                        break;
-                    }
-                }
-
-                if ( $condition ) {
-                    $func    = $notice['callback'];
-                    $output  = $func();
-
-                    if ( isset( $notice['output'][ $output ]['icon'] )
-                        && ( $notice['output'][ $output ]['icon'] == 'open'
-                        || $notice['output'][ $output ]['icon'] == 'premium'
-                        || $notice['output'][ $output ]['icon'] == 'warning'
-                        || $notice['output'][ $output ]['icon'] == 'success'
-                    ) ) {
-                        $count ++;
-                    }
+                if ( isset( $notice['output']['icon'] )
+                    && ( $notice['output']['icon'] == 'open'
+                    || $notice['output']['icon'] == 'premium'
+                    || $notice['output']['icon'] == 'warning'
+                    || $notice['output']['icon'] == 'success'
+                ) ) {
+                    $count ++;
                 }
             }
             set_transient( 'rsssl_all_task_count', $count, 'DAY_IN_SECONDS' );
@@ -3284,7 +3189,7 @@ class rsssl_admin extends rsssl_front_end
     }
 
     /**
-     * @return int|mixed
+     * @return int
      *
      * Get the remaining open task count, shown in the progress header
      *
@@ -3297,7 +3202,7 @@ class rsssl_admin extends rsssl_front_end
 
         if (wp_doing_ajax()) {
             if (!isset($_POST['token']) || (!wp_verify_nonce($_POST['token'], 'rsssl_nonce'))) {
-                return;
+                return 0;
             }
 
             if (!isset($_POST["action"]) && $_POST["action"] ==! 'rsssl_get_updated_percentage') return;
@@ -3311,34 +3216,17 @@ class rsssl_admin extends rsssl_front_end
 
             $notices = $this->get_notices_list();
             foreach ( $notices as $id => $notice ) {
-                $condition = true;
-                if ( get_option( "rsssl_" . $id . "_dismissed" ) ) {
-                    continue;
-                }
+	            $success = ( isset( $notice['output']['icon'] )
+                    && ( $notice['output']['icon']
+                        === 'success' ) ) ? true : false;
 
-                $condition_functions = $notice['condition'];
-                foreach ( $condition_functions as $func ) {
-                    $condition = $func();
-                    if ( ! $condition ) {
-                        break;
-                    }
-                }
-
-                if ( $condition ) {
-                    $func    = $notice['callback'];
-                    $output  = $func();
-                    $success = ( isset( $notice['output'][ $output ]['icon'] )
-                        && ( $notice['output'][ $output ]['icon']
-                            === 'success' ) ) ? true : false;
-
-                    if ( ! $success
-                        && isset( $notice['output'][ $output ]['icon'] )
-                        && ( $notice['output'][ $output ]['icon'] == 'open'
-                        || $notice['output'][ $output ]['icon'] == 'premium'
-                        || $notice['output'][ $output ]['icon'] == 'warning'
-                    ) ) {
-                        $count ++;
-                    }
+                if ( ! $success
+                    && isset( $notice['output']['icon'] )
+                    && ( $notice['output']['icon'] == 'open'
+                    || $notice['output']['icon'] == 'premium'
+                    || $notice['output']['icon'] == 'warning'
+                ) ) {
+                    $count ++;
                 }
             }
             set_transient( 'rsssl_remaining_task_count', $count, 'DAY_IN_SECONDS' );

@@ -55,8 +55,6 @@ if (!class_exists('rsssl_multisite')) {
 
             add_action('wp_ajax_dismiss_success_message_multisite', array($this, 'dismiss_success_message_callback'));
             add_action('wp_ajax_dismiss_wildcard_warning', array($this, 'dismiss_wildcard_message_callback'));
-            add_action('wp_ajax_rsssl_pro_dismiss_pro_option_notice', array($this, 'dismiss_pro_option_notice'));
-            add_action("network_admin_notices", array($this, 'show_pro_option_notice'));
             add_action("rsssl_show_network_tab_settings", array($this, 'settings_tab'));
 
             //If WP version is 5.1 or higher, use wp_insert_site hook for multisite SSL activation in new blogs
@@ -1084,71 +1082,11 @@ if (!class_exists('rsssl_multisite')) {
             wp_die();
         }
 
-        public function dismiss_pro_option_notice()
-        {
-            check_ajax_referer('rsssl-pro-dismiss-pro-option-notice' ,'security');
-            update_option('rsssl_pro_pro_option_notice_dismissed', true);
-            wp_die();
-        }
-
         public function dismiss_wildcard_message_callback()
         {
             check_ajax_referer('really-simple-ssl-dismiss', 'security');
             update_site_option("rsssl_wildcard_message_shown", true);
             wp_die();
-        }
-
-        public function dismiss_pro_option_script()
-        {
-
-            $ajax_nonce = wp_create_nonce("rsssl-pro-dismiss-pro-option-notice");
-            ?>
-            <script type='text/javascript'>
-                jQuery(document).ready(function ($) {
-
-                    $(".rsssl-pro-dismiss-notice.notice.is-dismissible").on("click", ".notice-dismiss", function (event) {
-                        var data = {
-                            'action': 'rsssl_pro_dismiss_pro_option_notice',
-                            'security': '<?php echo $ajax_nonce; ?>'
-                        };
-
-                        $.post(ajaxurl, data, function (response) {
-
-                        });
-                    });
-                });
-            </script>
-            <?php
-        }
-
-        public function show_pro_option_notice()
-        {
-            //prevent showing the review on edit screen, as gutenberg removes the class which makes it editable.
-            $screen = get_current_screen();
-            if ( $screen->parent_base === 'edit' ) return;
-
-            if (!$this->is_settings_page()) return;
-            $dismissed = get_option('rsssl_pro_pro_option_notice_dismissed');
-
-            if (!$dismissed) {
-                add_action('admin_print_footer_scripts', array($this, 'dismiss_pro_option_script'));
-
-                if (defined('rsssl_pro_version')) {
-                    if (!defined('rsssl_pro_ms_version')) {
-                        $class = "updated notice is-dismissible rsssl-pro-dismiss-notice";
-                        $title = __("Dedicated multisite plugin", "really-simple-ssl");
-                        $content = sprintf(__('You are running Really Simple SSL pro. A dedicated add-on for multisite has been released. If you want more options to have full control over your multisite network, you can %supgrade%s on the licenses tab of your account.', 'really-simple-ssl'), '<a target="_blank" href="https://really-simple-ssl.com/account/" title="Really Simple SSL">', '</a>');
-
-                        echo RSSSL()->really_simple_ssl->notice_html($class, $title, $content);
-                    }
-                } else {
-                    $class = "updated notice is-dismissible rsssl-pro-dismiss-notice";
-                    $title = __("Get more control", "really-simple-ssl");
-                    $content = sprintf(__('If you want more options to have full control over your multisite network, you can %supgrade%s your license to a multisite license, or dismiss this message', 'really-simple-ssl'), '<a target="_blank" href="https://really-simple-ssl.com/pro/#multisite" title="Really Simple SSL">', '</a>');
-
-                    echo RSSSL()->really_simple_ssl->notice_html($class, $title, $content);
-                }
-            }
         }
 
         public function is_settings_page()
