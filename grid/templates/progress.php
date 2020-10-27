@@ -19,37 +19,30 @@
                 $open_task_count = RSSSL()->really_simple_ssl->get_remaining_tasks_count();
                 if (RSSSL()->really_simple_ssl->ssl_enabled) {
                     if ($open_task_count > 0) {
-                    _e("You're doing well. You still have");
-                    ?>
-                    <div class="rsssl-progress-count">
-                        <?php echo  $open_task_count?>
-                    </div>
-                    <?php _e("tasks open", "really-simple-ssl");
+	                    $open_tasks_html = '<div class="rsssl-progress-count">'.$open_task_count.'</div>';
+                        printf( __ ("You're doing well. You still have %s tasks open"), $open_tasks_html);
                     } else {
                         $pro_url = RSSSL()->really_simple_ssl->pro_url;
                         echo sprintf(__("Basic SSL configuration finished! Improve your score with %sReally Simple SSL Pro%s. ", "really-simple-ssl"), '<a target="_blank" href="' . $pro_url . '">', '</a>');
                     }
                 } else {
-                    _e("SSL is not yet enabled." , "really-simple-ssl");
+                	if ( !is_network_admin() ) _e("SSL is not yet enabled on this site." , "really-simple-ssl");
                 }
-                    ?>
+                do_action('rsssl_progress_feedback');
+                ?>
             </span>
         </div>
     </div>
 
-	<?php
-	$tasks = RSSSL()->really_simple_ssl->get_notices_list();
-	?>
-
-	<div ss-container class="rsssl-task-list">
+	<div class="rsssl-task-list">
         <table class="rsssl-progress-table">
         <thead></thead>
 			<tbody>
 			<?php
-			$notices = $this->get_notices_list();
-				foreach ($notices as $id => $notice) {
-					RSSSL()->really_simple_ssl->notice_row($id, $notice);
-				}
+			$notices = RSSSL()->really_simple_ssl->get_notices_list(array( 'status' => 'all' ));
+            foreach ($notices as $id => $notice) {
+                RSSSL()->really_simple_ssl->notice_row($id, $notice);
+            }
 			?>
 			</tbody>
         </table>

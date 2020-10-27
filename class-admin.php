@@ -2593,40 +2593,40 @@ class rsssl_admin extends rsssl_front_end
 
         $reload_https_url = esc_url_raw("https://" . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"]);
         $notices = array(
-                'deactivation_file_detected' => array(
-	                'callback' => 'RSSSL()->really_simple_ssl->check_for_uninstall_file',
-	                'score' => 30,
-	                'output' => array(
-		                'fail' => array(
-                            'title' => __("Major security issue!", "really-simple-ssl"),
-			                'msg' => __("The 'force-deactivate.php' file has to be renamed to .txt. Otherwise your ssl can be deactivated by anyone on the internet.", "really-simple-ssl") .' '.
-			                         '<a href="'.add_query_arg(array('page'=>'rlrsssl_really_simple_ssl'), admin_url('options-general.php?page=')).'">'.__("Check again", "really-simple-ssl").'</a>',
-			                'icon' => 'warning',
-                            'admin_notice' =>true,
-		                ),
-	                ),
-                ),
-
-	            'ssl_detected' => array(
-                    'callback' => 'rsssl_ssl_detected',
-                    'score' => 30,
-                    'output' => array(
-                        'fail' => array(
-                            'msg' =>__('Failed activating SSL.', 'really-simple-ssl'),
-                            'icon' => 'warning'
-                        ),
-                        'no-ssl-detected' => array(
-                            'title' => __("No SSL detected", "really-simple-ssl"),
-                            'msg' => sprintf(__("No SSL detected. See our guide on how to %sget a free SSL certificate%s. If you do have an SSL certificate, try to reload this page over https by clicking this link: %sReload over https.%s", "really-simple-ssl"), '<a target="_blank" href="https://really-simple-ssl.com/knowledge-base/how-to-install-a-free-ssl-certificate-on-your-wordpress-cpanel-hosting/">', '</a>', '<a href="' .$reload_https_url . '">' , '</a>'),
-                            'icon' => 'warning',
-                            'admin_notice' => true,
-                        ),
-                        'ssl-detected' => array(
-                            'msg' => __('An SSL certificate was detected on your site.', 'really-simple-ssl'),
-                            'icon' => 'success'
-                        ),
+            'deactivation_file_detected' => array(
+                'callback' => 'RSSSL()->really_simple_ssl->check_for_uninstall_file',
+                'score' => 30,
+                'output' => array(
+                    'fail' => array(
+                        'title' => __("Major security issue!", "really-simple-ssl"),
+                        'msg' => __("The 'force-deactivate.php' file has to be renamed to .txt. Otherwise your ssl can be deactivated by anyone on the internet.", "really-simple-ssl") .' '.
+                                 '<a href="'.add_query_arg(array('page'=>'rlrsssl_really_simple_ssl'), admin_url('options-general.php?page=')).'">'.__("Check again", "really-simple-ssl").'</a>',
+                        'icon' => 'warning',
+                        'admin_notice' =>true,
                     ),
                 ),
+            ),
+
+            'ssl_detected' => array(
+                'callback' => 'rsssl_ssl_detected',
+                'score' => 30,
+                'output' => array(
+                    'fail' => array(
+                        'msg' =>__('Cannot activate SSL due to system configuration.', 'really-simple-ssl'),
+                        'icon' => 'warning'
+                    ),
+                    'no-ssl-detected' => array(
+                        'title' => __("No SSL detected", "really-simple-ssl"),
+                        'msg' => sprintf(__("No SSL detected. See our guide on how to %sget a free SSL certificate%s. If you do have an SSL certificate, try to reload this page over https by clicking this link: %sReload over https.%s", "really-simple-ssl"), '<a target="_blank" href="https://really-simple-ssl.com/knowledge-base/how-to-install-a-free-ssl-certificate-on-your-wordpress-cpanel-hosting/">', '</a>', '<a href="' .$reload_https_url . '">' , '</a>'),
+                        'icon' => 'warning',
+                        'admin_notice' => true,
+                    ),
+                    'ssl-detected' => array(
+                        'msg' => __('An SSL certificate was detected on your site.', 'really-simple-ssl'),
+                        'icon' => 'success'
+                    ),
+                ),
+            ),
 
             'google_analytics' => array(
                 'callback' => 'rsssl_google_analytics_notice',
@@ -2639,6 +2639,7 @@ class rsssl_admin extends rsssl_front_end
                                 . "<span class='rsssl-dashboard-dismiss' data-dismiss_type='google_analytics'><a href='#' class='rsssl-dismiss-text rsssl-close-warning'>$dismiss</a></span>",
                             'icon' => 'open',
                             'dismissible' => true,
+                            'plusone' => true
                         ),
                 ),
             ),
@@ -2884,6 +2885,7 @@ class rsssl_admin extends rsssl_front_end
 		           && ( $options['dismiss_all_notices'] !== false ) )
 		    ) {
 			    update_option( 'rsssl_' . $id . '_dismissed', true );
+
 			    unset($notices[$id]);
 			    continue;
 		    }
@@ -2896,11 +2898,13 @@ class rsssl_admin extends rsssl_front_end
 			    }
 		    }
 	    }
+
+
         //if only admin_notices are required, filter out the rest.
 	    if ( $args['admin_notices'] ) {
             foreach ( $notices as $id => $notice ) {
                 if (!isset($notice['output']['admin_notice'])){
-                    unset( $notices[$id]);
+	                unset( $notices[$id]);
                 }
             }
         }
@@ -2936,7 +2940,9 @@ class rsssl_admin extends rsssl_front_end
 
         $max_score    = 0;
         $actual_score = 0;
-        $notices = $this->get_notices_list();
+        $notices = $this->get_notices_list(array(
+                'status' => 'all',
+        ));
         foreach ( $notices as $id => $notice ) {
             if (isset( $notice['score'] )) {
                 // Only items matching condition will show in the dashboard. Only use these to determine max count.
@@ -2950,8 +2956,11 @@ class rsssl_admin extends rsssl_front_end
                 }
             }
         }
-
-        $score = $actual_score / $max_score;
+        if ($max_score>0) {
+	        $score = $actual_score / $max_score;
+        } else {
+            $score = 0;
+        }
         $score = $score * 100;
         $score = intval( round( $score ) );
         set_transient('rsssl_percentage_completed', $score, DAY_IN_SECONDS);
@@ -3171,19 +3180,11 @@ class rsssl_admin extends rsssl_front_end
         }
 
         $count = get_transient( 'rsssl_all_task_count' );
+
         if ( $count === false ) {
-            $count = 0;
-            $notices = $this->get_notices_list();
-            foreach ( $notices as $id => $notice ) {
-                if ( isset( $notice['output']['icon'] )
-                    && ( $notice['output']['icon'] == 'open'
-                    || $notice['output']['icon'] == 'premium'
-                    || $notice['output']['icon'] == 'warning'
-                    || $notice['output']['icon'] == 'success'
-                ) ) {
-                    $count ++;
-                }
-            }
+	        $count = count($this->get_notices_list(
+		        array( 'status' => 'all' )
+	        ));
             set_transient( 'rsssl_all_task_count', $count, 'DAY_IN_SECONDS' );
         }
         if (wp_doing_ajax()) {
@@ -3210,30 +3211,16 @@ class rsssl_admin extends rsssl_front_end
                 return 0;
             }
 
-            if (!isset($_POST["action"]) && $_POST["action"] ==! 'rsssl_get_updated_percentage') return;
+            if (!isset($_POST["action"]) && $_POST["action"] ==! 'rsssl_get_updated_percentage') return 0;
             // When invoked via AJAX the count should be updated, therefore clear cache
             $this->reset_open_remaining_task_cache();
         }
 
         $count = get_transient( 'rsssl_remaining_task_count' );
         if ( $count === false ) {
-            $count = 0;
-
-            $notices = $this->get_notices_list();
-            foreach ( $notices as $id => $notice ) {
-	            $success = ( isset( $notice['output']['icon'] )
-                    && ( $notice['output']['icon']
-                        === 'success' ) ) ? true : false;
-
-                if ( ! $success
-                    && isset( $notice['output']['icon'] )
-                    && ( $notice['output']['icon'] == 'open'
-                    || $notice['output']['icon'] == 'premium'
-                    || $notice['output']['icon'] == 'warning'
-                ) ) {
-                    $count ++;
-                }
-            }
+            $count = count($this->get_notices_list(
+                    array( 'status' => 'open' )
+            ));
             set_transient( 'rsssl_remaining_task_count', $count, 'DAY_IN_SECONDS' );
         }
 
@@ -4235,17 +4222,20 @@ if (!function_exists('rsssl_ssl_enabled_notice')) {
 
 if (!function_exists('rsssl_ssl_detected')) {
 	function rsssl_ssl_detected() {
+
 		if ( ! RSSSL()->really_simple_ssl->wpconfig_ok() ) {
-			return 'fail';
-		}
-		if ( ! RSSSL()->really_simple_ssl->site_has_ssl ) {
-			return 'no-ssl-detected';
-		}
-		if ( RSSSL()->rsssl_certificate->is_valid() ) {
-			return 'ssl-detected';
+			return apply_filters('rsssl_ssl_detected', 'fail');
 		}
 
-		return 'ssl-detected';
+		if ( RSSSL()->really_simple_ssl->site_has_ssl ) {
+			return apply_filters('rsssl_ssl_detected', 'ssl-detected');
+		}
+
+		if ( !RSSSL()->rsssl_certificate->is_valid() ) {
+			return apply_filters('rsssl_ssl_detected', 'no-ssl-detected');
+		}
+
+		return apply_filters('rsssl_ssl_detected', 'ssl-detected');
 	}
 }
 
