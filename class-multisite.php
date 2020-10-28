@@ -430,7 +430,7 @@ if (!class_exists('rsssl_multisite')) {
 					'can_hide' => false,
 				),
 			);
-			return apply_filters( 'rsssl_grid_items',  $grid_items );
+			return apply_filters( 'rsssl_grid_items_ms',  $grid_items );
 		}
 
 		public function settings_tab()
@@ -478,6 +478,7 @@ if (!class_exists('rsssl_multisite')) {
 
         public function update_network_options()
         {
+
             check_admin_referer('rsssl_network_options' . '-options');
 
             if (isset($_POST["rlrsssl_network_options"])) {

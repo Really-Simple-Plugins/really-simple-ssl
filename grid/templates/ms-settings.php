@@ -3,6 +3,5 @@
 	<?php
 	settings_fields('rsssl_network_options');
 	do_settings_sections("really-simple-ssl");
-
 	?>
 </div>
