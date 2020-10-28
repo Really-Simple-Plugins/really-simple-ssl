@@ -261,7 +261,7 @@ if (!class_exists('rsssl_multisite')) {
                 $site = get_blog_details($blog_id);
                 $this->switch_to_blog_bw_compatible($site);
                 RSSSL()->really_simple_ssl->activate_ssl();
-                restore_current_blog(); //switches back to previous blog, not current, so we have to do it each loop
+                restore_current_blog();
             }
         }
 
@@ -277,7 +277,7 @@ if (!class_exists('rsssl_multisite')) {
             if ($this->ssl_enabled_networkwide) {
                 $this->switch_to_blog_bw_compatible($site);
                 RSSSL()->really_simple_ssl->activate_ssl();
-                restore_current_blog(); //switches back to previous blog, not current, so we have to do it each loop
+                restore_current_blog();
             }
         }
 
@@ -621,7 +621,6 @@ if (!class_exists('rsssl_multisite')) {
 
                 //enable SSL on all sites on the network
                 $this->start_ssl_activation();
-
             }
 
             if (isset($_POST['rsssl_do_activate_ssl_per_site'])) {
@@ -631,6 +630,13 @@ if (!class_exists('rsssl_multisite')) {
                 $this->save_options();
             }
 
+	        if (isset($_POST['rsssl_do_activate_ssl_networkwide']) || isset($_POST['rsssl_do_activate_ssl_per_site']) ) {
+		        $url = add_query_arg( array(
+			        "page" => "really-simple-ssl",
+		        ), network_admin_url( "settings.php" ) );
+		        wp_safe_redirect( $url );
+		        exit;
+	        }
         }
 
 
@@ -683,14 +689,6 @@ if (!class_exists('rsssl_multisite')) {
 
         }
 
-        public function redirect_to_network_settings_page_after_activation() {
-            $url = add_query_arg( array(
-                "page" => "really-simple-ssl",
-            ), network_admin_url( "settings.php" ) );
-            wp_safe_redirect( $url );
-            exit;
-        }
-
         public function get_process_completed_percentage(){
             $complete_count = get_site_option('rsssl_siteprocessing_progress');
             $percentage = round(($complete_count/$this->get_total_blog_count())*100,0);
@@ -721,7 +719,7 @@ if (!class_exists('rsssl_multisite')) {
 
         public function deactivate_ssl_networkwide(){
             //run chunked
-            $nr_of_sites = 1;
+            $nr_of_sites = 200;
             $current_offset = get_site_option('rsssl_siteprocessing_progress');
 
             //set batch of sites
@@ -747,7 +745,7 @@ if (!class_exists('rsssl_multisite')) {
         public function activate_ssl_networkwide()
         {
             //run chunked
-            $nr_of_sites = 1;
+            $nr_of_sites = 200;
             $current_offset = get_site_option('rsssl_siteprocessing_progress');
 
             //set batch of sites
@@ -764,7 +762,6 @@ if (!class_exists('rsssl_multisite')) {
                     update_site_option('rsssl_siteprocessing_progress', $current_offset+$nr_of_sites);
                 }
             }
-            $this->redirect_to_network_settings_page_after_activation();
         }
 
 

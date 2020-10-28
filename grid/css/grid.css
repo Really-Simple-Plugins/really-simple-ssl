@@ -2,6 +2,10 @@
 .settings_page_really-simple-ssl {
   padding: 0;
 }
+#wpcontent .rsssl-footer-item form,
+.settings_page_really-simple-ssl .rsssl-footer-item form {
+  float: left;
+}
 #wpcontent .nav-tab-wrapper,
 .settings_page_really-simple-ssl .nav-tab-wrapper {
   height: 60px;
@@ -458,6 +462,7 @@
   margin-left: -10px;
   min-width: 80px;
   text-align: center;
+  float: left;
 }
 .rsssl-grid #rsssl-progress-footer .hidden {
   display: none;
