@@ -62,6 +62,17 @@
   border-radius: 20px;
   font-weight: 600;
 }
+#wpcontent .header-links .header-upsell .button-rsssl-primary,
+.settings_page_really-simple-ssl .header-links .header-upsell .button-rsssl-primary {
+  text-align: center;
+  background-color: #3a5998;
+  color: white !important;
+  min-width: 100px;
+}
+#wpcontent .header-links .header-upsell .button-rsssl-primary:hover,
+.settings_page_really-simple-ssl .header-links .header-upsell .button-rsssl-primary:hover {
+  color: black !important;
+}
 .rsssl-grid {
   margin-left: 25px;
   position: relative;
@@ -139,6 +150,9 @@
   width: 780px;
   height: 455px;
 }
+.rsssl-grid .rsssl-item .item-container .rsssl-save-settings-feedback {
+  color: #d7263d;
+}
 .rsssl-grid .rsssl-item .item-container .rsssl-grid-item-header {
   display: flex;
   align-items: center;
@@ -159,9 +173,6 @@
 }
 .rsssl-grid .rsssl-item .item-container .rsssl-grid-item-header .rsssl-secondary-header-item .all-task-count {
   margin-right: 5px;
-}
-.rsssl-grid .rsssl-item .item-container .rsssl-grid-item-header .rsssl-secondary-header-item .rsssl-save-settings-feedback {
-  color: #d7263d;
 }
 .rsssl-grid .rsssl-item .item-container .rsssl-table-td-main-content {
   padding-left: 15px;

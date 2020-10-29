@@ -18,7 +18,8 @@ if (RSSSL()->really_simple_ssl->has_301_redirect()) {
 $btns = '';
 if (!defined('rsssl_pro_version')) {
 	$button_text = __("Go PRO!", "really-simple-ssl");
-	$btns .= "<a href='RSSSL()->really_simple_ssl->pro_url' target='_blank' class='button button-rsssl-primary upsell'>$button_text</a>";
+	$button_link = RSSSL()->really_simple_ssl->pro_url;
+	$btns .= "<a href='$button_link' target='_blank' class='button button-rsssl-primary upsell'>$button_text</a>";
 }
 
 if (!RSSSL()->really_simple_ssl->ssl_enabled) {

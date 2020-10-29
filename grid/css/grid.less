@@ -67,6 +67,15 @@
         border-radius: 20px;
         font-weight: 600;
       }
+      .button-rsssl-primary {
+        text-align: center;
+        background-color: #3a5998;
+        color: white !important;
+        min-width: 100px;
+        &:hover {
+          color: black !important;
+        }
+      }
     }
   }
 }
@@ -155,6 +164,9 @@
       box-shadow: 0px 0px 5px 5px @box_shadow_color;
       width: @gridblock_width - 2* @grid_margin;
       height: @gridblock_height - 2 * @grid_margin;
+      .rsssl-save-settings-feedback {
+        color: @color_warning;
+      }
       .rsssl-grid-item-header {
         display: flex;
         align-items: center;
@@ -173,9 +185,6 @@
           }
           .all-task-count {
             margin-right: 5px;
-          }
-          .rsssl-save-settings-feedback {
-            color: @color_warning;
           }
         }
       }

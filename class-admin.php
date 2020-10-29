@@ -537,7 +537,7 @@ class rsssl_admin extends rsssl_front_end
                 flex-direction: row;
                 justify-content: space-between;
                 align-items: center;
-                margin-left: 10px;
+                padding-left: 25px;
             }
 
             #rsssl-logo-activation {
@@ -550,7 +550,7 @@ class rsssl_admin extends rsssl_front_end
             .rsssl-notice-content {
                 margin-top: 20px;
                 padding-bottom: 20px;
-                padding-left: 10px;
+                padding-left: 25px;
 
             }
 
@@ -561,11 +561,14 @@ class rsssl_admin extends rsssl_front_end
                 align-items: center;
                 padding-top: 10px;
                 padding-bottom: 10px;
-                padding-left: 25px;
+                margin-left: 25px;
+                margin-right: 25px;
             }
 
             #rsssl-message {
-                margin-bottom:20px;
+                margin: 0 0 20px 0;
+                padding: 0;
+                border-left-color: #333;
             }
 
             #rsssl-message .rsssl-notice-li::before {
@@ -587,12 +590,12 @@ class rsssl_admin extends rsssl_front_end
             #rsssl-message li:before {
                 background-color: #f8be2e;
                 color: #fff;
-                height: 14px;
-                width: 14px;
-                line-height: 23px;
+                height: 10px;
+                width: 10px;
                 border-radius:50%;
                 content: '';
                 position: absolute;
+                margin-top: 5px;
                 margin-left:-30px;
             }
             <?php echo apply_filters('rsssl_pro_inline_style', ''); ?>
@@ -2531,17 +2534,15 @@ class rsssl_admin extends rsssl_front_end
                 <div class="documentation">
                     <a href="https://really-simple-ssl.com/knowledge-base" target="_blank"><?php _e("Documentation", "really-simple-ssl");?></a>
                 </div>
-                <?php if (!defined('rsssl_pro_version')) { ?>
                 <div class="header-upsell">
-                    <?php if (defined('RSSSL_PRO_VERSION')) { ?>
+                    <?php if (defined('rsssl_pro_version')) { ?>
                         <div class="header-upsell-pro"><?php _e("PRO", "really-simple-ssl"); ?></div>
                     <?php } else { ?>
                     <div class="documentation">
-                        <a href="https://really-simple-ssl.com/support" target="_blank"><?php _e("Support", "really-simple-ssl") ?></a>
+                        <a href="https://really-simple-ssl.com/support" class="button button-rsssl-primary" target="_blank"><?php _e("Support", "really-simple-ssl") ?></a>
                     </div>
                     <?php } ?>
                 </div>
-                <?php } ?>
             </div>
         </div>
         <?php
