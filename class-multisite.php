@@ -35,10 +35,8 @@ if (!class_exists('rsssl_multisite')) {
             add_filter("admin_url", array($this, "check_admin_protocol"), 20, 3);
             add_filter('home_url', array($this, 'check_site_protocol'), 20, 4);
             add_filter('site_url', array($this, 'check_site_protocol'), 20, 4);
-
             add_action("plugins_loaded", array($this, "process_networkwide_choice"), 10, 0);
             add_action("plugins_loaded", array($this, "networkwide_choice_notice"), 20, 0);
-
             add_action('network_admin_menu', array(&$this, 'add_multisite_menu'));
             add_action('network_admin_edit_rsssl_update_network_settings', array($this, 'update_network_options'));
 
@@ -50,10 +48,8 @@ if (!class_exists('rsssl_multisite')) {
 
             $plugin = rsssl_plugin;
 	        add_filter("network_admin_plugin_action_links_$plugin", array($this, 'plugin_settings_link'));
-
             add_action('wp_ajax_dismiss_success_message_multisite', array($this, 'dismiss_success_message_callback'));
             add_action('wp_ajax_dismiss_wildcard_warning', array($this, 'dismiss_wildcard_message_callback'));
-            add_action("rsssl_show_network_tab_settings", array($this, 'settings_tab'));
 
             //If WP version is 5.1 or higher, use wp_insert_site hook for multisite SSL activation in new blogs
             if(version_compare(get_bloginfo('version'),'5.1', '>=') ) {
@@ -340,7 +336,7 @@ if (!class_exists('rsssl_multisite')) {
             add_settings_section('rsssl_network_settings', __("Settings", "really-simple-ssl"), array($this, 'section_text'), "really-simple-ssl");
 
             add_settings_field('id_ssl_enabled_networkwide', __("Enable SSL", "really-simple-ssl"), array($this, 'get_option_enable_multisite'), "really-simple-ssl", 'rsssl_network_settings');
-            RSSSL()->rsssl_network_admin_page = add_submenu_page('settings.php', "SSL", "SSL", 'manage_options', "really-simple-ssl", array(&$this, 'multisite_menu_page'));
+            RSSSL()->rsssl_network_admin_page = add_submenu_page('settings.php', "SSL", "SSL", 'manage_options', "really-simple-ssl", array(&$this, 'settings_tab'));
 
 
         }
@@ -366,22 +362,6 @@ if (!class_exists('rsssl_multisite')) {
         }
 
 
-        /**
-         * Displays the options page. The big difference here is where you post the data
-         * because, unlike for normal option pages, there is nowhere to process it by
-         * default so we have to create our own hook to process the saving of our options.
-         */
-
-        public function multisite_menu_page()
-        {
-            $tab = "settings";
-            if (isset ($_GET['tab'])) $tab = $_GET['tab'];
-            $this->admin_tabs($tab);
-
-            do_action("rsssl_show_network_tab_{$tab}");
-        }
-
-
 		/**
 		 * Build the settings page
 		 *
@@ -393,7 +373,7 @@ if (!class_exists('rsssl_multisite')) {
 
 		public function general_grid(){
 			$grid_items = array(
-				1 =>array(
+				'progress' =>array(
 					'title' => __("Your progress", "really-simple-ssl"),
 					'header' => rsssl_template_path . 'progress-header.php',
 					'content' => rsssl_template_path . 'progress.php',
@@ -478,8 +458,10 @@ if (!class_exists('rsssl_multisite')) {
 
         public function update_network_options()
         {
+            if (!isset($_POST['rsssl_ms_nonce']) || !wp_verify_nonce($_POST['rsssl_ms_nonce'], 'rsssl_ms_settings_update')) return;
+            if (!current_user_can('manage_options')) return;
 
-            check_admin_referer('rsssl_network_options' . '-options');
+	        do_action('rsssl_process_network_options');
 
             if (isset($_POST["rlrsssl_network_options"])) {
                 $prev_ssl_enabled_networkwide = $this->ssl_enabled_networkwide;
@@ -496,19 +478,19 @@ if (!class_exists('rsssl_multisite')) {
                 $this->cert_expiration_warning = isset($options["cert_expiration_warning"]) ? $options["cert_expiration_warning"] : false;
                 $this->hide_menu_for_subsites = isset($options["hide_menu_for_subsites"]) ? $options["hide_menu_for_subsites"] : false;
                 $this->selected_networkwide_or_per_site = isset($options["selected_networkwide_or_per_site"]) ? $options["selected_networkwide_or_per_site"] : false;
-            }
 
-            $this->save_options();
+	            $this->save_options();
 
-            if ($this->ssl_enabled_networkwide && !$prev_ssl_enabled_networkwide) {
-                //reset
-                $this->start_ssl_activation();
-                //enable SSL on all  sites on the network
-            }
+	            if ($this->ssl_enabled_networkwide && !$prev_ssl_enabled_networkwide) {
+		            //reset
+		            $this->start_ssl_activation();
+		            //enable SSL on all  sites on the network
+	            }
 
-            if (!$this->ssl_enabled_networkwide && $prev_ssl_enabled_networkwide ) {
-                //if we switch to per page, we deactivate SSL on all pages first, but only if the setting was changed.
-                $this->start_ssl_deactivation();
+	            if (!$this->ssl_enabled_networkwide && $prev_ssl_enabled_networkwide ) {
+		            //if we switch to per page, we deactivate SSL on all pages first, but only if the setting was changed.
+		            $this->start_ssl_deactivation();
+	            }
 
             }
 
@@ -1001,10 +983,15 @@ if (!class_exists('rsssl_multisite')) {
 
                 $link_open = '<a target="_self" href="' . $run_ssl_process_hook_switch_link . '">';
                 $link_close = '</a>';
+                $completed = $this->get_process_completed_percentage();
 
-                $content = sprintf(__("Conversion of websites %s percent complete.", "really-simple-ssl"), $this->get_process_completed_percentage()) . " ";
-                $content .= __("You have just started enabling or disabling SSL on multiple websites at once, and this process is not completed yet. Please refresh this page to check if the process has finished. It will proceed in the background.", "really-simple-ssl") . " ";
-                $content .= sprintf(__("If the conversion does not proceed after a few minutes, click %shere%s to force the conversion process.", "really-simple-ssl"), $link_open, $link_close);
+                if ($completed < 100){
+	                $content = sprintf(__("Conversion of websites %s percent complete.", "really-simple-ssl"), $completed) . " ";
+	                $content .= __("Site conversion in progress. Please refresh this page to check if the process has finished. It will proceed in the background.", "really-simple-ssl") . " ";
+	                $content .= sprintf(__("If the conversion does not proceed after a few minutes, click %shere%s to force the conversion process.", "really-simple-ssl"), $link_open, $link_close);
+                } else {
+	                $content = sprintf(__("Conversion of websites completed.", "really-simple-ssl"), $completed) . " ";
+                }
 
                 echo RSSSL()->really_simple_ssl->notice_html($class, $title, $content);
 
@@ -1096,34 +1083,6 @@ if (!class_exists('rsssl_multisite')) {
         public function is_settings_page()
         {
             return (isset($_GET['page']) && $_GET['page'] == 'really-simple-ssl') ? true : false;
-        }
-
-        /**
-         * Create tabs on the settings page
-         *
-         * @since  1.0.0
-         *
-         * @access public
-         *
-         */
-
-        public function admin_tabs($current = 'settings')
-        {
-            $tabs = array(
-                'settings' => __("Settings", "really-simple-ssl"),
-            );
-
-            $tabs = apply_filters("rsssl_network_tabs", $tabs);
-
-            if (count($tabs) > 1) {
-                echo '<h2 class="nav-tab-wrapper">';
-
-                foreach ($tabs as $tab => $name) {
-                    $class = ($tab == $current) ? ' nav-tab-active' : '';
-                    echo "<a class='nav-tab$class' href='?page=really-simple-ssl&tab=$tab'>$name</a>";
-                }
-                echo '</h2>';
-            }
         }
 
         public function get_total_blog_count()

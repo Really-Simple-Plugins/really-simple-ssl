@@ -514,6 +514,8 @@ class rsssl_admin extends rsssl_front_end
 		ob_start();
 		?>
         <style>
+
+
             .activate-ssl {
                 border-left: 4px solid #F8BE2E;
             }
@@ -597,6 +599,10 @@ class rsssl_admin extends rsssl_front_end
                 position: absolute;
                 margin-top: 5px;
                 margin-left:-30px;
+            }
+
+            .settings_page_rlrsssl_really_simple_ssl #wpcontent #rsssl-message, .settings_page_really-simple-ssl #wpcontent #rsssl-message {
+                margin: 20px;
             }
             <?php echo apply_filters('rsssl_pro_inline_style', ''); ?>
 
@@ -2988,7 +2994,6 @@ class rsssl_admin extends rsssl_front_end
             return add_query_arg(array("page" => "rlrsssl_really_simple_ssl", "highlight" => "$setting_name"), admin_url("options-general.php"));
         } elseif ($type == 'premium') {
             return add_query_arg(array("page" => "rlrsssl_really_simple_ssl", "tab" => "premium", "highlight" => "$setting_name"), admin_url("options-general.php"));
-
         }
     }
 
@@ -3092,7 +3097,7 @@ class rsssl_admin extends rsssl_front_end
 
 	public function general_grid(){
 		$grid_items = array(
-			1 =>array(
+			'progress' =>array(
 				'title' => __("Your progress", "really-simple-ssl"),
 				'header' => rsssl_template_path . 'progress-header.php',
 				'content' => rsssl_template_path . 'progress.php',
@@ -3101,7 +3106,7 @@ class rsssl_admin extends rsssl_front_end
 				'type' => 'all',
 				'can_hide' => true,
 			),
-			2 => array(
+			'settings' => array(
 				'title' => __("Settings", "really-simple-ssl"),
 				'header' => rsssl_template_path . 'header.php',
                 'content' => rsssl_template_path . 'settings.php',
@@ -3110,7 +3115,7 @@ class rsssl_admin extends rsssl_front_end
 				'type' => 'settings',
 				'can_hide' => true,
 			),
-            3 => array(
+            'tipstricks' => array(
                 'title' => __("Tips & Tricks", "really-simple-ssl"),
                 'header' => '',
                 'content' => rsssl_template_path . 'tips-tricks.php',
@@ -3290,15 +3295,16 @@ class rsssl_admin extends rsssl_front_end
 	    $output = '';
 
 	    foreach ($grid as $index => $grid_item) {
-		    $footer = $this->get_template_part($grid_item, 'footer');
-		    $content = $this->get_template_part($grid_item, 'content');
-		    $header = $this->get_template_part($grid_item, 'header');
+		    $footer = $this->get_template_part($grid_item, 'footer', $index);
+		    $content = $this->get_template_part($grid_item, 'content', $index);
+		    $header = $this->get_template_part($grid_item, 'header', $index);
 
 		    // Add form if type is settings
 		    $block = str_replace(array('{class}', '{title}', '{header}', '{content}', '{footer}'), array($grid_item['class'], $grid_item['title'], $header, $content, $footer), $element);
+
 		    if (isset($grid_item['type']) && $grid_item['type'] == 'settings') {
 			    if ( is_network_admin() ) {
-				    $output .= '<form action="edit.php?action=rsssl_update_network_settings" method="post">'.$block.'</form>';
+				    $output .= '<form action="edit.php?action=rsssl_update_network_settings" method="post">'.wp_nonce_field('rsssl_ms_settings_update', 'rsssl_ms_nonce').$block.'</form>';
 			    } else {
 				    $output .= '<form action="options.php" method="post">'.$block.'</form>';
 			    }
@@ -3308,29 +3314,34 @@ class rsssl_admin extends rsssl_front_end
 			    $output .= $block;
 		    }
 	    }
+
+
 	    echo str_replace('{content}', $output, $container);
     }
 
 	/**
      * Render grid item based on template
-	 * @param $grid_item
-	 * @param $key
+	 * @param array $grid_item
+	 * @param string $key
+     * @oaran string $index
 	 *
 	 * @return string
 	 */
 
-    public function get_template_part($grid_item, $key) {
+    public function get_template_part($grid_item, $key, $index) {
 
 	    if ( !isset($grid_item[$key]) || !$grid_item[$key] ) {
-		    return '';
+		    $template_part = '';
 	    } else {
 		    if ( strpos( $grid_item[ $key ], '.php' ) !== false && file_exists($grid_item[ $key ])  ) {
 		        ob_start();
 			    require $grid_item[ $key ];
-			    return ob_get_clean();
-		    }
+			    $template_part = ob_get_clean();
+		    } else {
+			    $template_part = '';
+            }
 	    }
-	    return $grid_item[ $key ];
+	    return apply_filters("rsssl_template_part_".$key.'_'.$index, $template_part, $grid_item);
     }
 
     /**
