@@ -3057,9 +3057,9 @@ class rsssl_admin extends rsssl_front_end
     }
 
 	/**
-	 * @return int|mixed
-     *
      * Count the plusones
+     *
+	 * @return int
      *
      * @since 3.2
 	 */
@@ -3081,7 +3081,7 @@ class rsssl_admin extends rsssl_front_end
                     $count ++;
                 }
 			}
-			set_transient( 'rsssl_plusone_count', $count, 'WEEK_IN_SECONDS' );
+			set_transient( 'rsssl_plusone_count', $count, WEEK_IN_SECONDS );
 		}
 		return $count;
 	}
