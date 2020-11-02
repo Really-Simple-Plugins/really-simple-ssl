@@ -8,11 +8,13 @@
   display: none !important;
 }
 /* comments on settings pages */
-.rsssl-settings .rsssl-comment {
-  font-style: italic;
+.rsssl-comment-text {
   color: #888;
-  padding-bottom: 0;
-  margin-top: -12px;
+  font-size: 13px;
+  font-weight: normal;
+  font-style: italic;
+  padding-bottom: 0 !important;
+  margin-top: -6px !important;
 }
 /* Hide review on own settings page */
 #rsssl_do_activate_ssl {

@@ -3661,8 +3661,7 @@ class rsssl_admin extends rsssl_front_end
             <span class="rsssl-slider rsssl-round"></span>
         </label>
         <?php
-        echo $comment;
-
+	    RSSSL()->rsssl_help->get_comment($comment);
     }
 
     /**
@@ -3679,19 +3678,14 @@ class rsssl_admin extends rsssl_front_end
 	{
 		$comment = $disabled = "";
 		//networkwide is not shown, so this only applies to per site activated sites.
-		if (is_multisite()) {
-		    if (RSSSL()->rsssl_multisite->htaccess_redirect) {
-			    $disabled = "disabled";
-			    $comment = __("This option is enabled on the network menu.", "really-simple-ssl");
-            }
-		} else {
-		    //on multisite, the .htaccess do not edit option is not available
-			if ($this->do_not_edit_htaccess) {
-				$comment = __("If the setting 'do not edit htaccess' is enabled, you can't change this setting.", "really-simple-ssl");
-				$disabled = "disabled";
-			}
+		if (is_multisite() && RSSSL()->rsssl_multisite->htaccess_redirect) {
+            $disabled = "disabled";
+            $comment = __("This option is enabled on the network menu.", "really-simple-ssl");
+		} elseif ($this->do_not_edit_htaccess) {
+            //on multisite, the .htaccess do not edit option is not available
+            $comment = __("If the setting 'do not edit htaccess' is enabled, you can't change this setting.", "really-simple-ssl");
+            $disabled = "disabled";
 		}
-
 		?>
         <label class="rsssl-switch" id="rsssl-maybe-highlight-wp-redirect-to-htaccess">
             <input id="rlrsssl_options" name="rlrsssl_options[htaccess_redirect]" size="40" value="1"
@@ -3699,9 +3693,7 @@ class rsssl_admin extends rsssl_front_end
             <span class="rsssl-slider rsssl-round"></span>
         </label>
 		<?php
-        if (strlen($comment)>0 ){
-	        echo '</tr><tr class="rsssl-comment"><td colspan="2" >'.$comment.'</td></tr><tr>';
-        }
+		RSSSL()->rsssl_help->get_comment($comment);
 	}
 
     /**
@@ -3914,7 +3906,6 @@ class rsssl_admin extends rsssl_front_end
 
     public function get_option_autoreplace_insecure_links()
     {
-        //$options = get_option('rlrsssl_options');
         $autoreplace_mixed_content = $this->autoreplace_insecure_links;
         $disabled = "";
         $comment = "";
@@ -3928,11 +3919,12 @@ class rsssl_admin extends rsssl_front_end
         ?>
         <label class="rsssl-switch">
             <input id="rlrsssl_options" name="rlrsssl_options[autoreplace_insecure_links]" size="40" value="1"
-                   type="checkbox" <?php checked(1, $autoreplace_mixed_content, true) ?> />
+                   type="checkbox" <?php checked(1, $autoreplace_mixed_content, true) ?> <?php echo $disabled?>/>
             <span class="rsssl-slider rsssl-round"></span>
         </label>
-        <?php
-        echo $comment;
+
+       <?php
+	    RSSSL()->rsssl_help->get_comment($comment);
     }
 
     /**
