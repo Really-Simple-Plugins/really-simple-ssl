@@ -158,8 +158,7 @@ class rsssl_admin extends rsssl_front_end
         */
 
         //when configuration should run again
-        if ($this->clicked_activate_ssl() || !$this->ssl_enabled || !$this->site_has_ssl || $is_on_settings_page || is_network_admin()) {
-
+        if ($this->clicked_activate_ssl() || !$this->ssl_enabled || !$this->site_has_ssl || $is_on_settings_page || is_network_admin() || defined('RSSSL_DOING_SYSTEM_STATUS') ) {
             if (is_multisite()) $this->build_domain_list();//has to come after clicked_activate_ssl, otherwise this domain won't get counted.
             $this->detect_configuration();
 
@@ -715,7 +714,6 @@ class rsssl_admin extends rsssl_front_end
             $this->review_notice_shown = isset($options['review_notice_shown']) ? $options['review_notice_shown'] : FALSE;
             $this->ssl_success_message_shown = isset($options['ssl_success_message_shown']) ? $options['ssl_success_message_shown'] : FALSE;
             $this->plugin_db_version = isset($options['plugin_db_version']) ? $options['plugin_db_version'] : "1.0";
-            $this->debug = isset($options['debug']) ? $options['debug'] : FALSE;
             $this->do_not_edit_htaccess = isset($options['do_not_edit_htaccess']) ? $options['do_not_edit_htaccess'] : FALSE;
             $this->htaccess_redirect = isset($options['htaccess_redirect']) ? $options['htaccess_redirect'] : FALSE;
             $this->switch_mixed_content_fixer_hook = isset($options['switch_mixed_content_fixer_hook']) ? $options['switch_mixed_content_fixer_hook'] : FALSE;
@@ -729,9 +727,9 @@ class rsssl_admin extends rsssl_front_end
             $network_htaccess_redirect = isset($network_options["htaccess_redirect"]) ? $network_options["htaccess_redirect"] : false;
             $network_do_not_edit_htaccess = isset($network_options["do_not_edit_htaccess"]) ? $network_options["do_not_edit_htaccess"] : false;
             /*
-          If multiste, and networkwide, only the networkwide setting counts.
-          if multisite, and per site, only the networkwide setting counts if it is true.
-      */
+              If multiste, and networkwide, only the networkwide setting counts.
+              if multisite, and per site, only the networkwide setting counts if it is true.
+           */
             $ssl_enabled_networkwide = isset($network_options["ssl_enabled_networkwide"]) ? $network_options["ssl_enabled_networkwide"] : false;
             if ($ssl_enabled_networkwide) {
                 $this->htaccess_redirect = $network_htaccess_redirect;
@@ -770,7 +768,8 @@ class rsssl_admin extends rsssl_front_end
             $nr_of_sites = RSSSL()->rsssl_multisite->get_total_blog_count();
             $sites = RSSSL()->rsssl_multisite->get_sites_bw_compatible(0, $nr_of_sites);
 
-            if ($this->debug) $this->trace_log("building domain list for multisite...");
+            $this->trace_log("building domain list for multisite...");
+            $has_sites_with_ssl = false;
             foreach ($sites as $site) {
                 $this->switch_to_blog_bw_compatible($site);
                 $options = get_option('rlrsssl_options');
@@ -782,11 +781,14 @@ class rsssl_admin extends rsssl_front_end
                 }
 
                 if (is_plugin_active(rsssl_plugin) && $ssl_enabled) {
-                    if ($this->debug) $this->trace_log("adding: " . home_url());
+                    $this->trace_log("- adding: " . home_url());
                     $this->sites[] = home_url();
+	                $has_sites_with_ssl = true;
                 }
                 restore_current_blog(); //switches back to previous blog, not current, so we have to do it each loop
             }
+
+            if (!$has_sites_with_ssl) $this->trace_log("- SSL not enabled on any site " );
 
             set_transient('rsssl_domain_list', $this->sites, HOUR_IN_SECONDS);
 
@@ -826,9 +828,10 @@ class rsssl_admin extends rsssl_front_end
 
     public function trace_log($msg)
     {
-        if (!$this->debug) return;
+	    if (defined('RSSSL_DOING_SYSTEM_STATUS') || (defined('WP_DEBUG') && WP_DEBUG ) )
+
         if (strpos($this->debug_log, $msg)) return;
-        $this->debug_log = $this->debug_log . "<br>" . $msg;
+        $this->debug_log = $this->debug_log . "\n" . $msg;
         error_log($msg);
     }
 
@@ -1018,16 +1021,12 @@ class rsssl_admin extends rsssl_front_end
                 $wpconfig = preg_replace($siteurl_pattern, "define('WP_SITEURL','https://", $wpconfig);
                 file_put_contents($wpconfig_path, $wpconfig);
             } else {
-                if ($this->debug) {
-                    $this->trace_log("not able to fix wpconfig siteurl/homeurl.");
-                }
+                $this->trace_log("not able to fix wpconfig siteurl/homeurl.");
                 //only when siteurl or homeurl is defined in wpconfig, and wpconfig is not writable is there a possible issue because we cannot edit the defined urls.
                 $this->wpconfig_siteurl_not_fixed = TRUE;
             }
         } else {
-            if ($this->debug) {
-                $this->trace_log("no siteurl/homeurl defines in wpconfig");
-            }
+            $this->trace_log("no siteurl/homeurl defines in wpconfig");
         }
     }
 
@@ -1101,19 +1100,13 @@ class rsssl_admin extends rsssl_front_end
                 }
 
                 file_put_contents($wpconfig_path, $wpconfig);
-                if ($this->debug) {
-                    $this->trace_log("wp config loadbalancer fix inserted");
-                }
+                $this->trace_log("wp config loadbalancer fix inserted");
             } else {
-                if ($this->debug) {
-                    $this->trace_log("wp config loadbalancer fix FAILED");
-                }
+                $this->trace_log("wp config loadbalancer fix FAILED");
                 $this->wpconfig_loadbalancer_fix_failed = TRUE;
             }
         } else {
-            if ($this->debug) {
-                $this->trace_log("wp config loadbalancer fix already in place, great!");
-            }
+            $this->trace_log("wp config loadbalancer fix already in place, great!");
         }
         $this->save_options();
 
@@ -1139,7 +1132,7 @@ class rsssl_admin extends rsssl_front_end
 
         //check permissions
         if (!is_writable($wpconfig_path)) {
-            if ($this->debug) $this->trace_log("wp-config.php not writable");
+            $this->trace_log("wp-config.php not writable");
             return;
         }
 
@@ -1154,15 +1147,11 @@ class rsssl_admin extends rsssl_front_end
 
         //check if the fix is already there
         if (strpos($wpconfig, "//Begin Really Simple SSL Server variable fix") !== FALSE) {
-            if ($this->debug) {
-                $this->trace_log("wp config server variable fix already in place, great!");
-            }
+            $this->trace_log("wp config server variable fix already in place, great!");
             return;
         }
 
-        if ($this->debug) {
-            $this->trace_log("Adding server variable to wpconfig");
-        }
+        $this->trace_log("Adding server variable to wpconfig");
         $rule = $this->get_server_variable_fix_code();
 
         $insert_after = "<?php";
@@ -1171,7 +1160,7 @@ class rsssl_admin extends rsssl_front_end
             $wpconfig = substr_replace($wpconfig, $rule, $pos + 1 + strlen($insert_after), 0);
         }
         file_put_contents($wpconfig_path, $wpconfig);
-        if ($this->debug) $this->trace_log("wp config server variable fix inserted");
+        $this->trace_log("wp config server variable fix inserted");
 
         $this->save_options();
     }
@@ -1189,12 +1178,12 @@ class rsssl_admin extends rsssl_front_end
     protected function get_server_variable_fix_code()
     {
         if (is_multisite() && !RSSSL()->rsssl_multisite->ssl_enabled_networkwide && RSSSL()->rsssl_multisite->is_multisite_subfolder_install()) {
-            if ($this->debug) $this->trace_log("per site activation on subfolder install, wp config server variable fix skipped");
+            $this->trace_log("per site activation on subfolder install, wp config server variable fix skipped");
             return "";
         }
 
         if (is_multisite() && !RSSSL()->rsssl_multisite->ssl_enabled_networkwide && count($this->sites) == 0) {
-            if ($this->debug) $this->trace_log("no sites left with SSL, wp config server variable fix skipped");
+            $this->trace_log("no sites left with SSL, wp config server variable fix skipped");
             return "";
         }
 
@@ -1202,9 +1191,7 @@ class rsssl_admin extends rsssl_front_end
             $rule = "\n" . "//Begin Really Simple SSL Server variable fix" . "\n";
             foreach ($this->sites as $domain) {
                 //remove http or https.
-                if ($this->debug) {
-                    $this->trace_log("getting server variable rule for:" . $domain);
-                }
+                $this->trace_log("getting server variable rule for:" . $domain);
                 $domain = preg_replace("/(http:\/\/|https:\/\/)/", "", $domain);
 
                 //we excluded subfolders, so treat as domain
@@ -1243,7 +1230,7 @@ class rsssl_admin extends rsssl_front_end
 
         //check for permissions
         if (!is_writable($wpconfig_path)) {
-            if ($this->debug) $this->trace_log("could not remove wpconfig edits, wp-config.php not writable");
+            $this->trace_log("could not remove wpconfig edits, wp-config.php not writable");
             $this->errors['wpconfig not writable'] = TRUE;
             return;
         }
@@ -1324,7 +1311,6 @@ class rsssl_admin extends rsssl_front_end
             'ssl_success_message_shown' => $this->ssl_success_message_shown,
             'autoreplace_insecure_links' => $this->autoreplace_insecure_links,
             'plugin_db_version' => $this->plugin_db_version,
-            'debug' => $this->debug,
             'do_not_edit_htaccess' => $this->do_not_edit_htaccess,
             'htaccess_redirect' => $this->htaccess_redirect,
             'ssl_enabled' => $this->ssl_enabled,
@@ -1437,7 +1423,7 @@ class rsssl_admin extends rsssl_front_end
 
     public function detect_configuration()
     {
-        $this->trace_log("<b>" . "Detecting configuration" . "</b>");
+        $this->trace_log("Detecting configuration");
         //if current page is on SSL, we can assume SSL is available, even when an errormsg was returned
         if ($this->is_ssl_extended()) {
             $this->site_has_ssl = TRUE;
@@ -1520,10 +1506,7 @@ class rsssl_admin extends rsssl_front_end
 
         $this->htaccess_test_success = get_transient('rsssl_htaccess_test_success');
         if (!$this->htaccess_test_success) {
-
-            if ($this->debug) {
-                $this->trace_log("testing htaccess rules...");
-            }
+            $this->trace_log("testing htaccess rules...");
 
             $filecontents = "";
             $testpage_url = trailingslashit($this->test_url()) . "testssl/";
@@ -1683,7 +1666,7 @@ class rsssl_admin extends rsssl_front_end
             $this->save_options();
         } else {
             $this->errors['HTACCESS_NOT_WRITABLE'] = TRUE;
-            if ($this->debug) $this->trace_log("could not remove rules from htaccess, file not writable");
+            $this->trace_log("could not remove rules from htaccess, file not writable");
         }
     }
 
@@ -1917,7 +1900,7 @@ class rsssl_admin extends rsssl_front_end
         }
 
         if (!is_writable($this->htaccess_file())) {
-            if ($this->debug) $this->trace_log(".htaccess not writable.");
+            $this->trace_log(".htaccess not writable.");
             return;
         }
 
@@ -2093,9 +2076,7 @@ class rsssl_admin extends rsssl_front_end
                     $rule = strrev(implode("", explode(strrev("[OR]"), strrev($rule), 2)));
                 }
             } else {
-                if ($this->debug) {
-                    $this->trace_log("single site or networkwide activation");
-                }
+                $this->trace_log("single site or networkwide activation");
             }
 
             //fastest cache compatibility
@@ -3552,7 +3533,6 @@ class rsssl_admin extends rsssl_front_end
         $newinput['review_notice_shown'] = $this->review_notice_shown;
         $newinput['plugin_db_version'] = $this->plugin_db_version;
         $newinput['ssl_enabled'] = $this->ssl_enabled;
-        $newinput['debug_log'] = $this->debug_log;
 
         if (!empty($input['hsts']) && $input['hsts'] == '1') {
             $newinput['hsts'] = TRUE;
@@ -3576,13 +3556,6 @@ class rsssl_admin extends rsssl_front_end
             $newinput['autoreplace_insecure_links'] = TRUE;
         } else {
             $newinput['autoreplace_insecure_links'] = FALSE;
-        }
-
-        if (!empty($input['debug']) && $input['debug'] == '1') {
-            $newinput['debug'] = TRUE;
-        } else {
-            $newinput['debug'] = FALSE;
-            $this->debug_log = "";
         }
 
         if (!empty($input['do_not_edit_htaccess']) && $input['do_not_edit_htaccess'] == '1') {
@@ -3610,27 +3583,6 @@ class rsssl_admin extends rsssl_front_end
         }
 
         return $newinput;
-    }
-
-    /**
-     * Insert option into settings form
-     * deprecated
-     * @since  2.0
-     *
-     * @access public
-     *
-     */
-
-    public function get_option_debug()
-    {
-        ?>
-        <label class="rsssl-switch">
-            <input id="rlrsssl_options" name="rlrsssl_options[debug]" size="40" value="1"
-                   type="checkbox" <?php checked(1, $this->debug, true) ?> />
-            <span class="rsssl-slider rsssl-round"></span>
-        </label>
-        <?php
-        RSSSL()->rsssl_help->get_help_tip(__("Enable this option to get debug info in the debug tab.", "really-simple-ssl"));
     }
 
 
@@ -4038,7 +3990,6 @@ class rsssl_admin extends rsssl_front_end
 
     protected function get_test_page_contents()
     {
-
         $filecontents = get_transient('rsssl_testpage');
         if (!$filecontents) {
             $filecontents = "";

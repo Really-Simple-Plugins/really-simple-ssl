@@ -1,6 +1,8 @@
 <?php
 # No need for the template engine
 define( 'WP_USE_THEMES', false );
+//we set wp admin to true, so the backend features get loaded.
+if (!defined('RSSSL_DOING_SYSTEM_STATUS')) define( 'RSSSL_DOING_SYSTEM_STATUS' , true);
 
 #find the base path
 define( 'BASE_PATH', find_wordpress_base_path()."/" );
@@ -10,6 +12,9 @@ require_once( BASE_PATH . 'wp-load.php' );
 require_once( BASE_PATH . 'wp-includes/class-phpass.php' );
 require_once( BASE_PATH . 'wp-admin/includes/image.php' );
 require_once( BASE_PATH . 'wp-admin/includes/plugin.php');
+
+delete_transient('rsssl_testpage');
+delete_transient('rsssl_domain_list');
 
 if ( current_user_can( 'manage_options' ) ) {
 
@@ -44,26 +49,13 @@ if ( current_user_can( 'manage_options' ) ) {
 	echo "Server information\n";
 	echo "Server: " . RSSSL()->rsssl_server->get_server() . "\n";
 	echo "SSL Type: " . RSSSL()->really_simple_ssl->ssl_type . "\n";
-	if (defined('rsssl_pro_path')) {
-	    echo "TLS Version: " . RSSSL_PRO()->rsssl_premium_options->get_tls_version() . "\n";
-    }
+
 	if (is_multisite()) {
 		echo "MULTISITE\n";
 		echo (!RSSSL()->rsssl_multisite->ssl_enabled_networkwide) ? "SSL is being activated per site\n" : "SSL is activated network wide\n";
 	}
 
-	if (defined('rsssl_pro_version')) {
-	    echo "TLS version: " . RSSSL_PRO()->really_simple_ssl->get_tls_version();
-	    if (RSSSL_PRO()->really_simple_ssl->redirects_to_homepage()) {
-	        echo "Redirect to homepage detected \n";
-        }
-	    if (RSSSL_PRO()->really_simple_ssl->has_redirect_to_http()) {
-	        echo "Redirect to http:// detected \n";
-        }
-	    if (RSSSL_PRO()->really_simple_ssl->site_uses_cache()) {
-	        echo "Site uses caching \n";
-        }
-    }
+	do_action("rsssl_system_status");
 
 	echo RSSSL()->really_simple_ssl->debug_log;
 

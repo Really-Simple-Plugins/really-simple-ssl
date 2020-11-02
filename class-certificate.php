@@ -45,12 +45,21 @@ if ( ! class_exists( 'rsssl_certificate' ) ) {
                 //get certificate info
                 $certinfo = $this->get_certinfo($domain);
 
-                if (!$certinfo) return false;
+                if (!$certinfo) {
+                	RSSSL()->really_simple_ssl->trace_log("- SSL certificate not valid");
+                	return false;
+                }
 
                 //Check if domain is valid
                 $domain_valid = $this->is_domain_valid($certinfo, $domain);
+                if (!$domain_valid) {
+	                RSSSL()->really_simple_ssl->trace_log("- Domain on certificate does not match website's domain");
+                }
                 //Check if date is valid
                 $date_valid = $this->is_date_valid($certinfo);
+	            if (!$date_valid) {
+		            RSSSL()->really_simple_ssl->trace_log("- Date on certificate expired or not valid");
+	            }
                 //Domain and date valid? Return true
                 if ($domain_valid && $date_valid) {
                     return true;
