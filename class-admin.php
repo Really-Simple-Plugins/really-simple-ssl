@@ -2742,7 +2742,7 @@ class rsssl_admin extends rsssl_front_end
             ),
 
             'elementor' => array(
-	            'condition' => array( 'rsssl_ssl_activation_time_no_longer_then_3_days_ago' ,'rsssl_does_not_use_pro'),
+	            'condition' => array( 'rsssl_ssl_activation_time_no_longer_then_3_days_ago'),
 	            'callback' => 'rsssl_uses_elementor',
 	            'score' => 5,
 	            'output' => array(
@@ -2843,15 +2843,8 @@ class rsssl_admin extends rsssl_front_end
 		    }
 
 		    $func   = $notice['callback'];
-		    //check if this is a class/function setup
-            if ( preg_match( '/(.*)\(\)\-\>(.*)->(.*)/i', $func, $matches)) {
-                $base = $matches[1];
-                $class = $matches[2];
-                $function = $matches[3];
-	            $output = call_user_func( array( $base()->{$class}, $function ) );
-            } else {
-	            $output = $func();
-            }
+		    _log("check callback");
+		    $output = $this->validate_function($func);
 
             if ( !isset($notice['output'][ $output ]) ) {
 	            unset($notices[$id]);
@@ -2880,7 +2873,8 @@ class rsssl_admin extends rsssl_front_end
 
 		    $condition_functions = $notice['condition'];
 		    foreach ( $condition_functions as $func ) {
-			    $condition = $func();
+		        _log("check condition");
+			    $condition = $this->validate_function($func, true);
 			    if ( ! $condition ) {
 				    unset($notices[$id]);
 			    }
@@ -2898,6 +2892,45 @@ class rsssl_admin extends rsssl_front_end
         }
 
         return $notices;
+    }
+
+	/**
+     * Get output of function, in format 'function', or 'class()->sub()->function'
+	 * @param string $func
+     * @param bool $is_condition // if the check is a condition, which should return a boolean
+     * @return string|bool
+	 */
+
+    private function validate_function($func, $is_condition = false ){
+	    $invert = false;
+	    if (strpos($func, 'NOT ') !== FALSE ) {
+		    $func = str_replace('NOT ', '', $func);
+		    $invert = true;
+	    }
+
+	    if ( preg_match( '/(.*)\(\)\-\>(.*)->(.*)/i', $func, $matches)) {
+		    $base = $matches[1];
+		    $class = $matches[2];
+		    $function = $matches[3];
+		    $output = call_user_func( array( $base()->{$class}, $function ) );
+	    } else {
+		    $output = $func();
+	    }
+
+	    if ( $invert ) {
+	        $output = !$output;
+        }
+
+	    //stringyfy booleans
+        if (!$is_condition) {
+	        if ( $output === false ) {
+		        $output = 'false';
+	        }
+	        if ( $output === true ) {
+		        $output = 'true';
+	        }
+        }
+	    return sanitize_text_field($output);
     }
 
     /**
@@ -3605,7 +3638,6 @@ class rsssl_admin extends rsssl_front_end
             $wp_redirect = TRUE;
             $comment = __("This option is enabled on the network menu.", "really-simple-ssl");
         }
-
         ?>
         <label class="rsssl-switch">
             <input id="rlrsssl_options" name="rlrsssl_options[wp_redirect]" size="40" value="1"
@@ -4196,10 +4228,6 @@ if (!function_exists('rsssl_ssl_detected')) {
 
 if (!function_exists('rsssl_check_redirect')) {
 	function rsssl_check_redirect() {
-
-
-
-
 		if ( ! RSSSL()->really_simple_ssl->has_301_redirect() ) {
 			return 'no-redirect-set';
 		}
@@ -4303,12 +4331,6 @@ if (!function_exists('rsssl_ssl_activation_time_no_longer_then_3_days_ago')) {
 	}
 }
 
-if (!function_exists('rsssl_elementor_notice')) {
-	function rsssl_elementor_notice() {
-		return 'elementor-notice';
-	}
-}
-
 if (!function_exists('rsssl_wp_redirect_condition')) {
 	function rsssl_wp_redirect_condition() {
 		if ( RSSSL()->really_simple_ssl->has_301_redirect() && RSSSL()->really_simple_ssl->wp_redirect && ! RSSSL()->really_simple_ssl->htaccess_redirect ) {
@@ -4332,17 +4354,6 @@ if (!function_exists('rsssl_wordpress_redirect')) {
 if (!function_exists('rsssl_no_multisite')) {
 	function rsssl_no_multisite() {
 		if ( ! is_multisite() ) {
-			return true;
-		} else {
-			return false;
-		}
-	}
-}
-
-if (!function_exists('rsssl_does_not_use_pro')) {
-	function rsssl_does_not_use_pro() {
-		if ( ! defined("rsssl_pro_version") ) {
-		    // Does not use RSSSL pro
 			return true;
 		} else {
 			return false;
