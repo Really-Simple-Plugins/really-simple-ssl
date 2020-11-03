@@ -513,8 +513,9 @@ class rsssl_admin extends rsssl_front_end
 		ob_start();
 		?>
         <style>
-
-
+            #rsssl-message.error{
+                border-left-color:#d7263d;
+            }
             .activate-ssl {
                 border-left: 4px solid #F8BE2E;
             }
@@ -832,7 +833,6 @@ class rsssl_admin extends rsssl_front_end
 
         if (strpos($this->debug_log, $msg)) return;
         $this->debug_log = $this->debug_log . "\n" . $msg;
-        error_log($msg);
     }
 
     /**
@@ -2595,27 +2595,6 @@ class rsssl_admin extends rsssl_front_end
                 ),
             ),
 
-            'ssl_detected' => array(
-                'callback' => 'rsssl_ssl_detected',
-                'score' => 30,
-                'output' => array(
-                    'fail' => array(
-                        'msg' =>__('Cannot activate SSL due to system configuration.', 'really-simple-ssl'),
-                        'icon' => 'warning'
-                    ),
-                    'no-ssl-detected' => array(
-                        'title' => __("No SSL detected", "really-simple-ssl"),
-                        'msg' => sprintf(__("No SSL detected. See our guide on how to %sget a free SSL certificate%s. If you do have an SSL certificate, try to reload this page over https by clicking this link: %sReload over https.%s", "really-simple-ssl"), '<a target="_blank" href="https://really-simple-ssl.com/knowledge-base/how-to-install-a-free-ssl-certificate-on-your-wordpress-cpanel-hosting/">', '</a>', '<a href="' .$reload_https_url . '">' , '</a>'),
-                        'icon' => 'warning',
-                        'admin_notice' => true,
-                    ),
-                    'ssl-detected' => array(
-                        'msg' => __('An SSL certificate was detected on your site.', 'really-simple-ssl'),
-                        'icon' => 'success'
-                    ),
-                ),
-            ),
-
             'google_analytics' => array(
                 'callback' => 'rsssl_google_analytics_notice',
                 'condition' => array('rsssl_ssl_enabled', 'rsssl_ssl_activation_time_no_longer_then_3_days_ago'),
@@ -2642,9 +2621,30 @@ class rsssl_admin extends rsssl_front_end
                     ),
                     'ssl-not-enabled' => array(
                         'msg' => __('SSL is not enabled yet', 'really-simple-ssl'),
-                        'icon' => 'open',
+                        'icon' => 'warning',
                     ),
                 ),
+            ),
+
+            'ssl_detected' => array(
+	            'callback' => 'rsssl_ssl_detected',
+	            'score' => 30,
+	            'output' => array(
+		            'fail' => array(
+			            'msg' =>__('Cannot activate SSL due to system configuration.', 'really-simple-ssl'),
+			            'icon' => 'warning'
+		            ),
+		            'no-ssl-detected' => array(
+			            'title' => __("No SSL detected", "really-simple-ssl"),
+			            'msg' => sprintf(__("No SSL detected. See our guide on how to %sget a free SSL certificate%s. If you do have an SSL certificate, try to reload this page over https by clicking this link: %sReload over https.%s", "really-simple-ssl"), '<a target="_blank" href="https://really-simple-ssl.com/knowledge-base/how-to-install-a-free-ssl-certificate-on-your-wordpress-cpanel-hosting/">', '</a>', '<a href="' .$reload_https_url . '">' , '</a>'),
+			            'icon' => 'warning',
+			            'admin_notice' => true,
+		            ),
+		            'ssl-detected' => array(
+			            'msg' => __('An SSL certificate was detected on your site.', 'really-simple-ssl'),
+			            'icon' => 'success'
+		            ),
+	            ),
             ),
 
             'mixed_content_fixer_detected' => array(
@@ -2881,7 +2881,6 @@ class rsssl_admin extends rsssl_front_end
 		    }
 	    }
 
-
         //if only admin_notices are required, filter out the rest.
 	    if ( $args['admin_notices'] ) {
             foreach ( $notices as $id => $notice ) {
@@ -2891,6 +2890,17 @@ class rsssl_admin extends rsssl_front_end
             }
         }
 
+	    //sort so warnings are on top
+	    $warnings = array();
+	    $other = array();
+	    foreach ($notices as $key => $notice){
+	        if ($notice['output']['icon']==='warning') {
+	            $warnings[$key] = $notice;
+            } else {
+		        $other[$key] = $notice;
+	        }
+        }
+	    $notices = $warnings + $other;
         return $notices;
     }
 
