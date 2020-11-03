@@ -2596,11 +2596,11 @@ class rsssl_admin extends rsssl_front_end
             ),
 
             'google_analytics' => array(
-                'callback' => 'rsssl_google_analytics_notice',
-                'condition' => array('rsssl_ssl_enabled', 'rsssl_ssl_activation_time_no_longer_then_3_days_ago'),
+                'callback' => '_true_',
+                //'condition' => array('rsssl_ssl_enabled', 'rsssl_ssl_activation_time_no_longer_then_3_days_ago'),
                 'score' => 5,
                 'output' => array(
-                        'ga' => array(
+                        'true' => array(
                             'msg' => sprintf(__("Don't forget to change your settings in Google Analytics and Webmaster tools. %sMore info%s", "really-simple-ssl"), '<a target="_blank" href="https://really-simple-ssl.com/knowledge-base/how-to-setup-google-analytics-and-google-search-consolewebmaster-tools/">', '</a>')
                                 . " " . __("or", "really-simple-ssl")
                                 . "<span class='rsssl-dashboard-dismiss' data-dismiss_type='google_analytics'><a href='#' class='rsssl-dismiss-text rsssl-close-warning'>$dismiss</a></span>",
@@ -2918,18 +2918,25 @@ class rsssl_admin extends rsssl_front_end
 		    $invert = true;
 	    }
 
-	    if ( preg_match( '/(.*)\(\)\-\>(.*)->(.*)/i', $func, $matches)) {
-		    $base = $matches[1];
-		    $class = $matches[2];
-		    $function = $matches[3];
-		    $output = call_user_func( array( $base()->{$class}, $function ) );
+	    if ( $func === '_true_') {
+	        $output = true;
+        } else if ( $func === '_false_' ) {
+		    $output = false;
 	    } else {
-		    $output = $func();
-	    }
+		    if ( preg_match( '/(.*)\(\)\-\>(.*)->(.*)/i', $func, $matches)) {
+			    $base = $matches[1];
+			    $class = $matches[2];
+			    $function = $matches[3];
+			    $output = call_user_func( array( $base()->{$class}, $function ) );
+		    } else {
+			    $output = $func();
+		    }
 
-	    if ( $invert ) {
-	        $output = !$output;
+		    if ( $invert ) {
+			    $output = !$output;
+		    }
         }
+
 
 	    //stringyfy booleans
         if (!$is_condition) {
@@ -4369,10 +4376,4 @@ if (!function_exists('rsssl_no_multisite')) {
 			return false;
 		}
 	}
-}
-
-if (!function_exists('rsssl_google_analytics_notice')) {
-    function rsssl_google_analytics_notice() {
-        return 'ga';
-    }
 }
