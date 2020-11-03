@@ -2733,11 +2733,6 @@ class rsssl_admin extends rsssl_front_end
                         'icon' => 'warning',
                         'dismissible' => true
                     ),
-                    'default' => array(
-                        'msg' => __('No 301 redirect is set. Enable the WordPress 301 redirect in the settings to get a 301 permanent redirect.', 'really-simple-ssl'),
-                        'icon' => 'warning',
-                        'dismissible' => true
-                    ),
                 ),
             ),
 
@@ -2843,7 +2838,7 @@ class rsssl_admin extends rsssl_front_end
 		    }
 
 		    $func   = $notice['callback'];
-		    _log("check callback");
+
 		    $output = $this->validate_function($func);
 
             if ( !isset($notice['output'][ $output ]) ) {
@@ -2873,7 +2868,6 @@ class rsssl_admin extends rsssl_front_end
 
 		    $condition_functions = $notice['condition'];
 		    foreach ( $condition_functions as $func ) {
-		        _log("check condition");
 			    $condition = $this->validate_function($func, true);
 			    if ( ! $condition ) {
 				    unset($notices[$id]);
