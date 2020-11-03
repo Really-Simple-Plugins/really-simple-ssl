@@ -75,7 +75,7 @@ if (!class_exists('rsssl_multisite')) {
         public function override_ssl_detection_ms( $output ){
 
             //if it's multisite, and it's activated per site, this is not important for the main site.
-        	if ( is_multisite() && $this->selected_networkwide_or_per_site && !$this->ssl_enabled_networkwide ) {
+        	if ( is_multisite() && is_main_site() && $this->selected_networkwide_or_per_site && !$this->ssl_enabled_networkwide ) {
         		return 'not-applicable';
 	        }
 
