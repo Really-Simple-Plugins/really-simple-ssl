@@ -2597,7 +2597,7 @@ class rsssl_admin extends rsssl_front_end
 
             'google_analytics' => array(
                 'callback' => '_true_',
-                //'condition' => array('rsssl_ssl_enabled', 'rsssl_ssl_activation_time_no_longer_then_3_days_ago'),
+                'condition' => array('rsssl_ssl_enabled', 'rsssl_ssl_activation_time_no_longer_then_3_days_ago'),
                 'score' => 5,
                 'output' => array(
                         'true' => array(
@@ -2798,10 +2798,10 @@ class rsssl_admin extends rsssl_front_end
             ),
 
             'mixed_content_scan' => array(
-                'callback' => 'rsssl_scan_upsell',
+                'callback' => '_true_',
                 'score' => 5,
                 'output' => array(
-                    'upsell' => array(
+                    'true' => array(
                         'msg' => sprintf(__("No mixed content scan performed (%sRead more%s) ", "really-simple-ssl"), '<a target="_blank" href="' . $this->pro_url .'">', '</a>'),
                         'icon' => 'premium'
                     ),
@@ -4281,12 +4281,6 @@ if (!function_exists('rsssl_secure_cookies_set')) {
 		} else {
 			return 'not-set';
 		}
-	}
-}
-
-if (!function_exists('rsssl_scan_upsell')) {
-	function rsssl_scan_upsell() {
-		return 'upsell';
 	}
 }
 
