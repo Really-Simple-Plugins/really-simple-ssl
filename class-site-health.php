@@ -13,7 +13,7 @@ if (!class_exists("rsssl_site_health")) {
 			}
 
 
-			add_filter( 'site_status_tests', array($this, 'rsssl_hsts_check' ) );
+			add_filter( 'site_status_tests', array($this, 'rsssl_health_check' ) );
 
 			self::$_this = $this;
 		}
@@ -22,16 +22,18 @@ if (!class_exists("rsssl_site_health")) {
 			return self::$_this;
 		}
 
-		public function rsssl_hsts_check( $tests ) {
+		public function rsssl_health_check( $tests ) {
 			$tests['direct']['really-simple-ssl'] = array(
 				'label' => __( 'Really Simple SSL HSTS test' ),
-				'test'  => array($this, "rsssl_hsts_test"),
+				'test'  => array($this, "rsssl_health_test"),
 			);
 
 			return $tests;
 		}
 
-		public function rsssl_hsts_test() {
+		public function rsssl_health_test() {
+
+
 			if (is_multisite() && is_super_admin() ){
 				$url = add_query_arg(array('page' => 'really-simple-ssl'), network_admin_url('settings.php'));
 			} else {
@@ -96,7 +98,27 @@ if (!class_exists("rsssl_site_health")) {
 						'actions'     => '',
 					);
 				}
+
+				//returns empty for sites without .htaccess, or if all headers are already in use
+				$recommended_headers = RSSSL()->really_simple_ssl->get_recommended_security_headers();
+				if (!empty($recommended_headers)) {
+					$style = '<style>.rsssl-sec-headers-list li {list-style-type:disc;margin-left:20px;}</style>';
+					$list = '<ul class="rsssl-sec-headers-list"><li>'.implode('</li><li>', $recommended_headers ).'</li></ul>';
+					$result['status']      = 'recommended';
+					$result['label']       = __( 'Missing security headers' , 'really-simple-ssl' );
+					$result['description'] = sprintf(
+						'<p>%s</p>',
+						__( 'Your .htaccess file does not contain all recommended security headers.', 'really-simple-ssl' ).$style.$list
+					);
+					$result['actions']     .= sprintf(
+						'<p><a href="%s" target="_blank">%s</a></p>',
+						'https://really-simple-ssl.com/everything-you-need-to-know-about-security-headers/',
+						__( 'Lear more about security headers', 'really-simple-ssl' )
+					);
+				}
 			}
+
+
 
 			if (isset($result['status'])) {
 				$result['badge'] = array(

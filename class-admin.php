@@ -1817,6 +1817,63 @@ class rsssl_admin extends rsssl_front_end
         return $result;
     }
 
+	/**
+	 * returns list of recommended, but not active security headers for this site
+     * returns empty array if no .htacces file exists
+     * @return array
+	 *
+	 * @since  4.0
+	 *
+	 * @access public
+	 *
+	 */
+
+	public function get_recommended_security_headers()
+	{
+		$not_used_headers = array();
+		if (RSSSL()->rsssl_server->uses_htaccess() && file_exists($this->htaccess_file())) {
+		    $check_headers = array(
+                array(
+                    'name' => 'HTTP Strict Transport Security',
+                    'pattern' =>  'Strict-Transport-Security',
+                ),
+                array(
+                    'name' => 'Content Security Policy: Upgrade Insecure Requests',
+                    'pattern' =>  'upgrade-insecure-requests',
+                ),
+			    array(
+				    'name' => 'X-XSS protection',
+				    'pattern' =>  'X-XSS-Protection',
+			    ),
+			    array(
+				    'name' => 'X-Content Type Options',
+				    'pattern' =>  'X-Content-Type-Options',
+			    ),
+                array(
+				    'name' => 'Referrer-Policy',
+				    'pattern' =>  'Referrer-Policy',
+			    ),
+                array(
+				    'name' => 'X-Frame-Options',
+				    'pattern' =>  'X-Frame-Options',
+			    ),
+                array(
+				    'name' => 'Expect-CT',
+				    'pattern' =>  'Expect-CT',
+			    ),
+            );
+
+			$htaccess = file_get_contents($this->htaccess_file());
+            foreach ($check_headers as $check_header){
+	            if ( !preg_match("/".$check_header['pattern']."/", $htaccess, $check) ) {
+	                $not_used_headers[] = $check_header['name'];
+                }
+            }
+		}
+
+		return $not_used_headers;
+	}
+
 
     /**
      * Adds redirect to https rules to the .htaccess file or htaccess.conf on Bitnami.
@@ -3296,7 +3353,7 @@ class rsssl_admin extends rsssl_front_end
 
         if (isset ($_GET['tab'])) $this->admin_tabs($_GET['tab']); else $this->admin_tabs('configuration');
         if (isset ($_GET['tab'])) $tab = $_GET['tab']; else $tab = 'configuration';
-
+        update_option('rsssl_visited_version_4_dashboard', true);
         ?>
         <div class="rsssl-container">
             <div class="rsssl-main"><?php

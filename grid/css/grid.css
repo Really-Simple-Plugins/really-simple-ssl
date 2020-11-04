@@ -270,9 +270,6 @@
 .rsssl-grid .rsssl-item .item-container .rsssl-grid-item-content .form-table {
   display: flex;
 }
-.rsssl-grid .rsssl-item .item-container .rsssl-grid-item-content .form-table tbody {
-  width: 100% !important;
-}
 .rsssl-grid .rsssl-item .item-container .rsssl-grid-item-content .form-table th {
   margin-left: 0;
 }
