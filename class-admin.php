@@ -568,7 +568,7 @@ class rsssl_admin extends rsssl_front_end
             }
 
             #rsssl-message {
-                margin: 0 0 20px 0;
+                margin: 0 0 20px 20px;
                 padding: 0;
                 border-left-color: #333;
             }
@@ -2512,9 +2512,11 @@ class rsssl_admin extends rsssl_front_end
                 <div id="rsssl-logo"><img src="<?php echo rsssl_url?>/assets/logo-really-simple-ssl.png" alt="review-logo"></div>
             </div>
             <?php
-                foreach ($tabs as $tab => $name) {
-                    $class = ($tab == $current) ? ' nav-tab-active' : '';
-                    echo "<a class='nav-tab$class' href='?page=rlrsssl_really_simple_ssl&tab=$tab'>$name</a>";
+                if (count($tabs)>1) {
+	                foreach ( $tabs as $tab => $name ) {
+		                $class = ( $tab == $current ) ? ' nav-tab-active' : '';
+		                echo "<a class='nav-tab$class' href='?page=rlrsssl_really_simple_ssl&tab=$tab'>$name</a>";
+	                }
                 }
             ?>
             <div class="header-links">
@@ -3284,6 +3286,10 @@ class rsssl_admin extends rsssl_front_end
         return $status;
     }
 
+	/**
+	 * Render the settings page
+	 */
+
     public function settings_page()
     {
         if (!current_user_can($this->capability)) return;
@@ -3294,10 +3300,8 @@ class rsssl_admin extends rsssl_front_end
         ?>
         <div class="rsssl-container">
             <div class="rsssl-main"><?php
-
                 switch ($tab) {
                     case 'configuration' :
-
                     $this->render_grid($this->general_grid());
                     do_action("rsssl_configuration_page");
                 }
