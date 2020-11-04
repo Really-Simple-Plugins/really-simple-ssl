@@ -15,6 +15,13 @@ require_once( BASE_PATH . 'wp-admin/includes/plugin.php');
 
 delete_transient('rsssl_testpage');
 delete_transient('rsssl_domain_list');
+$system_status_cert;
+if (is_multisite()){
+	$system_status_cert = RSSSL()->rsssl_certificate;
+} else {
+	
+	$system_status_cert
+}
 
 if ( current_user_can( 'manage_options' ) ) {
 
@@ -25,10 +32,10 @@ if ( current_user_can( 'manage_options' ) ) {
 	echo "Domain: " . site_url() ."\n";
 	echo "Plugin version: " . rsssl_version ."\n";
 
-	if ( RSSSL()->rsssl_certificate->is_valid() ) {
+	if ( $system_status_cert->is_valid() ) {
 		echo "SSL certificate is valid\n";
 	} else {
-		if ( RSSSL()->rsssl_certificate->detection_failed() ) {
+		if ( $system_status_cert->detection_failed() ) {
 			echo "Not able to detect certificate\n";
 		} else {
 			echo "Invalid SSL certificate\n";
