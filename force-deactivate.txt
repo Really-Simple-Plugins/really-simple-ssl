@@ -18,6 +18,9 @@ define( 'WP_USE_THEMES', false );
 #find the base path
 define( 'BASE_PATH', find_wordpress_base_path() . "/" );
 
+//make sure the files are loaded
+if (!defined('RSSSL_DOING_SYSTEM_STATUS')) define( 'RSSSL_DOING_SYSTEM_STATUS' , true);
+
 # Load WordPress Core
 require_once( BASE_PATH . 'wp-load.php' );
 require_once( ABSPATH . 'wp-admin/includes/plugin.php' );
