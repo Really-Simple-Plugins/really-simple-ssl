@@ -66,6 +66,7 @@ class rsssl_admin extends rsssl_front_end
         register_deactivation_hook(dirname(__FILE__) . "/" . $this->plugin_filename, array($this, 'deactivate'));
 	    add_action('admin_init', array($this, 'add_privacy_info'));
 	    add_action('admin_init', array($this, 'maybe_dismiss_review_notice'));
+
 	    // Only show deactivate popup when SSL has been enabled.
 	    if ($this->ssl_enabled) {
             add_action('admin_footer', array($this, 'deactivate_popup'), 40);
@@ -809,6 +810,10 @@ class rsssl_admin extends rsssl_front_end
     public function get_plugin_upgraded()
     {
         if ($this->plugin_db_version != rsssl_version) {
+
+	        if ( $this->plugin_db_version && version_compare( $this->plugin_db_version, '4.0.0', '<' ) ) {
+	            update_option('rsssl_upgraded_to_four', true);
+	        }
             $this->plugin_db_version = rsssl_version;
             $this->plugin_upgraded = true;
             $this->save_options();
@@ -2594,6 +2599,15 @@ class rsssl_admin extends rsssl_front_end
         <?php
     }
 
+	/**
+     * Check if user has upgraded to four from a previous version
+	 * @return bool
+	 */
+
+    public function upgraded_to_four(){
+        return get_option( 'rsssl_upgraded_to_four' );
+    }
+
     /**
      * Get array of notices
      * - condition: function returning boolean, if notice should be shown or not
@@ -2621,22 +2635,13 @@ class rsssl_admin extends rsssl_front_end
             $rules = __( "No recommended redirect rules detected.", "really-simple-ssl" ) ;
         }
 	    $rules            = '<br><code>' . $rules . '</code><br>';
-
-
+        
 	    $notice_defaults = array(
             'condition' => array(),
             'callback' => false,
         );
 
-        $enable = __("Show", "really-simple-ssl");
-	    $dismiss = __("dismiss", "really-simple-ssl");
 	    $curl_error = get_transient('rsssl_curl_error');
-
-	    if (RSSSL()->rsssl_server->uses_htaccess()) {
-		    $redirect_plusone = true;
-	    } else {
-	        $redirect_plusone = false;
-        }
 
         $reload_https_url = esc_url_raw("https://" . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"]);
         $notices = array(
@@ -2659,15 +2664,28 @@ class rsssl_admin extends rsssl_front_end
                 'condition' => array('rsssl_ssl_enabled', 'rsssl_ssl_activation_time_no_longer_then_3_days_ago'),
                 'score' => 5,
                 'output' => array(
-                        'true' => array(
-                            'msg' => sprintf(__("Don't forget to change your settings in Google Analytics and Webmaster tools. %sMore info%s", "really-simple-ssl"), '<a target="_blank" href="https://really-simple-ssl.com/knowledge-base/how-to-setup-google-analytics-and-google-search-consolewebmaster-tools/">', '</a>')
-                                . " " . __("or", "really-simple-ssl")
-                                . "<span class='rsssl-dashboard-dismiss' data-dismiss_type='google_analytics'><a href='#' class='rsssl-dismiss-text rsssl-close-warning'>$dismiss</a></span>",
-                            'icon' => 'open',
-                            'dismissible' => true,
-                            'plusone' => true
-                        ),
+                    'true' => array(
+                        'msg' => __("Don't forget to change your settings in Google Analytics and Webmaster tools.", "really-simple-ssl"),
+                        'url' => 'https://really-simple-ssl.com/knowledge-base/how-to-setup-google-analytics-and-google-search-consolewebmaster-tools/',
+                        'icon' => 'open',
+                        'dismissible' => true,
+                        'plusone' => true,
+                    ),
                 ),
+            ),
+
+            'upgraded_to_four' => array(
+	            'callback' => 'RSSSL()->really_simple_ssl->upgraded_to_four',
+	            'score' => 5,
+	            'output' => array(
+		            'true' => array(
+                        'url' => __('https://really-simple-ssl.com/really-simple-ssl-4-a-new-dashboard'),
+			            'msg' => __("Really Simple SSL 4.0. Learn more about our newest major release.", "really-simple-ssl"),
+			            'icon' => 'open',
+			            'dismissible' => true,
+			            'plusone' => true,
+		            ),
+	            ),
             ),
 
             'ssl_enabled' => array(
@@ -2716,16 +2734,15 @@ class rsssl_admin extends rsssl_front_end
                         'icon' => 'success'
                     ),
                     'no-response' => array(
-                        'msg' => sprintf(__('Really Simple SSL has received no response from the webpage. See our knowledge base for %sinstructions on how to fix this warning%s', 'really-simple-ssl'),'<a target="_blank" href="https://really-simple-ssl.com/knowledge-base/how-to-fix-no-response-from-webpage-warning/">','</a>') . " "
-                                 . __("or", "really-simple-ssl")
-                                 . "<span class='rsssl-dashboard-dismiss' data-dismiss_type='mixed_content_fixer_detected'><a href='#' class='rsssl-dismiss-text rsssl-close-warning'>$dismiss</a></span>"
-                                 . "<span class='rsssl-dashboard-plusone update-plugins rsssl-update-count'><span class='update-count'>1</span></span>",
+                        'url' => 'https://really-simple-ssl.com/knowledge-base/how-to-fix-no-response-from-webpage-warning/',
+                        'msg' => __('Really Simple SSL has received no response from the webpage.', 'really-simple-ssl'),
                         'icon' => 'open',
                         'dismissible' => true,
                         'plusone' => true
                     ),
                     'not-found' => array(
-                        'msg' => sprintf(__('The mixed content fixer is active, but was not detected on the frontpage. Please follow %sthese steps%s to check if the mixed content fixer is working.', "really-simple-ssl"),'<a target="_blank" href="https://www.really-simple-ssl.com/knowledge-base/how-to-check-if-the-mixed-content-fixer-is-active/">', '</a>' ),
+                        'url' => "https://www.really-simple-ssl.com/knowledge-base/how-to-check-if-the-mixed-content-fixer-is-active/",
+                        'msg' => __('The mixed content fixer is active, but was not detected on the frontpage.', "really-simple-ssl"),
                         'icon' => 'open',
                         'dismissible' => true
                     ),
@@ -2735,9 +2752,10 @@ class rsssl_admin extends rsssl_front_end
                         'dismissible' => true
                     ),
                     'curl-error' => array(
-	                    'msg' =>sprintf(__("The mixed content fixer could not be detected due to a cURL error: %s. cURL errors are often caused by an outdated version of PHP or cURL and don't affect the front-end of your site. Contact your hosting provider for a fix. %sMore information about this warning%s", 'really-simple-ssl'), "<b>" . $curl_error . "</b>", '<a target="_blank" href="https://www.really-simple-ssl.com/knowledge-base/curl-errors/">', '</a>' ),
+                        'url' => 'https://www.really-simple-ssl.com/knowledge-base/curl-errors/',
+	                    'msg' =>sprintf(__("The mixed content fixer could not be detected due to a cURL error: %s. cURL errors are often caused by an outdated version of PHP or cURL and don't affect the front-end of your site. Contact your hosting provider for a fix.", 'really-simple-ssl'), "<b>" . $curl_error . "</b>"),
 	                    'icon' => 'open',
-                        'dismissible' => true
+                        'dismissible' => true,
                     ),
                 ),
             ),
@@ -2768,14 +2786,12 @@ class rsssl_admin extends rsssl_front_end
                         'icon' => 'success'
                     ),
                     'wp-redirect-to-htaccess' => array(
-                        'msg' => __('WordPress 301 redirect enabled. We recommend to enable a 301 .htaccess redirect.', 'really-simple-ssl') . " "
-                                 . '<span><a href="'.$this->generate_enable_link($setting_name = 'wp-redirect-to-htaccess', $type='free').'">'.$enable.'</a></span>' . " "
-                                 . __("or", "really-simple-ssl")
-                                 . "<span class='rsssl-dashboard-dismiss' data-dismiss_type='check_redirect'><a href='#' class='rsssl-dismiss-text rsssl-close-warning'>$dismiss</a></span>"
-                                 . "<span class='rsssl-dashboard-plusone update-plugins rsssl-update-count'><span class='update-count'>1</span></span>",
+                        'url' => $this->generate_enable_link($setting_name = 'wp-redirect-to-htaccess', $type='free'),
+                        'msg' => __('WordPress 301 redirect enabled. We recommend to enable a 301 .htaccess redirect.', 'really-simple-ssl'),
                         'icon' => 'open',
-                        'plusone' => $redirect_plusone,
-                        'dismissible' => true
+                        'plusone' => RSSSL()->rsssl_server->uses_htaccess(),
+                        'dismissible' => true,
+                        'enable_dismiss' => 'enable',
                     ),
                     'no-redirect-set' => array(
                         'msg' => __('Enable a .htaccess redirect or WordPress redirect in the settings to create a 301 redirect.', 'really-simple-ssl') ,
@@ -2801,9 +2817,8 @@ class rsssl_admin extends rsssl_front_end
 	            'score' => 5,
 	            'output' => array(
 		            'uses-elementor' => array(
-			            'msg' => sprintf(__("Your site uses Elementor. This can require some additional steps before getting the secure lock. %sSee our guide for detailed instructions%s ", "really-simple-ssl"), '<a target="_blank" href="https://really-simple-ssl.com/knowledge-base/how-to-fix-mixed-content-in-elementor-after-moving-to-ssl/">', '</a>')
-			                     . __("or", "really-simple-ssl")
-			                     . "<span class='rsssl-dashboard-dismiss' data-dismiss_type='elementor'><a href='#' class='rsssl-dismiss-text rsssl-close-warning'>$dismiss</a></span>",
+                        'url' => 'https://really-simple-ssl.com/knowledge-base/how-to-fix-mixed-content-in-elementor-after-moving-to-ssl/',
+			            'msg' => __("Your site uses Elementor. This can require some additional steps before getting the secure lock.", "really-simple-ssl"),
 			            'icon' => 'open',
 			            'dismissible' => true
 		            ),
@@ -2816,9 +2831,8 @@ class rsssl_admin extends rsssl_front_end
 	            'score' => 5,
 	            'output' => array(
 		            'users-divi' => array(
-			            'msg' => sprintf(__("Your site uses Divi. This can require some additional steps before getting the secure lock. %sSee our guide for detailed instructions%s ", "really-simple-ssl"), '<a target="_blank" href="https://really-simple-ssl.com/knowledge-base/mixed-content-when-using-divi-theme/">', '</a>')
-			                     . __("or", "really-simple-ssl")
-			                     . "<span class='rsssl-dashboard-dismiss' data-dismiss_type='divi'><a href='#' class='rsssl-dismiss-text rsssl-close-warning'>$dismiss</a></span>",
+                        'url' => "https://really-simple-ssl.com/knowledge-base/mixed-content-when-using-divi-theme/",
+			            'msg' => __("Your site uses Divi. This can require some additional steps before getting the secure lock.", "really-simple-ssl"),
 			            'icon' => 'open',
 			            'dismissible' => true
 		            ),
@@ -2953,7 +2967,29 @@ class rsssl_admin extends rsssl_front_end
 		        $other[$key] = $notice;
 	        }
         }
+
 	    $notices = $warnings + $other;
+
+	    //add plus ones
+	    foreach ($notices as $key => $notice){
+
+		    if ( isset($notice['output']['url']) ) {
+		        $url = $notice['output']['url'];
+		        if (strpos( $url, 'https://really-simple-ssl.com')){
+		            $info = __('%sMore info%s or %sdismiss%s','really-simple-ssl');
+                } else {
+			        $info = __('%sEnable%s or %sdismiss%s','really-simple-ssl');
+		        }
+		        $dismiss_open = "<span class='rsssl-dashboard-dismiss' data-dismiss_type='".$key."'><a href='#' class='rsssl-dismiss-text rsssl-close-warning'>";
+			    $notices[$key]['output']['msg'] .= ' '.sprintf($info ,'<a target="_blank" href="'.$url.'">', '</a>', $dismiss_open, "</a></span>");
+		    }
+
+		    if ( isset($notice['output']['plusone']) && $notice['output']['plusone']) {
+			    $plusone = "<span class='rsssl-dashboard-plusone update-plugins rsssl-update-count'><span class='update-count'>1</span></span>";
+			    $notices[$key]['output']['msg'] .= $plusone;
+            }
+	    }
+
         return $notices;
     }
 
