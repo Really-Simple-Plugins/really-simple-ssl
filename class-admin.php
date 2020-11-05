@@ -51,6 +51,8 @@ class rsssl_admin extends rsssl_front_end
 
         self::$_this = $this;
 
+//        update_option('rsssl_google_analytics_dismissed', false);
+
         $this->ABSpath = $this->getABSPATH();
         $this->get_options();
         $this->get_admin_options();
@@ -568,7 +570,7 @@ class rsssl_admin extends rsssl_front_end
             }
 
             #rsssl-message {
-                margin: 0 0 20px 20px;
+                /*margin: 0 0 20px 20px;*/
                 padding: 0;
                 border-left-color: #333;
             }
@@ -2656,7 +2658,7 @@ class rsssl_admin extends rsssl_front_end
 
             'google_analytics' => array(
                 'callback' => '_true_',
-                'condition' => array('rsssl_ssl_enabled', 'rsssl_ssl_activation_time_no_longer_then_3_days_ago'),
+//                'condition' => array('rsssl_ssl_enabled', 'rsssl_ssl_activation_time_no_longer_then_3_days_ago'),
                 'score' => 5,
                 'output' => array(
                         'true' => array(
@@ -2890,8 +2892,10 @@ class rsssl_admin extends rsssl_front_end
 	     */
 	    $options = get_option( 'rlrsssl_options' );
 	    foreach ( $notices as $id => $notice ) {
+	        error_log("Checking if notice is dismissed");
 
 		    if ( $args['status'] === 'all' && get_option( "rsssl_" . $id . "_dismissed" )) {
+		        error_log("$id has been dismissed");
 			    unset($notices[$id]);
 			    continue;
 		    }
@@ -3015,6 +3019,7 @@ class rsssl_admin extends rsssl_front_end
 
     public function get_score_percentage() {
         if (wp_doing_ajax()) {
+            error_log("Get score invoked via AJAX");
             if (!isset($_POST['token']) || (!wp_verify_nonce($_POST['token'], 'rsssl_nonce'))) {
                 return 0;
             }
@@ -3057,6 +3062,7 @@ class rsssl_admin extends rsssl_front_end
         set_transient('rsssl_percentage_completed', $score, DAY_IN_SECONDS);
 
         if ( wp_doing_ajax() ) {
+            error_log("Returning score while invoked via AJAX");
             wp_die( $score );
         }
 
@@ -3136,6 +3142,7 @@ class rsssl_admin extends rsssl_front_end
      */
 
     public function reset_open_remaining_task_cache(){
+        error_log("Resetting remaining task count");
         delete_transient('rsssl_open_task_count');
         delete_transient('rsssl_remaining_task_count');
     }
@@ -3292,25 +3299,30 @@ class rsssl_admin extends rsssl_front_end
      */
 
     public function get_remaining_tasks_count() {
+        error_log("Getting open task count");
         if ( ! current_user_can( 'manage_options' ) ) {
             return 0;
         }
 
         if (wp_doing_ajax()) {
+            error_log("Getting open task count via AJAX!");
             if (!isset($_POST['token']) || (!wp_verify_nonce($_POST['token'], 'rsssl_nonce'))) {
                 return 0;
             }
 
             if (!isset($_POST["action"]) && $_POST["action"] ==! 'rsssl_get_updated_percentage') return 0;
             // When invoked via AJAX the count should be updated, therefore clear cache
+            error_log("Resetting open task count cache");
             $this->reset_open_remaining_task_cache();
         }
 
         $count = get_transient( 'rsssl_remaining_task_count' );
         if ( $count === false ) {
+            error_log("No transient, getting count");
             $count = count($this->get_notices_list(
                     array( 'status' => 'open' )
-            ));
+            ) );
+            error_log("Count $count");
             set_transient( 'rsssl_remaining_task_count', $count, 'DAY_IN_SECONDS' );
         }
 

@@ -20,24 +20,6 @@ jQuery(document).ready(function ($) {
         obj.closest('.rsssl-item').find('.rsssl-button-save').prop('disabled', false);
     }
 
-    // Re-calculate percentage on dimissing notice. Use document, function to allow AJAX call to run more than once.
-    $(document).on('click','.rsssl-close-warning',function () {
-        $.ajax({
-            type: "post",
-            data: {
-                'action': 'rsssl_get_updated_percentage',
-                token  : rsssl.token,
-            },
-            url: rsssl.ajaxurl,
-            success: function (data) {
-                if (data != '') {
-                    $('.rsssl-progress-percentage').text(data + "%");
-                    update_open_task_count();
-                }
-            }
-        });
-    });
-
     // Update the count in the 'Remaining tasks' section of progress block
     function update_open_task_count() {
         $.ajax({
@@ -55,10 +37,13 @@ jQuery(document).ready(function ($) {
                         $('.open-task-count').text("");
                         $(".rsssl-progress-text").text(rsssl.finished_text);
                         $(".rsssl-progress-text").append("<a href='https://really-simple-ssl.com/pro'>Really Simple SSL Pro</a>");
-
                     } else {
+                        var str = $('#rsssl-remaining-tasks-label').text();
+                        console.log(str);
+                        var yyy = str.replace(/\(.*?\)/, "(" + data + ")") ;
+                        console.log(yyy);
                         // Replace the count if there are open tasks left
-                        $('.open-task-count').text("(" + data + ")");
+                        $('#rsssl-remaining-tasks-label').text("(" + data + ")");
                         $(".rsssl-progress-count").text(data);
                     }
                 }
@@ -131,7 +116,7 @@ jQuery(document).ready(function ($) {
     }
 
 
-    $(".rsssl-dashboard-dismiss").on("click", ".rsssl-close-warning, .rsssl-close-warning-x",function (event) {
+    $(document).on("click", ".rsssl-close-warning, .rsssl-close-warning-x",function (event) {
         var type = $(this).closest('.rsssl-dashboard-dismiss').data('dismiss_type');
         var data = {
             'action': 'rsssl_dismiss_settings_notice',
@@ -140,6 +125,23 @@ jQuery(document).ready(function ($) {
         };
         $.post(ajaxurl, data, function (response) {});
         $(this).closest('tr').remove();
+
+        console.log("Clicked");
+
+        $.ajax({
+            type: "post",
+            data: {
+                'action': 'rsssl_get_updated_percentage',
+                token  : rsssl.token,
+            },
+            url: rsssl.ajaxurl,
+            success: function (data) {
+                if (data != '') {
+                    $('.rsssl-progress-percentage').text(data + "%");
+                    update_open_task_count();
+                }
+            }
+        });
     });
 
 });
