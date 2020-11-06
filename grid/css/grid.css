@@ -2,6 +2,10 @@
 .settings_page_really-simple-ssl #wpcontent {
   padding: 0;
 }
+.settings_page_rlrsssl_really_simple_ssl #wpcontent .rsssl-footer-item,
+.settings_page_really-simple-ssl #wpcontent .rsssl-footer-item {
+  margin-top: -5px;
+}
 .settings_page_rlrsssl_really_simple_ssl #wpcontent .rsssl-footer-item form,
 .settings_page_really-simple-ssl #wpcontent .rsssl-footer-item form {
   float: left;
@@ -466,7 +470,6 @@
 .rsssl-grid #rsssl-progress-footer .footer-left {
   margin-left: 0 !important;
   float: left;
-  margin-top: -15px;
   font-weight: 600;
 }
 .rsssl-grid #rsssl-progress-footer .footer-left .upsell {
