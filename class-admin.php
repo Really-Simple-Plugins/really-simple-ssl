@@ -3778,7 +3778,7 @@ class rsssl_admin extends rsssl_front_end
             $comment = __("This option is enabled on the network menu.", "really-simple-ssl");
 		} elseif ($this->do_not_edit_htaccess) {
             //on multisite, the .htaccess do not edit option is not available
-            $comment = __("If the setting 'do not edit htaccess' is enabled, you can't change this setting.", "really-simple-ssl");
+            $comment = __("If the setting 'stop editing the .htaccess file' is enabled, you can't change this setting.", "really-simple-ssl");
             $disabled = "disabled";
 		}
 		?>
