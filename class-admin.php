@@ -569,7 +569,7 @@ class rsssl_admin extends rsssl_front_end
             }
 
             #rsssl-message {
-                margin: 0 0 20px 20px;
+                /*margin: 0 0 20px 20px;*/
                 padding: 0;
                 border-left-color: #333;
             }
@@ -2661,7 +2661,7 @@ class rsssl_admin extends rsssl_front_end
 
             'google_analytics' => array(
                 'callback' => '_true_',
-                'condition' => array('rsssl_ssl_enabled', 'rsssl_ssl_activation_time_no_longer_then_3_days_ago'),
+//                'condition' => array('rsssl_ssl_enabled', 'rsssl_ssl_activation_time_no_longer_then_3_days_ago'),
                 'score' => 5,
                 'output' => array(
                     'true' => array(
@@ -2902,10 +2902,10 @@ class rsssl_admin extends rsssl_front_end
 	    /**
 	     * Filter out notice that do not apply, or are dismissed
 	     */
+
 	    $options = get_option( 'rlrsssl_options' );
 	    foreach ( $notices as $id => $notice ) {
-
-		    if ( $args['status'] === 'all' && get_option( "rsssl_" . $id . "_dismissed" )) {
+		    if (get_option( "rsssl_" . $id . "_dismissed" )) {
 			    unset($notices[$id]);
 			    continue;
 		    }
@@ -2913,6 +2913,17 @@ class rsssl_admin extends rsssl_front_end
 		    $func   = $notice['callback'];
 
 		    $output = $this->validate_function($func);
+
+            //check if all notices should be dismissed
+            if ( ( isset( $notice['output']['dismissible'] )
+                && $notice['output']['dismissible']
+                && ( $options['dismiss_all_notices'] !== false ) )
+            ) {
+                update_option( 'rsssl_' . $id . '_dismissed', true );
+
+                unset($notices[$id]);
+                continue;
+            }
 
             if ( !isset($notice['output'][ $output ]) ) {
 	            unset($notices[$id]);
@@ -2927,17 +2938,6 @@ class rsssl_admin extends rsssl_front_end
 			    unset($notices[$id]);
 			    continue;
             }
-
-		    //check if all notices should be dismissed
-		    if ( ( isset( $notice['output']['dismissible'] )
-		           && $notice['output']['dismissible']
-		           && ( $options['dismiss_all_notices'] !== false ) )
-		    ) {
-			    update_option( 'rsssl_' . $id . '_dismissed', true );
-
-			    unset($notices[$id]);
-			    continue;
-		    }
 
 		    $condition_functions = $notice['condition'];
 		    foreach ( $condition_functions as $func ) {
@@ -3306,7 +3306,6 @@ class rsssl_admin extends rsssl_front_end
         }
 
         $count = get_transient( 'rsssl_all_task_count' );
-
         if ( $count === false ) {
 	        $count = count($this->get_notices_list(
 		        array( 'status' => 'all' )
@@ -3346,7 +3345,7 @@ class rsssl_admin extends rsssl_front_end
         if ( $count === false ) {
             $count = count($this->get_notices_list(
                     array( 'status' => 'open' )
-            ));
+            ) );
             set_transient( 'rsssl_remaining_task_count', $count, 'DAY_IN_SECONDS' );
         }
 
