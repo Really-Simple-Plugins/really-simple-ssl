@@ -2313,7 +2313,7 @@ class rsssl_admin extends rsssl_front_end
 
                         <i>- Rogier</i>
                         <div class="rsssl-buttons-row">
-                            <a class="button button-rsssl-primary" target="_blank"
+                            <a class="button button-primary" target="_blank"
                                href="https://wordpress.org/support/plugin/really-simple-ssl/reviews/#new-post"><?php _e('Leave a review', 'really-simple-ssl'); ?></a>
                             <div class="dashicons dashicons-calendar"></div><a href="#" id="maybe-later"><?php _e('Maybe later', 'really-simple-ssl'); ?></a>
                             <div class="dashicons dashicons-no-alt"></div><a href="<?php echo esc_url(add_query_arg(array("page"=>"rlrsssl_really_simple_ssl", "tab"=>"configuration", "rsssl_dismiss_review_notice"=>1),admin_url("options-general.php") ) );?>"><?php _e('Don\'t show again', 'really-simple-ssl'); ?></a>
@@ -2590,7 +2590,7 @@ class rsssl_admin extends rsssl_front_end
                         <div class="header-upsell-pro"><?php _e("PRO", "really-simple-ssl"); ?></div>
                     <?php } else { ?>
                     <div class="documentation">
-                        <a href="https://really-simple-ssl.com/support" class="button button-rsssl-primary" target="_blank"><?php _e("Support", "really-simple-ssl") ?></a>
+                        <a href="https://really-simple-ssl.com/support" class="button button-primary" target="_blank"><?php _e("Support", "really-simple-ssl") ?></a>
                     </div>
                     <?php } ?>
                 </div>
