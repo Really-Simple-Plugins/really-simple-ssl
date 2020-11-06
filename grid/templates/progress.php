@@ -24,6 +24,12 @@
                     } else {
                         $pro_url = RSSSL()->really_simple_ssl->pro_url;
                         echo sprintf(__("Basic SSL configuration finished! Improve your score with %sReally Simple SSL Pro%s. ", "really-simple-ssl"), '<a target="_blank" href="' . $pro_url . '">', '</a>');
+                        if (defined('rsssl_pro_version')) {
+                            _e("SSL configuration finished!", "really-simple-ssl");
+                        } else {
+                            $pro_url = RSSSL()->really_simple_ssl->pro_url;
+                            echo sprintf(__("Basic SSL configuration finished! Improve your score with %sReally Simple SSL Pro%s. ", "really-simple-ssl"), '<a target="_blank" href="' . $pro_url . '">', '</a>');
+                        }
                     }
                 } else {
                 	if ( !is_network_admin() ) _e("SSL is not yet enabled on this site." , "really-simple-ssl");
