@@ -3613,7 +3613,7 @@ class rsssl_admin extends rsssl_front_end
 	    }
 
         register_setting('rlrsssl_options', 'rlrsssl_options', array($this, 'options_validate'));
-	    add_settings_section('rlrsssl_settings', __("Settings", "really-simple-ssl"), array($this, 'section_text'), 'rlrsssl');
+        add_settings_section('rlrsssl_settings', __("Settings", "really-simple-ssl"), array($this, 'section_text'), 'rlrsssl');
 
 	    $help_tip = RSSSL()->rsssl_help->get_help_tip(__("In most cases you need to leave this enabled, to prevent mixed content issues on your site.", "really-simple-ssl"), $return=true);
 	    add_settings_field('id_autoreplace_insecure_links', $help_tip . "<div class='rsssl-settings-text'>" . __("Mixed content fixer", "really-simple-ssl"), array($this, 'get_option_autoreplace_insecure_links'), 'rlrsssl', 'rlrsssl_settings');
