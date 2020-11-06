@@ -159,6 +159,43 @@
   width: 780px;
   height: 455px;
 }
+.rsssl-grid .rsssl-item .item-container .form-table {
+  display: flex;
+}
+.rsssl-grid .rsssl-item .item-container .form-table tbody {
+  display: flex;
+  flex-direction: column;
+  width: 100% !important;
+}
+.rsssl-grid .rsssl-item .item-container .form-table tbody tr {
+  padding: 0 !important;
+  padding-bottom: 10px;
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+}
+.rsssl-grid .rsssl-item .item-container .form-table tbody tr td {
+  padding: 0;
+  margin: 0;
+}
+.rsssl-grid .rsssl-item .item-container .form-table tbody tr th {
+  margin-left: 0;
+  width: 250px;
+  padding: 10px 0 0 0 !important;
+  display: flex;
+  align-items: center;
+  font-size: 13px;
+  font-weight: normal;
+}
+.rsssl-grid .rsssl-item .item-container .form-table tbody tr th .dashicons-editor-help {
+  font-size: 20px;
+}
+.rsssl-grid .rsssl-item .item-container .form-table tbody tr th .rsssl-tooltip-right {
+  padding-right: 10px;
+}
+.rsssl-grid .rsssl-item .item-container h2 {
+  display: none;
+}
 .rsssl-grid .rsssl-item .item-container .rsssl-save-settings-feedback {
   color: #d7263d;
 }
@@ -209,9 +246,6 @@
             Other plugins
          */
   /*
-          Other plugins
-        */
-  /*
           Progress labels
          */
 }
@@ -257,49 +291,6 @@
 .rsssl-grid .rsssl-item .item-container .rsssl-grid-item-content .rsssl-progress-block .rsssl-progress-table td {
   padding: 8px 15px 5px 0;
   vertical-align: top;
-}
-.rsssl-grid .rsssl-item .item-container .rsssl-grid-item-content .rsssl-settings th {
-  width: 85%;
-}
-.rsssl-grid .rsssl-item .item-container .rsssl-grid-item-content .rsssl-settings th tr {
-  width: 100%;
-}
-.rsssl-grid .rsssl-item .item-container .rsssl-grid-item-content .form-table {
-  display: flex;
-}
-.rsssl-grid .rsssl-item .item-container .rsssl-grid-item-content .form-table th {
-  margin-left: 0;
-}
-.rsssl-grid .rsssl-item .item-container .rsssl-grid-item-content .form-table th .dashicons-editor-help {
-  font-size: 20px;
-}
-.rsssl-grid .rsssl-item .item-container .rsssl-grid-item-content .form-table tbody {
-  display: flex;
-  flex-direction: column;
-  width: 100% !important;
-}
-.rsssl-grid .rsssl-item .item-container .rsssl-grid-item-content .form-table tbody tr {
-  padding-bottom: 10px;
-  display: flex;
-  align-items: center;
-  flex-direction: row;
-}
-.rsssl-grid .rsssl-item .item-container .rsssl-grid-item-content .form-table tbody tr th {
-  padding: 10px 0 0 0 !important;
-  display: flex;
-  align-items: center;
-  font-size: 13px;
-  font-weight: normal;
-}
-.rsssl-grid .rsssl-item .item-container .rsssl-grid-item-content .form-table tbody tr th .rsssl-tooltip-right {
-  padding-right: 10px;
-}
-.rsssl-grid .rsssl-item .item-container .rsssl-grid-item-content .form-table tbody tr td {
-  padding: 0;
-  margin: 0;
-}
-.rsssl-grid .rsssl-item .item-container .rsssl-grid-item-content h2 {
-  display: none;
 }
 .rsssl-grid .rsssl-item .item-container .rsssl-grid-item-content .rsssl-tips-tricks {
   color: #3c3c3c;
@@ -365,7 +356,7 @@
   text-decoration: underline;
 }
 .rsssl-grid .rsssl-item .item-container .rsssl-grid-item-content #rsssl-feedback {
-  color: red;
+  color: #d7263d;
 }
 .rsssl-grid .rsssl-item .item-container .rsssl-grid-item-content .rsssl-upsell {
   display: flex !important;
@@ -385,7 +376,7 @@
   margin-right: 5px;
 }
 .rsssl-grid .rsssl-item .item-container .rsssl-grid-item-content .rsssl-upsell .wpsi-red {
-  background-color: red;
+  background-color: #d7263d;
 }
 .rsssl-grid .rsssl-item .item-container .rsssl-grid-item-content .rsssl-upsell .cmplz-blue {
   background-color: #27ADEA;
@@ -431,6 +422,9 @@
 .rsssl-grid .rsssl-item .item-container .rsssl-grid-item-footer .button-primary {
   justify-content: flex-start;
 }
+.rsssl-grid .rsssl-item .item-container .rsssl-grid-item-footer .rsssl-button-save {
+  margin-right: 25px;
+}
 .rsssl-grid .rsssl-item .item-container .rsssl-grid-item-footer #rsssl-feedback {
   font-weight: 600;
   color: #61ce70;
@@ -451,6 +445,9 @@
 }
 .rsssl-grid .rsssl-item.small .item-container {
   width: 380px;
+}
+.rsssl-grid .rsssl-item.small .item-container th {
+  width: 85% !important;
 }
 .rsssl-grid .rsssl-item.no-border .item-container {
   border: none;

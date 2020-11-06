@@ -127,6 +127,8 @@
     width: 220px;
   }
 
+
+
   .rsssl-progress {
 
     .rsssl-task-list {
@@ -156,18 +158,56 @@
     &.small {
       width: @gridblock_width_small;
     }
+
     .rsssl-close-warning-x {
       color: #ccc;
       font-size: 0.9em;
       margin-right: 25px;
     }
-    &.settings {
-      .item-container {
-      }
-    }
+
     height: @gridblock_height;
     z-index: 1;
     .item-container {
+        .form-table {
+          display: flex;
+          tbody {
+            display: flex;
+            flex-direction: column;
+            width: 100% !important;
+            tr {
+              padding: 0 !important;
+              padding-bottom: @grid_margin;
+              display: flex;
+              align-items: center;
+              flex-direction: row;
+
+              td {
+                padding: 0;
+                margin: 0;
+              }
+              th {
+                .dashicons-editor-help {
+                  font-size: 20px;
+                }
+                margin-left: 0;
+                width: 250px;
+                // Important to override default WP style
+                padding: 10px 0 0 0 !important;
+                display: flex;
+                align-items: center;
+                font-size: 13px;
+                font-weight: normal;
+                .rsssl-tooltip-right {
+                  padding-right: 10px;
+                }
+              }
+            }
+          }
+        }
+      h2 {
+        display: none;
+      }
+
       background-color: #fff;
       position: relative;
       box-shadow: 0px 0px 5px 5px @box_shadow_color;
@@ -271,59 +311,9 @@
         */
 
         .rsssl-settings {
-            th {
-              width: 85%;
 
-              tr {
-                width: 100%;
-              }
-            }
           }
-          .form-table {
-            display: flex;
-            th {
-              margin-left: 0;
-              .dashicons-editor-help {
-                font-size: 20px;
-              }
-            }
 
-            tbody {
-              display: flex;
-              flex-direction: column;
-              width: 100% !important;
-
-              tr {
-                padding-bottom: @grid_margin;
-                display: flex;
-                align-items: center;
-                flex-direction: row;
-
-
-                th {
-                  // Important to override default WP style
-                  padding: 10px 0 0 0 !important;
-                  display: flex;
-                  align-items: center;
-
-                  font-size: 13px;
-                  font-weight: normal;
-
-                  .rsssl-tooltip-right {
-                    padding-right: 10px;
-                  }
-                }
-
-                td {
-                  padding: 0;
-                  margin: 0;
-                }
-              }
-            }
-          }
-          h2 {
-            display: none;
-          }
 
         /*
           Tips and Tricks
@@ -408,7 +398,7 @@
           }
 
         #rsssl-feedback {
-          color: red;
+          color: @color_warning;
         }
 
         /*
@@ -437,7 +427,7 @@
             }
 
             .wpsi-red {
-              background-color: red;
+              background-color: @color_warning;
             }
 
             .cmplz-blue {
@@ -454,10 +444,6 @@
           }
 
         /*
-          Other plugins
-        */
-
-        /*
           Progress labels
          */
         .rsssl-progress-status {
@@ -471,7 +457,6 @@
         }
 
         .rsssl-premium {
-          //background-color: @color_open;
           background-color: #29b6f6;
           color: white;
         }
@@ -500,6 +485,9 @@
         .button-primary {
           justify-content: flex-start;
         }
+        .rsssl-button-save {
+          margin-right:25px;
+        }
         #rsssl-feedback {
           font-weight: 600;
           color: @color-success;
@@ -527,6 +515,9 @@
     &.small {
       .item-container {
         width: @gridblock_width_small - 2* @grid_margin;
+        th {
+          width: 85% !important;
+        }
       }
     }
     &.no-border {
@@ -537,7 +528,6 @@
     &.no-background {
       .item-container {
         background-color: #f2f2f2;
-        //border: 1px solid @border_color;
       }
     }
   }
@@ -572,7 +562,6 @@
 
   .rsssl-system-status-footer-info {
     margin-right: 20px;
-    //font-size: 0.9em;
     width: 100%;
     text-align: right;
     .system-status-info {
