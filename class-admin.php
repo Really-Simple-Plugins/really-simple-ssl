@@ -468,7 +468,7 @@ class rsssl_admin extends rsssl_front_end
 
 	public function almost_ready_to_migrate()
 	{
-		_e("Some things can't be done automatically. Before you migrate, please check for: ", 'really-simple-ssl'); ?>
+		_e("Before you migrate, please check for: ", 'really-simple-ssl'); ?>
         <p>
             <ul>
                 <li><?php _e('Http references in your .css and .js files: change any http:// into https://', 'really-simple-ssl'); ?></li>
@@ -478,7 +478,7 @@ class rsssl_admin extends rsssl_front_end
                 $link_open = '<a target="_blank" href="'.$backup_link.'">';
                 $link_close = '</a>';
                 ?>
-                <li><?php printf(__("We strongly recommend to take a %sbackup%s of your site before activating SSL", 'really-simple-ssl'), $link_open, $link_close); ?> </li>
+                <li><?php printf(__("We strongly recommend to make a %sbackup%s of your site before activating SSL", 'really-simple-ssl'), $link_open, $link_close); ?> </li>
                 <li><?php _e("You may need to login in again.", "really-simple-ssl") ?></li>
             </ul>
         </p>
@@ -2635,7 +2635,7 @@ class rsssl_admin extends rsssl_front_end
             $rules = __( "No recommended redirect rules detected.", "really-simple-ssl" ) ;
         }
 	    $rules            = '<br><code>' . $rules . '</code><br>';
-        
+
 	    $notice_defaults = array(
             'condition' => array(),
             'callback' => false,
