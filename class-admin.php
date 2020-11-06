@@ -2659,9 +2659,24 @@ class rsssl_admin extends rsssl_front_end
                 ),
             ),
 
+            'mixed_content_scan' => array(
+	            'condition' => array('rsssl_ssl_enabled'),
+	            'callback' => '_true_',
+	            'score' => 5,
+	            'output' => array(
+		            'true' => array(
+                        'url' => 'https://really-simple-ssl.com/knowledge-base/how-to-track-down-mixed-content-or-insecure-content/',
+			            'msg' => __("Check your site to see if you still have mixed content", "really-simple-ssl"),
+			            'icon' => 'open',
+			            'dismissible' => true,
+			            'plusone' => true,
+		            ),
+	            ),
+            ),
+
             'google_analytics' => array(
                 'callback' => '_true_',
-//                'condition' => array('rsssl_ssl_enabled', 'rsssl_ssl_activation_time_no_longer_then_3_days_ago'),
+                'condition' => array('rsssl_ssl_enabled', 'rsssl_ssl_activation_time_no_longer_then_3_days_ago'),
                 'score' => 5,
                 'output' => array(
                     'true' => array(
@@ -2864,18 +2879,7 @@ class rsssl_admin extends rsssl_front_end
                         'icon' => 'success'
                     ),
                     'not-set' => array(
-                        'msg' => sprintf(__("Secure cookie settings not enabled (%sRead more%s) ", "really-simple-ssl"), '<a target="_blank" href="' . $this->pro_url .'">', '</a>'),
-                        'icon' => 'premium'
-                    ),
-                ),
-            ),
-
-            'mixed_content_scan' => array(
-                'callback' => '_true_',
-                'score' => 5,
-                'output' => array(
-                    'true' => array(
-                        'msg' => sprintf(__("No mixed content scan performed (%sRead more%s) ", "really-simple-ssl"), '<a target="_blank" href="' . $this->pro_url .'">', '</a>'),
+                        'msg' => sprintf(__("Secure cookie settings not enabled (%sRead more%s) ", "really-simple-ssl"), '<a target="_blank" href="https://really-simple-ssl.com/secure-cookies-with-httponly-secure-and-use_only_cookies/">', '</a>'),
                         'icon' => 'premium'
                     ),
                 ),
@@ -2886,7 +2890,7 @@ class rsssl_admin extends rsssl_front_end
                 'score' => 5,
                 'output' => array(
                     'htaccess' => array(
-                        'msg' => sprintf(__("Your .htaccess file is not writable. This prevents Really Simple SSL from writing redirects or security headers to your .htaccess file.", "really-simple-ssl"), '<a target="_blank" href="' . $this->pro_url .'">', '</a>'),
+                        'msg' => __("Your .htaccess file is not writable. This prevents Really Simple SSL from writing redirects or security headers to your .htaccess file.", "really-simple-ssl"),
                         'icon' => 'open',
                         'dismissible' => 'true',
                     ),
