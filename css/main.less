@@ -7,12 +7,37 @@
  }
 }
 /* comments on settings pages */
-.rsssl-settings .rsssl-comment {
-  font-style:italic;
+.rsssl-comment-text {
   color:#888;
-  padding-bottom:0;
-  margin-top:-12px;
+  font-size: 13px;
+  font-weight: normal;
+  font-style:italic;
+  padding-bottom:0 !important;
+  margin-top:6px !important;
 }
+.rsssl-networksettings-overlay{
+  position: absolute;
+  top:0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  background: rgba(255, 255, 255, 0.8);
+  .rsssl-networksettings-notice{
+    .rsssl-open {
+      float: left;
+      margin-right:12px;
+    }
+    position:absolute;
+    width: 718px;
+    bottom: 0;
+    background-color: #fff;
+    padding: 20px;
+    margin:12px;
+    box-shadow: 0 0 5px 5px rgba(223,222,222,0.4);
+  }
+}
+
+
 /* Hide review on own settings page */
 #rsssl_do_activate_ssl {
   margin-right:20px;
@@ -297,7 +322,7 @@
 .rsssl-tooltip-left:after,
 .rsssl-tooltip-right:after {
   margin-left: 0;
-  margin-bottom: -66px;
+  margin-bottom: -25px;
 }
 
 /* Styling for the sidebar in the admin tab of the free plugin */

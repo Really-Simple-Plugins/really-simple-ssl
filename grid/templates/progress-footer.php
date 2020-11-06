@@ -16,17 +16,16 @@ if (RSSSL()->really_simple_ssl->has_301_redirect()) {
 }
 
 $btns = '';
-
-
 if (!defined('rsssl_pro_version')) {
 	$button_text = __("Go PRO!", "really-simple-ssl");
-	$btns .= "<a href='RSSSL()->really_simple_ssl->pro_url' target='_blank' class='button button-rsssl-primary upsell'>$button_text</a>";
+	$button_link = RSSSL()->really_simple_ssl->pro_url;
+	$btns .= "<a href='$button_link' target='_blank' class='button button-rsssl-primary upsell'>$button_text</a>";
 }
 
 if (!RSSSL()->really_simple_ssl->ssl_enabled) {
 	if ( RSSSL()->really_simple_ssl->site_has_ssl || ( defined( 'RSSSL_FORCE_ACTIVATE' ) && RSSSL_FORCE_ACTIVATE ) ) {
 		$button_text = __( "Activate SSL", "really-simple-ssl" );
-		$btns        = '<form action="" method="post"><input type="submit" class="button button-primary" value="' . $button_text . '" id="rsssl_do_activate_ssl" name="rsssl_do_activate_ssl"></form>' . $btns;
+		$btns = '<form action="" method="post" ><input type="submit" class="button button-primary" value="' . $button_text . '" id="rsssl_do_activate_ssl" name="rsssl_do_activate_ssl"></form>' . $btns;
 	}
 }
 

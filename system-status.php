@@ -1,6 +1,8 @@
 <?php
 # No need for the template engine
 define( 'WP_USE_THEMES', false );
+//we set wp admin to true, so the backend features get loaded.
+if (!defined('RSSSL_DOING_SYSTEM_STATUS')) define( 'RSSSL_DOING_SYSTEM_STATUS' , true);
 
 #find the base path
 define( 'BASE_PATH', find_wordpress_base_path()."/" );
@@ -11,14 +13,20 @@ require_once( BASE_PATH . 'wp-includes/class-phpass.php' );
 require_once( BASE_PATH . 'wp-admin/includes/image.php' );
 require_once( BASE_PATH . 'wp-admin/includes/plugin.php');
 
+//by deleting these we make sure these functions run again
+delete_transient('rsssl_testpage');
+delete_transient('rsssl_domain_list');
+
 if ( current_user_can( 'manage_options' ) ) {
 
 	ob_start();
-	if (defined('RSSSL_SAFE_MODE') && RSSSL_SAFE_MODE) echo "SAFE MODE\n";
+	if ( defined( 'RSSSL_SAFE_MODE' ) && RSSSL_SAFE_MODE ) {
+		echo "SAFE MODE\n";
+	}
 
 	echo "General\n";
-	echo "Domain: " . site_url() ."\n";
-	echo "Plugin version: " . rsssl_version ."\n";
+	echo "Domain: " . site_url() . "\n";
+	echo "Plugin version: " . rsssl_version . "\n";
 
 	if ( RSSSL()->rsssl_certificate->is_valid() ) {
 		echo "SSL certificate is valid\n";
@@ -30,59 +38,75 @@ if ( current_user_can( 'manage_options' ) ) {
 		}
 	}
 
-	echo (RSSSL()->really_simple_ssl->ssl_enabled) ? "SSL is enabled\n\n" : "SSL is not yet enabled\n\n";
+	echo ( RSSSL()->really_simple_ssl->ssl_enabled ) ? "SSL is enabled\n\n"
+		: "SSL is not yet enabled\n\n";
 
 	echo "Options\n";
-	if (RSSSL()->really_simple_ssl->autoreplace_insecure_links) echo "* Mixed content fixer\n";
-	if (RSSSL()->really_simple_ssl->wp_redirect) echo "* WordPress redirect\n";
-	if (RSSSL()->really_simple_ssl->htaccess_redirect) echo "* htaccess redirect\n";
-	if (RSSSL()->really_simple_ssl->do_not_edit_htaccess) echo "* Stop editing the .htaccess file\n";
-	if (RSSSL()->really_simple_ssl->switch_mixed_content_fixer_hook) echo "* Use alternative method to fix mixed content\n";
-	if (RSSSL()->really_simple_ssl->dismiss_all_notices) echo "* Dismiss all Really Simple SSL notices\n";
+	if ( RSSSL()->really_simple_ssl->autoreplace_insecure_links ) {
+		echo "* Mixed content fixer\n";
+	}
+	if ( RSSSL()->really_simple_ssl->wp_redirect ) {
+		echo "* WordPress redirect\n";
+	}
+	if ( RSSSL()->really_simple_ssl->htaccess_redirect ) {
+		echo "* htaccess redirect\n";
+	}
+	if ( RSSSL()->really_simple_ssl->do_not_edit_htaccess ) {
+		echo "* Stop editing the .htaccess file\n";
+	}
+	if ( RSSSL()->really_simple_ssl->switch_mixed_content_fixer_hook ) {
+		echo "* Use alternative method to fix mixed content\n";
+	}
+	if ( RSSSL()->really_simple_ssl->dismiss_all_notices ) {
+		echo "* Dismiss all Really Simple SSL notices\n";
+	}
 	echo "\n";
 
 	echo "Server information\n";
 	echo "Server: " . RSSSL()->rsssl_server->get_server() . "\n";
 	echo "SSL Type: " . RSSSL()->really_simple_ssl->ssl_type . "\n";
-	if (defined('rsssl_pro_path')) {
-	    echo "TLS Version: " . RSSSL_PRO()->rsssl_premium_options->get_tls_version() . "\n";
-    }
-	if (is_multisite()) {
+
+	if ( is_multisite() ) {
 		echo "MULTISITE\n";
-		echo (!RSSSL()->rsssl_multisite->ssl_enabled_networkwide) ? "SSL is being activated per site\n" : "SSL is activated network wide\n";
+		echo ( ! RSSSL()->rsssl_multisite->ssl_enabled_networkwide )
+			? "SSL is being activated per site\n"
+			: "SSL is activated network wide\n";
 	}
 
-	if (defined('rsssl_pro_version')) {
-	    echo "TLS version: " . RSSSL_PRO()->really_simple_ssl->get_tls_version();
-	    if (RSSSL_PRO()->really_simple_ssl->redirects_to_homepage()) {
-	        echo "Redirect to homepage detected \n";
-        }
-	    if (RSSSL_PRO()->really_simple_ssl->has_redirect_to_http()) {
-	        echo "Redirect to http:// detected \n";
-        }
-	    if (RSSSL_PRO()->really_simple_ssl->site_uses_cache()) {
-	        echo "Site uses caching \n";
-        }
-    }
+	do_action( "rsssl_system_status" );
 
 	echo RSSSL()->really_simple_ssl->debug_log;
 
 	echo "\n\nConstants\n";
 
-	if (defined('RSSSL_FORCE_ACTIVATE')) echo "RSSSL_FORCE_ACTIVATE defined\n";
-	if (defined('RSSSL_NO_FLUSH')) echo "RSSSL_NO_FLUSH defined";
-	if (defined('RSSSL_DISMISS_ACTIVATE_SSL_NOTICE')) echo "RSSSL_DISMISS_ACTIVATE_SSL_NOTICE defined\n";
-	if (defined('RLRSSSL_DO_NOT_EDIT_HTACCESS')) echo "RLRSSSL_DO_NOT_EDIT_HTACCESS defined\n";
-	if (defined('RSSSL_SAFE_MODE')) echo "RSSSL_SAFE_MODE defined\n";
-	if (defined("RSSSL_SERVER_OVERRIDE")) echo "RSSSL_SERVER_OVERRIDE defined\n";
+	if ( defined( 'RSSSL_FORCE_ACTIVATE' ) ) {
+		echo "RSSSL_FORCE_ACTIVATE defined\n";
+	}
+	if ( defined( 'RSSSL_NO_FLUSH' ) ) {
+		echo "RSSSL_NO_FLUSH defined";
+	}
+	if ( defined( 'RSSSL_DISMISS_ACTIVATE_SSL_NOTICE' ) ) {
+		echo "RSSSL_DISMISS_ACTIVATE_SSL_NOTICE defined\n";
+	}
+	if ( defined( 'RLRSSSL_DO_NOT_EDIT_HTACCESS' ) ) {
+		echo "RLRSSSL_DO_NOT_EDIT_HTACCESS defined\n";
+	}
+	if ( defined( 'RSSSL_SAFE_MODE' ) ) {
+		echo "RSSSL_SAFE_MODE defined\n";
+	}
+	if ( defined( "RSSSL_SERVER_OVERRIDE" ) ) {
+		echo "RSSSL_SERVER_OVERRIDE defined\n";
+	}
 
-	if(    !defined('RSSSL_FORCE_ACTIVATE')
-	       && !defined('RSSSL_NO_FLUSH')
-	       && !defined('RSSSL_DISMISS_ACTIVATE_SSL_NOTICE')
-	       && !defined('RLRSSSL_DO_NOT_EDIT_HTACCESS')
-	       && !defined('RSSSL_SAFE_MODE')
-	       && !defined("RSSSL_SERVER_OVERRIDE")
-	) echo "No constants defined\n";
+	if ( ! defined( 'RSSSL_FORCE_ACTIVATE' )
+	     && ! defined( 'RSSSL_NO_FLUSH' )
+	     && ! defined( 'RSSSL_DISMISS_ACTIVATE_SSL_NOTICE' )
+	     && ! defined( 'RLRSSSL_DO_NOT_EDIT_HTACCESS' )
+	     && ! defined( 'RSSSL_SAFE_MODE' )
+	     && ! defined( "RSSSL_SERVER_OVERRIDE" )
+	) {
+		echo "No constants defined\n";
+	}
 
 	$content = ob_get_clean();
 
@@ -114,7 +138,7 @@ if ( current_user_can( 'manage_options' ) ) {
 
 } else {
 	//should not be here, so redirect to home
-	wp_redirect(home_url());
+	wp_redirect( home_url() );
 	exit;
 }
 
