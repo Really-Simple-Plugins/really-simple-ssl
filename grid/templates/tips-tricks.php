@@ -6,7 +6,7 @@
 
 			<div class="rsssl-tips-tricks-element">
 				<div class="rsssl-tips-tricks-content">
-					<?php _e("Improve security by enabling HTTP Strict Transport security on your site", "really-simple-ssl")?>
+					<?php _e("Improve security: Enable HTTP Strict Transport Security (HSTS)", "really-simple-ssl")?>
 				</div>
 				<div class="rsssl-tips-tricks-read-more">
 					<a href="https://really-simple-ssl.com/hsts-http-strict-transport-security-good/" target="_blank"><?php _e("Read more", "really-simple-ssl");?></a>
@@ -14,7 +14,7 @@
 			</div>
 			<div class="rsssl-tips-tricks-element">
 				<div class="rsssl-tips-tricks-content">
-					<?php _e("Extensive scan for your back-end", "really-simple-ssl")?>
+					<?php _e("Is your site still not secure? Do the extensive site scan", "really-simple-ssl")?>
 				</div>
 				<div class="rsssl-tips-tricks-read-more">
 					<a href="<?php echo RSSSL()->really_simple_ssl->pro_url?>" target="_blank"><?php _e("Read more", "really-simple-ssl");?></a>
@@ -22,7 +22,7 @@
 			</div>
 			<div class="rsssl-tips-tricks-element">
 				<div class="rsssl-tips-tricks-content">
-					<?php _e("Add security headers for improved security", "really-simple-ssl");?>
+					<?php _e("Improve security: Add security headers", "really-simple-ssl");?>
 				</div>
 				<div class="rsssl-tips-tricks-read-more">
 					<a href="https://really-simple-ssl.com/new-security-headers-for-really-simple-ssl-pro-coming-up/" target="_blank"><?php _e("Read more", "really-simple-ssl");?></a>
@@ -30,7 +30,7 @@
 			</div>
             <div class="rsssl-tips-tricks-element">
                 <div class="rsssl-tips-tricks-content">
-                    <?php _e("Secure cookies with HttpOnly, secure and use_only_cookies", "really-simple-ssl");?>
+                    <?php _e("Improve security: secure cookies", "really-simple-ssl");?>
                 </div>
                 <div class="rsssl-tips-tricks-read-more">
                     <a href="https://really-simple-ssl.com/secure-cookies-with-httponly-secure-and-use_only_cookies/" target="_blank"><?php _e("Read more", "really-simple-ssl");?></a>
