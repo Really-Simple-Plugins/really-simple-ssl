@@ -530,7 +530,7 @@ if (!class_exists('rsssl_multisite')) {
                 $title = __("Setup", "really-simple-ssl");
                 $content = '<h2>' . __("Some things can't be done automatically. Before you migrate, please check for: ", "really-simple-ssl") . '</h2>';
                 $content .= '<ul>
-                                <li>'. __("Http references in your .css and .js files: change any http:// into //", "really-simple-ssl") .'</li>
+                                <li>'. __("Http references in your .css and .js files: change any http:// into https://", "really-simple-ssl") .'</li>
                                 <li>'. __("Images, stylesheets or scripts from a domain without an SSL certificate: remove them or move to your own server.", "really-simple-ssl") .'</li>
                             </ul>';
                 $content .= __('You can also let the automatic scan of the pro version handle this for you, and get premium support and increased security with HSTS included.', 'really-simple-ssl') . " "

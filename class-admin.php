@@ -471,7 +471,7 @@ class rsssl_admin extends rsssl_front_end
 		_e("Some things can't be done automatically. Before you migrate, please check for: ", 'really-simple-ssl'); ?>
         <p>
             <ul>
-                <li><?php _e('Http references in your .css and .js files: change any http:// into //', 'really-simple-ssl'); ?></li>
+                <li><?php _e('Http references in your .css and .js files: change any http:// into https://', 'really-simple-ssl'); ?></li>
                 <li><?php _e('Images, stylesheets or scripts from a domain without an SSL certificate: remove them or move to your own server', 'really-simple-ssl'); ?></li><?php
 
                 $backup_link = "https://really-simple-ssl.com/knowledge-base/backing-up-your-site/";
@@ -4208,20 +4208,24 @@ class rsssl_admin extends rsssl_front_end
         <script>
             jQuery(document).ready(function ($) {
                 'use strict';
-                <?php
-                    if (isset($_GET['highlight'])) {
-	                    $setting_name = sanitize_text_field( $_GET['highlight'] );
-	                    echo "var setting_name = '$setting_name'" . ";";
-                    }
-                ?>
-
-                $(function() {
-                    if(typeof setting_name !== 'undefined' && setting_name != '') {
-                        if (document.location.href.indexOf('&highlight=' + setting_name) > -1) {
-                            $('#rsssl-maybe-highlight-' + setting_name).closest('tr').addClass('rsssl-highlight');
+                var sPageURL = window.location.href;
+                var queryString = sPageURL.split('?');
+                if (queryString.length === 1) return false;
+                var setting_name = '';
+                var rsssl_variables = queryString[1].split('&');
+                for (var key in rsssl_variables) {
+                    if (rsssl_variables.hasOwnProperty(key)) {
+                        var output = rsssl_variables[key].split('=');
+                        if (output[0]==='highlight') {
+                            setting_name = output[1];
                         }
                     }
-                });
+                }
+                console.log(setting_name);
+
+                if(setting_name !== '' && $('#rsssl-maybe-highlight-' + setting_name).length) {
+                    $('#rsssl-maybe-highlight-' + setting_name).closest('tr').addClass('rsssl-highlight');
+                }
             });
         </script>
     <?php
