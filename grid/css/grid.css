@@ -165,6 +165,8 @@
 .rsssl-grid .rsssl-item .item-container .form-table tbody {
   display: flex;
   flex-direction: column;
+  flex-wrap: wrap;
+  max-height: 300px;
   width: 100% !important;
 }
 .rsssl-grid .rsssl-item .item-container .form-table tbody tr {
