@@ -38,12 +38,10 @@ jQuery(document).ready(function ($) {
                         $(".rsssl-progress-text").text(rsssl.finished_text);
                         $(".rsssl-progress-text").append("<a href='https://really-simple-ssl.com/pro'>Really Simple SSL Pro</a>");
                     } else {
-                        var str = $('#rsssl-remaining-tasks-label').text();
-                        console.log(str);
-                        var yyy = str.replace(/\(.*?\)/, "(" + data + ")") ;
-                        console.log(yyy);
+                        var current_count = $('#rsssl-remaining-tasks-label').text();
+                        var updated_count = current_count.replace(/(?<=\().+?(?=\))/, data) ;
                         // Replace the count if there are open tasks left
-                        $('#rsssl-remaining-tasks-label').text("(" + data + ")");
+                        $('#rsssl-remaining-tasks-label').text(updated_count);
                         $(".rsssl-progress-count").text(data);
                     }
                 }
@@ -125,8 +123,6 @@ jQuery(document).ready(function ($) {
         };
         $.post(ajaxurl, data, function (response) {});
         $(this).closest('tr').remove();
-
-        console.log("Clicked");
 
         $.ajax({
             type: "post",
