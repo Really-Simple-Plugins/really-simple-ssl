@@ -1,7 +1,7 @@
 @gridblock_height: 475px;
 @gridblock_width: 800px;
 @gridblock_width_small:400px;
-@grid_margin: 10px;
+@grid_margin: 25px;
 @grey_light:#cecece;
 @box_shadow_color: rgba(222, 222, 222, 0.2);
 @border_color: #dedede;
@@ -125,7 +125,7 @@
   }
 
   .rsssl-item {
-    width: @gridblock_width;
+    width: @gridblock_width ;
     &.small {
       width: @gridblock_width_small;
     }
@@ -184,8 +184,10 @@
       background-color: #fff;
       position: relative;
       box-shadow: 0px 0px 5px 5px @box_shadow_color;
-      width: @gridblock_width - 2* @grid_margin;
-      height: @gridblock_height - 2 * @grid_margin;
+      width: @gridblock_width -  @grid_margin;
+      height: @gridblock_height;
+      //width: 775px;
+      //height: 475px;
       .rsssl-save-settings-feedback {
         color: @color_warning;
       }
@@ -442,13 +444,10 @@
       .rsssl-grid-item-footer {
         display: flex;
         align-items: center;
-        margin: 0 25px 0 25px;
+        margin: 17px 25px 0 25px;
         height: 40px;
         bottom: 0;
         width: 95%;
-        .button-primary {
-          justify-content: flex-start;
-        }
         .rsssl-button-save {
           margin-right:25px;
         }
@@ -469,16 +468,13 @@
       .item-container {
         height: @gridblock_height / 2;
         .rsssl-grid-item-content {
-          height: 100px;
+          height: 75px;
         }
-      }
-      .rsssl-grid-item-footer {
-        margin: -5px 25px 0 25px;
       }
     }
     &.small {
       .item-container {
-        width: @gridblock_width_small - 2* @grid_margin;
+        width: @gridblock_width_small - @grid_margin;
         th {
           width: 85% !important;
         }
