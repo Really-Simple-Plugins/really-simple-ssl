@@ -163,10 +163,11 @@
   font-weight: normal;
 }
 .rsssl-grid .rsssl-item .item-container .form-table tbody tr th .dashicons-editor-help {
-  font-size: 20px;
+  font-size: 26px;
 }
 .rsssl-grid .rsssl-item .item-container .form-table tbody tr th .rsssl-tooltip-right {
   padding-right: 10px;
+  margin-top: -4px;
 }
 .rsssl-grid .rsssl-item .item-container h2 {
   display: none;
@@ -271,6 +272,7 @@
 .rsssl-grid .rsssl-item .item-container .rsssl-grid-item-content .rsssl-tips-tricks .tips-tricks-content {
   display: flex;
   flex-direction: column;
+  margin-right: 10px;
   height: 300px;
 }
 .rsssl-grid .rsssl-item .item-container .rsssl-grid-item-content .rsssl-tips-tricks .tips-tricks-content .tips-tricks-top {
