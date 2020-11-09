@@ -535,7 +535,7 @@ if (!class_exists('rsssl_multisite')) {
                             </ul>';
                 $content .= __('You can also let the automatic scan of the pro version handle this for you, and get premium support and increased security with HSTS included.', 'really-simple-ssl') . " "
                     . '<a target="_blank"
-                     href="https://www.really-simple-ssl.com/pro-multisite">' . __("Check out Really Simple SSL Premium", "really-simple-ssl") . '</a>' . "<br>";
+                     href="https://really-simple-ssl.com/pro-multisite">' . __("Check out Really Simple SSL Premium", "really-simple-ssl") . '</a>' . "<br>";
 
                 $footer = '<form action="" method="post">
                             '. wp_nonce_field('rsssl_nonce', 'rsssl_nonce').'
@@ -563,7 +563,7 @@ if (!class_exists('rsssl_multisite')) {
             ?>
             <p><?php _e('You can also let the automatic scan of the pro version handle this for you, and get premium support and increased security with HSTS included.', 'really-simple-ssl') ?>
                 &nbsp;<a target="_blank"
-                         href="https://www.really-simple-ssl.com/pro-multisite"><?php _e("Check out Really Simple SSL Premium", "really-simple-ssl"); ?></a>
+                         href="https://really-simple-ssl.com/pro-multisite"><?php _e("Check out Really Simple SSL Premium", "really-simple-ssl"); ?></a>
             </p>
             <?php
         }

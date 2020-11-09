@@ -1,9 +1,7 @@
 <?php defined('ABSPATH') or die("you do not have access to this page!"); ?>
-
 <div class="rsssl-tips-tricks">
 	<div class="tips-tricks-content">
         <div class="tips-tricks-top">
-
 			<div class="rsssl-tips-tricks-element">
 				<div class="rsssl-tips-tricks-content">
 					<?php _e("Improve security by enabling HTTP Strict Transport security on your site", "really-simple-ssl")?>
@@ -14,10 +12,10 @@
 			</div>
 			<div class="rsssl-tips-tricks-element">
 				<div class="rsssl-tips-tricks-content">
-					<?php _e("Extensive scan for your back-end", "really-simple-ssl")?>
+					<?php _e("Troubleshooting Really Simple SSL", "really-simple-ssl")?>
 				</div>
 				<div class="rsssl-tips-tricks-read-more">
-					<a href="<?php echo RSSSL()->really_simple_ssl->pro_url?>" target="_blank"><?php _e("Read more", "really-simple-ssl");?></a>
+					<a href="https://really-simple-ssl.com/troubleshooting-really-simple-ssl/" target="_blank"><?php _e("Read more", "really-simple-ssl");?></a>
 				</div>
 			</div>
 			<div class="rsssl-tips-tricks-element">

@@ -2082,7 +2082,6 @@ class rsssl_admin extends rsssl_front_end
         //only add the redirect rules when a known type of SSL was detected. Otherwise, we use https.
         $rule = "";
 	    $this->ssl_type = "SERVER-HTTPS-ON";
-	    $this->htaccess_redirect = true;
         //if the htaccess test was successfull, and we know the redirectype, edit
         if ($this->htaccess_redirect && ($manual || $this->htaccess_test_success) && $this->ssl_type != "NA") {
 	        $this->trace_log("starting insertion of .htaccess redirects.");
@@ -2756,7 +2755,7 @@ class rsssl_admin extends rsssl_front_end
                         'plusone' => true
                     ),
                     'not-found' => array(
-                        'url' => "https://www.really-simple-ssl.com/knowledge-base/how-to-check-if-the-mixed-content-fixer-is-active/",
+                        'url' => "https://really-simple-ssl.com/knowledge-base/how-to-check-if-the-mixed-content-fixer-is-active/",
                         'msg' => __('The mixed content fixer is active, but was not detected on the frontpage.', "really-simple-ssl"),
                         'icon' => 'open',
                         'dismissible' => true
@@ -2767,7 +2766,7 @@ class rsssl_admin extends rsssl_front_end
                         'dismissible' => true
                     ),
                     'curl-error' => array(
-                        'url' => 'https://www.really-simple-ssl.com/knowledge-base/curl-errors/',
+                        'url' => 'https://really-simple-ssl.com/knowledge-base/curl-errors/',
 	                    'msg' =>sprintf(__("The mixed content fixer could not be detected due to a cURL error: %s. cURL errors are often caused by an outdated version of PHP or cURL and don't affect the front-end of your site. Contact your hosting provider for a fix.", 'really-simple-ssl'), "<b>" . $curl_error . "</b>"),
 	                    'icon' => 'open',
                         'dismissible' => true,
@@ -2814,6 +2813,7 @@ class rsssl_admin extends rsssl_front_end
                         'dismissible' => false
                     ),
                     'htaccess-not-writeable' => array(
+                        'url' => 'https://really-simple-ssl.com/knowledge-base/manually-insert-htaccess-redirect-http-to-https/',
                         'msg' => sprintf(__('The %s file is not writable. You can either use the WordPress redirect, add the rules manually, or set the file to writable.', 'really-simple-ssl'), $htaccess_file),
                         'icon' => 'warning',
                         'dismissible' => true
@@ -2979,7 +2979,7 @@ class rsssl_admin extends rsssl_front_end
 
 		    if ( isset($notice['output']['url']) ) {
 		        $url = $notice['output']['url'];
-		        if (strpos( $url, 'https://really-simple-ssl.com')){
+		        if ( strpos( $url, 'https://really-simple-ssl.com') !== FALSE ){
 		            $info = __('%sMore info%s or %sdismiss%s','really-simple-ssl');
                 } else {
 			        $info = __('%sEnable%s or %sdismiss%s','really-simple-ssl');
@@ -3809,7 +3809,10 @@ class rsssl_admin extends rsssl_front_end
             <span class="rsssl-slider rsssl-round"></span>
         </label>
         <?php
-        if (!$this->do_not_edit_htaccess && !is_writable($this->htaccess_file())) _e(".htaccess is currently not writable.", "really-simple-ssl");
+        if (!$this->do_not_edit_htaccess && !is_writable($this->htaccess_file()))  {
+            $comment = __(".htaccess is currently not writable.", "really-simple-ssl");
+	        RSSSL()->rsssl_help->get_comment($comment);
+        }
     }
 
     /**
