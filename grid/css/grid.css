@@ -199,8 +199,8 @@
   padding-left: 15px;
 }
 .rsssl-grid .rsssl-item .item-container .rsssl-grid-item-content {
-  height: 310px;
-  margin: 25px 25px 10px 25px;
+  height: 340px;
+  margin: 10px 25px 10px 25px;
   border-bottom: 1px solid #dedede;
   /*
           Progress block
@@ -386,7 +386,7 @@
 .rsssl-grid .rsssl-item .item-container .rsssl-grid-item-footer {
   display: flex;
   align-items: center;
-  margin: 17px 25px 0 25px;
+  margin: 11px 25px 0 25px;
   height: 40px;
   bottom: 0;
   width: 95%;
@@ -407,7 +407,7 @@
   height: 237.5px;
 }
 .rsssl-grid .rsssl-item.half-height .item-container .rsssl-grid-item-content {
-  height: 75px;
+  height: 105px;
 }
 .rsssl-grid .rsssl-item.small .item-container {
   width: 375px;
@@ -429,11 +429,6 @@
 .rsssl-grid #rsssl-progress-footer .rsssl-footer-item {
   margin-left: 20px;
   padding-right: 5px;
-}
-.rsssl-grid #rsssl-progress-footer .footer-left {
-  margin-left: 0 !important;
-  float: left;
-  font-weight: 600;
 }
 .rsssl-grid #rsssl-progress-footer .footer-left .upsell {
   margin-left: -10px;
