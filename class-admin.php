@@ -2081,7 +2081,6 @@ class rsssl_admin extends rsssl_front_end
         $this->trace_log("retrieving redirect rules");
         //only add the redirect rules when a known type of SSL was detected. Otherwise, we use https.
         $rule = "";
-	    $this->ssl_type = "SERVER-HTTPS-ON";
         //if the htaccess test was successfull, and we know the redirectype, edit
         if ($this->htaccess_redirect && ($manual || $this->htaccess_test_success) && $this->ssl_type != "NA") {
 	        $this->trace_log("starting insertion of .htaccess redirects.");
@@ -2619,6 +2618,7 @@ class rsssl_admin extends rsssl_front_end
     {
         $defaults = array(
             'admin_notices' => false,
+            'premium_only' => false,
             'status' => 'open', //status can be "all" (all tasks, regardless of dismissed or open), "open" (not success/completed) or "completed"
         );
         $args = wp_parse_args($args, $defaults);
@@ -2885,17 +2885,17 @@ class rsssl_admin extends rsssl_front_end
                 ),
             ),
 
-            'htaccess_not_writable' => array(
-                'callback' => 'rsssl_htaccess_not_writable',
-                'score' => 5,
-                'output' => array(
-                    'htaccess' => array(
-                        'msg' => __("Your .htaccess file is not writable. This prevents Really Simple SSL from writing redirects or security headers to your .htaccess file.", "really-simple-ssl"),
-                        'icon' => 'open',
-                        'dismissible' => 'true',
-                    ),
-                ),
-            ),
+//            'htaccess_not_writable' => array(
+//                'callback' => 'rsssl_htaccess_not_writable',
+//                'score' => 5,
+//                'output' => array(
+//                    'htaccess' => array(
+//                        'msg' => __("Your .htaccess file is not writable. This prevents Really Simple SSL from writing redirects or security headers to your .htaccess file.", "really-simple-ssl"),
+//                        'icon' => 'open',
+//                        'dismissible' => 'true',
+//                    ),
+//                ),
+//            ),
         );
 
         $notices = apply_filters('rsssl_notices', $notices);
@@ -2976,16 +2976,17 @@ class rsssl_admin extends rsssl_front_end
 
 	    //add plus ones
 	    foreach ($notices as $key => $notice){
-
 		    if ( isset($notice['output']['url']) ) {
 		        $url = $notice['output']['url'];
+		        $target = '';
 		        if ( strpos( $url, 'https://really-simple-ssl.com') !== FALSE ){
 		            $info = __('%sMore info%s or %sdismiss%s','really-simple-ssl');
+		            $target = 'target="_blank"';
                 } else {
 			        $info = __('%sEnable%s or %sdismiss%s','really-simple-ssl');
 		        }
 		        $dismiss_open = "<span class='rsssl-dashboard-dismiss' data-dismiss_type='".$key."'><a href='#' class='rsssl-dismiss-text rsssl-close-warning'>";
-			    $notices[$key]['output']['msg'] .= ' '.sprintf($info ,'<a target="_blank" href="'.$url.'">', '</a>', $dismiss_open, "</a></span>");
+			    $notices[$key]['output']['msg'] .= ' '.sprintf($info ,'<a '.$target.' href="'.$url.'">', '</a>', $dismiss_open, "</a></span>");
 		    }
 
 		    if ( isset($notice['output']['plusone']) && $notice['output']['plusone']) {
@@ -2994,7 +2995,25 @@ class rsssl_admin extends rsssl_front_end
             }
 	    }
 
+	    //if we only want a list of premium notices
+	    if ( $args['premium_only'] ) {
+		    foreach ($notices as $key => $notice){
+			    if ( !isset($notice['output']['icon']) || $notice['output']['icon'] !== 'premium' ) {
+				    unset($notices[$key]);
+			    }
+		    }
+        }
+
         return $notices;
+    }
+
+	/**
+     * Count number of premium notices we have in the list.
+	 * @return int
+	 */
+    public function get_lowest_possible_task_count(){
+        $premium_notices = $this->get_notices_list(array('premium_only'=>true));
+        return count($premium_notices) ;
     }
 
 	/**
@@ -3577,11 +3596,7 @@ class rsssl_admin extends rsssl_front_end
             . 'js/scripts.js', array("jquery"), rsssl_version);
         wp_enqueue_script('rsssl');
 
-        if (!defined('rsssl_pro_version')) {
-            $finished_text = __("Basic SSL configuration finished! Improve your score with ", "really-simple-ssl");
-        } else {
-            $finished_text = '';
-        }
+        $finished_text = apply_filters('rsssl_finished_text', sprintf(__("Basic SSL configuration finished! Improve your score with %sReally Simple SSL Pro%s.", "really-simple-ssl"), '<a target="_blank" href="' . $this->pro_url . '">', '</a>') );
 
         wp_localize_script('rsssl', 'rsssl',
             array(
@@ -3589,6 +3604,8 @@ class rsssl_admin extends rsssl_front_end
                 'token'   => wp_create_nonce( 'rsssl_nonce'),
                 'copied_text' => __("Copied!", "really-simple-ssl"),
                 'finished_text' => $finished_text,
+                'not_complete_text' =>__("You're doing well. You still have %s tasks open"),
+                'lowest_possible_task_count' =>	RSSSL()->really_simple_ssl->get_lowest_possible_task_count(),
             )
         );
         wp_register_script('rsssl-scrollbar',
