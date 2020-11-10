@@ -112,9 +112,17 @@
 
     #rsssl-all-tasks, #rsssl-remaining-tasks {
       display: none;
+
     }
-    .rsssl-tasks {
-      text-decoration: none;
+    .rsssl-tasks-container {
+      border-bottom:1px solid lightgrey;
+      color: lightgrey;
+      &.active{
+        text-decoration: none;
+        border-bottom:0;
+        color:initial;
+
+      }
     }
 
     .rsssl-tasks-inactive {

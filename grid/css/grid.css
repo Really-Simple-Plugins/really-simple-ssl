@@ -105,8 +105,14 @@
 .rsssl-grid .rsssl-progress #rsssl-remaining-tasks {
   display: none;
 }
-.rsssl-grid .rsssl-progress .rsssl-tasks {
+.rsssl-grid .rsssl-progress .rsssl-tasks-container {
+  border-bottom: 1px solid lightgrey;
+  color: lightgrey;
+}
+.rsssl-grid .rsssl-progress .rsssl-tasks-container.active {
   text-decoration: none;
+  border-bottom: 0;
+  color: initial;
 }
 .rsssl-grid .rsssl-progress .rsssl-tasks-inactive {
   text-decoration: underline;

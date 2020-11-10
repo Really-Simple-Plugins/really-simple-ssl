@@ -4034,7 +4034,7 @@ class rsssl_admin extends rsssl_front_end
                 ?>
                 <div class="rsssl-deactivate-notice-footer">
                     <a class="button button-default" href="#" id="rsssl_close_tb_window"><?php _e("Cancel", "really-simple-ssl") ?></a>
-                    <a class="button button-primary rsssl-button-deactivate-keep-ssl" href="<?php echo $deactivate_keep_ssl_link ?>"><?php _e("Deactivate, keep https", "really-simple-ssl") ?></a>
+                    <a class="button button-primary" href="<?php echo $deactivate_keep_ssl_link ?>"><?php _e("Deactivate, keep https", "really-simple-ssl") ?></a>
                     <a class="button  button-rsssl-tertiary rsssl-button-deactivate-revert" href="#"><?php _e("Deactivate, revert to http", "really-simple-ssl") ?></a>
                 </div>
         </div>

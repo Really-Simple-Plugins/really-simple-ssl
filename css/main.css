@@ -7,6 +7,9 @@
 .notice-info:not(.really-simple-plugins) {
   display: none !important;
 }
+.rsssl-spacer {
+  width: 10px;
+}
 /* comments on settings pages */
 .rsssl-comment-text {
   color: #888;
@@ -464,9 +467,6 @@ hr {
   border-radius: 50px;
   clear: both;
   margin-top: 10px;
-}
-.rsssl-button-deactivate-keep-ssl {
-  margin-right: 15px;
 }
 /*
     cool checkbox sliders
