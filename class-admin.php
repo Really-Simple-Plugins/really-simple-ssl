@@ -2991,16 +2991,19 @@ class rsssl_admin extends rsssl_front_end
 
 	    //sort so warnings are on top
 	    $warnings = array();
+	    $open = array();
 	    $other = array();
 	    foreach ($notices as $key => $notice){
 	        if ($notice['output']['icon']==='warning') {
 	            $warnings[$key] = $notice;
-            } else {
+            } else if ($notice['output']['icon']==='open') {
+		        $open[$key] = $notice;
+	        } else {
 		        $other[$key] = $notice;
 	        }
         }
 
-	    $notices = $warnings + $other;
+	    $notices = $warnings + $open + $other;
 
 	    //add plus ones
 	    foreach ($notices as $key => $notice){
