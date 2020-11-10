@@ -4,13 +4,13 @@ jQuery(document).ready(function ($) {
     $(document).on('click','.rsssl-slider',function () {
         rssslSaveChangesNotice($(this));
     });
-    $(document).on('click','.rsssl-text-input',function () {
+    $(document).on('click','.rsssl-container input',function () {
         rssslSaveChangesNotice($(this));
     });
-    $(document).on('change','.rsssl-text-input',function () {
+    $(document).on('change','.rsssl-container input',function () {
         rssslSaveChangesNotice($(this));
     });
-    $(document).on('change','select',function () {
+    $(document).on('change','.rsssl-container select',function () {
         rssslSaveChangesNotice($(this));
     });
     $('.rsssl-button-save').prop('disabled', true);
