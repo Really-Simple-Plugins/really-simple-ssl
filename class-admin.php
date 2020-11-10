@@ -451,7 +451,6 @@ class rsssl_admin extends rsssl_front_end
     public function ssl_detected()
     {
         if ($this->site_has_ssl) {
-
             ob_start();
 	        do_action('rsssl_activation_notice_inner');
 	        $content = ob_get_clean();
@@ -461,7 +460,6 @@ class rsssl_admin extends rsssl_front_end
             $footer = ob_get_clean();
 	        $class = "updated activate-ssl rsssl-pro-dismiss-notice";
 	        $title = __("Almost ready to migrate to SSL!", "really-simple-ssl");
-
 	        echo $this->notice_html( $class, $title, $content, $footer);
         }
     }
@@ -2791,7 +2789,7 @@ class rsssl_admin extends rsssl_front_end
             ),
 
             'check_redirect' => array(
-	            'condition' => array('rsssl_ssl_enabled' , 'rsssl_htaccess_redirect_allowed', 'rsssl_no_multisite'),
+	            'condition' => array('rsssl_ssl_enabled' , 'rsssl_htaccess_redirect_allowed', 'NOT is_multisite'),
 	            'callback' => 'rsssl_check_redirect',
                 'score' => 10,
 	            'output' => array(
@@ -2831,7 +2829,7 @@ class rsssl_admin extends rsssl_front_end
 	            'callback' => 'rsssl_uses_elementor',
 	            'score' => 5,
 	            'output' => array(
-		            'uses-elementor' => array(
+		            'true' => array(
                         'url' => 'https://really-simple-ssl.com/knowledge-base/how-to-fix-mixed-content-in-elementor-after-moving-to-ssl/',
 			            'msg' => __("Your site uses Elementor. This can require some additional steps before getting the secure lock.", "really-simple-ssl"),
 			            'icon' => 'open',
@@ -2845,7 +2843,7 @@ class rsssl_admin extends rsssl_front_end
 	            'callback' => 'rsssl_uses_divi',
 	            'score' => 5,
 	            'output' => array(
-		            'users-divi' => array(
+		            'true' => array(
                         'url' => "https://really-simple-ssl.com/knowledge-base/mixed-content-when-using-divi-theme/",
 			            'msg' => __("Your site uses Divi. This can require some additional steps before getting the secure lock.", "really-simple-ssl"),
 			            'icon' => 'open',
@@ -2855,15 +2853,15 @@ class rsssl_admin extends rsssl_front_end
             ),
 
             'hsts_enabled' => array(
-                'condition' => array('rsssl_no_multisite'),
-                'callback' => 'rsssl_hsts_enabled',
+                'condition' => array('NOT is_multisite'),
+                'callback' => 'RSSSL()->really_simple_ssl->contains_hsts',
                 'score' => 5,
                 'output' => array(
-                    'contains-hsts' => array(
+                    'true' => array(
                         'msg' =>__('HTTP Strict Transport Security was enabled.', 'really-simple-ssl'),
                         'icon' => 'success'
                     ),
-                    'no-hsts' => array(
+                    'false' => array(
                         'msg' => sprintf(__('%sHTTP Strict Transport Security%s is not enabled %s(Read more)%s', "really-simple-ssl"), '<a href="https://really-simple-ssl.com/hsts-http-strict-transport-security-good/" target="_blank">', '</a>', '<a target="_blank" href="' . $this->pro_url . '">', '</a>'),
                         'icon' => 'premium'
                     ),
@@ -2871,31 +2869,31 @@ class rsssl_admin extends rsssl_front_end
             ),
 
             'secure_cookies_set' => array(
-                'callback' => 'rsssl_secure_cookies_set',
+                'callback' => 'RSSSL()->really_simple_ssl->contains_secure_cookie_settings',
                 'score' => 5,
                 'output' => array(
-                    'set' => array(
+                    'true' => array(
                         'msg' =>__('Secure cookies set', 'really-simple-ssl'),
                         'icon' => 'success'
                     ),
-                    'not-set' => array(
+                    'false' => array(
                         'msg' => sprintf(__("Secure cookie settings not enabled (%sRead more%s) ", "really-simple-ssl"), '<a target="_blank" href="https://really-simple-ssl.com/secure-cookies-with-httponly-secure-and-use_only_cookies/">', '</a>'),
                         'icon' => 'premium'
                     ),
                 ),
             ),
 
-//            'htaccess_not_writable' => array(
-//                'callback' => 'rsssl_htaccess_not_writable',
-//                'score' => 5,
-//                'output' => array(
-//                    'htaccess' => array(
-//                        'msg' => __("Your .htaccess file is not writable. This prevents Really Simple SSL from writing redirects or security headers to your .htaccess file.", "really-simple-ssl"),
-//                        'icon' => 'open',
-//                        'dismissible' => 'true',
-//                    ),
-//                ),
-//            ),
+            'htaccess_not_writable' => array(
+                'callback' => 'rsssl_htaccess_not_writable',
+                'score' => 5,
+                'output' => array(
+                    'htaccess' => array(
+                        'msg' => __("Your .htaccess file is not writable. This prevents Really Simple SSL from writing redirects or security headers to your .htaccess file.", "really-simple-ssl"),
+                        'icon' => 'open',
+                        'dismissible' => 'true',
+                    ),
+                ),
+            ),
         );
 
         $notices = apply_filters('rsssl_notices', $notices);
@@ -4388,26 +4386,6 @@ if (!function_exists('rsssl_check_redirect')) {
 	}
 }
 
-if (!function_exists('rsssl_hsts_enabled')) {
-	function rsssl_hsts_enabled() {
-		if ( RSSSL()->really_simple_ssl->contains_hsts() ) {
-			return 'contains-hsts';
-		} else {
-			return 'no-hsts';
-		}
-	}
-}
-
-if (!function_exists('rsssl_secure_cookies_set')) {
-	function rsssl_secure_cookies_set() {
-		if ( RSSSL()->really_simple_ssl->contains_secure_cookie_settings() ) {
-			return 'set';
-		} else {
-			return 'not-set';
-		}
-	}
-}
-
 if (!function_exists('rsssl_htaccess_not_writable')) {
 	function rsssl_htaccess_not_writable() {
 	    //don't trigger if htaccess not used
@@ -4429,9 +4407,9 @@ if (!function_exists('rsssl_htaccess_redirect_allowed')) {
 if (!function_exists('rsssl_uses_elementor')) {
 	function rsssl_uses_elementor() {
 		if ( defined( 'ELEMENTOR_VERSION' ) || defined( 'ELEMENTOR_PRO_VERSION' ) ) {
-			return 'uses-elementor';
+			return true;
 		} else {
-			return 'no-elementor';
+			return false;
 		}
 	}
 }
@@ -4439,9 +4417,9 @@ if (!function_exists('rsssl_uses_elementor')) {
 if (!function_exists('rsssl_uses_divi')) {
 	function rsssl_uses_divi() {
 		if ( defined( 'ET_CORE_PATH' ) ) {
-			return 'uses-divi';
+			return true;
 		} else {
-			return 'no-divi';
+			return false;
 		}
 	}
 }
@@ -4476,16 +4454,6 @@ if (!function_exists('rsssl_wordpress_redirect')) {
 			return '301-wp-redirect';
 		} else {
 			return 'no-redirect';
-		}
-	}
-}
-
-if (!function_exists('rsssl_no_multisite')) {
-	function rsssl_no_multisite() {
-		if ( ! is_multisite() ) {
-			return true;
-		} else {
-			return false;
 		}
 	}
 }
