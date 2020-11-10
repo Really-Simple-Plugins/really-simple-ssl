@@ -1,7 +1,7 @@
 <?php
 /**
  * Plugin Name: Really Simple SSL
- * Plugin URI: https://www.really-simple-ssl.com
+ * Plugin URI: https://really-simple-ssl.com
  * Description: Lightweight plugin without any setup to make your site SSL proof
  * Version: 4.0.0
  * Text Domain: really-simple-ssl

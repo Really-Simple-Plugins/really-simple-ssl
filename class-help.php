@@ -12,7 +12,7 @@ if ( ! class_exists( 'rsssl_help' ) ) {
         }
 
         static function this() {
-        return self::$_this;
+            return self::$_this;
         }
 
         public function get_help_tip($str, $return=false){

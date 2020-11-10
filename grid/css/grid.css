@@ -2,6 +2,10 @@
 .settings_page_really-simple-ssl #wpcontent {
   padding: 0;
 }
+.settings_page_rlrsssl_really_simple_ssl #wpcontent .rsssl-footer-item,
+.settings_page_really-simple-ssl #wpcontent .rsssl-footer-item {
+  margin-top: -5px;
+}
 .settings_page_rlrsssl_really_simple_ssl #wpcontent .rsssl-footer-item form,
 .settings_page_really-simple-ssl #wpcontent .rsssl-footer-item form {
   float: left;
@@ -55,10 +59,6 @@
 .settings_page_really-simple-ssl #wpcontent .header-links .documentation {
   padding-right: 25px;
 }
-.settings_page_rlrsssl_really_simple_ssl #wpcontent .header-links .documentation a,
-.settings_page_really-simple-ssl #wpcontent .header-links .documentation a {
-  color: black;
-}
 .settings_page_rlrsssl_really_simple_ssl #wpcontent .header-links .header-upsell a,
 .settings_page_really-simple-ssl #wpcontent .header-links .header-upsell a {
   text-decoration: none;
@@ -74,17 +74,6 @@
   border-radius: 20px;
   font-weight: 600;
 }
-.settings_page_rlrsssl_really_simple_ssl #wpcontent .header-links .header-upsell .button-rsssl-primary,
-.settings_page_really-simple-ssl #wpcontent .header-links .header-upsell .button-rsssl-primary {
-  text-align: center;
-  background-color: #3a5998;
-  color: white !important;
-  min-width: 100px;
-}
-.settings_page_rlrsssl_really_simple_ssl #wpcontent .header-links .header-upsell .button-rsssl-primary:hover,
-.settings_page_really-simple-ssl #wpcontent .header-links .header-upsell .button-rsssl-primary:hover {
-  color: black !important;
-}
 .rsssl-grid {
   margin-left: 25px;
   position: relative;
@@ -97,22 +86,6 @@
   /*
     Dots
    */
-}
-.rsssl-grid .button-rsssl-primary {
-  text-align: center;
-  background-color: #3a5998;
-  color: white !important;
-  min-width: 100px;
-}
-.rsssl-grid .button-rsssl-primary:hover {
-  color: black !important;
-}
-.rsssl-grid .button-rsssl-secondary {
-  text-align: center;
-  border-color: #6477AA;
-  color: #7B8CB7;
-  background-color: #fff;
-  min-width: 100px;
 }
 .rsssl-grid .button-rsssl-tertiary {
   background-color: #D7263D;
@@ -132,8 +105,14 @@
 .rsssl-grid .rsssl-progress #rsssl-remaining-tasks {
   display: none;
 }
-.rsssl-grid .rsssl-progress .rsssl-tasks {
+.rsssl-grid .rsssl-progress .rsssl-tasks-container {
+  border-bottom: 1px solid lightgrey;
+  color: lightgrey;
+}
+.rsssl-grid .rsssl-progress .rsssl-tasks-container.active {
   text-decoration: none;
+  border-bottom: 0;
+  color: initial;
 }
 .rsssl-grid .rsssl-progress .rsssl-tasks-inactive {
   text-decoration: underline;
@@ -156,8 +135,8 @@
   background-color: #fff;
   position: relative;
   box-shadow: 0px 0px 5px 5px rgba(222, 222, 222, 0.2);
-  width: 780px;
-  height: 455px;
+  width: 775px;
+  height: 475px;
 }
 .rsssl-grid .rsssl-item .item-container .form-table {
   display: flex;
@@ -171,7 +150,7 @@
 }
 .rsssl-grid .rsssl-item .item-container .form-table tbody tr {
   padding: 0 !important;
-  padding-bottom: 10px;
+  padding-bottom: 25px;
   display: flex;
   align-items: center;
   flex-direction: row;
@@ -190,10 +169,11 @@
   font-weight: normal;
 }
 .rsssl-grid .rsssl-item .item-container .form-table tbody tr th .dashicons-editor-help {
-  font-size: 20px;
+  font-size: 26px;
 }
 .rsssl-grid .rsssl-item .item-container .form-table tbody tr th .rsssl-tooltip-right {
   padding-right: 10px;
+  margin-top: -4px;
 }
 .rsssl-grid .rsssl-item .item-container h2 {
   display: none;
@@ -205,7 +185,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-top: 10px;
+  margin-top: 25px;
   height: 60px;
   border-bottom: 1px solid #dedede;
   padding: 0 25px 0 25px;
@@ -226,8 +206,8 @@
   padding-left: 15px;
 }
 .rsssl-grid .rsssl-item .item-container .rsssl-grid-item-content {
-  height: 310px;
-  margin: 25px 25px 10px 25px;
+  height: 340px;
+  margin: 10px 25px 10px 25px;
   border-bottom: 1px solid #dedede;
   /*
           Progress block
@@ -278,7 +258,7 @@
 .rsssl-grid .rsssl-item .item-container .rsssl-grid-item-content .rsssl-progress-block .progress-text .rsssl-progress-text {
   display: flex;
   flex-direction: row;
-  margin-left: 10px;
+  margin-left: 25px;
 }
 .rsssl-grid .rsssl-item .item-container .rsssl-grid-item-content .rsssl-progress-block .progress-text .rsssl-progress-text a {
   margin-left: 3px;
@@ -298,6 +278,7 @@
 .rsssl-grid .rsssl-item .item-container .rsssl-grid-item-content .rsssl-tips-tricks .tips-tricks-content {
   display: flex;
   flex-direction: column;
+  margin-right: 10px;
   height: 300px;
 }
 .rsssl-grid .rsssl-item .item-container .rsssl-grid-item-content .rsssl-tips-tricks .tips-tricks-content .tips-tricks-top {
@@ -413,13 +394,10 @@
 .rsssl-grid .rsssl-item .item-container .rsssl-grid-item-footer {
   display: flex;
   align-items: center;
-  margin: 0 25px 0 25px;
+  margin: 11px 25px 0 25px;
   height: 40px;
   bottom: 0;
   width: 95%;
-}
-.rsssl-grid .rsssl-item .item-container .rsssl-grid-item-footer .button-primary {
-  justify-content: flex-start;
 }
 .rsssl-grid .rsssl-item .item-container .rsssl-grid-item-footer .rsssl-button-save {
   margin-right: 25px;
@@ -437,13 +415,10 @@
   height: 237.5px;
 }
 .rsssl-grid .rsssl-item.half-height .item-container .rsssl-grid-item-content {
-  height: 100px;
-}
-.rsssl-grid .rsssl-item.half-height .rsssl-grid-item-footer {
-  margin: -5px 25px 0 25px;
+  height: 105px;
 }
 .rsssl-grid .rsssl-item.small .item-container {
-  width: 380px;
+  width: 375px;
 }
 .rsssl-grid .rsssl-item.small .item-container th {
   width: 85% !important;
@@ -457,17 +432,11 @@
 .rsssl-grid #rsssl-progress-footer {
   width: 100%;
   text-align: right;
-  margin-right: 10px;
+  margin-right: 25px;
 }
 .rsssl-grid #rsssl-progress-footer .rsssl-footer-item {
   margin-left: 20px;
   padding-right: 5px;
-}
-.rsssl-grid #rsssl-progress-footer .footer-left {
-  margin-left: 0 !important;
-  float: left;
-  margin-top: -15px;
-  font-weight: 600;
 }
 .rsssl-grid #rsssl-progress-footer .footer-left .upsell {
   margin-left: -10px;

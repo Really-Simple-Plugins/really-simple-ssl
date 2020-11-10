@@ -1,9 +1,7 @@
 <?php defined('ABSPATH') or die("you do not have access to this page!"); ?>
-
 <div class="rsssl-tips-tricks">
 	<div class="tips-tricks-content">
         <div class="tips-tricks-top">
-
 			<div class="rsssl-tips-tricks-element">
 				<div class="rsssl-tips-tricks-content">
 					<?php _e("Improve security: Enable HTTP Strict Transport Security (HSTS)", "really-simple-ssl")?>
@@ -17,7 +15,7 @@
 					<?php _e("Is your site still not secure? Do the extensive site scan", "really-simple-ssl")?>
 				</div>
 				<div class="rsssl-tips-tricks-read-more">
-					<a href="<?php echo RSSSL()->really_simple_ssl->pro_url?>" target="_blank"><?php _e("Read more", "really-simple-ssl");?></a>
+					<a href="https://really-simple-ssl.com/knowledge-base/how-to-track-down-mixed-content-or-insecure-content/" target="_blank"><?php _e("Read more", "really-simple-ssl");?></a>
 				</div>
 			</div>
 			<div class="rsssl-tips-tricks-element">

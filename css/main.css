@@ -7,6 +7,9 @@
 .notice-info:not(.really-simple-plugins) {
   display: none !important;
 }
+.rsssl-spacer {
+  width: 10px;
+}
 /* comments on settings pages */
 .rsssl-comment-text {
   color: #888;
@@ -465,9 +468,6 @@ hr {
   clear: both;
   margin-top: 10px;
 }
-.rsssl-button-deactivate-keep-ssl {
-  margin-right: 15px;
-}
 /*
     cool checkbox sliders
 */
@@ -476,6 +476,7 @@ hr {
   display: inline-block;
   width: 40px;
   height: 21px;
+  margin-top: 15px;
 }
 .rsssl-switch input {
   display: none;
@@ -524,11 +525,6 @@ input:focus + .rsssl-slider {
 }
 .debug-log {
   width: 90%;
-}
-.rsssl-dismiss-text {
-  font-size: 1em;
-  color: #0073aa;
-  margin-left: 3px;
 }
 .rsssl-dashboard-plusone {
   margin-left: 8px;

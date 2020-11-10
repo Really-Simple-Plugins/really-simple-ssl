@@ -30,14 +30,20 @@ jQuery(document).ready(function ($) {
             },
             url: rsssl.ajaxurl,
             success: function (data) {
-                if (data != '') {
+                if (data !== '') {
                     // Hide completely when there are no tasks left
-                    if (data == 0) {
+                    if (data === 0) {
                         $('.open-task-text').text("");
                         $('.open-task-count').text("");
-                        $(".rsssl-progress-text").text(rsssl.finished_text);
-                        $(".rsssl-progress-text").append("<a href='https://really-simple-ssl.com/pro'>Really Simple SSL Pro</a>");
-                    } else {
+                    }
+                    if (data === rsssl.lowest_possible_task_count) {
+                        $(".rsssl-progress-text").html(rsssl.finished_text);
+                    } else  {
+                        var text = rsssl.not_complete_text.replace('%s', data);
+                        $(".rsssl-progress-text").html(text);
+                    }
+
+                    if (data !== 0) {
                         var current_count = $('#rsssl-remaining-tasks-label').text();
                         var updated_count = current_count.replace(/(?<=\().+?(?=\))/, data) ;
                         // Replace the count if there are open tasks left
@@ -98,18 +104,15 @@ jQuery(document).ready(function ($) {
         });
     }
 
-
-
     rsssl_update_toggle_style();
     function rsssl_update_toggle_style(){
         var allTasks = $('#rsssl-all-tasks');
-        var remainingTasks = $('#rsssl-remaining-tasks');
         if (allTasks.is(":checked")) {
-            $(".all-task-text").css({"border-bottom": "1px solid lightgrey", "color": "lightgrey"});
-            $(".open-task-text ").css({"text-decoration": "none"});
+            $(".rsssl-tasks-container.rsssl-all-tasks").addClass('active');
+            $(".rsssl-tasks-container.rsssl-remaining-tasks").removeClass('active');
         } else {
-            $(".all-task-text").css({"text-decoration": "none"});
-            $(".open-task-text ").css({"border-bottom": "1px solid lightgrey", "color": "lightgrey"});
+            $(".rsssl-tasks-container.rsssl-all-tasks").removeClass('active');
+            $(".rsssl-tasks-container.rsssl-remaining-tasks").addClass('active');
         }
     }
 

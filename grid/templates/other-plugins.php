@@ -13,7 +13,7 @@ $plugins = array(
 		'constant_free' => 'cmplz_plugin',
 		'constant_premium' => 'cmplz_premium',
 		'website' => 'https://complianz.io/pricing',
-		'search' => 'complianz',
+		'search' => 'complianz+really+simple+cookies+rogierlankhorst',
 	),
 	'ZIP' => array(
 		'constant_free' => 'ZRDN_PLUGIN_BASENAME',

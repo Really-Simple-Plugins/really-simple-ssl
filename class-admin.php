@@ -66,6 +66,8 @@ class rsssl_admin extends rsssl_front_end
         register_deactivation_hook(dirname(__FILE__) . "/" . $this->plugin_filename, array($this, 'deactivate'));
 	    add_action('admin_init', array($this, 'add_privacy_info'));
 	    add_action('admin_init', array($this, 'maybe_dismiss_review_notice'));
+	    add_action( "update_option_rlrsssl_options", array( $this, "maybe_clear_transients" ), 10, 3 );
+
 
 	    // Only show deactivate popup when SSL has been enabled.
 	    if ($this->ssl_enabled) {
@@ -77,6 +79,20 @@ class rsssl_admin extends rsssl_front_end
     static function this()
     {
         return self::$_this;
+    }
+
+	/**
+	 * @param $oldvalue
+	 * @param $newvalue
+	 * @param $option
+	 */
+    public function maybe_clear_transients($oldvalue, $newvalue, $option){
+        if ($oldvalue !== $newvalue ) {
+            delete_transient('rsssl_mixed_content_fixer_detected');
+            delete_transient('rsssl_plusone_count');
+            delete_transient('rsssl_all_task_count');
+            delete_transient('rsssl_remaining_task_count');
+        }
     }
 
 	/**
@@ -451,7 +467,6 @@ class rsssl_admin extends rsssl_front_end
     public function ssl_detected()
     {
         if ($this->site_has_ssl) {
-
             ob_start();
 	        do_action('rsssl_activation_notice_inner');
 	        $content = ob_get_clean();
@@ -461,7 +476,6 @@ class rsssl_admin extends rsssl_front_end
             $footer = ob_get_clean();
 	        $class = "updated activate-ssl rsssl-pro-dismiss-notice";
 	        $title = __("Almost ready to migrate to SSL!", "really-simple-ssl");
-
 	        echo $this->notice_html( $class, $title, $content, $footer);
         }
     }
@@ -2033,6 +2047,10 @@ class rsssl_admin extends rsssl_front_end
                 }
             }
 
+            if ($this->autoreplace_insecure_links == ! true) {
+                $mixed_content_fixer_detected = 'not-enabled';
+            }
+
             set_transient('rsssl_mixed_content_fixer_detected', $mixed_content_fixer_detected, 600);
         }
 
@@ -2062,6 +2080,11 @@ class rsssl_admin extends rsssl_front_end
             $this->mixed_content_fixer_detected = true;
         }
 
+        if ($mixed_content_fixer_detected === 'not-enabled') {
+            $this->trace_log("Mixed content fixer not enabled");
+            $this->mixed_content_fixer_detected = FALSE;
+        }
+
         return $mixed_content_fixer_detected;
     }
 
@@ -2081,8 +2104,6 @@ class rsssl_admin extends rsssl_front_end
         $this->trace_log("retrieving redirect rules");
         //only add the redirect rules when a known type of SSL was detected. Otherwise, we use https.
         $rule = "";
-	    $this->ssl_type = "SERVER-HTTPS-ON";
-	    $this->htaccess_redirect = true;
         //if the htaccess test was successfull, and we know the redirectype, edit
         if ($this->htaccess_redirect && ($manual || $this->htaccess_test_success) && $this->ssl_type != "NA") {
 	        $this->trace_log("starting insertion of .htaccess redirects.");
@@ -2313,7 +2334,7 @@ class rsssl_admin extends rsssl_front_end
 
                         <i>- Rogier</i>
                         <div class="rsssl-buttons-row">
-                            <a class="button button-rsssl-primary" target="_blank"
+                            <a class="button button-primary" target="_blank"
                                href="https://wordpress.org/support/plugin/really-simple-ssl/reviews/#new-post"><?php _e('Leave a review', 'really-simple-ssl'); ?></a>
                             <div class="dashicons dashicons-calendar"></div><a href="#" id="maybe-later"><?php _e('Maybe later', 'really-simple-ssl'); ?></a>
                             <div class="dashicons dashicons-no-alt"></div><a href="<?php echo esc_url(add_query_arg(array("page"=>"rlrsssl_really_simple_ssl", "tab"=>"configuration", "rsssl_dismiss_review_notice"=>1),admin_url("options-general.php") ) );?>"><?php _e('Don\'t show again', 'really-simple-ssl'); ?></a>
@@ -2590,7 +2611,7 @@ class rsssl_admin extends rsssl_front_end
                         <div class="header-upsell-pro"><?php _e("PRO", "really-simple-ssl"); ?></div>
                     <?php } else { ?>
                     <div class="documentation">
-                        <a href="https://really-simple-ssl.com/support" class="button button-rsssl-primary" target="_blank"><?php _e("Support", "really-simple-ssl") ?></a>
+                        <a href="https://really-simple-ssl.com/support" class="button button-primary" target="_blank"><?php _e("Support", "really-simple-ssl") ?></a>
                     </div>
                     <?php } ?>
                 </div>
@@ -2620,6 +2641,7 @@ class rsssl_admin extends rsssl_front_end
     {
         $defaults = array(
             'admin_notices' => false,
+            'premium_only' => false,
             'status' => 'open', //status can be "all" (all tasks, regardless of dismissed or open), "open" (not success/completed) or "completed"
         );
         $args = wp_parse_args($args, $defaults);
@@ -2740,7 +2762,7 @@ class rsssl_admin extends rsssl_front_end
             ),
 
             'mixed_content_fixer_detected' => array(
-                'condition' => array('rsssl_site_has_ssl', 'rsssl_autoreplace_insecure_links', 'rsssl_ssl_enabled'),
+                'condition' => array('rsssl_site_has_ssl', 'rsssl_ssl_enabled'),
                 'callback' => 'rsssl_mixed_content_fixer_detected',
                 'score' => 10,
                 'output' => array(
@@ -2756,7 +2778,7 @@ class rsssl_admin extends rsssl_front_end
                         'plusone' => true
                     ),
                     'not-found' => array(
-                        'url' => "https://www.really-simple-ssl.com/knowledge-base/how-to-check-if-the-mixed-content-fixer-is-active/",
+                        'url' => "https://really-simple-ssl.com/knowledge-base/how-to-check-if-the-mixed-content-fixer-is-active/",
                         'msg' => __('The mixed content fixer is active, but was not detected on the frontpage.', "really-simple-ssl"),
                         'icon' => 'open',
                         'dismissible' => true
@@ -2766,8 +2788,13 @@ class rsssl_admin extends rsssl_front_end
 	                    'icon' => 'open',
                         'dismissible' => true
                     ),
+                    'not-enabled' => array(
+                        'msg' =>__('Mixed content fixer not enabled. Enable the option to fix mixed content on your site.', 'really-simple-ssl'),
+                        'icon' => 'open',
+                        'dismissible' => true
+                    ),
                     'curl-error' => array(
-                        'url' => 'https://www.really-simple-ssl.com/knowledge-base/curl-errors/',
+                        'url' => 'https://really-simple-ssl.com/knowledge-base/curl-errors/',
 	                    'msg' =>sprintf(__("The mixed content fixer could not be detected due to a cURL error: %s. cURL errors are often caused by an outdated version of PHP or cURL and don't affect the front-end of your site. Contact your hosting provider for a fix.", 'really-simple-ssl'), "<b>" . $curl_error . "</b>"),
 	                    'icon' => 'open',
                         'dismissible' => true,
@@ -2792,7 +2819,7 @@ class rsssl_admin extends rsssl_front_end
             ),
 
             'check_redirect' => array(
-	            'condition' => array('rsssl_ssl_enabled' , 'rsssl_htaccess_redirect_allowed', 'rsssl_no_multisite'),
+	            'condition' => array('rsssl_ssl_enabled' , 'rsssl_htaccess_redirect_allowed', 'NOT is_multisite'),
 	            'callback' => 'rsssl_check_redirect',
                 'score' => 10,
 	            'output' => array(
@@ -2814,6 +2841,7 @@ class rsssl_admin extends rsssl_front_end
                         'dismissible' => false
                     ),
                     'htaccess-not-writeable' => array(
+                        'url' => 'https://really-simple-ssl.com/knowledge-base/manually-insert-htaccess-redirect-http-to-https/',
                         'msg' => sprintf(__('The %s file is not writable. You can either use the WordPress redirect, add the rules manually, or set the file to writable.', 'really-simple-ssl'), $htaccess_file),
                         'icon' => 'warning',
                         'dismissible' => true
@@ -2831,7 +2859,7 @@ class rsssl_admin extends rsssl_front_end
 	            'callback' => 'rsssl_uses_elementor',
 	            'score' => 5,
 	            'output' => array(
-		            'uses-elementor' => array(
+		            'true' => array(
                         'url' => 'https://really-simple-ssl.com/knowledge-base/how-to-fix-mixed-content-in-elementor-after-moving-to-ssl/',
 			            'msg' => __("Your site uses Elementor. This can require some additional steps before getting the secure lock.", "really-simple-ssl"),
 			            'icon' => 'open',
@@ -2845,7 +2873,7 @@ class rsssl_admin extends rsssl_front_end
 	            'callback' => 'rsssl_uses_divi',
 	            'score' => 5,
 	            'output' => array(
-		            'users-divi' => array(
+		            'true' => array(
                         'url' => "https://really-simple-ssl.com/knowledge-base/mixed-content-when-using-divi-theme/",
 			            'msg' => __("Your site uses Divi. This can require some additional steps before getting the secure lock.", "really-simple-ssl"),
 			            'icon' => 'open',
@@ -2855,15 +2883,15 @@ class rsssl_admin extends rsssl_front_end
             ),
 
             'hsts_enabled' => array(
-                'condition' => array('rsssl_no_multisite'),
-                'callback' => 'rsssl_hsts_enabled',
+                'condition' => array('NOT is_multisite'),
+                'callback' => 'RSSSL()->really_simple_ssl->contains_hsts',
                 'score' => 5,
                 'output' => array(
-                    'contains-hsts' => array(
+                    'true' => array(
                         'msg' =>__('HTTP Strict Transport Security was enabled.', 'really-simple-ssl'),
                         'icon' => 'success'
                     ),
-                    'no-hsts' => array(
+                    'false' => array(
                         'msg' => sprintf(__('%sHTTP Strict Transport Security%s is not enabled %s(Read more)%s', "really-simple-ssl"), '<a href="https://really-simple-ssl.com/hsts-http-strict-transport-security-good/" target="_blank">', '</a>', '<a target="_blank" href="' . $this->pro_url . '">', '</a>'),
                         'icon' => 'premium'
                     ),
@@ -2871,14 +2899,14 @@ class rsssl_admin extends rsssl_front_end
             ),
 
             'secure_cookies_set' => array(
-                'callback' => 'rsssl_secure_cookies_set',
+                'callback' => 'RSSSL()->really_simple_ssl->contains_secure_cookie_settings',
                 'score' => 5,
                 'output' => array(
-                    'set' => array(
+                    'true' => array(
                         'msg' =>__('Secure cookies set', 'really-simple-ssl'),
                         'icon' => 'success'
                     ),
-                    'not-set' => array(
+                    'false' => array(
                         'msg' => sprintf(__("Secure cookie settings not enabled (%sRead more%s) ", "really-simple-ssl"), '<a target="_blank" href="https://really-simple-ssl.com/secure-cookies-with-httponly-secure-and-use_only_cookies/">', '</a>'),
                         'icon' => 'premium'
                     ),
@@ -2963,29 +2991,33 @@ class rsssl_admin extends rsssl_front_end
 
 	    //sort so warnings are on top
 	    $warnings = array();
+	    $open = array();
 	    $other = array();
 	    foreach ($notices as $key => $notice){
 	        if ($notice['output']['icon']==='warning') {
 	            $warnings[$key] = $notice;
-            } else {
+            } else if ($notice['output']['icon']==='open') {
+		        $open[$key] = $notice;
+	        } else {
 		        $other[$key] = $notice;
 	        }
         }
 
-	    $notices = $warnings + $other;
+	    $notices = $warnings + $open + $other;
 
 	    //add plus ones
 	    foreach ($notices as $key => $notice){
-
 		    if ( isset($notice['output']['url']) ) {
 		        $url = $notice['output']['url'];
-		        if (strpos( $url, 'https://really-simple-ssl.com')){
+		        $target = '';
+		        if ( strpos( $url, 'https://really-simple-ssl.com') !== FALSE ){
 		            $info = __('%sMore info%s or %sdismiss%s','really-simple-ssl');
+		            $target = 'target="_blank"';
                 } else {
 			        $info = __('%sEnable%s or %sdismiss%s','really-simple-ssl');
 		        }
 		        $dismiss_open = "<span class='rsssl-dashboard-dismiss' data-dismiss_type='".$key."'><a href='#' class='rsssl-dismiss-text rsssl-close-warning'>";
-			    $notices[$key]['output']['msg'] .= ' '.sprintf($info ,'<a target="_blank" href="'.$url.'">', '</a>', $dismiss_open, "</a></span>");
+			    $notices[$key]['output']['msg'] .= ' '.sprintf($info ,'<a '.$target.' href="'.$url.'">', '</a>', $dismiss_open, "</a></span>");
 		    }
 
 		    if ( isset($notice['output']['plusone']) && $notice['output']['plusone']) {
@@ -2994,7 +3026,25 @@ class rsssl_admin extends rsssl_front_end
             }
 	    }
 
+	    //if we only want a list of premium notices
+	    if ( $args['premium_only'] ) {
+		    foreach ($notices as $key => $notice){
+			    if ( !isset($notice['output']['icon']) || $notice['output']['icon'] !== 'premium' ) {
+				    unset($notices[$key]);
+			    }
+		    }
+        }
+
         return $notices;
+    }
+
+	/**
+     * Count number of premium notices we have in the list.
+	 * @return int
+	 */
+    public function get_lowest_possible_task_count(){
+        $premium_notices = $this->get_notices_list(array('premium_only'=>true));
+        return count($premium_notices) ;
     }
 
 	/**
@@ -3577,11 +3627,7 @@ class rsssl_admin extends rsssl_front_end
             . 'js/scripts.js', array("jquery"), rsssl_version);
         wp_enqueue_script('rsssl');
 
-        if (!defined('rsssl_pro_version')) {
-            $finished_text = __("Basic SSL configuration finished! Improve your score with ", "really-simple-ssl");
-        } else {
-            $finished_text = '';
-        }
+        $finished_text = apply_filters('rsssl_finished_text', sprintf(__("Basic SSL configuration finished! Improve your score with %sReally Simple SSL Pro%s.", "really-simple-ssl"), '<a target="_blank" href="' . $this->pro_url . '">', '</a>') );
 
         wp_localize_script('rsssl', 'rsssl',
             array(
@@ -3589,6 +3635,8 @@ class rsssl_admin extends rsssl_front_end
                 'token'   => wp_create_nonce( 'rsssl_nonce'),
                 'copied_text' => __("Copied!", "really-simple-ssl"),
                 'finished_text' => $finished_text,
+                'not_complete_text' =>__("You're doing well. You still have %s tasks open"),
+                'lowest_possible_task_count' =>	RSSSL()->really_simple_ssl->get_lowest_possible_task_count(),
             )
         );
         wp_register_script('rsssl-scrollbar',
@@ -3809,7 +3857,10 @@ class rsssl_admin extends rsssl_front_end
             <span class="rsssl-slider rsssl-round"></span>
         </label>
         <?php
-        if (!$this->do_not_edit_htaccess && !is_writable($this->htaccess_file())) _e(".htaccess is currently not writable.", "really-simple-ssl");
+        if (!$this->do_not_edit_htaccess && !is_writable($this->htaccess_file()))  {
+            $comment = __(".htaccess is currently not writable.", "really-simple-ssl");
+	        RSSSL()->rsssl_help->get_comment($comment);
+        }
     }
 
     /**
@@ -3986,7 +4037,7 @@ class rsssl_admin extends rsssl_front_end
                 ?>
                 <div class="rsssl-deactivate-notice-footer">
                     <a class="button button-default" href="#" id="rsssl_close_tb_window"><?php _e("Cancel", "really-simple-ssl") ?></a>
-                    <a class="button button-primary rsssl-button-deactivate-keep-ssl" href="<?php echo $deactivate_keep_ssl_link ?>"><?php _e("Deactivate, keep https", "really-simple-ssl") ?></a>
+                    <a class="button button-primary" href="<?php echo $deactivate_keep_ssl_link ?>"><?php _e("Deactivate, keep https", "really-simple-ssl") ?></a>
                     <a class="button  button-rsssl-tertiary rsssl-button-deactivate-revert" href="#"><?php _e("Deactivate, revert to http", "really-simple-ssl") ?></a>
                 </div>
         </div>
@@ -4296,12 +4347,6 @@ if (!function_exists('rsssl_site_has_ssl')) {
 	}
 }
 
-if (!function_exists('rsssl_autoreplace_insecure_links')) {
-	function rsssl_autoreplace_insecure_links() {
-		return RSSSL()->really_simple_ssl->autoreplace_insecure_links;
-	}
-}
-
 if (!function_exists('rsssl_ssl_enabled')) {
     function rsssl_ssl_enabled() {
         if ( RSSSL()->really_simple_ssl->ssl_enabled ) {
@@ -4368,26 +4413,6 @@ if (!function_exists('rsssl_check_redirect')) {
 	}
 }
 
-if (!function_exists('rsssl_hsts_enabled')) {
-	function rsssl_hsts_enabled() {
-		if ( RSSSL()->really_simple_ssl->contains_hsts() ) {
-			return 'contains-hsts';
-		} else {
-			return 'no-hsts';
-		}
-	}
-}
-
-if (!function_exists('rsssl_secure_cookies_set')) {
-	function rsssl_secure_cookies_set() {
-		if ( RSSSL()->really_simple_ssl->contains_secure_cookie_settings() ) {
-			return 'set';
-		} else {
-			return 'not-set';
-		}
-	}
-}
-
 if (!function_exists('rsssl_htaccess_not_writable')) {
 	function rsssl_htaccess_not_writable() {
 	    //don't trigger if htaccess not used
@@ -4409,9 +4434,9 @@ if (!function_exists('rsssl_htaccess_redirect_allowed')) {
 if (!function_exists('rsssl_uses_elementor')) {
 	function rsssl_uses_elementor() {
 		if ( defined( 'ELEMENTOR_VERSION' ) || defined( 'ELEMENTOR_PRO_VERSION' ) ) {
-			return 'uses-elementor';
+			return true;
 		} else {
-			return 'no-elementor';
+			return false;
 		}
 	}
 }
@@ -4419,9 +4444,9 @@ if (!function_exists('rsssl_uses_elementor')) {
 if (!function_exists('rsssl_uses_divi')) {
 	function rsssl_uses_divi() {
 		if ( defined( 'ET_CORE_PATH' ) ) {
-			return 'uses-divi';
+			return true;
 		} else {
-			return 'no-divi';
+			return false;
 		}
 	}
 }
@@ -4456,16 +4481,6 @@ if (!function_exists('rsssl_wordpress_redirect')) {
 			return '301-wp-redirect';
 		} else {
 			return 'no-redirect';
-		}
-	}
-}
-
-if (!function_exists('rsssl_no_multisite')) {
-	function rsssl_no_multisite() {
-		if ( ! is_multisite() ) {
-			return true;
-		} else {
-			return false;
 		}
 	}
 }
