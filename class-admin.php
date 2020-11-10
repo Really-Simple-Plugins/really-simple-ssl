@@ -2702,7 +2702,7 @@ class rsssl_admin extends rsssl_front_end
                 'score' => 5,
                 'output' => array(
                     'true' => array(
-                        'msg' => __("Don't forget to change your settings in Google Analytics and Webmaster tools.", "really-simple-ssl"),
+                        'msg' => __("Don't forget to change your settings in Google Analytics and Search Console.", "really-simple-ssl"),
                         'url' => 'https://really-simple-ssl.com/knowledge-base/how-to-setup-google-analytics-and-google-search-consolewebmaster-tools/',
                         'icon' => 'open',
                         'dismissible' => true,
