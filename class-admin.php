@@ -66,6 +66,8 @@ class rsssl_admin extends rsssl_front_end
         register_deactivation_hook(dirname(__FILE__) . "/" . $this->plugin_filename, array($this, 'deactivate'));
 	    add_action('admin_init', array($this, 'add_privacy_info'));
 	    add_action('admin_init', array($this, 'maybe_dismiss_review_notice'));
+	    add_action( "update_option_rlrsssl_options", array( $this, "maybe_clear_transients" ), 10, 3 );
+
 
 	    // Only show deactivate popup when SSL has been enabled.
 	    if ($this->ssl_enabled) {
@@ -77,6 +79,20 @@ class rsssl_admin extends rsssl_front_end
     static function this()
     {
         return self::$_this;
+    }
+
+	/**
+	 * @param $oldvalue
+	 * @param $newvalue
+	 * @param $option
+	 */
+    public function maybe_clear_transients($oldvalue, $newvalue, $option){
+        if ($oldvalue !== $newvalue ) {
+            delete_transient('rsssl_mixed_content_fixer_detected');
+            delete_transient('rsssl_plusone_count');
+            delete_transient('rsssl_all_task_count');
+            delete_transient('rsssl_remaining_task_count');
+        }
     }
 
 	/**
