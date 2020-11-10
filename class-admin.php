@@ -2033,6 +2033,10 @@ class rsssl_admin extends rsssl_front_end
                 }
             }
 
+            if ($this->autoreplace_insecure_links == ! true) {
+                $mixed_content_fixer_detected = 'not-enabled';
+            }
+
             set_transient('rsssl_mixed_content_fixer_detected', $mixed_content_fixer_detected, 600);
         }
 
@@ -2060,6 +2064,11 @@ class rsssl_admin extends rsssl_front_end
             $this->trace_log("Mixed content fixer successfully detected");
             //Mixed content fixer was successfully detected on the front end
             $this->mixed_content_fixer_detected = true;
+        }
+
+        if ($mixed_content_fixer_detected === 'not-enabled') {
+            $this->trace_log("Mixed content fixer not enabled");
+            $this->mixed_content_fixer_detected = FALSE;
         }
 
         return $mixed_content_fixer_detected;
@@ -2739,7 +2748,7 @@ class rsssl_admin extends rsssl_front_end
             ),
 
             'mixed_content_fixer_detected' => array(
-                'condition' => array('rsssl_site_has_ssl', 'rsssl_autoreplace_insecure_links', 'rsssl_ssl_enabled'),
+                'condition' => array('rsssl_site_has_ssl', 'rsssl_ssl_enabled'),
                 'callback' => 'rsssl_mixed_content_fixer_detected',
                 'score' => 10,
                 'output' => array(
@@ -2763,6 +2772,11 @@ class rsssl_admin extends rsssl_front_end
                     'error' => array(
 	                    'msg' =>__('Error occurred when retrieving the webpage.', 'really-simple-ssl'),
 	                    'icon' => 'open',
+                        'dismissible' => true
+                    ),
+                    'not-enabled' => array(
+                        'msg' =>__('Mixed content fixer not enabled. Enable the option to fix mixed content on your site.', 'really-simple-ssl'),
+                        'icon' => 'open',
                         'dismissible' => true
                     ),
                     'curl-error' => array(
@@ -4313,12 +4327,6 @@ if (!function_exists('rsssl_mixed_content_fixer_detected')) {
 if (!function_exists('rsssl_site_has_ssl')) {
 	function rsssl_site_has_ssl() {
 		return RSSSL()->really_simple_ssl->site_has_ssl;
-	}
-}
-
-if (!function_exists('rsssl_autoreplace_insecure_links')) {
-	function rsssl_autoreplace_insecure_links() {
-		return RSSSL()->really_simple_ssl->autoreplace_insecure_links;
 	}
 }
 
