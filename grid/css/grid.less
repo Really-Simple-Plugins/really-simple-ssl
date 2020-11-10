@@ -82,7 +82,7 @@
 }
 
 .rsssl-grid {
-  margin-left: 25px;
+  margin: 25px;
   position: relative;
   display: flex;
   flex-direction: row;
@@ -144,7 +144,7 @@
       margin-right: 25px;
     }
 
-    height: @gridblock_height;
+    height: @gridblock_height + @grid_margin;
     z-index: 1;
     .item-container {
         .form-table {
@@ -204,7 +204,6 @@
         display: flex;
         align-items: center;
         justify-content: space-between;
-        margin-top: @grid_margin;
         height: 60px;
         border-bottom: 1px solid @border_color;
         padding: 0 25px 0 25px;
@@ -475,6 +474,8 @@
 
     }
     &.half-height {
+      height: (@gridblock_height / 2) + @grid_margin;
+
       .item-container {
         height: @gridblock_height / 2;
         .rsssl-grid-item-content {

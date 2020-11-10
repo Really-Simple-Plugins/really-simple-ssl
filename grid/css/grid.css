@@ -75,7 +75,7 @@
   font-weight: 600;
 }
 .rsssl-grid {
-  margin-left: 25px;
+  margin: 25px;
   position: relative;
   display: flex;
   flex-direction: row;
@@ -120,7 +120,7 @@
 }
 .rsssl-grid .rsssl-item {
   width: 800px;
-  height: 475px;
+  height: 500px;
   z-index: 1;
 }
 .rsssl-grid .rsssl-item.small {
@@ -185,7 +185,6 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-top: 25px;
   height: 60px;
   border-bottom: 1px solid #dedede;
   padding: 0 25px 0 25px;
@@ -410,6 +409,9 @@
 .rsssl-grid .rsssl-item .item-container .rsssl-deactivate-keep-ssl th,
 .rsssl-grid .rsssl-item .item-container .rsssl-deactivate-keep-ssl span {
   display: none;
+}
+.rsssl-grid .rsssl-item.half-height {
+  height: 262.5px;
 }
 .rsssl-grid .rsssl-item.half-height .item-container {
   height: 237.5px;
