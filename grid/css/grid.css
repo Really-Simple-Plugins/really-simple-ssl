@@ -150,10 +150,10 @@
 }
 .rsssl-grid .rsssl-item .item-container .form-table tbody tr {
   padding: 0 0 5px 0 !important;
-  max-width: 50%;
   display: flex;
   align-items: center;
   flex-direction: row;
+  max-width: 50%;
 }
 .rsssl-grid .rsssl-item .item-container .form-table tbody tr td {
   padding: 0;
@@ -424,6 +424,9 @@
 }
 .rsssl-grid .rsssl-item.small .item-container th {
   width: 85% !important;
+}
+.rsssl-grid .rsssl-item.small .item-container .form-table tbody tr {
+  max-width: 100%;
 }
 .rsssl-grid .rsssl-item.no-border .item-container {
   border: none;
