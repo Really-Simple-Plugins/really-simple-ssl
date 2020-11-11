@@ -149,8 +149,8 @@
   width: 100% !important;
 }
 .rsssl-grid .rsssl-item .item-container .form-table tbody tr {
-  padding: 0 !important;
-  padding-bottom: 25px;
+  padding: 0 0 5px 0 !important;
+  max-width: 50%;
   display: flex;
   align-items: center;
   flex-direction: row;
@@ -441,7 +441,6 @@
   padding-right: 5px;
 }
 .rsssl-grid #rsssl-progress-footer .footer-left .upsell {
-  margin-left: -10px;
   min-width: 80px;
   text-align: center;
   float: left;
