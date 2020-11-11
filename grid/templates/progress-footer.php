@@ -22,12 +22,12 @@ if (!defined('rsssl_pro_version')) {
 	$btns .= "<a href='$button_link' target='_blank' class='button button-default upsell'>$button_text</a>";
 }
 
-//if (!RSSSL()->really_simple_ssl->ssl_enabled) {
-//	if ( RSSSL()->really_simple_ssl->site_has_ssl || ( defined( 'RSSSL_FORCE_ACTIVATE' ) && RSSSL_FORCE_ACTIVATE ) ) {
+if (!RSSSL()->really_simple_ssl->ssl_enabled) {
+	if ( RSSSL()->really_simple_ssl->site_has_ssl || ( defined( 'RSSSL_FORCE_ACTIVATE' ) && RSSSL_FORCE_ACTIVATE ) ) {
 		$button_text = __( "Activate SSL", "really-simple-ssl" );
 		$btns = '<form action="" method="post" ><input type="submit" class="button button-primary" value="' . $button_text . '" id="rsssl_do_activate_ssl" name="rsssl_do_activate_ssl"></form>' . $btns;
-//	}
-//}
+	}
+}
 
 $items = array(
 		1 => array(
