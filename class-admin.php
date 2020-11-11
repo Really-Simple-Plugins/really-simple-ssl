@@ -88,11 +88,19 @@ class rsssl_admin extends rsssl_front_end
 	 */
     public function maybe_clear_transients($oldvalue, $newvalue, $option){
         if ($oldvalue !== $newvalue ) {
-            delete_transient('rsssl_mixed_content_fixer_detected');
-            delete_transient('rsssl_plusone_count');
-            delete_transient('rsssl_all_task_count');
-            delete_transient('rsssl_remaining_task_count');
+            $this->clear_transients();
         }
+    }
+
+	/**
+	 * Clear some transients
+	 */
+
+    public function clear_transients(){
+	    delete_transient('rsssl_mixed_content_fixer_detected');
+	    delete_transient('rsssl_plusone_count');
+	    delete_transient('rsssl_all_task_count');
+	    delete_transient('rsssl_remaining_task_count');
     }
 
 	/**
@@ -1318,9 +1326,6 @@ class rsssl_admin extends rsssl_front_end
 
     public function save_options()
     {
-        $this->reset_plusone_cache();
-	    $this->reset_open_remaining_task_cache();
-
 	    //any options added here should also be added to function options_validate()
         $options = array(
             'site_has_ssl' => $this->site_has_ssl,
@@ -3205,30 +3210,7 @@ class rsssl_admin extends rsssl_front_end
         <?php
     }
 
-	/**
-	 *
-     * Reset the plusone count transient
-     *
-     * @since 3.2
-     *
-	 */
 
-    public function reset_plusone_cache(){
-        delete_transient('rsssl_plusone_count');
-    }
-
-    /**
-     *
-     * Reset the open task count transient
-     *
-     * @since 4.0
-     *
-     */
-
-    public function reset_open_remaining_task_cache(){
-        delete_transient('rsssl_open_task_count');
-        delete_transient('rsssl_remaining_task_count');
-    }
 
 	/**
      * Count the plusones
@@ -3392,7 +3374,7 @@ class rsssl_admin extends rsssl_front_end
 
             if (!isset($_POST["action"]) && $_POST["action"] ==! 'rsssl_get_updated_percentage') return 0;
             // When invoked via AJAX the count should be updated, therefore clear cache
-            $this->reset_open_remaining_task_cache();
+            $this->clear_transients();
         }
 
         $count = get_transient( 'rsssl_remaining_task_count' );
