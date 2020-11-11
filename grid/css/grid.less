@@ -1,0 +1,554 @@
+@gridblock_height: 475px;
+@gridblock_width: 800px;
+@gridblock_width_small:400px;
+@grid_margin: 25px;
+@grey_light:#cecece;
+@box_shadow_color: rgba(222, 222, 222, 0.2);
+@border_color: #dedede;
+@color-success: #61ce70;
+@color_warning: #d7263d;
+@color_open: #FBC43D;
+@light-text-color: #3c3c3c;
+@light-grey: lightgrey;
+@button-border-color: #6477AA;
+
+// Override default WP settings style
+.settings_page_rlrsssl_really_simple_ssl #wpcontent, .settings_page_really-simple-ssl #wpcontent{
+  padding: 0;
+  .rsssl-footer-item {
+    margin-top:-5px;
+    form {
+      float:left;
+    }
+  }
+  .nav-tab {
+    padding: 20px;
+    padding-top:16px;
+    margin-bottom:0;
+    color: #444;
+    font-weight: normal;
+    font-size: 1.2em;
+    background: inherit;
+    border: 0;
+  }
+  .nav-tab-active {
+    padding: 18px;
+    padding-top:16px;
+    border-bottom: 2px solid @color_open !important;
+  }
+
+  .nav-tab-wrapper {
+    height: 60px;
+    background-color: #fff;
+    display: flex;
+    align-items: center;
+    border: 0;
+  }
+  .rsssl-logo-container {
+    margin-left: 25px;
+    margin-bottom: 10px;
+    #rsssl-logo {
+      height: 40px;
+      width: 174px;
+    }
+  }
+  .header-links {
+    display: flex;
+    flex: 1;
+    justify-content: flex-end;
+    flex-direction: row;
+    align-items: center;
+    margin-right: 138px;
+    text-decoration: underline;
+    .documentation {
+      padding-right:25px;
+    }
+    .header-upsell {
+      a {
+        text-decoration: none;
+      }
+      .header-upsell-pro {
+        color: black;
+        border: 3px solid black;
+        margin: 10px;
+        width: 80px;
+        text-align: center;
+        padding: 5px;
+        border-radius: 20px;
+        font-weight: 600;
+      }
+    }
+  }
+}
+
+.rsssl-grid {
+  margin: 25px;
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+
+  .button-rsssl-tertiary {
+      background-color: #D7263D;
+      color: white;
+      border:0;
+  }
+
+  .rsssl-wide-button {
+    width: 220px;
+  }
+
+
+
+  .rsssl-progress {
+
+    .rsssl-task-list {
+      height: 200px;
+    }
+
+    .rsssl-toggle-active {
+      text-decoration: underline;
+    }
+
+    #rsssl-all-tasks, #rsssl-remaining-tasks {
+      display: none;
+
+    }
+    .rsssl-tasks-container {
+      border-bottom:1px solid lightgrey;
+      color: lightgrey;
+      &.active{
+        text-decoration: none;
+        border-bottom:0;
+        color:initial;
+
+      }
+    }
+
+    .rsssl-tasks-inactive {
+      text-decoration: underline;
+      color:@light-grey;
+    }
+
+  }
+
+  .rsssl-item {
+    width: @gridblock_width ;
+    &.small {
+      width: @gridblock_width_small;
+    }
+
+    .rsssl-close-warning-x {
+      color: #ccc;
+      font-size: 0.9em;
+      margin-right: 25px;
+    }
+
+    height: @gridblock_height + @grid_margin;
+    z-index: 1;
+    .item-container {
+        .form-table {
+          display: flex;
+          tbody {
+            display: flex;
+            flex-direction: column;
+            flex-wrap: wrap;
+            max-height: 300px;
+            width: 100% !important;
+            tr {
+              padding: 0 !important;
+              padding-bottom: @grid_margin;
+              display: flex;
+              align-items: center;
+              flex-direction: row;
+
+              td {
+                padding: 0;
+                margin: 0;
+              }
+              th {
+                .dashicons-editor-help {
+                  font-size: 26px;
+                }
+                margin-left: 0;
+                width: 250px;
+                // Important to override default WP style
+                padding: 10px 0 0 0 !important;
+                display: flex;
+                align-items: center;
+                font-size: 13px;
+                font-weight: normal;
+                .rsssl-tooltip-right {
+                  padding-right: 10px;
+                  margin-top:-4px;
+                }
+              }
+            }
+          }
+        }
+      h2 {
+        display: none;
+      }
+
+      background-color: #fff;
+      position: relative;
+      box-shadow: 0px 0px 5px 5px @box_shadow_color;
+      width: @gridblock_width -  @grid_margin;
+      height: @gridblock_height;
+      //width: 775px;
+      //height: 475px;
+      .rsssl-save-settings-feedback {
+        color: @color_warning;
+      }
+      .rsssl-grid-item-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        height: 60px;
+        border-bottom: 1px solid @border_color;
+        padding: 0 25px 0 25px;
+
+        .rsssl-secondary-header-item {
+          display: flex;
+          color: @light-text-color;
+          .all-task-count, .open-task-count {
+            padding-left: 3px;
+            padding-top: 3px;
+          }
+          .all-task-count {
+            margin-right: 5px;
+          }
+        }
+      }
+      .rsssl-table-td-main-content {
+        padding-left: 15px;
+      }
+
+      .rsssl-grid-item-content {
+        height: 340px;
+        margin: 10px 25px 10px 25px;
+        border-bottom: 1px solid @border_color;
+
+        /*
+          Progress block
+        */
+
+        .rsssl-progress-block {
+          padding-top: 10px;
+
+          .progress-bar-container {
+            margin: 0 0 25px 0;
+          }
+
+          .progress {
+            overflow: hidden;
+            height: 20px;
+            border-radius: 5px;
+            background-color: #f7f7f7;
+          }
+
+          .progress .bar {
+            height: 100%;
+            background-color: @color-success;
+
+          }
+
+          .progress-text {
+            display: flex;
+            align-items: center;
+            margin: 10px 0;
+            padding-top: 10px;
+            padding-bottom: 10px;
+
+            .rsssl-progress-percentage {
+              font-size: 32px;
+              font-weight: 700;
+            }
+
+            .rsssl-progress-text {
+              display: flex;
+              flex-direction: row;
+              margin-left: @grid_margin;
+
+              a {
+                margin-left: 3px;
+              }
+
+              .rsssl-progress-count {
+                margin-left: 3px;
+                margin-right: 3px;
+              }
+            }
+          }
+
+          .rsssl-progress-table {
+            td {
+              padding: 8px 15px 5px 0;
+              vertical-align: top;
+            }
+          }
+        }
+
+        /*
+          Tips and Tricks
+       */
+        .rsssl-tips-tricks {
+            color: @light-text-color;
+            padding-bottom: 15px;
+            .tips-tricks-content{
+              display: flex;
+              flex-direction: column;
+              margin-right:10px;
+              height: 300px;
+              .tips-tricks-top {
+                flex-grow:1;
+
+                .rsssl-tips-tricks-element {
+                  margin-bottom: 15px;
+                  display: flex;
+                  flex-direction: row;
+                  justify-content: space-between;
+                }
+              }
+              .tips-tricks-bottom {
+                color: @light-text-color;
+              }
+            }
+
+
+          .rsssl-tips-tricks-read-more a {
+            text-decoration: none;
+            white-space: nowrap;
+          }
+        }
+        // End tips and tricks
+
+        /*
+        Default bullet style
+         */
+        .rsssl-bullet {
+          height: 13px;
+          width: 13px;
+          border-radius: 50%;
+          margin-right: 10px;
+          background-color: lightgrey;
+          text-decoration: none;
+        }
+
+        /*
+        Support forum block
+         */
+
+        #rsssl-support-forums-container {
+          display: flex;
+          flex-wrap: wrap;
+          flex-direction: row;
+          .rsssl-support-forums {
+            display: flex;
+            width: 50%;
+            a {
+              text-decoration: none;
+              color: @light-text-color;
+              display: flex;
+              align-items: center;
+            }
+
+            .rsssl-bullet {
+              margin: 7px 7px 7px 0;
+              background-color: @light-grey;
+              float: left;
+              &:hover {
+                background-color: @color_open;
+              }
+            }
+
+            .rsssl-forums-content {
+              float: left;
+              color: @light-text-color;
+              &:hover {
+                  text-decoration: underline;
+                }
+              }
+            }
+          }
+
+        #rsssl-feedback {
+          color: @color_warning;
+        }
+
+        /*
+            Other plugins
+         */
+
+          .rsssl-upsell {
+            display: flex !important; //we need important here, because the grid switch overrides it on element level
+            flex-direction: row;
+            padding: 5px 0 5px 0;
+            align-items: center;
+            color: @light-text-color;
+
+            .plugin-text {
+              a {
+                text-decoration: none;
+                color: @light-text-color;
+                &:hover {
+                  color: @color_open;
+                }
+              }
+            }
+
+            .rsp-image {
+              margin-right: 5px;
+            }
+
+            .wpsi-red {
+              background-color: @color_warning;
+            }
+
+            .cmplz-blue {
+              background-color: #27ADEA;
+            }
+
+            .zip-pink {
+              background-color: #E366A1;
+            }
+
+            .plugin-status {
+              margin-left: auto;
+            }
+          }
+
+        /*
+          Progress labels
+         */
+        .rsssl-progress-status {
+          display: block;
+          min-width: 60px;
+          text-align: center;
+          border-radius: 15px;
+          padding: 3px;
+          font-size: 0.8em;
+          font-weight: 600;
+        }
+
+        .rsssl-premium {
+          background-color: #29b6f6;
+          color: white;
+        }
+        .rsssl-success {
+          background-color: @color-success;
+          color: white;
+        }
+
+        .rsssl-open {
+          background-color: @color_open;
+        }
+
+        .rsssl-warning {
+          background-color: @color_warning;
+          color: white;
+        }
+
+      }
+      .rsssl-grid-item-footer {
+        display: flex;
+        align-items: center;
+        margin: 11px 25px 0 25px;
+        height: 40px;
+        bottom: 0;
+        width: 95%;
+        .rsssl-button-save {
+          margin-right:25px;
+        }
+        #rsssl-feedback {
+          font-weight: 600;
+          color: @color-success;
+          padding-left: 10px;
+        }
+      }
+      .rsssl-deactivate-keep-ssl {
+        th, span {
+          display: none;
+        }
+      }
+
+    }
+    &.half-height {
+      height: (@gridblock_height / 2) + @grid_margin;
+
+      .item-container {
+        height: @gridblock_height / 2;
+        .rsssl-grid-item-content {
+          height: 105px;
+        }
+      }
+    }
+    &.small {
+      .item-container {
+        width: @gridblock_width_small - @grid_margin;
+        th {
+          width: 85% !important;
+        }
+      }
+    }
+    &.no-border {
+      .item-container {
+        border: none;
+      }
+    }
+    &.no-background {
+      .item-container {
+        background-color: #f2f2f2;
+      }
+    }
+  }
+  /*
+    Footers
+   */
+  #rsssl-progress-footer {
+    width: 100%;
+    text-align: right;
+    margin-right: @grid_margin;
+    .rsssl-footer-item {
+      margin-left: 20px;
+      padding-right: 5px;
+    }
+    .footer-left {
+      .upsell {
+        margin-left: -10px;
+        min-width: 80px;
+        text-align: center;
+        float:left;
+      }
+    }
+
+    .hidden {
+      display: none;
+    }
+  }
+
+  .rsssl-system-status-footer-info {
+    margin-right: 20px;
+    width: 100%;
+    text-align: right;
+    .system-status-info {
+      margin-left: 6px;
+    }
+  }
+  /*
+    Dots
+   */
+
+  .dot {
+    height: 10px;
+    width: 10px;
+    border-radius: 50%;
+    display: inline-block;
+  }
+  .rsssl-dot-success {
+    background-color: #61ce70;
+  }
+  .rsssl-dot-error {
+    background-color: #d7263d;
+  }
+}
