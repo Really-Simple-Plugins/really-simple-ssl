@@ -284,6 +284,7 @@
   flex-grow: 1;
 }
 .rsssl-grid .rsssl-item .item-container .rsssl-grid-item-content .rsssl-tips-tricks .tips-tricks-content .tips-tricks-top .rsssl-tips-tricks-element {
+  margin-top: 10px;
   margin-bottom: 15px;
   display: flex;
   flex-direction: row;

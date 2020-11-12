@@ -23,7 +23,7 @@
 					<?php _e("Improve security: Add security headers", "really-simple-ssl");?>
 				</div>
 				<div class="rsssl-tips-tricks-read-more">
-					<a href="https://really-simple-ssl.com/new-security-headers-for-really-simple-ssl-pro-coming-up/" target="_blank"><?php _e("Read more", "really-simple-ssl");?></a>
+					<a href="https://really-simple-ssl.com/everything-you-need-to-know-about-security-headers/" target="_blank"><?php _e("Read more", "really-simple-ssl");?></a>
 				</div>
 			</div>
             <div class="rsssl-tips-tricks-element">
