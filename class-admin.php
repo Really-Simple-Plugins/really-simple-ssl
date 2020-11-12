@@ -3119,32 +3119,33 @@ class rsssl_admin extends rsssl_front_end
             return 0;
         }
 
-        $max_score    = 0;
+        $max_score = 0;
         $actual_score = 0;
         $notices = $this->get_notices_list(array(
-                'status' => 'all',
+            'status' => 'all',
         ));
-        foreach ( $notices as $id => $notice ) {
-            if (isset( $notice['score'] )) {
+        foreach ($notices as $id => $notice) {
+            if (isset($notice['score'])) {
                 // Only items matching condition will show in the dashboard. Only use these to determine max count.
-                $max_score = $max_score + intval( $notice['score'] );
-                $success = ( isset( $notice['output']['icon'] )
-                             && ( $notice['output']['icon']
-                                  === 'success' ) ) ? true : false;
-                if ( $success ) {
+                $max_score = $max_score + intval($notice['score']);
+                $success = (isset($notice['output']['icon'])
+                    && ($notice['output']['icon']
+                        === 'success')) ? true : false;
+                if ($success) {
                     // If the output is success, task is completed. Add to actual count.
-                    $actual_score = $actual_score + intval( $notice['score'] );
+                    $actual_score = $actual_score + intval($notice['score']);
                 }
             }
         }
-        if ($max_score>0) {
-	        $score = $actual_score / $max_score;
+        if ($max_score > 0) {
+            $score = $actual_score / $max_score;
         } else {
             $score = 0;
         }
         $score = $score * 100;
-        $score = intval( round( $score ) );
+        $score = intval(round($score));
         set_transient('rsssl_percentage_completed', $score, DAY_IN_SECONDS);
+
 
         if ( wp_doing_ajax() ) {
             wp_die( $score );
@@ -3442,7 +3443,7 @@ class rsssl_admin extends rsssl_front_end
 
         if (isset ($_GET['tab'])) $this->admin_tabs($_GET['tab']); else $this->admin_tabs('configuration');
         if (isset ($_GET['tab'])) $tab = $_GET['tab']; else $tab = 'configuration';
-        update_option('rsssl_visited_version_4_dashboard', true);
+        if (!get_option('rsssl_visited_version_4_dashboard')) update_option('rsssl_visited_version_4_dashboard', true);
         ?>
         <div class="rsssl-container">
             <div class="rsssl-main"><?php
