@@ -181,6 +181,7 @@
   display: none;
 }
 .rsssl-grid .rsssl-item .item-container .rsssl-save-settings-feedback {
+  margin-right: 20px;
   color: #d7263d;
 }
 .rsssl-grid .rsssl-item .item-container .rsssl-grid-item-header {
@@ -190,6 +191,9 @@
   height: 60px;
   border-bottom: 1px solid #dedede;
   padding: 0 25px 0 25px;
+}
+.rsssl-grid .rsssl-item .item-container .rsssl-grid-item-header .rsssl-instructions a {
+  color: #3c3c3c;
 }
 .rsssl-grid .rsssl-item .item-container .rsssl-grid-item-header .rsssl-secondary-header-item {
   display: flex;
