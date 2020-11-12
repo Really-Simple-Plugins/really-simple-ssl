@@ -474,14 +474,16 @@ class rsssl_admin extends rsssl_front_end
 
     public function ssl_detected()
     {
-        if ($this->site_has_ssl) {
-            ob_start();
+	    if ($this->site_has_ssl || (defined('RSSSL_FORCE_ACTIVATE') && RSSSL_FORCE_ACTIVATE)) {
+
+	        ob_start();
 	        do_action('rsssl_activation_notice_inner');
 	        $content = ob_get_clean();
 
             ob_start();
             do_action('rsssl_activation_notice_footer');
             $footer = ob_get_clean();
+
 	        $class = "updated activate-ssl rsssl-pro-dismiss-notice";
 	        $title = __("Almost ready to migrate to SSL!", "really-simple-ssl");
 	        echo $this->notice_html( $class, $title, $content, $footer);
@@ -546,11 +548,6 @@ class rsssl_admin extends rsssl_front_end
                 margin-bottom: 5px;
             }
 
-            .button-rsssl-secondary {
-                color: #7B8CB7;
-                background-color: #fff;
-            }
-
             #rsssl-message .button-primary {
                 margin-right: 10px;
             }
@@ -564,10 +561,6 @@ class rsssl_admin extends rsssl_front_end
                 align-items: center;
                 padding-left: 25px;
             }
-
-            #rsssl-logo-activation {
-                margin-right: 25px;
-            }
             .rsssl-notice-header h1 {
                 font-weight: bold;
             }
@@ -576,7 +569,6 @@ class rsssl_admin extends rsssl_front_end
                 margin-top: 20px;
                 padding-bottom: 20px;
                 padding-left: 25px;
-
             }
 
             .rsssl-notice-footer {
@@ -591,7 +583,6 @@ class rsssl_admin extends rsssl_front_end
             }
 
             #rsssl-message {
-                /*margin: 0 0 20px 20px;*/
                 padding: 0;
                 border-left-color: #333;
             }
@@ -635,7 +626,6 @@ class rsssl_admin extends rsssl_front_end
             <div class="rsssl-notice">
                 <div class="rsssl-notice-header">
                     <h1><?php echo $title ?></h1>
-                    <div id="rsssl-logo-activation"><img width="180px" src="<?php echo rsssl_url?>/assets/logo-really-simple-ssl.png" alt="really-simple-ssl-logo"></div>
                 </div>
                 <div class="rsssl-notice-content">
 					<?php echo $content ?>
@@ -643,9 +633,7 @@ class rsssl_admin extends rsssl_front_end
 				<?php
 				if ($footer ) { ?>
                     <div class="rsssl-notice-footer">
-						<?php
-						echo $footer;
-						?>
+						<?php echo $footer;?>
                     </div>
 				<?php } ?>
             </div>
@@ -665,25 +653,17 @@ class rsssl_admin extends rsssl_front_end
 
     public function show_enable_ssl_button()
     {
-        if ($this->site_has_ssl || (defined('RSSSL_FORCE_ACTIVATE') && RSSSL_FORCE_ACTIVATE)) {
-            ?>
-            <p>
-                <div class="rsssl-activation-notice-footer">
-                    <div class="rsssl-activate-ssl-button">
-                        <form action="" method="post">
-                            <?php wp_nonce_field('rsssl_nonce', 'rsssl_nonce'); ?>
-                            <input type="submit" class='button button-primary'
-                                   value="<?php _e("Go ahead, activate SSL!", "really-simple-ssl"); ?>" id="rsssl_do_activate_ssl"
-                                   name="rsssl_do_activate_ssl">
-                            <?php if (!defined("rsssl_pro_version") ) { ?>
-                            <a class="button button-rsssl-secondary" href="<?php echo $this->pro_url ?>" target="_blank"><?php _e("Get ready with PRO!", "really-simple-ssl"); ?></a>
-                            <?php } ?>
-                        </form>
-                    </div>
-                </div>
-            </p>
-            <?php
-        }
+        ?>
+            <form action="" method="post">
+                <?php wp_nonce_field('rsssl_nonce', 'rsssl_nonce'); ?>
+                <input type="submit" class='button button-primary'
+                       value="<?php _e("Go ahead, activate SSL!", "really-simple-ssl"); ?>" id="rsssl_do_activate_ssl"
+                       name="rsssl_do_activate_ssl">
+                <?php if (!defined("rsssl_pro_version") ) { ?>
+                <a class="button button-default" href="<?php echo $this->pro_url ?>" target="_blank"><?php _e("Get ready with PRO!", "really-simple-ssl"); ?></a>
+                <?php } ?>
+            </form>
+        <?php
     }
 
     /**
@@ -2294,6 +2274,8 @@ class rsssl_admin extends rsssl_front_end
 
     public function show_leave_review_notice()
     {
+        if ($this->dismiss_all_notices) return;
+
         //prevent showing the review on edit screen, as gutenberg removes the class which makes it editable.
         $screen = get_current_screen();
         if ( $screen->parent_base === 'edit' ) return;
@@ -2597,7 +2579,7 @@ class rsssl_admin extends rsssl_front_end
         ?>
         <div class="nav-tab-wrapper">
             <div class="rsssl-logo-container">
-                <div id="rsssl-logo"><img src="<?php echo rsssl_url?>/assets/logo-really-simple-ssl.png" alt="review-logo"></div>
+                <div id="rsssl-logo"><img src="<?php echo rsssl_url?>/assets/logo-really-simple-ssl.png?v=1" alt="review-logo"></div>
             </div>
             <?php
                 if (count($tabs)>1) {
@@ -2918,6 +2900,17 @@ class rsssl_admin extends rsssl_front_end
                 ),
             ),
 
+            'recommended_security_headers_not_set' => array(
+	            'callback' => '_true_',
+	            'score' => 5,
+	            'output' => array(
+		            'true' => array(
+			            'msg' => sprintf(__("Recommended security headers not enabled (%sRead more%s).", "really-simple-ssl"), '<a target="_blank" href="https://really-simple-ssl.com/everything-you-need-to-know-about-security-headers/">', '</a>'),
+			            'icon' => 'premium'
+		            ),
+	            ),
+            ),
+
             'htaccess_not_writable' => array(
                 'callback' => 'rsssl_htaccess_not_writable',
                 'score' => 5,
@@ -2940,7 +2933,6 @@ class rsssl_admin extends rsssl_front_end
 	     * Filter out notice that do not apply, or are dismissed
 	     */
 
-	    $options = get_option( 'rlrsssl_options' );
 	    foreach ( $notices as $id => $notice ) {
 		    if (get_option( "rsssl_" . $id . "_dismissed" )) {
 			    unset($notices[$id]);
@@ -2948,16 +2940,13 @@ class rsssl_admin extends rsssl_front_end
 		    }
 
 		    $func   = $notice['callback'];
-
 		    $output = $this->validate_function($func);
 
             //check if all notices should be dismissed
-            if ( ( isset( $notice['output']['dismissible'] )
-                && $notice['output']['dismissible']
-                && ( $options['dismiss_all_notices'] !== false ) )
+            if ( ( isset( $notice['output'][$output]['dismissible'] )
+                && $notice['output'][$output]['dismissible']
+                && ( $this->dismiss_all_notices ) )
             ) {
-                update_option( 'rsssl_' . $id . '_dismissed', true );
-
                 unset($notices[$id]);
                 continue;
             }
