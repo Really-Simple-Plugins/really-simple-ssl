@@ -380,7 +380,6 @@ if (!class_exists('rsssl_multisite')) {
 					'footer' => rsssl_template_path . 'progress-footer.php',
 					'class' => 'regular rsssl-progress',
 					'type' => 'all',
-					'can_hide' => true,
 				),
 				'ms_settings' => array(
 					'title' => __("Settings", "really-simple-ssl"),
@@ -389,7 +388,6 @@ if (!class_exists('rsssl_multisite')) {
 					'footer' => rsssl_template_path . 'settings-footer.php',
 					'class' => ' settings',
 					'type' => 'settings',
-					'can_hide' => true,
 				),
 				'support' => array(
 					'title' => __("Support forum", "really-simple-ssl"),
@@ -398,7 +396,6 @@ if (!class_exists('rsssl_multisite')) {
 					'footer' => rsssl_template_path . 'support-footer.php',
 					'type' => 'tasks',
 					'class' => 'half-height',
-					'can_hide' => true,
 				),
 				'plugins' => array(
 					'title' => __("Our plugins", "really-simple-ssl"),
@@ -410,6 +407,20 @@ if (!class_exists('rsssl_multisite')) {
 					'can_hide' => false,
 				),
 			);
+
+			$defaults = array(
+				'title' => '',
+				'header' => rsssl_template_path . 'header.php',
+				'content' => '',
+				'footer' => '',
+				'class' => '',
+				'type' => 'plugins',
+				'can_hide' => true,
+				'instructions' => false,
+			);
+			foreach ($grid_items as $key => $grid_item ) {
+				$grid_items[$key] = wp_parse_args($grid_item, $defaults);
+			}
 			return apply_filters( 'rsssl_grid_items_ms',  $grid_items );
 		}
 
