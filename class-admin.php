@@ -3461,7 +3461,7 @@ class rsssl_admin extends rsssl_front_end
 			    if ( is_network_admin() ) {
 				    $output .= '<form action="edit.php?action=rsssl_update_network_settings" method="post">'.wp_nonce_field('rsssl_ms_settings_update', 'rsssl_ms_nonce').$block.'</form>';
 			    } else {
-				    $output .= '<form action="options.php" method="post">'.$block.'</form>';
+				    $output .= '<form class="rsssl-item small" action="options.php" method="post">'.$block.'</form>';
 			    }
 		    } else if (isset($grid_item['type']) && $grid_item['type'] == 'scan') {
 			    $output .= '<div id="rsssl"><form id="rsssl_scan_form" action="" method="POST">'.$block.'</form></div>';
@@ -3593,7 +3593,7 @@ class rsssl_admin extends rsssl_front_end
             wp_register_style('rsssl-grid', trailingslashit(rsssl_url) . 'grid/css/grid-rtl.min.css', array(), rsssl_version);
         } else {
 	        wp_register_style('rlrsssl-css', trailingslashit(rsssl_url) . 'css/main.min.css', array(), rsssl_version );
-            wp_register_style('rsssl-grid', trailingslashit(rsssl_url) . 'grid/css/grid.min.css', array(), rsssl_version );
+            wp_register_style('rsssl-grid', trailingslashit(rsssl_url) . 'grid/css/grid.css', array(), rsssl_version );
         }
 
         wp_register_style('rsssl-scrollbar', trailingslashit(rsssl_url) . 'includes/simple-scrollbar.css', "", rsssl_version);
