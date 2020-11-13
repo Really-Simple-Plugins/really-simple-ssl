@@ -2579,7 +2579,7 @@ class rsssl_admin extends rsssl_front_end
         ?>
         <div class="nav-tab-wrapper">
             <div class="rsssl-logo-container">
-                <div id="rsssl-logo"><img src="<?php echo rsssl_url?>/assets/logo-really-simple-ssl.png?v=1" alt="review-logo"></div>
+                <div id="rsssl-logo"><img src="<?php echo rsssl_url?>/assets/really-simple-ssl-logo.svg" alt="review-logo"></div>
             </div>
             <?php
                 if (count($tabs)>1) {
@@ -3418,10 +3418,11 @@ class rsssl_admin extends rsssl_front_end
     public function settings_page()
     {
         if (!current_user_can($this->capability)) return;
-
         if (isset ($_GET['tab'])) $this->admin_tabs($_GET['tab']); else $this->admin_tabs('configuration');
         if (isset ($_GET['tab'])) $tab = $_GET['tab']; else $tab = 'configuration';
-        update_option('rsssl_visited_version_4_dashboard', true);
+        if ( !get_option('rsssl_visited_version_4_dashboard') ) {
+        	update_option('rsssl_visited_version_4_dashboard', true);
+        }
         ?>
         <div class="rsssl-container">
             <div class="rsssl-main"><?php

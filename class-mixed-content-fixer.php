@@ -18,7 +18,6 @@ if (!class_exists('rsssl_admin_mixed_content_fixer')) {
             if (!is_admin() && is_ssl() && RSSSL()->rsssl_front_end->autoreplace_insecure_links) {
                 $this->fix_mixed_content();
             }
-
         }
 
         static function this()
