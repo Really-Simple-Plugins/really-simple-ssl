@@ -193,9 +193,8 @@
       box-shadow: 0px 0px 5px 5px @box_shadow_color;
       width: @gridblock_width -  @grid_margin;
       height: @gridblock_height;
-      //width: 775px;
-      //height: 475px;
       .rsssl-save-settings-feedback {
+        margin-right:20px;
         color: @color_warning;
       }
       .rsssl-grid-item-header {
@@ -205,6 +204,9 @@
         height: 60px;
         border-bottom: 1px solid @border_color;
         padding: 0 25px 0 25px;
+        .rsssl-instructions a {
+          color: @light-text-color;
+        }
 
         .rsssl-secondary-header-item {
           display: flex;

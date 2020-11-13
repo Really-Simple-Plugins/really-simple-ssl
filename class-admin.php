@@ -3249,16 +3249,13 @@ class rsssl_admin extends rsssl_front_end
 				'footer' => rsssl_template_path . 'progress-footer.php',
 				'class' => 'regular rsssl-progress',
 				'type' => 'all',
-				'can_hide' => true,
 			),
 			'settings' => array(
 				'title' => __("Settings", "really-simple-ssl"),
-				'header' => rsssl_template_path . 'header.php',
                 'content' => rsssl_template_path . 'settings.php',
 				'footer' => rsssl_template_path . 'settings-footer.php',
 				'class' => 'small settings',
 				'type' => 'settings',
-				'can_hide' => true,
 			),
             'tipstricks' => array(
                 'title' => __("Tips & Tricks", "really-simple-ssl"),
@@ -3267,7 +3264,6 @@ class rsssl_admin extends rsssl_front_end
                 'footer' => rsssl_template_path . 'tips-tricks-footer.php',
                 'class' => 'small',
                 'type' => 'popular',
-                'can_hide' => true,
             ),
 			'support' => array(
 				'title' => __("Support forum", "really-simple-ssl"),
@@ -3276,19 +3272,31 @@ class rsssl_admin extends rsssl_front_end
 				'footer' => rsssl_template_path . 'support-footer.php',
 				'type' => 'tasks',
 				'class' => 'half-height',
-				'can_hide' => true,
 			),
             'plugins' => array(
                 'title' => __("Our plugins", "really-simple-ssl"),
                 'header' => rsssl_template_path . 'header.php',
                 'content' => rsssl_template_path . 'other-plugins.php',
-                'footer' => '',
                 'class' => 'half-height no-border no-background upsell-grid-container',
-                'type' => 'plugins',
                 'can_hide' => false,
             ),
 		);
-		return apply_filters( 'rsssl_grid_items',  $grid_items );
+		$grid_items = apply_filters( 'rsssl_grid_items',  $grid_items );
+
+		$defaults = array(
+			'title' => '',
+			'header' => rsssl_template_path . 'header.php',
+			'content' => '',
+			'footer' => '',
+			'class' => '',
+			'type' => 'plugins',
+			'can_hide' => true,
+            'instructions' => false,
+        );
+		foreach ($grid_items as $key => $grid_item ) {
+			$grid_items[$key] = wp_parse_args($grid_item, $defaults);
+        }
+		return $grid_items;
 	}
 
     /**
@@ -3445,9 +3453,9 @@ class rsssl_admin extends rsssl_front_end
 		    $footer = $this->get_template_part($grid_item, 'footer', $index);
 		    $content = $this->get_template_part($grid_item, 'content', $index);
 		    $header = $this->get_template_part($grid_item, 'header', $index);
-
+            $instructions = $grid_item['instructions'] ? '<a href="'.esc_url($grid_item['instructions']).'" target="_blank">'.__("Instructions Manual").'</a>' : '';
 		    // Add form if type is settings
-		    $block = str_replace(array('{class}', '{title}', '{header}', '{content}', '{footer}'), array($grid_item['class'], $grid_item['title'], $header, $content, $footer), $element);
+		    $block = str_replace(array('{class}', '{title}', '{header}', '{content}', '{footer}', '{instructions}'), array($grid_item['class'], $grid_item['title'], $header, $content, $footer, $instructions), $element);
 
 		    if (isset($grid_item['type']) && $grid_item['type'] == 'settings') {
 			    if ( is_network_admin() ) {
