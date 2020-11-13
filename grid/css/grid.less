@@ -159,7 +159,7 @@
               display: flex;
               align-items: center;
               flex-direction: row;
-              max-width: 50%;
+              width: 50%;
               td {
                 padding: 0;
                 margin: 0;
@@ -472,7 +472,6 @@
           display: none;
         }
       }
-
     }
     &.half-height {
       height: (@gridblock_height / 2) + @grid_margin;
@@ -481,6 +480,12 @@
         height: @gridblock_height / 2;
         .rsssl-grid-item-content {
           height: 105px;
+          .form-table tbody  {
+            tr, th {
+              width:100%;
+              max-width:100%;
+            }
+          }
         }
       }
     }
@@ -492,7 +497,7 @@
           width: 85% !important;
         }
         .form-table tbody tr {
-          max-width: 100%;
+          width: 100%;
         }
       }
     }

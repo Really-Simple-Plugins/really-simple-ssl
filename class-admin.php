@@ -3453,7 +3453,7 @@ class rsssl_admin extends rsssl_front_end
 		    $footer = $this->get_template_part($grid_item, 'footer', $index);
 		    $content = $this->get_template_part($grid_item, 'content', $index);
 		    $header = $this->get_template_part($grid_item, 'header', $index);
-            $instructions = $grid_item['instructions'] ? '<a href="'.esc_url($grid_item['instructions']).'" target="_blank">'.__("Instructions Manual").'</a>' : '';
+            $instructions = $grid_item['instructions'] ? '<a href="'.esc_url($grid_item['instructions']).'" target="_blank">'.__("Instructions manual").'</a>' : '';
 		    // Add form if type is settings
 		    $block = str_replace(array('{class}', '{title}', '{header}', '{content}', '{footer}', '{instructions}'), array($grid_item['class'], $grid_item['title'], $header, $content, $footer, $instructions), $element);
 
