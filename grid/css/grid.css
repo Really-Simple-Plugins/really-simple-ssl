@@ -13,8 +13,6 @@
 .settings_page_rlrsssl_really_simple_ssl #wpcontent .nav-tab,
 .settings_page_really-simple-ssl #wpcontent .nav-tab {
   padding: 20px;
-  padding-bottom: 10px;
-  padding-top: 16px;
   margin-bottom: 0;
   color: #444;
   font-weight: normal;
@@ -25,9 +23,8 @@
 .settings_page_rlrsssl_really_simple_ssl #wpcontent .nav-tab-active,
 .settings_page_really-simple-ssl #wpcontent .nav-tab-active {
   padding: 20px;
-  padding-bottom: 12px;
-  padding-top: 20px;
   border-bottom: 2px solid #FBC43D !important;
+  background: #fff;
 }
 .settings_page_rlrsssl_really_simple_ssl #wpcontent .nav-tab-wrapper,
 .settings_page_really-simple-ssl #wpcontent .nav-tab-wrapper {
@@ -40,12 +37,15 @@
 .settings_page_rlrsssl_really_simple_ssl #wpcontent .rsssl-logo-container,
 .settings_page_really-simple-ssl #wpcontent .rsssl-logo-container {
   margin-left: 25px;
-  margin-bottom: 10px;
 }
 .settings_page_rlrsssl_really_simple_ssl #wpcontent .rsssl-logo-container #rsssl-logo,
 .settings_page_really-simple-ssl #wpcontent .rsssl-logo-container #rsssl-logo {
   height: 40px;
-  width: 174px;
+  width: 200px;
+}
+.settings_page_rlrsssl_really_simple_ssl #wpcontent .rsssl-logo-container #rsssl-logo img,
+.settings_page_really-simple-ssl #wpcontent .rsssl-logo-container #rsssl-logo img {
+  width: 200px;
 }
 .settings_page_rlrsssl_really_simple_ssl #wpcontent .header-links,
 .settings_page_really-simple-ssl #wpcontent .header-links {
