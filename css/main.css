@@ -56,9 +56,6 @@
   max-width: 100%;
   /*height:inherit;*/
 }
-.nav-tab-active {
-  background: #fff;
-}
 .really-simple-ssl-table {
   display: flex;
   flex-direction: column;
