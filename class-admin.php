@@ -2597,9 +2597,9 @@ class rsssl_admin extends rsssl_front_end
                     <?php if (defined('rsssl_pro_version')) { ?>
                         <div class="header-upsell-pro"><?php _e("PRO", "really-simple-ssl"); ?></div>
                     <?php } else { ?>
-                    <div class="documentation">
-                        <a href="https://really-simple-ssl.com/support" class="button button-primary" target="_blank"><?php _e("Support", "really-simple-ssl") ?></a>
-                    </div>
+                        <div class="documentation">
+                            <a href="https://wordpress.org/support/plugin/really-simple-ssl/" class="button button-primary" target="_blank"><?php _e("Support", "really-simple-ssl") ?></a>
+                        </div>
                     <?php } ?>
                 </div>
             </div>
