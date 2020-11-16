@@ -75,6 +75,9 @@
   border-radius: 20px;
   font-weight: 600;
 }
+.network-admin .rsssl-logo-container {
+  height: 60px;
+}
 .rsssl-grid {
   margin: 25px;
   position: relative;
@@ -163,7 +166,6 @@
 .rsssl-grid .rsssl-item .item-container .form-table tbody tr th {
   margin-left: 0;
   width: 250px;
-  padding: 10px 0 0 0 !important;
   display: flex;
   align-items: center;
   font-size: 13px;
@@ -175,6 +177,10 @@
 .rsssl-grid .rsssl-item .item-container .form-table tbody tr th .rsssl-tooltip-right {
   padding-right: 10px;
   margin-top: -4px;
+}
+.rsssl-grid .rsssl-item .item-container .form-table tbody tr th,
+.rsssl-grid .rsssl-item .item-container .form-table tbody tr td {
+  padding: 15px 0 0 0 !important;
 }
 .rsssl-grid .rsssl-item .item-container h2 {
   display: none;

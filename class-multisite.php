@@ -334,11 +334,9 @@ if (!class_exists('rsssl_multisite')) {
 
             register_setting('rsssl_network_options', 'rsssl_options');
             add_settings_section('rsssl_network_settings', __("Settings", "really-simple-ssl"), array($this, 'section_text'), "really-simple-ssl");
-
-            add_settings_field('id_ssl_enabled_networkwide', __("Enable SSL", "really-simple-ssl"), array($this, 'get_option_enable_multisite'), "really-simple-ssl", 'rsssl_network_settings');
-            RSSSL()->rsssl_network_admin_page = add_submenu_page('settings.php', "SSL", "SSL", 'manage_options', "really-simple-ssl", array(&$this, 'settings_tab'));
-
-
+            $help = rsssl_help::this()->get_help_tip(__("Select to enable SSL networkwide or per site.", "really-simple-ssl"), true );
+            add_settings_field('id_ssl_enabled_networkwide', $help.__("Enable SSL", "really-simple-ssl"), array($this, 'get_option_enable_multisite'), "really-simple-ssl", 'rsssl_network_settings');
+            add_submenu_page('settings.php', "SSL", "SSL", 'manage_options', "really-simple-ssl", array(&$this, 'settings_tab'));
         }
 
         /**
@@ -349,11 +347,11 @@ if (!class_exists('rsssl_multisite')) {
 
         public function get_option_enable_multisite()
         {
-	        rsssl_help::this()->get_help_tip(__("Select to enable SSL networkwide or per site.", "really-simple-ssl"));
+
             ?>
             <select name="rlrsssl_network_options[ssl_enabled_networkwide]">
                 <?php if (!$this->selected_networkwide_or_per_site) { ?>
-                <option value="-1" <?php if (!$this->selected_networkwide_or_per_site) echo "selected"; ?>><?php _e("No selection was made", "really-simple-ssl") ?>
+                <option value="-1" <?php if (!$this->selected_networkwide_or_per_site) echo "selected"; ?>><?php _e("Choose option", "really-simple-ssl") ?>
                     <?php } ?>
                 <option value="1" <?php if ($this->selected_networkwide_or_per_site && $this->ssl_enabled_networkwide) echo "selected"; ?>><?php _e("networkwide", "really-simple-ssl") ?>
                 <option value="0" <?php if ($this->selected_networkwide_or_per_site && !$this->ssl_enabled_networkwide) echo "selected"; ?>><?php _e("per site", "really-simple-ssl") ?>
@@ -437,18 +435,22 @@ if (!class_exists('rsssl_multisite')) {
                     <div id="rsssl-logo"><img height="50px" src="<?php echo rsssl_url?>/assets/really-simple-ssl-logo.svg" alt="logo"></div>
                 </div>
 
+
                 <div class="header-links">
                     <div class="documentation">
                         <a href="https://really-simple-ssl.com/knowledge-base" target="_blank"><?php _e("Documentation", "really-simple-ssl");?></a>
                     </div>
-                    <?php if (!defined('rsssl_pro_version')) { ?>
-                        <div class="header-upsell">
-                            <a href="https://really-simple-ssl.com/pro#multisite" target="_blank">
-                                <div class="header-upsell-pro"><?php _e("PRO", "really-simple-ssl"); ?></div>
-                            </a>
-                        </div>
-                    <?php } ?>
+                    <div class="header-upsell">
+		                <?php if (defined('rsssl_pro_version')) { ?>
+                            <div class="header-upsell-pro"><?php _e("PRO", "really-simple-ssl"); ?></div>
+		                <?php } else { ?>
+                            <div class="documentation">
+                                <a href="https://wordpress.org/support/plugin/really-simple-ssl/" class="button button-primary" target="_blank"><?php _e("Support", "really-simple-ssl") ?></a>
+                            </div>
+		                <?php } ?>
+                    </div>
                 </div>
+
             </div>
 
             <div class="rsssl-container">
@@ -985,7 +987,7 @@ if (!class_exists('rsssl_multisite')) {
              */
 
             if ($this->ssl_process_active()) {
-                $class = "error notice is-dismissible rlrsssl-fail";
+                $class = "notice is-dismissible rlrsssl-fail";
                 $title = "Website conversion";
 
                 //In some cases the rsssl_ssl_process_hook hook can fail. Therefore we offer the option to switch the hook to admin_init when the conversion is stuck.
@@ -997,15 +999,16 @@ if (!class_exists('rsssl_multisite')) {
                 $completed = $this->get_process_completed_percentage();
 
                 if ($completed < 100){
+	                $class.=" error ";
 	                $content = sprintf(__("Conversion of websites %s percent complete.", "really-simple-ssl"), $completed) . " ";
 	                $content .= __("Site conversion in progress. Please refresh this page to check if the process has finished. It will proceed in the background.", "really-simple-ssl") . " ";
 	                $content .= sprintf(__("If the conversion does not proceed after a few minutes, click %shere%s to force the conversion process.", "really-simple-ssl"), $link_open, $link_close);
                 } else {
+	                $class.=" updated ";
 	                $content = sprintf(__("Conversion of websites completed.", "really-simple-ssl"), $completed) . " ";
                 }
 
                 echo RSSSL()->really_simple_ssl->notice_html($class, $title, $content);
-
             }
         }
 
