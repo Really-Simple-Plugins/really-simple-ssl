@@ -4,10 +4,10 @@ jQuery(document).ready(function ($) {
     $(document).on('click','.rsssl-slider',function () {
         rssslSaveChangesNotice($(this));
     });
-    $(document).on('click','.rsssl-container input',function () {
+    $(document).on('click','.rsssl-container .item-content input',function () {
         rssslSaveChangesNotice($(this));
     });
-    $(document).on('change','.rsssl-container input',function () {
+    $(document).on('change','.rsssl-container .item-content input',function () {
         rssslSaveChangesNotice($(this));
     });
     $(document).on('change','.rsssl-container select',function () {
@@ -16,6 +16,7 @@ jQuery(document).ready(function ($) {
     $('.rsssl-button-save').prop('disabled', true);
 
     function rssslSaveChangesNotice(obj){
+        console.log($(this));
         obj.closest('.rsssl-item').find('.rsssl-save-settings-feedback').fadeIn();
         obj.closest('.rsssl-item').find('.rsssl-button-save').prop('disabled', false);
     }
