@@ -405,6 +405,7 @@ if (!class_exists('rsssl_multisite')) {
 					'can_hide' => false,
 				),
 			);
+			$grid_items = apply_filters( 'rsssl_grid_items_ms',  $grid_items );
 
 			$defaults = array(
 				'title' => '',
@@ -419,7 +420,7 @@ if (!class_exists('rsssl_multisite')) {
 			foreach ($grid_items as $key => $grid_item ) {
 				$grid_items[$key] = wp_parse_args($grid_item, $defaults);
 			}
-			return apply_filters( 'rsssl_grid_items_ms',  $grid_items );
+			return $grid_items;
 		}
 
 		public function settings_tab()
