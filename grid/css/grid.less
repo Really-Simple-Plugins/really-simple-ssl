@@ -89,6 +89,13 @@
   }
 }
 
+.network-admin {
+  .rsssl-logo-container {
+    height:60px;
+  }
+}
+
+
 .rsssl-grid {
   width: calc(100% - 20px); 
   margin: @grid_margin;
@@ -167,7 +174,8 @@
               display: flex;
               align-items: center;
               flex-direction: row;
-              max-width: 50%;
+              width: 50%;
+
               td {
                 padding: 0;
                 margin: 0;
@@ -178,8 +186,6 @@
                 }
                 margin-left: 0;
                 width: 250px;
-                // Important to override default WP style
-                padding: 10px 0 0 0 !important;
                 display: flex;
                 align-items: center;
                 font-size: 13px;
@@ -188,6 +194,10 @@
                   padding-right: 10px;
                   margin-top:-4px;
                 }
+              }
+              th, td {
+                // Important to override default WP style
+                padding: 15px 0 0 0 !important;
               }
             }
           }
@@ -480,7 +490,6 @@
           display: none;
         }
       }
-
     }
     &.half-height {
       height: (@gridblock_height / 2) + @grid_margin;
@@ -489,6 +498,12 @@
         height: @gridblock_height / 2;
         .rsssl-grid-item-content {
           height: 105px;
+          .form-table tbody  {
+            tr, th {
+              width:100%;
+              max-width:100%;
+            }
+          }
         }
       }
     }
@@ -500,7 +515,7 @@
           width: 85% !important;
         }
         .form-table tbody tr {
-          max-width: 100%;
+          width: 100%;
         }
       }
     }

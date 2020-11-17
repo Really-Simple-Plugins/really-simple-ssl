@@ -28,7 +28,7 @@
   bottom: 0;
   right: 0;
   background: rgba(255, 255, 255, 0.8);
-  .rsssl-networksettings-notice{
+  .rsssl-disabled-settings-overlay{
     .rsssl-open {
       float: left;
       margin-right:12px;
@@ -547,11 +547,11 @@ hr {
   display: inline-block;
   width: 40px;
   height: 21px;
-  margin-top:15px;
+  input {
+    display: none;
+  }
 }
-.rsssl-switch input {
-  display: none;
-}
+
 .rsssl-slider {
   position: absolute;
   cursor: pointer;

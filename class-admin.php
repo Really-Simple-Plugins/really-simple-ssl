@@ -813,7 +813,7 @@ class rsssl_admin extends rsssl_front_end
     {
         if ($this->plugin_db_version != rsssl_version) {
 
-	        if ( $this->plugin_db_version && version_compare( $this->plugin_db_version, '4.0.0', '<' ) ) {
+	        if ( $this->plugin_db_version !== '1.0'  && version_compare( $this->plugin_db_version, '4.0.0', '<' ) ) {
 	            update_option('rsssl_upgraded_to_four', true);
 	        }
             $this->plugin_db_version = rsssl_version;
@@ -2597,9 +2597,9 @@ class rsssl_admin extends rsssl_front_end
                     <?php if (defined('rsssl_pro_version')) { ?>
                         <div class="header-upsell-pro"><?php _e("PRO", "really-simple-ssl"); ?></div>
                     <?php } else { ?>
-                    <div class="documentation">
-                        <a href="https://really-simple-ssl.com/support" class="button button-primary" target="_blank"><?php _e("Support", "really-simple-ssl") ?></a>
-                    </div>
+                        <div class="documentation">
+                            <a href="https://wordpress.org/support/plugin/really-simple-ssl/" class="button button-primary" target="_blank"><?php _e("Support", "really-simple-ssl") ?></a>
+                        </div>
                     <?php } ?>
                 </div>
             </div>
@@ -2613,7 +2613,7 @@ class rsssl_admin extends rsssl_front_end
 	 */
 
     public function upgraded_to_four(){
-        return get_option( 'rsssl_upgraded_to_four' );
+        return get_option( 'rsssl_upgraded_to_four' ) ? true : false;
     }
 
     /**
@@ -2713,14 +2713,14 @@ class rsssl_admin extends rsssl_front_end
             ),
 
             'ssl_enabled' => array(
-                'callback' => 'rsssl_ssl_enabled_notice',
+                'callback' => 'rsssl_ssl_enabled',
                 'score' => 30,
                 'output' => array(
-                    'ssl-enabled' => array(
+                    'true' => array(
                         'msg' =>__('SSL is enabled on your site.', 'really-simple-ssl'),
                         'icon' => 'success'
                     ),
-                    'ssl-not-enabled' => array(
+                    'false' => array(
                         'msg' => __('SSL is not enabled yet', 'really-simple-ssl'),
                         'icon' => 'warning',
                     ),
@@ -2750,7 +2750,7 @@ class rsssl_admin extends rsssl_front_end
 
             'mixed_content_fixer_detected' => array(
                 'condition' => array('rsssl_site_has_ssl', 'rsssl_ssl_enabled'),
-                'callback' => 'rsssl_mixed_content_fixer_detected',
+                'callback' => 'RSSSL()->really_simple_ssl->mixed_content_fixer_detected',
                 'score' => 10,
                 'output' => array(
                     'found' => array(
@@ -2806,7 +2806,7 @@ class rsssl_admin extends rsssl_front_end
             ),
 
             'check_redirect' => array(
-	            'condition' => array('rsssl_ssl_enabled' , 'rsssl_htaccess_redirect_allowed', 'NOT is_multisite'),
+	            'condition' => array('rsssl_ssl_enabled' , 'RSSSL()->really_simple_ssl->htaccess_redirect_allowed', 'NOT is_multisite'),
 	            'callback' => 'rsssl_check_redirect',
                 'score' => 10,
 	            'output' => array(
@@ -3074,13 +3074,12 @@ class rsssl_admin extends rsssl_front_end
 		    }
         }
 
-
 	    //stringyfy booleans
         if (!$is_condition) {
-	        if ( $output === false ) {
+	        if ( $output === false || $output === 0 ) {
 		        $output = 'false';
 	        }
-	        if ( $output === true ) {
+	        if ( $output === true || $output === 1 ) {
 		        $output = 'true';
 	        }
         }
@@ -3451,7 +3450,7 @@ class rsssl_admin extends rsssl_front_end
 		    $footer = $this->get_template_part($grid_item, 'footer', $index);
 		    $content = $this->get_template_part($grid_item, 'content', $index);
 		    $header = $this->get_template_part($grid_item, 'header', $index);
-            $instructions = $grid_item['instructions'] ? '<a href="'.esc_url($grid_item['instructions']).'" target="_blank">'.__("Instructions Manual").'</a>' : '';
+            $instructions = $grid_item['instructions'] ? '<a href="'.esc_url($grid_item['instructions']).'" target="_blank">'.__("Instructions manual").'</a>' : '';
 		    // Add form if type is settings
 		    $block = str_replace(array('{class}', '{title}', '{header}', '{content}', '{footer}', '{instructions}'), array($grid_item['class'], $grid_item['title'], $header, $content, $footer, $instructions), $element);
 		    $output .= $block;
@@ -4319,11 +4318,6 @@ class rsssl_admin extends rsssl_front_end
  * @return string
  */
 
-if (!function_exists('rsssl_mixed_content_fixer_detected')) {
-	function rsssl_mixed_content_fixer_detected() {
-		return RSSSL()->really_simple_ssl->mixed_content_fixer_detected();
-	}
-}
 
 if (!function_exists('rsssl_site_has_ssl')) {
 	function rsssl_site_has_ssl() {
@@ -4333,22 +4327,8 @@ if (!function_exists('rsssl_site_has_ssl')) {
 
 if (!function_exists('rsssl_ssl_enabled')) {
     function rsssl_ssl_enabled() {
-        if ( RSSSL()->really_simple_ssl->ssl_enabled ) {
-            return true;
-        } else {
-            return false;
-        }
+        return RSSSL()->really_simple_ssl->ssl_enabled;
     }
-}
-
-if (!function_exists('rsssl_ssl_enabled_notice')) {
-	function rsssl_ssl_enabled_notice() {
-		if ( RSSSL()->really_simple_ssl->ssl_enabled ) {
-			return 'ssl-enabled';
-		} else {
-			return 'ssl-not-enabled';
-		}
-	}
 }
 
 if (!function_exists('rsssl_ssl_detected')) {
@@ -4393,7 +4373,6 @@ if (!function_exists('rsssl_check_redirect')) {
 		}
 
         return 'default';
-
 	}
 }
 
@@ -4409,29 +4388,15 @@ if (!function_exists('rsssl_htaccess_not_writable')) {
 	}
 }
 
-if (!function_exists('rsssl_htaccess_redirect_allowed')) {
-	function rsssl_htaccess_redirect_allowed() {
-		return RSSSL()->really_simple_ssl->htaccess_redirect_allowed();
-	}
-}
-
 if (!function_exists('rsssl_uses_elementor')) {
 	function rsssl_uses_elementor() {
-		if ( defined( 'ELEMENTOR_VERSION' ) || defined( 'ELEMENTOR_PRO_VERSION' ) ) {
-			return true;
-		} else {
-			return false;
-		}
+		return ( defined( 'ELEMENTOR_VERSION' ) || defined( 'ELEMENTOR_PRO_VERSION' ) );
 	}
 }
 
 if (!function_exists('rsssl_uses_divi')) {
 	function rsssl_uses_divi() {
-		if ( defined( 'ET_CORE_PATH' ) ) {
-			return true;
-		} else {
-			return false;
-		}
+		return defined( 'ET_CORE_PATH' );
 	}
 }
 
