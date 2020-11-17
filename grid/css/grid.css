@@ -458,13 +458,21 @@
   margin-right: 10px;
 }
 .rsssl-grid #rsssl-progress-footer .rsssl-footer-item {
-  margin-left: 20px;
   padding-right: 5px;
+}
+.rsssl-grid #rsssl-progress-footer .rsssl-footer-item + .rsssl-footer-item {
+  margin-right: 20px;
+  margin-top: 3px;
+}
+.rsssl-grid #rsssl-progress-footer .footer-left {
+  float: left;
 }
 .rsssl-grid #rsssl-progress-footer .footer-left .upsell {
   min-width: 80px;
   text-align: center;
-  float: left;
+}
+.rsssl-grid #rsssl-progress-footer .footer-right {
+  float: right;
 }
 .rsssl-grid #rsssl-progress-footer .hidden {
   display: none;

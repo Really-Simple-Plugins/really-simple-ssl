@@ -538,17 +538,24 @@
     text-align: right;
     margin-right: @grid_margin;
     .rsssl-footer-item {
-      margin-left: 20px;
       padding-right: 5px;
     }
+    .rsssl-footer-item +.rsssl-footer-item {
+      margin-right:20px;
+      margin-top:3px;
+    }
+
     .footer-left {
+      float:left;
       .upsell {
         min-width: 80px;
         text-align: center;
-        float:left;
       }
     }
 
+    .footer-right {
+      float:right;
+    }
     .hidden {
       display: none;
     }

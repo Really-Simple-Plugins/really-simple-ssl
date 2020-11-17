@@ -15,33 +15,26 @@ if (RSSSL()->really_simple_ssl->has_301_redirect()) {
 	$redirect_301 = "rsssl-dot-error";
 }
 
-$btns = '';
-if (!defined('rsssl_pro_version')) {
-	$button_text = __("Go PRO!", "really-simple-ssl");
-	$button_link = RSSSL()->really_simple_ssl->pro_url;
-	$btns .= "<a href='$button_link' target='_blank' class='button button-default upsell'>$button_text</a>";
-}
+
+$button_text = __("Go PRO!", "really-simple-ssl");
+$button_link = RSSSL()->really_simple_ssl->pro_url;
+$go_pro = "<a href='$button_link' target='_blank' class='button button-default upsell'>$button_text</a>";
 
 if (!RSSSL()->really_simple_ssl->ssl_enabled) {
 	if ( RSSSL()->really_simple_ssl->site_has_ssl || ( defined( 'RSSSL_FORCE_ACTIVATE' ) && RSSSL_FORCE_ACTIVATE ) ) {
 		$button_text = __( "Activate SSL", "really-simple-ssl" );
-		$btns = '<form action="" method="post" ><input type="submit" class="button button-primary" value="' . $button_text . '" id="rsssl_do_activate_ssl" name="rsssl_do_activate_ssl"></form>' . $btns;
+		$activate_btn = '<form action="" method="post" ><input type="submit" class="button button-primary" value="' . $button_text . '" id="rsssl_do_activate_ssl" name="rsssl_do_activate_ssl"></form>';
 	}
 }
 
 $items = array(
 		1 => array(
-			'class' => 'footer-left',
-			'dot_class' => '',
-			'text' => $btns,
-		),
-		2 => array(
-			'class' => '',
+			'class' => 'footer-right',
 			'dot_class' => $ssl_enabled,
 			'text' => $ssl_text,
 		),
-		3 => array(
-			'class' => '',
+		2 => array(
+			'class' => 'footer-right',
 			'dot_class' => $redirect_301,
 			'text' => __("301 Redirect", "really-simple-ssl"),
 		),
@@ -49,6 +42,9 @@ $items = array(
 
 ?>
 <div id="rsssl-progress-footer">
+    <span class="rsssl-footer-item footer-left">
+        <?php echo apply_filters("rsssl_progress_footer_left", '').$activate_btn.apply_filters("rsssl_progress_footer_right", $go_pro )?>
+    </span>
 	<?php
 	foreach ($items as $item) { ?>
 		<span class="rsssl-footer-item <?php echo $item['class']?>">
