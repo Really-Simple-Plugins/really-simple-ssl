@@ -28,7 +28,7 @@
   right: 0;
   background: rgba(255, 255, 255, 0.8);
 }
-.rsssl-networksettings-overlay .rsssl-networksettings-notice {
+.rsssl-networksettings-overlay .rsssl-disabled-settings-overlay {
   position: absolute;
   width: 718px;
   bottom: 0;
@@ -37,7 +37,7 @@
   margin: 12px;
   box-shadow: 0 0 5px 5px rgba(223, 222, 222, 0.4);
 }
-.rsssl-networksettings-overlay .rsssl-networksettings-notice .rsssl-open {
+.rsssl-networksettings-overlay .rsssl-disabled-settings-overlay .rsssl-open {
   float: left;
   margin-right: 12px;
 }
