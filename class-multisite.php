@@ -390,6 +390,7 @@ if (!class_exists('rsssl_multisite')) {
 					'class' => ' settings',
 					'type' => 'settings',
 					'can_hide' => true,
+                    'form' => true,
 				),
 				'support' => array(
 					'title' => __("Support forum", "really-simple-ssl"),
