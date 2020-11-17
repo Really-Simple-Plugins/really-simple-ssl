@@ -439,11 +439,10 @@ if (!class_exists('rsssl_multisite')) {
 
                 <div class="header-links">
                     <div class="documentation">
-                        <a href="https://really-simple-ssl.com/knowledge-base" target="_blank"><?php _e("Documentation", "really-simple-ssl");?></a>
+                        <a href="https://really-simple-ssl.com/knowledge-base" target="_blank" class="<?php if (defined('rsssl_pro_version')) echo "button button-primary"?>"><?php _e("Documentation", "really-simple-ssl");?></a>
                     </div>
                     <div class="header-upsell">
 		                <?php if (defined('rsssl_pro_version')) { ?>
-                            <div class="header-upsell-pro"><?php _e("PRO", "really-simple-ssl"); ?></div>
 		                <?php } else { ?>
                             <div class="documentation">
                                 <a href="https://wordpress.org/support/plugin/really-simple-ssl/" class="button button-primary" target="_blank"><?php _e("Support", "really-simple-ssl") ?></a>
