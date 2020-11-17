@@ -3435,6 +3435,19 @@ class rsssl_admin extends rsssl_front_end
 	    $output = '';
 
 	    foreach ($grid as $index => $grid_item) {
+		    $defaults = array(
+			    'title' => '',
+			    'header' => rsssl_template_path . 'header.php',
+			    'content' => '',
+			    'footer' => '',
+			    'class' => '',
+			    'type' => 'plugins',
+			    'can_hide' => true,
+			    'instructions' => false,
+		    );
+
+		    $grid_item = wp_parse_args($grid_item, $defaults);
+
 		    $footer = $this->get_template_part($grid_item, 'footer', $index);
 		    $content = $this->get_template_part($grid_item, 'content', $index);
 		    $header = $this->get_template_part($grid_item, 'header', $index);
@@ -3443,7 +3456,6 @@ class rsssl_admin extends rsssl_front_end
 		    $block = str_replace(array('{class}', '{title}', '{header}', '{content}', '{footer}', '{instructions}'), array($grid_item['class'], $grid_item['title'], $header, $content, $footer, $instructions), $element);
 		    $output .= $block;
 	    }
-
 
 	    echo str_replace('{content}', $output, $container);
     }
@@ -3458,18 +3470,6 @@ class rsssl_admin extends rsssl_front_end
 	 */
 
     public function get_template_part($grid_item, $key, $index) {
-	    $defaults = array(
-		    'title' => '',
-		    'header' => rsssl_template_path . 'header.php',
-		    'content' => '',
-		    'footer' => '',
-		    'class' => '',
-		    'type' => 'plugins',
-		    'can_hide' => true,
-		    'instructions' => false,
-	    );
-
-	    $grid_item = wp_parse_args($grid_item, $defaults);
 
 	    if ( !isset($grid_item[$key]) || !$grid_item[$key] ) {
 		    $template_part = '';
@@ -3496,18 +3496,10 @@ class rsssl_admin extends rsssl_front_end
             }
         }
 
-	    if ($key === 'footer' ) {
-		    if ( $grid_item['type'] === 'scan' ) {
-			    $template_part = $template_part.'</form>';
-		    } elseif ( $grid_item['type'] === 'settings' ) {
-			    if ( is_network_admin() ) {
-				    $template_part = $template_part.'</form>';
-			    } else {
-				    $template_part = $template_part.'</form>';
-			    }
-		    }
+        if ( $key === 'footer' && ( $grid_item['type'] === 'scan' || $grid_item['type'] === 'settings') ) {
+            $template_part .= '</form>';
+        }
 
-	    }
 	    return apply_filters("rsssl_template_part_".$key.'_'.$index, $template_part, $grid_item);
     }
 
