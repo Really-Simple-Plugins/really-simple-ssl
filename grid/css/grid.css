@@ -631,7 +631,7 @@
 .rsssl-grid .rsssl-item .item-container {
   background-color: #fff;
   position: relative;
-  box-shadow: 1px 1px rgba(222, 222, 222, 0.2);
+  box-shadow: 0 0 5px 5px rgba(222, 222, 222, 0.2);
   height: 100%;
   width: 100%;
 }
@@ -651,8 +651,5 @@
 .rsssl-grid .rsssl-item.muuri-item-placeholder .item-container {
   border-style: dashed;
   padding: 0;
-}
-.rsssl-grid .upsell-grid-container .item-container {
-  box-shadow: none;
 }
 /*# sourceMappingURL=grid.css.map */
