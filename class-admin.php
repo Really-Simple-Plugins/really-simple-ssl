@@ -3493,6 +3493,24 @@ class rsssl_admin extends rsssl_front_end
 			    $template_part = '';
             }
 	    }
+
+	    if ($key === 'content' ) {
+		    if ( $grid_item['type'] === 'scan' ) {
+			    $template_part = '<form id="rsssl_scan_form" action="" method="post">'.$template_part;
+		    } elseif ( $grid_item['type'] === 'settings' ) {
+			    if ( is_network_admin() ) {
+				    $template_part = '<form action="edit.php?action=rsssl_update_network_settings" method="post">'.wp_nonce_field('rsssl_ms_settings_update', 'rsssl_ms_nonce').
+				                     $template_part;
+			    } else {
+				    $template_part = '<form action="options.php" method="post">'.$template_part;
+			    }
+		    }
+	    }
+
+	    if ( $key === 'footer' && ( $grid_item['type'] === 'scan' || $grid_item['type'] === 'settings') ) {
+		    $template_part .= '</form>';
+	    }
+
 	    return apply_filters("rsssl_template_part_".$key.'_'.$index, $template_part, $grid_item);
     }
 
