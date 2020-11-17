@@ -2481,10 +2481,12 @@ class rsssl_admin extends rsssl_front_end
     public function add_settings_page()
     {
         if (!current_user_can($this->capability)) return;
+
         //hides the settings page if the hide menu for subsites setting is enabled
         if (is_multisite() && rsssl_multisite::this()->hide_menu_for_subsites && !is_super_admin()) return;
 
         global $rsssl_admin_page;
+
         $count = $this->count_plusones();
         if ($count > 0 ) {
             $update_count = "<span class='update-plugins rsssl-update-count'><span class='update-count'>$count</span></span>";
@@ -3212,8 +3214,10 @@ class rsssl_admin extends rsssl_front_end
 		if ( ! current_user_can( 'manage_options' ) ) {
 			return 0;
 		}
+
+		$cache = $this->is_settings_page() ? false : true;
 		$count = get_transient( 'rsssl_plusone_count' );
-		if ( $count === false ) {
+		if ( !$cache || ($count === false) ) {
 			$count = 0;
 			$notices = $this->get_notices_list();
 			foreach ( $notices as $id => $notice ) {
@@ -3222,7 +3226,7 @@ class rsssl_admin extends rsssl_front_end
                      && isset( $notice['output']['plusone'] )
                      && $notice['output']['plusone']
                 ) {
-                    $count ++;
+                    $count++;
                 }
 			}
 			set_transient( 'rsssl_plusone_count', $count, WEEK_IN_SECONDS );
@@ -3280,22 +3284,7 @@ class rsssl_admin extends rsssl_front_end
                 'can_hide' => false,
             ),
 		);
-		$grid_items = apply_filters( 'rsssl_grid_items',  $grid_items );
-
-		$defaults = array(
-			'title' => '',
-			'header' => rsssl_template_path . 'header.php',
-			'content' => '',
-			'footer' => '',
-			'class' => '',
-			'type' => 'plugins',
-			'can_hide' => true,
-            'instructions' => false,
-        );
-		foreach ($grid_items as $key => $grid_item ) {
-			$grid_items[$key] = wp_parse_args($grid_item, $defaults);
-        }
-		return $grid_items;
+		return apply_filters( 'rsssl_grid_items',  $grid_items );
 	}
 
     /**
@@ -3447,8 +3436,18 @@ class rsssl_admin extends rsssl_front_end
 	    $container = $this->get_template('grid-container.php', rsssl_path . 'grid/');
 	    $element = $this->get_template('grid-element.php', rsssl_path . 'grid/');
 	    $output = '';
-
+	    $defaults = array(
+		    'title' => '',
+		    'header' => rsssl_template_path . 'header.php',
+		    'content' => '',
+		    'footer' => '',
+		    'class' => '',
+		    'type' => 'plugins',
+		    'can_hide' => true,
+		    'instructions' => false,
+	    );
 	    foreach ($grid as $index => $grid_item) {
+	        $grid_item = wp_parse_args($grid_item, $defaults);
 		    $footer = $this->get_template_part($grid_item, 'footer', $index);
 		    $content = $this->get_template_part($grid_item, 'content', $index);
 		    $header = $this->get_template_part($grid_item, 'header', $index);
@@ -3468,7 +3467,6 @@ class rsssl_admin extends rsssl_front_end
 			    $output .= $block;
 		    }
 	    }
-
 
 	    echo str_replace('{content}', $output, $container);
     }
@@ -3495,6 +3493,24 @@ class rsssl_admin extends rsssl_front_end
 			    $template_part = '';
             }
 	    }
+
+	    if ($key === 'content' ) {
+		    if ( $grid_item['type'] === 'scan' ) {
+			    $template_part = '<form id="rsssl_scan_form" action="" method="post">'.$template_part;
+		    } elseif ( $grid_item['type'] === 'settings' ) {
+			    if ( is_network_admin() ) {
+				    $template_part = '<form action="edit.php?action=rsssl_update_network_settings" method="post">'.wp_nonce_field('rsssl_ms_settings_update', 'rsssl_ms_nonce').
+				                     $template_part;
+			    } else {
+				    $template_part = '<form action="options.php" method="post">'.$template_part;
+			    }
+		    }
+	    }
+
+	    if ( $key === 'footer' && ( $grid_item['type'] === 'scan' || $grid_item['type'] === 'settings') ) {
+		    $template_part .= '</form>';
+	    }
+
 	    return apply_filters("rsssl_template_part_".$key.'_'.$index, $template_part, $grid_item);
     }
 
