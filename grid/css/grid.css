@@ -49,12 +49,15 @@
   justify-content: flex-end;
   flex-direction: row;
   align-items: center;
-  margin-right: 138px;
+  margin-right: 20px;
 }
 .settings_page_rlrsssl_really_simple_ssl #wpcontent .header-links .documentation,
 .settings_page_really-simple-ssl #wpcontent .header-links .documentation {
-  padding-right: 25px;
   text-decoration: underline;
+}
+.settings_page_rlrsssl_really_simple_ssl #wpcontent .header-links .header-upsell .documentation,
+.settings_page_really-simple-ssl #wpcontent .header-links .header-upsell .documentation {
+  margin-left: 25px;
 }
 .settings_page_rlrsssl_really_simple_ssl #wpcontent .header-links .header-upsell a,
 .settings_page_really-simple-ssl #wpcontent .header-links .header-upsell a {
@@ -75,7 +78,8 @@
   height: 60px;
 }
 .rsssl-grid {
-  margin: 25px;
+  width: calc(100% - 20px);
+  margin: 10px;
   position: relative;
   display: flex;
   flex-direction: row;
@@ -120,7 +124,7 @@
 }
 .rsssl-grid .rsssl-item {
   width: 800px;
-  height: 500px;
+  height: 485px;
   z-index: 1;
 }
 .rsssl-grid .rsssl-item.small {
@@ -135,7 +139,7 @@
   background-color: #fff;
   position: relative;
   box-shadow: 0px 0px 5px 5px rgba(222, 222, 222, 0.2);
-  width: 775px;
+  width: 790px;
   height: 475px;
 }
 .rsssl-grid .rsssl-item .item-container .form-table {
@@ -212,7 +216,7 @@
   padding-left: 15px;
 }
 .rsssl-grid .rsssl-item .item-container .rsssl-grid-item-content {
-  height: 340px;
+  height: 360px;
   margin: 10px 25px 10px 25px;
   border-bottom: 1px solid #dedede;
   /*
@@ -264,7 +268,7 @@
 .rsssl-grid .rsssl-item .item-container .rsssl-grid-item-content .rsssl-progress-block .progress-text .rsssl-progress-text {
   display: flex;
   flex-direction: row;
-  margin-left: 25px;
+  margin-left: 10px;
 }
 .rsssl-grid .rsssl-item .item-container .rsssl-grid-item-content .rsssl-progress-block .progress-text .rsssl-progress-text a {
   margin-left: 3px;
@@ -401,7 +405,7 @@
 .rsssl-grid .rsssl-item .item-container .rsssl-grid-item-footer {
   display: flex;
   align-items: center;
-  margin: 11px 25px 0 25px;
+  margin: 14px 25px 0 25px;
   height: 40px;
   bottom: 0;
   width: 95%;
@@ -419,13 +423,13 @@
   display: none;
 }
 .rsssl-grid .rsssl-item.half-height {
-  height: 262.5px;
+  height: 247.5px;
 }
 .rsssl-grid .rsssl-item.half-height .item-container {
   height: 237.5px;
 }
 .rsssl-grid .rsssl-item.half-height .item-container .rsssl-grid-item-content {
-  height: 105px;
+  height: 110px;
 }
 .rsssl-grid .rsssl-item.half-height .item-container .rsssl-grid-item-content .form-table tbody tr,
 .rsssl-grid .rsssl-item.half-height .item-container .rsssl-grid-item-content .form-table tbody th {
@@ -433,7 +437,7 @@
   max-width: 100%;
 }
 .rsssl-grid .rsssl-item.small .item-container {
-  width: 375px;
+  width: 390px;
 }
 .rsssl-grid .rsssl-item.small .item-container th {
   width: 85% !important;
@@ -450,10 +454,13 @@
 .rsssl-grid #rsssl-progress-footer {
   width: 100%;
   text-align: right;
-  margin-right: 25px;
+  margin-right: 10px;
 }
 .rsssl-grid #rsssl-progress-footer .rsssl-footer-item {
   padding-right: 5px;
+}
+.rsssl-grid #rsssl-progress-footer .rsssl-footer-item form {
+  float: left;
 }
 .rsssl-grid #rsssl-progress-footer .rsssl-footer-item + .rsssl-footer-item {
   margin-right: 20px;
@@ -491,5 +498,168 @@
 }
 .rsssl-grid .rsssl-dot-error {
   background-color: #d7263d;
+}
+.rsssl-grid {
+  position: relative;
+}
+.rsssl-grid .rsssl-item {
+  width: calc(100% - 20px);
+  padding: 10px;
+  height: 475px;
+  min-height: 500px;
+  z-index: 1;
+}
+@media only screen and (min-width: 400px) {
+  .rsssl-grid .rsssl-item {
+    width: calc(100% - 20px);
+  }
+}
+@media only screen and (min-width: 600px) {
+  .rsssl-grid .rsssl-item {
+    width: calc(100% - 20px);
+  }
+}
+@media only screen and (min-width: 768px) {
+  .rsssl-grid .rsssl-item {
+    width: calc(100% - 20px);
+  }
+}
+@media only screen and (min-width: 992px) {
+  .rsssl-grid .rsssl-item {
+    width: calc(100% - 20px);
+  }
+}
+@media only screen and (min-width: 1555px) {
+  .rsssl-grid .rsssl-item {
+    width: calc(50% - 20px);
+  }
+}
+.rsssl-grid .rsssl-item.small {
+  width: calc(100% - 20px);
+}
+@media only screen and (min-width: 400px) {
+  .rsssl-grid .rsssl-item.small {
+    width: calc(100% - 20px);
+  }
+}
+@media only screen and (min-width: 600px) {
+  .rsssl-grid .rsssl-item.small {
+    width: calc(100% - 20px);
+  }
+}
+@media only screen and (min-width: 768px) {
+  .rsssl-grid .rsssl-item.small {
+    width: calc(50% - 20px);
+  }
+}
+@media only screen and (min-width: 992px) {
+  .rsssl-grid .rsssl-item.small {
+    width: calc(50% - 20px);
+  }
+}
+@media only screen and (min-width: 1555px) {
+  .rsssl-grid .rsssl-item.small {
+    width: calc(25% - 20px);
+  }
+}
+.rsssl-grid .rsssl-item.small .item-container {
+  width: 100%;
+  min-width: 200px;
+}
+.rsssl-grid .rsssl-item.half-height {
+  min-height: 250px;
+}
+@media only screen and (min-width: 400px) {
+  .rsssl-grid .rsssl-item.half-height {
+    height: 237.5px;
+    min-height: 250px;
+  }
+}
+@media only screen and (min-width: 600px) {
+  .rsssl-grid .rsssl-item.half-height {
+    min-height: 250px;
+    height: 237.5px;
+  }
+}
+@media only screen and (min-width: 768px) {
+  .rsssl-grid .rsssl-item.half-height {
+    min-height: 250px;
+    height: 237.5px;
+  }
+}
+@media only screen and (min-width: 992px) {
+  .rsssl-grid .rsssl-item.half-height {
+    min-height: 250px;
+    height: 237.5px;
+  }
+}
+@media only screen and (min-width: 1555px) {
+  .rsssl-grid .rsssl-item.half-height {
+    min-height: 250px;
+    height: 237.5px;
+  }
+}
+.rsssl-grid .rsssl-item.half-height .item-container {
+  width: 100%;
+  min-width: 200px;
+  min-height: 250px;
+}
+.rsssl-grid .rsssl-item .settings.rsssl-item {
+  width: 100%;
+  padding: 0;
+}
+.rsssl-grid .rsssl-item.muuri-item-hidden {
+  z-index: 0;
+}
+.rsssl-grid .rsssl-item.muuri-item-releasing {
+  z-index: 2;
+}
+.rsssl-grid .rsssl-item.muuri-item-dragging {
+  z-index: 3;
+}
+.rsssl-grid .rsssl-item .rsssl-grid-header {
+  border-bottom: 1px solid lightgrey;
+  padding: 0;
+  height: 60px;
+}
+.rsssl-grid .rsssl-item .rsssl-grid-header .rsssl-grid-header-container {
+  margin: 0 20px;
+  height: 100%;
+}
+.rsssl-grid .rsssl-item .rsssl-grid-header .rsssl-grid-title {
+  cursor: pointer;
+  font-size: 20px;
+  padding: 20px 0;
+  font-weight: bold;
+  float: left;
+}
+.rsssl-grid .rsssl-item .rsssl-grid-header .rsssl-grid-controls {
+  float: right;
+  margin-top: 20px;
+  color: #cecece;
+}
+.rsssl-grid .rsssl-item .item-container {
+  background-color: #fff;
+  position: relative;
+  box-shadow: 0 0 5px 5px rgba(222, 222, 222, 0.2);
+  height: 100%;
+  width: 100%;
+}
+.rsssl-grid .rsssl-item .item-container .item-content {
+  clear: both;
+  margin: 15px;
+  height: calc(100% - 100px);
+  padding-top: 0px;
+  padding-bottom: 10px;
+}
+.rsssl-grid .rsssl-item.no-border .item-container {
+  border: none;
+}
+.rsssl-grid .rsssl-item.no-background .item-container {
+  background-color: #F1F1F1;
+}
+.rsssl-grid .rsssl-item.muuri-item-placeholder .item-container {
+  border-style: dashed;
+  padding: 0;
 }
 /*# sourceMappingURL=grid.css.map */

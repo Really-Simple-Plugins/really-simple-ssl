@@ -1,7 +1,7 @@
 @gridblock_height: 475px;
 @gridblock_width: 800px;
 @gridblock_width_small:400px;
-@grid_margin: 25px;
+@grid_margin: 10px;
 @grey_light:#cecece;
 @box_shadow_color: rgba(222, 222, 222, 0.2);
 @border_color: #dedede;
@@ -12,15 +12,22 @@
 @light-grey: lightgrey;
 @button-border-color: #6477AA;
 
+// break points
+@break-xs: 400px;
+@break-s: 600px;
+@break-m: 768px;
+@break-l: 992px;
+@break-xl: 1555px;
+
 // Override default WP settings style
 .settings_page_rlrsssl_really_simple_ssl #wpcontent, .settings_page_really-simple-ssl #wpcontent{
   padding: 0;
   .rsssl-footer-item {
-
     form {
       float:left;
     }
   }
+
   .nav-tab {
     padding: 17px 20px;
     margin-bottom:0;
@@ -59,12 +66,14 @@
     justify-content: flex-end;
     flex-direction: row;
     align-items: center;
-    margin-right: 138px;
+    margin-right: 20px;
     .documentation {
-      padding-right:25px;
       text-decoration: underline;
     }
     .header-upsell {
+      .documentation {
+        margin-left:25px;
+      }
       a {
         text-decoration: none;
       }
@@ -90,7 +99,8 @@
 
 
 .rsssl-grid {
-  margin: 25px;
+  width: calc(100% - 20px); 
+  margin: @grid_margin;
   position: relative;
   display: flex;
   flex-direction: row;
@@ -235,7 +245,7 @@
       }
 
       .rsssl-grid-item-content {
-        height: 340px;
+        height: 360px;
         margin: 10px 25px 10px 25px;
         border-bottom: 1px solid @border_color;
 
@@ -459,12 +469,11 @@
           background-color: @color_warning;
           color: white;
         }
-
       }
       .rsssl-grid-item-footer {
         display: flex;
         align-items: center;
-        margin: 11px 25px 0 25px;
+        margin: 14px 25px 0 25px;
         height: 40px;
         bottom: 0;
         width: 95%;
@@ -489,7 +498,7 @@
       .item-container {
         height: @gridblock_height / 2;
         .rsssl-grid-item-content {
-          height: 105px;
+          height: 110px;
           .form-table tbody  {
             tr, th {
               width:100%;
@@ -525,12 +534,16 @@
   /*
     Footers
    */
+
   #rsssl-progress-footer {
     width: 100%;
     text-align: right;
     margin-right: @grid_margin;
     .rsssl-footer-item {
       padding-right: 5px;
+      form {
+        float:left;
+      }
     }
     .rsssl-footer-item +.rsssl-footer-item {
       margin-right:20px;
@@ -577,4 +590,169 @@
   .rsssl-dot-error {
     background-color: #d7263d;
   }
+}
+
+
+// Code below should be integrated in to the code above.
+.rsssl-grid {
+    position: relative;
+    .rsssl-item {
+        width: calc(100% - 20px); 
+        padding: 10px;
+        height: @gridblock_height;
+        min-height: 500px;
+        z-index: 1;
+        @media only screen and (min-width: @break-xs) {
+            width: calc(100% - 20px); 
+        }
+
+        @media only screen and (min-width: @break-s) {
+            width: calc(100% - 20px); 
+        }
+
+        @media only screen and (min-width: @break-m) {
+            width: calc(100% - 20px); 
+        }
+
+        @media only screen and (min-width: @break-l) {
+            width: calc(100% - 20px); 
+        }
+
+        @media only screen and (min-width: @break-xl) {
+            width: calc(50% - 20px); 
+        }
+
+
+        &.small {
+            width: calc(100% - 20px);
+
+            @media only screen and (min-width: @break-xs) {
+                width: calc(100% - 20px); 
+            }
+
+            @media only screen and (min-width: @break-s) {
+                width: calc(100% - 20px); 
+            }
+
+            @media only screen and (min-width: @break-m) {
+                width: calc(50% - 20px); 
+            }
+
+            @media only screen and (min-width: @break-l) {
+                width: calc(50% - 20px); 
+            }
+
+            @media only screen and (min-width: @break-xl) {
+                width: calc(25% - 20px); 
+            }
+            .item-container{
+                width: 100%;
+                min-width: 200px;
+            }
+
+        }
+
+        &.half-height {
+                min-height: 250px;
+                 @media only screen and (min-width: @break-xs) {
+                    height: @gridblock_height / 2;
+                    min-height: 250px;
+                }
+
+                @media only screen and (min-width: @break-s) {
+                    min-height: 250px;
+                    height: @gridblock_height / 2;
+                }
+
+                @media only screen and (min-width: @break-m) {
+                    min-height: 250px;
+                    height: @gridblock_height / 2;
+                }
+
+                @media only screen and (min-width: @break-l) {
+                    min-height: 250px;
+                    height: @gridblock_height / 2;
+                }
+
+                @media only screen and (min-width: @break-xl) {
+                    min-height: 250px;
+                    height: @gridblock_height / 2;
+                }
+
+            .item-container {
+                width: 100%;
+                min-width: 200px;
+                min-height: 250px;
+            }
+        }
+        .settings.rsssl-item{
+          width: 100%;
+          padding: 0;
+        }
+
+        &.muuri-item-hidden {
+            z-index: 0;
+        }
+        &.muuri-item-releasing {
+            z-index: 2;
+        }
+        &.muuri-item-dragging {
+            z-index: 3;
+        }
+        .rsssl-grid-header {
+        border-bottom: 1px solid @light-grey;
+            padding: 0;
+            height: 60px;
+       .rsssl-grid-header-container {
+                margin: 0 20px;
+                height: 100%;
+            }
+            
+           
+            .rsssl-grid-title{
+                cursor: pointer;
+                font-size: 20px;
+                padding: 20px 0;
+                font-weight: bold;
+                float: left;
+            }
+            .rsssl-grid-controls {
+                float: right;
+                margin-top: 20px;
+          color: #cecece;
+            }
+        }
+        .item-container {
+            background-color: #fff;
+            position: relative;
+            box-shadow: 0 0 5px 5px rgba(222,222,222,0.2);
+            height: 100%;
+            width: 100%;
+            
+            .item-content {
+                clear:both;
+                margin:15px;
+                height: calc(100% - 100px);
+                padding-top: 0px;
+                padding-bottom:10px;
+            }
+
+        }
+        
+        &.no-border {
+            .item-container {
+                border: none;
+            }
+        }
+        &.no-background {
+            .item-container {
+                background-color: #F1F1F1;
+            }
+        }
+
+        &.muuri-item-placeholder .item-container {
+            border-style: dashed;
+            padding:0;
+        }
+    }
 }

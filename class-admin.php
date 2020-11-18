@@ -3431,7 +3431,6 @@ class rsssl_admin extends rsssl_front_end
 	 * @param array $grid
 	 */
     public function render_grid($grid){
-
 	    $container = $this->get_template('grid-container.php', rsssl_path . 'grid/');
 	    $element = $this->get_template('grid-element.php', rsssl_path . 'grid/');
 	    $output = '';
@@ -3446,25 +3445,14 @@ class rsssl_admin extends rsssl_front_end
 		    'instructions' => false,
 	    );
 	    foreach ($grid as $index => $grid_item) {
-	        $grid_item = wp_parse_args($grid_item, $defaults);
+		    $grid_item = wp_parse_args($grid_item, $defaults);
 		    $footer = $this->get_template_part($grid_item, 'footer', $index);
 		    $content = $this->get_template_part($grid_item, 'content', $index);
 		    $header = $this->get_template_part($grid_item, 'header', $index);
             $instructions = $grid_item['instructions'] ? '<a href="'.esc_url($grid_item['instructions']).'" target="_blank">'.__("Instructions manual").'</a>' : '';
 		    // Add form if type is settings
 		    $block = str_replace(array('{class}', '{title}', '{header}', '{content}', '{footer}', '{instructions}'), array($grid_item['class'], $grid_item['title'], $header, $content, $footer, $instructions), $element);
-
-		    if (isset($grid_item['type']) && $grid_item['type'] == 'settings') {
-			    if ( is_network_admin() ) {
-				    $output .= '<form action="edit.php?action=rsssl_update_network_settings" method="post">'.wp_nonce_field('rsssl_ms_settings_update', 'rsssl_ms_nonce').$block.'</form>';
-			    } else {
-				    $output .= '<form action="options.php" method="post">'.$block.'</form>';
-			    }
-		    } else if (isset($grid_item['type']) && $grid_item['type'] == 'scan') {
-			    $output .= '<div id="rsssl"><form id="rsssl_scan_form" action="" method="POST">'.$block.'</form></div>';
-		    } else {
-			    $output .= $block;
-		    }
+		    $output .= $block;
 	    }
 
 	    echo str_replace('{content}', $output, $container);
@@ -3474,7 +3462,7 @@ class rsssl_admin extends rsssl_front_end
      * Render grid item based on template
 	 * @param array $grid_item
 	 * @param string $key
-     * @oaran string $index
+     * @oaram string $index
 	 *
 	 * @return string
 	 */
@@ -3607,7 +3595,7 @@ class rsssl_admin extends rsssl_front_end
             wp_register_style('rsssl-grid', trailingslashit(rsssl_url) . 'grid/css/grid-rtl.min.css', array(), rsssl_version);
         } else {
 	        wp_register_style('rlrsssl-css', trailingslashit(rsssl_url) . 'css/main.min.css', array(), rsssl_version );
-            wp_register_style('rsssl-grid', trailingslashit(rsssl_url) . 'grid/css/grid.min.css', array(), rsssl_version );
+            wp_register_style('rsssl-grid', trailingslashit(rsssl_url) . 'grid/css/grid.css', array(), rsssl_version );
         }
 
         wp_register_style('rsssl-scrollbar', trailingslashit(rsssl_url) . 'includes/simple-scrollbar.css', "", rsssl_version);
