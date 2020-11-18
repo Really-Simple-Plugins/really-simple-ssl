@@ -2676,7 +2676,7 @@ class rsssl_admin extends rsssl_front_end
 	            'output' => array(
 		            'true' => array(
                         'url' => 'https://really-simple-ssl.com/knowledge-base/how-to-track-down-mixed-content-or-insecure-content/',
-			            'msg' => __("Check your site to see if you still have mixed content", "really-simple-ssl"),
+			            'msg' => __("SSL is now activated. Check if your website is secure by following this article.", "really-simple-ssl"),
 			            'icon' => 'open',
 			            'dismissible' => true,
 			            'plusone' => true,
