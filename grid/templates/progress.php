@@ -21,9 +21,10 @@
                 <?php
                 $open_task_count = RSSSL()->really_simple_ssl->get_remaining_tasks_count();
                 $open_tasks_html = '<div class="rsssl-progress-count">'.$open_task_count.'</div>';
-                $doing_well = sprintf( _n( "You're doing well. You still have %s task open.", "You're doing well. You still have %s tasks open.", $open_task_count, 'complianz-gdpr' ), $open_tasks_html );
                 if (RSSSL()->really_simple_ssl->ssl_enabled) {
-                	if ( $open_task_count === 0 ) {
+	                $doing_well = __( "SSL is activated on your site.",  'really-simple-ssl' ) . ' ' . sprintf( _n( "You still have %s task open.", "You still have %s tasks open.", $open_task_count, 'really-simple-ssl' ), $open_tasks_html );
+
+	                if ( $open_task_count === 0 ) {
 		                _e("SSL configuration finished!", "really-simple-ssl");
 	                } elseif ( !defined('rsssl_pro_version') ){
                 		if ( $open_task_count >= $lowest_possible_task_count) {

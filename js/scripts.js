@@ -20,41 +20,6 @@ jQuery(document).ready(function ($) {
         obj.closest('.rsssl-item').find('.rsssl-button-save').prop('disabled', false);
     }
 
-    // Update the count in the 'Remaining tasks' section of progress block
-    function update_open_task_count() {
-        $.ajax({
-            type: "post",
-            data: {
-                'action': 'rsssl_get_updated_task_count',
-                token  : rsssl.token,
-            },
-            url: rsssl.ajaxurl,
-            success: function (data) {
-                if (data !== '') {
-                    // Hide completely when there are no tasks left
-                    if (data === 0) {
-                        $('.open-task-text').text("");
-                        $('.open-task-count').text("");
-                    }
-                    if (data === rsssl.lowest_possible_task_count) {
-                        $(".rsssl-progress-text").html(rsssl.finished_text);
-                    } else  {
-                        var text = rsssl.not_complete_text.replace('%s', data);
-                        $(".rsssl-progress-text").html(text);
-                    }
-
-                    if (data !== 0) {
-                        var current_count = $('#rsssl-remaining-tasks-label').text();
-                        var updated_count = current_count.replace(/(?<=\().+?(?=\))/, data) ;
-                        // Replace the count if there are open tasks left
-                        $('#rsssl-remaining-tasks-label').text(updated_count);
-                        $(".rsssl-progress-count").text(data);
-                    }
-                }
-            }
-        });
-    }
-
     // Color bullet in support forum block
     $(".rsssl-support-forums a").hover(function() {
         $(this).find('.rsssl-bullet').css("background-color","#FBC43D");
@@ -119,25 +84,48 @@ jQuery(document).ready(function ($) {
 
     $(document).on("click", ".rsssl-close-warning, .rsssl-close-warning-x",function (event) {
         var type = $(this).closest('.rsssl-dashboard-dismiss').data('dismiss_type');
-        var data = {
-            'action': 'rsssl_dismiss_settings_notice',
-            'type' : type,
-            'token'  : rsssl.token,
-        };
-        $.post(ajaxurl, data, function (response) {});
-        $(this).closest('tr').remove();
+        var row = $(this).closest('tr');
 
         $.ajax({
             type: "post",
             data: {
-                'action': 'rsssl_get_updated_percentage',
+                'type' : type,
+                'action': 'rsssl_dismiss_settings_notice',
                 token  : rsssl.token,
             },
             url: rsssl.ajaxurl,
             success: function (data) {
-                if (data != '') {
-                    $('.rsssl-progress-percentage').text(data + "%");
-                    update_open_task_count();
+                row.remove();
+                if (data.percentage !== '') {
+                    $('.rsssl-progress-percentage').text(data.percentage + "%");
+                    $(".progress-bar-container .progress .bar").css("width", data.percentage + '%');
+                }
+
+                if (data.tasks !== '') {
+                    // Hide completely when there are no tasks left
+                    if (data.tasks === 0) {
+                        $('.open-task-text').text("");
+                        $('.open-task-count').text("");
+                    }
+                    if (data.tasks === rsssl.lowest_possible_task_count) {
+                        $(".rsssl-progress-text").html(rsssl.finished_text);
+                    } else  {
+                        var text = '';
+                        if (data.tasks === 1 ) {
+                            text = rsssl.not_complete_text_singular.replace('%s', data.tasks);
+                        } else {
+                            text = rsssl.not_complete_text_plural.replace('%s', data.tasks);
+                        }
+                        $(".rsssl-progress-text").html(text);
+                    }
+
+                    if (data.tasks !== 0) {
+                        var current_count = $('#rsssl-remaining-tasks-label').text();
+                        var updated_count = current_count.replace(/(?<=\().+?(?=\))/, data.tasks) ;
+                        // Replace the count if there are open tasks left
+                        $('#rsssl-remaining-tasks-label').text(updated_count);
+                        $(".rsssl-progress-count").text(data.tasks);
+                    }
                 }
             }
         });
