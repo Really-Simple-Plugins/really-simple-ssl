@@ -4,8 +4,6 @@
  * Plugin URI: https://really-simple-ssl.com
  * Description: Lightweight plugin without any setup to make your site SSL proof
  * Version: 4.0.0
- * Text Domain: really-simple-ssl
- * Domain Path: /languages
  * Author: Really Simple Plugins
  * Author URI: https://really-simple-plugins.com
  * License: GPL2
