@@ -38,7 +38,7 @@ if ( ! class_exists( 'rsssl_help' ) ) {
         public function get_comment($str, $class = false) {
             if (strlen($str) === 0) return;
             ?>
-            </td></tr><tr class="rsssl-comment-text <?php echo esc_attr($class)?>"><td colspan="2" > <?php echo $str;?></td></tr><tr><td>
+            </td></tr><tr class="rsssl-comment-text <?php echo esc_attr($class)?>"><td colspan="2"><?php echo $str;?></td></tr>
             <?php
         }
 
