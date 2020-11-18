@@ -101,6 +101,7 @@ class rsssl_admin extends rsssl_front_end
 	    delete_transient('rsssl_plusone_count');
 	    delete_transient('rsssl_all_task_count');
 	    delete_transient('rsssl_remaining_task_count');
+	    delete_transient('rsssl_percentage_completed');
     }
 
 	/**
@@ -235,8 +236,6 @@ class rsssl_admin extends rsssl_front_end
         add_action('wp_ajax_dismiss_success_message', array($this, 'dismiss_success_message_callback'));
         add_action('wp_ajax_rsssl_dismiss_review_notice', array($this, 'dismiss_review_notice_callback'));
         add_action('wp_ajax_rsssl_dismiss_settings_notice', array($this, 'dismiss_settings_notice_callback'));
-        add_action('wp_ajax_rsssl_get_updated_percentage', array($this, 'get_score_percentage'));
-        add_action('wp_ajax_rsssl_get_updated_task_count', array($this, 'get_remaining_tasks_count'));
         add_action('wp_ajax_rsssl_update_task_toggle_option', array($this, 'update_task_toggle_option'));
 
         //handle notices
@@ -1379,6 +1378,7 @@ class rsssl_admin extends rsssl_front_end
             RSSSL()->rsssl_multisite->deactivate();
             if (!RSSSL()->rsssl_multisite->ssl_enabled_networkwide) $this->build_domain_list();
         }
+        do_action("rsssl_deactivate");
 
         $this->remove_wpconfig_edit();
         $this->removeHtaccessEdit();
@@ -2441,7 +2441,18 @@ class rsssl_admin extends rsssl_front_end
 	        update_option( "rsssl_".$dismiss_type."_dismissed", true );
             delete_transient( 'rsssl_plusone_count' );
         }
-        wp_die();
+
+	    // count should be updated, therefore clear cache
+	    $this->clear_transients();
+
+	    $data     = array(
+		    'tasks' => $this->get_remaining_tasks_count(),
+		    'percentage' => $this->get_score_percentage(),
+	    );
+	    $response = json_encode( $data );
+	    header( "Content-Type: application/json" );
+	    echo $response;
+	    exit;
     }
 
     /**
@@ -2665,6 +2676,8 @@ class rsssl_admin extends rsssl_front_end
                                  '<a href="'.add_query_arg(array('page'=>'rlrsssl_really_simple_ssl'), admin_url('options-general.php?page=')).'">'.__("Check again", "really-simple-ssl").'</a>',
                         'icon' => 'warning',
                         'admin_notice' =>true,
+                        'plusone' => true,
+
                     ),
                 ),
             ),
@@ -3098,17 +3111,6 @@ class rsssl_admin extends rsssl_front_end
      */
 
     public function get_score_percentage() {
-        if (wp_doing_ajax()) {
-            if (!isset($_POST['token']) || (!wp_verify_nonce($_POST['token'], 'rsssl_nonce'))) {
-                return 0;
-            }
-
-            if (!isset($_POST["action"]) && $_POST["action"] ==! 'rsssl_get_updated_percentage') return;
-
-            // Delete the transient when invoked via AJAX, as the count should now be updated
-            delete_transient('rsssl_percentage_completed');
-        }
-
         if ( ! current_user_can( 'manage_options' ) ) {
             return 0;
         }
@@ -3139,10 +3141,6 @@ class rsssl_admin extends rsssl_front_end
         $score = $score * 100;
         $score = intval( round( $score ) );
         set_transient('rsssl_percentage_completed', $score, DAY_IN_SECONDS);
-
-        if ( wp_doing_ajax() ) {
-            wp_die( $score );
-        }
 
         return $score;
     }
@@ -3351,26 +3349,12 @@ class rsssl_admin extends rsssl_front_end
             return 0;
         }
 
-        if (wp_doing_ajax()) {
-            if (!isset($_POST['token']) || (!wp_verify_nonce($_POST['token'], 'rsssl_nonce'))) {
-                return 0;
-            }
-
-            if (!isset($_POST["action"]) && $_POST["action"] ==! 'rsssl_get_updated_percentage') return 0;
-            // When invoked via AJAX the count should be updated, therefore clear cache
-            $this->clear_transients();
-        }
-
         $count = get_transient( 'rsssl_remaining_task_count' );
         if ( $count === false ) {
             $count = count($this->get_notices_list(
                     array( 'status' => 'open' )
             ) );
             set_transient( 'rsssl_remaining_task_count', $count, 'DAY_IN_SECONDS' );
-        }
-
-        if (wp_doing_ajax()) {
-            wp_die($count);
         }
 
         return $count;
@@ -3610,6 +3594,14 @@ class rsssl_admin extends rsssl_front_end
         wp_enqueue_script('rsssl');
 
         $finished_text = apply_filters('rsssl_finished_text', sprintf(__("Basic SSL configuration finished! Improve your score with %sReally Simple SSL Pro%s.", "really-simple-ssl"), '<a target="_blank" href="' . $this->pro_url . '">', '</a>') );
+	    if ($this->ssl_enabled) {
+		    $ssl_status = __( "SSL is activated on your site.",  'really-simple-ssl' );
+        } else {
+		    $ssl_status = __( "SSL is not yet enabled on this site.",  'really-simple-ssl' );
+        }
+
+	    $not_completed_text_singular =  $ssl_status.' '. __("You still have %s task open.",  'really-simple-ssl' );
+	    $not_completed_text_plural =  $ssl_status .' '.__(" You still have %s tasks open.",  'really-simple-ssl' );
 
         wp_localize_script('rsssl', 'rsssl',
             array(
@@ -3617,7 +3609,8 @@ class rsssl_admin extends rsssl_front_end
                 'token'   => wp_create_nonce( 'rsssl_nonce'),
                 'copied_text' => __("Copied!", "really-simple-ssl"),
                 'finished_text' => $finished_text,
-                'not_complete_text' =>__("You're doing well. You still have %s tasks open"),
+                'not_complete_text_singular' => $not_completed_text_singular,
+                'not_complete_text_plural' => $not_completed_text_plural,
                 'lowest_possible_task_count' =>	RSSSL()->really_simple_ssl->get_lowest_possible_task_count(),
             )
         );
@@ -3895,7 +3888,6 @@ class rsssl_admin extends rsssl_front_end
      * @access public
      *
      */
-
 
     public function deactivate_popup()
     {
