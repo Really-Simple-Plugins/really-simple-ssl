@@ -60,7 +60,6 @@
 .really-simple-ssl-table {
   display: flex;
   flex-direction: column;
-  max-width: 1140px;
 }
 .rsssl-table-td-main-content {
   width: 100%;

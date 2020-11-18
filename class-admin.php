@@ -68,7 +68,6 @@ class rsssl_admin extends rsssl_front_end
 	    add_action('admin_init', array($this, 'maybe_dismiss_review_notice'));
 	    add_action( "update_option_rlrsssl_options", array( $this, "maybe_clear_transients" ), 10, 3 );
 
-
 	    // Only show deactivate popup when SSL has been enabled.
 	    if ($this->ssl_enabled) {
             add_action('admin_footer', array($this, 'deactivate_popup'), 40);
@@ -99,9 +98,7 @@ class rsssl_admin extends rsssl_front_end
     public function clear_transients(){
 	    delete_transient('rsssl_mixed_content_fixer_detected');
 	    delete_transient('rsssl_plusone_count');
-	    delete_transient('rsssl_all_task_count');
 	    delete_transient('rsssl_remaining_task_count');
-	    delete_transient('rsssl_percentage_completed');
     }
 
 	/**
@@ -216,7 +213,6 @@ class rsssl_admin extends rsssl_front_end
 
         //add the settings page for the plugin
         add_action('admin_enqueue_scripts', array($this, 'enqueue_assets'));
-        add_action('admin_init', array($this, 'load_translation'), 20);
 
         //settings page, form  and settings link in the plugins page
         add_action('admin_menu', array($this, 'add_settings_page'), 40);
@@ -248,7 +244,7 @@ class rsssl_admin extends rsssl_front_end
     }
 
     public function check_upgrade() {
-        $prev_version = get_option( 'rsssl_current_version', false );
+	    $prev_version = get_option( 'rsssl_current_version', false );
         if ( $prev_version && version_compare( $prev_version, '4.0', '<' ) ) {
             update_option('rsssl_remaining_tasks', true);
         }
@@ -811,7 +807,6 @@ class rsssl_admin extends rsssl_front_end
     public function get_plugin_upgraded()
     {
         if ($this->plugin_db_version != rsssl_version) {
-
 	        if ( $this->plugin_db_version !== '1.0'  && version_compare( $this->plugin_db_version, '4.0.0', '<' ) ) {
 	            update_option('rsssl_upgraded_to_four', true);
 	        }
@@ -1324,22 +1319,10 @@ class rsssl_admin extends rsssl_front_end
             'dismiss_review_notice' => $this->dismiss_review_notice,
 
         );
-        update_option('rlrsssl_options', $options);
+
+	    update_option('rlrsssl_options', $options);
     }
 
-    /**
-     * Load the translation files
-     *
-     * @since  1.0
-     *
-     * @access public
-     *
-     */
-
-    public function load_translation()
-    {
-        load_plugin_textdomain('really-simple-ssl', FALSE, dirname(plugin_basename(__FILE__)) . '/languages/');
-    }
 
     /**
      * Handles deactivation of this plugin
@@ -2645,6 +2628,12 @@ class rsssl_admin extends rsssl_front_end
         );
         $args = wp_parse_args($args, $defaults);
 
+	    $cache_admin_notices = !$this->is_settings_page() && $args['admin_notices'];
+	    if ( $cache_admin_notices) {
+		    $cached_notices = get_transient('rsssl_admin_notices');
+		    if ( $cached_notices ) return $cached_notices;
+	    }
+
 	    $htaccess_file = $this->uses_htaccess_conf() ? "htaccess.conf (/conf/htaccess.conf/)" : $htaccess_file = ".htaccess";
         if ( $this->ssl_type != "NA" ) {
             $rules            = $this->get_redirect_rules( true );
@@ -2995,6 +2984,7 @@ class rsssl_admin extends rsssl_front_end
 	                unset( $notices[$id]);
                 }
             }
+		    set_transient('rsssl_admin_notices', $notices, DAY_IN_SECONDS );
         }
 
 	    //sort so warnings are on top
@@ -3042,6 +3032,8 @@ class rsssl_admin extends rsssl_front_end
 			    }
 		    }
         }
+
+
 
         return $notices;
     }
@@ -3140,7 +3132,6 @@ class rsssl_admin extends rsssl_front_end
         }
         $score = $score * 100;
         $score = intval( round( $score ) );
-        set_transient('rsssl_percentage_completed', $score, DAY_IN_SECONDS);
 
         return $score;
     }
@@ -3265,6 +3256,13 @@ class rsssl_admin extends rsssl_front_end
                 'class' => 'small',
                 'type' => 'popular',
             ),
+            'plugins' => array(
+                'title' => __("Our plugins", "really-simple-ssl"),
+                'header' => rsssl_template_path . 'header.php',
+                'content' => rsssl_template_path . 'other-plugins.php',
+                'class' => 'half-height no-border no-background upsell-grid-container',
+                'can_hide' => false,
+            ),
 			'support' => array(
 				'title' => __("Support forum", "really-simple-ssl"),
 				'header' => '',
@@ -3273,13 +3271,6 @@ class rsssl_admin extends rsssl_front_end
 				'type' => 'tasks',
 				'class' => 'half-height',
 			),
-            'plugins' => array(
-                'title' => __("Our plugins", "really-simple-ssl"),
-                'header' => rsssl_template_path . 'header.php',
-                'content' => rsssl_template_path . 'other-plugins.php',
-                'class' => 'half-height no-border no-background upsell-grid-container',
-                'can_hide' => false,
-            ),
 		);
 		return apply_filters( 'rsssl_grid_items',  $grid_items );
 	}
@@ -3323,16 +3314,9 @@ class rsssl_admin extends rsssl_front_end
             return 0;
         }
 
-        $count = get_transient( 'rsssl_all_task_count' );
-        if ( $count === false ) {
-	        $count = count($this->get_notices_list(
-		        array( 'status' => 'all' )
-	        ));
-            set_transient( 'rsssl_all_task_count', $count, 'DAY_IN_SECONDS' );
-        }
-        if (wp_doing_ajax()) {
-            wp_die($count);
-        }
+        $count = count($this->get_notices_list(
+            array( 'status' => 'all' )
+        ));
 
         return $count;
     }
@@ -3349,8 +3333,10 @@ class rsssl_admin extends rsssl_front_end
             return 0;
         }
 
+        $cache = !$this->is_settings_page();
+
         $count = get_transient( 'rsssl_remaining_task_count' );
-        if ( $count === false ) {
+        if ( !$cache || $count === false ) {
             $count = count($this->get_notices_list(
                     array( 'status' => 'open' )
             ) );
