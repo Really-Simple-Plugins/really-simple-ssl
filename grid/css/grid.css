@@ -279,7 +279,6 @@
 }
 .rsssl-grid .rsssl-item .item-container .rsssl-grid-item-content .rsssl-progress-block .rsssl-progress-table td {
   padding: 8px 15px 5px 0;
-  vertical-align: top;
 }
 .rsssl-grid .rsssl-item .item-container .rsssl-grid-item-content .rsssl-tips-tricks {
   color: #3c3c3c;
@@ -386,7 +385,7 @@
   min-width: 60px;
   text-align: center;
   border-radius: 15px;
-  padding: 3px;
+  padding: 4px 8px;
   font-size: 0.8em;
   font-weight: 600;
 }
