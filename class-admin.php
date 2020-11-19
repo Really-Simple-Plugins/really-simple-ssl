@@ -441,7 +441,7 @@ class rsssl_admin extends rsssl_front_end
     {
         //prevent showing the review on edit screen, as gutenberg removes the class which makes it editable.
         $screen = get_current_screen();
-        if ( $screen->parent_base === 'edit' ) return;
+	    if ( $screen->base === 'post' ) return;
 
         if ($this->ssl_enabled) return;
 
@@ -479,12 +479,15 @@ class rsssl_admin extends rsssl_front_end
             do_action('rsssl_activation_notice_footer');
             $footer = ob_get_clean();
 
-	        $class = "updated activate-ssl rsssl-pro-dismiss-notice";
+	        $class = apply_filters("rsssl_activation_notice_classes", "updated activate-ssl rsssl-pro-dismiss-notice");
 	        $title = __("Almost ready to migrate to SSL!", "really-simple-ssl");
 	        echo $this->notice_html( $class, $title, $content, $footer);
         }
     }
 
+	/**
+	 * Show almost ready to migrate notice
+	 */
 	public function almost_ready_to_migrate()
 	{
 		_e("Before you migrate, please check for: ", 'really-simple-ssl'); ?>
@@ -530,6 +533,7 @@ class rsssl_admin extends rsssl_front_end
 	 */
 
 	public function notice_html($class, $title, $content, $footer=false) {
+
 		ob_start();
 		?>
         <style>
@@ -2168,7 +2172,7 @@ class rsssl_admin extends rsssl_front_end
     {
         //prevent showing the review on edit screen, as gutenberg removes the class which makes it editable.
         $screen = get_current_screen();
-        if ( $screen->parent_base === 'edit' ) return;
+	    if ( $screen->base === 'post' ) return;
 
         ob_start();
         if ($this->wpconfig_siteurl_not_fixed) { ?>
@@ -2261,7 +2265,7 @@ class rsssl_admin extends rsssl_front_end
 
         //prevent showing the review on edit screen, as gutenberg removes the class which makes it editable.
         $screen = get_current_screen();
-        if ( $screen->parent_base === 'edit' ) return;
+	    if ( $screen->base === 'post' ) return;
 
         //this user has never had the review notice yet.
         if ($this->ssl_enabled && !get_option('rsssl_activation_timestamp')){
@@ -2327,9 +2331,9 @@ class rsssl_admin extends rsssl_front_end
 
     public function show_notices()
     {
-        //prevent showing the review on edit screen, as gutenberg removes the class which makes it editable.
-        $screen = get_current_screen();
-        if ( $screen->parent_base === 'edit' ) return;
+	    //prevent showing the review on edit screen, as gutenberg removes the class which makes it editable.
+	    $screen = get_current_screen();
+	    if ( $screen->base === 'post' ) return;
 
         //don't show admin notices on our own settings page: we have the warnings there
         if ( $this->is_settings_page() ) return;
@@ -2528,26 +2532,6 @@ class rsssl_admin extends rsssl_front_end
     }
 
     /**
-     * Admin help tab
-     *
-     * @since  2.0
-     *
-     * @access public
-     *
-     */
-
-    public function admin_add_help_tab()
-    {
-        $screen = get_current_screen();
-        // Add my_help_tab if current screen is My Admin Page
-        $screen->add_help_tab(array(
-            'id' => "really-simple-ssl-documentation",
-            'title' => __("Documentation", "really-simple-ssl"),
-            'content' => '<p>' . __("On <a href='https://really-simple-ssl.com'>really-simple-ssl.com</a> you can find a lot of articles and documentation about installing this plugin, and installing SSL in general.", "really-simple-ssl") . '</p>',
-        ));
-    }
-
-    /**
      * Create tabs on the settings page
      *
      * @since  2.1
@@ -2710,7 +2694,7 @@ class rsssl_admin extends rsssl_front_end
 			            'msg' => __("Really Simple SSL 4.0. Learn more about our newest major release.", "really-simple-ssl"),
 			            'icon' => 'open',
 			            'dismissible' => true,
-			            'plusone' => true,
+			            'plusone' => false, //set to true on 4.1
 		            ),
 	            ),
             ),
@@ -2837,9 +2821,11 @@ class rsssl_admin extends rsssl_front_end
                         'dismissible' => true
                     ),
                     'htaccess-rules-test-failed' => array(
-                	    'msg' => __('The .htaccess redirect rules selected by this plugin failed in the test. Set manually or dismiss to leave on WordPress redirect.', 'really-simple-ssl') . $rules,
+	                    'url' => 'https://really-simple-ssl.com/knowledge-base/manually-insert-htaccess-redirect-http-to-https/',
+	                    'msg' => __('The .htaccess redirect rules selected by this plugin failed in the test. Set manually or dismiss to leave on WordPress redirect.', 'really-simple-ssl') . $rules,
                         'icon' => 'warning',
-                        'dismissible' => true
+                        'dismissible' => true,
+                        'plusone'=>true,
                     ),
                 ),
             ),
@@ -3939,6 +3925,9 @@ class rsssl_admin extends rsssl_front_end
 
             .rsssl-deactivate-notice-content {
                 margin: 20px
+            }
+            .rsssl-deactivate-notice-content h3 , .rsssl-deactivate-notice-content ul{
+                font-size:1.1em;
             }
 
             .rsssl-deactivate-notice-footer {
