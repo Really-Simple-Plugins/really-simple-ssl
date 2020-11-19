@@ -2763,7 +2763,8 @@ class rsssl_admin extends rsssl_front_end
                         'dismissible' => true
                     ),
                     'not-enabled' => array(
-                        'msg' =>__('Mixed content fixer not enabled. Enable the option to fix mixed content on your site.', 'really-simple-ssl'),
+	                    'url' => $this->generate_enable_link($setting_name = 'autoreplace_insecure_links', $type='free'),
+	                    'msg' =>__('Mixed content fixer not enabled. Enable the option to fix mixed content on your site.', 'really-simple-ssl'),
                         'icon' => 'open',
                         'dismissible' => true
                     ),
@@ -2868,7 +2869,7 @@ class rsssl_admin extends rsssl_front_end
                         'icon' => 'success'
                     ),
                     'false' => array(
-                        'msg' => sprintf(__('%sHTTP Strict Transport Security%s is not enabled %s(Read more)%s', "really-simple-ssl"), '<a href="https://really-simple-ssl.com/hsts-http-strict-transport-security-good/" target="_blank">', '</a>', '<a target="_blank" href="' . $this->pro_url . '">', '</a>'),
+                        'msg' => sprintf(__('HTTP Strict Transport Security is not enabled %s(Read more)%s', "really-simple-ssl"), '<a href="https://really-simple-ssl.com/hsts-http-strict-transport-security-good/" target="_blank">', '</a>' ),
                         'icon' => 'premium'
                     ),
                 ),
@@ -4012,7 +4013,7 @@ class rsssl_admin extends rsssl_front_end
         }
 
         ?>
-        <label class="rsssl-switch">
+        <label class="rsssl-switch" id="rsssl-maybe-highlight-autoreplace_insecure_links">
             <input id="rlrsssl_options" name="rlrsssl_options[autoreplace_insecure_links]" size="40" value="1"
                    type="checkbox" <?php checked(1, $autoreplace_mixed_content, true) ?> <?php echo $disabled?>/>
             <span class="rsssl-slider rsssl-round"></span>
