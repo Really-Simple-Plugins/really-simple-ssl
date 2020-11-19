@@ -28,7 +28,7 @@
 			</div>
             <div class="rsssl-tips-tricks-element">
                 <div class="rsssl-tips-tricks-content">
-                    <?php _e("Improve security: secure cookies", "really-simple-ssl");?>
+                    <?php _e("Improve security: Secure cookies", "really-simple-ssl");?>
                 </div>
                 <div class="rsssl-tips-tricks-read-more">
                     <a href="https://really-simple-ssl.com/secure-cookies-with-httponly-secure-and-use_only_cookies/" target="_blank"><?php _e("Read more", "really-simple-ssl");?></a>
@@ -45,7 +45,7 @@
         </div>
         <div class="tips-tricks-bottom">
             <?php printf(
-            __('Any questions? see the %sdocumentation%s or the %sWordPress Forum%s.', 'really-simple-ssl'),
+            __('Any questions? See the %sdocumentation%s or the %sWordPress Forum%s.', 'really-simple-ssl'),
             '<a href="https://really-simple-ssl.com/knowledge-base/" target="_blank">','</a>',  '<a href="https://wordpress.org/support/plugin/really-simple-ssl/" target="_blank">', '</a>' );
             ?>
         </div>
