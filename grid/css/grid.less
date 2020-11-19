@@ -29,7 +29,7 @@
   }
 
   .nav-tab {
-    padding: 17px 20px;
+    padding: 17px 20px 19px 20px;
     margin-bottom:0;
     color: #444;
     font-weight: normal;
@@ -39,6 +39,7 @@
     &.nav-tab-active {
       border-bottom: 2px solid @color_open !important;
       background: #fff;
+      padding-bottom:17px;
     }
   }
 
@@ -119,7 +120,8 @@
   .rsssl-progress {
 
     .rsssl-task-list {
-      height: 200px;
+      height: 257px;
+      overflow:hidden;
     }
 
     .rsssl-toggle-active {
@@ -172,7 +174,7 @@
             max-height: 340px;
             width: 100% !important;
             tr {
-              padding: 0 0 5px 0 !important;
+              padding: 0 0 0 0 !important;
               display: flex;
               align-items: center;
               flex-direction: row;
@@ -199,7 +201,7 @@
               }
               th, td {
                 // Important to override default WP style
-                padding: 15px 0 0 0 !important;
+                padding: 10px 0 !important;
               }
             }
           }
@@ -303,8 +305,9 @@
 
           .rsssl-progress-table {
             td {
-              padding: 8px 15px 5px 0;
+              padding: 10px 10px 10px 0;
             }
+            td +td {padding-left:15px;}
           }
         }
 

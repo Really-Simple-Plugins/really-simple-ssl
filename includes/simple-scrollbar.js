@@ -139,7 +139,7 @@
     }
 
     function initAll() {
-        var nodes = d.querySelectorAll('*[ss-container]');
+        var nodes = d.querySelectorAll('.rsssl-scroll-container');
 
         for (var i = 0; i < nodes.length; i++) {
             initEl(nodes[i]);

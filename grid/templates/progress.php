@@ -44,7 +44,7 @@
         </div>
     </div>
 
-	<div  ss-container class="rsssl-task-list">
+	<div class="rsssl-scroll-container rsssl-task-list">
         <table class="rsssl-progress-table">
         <thead></thead>
 			<tbody>
