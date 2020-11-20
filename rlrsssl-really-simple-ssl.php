@@ -127,12 +127,11 @@ class REALLY_SIMPLE_SSL
 
 	private function hooks()
 	{
-		add_action('admin_notices', array( $this, 'admin_notices'));
-
 		/**
 		 * Fire custom hook
 		 */
 		if ( is_admin() ) {
+			add_action('admin_notices', array( $this, 'admin_notices'));
 			do_action('rsssl_admin_init' );
 		}
 
