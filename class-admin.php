@@ -38,7 +38,6 @@ class rsssl_admin extends rsssl_front_end
     public $debug_log;
 
     public $plugin_db_version;
-    public $plugin_upgraded;
     public $ssl_type = "NA";
     public $dismiss_all_notices = false;
     public $pro_url;
@@ -814,11 +813,20 @@ class rsssl_admin extends rsssl_front_end
 	        if ( $this->plugin_db_version !== '1.0'  && version_compare( $this->plugin_db_version, '4.0.0', '<' ) ) {
 	            update_option('rsssl_upgraded_to_four', true);
 	        }
+
+	        if ( $this->plugin_db_version !== '1.0' ) {
+		        $dismiss_options = $this->get_notices_list( array(
+			        'dismiss_on_upgrade' => true,
+		        ) );
+		        foreach ($dismiss_options as $dismiss_option ) {
+			        update_option( "rsssl_" . $dismiss_option . "_dismissed" , true);
+		        }
+		        delete_transient( 'rsssl_plusone_count' );
+	        }
+
             $this->plugin_db_version = rsssl_version;
-            $this->plugin_upgraded = true;
             $this->save_options();
         }
-        $this->plugin_upgraded = false;
     }
 
     /**
@@ -2608,6 +2616,7 @@ class rsssl_admin extends rsssl_front_end
         $defaults = array(
             'admin_notices' => false,
             'premium_only' => false,
+            'dismiss_on_upgrade' => false,
             'status' => 'open', //status can be "all" (all tasks, regardless of dismissed or open), "open" (not success/completed) or "completed"
         );
         $args = wp_parse_args($args, $defaults);
@@ -2656,6 +2665,7 @@ class rsssl_admin extends rsssl_front_end
             ),
 
             'mixed_content_scan' => array(
+                'dismiss_on_upgrade' => true,
 	            'condition' => array('rsssl_ssl_enabled'),
 	            'callback' => '_true_',
 	            'score' => 5,
@@ -2671,7 +2681,8 @@ class rsssl_admin extends rsssl_front_end
             ),
 
             'google_analytics' => array(
-                'callback' => '_true_',
+	            'dismiss_on_upgrade' => true,
+	            'callback' => '_true_',
                 'condition' => array('rsssl_ssl_enabled', 'rsssl_ssl_activation_time_no_longer_then_3_days_ago'),
                 'score' => 5,
                 'output' => array(
@@ -2708,7 +2719,7 @@ class rsssl_admin extends rsssl_front_end
                         'icon' => 'success'
                     ),
                     'false' => array(
-                        'msg' => __('SSL is not enabled yet', 'really-simple-ssl'),
+                        'msg' => __('SSL is not enabled yet.', 'really-simple-ssl'),
                         'icon' => 'warning',
                     ),
                 ),
@@ -2741,7 +2752,7 @@ class rsssl_admin extends rsssl_front_end
                 'score' => 10,
                 'output' => array(
                     'found' => array(
-                        'msg' =>__('Mixed content fixer was successfully detected on the front-end', 'really-simple-ssl'),
+                        'msg' =>__('Mixed content fixer was successfully detected on the front-end.', 'really-simple-ssl'),
                         'icon' => 'success'
                     ),
                     'no-response' => array(
@@ -2869,7 +2880,7 @@ class rsssl_admin extends rsssl_front_end
                         'icon' => 'success'
                     ),
                     'false' => array(
-                        'msg' => sprintf(__('HTTP Strict Transport Security is not enabled %s(Read more)%s', "really-simple-ssl"), '<a href="https://really-simple-ssl.com/hsts-http-strict-transport-security-good/" target="_blank">', '</a>' ),
+                        'msg' => sprintf(__('HTTP Strict Transport Security is not enabled %s(Read more)%s.', "really-simple-ssl"), '<a href="https://really-simple-ssl.com/hsts-http-strict-transport-security-good/" target="_blank">', '</a>' ),
                         'icon' => 'premium'
                     ),
                 ),
@@ -2880,11 +2891,11 @@ class rsssl_admin extends rsssl_front_end
                 'score' => 5,
                 'output' => array(
                     'true' => array(
-                        'msg' =>__('Secure cookies set', 'really-simple-ssl'),
+                        'msg' =>__('Secure cookies set.', 'really-simple-ssl'),
                         'icon' => 'success'
                     ),
                     'false' => array(
-                        'msg' => sprintf(__("Secure cookie settings not enabled (%sRead more%s) ", "really-simple-ssl"), '<a target="_blank" href="https://really-simple-ssl.com/secure-cookies-with-httponly-secure-and-use_only_cookies/">', '</a>'),
+                        'msg' => sprintf(__("Secure cookie settings not enabled (%sRead more%s).", "really-simple-ssl"), '<a target="_blank" href="https://really-simple-ssl.com/secure-cookies-with-httponly-secure-and-use_only_cookies/">', '</a>'),
                         'icon' => 'premium'
                     ),
                 ),
@@ -2918,6 +2929,19 @@ class rsssl_admin extends rsssl_front_end
         foreach ($notices as $id => $notice) {
             $notices[$id] = wp_parse_args($notice, $notice_defaults);
         }
+
+	    /**
+	     * If a list of notices that should be dismissed on upgrade is requested
+	     */
+	    if ( $args['dismiss_on_upgrade'] ) {
+		    $output = array();
+            foreach( $notices as $key => $notice ) {
+                if ( isset($notice['dismiss_on_upgrade']) && $notice['dismiss_on_upgrade'] ) {
+                    $output[] = $key;
+                }
+            }
+		    return $output;
+	    }
 
 	    /**
 	     * Filter out notice that do not apply, or are dismissed
@@ -4225,8 +4249,6 @@ class rsssl_admin extends rsssl_front_end
                         }
                     }
                 }
-                console.log(setting_name);
-
                 if(setting_name !== '' && $('#rsssl-maybe-highlight-' + setting_name).length) {
                     $('#rsssl-maybe-highlight-' + setting_name).closest('tr').addClass('rsssl-highlight');
                 }
