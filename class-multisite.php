@@ -87,12 +87,11 @@ if (!class_exists('rsssl_multisite')) {
             if ( !is_network_admin() ) return;
 
 	        if ( !$this->selected_networkwide_or_per_site ) {
-		        _e('No choice has been made regarding networkwide or per site activation', 'really-simple-ssl');
+		        echo ' '.__('No choice has been made regarding networkwide or per site activation.', 'really-simple-ssl');
 	        } else if ($this->ssl_enabled_networkwide){
-		        _e('SSL is activated network wide', 'really-simple-ssl');
+		        echo ' '.__('SSL is activated network wide.', 'really-simple-ssl');
 	        } else {
-		        _e('SSL is activated per site', 'really-simple-ssl');
-
+		        echo ' '.__('SSL is activated per site.', 'really-simple-ssl');
 	        }
         }
 
@@ -677,7 +676,8 @@ if (!class_exists('rsssl_multisite')) {
             }
 
             if (get_site_option('rsssl_ssl_deactivation_active')){
-                $this->deactivate_ssl_networkwide();
+                //$this->deactivate_ssl_networkwide();
+	            $this->end_ssl_deactivation();
             }
 
             update_site_option('rsssl_run', false);
@@ -774,7 +774,6 @@ if (!class_exists('rsssl_multisite')) {
             $args = array(
                 'number' => $nr_of_sites,
                 'offset' => $offset,
-                'public' => 1,
             );
             $sites = ($wp_version >= 4.6) ? get_sites($args) : wp_get_sites();
             return $sites;
@@ -1005,7 +1004,13 @@ if (!class_exists('rsssl_multisite')) {
 	                $content .= sprintf(__("If the conversion does not proceed after a few minutes, click %shere%s to force the conversion process.", "really-simple-ssl"), $link_open, $link_close);
                 } else {
 	                $class.=" updated ";
-	                $content = sprintf(__("Conversion of websites completed.", "really-simple-ssl"), $completed) . " ";
+	                $activation_active = get_site_option('rsssl_ssl_activation_active');
+	                $content = __("Conversion of websites completed.", "really-simple-ssl") . " ";
+	                if ($activation_active) {
+		                $content .= __("Really Simple SSL has converted all your websites to SSL.", "really-simple-ssl");
+	                } else {
+		                $content .= __("Really Simple SSL has converted all your websites to non SSL.", "really-simple-ssl");
+	                }
                 }
 
                 echo RSSSL()->really_simple_ssl->notice_html($class, $title, $content);
