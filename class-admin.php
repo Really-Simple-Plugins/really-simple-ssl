@@ -2887,7 +2887,8 @@ class rsssl_admin extends rsssl_front_end
             ),
 
             'secure_cookies_set' => array(
-                'callback' => 'RSSSL()->really_simple_ssl->contains_secure_cookie_settings',
+	            'condition' => array('rsssl_ssl_enabled'),
+	            'callback' => 'RSSSL()->really_simple_ssl->contains_secure_cookie_settings',
                 'score' => 5,
                 'output' => array(
                     'true' => array(
@@ -3648,7 +3649,6 @@ class rsssl_admin extends rsssl_front_end
 	            $help_tip = RSSSL()->rsssl_help->get_help_tip(__("A .htaccess redirect is faster and works better with caching. Really Simple SSL detects the redirect code that is most likely to work (99% of websites), but this is not 100%. Make sure you know how to regain access to your site if anything goes wrong!", "really-simple-ssl"), $return=true);
 	            add_settings_field('id_htaccess_redirect', $help_tip . "<div class='rsssl-settings-text'>" . __("Enable 301 .htaccess redirect", "really-simple-ssl"), array($this, 'get_option_htaccess_redirect'), 'rlrsssl', 'rlrsssl_settings');
             }
-
         }
 
         //on multisite this setting can only be set networkwide
@@ -3658,7 +3658,7 @@ class rsssl_admin extends rsssl_front_end
         }
 
 	    $help_tip = RSSSL()->rsssl_help->get_help_tip(__("If this option is set to true, the mixed content fixer will fire on the init hook instead of the template_redirect hook. Only use this option when you experience problems with the mixed content fixer.\"", "really-simple-ssl"), $return=true);
-        add_settings_field('id_switch_mixed_content_fixer_hook', $help_tip . "<div class='rsssl-settings-text'>" . __("Fire mixed content fixer on different point", "really-simple-ssl"), array($this, 'get_option_switch_mixed_content_fixer_hook'), 'rlrsssl', 'rlrsssl_settings');
+        add_settings_field('id_switch_mixed_content_fixer_hook', $help_tip . "<div class='rsssl-settings-text'>" . __("Fire mixed content fixer with different method", "really-simple-ssl"), array($this, 'get_option_switch_mixed_content_fixer_hook'), 'rlrsssl', 'rlrsssl_settings');
 	    $help_tip = RSSSL()->rsssl_help->get_help_tip(__("Enable this option to permanently dismiss all +1 notices in the 'Your progress' tab", "really-simple-ssl"), $return=true);
 	    add_settings_field('id_dismiss_all_notices', $help_tip . "<div class='rsssl-settings-text'>" .  __("Dismiss all Really Simple SSL notices", "really-simple-ssl"), array($this, 'get_option_dismiss_all_notices'), 'rlrsssl', 'rlrsssl_settings');
 
@@ -3792,6 +3792,8 @@ class rsssl_admin extends rsssl_front_end
 	public function get_option_htaccess_redirect()
 	{
 		$comment = $disabled = "";
+		$link_open = '<a href="https://really-simple-ssl.com/knowledge-base/remove-htaccess-redirect-site-lockout/" target="_blank">';
+		if (!$this->htaccess_redirect) $comment = sprintf(__("Before you enable the htaccess redirect, make sure you know how to %sregain access%s to your site in case of a redirect loop.", "really-simple-ssl"), $link_open, '</a>');
 		//networkwide is not shown, so this only applies to per site activated sites.
 		if (is_multisite() && RSSSL()->rsssl_multisite->htaccess_redirect) {
             $disabled = "disabled";
