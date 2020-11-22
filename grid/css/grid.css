@@ -183,6 +183,11 @@
 .rsssl-grid .rsssl-item .item-container .form-table tbody tr th,
 .rsssl-grid .rsssl-item .item-container .form-table tbody tr td {
   padding: 10px 0 !important;
+  font-size: 13px;
+}
+.rsssl-grid .rsssl-item .item-container .form-table tbody tr th p,
+.rsssl-grid .rsssl-item .item-container .form-table tbody tr td p {
+  font-size: 13px;
 }
 .rsssl-grid .rsssl-item .item-container h2 {
   display: none;
