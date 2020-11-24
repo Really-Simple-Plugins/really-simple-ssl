@@ -71,7 +71,6 @@ class rsssl_admin extends rsssl_front_end
 	    if ($this->ssl_enabled) {
             add_action('admin_footer', array($this, 'deactivate_popup'), 40);
         }
-
     }
 
     static function this()
@@ -401,13 +400,19 @@ class rsssl_admin extends rsssl_front_end
 
     public function deactivate_ssl()
     {
-        $this->ssl_enabled = false;
-        $this->wp_redirect = false;
-        $this->htaccess_redirect = false;
-
-        $this->remove_ssl_from_siteurl();
-        $this->save_options();
+        //only revert if SSL was enabled first.
+        if ($this->ssl_enabled) {
+	        $this->ssl_enabled       = false;
+	        $this->wp_redirect       = false;
+	        $this->htaccess_redirect = false;
+	        $this->remove_ssl_from_siteurl();
+	        $this->save_options();
+        }
     }
+
+	/**
+	 * redirect to settings page
+	 */
 
     public function redirect_to_settings_page() {
         if (isset($_GET['page']) && $_GET['page'] == 'rlrsssl_really_simple_ssl') return;
@@ -3894,6 +3899,9 @@ class rsssl_admin extends rsssl_front_end
 
     public function deactivate_popup()
     {
+        //only on plugins page
+        $screen = get_current_screen();
+        if (!$screen || $screen->base !=='plugins' ) return;
 
         ?>
 	    <?php add_thickbox();?>
