@@ -85,12 +85,9 @@ Yes. There is a dedicated network settings page where you can switch between net
 = 4.0.0 =
 * New user interface
 * Fix: transient stored with 'WEEK_IN_SECONDS' as string instead of constant
-* Improvement: new fix options in scan
-* Fix: scan mixed content detection false positive
-* Fix: removal of .htaccess lines and wpconfig lines on deactivation
-* Fix: CSP generation bug for some types
 * Improvement: notices dashboard, with dismissable notices
 * Improvement: improved naming of settings, and instructions
+* Improvement: articles in tips & tricks section
 
 = 3.3.4 =
 * Fix: prefix review notice dismiss to prevent conflicts with other plugins

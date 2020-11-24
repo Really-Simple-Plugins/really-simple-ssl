@@ -636,6 +636,8 @@ if (!class_exists('rsssl_multisite')) {
 
         public function save_options()
         {
+	        if ( ! current_user_can( 'manage_options' ) ) return;
+
             $options = get_site_option("rlrsssl_network_options");
             if (!is_array($options)) $options = array();
 
@@ -781,7 +783,6 @@ if (!class_exists('rsssl_multisite')) {
 
         /**
               The new get_sites function returns an object.
-
         */
 
         public function switch_to_blog_bw_compatible($site)
