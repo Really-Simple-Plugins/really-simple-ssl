@@ -2789,15 +2789,15 @@ class rsssl_admin extends rsssl_front_end
             ),
 
             'wordpress_redirect' => array(
-	            'condition' => array('rsssl_wp_redirect_condition'),
-	            'callback' => 'rsssl_wordpress_redirect',
+	            'condition' => array('rsssl_ssl_enabled'),
+	            'callback' => 'RSSSL()->really_simple_ssl->has_301_redirect',
                 'score' => 10,
                 'output' => array(
-                     '301-wp-redirect' => array(
-                        'msg' => __('301 redirect to https set: WordPress redirect.', 'really-simple-ssl'),
+                     'true' => array(
+                        'msg' => __('301 redirect to https set.', 'really-simple-ssl'),
                         'icon' => 'success'
                         ),
-                     'no-redirect' => array(
+                     'false' => array(
                          'msg' => __('No 301 redirect is set. Enable the WordPress 301 redirect in the settings to get a 301 permanent redirect.', 'really-simple-ssl'),
                          'icon' => 'open'
                      ),
@@ -4405,26 +4405,6 @@ if (!function_exists('rsssl_ssl_activation_time_no_longer_then_3_days_ago')) {
 			return true;
 		} else {
 			return false;
-		}
-	}
-}
-
-if (!function_exists('rsssl_wp_redirect_condition')) {
-	function rsssl_wp_redirect_condition() {
-		if ( RSSSL()->really_simple_ssl->has_301_redirect() && RSSSL()->really_simple_ssl->wp_redirect && ! RSSSL()->really_simple_ssl->htaccess_redirect ) {
-			return true;
-		} else {
-			return false;
-		}
-	}
-}
-
-if (!function_exists('rsssl_wordpress_redirect')) {
-	function rsssl_wordpress_redirect() {
-		if ( RSSSL()->really_simple_ssl->has_301_redirect() && RSSSL()->really_simple_ssl->wp_redirect ) {
-			return '301-wp-redirect';
-		} else {
-			return 'no-redirect';
 		}
 	}
 }

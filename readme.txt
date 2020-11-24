@@ -599,6 +599,5 @@ On settings page load, the .htaccess file is no rewritten. If you have made .hta
 Always back up before any upgrade. Especially .htaccess, wp-config.php and the plugin folder. This way you can easily roll back.
 
 == Screenshots ==
-1. After activation, if SSL was detected, you can enable SSL.
-2. View your configuration on the settings page.
-3. Mixed content scan.
+1. Easily migrate your website to SSL with one click
+2. Improve security with Really Simple SSL. Fully guided and documented.
