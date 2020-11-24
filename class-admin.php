@@ -3352,7 +3352,7 @@ class rsssl_admin extends rsssl_front_end
             $count = count($this->get_notices_list(
                     array( 'status' => 'open' )
             ) );
-            set_transient( 'rsssl_remaining_task_count', $count, 'DAY_IN_SECONDS' );
+            set_transient( 'rsssl_remaining_task_count', $count, DAY_IN_SECONDS );
         }
 
         return $count;
