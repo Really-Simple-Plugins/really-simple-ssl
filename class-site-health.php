@@ -113,7 +113,7 @@ if (!class_exists("rsssl_site_health")) {
 					$result['actions']     .= sprintf(
 						'<p><a href="%s" target="_blank">%s</a></p>',
 						'https://really-simple-ssl.com/everything-you-need-to-know-about-security-headers/',
-						__( 'Lear more about security headers', 'really-simple-ssl' )
+						__( 'Learn more about security headers', 'really-simple-ssl' )
 					);
 				}
 			}
