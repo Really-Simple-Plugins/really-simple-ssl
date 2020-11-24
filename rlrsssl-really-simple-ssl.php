@@ -156,7 +156,7 @@ class REALLY_SIMPLE_SSL
 			?>
 			<div id="message" class="error notice really-simple-plugins">
 				<h1><?php echo __("Plugin dependency error","really-simple-ssl-pro");?></h1>
-				<p><?php echo __("You have a premium add with a version that is not compatible with the >4.0 release of Really Simple SSL.","really-simple-ssl");?></p>
+				<p><?php echo __("You have a premium add-on with a version that is not compatible with the >4.0 release of Really Simple SSL.","really-simple-ssl");?></p>
 				<p><?php echo __("Please upgrade to the latest version to be able use the full functionality of the plugin.","really-simple-ssl");?></p>
 			</div>
 			<?php
