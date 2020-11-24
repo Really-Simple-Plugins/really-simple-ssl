@@ -96,9 +96,8 @@ class REALLY_SIMPLE_SSL
 		define('rsssl_template_path', trailingslashit(plugin_dir_path(__FILE__)).'grid/templates/');
 		define('rsssl_plugin', plugin_basename(__FILE__));
 		require_once(ABSPATH . 'wp-admin/includes/plugin.php');
-		$debug = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? time() : '';
 		$plugin_data = get_plugin_data(__FILE__);
-		define('rsssl_version', $plugin_data['Version'] . $debug);
+		define('rsssl_version', $plugin_data['Version']);
 	}
 
 	private function includes()
