@@ -151,7 +151,7 @@ class REALLY_SIMPLE_SSL
 
 		if ( self::has_old_addon('really-simple-ssl-pro/really-simple-ssl-pro.php') ||
 		     self::has_old_addon('really-simple-ssl-pro-multisite/really-simple-ssl-pro-multisite.php' ) ||
-		     self::has_old_addon('really-simple-ssl-social/really-simple-ssl-social.php' )
+		     self::has_old_addon('really-simple-ssl-social/really-simple-social.php' )
 		) {
 			?>
 			<div id="message" class="error notice really-simple-plugins">
@@ -174,6 +174,10 @@ class REALLY_SIMPLE_SSL
 		$data = false;
 		if (is_plugin_active($file)) $data = get_plugin_data( trailingslashit(WP_PLUGIN_DIR) . $file, false, false );
 		if ($data && version_compare($data['Version'], '4.0.0', '<')) {
+			return true;
+		}
+
+		if ($data && $data['Name']==='Really Simple SSL social' && version_compare($data['Version'], '4.0.8', '<')) {
 			return true;
 		}
 		return false;
