@@ -8,7 +8,7 @@
  * Author URI: https://really-simple-plugins.com
  * License: GPL2
  */
-/*  Copyright 2014  Rogier Lankhorst  (email : rogier@rogierlankhorst.com)
+/*  Copyright 2020  Really Simple Plugins BV  (email : support@really-simple-ssl.com)
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License, version 2, as
     published by the Free Software Foundation.
