@@ -65,7 +65,7 @@ if (!class_exists("rsssl_site_health")) {
 			} else {
 				if (!RSSSL()->really_simple_ssl->has_301_redirect()) {
 					$result['status']      = 'recommended';
-					$result['label']       = __( 'No 301 redirect to SSL not enabled.' , 'really-simple-ssl' );
+					$result['label']       = __( 'No 301 redirect to SSL enabled.' , 'really-simple-ssl' );
 					$result['description'] = sprintf(
 						'<p>%s</p>',
 						__( 'To ensure all traffic passes through SSL, please enable a 301 redirect.', 'really-simple-ssl' )
