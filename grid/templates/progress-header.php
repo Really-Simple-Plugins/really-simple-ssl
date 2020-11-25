@@ -12,7 +12,7 @@
 	if ($open_task_count ==! 0) {?>
 		<div class="rsssl-tasks-container rsssl-remaining-tasks">
 			<input type="checkbox" class="rsssl-task-toggle" id="rsssl-remaining-tasks" name="rsssl_remaining_tasks" <?php if (get_option('rsssl_remaining_tasks') ) echo "checked"?>>
-			<label for="rsssl-remaining-tasks" id="rsssl-remaining-tasks-label" class="<?php if (get_option('rsssl_remaining_tasks') ) echo "checked"?>"><?php _e( "Remaining tasks", "really-simple-ssl" ); ?><?php echo " " . "(" . $open_task_count . ")"; ?></label>
+			<label for="rsssl-remaining-tasks" id="rsssl-remaining-tasks-label" class="<?php if (get_option('rsssl_remaining_tasks') ) echo "checked"?>"><?php _e( "Remaining tasks", "really-simple-ssl" ); ?><?php echo " " . '(<span class="rsssl_remaining_task_count">' . $open_task_count . "</span>)"; ?></label>
 		</div>
         <?php
 	}
