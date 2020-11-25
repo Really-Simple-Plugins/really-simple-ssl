@@ -4333,7 +4333,7 @@ if (!function_exists('rsssl_ssl_enabled')) {
 if (!function_exists('rsssl_ssl_detected')) {
 	function rsssl_ssl_detected() {
 
-	    if ( RSSSL()->really_simple_ssl->rsssl_ssl_enabled ) {
+	    if ( RSSSL()->really_simple_ssl->ssl_enabled ) {
 		    return apply_filters('rsssl_ssl_detected', 'ssl-detected');
 	    }
 
