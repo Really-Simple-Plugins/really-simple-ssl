@@ -232,7 +232,7 @@ if (!class_exists('rsssl_multisite')) {
 		    array_unshift($links, $support);
 
 		    if ( ! defined( 'rsssl_pro_version' ) ) {
-			    $upgrade_link = '<a style="color:#f8be2e;font-weight:bold" target="_blank" href="https://really-simple-ssl.com/pro/#multisite">'
+			    $upgrade_link = '<a style="color:#f8be2e;font-weight:bold" target="_blank" href="https://really-simple-ssl.com/pro#multisite">'
 			                    . __( 'Upgrade to premium', 'really-simple-ssl' ) . '</a>';
 			    array_unshift( $links, $upgrade_link );
 		    }
