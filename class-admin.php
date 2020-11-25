@@ -2622,6 +2622,8 @@ class rsssl_admin extends rsssl_front_end
         $args = wp_parse_args($args, $defaults);
 
 	    $cache_admin_notices = !$this->is_settings_page() && $args['admin_notices'];
+
+	    //if we're on the settings page, we need to clear the admin notices transient, because this list never gets requested on the settings page, and won'd get cleared otherwise
 	    if ($this->is_settings_page()) {
 	        delete_transient('rsssl_admin_notices');
 	    }
