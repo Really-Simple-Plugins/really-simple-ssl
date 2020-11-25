@@ -2622,6 +2622,11 @@ class rsssl_admin extends rsssl_front_end
         $args = wp_parse_args($args, $defaults);
 
 	    $cache_admin_notices = !$this->is_settings_page() && $args['admin_notices'];
+
+	    //if we're on the settings page, we need to clear the admin notices transient, because this list never gets requested on the settings page, and won'd get cleared otherwise
+	    if ($this->is_settings_page()) {
+	        delete_transient('rsssl_admin_notices');
+	    }
 	    if ( $cache_admin_notices) {
 		    $cached_notices = get_transient('rsssl_admin_notices');
 		    if ( $cached_notices ) return $cached_notices;
@@ -2659,7 +2664,6 @@ class rsssl_admin extends rsssl_front_end
                         'icon' => 'warning',
                         'admin_notice' =>true,
                         'plusone' => true,
-
                     ),
                 ),
             ),
@@ -3431,7 +3435,7 @@ class rsssl_admin extends rsssl_front_end
 		    $footer = $this->get_template_part($grid_item, 'footer', $index);
 		    $content = $this->get_template_part($grid_item, 'content', $index);
 		    $header = $this->get_template_part($grid_item, 'header', $index);
-            $instructions = $grid_item['instructions'] ? '<a href="'.esc_url($grid_item['instructions']).'" target="_blank">'.__("Instructions manual").'</a>' : '';
+            $instructions = $grid_item['instructions'] ? '<a href="'.esc_url($grid_item['instructions']).'" target="_blank">'.__("Instructions manual", "really-simple-ssl").'</a>' : '';
 		    // Add form if type is settings
 		    $block = str_replace(array('{class}', '{title}', '{header}', '{content}', '{footer}', '{instructions}'), array($grid_item['class'], $grid_item['title'], $header, $content, $footer, $instructions), $element);
 		    $output .= $block;
@@ -4328,6 +4332,10 @@ if (!function_exists('rsssl_ssl_enabled')) {
 
 if (!function_exists('rsssl_ssl_detected')) {
 	function rsssl_ssl_detected() {
+
+	    if ( RSSSL()->really_simple_ssl->rsssl_ssl_enabled ) {
+		    return apply_filters('rsssl_ssl_detected', 'ssl-detected');
+	    }
 
 		if ( ! RSSSL()->really_simple_ssl->wpconfig_ok() ) {
 			return apply_filters('rsssl_ssl_detected', 'fail');

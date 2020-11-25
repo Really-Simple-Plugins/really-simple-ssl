@@ -6,7 +6,7 @@ Requires at least: 4.6
 License: GPL2
 Tested up to: 5.6
 Requires PHP: 5.4
-Stable tag: 4.0.0
+Stable tag: 4.0.1
 
 No setup required! You only need an SSL certificate, and this plugin will do the rest.
 
@@ -84,6 +84,7 @@ Yes. There is a dedicated network settings page where you can switch between net
 == Changelog ==
 = 4.0.1 =
 * Fix: fixed a bug where switching between the WP/.htaccess redirect caused a percentage switch
+* No SSL detected notice is cached after enabling SSL. props @memery2020
 
 = 4.0.0 =
 * New user interface
