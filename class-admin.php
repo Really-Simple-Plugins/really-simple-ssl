@@ -1352,36 +1352,38 @@ class rsssl_admin extends rsssl_front_end
 
     public function deactivate($networkwide)
     {
-        $this->remove_ssl_from_siteurl();
-        $this->remove_ssl_from_siteurl_in_wpconfig();
+        if ( $this->ssl_enabled ) {
+	        $this->remove_ssl_from_siteurl();
+	        $this->remove_ssl_from_siteurl_in_wpconfig();
 
-        $this->site_has_ssl = FALSE;
-        $this->hsts = FALSE;
-        $this->htaccess_warning_shown = FALSE;
-        $this->review_notice_shown = FALSE;
-        $this->ssl_success_message_shown = FALSE;
-        $this->autoreplace_insecure_links = TRUE;
-        $this->do_not_edit_htaccess = FALSE;
-        $this->htaccess_redirect = FALSE;
-        $this->javascript_redirect = FALSE;
-        $this->wp_redirect = FALSE;
-        $this->ssl_enabled = FALSE;
-        $this->switch_mixed_content_fixer_hook = FALSE;
-	    $this->dismiss_all_notices = FALSE;
-	    $this->dismiss_review_notice = FALSE;
+	        $this->site_has_ssl = FALSE;
+	        $this->hsts = FALSE;
+	        $this->htaccess_warning_shown = FALSE;
+	        $this->review_notice_shown = FALSE;
+	        $this->ssl_success_message_shown = FALSE;
+	        $this->autoreplace_insecure_links = TRUE;
+	        $this->do_not_edit_htaccess = FALSE;
+	        $this->htaccess_redirect = FALSE;
+	        $this->javascript_redirect = FALSE;
+	        $this->wp_redirect = FALSE;
+	        $this->ssl_enabled = FALSE;
+	        $this->switch_mixed_content_fixer_hook = FALSE;
+	        $this->dismiss_all_notices = FALSE;
+	        $this->dismiss_review_notice = FALSE;
 
 
-	    $this->save_options();
+	        $this->save_options();
 
-        //when on multisite, per site activation, recreate domain list for htaccess and wpconfig rewrite actions
-        if (is_multisite()) {
-            RSSSL()->rsssl_multisite->deactivate();
-            if (!RSSSL()->rsssl_multisite->ssl_enabled_networkwide) $this->build_domain_list();
+	        //when on multisite, per site activation, recreate domain list for htaccess and wpconfig rewrite actions
+	        if (is_multisite()) {
+		        RSSSL()->rsssl_multisite->deactivate();
+		        if (!RSSSL()->rsssl_multisite->ssl_enabled_networkwide) $this->build_domain_list();
+	        }
+	        do_action("rsssl_deactivate");
+
+	        $this->remove_wpconfig_edit();
+	        $this->removeHtaccessEdit();
         }
-        do_action("rsssl_deactivate");
-
-        $this->remove_wpconfig_edit();
-        $this->removeHtaccessEdit();
     }
 
 
