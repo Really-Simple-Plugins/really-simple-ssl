@@ -85,6 +85,7 @@ Yes. There is a dedicated network settings page where you can switch between net
 = 4.0.1 =
 * Fix: fixed a bug where switching between the WP/.htaccess redirect caused a percentage switch
 * No SSL detected notice is cached after enabling SSL. props @memery2020
+* Fix: deactivating before SSL was activated on a site which was already SSL would revert to http.
 
 = 4.0.0 =
 * New user interface
