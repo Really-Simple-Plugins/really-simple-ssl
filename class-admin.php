@@ -2622,6 +2622,9 @@ class rsssl_admin extends rsssl_front_end
         $args = wp_parse_args($args, $defaults);
 
 	    $cache_admin_notices = !$this->is_settings_page() && $args['admin_notices'];
+	    if ($this->is_settings_page()) {
+	        delete_transient('rsssl_admin_notices');
+	    }
 	    if ( $cache_admin_notices) {
 		    $cached_notices = get_transient('rsssl_admin_notices');
 		    if ( $cached_notices ) return $cached_notices;
@@ -4328,6 +4331,10 @@ if (!function_exists('rsssl_ssl_enabled')) {
 
 if (!function_exists('rsssl_ssl_detected')) {
 	function rsssl_ssl_detected() {
+
+	    if ( RSSSL()->really_simple_ssl->rsssl_ssl_enabled ) {
+		    return apply_filters('rsssl_ssl_detected', 'ssl-detected');
+	    }
 
 		if ( ! RSSSL()->really_simple_ssl->wpconfig_ok() ) {
 			return apply_filters('rsssl_ssl_detected', 'fail');
