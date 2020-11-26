@@ -23,22 +23,98 @@ if (!class_exists("rsssl_site_health")) {
 		}
 
 		public function rsssl_health_check( $tests ) {
-			$tests['direct']['really-simple-ssl'] = array(
-				'label' => __( 'Really Simple SSL HSTS test' ),
-				'test'  => array($this, "rsssl_health_test"),
-			);
-
+			$tests['direct']['rsssl-health'] =
+				array(
+					'label' => __( 'SSL Status Test' , 'really-simple-ssl'),
+					'test'  => array($this, "health_test"),
+				);
+			$tests['direct']['rsssl-headers'] =
+				array(
+					'label' => __( 'Security Headers Test' , 'really-simple-ssl' ),
+					'test'  => array($this, "headers_test"),
+				);
 			return $tests;
 		}
 
-		public function rsssl_health_test() {
+		/**
+		 * Test to check if the recommended security headers are present
+		 * @return array
+		 */
 
+		public function headers_test() {
+			$result = array();
+
+			if (!RSSSL()->really_simple_ssl->ssl_enabled || RSSSL()->really_simple_ssl->dismiss_all_notices) {
+				return $result;
+			}
+
+			if (RSSSL()->rsssl_server->uses_htaccess() && file_exists(RSSSL()->really_simple_ssl->htaccess_file())) {
+				$result = array(
+					'label'       => __( 'Recommended security headers detected', 'really-simple-ssl' ),
+					'status'      => 'good',
+					'badge'       => array(
+						'label' => 'SSL',
+						'color' => 'blue',
+					),
+					'description' => sprintf(
+						'<p>%s</p>',
+						__( 'The recommended security headers are detected on your site.', 'really-simple-ssl' )
+					),
+					'actions'     => '',
+					'test'        => 'headers_test',
+				);
+
+				//returns empty for sites without .htaccess, or if all headers are already in use
+				$recommended_headers = RSSSL()->really_simple_ssl->get_recommended_security_headers();
+				if (!empty($recommended_headers)) {
+					$style = '<style>.rsssl-sec-headers-list li {list-style-type:disc;margin-left:20px;}</style>';
+					$list = '<ul class="rsssl-sec-headers-list"><li>'.implode('</li><li>', $recommended_headers ).'</li></ul>';
+					$result['status']      = 'recommended';
+					$result['label']       = __( 'Recommended security headers' , 'really-simple-ssl' );
+					$result['description'] = sprintf( '<p>%s</p>', __( 'Your .htaccess file does not contain all recommended security headers.', 'really-simple-ssl' ).$style.$list);
+					$result['actions']     = sprintf(
+						'<p><a href="%s" target="_blank">%s</a></p>',
+						'https://really-simple-ssl.com/site-health-recommended-security-headers/',
+						__( 'Learn more about security headers', 'really-simple-ssl' )
+					);
+				}
+
+			}
+
+			return $result;
+		}
+
+		/**
+		 * Some basic health checks
+		 * @return array
+		 */
+		public function health_test() {
+			$result = array();
+
+			if (RSSSL()->really_simple_ssl->dismiss_all_notices) {
+				return $result;
+			}
 
 			if (is_multisite() && is_super_admin() ){
 				$url = add_query_arg(array('page' => 'really-simple-ssl'), network_admin_url('settings.php'));
 			} else {
 				$url = add_query_arg(array('page' => 'rlrsssl_really_simple_ssl'), admin_url("options-general.php") );
 			}
+
+			$result = array(
+				'label'       => __( '301 SSL redirect enabled', 'really-simple-ssl' ),
+				'status'      => 'good',
+				'badge'       => array(
+					'label' => 'SSL',
+					'color' => 'blue',
+				),
+				'description' => sprintf(
+					'<p>%s</p>',
+					__( 'You have set a 301 redirect to SSL. This is important for SEO purposes', 'really-simple-ssl' )
+				),
+				'actions'     => '',
+				'test'        => 'health_test',
+			);
 
 			if (!RSSSL()->really_simple_ssl->ssl_enabled) {
 				if ( RSSSL()->really_simple_ssl->site_has_ssl ) {
@@ -63,7 +139,7 @@ if (!class_exists("rsssl_site_health")) {
 					);
 				}
 			} else {
-				if (!RSSSL()->really_simple_ssl->has_301_redirect()) {
+				if ( !RSSSL()->really_simple_ssl->has_301_redirect() ) {
 					$result['status']      = 'recommended';
 					$result['label']       = __( 'No 301 redirect to SSL enabled.' , 'really-simple-ssl' );
 					$result['description'] = sprintf(
@@ -87,48 +163,9 @@ if (!class_exists("rsssl_site_health")) {
 						$url,
 						__( 'Enable 301 .htaccess redirect', 'really-simple-ssl' )
 					);
-				} else {
-					$result = array(
-						'label'       => __( '301 SSL redirect enabled', 'really-simple-ssl' ),
-						'status'      => 'good',
-						'description' => sprintf(
-							'<p>%s</p>',
-							__( 'You have set a 301 redirect to SSL. This is important for SEO purposes', 'really-simple-ssl' )
-						),
-						'actions'     => '',
-					);
 				}
-
-				//returns empty for sites without .htaccess, or if all headers are already in use
-				$recommended_headers = RSSSL()->really_simple_ssl->get_recommended_security_headers();
-				if (!empty($recommended_headers)) {
-					$style = '<style>.rsssl-sec-headers-list li {list-style-type:disc;margin-left:20px;}</style>';
-					$list = '<ul class="rsssl-sec-headers-list"><li>'.implode('</li><li>', $recommended_headers ).'</li></ul>';
-					$result['status']      = 'recommended';
-					$result['label']       = __( 'Missing security headers' , 'really-simple-ssl' );
-					$result['description'] = sprintf(
-						'<p>%s</p>',
-						__( 'Your .htaccess file does not contain all recommended security headers.', 'really-simple-ssl' ).$style.$list
-					);
-					$result['actions']     .= sprintf(
-						'<p><a href="%s" target="_blank">%s</a></p>',
-						'https://really-simple-ssl.com/site-health-recommended-security-headers/',
-						__( 'Learn more about security headers', 'really-simple-ssl' )
-					);
-				}
-			}
-
-
-
-			if (isset($result['status'])) {
-				$result['badge'] = array(
-					'label' => __( 'SSL' ),
-					'color' => 'blue',
-				);
-				$result['test']= 'really-simple-ssl';
 			}
 			return $result;
-
 		}
 	}
 }
