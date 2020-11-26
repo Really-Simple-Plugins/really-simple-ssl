@@ -342,6 +342,7 @@
   color: #3c3c3c;
   display: flex;
   align-items: center;
+  padding: 4px 0;
 }
 .rsssl-grid .rsssl-item .item-container .rsssl-grid-item-content #rsssl-support-forums-container .rsssl-support-forums .rsssl-bullet {
   margin: 7px 7px 7px 0;
@@ -364,7 +365,7 @@
 .rsssl-grid .rsssl-item .item-container .rsssl-grid-item-content .rsssl-upsell {
   display: flex !important;
   flex-direction: row;
-  padding: 5px 0 5px 0;
+  padding: 7px 0 7px 0;
   align-items: center;
   color: #3c3c3c;
 }
