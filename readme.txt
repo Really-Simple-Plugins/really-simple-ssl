@@ -84,6 +84,7 @@ Yes. There is a dedicated network settings page where you can switch between net
 == Changelog ==
 = 4.0.2 =
 * Fix: not translatable string, props @kebbet
+* Improvement: clear admin notices cache when SSL activated or reloaded over https
 * Fix: removed javascript regex not supported by Safari, causing the dismiss not to work on the progress block
 * Improvement: option to dismiss site health notices in the settings
 
