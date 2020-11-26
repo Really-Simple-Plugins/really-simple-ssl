@@ -167,7 +167,7 @@
 }
 .rsssl-grid .rsssl-item .item-container .form-table tbody tr th {
   margin-left: 0;
-  width: 250px;
+  width: 85%;
   display: flex;
   align-items: center;
   font-size: 13px;
