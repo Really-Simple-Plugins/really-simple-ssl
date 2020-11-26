@@ -102,16 +102,13 @@ jQuery(document).ready(function ($) {
                 }
 
                 if (data.tasks !== '') {
-                    // Hide completely when there are no tasks left
-                    if (data.tasks === 0) {
-                        $('.open-task-text').text("");
-                        $('.open-task-count').text("");
-                    }
                     if (data.tasks === rsssl.lowest_possible_task_count) {
                         $(".rsssl-progress-text").html(rsssl.finished_text);
                     } else  {
                         var text = '';
-                        if (data.tasks === 1 ) {
+                        if (data.tasks === 0) {
+                            text = rsssl.finished_text;
+                        } else if (data.tasks === 1 ) {
                             text = rsssl.not_complete_text_singular.replace('%s', data.tasks);
                         } else {
                             text = rsssl.not_complete_text_plural.replace('%s', data.tasks);
@@ -119,13 +116,8 @@ jQuery(document).ready(function ($) {
                         $(".rsssl-progress-text").html(text);
                     }
 
-                    if (data.tasks !== 0) {
-                        var current_count = $('#rsssl-remaining-tasks-label').text();
-                        var updated_count = current_count.replace(/(?<=\().+?(?=\))/, data.tasks) ;
-                        // Replace the count if there are open tasks left
-                        $('#rsssl-remaining-tasks-label').text(updated_count);
-                        $(".rsssl-progress-count").text(data.tasks);
-                    }
+                    $('.rsssl_remaining_task_count').html(data.tasks);
+                    $(".rsssl-progress-count").html(data.tasks);
                 }
             }
         });
