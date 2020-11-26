@@ -186,7 +186,7 @@ class rsssl_admin extends rsssl_front_end
             //flush caches when just activated ssl
             //flush the permalinks
             if ($this->clicked_activate_ssl()) {
-                if (!defined('RSSSL_NO_FLUSH') || !RSSSL_NO_FLUSH) {
+	            if (!defined('RSSSL_NO_FLUSH') || !RSSSL_NO_FLUSH) {
                     update_option('rsssl_flush_rewrite_rules', time());
                 }
                 add_action('admin_init', array(RSSSL()->rsssl_cache, 'flush'), 40);
@@ -2631,7 +2631,7 @@ class rsssl_admin extends rsssl_front_end
 	    $cache_admin_notices = !$this->is_settings_page() && $args['admin_notices'];
 
 	    //if we're on the settings page, we need to clear the admin notices transient, because this list never gets requested on the settings page, and won'd get cleared otherwise
-	    if ($this->is_settings_page()) {
+	    if ($this->clicked_activate_ssl() || $this->is_settings_page() || isset($_GET['ssl_reload_https']) ) {
 	        delete_transient('rsssl_admin_notices');
 	    }
 	    if ( $cache_admin_notices) {
@@ -2658,7 +2658,7 @@ class rsssl_admin extends rsssl_front_end
 
 	    $curl_error = get_transient('rsssl_curl_error');
 
-        $reload_https_url = esc_url_raw("https://" . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"]);
+        $reload_https_url = add_query_arg( array( 'ssl_reload_https' => '1') , esc_url_raw("https://" . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"]) );
         $notices = array(
             'deactivation_file_detected' => array(
                 'callback' => 'RSSSL()->really_simple_ssl->check_for_uninstall_file',
