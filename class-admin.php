@@ -1860,10 +1860,6 @@ class rsssl_admin extends rsssl_front_end
 				    'pattern' =>  'Referrer-Policy',
 			    ),
                 array(
-				    'name' => 'X-Frame-Options',
-				    'pattern' =>  'X-Frame-Options',
-			    ),
-                array(
 				    'name' => 'Expect-CT',
 				    'pattern' =>  'Expect-CT',
 			    ),
