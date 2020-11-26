@@ -38,7 +38,7 @@ if (!class_exists("rsssl_site_health")) {
 						'test'  => array($this, "headers_test"),
 					);
 				}
-				
+
 			}
 
 			return $tests;
@@ -51,7 +51,7 @@ if (!class_exists("rsssl_site_health")) {
 
 		public function headers_test() {
 			$result = array(
-				'label'       => __( 'Recommended security headers detected', 'really-simple-ssl' ),
+				'label'       => __( 'Recommended security headers installed', 'really-simple-ssl' ),
 				'status'      => 'good',
 				'badge'       => array(
 					'label' => 'SSL',
@@ -71,7 +71,7 @@ if (!class_exists("rsssl_site_health")) {
 				$style = '<style>.rsssl-sec-headers-list li {list-style-type:disc;margin-left:20px;}</style>';
 				$list = '<ul class="rsssl-sec-headers-list"><li>'.implode('</li><li>', $recommended_headers ).'</li></ul>';
 				$result['status']      = 'recommended';
-				$result['label']       = __( 'Recommended security headers' , 'really-simple-ssl' );
+				$result['label']       = __( 'Not all recommended security headers are installed' , 'really-simple-ssl' );
 				$result['description'] = sprintf( '<p>%s</p>', __( 'Your .htaccess file does not contain all recommended security headers.', 'really-simple-ssl' ).$style.$list);
 				$result['actions']     = sprintf(
 					'<p><a href="%s" target="_blank">%s</a></p>',
