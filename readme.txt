@@ -6,7 +6,7 @@ Requires at least: 4.6
 License: GPL2
 Tested up to: 5.6
 Requires PHP: 5.4
-Stable tag: 4.0.1
+Stable tag: 4.0.2
 
 No setup required! You only need an SSL certificate, and this plugin will do the rest.
 
@@ -82,6 +82,11 @@ If you are experiencing redirect loops on your site, try these [instructions](ht
 Yes. There is a dedicated network settings page where you can switch between network activated SSL and per page SSL. In the dedicated pro for multisite plugin, you can override all site settings for SSL on the network level, and can activate and deactivate SSL in the network menu for each site.
 
 == Changelog ==
+= 4.0.2 =
+* Fix: not translatable string, props @kebbet
+* Fix: removed javascript regex not supported by Safari, causing the dismiss not to work on the progress block
+* Improvement: option to dismiss site health notices in the settings
+
 = 4.0.1 =
 * Fix: fixed a bug where switching between the WP/.htaccess redirect caused a percentage switch
 * No SSL detected notice is cached after enabling SSL. props @memery2020

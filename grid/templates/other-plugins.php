@@ -29,7 +29,7 @@ $plugins = array(
 			<div class="wpsi-red rsssl-bullet"></div>
 		</div>
 		<div class="plugin-text">
-			<a href="https://wordpress.org/plugins/wp-search-insights/" target="_blank"><?php _e("WP Search Insights - Track searches on your website")?></a>
+			<a href="https://wordpress.org/plugins/wp-search-insights/" target="_blank">WP Search Insights - <?php _e("Track searches on your website", "really-simple-ssl")?></a>
 		</div>
 		<div class="plugin-status">
 			<?php echo RSSSL()->really_simple_ssl->get_status_link($plugins['WPSI'])?>
@@ -40,7 +40,7 @@ $plugins = array(
 			<div class="cmplz-blue rsssl-bullet"></div>
 		</div>
 		<div class="plugin-text">
-			<a href="https://wordpress.org/plugins/complianz-gdpr/" target="_blank"><?php _e("Complianz Privacy Suite - Consent Management as it should be ", "really-simple-ssl")?></a>
+			<a href="https://wordpress.org/plugins/complianz-gdpr/" target="_blank">Complianz Privacy Suite - <?php _e("Consent Management as it should be ", "really-simple-ssl")?></a>
 		</div>
 		<div class="plugin-status">
 			<?php echo RSSSL()->really_simple_ssl->get_status_link($plugins['COMPLIANZ'])?>
@@ -50,9 +50,9 @@ $plugins = array(
 		<div class="plugin-color">
 			<div class="zip-pink rsssl-bullet"></div>
 		</div>
-		<div class="plugin-text"><a href="https://wordpress.org/plugins/zip-recipes/" target="_blank">
-				<?php _e("Zip Recipes - Beautiful recipes optimized for Google ", "really-simple-ssl")?></a>
-		</div>
+		<div class="plugin-text">
+            <a href="https://wordpress.org/plugins/zip-recipes/" target="_blank">Zip Recipes - <?php _e("Beautiful recipes optimized for Google ", "really-simple-ssl")?></a>
+        </div>
 		<div class="plugin-status">
 			<?php echo RSSSL()->really_simple_ssl->get_status_link($plugins['ZIP'])?>
 		</div>
