@@ -23,16 +23,14 @@ if (!class_exists("rsssl_site_health")) {
 		}
 
 		public function rsssl_health_check( $tests ) {
-			if (!RSSSL()->really_simple_ssl->dismiss_all_notices) {
+			if ( !RSSSL()->really_simple_ssl->dismiss_all_notices ) {
 
-				if (RSSSL()->really_simple_ssl->ssl_enabled ) {
-					$tests['direct']['rsssl-health'] = array(
-						'label' => __( 'SSL Status Test' , 'really-simple-ssl'),
-						'test'  => array($this, "health_test"),
-					);
-				}
+				$tests['direct']['rsssl-health'] = array(
+					'label' => __( 'SSL Status Test' , 'really-simple-ssl'),
+					'test'  => array($this, "health_test"),
+				);
 
-				if (RSSSL()->rsssl_server->uses_htaccess() && file_exists(RSSSL()->really_simple_ssl->htaccess_file())) {
+				if ( RSSSL()->really_simple_ssl->ssl_enabled && RSSSL()->rsssl_server->uses_htaccess() && file_exists( RSSSL()->really_simple_ssl->htaccess_file() ) ) {
 					$tests['direct']['rsssl-headers'] = array(
 						'label' => __( 'Security Headers Test' , 'really-simple-ssl' ),
 						'test'  => array($this, "headers_test"),
