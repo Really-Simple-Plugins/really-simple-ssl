@@ -7,6 +7,8 @@
  * Author: Really Simple Plugins
  * Author URI: https://really-simple-plugins.com
  * License: GPL2
+ * Text Domain: really-simple-ssl
+ * Domain Path: /languages
  */
 /*  Copyright 2020  Really Simple Plugins BV  (email : support@really-simple-ssl.com)
     This program is free software; you can redistribute it and/or modify
