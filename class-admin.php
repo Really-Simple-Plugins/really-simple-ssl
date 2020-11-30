@@ -2712,7 +2712,7 @@ class rsssl_admin extends rsssl_front_end
 			            'msg' => __("Really Simple SSL 4.0. Learn more about our newest major release.", "really-simple-ssl"),
 			            'icon' => 'open',
 			            'dismissible' => true,
-			            'plusone' => false, //set to true on 4.1
+			            'plusone' => true,
 		            ),
 	            ),
             ),
