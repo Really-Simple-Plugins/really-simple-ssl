@@ -219,10 +219,6 @@
 .rsssl-grid .rsssl-item .item-container .rsssl-grid-item-header .rsssl-secondary-header-item .all-task-count {
   margin-right: 5px;
 }
-.rsssl-grid .rsssl-item .item-container .rsssl-grid-item-header .rsssl-secondary-header-item #rsssl-rsp-image img {
-  height: 30px;
-  padding-top: 5px;
-}
 .rsssl-grid .rsssl-item .item-container .rsssl-table-td-main-content {
   padding-left: 15px;
 }
@@ -515,6 +511,10 @@
 }
 .rsssl-grid .rsssl-dot-error {
   background-color: #d7263d;
+}
+.upsell-grid-container .rsssl-secondary-header-item img {
+  height: 30px;
+  padding-top: 5px;
 }
 .rsssl-grid {
   position: relative;
