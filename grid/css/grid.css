@@ -512,6 +512,10 @@
 .rsssl-grid .rsssl-dot-error {
   background-color: #d7263d;
 }
+.upsell-grid-container .rsssl-secondary-header-item img {
+  height: 30px;
+  padding-top: 5px;
+}
 .rsssl-grid {
   position: relative;
 }

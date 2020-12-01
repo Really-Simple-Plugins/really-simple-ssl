@@ -3277,7 +3277,7 @@ class rsssl_admin extends rsssl_front_end
             ),
             'plugins' => array(
                 'title' => __("Our plugins", "really-simple-ssl"),
-                'header' => rsssl_template_path . 'header.php',
+                'header' => rsssl_template_path . 'our-plugins-header.php',
                 'content' => rsssl_template_path . 'other-plugins.php',
                 'class' => 'half-height no-border no-background upsell-grid-container',
                 'can_hide' => false,
