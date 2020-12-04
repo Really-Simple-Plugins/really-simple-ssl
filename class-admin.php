@@ -2712,7 +2712,7 @@ class rsssl_admin extends rsssl_front_end
 			            'msg' => __("Really Simple SSL 4.0. Learn more about our newest major release.", "really-simple-ssl"),
 			            'icon' => 'open',
 			            'dismissible' => true,
-			            'plusone' => false, //set to true on 4.1
+			            'plusone' => true,
 		            ),
 	            ),
             ),
@@ -3156,21 +3156,33 @@ class rsssl_admin extends rsssl_front_end
     }
 
 	/**
-	 * @param $setting_name
-	 *
-	 * @return string
-     *
      * Generate an enable link for the specific setting, redirects to settings page and highlights the setting.
      *
+	 * @param string $setting_name
+	 * @param string $type
+	 *
+	 * @return string
 	 */
 
-    public function generate_enable_link($setting_name, $type=false)
+    public function generate_enable_link($setting_name, $type)
     {
-        if ($type == 'free') {
-            return add_query_arg(array("page" => "rlrsssl_really_simple_ssl", "highlight" => "$setting_name"), admin_url("options-general.php"));
-        } elseif ($type == 'premium') {
-            return add_query_arg(array("page" => "rlrsssl_really_simple_ssl", "tab" => "premium", "highlight" => "$setting_name"), admin_url("options-general.php"));
+	    if ( is_network_admin() ) {
+		    $page = "really-simple-ssl";
+		    $wp_page = network_admin_url('settings.php' );
+	    } else {
+		    $page = "rlrsssl_really_simple_ssl";
+		    $wp_page = admin_url('options-general.php');
+	    }
+        $args = array(
+                "page" => $page,
+                "highlight" => $setting_name
+        );
+
+	    if ( $type === 'premium' && !is_network_admin() ) {
+		    $args['tab'] = 'premium';
         }
+
+	    return add_query_arg($args, $wp_page);
     }
 
 	/**
@@ -3277,7 +3289,7 @@ class rsssl_admin extends rsssl_front_end
             ),
             'plugins' => array(
                 'title' => __("Our plugins", "really-simple-ssl"),
-                'header' => rsssl_template_path . 'header.php',
+                'header' => rsssl_template_path . 'our-plugins-header.php',
                 'content' => rsssl_template_path . 'other-plugins.php',
                 'class' => 'half-height no-border no-background upsell-grid-container',
                 'can_hide' => false,
@@ -3396,9 +3408,6 @@ class rsssl_admin extends rsssl_front_end
         if (!current_user_can($this->capability)) return;
         if (isset ($_GET['tab'])) $this->admin_tabs($_GET['tab']); else $this->admin_tabs('configuration');
         if (isset ($_GET['tab'])) $tab = $_GET['tab']; else $tab = 'configuration';
-        if ( !get_option('rsssl_visited_version_4_dashboard') ) {
-        	update_option('rsssl_visited_version_4_dashboard', true);
-        }
         ?>
         <div class="rsssl-container">
             <div class="rsssl-main"><?php
@@ -3636,10 +3645,6 @@ class rsssl_admin extends rsssl_front_end
 
     public function create_form()
     {
-	    if ($this->is_settings_page()) {
-		    add_action( 'admin_head', array( $this, 'highlight_js' ) );
-	    }
-
         register_setting('rlrsssl_options', 'rlrsssl_options', array($this, 'options_validate'));
         add_settings_section('rlrsssl_settings', __("Settings", "really-simple-ssl"), array($this, 'section_text'), 'rlrsssl');
 
@@ -4235,42 +4240,6 @@ class rsssl_admin extends rsssl_front_end
         }
 
         return $htaccess_file;
-    }
-
-	/**
-	 *
-     * Insert script to highlight option after dashboard click
-     *
-     * @since 3.2
-     *
-     * @access public
-     *
-	 */
-
-    public function highlight_js(){
-        ?>
-        <script>
-            jQuery(document).ready(function ($) {
-                'use strict';
-                var sPageURL = window.location.href;
-                var queryString = sPageURL.split('?');
-                if (queryString.length === 1) return false;
-                var setting_name = '';
-                var rsssl_variables = queryString[1].split('&');
-                for (var key in rsssl_variables) {
-                    if (rsssl_variables.hasOwnProperty(key)) {
-                        var output = rsssl_variables[key].split('=');
-                        if (output[0]==='highlight') {
-                            setting_name = output[1];
-                        }
-                    }
-                }
-                if(setting_name !== '' && $('#rsssl-maybe-highlight-' + setting_name).length) {
-                    $('#rsssl-maybe-highlight-' + setting_name).closest('tr').addClass('rsssl-highlight');
-                }
-            });
-        </script>
-    <?php
     }
 
 	/**

@@ -1,6 +1,31 @@
 jQuery(document).ready(function ($) {
     "use strict";
 
+    /**
+     * Highlight JS
+     */
+    var sPageURL = window.location.href;
+    var queryString = sPageURL.split('?');
+    if (queryString.length === 1) return false;
+    var setting_name = '';
+    var rsssl_variables = queryString[1].split('&');
+    for (var key in rsssl_variables) {
+        if (rsssl_variables.hasOwnProperty(key)) {
+            var output = rsssl_variables[key].split('=');
+            if (output[0]==='highlight') {
+                setting_name = output[1];
+            }
+        }
+    }
+
+    if(setting_name !== '' && $('#rsssl-maybe-highlight-' + setting_name).length) {
+        var tr_element = $('#rsssl-maybe-highlight-' + setting_name).closest('tr');
+        $([document.documentElement, document.body]).animate({
+            scrollTop: tr_element.offset().top
+        }, 1000);
+        tr_element.addClass('rsssl-highlight');
+    }
+
     $(document).on('click','.rsssl-slider',function () {
         rssslSaveChangesNotice($(this));
     });
