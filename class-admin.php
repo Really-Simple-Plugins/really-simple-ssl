@@ -3396,9 +3396,6 @@ class rsssl_admin extends rsssl_front_end
         if (!current_user_can($this->capability)) return;
         if (isset ($_GET['tab'])) $this->admin_tabs($_GET['tab']); else $this->admin_tabs('configuration');
         if (isset ($_GET['tab'])) $tab = $_GET['tab']; else $tab = 'configuration';
-        if ( !get_option('rsssl_visited_version_4_dashboard') ) {
-        	update_option('rsssl_visited_version_4_dashboard', true);
-        }
         ?>
         <div class="rsssl-container">
             <div class="rsssl-main"><?php
