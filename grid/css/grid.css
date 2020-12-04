@@ -471,14 +471,12 @@
   text-align: right;
   margin-right: 10px;
 }
-.rsssl-grid #rsssl-progress-footer .rsssl-footer-item {
-  padding-right: 5px;
-}
 .rsssl-grid #rsssl-progress-footer .rsssl-footer-item form {
   float: left;
 }
 .rsssl-grid #rsssl-progress-footer .rsssl-footer-item + .rsssl-footer-item {
-  margin-right: 20px;
+  margin-left: 20px;
+  padding: 4px 0;
 }
 .rsssl-grid #rsssl-progress-footer .footer-left {
   float: left;
