@@ -3022,27 +3022,28 @@ class rsssl_admin extends rsssl_front_end
 
 	    $notices = $warnings + $open + $other;
 
-	    //add plus ones
-	    foreach ($notices as $key => $notice){
-		    if ( isset($notice['output']['url']) ) {
-		        $url = $notice['output']['url'];
-		        $target = '';
-		        if ( strpos( $url, 'https://really-simple-ssl.com') !== FALSE ){
-		            $info = __('%sMore info%s or %sdismiss%s','really-simple-ssl');
-		            $target = 'target="_blank"';
-                } else {
-			        $info = __('%sEnable%s or %sdismiss%s','really-simple-ssl');
+	    //add plus ones, but not when in admin notice
+        if ( !$args['admin_notices'] ) {
+	        foreach ( $notices as $key => $notice ) {
+		        if ( isset( $notice['output']['url'] ) ) {
+			        $url    = $notice['output']['url'];
+			        $target = '';
+			        if ( strpos( $url, 'https://really-simple-ssl.com' ) !== false ) {
+				        $info   = __( '%sMore info%s or %sdismiss%s', 'really-simple-ssl' );
+				        $target = 'target="_blank"';
+			        } else {
+				        $info = __( '%sEnable%s or %sdismiss%s', 'really-simple-ssl' );
+			        }
+			        $dismiss_open                     = "<span class='rsssl-dashboard-dismiss' data-dismiss_type='" . $key . "'><a href='#' class='rsssl-dismiss-text rsssl-close-warning'>";
+			        $notices[ $key ]['output']['msg'] .= ' ' . sprintf( $info, '<a ' . $target . ' href="' . $url . '">', '</a>', $dismiss_open, "</a></span>" );
 		        }
-		        $dismiss_open = "<span class='rsssl-dashboard-dismiss' data-dismiss_type='".$key."'><a href='#' class='rsssl-dismiss-text rsssl-close-warning'>";
-			    $notices[$key]['output']['msg'] .= ' '.sprintf($info ,'<a '.$target.' href="'.$url.'">', '</a>', $dismiss_open, "</a></span>");
-		    }
 
-		    if ( isset($notice['output']['plusone']) && $notice['output']['plusone']) {
-			    $plusone = "<span class='rsssl-dashboard-plusone update-plugins rsssl-update-count'><span class='update-count'>1</span></span>";
-			    $notices[$key]['output']['msg'] .= $plusone;
-            }
-	    }
-
+		        if ( isset( $notice['output']['plusone'] ) && $notice['output']['plusone'] ) {
+			        $plusone                          = "<span class='rsssl-dashboard-plusone update-plugins rsssl-update-count'><span class='update-count'>1</span></span>";
+			        $notices[ $key ]['output']['msg'] .= $plusone;
+		        }
+	        }
+        }
 	    //if we only want a list of premium notices
 	    if ( $args['premium_only'] ) {
 		    foreach ($notices as $key => $notice){
@@ -3051,9 +3052,6 @@ class rsssl_admin extends rsssl_front_end
 			    }
 		    }
         }
-
-
-
         return $notices;
     }
 
