@@ -85,6 +85,7 @@ Yes. There is a dedicated network settings page where you can switch between net
 = 4.0.4 =
 * Added Really Simple Plugins logo
 * Fix: enable link in task for multisite redirected to subsite
+* Fix: exclude plus one count from admin notices
 
 = 4.0.3 =
 * Fix: sitehealth dismiss not working correctly, props @doffine
