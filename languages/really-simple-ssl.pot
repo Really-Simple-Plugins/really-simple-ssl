@@ -3,8 +3,8 @@ msgid ""
 msgstr ""
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 "Project-Id-Version: Really Simple SSL\n"
-"POT-Creation-Date: 2020-11-27 12:50+0100\n"
-"PO-Revision-Date: 2020-11-27 12:50+0100\n"
+"POT-Creation-Date: 2020-12-07 09:09+0100\n"
+"PO-Revision-Date: 2020-12-07 09:09+0100\n"
 "Last-Translator: Rogier Lankhorst <rogierlankhorst@gmail.com>\n"
 "Language-Team: Rogier Lankhorst <rogierlankhorst@gmail.com>\n"
 "MIME-Version: 1.0\n"
@@ -157,8 +157,8 @@ msgstr ""
 msgid "SSL"
 msgstr ""
 
-#: class-admin.php:2530 class-admin.php:3264 class-admin.php:3644
-#: class-admin.php:4079 class-multisite.php:224 class-multisite.php:335
+#: class-admin.php:2530 class-admin.php:3274 class-admin.php:3647
+#: class-admin.php:4082 class-multisite.php:224 class-multisite.php:335
 #: class-multisite.php:382
 msgid "Settings"
 msgstr ""
@@ -172,7 +172,7 @@ msgstr ""
 msgid "Documentation"
 msgstr ""
 
-#: class-admin.php:2591 class-admin.php:4083 class-multisite.php:228
+#: class-admin.php:2591 class-admin.php:4086 class-multisite.php:228
 #: class-multisite.php:447
 msgid "Support"
 msgstr ""
@@ -353,120 +353,120 @@ msgid ""
 "writing redirects or security headers to your .htaccess file."
 msgstr ""
 
-#: class-admin.php:3031
+#: class-admin.php:3032
 #, php-format
 msgid "%sMore info%s or %sdismiss%s"
 msgstr ""
 
-#: class-admin.php:3034
+#: class-admin.php:3035
 #, php-format
 msgid "%sEnable%s or %sdismiss%s"
 msgstr ""
 
-#: class-admin.php:3256 class-multisite.php:374
+#: class-admin.php:3266 class-multisite.php:374
 msgid "Your progress"
 msgstr ""
 
-#: class-admin.php:3271
+#: class-admin.php:3281
 msgid "Tips & Tricks"
 msgstr ""
 
-#: class-admin.php:3279 class-multisite.php:398
+#: class-admin.php:3289 class-multisite.php:398
 msgid "Our plugins"
 msgstr ""
 
-#: class-admin.php:3286 class-multisite.php:390
+#: class-admin.php:3296 class-multisite.php:390
 msgid "Support forum"
 msgstr ""
 
-#: class-admin.php:3378
+#: class-admin.php:3388
 msgid "Install"
 msgstr ""
 
-#: class-admin.php:3381
+#: class-admin.php:3391
 msgid "Installed"
 msgstr ""
 
-#: class-admin.php:3384
+#: class-admin.php:3394
 msgid "Upgrade to pro"
 msgstr ""
 
-#: class-admin.php:3441
+#: class-admin.php:3448
 msgid "Instructions manual"
 msgstr ""
 
-#: class-admin.php:3508
+#: class-admin.php:3515
 msgid "Completed"
 msgstr ""
 
-#: class-admin.php:3510
+#: class-admin.php:3517
 msgid "Warning"
 msgstr ""
 
-#: class-admin.php:3512
+#: class-admin.php:3519
 msgid "Open"
 msgstr ""
 
-#: class-admin.php:3514
+#: class-admin.php:3521
 msgid "Premium"
 msgstr ""
 
-#: class-admin.php:3562
+#: class-admin.php:3569
 msgid "More info"
 msgstr ""
 
-#: class-admin.php:3601 grid/templates/progress.php:33
+#: class-admin.php:3608 grid/templates/progress.php:33
 #, php-format
 msgid ""
 "Basic SSL configuration finished! Improve your score with %sReally Simple "
 "SSL Pro%s."
 msgstr ""
 
-#: class-admin.php:3603 grid/templates/progress.php:25
+#: class-admin.php:3610 grid/templates/progress.php:25
 msgid "SSL is activated on your site."
 msgstr ""
 
-#: class-admin.php:3605 grid/templates/progress.php:39
+#: class-admin.php:3612 grid/templates/progress.php:39
 msgid "SSL is not yet enabled on this site."
 msgstr ""
 
-#: class-admin.php:3608 grid/templates/progress.php:25
+#: class-admin.php:3615 grid/templates/progress.php:25
 #, fuzzy, php-format
 msgid "You still have %s task open."
 msgstr ""
 "#-#-#-#-#  legacy_PHP_extracted.pot (PACKAGE VERSION)  #-#-#-#-#\n"
 "#-#-#-#-#  1legacy_PHP_extracted.pot (PACKAGE VERSION)  #-#-#-#-#\n"
 
-#: class-admin.php:3609
+#: class-admin.php:3616
 #, php-format
 msgid " You still have %s tasks open."
 msgstr ""
 
-#: class-admin.php:3615
+#: class-admin.php:3622
 msgid "Copied!"
 msgstr ""
 
-#: class-admin.php:3646
+#: class-admin.php:3649
 msgid ""
 "In most cases you need to leave this enabled, to prevent mixed content "
 "issues on your site."
 msgstr ""
 
-#: class-admin.php:3647
+#: class-admin.php:3650
 msgid "Mixed content fixer"
 msgstr ""
 
-#: class-admin.php:3651
+#: class-admin.php:3654
 msgid ""
 "Redirects all requests over HTTP to HTTPS using a PHP 301 redirect. Enable "
 "if the .htaccess redirect cannot be used, for example on NGINX servers."
 msgstr ""
 
-#: class-admin.php:3652
+#: class-admin.php:3655
 msgid "Enable WordPress 301 redirect"
 msgstr ""
 
-#: class-admin.php:3656
+#: class-admin.php:3659
 msgid ""
 "A .htaccess redirect is faster and works better with caching. Really Simple "
 "SSL detects the redirect code that is most likely to work (99% of websites), "
@@ -474,117 +474,117 @@ msgid ""
 "if anything goes wrong!"
 msgstr ""
 
-#: class-admin.php:3657 class-site-health.php:155
+#: class-admin.php:3660 class-site-health.php:155
 msgid "Enable 301 .htaccess redirect"
 msgstr ""
 
-#: class-admin.php:3663
+#: class-admin.php:3666
 msgid ""
 "If you want to customize the Really Simple SSL .htaccess, you need to "
 "prevent Really Simple SSL from rewriting it. Enabling this option will do "
 "that."
 msgstr ""
 
-#: class-admin.php:3664
+#: class-admin.php:3667
 msgid "Stop editing the .htaccess file"
 msgstr ""
 
-#: class-admin.php:3669
+#: class-admin.php:3672
 msgid ""
 "If this option is set to true, the mixed content fixer will fire on the init "
 "hook instead of the template_redirect hook. Only use this option when you "
 "experience problems with the mixed content fixer.\""
 msgstr ""
 
-#: class-admin.php:3670
+#: class-admin.php:3673
 msgid "Fire mixed content fixer with different method"
 msgstr ""
 
-#: class-admin.php:3673
+#: class-admin.php:3676
 msgid ""
 "Enable this option to permanently dismiss all +1 notices in the 'Your "
 "progress' tab"
 msgstr ""
 
-#: class-admin.php:3674
+#: class-admin.php:3677
 msgid "Dismiss all Really Simple SSL notices"
 msgstr ""
 
-#: class-admin.php:3781 class-admin.php:3811 class-admin.php:4052
+#: class-admin.php:3784 class-admin.php:3814 class-admin.php:4055
 msgid "This option is enabled on the network menu."
 msgstr ""
 
-#: class-admin.php:3807
+#: class-admin.php:3810
 #, php-format
 msgid ""
 "Before you enable the htaccess redirect, make sure you know how to %sregain "
 "access%s to your site in case of a redirect loop."
 msgstr ""
 
-#: class-admin.php:3814
+#: class-admin.php:3817
 msgid ""
 "If the setting 'stop editing the .htaccess file' is enabled, you can't "
 "change this setting."
 msgstr ""
 
-#: class-admin.php:3846
+#: class-admin.php:3849
 msgid ".htaccess is currently not writable."
 msgstr ""
 
-#: class-admin.php:3996
+#: class-admin.php:3999
 msgid "Are you sure?"
 msgstr ""
 
-#: class-admin.php:4009
+#: class-admin.php:4012
 msgid "To deactivate the plugin correctly, please select if you want to:"
 msgstr ""
 
-#: class-admin.php:4011
+#: class-admin.php:4014
 msgid "Deactivate, but stay on SSL."
 msgstr ""
 
-#: class-admin.php:4012
+#: class-admin.php:4015
 msgid ""
 "Deactivate, and revert to http. This will remove all changes by the plugin."
 msgstr ""
 
-#: class-admin.php:4014
+#: class-admin.php:4017
 msgid "Deactivating the plugin while keeping SSL will do the following:"
 msgstr ""
 
-#: class-admin.php:4016
+#: class-admin.php:4019
 msgid "The mixed content fixer will stop working"
 msgstr ""
 
-#: class-admin.php:4017
+#: class-admin.php:4020
 msgid "The WordPress 301 redirect will stop working"
 msgstr ""
 
-#: class-admin.php:4018
+#: class-admin.php:4021
 msgid "Your site address will remain https://"
 msgstr ""
 
-#: class-admin.php:4019
+#: class-admin.php:4022
 msgid "The .htaccess redirect will remain active"
 msgstr ""
 
-#: class-admin.php:4029
+#: class-admin.php:4032
 msgid "Cancel"
 msgstr ""
 
-#: class-admin.php:4030
+#: class-admin.php:4033
 msgid "Deactivate, keep https"
 msgstr ""
 
-#: class-admin.php:4031
+#: class-admin.php:4034
 msgid "Deactivate, revert to http"
 msgstr ""
 
-#: class-admin.php:4085 class-multisite.php:230
+#: class-admin.php:4088 class-multisite.php:230
 msgid "Premium Support"
 msgstr ""
 
-#: class-admin.php:4091 class-multisite.php:236
+#: class-admin.php:4094 class-multisite.php:236
 msgid "Upgrade to premium"
 msgstr ""
 
