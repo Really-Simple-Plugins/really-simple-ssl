@@ -3162,7 +3162,7 @@ class rsssl_admin extends rsssl_front_end
 	 * @return string
 	 */
 
-    public function generate_enable_link($setting_name, $type)
+    public function generate_enable_link($setting_name, $type = 'free' )
     {
 	    if ( is_network_admin() ) {
 		    $page = "really-simple-ssl";
