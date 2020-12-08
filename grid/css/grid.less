@@ -50,7 +50,6 @@
       flex-wrap: wrap;
       justify-content: center;
       .nav-tab {
-        padding: 10px 10px 10px 0px;
         margin-left: 25px;
       }
 
@@ -60,9 +59,19 @@
     }
   }
 
-  @media screen and (max-width: 600px) {
-    .rsssl-logo-container {
-      display: none;
+  @media screen and (max-width: 700px) {
+    .nav-tab-wrapper {
+      .rsssl-logo-container {
+        display: none;
+      }
+
+      .nav-tab {
+        padding: 22px 3px 10px 3px;
+      }
+
+      .nav-tab-active {
+        padding-bottom: 10px;
+      }
     }
   }
 
