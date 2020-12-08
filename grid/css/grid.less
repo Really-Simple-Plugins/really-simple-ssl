@@ -43,9 +43,32 @@
     }
   }
 
+  // Responsive menu
+  @media screen and (max-width: 800px) {
+    .nav-tab-wrapper {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      .nav-tab {
+        padding: 10px 10px 10px 0px;
+        margin-left: 25px;
+      }
 
-  .nav-tab-wrapper {
-    height: 60px;
+      .documentation {
+        display: none;
+      }
+    }
+  }
+
+  @media screen and (max-width: 600px) {
+    .rsssl-logo-container {
+      display: none;
+    }
+  }
+
+
+    .nav-tab-wrapper {
+    min-height: 60px;
     background-color: #fff;
     display: flex;
     align-items: center;
