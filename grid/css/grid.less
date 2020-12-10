@@ -39,13 +39,47 @@
     &.nav-tab-active {
       border-bottom: 2px solid @color_open !important;
       background: #fff;
-      padding-bottom:17px;
+      padding-bottom:15px;
     }
   }
 
+  // Responsive menu
+  @media screen and (max-width: 800px) {
+    .nav-tab-wrapper {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      .nav-tab {
+        margin-left: 25px;
+      }
+
+      .documentation {
+        display: none;
+      }
+    }
+  }
+
+  @media screen and (max-width: 700px) {
+      .rsssl-logo-container {
+        display: none;
+      }
+  }
+
+  @media screen and (max-width: 480px) {
+    .nav-tab-wrapper {
+
+      .nav-tab {
+        padding: 22px 3px 10px 3px;
+      }
+
+      .nav-tab-active {
+        padding-bottom: 10px;
+      }
+    }
+  }
 
   .nav-tab-wrapper {
-    height: 60px;
+    min-height: 60px;
     background-color: #fff;
     display: flex;
     align-items: center;
