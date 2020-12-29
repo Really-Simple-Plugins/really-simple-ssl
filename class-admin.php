@@ -2835,7 +2835,7 @@ class rsssl_admin extends rsssl_front_end
                     ),
                     'htaccess-not-writeable' => array(
                         'url' => 'https://really-simple-ssl.com/knowledge-base/manually-insert-htaccess-redirect-http-to-https/',
-                        'msg' => sprintf(__('The %s file is not writable. You can either use the WordPress redirect, add the rules manually, or set the file to %swritable%s.', 'really-simple-ssl'), $htaccess_file, '<a href="https://https://really-simple-ssl.com/knowledge-base/htaccess-wp-config-files-not-writable/>', '</a>'),
+                        'msg' => sprintf(__('The %s file is not writable. You can either use the WordPress redirect, add the rules manually, or set the file to %swritable%s.', 'really-simple-ssl'), $htaccess_file, '<a href="https://https://really-simple-ssl.com/knowledge-base/htaccess-wp-config-files-not-writable/">', '</a>'),
                         'icon' => 'warning',
                         'dismissible' => true
                     ),
