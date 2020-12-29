@@ -2190,7 +2190,7 @@ class rsssl_admin extends rsssl_front_end
             <p>
                 <?php echo __("A definition of a siteurl or homeurl was detected in your wp-config.php, but the file is not writable.", "really-simple-ssl"); ?>
             </p>
-            <p><?php echo sprintf(__("Set your wp-config.php to writable and reload this page.", "really-simple-ssl"), '<a href="https://really-simple-ssl.com/knowledge-base/htaccess-wp-config-files-not-writable/">', '<a/>');; ?></p>
+            <p><?php echo sprintf(__("Set your wp-config.php to writable and reload this page.", "really-simple-ssl"), '<a href="https://really-simple-ssl.com/knowledge-base/htaccess-wp-config-files-not-writable/">', '<a/>'); ?></p>
         <?php }
         if ($this->do_wpconfig_loadbalancer_fix) { ?>
             <p><?php echo __("Your wp-config.php has to be edited, but is not writable.", "really-simple-ssl"); ?></p>
@@ -3847,7 +3847,7 @@ class rsssl_admin extends rsssl_front_end
         </label>
         <?php
         if (!$this->do_not_edit_htaccess && !is_writable($this->htaccess_file()))  {
-            $comment = sprintf(__(".htaccess is currently not %swritable%s.", "really-simple-ssl"), '<a href="https://really-simple-ssl.com/knowledge-base/htaccess-wp-config-files-not-writable/">', '<a/>');;
+            $comment = sprintf(__(".htaccess is currently not %swritable%s.", "really-simple-ssl"), '<a href="https://really-simple-ssl.com/knowledge-base/htaccess-wp-config-files-not-writable/">', '<a/>');
 	        RSSSL()->rsssl_help->get_comment($comment);
         }
     }
