@@ -2931,19 +2931,6 @@ class rsssl_admin extends rsssl_front_end
 		            ),
 	            ),
             ),
-
-            'htaccess_not_writable' => array(
-                'callback' => 'rsssl_htaccess_not_writable',
-                'score' => 5,
-                'output' => array(
-                    'true' => array(
-                        'url' => 'https://really-simple-ssl.com/knowledge-base/htaccess-wp-config-files-not-writable/',
-                        'msg' => __("Your .htaccess file is not writable. This prevents Really Simple SSL from writing redirects or security headers to your .htaccess file.", "really-simple-ssl"),
-                        'icon' => 'open',
-                        'dismissible' => true,
-                    ),
-                ),
-            ),
         );
 
         $notices = apply_filters('rsssl_notices', $notices);
@@ -4382,18 +4369,6 @@ if (!function_exists('rsssl_check_redirect')) {
 		}
 
         return 'default';
-	}
-}
-
-if (!function_exists('rsssl_htaccess_not_writable')) {
-	function rsssl_htaccess_not_writable() {
-	    //don't trigger if htaccess not used
-	    if ( !RSSSL()->rsssl_server->uses_htaccess() ) return false;
-
-		if (RSSSL()->really_simple_ssl->do_not_edit_htaccess || !is_writable(RSSSL()->really_simple_ssl->ABSpath.".htaccess")){
-			return true;
-		}
-		return false;
 	}
 }
 
