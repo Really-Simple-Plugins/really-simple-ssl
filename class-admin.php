@@ -2826,7 +2826,6 @@ class rsssl_admin extends rsssl_front_end
                         'icon' => 'open',
                         'plusone' => RSSSL()->rsssl_server->uses_htaccess(),
                         'dismissible' => true,
-                        'enable_dismiss' => 'enable',
                     ),
                     'no-redirect-set' => array(
                         'msg' => __('Enable a .htaccess redirect or WordPress redirect in the settings to create a 301 redirect.', 'really-simple-ssl') ,
@@ -2928,7 +2927,7 @@ class rsssl_admin extends rsssl_front_end
                         'url' => 'https://really-simple-ssl.com/knowledge-base/htaccess-wp-config-files-not-writable/',
                         'msg' => __("Your .htaccess file is not writable. This prevents Really Simple SSL from writing redirects or security headers to your .htaccess file.", "really-simple-ssl"),
                         'icon' => 'open',
-                        'dismissible' => 'true',
+                        'dismissible' => true,
                     ),
                 ),
             ),
