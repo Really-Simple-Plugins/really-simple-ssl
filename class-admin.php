@@ -2653,7 +2653,7 @@ class rsssl_admin extends rsssl_front_end
         );
 
 	    $curl_error = get_transient('rsssl_curl_error');
-
+        $current_plugin_folder = $this->get_current_rsssl_free_dirname();
         $reload_https_url = add_query_arg( array( 'ssl_reload_https' => '1') , esc_url_raw("https://" . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"]) );
         $notices = array(
             'deactivation_file_detected' => array(
@@ -2665,8 +2665,21 @@ class rsssl_admin extends rsssl_front_end
                         'msg' => __("The 'force-deactivate.php' file has to be renamed to .txt. Otherwise your ssl can be deactivated by anyone on the internet.", "really-simple-ssl") .' '.
                                  '<a href="'.add_query_arg(array('page'=>'rlrsssl_really_simple_ssl'), admin_url('options-general.php?page=')).'">'.__("Check again", "really-simple-ssl").'</a>',
                         'icon' => 'warning',
-                        'admin_notice' =>true,
+                        'admin_notice' => true,
                         'plusone' => true,
+                    ),
+                ),
+            ),
+
+            'non_default_plugin_folder' => array(
+                'callback' => 'RSSSL()->really_simple_ssl->uses_default_folder_name',
+                'score' => 30,
+                'output' => array(
+                    'false' => array(
+	                    'msg' => sprintf(__("The Really Simple SSL plugin folder in the /wp-content/plugins/ directory has been renamed to %s. This might cause issues when deactivating, or with premium add-ons. To fix this you can rename the Really Simple SSL folder back to the default %s.", "really-simple-ssl"),"<b>" . $current_plugin_folder . "</b>" , "<b>really-simple-ssl</b>"),
+	                    'url' => 'https://really-simple-ssl.com/knowledge-base/why-you-should-use-the-default-plugin-folder-name-for-really-simple-ssl/',
+                        'icon' => 'warning',
+                        'admin_notice' => false,
                     ),
                 ),
             ),
@@ -2999,7 +3012,7 @@ class rsssl_admin extends rsssl_front_end
         //if only admin_notices are required, filter out the rest.
 	    if ( $args['admin_notices'] ) {
             foreach ( $notices as $id => $notice ) {
-                if (!isset($notice['output']['admin_notice'])){
+                if (!isset($notice['output']['admin_notice']) || !$notice['output']['admin_notice']){
 	                unset( $notices[$id]);
                 }
             }
@@ -4209,17 +4222,37 @@ class rsssl_admin extends rsssl_front_end
     }
 
     /**
+     * Determine dirname to show in admin_notices() in really-simple-ssl-pro.php to show a warning when free folder has been renamed
      *
      * @return string
      *
      * since 3.1
      *
-     * Determine dirname to show in admin_notices() in really-simple-ssl-pro.php to show a warning when free folder has been renamed
      */
 
     public function get_current_rsssl_free_dirname() {
         return basename( __DIR__ );
     }
+
+
+	/**
+	 *
+	 * Check the current free plugin folder path and compare it to default path to detect if the plugin folder has been renamed
+	 *
+	 * @return boolean
+	 *
+	 * @since 3.1
+	 *
+	 */
+
+	public function uses_default_folder_name() {
+		$current_plugin_path = $this->get_current_rsssl_free_dirname();
+		if ( $this->plugin_dir === $current_plugin_path ) {
+			return true;
+		} else {
+			return false;
+		}
+	}
 
     /**
      * @return string
