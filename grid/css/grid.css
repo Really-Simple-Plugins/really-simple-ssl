@@ -38,12 +38,6 @@
     display: none;
   }
 }
-@media screen and (max-width: 700px) {
-  .settings_page_rlrsssl_really_simple_ssl #wpcontent .rsssl-logo-container,
-  .settings_page_really-simple-ssl #wpcontent .rsssl-logo-container {
-    display: none;
-  }
-}
 @media screen and (max-width: 480px) {
   .settings_page_rlrsssl_really_simple_ssl #wpcontent .nav-tab-wrapper .nav-tab,
   .settings_page_really-simple-ssl #wpcontent .nav-tab-wrapper .nav-tab {
