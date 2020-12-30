@@ -85,7 +85,8 @@ Yes. There is a dedicated network settings page where you can switch between net
 = 4.0.6 =
 * Improvement: Improved responsive css for tabbed menu
 * Improvement: PHP 8 compatibility
-* Added links to help article for not writable notices
+* Improvement: Added links to help article for not writable notices
+* Improvement: notice when plugin folder had been renamed
 
 = 4.0.5 =
 * Backward compatibility for <4.0 premium versions
