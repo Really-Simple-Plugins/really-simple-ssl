@@ -2350,7 +2350,6 @@ class rsssl_admin extends rsssl_front_end
         if ( $this->is_settings_page() ) return;
 
 	    $notices = $this->get_notices_list( array('admin_notices'=>true) );
-	    _log($notices);
         foreach ( $notices as $id => $notice ){
             $notice = $notice['output'];
             $class = ( $notice['status'] !== 'completed' ) ? 'error' : 'updated';
