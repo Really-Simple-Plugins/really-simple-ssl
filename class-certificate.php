@@ -177,12 +177,12 @@ if ( ! class_exists( 'rsssl_certificate' ) ) {
          * Get the certificate info
          *
          * @since 3.0
-         *
+         * @param string $url
          * @access public
          *
          */
 
-        public function get_certinfo($url)
+        public function get_certinfo( $url )
         {
             $certinfo = get_transient('rsssl_certinfo');
 
@@ -220,18 +220,22 @@ if ( ! class_exists( 'rsssl_certificate' ) ) {
             return false;
         }
 
-        /**
-         *
-         * Catch errors
-         *
-         * @since 3.0
-         *
-         * @access public
-         *
-         */
+	    /**
+	     * Catch errors
+	     *
+	     * @since 3.0
+	     *
+	     * @access public
+	     * @param       $errno
+	     * @param       $errstr
+	     * @param       $errfile
+	     * @param       $errline
+	     * @param array $errcontext
+	     *
+	     * @return bool
+	     */
 
-
-        public function custom_error_handling($errno, $errstr, $errfile, $errline, array $errcontext) {
+        public function custom_error_handling( $errno, $errstr, $errfile, $errline, $errcontext = array() ) {
             return true;
         }
 
