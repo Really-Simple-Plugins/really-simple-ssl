@@ -2190,7 +2190,7 @@ class rsssl_admin extends rsssl_front_end
             <p>
                 <?php echo __("A definition of a siteurl or homeurl was detected in your wp-config.php, but the file is not writable.", "really-simple-ssl"); ?>
             </p>
-            <p><?php echo __("Set your wp-config.php to writable and reload this page.", "really-simple-ssl"); ?></p>
+            <p><?php echo sprintf(__("Set your wp-config.php to %swritable%s and reload this page.", "really-simple-ssl"), '<a target="_blank" href="https://really-simple-ssl.com/knowledge-base/htaccess-wp-config-files-not-writable/">', '</a>'); ?></p>
         <?php }
         if ($this->do_wpconfig_loadbalancer_fix) { ?>
             <p><?php echo __("Your wp-config.php has to be edited, but is not writable.", "really-simple-ssl"); ?></p>
@@ -2210,14 +2210,14 @@ class rsssl_admin extends rsssl_front_end
                     //END Really Simple SSL
                 </code><br>
             </p>
-            <p><?php echo __("Or set your wp-config.php to writable and reload this page.", "really-simple-ssl"); ?></p>
+            <p><?php echo sprintf(__("Or set your wp-config.php to %swritable%s and reload this page.", "really-simple-ssl"), '<a target="_blank" href="https://really-simple-ssl.com/knowledge-base/htaccess-wp-config-files-not-writable/">', '</a>'); ?></p>
             <?php
         }
 
         if ($this->no_server_variable) {
             ?>
             <p><?php echo __('Because your server does not pass a variable with which WordPress can detect SSL, WordPress may create redirect loops on SSL.', 'really-simple-ssl'); ?></p>
-            <p><?php echo __("Set your wp-config.php to writable and reload this page.", "really-simple-ssl"); ?></p>
+            <p><?php echo sprintf(__("Set your wp-config.php to %swritable%s and reload this page.", "really-simple-ssl"), '<a target="_blank" href="https://really-simple-ssl.com/knowledge-base/htaccess-wp-config-files-not-writable/">', '</a>');?></p>
             <?php
         }
 
@@ -2835,7 +2835,7 @@ class rsssl_admin extends rsssl_front_end
                     ),
                     'htaccess-not-writeable' => array(
                         'url' => 'https://really-simple-ssl.com/knowledge-base/manually-insert-htaccess-redirect-http-to-https/',
-                        'msg' => sprintf(__('The %s file is not writable. You can either use the WordPress redirect, add the rules manually, or set the file to writable.', 'really-simple-ssl'), $htaccess_file),
+                        'msg' => sprintf(__('The %s file is not writable. You can either use the WordPress redirect, add the rules manually, or set the file to %swritable%s.', 'really-simple-ssl'), $htaccess_file, '<a target="_blank" href="https://really-simple-ssl.com/knowledge-base/htaccess-wp-config-files-not-writable/">', '</a>'),
                         'icon' => 'warning',
                         'dismissible' => true
                     ),
@@ -2924,7 +2924,8 @@ class rsssl_admin extends rsssl_front_end
                 'callback' => 'rsssl_htaccess_not_writable',
                 'score' => 5,
                 'output' => array(
-                    'htaccess' => array(
+                    'true' => array(
+                        'url' => 'https://really-simple-ssl.com/knowledge-base/htaccess-wp-config-files-not-writable/',
                         'msg' => __("Your .htaccess file is not writable. This prevents Really Simple SSL from writing redirects or security headers to your .htaccess file.", "really-simple-ssl"),
                         'icon' => 'open',
                         'dismissible' => 'true',
@@ -3846,7 +3847,7 @@ class rsssl_admin extends rsssl_front_end
         </label>
         <?php
         if (!$this->do_not_edit_htaccess && !is_writable($this->htaccess_file()))  {
-            $comment = __(".htaccess is currently not writable.", "really-simple-ssl");
+            $comment = sprintf(__(".htaccess is currently not %swritable%s.", "really-simple-ssl"), '<a target="_blank" href="https://really-simple-ssl.com/knowledge-base/htaccess-wp-config-files-not-writable/">', '</a>');
 	        RSSSL()->rsssl_help->get_comment($comment);
         }
     }
