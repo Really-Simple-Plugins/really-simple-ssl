@@ -2924,7 +2924,7 @@ class rsssl_admin extends rsssl_front_end
                 'callback' => 'rsssl_htaccess_not_writable',
                 'score' => 5,
                 'output' => array(
-                    'htaccess' => array(
+                    'true' => array(
                         'url' => 'https://really-simple-ssl.com/knowledge-base/htaccess-wp-config-files-not-writable/',
                         'msg' => __("Your .htaccess file is not writable. This prevents Really Simple SSL from writing redirects or security headers to your .htaccess file.", "really-simple-ssl"),
                         'icon' => 'open',
