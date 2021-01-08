@@ -40,7 +40,7 @@ $plugins = array(
 			<div class="cmplz-blue rsssl-bullet"></div>
 		</div>
 		<div class="plugin-text">
-			<a href="https://wordpress.org/plugins/complianz-gdpr/" target="_blank">Complianz Privacy Suite - <?php _e("Consent Management as it should be ", "really-simple-ssl")?></a>
+			<a href="https://wordpress.org/plugins/complianz-gdpr/" target="_blank">Complianz – GDPR/CCPA Cookie Consent</a>
 		</div>
 		<div class="plugin-status">
 			<?php echo RSSSL()->really_simple_ssl->get_status_link($plugins['COMPLIANZ'])?>

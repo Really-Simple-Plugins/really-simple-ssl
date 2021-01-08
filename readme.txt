@@ -87,6 +87,7 @@ Yes. There is a dedicated network settings page where you can switch between net
 * Improvement: PHP 8 compatibility
 * Improvement: Added links to help article for not writable notices
 * Improvement: notice when plugin folder had been renamed
+* Improvement: increase php minimum required to 5.6
 
 = 4.0.5 =
 * Backward compatibility for <4.0 premium versions
