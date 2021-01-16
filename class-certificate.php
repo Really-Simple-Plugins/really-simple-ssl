@@ -126,15 +126,14 @@ if ( ! class_exists( 'rsssl_certificate' ) ) {
             //Get the start date and end date from the certificate
             $start_date = isset($certinfo['validFrom_time_t']) ? $certinfo['validFrom_time_t'] : false;
             $end_date = isset($certinfo['validTo_time_t']) ? $certinfo['validTo_time_t'] : false;
-
-            //Get current date
             $current_date = time();
 
             //Check if the current date is between the start date and end date. If so, return true
-            if ($current_date > $start_date && ($current_date < $end_date)) return true;
+            if ($current_date > $start_date && ($current_date < $end_date)) {
+            	return true;
+            }
 
             return false;
-
         }
 
 
@@ -178,6 +177,7 @@ if ( ! class_exists( 'rsssl_certificate' ) ) {
          *
          * @since 3.0
          * @param string $url
+         * @return mixed
          * @access public
          *
          */
@@ -194,26 +194,29 @@ if ( ! class_exists( 'rsssl_certificate' ) ) {
                 $original_parse = parse_url($url, PHP_URL_HOST);
                 if ($original_parse) {
                     $get = stream_context_create(array("ssl" => array("capture_peer_cert" => TRUE)));
-                    if ($get) {
+                    if ( $get ) {
                         set_error_handler(array($this, 'custom_error_handling'));
                         $read = stream_socket_client("ssl://" . $original_parse . ":443", $errno, $errstr, 5, STREAM_CLIENT_CONNECT, $get);
                         restore_error_handler();
 
-	                    if (!$read){
+	                    if ( !$read ){
 		                    $certinfo = 'no-response';
 	                    }
 
                         if ($errno == 0 && $read) {
                             $cert = stream_context_get_params($read);
-                            $certinfo = openssl_x509_parse($cert['options']['ssl']['peer_certificate']);
+                            if ( isset($cert['options']['ssl']['peer_certificate']) ) {
+	                            $certinfo = openssl_x509_parse($cert['options']['ssl']['peer_certificate']);
+                            } else {
+	                            $certinfo = 'no-response';
+                            }
                         }
                     }
                 }
-
                 set_transient('rsssl_certinfo', $certinfo, DAY_IN_SECONDS);
             }
 
-            if ($certinfo==='not-valid') return false;
+            if ( $certinfo==='not-valid' ) return false;
 
             if (!empty($certinfo)) return $certinfo;
 
