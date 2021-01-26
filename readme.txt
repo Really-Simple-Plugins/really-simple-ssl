@@ -84,6 +84,7 @@ Yes. There is a dedicated network settings page where you can switch between net
 == Changelog ==
 = 4.0.7 =
 * Fix: catch not set certificate info in case of empty array when no certificate is available
+* Fix: minor CSS fixes
 
 = 4.0.6 =
 * Improvement: Improved responsive css for tabbed menu

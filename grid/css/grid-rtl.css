@@ -166,7 +166,7 @@
   flex-direction: row;
 }
 .rsssl-grid .rsssl-item .item-container .rsssl-grid-item-content .rsssl-settings .form-table tbody tr th {
-  padding: 10px 0 0 0 !important;
+  padding: 8px 0 0 0 !important;
   vertical-align: middle !important;
   display: flex;
   width: 85%;

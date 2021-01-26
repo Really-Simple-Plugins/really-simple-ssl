@@ -7,7 +7,7 @@ $plugins = array(
 		'constant_free' => 'wpsi_plugin',
 		'constant_premium' => 'wpsi_pro_plugin',
 		'website' => 'https://wpsearchinsights.com/pro',
-		'search' => 'WP+Search+Insights+really+simple+plugins+searches+complianz',
+		'search' => 'WP+Search+Insights+mark+wolters',
 	),
 	'COMPLIANZ' => array(
 		'constant_free' => 'cmplz_plugin',
