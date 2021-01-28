@@ -71,7 +71,7 @@ class REALLY_SIMPLE_SSL
 
 			$wpcli = defined( 'WP_CLI' ) && WP_CLI;
 
-			if (is_admin() || is_multisite() || $wpcli || defined('RSSSL_DOING_SYSTEM_STATUS')) {
+			if (is_admin() || is_multisite() || $wpcli || defined('RSSSL_DOING_SYSTEM_STATUS') || defined('RSSSL_DOING_CSP') ) {
 				if (is_multisite()) {
 					self::$instance->rsssl_multisite = new rsssl_multisite();
 				}
@@ -113,7 +113,7 @@ class REALLY_SIMPLE_SSL
 			require_once(rsssl_path . 'class-rsssl-wp-cli.php');
 		}
 
-		if (is_admin() || is_multisite() || $wpcli || defined('RSSSL_DOING_SYSTEM_STATUS')) {
+		if (is_admin() || is_multisite() || $wpcli || defined('RSSSL_DOING_SYSTEM_STATUS') || defined('RSSSL_DOING_CSP') ) {
 			if (is_multisite()) {
 				require_once(rsssl_path . 'class-multisite.php');
 				require_once(rsssl_path . 'multisite-cron.php');
