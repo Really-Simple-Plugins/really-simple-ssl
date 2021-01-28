@@ -190,7 +190,12 @@ if ( ! class_exists( 'rsssl_certificate' ) ) {
 	        if ($certinfo === 'no-response') return false;
 
 	        if (!$certinfo || RSSSL()->really_simple_ssl->is_settings_page()) {
+
+	            $url = str_replace('https://', '', $url);
+                $url = str_replace('http://', '', $url);
+
                 $url = 'https://'.$url;
+
                 $original_parse = parse_url($url, PHP_URL_HOST);
                 if ($original_parse) {
                     $get = stream_context_create(array("ssl" => array("capture_peer_cert" => TRUE)));
