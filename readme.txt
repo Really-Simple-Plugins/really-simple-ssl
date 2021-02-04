@@ -6,7 +6,7 @@ Requires at least: 4.6
 License: GPL2
 Tested up to: 5.6
 Requires PHP: 5.6
-Stable tag: 4.0.7
+Stable tag: 4.0.8
 
 No setup required! You only need an SSL certificate, and this plugin will do the rest.
 
