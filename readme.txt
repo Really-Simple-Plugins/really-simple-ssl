@@ -51,8 +51,6 @@ Translations can be added very easily [here](https://translate.wordpress.org/pro
 
 == Installation ==
 
-[youtube https://www.youtube.com/watch?v=BVx3ZrSsPrU]
-
 To install this plugin:
 
 1. Make a backup!
@@ -61,6 +59,8 @@ To install this plugin:
 4. Upload the plugin to the wp-content/plugins directory,
 5. Go to “plugins” in your WordPress admin, then click activate.
 6. You will now see a notice asking you to enable SSL. Click it and log in again.
+
+https://www.youtube.com/watch?v=BVx3ZrSsPrU
 
 == Frequently Asked Questions ==
 
