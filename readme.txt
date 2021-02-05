@@ -50,6 +50,9 @@ Check out other plugins developed by Really Simple Plugins as well: [Complianz](
 Translations can be added very easily [here](https://translate.wordpress.org/projects/wp-plugins/really-simple-ssl). If you do, I can get you added as translation editor to approve the translations.
 
 == Installation ==
+
+[youtube https://www.youtube.com/watch?v=BVx3ZrSsPrU]
+
 To install this plugin:
 
 1. Make a backup!
