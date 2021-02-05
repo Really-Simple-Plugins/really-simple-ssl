@@ -82,6 +82,9 @@ If you are experiencing redirect loops on your site, try these [instructions](ht
 Yes. There is a dedicated network settings page where you can switch between network activated SSL and per page SSL. In the dedicated pro for multisite plugin, you can override all site settings for SSL on the network level, and can activate and deactivate SSL in the network menu for each site.
 
 == Changelog ==
+= 4.0.8 =
+* Improvement: Content Security Policy compatibility
+
 = 4.0.7 =
 * Fix: catch not set certificate info in case of empty array when no certificate is available
 * Fix: minor CSS fixes
