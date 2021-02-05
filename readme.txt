@@ -46,6 +46,8 @@ Check out other plugins developed by Really Simple Plugins as well: [Complianz](
 
 [contact](https://www.really-simple-ssl.com/contact/) me if you have any questions, issues, or suggestions. Really Simple SSL is developed by [Really Simple Plugins](https://www.really-simple-plugins.com).
 
+[youtube https://www.youtube.com/watch?v=BVx3ZrSsPrU]
+
 = Like to have this plugin in your language? =
 Translations can be added very easily [here](https://translate.wordpress.org/projects/wp-plugins/really-simple-ssl). If you do, I can get you added as translation editor to approve the translations.
 
