@@ -83,6 +83,7 @@ Yes. There is a dedicated network settings page where you can switch between net
 
 == Changelog ==
 = 4.0.8 =
+* Fix: fixed a bug in the get_certinfo() function where an URL with a double prefix could be checked
 * Improvement: Content Security Policy compatibility
 
 = 4.0.7 =
