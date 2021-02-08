@@ -19,6 +19,8 @@ To keep it lightweight, the options are kept to a minimum. The entire site will 
 * Activate this plugin
 * Enable SSL with one click
 
+https://www.youtube.com/watch?v=BVx3ZrSsPrU
+
 Always backup before you go! If you do not have a sound backup policy, start having one! See [our recommendations](https://really-simple-ssl.com/knowledge-base/backing-up-your-site/).
 
 Any code suggestions? We're on [GitHub](https://github.com/rlankhorst/really-simple-ssl) as well!
@@ -59,8 +61,6 @@ To install this plugin:
 4. Upload the plugin to the wp-content/plugins directory,
 5. Go to “plugins” in your WordPress admin, then click activate.
 6. You will now see a notice asking you to enable SSL. Click it and log in again.
-
-https://www.youtube.com/watch?v=BVx3ZrSsPrU
 
 == Frequently Asked Questions ==
 
