@@ -256,6 +256,9 @@
 .rsssl-grid .rsssl-item .item-container .rsssl-grid-item-content .rsssl-upsell .wpsi-red {
   background-color: red;
 }
+.rsssl-grid .rsssl-item .item-container .rsssl-grid-item-content .rsssl-upsell .cmplztc-black {
+  background-color: #333;
+}
 .rsssl-grid .rsssl-item .item-container .rsssl-grid-item-content .rsssl-upsell .cmplz-blue {
   background-color: #27ADEA;
 }

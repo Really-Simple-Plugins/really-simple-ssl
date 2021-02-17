@@ -3384,15 +3384,19 @@ class rsssl_admin extends rsssl_front_end
 
     public function get_status_link($item){
         if (!defined($item['constant_free']) && !defined($item['constant_premium'])) {
-	        $link = admin_url() . "plugin-install.php?s=".$item['search']."&tab=search&type=term";
-	        $text = __('Install', 'really-simple-ssl');
-	        $status = "<a href=$link>$text</a>";
-        } elseif ($item['constant_free'] == 'wpsi_plugin' || defined($item['constant_premium'] ) ) {
-            $status = __("Installed", "really-simple-ssl");
-        } elseif (defined($item['constant_free']) && !defined($item['constant_premium'])) {
+            $args = array(
+                "s" => $item['search'],
+                "tab" => "search",
+                "type" => "term"
+            );
+            $admin_url= is_multisite() ? network_admin_url('plugin-install.php') : admin_url('plugin-install.php');
+	        $link = add_query_arg( $args, $admin_url );
+	        $status = '<a href="'.esc_url_raw($link).'">'.__('Install', 'really-simple-ssl').'</a>';
+        } elseif (isset($item['constant_premium']) && !defined($item['constant_premium'])) {
 	        $link = $item['website'];
-	        $text = __('Upgrade to pro', 'really-simple-ssl');
-	        $status = "<a href=$link>$text</a>";
+	        $status = '<a href="'.esc_url_raw($link).'">'.__('Upgrade to pro', 'really-simple-ssl').'</a>';
+        } else {
+	        $status = __( "Installed", "really-simple-ssl" );
         }
         return $status;
     }
