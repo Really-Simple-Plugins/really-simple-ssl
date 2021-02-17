@@ -47,7 +47,7 @@ $plugins = array(
             <div class="cmplztc-black rsssl-bullet"></div>
         </div>
         <div class="plugin-text">
-            <a href="https://wordpress.org/plugins/complianz-terms-conditions/" target="_blank">Complianz Terms & Conditions</a>
+            <a href="https://wordpress.org/plugins/complianz-terms-conditions/" target="_blank">Complianz - Terms & Conditions</a>
         </div>
         <div class="plugin-status">
 			<?php echo RSSSL()->really_simple_ssl->get_status_link($plugins['COMPLIANZTC'])?>
