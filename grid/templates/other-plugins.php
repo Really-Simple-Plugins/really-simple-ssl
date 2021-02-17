@@ -1,13 +1,9 @@
-<?php defined('ABSPATH') or die("you do not have access to this page!"); ?>
-
-<?php
-
+<?php defined('ABSPATH') or die("you do not have access to this page!");
 $plugins = array(
-	'WPSI' => array(
-		'constant_free' => 'wpsi_plugin',
-		'constant_premium' => 'wpsi_pro_plugin',
-		'website' => 'https://wpsearchinsights.com/pro',
-		'search' => 'WP+Search+Insights+mark+wolters',
+	'COMPLIANZTC' => array(
+		'constant_free' => 'cmplz_tc_version',
+		'website' => 'https://complianz.io',
+		'search' => 'complianz%20-%20terms%20conditions%20stand-alone%20ecommerce',
 	),
 	'COMPLIANZ' => array(
 		'constant_free' => 'cmplz_plugin',
@@ -24,17 +20,6 @@ $plugins = array(
 );
 ?>
 <div>
-	<div class="rsssl-upsell rsssl-wpsi">
-		<div class="plugin-color">
-			<div class="wpsi-red rsssl-bullet"></div>
-		</div>
-		<div class="plugin-text">
-			<a href="https://wordpress.org/plugins/wp-search-insights/" target="_blank">WP Search Insights - <?php _e("Track searches on your website", "really-simple-ssl")?></a>
-		</div>
-		<div class="plugin-status">
-			<?php echo RSSSL()->really_simple_ssl->get_status_link($plugins['WPSI'])?>
-		</div>
-	</div>
 	<div class="rsssl-upsell rsssl-cmplz">
 		<div class="plugin-color">
 			<div class="cmplz-blue rsssl-bullet"></div>
@@ -57,4 +42,15 @@ $plugins = array(
 			<?php echo RSSSL()->really_simple_ssl->get_status_link($plugins['ZIP'])?>
 		</div>
 	</div>
+    <div class="rsssl-upsell rsssl-cmplztc">
+        <div class="plugin-color">
+            <div class="cmplztc-black rsssl-bullet"></div>
+        </div>
+        <div class="plugin-text">
+            <a href="https://wordpress.org/plugins/complianz-terms-conditions/" target="_blank">Complianz Terms & Conditions</a>
+        </div>
+        <div class="plugin-status">
+			<?php echo RSSSL()->really_simple_ssl->get_status_link($plugins['COMPLIANZTC'])?>
+        </div>
+    </div>
 </div>
