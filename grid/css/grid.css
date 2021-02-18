@@ -299,8 +299,6 @@
   font-weight: 700;
 }
 .rsssl-grid .rsssl-item .item-container .rsssl-grid-item-content .rsssl-progress-block .progress-text .rsssl-progress-text {
-  display: flex;
-  flex-direction: row;
   margin-left: 35px;
   font-size: 18px;
   font-weight: 600;
