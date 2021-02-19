@@ -1009,9 +1009,12 @@ if (!class_exists('rsssl_multisite')) {
 	                $content = __("Conversion of websites completed.", "really-simple-ssl") . " ";
 	                if ($activation_active) {
 		                $content .= __("Really Simple SSL has converted all your websites to SSL.", "really-simple-ssl");
+		                $this->end_ssl_activation();
 	                } else {
 		                $content .= __("Really Simple SSL has converted all your websites to non SSL.", "really-simple-ssl");
+		                $this->end_ssl_deactivation();
 	                }
+
                 }
 
                 echo RSSSL()->really_simple_ssl->notice_html($class, $title, $content);
