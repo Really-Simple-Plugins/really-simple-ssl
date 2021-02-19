@@ -6,7 +6,7 @@ Requires at least: 4.6
 License: GPL2
 Tested up to: 5.6
 Requires PHP: 5.6
-Stable tag: 4.0.8
+Stable tag: 4.0.9
 
 No setup required! You only need an SSL certificate, and this plugin will do the rest.
 
@@ -87,7 +87,8 @@ Yes. There is a dedicated network settings page where you can switch between net
 == Changelog ==
 = 4.0.9 =
 * Improvement: some small CSS improvements in the dashboard
-* Switched wp_insert_site hook to wp_initialize_site
+* Fix: Switched wp_insert_site hook to wp_initialize_site props @masumm17
+* Fix: multisite: after switching from networkwide to per site, or vice versa, the completed notice didn't go away.
 
 = 4.0.8 =
 * Fix: fixed a bug in the get_certinfo() function where an URL with a double prefix could be checked
