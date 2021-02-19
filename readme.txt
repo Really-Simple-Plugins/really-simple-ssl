@@ -87,6 +87,7 @@ Yes. There is a dedicated network settings page where you can switch between net
 == Changelog ==
 = 4.0.9 =
 * Improvement: some small CSS improvements in the dashboard
+* Switched wp_insert_site hook to wp_initialize_site
 
 = 4.0.8 =
 * Fix: fixed a bug in the get_certinfo() function where an URL with a double prefix could be checked
