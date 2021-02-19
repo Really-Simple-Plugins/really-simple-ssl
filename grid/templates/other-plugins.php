@@ -2,7 +2,7 @@
 $plugins = array(
 	'COMPLIANZTC' => array(
 		'constant_free' => 'cmplz_tc_version',
-		'constant_premium' => 'cmplz_tc_premium',
+		'constant_premium' => 'cmplz_tc_version',
 		'website' => 'https://complianz.io',
 		'search' => 'complianz+terms+conditions+stand-alone',
 	),
