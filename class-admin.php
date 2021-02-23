@@ -203,6 +203,8 @@ class rsssl_admin extends rsssl_front_end
             }
         }
 
+        add_action( 'admin_init', array( $this, 'check_upgrade' ), 10, 2 );
+
         //when SSL is enabled, and not enabled by user, ask for activation.
         add_action("admin_notices", array($this, 'show_notice_activate_ssl'), 10);
         add_action('rsssl_activation_notice', array($this, 'ssl_detected'), 10);
@@ -246,6 +248,15 @@ class rsssl_admin extends rsssl_front_end
         if ( $prev_version && version_compare( $prev_version, '4.0', '<' ) ) {
             update_option('rsssl_remaining_tasks', true);
         }
+
+        if ( $prev_version && version_compare( $prev_version, '4.0.11', '<' ) ) {
+            if (function_exists('is_wpe') && is_wpe()) {
+                $this->wp_redirect = true;
+                $this->htaccess_redirect = false;
+                $this->save_options();
+            }
+        }
+
         update_option( 'rsssl_current_version', rsssl_version );
     }
 
