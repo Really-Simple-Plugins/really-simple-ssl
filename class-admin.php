@@ -249,7 +249,7 @@ class rsssl_admin extends rsssl_front_end
             update_option('rsssl_remaining_tasks', true);
         }
 
-        if ( $prev_version && version_compare( $prev_version, '4.0.11', '<' ) ) {
+        if ( $prev_version && version_compare( $prev_version, '4.0.10', '<=' ) ) {
             if (function_exists('is_wpe') && is_wpe()) {
                 $this->wp_redirect = true;
                 $this->htaccess_redirect = false;
