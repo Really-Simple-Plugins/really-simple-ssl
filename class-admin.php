@@ -264,7 +264,7 @@ class rsssl_admin extends rsssl_front_end
 	 * Because of breaking changes in 4.0 we need to remove some legacy actions to ensure no issues occur
 	 */
     public function backward_compatibility(){
-	    if ( function_exists('RSSSL_PRO') ) remove_action( 'admin_init', array(RSSSL_PRO()->rsssl_premium_options, 'add_pro_settings'),60);
+	    if ( function_exists('RSSSL_PRO') && RSSSL_PRO()->is_compatible() ) remove_action( 'admin_init', array(RSSSL_PRO()->rsssl_premium_options, 'add_pro_settings'),60);
     }
 
     /**
