@@ -55,6 +55,9 @@ class REALLY_SIMPLE_SSL
 	public $really_simple_ssl;
 	public $rsssl_help;
 	public $rsssl_certificate;
+	public $rsssl_wizard;
+	public $rsssl_field;
+	public $rsssl_config;
 
 	private function __construct()
 	{
@@ -85,7 +88,11 @@ class REALLY_SIMPLE_SSL
 				self::$instance->rsssl_certificate = new rsssl_certificate();
 				self::$instance->rsssl_site_health = new rsssl_site_health();
 
-				if ( $wpcli ) {
+                self::$instance->rsssl_wizard = new rsssl_wizard();
+                self::$instance->rsssl_field = new rsssl_field();
+                self::$instance->rsssl_config = new rsssl_config();
+
+                if ( $wpcli ) {
 					self::$instance->rsssl_wp_cli = new rsssl_wp_cli();
 				}
 			}
@@ -98,8 +105,9 @@ class REALLY_SIMPLE_SSL
 	{
 		define('rsssl_url', plugin_dir_url(__FILE__));
 		define('rsssl_path', trailingslashit(plugin_dir_path(__FILE__)));
-		define('rsssl_template_path', trailingslashit(plugin_dir_path(__FILE__)).'grid/templates/');
-		define('rsssl_plugin', plugin_basename(__FILE__));
+		define('rsssl_template_path', trailingslashit(plugin_dir_path(__FILE__)).'lets-encrypt/templates/');
+//        define('rsssl_wizard_template_path', trailingslashit(plugin_dir_path(__FILE__)).'lets-encrypt/templates/');
+        define('rsssl_plugin', plugin_basename(__FILE__));
 		require_once(ABSPATH . 'wp-admin/includes/plugin.php');
 		$plugin_data = get_plugin_data(__FILE__);
 		$debug = defined('RSSSL_DEBUG') && RSSSL_DEBUG ? time() : '';
@@ -126,8 +134,13 @@ class REALLY_SIMPLE_SSL
 			require_once(rsssl_path . 'class-server.php');
             require_once(rsssl_path . 'class-help.php');
 			require_once(rsssl_path . 'class-certificate.php');
+			require_once(rsssl_path . 'class-certificate.php');
 			require_once(rsssl_path . 'class-site-health.php');
-		}
+
+            require_once(rsssl_path . 'lets-encrypt/class-wizard.php');
+            require_once(rsssl_path . 'lets-encrypt/class-field.php');
+            require_once(rsssl_path . 'lets-encrypt/config/class-config.php');
+        }
 	}
 
 	private function hooks()

@@ -3305,6 +3305,19 @@ class rsssl_admin extends rsssl_front_end
 	}
 
     /**
+     * @return mixed|void
+     * Let's Encrypt wizard
+     */
+
+	public function lets_encrypt_wizard_grid() {
+            ?>
+            <div class="wrap">
+                <?php RSSSL()->rsssl_wizard->wizard( 'lets-encrypt' );  ?>
+            </div>
+            <?php
+    }
+
+    /**
      * Save the task toggle option
      * @since 4.0
      */
@@ -3410,13 +3423,20 @@ class rsssl_admin extends rsssl_front_end
         if (!current_user_can($this->capability)) return;
         if (isset ($_GET['tab'])) $this->admin_tabs($_GET['tab']); else $this->admin_tabs('configuration');
         if (isset ($_GET['tab'])) $tab = $_GET['tab']; else $tab = 'configuration';
+        if (isset ($_POST['rsssl_le_wizard'] ) ) $tab = 'le-wizard';
         ?>
         <div class="rsssl-container">
             <div class="rsssl-main"><?php
                 switch ($tab) {
                     case 'configuration' :
-                    $this->render_grid($this->general_grid());
+                        $this->lets_encrypt_wizard_grid();
+                        break;
+//                        $this->render_grid($this->general_grid());
                     do_action("rsssl_configuration_page");
+                    break;
+                    case 'le-wizard';
+                    $this->render_grid($this->lets_encrypt_wizard_grid());
+                    break;
                 }
                 //possibility to hook into the tabs.
                 do_action("show_tab_{$tab}");
@@ -3431,8 +3451,10 @@ class rsssl_admin extends rsssl_front_end
 	 * @param array $grid
 	 */
     public function render_grid($grid){
+
 	    $container = $this->get_template('grid-container.php', rsssl_path . 'grid/');
 	    $element = $this->get_template('grid-element.php', rsssl_path . 'grid/');
+
 	    $output = '';
 	    $defaults = array(
 		    'title' => '',
