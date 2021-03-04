@@ -28,12 +28,16 @@ if ( ! class_exists( 'rsssl_server' ) ) {
 
 
 public function uses_htaccess(){
+    // No .htaccess on WP Engine
+    if ( function_exists( 'is_wpe' ) && is_wpe() ) {
+        return false;
+    }
 
-  if ($this->get_server()=="apache" || $this->get_server()=="litespeed") {
-    return true;
-  }
+    if ($this->get_server()=="apache" || $this->get_server()=="litespeed") {
+        return true;
+    }
 
-  return false;
+    return false;
 }
 
 /**

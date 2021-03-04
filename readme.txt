@@ -85,6 +85,9 @@ If you are experiencing redirect loops on your site, try these [instructions](ht
 Yes. There is a dedicated network settings page where you can switch between network activated SSL and per page SSL. In the dedicated pro for multisite plugin, you can override all site settings for SSL on the network level, and can activate and deactivate SSL in the network menu for each site.
 
 == Changelog ==
+= 4.0.10 =
+* Improvement: enable WordPess redirect, disable .htaccess redirect for WP Engine users.
+
 = 4.0.9 =
 * Improvement: some small CSS improvements in the dashboard
 * Fix: Switched wp_insert_site hook to wp_initialize_site props @masumm17
