@@ -2942,6 +2942,19 @@ class rsssl_admin extends rsssl_front_end
 		            ),
 	            ),
             ),
+            'uses_wp_engine' => array(
+                'condition' => array('rsssl_uses_wp_engine'),
+                'callback' => '_true_',
+                'score' => 5,
+                'output' => array(
+                    'true' => array(
+                        'msg' =>__('Due to a recent update by WP Engine, we have changed your settings automatically to adapt.', 'really-simple-ssl'),
+                        'url' => 'https://really-simple-ssl.com/really-simple-ssl-adapts-to-recent-wp-engine-changes/',
+                        'icon' => 'open',
+                        'dismissible' => true
+                    ),
+                ),
+            ),
         );
 
         $notices = apply_filters('rsssl_notices', $notices);
@@ -4397,6 +4410,15 @@ if (!function_exists('rsssl_uses_divi')) {
 	function rsssl_uses_divi() {
 		return defined( 'ET_CORE_PATH' );
 	}
+}
+
+if (!function_exists('rsssl_uses_wp_engine')) {
+    function rsssl_uses_wp_engine() {
+        if (function_exists('is_wpe') && is_wpe()) {
+            return true;
+        }
+        return false;
+    }
 }
 
 if (!function_exists('rsssl_ssl_activation_time_no_longer_then_3_days_ago')) {
