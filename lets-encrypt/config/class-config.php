@@ -38,7 +38,7 @@ if ( ! class_exists( "rsssl_config" ) ) {
             require_once( rsssl_path . '/lets-encrypt/config/steps.php' );
             require_once( rsssl_path . '/lets-encrypt/config/questions-wizard.php' );
 //            require_once( rsssl_path . '/config/documents/documents.php' );
-//            require_once( rsssl_path . '/config/documents/terms-conditions.php' );
+//            require_once( rsssl_path . '/config/documents/lets-encrypt.php' );
 
             /**
              * Preload fields with a filter, to allow for overriding types
@@ -59,7 +59,7 @@ if ( ! class_exists( "rsssl_config" ) ) {
 
         public function get_section_by_id( $id ) {
 
-            $steps = $this->steps['terms-conditions'];
+            $steps = $this->steps['lets-encrypt'];
             foreach ( $steps as $step ) {
                 if ( ! isset( $step['sections'] ) ) {
                     continue;
@@ -73,7 +73,7 @@ if ( ! class_exists( "rsssl_config" ) ) {
         }
 
         public function get_step_by_id( $id ) {
-            $steps = $this->steps['terms-conditions'];
+            $steps = $this->steps['lets-encrypt'];
 
             //because the step arrays start with one instead of 0, we increase with one
             return array_search( $id, array_column( $steps, 'id' ) ) + 1;
@@ -88,7 +88,7 @@ if ( ! class_exists( "rsssl_config" ) ) {
             $output = array();
             $fields = $this->fields;
             if ( $page ) {
-                $fields = cmplz_tc_array_filter_multidimensional( $this->fields,
+                $fields = rsssl_array_filter_multidimensional( $this->fields,
                     'source', $page );
             }
 
@@ -133,19 +133,19 @@ if ( ! class_exists( "rsssl_config" ) ) {
         }
 
         public function preload_init(){
-            $this->fields = apply_filters( 'cmplz_fields_load_types', $this->fields );
+            $this->fields = apply_filters( 'rsssl_fields_load_types', $this->fields );
         }
 
         public function init() {
-            $this->fields = apply_filters( 'cmplz_fields', $this->fields );
+            $this->fields = apply_filters( 'rsssl_fields', $this->fields );
             if ( ! is_admin() ) {
-                $regions = cmplz_tc_get_regions();
+                $regions = rsssl_get_regions();
                 foreach ( $regions as $region => $label ) {
                     if ( !isset( $this->pages[ $region ] ) ) continue;
 
                     foreach ( $this->pages[ $region ] as $type => $data ) {
                         $this->pages[ $region ][ $type ]['document_elements']
-                            = apply_filters( 'cmplz_document_elements',
+                            = apply_filters( 'rsssl_document_elements',
                             $this->pages[ $region ][ $type ]['document_elements'],
                             $region, $type, $this->fields() );
                     }
@@ -162,7 +162,7 @@ if ( ! class_exists( "rsssl_config" ) ) {
          */
 
         public function get_supported_languages( $count = false ) {
-            $site_locale = cmplz_tc_sanitize_language( get_locale() );
+            $site_locale = rsssl_sanitize_language( get_locale() );
 
             $languages = array( $site_locale => $site_locale );
 

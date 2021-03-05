@@ -58,15 +58,15 @@ if ( ! class_exists( "rsssl_field" ) ) {
         public function register_translation( $fieldname, $string ) {
             //polylang
             if ( function_exists( "pll_register_string" ) ) {
-                pll_register_string( $fieldname, $string, 'complianz' );
+                pll_register_string( $fieldname, $string, 'rsssl' );
             }
 
             //wpml
             if ( function_exists( 'icl_register_string' ) ) {
-                icl_register_string( 'complianz', $fieldname, $string );
+                icl_register_string( 'rsssl', $fieldname, $string );
             }
 
-            do_action( 'wpml_register_single_string', 'complianz', $fieldname,
+            do_action( 'wpml_register_single_string', 'rsssl', $fieldname,
                 $string );
         }
 
@@ -152,7 +152,7 @@ if ( ! class_exists( "rsssl_field" ) ) {
                     $this->save_multiple( $fieldnames );
                 }
 
-                //Save the custom URL's for not Complianz generated pages.
+                //Save the custom URL's for not rsssl generated pages.
                 $docs = RSSSL()->rsssl_document->get_document_types();
                 foreach ($docs as $document){
                     if (isset($_POST["rsssl_".$document."_custom_page"])){
@@ -1534,9 +1534,9 @@ if ( ! class_exists( "rsssl_field" ) ) {
                 return;
             }
             ?>
-            <?php do_action( 'complianz_before_label', $args ); ?>
+            <?php do_action( 'rsssl_before_label', $args ); ?>
             <label><?php echo esc_html( $args['label'] ) ?></label>
-            <?php do_action( 'complianz_after_label', $args ); ?>
+            <?php do_action( 'rsssl_after_label', $args ); ?>
             <button class="button" type="submit" name="rsssl_add_multiple"
                     value="<?php echo esc_html( $args['fieldname'] ) ?>"><?php _e( "Add new",
                     'really-simple-ssl' ) ?></button>
@@ -1566,7 +1566,7 @@ if ( ! class_exists( "rsssl_field" ) ) {
                 }
             }
             ?>
-            <?php do_action( 'complianz_after_field', $args ); ?>
+            <?php do_action( 'rsssl_after_field', $args ); ?>
             <?php
 
         }
@@ -1620,7 +1620,7 @@ if ( ! class_exists( "rsssl_field" ) ) {
         }
 
         /**
-         * Checks if a fieldname exists in the complianz field list.
+         * Checks if a fieldname exists in the rsssl field list.
          *
          * @param string $fieldname
          *

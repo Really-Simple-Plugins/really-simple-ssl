@@ -1,15 +1,15 @@
 <?php
-defined( 'ABSPATH' ) or die( "you do not have acces to this page!" );
+defined( 'ABSPATH' ) or die( "you do not have access to this page!" );
 
 $this->steps = apply_filters('rsssl_steps',array(
-    'terms-conditions' =>
+    'lets-encrypt' =>
         array(
             1 => array(
                 "id"    => "company",
                 "title" => __( "General", 'really-simple-ssl' ),
                 'intro' => '<h1>'.__('Terms & conditions', 'really-simple-ssl').'</h1><p>'.
-                    sprintf(__('We have tried to make our Wizard as simple and fast as possible. Although these questions are all necessary, if there’s any way you think we can improve the plugin, please let us %sknow%s!', 'really-simple-ssl'),'<a target="_blank" href="https://complianz.io/contact">', '</a>').
-                    sprintf(__(' Please note that you can always save and finish the wizard later, use our %sdocumentation%s for additional information or log a %ssupport ticket%s if you need our assistance.', 'really-simple-ssl'),'<a target="_blank" href="https://complianz.io/docs/terms-conditions">', '</a>','<a target="_blank" href="https://complianz.io/support">', '</a>').'</p>',
+                    sprintf(__('We have tried to make our Wizard as simple and fast as possible. Although these questions are all necessary, if there’s any way you think we can improve the plugin, please let us %sknow%s!', 'really-simple-ssl'),'<a target="_blank" href="https://rsssl.io/contact">', '</a>').
+                    sprintf(__(' Please note that you can always save and finish the wizard later, use our %sdocumentation%s for additional information or log a %ssupport ticket%s if you need our assistance.', 'really-simple-ssl'),'<a target="_blank" href="https://rsssl.io/docs/lets-encrypt">', '</a>','<a target="_blank" href="https://rsssl.io/support">', '</a>').'</p>',
             ),
 
             2 => array(
@@ -18,7 +18,7 @@ $this->steps = apply_filters('rsssl_steps',array(
                 'sections' => array(
                     1 => array(
                         'title' => __( 'Content', 'really-simple-ssl' ),
-                        'intro' => __( 'These questions will concern the content presented on your website and specific functionalities that might need to be included in the Terms & conditions.', 'really-simple-ssl' ). rsssl_read_more( 'https://complianz.io/docs/terms-conditions/' ),
+                        'intro' => __( 'These questions will concern the content presented on your website and specific functionalities that might need to be included in the Terms & conditions.', 'really-simple-ssl' ). rsssl_read_more( 'https://rsssl.io/docs/lets-encrypt/' ),
                     ),
                     2 => array(
                         'title' => __( 'Communication', 'really-simple-ssl' ),
@@ -28,7 +28,7 @@ $this->steps = apply_filters('rsssl_steps',array(
 
                     3 => array(
                         'title' => __( 'Liability', 'really-simple-ssl' ),
-                        'intro' => __( 'Based on earlier answers you can now choose to limit liability if needed.', 'really-simple-ssl' ). rsssl_read_more( 'https://complianz.io/docs/terms-conditions/' ),
+                        'intro' => __( 'Based on earlier answers you can now choose to limit liability if needed.', 'really-simple-ssl' ). rsssl_read_more( 'https://rsssl.io/docs/lets-encrypt/' ),
 
                     ),
 
@@ -39,7 +39,7 @@ $this->steps = apply_filters('rsssl_steps',array(
 
                     5 => array(
                         'title' => __( 'Returns', 'really-simple-ssl' ),
-                        'intro' => __( 'If you offer returns of goods or the withdrawal of services you can specify the terms below.', 'really-simple-ssl' ). rsssl_read_more( 'https://complianz.io/docs/terms-conditions/' ),
+                        'intro' => __( 'If you offer returns of goods or the withdrawal of services you can specify the terms below.', 'really-simple-ssl' ). rsssl_read_more( 'https://rsssl.io/docs/lets-encrypt/' ),
                     ),
                 ),
             ),
