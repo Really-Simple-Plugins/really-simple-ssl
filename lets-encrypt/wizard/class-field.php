@@ -152,23 +152,6 @@ if ( ! class_exists( "rsssl_field" ) ) {
                     $this->save_multiple( $fieldnames );
                 }
 
-                //Save the custom URL's for not rsssl generated pages.
-                $docs = RSSSL()->rsssl_document->get_document_types();
-                foreach ($docs as $document){
-                    if (isset($_POST["rsssl_".$document."_custom_page"])){
-                        $doc_id = intval($_POST["rsssl_".$document."_custom_page"]);
-                        update_option("rsssl_".$document."_custom_page", $doc_id );
-                        //if we have an actual privacy statement, custom, set it as privacy url for WP
-                        if ($document==='privacy-statement' && $doc_id > 0){
-                            RSSSL()->rsssl_document->set_wp_privacy_policy($doc_id, 'privacy-statement');
-                        }
-                    }
-                    if (isset($_POST["rsssl_".$document."_custom_page_url"])){
-                        $url = esc_url_raw($_POST["rsssl_".$document."_custom_page_url"]);
-                        update_option("rsssl_".$document."_custom_page_url", $url );
-                    }
-                }
-
                 //save data
                 $posted_fields = array_filter( $_POST, array( $this, 'filter_rsssl_fields' ), ARRAY_FILTER_USE_KEY );
                 foreach ( $posted_fields as $fieldname => $fieldvalue ) {

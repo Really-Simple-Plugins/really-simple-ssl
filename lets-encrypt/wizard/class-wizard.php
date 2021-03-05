@@ -20,9 +20,6 @@ if ( ! class_exists( "rsssl_wizard" ) ) {
             self::$_this = $this;
             add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_assets' ) );
 
-            //callback from settings
-            add_action( 'rsssl_last_step', array( $this, 'wizard_last_step_callback' ), 10, 1 );
-
             //link action to custom hook
             add_action( 'rsssl_wizard', array( $this, 'wizard_after_step' ), 10, 1 );
 
@@ -82,7 +79,7 @@ if ( ! class_exists( "rsssl_wizard" ) ) {
                 echo '</div>';
             } else {
                 echo '<div class="rsssl-wizard-intro">' . __( "You're done! Here are some tips & tricks to use this document to your full advantage.", 'really-simple-ssl' ) . '</div>';
-                echo rsssl_get_template('last-step.php');
+                echo RSSSL()->really_simple_ssl->get_template('last-step.php', $path = rsssl_wizard_path);
             }
         }
 
@@ -95,9 +92,6 @@ if ( ! class_exists( "rsssl_wizard" ) ) {
             if ( ! rsssl_user_can_manage() ) {
                 return;
             }
-
-            //clear document cache
-            RSSSL()->rsssl_document->clear_shortcode_transients();
 
             //when clicking to the last page, or clicking finish, run the finish sequence.
             if ( isset( $_POST['rsssl-finish'] )
@@ -116,8 +110,6 @@ if ( ! class_exists( "rsssl_wizard" ) ) {
         public function before_save_wizard_option(
             $fieldname, $fieldvalue, $prev_value, $type
         ) {
-
-            update_option( 'rsssl_documents_update_date', time() );
 
             //only run when changes have been made
             if ( $fieldvalue === $prev_value ) {
@@ -381,7 +373,7 @@ if ( ! class_exists( "rsssl_wizard" ) ) {
                 'page' => 'lets-encrypt',
                 'content' => $menu.$content,
             );
-            echo rsssl_get_template('admin_wrap.php', $args );
+            echo RSSSL()->really_simple_ssl->get_template('admin_wrap.php', $path = rsssl_wizard_path, $args );
         }
 
         /**
@@ -398,7 +390,6 @@ if ( ! class_exists( "rsssl_wizard" ) ) {
             $args_menu['steps'] = "";
             for ($i = 1; $i <= $this->total_steps($page); $i++)
             {
-                //@todo
                 $args['title'] = $i . '. ' . RSSSL()->rsssl_config->steps[$page][$i]['title'];
                 $args['active'] = ($i == $active_step) ? 'active' : '';
                 $args['completed'] = $this->required_fields_completed($page, $i, false) ? 'complete' : 'incomplete';
@@ -408,13 +399,12 @@ if ( ! class_exists( "rsssl_wizard" ) ) {
                     $args['url'] = add_query_arg(array('post_id' => $this->post_id()), $args['url']);
                 }
                 $args['sections'] = ($args['active'] == 'active') ? $this->wizard_sections($page, $active_step, $active_section) : '';
-
-                $args_menu['steps'] .= rsssl_get_template( 'step.php' , $args);
+                $args_menu['steps'] .= RSSSL()->really_simple_ssl->get_template( 'step.php', $path = rsssl_wizard_path , $args);
             }
             $args_menu['percentage-complete'] = $this->wizard_percentage_complete(false);
             $args_menu['title'] = !empty( $wizard_title ) ? '<div class="rsssl-wizard-subtitle"><h2>' . $wizard_title . '</h2></div>': '' ;
 
-            return rsssl_get_template( 'menu.php', $args_menu );
+            return RSSSL()->really_simple_ssl->get_template( 'menu.php', $path = rsssl_wizard_path, $args_menu );
         }
 
         /**
@@ -458,7 +448,7 @@ if ( ! class_exists( "rsssl_wizard" ) ) {
                         'url' => $url,
                         'title' => $title,
                     );
-                    $sections .= rsssl_get_template( 'section.php', $args );
+                    $sections .= RSSSL()->really_simple_ssl->get_template( 'section.php', $path = rsssl_wizard_path, $args );
                 }
             }
 
@@ -479,11 +469,9 @@ if ( ! class_exists( "rsssl_wizard" ) ) {
             if (isset(RSSSL()->rsssl_config->steps[$page][$step]['sections'][$section]['title'])) {
                 $args['title'] = RSSSL()->rsssl_config->steps[$page][$step]['sections'][$section]['title'];
                 $regions = $this->get_section_regions($page, $step, $section);
-                //@todo
-                //$args['title'] .= $regions ? ' - ' . implode(' | ', $regions) : '';
+                $args['title'] .= $regions ? ' - ' . implode(' | ', $regions) : '';
             } else {
-                //@todo
-                //$args['title'] .= RSSSL()->rsssl_config->steps[$page][$step]['title'];
+                $args['title'] .= RSSSL()->rsssl_config->steps[$page][$step]['title'];
             }
             $args['flags'] = '';
             $args['save_notice'] = '';
@@ -517,22 +505,15 @@ if ( ! class_exists( "rsssl_wizard" ) ) {
                 $args['next_button'] = '<input class="button button-primary rsssl-next" type="submit" name="rsssl-next" value="'. __( "Next", 'really-simple-ssl' ) . '">';
             }
 
-            $other_plugins = "";
+//            $other_plugins = "";
             if ( $step > 0  && $step < $this->total_steps( $page )) {
                 $args['save_button'] = '<input class="button button-secondary rsssl-save" type="submit" name="rsssl-save" value="'. __( "Save", 'really-simple-ssl' ) . '">';
-            } else if ($step === $this->total_steps( $page )) {
-                $other_plugins = rsssl_get_template('other-plugins.php');
-                $page_id = RSSSL()->rsssl_document->get_shortcode_page_id();
-                $link = get_permalink($page_id);
-                if ( !$link ) {
-                    $link = add_query_arg(array( 'step' => 3), rsssl_settings_page());
-                    $args['save_button'] = '<a class="button button-primary rsssl-save" href="'.$link.'" type="button" name="rsssl-save">'. sprintf(__( "Create %s", 'really-simple-ssl' ) , __("Terms & conditions", "really-simple-ssl")). '</a>';
-                } else {
-                    $args['save_button'] = '<a class="button button-primary rsssl-save" target="_blank" href="'.$link.'" type="button" name="rsssl-save">'. sprintf(__( "Open %s", 'really-simple-ssl' ) , __("Terms & conditions", "really-simple-ssl")). '</a>';
-                }
+            } elseif ($step === $this->total_steps( $page )) {
+
             }
 
-            return rsssl_get_template( 'content.php', $args ).$other_plugins;
+//            return rsssl_get_template( 'content.php', $args ).$other_plugins;
+            return RSSSL()->really_simple_ssl->get_template( 'content.php', $path = rsssl_wizard_path, $args );
         }
 
         /**
@@ -557,24 +538,22 @@ if ( ! class_exists( "rsssl_wizard" ) ) {
          */
         public function enqueue_assets( $hook ) {
             $minified = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? '' : '.min';
+            //@todo if $hook == rsssl le
+    	    // Let's encrypt
+            wp_register_style( 'rsssl-wizard', rsssl_url . "lets-encrypt/wizard/assets/css/wizard.css", false, rsssl_version );
+            wp_enqueue_style( 'rsssl-wizard' );
+            // @todo admin css in wizard.less
+            wp_register_style( 'rsssl-wizard-admin', rsssl_url . "lets-encrypt/wizard/assets/css/admin.css", false, rsssl_version );
+            wp_enqueue_style( 'rsssl-wizard-admin' );
 
-            if ( strpos( $hook, 'lets-encrypt' ) === false ) {
-                return;
-            }
-
-//	    // Let's encrypt
-        wp_register_style( 'rsssl-wizard', rsssl_url . "lets-encrypt/wizard.css", false, rsssl_version );
-        wp_enqueue_style( 'rsssl-wizard' );
-        wp_register_style( 'rsssl-wizard-admin', rsssl_url . "lets-encrypt/admin.css", false, rsssl_version );
-        wp_enqueue_style( 'rsssl-wizard-admin' );
-//
-//        wp_localize_script(
-//            'cmplz-tc-admin',
-//            'complianz_tc_admin',
-//            array(
-//                'admin_url'    => admin_url( 'admin-ajax.php' ),
-//            )
-//        );
+            wp_enqueue_script( 'rsssl-wizard', rsssl_url . "lets-encrypt/wizard/assets/js/wizard$minified.js", array( 'jquery' ), rsssl_version, true );
+            wp_localize_script(
+            'rsssl-wizard',
+            'rsssl_wizard',
+                array(
+                    'admin_url'    => admin_url( 'admin-ajax.php' ),
+                )
+            );
         }
 
 
@@ -749,10 +728,8 @@ if ( ! class_exists( "rsssl_wizard" ) ) {
         public function get_type( $post_id = false ) {
             $page = false;
             if ( $post_id ) {
-                $region    = RSSSL()->rsssl_document->get_region( $post_id );
                 $post_type = get_post_type( $post_id );
-                $page      = str_replace( 'rsssl-', '', $post_type ) . '-'
-                    . $region;
+                $page      = str_replace( 'rsssl-', '', $post_type );
             }
             if ( isset( $_GET['page'] ) ) {
                 $page = str_replace( 'rsssl-', '',
@@ -829,8 +806,6 @@ if ( ! class_exists( "rsssl_wizard" ) ) {
          */
 
         public function total_steps( $page ) {
-            //@todo
-            return 5;
             return count( RSSSL()->rsssl_config->steps[ $page ] );
         }
 
@@ -947,16 +922,6 @@ if ( ! class_exists( "rsssl_wizard" ) ) {
                             $completed_fields ++;
                         }
                     }
-                }
-            }
-
-            $pages = RSSSL()->rsssl_document->get_required_pages();
-            foreach ( $pages as $region => $region_pages ) {
-                foreach ( $region_pages as $type => $page ) {
-                    if ( RSSSL()->rsssl_document->page_exists() ) {
-                        $completed_fields ++;
-                    }
-                    $total_fields ++;
                 }
             }
 

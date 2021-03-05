@@ -14,150 +14,150 @@
   border-left: none;
   border-bottom: 15px solid transparent;
 }
-.rsssl-container .rsssl-main #rsssl-content-area {
+#rsssl-content-area {
   display: grid;
   grid-template-columns: 225px auto;
 }
-.rsssl-container .rsssl-main #rsssl-content-area h1 {
+#rsssl-content-area h1 {
   padding: 0;
 }
-.rsssl-container .rsssl-main #rsssl-content-area .rsssl-wizard-title {
+#rsssl-content-area .rsssl-wizard-title {
   padding: 20px;
   border-bottom: 1px solid #eeeeee;
   display: flex;
   justify-content: space-between;
   align-content: center;
 }
-.rsssl-container .rsssl-main #rsssl-content-area .rsssl-wizard-title h1 {
+#rsssl-content-area .rsssl-wizard-title h1 {
   font-size: 18px;
   font-weight: bold;
 }
-.rsssl-container .rsssl-main #rsssl-content-area .rsssl-wizard-title.rsssl-section-content-notifications-header {
+#rsssl-content-area .rsssl-wizard-title.rsssl-section-content-notifications-header {
   border-bottom: 1px solid #e6e6e6;
 }
-.rsssl-container .rsssl-main #rsssl-content-area .rsssl-wizard-title.rsssl-section-content-notifications-header h1 {
+#rsssl-content-area .rsssl-wizard-title.rsssl-section-content-notifications-header h1 {
   font-weight: normal;
 }
-.rsssl-container .rsssl-main #rsssl-content-area .rsssl-wizard-subtitle h2 {
+#rsssl-content-area .rsssl-wizard-subtitle h2 {
   margin: 20px 20px 0 20px;
   font-size: 14px;
 }
-.rsssl-container .rsssl-main #rsssl-content-area .rsssl-wizard-menu {
+#rsssl-content-area .rsssl-wizard-menu {
   background-color: white;
   margin: 10px;
   margin-bottom: 0;
   padding-bottom: 20px;
   box-shadow: 0 0 5px 5px rgba(222, 222, 222, 0.2);
 }
-.rsssl-container .rsssl-main #rsssl-content-area .rsssl-wizard-menu .rsssl-wizard-progress-bar {
+#rsssl-content-area .rsssl-wizard-menu .rsssl-wizard-progress-bar {
   background: #eeeeee;
   height: 15px;
   margin: 20px 20px 0 20px;
 }
-.rsssl-container .rsssl-main #rsssl-content-area .rsssl-wizard-menu .rsssl-wizard-progress-bar .rsssl-wizard-progress-bar-value {
+#rsssl-content-area .rsssl-wizard-menu .rsssl-wizard-progress-bar .rsssl-wizard-progress-bar-value {
   height: 100%;
   background: #61ce70;
   border-radius: 4px;
 }
-.rsssl-container .rsssl-main #rsssl-content-area .rsssl-wizard-menu .rsssl-step .rsssl-step-header {
+#rsssl-content-area .rsssl-wizard-menu .rsssl-step .rsssl-step-header {
   text-decoration: none;
 }
-.rsssl-container .rsssl-main #rsssl-content-area .rsssl-wizard-menu .rsssl-step .rsssl-step-header.incomplete a h2 {
+#rsssl-content-area .rsssl-wizard-menu .rsssl-step .rsssl-step-header.incomplete a h2 {
   color: #c6c6c6;
 }
-.rsssl-container .rsssl-main #rsssl-content-area .rsssl-wizard-menu .rsssl-step .rsssl-step-header a {
+#rsssl-content-area .rsssl-wizard-menu .rsssl-step .rsssl-step-header a {
   display: inline-block;
   padding: 5px 20px;
   text-decoration: none;
   width: calc(100% - (20px + 20px));
 }
-.rsssl-container .rsssl-main #rsssl-content-area .rsssl-wizard-menu .rsssl-step .rsssl-step-header a h2 {
+#rsssl-content-area .rsssl-wizard-menu .rsssl-step .rsssl-step-header a h2 {
   font-size: 14px;
   margin: 0;
 }
-.rsssl-container .rsssl-main #rsssl-content-area .rsssl-wizard-menu .rsssl-step .rsssl-step-header:hover a h2 {
+#rsssl-content-area .rsssl-wizard-menu .rsssl-step .rsssl-step-header:hover a h2 {
   text-decoration: underline;
 }
-.rsssl-container .rsssl-main #rsssl-content-area .rsssl-wizard-menu .rsssl-step .rsssl-step-header.active:hover a {
+#rsssl-content-area .rsssl-wizard-menu .rsssl-step .rsssl-step-header.active:hover a {
   background: white;
   pointer-events: none;
 }
-.rsssl-container .rsssl-main #rsssl-content-area .rsssl-wizard-menu .rsssl-step .rsssl-section {
+#rsssl-content-area .rsssl-wizard-menu .rsssl-step .rsssl-section {
   display: grid;
   grid-template-columns: 20px 1fr;
   margin: 0 20px;
 }
-.rsssl-container .rsssl-main #rsssl-content-area .rsssl-wizard-menu .rsssl-step .rsssl-section span {
+#rsssl-content-area .rsssl-wizard-menu .rsssl-step .rsssl-section span {
   align-self: center;
   justify-self: center;
 }
-.rsssl-container .rsssl-main #rsssl-content-area .rsssl-wizard-menu .rsssl-step .rsssl-section a {
+#rsssl-content-area .rsssl-wizard-menu .rsssl-step .rsssl-section a {
   display: inline-block;
   text-decoration: none;
   padding: 3px 5px;
 }
-.rsssl-container .rsssl-main #rsssl-content-area .rsssl-wizard-menu .rsssl-step .rsssl-section a h3 {
+#rsssl-content-area .rsssl-wizard-menu .rsssl-step .rsssl-section a h3 {
   color: #c6c6c6;
 }
-.rsssl-container .rsssl-main #rsssl-content-area .rsssl-wizard-menu .rsssl-step .rsssl-section a:visited h3 {
+#rsssl-content-area .rsssl-wizard-menu .rsssl-step .rsssl-section a:visited h3 {
   color: initial;
 }
-.rsssl-container .rsssl-main #rsssl-content-area .rsssl-wizard-menu .rsssl-step .rsssl-section a h3 {
+#rsssl-content-area .rsssl-wizard-menu .rsssl-step .rsssl-section a h3 {
   font-size: 12px;
   font-weight: normal;
   margin: 0;
 }
-.rsssl-container .rsssl-main #rsssl-content-area .rsssl-wizard-menu .rsssl-step .rsssl-section.active a h3 {
+#rsssl-content-area .rsssl-wizard-menu .rsssl-step .rsssl-section.active a h3 {
   color: #29b6f6 !important;
 }
-.rsssl-container .rsssl-main #rsssl-content-area .rsssl-wizard-menu .rsssl-step .rsssl-section:hover a h3 {
+#rsssl-content-area .rsssl-wizard-menu .rsssl-step .rsssl-section:hover a h3 {
   text-decoration: underline;
 }
-.rsssl-container .rsssl-main #rsssl-content-area .rsssl-wizard-menu .rsssl-step .rsssl-section.active:hover a {
+#rsssl-content-area .rsssl-wizard-menu .rsssl-step .rsssl-section.active:hover a {
   background: white;
   pointer-events: none;
 }
-.rsssl-container .rsssl-main #rsssl-content-area .rsssl-section-content {
+#rsssl-content-area .rsssl-section-content {
   margin: 10px;
 }
-.rsssl-container .rsssl-main #rsssl-content-area .rsssl-section-content p {
+#rsssl-content-area .rsssl-section-content p {
   margin: 0;
 }
-.rsssl-container .rsssl-main #rsssl-content-area .rsssl-section-content p:not(:first-child) {
+#rsssl-content-area .rsssl-section-content p:not(:first-child) {
   margin-top: 1em;
 }
-.rsssl-container .rsssl-main #rsssl-content-area .rsssl-section-content form {
+#rsssl-content-area .rsssl-section-content form {
   display: grid;
   grid-template-columns: auto 325px;
   grid-column-gap: 15px;
 }
-.rsssl-container .rsssl-main #rsssl-content-area .rsssl-section-content form .rsssl-section-content-title-header {
+#rsssl-content-area .rsssl-section-content form .rsssl-section-content-title-header {
   background-color: white;
 }
-.rsssl-container .rsssl-main #rsssl-content-area .rsssl-section-content form .rsssl-wizard-intro,
-.rsssl-container .rsssl-main #rsssl-content-area .rsssl-section-content form .rsssl-master-label {
+#rsssl-content-area .rsssl-section-content form .rsssl-wizard-intro,
+#rsssl-content-area .rsssl-section-content form .rsssl-master-label {
   grid-column-start: 1;
   background-color: white;
   padding: 20px 20px 0 20px;
 }
-.rsssl-container .rsssl-main #rsssl-content-area .rsssl-section-content form .rsssl-field .rsssl-wizard-intro {
+#rsssl-content-area .rsssl-section-content form .rsssl-field .rsssl-wizard-intro {
   padding: 0 0 20px 0;
 }
-.rsssl-container .rsssl-main #rsssl-content-area .rsssl-section-content form .rsssl-button {
+#rsssl-content-area .rsssl-section-content form .rsssl-button {
   background-color: white;
   grid-column-start: 1;
   padding: 20px 20px 0 20px;
 }
-.rsssl-container .rsssl-main #rsssl-content-area .rsssl-section-content form .field-group {
+#rsssl-content-area .rsssl-section-content form .field-group {
   grid-column: span 2;
   display: grid;
   grid-template-columns: auto 325px;
   grid-column-gap: 15px;
 }
-.rsssl-container .rsssl-main #rsssl-content-area .rsssl-section-content form .field-group .rsssl-field {
+#rsssl-content-area .rsssl-section-content form .field-group .rsssl-field {
   grid-column-start: 1;
 }
-.rsssl-container .rsssl-main #rsssl-content-area .rsssl-section-content form .rsssl-section-footer {
+#rsssl-content-area .rsssl-section-content form .rsssl-section-footer {
   grid-column-start: 1;
   background-color: white;
   padding: 20px;
@@ -165,45 +165,45 @@
   align-items: center;
   grid-template-columns: 1fr auto;
 }
-.rsssl-container .rsssl-main #rsssl-content-area .rsssl-section-content form .rsssl-section-footer .rsssl-buttons-container {
+#rsssl-content-area .rsssl-section-content form .rsssl-section-footer .rsssl-buttons-container {
   grid-column-start: 2;
 }
-.rsssl-container .rsssl-main #rsssl-content-area .rsssl-section-content form .rsssl-section-footer .rsssl-buttons-container input {
+#rsssl-content-area .rsssl-section-content form .rsssl-section-footer .rsssl-buttons-container input {
   margin-right: 20px;
 }
-.rsssl-container .rsssl-main #rsssl-content-area .rsssl-add-pages-table {
+#rsssl-content-area .rsssl-add-pages-table {
   display: grid;
   grid-template-columns: auto auto auto;
   grid-gap: 5px;
   align-items: center;
   margin-bottom: 20px;
 }
-.rsssl-container .rsssl-main #rsssl-content-area .rsssl-add-pages-table span {
+#rsssl-content-area .rsssl-add-pages-table span {
   justify-self: end;
   text-align: justify;
 }
-.rsssl-container .rsssl-main #rsssl-content-area .rsssl-link-to-menu-table {
+#rsssl-content-area .rsssl-link-to-menu-table {
   display: grid;
   grid-template-columns: 30% 30%;
   grid-gap: 5px;
   align-items: center;
 }
-.rsssl-container .rsssl-main #rsssl-content-area .rsssl-link-to-menu-table h3 {
+#rsssl-content-area .rsssl-link-to-menu-table h3 {
   grid-column: span 2;
   margin-top: 20px;
   margin-bottom: 5px;
 }
-.rsssl-container .rsssl-main #rsssl-content-area .rsssl-link-to-menu-table h3:first-child {
+#rsssl-content-area .rsssl-link-to-menu-table h3:first-child {
   margin-top: 0;
 }
-.rsssl-container .rsssl-main #rsssl-content-area .rsssl-link-to-menu-table select {
+#rsssl-content-area .rsssl-link-to-menu-table select {
   grid-column-start: 2;
 }
-.rsssl-container .rsssl-main #rsssl-content-area .rsssl-cookies-table h2 {
+#rsssl-content-area .rsssl-cookies-table h2 {
   font-weight: normal;
   font-size: 15px;
 }
-.rsssl-container .rsssl-main #rsssl-content-area .rsssl-cookies-table .rsssl-cookies-table-body {
+#rsssl-content-area .rsssl-cookies-table .rsssl-cookies-table-body {
   border-radius: 5px;
   display: grid;
   grid-template-columns: 1fr;

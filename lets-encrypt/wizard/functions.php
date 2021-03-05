@@ -2,48 +2,6 @@
 
 defined( 'ABSPATH' ) or die( "you do not have acces to this page!" );
 
-if ( ! function_exists( 'rsssl_get_template' ) ) {
-    /**
-     * Get a template based on filename, overridable in theme dir
-     * @param string $filename
-     * @param array $args
-     * @return string
-     */
-
-    function rsssl_get_template( $filename , $args = array() ) {
-
-        $file       = apply_filters('rsssl_template_file', trailingslashit( rsssl_path ) . 'lets-encrypt/templates/' . $filename, $filename);
-
-        $theme_file = trailingslashit( get_stylesheet_directory() )
-            . trailingslashit( basename( rsssl_path ) )
-            . 'templates/' . $filename;
-
-        if ( !file_exists( $file ) ) {
-            return false;
-        }
-
-        if ( file_exists( $theme_file ) ) {
-            $file = $theme_file;
-        }
-
-        if ( strpos( $file, '.php' ) !== false ) {
-            ob_start();
-            require $file;
-            $contents = ob_get_clean();
-        } else {
-            $contents = file_get_contents( $file );
-        }
-
-        if ( !empty($args) && is_array($args) ) {
-            foreach($args as $fieldname => $value ) {
-                $contents = str_replace( '{'.$fieldname.'}', $value, $contents );
-            }
-        }
-
-        echo $contents;
-    }
-}
-
 if ( ! function_exists( 'rsssl_user_can_manage' ) ) {
     function rsssl_user_can_manage() {
         if ( ! is_user_logged_in() ) {

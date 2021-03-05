@@ -35,8 +35,8 @@ if ( ! class_exists( "rsssl_config" ) ) {
 
             /* config files */
 //            require_once( rsssl_path . '/config/countries.php' );
-            require_once( rsssl_path . '/lets-encrypt/config/steps.php' );
-            require_once( rsssl_path . '/lets-encrypt/config/questions-wizard.php' );
+            require_once( rsssl_path . '/lets-encrypt/wizard/config/steps.php' );
+            require_once( rsssl_path . '/lets-encrypt/wizard/config/questions-wizard.php' );
 //            require_once( rsssl_path . '/config/documents/documents.php' );
 //            require_once( rsssl_path . '/config/documents/lets-encrypt.php' );
 
@@ -138,19 +138,9 @@ if ( ! class_exists( "rsssl_config" ) ) {
 
         public function init() {
             $this->fields = apply_filters( 'rsssl_fields', $this->fields );
-            if ( ! is_admin() ) {
-                $regions = rsssl_get_regions();
-                foreach ( $regions as $region => $label ) {
-                    if ( !isset( $this->pages[ $region ] ) ) continue;
-
-                    foreach ( $this->pages[ $region ] as $type => $data ) {
-                        $this->pages[ $region ][ $type ]['document_elements']
-                            = apply_filters( 'rsssl_document_elements',
-                            $this->pages[ $region ][ $type ]['document_elements'],
-                            $region, $type, $this->fields() );
-                    }
-                }
-            }
+//            if ( ! is_admin() ) {
+//
+//            }
         }
 
         /**

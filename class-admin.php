@@ -3423,7 +3423,7 @@ class rsssl_admin extends rsssl_front_end
         if (!current_user_can($this->capability)) return;
         if (isset ($_GET['tab'])) $this->admin_tabs($_GET['tab']); else $this->admin_tabs('configuration');
         if (isset ($_GET['tab'])) $tab = $_GET['tab']; else $tab = 'configuration';
-        if (isset ($_POST['rsssl_le_wizard'] ) ) $tab = 'le-wizard';
+//        if (isset ($_POST['rsssl_le_wizard'] ) ) $tab = 'le-wizard';
         ?>
         <div class="rsssl-container">
             <div class="rsssl-main"><?php
@@ -3431,11 +3431,11 @@ class rsssl_admin extends rsssl_front_end
                     case 'configuration' :
                         $this->lets_encrypt_wizard_grid();
                         break;
-//                        $this->render_grid($this->general_grid());
+                        $this->render_grid($this->general_grid());
                     do_action("rsssl_configuration_page");
                     break;
                     case 'le-wizard';
-                    $this->render_grid($this->lets_encrypt_wizard_grid());
+//                    $this->render_grid($this->lets_encrypt_wizard_grid());
                     break;
                 }
                 //possibility to hook into the tabs.
@@ -4326,6 +4326,12 @@ class rsssl_admin extends rsssl_front_end
 		} else {
 			$contents = file_get_contents($file);
 		}
+
+        if ( !empty($args) && is_array($args) ) {
+            foreach($args as $fieldname => $value ) {
+                $contents = str_replace( '{'.$fieldname.'}', $value, $contents );
+            }
+        }
 
 		return $contents;
 	}
