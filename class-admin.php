@@ -264,7 +264,7 @@ class rsssl_admin extends rsssl_front_end
 	 * Because of breaking changes in 4.0 we need to remove some legacy actions to ensure no issues occur
 	 */
     public function backward_compatibility(){
-	    if ( function_exists('RSSSL_PRO') && RSSSL_PRO()->is_compatible() ) remove_action( 'admin_init', array(RSSSL_PRO()->rsssl_premium_options, 'add_pro_settings'),60);
+	    if ( function_exists('RSSSL_PRO') && method_exists('RSSSL_PRO', 'is_compatible') && RSSSL_PRO()->is_compatible() ) remove_action( 'admin_init', array(RSSSL_PRO()->rsssl_premium_options, 'add_pro_settings'),60);
     }
 
     /**
@@ -3873,7 +3873,7 @@ class rsssl_admin extends rsssl_front_end
             <span class="rsssl-slider rsssl-round"></span>
         </label>
         <?php
-        if (!$this->do_not_edit_htaccess && !is_writable($this->htaccess_file()))  {
+        if ( !$this->do_not_edit_htaccess && !is_writable($this->htaccess_file()))  {
             $comment = sprintf(__(".htaccess is currently not %swritable%s.", "really-simple-ssl"), '<a target="_blank" href="https://really-simple-ssl.com/knowledge-base/htaccess-wp-config-files-not-writable/">', '</a>');
 	        RSSSL()->rsssl_help->get_comment($comment);
         }
