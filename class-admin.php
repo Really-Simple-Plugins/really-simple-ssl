@@ -217,7 +217,6 @@ class rsssl_admin extends rsssl_front_end
         //settings page, form  and settings link in the plugins page
         add_action('admin_menu', array($this, 'add_settings_page'), 40);
 	    add_action('admin_init', array($this, 'create_form'), 40);
-	    add_action('admin_init', array($this, 'backward_compatibility'), 40);
         add_action('admin_init', array($this, 'listen_for_deactivation'), 40);
         add_action( 'update_option_rlrsssl_options', array( $this, 'maybe_remove_highlight_from_url' ), 50 );
 
@@ -258,13 +257,6 @@ class rsssl_admin extends rsssl_front_end
         }
 
         update_option( 'rsssl_current_version', rsssl_version );
-    }
-
-	/**
-	 * Because of breaking changes in 4.0 we need to remove some legacy actions to ensure no issues occur
-	 */
-    public function backward_compatibility(){
-	    if ( function_exists('RSSSL_PRO') && method_exists('RSSSL_PRO', 'is_compatible') && RSSSL_PRO()->is_compatible() ) remove_action( 'admin_init', array(RSSSL_PRO()->rsssl_premium_options, 'add_pro_settings'),60);
     }
 
     /**
