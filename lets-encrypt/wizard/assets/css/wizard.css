@@ -221,6 +221,8 @@
   /* Text & Email Validation */
   /* Text, Email, Select(2), Textarea Style */
   /* Placeholders */
+  /* Labels */
+  /* Firefox */
 }
 #rsssl-wizard .rsssl-icon {
   border-radius: 50%;
@@ -273,6 +275,13 @@
 }
 #rsssl-wizard .rsssl-not-allowed {
   cursor: not-allowed;
+}
+#rsssl-wizard .rsssl-checkbox .rsssl-field {
+  display: flex;
+  align-items: center;
+}
+#rsssl-wizard .rsssl-checkbox .rsssl-field .rsssl-wizard-settings-text {
+  margin-left: 20px;
 }
 #rsssl-wizard .rsssl-checkbox-container {
   display: block;
@@ -455,6 +464,176 @@
 }
 #rsssl-wizard :-moz-placeholder {
   color: #dadada;
+}
+#rsssl-wizard .rsssl-master-label h2 {
+  padding: 20px 20px 0 20px !important;
+}
+#rsssl-wizard .rsssl-footer-contents {
+  border-top: none;
+}
+#rsssl-wizard .rsssl-grid.rsssl-gridless {
+  display: flex;
+  flex-wrap: wrap;
+  height: inherit !important;
+}
+#rsssl-wizard .rsssl-grid.rsssl-gridless .rsssl-grid-item {
+  position: relative;
+}
+#rsssl-wizard .rsssl-grid.rsssl-gridless .rsssl-grid-item .rsssl-help-warning-wrap {
+  display: none;
+}
+#rsssl-wizard .rsssl-grid.rsssl-gridless .rsssl-grid-item .rsssl-comment {
+  display: none;
+}
+#rsssl-wizard .rsssl-grid.rsssl-gridless .rsssl-grid-item .rsssl-grid-header {
+  height: initial;
+}
+#rsssl-wizard .rsssl-grid.rsssl-gridless .rsssl-grid-item .rsssl-grid-header-container {
+  display: flex;
+  justify-content: space-between;
+  align-content: center;
+}
+#rsssl-wizard .rsssl-grid.rsssl-gridless .rsssl-grid-item .rsssl-grid-header-container .rsssl-grid-controls {
+  margin: auto 0;
+}
+#rsssl-wizard .rsssl-grid.rsssl-gridless .rsssl-grid-item .item-container {
+  height: calc(100% - 20px);
+  width: calc(100% - 20px);
+  margin-left: 10px;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  background-color: white;
+}
+#rsssl-wizard .rsssl-grid.rsssl-gridless .rsssl-grid-item .item-container .item-content {
+  padding: 10px 0 0 0;
+  margin: 0;
+  clear: none;
+}
+#rsssl-wizard .rsssl-grid.rsssl-gridless .rsssl-grid-item .item-footer {
+  background-color: white;
+  height: initial;
+}
+#rsssl-wizard .rsssl-grid.rsssl-gridless .rsssl-grid-item .rsssl-checkbox .rsssl-field {
+  display: flex;
+  justify-content: space-between;
+  align-content: center;
+  padding: 20px 20px 0 20px;
+}
+#rsssl-wizard .rsssl-grid.rsssl-gridless .rsssl-grid-item.big .item-container .item-content {
+  display: grid;
+  grid-auto-flow: row dense;
+  grid-template-columns: 50% 50%;
+  grid-auto-rows: minmax(min-content, max-content);
+}
+#rsssl-wizard .rsssl-grid.rsssl-gridless .rsssl-grid-item.big.rsssl-customization .item-container .item-content {
+  grid-auto-flow: row;
+}
+#rsssl-wizard .rsssl-grid.rsssl-gridless .rsssl-cols-2 .rsssl-field {
+  grid-column: span 2;
+  display: grid;
+  grid-template-columns: 100px 100px;
+  grid-column-gap: 20px;
+}
+#rsssl-wizard .rsssl-grid.rsssl-gridless .rsssl-cols-2 .rsssl-field .rsssl-label {
+  grid-column: span 2;
+}
+#rsssl-wizard .rsssl-grid.rsssl-gridless .rsssl-cols-3 .rsssl-field {
+  grid-column: span 2;
+  display: grid;
+  grid-template-columns: 100px 100px 100px;
+  grid-column-gap: 20px;
+}
+#rsssl-wizard .rsssl-grid.rsssl-gridless .rsssl-cols-3 .rsssl-field .rsssl-label {
+  grid-column: span 3;
+}
+#rsssl-wizard .rsssl-grid.rsssl-gridless .rsssl-borderradius.rsssl-cols-5 .rsssl-field,
+#rsssl-wizard .rsssl-grid.rsssl-gridless .rsssl-borderwidth.rsssl-cols-5 .rsssl-field {
+  display: grid;
+  grid-template-columns: 50px 50px 50px 50px 50px;
+  grid-column-gap: 10px;
+}
+#rsssl-wizard .rsssl-grid.rsssl-gridless .rsssl-borderradius.rsssl-cols-5 .rsssl-field .rsssl-label,
+#rsssl-wizard .rsssl-grid.rsssl-gridless .rsssl-borderwidth.rsssl-cols-5 .rsssl-field .rsssl-label {
+  grid-column: span 5;
+}
+#rsssl-wizard .rsssl-grid.rsssl-gridless .rsssl-border-input-type-wrap {
+  display: grid;
+  grid-template-rows: 16px 16px;
+  padding-top: 16px;
+}
+#rsssl-wizard .rsssl-grid.rsssl-gridless .rsssl-border-input-type-wrap .rsssl-grey {
+  color: darkgrey;
+}
+#rsssl-wizard .rsssl-grid.rsssl-gridless .rsssl-border-input-type-wrap span {
+  cursor: pointer;
+}
+#rsssl-wizard .rsssl-grid.rsssl-gridless select {
+  width: 100%;
+}
+#rsssl-wizard .rsssl-grid.rsssl-gridless .field-group {
+  grid-column: span 2;
+}
+#rsssl-wizard .rsssl-grid.rsssl-gridless .rsssl-field {
+  padding: 10px 20px 0 20px;
+}
+#rsssl-wizard .rsssl-grid.rsssl-gridless .rsssl-borderradius,
+#rsssl-wizard .rsssl-grid.rsssl-gridless .rsssl-borderwidth {
+  grid-column: span 1;
+}
+#rsssl-wizard .rsssl-grid.rsssl-gridless .field-group.rsssl-colspan-1 {
+  grid-column: span 1;
+}
+#rsssl-wizard .rsssl-grid.rsssl-gridless .field-group.rsssl-colspan-2 {
+  grid-column: span 2;
+}
+#rsssl-wizard .rsssl-grid.rsssl-gridless .field-group.rsssl-col-1 {
+  grid-column-start: 1;
+}
+#rsssl-wizard .rsssl-grid.rsssl-gridless .field-group.rsssl-col-2 {
+  grid-column-start: 2;
+}
+#rsssl-wizard .rsssl-grid.rsssl-gridless .rsssl-master-label h2 {
+  grid-column: span 2;
+  margin: 0;
+  padding: 20px 20px 0 20px;
+  font-size: 18px;
+}
+#rsssl-wizard .rsssl-grid.rsssl-gridless .rsssl-sublabel label {
+  color: darkgrey;
+  font-size: 13px;
+}
+#rsssl-wizard .rsssl-grid.rsssl-gridless label .rsssl-icon {
+  display: inline;
+}
+#rsssl-wizard .rsssl-grid.rsssl-gridless .rsssl-switch {
+  margin-top: 0;
+}
+#rsssl-wizard .rsssl-grid.rsssl-gridless .wp-picker-input-wrap:not(.hidden) {
+  display: block;
+  position: absolute;
+  z-index: 10;
+}
+#rsssl-wizard .rsssl-grid.rsssl-gridless .wp-picker-holder {
+  position: absolute;
+  top: 132px;
+  z-index: 10;
+}
+#rsssl-wizard .rsssl-grid.rsssl-gridless .wp-picker-clear {
+  position: absolute;
+}
+#rsssl-wizard .rsssl-grid.rsssl-gridless .rsssl-grid-controls .rsssl-field {
+  padding: 0;
+}
+#rsssl-wizard .rsssl-grid.rsssl-gridless .rsssl-grid-controls .rsssl-field .rsssl-label {
+  margin: 0;
+}
+#rsssl-wizard input::-webkit-outer-spin-button,
+#rsssl-wizard input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+#rsssl-wizard input[type=number] {
+  -moz-appearance: textfield;
 }
 .rsssl-multiple-field-button-footer {
   display: flex;
@@ -994,238 +1173,139 @@ html .mceContentBody {
   font-weight: bold;
   padding: 2px;
 }
-#rsssl-wizard,
-#cookie-policy-snapshots,
-#rsssl-cookie-settings {
+#rsssl-wizard {
   /*body */
 }
 #rsssl-wizard h1,
-#cookie-policy-snapshots h1,
-#rsssl-cookie-settings h1,
 #rsssl-wizard h2,
-#cookie-policy-snapshots h2,
-#rsssl-cookie-settings h2,
 #rsssl-wizard h3,
-#cookie-policy-snapshots h3,
-#rsssl-cookie-settings h3,
 #rsssl-wizard h4,
-#cookie-policy-snapshots h4,
-#rsssl-cookie-settings h4,
 #rsssl-wizard .rsssl-menu-item,
-#cookie-policy-snapshots .rsssl-menu-item,
-#rsssl-cookie-settings .rsssl-menu-item,
 #rsssl-wizard .rsssl-step-title,
-#cookie-policy-snapshots .rsssl-step-title,
-#rsssl-cookie-settings .rsssl-step-title,
-#rsssl-wizard .rsssl-button,
-#cookie-policy-snapshots .rsssl-button,
-#rsssl-cookie-settings .rsssl-button {
+#rsssl-wizard .rsssl-button {
   font-variant: normal;
 }
-#rsssl-wizard label,
-#cookie-policy-snapshots label,
-#rsssl-cookie-settings label {
+#rsssl-wizard label {
   font-size: 13px;
 }
-#rsssl-wizard .field-group,
-#cookie-policy-snapshots .field-group,
-#rsssl-cookie-settings .field-group {
+#rsssl-wizard .field-group {
   position: relative;
 }
-#rsssl-wizard .field-group .rsssl-field,
-#cookie-policy-snapshots .field-group .rsssl-field,
-#rsssl-cookie-settings .field-group .rsssl-field {
-  padding: 20px 20px 0 20px;
+#rsssl-wizard .field-group .rsssl-field {
+  padding: 0 20px 0 20px;
   background-color: white;
 }
-#rsssl-wizard .field-group .rsssl-label,
-#cookie-policy-snapshots .field-group .rsssl-label,
-#rsssl-cookie-settings .field-group .rsssl-label {
+#rsssl-wizard .field-group .rsssl-title-wrap {
+  font-size: 15px;
+  font-weight: 600;
+}
+#rsssl-wizard .field-group .rsssl-label {
   margin-bottom: 10px;
 }
-#rsssl-wizard .field-group .rsssl-label label,
-#cookie-policy-snapshots .field-group .rsssl-label label,
-#rsssl-cookie-settings .field-group .rsssl-label label {
+#rsssl-wizard .field-group .rsssl-label label {
   display: flex;
+  flex-direction: column;
   font-size: 15px;
   font-weight: 600;
   cursor: default;
 }
-#rsssl-wizard .field-group.rsssl-editor .rsssl-label,
-#cookie-policy-snapshots .field-group.rsssl-editor .rsssl-label,
-#rsssl-cookie-settings .field-group.rsssl-editor .rsssl-label {
+#rsssl-wizard .field-group .rsssl-label label .rsssl-subtitle-wrap {
+  font-weight: 500;
+  font-size: 0.9em;
+}
+#rsssl-wizard .field-group.rsssl-editor .rsssl-label {
   margin-bottom: 0;
 }
-#rsssl-wizard .field-group .rsssl-field .field-group,
-#cookie-policy-snapshots .field-group .rsssl-field .field-group,
-#rsssl-cookie-settings .field-group .rsssl-field .field-group {
+#rsssl-wizard .field-group .rsssl-field .field-group {
   grid-column: 1;
   display: block;
 }
-#rsssl-wizard .field-group .rsssl-field .rsssl-field,
-#cookie-policy-snapshots .field-group .rsssl-field .rsssl-field,
-#rsssl-cookie-settings .field-group .rsssl-field .rsssl-field {
+#rsssl-wizard .field-group .rsssl-field .rsssl-field {
   padding: 0;
 }
 #rsssl-wizard .rsssl-body,
-#cookie-policy-snapshots .rsssl-body,
-#rsssl-cookie-settings .rsssl-body,
-#rsssl-wizard #rsssl-content-area,
-#cookie-policy-snapshots #rsssl-content-area,
-#rsssl-cookie-settings #rsssl-content-area {
+#rsssl-wizard #rsssl-content-area {
   /* Styling for the previous and next buttons */
   /* CSS for the sections menu */
 }
 #rsssl-wizard .rsssl-body input[type="text"].rsssl-document-custom-url,
-#cookie-policy-snapshots .rsssl-body input[type="text"].rsssl-document-custom-url,
-#rsssl-cookie-settings .rsssl-body input[type="text"].rsssl-document-custom-url,
-#rsssl-wizard #rsssl-content-area input[type="text"].rsssl-document-custom-url,
-#cookie-policy-snapshots #rsssl-content-area input[type="text"].rsssl-document-custom-url,
-#rsssl-cookie-settings #rsssl-content-area input[type="text"].rsssl-document-custom-url {
+#rsssl-wizard #rsssl-content-area input[type="text"].rsssl-document-custom-url {
   width: 250px;
 }
 #rsssl-wizard .rsssl-body .rsssl-document-custom-url,
-#cookie-policy-snapshots .rsssl-body .rsssl-document-custom-url,
-#rsssl-cookie-settings .rsssl-body .rsssl-document-custom-url,
 #rsssl-wizard #rsssl-content-area .rsssl-document-custom-url,
-#cookie-policy-snapshots #rsssl-content-area .rsssl-document-custom-url,
-#rsssl-cookie-settings #rsssl-content-area .rsssl-document-custom-url,
 #rsssl-wizard .rsssl-body .rsssl-document-custom-page,
-#cookie-policy-snapshots .rsssl-body .rsssl-document-custom-page,
-#rsssl-cookie-settings .rsssl-body .rsssl-document-custom-page,
-#rsssl-wizard #rsssl-content-area .rsssl-document-custom-page,
-#cookie-policy-snapshots #rsssl-content-area .rsssl-document-custom-page,
-#rsssl-cookie-settings #rsssl-content-area .rsssl-document-custom-page {
+#rsssl-wizard #rsssl-content-area .rsssl-document-custom-page {
   margin-top: 5px;
 }
 #rsssl-wizard .rsssl-body input.button,
-#cookie-policy-snapshots .rsssl-body input.button,
-#rsssl-cookie-settings .rsssl-body input.button,
-#rsssl-wizard #rsssl-content-area input.button,
-#cookie-policy-snapshots #rsssl-content-area input.button,
-#rsssl-cookie-settings #rsssl-content-area input.button {
+#rsssl-wizard #rsssl-content-area input.button {
   min-width: 100px;
 }
 #rsssl-wizard .rsssl-body input.button.button-red,
-#cookie-policy-snapshots .rsssl-body input.button.button-red,
-#rsssl-cookie-settings .rsssl-body input.button.button-red,
-#rsssl-wizard #rsssl-content-area input.button.button-red,
-#cookie-policy-snapshots #rsssl-content-area input.button.button-red,
-#rsssl-cookie-settings #rsssl-content-area input.button.button-red {
+#rsssl-wizard #rsssl-content-area input.button.button-red {
   background-color: red;
   color: white;
   border-color: red;
 }
 #rsssl-wizard .rsssl-body input.button.button-black,
-#cookie-policy-snapshots .rsssl-body input.button.button-black,
-#rsssl-cookie-settings .rsssl-body input.button.button-black,
-#rsssl-wizard #rsssl-content-area input.button.button-black,
-#cookie-policy-snapshots #rsssl-content-area input.button.button-black,
-#rsssl-cookie-settings #rsssl-content-area input.button.button-black {
+#rsssl-wizard #rsssl-content-area input.button.button-black {
   background-color: black;
   color: white;
   border-color: black;
 }
 #rsssl-wizard .rsssl-body input.button.button-link,
-#cookie-policy-snapshots .rsssl-body input.button.button-link,
-#rsssl-cookie-settings .rsssl-body input.button.button-link,
-#rsssl-wizard #rsssl-content-area input.button.button-link,
-#cookie-policy-snapshots #rsssl-content-area input.button.button-link,
-#rsssl-cookie-settings #rsssl-content-area input.button.button-link {
+#rsssl-wizard #rsssl-content-area input.button.button-link {
   text-align: center;
   min-width: initial;
 }
 #rsssl-wizard .rsssl-body input.button.button-link:hover,
-#cookie-policy-snapshots .rsssl-body input.button.button-link:hover,
-#rsssl-cookie-settings .rsssl-body input.button.button-link:hover,
-#rsssl-wizard #rsssl-content-area input.button.button-link:hover,
-#cookie-policy-snapshots #rsssl-content-area input.button.button-link:hover,
-#rsssl-cookie-settings #rsssl-content-area input.button.button-link:hover {
+#rsssl-wizard #rsssl-content-area input.button.button-link:hover {
   background-color: initial;
   text-decoration: none;
 }
 #rsssl-wizard .rsssl-body button.button-red,
-#cookie-policy-snapshots .rsssl-body button.button-red,
-#rsssl-cookie-settings .rsssl-body button.button-red,
-#rsssl-wizard #rsssl-content-area button.button-red,
-#cookie-policy-snapshots #rsssl-content-area button.button-red,
-#rsssl-cookie-settings #rsssl-content-area button.button-red {
+#rsssl-wizard #rsssl-content-area button.button-red {
   background-color: red;
   color: white;
   border-color: red;
 }
 #rsssl-wizard .rsssl-body .rsssl-master-label h2,
-#cookie-policy-snapshots .rsssl-body .rsssl-master-label h2,
-#rsssl-cookie-settings .rsssl-body .rsssl-master-label h2,
-#rsssl-wizard #rsssl-content-area .rsssl-master-label h2,
-#cookie-policy-snapshots #rsssl-content-area .rsssl-master-label h2,
-#rsssl-cookie-settings #rsssl-content-area .rsssl-master-label h2 {
+#rsssl-wizard #rsssl-content-area .rsssl-master-label h2 {
   margin: 0;
   padding: 20px 20px 0 0;
   font-size: 18px;
   background-color: white;
 }
 #rsssl-wizard .rsssl-body .rsssl-remove,
-#cookie-policy-snapshots .rsssl-body .rsssl-remove,
-#rsssl-cookie-settings .rsssl-body .rsssl-remove,
-#rsssl-wizard #rsssl-content-area .rsssl-remove,
-#cookie-policy-snapshots #rsssl-content-area .rsssl-remove,
-#rsssl-cookie-settings #rsssl-content-area .rsssl-remove {
+#rsssl-wizard #rsssl-content-area .rsssl-remove {
   margin-bottom: 12px;
 }
 #rsssl-wizard .rsssl-body .rsssl-rescan,
-#cookie-policy-snapshots .rsssl-body .rsssl-rescan,
-#rsssl-cookie-settings .rsssl-body .rsssl-rescan,
-#rsssl-wizard #rsssl-content-area .rsssl-rescan,
-#cookie-policy-snapshots #rsssl-content-area .rsssl-rescan,
-#rsssl-cookie-settings #rsssl-content-area .rsssl-rescan {
+#rsssl-wizard #rsssl-content-area .rsssl-rescan {
   padding: 0 10px 0 10px;
 }
-#rsssl-wizard .rsssl-body .rsssl-add-new-cookie,
-#cookie-policy-snapshots .rsssl-body .rsssl-add-new-cookie,
-#rsssl-cookie-settings .rsssl-body .rsssl-add-new-cookie,
-#rsssl-wizard #rsssl-content-area .rsssl-add-new-cookie,
-#cookie-policy-snapshots #rsssl-content-area .rsssl-add-new-cookie,
-#rsssl-cookie-settings #rsssl-content-area .rsssl-add-new-cookie {
-  padding: 0;
-}
 #rsssl-wizard .rsssl-body .rsssl-menu-item.active i,
-#cookie-policy-snapshots .rsssl-body .rsssl-menu-item.active i,
-#rsssl-cookie-settings .rsssl-body .rsssl-menu-item.active i,
-#rsssl-wizard #rsssl-content-area .rsssl-menu-item.active i,
-#cookie-policy-snapshots #rsssl-content-area .rsssl-menu-item.active i,
-#rsssl-cookie-settings #rsssl-content-area .rsssl-menu-item.active i {
+#rsssl-wizard #rsssl-content-area .rsssl-menu-item.active i {
   color: black;
   font-size: 1.35em;
   float: left;
 }
 #rsssl-wizard .rsssl-body .rsssl-menu-item.active a,
-#cookie-policy-snapshots .rsssl-body .rsssl-menu-item.active a,
-#rsssl-cookie-settings .rsssl-body .rsssl-menu-item.active a,
-#rsssl-wizard #rsssl-content-area .rsssl-menu-item.active a,
-#cookie-policy-snapshots #rsssl-content-area .rsssl-menu-item.active a,
-#rsssl-cookie-settings #rsssl-content-area .rsssl-menu-item.active a {
+#rsssl-wizard #rsssl-content-area .rsssl-menu-item.active a {
   color: #000;
   font-weight: 900;
   padding-left: 7px;
   text-decoration: underline;
 }
 #rsssl-wizard .rsssl-body .rsssl-done a,
-#cookie-policy-snapshots .rsssl-body .rsssl-done a,
-#rsssl-cookie-settings .rsssl-body .rsssl-done a,
-#rsssl-wizard #rsssl-content-area .rsssl-done a,
-#cookie-policy-snapshots #rsssl-content-area .rsssl-done a,
-#rsssl-cookie-settings #rsssl-content-area .rsssl-done a {
+#rsssl-wizard #rsssl-content-area .rsssl-done a {
   text-decoration: none;
   color: white;
   font-size: 14px;
 }
 #rsssl-wizard .rsssl-body .rsssl-to-do a,
-#cookie-policy-snapshots .rsssl-body .rsssl-to-do a,
-#rsssl-cookie-settings .rsssl-body .rsssl-to-do a,
-#rsssl-wizard #rsssl-content-area .rsssl-to-do a,
-#cookie-policy-snapshots #rsssl-content-area .rsssl-to-do a,
-#rsssl-cookie-settings #rsssl-content-area .rsssl-to-do a {
+#rsssl-wizard #rsssl-content-area .rsssl-to-do a {
   color: white;
   font-size: 14px;
   text-decoration: none;
@@ -1233,11 +1313,7 @@ html .mceContentBody {
 }
 @media screen and (max-width: 782px) {
   #rsssl-wizard .rsssl-body input,
-  #cookie-policy-snapshots .rsssl-body input,
-  #rsssl-cookie-settings .rsssl-body input,
-  #rsssl-wizard #rsssl-content-area input,
-  #cookie-policy-snapshots #rsssl-content-area input,
-  #rsssl-cookie-settings #rsssl-content-area input {
+  #rsssl-wizard #rsssl-content-area input {
     vertical-align: top !important;
   }
 }
@@ -1689,12 +1765,6 @@ input.rsssl.button .fa-angle-right {
 .rsssl-wizard-menu-menus {
   padding-top: 10px;
 }
-.rsssl-cookie-settings-content {
-  padding-top: 10px;
-  display: grid;
-  grid-template-columns: 815px 1fr;
-  grid-template-rows: calc(100vh - 160px);
-}
 .rsssl-scroll {
   overflow: scroll;
   scroll-behavior: smooth;
@@ -1702,179 +1772,6 @@ input.rsssl.button .fa-angle-right {
 }
 #wpbody-content {
   padding-bottom: 0;
-}
-#rsssl-cookie-settings {
-  /* Firefox */
-}
-#rsssl-cookie-settings .rsssl-master-label h2 {
-  padding: 20px 20px 0 20px !important;
-}
-#rsssl-cookie-settings .rsssl-footer-contents {
-  border-top: none;
-}
-#rsssl-cookie-settings .rsssl-grid.rsssl-gridless {
-  display: flex;
-  flex-wrap: wrap;
-  height: inherit !important;
-}
-#rsssl-cookie-settings .rsssl-grid.rsssl-gridless .rsssl-grid-item {
-  position: relative;
-}
-#rsssl-cookie-settings .rsssl-grid.rsssl-gridless .rsssl-grid-item .rsssl-help-warning-wrap {
-  display: none;
-}
-#rsssl-cookie-settings .rsssl-grid.rsssl-gridless .rsssl-grid-item .rsssl-comment {
-  display: none;
-}
-#rsssl-cookie-settings .rsssl-grid.rsssl-gridless .rsssl-grid-item .rsssl-grid-header {
-  height: initial;
-}
-#rsssl-cookie-settings .rsssl-grid.rsssl-gridless .rsssl-grid-item .rsssl-grid-header-container {
-  display: flex;
-  justify-content: space-between;
-  align-content: center;
-}
-#rsssl-cookie-settings .rsssl-grid.rsssl-gridless .rsssl-grid-item .rsssl-grid-header-container .rsssl-grid-controls {
-  margin: auto 0;
-}
-#rsssl-cookie-settings .rsssl-grid.rsssl-gridless .rsssl-grid-item .item-container {
-  height: calc(100% - 20px);
-  width: calc(100% - 20px);
-  margin-left: 10px;
-  display: grid;
-  grid-template-rows: auto 1fr auto;
-  background-color: white;
-}
-#rsssl-cookie-settings .rsssl-grid.rsssl-gridless .rsssl-grid-item .item-container .item-content {
-  padding: 10px 0 0 0;
-  margin: 0;
-  clear: none;
-}
-#rsssl-cookie-settings .rsssl-grid.rsssl-gridless .rsssl-grid-item .item-footer {
-  background-color: white;
-  height: initial;
-}
-#rsssl-cookie-settings .rsssl-grid.rsssl-gridless .rsssl-grid-item .rsssl-checkbox .rsssl-field {
-  display: flex;
-  justify-content: space-between;
-  align-content: center;
-  padding: 20px 20px 0 20px;
-}
-#rsssl-cookie-settings .rsssl-grid.rsssl-gridless .rsssl-grid-item.big .item-container .item-content {
-  display: grid;
-  grid-auto-flow: row dense;
-  grid-template-columns: 50% 50%;
-  grid-auto-rows: minmax(min-content, max-content);
-}
-#rsssl-cookie-settings .rsssl-grid.rsssl-gridless .rsssl-grid-item.big.rsssl-customization .item-container .item-content {
-  grid-auto-flow: row;
-}
-#rsssl-cookie-settings .rsssl-grid.rsssl-gridless .rsssl-cols-2 .rsssl-field {
-  grid-column: span 2;
-  display: grid;
-  grid-template-columns: 100px 100px;
-  grid-column-gap: 20px;
-}
-#rsssl-cookie-settings .rsssl-grid.rsssl-gridless .rsssl-cols-2 .rsssl-field .rsssl-label {
-  grid-column: span 2;
-}
-#rsssl-cookie-settings .rsssl-grid.rsssl-gridless .rsssl-cols-3 .rsssl-field {
-  grid-column: span 2;
-  display: grid;
-  grid-template-columns: 100px 100px 100px;
-  grid-column-gap: 20px;
-}
-#rsssl-cookie-settings .rsssl-grid.rsssl-gridless .rsssl-cols-3 .rsssl-field .rsssl-label {
-  grid-column: span 3;
-}
-#rsssl-cookie-settings .rsssl-grid.rsssl-gridless .rsssl-borderradius.rsssl-cols-5 .rsssl-field,
-#rsssl-cookie-settings .rsssl-grid.rsssl-gridless .rsssl-borderwidth.rsssl-cols-5 .rsssl-field {
-  display: grid;
-  grid-template-columns: 50px 50px 50px 50px 50px;
-  grid-column-gap: 10px;
-}
-#rsssl-cookie-settings .rsssl-grid.rsssl-gridless .rsssl-borderradius.rsssl-cols-5 .rsssl-field .rsssl-label,
-#rsssl-cookie-settings .rsssl-grid.rsssl-gridless .rsssl-borderwidth.rsssl-cols-5 .rsssl-field .rsssl-label {
-  grid-column: span 5;
-}
-#rsssl-cookie-settings .rsssl-grid.rsssl-gridless .rsssl-border-input-type-wrap {
-  display: grid;
-  grid-template-rows: 16px 16px;
-  padding-top: 16px;
-}
-#rsssl-cookie-settings .rsssl-grid.rsssl-gridless .rsssl-border-input-type-wrap .rsssl-grey {
-  color: darkgrey;
-}
-#rsssl-cookie-settings .rsssl-grid.rsssl-gridless .rsssl-border-input-type-wrap span {
-  cursor: pointer;
-}
-#rsssl-cookie-settings .rsssl-grid.rsssl-gridless select {
-  width: 100%;
-}
-#rsssl-cookie-settings .rsssl-grid.rsssl-gridless .field-group {
-  grid-column: span 2;
-}
-#rsssl-cookie-settings .rsssl-grid.rsssl-gridless .rsssl-field {
-  padding: 10px 20px 0 20px;
-}
-#rsssl-cookie-settings .rsssl-grid.rsssl-gridless .rsssl-borderradius,
-#rsssl-cookie-settings .rsssl-grid.rsssl-gridless .rsssl-borderwidth {
-  grid-column: span 1;
-}
-#rsssl-cookie-settings .rsssl-grid.rsssl-gridless .field-group.rsssl-colspan-1 {
-  grid-column: span 1;
-}
-#rsssl-cookie-settings .rsssl-grid.rsssl-gridless .field-group.rsssl-colspan-2 {
-  grid-column: span 2;
-}
-#rsssl-cookie-settings .rsssl-grid.rsssl-gridless .field-group.rsssl-col-1 {
-  grid-column-start: 1;
-}
-#rsssl-cookie-settings .rsssl-grid.rsssl-gridless .field-group.rsssl-col-2 {
-  grid-column-start: 2;
-}
-#rsssl-cookie-settings .rsssl-grid.rsssl-gridless .rsssl-master-label h2 {
-  grid-column: span 2;
-  margin: 0;
-  padding: 20px 20px 0 20px;
-  font-size: 18px;
-}
-#rsssl-cookie-settings .rsssl-grid.rsssl-gridless .rsssl-sublabel label {
-  color: darkgrey;
-  font-size: 13px;
-}
-#rsssl-cookie-settings .rsssl-grid.rsssl-gridless label .rsssl-icon {
-  display: inline;
-}
-#rsssl-cookie-settings .rsssl-grid.rsssl-gridless .rsssl-switch {
-  margin-top: 0;
-}
-#rsssl-cookie-settings .rsssl-grid.rsssl-gridless .wp-picker-input-wrap:not(.hidden) {
-  display: block;
-  position: absolute;
-  z-index: 10;
-}
-#rsssl-cookie-settings .rsssl-grid.rsssl-gridless .wp-picker-holder {
-  position: absolute;
-  top: 132px;
-  z-index: 10;
-}
-#rsssl-cookie-settings .rsssl-grid.rsssl-gridless .wp-picker-clear {
-  position: absolute;
-}
-#rsssl-cookie-settings .rsssl-grid.rsssl-gridless .rsssl-grid-controls .rsssl-field {
-  padding: 0;
-}
-#rsssl-cookie-settings .rsssl-grid.rsssl-gridless .rsssl-grid-controls .rsssl-field .rsssl-label {
-  margin: 0;
-}
-#rsssl-cookie-settings input::-webkit-outer-spin-button,
-#rsssl-cookie-settings input::-webkit-inner-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
-}
-#rsssl-cookie-settings input[type=number] {
-  -moz-appearance: textfield;
 }
 #customization {
   z-index: 10;

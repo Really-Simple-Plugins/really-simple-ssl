@@ -1,5 +1,5 @@
 <?php
-defined( 'ABSPATH' ) or die( "you do not have access to this page!" );
+defined( 'ABSPATH' ) or die( "you do not have accesss to this page!" );
 
 $this->steps = apply_filters('rsssl_steps',array(
     'lets-encrypt' =>
@@ -13,11 +13,11 @@ $this->steps = apply_filters('rsssl_steps',array(
                 'sections' => array (
                     1 => array(
                         'title' => __( 'Information', 'really-simple-ssl' ),
-                        'intro' => __( 'These questions will concern the content presented on your website and specific functionalities that might need to be included in the Terms & conditions.', 'really-simple-ssl' ). rsssl_read_more( 'https://rsssl.io/docs/lets-encrypt/wizard/' ),
+                        'intro' => __( 'Letʼs Encrypt is a free, automated and open certificate authority brought to you by the nonprofit Internet Security Research Group (ISRG).We probably need some form of mention regarding terms, copyright etc.', 'really-simple-ssl' ). rsssl_read_more( 'https://rsssl.io/docs/lets-encrypt/wizard/' ),
                     ),
                     2 => array(
                         'title' => __( 'Instructions', 'really-simple-ssl' ),
-                        'intro' => __( 'These questions will explicitly explain your efforts in communicating with your customers or visitors regarding the services you provide.', 'really-simple-ssl'),
+                        'intro' => __( 'Below you will find the instructions for different hosting environments and configurations. If you start the process with the necessary instructions and credentials the next view steps will be done in no time.', 'really-simple-ssl'),
 
                     ),
                 )
@@ -31,11 +31,6 @@ $this->steps = apply_filters('rsssl_steps',array(
             3    => array(
                 "id"    => "installation",
                 "title" => __( "Installation", 'really-simple-ssl' ),
-                'intro' =>
-                    '<h1>' . __( "Get ready to finish your configuration.", 'really-simple-ssl' ) . '</h1>' .
-                    '<p>'
-                    . __( "Generate the Terms & conditions, then you can add them to your menu directly or do it manually after the wizard is finished.", 'really-simple-ssl' ) . '</p>',
-
             ),
             4  => array(
                 "title" => __( "Activate SSL", 'really-simple-ssl' ),

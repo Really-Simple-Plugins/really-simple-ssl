@@ -1,6 +1,6 @@
 <?php
 
-defined( 'ABSPATH' ) or die( "you do not have acces to this page!" );
+defined( 'ABSPATH' ) or die( "you do not have access to this page!" );
 
 if ( ! function_exists( 'rsssl_user_can_manage' ) ) {
     function rsssl_user_can_manage() {
@@ -443,71 +443,6 @@ if ( ! function_exists( 'rsssl_sanitize_language' ) ) {
         return false;
     }
 }
-if ( ! function_exists( 'rssslf_creative_commons' ) ) {
-
-    /**
-     * Check if creative commons applies
-     *
-     *
-     * @return bool
-     */
-
-    function rssslf_creative_commons() {
-        $type = rsssl_get_value('about_copyright');
-        if ( $type === 'allrights' || $type === 'norights') {
-            return false;
-        } else {
-            return true;
-        }
-    }
-}
-
-if ( ! function_exists( 'rssslf_nuts' ) ) {
-
-    /**
-     * Check if nuts applies
-     *
-     *
-     * @return bool
-     */
-
-    function rssslf_nuts() {
-        $services = rsssl_get_value('about_returns') === 'nuts_services';
-        $utilities = rsssl_get_value('about_returns') === 'nuts_utilities';
-        if ( $services || $utilities ) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-}
-
-/**
- * Registrer a translation
- *
- * @param $fieldname
- *
- * @return bool
- */
-
-if ( ! function_exists( 'rsssl_register_translation' ) ) {
-
-    function rsssl_register_translation( $string, $fieldname ) {
-        //polylang
-        if ( function_exists( "pll_register_string" ) ) {
-            pll_register_string( $fieldname, $string, 'rsssl' );
-        }
-
-        //wpml
-        if ( function_exists( 'icl_register_string' ) ) {
-            icl_register_string( 'rsssl', $fieldname, $string );
-        }
-
-        do_action( 'wpml_register_single_string', 'rsssl', $fieldname,
-            $string );
-
-    }
-}
 
 if ( ! function_exists( 'rsssl_uses_gutenberg' ) ) {
     function rsssl_uses_gutenberg() {
@@ -534,5 +469,16 @@ if ( ! function_exists( 'rsssl_array_filter_multidimensional' ) ) {
             } );
 
         return $new;
+    }
+}
+
+if ( ! function_exists( 'rsssl_get_non_www_domain' ) ) {
+    function rsssl_get_non_www_domain() {
+
+        $url = site_url();
+        $url = str_replace('http://', '', $url);
+        $url = str_replace('www', '', $url);
+
+        return $url;
     }
 }

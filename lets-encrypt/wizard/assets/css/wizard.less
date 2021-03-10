@@ -362,6 +362,16 @@
     cursor: not-allowed;
   }
 
+  .rsssl-checkbox {
+    .rsssl-field {
+      display: flex;
+      align-items: center;
+      .rsssl-wizard-settings-text {
+        margin-left: 20px;
+      }
+    }
+  }
+
   /* Customize the label (the container) */
   .rsssl-checkbox-container {
     display: block;
@@ -567,6 +577,222 @@
   }
   :-moz-placeholder /* Firefox 18- */ {
     color: @gray-light;
+  }
+
+
+  /* Labels */
+  .rsssl-master-label h2 {
+    padding: @green-gap @green-gap 0 @green-gap !important;
+  }
+
+  .rsssl-footer-contents {
+    border-top: none;
+  }
+
+  .rsssl-grid.rsssl-gridless {
+    display: flex;
+    flex-wrap: wrap;
+    height: inherit !important;
+    .rsssl-grid-item {
+      position: relative;
+      //padding: 0 20px 20px 0;
+
+      .rsssl-help-warning-wrap {
+        display: none;
+      }
+      .rsssl-comment {
+        display: none;
+      }
+
+      .rsssl-grid-header {
+        height: initial;
+      }
+
+      .rsssl-grid-header-container {
+        display: flex;
+        justify-content: space-between;
+        align-content: center;
+
+        .rsssl-grid-controls {
+          margin: auto 0;
+        }
+      }
+
+      .item-container {
+        height: calc(100% - 20px);
+        width: calc(100% - 20px);
+        margin-left: 10px;
+        //margin-top: 10px;
+        display: grid;
+        grid-template-rows: auto 1fr auto;
+        background-color: white;
+      }
+
+      .item-container .item-content {
+        padding: 10px 0 0 0;
+        margin: 0;
+        clear: none;
+      }
+
+      .item-footer {
+        background-color: white;
+        height: initial;
+      }
+
+      .rsssl-checkbox .rsssl-field {
+        display: flex;
+        justify-content: space-between;
+        align-content: center;
+        padding: @green-gap @green-gap 0 @green-gap;
+      }
+    }
+
+    .rsssl-grid-item.big {
+      .item-container .item-content {
+        display: grid;
+        grid-auto-flow: row dense;
+        grid-template-columns: 50% 50%;
+        grid-auto-rows: minmax(min-content, max-content);
+      }
+
+      &.rsssl-customization .item-container .item-content {
+        grid-auto-flow: row;
+      }
+
+    }
+
+    .rsssl-cols-2 .rsssl-field {
+      grid-column: span 2;
+      display: grid;
+      grid-template-columns: 100px 100px;
+      grid-column-gap: 20px;
+
+      .rsssl-label {
+        grid-column: span 2;
+      }
+    }
+
+    .rsssl-cols-3 .rsssl-field {
+      grid-column: span 2;
+      display: grid;
+      grid-template-columns: 100px 100px 100px;
+      grid-column-gap: 20px;
+
+      .rsssl-label {
+        grid-column: span 3;
+      }
+    }
+
+    .rsssl-borderradius.rsssl-cols-5 .rsssl-field, .rsssl-borderwidth.rsssl-cols-5 .rsssl-field {
+      display: grid;
+      grid-template-columns: 50px 50px 50px 50px 50px;
+      grid-column-gap: 10px;
+
+      .rsssl-label {
+        grid-column: span 5;
+      }
+    }
+
+    .rsssl-border-input-type-wrap {
+      display: grid;
+      grid-template-rows: 16px 16px;
+      padding-top: 16px;
+
+      .rsssl-grey {
+        color: darkgrey;
+      }
+      span {
+        cursor: pointer;
+      }
+    }
+
+    select {
+      width: 100%;
+    }
+
+    .field-group {
+      grid-column: span 2;
+    }
+
+    .rsssl-field {
+      padding: 10px @green-gap 0 @green-gap;
+    }
+
+    .rsssl-borderradius,
+    .rsssl-borderwidth {
+      grid-column: span 1;
+    }
+
+    .field-group.rsssl-colspan-1 {
+      grid-column: span 1;
+    }
+
+    .field-group.rsssl-colspan-2 {
+      grid-column: span 2;
+    }
+
+    .field-group.rsssl-col-1 {
+      grid-column-start: 1;
+    }
+
+    .field-group.rsssl-col-2 {
+      grid-column-start: 2;
+    }
+
+    .rsssl-master-label h2 {
+      grid-column: span 2;
+      margin: 0;
+      padding: @green-gap @green-gap 0 @green-gap;
+      font-size: 18px;
+    }
+
+    .rsssl-sublabel label {
+      color: darkgrey;
+      font-size: 13px;
+    }
+
+    label .rsssl-icon {
+      display: inline;
+    }
+
+    .rsssl-switch {
+      margin-top: 0;
+    }
+
+    .wp-picker-input-wrap:not(.hidden) {
+      display: block;
+      position: absolute;
+      z-index: 10;
+    }
+
+    .wp-picker-holder {
+      position: absolute;
+      top: 132px;
+      z-index: 10;
+    }
+
+    .wp-picker-clear {
+      position: absolute;
+    }
+
+    .rsssl-grid-controls .rsssl-field {
+      padding: 0;
+      .rsssl-label {
+        margin: 0;
+      }
+    }
+
+  }
+
+  input::-webkit-outer-spin-button,
+  input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
+  /* Firefox */
+  input[type=number] {
+    -moz-appearance: textfield;
   }
 
 }
@@ -1189,7 +1415,7 @@ html .mceContentBody {
   }
 }
 
-#rsssl-wizard , #cookie-policy-snapshots, #rsssl-cookie-settings {
+#rsssl-wizard {
   h1, h2, h3, h4, .rsssl-menu-item, .rsssl-step-title, .rsssl-button {
     font-variant: normal;
   }
@@ -1202,17 +1428,28 @@ html .mceContentBody {
     position: relative;
 
     .rsssl-field {
-      padding: @green-gap @green-gap 0 @green-gap;
+      padding: 0 @green-gap 0 @green-gap;
       background-color: white;
+    }
+
+    .rsssl-title-wrap {
+      font-size: 15px;
+      font-weight: 600;
+      //width: 100%;
     }
 
     .rsssl-label {
       margin-bottom: 10px;
       label {
         display:flex;
+        flex-direction: column;
         font-size:15px;
         font-weight: 600;
         cursor: default;
+        .rsssl-subtitle-wrap {
+          font-weight: 500;
+          font-size: 0.9em;
+        }
       }
     }
 
@@ -1232,120 +1469,6 @@ html .mceContentBody {
     }
 
   }
-  //
-  //.rsssl-header {
-  //background-color: #F1F1F1;
-  //
-  //.rsssl-wizard-title {
-  //  font-size: 26px;
-  //  padding-bottom: 20px;
-  //  &.rsssl-section-content-notifications-header h1{
-  //	color:@gray-dark;
-  //  }
-  //}
-  //
-  //.rsssl-wizard-steps {
-  //  display: flex;
-  //  @media screen and (max-width: 640px) {
-  //	flex-direction: column;
-  //  }
-  //
-  //  .rsssl-step-time {
-  //	float: left;
-  //	padding: 9px 5px;
-  //	color: #fff;
-  //	font-size: 11px;
-  //  }
-  //
-  //  .rsssl-step-count {
-  //	span {
-  //	  top: 9px;
-  //	  position: relative;
-  //	}
-  //
-  //	color: #fff;
-  //	background-color: @brand-primary;
-  //	border-radius: 50%;
-  //	text-align: center;
-  //	vertical-align: middle;
-  //	width: 35px;
-  //	height: 35px;
-  //	display: inline-block;
-  //  }
-  //
-  //  .rsssl-step-title {
-  //	color: #333333;
-  //	top: 2px;
-  //	position: relative;
-  //  }
-  //
-  //
-  //  .rsssl-step {
-  //
-  //	color: @brand-primary;
-  //	font-size: 16px;
-  //	font-weight: bold;
-  //	border-radius: @border-radius;
-  //	margin-bottom: 30px;
-  //	flex-grow: 1;
-  //
-  //	.rsssl-step-count {
-  //	  font-size: 18px;
-  //	}
-  //
-  //	&.active {
-  //	  .rsssl-step-title {
-  //		color: white;
-  //	  }
-  //
-  //	  .rsssl-step-count {
-  //		color: #fff;
-  //		background-color: @brand-primary;
-  //		border-radius: 50%;
-  //	  }
-  //
-  //	  background-color: #000;
-  //	  text-decoration: none;
-  //	  margin-right: 80px;
-  //	  @media screen and (min-width: 641px) {
-  //		flex: 0 0 260px;
-  //	  }
-  //	  @media screen and (max-width: 640px) {
-  //		width: 260px;
-  //	  }
-  //
-  //	  .rsssl-step-wrap {
-  //		background-color: @brand-primary;
-  //		border: 0;
-  //		border-radius: @border-radius;
-  //		height: 36px;
-  //	  }
-  //	}
-  //
-  //	&.not-active {
-  //	  .rsssl-step-wrap a:hover .rsssl-step-count {
-  //		background-color: lighten(@brand-primary, 5%)
-  //	  }
-  //	}
-  //
-  //	.rsssl-step-wrap {
-  //	  float: left;
-  //	  width: 200px;
-  //
-  //	  a {
-  //		text-decoration: none;
-  //	  }
-  //	}
-  //
-  //	&.incomplete {
-  //	  .rsssl-step-count {
-  //		background-color: @brand-primary;
-  //		color: #fff;
-  //	  }
-  //	}
-  //  }
-  //}
-  //}
 
   /*body */
   .rsssl-body, #rsssl-content-area {
@@ -1403,10 +1526,6 @@ html .mceContentBody {
 
     .rsssl-rescan {
       padding: 0 10px 0 10px;
-    }
-
-    .rsssl-add-new-cookie {
-      padding: 0;
     }
 
     /* CSS for the sections menu */
@@ -1987,12 +2106,12 @@ a.rsssl.button, button.rsssl.button, input.rsssl.button {
   padding-top: 10px;
 }
 
-.rsssl-cookie-settings-content {
-  padding-top: 10px;
-  display: grid;
-  grid-template-columns: 815px 1fr;
-  grid-template-rows: calc(100vh - 160px);
-}
+//.rsssl-cookie-settings-content {
+//  padding-top: 10px;
+//  display: grid;
+//  grid-template-columns: 815px 1fr;
+//  grid-template-rows: calc(100vh - 160px);
+//}
 
 .rsssl-scroll {
   overflow: scroll;
@@ -2003,225 +2122,6 @@ a.rsssl.button, button.rsssl.button, input.rsssl.button {
 
 #wpbody-content {
   padding-bottom: 0;
-}
-
-#rsssl-cookie-settings {
-
-  .rsssl-master-label h2 {
-    padding: @green-gap @green-gap 0 @green-gap !important;
-  }
-
-  .rsssl-footer-contents {
-    border-top: none;
-  }
-
-  .rsssl-grid.rsssl-gridless {
-    display: flex;
-    flex-wrap: wrap;
-    height: inherit !important;
-    .rsssl-grid-item {
-      position: relative;
-      //padding: 0 20px 20px 0;
-
-      .rsssl-help-warning-wrap {
-        display: none;
-      }
-      .rsssl-comment {
-        display: none;
-      }
-
-      .rsssl-grid-header {
-        height: initial;
-      }
-
-      .rsssl-grid-header-container {
-        display: flex;
-        justify-content: space-between;
-        align-content: center;
-
-        .rsssl-grid-controls {
-          margin: auto 0;
-        }
-      }
-
-      .item-container {
-        height: calc(100% - 20px);
-        width: calc(100% - 20px);
-        margin-left: 10px;
-        //margin-top: 10px;
-        display: grid;
-        grid-template-rows: auto 1fr auto;
-        background-color: white;
-      }
-
-      .item-container .item-content {
-        padding: 10px 0 0 0;
-        margin: 0;
-        clear: none;
-      }
-
-      .item-footer {
-        background-color: white;
-        height: initial;
-      }
-
-      .rsssl-checkbox .rsssl-field {
-        display: flex;
-        justify-content: space-between;
-        align-content: center;
-        padding: @green-gap @green-gap 0 @green-gap;
-      }
-    }
-
-    .rsssl-grid-item.big {
-      .item-container .item-content {
-        display: grid;
-        grid-auto-flow: row dense;
-        grid-template-columns: 50% 50%;
-        grid-auto-rows: minmax(min-content, max-content);
-      }
-
-      &.rsssl-customization .item-container .item-content {
-        grid-auto-flow: row;
-      }
-
-    }
-
-
-    .rsssl-cols-2 .rsssl-field {
-      grid-column: span 2;
-      display: grid;
-      grid-template-columns: 100px 100px;
-      grid-column-gap: 20px;
-
-      .rsssl-label {
-        grid-column: span 2;
-      }
-    }
-
-    .rsssl-cols-3 .rsssl-field {
-      grid-column: span 2;
-      display: grid;
-      grid-template-columns: 100px 100px 100px;
-      grid-column-gap: 20px;
-
-      .rsssl-label {
-        grid-column: span 3;
-      }
-    }
-
-    .rsssl-borderradius.rsssl-cols-5 .rsssl-field, .rsssl-borderwidth.rsssl-cols-5 .rsssl-field {
-      display: grid;
-      grid-template-columns: 50px 50px 50px 50px 50px;
-      grid-column-gap: 10px;
-
-      .rsssl-label {
-        grid-column: span 5;
-      }
-    }
-
-    .rsssl-border-input-type-wrap {
-      display: grid;
-      grid-template-rows: 16px 16px;
-      padding-top: 16px;
-
-      .rsssl-grey {
-        color: darkgrey;
-      }
-      span {
-        cursor: pointer;
-      }
-    }
-
-    select {
-      width: 100%;
-    }
-
-    .field-group {
-      grid-column: span 2;
-    }
-
-    .rsssl-field {
-      padding: 10px @green-gap 0 @green-gap;
-    }
-
-    .rsssl-borderradius,
-    .rsssl-borderwidth {
-      grid-column: span 1;
-    }
-
-    .field-group.rsssl-colspan-1 {
-      grid-column: span 1;
-    }
-
-    .field-group.rsssl-colspan-2 {
-      grid-column: span 2;
-    }
-
-    .field-group.rsssl-col-1 {
-      grid-column-start: 1;
-    }
-
-    .field-group.rsssl-col-2 {
-      grid-column-start: 2;
-    }
-
-    .rsssl-master-label h2 {
-      grid-column: span 2;
-      margin: 0;
-      padding: @green-gap @green-gap 0 @green-gap;
-      font-size: 18px;
-    }
-
-    .rsssl-sublabel label {
-      color: darkgrey;
-      font-size: 13px;
-    }
-
-    label .rsssl-icon {
-      display: inline;
-    }
-
-    .rsssl-switch {
-      margin-top: 0;
-    }
-
-    .wp-picker-input-wrap:not(.hidden) {
-      display: block;
-      position: absolute;
-      z-index: 10;
-    }
-
-    .wp-picker-holder {
-      position: absolute;
-      top: 132px;
-      z-index: 10;
-    }
-
-    .wp-picker-clear {
-      position: absolute;
-    }
-
-    .rsssl-grid-controls .rsssl-field {
-      padding: 0;
-      .rsssl-label {
-        margin: 0;
-      }
-    }
-
-  }
-
-  input::-webkit-outer-spin-button,
-  input::-webkit-inner-spin-button {
-    -webkit-appearance: none;
-    margin: 0;
-  }
-
-  /* Firefox */
-  input[type=number] {
-    -moz-appearance: textfield;
-  }
-
 }
 
 // This will make color pickers overlap

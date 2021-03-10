@@ -1,6 +1,6 @@
 <?php
 
-defined( 'ABSPATH' ) or die( "you do not have acces to this page!" );
+defined( 'ABSPATH' ) or die( "you do not have access to this page!" );
 
 if ( ! class_exists( "rsssl_wizard" ) ) {
     class rsssl_wizard{
@@ -22,6 +22,10 @@ if ( ! class_exists( "rsssl_wizard" ) ) {
 
             //link action to custom hook
             add_action( 'rsssl_wizard', array( $this, 'wizard_after_step' ), 10, 1 );
+
+            add_action( 'rsssl_add_instructions_page', array( $this, 'add_instructions_page' ), 10, 1 );
+            add_action( 'rsssl_add_verification_page', array( $this, 'add_verification_page' ), 10, 5 );
+            add_action( 'rsssl_add_installation_page', array( $this, 'add_installation_page' ), 10, 10 );
 
             //process custom hooks
             add_action( 'admin_init', array( $this, 'process_custom_hooks' ) );
@@ -70,6 +74,30 @@ if ( ! class_exists( "rsssl_wizard" ) ) {
         }
 
         /**
+         * Add instructions page to wizard
+         */
+
+        public function add_instructions_page() {
+            echo RSSSL()->really_simple_ssl->get_template('instructions.php', $path = rsssl_wizard_path);
+        }
+
+        /**
+         * Add verification page to wizard
+         */
+
+        public function add_verification_page() {
+            echo RSSSL()->really_simple_ssl->get_template('verification.php', $path = rsssl_wizard_path);
+        }
+
+        /**
+         * Add installation page to wizard
+         */
+
+        public function add_installation_page() {
+            echo RSSSL()->really_simple_ssl->get_template('installation.php', $path = rsssl_wizard_path);
+        }
+
+        /**
          * Some actions after the last step has been completed
          */
         public function last_step_callback() {
@@ -78,7 +106,7 @@ if ( ! class_exists( "rsssl_wizard" ) ) {
                 _e( "Not all required fields are completed yet. Please check the steps to complete all required questions", 'really-simple-ssl' );
                 echo '</div>';
             } else {
-                echo '<div class="rsssl-wizard-intro">' . __( "You're done! Here are some tips & tricks to use this document to your full advantage.", 'really-simple-ssl' ) . '</div>';
+//                echo '<div class="rsssl-wizard-intro">' . __( "You're done! Here are some tips & tricks to use this document to your full advantage.", 'really-simple-ssl' ) . '</div>';
                 echo RSSSL()->really_simple_ssl->get_template('last-step.php', $path = rsssl_wizard_path);
             }
         }

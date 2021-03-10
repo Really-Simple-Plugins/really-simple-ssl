@@ -1,27 +1,13 @@
-<div class="rsssl-trick">
-    <a href="https://rsssl.io/translating-lets-encrypt/wizard/" target="_blank">
-        <div class="rsssl-bullet" style=""></div>
-        <div class="rsssl-tips-tricks-content"><?php printf(__("Translating %s", "really-simple-ssl"), __("Terms & conditions", "really-simple-ssl"))?></div>
-    </a>
-</div>
+Do action not working
+<?php
+//ob_start();
+//do_action('rsssl_activation_notice');
+//$content = ob_get_clean();
+ob_start();
+do_action('rsssl_activation_notice_inner');
+$content = ob_get_clean();
 
-<div class="rsssl-trick">
-    <a href="https://rsssl.io/styling-lets-encrypt/wizard/" target="_blank">
-        <div class="rsssl-bullet"></div>
-        <div class="rsssl-tips-tricks-content"><?php printf(__("Styling %s", "really-simple-ssl"), __("Terms & conditions", "really-simple-ssl"))?></div>
-    </a>
-</div>
-
-<div class="rsssl-trick">
-    <a href="https://rsssl.io/editing-lets-encrypt/wizard/" target="_blank">
-        <div class="rsssl-bullet" style=""></div>
-        <div class="rsssl-tips-tricks-content"><?php printf(__("Editing %s", "really-simple-ssl"), __("Terms & conditions", "really-simple-ssl"))?></div>
-    </a>
-</div>
-
-<div class="rsssl-trick">
-    <a href="https://rsssl.io/woocommerce-lets-encrypt/wizard/" target="_blank">
-        <div class="rsssl-bullet"></div>
-        <div class="rsssl-tips-tricks-content"><?php _e("Adding to WooCommerce", "really-simple-ssl")?></div>
-    </a>
-</div>
+ob_start();
+do_action('rsssl_activation_notice_footer');
+$footer = ob_get_clean();
+echo $content . $footer;

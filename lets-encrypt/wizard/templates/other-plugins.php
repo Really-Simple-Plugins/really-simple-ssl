@@ -1,4 +1,4 @@
-<?php defined('ABSPATH') or die("you do not have access to this page!"); ?>
+<?php defined('ABSPATH') or die("you do not have accesss to this page!"); ?>
 
 <?php
 $plugins = array(

@@ -1,6 +1,6 @@
 <?php
 
-defined( 'ABSPATH' ) or die( "you do not have acces to this page!" );
+defined( 'ABSPATH' ) or die( "you do not have access to this page!" );
 
 if ( ! class_exists( "rsssl_field" ) ) {
     class rsssl_field {
@@ -36,7 +36,8 @@ if ( ! class_exists( "rsssl_field" ) ) {
         public function label_html( $args ) {
             ?>
             <label class="<?php if ( $args['disabled'] ) {echo 'rsssl-disabled';} ?>" for="<?php echo $args['fieldname'] ?>">
-                <div class="rsssl-title-wrap"><?php echo $args['label'] ?></div>
+                <div class="rsssl-label-wrap"><?php echo $args['label'] ?></div>
+                <div class="rsssl-subtitle-wrap"><?php echo $args['sublabel'] ?></div>
                 <div>
                     <?php
                     if ( isset($args['tooltip']) ) {
@@ -77,6 +78,8 @@ if ( ! class_exists( "rsssl_field" ) ) {
                 "required"           => false,
                 'default'            => '',
                 'label'              => '',
+                'sublabel'           => '',
+                'option_text'        => false,
                 'table'              => false,
                 'callback_condition' => false,
                 'condition'          => false,
@@ -91,6 +94,7 @@ if ( ! class_exists( "rsssl_field" ) ) {
                 'warn'               => false,
                 'cols'               => false,
                 'minimum'            => 0,
+                'title'              => '',
             );
 
 
@@ -733,8 +737,14 @@ if ( ! class_exists( "rsssl_field" ) ) {
             ?>
             <?php do_action( 'rsssl_before_label', $args ); ?>
             <?php do_action( 'rsssl_label_html' , $args );?>
-            <?php do_action( 'rsssl_after_label', $args ); ?>
+            <?php do_action( 'rsssl_after_label', $args );
 
+            if ($args['title']) {
+                ?>
+                <div class="rsssl-title-wrap"><?php echo $args['title'] ?></div>
+                <?php
+            }
+            ?>
             <label class="rsssl-switch">
                 <input name="<?php echo esc_html( $fieldname ) ?>" type="hidden"
                        value="<?php echo $placeholder_value ?>"/>
@@ -750,8 +760,11 @@ if ( ! class_exists( "rsssl_field" ) ) {
                        value="1" <?php checked( 1, $value, true ) ?> />
                 <span class="rsssl-slider rsssl-round"></span>
             </label>
+            <?php if ($args['option_text'] ) {
+                ?> <div class="rsssl-wizard-settings-text"><?php echo $args['option_text'] ?></div> <?php
+            }
 
-            <?php do_action( 'rsssl_after_field', $args ); ?>
+            do_action( 'rsssl_after_field', $args ); ?>
             <?php
         }
 
