@@ -65,6 +65,8 @@ class rsssl_admin extends rsssl_front_end
         register_deactivation_hook(dirname(__FILE__) . "/" . $this->plugin_filename, array($this, 'deactivate'));
 	    add_action('admin_init', array($this, 'add_privacy_info'));
 	    add_action('admin_init', array($this, 'maybe_dismiss_review_notice'));
+	    add_action( 'admin_init', array($this, 'insert_secure_cookie_settings'), 70);
+
 	    add_action( "update_option_rlrsssl_options", array( $this, "maybe_clear_transients" ), 10, 3 );
 
 	    // Only show deactivate popup when SSL has been enabled.
@@ -1358,6 +1360,7 @@ class rsssl_admin extends rsssl_front_end
         if ( $this->ssl_enabled ) {
 	        $this->remove_ssl_from_siteurl();
 	        $this->remove_ssl_from_siteurl_in_wpconfig();
+	        $this->remove_secure_cookie_settings();
 
 	        $this->site_has_ssl = FALSE;
 	        $this->hsts = FALSE;
@@ -1388,6 +1391,33 @@ class rsssl_admin extends rsssl_front_end
 	        $this->removeHtaccessEdit();
         }
     }
+
+	/**
+	 * remove secure cookie settings
+	 *
+	 * @since  4.0.10
+	 *
+	 * @access public
+	 *
+	 */
+
+	public function remove_secure_cookie_settings() {
+
+		if ( wp_doing_ajax() || !current_user_can("activate_plugins")) return;
+
+		if ( !$this->contains_secure_cookie_settings()) return;
+
+		$wpconfig_path = $this->find_wp_config_path();
+
+		if ( !is_writable($wpconfig_path) ) return;
+
+		if (!empty($wpconfig_path)) {
+			$wpconfig = file_get_contents($wpconfig_path);
+			$wpconfig = preg_replace("/\/\/Begin\s?Really\s?Simple\s?SSL\s?session\s?cookie\s?settings.*?\/\/END\s?Really\s?Simple\s?SSL/s", "", $wpconfig);
+			$wpconfig = preg_replace("/\n+/","\n", $wpconfig);
+			file_put_contents($wpconfig_path, $wpconfig);
+		}
+	}
 
 
     /**
@@ -2909,18 +2939,36 @@ class rsssl_admin extends rsssl_front_end
             ),
 
             'secure_cookies_set' => array(
-	            'condition' => array('rsssl_ssl_enabled'),
+	            'condition' => array(
+	                    'rsssl_ssl_enabled',
+                        'RSSSL()->really_simple_ssl->can_apply_networkwide',
+                ),
 	            'callback' => 'RSSSL()->really_simple_ssl->contains_secure_cookie_settings',
                 'score' => 5,
                 'output' => array(
-                    'true' => array(
-                        'msg' =>__('Secure cookies set.', 'really-simple-ssl'),
+                    'set' => array(
+                        'msg' =>__('HttpOnly Secure cookies set!', 'really-simple-ssl'),
                         'icon' => 'success'
                     ),
-                    'false' => array(
-                        'msg' => sprintf(__("Secure cookie settings not enabled (%sRead more%s).", "really-simple-ssl"), '<a target="_blank" href="https://really-simple-ssl.com/secure-cookies-with-httponly-secure-and-use_only_cookies/">', '</a>'),
-                        'icon' => 'premium'
+                    'not-set' => array(
+	                    'msg' =>__('HttpOnly Secure cookies not set.', 'really-simple-ssl'),
+	                    'icon' => 'warning'
                     ),
+                    'wpconfig-not-writable' => array(
+                            'msg' =>    '<p>'. __("To set the httponly secure cookie settings, your wp-config.php has to be edited, but the file is not writable.","really-simple-ssl").'</p>'.
+                                        '<p>'. __("Add the following lines of code to your wp-config.php.","really-simple-ssl").'</p>' .
+                                        "<br><br>
+                                            <code>
+                                                //Begin Really Simple SSL session cookie settings <br>
+                                                &nbsp;&nbsp;@ini_set('session.cookie_httponly', true); <br>
+                                                &nbsp;&nbsp;@ini_set('session.cookie_secure', true); <br>
+                                                &nbsp;&nbsp;@ini_set('session.use_only_cookies', true); <br>
+                                                //END Really Simple SSL cookie settings <br>
+                                            </code>
+                                        <br>
+                                        <p>".__("Or set your wp-config.php to writable and reload this page.", "really-simple-ssl").'</p>',
+                            'icon' => 'warning',
+                    )
                 ),
             ),
 
@@ -4130,20 +4178,72 @@ class rsssl_admin extends rsssl_front_end
 
     public function contains_secure_cookie_settings()
     {
+        error_log("check cookies config");
         $wpconfig_path = $this->find_wp_config_path();
-
-        if (!$wpconfig_path) return false;
-
-        $wpconfig = file_get_contents($wpconfig_path);
-        if ((strpos($wpconfig, "//Begin Really Simple SSL session cookie settings") === FALSE) && (strpos($wpconfig, "cookie_httponly") === FALSE)) {
-            return false;
+        if (!$wpconfig_path) {
+            return 'wpconfig-not-writable';
         }
 
-        return true;
+	    if ( !is_writable($wpconfig_path) ) {
+	        error_log("not writable");
+		    return 'wpconfig-not-writable';
+	    }
+
+	    $wpconfig = file_get_contents($wpconfig_path);
+        if ((strpos($wpconfig, "//Begin Really Simple SSL session cookie settings") === FALSE) && (strpos($wpconfig, "cookie_httponly") === FALSE)) {
+	        error_log("not set");
+
+	        return 'not-set';
+        }
+
+	    error_log("set");
+
+	    return 'set';
     }
 
+	/**
+	 * Insert secure cookie settings
+	 */
 
-    /**
+	public function insert_secure_cookie_settings(){
+		if (!current_user_can("activate_plugins")) return;
+
+		if ( wp_doing_ajax() || !$this->is_settings_page() ) return;
+
+		//only if this site has SSL activated, otherwise, remove cookie settings and exit.
+		if (!$this->ssl_enabled) {
+			$this->remove_secure_cookie_settings();
+			return;
+		}
+
+		//if multisite, only on network wide activated setups
+		if (is_multisite() && !RSSSL()->rsssl_multisite->ssl_enabled_networkwide ) return;
+
+		//only if cookie settings were not inserted yet
+		if (!$this->contains_secure_cookie_settings() ) {
+			$wpconfig_path = RSSSL()->really_simple_ssl->find_wp_config_path();
+			$wpconfig = file_get_contents($wpconfig_path);
+			if ((strlen($wpconfig)!=0) && is_writable($wpconfig_path)) {
+				$rule  = "\n"."//Begin Really Simple SSL session cookie settings"."\n";
+				$rule .= "@ini_set('session.cookie_httponly', true);"."\n";
+				$rule .= "@ini_set('session.cookie_secure', true);"."\n";
+				$rule .= "@ini_set('session.use_only_cookies', true);"."\n";
+				$rule .= "//END Really Simple SSL"."\n";
+
+				$insert_after = "<?php";
+				$pos = strpos($wpconfig, $insert_after);
+				if ($pos !== false) {
+					$wpconfig = substr_replace($wpconfig,$rule,$pos+1+strlen($insert_after),0);
+				}
+
+				file_put_contents($wpconfig_path, $wpconfig);
+			}
+		}
+	}
+
+
+
+	/**
      * Get the absolute path the the www directory of this site, where .htaccess lives.
      *
      * @since  2.0
@@ -4169,6 +4269,19 @@ class rsssl_admin extends rsssl_front_end
         }
 
         return $path;
+    }
+
+	/**
+     * Check if it's either a single site, or when multisite, network enabled.
+	 * @return bool
+	 */
+    public function can_apply_networkwide(){
+        if ( !is_multisite() ) {
+            return true;
+        } elseif (RSSSL()->rsssl_multisite->ssl_enabled_networkwide) {
+            return true;
+        }
+        return false;
     }
 
     /**
