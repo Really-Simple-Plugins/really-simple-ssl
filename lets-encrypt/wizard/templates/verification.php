@@ -23,6 +23,10 @@ defined( 'ABSPATH' ) or die( "you do not have access to this page!" );
         <?php _e("Upload the verification files", "really-simple-ssl")
         . RSSSL()->rsssl_help->get_help_tip(__("Placeholder", "really-simple-ssl") ); ?>
     </h2>
+    <p>
+        <button class="button button-secondary"><?php _e("Download file", "really-simple-ssl")?></button>
+        <button class="button button-primary"><?php _e("Verify", "really-simple-ssl")?></button>
+    </p>
     <div class="rsssl-progress-bar">
 
     </div>

@@ -106,7 +106,6 @@ if ( ! class_exists( "rsssl_wizard" ) ) {
                 _e( "Not all required fields are completed yet. Please check the steps to complete all required questions", 'really-simple-ssl' );
                 echo '</div>';
             } else {
-//                echo '<div class="rsssl-wizard-intro">' . __( "You're done! Here are some tips & tricks to use this document to your full advantage.", 'really-simple-ssl' ) . '</div>';
                 echo RSSSL()->really_simple_ssl->get_template('last-step.php', $path = rsssl_wizard_path);
             }
         }
@@ -429,7 +428,7 @@ if ( ! class_exists( "rsssl_wizard" ) ) {
                 $args['sections'] = ($args['active'] == 'active') ? $this->wizard_sections($page, $active_step, $active_section) : '';
                 $args_menu['steps'] .= RSSSL()->really_simple_ssl->get_template( 'step.php', $path = rsssl_wizard_path , $args);
             }
-            $args_menu['percentage-complete'] = $this->wizard_percentage_complete(false);
+            $args_menu['percentage-complete'] = $this->wizard_percentage_complete($active_step);
             $args_menu['title'] = !empty( $wizard_title ) ? '<div class="rsssl-wizard-subtitle"><h2>' . $wizard_title . '</h2></div>': '' ;
 
             return RSSSL()->really_simple_ssl->get_template( 'menu.php', $path = rsssl_wizard_path, $args_menu );
@@ -845,7 +844,6 @@ if ( ! class_exists( "rsssl_wizard" ) ) {
             return count( RSSSL()->rsssl_config->steps[ $page ][ $step ]['sections'] );
         }
 
-
         public function last_section( $page, $step ) {
             if ( ! isset( RSSSL()->rsssl_config->steps[ $page ][ $step ]["sections"] ) ) {
                 return 1;
@@ -925,37 +923,39 @@ if ( ! class_exists( "rsssl_wizard" ) ) {
          * */
 
 
-        public function wizard_percentage_complete( $count_warnings = true )
+        public function wizard_percentage_complete( $step )
         {
             //store to make sure it only runs once.
             if ( $this->percentage_complete !== false ) {
                 return $this->percentage_complete;
             }
-            $total_fields     = 0;
-            $completed_fields = 0;
-            $total_steps      = $this->total_steps( 'lets-encrypt' );
-            for ( $i = 1; $i <= $total_steps; $i ++ ) {
-                $fields = RSSSL()->rsssl_config->fields( 'lets-encrypt', $i, false );
-                foreach ( $fields as $fieldname => $field ) {
-                    //is field required
-                    $required = isset( $field['required'] ) ? $field['required'] : false;
-                    if ( ( isset( $field['condition'] ) || isset( $field['callback_condition'] ) ) && ! RSSSL()->rsssl_field->condition_applies( $field )
-                    ) {
-                        $required = false;
-                    }
-                    if ( $required ) {
-                        $value = rsssl_get_value( $fieldname, false, false, false );
-                        $total_fields ++;
-                        if ( ! empty( $value ) ) {
-                            $completed_fields ++;
-                        }
-                    }
-                }
-            }
 
-            $percentage = round( 100 * ( $completed_fields / $total_fields ) + 0.45 );
+            $total_steps = $this->total_steps( 'lets-encrypt' );
+
+            $percentage = round( 100 * ( $step / $total_steps ) + 0.45 );
             $this->percentage_complete = $percentage;
             return $percentage;
+
+//            $active_section = '';
+//            for ( $i = 1; $i <= $total_steps; $i ++ ) {
+//                $fields = RSSSL()->rsssl_config->fields( 'lets-encrypt', $i, false );
+//                foreach ( $fields as $fieldname => $field ) {
+//                    //is field required
+//                    $required = isset( $field['required'] ) ? $field['required'] : false;
+//                    if ( ( isset( $field['condition'] ) || isset( $field['callback_condition'] ) ) && ! RSSSL()->rsssl_field->condition_applies( $field )
+//                    ) {
+//                        $required = false;
+//                    }
+//                    if ( $required ) {
+//                        $value = rsssl_get_value( $fieldname, false, false, false );
+//                        $total_fields ++;
+//                        if ( ! empty( $value ) ) {
+//                            $completed_fields ++;
+//                        }
+//                    }
+//                }
+//            }
+
         }
 
     }

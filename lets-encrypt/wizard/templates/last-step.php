@@ -1,4 +1,3 @@
-Do action not working
 <?php
 //ob_start();
 //do_action('rsssl_activation_notice');
