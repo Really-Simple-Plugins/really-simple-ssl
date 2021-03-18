@@ -56,7 +56,7 @@
 }
 #rsssl-content-area .rsssl-wizard-menu .rsssl-wizard-progress-bar .rsssl-wizard-progress-bar-value {
   height: 100%;
-  background: #61ce70;
+  background: #29B6F6;
   border-radius: 4px;
 }
 #rsssl-content-area .rsssl-wizard-menu .rsssl-step .rsssl-step-header {
@@ -76,7 +76,7 @@
   margin: 0;
 }
 #rsssl-content-area .rsssl-wizard-menu .rsssl-step .rsssl-step-header.active a h2 {
-  color: lightgray !important;
+  color: #c6c6c6 !important;
 }
 #rsssl-content-area .rsssl-wizard-menu .rsssl-step .rsssl-step-header:hover a h2 {
   text-decoration: underline;
@@ -111,7 +111,7 @@
   margin: 0;
 }
 #rsssl-content-area .rsssl-wizard-menu .rsssl-step .rsssl-section.active a h3 {
-  color: lightgrey;
+  color: grey;
 }
 #rsssl-content-area .rsssl-wizard-menu .rsssl-step .rsssl-section:hover a h3 {
   text-decoration: underline;
@@ -159,6 +159,9 @@
 }
 #rsssl-content-area .rsssl-section-content form .field-group .rsssl-field {
   grid-column-start: 1;
+}
+#rsssl-content-area .rsssl-section-content form .field-group .rsssl-help-warning-wrap {
+  margin-top: 20px;
 }
 #rsssl-content-area .rsssl-section-content form .rsssl-section-footer {
   grid-column-start: 1;

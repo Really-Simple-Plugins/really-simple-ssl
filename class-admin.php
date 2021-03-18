@@ -225,12 +225,17 @@ class rsssl_admin extends rsssl_front_end
         //Add update notification to Settings admin menu
         add_action('admin_menu', array($this, 'rsssl_edit_admin_menu') );
 
-
         //callbacks for the ajax dismiss buttons
         add_action('wp_ajax_dismiss_success_message', array($this, 'dismiss_success_message_callback'));
         add_action('wp_ajax_rsssl_dismiss_review_notice', array($this, 'dismiss_review_notice_callback'));
         add_action('wp_ajax_rsssl_dismiss_settings_notice', array($this, 'dismiss_settings_notice_callback'));
         add_action('wp_ajax_rsssl_update_task_toggle_option', array($this, 'update_task_toggle_option'));
+        add_action('wp_ajax_rsssl_redirect_to_le_wizard', array($this, 'rsssl_redirect_to_le_wizard'));
+
+        //@todo nonce wp_verify_nonce($_POST['token'], 'rsssl_nonce')
+        if (isset($_POST['rsssl_do_lets_encrypt']) ) {
+            $this->redirect_to_settings_page($tab='lets-encrypt');
+        }
 
         //handle notices
         add_action('admin_notices', array($this, 'show_notices'));
@@ -414,11 +419,11 @@ class rsssl_admin extends rsssl_front_end
 	 * redirect to settings page
 	 */
 
-    public function redirect_to_settings_page() {
+    public function redirect_to_settings_page($tab='configuration') {
         if (isset($_GET['page']) && $_GET['page'] == 'rlrsssl_really_simple_ssl') return;
 	        $url = add_query_arg( array(
 		        "page" => "rlrsssl_really_simple_ssl",
-                "tab" => "configuration",
+                "tab" => $tab,
 	        ), admin_url( "options-general.php" ) );
 	        wp_redirect( $url );
 	        exit;
@@ -441,7 +446,7 @@ class rsssl_admin extends rsssl_front_end
       This message is shown when SSL is not enabled by the user yet
       */
 
-    public function show_notice_activate_ssl()
+    public function show_notice_activate_ssl($hook)
     {
         //prevent showing the review on edit screen, as gutenberg removes the class which makes it editable.
         $screen = get_current_screen();
@@ -506,6 +511,14 @@ class rsssl_admin extends rsssl_front_end
                 ?>
                 <li><?php printf(__("We strongly recommend to create a %sbackup%s of your site before activating SSL", 'really-simple-ssl'), $link_open, $link_close); ?> </li>
                 <li><?php _e("You may need to login in again.", "really-simple-ssl") ?></li>
+                <?php
+                if (RSSSL()->rsssl_certificate->is_valid()) { ?>
+                    <li class="rsssl-success"><?php _e("An SSL certificate has been detected", "really-simple-ssl") ?></li>
+                <?php } elseif ($this->lets_encrypt_conditions()) { ?>
+                    <li class="rsssl-fail"><?php _e("No SSL certificate has been detected. Generate one by pressing the 'Install SSL certificate' button", "really-simple-ssl") ?></li>
+                <?php } else { ?>
+                    <li class="rsssl-fail"><?php _e("No SSL certificate has been detected", "really-simple-ssl") ?></li>
+                <?php } ?>
             </ul>
         </p>
         <p><?php
@@ -602,6 +615,15 @@ class rsssl_admin extends rsssl_front_end
                 list-style: none;
                 list-style-position: inside;
             }
+
+            #rsssl-message .rsssl-success::before {
+                background-color: green;
+            }
+
+            #rsssl-message .rsssl-fail::before {
+                background-color: red;
+            }
+
             #rsssl-message li {
                 margin-left:30px;
                 margin-bottom:10px;
@@ -616,6 +638,10 @@ class rsssl_admin extends rsssl_front_end
                 position: absolute;
                 margin-top: 5px;
                 margin-left:-30px;
+            }
+
+            #rsssl-message .button-default {
+                margin-right: 10px;
             }
 
             .settings_page_rlrsssl_really_simple_ssl #wpcontent #rsssl-message, .settings_page_really-simple-ssl #wpcontent #rsssl-message {
@@ -665,8 +691,24 @@ class rsssl_admin extends rsssl_front_end
                 <?php if (!defined("rsssl_pro_version") ) { ?>
                 <a class="button button-default" href="<?php echo $this->pro_url ?>" target="_blank"><?php _e("Get ready with PRO!", "really-simple-ssl"); ?></a>
                 <?php } ?>
+                <?php if ($this->lets_encrypt_conditions() ) { ?>
+                <input type="submit" class='button button-primary'
+                       value="<?php _e("Install SSL certificate", "really-simple-ssl"); ?>" id="rsssl_do_lets_encrypt"
+                       name="rsssl_do_lets_encrypt">
+                <?php } ?>
             </form>
         <?php
+    }
+
+    /**
+     * @return bool
+     * Conditions to be met before Let's Encrypt SSL installation shows
+     */
+
+    public function lets_encrypt_conditions() {
+        //@todo
+
+        return true;
     }
 
     /**
@@ -3421,22 +3463,21 @@ class rsssl_admin extends rsssl_front_end
     public function settings_page()
     {
         if (!current_user_can($this->capability)) return;
-        if (isset ($_GET['tab'])) $this->admin_tabs($_GET['tab']); else $this->admin_tabs('configuration');
-        if (isset ($_GET['tab'])) $tab = $_GET['tab']; else $tab = 'configuration';
-//        if (isset ($_POST['rsssl_le_wizard'] ) ) $tab = 'le-wizard';
+        if ( isset ($_GET['tab'] ) ) $this->admin_tabs( $_GET['tab'] ); else $this->admin_tabs('configuration');
+        if ( isset ($_GET['tab'] ) ) $tab = $_GET['tab']; else $tab = 'configuration';
+        if ( isset($_GET['rsssl_do_lets_encrypt'] ) ) $tab = 'lets-encrypt';
+
         ?>
         <div class="rsssl-container">
             <div class="rsssl-main"><?php
                 switch ($tab) {
                     case 'configuration' :
+                        $this->render_grid($this->general_grid());
+                        do_action("rsssl_configuration_page");
+                        break;
+                    case 'lets-encrypt' :
                         $this->lets_encrypt_wizard_grid();
                         break;
-                        $this->render_grid($this->general_grid());
-                    do_action("rsssl_configuration_page");
-                    break;
-                    case 'le-wizard';
-//                    $this->render_grid($this->lets_encrypt_wizard_grid());
-                    break;
                 }
                 //possibility to hook into the tabs.
                 do_action("show_tab_{$tab}");

@@ -494,8 +494,16 @@ if ( ! class_exists( "rsssl_field" ) ) {
 
             echo $condition_question;
             echo $condition_answer;
+            // Close div!
+            echo '>';
 
-            echo '><div class="rsssl-field"><div class="rsssl-label">';
+            // Required to give a checkbox a title
+            if ($args['title']) {
+                $title = $args['title'];
+                echo "<div class='rsssl-title-wrap rsssl-field'>$title</div>";
+            }
+
+            echo '<div class="rsssl-field"><div class="rsssl-label">';
         }
 
         public function get_master_label( $args ) {
@@ -739,11 +747,6 @@ if ( ! class_exists( "rsssl_field" ) ) {
             <?php do_action( 'rsssl_label_html' , $args );?>
             <?php do_action( 'rsssl_after_label', $args );
 
-            if ($args['title']) {
-                ?>
-                <div class="rsssl-title-wrap"><?php echo $args['title'] ?></div>
-                <?php
-            }
             ?>
             <label class="rsssl-switch">
                 <input name="<?php echo esc_html( $fieldname ) ?>" type="hidden"

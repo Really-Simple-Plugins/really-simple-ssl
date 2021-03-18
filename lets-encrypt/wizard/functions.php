@@ -18,7 +18,7 @@ if ( ! function_exists( 'rsssl_user_can_manage' ) ) {
 
 if ( !function_exists('rsssl_settings_page') ) {
     function rsssl_settings_page(){
-            return add_query_arg(array('page' => 'rlrsssl_really_simple_ssl'), admin_url('options-general.php?page=') );
+            return add_query_arg(array('page' => 'rlrsssl_really_simple_ssl', 'tab' => 'lets-encrypt'), admin_url('options-general.php?page=') );
     }
 }
 
@@ -475,10 +475,15 @@ if ( ! function_exists( 'rsssl_array_filter_multidimensional' ) ) {
 if ( ! function_exists( 'rsssl_get_non_www_domain' ) ) {
     function rsssl_get_non_www_domain() {
 
-        $url = site_url();
-        $url = str_replace('http://', '', $url);
-        $url = str_replace('www', '', $url);
+        //Get current domain
+        $domain = site_url();
+        //Parse to strip off any /subfolder/
+        $parse = parse_url($domain);
+        $domain = $parse['host'];
 
-        return $url;
+        $domain = str_replace('http://', '', $domain);
+        $domain = str_replace('www', '', $domain);
+
+        return $domain;
     }
 }

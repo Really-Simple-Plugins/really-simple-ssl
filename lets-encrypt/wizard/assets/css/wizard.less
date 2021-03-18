@@ -1,7 +1,7 @@
 // out: wizard.css, sourcemap: false, compress: false
 @brand-primary: #FBC43D;
 @brand-secondary: #61ce70;
-@brand-tertiary: #61ce70;
+@brand-tertiary: #29B6F6;
 @border-radius: 25px;
 @input-background-color: #F1F1F1;
 @input-border-color: #dadada;
@@ -150,7 +150,7 @@
             }
 
             &.active a h3 {
-              color: @active-section-color;
+              color: grey;
             }
 
             &:hover a {
@@ -216,9 +216,9 @@
               grid-column-start: 1;
             }
 
-            //.rsssl-help-warning-wrap {
-            //  grid-column-start: 2;
-            //}
+            .rsssl-help-warning-wrap {
+              margin-top: @green-gap;
+            }
           }
 
           .rsssl-section-footer {
@@ -240,7 +240,6 @@
           }
         }
       }
-
 
       .rsssl-add-pages-table {
         display: grid;

@@ -32,8 +32,9 @@ $this->fields = $this->fields + array(
             'default'     => rsssl_get_non_www_domain(),
             'placeholder' => rsssl_get_non_www_domain(),
             'label'       => __( "Your domain", 'really-simple-ssl' ),
-            'sublabel'  => __("This field is prefilled based on your configuration", 'really-simple-ssl'),
+            'sublabel'    => __("This field is prefilled based on your configuration", 'really-simple-ssl'),
             'required'    => true,
+//            'disabled'    => true,
         ),
 
         'include_www' => array(
@@ -66,7 +67,6 @@ $this->fields = $this->fields + array(
             'type'        => 'checkbox',
             'default'     => '',
             'title'       => 'Terms & Conditions',
-//            'label'       => __( "Terms & Conditions", 'really-simple-ssl' ),
             'option_text' => __("I agree to the Terms & Conditions", 'really-simple-ssl'),
         ),
 

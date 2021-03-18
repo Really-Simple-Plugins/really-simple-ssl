@@ -420,7 +420,7 @@ if ( ! class_exists( "rsssl_wizard" ) ) {
                 $args['title'] = $i . '. ' . RSSSL()->rsssl_config->steps[$page][$i]['title'];
                 $args['active'] = ($i == $active_step) ? 'active' : '';
                 $args['completed'] = $this->required_fields_completed($page, $i, false) ? 'complete' : 'incomplete';
-                $args['url'] = add_query_arg(array('step' => $i), $this->page_url);
+                $args['url'] = add_query_arg(array('tab' => 'lets-encrypt', 'step' => $i), $this->page_url);
                 if ($this->post_id())
                 {
                     $args['url'] = add_query_arg(array('post_id' => $this->post_id()), $args['url']);
@@ -428,7 +428,7 @@ if ( ! class_exists( "rsssl_wizard" ) ) {
                 $args['sections'] = ($args['active'] == 'active') ? $this->wizard_sections($page, $active_step, $active_section) : '';
                 $args_menu['steps'] .= RSSSL()->really_simple_ssl->get_template( 'step.php', $path = rsssl_wizard_path , $args);
             }
-            $args_menu['percentage-complete'] = $this->wizard_percentage_complete($active_step);
+            $args_menu['percentage-complete'] = $this->wizard_percentage_complete($page, $active_step);
             $args_menu['title'] = !empty( $wizard_title ) ? '<div class="rsssl-wizard-subtitle"><h2>' . $wizard_title . '</h2></div>': '' ;
 
             return RSSSL()->really_simple_ssl->get_template( 'menu.php', $path = rsssl_wizard_path, $args_menu );
@@ -460,7 +460,7 @@ if ( ! class_exists( "rsssl_wizard" ) ) {
                     }
 
                     $completed = ( $this->required_fields_completed( $page, $step, $i ) ) ? "rsssl-done" : "rsssl-to-do";
-                    $url = add_query_arg( array('step' => $step, 'section' => $i), $this->page_url );
+                    $url = add_query_arg( array('tab' => 'lets-encrypt', 'step' => $step, 'section' => $i), $this->page_url );
                     if ( $this->post_id() ) {
                         $url = add_query_arg( array( 'post_id' => $this->post_id() ), $url );
                     }
@@ -923,7 +923,7 @@ if ( ! class_exists( "rsssl_wizard" ) ) {
          * */
 
 
-        public function wizard_percentage_complete( $step )
+        public function wizard_percentage_complete( $page, $step )
         {
             //store to make sure it only runs once.
             if ( $this->percentage_complete !== false ) {
@@ -931,6 +931,11 @@ if ( ! class_exists( "rsssl_wizard" ) ) {
             }
 
             $total_steps = $this->total_steps( 'lets-encrypt' );
+            $total_sections = $this->total_sections($page, $step);
+
+//            if ($total_sections > 1) {
+//                $step = $step / $total_sections;
+//            }
 
             $percentage = round( 100 * ( $step / $total_steps ) + 0.45 );
             $this->percentage_complete = $percentage;
