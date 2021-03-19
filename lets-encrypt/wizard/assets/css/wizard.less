@@ -10,6 +10,7 @@
 @gray-dark: #888;
 @red-gap: 15px;
 @green-gap: 20px;
+@color-disabled: #F2F2F2;
 
 /**
 * class to add a triangle pointer to each div
@@ -43,7 +44,6 @@
 
         h1 {
           font-size: 18px;
-          font-weight: bold;
         }
 
         justify-content: space-between;
@@ -69,6 +69,10 @@
         margin-bottom: 0;
         padding-bottom: @green-gap;
         box-shadow: 0 0 5px 5px rgba(222, 222, 222, 0.2);
+
+        .rsssl-wizard-menu h1 {
+          font-weight: bold;
+        }
 
         .rsssl-wizard-progress-bar {
           background: #eeeeee;
@@ -188,7 +192,7 @@
             background-color: white;
           }
 
-          .rsssl-wizard-intro,
+          .rsssl-wizard-intro, .rsssl-template-intro
           .rsssl-master-label {
             grid-column-start: 1;
             background-color: white;
@@ -546,6 +550,10 @@
     }
   }
 
+  input:disabled {
+    background-color: @color-disabled;
+  }
+
   /* Text, Email, Select(2), Textarea Style */
 
   input[type="text"], input[type="email"], select, .select2, textarea, input[type="number"] {
@@ -811,6 +819,7 @@
 /* START TOOLTIP STYLES */
 [rsssl-tooltip] {
   position: relative; /* opinion 1 */
+  margin-left: 5px;
 }
 
 /* Applies to all tooltips */
@@ -1429,12 +1438,15 @@ html .mceContentBody {
     .rsssl-field {
       padding: 0 @green-gap 0 @green-gap;
       background-color: white;
+      .rsssl-template-intro {
+        margin-top: @red-gap;
+      }
     }
 
     .rsssl-title-wrap {
       font-size: 15px;
-      font-weight: 600;
-      //width: 100%;
+      font-weight: 700;
+      padding-top: @red-gap;
     }
 
     .rsssl-label {
@@ -1443,11 +1455,15 @@ html .mceContentBody {
         display:flex;
         flex-direction: column;
         font-size:15px;
-        font-weight: 600;
         cursor: default;
+        .rsssl-label-wrap {
+          display: flex;
+          margin-top: @red-gap;
+          font-weight: 700;
+        }
         .rsssl-subtitle-wrap {
-          font-weight: 500;
           font-size: 0.9em;
+          margin: 5px 5px 0 0;
         }
       }
     }
@@ -1581,7 +1597,7 @@ html .mceContentBody {
     margin-top: -11px !important;
   }
   input[type="text"], input[type="email"], input[type="number"] {
-    max-width: 500px;
+    //max-width: 500px;
     border-color: @input-border-color;
   }
 
@@ -1636,7 +1652,7 @@ html .mceContentBody {
 
 //Button styling
 a.rsssl.button, button.rsssl.button, input.rsssl.button {
-  //smargin-left:15px;
+  margin-left:15px;
   box-shadow: 0 0 0 #fff;
   background-color: @brand-primary;
   color: #fff;

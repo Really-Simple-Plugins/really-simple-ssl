@@ -30,11 +30,10 @@ $this->fields = $this->fields + array(
             'source'      => 'lets-encrypt',
             'type'        => 'text',
             'default'     => rsssl_get_non_www_domain(),
-            'placeholder' => rsssl_get_non_www_domain(),
-            'label'       => __( "Your domain", 'really-simple-ssl' ),
+            'label'       => __( "Domain", 'really-simple-ssl' ),
             'sublabel'    => __("This field is prefilled based on your configuration", 'really-simple-ssl'),
             'required'    => true,
-//            'disabled'    => true,
+            'disabled'    => true,
         ),
 
         'include_www' => array(
@@ -43,7 +42,9 @@ $this->fields = $this->fields + array(
             'source'      => 'lets-encrypt',
             'type'        => 'checkbox',
             'default'     => '',
-//            'label'       => __( "Include www domain", 'really-simple-ssl' ),
+            'tooltip'   => __( "Your email address will be obfuscated on the front-end to prevent spidering.",
+                'really-simple-ssl' ),
+            'tooltip-position' => 'after',
             'option_text' => __("Include www-prefixed version too?", 'really-simple-ssl'),
         ),
 
@@ -55,6 +56,7 @@ $this->fields = $this->fields + array(
             'default'   => get_option('admin_email'),
             'tooltip'   => __( "Your email address will be obfuscated on the front-end to prevent spidering.",
                 'really-simple-ssl' ),
+            'tooltip-position' => 'title',
             'label'     => __( "Your e-mail address", 'really-simple-ssl' ),
             'sublabel'  => __("This field is prefilled based on your configuration", 'really-simple-ssl'),
             'required'  => true,
@@ -74,7 +76,7 @@ $this->fields = $this->fields + array(
             'step'        => 1,
             'section'     => 2,
             'source'      => 'lets-encrypt',
-            'label'       => '',
+//            'label'       => '',
             'callback'    => 'add_instructions_page',
             'help'     => __('Want to come back to the instructions after this step?', 'really-simple-ssl' ) . rsssl_read_more( 'https://complianz.io/what-is-force-majeure/' ),
         ),
@@ -83,12 +85,11 @@ $this->fields = $this->fields + array(
 // Questions - Content
 
 $this->fields = $this->fields + array(
-        // constante zoeken + callback
         'verification' => array(
             'step'        => 2,
             'section'     => 1,
             'source'      => 'lets-encrypt',
-            'label'       => '',
+//            'label'       => '',
             'callback'    => 'add_verification_page',
             'help'     => __('To make sure you have added everything correctly,  view this example of these folders included in the root of a WordPress installation.', 'really-simple-ssl' ) . rsssl_read_more( 'https://complianz.io/what-is-force-majeure/' ),
         ),
@@ -100,7 +101,7 @@ $this->fields = $this->fields + array(
             'step'        => 3,
             'section'     => 1,
             'source'      => 'lets-encrypt',
-            'label'       => '',
+//            'label'       => '',
             'callback'    => 'add_installation_page',
         ),
     );
@@ -111,6 +112,6 @@ $this->fields = $this->fields + array(
             'step'     => 4,
             'source'   => 'lets-encrypt',
             'callback' => 'last_step',
-            'label'    => '',
+//            'label'    => '',
         ),
     );

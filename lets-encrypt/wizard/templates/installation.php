@@ -4,9 +4,11 @@ defined( 'ABSPATH' ) or die( "you do not have access to this page!" );
 
 ?>
 <div class="rsssl-section">
-    <p>
-        <?php _e("We will now install your SSL Certificate in your hosting environment. You will now need the specific instructions for your hosting environment", "really-simple-ssl"); ?>
-    </p>
+    <div class="rsssl-template-intro">
+        <p>
+            <?php _e("We will now install your SSL Certificate in your hosting environment. You will now need the specific instructions for your hosting environment", "really-simple-ssl"); ?>
+        </p>
+    </div>
     <h2>
         <?php _e("FTP or Hosting Credentials", "really-simple-ssl")
         . RSSSL()->rsssl_help->get_help_tip(__("Placeholder", "really-simple-ssl") ); ?>

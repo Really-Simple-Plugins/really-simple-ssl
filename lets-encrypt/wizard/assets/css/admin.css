@@ -120,11 +120,11 @@
   margin: 10px;
 }
 #rsssl-wizard .rsssl-icon.rsssl-success {
-  color: #61ce70;
+  color: #29B6F6;
 }
 #rsssl-wizard .rsssl-icon.rsssl-success svg {
-  stroke: #61ce70;
-  fill: #61ce70;
+  stroke: #29B6F6;
+  fill: #29B6F6;
 }
 #rsssl-wizard .rsssl-icon.rsssl-success.documents-shortcode {
   color: #000;

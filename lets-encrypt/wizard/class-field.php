@@ -36,16 +36,14 @@ if ( ! class_exists( "rsssl_field" ) ) {
         public function label_html( $args ) {
             ?>
             <label class="<?php if ( $args['disabled'] ) {echo 'rsssl-disabled';} ?>" for="<?php echo $args['fieldname'] ?>">
-                <div class="rsssl-label-wrap"><?php echo $args['label'] ?></div>
-                <div class="rsssl-subtitle-wrap"><?php echo $args['sublabel'] ?></div>
-                <div>
+                <div class="rsssl-label-wrap"><?php echo $args['label'] ?>
                     <?php
-                    if ( isset($args['tooltip']) ) {
+                    if ( isset($args['tooltip']) && $args['tooltip-position'] === 'title') {
                         echo rsssl_icon('help', 'normal', $args['tooltip']);
                     }
                     ?>
                 </div>
-
+                <div class="rsssl-subtitle-wrap"><?php echo $args['sublabel'] ?></div>
             </label>
             <?php
         }
@@ -503,7 +501,11 @@ if ( ! class_exists( "rsssl_field" ) ) {
                 echo "<div class='rsssl-title-wrap rsssl-field'>$title</div>";
             }
 
-            echo '<div class="rsssl-field"><div class="rsssl-label">';
+            echo '<div class="rsssl-field">';
+
+            if ($args['label']) {
+                echo '<div class="rsssl-label">';
+            }
         }
 
         public function get_master_label( $args ) {
@@ -544,7 +546,9 @@ if ( ! class_exists( "rsssl_field" ) ) {
         function after_label(
             $args
         ) {
-            echo '</div>';
+            if ($args['label'] ) {
+                echo '</div>';
+            }
         }
 
         public function after_field( $args ) {
@@ -574,7 +578,7 @@ if ( ! class_exists( "rsssl_field" ) ) {
             $required = $args['required'] ? 'required' : '';
             $is_required = $args['required'] ? 'is-required' : '';
             $check_icon = rsssl_icon('check', 'success');
-            $times_icon = rsssl_icon('check', 'failed');
+//            $times_icon = rsssl_icon('check', 'failed');
             ?>
 
             <?php do_action( 'rsssl_before_label', $args ); ?>
@@ -587,9 +591,12 @@ if ( ! class_exists( "rsssl_field" ) ) {
                 type="text"
                 value="<?php echo esc_html( $value ) ?>"
                 name="<?php echo esc_html( $fieldname ) ?>"
+                <?php if ( $args['disabled'] ) {
+                    echo 'disabled';
+                } ?>
             >
             <?php echo $check_icon ?>
-            <?php echo $times_icon ?>
+<!--            --><?php //echo $times_icon ?>
 
             <?php do_action( 'rsssl_after_field', $args ); ?>
 
@@ -765,6 +772,10 @@ if ( ! class_exists( "rsssl_field" ) ) {
             </label>
             <?php if ($args['option_text'] ) {
                 ?> <div class="rsssl-wizard-settings-text"><?php echo $args['option_text'] ?></div> <?php
+
+                if (isset($args['tooltip']) && $args['tooltip-position'] === 'after') {
+                    echo rsssl_icon('help', 'normal', $args['tooltip']);
+                }
             }
 
             do_action( 'rsssl_after_field', $args ); ?>

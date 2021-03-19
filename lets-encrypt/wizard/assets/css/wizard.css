@@ -30,7 +30,6 @@
 }
 #rsssl-content-area .rsssl-wizard-title h1 {
   font-size: 18px;
-  font-weight: bold;
 }
 #rsssl-content-area .rsssl-wizard-title.rsssl-section-content-notifications-header {
   border-bottom: 1px solid #e6e6e6;
@@ -48,6 +47,9 @@
   margin-bottom: 0;
   padding-bottom: 20px;
   box-shadow: 0 0 5px 5px rgba(222, 222, 222, 0.2);
+}
+#rsssl-content-area .rsssl-wizard-menu .rsssl-wizard-menu h1 {
+  font-weight: bold;
 }
 #rsssl-content-area .rsssl-wizard-menu .rsssl-wizard-progress-bar {
   background: #eeeeee;
@@ -138,7 +140,7 @@
   background-color: white;
 }
 #rsssl-content-area .rsssl-section-content form .rsssl-wizard-intro,
-#rsssl-content-area .rsssl-section-content form .rsssl-master-label {
+#rsssl-content-area .rsssl-section-content form .rsssl-template-intro .rsssl-master-label {
   grid-column-start: 1;
   background-color: white;
   padding: 20px 20px 0 20px;
@@ -445,6 +447,9 @@
 #rsssl-wizard input[type="email"].validation:invalid ~ span .rsssl-success {
   display: none;
 }
+#rsssl-wizard input:disabled {
+  background-color: #F2F2F2;
+}
 #rsssl-wizard input[type="text"],
 #rsssl-wizard input[type="email"],
 #rsssl-wizard select,
@@ -655,6 +660,7 @@
 [rsssl-tooltip] {
   position: relative;
   /* opinion 1 */
+  margin-left: 5px;
 }
 /* Applies to all tooltips */
 [rsssl-tooltip]::before,
@@ -1201,9 +1207,13 @@ html .mceContentBody {
   padding: 0 20px 0 20px;
   background-color: white;
 }
+#rsssl-wizard .field-group .rsssl-field .rsssl-template-intro {
+  margin-top: 15px;
+}
 #rsssl-wizard .field-group .rsssl-title-wrap {
   font-size: 15px;
-  font-weight: 600;
+  font-weight: 700;
+  padding-top: 15px;
 }
 #rsssl-wizard .field-group .rsssl-label {
   margin-bottom: 10px;
@@ -1212,12 +1222,16 @@ html .mceContentBody {
   display: flex;
   flex-direction: column;
   font-size: 15px;
-  font-weight: 600;
   cursor: default;
 }
+#rsssl-wizard .field-group .rsssl-label label .rsssl-label-wrap {
+  display: flex;
+  margin-top: 15px;
+  font-weight: 700;
+}
 #rsssl-wizard .field-group .rsssl-label label .rsssl-subtitle-wrap {
-  font-weight: 500;
   font-size: 0.9em;
+  margin: 5px 5px 0 0;
 }
 #rsssl-wizard .field-group.rsssl-editor .rsssl-label {
   margin-bottom: 0;
@@ -1336,7 +1350,6 @@ html .mceContentBody {
 .rsssl-field input[type="text"],
 .rsssl-field input[type="email"],
 .rsssl-field input[type="number"] {
-  max-width: 500px;
   border-color: #dadada;
 }
 .rsssl-field select {
@@ -1383,6 +1396,7 @@ html .mceContentBody {
 a.rsssl.button,
 button.rsssl.button,
 input.rsssl.button {
+  margin-left: 15px;
   box-shadow: 0 0 0 #fff;
   background-color: #FBC43D;
   color: #fff;
