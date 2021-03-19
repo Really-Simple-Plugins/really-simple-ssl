@@ -543,7 +543,7 @@ class rsssl_admin extends rsssl_front_end
 
 		ob_start();
 		?>
-        <?php if ( is_rtl() ) { error_log("IS RTL!!!!"); ?>
+        <?php if ( is_rtl() ) { ?>
             <style>
                 #rsssl-message .error{
                     border-right-color:#d7263d;
@@ -627,7 +627,7 @@ class rsssl_admin extends rsssl_front_end
                 }
                 <?php echo apply_filters('rsssl_pro_inline_style', ''); ?>
             </style>
-        <?php } else { error_log("NON RTL");?>
+        <?php } else { ?>
             <style>
                 #rsssl-message .error{
                     border-left-color:#d7263d;
