@@ -1289,8 +1289,10 @@ class rsssl_admin extends rsssl_front_end
         $homeurl_ssl = str_replace("http://", "https://", get_option('home'));
         update_option('siteurl', $siteurl_ssl);
         update_option('home', $homeurl_ssl);
-    }
 
+        //RSSSL has it's own, more extensive mixed content fixer.
+	    update_option( 'https_migration_required', false );
+    }
 
     /**
      * On de-activation, siteurl and homeurl are reset to http
