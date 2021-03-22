@@ -482,7 +482,10 @@ if ( ! function_exists( 'rsssl_get_non_www_domain' ) ) {
         $domain = $parse['host'];
 
         $domain = str_replace('http://', '', $domain);
-        $domain = str_replace('www', '', $domain);
+	    $domain = str_replace('https://', '', $domain);
+	    $domain = str_replace('www', '', $domain);
+
+	    error_log($domain);
 
         return $domain;
     }

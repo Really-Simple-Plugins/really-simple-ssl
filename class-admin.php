@@ -233,8 +233,8 @@ class rsssl_admin extends rsssl_front_end
         add_action('wp_ajax_rsssl_redirect_to_le_wizard', array($this, 'rsssl_redirect_to_le_wizard'));
 
         //@todo nonce wp_verify_nonce($_POST['token'], 'rsssl_nonce')
-        if (isset($_POST['rsssl_do_lets_encrypt']) ) {
-            $this->redirect_to_settings_page($tab='lets-encrypt');
+        if ( isset( $_POST['rsssl_do_lets_encrypt'] ) ) {
+            $this->redirect_to_settings_page($tab='lets-encrypt&step=1');
         }
 
         //handle notices
@@ -455,6 +455,10 @@ class rsssl_admin extends rsssl_front_end
         if ($this->ssl_enabled) return;
 
         if (defined("RSSSL_DISMISS_ACTIVATE_SSL_NOTICE") && RSSSL_DISMISS_ACTIVATE_SSL_NOTICE) return;
+
+        if ( isset( $_GET['tab'] ) && $_GET['tab'] == 'lets-encrypt' && isset( $_GET['step'] ) && $_GET['step'] != 4 ) {
+            return;
+        }
 
         //for multisite, show only activate when a choice has been made to activate networkwide or per site.
         if (is_multisite() && !RSSSL()->rsssl_multisite->selected_networkwide_or_per_site) return;
