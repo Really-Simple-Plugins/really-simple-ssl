@@ -6,7 +6,7 @@ Requires at least: 4.6
 License: GPL2
 Tested up to: 5.7
 Requires PHP: 5.6
-Stable tag: 4.0.11
+Stable tag: 4.0.12
 
 No setup required! You only need an SSL certificate, and this plugin will do the rest.
 
@@ -88,6 +88,7 @@ Yes. There is a dedicated network settings page where you can switch between net
 == Changelog ==
 = 4.0.12 =
 * Added secure cookies
+* Improved Right-To-Left text support
 
 = 4.0.11 =
 * Fixed a bug where users with an older Pro version could get a fatal error call to private function
