@@ -3068,19 +3068,19 @@ class rsssl_admin extends rsssl_front_end
                         'url' => 'https://really-simple-ssl.com/secure-cookies-with-httponly-secure-and-use_only_cookies/',
                     ),
                     'wpconfig-not-writable' => array(
-                            'msg' =>    __("To set the httponly secure cookie settings, your wp-config.php has to be edited, but the file is not writable.","really-simple-ssl").'&nbsp;'.__("Add the following lines of code to your wp-config.php.","really-simple-ssl") .
-                                        "<br><br><code>
-                                                //Begin Really Simple SSL session cookie settings <br>
-                                                &nbsp;&nbsp;@ini_set('session.cookie_httponly', true); <br>
-                                                &nbsp;&nbsp;@ini_set('session.cookie_secure', true); <br>
-                                                &nbsp;&nbsp;@ini_set('session.use_only_cookies', true); <br>
-                                                //END Really Simple SSL cookie settings <br>
-                                            </code><br>
-                                        ".__("Or set your wp-config.php to writable and reload this page.", "really-simple-ssl"),
-                            'icon' => 'warning',
-                            'dismissible' => true,
-                            'plusone' => true,
-                            'url' => 'https://really-simple-ssl.com/secure-cookies-with-httponly-secure-and-use_only_cookies/',
+                        'msg' =>    __("To set the httponly secure cookie settings, your wp-config.php has to be edited, but the file is not writable.","really-simple-ssl").'&nbsp;'.__("Add the following lines of code to your wp-config.php.","really-simple-ssl") .
+                                    "<br><br><code>
+                                            //Begin Really Simple SSL session cookie settings <br>
+                                            &nbsp;&nbsp;@ini_set('session.cookie_httponly', true); <br>
+                                            &nbsp;&nbsp;@ini_set('session.cookie_secure', true); <br>
+                                            &nbsp;&nbsp;@ini_set('session.use_only_cookies', true); <br>
+                                            //END Really Simple SSL cookie settings <br>
+                                        </code><br>
+                                    ".__("Or set your wp-config.php to writable and reload this page.", "really-simple-ssl"),
+                        'icon' => 'warning',
+                        'dismissible' => true,
+                        'plusone' => true,
+                        'url' => 'https://really-simple-ssl.com/secure-cookies-with-httponly-secure-and-use_only_cookies/',
                     )
                 ),
             ),
@@ -4393,16 +4393,16 @@ class rsssl_admin extends rsssl_front_end
 			return 'wpconfig-not-writable';
 		}
 
+		$wpconfig = file_get_contents($wpconfig_path);
+		if ((strpos($wpconfig, "//Begin Really Simple SSL session cookie settings") !== FALSE) || (strpos($wpconfig, "cookie_httponly") !== FALSE)) {
+			return 'set';
+		}
+
 		if ( !is_writable($wpconfig_path) ) {
 			return 'wpconfig-not-writable';
 		}
 
-		$wpconfig = file_get_contents($wpconfig_path);
-		if ((strpos($wpconfig, "//Begin Really Simple SSL session cookie settings") === FALSE) && (strpos($wpconfig, "cookie_httponly") === FALSE)) {
-			return 'not-set';
-		}
-
-		return 'set';
+		return 'not-set';
 	}
 
 	/**
