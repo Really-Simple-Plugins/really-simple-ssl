@@ -43,6 +43,7 @@ some cool features.
 * All incoming requests are redirected to https. Default with an internal WordPress redirect, but you can also enable a .htaccess redirect.
 * The siteurl and homeurl are changed to https.
 * Your insecure content is fixed by replacing all http:// URL's with https://, except hyperlinks to other domains. Dynamically, so no database changes are made (except for the siteurl and homeurl).
+* Cookies set with PHP are set securely, by setting them with the httpOnly flag
 
 Check out other plugins developed by Really Simple Plugins as well: [Complianz](https://wordpress.org/plugins/complianz-gdpr/) and [Zip Recipes](https://wordpress.org/plugins/zip-recipes/).
 
@@ -86,6 +87,7 @@ Yes. There is a dedicated network settings page where you can switch between net
 
 == Changelog ==
 = 4.0.12 =
+* Added secure cookies
 * Improved Right-To-Left text support
 
 = 4.0.11 =

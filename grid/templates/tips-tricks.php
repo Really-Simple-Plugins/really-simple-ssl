@@ -28,10 +28,18 @@
 			</div>
             <div class="rsssl-tips-tricks-element">
                 <div class="rsssl-tips-tricks-content">
-                    <?php _e("Improve security: Secure cookies", "really-simple-ssl");?>
+                    <?php _e("Adding a Content Security Policy", "really-simple-ssl");?>
                 </div>
                 <div class="rsssl-tips-tricks-read-more">
-                    <a href="https://really-simple-ssl.com/secure-cookies-with-httponly-secure-and-use_only_cookies/" target="_blank"><?php _e("Read more", "really-simple-ssl");?></a>
+                    <a href="https://really-simple-ssl.com/knowledge-base/how-to-use-the-content-security-policy-generator/" target="_blank"><?php _e("Read more", "really-simple-ssl");?></a>
+                </div>
+            </div>
+            <div class="rsssl-tips-tricks-element">
+                <div class="rsssl-tips-tricks-content">
+			        <?php _e("Adding a Permission Policy", "really-simple-ssl");?>
+                </div>
+                <div class="rsssl-tips-tricks-read-more">
+                    <a href="https://really-simple-ssl.com/knowledge-base/how-to-use-the-permissions-policy-header/" target="_blank"><?php _e("Read more", "really-simple-ssl");?></a>
                 </div>
             </div>
             <div class="rsssl-tips-tricks-element">
