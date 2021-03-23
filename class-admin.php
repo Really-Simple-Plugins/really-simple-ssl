@@ -4205,15 +4205,15 @@ class rsssl_admin extends rsssl_front_end
 		}
 
 		$wpconfig = file_get_contents($wpconfig_path);
-		if ((strpos($wpconfig, "//Begin Really Simple SSL session cookie settings") === FALSE) && (strpos($wpconfig, "cookie_httponly") === FALSE)) {
-			return 'not-set';
+		if ((strpos($wpconfig, "//Begin Really Simple SSL session cookie settings") !== FALSE) || (strpos($wpconfig, "cookie_httponly") !== FALSE)) {
+			return 'set';
 		}
 
 		if ( !is_writable($wpconfig_path) ) {
 			return 'wpconfig-not-writable';
 		}
 
-		return 'set';
+		return 'not-set';
 	}
 
 	/**
