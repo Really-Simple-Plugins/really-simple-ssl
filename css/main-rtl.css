@@ -1,59 +1,94 @@
+/*
+    Hide nags from other plugins
+*/
+.error:not(.really-simple-plugins),
+.notice:not(.really-simple-plugins),
+.update-nag:not(.really-simple-plugins),
+.notice-info:not(.really-simple-plugins) {
+    display: none !important;
+}
+.rsssl-spacer {
+    width: 10px;
+}
+/* comments on settings pages */
+.rsssl-grid .rsssl-item .item-container .form-table tbody tr.rsssl-comment-text {
+    color: #888;
+    font-size: 13px;
+    font-weight: normal;
+    font-style: italic;
+    padding-bottom: 0 !important;
+    margin-top: 0 !important;
+}
+.rsssl-grid .rsssl-item .item-container .form-table tbody tr.rsssl-comment-text td {
+    padding-top: 0!important;
+}
+.rsssl-networksettings-overlay {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background: rgba(255, 255, 255, 0.8);
+}
+.rsssl-networksettings-overlay .rsssl-disabled-settings-overlay {
+    position: absolute;
+    width: calc(100% - 65px);
+    bottom: 0;
+    background-color: #fff;
+    padding: 20px;
+    margin: 12px;
+    box-shadow: 0 0 5px 5px rgba(223, 222, 222, 0.4);
+}
+.rsssl-networksettings-overlay .rsssl-disabled-settings-overlay .rsssl-open {
+    float: right;
+    margin-left: 12px;
+}
+/* Hide review on own settings page */
+#rsssl_do_activate_ssl {
+    margin-left: 10px;
+}
+.rlrsssl-review {
+    display: none;
+}
 .rsssl-main {
     flex: 1;
     width: 80%;
-    float:right;
+    float: right;
 }
-
 .rsssl-sidebar img {
-    max-width:100%;
+    max-width: 100%;
     /*height:inherit;*/
 }
-
-.nav-tab-active {
-    background: #fff;
-}
-
 .really-simple-ssl-table {
     display: flex;
     flex-direction: column;
-    max-width: 1140px;
 }
-
 .rsssl-table-td-main-content {
     width: 100%;
 }
-
 .really-simple-ssl-table tr:first-child {
-    border-top-right-radius: .55rem;
-    border-top-left-radius: .55rem;
+    border-top-right-radius: 0.55rem;
+    border-top-left-radius: 0.55rem;
 }
-
 .really-simple-ssl-table tr:last-child {
     margin-bottom: 0;
-    border-bottom-right-radius: .55rem;
-    border-bottom-left-radius: .55rem;
+    border-bottom-right-radius: 0.55rem;
+    border-bottom-left-radius: 0.55rem;
 }
-
 .really-simple-ssl-table tr {
     position: relative;
-    display: block;
-    padding: .75rem 1.25rem;
-    margin-bottom: -1px;
+    padding-right: 5px;
+    padding-top: 10px;
     background-color: #fff;
-    border: 1px solid rgba(0,0,0,.125);
 }
-
 .debug-log {
     background-color: #fff;
-    padding:15px;
-    border:1px solid black;
+    padding: 15px;
 }
-
 .rsssl-icons {
-    width:15px;
-    height:15px;
+    width: 15px;
+    height: 15px;
 }
-
 .rsssl-update-count {
     margin-right: 4px !important;
     display: inline-block;
@@ -69,9 +104,8 @@
     font-size: 11px;
     line-height: 1.6;
     text-align: center;
-    z-index: 26
+    z-index: 26;
 }
-
 /* rsssl-rsssl-tooltip for settings page */
 /* Base styles for the element that has a rsssl-tooltip */
 [data-rsssl-tooltip],
@@ -79,7 +113,6 @@
     position: relative;
     cursor: pointer;
 }
-
 /* Base styles for the entire tooltip */
 [data-rsssl-tooltip]:before,
 [data-rsssl-tooltip]:after,
@@ -90,24 +123,14 @@
     -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
     filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=0);
     opacity: 0;
-    -webkit-transition:
-            opacity 0.2s ease-in-out,
-            visibility 0.2s ease-in-out,
-            -webkit-transform 0.2s cubic-bezier(0.71, 1.7, 0.77, 1.24);
-    -moz-transition:
-            opacity 0.2s ease-in-out,
-            visibility 0.2s ease-in-out,
-            -moz-transform 0.2s cubic-bezier(0.71, 1.7, 0.77, 1.24);
-    transition:
-            opacity 0.2s ease-in-out,
-            visibility 0.2s ease-in-out,
-            transform 0.2s cubic-bezier(0.71, 1.7, 0.77, 1.24);
+    -webkit-transition: opacity 0.2s ease-in-out, visibility 0.2s ease-in-out, -webkit-transform 0.2s cubic-bezier(0.71, 1.7, 0.77, 1.24);
+    -moz-transition: opacity 0.2s ease-in-out, visibility 0.2s ease-in-out, -moz-transform 0.2s cubic-bezier(0.71, 1.7, 0.77, 1.24);
+    transition: opacity 0.2s ease-in-out, visibility 0.2s ease-in-out, transform 0.2s cubic-bezier(0.71, 1.7, 0.77, 1.24);
     -webkit-transform: translate3d(0, 0, 0);
-    -moz-transform:    translate3d(0, 0, 0);
-    transform:         translate3d(0, 0, 0);
+    -moz-transform: translate3d(0, 0, 0);
+    transform: translate3d(0, 0, 0);
     pointer-events: none;
 }
-
 /* Show the entire rsssl-tooltip on hover and focus */
 [data-rsssl-tooltip]:hover:before,
 [data-rsssl-tooltip]:hover:after,
@@ -122,7 +145,6 @@
     filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=100);
     opacity: 1;
 }
-
 /* Base styles for the rsssl-tooltip's directional arrow */
 .rsssl-tooltip:before,
 [data-rsssl-tooltip]:before {
@@ -131,13 +153,12 @@
     background: transparent;
     content: "";
 }
-
 /* Base styles for the rsssl-tooltip's content area */
 .rsssl-tooltip:after,
 [data-rsssl-tooltip]:after {
     z-index: 1000;
     padding: 8px;
-    width: 160px;
+    width: 220px;
     background-color: #000;
     background-color: hsla(0, 0%, 20%, 0.9);
     color: #fff;
@@ -145,10 +166,11 @@
     font-size: 14px;
     line-height: 1.2;
 }
-
 /* Directions */
-
 /* Top (default) */
+.rsssl-tooltip-right {
+    font-weight: normal;
+}
 [data-rsssl-tooltip]:before,
 [data-rsssl-tooltip]:after,
 .rsssl-tooltip:before,
@@ -158,7 +180,6 @@
     bottom: 100%;
     right: 50%;
 }
-
 [data-rsssl-tooltip]:before,
 .rsssl-tooltip:before,
 .rsssl-tooltip-top:before {
@@ -167,14 +188,12 @@
     border-top-color: #000;
     border-top-color: hsla(0, 0%, 20%, 0.9);
 }
-
 /* Horizontally align top/bottom rsssl-tooltips */
 [data-rsssl-tooltip]:after,
 .rsssl-tooltip:after,
 .rsssl-tooltip-top:after {
     margin-right: -80px;
 }
-
 [data-rsssl-tooltip]:hover:before,
 [data-rsssl-tooltip]:hover:after,
 [data-rsssl-tooltip]:focus:before,
@@ -188,18 +207,16 @@
 .rsssl-tooltip-top:focus:before,
 .rsssl-tooltip-top:focus:after {
     -webkit-transform: translateY(-12px);
-    -moz-transform:    translateY(-12px);
-    transform:         translateY(-12px);
+    -moz-transform: translateY(-12px);
+    transform: translateY(-12px);
 }
-
 /* Left */
 .rsssl-tooltip-left:before,
 .rsssl-tooltip-left:after {
     left: 100%;
-    bottom: 50%;
+    /*bottom: 50%;*/
     right: auto;
 }
-
 .rsssl-tooltip-left:before {
     margin-right: 0;
     margin-left: -12px;
@@ -208,16 +225,14 @@
     border-right-color: #000;
     border-right-color: hsla(0, 0%, 20%, 0.9);
 }
-
 .rsssl-tooltip-left:hover:before,
 .rsssl-tooltip-left:hover:after,
 .rsssl-tooltip-left:focus:before,
 .rsssl-tooltip-left:focus:after {
     -webkit-transform: translateX(12px);
-    -moz-transform:    translateX(12px);
-    transform:         translateX(12px);
+    -moz-transform: translateX(12px);
+    transform: translateX(12px);
 }
-
 /* Bottom */
 .rsssl-tooltip-bottom:before,
 .rsssl-tooltip-bottom:after {
@@ -225,7 +240,6 @@
     bottom: auto;
     right: 50%;
 }
-
 .rsssl-tooltip-bottom:before {
     margin-top: -12px;
     margin-bottom: 0;
@@ -233,23 +247,20 @@
     border-bottom-color: #000;
     border-bottom-color: hsla(0, 0%, 20%, 0.9);
 }
-
 .rsssl-tooltip-bottom:hover:before,
 .rsssl-tooltip-bottom:hover:after,
 .rsssl-tooltip-bottom:focus:before,
 .rsssl-tooltip-bottom:focus:after {
     -webkit-transform: translateY(12px);
-    -moz-transform:    translateY(12px);
-    transform:         translateY(12px);
+    -moz-transform: translateY(12px);
+    transform: translateY(12px);
 }
-
 /* Right */
 .rsssl-tooltip-right:before,
 .rsssl-tooltip-right:after {
     bottom: 50%;
     right: 100%;
 }
-
 .rsssl-tooltip-right:before {
     margin-bottom: 0;
     margin-right: -12px;
@@ -257,37 +268,31 @@
     border-left-color: #000;
     border-left-color: hsla(0, 0%, 20%, 0.9);
 }
-
 .rsssl-tooltip-right:hover:before,
 .rsssl-tooltip-right:hover:after,
 .rsssl-tooltip-right:focus:before,
 .rsssl-tooltip-right:focus:after {
     -webkit-transform: translateX(-12px);
-    -moz-transform:    translateX(-12px);
-    transform:         translateX(-12px);
+    -moz-transform: translateX(-12px);
+    transform: translateX(-12px);
 }
-
 /* Move directional arrows down a bit for left/right rsssl-tooltips */
 .rsssl-tooltip-left:before,
 .rsssl-tooltip-right:before {
     top: 3px;
 }
-
 /* Vertically center rsssl-tooltip content for left/right rsssl-tooltips */
 .rsssl-tooltip-left:after,
 .rsssl-tooltip-right:after {
     margin-right: 0;
-    margin-bottom: -66px;
+    margin-bottom: -25px;
 }
-
 /* Styling for the sidebar in the admin tab of the free plugin */
-
 .rsssl-really-simple-plugins-logo {
     background-color: #ececec;
     margin-right: -15px;
     margin-left: -15px;
 }
-
 .rsssl-sidebar {
     width: 240px;
     margin-top: 20px;
@@ -297,7 +302,6 @@
     padding-bottom: 15px;
     background-color: #ECECEC;
 }
-
 .rsssl-sidebar-single-content-container {
     min-height: 125px;
     padding-bottom: 35px;
@@ -306,7 +310,6 @@
     width: 100%;
     border-radius: 3%;
 }
-
 .rsssl-sidebar-single-content-container-pro {
     background-color: #fff;
     min-height: 125px;
@@ -315,11 +318,9 @@
     width: 100%;
     border-radius: 3%;
 }
-
 .rsssl-sidebar-title h3 {
     font-size: 0.9em;
 }
-
 .rsssl-sidebar-text-content-pro {
     font-weight: 700;
     font-size: 0.8em;
@@ -327,7 +328,6 @@
     /*min-height: 100px;*/
     margin: auto;
 }
-
 .rsssl-sidebar-text-content {
     width: 45%;
     padding-top: 5px;
@@ -337,35 +337,29 @@
     float: left;
     margin: 10px auto;
 }
-
 .rsssl-pro-image {
     height: 30px;
     margin-top: 6px;
 }
-
 .rsssl-sidebar-image-pro {
     width: 90%;
     margin: 10px;
 }
-
 .rsssl-sidebar-image {
     width: 100px;
     float: right;
     padding: 10px;
     height: 100px;
 }
-
 @media screen and (max-width: 1024px) and (min-width: 541px) {
     /* Let the main container be 100% width again */
     .rsssl-main {
         width: 100%;
     }
-
     .rsssl-sidebar-title {
         /*margin: auto;*/
         text-align: center;
     }
-
     .rsssl-container {
         flex-direction: column;
     }
@@ -383,13 +377,11 @@
         float: right;
         margin-left: 25px;
     }
-
     .rsssl-sidebar-single-content-container-pro {
         width: 40%;
         padding-right: 25px;
         margin: auto auto 25px;
     }
-
     .rsssl-sidebar-um-text-content {
         width: 40%;
     }
@@ -397,7 +389,6 @@
         display: none;
     }
 }
-
 @media screen and (max-width: 540px) {
     .rsssl-main {
         width: 100%;
@@ -420,20 +411,16 @@
         padding-bottom: 10px;
     }
 }
-
 .rsssl-sidebar h4 {
-    font-size:14px;
-    font-style:italic;
+    font-size: 14px;
+    font-style: italic;
 }
-
 .rsssl-wrapper {
     padding: 30px;
 }
-
 .rsssl-sidebar-list {
     font-size: 0.9em;
 }
-
 #rsssl-premium-button-pro {
     display: inline-table;
     width: 40%;
@@ -449,12 +436,10 @@
     color: white;
     margin-left: 5px;
 }
-
 .rsssl-sidebar-content {
     float: right;
     padding-bottom: 10px;
 }
-
 hr {
     display: block;
     height: 1px;
@@ -463,11 +448,9 @@ hr {
     margin: 1em 0;
     padding: 0;
 }
-
 .rsssl-container {
     display: flex;
 }
-
 #rsssl-premium-button {
     display: inline-table;
     width: 40%;
@@ -481,18 +464,12 @@ hr {
     color: white;
     margin-left: 5px;
 }
-
 .rsssl-more-info-button {
     border: none;
     border-radius: 50px;
     clear: both;
     margin-top: 10px;
 }
-
-.rsssl-button-deactivate-keep-ssl {
-    margin-left: 15px;
-}
-
 /*
     cool checkbox sliders
 */
@@ -513,8 +490,8 @@ hr {
     left: 0;
     bottom: 0;
     background-color: #ccc;
-    -webkit-transition: .4s;
-    transition: .4s;
+    -webkit-transition: 0.4s;
+    transition: 0.4s;
 }
 .rsssl-slider:before {
     position: absolute;
@@ -524,8 +501,8 @@ hr {
     right: 4px;
     bottom: 3px;
     background-color: white;
-    -webkit-transition: .4s;
-    transition: .4s;
+    -webkit-transition: 0.4s;
+    transition: 0.4s;
 }
 .rsssl-slider.rsssl-round {
     border-radius: 20px;
@@ -547,54 +524,91 @@ input:disabled + .rsssl-slider {
 input:focus + .rsssl-slider {
     box-shadow: 0 0 1px #2DAAE1;
 }
-
 .debug-log {
     width: 90%;
 }
-
-.rsssl-dismiss-text {
-    font-size: 1em;
-    color: #0073aa;
-    margin-right: 6px;
-}
-
 .rsssl-dashboard-plusone {
     margin-right: 8px;
 }
-
 .rsssl-highlight {
-    border-right: 4px solid #46B450;
-    box-shadow: 0 1px 1px 0 rgba(0,0,0,0.1);
-    background-image:none !important;
+    background-color: #fff;
+    border-left: 4px solid #61ce70;
     -o-animation: fadeIt 5s ease-in-out;
-    animation: fadeIt 5s ease-in-out;}
-
+    animation: fadeIt 5s ease-in-out;
+}
 @-o-keyframes fadeIt {
-    0%   { background-color: #FFFFFF; }
-    30%  { background-color: #d6efd6; }
-    100% { background-color: inherit; }
+    0% {
+        background-color: #FFFFFF;
+    }
+    30% {
+        background-color: #d6efd6;
+    }
+    100% {
+        border-right: 0;
+        background-color: inherit;
+    }
 }
 @keyframes fadeIt {
-    0%   { background-color: #FFFFFF; }
-    30%  { background-color: #d6efd6; }
-    100% { background-color: inherit; }
+    0% {
+        background-color: #FFFFFF;
+        border-right: 0;
+    }
+    30% {
+        background-color: #d6efd6;
+    }
+    100% {
+        background-color: inherit;
+    }
 }
-
 .form-table th {
     padding-right: 10px;
 }
-
 .rsssl-dashboard-dismiss .close {
     all: initial;
 }
-
 .rsssl-dashboard-dismiss span {
     font-size: 1.5em;
-    color: darkgrey;
+    color: black;
     font-family: sans-serif;
 }
-
 .rsssl-dashboard-dismiss span:hover {
     cursor: pointer;
     color: grey;
+}
+/* License page */
+.rsssl-grid .rsssl-item.rsssl-license-grid .item-container .form-table tbody tr {
+    max-width: 100%;
+    width: 100%;
+}
+.rsssl-grid .rsssl-item.rsssl-license-grid .item-container .rsssl-grid-item-footer input + input {
+    margin-right: 20px;
+}
+.rsssl_notice_license {
+    font-size: 13px !important;
+    border-radius: 0.25rem;
+    padding: 10px 15px;
+    margin: 10px 0;
+    background-color: #29b6f6;
+    border: 1px solid #29b6f6;
+    color: #fff;
+}
+.rsssl_notice_license h1 {
+    font-size: 16px;
+}
+.rsssl_notice_license p {
+    font-size: 13px !important;
+}
+.rsssl_notice_license.success {
+    background-color: #dff0d8;
+    border-color: #d0e9c6;
+    color: #3c763d;
+}
+.rsssl_notice_license.warning {
+    color: #000;
+    background-color: #FBC43D;
+    border-color: #FBC43D;
+}
+.rsssl_notice_license ul {
+    list-style-type: disc;
+    margin-right: 22px;
 }
