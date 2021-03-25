@@ -162,6 +162,12 @@ if (!class_exists('rsssl_multisite')) {
 			        ),
 		        ),
 	        );
+
+	        //secure cookies are disabled on subsites when multisite, but should show on the network tab.
+	        $notices['secure_cookies_set']['condition'] = array(
+                'rsssl_ssl_enabled',
+                'RSSSL()->really_simple_ssl->can_apply_networkwide',
+            );
             return $notices;
         }
 

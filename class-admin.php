@@ -3047,6 +3047,7 @@ class rsssl_admin extends rsssl_front_end
 
             'secure_cookies_set' => array(
 	            'condition' => array(
+		                'NOT is_multisite',
 	                    'rsssl_ssl_enabled',
                         'RSSSL()->really_simple_ssl->can_apply_networkwide',
                 ),
