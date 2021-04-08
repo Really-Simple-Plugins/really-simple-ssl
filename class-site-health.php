@@ -113,7 +113,7 @@ if (!class_exists("rsssl_site_health")) {
 
 			if (!RSSSL()->really_simple_ssl->ssl_enabled) {
 				if ( RSSSL()->really_simple_ssl->site_has_ssl ) {
-					$result['status']      = 'recommended';
+					$result['status']      = 'critical';
 					$result['label']       = __( 'SSL is not enabled.', 'really-simple-ssl' );
 					$result['description'] = sprintf(
 						'<p>%s</p>',
