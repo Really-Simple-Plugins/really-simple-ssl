@@ -23,6 +23,10 @@ if (!class_exists("rsssl_site_health")) {
 		}
 
 		public function rsssl_health_check( $tests ) {
+
+			unset($tests['async']['https_status']);
+
+
 			if ( !RSSSL()->really_simple_ssl->dismiss_all_notices ) {
 
 				$tests['direct']['rsssl-health'] = array(
@@ -109,7 +113,7 @@ if (!class_exists("rsssl_site_health")) {
 
 			if (!RSSSL()->really_simple_ssl->ssl_enabled) {
 				if ( RSSSL()->really_simple_ssl->site_has_ssl ) {
-					$result['status']      = 'recommended';
+					$result['status']      = 'critical';
 					$result['label']       = __( 'SSL is not enabled.', 'really-simple-ssl' );
 					$result['description'] = sprintf(
 						'<p>%s</p>',
@@ -122,7 +126,7 @@ if (!class_exists("rsssl_site_health")) {
 						__( 'Activate SSL', 'really-simple-ssl' )
 					);
 				} else {
-					$result['status']      = 'recommended';
+					$result['status']      = 'critical';
 					$result['label']       = __( 'No SSL detected.' , 'really-simple-ssl' );
 					$result['description'] = sprintf(
 						'<p>%s</p>',
