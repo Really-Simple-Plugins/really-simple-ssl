@@ -88,6 +88,7 @@ Yes. There is a dedicated network settings page where you can switch between net
 == Changelog ==
 = 4.0.14 =
 * Improvement: when WordPress incorrectly reports that SSL is not possible, correct the resulting site health notice.
+* Improvement: don't show the secure cookies notice on subsites of a multisite installation. Show on the network dashboard instead.
 
 = 4.0.13 =
 * Fixed notice about wp config.php not writable notice even when httpOnly cookie settings already written.
