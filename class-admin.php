@@ -3110,6 +3110,11 @@ class rsssl_admin extends rsssl_front_end
             ),
         );
 
+        //on multisite, don't show the notice on subsites.
+        if ( is_multisite() && !is_network_admin() ) {
+            unset($notices['secure_cookies_set']);
+        }
+
         $notices = apply_filters('rsssl_notices', $notices);
         foreach ($notices as $id => $notice) {
             $notices[$id] = wp_parse_args($notice, $notice_defaults);
