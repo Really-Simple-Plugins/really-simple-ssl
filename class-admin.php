@@ -3633,6 +3633,22 @@ class rsssl_admin extends rsssl_front_end
 		    $header = $this->get_template_part($grid_item, 'header', $index);
             $instructions = $grid_item['instructions'] ? '<a href="'.esc_url($grid_item['instructions']).'" target="_blank">'.__("Instructions manual", "really-simple-ssl").'</a>' : '';
 		    // Add form if type is settings
+		    $form_open = '';
+		    $form_close = '';
+		    if ( $grid_item['type'] === 'scan' ) {
+			    $form_open = '<form id="rsssl_scan_form" action="" method="post">';
+			    $form_close = '</form>';
+		    } elseif ( $grid_item['type'] === 'settings' ) {
+			    if ( is_network_admin() ) {
+				    $form_open = '<form action="edit.php?action=rsssl_update_network_settings" method="post">'.wp_nonce_field('rsssl_ms_settings_update', 'rsssl_ms_nonce');
+				    $form_close = '</form>';
+
+			    } else {
+				    $form_open = '<form action="options.php" method="post">';
+				    $form_close = '</form>';
+			    }
+		    }
+		    
 		    $block = str_replace(array('{class}', '{title}', '{header}', '{content}', '{footer}', '{instructions}'), array($grid_item['class'], $grid_item['title'], $header, $content, $footer, $instructions), $element);
 		    $output .= $block;
 	    }
