@@ -77,21 +77,19 @@ $this->fields = $this->fields + array(
             'section'     => 2,
             'source'      => 'lets-encrypt',
 //            'label'       => '',
-            'callback'    => 'add_instructions_page',
+            'callback'    => 'instructions.php',
             'help'     => __('Want to come back to the instructions after this step?', 'really-simple-ssl' ) . rsssl_read_more( 'https://complianz.io/what-is-force-majeure/' ),
         ),
     );
 
 // Questions - Content
-
 $this->fields = $this->fields + array(
         'verification' => array(
             'step'        => 2,
             'section'     => 1,
             'source'      => 'lets-encrypt',
-//            'label'       => '',
-            'callback'    => 'add_verification_page',
-            'help'     => __('To make sure you have added everything correctly,  view this example of these folders included in the root of a WordPress installation.', 'really-simple-ssl' ) . rsssl_read_more( 'https://complianz.io/what-is-force-majeure/' ),
+            'callback'    => 'verification.php',
+            'help'     => __('To make sure you have added everything correctly, view this example of these folders included in the root of a WordPress installation.', 'really-simple-ssl' ) . rsssl_read_more( 'https://complianz.io/what-is-force-majeure/' ),
         ),
     );
 
@@ -102,7 +100,7 @@ $this->fields = $this->fields + array(
             'section'     => 1,
             'source'      => 'lets-encrypt',
 //            'label'       => '',
-            'callback'    => 'add_installation_page',
+            'callback'    => 'installation.php',
         ),
     );
 

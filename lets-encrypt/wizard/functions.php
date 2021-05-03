@@ -119,26 +119,6 @@ if ( ! function_exists( 'rsssl_get_value' ) ) {
     }
 }
 
-
-if ( ! function_exists( 'rsssl_intro' ) ) {
-
-    /**
-     * @param string $msg
-     *
-     * @return string|void
-     */
-
-    function rsssl_intro( $msg ) {
-        if ( $msg == '' ) {
-            return;
-        }
-        $html = "<div class='rsssl-panel rsssl-notification rsssl-intro'>{$msg}</div>";
-
-        echo $html;
-
-    }
-}
-
 if ( ! function_exists( 'rsssl_notice' ) ) {
     /**
      * Notification without arrow on the left. Should be used outside notifications center
@@ -223,19 +203,6 @@ if ( ! function_exists( 'rsssl_sidebar_notice' ) ) {
     }
 }
 
-if ( ! function_exists( 'rsssl_localize_date' ) ) {
-
-    function rsssl_localize_date( $date ) {
-        $month             = date( 'F', strtotime( $date ) ); //june
-        $month_localized   = __( $month ); //juni
-        $date              = str_replace( $month, $month_localized, $date );
-        $weekday           = date( 'l', strtotime( $date ) ); //wednesday
-        $weekday_localized = __( $weekday ); //woensdag
-        $date              = str_replace( $weekday, $weekday_localized, $date );
-
-        return $date;
-    }
-}
 
 if (!function_exists('rsssl_read_more')) {
     /**
@@ -260,18 +227,6 @@ if (!function_exists('rsssl_read_more')) {
 }
 
 
-if ( ! function_exists( 'rsssl_get_regions' ) ) {
-    /**
-     * At this moment, only one document, for all regions
-     * @return array
-     */
-    function rsssl_get_regions() {
-        $output['all'] = __( 'All regions', 'really-simple-ssl' );
-
-        return $output;
-    }
-}
-
 register_activation_hook( __FILE__, 'rsssl_set_activation_time_stamp' );
 if ( ! function_exists( 'rsssl_set_activation_time_stamp' ) ) {
     function rsssl_set_activation_time_stamp( $networkwide ) {
@@ -279,183 +234,6 @@ if ( ! function_exists( 'rsssl_set_activation_time_stamp' ) ) {
     }
 }
 
-if ( ! function_exists( 'rsssl_allowed_html' ) ) {
-    function rsssl_allowed_html() {
-
-        $allowed_tags = array(
-            'a'          => array(
-                'class'  => array(),
-                'href'   => array(),
-                'rel'    => array(),
-                'title'  => array(),
-                'target' => array(),
-                'id' => array(),
-            ),
-            'button'     => array(
-                'id'  => array(),
-                'class'  => array(),
-                'href'   => array(),
-                'rel'    => array(),
-                'title'  => array(),
-                'target' => array(),
-            ),
-            'b'          => array(),
-            'br'         => array(),
-            'blockquote' => array(
-                'cite' => array(),
-            ),
-            'div'        => array(
-                'class' => array(),
-                'id'    => array(),
-            ),
-            'h1'         => array(),
-            'h2'         => array(),
-            'h3'         => array(),
-            'h4'         => array(),
-            'h5'         => array(),
-            'h6'         => array(),
-            'i'          => array(),
-            'input'      => array(
-                'type'        => array(),
-                'class'       => array(),
-                'id'          => array(),
-                'required'    => array(),
-                'value'       => array(),
-                'placeholder' => array(),
-                'data-category' => array(),
-                'style' => array(
-                    'color' => array(),
-                ),			),
-            'img'        => array(
-                'alt'    => array(),
-                'class'  => array(),
-                'height' => array(),
-                'src'    => array(),
-                'width'  => array(),
-            ),
-            'label'      => array(
-                'for' => array(),
-                'class' => array(),
-                'style' => array(
-                    'visibility' => array(),
-                ),
-            ),
-            'li'         => array(
-                'class' => array(),
-                'id'    => array(),
-            ),
-            'ol'         => array(
-                'class' => array(),
-                'id'    => array(),
-            ),
-            'p'          => array(
-                'class' => array(),
-                'id'    => array(),
-            ),
-            'span'       => array(
-                'class' => array(),
-                'title' => array(),
-                'style' => array(
-                    'color' => array(),
-                    'display' => array(),
-                ),
-                'id'    => array(),
-            ),
-            'strong'     => array(),
-            'table'      => array(
-                'class' => array(),
-                'id'    => array(),
-            ),
-            'tr'         => array(),
-            'svg'         => array(
-                'width' => array(),
-                'height' => array(),
-                'viewBox' => array(),
-            ),
-            'polyline'    => array(
-                'points' => array(),
-
-            ),
-            'path'    => array(
-                'd' => array(),
-
-            ),
-            'style'      => array(),
-            'td'         => array( 'colspan' => array(), 'scope' => array() ),
-            'th'         => array( 'scope' => array() ),
-            'ul'         => array(
-                'class' => array(),
-                'id'    => array(),
-            ),
-        );
-
-        return apply_filters( "rsssl_allowed_html", $allowed_tags );
-    }
-}
-
-/**
- * Check if this field is translatable
- *
- * @param $fieldname
- *
- * @return bool
- */
-
-if ( ! function_exists( 'rsssl_translate' ) ) {
-    function rsssl_translate( $value, $fieldname ) {
-        if ( function_exists( 'pll__' ) ) {
-            $value = pll__( $value );
-        }
-
-        if ( function_exists( 'icl_translate' ) ) {
-            $value = icl_translate( 'rsssl', $fieldname, $value );
-        }
-
-        $value = apply_filters( 'wpml_translate_single_string', $value, 'rsssl', $fieldname );
-
-        return $value;
-    }
-}
-
-if ( ! function_exists( 'rsssl_sanitize_language' ) ) {
-
-    /**
-     * Validate a language string
-     *
-     * @param $language
-     *
-     * @return bool|string
-     */
-
-    function rsssl_sanitize_language( $language ) {
-        $pattern = '/^[a-zA-Z]{2}$/';
-        if ( ! is_string( $language ) ) {
-            return false;
-        }
-        $language = substr( $language, 0, 2 );
-
-        if ( (bool) preg_match( $pattern, $language ) ) {
-            $language = strtolower( $language );
-
-            return $language;
-        }
-
-        return false;
-    }
-}
-
-if ( ! function_exists( 'rsssl_uses_gutenberg' ) ) {
-    function rsssl_uses_gutenberg() {
-
-        if ( function_exists( 'has_block' )
-            && ! class_exists( 'Classic_Editor' )
-        ) {
-            return true;
-        }
-
-        return false;
-    }
-}
 
 if ( ! function_exists( 'rsssl_array_filter_multidimensional' ) ) {
     function rsssl_array_filter_multidimensional(
@@ -490,3 +268,4 @@ if ( ! function_exists( 'rsssl_get_non_www_domain' ) ) {
         return $domain;
     }
 }
+

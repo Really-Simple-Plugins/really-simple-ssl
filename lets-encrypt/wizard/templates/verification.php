@@ -5,20 +5,26 @@ defined( 'ABSPATH' ) or die( "you do not have access to this page!" );
 ?>
 <div class="rsssl-section">
     <h2>
-        <?php _e("Create a folder to upload verification files", "really-simple-ssl")
-        . RSSSL()->rsssl_help->get_help_tip(__("Placeholder", "really-simple-ssl") ); ?>
+		<?php _e("Create a folder to upload verification files", "really-simple-ssl")
+		      . RSSSL()->rsssl_help->get_help_tip(__("Placeholder", "really-simple-ssl") ); ?>
     </h2>
-    <p>
-        <?php _e("Navigate in FTP or File Manager to the root of your WordPress installation:", "really-simple-ssl"); ?>
-    </p>
-    <ul>
-        <li class="rsssl-tooltip-icon dashicons-before rsssl-icon arrow-right-alt2 dashicons-arrow-right-alt2">
-            <?php _e('Create a folder called “.well-known”', 'really-simple-ssl'); ?>
-        </li>
-        <li class="rsssl-tooltip-icon dashicons-before rsssl-icon arrow-right-alt2 dashicons-arrow-right-alt2">
-            <?php _e('Inside the folder called “.well-known” create a new folder called “acme-challenge”', 'really-simple-ssl'); ?>
-        </li>
-    </ul>
+    <?php if ( RSSSL()->rsssl_letsencrypt->manual_directory_creation_needed() ){ ?>
+        <p>
+		    <?php _e("Navigate in FTP or File Manager to the root of your WordPress installation:", "really-simple-ssl"); ?>
+        </p>
+        <ul>
+            <li class="rsssl-tooltip-icon dashicons-before rsssl-icon arrow-right-alt2 dashicons-arrow-right-alt2">
+			    <?php _e('Create a folder called “.well-known”', 'really-simple-ssl'); ?>
+            </li>
+            <li class="rsssl-tooltip-icon dashicons-before rsssl-icon arrow-right-alt2 dashicons-arrow-right-alt2">
+			    <?php _e('Inside the folder called “.well-known” create a new folder called “acme-challenge”', 'really-simple-ssl'); ?>
+            </li>
+        </ul>
+    <?php } else {?>
+        <p>
+		    <?php _e("The necessary folders were successfully created automatically.", "really-simple-ssl"); ?>
+        </p>
+    <?php } ?>
     <h2>
         <?php _e("Upload the verification files", "really-simple-ssl")
         . RSSSL()->rsssl_help->get_help_tip(__("Placeholder", "really-simple-ssl") ); ?>

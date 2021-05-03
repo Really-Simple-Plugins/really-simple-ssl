@@ -73,29 +73,6 @@ if ( ! class_exists( "rsssl_wizard" ) ) {
             }
         }
 
-        /**
-         * Add instructions page to wizard
-         */
-
-        public function add_instructions_page() {
-            echo RSSSL()->really_simple_ssl->get_template('instructions.php', $path = rsssl_wizard_path);
-        }
-
-        /**
-         * Add verification page to wizard
-         */
-
-        public function add_verification_page() {
-            echo RSSSL()->really_simple_ssl->get_template('verification.php', $path = rsssl_wizard_path);
-        }
-
-        /**
-         * Add installation page to wizard
-         */
-
-        public function add_installation_page() {
-            echo RSSSL()->really_simple_ssl->get_template('installation.php', $path = rsssl_wizard_path);
-        }
 
         /**
          * Some actions after the last step has been completed

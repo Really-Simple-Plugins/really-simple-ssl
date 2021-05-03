@@ -1370,11 +1370,16 @@ if ( ! class_exists( "rsssl_field" ) ) {
             $args
         ) {
             $callback = $args['callback'];
-            do_action( 'rsssl_before_label', $args ); ?>
-            <?php do_action( 'rsssl_label_html' , $args );?>
-            <?php
+            do_action( 'rsssl_before_label', $args );
+            do_action( 'rsssl_label_html' , $args );
             do_action( 'rsssl_after_label', $args );
-            do_action( "rsssl_$callback", $args );
+
+	        $file = trailingslashit(rsssl_wizard_path) . 'templates/' . $callback;
+            if ( file_exists($file) ) {
+                echo RSSSL()->really_simple_ssl->get_template($callback, $path = rsssl_wizard_path);
+            } else {
+	            do_action( "rsssl_$callback", $args );
+            }
             do_action( 'rsssl_after_field', $args );
         }
 

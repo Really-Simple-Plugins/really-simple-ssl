@@ -57,8 +57,8 @@ class REALLY_SIMPLE_SSL
 	public $rsssl_certificate;
 	public $rsssl_wizard;
 	public $rsssl_field;
-	//public $rsssl_document;
 	public $rsssl_config;
+	public $rsssl_letsencrypt;
 
 	private function __construct()
 	{
@@ -89,11 +89,10 @@ class REALLY_SIMPLE_SSL
 				self::$instance->rsssl_certificate = new rsssl_certificate();
 				self::$instance->rsssl_site_health = new rsssl_site_health();
 
-                //self::$instance->rsssl_document = new rsssl_document();
-
                 self::$instance->rsssl_field = new rsssl_field();
                 self::$instance->rsssl_wizard = new rsssl_wizard();
                 self::$instance->rsssl_config = new rsssl_config();
+                self::$instance->rsssl_letsencrypt = new rsssl_letsencrypt();
 
                 if ( $wpcli ) {
 					self::$instance->rsssl_wp_cli = new rsssl_wp_cli();
@@ -140,14 +139,11 @@ class REALLY_SIMPLE_SSL
 			require_once(rsssl_path . 'class-certificate.php');
 			require_once(rsssl_path . 'class-site-health.php');
 
-            //require_once(rsssl_path . 'lets-encrypt/wizard/config/class-document.php');
-
             require_once(rsssl_path . 'lets-encrypt/wizard/assets/icons.php');
             require_once(rsssl_path . 'lets-encrypt/wizard/class-field.php');
             require_once(rsssl_path . 'lets-encrypt/wizard/class-wizard.php');
             require_once(rsssl_path . 'lets-encrypt/wizard/config/class-config.php');
-
-
+            require_once(rsssl_path . 'lets-encrypt/class-letsencrypt.php');
         }
 	}
 
