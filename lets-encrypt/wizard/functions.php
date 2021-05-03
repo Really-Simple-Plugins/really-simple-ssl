@@ -38,83 +38,26 @@ if ( ! function_exists( 'rsssl_get_value' ) ) {
      */
 
     function rsssl_get_value(
-        $fieldname, $post_id = false, $page = false, $use_default = true, $use_translate = true
+        $fieldname, $post_id = false, $page = false, $use_default = true
     ) {
         if ( ! is_numeric( $post_id ) ) {
             $post_id = false;
         }
 
-        if ( ! $page && ! isset( RSSSL()->rsssl_config->fields[ $fieldname ] ) ) {
+        if ( ! $page && ! isset( RSSSL_LE()->config->fields[ $fieldname ] ) ) {
             return false;
         }
 
         //if  a post id is passed we retrieve the data from the post
         if ( ! $page ) {
-            $page = RSSSL()->rsssl_config->fields[ $fieldname ]['source'];
+            $page = RSSSL_LE()->config->fields[ $fieldname ]['source'];
         }
 
         $fields = get_option( 'rsssl_options_' . $page );
-        $default = ( $use_default && $page && isset( RSSSL()->rsssl_config->fields[ $fieldname ]['default'] ) )
-            ? RSSSL()->rsssl_config->fields[ $fieldname ]['default'] : '';
+        $default = ( $use_default && $page && isset( RSSSL_LE()->config->fields[ $fieldname ]['default'] ) )
+            ? RSSSL_LE()->config->fields[ $fieldname ]['default'] : '';
 
         $value   = isset( $fields[ $fieldname ] ) ? $fields[ $fieldname ] : $default;
-
-
-        /*
-         * Translate output
-         *
-         * */
-        if ($use_translate) {
-
-            $type = isset(RSSSL()->rsssl_config->fields[$fieldname]['type'])
-                ? RSSSL()->rsssl_config->fields[$fieldname]['type'] : false;
-            if ($type === 'cookies' || $type === 'thirdparties'
-                || $type === 'processors'
-            ) {
-                if (is_array($value)) {
-
-                    //this is for example a cookie array, like ($item = cookie("name"=>"_ga")
-
-                    foreach ($value as $item_key => $item) {
-                        //contains the values of an item
-                        foreach ($item as $key => $key_value) {
-                            if (function_exists('pll__')) {
-                                $value[$item_key][$key] = pll__($item_key . '_'
-                                    . $fieldname
-                                    . "_" . $key);
-                            }
-                            if (function_exists('icl_translate')) {
-                                $value[$item_key][$key]
-                                    = icl_translate('rsssl',
-                                    $item_key . '_' . $fieldname . "_" . $key,
-                                    $key_value);
-                            }
-
-                            $value[$item_key][$key]
-                                = apply_filters('wpml_translate_single_string',
-                                $key_value, 'rsssl',
-                                $item_key . '_' . $fieldname . "_" . $key);
-                        }
-                    }
-                }
-            } else {
-                if (isset(RSSSL()->rsssl_config->fields[$fieldname]['translatable'])
-                    && RSSSL()->rsssl_config->fields[$fieldname]['translatable']
-                ) {
-                    if (function_exists('pll__')) {
-                        $value = pll__($value);
-                    }
-                    if (function_exists('icl_translate')) {
-                        $value = icl_translate('rsssl', $fieldname, $value);
-                    }
-
-                    $value = apply_filters('wpml_translate_single_string', $value,
-                        'rsssl', $fieldname);
-                }
-            }
-
-        }
-
         return $value;
     }
 }
@@ -262,8 +205,6 @@ if ( ! function_exists( 'rsssl_get_non_www_domain' ) ) {
         $domain = str_replace('http://', '', $domain);
 	    $domain = str_replace('https://', '', $domain);
 	    $domain = str_replace('www', '', $domain);
-
-	    error_log($domain);
 
         return $domain;
     }

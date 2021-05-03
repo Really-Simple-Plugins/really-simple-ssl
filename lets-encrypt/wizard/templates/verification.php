@@ -8,7 +8,7 @@ defined( 'ABSPATH' ) or die( "you do not have access to this page!" );
 		<?php _e("Create a folder to upload verification files", "really-simple-ssl")
 		      . RSSSL()->rsssl_help->get_help_tip(__("Placeholder", "really-simple-ssl") ); ?>
     </h2>
-    <?php if ( RSSSL()->rsssl_letsencrypt->manual_directory_creation_needed() ){ ?>
+    <?php if ( RSSSL_LE()->letsencrypt_handler->manual_directory_creation_needed() ){ ?>
         <p>
 		    <?php _e("Navigate in FTP or File Manager to the root of your WordPress installation:", "really-simple-ssl"); ?>
         </p>
@@ -20,7 +20,23 @@ defined( 'ABSPATH' ) or die( "you do not have access to this page!" );
 			    <?php _e('Inside the folder called “.well-known” create a new folder called “acme-challenge”', 'really-simple-ssl'); ?>
             </li>
         </ul>
-    <?php } else {?>
+    <?php }
+
+    if ( RSSSL_LE()->letsencrypt_handler->manual_key_directory_creation_needed() ){ ?>
+    <p>
+		<?php _e("Navigate in FTP or File Manager to one level above the root of your WordPress installation:", "really-simple-ssl"); ?>
+    </p>
+    <ul>
+        <li class="rsssl-tooltip-icon dashicons-before rsssl-icon arrow-right-alt2 dashicons-arrow-right-alt2">
+			<?php _e('Create a folder called “ssl”', 'really-simple-ssl'); ?>
+        </li>
+        <li class="rsssl-tooltip-icon dashicons-before rsssl-icon arrow-right-alt2 dashicons-arrow-right-alt2">
+			<?php _e('Inside the folder called “ssl” create a new folder called “keys”', 'really-simple-ssl'); ?>
+        </li>
+    </ul>
+	<?php }
+
+	if ( !RSSSL_LE()->letsencrypt_handler->manual_directory_creation_needed() && !RSSSL_LE()->letsencrypt_handler->manual_key_directory_creation_needed() ) { ?>
         <p>
 		    <?php _e("The necessary folders were successfully created automatically.", "really-simple-ssl"); ?>
         </p>

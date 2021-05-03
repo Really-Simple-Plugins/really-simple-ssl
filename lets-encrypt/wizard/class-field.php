@@ -111,7 +111,7 @@ if ( ! class_exists( "rsssl_field" ) ) {
                     return;
                 }
 
-                $fields = RSSSL()->rsssl_config->fields();
+                $fields = RSSSL_LE()->config->fields();
 
                 //remove multiple field
                 if ( isset( $_POST['rsssl_remove_multiple'] ) ) {
@@ -198,7 +198,7 @@ if ( ! class_exists( "rsssl_field" ) ) {
          */
 
         public function is_conditional( $fieldname ) {
-            $fields = RSSSL()->rsssl_config->fields();
+            $fields = RSSSL_LE()->config->fields();
             if ( isset( $fields[ $fieldname ]['condition'] )
                 && $fields[ $fieldname ]['condition']
             ) {
@@ -217,7 +217,7 @@ if ( ! class_exists( "rsssl_field" ) ) {
          */
 
         public function is_multiple_field( $fieldname ) {
-            $fields = RSSSL()->rsssl_config->fields();
+            $fields = RSSSL_LE()->config->fields();
             if ( isset( $fields[ $fieldname ]['type'] )
                 && ( $fields[ $fieldname ]['type'] == 'thirdparties' )
             ) {
@@ -238,7 +238,7 @@ if ( ! class_exists( "rsssl_field" ) ) {
                 return;
             }
 
-            $fields = RSSSL()->rsssl_config->fields();
+            $fields = RSSSL_LE()->config->fields();
             foreach ( $fieldnames as $fieldname => $saved_fields ) {
 
                 if ( ! isset( $fields[ $fieldname ] ) ) {
@@ -295,7 +295,7 @@ if ( ! class_exists( "rsssl_field" ) ) {
             }
 
             $fieldvalue = apply_filters("rsssl_fieldvalue", $fieldvalue, $fieldname);
-            $fields    = RSSSL()->rsssl_config->fields();
+            $fields    = RSSSL_LE()->config->fields();
             $fieldname = str_replace( "rsssl_", '', $fieldname );
 
             //do not save callback fields
@@ -344,7 +344,7 @@ if ( ! class_exists( "rsssl_field" ) ) {
                 return;
             }
 
-            $fields = RSSSL()->rsssl_config->fields();
+            $fields = RSSSL_LE()->config->fields();
 
             $page    = $fields[ $fieldname ]['source'];
             $options = get_option( 'rsssl_options_' . $page );
@@ -440,7 +440,7 @@ if ( ! class_exists( "rsssl_field" ) ) {
             $fieldname
         ) {
             if ( strpos( $fieldname, 'rsssl_' ) !== false
-                && isset( RSSSL()->rsssl_config->fields[ str_replace( 'rsssl_',
+                && isset( RSSSL_LE()->config->fields[ str_replace( 'rsssl_',
                         '', $fieldname ) ] )
             ) {
                 return true;
@@ -1080,11 +1080,11 @@ if ( ! class_exists( "rsssl_field" ) ) {
         }
 
         public function get_field_type( $fieldname ) {
-            if ( ! isset( RSSSL()->rsssl_config->fields[ $fieldname ] ) ) {
+            if ( ! isset( RSSSL_LE()->config->fields[ $fieldname ] ) ) {
                 return false;
             }
 
-            return RSSSL()->rsssl_config->fields[ $fieldname ]['type'];
+            return RSSSL_LE()->config->fields[ $fieldname ]['type'];
         }
 
         public
@@ -1235,7 +1235,7 @@ if ( ! class_exists( "rsssl_field" ) ) {
          * @return bool
          */
         public function step_has_fields( $page, $step = false, $section = false ) {
-            $fields = RSSSL()->rsssl_config->fields( $page, $step, $section );
+            $fields = RSSSL_LE()->config->fields( $page, $step, $section );
             foreach ( $fields as $fieldname => $args ) {
                 $default_args = $this->default_args;
                 $args         = wp_parse_args( $args, $default_args );
@@ -1261,7 +1261,7 @@ if ( ! class_exists( "rsssl_field" ) ) {
             $source, $step = false, $section = false, $get_by_fieldname = false
         ) {
 
-            $fields = RSSSL()->rsssl_config->fields( $source, $step, $section,
+            $fields = RSSSL_LE()->config->fields( $source, $step, $section,
                 $get_by_fieldname );
 
 
@@ -1587,25 +1587,6 @@ if ( ! class_exists( "rsssl_field" ) ) {
         }
 
         /**
-         * @param $language
-         *
-         * @return string
-         */
-
-        private function get_language_descriptor( $language, $type = 'cookie' ) {
-            $string = $type =='cookie' ? __( 'Cookies in %s', 'really-simple-ssl' ) : __( 'Services in %s', 'really-simple-ssl' );
-            if ( isset( RSSSL()->rsssl_config->language_codes[ $language ] ) ) {
-                $string = sprintf( $string ,
-                    RSSSL()->rsssl_config->language_codes[ $language ] );
-            } else {
-                $string = sprintf( $string,
-                    strtoupper( $language ) );
-            }
-
-            return $string;
-        }
-
-        /**
          * Get value of this fieldname
          *
          * @param        $fieldname
@@ -1615,7 +1596,7 @@ if ( ! class_exists( "rsssl_field" ) ) {
          */
 
         public function get_value( $fieldname, $default = '' ) {
-            $fields = RSSSL()->rsssl_config->fields();
+            $fields = RSSSL_LE()->config->fields();
 
             if ( ! isset( $fields[ $fieldname ] ) ) {
                 return false;
@@ -1646,7 +1627,7 @@ if ( ! class_exists( "rsssl_field" ) ) {
         function sanitize_fieldname(
             $fieldname
         ) {
-            $fields = RSSSL()->rsssl_config->fields();
+            $fields = RSSSL_LE()->config->fields();
             if ( array_key_exists( $fieldname, $fields ) ) {
                 return sanitize_text_field($fieldname);
             }

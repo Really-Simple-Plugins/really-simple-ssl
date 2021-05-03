@@ -57,15 +57,15 @@ if ( ! class_exists( "rsssl_wizard" ) ) {
             if ( isset( $_GET['post_id'] ) ) {
                 $post_id = intval( $_GET['post_id'] );
                 //get all fields for this page
-                $fields = RSSSL()->rsssl_config->fields( $page );
+                $fields = RSSSL_LE()->config->fields( $page );
                 foreach ( $fields as $fieldname => $field ) {
                     $fieldvalue = get_post_meta( $post_id, $fieldname, true );
                     if ( $fieldvalue ) {
-                        if ( ! RSSSL()->rsssl_field->is_multiple_field( $fieldname ) ) {
-                            RSSSL()->rsssl_field->save_field( $fieldname, $fieldvalue );
+                        if ( ! RSSSL_LE()->field->is_multiple_field( $fieldname ) ) {
+                            RSSSL_LE()->field->save_field( $fieldname, $fieldvalue );
                         } else {
                             $field[ $fieldname ] = $fieldvalue;
-                            RSSSL()->rsssl_field->save_multiple( $field );
+                            RSSSL_LE()->field->save_multiple( $field );
                         }
                     }
 
@@ -170,7 +170,7 @@ if ( ! class_exists( "rsssl_wizard" ) ) {
          * @return int
          */
         public function get_next_not_empty_step( $page, $step ) {
-            if ( ! RSSSL()->rsssl_field->step_has_fields( $page, $step ) ) {
+            if ( ! RSSSL_LE()->field->step_has_fields( $page, $step ) ) {
                 if ( $step >= $this->total_steps( $page ) ) {
                     return $step;
                 }
@@ -190,16 +190,16 @@ if ( ! class_exists( "rsssl_wizard" ) ) {
          * @return int|bool
          */
         public function get_next_not_empty_section( $page, $step, $section ) {
-            if ( ! RSSSL()->rsssl_field->step_has_fields( $page, $step,
+            if ( ! RSSSL_LE()->field->step_has_fields( $page, $step,
                 $section )
             ) {
                 //some keys are missing, so we need to count the actual number of keys.
-                if ( isset( RSSSL()->rsssl_config->steps[ $page ][ $step ]['sections'] ) ) {
-                    $n = array_keys( RSSSL()->rsssl_config->steps[ $page ][ $step ]['sections'] ); //<---- Grab all the keys of your actual array and put in another array
+                if ( isset( RSSSL_LE()->config->steps[ $page ][ $step ]['sections'] ) ) {
+                    $n = array_keys( RSSSL_LE()->config->steps[ $page ][ $step ]['sections'] ); //<---- Grab all the keys of your actual array and put in another array
                     $count = array_search( $section, $n ); //<--- Returns the position of the offset from this array using search
 
                     //this is the actual list up to section key.
-                    $new_arr = array_slice( RSSSL()->rsssl_config->steps[ $page ][ $step ]['sections'], 0, $count + 1, true );//<--- Slice it with the 0 index as start and position+1 as the length parameter.
+                    $new_arr = array_slice( RSSSL_LE()->config->steps[ $page ][ $step ]['sections'], 0, $count + 1, true );//<--- Slice it with the 0 index as start and position+1 as the length parameter.
                     $section_count = count( $new_arr ) + 1;
                 } else {
                     $section_count = $section + 1;
@@ -226,7 +226,7 @@ if ( ! class_exists( "rsssl_wizard" ) ) {
          * @return int
          */
         public function get_previous_not_empty_step( $page, $step ) {
-            if ( ! RSSSL()->rsssl_field->step_has_fields( $page, $step ) ) {
+            if ( ! RSSSL_LE()->field->step_has_fields( $page, $step ) ) {
                 if ( $step <= 1 ) {
                     return $step;
                 }
@@ -248,7 +248,7 @@ if ( ! class_exists( "rsssl_wizard" ) ) {
         public function get_previous_not_empty_section( $page, $step, $section
         ) {
 
-            if ( ! RSSSL()->rsssl_field->step_has_fields( $page, $step,
+            if ( ! RSSSL_LE()->field->step_has_fields( $page, $step,
                 $section )
             ) {
                 $section --;
@@ -333,9 +333,9 @@ if ( ! class_exists( "rsssl_wizard" ) ) {
 
             if ($this->section_is_empty($page, $step, $section)
                 || (isset($_POST['rsssl-next'])
-                    && !RSSSL()->rsssl_field->has_errors())
+                    && !RSSSL_LE()->field->has_errors())
             ) {
-                if (RSSSL()->rsssl_config->has_sections($page, $step)
+                if (RSSSL_LE()->config->has_sections($page, $step)
                     && ($section < $this->last_section)
                 ) {
                     $section = $section + 1;
@@ -356,7 +356,7 @@ if ( ! class_exists( "rsssl_wizard" ) ) {
             }
 
             if (isset($_POST['rsssl-previous'])) {
-                if (RSSSL()->rsssl_config->has_sections($page, $step)
+                if (RSSSL_LE()->config->has_sections($page, $step)
                     && $section > $this->first_section($page, $step)
                 ) {
                     $section--;
@@ -394,7 +394,7 @@ if ( ! class_exists( "rsssl_wizard" ) ) {
             $args_menu['steps'] = "";
             for ($i = 1; $i <= $this->total_steps($page); $i++)
             {
-                $args['title'] = $i . '. ' . RSSSL()->rsssl_config->steps[$page][$i]['title'];
+                $args['title'] = $i . '. ' . RSSSL_LE()->config->steps[$page][$i]['title'];
                 $args['active'] = ($i == $active_step) ? 'active' : '';
                 $args['completed'] = $this->required_fields_completed($page, $i, false) ? 'complete' : 'incomplete';
                 $args['url'] = add_query_arg(array('tab' => 'lets-encrypt', 'step' => $i), $this->page_url);
@@ -421,7 +421,7 @@ if ( ! class_exists( "rsssl_wizard" ) ) {
         public function wizard_sections( $page, $step, $active_section ) {
             $sections = "";
 
-            if ( RSSSL()->rsssl_config->has_sections( $page, $step )) {
+            if ( RSSSL_LE()->config->has_sections( $page, $step )) {
 
                 for ($i = $this->first_section( $page, $step ); $i <= $this->last_section( $page, $step ); $i ++) {
                     $icon = rsssl_icon('check', 'empty');
@@ -442,9 +442,7 @@ if ( ! class_exists( "rsssl_wizard" ) ) {
                         $url = add_query_arg( array( 'post_id' => $this->post_id() ), $url );
                     }
 
-                    $title = RSSSL()->rsssl_config->steps[ $page ][ $step ]['sections'][ $i ]['title'];
-                    $regions = $this->get_section_regions( $page, $step, $i );
-                    $title .= $regions ? ' - ' . implode( ' | ', $regions ) : '';
+                    $title = RSSSL_LE()->config->steps[ $page ][ $step ]['sections'][ $i ]['title'];
                     $args = array(
                         'active' => $active,
                         'completed' => $completed,
@@ -470,12 +468,12 @@ if ( ! class_exists( "rsssl_wizard" ) ) {
         public function wizard_content( $page, $step, $section ) {
 
             $args['title'] = '';
-            if (isset(RSSSL()->rsssl_config->steps[$page][$step]['sections'][$section]['title'])) {
-                $args['title'] = RSSSL()->rsssl_config->steps[$page][$step]['sections'][$section]['title'];
+            if (isset(RSSSL_LE()->config->steps[$page][$step]['sections'][$section]['title'])) {
+                $args['title'] = RSSSL_LE()->config->steps[$page][$step]['sections'][$section]['title'];
                 $regions = $this->get_section_regions($page, $step, $section);
                 $args['title'] .= $regions ? ' - ' . implode(' | ', $regions) : '';
             } else {
-                $args['title'] .= RSSSL()->rsssl_config->steps[$page][$step]['title'];
+                $args['title'] .= RSSSL_LE()->config->steps[$page][$step]['title'];
             }
             $args['flags'] = '';
             $args['save_notice'] = '';
@@ -495,7 +493,7 @@ if ( ! class_exists( "rsssl_wizard" ) ) {
             $args['post_id'] = $this->post_id() ? '<input type="hidden" value="' . $this->post_id() . '" name="post_id">' : '';
 
             ob_start();
-            RSSSL()->rsssl_field->get_fields( $page, $step, $section );
+            RSSSL_LE()->field->get_fields( $page, $step, $section );
             $args['fields'] = ob_get_clean();
 
             $args['step'] = $step;
@@ -574,7 +572,7 @@ if ( ! class_exists( "rsssl_wizard" ) ) {
 
         public function required_fields_completed( $page, $step, $section ) {
             //get all required fields for this section, and check if they're filled in
-            $fields = RSSSL()->rsssl_config->fields( $page, $step, $section );
+            $fields = RSSSL_LE()->config->fields( $page, $step, $section );
 
             //get
             $fields = rsssl_array_filter_multidimensional( $fields, 'required',
@@ -583,11 +581,11 @@ if ( ! class_exists( "rsssl_wizard" ) ) {
                 //if a condition exists, only check for this field if the condition applies.
                 if ( isset( $args['condition'] )
                     || isset( $args['callback_condition'] )
-                    && ! RSSSL()->rsssl_field->condition_applies( $args )
+                    && ! RSSSL_LE()->field->condition_applies( $args )
                 ) {
                     continue;
                 }
-                $value = RSSSL()->rsssl_field->get_value( $fieldname );
+                $value = RSSSL_LE()->field->get_value( $fieldname );
                 if ( empty( $value ) ) {
                     return false;
                 }
@@ -607,7 +605,7 @@ if ( ! class_exists( "rsssl_wizard" ) ) {
 
         public function all_required_fields_completed( $page ) {
             for ( $step = 1; $step <= $this->total_steps( $page ); $step ++ ) {
-                if ( RSSSL()->rsssl_config->has_sections( $page, $step ) ) {
+                if ( RSSSL_LE()->config->has_sections( $page, $step ) ) {
                     for (
                         $section = $this->first_section( $page, $step );
                         $section <= $this->last_section( $page, $step );
@@ -661,13 +659,13 @@ if ( ! class_exists( "rsssl_wizard" ) ) {
         public function get_intro( $page, $step, $section ) {
             //only show when in action
             $intro = '';
-            if ( RSSSL()->rsssl_config->has_sections( $page, $step ) ) {
-                if ( isset( RSSSL()->rsssl_config->steps[ $page ][ $step ]['sections'][ $section ]['intro'] ) ) {
-                    $intro .= RSSSL()->rsssl_config->steps[ $page ][ $step ]['sections'][ $section ]['intro'];
+            if ( RSSSL_LE()->config->has_sections( $page, $step ) ) {
+                if ( isset( RSSSL_LE()->config->steps[ $page ][ $step ]['sections'][ $section ]['intro'] ) ) {
+                    $intro .= RSSSL_LE()->config->steps[ $page ][ $step ]['sections'][ $section ]['intro'];
                 }
             } else {
-                if ( isset( RSSSL()->rsssl_config->steps[ $page ][ $step ]['intro'] ) ) {
-                    $intro .= RSSSL()->rsssl_config->steps[ $page ][ $step ]['intro'];
+                if ( isset( RSSSL_LE()->config->steps[ $page ][ $step ]['intro'] ) ) {
+                    $intro .= RSSSL_LE()->config->steps[ $page ][ $step ]['intro'];
                 }
             }
 
@@ -694,15 +692,15 @@ if ( ! class_exists( "rsssl_wizard" ) ) {
             //only show when in action
             $regions = false;
 
-            if ( RSSSL()->rsssl_config->has_sections( $page, $step ) ) {
-                if ( isset( RSSSL()->rsssl_config->steps[ $page ][ $step ]['sections'][ $section ]['region'] ) ) {
+            if ( RSSSL_LE()->config->has_sections( $page, $step ) ) {
+                if ( isset( RSSSL_LE()->config->steps[ $page ][ $step ]['sections'][ $section ]['region'] ) ) {
                     $regions
-                        = RSSSL()->rsssl_config->steps[ $page ][ $step ]['sections'][ $section ]['region'];
+                        = RSSSL_LE()->config->steps[ $page ][ $step ]['sections'][ $section ]['region'];
                 }
             } else {
-                if ( isset( RSSSL()->rsssl_config->steps[ $page ][ $step ]['region'] ) ) {
+                if ( isset( RSSSL_LE()->config->steps[ $page ][ $step ]['region'] ) ) {
                     $regions
-                        = RSSSL()->rsssl_config->steps[ $page ][ $step ]['region'];
+                        = RSSSL_LE()->config->steps[ $page ][ $step ]['region'];
                 }
             }
 
@@ -810,34 +808,34 @@ if ( ! class_exists( "rsssl_wizard" ) ) {
          */
 
         public function total_steps( $page ) {
-            return count( RSSSL()->rsssl_config->steps[ $page ] );
+            return count( RSSSL_LE()->config->steps[ $page ] );
         }
 
         public function total_sections( $page, $step ) {
-            if ( ! isset( RSSSL()->rsssl_config->steps[ $page ][ $step ]['sections'] ) ) {
+            if ( ! isset( RSSSL_LE()->config->steps[ $page ][ $step ]['sections'] ) ) {
                 return 0;
             }
 
-            return count( RSSSL()->rsssl_config->steps[ $page ][ $step ]['sections'] );
+            return count( RSSSL_LE()->config->steps[ $page ][ $step ]['sections'] );
         }
 
         public function last_section( $page, $step ) {
-            if ( ! isset( RSSSL()->rsssl_config->steps[ $page ][ $step ]["sections"] ) ) {
+            if ( ! isset( RSSSL_LE()->config->steps[ $page ][ $step ]["sections"] ) ) {
                 return 1;
             }
 
-            $array = RSSSL()->rsssl_config->steps[ $page ][ $step ]["sections"];
+            $array = RSSSL_LE()->config->steps[ $page ][ $step ]["sections"];
 
             return max( array_keys( $array ) );
 
         }
 
         public function first_section( $page, $step ) {
-            if ( ! isset( RSSSL()->rsssl_config->steps[ $page ][ $step ]["sections"] ) ) {
+            if ( ! isset( RSSSL_LE()->config->steps[ $page ][ $step ]["sections"] ) ) {
                 return 1;
             }
 
-            $arr       = RSSSL()->rsssl_config->steps[ $page ][ $step ]["sections"];
+            $arr       = RSSSL_LE()->config->steps[ $page ][ $step ]["sections"];
             $first_key = key( $arr );
 
             return $first_key;
@@ -854,7 +852,7 @@ if ( ! class_exists( "rsssl_wizard" ) ) {
 
                 //if we're on a step with sections, we should add the sections that still need to be done.
                 if ( ( $step == $i )
-                    && RSSSL()->rsssl_config->has_sections( $page, $step )
+                    && RSSSL_LE()->config->has_sections( $page, $step )
                 ) {
 
                     for (
@@ -862,7 +860,7 @@ if ( ! class_exists( "rsssl_wizard" ) ) {
                         $s --
                     ) {
                         $subsub         = 0;
-                        $section_fields = RSSSL()->rsssl_config->fields( $page,
+                        $section_fields = RSSSL_LE()->config->fields( $page,
                             $step, $s );
                         foreach (
                             $section_fields as $section_fieldname =>
@@ -876,7 +874,7 @@ if ( ! class_exists( "rsssl_wizard" ) ) {
                         }
                     }
                 } else {
-                    $fields = RSSSL()->rsssl_config->fields( $page, $i, false );
+                    $fields = RSSSL_LE()->config->fields( $page, $i, false );
 
                     foreach ( $fields as $fieldname => $field ) {
                         if ( isset( $field['time'] ) ) {
@@ -920,11 +918,11 @@ if ( ! class_exists( "rsssl_wizard" ) ) {
 
 //            $active_section = '';
 //            for ( $i = 1; $i <= $total_steps; $i ++ ) {
-//                $fields = RSSSL()->rsssl_config->fields( 'lets-encrypt', $i, false );
+//                $fields = RSSSL_LE()->config->fields( 'lets-encrypt', $i, false );
 //                foreach ( $fields as $fieldname => $field ) {
 //                    //is field required
 //                    $required = isset( $field['required'] ) ? $field['required'] : false;
-//                    if ( ( isset( $field['condition'] ) || isset( $field['callback_condition'] ) ) && ! RSSSL()->rsssl_field->condition_applies( $field )
+//                    if ( ( isset( $field['condition'] ) || isset( $field['callback_condition'] ) ) && ! RSSSL_LE()->field->condition_applies( $field )
 //                    ) {
 //                        $required = false;
 //                    }
