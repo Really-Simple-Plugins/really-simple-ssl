@@ -103,7 +103,6 @@ if (!class_exists('rsssl_multisite')) {
             $unset_array = array(
                 'mixed_content_fixer_detected',
                 'hsts_enabled',
-                'secure_cookies_set',
                 'mixed_content_scan',
                 'elementor',
                 'divi',
@@ -133,7 +132,7 @@ if (!class_exists('rsssl_multisite')) {
 		        ),
 	        );
 
-            //we don't need an no ssl warning on multisite
+            //we don't need a no ssl warning on multisite
             unset( $notices['ssl_detected']['output']['no-ssl-detected'] );
 
 	        $notices['multisite_server_variable_warning'] = array(
@@ -162,6 +161,7 @@ if (!class_exists('rsssl_multisite')) {
 			        ),
 		        ),
 	        );
+
             return $notices;
         }
 
