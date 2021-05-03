@@ -3665,39 +3665,22 @@ class rsssl_admin extends rsssl_front_end
 	 * @return string
 	 */
 
-    public function get_template_part($grid_item, $key, $index) {
+	public function get_template_part($grid_item, $key, $index) {
 
-	    if ( !isset($grid_item[$key]) || !$grid_item[$key] ) {
-		    $template_part = '';
-	    } else {
-		    if ( strpos( $grid_item[ $key ], '.php' ) !== false && file_exists($grid_item[ $key ])  ) {
-		        ob_start();
-			    require $grid_item[ $key ];
-			    $template_part = ob_get_clean();
-		    } else {
-			    $template_part = '';
-            }
-	    }
+		if ( !isset($grid_item[$key]) || !$grid_item[$key] ) {
+			$template_part = '';
+		} else {
+			if ( strpos( $grid_item[ $key ], '.php' ) !== false && file_exists($grid_item[ $key ])  ) {
+				ob_start();
+				require $grid_item[ $key ];
+				$template_part = ob_get_clean();
+			} else {
+				$template_part = '';
+			}
+		}
 
-	    if ($key === 'content' ) {
-		    if ( $grid_item['type'] === 'scan' ) {
-			    $template_part = '<form id="rsssl_scan_form" action="" method="post">'.$template_part;
-		    } elseif ( $grid_item['type'] === 'settings' ) {
-			    if ( is_network_admin() ) {
-				    $template_part = '<form action="edit.php?action=rsssl_update_network_settings" method="post">'.wp_nonce_field('rsssl_ms_settings_update', 'rsssl_ms_nonce').
-				                     $template_part;
-			    } else {
-				    $template_part = '<form action="options.php" method="post">'.$template_part;
-			    }
-		    }
-	    }
-
-	    if ( $key === 'footer' && ( $grid_item['type'] === 'scan' || $grid_item['type'] === 'settings') ) {
-		    $template_part .= '</form>';
-	    }
-
-	    return apply_filters("rsssl_template_part_".$key.'_'.$index, $template_part, $grid_item);
-    }
+		return apply_filters("rsssl_template_part_".$key.'_'.$index, $template_part, $grid_item);
+	}
 
     /**
      * Returns a success, error or warning image for the settings page
