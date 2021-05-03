@@ -3648,8 +3648,8 @@ class rsssl_admin extends rsssl_front_end
 				    $form_close = '</form>';
 			    }
 		    }
-		    
-		    $block = str_replace(array('{class}', '{title}', '{header}', '{content}', '{footer}', '{instructions}'), array($grid_item['class'], $grid_item['title'], $header, $content, $footer, $instructions), $element);
+
+		    $block = str_replace(array('{class}', '{title}', '{header}', '{content}', '{footer}', '{instructions}', '{form_open}','{form_close}'), array($grid_item['class'], $grid_item['title'], $header, $content, $footer, $instructions, $form_open, $form_close), $element);
 		    $output .= $block;
 	    }
 
