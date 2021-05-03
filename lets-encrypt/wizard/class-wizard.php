@@ -20,13 +20,6 @@ if ( ! class_exists( "rsssl_wizard" ) ) {
             self::$_this = $this;
             add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_assets' ) );
 
-            //link action to custom hook
-            add_action( 'rsssl_wizard', array( $this, 'wizard_after_step' ), 10, 1 );
-
-            add_action( 'rsssl_add_instructions_page', array( $this, 'add_instructions_page' ), 10, 1 );
-            add_action( 'rsssl_add_verification_page', array( $this, 'add_verification_page' ), 10, 5 );
-            add_action( 'rsssl_add_installation_page', array( $this, 'add_installation_page' ), 10, 10 );
-
             //process custom hooks
             add_action( 'admin_init', array( $this, 'process_custom_hooks' ) );
             add_action( 'rsssl_before_save_lets-encrypt_option', array( $this, 'before_save_wizard_option' ), 10, 4 );
@@ -96,14 +89,11 @@ if ( ! class_exists( "rsssl_wizard" ) ) {
             if ( ! rsssl_user_can_manage() ) {
                 return;
             }
-
-            //when clicking to the last page, or clicking finish, run the finish sequence.
-            if ( isset( $_POST['rsssl-finish'] )
-                || ( isset( $_POST["step"] ) && $_POST['step'] == 3
-                    && isset( $_POST['rsssl-next'] ) )
-            ) {
-                $this->set_wizard_completed_once();
+			error_log("after step");
+            if ($_POST["step"]==3 || $_GET["step"] ==3) {
+	            RSSSL_LE()->letsencrypt_handler->get_order();
             }
+
         }
 
         /**
@@ -146,19 +136,8 @@ if ( ! class_exists( "rsssl_wizard" ) ) {
                 return;
             }
 
-            //if languages have been changed, we update the withdrawal form, if those should be generated.
-            if ( $fieldname === 'language_communication' || $fieldname === 'address_company' || $fieldname === 'multilanguage_communication' ) {
-                $languages = rsssl_get_value('multilanguage_communication');
-                if ( !empty($languages) ) {
-                    $languages = array_filter($languages);
-                    update_option( 'rsssl_generate_pdf_languages', $languages );
-                }
-            }
-
-            if ( $fieldname === 'language_communication' ) {
-                $languages = array(rsssl_sanitize_language( get_locale() ));
-                $languages = array_filter($languages);
-                update_option( 'rsssl_generate_pdf_languages', $languages );
+            if ( $fieldname === 'email_address'&& is_email($fieldvalue) ) {
+	            RSSSL_LE()->letsencrypt_handler->update_account($fieldvalue);
             }
         }
 
@@ -507,14 +486,12 @@ if ( ! class_exists( "rsssl_wizard" ) ) {
                 $args['next_button'] = '<input class="button button-primary rsssl-next" type="submit" name="rsssl-next" value="'. __( "Next", 'really-simple-ssl' ) . '">';
             }
 
-//            $other_plugins = "";
             if ( $step > 0  && $step < $this->total_steps( $page )) {
                 $args['save_button'] = '<input class="button button-secondary rsssl-save" type="submit" name="rsssl-save" value="'. __( "Save", 'really-simple-ssl' ) . '">';
             } elseif ($step === $this->total_steps( $page )) {
 
             }
 
-//            return rsssl_get_template( 'content.php', $args ).$other_plugins;
             return RSSSL()->really_simple_ssl->get_template( 'content.php', $path = rsssl_wizard_path, $args );
         }
 

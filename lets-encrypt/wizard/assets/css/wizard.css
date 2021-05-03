@@ -41,6 +41,16 @@
   margin: 20px 20px 0 20px;
   font-size: 14px;
 }
+#rsssl-content-area .rsssl-wizard-progress-bar {
+  background: #eeeeee;
+  height: 15px;
+  margin: 20px 20px 0 20px;
+}
+#rsssl-content-area .rsssl-wizard-progress-bar .rsssl-wizard-progress-bar-value {
+  height: 100%;
+  background: #29B6F6;
+  border-radius: 4px;
+}
 #rsssl-content-area .rsssl-wizard-menu {
   background-color: white;
   margin: 10px;
@@ -50,16 +60,6 @@
 }
 #rsssl-content-area .rsssl-wizard-menu .rsssl-wizard-menu h1 {
   font-weight: bold;
-}
-#rsssl-content-area .rsssl-wizard-menu .rsssl-wizard-progress-bar {
-  background: #eeeeee;
-  height: 15px;
-  margin: 20px 20px 0 20px;
-}
-#rsssl-content-area .rsssl-wizard-menu .rsssl-wizard-progress-bar .rsssl-wizard-progress-bar-value {
-  height: 100%;
-  background: #29B6F6;
-  border-radius: 4px;
 }
 #rsssl-content-area .rsssl-wizard-menu .rsssl-step .rsssl-step-header {
   text-decoration: none;

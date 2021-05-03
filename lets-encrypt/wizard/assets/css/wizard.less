@@ -62,7 +62,17 @@
         margin: @green-gap @green-gap 0 @green-gap;
         font-size: 14px;
       }
+  .rsssl-wizard-progress-bar {
+    background: #eeeeee;
+    height: 15px;
+    margin: @green-gap @green-gap 0 @green-gap;
 
+    .rsssl-wizard-progress-bar-value {
+      height: 100%;
+      background: @brand-tertiary;
+      border-radius: 4px;
+    }
+  }
       .rsssl-wizard-menu {
         background-color: white;
         margin: 0.5 * @green-gap;
@@ -74,17 +84,7 @@
           font-weight: bold;
         }
 
-        .rsssl-wizard-progress-bar {
-          background: #eeeeee;
-          height: 15px;
-          margin: @green-gap @green-gap 0 @green-gap;
 
-          .rsssl-wizard-progress-bar-value {
-            height: 100%;
-            background: @brand-tertiary;
-            border-radius: 4px;
-          }
-        }
 
         .rsssl-step {
           .rsssl-step-header {
