@@ -38,21 +38,13 @@ if ( ! function_exists( 'rsssl_get_value' ) ) {
      */
 
     function rsssl_get_value(
-        $fieldname, $post_id = false, $page = false, $use_default = true
+        $fieldname, $use_default = true
     ) {
-        if ( ! is_numeric( $post_id ) ) {
-            $post_id = false;
-        }
-
-        if ( ! $page && ! isset( RSSSL_LE()->config->fields[ $fieldname ] ) ) {
+        if ( ! isset( RSSSL_LE()->config->fields[ $fieldname ] ) ) {
             return false;
         }
 
-        //if  a post id is passed we retrieve the data from the post
-        if ( ! $page ) {
-            $page = RSSSL_LE()->config->fields[ $fieldname ]['source'];
-        }
-
+        $page = RSSSL_LE()->config->fields[ $fieldname ]['source'];
         $fields = get_option( 'rsssl_options_' . $page );
         $default = ( $use_default && $page && isset( RSSSL_LE()->config->fields[ $fieldname ]['default'] ) )
             ? RSSSL_LE()->config->fields[ $fieldname ]['default'] : '';
