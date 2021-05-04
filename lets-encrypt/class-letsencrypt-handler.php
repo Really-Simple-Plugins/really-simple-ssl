@@ -19,9 +19,9 @@ class rsssl_letsencrypt_handler {
 		if ( isset( self::$_this ) ) {
 			wp_die( sprintf( __( '%s is a singleton class and you cannot create a second instance.', 'really-simple-ssl' ), get_class( $this ) ) );
 		}
-		add_action('rsssl_lets_encrypt_grid', array($this, 'wizard'));
+		add_action( 'rsssl_lets_encrypt_grid', array($this, 'wizard'));
 		add_action( 'rsssl_le_installation_step', array( $this, 'installation_progress' ), 10, 1 );
-		add_action('wp_ajax_rsssl_installation_progress', array($this, 'get_installation_progress'));
+		add_action( 'wp_ajax_rsssl_installation_progress', array($this, 'get_installation_progress'));
 
 		$this->installation_sequence = array(
             0 => 'challenge_directory',
@@ -44,8 +44,8 @@ class rsssl_letsencrypt_handler {
         }
 
 		// General configs
-//		Connector::getInstance()->useStagingServer( true );
-//		Logger::getInstance()->setDesiredLevel( Logger::LEVEL_DISABLED );
+		Connector::getInstance()->useStagingServer( true );
+		Logger::getInstance()->setDesiredLevel( Logger::LEVEL_DISABLED );
 
 //		// Optional configs
 //		//\LE_ACME2\Utilities\Certificate::enableFeatureOCSPMustStaple();
@@ -133,11 +133,12 @@ class rsssl_letsencrypt_handler {
                     //set up a counter to slowly increment the progress value until we get a response.
                     var progress = 0;
                     var interval = setInterval(function() {
-                        if (progress>50) {
+                        if (progress>75) {
+                            progress += 0.5;
+                        } else if (progress>50) {
                             progress +=1;
                         } else {
                             progress +=5;
-
                         }
                         rsssl_set_progress(progress);
                     }, 1000);
@@ -152,23 +153,25 @@ class rsssl_letsencrypt_handler {
                             action: 'rsssl_installation_progress'
                         }),
                         success: function (response) {
-                            if (response.message === 'success' ) {
-                                progress = 100;
-                                rsssl_set_progress(progress);
-                            } else {
-                                rsssl_set_progress(100);
-                                $('.rsssl_installation_message').html(response.message);
+                            var msg = '';
+                            if (response.message !== 'success' ) {
+                                msg = response.message;
                             }
+
+                            var interval = setInterval(function() {
+                                progress +=5;
+                                rsssl_set_progress(progress, msg);
+                            }, 100 );
                         }
                     });
 
-                    function rsssl_waiting_progress(){
-
-                    }
-                    function rsssl_set_progress(progress){
-                        if (progress>100) progress=100;
-                        if (progress==100) clearInterval(interval);
-                        $('.rsssl-installation-progress').css('width',progress + '%')
+                    function rsssl_set_progress(progress, msg ){
+                        if ( progress>100 ) progress=100;
+                        $('.rsssl-installation-progress').css('width',progress + '%');
+                        if ( progress==100 ) {
+                            clearInterval(interval);
+                            if (typeof msg !== "undefined") $('.rsssl_installation_message').html(msg);
+                        }
                     }
                 });
 
@@ -204,7 +207,6 @@ class rsssl_letsencrypt_handler {
 			        Account::get( $account_email );
 	        } catch(Exception $e) {
 		        error_log(print_r($e, true));
-		        $this->log_error('create_account_failed');
 	        }
         } else {
             error_log("no email set");
@@ -222,6 +224,7 @@ class rsssl_letsencrypt_handler {
      * Get Lets encrypt order
 	 * @return mixed|string
 	 */
+
 	public function get_order(){
 
 	    error_log("RUN ORDER");
@@ -230,12 +233,12 @@ class rsssl_letsencrypt_handler {
 
 		if ($this->is_ready_for('order')) {
 			if ( ! Order::exists( $this->account, $this->subjects ) ) {
+			    error_log("order does not exist yet");
 				try {
 					$order = Order::create( $this->account, $this->subjects );
 				} catch(Exception $e) {
+				    $response = $this->get_error($e);
 					error_log(print_r($e, true));
-					$response = $e->getMessage();
-					$this->log_error('create_order_failed');
 				}
 
 			} else {
@@ -243,12 +246,11 @@ class rsssl_letsencrypt_handler {
 					$order = Order::get( $this->account, $this->subjects );
 				} catch(Exception $e) {
 					error_log(print_r($e, true));
-					$response = $e->getMessage();
-					$this->log_error('create_order_failed');
+					$response = $this->get_error($e);
 				}
 			}
         } else {
-			$response = 'Get order: Previous steps not completed';
+			$response = sprintf(__('Steps not completed: %s', "really-simple-ssl"), implode(", ",$this->get_not_completed_steps('order')) );
 		}
 
         if ( $response==='success' && $order) {
@@ -275,8 +277,7 @@ class rsssl_letsencrypt_handler {
 			    $order = Order::get( $this->account, $this->subjects );
 		    } catch (Exception $e){
 			    error_log(print_r($e, true));
-			    $response = $e;
-			    $this->log_error('finalize_order_failed');
+			    $response = $this->get_error($e);
 		    }
 
 		    try {
@@ -285,8 +286,7 @@ class rsssl_letsencrypt_handler {
 			    }
 		    } catch (Exception $e){
 			    error_log(print_r($e, true));
-			    $response = $e;
-			    $this->log_error('finalize_order_failed');
+			    $response = $this->get_error($e);
 		    }
 
 		    try {
@@ -296,11 +296,10 @@ class rsssl_letsencrypt_handler {
 			    }
             } catch (Exception $e){
 			    error_log(print_r($e, true));
-			    $response = $e;
-			    $this->log_error('bundle_creation_failed');
+			    $response = $this->get_error($e);
 		    }
 	    } else {
-		    $response = 'Get bundle: Previous steps not completed';
+		    $response = sprintf(__('Steps not completed: %s', "really-simple-ssl"), implode(", ",$this->get_not_completed_steps('bundle')) );
 	    }
 
 	    if ( $bundle ){
@@ -327,43 +326,14 @@ class rsssl_letsencrypt_handler {
 	 */
 
     public function update_account( $new_email ){
-	    $this->clear_error('change_email_failed');
         try {
 	        $this->account->update($new_email);
         } catch (Exception $e) {
             error_log("Lets encrypt email update failed");
             error_log(print_r($e, true));
-            $this->log_error('change_email_failed');
         }
     }
 
-	/**
-     * Add an error to the logs
-	 * @param string $error
-	 */
-    public function log_error($error){
-	    $logs = get_transient('rsssl_letsencrypt_logs');
-	    if (!is_array($logs)) {
-	        $logs = array();
-	    }
-	    if (!in_array($error, $logs)) {
-	        $logs[] = $error;
-		    set_transient('rsssl_letsencrypt_logs', $logs, DAY_IN_SECONDS );
-	    }
-    }
-
-	/**
-     * Remove an error from the logs.
-	 * @param string $error
-	 */
-	public function clear_error($error){
-		$logs = get_transient('rsssl_letsencrypt_logs');
-		if (is_array($logs) && in_array($error, $logs)) {
-		    $key = array_search( $error, $logs);
-		    unset($logs[$key]);
-			set_transient('rsssl_letsencrypt_logs', $logs, DAY_IN_SECONDS);
-		}
-	}
 
 	/**
 	 * @return mixed|void
@@ -434,7 +404,7 @@ class rsssl_letsencrypt_handler {
 		$progress = get_option("rsssl_le_installation_progress");
 		if (!in_array($item, $progress)){
 		    $progress[] = $item;
-			update_option("rsssl_le_installation_progress", array() );
+			update_option("rsssl_le_installation_progress", $progress );
 		}
 	}
 
@@ -454,31 +424,31 @@ class rsssl_letsencrypt_handler {
      * Check if we're ready for the next step.
 	 * @param string $item
 	 *
-	 * @return bool
+	 * @return array | bool
 	 */
 	public function is_ready_for($item) {
-	    return true;
-	    $sequence = $this->installation_sequence;
-//		array(
-//			0 => 'challenge_directory',
-//			1 => 'key_directory',
-//			2 => 'account',
-//			3 => 'order',
-//			4 => 'bundle',
-//		);
-        //drop all statuses after $item. We only need to know if all previous ones have been completed
-        $index = array_search($item, $sequence);
-		$sequence = array_slice($sequence, 0, $index, true);
-
-	    $finished = get_option("rsssl_le_installation_progress", array());
-        foreach ($sequence as $status ) {
-            if (!in_array($status, $finished)) {
-                return false;
-            }
+        if (empty($this->get_not_completed_steps($item))){
+            return true;
+        } else{
+            return false;
         }
+	}
 
-        //if we have checked all items in sequence, and not jumped out of the loop, we're good to go.
-        return true;
+	private function get_not_completed_steps($item){
+		$sequence = $this->installation_sequence;
+		//drop all statuses after $item. We only need to know if all previous ones have been completed
+		$index = array_search($item, $sequence);
+		$sequence = array_slice($sequence, 0, $index, true);
+		$not_completed = array();
+		$finished = get_option("rsssl_le_installation_progress", array());
+		error_log(print_r($finished,true));
+		foreach ($sequence as $status ) {
+			if (!in_array($status, $finished)) {
+				$not_completed[] = $status;
+			}
+		}
+
+        return $not_completed;
 	}
 
 
@@ -489,22 +459,51 @@ class rsssl_letsencrypt_handler {
 	 */
 	public function key_directory(){
 		$root_directory = trailingslashit(ABSPATH);
-		$parent_directory = dirname($root_directory);
+		$parent_directory = trailingslashit(dirname($root_directory));
 		if ( ! file_exists( $parent_directory . 'ssl' ) ) {
-			mkdir( $parent_directory . 'ssl' );
+			mkdir( $parent_directory . '/ssl' );
 		}
 
 		if ( ! file_exists( $parent_directory . 'ssl/keys' ) ) {
-			mkdir( $parent_directory . 'ssl/keys' );
+			mkdir( $parent_directory . '/ssl/keys' );
 		}
 
 		if ( file_exists( $parent_directory . 'ssl/keys' ) ){
 			$this->progress_add('key_directory');
-			return $parent_directory . 'ssl/keys';
+			return $parent_directory . '/ssl/keys';
 		} else {
 			$this->progress_remove('key_directory');
 
 			return false;
 		}
+	}
+
+	/**
+     * Get string error from error message.
+	 * @param $e
+	 *
+	 * @return string
+	 */
+	private function get_error($e){
+	    if (isset($e->getTrace()[0]['args'][0]->body['detail'])) {
+		    $error = $e->getTrace()[0]['args'][0]->body['detail'];
+
+		    //check for subproblems
+		    if (isset($e->getTrace()[0]['args'][0]->body['subproblems'])){
+		        foreach($e->getTrace()[0]['args'][0]->body['subproblems'] as $index => $problem) {
+			        $error .= '<br>'. $e->getTrace()[0]['args'][0]->body['subproblems'][$index]['detail'];
+		        }
+            }
+
+		    $error = str_replace(array(
+			    'Refer to sub-problems for more information.',
+			    'Error creating new order :: ',
+		    ), '', $error);
+
+	    } else {
+	        $error = $e;
+	    }
+	    return $error;
+
 	}
 }
