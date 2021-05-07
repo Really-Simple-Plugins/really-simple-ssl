@@ -10,10 +10,10 @@ use LE_ACME2\Utilities\Logger;
 class rsssl_letsencrypt_handler {
 
 	private static $_this;
-    public $account;
-    public $challenge_directory;
-    public $key_directory;
-    public $certs_directory;
+	public $account = false;
+	public $challenge_directory = false;
+	public $key_directory = false;
+	public $certs_directory = false;
     public $subjects = array();
     public $installation_sequence;
 	function __construct() {
@@ -457,7 +457,9 @@ class rsssl_letsencrypt_handler {
 	 */
 
     public function update_account( $new_email ){
-        try {
+	    if (!$this->account) return;
+
+	    try {
 	        $this->account->update($new_email);
         } catch (Exception $e) {
             error_log("Lets encrypt email update failed");
