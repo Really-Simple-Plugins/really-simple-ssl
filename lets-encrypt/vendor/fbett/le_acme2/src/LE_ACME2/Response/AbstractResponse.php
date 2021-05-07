@@ -1,7 +1,7 @@
 <?php
 
 namespace LE_ACME2\Response;
-
+defined( 'ABSPATH' ) or die();
 use LE_ACME2\Exception;
 
 use LE_ACME2\Connector\RawResponse;

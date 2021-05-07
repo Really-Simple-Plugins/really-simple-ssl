@@ -34,7 +34,7 @@ if ( ! class_exists( "rsssl_config" ) ) {
 
             /* config files */
             require_once( rsssl_path . '/lets-encrypt/wizard/config/steps.php' );
-            require_once( rsssl_path . '/lets-encrypt/wizard/config/questions-wizard.php' );
+            require_once( rsssl_path . '/lets-encrypt/wizard/config/questions.php' );
 
             /**
              * Preload fields with a filter, to allow for overriding types

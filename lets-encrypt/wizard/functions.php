@@ -169,7 +169,6 @@ if ( ! function_exists( 'rsssl_set_activation_time_stamp' ) ) {
     }
 }
 
-
 if ( ! function_exists( 'rsssl_array_filter_multidimensional' ) ) {
     function rsssl_array_filter_multidimensional(
         $array, $filter_key, $filter_value
@@ -194,9 +193,7 @@ if ( ! function_exists( 'rsssl_get_non_www_domain' ) ) {
         $parse = parse_url($domain);
         $domain = $parse['host'];
 
-        $domain = str_replace('http://', '', $domain);
-	    $domain = str_replace('https://', '', $domain);
-	    $domain = str_replace('www', '', $domain);
+        $domain = str_replace(array('http://', 'https://', 'www.'), '', $domain);
 
         return $domain;
     }

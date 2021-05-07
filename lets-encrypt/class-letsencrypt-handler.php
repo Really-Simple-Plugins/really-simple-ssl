@@ -1,5 +1,6 @@
 <?php
 defined('ABSPATH') or die("you do not have access to this page!");
+
 require_once rsssl_path . '/lets-encrypt/vendor/autoload.php';
 use LE_ACME2\Account;
 use LE_ACME2\Authorizer\HTTP;
@@ -12,6 +13,7 @@ class rsssl_letsencrypt_handler {
     public $account;
     public $challenge_directory;
     public $key_directory;
+    public $certs_directory;
     public $subjects = array();
     public $installation_sequence;
 	function __construct() {
@@ -19,20 +21,25 @@ class rsssl_letsencrypt_handler {
 		if ( isset( self::$_this ) ) {
 			wp_die( sprintf( __( '%s is a singleton class and you cannot create a second instance.', 'really-simple-ssl' ), get_class( $this ) ) );
 		}
-		add_action( 'rsssl_lets_encrypt_grid', array($this, 'wizard'));
+		add_action( 'rsssl_lets_encrypt_grid', array($this, 'wizard') );
+		add_action( 'rsssl_lets_encrypt_grid', array($this, 'wizard') );
 		add_action( 'rsssl_le_installation_step', array( $this, 'installation_progress' ), 10, 1 );
 		add_action( 'wp_ajax_rsssl_installation_progress', array($this, 'get_installation_progress'));
+		add_action( 'rsssl_before_save_lets-encrypt_option', array( $this, 'before_save_wizard_option' ), 10, 4 );
 
 		$this->installation_sequence = array(
-            0 => 'challenge_directory',
-            1 => 'key_directory',
-            2 => 'account',
-            3 => 'order',
-            4 => 'bundle',
+            0 => 'accept_terms',
+            1 => 'challenge_directory',
+            2 => 'key_directory',
+            3 => 'account',
+            4 => 'order',
+            5 => 'bundle',
+            6 => 'installation',
         );
 
 		$this->key_directory = $this->key_directory();
 		$this->challenge_directory = $this->challenge_directory();
+		$this->certs_directory = $this->certs_directory();
 
 		// Config the desired paths
         if ( $this->key_directory ) {
@@ -53,40 +60,35 @@ class rsssl_letsencrypt_handler {
 
         $this->get_account();
         $this->subjects = $this->get_subjects();
-
-
-//
-//		// Clear current order (in case to restart on status "invalid")
-//		// Already received certificate bundles will not be affected
-//		// $order->clear();
-//
-//		if ( $order->shouldStartAuthorization( Order::CHALLENGE_TYPE_HTTP ) ) {
-//			// Do some pre-checks, f.e. external dns checks - not required
-//		}
-//
-//		if ( $order->authorize( Order::CHALLENGE_TYPE_HTTP ) ) {
-//			$order->finalize();
-//		}
-//
-//		if ( $order->isCertificateBundleAvailable() ) {
-//
-//			$bundle = $order->getCertificateBundle();
-//			$order->enableAutoRenewal();
-//
-//			// Revoke certificate
-//			// $order->revokeCertificate($reason = 0);
-//		}
-
 		self::$_this = $this;
-
 	}
 
 	static function this() {
 		return self::$_this;
 	}
 
+	public function before_save_wizard_option(
+		$fieldname, $fieldvalue, $prev_value, $type
+	) {
+
+		//only run when changes have been made
+		if ( $fieldvalue === $prev_value ) {
+			return;
+		}
+
+		if ($fieldname==='accept_le_terms'){
+		    if ($fieldvalue) {
+			    $this->progress_add('accept_terms');
+            } else {
+		        $this->progress_remove('accept_terms');
+            }
+        }
+
+	}
+
 	public function get_installation_progress(){
 		$error   = false;
+		$action = '';
 		$response = '';
 		if ( ! is_user_logged_in() ) {
 			$error = true;
@@ -102,11 +104,34 @@ class rsssl_letsencrypt_handler {
 
 		if (!$error) {
 		    switch ($step) {
-                case 3:
-	                $response = $this->get_order();
+                case 2:
+	                $response = $this->create_order();
+	                if ($response === 'success') {
+		                $response = __('Successfully created order',"really-simple-ssl");
+		                $action = 'finalize';
+	                } else {
+	                    $action = 'stop';
+	                    $error = true;
+                    }
 	                break;
-			    case 4:
-				    $response = $this->get_bundle();
+			    case 3:
+				    $response = $this->create_bundle_or_renew();
+				    if ($response === 'success') {
+					    $response = __( 'Successfully created bundle', "really-simple-ssl" );
+					    $action   = 'finalize';
+				    } else if ( $response === 'success_renewed' ) {
+                        $response = __("Certificate already installed. It has been renewed if necessary.","really-simple-ssl");
+                        $action = 'finalize';
+				    } else {
+					    $error = true;
+					    //if we're ready for the bundle, restart the process on failure.
+					    if ($this->is_ready_for('bundle')) {
+						    $action = 'restart';
+					    } else {
+						    $action = 'stop';
+					    }
+				    }
+
 				    break;
                 default:
                     $response = 'not allowed input';
@@ -116,68 +141,111 @@ class rsssl_letsencrypt_handler {
 		$out = array(
 			'success' => ! $error,
             'message' => $response,
+            'action' => $action,
 		);
 
 		die( json_encode( $out ) );
     }
 
+	/**
+     *
+	 * @param $step
+	 */
 
 	public function installation_progress($step){
-	    $progress_steps = array(3, 4);
-	    if ( !in_array($step, $progress_steps ) ) return;
 	    ?>
             <script>
                 jQuery(document).ready(function ($) {
-                        'use strict';
-
-                    //set up a counter to slowly increment the progress value until we get a response.
+                    'use strict';
                     var progress = 0;
-                    var interval = setInterval(function() {
-                        if (progress>75) {
-                            progress += 0.5;
-                        } else if (progress>50) {
-                            progress +=1;
-                        } else {
-                            progress +=5;
-                        }
-                        rsssl_set_progress(progress);
-                    }, 1000);
-
-                    var step = <?php echo $step?>;
-                    $.ajax({
-                        type: "GET",
-                        url: rsssl_wizard.admin_url,
-                        dataType: 'json',
-                        data: ({
-                            step: step,
-                            action: 'rsssl_installation_progress'
-                        }),
-                        success: function (response) {
-                            var msg = '';
-                            if (response.message !== 'success' ) {
-                                msg = response.message;
+                    var step = $('input[name=step]').val();
+                    if (step==2 || step ==3) {
+                        $('.rsssl_letsencrypt_container').removeClass('rsssl-hidden');
+                        rsssl_process_installation_step();
+                    }
+                    function rsssl_process_installation_step() {
+                        console.log("start process bar");
+                        //set up a counter to slowly increment the progress value until we get a response.
+                        window.rsssl_interval = setInterval(function () {
+                            if (progress > 50) {
+                                progress += 1;
+                            } else {
+                                progress += 5;
                             }
+                            rsssl_set_progress();
+                        }, 2000);
 
-                            var interval = setInterval(function() {
-                                progress +=5;
-                                rsssl_set_progress(progress, msg);
-                            }, 100 );
-                        }
-                    });
+                        $.ajax({
+                            type: "GET",
+                            url: rsssl_wizard.admin_url,
+                            dataType: 'json',
+                            data: ({
+                                step: step,
+                                action: 'rsssl_installation_progress'
+                            }),
+                            success: function (response) {
+                                console.log(response);
+                                var msg = response.message;
+                                //if this is the bundle step, keep progress below 50
+                                //the installation was not successful yet
+                                if (response.action === 'finalize' ) {
+                                    window.rsssl_interval = setInterval(function() {
+                                        progress +=5;
+                                        rsssl_set_progress(msg);
+                                    }, 100 );
+                                    console.log("start callback");
+                                } else if (response.action === 'restart' ) {
+                                    progress = 0;
+                                    window.rsssl_interval = setInterval(function() {
+                                        progress = 0;
+                                        rsssl_set_progress(msg, true);
+                                    }, 1000 );
 
-                    function rsssl_set_progress(progress, msg ){
-                        if ( progress>100 ) progress=100;
+                                } else if (response.action === 'stop'){
+                                    progress = 0;
+                                    rsssl_stop_progress(msg);
+                                }
+
+
+                            }
+                        });
+                    }
+
+                    function rsssl_stop_progress( msg ){
+                        console.log(progress);
                         $('.rsssl-installation-progress').css('width',progress + '%');
-                        if ( progress==100 ) {
-                            clearInterval(interval);
-                            if (typeof msg !== "undefined") $('.rsssl_installation_message').html(msg);
+                        clearInterval(window.rsssl_interval);
+                        if (typeof msg !== "undefined") {
+                            $('.rsssl_installation_message').html(msg);
                         }
+                    }
+
+                    function rsssl_set_progress(msg , restart_on_100){
+                        if ( progress>=100 ) progress=100;
+                        console.log(progress);
+
+                        $('.rsssl-installation-progress').css('width',progress + '%');
+
+                        if ( progress == 100 ) {
+                            clearInterval(window.rsssl_interval);
+                            if (typeof msg !== "undefined") {
+                                $('.rsssl_installation_message').html(msg);
+                            }
+                            if (typeof restart_on_100 !=='undefined' && restart_on_100){
+                                progress = 0;
+                                $('.rsssl_installation_message').html('<?php _e("Not succeeded yet. Please let the system retry, or come back to this page later")?>');
+
+                                rsssl_process_installation_step();
+                            }
+                        }
+
+
                     }
                 });
 
 
             </script>
-            <div class="field-group">
+            <div class="rsssl_letsencrypt_container field-group rsssl-hidden">
                 <div class="rsssl-field">
                     <div class="rsssl_installation_message"></div>
                     <div class=" rsssl-wizard-progress-bar">
@@ -220,13 +288,14 @@ class rsssl_letsencrypt_handler {
         }
     }
 
+
+
 	/**
      * Get Lets encrypt order
 	 * @return mixed|string
 	 */
 
-	public function get_order(){
-
+	public function create_order(){
 	    error_log("RUN ORDER");
 		$response = 'success';
 		$order = false;
@@ -242,18 +311,14 @@ class rsssl_letsencrypt_handler {
 				}
 
 			} else {
-				try {
-					$order = Order::get( $this->account, $this->subjects );
-				} catch(Exception $e) {
-					error_log(print_r($e, true));
-					$response = $this->get_error($e);
-				}
+			    //order exists already
+                $order = true;
 			}
         } else {
 			$response = sprintf(__('Steps not completed: %s', "really-simple-ssl"), implode(", ",$this->get_not_completed_steps('order')) );
 		}
 
-        if ( $response==='success' && $order) {
+        if ( $order) {
 	        $this->progress_add('order');
         } else {
 	        $this->progress_remove('order');
@@ -267,9 +332,9 @@ class rsssl_letsencrypt_handler {
 	 * @return string|void
 	 */
 
-    public function get_bundle(){
+    public function create_bundle_or_renew(){
 	    //check if the required order was created
-	    $bundle = false;
+	    $bundle = $order = $bundle_completed = false;
 	    $response = 'success';
 
 	    if ($this->is_ready_for('bundle')) {
@@ -280,29 +345,65 @@ class rsssl_letsencrypt_handler {
 			    $response = $this->get_error($e);
 		    }
 
-		    try {
-			    if ( $order->authorize( Order::CHALLENGE_TYPE_HTTP ) ) {
-				    $order->finalize();
-			    }
-		    } catch (Exception $e){
-			    error_log(print_r($e, true));
-			    $response = $this->get_error($e);
-		    }
+            if ($order && $order->isCertificateBundleAvailable()){
+	            try {
+		            $order->enableAutoRenewal();
+		            $response = 'success_renewed';
+	            } catch (Exception $e){
+		            error_log(print_r($e, true));
+		            $response = $this->get_error($e);
+	            }
+            } else {
+	            try {
+		            if ( $order->authorize( Order::CHALLENGE_TYPE_HTTP ) ) {
+			            $order->finalize();
+		            }
+	            } catch (Exception $e){
+		            error_log(print_r($e, true));
+		            $response = $this->get_error($e);
+	            }
 
-		    try {
-			    if ( $order->isCertificateBundleAvailable() ) {
-				    $bundle = $order->getCertificateBundle();
-				    $order->enableAutoRenewal();
-			    }
-            } catch (Exception $e){
-			    error_log(print_r($e, true));
-			    $response = $this->get_error($e);
-		    }
+	            try {
+		            if ( $order->isCertificateBundleAvailable() ) {
+			            $bundle_completed = true;
+			            $success_cert = $success_intermediate = $success_private = false;
+			            $bundle = $order->getCertificateBundle();
+			            $pathToPrivateKey = $bundle->path . $bundle->private;
+			            $pathToCertificate = $bundle->path . $bundle->certificate;
+			            $pathToIntermediate = $bundle->path . $bundle->intermediate;
+
+			            if (file_exists($pathToPrivateKey)) {
+				            $success_private = true;
+				            update_option('rsssl_private_key_path', $pathToPrivateKey);
+			            }
+			            if (file_exists($pathToCertificate)) {
+				            $success_cert = true;
+				            update_option('rsssl_certificate_path', $pathToCertificate);
+			            }
+
+			            if (file_exists($pathToIntermediate)) {
+				            $success_intermediate = true;
+				            update_option('rsssl_intermediate_path', $pathToIntermediate);
+			            }
+			            if (!$success_cert || !$success_private || !$success_intermediate) {
+				            $bundle_completed = false;
+			            }
+		            }
+
+
+	            } catch (Exception $e){
+		            error_log(print_r($e, true));
+		            $response = $this->get_error($e);
+	            }
+            }
+
+
+
 	    } else {
 		    $response = sprintf(__('Steps not completed: %s', "really-simple-ssl"), implode(", ",$this->get_not_completed_steps('bundle')) );
 	    }
 
-	    if ( $bundle ){
+	    if ( $bundle_completed ){
 		    $this->progress_add('bundle');
 	    } else {
 		    $this->progress_remove('bundle');
@@ -311,13 +412,43 @@ class rsssl_letsencrypt_handler {
 	    return $response;
     }
 
+	public function copy_certificates(){
+		$response = 'success';
+		$order = false;
+		if ($this->is_ready_for('bundle')) {
+
+			try {
+				$order = Order::get( $this->account, $this->subjects );
+			} catch (Exception $e){
+				error_log(print_r($e, true));
+				$response = $this->get_error($e);
+			}
+
+		} else {
+			$response = 'not-ready';
+		}
+		return $response;
+
+	}
+
+
+
+
 	/**
      * Get account email
 	 * @return string
 	 */
 	public function account_email(){
-	    //don't use the default value.
+	    //don't use the default value: we want users to explicitly enter a value
 	    return rsssl_get_value('email_address', false);
+    }
+	/**
+     * Get terms accepted
+	 * @return bool
+	 */
+	public function terms_accepted(){
+	    //don't use the default value: we want users to explicitly enter a value
+	    return rsssl_get_value('accept_le_terms', false);
     }
 
 	/**
@@ -354,7 +485,8 @@ class rsssl_letsencrypt_handler {
 	 */
 	public function get_subjects(){
 		$subjects = array();
-	    $subjects[] = rsssl_get_value('domain');
+		$domain_no_www = rsssl_get_non_www_domain();
+	    $subjects[] = $domain_no_www;
 	    if (rsssl_get_value('include_www')) {
 		    $subjects[] = 'www.'.rsssl_get_value('domain');
 	    }
@@ -401,7 +533,7 @@ class rsssl_letsencrypt_handler {
 	 * @param string $item
 	 */
 	public function progress_add($item){
-		$progress = get_option("rsssl_le_installation_progress");
+		$progress = get_option("rsssl_le_installation_progress", array() );
 		if (!in_array($item, $progress)){
 		    $progress[] = $item;
 			update_option("rsssl_le_installation_progress", $progress );
@@ -414,7 +546,7 @@ class rsssl_letsencrypt_handler {
 	public function progress_remove($item){
 		$progress = get_option("rsssl_le_installation_progress", array());
 		if (in_array($item, $progress)){
-		    $index = array_search($item);
+		    $index = array_search($item, $progress);
 		    unset($progress[$index]);
 			update_option("rsssl_le_installation_progress", $progress);
 		}
@@ -461,19 +593,41 @@ class rsssl_letsencrypt_handler {
 		$root_directory = trailingslashit(ABSPATH);
 		$parent_directory = trailingslashit(dirname($root_directory));
 		if ( ! file_exists( $parent_directory . 'ssl' ) ) {
-			mkdir( $parent_directory . '/ssl' );
+			mkdir( $parent_directory . 'ssl' );
 		}
 
 		if ( ! file_exists( $parent_directory . 'ssl/keys' ) ) {
-			mkdir( $parent_directory . '/ssl/keys' );
+			mkdir( $parent_directory . 'ssl/keys' );
 		}
 
 		if ( file_exists( $parent_directory . 'ssl/keys' ) ){
 			$this->progress_add('key_directory');
-			return $parent_directory . '/ssl/keys';
+			return $parent_directory . 'ssl/keys';
 		} else {
 			$this->progress_remove('key_directory');
 
+			return false;
+		}
+	}
+
+	/**
+	 * Check if exists, create ssl/certs directory above the wp root if not existing
+	 * @return bool|string
+	 */
+	public function certs_directory(){
+		$root_directory = trailingslashit(ABSPATH);
+		$parent_directory = trailingslashit(dirname($root_directory));
+		if ( ! file_exists( $parent_directory . 'ssl' ) ) {
+			mkdir( $parent_directory . 'ssl' );
+		}
+
+		if ( ! file_exists( $parent_directory . 'ssl/certs' ) ) {
+			mkdir( $parent_directory . 'ssl/certs' );
+		}
+
+		if ( file_exists( $parent_directory . 'ssl/certs' ) ){
+			return $parent_directory . 'ssl/certs';
+		} else {
 			return false;
 		}
 	}

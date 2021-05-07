@@ -11,21 +11,8 @@
 			<h1><?php _e("Notifications", 'really-simple-ssl')?></h1>
 		</div>
 	    {intro}
-		{post_id}
 		{fields}
-
-	    <?php
-	    $step = false;
-	    if (isset($_GET['step'])) {
-		    $step = intval($_GET['step']);
-	    } else if (isset($_POST['step'])) {
-		    $step = intval($_POST['step']);
-	    }
-	    if ($step) {
-		    do_action("rsssl_le_installation_step", $step );
-	    }
-	    ?>
-
+	    <?php do_action("rsssl_le_installation_step" ); ?>
         <div class="rsssl-section-footer">
             {save_as_notice}
             {save_notice}

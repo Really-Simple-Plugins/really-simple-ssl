@@ -27,13 +27,17 @@ $this->steps = apply_filters('rsssl_steps',array(
                 "id"       => "verification",
                 "title"    => __( "Verification", 'really-simple-ssl' ),
             ),
-
             3    => array(
+	            "id"    => "generation",
+	            "title" => __( "Generation", 'really-simple-ssl' ),
+            ),
+            4    => array(
                 "id"    => "installation",
                 "title" => __( "Installation", 'really-simple-ssl' ),
             ),
-            4  => array(
-                "title" => __( "Activate SSL", 'really-simple-ssl' ),
+            5  => array(
+	            "id"    => "activate",
+	            "title" => __( "Activate SSL", 'really-simple-ssl' ),
             ),
         ),
 ));

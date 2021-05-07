@@ -32,7 +32,7 @@ $this->fields = $this->fields + array(
             'default'     => rsssl_get_non_www_domain(),
             'label'       => __( "Domain", 'really-simple-ssl' ),
             'sublabel'    => __("This field is prefilled based on your configuration", 'really-simple-ssl'),
-            'required'    => true,
+            'required'    => false,
             'disabled'    => true,
         ),
 
@@ -68,7 +68,7 @@ $this->fields = $this->fields + array(
             'source'      => 'lets-encrypt',
             'type'        => 'checkbox',
             'default'     => '',
-            'title'       => 'Terms & Conditions',
+            'title'       => __('Terms & Conditions',"really-simple-ssl"),
             'option_text' => __("I agree to the Terms & Conditions", 'really-simple-ssl'),
         ),
 
@@ -76,40 +76,35 @@ $this->fields = $this->fields + array(
             'step'        => 1,
             'section'     => 2,
             'source'      => 'lets-encrypt',
-//            'label'       => '',
             'callback'    => 'instructions.php',
             'help'     => __('Want to come back to the instructions after this step?', 'really-simple-ssl' ) . rsssl_read_more( 'https://complianz.io/what-is-force-majeure/' ),
         ),
-    );
 
-// Questions - Content
-$this->fields = $this->fields + array(
         'verification' => array(
-            'step'        => 2,
-            'section'     => 1,
-            'source'      => 'lets-encrypt',
-            'callback'    => 'verification.php',
-            'help'     => __('To make sure you have added everything correctly, view this example of these folders included in the root of a WordPress installation.', 'really-simple-ssl' ) . rsssl_read_more( 'https://complianz.io/what-is-force-majeure/' ),
+	        'step'        => 2,
+	        'section'     => 1,
+	        'source'      => 'lets-encrypt',
+	        'callback'    => 'verification.php',
+	        'help'     => __('To make sure you have added everything correctly, view this example of these folders included in the root of a WordPress installation.', 'really-simple-ssl' ) . rsssl_read_more( 'https://complianz.io/what-is-force-majeure/' ),
         ),
-    );
 
-// End of Questions
-$this->fields = $this->fields + array(
+        'generation' => array(
+	        'step'        => 3,
+	        'section'     => 1,
+	        'source'      => 'lets-encrypt',
+	        'callback'    => 'generation.php',
+        ),
+
         'installation' => array(
-            'step'        => 3,
-            'section'     => 1,
-            'source'      => 'lets-encrypt',
-//            'label'       => '',
-            'callback'    => 'installation.php',
+	        'step'        => 4,
+	        'section'     => 1,
+	        'source'      => 'lets-encrypt',
+	        'callback'    => 'installation.php',
         ),
-    );
 
-
-$this->fields = $this->fields + array(
         'activate_ssl' => array(
-            'step'     => 4,
-            'source'   => 'lets-encrypt',
-            'callback' => 'last_step',
-//            'label'    => '',
+	        'step'     => 5,
+	        'source'   => 'lets-encrypt',
+	        'callback' => 'activate.php',
         ),
     );

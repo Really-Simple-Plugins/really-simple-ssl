@@ -760,25 +760,23 @@ class rsssl_admin extends rsssl_front_end
      * @access public
      */
 
-    public function show_enable_ssl_button()
-    {
-        ?>
-            <form action="" method="post">
-                <?php wp_nonce_field('rsssl_nonce', 'rsssl_nonce'); ?>
-                <input type="submit" class='button button-primary'
-                       value="<?php _e("Go ahead, activate SSL!", "really-simple-ssl"); ?>" id="rsssl_do_activate_ssl"
-                       name="rsssl_do_activate_ssl">
-                <?php if (!defined("rsssl_pro_version") ) { ?>
+	public function show_enable_ssl_button()
+	{
+		?>
+        <form action="" method="post">
+			<?php wp_nonce_field('rsssl_nonce', 'rsssl_nonce'); ?>
+            <input type="submit" class='button button-primary'
+                   value="<?php _e("Go ahead, activate SSL!", "really-simple-ssl"); ?>" id="rsssl_do_activate_ssl"
+                   name="rsssl_do_activate_ssl">
+			<?php if (!defined("rsssl_pro_version") ) { ?>
                 <a class="button button-default" href="<?php echo $this->pro_url ?>" target="_blank"><?php _e("Get ready with PRO!", "really-simple-ssl"); ?></a>
-                <?php } ?>
-                <?php if ($this->lets_encrypt_conditions() ) { ?>
-                <input type="submit" class='button button-primary'
-                       value="<?php _e("Install SSL certificate", "really-simple-ssl"); ?>" id="rsssl_do_lets_encrypt"
-                       name="rsssl_do_lets_encrypt">
-                <?php } ?>
-            </form>
-        <?php
-    }
+			<?php } ?>
+			<?php if ($this->lets_encrypt_conditions() ) { ?>
+                <a href="<?php echo add_query_arg(array("page" => "rlrsssl_really_simple_ssl", "tab" => "lets-encrypt"),admin_url("options-general.php")) ?>" type="submit" class="button button-primary"><?php _e("Install SSL certificate", "really-simple-ssl"); ?></a>
+			<?php } ?>
+        </form>
+		<?php
+	}
 
     /**
      * @return bool
