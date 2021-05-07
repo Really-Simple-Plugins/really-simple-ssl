@@ -785,7 +785,8 @@ class rsssl_admin extends rsssl_front_end
 
     public function lets_encrypt_conditions() {
         //@todo
-
+        //localhost => no
+        //cpanel, cpanel api.
         return true;
     }
 

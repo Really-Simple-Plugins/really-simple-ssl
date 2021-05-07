@@ -22,6 +22,14 @@ if ( !function_exists('rsssl_settings_page') ) {
     }
 }
 
+/**
+ * Check if we're on CPanel
+ * @return bool
+ */
+function rsssl_is_cpanel(){
+	return file_exists("/usr/local/cpanel");
+}
+
 if ( ! function_exists( 'rsssl_get_value' ) ) {
 
     /**

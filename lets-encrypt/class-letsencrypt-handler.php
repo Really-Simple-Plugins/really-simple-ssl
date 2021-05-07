@@ -28,13 +28,12 @@ class rsssl_letsencrypt_handler {
 		add_action( 'rsssl_before_save_lets-encrypt_option', array( $this, 'before_save_wizard_option' ), 10, 4 );
 
 		$this->installation_sequence = array(
-            0 => 'accept_terms',
-            1 => 'challenge_directory',
-            2 => 'key_directory',
-            3 => 'account',
-            4 => 'order',
-            5 => 'bundle',
-            6 => 'installation',
+            'accept_terms',
+            'challenge_directory',
+            'key_directory',
+            'account',
+            'bundle',
+            'installation',
         );
 
 		$this->key_directory = $this->key_directory();
@@ -51,12 +50,12 @@ class rsssl_letsencrypt_handler {
         }
 
 		// General configs
-		Connector::getInstance()->useStagingServer( true );
+		Connector::getInstance()->useStagingServer( false );
 		Logger::getInstance()->setDesiredLevel( Logger::LEVEL_DISABLED );
 
 //		// Optional configs
 //		//\LE_ACME2\Utilities\Certificate::enableFeatureOCSPMustStaple();
-//		//\LE_ACME2\Order::setPreferredChain(\LE_ACME2\Order::IDENTRUST_ISSUER_CN);
+//		\LE_ACME2\Order::setPreferredChain(\LE_ACME2\Order::IDENTRUST_ISSUER_CN);
 
         $this->get_account();
         $this->subjects = $this->get_subjects();
@@ -90,6 +89,7 @@ class rsssl_letsencrypt_handler {
 		$error   = false;
 		$action = '';
 		$response = '';
+		$status = 'none';
 		if ( ! is_user_logged_in() ) {
 			$error = true;
 		}
@@ -104,18 +104,10 @@ class rsssl_letsencrypt_handler {
 
 		if (!$error) {
 		    switch ($step) {
-                case 2:
-	                $response = $this->create_order();
-	                if ($response === 'success') {
-		                $response = __('Successfully created order',"really-simple-ssl");
-		                $action = 'finalize';
-	                } else {
-	                    $action = 'stop';
-	                    $error = true;
-                    }
-	                break;
 			    case 3:
-				    $response = $this->create_bundle_or_renew();
+				    $status = $this->create_bundle_or_renew();
+				    $response = $status;
+
 				    if ($response === 'success') {
 					    $response = __( 'Successfully created bundle', "really-simple-ssl" );
 					    $action   = 'finalize';
@@ -133,6 +125,18 @@ class rsssl_letsencrypt_handler {
 				    }
 
 				    break;
+                case 4:
+	                $status = $this->install_certificate();
+	                $response = $status;
+	                if ($response === 'success') {
+		                $response = __('Successfully installed certificate',"really-simple-ssl");
+		                $action = 'finalize';
+	                } else {
+	                    error_log("json response stop");
+		                $action = 'stop';
+		                $error = true;
+	                }
+	                break;
                 default:
                     $response = 'not allowed input';
             }
@@ -142,6 +146,7 @@ class rsssl_letsencrypt_handler {
 			'success' => ! $error,
             'message' => $response,
             'action' => $action,
+            'status' => $status,
 		);
 
 		die( json_encode( $out ) );
@@ -159,7 +164,7 @@ class rsssl_letsencrypt_handler {
                     'use strict';
                     var progress = 0;
                     var step = $('input[name=step]').val();
-                    if (step==2 || step ==3) {
+                    if ( step ==3 || step ==4 ) {
                         $('.rsssl_letsencrypt_container').removeClass('rsssl-hidden');
                         rsssl_process_installation_step();
                     }
@@ -184,10 +189,12 @@ class rsssl_letsencrypt_handler {
                                 action: 'rsssl_installation_progress'
                             }),
                             success: function (response) {
+                                console.log("response");
                                 console.log(response);
                                 var msg = response.message;
                                 //if this is the bundle step, keep progress below 50
                                 //the installation was not successful yet
+                                rsssl_set_status(response.status);
                                 if (response.action === 'finalize' ) {
                                     window.rsssl_interval = setInterval(function() {
                                         progress +=5;
@@ -207,8 +214,19 @@ class rsssl_letsencrypt_handler {
                                 }
 
 
+                            },
+                            error: function(response) {
+                                console.log("error");
+                                console.log(response);
+                                rsssl_stop_progress(response.responseText);
                             }
                         });
+                    }
+
+                    function rsssl_set_status(status){
+                        if ($('.'+status).length) {
+                            $('.'+status).removeClass('rsssl-hidden');
+                        }
                     }
 
                     function rsssl_stop_progress( msg ){
@@ -252,7 +270,6 @@ class rsssl_letsencrypt_handler {
                         <div class="rsssl-wizard-progress-bar-value rsssl-installation-progress" style="width:0"></div>
                     </div>
                 </div>
-
             </div>
 
             <?php
@@ -289,44 +306,6 @@ class rsssl_letsencrypt_handler {
     }
 
 
-
-	/**
-     * Get Lets encrypt order
-	 * @return mixed|string
-	 */
-
-	public function create_order(){
-	    error_log("RUN ORDER");
-		$response = 'success';
-		$order = false;
-
-		if ($this->is_ready_for('order')) {
-			if ( ! Order::exists( $this->account, $this->subjects ) ) {
-			    error_log("order does not exist yet");
-				try {
-					$order = Order::create( $this->account, $this->subjects );
-				} catch(Exception $e) {
-				    $response = $this->get_error($e);
-					error_log(print_r($e, true));
-				}
-
-			} else {
-			    //order exists already
-                $order = true;
-			}
-        } else {
-			$response = sprintf(__('Steps not completed: %s', "really-simple-ssl"), implode(", ",$this->get_not_completed_steps('order')) );
-		}
-
-        if ( $order) {
-	        $this->progress_add('order');
-        } else {
-	        $this->progress_remove('order');
-        }
-
-		return $response;
-    }
-
 	/**
      * Authorize the order
 	 * @return string|void
@@ -334,24 +313,33 @@ class rsssl_letsencrypt_handler {
 
     public function create_bundle_or_renew(){
 	    //check if the required order was created
-	    $bundle = $order = $bundle_completed = false;
+	    $order = $bundle_completed = false;
 	    $response = 'success';
 
 	    if ($this->is_ready_for('bundle')) {
-		    try {
+		    if ( ! Order::exists( $this->account, $this->subjects ) ) {
+			    error_log("order does not exist yet");
+			    try {
+				    $order = Order::create( $this->account, $this->subjects );
+			    } catch(Exception $e) {
+				    $response = $this->get_error($e);
+				    error_log(print_r($e, true));
+			    }
+
+		    } else {
+			    //order exists already
 			    $order = Order::get( $this->account, $this->subjects );
-		    } catch (Exception $e){
-			    error_log(print_r($e, true));
-			    $response = $this->get_error($e);
 		    }
 
             if ($order && $order->isCertificateBundleAvailable()){
 	            try {
 		            $order->enableAutoRenewal();
 		            $response = 'success_renewed';
+		            $bundle_completed = true;
 	            } catch (Exception $e){
 		            error_log(print_r($e, true));
 		            $response = $this->get_error($e);
+		            $bundle_completed = false;
 	            }
             } else {
 	            try {
@@ -365,6 +353,7 @@ class rsssl_letsencrypt_handler {
 
 	            try {
 		            if ( $order->isCertificateBundleAvailable() ) {
+		                error_log("cert bundle available");
 			            $bundle_completed = true;
 			            $success_cert = $success_intermediate = $success_private = false;
 			            $bundle = $order->getCertificateBundle();
@@ -373,19 +362,26 @@ class rsssl_letsencrypt_handler {
 			            $pathToIntermediate = $bundle->path . $bundle->intermediate;
 
 			            if (file_exists($pathToPrivateKey)) {
+				            error_log("missing private key file");
+
 				            $success_private = true;
 				            update_option('rsssl_private_key_path', $pathToPrivateKey);
 			            }
 			            if (file_exists($pathToCertificate)) {
+				            error_log("missing cert file");
+
 				            $success_cert = true;
 				            update_option('rsssl_certificate_path', $pathToCertificate);
 			            }
 
 			            if (file_exists($pathToIntermediate)) {
+				            error_log("missing intermediate file");
+
 				            $success_intermediate = true;
 				            update_option('rsssl_intermediate_path', $pathToIntermediate);
 			            }
 			            if (!$success_cert || !$success_private || !$success_intermediate) {
+			                error_log("not all files");
 				            $bundle_completed = false;
 			            }
 		            }
@@ -396,9 +392,6 @@ class rsssl_letsencrypt_handler {
 		            $response = $this->get_error($e);
 	            }
             }
-
-
-
 	    } else {
 		    $response = sprintf(__('Steps not completed: %s', "really-simple-ssl"), implode(", ",$this->get_not_completed_steps('bundle')) );
 	    }
@@ -412,18 +405,51 @@ class rsssl_letsencrypt_handler {
 	    return $response;
     }
 
-	public function copy_certificates(){
+	/**
+     * Instantiate our installer, and run it.
+     *
+	 * @return string
+	 */
+	public function install_certificate(){
 		$response = 'success';
-		$order = false;
-		if ($this->is_ready_for('bundle')) {
+		if ($this->is_ready_for('installation')) {
+		    try {
+			    if (rsssl_is_cpanel()){
+				    error_log("is cpanel");
+				    require_once( rsssl_path . 'lets-encrypt/cPanel/cPanel.php' );
+				    $username = rsssl_get_value('cpanel_username');
+				    $password = rsssl_get_value('cpanel_password');
+				    $cpanel_host = rsssl_get_value('cpanel_host');
+				    $cpanel = new rsssl_cPanel($cpanel_host, $username, $password);
+				    $domains = RSSSL_LE()->letsencrypt_handler->get_subjects();
+				    $response_arr = array();
+				    if (is_array($domains) && count($domains)>0) {
+					    foreach ($domains as $domain ) {
+						    $response_arr[] = $cpanel->installSSL($domain);
+					    }
+				    }
 
-			try {
-				$order = Order::get( $this->account, $this->subjects );
-			} catch (Exception $e){
-				error_log(print_r($e, true));
-				$response = $this->get_error($e);
-			}
+				    foreach ($response_arr as $response ) {
+				        if ($response !== 'success' ) {
+					        error_log("response err".$response);
 
+					        return $response;
+				        }
+				    }
+				    error_log("success response");
+
+				    return 'success';
+
+			    } else {
+
+				    error_log("not cpanel");
+				    $response = 'not-ready';
+
+			    }
+		    } catch (Exception $e) {
+		        error_log(print_r($e, true));
+			    $response = 'not-ready';
+		    }
 		} else {
 			$response = 'not-ready';
 		}
@@ -662,4 +688,6 @@ class rsssl_letsencrypt_handler {
 	    return $error;
 
 	}
+
+
 }

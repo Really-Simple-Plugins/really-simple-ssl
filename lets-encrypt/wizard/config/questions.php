@@ -37,15 +37,51 @@ $this->fields = $this->fields + array(
         ),
 
         'include_www' => array(
+	        'step'        => 1,
+	        'section'     => 1,
+	        'source'      => 'lets-encrypt',
+	        'type'        => 'checkbox',
+	        'default'     => '',
+	        'tooltip'   => __( "Your email address will be obfuscated on the front-end to prevent spidering.",
+		        'really-simple-ssl' ),
+	        'tooltip-position' => 'after',
+	        'option_text' => __("Include www-prefixed version too?", 'really-simple-ssl'),
+        ),
+
+        'cpanel_host' => array(
             'step'        => 1,
             'section'     => 1,
             'source'      => 'lets-encrypt',
-            'type'        => 'checkbox',
-            'default'     => '',
-            'tooltip'   => __( "Your email address will be obfuscated on the front-end to prevent spidering.",
-                'really-simple-ssl' ),
-            'tooltip-position' => 'after',
-            'option_text' => __("Include www-prefixed version too?", 'really-simple-ssl'),
+            'type'        => 'text',
+            'default'     => rsssl_get_non_www_domain(),
+            'label'       => __( "CPanel host", 'really-simple-ssl' ),
+            'required'    => true,
+            'disabled'    => false,
+	        'callback_condition' => 'rsssl_is_cpanel'
+        ),
+
+        'cpanel_username' => array(
+	        'step'        => 1,
+	        'section'     => 1,
+	        'source'      => 'lets-encrypt',
+	        'type'        => 'text',
+	        'default'     => '',
+	        'label'       => __( "CPanel username", 'really-simple-ssl' ),
+	        'required'    => true,
+	        'disabled'    => false,
+	        'callback_condition' => 'rsssl_is_cpanel'
+        ),
+
+        'cpanel_password' => array(
+	        'step'        => 1,
+	        'section'     => 1,
+	        'source'      => 'lets-encrypt',
+	        'type'        => 'text',
+	        'default'     => '',
+	        'label'       => __( "CPanel password", 'really-simple-ssl' ),
+	        'required'    => true,
+	        'disabled'    => false,
+	        'callback_condition' => 'rsssl_is_cpanel'
         ),
 
         'email_address'      => array(

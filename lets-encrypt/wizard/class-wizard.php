@@ -532,27 +532,21 @@ if ( ! class_exists( "rsssl_wizard" ) ) {
 
         public function required_fields_completed( $page, $step, $section ) {
             //get all required fields for this section, and check if they're filled in
-	        error_log("$page $step $section");
             $fields = RSSSL_LE()->config->fields( $page, $step, $section );
             $fields = rsssl_array_filter_multidimensional( $fields, 'required', true );
             foreach ( $fields as $fieldname => $args ) {
-            	error_log($fieldname);
                 //if a condition exists, only check for this field if the condition applies.
                 if ( isset( $args['condition'] )
                     || isset( $args['callback_condition'] )
                     && ! RSSSL_LE()->field->condition_applies( $args )
                 ) {
-                	error_log("skip ".$fieldname);
                     continue;
                 }
                 $value = RSSSL_LE()->field->get_value( $fieldname );
                 if ( empty( $value ) ) {
-	                error_log("not completed ".$fieldname);
-
 	                return false;
                 }
             }
-            error_log("all completed");
             return true;
         }
 
