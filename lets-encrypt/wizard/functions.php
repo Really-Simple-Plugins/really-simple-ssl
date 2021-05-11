@@ -30,6 +30,49 @@ function rsssl_is_cpanel(){
 	return file_exists("/usr/local/cpanel");
 }
 
+/**
+ * Check if CPanel supports the api
+ * @return bool
+ */
+function rsssl_cpanel_api_supported(){
+	return rsssl_is_cpanel() && file_exists("/usr/local/cpanel/php/cpanel.php");
+}
+
+function rsssl_is_plesk(){
+	return false;
+}
+
+/**
+ * @param bool $nicename
+ *
+ * @return string
+ */
+function rsssl_hosting_environment($nicename = false ){
+	$system = 'other';
+	if (rsssl_is_cpanel()) {
+		$system = 'cpanel';
+	}
+
+	if (rsssl_is_plesk()) {
+		$system = 'plesk';
+	}
+
+	if ($nicename){
+		$list = array(
+			'plesk' => "Plesk",
+			'cpanel' => "CPanel",
+			'other' => __("Other hosting environment.", "really-simple-ssl"),
+		);
+		return $list[$system];
+
+	} else {
+		return $system;
+	}
+
+
+}
+
+
 if ( ! function_exists( 'rsssl_get_value' ) ) {
 
     /**

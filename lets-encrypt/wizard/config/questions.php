@@ -24,8 +24,15 @@ defined( 'ABSPATH' ) or die( "you do not have access to this page!" );
 
 // General
 $this->fields = $this->fields + array(
+		'system_status' => array(
+			'step'        => 1,
+			'section'     => 1,
+			'source'      => 'lets-encrypt',
+			'callback'    => 'system-status.php',
+		),
+
         'domain' => array(
-            'step'        => 1,
+            'step'        => 2,
             'section'     => 1,
             'source'      => 'lets-encrypt',
             'type'        => 'text',
@@ -37,7 +44,7 @@ $this->fields = $this->fields + array(
         ),
 
         'include_www' => array(
-	        'step'        => 1,
+	        'step'        => 2,
 	        'section'     => 1,
 	        'source'      => 'lets-encrypt',
 	        'type'        => 'checkbox',
@@ -49,7 +56,7 @@ $this->fields = $this->fields + array(
         ),
 
         'cpanel_host' => array(
-            'step'        => 1,
+            'step'        => 2,
             'section'     => 1,
             'source'      => 'lets-encrypt',
             'type'        => 'text',
@@ -57,11 +64,11 @@ $this->fields = $this->fields + array(
             'label'       => __( "CPanel host", 'really-simple-ssl' ),
             'required'    => true,
             'disabled'    => false,
-	        'callback_condition' => 'rsssl_is_cpanel'
+	        'callback_condition' => 'rsssl_cpanel_api_supported'
         ),
 
         'cpanel_username' => array(
-	        'step'        => 1,
+	        'step'        => 2,
 	        'section'     => 1,
 	        'source'      => 'lets-encrypt',
 	        'type'        => 'text',
@@ -69,11 +76,11 @@ $this->fields = $this->fields + array(
 	        'label'       => __( "CPanel username", 'really-simple-ssl' ),
 	        'required'    => true,
 	        'disabled'    => false,
-	        'callback_condition' => 'rsssl_is_cpanel'
+	        'callback_condition' => 'rsssl_cpanel_api_supported'
         ),
 
         'cpanel_password' => array(
-	        'step'        => 1,
+	        'step'        => 2,
 	        'section'     => 1,
 	        'source'      => 'lets-encrypt',
 	        'type'        => 'text',
@@ -81,11 +88,11 @@ $this->fields = $this->fields + array(
 	        'label'       => __( "CPanel password", 'really-simple-ssl' ),
 	        'required'    => true,
 	        'disabled'    => false,
-	        'callback_condition' => 'rsssl_is_cpanel'
+	        'callback_condition' => 'rsssl_cpanel_api_supported'
         ),
 
         'email_address'      => array(
-            'step'      => 1,
+            'step'      => 2,
             'section'   => 1,
             'source'    => 'lets-encrypt',
             'type'      => 'email',
@@ -99,7 +106,7 @@ $this->fields = $this->fields + array(
         ),
 
         'accept_le_terms' => array(
-            'step'        => 1,
+            'step'        => 2,
             'section'     => 1,
             'source'      => 'lets-encrypt',
             'type'        => 'checkbox',
@@ -109,7 +116,7 @@ $this->fields = $this->fields + array(
         ),
 
         'instructions' => array(
-            'step'        => 1,
+            'step'        => 2,
             'section'     => 2,
             'source'      => 'lets-encrypt',
             'callback'    => 'instructions.php',
@@ -117,7 +124,7 @@ $this->fields = $this->fields + array(
         ),
 
         'verification' => array(
-	        'step'        => 2,
+	        'step'        => 3,
 	        'section'     => 1,
 	        'source'      => 'lets-encrypt',
 	        'callback'    => 'verification.php',
@@ -125,21 +132,21 @@ $this->fields = $this->fields + array(
         ),
 
         'generation' => array(
-	        'step'        => 3,
+	        'step'        => 4,
 	        'section'     => 1,
 	        'source'      => 'lets-encrypt',
 	        'callback'    => 'generation.php',
         ),
 
         'installation' => array(
-	        'step'        => 4,
+	        'step'        => 5,
 	        'section'     => 1,
 	        'source'      => 'lets-encrypt',
 	        'callback'    => 'installation.php',
         ),
 
         'activate_ssl' => array(
-	        'step'     => 5,
+	        'step'     => 6,
 	        'source'   => 'lets-encrypt',
 	        'callback' => 'activate.php',
         ),

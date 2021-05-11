@@ -4,7 +4,11 @@ defined( 'ABSPATH' ) or die( "you do not have accesss to this page!" );
 $this->steps = apply_filters('rsssl_steps',array(
     'lets-encrypt' =>
         array(
-            1 => array(
+	        1 => array(
+		        "id"       => "system-status",
+		        "title"    => __( "System Status", 'really-simple-ssl' ),
+	        ),
+            2 => array(
                 "id"    => "domain",
                 "title" => __( "Domain", 'really-simple-ssl' ),
                 'intro' => '<h1>'.__('Terms & conditions', 'really-simple-ssl').'</h1><p>'.
@@ -23,19 +27,19 @@ $this->steps = apply_filters('rsssl_steps',array(
                 )
             ),
 
-            2 => array(
+            3 => array(
                 "id"       => "verification",
                 "title"    => __( "Verification", 'really-simple-ssl' ),
             ),
-            3    => array(
+            4    => array(
 	            "id"    => "generation",
 	            "title" => __( "Generation", 'really-simple-ssl' ),
             ),
-            4    => array(
+            5    => array(
                 "id"    => "installation",
                 "title" => __( "Installation", 'really-simple-ssl' ),
             ),
-            5  => array(
+            6  => array(
 	            "id"    => "activate",
 	            "title" => __( "Activate SSL", 'really-simple-ssl' ),
             ),

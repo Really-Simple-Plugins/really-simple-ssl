@@ -82,7 +82,6 @@ class rsssl_letsencrypt_handler {
 		        $this->progress_remove('accept_terms');
             }
         }
-
 	}
 
 	public function get_installation_progress(){
@@ -104,20 +103,28 @@ class rsssl_letsencrypt_handler {
 
 		if (!$error) {
 		    switch ($step) {
-			    case 3:
+			    case 4:
 				    $status = $this->create_bundle_or_renew();
 				    $response = $status;
 
-				    if ($response === 'success') {
+				    if ($response === 'success' ) {
 					    $response = __( 'Successfully created bundle', "really-simple-ssl" );
 					    $action   = 'finalize';
 				    } else if ( $response === 'success_renewed' ) {
                         $response = __("Certificate already installed. It has been renewed if necessary.","really-simple-ssl");
-                        $action = 'finalize';
+                        $action   = 'finalize';
 				    } else {
+					    $status = 'failed';
 					    $error = true;
+					    error_log($response);
+
+
+					    if (strpos($response, 'Error creating new order') !== false ) {
+						    error_log("found needle order");
+						    $action = 'stop';
+					    }
 					    //if we're ready for the bundle, restart the process on failure.
-					    if ($this->is_ready_for('bundle')) {
+                        else if ($this->is_ready_for('bundle')) {
 						    $action = 'restart';
 					    } else {
 						    $action = 'stop';
@@ -125,7 +132,7 @@ class rsssl_letsencrypt_handler {
 				    }
 
 				    break;
-                case 4:
+                case 5:
 	                $status = $this->install_certificate();
 	                $response = $status;
 	                if ($response === 'success') {
@@ -164,7 +171,7 @@ class rsssl_letsencrypt_handler {
                     'use strict';
                     var progress = 0;
                     var step = $('input[name=step]').val();
-                    if ( step ==3 || step ==4 ) {
+                    if ( step ==4 || step ==5 ) {
                         $('.rsssl_letsencrypt_container').removeClass('rsssl-hidden');
                         rsssl_process_installation_step();
                     }
@@ -224,6 +231,7 @@ class rsssl_letsencrypt_handler {
                     }
 
                     function rsssl_set_status(status){
+                        if (status)
                         if ($('.'+status).length) {
                             $('.'+status).removeClass('rsssl-hidden');
                         }
@@ -325,73 +333,68 @@ class rsssl_letsencrypt_handler {
 				    $response = $this->get_error($e);
 				    error_log(print_r($e, true));
 			    }
-
 		    } else {
 			    //order exists already
 			    $order = Order::get( $this->account, $this->subjects );
 		    }
 
-            if ($order && $order->isCertificateBundleAvailable()){
-	            try {
-		            $order->enableAutoRenewal();
-		            $response = 'success_renewed';
-		            $bundle_completed = true;
-	            } catch (Exception $e){
-		            error_log(print_r($e, true));
-		            $response = $this->get_error($e);
-		            $bundle_completed = false;
-	            }
-            } else {
-	            try {
-		            if ( $order->authorize( Order::CHALLENGE_TYPE_HTTP ) ) {
-			            $order->finalize();
-		            }
-	            } catch (Exception $e){
-		            error_log(print_r($e, true));
-		            $response = $this->get_error($e);
-	            }
+		    if ( $order ) {
+			    if ( $order->isCertificateBundleAvailable() ) {
+				    try {
+					    $order->enableAutoRenewal();
+					    $response         = 'success_renewed';
+					    $bundle_completed = true;
+				    } catch ( Exception $e ) {
+					    error_log( print_r( $e, true ) );
+					    $response         = $this->get_error( $e );
+					    $bundle_completed = false;
+				    }
+			    } else {
+				    try {
+					    if ( $order->authorize( Order::CHALLENGE_TYPE_HTTP ) ) {
+						    $order->finalize();
+					    }
+				    } catch ( Exception $e ) {
+					    error_log( print_r( $e, true ) );
+					    $response = $this->get_error( $e );
+				    }
 
-	            try {
-		            if ( $order->isCertificateBundleAvailable() ) {
-		                error_log("cert bundle available");
-			            $bundle_completed = true;
-			            $success_cert = $success_intermediate = $success_private = false;
-			            $bundle = $order->getCertificateBundle();
-			            $pathToPrivateKey = $bundle->path . $bundle->private;
-			            $pathToCertificate = $bundle->path . $bundle->certificate;
-			            $pathToIntermediate = $bundle->path . $bundle->intermediate;
+				    try {
+					    if ( $order->isCertificateBundleAvailable() ) {
+						    error_log( "cert bundle available" );
+						    $bundle_completed   = true;
+						    $success_cert       = $success_intermediate = $success_private = false;
+						    $bundle             = $order->getCertificateBundle();
+						    $pathToPrivateKey   = $bundle->path . $bundle->private;
+						    $pathToCertificate  = $bundle->path . $bundle->certificate;
+						    $pathToIntermediate = $bundle->path . $bundle->intermediate;
 
-			            if (file_exists($pathToPrivateKey)) {
-				            error_log("missing private key file");
+						    if ( file_exists( $pathToPrivateKey ) ) {
+							    $success_private = true;
+							    update_option( 'rsssl_private_key_path', $pathToPrivateKey );
+						    }
+						    if ( file_exists( $pathToCertificate ) ) {
+							    $success_cert = true;
+							    update_option( 'rsssl_certificate_path', $pathToCertificate );
+						    }
 
-				            $success_private = true;
-				            update_option('rsssl_private_key_path', $pathToPrivateKey);
-			            }
-			            if (file_exists($pathToCertificate)) {
-				            error_log("missing cert file");
-
-				            $success_cert = true;
-				            update_option('rsssl_certificate_path', $pathToCertificate);
-			            }
-
-			            if (file_exists($pathToIntermediate)) {
-				            error_log("missing intermediate file");
-
-				            $success_intermediate = true;
-				            update_option('rsssl_intermediate_path', $pathToIntermediate);
-			            }
-			            if (!$success_cert || !$success_private || !$success_intermediate) {
-			                error_log("not all files");
-				            $bundle_completed = false;
-			            }
-		            }
+						    if ( file_exists( $pathToIntermediate ) ) {
+							    $success_intermediate = true;
+							    update_option( 'rsssl_intermediate_path', $pathToIntermediate );
+						    }
+						    if ( ! $success_cert || ! $success_private || ! $success_intermediate ) {
+							    error_log( "not all files" );
+							    $bundle_completed = false;
+						    }
+					    }
 
 
-	            } catch (Exception $e){
-		            error_log(print_r($e, true));
-		            $response = $this->get_error($e);
-	            }
-            }
+				    } catch ( Exception $e ) {
+					    error_log( print_r( $e, true ) );
+					    $response = $this->get_error( $e );
+				    }
+			    }
+		    }
 	    } else {
 		    $response = sprintf(__('Steps not completed: %s', "really-simple-ssl"), implode(", ",$this->get_not_completed_steps('bundle')) );
 	    }
@@ -414,7 +417,7 @@ class rsssl_letsencrypt_handler {
 		$response = 'success';
 		if ($this->is_ready_for('installation')) {
 		    try {
-			    if (rsssl_is_cpanel()){
+			    if (rsssl_cpanel_api_supported()){
 				    error_log("is cpanel");
 				    require_once( rsssl_path . 'lets-encrypt/cPanel/cPanel.php' );
 				    $username = rsssl_get_value('cpanel_username');
@@ -672,15 +675,13 @@ class rsssl_letsencrypt_handler {
 
 		    //check for subproblems
 		    if (isset($e->getTrace()[0]['args'][0]->body['subproblems'])){
+			    $error .= '<ul>';
 		        foreach($e->getTrace()[0]['args'][0]->body['subproblems'] as $index => $problem) {
-			        $error .= '<br>'. $e->getTrace()[0]['args'][0]->body['subproblems'][$index]['detail'];
+			        $error .= '<li>'. $this->cleanup_error_message($e->getTrace()[0]['args'][0]->body['subproblems'][$index]['detail']).'</li>';
 		        }
-            }
+			    $error .= '</ul>';
 
-		    $error = str_replace(array(
-			    'Refer to sub-problems for more information.',
-			    'Error creating new order :: ',
-		    ), '', $error);
+		    }
 
 	    } else {
 	        $error = $e;
@@ -688,6 +689,13 @@ class rsssl_letsencrypt_handler {
 	    return $error;
 
 	}
+
+	private function cleanup_error_message($msg){
+		return str_replace(array(
+			'Refer to sub-problems for more information.',
+			'Error creating new order ::',
+		), '', $msg);
+    }
 
 
 }
