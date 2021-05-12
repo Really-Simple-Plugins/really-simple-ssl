@@ -1,3 +1,53 @@
+#rsssl-lets-encrypt ul {
+  margin-left: 30px;
+}
+#rsssl-lets-encrypt ul li {
+  /*Nested li */
+}
+#rsssl-lets-encrypt ul li:before {
+  background-color: #f8be2e;
+  color: #fff;
+  height: 10px;
+  width: 10px;
+  border-radius: 50%;
+  content: '';
+  position: absolute;
+  margin-top: 5px;
+  margin-left: -30px;
+}
+#rsssl-lets-encrypt ul li.rsssl-error:before {
+  background-color: #D7263D;
+  color: #fff;
+  height: 10px;
+  width: 10px;
+  border-radius: 50%;
+  content: '';
+  position: absolute;
+  margin-top: 5px;
+  margin-left: -30px;
+}
+#rsssl-lets-encrypt ul li.rsssl-success:before {
+  background-color: #22932e;
+  color: #fff;
+  height: 10px;
+  width: 10px;
+  border-radius: 50%;
+  content: '';
+  position: absolute;
+  margin-top: 5px;
+  margin-left: -30px;
+}
+#rsssl-lets-encrypt ul li ul li:before {
+  background-color: #888;
+  color: #fff;
+  height: 6px;
+  width: 6px;
+  border-radius: 50%;
+  content: '';
+  position: absolute;
+  margin-top: 7px;
+  margin-left: -19px;
+}
 /*Loader*/
 .rsssl-loader {
   margin: 0;
@@ -120,11 +170,11 @@
   margin: 10px;
 }
 #rsssl-wizard .rsssl-icon.rsssl-success {
-  color: #29B6F6;
+  color: #22932e;
 }
 #rsssl-wizard .rsssl-icon.rsssl-success svg {
-  stroke: #29B6F6;
-  fill: #29B6F6;
+  stroke: #22932e;
+  fill: #22932e;
 }
 #rsssl-wizard .rsssl-icon.rsssl-success.documents-shortcode {
   color: #000;

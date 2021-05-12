@@ -1,6 +1,20 @@
 <?php
 defined('ABSPATH') or die("you do not have access to this page!");
-if (rsssl_letsencrypt_generation_allowed()) {
+/**
+ * Capability handling for lets encrypt
+ * @return bool
+ */
+if (!function_exists('rsssl_letsencrypt_generation_allowed')) {
+	function rsssl_letsencrypt_generation_allowed() {
+		if ( current_user_can( 'manage_options' ) || wp_doing_cron() ) {
+			return true;
+		}
+
+		return false;
+	}
+}
+
+if ( rsssl_letsencrypt_generation_allowed() ) {
 
 	class RSSSL_LETSENCRYPT {
 		private static $instance;
@@ -19,7 +33,7 @@ if (rsssl_letsencrypt_generation_allowed()) {
 				self::$instance = new RSSSL_LETSENCRYPT;
 				self::$instance->setup_constants();
 				self::$instance->includes();
-				if ( is_admin() ) {
+				if ( is_admin() || wp_doing_cron() ) {
 					self::$instance->field               = new rsssl_field();
 					self::$instance->wizard              = new rsssl_wizard();
 					self::$instance->config              = new rsssl_config();
@@ -32,16 +46,20 @@ if (rsssl_letsencrypt_generation_allowed()) {
 		}
 
 		private function setup_constants() {
-
+			define('rsssl_le_url', plugin_dir_url(__FILE__));
+			define('rsssl_le_path', trailingslashit(plugin_dir_path(__FILE__)));
+			define('rsssl_le_wizard_path', trailingslashit(plugin_dir_path(__FILE__)).'/wizard/');
 		}
 
 		private function includes() {
-			if ( is_admin() ) {
-				require_once( rsssl_path . 'lets-encrypt/wizard/assets/icons.php' );
-				require_once( rsssl_path . 'lets-encrypt/wizard/class-field.php' );
-				require_once( rsssl_path . 'lets-encrypt/wizard/class-wizard.php' );
-				require_once( rsssl_path . 'lets-encrypt/wizard/config/class-config.php' );
-				require_once( rsssl_path . 'lets-encrypt/class-letsencrypt-handler.php' );
+			require_once( rsssl_le_path . 'cron.php' );
+
+			if ( is_admin() || wp_doing_cron() ) {
+				require_once( rsssl_le_path . 'wizard/assets/icons.php' );
+				require_once( rsssl_le_path . 'wizard/class-field.php' );
+				require_once( rsssl_le_path . 'wizard/class-wizard.php' );
+				require_once( rsssl_le_path . 'wizard/config/class-config.php' );
+				require_once( rsssl_le_path . 'class-letsencrypt-handler.php' );
 			}
 		}
 
@@ -66,12 +84,3 @@ if (rsssl_letsencrypt_generation_allowed()) {
 }
 
 
-/**
- * Capability handling for lets encrypt
- * @return bool
- */
-function rsssl_letsencrypt_generation_allowed(){
-	if (current_user_can('manage_options') || wp_doing_cron() ) return true;
-
-	return false;
-}

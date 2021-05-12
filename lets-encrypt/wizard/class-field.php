@@ -1374,9 +1374,9 @@ if ( ! class_exists( "rsssl_field" ) ) {
             do_action( 'rsssl_label_html' , $args );
             do_action( 'rsssl_after_label', $args );
 
-	        $file = trailingslashit(rsssl_wizard_path) . 'templates/' . $callback;
+	        $file = trailingslashit(rsssl_le_wizard_path) . 'templates/' . $callback;
             if ( file_exists($file) ) {
-                echo RSSSL()->really_simple_ssl->get_template($callback, $path = rsssl_wizard_path);
+                echo RSSSL()->really_simple_ssl->get_template($callback, $path = rsssl_le_wizard_path);
             } else {
 	            do_action( "rsssl_$callback", $args );
             }
@@ -1525,18 +1525,21 @@ if ( ! class_exists( "rsssl_field" ) ) {
         }
 
 
-        public
-        function save_button() {
-            wp_nonce_field( 'rsssl_save', 'rsssl_nonce' );
-            ?>
-            <th></th>
-            <td>
-                <input class="button button-primary" type="submit"
-                       name="rsssl-save"
-                       value="<?php _e( "Save", 'really-simple-ssl' ) ?>">
+        public function save_button() {
+            $button_text = __( "Save", 'really-simple-ssl' );
+	        $button_name = 'rsssl-save';
 
-            </td>
-            <?php
+	        $step = RSSSL_LE()->wizard->step();
+            $section = RSSSL_LE()->wizard->section();
+	        $fields = RSSSL_LE()->config->fields( 'lets-encrypt', $step, $section);
+	        reset($fields);
+	        foreach ($fields as $key => $field ) {
+		        if (isset($field['callback']) && strpos($field['callback'], '.php')!==false) {
+			        $button_text = __( "Refresh", 'really-simple-ssl' );
+			        $button_name = 'rsssl-refresh';
+		        }
+	        }
+	        return '<input class="button button-secondary" type="submit" name="'.$button_name.'" value="'.$button_text.'">';
         }
 
 

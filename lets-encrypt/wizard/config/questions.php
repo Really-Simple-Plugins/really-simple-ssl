@@ -49,7 +49,7 @@ $this->fields = $this->fields + array(
 	        'source'      => 'lets-encrypt',
 	        'type'        => 'checkbox',
 	        'default'     => '',
-	        'tooltip'   => __( "Your email address will be obfuscated on the front-end to prevent spidering.",
+	        'tooltip'   => __( "It is recommended to add the www domain to your certificate as well. You should have the www domain pointed to the same website as the non-www domain.",
 		        'really-simple-ssl' ),
 	        'tooltip-position' => 'after',
 	        'option_text' => __("Include www-prefixed version too?", 'really-simple-ssl'),
@@ -123,11 +123,11 @@ $this->fields = $this->fields + array(
             'help'     => __('Want to come back to the instructions after this step?', 'really-simple-ssl' ) . rsssl_read_more( 'https://complianz.io/what-is-force-majeure/' ),
         ),
 
-        'verification' => array(
+        'directories' => array(
 	        'step'        => 3,
 	        'section'     => 1,
 	        'source'      => 'lets-encrypt',
-	        'callback'    => 'verification.php',
+	        'callback'    => 'directories.php',
 	        'help'     => __('To make sure you have added everything correctly, view this example of these folders included in the root of a WordPress installation.', 'really-simple-ssl' ) . rsssl_read_more( 'https://complianz.io/what-is-force-majeure/' ),
         ),
 

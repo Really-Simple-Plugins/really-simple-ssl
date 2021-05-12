@@ -99,8 +99,8 @@ class REALLY_SIMPLE_SSL
 		define('rsssl_url', plugin_dir_url(__FILE__));
 		define('rsssl_path', trailingslashit(plugin_dir_path(__FILE__)));
         define('rsssl_template_path', trailingslashit(plugin_dir_path(__FILE__)).'grid/templates/');
-        define('rsssl_wizard_path', trailingslashit(plugin_dir_path(__FILE__)).'lets-encrypt/wizard/');
         define('rsssl_plugin', plugin_basename(__FILE__));
+        define('rsssl_file', __FILE__);
 		require_once(ABSPATH . 'wp-admin/includes/plugin.php');
 		$plugin_data = get_plugin_data(__FILE__);
 		$debug = defined('RSSSL_DEBUG') && RSSSL_DEBUG ? time() : '';
@@ -130,7 +130,9 @@ class REALLY_SIMPLE_SSL
 			require_once(rsssl_path . 'class-certificate.php');
 			require_once(rsssl_path . 'class-site-health.php');
 
-            require_once(rsssl_path . 'lets-encrypt/letsencrypt.php');
+			if (!defined('rsssl_beta_addon')) {
+				require_once( rsssl_path . 'lets-encrypt/letsencrypt.php' );
+			}
         }
 	}
 

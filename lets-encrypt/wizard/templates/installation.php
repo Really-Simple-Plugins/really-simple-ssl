@@ -1,6 +1,6 @@
 <?php
 defined( 'ABSPATH' ) or die( "you do not have access to this page!" );
-
+$download_url = rsssl_le_url.'download.php?token='.wp_create_nonce('rsssl_download_cert');
 ?>
 <div class="rsssl-section">
     <div class="rsssl-template-intro">
@@ -22,7 +22,7 @@ defined( 'ABSPATH' ) or die( "you do not have access to this page!" );
             . RSSSL()->rsssl_help->get_help_tip(__("Placeholder", "really-simple-ssl") ); ?>
         </h2>
         <p>
-            <button class="button button-secondary"><?php _e("Download", "really-simple-ssl")?></button>
+            <a href="<?php echo $download_url?>&type=certificate" class="button button-secondary"><?php _e("Download", "really-simple-ssl")?></a>
             <button class="button button-primary"><?php _e("View content", "really-simple-ssl")?></button>
         </p>
         <h2>
@@ -30,7 +30,7 @@ defined( 'ABSPATH' ) or die( "you do not have access to this page!" );
             . RSSSL()->rsssl_help->get_help_tip(__("Placeholder", "really-simple-ssl") ); ?>
         </h2>
         <p>
-            <button class="button button-secondary"><?php _e("Download", "really-simple-ssl")?></button>
+            <a href="<?php echo $download_url?>&type=private_key" class="button button-secondary"><?php _e("Download", "really-simple-ssl")?></a>
             <button class="button button-primary"><?php _e("View content", "really-simple-ssl")?></button>
         </p>
         <h2>
@@ -38,7 +38,7 @@ defined( 'ABSPATH' ) or die( "you do not have access to this page!" );
             . RSSSL()->rsssl_help->get_help_tip(__("Placeholder", "really-simple-ssl") ); ?>
         </h2>
         <p>
-            <button class="button button-secondary"><?php _e("Download", "really-simple-ssl")?></button>
+            <a href="<?php echo $download_url?>&type=intermediate" class="button button-secondary"><?php _e("Download", "really-simple-ssl")?></a>
             <button class="button button-primary"><?php _e("View content", "really-simple-ssl")?></button>
         </p>
     </div>

@@ -36,7 +36,7 @@ $plugins = array(
 		<div class="rsssl-other-plugin-block">
 			<div class="rsssl-other-plugin-header">
                 <div class="rsssl-other-plugin-title"><?php _e("Our Plugins", "really-simple-ssl")?></div>
-                <div class="rsssl-other-plugin-image"><img src="<?php echo rsssl_url?>/assets/images/really-simple-plugins.svg" ></div>
+                <div class="rsssl-other-plugin-image"><img src="<?php echo rsssl_le_url?>/assets/images/really-simple-plugins.svg" ></div>
             </div>
             <div class="rsssl-other-plugin-content">
                 <?php foreach ($plugins as $id => $plugin) {

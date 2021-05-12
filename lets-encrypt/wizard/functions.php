@@ -42,6 +42,7 @@ function rsssl_is_plesk(){
 	return false;
 }
 
+
 /**
  * @param bool $nicename
  *

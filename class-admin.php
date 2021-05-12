@@ -461,17 +461,15 @@ class rsssl_admin extends rsssl_front_end
 
         if (defined("RSSSL_DISMISS_ACTIVATE_SSL_NOTICE") && RSSSL_DISMISS_ACTIVATE_SSL_NOTICE) return;
 
-        if ( isset( $_GET['tab'] ) && $_GET['tab'] == 'lets-encrypt' && isset( $_GET['step'] ) && $_GET['step'] != 4 ) {
-            return;
-        }
-
         //for multisite, show only activate when a choice has been made to activate networkwide or per site.
         if (is_multisite() && !RSSSL()->rsssl_multisite->selected_networkwide_or_per_site) return;
 
         //on multisite, only show this message on the network admin. Per site activated sites have to go to the settings page.
         //otherwise sites that do not need SSL possibly get to see this message.
-
         if (is_multisite() && !is_network_admin()) return;
+
+        //don't show in our lets encrypt wizard
+        if (isset($_GET['tab']) && $_GET['tab']==='lets-encrypt') return;
 
         if (!$this->wpconfig_ok()) return;
 
@@ -487,20 +485,17 @@ class rsssl_admin extends rsssl_front_end
 
     public function ssl_detected()
     {
-	    if ($this->site_has_ssl || (defined('RSSSL_FORCE_ACTIVATE') && RSSSL_FORCE_ACTIVATE)) {
+        ob_start();
+        do_action('rsssl_activation_notice_inner');
+        $content = ob_get_clean();
 
-	        ob_start();
-	        do_action('rsssl_activation_notice_inner');
-	        $content = ob_get_clean();
+        ob_start();
+        do_action('rsssl_activation_notice_footer');
+        $footer = ob_get_clean();
 
-            ob_start();
-            do_action('rsssl_activation_notice_footer');
-            $footer = ob_get_clean();
-
-	        $class = apply_filters("rsssl_activation_notice_classes", "updated activate-ssl rsssl-pro-dismiss-notice");
-	        $title = __("Almost ready to migrate to SSL!", "really-simple-ssl");
-	        echo $this->notice_html( $class, $title, $content, $footer);
-        }
+        $class = apply_filters("rsssl_activation_notice_classes", "updated activate-ssl rsssl-pro-dismiss-notice");
+        $title = __("Almost ready to migrate to SSL!", "really-simple-ssl");
+        echo $this->notice_html( $class, $title, $content, $footer);
     }
 
 	/**
@@ -523,11 +518,9 @@ class rsssl_admin extends rsssl_front_end
                 <?php
                 if (RSSSL()->rsssl_certificate->is_valid()) { ?>
                     <li class="rsssl-success"><?php _e("An SSL certificate has been detected", "really-simple-ssl") ?></li>
-                <?php } elseif ($this->lets_encrypt_conditions()) { ?>
-                    <li class="rsssl-fail"><?php _e("No SSL certificate has been detected. Generate one by pressing the 'Install SSL certificate' button", "really-simple-ssl") ?></li>
                 <?php } else { ?>
-                    <li class="rsssl-fail"><?php _e("No SSL certificate has been detected", "really-simple-ssl") ?></li>
-                <?php } ?>
+                    <li class="rsssl-fail"><?php _e("No SSL certificate has been detected. Generate one by pressing the 'Install SSL certificate' button", "really-simple-ssl") ?></li>
+                <?php }?>
             </ul>
         </p>
         <p><?php
@@ -559,7 +552,9 @@ class rsssl_admin extends rsssl_front_end
 	 */
 
 	public function notice_html($class, $title, $content, $footer=false) {
-
+        if (!isset($_GET['tab']) || $_GET['tab']!=='lets-encrypt') {
+	        $class.= ' notice ';
+        }
 		ob_start();
 		?>
         <?php if ( is_rtl() ) { ?>
@@ -644,7 +639,6 @@ class rsssl_admin extends rsssl_front_end
                 .settings_page_rlrsssl_really_simple_ssl #wpcontent #rsssl-message, .settings_page_really-simple-ssl #wpcontent #rsssl-message {
                     margin: 20px;
                 }
-                <?php echo apply_filters('rsssl_pro_inline_style', ''); ?>
             </style>
         <?php } else { ?>
             <style>
@@ -728,14 +722,16 @@ class rsssl_admin extends rsssl_front_end
                 .settings_page_rlrsssl_really_simple_ssl #wpcontent #rsssl-message, .settings_page_really-simple-ssl #wpcontent #rsssl-message {
                     margin: 20px;
                 }
-                <?php echo apply_filters('rsssl_pro_inline_style', ''); ?>
             </style>
         <?php } ?>
-        <div id="rsssl-message" class="notice <?php echo $class?> really-simple-plugins">
+
+        <div id="rsssl-message" class="<?php echo $class?> really-simple-plugins">
             <div class="rsssl-notice">
-                <div class="rsssl-notice-header">
-                    <h1><?php echo $title ?></h1>
-                </div>
+                <?php if (!empty($title)) {?>
+                    <div class="rsssl-notice-header">
+                        <h1><?php echo $title ?></h1>
+                    </div>
+                <?php }?>
                 <div class="rsssl-notice-content">
 					<?php echo $content ?>
                 </div>
@@ -771,24 +767,13 @@ class rsssl_admin extends rsssl_front_end
 			<?php if (!defined("rsssl_pro_version") ) { ?>
                 <a class="button button-default" href="<?php echo $this->pro_url ?>" target="_blank"><?php _e("Get ready with PRO!", "really-simple-ssl"); ?></a>
 			<?php } ?>
-			<?php if ($this->lets_encrypt_conditions() ) { ?>
+            <?php if (!RSSSL()->rsssl_certificate->is_valid()){?>
                 <a href="<?php echo add_query_arg(array("page" => "rlrsssl_really_simple_ssl", "tab" => "lets-encrypt"),admin_url("options-general.php")) ?>" type="submit" class="button button-primary"><?php _e("Install SSL certificate", "really-simple-ssl"); ?></a>
-			<?php } ?>
+            <?php } ?>
         </form>
 		<?php
 	}
 
-    /**
-     * @return bool
-     * Conditions to be met before Let's Encrypt SSL installation shows
-     */
-
-    public function lets_encrypt_conditions() {
-        //@todo
-        //localhost => no
-        //cpanel, cpanel api.
-        return true;
-    }
 
     /**
      * @return bool
@@ -2927,9 +2912,12 @@ class rsssl_admin extends rsssl_front_end
 		            ),
 		            'no-ssl-detected' => array(
 			            'title' => __("No SSL detected", "really-simple-ssl"),
-			            'msg' => sprintf(__("No SSL detected. See our guide on how to %sget a free SSL certificate%s. If you do have an SSL certificate, try to reload this page over https by clicking this link: %sReload over https.%s", "really-simple-ssl"), '<a target="_blank" href="https://really-simple-ssl.com/knowledge-base/how-to-install-a-free-ssl-certificate-on-your-wordpress-cpanel-hosting/">', '</a>', '<a href="' .$reload_https_url . '">' , '</a>'),
+			            'msg' => __("No SSL detected. If you're sure you have an SSL certificate, click the 'reload over https' button.", "really-simple-ssl").
+
+                            '<p><a href="'.add_query_arg(array("page" => "rlrsssl_really_simple_ssl", "tab" => "lets-encrypt"),admin_url("options-general.php")) .'" type="submit" class="button button-primary">'.__("Install SSL certificate", "really-simple-ssl").'</a>'.
+                            '&nbsp;<a target="_blank" class="button button-primary" href="' .$reload_https_url . '">'.__("Reload over https", "really-simple-ssl").'</a></p>',
 			            'icon' => 'warning',
-			            'admin_notice' => true,
+			            'admin_notice' => false,
 		            ),
 		            'ssl-detected' => array(
 			            'msg' => __('An SSL certificate was detected on your site.', 'really-simple-ssl'),
@@ -4669,9 +4657,16 @@ class rsssl_admin extends rsssl_front_end
 	    }
     }
 
+	/**
+     * Get template
+	 * @param string $file
+	 * @param string $path
+	 * @param array  $args
+	 *
+	 * @return string
+	 */
 	public function get_template($file, $path = rsssl_path, $args = array())
 	{
-
 		$file = trailingslashit($path) . 'templates/' . $file;
 		$theme_file = trailingslashit(get_stylesheet_directory()) . dirname(rsssl_path) . $file;
 

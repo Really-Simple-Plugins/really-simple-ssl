@@ -1,7 +1,6 @@
 <?php
 
 defined( 'ABSPATH' ) or die( "you do not have access to this page!" );
-
 ?>
 <div class="rsssl-section">
     <h2>
@@ -50,10 +49,30 @@ defined( 'ABSPATH' ) or die( "you do not have access to this page!" );
         </ul>
     <?php }
 
-	if ( RSSSL_LE()->letsencrypt_handler->challenge_directory && RSSSL_LE()->letsencrypt_handler->key_directory && RSSSL_LE()->letsencrypt_handler->certs_directory ) { ?>
+    $directories_without_permissions = RSSSL_LE()->letsencrypt_handler->directories_without_writing_permissions();
+    $has_missing_permissions = count($directories_without_permissions)>0;
+    if ( $has_missing_permissions ){ ?>
         <p>
-		    <?php _e("The necessary folders were successfully created.", "really-simple-ssl"); ?>
+		    <?php _e("One or more folders which require writing permissions do not have writing permissions:", "really-simple-ssl"); ?>
         </p>
-    <?php } ?>
+        <ul>
+            <?php foreach ($directories_without_permissions as $directories_without_permission) {?>
+            <li class="rsssl-tooltip-icon dashicons-before rsssl-icon arrow-right-alt2 dashicons-arrow-right-alt2">
+			    <?php _e('The following directory does not have writing permissions. Set permissions to 644 to enable SSL generation.', 'really-simple-ssl'); ?>
+                <?php echo $directories_without_permission?>
+            </li>
+            <?php } ?>
+        </ul>
+    <?php }
+
+	if ( !$has_missing_permissions && RSSSL_LE()->letsencrypt_handler->challenge_directory && RSSSL_LE()->letsencrypt_handler->key_directory && RSSSL_LE()->letsencrypt_handler->certs_directory ) {
+		RSSSL_LE()->letsencrypt_handler->progress_add('directories');
+		?>
+        <p>
+		    <?php _e("The necessary folders were successfully created, and have the correct permissions.", "really-simple-ssl"); ?>
+        </p>
+    <?php } else {
+		RSSSL_LE()->letsencrypt_handler->progress_remove('directories');
+    } ?>
 
 </div>
