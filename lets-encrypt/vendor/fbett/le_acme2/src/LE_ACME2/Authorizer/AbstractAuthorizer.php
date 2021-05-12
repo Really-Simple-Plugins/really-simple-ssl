@@ -48,7 +48,7 @@ abstract class AbstractAuthorizer {
 
             Utilities\Logger::getInstance()->add(
                 Utilities\Logger::LEVEL_DEBUG,
-                get_class() . '::' . __FUNCTION__ . ' result suppressed (Order has finished already)',
+                get_class() . '::' . __FUNCTION__ . ' result suppressed (Order has finished already)'
             );
 
             return;

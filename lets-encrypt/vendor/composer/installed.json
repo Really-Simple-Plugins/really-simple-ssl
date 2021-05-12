@@ -19,7 +19,7 @@
                 "ext-curl": "*",
                 "ext-json": "*",
                 "ext-openssl": "*",
-                "php": ">=7.3"
+                "php": ">=7.1"
             },
             "time": "2021-04-28T17:22:43+00:00",
             "type": "library",

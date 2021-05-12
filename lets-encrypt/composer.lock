@@ -24,7 +24,7 @@
                 "ext-curl": "*",
                 "ext-json": "*",
                 "ext-openssl": "*",
-                "php": ">=7.3"
+                "php": ">=7.1"
             },
             "type": "library",
             "autoload": {
