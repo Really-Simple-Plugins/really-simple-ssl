@@ -1259,7 +1259,9 @@ if ( ! class_exists( "rsssl_field" ) ) {
 
 	        $file = trailingslashit(rsssl_le_wizard_path) . 'templates/' . $callback;
             if ( file_exists($file) ) {
-                echo RSSSL()->really_simple_ssl->get_template($callback, $path = rsssl_le_wizard_path);
+	            $html = RSSSL()->really_simple_ssl->get_template($callback, $path = rsssl_le_wizard_path);
+	            echo RSSSL_LE()->wizard->process_args($html, $args);
+
             } else {
 	            do_action( "rsssl_$callback", $args );
             }

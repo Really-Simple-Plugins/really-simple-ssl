@@ -40,6 +40,20 @@ if ( ! class_exists( "rsssl_wizard" ) ) {
         }
 
         /**
+         * beta add on compatibility
+         */
+	    public function process_args($html, $args){
+		    if (defined('rsssl_beta_addon') ) {
+			    if ( ! empty( $args ) && is_array( $args ) ) {
+				    foreach ( $args as $fieldname => $value ) {
+					    $html = str_replace( '{' . $fieldname . '}', $value, $html );
+				    }
+			    }
+		    }
+		    return $html;
+	    }
+
+        /**
          * Initialize a page in the wizard
          * @param $page
          */
@@ -76,7 +90,9 @@ if ( ! class_exists( "rsssl_wizard" ) ) {
                 _e( "Not all required fields are completed yet. Please check the steps to complete all required questions", 'really-simple-ssl' );
                 echo '</div>';
             } else {
-                echo RSSSL()->really_simple_ssl->get_template('last-step.php', $path = rsssl_le_wizard_path);
+                $html = RSSSL()->really_simple_ssl->get_template('last-step.php', $path = rsssl_le_wizard_path);
+	            echo $this->process_args($html, $args);
+
             }
         }
 
@@ -354,7 +370,9 @@ if ( ! class_exists( "rsssl_wizard" ) ) {
                 'page' => 'lets-encrypt',
                 'content' => $menu.$content,
             );
-            echo RSSSL()->really_simple_ssl->get_template('admin_wrap.php', $path = rsssl_le_wizard_path, $args );
+            $html = RSSSL()->really_simple_ssl->get_template('admin_wrap.php', $path = rsssl_le_wizard_path, $args );
+	        echo $this->process_args($html, $args);
+
         }
 
         /**
@@ -376,12 +394,16 @@ if ( ! class_exists( "rsssl_wizard" ) ) {
                 $args['completed'] = $this->required_fields_completed($page, $i, false) ? 'complete' : 'incomplete';
                 $args['url'] = add_query_arg(array('tab' => 'letsencrypt', 'step' => $i), $this->page_url);
                 $args['sections'] = ($args['active'] == 'active') ? $this->wizard_sections($page, $active_step, $active_section) : '';
-                $args_menu['steps'] .= RSSSL()->really_simple_ssl->get_template( 'step.php', $path = rsssl_le_wizard_path , $args);
+	            $step_html = RSSSL()->really_simple_ssl->get_template( 'step.php', $path = rsssl_le_wizard_path , $args);
+	            $step_html = $this->process_args($step_html, $args);
+	            $args_menu['steps'] .= $step_html;
+
             }
             $args_menu['percentage-complete'] = $this->wizard_percentage_complete($page, $active_step);
             $args_menu['title'] = !empty( $wizard_title ) ? '<div class="rsssl-wizard-subtitle"><h2>' . $wizard_title . '</h2></div>': '' ;
 
-            return RSSSL()->really_simple_ssl->get_template( 'menu.php', $path = rsssl_le_wizard_path, $args_menu );
+	        $html = RSSSL()->really_simple_ssl->get_template( 'menu.php', $path = rsssl_le_wizard_path, $args_menu );
+	        return $this->process_args($html, $args);
         }
 
         /**
@@ -419,7 +441,10 @@ if ( ! class_exists( "rsssl_wizard" ) ) {
                         'url' => $url,
                         'title' => $title,
                     );
-                    $sections .= RSSSL()->really_simple_ssl->get_template( 'section.php', $path = rsssl_le_wizard_path, $args );
+                    $section_html = RSSSL()->really_simple_ssl->get_template( 'section.php', $path = rsssl_le_wizard_path, $args );
+	                $section_html = $this->process_args($section_html, $args);
+	                $sections .= $section_html;
+
                 }
             }
 
@@ -477,7 +502,9 @@ if ( ! class_exists( "rsssl_wizard" ) ) {
 
             }
 
-            return RSSSL()->really_simple_ssl->get_template( 'content.php', $path = rsssl_le_wizard_path, $args );
+            $html = RSSSL()->really_simple_ssl->get_template( 'content.php', $path = rsssl_le_wizard_path, $args );
+	        return $this->process_args($html, $args);
+
         }
 
         /**
