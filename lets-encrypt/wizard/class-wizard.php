@@ -90,9 +90,7 @@ if ( ! class_exists( "rsssl_wizard" ) ) {
                 _e( "Not all required fields are completed yet. Please check the steps to complete all required questions", 'really-simple-ssl' );
                 echo '</div>';
             } else {
-                $html = RSSSL()->really_simple_ssl->get_template('last-step.php', $path = rsssl_le_wizard_path);
-	            echo $this->process_args($html, $args);
-
+                echo RSSSL()->really_simple_ssl->get_template('last-step.php', $path = rsssl_le_wizard_path);
             }
         }
 
@@ -403,7 +401,7 @@ if ( ! class_exists( "rsssl_wizard" ) ) {
             $args_menu['title'] = !empty( $wizard_title ) ? '<div class="rsssl-wizard-subtitle"><h2>' . $wizard_title . '</h2></div>': '' ;
 
 	        $html = RSSSL()->really_simple_ssl->get_template( 'menu.php', $path = rsssl_le_wizard_path, $args_menu );
-	        return $this->process_args($html, $args);
+	        return $this->process_args($html, $args_menu);
         }
 
         /**
