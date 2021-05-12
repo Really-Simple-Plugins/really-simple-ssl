@@ -120,6 +120,9 @@ class rsssl_letsencrypt_handler {
 				        } else if ( $response === 'success_renewed' ) {
 					        $response = __("Certificate already installed. It has been renewed if necessary.","really-simple-ssl");
 					        $action   = 'finalize';
+				        } else if ( $response === 'rate_limit' ) {
+					        $response = __("Not successful at the moment. Please try again in a few hours, or contact support.","really-simple-ssl");
+					        $action   = 'stop';
 				        } else {
 					        $status = 'failed';
 					        $error = true;
@@ -142,11 +145,14 @@ class rsssl_letsencrypt_handler {
                     }
 				    break;
                 case 5:
-	                $status = $this->install_certificate();
+	                $status = $this->install();
 	                $response = $status;
 	                if ($response === 'success') {
 		                $response = __( 'Successfully installed certificate', "really-simple-ssl" );
 		                $action   = 'finalize';
+	                } else if ( $response === 'rate_limit' ) {
+		                $response = __("Not successful at the moment. Please try again in a few hours, or contact support.","really-simple-ssl");
+		                $action   = 'stop';
 	                } else if ($response === 'not-ready') {
                         $response = __( 'Not all required steps are completed successfully. Please check the previous steps.', "really-simple-ssl" );
                         $action = 'stop';
@@ -348,13 +354,20 @@ class rsssl_letsencrypt_handler {
         return $response;
     }
 
-
 	/**
      * Authorize the order
 	 * @return string|void
 	 */
 
     public function create_bundle_or_renew(){
+	    $attempt_count = intval(get_transient('rsssl_le_generate_attempt_count'));
+	    $attempt_count++;
+	    set_transient('rsssl_le_generate_attempt_count', $attempt_count, DAY_IN_SECONDS);
+	    if ($attempt_count>10){
+		    delete_option("rsssl_le_start_renewal");
+            return 'rate_limit';
+	    }
+
 	    //check if the required order was created
 	    $order = $bundle_completed = false;
 	    $response = 'success';
@@ -379,6 +392,7 @@ class rsssl_letsencrypt_handler {
 			    if ( $order->isCertificateBundleAvailable() ) {
 				    try {
 					    $order->enableAutoRenewal();
+
 					    $response         = 'success_renewed';
 					    $bundle_completed = true;
 				    } catch ( Exception $e ) {
@@ -438,6 +452,8 @@ class rsssl_letsencrypt_handler {
 
 	    if ( $bundle_completed ){
 		    $this->progress_add('generation');
+		    update_option('rsssl_le_certificate_generated_by_rsssl', true);
+		    delete_option("rsssl_le_start_renewal");
 	    } else {
 		    $this->progress_remove('generation');
 	    }
@@ -446,19 +462,67 @@ class rsssl_letsencrypt_handler {
     }
 
 	/**
+     * If a bundle generation is completed, this value is set to true.
+	 * @return bool
+	 */
+    public function generated_by_rsssl(){
+	    return get_option('rsssl_le_certificate_generated_by_rsssl');
+    }
+
+	/**
+	 * Check if the certificate can be installed automatically.
+	 */
+    public function certificate_can_auto_install(){
+        if ($this->certificate_needs_renewal()) {
+            return false;
+        }
+
+        if (rsssl_cpanel_api_supported()) {
+            return true;
+        }
+
+        return false;
+    }
+
+	/**
+     * Check if the certificate needs renewal.
+     *
+	 * @return bool
+	 */
+    public function certificate_needs_renewal(){
+	    $cert_file = get_option('rsssl_certificate_path');
+	    $certificate = file_get_contents($cert_file);
+	    $certificateInfo = openssl_x509_parse($certificate);
+	    $valid_to = $certificateInfo['validTo_time_t'];
+	    $in_30_days = strtotime( "+30 days" );
+	    if ( $in_30_days > $valid_to ) {
+	        return true;
+        } else {
+	        return false;
+	    }
+    }
+
+	/**
      * Instantiate our installer, and run it.
      *
 	 * @return string
 	 */
-	public function install_certificate(){
-		$response = 'success';
+	public function install(){
+	    $attempt_count = intval(get_transient('rsssl_le_install_attempt_count'));
+		$attempt_count++;
+		set_transient('rsssl_le_install_attempt_count', $attempt_count, DAY_IN_SECONDS);
+		if ($attempt_count>10){
+			delete_option("rsssl_le_start_installation");
+			return 'rate_limit';
+		}
+
 		if ($this->is_ready_for('installation')) {
 		    try {
 			    if (rsssl_cpanel_api_supported()){
 				    error_log("is cpanel");
 				    require_once( rsssl_le_path . 'cPanel/cPanel.php' );
 				    $username = rsssl_get_value('cpanel_username');
-				    $password = rsssl_get_value('cpanel_password');
+				    $password = $this->decode( rsssl_get_value('cpanel_password') );
 				    $cpanel_host = rsssl_get_value('cpanel_host');
 				    $cpanel = new rsssl_cPanel($cpanel_host, $username, $password);
 				    $domains = RSSSL_LE()->letsencrypt_handler->get_subjects();
@@ -476,15 +540,13 @@ class rsssl_letsencrypt_handler {
 					        return $response;
 				        }
 				    }
+				    delete_option("rsssl_le_start_installation");
 				    error_log("success response");
-
 				    return 'success';
 
 			    } else {
-
 				    error_log("not cpanel");
 				    $response = 'not-ready';
-
 			    }
 		    } catch (Exception $e) {
 		        error_log(print_r($e, true));
@@ -772,6 +834,69 @@ class rsssl_letsencrypt_handler {
 			'Error creating new order ::',
 		), '', $msg);
     }
+
+	/**
+	 * Encode a string
+	 * @param string $string
+	 * @return string
+	 */
+
+	public function encode( $string ) {
+		if ( strlen(trim($string)) === 0 ) return $string;
+
+		if (strpos( $string , 'rsssl_') !== FALSE ) {
+			return $string;
+		}
+
+		$key = $this->get_key();
+		if ( !$key ) {
+			$key = $this->set_key();
+		}
+
+		$ivlength = openssl_cipher_iv_length('aes-256-cbc');
+		$iv = openssl_random_pseudo_bytes($ivlength);
+		$ciphertext_raw = openssl_encrypt($string, 'aes-256-cbc', $key, 0, $iv);
+		$key = base64_encode( $iv.$ciphertext_raw );
+
+		return 'rsssl_'.$key;
+	}
+
+    private function decode($string){
+		if (strpos( $string , 'rsssl_') !== FALSE ) {
+			$key = $this->get_key();
+			$string = str_replace('rsssl_', '', $string);
+
+			// To decrypt, split the encrypted data from our IV
+			$ivlength = openssl_cipher_iv_length('aes-256-cbc');
+			$iv = substr(base64_decode($string), 0, $ivlength);
+			$encrypted_data = substr(base64_decode($string), $ivlength);
+
+			$decrypted =  openssl_decrypt($encrypted_data, 'aes-256-cbc', $key, 0, $iv);
+			return $decrypted;
+		}
+
+		//not encoded, return
+		return $string;
+	}
+
+	/**
+	 * Set a new key
+	 * @return string
+	 */
+
+	private function set_key(){
+		update_site_option( 'rsssl_key' , time() );
+		return get_site_option('rsssl_key');
+	}
+
+	/**
+	 * Get a decode/encode key
+	 * @return false|string
+	 */
+
+	private function get_key() {
+		return get_site_option( 'rsssl_key' );
+	}
 
 
 }

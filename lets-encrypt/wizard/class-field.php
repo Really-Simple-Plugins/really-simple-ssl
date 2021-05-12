@@ -314,13 +314,8 @@ if ( ! class_exists( "rsssl_field" ) ) {
                 $this->form_errors[] = $fieldname;
             }
 
-            //make translatable
-            if ( $type == 'text' || $type == 'textarea' || $type == 'editor' ) {
-                if ( isset( $fields[ $fieldname ]['translatable'] )
-                    && $fields[ $fieldname ]['translatable']
-                ) {
-                    do_action( 'rsssl_register_translation', $fieldname, $fieldvalue );
-                }
+            if ($type === 'password' ) {
+                $fieldvalue = RSSSL_LE()->letsencrypt_handler->encode($fieldvalue);
             }
 
             $options = get_option( 'rsssl_options_' . $page );
@@ -603,6 +598,41 @@ if ( ! class_exists( "rsssl_field" ) ) {
             <?php
         }
 
+	    public function password( $args )
+	    {
+		    if ( ! $this->show_field( $args ) ) {
+			    return;
+		    }
+
+		    $fieldname = 'rsssl_' . $args['fieldname'];
+		    $value = $this->get_value( $args['fieldname'], $args['default'] );
+		    $required = $args['required'] ? 'required' : '';
+		    $is_required = $args['required'] ? 'is-required' : '';
+		    $check_icon = rsssl_icon('check', 'success');
+//            $times_icon = rsssl_icon('check', 'failed');
+		    ?>
+
+		    <?php do_action( 'rsssl_before_label', $args ); ?>
+		    <?php do_action( 'rsssl_label_html' , $args );?>
+		    <?php do_action( 'rsssl_after_label', $args ); ?>
+
+            <input <?php echo $required ?>
+                    class="validation <?php echo $is_required ?>"
+                    placeholder="<?php echo esc_html( $args['placeholder'] ) ?>"
+                    type="password"
+                    value="<?php echo esc_html( $value ) ?>"
+                    name="<?php echo esc_html( $fieldname ) ?>"
+			    <?php if ( $args['disabled'] ) {
+				    echo 'disabled';
+			    } ?>
+            >
+		    <?php echo $check_icon ?>
+
+		    <?php do_action( 'rsssl_after_field', $args ); ?>
+
+		    <?php
+	    }
+
         public function url( $args )
         {
             if ( ! $this->show_field( $args ) ) {
@@ -782,103 +812,7 @@ if ( ! class_exists( "rsssl_field" ) ) {
             <?php
         }
 
-        public function multicheckbox( $args )
-        {
-            if ( ! $this->show_field( $args ) ) {
-                return;
-            }
 
-            $fieldname = 'rsssl_' . $args['fieldname'];
-
-            // Initialize
-            $default_index = array();
-            $disabled_index = array();
-            $value_index = array();
-            $validate = '';
-            $check_icon = '';
-
-            if ( ! empty( $args['options'] ) )
-            {
-                // Value index
-                $value     = rsssl_get_value( $args['fieldname'],  false );
-                foreach ($args['options'] as $option_key => $option_label) {
-                    if ( is_array( $value ) && isset( $value[$option_key] ) && $value[$option_key] ) { // If value is not set it's ''
-                        $value_index[$option_key] = 'checked';
-                    } else {
-                        $value_index[$option_key] = '';
-                    }
-                }
-
-                // Default index
-                $defaults = apply_filters( 'rsssl_default_value', $args['default'], $fieldname );
-                foreach ($args['options'] as $option_key => $option_label) {
-                    if ( ! is_array($defaults) ) { // If default_index is not array, make into array
-                        $default_index[$option_key] = ($defaults == $option_key) ? 'rsssl-default' : '';
-                    } else {
-                        $default_index[$option_key] = in_array($option_key, $defaults) ? 'rsssl-default' : '';
-                    }
-                }
-
-                // Disabled index
-                foreach ($args['options'] as $option_key => $option_label) {
-                    if ( is_array( $args['disabled']) && in_array($option_key, $args['disabled']) ) {
-                        $disabled_index[$option_key] = 'rsssl-disabled';
-                    } else {
-                        $disabled_index[$option_key] = '';
-                    }
-                }
-
-                // Required
-                $validate = $args['required'] ? 'class="rsssl-validate-multicheckbox"' : '';
-
-                // Check icon
-                $check_icon = rsssl_icon('check', 'success');
-            }
-
-            ?>
-
-            <?php do_action( 'rsssl_before_label', $args ); ?>
-            <?php do_action( 'rsssl_label_html' , $args );?>
-            <?php do_action( 'rsssl_after_label', $args ); ?>
-
-            <div <?php echo $validate ?>>
-
-                <?php if ( ! empty( $args['options'] ) ) {
-                    foreach ($args['options'] as $option_key => $option_label)
-                    {
-                        if ($disabled_index[$option_key] === 'rsssl-disabled') {
-                            echo '<div class="rsssl-not-allowed">';
-                        } ?>
-                        <label class="rsssl-checkbox-container <?php echo $disabled_index[$option_key] ?>"><?php echo esc_html( $option_label ) ?>
-                            <input
-                                name="<?php echo esc_html( $fieldname ) ?>[<?php echo $option_key ?>]"
-                                type="hidden"
-                                value="0"
-                            >
-                            <input
-                                name="<?php echo esc_html( $fieldname ) ?>[<?php echo $option_key ?>]"
-                                class="<?php echo esc_html( $fieldname ) ?>[<?php echo $option_key ?>]"
-                                type="checkbox"
-                                value="1"
-                                <?php echo $value_index[$option_key] ?>
-                            >
-                            <div
-                                class="checkmark <?php echo $default_index[$option_key] ?>"
-                                <?php echo $value_index[$option_key] ?>
-                            ><?php echo $check_icon ?></div>
-                        </label>
-                        <?php if ($disabled_index[$option_key] === 'rsssl-disabled') {
-                        echo '</div>'; // class="rsssl-not-allowed"
-                    }
-                    }
-                } else {
-                    rsssl_notice( __( 'No options found', 'really-simple-ssl' ) );
-                } ?>
-
-            </div>
-
-            <?php do_action( 'rsssl_after_field', $args );
-        }
 
         public function radio( $args )
         {
@@ -1026,8 +960,6 @@ if ( ! class_exists( "rsssl_field" ) ) {
                     } else {
                         $actual_value = rsssl_get_value( $c_fieldname );
 
-                        $fieldtype = $this->get_field_type( $c_fieldname );
-
                         if ( strpos( $c_value, 'NOT ' ) === false ) {
                             $invert = false;
                         } else {
@@ -1035,36 +967,11 @@ if ( ! class_exists( "rsssl_field" ) ) {
                             $c_value = str_replace( "NOT ", "", $c_value );
                         }
 
-                        if ( $fieldtype == 'multicheckbox' ) {
-                            if ( ! is_array( $actual_value ) ) {
-                                $actual_value = array( $actual_value );
-                            }
-                            //get all items that are set to true
-                            $actual_value = array_filter( $actual_value,
-                                function ( $item ) {
-                                    return $item == 1;
-                                } );
-                            $actual_value = array_keys( $actual_value );
+                        //when the actual value is an array, it is enough when just one matches.
+                        //to be able to return false, for no match at all, we check all items, then return false if none matched
+                        //this way we can preserve the AND property of this function
+                        $match = ( $c_value === $actual_value || in_array( $actual_value, $c_values ) );
 
-                            if ( ! is_array( $actual_value ) ) {
-                                $actual_value = array( $actual_value );
-                            }
-                            $match = false;
-                            foreach ( $c_values as $check_each_value ) {
-                                if ( in_array( $check_each_value,
-                                    $actual_value )
-                                ) {
-                                    $match = true;
-                                }
-                            }
-
-                        } else {
-                            //when the actual value is an array, it is enough when just one matches.
-                            //to be able to return false, for no match at all, we check all items, then return false if none matched
-                            //this way we can preserve the AND property of this function
-                            $match = ( $c_value === $actual_value || in_array( $actual_value, $c_values ) );
-
-                        }
                         if ( $invert ) {
                             $match = ! $match;
                         }
@@ -1285,9 +1192,6 @@ if ( ! class_exists( "rsssl_field" ) ) {
                     case 'text':
                         $this->text( $args );
                         break;
-                    case 'document':
-                        $this->document( $args );
-                        break;
                     case 'button':
                         $this->button( $args );
                         break;
@@ -1300,35 +1204,17 @@ if ( ! class_exists( "rsssl_field" ) ) {
                     case 'select':
                         $this->select( $args );
                         break;
-                    case 'colorpicker':
-                        $this->colorpicker( $args );
-                        break;
-                    case 'borderradius':
-                        $this->border_radius( $args );
-                        break;
-                    case 'borderwidth':
-                        $this->border_width( $args );
-                        break;
                     case 'checkbox':
                         $this->checkbox( $args );
                         break;
                     case 'textarea':
                         $this->textarea( $args );
                         break;
-                    case 'cookies':
-                        $this->cookies( $args );
-                        break;
-                    case 'services':
-                        $this->services( $args );
-                        break;
                     case 'multiple':
                         $this->multiple( $args );
                         break;
                     case 'radio':
                         $this->radio( $args );
-                        break;
-                    case 'multicheckbox':
-                        $this->multicheckbox( $args );
                         break;
                     case 'javascript':
                         $this->javascript( $args );
@@ -1341,12 +1227,6 @@ if ( ! class_exists( "rsssl_field" ) ) {
                         break;
                     case 'phone':
                         $this->phone( $args );
-                        break;
-                    case 'thirdparties':
-                        $this->thirdparties( $args );
-                        break;
-                    case 'processors':
-                        $this->processors( $args );
                         break;
                     case 'number':
                         $this->number( $args );
