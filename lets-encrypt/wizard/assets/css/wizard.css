@@ -408,6 +408,7 @@
 }
 #rsssl-wizard textarea.validation,
 #rsssl-wizard input[type="text"].validation,
+#rsssl-wizard input[type="password"].validation,
 #rsssl-wizard input[type="email"].validation,
 #rsssl-wizard input[type="text"].rsssl-valid-page,
 #rsssl-wizard input[type="text"].rsssl-deleted-page {
@@ -416,6 +417,7 @@
 }
 #rsssl-wizard textarea.validation ~ span .rsssl-icon,
 #rsssl-wizard input[type="text"].validation ~ span .rsssl-icon,
+#rsssl-wizard input[type="password"].validation ~ span .rsssl-icon,
 #rsssl-wizard input[type="email"].validation ~ span .rsssl-icon,
 #rsssl-wizard input[type="text"].rsssl-valid-page ~ span .rsssl-icon,
 #rsssl-wizard input[type="text"].rsssl-deleted-page ~ span .rsssl-icon {
@@ -427,6 +429,7 @@
 }
 #rsssl-wizard textarea.validation ~ span .rsssl-icon svg,
 #rsssl-wizard input[type="text"].validation ~ span .rsssl-icon svg,
+#rsssl-wizard input[type="password"].validation ~ span .rsssl-icon svg,
 #rsssl-wizard input[type="email"].validation ~ span .rsssl-icon svg,
 #rsssl-wizard input[type="text"].rsssl-valid-page ~ span .rsssl-icon svg,
 #rsssl-wizard input[type="text"].rsssl-deleted-page ~ span .rsssl-icon svg {
@@ -439,11 +442,13 @@
 }
 #rsssl-wizard textarea.validation:valid ~ span .rsssl-failed,
 #rsssl-wizard input[type="text"].validation:valid ~ span .rsssl-failed,
+#rsssl-wizard input[type="password"].validation:valid ~ span .rsssl-failed,
 #rsssl-wizard input[type="email"].validation:valid ~ span .rsssl-failed {
   display: none;
 }
 #rsssl-wizard textarea.validation:invalid ~ span .rsssl-success,
 #rsssl-wizard input[type="text"].validation:invalid ~ span .rsssl-success,
+#rsssl-wizard input[type="password"].validation:invalid ~ span .rsssl-success,
 #rsssl-wizard input[type="email"].validation:invalid ~ span .rsssl-success {
   display: none;
 }
@@ -451,6 +456,7 @@
   background-color: #F2F2F2;
 }
 #rsssl-wizard input[type="text"],
+#rsssl-wizard input[type="password"],
 #rsssl-wizard input[type="email"],
 #rsssl-wizard select,
 #rsssl-wizard .select2,
@@ -1040,6 +1046,7 @@ a.button.rsssl-open-modal {
   margin-left: 22px;
 }
 input[type="text"],
+input[type="password"],
 input[type="email"],
 input[type="number"] {
   width: 100%;

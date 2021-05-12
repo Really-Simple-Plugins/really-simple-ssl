@@ -6,6 +6,10 @@ defined('ABSPATH') or die("you do not have access to this page!");
  */
 if (!function_exists('rsssl_letsencrypt_generation_allowed')) {
 	function rsssl_letsencrypt_generation_allowed() {
+		if (version_compare(PHP_VERSION, '7.3', '<')) {
+			return false;
+		}
+
 		if ( current_user_can( 'manage_options' ) || wp_doing_cron() ) {
 			return true;
 		}
@@ -13,6 +17,8 @@ if (!function_exists('rsssl_letsencrypt_generation_allowed')) {
 		return false;
 	}
 }
+
+
 
 if ( rsssl_letsencrypt_generation_allowed() ) {
 

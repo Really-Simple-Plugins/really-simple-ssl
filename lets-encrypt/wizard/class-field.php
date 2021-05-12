@@ -1192,6 +1192,9 @@ if ( ! class_exists( "rsssl_field" ) ) {
                     case 'text':
                         $this->text( $args );
                         break;
+	                case 'password':
+		                $this->password( $args );
+		                break;
                     case 'button':
                         $this->button( $args );
                         break;

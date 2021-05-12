@@ -514,6 +514,7 @@
   /* Text & Email Validation */
   textarea.validation,
   input[type="text"].validation,
+  input[type="password"].validation,
   input[type="email"].validation,
   input[type="text"].rsssl-valid-page,
   input[type="text"].rsssl-deleted-page {
@@ -541,6 +542,7 @@
 
   textarea.validation,
   input[type="text"].validation,
+  input[type="password"].validation,
   input[type="email"].validation {
     &:valid ~ span .rsssl-failed {
       display: none;
@@ -556,7 +558,7 @@
 
   /* Text, Email, Select(2), Textarea Style */
 
-  input[type="text"], input[type="email"], select, .select2, textarea, input[type="number"] {
+  input[type="text"], input[type="password"], input[type="email"], select, .select2, textarea, input[type="number"] {
     // box-shadow:
     //   0 1px 1px rgba(0,0,0,0.06),
     //   0 2px 2px rgba(0,0,0,0.06);
@@ -1239,7 +1241,7 @@ a.button.rsssl-open-modal {
 }
 
 
-input[type="text"], input[type="email"], input[type="number"] {
+input[type="text"], input[type="password"], input[type="email"], input[type="number"] {
   width: 100%;
 }
 
