@@ -18,7 +18,7 @@ if ( ! function_exists( 'rsssl_user_can_manage' ) ) {
 
 if ( !function_exists('rsssl_settings_page') ) {
     function rsssl_settings_page(){
-            return add_query_arg(array('page' => 'rlrsssl_really_simple_ssl', 'tab' => 'lets-encrypt'), admin_url('options-general.php?page=') );
+            return add_query_arg(array('page' => 'rlrsssl_really_simple_ssl', 'tab' => 'letsencrypt'), admin_url('options-general.php?page=') );
     }
 }
 

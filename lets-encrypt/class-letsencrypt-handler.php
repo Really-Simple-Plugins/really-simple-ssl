@@ -21,8 +21,7 @@ class rsssl_letsencrypt_handler {
 		if ( isset( self::$_this ) ) {
 			wp_die( sprintf( __( '%s is a singleton class and you cannot create a second instance.', 'really-simple-ssl' ), get_class( $this ) ) );
 		}
-		add_action( 'rsssl_lets_encrypt_grid', array($this, 'wizard') );
-		add_action( 'rsssl_lets_encrypt_grid', array($this, 'wizard') );
+		add_action( 'show_tab_letsencrypt', array($this, 'wizard') );
 		add_action( 'rsssl_le_installation_step', array( $this, 'installation_progress' ), 10, 1 );
 		add_action( 'wp_ajax_rsssl_installation_progress', array($this, 'get_installation_progress'));
 		add_action( 'rsssl_before_save_lets-encrypt_option', array( $this, 'before_save_wizard_option' ), 10, 4 );

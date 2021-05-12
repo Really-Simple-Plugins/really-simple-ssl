@@ -36,7 +36,7 @@ if ( ! class_exists( "rsssl_wizard" ) ) {
         }
 
         public function process_custom_hooks() {
-            do_action( "rsssl_wizard_lets-encrypt" );
+
         }
 
         /**
@@ -374,7 +374,7 @@ if ( ! class_exists( "rsssl_wizard" ) ) {
                 $args['title'] = $i . '. ' . RSSSL_LE()->config->steps[$page][$i]['title'];
                 $args['active'] = ($i == $active_step) ? 'active' : '';
                 $args['completed'] = $this->required_fields_completed($page, $i, false) ? 'complete' : 'incomplete';
-                $args['url'] = add_query_arg(array('tab' => 'lets-encrypt', 'step' => $i), $this->page_url);
+                $args['url'] = add_query_arg(array('tab' => 'letsencrypt', 'step' => $i), $this->page_url);
                 $args['sections'] = ($args['active'] == 'active') ? $this->wizard_sections($page, $active_step, $active_section) : '';
                 $args_menu['steps'] .= RSSSL()->really_simple_ssl->get_template( 'step.php', $path = rsssl_le_wizard_path , $args);
             }
@@ -410,7 +410,7 @@ if ( ! class_exists( "rsssl_wizard" ) ) {
                     }
 
                     $completed = ( $this->required_fields_completed( $page, $step, $i ) ) ? "rsssl-done" : "rsssl-to-do";
-                    $url = add_query_arg( array('tab' => 'lets-encrypt', 'step' => $step, 'section' => $i), $this->page_url );
+                    $url = add_query_arg( array('tab' => 'letsencrypt', 'step' => $step, 'section' => $i), $this->page_url );
                     $title = RSSSL_LE()->config->steps[ $page ][ $step ]['sections'][ $i ]['title'];
                     $args = array(
                         'active' => $active,
@@ -503,7 +503,7 @@ if ( ! class_exists( "rsssl_wizard" ) ) {
         public function enqueue_assets( $hook ) {
             $minified = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? '' : '.min';
             //@todo if $hook == rsssl le
-	        if (!isset($_GET['tab']) || $_GET['tab']!=='lets-encrypt') return;
+	        if (!isset($_GET['tab']) || $_GET['tab']!=='letsencrypt') return;
 
     	    // Let's encrypt
             wp_register_style( 'rsssl-wizard', rsssl_le_url . "wizard/assets/css/wizard.css", false, rsssl_version );

@@ -235,11 +235,6 @@ class rsssl_admin extends rsssl_front_end
         add_action('wp_ajax_rsssl_update_task_toggle_option', array($this, 'update_task_toggle_option'));
         add_action('wp_ajax_rsssl_redirect_to_le_wizard', array($this, 'rsssl_redirect_to_le_wizard'));
 
-        //@todo nonce wp_verify_nonce($_POST['token'], 'rsssl_nonce')
-        if ( isset( $_POST['rsssl_do_lets_encrypt'] ) ) {
-            $this->redirect_to_settings_page($tab='lets-encrypt&step=1');
-        }
-
         //handle notices
         add_action('admin_notices', array($this, 'show_notices'));
         //show review notice, only to free users
@@ -469,7 +464,7 @@ class rsssl_admin extends rsssl_front_end
         if (is_multisite() && !is_network_admin()) return;
 
         //don't show in our lets encrypt wizard
-        if (isset($_GET['tab']) && $_GET['tab']==='lets-encrypt') return;
+        if (isset($_GET['tab']) && $_GET['tab']==='letsencrypt') return;
 
         if (!$this->wpconfig_ok()) return;
 
@@ -552,9 +547,7 @@ class rsssl_admin extends rsssl_front_end
 	 */
 
 	public function notice_html($class, $title, $content, $footer=false) {
-        if (!isset($_GET['tab']) || $_GET['tab']!=='lets-encrypt') {
-	        $class.= ' notice ';
-        }
+	    $class .= ' notice ';
 		ob_start();
 		?>
         <?php if ( is_rtl() ) { ?>
@@ -768,7 +761,7 @@ class rsssl_admin extends rsssl_front_end
                 <a class="button button-default" href="<?php echo $this->pro_url ?>" target="_blank"><?php _e("Get ready with PRO!", "really-simple-ssl"); ?></a>
 			<?php } ?>
             <?php if (!RSSSL()->rsssl_certificate->is_valid()){?>
-                <a href="<?php echo add_query_arg(array("page" => "rlrsssl_really_simple_ssl", "tab" => "lets-encrypt"),admin_url("options-general.php")) ?>" type="submit" class="button button-primary"><?php _e("Install SSL certificate", "really-simple-ssl"); ?></a>
+                <a href="<?php echo add_query_arg(array("page" => "rlrsssl_really_simple_ssl", "tab" => "letsencrypt"),admin_url("options-general.php")) ?>" type="submit" class="button button-primary"><?php _e("Install SSL certificate", "really-simple-ssl"); ?></a>
             <?php } ?>
         </form>
 		<?php
@@ -2914,7 +2907,7 @@ class rsssl_admin extends rsssl_front_end
 			            'title' => __("No SSL detected", "really-simple-ssl"),
 			            'msg' => __("No SSL detected. If you're sure you have an SSL certificate, click the 'reload over https' button.", "really-simple-ssl").
 
-                            '<p><a href="'.add_query_arg(array("page" => "rlrsssl_really_simple_ssl", "tab" => "lets-encrypt"),admin_url("options-general.php")) .'" type="submit" class="button button-primary">'.__("Install SSL certificate", "really-simple-ssl").'</a>'.
+                            '<p><a href="'.add_query_arg(array("page" => "rlrsssl_really_simple_ssl", "tab" => "letsencrypt"),admin_url("options-general.php")) .'" type="submit" class="button button-primary">'.__("Install SSL certificate", "really-simple-ssl").'</a>'.
                             '&nbsp;<a target="_blank" class="button button-primary" href="' .$reload_https_url . '">'.__("Reload over https", "really-simple-ssl").'</a></p>',
 			            'icon' => 'warning',
 			            'admin_notice' => false,
@@ -3612,7 +3605,6 @@ class rsssl_admin extends rsssl_front_end
         if (!current_user_can($this->capability)) return;
         if ( isset ($_GET['tab'] ) ) $this->admin_tabs( $_GET['tab'] ); else $this->admin_tabs('configuration');
         if ( isset ($_GET['tab'] ) ) $tab = $_GET['tab']; else $tab = 'configuration';
-        if ( isset($_GET['rsssl_do_lets_encrypt'] ) ) $tab = 'lets-encrypt';
 
         ?>
         <div class="rsssl-container">
@@ -3622,11 +3614,9 @@ class rsssl_admin extends rsssl_front_end
                         $this->render_grid($this->general_grid());
                         do_action("rsssl_configuration_page");
                         break;
-                    case 'lets-encrypt' :
-                        do_action('rsssl_lets_encrypt_grid');
-                        break;
                 }
                 //possibility to hook into the tabs.
+                error_log("show_tab_{$tab}");
                 do_action("show_tab_{$tab}");
                 ?>
             </div>
