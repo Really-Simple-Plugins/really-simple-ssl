@@ -7,6 +7,7 @@ use LE_ACME2\Authorizer\HTTP;
 use LE_ACME2\Connector\Connector;
 use LE_ACME2\Order;
 use LE_ACME2\Utilities\Logger;
+
 class rsssl_letsencrypt_handler {
 
 	private static $_this;
@@ -21,13 +22,9 @@ class rsssl_letsencrypt_handler {
 		if ( isset( self::$_this ) ) {
 			wp_die( sprintf( __( '%s is a singleton class and you cannot create a second instance.', 'really-simple-ssl' ), get_class( $this ) ) );
 		}
-		add_action( 'show_tab_letsencrypt', array($this, 'wizard') );
-		add_action( 'rsssl_le_installation_step', array( $this, 'installation_progress' ), 10, 1 );
-		add_action( 'wp_ajax_rsssl_installation_progress', array($this, 'get_installation_progress'));
 		add_action( 'rsssl_before_save_lets-encrypt_option', array( $this, 'before_save_wizard_option' ), 10, 4 );
 
 		$this->installation_sequence = array_column( RSSSL_LE()->config->steps['lets-encrypt'], 'id');
-
 		$this->key_directory = $this->key_directory();
 		$this->challenge_directory = $this->challenge_directory();
 		$this->certs_directory = $this->certs_directory();
@@ -60,7 +57,7 @@ class rsssl_letsencrypt_handler {
 	public function before_save_wizard_option(
 		$fieldname, $fieldvalue, $prev_value, $type
 	) {
-		$this->progress_add('domain');
+		rsssl_progress_add('domain');
 		//only run when changes have been made
 		if ( $fieldvalue === $prev_value ) {
 			return;
@@ -68,269 +65,127 @@ class rsssl_letsencrypt_handler {
 
 		if ($fieldname==='accept_le_terms'){
 		    if (!$fieldvalue) {
-		        $this->progress_remove('domain');
+		        rsssl_progress_remove('domain');
             }
         }
 
 		if ( $fieldname==='email' ){
 		    if ( !is_email($fieldvalue) ) {
-		        $this->progress_remove('domain');
+		        rsssl_progress_remove('domain');
             }
         }
 	}
 
-	public function get_installation_progress(){
-		$error   = false;
-		$action = '';
-		$response = '';
-		$status = 'none';
-		if ( ! is_user_logged_in() ) {
-			$error = true;
-		}
-
-		if ( !isset($_GET['step']) ) {
-			$error = true;
-		}
-
-		if (!$error) {
-		    $step = intval($_GET['step']);
-        }
-		if (!$error) {
-		    switch ($step) {
-			    case 4:
-			        if (!get_transient('rsssl_account_checked')) {
-			            error_log("check account");
-				        $status = $this->get_account();
-				        $response = $status;
-				        if ( $response === 'success' ) {
-					        $action   = 'continue';
-					        $response = __( 'Successfully created account.', "really-simple-ssl" );
-				        } else {
-				            $action = 'stop';
-                        }
-			        } else {
-			            error_log("create bundle");
-				        $status = $this->create_bundle_or_renew();
-				        $response = $status;
-				        error_log("response $response");
-				        if ($response === 'success' ) {
-					        $response = __( 'Successfully created bundle', "really-simple-ssl" );
-					        $action   = 'finalize';
-				        } else if ( $response === 'success_renewed' ) {
-					        $response = __("Certificate already installed. It has been renewed if necessary.","really-simple-ssl");
-					        $action   = 'finalize';
-				        } else if ( $response === 'rate_limit' ) {
-					        $response = __("Not successful at the moment. Please try again in a few hours, or contact support.","really-simple-ssl");
-					        $action   = 'stop';
-				        } else {
-					        $status = 'failed';
-					        $error = true;
-					        error_log($response);
-
-					        if (strpos($response, 'Error creating new order') !== false ) {
-						        error_log("found needle order");
-						        $action = 'stop';
-					        } else if ($response === 'not-ready') {
-						        $response = __( 'Not all required steps are completed successfully. Please check the previous steps.', "really-simple-ssl" );
-						        $action = 'stop';
-					        }
-					        //if we're ready for the bundle, restart the process on failure.
-					        else if ($this->is_ready_for('generation')) {
-						        $action = 'restart';
-					        } else {
-						        $action = 'stop';
-					        }
-				        }
-                    }
-				    break;
-                case 5:
-	                $status = $this->install();
-	                $response = $status;
-	                if ($response === 'success') {
-		                $response = __( 'Successfully installed certificate', "really-simple-ssl" );
-		                $action   = 'finalize';
-	                } else if ( $response === 'rate_limit' ) {
-		                $response = __("Not successful at the moment. Please try again in a few hours, or contact support.","really-simple-ssl");
-		                $action   = 'stop';
-	                } else if ($response === 'not-ready') {
-                        $response = __( 'Not all required steps are completed successfully. Please check the previous steps.', "really-simple-ssl" );
-                        $action = 'stop';
-	                } else {
-	                    error_log("json response stop");
-		                $action = 'stop';
-		                $error = true;
-	                }
-	                break;
-                default:
-                    $response = 'not allowed input';
-            }
-		}
-
-		$out = array(
-			'success' => ! $error,
-            'message' => $response,
-            'action' => $action,
-            'status' => $status,
-		);
-
-		die( json_encode( $out ) );
+	/**
+     * Test for localhost usage
+	 * @return RSSSL_RESPONSE
+	 */
+    public function localhost_used(){
+	    if ( strpos(site_url(), 'localhost')!==false ) {
+		    rsssl_progress_remove('system-status');
+		    $action = 'stop';
+		    $status = 'error';
+		    $message = __("It is not possible to install Let's Encrypt on a localhost environment.", "really-simple-ssl" );
+	    } else {
+		    $action = 'continue';
+		    $status = 'success';
+		    $message = __("Your domain meets the requirements for Let's Encrypt.", "really-simple-ssl" );
+	    }
+	    return new RSSSL_RESPONSE($status, $action, $message);
     }
 
 	/**
-     *
-	 * @param $step
+	 * Get certificate installation URL
+	 * @return RSSSL_RESPONSE
 	 */
 
-	public function installation_progress($step){
-	    ?>
-            <script>
-                jQuery(document).ready(function ($) {
-                    'use strict';
-                    var progress = 0;
-                    var step = $('input[name=step]').val();
-                    if ( step ==4 || step ==5 ) {
-                        $('.rsssl_letsencrypt_container').removeClass('rsssl-hidden');
-                        rsssl_process_installation_step();
-                    }
-                    function rsssl_process_installation_step() {
-                        console.log("start process bar");
-                        //set up a counter to slowly increment the progress value until we get a response.
-                        window.rsssl_interval = setInterval(function () {
-                            if (progress > 50) {
-                                progress += 1;
-                            } else {
-                                progress += 5;
-                            }
-                            rsssl_set_progress();
-                        }, 2000);
+    public function search_ssl_installation_url(){
 
-                        $.ajax({
-                            type: "GET",
-                            url: rsssl_wizard.admin_url,
-                            dataType: 'json',
-                            data: ({
-                                step: step,
-                                action: 'rsssl_installation_progress'
-                            }),
-                            success: function (response) {
-                                console.log("response");
-                                console.log(response);
-                                var msg = response.message;
-                                //if this is the bundle step, keep progress below 50
-                                //the installation was not successful yet
-                                rsssl_set_status(response.status);
-                                if (response.action === 'finalize' ) {
-                                    rsssl_set_message_container_status('success');
-                                    window.rsssl_interval = setInterval(function() {
-                                        progress +=5;
-                                        rsssl_set_progress(msg);
-                                    }, 100 );
-                                    console.log("start callback");
-                                } else if (response.action === 'continue' ) {
-                                    rsssl_set_message_container_status('success');
-                                    progress = 25;
-                                    rsssl_stop_progress(msg);
-                                    rsssl_process_installation_step();
-                                    console.log("start callback");
-                                } else if (response.action === 'restart' ) {
-                                    rsssl_set_message_container_status('error');
+        if (function_exists('wp_get_direct_update_https_url') && !empty(wp_get_direct_update_https_url())) {
+        	$url = wp_get_direct_update_https_url();
+        } else if ( rsssl_is_cpanel() ) {
+	        require_once( rsssl_le_path . 'cPanel/cPanel.php' );
+	        $cpanel_host = rsssl_get_value('cpanel_host');
+	        $cpanel = new rsssl_cPanel( $cpanel_host );
+	        $url = $cpanel->ssl_installation_url;
+        } else {
+        	$url = 'https://really-simple-ssl.com/install-ssl-certificate';
+        }
 
-                                    progress = 0;
-                                    window.rsssl_interval = setInterval(function() {
-                                        progress = 0;
-                                        rsssl_set_progress(msg, true);
-                                    }, 1000 );
+	    $action = 'continue';
+	    $status = 'success';
+	    $message = __("Your server requires some manual actions to install the certificate.", "really-simple-ssl").' '.
+	               sprintf(__("Please follow this %slink%s to proceed.", "really-simple-ssl"), '<a target="_blank" href="'.$url.'">', '</a>');
 
-                                } else if (response.action === 'stop'){
-                                    rsssl_set_message_container_status('error');
-                                    progress = 0;
-                                    rsssl_stop_progress(msg);
-                                }
-
-
-                            },
-                            error: function(response) {
-                                console.log("error");
-                                console.log(response);
-                                rsssl_stop_progress(response.responseText);
-                            }
-                        });
-                    }
-
-                    function rsssl_set_status(status){
-                        if (status)
-                        if ($('.'+status).length) {
-                            $('.'+status).removeClass('rsssl-hidden');
-                        }
-                    }
-
-                    function rsssl_stop_progress( msg ){
-                        console.log("stopping");
-                        console.log(progress);
-                        $('.rsssl-installation-progress').css('width',progress + '%');
-                        clearInterval(window.rsssl_interval);
-                        if (typeof msg !== "undefined") {
-                            $('.rsssl_installation_message').html(msg);
-                        }
-                    }
-                    function rsssl_set_message_container_status(status){
-                        if (status==='error') {
-                            $('.rsssl_installation_message').removeClass('rsssl-success');
-                            $('.rsssl_installation_message').addClass('rsssl-error');
-                        }
-                        if (status==='success') {
-                            $('.rsssl_installation_message').addClass('rsssl-success');
-                            $('.rsssl_installation_message').removeClass('rsssl-error');
-                        }
-                    }
-
-                    function rsssl_set_progress(msg , restart_on_100){
-                        if ( progress>=100 ) progress=100;
-                        console.log(progress);
-
-                        $('.rsssl-installation-progress').css('width',progress + '%');
-
-                        if ( progress == 100 ) {
-                            clearInterval(window.rsssl_interval);
-                            if (typeof msg !== "undefined") {
-                                $('.rsssl_installation_message').html(msg);
-                            }
-                            if (typeof restart_on_100 !=='undefined' && restart_on_100){
-                                progress = 0;
-                                $('.rsssl_installation_message').html('<?php _e("Not succeeded yet. Please let the system retry, or come back to this page later")?>');
-
-                                rsssl_process_installation_step();
-                            }
-                        }
-
-
-                    }
-                });
-
-
-            </script>
-            <div class="rsssl_letsencrypt_container field-group rsssl-hidden">
-                <div class="rsssl-field">
-                    <ul>
-                        <li class="rsssl_installation_message">
-
-                        </li>
-                    </ul>
-                    <div class=" rsssl-wizard-progress-bar">
-                        <div class="rsssl-wizard-progress-bar-value rsssl-installation-progress" style="width:0"></div>
-                    </div>
-                </div>
-            </div>
-
-            <?php
+	    return new RSSSL_RESPONSE($status, $action, $message);
     }
+
+    /**
+     * Test for localhost usage
+	 * @return RSSSL_RESPONSE
+	 */
+    public function certificate_status(){
+	    delete_transient('rsssl_certinfo');
+	    if ( RSSSL()->rsssl_certificate->is_valid() ) {
+		    $action = 'stop';
+		    $status = 'error';
+		    $message = __("You already have a valid SSL certificate.", "really-simple-ssl" );
+	    } else {
+		    $action = 'continue';
+		    $status = 'error';
+		    $message = __("SSL certificate not valid. Please continue to generate your own certificate.", "really-simple-ssl" );
+	    }
+	    return new RSSSL_RESPONSE($status, $action, $message);
+    }
+
+
+
+    /**
+     * Test for server software
+	 * @return RSSSL_RESPONSE
+	 */
+	public function server_software(){
+	    $action = 'continue';
+	    $status = 'warning';
+	    $message = __("The server software was not recognized. The generated certificate will need to be installed manually.", "really-simple-ssl" );
+
+        if (rsssl_is_cpanel()) {
+	        $status = 'success';
+	        $message = __("CPanel recognized. Possibly the certificate can be installed automatically.", "really-simple-ssl" );
+        }
+
+        if (rsssl_is_plesk()) {
+	        $status = 'success';
+	        $message = __("Plesk recognized. Possibly the certificate can be installed automatically.", "really-simple-ssl" );
+        }
+
+		return new RSSSL_RESPONSE($status, $action, $message);
+    }
+
+    /**
+     * Test for server software
+	 * @return RSSSL_RESPONSE
+	 */
+	public function system_check(){
+	    $action = 'stop';
+	    $status = 'error';
+	    $message = __("Your system does not meet the minimum requirements.", "really-simple-ssl" );
+
+        if (rsssl_is_cpanel()) {
+	        $status = 'success';
+	        $message = __("CPanel recognized. Possibly the certificate can be installed automatically.", "really-simple-ssl" );
+        }
+
+		return new RSSSL_RESPONSE($status, $action, $message);
+    }
+
 
 	/**
 	 * Get or create an account
+	 * @return RSSSL_RESPONSE
 	 */
     public function get_account(){
 	    $account_email = $this->account_email();
-	    $response = 'success';
 
         if ( is_email($account_email) ) {
 	        try {
@@ -338,20 +193,25 @@ class rsssl_letsencrypt_handler {
 			        = ! Account::exists( $account_email ) ?
 			        Account::create( $account_email ) :
 			        Account::get( $account_email );
+		        $status = 'success';
+		        $action = 'continue';
+		        $message = __("Successfully retrieved account", "really-simple-ssl");
 	        } catch(Exception $e) {
 		        error_log(print_r($e, true));
 		        $response = $this->get_error($e);
+		        $status = 'error';
+		        $action = 'retry';
+		        $message = $response;
 	        }
         } else {
             error_log("no email set");
-	        $response = 'not-ready';
+	        $status = 'error';
+	        $action = 'stop';
+	        $message = __("The email address was not set. Please set the email address",'really-simple-ssl');
         }
-
-        if ($response==='success') {
-	        set_transient('rsssl_account_checked', true, 5 * MINUTE_IN_SECONDS);
-        }
-        return $response;
+	    return new RSSSL_RESPONSE($status, $action, $message);
     }
+
 
 	/**
      * Authorize the order
@@ -361,15 +221,17 @@ class rsssl_letsencrypt_handler {
     public function create_bundle_or_renew(){
 	    $attempt_count = intval(get_transient('rsssl_le_generate_attempt_count'));
 	    $attempt_count++;
-	    set_transient('rsssl_le_generate_attempt_count', $attempt_count, DAY_IN_SECONDS);
-	    if ($attempt_count>10){
+	    set_transient('rsssl_le_generate_attempt_count', $attempt_count, 2 * HOUR_IN_SECONDS);
+	    if ($attempt_count>20){
 		    delete_option("rsssl_le_start_renewal");
-            return 'rate_limit';
+		    $status = 'error';
+		    $action = 'stop';
+		    $message = __("The certificate generation was rate limited. Please try again later.",'really-simple-ssl');
+	        return new RSSSL_RESPONSE($status, $action, $message);
 	    }
 
 	    //check if the required order was created
 	    $order = $bundle_completed = false;
-	    $response = 'success';
 
 	    if ($this->is_ready_for('generation')) {
 		    $this->get_account();
@@ -378,12 +240,21 @@ class rsssl_letsencrypt_handler {
 			    error_log("order does not exist yet");
 			    try {
 				    $order = Order::create( $this->account, $this->subjects );
+				    $status = 'success';
+				    $action = 'continue';
+				    $message = __("Order successfully created.",'really-simple-ssl');
 			    } catch(Exception $e) {
 				    $response = $this->get_error($e);
 				    error_log(print_r($e, true));
+				    $status = 'error';
+				    $action = 'retry';
+				    $message = $response;
 			    }
 		    } else {
 			    //order exists already
+			    $status = 'success';
+			    $action = 'continue';
+			    $message = __("Order exists.",'really-simple-ssl');
 			    $order = Order::get( $this->account, $this->subjects );
 		    }
 
@@ -391,12 +262,15 @@ class rsssl_letsencrypt_handler {
 			    if ( $order->isCertificateBundleAvailable() ) {
 				    try {
 					    $order->enableAutoRenewal();
-
-					    $response         = 'success_renewed';
+					    $status = 'success';
+					    $action = 'continue';
+					    $message = __("Successfully renewed certificate.",'really-simple-ssl');
 					    $bundle_completed = true;
 				    } catch ( Exception $e ) {
 					    error_log( print_r( $e, true ) );
-					    $response         = $this->get_error( $e );
+					    $status = 'error';
+					    $action = 'retry';
+					    $message = $this->get_error( $e );
 					    $bundle_completed = false;
 				    }
 			    } else {
@@ -406,7 +280,6 @@ class rsssl_letsencrypt_handler {
 					    }
 				    } catch ( Exception $e ) {
 					    error_log( print_r( $e, true ) );
-					    $response = $this->get_error( $e );
 				    }
 
 				    try {
@@ -432,32 +305,52 @@ class rsssl_letsencrypt_handler {
 							    $success_intermediate = true;
 							    update_option( 'rsssl_intermediate_path', $pathToIntermediate );
 						    }
+
 						    if ( ! $success_cert || ! $success_private || ! $success_intermediate ) {
 							    error_log( "not all files" );
 							    $bundle_completed = false;
 						    }
+
+						    if ( $bundle_completed ) {
+							    $status = 'success';
+							    $action = 'continue';
+							    $message = __("Successfully generated certificate.",'really-simple-ssl');
+						    } else {
+							    $status = 'error';
+							    $action = 'retry';
+							    $message = __("Bundle not available yet...",'really-simple-ssl');
+						    }
+
+					    } else {
+						    $status = 'error';
+						    $action = 'retry';
+						    $message = __("Bundle not available yet...",'really-simple-ssl');
 					    }
 
 
 				    } catch ( Exception $e ) {
 					    error_log( print_r( $e, true ) );
-					    $response = $this->get_error( $e );
+					    $status = 'success';
+					    $action = 'continue';
+					    $message = $this->get_error( $e );
 				    }
 			    }
 		    }
 	    } else {
-		    $response = sprintf(__('Steps not completed: %s', "really-simple-ssl"), implode(", ",$this->get_not_completed_steps('generation')) );
+		    $status = 'error';
+		    $action = 'stop';
+		    $message = sprintf(__('Steps not completed: %s', "really-simple-ssl"), implode(", ",$this->get_not_completed_steps('generation')) );
 	    }
 
 	    if ( $bundle_completed ){
-		    $this->progress_add('generation');
+		    rsssl_progress_add('generation');
 		    update_option('rsssl_le_certificate_generated_by_rsssl', true);
 		    delete_option("rsssl_le_start_renewal");
 	    } else {
-		    $this->progress_remove('generation');
+		    rsssl_progress_remove('generation');
 	    }
 
-	    return $response;
+	    return new RSSSL_RESPONSE($status, $action, $message);
     }
 
 	/**
@@ -502,59 +395,105 @@ class rsssl_letsencrypt_handler {
     }
 
 	/**
+	 * @return RSSSL_RESPONSE
+	 */
+    public function attempt_cpanel_autossl_install(){
+    	return $this->install('cpanel', 'autossl');
+    }
+	/**
+	 * @return RSSSL_RESPONSE
+	 */
+    public function attempt_cpanel_install(){
+	    return $this->install('cpanel', 'default');
+    }
+
+	/**
      * Instantiate our installer, and run it.
      *
 	 * @return string
 	 */
-	public function install(){
+
+	public function install( $server, $type ='' ){
 	    $attempt_count = intval(get_transient('rsssl_le_install_attempt_count'));
 		$attempt_count++;
 		set_transient('rsssl_le_install_attempt_count', $attempt_count, DAY_IN_SECONDS);
-		if ($attempt_count>10){
+		if ( $attempt_count>5 ){
 			delete_option("rsssl_le_start_installation");
-			return 'rate_limit';
+			$status = 'error';
+			$action = 'stop';
+			$message = __("The certificate installation was rate limited. Please try again later.",'really-simple-ssl');
+			return new RSSSL_RESPONSE($status, $action, $message);
 		}
 
 		if ($this->is_ready_for('installation')) {
 		    try {
-			    if (rsssl_cpanel_api_supported()){
+		    	if ( $server === 'cpanel' ) {
 				    error_log("is cpanel");
+
 				    require_once( rsssl_le_path . 'cPanel/cPanel.php' );
 				    $username = rsssl_get_value('cpanel_username');
 				    $password = $this->decode( rsssl_get_value('cpanel_password') );
 				    $cpanel_host = rsssl_get_value('cpanel_host');
-				    $cpanel = new rsssl_cPanel($cpanel_host, $username, $password);
+				    $cpanel = new rsssl_cPanel( $cpanel_host, $username, $password );
 				    $domains = RSSSL_LE()->letsencrypt_handler->get_subjects();
-				    $response_arr = array();
-				    if (is_array($domains) && count($domains)>0) {
-					    foreach ($domains as $domain ) {
-						    $response_arr[] = $cpanel->installSSL($domain);
+
+				    if ( $type === 'autossl' ) {
+					    $response = $cpanel->enableAutoSSL($domains);
+					    if ( $response->status === 'success' ) {
+						    update_option('rsssl_le_certificate_installed_by_rsssl', true);
 					    }
+					    //set to success even if error, so the bullet is green, as we will then attempt default installation
+					    $status = $response->status;
+					    $action = $response->action;
+					    $message = $response->message;
+                    } else {
+					    $response_arr = array();
+					    if ( is_array($domains) && count($domains)>0 ) {
+						    foreach ($domains as $domain ) {
+						    	$response = $cpanel->installSSL($domain);
+							    $response_arr[] = $response;
+						    }
+					    }
+					    $message = '';
+					    $status = '';
+					    foreach ( $response_arr as $response_item ) {
+						    $status = $response_item->status;
+						    $action = $response_item->action;
+						    $message .= '<br>'.$response_item->message;
+
+						    //overwrite if error.
+						    if ($response_item->status !== 'success' ) {
+							    error_log("response err");
+							    $status = $response_item->status;
+							    $action = $response_item->action;
+						    }
+					    }
+					    if ( $status === 'success' ) {
+						    update_option('rsssl_le_certificate_installed_by_rsssl', true);
+					    }
+                    }
+
+				    if ( $status === 'success' ) {
+					    delete_option("rsssl_le_start_installation");
 				    }
-
-				    foreach ($response_arr as $response ) {
-				        if ($response !== 'success' ) {
-					        error_log("response err".$response);
-
-					        return $response;
-				        }
-				    }
-				    delete_option("rsssl_le_start_installation");
-				    error_log("success response");
-				    return 'success';
-
-			    } else {
-				    error_log("not cpanel");
-				    $response = 'not-ready';
+		    	} else {
+				    $status = 'error';
+				    $action = 'stop';
+				    $message = __("Not recognized server.", "really-simple-ssl");
 			    }
 		    } catch (Exception $e) {
 		        error_log(print_r($e, true));
-			    $response = 'not-ready';
+			    $status = 'error';
+			    $action = 'stop';
+			    $message = __("Installation failed.", "really-simple-ssl");
 		    }
 		} else {
-			$response = 'not-ready';
+			$status = 'error';
+			$action = 'stop';
+			$message = __("The system is not ready for the installation yet. Please run the wizard again.", "really-simple-ssl");
 		}
-		return $response;
+
+		return new RSSSL_RESPONSE($status, $action, $message);
 	}
 
 
@@ -593,20 +532,6 @@ class rsssl_letsencrypt_handler {
         }
     }
 
-
-	/**
-	 * @return mixed|void
-	 * Let's Encrypt wizard
-	 */
-
-	public function wizard() {
-		?>
-		<div class="wrap">
-			<?php RSSSL_LE()->wizard->wizard( 'lets-encrypt' );  ?>
-		</div>
-		<?php
-	}
-
 	/**
      * Get list of common names on the certificate
 	 * @return array
@@ -635,50 +560,6 @@ class rsssl_letsencrypt_handler {
 	}
 
 	/**
-	 * Check if exists, create .well-known/acme-challenge directory if not existing
-	 * @return bool|string
-	 */
-	public function challenge_directory() {
-		$root_directory = trailingslashit(ABSPATH);
-		if ( ! file_exists( $root_directory . '.well-known' ) ) {
-			mkdir( $root_directory . '.well-known' );
-		}
-
-		if ( ! file_exists( $root_directory . '.well-known/acme-challenge' ) ) {
-			mkdir( $root_directory . '.well-known/acme-challenge' );
-		}
-
-		if ( file_exists( $root_directory . '.well-known/acme-challenge' ) ){
-			return $root_directory . '.well-known/acme-challenge';
-		} else {
-			return false;
-		}
-	}
-
-	/**
-	 * @param string $item
-	 */
-	public function progress_add($item){
-		$progress = get_option("rsssl_le_installation_progress", array() );
-		if (!in_array($item, $progress)){
-		    $progress[] = $item;
-			update_option("rsssl_le_installation_progress", $progress );
-		}
-	}
-
-	/**
-	 * @param string $item
-	 */
-	public function progress_remove($item){
-		$progress = get_option("rsssl_le_installation_progress", array());
-		if (in_array($item, $progress)){
-		    $index = array_search($item, $progress);
-		    unset($progress[$index]);
-			update_option("rsssl_le_installation_progress", $progress);
-		}
-	}
-
-	/**
      * Check if we're ready for the next step.
 	 * @param string $item
 	 *
@@ -692,30 +573,7 @@ class rsssl_letsencrypt_handler {
         }
 	}
 
-	/**
-	 * Check if our created directories have the necessary writing permissions
-	 */
 
-	public function directories_without_writing_permissions(){
-	    $required_folders = array(
-            $this->challenge_directory,
-            $this->key_directory,
-            $this->certs_directory,
-        );
-
-	    $no_writing_permissions = array();
-        foreach ($required_folders as $required_folder){
-	        set_error_handler(array($this, 'custom_error_handling'));
-	        $test_file = fopen( $required_folder . "/really-simple-ssl-permissions-check.txt", "w" );
-	        fclose( $test_file );
-	        restore_error_handler();
-	        if (!file_exists($required_folder . "/really-simple-ssl-permissions-check.txt")) {
-		        $no_writing_permissions[] = $required_folder;
-	        }
-        }
-
-        return $no_writing_permissions;
-    }
 
 	/**
 	 * Catch errors
@@ -744,7 +602,6 @@ class rsssl_letsencrypt_handler {
 		$sequence = array_slice($sequence, 0, $index, true);
 		$not_completed = array();
 		$finished = get_option("rsssl_le_installation_progress", array());
-		error_log(print_r($finished,true));
 		foreach ($sequence as $status ) {
 			if (!in_array($status, $finished)) {
 				$not_completed[] = $status;
@@ -754,7 +611,132 @@ class rsssl_letsencrypt_handler {
         return $not_completed;
 	}
 
+	/**
+	 * Test for writing permissions
+	 * @return RSSSL_RESPONSE
+	 */
 
+	public function check_writing_permissions(){
+		$directories_without_permissions = $this->directories_without_writing_permissions();
+		$has_missing_permissions = count($directories_without_permissions)>0;
+
+		if ( $has_missing_permissions ) {
+			rsssl_progress_remove('directories');
+			$action = 'stop';
+			$status = 'error';
+			$message = __("The following directories do not have the necessary writing permissions.", "really-simple-ssl" )."&nbsp;".__("Set permissions to 644 to enable SSL generation.", "really-simple-ssl" );
+			foreach ($directories_without_permissions as $directories_without_permission) {
+				$message .= "<br> - ".$directories_without_permission;
+			}
+		} else {
+			$action = 'continue';
+			$status = 'success';
+			$message = __("The required directories have the necessary writing permissions.", "really-simple-ssl" );
+		}
+		return new RSSSL_RESPONSE($status, $action, $message);
+	}
+
+	/**
+	 * Test for directory
+	 * @return RSSSL_RESPONSE
+	 */
+
+	public function check_challenge_directory(){
+		if ( !$this->challenge_directory() ) {
+			rsssl_progress_remove('directories');
+			$action = 'stop';
+			$status = 'error';
+			$message = __("The challenge directory is not created yet.", "really-simple-ssl" );
+		} else {
+			$action = 'continue';
+			$status = 'success';
+			$message = __("The challenge directory was successfully created.", "really-simple-ssl" );
+		}
+		return new RSSSL_RESPONSE($status, $action, $message);
+	}
+	/**
+	 * Test for directory
+	 * @return RSSSL_RESPONSE
+	 */
+
+	public function check_key_directory(){
+		if ( !$this->key_directory() ) {
+			rsssl_progress_remove('directories');
+			$action = 'stop';
+			$status = 'error';
+			$message = __("The key directory is not created yet.", "really-simple-ssl" );
+		} else {
+			$action = 'continue';
+			$status = 'success';
+			$message = __("The key directory was successfully created.", "really-simple-ssl" );
+		}
+		return new RSSSL_RESPONSE($status, $action, $message);
+	}
+
+	/**
+	 * Test for directory
+	 * @return RSSSL_RESPONSE
+	 */
+
+	public function check_certs_directory(){
+		if ( !$this->certs_directory() ) {
+			rsssl_progress_remove('directories');
+			$action = 'stop';
+			$status = 'error';
+			$message = __("The certs directory is not created yet.", "really-simple-ssl" );
+		} else {
+			$action = 'continue';
+			$status = 'success';
+			$message = __("The certs directory was successfully created.", "really-simple-ssl" );
+		}
+		return new RSSSL_RESPONSE($status, $action, $message);
+	}
+
+	/**
+	 * Check if our created directories have the necessary writing permissions
+	 */
+
+	public function directories_without_writing_permissions(){
+		$required_folders = array(
+			$this->challenge_directory,
+			$this->key_directory,
+			$this->certs_directory,
+		);
+
+		$no_writing_permissions = array();
+		foreach ($required_folders as $required_folder){
+			set_error_handler(array($this, 'custom_error_handling'));
+			$test_file = fopen( $required_folder . "/really-simple-ssl-permissions-check.txt", "w" );
+			fclose( $test_file );
+			restore_error_handler();
+			if (!file_exists($required_folder . "/really-simple-ssl-permissions-check.txt")) {
+				$no_writing_permissions[] = $required_folder;
+			}
+		}
+
+		return $no_writing_permissions;
+	}
+
+	/**
+	 * Check if exists, create .well-known/acme-challenge directory if not existing
+	 * @return bool|string
+	 */
+	public function challenge_directory() {
+		$root_directory = trailingslashit(ABSPATH);
+		if ( ! file_exists( $root_directory . '.well-known' ) ) {
+			mkdir( $root_directory . '.well-known' );
+		}
+
+		if ( ! file_exists( $root_directory . '.well-known/acme-challenge' ) ) {
+			mkdir( $root_directory . '.well-known/acme-challenge' );
+		}
+
+		if ( file_exists( $root_directory . '.well-known/acme-challenge' ) ){
+			return $root_directory . '.well-known/acme-challenge';
+		} else {
+			return false;
+		}
+	}
 
 	/**
      * Check if exists, create ssl/keys directory above the wp root if not existing
@@ -897,5 +879,20 @@ class rsssl_letsencrypt_handler {
 		return get_site_option( 'rsssl_key' );
 	}
 
+
+}
+
+class RSSSL_RESPONSE
+{
+	public $message;
+	public $action;
+	public $status;
+
+	public function __construct($status, $action, $message)
+	{
+	    $this->status = $status;
+	    $this->action = $action;
+	    $this->message = $message;
+	}
 
 }

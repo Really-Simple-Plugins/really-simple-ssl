@@ -3,7 +3,7 @@
 <div class="rsssl-section">
 	<div class="rsssl-template-intro">
 		<p>
-			<?php _e("We will now generate your SSL Certificate", "really-simple-ssl"); ?>
+
 		</p>
 	</div>
 </div>

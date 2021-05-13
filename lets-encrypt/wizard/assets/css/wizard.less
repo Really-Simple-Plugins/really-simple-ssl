@@ -1,5 +1,6 @@
 // out: wizard.css, sourcemap: false, compress: false
-@brand-primary: #FBC43D;
+@import 'variables.less';
+@brand-primary: @rsp-yellow;
 @brand-secondary: #61ce70;
 @brand-tertiary: #29B6F6;
 @border-radius: 25px;
@@ -62,17 +63,23 @@
         margin: @green-gap @green-gap 0 @green-gap;
         font-size: 14px;
       }
-  .rsssl-wizard-progress-bar {
-    background: #eeeeee;
-    height: 15px;
-    margin: @green-gap @green-gap 0 @green-gap;
 
-    .rsssl-wizard-progress-bar-value {
-      height: 100%;
-      background: @brand-tertiary;
-      border-radius: 4px;
-    }
-  }
+      .rsssl-wizard-progress-bar {
+        background: #eeeeee;
+        height: 15px;
+        margin: @green-gap @green-gap 0 @green-gap;
+
+        .rsssl-wizard-progress-bar-value {
+          transition: width 0.5s;
+          -webkit-transition: width 0.5s;
+          height: 100%;
+          background: @rsp-green;
+          border-radius: 4px;
+          &.rsssl-error {
+            background-color: @rsp-red;
+          }
+        }
+      }
       .rsssl-wizard-menu {
         background-color: white;
         margin: 0.5 * @green-gap;

@@ -11,10 +11,12 @@
 			<h1><?php _e("Notifications", 'really-simple-ssl')?></h1>
 		</div>
 	    {intro}
-		{fields}
+        <!-- before do action -->
 	    <?php do_action("rsssl_le_installation_step" ); ?>
+        <!-- after do action -->
+
+        {fields}
         <div class="rsssl-section-footer">
-            {save_as_notice}
             {save_notice}
             <div class="rsssl-buttons-container">
                 {previous_button}

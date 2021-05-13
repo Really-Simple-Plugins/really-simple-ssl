@@ -6,10 +6,6 @@ defined('ABSPATH') or die("you do not have access to this page!");
  */
 if (!function_exists('rsssl_letsencrypt_generation_allowed')) {
 	function rsssl_letsencrypt_generation_allowed() {
-		if (version_compare(PHP_VERSION, '7.1', '<')) {
-			return false;
-		}
-
 		if ( current_user_can( 'manage_options' ) || wp_doing_cron() ) {
 			return true;
 		}
@@ -17,8 +13,6 @@ if (!function_exists('rsssl_letsencrypt_generation_allowed')) {
 		return false;
 	}
 }
-
-
 
 if ( rsssl_letsencrypt_generation_allowed() ) {
 
@@ -39,19 +33,19 @@ if ( rsssl_letsencrypt_generation_allowed() ) {
 				self::$instance = new RSSSL_LETSENCRYPT;
 				self::$instance->setup_constants();
 				self::$instance->includes();
-				if ( is_admin() || wp_doing_cron() ) {
-					self::$instance->field               = new rsssl_field();
-					self::$instance->wizard              = new rsssl_wizard();
-					self::$instance->config              = new rsssl_config();
+				self::$instance->field               = new rsssl_field();
+				self::$instance->wizard              = new rsssl_wizard();
+				self::$instance->config              = new rsssl_config();
+				if (version_compare(PHP_VERSION, rsssl_le_php_version, '>')) {
 					self::$instance->letsencrypt_handler = new rsssl_letsencrypt_handler();
 				}
-				self::$instance->hooks();
 			}
 
 			return self::$instance;
 		}
 
 		private function setup_constants() {
+			define('rsssl_le_php_version', '7.1');
 			define('rsssl_le_url', plugin_dir_url(__FILE__));
 			define('rsssl_le_path', trailingslashit(plugin_dir_path(__FILE__)));
 			define('rsssl_le_wizard_path', trailingslashit(plugin_dir_path(__FILE__)).'/wizard/');
@@ -59,19 +53,13 @@ if ( rsssl_letsencrypt_generation_allowed() ) {
 
 		private function includes() {
 			require_once( rsssl_le_path . 'cron.php' );
-
-			if ( is_admin() || wp_doing_cron() ) {
-				require_once( rsssl_le_path . 'wizard/assets/icons.php' );
-				require_once( rsssl_le_path . 'wizard/class-field.php' );
-				require_once( rsssl_le_path . 'wizard/class-wizard.php' );
-				require_once( rsssl_le_path . 'wizard/config/class-config.php' );
+			require_once( rsssl_le_path . 'wizard/assets/icons.php' );
+			require_once( rsssl_le_path . 'wizard/class-field.php' );
+			require_once( rsssl_le_path . 'wizard/class-wizard.php' );
+			require_once( rsssl_le_path . 'wizard/config/class-config.php' );
+			if (version_compare(PHP_VERSION, rsssl_le_php_version, '>=')) {
 				require_once( rsssl_le_path . 'class-letsencrypt-handler.php' );
 			}
-		}
-
-		private function hooks() {
-
-
 		}
 
 		/**

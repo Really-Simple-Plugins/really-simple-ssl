@@ -31,6 +31,7 @@ class rsssl_cPanel
     private $cpanel_host;
     private $username;
     private $password;
+    public $ssl_installation_url;
 
     /**
      * Initiates the cPanel class.
@@ -39,11 +40,12 @@ class rsssl_cPanel
      * @param string $username
      * @param string $password
      */
-    public function __construct($cpanel_host, $username, $password)
+    public function __construct($cpanel_host, $username='', $password='')
     {
 	    $this->cpanel_host =  str_replace(array('http://', 'https://', ':2083'), '', $cpanel_host);;
         $this->username = $username;
         $this->password = $password;
+        $this->ssl_installation_url = $this->cpanel_host.":2083/frontend/paper_lantern/ssl/index.html";
     }
 
     /**
@@ -51,21 +53,15 @@ class rsssl_cPanel
      *
      * @param string $domain
      *
-     * @return bool
+     * @return RSSSL_RESPONSE
      */
     public function installSSL($domain)
     {
-        error_log('Let\'s install the SSL now!!');
 	    $key_file = get_option('rsssl_private_key_path');
-	    error_log($key_file);
-
 	    $cert_file = get_option('rsssl_certificate_path');
-	    error_log($cert_file);
-
 	    $cabundle_file = get_option('rsssl_intermediate_path');
         $request_uri = 'https://'.$this->cpanel_host.':2083/execute/SSL/install_ssl';
 
-        // Set up the payload to send to the server.
         $payload = [
             'domain' => $domain,
             'cert' => file_get_contents($cert_file),
@@ -77,20 +73,60 @@ class rsssl_cPanel
 		error_log(print_r($response, true));
         //Validate $response
         if (empty($response)) {
-            error_log('The install_ssl cURL call did not return valid JSON:');
-            error_log('Sorry, there was a problem installing the SSL on '.$domain);
-            return 'no-response';
+            error_log('Not able to login');
+	        $link_open = '<a target="_blank" href="'.$this->ssl_installation_url.'">';
+	        $status = 'error';
+	        $action = 'stop';
+	        $message = sprintf(__("Your hosting environment does not allow automatic SSL installation. Please complete %smanually%s.","really-simple-ssl"), $link_open, '</a>');
+        } else if ($response->status) {
+            error_log('SSL successfully installed on '.$domain.' successfully.');
+	        $status = 'success';
+	        $action = 'continue';
+	        $message = __("SSL successfully installed on $domain","really-simple-ssl");
+        } else {
+	        error_log($response->errors[0]);
+	        $status = 'error';
+	        $action = 'stop';
+	        $message = __("Errors were reported during installation","really-simple-ssl").'<br> '.$response->errors[0];
         }
 
-        if ($response->status) {
-            error_log('Congrats! SSL installed on '.$domain.' successfully.');
-            return 'success';
-        } else {
-        	error_log('The install_ssl cURL call returned valid JSON, but reported errors:');
-	        echo $response->errors[0].'<br />';
-	        error_log('Sorry, there was a problem installing the SSL on '.$domain);
-	        return 'error';
-        }
+		return new RSSSL_RESPONSE($status, $action, $message);
+    }
+
+	/**
+	 * @param $domains
+	 *
+	 * @return RSSSL_RESPONSE
+	 */
+    public function enableAutoSSL($domains){
+    	$domains = implode(',', $domains);
+	    $request_uri = 'https://'.$this->cpanel_host.':2083/execute/SSL/remove_autossl_excluded_domains';
+	    $payload = [
+		    'domains' => $domains,
+	    ];
+
+	    $response = $this->connectUapi($request_uri, $payload);
+
+	    //Validate $response
+	    if (empty($response)) {
+		    error_log('The install_ssl cURL call did not return valid JSON:');
+		    $status = 'error';
+		    $action = 'skip';//we try the default next
+		    $message = __("Your hosting environment does not allow automatic SSL installation. Please complete manually.","really-simple-ssl");
+	    } else if ($response->status) {
+		    error_log('Congrats! SSL installed on '.$domains.' successfully.');
+		    $status = 'success';
+		    $action = 'finalize';
+		    $message = __("SSL successfully installed on $domains","really-simple-ssl");
+	    } else {
+		    error_log('The auto SSL cURL call returned valid JSON, but reported errors:');
+		    error_log($response->errors[0]);
+		    $status = 'error';
+		    $action = 'skip';//we try the default next
+		    $message = __("Errors were reported during installation.","really-simple-ssl").'<br> '.$response->errors[0];
+	    }
+	    return new RSSSL_RESPONSE($status, $action, $message);
+
     }
 
     /**

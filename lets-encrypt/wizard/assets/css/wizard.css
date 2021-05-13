@@ -47,9 +47,14 @@
   margin: 20px 20px 0 20px;
 }
 #rsssl-content-area .rsssl-wizard-progress-bar .rsssl-wizard-progress-bar-value {
+  transition: width 0.5s;
+  -webkit-transition: width 0.5s;
   height: 100%;
-  background: #29B6F6;
+  background: #22932e;
   border-radius: 4px;
+}
+#rsssl-content-area .rsssl-wizard-progress-bar .rsssl-wizard-progress-bar-value.rsssl-error {
+  background-color: #D7263D;
 }
 #rsssl-content-area .rsssl-wizard-menu {
   background-color: white;
@@ -239,11 +244,11 @@
   visibility: hidden;
 }
 #rsssl-wizard .rsssl-icon.rsssl-success {
-  color: #FBC43D;
+  color: #f8be2e;
 }
 #rsssl-wizard .rsssl-icon.rsssl-success svg {
-  fill: #FBC43D;
-  stroke: #FBC43D;
+  fill: #f8be2e;
+  stroke: #f8be2e;
 }
 #rsssl-wizard .rsssl-icon.rsssl-green {
   color: #61ce70;
@@ -326,8 +331,8 @@
 }
 #rsssl-wizard .rsssl-checkbox-container input:checked ~ .checkmark svg {
   display: block;
-  fill: #FBC43D;
-  stroke: #FBC43D;
+  fill: #f8be2e;
+  stroke: #f8be2e;
 }
 #rsssl-wizard .rsssl-checkbox-container .checkmark svg {
   left: 2.5px;
@@ -385,7 +390,7 @@
 }
 #rsssl-wizard .rsssl-radio-container input:checked ~ .radiobtn .rsssl-icon {
   display: block;
-  background-color: #FBC43D;
+  background-color: #f8be2e;
 }
 #rsssl-wizard .rsssl-radio-container .radiobtn .rsssl-icon {
   left: 5px;
@@ -822,7 +827,7 @@
   margin: 0 0 0 20px;
   padding: 10px 15px;
   color: #fff;
-  background-color: #FBC43D;
+  background-color: #f8be2e;
   text-align: left;
 }
 .rsssl-help-warning-wrap .rsssl-help-modal:after {
@@ -836,12 +841,12 @@
   border-bottom: 15px solid transparent;
 }
 .rsssl-help-warning-wrap .rsssl-help-modal.rsssl-notice {
-  background-color: #FBC43D;
+  background-color: #f8be2e;
   color: black;
   padding: 20px;
 }
 .rsssl-help-warning-wrap .rsssl-help-modal.rsssl-notice:after {
-  border-right: 15px solid #FBC43D;
+  border-right: 15px solid #f8be2e;
 }
 .rsssl-help-warning-wrap .rsssl-help-modal.rsssl-success {
   background-color: white;
@@ -1111,7 +1116,7 @@ input[type="number"] {
   border-radius: 20px;
 }
 input:checked + .rsssl-slider {
-  background-color: #FBC43D;
+  background-color: #f8be2e;
 }
 input:checked + .rsssl-slider:before {
   -webkit-transform: translateX(17px);
@@ -1119,10 +1124,10 @@ input:checked + .rsssl-slider:before {
   transform: translateX(17px);
 }
 input:checked:disabled + .rsssl-slider {
-  background-color: #ffffff;
+  background-color: #fffbf3;
 }
 input:focus + .rsssl-slider {
-  box-shadow: 0 0 1px #FBC43D;
+  box-shadow: 0 0 1px #f8be2e;
 }
 #complete_wizard_first_notice {
   position: fixed;
@@ -1142,7 +1147,7 @@ input:focus + .rsssl-slider {
 #complete_wizard_first_notice p {
   border-radius: 0px;
   font-size: 16px;
-  background-color: #FBC43D;
+  background-color: #f8be2e;
   color: white;
   position: relative;
   /* height: 100px; */
@@ -1186,7 +1191,7 @@ html .mceContentBody {
 #rsssl-scan-progress .rsssl-sync-progress-bar,
 #rsssl-sync-progress .rsssl-sync-progress-bar {
   height: 15px;
-  background-color: #FBC43D;
+  background-color: #f8be2e;
   transition: width 0.5s;
   -webkit-transition: width 0.5s;
   font-weight: bold;
@@ -1405,7 +1410,7 @@ button.rsssl.button,
 input.rsssl.button {
   margin-left: 15px;
   box-shadow: 0 0 0 #fff;
-  background-color: #FBC43D;
+  background-color: #f8be2e;
   color: #fff;
   padding-right: 20px;
   border: 0;
@@ -1415,7 +1420,7 @@ input.rsssl.button {
 a.rsssl.button:hover,
 button.rsssl.button:hover,
 input.rsssl.button:hover {
-  background-color: #fcd36f;
+  background-color: #facd5f;
   color: white;
 }
 a.rsssl.button .fa-angle-right,
@@ -1431,7 +1436,7 @@ input.rsssl.button .fa-angle-right {
   color: black;
 }
 #rsssl-wizard .dashboard .fa-check {
-  color: #FBC43D;
+  color: #f8be2e;
 }
 /* building our new structured css here */
 .rsssl-dashboard-container .rsssl-dashboard-title {
@@ -1458,8 +1463,8 @@ input.rsssl.button .fa-angle-right {
 .rsssl-header-top .rsssl-premium-cta {
   width: 150px;
   float: right;
-  border-color: #FBC43D;
-  color: #FBC43D;
+  border-color: #f8be2e;
+  color: #f8be2e;
   text-transform: uppercase;
   display: flex;
 }
@@ -1472,7 +1477,7 @@ input.rsssl.button .fa-angle-right {
   margin-bottom: -270px;
   width: 100%;
   min-height: 220px;
-  background-color: #FBC43D;
+  background-color: #f8be2e;
   background-repeat: no-repeat;
   background-attachment: scroll;
   background-position: bottom center;
@@ -1576,7 +1581,7 @@ input.rsssl.button .fa-angle-right {
   float: left;
 }
 .rsssl-dashboard-container .rsssl-dashboard-content-container .rsssl-dashboard-progress .rsssl-dashboard-progress-top .rsssl-dashboard-top-text .rsssl-dashboard-top-text-subtitle {
-  color: #FBC43D;
+  color: #f8be2e;
 }
 .rsssl-dashboard-container .rsssl-dashboard-content-container .rsssl-dashboard-progress .rsssl-continue-wizard-btn {
   padding-top: 125px;
@@ -1649,7 +1654,7 @@ input.rsssl.button .fa-angle-right {
   margin-left: 8px;
 }
 .rsssl-dashboard-container .rsssl-dashboard-content-container .rsssl-dashboard-documents .rsssl-upgrade-table .fa-plus {
-  color: #FBC43D;
+  color: #f8be2e;
   font-size: 1.5em;
 }
 .rsssl-dashboard-container .rsssl-dashboard-content-container .rsssl-dashboard-documents .rsssl-documents-bottom {
@@ -1702,7 +1707,7 @@ input.rsssl.button .fa-angle-right {
 .rsssl-dashboard-container .rsssl-dashboard-content-container .rsssl-dashboard-footer .rsssl-footer-block .rsssl-external-btn {
   text-align: center;
   border-radius: 7px;
-  color: #FBC43D;
+  color: #f8be2e;
   width: 25px;
   height: 20px;
   float: right;

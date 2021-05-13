@@ -7,6 +7,29 @@ $this->steps = apply_filters('rsssl_steps',array(
 	        1 => array(
 		        "id"       => "system-status",
 		        "title"    => __( "System Status", 'really-simple-ssl' ),
+		        "intro"    => __( "Detected status of your setup.", "really-simple-ssl" ),
+				'actions' => array(
+		        	array(
+		        		'description' => __("Checking PHP version...", "really-simple-ssl"),
+				        'action'=> 'rsssl_php_requirement_met',
+				        'attempts' => 1,
+			        ),
+			        array(
+				        'description' => __("Checking SSL certificate...", "really-simple-ssl"),
+				        'action'=> 'certificate_status',
+				        'attempts' => 1,
+			        ),
+			        array(
+				        'description' => __("Checking server software...", "really-simple-ssl"),
+				        'action'=> 'server_software',
+				        'attempts' => 1,
+			        ),
+			        array(
+				        'description' => __("Checking for localhost installation...", "really-simple-ssl"),
+				        'action'=> 'localhost_used',
+				        'attempts' => 1,
+			        ),
+		        ),
 	        ),
             2 => array(
                 "id"    => "domain",
@@ -25,23 +48,62 @@ $this->steps = apply_filters('rsssl_steps',array(
 //
 //                    ),
 //                )
+                'actions' => array(),
             ),
 
             3 => array(
                 "id"       => "directories",
                 "title"    => __( "Directories", 'really-simple-ssl' ),
+                'actions' => array(
+	                array(
+		                'description' => __("Checking challenge directory...", "really-simple-ssl"),
+		                'action'=> 'check_challenge_directory',
+		                'attempts' => 1,
+	                ),
+	                array(
+		                'description' => __("Checking key directory...", "really-simple-ssl"),
+		                'action'=> 'check_key_directory',
+		                'attempts' => 1,
+	                ),
+	                array(
+		                'description' => __("Checking certs directory...", "really-simple-ssl"),
+		                'action'=> 'check_certs_directory',
+		                'attempts' => 1,
+	                ),
+	                array(
+		                'description' => __("Checking permissions...", "really-simple-ssl"),
+		                'action'=> 'check_writing_permissions',
+		                'attempts' => 1,
+	                ),
+                ),
             ),
             4    => array(
 	            "id"    => "generation",
 	            "title" => __( "Generation", 'really-simple-ssl' ),
+	            "intro" => __( "We will now generate your SSL Certificate", "really-simple-ssl" ),
+	            'actions' => array(
+		            array(
+			            'description' => __("Creating account...", "really-simple-ssl"),
+			            'action'=> 'get_account',
+			            'attempts' => 5,
+		            ),
+		            array(
+			            'description' => __("Generating SSL certificate...", "really-simple-ssl"),
+			            'action'=> 'create_bundle_or_renew',
+			            'attempts' => 5,
+		            ),
+
+	            ),
             ),
             5    => array(
                 "id"    => "installation",
                 "title" => __( "Installation", 'really-simple-ssl' ),
+                'actions' => array(),
             ),
             6  => array(
 	            "id"    => "activation",
 	            "title" => __( "Activate SSL", 'really-simple-ssl' ),
+	            'actions' => array(),
             ),
         ),
 ));

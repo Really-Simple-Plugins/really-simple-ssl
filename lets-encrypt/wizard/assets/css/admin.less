@@ -3,9 +3,11 @@
 @color-success:@rsp-green;
 @color-disabled: #d7d7d7;
 @light-grey:#eeeeee;
-
+.rsssl_letsencrypt_container {
+  margin-top:@big-margin;
+}
 #rsssl-lets-encrypt ul {
-  margin-left:@big-margin;
+  margin-left:@big-margin + @big-margin;
   li {
     &:before {
       background-color: @brand-primary;

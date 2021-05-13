@@ -3616,7 +3616,6 @@ class rsssl_admin extends rsssl_front_end
                         break;
                 }
                 //possibility to hook into the tabs.
-                error_log("show_tab_{$tab}");
                 do_action("show_tab_{$tab}");
                 ?>
             </div>

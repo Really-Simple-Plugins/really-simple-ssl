@@ -42,35 +42,45 @@ function rsssl_is_plesk(){
 	return false;
 }
 
+/**
+ * @param string $item
+ */
+function rsssl_progress_add($item){
+	$progress = get_option("rsssl_le_installation_progress", array() );
+	if (!in_array($item, $progress)){
+		$progress[] = $item;
+		update_option("rsssl_le_installation_progress", $progress );
+	}
+}
 
 /**
- * @param bool $nicename
- *
- * @return string
+ * @param string $item
  */
-function rsssl_hosting_environment($nicename = false ){
-	$system = 'other';
-	if (rsssl_is_cpanel()) {
-		$system = 'cpanel';
+function rsssl_progress_remove($item){
+	$progress = get_option("rsssl_le_installation_progress", array());
+	if (in_array($item, $progress)){
+		$index = array_search($item, $progress);
+		unset($progress[$index]);
+		update_option("rsssl_le_installation_progress", $progress);
 	}
+}
 
-	if (rsssl_is_plesk()) {
-		$system = 'plesk';
-	}
-
-	if ($nicename){
-		$list = array(
-			'plesk' => "Plesk",
-			'cpanel' => "CPanel",
-			'other' => __("Other hosting environment.", "really-simple-ssl"),
-		);
-		return $list[$system];
-
+/**
+ * Get PHP version status for tests
+ * @return RSSSL_RESPONSE
+ */
+function rsssl_php_requirement_met(){
+	if (version_compare(PHP_VERSION, rsssl_le_php_version, '<')) {
+		rsssl_progress_remove('system-status');
+		$action = 'stop';
+		$status = 'error';
+		$message = sprintf(__("The minimum requirements for the PHP version have not been met. Please upgrade to %s", "really-simple-ssl"), rsssl_le_php_version );
 	} else {
-		return $system;
+		$action = 'continue';
+		$status = 'success';
+		$message = __("You have the required PHP version to continue.", "really-simple-ssl" );
 	}
-
-
+	return new RSSSL_RESPONSE($status, $action, $message);
 }
 
 

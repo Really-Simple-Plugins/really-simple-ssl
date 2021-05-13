@@ -1412,7 +1412,7 @@ if ( ! class_exists( "rsssl_field" ) ) {
             $button_text = __( "Save", 'really-simple-ssl' );
 	        $button_name = 'rsssl-save';
 
-	        $step = RSSSL_LE()->wizard->step();
+	        $step = RSSSL_LE()->wizard->actual_step();
             $section = RSSSL_LE()->wizard->section();
 	        $fields = RSSSL_LE()->config->fields( 'lets-encrypt', $step, $section);
 	        reset($fields);

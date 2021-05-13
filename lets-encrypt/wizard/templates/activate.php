@@ -21,7 +21,9 @@ defined( 'ABSPATH' ) or die( "you do not have access to this page!" );
         <li><?php printf(__("We strongly recommend to create a %sbackup%s of your site before activating SSL", 'really-simple-ssl'), $link_open, $link_close); ?> </li>
         <li><?php _e("You may need to login in again.", "really-simple-ssl") ?></li>
 		<?php
-		if (RSSSL()->rsssl_certificate->is_valid()) { ?>
+        //non cached SSL check.
+        $response = RSSSL_LE()->letsencrypt_handler->certificate_status();
+		if ($response->action === 'stop') { ?>
             <li class="rsssl-success"><?php _e("An SSL certificate has been detected", "really-simple-ssl") ?></li>
 		<?php } else { ?>
             <li class="rsssl-error"><?php _e("No SSL certificate has been detected.", "really-simple-ssl") ?></li>
