@@ -43,6 +43,14 @@ function rsssl_is_plesk(){
 }
 
 /**
+ * check if this is a server that is not automatically detected
+ * @return bool
+ */
+function rsssl_is_other(){
+	$response = RSSSL_LE()->letsencrypt_handler->server_software();
+	return $response->status === 'warning';
+}
+/**
  * @param string $item
  */
 function rsssl_progress_add($item){
@@ -99,21 +107,21 @@ if ( ! function_exists( 'rsssl_get_value' ) ) {
      * @return array|bool|mixed|string
      */
 
-    function rsssl_get_value(
-        $fieldname, $use_default = true
-    ) {
-        if ( ! isset( RSSSL_LE()->config->fields[ $fieldname ] ) ) {
-            return false;
-        }
+	function rsssl_get_value(
+		$fieldname, $use_default = true
+	) {
+		$default = false;
+		$fields = get_option( 'rsssl_options_lets-encrypt' );
+		if ($use_default) {
+			if ( ! isset( RSSSL_LE()->config->fields[ $fieldname ] ) ) {
+				return false;
+			}
+			$default = ( isset( RSSSL_LE()->config->fields[ $fieldname ]['default'] ) ) ? RSSSL_LE()->config->fields[ $fieldname ]['default'] : '';
+		}
 
-        $page = RSSSL_LE()->config->fields[ $fieldname ]['source'];
-        $fields = get_option( 'rsssl_options_' . $page );
-        $default = ( $use_default && $page && isset( RSSSL_LE()->config->fields[ $fieldname ]['default'] ) )
-            ? RSSSL_LE()->config->fields[ $fieldname ]['default'] : '';
-
-        $value   = isset( $fields[ $fieldname ] ) ? $fields[ $fieldname ] : $default;
-        return $value;
-    }
+		$value   = isset( $fields[ $fieldname ] ) ? $fields[ $fieldname ] : $default;
+		return $value;
+	}
 }
 
 if ( ! function_exists( 'rsssl_notice' ) ) {

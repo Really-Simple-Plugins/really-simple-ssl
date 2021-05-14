@@ -31,6 +31,30 @@ $this->fields = $this->fields + array(
 			'callback'    => 'system-status.php',
 		),
 
+		'email_address'      => array(
+			'step'      => 2,
+			'section'   => 1,
+			'source'    => 'lets-encrypt',
+			'type'      => 'email',
+			'default'   => get_option('admin_email'),
+			'tooltip'   => __( "Your email address will be obfuscated on the front-end to prevent spidering.",
+				'really-simple-ssl' ),
+			'tooltip-position' => 'title',
+			'label'     => __( "Your e-mail address", 'really-simple-ssl' ),
+			'sublabel'  => __("This field is prefilled based on your configuration", 'really-simple-ssl'),
+			'required'  => true,
+		),
+
+		'accept_le_terms' => array(
+			'step'        => 2,
+			'section'     => 1,
+			'source'      => 'lets-encrypt',
+			'type'        => 'checkbox',
+			'default'     => '',
+			'title'       => __('Terms & Conditions',"really-simple-ssl"),
+			'option_text' => __("I agree to the Terms & Conditions", 'really-simple-ssl'),
+		),
+
         'domain' => array(
             'step'        => 2,
             'section'     => 1,
@@ -54,6 +78,48 @@ $this->fields = $this->fields + array(
 	        'tooltip-position' => 'after',
 	        'option_text' => __("Include www-prefixed version too?", 'really-simple-ssl'),
         ),
+
+        'other_host_type' => array(
+	        'step'        => 2,
+	        'section'     => 1,
+	        'source'      => 'lets-encrypt',
+	        'type'        => 'select',
+	        'options'     => $this->supported_hosts,
+	        'default'     => false,
+	        'label'       => __( "Hosting company", 'really-simple-ssl' ),
+	        'required'    => true,
+	        'disabled'    => false,
+	        'callback_condition' => 'rsssl_is_other',
+        ),
+
+		'cloudways_user_email' => array(
+			'step'        => 2,
+			'section'     => 1,
+			'source'      => 'lets-encrypt',
+			'type'        => 'text',
+			'default'     => '',
+			'placeholder' => 'email@email.com',
+			'label'       => __( "CloudWays user email", 'really-simple-ssl' ),
+			'required'    => true,
+			'disabled'    => false,
+			'condition' => array(
+				'other_host_type' => 'cloudways'
+			)
+		),
+		'cloudways_api_key' => array(
+			'step'        => 2,
+			'section'     => 1,
+			'source'      => 'lets-encrypt',
+			'type'        => 'text',
+			'default'     => '',
+			'label'       => __( "CloudWays api key", 'really-simple-ssl' ),
+			'required'    => true,
+			'disabled'    => false,
+			'comment'     => sprintf(__("You can find your api key %shere%s.","really-simple-ssl"),'<a target="_blank" href="https://platform.cloudways.com/api">','</a>'),
+			'condition' => array(
+				'other_host_type' => 'cloudways'
+			)
+		),
 
         'cpanel_host' => array(
             'step'        => 2,
@@ -89,30 +155,6 @@ $this->fields = $this->fields + array(
 	        'required'    => true,
 	        'disabled'    => false,
 	        'callback_condition' => 'rsssl_cpanel_api_supported'
-        ),
-
-        'email_address'      => array(
-            'step'      => 2,
-            'section'   => 1,
-            'source'    => 'lets-encrypt',
-            'type'      => 'email',
-            'default'   => get_option('admin_email'),
-            'tooltip'   => __( "Your email address will be obfuscated on the front-end to prevent spidering.",
-                'really-simple-ssl' ),
-            'tooltip-position' => 'title',
-            'label'     => __( "Your e-mail address", 'really-simple-ssl' ),
-            'sublabel'  => __("This field is prefilled based on your configuration", 'really-simple-ssl'),
-            'required'  => true,
-        ),
-
-        'accept_le_terms' => array(
-            'step'        => 2,
-            'section'     => 1,
-            'source'      => 'lets-encrypt',
-            'type'        => 'checkbox',
-            'default'     => '',
-            'title'       => __('Terms & Conditions',"really-simple-ssl"),
-            'option_text' => __("I agree to the Terms & Conditions", 'really-simple-ssl'),
         ),
 
         'instructions' => array(

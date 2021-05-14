@@ -39,6 +39,8 @@ if ( ! class_exists( "rsssl_wizard" ) ) {
 		public function add_condition_actions($steps){
 		    $index = array_search('installation',array_column($steps['lets-encrypt'],'id'));
 			$index++;
+
+			$is_cloudways = rsssl_get_value('other_host_type') === 'cloudways';
 			if (rsssl_cpanel_api_supported()) {
 				$steps['lets-encrypt'][$index]['actions'] = array(
 					array(
@@ -50,6 +52,24 @@ if ( ! class_exists( "rsssl_wizard" ) ) {
 						'description' => __("Attempting to install certificate...", "really-simple-ssl"),
 						'action'=> 'attempt_cpanel_install',
 						'attempts' => 1,
+					),
+				);
+            } elseif ($is_cloudways) {
+				$steps['lets-encrypt'][$index]['actions'] = array(
+					array(
+						'description' => __("Attempting to retrieve Cloudways server data...", "really-simple-ssl"),
+						'action'=> 'attempt_cloudways_server_data',
+						'attempts' => 5,
+					),
+					array(
+						'description' => __("Attempting to retrieve Cloudways server data...", "really-simple-ssl"),
+						'action'=> 'attempt_cloudways_install_ssl',
+						'attempts' => 5,
+					),
+					array(
+						'description' => __("Attempting to retrieve Cloudways server data...", "really-simple-ssl"),
+						'action'=> 'attempt_cloudways_auto_renew',
+						'attempts' => 5,
 					),
 				);
             } else {

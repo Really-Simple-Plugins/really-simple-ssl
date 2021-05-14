@@ -138,12 +138,11 @@ class rsssl_letsencrypt_handler {
 	    return new RSSSL_RESPONSE($status, $action, $message);
     }
 
-
-
     /**
      * Test for server software
 	 * @return RSSSL_RESPONSE
 	 */
+
 	public function server_software(){
 	    $action = 'continue';
 	    $status = 'warning';
@@ -407,6 +406,25 @@ class rsssl_letsencrypt_handler {
 	    return $this->install('cpanel', 'default');
     }
 
+    public function attempt_cloudways_server_data(){
+	    require_once( rsssl_le_path . 'API/Cloudways.php' );
+	    $cloudways = new rsssl_Cloudways();
+	    return $cloudways->getServerInfo();
+    }
+
+	public function attempt_cloudways_install_ssl(){
+		require_once( rsssl_le_path . 'API/Cloudways.php' );
+		$domains = $this->get_subjects();
+		$cloudways = new rsssl_Cloudways();
+		return $cloudways->installSSL($domains);
+	}
+
+	public function attempt_cloudways_auto_renew(){
+		require_once( rsssl_le_path . 'API/Cloudways.php' );
+		$cloudways = new rsssl_Cloudways();
+		return $cloudways->enableAutoRenew();
+	}
+
 	/**
      * Instantiate our installer, and run it.
      *
@@ -435,7 +453,7 @@ class rsssl_letsencrypt_handler {
 				    $password = $this->decode( rsssl_get_value('cpanel_password') );
 				    $cpanel_host = rsssl_get_value('cpanel_host');
 				    $cpanel = new rsssl_cPanel( $cpanel_host, $username, $password );
-				    $domains = RSSSL_LE()->letsencrypt_handler->get_subjects();
+				    $domains = $this->get_subjects();
 
 				    if ( $type === 'autossl' ) {
 					    $response = $cpanel->enableAutoSSL($domains);
@@ -887,12 +905,14 @@ class RSSSL_RESPONSE
 	public $message;
 	public $action;
 	public $status;
+	public $output;
 
-	public function __construct($status, $action, $message)
+	public function __construct($status, $action, $message, $output = false )
 	{
 	    $this->status = $status;
 	    $this->action = $action;
 	    $this->message = $message;
+	    $this->output = $output;
 	}
 
 }
