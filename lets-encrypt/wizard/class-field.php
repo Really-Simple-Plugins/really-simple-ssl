@@ -1145,18 +1145,11 @@ if ( ! class_exists( "rsssl_field" ) ) {
             $fields = RSSSL_LE()->config->fields( $page, $step, $section );
             foreach ( $fields as $fieldname => $args ) {
                 $default_args = $this->default_args;
-                $args         = wp_parse_args( $args, $default_args );
-
-                $type              = ( $args['callback'] ) ? 'callback'
-                    : $args['type'];
+                $args = wp_parse_args( $args, $default_args );
                 $args['fieldname'] = $fieldname;
 
-                if ( $type == 'callback' ) {
+                if ( $this->show_field( $args ) ) {
                     return true;
-                } else {
-                    if ( $this->show_field( $args ) ) {
-                        return true;
-                    }
                 }
             }
 

@@ -124,6 +124,28 @@ if ( ! function_exists( 'rsssl_get_value' ) ) {
 	}
 }
 
+if ( !function_exists('rsssl_do_local_lets_encrypt_install')) {
+	/**
+	 * Check if the setup requires local certificate generation
+	 * @return bool
+	 */
+	function rsssl_do_local_lets_encrypt_install() {
+		error_log("test local install");
+		if ( rsssl_cpanel_api_supported() || rsssl_is_plesk() ) {
+			return true;
+		}
+
+		$not_local_cert_hosts = RSSSL_LE()->config->not_local_certificate_hosts;
+		$current_host         = rsssl_get_other_host();
+		if ( in_array( $current_host, $not_local_cert_hosts ) ) {
+			error_log("no local install");
+			return false;
+		}
+
+		return true;
+	}
+}
+
 if ( ! function_exists( 'rsssl_notice' ) ) {
     /**
      * Notification without arrow on the left. Should be used outside notifications center
@@ -267,5 +289,9 @@ if ( ! function_exists( 'rsssl_get_non_www_domain' ) ) {
 
         return $domain;
     }
+}
+
+function rsssl_get_other_host(){
+	return rsssl_get_value('other_host_type');
 }
 

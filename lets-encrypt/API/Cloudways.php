@@ -36,20 +36,20 @@ class rsssl_Cloudways {
 			curl_setopt( $ch, CURLOPT_CUSTOMREQUEST, $method );
 			curl_setopt( $ch, CURLOPT_URL, $baseURL . $url );
 			curl_setopt( $ch, CURLOPT_RETURNTRANSFER, true );
-			//curl_setopt($ch, CURLOPT_HEADER, 1);
-			//Set Authorization Header
 			if ( $accessToken ) {
 				curl_setopt( $ch, CURLOPT_HTTPHEADER, [ 'Authorization: Bearer ' . $accessToken ] );
 			}
 
-			//Set Post Parameters
 			$encoded = '';
 			if ( count( $post ) ) {
 				foreach ( $post as $name => $value ) {
-					$encoded .= urlencode( $name ) . '=' . urlencode( $value ) . '&';
+					if ( !is_array( $value) ) {
+						$encoded .= urlencode( $name ) . '=' . urlencode( $value ) . '&';
+					} else {
+						$encoded .= urlencode( $name ) . '=' .  http_build_query( $value ,'',"\n") . '&';
+					}
 				}
 				$encoded = substr( $encoded, 0, strlen( $encoded ) - 1 );
-
 				curl_setopt( $ch, CURLOPT_POSTFIELDS, $encoded );
 				curl_setopt( $ch, CURLOPT_POST, 1 );
 			}
@@ -60,17 +60,19 @@ class rsssl_Cloudways {
 
 			$httpcode = curl_getinfo( $ch, CURLINFO_HTTP_CODE );
 			if ($output && isset($output->error_description)) {
-				return new RSSSL_RESPONSE( 'error', 'retry', $output->error_description );
+				return new RSSSL_RESPONSE( 'error', 'stop', $output->error_description, false );
+			} else if ($httpcode != '200' && $output && isset($output->message) ){
+				return new RSSSL_RESPONSE( 'error', 'stop', $output->message );
 			} else if ( $httpcode != '200' ) {
-				$message = 'An error occurred code: ' . $httpcode . ' output: ' . substr( $output, 0, 10000 );
+				$message = $httpcode . ' output: ' . substr( $output, 0, 10000 );
 				error_log(print_r($message, true));
-				return new RSSSL_RESPONSE( 'error', 'retry', $message );
+				return new RSSSL_RESPONSE( 'error', 'stop', $message );
 			}
 			curl_close( $ch );
 			return new RSSSL_RESPONSE( 'success', 'continue', '', json_decode( $output ) );
 		} catch(Exception $e) {
 			error_log(print_r($e,true));
-			return new RSSSL_RESPONSE( 'error', 'retry', $e->getMessage() );
+			return new RSSSL_RESPONSE( 'error', 'stop', $e->getMessage() );
 		}
 	}
 
@@ -87,15 +89,16 @@ class rsssl_Cloudways {
 			error_log("not found, get new");
 
 			$response = $this->callCloudwaysAPI( 'POST', '/oauth/access_token', null, [ 'email' => $this->email, 'api_key' => $this->api_key ] );
+			error_log("api call output");
 			error_log(print_r($response, true));
 			if ($response->status === 'success' ) {
 				$accessToken   = $response->output->access_token;
 				set_transient('rsssl_cw_t', $accessToken, 1800);
 			} else {
-				return new RSSSL_RESPONSE( 'error', 'retry', $response->message );
+				return new RSSSL_RESPONSE( 'error', 'stop', $response->message );
 			}
 		}
-		return new RSSSL_RESPONSE( 'success', 'continue', '',$accessToken );
+		return new RSSSL_RESPONSE( 'success', 'continue','', $accessToken );
 	}
 
 	/**
@@ -103,46 +106,32 @@ class rsssl_Cloudways {
 	 *
 	 * @return RSSSL_RESPONSE
 	 */
+
 	public function installSSL($domains){
+		error_log("starting installation");
+
 		$response = $this->getAccessToken();
 		if ( $response->status !== 'success' ) {
-			return new RSSSL_RESPONSE('error','retry',$response->message);
+			return new RSSSL_RESPONSE('error','stop',$response->message);
 		}
 		$accessToken = $response->output;
-
 		$response = $this->getServerInfo();
+
 		if ($response->status === 'success' ) {
-			$server_id = get_transient('rsssl_cw_app_id');
-			$app_id = get_transient('rsssl_cw_server_id' );
-			$response = $this->callCloudWaysAPI( 'POST', 'security/lets_encrypt_install', $accessToken,
-				[
-					'server_id' => $server_id,
-					'app_id' => $app_id,
-					'ssl_email' => $this->email,
-					'wild_card' => false,
-					'ssl_domains' => $domains,
-				]
-			);
+			$server_id = get_transient('rsssl_cw_server_id' );
+			$app_id = get_transient('rsssl_cw_app_id');
+			$args = [
+				'server_id' => $server_id,
+				'app_id' => $app_id,
+				'ssl_email' => $this->email,
+				'wild_card' => false,
+				'ssl_domains' => $domains,
+			];
+
+			$response = $this->callCloudWaysAPI( 'POST', 'security/lets_encrypt_install', $accessToken, $args );
 		}
 
-		if ( $response->status === 'success' ) {
-			if (isset($response->output->operation_id)) {
-				$status = 'success';
-				$action = 'continue';
-				$message = __("Successfully installed Lets Encrypt","really-simple-ssl");
-			} else {
-				$status = 'error';
-				$action = 'retry';
-				$message = $response->message;
-			}
-
-		} else {
-			$status = 'error';
-			$action = 'retry';
-			$message = __("Error installing Lets Encrypt","really-simple-ssl");
-		}
-
-		return new RSSSL_RESPONSE( $status, $action, $message );
+		return $response;
 	}
 
 	/**
@@ -152,7 +141,7 @@ class rsssl_Cloudways {
 	public function enableAutoRenew(){
 		$response = $this->getAccessToken();
 		if ( $response->status !== 'success' ) {
-			return new RSSSL_RESPONSE('error','retry', __("Failed retrieving access token","really-simple-ssl"));
+			return new RSSSL_RESPONSE('error','stop', __("Failed retrieving access token","really-simple-ssl"));
 		}
 		$accessToken = $response->output;
 
@@ -174,12 +163,12 @@ class rsssl_Cloudways {
 			$action = 'continue';
 			$message = __("Successfully installed Lets Encrypt","really-simple-ssl");
 		} elseif ($response->status === 'error') {
-			$status = 'error';
-			$action = 'retry';
+			$status = $response->status;
+			$action = $response->action;
 			$message = $response->message;
 		} else {
-			$status = 'error';
-			$action = 'retry';
+			$status = $response->status;
+			$action = $response->action;
 			$message = __("Error enabling auto renew for Lets Encrypt","really-simple-ssl");
 		}
 
@@ -202,7 +191,7 @@ class rsssl_Cloudways {
 
 		$response = $this->getAccessToken();
 		if ( $response->status !== 'success' ) {
-			return new RSSSL_RESPONSE('error','retry', $response->message);
+			return new RSSSL_RESPONSE('error','stop', $response->message);
 		}
 		$accessToken = $response->output;
 
@@ -215,7 +204,7 @@ class rsssl_Cloudways {
 			foreach ($servers as $server ){
 				$apps = $server->apps;
 				foreach ($apps as $app ){
-					$app_domain = $app->app_fqdn;
+					$app_domain = $app->cname;
 					error_log("app domain ".$app_domain);
 					$this_site_domain = str_replace(array('https://', 'http://', 'www.'), '',site_url());
 					if (strpos($app_domain, $this_site_domain) !== false ) {
@@ -234,7 +223,7 @@ class rsssl_Cloudways {
 			$message = __("Successfully retrieved server id and app id","really-simple-ssl");
 		} else {
 			$status = 'error';
-			$action = 'retry';
+			$action = 'stop';
 			if ( isset($serverList->error_description) ) {
 				$message = $serverList->error_description;
 			} else {
@@ -246,4 +235,3 @@ class rsssl_Cloudways {
 	}
 
 }
-

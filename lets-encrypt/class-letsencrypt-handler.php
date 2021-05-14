@@ -69,6 +69,14 @@ class rsssl_letsencrypt_handler {
             }
         }
 
+		if ($fieldname==='other_host_type'){
+			$not_local_cert_hosts = RSSSL_LE()->config->not_local_certificate_hosts;
+			if ( in_array( $fieldvalue, $not_local_cert_hosts ) ) {
+				rsssl_progress_add('directories');
+				rsssl_progress_add('generation');
+			}
+		}
+
 		if ( $fieldname==='email' ){
 		    if ( !is_email($fieldvalue) ) {
 		        rsssl_progress_remove('domain');
@@ -113,7 +121,7 @@ class rsssl_letsencrypt_handler {
         }
 
 	    $action = 'continue';
-	    $status = 'success';
+	    $status = 'warning';
 	    $message = __("Your server requires some manual actions to install the certificate.", "really-simple-ssl").' '.
 	               sprintf(__("Please follow this %slink%s to proceed.", "really-simple-ssl"), '<a target="_blank" href="'.$url.'">', '</a>');
 
@@ -236,7 +244,6 @@ class rsssl_letsencrypt_handler {
 		    $this->get_account();
 
 		    if ( ! Order::exists( $this->account, $this->subjects ) ) {
-			    error_log("order does not exist yet");
 			    try {
 				    $order = Order::create( $this->account, $this->subjects );
 				    $status = 'success';
@@ -306,7 +313,6 @@ class rsssl_letsencrypt_handler {
 						    }
 
 						    if ( ! $success_cert || ! $success_private || ! $success_intermediate ) {
-							    error_log( "not all files" );
 							    $bundle_completed = false;
 						    }
 
@@ -357,19 +363,28 @@ class rsssl_letsencrypt_handler {
 	 * @return bool
 	 */
     public function generated_by_rsssl(){
-	    return get_option('rsssl_le_certificate_generated_by_rsssl');
+	    return get_option('rsssl_le_certificate_generated_by_rsssl')!==false;
     }
 
 	/**
 	 * Check if the certificate can be installed automatically.
 	 */
+
     public function certificate_can_auto_install(){
+
+    	$install_method = get_option('rsssl_le_certificate_installed_by_rsssl');
+    	if ( in_array($install_method, RSSSL_LE()->config->no_renewal_needed) ) {
+    		return false;
+	    }
+
+	    //if it was never auto installed, we probably can't autorenew.
+	    if ($install_method === false ) {
+		    return false;
+	    }
+
+    	// we can only instal if the certificate is up to date
         if ($this->certificate_needs_renewal()) {
             return false;
-        }
-
-        if (rsssl_cpanel_api_supported()) {
-            return true;
         }
 
         return false;
@@ -381,6 +396,7 @@ class rsssl_letsencrypt_handler {
 	 * @return bool
 	 */
     public function certificate_needs_renewal(){
+
 	    $cert_file = get_option('rsssl_certificate_path');
 	    $certificate = file_get_contents($cert_file);
 	    $certificateInfo = openssl_x509_parse($certificate);
@@ -413,10 +429,21 @@ class rsssl_letsencrypt_handler {
     }
 
 	public function attempt_cloudways_install_ssl(){
-		require_once( rsssl_le_path . 'API/Cloudways.php' );
-		$domains = $this->get_subjects();
-		$cloudways = new rsssl_Cloudways();
-		return $cloudways->installSSL($domains);
+		if ($this->is_ready_for('installation')) {
+			require_once( rsssl_le_path . 'API/Cloudways.php' );
+			$domains = $this->get_subjects();
+			$cloudways = new rsssl_Cloudways();
+			$response =  $cloudways->installSSL($domains);
+			if ($response->status === 'success') {
+				update_option('rsssl_le_certificate_installed_by_rsssl', 'cloudways');
+			}
+			return $response;
+		} else {
+			$status = 'error';
+			$action = 'stop';
+			$message = __("The system is not ready for the installation yet. Please run the wizard again.", "really-simple-ssl");
+			return new RSSSL_RESPONSE($status, $action, $message);
+		}
 	}
 
 	public function attempt_cloudways_auto_renew(){
@@ -431,7 +458,15 @@ class rsssl_letsencrypt_handler {
 	 * @return string
 	 */
 
-	public function install( $server, $type ='' ){
+	public function install( $server = false, $type ='default' ){
+		//autodetect if empty
+		if (!$server) {
+			$install_method = get_option('rsssl_le_certificate_installed_by_rsssl');
+			$data = explode($install_method, ':');
+			$server = isset($data[0]) ? $data[0] : false;
+			$type = isset($data[1]) ? $data[1] : false;
+		}
+
 	    $attempt_count = intval(get_transient('rsssl_le_install_attempt_count'));
 		$attempt_count++;
 		set_transient('rsssl_le_install_attempt_count', $attempt_count, DAY_IN_SECONDS);
@@ -446,8 +481,6 @@ class rsssl_letsencrypt_handler {
 		if ($this->is_ready_for('installation')) {
 		    try {
 		    	if ( $server === 'cpanel' ) {
-				    error_log("is cpanel");
-
 				    require_once( rsssl_le_path . 'API/cPanel.php' );
 				    $username = rsssl_get_value('cpanel_username');
 				    $password = $this->decode( rsssl_get_value('cpanel_password') );
@@ -458,7 +491,7 @@ class rsssl_letsencrypt_handler {
 				    if ( $type === 'autossl' ) {
 					    $response = $cpanel->enableAutoSSL($domains);
 					    if ( $response->status === 'success' ) {
-						    update_option('rsssl_le_certificate_installed_by_rsssl', true);
+						    update_option('rsssl_le_certificate_installed_by_rsssl', 'cpanel:autossl');
 					    }
 					    //set to success even if error, so the bullet is green, as we will then attempt default installation
 					    $status = $response->status;
@@ -487,7 +520,7 @@ class rsssl_letsencrypt_handler {
 						    }
 					    }
 					    if ( $status === 'success' ) {
-						    update_option('rsssl_le_certificate_installed_by_rsssl', true);
+						    update_option('rsssl_le_certificate_installed_by_rsssl', 'cpanel:default');
 					    }
                     }
 

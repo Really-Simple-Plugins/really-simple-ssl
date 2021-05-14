@@ -157,13 +157,14 @@ $this->fields = $this->fields + array(
 	        'callback_condition' => 'rsssl_cpanel_api_supported'
         ),
 
-        'instructions' => array(
-            'step'        => 2,
-            'section'     => 2,
-            'source'      => 'lets-encrypt',
-            'callback'    => 'instructions.php',
-            'help'     => __('Want to come back to the instructions after this step?', 'really-simple-ssl' ) . rsssl_read_more( 'https://complianz.io/what-is-force-majeure/' ),
-        ),
+//        'instructions' => array(
+//            'step'        => 2,
+//            'section'     => 2,
+//            'source'      => 'lets-encrypt',
+//            'callback'    => 'instructions.php',
+//            'help'     => __('Want to come back to the instructions after this step?', 'really-simple-ssl' ) . rsssl_read_more( 'https://complianz.io/what-is-force-majeure/' ),
+//            'callback_condition' => 'rsssl_do_local_lets_encrypt_install'
+//        ),
 
         'directories' => array(
 	        'step'        => 3,
@@ -171,6 +172,7 @@ $this->fields = $this->fields + array(
 	        'source'      => 'lets-encrypt',
 	        'callback'    => 'directories.php',
 	        'help'     => __('To make sure you have added everything correctly, view this example of these folders included in the root of a WordPress installation.', 'really-simple-ssl' ) . rsssl_read_more( 'https://complianz.io/what-is-force-majeure/' ),
+	        'callback_condition' => 'rsssl_do_local_lets_encrypt_install'
         ),
 
         'generation' => array(
@@ -178,6 +180,7 @@ $this->fields = $this->fields + array(
 	        'section'     => 1,
 	        'source'      => 'lets-encrypt',
 	        'callback'    => 'generation.php',
+	        'callback_condition' => 'rsssl_do_local_lets_encrypt_install'
         ),
 
         'installation' => array(
