@@ -6,4 +6,5 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
+    'PleskX\\' => array($vendorDir . '/plesk/api-php-lib/src'),
 );

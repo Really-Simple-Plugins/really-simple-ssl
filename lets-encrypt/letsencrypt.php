@@ -3,6 +3,8 @@ defined('ABSPATH') or die("you do not have access to this page!");
 /**
  * Capability handling for lets encrypt
  * @return bool
+ *
+ *              php -r "readfile('https://getcomposer.org/installer');" | php
  */
 if (!function_exists('rsssl_letsencrypt_generation_allowed')) {
 	function rsssl_letsencrypt_generation_allowed() {

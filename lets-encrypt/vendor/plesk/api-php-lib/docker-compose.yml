@@ -1,0 +1,21 @@
+version: '2'
+services:
+  plesk:
+    image: plesk/plesk
+    logging:
+      driver: none
+    ports:
+      ["8443:8443"]
+  tests:
+    build: .
+    environment:
+      REMOTE_URL: https://plesk:8443
+      REMOTE_PASSWORD: changeme1Q**
+    command: bash -c "cd /opt/api-php-lib && composer install && ./wait-for-plesk.sh && composer test -- --testdox"
+    depends_on:
+      - plesk
+    links:
+      - plesk
+    volumes:
+      - .:/opt/api-php-lib
+

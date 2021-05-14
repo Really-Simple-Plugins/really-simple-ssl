@@ -104,7 +104,7 @@ class rsssl_letsencrypt_handler {
         if (function_exists('wp_get_direct_update_https_url') && !empty(wp_get_direct_update_https_url())) {
         	$url = wp_get_direct_update_https_url();
         } else if ( rsssl_is_cpanel() ) {
-	        require_once( rsssl_le_path . 'cPanel/cPanel.php' );
+	        require_once( rsssl_le_path . 'API/cPanel.php' );
 	        $cpanel_host = rsssl_get_value('cpanel_host');
 	        $cpanel = new rsssl_cPanel( $cpanel_host );
 	        $url = $cpanel->ssl_installation_url;
@@ -430,7 +430,7 @@ class rsssl_letsencrypt_handler {
 		    	if ( $server === 'cpanel' ) {
 				    error_log("is cpanel");
 
-				    require_once( rsssl_le_path . 'cPanel/cPanel.php' );
+				    require_once( rsssl_le_path . 'API/cPanel.php' );
 				    $username = rsssl_get_value('cpanel_username');
 				    $password = $this->decode( rsssl_get_value('cpanel_password') );
 				    $cpanel_host = rsssl_get_value('cpanel_host');

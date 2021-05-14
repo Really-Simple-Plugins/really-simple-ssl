@@ -6,6 +6,20 @@ namespace Composer\Autoload;
 
 class ComposerStaticInita8412ede23fd11b4d0e29303fdebd5f4
 {
+    public static $prefixLengthsPsr4 = array (
+        'P' => 
+        array (
+            'PleskX\\' => 7,
+        ),
+    );
+
+    public static $prefixDirsPsr4 = array (
+        'PleskX\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/plesk/api-php-lib/src',
+        ),
+    );
+
     public static $prefixesPsr0 = array (
         'L' => 
         array (
@@ -23,6 +37,8 @@ class ComposerStaticInita8412ede23fd11b4d0e29303fdebd5f4
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
+            $loader->prefixLengthsPsr4 = ComposerStaticInita8412ede23fd11b4d0e29303fdebd5f4::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInita8412ede23fd11b4d0e29303fdebd5f4::$prefixDirsPsr4;
             $loader->prefixesPsr0 = ComposerStaticInita8412ede23fd11b4d0e29303fdebd5f4::$prefixesPsr0;
             $loader->classMap = ComposerStaticInita8412ede23fd11b4d0e29303fdebd5f4::$classMap;
 

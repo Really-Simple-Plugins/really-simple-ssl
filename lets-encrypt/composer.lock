@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "195fa854204d49077c4bfbea55804860",
+    "content-hash": "b389e777ede0e3ee4826bceeb4a31f85",
     "packages": [
         {
             "name": "fbett/le_acme2",
@@ -50,6 +50,62 @@
                 "source": "https://github.com/fbett/le-acme2-php/tree/v1.5.5"
             },
             "time": "2021-04-28T17:22:43+00:00"
+        },
+        {
+            "name": "plesk/api-php-lib",
+            "version": "v1.0.7",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/plesk/api-php-lib.git",
+                "reference": "7f81b0c3bb0a9f4200aef62a54d3e2c04d91a605"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/plesk/api-php-lib/zipball/7f81b0c3bb0a9f4200aef62a54d3e2c04d91a605",
+                "reference": "7f81b0c3bb0a9f4200aef62a54d3e2c04d91a605",
+                "shasum": ""
+            },
+            "require": {
+                "ext-curl": "*",
+                "ext-simplexml": "*",
+                "ext-xml": "*",
+                "php": "^7.3"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^9",
+                "spatie/phpunit-watcher": "^1.22"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.0.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "PleskX\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "Apache-2.0"
+            ],
+            "authors": [
+                {
+                    "name": "Alexei Yuzhakov",
+                    "email": "sibprogrammer@gmail.com"
+                },
+                {
+                    "name": "Plesk International GmbH.",
+                    "email": "plesk-dev-leads@plesk.com"
+                }
+            ],
+            "description": "PHP object-oriented library for Plesk XML-RPC API",
+            "support": {
+                "issues": "https://github.com/plesk/api-php-lib/issues",
+                "source": "https://github.com/plesk/api-php-lib/tree/v1.0.7"
+            },
+            "time": "2020-12-24T07:20:26+00:00"
         }
     ],
     "packages-dev": [],

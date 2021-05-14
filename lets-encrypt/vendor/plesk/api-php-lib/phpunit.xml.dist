@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Copyright 1999-2020. Plesk International GmbH. -->
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="vendor/phpunit/phpunit/phpunit.xsd"
+         bootstrap="vendor/autoload.php"
+         verbose="true"
+         colors="true">
+    <testsuites>
+        <testsuite name="E2E">
+            <directory>./tests</directory>
+        </testsuite>
+    </testsuites>
+
+    <filter>
+        <whitelist processUncoveredFilesFromWhitelist="true">
+            <directory suffix=".php">./src</directory>
+        </whitelist>
+    </filter>
+
+    <php>
+        <ini name="error_reporting" value="-1"/>
+        <env name="REMOTE_URL" value=""/>
+        <env name="REMOTE_PASSWORD" value=""/>
+    </php>
+</phpunit>
