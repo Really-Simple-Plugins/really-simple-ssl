@@ -31,21 +31,57 @@ class rsssl_cPanel
     private $cpanel_host;
     private $username;
     private $password;
-    public $ssl_installation_url;
+    public  $ssl_installation_url;
 
     /**
      * Initiates the cPanel class.
-     *
-     * @param string $cpanel_host
-     * @param string $username
-     * @param string $password
      */
-    public function __construct($cpanel_host, $username='', $password='')
+    public function __construct()
     {
+	    $username = rsssl_get_value('cpanel_username');
+	    $password = RSSSL_LE()->letsencrypt_handler->decode( rsssl_get_value('cpanel_password') );
+	    $cpanel_host = rsssl_get_value('cpanel_host');
 	    $this->cpanel_host =  str_replace(array('http://', 'https://', ':2083'), '', $cpanel_host);;
         $this->username = $username;
         $this->password = $password;
         $this->ssl_installation_url = $this->cpanel_host.":2083/frontend/paper_lantern/ssl/index.html";
+    }
+
+	/**
+	 * Install SSL for all passed domains
+	 * @param array $domains
+	 *
+	 * @return RSSSL_RESPONSE
+	 */
+    public function installSSL($domains) {
+	    $response_arr = array();
+	    if ( is_array($domains) && count($domains)>0 ) {
+		    foreach ($domains as $domain ) {
+			    $response = $this->installSSLPerDomain($domain);
+			    $response_arr[] = $response;
+		    }
+	    }
+	    $message = '';
+	    $status = '';
+	    $action = '';
+
+	    foreach ( $response_arr as $response_item ) {
+		    $status = $response_item->status;
+		    $action = $response_item->action;
+		    $message .= '<br>'.$response_item->message;
+
+		    //overwrite if error.
+		    if ($response_item->status !== 'success' ) {
+			    error_log("response err");
+			    $status = $response_item->status;
+			    $action = $response_item->action;
+		    }
+	    }
+	    if ( $status === 'success' ) {
+		    update_option('rsssl_le_certificate_installed_by_rsssl', 'cpanel:default');
+	    }
+
+	    return new RSSSL_RESPONSE($status, $action, $message);
     }
 
     /**
@@ -55,7 +91,7 @@ class rsssl_cPanel
      *
      * @return RSSSL_RESPONSE
      */
-    public function installSSL($domain)
+    public function installSSLPerDomain($domain)
     {
 	    $key_file = get_option('rsssl_private_key_path');
 	    $cert_file = get_option('rsssl_certificate_path');

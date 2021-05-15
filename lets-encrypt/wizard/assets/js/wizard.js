@@ -1,14 +1,23 @@
 jQuery(document).ready(function ($) {
     'use strict';
 
-    // Color bullet in support forum block
-    // $(".rsssl-trick a").hover(function() {
-    //     $(this).find('.rsssl-bullet').css("background-color","#29b6f6");
-    //     $(this).find('.rsssl-trick a, .rsssl-tips-tricks-content').css("color","#29b6f6");
-    // }, function() {
-    //     $(this).find('.rsssl-bullet').css("background-color",""); //to remove property set it to ''
-    //     $(this).find('.rsssl-trick a, .rsssl-tips-tricks-content').css("color","");
-    // });
+    function maybe_show_password_delete_questions(){
+        var deletePasswordField = $('.field-group.store_credentials');
+        if (deletePasswordField.length) {
+            deletePasswordField.addClass('rsssl-hidden');
+        }
+        var passwordFields = $('.rsssl-password');
+        if (deletePasswordField.length) {
+            passwordFields.each(function(){
+                if ( !$(this).hasClass('rsssl-hidden') ) {
+                    console.log('is hidden field');
+                    deletePasswordField.removeClass('rsssl-hidden');
+                }
+            });
+
+        }
+    }
+
 
     //remove alerts
     window.setTimeout(function () {
@@ -111,6 +120,7 @@ jQuery(document).ready(function ($) {
     });
 
     $(document).on('keyup', 'input', function (e) {
+        check_conditions();
         remove_after_change();
     });
 
@@ -214,11 +224,10 @@ jQuery(document).ready(function ($) {
                             value = [];
                         }
                     }
-
                     if (showIfConditionMet) {
 
                         //check if the index of the value is the condition, or, if the value is the condition
-                        if (conditionMet || value.indexOf(condition_answer) != -1 || (value == condition_answer)) {
+                        if (conditionMet || value.indexOf(condition_answer) != -1 || (value == condition_answer) || (condition_answer==='EMPTY' && value=='') ) {
 
                             container.removeClass("rsssl-hidden");
                             //remove required attribute of child, and set a class.
@@ -231,7 +240,7 @@ jQuery(document).ready(function ($) {
                         }
                     } else {
 
-                        if (conditionMet || value.indexOf(condition_answer) != -1 || (value == condition_answer)) {
+                        if (conditionMet || value.indexOf(condition_answer) != -1 || (value == condition_answer) || (condition_answer==='EMPTY' && value=='') ) {
                             container.addClass("rsssl-hidden");
                             if (input.hasClass('is-required')) input.prop('required', false);
                         } else {
@@ -246,6 +255,8 @@ jQuery(document).ready(function ($) {
                 }
             }
         });
+        maybe_show_password_delete_questions();
+
     }
 
 
@@ -254,9 +265,9 @@ jQuery(document).ready(function ($) {
      */
 
     function get_input_value(fieldName) {
-
-        if ($('input[name=' + fieldName + ']').attr('type') == 'text') {
-            return $('input[name^=' + fieldName + ']').val();
+        var input = $('input[name=' + fieldName + ']');
+        if (input.attr('type') === 'text' || input.attr('type') === 'password') {
+            return input.val();
         } else {
             var checked_boxes = [];
             $('input[name=' + fieldName + ']:checked').each(function () {

@@ -38,7 +38,7 @@ function rsssl_le_maybe_start_renewal(){
 		update_option("rsssl_le_start_renewal", true);
 	}
 
-	if ( RSSSL_LE()->letsencrypt_handler->certificate_can_auto_install() ) {
+	if ( RSSSL_LE()->letsencrypt_handler->certificate_requires_install_on_renewal() ) {
 		update_option("rsssl_le_start_installation", true);
 	}
 }
@@ -50,7 +50,7 @@ function rsssl_le_check_renewal_status(){
 	if ( $renewal_active ) {
 		RSSSL_LE()->letsencrypt_handler->create_bundle_or_renew();
 	} else if ( $installation_active ) {
-		RSSSL_LE()->letsencrypt_handler->install();
+		RSSSL_LE()->letsencrypt_handler->cron_renew_installation();
 	}
 }
 

@@ -120,33 +120,25 @@ if ( ! class_exists( "rsssl_field" ) ) {
                     }, $_POST['rsssl_remove_multiple'] );
 
                     foreach ( $fieldnames as $fieldname => $key ) {
-
                         $page    = $fields[ $fieldname ]['source'];
                         $options = get_option( 'rsssl_options_' . $page );
-
-                        $multiple_field = $this->get_value( $fieldname,
-                            array() );
-
+                        $multiple_field = $this->get_value( $fieldname, array() );
                         unset( $multiple_field[ $key ] );
-
                         $options[ $fieldname ] = $multiple_field;
                         if ( ! empty( $options ) ) {
-                            update_option( 'rsssl_options_' . $page,
-                                $options );
+                            update_option( 'rsssl_options_' . $page, $options );
                         }
                     }
                 }
 
                 //add multiple field
                 if ( isset( $_POST['rsssl_add_multiple'] ) ) {
-                    $fieldname
-                        = $this->sanitize_fieldname( $_POST['rsssl_add_multiple'] );
+                    $fieldname = $this->sanitize_fieldname( $_POST['rsssl_add_multiple'] );
                     $this->add_multiple_field( $fieldname );
                 }
 
                 //save multiple field
-                if ( ( isset( $_POST['rsssl-save'] )
-                        || isset( $_POST['rsssl-next'] ) )
+                if ( ( isset( $_POST['rsssl-save'] ) || isset( $_POST['rsssl-next'] ) )
                     && isset( $_POST['rsssl_multiple'] )
                 ) {
                     $fieldnames
@@ -573,7 +565,6 @@ if ( ! class_exists( "rsssl_field" ) ) {
             $required = $args['required'] ? 'required' : '';
             $is_required = $args['required'] ? 'is-required' : '';
             $check_icon = rsssl_icon('check', 'success');
-//            $times_icon = rsssl_icon('check', 'failed');
             ?>
 
             <?php do_action( 'rsssl_before_label', $args ); ?>
@@ -591,8 +582,6 @@ if ( ! class_exists( "rsssl_field" ) ) {
                 } ?>
             >
             <?php echo $check_icon ?>
-<!--            --><?php //echo $times_icon ?>
-
             <?php do_action( 'rsssl_after_field', $args ); ?>
 
             <?php
@@ -609,7 +598,6 @@ if ( ! class_exists( "rsssl_field" ) ) {
 		    $required = $args['required'] ? 'required' : '';
 		    $is_required = $args['required'] ? 'is-required' : '';
 		    $check_icon = rsssl_icon('check', 'success');
-//            $times_icon = rsssl_icon('check', 'failed');
 		    ?>
 
 		    <?php do_action( 'rsssl_before_label', $args ); ?>

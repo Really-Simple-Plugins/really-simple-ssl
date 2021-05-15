@@ -1,7 +1,8 @@
 <?php
 defined( 'ABSPATH' ) or die( "you do not have access to this page!" );
-
+do_action('rsssl_le_activation');
 ?>
+
 <div class="rsssl-section">
 	<h2>
 		<?php _e("Almost ready to activate SSL!", "really-simple-ssl")

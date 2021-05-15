@@ -38,8 +38,16 @@ function rsssl_cpanel_api_supported(){
 	return rsssl_is_cpanel() && file_exists("/usr/local/cpanel/php/cpanel.php");
 }
 
+/**
+ * https://stackoverflow.com/questions/26927248/how-to-detect-servers-control-panel-type-with-php
+ * @return false
+ */
 function rsssl_is_plesk(){
-	return false;
+	if ( is_dir( '/usr/local/psa' ) ) {
+		return true;
+	} else {
+		return false;
+	}
 }
 
 /**
@@ -292,6 +300,6 @@ if ( ! function_exists( 'rsssl_get_non_www_domain' ) ) {
 }
 
 function rsssl_get_other_host(){
-	return rsssl_get_value('other_host_type');
+	return rsssl_get_value('other_host_type', false);
 }
 

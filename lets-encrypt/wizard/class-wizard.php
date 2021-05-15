@@ -27,63 +27,12 @@ if ( ! class_exists( "rsssl_wizard" ) ) {
 			add_action( 'rsssl_after_save_lets-encrypt_option', array( $this, 'after_save_wizard_option' ), 10, 4 );
 			add_action( 'rsssl_after_saved_all_fields', array( $this, 'after_saved_all_fields' ), 10, 1 );
 			add_action( 'rsssl_last_step', array( $this, 'last_step_callback' ) );
-			add_filter( 'rsssl_steps', array( $this, 'add_condition_actions' ) );
 
-			require_once(plugin_dir_path(__FILE__) . 'functions.php');
 		}
 
 		static function this() {
 			return self::$_this;
 		}
-
-		public function add_condition_actions($steps){
-		    $index = array_search('installation',array_column($steps['lets-encrypt'],'id'));
-			$index++;
-
-			$is_cloudways = rsssl_get_value('other_host_type') === 'cloudways';
-			if (rsssl_cpanel_api_supported()) {
-				$steps['lets-encrypt'][$index]['actions'] = array(
-					array(
-						'description' => __("Attempting to install certificate using AutoSSL...", "really-simple-ssl"),
-						'action'=> 'attempt_cpanel_autossl_install',
-						'attempts' => 1,
-					),
-					array(
-						'description' => __("Attempting to install certificate...", "really-simple-ssl"),
-						'action'=> 'attempt_cpanel_install',
-						'attempts' => 1,
-					),
-				);
-            } elseif ($is_cloudways) {
-				$steps['lets-encrypt'][$index]['actions'] = array(
-					array(
-						'description' => __("Retrieving Cloudways server data...", "really-simple-ssl"),
-						'action'=> 'attempt_cloudways_server_data',
-						'attempts' => 5,
-					),
-					array(
-						'description' => __("Installing SSL certificate...", "really-simple-ssl"),
-						'action'=> 'attempt_cloudways_install_ssl',
-						'attempts' => 5,
-					),
-					array(
-						'description' => __("Enabling auto renew...", "really-simple-ssl"),
-						'action'=> 'attempt_cloudways_auto_renew',
-						'attempts' => 5,
-					),
-				);
-            } else {
-				$steps['lets-encrypt'][$index]['actions'] = array(
-					array(
-						'description' => __("Searching for link to SSL installation page on your server...", "really-simple-ssl"),
-						'action'=> 'search_ssl_installation_url',
-						'attempts' => 1,
-					),
-				);
-            }
-
-		    return $steps;
-        }
 
 		/**
 		 *
@@ -95,6 +44,7 @@ if ( ! class_exists( "rsssl_wizard" ) ) {
 			if (empty($step)) return;
 
 			$action_list = RSSSL_LE()->config->steps['lets-encrypt'][$step]['actions'];
+			error_log(print_r($action_list,true));
 			if (count($action_list)==0) return;
 			$actions = array_column($action_list, 'action');
 			$attempts = array_column($action_list, 'attempts');

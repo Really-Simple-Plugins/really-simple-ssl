@@ -59,9 +59,12 @@ if ( rsssl_letsencrypt_generation_allowed() ) {
 			require_once( rsssl_le_path . 'wizard/class-field.php' );
 			require_once( rsssl_le_path . 'wizard/class-wizard.php' );
 			require_once( rsssl_le_path . 'wizard/config/class-config.php' );
+			require_once( rsssl_le_path . 'functions.php');
+
 			if (version_compare(PHP_VERSION, rsssl_le_php_version, '>=')) {
 				require_once( rsssl_le_path . 'class-letsencrypt-handler.php' );
 			}
+			require_once( rsssl_le_path . 'integrations/integrations.php' );
 		}
 
 		/**

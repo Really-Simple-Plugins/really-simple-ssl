@@ -98,7 +98,13 @@ $this->steps = apply_filters('rsssl_steps',array(
             5    => array(
                 "id"    => "installation",
                 "title" => __( "Installation", 'really-simple-ssl' ),
-                'actions' => array(),
+                'actions' => array(
+	                array(
+		                'description' => __("Searching for link to SSL installation page on your server...", "really-simple-ssl"),
+		                'action'=> 'search_ssl_installation_url',
+		                'attempts' => 1,
+	                ),
+                ),
             ),
             6  => array(
 	            "id"    => "activation",

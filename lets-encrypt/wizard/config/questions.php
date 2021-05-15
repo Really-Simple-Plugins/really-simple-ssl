@@ -110,7 +110,7 @@ $this->fields = $this->fields + array(
 			'step'        => 2,
 			'section'     => 1,
 			'source'      => 'lets-encrypt',
-			'type'        => 'text',
+			'type'        => 'password',
 			'default'     => '',
 			'label'       => __( "CloudWays api key", 'really-simple-ssl' ),
 			'required'    => true,
@@ -157,14 +157,17 @@ $this->fields = $this->fields + array(
 	        'callback_condition' => 'rsssl_cpanel_api_supported'
         ),
 
-//        'instructions' => array(
-//            'step'        => 2,
-//            'section'     => 2,
-//            'source'      => 'lets-encrypt',
-//            'callback'    => 'instructions.php',
-//            'help'     => __('Want to come back to the instructions after this step?', 'really-simple-ssl' ) . rsssl_read_more( 'https://complianz.io/what-is-force-majeure/' ),
-//            'callback_condition' => 'rsssl_do_local_lets_encrypt_install'
-//        ),
+		'store_credentials' => array(
+			'step'        => 2,
+			'section'     => 1,
+			'source'      => 'lets-encrypt',
+			'type'        => 'checkbox',
+			'default'     => '',
+			'title'       => __( "Credentials storage", 'really-simple-ssl' ),
+			'option_text'       => __( "Store for renewal purposes. If not stored, renewal may need to be done manually.", 'really-simple-ssl' ),
+			'required'    => true,
+			'disabled'    => false,
+		),
 
         'directories' => array(
 	        'step'        => 3,
