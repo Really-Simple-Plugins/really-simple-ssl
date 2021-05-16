@@ -187,16 +187,37 @@ class rsssl_letsencrypt_handler {
 		return new RSSSL_RESPONSE($status, $action, $message);
     }
 
+	/**
+	 * Check if CURL is available
+	 *
+	 * @return RSSSL_RESPONSE
+	 */
+
+    public function curl_exists(){
+	    if(function_exists('curl_init') === false){
+		    $action = 'stop';
+		    $status = 'error';
+		    $message = __("The PHP function CURL is not available on your server, which is required. Please contact your hosting company.", "really-simple-ssl" );
+	    } else {
+		    $action = 'continue';
+		    $status = 'success';
+		    $message = __("The PHP function CURL has successfully been detected.", "really-simple-ssl" );
+	    }
+
+	    return new RSSSL_RESPONSE($status, $action, $message);
+    }
+
     /**
      * Test for server software
 	 * @return RSSSL_RESPONSE
 	 */
 	public function system_check(){
-	    $action = 'stop';
+	    $action = 'continue';
 	    $status = 'error';
 	    $message = __("Your system does not meet the minimum requirements.", "really-simple-ssl" );
 
         if (rsssl_is_cpanel()) {
+	        $action = 'continue';
 	        $status = 'success';
 	        $message = __("CPanel recognized. Possibly the certificate can be installed automatically.", "really-simple-ssl" );
         }
@@ -469,10 +490,18 @@ class rsssl_letsencrypt_handler {
 	 */
 	public function get_subjects(){
 		$subjects = array();
-		$domain_no_www = rsssl_get_non_www_domain();
-	    $subjects[] = $domain_no_www;
-	    if (rsssl_get_value('include_www')) {
-		    $subjects[] = 'www.'.rsssl_get_value('domain');
+		$domain = rsssl_get_domain();
+		$subjects[] = $domain;
+
+		//main is www.
+		if ( strpos( $domain, 'www.' ) !== false ) {
+			$alias_domain = str_replace( 'www.', '', $domain );
+		} else {
+			$alias_domain = str_replace( array( 'http://', 'https://' ), array( 'http://www.', 'https://www.' ), $domain );
+		}
+
+	    if (rsssl_get_value('include_alias')) {
+		    $subjects[] = $alias_domain;
 	    }
 	    return $subjects;
 	}
@@ -691,6 +720,96 @@ class rsssl_letsencrypt_handler {
 		}
 	}
 
+
+	/**
+	 * Check if the alias domain is available
+	 *
+	 * @return RSSSL_RESPONSE
+	 */
+	public function alias_domain_available(){
+		//write a test file to the uploads directory
+		$uploads    = wp_upload_dir();
+		$upload_dir = trailingslashit($uploads['basedir']);
+		$upload_url = trailingslashit($uploads['baseurl']);
+		$file_content = false;
+		$status = 404;
+
+		$domain = rsssl_get_domain();
+		//main is www.
+		if ( strpos( $domain, 'www.' ) !== false ) {
+			$is_www = true;
+			$alias_domain = str_replace( 'www.', '', $domain );
+		} else {
+			$is_www = false;
+			$alias_domain = str_replace( array( 'http://', 'https://' ), array( 'http://www.', 'https://www.' ), $domain );
+		}
+		if ( $is_www ) {
+			$message =  __("Please check if the non www version of your site also points to this website.", "really-simple-ssl" );
+		} else {
+			$message = __("Please check if the www version of your site also points to this website.", "really-simple-ssl" );
+		}
+		$error_message = __( "Could not verify alias domain.", "really-simple-ssl") .' '. $message.' '. __( "If this is not the case, dont' add this variant to your certificate.", "really-simple-ssl");
+
+
+		//get cached status first.
+		$cached_status = get_transient('rsssl_alias_domain_available');
+		if ( $cached_status ) {
+			if ( $cached_status === 'available' ) {
+				$status  = 'success';
+				$action  = 'continue';
+				$message = __( "Successfully verified alias domain.", "really-simple-ssl" );
+			} else {
+				$status  = 'warning';
+				$action  = 'continue';
+				$message = $error_message;
+			}
+			return new RSSSL_RESPONSE($status, $action, $message);
+		}
+
+		if ( ! file_exists( $upload_dir . 'rsssl' ) ) {
+			mkdir( $upload_dir . 'rsssl' );
+		}
+
+		$test_string = 'file to test alias domain existence';
+		$test_file = $upload_dir . 'rsssl/test.txt';
+		file_put_contents($test_file, $test_string );
+		$test_url = $upload_url . 'rsssl/test.txt';
+
+		if ( ! file_exists( $test_file ) ) {
+			$status = 'error';
+			$action = 'stop';
+			$message = __("Could not create test folder and file.", "really-simple-ssl").' '.
+			           __("Please create a folder 'rsssl' in the uploads directory, with 644 permissions.", "really-simple-ssl");
+		} else {
+			set_transient('rsssl_alias_domain_available', 'not-available', 30 * 'MINUTE_IN_SECONDS' );
+			$alias_test_url = str_replace( $domain, $alias_domain, $test_url );
+			$response       = wp_remote_get( $alias_test_url );
+			if ( is_array( $response ) ) {
+				$status       = wp_remote_retrieve_response_code( $response );
+				$file_content = wp_remote_retrieve_body( $response );
+			}
+
+			if ( $status !== 200 ) {
+				$status  = 'warning';
+				$action  = 'retry';
+				$message = $error_message.' '.sprintf( __( "Error code %s", "really-simple-ssl" ), $status );
+			} else {
+				if ( ! is_wp_error( $response ) && ( strpos( $file_content, $test_string ) !== false ) ) {
+					$status  = 'success';
+					$action  = 'continue';
+					$message = __( "Successfully verified alias domain.", "really-simple-ssl" );
+					set_transient('rsssl_alias_domain_available', 'available', 30 * 'MINUTE_IN_SECONDS' );
+				} else {
+					$status  = 'warning';
+					$action  = 'retry';
+					$message = $error_message;
+				}
+			}
+		}
+
+		return new RSSSL_RESPONSE($status, $action, $message);
+	}
+
 	/**
 	 * Check if exists, create ssl/certs directory above the wp root if not existing
 	 * @return bool|string
@@ -800,6 +919,13 @@ class rsssl_letsencrypt_handler {
 		return new RSSSL_RESPONSE($status, $action, $message);
 	}
 
+	/**
+	 * Cleanup the default message a bit
+	 *
+	 * @param $msg
+	 *
+	 * @return string|string[]
+	 */
 	private function cleanup_error_message($msg){
 		return str_replace(array(
 			'Refer to sub-problems for more information.',
@@ -833,7 +959,17 @@ class rsssl_letsencrypt_handler {
 		return 'rsssl_'.$key;
 	}
 
+	/**
+	 * Decode a string
+	 * @param $string
+	 *
+	 * @return string
+	 */
     public function decode($string){
+		if ( !wp_doing_cron() && !current_user_can('manage_options') ) {
+			return '';
+		}
+
 		if (strpos( $string , 'rsssl_') !== FALSE ) {
 			$key = $this->get_key();
 			$string = str_replace('rsssl_', '', $string);

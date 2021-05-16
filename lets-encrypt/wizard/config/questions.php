@@ -60,23 +60,22 @@ $this->fields = $this->fields + array(
             'section'     => 1,
             'source'      => 'lets-encrypt',
             'type'        => 'text',
-            'default'     => rsssl_get_non_www_domain(),
+            'default'     => rsssl_get_domain(),
             'label'       => __( "Domain", 'really-simple-ssl' ),
             'sublabel'    => __("This field is prefilled based on your configuration", 'really-simple-ssl'),
             'required'    => false,
             'disabled'    => true,
         ),
 
-        'include_www' => array(
+        'include_alias' => array(
 	        'step'        => 2,
 	        'section'     => 1,
 	        'source'      => 'lets-encrypt',
 	        'type'        => 'checkbox',
 	        'default'     => '',
-	        'tooltip'   => __( "It is recommended to add the www domain to your certificate as well. You should have the www domain pointed to the same website as the non-www domain.",
-		        'really-simple-ssl' ),
+	        'tooltip'   => __( "If your site is without www, it is recommended to add the www domain to your certificate as well (and vice versa).", "really-simple-ssl").' '.__("You should have the www domain pointed to the same website as the non-www domain.", 'really-simple-ssl' ),
 	        'tooltip-position' => 'after',
-	        'option_text' => __("Include www-prefixed version too?", 'really-simple-ssl'),
+	        'option_text' => __("Include alias domain too?", 'really-simple-ssl'),
         ),
 
         'other_host_type' => array(
@@ -126,7 +125,7 @@ $this->fields = $this->fields + array(
             'section'     => 1,
             'source'      => 'lets-encrypt',
             'type'        => 'text',
-            'default'     => rsssl_get_non_www_domain(),
+            'default'     => '',
             'label'       => __( "CPanel host", 'really-simple-ssl' ),
             'required'    => true,
             'disabled'    => false,

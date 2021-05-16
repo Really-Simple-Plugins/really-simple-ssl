@@ -19,10 +19,20 @@ $this->steps = apply_filters('rsssl_steps',array(
 				        'action'=> 'certificate_status',
 				        'attempts' => 1,
 			        ),
+					array(
+						'description' => __("Checking if CURL is available...", "really-simple-ssl"),
+						'action'=> 'curl_exists',
+						'attempts' => 1,
+					),
 			        array(
 				        'description' => __("Checking server software...", "really-simple-ssl"),
 				        'action'=> 'server_software',
 				        'attempts' => 1,
+			        ),
+					array(
+				        'description' => __("Checking alias domain...", "really-simple-ssl"),
+				        'action'=> 'alias_domain_available',
+				        'attempts' => 3,
 			        ),
 			        array(
 				        'description' => __("Checking for localhost installation...", "really-simple-ssl"),

@@ -16,7 +16,7 @@ class rsssl_Cloudways {
 
 	public function __construct( ) {
 		$this->email             = rsssl_get_value('cloudways_user_email');
-		$this->api_key           = rsssl_get_value('cloudways_api_key');
+		$this->api_key = RSSSL_LE()->letsencrypt_handler->decode( rsssl_get_value('cloudways_api_key') );
 		$this->ssl_installation_url = "";
 	}
 
@@ -42,14 +42,15 @@ class rsssl_Cloudways {
 
 			$encoded = '';
 			if ( count( $post ) ) {
-				foreach ( $post as $name => $value ) {
-					if ( !is_array( $value) ) {
-						$encoded .= urlencode( $name ) . '=' . urlencode( $value ) . '&';
-					} else {
-						$encoded .= urlencode( $name ) . '=' .  http_build_query( $value ,'',"\n") . '&';
-					}
-				}
-				$encoded = substr( $encoded, 0, strlen( $encoded ) - 1 );
+//				foreach ( $post as $name => $value ) {
+//					if ( !is_array( $value) ) {
+//						$encoded .= urlencode( $name ) . '=' . urlencode( $value ) . '&';
+//					} else {
+//						$encoded .= urlencode( $name ) . '=' .  http_build_query( $value ,'',"\n") . '&';
+//					}
+//				}
+				$encoded = http_build_query($post);
+//				$encoded = substr( $encoded, 0, strlen( $encoded ) - 1 );
 				curl_setopt( $ch, CURLOPT_POSTFIELDS, $encoded );
 				curl_setopt( $ch, CURLOPT_POST, 1 );
 			}

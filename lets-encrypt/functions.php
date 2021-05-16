@@ -284,8 +284,8 @@ if ( ! function_exists( 'rsssl_array_filter_multidimensional' ) ) {
     }
 }
 
-if ( ! function_exists( 'rsssl_get_non_www_domain' ) ) {
-    function rsssl_get_non_www_domain() {
+if ( ! function_exists( 'rsssl_get_domain' ) ) {
+    function rsssl_get_domain() {
 
         //Get current domain
         $domain = site_url();
@@ -293,7 +293,7 @@ if ( ! function_exists( 'rsssl_get_non_www_domain' ) ) {
         $parse = parse_url($domain);
         $domain = $parse['host'];
 
-        $domain = str_replace(array('http://', 'https://', 'www.'), '', $domain);
+        $domain = str_replace(array('http://', 'https://' ), '', $domain);
 
         return $domain;
     }
