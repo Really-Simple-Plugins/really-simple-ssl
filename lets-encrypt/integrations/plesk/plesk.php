@@ -10,6 +10,7 @@
 use PleskX\Api\Client;
 
 require_once rsssl_le_path . 'vendor/autoload.php';
+require_once( rsssl_le_path . 'integrations/plesk/functions.php' );
 
 class rsssl_plesk
 {

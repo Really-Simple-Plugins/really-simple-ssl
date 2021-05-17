@@ -107,10 +107,7 @@ if ( ! function_exists( 'rsssl_get_value' ) ) {
      * For usage very early in the execution order, use the $page option. This bypasses the class usage.
      *
      * @param string $fieldname
-     * @param bool|int $post_id
-     * @param bool|string $page
      * @param bool $use_default
-     * @param bool $use_translate
      *
      * @return array|bool|mixed|string
      */
@@ -138,7 +135,6 @@ if ( !function_exists('rsssl_do_local_lets_encrypt_install')) {
 	 * @return bool
 	 */
 	function rsssl_do_local_lets_encrypt_install() {
-		error_log("test local install");
 		if ( rsssl_cpanel_api_supported() || rsssl_is_plesk() ) {
 			return true;
 		}
@@ -146,7 +142,6 @@ if ( !function_exists('rsssl_do_local_lets_encrypt_install')) {
 		$not_local_cert_hosts = RSSSL_LE()->config->not_local_certificate_hosts;
 		$current_host         = rsssl_get_other_host();
 		if ( in_array( $current_host, $not_local_cert_hosts ) ) {
-			error_log("no local install");
 			return false;
 		}
 
@@ -282,6 +277,41 @@ if ( ! function_exists( 'rsssl_array_filter_multidimensional' ) ) {
 
         return $new;
     }
+}
+
+if ( !function_exists('rsssl_is_subdomain') ) {
+	/**
+	 * Check if we're on a subdomain.
+	 * If this is a www domain, we return false
+	 */
+	function rsssl_is_subdomain(){
+		$domain = rsssl_get_domain();
+		if ( strpos($domain, 'www.') !== false ) return false;
+
+		$root = rsssl_get_root_domain($domain);
+
+		if ($root === $domain ) {
+			return false;
+		} else {
+			return true;
+		}
+	}
+}
+
+if ( !function_exists('rsssl_get_subdomain') ) {
+	/**
+	 * Get root domain of a domain
+	 */
+	function rsssl_get_root_domain($domain){
+		$sub = strtolower(trim($domain));
+		$count = substr_count($sub, '.');
+		if($count === 2){
+			if(strlen(explode('.', $sub)[1]) > 3) $sub = explode('.', $sub, 2)[1];
+		} else if($count > 2){
+			$sub = rsssl_get_root_domain(explode('.', $sub, 2)[1]);
+		}
+		return $sub;
+	}
 }
 
 if ( ! function_exists( 'rsssl_get_domain' ) ) {

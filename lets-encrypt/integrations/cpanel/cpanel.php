@@ -25,6 +25,7 @@
  *   along with this program.  If not, see <https://www.gnu.org/licenses/>.
  * 
  */
+require_once( rsssl_le_path . 'integrations/cpanel/functions.php' );
 
 class rsssl_cPanel
 {
@@ -44,7 +45,7 @@ class rsssl_cPanel
 	    $this->cpanel_host =  str_replace(array('http://', 'https://', ':2083'), '', $cpanel_host);;
         $this->username = $username;
         $this->password = $password;
-        $this->ssl_installation_url = $this->cpanel_host.":2083/frontend/paper_lantern/ssl/index.html";
+        $this->ssl_installation_url = 'https://'.$this->cpanel_host.":2083/frontend/paper_lantern/ssl/install.html";
     }
 
 	/**
@@ -55,8 +56,9 @@ class rsssl_cPanel
 	 */
     public function installSSL($domains) {
 	    $response_arr = array();
+
 	    if ( is_array($domains) && count($domains)>0 ) {
-		    foreach ($domains as $domain ) {
+	    	foreach ($domains as $domain ) {
 			    $response = $this->installSSLPerDomain($domain);
 			    $response_arr[] = $response;
 		    }
@@ -68,7 +70,7 @@ class rsssl_cPanel
 	    foreach ( $response_arr as $response_item ) {
 		    $status = $response_item->status;
 		    $action = $response_item->action;
-		    $message .= '<br>'.$response_item->message;
+		    $message = $response_item->message;
 
 		    //overwrite if error.
 		    if ($response_item->status !== 'success' ) {
@@ -111,9 +113,11 @@ class rsssl_cPanel
         if (empty($response)) {
             error_log('Not able to login');
 	        $link_open = '<a target="_blank" href="'.$this->ssl_installation_url.'">';
-	        $status = 'error';
+	        $status = 'warning';
 	        $action = 'stop';
-	        $message = sprintf(__("Your hosting environment does not allow automatic SSL installation. Please complete %smanually%s.","really-simple-ssl"), $link_open, '</a>');
+	        $message =
+		        sprintf(__("Your hosting environment does not allow automatic SSL installation. Please complete %smanually%s.","really-simple-ssl"), $link_open, '</a>').' '.
+		        sprintf(__("You can follow these %sinstructions%s.","really-simple-ssl"), '<a target="_blank" href="https://really-simple-ssl.com/install-ssl-certificate">', '</a>');
         } else if ($response->status) {
             error_log('SSL successfully installed on '.$domain.' successfully.');
 	        $status = 'success';
@@ -146,9 +150,10 @@ class rsssl_cPanel
 	    //Validate $response
 	    if (empty($response)) {
 		    error_log('The install_ssl cURL call did not return valid JSON:');
+		    $link_open = '<a target="_blank" href="'.$this->ssl_installation_url.'">';
 		    $status = 'error';
-		    $action = 'skip';//we try the default next
-		    $message = __("Your hosting environment does not allow automatic SSL installation. Please complete manually.","really-simple-ssl");
+		    $action = 'skip';
+		    $message = sprintf(__("Your hosting environment does not allow automatic SSL installation. Please complete %smanually%s.","really-simple-ssl"), $link_open, '</a>');
 	    } else if ($response->status) {
 		    error_log('Congrats! SSL installed on '.$domains.' successfully.');
 		    $status = 'success';

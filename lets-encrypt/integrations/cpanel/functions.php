@@ -37,20 +37,23 @@ function rsssl_install_cpanel_default(){
 
 
 function rsssl_cpanel_add_condition_actions($steps){
-	$index = array_search('installation',array_column($steps['lets-encrypt'],'id'));
-	$index++;
-	$steps['lets-encrypt'][$index]['actions'] = array(
-		array(
-			'description' => __("Attempting to install certificate using AutoSSL...", "really-simple-ssl"),
-			'action'=> 'rsssl_install_cpanel_autossl',
-			'attempts' => 1,
-		),
-		array(
-			'description' => __("Attempting to install certificate...", "really-simple-ssl"),
-			'action'=> 'rsssl_install_cpanel_default',
-			'attempts' => 1,
-		),
-	);
+	$add_cpanel_steps = apply_filters('rssl_le_add_cpanel_steps', true);
+	if ($add_cpanel_steps) {
+		$index = array_search( 'installation', array_column( $steps['lets-encrypt'], 'id' ) );
+		$index ++;
+		$steps['lets-encrypt'][ $index ]['actions'] = array(
+			array(
+				'description' => __( "Attempting to install certificate using AutoSSL...", "really-simple-ssl" ),
+				'action'      => 'rsssl_install_cpanel_autossl',
+				'attempts'    => 1,
+			),
+			array(
+				'description' => __( "Attempting to install certificate...", "really-simple-ssl" ),
+				'action'      => 'rsssl_install_cpanel_default',
+				'attempts'    => 1,
+			),
+		);
+	}
 
 	return $steps;
 }

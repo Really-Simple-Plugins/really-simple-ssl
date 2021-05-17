@@ -35,8 +35,9 @@ if ( ! class_exists( "rsssl_config" ) ) {
             );
 
             $this->supported_hosts = array(
-            	'none' => __('Not listed, proceed with installation', 'really-simple-ssl'),
+            	'none' => __('I don\'t know, or not listed, proceed with installation', 'really-simple-ssl'),
             	'cloudways' => 'CloudWays',
+            	'hostgator' => 'HostGator',
             );
 
             $this->not_local_certificate_hosts = array(

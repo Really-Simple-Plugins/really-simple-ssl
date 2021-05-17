@@ -23,7 +23,8 @@ class rsssl_letsencrypt_handler {
 			wp_die( sprintf( __( '%s is a singleton class and you cannot create a second instance.', 'really-simple-ssl' ), get_class( $this ) ) );
 		}
 		add_action( 'rsssl_before_save_lets-encrypt_option', array( $this, 'before_save_wizard_option' ), 10, 4 );
-		add_action( 'rsssl_le_activation' , array( $this, 'cleanup_on_activation'));
+		add_action( 'rsssl_le_activation' , array( $this, 'cleanup_on_ssl_activation'));
+		add_action( 'rsssl_le_activation' , array( $this, 'plugin_activation_actions'));
 
 		$this->installation_sequence = array_column( RSSSL_LE()->config->steps['lets-encrypt'], 'id');
 		$this->key_directory = $this->key_directory();
@@ -54,10 +55,18 @@ class rsssl_letsencrypt_handler {
 		return self::$_this;
 	}
 
+	public function plugin_activation_actions(){
+		if (get_option('rsssl_activated_plugin')) {
+			//do some actions
+
+			delete_option('rsssl_activated_plugin');
+		}
+	}
+
 	/**
 	 * Cleanup. If user did not consent to storage, all password fields should be removed on activation, unless they're needed for renewals
 	 */
-	public function cleanup_on_activation(){
+	public function cleanup_on_ssl_activation(){
 		if (!current_user_can('manage_options')) return;
 
 		$delete_credentials = !rsssl_get_value('store_credentials');
@@ -153,9 +162,23 @@ class rsssl_letsencrypt_handler {
     public function certificate_status(){
 	    delete_transient('rsssl_certinfo');
 	    if ( RSSSL()->rsssl_certificate->is_valid() ) {
-		    $action = 'stop';
-		    $status = 'error';
-		    $message = __("You already have a valid SSL certificate.", "really-simple-ssl" );
+	    	//we have now renewed the cert info transient
+		    $certinfo = get_transient('rsssl_certinfo');
+		    $end_date = isset($certinfo['validTo_time_t']) ? $certinfo['validTo_time_t'] : false;
+		    $grace_period = strtotime('+30 days');
+
+		    //if the certificate expires within the grace period, allow renewal
+		    //e.g. expiry date 30 may, now = 10 may => grace period 9 june.
+		    if ( $grace_period > $end_date ) {
+			    $action = 'continue';
+			    $status = 'error';
+			    $message = __("Your certificate will expire within 30 days.", "really-simple-ssl" ).' '.__("Continue to renew.", "really-simple-ssl" );   ;
+		    } else {
+			    $action = 'stop';
+			    $status = 'error';
+			    $message = __("You already have a valid SSL certificate.", "really-simple-ssl" );
+		    }
+
 	    } else {
 		    $action = 'continue';
 		    $status = 'error';
@@ -493,16 +516,19 @@ class rsssl_letsencrypt_handler {
 		$domain = rsssl_get_domain();
 		$subjects[] = $domain;
 
-		//main is www.
-		if ( strpos( $domain, 'www.' ) !== false ) {
-			$alias_domain = str_replace( 'www.', '', $domain );
-		} else {
-			$alias_domain = str_replace( array( 'http://', 'https://' ), array( 'http://www.', 'https://www.' ), $domain );
+		//don't offer aliasses for subdomains
+		if ( !rsssl_is_subdomain() ) {
+			//main is www.
+			if ( strpos( $domain, 'www.' ) !== false ) {
+				$alias_domain = str_replace( 'www.', '', $domain );
+			} else {
+				$alias_domain = 'www.'.$domain;
+			}
+			if (rsssl_get_value( 'include_alias' )) {
+				$subjects[] = $alias_domain;
+			}
 		}
-
-	    if (rsssl_get_value('include_alias')) {
-		    $subjects[] = $alias_domain;
-	    }
+		error_log(print_r($subjects, true));
 	    return $subjects;
 	}
 
@@ -750,7 +776,6 @@ class rsssl_letsencrypt_handler {
 		}
 		$error_message = __( "Could not verify alias domain.", "really-simple-ssl") .' '. $message.' '. __( "If this is not the case, dont' add this variant to your certificate.", "really-simple-ssl");
 
-
 		//get cached status first.
 		$cached_status = get_transient('rsssl_alias_domain_available');
 		if ( $cached_status ) {
@@ -758,6 +783,13 @@ class rsssl_letsencrypt_handler {
 				$status  = 'success';
 				$action  = 'continue';
 				$message = __( "Successfully verified alias domain.", "really-simple-ssl" );
+
+				//make sure we only set this value once, during first setup.
+				if ( !get_option('rsssl_initial_alias_domain_value_set')) {
+					RSSSL_LE()->field->save_field  ('rsssl_include_alias', true);
+					update_option('rsssl_initial_alias_domain_value_set', true);
+				}
+
 			} else {
 				$status  = 'warning';
 				$action  = 'continue';

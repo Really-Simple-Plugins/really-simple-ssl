@@ -76,6 +76,7 @@ $this->fields = $this->fields + array(
 	        'tooltip'   => __( "If your site is without www, it is recommended to add the www domain to your certificate as well (and vice versa).", "really-simple-ssl").' '.__("You should have the www domain pointed to the same website as the non-www domain.", 'really-simple-ssl' ),
 	        'tooltip-position' => 'after',
 	        'option_text' => __("Include alias domain too?", 'really-simple-ssl'),
+	        'callback_condition' => 'NOT rsssl_is_subdomain',
         ),
 
         'other_host_type' => array(
@@ -88,7 +89,6 @@ $this->fields = $this->fields + array(
 	        'label'       => __( "Hosting company", 'really-simple-ssl' ),
 	        'required'    => true,
 	        'disabled'    => false,
-	        'callback_condition' => 'rsssl_is_other',
         ),
 
 		'cloudways_user_email' => array(
@@ -103,7 +103,7 @@ $this->fields = $this->fields + array(
 			'disabled'    => false,
 			'condition' => array(
 				'other_host_type' => 'cloudways'
-			)
+			),
 		),
 		'cloudways_api_key' => array(
 			'step'        => 2,
@@ -127,9 +127,10 @@ $this->fields = $this->fields + array(
             'type'        => 'text',
             'default'     => '',
             'label'       => __( "CPanel host", 'really-simple-ssl' ),
+            'help'       => __( "The URL you use to access your cPanel dashboard. Ends on :2083.", 'really-simple-ssl' ),
             'required'    => true,
             'disabled'    => false,
-	        'callback_condition' => 'rsssl_cpanel_api_supported'
+	        'callback_condition' => 'rsssl_is_cpanel'
         ),
 
         'cpanel_username' => array(
@@ -141,7 +142,10 @@ $this->fields = $this->fields + array(
 	        'label'       => __( "CPanel username", 'really-simple-ssl' ),
 	        'required'    => true,
 	        'disabled'    => false,
-	        'callback_condition' => 'rsssl_cpanel_api_supported'
+	        'callback_condition' => 'rsssl_cpanel_api_supported',
+	        'condition' => array(
+	        	'other_host_type' => 'NOT hostgator',
+	        ),
         ),
 
         'cpanel_password' => array(
