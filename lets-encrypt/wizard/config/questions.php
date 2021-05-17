@@ -157,7 +157,10 @@ $this->fields = $this->fields + array(
 	        'label'       => __( "CPanel password", 'really-simple-ssl' ),
 	        'required'    => true,
 	        'disabled'    => false,
-	        'callback_condition' => 'rsssl_cpanel_api_supported'
+	        'callback_condition' => 'rsssl_cpanel_api_supported',
+	        'condition' => array(
+		        'other_host_type' => 'NOT hostgator',
+	        ),
         ),
 
 		'store_credentials' => array(

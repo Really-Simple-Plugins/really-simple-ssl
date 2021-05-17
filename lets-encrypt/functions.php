@@ -18,7 +18,7 @@ if ( ! function_exists( 'rsssl_user_can_manage' ) ) {
 
 if ( !function_exists('rsssl_settings_page') ) {
     function rsssl_settings_page(){
-            return add_query_arg(array('page' => 'rlrsssl_really_simple_ssl', 'tab' => 'letsencrypt'), admin_url('options-general.php?page=') );
+            return add_query_arg(array('page' => 'rlrsssl_really_simple_ssl', 'tab' => 'letsencrypt'), admin_url('options-general.php') );
     }
 }
 
@@ -195,14 +195,13 @@ if ( ! function_exists( 'rsssl_sidebar_notice' ) ) {
     /**
      * @param string $msg
      * @param string $type notice | warning | success
-     * @param bool   $remove_after_change
      * @param bool   $echo
      * @param bool|array  $condition $condition['question'] $condition['answer']
      *
      * @return string|void
      */
 
-    function rsssl_sidebar_notice( $msg, $type = 'notice', $remove_after_change = false, $echo = true, $condition = false) {
+    function rsssl_sidebar_notice( $msg, $type = 'notice', $echo = true, $condition = false) {
         if ( $msg == '' ) {
             return;
         }
@@ -220,10 +219,7 @@ if ( ! function_exists( 'rsssl_sidebar_notice' ) ) {
             $rsssl_hidden = rsssl_field::this()->condition_applies($args) ? "" : "rsssl-hidden";;
         }
 
-        // Hide
-        $remove_after_change_class = $remove_after_change ? "rsssl-remove-after-change" : "";
-
-        $html = "<div class='rsssl-help-modal rsssl-notice rsssl-{$type} {$remove_after_change_class} {$rsssl_hidden} {$condition_check}' {$condition_question} {$condition_answer}>{$msg}</div>";
+        $html = "<div class='rsssl-help-modal rsssl-notice rsssl-{$type} {$rsssl_hidden} {$condition_check}' {$condition_question} {$condition_answer}>{$msg}</div>";
 
         if ( $echo ) {
             echo $html;

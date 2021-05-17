@@ -19,9 +19,7 @@ if ( ! class_exists( "rsssl_field" ) ) {
             self::$_this = $this;
             //safe before the fields are loaded in config, in init
             add_action( 'plugins_loaded', array( $this, 'process_save' ), 14 );
-
             add_action( 'rsssl_before_label', array( $this, 'before_label' ), 10, 1 );
-            add_action( 'rsssl_before_label', array( $this, 'show_errors' ), 10, 1 );
             add_action( 'rsssl_label_html', array( $this, 'label_html' ), 10, 1 );
             add_action( 'rsssl_after_label', array( $this, 'after_label' ), 10, 1 );
             add_action( 'rsssl_after_field', array( $this, 'after_field' ), 10, 1 );
@@ -505,20 +503,6 @@ if ( ! class_exists( "rsssl_field" ) ) {
 
         }
 
-        public
-        function show_errors(
-            $args
-        ) {
-            if ( in_array( $args['fieldname'], $this->form_errors ) ) {
-                ?>
-                <div class="rsssl-form-errors">
-                    <?php _e( "This field is required. Please complete the question before continuing",
-                        'really-simple-ssl' ) ?>
-                </div>
-                <?php
-            }
-        }
-
         /**
          * Show tooltip, if provided
          * @param $args
@@ -546,7 +530,6 @@ if ( ! class_exists( "rsssl_field" ) ) {
             if ( isset( $args['help'] ) ) {
                 rsssl_sidebar_notice( wp_kses_post( $args['help'] ) );
             }
-
             do_action( 'rsssl_notice_' . $args['fieldname'], $args );
 
             echo '</div>';
