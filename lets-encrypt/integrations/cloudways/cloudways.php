@@ -40,17 +40,21 @@ class rsssl_Cloudways {
 				curl_setopt( $ch, CURLOPT_HTTPHEADER, [ 'Authorization: Bearer ' . $accessToken ] );
 			}
 
+			//ssl_domains[]=fungibleownership.com&ssl_domains[]=www.fungibleownership.com
 			$encoded = '';
 			if ( count( $post ) ) {
-//				foreach ( $post as $name => $value ) {
-//					if ( !is_array( $value) ) {
-//						$encoded .= urlencode( $name ) . '=' . urlencode( $value ) . '&';
-//					} else {
-//						$encoded .= urlencode( $name ) . '=' .  http_build_query( $value ,'',"\n") . '&';
-//					}
-//				}
-				$encoded = http_build_query($post);
-//				$encoded = substr( $encoded, 0, strlen( $encoded ) - 1 );
+				foreach ( $post as $name => $value ) {
+					if ( is_array( $value) ) {
+						foreach ( $value as $sub_value ) {
+							$encoded .= $name.'[]='.urlencode( $sub_value) . '&';
+						}
+					} else {
+						$encoded .= urlencode( $name ) . '=' . urlencode( $value ) . '&';
+					}
+				}
+				$encoded = substr( $encoded, 0, strlen( $encoded ) - 1 );
+				error_log("posted msg");
+				error_log($encoded);
 				curl_setopt( $ch, CURLOPT_POSTFIELDS, $encoded );
 				curl_setopt( $ch, CURLOPT_POST, 1 );
 			}
@@ -148,8 +152,8 @@ class rsssl_Cloudways {
 
 		$response = $this->getServerInfo();
 		if ($response->status === 'success' ) {
-			$server_id = get_transient('rsssl_cw_app_id');
-			$app_id = get_transient('rsssl_cw_server_id' );
+			$app_id = get_transient('rsssl_cw_app_id');
+			$server_id = get_transient('rsssl_cw_server_id' );
 			$response = $this->callCloudWaysAPI( 'POST', 'security/lets_encrypt_auto', $accessToken,
 				[
 					'server_id' => $server_id,
@@ -164,9 +168,16 @@ class rsssl_Cloudways {
 			$action = 'continue';
 			$message = __("Successfully installed Lets Encrypt","really-simple-ssl");
 		} elseif ($response->status === 'error') {
-			$status = $response->status;
-			$action = $response->action;
-			$message = $response->message;
+			//in some cases, the process is already started, which also signifies success.
+			if ( strpos($response->message, 'An operation is already in progress for this server')) {
+				$status = 'success';
+				$action = 'continue';
+				$message = __("Successfully installed Lets Encrypt","really-simple-ssl");
+			} else {
+				$status = $response->status;
+				$action = $response->action;
+				$message = $response->message;
+			}
 		} else {
 			$status = $response->status;
 			$action = $response->action;
