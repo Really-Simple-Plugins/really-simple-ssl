@@ -129,16 +129,12 @@ if ( ! function_exists( 'rsssl_get_value' ) ) {
 	}
 }
 
-if ( !function_exists('rsssl_do_local_lets_encrypt_install')) {
+if ( !function_exists('rsssl_do_local_lets_encrypt_generation')) {
 	/**
 	 * Check if the setup requires local certificate generation
 	 * @return bool
 	 */
-	function rsssl_do_local_lets_encrypt_install() {
-		if ( rsssl_cpanel_api_supported() || rsssl_is_plesk() ) {
-			return true;
-		}
-
+	function rsssl_do_local_lets_encrypt_generation() {
 		$not_local_cert_hosts = RSSSL_LE()->config->not_local_certificate_hosts;
 		$current_host         = rsssl_get_other_host();
 		if ( in_array( $current_host, $not_local_cert_hosts ) ) {

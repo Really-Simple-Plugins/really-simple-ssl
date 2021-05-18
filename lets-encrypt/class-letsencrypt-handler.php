@@ -75,24 +75,51 @@ class rsssl_letsencrypt_handler {
 			$expiry_date = date( get_option('date_format'), $end_date );
 			$renew_link = rsssl_settings_page();
 			$link_open = '<a href="'.$renew_link.'" target="_blank">';
+
+
 			$notices['certificate_renewal'] = array(
 				'condition' => array( 'rsssl_ssl_enabled' ),
 				'callback'  => 'RSSSL_LE()->letsencrypt_handler->certificate_about_to_expire',
 				'score'     => 10,
 				'output'    => array(
-					'_false_'     => array(
+					'false'     => array(
 						'msg'  => sprintf( __( "Your certificate is valid to: %s", "really-simple-ssl-pro" ), $expiry_date ),
 						'icon' => 'success'
 					),
-					'_true_' => array(
+					'true' => array(
 						'msg'  => sprintf( __( "Your certificate will expire on %s. You can renew it %shere%s.", "really-simple-ssl-pro" ), $expiry_date, $link_open, '</a>' ),
-						'icon' => 'open'
+						'icon' => 'open',
+						'plusone' => true,
+					),
+				),
+			);
+
+			$notices['certificate_installation'] = array(
+				'condition' => array( 'rsssl_ssl_enabled' ),
+				'callback'  => 'RSSSL_LE()->letsencrypt_handler->installation_failed',
+				'score'     => 10,
+				'output'    => array(
+					'true' => array(
+						'msg'  => sprintf( __( "The automatic installation of your certificate has failed. Please check your credentials, and retry the %sinstallation%s.", "really-simple-ssl-pro" ), '<a href="'.rsssl_settings_page().'">', '</a>' ),
+						'icon' => 'open',
+						'plusone' => true,
 					),
 				),
 			);
 		}
 
 		return $notices;
+	}
+
+	/**
+	 * Check if we have an installation failed state.
+	 * @return bool
+	 */
+	public function installation_failed(){
+		$installation_active = get_option("rsssl_le_start_installation");
+		$installation_failed = get_option("rsssl_installation_error");
+
+		return $installation_active && $installation_failed;
 	}
 
 	public function plugin_activation_actions(){
@@ -138,8 +165,7 @@ class rsssl_letsencrypt_handler {
         }
 
 		if ($fieldname==='other_host_type'){
-			$not_local_cert_hosts = RSSSL_LE()->config->not_local_certificate_hosts;
-			if ( in_array( $fieldvalue, $not_local_cert_hosts ) ) {
+			if ( !rsssl_do_local_lets_encrypt_generation() ) {
 				rsssl_progress_add('directories');
 				rsssl_progress_add('generation');
 			}
@@ -504,7 +530,8 @@ class rsssl_letsencrypt_handler {
     public function certificate_install_required(){
 
     	$install_method = get_option('rsssl_le_certificate_installed_by_rsssl');
-    	if ( in_array($install_method, RSSSL_LE()->config->no_renewal_needed) ) {
+    	$hosting_company = rsssl_get_other_host();
+    	if ( in_array($install_method, RSSSL_LE()->config->no_installation_renewal_needed) || in_array($hosting_company, RSSSL_LE()->config->no_installation_renewal_needed)) {
     		return false;
 	    }
 
@@ -803,85 +830,6 @@ class rsssl_letsencrypt_handler {
 		} else {
 			return false;
 		}
-	}
-
-	/**
-	 * If we're here, the site needs manual renewal. If the user doesn't have the credentials saved, or an api is not available, send an email.
-	 */
-	public function maybe_send_installation_renewal_mail(){
-		if ( $this->certificate_automatic_install_possible() ) {
-			if ( !rsssl_get_value('store_credentials') ) {
-				$this->send_email('renewal-mail');
-			}
-		} else {
-			$this->send_email('renewal-mail');
-		}
-	}
-
-	/**
-	 * Send email
-	 * @param $type
-	 */
-	public function send_email( $type ){
-		$valid = RSSSL()->rsssl_certificate->is_valid();
-		//we have now renewed the cert info transient
-		$certinfo = get_transient('rsssl_certinfo');
-		$end_date = isset($certinfo['validTo_time_t']) ? $certinfo['validTo_time_t'] : false;
-
-		$thirty_days_time = strtotime('+30 days');
-		$two_weeks_time = strtotime('+14 days');
-		$expired_time = time();
-		//if the certificate expires within the grace period, allow renewal
-		//e.g. expiry date 30 may, now = 10 may => grace period 9 june.
-		$expiry_date = date( get_option('date_format'), $end_date );
-		$notice_expiration = sprintf(__("Your certificate will expire on %s.","really-simple-ssl"), $expiry_date );
-
-		if ( $thirty_days_time > $end_date ) {
-			$notice_time = 'thirty-days';
-		} else if ( $two_weeks_time > $end_date ) {
-			$notice_time = 'two-weeks-days';
-		} else if ( $expired_time > $end_date ) {
-			$notice_time = 'expired';
-			$notice_expiration = sprintf(__("Your certificate has expired on %s.","really-simple-ssl"), $expiry_date );
-		}
-
-		if ( get_option( "rsssl_le_mail_sent_$notice_time") ) return;
-
-		$emails = array(
-			'renewal-mail' => array(
-				'subject' => __("Action required for the renewal of your SSL certificate","really-simple-ssl"),
-			),
-		);
-		$user = get_user_by('id',get_option('rsssl_le_ssl_user'));
-		if (!$user) return;
-
-		$allowed_roles = array('administrator');
-		if( array_intersect($allowed_roles, $user->roles ) ) {
-			update_option( "rsssl_le_mail_sent_$notice_time", true);
-			$args = array(
-				'name' => $user->user_nicename,
-				'domain' => rsssl_get_domain(),
-				'link' => rsssl_settings_page(),
-				'expired_notice' => $notice_expiration,
-			);
-
-		    $body = RSSSL()->really_simple_ssl->get_template( "$type.php", $path = rsssl_le_wizard_path );
-			$body = RSSSL_LE()->wizard->process_args($body, $args);
-			$headers = array();
-
-			add_filter( 'wp_mail_content_type', function ( $content_type ) {
-				return 'text/html';
-			} );
-
-			if ( wp_mail( $user->user_email, $emails[$type], $body, $headers ) === false ) {
-				$success = false;
-			}
-
-			// Reset content-type to avoid conflicts -- http://core.trac.wordpress.org/ticket/23578
-			remove_filter( 'wp_mail_content_type', 'set_html_content_type' );
-		}
-
-
 	}
 
 	/**

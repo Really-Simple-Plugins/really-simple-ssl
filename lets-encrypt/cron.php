@@ -40,7 +40,6 @@ function rsssl_le_maybe_start_renewal(){
 
 	if ( RSSSL_LE()->letsencrypt_handler->certificate_install_required() ) {
 		update_option("rsssl_le_start_installation", true);
-		RSSSL_LE()->letsencrypt_handler->maybe_send_installation_renewal_mail();
 	}
 }
 
