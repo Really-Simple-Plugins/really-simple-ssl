@@ -27,7 +27,6 @@ if ( !function_exists('rsssl_settings_page') ) {
  * @return bool
  */
 function rsssl_is_cpanel(){
-	return true;
 	return file_exists("/usr/local/cpanel");
 }
 
@@ -36,8 +35,6 @@ function rsssl_is_cpanel(){
  * @return bool
  */
 function rsssl_cpanel_api_supported(){
-	return true;
-
 	return rsssl_is_cpanel() && file_exists("/usr/local/cpanel/php/cpanel.php");
 }
 
@@ -328,3 +325,12 @@ function rsssl_get_other_host(){
 	return rsssl_get_value('other_host_type', false);
 }
 
+function rsssl_insert_after_key($array, $key, $items){
+	$keys = array_keys($array);
+	$key = array_search($key, $keys);
+	$array = array_slice($array, 0, $key, true) +
+	$items +
+	array_slice($array, 3, count($array)-3, true);
+
+	return $array;
+}

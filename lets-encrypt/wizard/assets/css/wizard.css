@@ -1,3 +1,14 @@
+.rsssl-certificate-data {
+  right: 10000px;
+  position: absolute;
+  background-color: #fff;
+  padding: 0;
+  white-space: nowrap;
+}
+.rsssl-copied-feedback-container {
+  padding: 20px;
+  color: #22932e;
+}
 /**
 * class to add a triangle pointer to each div
 */

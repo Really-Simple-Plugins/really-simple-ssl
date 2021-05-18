@@ -1,5 +1,28 @@
 jQuery(document).ready(function ($) {
     'use strict';
+    var copied_element = $('.rsssl-copied-feedback').html();
+    $(document).on('click', '.rsssl-copy-content', function () {
+        var type = $(this).data('item');
+        console.log(type);
+        var element = document.getElementById('rsssl-'+type);
+        console.log(element);
+
+        var sel = window.getSelection();
+        sel.removeAllRanges();
+        var range = document.createRange();
+        range.selectNodeContents(element);
+        sel.addRange(range);
+        var success;
+        try {
+            success = document.execCommand("copy");
+        } catch (e) {
+            success = false;
+        }
+
+        if (success) {
+            $('<span class="rsssl-copied-feedback-container">'+copied_element+'</span>').insertAfter($(this));
+        }
+    });
 
     function maybe_show_password_delete_questions(){
         var deletePasswordField = $('.field-group.store_credentials');

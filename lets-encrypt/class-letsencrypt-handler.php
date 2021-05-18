@@ -431,65 +431,74 @@ class rsssl_letsencrypt_handler {
 					    $bundle_completed = false;
 				    }
 			    } else {
+			    	$finalized = false;
 				    try {
 					    if ( $order->authorize( Order::CHALLENGE_TYPE_HTTP ) ) {
 						    $order->finalize();
+						    $finalized = true;
 					    }
 				    } catch ( Exception $e ) {
 					    error_log( print_r( $e, true ) );
+					    error_log("### print exception test 2");
+					    $status = 'error';
+					    $action = 'stop';
+					    $message = $this->get_error( $e );
+
 				    }
 
-				    try {
-					    if ( $order->isCertificateBundleAvailable() ) {
-						    error_log( "cert bundle available" );
-						    $bundle_completed   = true;
-						    $success_cert       = $success_intermediate = $success_private = false;
-						    $bundle             = $order->getCertificateBundle();
-						    $pathToPrivateKey   = $bundle->path . $bundle->private;
-						    $pathToCertificate  = $bundle->path . $bundle->certificate;
-						    $pathToIntermediate = $bundle->path . $bundle->intermediate;
+					if ($finalized) {
+					    try {
+						    if ( $order->isCertificateBundleAvailable() ) {
+							    error_log( "cert bundle available" );
+							    $bundle_completed   = true;
+							    $success_cert       = $success_intermediate = $success_private = false;
+							    $bundle             = $order->getCertificateBundle();
+							    $pathToPrivateKey   = $bundle->path . $bundle->private;
+							    $pathToCertificate  = $bundle->path . $bundle->certificate;
+							    $pathToIntermediate = $bundle->path . $bundle->intermediate;
 
-						    if ( file_exists( $pathToPrivateKey ) ) {
-							    $success_private = true;
-							    update_option( 'rsssl_private_key_path', $pathToPrivateKey );
-						    }
-						    if ( file_exists( $pathToCertificate ) ) {
-							    $success_cert = true;
-							    update_option( 'rsssl_certificate_path', $pathToCertificate );
-						    }
+							    if ( file_exists( $pathToPrivateKey ) ) {
+								    $success_private = true;
+								    update_option( 'rsssl_private_key_path', $pathToPrivateKey );
+							    }
+							    if ( file_exists( $pathToCertificate ) ) {
+								    $success_cert = true;
+								    update_option( 'rsssl_certificate_path', $pathToCertificate );
+							    }
 
-						    if ( file_exists( $pathToIntermediate ) ) {
-							    $success_intermediate = true;
-							    update_option( 'rsssl_intermediate_path', $pathToIntermediate );
-						    }
+							    if ( file_exists( $pathToIntermediate ) ) {
+								    $success_intermediate = true;
+								    update_option( 'rsssl_intermediate_path', $pathToIntermediate );
+							    }
 
-						    if ( ! $success_cert || ! $success_private || ! $success_intermediate ) {
-							    $bundle_completed = false;
-						    }
+							    if ( ! $success_cert || ! $success_private || ! $success_intermediate ) {
+								    $bundle_completed = false;
+							    }
 
-						    if ( $bundle_completed ) {
-							    $status = 'success';
-							    $action = 'continue';
-							    $message = __("Successfully generated certificate.",'really-simple-ssl');
+							    if ( $bundle_completed ) {
+								    $status = 'success';
+								    $action = 'continue';
+								    $message = __("Successfully generated certificate.",'really-simple-ssl');
+							    } else {
+								    $status = 'error';
+								    $action = 'retry';
+								    $message = __("Files not created yet...",'really-simple-ssl');
+							    }
+
 						    } else {
 							    $status = 'error';
 							    $action = 'retry';
 							    $message = __("Bundle not available yet...",'really-simple-ssl');
 						    }
 
-					    } else {
-						    $status = 'error';
-						    $action = 'retry';
-						    $message = __("Bundle not available yet...",'really-simple-ssl');
-					    }
 
-
-				    } catch ( Exception $e ) {
-					    error_log( print_r( $e, true ) );
-					    $status = 'success';
-					    $action = 'continue';
-					    $message = $this->get_error( $e );
-				    }
+					    } catch ( Exception $e ) {
+						    error_log( print_r( $e, true ) );
+						    $status = 'success';
+						    $action = 'continue';
+						    $message = $this->get_error( $e );
+				        }
+					}
 			    }
 		    }
 	    } else {
@@ -626,21 +635,7 @@ class rsssl_letsencrypt_handler {
 				$subjects[] = $alias_domain;
 			}
 		}
-		error_log(print_r($subjects, true));
 	    return $subjects;
-	}
-
-	/**
-	 * @param LE_ACME2\Exception\InvalidResponse Object $e
-	 *
-	 * @return string
-	 */
-	public function get_error_from_le($e){
-	    $message = $e->getMessage();
-	    $message1 = json_decode($message);
-		error_log(print_r($message1,true));
-
-		return $message;
 	}
 
 	/**
@@ -656,8 +651,6 @@ class rsssl_letsencrypt_handler {
             return false;
         }
 	}
-
-
 
 	/**
 	 * Catch errors
@@ -791,6 +784,7 @@ class rsssl_letsencrypt_handler {
 		foreach ($required_folders as $required_folder){
 			set_error_handler(array($this, 'custom_error_handling'));
 			$test_file = fopen( $required_folder . "/really-simple-ssl-permissions-check.txt", "w" );
+			fwrite($test_file, 'file to test writing permissions for Really Simple SSL');
 			fclose( $test_file );
 			restore_error_handler();
 			if (!file_exists($required_folder . "/really-simple-ssl-permissions-check.txt")) {
@@ -799,6 +793,54 @@ class rsssl_letsencrypt_handler {
 		}
 
 		return $no_writing_permissions;
+	}
+
+	/**
+	 * Check if the challenage directory is reachable over the http protocol
+	 * @return RSSSL_RESPONSE
+	 */
+
+	public function challenge_directory_reachable(){
+		$file_content = false;
+		$status = 404;
+		$url = site_url('.well-known/acme-challenge/really-simple-ssl-permissions-check.txt');
+
+		$error_message = sprintf(__( "Could not reach challenge directory over %s.", "really-simple-ssl"), $url);
+		$test_string = 'Really Simple SSL';
+		if (!$this->challenge_directory() ) return false;
+		$folders = $this->directories_without_writing_permissions();
+		if ( !$this->challenge_directory() || count($folders) !==0 ) {
+			$status  = 'error';
+			$action  = 'stop';
+			$message = __( "Challenge directory not writable.", "really-simple-ssl");
+			return new RSSSL_RESPONSE($status, $action, $message);
+		}
+
+		$response       = wp_remote_get( $url );
+		if ( is_array( $response ) ) {
+			$status       = wp_remote_retrieve_response_code( $response );
+			$file_content = wp_remote_retrieve_body( $response );
+		}
+
+		if ( $status !== 200 ) {
+			$status  = 'warning';
+			$action  = 'stop';
+			$message = $error_message.' '.sprintf( __( "Error code %s", "really-simple-ssl" ), $status );
+			rsssl_progress_remove('directories');
+		} else {
+			if ( ! is_wp_error( $response ) && ( strpos( $file_content, $test_string ) !== false ) ) {
+				$status  = 'success';
+				$action  = 'continue';
+				$message = __( "Successfully verified alias domain.", "really-simple-ssl" );
+				set_transient('rsssl_alias_domain_available', 'available', 30 * 'MINUTE_IN_SECONDS' );
+			} else {
+				$status  = 'error';
+				$action  = 'stop';
+				$message = $error_message;
+				rsssl_progress_remove('directories');
+			}
+		}
+		return new RSSSL_RESPONSE($status, $action, $message);
 	}
 
 	/**
@@ -982,8 +1024,14 @@ class rsssl_letsencrypt_handler {
 		    }
 
 	    } else {
-	        $error = $e;
+	        $error = $e->getMessage();
 	    }
+
+	    $max = strpos($error, 'CURL response');
+	    if ($max===false) {
+	    	$max = 200;
+	    }
+		$error = substr( $error, 0, $max);
 	    return $error;
 
 	}

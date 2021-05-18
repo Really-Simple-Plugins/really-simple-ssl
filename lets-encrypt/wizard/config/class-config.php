@@ -25,6 +25,12 @@ if ( ! class_exists( "rsssl_config" ) ) {
 
             self::$_this = $this;
 
+	        /**
+	         * Plesk requires local SSL generation, and installation renewal.
+	         * Cpanel default requires local SSL generation, and installation renewal.
+	         * Cpanel autossl: no local ssl generation, no renewal
+	         */
+
             $this->hosts = array(
             	'cloudways' => array(
             		'name' => 'CloudWays',

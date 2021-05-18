@@ -62,7 +62,7 @@ if ( ! class_exists( "rsssl_wizard" ) ) {
                     var progress_step = Math.ceil(100/actions.length);
                     var message_container = $('.rsssl_installation_message');
                     var message_success = '<?php _e("Completed successfully", "really-simple-ssl")?>';
-                    var message_error = '<?php _e("Please check the errors above", "really-simple-ssl")?>';
+                    var message_error = '<?php _e("Please check the notices above.", "really-simple-ssl")?>';
                     var attempt_string = '<?php _e("Attempt %s.", "really-simple-ssl")?>';
                     var msg_aborted = '<?php _e("aborted.", "really-simple-ssl")?>';
                     var startTime, endTime;
@@ -990,12 +990,10 @@ if ( ! class_exists( "rsssl_wizard" ) ) {
 		    if (isset($_POST['rsssl-next'])) {
 			    $step++;
 			    $step = $this->get_next_not_empty_step('lets-encrypt', $step);
-			    error_log("actual step $step");
             }
 			if (isset($_POST['rsssl-previous'])) {
 				$step--;
 				$step = $this->get_previous_not_empty_step('lets-encrypt', $step);
-				error_log("actual step $step");
 			}
 			return $step;
 		}

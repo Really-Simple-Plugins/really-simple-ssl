@@ -86,6 +86,12 @@ $this->steps = array(
 		                'action'=> 'check_writing_permissions',
 		                'attempts' => 1,
 	                ),
+
+	                array(
+		                'description' => __("Checking challenge directory reachable over http...", "really-simple-ssl"),
+		                'action'=> 'challenge_directory_reachable',
+		                'attempts' => 1,
+	                ),
                 ),
             ),
             4    => array(
