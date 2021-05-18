@@ -37,6 +37,7 @@ function rsssl_install_cpanel_default(){
 
 
 function rsssl_cpanel_add_condition_actions($steps){
+	error_log("run cpanel filter");
 
 	$auto_ssl = RSSSL_LE()->config->current_host_can('cpanel:autossl');
 	$default_ssl = RSSSL_LE()->config->current_host_can('cpanel:default');
@@ -66,4 +67,6 @@ function rsssl_cpanel_add_condition_actions($steps){
 
 	return $steps;
 }
+error_log("add cpanel filter");
+
 add_filter( 'rsssl_steps', 'rsssl_cpanel_add_condition_actions' );

@@ -8,6 +8,7 @@ if ( ! class_exists( "rsssl_config" ) ) {
         public $fields = array();
         public $sections;
         public $pages;
+        public $steps;
         public $hosts;
         public $warning_types;
         public $yes_no;
@@ -16,6 +17,7 @@ if ( ! class_exists( "rsssl_config" ) ) {
         public $no_installation_renewal_needed;
 
         function __construct() {
+        	error_log("construct config");
             if ( isset( self::$_this ) ) {
                 wp_die( sprintf( '%s is a singleton class and you cannot create a second instance.',
                     get_class( $this ) ) );
@@ -30,13 +32,15 @@ if ( ! class_exists( "rsssl_config" ) ) {
 		            'local_ssl_generation_needed' => false,
 		            'cpanel:autossl' => false,
 		            'cpanel:default' => false,
+		            'ssl_installation_link' => '',
 	            ),
 	            'hostgator' => array(
 		            'name' => 'HostGator',
 		            'installation_renewal_required' => false,
 		            'local_ssl_generation_needed' => false,
-		            'cpanel:autossl' => false,
+		            'cpanel:autossl' => true,
 		            'cpanel:default' => false,
+		            'ssl_installation_link' => 'https://{host}:2083/frontend/paper_lantern/security/tls_status/',
 	            ),
             );
 
@@ -74,6 +78,7 @@ if ( ! class_exists( "rsssl_config" ) ) {
             return self::$_this;
         }
 
+
 	    /**
 	     * @param array $array
 	     * @param mixed $filter_value
@@ -87,6 +92,8 @@ if ( ! class_exists( "rsssl_config" ) ) {
 	        }) );
         }
 
+
+
 	    /**
 	     * Check if a host has a specific capability
 	     * @param string $function
@@ -95,7 +102,10 @@ if ( ! class_exists( "rsssl_config" ) ) {
 	     */
         public function current_host_can( $function ) {
 	        $hosting_company = rsssl_get_other_host();
-
+	        //if not listed, we assume it can.
+			if ( !$hosting_company || $hosting_company === 'none' ) {
+				return true;
+			}
 	        //we check only for hosts WITHOUT this capability
 	        //by default we assume they can.
 	        $hosts_without_function = RSSSL_LE()->config->filter_hosts( $function, false);
@@ -182,6 +192,7 @@ if ( ! class_exists( "rsssl_config" ) ) {
 
         public function preload_init(){
             $this->fields = apply_filters( 'rsssl_fields_load_types', $this->fields );
+            $this->steps = apply_filters( 'rsssl_steps', $this->steps );
         }
 
         public function init() {

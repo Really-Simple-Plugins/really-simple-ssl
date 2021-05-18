@@ -1,7 +1,8 @@
 <?php
 defined( 'ABSPATH' ) or die( "you do not have accesss to this page!" );
+error_log("load steps");
 
-$this->steps = apply_filters('rsssl_steps',array(
+$this->steps = array(
     'lets-encrypt' =>
         array(
 	        1 => array(
@@ -122,4 +123,4 @@ $this->steps = apply_filters('rsssl_steps',array(
 	            'actions' => array(),
             ),
         ),
-));
+);

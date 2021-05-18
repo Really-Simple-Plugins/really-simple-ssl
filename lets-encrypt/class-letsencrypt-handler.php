@@ -202,15 +202,27 @@ class rsssl_letsencrypt_handler {
 	 */
 
     public function search_ssl_installation_url(){
+    	//start with most generice, then more specific if possible.
+	    $url = 'https://really-simple-ssl.com/install-ssl-certificate';
+	    $host = 'enter-your-dashboard-url-here';
 
-        if (function_exists('wp_get_direct_update_https_url') && !empty(wp_get_direct_update_https_url())) {
-        	$url = wp_get_direct_update_https_url();
-        } else if ( rsssl_is_cpanel() ) {
-	        $cpanel = new rsssl_cPanel();
-	        $url = $cpanel->ssl_installation_url;
-        } else {
-        	$url = 'https://really-simple-ssl.com/install-ssl-certificate';
-        }
+	    if (function_exists('wp_get_direct_update_https_url') && !empty(wp_get_direct_update_https_url())) {
+		    $url = wp_get_direct_update_https_url();
+	    }
+
+	    if ( rsssl_is_cpanel() ) {
+		    $cpanel = new rsssl_cPanel();
+		    $host = $cpanel->cpanel_host;
+		    $url = $cpanel->ssl_installation_url;
+	    }
+
+	    $hosting_company = rsssl_get_other_host();
+	    if ( $hosting_company && $hosting_company !== 'none' ) {
+		    $hosting_specific_link = RSSSL_LE()->config->hosts[$hosting_company]['ssl_installation_link'];
+		    if ($hosting_specific_link) {
+			    $url = str_replace('{host}', $host, $hosting_specific_link);
+		    }
+	    }
 
 	    $action = 'continue';
 	    $status = 'warning';

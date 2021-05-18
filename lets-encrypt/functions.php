@@ -27,6 +27,7 @@ if ( !function_exists('rsssl_settings_page') ) {
  * @return bool
  */
 function rsssl_is_cpanel(){
+	return true;
 	return file_exists("/usr/local/cpanel");
 }
 
@@ -35,6 +36,8 @@ function rsssl_is_cpanel(){
  * @return bool
  */
 function rsssl_cpanel_api_supported(){
+	return true;
+
 	return rsssl_is_cpanel() && file_exists("/usr/local/cpanel/php/cpanel.php");
 }
 
