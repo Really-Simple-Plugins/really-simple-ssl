@@ -1,7 +1,7 @@
 <?php
 
 namespace LE_ACME2;
-defined( 'ABSPATH' ) or die();
+
 use LE_ACME2\Connector\Connector;
 
 abstract class AbstractKeyValuable {

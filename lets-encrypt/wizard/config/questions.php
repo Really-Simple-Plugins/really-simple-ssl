@@ -52,7 +52,7 @@ $this->fields = $this->fields + array(
 			'type'        => 'checkbox',
 			'default'     => '',
 			'title'       => __('Terms & Conditions',"really-simple-ssl"),
-			'option_text' => __("I agree to the Terms & Conditions", 'really-simple-ssl'),
+			'option_text' => sprintf(__("I agree to the Let's Encrypt %sTerms & Conditions%s", 'really-simple-ssl'),'<a target="_blank" href="https://letsencrypt.org/documents/LE-SA-v1.2-November-15-2017.pdf">','</a>'),
 		),
 
         'domain' => array(
@@ -90,35 +90,6 @@ $this->fields = $this->fields + array(
 	        'required'    => true,
 	        'disabled'    => false,
         ),
-
-		'cloudways_user_email' => array(
-			'step'        => 2,
-			'section'     => 1,
-			'source'      => 'lets-encrypt',
-			'type'        => 'text',
-			'default'     => '',
-			'placeholder' => 'email@email.com',
-			'label'       => __( "CloudWays user email", 'really-simple-ssl' ),
-			'required'    => true,
-			'disabled'    => false,
-			'condition' => array(
-				'other_host_type' => 'cloudways'
-			),
-		),
-		'cloudways_api_key' => array(
-			'step'        => 2,
-			'section'     => 1,
-			'source'      => 'lets-encrypt',
-			'type'        => 'password',
-			'default'     => '',
-			'label'       => __( "CloudWays api key", 'really-simple-ssl' ),
-			'required'    => true,
-			'disabled'    => false,
-			'comment'     => sprintf(__("You can find your api key %shere%s.","really-simple-ssl"),'<a target="_blank" href="https://platform.cloudways.com/api">','</a>'),
-			'condition' => array(
-				'other_host_type' => 'cloudways'
-			)
-		),
 
         'cpanel_host' => array(
             'step'        => 2,
@@ -163,6 +134,71 @@ $this->fields = $this->fields + array(
 	        ),
         ),
 
+		'cloudways_user_email' => array(
+			'step'        => 2,
+			'section'     => 1,
+			'source'      => 'lets-encrypt',
+			'type'        => 'text',
+			'default'     => '',
+			'placeholder' => 'email@email.com',
+			'label'       => __( "CloudWays user email", 'really-simple-ssl' ),
+			'required'    => true,
+			'disabled'    => false,
+			'condition' => array(
+				'other_host_type' => 'cloudways'
+			),
+		),
+		'cloudways_api_key' => array(
+			'step'        => 2,
+			'section'     => 1,
+			'source'      => 'lets-encrypt',
+			'type'        => 'password',
+			'default'     => '',
+			'label'       => __( "CloudWays api key", 'really-simple-ssl' ),
+			'required'    => true,
+			'disabled'    => false,
+			'comment'     => sprintf(__("You can find your api key %shere%s (make sure you're logged in with your main account).","really-simple-ssl"),'<a target="_blank" href="https://platform.cloudways.com/api">','</a>'),
+			'condition' => array(
+				'other_host_type' => 'cloudways'
+			)
+		),
+
+		'plesk_host' => array(
+			'step'        => 2,
+			'section'     => 1,
+			'source'      => 'lets-encrypt',
+			'type'        => 'text',
+			'default'     => '',
+			'label'       => __( "Plesk host", 'really-simple-ssl' ),
+			'help'       => __( "The URL you use to access your Plesk dashboard. Ends on :8443.", 'really-simple-ssl' ),
+			'required'    => true,
+			'disabled'    => false,
+			'callback_condition' => 'rsssl_is_plesk',
+		),
+		'plesk_username' => array(
+			'step'        => 2,
+			'section'     => 1,
+			'source'      => 'lets-encrypt',
+			'type'        => 'text',
+			'default'     => '',
+			'label'       => __( "Plesk username", 'really-simple-ssl' ),
+			'required'    => true,
+			'disabled'    => false,
+			'callback_condition' => 'rsssl_is_plesk',
+		),
+
+		'plesk_password' => array(
+			'step'        => 2,
+			'section'     => 1,
+			'source'      => 'lets-encrypt',
+			'type'        => 'password',
+			'default'     => '',
+			'label'       => __( "Plesk password", 'really-simple-ssl' ),
+			'required'    => true,
+			'disabled'    => false,
+			'callback_condition' => 'rsssl_is_plesk',
+		),
+
 		'store_credentials' => array(
 			'step'        => 2,
 			'section'     => 1,
@@ -173,6 +209,9 @@ $this->fields = $this->fields + array(
 			'option_text'       => __( "Store for renewal purposes. If not stored, renewal may need to be done manually.", 'really-simple-ssl' ),
 			'required'    => true,
 			'disabled'    => false,
+			'condition' => array(
+				'other_host_type' => 'NOT cloudways'
+			),
 		),
 
         'directories' => array(
@@ -180,12 +219,19 @@ $this->fields = $this->fields + array(
 	        'section'     => 1,
 	        'source'      => 'lets-encrypt',
 	        'callback'    => 'directories.php',
-//	        'help'     => __('To make sure you have added everything correctly, view this example of these folders included in the root of a WordPress installation.', 'really-simple-ssl' ) . rsssl_read_more( 'https://complianz.io/what-is-force-majeure/' ),
 	        'callback_condition' => 'rsssl_do_local_lets_encrypt_generation'
         ),
 
+		'dns-verification' => array(
+			'step'        => 4,
+			'section'     => 1,
+			'source'      => 'lets-encrypt',
+			'callback'    => 'dns-verification.php',
+			'callback_condition' => 'rsssl_dns_verification_required'
+		),
+
         'generation' => array(
-	        'step'        => 4,
+	        'step'        => 5,
 	        'section'     => 1,
 	        'source'      => 'lets-encrypt',
 	        'callback'    => 'generation.php',
@@ -193,14 +239,14 @@ $this->fields = $this->fields + array(
         ),
 
         'installation' => array(
-	        'step'        => 5,
+	        'step'        => 6,
 	        'section'     => 1,
 	        'source'      => 'lets-encrypt',
 	        'callback'    => 'installation.php',
         ),
 
         'activate_ssl' => array(
-	        'step'     => 6,
+	        'step'     => 7,
 	        'source'   => 'lets-encrypt',
 	        'callback' => 'activate.php',
         ),

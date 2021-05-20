@@ -1,14 +1,24 @@
 .rsssl_letsencrypt_container {
   margin-top: 30px;
+  background-color: #fafafa;
+}
+.rsssl_letsencrypt_container.rsssl-progress-container {
+  margin: 20px;
+  padding: 10px 0;
+  border-radius: 5px;
+}
+.rsssl-dns-field {
+  max-width: 45%;
 }
 #rsssl-lets-encrypt ul {
-  margin-left: 60px;
+  margin-left: 50px;
 }
 #rsssl-lets-encrypt ul li {
+  padding-right: 10px;
   /*Nested li */
 }
 #rsssl-lets-encrypt ul li:before {
-  background-color: #f8be2e;
+  background-color: #eeeeee;
   color: #fff;
   height: 10px;
   width: 10px;
@@ -17,28 +27,15 @@
   position: absolute;
   margin-top: 5px;
   margin-left: -30px;
+}
+#rsssl-lets-encrypt ul li.rsssl-warning:before {
+  background-color: #f8be2e;
 }
 #rsssl-lets-encrypt ul li.rsssl-error:before {
   background-color: #D7263D;
-  color: #fff;
-  height: 10px;
-  width: 10px;
-  border-radius: 50%;
-  content: '';
-  position: absolute;
-  margin-top: 5px;
-  margin-left: -30px;
 }
 #rsssl-lets-encrypt ul li.rsssl-success:before {
-  background-color: #22932e;
-  color: #fff;
-  height: 10px;
-  width: 10px;
-  border-radius: 50%;
-  content: '';
-  position: absolute;
-  margin-top: 5px;
-  margin-left: -30px;
+  background-color: #61ce70;
 }
 #rsssl-lets-encrypt ul li ul li:before {
   background-color: #888;
@@ -173,11 +170,11 @@
   margin: 10px;
 }
 #rsssl-wizard .rsssl-icon.rsssl-success {
-  color: #22932e;
+  color: #61ce70;
 }
 #rsssl-wizard .rsssl-icon.rsssl-success svg {
-  stroke: #22932e;
-  fill: #22932e;
+  stroke: #61ce70;
+  fill: #61ce70;
 }
 #rsssl-wizard .rsssl-icon.rsssl-success.documents-shortcode {
   color: #000;

@@ -67,6 +67,5 @@ function rsssl_cpanel_add_condition_actions($steps){
 
 	return $steps;
 }
-error_log("add cpanel filter");
 
 add_filter( 'rsssl_steps', 'rsssl_cpanel_add_condition_actions' );

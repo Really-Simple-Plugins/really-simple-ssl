@@ -1,7 +1,7 @@
 <?php
 
 namespace LE_ACME2;
-defined( 'ABSPATH' ) or die();
+
 use LE_ACME2\Request;
 use LE_ACME2\Response;
 
@@ -25,7 +25,6 @@ class Order extends AbstractKeyValuable {
     }
 
     CONST IDENTRUST_ISSUER_CN = 'DST Root CA X3';
-    private CONST IDENTRUST_ISSUER_EXPIRE_DATE = '2021-09-29';
 
     /** @var string|null $_preferredChain */
     private static $_preferredChain = null;
@@ -244,30 +243,19 @@ class Order extends AbstractKeyValuable {
             $certificate = $response->getCertificate();
             $intermediate = $response->getIntermediate();
 
-            $certificateInfo = openssl_x509_parse($certificate);
-            $certificateValidToTimeTimestamp = $certificateInfo['validTo_time_t'];
+            //$certificateInfo = openssl_x509_parse($certificate);
+            //$certificateValidToTimeTimestamp = $certificateInfo['validTo_time_t'];
             $intermediateInfo = openssl_x509_parse($intermediate);
 
-            // Prefer to use IdenTrust's as long as possible
-            // Expiration of IdenTrust's chain removed at April 2021: LE introduced a cross signed
-            $preferredChain = (self::$_preferredChain === null || self::$_preferredChain == self::IDENTRUST_ISSUER_CN) &&
-                (true || strtotime(self::IDENTRUST_ISSUER_EXPIRE_DATE) > $certificateValidToTimeTimestamp) ?
-                self::IDENTRUST_ISSUER_CN : null;
-
-            // If another chain is set (not IdenTrust's), force to use it
-            if(self::$_preferredChain !== null && self::$_preferredChain != self::IDENTRUST_ISSUER_CN) {
-                $preferredChain = self::$_preferredChain;
-            }
-
-            if($preferredChain !== null) {
+            if(self::$_preferredChain !== null) {
                 Utilities\Logger::getInstance()->add(
                     Utilities\Logger::LEVEL_INFO,
-                    'Preferred chain is set: ' . $preferredChain
+                    'Preferred chain is set: ' . self::$_preferredChain
                 );
             }
 
             $found = false;
-            if($preferredChain !== null && $intermediateInfo['issuer']['CN'] != $preferredChain) {
+            if(self::$_preferredChain !== null && $intermediateInfo['issuer']['CN'] != self::$_preferredChain) {
 
                 Utilities\Logger::getInstance()->add(
                     Utilities\Logger::LEVEL_INFO,
@@ -283,7 +271,7 @@ class Order extends AbstractKeyValuable {
                     $alternativeIntermediate = $response->getIntermediate();
 
                     $intermediateInfo = openssl_x509_parse($intermediate);
-                    if($intermediateInfo['issuer']['CN'] != $preferredChain) {
+                    if($intermediateInfo['issuer']['CN'] != self::$_preferredChain) {
                         continue;
                     }
 

@@ -37,7 +37,6 @@ if ( rsssl_letsencrypt_generation_allowed() ) {
 				self::$instance->includes();
 				self::$instance->field               = new rsssl_field();
 				self::$instance->wizard              = new rsssl_wizard();
-				error_log("instantiate config");
 				self::$instance->config              = new rsssl_config();
 				if (version_compare(PHP_VERSION, rsssl_le_php_version, '>')) {
 					self::$instance->letsencrypt_handler = new rsssl_letsencrypt_handler();
@@ -67,8 +66,6 @@ if ( rsssl_letsencrypt_generation_allowed() ) {
 			if (version_compare(PHP_VERSION, rsssl_le_php_version, '>=')) {
 				require_once( rsssl_le_path . 'class-letsencrypt-handler.php' );
 			}
-			error_log("load integrations");
-
 			require_once( rsssl_le_path . 'integrations/integrations.php' );
 		}
 

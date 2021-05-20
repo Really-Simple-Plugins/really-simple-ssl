@@ -1,7 +1,7 @@
 <?php
 
 namespace LE_ACME2\Exception;
-defined( 'ABSPATH' ) or die();
+
 class RateLimitReached extends AbstractException {
 
     public function __construct(string $request, string $detail) {

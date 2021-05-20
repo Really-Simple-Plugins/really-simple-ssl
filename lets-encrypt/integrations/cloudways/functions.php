@@ -55,3 +55,17 @@ function rsssl_cloudways_add_condition_actions($steps){
 	return $steps;
 }
 add_filter( 'rsssl_steps', 'rsssl_cloudways_add_condition_actions' );
+
+/**
+ * Drop store credentials field
+ * @param $fields
+ *
+ * @return mixed
+ */
+function rsssl_cloudways_fields($fields){
+	unset($fields['store_credentials']);
+
+	return $fields;
+}
+add_filter( 'rsssl_fields_load_types', 'rsssl_cloudways_fields' );
+

@@ -27,6 +27,9 @@ if ( ! class_exists( "rsssl_wizard" ) ) {
 			add_action( 'rsssl_after_save_lets-encrypt_option', array( $this, 'after_save_wizard_option' ), 10, 4 );
 			add_action( 'rsssl_after_saved_all_fields', array( $this, 'after_saved_all_fields' ), 10, 1 );
 			add_action( 'rsssl_last_step', array( $this, 'last_step_callback' ) );
+			add_action( 'admin_init', array( $this, 'catch_dns_switch' ) );
+			add_filter( 'rsssl_fields_load_types', array( $this, 'maybe_drop_directories_step' )  );
+			add_filter( 'rsssl_steps', array($this, 'adjust_for_dns_actions') );
 
 		}
 
@@ -34,6 +37,40 @@ if ( ! class_exists( "rsssl_wizard" ) ) {
 			return self::$_this;
 		}
 
+		public function adjust_for_dns_actions($steps){
+			$use_dns = rsssl_dns_verification_required();
+            if ($use_dns) {
+	            $index = array_search( 'generation', array_column( $steps['lets-encrypt'], 'id' ) );
+	            $index ++;
+	            //clear existing array
+                $steps['lets-encrypt'][ $index ]['actions'] = array (
+                     array(
+                        'description' => __("Generating SSL certificate...", "really-simple-ssl"),
+                        'action'=> 'create_bundle_or_renew',
+                        'attempts' => 5,
+                    )
+                );
+            }
+			return $steps;
+		}
+
+
+		public function maybe_drop_directories_step($fields){
+		    if (rsssl_dns_verification_required()) {
+		        unset($fields['directories']);
+            }
+		    return $fields;
+        }
+
+		public function catch_dns_switch(){
+		    if ( !rsssl_user_can_manage() ) {
+		        return;
+            }
+
+		    if (isset($_POST['rsssl-switch-to-dns'])) {
+		        update_option('rsssl_verification_type', 'DNS');
+            }
+        }
 		/**
 		 *
 		 * @param $step
@@ -60,11 +97,9 @@ if ( ! class_exists( "rsssl_wizard" ) ) {
                     var attempts = stored_attempts;//enabled us to reset
                     var descriptions = stored_descriptions;//enabled us to reset
                     var progress_step = Math.ceil(100/actions.length);
-                    var message_container = $('.rsssl_installation_message');
                     var message_success = '<?php _e("Completed successfully", "really-simple-ssl")?>';
                     var message_error = '<?php _e("Please check the notices above.", "really-simple-ssl")?>';
                     var attempt_string = '<?php _e("Attempt %s.", "really-simple-ssl")?>';
-                    var msg_aborted = '<?php _e("aborted.", "really-simple-ssl")?>';
                     var startTime, endTime;
                     var actual_attempts_count = 1;
                     var previous_progress = 0;
@@ -77,11 +112,6 @@ if ( ! class_exists( "rsssl_wizard" ) ) {
                         console.log(actions);
                         var current_action = actions[0];
                         var max_attempts = attempts[0];
-                        var current_description = descriptions[0];
-                        if (actual_attempts_count>1) {
-                            current_description = attempt_string.replace('%s', actual_attempts_count)+' '+current_description;
-                        }
-                        message_container.html(current_description);
                         //set up a counter to slowly increment the progress value until we get a response.
                         clearInterval(window.rsssl_interval);
                         window.rsssl_interval = setInterval(function () {
@@ -108,10 +138,14 @@ if ( ! class_exists( "rsssl_wizard" ) ) {
                                 rsssl_maybe_show_elements(current_action, response.status);
 
                                 var msg = response.message;
+                                if (actual_attempts_count>1) {
+                                    msg = attempt_string.replace('%s', actual_attempts_count)+' '+msg;
+                                }
                                 var current_action_container = $('.rsssl_action_'+current_action);
                                 current_action_container.html(msg);
                                 current_action_container.addClass('rsssl-'+response.status);
-
+                                var event = new CustomEvent('rsssl_le_response', { detail: response });
+                                document.dispatchEvent(event);
                                 if (response.action === 'finalize' ) {
                                     rsssl_set_status(response.status);
                                     //remove remaining list items.
@@ -126,7 +160,6 @@ if ( ! class_exists( "rsssl_wizard" ) ) {
                                     descriptions.length = 0;
                                     console.log("action is finalize");
                                     $('.rsssl-next').prop('disabled', false);
-                                    rsssl_set_message_container_status('success');
                                     clearInterval(window.rsssl_interval);
                                     window.rsssl_interval = setInterval(function() {
                                         progress +=5;
@@ -146,8 +179,6 @@ if ( ! class_exists( "rsssl_wizard" ) ) {
                                     progress = 100 - (progress_step * actions.length);
                                     //store last successful progress
                                     previous_progress = progress;
-
-                                    rsssl_set_message_container_status(response.status);
                                     rsssl_set_progress(100);
                                     if ( actions.length == 0 ) {
                                         rsssl_stop_progress(response.status);
@@ -157,7 +188,8 @@ if ( ! class_exists( "rsssl_wizard" ) ) {
                                     }
 
                                 } else if (response.action === 'retry' ) {
-
+                                    console.log("actual attempts count "+actual_attempts_count);
+                                    console.log("max attempts count "+max_attempts);
                                     if ( actual_attempts_count >= max_attempts ) {
                                         console.log("action is retry, but too many attempts");
                                         progress = 100;
@@ -169,8 +201,6 @@ if ( ! class_exists( "rsssl_wizard" ) ) {
                                         actions = stored_actions;
                                         descriptions = stored_descriptions;
                                         attempts = stored_attempts;
-                                        rsssl_set_message_container_status('error');
-
                                         clearInterval(window.rsssl_interval);
                                         window.rsssl_interval = setInterval(function() {
                                             progress += 10;
@@ -184,10 +214,9 @@ if ( ! class_exists( "rsssl_wizard" ) ) {
                                     for (var action in actions) {
                                         if (actions.hasOwnProperty(action)) {
                                             var container = $('.rsssl_action_'+actions[action]);
-                                            container.html(container.html() + ' ' + msg_aborted );
+                                            container.html(container.html() );
                                         }
                                     }
-                                    rsssl_set_message_container_status('error');
                                     progress = 100;
                                     rsssl_stop_progress(response.status);
                                 } else {
@@ -211,10 +240,8 @@ if ( ! class_exists( "rsssl_wizard" ) ) {
                     }
 
                     function rsssl_maybe_show_elements(action, status){
-                        console.log(action);
-                        console.log(status);
-                        console.log('.rsssl-show-on-'+status+'.rsssl-'+action);
                         $('.rsssl-show-on-'+status+'.rsssl-'+action).removeClass('rsssl-hidden');
+                        $('.rsssl-show-on-'+status+'.rsssl-general').removeClass('rsssl-hidden');
                     }
 
                     function rsssl_sleep(milliseconds) {
@@ -226,19 +253,9 @@ if ( ! class_exists( "rsssl_wizard" ) ) {
                     }
 
                     function rsssl_stop_progress( status ){
-                        console.log("stopping");
-                        console.log(progress);
                         var bar = $('.rsssl-installation-progress');
-                        var msg;
                         bar.css('width', '100%');
                         bar.addClass('rsssl-'+status);
-                        rsssl_set_message_container_status(status);
-                        if (status==='success'){
-                            msg = message_success;
-                        } else {
-                            msg = message_error;
-                        }
-                        message_container.html(msg);
                         clearInterval(window.rsssl_interval);
                     }
 
@@ -252,32 +269,14 @@ if ( ! class_exists( "rsssl_wizard" ) ) {
                         return Math.round(timeDiff);
                     }
 
-                    function rsssl_set_message_container_status(status){
-
-                        if (status==='error') {
-                            message_container.removeClass('rsssl-success');
-                            message_container.addClass('rsssl-error');
-                        }
-                        if (status==='success') {
-                            message_container.addClass('rsssl-success');
-                            message_container.removeClass('rsssl-error');
-                        }
-                    }
-
                     function rsssl_set_progress(msg , restart_on_100){
                         if ( progress>=100 ) progress=100;
-                        console.log(progress);
-
                         $('.rsssl-installation-progress').css('width',progress + '%');
 
                         if ( progress == 100 ) {
                             clearInterval(window.rsssl_interval);
-                            if (typeof msg !== "undefined") {
-                                message_container.html(msg);
-                            }
                             if (typeof restart_on_100 !=='undefined' && restart_on_100){
                                 progress = previous_progress;
-                                message_container.html('<?php _e("Not succeeded yet. Please let the system retry, or come back to this page later")?>');
                                 rsssl_process_installation_step();
                             }
                         }
@@ -288,24 +287,21 @@ if ( ! class_exists( "rsssl_wizard" ) ) {
             <div class="field-group">
                 <div class="rsssl-field">
                     <div class="rsssl-section">
-                        <ul>
-		                    <?php foreach ($action_list as $action){?>
-                                <li class="rsssl_action_<?php echo $action['action']?>">
-				                    <?php echo $action['description'] ?>
-                                </li>
-		                    <?php } ?>
-                        </ul>
                         <div class="rsssl_letsencrypt_container field-group rsssl-hidden">
                             <div class="rsssl-field">
-                                <ul>
-                                    <li class="rsssl_installation_message">
-
-                                    </li>
-                                </ul>
                                 <div class=" rsssl-wizard-progress-bar">
                                     <div class="rsssl-wizard-progress-bar-value rsssl-installation-progress" style="width:0"></div>
                                 </div>
                             </div>
+                        </div>
+                        <div class="rsssl_letsencrypt_container rsssl-progress-container field-group rsssl-hidden">
+                            <ul>
+                                <?php foreach ($action_list as $action){?>
+                                    <li class="rsssl_action_<?php echo $action['action']?>">
+                                        <?php echo $action['description'] ?>
+                                    </li>
+                                <?php } ?>
+                            </ul>
                         </div>
                     </div>
                 </div>
@@ -319,6 +315,7 @@ if ( ! class_exists( "rsssl_wizard" ) ) {
 			$error   = false;
 			$action = '';
 			$message = '';
+			$output = '';
 			$status = 'none';
 			if ( ! is_user_logged_in() ) {
 				$error = true;
@@ -348,12 +345,14 @@ if ( ! class_exists( "rsssl_wizard" ) ) {
 				$message = $response->message;
 				$action = $response->action;
 				$status = $response->status;
+				$output = $response->output;
 			}
 			$out = array(
 				'success' => ! $error,
 				'message' => $message,
 				'action' => $action,
 				'status' => $status,
+				'output' => $output,
 			);
 
 			die( json_encode( $out ) );
@@ -380,7 +379,7 @@ if ( ! class_exists( "rsssl_wizard" ) ) {
 		 */
 		public function initialize( $page ) {
 			$this->last_section = $this->last_section( $page, $this->step() );
-			$this->page_url     = rsssl_settings_page();
+			$this->page_url     = rsssl_letsencrypt_wizard_url();
 			//if a post id was passed, we copy the contents of that page to the wizard settings.
 			if ( isset( $_GET['post_id'] ) ) {
 				$post_id = intval( $_GET['post_id'] );
@@ -804,15 +803,37 @@ if ( ! class_exists( "rsssl_wizard" ) ) {
 				$args['next_button'] = '<input '.$disabled.' class="button button-primary rsssl-next" type="submit" name="rsssl-next" value="'. __( "Next", 'really-simple-ssl' ) . '">';
 			}
 
-			if ( $step > 0  && $step <= $this->total_steps( $page )) {
+			if ( $step > 0  && $step < $this->total_steps( $page )) {
 				$args['save_button'] = RSSSL_LE()->field->save_button();
 			} elseif ($step === $this->total_steps( $page )) {
-
+				$args['save_button'] = $this->activate_ssl_buttons();
 			}
 
 			$html = RSSSL()->really_simple_ssl->get_template( 'content.php', $path = rsssl_le_wizard_path, $args );
 			return $this->process_args($html, $args);
 
+		}
+
+		public function activate_ssl_buttons(){
+		    ob_start();
+		    wp_nonce_field('rsssl_nonce', 'rsssl_nonce'); ?>
+            <?php
+                $response = RSSSL_LE()->letsencrypt_handler->certificate_status();
+                if ($response->action === 'stop') {?>
+                    <input type="submit" class='button button-primary'
+                           value="<?php _e("Go ahead, activate SSL!", "really-simple-ssl"); ?>" id="rsssl_do_activate_ssl"
+                           name="rsssl_do_activate_ssl">
+                <?php } else { ?>
+                    <input type="submit" class='button button-default'
+                           value="<?php _e("Re-check SSL certificate", "really-simple-ssl"); ?>" id="rsssl_recheck_ssl"
+                           name="rsssl_recheck_ssl">
+                <?php }?>
+
+                <?php if (!defined("rsssl_pro_version") ) { ?>
+                    <a class="button button-default" href="<?php echo $this->pro_url ?>" target="_blank"><?php _e("Get ready with PRO!", "really-simple-ssl"); ?></a>
+                <?php } ?>
+            <?php
+            return ob_get_clean();
 		}
 
 		/**

@@ -17,7 +17,6 @@ if ( ! class_exists( "rsssl_config" ) ) {
         public $no_installation_renewal_needed;
 
         function __construct() {
-        	error_log("construct config");
             if ( isset( self::$_this ) ) {
                 wp_die( sprintf( '%s is a singleton class and you cannot create a second instance.',
                     get_class( $this ) ) );

@@ -1,7 +1,7 @@
 <?php
 
 namespace LE_ACME2\Utilities;
-defined( 'ABSPATH' ) or die();
+
 use LE_ACME2\Order;
 
 class Certificate {

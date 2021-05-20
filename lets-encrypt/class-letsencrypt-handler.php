@@ -3,9 +3,12 @@ defined('ABSPATH') or die("you do not have access to this page!");
 
 require_once rsssl_le_path . 'vendor/autoload.php';
 use LE_ACME2\Account;
+use LE_ACME2\Authorizer\AbstractDNSWriter;
+use LE_ACME2\Authorizer\DNS;
 use LE_ACME2\Authorizer\HTTP;
 use LE_ACME2\Connector\Connector;
 use LE_ACME2\Order;
+use LE_ACME2\Utilities\Certificate;
 use LE_ACME2\Utilities\Logger;
 
 class rsssl_letsencrypt_handler {
@@ -45,9 +48,8 @@ class rsssl_letsencrypt_handler {
 		Connector::getInstance()->useStagingServer( false );
 		Logger::getInstance()->setDesiredLevel( Logger::LEVEL_DISABLED );
 
-//		// Optional configs
-//		//\LE_ACME2\Utilities\Certificate::enableFeatureOCSPMustStaple();
-//		\LE_ACME2\Order::setPreferredChain(\LE_ACME2\Order::IDENTRUST_ISSUER_CN);
+		Certificate::enableFeatureOCSPMustStaple();
+		Order::setPreferredChain('ISRG Root X1');
         $this->subjects = $this->get_subjects();
 		self::$_this = $this;
 	}
@@ -73,7 +75,7 @@ class rsssl_letsencrypt_handler {
 			//if the certificate expires within the grace period, allow renewal
 			//e.g. expiry date 30 may, now = 10 may => grace period 9 june.
 			$expiry_date = date( get_option('date_format'), $end_date );
-			$renew_link = rsssl_settings_page();
+			$renew_link = rsssl_letsencrypt_wizard_url();
 			$link_open = '<a href="'.$renew_link.'" target="_blank">';
 
 
@@ -100,7 +102,7 @@ class rsssl_letsencrypt_handler {
 				'score'     => 10,
 				'output'    => array(
 					'true' => array(
-						'msg'  => sprintf( __( "The automatic installation of your certificate has failed. Please check your credentials, and retry the %sinstallation%s.", "really-simple-ssl-pro" ), '<a href="'.rsssl_settings_page().'">', '</a>' ),
+						'msg'  => sprintf( __( "The automatic installation of your certificate has failed. Please check your credentials, and retry the %sinstallation%s.", "really-simple-ssl-pro" ), '<a href="'.rsssl_letsencrypt_wizard_url().'">', '</a>' ),
 						'icon' => 'open',
 						'plusone' => true,
 					),
@@ -179,11 +181,29 @@ class rsssl_letsencrypt_handler {
 	}
 
 	/**
-     * Test for localhost usage
+     * Test for localhost or subfolder usage
 	 * @return RSSSL_RESPONSE
 	 */
-    public function localhost_used(){
-	    if ( strpos(site_url(), 'localhost')!==false ) {
+    public function check_domain(){
+	    $details = parse_url(site_url());
+	    $path = $details['path'];
+
+	    if (is_multisite() && get_current_blog_id() !== get_main_site_id() ) {
+		    rsssl_progress_remove('system-status');
+		    $action = 'stop';
+		    $status = 'error';
+		    $message = __("It is not possible to install Let's Encrypt on a subsite. Please go to the main site of your website.", "really-simple-ssl" );
+	    } else if ( strlen($path)>0 ) {
+		    rsssl_progress_remove('system-status');
+		    $action = 'stop';
+		    $status = 'error';
+		    $message = __("It is not possible to install Let's Encrypt on a subfolder configuration.", "really-simple-ssl" );
+	    } else if ( strlen($path)>0 ) {
+		    rsssl_progress_remove('system-status');
+		    $action = 'stop';
+		    $status = 'error';
+		    $message = __("It is not possible to install Let's Encrypt on a subfolder configuration.", "really-simple-ssl" );
+	    } else if ( strpos(site_url(), 'localhost')!==false ) {
 		    rsssl_progress_remove('system-status');
 		    $action = 'stop';
 		    $status = 'error';
@@ -248,7 +268,7 @@ class rsssl_letsencrypt_handler {
 		    //e.g. expiry date 30 may, now = 10 may => grace period 9 june.
 		    if ( $grace_period > $end_date ) {
 			    $action = 'continue';
-			    $status = 'error';
+			    $status = 'success';
 			    $message = __("Your certificate will expire within 30 days.", "really-simple-ssl" ).' '.__("Continue to renew.", "really-simple-ssl" );   ;
 		    } else {
 			    $action = 'stop';
@@ -258,8 +278,8 @@ class rsssl_letsencrypt_handler {
 
 	    } else {
 		    $action = 'continue';
-		    $status = 'error';
-		    $message = __("SSL certificate not valid. Please continue to generate your own certificate.", "really-simple-ssl" );
+		    $status = 'success';
+		    $message = __("SSL certificate should be generated and installed.", "really-simple-ssl" );
 	    }
 	    return new RSSSL_RESPONSE($status, $action, $message);
     }
@@ -370,6 +390,94 @@ class rsssl_letsencrypt_handler {
 	    return new RSSSL_RESPONSE($status, $action, $message);
     }
 
+	/**
+	 * @return RSSSL_RESPONSE
+	 */
+    public function get_dns_token(){
+
+	    $use_dns = rsssl_dns_verification_required();
+	    $output = '';
+	    $challenge_type = $use_dns ? Order::CHALLENGE_TYPE_DNS : Order::CHALLENGE_TYPE_HTTP;
+	    if ($use_dns) {
+	    	try {
+			    $this->get_account();
+			    $dnsWriter = new class extends AbstractDNSWriter {
+				    public function write( Order $order, string $identifier, string $digest): bool {
+				    	$tokens = get_option('rsssl_le_dns_tokens', array());
+					    $tokens[$identifier] = $digest;
+					    update_option("rsssl_le_dns_tokens", $tokens);
+					    //return false, as we will continue later on.
+					    return false;
+				    }
+			    };
+			    DNS::setWriter($dnsWriter);
+			    $order = false;
+			    if ( ! Order::exists( $this->account, $this->subjects ) ) {
+				    try {
+					    $order = Order::create( $this->account, $this->subjects );
+					    $status = 'success';
+					    $action = 'continue';
+					    $message = __("Order successfully created.",'really-simple-ssl');
+				    } catch(Exception $e) {
+
+					    $response = $this->get_error($e);
+					    error_log(print_r($e, true));
+					    $status = 'error';
+					    $action = 'retry';
+					    $message = $response;
+				    }
+			    } else {
+				    //order exists already
+				    $status = 'success';
+				    $action = 'continue';
+				    $message = __("Order successfully retrieved.",'really-simple-ssl');
+				    $order = Order::get( $this->account, $this->subjects );
+			    }
+
+			    if ( $order ) {
+				    try {
+					    if ( $order->authorize( $challenge_type ) ) {
+						    $status = 'success';
+						    $action = 'continue';
+						    $message = __("Token successfully retrieved.",'really-simple-ssl');
+					    } else {
+						    rsssl_progress_add('dns-verification');
+						    if ( get_option('rsssl_le_dns_tokens') ) {
+							    $status = 'success';
+							    $action = 'continue';
+							    $message = __("Token successfully retrieved.",'really-simple-ssl');
+							    $output = json_encode(get_option('rsssl_le_dns_tokens'));
+						    } else {
+							    $status = 'error';
+							    $action = 'retry';
+							    $message = __("Token not received yet.",'really-simple-ssl');
+						    }
+
+					    }
+				    } catch ( Exception $e ) {
+					    error_log( print_r( $e, true ) );
+					    $status = 'error';
+					    $action = 'retry';
+					    $message = $this->get_error( $e );
+				    }
+			    }
+
+		    } catch(Exception $e) {
+			    $response = $this->get_error($e);
+			    error_log(print_r($e, true));
+			    $status = 'error';
+			    $action = 'retry';
+			    $message = $response;
+		    }
+	    } else {
+			$status = 'error';
+			$action = 'stop';
+			$message = __("Configured for HTTP challenge",'really-simple-ssl');
+	    }
+
+	    return new RSSSL_RESPONSE($status, $action, $message, $output);
+
+    }
 
 	/**
      * Authorize the order
@@ -377,6 +485,7 @@ class rsssl_letsencrypt_handler {
 	 */
 
     public function create_bundle_or_renew(){
+    	$use_dns = rsssl_dns_verification_required();
 	    $attempt_count = intval(get_transient('rsssl_le_generate_attempt_count'));
 	    $attempt_count++;
 	    set_transient('rsssl_le_generate_attempt_count', $attempt_count, 2 * HOUR_IN_SECONDS);
@@ -393,7 +502,18 @@ class rsssl_letsencrypt_handler {
 
 	    if ($this->is_ready_for('generation')) {
 		    $this->get_account();
-
+			if ( $use_dns ) {
+				$dnsWriter = new class extends AbstractDNSWriter {
+					public function write( Order $order, string $identifier, string $digest): bool {
+						$status = false;
+						if ( get_option('rsssl_le_dns_token') ) {
+							$status = true;
+						}
+						return $status;
+					}
+				};
+				DNS::setWriter($dnsWriter);
+			}
 		    if ( ! Order::exists( $this->account, $this->subjects ) ) {
 			    try {
 				    $order = Order::create( $this->account, $this->subjects );
@@ -432,18 +552,25 @@ class rsssl_letsencrypt_handler {
 				    }
 			    } else {
 			    	$finalized = false;
+			    	$challenge_type = $use_dns ? Order::CHALLENGE_TYPE_DNS : Order::CHALLENGE_TYPE_HTTP;
 				    try {
-					    if ( $order->authorize( Order::CHALLENGE_TYPE_HTTP ) ) {
+					    if ( $order->authorize( $challenge_type ) ) {
 						    $order->finalize();
 						    $finalized = true;
+					    } else {
+						    $status = 'error';
+						    $action = 'retry';
+						    $message = __('Authorization not completed yet. Try again later.',"really-simple-ssl");
+						    $bundle_completed = false;
 					    }
 				    } catch ( Exception $e ) {
 					    error_log( print_r( $e, true ) );
-					    error_log("### print exception test 2");
 					    $status = 'error';
 					    $action = 'stop';
 					    $message = $this->get_error( $e );
-
+					    if (strpos($message, 'Order has status "invalid"')!==false) {
+					    	$order->clear();
+					    }
 				    }
 
 					if ($finalized) {
@@ -621,8 +748,8 @@ class rsssl_letsencrypt_handler {
 	public function get_subjects(){
 		$subjects = array();
 		$domain = rsssl_get_domain();
-		$subjects[] = $domain;
 
+		$subjects[] = $domain;
 		//don't offer aliasses for subdomains
 		if ( !rsssl_is_subdomain() ) {
 			//main is www.
@@ -635,7 +762,8 @@ class rsssl_letsencrypt_handler {
 				$subjects[] = $alias_domain;
 			}
 		}
-	    return $subjects;
+
+	    return apply_filters('rsssl_le_subjects', $subjects);
 	}
 
 	/**
@@ -645,7 +773,12 @@ class rsssl_letsencrypt_handler {
 	 * @return array | bool
 	 */
 	public function is_ready_for($item) {
-        if (empty($this->get_not_completed_steps($item))){
+		if ( !rsssl_do_local_lets_encrypt_generation() ) {
+			rsssl_progress_add('directories');
+			rsssl_progress_add('generation');
+		}
+
+		if (empty($this->get_not_completed_steps($item))){
             return true;
         } else{
             return false;
@@ -729,6 +862,7 @@ class rsssl_letsencrypt_handler {
 			$status = 'success';
 			$message = __("The challenge directory was successfully created.", "really-simple-ssl" );
 		}
+
 		return new RSSSL_RESPONSE($status, $action, $message);
 	}
 	/**
@@ -802,12 +936,11 @@ class rsssl_letsencrypt_handler {
 
 	public function challenge_directory_reachable(){
 		$file_content = false;
-		$status = 404;
+		$status_code = __('no response','really-simple-ssl');
 		$url = site_url('.well-known/acme-challenge/really-simple-ssl-permissions-check.txt');
 
 		$error_message = sprintf(__( "Could not reach challenge directory over %s.", "really-simple-ssl"), $url);
 		$test_string = 'Really Simple SSL';
-		if (!$this->challenge_directory() ) return false;
 		$folders = $this->directories_without_writing_permissions();
 		if ( !$this->challenge_directory() || count($folders) !==0 ) {
 			$status  = 'error';
@@ -818,14 +951,14 @@ class rsssl_letsencrypt_handler {
 
 		$response       = wp_remote_get( $url );
 		if ( is_array( $response ) ) {
-			$status       = wp_remote_retrieve_response_code( $response );
+			$status_code       = wp_remote_retrieve_response_code( $response );
 			$file_content = wp_remote_retrieve_body( $response );
 		}
 
-		if ( $status !== 200 ) {
-			$status  = 'warning';
+		if ( $status_code !== 200 ) {
+			$status  = 'error';
 			$action  = 'stop';
-			$message = $error_message.' '.sprintf( __( "Error code %s", "really-simple-ssl" ), $status );
+			$message = $error_message.' '.sprintf( __( "Error code %s.", "really-simple-ssl" ), $status_code );
 			rsssl_progress_remove('directories');
 		} else {
 			if ( ! is_wp_error( $response ) && ( strpos( $file_content, $test_string ) !== false ) ) {
@@ -887,6 +1020,40 @@ class rsssl_letsencrypt_handler {
 	}
 
 	/**
+	 * Check if the site requires a wildcard
+	 * @return bool
+	 */
+	public function wildcard_certificate_required(){
+		if ( !is_multisite() ) {
+			return false;
+		} else {
+			if ( defined('SUBDOMAIN_INSTALL') && SUBDOMAIN_INSTALL ) {
+				return true;
+			} else {
+				return false;
+			}
+		}
+
+	}
+
+	/**
+	 * Check if we're about to create a wilcard certificate
+	 * @return bool
+	 */
+
+	public function is_wildcard(){
+		$subjects = $this->get_subjects();
+		$is_wildcard = false;
+		foreach ($subjects as $domain ) {
+			if ( strpos($domain, '*') !== false ) {
+				$is_wildcard = true;
+			}
+		}
+
+		return $is_wildcard;
+	}
+
+	/**
 	 * Check if the alias domain is available
 	 *
 	 * @return RSSSL_RESPONSE
@@ -897,17 +1064,18 @@ class rsssl_letsencrypt_handler {
 		$upload_dir = trailingslashit($uploads['basedir']);
 		$upload_url = trailingslashit($uploads['baseurl']);
 		$file_content = false;
-		$status = 404;
+		$status_code = __('no response','really-simple-ssl');
 
 		$domain = rsssl_get_domain();
-		//main is www.
+
 		if ( strpos( $domain, 'www.' ) !== false ) {
 			$is_www = true;
 			$alias_domain = str_replace( 'www.', '', $domain );
 		} else {
 			$is_www = false;
-			$alias_domain = str_replace( array( 'http://', 'https://' ), array( 'http://www.', 'https://www.' ), $domain );
+			$alias_domain = 'www.'.$domain;
 		}
+
 		if ( $is_www ) {
 			$message =  __("Please check if the non www version of your site also points to this website.", "really-simple-ssl" );
 		} else {
@@ -916,7 +1084,7 @@ class rsssl_letsencrypt_handler {
 		$error_message = __( "Could not verify alias domain.", "really-simple-ssl") .' '. $message.' '. __( "If this is not the case, dont' add this variant to your certificate.", "really-simple-ssl");
 
 		//get cached status first.
-		$cached_status = get_transient('rsssl_alias_domain_available');
+		$cached_status = false;//get_transient('rsssl_alias_domain_available');
 		if ( $cached_status ) {
 			if ( $cached_status === 'available' ) {
 				$status  = 'success';
@@ -946,33 +1114,39 @@ class rsssl_letsencrypt_handler {
 		file_put_contents($test_file, $test_string );
 		$test_url = $upload_url . 'rsssl/test.txt';
 
+
 		if ( ! file_exists( $test_file ) ) {
 			$status = 'error';
 			$action = 'stop';
 			$message = __("Could not create test folder and file.", "really-simple-ssl").' '.
 			           __("Please create a folder 'rsssl' in the uploads directory, with 644 permissions.", "really-simple-ssl");
 		} else {
-			set_transient('rsssl_alias_domain_available', 'not-available', 30 * 'MINUTE_IN_SECONDS' );
+			set_transient('rsssl_alias_domain_available', 'not-available', 30 * MINUTE_IN_SECONDS );
 			$alias_test_url = str_replace( $domain, $alias_domain, $test_url );
+			//always over http:
+			$alias_test_url = str_replace('https://','http://', $alias_test_url);
 			$response       = wp_remote_get( $alias_test_url );
 			if ( is_array( $response ) ) {
-				$status       = wp_remote_retrieve_response_code( $response );
+				$status_code       = wp_remote_retrieve_response_code( $response );
 				$file_content = wp_remote_retrieve_body( $response );
 			}
 
-			if ( $status !== 200 ) {
+			if ( $status_code !== 200 ) {
 				$status  = 'warning';
-				$action  = 'retry';
-				$message = $error_message.' '.sprintf( __( "Error code %s", "really-simple-ssl" ), $status );
+				$action  = 'continue';
+				$message = $error_message;
+				if (intval($status_code) != 0 ) {
+					$message .= ' '.sprintf( __( "Error code %s", "really-simple-ssl" ), $status_code );
+				}
 			} else {
 				if ( ! is_wp_error( $response ) && ( strpos( $file_content, $test_string ) !== false ) ) {
 					$status  = 'success';
 					$action  = 'continue';
 					$message = __( "Successfully verified alias domain.", "really-simple-ssl" );
-					set_transient('rsssl_alias_domain_available', 'available', 30 * 'MINUTE_IN_SECONDS' );
+					set_transient('rsssl_alias_domain_available', 'available', 30 * MINUTE_IN_SECONDS );
 				} else {
 					$status  = 'warning';
-					$action  = 'retry';
+					$action  = 'continue';
 					$message = $error_message;
 				}
 			}
@@ -1005,33 +1179,39 @@ class rsssl_letsencrypt_handler {
 
 	/**
      * Get string error from error message.
-	 * @param $e
+	 * @param mixed|LE_ACME2\Exception\InvalidResponse $e
 	 *
 	 * @return string
 	 */
 	private function get_error($e){
-	    if (isset($e->getTrace()[0]['args'][0]->body['detail'])) {
-		    $error = $e->getTrace()[0]['args'][0]->body['detail'];
+		$is_raw_response = false;
 
+		error_log("###");
+	    if (method_exists($e, 'getRawResponse') && isset($e->getRawResponse()->body['detail'])) {
+	    	$is_raw_response = true;
+		    $error = $e->getRawResponse()->body['detail'];
+			error_log($error);
 		    //check for subproblems
-		    if (isset($e->getTrace()[0]['args'][0]->body['subproblems'])){
+		    if (isset($e->getRawResponse()->body['subproblems'])){
 			    $error .= '<ul>';
-		        foreach($e->getTrace()[0]['args'][0]->body['subproblems'] as $index => $problem) {
-			        $error .= '<li>'. $this->cleanup_error_message($e->getTrace()[0]['args'][0]->body['subproblems'][$index]['detail']).'</li>';
+		        foreach($e->getRawResponse()->body['subproblems'] as $index => $problem) {
+			        $error .= '<li>'. $this->cleanup_error_message($e->getRawResponse()->body['subproblems'][$index]['detail']).'</li>';
 		        }
 			    $error .= '</ul>';
-
 		    }
 
 	    } else {
 	        $error = $e->getMessage();
 	    }
 
+
 	    $max = strpos($error, 'CURL response');
 	    if ($max===false) {
 	    	$max = 200;
 	    }
-		$error = substr( $error, 0, $max);
+	    if (!$is_raw_response){
+		    $error = substr( $error, 0, $max);
+	    }
 	    return $error;
 
 	}

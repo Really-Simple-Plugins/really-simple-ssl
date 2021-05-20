@@ -1,7 +1,7 @@
 <?php
 
 namespace LE_ACME2\Struct;
-defined( 'ABSPATH' ) or die();
+
 class CertificateBundle {
 
     public $path;

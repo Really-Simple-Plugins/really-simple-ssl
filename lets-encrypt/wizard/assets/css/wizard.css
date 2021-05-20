@@ -7,7 +7,7 @@
 }
 .rsssl-copied-feedback-container {
   padding: 20px;
-  color: #22932e;
+  color: #61ce70;
 }
 /**
 * class to add a triangle pointer to each div
@@ -61,7 +61,7 @@
   transition: width 0.5s;
   -webkit-transition: width 0.5s;
   height: 100%;
-  background: #22932e;
+  background: #61ce70;
   border-radius: 4px;
 }
 #rsssl-content-area .rsssl-wizard-progress-bar .rsssl-wizard-progress-bar-value.rsssl-error {
@@ -306,6 +306,7 @@
 }
 #rsssl-wizard .rsssl-checkbox .rsssl-field .rsssl-wizard-settings-text {
   margin-left: 20px;
+  margin-top: 5px;
 }
 #rsssl-wizard .rsssl-checkbox-container {
   display: block;
@@ -1219,6 +1220,10 @@ html .mceContentBody {
 #rsssl-wizard .rsssl-step-title,
 #rsssl-wizard .rsssl-button {
   font-variant: normal;
+}
+#rsssl-wizard h3 {
+  font-weight: 400;
+  font-size: 16px;
 }
 #rsssl-wizard label {
   font-size: 13px;

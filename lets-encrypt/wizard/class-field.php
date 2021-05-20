@@ -1324,7 +1324,7 @@ if ( ! class_exists( "rsssl_field" ) ) {
                 <a <?php if ( $args['disabled'] )
                     echo "disabled" ?>href="<?php echo $args['disabled']
                     ? "#"
-                    : rsssl_settings_page().'&action=' . $args['action'] ?>"
+                    : rsssl_letsencrypt_wizard_url().'&action=' . $args['action'] ?>"
                    class="button"><?php echo esc_html( $args['label'] ) ?></a>
             <?php } else { ?>
                 <input <?php if ( $args['warn'] )

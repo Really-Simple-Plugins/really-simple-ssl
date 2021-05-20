@@ -86,6 +86,12 @@ class AccountTest extends AbstractTest {
         }
 
         $this->expectException(InvalidResponse::class);
+        $this->expectExceptionMessage(
+            'Invalid response received: ' .
+            'urn:ietf:params:acme:error:invalidEmail' .
+            ' - ' .
+            'Error creating new account :: invalid contact domain. Contact emails @example.org are forbidden'
+        );
         \LE_ACME2\Account::create('test@example.org');
     }
 
@@ -102,6 +108,7 @@ class AccountTest extends AbstractTest {
         $keyDirectoryPath = $account->getKeyDirectoryPath();
         $newEmail = 'new-' . $this->_email;
 
+        // An email from example.org is not allowed
         $result = $account->update('test@example.org');
         $this->assertTrue($result === false);
 
@@ -131,12 +138,15 @@ class AccountTest extends AbstractTest {
         $result = $account->deactivate();
         $this->assertTrue($result === true);
 
+        // The account is already deactivated
         $result = $account->deactivate();
         $this->assertTrue($result === false);
 
+        // The account is already deactivated
         $result = $account->changeKeys();
         $this->assertTrue($result === false);
 
+        // The account is already deactivated
         $this->expectException(\LE_ACME2\Exception\InvalidResponse::class);
         $account->getData();
     }

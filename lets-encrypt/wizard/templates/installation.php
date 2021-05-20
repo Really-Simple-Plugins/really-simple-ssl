@@ -13,6 +13,11 @@ defined( 'ABSPATH' ) or die( "you do not have access to this page!" );
         ?>
         <div class="rsssl-hidden rsssl-copied-feedback"><?php _e("copied!","really-simple-ssl")?></div>
         <div class="rsssl-manual rsssl-warning rsssl-hidden">
+            <div>
+                <h2>
+			        <?php _e("Next step", "really-simple-ssl"); ?>
+                </h2>
+            </div>
             <div class="rsssl-template-intro">
                 <p><?php _e("Installation of your certificate.", "really-simple-ssl")?></p>
             </div>
@@ -20,29 +25,25 @@ defined( 'ABSPATH' ) or die( "you do not have access to this page!" );
 			    <?php _e("Certifcate (CRT)", "really-simple-ssl")
 			          . RSSSL()->rsssl_help->get_help_tip(__("Placeholder", "really-simple-ssl") ); ?>
             </h2>
-            <p>
-                <div class="rsssl-certificate-data rsssl-certificate" id="rsssl-certificate"><?php echo $certificate_content ?></div>
-                <a href="<?php echo $download_url?>&type=certificate" class="button button-secondary"><?php _e("Download", "really-simple-ssl")?></a>
-                <button type="button"  class="button button-primary rsssl-copy-content" data-item="certificate"><?php _e("Copy content", "really-simple-ssl")?></button>
-            </p>
+
+            <div class="rsssl-certificate-data rsssl-certificate" id="rsssl-certificate"><?php echo $certificate_content ?></div>
+            <a href="<?php echo $download_url?>&type=certificate" class="button button-secondary"><?php _e("Download", "really-simple-ssl")?></a>
+            <button type="button"  class="button button-primary rsssl-copy-content" data-item="certificate"><?php _e("Copy content", "really-simple-ssl")?></button>
+
             <h2>
 			    <?php _e("Private Key (KEY)", "really-simple-ssl")
 			          . RSSSL()->rsssl_help->get_help_tip(__("Placeholder", "really-simple-ssl") ); ?>
             </h2>
-            <p>
-                <div class="rsssl-certificate-data rsssl-key" id="rsssl-key"><?php echo $key_content ?></div>
-                <a href="<?php echo $download_url?>&type=private_key" class="button button-secondary"><?php _e("Download", "really-simple-ssl")?></a>
-                <button type="button" class="button button-primary rsssl-copy-content" data-item="key"><?php _e("Copy content", "really-simple-ssl")?></button>
-            </p>
+            <div class="rsssl-certificate-data rsssl-key" id="rsssl-key"><?php echo $key_content ?></div>
+            <a href="<?php echo $download_url?>&type=private_key" class="button button-secondary"><?php _e("Download", "really-simple-ssl")?></a>
+            <button type="button" class="button button-primary rsssl-copy-content" data-item="key"><?php _e("Copy content", "really-simple-ssl")?></button>
             <h2>
 			    <?php _e("Certificate Authority Bundle (CABUNDLE)", "really-simple-ssl")
 			          . RSSSL()->rsssl_help->get_help_tip(__("Placeholder", "really-simple-ssl") ); ?>
             </h2>
-            <p>
-                <div class="rsssl-certificate-data rsssl-cabundle" id="rsssl-cabundle"><?php echo $ca_bundle_content ?></div>
-                <a href="<?php echo $download_url?>&type=intermediate" class="button button-secondary"><?php _e("Download", "really-simple-ssl")?></a>
-                <button type="button" class="button button-primary rsssl-copy-content" data-item="cabundle"><?php _e("Copy content", "really-simple-ssl")?></button>
-            </p>
+            <div class="rsssl-certificate-data rsssl-cabundle" id="rsssl-cabundle"><?php echo $ca_bundle_content ?></div>
+            <a href="<?php echo $download_url?>&type=intermediate" class="button button-secondary"><?php _e("Download", "really-simple-ssl")?></a>
+            <button type="button" class="button button-primary rsssl-copy-content" data-item="cabundle"><?php _e("Copy content", "really-simple-ssl")?></button>
         </div>
     <?php } ?>
 </div>

@@ -3,13 +3,17 @@
 require_once dirname(dirname(dirname(__FILE__))) . DIRECTORY_SEPARATOR . 'autoload.php'; //Path to composer autoload
 
 $dnsWriter = new class extends \LE_ACME2\Authorizer\AbstractDNSWriter {
-
     public function write(\LE_ACME2\Order $order, string $identifier, string $digest): bool {
-
         $status = false;
+        error_log("ORDER");
+        error_log(print_r($order,true));
+	    error_log("Identifier");
 
+	    error_log(print_r($identifier,true));
+	    error_log("digest");
+
+	    error_log(print_r($digest,true));
         // Write digest to DNS system
-
         // return true, if the dns configuration is usable and the process should be progressed
         return $status;
     }
@@ -19,14 +23,6 @@ $dnsWriter = new class extends \LE_ACME2\Authorizer\AbstractDNSWriter {
 // Config the desired paths
 \LE_ACME2\Account::setCommonKeyDirectoryPath('/etc/ssl/le-storage/');
 \LE_ACME2\Authorizer\DNS::setWriter($dnsWriter);
-
-// General configs
-\LE_ACME2\Connector\Connector::getInstance()->useStagingServer(true);
-\LE_ACME2\Utilities\Logger::getInstance()->setDesiredLevel(\LE_ACME2\Utilities\Logger::LEVEL_INFO);
-
-// Optional configs
-//\LE_ACME2\Utilities\Certificate::enableFeatureOCSPMustStaple();
-//\LE_ACME2\Order::setPreferredChain(\LE_ACME2\Order::IDENTRUST_ISSUER_CN);
 
 $account_email = 'test@example.org';
 

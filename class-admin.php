@@ -761,7 +761,7 @@ class rsssl_admin extends rsssl_front_end
                 <a class="button button-default" href="<?php echo $this->pro_url ?>" target="_blank"><?php _e("Get ready with PRO!", "really-simple-ssl"); ?></a>
 			<?php } ?>
             <?php if (!RSSSL()->rsssl_certificate->is_valid()){?>
-                <a href="<?php echo add_query_arg(array("page" => "rlrsssl_really_simple_ssl", "tab" => "letsencrypt"),admin_url("options-general.php")) ?>" type="submit" class="button button-primary"><?php _e("Install SSL certificate", "really-simple-ssl"); ?></a>
+                <a href="<?php echo rsssl_letsencrypt_wizard_url()?>" type="submit" class="button button-primary"><?php _e("Install SSL certificate", "really-simple-ssl"); ?></a>
             <?php } ?>
         </form>
 		<?php

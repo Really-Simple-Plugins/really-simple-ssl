@@ -16,12 +16,31 @@ if ( ! function_exists( 'rsssl_user_can_manage' ) ) {
     }
 }
 
-if ( !function_exists('rsssl_settings_page') ) {
-    function rsssl_settings_page(){
-            return add_query_arg(array('page' => 'rlrsssl_really_simple_ssl', 'tab' => 'letsencrypt'), admin_url('options-general.php') );
+if ( !function_exists('rsssl_letsencrypt_wizard_url') ) {
+    function rsssl_letsencrypt_wizard_url(){
+    	if (is_multisite() && !is_main_site()) {
+		    return add_query_arg(array('page' => 'rlrsssl_really_simple_ssl', 'tab' => 'letsencrypt'), get_admin_url(get_main_site_id(),'options-general.php') );
+	    } else {
+		    return add_query_arg(array('page' => 'rlrsssl_really_simple_ssl', 'tab' => 'letsencrypt'), admin_url('options-general.php') );
+	    }
     }
 }
 
+/**
+ * Check if we need to use DNS verification
+ * @return bool
+ */
+function rsssl_dns_verification_required(){
+	return true;
+	if (get_option('rsssl_verification_type')==='DNS') {
+		return true;
+	}
+	if (RSSSL_LE()->letsencrypt_handler->wildcard_certificate_required()) {
+		return true;
+	}
+
+	return false;
+}
 /**
  * Check if we're on CPanel
  * @return bool
@@ -334,3 +353,23 @@ function rsssl_insert_after_key($array, $key, $items){
 
 	return $array;
 }
+
+/**
+ * Override for lets encrypt
+ * @param array $subjects
+ *
+ * @return array
+ */
+function rsssl_le_subjects( $subjects ) {
+	if ( RSSSL_LE()->letsencrypt_handler->wildcard_certificate_required() ) {
+		$domain = rsssl_get_domain();
+		//in theory, the main site of a subdomain setup can be a www. domain. But we have to request a certificate without the www.
+		$domain = str_replace('www.','', $domain);
+		$subjects = array(
+			$domain,
+			'*.'.$domain,
+		);
+	}
+	return $subjects;
+}
+add_filter( 'rsssl_le_subjects', 'rsssl_le_subjects' );

@@ -5,12 +5,22 @@
 @light-grey:#eeeeee;
 .rsssl_letsencrypt_container {
   margin-top:@big-margin;
+  background-color: @grey-lighter;
+  &.rsssl-progress-container {
+    margin: 20px;
+    padding: 10px 0;
+    border-radius: 5px;
+  }
+}
+.rsssl-dns-field {
+  max-width:45%;
 }
 #rsssl-lets-encrypt ul {
-  margin-left:@big-margin + @big-margin;
+  margin-left:50px;
   li {
+    padding-right:10px;
     &:before {
-      background-color: @brand-primary;
+      background-color: @grey-light;
       color: #fff;
       height: 10px;
       width: 10px;
@@ -19,30 +29,18 @@
       position: absolute;
       margin-top: 5px;
       margin-left: -30px;
+    }
+
+    &.rsssl-warning:before {
+      background-color: @brand-primary;
     }
 
     &.rsssl-error:before {
       background-color: @color-warning;
-      color: #fff;
-      height: 10px;
-      width: 10px;
-      border-radius: 50%;
-      content: '';
-      position: absolute;
-      margin-top: 5px;
-      margin-left: -30px;
     }
 
     &.rsssl-success:before {
       background-color: @color-success;
-      color: #fff;
-      height: 10px;
-      width: 10px;
-      border-radius: 50%;
-      content: '';
-      position: absolute;
-      margin-top: 5px;
-      margin-left: -30px;
     }
 
     /*Nested li */

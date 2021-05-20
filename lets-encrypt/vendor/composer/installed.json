@@ -2,26 +2,26 @@
     "packages": [
         {
             "name": "fbett/le_acme2",
-            "version": "1.5.5",
-            "version_normalized": "1.5.5.0",
+            "version": "1.5.6",
+            "version_normalized": "1.5.6.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/fbett/le-acme2-php.git",
-                "reference": "3e9457ae0b4330f7a3b35a761aaaf2cc037b0750"
+                "reference": "26b2c421764b173326f6bcb0713a86bd614f77fa"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fbett/le-acme2-php/zipball/3e9457ae0b4330f7a3b35a761aaaf2cc037b0750",
-                "reference": "3e9457ae0b4330f7a3b35a761aaaf2cc037b0750",
+                "url": "https://api.github.com/repos/fbett/le-acme2-php/zipball/26b2c421764b173326f6bcb0713a86bd614f77fa",
+                "reference": "26b2c421764b173326f6bcb0713a86bd614f77fa",
                 "shasum": ""
             },
             "require": {
                 "ext-curl": "*",
                 "ext-json": "*",
                 "ext-openssl": "*",
-                "php": ">=7.1"
+                "php": ">=7.3"
             },
-            "time": "2021-04-28T17:22:43+00:00",
+            "time": "2021-05-17T07:08:46+00:00",
             "type": "library",
             "installation-source": "dist",
             "autoload": {
@@ -44,7 +44,7 @@
             "homepage": "https://github.com/fbett/le-acme2-php",
             "support": {
                 "issues": "https://github.com/fbett/le-acme2-php/issues",
-                "source": "https://github.com/fbett/le-acme2-php/tree/v1.5.5"
+                "source": "https://github.com/fbett/le-acme2-php/tree/v1.5.6"
             },
             "install-path": "../fbett/le_acme2"
         },

@@ -1,7 +1,7 @@
 <?php
 
 namespace LE_ACME2\Request\Account;
-defined( 'ABSPATH' ) or die();
+
 use LE_ACME2\Response;
 
 use LE_ACME2\Exception;

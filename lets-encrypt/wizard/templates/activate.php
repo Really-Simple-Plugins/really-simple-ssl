@@ -12,15 +12,15 @@ do_action('rsssl_le_activation');
     _e("Before you migrate, please check for: ", 'really-simple-ssl'); ?>
     <p>
     <ul>
-        <li><?php _e('Http references in your .css and .js files: change any http:// into https://', 'really-simple-ssl'); ?></li>
-        <li><?php _e('Images, stylesheets or scripts from a domain without an SSL certificate: remove them or move to your own server.', 'really-simple-ssl'); ?></li><?php
+        <li class="rsssl-warning"><?php _e('Http references in your .css and .js files: change any http:// into https://', 'really-simple-ssl'); ?></li>
+        <li class="rsssl-warning"><?php _e('Images, stylesheets or scripts from a domain without an SSL certificate: remove them or move to your own server.', 'really-simple-ssl'); ?></li><?php
 
 		$backup_link = "https://really-simple-ssl.com/knowledge-base/backing-up-your-site/";
 		$link_open = '<a target="_blank" href="'.$backup_link.'">';
 		$link_close = '</a>';
 		?>
-        <li><?php printf(__("We strongly recommend to create a %sbackup%s of your site before activating SSL", 'really-simple-ssl'), $link_open, $link_close); ?> </li>
-        <li><?php _e("You may need to login in again.", "really-simple-ssl") ?></li>
+        <li class="rsssl-warning"><?php printf(__("We strongly recommend to create a %sbackup%s of your site before activating SSL", 'really-simple-ssl'), $link_open, $link_close); ?> </li>
+        <li class="rsssl-warning"><?php _e("You may need to login in again.", "really-simple-ssl") ?></li>
 		<?php
         //non cached SSL check.
         $response = RSSSL_LE()->letsencrypt_handler->certificate_status();

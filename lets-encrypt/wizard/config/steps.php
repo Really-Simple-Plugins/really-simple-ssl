@@ -1,7 +1,5 @@
 <?php
 defined( 'ABSPATH' ) or die( "you do not have accesss to this page!" );
-error_log("load steps");
-
 $this->steps = array(
     'lets-encrypt' =>
         array(
@@ -36,16 +34,16 @@ $this->steps = array(
 				        'attempts' => 3,
 			        ),
 			        array(
-				        'description' => __("Checking for localhost installation...", "really-simple-ssl"),
-				        'action'=> 'localhost_used',
+				        'description' => __("Checking for website configuration...", "really-simple-ssl"),
+				        'action'=> 'check_domain',
 				        'attempts' => 1,
 			        ),
 		        ),
 	        ),
             2 => array(
                 "id"    => "domain",
-                "title" => __( "Domain", 'really-simple-ssl' ),
-                'intro' => '<h1>'.__('Terms & conditions', 'really-simple-ssl').'</h1><p>'.
+                "title" => __( "General settings", 'really-simple-ssl' ),
+                'intro' => '<p>'.
                     sprintf(__('We have tried to make our Wizard as simple and fast as possible. Although these questions are all necessary, if there’s any way you think we can improve the plugin, please let us %sknow%s!', 'really-simple-ssl'),'<a target="_blank" href="https://rsssl.io/contact">', '</a>').
                     sprintf(__(' Please note that you can always save and finish the wizard later, use our %sdocumentation%s for additional information or log a %ssupport ticket%s if you need our assistance.', 'really-simple-ssl'),'<a target="_blank" href="https://rsssl.io/docs/lets-encrypt">', '</a>','<a target="_blank" href="https://rsssl.io/support">', '</a>').'</p>',
 //                'sections' => array (
@@ -94,7 +92,23 @@ $this->steps = array(
 	                ),
                 ),
             ),
-            4    => array(
+	        4    => array(
+		        "id"    => "dns-verification",
+		        "title" => __( "DNS Verification", 'really-simple-ssl' ),
+		        'actions' => array(
+			        array(
+				        'description' => __("Creating account...", "really-simple-ssl"),
+				        'action'=> 'get_account',
+				        'attempts' => 5,
+			        ),
+			        array(
+				        'description' => __("Retrieving DNS verification token...", "really-simple-ssl"),
+				        'action'=> 'get_dns_token',
+				        'attempts' => 5,
+			        ),
+		        ),
+	        ),
+            5    => array(
 	            "id"    => "generation",
 	            "title" => __( "Generation", 'really-simple-ssl' ),
 	            "intro" => __( "We will now generate your SSL Certificate", "really-simple-ssl" ),
@@ -112,7 +126,7 @@ $this->steps = array(
 
 	            ),
             ),
-            5    => array(
+            6    => array(
                 "id"    => "installation",
                 "title" => __( "Installation", 'really-simple-ssl' ),
                 'actions' => array(
@@ -123,7 +137,7 @@ $this->steps = array(
 	                ),
                 ),
             ),
-            6  => array(
+            7  => array(
 	            "id"    => "activation",
 	            "title" => __( "Activate SSL", 'really-simple-ssl' ),
 	            'actions' => array(),

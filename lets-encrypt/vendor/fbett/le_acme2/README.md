@@ -30,11 +30,11 @@ This library supports it to set a preferred chain in `Order::setPreferredChain($
 
 If the preferred chain is not set or set to IdenTrust’s chain, 
 this library will try to use the IdenTrust’s chain as long as possible.
-Expected first date of NOT using the IdenTrust’s chain anymore for new certificate requests: June 30, 21
+Please see: https://letsencrypt.org/docs/dst-root-ca-x3-expiration-september-2021/
 
 ## Prerequisites
 
-The minimum required PHP version is 7.1.
+The minimum required PHP version is 7.3.
 
 This client also depends on cURL and OpenSSL.
 
@@ -100,7 +100,7 @@ if($order->isCertificateBundleAvailable()) {
     $pathToCertificate = $bundle->path . $bundle->certificate;
     $pathToIntermediate = $bundle->path . $bundle->intermediate;
     
-    $order->enableAutoRenewal(); // If the date of expiration is closer than seven days, the order will automatically start the renewal process.
+    $order->enableAutoRenewal(); // If the date of expiration is closer than thirty days, the order will automatically start the renewal process.
 }
 ```
 

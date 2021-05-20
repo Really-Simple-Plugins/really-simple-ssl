@@ -32,7 +32,7 @@ private static $installed = array (
     'aliases' => 
     array (
     ),
-    'reference' => '7c3a1613496547bf71cc3b29176df5a55c78260b',
+    'reference' => 'e1f29a10d32eaf4510f3dcafc7b73475bac7a8e7',
     'name' => '__root__',
   ),
   'versions' => 
@@ -44,16 +44,16 @@ private static $installed = array (
       'aliases' => 
       array (
       ),
-      'reference' => '7c3a1613496547bf71cc3b29176df5a55c78260b',
+      'reference' => 'e1f29a10d32eaf4510f3dcafc7b73475bac7a8e7',
     ),
     'fbett/le_acme2' => 
     array (
-      'pretty_version' => '1.5.5',
-      'version' => '1.5.5.0',
+      'pretty_version' => '1.5.6',
+      'version' => '1.5.6.0',
       'aliases' => 
       array (
       ),
-      'reference' => '3e9457ae0b4330f7a3b35a761aaaf2cc037b0750',
+      'reference' => '26b2c421764b173326f6bcb0713a86bd614f77fa',
     ),
     'plesk/api-php-lib' => 
     array (

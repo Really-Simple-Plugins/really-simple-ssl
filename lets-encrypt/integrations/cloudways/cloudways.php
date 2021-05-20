@@ -122,6 +122,7 @@ class rsssl_Cloudways {
 		$accessToken = $response->output;
 		$response = $this->getServerInfo();
 
+
 		if ($response->status === 'success' ) {
 			$server_id = get_transient('rsssl_cw_server_id' );
 			$app_id = get_transient('rsssl_cw_app_id');
@@ -129,7 +130,7 @@ class rsssl_Cloudways {
 				'server_id' => $server_id,
 				'app_id' => $app_id,
 				'ssl_email' => $this->email,
-				'wild_card' => false,
+				'wild_card' => RSSSL_LE()->letsencrypt_handler->is_wildcard(),
 				'ssl_domains' => $domains,
 			];
 
