@@ -30,6 +30,7 @@ if ( ! class_exists( "rsssl_wizard" ) ) {
 			add_action( 'admin_init', array( $this, 'catch_dns_switch' ) );
 			add_filter( 'rsssl_fields_load_types', array( $this, 'maybe_drop_directories_step' )  );
 			add_filter( 'rsssl_steps', array($this, 'adjust_for_dns_actions') );
+			add_filter( 'rsssl_steps', array($this, 'maybe_add_multisite_test') );
 
 		}
 
@@ -37,6 +38,12 @@ if ( ! class_exists( "rsssl_wizard" ) ) {
 			return self::$_this;
 		}
 
+		/**
+         * Change the steps in the generation page if DNS verification is enabled
+		 * @param $steps
+		 *
+		 * @return mixed
+		 */
 		public function adjust_for_dns_actions($steps){
 			$use_dns = rsssl_dns_verification_required();
             if ($use_dns) {
@@ -48,9 +55,34 @@ if ( ! class_exists( "rsssl_wizard" ) ) {
                         'description' => __("Generating SSL certificate...", "really-simple-ssl"),
                         'action'=> 'create_bundle_or_renew',
                         'attempts' => 5,
+                        'speed' => 'slow',
                     )
                 );
             }
+			return $steps;
+		}
+
+		/**
+         * In case of multisite, we add a step to test for subdomains
+		 * @param $steps
+		 *
+		 * @return mixed
+		 */
+		public function maybe_add_multisite_test($steps){
+			if (is_multisite() ) {
+				$index = array_search( 'system-status', array_column( $steps['lets-encrypt'], 'id' ) );
+				$index ++;
+				//clear existing array
+				$steps['lets-encrypt'][ $index ]['actions'] =
+					array(
+                        array(
+                            'description' => __("Checking for subdomain setup...", "really-simple-ssl"),
+                            'action'=> 'is_subdomain_setup',
+                            'attempts' => 1,
+                            'speed' => 'normal',
+                        )
+                    ) + $steps['lets-encrypt'][ $index ]['actions'];
+			}
 			return $steps;
 		}
 
@@ -68,7 +100,9 @@ if ( ! class_exists( "rsssl_wizard" ) ) {
             }
 
 		    if (isset($_POST['rsssl-switch-to-dns'])) {
-		        update_option('rsssl_verification_type', 'DNS');
+			    update_option('rsssl_verification_type', 'DNS');
+		        wp_redirect(rsssl_letsencrypt_wizard_url().'&step=4');
+		        exit;
             }
         }
 		/**
@@ -85,6 +119,7 @@ if ( ! class_exists( "rsssl_wizard" ) ) {
 			$actions = array_column($action_list, 'action');
 			$attempts = array_column($action_list, 'attempts');
 			$descriptions = array_column($action_list, 'description');
+			$speed = array_column($action_list, 'speed');
 			?>
 			<script>
                 jQuery(document).ready(function ($) {
@@ -227,7 +262,9 @@ if ( ! class_exists( "rsssl_wizard" ) ) {
                             error: function(response) {
                                 console.log("error");
                                 console.log(response);
-                                rsssl_stop_progress(response.status);
+                                rsssl_set_status('error');
+                                $('.rsssl-progress-container ul li:first-of-type').html(response.responseText);
+                                rsssl_stop_progress('error');
                             }
                         });
                     }

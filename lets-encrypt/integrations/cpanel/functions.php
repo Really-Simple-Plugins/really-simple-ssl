@@ -53,6 +53,7 @@ function rsssl_cpanel_add_condition_actions($steps){
 			'description' => __( "Attempting to install certificate using AutoSSL...", "really-simple-ssl" ),
 			'action'      => 'rsssl_install_cpanel_autossl',
 			'attempts'    => 1,
+			'speed' => 'normal',
 		);
 	}
 
@@ -62,6 +63,7 @@ function rsssl_cpanel_add_condition_actions($steps){
 			'description' => __( "Attempting to install certificate...", "really-simple-ssl" ),
 			'action'      => 'rsssl_install_cpanel_default',
 			'attempts'    => 1,
+			'speed' => 'normal',
 		);
 	}
 

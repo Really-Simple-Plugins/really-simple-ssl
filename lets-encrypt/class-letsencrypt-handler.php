@@ -45,7 +45,7 @@ class rsssl_letsencrypt_handler {
         }
 
 		// General configs
-		Connector::getInstance()->useStagingServer( false );
+		Connector::getInstance()->useStagingServer( true );
 		Logger::getInstance()->setDesiredLevel( Logger::LEVEL_DISABLED );
 
 		Certificate::enableFeatureOCSPMustStaple();
@@ -186,7 +186,7 @@ class rsssl_letsencrypt_handler {
 	 */
     public function check_domain(){
 	    $details = parse_url(site_url());
-	    $path = $details['path'];
+	    $path = isset($details['path']) ? $details['path'] : '';
 
 	    if (is_multisite() && get_current_blog_id() !== get_main_site_id() ) {
 		    rsssl_progress_remove('system-status');
@@ -506,7 +506,7 @@ class rsssl_letsencrypt_handler {
 				$dnsWriter = new class extends AbstractDNSWriter {
 					public function write( Order $order, string $identifier, string $digest): bool {
 						$status = false;
-						if ( get_option('rsssl_le_dns_token') ) {
+						if ( get_option('rsssl_le_dns_tokens') ) {
 							$status = true;
 						}
 						return $status;
@@ -748,7 +748,6 @@ class rsssl_letsencrypt_handler {
 	public function get_subjects(){
 		$subjects = array();
 		$domain = rsssl_get_domain();
-
 		$subjects[] = $domain;
 		//don't offer aliasses for subdomains
 		if ( !rsssl_is_subdomain() ) {
@@ -776,6 +775,10 @@ class rsssl_letsencrypt_handler {
 		if ( !rsssl_do_local_lets_encrypt_generation() ) {
 			rsssl_progress_add('directories');
 			rsssl_progress_add('generation');
+		}
+
+		if ( rsssl_dns_verification_required() ) {
+			rsssl_progress_add('directories');
 		}
 
 		if (empty($this->get_not_completed_steps($item))){
@@ -1020,20 +1023,32 @@ class rsssl_letsencrypt_handler {
 	}
 
 	/**
-	 * Check if the site requires a wildcard
-	 * @return bool
+	 * Check if it's a subdomain multisite
+	 * @return RSSSL_RESPONSE
 	 */
-	public function wildcard_certificate_required(){
+	public function is_subdomain_setup(){
 		if ( !is_multisite() ) {
-			return false;
+			$is_subdomain = false;
 		} else {
 			if ( defined('SUBDOMAIN_INSTALL') && SUBDOMAIN_INSTALL ) {
-				return true;
+				$is_subdomain = true;
 			} else {
-				return false;
+				$is_subdomain = false;
 			}
 		}
 
+		if ($is_subdomain) {
+			$status  = 'error';
+			$action  = 'stop';
+			$message = sprintf(__("This is a multisite configuration with subdomains, which requires a wildcard certificate. Wildcard certificates are part of the %spremium%s plan.",'really-simple-ssl'), '<a href="https://really-simple-ssl.com/pro" target="_blank">','</a>');
+			rsssl_progress_remove('system-status');
+		} else {
+			$status  = 'success';
+			$action  = 'continue';
+			$message = __("No subdomain setup detected.","really-simple-ssl");
+		}
+
+		return new RSSSL_RESPONSE($status, $action, $message);
 	}
 
 	/**

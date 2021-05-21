@@ -31,11 +31,10 @@ if ( !function_exists('rsssl_letsencrypt_wizard_url') ) {
  * @return bool
  */
 function rsssl_dns_verification_required(){
-	return true;
-	if (get_option('rsssl_verification_type')==='DNS') {
+	if ( get_option('rsssl_verification_type')==='DNS' ) {
 		return true;
 	}
-	if (RSSSL_LE()->letsencrypt_handler->wildcard_certificate_required()) {
+	if ( rsssl_wildcard_certificate_required() ) {
 		return true;
 	}
 
@@ -354,22 +353,66 @@ function rsssl_insert_after_key($array, $key, $items){
 	return $array;
 }
 
+if ( !function_exists('rsssl_wildcard_certificate_required') ) {
+	/**
+	 * Check if the site requires a wildcard
+	 *
+	 * @return bool
+	 */
+	function rsssl_wildcard_certificate_required() {
+		if ( ! is_multisite() ) {
+			return false;
+		} else {
+			if ( defined( 'SUBDOMAIN_INSTALL' ) && SUBDOMAIN_INSTALL ) {
+				return true;
+			} else {
+				return false;
+			}
+		}
+	}
+}
+
+/**
+ * Move to add on
+ */
+
+
+
 /**
  * Override for lets encrypt
+ * Needs to be loaded directly (not in hook)
+ *
  * @param array $subjects
  *
  * @return array
  */
+
 function rsssl_le_subjects( $subjects ) {
-	if ( RSSSL_LE()->letsencrypt_handler->wildcard_certificate_required() ) {
+	if ( rsssl_wildcard_certificate_required() ) {
 		$domain = rsssl_get_domain();
 		//in theory, the main site of a subdomain setup can be a www. domain. But we have to request a certificate without the www.
-		$domain = str_replace('www.','', $domain);
+		$domain   = str_replace( 'www.', '', $domain );
 		$subjects = array(
 			$domain,
-			'*.'.$domain,
+			'*.' . $domain,
 		);
 	}
 	return $subjects;
 }
+
 add_filter( 'rsssl_le_subjects', 'rsssl_le_subjects' );
+
+function rsssl_maybe_drop_subdomain_test( $steps ) {
+	if ( is_multisite() ) {
+		$index = array_search( 'system-status', array_column( $steps['lets-encrypt'], 'id' ) );
+		$index ++;
+		$actions = $steps['lets-encrypt'][ $index ]['actions'];
+		//get the is_subdomain_setup
+		$sub_index = array_search( 'is_subdomain_setup', array_column( $actions, 'action' ) );
+		unset( $actions[ $sub_index ] );
+		$steps['lets-encrypt'][ $index ]['actions'] = $actions;
+	}
+	return $steps;
+}
+add_filter( 'rsssl_steps', 'rsssl_maybe_drop_subdomain_test' , 20);
+
