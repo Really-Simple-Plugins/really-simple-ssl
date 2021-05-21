@@ -297,7 +297,6 @@ if ( ! class_exists( "rsssl_field" ) ) {
             $page     = $fields[ $fieldname ]['source'];
             $required = isset( $fields[ $fieldname ]['required'] ) ? $fields[ $fieldname ]['required'] : false;
             $fieldvalue = $this->sanitize( $fieldvalue, $type );
-
             if ( ! $this->is_conditional( $fieldname ) && $required
                 && empty( $fieldvalue )
             ) {
@@ -386,6 +385,7 @@ if ( ! class_exists( "rsssl_field" ) ) {
             if ( ! current_user_can( 'manage_options' ) ) {
                 return false;
             }
+
             switch ( $type ) {
                 case 'colorpicker':
                     return sanitize_hex_color( $value );
@@ -412,6 +412,7 @@ if ( ! class_exists( "rsssl_field" ) ) {
                     return  $value ;
                 case 'editor':
                 case 'textarea':
+	            case 'password':
                     return wp_kses_post( $value );
             }
 

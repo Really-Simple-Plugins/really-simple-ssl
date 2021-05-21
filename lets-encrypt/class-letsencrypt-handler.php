@@ -1331,7 +1331,9 @@ class rsssl_letsencrypt_handler {
 	 */
 
 	public function encode( $string ) {
-		if ( strlen(trim($string)) === 0 ) return $string;
+		if ( strlen(trim($string)) === 0 ) {
+			return $string;
+		}
 
 		if (strpos( $string , 'rsssl_') !== FALSE ) {
 			return $string;
