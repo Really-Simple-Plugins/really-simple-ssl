@@ -45,12 +45,13 @@ class rsssl_letsencrypt_handler {
         }
 
 		// General configs
-		Connector::getInstance()->useStagingServer( true );
+		Connector::getInstance()->useStagingServer( false );
 		Logger::getInstance()->setDesiredLevel( Logger::LEVEL_DISABLED );
 
 		Certificate::enableFeatureOCSPMustStaple();
 		Order::setPreferredChain('ISRG Root X1');
         $this->subjects = $this->get_subjects();
+        $this->verify_dns();
 		self::$_this = $this;
 	}
 
@@ -311,7 +312,7 @@ class rsssl_letsencrypt_handler {
 	public function server_software(){
 	    $action = 'continue';
 	    $status = 'warning';
-	    $message = __("The server software was not recognized. The generated certificate will need to be installed manually.", "really-simple-ssl" );
+	    $message = __("The server software was not recognized. Depending on your hosting company, the generated certificate may need to be installed manually.", "really-simple-ssl" );
 
         if (rsssl_is_cpanel()) {
 	        $status = 'success';
@@ -400,89 +401,142 @@ class rsssl_letsencrypt_handler {
 	 * @return RSSSL_RESPONSE
 	 */
     public function get_dns_token(){
+	    if ($this->is_ready_for('dns-verification')) {
+		    $use_dns        = rsssl_dns_verification_required();
+		    $output         = '';
+		    $challenge_type = $use_dns ? Order::CHALLENGE_TYPE_DNS : Order::CHALLENGE_TYPE_HTTP;
+		    if ( $use_dns ) {
+			    try {
+				    $this->get_account();
+				    $dnsWriter = new class extends AbstractDNSWriter {
+					    public function write( Order $order, string $identifier, string $digest ): bool {
+						    $tokens                = get_option( 'rsssl_le_dns_tokens', array() );
+						    $tokens[ $identifier ] = $digest;
+						    update_option( "rsssl_le_dns_tokens", $tokens );
 
-	    $use_dns = rsssl_dns_verification_required();
-	    $output = '';
-	    $challenge_type = $use_dns ? Order::CHALLENGE_TYPE_DNS : Order::CHALLENGE_TYPE_HTTP;
-	    if ($use_dns) {
-	    	try {
-			    $this->get_account();
-			    $dnsWriter = new class extends AbstractDNSWriter {
-				    public function write( Order $order, string $identifier, string $digest): bool {
-				    	$tokens = get_option('rsssl_le_dns_tokens', array());
-					    $tokens[$identifier] = $digest;
-					    update_option("rsssl_le_dns_tokens", $tokens);
-					    //return false, as we will continue later on.
-					    return false;
-				    }
-			    };
-			    DNS::setWriter($dnsWriter);
-			    $order = false;
-			    if ( ! Order::exists( $this->account, $this->subjects ) ) {
-				    try {
-					    $order = Order::create( $this->account, $this->subjects );
-					    $status = 'success';
-					    $action = 'continue';
-					    $message = __("Order successfully created.",'really-simple-ssl');
-				    } catch(Exception $e) {
-
-					    $response = $this->get_error($e);
-					    error_log(print_r($e, true));
-					    $status = 'error';
-					    $action = 'retry';
-					    $message = $response;
-				    }
-			    } else {
-				    //order exists already
-				    $status = 'success';
-				    $action = 'continue';
-				    $message = __("Order successfully retrieved.",'really-simple-ssl');
-				    $order = Order::get( $this->account, $this->subjects );
-			    }
-
-			    if ( $order ) {
-				    try {
-					    if ( $order->authorize( $challenge_type ) ) {
-						    $status = 'success';
-						    $action = 'continue';
-						    $message = __("Token successfully retrieved.",'really-simple-ssl');
-					    } else {
-						    rsssl_progress_add('dns-verification');
-						    if ( get_option('rsssl_le_dns_tokens') ) {
-							    $status = 'success';
-							    $action = 'continue';
-							    $message = __("Token successfully retrieved.",'really-simple-ssl');
-							    $output = json_encode(get_option('rsssl_le_dns_tokens'));
-						    } else {
-							    $status = 'error';
-							    $action = 'retry';
-							    $message = __("Token not received yet.",'really-simple-ssl');
-						    }
-
+						    //return false, as we will continue later on.
+						    return false;
 					    }
-				    } catch ( Exception $e ) {
-					    error_log( print_r( $e, true ) );
-					    $status = 'error';
-					    $action = 'retry';
-					    $message = $this->get_error( $e );
-				    }
-			    }
+				    };
+				    DNS::setWriter( $dnsWriter );
+				    $order = false;
+				    if ( ! Order::exists( $this->account, $this->subjects ) ) {
+					    try {
+						    $order   = Order::create( $this->account, $this->subjects );
+						    $status  = 'success';
+						    $action  = 'continue';
+						    $message = __( "Order successfully created.", 'really-simple-ssl' );
+					    } catch ( Exception $e ) {
 
-		    } catch(Exception $e) {
-			    $response = $this->get_error($e);
-			    error_log(print_r($e, true));
-			    $status = 'error';
-			    $action = 'retry';
-			    $message = $response;
+						    $response = $this->get_error( $e );
+						    error_log( print_r( $e, true ) );
+						    $status  = 'error';
+						    $action  = 'retry';
+						    $message = $response;
+					    }
+				    } else {
+					    //order exists already
+					    $status  = 'success';
+					    $action  = 'continue';
+					    $message = __( "Order successfully retrieved.", 'really-simple-ssl' );
+					    $order   = Order::get( $this->account, $this->subjects );
+				    }
+
+				    if ( $order ) {
+					    try {
+						    if ( $order->authorize( $challenge_type ) ) {
+							    $status  = 'success';
+							    $action  = 'continue';
+							    $message = __( "Token successfully retrieved.", 'really-simple-ssl' );
+						    } else {
+							    rsssl_progress_add( 'dns-verification' );
+							    if ( get_option( 'rsssl_le_dns_tokens' ) ) {
+								    $status  = 'success';
+								    $action  = 'continue';
+								    $message = __( "Token successfully retrieved.", 'really-simple-ssl' );
+								    $output  = json_encode( get_option( 'rsssl_le_dns_tokens' ) );
+							    } else {
+								    $status  = 'error';
+								    $action  = 'retry';
+								    $message = __( "Token not received yet.", 'really-simple-ssl' );
+							    }
+
+						    }
+					    } catch ( Exception $e ) {
+						    error_log( print_r( $e, true ) );
+						    $status  = 'error';
+						    $action  = 'retry';
+						    $message = $this->get_error( $e );
+					    }
+				    }
+
+			    } catch ( Exception $e ) {
+				    $response = $this->get_error( $e );
+				    error_log( print_r( $e, true ) );
+				    $status  = 'error';
+				    $action  = 'retry';
+				    $message = $response;
+			    }
+		    } else {
+			    $status  = 'error';
+			    $action  = 'stop';
+			    $message = __( "Configured for HTTP challenge", 'really-simple-ssl' );
 		    }
 	    } else {
-			$status = 'error';
-			$action = 'stop';
-			$message = __("Configured for HTTP challenge",'really-simple-ssl');
+		    $status  = 'error';
+		    $action  = 'stop';
+		    $message = __( "Please complete the previous steps", 'really-simple-ssl' );
 	    }
-
 	    return new RSSSL_RESPONSE($status, $action, $message, $output);
     }
+
+	/**
+	 * Check DNS txt records.
+	 * @return string|void
+	 */
+
+	public function verify_dns(){
+		if ($this->is_ready_for('generation')) {
+			update_option('rsssl_le_dns_records_verified', false);
+
+			$tokens = get_option('rsssl_le_dns_tokens');
+			if ( !$tokens) {
+				$status = 'error';
+				$action = 'stop';
+				$message = __('Token not generated. Please complete the previous step.',"really-simple-ssl");
+				return new RSSSL_RESPONSE($status, $action, $message);
+			}
+			foreach ($tokens as $identifier => $token){
+
+				if (strpos($identifier, '*') !== false) continue;
+				$response = dns_get_record ("_acme-challenge.$identifier", DNS_TXT);
+				if ( isset($response[0]['txt']) ){
+					if ($response[0]['txt'] === $token) {
+						$status = 'success';
+						$action = 'continue';
+						$message = sprintf(__('Successfully verified DNS records', "really-simple-ssl"), "_acme-challenge.$identifier");
+						update_option('rsssl_le_dns_records_verified', true);
+					} else {
+						$status = 'error';
+						$action = 'stop';
+						$message = sprintf(__('The DNS response for %s was %s, while it should be %s.', "really-simple-ssl"), "_acme-challenge.$identifier", $response[0]['txt'], $token );
+						break;
+					}
+				} else {
+					$status = 'error';
+					$action = 'stop';
+					$message = sprintf(__('No valid response received for domain %s', "really-simple-ssl"), "_acme-challenge.$identifier");
+				}
+			}
+
+		} else {
+			$status = 'error';
+			$action = 'stop';
+			$message = __('Please complete the previous step.',"really-simple-ssl");
+		}
+
+		return new RSSSL_RESPONSE($status, $action, $message);
+	}
 
 	/**
      * Authorize the order
@@ -503,7 +557,14 @@ class rsssl_letsencrypt_handler {
 	    //check if the required order was created
 	    $order = $bundle_completed = false;
 
-	    if ($this->is_ready_for('generation')) {
+	    if ( $use_dns && !get_option('rsssl_le_dns_records_verified')) {
+		    $status = 'error';
+		    $action = 'stop';
+		    $message = __("DNS records were not verified yet. Please complete the previous step.",'really-simple-ssl');
+		    return new RSSSL_RESPONSE($status, $action, $message);
+	    }
+
+	    if ($this->is_ready_for('generation') ) {
 		    $this->get_account();
 			if ( $use_dns ) {
 				$dnsWriter = new class extends AbstractDNSWriter {
@@ -544,7 +605,7 @@ class rsssl_letsencrypt_handler {
 					    $order->enableAutoRenewal();
 					    $status = 'success';
 					    $action = 'continue';
-					    $message = __("Successfully renewed certificate.",'really-simple-ssl');
+					    $message = __("Certificate already generated. It was renewed if required.",'really-simple-ssl');
 					    $bundle_completed = true;
 				    } catch ( Exception $e ) {
 					    error_log( print_r( $e, true ) );

@@ -1,6 +1,6 @@
 <?php
 defined( 'ABSPATH' ) or die(  );
-rsssl_progress_remove('dns-verification');
+rsssl_progress_add('dns-verification');
 
 ?>
 <div class="rsssl-section">

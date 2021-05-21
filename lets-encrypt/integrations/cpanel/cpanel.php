@@ -211,4 +211,58 @@ class rsssl_cPanel
         return json_decode($curl_response);
     }
 
+	/**
+	 * Set DNS TXT record using Json API through cPanel XMLAPI.
+	 *
+	 * @param string $domain
+	 * @param string $txt_name
+	 * @param string $txt_value
+	 *
+	 * @return RSSSL_RESPONSE
+	 */
+	public function setDnsTxt($domain, $txt_name, $txt_value)
+	{
+		$xmlapi = new xmlapi($this->cpanel_host, $this->username, $this->password);
+		$xmlapi->set_output('json');
+		$xmlapi->set_port('2083');
+		$xmlapi->set_debug(1);
+		$response = $xmlapi->api2_query(
+			$this->username,
+			'ZoneEdit',
+			'add_zone_record',
+			[
+				'domain' => $domain,
+				'name' => $txt_name,
+				'type' => 'TXT',
+				'txtdata' => $txt_value,
+				'ttl' => '600',
+				'class' => 'IN',
+			]
+		);
+
+		$response_array = json_decode($response, true);
+
+		$result = [];
+		//Check status
+		$event_result = (bool) $response_array['cpanelresult']['event']['result'];
+		$preevent_result = isset($response_array['cpanelresult']['preevent']) ? (bool) $response_array['cpanelresult']['preevent']['result'] : true; //Some cPanel doesn't provide this key. In that case, ignore it by setting 'true'.
+		$postevent_result = isset($response_array['cpanelresult']['postevent']) ? (bool) $response_array['cpanelresult']['postevent']['result'] : true; //Some cPanel doesn't provide this key. In that case, ignore it by setting 'true'.
+
+		if ($event_result && $preevent_result && $postevent_result) {
+			$result['http_code'] = 200;
+			$result['body'] = $response_array;
+			$status = 'success';
+			$action = 'stop';
+			$message = __("Successfully added TXT record.","really-simple-ssl");
+		} else {
+			$result['http_code'] = 404;
+			$result['body'] = $response_array;
+			$status = 'error';
+			$action = 'skip';
+			$message = __("Errors were reported during adding of TXT record.","really-simple-ssl");
+		}
+
+		return new RSSSL_RESPONSE($status, $action, $message);
+	}
+
 }

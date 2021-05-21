@@ -63,10 +63,10 @@ class rsssl_admin extends rsssl_front_end
         }
 
         register_deactivation_hook(dirname(__FILE__) . "/" . $this->plugin_filename, array($this, 'deactivate'));
-	    add_action('admin_init', array($this, 'add_privacy_info'));
-	    add_action('admin_init', array($this, 'maybe_dismiss_review_notice'));
-	    add_action( 'admin_init', array($this, 'insert_secure_cookie_settings'), 70);
-
+	    add_action( 'admin_init', array($this, 'add_privacy_info') );
+	    add_action( 'admin_init', array($this, 'maybe_dismiss_review_notice') );
+	    add_action( 'admin_init', array($this, 'insert_secure_cookie_settings'), 70 );
+        add_action( 'admin_init', array($this, 'recheck_certificate') );
 	    add_action( "update_option_rlrsssl_options", array( $this, "maybe_clear_transients" ), 10, 3 );
 
 	    // Only show deactivate popup when SSL has been enabled.
@@ -386,6 +386,18 @@ class rsssl_admin extends rsssl_front_end
         return false;
     }
 
+	/**
+     * If the user has clicked "recheck certificate, clear the cache for the certificate check.
+	 * @return void
+	 */
+    public function recheck_certificate(){
+	    if (!current_user_can($this->capability)) return;
+
+        if (isset($_POST['rsssl_recheck_certificate'])) {
+	        delete_transient('rsssl_certinfo');
+        }
+    }
+
 
 	/**
 	 *  Activate the SSL for this site
@@ -499,37 +511,27 @@ class rsssl_admin extends rsssl_front_end
 	public function almost_ready_to_migrate()
 	{
 		_e("Before you migrate, please check for: ", 'really-simple-ssl'); ?>
-        <p>
-            <ul>
-                <li><?php _e('Http references in your .css and .js files: change any http:// into https://', 'really-simple-ssl'); ?></li>
-                <li><?php _e('Images, stylesheets or scripts from a domain without an SSL certificate: remove them or move to your own server', 'really-simple-ssl'); ?></li><?php
+        <ul>
+            <li><?php _e('Http references in your .css and .js files: change any http:// into https://', 'really-simple-ssl'); ?></li>
+            <li><?php _e('Images, stylesheets or scripts from a domain without an SSL certificate: remove them or move to your own server', 'really-simple-ssl'); ?></li><?php
 
-                $backup_link = "https://really-simple-ssl.com/knowledge-base/backing-up-your-site/";
-                $link_open = '<a target="_blank" href="'.$backup_link.'">';
-                $link_close = '</a>';
-                ?>
-                <li><?php printf(__("We strongly recommend to create a %sbackup%s of your site before activating SSL", 'really-simple-ssl'), $link_open, $link_close); ?> </li>
-                <li><?php _e("You may need to login in again.", "really-simple-ssl") ?></li>
-                <?php
-                if (RSSSL()->rsssl_certificate->is_valid()) { ?>
-                    <li class="rsssl-success"><?php _e("An SSL certificate has been detected", "really-simple-ssl") ?></li>
-                <?php } else { ?>
-                    <li class="rsssl-fail"><?php _e("No SSL certificate has been detected. Generate one by pressing the 'Install SSL certificate' button", "really-simple-ssl") ?></li>
-                <?php }?>
-            </ul>
-        </p>
-        <p><?php
-			if (!defined('rsssl_pro_version')) {
-			_e('You can also let the automatic scan of the pro version handle this for you, and get premium support, increased security with HSTS and more!', 'really-simple-ssl');
-			?>
-            <a target="_blank"
-               href="<?php
-			   echo $this->pro_url; ?>"><?php _e("Check out Really Simple SSL Pro", "really-simple-ssl");
-				}
-				?>
-            </a>
-        </p>
-
+            $backup_link = "https://really-simple-ssl.com/knowledge-base/backing-up-your-site/";
+            $link_open = '<a target="_blank" href="'.$backup_link.'">';
+            $link_close = '</a>';
+            ?>
+            <li><?php printf(__("We strongly recommend to create a %sbackup%s of your site before activating SSL", 'really-simple-ssl'), $link_open, $link_close); ?> </li>
+            <li><?php _e("You may need to login in again.", "really-simple-ssl") ?></li>
+            <?php
+            if (RSSSL()->rsssl_certificate->is_valid()) { ?>
+                <li class="rsssl-success"><?php _e("An SSL certificate has been detected", "really-simple-ssl") ?></li>
+            <?php } else { ?>
+                <li class="rsssl-error"><?php _e("No SSL certificate has been detected. Generate one by pressing the 'Install SSL certificate' button.", "really-simple-ssl") ?></li>
+            <?php }?>
+        </ul>
+        <?php if ( !defined('rsssl_pro_version') ) { ?>
+            <?php _e('You can also let the automatic scan of the pro version handle this for you, and get premium support, increased security with HSTS and more!', 'really-simple-ssl'); ?>
+            <a target="_blank" href="<?php echo $this->pro_url; ?>"><?php _e("Check out Really Simple SSL Pro", "really-simple-ssl");?></a>
+        <?php } ?>
 		<?php
 	}
 
@@ -629,6 +631,10 @@ class rsssl_admin extends rsssl_front_end
                     margin-right:-30px;
                 }
 
+                #rsssl-message li.rsssl-error:before {
+                    background-color: #D7263D;
+                }
+
                 .settings_page_rlrsssl_really_simple_ssl #wpcontent #rsssl-message, .settings_page_really-simple-ssl #wpcontent #rsssl-message {
                     margin: 20px;
                 }
@@ -645,7 +651,7 @@ class rsssl_admin extends rsssl_front_end
                     margin-bottom: 5px;
                 }
 
-                #rsssl-message .button-primary {
+                #rsssl-message .button-primary, #rsssl-message .button-default {
                     margin-right: 10px;
                 }
 
@@ -711,6 +717,9 @@ class rsssl_admin extends rsssl_front_end
                     margin-top: 5px;
                     margin-left:-30px;
                 }
+                #rsssl-message li.rsssl-error:before {
+                    background-color: #D7263D;
+                }
 
                 .settings_page_rlrsssl_really_simple_ssl #wpcontent #rsssl-message, .settings_page_really-simple-ssl #wpcontent #rsssl-message {
                     margin: 20px;
@@ -754,15 +763,21 @@ class rsssl_admin extends rsssl_front_end
 		?>
         <form action="" method="post">
 			<?php wp_nonce_field('rsssl_nonce', 'rsssl_nonce'); ?>
-            <input type="submit" class='button button-primary'
-                   value="<?php _e("Go ahead, activate SSL!", "really-simple-ssl"); ?>" id="rsssl_do_activate_ssl"
-                   name="rsssl_do_activate_ssl">
-			<?php if (!defined("rsssl_pro_version") ) { ?>
+	        <?php if (!RSSSL()->rsssl_certificate->is_valid()) {?>
+                <input type="submit" class='button button-primary'
+                       value="<?php _e("Retry", "really-simple-ssl"); ?>" id="rsssl_recheck_certificate"
+                       name="rsssl_recheck_certificate">
+            <?php } else { ?>
+                <input type="submit" class='button button-primary'
+                       value="<?php _e("Go ahead, activate SSL!", "really-simple-ssl"); ?>" id="rsssl_do_activate_ssl"
+                       name="rsssl_do_activate_ssl">
+	        <?php } ?>
+	        <?php if (!RSSSL()->rsssl_certificate->is_valid()){?>
+                <a href="<?php echo rsssl_letsencrypt_wizard_url()?>" type="submit" class="button button-default"><?php _e("Install SSL certificate", "really-simple-ssl"); ?></a>
+	        <?php } ?>
+            <?php if (!defined("rsssl_pro_version") ) { ?>
                 <a class="button button-default" href="<?php echo $this->pro_url ?>" target="_blank"><?php _e("Get ready with PRO!", "really-simple-ssl"); ?></a>
 			<?php } ?>
-            <?php if (!RSSSL()->rsssl_certificate->is_valid()){?>
-                <a href="<?php echo rsssl_letsencrypt_wizard_url()?>" type="submit" class="button button-primary"><?php _e("Install SSL certificate", "really-simple-ssl"); ?></a>
-            <?php } ?>
         </form>
 		<?php
 	}
@@ -2905,10 +2920,11 @@ class rsssl_admin extends rsssl_front_end
 		            ),
 		            'no-ssl-detected' => array(
 			            'title' => __("No SSL detected", "really-simple-ssl"),
-			            'msg' => __("No SSL detected. If you're sure you have an SSL certificate, click the 'reload over https' button.", "really-simple-ssl").
+			            'msg' => __("No SSL detected. Use the retry button, or, if you're absolutely sure you have an SSL certificate, click the 'Override SSL detection' button.", "really-simple-ssl").
 
-                            '<p><a href="'.add_query_arg(array("page" => "rlrsssl_really_simple_ssl", "tab" => "letsencrypt"),admin_url("options-general.php")) .'" type="submit" class="button button-primary">'.__("Install SSL certificate", "really-simple-ssl").'</a>'.
-                            '&nbsp;<a target="_blank" class="button button-primary" href="' .$reload_https_url . '">'.__("Reload over https", "really-simple-ssl").'</a></p>',
+                            '<br><br><form action="" method="POST"><a href="'.add_query_arg(array("page" => "rlrsssl_really_simple_ssl", "tab" => "letsencrypt"),admin_url("options-general.php")) .'" type="submit" class="button button-default">'.__("Install SSL certificate", "really-simple-ssl").'</a>'.
+			                     '&nbsp;<input type="submit" class="button button-default" value="'.__("Retry", "really-simple-ssl").'" id="rsssl_recheck_certificate" name="rsssl_recheck_certificate">'.
+                                 '&nbsp;<a target="_blank" class="button button-default" href="' .$reload_https_url . '">'.__("Override SSL detection", "really-simple-ssl").'</a></form>',
 			            'icon' => 'warning',
 			            'admin_notice' => false,
 		            ),

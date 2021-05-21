@@ -34,87 +34,116 @@ function rsssl_dns_verification_required(){
 	if ( get_option('rsssl_verification_type')==='DNS' ) {
 		return true;
 	}
+
+	/**
+	 * If our current hosting company does not allow or require local SSL certificate generation,
+	 * We do not need to DNS verification either.
+	 */
+
+	if ( !rsssl_do_local_lets_encrypt_generation() ) {
+		return false;
+	}
+
 	if ( rsssl_wildcard_certificate_required() ) {
 		return true;
 	}
 
 	return false;
 }
-/**
- * Check if we're on CPanel
- * @return bool
- */
-function rsssl_is_cpanel(){
-	return file_exists("/usr/local/cpanel");
-}
 
-/**
- * Check if CPanel supports the api
- * @return bool
- */
-function rsssl_cpanel_api_supported(){
-	return rsssl_is_cpanel() && file_exists("/usr/local/cpanel/php/cpanel.php");
-}
-
-/**
- * https://stackoverflow.com/questions/26927248/how-to-detect-servers-control-panel-type-with-php
- * @return false
- */
-function rsssl_is_plesk(){
-	if ( is_dir( '/usr/local/psa' ) ) {
-		return true;
-	} else {
-		return false;
+if ( !function_exists('rsssl_is_cpanel')) {
+	/**
+	 * Check if we're on CPanel
+	 *
+	 * @return bool
+	 */
+	function rsssl_is_cpanel() {
+		return file_exists( "/usr/local/cpanel" );
 	}
 }
 
-/**
- * check if this is a server that is not automatically detected
- * @return bool
- */
-function rsssl_is_other(){
-	$response = RSSSL_LE()->letsencrypt_handler->server_software();
-	return $response->status === 'warning';
-}
-/**
- * @param string $item
- */
-function rsssl_progress_add($item){
-	$progress = get_option("rsssl_le_installation_progress", array() );
-	if (!in_array($item, $progress)){
-		$progress[] = $item;
-		update_option("rsssl_le_installation_progress", $progress );
+if (!function_exists('rsssl_cpanel_api_supported')) {
+	/**
+	 * Check if CPanel supports the api
+	 *
+	 * @return bool
+	 */
+	function rsssl_cpanel_api_supported() {
+		return rsssl_is_cpanel() && file_exists( "/usr/local/cpanel/php/cpanel.php" );
 	}
 }
 
-/**
- * @param string $item
- */
-function rsssl_progress_remove($item){
-	$progress = get_option("rsssl_le_installation_progress", array());
-	if (in_array($item, $progress)){
-		$index = array_search($item, $progress);
-		unset($progress[$index]);
-		update_option("rsssl_le_installation_progress", $progress);
+if ( !function_exists('rsssl_is_plesk')) {
+	/**
+	 * https://stackoverflow.com/questions/26927248/how-to-detect-servers-control-panel-type-with-php
+	 * @return false
+	 */
+	function rsssl_is_plesk() {
+		if ( is_dir( '/usr/local/psa' ) ) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 }
 
-/**
- * Get PHP version status for tests
- * @return RSSSL_RESPONSE
- */
-function rsssl_php_requirement_met(){
-	if (version_compare(PHP_VERSION, rsssl_le_php_version, '<')) {
-		rsssl_progress_remove('system-status');
-		$action = 'stop';
-		$status = 'error';
-		$message = sprintf(__("The minimum requirements for the PHP version have not been met. Please upgrade to %s", "really-simple-ssl"), rsssl_le_php_version );
-	} else {
-		$action = 'continue';
-		$status = 'success';
-		$message = __("You have the required PHP version to continue.", "really-simple-ssl" );
+if ( !function_exists('rsssl_get_other_host') ) {
+	/**
+	 * Get the selected hosting company, if any.
+	 * @return bool|string
+	 */
+	function rsssl_get_other_host() {
+		return rsssl_get_value( 'other_host_type', false );
 	}
-	return new RSSSL_RESPONSE($status, $action, $message);
+}
+
+if ( !function_exists('rsssl_progress_add')) {
+	/**
+	 * @param string $item
+	 */
+	function rsssl_progress_add( $item ) {
+		$progress = get_option( "rsssl_le_installation_progress", array() );
+		if ( ! in_array( $item, $progress ) ) {
+			$progress[] = $item;
+			update_option( "rsssl_le_installation_progress", $progress );
+		}
+	}
+}
+
+if ( !function_exists('rsssl_progress_remove')) {
+	/**
+	 * @param string $item
+	 */
+	function rsssl_progress_remove( $item ) {
+		$progress = get_option( "rsssl_le_installation_progress", array() );
+		if ( in_array( $item, $progress ) ) {
+			$index = array_search( $item, $progress );
+			unset( $progress[ $index ] );
+			update_option( "rsssl_le_installation_progress", $progress );
+		}
+	}
+}
+
+if ( !function_exists('rsssl_php_requirement_met')) {
+	/**
+	 * Get PHP version status for tests
+	 *
+	 * @return RSSSL_RESPONSE
+	 */
+	function rsssl_php_requirement_met() {
+		if ( version_compare( PHP_VERSION, rsssl_le_php_version, '<' ) ) {
+			rsssl_progress_remove( 'system-status' );
+			$action  = 'stop';
+			$status  = 'error';
+			$message = sprintf( __( "The minimum requirements for the PHP version have not been met. Please upgrade to %s", "really-simple-ssl" ), rsssl_le_php_version );
+		} else {
+			$action  = 'continue';
+			$status  = 'success';
+			$message = __( "You have the required PHP version to continue.", "really-simple-ssl" );
+		}
+
+		return new RSSSL_RESPONSE( $status, $action, $message );
+	}
 }
 
 
@@ -339,10 +368,6 @@ if ( ! function_exists( 'rsssl_get_domain' ) ) {
     }
 }
 
-function rsssl_get_other_host(){
-	return rsssl_get_value('other_host_type', false);
-}
-
 function rsssl_insert_after_key($array, $key, $items){
 	$keys = array_keys($array);
 	$key = array_search($key, $keys);
@@ -371,6 +396,7 @@ if ( !function_exists('rsssl_wildcard_certificate_required') ) {
 		}
 	}
 }
+
 
 /**
  * Move to add on

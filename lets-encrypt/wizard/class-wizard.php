@@ -49,12 +49,17 @@ if ( ! class_exists( "rsssl_wizard" ) ) {
             if ($use_dns) {
 	            $index = array_search( 'generation', array_column( $steps['lets-encrypt'], 'id' ) );
 	            $index ++;
-	            //clear existing array
                 $steps['lets-encrypt'][ $index ]['actions'] = array (
                      array(
+                        'description' => __("Verifying DNS records...", "really-simple-ssl"),
+                        'action'=> 'verify_dns',
+                        'attempts' => 5,
+                        'speed' => 'slow',
+                    ),
+                    array(
                         'description' => __("Generating SSL certificate...", "really-simple-ssl"),
                         'action'=> 'create_bundle_or_renew',
-                        'attempts' => 5,
+                        'attempts' => 4,
                         'speed' => 'slow',
                     )
                 );
@@ -735,7 +740,10 @@ if ( ! class_exists( "rsssl_wizard" ) ) {
 				$args['title'] = $i . '. ' . RSSSL_LE()->config->steps[$page][$i]['title'];
 				$args['active'] = ($i == $active_step) ? 'active' : '';
 				$args['completed'] = $this->required_fields_completed($page, $i, false) ? 'complete' : 'incomplete';
-				$args['url'] = add_query_arg(array('tab' => 'letsencrypt', 'step' => $i), $this->page_url);
+				$args['url'] = '#';
+				if ($i<$this->actual_step()){
+					$args['url'] = add_query_arg(array('tab' => 'letsencrypt', 'step' => $i), $this->page_url);
+				}
 				$args['sections'] = ($args['active'] == 'active') ? $this->wizard_sections($page, $active_step, $active_section) : '';
 				$step_html = RSSSL()->really_simple_ssl->get_template( 'step.php', $path = rsssl_le_wizard_path , $args);
 				$step_html = $this->process_args($step_html, $args);
@@ -861,12 +869,12 @@ if ( ! class_exists( "rsssl_wizard" ) ) {
                            name="rsssl_do_activate_ssl">
                 <?php } else { ?>
                     <input type="submit" class='button button-default'
-                           value="<?php _e("Re-check SSL certificate", "really-simple-ssl"); ?>" id="rsssl_recheck_ssl"
+                           value="<?php _e("Retry", "really-simple-ssl"); ?>" id="rsssl_recheck_ssl"
                            name="rsssl_recheck_ssl">
                 <?php }?>
 
                 <?php if (!defined("rsssl_pro_version") ) { ?>
-                    <a class="button button-default" href="<?php echo $this->pro_url ?>" target="_blank"><?php _e("Get ready with PRO!", "really-simple-ssl"); ?></a>
+                    <a class="button button-default" href="<?php echo RSSSL()->really_simple_ssl->pro_url ?>" target="_blank"><?php _e("Get ready with PRO!", "really-simple-ssl"); ?></a>
                 <?php } ?>
             <?php
             return ob_get_clean();
