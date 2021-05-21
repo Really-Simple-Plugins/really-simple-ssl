@@ -1,5 +1,6 @@
 jQuery(document).ready(function ($) {
     'use strict';
+    var t=1;
     var copied_element = $('.rsssl-copied-feedback').html();
     $(document).on('click', '.rsssl-copy-content', function () {
         var type = $(this).data('item');

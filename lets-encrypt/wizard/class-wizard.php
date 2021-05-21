@@ -72,8 +72,7 @@ if ( ! class_exists( "rsssl_wizard" ) ) {
 			if (is_multisite() ) {
 				$index = array_search( 'system-status', array_column( $steps['lets-encrypt'], 'id' ) );
 				$index ++;
-				//clear existing array
-				$steps['lets-encrypt'][ $index ]['actions'] =
+				$steps['lets-encrypt'][ $index ]['actions'] = array_merge(
 					array(
                         array(
                             'description' => __("Checking for subdomain setup...", "really-simple-ssl"),
@@ -81,7 +80,7 @@ if ( ! class_exists( "rsssl_wizard" ) ) {
                             'attempts' => 1,
                             'speed' => 'normal',
                         )
-                    ) + $steps['lets-encrypt'][ $index ]['actions'];
+                    ) , $steps['lets-encrypt'][ $index ]['actions']);
 			}
 			return $steps;
 		}

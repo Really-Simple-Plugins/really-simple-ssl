@@ -19,7 +19,7 @@ defined( 'ABSPATH' ) or die( "you do not have access to this page!" );
                 </h2>
             </div>
             <div class="rsssl-template-intro">
-                <p><?php _e("Installation of your certificate.", "really-simple-ssl")?></p>
+                <p><?php _e("Install your certificate.", "really-simple-ssl")?></p>
             </div>
             <h2>
 			    <?php _e("Certifcate (CRT)", "really-simple-ssl")

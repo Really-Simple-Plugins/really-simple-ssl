@@ -236,6 +236,12 @@ class rsssl_letsencrypt_handler {
 		    $url = $cpanel->ssl_installation_url;
 	    }
 
+	    if ( rsssl_is_plesk() ) {
+		    $plesk = new rsssl_plesk();
+		    $host = $plesk->host;
+		    $url = $plesk->ssl_installation_url;
+	    }
+
 	    $hosting_company = rsssl_get_other_host();
 	    if ( $hosting_company && $hosting_company !== 'none' ) {
 		    $hosting_specific_link = RSSSL_LE()->config->hosts[$hosting_company]['ssl_installation_link'];
@@ -476,7 +482,6 @@ class rsssl_letsencrypt_handler {
 	    }
 
 	    return new RSSSL_RESPONSE($status, $action, $message, $output);
-
     }
 
 	/**
@@ -487,9 +492,7 @@ class rsssl_letsencrypt_handler {
     public function create_bundle_or_renew(){
     	$use_dns = rsssl_dns_verification_required();
 	    $attempt_count = intval(get_transient('rsssl_le_generate_attempt_count'));
-	    $attempt_count++;
-	    set_transient('rsssl_le_generate_attempt_count', $attempt_count, 2 * HOUR_IN_SECONDS);
-	    if ($attempt_count>20){
+	    if ( $attempt_count>5 ){
 		    delete_option("rsssl_le_start_renewal");
 		    $status = 'error';
 		    $action = 'stop';
@@ -556,14 +559,17 @@ class rsssl_letsencrypt_handler {
 				    try {
 					    if ( $order->authorize( $challenge_type ) ) {
 						    $order->finalize();
+						    $this->reset_attempt();
 						    $finalized = true;
 					    } else {
+							$this->count_attempt();
 						    $status = 'error';
 						    $action = 'retry';
 						    $message = __('Authorization not completed yet. Try again later.',"really-simple-ssl");
 						    $bundle_completed = false;
 					    }
 				    } catch ( Exception $e ) {
+					    $this->count_attempt();
 					    error_log( print_r( $e, true ) );
 					    $status = 'error';
 					    $action = 'stop';
@@ -644,6 +650,19 @@ class rsssl_letsencrypt_handler {
 
 	    return new RSSSL_RESPONSE($status, $action, $message);
     }
+
+	/**
+	 * Keep track of certain request counts, to prevent rate limiting by LE
+	 */
+    public function count_attempt(){
+	    $attempt_count = intval(get_transient('rsssl_le_generate_attempt_count'));
+	    $attempt_count++;
+	    set_transient('rsssl_le_generate_attempt_count', $attempt_count, 1 * HOUR_IN_SECONDS);
+    }
+
+	public function reset_attempt(){
+		delete_transient('rsssl_le_generate_attempt_count');
+	}
 
 	/**
      * If a bundle generation is completed, this value is set to true.

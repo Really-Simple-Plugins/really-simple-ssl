@@ -182,6 +182,7 @@ $this->fields = $this->fields + array(
 			'type'        => 'text',
 			'default'     => '',
 			'label'       => __( "Plesk username", 'really-simple-ssl' ),
+			'help'       => sprintf(__( "You can find your Plesk username and password in %s", 'really-simple-ssl' ),'https://{your-plesk-host-name}:8443/smb/my-profile'),
 			'required'    => true,
 			'disabled'    => false,
 			'callback_condition' => 'rsssl_is_plesk',
