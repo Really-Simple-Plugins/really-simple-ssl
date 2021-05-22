@@ -53,8 +53,14 @@ if ( ! class_exists( "rsssl_wizard" ) ) {
                      array(
                         'description' => __("Verifying DNS records...", "really-simple-ssl"),
                         'action'=> 'verify_dns',
-                        'attempts' => 5,
+                        'attempts' => 2,
                         'speed' => 'slow',
+                    ),
+                    array(
+                        'description' => __("Checking if Lets Encrypt is ready for authorization step...", "really-simple-ssl"),
+                        'action'=> 'dns_auth_check_if_ready',
+                        'attempts' => 2,
+                        'speed' => 'normal',
                     ),
                     array(
                         'description' => __("Generating SSL certificate...", "really-simple-ssl"),
@@ -187,10 +193,11 @@ if ( ! class_exists( "rsssl_wizard" ) ) {
                                 document.dispatchEvent(event);
                                 if (response.action === 'finalize' ) {
                                     rsssl_set_status(response.status);
+                                    //do not remove current action
                                     //remove remaining list items.
                                     for (var action in actions) {
                                         if (actions.hasOwnProperty(action)) {
-                                            $('.rsssl_action_'+actions[action]).hide();
+                                            if (current_action !== actions[action]) $('.rsssl_action_'+actions[action]).hide();
                                         }
                                     }
                                     //clear all arrays
