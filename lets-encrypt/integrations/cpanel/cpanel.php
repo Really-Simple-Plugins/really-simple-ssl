@@ -1,9 +1,7 @@
 <?php
 /**
+ * Based on the FreeSSL.tech Auto CPanel class
  *
- * @package FreeSSL.tech Auto
- * This PHP app issues and installs free SSL certificates in cPanel shared hosting with complete automation.
- * 
  * @author Anindya Sundar Mandal <anindya@SpeedUpWebsite.info>
  * @copyright  Copyright (C) 2018-2019, Anindya Sundar Mandal
  * @license    http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License, version 3

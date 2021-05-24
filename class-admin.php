@@ -634,6 +634,9 @@ class rsssl_admin extends rsssl_front_end
                 #rsssl-message li.rsssl-error:before {
                     background-color: #D7263D;
                 }
+                #rsssl-message li.rsssl-success:before {
+                    background-color: #61ce70;
+                }
 
                 .settings_page_rlrsssl_really_simple_ssl #wpcontent #rsssl-message, .settings_page_really-simple-ssl #wpcontent #rsssl-message {
                     margin: 20px;

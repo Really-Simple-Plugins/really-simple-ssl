@@ -1,5 +1,5 @@
 === Really Simple SSL ===
-Contributors: RogierLankhorst, markwolters, hesseldejong
+Contributors: RogierLankhorst, markwolters, hesseldejong, fbett
 Donate link: https://www.paypal.me/reallysimplessl
 Tags: SSL, https, force SSL, mixed content, insecure content, secure website, website security, TLS, security, secure socket layers, HSTS
 Requires at least: 4.9
@@ -15,8 +15,8 @@ Really Simple SSL automatically detects your settings and configures your websit
 To keep it lightweight, the options are kept to a minimum. The entire site will move to SSL.
 
 = Three simple steps for setup: =
-* Get an SSL certificate (can't do that for you, sorry.) [See our recommendations for a free SSL certificate](https://really-simple-ssl.com/knowledge-base/how-to-install-a-free-ssl-certificate-on-your-wordpress-cpanel-hosting/).
 * Activate this plugin
+* Activate SSL in your hosting environment, or generate a free Let's Encrypt certificate in [Really Simple SSL](https://really-simple-ssl.com/knowledge-base/how-to-install-a-free-ssl-certificate-on-your-wordpress-cpanel-hosting/).
 * Enable SSL with one click
 
 https://www.youtube.com/watch?v=BVx3ZrSsPrU
@@ -39,11 +39,16 @@ some cool features.
 * Premium support
 
 = What does the plugin actually do =
+* It will first check for an existing SSL certificate. If you don't have one, you can generate one in the plugin. Depending on your hosting company, we can also install it for you, or help you with instructions
 * The plugin handles most issues that WordPress has with SSL, like when you're behind a reverse proxy/loadbalancer, or when no headers are passed which WordPress can use to detect SSL.
 * All incoming requests are redirected to https. Default with an internal WordPress redirect, but you can also enable a .htaccess redirect.
 * The siteurl and homeurl are changed to https.
 * Your insecure content is fixed by replacing all http:// URL's with https://, except hyperlinks to other domains. Dynamically, so no database changes are made (except for the siteurl and homeurl).
 * Cookies set with PHP are set securely, by setting them with the httpOnly flag
+
+= Credits =
+* The Let's Encrypt generation code uses the PHP ACME2 Client by [fbett](https://github.com/fbett/le-acme2-php).
+* Plesk API extended from the [PHP library for Plesk XML-RPC API](https://github.com/plesk/api-php-lib)
 
 Check out other plugins developed by Really Simple Plugins as well: [Complianz](https://wordpress.org/plugins/complianz-gdpr/) and [Zip Recipes](https://wordpress.org/plugins/zip-recipes/).
 

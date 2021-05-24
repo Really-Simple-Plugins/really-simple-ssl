@@ -114,6 +114,12 @@ if ( ! class_exists( "rsssl_wizard" ) ) {
 		        wp_redirect(rsssl_letsencrypt_wizard_url().'&step=4');
 		        exit;
             }
+
+		    if (isset($_POST['rsssl-skip-dns-check'])) {
+			    update_option('rsssl_skip_dns_check', true);
+		        exit;
+            }
+
         }
 		/**
 		 *

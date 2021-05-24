@@ -486,7 +486,7 @@ class rsssl_letsencrypt_handler {
 		    rsssl_progress_remove( 'dns-verification' );
 		    $status  = 'error';
 		    $action  = 'stop';
-		    $message = __( "Please complete the previous steps", 'really-simple-ssl' );
+		    $message = $this->not_completed_steps_message('dns-verification');
 	    }
 	    return new RSSSL_RESPONSE($status, $action, $message, $output);
     }
@@ -507,9 +507,12 @@ class rsssl_letsencrypt_handler {
 				$message = __('Token not generated. Please complete the previous step.',"really-simple-ssl");
 				return new RSSSL_RESPONSE($status, $action, $message);
 			}
+
 			foreach ($tokens as $identifier => $token){
 				if (strpos($identifier, '*') !== false) continue;
-				$response = dns_get_record ("_acme-challenge.$identifier", DNS_TXT);
+				set_error_handler(array($this, 'custom_error_handling'));
+				$response = dns_get_record( "_acme-challenge.$identifier", DNS_TXT );
+				restore_error_handler();
 				if ( isset($response[0]['txt']) ){
 					if ($response[0]['txt'] === $token) {
 						$status = 'success';
@@ -524,7 +527,7 @@ class rsssl_letsencrypt_handler {
 					}
 				} else {
 					$status = 'warning';
-					$action = 'continue';
+					$action = get_option('rsssl_skip_dns_check') ? 'continue' : 'stop';
 					$message = sprintf(__('Could not verify TXT record for domain %s', "really-simple-ssl"), "_acme-challenge.$identifier");
 				}
 			}
@@ -532,7 +535,7 @@ class rsssl_letsencrypt_handler {
 		} else {
 			$status = 'error';
 			$action = 'stop';
-			$message = __('Please complete the previous step.',"really-simple-ssl");
+			$message = $this->not_completed_steps_message('dns-verification');
 		}
 
 		return new RSSSL_RESPONSE($status, $action, $message);
@@ -544,11 +547,11 @@ class rsssl_letsencrypt_handler {
 	 */
 
 	public function dns_auth_check_if_ready(){
-		if ( !get_option('rsssl_le_dns_records_verified')) {
+		if ( !get_option('rsssl_skip_dns_check')&& !get_option('rsssl_le_dns_records_verified')) {
 			$status = 'error';
 			$action = 'stop';
 			$message = __("DNS records were not verified yet. Please complete the previous step.",'really-simple-ssl');
-			//return new RSSSL_RESPONSE($status, $action, $message);
+			return new RSSSL_RESPONSE($status, $action, $message);
 		}
 
 		if ($this->is_ready_for('generation') ) {
@@ -637,11 +640,13 @@ class rsssl_letsencrypt_handler {
 	    //check if the required order was created
 	    $order = $bundle_completed = false;
 
-	    if ( $use_dns && !get_option('rsssl_le_dns_records_verified')) {
-		    $status = 'error';
-		    $action = 'stop';
-		    $message = __("DNS records were not verified yet. Please complete the previous step.",'really-simple-ssl');
-		   // return new RSSSL_RESPONSE($status, $action, $message);
+	    if ( !get_option('rsssl_skip_dns_check') ) {
+		    if ( $use_dns && ! get_option( 'rsssl_le_dns_records_verified' ) ) {
+			    $status  = 'error';
+			    $action  = 'stop';
+			    $message = __( "DNS records were not verified yet. Please complete the previous step.", 'really-simple-ssl' );
+			    return new RSSSL_RESPONSE( $status, $action, $message );
+		    }
 	    }
 
 	    if ($this->is_ready_for('generation') ) {
@@ -717,6 +722,11 @@ class rsssl_letsencrypt_handler {
 					    $message = $this->get_error( $e );
 					    if (strpos($message, 'Order has status "invalid"')!==false) {
 					    	$order->clear();
+						    $message = __("The order is invalid, possibly due to too many failed authorization attempts. Please start at the previous step.","really-simple-ssl");
+					        if ($use_dns) {
+					        	rsssl_progress_remove('dns-verification');
+						        $message .= '&nbsp;'.__("As your order will be regenerated, you'll need to update your DNS text records.","really-simple-ssl");
+					        }
 					    }
 				    }
 
@@ -778,7 +788,7 @@ class rsssl_letsencrypt_handler {
 	    } else {
 		    $status = 'error';
 		    $action = 'stop';
-		    $message = sprintf(__('Steps not completed: %s', "really-simple-ssl"), implode(", ",$this->get_not_completed_steps('generation')) );
+		    $message = $this->not_completed_steps_message('generation');
 	    }
 
 	    if ( $bundle_completed ){
@@ -969,6 +979,15 @@ class rsssl_letsencrypt_handler {
 		return true;
 	}
 
+	public function not_completed_steps_message($step){
+		$not_completed_steps = $this->get_not_completed_steps($step);
+		$nice_names = array();
+		foreach ($not_completed_steps as $not_completed_step ) {
+			$index = array_search($not_completed_step, array_column( RSSSL_LE()->config->steps['lets-encrypt'], 'id'));
+			$nice_names[] = RSSSL_LE()->config->steps['lets-encrypt'][$index+1]['title'];
+		}
+		return sprintf(__('Please complete the following step(s) first: %s', "really-simple-ssl"), implode(", ", $nice_names) );
+	}
 
 	private function get_not_completed_steps($item){
 		$sequence = array_column( RSSSL_LE()->config->steps['lets-encrypt'], 'id');

@@ -22,7 +22,7 @@ defined( 'ABSPATH' ) or die( "you do not have access to this page!" );
                 <p><?php _e("Install your certificate.", "really-simple-ssl")?></p>
             </div>
             <h2>
-			    <?php _e("Certifcate (CRT)", "really-simple-ssl")
+			    <?php _e("Certificate (CRT)", "really-simple-ssl")
 			          . RSSSL()->rsssl_help->get_help_tip(__("Placeholder", "really-simple-ssl") ); ?>
             </h2>
 
