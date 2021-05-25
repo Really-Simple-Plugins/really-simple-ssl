@@ -47,6 +47,14 @@ if ( ! class_exists( "rsssl_config" ) ) {
 		            'cpanel:default' => false,
 		            'ssl_installation_link' => 'https://{host}:2083/frontend/paper_lantern/security/tls_status/',
 	            ),
+	            'simply' => array(
+		            'name' => 'Simply',
+		            'installation_renewal_required' => true,
+		            'local_ssl_generation_needed' => true,
+		            'cpanel:autossl' => false,
+		            'cpanel:default' => false,
+		            'ssl_installation_link' => 'https://www.simply.com/en/controlpanel/sslcerts/',
+	            ),
             );
 
 	        $this->not_local_certificate_hosts = $this->filter_hosts( 'local_ssl_generation_needed', false);

@@ -30,7 +30,7 @@ require_once( rsssl_le_path . 'integrations/plesk/functions.php' );
 
 class rsssl_plesk
 {
-	private $host;
+	public $host;
 	private $login;
 	private $password;
 	public $ssl_installation_url;
@@ -49,7 +49,6 @@ class rsssl_plesk
 		$this->host =  str_replace(array('http://', 'https://', ':8443'), '', $host);
 		$this->login = rsssl_get_value('plesk_username');
 		$this->password = $password;
-		error_log(print_r('888:'.$this->password,true));
 		$this->ssl_installation_url = 'https://'.$this->host.":8443/smb/ssl-certificate/list/id/21";
 	}
 
@@ -85,9 +84,6 @@ class rsssl_plesk
 			$status = 'warning';
 			$action = 'continue';
 			$message = $e->getMessage();
-			if ($e->getCode() === 1006 ){
-				$message .= ' '.__("Possibly rate limited. You can try again later.","really-simple-ssl");
-			}
 		}
 		return new RSSSL_RESPONSE($status, $action, $message);
 	}

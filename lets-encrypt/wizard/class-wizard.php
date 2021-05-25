@@ -27,7 +27,7 @@ if ( ! class_exists( "rsssl_wizard" ) ) {
 			add_action( 'rsssl_after_save_lets-encrypt_option', array( $this, 'after_save_wizard_option' ), 10, 4 );
 			add_action( 'rsssl_after_saved_all_fields', array( $this, 'after_saved_all_fields' ), 10, 1 );
 			add_action( 'rsssl_last_step', array( $this, 'last_step_callback' ) );
-			add_action( 'admin_init', array( $this, 'catch_dns_switch' ) );
+			add_action( 'admin_init', array( $this, 'catch_settings_switches' ) );
 			add_filter( 'rsssl_fields_load_types', array( $this, 'maybe_drop_directories_step' )  );
 			add_filter( 'rsssl_steps', array($this, 'adjust_for_dns_actions') );
 			add_filter( 'rsssl_steps', array($this, 'maybe_add_multisite_test') );
@@ -55,12 +55,12 @@ if ( ! class_exists( "rsssl_wizard" ) ) {
                         'attempts' => 2,
                         'speed' => 'slow',
                     ),
-                    array(
-                        'description' => __("Checking if Lets Encrypt is ready for authorization step...", "really-simple-ssl"),
-                        'action'=> 'dns_auth_check_if_ready',
-                        'attempts' => 2,
-                        'speed' => 'normal',
-                    ),
+//                    array(
+//                        'description' => __("Checking if Lets Encrypt is ready for authorization step...", "really-simple-ssl"),
+//                        'action'=> 'dns_auth_check_if_ready',
+//                        'attempts' => 2,
+//                        'speed' => 'normal',
+//                    ),
                     array(
                         'description' => __("Generating SSL certificate...", "really-simple-ssl"),
                         'action'=> 'create_bundle_or_renew',
@@ -103,7 +103,7 @@ if ( ! class_exists( "rsssl_wizard" ) ) {
 		    return $fields;
         }
 
-		public function catch_dns_switch(){
+		public function catch_settings_switches(){
 		    if ( !rsssl_user_can_manage() ) {
 		        return;
             }
@@ -116,8 +116,15 @@ if ( ! class_exists( "rsssl_wizard" ) ) {
 
 		    if (isset($_POST['rsssl-skip-dns-check'])) {
 			    update_option('rsssl_skip_dns_check', true);
-		        exit;
             }
+
+		    if (isset($_POST['rsssl-force-plesk'])) {
+			    update_option('rsssl_force_plesk', true);
+            }
+
+			if (isset($_POST['rsssl-force-cpanel'])) {
+				update_option('rsssl_force_cpanel', true);
+			}
 
         }
 		/**
@@ -875,7 +882,7 @@ if ( ! class_exists( "rsssl_wizard" ) ) {
 		    wp_nonce_field('rsssl_nonce', 'rsssl_nonce'); ?>
             <?php
                 $response = RSSSL_LE()->letsencrypt_handler->certificate_status();
-                if ($response->action === 'stop') {?>
+                if ( $response->action !== 'stop' ) {?>
                     <input type="submit" class='button button-primary'
                            value="<?php _e("Go ahead, activate SSL!", "really-simple-ssl"); ?>" id="rsssl_do_activate_ssl"
                            name="rsssl_do_activate_ssl">

@@ -375,7 +375,6 @@ class rsssl_admin extends rsssl_front_end
     private function clicked_activate_ssl()
     {
         if (!current_user_can($this->capability)) return;
-
         if (isset($_POST['rsssl_do_activate_ssl'])) {
             $this->activate_ssl();
             update_option('rsssl_activation_timestamp', time());

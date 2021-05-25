@@ -50,7 +50,13 @@ class rsssl_letsencrypt_handler {
 		Connector::getInstance()->useStagingServer( false );
 		Logger::getInstance()->setDesiredLevel( Logger::LEVEL_DISABLED );
 
-		Certificate::enableFeatureOCSPMustStaple();
+		/**
+		 * don't use OCSP stapling icw idn's
+		 */
+		if ( !$this->uses_idns() ) {
+			Certificate::enableFeatureOCSPMustStaple();
+		}
+
 		Order::setPreferredChain('ISRG Root X1');
         $this->subjects = $this->get_subjects();
         $this->verify_dns();
@@ -59,6 +65,20 @@ class rsssl_letsencrypt_handler {
 
 	static function this() {
 		return self::$_this;
+	}
+
+	/**
+	 * Check if the site uses internationalized domains, starting with xn--
+	 * @return bool
+	 */
+	public function uses_idns() {
+		$subjects = $this->get_subjects();
+		foreach ($subjects as $subject ) {
+			if (strpos($subject, 'xn--') !== false ) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	/**
@@ -556,7 +576,7 @@ class rsssl_letsencrypt_handler {
 						$response = new RSSSL_RESPONSE(
 							'error',
 							'stop',
-							__("Not ready for authorization yet.",'really-simple-ssl')
+							__("The Let\'s Encrypt servers are not ready for authorization yet. Please try again later.",'really-simple-ssl')
 						);
 					}
 				}
@@ -1143,7 +1163,7 @@ class rsssl_letsencrypt_handler {
 				$status  = 'success';
 				$action  = 'continue';
 				$message = __( "Successfully verified alias domain.", "really-simple-ssl" );
-				set_transient('rsssl_alias_domain_available', 'available', 30 * 'MINUTE_IN_SECONDS' );
+				set_transient('rsssl_alias_domain_available', 'available', 30 * MINUTE_IN_SECONDS );
 			} else {
 				$status  = 'error';
 				$action  = 'stop';
@@ -1279,13 +1299,6 @@ class rsssl_letsencrypt_handler {
 				$status  = 'success';
 				$action  = 'continue';
 				$message = __( "Successfully verified alias domain.", "really-simple-ssl" );
-
-				//make sure we only set this value once, during first setup.
-				if ( !get_option('rsssl_initial_alias_domain_value_set')) {
-					RSSSL_LE()->field->save_field('rsssl_include_alias', true);
-					update_option('rsssl_initial_alias_domain_value_set', true);
-				}
-
 			} else {
 				$status  = 'warning';
 				$action  = 'continue';
@@ -1329,6 +1342,11 @@ class rsssl_letsencrypt_handler {
 				}
 			} else {
 				if ( ! is_wp_error( $response ) && ( strpos( $file_content, $test_string ) !== false ) ) {
+					//make sure we only set this value once, during first setup.
+					if ( !get_option('rsssl_initial_alias_domain_value_set') ) {
+						RSSSL_LE()->field->save_field('rsssl_include_alias', true);
+						update_option('rsssl_initial_alias_domain_value_set', true);
+					}
 					$status  = 'success';
 					$action  = 'continue';
 					$message = __( "Successfully verified alias domain.", "really-simple-ssl" );

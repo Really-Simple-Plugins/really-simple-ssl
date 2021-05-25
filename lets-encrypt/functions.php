@@ -58,7 +58,15 @@ if ( !function_exists('rsssl_is_cpanel')) {
 	 * @return bool
 	 */
 	function rsssl_is_cpanel() {
-		return file_exists( "/usr/local/cpanel" );
+		if (get_option('rsssl_force_cpanel')) {
+			return true;
+		}
+
+		$open_basedir = ini_get("open_basedir");
+		if ( empty($open_basedir) && file_exists( "/usr/local/cpanel" ) ) {
+			return true;
+		}
+		return false;
 	}
 }
 
@@ -79,7 +87,11 @@ if ( !function_exists('rsssl_is_plesk')) {
 	 * @return false
 	 */
 	function rsssl_is_plesk() {
-		if ( is_dir( '/usr/local/psa' ) ) {
+		if (get_option('rsssl_force_plesk')) {
+			return true;
+		}
+		$open_basedir = ini_get("open_basedir");
+		if ( empty($open_basedir) && is_dir( '/usr/local/psa' ) ) {
 			return true;
 		} else {
 			return false;

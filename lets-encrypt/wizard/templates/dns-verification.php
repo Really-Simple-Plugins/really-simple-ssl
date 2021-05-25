@@ -1,18 +1,13 @@
 <?php
 defined( 'ABSPATH' ) or die(  );
 rsssl_progress_add('dns-verification');
-
 ?>
 <div class="rsssl-section">
 	<div class="rsssl-hidden rsssl-general rsssl-show-on-success">
-		<h2>
-			<?php _e("Next step", "really-simple-ssl"); ?>
-		</h2>
+        <h2><?php _e("Next step", "really-simple-ssl"); ?></h2>
 	</div>
 	<div class="rsssl-hidden rsssl-get_dns_token rsssl-show-on-success">
-		<p>
-			<?php _e("Add the following token as text record to your DNS records.", "really-simple-ssl"); ?>
-		</p>
+        <p><?php _e("Add the following token as text record to your DNS records. We recommend to use a short TTL during installation, in case you need to change it.", "really-simple-ssl"); ?></p>
         <div id="rsssl-dns-text-records"></div>
 		<script>
             jQuery(document).ready(function ($) {
@@ -34,5 +29,4 @@ rsssl_progress_add('dns-verification');
             });
 		</script>
 	</div>
-
 </div>

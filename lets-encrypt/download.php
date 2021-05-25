@@ -38,7 +38,6 @@ switch($type) {
 	case 'intermediate':
 		$file = get_option('rsssl_intermediate_path');
 		$file_name = 'intermediate.pem';
-
 		break;
 	default:
 		$file = false;
