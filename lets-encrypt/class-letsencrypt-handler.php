@@ -14,6 +14,10 @@ use LE_ACME2\Utilities\Logger;
 class rsssl_letsencrypt_handler {
 
 	private static $_this;
+	/**
+	 * Account object
+	 * @var bool|LE_ACME2\Account
+	 */
 	public $account = false;
 	public $challenge_directory = false;
 	public $key_directory = false;
@@ -28,7 +32,6 @@ class rsssl_letsencrypt_handler {
 		add_action( 'rsssl_before_save_lets-encrypt_option', array( $this, 'before_save_wizard_option' ), 10, 4 );
 		add_action( 'rsssl_le_activation', array( $this, 'cleanup_on_ssl_activation'));
 		add_action( 'rsssl_le_activation', array( $this, 'plugin_activation_actions'));
-		add_filter( 'rsssl_notices', array( $this, 'get_notices_list'), 30, 1 );
 
 		$this->key_directory = $this->key_directory();
 		$this->challenge_directory = $this->challenge_directory();
@@ -56,61 +59,6 @@ class rsssl_letsencrypt_handler {
 
 	static function this() {
 		return self::$_this;
-	}
-
-	/**
-	 * Show notice if certificate needs to be renewed.
-	 *
-	 * @param array $notices
-	 *
-	 * @return array
-	 */
-	public function get_notices_list($notices) {
-		if ( RSSSL_LE()->letsencrypt_handler->generated_by_rsssl() ) {
-			$valid = RSSSL()->rsssl_certificate->is_valid();
-			//we have now renewed the cert info transient
-			$certinfo = get_transient('rsssl_certinfo');
-			$end_date = isset($certinfo['validTo_time_t']) ? $certinfo['validTo_time_t'] : false;
-
-			//if the certificate expires within the grace period, allow renewal
-			//e.g. expiry date 30 may, now = 10 may => grace period 9 june.
-			$expiry_date = date( get_option('date_format'), $end_date );
-			$renew_link = rsssl_letsencrypt_wizard_url();
-			$link_open = '<a href="'.$renew_link.'" target="_blank">';
-
-
-			$notices['certificate_renewal'] = array(
-				'condition' => array( 'rsssl_ssl_enabled' ),
-				'callback'  => 'RSSSL_LE()->letsencrypt_handler->certificate_about_to_expire',
-				'score'     => 10,
-				'output'    => array(
-					'false'     => array(
-						'msg'  => sprintf( __( "Your certificate is valid to: %s", "really-simple-ssl-pro" ), $expiry_date ),
-						'icon' => 'success'
-					),
-					'true' => array(
-						'msg'  => sprintf( __( "Your certificate will expire on %s. You can renew it %shere%s.", "really-simple-ssl-pro" ), $expiry_date, $link_open, '</a>' ),
-						'icon' => 'open',
-						'plusone' => true,
-					),
-				),
-			);
-
-			$notices['certificate_installation'] = array(
-				'condition' => array( 'rsssl_ssl_enabled' ),
-				'callback'  => 'RSSSL_LE()->letsencrypt_handler->installation_failed',
-				'score'     => 10,
-				'output'    => array(
-					'true' => array(
-						'msg'  => sprintf( __( "The automatic installation of your certificate has failed. Please check your credentials, and retry the %sinstallation%s.", "really-simple-ssl-pro" ), '<a href="'.rsssl_letsencrypt_wizard_url().'">', '</a>' ),
-						'icon' => 'open',
-						'plusone' => true,
-					),
-				),
-			);
-		}
-
-		return $notices;
 	}
 
 	/**
@@ -290,6 +238,10 @@ class rsssl_letsencrypt_handler {
 	    return new RSSSL_RESPONSE($status, $action, $message);
     }
 
+	/**
+	 * Check if the certifiate is to expire in max 30 days.
+	 * @return bool
+	 */
 	public function certificate_about_to_expire(){
 		$valid = RSSSL()->rsssl_certificate->is_valid();
 		//we have now renewed the cert info transient
@@ -311,7 +263,7 @@ class rsssl_letsencrypt_handler {
 	public function server_software(){
 	    $action = 'continue';
 	    $status = 'warning';
-	    $message = __("The server software was not recognized. Depending on your hosting company, the generated certificate may need to be installed manually.", "really-simple-ssl" );
+	    $message = __("The Webhosting Dashboard software was not recognized. Depending on your hosting company, the generated certificate may need to be installed manually.", "really-simple-ssl" );
 
         if (rsssl_is_cpanel()) {
 	        $status = 'success';
@@ -350,6 +302,7 @@ class rsssl_letsencrypt_handler {
      * Test for server software
 	 * @return RSSSL_RESPONSE
 	 */
+
 	public function system_check(){
 	    $action = 'continue';
 	    $status = 'error';
@@ -402,7 +355,6 @@ class rsssl_letsencrypt_handler {
     public function get_dns_token(){
 	    if ($this->is_ready_for('dns-verification')) {
 		    $use_dns        = rsssl_dns_verification_required();
-		    $output         = '';
 		    $challenge_type = $use_dns ? Order::CHALLENGE_TYPE_DNS : Order::CHALLENGE_TYPE_HTTP;
 		    if ( $use_dns ) {
 			    try {
@@ -419,53 +371,43 @@ class rsssl_letsencrypt_handler {
 					    }
 				    };
 				    DNS::setWriter( $dnsWriter );
-				    $order = false;
-				    if ( ! Order::exists( $this->account, $this->subjects ) ) {
-					    try {
-						    $order   = Order::create( $this->account, $this->subjects );
-						    $status  = 'success';
-						    $action  = 'continue';
-						    $message = __( "Order successfully created.", 'really-simple-ssl' );
-					    } catch ( Exception $e ) {
-
-						    $response = $this->get_error( $e );
-						    error_log( print_r( $e, true ) );
-						    $status  = 'error';
-						    $action  = 'retry';
-						    $message = $response;
-					    }
-				    } else {
-					    //order exists already
-					    $status  = 'success';
-					    $action  = 'continue';
-					    $message = __( "Order successfully retrieved.", 'really-simple-ssl' );
-					    $order   = Order::get( $this->account, $this->subjects );
-				    }
+				    $response = $this->get_order();
+				    $order = $response->output;
+				    $response->output = false;
 
 				    if ( $order ) {
 					    try {
 						    if ( $order->authorize( $challenge_type ) ) {
-							    $status  = 'success';
-							    $action  = 'continue';
-							    $message = __( "Token successfully retrieved.", 'really-simple-ssl' );
+							    $response = new RSSSL_RESPONSE(
+								    'success',
+								    'continue',
+								    __( "Token successfully retrieved.", 'really-simple-ssl' ),
+								    json_encode( get_option( 'rsssl_le_dns_tokens' ) )
+							    );
 						    } else {
 							    if ( get_option( 'rsssl_le_dns_tokens' ) ) {
-								    $status  = 'success';
-								    $action  = 'continue';
-								    $message = __( "Token successfully retrieved.", 'really-simple-ssl' );
-								    $output  = json_encode( get_option( 'rsssl_le_dns_tokens' ) );
+								    $response = new RSSSL_RESPONSE(
+									    'success',
+									    'continue',
+									    __( "Token successfully retrieved.", 'really-simple-ssl' ),
+									    json_encode( get_option( 'rsssl_le_dns_tokens' ) )
+								    );
 							    } else {
-								    $status  = 'error';
-								    $action  = 'retry';
-								    $message = __( "Token not received yet.", 'really-simple-ssl' );
+								    $response = new RSSSL_RESPONSE(
+									    'error',
+									    'retry',
+									    __( "Token not received yet.", 'really-simple-ssl' )
+								    );
 							    }
 
 						    }
 					    } catch ( Exception $e ) {
 						    error_log( print_r( $e, true ) );
-						    $status  = 'error';
-						    $action  = 'retry';
-						    $message = $this->get_error( $e );
+						    $response = new RSSSL_RESPONSE(
+							    'error',
+							    'retry',
+							    $this->get_error( $e )
+						    );
 					    }
 				    }
 
@@ -473,22 +415,28 @@ class rsssl_letsencrypt_handler {
 				    rsssl_progress_remove( 'dns-verification' );
 				    $response = $this->get_error( $e );
 				    error_log( print_r( $e, true ) );
-				    $status  = 'error';
-				    $action  = 'retry';
-				    $message = $response;
+				    $response = new RSSSL_RESPONSE(
+					    'error',
+					    'retry',
+					    $response
+				    );
 			    }
 		    } else {
-			    $status  = 'error';
-			    $action  = 'stop';
-			    $message = __( "Configured for HTTP challenge", 'really-simple-ssl' );
+			    $response = new RSSSL_RESPONSE(
+				    'error',
+				    'stop',
+				    __( "Configured for HTTP challenge", 'really-simple-ssl' )
+			    );
 		    }
 	    } else {
 		    rsssl_progress_remove( 'dns-verification' );
-		    $status  = 'error';
-		    $action  = 'stop';
-		    $message = $this->not_completed_steps_message('dns-verification');
+		    $response = new RSSSL_RESPONSE(
+			    'error',
+			    'stop',
+			    $this->not_completed_steps_message('dns-verification')
+		    );
 	    }
-	    return new RSSSL_RESPONSE($status, $action, $message, $output);
+	    return $response;
     }
 
 	/**
@@ -515,43 +463,53 @@ class rsssl_letsencrypt_handler {
 				restore_error_handler();
 				if ( isset($response[0]['txt']) ){
 					if ($response[0]['txt'] === $token) {
-						$status = 'success';
-						$action = 'continue';
-						$message = sprintf(__('Successfully verified DNS records', "really-simple-ssl"), "_acme-challenge.$identifier");
+						$response = new RSSSL_RESPONSE(
+							'success',
+							'continue',
+							sprintf(__('Successfully verified DNS records', "really-simple-ssl"), "_acme-challenge.$identifier")
+						);
 						update_option('rsssl_le_dns_records_verified', true);
 					} else {
-						$status = 'error';
-						$action = 'stop';
-						$message = sprintf(__('The DNS response for %s was %s, while it should be %s.', "really-simple-ssl"), "_acme-challenge.$identifier", $response[0]['txt'], $token );
+						$response = new RSSSL_RESPONSE(
+							'error',
+							'stop',
+							sprintf(__('The DNS response for %s was %s, while it should be %s.', "really-simple-ssl"), "_acme-challenge.$identifier", $response[0]['txt'], $token )
+						);
 						break;
 					}
 				} else {
-					$status = 'warning';
 					$action = get_option('rsssl_skip_dns_check') ? 'continue' : 'stop';
-					$message = sprintf(__('Could not verify TXT record for domain %s', "really-simple-ssl"), "_acme-challenge.$identifier");
+					$response = new RSSSL_RESPONSE(
+						'warning',
+						$action,
+						sprintf(__('Could not verify TXT record for domain %s', "really-simple-ssl"), "_acme-challenge.$identifier")
+					);
 				}
 			}
 
 		} else {
-			$status = 'error';
-			$action = 'stop';
-			$message = $this->not_completed_steps_message('dns-verification');
+			$response = new RSSSL_RESPONSE(
+				'error',
+				'stop',
+				$this->not_completed_steps_message('dns-verification')
+			);
 		}
 
-		return new RSSSL_RESPONSE($status, $action, $message);
+		return $response;
 	}
 
 	/**
 	 * Authorize the order
-	 * @return string|void
+	 * @return RSSSL_RESPONSE
 	 */
 
 	public function dns_auth_check_if_ready(){
 		if ( !get_option('rsssl_skip_dns_check')&& !get_option('rsssl_le_dns_records_verified')) {
-			$status = 'error';
-			$action = 'stop';
-			$message = __("DNS records were not verified yet. Please complete the previous step.",'really-simple-ssl');
-			return new RSSSL_RESPONSE($status, $action, $message);
+			return new RSSSL_RESPONSE(
+				'error',
+				'stop',
+				__("DNS records were not verified yet. Please complete the previous step.",'really-simple-ssl')
+			);
 		}
 
 		if ($this->is_ready_for('generation') ) {
@@ -567,58 +525,51 @@ class rsssl_letsencrypt_handler {
 			};
 			DNS::setWriter($dnsWriter);
 
-			if ( ! Order::exists( $this->account, $this->subjects ) ) {
-				try {
-					$order = Order::create( $this->account, $this->subjects );
-					$status = 'success';
-					$action = 'continue';
-					$message = __("Order successfully created.",'really-simple-ssl');
-				} catch(Exception $e) {
-					$response = $this->get_error($e);
-					error_log(print_r($e, true));
-					$status = 'error';
-					$action = 'retry';
-					$message = $response;
-				}
-			} else {
-				//order exists already
-				$status = 'success';
-				$action = 'continue';
-				$message = __("Order exists.",'really-simple-ssl');
-				$order = Order::get( $this->account, $this->subjects );
-			}
+			$response = $this->get_order();
+			$order = $response->output;
+			$response->output = false;
 
 			if ( $order ) {
 				if ( $order->isCertificateBundleAvailable() ) {
 					try {
-						$status = 'success';
-						$action = 'continue';
-						$message = __("Certificate already available.",'really-simple-ssl');
+						$response = new RSSSL_RESPONSE(
+							'success',
+							'continue',
+							__("Certificate already available.",'really-simple-ssl')
+						);
 					} catch ( Exception $e ) {
 						error_log( print_r( $e, true ) );
-						$status = 'error';
-						$action = 'retry';
-						$message = $this->get_error( $e );
+						$response = new RSSSL_RESPONSE(
+							'error',
+							'retry',
+							$this->get_error( $e )
+						);
 					}
 				} else {
 					if($order->shouldStartAuthorization( Order::CHALLENGE_TYPE_DNS)) {
-						$status = 'success';
-						$action = 'continue';
-						$message = __("Ready for authorization.",'really-simple-ssl');
+						$response = new RSSSL_RESPONSE(
+							'success',
+							'continue',
+							__("Ready for authorization.",'really-simple-ssl')
+						);
 					} else {
-						$status = 'error';
-						$action = 'stop';
-						$message = __("Not ready for authorization yet.",'really-simple-ssl');
+						$response = new RSSSL_RESPONSE(
+							'error',
+							'stop',
+							__("Not ready for authorization yet.",'really-simple-ssl')
+						);
 					}
 				}
 			}
 		} else {
-			$status = 'error';
-			$action = 'stop';
-			$message = sprintf(__('Steps not completed: %s', "really-simple-ssl"), implode(", ",$this->get_not_completed_steps('generation')) );
+			$response = new RSSSL_RESPONSE(
+				'error',
+				'stop',
+				sprintf(__('Steps not completed: %s', "really-simple-ssl"), implode(", ",$this->get_not_completed_steps('generation')) )
+			);
 		}
 
-		return new RSSSL_RESPONSE($status, $action, $message);
+		return $response;
 	}
 
 	/**
@@ -627,26 +578,30 @@ class rsssl_letsencrypt_handler {
 	 */
 
     public function create_bundle_or_renew(){
+	    $bundle_completed = false;
     	$use_dns = rsssl_dns_verification_required();
 	    $attempt_count = intval(get_transient('rsssl_le_generate_attempt_count'));
 	    if ( $attempt_count>5 ){
 		    delete_option("rsssl_le_start_renewal");
-		    $status = 'error';
-		    $action = 'stop';
-		    $message = __("The certificate generation was rate limited. Please try again later.",'really-simple-ssl');
-	        return new RSSSL_RESPONSE($status, $action, $message);
+		    $message = __("The certificate generation was rate limited for 10 minutes because the authorization failed.",'really-simple-ssl');
+		    if ($use_dns){
+			    $message .= '&nbsp;'.__("Please double check your DNS txt record.",'really-simple-ssl');
+		    }
+		    return new RSSSL_RESPONSE(
+			    'error',
+			    'stop',
+			    $message
+		    );
 	    }
-
-	    //check if the required order was created
-	    $order = $bundle_completed = false;
 
 	    if ( !get_option('rsssl_skip_dns_check') ) {
 		    if ( $use_dns && ! get_option( 'rsssl_le_dns_records_verified' ) ) {
-			    $status  = 'error';
-			    $action  = 'stop';
-			    $message = __( "DNS records were not verified yet. Please complete the previous step.", 'really-simple-ssl' );
-			    return new RSSSL_RESPONSE( $status, $action, $message );
-		    }
+			    return new RSSSL_RESPONSE(
+				    'error',
+				    'stop',
+				    __( "DNS records were not verified yet. Please complete the previous step.", 'really-simple-ssl' )
+			    );
+	        }
 	    }
 
 	    if ($this->is_ready_for('generation') ) {
@@ -663,40 +618,28 @@ class rsssl_letsencrypt_handler {
 				};
 				DNS::setWriter($dnsWriter);
 			}
-		    if ( ! Order::exists( $this->account, $this->subjects ) ) {
-			    try {
-				    $order = Order::create( $this->account, $this->subjects );
-				    $status = 'success';
-				    $action = 'continue';
-				    $message = __("Order successfully created.",'really-simple-ssl');
-			    } catch(Exception $e) {
-				    $response = $this->get_error($e);
-				    error_log(print_r($e, true));
-				    $status = 'error';
-				    $action = 'retry';
-				    $message = $response;
-			    }
-		    } else {
-			    //order exists already
-			    $status = 'success';
-			    $action = 'continue';
-			    $message = __("Order exists.",'really-simple-ssl');
-			    $order = Order::get( $this->account, $this->subjects );
-		    }
+
+		    $response = $this->get_order();
+			$order = $response->output;
+		    $response->output = false;
 
 		    if ( $order ) {
 			    if ( $order->isCertificateBundleAvailable() ) {
 				    try {
 					    $order->enableAutoRenewal();
-					    $status = 'success';
-					    $action = 'continue';
-					    $message = __("Certificate already generated. It was renewed if required.",'really-simple-ssl');
+					    $response = new RSSSL_RESPONSE(
+						    'success',
+						    'continue',
+						    __("Certificate already generated. It was renewed if required.",'really-simple-ssl')
+					    );
 					    $bundle_completed = true;
 				    } catch ( Exception $e ) {
 					    error_log( print_r( $e, true ) );
-					    $status = 'error';
-					    $action = 'retry';
-					    $message = $this->get_error( $e );
+					    $response = new RSSSL_RESPONSE(
+						    'error',
+						    'retry',
+						    $this->get_error( $e )
+					    );
 					    $bundle_completed = false;
 				    }
 			    } else {
@@ -709,23 +652,28 @@ class rsssl_letsencrypt_handler {
 						    $finalized = true;
 					    } else {
 							$this->count_attempt();
-						    $status = 'error';
-						    $action = 'retry';
-						    $message = __('Authorization not completed yet.',"really-simple-ssl");
+						    $response = new RSSSL_RESPONSE(
+							    'error',
+							    'retry',
+							    __('Authorization not completed yet.',"really-simple-ssl")
+						    );
 						    $bundle_completed = false;
 					    }
 				    } catch ( Exception $e ) {
 					    $this->count_attempt();
-					    error_log( print_r( $e, true ) );
-					    $status = 'error';
-					    $action = 'stop';
 					    $message = $this->get_error( $e );
+					    error_log( print_r( $e, true ) );
+					    $response = new RSSSL_RESPONSE(
+						    'error',
+						    'stop',
+						    $message
+					    );
 					    if (strpos($message, 'Order has status "invalid"')!==false) {
 					    	$order->clear();
-						    $message = __("The order is invalid, possibly due to too many failed authorization attempts. Please start at the previous step.","really-simple-ssl");
+						    $response->message = __("The order is invalid, possibly due to too many failed authorization attempts. Please start at the previous step.","really-simple-ssl");
 					        if ($use_dns) {
 					        	rsssl_progress_remove('dns-verification');
-						        $message .= '&nbsp;'.__("As your order will be regenerated, you'll need to update your DNS text records.","really-simple-ssl");
+						        $response->message .= '&nbsp;'.__("As your order will be regenerated, you'll need to update your DNS text records.","really-simple-ssl");
 					        }
 					    }
 				    }
@@ -760,35 +708,43 @@ class rsssl_letsencrypt_handler {
 							    }
 
 							    if ( $bundle_completed ) {
-								    $status = 'success';
-								    $action = 'continue';
-								    $message = __("Successfully generated certificate.",'really-simple-ssl');
+								    $response = new RSSSL_RESPONSE(
+									    'success',
+									    'continue',
+									    __("Successfully generated certificate.",'really-simple-ssl')
+								    );
 							    } else {
-								    $status = 'error';
-								    $action = 'retry';
-								    $message = __("Files not created yet...",'really-simple-ssl');
+								    $response = new RSSSL_RESPONSE(
+									    'error',
+									    'retry',
+									    __("Files not created yet...",'really-simple-ssl')
+								    );
 							    }
 
 						    } else {
-							    $status = 'error';
-							    $action = 'retry';
-							    $message = __("Bundle not available yet...",'really-simple-ssl');
+							    $response = new RSSSL_RESPONSE(
+								    'error',
+								    'retry',
+								    __("Bundle not available yet...",'really-simple-ssl')
+							    );
 						    }
-
-
 					    } catch ( Exception $e ) {
 						    error_log( print_r( $e, true ) );
-						    $status = 'success';
-						    $action = 'continue';
-						    $message = $this->get_error( $e );
+						    $response = new RSSSL_RESPONSE(
+							    'error',
+							    'retry',
+							    $this->get_error( $e )
+						    );
 				        }
 					}
 			    }
 		    }
 	    } else {
-		    $status = 'error';
-		    $action = 'stop';
-		    $message = $this->not_completed_steps_message('generation');
+		    $response = new RSSSL_RESPONSE(
+		    	'error',
+			    'stop',
+			    $this->not_completed_steps_message('generation')
+		    );
 	    }
 
 	    if ( $bundle_completed ){
@@ -799,7 +755,42 @@ class rsssl_letsencrypt_handler {
 		    rsssl_progress_remove('generation');
 	    }
 
-	    return new RSSSL_RESPONSE($status, $action, $message);
+	    return $response;
+    }
+
+	/**
+	 * Get the order object
+	 * @return RSSSL_RESPONSE
+	 */
+    public function get_order(){
+	    if ( ! Order::exists( $this->account, $this->subjects ) ) {
+		    try {
+			    $response = new RSSSL_RESPONSE(
+				    'success',
+				    'continue',
+				    __("Order successfully created.",'really-simple-ssl')
+			    );
+			    $response->output = Order::create( $this->account, $this->subjects );
+
+		    } catch(Exception $e) {
+			    error_log(print_r($e, true));
+			    $response = new RSSSL_RESPONSE(
+				    'error',
+				    'retry',
+				    $this->get_error($e)
+			    );
+		    }
+	    } else {
+		    //order exists already
+		    $response = new RSSSL_RESPONSE(
+			    'success',
+			    'continue',
+			    __( "Order successfully retrieved.", 'really-simple-ssl' )
+		    );
+		    $response->output = Order::get( $this->account, $this->subjects );
+	    }
+
+	    return $response;
     }
 
 	/**
@@ -808,7 +799,7 @@ class rsssl_letsencrypt_handler {
     public function count_attempt(){
 	    $attempt_count = intval(get_transient('rsssl_le_generate_attempt_count'));
 	    $attempt_count++;
-	    set_transient('rsssl_le_generate_attempt_count', $attempt_count, 1 * HOUR_IN_SECONDS);
+	    set_transient('rsssl_le_generate_attempt_count', $attempt_count, 10 * MINUTE_IN_SECONDS);
     }
 
 	public function reset_attempt(){
@@ -823,7 +814,10 @@ class rsssl_letsencrypt_handler {
 	    return get_option('rsssl_le_certificate_generated_by_rsssl')!==false;
     }
 
-
+	/**
+	 * Check if it's possible to autorenew
+	 * @return bool
+	 */
 	public function certificate_automatic_install_possible(){
 
 		$install_method = get_option('rsssl_le_certificate_installed_by_rsssl');
@@ -832,7 +826,7 @@ class rsssl_letsencrypt_handler {
 		if ($install_method === false ) {
 			return false;
 		} else {
-			return false;
+			return true;
 		}
     }
 
@@ -1261,7 +1255,6 @@ class rsssl_letsencrypt_handler {
 		$upload_url = trailingslashit($uploads['baseurl']);
 		$file_content = false;
 		$status_code = __('no response','really-simple-ssl');
-
 		$domain = rsssl_get_domain();
 
 		if ( strpos( $domain, 'www.' ) !== false ) {
@@ -1280,7 +1273,7 @@ class rsssl_letsencrypt_handler {
 		$error_message = __( "Could not verify alias domain.", "really-simple-ssl") .' '. $message.' '. __( "If this is not the case, dont' add this variant to your certificate.", "really-simple-ssl");
 
 		//get cached status first.
-		$cached_status = false;//get_transient('rsssl_alias_domain_available');
+		$cached_status = get_transient('rsssl_alias_domain_available');
 		if ( $cached_status ) {
 			if ( $cached_status === 'available' ) {
 				$status  = 'success';
@@ -1289,7 +1282,7 @@ class rsssl_letsencrypt_handler {
 
 				//make sure we only set this value once, during first setup.
 				if ( !get_option('rsssl_initial_alias_domain_value_set')) {
-					RSSSL_LE()->field->save_field  ('rsssl_include_alias', true);
+					RSSSL_LE()->field->save_field('rsssl_include_alias', true);
 					update_option('rsssl_initial_alias_domain_value_set', true);
 				}
 

@@ -31,7 +31,6 @@ if ( ! class_exists( "rsssl_wizard" ) ) {
 			add_filter( 'rsssl_fields_load_types', array( $this, 'maybe_drop_directories_step' )  );
 			add_filter( 'rsssl_steps', array($this, 'adjust_for_dns_actions') );
 			add_filter( 'rsssl_steps', array($this, 'maybe_add_multisite_test') );
-
 		}
 
 		static function this() {

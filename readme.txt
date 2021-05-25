@@ -1,5 +1,5 @@
 === Really Simple SSL ===
-Contributors: RogierLankhorst, markwolters, hesseldejong, fbett
+Contributors: RogierLankhorst, markwolters, hesseldejong
 Donate link: https://www.paypal.me/reallysimplessl
 Tags: SSL, https, force SSL, mixed content, insecure content, secure website, website security, TLS, security, secure socket layers, HSTS
 Requires at least: 4.9
@@ -45,10 +45,6 @@ some cool features.
 * The siteurl and homeurl are changed to https.
 * Your insecure content is fixed by replacing all http:// URL's with https://, except hyperlinks to other domains. Dynamically, so no database changes are made (except for the siteurl and homeurl).
 * Cookies set with PHP are set securely, by setting them with the httpOnly flag
-
-= Credits =
-* The Let's Encrypt generation code uses the PHP ACME2 Client by [fbett](https://github.com/fbett/le-acme2-php).
-* Plesk API extended from the [PHP library for Plesk XML-RPC API](https://github.com/plesk/api-php-lib)
 
 Check out other plugins developed by Really Simple Plugins as well: [Complianz](https://wordpress.org/plugins/complianz-gdpr/) and [Zip Recipes](https://wordpress.org/plugins/zip-recipes/).
 

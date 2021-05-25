@@ -12,3 +12,58 @@ function rsssl_notice_include_alias( $args ) {
 		}
 	}
 }
+
+/**
+ * Show notice if certificate needs to be renewed.
+ *
+ * @param array $notices
+ *
+ * @return array
+ */
+function rsssl_le_get_notices_list($notices) {
+	if ( RSSSL_LE()->letsencrypt_handler->generated_by_rsssl() ) {
+		$valid = RSSSL()->rsssl_certificate->is_valid();
+		//we have now renewed the cert info transient
+		$certinfo = get_transient('rsssl_certinfo');
+		$end_date = isset($certinfo['validTo_time_t']) ? $certinfo['validTo_time_t'] : false;
+		//if the certificate expires within the grace period, allow renewal
+		//e.g. expiry date 30 may, now = 10 may => grace period 9 june.
+		$expiry_date = !empty($end_date) ? date( get_option('date_format'), $end_date ) : __("(unknown)","really-simple-ssl");
+		$renew_link = rsssl_letsencrypt_wizard_url();
+		$link_open = '<a href="'.$renew_link.'">';
+
+		$notices['certificate_renewal'] = array(
+			'condition' => array( 'rsssl_ssl_enabled' ),
+			'callback'  => 'RSSSL_LE()->letsencrypt_handler->certificate_about_to_expire',
+			'score'     => 10,
+			'output'    => array(
+				'false'     => array(
+					'msg'  => sprintf( __( "Your certificate is valid to: %s", "really-simple-ssl-pro" ), $expiry_date ),
+					'icon' => 'success'
+				),
+				'true' => array(
+					'msg'  => sprintf( __( "Your certificate will expire on %s. You can renew it %shere%s.", "really-simple-ssl-pro" ), $expiry_date, $link_open, '</a>' ),
+					'icon' => 'open',
+					'plusone' => true,
+				),
+			),
+		);
+
+		$notices['certificate_installation'] = array(
+			'condition' => array( 'rsssl_ssl_enabled' ),
+			'callback'  => 'RSSSL_LE()->letsencrypt_handler->installation_failed',
+			'score'     => 10,
+			'output'    => array(
+				'true' => array(
+					'msg'  => sprintf( __( "The automatic installation of your certificate has failed. Please check your credentials, and retry the %sinstallation%s.", "really-simple-ssl-pro" ), '<a href="'.rsssl_letsencrypt_wizard_url().'">', '</a>' ),
+					'icon' => 'open',
+					'plusone' => true,
+				),
+			),
+		);
+	}
+
+	return $notices;
+}
+error_log("get notices0");
+add_filter( 'rsssl_notices', 'rsssl_le_get_notices_list', 30, 1 );

@@ -3140,13 +3140,24 @@ class rsssl_admin extends rsssl_front_end
                     ),
                 ),
             ),
+            'beta_5_addon_active' => array(
+                'condition' => array('rsssl_beta_5_addon_active'),
+                'callback' => '_true_',
+                'score' => 5,
+                'output' => array(
+                    'true' => array(
+                        'msg' =>__('You have the Really Simple SSL Let\'s Encrypt beta add-on activated. This functionality has now been integrated in core, so you can deactivate the add-on.', 'really-simple-ssl'),
+                        'icon' => 'open',
+                        'dismissible' => true
+                    ),
+                ),
+            ),
         );
 
         //on multisite, don't show the notice on subsites.
         if ( is_multisite() && !is_network_admin() ) {
             unset($notices['secure_cookies_set']);
         }
-
         $notices = apply_filters('rsssl_notices', $notices);
         foreach ($notices as $id => $notice) {
             $notices[$id] = wp_parse_args($notice, $notice_defaults);
@@ -4782,6 +4793,15 @@ if (!function_exists('rsssl_uses_divi')) {
 if (!function_exists('rsssl_uses_wp_engine')) {
     function rsssl_uses_wp_engine() {
         if (function_exists('is_wpe') && is_wpe()) {
+            return true;
+        }
+        return false;
+    }
+}
+
+if (!function_exists('rsssl_beta_5_addon_active')) {
+    function rsssl_beta_5_addon_active() {
+        if (defined('rsssl_beta_addon') && rsssl_beta_addon ) {
             return true;
         }
         return false;
