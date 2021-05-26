@@ -23,7 +23,6 @@ function rsssl_notice_include_alias( $args ) {
 function rsssl_le_get_notices_list($notices) {
 	if ( RSSSL_LE()->letsencrypt_handler->generated_by_rsssl() ) {
 		$valid = RSSSL()->rsssl_certificate->is_valid();
-		//we have now renewed the cert info transient
 		$certinfo = get_transient('rsssl_certinfo');
 		$end_date = isset($certinfo['validTo_time_t']) ? $certinfo['validTo_time_t'] : false;
 		//if the certificate expires within the grace period, allow renewal
@@ -33,37 +32,61 @@ function rsssl_le_get_notices_list($notices) {
 		$link_open = '<a href="'.$renew_link.'">';
 
 		$notices['certificate_renewal'] = array(
-			'condition' => array( 'rsssl_ssl_enabled' ),
+			'condition' => array( 'rsssl_ssl_enabled', 'RSSSL_LE()->letsencrypt_handler->generated_by_rsssl' ),
 			'callback'  => 'RSSSL_LE()->letsencrypt_handler->certificate_about_to_expire',
 			'score'     => 10,
 			'output'    => array(
-				'false'     => array(
+				'false' => array(
 					'msg'  => sprintf( __( "Your certificate is valid to: %s", "really-simple-ssl-pro" ), $expiry_date ),
 					'icon' => 'success'
 				),
-				'true' => array(
-					'msg'  => sprintf( __( "Your certificate will expire on %s. You can renew it %shere%s.", "really-simple-ssl-pro" ), $expiry_date, $link_open, '</a>' ),
-					'icon' => 'open',
+				'true'  => array(
+					'msg'     => sprintf( __( "Your certificate will expire on %s. You can renew it %shere%s.", "really-simple-ssl-pro" ), $expiry_date, $link_open, '</a>' ),
+					'icon'    => 'open',
 					'plusone' => true,
+					'dismissible' => false,
 				),
 			),
 		);
 
-		$notices['certificate_installation'] = array(
-			'condition' => array( 'rsssl_ssl_enabled' ),
-			'callback'  => 'RSSSL_LE()->letsencrypt_handler->installation_failed',
-			'score'     => 10,
-			'output'    => array(
-				'true' => array(
-					'msg'  => sprintf( __( "The automatic installation of your certificate has failed. Please check your credentials, and retry the %sinstallation%s.", "really-simple-ssl-pro" ), '<a href="'.rsssl_letsencrypt_wizard_url().'">', '</a>' ),
-					'icon' => 'open',
-					'plusone' => true,
+		if ( RSSSL_LE()->letsencrypt_handler->certificate_install_required() ) {
+			if ( RSSSL_LE()->letsencrypt_handler->certificate_automatic_install_possible() ) {
+				$notices['certificate_installation'] = array(
+					'condition' => array( 'rsssl_ssl_enabled' ),
+					'callback'  => 'RSSSL_LE()->letsencrypt_handler->installation_failed',
+					'score'     => 10,
+					'output'    => array(
+						'true' => array(
+							'msg'  => sprintf( __( "The automatic installation of your certificate has failed. Please check your credentials, and retry the %sinstallation%s.", "really-simple-ssl-pro" ), '<a href="'.rsssl_letsencrypt_wizard_url().'">', '</a>' ),
+							'icon' => 'open',
+							'plusone' => true,
+							'dismissible' => false,
+
+						),
+					),
+				);
+			} else {
+				$response = RSSSL_LE()->letsencrypt_handler->search_ssl_installation_url();
+				$url = $response->output;
+
+				$notices['certificate_installation'] = array(
+				'condition' => array( 'rsssl_ssl_enabled' ),
+				'callback'  => 'RSSSL_LE()->letsencrypt_handler->should_start_manual_installation_renewal',
+				'score'     => 10,
+				'output'    => array(
+					'true' => array(
+						'msg'  => sprintf( __( "The SSL certificate has been renewed, and requires manual %sinstallation%s in your hosting dashboard.", "really-simple-ssl-pro" ), '<a target="_blank" href="'.$url.'">', '</a>' ),
+						'icon' => 'open',
+						'plusone' => true,
+						'dismissible' => false,
+					),
 				),
-			),
-		);
+			);
+			}
+		}
+
 	}
 
 	return $notices;
 }
-error_log("get notices0");
 add_filter( 'rsssl_notices', 'rsssl_le_get_notices_list', 30, 1 );

@@ -51,6 +51,8 @@ if ( rsssl_letsencrypt_generation_allowed() ) {
 			define('rsssl_le_url', plugin_dir_url(__FILE__));
 			define('rsssl_le_path', trailingslashit(plugin_dir_path(__FILE__)));
 			define('rsssl_le_wizard_path', trailingslashit(plugin_dir_path(__FILE__)).'/wizard/');
+			define('rsssl_le_cron_generation_renewal_check', 20);
+			define('rsssl_le_manual_generation_renewal_check', 15);
 		}
 
 		private function includes() {

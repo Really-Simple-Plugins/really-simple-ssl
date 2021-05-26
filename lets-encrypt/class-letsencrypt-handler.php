@@ -222,8 +222,8 @@ class rsssl_letsencrypt_handler {
 	    $status = 'warning';
 	    $message = __("Your server requires some manual actions to install the certificate.", "really-simple-ssl").' '.
 	               sprintf(__("Please follow this %slink%s to proceed.", "really-simple-ssl"), '<a target="_blank" href="'.$url.'">', '</a>');
-
-	    return new RSSSL_RESPONSE($status, $action, $message);
+		$output = $url;
+	    return new RSSSL_RESPONSE($status, $action, $message, $output );
     }
 
     /**
@@ -236,14 +236,14 @@ class rsssl_letsencrypt_handler {
 	    	//we have now renewed the cert info transient
 		    $certinfo = get_transient('rsssl_certinfo');
 		    $end_date = isset($certinfo['validTo_time_t']) ? $certinfo['validTo_time_t'] : false;
-		    $grace_period = strtotime('+30 days');
-
+		    $grace_period = strtotime('+'.rsssl_le_manual_generation_renewal_check.' days');
+		    $expiry_date = !empty($end_date) ? date( get_option('date_format'), $end_date ) : __("(unknown)","really-simple-ssl");
 		    //if the certificate expires within the grace period, allow renewal
 		    //e.g. expiry date 30 may, now = 10 may => grace period 9 june.
 		    if ( $grace_period > $end_date ) {
 			    $action = 'continue';
 			    $status = 'success';
-			    $message = __("Your certificate will expire within 30 days.", "really-simple-ssl" ).' '.__("Continue to renew.", "really-simple-ssl" );   ;
+			    $message = sprintf(__("Your certificate will expire on %s.", "really-simple-ssl" ).' '.__("Continue to renew.", "really-simple-ssl" ), $expiry_date);   ;
 		    } else {
 			    $action = 'stop';
 			    $status = 'error';
@@ -259,16 +259,21 @@ class rsssl_letsencrypt_handler {
     }
 
 	/**
-	 * Check if the certifiate is to expire in max 30 days.
+	 * Check if the certifiate is to expire in max rsssl_le_manual_generation_renewal_check days.
+	 * Used in notices list
 	 * @return bool
 	 */
+
 	public function certificate_about_to_expire(){
 		$valid = RSSSL()->rsssl_certificate->is_valid();
 		//we have now renewed the cert info transient
 		$certinfo = get_transient('rsssl_certinfo');
 		$end_date = isset($certinfo['validTo_time_t']) ? $certinfo['validTo_time_t'] : false;
-		$thirty_days_time = strtotime('+30 days');
-		if ( $thirty_days_time < $end_date ) {
+		$expiry_days_time = strtotime('+'.rsssl_le_manual_generation_renewal_check.' days');
+		if ( $expiry_days_time < $end_date ) {
+			//if the certificate is valid, stop any attempt to renew.
+			delete_option('rsssl_le_start_renewal');
+			delete_option('rsssl_le_start_installation');
 			return false;
 		} else {
 			return true;
@@ -851,12 +856,23 @@ class rsssl_letsencrypt_handler {
     }
 
 	/**
+	 * Check if the manual renewal should start.
+	 *
+	 * @return bool
+	 */
+    public function should_start_manual_installation_renewal(){
+	    $renewal_active = get_option( "rsssl_le_start_renewal" );
+	    $installation_active = get_option( "rsssl_le_start_installation" );
+	    if ( !$renewal_active && $installation_active ) {
+			return true;
+	    }
+	    return false;
+    }
+
+	/**
 	 * Check if the certificate can be installed automatically.
 	 *
 	 *     	// we can only instal if the certificate is up to date
-	if ($this->certificate_needs_renewal()) {
-	return false;
-	}
 	 */
 
     public function certificate_install_required(){
@@ -875,14 +891,14 @@ class rsssl_letsencrypt_handler {
      *
 	 * @return bool
 	 */
-    public function certificate_needs_renewal(){
+    public function cron_certificate_needs_renewal(){
 
 	    $cert_file = get_option('rsssl_certificate_path');
 	    $certificate = file_get_contents($cert_file);
 	    $certificateInfo = openssl_x509_parse($certificate);
 	    $valid_to = $certificateInfo['validTo_time_t'];
-	    $in_30_days = strtotime( "+30 days" );
-	    if ( $in_30_days > $valid_to ) {
+	    $in_expiry_days = strtotime( "+".rsssl_le_cron_generation_renewal_check." days" );
+	    if ( $in_expiry_days > $valid_to ) {
 	        return true;
         } else {
 	        return false;
