@@ -91,6 +91,7 @@ if ( ! class_exists( "rsssl_field" ) ) {
                 'cols'               => false,
                 'minimum'            => 0,
                 'title'              => '',
+                'tooltip-position' => '',
             );
 
 
