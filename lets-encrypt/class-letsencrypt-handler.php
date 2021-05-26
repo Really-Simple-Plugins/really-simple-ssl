@@ -210,6 +210,12 @@ class rsssl_letsencrypt_handler {
 		    $url = $plesk->ssl_installation_url;
 	    }
 
+	    if ( rsssl_is_directadmin() ) {
+		    $directadmin = new rsssl_directadmin();
+		    $host = $directadmin->host;
+		    $url = $directadmin->ssl_installation_url;
+	    }
+
 	    $hosting_company = rsssl_get_other_host();
 	    if ( $hosting_company && $hosting_company !== 'none' ) {
 		    $hosting_specific_link = RSSSL_LE()->config->hosts[$hosting_company]['ssl_installation_link'];
@@ -300,6 +306,11 @@ class rsssl_letsencrypt_handler {
 	        $message = __("Plesk recognized. Possibly the certificate can be installed automatically.", "really-simple-ssl" );
         }
 
+		if (rsssl_is_directadmin() ) {
+			$status = 'success';
+			$message = __("DirectAdmin recognized. Possibly the certificate can be installed automatically.", "really-simple-ssl" );
+		}
+
 		return new RSSSL_RESPONSE($status, $action, $message);
     }
 
@@ -322,26 +333,6 @@ class rsssl_letsencrypt_handler {
 
 	    return new RSSSL_RESPONSE($status, $action, $message);
     }
-
-    /**
-     * Test for server software
-	 * @return RSSSL_RESPONSE
-	 */
-
-	public function system_check(){
-	    $action = 'continue';
-	    $status = 'error';
-	    $message = __("Your system does not meet the minimum requirements.", "really-simple-ssl" );
-
-        if (rsssl_is_cpanel()) {
-	        $action = 'continue';
-	        $status = 'success';
-	        $message = __("CPanel recognized. Possibly the certificate can be installed automatically.", "really-simple-ssl" );
-        }
-
-		return new RSSSL_RESPONSE($status, $action, $message);
-    }
-
 
 	/**
 	 * Get or create an account
@@ -523,79 +514,79 @@ class rsssl_letsencrypt_handler {
 		return $response;
 	}
 
-	/**
-	 * Authorize the order
-	 * @return RSSSL_RESPONSE
-	 */
+//	/**
+//	 * Authorize the order
+//	 * @return RSSSL_RESPONSE
+//	 */
 
-	public function dns_auth_check_if_ready(){
-		if ( !get_option('rsssl_skip_dns_check')&& !get_option('rsssl_le_dns_records_verified')) {
-			return new RSSSL_RESPONSE(
-				'error',
-				'stop',
-				__("DNS records were not verified yet. Please complete the previous step.",'really-simple-ssl')
-			);
-		}
-
-		if ($this->is_ready_for('generation') ) {
-			$this->get_account();
-			$dnsWriter = new class extends AbstractDNSWriter {
-				public function write( Order $order, string $identifier, string $digest): bool {
-					$status = false;
-					if ( get_option('rsssl_le_dns_tokens') ) {
-						$status = true;
-					}
-					return $status;
-				}
-			};
-			DNS::setWriter($dnsWriter);
-
-			$response = $this->get_order();
-			$order = $response->output;
-			$response->output = false;
-
-			if ( $order ) {
-				if ( $order->isCertificateBundleAvailable() ) {
-					try {
-						$response = new RSSSL_RESPONSE(
-							'success',
-							'continue',
-							__("Certificate already available.",'really-simple-ssl')
-						);
-					} catch ( Exception $e ) {
-						error_log( print_r( $e, true ) );
-						$response = new RSSSL_RESPONSE(
-							'error',
-							'retry',
-							$this->get_error( $e )
-						);
-					}
-				} else {
-					if($order->shouldStartAuthorization( Order::CHALLENGE_TYPE_DNS)) {
-						$response = new RSSSL_RESPONSE(
-							'success',
-							'continue',
-							__("Ready for authorization.",'really-simple-ssl')
-						);
-					} else {
-						$response = new RSSSL_RESPONSE(
-							'error',
-							'stop',
-							__("The Let\'s Encrypt servers are not ready for authorization yet. Please try again later.",'really-simple-ssl')
-						);
-					}
-				}
-			}
-		} else {
-			$response = new RSSSL_RESPONSE(
-				'error',
-				'stop',
-				sprintf(__('Steps not completed: %s', "really-simple-ssl"), implode(", ",$this->get_not_completed_steps('generation')) )
-			);
-		}
-
-		return $response;
-	}
+//	public function dns_auth_check_if_ready(){
+//		if ( !get_option('rsssl_skip_dns_check')&& !get_option('rsssl_le_dns_records_verified')) {
+//			return new RSSSL_RESPONSE(
+//				'error',
+//				'stop',
+//				__("DNS records were not verified yet. Please complete the previous step.",'really-simple-ssl')
+//			);
+//		}
+//
+//		if ($this->is_ready_for('generation') ) {
+//			$this->get_account();
+//			$dnsWriter = new class extends AbstractDNSWriter {
+//				public function write( Order $order, string $identifier, string $digest): bool {
+//					$status = false;
+//					if ( get_option('rsssl_le_dns_tokens') ) {
+//						$status = true;
+//					}
+//					return $status;
+//				}
+//			};
+//			DNS::setWriter($dnsWriter);
+//
+//			$response = $this->get_order();
+//			$order = $response->output;
+//			$response->output = false;
+//
+//			if ( $order ) {
+//				if ( $order->isCertificateBundleAvailable() ) {
+//					try {
+//						$response = new RSSSL_RESPONSE(
+//							'success',
+//							'continue',
+//							__("Certificate already available.",'really-simple-ssl')
+//						);
+//					} catch ( Exception $e ) {
+//						error_log( print_r( $e, true ) );
+//						$response = new RSSSL_RESPONSE(
+//							'error',
+//							'retry',
+//							$this->get_error( $e )
+//						);
+//					}
+//				} else {
+//					if($order->shouldStartAuthorization( Order::CHALLENGE_TYPE_DNS)) {
+//						$response = new RSSSL_RESPONSE(
+//							'success',
+//							'continue',
+//							__("Ready for authorization.",'really-simple-ssl')
+//						);
+//					} else {
+//						$response = new RSSSL_RESPONSE(
+//							'error',
+//							'stop',
+//							__("The Let\'s Encrypt servers are not ready for authorization yet. Please try again later.",'really-simple-ssl')
+//						);
+//					}
+//				}
+//			}
+//		} else {
+//			$response = new RSSSL_RESPONSE(
+//				'error',
+//				'stop',
+//				sprintf(__('Steps not completed: %s', "really-simple-ssl"), implode(", ",$this->get_not_completed_steps('generation')) )
+//			);
+//		}
+//
+//		return $response;
+//	}
 
 	/**
      * Authorize the order
@@ -1153,7 +1144,7 @@ class rsssl_letsencrypt_handler {
 		$status_code = __('no response','really-simple-ssl');
 		$url = site_url('.well-known/acme-challenge/really-simple-ssl-permissions-check.txt');
 
-		$error_message = sprintf(__( "Could not reach challenge directory over %s.", "really-simple-ssl"), $url);
+		$error_message = sprintf(__( "Could not reach challenge directory over %s.", "really-simple-ssl"), '<a target="_blank" href="'.$url.'">'.$url.'</a>');
 		$test_string = 'Really Simple SSL';
 		$folders = $this->directories_without_writing_permissions();
 		if ( !$this->challenge_directory() || count($folders) !==0 ) {
@@ -1170,10 +1161,18 @@ class rsssl_letsencrypt_handler {
 		}
 
 		if ( $status_code !== 200 ) {
-			$status  = 'error';
-			$action  = 'stop';
-			$message = $error_message.' '.sprintf( __( "Error code %s.", "really-simple-ssl" ), $status_code );
-			rsssl_progress_remove('directories');
+			if (get_option('rsssl_skip_challenge_directory_request')) {
+				$status  = 'warning';
+				$action = 'continue';
+				$message = $error_message.' '.sprintf( __( "Error code %s.", "really-simple-ssl" ), $status_code );
+			} else {
+				$status  = 'error';
+				$action = 'stop';
+				$message = $error_message.' '.sprintf( __( "Error code %s.", "really-simple-ssl" ), $status_code );
+				rsssl_progress_remove('directories');
+			}
+
+
 		} else {
 			if ( ! is_wp_error( $response ) && ( strpos( $file_content, $test_string ) !== false ) ) {
 				$status  = 'success';

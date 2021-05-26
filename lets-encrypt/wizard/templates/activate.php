@@ -5,8 +5,7 @@ do_action('rsssl_le_activation');
 
 <div class="rsssl-section">
 	<h2>
-		<?php _e("Almost ready to activate SSL!", "really-simple-ssl")
-		      . RSSSL()->rsssl_help->get_help_tip(__("Placeholder", "really-simple-ssl") ); ?>
+		<?php _e("Almost ready to activate SSL!", "really-simple-ssl") . RSSSL()->rsssl_help->get_help_tip(__("In some cases it takes a few minutes for the certificate to get detected. In that case, check back in a few minutes.", "really-simple-ssl") ); ?>
 	</h2>
     <?php
     _e("Before you migrate, please check for: ", 'really-simple-ssl'); ?>

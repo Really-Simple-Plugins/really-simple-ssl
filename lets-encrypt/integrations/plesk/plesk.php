@@ -38,9 +38,6 @@ class rsssl_plesk
 	/**
 	 * Initiates the Plesk class.
 	 *
-	 * @param string $host
-	 * @param string $login
-	 * @param string $password
 	 */
 	public function __construct()
 	{

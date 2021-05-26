@@ -84,6 +84,7 @@ $this->fields = $this->fields + array(
 	        'section'     => 1,
 	        'source'      => 'lets-encrypt',
 	        'type'        => 'select',
+	        'tooltip'   => __( "This information may improve process, skipping unnecessary steps and improving suggested links.", "really-simple-ssl"),
 	        'options'     => $this->supported_hosts,
 	        'default'     => false,
 	        'label'       => __( "Hosting company", 'really-simple-ssl' ),
@@ -133,6 +134,43 @@ $this->fields = $this->fields + array(
 		        'other_host_type' => 'NOT hostgator',
 	        ),
         ),
+
+		'directadmin_host' => array(
+			'step'        => 2,
+			'section'     => 1,
+			'source'      => 'lets-encrypt',
+			'type'        => 'text',
+			'default'     => '',
+			'label'       => __( "DirectAdmin host", 'really-simple-ssl' ),
+			'help'       => __( "The URL you use to access your DirectAdmin dashboard. Ends on :2222.", 'really-simple-ssl' ),
+			'required'    => true,
+			'disabled'    => false,
+			'callback_condition' => 'rsssl_is_directadmin'
+		),
+
+		'directadmin_username' => array(
+			'step'        => 2,
+			'section'     => 1,
+			'source'      => 'lets-encrypt',
+			'type'        => 'text',
+			'default'     => '',
+			'label'       => __( "DirectAdmin username", 'really-simple-ssl' ),
+			'required'    => true,
+			'disabled'    => false,
+			'callback_condition' => 'rsssl_is_directadmin'
+		),
+
+		'directadmin_password' => array(
+			'step'        => 2,
+			'section'     => 1,
+			'source'      => 'lets-encrypt',
+			'type'        => 'password',
+			'default'     => '',
+			'label'       => __( "DirectAdmin password", 'really-simple-ssl' ),
+			'required'    => true,
+			'disabled'    => false,
+			'callback_condition' => 'rsssl_is_directadmin'
+		),
 
 		'cloudways_user_email' => array(
 			'step'        => 2,

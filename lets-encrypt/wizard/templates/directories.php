@@ -12,8 +12,10 @@ rsssl_progress_add('directories');
     </div>
     <div class="rsssl-hidden rsssl-check_challenge_directory rsssl-challenge_directory_reachable rsssl-show-on-error">
         <p>
-		    <?php _e("If the challenge directory cannot be created, or is not reachable, you can either remove the server the limitation, or change to DNS verification.", "really-simple-ssl"); ?>
+	        <?php _e("If you see a response when you click the above URL, you can click the 'skip directory request' button.", "really-simple-ssl"); ?>
+	        <?php _e("If the challenge directory cannot be created, or is not reachable, you can either remove the server limitation, or change to DNS verification.", "really-simple-ssl"); ?>
         </p><br>
+        <button class="button button-default" name="rsssl-skip-challenge-directory-request"><?php _e("Skip directory request", "really-simple-ssl"); ?></button>
         <button class="button button-default" name="rsssl-switch-to-dns"><?php _e("Switch to DNS verification", "really-simple-ssl"); ?></button>
     </div>
     <div class="rsssl-hidden rsssl-check_challenge_directory rsssl-show-on-error">

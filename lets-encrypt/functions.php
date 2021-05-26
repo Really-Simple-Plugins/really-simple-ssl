@@ -65,8 +65,11 @@ if ( !function_exists('rsssl_is_cpanel')) {
 		$open_basedir = ini_get("open_basedir");
 		if ( empty($open_basedir) && file_exists( "/usr/local/cpanel" ) ) {
 			return true;
+		} else if (rsssl_check_port(2082)) {
+			return true;
+		} else {
+			return false;
 		}
-		return false;
 	}
 }
 
@@ -93,10 +96,53 @@ if ( !function_exists('rsssl_is_plesk')) {
 		$open_basedir = ini_get("open_basedir");
 		if ( empty($open_basedir) && is_dir( '/usr/local/psa' ) ) {
 			return true;
+		} else if (rsssl_check_port(8443)) {
+			return true;
 		} else {
 			return false;
 		}
 	}
+}
+
+if ( !function_exists('rsssl_is_directadmin')) {
+	/**
+	 * https://stackoverflow.com/questions/26927248/how-to-detect-servers-control-panel-type-with-php
+	 * @return bool
+	 */
+	function rsssl_is_directadmin() {
+		if (get_option('rsssl_force_directadmin')) {
+			return true;
+		}
+		if (rsssl_check_port(2222)) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+}
+
+/**
+ * @param int $port
+ *
+ * @return bool
+ * @throws Exception
+ */
+function rsssl_check_port( $port)
+{
+	try {
+		$ipAddress = gethostbyname('localhost');
+		$link = @fsockopen($ipAddress, $port, $errno, $error);
+		if ($error) {
+			return false;
+		}
+	} catch (\Exception $ex) {
+		return false;
+	}
+
+	if ( $link ) {
+		return true;
+	}
+	return false;
 }
 
 if ( !function_exists('rsssl_get_other_host') ) {

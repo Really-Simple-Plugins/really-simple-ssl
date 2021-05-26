@@ -1,4 +1,6 @@
 <?php
+defined( 'ABSPATH' ) or die();
+
 /**
  * Based on the FreeSSL.tech Auto CPanel class
  *
@@ -53,35 +55,32 @@ class rsssl_cPanel
 	 * @return RSSSL_RESPONSE
 	 */
     public function installSSL($domains) {
-	    $response_arr = array();
+	    $response = false;
 
 	    if ( is_array($domains) && count($domains)>0 ) {
-	    	foreach ($domains as $domain ) {
-			    $response = $this->installSSLPerDomain($domain);
-			    $response_arr[] = $response;
+		    foreach( $domains as $domain ) {
+			    $response_item = $this->installSSLPerDomain($domain);
+			    //set on first iteration
+			    if ( !$response ) {
+				    $response = $response_item;
+			    }
+
+			    //override if not successfull, to always get the error.
+			    if ( $response->status !== 'success' ) {
+				    $response = $response_item;
+			    }
 		    }
 	    }
-	    $message = '';
-	    $status = '';
-	    $action = '';
 
-	    foreach ( $response_arr as $response_item ) {
-		    $status = $response_item->status;
-		    $action = $response_item->action;
-		    $message = $response_item->message;
-
-		    //overwrite if error.
-		    if ($response_item->status !== 'success' ) {
-			    error_log("response err");
-			    $status = $response_item->status;
-			    $action = $response_item->action;
-		    }
+	    if ( !$response ) {
+	    	$response = new RSSSL_RESPONSE('error', 'stop', __("No valid list of domains.", "really-simple-ssl"));
 	    }
-	    if ( $status === 'success' ) {
+
+	    if ( $response->status === 'success' ) {
 		    update_option('rsssl_le_certificate_installed_by_rsssl', 'cpanel:default');
 	    }
 
-	    return new RSSSL_RESPONSE($status, $action, $message);
+	    return $response;
     }
 
     /**
@@ -123,7 +122,7 @@ class rsssl_cPanel
 	        error_log('SSL successfully installed on '.$domain.' successfully.');
 	        $status = 'success';
 	        $action = 'continue';
-	        $message = __("SSL successfully installed on $domain","really-simple-ssl");
+	        $message = sprintf(__("SSL successfully installed on %s","really-simple-ssl"), $domain);
         } else {
 	        update_option('rsssl_installation_error', 'cpanel:default');
 	        error_log($response->errors[0]);

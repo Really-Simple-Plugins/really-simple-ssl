@@ -11,5 +11,7 @@ if ( rsssl_is_plesk() ) {
 	require_once( rsssl_le_path . 'integrations/plesk/plesk.php' );
 } else if ( rsssl_is_cpanel() ) {
 	require_once( rsssl_le_path . 'integrations/cpanel/cpanel.php' );
+} else if ( rsssl_is_directadmin() ) {
+	require_once( rsssl_le_path . 'integrations/directadmin/directadmin.php' );
 }
 

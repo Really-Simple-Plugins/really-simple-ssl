@@ -37,7 +37,15 @@ if ( ! class_exists( "rsssl_config" ) ) {
 		            'local_ssl_generation_needed' => false,
 		            'cpanel:autossl' => false,
 		            'cpanel:default' => false,
-		            'ssl_installation_link' => '',
+		            'ssl_installation_link' => false,
+	            ),
+	            'godaddy' => array(
+		            'name' => 'GoDaddy',
+		            'installation_renewal_required' => true,
+		            'local_ssl_generation_needed' => true,
+		            'cpanel:autossl' => false,
+		            'cpanel:default' => true,
+		            'ssl_installation_link' => false,
 	            ),
 	            'hostgator' => array(
 		            'name' => 'HostGator',

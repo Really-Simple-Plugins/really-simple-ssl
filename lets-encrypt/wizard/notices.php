@@ -21,6 +21,8 @@ function rsssl_notice_include_alias( $args ) {
  * @return array
  */
 function rsssl_le_get_notices_list($notices) {
+	//expiration date requests are cached.
+
 	if ( RSSSL_LE()->letsencrypt_handler->generated_by_rsssl() ) {
 		$valid = RSSSL()->rsssl_certificate->is_valid();
 		$certinfo = get_transient('rsssl_certinfo');
