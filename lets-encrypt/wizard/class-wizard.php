@@ -158,8 +158,6 @@ if ( ! class_exists( "rsssl_wizard" ) ) {
                     var attempts = stored_attempts;//enabled us to reset
                     var descriptions = stored_descriptions;//enabled us to reset
                     var progress_step = Math.ceil(100/actions.length);
-                    var message_success = '<?php _e("Completed successfully", "really-simple-ssl")?>';
-                    var message_error = '<?php _e("Please check the notices above.", "really-simple-ssl")?>';
                     var attempt_string = '<?php _e("Attempt %s.", "really-simple-ssl")?>';
                     var startTime, endTime;
                     var actual_attempts_count = 1;
@@ -176,7 +174,10 @@ if ( ! class_exists( "rsssl_wizard" ) ) {
                         //set up a counter to slowly increment the progress value until we get a response.
                         clearInterval(window.rsssl_interval);
                         window.rsssl_interval = setInterval(function () {
-                            progress += 1;
+                            progress += 0.2;
+                            if (progress >= 100) {
+                                progress = previous_progress;
+                            }
                             rsssl_set_progress();
                         }, 100);
 

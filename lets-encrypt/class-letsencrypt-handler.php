@@ -226,8 +226,7 @@ class rsssl_letsencrypt_handler {
 
 	    $action = 'continue';
 	    $status = 'warning';
-	    $message = __("Your server requires some manual actions to install the certificate.", "really-simple-ssl").' '.
-	               sprintf(__("Please follow this %slink%s to proceed.", "really-simple-ssl"), '<a target="_blank" href="'.$url.'">', '</a>');
+	    $message = rsssl_get_manual_instructions_text($url);
 		$output = $url;
 	    return new RSSSL_RESPONSE($status, $action, $message, $output );
     }
@@ -1407,9 +1406,7 @@ class rsssl_letsencrypt_handler {
 	 */
 	private function get_error($e){
 		$is_raw_response = false;
-
-		error_log("###");
-	    if (method_exists($e, 'getRawResponse') && isset($e->getRawResponse()->body['detail'])) {
+		if (method_exists($e, 'getRawResponse') && isset($e->getRawResponse()->body['detail'])) {
 	    	$is_raw_response = true;
 		    $error = $e->getRawResponse()->body['detail'];
 			error_log($error);
@@ -1587,22 +1584,5 @@ class rsssl_letsencrypt_handler {
 		return get_site_option( 'rsssl_key' );
 	}
 
-
-}
-
-class RSSSL_RESPONSE
-{
-	public $message;
-	public $action;
-	public $status;
-	public $output;
-
-	public function __construct($status, $action, $message, $output = false )
-	{
-	    $this->status = $status;
-	    $this->action = $action;
-	    $this->message = $message;
-	    $this->output = $output;
-	}
 
 }

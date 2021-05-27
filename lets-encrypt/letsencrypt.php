@@ -62,10 +62,11 @@ if ( rsssl_letsencrypt_generation_allowed() ) {
 			require_once( rsssl_le_path . 'wizard/class-wizard.php' );
 			require_once( rsssl_le_path . 'wizard/config/class-config.php' );
 
-			require_once( rsssl_le_path . 'wizard/notices.php' );
+
 			require_once( rsssl_le_path . 'functions.php');
 
 			if (version_compare(PHP_VERSION, rsssl_le_php_version, '>=')) {
+				require_once( rsssl_le_path . 'wizard/notices.php' );
 				require_once( rsssl_le_path . 'class-letsencrypt-handler.php' );
 			}
 			require_once( rsssl_le_path . 'integrations/integrations.php' );
@@ -84,6 +85,24 @@ if ( rsssl_letsencrypt_generation_allowed() ) {
 	}
 
 	add_action( 'plugins_loaded', 'RSSSL_LE', 9 );
+}
+
+
+class RSSSL_RESPONSE
+{
+	public $message;
+	public $action;
+	public $status;
+	public $output;
+
+	public function __construct($status, $action, $message, $output = false )
+	{
+		$this->status = $status;
+		$this->action = $action;
+		$this->message = $message;
+		$this->output = $output;
+	}
+
 }
 
 

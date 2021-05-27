@@ -15,6 +15,7 @@ if ( ! class_exists( "rsssl_config" ) ) {
         public $supported_hosts;
         public $not_local_certificate_hosts;
         public $no_installation_renewal_needed;
+        public $dashboard_activation_required;
 
         function __construct() {
             if ( isset( self::$_this ) ) {
@@ -35,6 +36,7 @@ if ( ! class_exists( "rsssl_config" ) ) {
             		'name' => 'CloudWays',
 		            'installation_renewal_required' => false,
 		            'local_ssl_generation_needed' => false,
+		            'dashboard_action' => false,
 		            'cpanel:autossl' => false,
 		            'cpanel:default' => false,
 		            'ssl_installation_link' => false,
@@ -43,6 +45,7 @@ if ( ! class_exists( "rsssl_config" ) ) {
 		            'name' => 'GoDaddy',
 		            'installation_renewal_required' => true,
 		            'local_ssl_generation_needed' => true,
+		            'dashboard_action' => false,
 		            'cpanel:autossl' => false,
 		            'cpanel:default' => true,
 		            'ssl_installation_link' => false,
@@ -51,6 +54,7 @@ if ( ! class_exists( "rsssl_config" ) ) {
 		            'name' => 'HostGator',
 		            'installation_renewal_required' => false,
 		            'local_ssl_generation_needed' => false,
+		            'dashboard_action' => true,
 		            'cpanel:autossl' => true,
 		            'cpanel:default' => false,
 		            'ssl_installation_link' => 'https://{host}:2083/frontend/paper_lantern/security/tls_status/',
@@ -59,13 +63,25 @@ if ( ! class_exists( "rsssl_config" ) ) {
 		            'name' => 'Simply',
 		            'installation_renewal_required' => true,
 		            'local_ssl_generation_needed' => true,
+		            'dashboard_action' => false,
 		            'cpanel:autossl' => false,
 		            'cpanel:default' => false,
 		            'ssl_installation_link' => 'https://www.simply.com/en/controlpanel/sslcerts/',
 	            ),
+	            'pcextreme' => array(
+		            'name' => 'PCExtreme',
+		            'installation_renewal_required' => false,
+		            'local_ssl_generation_needed' => false,
+		            'dashboard_action' => 'activate',
+		            'cpanel:autossl' => false,
+		            'cpanel:default' => false,
+		            'ssl_installation_link' => 'https://help.pcextreme.nl/domains-ssl/hoe-vraag-ik-een-ssl-certificaat-aan-voor-mijn-domein/',
+	            ),
+
             );
 
 	        $this->not_local_certificate_hosts = $this->filter_hosts( 'local_ssl_generation_needed', false);
+	        $this->dashboard_activation_required = $this->filter_hosts( 'dashboard_action', 'activate');
             $this->no_installation_renewal_needed = $this->filter_hosts( 'installation_renewal_required', false);
             $this->no_installation_renewal_needed[] = 'cpanel:autossl';
 

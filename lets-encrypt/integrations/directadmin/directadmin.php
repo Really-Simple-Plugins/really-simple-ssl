@@ -91,15 +91,13 @@ class rsssl_directadmin {
 			error_log( print_r( $response, true ) );
 
 			//set a default error response
-			$link_open = '<a target="_blank" href="'.$this->ssl_installation_url.'">';
 			$status = 'warning';
 			$action = 'stop';
-			$message =
-				sprintf(__("Your hosting environment does not allow automatic SSL installation. Please complete %smanually%s.","really-simple-ssl"), $link_open, '</a>').' '.
-				sprintf(__("You can follow these %sinstructions%s.","really-simple-ssl"), '<a target="_blank" href="https://really-simple-ssl.com/install-ssl-certificate">', '</a>');
+			$message = rsssl_get_manual_instructions_text($this->ssl_installation_url);
+
 
 			//if successful, proceed to next step
-			if ( empty($response['details']) ) {
+			if ( empty($response['details']) && stripos($response[0], 'Error' ) ) {
 				$sock->query('/CMD_SSL',
 					array(
 						'domain' => $domain,
@@ -110,14 +108,15 @@ class rsssl_directadmin {
 					));
 				$response = $sock->fetch_parsed_body();
 				error_log( print_r( $response, true ) );
-				if ( empty($response['details']) ) {
+				if ( empty($response['details']) && stripos($response[0], 'Error' ) ) {
 					$status = 'success';
-					$action = 'stop';
+					$action = 'finalize';
 					$message = sprintf(__("SSL successfully installed on %s","really-simple-ssl"), $domain);
 					update_option( 'rsssl_le_certificate_installed_by_rsssl', 'directadmin' );
 					delete_option( 'rsssl_installation_error' );
 				}
 			}
+
 
 		} catch ( Exception $e ) {
 			error_log( print_r( $e, true ) );

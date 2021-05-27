@@ -31,9 +31,6 @@ if ( !function_exists('rsssl_letsencrypt_wizard_url') ) {
  * @return bool
  */
 function rsssl_dns_verification_required(){
-	if ( get_option('rsssl_verification_type')==='DNS' ) {
-		return true;
-	}
 
 	/**
 	 * If our current hosting company does not allow or require local SSL certificate generation,
@@ -42,6 +39,10 @@ function rsssl_dns_verification_required(){
 
 	if ( !rsssl_do_local_lets_encrypt_generation() ) {
 		return false;
+	}
+
+	if ( get_option('rsssl_verification_type')==='DNS' ) {
+		return true;
 	}
 
 	if ( rsssl_wildcard_certificate_required() ) {
@@ -247,6 +248,35 @@ if ( !function_exists('rsssl_do_local_lets_encrypt_generation')) {
 		}
 
 		return true;
+	}
+}
+
+function rsssl_get_manual_instructions_text( $url ){
+
+	if ( rsssl_dashboard_activation_required() ) {
+		$msg = sprintf(__("You already have free SSL on your hosting environment. Please activate it on your dashboard %smanually%s.","really-simple-ssl"), '<a target="_blank" href="'.$url.'">', '</a>');
+	} else {
+		$msg = sprintf(__("Your hosting environment does not allow automatic SSL installation. Please complete %smanually%s.","really-simple-ssl"), '<a target="_blank" href="'.$url.'">', '</a>').' '.
+		       sprintf(__("You can follow these %sinstructions%s.","really-simple-ssl"), '<a target="_blank" href="https://really-simple-ssl.com/install-ssl-certificate">', '</a>');
+
+	}
+
+	return $msg;
+}
+
+if ( !function_exists('rsssl_dashboard_activation_required')) {
+	/**
+	 * Check if the setup requires local certificate generation
+	 * @return bool
+	 */
+	function rsssl_dashboard_activation_required() {
+		$dashboard_activation_required = RSSSL_LE()->config->dashboard_activation_required;
+		$current_host         = rsssl_get_other_host();
+		if ( in_array( $current_host, $dashboard_activation_required ) ) {
+			return true;
+		}
+
+		return false;
 	}
 }
 

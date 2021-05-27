@@ -30,7 +30,7 @@ function rsssl_directadmin_add_condition_actions($steps){
 		$steps['lets-encrypt'][ $index ]['actions'][]
 			= array(
 			'description' => __( "Attempting to install certificate...", "really-simple-ssl" ),
-			'action'      => 'rsssl_install_directadmin_default',
+			'action'      => 'rsssl_install_directadmin',
 			'attempts'    => 1,
 			'speed' => 'normal',
 		);

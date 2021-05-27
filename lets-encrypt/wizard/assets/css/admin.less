@@ -13,7 +13,12 @@
   }
 }
 .rsssl-dns-field {
-  max-width:45%;
+  width:45%;
+  border: 1px solid @input-border-color;
+  padding: 5px;
+  float: left;
+  margin-left: 25px;
+  margin-bottom: 10px;
 }
 #rsssl-lets-encrypt ul {
   margin-left:50px;
@@ -58,62 +63,9 @@
   }
 }
 
-
-/*Loader*/
-.rsssl-loader {
-  margin: 0;
-  width: 50px;
-  height: 15px;
-  text-align: center;
-  font-size: 10px;
-}
 //wordpress inserts notices after the first h1 or h2. To prevent breaking layout we insert an empty h1 tag at the start of our page, where WP can insert the notice.
 .rsssl-notice-hook-element {
   display:none;
-}
-
-.rsssl-loader {
-  > div {
-    margin:1px;
-    background-color: #333;
-    height: 100%;
-    width: 3px;
-    display: inline-block;
-
-    -webkit-animation: sk-stretchdelay 1.2s infinite ease-in-out;
-    animation: sk-stretchdelay 1.2s infinite ease-in-out;
-  }
-  .rect2 {
-    -webkit-animation-delay: -1.1s;
-    animation-delay: -1.1s;
-  }
-  .rect3 {
-    -webkit-animation-delay: -1.0s;
-    animation-delay: -1.0s;
-  }
-  .rect4 {
-    -webkit-animation-delay: -0.9s;
-    animation-delay: -0.9s;
-  }
-  .rect5 {
-    -webkit-animation-delay: -0.8s;
-    animation-delay: -0.8s;
-  }
-}
-
-@-webkit-keyframes sk-stretchdelay {
-  0%, 40%, 100% { -webkit-transform: scaleY(0.4) }
-  20% { -webkit-transform: scaleY(1.0) }
-}
-
-@keyframes sk-stretchdelay {
-  0%, 40%, 100% {
-    transform: scaleY(0.4);
-    -webkit-transform: scaleY(0.4);
-  }  20% {
-       transform: scaleY(1.0);
-       -webkit-transform: scaleY(1.0);
-     }
 }
 
 /*
@@ -133,21 +85,6 @@
     -moz-user-select: all; /* Firefox */
     -ms-user-select: all; /* Internet Explorer/Edge */
     user-select: all; /* Chrome and Opera */
-  }
-  .rsssl-region-indicator {
-    display: flex;
-    align-items: center;
-    img {
-      width: 25px;
-      height: 25px;
-      margin-left: 5px;
-    }
-  }
-
-  .rsssl-documents .rsssl-region-indicator img {
-    width: 14px;
-    height: 14px;
-    margin-left:0;
   }
 
   #rsssl-header {
@@ -217,22 +154,5 @@
     }
 
   }
-  .rsssl-graph-container {
-    width:80%;
-  }
 
-  .rsssl-insights {
-    .rsssl-graph-container {
-      width:100%;
-      position:absolute;
-      top:0;
-      right:0;
-      bottom:0;
-      left:0;
-    }
-
-    canvas.rsssl-graph {
-      height:85px !important;
-    }
-  }
 }

@@ -1,13 +1,9 @@
 jQuery(document).ready(function ($) {
     'use strict';
-    var t=1;
     var copied_element = $('.rsssl-copied-feedback').html();
     $(document).on('click', '.rsssl-copy-content', function () {
         var type = $(this).data('item');
-        console.log(type);
         var element = document.getElementById('rsssl-'+type);
-        console.log(element);
-
         var sel = window.getSelection();
         sel.removeAllRanges();
         var range = document.createRange();
@@ -300,105 +296,5 @@ jQuery(document).ready(function ($) {
             return checked_boxes;
         }
     }
-
-
-    //select2 dropdown
-    if ($('.rsssl-select2').length) {
-        rssslInitSelect2()
-    }
-
-    function rssslInitSelect2() {
-        $('.rsssl-select2').select2({
-            tags: true,
-            width:'400px',
-        });
-
-        $('.rsssl-select2-no-additions').select2({
-            width:'400px',
-        });
-    }
-
-
-    /**
-     * hide and show custom url
-     */
-    $(document).on('change', '.rsssl-document-input', function(){
-        rsssl_update_document_field();
-    });
-
-    function rsssl_update_document_field(){
-        if ($('.rsssl-document-field').length){
-            $('.rsssl-document-field').each(function(){
-                var fieldname = $(this).data('fieldname');
-                var value = $('input[name='+fieldname+']:checked').val();
-                var urlField = $(this).find('.rsssl-document-custom-url');
-                var pageField = $(this).find('.rsssl-document-custom-page');
-
-                if (value==='custom'){
-                    pageField.show();
-                    pageField.prop('required', true);
-                } else {
-                    pageField.hide();
-                    pageField.prop('required', false);
-                }
-
-                if (value==='url'){
-                    urlField.show();
-                    urlField.prop('required', true);
-                } else {
-                    urlField.hide();
-                    urlField.prop('required', false);
-                }
-
-
-
-            });
-        }
-    }
-
-    /**
-     * Create missing pages
-     */
-    $(document).on('click', '#rsssl-create_pages', function(){
-        //init loader anim
-        var btn = $('#rsssl-create_pages');
-        btn.attr('disabled', 'disabled');
-        var oldBtnHtml = btn.html();
-        btn.html('<div class="rsssl-loader "><div class="rect1"></div><div class="rect2"></div><div class="rect3"></div><div class="rect4"></div><div class="rect5"></div></div>');
-
-        //get all page titles from the page
-        var pageTitles = {};
-        $('.rsssl-create-page-title').each(function(){
-            if (pageTitles.hasOwnProperty($(this).data('region'))){
-                region = pageTitles[$(this).data('region')];
-            } else {
-                var region = {};
-            }
-            region[$(this).attr('name')] = $(this).val();
-            pageTitles[$(this).data('region')] = region;
-        });
-
-        $.ajax({
-            type: "POST",
-            url: rsssl_wizard.admin_url,
-            dataType: 'json',
-            data: ({
-                pages: JSON.stringify(pageTitles),
-                action: 'rsssl_create_pages'
-            }),
-            success: function (response) {
-                if (response.success) {
-                    $('.rsssl-create-page-title').each(function(){
-                        $(this).removeClass('rsssl-deleted-page').addClass('rsssl-valid-page');
-                        $(this).parent().find('.rsssl-icon').replaceWith(response.icon);
-                    });
-                    btn.html(response.new_button_text);
-                    btn.removeAttr('disabled');
-                } else {
-                    btn.html(oldBtnHtml);
-                }
-            }
-        });
-    });
 
 });
