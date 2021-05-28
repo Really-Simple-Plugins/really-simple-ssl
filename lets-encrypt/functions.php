@@ -97,8 +97,6 @@ if ( !function_exists('rsssl_is_plesk')) {
 		$open_basedir = ini_get("open_basedir");
 		if ( empty($open_basedir) && is_dir( '/usr/local/psa' ) ) {
 			return true;
-		} else if (rsssl_check_port(8443)) {
-			return true;
 		} else {
 			return false;
 		}
@@ -252,8 +250,25 @@ if ( !function_exists('rsssl_do_local_lets_encrypt_generation')) {
 }
 
 function rsssl_get_manual_instructions_text( $url ){
+	$dashboard_activation_required =  false;
+	$activated_by_default =  false;
 
-	if ( rsssl_dashboard_activation_required() ) {
+	$dashboard_activation_required_hosts = RSSSL_LE()->config->dashboard_activation_required;
+	$current_host         = rsssl_get_other_host();
+	if ( in_array( $current_host, $dashboard_activation_required_hosts ) ) {
+		$dashboard_activation_required =  true;
+	}
+
+	$activated_by_default_hosts = RSSSL_LE()->config->dashboard_activation_required;
+	$current_host         = rsssl_get_other_host();
+	if ( in_array( $current_host, $activated_by_default_hosts ) ) {
+		$activated_by_default =  true;
+	}
+
+	if ( $activated_by_default ) {
+		$msg = sprintf(__("According to our information, your hosting provider supplies your account with an SSL certificate by default. Please contact your %shosting support%s if this is not the case.","really-simple-ssl"), '<a target="_blank" href="'.$url.'">', '</a>');
+
+	} else if ( $dashboard_activation_required ) {
 		$msg = sprintf(__("You already have free SSL on your hosting environment. Please activate it on your dashboard %smanually%s.","really-simple-ssl"), '<a target="_blank" href="'.$url.'">', '</a>');
 	} else {
 		$msg = sprintf(__("Your hosting environment does not allow automatic SSL installation. Please complete %smanually%s.","really-simple-ssl"), '<a target="_blank" href="'.$url.'">', '</a>').' '.
@@ -262,22 +277,6 @@ function rsssl_get_manual_instructions_text( $url ){
 	}
 
 	return $msg;
-}
-
-if ( !function_exists('rsssl_dashboard_activation_required')) {
-	/**
-	 * Check if the setup requires local certificate generation
-	 * @return bool
-	 */
-	function rsssl_dashboard_activation_required() {
-		$dashboard_activation_required = RSSSL_LE()->config->dashboard_activation_required;
-		$current_host         = rsssl_get_other_host();
-		if ( in_array( $current_host, $dashboard_activation_required ) ) {
-			return true;
-		}
-
-		return false;
-	}
 }
 
 if ( ! function_exists( 'rsssl_notice' ) ) {

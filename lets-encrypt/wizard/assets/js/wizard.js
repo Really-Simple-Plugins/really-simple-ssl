@@ -3,21 +3,20 @@ jQuery(document).ready(function ($) {
     var copied_element = $('.rsssl-copied-feedback').html();
     $(document).on('click', '.rsssl-copy-content', function () {
         var type = $(this).data('item');
-        var element = document.getElementById('rsssl-'+type);
-        var sel = window.getSelection();
-        sel.removeAllRanges();
-        var range = document.createRange();
-        range.selectNodeContents(element);
-        sel.addRange(range);
         var success;
+        var data = $('.rsssl-'+type).text();
+        var temp_element = $("<textarea>");
+        $("body").append(temp_element);
+        temp_element.val(data).select();
         try {
             success = document.execCommand("copy");
         } catch (e) {
             success = false;
         }
-
+        temp_element.remove();
         if (success) {
             $('<span class="rsssl-copied-feedback-container">'+copied_element+'</span>').insertAfter($(this));
+            setTimeout(function(){ $('.rsssl-copied-feedback-container').fadeOut('slow') }, 5000);
         }
     });
 

@@ -50,6 +50,17 @@ class rsssl_plesk
 	}
 
 	/**
+	 * Check if all creds are available
+	 * @return bool
+	 */
+	public function credentials_available(){
+		if (!empty($this->host) && !empty($this->password) && !empty($this->login)) {
+			return true;
+		}
+		return false;
+	}
+
+	/**
 	 * Install certificate
 	 * @param $domains
 	 *

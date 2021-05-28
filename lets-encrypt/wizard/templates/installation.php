@@ -41,7 +41,7 @@ defined( 'ABSPATH' ) or die( "you do not have access to this page!" );
 			    <?php _e("Certificate Authority Bundle (CABUNDLE)", "really-simple-ssl")
 			          . RSSSL()->rsssl_help->get_help_tip(__("Placeholder", "really-simple-ssl") ); ?>
             </h2>
-            <div class="rsssl-certificate-data rsssl-cabundle" id="rsssl-cabundle"><?php echo $ca_bundle_content ?></div>
+            <div class="rsssl-certificate-data rsssl-cabundle" id="rsssl-cabundle"><?php echo  $ca_bundle_content;?></div>
             <a href="<?php echo $download_url?>&type=intermediate" class="button button-secondary"><?php _e("Download", "really-simple-ssl")?></a>
             <button type="button" class="button button-primary rsssl-copy-content" data-item="cabundle"><?php _e("Copy content", "really-simple-ssl")?></button>
         </div>

@@ -37,34 +37,36 @@ function rsssl_install_cpanel_default(){
 
 
 function rsssl_cpanel_add_condition_actions($steps){
-	$auto_ssl = RSSSL_LE()->config->current_host_can('cpanel:autossl');
-	$default_ssl = RSSSL_LE()->config->current_host_can('cpanel:default');
+	$cpanel = new rsssl_cPanel();
+	if ( RSSSL_LE()->config->host_has_dashboard('cpanel') && $cpanel->credentials_available() ) {
+		$auto_ssl    = RSSSL_LE()->config->host_api_supported( 'cpanel:autossl' );
+		$default_ssl = RSSSL_LE()->config->host_api_supported( 'cpanel:default' );
 
-	$index = array_search( 'installation', array_column( $steps['lets-encrypt'], 'id' ) );
-	$index ++;
-	//clear existing array
-	$steps['lets-encrypt'][ $index ]['actions'] = array();
+		$index = array_search( 'installation', array_column( $steps['lets-encrypt'], 'id' ) );
+		$index ++;
+		//clear existing array
+		$steps['lets-encrypt'][ $index ]['actions'] = array();
 
-	if ($auto_ssl) {
-		$steps['lets-encrypt'][ $index ]['actions'][]
-			= array(
-			'description' => __( "Attempting to install certificate using AutoSSL...", "really-simple-ssl" ),
-			'action'      => 'rsssl_install_cpanel_autossl',
-			'attempts'    => 1,
-			'speed' => 'normal',
-		);
+		if ( $auto_ssl ) {
+			$steps['lets-encrypt'][ $index ]['actions'][]
+				= array(
+				'description' => __( "Attempting to install certificate using AutoSSL...", "really-simple-ssl" ),
+				'action'      => 'rsssl_install_cpanel_autossl',
+				'attempts'    => 1,
+				'speed'       => 'normal',
+			);
+		}
+
+		if ( $default_ssl ) {
+			$steps['lets-encrypt'][ $index ]['actions'][]
+				= array(
+				'description' => __( "Attempting to install certificate...", "really-simple-ssl" ),
+				'action'      => 'rsssl_install_cpanel_default',
+				'attempts'    => 1,
+				'speed'       => 'normal',
+			);
+		}
 	}
-
-	if ($default_ssl) {
-		$steps['lets-encrypt'][ $index ]['actions'][]
-			= array(
-			'description' => __( "Attempting to install certificate...", "really-simple-ssl" ),
-			'action'      => 'rsssl_install_cpanel_default',
-			'attempts'    => 1,
-			'speed' => 'normal',
-		);
-	}
-
 	return $steps;
 }
 

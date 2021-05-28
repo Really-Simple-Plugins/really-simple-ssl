@@ -29,7 +29,7 @@ require_once( rsssl_le_path . 'integrations/cpanel/functions.php' );
 
 class rsssl_cPanel
 {
-    private $cpanel_host;
+    public $host;
     private $username;
     private $password;
     public  $ssl_installation_url;
@@ -41,12 +41,22 @@ class rsssl_cPanel
     {
 	    $username = rsssl_get_value('cpanel_username');
 	    $password = RSSSL_LE()->letsencrypt_handler->decode( rsssl_get_value('cpanel_password') );
-	    $cpanel_host = rsssl_get_value('cpanel_host');
-	    $this->cpanel_host =  str_replace(array('http://', 'https://', ':2083'), '', $cpanel_host);
+	    $host = rsssl_get_value('cpanel_host');
+	    $this->host =  str_replace(array('http://', 'https://', ':2083'), '', $host);
         $this->username = $username;
         $this->password = $password;
-        $this->ssl_installation_url = 'https://'.$this->cpanel_host.":2083/frontend/paper_lantern/ssl/install.html";
+        $this->ssl_installation_url = 'https://'.$this->host.":2083/frontend/paper_lantern/ssl/install.html";
     }
+	/**
+	 * Check if all creds are available
+	 * @return bool
+	 */
+	public function credentials_available(){
+		if (!empty($this->host) && !empty($this->password) && !empty($this->username)) {
+			return true;
+		}
+		return false;
+	}
 
 	/**
 	 * Install SSL for all passed domains
@@ -95,7 +105,7 @@ class rsssl_cPanel
 	    $key_file = get_option('rsssl_private_key_path');
 	    $cert_file = get_option('rsssl_certificate_path');
 	    $cabundle_file = get_option('rsssl_intermediate_path');
-        $request_uri = 'https://'.$this->cpanel_host.':2083/execute/SSL/install_ssl';
+        $request_uri = 'https://'.$this->host.':2083/execute/SSL/install_ssl';
 
         $payload = [
             'domain' => $domain,
@@ -137,7 +147,7 @@ class rsssl_cPanel
 	 */
     public function enableAutoSSL($domains){
     	$domains = implode(',', $domains);
-	    $request_uri = 'https://'.$this->cpanel_host.':2083/execute/SSL/remove_autossl_excluded_domains';
+	    $request_uri = 'https://'.$this->host.':2083/execute/SSL/remove_autossl_excluded_domains';
 	    $payload = [
 		    'domains' => $domains,
 	    ];
@@ -214,7 +224,7 @@ class rsssl_cPanel
 	 */
 	public function setDnsTxt($domain, $txt_name, $txt_value)
 	{
-		$xmlapi = new xmlapi($this->cpanel_host, $this->username, $this->password);
+		$xmlapi = new xmlapi($this->host, $this->username, $this->password);
 		$xmlapi->set_output('json');
 		$xmlapi->set_port('2083');
 		$xmlapi->set_debug(1);

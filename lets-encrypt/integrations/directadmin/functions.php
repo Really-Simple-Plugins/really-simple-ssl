@@ -19,14 +19,12 @@ function rsssl_install_directadmin(){
 }
 
 function rsssl_directadmin_add_condition_actions($steps){
-	$directadmin = RSSSL_LE()->config->current_host_can('directadmin');
-
-	$index = array_search( 'installation', array_column( $steps['lets-encrypt'], 'id' ) );
-	$index ++;
-	//clear existing array
-	$steps['lets-encrypt'][ $index ]['actions'] = array();
-
-	if ($directadmin) {
+	$directadmin = new rsssl_directadmin();
+	if (RSSSL_LE()->config->host_has_dashboard('directadmin') && $directadmin->credentials_available() ) {
+		$index = array_search( 'installation', array_column( $steps['lets-encrypt'], 'id' ) );
+		$index ++;
+		//clear existing array
+		$steps['lets-encrypt'][ $index ]['actions'] = array();
 		$steps['lets-encrypt'][ $index ]['actions'][]
 			= array(
 			'description' => __( "Attempting to install certificate...", "really-simple-ssl" ),

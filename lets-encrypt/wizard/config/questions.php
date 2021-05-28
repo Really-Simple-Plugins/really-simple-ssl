@@ -37,8 +37,7 @@ $this->fields = $this->fields + array(
 			'source'    => 'lets-encrypt',
 			'type'      => 'email',
 			'default'   => get_option('admin_email'),
-			'tooltip'   => __( "Your email address will be obfuscated on the front-end to prevent spidering.",
-				'really-simple-ssl' ),
+			'tooltip'   => __( "Your email address will used to create a Lets Encrypt account. This is also where you will receive renewal notifications.", 'really-simple-ssl' ),
 			'tooltip-position' => 'title',
 			'label'     => __( "Your e-mail address", 'really-simple-ssl' ),
 			'sublabel'  => __("This field is prefilled based on your configuration", 'really-simple-ssl'),
@@ -100,7 +99,7 @@ $this->fields = $this->fields + array(
             'default'     => '',
             'label'       => __( "CPanel host", 'really-simple-ssl' ),
             'help'       => __( "The URL you use to access your cPanel dashboard. Ends on :2083.", 'really-simple-ssl' ),
-            'required'    => true,
+            'required'    => false,
             'disabled'    => false,
 	        'callback_condition' => 'rsssl_is_cpanel'
         ),
@@ -112,7 +111,7 @@ $this->fields = $this->fields + array(
 	        'type'        => 'text',
 	        'default'     => '',
 	        'label'       => __( "CPanel username", 'really-simple-ssl' ),
-	        'required'    => true,
+	        'required'    => false,
 	        'disabled'    => false,
 	        'callback_condition' => 'rsssl_cpanel_api_supported',
 	        'condition' => array(
@@ -127,7 +126,7 @@ $this->fields = $this->fields + array(
 	        'type'        => 'password',
 	        'default'     => '',
 	        'label'       => __( "CPanel password", 'really-simple-ssl' ),
-	        'required'    => true,
+	        'required'    => false,
 	        'disabled'    => false,
 	        'callback_condition' => 'rsssl_cpanel_api_supported',
 	        'condition' => array(
@@ -143,7 +142,7 @@ $this->fields = $this->fields + array(
 			'default'     => '',
 			'label'       => __( "DirectAdmin host", 'really-simple-ssl' ),
 			'help'       => __( "The URL you use to access your DirectAdmin dashboard. Ends on :2222.", 'really-simple-ssl' ),
-			'required'    => true,
+			'required'    => false,
 			'disabled'    => false,
 			'callback_condition' => 'rsssl_is_directadmin'
 		),
@@ -155,7 +154,7 @@ $this->fields = $this->fields + array(
 			'type'        => 'text',
 			'default'     => '',
 			'label'       => __( "DirectAdmin username", 'really-simple-ssl' ),
-			'required'    => true,
+			'required'    => false,
 			'disabled'    => false,
 			'callback_condition' => 'rsssl_is_directadmin'
 		),
@@ -167,7 +166,7 @@ $this->fields = $this->fields + array(
 			'type'        => 'password',
 			'default'     => '',
 			'label'       => __( "DirectAdmin password", 'really-simple-ssl' ),
-			'required'    => true,
+			'required'    => false,
 			'disabled'    => false,
 			'callback_condition' => 'rsssl_is_directadmin'
 		),
@@ -180,7 +179,7 @@ $this->fields = $this->fields + array(
 			'default'     => '',
 			'placeholder' => 'email@email.com',
 			'label'       => __( "CloudWays user email", 'really-simple-ssl' ),
-			'required'    => true,
+			'required'    => false,
 			'disabled'    => false,
 			'condition' => array(
 				'other_host_type' => 'cloudways'
@@ -193,7 +192,7 @@ $this->fields = $this->fields + array(
 			'type'        => 'password',
 			'default'     => '',
 			'label'       => __( "CloudWays api key", 'really-simple-ssl' ),
-			'required'    => true,
+			'required'    => false,
 			'disabled'    => false,
 			'comment'     => sprintf(__("You can find your api key %shere%s (make sure you're logged in with your main account).","really-simple-ssl"),'<a target="_blank" href="https://platform.cloudways.com/api">','</a>'),
 			'condition' => array(
@@ -209,9 +208,12 @@ $this->fields = $this->fields + array(
 			'default'     => '',
 			'label'       => __( "Plesk host", 'really-simple-ssl' ),
 			'help'       => __( "The URL you use to access your Plesk dashboard. Ends on :8443.", 'really-simple-ssl' ),
-			'required'    => true,
+			'required'    => false,
 			'disabled'    => false,
 			'callback_condition' => 'rsssl_is_plesk',
+			'condition' => array(
+				'other_host_type' => 'NOT hostinger',
+			),
 		),
 		'plesk_username' => array(
 			'step'        => 2,
@@ -221,9 +223,12 @@ $this->fields = $this->fields + array(
 			'default'     => '',
 			'label'       => __( "Plesk username", 'really-simple-ssl' ),
 			'help'       => sprintf(__( "You can find your Plesk username and password in %s", 'really-simple-ssl' ),'https://{your-plesk-host-name}:8443/smb/my-profile'),
-			'required'    => true,
+			'required'    => false,
 			'disabled'    => false,
 			'callback_condition' => 'rsssl_is_plesk',
+			'condition' => array(
+				'other_host_type' => 'NOT hostinger',
+			),
 		),
 
 		'plesk_password' => array(
@@ -233,9 +238,12 @@ $this->fields = $this->fields + array(
 			'type'        => 'password',
 			'default'     => '',
 			'label'       => __( "Plesk password", 'really-simple-ssl' ),
-			'required'    => true,
+			'required'    => false,
 			'disabled'    => false,
 			'callback_condition' => 'rsssl_is_plesk',
+			'condition' => array(
+				'other_host_type' => 'NOT hostinger',
+			),
 		),
 
 		'store_credentials' => array(

@@ -32,6 +32,7 @@ class rsssl_letsencrypt_handler {
 		add_action( 'rsssl_before_save_lets-encrypt_option', array( $this, 'before_save_wizard_option' ), 10, 4 );
 		add_action( 'rsssl_le_activation', array( $this, 'cleanup_on_ssl_activation'));
 		add_action( 'rsssl_le_activation', array( $this, 'plugin_activation_actions'));
+		add_action( 'admin_init', array( $this, 'maybe_add_htaccess_exclude'));
 
 		$this->key_directory = $this->key_directory();
 		$this->challenge_directory = $this->challenge_directory();
@@ -65,6 +66,45 @@ class rsssl_letsencrypt_handler {
 
 	static function this() {
 		return self::$_this;
+	}
+
+	/**
+	 * If we're on apache, add a line to the .htaccess so the acme challenge directory won't get blocked.
+	 */
+	public function maybe_add_htaccess_exclude(){
+
+		if (!current_user_can('manage_options')) {
+			return;
+		}
+
+		if ( !RSSSL()->rsssl_server->uses_htaccess() ) {
+			return;
+		}
+
+		$htaccess_file = RSSSL()->really_simple_ssl->htaccess_file();
+		if ( !file_exists($htaccess_file) ) {
+			return;
+		}
+
+		if ( !is_writable($htaccess_file) ) {
+			return;
+		}
+
+		//check if editing is blocked.
+		if ( RSSSL()->really_simple_ssl->do_not_edit_htaccess ) {
+			return;
+		}
+
+		$htaccess = file_get_contents( $htaccess_file );
+		$htaccess = preg_replace("/#\s?BEGIN\s?Really Simple SSL LETS ENCRYPT.*?#\s?END\s?Really Simple SSL LETS ENCRYPT/s", "", $htaccess);
+		$htaccess = preg_replace("/\n+/", "\n", $htaccess);
+
+		$rules = '#BEGIN Really Simple SSL LETS ENCRYPT'."\n";
+		$rules .= 'RewriteRule ^.well-known/(.*)$ - [L]'."\n";
+		$rules .= '#END Really Simple SSL LETS ENCRYPT'."\n";
+		$htaccess = $rules . $htaccess;
+		file_put_contents($htaccess_file, $htaccess);
+
 	}
 
 	/**
@@ -200,7 +240,7 @@ class rsssl_letsencrypt_handler {
 
 	    if ( rsssl_is_cpanel() ) {
 		    $cpanel = new rsssl_cPanel();
-		    $host = $cpanel->cpanel_host;
+		    $host = $cpanel->host;
 		    $url = $cpanel->ssl_installation_url;
 	    }
 
@@ -220,7 +260,8 @@ class rsssl_letsencrypt_handler {
 	    if ( $hosting_company && $hosting_company !== 'none' ) {
 		    $hosting_specific_link = RSSSL_LE()->config->hosts[$hosting_company]['ssl_installation_link'];
 		    if ($hosting_specific_link) {
-			    $url = str_replace('{host}', $host, $hosting_specific_link);
+			    $site = trailingslashit( str_replace(array('https://','http://', 'www.'),'', site_url()) );
+			    $url = str_replace(array('{host}', '{domain}'), array($host, $site), $hosting_specific_link);
 		    }
 	    }
 
@@ -1470,11 +1511,13 @@ class rsssl_letsencrypt_handler {
 					if ( $response->status === 'success' ) {
 						delete_option( "rsssl_le_start_installation" );
 					}
+					return $response;
 				} else if ( $server === 'plesk') {
 					$response = rsssl_plesk_install();
 					if ( $response->status === 'success' ) {
 						delete_option( "rsssl_le_start_installation" );
 					}
+					return $response;
 				} else {
 					$status = 'error';
 					$action = 'stop';

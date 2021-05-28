@@ -32,6 +32,16 @@ class rsssl_directadmin {
 		$this->password             = $password;
 		$this->ssl_installation_url = 'https://' . $this->host . "";
 	}
+	/**
+	 * Check if all creds are available
+	 * @return bool
+	 */
+	public function credentials_available(){
+		if (!empty($this->host) && !empty($this->password) && !empty($this->login)) {
+			return true;
+		}
+		return false;
+	}
 
 	public function installSSL( $domains ) {
 		$response = false;
