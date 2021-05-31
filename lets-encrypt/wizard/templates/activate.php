@@ -23,7 +23,10 @@ do_action('rsssl_le_activation');
 		<?php
         //non cached SSL check.
         $response = RSSSL_LE()->letsencrypt_handler->certificate_status();
-		if ($response->status === 'error') { ?>
+        $already_enabled = RSSSL()->really_simple_ssl->ssl_enabled;
+        if ($already_enabled){ ?>
+            <li class="rsssl-success"><?php _e("SSL was already activated on your website!", "really-simple-ssl") ?></li>
+        <?php } else if ($response->status === 'error') { ?>
             <li class="rsssl-success"><?php _e("An SSL certificate has been detected", "really-simple-ssl") ?></li>
 		<?php } else { ?>
             <li class="rsssl-error"><?php _e("No SSL certificate has been detected.", "really-simple-ssl") ?></li>

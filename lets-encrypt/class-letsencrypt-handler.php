@@ -90,12 +90,13 @@ class rsssl_letsencrypt_handler {
 			return;
 		}
 
-		//check if editing is blocked.
-		if ( RSSSL()->really_simple_ssl->do_not_edit_htaccess ) {
+		$htaccess = file_get_contents( $htaccess_file );
+
+		//if it's already inserted, skip.
+		if ( strpos($htaccess, 'Really Simple SSL LETS ENCRYPT') !== FALSE ) {
 			return;
 		}
 
-		$htaccess = file_get_contents( $htaccess_file );
 		$htaccess = preg_replace("/#\s?BEGIN\s?Really Simple SSL LETS ENCRYPT.*?#\s?END\s?Really Simple SSL LETS ENCRYPT/s", "", $htaccess);
 		$htaccess = preg_replace("/\n+/", "\n", $htaccess);
 
@@ -1166,7 +1167,8 @@ class rsssl_letsencrypt_handler {
 	public function challenge_directory_reachable(){
 		$file_content = false;
 		$status_code = __('no response','really-simple-ssl');
-		$url = site_url('.well-known/acme-challenge/really-simple-ssl-permissions-check.txt');
+		//make sure we request over http, otherwise the request might fail if the url is already https.
+		$url = str_replace('https://', 'http://', site_url('.well-known/acme-challenge/really-simple-ssl-permissions-check.txt'));
 
 		$error_message = sprintf(__( "Could not reach challenge directory over %s.", "really-simple-ssl"), '<a target="_blank" href="'.$url.'">'.$url.'</a>');
 		$test_string = 'Really Simple SSL';

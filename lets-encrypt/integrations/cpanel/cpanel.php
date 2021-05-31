@@ -42,7 +42,7 @@ class rsssl_cPanel
 	    $username = rsssl_get_value('cpanel_username');
 	    $password = RSSSL_LE()->letsencrypt_handler->decode( rsssl_get_value('cpanel_password') );
 	    $host = rsssl_get_value('cpanel_host');
-	    $this->host =  str_replace(array('http://', 'https://', ':2083'), '', $host);
+	    $this->host =  str_replace(array('http://', 'https://', ':2083',':'), '', $host);
         $this->username = $username;
         $this->password = $password;
         $this->ssl_installation_url = 'https://'.$this->host.":2083/frontend/paper_lantern/ssl/install.html";
