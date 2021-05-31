@@ -29,28 +29,29 @@ function rsssl_le_get_notices_list($notices) {
 		$end_date = isset($certinfo['validTo_time_t']) ? $certinfo['validTo_time_t'] : false;
 		//if the certificate expires within the grace period, allow renewal
 		//e.g. expiry date 30 may, now = 10 may => grace period 9 june.
-		$expiry_date = !empty($end_date) ? date( get_option('date_format'), $end_date ) : __("(unknown)","really-simple-ssl");
+		$expiry_date = !empty($end_date) ? date( get_option('date_format'), $end_date ) : false;
 		$renew_link = rsssl_letsencrypt_wizard_url();
 		$link_open = '<a href="'.$renew_link.'">';
 
-		$notices['certificate_renewal'] = array(
-			'condition' => array( 'rsssl_ssl_enabled', 'RSSSL_LE()->letsencrypt_handler->generated_by_rsssl' ),
-			'callback'  => 'RSSSL_LE()->letsencrypt_handler->certificate_about_to_expire',
-			'score'     => 10,
-			'output'    => array(
-				'false' => array(
-					'msg'  => sprintf( __( "Your certificate is valid to: %s", "really-simple-ssl-pro" ), $expiry_date ),
-					'icon' => 'success'
+		if ($expiry_date) {
+			$notices['certificate_renewal'] = array(
+				'condition' => array( 'rsssl_ssl_enabled', 'RSSSL_LE()->letsencrypt_handler->generated_by_rsssl' ),
+				'callback'  => 'RSSSL_LE()->letsencrypt_handler->certificate_about_to_expire',
+				'score'     => 10,
+				'output'    => array(
+					'false' => array(
+						'msg'  => sprintf( __( "Your certificate is valid to: %s", "really-simple-ssl-pro" ), $expiry_date ),
+						'icon' => 'success'
+					),
+					'true'  => array(
+						'msg'         => sprintf( __( "Your certificate will expire on %s. You can renew it %shere%s.", "really-simple-ssl-pro" ), $expiry_date, $link_open, '</a>' ),
+						'icon'        => 'open',
+						'plusone'     => true,
+						'dismissible' => false,
+					),
 				),
-				'true'  => array(
-					'msg'     => sprintf( __( "Your certificate will expire on %s. You can renew it %shere%s.", "really-simple-ssl-pro" ), $expiry_date, $link_open, '</a>' ),
-					'icon'    => 'open',
-					'plusone' => true,
-					'dismissible' => false,
-				),
-			),
-		);
-
+			);
+		}
 		if ( RSSSL_LE()->letsencrypt_handler->certificate_install_required() ) {
 			if ( RSSSL_LE()->letsencrypt_handler->certificate_automatic_install_possible() ) {
 				$notices['certificate_installation'] = array(

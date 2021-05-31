@@ -119,7 +119,7 @@ if ( ! class_exists( "rsssl_config" ) ) {
 		            'name' => 'PCExtreme',
 		            'installation_renewal_required' => false,
 		            'local_ssl_generation_needed' => false,
-		            'free_ssl_available' => 'activation_required',
+		            'free_ssl_available' => 'activated_by_default',
 		            'hosting_dashboard' => 'directadmin',
 		            'api' => false,
 		            'ssl_installation_link' => 'https://help.pcextreme.nl/domains-ssl/hoe-vraag-ik-een-ssl-certificaat-aan-voor-mijn-domein/',
