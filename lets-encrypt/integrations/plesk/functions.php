@@ -2,7 +2,7 @@
 defined( 'ABSPATH' ) or die();
 
 function rsssl_plesk_install(){
-	if (RSSSL_LE()->letsencrypt_handler->is_ready_for('installation')) {
+	if (rsssl_is_ready_for('installation')) {
 		$cpanel = new rsssl_plesk();
 		$domains = RSSSL_LE()->letsencrypt_handler->get_subjects();
 		$response = $cpanel->installSSL($domains);

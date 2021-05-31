@@ -768,7 +768,7 @@ if ( ! class_exists( "rsssl_wizard" ) ) {
 				//get id of step based on $i
                 //if this id is in the progress list it has been completed once, we show the url
                 $id = RSSSL_LE()->config->steps['lets-encrypt'][$i]['id'];
-                if ( RSSSL_LE()->letsencrypt_handler->is_ready_for($id)) {
+                if ( rsssl_is_ready_for($id)) {
 					$args['url'] = add_query_arg(array('tab' => 'letsencrypt', 'step' => $i), $this->page_url);
 				}
 				$args['sections'] = ($args['active'] == 'active') ? $this->wizard_sections($page, $active_step, $active_section) : '';

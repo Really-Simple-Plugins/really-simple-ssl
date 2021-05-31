@@ -7,7 +7,7 @@ function rsssl_cloudways_server_data(){
 }
 
 function rsssl_cloudways_install_ssl(){
-	if (RSSSL_LE()->letsencrypt_handler->is_ready_for('installation')) {
+	if (rsssl_is_ready_for('installation')) {
 		require_once( rsssl_le_path . 'integrations/cloudways/cloudways.php' );
 		$domains = RSSSL_LE()->letsencrypt_handler->get_subjects();
 		$cloudways = new rsssl_Cloudways();

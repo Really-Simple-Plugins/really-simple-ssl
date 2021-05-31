@@ -167,6 +167,46 @@ if ( !function_exists('rsssl_progress_add')) {
 	}
 }
 
+if ( !function_exists('rsssl_is_ready_for')) {
+	/**
+	 * @param string $item
+	 */
+	function rsssl_is_ready_for( $item ) {
+		if ( !rsssl_do_local_lets_encrypt_generation() ) {
+			rsssl_progress_add('directories');
+			rsssl_progress_add('generation');
+		}
+
+		if ( rsssl_dns_verification_required() ) {
+			rsssl_progress_add('directories');
+		} else {
+			rsssl_progress_add('dns-verification');
+		}
+
+		if (empty(rsssl_get_not_completed_steps($item))){
+			return true;
+		} else{
+			return false;
+		}
+	}
+}
+
+ function rsssl_get_not_completed_steps($item){
+	$sequence = array_column( RSSSL_LE()->config->steps['lets-encrypt'], 'id');
+	//drop all statuses after $item. We only need to know if all previous ones have been completed
+	$index = array_search($item, $sequence);
+	$sequence = array_slice($sequence, 0, $index, true);
+	$not_completed = array();
+	$finished = get_option("rsssl_le_installation_progress", array());
+	foreach ($sequence as $status ) {
+		if (!in_array($status, $finished)) {
+			$not_completed[] = $status;
+		}
+	}
+
+	return $not_completed;
+}
+
 if ( !function_exists('rsssl_progress_remove')) {
 	/**
 	 * @param string $item

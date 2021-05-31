@@ -2,7 +2,7 @@
 defined( 'ABSPATH' ) or die();
 
 function rsssl_install_directadmin(){
-	if (RSSSL_LE()->letsencrypt_handler->is_ready_for('installation')) {
+	if (rsssl_is_ready_for('installation')) {
 		$directadmin = new rsssl_directadmin();
 		$domains = RSSSL_LE()->letsencrypt_handler->get_subjects();
 		$response = $directadmin->installSSL($domains);
