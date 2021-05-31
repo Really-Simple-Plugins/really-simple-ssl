@@ -42,6 +42,15 @@ if ( ! class_exists( "rsssl_config" ) ) {
 		            'api' => true,
 		            'ssl_installation_link' => false,
 	            ),
+	            'tierpoint' => array(
+            		'name' => 'TierPoint',
+		            'installation_renewal_required' => true,
+		            'local_ssl_generation_needed' => true,
+		            'free_ssl_available' => false,
+		            'hosting_dashboard' => 'cpanel',
+		            'api' => true,
+		            'ssl_installation_link' => false,
+	            ),
 	            'godaddy' => array(
 		            'name' => 'GoDaddy',
 		            'installation_renewal_required' => true,
