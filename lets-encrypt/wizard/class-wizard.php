@@ -55,12 +55,6 @@ if ( ! class_exists( "rsssl_wizard" ) ) {
                         'attempts' => 2,
                         'speed' => 'slow',
                     ),
-//                    array(
-//                        'description' => __("Checking if Lets Encrypt is ready for authorization step...", "really-simple-ssl"),
-//                        'action'=> 'dns_auth_check_if_ready',
-//                        'attempts' => 2,
-//                        'speed' => 'normal',
-//                    ),
                     array(
                         'description' => __("Generating SSL certificate...", "really-simple-ssl"),
                         'action'=> 'create_bundle_or_renew',
@@ -107,6 +101,20 @@ if ( ! class_exists( "rsssl_wizard" ) ) {
 		    if ( !rsssl_user_can_manage() ) {
 		        return;
             }
+
+			/*
+			 * reset all option
+             */
+			if (isset($_GET['rsssl-reset-letsencrypt'])) {
+				delete_option('rsssl_verification_type');
+				delete_option('rsssl_skip_dns_check' );
+				delete_option('rsssl_skip_challenge_directory_request' );
+				delete_option('rsssl_force_plesk' );
+				delete_option('rsssl_force_cpanel' );
+
+				wp_redirect(rsssl_letsencrypt_wizard_url().'&step=1');
+				exit;
+			}
 
 		    if (isset($_POST['rsssl-switch-to-dns'])) {
 			    update_option('rsssl_verification_type', 'DNS');
