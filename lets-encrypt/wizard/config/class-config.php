@@ -137,7 +137,7 @@ if ( ! class_exists( "rsssl_config" ) ) {
 		            'api' => false,
 		            'ssl_installation_link' => 'https://www.ipage.com/help/article/enable-your-free-ssl-certificate',
 	            ),
-	            'onecome' => array(
+	            'onecom' => array(
 		            'name' => 'one.com',
 		            'installation_renewal_required' => false,
 		            'local_ssl_generation_needed' => false,
@@ -145,6 +145,15 @@ if ( ! class_exists( "rsssl_config" ) ) {
 		            'hosting_dashboard' => false,
 		            'api' => false,
 		            'ssl_installation_link' => 'https://help.one.com/hc/en-us/articles/360000297458-Why-is-SSL-HTTPS-not-working-on-my-site-',
+	            ),
+	            'wpmudev' => array(
+		            'name' => 'WPMUDEV',
+		            'installation_renewal_required' => false,
+		            'local_ssl_generation_needed' => false,
+		            'free_ssl_available' => 'activated_by_default',
+		            'hosting_dashboard' => false,
+		            'api' => false,
+		            'ssl_installation_link' => 'https://wpmudev.com',
 	            ),
 	            'hostinger' => array(
 		            'name' => 'Hostinger',

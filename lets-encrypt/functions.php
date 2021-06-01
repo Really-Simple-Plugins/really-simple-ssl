@@ -300,7 +300,7 @@ function rsssl_get_manual_instructions_text( $url ){
 		$dashboard_activation_required =  true;
 	}
 
-	$activated_by_default_hosts = RSSSL_LE()->config->dashboard_activation_required;
+	$activated_by_default_hosts = RSSSL_LE()->config->activated_by_default;
 	$current_host         = rsssl_get_other_host();
 	if ( in_array( $current_host, $activated_by_default_hosts ) ) {
 		$activated_by_default =  true;
