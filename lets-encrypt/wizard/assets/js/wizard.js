@@ -1,5 +1,31 @@
 jQuery(document).ready(function ($) {
     'use strict';
+
+    //select2 dropdown
+    var select2Dropdown = $('.rsssl-select2');
+    if (select2Dropdown.length) {
+        select2Dropdown.select2({
+            //tags: true,
+            width:'400px',
+            placeholder: 'Select or Add',
+            language: {
+                noResults: function() {
+                    return '<span id="rsssl-no-results-container">'+rsssl_wizard.no_results+'</span>';
+                },
+            },
+            escapeMarkup: function(markup) {
+                return markup;
+            },
+        });
+    }
+
+    $(document).on('click','#rsssl-no-results-container',function(){
+        console.log("clicked");
+        select2Dropdown.val('none');
+        select2Dropdown.trigger('change');
+        select2Dropdown.select2('close');
+    });
+
     var copied_element = $('.rsssl-copied-feedback').html();
     $(document).on('click', '.rsssl-copy-content', function () {
         var type = $(this).data('item');

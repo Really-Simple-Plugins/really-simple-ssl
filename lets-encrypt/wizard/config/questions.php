@@ -115,7 +115,7 @@ $this->fields = $this->fields + array(
 	        'disabled'    => false,
 	        'callback_condition' => 'rsssl_cpanel_api_supported',
 	        'condition' => array(
-	        	'other_host_type' => 'NOT hostgator',
+	        	//'other_host_type' => 'NOT hostgator',
 	        ),
         ),
 
@@ -130,7 +130,7 @@ $this->fields = $this->fields + array(
 	        'disabled'    => false,
 	        'callback_condition' => 'rsssl_cpanel_api_supported',
 	        'condition' => array(
-		        'other_host_type' => 'NOT hostgator',
+		        //'other_host_type' => 'NOT hostgator',
 	        ),
         ),
 

@@ -939,9 +939,14 @@ if ( ! class_exists( "rsssl_wizard" ) ) {
 		 * @param $hook
 		 */
 		public function enqueue_assets( $hook ) {
-			$minified = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? '' : '.min';
-			//@todo if $hook == rsssl le
 			if (!isset($_GET['tab']) || $_GET['tab']!=='letsencrypt') return;
+
+			$minified = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? '' : '.min';
+
+			wp_register_style( 'select2', rsssl_le_url . 'wizard/assets/select2/css/select2.min.css', false, rsssl_version );
+			wp_enqueue_style( 'select2' );
+			wp_enqueue_script( 'select2', rsssl_le_url . "wizard/assets/select2/js/select2.min.js", array( 'jquery' ), rsssl_version, true );
+
 
 			// Let's encrypt
 			wp_register_style( 'rsssl-wizard', rsssl_le_url . "wizard/assets/css/wizard.css", false, rsssl_version );
@@ -950,12 +955,13 @@ if ( ! class_exists( "rsssl_wizard" ) ) {
 			wp_register_style( 'rsssl-wizard-admin', rsssl_le_url . "wizard/assets/css/admin.css", false, rsssl_version );
 			wp_enqueue_style( 'rsssl-wizard-admin' );
 
-			wp_enqueue_script( 'rsssl-wizard', rsssl_le_url . "wizard/assets/js/wizard$minified.js", array( 'jquery' ), rsssl_version, true );
+			wp_enqueue_script( 'rsssl-wizard', rsssl_le_url . "wizard/assets/js/wizard$minified.js", array( 'jquery', 'select2' ), rsssl_version.time(), true );
 			wp_localize_script(
 				'rsssl-wizard',
 				'rsssl_wizard',
 				array(
 					'admin_url'    => admin_url( 'admin-ajax.php' ),
+					'no_results'    => __("I don't know, or not listed, proceed with installation","really-simple-ssl"),
 				)
 			);
 		}

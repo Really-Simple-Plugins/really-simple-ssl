@@ -1261,11 +1261,9 @@ if ( ! class_exists( "rsssl_field" ) ) {
             <?php do_action( 'rsssl_before_label', $args ); ?>
             <?php do_action( 'rsssl_label_html' , $args );?>
             <?php do_action( 'rsssl_after_label', $args ); ?>
-            <select <?php if ( $args['required'] ) {
+            <select class="rsssl-select2" <?php if ( $args['required'] ) {
                 echo 'required';
             } ?> name="<?php echo esc_html( $fieldname ) ?>">
-                <option value=""><?php _e( "Choose an option",
-                        'really-simple-ssl' ) ?></option>
                 <?php foreach (
                     $args['options'] as $option_key => $option_label
                 ) { ?>

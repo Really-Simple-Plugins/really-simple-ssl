@@ -17,6 +17,7 @@ if ( ! class_exists( "rsssl_config" ) ) {
         public $no_installation_renewal_needed;
         public $dashboard_activation_required;
         public $activated_by_default;
+        public $paid_only;
 
         function __construct() {
             if ( isset( self::$_this ) ) {
@@ -61,15 +62,36 @@ if ( ! class_exists( "rsssl_config" ) ) {
 		            'ssl_installation_link' => false,
 	            ),
 
+	            'kasserver' => array(
+		            'name' => 'Kasserver',
+		            'installation_renewal_required' => false,
+		            'local_ssl_generation_needed' => false,
+		            'free_ssl_available' => true,
+		            'hosting_dashboard' => 'kasserver',
+		            'api' => false,
+		            'ssl_installation_link' => 'https://kas.all-inkl.com/',
+	            ),
+
 	            'hostgator' => array(
 		            'name' => 'HostGator',
 		            'installation_renewal_required' => false,
 		            'local_ssl_generation_needed' => false,
 		            'free_ssl_available' => true,
-		            'hosting_dashboard' => 'cpanel',
-		            'api' => false,
+		            'hosting_dashboard' => 'cpanel:autossl',
+		            'api' => true,
 		            'ssl_installation_link' => 'https://{host}:2083/frontend/paper_lantern/security/tls_status/',
 	            ),
+
+	            'ionos' => array(
+		            'name' => 'IONOS',
+		            'installation_renewal_required' => false,
+		            'local_ssl_generation_needed' => false,
+		            'free_ssl_available' => 'paid_only',
+		            'hosting_dashboard' => 'ionos',
+		            'api' => false,
+		            'ssl_installation_link' => '',
+	            ),
+
 	            'simply' => array(
 		            'name' => 'Simply',
 		            'installation_renewal_required' => true,
@@ -115,6 +137,15 @@ if ( ! class_exists( "rsssl_config" ) ) {
 		            'api' => false,
 		            'ssl_installation_link' => 'https://www.ipage.com/help/article/enable-your-free-ssl-certificate',
 	            ),
+	            'onecome' => array(
+		            'name' => 'one.com',
+		            'installation_renewal_required' => false,
+		            'local_ssl_generation_needed' => false,
+		            'free_ssl_available' => 'activated_by_default',
+		            'hosting_dashboard' => false,
+		            'api' => false,
+		            'ssl_installation_link' => 'https://help.one.com/hc/en-us/articles/360000297458-Why-is-SSL-HTTPS-not-working-on-my-site-',
+	            ),
 	            'hostinger' => array(
 		            'name' => 'Hostinger',
 		            'installation_renewal_required' => true,
@@ -139,6 +170,7 @@ if ( ! class_exists( "rsssl_config" ) ) {
 	        $this->not_local_certificate_hosts = $this->filter_hosts( 'local_ssl_generation_needed', false);
 	        $this->dashboard_activation_required = $this->filter_hosts( 'free_ssl_available', 'activation_required');
 	        $this->activated_by_default = $this->filter_hosts( 'free_ssl_available', 'activated_by_default');
+	        $this->paid_only = $this->filter_hosts( 'free_ssl_available', 'paid_only');
             $this->no_installation_renewal_needed = $this->filter_hosts( 'installation_renewal_required', false);
             $this->no_installation_renewal_needed[] = 'cpanel:autossl';
 
@@ -147,11 +179,12 @@ if ( ! class_exists( "rsssl_config" ) ) {
 		        'no'  => __( 'No', 'really-simple-ssl' ),
 	        );
 
-	        $this->supported_hosts = array(
-            	'none' => __('I don\'t know, or not listed, proceed with installation', 'really-simple-ssl'),
-            );
-	        $this->supported_hosts = $this->supported_hosts + wp_list_pluck($this->hosts, 'name');
 
+	        ksort($this->hosts);
+	        $this->supported_hosts = array(
+		        'none' => __('I don\'t know, or not listed, proceed with installation', 'really-simple-ssl'),
+	        );
+	        $this->supported_hosts = $this->supported_hosts + wp_list_pluck($this->hosts, 'name');
             /* config files */
             require_once( rsssl_le_path . 'wizard/config/steps.php' );
             require_once( rsssl_le_path . 'wizard/config/questions.php' );

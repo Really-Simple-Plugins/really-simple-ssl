@@ -292,6 +292,7 @@ if ( !function_exists('rsssl_do_local_lets_encrypt_generation')) {
 function rsssl_get_manual_instructions_text( $url ){
 	$dashboard_activation_required =  false;
 	$activated_by_default =  false;
+	$paid_only =  false;
 
 	$dashboard_activation_required_hosts = RSSSL_LE()->config->dashboard_activation_required;
 	$current_host         = rsssl_get_other_host();
@@ -305,11 +306,19 @@ function rsssl_get_manual_instructions_text( $url ){
 		$activated_by_default =  true;
 	}
 
+	$paid_only_hosts = RSSSL_LE()->config->paid_only;
+	$current_host         = rsssl_get_other_host();
+	if ( in_array( $current_host, $paid_only_hosts ) ) {
+		$paid_only =  true;
+	}
+
 	if ( $activated_by_default ) {
 		$msg = sprintf(__("According to our information, your hosting provider supplies your account with an SSL certificate by default. Please contact your %shosting support%s if this is not the case.","really-simple-ssl"), '<a target="_blank" href="'.$url.'">', '</a>');
-
 	} else if ( $dashboard_activation_required ) {
-		$msg = sprintf(__("You already have free SSL on your hosting environment. Please activate it on your dashboard %smanually%s.","really-simple-ssl"), '<a target="_blank" href="'.$url.'">', '</a>');
+		$msg = sprintf( __( "You already have free SSL on your hosting environment. Please activate it on your dashboard %smanually%s.", "really-simple-ssl" ),
+			'<a target="_blank" href="' . $url . '">', '</a>' );
+	} else if ( $paid_only ) {
+		$msg = sprintf(__("According to our information, your hosting provider does not allow any kind of SSL installation, other then their own paid certificate. For an alternative hosting provider with SSL, see this %sarticle%s.","really-simple-ssl"), '<a target="_blank" href="https://really-simple-ssl.com/hosting-providers-with-free-ssl">', '</a>');
 	} else {
 		$msg = sprintf(__("Your hosting environment does not allow automatic SSL installation. Please complete %smanually%s.","really-simple-ssl"), '<a target="_blank" href="'.$url.'">', '</a>').' '.
 		       sprintf(__("You can follow these %sinstructions%s.","really-simple-ssl"), '<a target="_blank" href="https://really-simple-ssl.com/install-ssl-certificate">', '</a>');
