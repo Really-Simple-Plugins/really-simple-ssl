@@ -105,13 +105,13 @@ if ( ! class_exists( "rsssl_wizard" ) ) {
 			/*
 			 * reset all option
              */
-			if (isset($_GET['rsssl-reset-letsencrypt'])) {
+			if (isset($_GET['reset-letsencrypt'])) {
 				delete_option('rsssl_verification_type');
 				delete_option('rsssl_skip_dns_check' );
 				delete_option('rsssl_skip_challenge_directory_request' );
 				delete_option('rsssl_force_plesk' );
 				delete_option('rsssl_force_cpanel' );
-
+				delete_option('rsssl_disable_ocsp' );
 				wp_redirect(rsssl_letsencrypt_wizard_url().'&step=1');
 				exit;
 			}

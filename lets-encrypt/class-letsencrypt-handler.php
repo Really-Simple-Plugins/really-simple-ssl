@@ -51,10 +51,7 @@ class rsssl_letsencrypt_handler {
 		Connector::getInstance()->useStagingServer( false );
 		Logger::getInstance()->setDesiredLevel( Logger::LEVEL_DISABLED );
 
-		/**
-		 * don't use OCSP stapling icw idn's
-		 */
-		if ( !$this->uses_idns() ) {
+		if ( !get_option('rsssl_disable_ocsp') ) {
 			Certificate::enableFeatureOCSPMustStaple();
 		}
 
@@ -106,20 +103,6 @@ class rsssl_letsencrypt_handler {
 		$htaccess = $rules . $htaccess;
 		file_put_contents($htaccess_file, $htaccess);
 
-	}
-
-	/**
-	 * Check if the site uses internationalized domains, starting with xn--
-	 * @return bool
-	 */
-	public function uses_idns() {
-		$subjects = $this->get_subjects();
-		foreach ($subjects as $subject ) {
-			if (strpos($subject, 'xn--') !== false ) {
-				return true;
-			}
-		}
-		return false;
 	}
 
 	/**
@@ -635,6 +618,7 @@ class rsssl_letsencrypt_handler {
 						    $bundle_completed = false;
 					    }
 				    } catch ( Exception $e ) {
+
 					    $this->count_attempt();
 					    $message = $this->get_error( $e );
 					    error_log( print_r( $e, true ) );
@@ -643,6 +627,7 @@ class rsssl_letsencrypt_handler {
 						    'stop',
 						    $message
 					    );
+
 					    if (strpos($message, 'Order has status "invalid"')!==false) {
 					    	$order->clear();
 						    $response->message = __("The order is invalid, possibly due to too many failed authorization attempts. Please start at the previous step.","really-simple-ssl");
@@ -650,6 +635,16 @@ class rsssl_letsencrypt_handler {
 					        	rsssl_progress_remove('dns-verification');
 						        $response->message .= '&nbsp;'.__("As your order will be regenerated, you'll need to update your DNS text records.","really-simple-ssl");
 					        }
+					    } else {
+					    	//if OCSP is not disabled yet, and the order status is not invalid, we disable ocsp, and try again.
+					    	if ( !get_option('rsssl_disable_ocsp' ) ) {
+							    update_option('rsssl_disable_ocsp', true);
+							    $response->action = 'retry';
+							    $response->status = 'warning';
+							    $response->message = __("OCSP not supported, the certificate will be generated without OCSP.","really-simple-ssl");
+						    }
+
+
 					    }
 				    }
 

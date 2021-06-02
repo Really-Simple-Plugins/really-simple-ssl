@@ -3,30 +3,40 @@
 namespace LE_ACME2\Utilities;
 
 use LE_ACME2\Order;
+use LE_ACME2\Exception\OpenSSLException;
 
 class Certificate {
 
-    protected static $_featureOCSPMustStapleEnabled = false;
+	protected static $_featureOCSPMustStapleEnabled = false;
 
-    public static function enableFeatureOCSPMustStaple() {
-        self::$_featureOCSPMustStapleEnabled = true;
-    }
+	public static function enableFeatureOCSPMustStaple() {
+		self::$_featureOCSPMustStapleEnabled = true;
+	}
 
-    public static function generateCSR(Order $order) : string {
+	public static function disableFeatureOCSPMustStaple() {
+		self::$_featureOCSPMustStapleEnabled = false;
+	}
 
-        $dn = [
-            "commonName" => $order->getSubjects()[0]
-        ];
+	/**
+	 * @param Order $order
+	 * @return string
+	 * @throws OpenSSLException
+	 */
+	public static function generateCSR(Order $order) : string {
 
-        $san = implode(",", array_map(function ($dns) {
+		$dn = [
+			"commonName" => $order->getSubjects()[0]
+		];
 
-                return "DNS:" . $dns;
-            }, $order->getSubjects())
-        );
+		$san = implode(",", array_map(function ($dns) {
 
-        $config_file = $order->getKeyDirectoryPath() . 'csr_config';
+				return "DNS:" . $dns;
+			}, $order->getSubjects())
+		);
 
-        $content = 'HOME = .
+		$configFilePath = $order->getKeyDirectoryPath() . 'csr_config';
+
+		$config = 'HOME = .
 			RANDFILE = ' . $order->getKeyDirectoryPath() . '.rnd
 			[ req ]
 			default_bits = 4096
@@ -40,50 +50,39 @@ class Certificate {
 			subjectAltName = ' . $san . '
 			keyUsage = nonRepudiation, digitalSignature, keyEncipherment';
 
-        if(self::$_featureOCSPMustStapleEnabled) {
-            $content .= PHP_EOL . 'tlsfeature=status_request';
-        }
+		if(self::$_featureOCSPMustStapleEnabled) {
+			$config .= PHP_EOL . 'tlsfeature=status_request';
+		}
 
-        file_put_contents(
-            $config_file,
-            $content
-        );
+		file_put_contents($configFilePath, $config);
 
-        // Enabling OCSP stapling causes an error here:
-		//	    [25-May-2021 08:09:56 UTC] PHP Warning:  openssl_csr_new() [<a href='http://php.net/manual/en/function.openssl-csr-new'>function.openssl-csr-new</a>]:
-		// \Error loading request_extensions_section section v3_req of
-		// ***/csr_config
-		// in ***le_acme2/src/LE_ACME2/Utilities/Certificate.php on line 58
+		$privateKey = openssl_pkey_get_private(
+			file_get_contents($order->getKeyDirectoryPath() . 'private.pem')
+		);
 
-	    /*
-	      HOME = .
-			RANDFILE = ***.rnd
-			[ req ]
-			default_bits = 4096
-			default_keyfile = privkey.pem
-			distinguished_name = req_distinguished_name
-			req_extensions = v3_req
-			[ req_distinguished_name ]
-			countryName = Country Name (2 letter code)
-			[ v3_req ]
-			basicConstraints = CA:FALSE
-			subjectAltName = DNS:xn--***k,DNS:www.xn--***
-			keyUsage = nonRepudiation, digitalSignature, keyEncipherment
-			tlsfeature=status_request
-	     */
+		if($privateKey === false) {
+			throw new OpenSSLException('openssl_pkey_get_private');
+		}
 
-        $privateKey = openssl_pkey_get_private(file_get_contents(
-            $order->getKeyDirectoryPath() . 'private.pem')
-        );
-        $csr = openssl_csr_new(
-            $dn,
-            $privateKey,
-            array('config' => $config_file, 'digest_alg' => 'sha256')
-        );
-        openssl_csr_export ($csr, $csr);
+		$csr = openssl_csr_new(
+			$dn,
+			$privateKey,
+			[
+				'config' => $configFilePath,
+				'digest_alg' => 'sha256'
+			]
+		);
 
-        unlink($config_file);
+		if($csr === false) {
+			throw new OpenSSLException('openssl_csr_new');
+		}
 
-        return $csr;
-    }
+		if(!openssl_csr_export($csr, $csr)) {
+			throw new OpenSSLException('openssl_csr_export');
+		}
+
+		unlink($configFilePath);
+
+		return $csr;
+	}
 }

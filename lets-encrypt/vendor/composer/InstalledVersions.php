@@ -32,7 +32,7 @@ private static $installed = array (
     'aliases' => 
     array (
     ),
-    'reference' => 'bf44d2bdb38290744426fe9dbfd0c6d73c07a1a1',
+    'reference' => '53cfe01c831d81b1398d479a9e85cbb4110e9e13',
     'name' => '__root__',
   ),
   'versions' => 
@@ -44,7 +44,7 @@ private static $installed = array (
       'aliases' => 
       array (
       ),
-      'reference' => 'bf44d2bdb38290744426fe9dbfd0c6d73c07a1a1',
+      'reference' => '53cfe01c831d81b1398d479a9e85cbb4110e9e13',
     ),
     'fbett/le_acme2' => 
     array (
