@@ -1,0 +1,25 @@
+{
+  "name": "fbett/le_acme2",
+  "description": "Letsencrypt PHP ACME v2 client",
+  "homepage": "https://github.com/fbett/le-acme2-php",
+  "version": "1.5.6",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Fabian Bett",
+      "homepage": "https://www.bett-ingenieure.de",
+      "role": "Developer"
+    }
+  ],
+  "autoload": {
+    "psr-0": {
+      "LE_ACME2": "src/"
+    }
+  },
+  "require": {
+    "php": ">=7.3",
+    "ext-curl": "*",
+    "ext-openssl": "*",
+    "ext-json": "*"
+  }
+}

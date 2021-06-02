@@ -3,7 +3,7 @@
  * Plugin Name: Really Simple SSL
  * Plugin URI: https://really-simple-ssl.com
  * Description: Lightweight plugin without any setup to make your site SSL proof
- * Version: 4.0.15
+ * Version: 5.0
  * Author: Really Simple Plugins
  * Author URI: https://really-simple-plugins.com
  * License: GPL2
@@ -42,6 +42,17 @@ if (!function_exists('rsssl_activation_check')) {
 		}
 	}
 	register_activation_hook( __FILE__, 'rsssl_activation_check' );
+}
+
+if (!function_exists('rsssl_le_activation_check')) {
+	/**
+	 * Checks if the plugin can safely be activated, at least php 5.6 and wp 4.8
+	 */
+	function rsssl_le_activation_check()
+	{
+		update_option("rsssl_activated_plugin", true);
+	}
+	register_activation_hook( __FILE__, 'rsssl_le_activation_check' );
 }
 
 class REALLY_SIMPLE_SSL
@@ -85,7 +96,7 @@ class REALLY_SIMPLE_SSL
 				self::$instance->rsssl_certificate = new rsssl_certificate();
 				self::$instance->rsssl_site_health = new rsssl_site_health();
 
-				if ( $wpcli ) {
+                if ( $wpcli ) {
 					self::$instance->rsssl_wp_cli = new rsssl_wp_cli();
 				}
 			}
@@ -98,8 +109,11 @@ class REALLY_SIMPLE_SSL
 	{
 		define('rsssl_url', plugin_dir_url(__FILE__));
 		define('rsssl_path', trailingslashit(plugin_dir_path(__FILE__)));
-		define('rsssl_template_path', trailingslashit(plugin_dir_path(__FILE__)).'grid/templates/');
-		define('rsssl_plugin', plugin_basename(__FILE__));
+        define('rsssl_template_path', trailingslashit(plugin_dir_path(__FILE__)).'grid/templates/');
+        define('rsssl_plugin', plugin_basename(__FILE__));
+        if (!defined('rsssl_file') ){
+            define('rsssl_file', __FILE__);
+        }
 		require_once(ABSPATH . 'wp-admin/includes/plugin.php');
 		$plugin_data = get_plugin_data(__FILE__);
 		$debug = defined('RSSSL_DEBUG') && RSSSL_DEBUG ? time() : '';
@@ -126,8 +140,13 @@ class REALLY_SIMPLE_SSL
 			require_once(rsssl_path . 'class-server.php');
             require_once(rsssl_path . 'class-help.php');
 			require_once(rsssl_path . 'class-certificate.php');
+			require_once(rsssl_path . 'class-certificate.php');
 			require_once(rsssl_path . 'class-site-health.php');
-		}
+
+			if (!defined('rsssl_beta_addon')) {
+				require_once( rsssl_path . 'lets-encrypt/letsencrypt.php' );
+			}
+        }
 	}
 
 	private function hooks()

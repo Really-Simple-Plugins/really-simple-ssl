@@ -1,0 +1,6 @@
+preset: recommended
+
+disabled:
+  - align_double_arrow
+  - phpdoc_align
+  - blank_line_after_opening_tag

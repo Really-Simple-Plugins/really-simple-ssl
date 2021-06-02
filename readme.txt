@@ -6,7 +6,7 @@ Requires at least: 4.9
 License: GPL2
 Tested up to: 5.7
 Requires PHP: 5.6
-Stable tag: 4.0.15
+Stable tag: 5.0
 
 No setup required! You only need an SSL certificate, and this plugin will do the rest.
 
@@ -15,8 +15,8 @@ Really Simple SSL automatically detects your settings and configures your websit
 To keep it lightweight, the options are kept to a minimum. The entire site will move to SSL.
 
 = Three simple steps for setup: =
-* Get an SSL certificate (can't do that for you, sorry.) [See our recommendations for a free SSL certificate](https://really-simple-ssl.com/knowledge-base/how-to-install-a-free-ssl-certificate-on-your-wordpress-cpanel-hosting/).
 * Activate this plugin
+* Activate SSL in your hosting environment, or generate a free Let's Encrypt certificate in [Really Simple SSL](https://really-simple-ssl.com/knowledge-base/how-to-install-a-free-ssl-certificate-on-your-wordpress-cpanel-hosting/).
 * Enable SSL with one click
 
 https://www.youtube.com/watch?v=BVx3ZrSsPrU
@@ -39,6 +39,7 @@ some cool features.
 * Premium support
 
 = What does the plugin actually do =
+* It will first check for an existing SSL certificate. If you don't have one, you can generate one in the plugin. Depending on your hosting company, we can also install it for you, or help you with instructions
 * The plugin handles most issues that WordPress has with SSL, like when you're behind a reverse proxy/loadbalancer, or when no headers are passed which WordPress can use to detect SSL.
 * All incoming requests are redirected to https. Default with an internal WordPress redirect, but you can also enable a .htaccess redirect.
 * The siteurl and homeurl are changed to https.

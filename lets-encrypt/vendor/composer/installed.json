@@ -1,0 +1,113 @@
+{
+    "packages": [
+        {
+            "name": "fbett/le_acme2",
+            "version": "1.5.6",
+            "version_normalized": "1.5.6.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/fbett/le-acme2-php.git",
+                "reference": "26b2c421764b173326f6bcb0713a86bd614f77fa"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/fbett/le-acme2-php/zipball/26b2c421764b173326f6bcb0713a86bd614f77fa",
+                "reference": "26b2c421764b173326f6bcb0713a86bd614f77fa",
+                "shasum": ""
+            },
+            "require": {
+                "ext-curl": "*",
+                "ext-json": "*",
+                "ext-openssl": "*",
+                "php": ">=7.3"
+            },
+            "time": "2021-05-17T07:08:46+00:00",
+            "type": "library",
+            "installation-source": "dist",
+            "autoload": {
+                "psr-0": {
+                    "LE_ACME2": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Fabian Bett",
+                    "homepage": "https://www.bett-ingenieure.de",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Letsencrypt PHP ACME v2 client",
+            "homepage": "https://github.com/fbett/le-acme2-php",
+            "support": {
+                "issues": "https://github.com/fbett/le-acme2-php/issues",
+                "source": "https://github.com/fbett/le-acme2-php/tree/v1.5.6"
+            },
+            "install-path": "../fbett/le_acme2"
+        },
+        {
+            "name": "plesk/api-php-lib",
+            "version": "v1.0.7",
+            "version_normalized": "1.0.7.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/plesk/api-php-lib.git",
+                "reference": "7f81b0c3bb0a9f4200aef62a54d3e2c04d91a605"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/plesk/api-php-lib/zipball/7f81b0c3bb0a9f4200aef62a54d3e2c04d91a605",
+                "reference": "7f81b0c3bb0a9f4200aef62a54d3e2c04d91a605",
+                "shasum": ""
+            },
+            "require": {
+                "ext-curl": "*",
+                "ext-simplexml": "*",
+                "ext-xml": "*",
+                "php": "^7.3"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^9",
+                "spatie/phpunit-watcher": "^1.22"
+            },
+            "time": "2020-12-24T07:20:26+00:00",
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.0.x-dev"
+                }
+            },
+            "installation-source": "dist",
+            "autoload": {
+                "psr-4": {
+                    "PleskX\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "Apache-2.0"
+            ],
+            "authors": [
+                {
+                    "name": "Alexei Yuzhakov",
+                    "email": "sibprogrammer@gmail.com"
+                },
+                {
+                    "name": "Plesk International GmbH.",
+                    "email": "plesk-dev-leads@plesk.com"
+                }
+            ],
+            "description": "PHP object-oriented library for Plesk XML-RPC API",
+            "support": {
+                "issues": "https://github.com/plesk/api-php-lib/issues",
+                "source": "https://github.com/plesk/api-php-lib/tree/v1.0.7"
+            },
+            "install-path": "../plesk/api-php-lib"
+        }
+    ],
+    "dev": true,
+    "dev-package-names": []
+}
