@@ -87,7 +87,11 @@ function rsssl_le_get_notices_list($notices) {
 			);
 			}
 		}
+	}
 
+	//if one of these notices is added, we can remove the "ssl detected" notice" to prevent duplicates
+	if ( isset($notices['certificate_installation']) || isset($notices['certificate_renewal'] ) ){
+		unset($notices['ssl_detected']);
 	}
 
 	return $notices;
