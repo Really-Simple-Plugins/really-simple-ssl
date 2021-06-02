@@ -3699,9 +3699,6 @@ class rsssl_admin extends rsssl_front_end
 		    }
 
 		    $block = str_replace(array('{class}', '{title}', '{header}', '{content}', '{footer}', '{instructions}', '{form_open}','{form_close}'), array($grid_item['class'], $grid_item['title'], $header, $content, $footer, $instructions, $form_open, $form_close), $element);
-
-
-
 		    $output .= $block;
 	    }
 
@@ -3717,8 +3714,7 @@ class rsssl_admin extends rsssl_front_end
 	 * @return string
 	 */
 
-    public function get_template_part($grid_item, $key, $index) {
-
+	public function get_template_part($grid_item, $key, $index) {
 	    if ( !isset($grid_item[$key]) || !$grid_item[$key] ) {
 		    $template_part = '';
 	    } else {
@@ -3731,10 +3727,8 @@ class rsssl_admin extends rsssl_front_end
             }
 	    }
 
-
-
-	    return apply_filters("rsssl_template_part_".$key.'_'.$index, $template_part, $grid_item);
-    }
+		return apply_filters("rsssl_template_part_".$key.'_'.$index, $template_part, $grid_item);
+	}
 
     /**
      * Returns a success, error or warning image for the settings page
