@@ -164,6 +164,15 @@ if ( ! class_exists( "rsssl_config" ) ) {
 		            'api' => false,
 		            'ssl_installation_link' => 'https://ovh.com',
 	            ),
+	            'freeola' => array(
+		            'name' => 'freeola',
+		            'installation_renewal_required' => false,
+		            'local_ssl_generation_needed' => false,
+		            'free_ssl_available' => 'paid_only',
+		            'hosting_dashboard' => 'freeola',
+		            'api' => false,
+		            'ssl_installation_link' => '',
+	            ),
 	            'hostinger' => array(
 		            'name' => 'Hostinger',
 		            'installation_renewal_required' => true,
@@ -181,6 +190,15 @@ if ( ! class_exists( "rsssl_config" ) ) {
 		            'hosting_dashboard' => 'directadmin',
 		            'api' => false,
 		            'ssl_installation_link' => 'https://help.pcextreme.nl/domains-ssl/hoe-vraag-ik-een-ssl-certificaat-aan-voor-mijn-domein/',
+	            ),
+	            'internic' => array(
+		            'name' => 'Internic',
+		            'installation_renewal_required' => false,
+		            'local_ssl_generation_needed' => false,
+		            'free_ssl_available' => 'activated_by_default',
+		            'hosting_dashboard' => 'internic',
+		            'api' => false,
+		            'ssl_installation_link' => 'https://internic.com',
 	            ),
 
             );

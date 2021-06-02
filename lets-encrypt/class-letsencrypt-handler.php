@@ -893,16 +893,17 @@ class rsssl_letsencrypt_handler {
 	public function get_subjects(){
 		$subjects = array();
 		$domain = rsssl_get_domain();
+		$root = str_replace( 'www.', '', $domain );;
 		$subjects[] = $domain;
 		//don't offer aliasses for subdomains
 		if ( !rsssl_is_subdomain() ) {
-			//main is www.
-			if ( strpos( $domain, 'www.' ) !== false ) {
-				$alias_domain = str_replace( 'www.', '', $domain );
-			} else {
-				$alias_domain = 'www.'.$domain;
-			}
 			if (rsssl_get_value( 'include_alias' )) {
+				//main is www.
+				if ( strpos( $domain, 'www.' ) !== false ) {
+					$alias_domain = $root;
+				} else {
+					$alias_domain = 'www.'.$root;
+				}
 				$subjects[] = $alias_domain;
 			}
 		}
