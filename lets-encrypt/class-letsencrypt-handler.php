@@ -1224,6 +1224,9 @@ class rsssl_letsencrypt_handler {
 	 * @return RSSSL_RESPONSE
 	 */
 	public function alias_domain_available(){
+		if ( rsssl_is_subdomain() ) {
+			return new RSSSL_RESPONSE('success', 'continue',__("Alias domain check is not relevant for a subdomain","really-simple-ssl"));
+		}
 		//write a test file to the uploads directory
 		$uploads    = wp_upload_dir();
 		$upload_dir = trailingslashit($uploads['basedir']);
