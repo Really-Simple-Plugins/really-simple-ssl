@@ -2,7 +2,7 @@
     <form action="{page_url}" method="POST">
 		<input type="hidden" value="{step}" name="step">
 		<input type="hidden" value="{section}" name="section">
-		<?php wp_nonce_field( 'rsssl_save', 'rsssl_nonce' ); ?>
+		<?php wp_nonce_field( 'rsssl_save', 'rsssl_le_nonce' ); ?>
 
         <div class="rsssl-wizard-title rsssl-section-content-title-header">
 			<h1>{title}</h1>

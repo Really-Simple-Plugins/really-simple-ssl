@@ -16,15 +16,7 @@ if ( ! function_exists( 'rsssl_user_can_manage' ) ) {
     }
 }
 
-if ( !function_exists('rsssl_letsencrypt_wizard_url') ) {
-    function rsssl_letsencrypt_wizard_url(){
-    	if (is_multisite() && !is_main_site()) {
-		    return add_query_arg(array('page' => 'rlrsssl_really_simple_ssl', 'tab' => 'letsencrypt'), get_admin_url(get_main_site_id(),'options-general.php') );
-	    } else {
-		    return add_query_arg(array('page' => 'rlrsssl_really_simple_ssl', 'tab' => 'letsencrypt'), admin_url('options-general.php') );
-	    }
-    }
-}
+
 
 /**
  * Check if we need to use DNS verification

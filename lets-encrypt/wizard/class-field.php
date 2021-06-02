@@ -101,10 +101,10 @@ if ( ! class_exists( "rsssl_field" ) ) {
             if ( ! current_user_can( 'manage_options' ) ) {
                 return;
             }
-            if ( isset( $_POST['rsssl_nonce'] ) ) {
+            if ( isset( $_POST['rsssl_le_nonce'] ) ) {
                 //check nonce
-                if ( ! isset( $_POST['rsssl_nonce'] )
-                    || ! wp_verify_nonce( $_POST['rsssl_nonce'],
+                if ( ! isset( $_POST['rsssl_le_nonce'] )
+                    || ! wp_verify_nonce( $_POST['rsssl_le_nonce'],
                         'rsssl_save' )
                 ) {
                     return;

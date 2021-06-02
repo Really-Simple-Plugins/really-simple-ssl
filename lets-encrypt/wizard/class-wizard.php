@@ -895,7 +895,7 @@ if ( ! class_exists( "rsssl_wizard" ) ) {
 
 		public function activate_ssl_buttons(){
 		    ob_start();
-		    wp_nonce_field('rsssl_nonce', 'rsssl_nonce'); ?>
+		    wp_nonce_field('rsssl_le_nonce', 'rsssl_le_nonce'); ?>
             <?php
                 $response = RSSSL_LE()->letsencrypt_handler->certificate_status();
                 $certificate_is_valid = $response->status === 'error';
