@@ -8,7 +8,24 @@ defined('ABSPATH') or die();
  */
 if (!function_exists('rsssl_letsencrypt_generation_allowed')) {
 	function rsssl_letsencrypt_generation_allowed() {
-		if ( current_user_can( 'manage_options' ) || wp_doing_cron() ) {
+
+		if ( wp_doing_cron() ) {
+			return true;
+		}
+
+		if ( !current_user_can( 'manage_options' ) ) {
+			return false;
+		}
+
+		if ( isset($_GET['tab']) && $_GET['tab'] === 'letsencrypt' ){
+			return true;
+		}
+
+		if ( isset($_GET['action']) && $_GET['action'] === 'rsssl_installation_progress' ){
+			return true;
+		}
+
+		if ( isset($_POST['rsssl_le_nonce']) && wp_verify_nonce( $_POST['rsssl_le_nonce'], 'rsssl_save' )){
 			return true;
 		}
 
