@@ -91,11 +91,20 @@ if ( !function_exists('rsssl_is_plesk')) {
 	 * @return false
 	 */
 	function rsssl_is_plesk() {
+
 		if (get_option('rsssl_force_plesk')) {
 			return true;
 		}
+
+		//cpanel takes precedence, as it's more precise
+		if ( rsssl_is_cpanel() ) {
+			return false;
+		}
+
 		$open_basedir = ini_get("open_basedir");
 		if ( empty($open_basedir) && is_dir( '/usr/local/psa' ) ) {
+			return true;
+		} else if (rsssl_check_port(2222)) {
 			return true;
 		} else {
 			return false;
@@ -112,6 +121,12 @@ if ( !function_exists('rsssl_is_directadmin')) {
 		if (get_option('rsssl_force_directadmin')) {
 			return true;
 		}
+
+		//cpanel takes precedence, as it's more precise
+		if ( rsssl_is_cpanel() ) {
+			return false;
+		}
+
 		if (rsssl_check_port(2222)) {
 			return true;
 		} else {

@@ -243,15 +243,11 @@ class rsssl_letsencrypt_handler {
 		    $cpanel = new rsssl_cPanel();
 		    $host = $cpanel->host;
 		    $url = $cpanel->ssl_installation_url;
-	    }
-
-	    if ( rsssl_is_plesk() ) {
+	    } else if ( rsssl_is_plesk() ) {
 		    $plesk = new rsssl_plesk();
 		    $host = $plesk->host;
 		    $url = $plesk->ssl_installation_url;
-	    }
-
-	    if ( rsssl_is_directadmin() ) {
+	    } else if ( rsssl_is_directadmin() ) {
 		    $directadmin = new rsssl_directadmin();
 		    $host = $directadmin->host;
 		    $url = $directadmin->ssl_installation_url;
@@ -337,17 +333,13 @@ class rsssl_letsencrypt_handler {
 	    $status = 'warning';
 	    $message = __("The Webhosting Dashboard software was not recognized. Depending on your hosting company, the generated certificate may need to be installed manually.", "really-simple-ssl" );
 
-        if (rsssl_is_cpanel()) {
+        if ( rsssl_is_cpanel() ) {
 	        $status = 'success';
 	        $message = __("CPanel recognized. Possibly the certificate can be installed automatically.", "really-simple-ssl" );
-        }
-
-        if (rsssl_is_plesk()) {
+        } else if ( rsssl_is_plesk() ) {
 	        $status = 'success';
 	        $message = __("Plesk recognized. Possibly the certificate can be installed automatically.", "really-simple-ssl" );
-        }
-
-		if (rsssl_is_directadmin() ) {
+        } else if ( rsssl_is_directadmin() ) {
 			$status = 'success';
 			$message = __("DirectAdmin recognized. Possibly the certificate can be installed automatically.", "really-simple-ssl" );
 		}
