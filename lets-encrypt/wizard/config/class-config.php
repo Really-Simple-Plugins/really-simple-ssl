@@ -155,6 +155,15 @@ if ( ! class_exists( "rsssl_config" ) ) {
 		            'api' => false,
 		            'ssl_installation_link' => 'https://wpmudev.com',
 	            ),
+	            'ovh' => array(
+		            'name' => 'OVH',
+		            'installation_renewal_required' => false,
+		            'local_ssl_generation_needed' => false,
+		            'free_ssl_available' => 'activated_by_default',
+		            'hosting_dashboard' => 'cpanel',
+		            'api' => false,
+		            'ssl_installation_link' => 'https://ovh.com',
+	            ),
 	            'hostinger' => array(
 		            'name' => 'Hostinger',
 		            'installation_renewal_required' => true,
