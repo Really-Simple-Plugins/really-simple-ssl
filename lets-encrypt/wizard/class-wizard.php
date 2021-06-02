@@ -898,10 +898,11 @@ if ( ! class_exists( "rsssl_wizard" ) ) {
 		    wp_nonce_field('rsssl_nonce', 'rsssl_nonce'); ?>
             <?php
                 $response = RSSSL_LE()->letsencrypt_handler->certificate_status();
+                $certificate_is_valid = $response->status === 'error';
                 $already_enabled = RSSSL()->really_simple_ssl->ssl_enabled;
-                if ($already_enabled){ ?>
+    			if ($certificate_is_valid && $already_enabled){ ?>
                     <a class="button button-default" href="<?php echo esc_url(add_query_arg(array("page"=>"rlrsssl_really_simple_ssl"),admin_url("options-general.php") ) );?>"><?php _e("Go to dashboard", "really-simple-ssl"); ?></a>
-                <?php } else if ( $response->action === 'stop' ) {?>
+                <?php } else if ( $certificate_is_valid ) {?>
                     <input type="submit" class='button button-primary'
                            value="<?php _e("Go ahead, activate SSL!", "really-simple-ssl"); ?>" id="rsssl_do_activate_ssl"
                            name="rsssl_do_activate_ssl">

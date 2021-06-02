@@ -2941,7 +2941,7 @@ class rsssl_admin extends rsssl_front_end
             ),
 
             'mixed_content_fixer_detected' => array(
-                'condition' => array('rsssl_site_has_ssl', 'rsssl_ssl_enabled'),
+                'condition' => array('rsssl_ssl_enabled'),
                 'callback' => 'RSSSL()->really_simple_ssl->mixed_content_fixer_detected',
                 'score' => 10,
                 'output' => array(
@@ -4713,18 +4713,6 @@ class rsssl_admin extends rsssl_front_end
 	}
 } //class closure
 
-/**
- * Wrapper functions for dashboard notices()
- * @return string
- */
-
-
-if (!function_exists('rsssl_site_has_ssl')) {
-	function rsssl_site_has_ssl() {
-		return RSSSL()->really_simple_ssl->site_has_ssl;
-	}
-}
-
 if (!function_exists('rsssl_ssl_enabled')) {
     function rsssl_ssl_enabled() {
         return RSSSL()->really_simple_ssl->ssl_enabled;
@@ -4734,21 +4722,19 @@ if (!function_exists('rsssl_ssl_enabled')) {
 if (!function_exists('rsssl_ssl_detected')) {
 	function rsssl_ssl_detected() {
 
-	    if ( RSSSL()->really_simple_ssl->ssl_enabled ) {
-		    return apply_filters('rsssl_ssl_detected', 'ssl-detected');
-	    }
+//	    if ( RSSSL()->rsssl_certificate->is_valid() ) {
+//		    return apply_filters('rsssl_ssl_detected', 'ssl-detected');
+//	    }
 
 		if ( ! RSSSL()->really_simple_ssl->wpconfig_ok() ) {
 			return apply_filters('rsssl_ssl_detected', 'fail');
 		}
 
-		if ( RSSSL()->really_simple_ssl->site_has_ssl ) {
-			return apply_filters('rsssl_ssl_detected', 'ssl-detected');
-		}
-
 		if ( !RSSSL()->rsssl_certificate->is_valid() ) {
 			return apply_filters('rsssl_ssl_detected', 'no-ssl-detected');
-		}
+		} else {
+			return apply_filters('rsssl_ssl_detected', 'ssl-detected');
+        }
 
 		return apply_filters('rsssl_ssl_detected', 'ssl-detected');
 	}
