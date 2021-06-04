@@ -777,7 +777,7 @@ class rsssl_admin extends rsssl_front_end
                        value="<?php _e("Go ahead, activate SSL!", "really-simple-ssl"); ?>" id="rsssl_do_activate_ssl"
                        name="rsssl_do_activate_ssl">
 	        <?php } ?>
-	        <?php if (!RSSSL()->rsssl_certificate->is_valid()){?>
+	        <?php if (!RSSSL()->rsssl_certificate->is_valid() ){?>
                 <a href="<?php echo rsssl_letsencrypt_wizard_url()?>" type="submit" class="button button-default"><?php _e("Install SSL certificate", "really-simple-ssl"); ?></a>
 	        <?php } ?>
             <?php if (!defined("rsssl_pro_version") ) { ?>

@@ -370,6 +370,11 @@ class rsssl_letsencrypt_handler {
 		        $response = $this->get_error($e);
 		        $status = 'error';
 		        $action = 'retry';
+		        if ( strpos($response, 'invalid contact domain')) {
+		        	$action = 'stop';
+		        	$response = __("The used domain for your email address is not allowed. Please change your email address here and try again.", "really-simple-ssl");
+		        }
+
 		        $message = $response;
 	        }
         } else {

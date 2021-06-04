@@ -320,15 +320,18 @@ function rsssl_get_manual_instructions_text( $url ){
 	}
 
 	if ( $activated_by_default ) {
-		$msg = sprintf(__("According to our information, your hosting provider supplies your account with an SSL certificate by default. Please contact your %shosting support%s if this is not the case.","really-simple-ssl"), '<a target="_blank" href="'.$url.'">', '</a>');
+		$msg = sprintf(__("According to our information, your hosting provider supplies your account with an SSL certificate by default. Please contact your %shosting support%s if this is not the case.","really-simple-ssl"), '<a target="_blank" href="'.$url.'">', '</a>').'&nbsp'.
+		       __("After completing the installation, you can continue to the next step to complete the installation.","really-simple-ssl");
 	} else if ( $dashboard_activation_required ) {
 		$msg = sprintf( __( "You already have free SSL on your hosting environment. Please activate it on your dashboard %smanually%s.", "really-simple-ssl" ),
-			'<a target="_blank" href="' . $url . '">', '</a>' );
+			'<a target="_blank" href="' . $url . '">', '</a>' ).'&nbsp'.
+		       __("After completing the installation, you can continue to the next step to complete the installation.","really-simple-ssl");
 	} else if ( $paid_only ) {
 		$msg = sprintf(__("According to our information, your hosting provider does not allow any kind of SSL installation, other then their own paid certificate. For an alternative hosting provider with SSL, see this %sarticle%s.","really-simple-ssl"), '<a target="_blank" href="https://really-simple-ssl.com/hosting-providers-with-free-ssl">', '</a>');
 	} else {
 		$msg = sprintf(__("Your hosting environment does not allow automatic SSL installation. Please complete %smanually%s.","really-simple-ssl"), '<a target="_blank" href="'.$url.'">', '</a>').' '.
-		       sprintf(__("You can follow these %sinstructions%s.","really-simple-ssl"), '<a target="_blank" href="https://really-simple-ssl.com/install-ssl-certificate">', '</a>');
+		       sprintf(__("You can follow these %sinstructions%s.","really-simple-ssl"), '<a target="_blank" href="https://really-simple-ssl.com/install-ssl-certificate">', '</a>').'&nbsp'.
+				__("After completing the installation, you can continue to the next step to complete the installation.","really-simple-ssl");
 
 	}
 
