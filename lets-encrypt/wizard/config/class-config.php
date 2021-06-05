@@ -165,7 +165,7 @@ if ( ! class_exists( "rsssl_config" ) ) {
 		            'ssl_installation_link' => 'https://ovh.com',
 	            ),
 	            'freeola' => array(
-		            'name' => 'freeola',
+		            'name' => 'Freeola',
 		            'installation_renewal_required' => false,
 		            'local_ssl_generation_needed' => false,
 		            'free_ssl_available' => 'paid_only',

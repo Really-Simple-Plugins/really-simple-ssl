@@ -241,7 +241,11 @@ class rsssl_letsencrypt_handler {
 		    $hosting_specific_link = RSSSL_LE()->config->hosts[$hosting_company]['ssl_installation_link'];
 		    if ($hosting_specific_link) {
 			    $site = trailingslashit( str_replace(array('https://','http://', 'www.'),'', site_url()) );
-			    $url = str_replace(array('{host}', '{domain}'), array($host, $site), $hosting_specific_link);
+			    if ( strpos($hosting_specific_link,'{host}') !==false && empty($host) ) {
+			    	$url = '';
+			    } else {
+				    $url = str_replace(array('{host}', '{domain}'), array($host, $site), $hosting_specific_link);
+			    }
 		    }
 	    }
 

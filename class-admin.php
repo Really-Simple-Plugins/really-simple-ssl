@@ -2824,7 +2824,7 @@ class rsssl_admin extends rsssl_front_end
 
 	    $curl_error = get_transient('rsssl_curl_error');
         $current_plugin_folder = $this->get_current_rsssl_free_dirname();
-        $reload_https_url = add_query_arg( array( 'ssl_reload_https' => '1') , esc_url_raw("https://" . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"]) );
+//        $reload_https_url = add_query_arg( array( 'ssl_reload_https' => '1') , esc_url_raw("https://" . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"]) );
         $notices = array(
             'deactivation_file_detected' => array(
                 'callback' => 'RSSSL()->really_simple_ssl->check_for_uninstall_file',
@@ -2928,8 +2928,8 @@ class rsssl_admin extends rsssl_front_end
 			            'msg' => __("No SSL detected. Use the retry button, or, if you're absolutely sure you have an SSL certificate, click the 'Override SSL detection' button.", "really-simple-ssl").
 
                             '<br><br><form action="" method="POST"><a href="'.add_query_arg(array("page" => "rlrsssl_really_simple_ssl", "tab" => "letsencrypt"),admin_url("options-general.php")) .'" type="submit" class="button button-default">'.__("Install SSL certificate", "really-simple-ssl").'</a>'.
-			                     '&nbsp;<input type="submit" class="button button-default" value="'.__("Retry", "really-simple-ssl").'" id="rsssl_recheck_certificate" name="rsssl_recheck_certificate">'.
-                                 '&nbsp;<a target="_blank" class="button button-default" href="' .$reload_https_url . '">'.__("Override SSL detection", "really-simple-ssl").'</a></form>',
+			                     '&nbsp;<input type="submit" class="button button-default" value="'.__("Retry", "really-simple-ssl").'" id="rsssl_recheck_certificate" name="rsssl_recheck_certificate"></form>',
+			            //'&nbsp;<a target="_blank" class="button button-default" href="' .$reload_https_url . '">'.__("Override SSL detection", "really-simple-ssl").'</a>
 			            'icon' => 'warning',
 			            'admin_notice' => false,
 		            ),
