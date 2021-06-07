@@ -79,7 +79,7 @@
       .rsssl-wizard-progress-bar {
         background: #eeeeee;
         height: 15px;
-        margin: @green-gap @green-gap 0 @green-gap;
+        margin: @green-gap 0 0 0;
 
         .rsssl-wizard-progress-bar-value {
           transition: width 0.5s;
@@ -120,7 +120,7 @@
               width: calc(100% - (@green-gap + @green-gap));
 
               h2 {
-                font-size: 14px;
+                font-size: 15px;
                 margin: 0;
               }
             }
@@ -255,11 +255,10 @@
             .rsssl-buttons-container {
               grid-column-start: 2;
 
-              input {
-                margin-right: @green-gap;
+              input +input {
+                margin-left: @green-gap;
               }
             }
-
           }
         }
       }
@@ -586,7 +585,9 @@
   }
   textarea {
     padding:10px;
-  }
+    width:100%;
+    height: 100px;
+    margin: 20px 0;  }
 
   /* Placeholders */
 
@@ -1011,11 +1012,13 @@
 .rsssl-help-warning-wrap {
   .rsssl-help-modal {
     .rsssl-pointer;
+    position:absolute;
 
     &.rsssl-notice {
       background-color: @brand-primary;
       &:after {
         border-right: 15px solid @brand-primary;
+        top: calc(50% - 15px);
       }
       color: black;
       padding: @green-gap;
@@ -1116,7 +1119,7 @@ a.button.rsssl-open-modal {
   }
 
   .rsssl-service-divider {
-    font-size: 14px;
+    font-size: 15px;
     margin-bottom: 10px;
   }
 
@@ -1449,9 +1452,11 @@ html .mceContentBody {
   h1, h2, h3, h4, .rsssl-menu-item, .rsssl-step-title, .rsssl-button {
     font-variant: normal;
   }
+  h2, h3 {
+    font-size:15px;
+  }
   h3 {
     font-weight: 400;
-    font-size: 16px;
   }
 
   label {
@@ -1589,12 +1594,12 @@ html .mceContentBody {
     .rsssl-done a {
       text-decoration: none;
       color: white;
-      font-size: 14px;
+      font-size: 15px;
     }
 
     .rsssl-to-do a {
       color: white;
-      font-size: 14px;
+      font-size: 15px;
       text-decoration: none;
       opacity: 0.6;
     }
@@ -1639,7 +1644,7 @@ html .mceContentBody {
 
   textarea {
     min-height: 150px;
-    min-width: 100%;
+    width:100%;
   }
 
   input[type=radio]:checked:before {

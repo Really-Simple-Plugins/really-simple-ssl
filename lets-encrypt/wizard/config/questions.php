@@ -84,7 +84,7 @@ $this->fields = $this->fields + array(
 	        'type'        => 'select',
 	        'tooltip'   => __( "This information may improve process, skipping unnecessary steps and improving suggested links.", "really-simple-ssl"),
 	        'options'     => $this->supported_hosts,
-	        'help'      => __("By selecting your hosting company we can tell you if your hosting company already supports free SSL, and/or where you can activate it.","really-simple-ssl")."&nbsp;".
+	        'help'      => __( "By selecting your hosting company we can tell you if your hosting company already supports free SSL, and/or where you can activate it.","really-simple-ssl")."&nbsp;".
 	                       sprintf(__("If your hosting company is not listed, and there's an SSL activation/installation link, please let us know on the %sforum%s.","really-simple-ssl"),'<a target="_blank" href="https://wordpress.org/support/plugin/really-simple-ssl/">','</a>'),
 	        'default'     => false,
 	        'label'       => __( "Hosting company", 'really-simple-ssl' ),
@@ -287,7 +287,10 @@ $this->fields = $this->fields + array(
 			'required'    => false,
 			'disabled'    => false,
 			'callback_condition' => array(
-				'other_host_type' => 'NOT cloudways'
+				'rsssl_is_plesk OR rsssl_is_cpanel OR rsssl_is_directadmin',
+				'NOT rsssl_activated_by_default',
+				'NOT rsssl_activation_required',
+				'NOT rsssl_paid_only',
 			),
 		),
 

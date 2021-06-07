@@ -372,7 +372,8 @@ class rsssl_letsencrypt_handler {
 		        $action = 'retry';
 		        if ( strpos($response, 'invalid contact domain')) {
 		        	$action = 'stop';
-		        	$response = __("The used domain for your email address is not allowed. Please change your email address here and try again.", "really-simple-ssl");
+		        	$response = __("The used domain for your email address is not allowed.","really-simple-ssl").'&nbsp;'.
+			                    sprintf(__("Please change your email address %shere%s and try again.", "really-simple-ssl"),'<a href="'.rsssl_letsencrypt_wizard_url().'&step=2'.'">','</a>');
 		        }
 
 		        $message = $response;
@@ -911,6 +912,16 @@ class rsssl_letsencrypt_handler {
 				}
 				$subjects[] = $alias_domain;
 			}
+		}
+
+		if ( rsssl_wildcard_certificate_required() ) {
+			$domain = rsssl_get_domain();
+			//in theory, the main site of a subdomain setup can be a www. domain. But we have to request a certificate without the www.
+			$domain   = str_replace( 'www.', '', $domain );
+			$subjects = array(
+				$domain,
+				'*.' . $domain,
+			);
 		}
 
 	    return apply_filters('rsssl_le_subjects', $subjects);

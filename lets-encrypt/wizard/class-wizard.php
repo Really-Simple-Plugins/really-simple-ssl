@@ -27,7 +27,8 @@ if ( ! class_exists( "rsssl_wizard" ) ) {
 			add_action( 'rsssl_after_save_lets-encrypt_option', array( $this, 'after_save_wizard_option' ), 10, 4 );
 			add_action( 'rsssl_after_saved_all_fields', array( $this, 'after_saved_all_fields' ), 10, 1 );
 			add_action( 'rsssl_last_step', array( $this, 'last_step_callback' ) );
-			add_action( 'admin_init', array( $this, 'catch_settings_switches' ) );
+			add_action( 'plugins_loaded', array( $this, 'catch_settings_switches' ), 10 );
+			add_action( 'plugins_loaded', array( $this, 'process_support_request' ), 10 );
 			add_filter( 'rsssl_fields_load_types', array( $this, 'maybe_drop_directories_step' )  );
 			add_filter( 'rsssl_steps', array($this, 'adjust_for_dns_actions') );
 			add_filter( 'rsssl_steps', array($this, 'maybe_add_multisite_test') );
@@ -118,8 +119,16 @@ if ( ! class_exists( "rsssl_wizard" ) ) {
 
 		    if (isset($_POST['rsssl-switch-to-dns'])) {
 			    update_option('rsssl_verification_type', 'DNS');
-		        wp_redirect(rsssl_letsencrypt_wizard_url().'&step=4');
-		        exit;
+			    $step = $this->step();
+			    //if we're in step directories, skip to DNS step
+			    if ( $step == 3) {
+				    wp_redirect(rsssl_letsencrypt_wizard_url().'&step=4');
+				    exit;
+			    }
+            }
+
+		    if (isset($_POST['rsssl-switch-to-directory'])) {
+			    delete_option('rsssl_verification_type' );
             }
 
 		    if (isset($_POST['rsssl-skip-dns-check'])) {
@@ -376,12 +385,30 @@ if ( ! class_exists( "rsssl_wizard" ) ) {
                                     </li>
                                 <?php } ?>
                             </ul>
+
                         </div>
                     </div>
                 </div>
+                <div class="rsssl-help-warning-wrap"><?php
+                    if ($this->step() === 1) {
+                        rsssl_sidebar_notice($this->support_form());
+                    } ?>
+                </div>
             </div>
-
 			<?php
+		}
+
+
+		public function support_form(){
+			ob_start();
+			_e("Questions? Ask your question here.","really-simple-ssl")
+			?>
+            <br>
+            <textarea></textarea><br>
+			<?php wp_nonce_field('rsssl_save', 'rsssl_le_nonce') ?>
+            <button type="submit" class="button button-default" name="rsssl-letsencrypt-support"><?php _e("Get support","really-simple-ssl")?></button>
+			<?php
+			return ob_get_clean();
 		}
 
 
@@ -432,19 +459,6 @@ if ( ! class_exists( "rsssl_wizard" ) ) {
 			die( json_encode( $out ) );
 		}
 
-		/**
-		 * beta add on compatibility
-		 */
-		public function process_args($html, $args){
-			if (defined('rsssl_beta_addon') ) {
-				if ( ! empty( $args ) && is_array( $args ) ) {
-					foreach ( $args as $fieldname => $value ) {
-						$html = str_replace( '{' . $fieldname . '}', $value, $html );
-					}
-				}
-			}
-			return $html;
-		}
 
 		/**
 		 * Initialize a page in the wizard
@@ -556,8 +570,9 @@ if ( ! class_exists( "rsssl_wizard" ) ) {
 				if ( $step >= $this->total_steps( $page ) ) {
 					return $step;
 				}
+
 				$step ++;
-			    $step = $this->get_next_not_empty_step( $page, $step );
+				$step = $this->get_next_not_empty_step( $page, $step );
 			}
 
 			return $step;
@@ -572,9 +587,7 @@ if ( ! class_exists( "rsssl_wizard" ) ) {
 		 * @return int|bool
 		 */
 		public function get_next_not_empty_section( $page, $step, $section ) {
-			if ( ! RSSSL_LE()->field->step_has_fields( $page, $step,
-				$section )
-			) {
+			if ( ! RSSSL_LE()->field->step_has_fields( $page, $step, $section ) ) {
 				//some keys are missing, so we need to count the actual number of keys.
 				if ( isset( RSSSL_LE()->config->steps[ $page ][ $step ]['sections'] ) ) {
 					$n = array_keys( RSSSL_LE()->config->steps[ $page ][ $step ]['sections'] ); //<---- Grab all the keys of your actual array and put in another array
@@ -590,6 +603,7 @@ if ( ! class_exists( "rsssl_wizard" ) ) {
 				$section ++;
 
 				if ( $section_count > $this->total_sections( $page, $step ) ) {
+				    error_log("section count>totalsectinos");
 					return false;
 				}
 
@@ -708,7 +722,6 @@ if ( ! class_exists( "rsssl_wizard" ) ) {
 			$this->initialize($page);
 
             $step = $this->calculate_next( 'step');
-            error_log("calculated next step $step");
             $section = $this->calculate_next('section');
 
 			$menu = $this->wizard_menu( $page, '', $step, $section );
@@ -719,7 +732,6 @@ if ( ! class_exists( "rsssl_wizard" ) ) {
 				'content' => $menu.$content,
 			);
 			$html = RSSSL()->really_simple_ssl->get_template('admin_wrap.php', $path = rsssl_le_wizard_path, $args );
-			$html = $this->process_args($html, $args);
 			echo '<div class="wrap">'.$html.'</div>';
 
 		}
@@ -730,6 +742,7 @@ if ( ! class_exists( "rsssl_wizard" ) ) {
 			$section = $this->section();
 			$page = 'lets-encrypt';
 			if ($this->section_is_empty($page, $step, $section) || (isset($_POST['rsssl-next']) ) ) {
+
 				if (RSSSL_LE()->config->has_sections($page, $step)
 				    && ($section < $this->last_section)
 				) {
@@ -743,6 +756,7 @@ if ( ! class_exists( "rsssl_wizard" ) ) {
 				//if the last section is also empty, it will return false, so we need to skip the step too.
 				if (!$section) {
 					$section = 1;
+					$step++;
 				}
 			}
 
@@ -794,14 +808,13 @@ if ( ! class_exists( "rsssl_wizard" ) ) {
 				}
 				$args['sections'] = ($args['active'] == 'active') ? $this->wizard_sections($page, $active_step, $active_section) : '';
 				$step_html = RSSSL()->really_simple_ssl->get_template( 'step.php', $path = rsssl_le_wizard_path , $args);
-				$step_html = $this->process_args($step_html, $args);
 				$args_menu['steps'] .= $step_html;
 			}
 			$args_menu['percentage-complete'] = $this->wizard_percentage_complete($page, $active_step);
 			$args_menu['title'] = !empty( $wizard_title ) ? '<div class="rsssl-wizard-subtitle"><h2>' . $wizard_title . '</h2></div>': '' ;
 
 			$html = RSSSL()->really_simple_ssl->get_template( 'menu.php', $path = rsssl_le_wizard_path, $args_menu );
-			return $this->process_args($html, $args_menu);
+			return $html;
 		}
 
 		/**
@@ -840,7 +853,6 @@ if ( ! class_exists( "rsssl_wizard" ) ) {
 						'title' => $title,
 					);
 					$section_html = RSSSL()->really_simple_ssl->get_template( 'section.php', $path = rsssl_le_wizard_path, $args );
-					$section_html = $this->process_args($section_html, $args);
 					$sections .= $section_html;
 
 				}
@@ -902,9 +914,61 @@ if ( ! class_exists( "rsssl_wizard" ) ) {
 			}
 
 			$html = RSSSL()->really_simple_ssl->get_template( 'content.php', $path = rsssl_le_wizard_path, $args );
-			return $this->process_args($html, $args);
+			return $html;
 
 		}
+
+		public function process_support_request()
+		{
+            error_log(print_r($_POST,true));
+			if (! isset($_POST['rsssl-letsencrypt-support']) ) {
+			    return;
+            }
+			if ( !rsssl_user_can_manage() ) {
+				return;
+			}
+
+            if (!wp_verify_nonce($_POST['rsssl_le_nonce'], 'rsssl_save')) {
+                return;
+            }
+
+            $user_info = get_userdata(get_current_user_id());
+            $email = urlencode($user_info->user_email);
+            $name = urlencode($user_info->display_name);
+            $support_request = urlencode(esc_html($_POST['rsssl_support_request']) );
+			$verification_type = get_option('rsssl_verification_type') === 'DNS' ? 'DNS' : 'DIR';
+			$skip_dns_check = get_option('rsssl_skip_dns_check' ) ? 'Skip DNS check' : 'Do DNS check';
+			$skip_directory_check = get_option('rsssl_skip_challenge_directory_request' ) ? 'Skip directory check' : 'Do directory check';
+			$hosting_company = rsssl_get_other_host();
+			$dashboard = 'unknown';
+			if (rsssl_is_cpanel()){
+			    $dashboard = 'cpanel';
+			} else if(rsssl_is_plesk()){
+			    $dashboard = 'plesk';
+			} else if (rsssl_is_directadmin()){
+			    $dashboard = 'directadmin';
+			}
+            $debug_log_contents = RSSSL()->really_simple_ssl->debug_log;
+            $debug_log_contents = str_replace("\n", '--br--', $debug_log_contents );
+            $debug_log_contents .= '--br--'.'hosting company '.$hosting_company.'--br--';
+            $debug_log_contents .= 'dashboard '.$dashboard.'--br--';
+            $debug_log_contents .= 'skip dns check '.$skip_dns_check.'--br--';
+            $debug_log_contents .= 'skip directory check '.$skip_directory_check.'--br--';
+            $debug_log_contents .= 'verification type '.$verification_type.'--br--';
+            $debug_log_contents = urlencode(strip_tags( $debug_log_contents ) );
+
+            //Retrieve the domain
+            $domain = site_url();
+            //Retrieve active plugins
+            $active_plugins = get_option('active_plugins');
+            $active_plugins = print_r($active_plugins, true);
+
+            $url = "https://really-simple-ssl.com/support/?email=$email&customername=$name&domain=$domain&supportrequest=$support_request&debuglog=$debug_log_contents&activeplugins=$active_plugins";
+
+            wp_redirect($url);
+            exit;
+		}
+
 
 		public function activate_ssl_buttons(){
 		    ob_start();

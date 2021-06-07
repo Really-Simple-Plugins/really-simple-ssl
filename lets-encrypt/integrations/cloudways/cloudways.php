@@ -73,15 +73,11 @@ class rsssl_Cloudways {
 					}
 				}
 				$encoded = substr( $encoded, 0, strlen( $encoded ) - 1 );
-				error_log("posted msg");
-				error_log($encoded);
 				curl_setopt( $ch, CURLOPT_POSTFIELDS, $encoded );
 				curl_setopt( $ch, CURLOPT_POST, 1 );
 			}
 
 			$output = curl_exec( $ch );
-			error_log("API Response ###");
-			error_log(print_r($output, true));
 
 			$httpcode = curl_getinfo( $ch, CURLINFO_HTTP_CODE );
 			if ($output && isset($output->error_description)) {

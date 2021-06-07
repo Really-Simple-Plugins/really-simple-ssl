@@ -97,3 +97,23 @@ function rsssl_le_get_notices_list($notices) {
 	return $notices;
 }
 add_filter( 'rsssl_notices', 'rsssl_le_get_notices_list', 30, 1 );
+function rsssl_le_custom_field_notices($fields){
+	if ( rsssl_is_cpanel() ) {
+		if( get_option('rsssl_verification_type') === 'DNS' ) {
+			$fields['email_address']['help'] =
+				__("You have switched to DNS verification.","really-simple-ssl").'&nbsp;'.
+				__("You can switch back to directory verification here.","really-simple-ssl").
+				'<br><br><button class="button button-default" name="rsssl-switch-to-directory">'.__("Switch to directory verification", "really-simple-ssl").'</button>';
+		} else {
+			$fields['email_address']['help'] =
+				__("By default the authorization uses the easiest method: directory validation. This will be mostly automatic for you.","really-simple-ssl").'&nbsp;'.
+				sprintf(__("As cPanel often uses several subdomains like mail.domain.com, cpanel.domain.com, these can only be authorized with the %sDNS%s method.","really-simple-ssl"),'<a target="_blank" href="https://really-simple-ssl.com/lets-encrypt-authorization-with-dns">', '</a>').'&nbsp;'.
+				__("If you prefer a wildcard certificate to support these subdomains, please switch to the DNS verification method.","really-simple-ssl").
+				'<br><br><button class="button button-default" name="rsssl-switch-to-dns">'.__("Switch to DNS verification", "really-simple-ssl").'</button>';
+		}
+	}
+	return $fields;
+}
+add_filter( 'rsssl_fields', 'rsssl_le_custom_field_notices', 30, 1 );
+
+

@@ -2,7 +2,7 @@
 defined( 'ABSPATH' ) or die( "you do not have access to this page!" );
 ?>
 <div class="rsssl-section">
-    <?php if ( RSSSL_LE()->letsencrypt_handler->generated_by_rsssl() ) {
+    <?php if ( !RSSSL_LE()->letsencrypt_handler->generated_by_rsssl() ) {
         $download_url = rsssl_le_url.'download.php?token='.wp_create_nonce('rsssl_download_cert');
         $key_file = get_option('rsssl_private_key_path');
         $cert_file = get_option('rsssl_certificate_path');
@@ -23,7 +23,7 @@ defined( 'ABSPATH' ) or die( "you do not have access to this page!" );
             </div>
             <h2>
 			    <?php _e("Certificate (CRT)", "really-simple-ssl")
-			          . RSSSL()->rsssl_help->get_help_tip(__("This is the certificate, which you need to install it on your site.", "really-simple-ssl") ); ?>
+			          . RSSSL()->rsssl_help->get_help_tip(__("This is the certificate, which you need to install in your hosting dashboard.", "really-simple-ssl") ); ?>
             </h2>
 
             <div class="rsssl-certificate-data rsssl-certificate" id="rsssl-certificate"><?php echo $certificate_content ?></div>
