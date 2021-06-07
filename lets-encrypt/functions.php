@@ -77,15 +77,69 @@ if (!function_exists('rsssl_cpanel_api_supported')) {
 	}
 }
 
+if (!function_exists('rsssl_activated_by_default')) {
+	/**
+	 * Check if the host has ssl, activated by default
+	 *
+	 * @return bool
+	 */
+	function rsssl_activated_by_default() {
+		$activated_by_default =  false;
+		$activated_by_default_hosts = RSSSL_LE()->config->activated_by_default;
+		$current_host         = rsssl_get_other_host();
+		if ( in_array( $current_host, $activated_by_default_hosts ) ) {
+			$activated_by_default =  true;
+		}
+		return $activated_by_default;
+	}
+}
+
+if (!function_exists('rsssl_activation_required')) {
+	/**
+	 * Check if the host has ssl, activation required
+	 *
+	 * @return bool
+	 */
+	function rsssl_activation_required() {
+		$dashboard_activation_required =  false;
+		$dashboard_activation_required_hosts = RSSSL_LE()->config->dashboard_activation_required;
+		$current_host         = rsssl_get_other_host();
+		if ( in_array( $current_host, $dashboard_activation_required_hosts ) ) {
+			$dashboard_activation_required =  true;
+		}
+		return $dashboard_activation_required;
+	}
+}
+
+if (!function_exists('rsssl_paid_only')) {
+	/**
+	 * Check if the host has ssl, paid only
+	 *
+	 * @return bool
+	 */
+	function rsssl_paid_only() {
+		$paid_only =  false;
+		$paid_only_hosts = RSSSL_LE()->config->paid_only;
+		$current_host         = rsssl_get_other_host();
+		if ( in_array( $current_host, $paid_only_hosts ) ) {
+			$paid_only =  true;
+		}
+		return $paid_only;
+	}
+}
+
 if ( !function_exists('rsssl_is_plesk')) {
 	/**
 	 * https://stackoverflow.com/questions/26927248/how-to-detect-servers-control-panel-type-with-php
 	 * @return false
 	 */
 	function rsssl_is_plesk() {
-
 		if (get_option('rsssl_force_plesk')) {
 			return true;
+		}
+
+		if ( !rsssl_has_host_has_dashboard('plesk') ){
+			return false;
 		}
 
 		//cpanel takes precedence, as it's more precise
@@ -104,6 +158,21 @@ if ( !function_exists('rsssl_is_plesk')) {
 	}
 }
 
+if ( !function_exists('rsssl_has_host_has_dashboard') ) {
+	function rsssl_has_host_has_dashboard($dashboard){
+		//if the function is called very early, we assume this dashboard is supported for this check.
+		if ( !defined('RSSSL_LE_CONFIG_LOADED') ) {
+			return true;
+		}
+
+		if ( RSSSL_LE()->config->host_has_dashboard($dashboard) ){
+			return false;
+		} else {
+			return true;
+		}
+	}
+}
+
 if ( !function_exists('rsssl_is_directadmin')) {
 	/**
 	 * https://stackoverflow.com/questions/26927248/how-to-detect-servers-control-panel-type-with-php
@@ -114,8 +183,16 @@ if ( !function_exists('rsssl_is_directadmin')) {
 			return true;
 		}
 
+		if ( !rsssl_has_host_has_dashboard('directadmin') ){
+			return false;
+		}
+
 		//cpanel takes precedence, as it's more precise
 		if ( rsssl_is_cpanel() ) {
+			return false;
+		}
+
+		if ( rsssl_is_plesk() ) {
 			return false;
 		}
 
@@ -297,38 +374,32 @@ if ( !function_exists('rsssl_do_local_lets_encrypt_generation')) {
 }
 
 function rsssl_get_manual_instructions_text( $url ){
-	$dashboard_activation_required =  false;
-	$activated_by_default =  false;
-	$paid_only =  false;
+	$dashboard_activation_required =  rsssl_activation_required();
+	$activated_by_default =  rsssl_activated_by_default();
+	$paid_only =  rsssl_paid_only();
 
-	$dashboard_activation_required_hosts = RSSSL_LE()->config->dashboard_activation_required;
-	$current_host         = rsssl_get_other_host();
-	if ( in_array( $current_host, $dashboard_activation_required_hosts ) ) {
-		$dashboard_activation_required =  true;
-	}
-
-	$activated_by_default_hosts = RSSSL_LE()->config->activated_by_default;
-	$current_host         = rsssl_get_other_host();
-	if ( in_array( $current_host, $activated_by_default_hosts ) ) {
-		$activated_by_default =  true;
-	}
-
-	$paid_only_hosts = RSSSL_LE()->config->paid_only;
-	$current_host         = rsssl_get_other_host();
-	if ( in_array( $current_host, $paid_only_hosts ) ) {
-		$paid_only =  true;
+	if (empty($url) ){
+		$complete_manually = sprintf(__("Please complete manually in your hosting dashboard.", "really-simple-ssl"), '<a target="_blank" href="'.$url.'">', '</a>');
+		$activate_manually = sprintf(__("Please activate it manually on your hosting dashboard.", "really-simple-ssl"), '<a target="_blank" href="'.$url.'">', '</a>');
+	} else {
+		$complete_manually = sprintf(__("Please complete %smanually%s", "really-simple-ssl"), '<a target="_blank" href="'.$url.'">', '</a>');
+		$activate_manually = sprintf(__("Please activate it on your dashboard %smanually%s", "really-simple-ssl"), '<a target="_blank" href="'.$url.'">', '</a>');
 	}
 
 	if ( $activated_by_default ) {
-		$msg = sprintf(__("According to our information, your hosting provider supplies your account with an SSL certificate by default. Please contact your %shosting support%s if this is not the case.","really-simple-ssl"), '<a target="_blank" href="'.$url.'">', '</a>');
+		$msg = sprintf(__("According to our information, your hosting provider supplies your account with an SSL certificate by default. Please contact your %shosting support%s if this is not the case.","really-simple-ssl"), '<a target="_blank" href="'.$url.'">', '</a>').'&nbsp'.
+		       __("After completing the installation, you can continue to the next step to complete the installation.","really-simple-ssl");
 	} else if ( $dashboard_activation_required ) {
-		$msg = sprintf( __( "You already have free SSL on your hosting environment. Please activate it on your dashboard %smanually%s.", "really-simple-ssl" ),
-			'<a target="_blank" href="' . $url . '">', '</a>' );
+		$msg = __( "You already have free SSL on your hosting environment.", "really-simple-ssl" ).'&nbsp'.
+		       $activate_manually.' '.
+		       __("After completing the installation, you can continue to the next step to complete the installation.","really-simple-ssl");
 	} else if ( $paid_only ) {
 		$msg = sprintf(__("According to our information, your hosting provider does not allow any kind of SSL installation, other then their own paid certificate. For an alternative hosting provider with SSL, see this %sarticle%s.","really-simple-ssl"), '<a target="_blank" href="https://really-simple-ssl.com/hosting-providers-with-free-ssl">', '</a>');
 	} else {
-		$msg = sprintf(__("Your hosting environment does not allow automatic SSL installation. Please complete %smanually%s.","really-simple-ssl"), '<a target="_blank" href="'.$url.'">', '</a>').' '.
-		       sprintf(__("You can follow these %sinstructions%s.","really-simple-ssl"), '<a target="_blank" href="https://really-simple-ssl.com/install-ssl-certificate">', '</a>');
+		$msg = __("Your hosting environment does not allow automatic SSL installation.","really-simple-ssl").' '.
+		       $complete_manually.' '.
+		       sprintf(__("You can follow these %sinstructions%s.","really-simple-ssl"), '<a target="_blank" href="https://really-simple-ssl.com/install-ssl-certificate">', '</a>').'&nbsp'.
+				__("After completing the installation, you can continue to the next step to complete the installation.","really-simple-ssl");
 
 	}
 
@@ -528,6 +599,11 @@ if ( !function_exists('rsssl_wildcard_certificate_required') ) {
 	 * @return bool
 	 */
 	function rsssl_wildcard_certificate_required() {
+		//if DNS verification, create wildcard.
+		if ( get_option('rsssl_verification_type') === 'DNS' ) {
+			return true;
+		}
+
 		if ( ! is_multisite() ) {
 			return false;
 		} else {
@@ -540,48 +616,20 @@ if ( !function_exists('rsssl_wildcard_certificate_required') ) {
 	}
 }
 
+if ( !function_exists('rsssl_maybe_drop_subdomain_test') ) {
+	function rsssl_maybe_drop_subdomain_test( $steps ) {
+		if ( is_multisite() ) {
+			$index = array_search( 'system-status', array_column( $steps['lets-encrypt'], 'id' ) );
+			$index ++;
+			$actions = $steps['lets-encrypt'][ $index ]['actions'];
+			//get the is_subdomain_setup
+			$sub_index = array_search( 'is_subdomain_setup', array_column( $actions, 'action' ) );
+			unset( $actions[ $sub_index ] );
+			$steps['lets-encrypt'][ $index ]['actions'] = $actions;
+		}
 
-/**
- * Move to add on
- */
-
-
-
-/**
- * Override for lets encrypt
- * Needs to be loaded directly (not in hook)
- *
- * @param array $subjects
- *
- * @return array
- */
-
-function rsssl_le_subjects( $subjects ) {
-	if ( rsssl_wildcard_certificate_required() ) {
-		$domain = rsssl_get_domain();
-		//in theory, the main site of a subdomain setup can be a www. domain. But we have to request a certificate without the www.
-		$domain   = str_replace( 'www.', '', $domain );
-		$subjects = array(
-			$domain,
-			'*.' . $domain,
-		);
+		return $steps;
 	}
-	return $subjects;
+
+	add_filter( 'rsssl_steps', 'rsssl_maybe_drop_subdomain_test', 20 );
 }
-
-add_filter( 'rsssl_le_subjects', 'rsssl_le_subjects' );
-
-function rsssl_maybe_drop_subdomain_test( $steps ) {
-	if ( is_multisite() ) {
-		$index = array_search( 'system-status', array_column( $steps['lets-encrypt'], 'id' ) );
-		$index ++;
-		$actions = $steps['lets-encrypt'][ $index ]['actions'];
-		//get the is_subdomain_setup
-		$sub_index = array_search( 'is_subdomain_setup', array_column( $actions, 'action' ) );
-		unset( $actions[ $sub_index ] );
-		$steps['lets-encrypt'][ $index ]['actions'] = $actions;
-	}
-	return $steps;
-}
-add_filter( 'rsssl_steps', 'rsssl_maybe_drop_subdomain_test' , 20);
-

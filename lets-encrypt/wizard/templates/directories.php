@@ -81,10 +81,7 @@ rsssl_progress_add('directories');
         <h2>
 			<?php _e("Or you can switch to DNS verification", "really-simple-ssl"); ?>
         </h2>
-        <p>
-
-			<?php _e("If the challenge directory cannot be created, you can either remove the server limitation, or change to DNS verification.", "really-simple-ssl"); ?>
-        </p><br>
+        <p><?php _e("If the challenge directory cannot be created, you can either remove the server limitation, or change to DNS verification.", "really-simple-ssl"); ?></p><br>
         <button class="button button-default" name="rsssl-switch-to-dns"><?php _e("Switch to DNS verification", "really-simple-ssl"); ?></button>
     </div>
 

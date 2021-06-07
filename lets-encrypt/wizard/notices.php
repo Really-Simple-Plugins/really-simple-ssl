@@ -22,19 +22,18 @@ function rsssl_notice_include_alias( $args ) {
  */
 function rsssl_le_get_notices_list($notices) {
 	//expiration date requests are cached.
+	$valid = RSSSL()->rsssl_certificate->is_valid();
+	$certinfo = get_transient('rsssl_certinfo');
+	$end_date = isset($certinfo['validTo_time_t']) ? $certinfo['validTo_time_t'] : false;
+	//if the certificate expires within the grace period, allow renewal
+	//e.g. expiry date 30 may, now = 10 may => grace period 9 june.
+	$expiry_date = !empty($end_date) ? date( get_option('date_format'), $end_date ) : false;
+	$renew_link = rsssl_letsencrypt_wizard_url();
+	$link_open = '<a href="'.$renew_link.'">';
 
 	if ( RSSSL_LE()->letsencrypt_handler->generated_by_rsssl() ) {
-		$valid = RSSSL()->rsssl_certificate->is_valid();
-		$certinfo = get_transient('rsssl_certinfo');
-		$end_date = isset($certinfo['validTo_time_t']) ? $certinfo['validTo_time_t'] : false;
-		//if the certificate expires within the grace period, allow renewal
-		//e.g. expiry date 30 may, now = 10 may => grace period 9 june.
-		$expiry_date = !empty($end_date) ? date( get_option('date_format'), $end_date ) : false;
-		$renew_link = rsssl_letsencrypt_wizard_url();
-		$link_open = '<a href="'.$renew_link.'">';
-
 		if ($expiry_date) {
-			$notices['certificate_renewal'] = array(
+			$notices['ssl_detected'] = array(
 				'condition' => array( 'rsssl_ssl_enabled', 'RSSSL_LE()->letsencrypt_handler->generated_by_rsssl' ),
 				'callback'  => 'RSSSL_LE()->letsencrypt_handler->certificate_about_to_expire',
 				'score'     => 10,
@@ -52,6 +51,7 @@ function rsssl_le_get_notices_list($notices) {
 				),
 			);
 		}
+
 		if ( RSSSL_LE()->letsencrypt_handler->certificate_install_required() ) {
 			if ( RSSSL_LE()->letsencrypt_handler->certificate_automatic_install_possible() ) {
 				$notices['certificate_installation'] = array(
@@ -97,3 +97,23 @@ function rsssl_le_get_notices_list($notices) {
 	return $notices;
 }
 add_filter( 'rsssl_notices', 'rsssl_le_get_notices_list', 30, 1 );
+function rsssl_le_custom_field_notices($fields){
+	if ( rsssl_is_cpanel() ) {
+		if( get_option('rsssl_verification_type') === 'DNS' ) {
+			$fields['email_address']['help'] =
+				__("You have switched to DNS verification.","really-simple-ssl").'&nbsp;'.
+				__("You can switch back to directory verification here.","really-simple-ssl").
+				'<br><br><button class="button button-default" name="rsssl-switch-to-directory">'.__("Switch to directory verification", "really-simple-ssl").'</button>';
+		} else {
+			$fields['email_address']['help'] =
+				__("By default the authorization uses the easiest method: directory validation. This will be mostly automatic for you.","really-simple-ssl").'&nbsp;'.
+				sprintf(__("As cPanel often uses several subdomains like mail.domain.com, cpanel.domain.com, these can only be authorized with the %sDNS%s method.","really-simple-ssl"),'<a target="_blank" href="https://really-simple-ssl.com/lets-encrypt-authorization-with-dns">', '</a>').'&nbsp;'.
+				__("If you prefer a wildcard certificate to support these subdomains, please switch to the DNS verification method.","really-simple-ssl").
+				'<br><br><button class="button button-default" name="rsssl-switch-to-dns">'.__("Switch to DNS verification", "really-simple-ssl").'</button>';
+		}
+	}
+	return $fields;
+}
+add_filter( 'rsssl_fields', 'rsssl_le_custom_field_notices', 30, 1 );
+
+

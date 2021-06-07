@@ -5,7 +5,6 @@ require_once dirname(dirname(dirname(__FILE__))) . DIRECTORY_SEPARATOR . 'autolo
 $dnsWriter = new class extends \LE_ACME2\Authorizer\AbstractDNSWriter {
     public function write(\LE_ACME2\Order $order, string $identifier, string $digest): bool {
         $status = false;
-        error_log("ORDER");
         error_log(print_r($order,true));
 	    error_log("Identifier");
 

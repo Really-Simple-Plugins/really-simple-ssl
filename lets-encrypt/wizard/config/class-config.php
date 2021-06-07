@@ -20,7 +20,9 @@ if ( ! class_exists( "rsssl_config" ) ) {
         public $paid_only;
 
         function __construct() {
-            if ( isset( self::$_this ) ) {
+	        define('RSSSL_LE_CONFIG_LOADED', true);
+
+	        if ( isset( self::$_this ) ) {
                 wp_die( sprintf( '%s is a singleton class and you cannot create a second instance.',
                     get_class( $this ) ) );
             }
@@ -61,7 +63,15 @@ if ( ! class_exists( "rsssl_config" ) ) {
 		            'api' => false,
 		            'ssl_installation_link' => false,
 	            ),
-
+	            'godaddy_managed' => array(
+		            'name' => 'GoDaddy Managed WordPress',
+		            'installation_renewal_required' => false,
+		            'local_ssl_generation_needed' => false,
+		            'free_ssl_available' => 'activated_by_default',
+		            'hosting_dashboard' => 'godaddymanaged',
+		            'api' => false,
+		            'ssl_installation_link' => false,
+	            ),
 	            'kasserver' => array(
 		            'name' => 'Kasserver',
 		            'installation_renewal_required' => false,
@@ -165,7 +175,7 @@ if ( ! class_exists( "rsssl_config" ) ) {
 		            'ssl_installation_link' => 'https://ovh.com',
 	            ),
 	            'freeola' => array(
-		            'name' => 'freeola',
+		            'name' => 'Freeola',
 		            'installation_renewal_required' => false,
 		            'local_ssl_generation_needed' => false,
 		            'free_ssl_available' => 'paid_only',
@@ -298,28 +308,6 @@ if ( ! class_exists( "rsssl_config" ) ) {
 			    return false;
 		    }
 	    }
-
-        public function get_section_by_id( $id ) {
-            $steps = $this->steps['lets-encrypt'];
-            foreach ( $steps as $step ) {
-                if ( ! isset( $step['sections'] ) ) {
-                    continue;
-                }
-                $sections = $step['sections'];
-
-                //because the step arrays start with one instead of 0, we increase with one
-                return array_search( $id, array_column( $sections, 'id' ) ) + 1;
-            }
-
-        }
-
-        public function get_step_by_id( $id ) {
-            $steps = $this->steps['lets-encrypt'];
-
-            //because the step arrays start with one instead of 0, we increase with one
-            return array_search( $id, array_column( $steps, 'id' ) ) + 1;
-        }
-
 
         public function fields(
             $page = false, $step = false, $section = false,

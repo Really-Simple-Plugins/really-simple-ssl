@@ -118,6 +118,9 @@ class REALLY_SIMPLE_SSL
 		$plugin_data = get_plugin_data(__FILE__);
 		$debug = defined('RSSSL_DEBUG') && RSSSL_DEBUG ? time() : '';
 		define('rsssl_version', $plugin_data['Version'].$debug);
+
+		define('rsssl_le_cron_generation_renewal_check', 20);
+		define('rsssl_le_manual_generation_renewal_check', 15);
 	}
 
 	private function includes()

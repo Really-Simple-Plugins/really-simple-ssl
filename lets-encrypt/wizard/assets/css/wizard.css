@@ -55,7 +55,7 @@
 #rsssl-content-area .rsssl-wizard-progress-bar {
   background: #eeeeee;
   height: 15px;
-  margin: 20px 20px 0 20px;
+  margin: 20px 0 0 0;
 }
 #rsssl-content-area .rsssl-wizard-progress-bar .rsssl-wizard-progress-bar-value {
   transition: width 0.5s;
@@ -90,7 +90,7 @@
   width: calc(100% - (20px + 20px));
 }
 #rsssl-content-area .rsssl-wizard-menu .rsssl-step .rsssl-step-header a h2 {
-  font-size: 14px;
+  font-size: 15px;
   margin: 0;
 }
 #rsssl-content-area .rsssl-wizard-menu .rsssl-step .rsssl-step-header.active a h2 {
@@ -192,8 +192,8 @@
 #rsssl-content-area .rsssl-section-content form .rsssl-section-footer .rsssl-buttons-container {
   grid-column-start: 2;
 }
-#rsssl-content-area .rsssl-section-content form .rsssl-section-footer .rsssl-buttons-container input {
-  margin-right: 20px;
+#rsssl-content-area .rsssl-section-content form .rsssl-section-footer .rsssl-buttons-container input + input {
+  margin-left: 20px;
 }
 #rsssl-content-area .rsssl-add-pages-table {
   display: grid;
@@ -483,6 +483,9 @@
 }
 #rsssl-wizard textarea {
   padding: 10px;
+  width: 100%;
+  height: 100px;
+  margin: 20px 0;
 }
 #rsssl-wizard ::placeholder {
   color: #dadada;
@@ -836,6 +839,7 @@
 }
 .rsssl-help-warning-wrap .rsssl-help-modal {
   position: relative;
+  position: absolute;
   margin: 0 0 0 20px;
   padding: 10px 15px;
   color: #fff;
@@ -859,6 +863,7 @@
 }
 .rsssl-help-warning-wrap .rsssl-help-modal.rsssl-notice:after {
   border-right: 15px solid #f8be2e;
+  top: calc(50% - 15px);
 }
 .rsssl-help-warning-wrap .rsssl-help-modal.rsssl-success {
   background-color: white;
@@ -931,7 +936,7 @@ a.button.rsssl-open-modal {
   margin-bottom: 0px;
 }
 .rsssl-list-container .rsssl-service-divider {
-  font-size: 14px;
+  font-size: 15px;
   margin-bottom: 10px;
 }
 .rsssl-legenda {
@@ -1221,9 +1226,12 @@ html .mceContentBody {
 #rsssl-wizard .rsssl-button {
   font-variant: normal;
 }
+#rsssl-wizard h2,
+#rsssl-wizard h3 {
+  font-size: 15px;
+}
 #rsssl-wizard h3 {
   font-weight: 400;
-  font-size: 16px;
 }
 #rsssl-wizard label {
   font-size: 13px;
@@ -1350,12 +1358,12 @@ html .mceContentBody {
 #rsssl-wizard #rsssl-content-area .rsssl-done a {
   text-decoration: none;
   color: white;
-  font-size: 14px;
+  font-size: 15px;
 }
 #rsssl-wizard .rsssl-body .rsssl-to-do a,
 #rsssl-wizard #rsssl-content-area .rsssl-to-do a {
   color: white;
-  font-size: 14px;
+  font-size: 15px;
   text-decoration: none;
   opacity: 0.6;
 }
@@ -1391,7 +1399,7 @@ html .mceContentBody {
 }
 .rsssl-field textarea {
   min-height: 150px;
-  min-width: 100%;
+  width: 100%;
 }
 .rsssl-field input[type=radio]:checked:before {
   content: "\2022";

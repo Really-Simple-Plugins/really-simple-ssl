@@ -241,7 +241,11 @@ class rsssl_letsencrypt_handler {
 		    $hosting_specific_link = RSSSL_LE()->config->hosts[$hosting_company]['ssl_installation_link'];
 		    if ($hosting_specific_link) {
 			    $site = trailingslashit( str_replace(array('https://','http://', 'www.'),'', site_url()) );
-			    $url = str_replace(array('{host}', '{domain}'), array($host, $site), $hosting_specific_link);
+			    if ( strpos($hosting_specific_link,'{host}') !==false && empty($host) ) {
+			    	$url = '';
+			    } else {
+				    $url = str_replace(array('{host}', '{domain}'), array($host, $site), $hosting_specific_link);
+			    }
 		    }
 	    }
 
@@ -291,12 +295,8 @@ class rsssl_letsencrypt_handler {
 	 */
 
 	public function certificate_about_to_expire(){
-		$valid = RSSSL()->rsssl_certificate->is_valid();
-		//we have now renewed the cert info transient
-		$certinfo = get_transient('rsssl_certinfo');
-		$end_date = isset($certinfo['validTo_time_t']) ? $certinfo['validTo_time_t'] : false;
-		$expiry_days_time = strtotime('+'.rsssl_le_manual_generation_renewal_check.' days');
-		if ( $expiry_days_time < $end_date ) {
+		$about_to_expire = RSSSL()->rsssl_certificate->about_to_expire();
+		if ( !$about_to_expire ) {
 			//if the certificate is valid, stop any attempt to renew.
 			delete_option('rsssl_le_start_renewal');
 			delete_option('rsssl_le_start_installation');
@@ -370,6 +370,12 @@ class rsssl_letsencrypt_handler {
 		        $response = $this->get_error($e);
 		        $status = 'error';
 		        $action = 'retry';
+		        if ( strpos($response, 'invalid contact domain')) {
+		        	$action = 'stop';
+		        	$response = __("The used domain for your email address is not allowed.","really-simple-ssl").'&nbsp;'.
+			                    sprintf(__("Please change your email address %shere%s and try again.", "really-simple-ssl"),'<a href="'.rsssl_letsencrypt_wizard_url().'&step=2'.'">','</a>');
+		        }
+
 		        $message = $response;
 	        }
         } else {
@@ -906,6 +912,16 @@ class rsssl_letsencrypt_handler {
 				}
 				$subjects[] = $alias_domain;
 			}
+		}
+
+		if ( rsssl_wildcard_certificate_required() ) {
+			$domain = rsssl_get_domain();
+			//in theory, the main site of a subdomain setup can be a www. domain. But we have to request a certificate without the www.
+			$domain   = str_replace( 'www.', '', $domain );
+			$subjects = array(
+				$domain,
+				'*.' . $domain,
+			);
 		}
 
 	    return apply_filters('rsssl_le_subjects', $subjects);
