@@ -2824,7 +2824,12 @@ class rsssl_admin extends rsssl_front_end
 
 	    $curl_error = get_transient('rsssl_curl_error');
         $current_plugin_folder = $this->get_current_rsssl_free_dirname();
-//        $reload_https_url = add_query_arg( array( 'ssl_reload_https' => '1') , esc_url_raw("https://" . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"]) );
+
+        //get expiry date, if we have one.
+	    $certinfo = get_transient('rsssl_certinfo');
+	    $end_date = isset($certinfo['validTo_time_t']) ? $certinfo['validTo_time_t'] : false;
+	    $expiry_date = !empty($end_date) ? date( get_option('date_format'), $end_date ) : __("(Unknown)", "really-simple-ssl");
+
         $notices = array(
             'deactivation_file_detected' => array(
                 'callback' => 'RSSSL()->really_simple_ssl->check_for_uninstall_file',
@@ -2925,8 +2930,7 @@ class rsssl_admin extends rsssl_front_end
 		            ),
 		            'no-ssl-detected' => array(
 			            'title' => __("No SSL detected", "really-simple-ssl"),
-			            'msg' => __("No SSL detected. Use the retry button, or, if you're absolutely sure you have an SSL certificate, click the 'Override SSL detection' button.", "really-simple-ssl").
-
+			            'msg' => __("No SSL detected. Use the retry button to check again.", "really-simple-ssl").
                             '<br><br><form action="" method="POST"><a href="'.add_query_arg(array("page" => "rlrsssl_really_simple_ssl", "tab" => "letsencrypt"),admin_url("options-general.php")) .'" type="submit" class="button button-default">'.__("Install SSL certificate", "really-simple-ssl").'</a>'.
 			                     '&nbsp;<input type="submit" class="button button-default" value="'.__("Retry", "really-simple-ssl").'" id="rsssl_recheck_certificate" name="rsssl_recheck_certificate"></form>',
 			            //'&nbsp;<a target="_blank" class="button button-default" href="' .$reload_https_url . '">'.__("Override SSL detection", "really-simple-ssl").'</a>
@@ -2936,6 +2940,15 @@ class rsssl_admin extends rsssl_front_end
 		            'ssl-detected' => array(
 			            'msg' => __('An SSL certificate was detected on your site.', 'really-simple-ssl'),
 			            'icon' => 'success'
+		            ),
+		            'about-to-expire' => array(
+			            'title' => __("Your SSL certificate will expire soon.", "really-simple-ssl"),
+			            'msg' => sprintf(__("SSL certificate will expire on %s.","really-simple-ssl"), $expiry_date).'&nbsp;'.__("If your hosting provider auto-renews your certificate, no action is required. Alternatively, you have the option to generate an SSL certificate with Really Simple SSL.","really-simple-ssl").'&nbsp;'.
+                                 sprintf(__("Depending on your hosting company, %smanual installation%s may be required.", "really-simple-ssl"),'<a target="_blank" href="https://really-simple-ssl.com/install-ssl-certificate">','</a>').
+			                     '<br><br><form action="" method="POST"><a href="'.add_query_arg(array("page" => "rlrsssl_really_simple_ssl", "tab" => "letsencrypt"),admin_url("options-general.php")) .'" type="submit" class="button button-default">'.__("Install SSL certificate", "really-simple-ssl").'</a>'.
+			                     '&nbsp;<input type="submit" class="button button-default" value="'.__("Re-check", "really-simple-ssl").'" id="rsssl_recheck_certificate" name="rsssl_recheck_certificate"></form>',
+			            'icon' => 'warning',
+			            'admin_notice' => false,
 		            ),
 	            ),
             ),
@@ -4716,21 +4729,22 @@ if (!function_exists('rsssl_ssl_enabled')) {
 if (!function_exists('rsssl_ssl_detected')) {
 	function rsssl_ssl_detected() {
 
-//	    if ( RSSSL()->rsssl_certificate->is_valid() ) {
-//		    return apply_filters('rsssl_ssl_detected', 'ssl-detected');
-//	    }
-
 		if ( ! RSSSL()->really_simple_ssl->wpconfig_ok() ) {
 			return apply_filters('rsssl_ssl_detected', 'fail');
 		}
 
-		if ( !RSSSL()->rsssl_certificate->is_valid() ) {
+		$valid = RSSSL()->rsssl_certificate->is_valid();
+		if ( !$valid ) {
 			return apply_filters('rsssl_ssl_detected', 'no-ssl-detected');
 		} else {
-			return apply_filters('rsssl_ssl_detected', 'ssl-detected');
+		    $about_to_expire = RSSSL()->rsssl_certificate->about_to_expire();
+			if ( !$about_to_expire ) {
+				return apply_filters('rsssl_ssl_detected', 'ssl-detected');
+			} else {
+				return apply_filters('rsssl_ssl_detected', 'about-to-expire');
+			}
         }
 
-		return apply_filters('rsssl_ssl_detected', 'ssl-detected');
 	}
 }
 

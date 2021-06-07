@@ -22,19 +22,18 @@ function rsssl_notice_include_alias( $args ) {
  */
 function rsssl_le_get_notices_list($notices) {
 	//expiration date requests are cached.
+	$valid = RSSSL()->rsssl_certificate->is_valid();
+	$certinfo = get_transient('rsssl_certinfo');
+	$end_date = isset($certinfo['validTo_time_t']) ? $certinfo['validTo_time_t'] : false;
+	//if the certificate expires within the grace period, allow renewal
+	//e.g. expiry date 30 may, now = 10 may => grace period 9 june.
+	$expiry_date = !empty($end_date) ? date( get_option('date_format'), $end_date ) : false;
+	$renew_link = rsssl_letsencrypt_wizard_url();
+	$link_open = '<a href="'.$renew_link.'">';
 
 	if ( RSSSL_LE()->letsencrypt_handler->generated_by_rsssl() ) {
-		$valid = RSSSL()->rsssl_certificate->is_valid();
-		$certinfo = get_transient('rsssl_certinfo');
-		$end_date = isset($certinfo['validTo_time_t']) ? $certinfo['validTo_time_t'] : false;
-		//if the certificate expires within the grace period, allow renewal
-		//e.g. expiry date 30 may, now = 10 may => grace period 9 june.
-		$expiry_date = !empty($end_date) ? date( get_option('date_format'), $end_date ) : false;
-		$renew_link = rsssl_letsencrypt_wizard_url();
-		$link_open = '<a href="'.$renew_link.'">';
-
 		if ($expiry_date) {
-			$notices['certificate_renewal'] = array(
+			$notices['ssl_detected'] = array(
 				'condition' => array( 'rsssl_ssl_enabled', 'RSSSL_LE()->letsencrypt_handler->generated_by_rsssl' ),
 				'callback'  => 'RSSSL_LE()->letsencrypt_handler->certificate_about_to_expire',
 				'score'     => 10,
@@ -52,6 +51,7 @@ function rsssl_le_get_notices_list($notices) {
 				),
 			);
 		}
+
 		if ( RSSSL_LE()->letsencrypt_handler->certificate_install_required() ) {
 			if ( RSSSL_LE()->letsencrypt_handler->certificate_automatic_install_possible() ) {
 				$notices['certificate_installation'] = array(

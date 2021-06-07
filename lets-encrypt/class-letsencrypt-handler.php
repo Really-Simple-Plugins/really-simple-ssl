@@ -295,12 +295,8 @@ class rsssl_letsencrypt_handler {
 	 */
 
 	public function certificate_about_to_expire(){
-		$valid = RSSSL()->rsssl_certificate->is_valid();
-		//we have now renewed the cert info transient
-		$certinfo = get_transient('rsssl_certinfo');
-		$end_date = isset($certinfo['validTo_time_t']) ? $certinfo['validTo_time_t'] : false;
-		$expiry_days_time = strtotime('+'.rsssl_le_manual_generation_renewal_check.' days');
-		if ( $expiry_days_time < $end_date ) {
+		$about_to_expire = RSSSL()->rsssl_certificate->about_to_expire();
+		if ( !$about_to_expire ) {
 			//if the certificate is valid, stop any attempt to renew.
 			delete_option('rsssl_le_start_renewal');
 			delete_option('rsssl_le_start_installation');

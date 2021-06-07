@@ -432,7 +432,6 @@ if ( ! class_exists( "rsssl_wizard" ) ) {
 			die( json_encode( $out ) );
 		}
 
-
 		/**
 		 * beta add on compatibility
 		 */
@@ -1212,36 +1211,9 @@ if ( ! class_exists( "rsssl_wizard" ) ) {
 			}
 
 			$total_steps = $this->total_steps( 'lets-encrypt' );
-			$total_sections = $this->total_sections($page, $step);
-
-//            if ($total_sections > 1) {
-//                $step = $step / $total_sections;
-//            }
-
 			$percentage = round( 100 * ( $step / $total_steps ) + 0.45 );
 			$this->percentage_complete = $percentage;
 			return $percentage;
-
-//            $active_section = '';
-//            for ( $i = 1; $i <= $total_steps; $i ++ ) {
-//                $fields = RSSSL_LE()->config->fields( 'lets-encrypt', $i, false );
-//                foreach ( $fields as $fieldname => $field ) {
-//                    //is field required
-//                    $required = isset( $field['required'] ) ? $field['required'] : false;
-//                    if ( ( isset( $field['condition'] ) || isset( $field['callback_condition'] ) ) && ! RSSSL_LE()->field->condition_applies( $field )
-//                    ) {
-//                        $required = false;
-//                    }
-//                    if ( $required ) {
-//                        $value = rsssl_get_value( $fieldname, false, false, false );
-//                        $total_fields ++;
-//                        if ( ! empty( $value ) ) {
-//                            $completed_fields ++;
-//                        }
-//                    }
-//                }
-//            }
-
 		}
 
 	}

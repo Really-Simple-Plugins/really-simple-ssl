@@ -156,6 +156,39 @@ if ( ! class_exists( 'rsssl_certificate' ) ) {
             return false;
         }
 
+        public function expiry_date_nice(){
+        	//refresh transient
+	        $valid = RSSSL()->rsssl_certificate->is_valid();
+	        $certinfo = get_transient('rsssl_certinfo');
+	        $end_date = isset($certinfo['validTo_time_t']) ? $certinfo['validTo_time_t'] : false;
+	        //if the certificate expires within the grace period, allow renewal
+	        //e.g. expiry date 30 may, now = 10 may => grace period 9 june.
+	        $expiry_date = !empty($end_date) ? date( get_option('date_format'), $end_date ) : false;
+	        return $expiry_date;
+        }
+
+	    /**
+	     * Check if the certificate is valid, but about to expire.
+	     * @return bool
+	     */
+        public function about_to_expire(){
+	        $valid = $this->is_valid();
+	        //if not valid, it's already expired
+	        if (!$valid) {
+	        	return true;
+	        }
+
+	        //we have now renewed the cert info transient
+	        $certinfo = get_transient('rsssl_certinfo');
+	        $end_date = isset($certinfo['validTo_time_t']) ? $certinfo['validTo_time_t'] : false;
+	        $expiry_days_time = strtotime('+'.rsssl_le_manual_generation_renewal_check.' days');
+	        if ( $expiry_days_time < $end_date ) {
+		        return false;
+	        } else {
+		        return true;
+	        }
+        }
+
         /**
          *
          * Check if the certificate is a wildcard certificate
