@@ -145,7 +145,8 @@ if ( ! class_exists( "rsssl_wizard" ) ) {
 		 */
 
 		public function installation_progress(){
-			$step = $this->actual_step();
+			$step = $this->calculate_next('step');
+
 			if (empty($step)) return;
 
 			$action_list = RSSSL_LE()->config->steps['lets-encrypt'][$step]['actions'];
@@ -550,13 +551,14 @@ if ( ! class_exists( "rsssl_wizard" ) ) {
 		 *
 		 * @return int
 		 */
+
 		public function get_next_not_empty_step( $page, $step ) {
 		    if ( ! RSSSL_LE()->field->step_has_fields( $page, $step ) ) {
 				if ( $step >= $this->total_steps( $page ) ) {
 					return $step;
 				}
 				$step ++;
-				$step = $this->get_next_not_empty_step( $page, $step );
+			    $step = $this->get_next_not_empty_step( $page, $step );
 			}
 
 			return $step;
@@ -614,7 +616,6 @@ if ( ! class_exists( "rsssl_wizard" ) ) {
 				$step --;
 				$step = $this->get_previous_not_empty_step( $page, $step );
 			}
-
 			return $step;
 		}
 
@@ -694,8 +695,7 @@ if ( ! class_exists( "rsssl_wizard" ) ) {
 			if ($this->wizard_is_locked()) {
 				$user_id = $this->get_lock_user();
 				$user = get_user_by("id", $user_id);
-				$lock_time = apply_filters("rsssl_wizard_lock_time",
-						2 * MINUTE_IN_SECONDS) / 60;
+				$lock_time = apply_filters("rsssl_wizard_lock_time", 2 * MINUTE_IN_SECONDS) / 60;
 
 				rsssl_notice(sprintf(__("The wizard is currently being edited by %s",
 						'really-simple-ssl'), $user->user_nicename) . '<br>'
@@ -706,40 +706,11 @@ if ( ! class_exists( "rsssl_wizard" ) ) {
 			}
 			//lock the wizard for other users.
 			$this->lock_wizard();
-
 			$this->initialize($page);
 
-			$section = $this->section();
-			$step = $this->actual_step();
-
-			if ($this->section_is_empty($page, $step, $section) || (isset($_POST['rsssl-next']) && !RSSSL_LE()->field->has_errors()) ) {
-				if (RSSSL_LE()->config->has_sections($page, $step)
-				    && ($section < $this->last_section)
-				) {
-					$section = $section + 1;
-				} else {
-					$section = $this->first_section($page, $step);
-				}
-
-				$section = $this->get_next_not_empty_section($page, $step, $section);
-				//if the last section is also empty, it will return false, so we need to skip the step too.
-				if (!$section) {
-					$section = 1;
-				}
-			}
-
-			if (isset($_POST['rsssl-previous'])) {
-				if (RSSSL_LE()->config->has_sections($page, $step)
-				    && $section > $this->first_section($page, $step)
-				) {
-					$section--;
-				} else {
-					$section = $this->last_section($page, $step);
-				}
-
-				$step = $this->get_previous_not_empty_step($page, $step);
-				$section = $this->get_previous_not_empty_section($page, $step, $section);
-			}
+            $step = $this->calculate_next( 'step');
+            error_log("calculated next step $step");
+            $section = $this->calculate_next('section');
 
 			$menu = $this->wizard_menu( $page, '', $step, $section );
 			$content = $this->wizard_content($page, $step, $section );
@@ -753,6 +724,49 @@ if ( ! class_exists( "rsssl_wizard" ) ) {
 			echo '<div class="wrap">'.$html.'</div>';
 
 		}
+
+
+		public function calculate_next( $type ){
+			$step = $this->step();
+			$section = $this->section();
+			$page = 'lets-encrypt';
+			if ($this->section_is_empty($page, $step, $section) || (isset($_POST['rsssl-next']) ) ) {
+				if (RSSSL_LE()->config->has_sections($page, $step)
+				    && ($section < $this->last_section)
+				) {
+					$section++;
+				} else {
+					$step++;
+					$section = $this->first_section($page, $step);
+				}
+				$step = $this->get_next_not_empty_step($page, $step);
+				$section = $this->get_next_not_empty_section($page, $step, $section);
+				//if the last section is also empty, it will return false, so we need to skip the step too.
+				if (!$section) {
+					$section = 1;
+				}
+			}
+
+			if (isset($_POST['rsssl-previous'])) {
+				if (RSSSL_LE()->config->has_sections($page, $step)
+				    && $section > $this->first_section($page, $step)
+				) {
+					$section--;
+				} else {
+					$step--;
+					$section = $this->last_section($page, $step);
+				}
+
+				$step = $this->get_previous_not_empty_step($page, $step);
+				$section = $this->get_previous_not_empty_section($page, $step, $section);
+			}
+
+			if ($type==='step'){
+			    return $step;
+			} else {
+			    return $section;
+			}
+        }
 
 		/**
 		 * Render Wizard menu
@@ -1090,24 +1104,6 @@ if ( ! class_exists( "rsssl_wizard" ) ) {
 			return $page;
 		}
 
-		/**
-		 * The step function returns the posted or get step, which may lag behind if next is clicked.
-         * @return int
-		 */
-
-		public function actual_step(){
-		    $step = $this->step();
-		    if (isset($_POST['rsssl-next'])) {
-			    $step++;
-			    $step = $this->get_next_not_empty_step('lets-encrypt', $step);
-            }
-			if (isset($_POST['rsssl-previous'])) {
-				$step--;
-				$step = $this->get_previous_not_empty_step('lets-encrypt', $step);
-			}
-			return $step;
-		}
-
 		public function step( $page = false ) {
 			$step = 1;
 			if ( ! $page ) {
@@ -1198,53 +1194,6 @@ if ( ! class_exists( "rsssl_wizard" ) ) {
 			return $first_key;
 		}
 
-
-		public function remaining_time( $page, $step, $section = false ) {
-
-			//get remaining steps including this one
-			$time        = 0;
-			$total_steps = $this->total_steps( $page );
-			for ( $i = $total_steps; $i >= $step; $i -- ) {
-				$sub = 0;
-
-				//if we're on a step with sections, we should add the sections that still need to be done.
-				if ( ( $step == $i )
-				     && RSSSL_LE()->config->has_sections( $page, $step )
-				) {
-
-					for (
-						$s = $this->last_section( $page, $i ); $s >= $section;
-						$s --
-					) {
-						$subsub         = 0;
-						$section_fields = RSSSL_LE()->config->fields( $page,
-							$step, $s );
-						foreach (
-							$section_fields as $section_fieldname =>
-							$section_field
-						) {
-							if ( isset( $section_field['time'] ) ) {
-								$sub    += $section_field['time'];
-								$subsub += $section_field['time'];
-								$time   += $section_field['time'];
-							}
-						}
-					}
-				} else {
-					$fields = RSSSL_LE()->config->fields( $page, $i, false );
-
-					foreach ( $fields as $fieldname => $field ) {
-						if ( isset( $field['time'] ) ) {
-							$sub  += $field['time'];
-							$time += $field['time'];
-						}
-
-					}
-				}
-			}
-
-			return round( $time + 0.45 );
-		}
 
 		/**
 		 *

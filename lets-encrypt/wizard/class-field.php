@@ -884,6 +884,14 @@ if ( ! class_exists( "rsssl_field" ) ) {
             }
         }
 
+	    /**
+         * If multiple condition, uses AND relation
+         *
+	     * @param       $args
+	     * @param false $type
+	     *
+	     * @return bool
+	     */
         public function condition_applies( $args, $type = false)
         {
             $default_args = $this->default_args;
@@ -1376,7 +1384,7 @@ if ( ! class_exists( "rsssl_field" ) ) {
             $button_text = __( "Save", 'really-simple-ssl' );
 	        $button_name = 'rsssl-save';
 
-	        $step = RSSSL_LE()->wizard->actual_step();
+	        $step = RSSSL_LE()->wizard->step();
             $section = RSSSL_LE()->wizard->section();
 	        $fields = RSSSL_LE()->config->fields( 'lets-encrypt', $step, $section);
 	        reset($fields);

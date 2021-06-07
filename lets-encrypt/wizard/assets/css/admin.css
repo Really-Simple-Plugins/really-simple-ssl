@@ -105,6 +105,12 @@
 #rsssl-wizard #rsssl-content-area {
   margin: 10px;
 }
+#rsssl-wizard .rsssl-section .rsssl-success.check {
+  margin-left: 15px;
+}
+#rsssl-wizard .rsssl-icon {
+  height: initial;
+}
 #rsssl-wizard .rsssl-icon.rsssl-success {
   color: #61ce70;
 }
