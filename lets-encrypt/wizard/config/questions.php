@@ -74,7 +74,10 @@ $this->fields = $this->fields + array(
 	        'tooltip'   => __( "If your site is without www, it is recommended to add the www domain to your certificate as well (and vice versa).", "really-simple-ssl").' '.__("You should have the www domain pointed to the same website as the non-www domain.", 'really-simple-ssl' ),
 	        'tooltip-position' => 'after',
 	        'option_text' => __("Include alias domain too?", 'really-simple-ssl'),
-	        'callback_condition' => 'NOT rsssl_is_subdomain',
+	        'callback_condition' => array(
+	        	'NOT rsssl_is_subdomain',
+	        	'NOT rsssl_wildcard_certificate_required',
+	        )
         ),
 
         'other_host_type' => array(
@@ -287,7 +290,7 @@ $this->fields = $this->fields + array(
 			'required'    => false,
 			'disabled'    => false,
 			'callback_condition' => array(
-				'rsssl_is_plesk OR rsssl_is_cpanel OR rsssl_is_directadmin',
+				'rsssl_uses_known_dashboard',
 				'NOT rsssl_activated_by_default',
 				'NOT rsssl_activation_required',
 				'NOT rsssl_paid_only',

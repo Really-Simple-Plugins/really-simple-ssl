@@ -251,6 +251,19 @@ if ( !function_exists('rsssl_progress_add')) {
 	}
 }
 
+if ( !function_exists('rsssl_uses_known_dashboard')) {
+	/**
+	 * Check if website uses any of the known dashboards.
+	 */
+	function rsssl_uses_known_dashboard( ) {
+		if ( rsssl_is_cpanel() || rsssl_is_plesk() || rsssl_is_directadmin() ) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+}
+
 if ( !function_exists('rsssl_is_ready_for')) {
 	/**
 	 * @param string $item

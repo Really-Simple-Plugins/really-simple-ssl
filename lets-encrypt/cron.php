@@ -59,6 +59,11 @@ function rsssl_le_cron_maybe_start_renewal(){
 }
 
 function rsssl_le_check_renewal_status(){
+	//when DNS validated, without api, we cannot autorenew
+	if ( !RSSSL_LE()->letsencrypt_handler->ssl_generation_can_auto_renew() ) {
+		return;
+	}
+
 	$renewal_active = get_option("rsssl_le_start_renewal");
 	$installation_active = get_option("rsssl_le_start_installation");
 

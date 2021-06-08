@@ -840,6 +840,7 @@
 .rsssl-help-warning-wrap .rsssl-help-modal {
   position: relative;
   position: absolute;
+  z-index: 99;
   margin: 0 0 0 20px;
   padding: 10px 15px;
   color: #fff;
