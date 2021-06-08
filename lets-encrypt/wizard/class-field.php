@@ -1,6 +1,4 @@
-<?php
-
-defined( 'ABSPATH' ) or die( "you do not have access to this page!" );
+<?php defined( 'ABSPATH' ) or die();
 
 if ( ! class_exists( "rsssl_field" ) ) {
     class rsssl_field {
@@ -46,27 +44,6 @@ if ( ! class_exists( "rsssl_field" ) ) {
             <?php
         }
 
-
-        /**
-         * Register each string in supported string translation tools
-         *
-         */
-
-        public function register_translation( $fieldname, $string ) {
-            //polylang
-            if ( function_exists( "pll_register_string" ) ) {
-                pll_register_string( $fieldname, $string, 'rsssl' );
-            }
-
-            //wpml
-            if ( function_exists( 'icl_register_string' ) ) {
-                icl_register_string( 'rsssl', $fieldname, $string );
-            }
-
-            do_action( 'wpml_register_single_string', 'rsssl', $fieldname,
-                $string );
-        }
-
         public function load() {
             $this->default_args = array(
                 "fieldname"          => '',
@@ -101,48 +78,10 @@ if ( ! class_exists( "rsssl_field" ) ) {
             if ( ! current_user_can( 'manage_options' ) ) {
                 return;
             }
+
             if ( isset( $_POST['rsssl_le_nonce'] ) ) {
-                //check nonce
-                if ( ! isset( $_POST['rsssl_le_nonce'] )
-                    || ! wp_verify_nonce( $_POST['rsssl_le_nonce'],
-                        'rsssl_save' )
-                ) {
+                if ( ! isset( $_POST['rsssl_le_nonce'] ) || ! wp_verify_nonce( $_POST['rsssl_le_nonce'], 'rsssl_save' ) ) {
                     return;
-                }
-
-                $fields = RSSSL_LE()->config->fields();
-
-                //remove multiple field
-                if ( isset( $_POST['rsssl_remove_multiple'] ) ) {
-                    $fieldnames = array_map( function ( $el ) {
-                        return sanitize_title( $el );
-                    }, $_POST['rsssl_remove_multiple'] );
-
-                    foreach ( $fieldnames as $fieldname => $key ) {
-                        $page    = $fields[ $fieldname ]['source'];
-                        $options = get_option( 'rsssl_options_' . $page );
-                        $multiple_field = $this->get_value( $fieldname, array() );
-                        unset( $multiple_field[ $key ] );
-                        $options[ $fieldname ] = $multiple_field;
-                        if ( ! empty( $options ) ) {
-                            update_option( 'rsssl_options_' . $page, $options );
-                        }
-                    }
-                }
-
-                //add multiple field
-                if ( isset( $_POST['rsssl_add_multiple'] ) ) {
-                    $fieldname = $this->sanitize_fieldname( $_POST['rsssl_add_multiple'] );
-                    $this->add_multiple_field( $fieldname );
-                }
-
-                //save multiple field
-                if ( ( isset( $_POST['rsssl-save'] ) || isset( $_POST['rsssl-next'] ) )
-                    && isset( $_POST['rsssl_multiple'] )
-                ) {
-                    $fieldnames
-                        = $this->sanitize_array( $_POST['rsssl_multiple'] );
-                    $this->save_multiple( $fieldnames );
                 }
 
                 //save data
@@ -153,7 +92,6 @@ if ( ! class_exists( "rsssl_field" ) ) {
                 do_action('rsssl_after_saved_all_fields', $posted_fields );
             }
         }
-
 
 
         /**
@@ -237,7 +175,6 @@ if ( ! class_exists( "rsssl_field" ) ) {
                 }
 
                 $page           = $fields[ $fieldname ]['source'];
-                $type           = $fields[ $fieldname ]['type'];
                 $options        = get_option( 'rsssl_options_' . $page );
                 $multiple_field = $this->get_value( $fieldname, array() );
 
@@ -249,22 +186,6 @@ if ( ! class_exists( "rsssl_field" ) ) {
                     //store the fact that this value was saved from the back-end, so should not get overwritten.
                     $value['saved_by_user'] = true;
                     $multiple_field[ $key ] = $value;
-
-                    //make cookies and thirdparties translatable
-                    if ( $type === 'cookies' || $type === 'thirdparties'
-                        || $type === 'processors'
-                        || $type === 'editor'
-                    ) {
-                        if ( isset( $fields[ $fieldname ]['translatable'] )
-                            && $fields[ $fieldname ]['translatable']
-                        ) {
-                            foreach ( $value as $value_key => $field_value ) {
-                                do_action( 'rsssl_register_translation',
-                                    $key . '_' . $fieldname . "_" . $value_key,
-                                    $field_value );
-                            }
-                        }
-                    }
                 }
 
                 $options[ $fieldname ] = $multiple_field;
@@ -1187,9 +1108,6 @@ if ( ! class_exists( "rsssl_field" ) ) {
                     case 'textarea':
                         $this->textarea( $args );
                         break;
-                    case 'multiple':
-                        $this->multiple( $args );
-                        break;
                     case 'radio':
                         $this->radio( $args );
                         break;
@@ -1395,53 +1313,6 @@ if ( ! class_exists( "rsssl_field" ) ) {
 		        }
 	        }
 	        return '<input class="button button-secondary" type="submit" name="'.$button_name.'" value="'.$button_text.'">';
-        }
-
-
-        public
-        function multiple(
-            $args
-        ) {
-            $values = $this->get_value( $args['fieldname'] );
-            if ( ! $this->show_field( $args ) ) {
-                return;
-            }
-            ?>
-            <?php do_action( 'rsssl_before_label', $args ); ?>
-            <label><?php echo esc_html( $args['label'] ) ?></label>
-            <?php do_action( 'rsssl_after_label', $args ); ?>
-            <button class="button" type="submit" name="rsssl_add_multiple"
-                    value="<?php echo esc_html( $args['fieldname'] ) ?>"><?php _e( "Add new",
-                    'really-simple-ssl' ) ?></button>
-            <br><br>
-            <?php
-            if ( $values ) {
-                foreach ( $values as $key => $value ) {
-                    ?>
-
-                    <div>
-                        <div>
-                            <label><?php _e( 'Description',
-                                    'really-simple-ssl' ) ?></label>
-                        </div>
-                        <div>
-                        <textarea class="rsssl_multiple"
-                                  name="rsssl_multiple[<?php echo esc_html( $args['fieldname'] ) ?>][<?php echo $key ?>][description]"><?php if ( isset( $value['description'] ) )
-                                echo esc_html( $value['description'] ) ?></textarea>
-                        </div>
-
-                    </div>
-                    <button class="button rsssl-remove" type="submit"
-                            name="rsssl_remove_multiple[<?php echo esc_html( $args['fieldname'] ) ?>]"
-                            value="<?php echo $key ?>"><?php _e( "Remove",
-                            'really-simple-ssl' ) ?></button>
-                    <?php
-                }
-            }
-            ?>
-            <?php do_action( 'rsssl_after_field', $args ); ?>
-            <?php
-
         }
 
         /**

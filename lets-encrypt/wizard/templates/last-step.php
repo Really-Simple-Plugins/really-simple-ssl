@@ -1,4 +1,6 @@
 <?php
+defined( 'ABSPATH' ) or die();
+
 ob_start();
 do_action('rsssl_activation_notice_inner');
 $content = ob_get_clean();

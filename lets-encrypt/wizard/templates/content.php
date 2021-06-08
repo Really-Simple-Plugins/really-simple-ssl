@@ -1,3 +1,4 @@
+<?php defined( 'ABSPATH' ) or die(  );?>
 <div class="rsssl-section-content">
     <form action="{page_url}" method="POST">
 		<input type="hidden" value="{step}" name="step">

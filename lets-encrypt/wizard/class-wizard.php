@@ -23,10 +23,7 @@ if ( ! class_exists( "rsssl_wizard" ) ) {
 			add_action( 'show_tab_letsencrypt', array($this, 'wizard') );
 			add_action( 'rsssl_le_installation_step', array( $this, 'installation_progress' ), 10 );
 			add_action( 'wp_ajax_rsssl_installation_progress', array($this, 'get_installation_progress'));
-			add_action( 'rsssl_before_save_lets-encrypt_option', array( $this, 'before_save_wizard_option' ), 10, 4 );
 			add_action( 'rsssl_after_save_lets-encrypt_option', array( $this, 'after_save_wizard_option' ), 10, 4 );
-			add_action( 'rsssl_after_saved_all_fields', array( $this, 'after_saved_all_fields' ), 10, 1 );
-			add_action( 'rsssl_last_step', array( $this, 'last_step_callback' ) );
 			add_action( 'plugins_loaded', array( $this, 'catch_settings_switches' ), 10 );
 			add_action( 'plugins_loaded', array( $this, 'process_support_request' ), 10 );
 			add_filter( 'rsssl_fields_load_types', array( $this, 'maybe_drop_directories_step' )  );
@@ -467,75 +464,6 @@ if ( ! class_exists( "rsssl_wizard" ) ) {
 		public function initialize( $page ) {
 			$this->last_section = $this->last_section( $page, $this->step() );
 			$this->page_url     = rsssl_letsencrypt_wizard_url();
-			//if a post id was passed, we copy the contents of that page to the wizard settings.
-			if ( isset( $_GET['post_id'] ) ) {
-				$post_id = intval( $_GET['post_id'] );
-				//get all fields for this page
-				$fields = RSSSL_LE()->config->fields( $page );
-				foreach ( $fields as $fieldname => $field ) {
-					$fieldvalue = get_post_meta( $post_id, $fieldname, true );
-					if ( $fieldvalue ) {
-						if ( ! RSSSL_LE()->field->is_multiple_field( $fieldname ) ) {
-							RSSSL_LE()->field->save_field( $fieldname, $fieldvalue );
-						} else {
-							$field[ $fieldname ] = $fieldvalue;
-							RSSSL_LE()->field->save_multiple( $field );
-						}
-					}
-
-				}
-			}
-		}
-
-
-		/**
-		 * Some actions after the last step has been completed
-		 */
-		public function last_step_callback() {
-			if ( ! $this->all_required_fields_completed( 'lets-encrypt' ) ) {
-				echo '<div class="rsssl-wizard-intro">';
-				_e( "Not all required fields are completed yet. Please check the steps to complete all required questions", 'really-simple-ssl' );
-				echo '</div>';
-			} else {
-				echo RSSSL()->really_simple_ssl->get_template('last-step.php', $path = rsssl_le_wizard_path);
-			}
-		}
-
-		/**
-		 * Process completion of setup
-		 *
-		 * */
-
-		public function wizard_after_step() {
-			if ( ! rsssl_user_can_manage() ) {
-				return;
-			}
-		}
-
-		/**
-		 * Do stuff before a page from the wizard is saved.
-		 *
-		 * */
-
-		public function before_save_wizard_option(
-			$fieldname, $fieldvalue, $prev_value, $type
-		) {
-
-			//only run when changes have been made
-			if ( $fieldvalue === $prev_value ) {
-				return;
-			}
-		}
-
-		/**
-		 * Handle some custom options after saving the wizard options
-		 *
-		 * After all fields have been saved
-		 * @param $posted_fields
-		 */
-
-		public function after_saved_all_fields($posted_fields){
-
 		}
 
 		/**
