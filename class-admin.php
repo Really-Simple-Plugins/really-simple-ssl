@@ -2933,7 +2933,6 @@ class rsssl_admin extends rsssl_front_end
 			            'msg' => __("No SSL detected. Use the retry button to check again.", "really-simple-ssl").
                             '<br><br><form action="" method="POST"><a href="'.add_query_arg(array("page" => "rlrsssl_really_simple_ssl", "tab" => "letsencrypt"),admin_url("options-general.php")) .'" type="submit" class="button button-default">'.__("Install SSL certificate", "really-simple-ssl").'</a>'.
 			                     '&nbsp;<input type="submit" class="button button-default" value="'.__("Retry", "really-simple-ssl").'" id="rsssl_recheck_certificate" name="rsssl_recheck_certificate"></form>',
-			            //'&nbsp;<a target="_blank" class="button button-default" href="' .$reload_https_url . '">'.__("Override SSL detection", "really-simple-ssl").'</a>
 			            'icon' => 'warning',
 			            'admin_notice' => false,
 		            ),

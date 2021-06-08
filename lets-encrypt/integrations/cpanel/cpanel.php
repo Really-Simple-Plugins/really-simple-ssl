@@ -42,7 +42,7 @@ class rsssl_cPanel
 	    $username = rsssl_get_value('cpanel_username');
 	    $password = RSSSL_LE()->letsencrypt_handler->decode( rsssl_get_value('cpanel_password') );
 	    $host = rsssl_get_value('cpanel_host');
-	    $this->host =  str_replace(array('http://', 'https://', ':2083',':'), '', $host);
+	    $this->host =  str_replace( array('http://', 'https://', ':2083',':'), '', $host );
         $this->username = $username;
         $this->password = $password;
         $this->ssl_installation_url = 'https://'.$this->host.":2083/frontend/paper_lantern/ssl/install.html";
@@ -157,7 +157,7 @@ class rsssl_cPanel
 	    //Validate $response
 	    if (empty($response)) {
 	    	update_option('rsssl_installation_error', 'cpanel:autossl');
-		    error_log('The install_ssl cURL call did not return valid JSON:');
+		    error_log('The install_ssl cURL call did not return valid JSON');
 		    $status = 'error';
 		    $action = 'skip';
 		    $message = rsssl_get_manual_instructions_text($this->ssl_installation_url);
@@ -188,13 +188,13 @@ class rsssl_cPanel
      */
     public function connectUapi($request_uri, $payload = null)
     {
-    	error_log("connect over ".$request_uri);
-        // Set up the cURL request object.
+    	// Set up the cURL request object.
         $ch = curl_init($request_uri);
         curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
         curl_setopt($ch, CURLOPT_USERPWD, $this->username.':'.$this->password);
         curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+	    curl_setopt($ch, CURLOPT_BUFFERSIZE, 131072);
 
         if (null !== $payload) {
             // Set up a POST request with the payload.
@@ -217,54 +217,90 @@ class rsssl_cPanel
 	 * Set DNS TXT record using Json API through cPanel XMLAPI.
 	 *
 	 * @param string $domain
-	 * @param string $txt_name
-	 * @param string $txt_value
+	 * @param string $value
 	 *
 	 * @return RSSSL_RESPONSE
 	 */
-	public function setDnsTxt($domain, $txt_name, $txt_value)
+	public function set_txt_record($domain, $value)
 	{
-		$xmlapi = new xmlapi($this->host, $this->username, $this->password);
-		$xmlapi->set_output('json');
-		$xmlapi->set_port('2083');
-		$xmlapi->set_debug(1);
-		$response = $xmlapi->api2_query(
-			$this->username,
-			'ZoneEdit',
-			'add_zone_record',
-			[
-				'domain' => $domain,
-				'name' => $txt_name,
-				'type' => 'TXT',
-				'txtdata' => $txt_value,
-				'ttl' => '600',
-				'class' => 'IN',
-			]
-		);
+		$args = [
+			'domain' => $domain,
+			'name' => '_acme-challenge',
+			'type' => 'TXT',
+			'txtdata' => $value,
+			'ttl' => '600',
+			'class' => 'IN',
+			'cpanel_jsonapi_user' => $this->username,
+			'cpanel_jsonapi_module' => 'ZoneEdit',
+			'cpanel_jsonapi_func' => 'add_zone_record',
+			'cpanel_jsonapi_apiversion' => '2',
+		];
 
+		$args = http_build_query($args, '', '&');
+		$url = 'https://'.$this->host.':2083/json-api/cpanel';
+		$authstr = 'Authorization: Basic '.base64_encode($this->username.':'.$this->password)."\r\n";
+
+		$curl = curl_init();
+		curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, 0);
+		curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+		curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 0);
+		curl_setopt($curl, CURLOPT_URL, $url);
+		curl_setopt($curl, CURLOPT_BUFFERSIZE, 131072);
+
+		$header[0] = $authstr.
+		             "Content-Type: application/x-www-form-urlencoded\r\n".
+		             'Content-Length: '.\strlen($args)."\r\n"."\r\n".$args;
+
+		curl_setopt($curl, CURLOPT_HTTPHEADER, $header);
+		curl_setopt($curl, CURLOPT_POST, 1);
+
+		$response = curl_exec($curl);
+		curl_close($curl);
+
+		if (false === $response) {
+			return new RSSSL_RESPONSE('error', 'stop', __("Unable to connect to cPanel", "really-simple-ssl").' '.curl_error($curl));
+		}
+
+		if (true === stristr($response, '<html>')) {
+			return new RSSSL_RESPONSE('error', 'stop', __("Login credentials incorrect", "really-simple-ssl"));
+		}
 		$response_array = json_decode($response, true);
+		error_log(print_r($response_array,true));
 
-		$result = [];
-		//Check status
+		if ( isset($response_array['cpanelresult']['data'][0]['result']['status']) ) {
+			if ($response_array['cpanelresult']['data'][0]['result']['status']) {
+				$status = 'success';
+				$action = 'continue';
+				$message = __("Successfully added TXT record.","really-simple-ssl");
+			} else {
+				$status = 'warning';
+				$action = 'continue';
+				$message = __("Could not automatically add TXT record. Please proceed manually, following the steps below.","really-simple-ssl");
+				if (isset($response_array['cpanelresult']['data'][0]['result']['statusmsg'])) {
+					$message .= '<br>'.$response_array['cpanelresult']['data'][0]['result']['statusmsg'];
+				}
+			}
+			return new RSSSL_RESPONSE($status, $action, $message);
+		}
+
+		//legacy ??
 		$event_result = (bool) $response_array['cpanelresult']['event']['result'];
 		$preevent_result = isset($response_array['cpanelresult']['preevent']) ? (bool) $response_array['cpanelresult']['preevent']['result'] : true; //Some cPanel doesn't provide this key. In that case, ignore it by setting 'true'.
 		$postevent_result = isset($response_array['cpanelresult']['postevent']) ? (bool) $response_array['cpanelresult']['postevent']['result'] : true; //Some cPanel doesn't provide this key. In that case, ignore it by setting 'true'.
 
 		if ($event_result && $preevent_result && $postevent_result) {
-			$result['http_code'] = 200;
-			$result['body'] = $response_array;
 			$status = 'success';
-			$action = 'stop';
+			$action = 'continue';
 			$message = __("Successfully added TXT record.","really-simple-ssl");
 		} else {
-			$result['http_code'] = 404;
-			$result['body'] = $response_array;
-			$status = 'error';
-			$action = 'skip';
-			$message = __("Errors were reported during adding of TXT record.","really-simple-ssl");
+			error_log(print_r($response_array, true));
+			$status = 'warning';
+			$action = 'continue';
+			$message = __("Could not automatically add TXT record. Please proceed manually, following the steps below.","really-simple-ssl");
 		}
 
 		return new RSSSL_RESPONSE($status, $action, $message);
 	}
+
 
 }

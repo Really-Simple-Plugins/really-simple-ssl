@@ -31,10 +31,16 @@ function rsssl_le_get_notices_list($notices) {
 	$renew_link = rsssl_letsencrypt_wizard_url();
 	$link_open = '<a href="'.$renew_link.'">';
 
+	$response = RSSSL_LE()->letsencrypt_handler->search_ssl_installation_url();
+	$url = $response->output;
+
+	$ssl_generate_url = add_query_arg(array("page" => "rlrsssl_really_simple_ssl", "tab" => "letsencrypt"),admin_url("options-general.php"));
+
+
 	if ( RSSSL_LE()->letsencrypt_handler->generated_by_rsssl() ) {
-		if ($expiry_date) {
+		if ( $expiry_date) {
 			$notices['ssl_detected'] = array(
-				'condition' => array( 'rsssl_ssl_enabled', 'RSSSL_LE()->letsencrypt_handler->generated_by_rsssl' ),
+				'condition' => array( 'rsssl_ssl_enabled' ),
 				'callback'  => 'RSSSL_LE()->letsencrypt_handler->certificate_about_to_expire',
 				'score'     => 10,
 				'output'    => array(
@@ -52,53 +58,45 @@ function rsssl_le_get_notices_list($notices) {
 			);
 		}
 
-		if ( RSSSL_LE()->letsencrypt_handler->certificate_install_required() ) {
-			if ( RSSSL_LE()->letsencrypt_handler->certificate_automatic_install_possible() ) {
-				$notices['certificate_installation'] = array(
-					'condition' => array( 'rsssl_ssl_enabled' ),
-					'callback'  => 'RSSSL_LE()->letsencrypt_handler->installation_failed',
-					'score'     => 10,
-					'output'    => array(
-						'true' => array(
-							'msg'  => sprintf( __( "The automatic installation of your certificate has failed. Please check your credentials, and retry the %sinstallation%s.", "really-simple-ssl-pro" ), '<a href="'.rsssl_letsencrypt_wizard_url().'">', '</a>' ),
-							'icon' => 'open',
-							'plusone' => true,
-							'dismissible' => false,
-
-						),
-					),
-				);
-			} else {
-				$response = RSSSL_LE()->letsencrypt_handler->search_ssl_installation_url();
-				$url = $response->output;
-
-				$notices['certificate_installation'] = array(
-				'condition' => array( 'rsssl_ssl_enabled' ),
-				'callback'  => 'RSSSL_LE()->letsencrypt_handler->should_start_manual_installation_renewal',
-				'score'     => 10,
-				'output'    => array(
-					'true' => array(
-						'msg'  => sprintf( __( "The SSL certificate has been renewed, and requires manual %sinstallation%s in your hosting dashboard.", "really-simple-ssl-pro" ), '<a target="_blank" href="'.$url.'">', '</a>' ),
-						'icon' => 'open',
-						'plusone' => true,
-						'dismissible' => false,
-					),
+		$notices['certificate_installation'] = array(
+			'condition' => array( 'rsssl_ssl_enabled', 'RSSSL_LE()->letsencrypt_handler->certificate_about_to_expire' ),
+			'callback'  => 'RSSSL_LE()->letsencrypt_handler->certificate_renewal_status_notice',
+			'score'     => 10,
+			'output'    => array(
+				'automatic-installation-failed' => array(
+					'msg'  => sprintf( __( "The automatic installation of your certificate has failed. Please check your credentials, and retry the %sinstallation%s.", "really-simple-ssl-pro" ), '<a href="'.rsssl_letsencrypt_wizard_url().'">', '</a>' ),
+					'icon' => 'open',
+					'plusone' => true,
+					'dismissible' => false,
 				),
-			);
-			}
-		}
-	}
-
-	//if one of these notices is added, we can remove the "ssl detected" notice" to prevent duplicates
-	if ( isset($notices['certificate_installation']) || isset($notices['certificate_renewal'] ) ){
-		unset($notices['ssl_detected']);
+				'manual-installation' => array(
+					'msg'  => sprintf( __( "The SSL certificate has been renewed, and requires manual %sinstallation%s in your hosting dashboard.", "really-simple-ssl-pro" ), '<a target="_blank" href="'.$url.'">', '</a>' ),
+					'icon' => 'open',
+					'plusone' => true,
+					'dismissible' => false,
+				),
+				'manual-generation' => array(
+					'msg'  => sprintf( __( "Automatic renewal of your certificate was not possible. The SSL certificate should be %srenewed% manually.", "really-simple-ssl-pro" ), '<a target="_blank" href="'.$ssl_generate_url.'">', '</a>' ),
+					'icon' => 'open',
+					'plusone' => true,
+					'dismissible' => false,
+				),
+				'automatic' => array(
+					'msg'  => __( "Your certificate will be renewed and installed automatically.", "really-simple-ssl-pro" ),
+					'icon' => 'open',
+					'plusone' => true,
+					'dismissible' => false,
+				),
+			),
+		);
 	}
 
 	return $notices;
 }
+
 add_filter( 'rsssl_notices', 'rsssl_le_get_notices_list', 30, 1 );
 function rsssl_le_custom_field_notices($fields){
-	if ( rsssl_is_cpanel() ) {
+	//if ( rsssl_is_cpanel() ) {
 		if( get_option('rsssl_verification_type') === 'DNS' ) {
 			$fields['email_address']['help'] =
 				__("You have switched to DNS verification.","really-simple-ssl").'&nbsp;'.
@@ -106,12 +104,11 @@ function rsssl_le_custom_field_notices($fields){
 				'<br><br><button class="button button-default" name="rsssl-switch-to-directory">'.__("Switch to directory verification", "really-simple-ssl").'</button>';
 		} else {
 			$fields['email_address']['help'] =
-				__("By default the authorization uses the easiest method: directory validation. This will be mostly automatic for you.","really-simple-ssl").'&nbsp;'.
-				sprintf(__("As cPanel often uses several subdomains like mail.domain.com, cpanel.domain.com, these can only be authorized with the %sDNS%s method.","really-simple-ssl"),'<a target="_blank" href="https://really-simple-ssl.com/lets-encrypt-authorization-with-dns">', '</a>').'&nbsp;'.
-				__("If you prefer a wildcard certificate to support these subdomains, please switch to the DNS verification method.","really-simple-ssl").
+				sprintf(__("If you also want to secure subdomains like mail.domain.com, cpanel.domain.com, you have to use the %sDNS%s challenge.","really-simple-ssl"),'<a target="_blank" href="https://really-simple-ssl.com/lets-encrypt-authorization-with-dns">', '</a>').'&nbsp;'.
+				__("Please note that auto-renewal with a DNS challenge might not be possible.","really-simple-ssl").
 				'<br><br><button class="button button-default" name="rsssl-switch-to-dns">'.__("Switch to DNS verification", "really-simple-ssl").'</button>';
 		}
-	}
+	//}
 	return $fields;
 }
 add_filter( 'rsssl_fields', 'rsssl_le_custom_field_notices', 30, 1 );

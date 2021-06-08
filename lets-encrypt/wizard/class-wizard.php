@@ -401,10 +401,10 @@ if ( ! class_exists( "rsssl_wizard" ) ) {
 
 		public function support_form(){
 			ob_start();
-			_e("Questions? Ask your question here.","really-simple-ssl")
+			_e("Questions? Ask them here.","really-simple-ssl")
 			?>
             <br>
-            <textarea></textarea><br>
+            <textarea name="rsssl_support_request"></textarea><br>
 			<?php wp_nonce_field('rsssl_save', 'rsssl_le_nonce') ?>
             <button type="submit" class="button button-default" name="rsssl-letsencrypt-support"><?php _e("Get support","really-simple-ssl")?></button>
 			<?php
@@ -603,7 +603,6 @@ if ( ! class_exists( "rsssl_wizard" ) ) {
 				$section ++;
 
 				if ( $section_count > $this->total_sections( $page, $step ) ) {
-				    error_log("section count>totalsectinos");
 					return false;
 				}
 
@@ -920,7 +919,6 @@ if ( ! class_exists( "rsssl_wizard" ) ) {
 
 		public function process_support_request()
 		{
-            error_log(print_r($_POST,true));
 			if (! isset($_POST['rsssl-letsencrypt-support']) ) {
 			    return;
             }
