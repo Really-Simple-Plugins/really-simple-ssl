@@ -25,7 +25,6 @@ if ( ! class_exists( "rsssl_wizard" ) ) {
 			add_action( 'wp_ajax_rsssl_installation_progress', array($this, 'get_installation_progress'));
 			add_action( 'rsssl_after_save_lets-encrypt_option', array( $this, 'after_save_wizard_option' ), 10, 4 );
 			add_action( 'plugins_loaded', array( $this, 'catch_settings_switches' ), 10 );
-			add_action( 'plugins_loaded', array( $this, 'process_support_request' ), 10 );
 			add_filter( 'rsssl_fields_load_types', array( $this, 'maybe_drop_directories_step' )  );
 			add_filter( 'rsssl_steps', array($this, 'adjust_for_dns_actions') );
 			add_filter( 'rsssl_steps', array($this, 'maybe_add_multisite_test') );
@@ -397,13 +396,12 @@ if ( ! class_exists( "rsssl_wizard" ) ) {
 
 
 		public function support_form(){
-			ob_start();
-			_e("Questions? Ask them here.","really-simple-ssl")
-			?>
-            <br>
-            <textarea name="rsssl_support_request"></textarea><br>
-			<?php wp_nonce_field('rsssl_save', 'rsssl_le_nonce') ?>
-            <button type="submit" class="button button-default" name="rsssl-letsencrypt-support"><?php _e("Get support","really-simple-ssl")?></button>
+		    $url = $this->get_support_url();
+			ob_start();?>
+			<h2><?php _e("Before you begin!","really-simple-ssl") ?></h2>
+            <p><?php _e("We're currently in Beta. This means we need your help! During this process you might discover you want to give some feedback about your experiences or need some help. If so, keep or form ready and try to be so complete and precise as possible so we can assist as fast as possible.","really-simple-ssl")?></p>
+            <?php wp_nonce_field('rsssl_save', 'rsssl_le_nonce') ?>
+            <a target="_blank" href="<?php echo $url?>" type="submit" class="button button-default rsssl-priority" name="rsssl-letsencrypt-support"><?php _e("Priority Support","really-simple-ssl")?></a>
 			<?php
 			return ob_get_clean();
 		}
@@ -845,19 +843,8 @@ if ( ! class_exists( "rsssl_wizard" ) ) {
 
 		}
 
-		public function process_support_request()
+		public function get_support_url()
 		{
-			if (! isset($_POST['rsssl-letsencrypt-support']) ) {
-			    return;
-            }
-			if ( !rsssl_user_can_manage() ) {
-				return;
-			}
-
-            if (!wp_verify_nonce($_POST['rsssl_le_nonce'], 'rsssl_save')) {
-                return;
-            }
-
             $user_info = get_userdata(get_current_user_id());
             $email = urlencode($user_info->user_email);
             $name = urlencode($user_info->display_name);
@@ -889,10 +876,9 @@ if ( ! class_exists( "rsssl_wizard" ) ) {
             $active_plugins = get_option('active_plugins');
             $active_plugins = print_r($active_plugins, true);
 
-            $url = "https://really-simple-ssl.com/support/?email=$email&customername=$name&domain=$domain&supportrequest=$support_request&debuglog=$debug_log_contents&activeplugins=$active_plugins";
+            $url = "https://really-simple-ssl.com/letsencrypt-support/?email=$email&customername=$name&domain=$domain&supportrequest=$support_request&debuglog=$debug_log_contents&activeplugins=$active_plugins";
 
-            wp_redirect($url);
-            exit;
+            return $url;
 		}
 
 

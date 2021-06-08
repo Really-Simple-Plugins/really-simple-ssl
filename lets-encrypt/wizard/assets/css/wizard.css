@@ -67,6 +67,12 @@
 #rsssl-content-area .rsssl-wizard-progress-bar .rsssl-wizard-progress-bar-value.rsssl-error {
   background-color: #D7263D;
 }
+#rsssl-content-area .rsssl-priority {
+  background-color: #000;
+  color: #fff;
+  border-color: #000;
+  margin-top: 10px;
+}
 #rsssl-content-area .rsssl-wizard-menu {
   background-color: white;
   margin: 10px;
@@ -76,6 +82,9 @@
 }
 #rsssl-content-area .rsssl-wizard-menu .rsssl-wizard-menu h1 {
   font-weight: bold;
+}
+#rsssl-content-area .rsssl-wizard-menu .rsssl-wizard-progress-bar {
+  margin: 20px;
 }
 #rsssl-content-area .rsssl-wizard-menu .rsssl-step .rsssl-step-header {
   text-decoration: none;
@@ -1197,23 +1206,6 @@ html .mceContentBody {
 #rsssl_close_tb_window {
   margin-right: 15px;
   margin-top: 15px;
-}
-/*progress bar */
-#rsssl-scan-progress,
-#rsssl-sync-progress {
-  background-color: #F1F1F1;
-  border-radius: 5px;
-}
-#rsssl-scan-progress .rsssl-progress-bar,
-#rsssl-sync-progress .rsssl-progress-bar,
-#rsssl-scan-progress .rsssl-sync-progress-bar,
-#rsssl-sync-progress .rsssl-sync-progress-bar {
-  height: 15px;
-  background-color: #f8be2e;
-  transition: width 1s;
-  -webkit-transition: width 1s;
-  font-weight: bold;
-  padding: 2px;
 }
 #rsssl-wizard {
   /*body */
