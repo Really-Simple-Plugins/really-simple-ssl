@@ -67,6 +67,12 @@
 #rsssl-content-area .rsssl-wizard-progress-bar .rsssl-wizard-progress-bar-value.rsssl-error {
   background-color: #D7263D;
 }
+#rsssl-content-area .rsssl-priority {
+  background-color: #000;
+  color: #fff;
+  border-color: #000;
+  margin-top: 10px;
+}
 #rsssl-content-area .rsssl-wizard-menu {
   background-color: white;
   margin: 10px;
