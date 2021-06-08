@@ -92,6 +92,7 @@
           }
         }
       }
+
       .rsssl-wizard-menu {
         background-color: white;
         margin: 0.5 * @green-gap;
@@ -102,7 +103,9 @@
         .rsssl-wizard-menu h1 {
           font-weight: bold;
         }
-
+        .rsssl-wizard-progress-bar {
+          margin: @green-gap;
+        }
 
 
         .rsssl-step {
@@ -1431,22 +1434,6 @@ html .mceContentBody {
 #rsssl-start-mail, #rsssl_close_tb_window {
   margin-right: 15px;
   margin-top: 15px;
-}
-
-
-/*progress bar */
-#rsssl-scan-progress, #rsssl-sync-progress {
-  background-color: #F1F1F1;
-  border-radius: 5px;
-
-  .rsssl-progress-bar, .rsssl-sync-progress-bar {
-    height: 15px;
-    background-color: @brand-primary;
-    transition: width 1s;
-    -webkit-transition: width 1s;
-    font-weight: bold;
-    padding: 2px;
-  }
 }
 
 #rsssl-wizard {
