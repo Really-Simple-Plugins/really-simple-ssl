@@ -1,5 +1,5 @@
 <?php
-defined( 'ABSPATH' ) or die( "you do not have accesss to this page!" );
+defined( 'ABSPATH' ) or die( );
 $this->steps = array(
     'lets-encrypt' =>
         array(

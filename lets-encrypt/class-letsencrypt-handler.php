@@ -787,7 +787,7 @@ class rsssl_letsencrypt_handler {
 	 * @return bool
 	 */
     public function generated_by_rsssl(){
-	    return get_option('rsssl_le_certificate_generated_by_rsssl')!==false;
+	    return get_option('rsssl_le_certificate_generated_by_rsssl');
     }
 
 	/**

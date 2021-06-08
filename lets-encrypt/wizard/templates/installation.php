@@ -1,8 +1,8 @@
 <?php
-defined( 'ABSPATH' ) or die( "you do not have access to this page!" );
+defined( 'ABSPATH' ) or die();
 ?>
 <div class="rsssl-section">
-    <?php if ( !RSSSL_LE()->letsencrypt_handler->generated_by_rsssl() ) {
+    <?php if ( RSSSL_LE()->letsencrypt_handler->generated_by_rsssl() ) {
         $download_url = rsssl_le_url.'download.php?token='.wp_create_nonce('rsssl_download_cert');
         $key_file = get_option('rsssl_private_key_path');
         $cert_file = get_option('rsssl_certificate_path');
