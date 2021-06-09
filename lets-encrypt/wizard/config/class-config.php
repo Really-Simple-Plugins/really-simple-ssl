@@ -76,7 +76,7 @@ if ( ! class_exists( "rsssl_config" ) ) {
 		            'name' => 'Kasserver',
 		            'installation_renewal_required' => false,
 		            'local_ssl_generation_needed' => false,
-		            'free_ssl_available' => true,
+		            'free_ssl_available' => 'activation_required',
 		            'hosting_dashboard' => 'kasserver',
 		            'api' => false,
 		            'ssl_installation_link' => 'https://kas.all-inkl.com/',
