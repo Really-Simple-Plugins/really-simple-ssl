@@ -848,7 +848,6 @@ if ( ! class_exists( "rsssl_wizard" ) ) {
             $user_info = get_userdata(get_current_user_id());
             $email = urlencode($user_info->user_email);
             $name = urlencode($user_info->display_name);
-            $support_request = urlencode(esc_html($_POST['rsssl_support_request']) );
 			$verification_type = get_option('rsssl_verification_type') === 'DNS' ? 'DNS' : 'DIR';
 			$skip_dns_check = get_option('rsssl_skip_dns_check' ) ? 'Skip DNS check' : 'Do DNS check';
 			$skip_directory_check = get_option('rsssl_skip_challenge_directory_request' ) ? 'Skip directory check' : 'Do directory check';
@@ -861,9 +860,9 @@ if ( ! class_exists( "rsssl_wizard" ) ) {
 			} else if (rsssl_is_directadmin()){
 			    $dashboard = 'directadmin';
 			}
+
             $debug_log_contents = RSSSL()->really_simple_ssl->debug_log;
             $debug_log_contents = str_replace("\n", '--br--', $debug_log_contents );
-            $debug_log_contents .= '--br--'.'hosting company '.$hosting_company.'--br--';
             $debug_log_contents .= 'dashboard '.$dashboard.'--br--';
             $debug_log_contents .= 'skip dns check '.$skip_dns_check.'--br--';
             $debug_log_contents .= 'skip directory check '.$skip_directory_check.'--br--';
@@ -872,11 +871,8 @@ if ( ! class_exists( "rsssl_wizard" ) ) {
 
             //Retrieve the domain
             $domain = site_url();
-            //Retrieve active plugins
-            $active_plugins = get_option('active_plugins');
-            $active_plugins = print_r($active_plugins, true);
 
-            $url = "https://really-simple-ssl.com/letsencrypt-support/?email=$email&customername=$name&domain=$domain&supportrequest=$support_request&debuglog=$debug_log_contents&activeplugins=$active_plugins";
+            $url = "https://really-simple-ssl.com/letsencrypt-support/?email=$email&customername=$name&domain=$domain&hosting_company=$hosting_company&debuglog=$debug_log_contents";
 
             return $url;
 		}
