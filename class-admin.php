@@ -2740,7 +2740,7 @@ class rsssl_admin extends rsssl_front_end
         ?>
         <div class="nav-tab-wrapper">
             <div class="rsssl-logo-container">
-                <div id="rsssl-logo"><img src="<?php echo rsssl_url?>/assets/really-simple-ssl-logo.svg" alt="review-logo"></div>
+                <div id="rsssl-logo"><img src="<?php echo rsssl_url?>/assets/really-simple-ssl-logo.png" alt="review-logo"></div>
             </div>
             <?php
                 if (count($tabs)>1) {
