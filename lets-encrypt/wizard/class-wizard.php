@@ -94,12 +94,6 @@ if ( ! class_exists( "rsssl_wizard" ) ) {
 		}
 
 
-//		public function maybe_drop_directories_step($fields){
-//		    if (rsssl_dns_verification_required()) {
-//		        unset($fields['directories']);
-//            }
-//		    return $fields;
-//        }
 
 		public function catch_settings_switches(){
 		    if ( !rsssl_user_can_manage() ) {
@@ -120,10 +114,6 @@ if ( ! class_exists( "rsssl_wizard" ) ) {
 				delete_option('rsssl_create_folders_in_root');
 				wp_redirect(rsssl_letsencrypt_wizard_url().'&step=1');
 				exit;
-			}
-
-			if (isset($_GET['rsssl-create-folders-in-root'])) {
-				update_option('rsssl_create_folders_in_root', true);
 			}
 
 		    if (isset($_POST['rsssl-switch-to-dns'])) {
@@ -222,9 +212,6 @@ if ( ! class_exists( "rsssl_wizard" ) ) {
                                 if (elapsedTime<1000) {
                                     rsssl_sleep(1000-elapsedTime);
                                 }
-                                console.log("response for "+current_action);
-                                console.log(response);
-                                rsssl_maybe_show_elements(current_action, response.status);
 
                                 var msg = response.message;
                                 if (actual_attempts_count>1) {
@@ -236,6 +223,7 @@ if ( ! class_exists( "rsssl_wizard" ) ) {
                                 var event = new CustomEvent('rsssl_le_response', { detail: response });
                                 document.dispatchEvent(event);
                                 if (response.action === 'finalize' ) {
+                                    rsssl_maybe_show_elements(current_action, response.status);
                                     rsssl_set_status(response.status);
                                     //do not remove current action
                                     //remove remaining list items.
@@ -256,6 +244,7 @@ if ( ! class_exists( "rsssl_wizard" ) ) {
                                         rsssl_set_progress(msg);
                                     }, 100 );
                                 } else if (response.action === 'continue' || response.action === 'skip' ) {
+                                    rsssl_maybe_show_elements(current_action, response.status);
                                     rsssl_set_status(response.status);
                                     //skip:  drop previous completely, skip to next.
                                     if (response.action === 'skip') {
@@ -278,16 +267,12 @@ if ( ! class_exists( "rsssl_wizard" ) ) {
                                     }
 
                                 } else if (response.action === 'retry' ) {
-                                    console.log("actual attempts count "+actual_attempts_count);
-                                    console.log("max attempts count "+max_attempts);
                                     if ( actual_attempts_count >= max_attempts ) {
-                                        console.log("action is retry, but too many attempts");
+                                        rsssl_maybe_show_elements(current_action, response.status);
                                         progress = 100;
                                         rsssl_stop_progress(response.status);
                                     } else {
-                                        console.log("action is retry, start again.");
                                         actual_attempts_count++;
-                                        console.log("attempt "+actual_attempts_count);
                                         actions = stored_actions;
                                         descriptions = stored_descriptions;
                                         attempts = stored_attempts;
@@ -298,6 +283,7 @@ if ( ! class_exists( "rsssl_wizard" ) ) {
                                         }, 100 );
                                     }
                                 } else if (response.action === 'stop'){
+                                    rsssl_maybe_show_elements(current_action, response.status);
                                     rsssl_set_status(response.status);
 
                                     actions.shift();
