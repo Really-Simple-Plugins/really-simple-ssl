@@ -33,6 +33,7 @@ class rsssl_letsencrypt_handler {
 		add_action( 'rsssl_le_activation', array( $this, 'cleanup_on_ssl_activation'));
 		add_action( 'rsssl_le_activation', array( $this, 'plugin_activation_actions'));
 		add_action( 'admin_init', array( $this, 'maybe_add_htaccess_exclude'));
+		add_action( 'admin_init', array( $this, 'maybe_create_htaccess_directories'));
 
 		$this->key_directory = $this->key_directory();
 		$this->challenge_directory = $this->challenge_directory();
@@ -162,6 +163,7 @@ class rsssl_letsencrypt_handler {
 			if ( !rsssl_do_local_lets_encrypt_generation() ) {
 				rsssl_progress_add('directories');
 				rsssl_progress_add('generation');
+				rsssl_progress_add('dns-verification');
 			}
 		}
 
@@ -189,7 +191,7 @@ class rsssl_letsencrypt_handler {
 		    rsssl_progress_remove('system-status');
 		    $action = 'stop';
 		    $status = 'error';
-		    $message = __("It is not possible to install Let's Encrypt on a subfolder configuration.", "really-simple-ssl" );
+		    $message = __("It is not possible to install Let's Encrypt on a subfolder configuration.", "really-simple-ssl" ).rsssl_read_more('https://really-simple-ssl.com/install-ssl-on-subfolders');
 	    } else if ( strlen($path)>0 ) {
 		    rsssl_progress_remove('system-status');
 		    $action = 'stop';
@@ -534,6 +536,18 @@ class rsssl_letsencrypt_handler {
 		}
 
 		return $response;
+	}
+
+	/**
+	 * Clear an existing order
+	 */
+	public function clear_order(){
+		$this->get_account();
+		$response = $this->get_order();
+		$order = $response->output;
+		if ( $order ) {
+			$order->clear();
+		}
 	}
 
 	/**
@@ -976,11 +990,10 @@ class rsssl_letsencrypt_handler {
 		if ( !rsssl_do_local_lets_encrypt_generation() ) {
 			rsssl_progress_add('directories');
 			rsssl_progress_add('generation');
+			rsssl_progress_add('dns-verification');
 		}
 
-		if ( rsssl_dns_verification_required() ) {
-			rsssl_progress_add('directories');
-		} else {
+		if ( !rsssl_dns_verification_required() ) {
 			rsssl_progress_add('dns-verification');
 		}
 
@@ -1106,26 +1119,43 @@ class rsssl_letsencrypt_handler {
 	 * Check if our created directories have the necessary writing permissions
 	 */
 
-	public function directories_without_writing_permissions(){
+	public function directories_without_writing_permissions( ){
 		$required_folders = array(
-			$this->challenge_directory,
 			$this->key_directory,
 			$this->certs_directory,
 		);
 
+		if ( !rsssl_dns_verification_required() ) {
+			$required_folders[] = $this->challenge_directory;
+		}
+
 		$no_writing_permissions = array();
 		foreach ($required_folders as $required_folder){
-			set_error_handler(array($this, 'custom_error_handling'));
-			$test_file = fopen( $required_folder . "/really-simple-ssl-permissions-check.txt", "w" );
-			fwrite($test_file, 'file to test writing permissions for Really Simple SSL');
-			fclose( $test_file );
-			restore_error_handler();
-			if (!file_exists($required_folder . "/really-simple-ssl-permissions-check.txt")) {
+			if (!$this->directory_has_writing_permissions( $required_folder )) {
 				$no_writing_permissions[] = $required_folder;
 			}
 		}
 
 		return $no_writing_permissions;
+	}
+
+	/**
+	 * Check if a directory has writing permissions
+	 * @param string $directory
+	 *
+	 * @return bool
+	 */
+	public function directory_has_writing_permissions( $directory ){
+		set_error_handler(array($this, 'custom_error_handling'));
+		$test_file = fopen( $directory . "/really-simple-ssl-permissions-check.txt", "w" );
+		fwrite($test_file, 'file to test writing permissions for Really Simple SSL');
+		fclose( $test_file );
+		restore_error_handler();
+		if (!file_exists($directory . "/really-simple-ssl-permissions-check.txt")) {
+			return false;
+		} else {
+			return true;
+		}
 	}
 
 	/**
@@ -1206,25 +1236,104 @@ class rsssl_letsencrypt_handler {
 	}
 
 	/**
-     * Check if exists, create ssl/keys directory above the wp root if not existing
+	 * Check if exists, create ssl/certs directory above the wp root if not existing
 	 * @return bool|string
 	 */
-	public function key_directory(){
-		$root_directory = trailingslashit(ABSPATH);
-		$parent_directory = trailingslashit(dirname($root_directory));
-		if ( ! file_exists( $parent_directory . 'ssl' ) ) {
-			mkdir( $parent_directory . 'ssl' );
+	public function certs_directory(){
+		$directory = $this->get_directory_path();
+
+		if ( ! file_exists( $directory . 'ssl' ) ) {
+			mkdir( $directory . 'ssl' );
 		}
 
-		if ( ! file_exists( $parent_directory . 'ssl/keys' ) ) {
-			mkdir( $parent_directory . 'ssl/keys' );
+		if ( ! file_exists( $directory . 'ssl/certs' ) ) {
+			mkdir( $directory . 'ssl/certs' );
 		}
 
-		if ( file_exists( $parent_directory . 'ssl/keys' ) ){
-			return $parent_directory . 'ssl/keys';
+		if ( file_exists( $directory . 'ssl/certs' ) ){
+			return $directory . 'ssl/certs';
 		} else {
 			return false;
 		}
+	}
+
+	/**
+	 * Get path to location where to create the directories.
+	 * @return string
+	 */
+	public function get_directory_path(){
+		$root_directory = trailingslashit(ABSPATH);
+		if ( get_option('rsssl_create_folders_in_root') ) {
+			if ( !get_option('rsssl_ssl_dirname') ) {
+				$token = str_shuffle ( time() );
+				update_option('rsssl_ssl_dirname', $token );
+			}
+			return $root_directory . trailingslashit( get_option('rsssl_ssl_dirname') );
+		} else {
+			return trailingslashit(dirname($root_directory));
+		}
+	}
+
+	/**
+     * Check if exists, create ssl/keys directory above the wp root if not existing
+	 * @return bool|string
+	 */
+
+	public function key_directory(){
+		$directory = $this->get_directory_path();
+		if ( ! file_exists( $directory . 'ssl' ) ) {
+			mkdir( $directory . 'ssl' );
+		}
+
+		if ( ! file_exists( $directory . 'ssl/keys' ) ) {
+			mkdir( $directory . 'ssl/keys' );
+		}
+
+		if ( file_exists( $directory . 'ssl/keys' ) ){
+			return $directory . 'ssl/keys';
+		} else {
+			return false;
+		}
+	}
+
+	public function maybe_create_htaccess_directories(){
+		if (!current_user_can('manage_options')) {
+			return;
+		}
+
+		if ( !RSSSL()->rsssl_server->uses_htaccess() ) {
+			return;
+		}
+
+		if ( !get_option('rsssl_create_folders_in_root') ) {
+			return;
+		}
+
+		$this->write_htaccess_dir_file( $this->get_directory_path().'ssl/.htaccess' ,'ssl');
+		$this->write_htaccess_dir_file( $this->key_directory().'.htaccess' ,'key');
+		$this->write_htaccess_dir_file( $this->certs_directory().'.htaccess' ,'certs');
+	}
+
+	public function write_htaccess_dir_file($path, $type){
+		if ( get_option('rsssl_htaccess_file_set_'.$type ) ) return;
+
+		$rules = '#BEGIN Really Simple SSL LETS ENCRYPT'."\n";
+		$rules .= 'deny from all'."\n";
+		$rules .= '#END Really Simple SSL LETS ENCRYPT'."\n";
+
+		if ( !file_exists($path) && is_writable( $path ) ) {
+			set_error_handler(array($this, 'custom_error_handling'));
+			$htaccess_file = fopen( $path, "w" );
+			fclose( $htaccess_file );
+			restore_error_handler();
+		}
+
+		$htaccess = file_get_contents( $path );
+		if ( strpos($htaccess, 'deny from all') !== FALSE ) {
+			update_option('rsssl_htaccess_file_set_'.$type, true);
+			return;
+		}
+		file_put_contents($path, $rules);
 	}
 
 	/**
@@ -1373,28 +1482,6 @@ class rsssl_letsencrypt_handler {
 		}
 
 		return new RSSSL_RESPONSE($status, $action, $message);
-	}
-
-	/**
-	 * Check if exists, create ssl/certs directory above the wp root if not existing
-	 * @return bool|string
-	 */
-	public function certs_directory(){
-		$root_directory = trailingslashit(ABSPATH);
-		$parent_directory = trailingslashit(dirname($root_directory));
-		if ( ! file_exists( $parent_directory . 'ssl' ) ) {
-			mkdir( $parent_directory . 'ssl' );
-		}
-
-		if ( ! file_exists( $parent_directory . 'ssl/certs' ) ) {
-			mkdir( $parent_directory . 'ssl/certs' );
-		}
-
-		if ( file_exists( $parent_directory . 'ssl/certs' ) ){
-			return $parent_directory . 'ssl/certs';
-		} else {
-			return false;
-		}
 	}
 
 	/**

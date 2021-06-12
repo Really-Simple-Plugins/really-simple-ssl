@@ -25,7 +25,7 @@ if ( ! class_exists( "rsssl_wizard" ) ) {
 			add_action( 'wp_ajax_rsssl_installation_progress', array($this, 'get_installation_progress'));
 			add_action( 'rsssl_after_save_lets-encrypt_option', array( $this, 'after_save_wizard_option' ), 10, 4 );
 			add_action( 'plugins_loaded', array( $this, 'catch_settings_switches' ), 10 );
-			add_filter( 'rsssl_fields_load_types', array( $this, 'maybe_drop_directories_step' )  );
+			//add_filter( 'rsssl_fields_load_types', array( $this, 'maybe_drop_directories_step' )  );
 			add_filter( 'rsssl_steps', array($this, 'adjust_for_dns_actions') );
 			add_filter( 'rsssl_steps', array($this, 'maybe_add_multisite_test') );
 		}
@@ -43,6 +43,13 @@ if ( ! class_exists( "rsssl_wizard" ) ) {
 		public function adjust_for_dns_actions($steps){
 			$use_dns = rsssl_dns_verification_required();
             if ($use_dns) {
+	            $index_directories = array_search( 'directories', array_column( $steps['lets-encrypt'], 'id' ) );
+	            $index_directories ++;
+	            $challenge_key = array_search( 'check_challenge_directory', array_column( $steps['lets-encrypt'][ $index_directories ]['actions'], 'action' ) );
+	            $challenge_reachable_key = array_search( 'challenge_directory_reachable', array_column( $steps['lets-encrypt'][ $index_directories ]['actions'], 'action' ) );
+	            unset( $steps['lets-encrypt'][ $index_directories ]['actions'][$challenge_key] );
+	            unset( $steps['lets-encrypt'][ $index_directories ]['actions'][$challenge_reachable_key] );
+
 	            $index = array_search( 'generation', array_column( $steps['lets-encrypt'], 'id' ) );
 	            $index ++;
                 $steps['lets-encrypt'][ $index ]['actions'] = array (
@@ -87,12 +94,12 @@ if ( ! class_exists( "rsssl_wizard" ) ) {
 		}
 
 
-		public function maybe_drop_directories_step($fields){
-		    if (rsssl_dns_verification_required()) {
-		        unset($fields['directories']);
-            }
-		    return $fields;
-        }
+//		public function maybe_drop_directories_step($fields){
+//		    if (rsssl_dns_verification_required()) {
+//		        unset($fields['directories']);
+//            }
+//		    return $fields;
+//        }
 
 		public function catch_settings_switches(){
 		    if ( !rsssl_user_can_manage() ) {
@@ -103,14 +110,20 @@ if ( ! class_exists( "rsssl_wizard" ) ) {
 			 * reset all option
              */
 			if (isset($_GET['reset-letsencrypt'])) {
+			    RSSSL_LE()->letsencrypt_handler->clear_order();
 				delete_option('rsssl_verification_type');
 				delete_option('rsssl_skip_dns_check' );
 				delete_option('rsssl_skip_challenge_directory_request' );
 				delete_option('rsssl_force_plesk' );
 				delete_option('rsssl_force_cpanel' );
 				delete_option('rsssl_disable_ocsp' );
+				delete_option('rsssl_create_folders_in_root');
 				wp_redirect(rsssl_letsencrypt_wizard_url().'&step=1');
 				exit;
+			}
+
+			if (isset($_GET['rsssl-create-folders-in-root'])) {
+				update_option('rsssl_create_folders_in_root', true);
 			}
 
 		    if (isset($_POST['rsssl-switch-to-dns'])) {
@@ -728,7 +741,7 @@ if ( ! class_exists( "rsssl_wizard" ) ) {
 				//get id of step based on $i
                 //if this id is in the progress list it has been completed once, we show the url
                 $id = RSSSL_LE()->config->steps['lets-encrypt'][$i]['id'];
-                if ( rsssl_is_ready_for($id)) {
+                if ( rsssl_is_ready_for($id) ) {
 					$args['url'] = add_query_arg(array('tab' => 'letsencrypt', 'step' => $i), $this->page_url);
 				}
 				$args['sections'] = ($args['active'] == 'active') ? $this->wizard_sections($page, $active_step, $active_section) : '';
