@@ -2,7 +2,6 @@
 defined( 'ABSPATH' ) or die(  );
 rsssl_progress_add('directories');
 
-
 ?>
 <div class="rsssl-section">
     <div class="rsssl-hidden rsssl-general rsssl-show-on-error">
@@ -11,7 +10,7 @@ rsssl_progress_add('directories');
         </h2>
     </div>
 
-    <div class="rsssl-hidden rsssl-check_challenge_directory rsssl-challenge_directory_reachable rsssl-show-on-warning">
+    <div class="rsssl-hidden rsssl-check_challenge_directory rsssl-challenge_directory_reachable rsssl-show-on-warning rsssl-show-on-error">
         <p>
 			<?php _e("If the challenge directory cannot be created, or is not reachable, you can either remove the server limitation, or change to DNS verification.", "really-simple-ssl"); ?>
         </p><br>
@@ -36,8 +35,13 @@ rsssl_progress_add('directories');
 				<?php _e('Click the refresh button.', 'really-simple-ssl'); ?>
             </li>
         </ul>
-    </div><div class="rsssl-hidden rsssl-check_key_directory rsssl-show-on-error">
+        <h2>
+		    <?php _e("Or you can switch to DNS verification", "really-simple-ssl"); ?>
+        </h2>
+        <p><?php _e("If the challenge directory cannot be created, you can either remove the server limitation, or change to DNS verification.", "really-simple-ssl"); ?></p><br>
+        <button class="button button-default" name="rsssl-switch-to-dns"><?php _e("Switch to DNS verification", "really-simple-ssl"); ?></button>
 
+    </div><div class="rsssl-hidden rsssl-check_key_directory rsssl-show-on-error">
         <h3>
 			<?php _e("Create a key directory", "really-simple-ssl")
 			      . RSSSL()->rsssl_help->get_help_tip(__("The key directory is needed to store the generated keys.","really-simple-ssl").' '.__("By placing it outside the root folder, it is not accessible over the internet.", "really-simple-ssl") ); ?>
@@ -56,7 +60,6 @@ rsssl_progress_add('directories');
 				<?php _e('Click the refresh button.', 'really-simple-ssl'); ?>
             </li>
         </ul>
-
     </div><div class="rsssl-hidden rsssl-check_certs_directory rsssl-show-on-error">
         <h2>
 			<?php _e("Create a certs directory", "really-simple-ssl")
@@ -77,12 +80,26 @@ rsssl_progress_add('directories');
             </li>
         </ul>
     </div>
-    <div class="rsssl-hidden rsssl-general rsssl-show-on-error">
-        <h2>
-			<?php _e("Or you can switch to DNS verification", "really-simple-ssl"); ?>
-        </h2>
-        <p><?php _e("If the challenge directory cannot be created, you can either remove the server limitation, or change to DNS verification.", "really-simple-ssl"); ?></p><br>
-        <button class="button button-default" name="rsssl-switch-to-dns"><?php _e("Switch to DNS verification", "really-simple-ssl"); ?></button>
-    </div>
 
+    <?php
+    /**
+     * To be able to secure these files in the root, we can only offer this on apache,
+     */
+    ?>
+    <?php
+    $challenge_dir = RSSSL_LE()->letsencrypt_handler->challenge_directory;
+    $has_writing_permissions = RSSSL_LE()->letsencrypt_handler->directory_has_writing_permissions( $challenge_dir );
+    //we're guessing that if the challenge dir has writing permissions, the new dir will also have it.
+    if ( RSSSL()->rsssl_server->uses_htaccess() && $has_writing_permissions ) {?>
+        <div class="rsssl-hidden rsssl-check_certs_directory rsssl-check_key_directory rsssl-show-on-error">
+            <h2>
+                <?php _e("Or try to create folders in the root of your website.", "really-simple-ssl")
+                      . RSSSL()->rsssl_help->get_help_tip(__("For security reasons, we try to create these folders above the root of your website. If this is not possible, you can try the root instead. To secure these folders, we add a .htaccess file to block all requests.", "really-simple-ssl") ); ?>
+            </h2>
+            <p>
+                <?php _e("If creating these folders in the default location is not possible, you can try creating them in the root of your website instead.", "really-simple-ssl") ?>
+            </p><br>
+            <button class="button button-default" name="rsssl-create-folders-in-root"><?php _e("Create folders in root", "really-simple-ssl"); ?></button>
+        </div>
+    <?php } ?>
 </div>

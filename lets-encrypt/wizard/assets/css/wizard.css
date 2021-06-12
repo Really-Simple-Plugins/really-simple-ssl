@@ -9,6 +9,9 @@
   padding: 20px;
   color: #61ce70;
 }
+.rsssl-section a.button {
+  margin-top: 15px;
+}
 /**
 * class to add a triangle pointer to each div
 */
@@ -258,6 +261,7 @@
   /* Firefox */
 }
 #rsssl-wizard .rsssl-icon {
+  width: initial;
   border-radius: 50%;
 }
 #rsssl-wizard .rsssl-icon.rsssl-empty {
