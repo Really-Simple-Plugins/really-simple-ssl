@@ -72,7 +72,7 @@ $this->steps = array(
 	                array(
 		                'description' => __("Checking key directory...", "really-simple-ssl"),
 		                'action'=> 'check_key_directory',
-		                'attempts' => 1,
+		                'attempts' => 2,
 		                'speed' => 'normal',
 	                ),
 	                array(

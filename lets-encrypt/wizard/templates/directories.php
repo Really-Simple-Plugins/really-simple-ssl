@@ -80,26 +80,4 @@ rsssl_progress_add('directories');
             </li>
         </ul>
     </div>
-
-    <?php
-    /**
-     * To be able to secure these files in the root, we can only offer this on apache,
-     */
-    ?>
-    <?php
-    $challenge_dir = RSSSL_LE()->letsencrypt_handler->challenge_directory;
-    $has_writing_permissions = RSSSL_LE()->letsencrypt_handler->directory_has_writing_permissions( $challenge_dir );
-    //we're guessing that if the challenge dir has writing permissions, the new dir will also have it.
-    if ( RSSSL()->rsssl_server->uses_htaccess() && $has_writing_permissions ) {?>
-        <div class="rsssl-hidden rsssl-check_certs_directory rsssl-check_key_directory rsssl-show-on-error">
-            <h2>
-                <?php _e("Or try to create folders in the root of your website.", "really-simple-ssl")
-                      . RSSSL()->rsssl_help->get_help_tip(__("For security reasons, we try to create these folders above the root of your website. If this is not possible, you can try the root instead. To secure these folders, we add a .htaccess file to block all requests.", "really-simple-ssl") ); ?>
-            </h2>
-            <p>
-                <?php _e("If creating these folders in the default location is not possible, you can try creating them in the root of your website instead.", "really-simple-ssl") ?>
-            </p><br>
-            <button class="button button-default" name="rsssl-create-folders-in-root"><?php _e("Create folders in root", "really-simple-ssl"); ?></button>
-        </div>
-    <?php } ?>
 </div>

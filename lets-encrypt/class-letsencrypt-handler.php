@@ -1083,11 +1083,17 @@ class rsssl_letsencrypt_handler {
 	 */
 
 	public function check_key_directory(){
+		$action = 'stop';
+		$status = 'error';
+		$message = __("The key directory is not created yet.", "really-simple-ssl" );
+		//this option is set in the key_dir function, so we need to check it now.
+		if ( !get_option('rsssl_create_folders_in_root')) {
+			$action = 'retry';
+			$message = __("Trying to create directory in root of website.", "really-simple-ssl" );
+		}
+
 		if ( !$this->key_directory() ) {
 			rsssl_progress_remove('directories');
-			$action = 'stop';
-			$status = 'error';
-			$message = __("The key directory is not created yet.", "really-simple-ssl" );
 		} else {
 			$action = 'continue';
 			$status = 'success';
@@ -1241,7 +1247,6 @@ class rsssl_letsencrypt_handler {
 	 */
 	public function certs_directory(){
 		$directory = $this->get_directory_path();
-
 		if ( ! file_exists( $directory . 'ssl' ) ) {
 			mkdir( $directory . 'ssl' );
 		}
@@ -1268,6 +1273,9 @@ class rsssl_letsencrypt_handler {
 				$token = str_shuffle ( time() );
 				update_option('rsssl_ssl_dirname', $token );
 			}
+			if ( ! file_exists( $root_directory . get_option('rsssl_ssl_dirname') ) ) {
+				mkdir( $root_directory . get_option('rsssl_ssl_dirname') );
+			}
 			return $root_directory . trailingslashit( get_option('rsssl_ssl_dirname') );
 		} else {
 			return trailingslashit(dirname($root_directory));
@@ -1292,6 +1300,13 @@ class rsssl_letsencrypt_handler {
 		if ( file_exists( $directory . 'ssl/keys' ) ){
 			return $directory . 'ssl/keys';
 		} else {
+			//if creating the folder has failed, we're on apache, and can write to these folders, we create a root directory.
+		    $challenge_dir = $this->challenge_directory;
+		    $has_writing_permissions = $this->directory_has_writing_permissions( $challenge_dir );
+		    //we're guessing that if the challenge dir has writing permissions, the new dir will also have it.
+		    if ( RSSSL()->rsssl_server->uses_htaccess() && $has_writing_permissions ) {
+			    update_option('rsssl_create_folders_in_root', true);
+		    }
 			return false;
 		}
 	}
@@ -1309,31 +1324,32 @@ class rsssl_letsencrypt_handler {
 			return;
 		}
 
-		$this->write_htaccess_dir_file( $this->get_directory_path().'ssl/.htaccess' ,'ssl');
-		$this->write_htaccess_dir_file( $this->key_directory().'.htaccess' ,'key');
-		$this->write_htaccess_dir_file( $this->certs_directory().'.htaccess' ,'certs');
+		if ( !empty($this->get_directory_path()) ) {
+			$this->write_htaccess_dir_file( $this->get_directory_path().'ssl/.htaccess' ,'ssl');
+		}
+
+		if ( !empty($this->key_directory()) ) {
+			$this->write_htaccess_dir_file( trailingslashit($this->key_directory()).'.htaccess' ,'key');
+		}
+		if ( !empty($this->certs_directory()) ) {
+			$this->write_htaccess_dir_file( trailingslashit($this->certs_directory()).'.htaccess' ,'certs');
+		}
 	}
 
 	public function write_htaccess_dir_file($path, $type){
-		if ( get_option('rsssl_htaccess_file_set_'.$type ) ) return;
-
-		$rules = '#BEGIN Really Simple SSL LETS ENCRYPT'."\n";
-		$rules .= 'deny from all'."\n";
-		$rules .= '#END Really Simple SSL LETS ENCRYPT'."\n";
-
-		if ( !file_exists($path) && is_writable( $path ) ) {
-			set_error_handler(array($this, 'custom_error_handling'));
-			$htaccess_file = fopen( $path, "w" );
-			fclose( $htaccess_file );
-			restore_error_handler();
-		}
+		$htaccess = '<ifModule mod_authz_core.c>' . "\n"
+		            . '    Require all denied' . "\n"
+		            . '</ifModule>' . "\n"
+		            . '<ifModule !mod_authz_core.c>' . "\n"
+		            . '    Deny from all' . "\n"
+		            . '</ifModule>';
+		insert_with_markers($path, 'Really Simple SSL LETS ENCRYPT', $htaccess);
 
 		$htaccess = file_get_contents( $path );
 		if ( strpos($htaccess, 'deny from all') !== FALSE ) {
 			update_option('rsssl_htaccess_file_set_'.$type, true);
 			return;
 		}
-		file_put_contents($path, $rules);
 	}
 
 	/**
