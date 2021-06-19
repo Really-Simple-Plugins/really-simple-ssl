@@ -81,6 +81,15 @@ if ( ! class_exists( "rsssl_config" ) ) {
 		            'api' => false,
 		            'ssl_installation_link' => 'https://kas.all-inkl.com/',
 	            ),
+	            'argeweb' => array(
+		            'name' => 'Argeweb',
+		            'installation_renewal_required' => false,
+		            'local_ssl_generation_needed' => false,
+		            'free_ssl_available' => 'activation_required',
+		            'hosting_dashboard' => 'plesk',
+		            'api' => false,
+		            'ssl_installation_link' => 'https://www.argeweb.nl/argecs/',
+	            ),
 
 	            'hostgator' => array(
 		            'name' => 'HostGator',
