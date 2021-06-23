@@ -216,7 +216,7 @@ class rsssl_letsencrypt_handler {
 	 */
 
     public function search_ssl_installation_url(){
-    	//start with most generice, then more specific if possible.
+    	//start with most generic, then more specific if possible.
 	    $url = 'https://really-simple-ssl.com/install-ssl-certificate';
 	    $host = 'enter-your-dashboard-url-here';
 
