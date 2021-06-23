@@ -112,7 +112,9 @@ if ( ! class_exists( "rsssl_wizard" ) ) {
 				delete_option('rsssl_force_cpanel' );
 				delete_option('rsssl_disable_ocsp' );
 				delete_option('rsssl_create_folders_in_root');
+				delete_option('rsssl_hosting_dashboard');
 				wp_redirect(rsssl_letsencrypt_wizard_url().'&step=1');
+				RSSSL_LE()->letsencrypt_handler->clear_keys_directory();
 				exit;
 			}
 
@@ -476,6 +478,13 @@ if ( ! class_exists( "rsssl_wizard" ) ) {
 			if ( $fieldvalue === $prev_value ) {
 				return;
 			}
+
+			if ( $fieldname==='other_host_type'){
+			    if ( isset(RSSSL_LE()->config->hosts[$fieldvalue]) ){
+			        $dashboard = RSSSL_LE()->config->hosts[$fieldvalue]['hosting_dashboard'];
+			        update_option('rsssl_hosting_dashboard', $dashboard);
+                }
+            }
 
 			if ( $fieldname === 'email_address'&& is_email($fieldvalue) ) {
 				RSSSL_LE()->letsencrypt_handler->update_account($fieldvalue);

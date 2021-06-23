@@ -243,7 +243,6 @@ class rsssl_cPanel
 			return new RSSSL_RESPONSE('error', 'stop', __("Login credentials incorrect", "really-simple-ssl"));
 		}
 		$response_array = json_decode($response, true);
-		error_log(print_r($response_array,true));
 
 		if ( isset($response_array['cpanelresult']['data'][0]['result']['status']) ) {
 			if ($response_array['cpanelresult']['data'][0]['result']['status']) {

@@ -1311,6 +1311,25 @@ class rsssl_letsencrypt_handler {
 		}
 	}
 
+	/**
+	 * Clear the keys directory, used in reset function
+	 */
+	public function clear_keys_directory(){
+		if (!current_user_can('manage_options')) {
+			return;
+		}
+		$path = $this->key_directory();
+		if ( file_exists( $path ) && $handle = opendir( $path ) ) {
+			while ( false !== ( $file = readdir( $handle ) ) ) {
+				if ( strpos($file, 'account_live_')!==false || strpos($file, 'account_staging_')!==false ){
+					unlink($path.'/'.$file);
+				}
+			}
+			closedir( $handle );
+		}
+
+	}
+
 	public function maybe_create_htaccess_directories(){
 		if (!current_user_can('manage_options')) {
 			return;

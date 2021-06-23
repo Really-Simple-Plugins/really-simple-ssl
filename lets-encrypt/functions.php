@@ -138,7 +138,7 @@ if ( !function_exists('rsssl_is_plesk')) {
 			return true;
 		}
 
-		if ( rsssl_host_has_dashboard('plesk') ){
+		if ( get_option('rsssl_hosting_dashboard')==='plesk' ){
 			return true;
 		}
 
@@ -158,21 +158,6 @@ if ( !function_exists('rsssl_is_plesk')) {
 	}
 }
 
-if ( !function_exists('rsssl_host_has_dashboard') ) {
-	function rsssl_host_has_dashboard($dashboard){
-		//if the function is called very early, we assume this dashboard is supported for this check.
-		if ( !defined('RSSSL_LE_CONFIG_LOADED') ) {
-			return true;
-		}
-
-		if ( RSSSL_LE()->config->host_has_dashboard($dashboard) ){
-			return false;
-		} else {
-			return true;
-		}
-	}
-}
-
 if ( !function_exists('rsssl_is_directadmin')) {
 	/**
 	 * https://stackoverflow.com/questions/26927248/how-to-detect-servers-control-panel-type-with-php
@@ -183,7 +168,7 @@ if ( !function_exists('rsssl_is_directadmin')) {
 			return true;
 		}
 
-		if ( rsssl_host_has_dashboard('directadmin') ){
+		if ( get_option('rsssl_hosting_dashboard')==='directadmin' ){
 			return true;
 		}
 
