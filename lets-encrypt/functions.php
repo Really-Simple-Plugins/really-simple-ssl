@@ -138,8 +138,8 @@ if ( !function_exists('rsssl_is_plesk')) {
 			return true;
 		}
 
-		if ( !rsssl_has_host_has_dashboard('plesk') ){
-			return false;
+		if ( rsssl_host_has_dashboard('plesk') ){
+			return true;
 		}
 
 		//cpanel takes precedence, as it's more precise
@@ -158,8 +158,8 @@ if ( !function_exists('rsssl_is_plesk')) {
 	}
 }
 
-if ( !function_exists('rsssl_has_host_has_dashboard') ) {
-	function rsssl_has_host_has_dashboard($dashboard){
+if ( !function_exists('rsssl_host_has_dashboard') ) {
+	function rsssl_host_has_dashboard($dashboard){
 		//if the function is called very early, we assume this dashboard is supported for this check.
 		if ( !defined('RSSSL_LE_CONFIG_LOADED') ) {
 			return true;
@@ -183,8 +183,8 @@ if ( !function_exists('rsssl_is_directadmin')) {
 			return true;
 		}
 
-		if ( !rsssl_has_host_has_dashboard('directadmin') ){
-			return false;
+		if ( rsssl_host_has_dashboard('directadmin') ){
+			return true;
 		}
 
 		//cpanel takes precedence, as it's more precise
