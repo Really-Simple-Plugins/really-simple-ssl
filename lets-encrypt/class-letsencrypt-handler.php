@@ -216,7 +216,7 @@ class rsssl_letsencrypt_handler {
 	 */
 
     public function search_ssl_installation_url(){
-    	//start with most generice, then more specific if possible.
+    	//start with most generic, then more specific if possible.
 	    $url = 'https://really-simple-ssl.com/install-ssl-certificate';
 	    $host = 'enter-your-dashboard-url-here';
 
@@ -1309,6 +1309,25 @@ class rsssl_letsencrypt_handler {
 		    }
 			return false;
 		}
+	}
+
+	/**
+	 * Clear the keys directory, used in reset function
+	 */
+	public function clear_keys_directory(){
+		if (!current_user_can('manage_options')) {
+			return;
+		}
+		$path = $this->key_directory();
+		if ( file_exists( $path ) && $handle = opendir( $path ) ) {
+			while ( false !== ( $file = readdir( $handle ) ) ) {
+				if ( strpos($file, 'account_live_')!==false || strpos($file, 'account_staging_')!==false ){
+					unlink($path.'/'.$file);
+				}
+			}
+			closedir( $handle );
+		}
+
 	}
 
 	public function maybe_create_htaccess_directories(){

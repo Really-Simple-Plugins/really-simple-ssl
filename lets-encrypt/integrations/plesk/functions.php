@@ -26,7 +26,7 @@ function rsssl_plesk_install(){
  */
 function rsssl_plesk_add_installation_step($steps){
 	$plesk = new rsssl_plesk();
-	if ( RSSSL_LE()->config->host_has_dashboard('plesk') && $plesk->credentials_available() ) {
+	if ( $plesk->credentials_available() ) {
 		$index = array_search( 'installation', array_column( $steps['lets-encrypt'], 'id' ) );
 		$index ++;
 		$steps['lets-encrypt'][ $index ]['actions'] = array_merge(array(

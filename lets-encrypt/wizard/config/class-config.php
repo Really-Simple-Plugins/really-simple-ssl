@@ -274,29 +274,6 @@ if ( ! class_exists( "rsssl_config" ) ) {
 	        }) );
         }
 
-
-
-	    /**
-	     * Check if a host has a specific capability
-	     * @param string $type
-	     *
-	     * @return bool
-	     */
-        public function host_has_dashboard( $type ) {
-	        $hosting_company = rsssl_get_other_host();
-	        //if not listed, we assume it can.
-			if ( !$hosting_company || $hosting_company === 'none' ) {
-				return true;
-			}
-
-	        $hosts_has_dashboard = RSSSL_LE()->config->filter_hosts( 'hosting_dashboard', $type);
-	        if ( in_array($hosting_company, $hosts_has_dashboard) ) {
-	        	return true;
-	        } else {
-	        	return false;
-	        }
-        }
-
 	    /**
 	     * @param string | bool $type
 	     *

@@ -68,7 +68,7 @@ function rsssl_cpanel_set_txt_record(){
 
 function rsssl_cpanel_add_condition_actions($steps){
 	$cpanel = new rsssl_cPanel();
-	if ( RSSSL_LE()->config->host_has_dashboard('cpanel') && $cpanel->credentials_available() ) {
+	if ( $cpanel->credentials_available() ) {
 		$auto_ssl    = RSSSL_LE()->config->host_api_supported( 'cpanel:autossl' );
 		$default_ssl = RSSSL_LE()->config->host_api_supported( 'cpanel:default' );
 

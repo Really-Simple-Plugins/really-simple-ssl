@@ -9,7 +9,7 @@
   padding: 20px;
   color: #61ce70;
 }
-.rsssl-section a.button {
+.rsssl-section .rsssl_letsencrypt_container a.button {
   margin-top: 15px;
 }
 /**
@@ -859,6 +859,9 @@
   color: #fff;
   background-color: #f8be2e;
   text-align: left;
+}
+.rsssl-help-warning-wrap .rsssl-help-modal h2 {
+  margin-top: -5px;
 }
 .rsssl-help-warning-wrap .rsssl-help-modal:after {
   content: " ";
