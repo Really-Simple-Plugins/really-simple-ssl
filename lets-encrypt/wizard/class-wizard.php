@@ -729,7 +729,7 @@ if ( ! class_exists( "rsssl_wizard" ) ) {
 			for ($i = 1; $i <= $this->total_steps($page); $i++)
 			{
 				if ($this->step_is_empty($page, $i)) continue;
-				$args['title'] = $i . '. ' . RSSSL_LE()->config->steps[$page][$i]['title'];
+				$args['title'] = RSSSL_LE()->config->steps[$page][$i]['title'];
 				$args['active'] = ($i == $active_step) ? 'active' : '';
 				$args['completed'] = $this->required_fields_completed($page, $i, false) ? 'complete' : 'incomplete';
 				$args['url'] = '#';

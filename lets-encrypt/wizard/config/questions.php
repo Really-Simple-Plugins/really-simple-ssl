@@ -38,7 +38,7 @@ $this->fields = $this->fields + array(
 			'default'   => get_option('admin_email'),
 			'tooltip'   => __( "Your email address will used to create a Lets Encrypt account. This is also where you will receive renewal notifications.", 'really-simple-ssl' ),
 			'tooltip-position' => 'title',
-			'label'     => __( "Your e-mail address", 'really-simple-ssl' ),
+			'label'     => __( "Your email address", 'really-simple-ssl' ),
 			'sublabel'  => __("This field is prefilled based on your configuration", 'really-simple-ssl'),
 			'required'  => true,
 		),
@@ -87,10 +87,10 @@ $this->fields = $this->fields + array(
 	        'type'        => 'select',
 	        'tooltip'   => __( "This information may improve process, skipping unnecessary steps and improving suggested links.", "really-simple-ssl"),
 	        'options'     => $this->supported_hosts,
-	        'help'      => __( "By selecting your hosting company we can tell you if your hosting company already supports free SSL, and/or where you can activate it.","really-simple-ssl")."&nbsp;".
-	                       sprintf(__("If your hosting company is not listed, and there's an SSL activation/installation link, please let us know on the %sforum%s.","really-simple-ssl"),'<a target="_blank" href="https://wordpress.org/support/plugin/really-simple-ssl/">','</a>'),
+	        'help'      => __( "By selecting your hosting provider we can tell you if your hosting company already supports free SSL, and/or where you can activate it.","really-simple-ssl")."&nbsp;".
+	                       sprintf(__("If your hosting provider is not listed, and there's an SSL activation/installation link, please let us %sknow%s.","really-simple-ssl"),'<a target="_blank" href="https://really-simple-ssl.com/install-ssl-certificate/#hostingdetails">','</a>'),
 	        'default'     => false,
-	        'label'       => __( "Hosting company", 'really-simple-ssl' ),
+	        'label'       => __( "Hosting provider", 'really-simple-ssl' ),
 	        'required'    => true,
 	        'disabled'    => false,
         ),
