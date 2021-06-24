@@ -35,6 +35,33 @@ function rsssl_install_cpanel_default(){
 	}
 }
 
+function rsssl_install_cpanel_shell(){
+
+	if (rsssl_is_ready_for('installation')) {
+		$cpanel = new rsssl_cPanel();
+		$domains = RSSSL_LE()->letsencrypt_handler->get_subjects();
+
+		if ( function_exists('shell_exec') || function_exists('system') || function_exists('passthru') || function_exists('exec') ) {
+			$response = $cpanel->installSSLShell( $domains );
+			if ( $response->status === 'success' ) {
+				update_option('rsssl_le_certificate_installed_by_rsssl', 'cpanel:default');
+			}
+			return $response;
+		} else {
+			$status = 'error';
+			$action = 'skip';
+			$message = rsssl_get_manual_instructions_text(RSSSL_LE()->letsencrypt_handler->ssl_installation_url);
+			return new RSSSL_RESPONSE($status, $action, $message);
+		}
+
+	} else {
+		$status = 'error';
+		$action = 'stop';
+		$message = __("The system is not ready for the installation yet. Please run the wizard again.", "really-simple-ssl");
+		return new RSSSL_RESPONSE($status, $action, $message);
+	}
+}
+
 function rsssl_cpanel_set_txt_record(){
 	if ( rsssl_is_ready_for('dns-verification') ) {
 		$cpanel = new rsssl_cPanel();
@@ -69,6 +96,7 @@ function rsssl_cpanel_set_txt_record(){
 function rsssl_cpanel_add_condition_actions($steps){
 	$cpanel = new rsssl_cPanel();
 	if ( $cpanel->credentials_available() ) {
+		//this defaults to true, if not known.
 		$auto_ssl    = RSSSL_LE()->config->host_api_supported( 'cpanel:autossl' );
 		$default_ssl = RSSSL_LE()->config->host_api_supported( 'cpanel:default' );
 
@@ -76,9 +104,9 @@ function rsssl_cpanel_add_condition_actions($steps){
 		$dns_index = array_search( 'dns-verification', array_column( $steps['lets-encrypt'], 'id' ) );
 		$installation_index ++;
 		$dns_index ++;
-		//clear existing array
-		$steps['lets-encrypt'][ $installation_index ]['actions'] = array();
 
+		//clear existing array
+		if ($auto_ssl || $default_ssl ) $steps['lets-encrypt'][ $installation_index ]['actions'] = array();
 		if ( $auto_ssl ) {
 			$steps['lets-encrypt'][ $installation_index ]['actions'][]
 				= array(
@@ -102,9 +130,16 @@ function rsssl_cpanel_add_condition_actions($steps){
 				'action'      => 'rsssl_install_cpanel_default',
 				'attempts'    => 1,
 			);
-
-
 		}
+	}
+
+	if ( function_exists('shell_exec') || function_exists('system') || function_exists('passthru') || function_exists('exec') ) {
+		$steps['lets-encrypt'][ $installation_index ]['actions'][]
+			= array(
+			'description' => __( "Attempting to install certificate using shell...", "really-simple-ssl" ),
+			'action'      => 'rsssl_install_cpanel_shell',
+			'attempts'    => 1,
+		);
 	}
 	return $steps;
 }
