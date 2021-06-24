@@ -2940,6 +2940,7 @@ class rsssl_admin extends rsssl_front_end
 			            'msg' => __('An SSL certificate was detected on your site.', 'really-simple-ssl'),
 			            'icon' => 'success'
 		            ),
+
 		            'about-to-expire' => array(
 			            'title' => __("Your SSL certificate will expire soon.", "really-simple-ssl"),
 			            'msg' => sprintf(__("SSL certificate will expire on %s.","really-simple-ssl"), $expiry_date).'&nbsp;'.__("If your hosting provider auto-renews your certificate, no action is required. Alternatively, you have the option to generate an SSL certificate with Really Simple SSL.","really-simple-ssl").'&nbsp;'.
@@ -4740,7 +4741,8 @@ if (!function_exists('rsssl_ssl_detected')) {
 			if ( !$about_to_expire ) {
 				return apply_filters('rsssl_ssl_detected', 'ssl-detected');
 			} else {
-				return apply_filters('rsssl_ssl_detected', 'about-to-expire');
+				return apply_filters('rsssl_ssl_detected', 'ssl-detected');
+//				return apply_filters('rsssl_ssl_detected', 'about-to-expire');
 			}
         }
 
