@@ -219,6 +219,15 @@ if ( ! class_exists( "rsssl_config" ) ) {
 		            'api' => false,
 		            'ssl_installation_link' => 'https://internic.com',
 	            ),
+	            'aruba' => array(
+		            'name' => 'Aruba',
+		            'installation_renewal_required' => false,
+		            'local_ssl_generation_needed' => false,
+		            'free_ssl_available' => 'paid_only',
+		            'hosting_dashboard' => 'aruba',
+		            'api' => false,
+		            'ssl_installation_link' => 'https://admin.aruba.it/PannelloAdmin/UI/Pages/ContentSection.aspx?Action=153',
+	            ),
 
             );
 
