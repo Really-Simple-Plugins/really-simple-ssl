@@ -228,6 +228,15 @@ if ( ! class_exists( "rsssl_config" ) ) {
 		            'api' => false,
 		            'ssl_installation_link' => 'https://admin.aruba.it/PannelloAdmin/UI/Pages/ContentSection.aspx?Action=153',
 	            ),
+	            'namecheap' => array(
+		            'name' => 'Namecheap',
+		            'installation_renewal_required' => false,
+		            'local_ssl_generation_needed' => false,
+		            'free_ssl_available' => 'activation_required',
+		            'hosting_dashboard' => 'cpanel',
+		            'api' => false,
+		            'ssl_installation_link' => 'https://www.namecheap.com/blog/install-free-ssls/',
+	            ),
 
             );
 
