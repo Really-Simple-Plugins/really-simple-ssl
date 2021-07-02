@@ -3,8 +3,8 @@ msgid ""
 msgstr ""
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 "Project-Id-Version: Really Simple SSL\n"
-"POT-Creation-Date: 2021-06-24 14:04+0200\n"
-"PO-Revision-Date: 2021-06-24 14:04+0200\n"
+"POT-Creation-Date: 2021-07-02 11:06+0200\n"
+"PO-Revision-Date: 2021-07-02 11:05+0200\n"
 "Last-Translator: Rogier Lankhorst <rogierlankhorst@gmail.com>\n"
 "Language-Team: Rogier Lankhorst <rogierlankhorst@gmail.com>\n"
 "MIME-Version: 1.0\n"
@@ -1118,7 +1118,7 @@ msgid "Configured for HTTP challenge"
 msgstr ""
 
 #: lets-encrypt/class-letsencrypt-handler.php:495
-#: lets-encrypt/integrations/cpanel/functions.php:45
+#: lets-encrypt/integrations/cpanel/functions.php:72
 msgid "Token not generated. Please complete the previous step."
 msgstr ""
 
@@ -1318,18 +1318,19 @@ msgstr ""
 msgid "The certificate installation was rate limited. Please try again later."
 msgstr ""
 
-#: lets-encrypt/class-letsencrypt-handler.php:1604
+#: lets-encrypt/class-letsencrypt-handler.php:1608
 msgid "Not recognized server."
 msgstr ""
 
-#: lets-encrypt/class-letsencrypt-handler.php:1610
+#: lets-encrypt/class-letsencrypt-handler.php:1614
 msgid "Installation failed."
 msgstr ""
 
-#: lets-encrypt/class-letsencrypt-handler.php:1615
+#: lets-encrypt/class-letsencrypt-handler.php:1619
 #: lets-encrypt/integrations/cloudways/functions.php:22
 #: lets-encrypt/integrations/cpanel/functions.php:16
 #: lets-encrypt/integrations/cpanel/functions.php:33
+#: lets-encrypt/integrations/cpanel/functions.php:60
 #: lets-encrypt/integrations/directadmin/functions.php:16
 #: lets-encrypt/integrations/plesk/functions.php:16
 msgid ""
@@ -1469,62 +1470,68 @@ msgstr ""
 msgid "Enabling auto renew..."
 msgstr ""
 
-#: lets-encrypt/integrations/cpanel/cpanel.php:64
+#: lets-encrypt/integrations/cpanel/cpanel.php:59
+#: lets-encrypt/integrations/cpanel/cpanel.php:163
 #: lets-encrypt/integrations/directadmin/directadmin.php:64
 msgid "No valid list of domains."
 msgstr ""
 
-#: lets-encrypt/integrations/cpanel/cpanel.php:109
+#: lets-encrypt/integrations/cpanel/cpanel.php:129
+#: lets-encrypt/integrations/cpanel/cpanel.php:208
 #: lets-encrypt/integrations/directadmin/directadmin.php:124
 #, php-format
 msgid "SSL successfully installed on %s"
 msgstr ""
 
-#: lets-encrypt/integrations/cpanel/cpanel.php:115
+#: lets-encrypt/integrations/cpanel/cpanel.php:214
 msgid "Errors were reported during installation"
 msgstr ""
 
-#: lets-encrypt/integrations/cpanel/cpanel.php:154
+#: lets-encrypt/integrations/cpanel/cpanel.php:254
 msgid "Errors were reported during installation."
 msgstr ""
 
-#: lets-encrypt/integrations/cpanel/cpanel.php:239
+#: lets-encrypt/integrations/cpanel/cpanel.php:339
 msgid "Unable to connect to cPanel"
 msgstr ""
 
-#: lets-encrypt/integrations/cpanel/cpanel.php:243
+#: lets-encrypt/integrations/cpanel/cpanel.php:343
 msgid "Login credentials incorrect"
 msgstr ""
 
-#: lets-encrypt/integrations/cpanel/cpanel.php:251
-#: lets-encrypt/integrations/cpanel/cpanel.php:271
+#: lets-encrypt/integrations/cpanel/cpanel.php:351
+#: lets-encrypt/integrations/cpanel/cpanel.php:371
 msgid "Successfully added TXT record."
 msgstr ""
 
-#: lets-encrypt/integrations/cpanel/cpanel.php:255
-#: lets-encrypt/integrations/cpanel/cpanel.php:276
+#: lets-encrypt/integrations/cpanel/cpanel.php:355
+#: lets-encrypt/integrations/cpanel/cpanel.php:376
 msgid ""
 "Could not automatically add TXT record. Please proceed manually, following "
 "the steps below."
 msgstr ""
 
-#: lets-encrypt/integrations/cpanel/functions.php:61
+#: lets-encrypt/integrations/cpanel/functions.php:88
 msgid ""
 "The system is not ready for the DNS verification yet. Please run the wizard "
 "again."
 msgstr ""
 
-#: lets-encrypt/integrations/cpanel/functions.php:85
+#: lets-encrypt/integrations/cpanel/functions.php:113
 msgid "Attempting to install certificate using AutoSSL..."
 msgstr ""
 
-#: lets-encrypt/integrations/cpanel/functions.php:94
+#: lets-encrypt/integrations/cpanel/functions.php:122
 msgid "Attempting to set DNS txt record..."
 msgstr ""
 
-#: lets-encrypt/integrations/cpanel/functions.php:101
+#: lets-encrypt/integrations/cpanel/functions.php:129
 #: lets-encrypt/integrations/directadmin/functions.php:30
 msgid "Attempting to install certificate..."
+msgstr ""
+
+#: lets-encrypt/integrations/cpanel/functions.php:139
+msgid "Attempting to install certificate using shell..."
 msgstr ""
 
 #: lets-encrypt/integrations/plesk/functions.php:34
@@ -1604,15 +1611,15 @@ msgid "Go to dashboard"
 msgstr ""
 
 #: lets-encrypt/wizard/class-wizard.php:966
-#: lets-encrypt/wizard/config/class-config.php:240
+#: lets-encrypt/wizard/config/class-config.php:258
 msgid "I don't know, or not listed, proceed with installation"
 msgstr ""
 
-#: lets-encrypt/wizard/config/class-config.php:233
+#: lets-encrypt/wizard/config/class-config.php:251
 msgid "Yes"
 msgstr ""
 
-#: lets-encrypt/wizard/config/class-config.php:234
+#: lets-encrypt/wizard/config/class-config.php:252
 msgid "No"
 msgstr ""
 
