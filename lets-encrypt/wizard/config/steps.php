@@ -49,7 +49,7 @@ $this->steps = array(
                 'sections' => array (
                     1 => array(
                         'title' => __( 'Domain', 'really-simple-ssl' ),
-                        'intro' => __( 'Letʼs Encrypt is a free, automated and open certificate authority brought to you by the nonprofit Internet Security Research Group (ISRG).', 'really-simple-ssl' ). rsssl_read_more( 'https://rsssl.io/docs/lets-encrypt/wizard/' ),
+                        'intro' => __( 'Letʼs Encrypt is a free, automated and open certificate authority brought to you by the nonprofit Internet Security Research Group (ISRG).', 'really-simple-ssl' ). rsssl_read_more( 'https://really-simple-ssl.com/about-lets-encrypt/' ),
                     ),
                     2 => array(
                         'title' => __( 'Hosting', 'really-simple-ssl' ),
