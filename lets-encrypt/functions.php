@@ -25,7 +25,7 @@ if ( ! function_exists( 'rsssl_user_can_manage' ) ) {
 function rsssl_dns_verification_required(){
 
 	/**
-	 * If our current hosting company does not allow or require local SSL certificate generation,
+	 * If our current hosting provider does not allow or require local SSL certificate generation,
 	 * We do not need to DNS verification either.
 	 */
 
@@ -215,7 +215,7 @@ function rsssl_check_port( $port)
 
 if ( !function_exists('rsssl_get_other_host') ) {
 	/**
-	 * Get the selected hosting company, if any.
+	 * Get the selected hosting provider, if any.
 	 * @return bool|string
 	 */
 	function rsssl_get_other_host() {
@@ -379,10 +379,6 @@ function rsssl_get_manual_instructions_text( $url ){
 	$button_complete = '<br><a href="'.$default_url.'" target="_blank" class="button button-primary">'.__("Instructions","really-simple-ssl").'</a>&nbsp;&nbsp;';
 
 	if ( $url === $default_url ) {
-		$url = false;
-	}
-
-	if (empty($url) ){
 		$complete_manually = sprintf(__("Please complete manually in your hosting dashboard.", "really-simple-ssl"), '<a target="_blank" href="'.$url.'">', '</a>');
 		$activate_manually = sprintf(__("Please activate it manually on your hosting dashboard.", "really-simple-ssl"), '<a target="_blank" href="'.$url.'">', '</a>');
 	} else {

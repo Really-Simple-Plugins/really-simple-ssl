@@ -31,7 +31,7 @@ function rsssl_plesk_add_installation_step($steps){
 		$index ++;
 		$steps['lets-encrypt'][ $index ]['actions'] = array_merge(array(
 			array(
-				'description' => __("Installling SSL certificate using PLESK API...", "really-simple-ssl"),
+				'description' => __("Installing SSL certificate using PLESK API...", "really-simple-ssl"),
 				'action'=> 'rsssl_plesk_install',
 				'attempts' => 1,
 				'speed' => 'normal',

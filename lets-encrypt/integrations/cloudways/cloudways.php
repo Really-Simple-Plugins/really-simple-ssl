@@ -183,13 +183,13 @@ class rsssl_Cloudways {
 		if ( $response->status === 'success' ) {
 			$status = 'success';
 			$action = 'continue';
-			$message = __("Successfully installed Lets Encrypt","really-simple-ssl");
+			$message = __("Successfully installed Let's Encrypt","really-simple-ssl");
 		} elseif ($response->status === 'error') {
 			//in some cases, the process is already started, which also signifies success.
 			if ( strpos($response->message, 'An operation is already in progress for this server')) {
 				$status = 'success';
 				$action = 'continue';
-				$message = __("Successfully installed Lets Encrypt","really-simple-ssl");
+				$message = __("Successfully installed Let's Encrypt","really-simple-ssl");
 			} else {
 				$status = $response->status;
 				$action = $response->action;
@@ -198,7 +198,7 @@ class rsssl_Cloudways {
 		} else {
 			$status = $response->status;
 			$action = $response->action;
-			$message = __("Error enabling auto renew for Lets Encrypt","really-simple-ssl");
+			$message = __("Error enabling auto renew for Let's Encrypt","really-simple-ssl");
 		}
 
 		return new RSSSL_RESPONSE( $status, $action, $message );

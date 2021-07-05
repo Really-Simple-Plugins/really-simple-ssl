@@ -316,7 +316,7 @@ class rsssl_letsencrypt_handler {
 	public function server_software(){
 	    $action = 'continue';
 	    $status = 'warning';
-	    $message = __("The Webhosting Dashboard software was not recognized. Depending on your hosting company, the generated certificate may need to be installed manually.", "really-simple-ssl" );
+	    $message = __("The Webhosting Dashboard software was not recognized. Depending on your hosting provider, the generated certificate may need to be installed manually.", "really-simple-ssl" );
 
         if ( rsssl_is_cpanel() ) {
 	        $status = 'success';
@@ -342,7 +342,7 @@ class rsssl_letsencrypt_handler {
 	    if(function_exists('curl_init') === false){
 		    $action = 'stop';
 		    $status = 'error';
-		    $message = __("The PHP function CURL is not available on your server, which is required. Please contact your hosting company.", "really-simple-ssl" );
+		    $message = __("The PHP function CURL is not available on your server, which is required. Please contact your hosting provider.", "really-simple-ssl" );
 	    } else {
 		    $action = 'continue';
 		    $status = 'success';

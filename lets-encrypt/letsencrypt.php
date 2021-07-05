@@ -1,7 +1,7 @@
 <?php
 defined('ABSPATH') or die();
 /**
- * Capability handling for lets encrypt
+ * Capability handling for Let's Encrypt
  * @return bool
  *
  * php -r "readfile('https://getcomposer.org/installer');" | php
