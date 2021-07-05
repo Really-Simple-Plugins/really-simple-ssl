@@ -394,11 +394,11 @@ function rsssl_get_manual_instructions_text( $url ){
 
 	if ( $activated_by_default ) {
 		$msg = sprintf(__("According to our information, your hosting provider supplies your account with an SSL certificate by default. Please contact your %shosting support%s if this is not the case.","really-simple-ssl"), '<a target="_blank" href="'.$url.'">', '</a>').'&nbsp'.
-		       __("After completing the installation, you can continue to the next step to complete the installation.","really-simple-ssl");
+		       __("After completing the installation, you can continue to the next step to complete the configuration.","really-simple-ssl");
 	} else if ( $dashboard_activation_required ) {
 		$msg = __( "You already have free SSL on your hosting environment.", "really-simple-ssl" ).'&nbsp'.
 		       $activate_manually.' '.
-		       __("After completing the installation, you can continue to the next step to complete the installation.","really-simple-ssl")
+		       __("After completing the installation, you can continue to the next step to complete the configuration.","really-simple-ssl")
 		       .$button_activate;
 	} else if ( $paid_only ) {
 		$msg = sprintf(__("According to our information, your hosting provider does not allow any kind of SSL installation, other then their own paid certificate. For an alternative hosting provider with SSL, see this %sarticle%s.","really-simple-ssl"), '<a target="_blank" href="https://really-simple-ssl.com/hosting-providers-with-free-ssl">', '</a>');
@@ -406,7 +406,7 @@ function rsssl_get_manual_instructions_text( $url ){
 		$msg = __("Your hosting environment does not allow automatic SSL installation.","really-simple-ssl").' '.
 		       $complete_manually.' '.
 		       sprintf(__("You can follow these %sinstructions%s.","really-simple-ssl"), '<a target="_blank" href="'.$default_url.'">', '</a>').'&nbsp'.
-				__("After completing the installation, you can continue to the next step to complete the installation.","really-simple-ssl")
+				__("After completing the installation, you can continue to the next step to complete the configuration.","really-simple-ssl")
 		       .$button_complete;
 	}
 
