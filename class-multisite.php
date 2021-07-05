@@ -432,7 +432,7 @@ if (!class_exists('rsssl_multisite')) {
 
             <div class="nav-tab-wrapper">
                 <div class="rsssl-logo-container">
-                    <div id="rsssl-logo"><img height="50px" src="<?php echo rsssl_url?>/assets/really-simple-ssl-logo.png" alt="logo"></div>
+                    <div id="rsssl-logo"><img src="<?php echo rsssl_url?>/assets/really-simple-ssl-logo.png" alt="logo"></div>
                 </div>
 
 

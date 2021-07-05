@@ -474,7 +474,7 @@ class rsssl_admin extends rsssl_front_end
         //otherwise sites that do not need SSL possibly get to see this message.
         if (is_multisite() && !is_network_admin()) return;
 
-        //don't show in our lets encrypt wizard
+        //don't show in our Let's Encrypt wizard
         if (isset($_GET['tab']) && $_GET['tab']==='letsencrypt') return;
 
         if (!$this->wpconfig_ok()) return;
@@ -2944,7 +2944,7 @@ class rsssl_admin extends rsssl_front_end
 		            'about-to-expire' => array(
 			            'title' => __("Your SSL certificate will expire soon.", "really-simple-ssl"),
 			            'msg' => sprintf(__("SSL certificate will expire on %s.","really-simple-ssl"), $expiry_date).'&nbsp;'.__("If your hosting provider auto-renews your certificate, no action is required. Alternatively, you have the option to generate an SSL certificate with Really Simple SSL.","really-simple-ssl").'&nbsp;'.
-                                 sprintf(__("Depending on your hosting company, %smanual installation%s may be required.", "really-simple-ssl"),'<a target="_blank" href="https://really-simple-ssl.com/install-ssl-certificate">','</a>').
+                                 sprintf(__("Depending on your hosting provider, %smanual installation%s may be required.", "really-simple-ssl"),'<a target="_blank" href="https://really-simple-ssl.com/install-ssl-certificate">','</a>').
 			                     '<br><br><form action="" method="POST"><a href="'.add_query_arg(array("page" => "rlrsssl_really_simple_ssl", "tab" => "letsencrypt"),admin_url("options-general.php")) .'" type="submit" class="button button-default">'.__("Install SSL certificate", "really-simple-ssl").'</a>'.
 			                     '&nbsp;<input type="submit" class="button button-default" value="'.__("Re-check", "really-simple-ssl").'" id="rsssl_recheck_certificate" name="rsssl_recheck_certificate"></form>',
 			            'icon' => 'warning',
