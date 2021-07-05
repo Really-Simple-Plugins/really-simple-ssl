@@ -101,9 +101,6 @@
   border-radius: 20px;
   font-weight: 600;
 }
-.network-admin .rsssl-logo-container {
-  height: 60px;
-}
 .rsssl-grid {
   width: calc(100% - 20px);
   margin: 10px;
