@@ -3,8 +3,8 @@ msgid ""
 msgstr ""
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 "Project-Id-Version: Really Simple SSL\n"
-"POT-Creation-Date: 2021-07-02 11:06+0200\n"
-"PO-Revision-Date: 2021-07-02 11:05+0200\n"
+"POT-Creation-Date: 2021-07-05 12:06+0200\n"
+"PO-Revision-Date: 2021-07-05 12:06+0200\n"
 "Last-Translator: Rogier Lankhorst <rogierlankhorst@gmail.com>\n"
 "Language-Team: Rogier Lankhorst <rogierlankhorst@gmail.com>\n"
 "MIME-Version: 1.0\n"
@@ -93,11 +93,11 @@ msgid "Check out Really Simple SSL Pro"
 msgstr ""
 
 #: class-admin.php:773 class-admin.php:2935
-#: lets-encrypt/wizard/class-wizard.php:904
+#: lets-encrypt/wizard/class-wizard.php:907
 msgid "Retry"
 msgstr ""
 
-#: class-admin.php:777 lets-encrypt/wizard/class-wizard.php:900
+#: class-admin.php:777 lets-encrypt/wizard/class-wizard.php:903
 msgid "Go ahead, activate SSL!"
 msgstr ""
 
@@ -105,7 +105,7 @@ msgstr ""
 msgid "Install SSL certificate"
 msgstr ""
 
-#: class-admin.php:784 lets-encrypt/wizard/class-wizard.php:909
+#: class-admin.php:784 lets-encrypt/wizard/class-wizard.php:912
 msgid "Get ready with PRO!"
 msgstr ""
 
@@ -199,7 +199,7 @@ msgid "Documentation"
 msgstr ""
 
 #: class-admin.php:2761 class-admin.php:4414 class-multisite.php:228
-#: class-multisite.php:447
+#: class-multisite.php:447 lets-encrypt/wizard/class-wizard.php:405
 msgid "Support"
 msgstr ""
 
@@ -296,7 +296,7 @@ msgstr ""
 #: class-admin.php:2947
 #, php-format
 msgid ""
-"Depending on your hosting company, %smanual installation%s may be required."
+"Depending on your hosting provider, %smanual installation%s may be required."
 msgstr ""
 
 #: class-admin.php:2949
@@ -1058,7 +1058,8 @@ msgstr ""
 #: lets-encrypt/class-letsencrypt-handler.php:319
 msgid ""
 "The Webhosting Dashboard software was not recognized. Depending on your "
-"hosting company, the generated certificate may need to be installed manually."
+"hosting provider, the generated certificate may need to be installed "
+"manually."
 msgstr ""
 
 #: lets-encrypt/class-letsencrypt-handler.php:323
@@ -1080,7 +1081,7 @@ msgstr ""
 #: lets-encrypt/class-letsencrypt-handler.php:345
 msgid ""
 "The PHP function CURL is not available on your server, which is required. "
-"Please contact your hosting company."
+"Please contact your hosting provider."
 msgstr ""
 
 #: lets-encrypt/class-letsencrypt-handler.php:349
@@ -1369,33 +1370,33 @@ msgstr ""
 msgid "Instructions"
 msgstr ""
 
-#: lets-encrypt/functions.php:386
+#: lets-encrypt/functions.php:382
 msgid "Please complete manually in your hosting dashboard."
 msgstr ""
 
-#: lets-encrypt/functions.php:387
+#: lets-encrypt/functions.php:383
 msgid "Please activate it manually on your hosting dashboard."
 msgstr ""
 
-#: lets-encrypt/functions.php:389
+#: lets-encrypt/functions.php:385
 #, php-format
 msgid "Please complete %smanually%s"
 msgstr ""
 
-#: lets-encrypt/functions.php:390
+#: lets-encrypt/functions.php:386
 #, php-format
 msgid "Please activate it on your dashboard %smanually%s"
 msgstr ""
 
-#: lets-encrypt/functions.php:391
+#: lets-encrypt/functions.php:387
 msgid "Go to activation"
 msgstr ""
 
-#: lets-encrypt/functions.php:392
+#: lets-encrypt/functions.php:388
 msgid "Go to installation"
 msgstr ""
 
-#: lets-encrypt/functions.php:396
+#: lets-encrypt/functions.php:392
 #, php-format
 msgid ""
 "According to our information, your hosting provider supplies your account "
@@ -1403,18 +1404,18 @@ msgid ""
 "if this is not the case."
 msgstr ""
 
-#: lets-encrypt/functions.php:397 lets-encrypt/functions.php:401
-#: lets-encrypt/functions.php:409
+#: lets-encrypt/functions.php:393 lets-encrypt/functions.php:397
+#: lets-encrypt/functions.php:405
 msgid ""
 "After completing the installation, you can continue to the next step to "
-"complete the installation."
+"complete the configuration."
 msgstr ""
 
-#: lets-encrypt/functions.php:399
+#: lets-encrypt/functions.php:395
 msgid "You already have free SSL on your hosting environment."
 msgstr ""
 
-#: lets-encrypt/functions.php:404
+#: lets-encrypt/functions.php:400
 #, php-format
 msgid ""
 "According to our information, your hosting provider does not allow any kind "
@@ -1422,16 +1423,16 @@ msgid ""
 "alternative hosting provider with SSL, see this %sarticle%s."
 msgstr ""
 
-#: lets-encrypt/functions.php:406
+#: lets-encrypt/functions.php:402
 msgid "Your hosting environment does not allow automatic SSL installation."
 msgstr ""
 
-#: lets-encrypt/functions.php:408
+#: lets-encrypt/functions.php:404
 #, php-format
 msgid "You can follow these %sinstructions%s."
 msgstr ""
 
-#: lets-encrypt/functions.php:507
+#: lets-encrypt/functions.php:503
 #, php-format
 msgid "For more information on this subject, please read this %sarticle%s"
 msgstr ""
@@ -1442,11 +1443,11 @@ msgstr ""
 
 #: lets-encrypt/integrations/cloudways/cloudways.php:186
 #: lets-encrypt/integrations/cloudways/cloudways.php:192
-msgid "Successfully installed Lets Encrypt"
+msgid "Successfully installed Let's Encrypt"
 msgstr ""
 
 #: lets-encrypt/integrations/cloudways/cloudways.php:201
-msgid "Error enabling auto renew for Lets Encrypt"
+msgid "Error enabling auto renew for Let's Encrypt"
 msgstr ""
 
 #: lets-encrypt/integrations/cloudways/cloudways.php:217
@@ -1535,7 +1536,7 @@ msgid "Attempting to install certificate using shell..."
 msgstr ""
 
 #: lets-encrypt/integrations/plesk/functions.php:34
-msgid "Installling SSL certificate using PLESK API..."
+msgid "Installing SSL certificate using PLESK API..."
 msgstr ""
 
 #: lets-encrypt/integrations/plesk/plesk.php:88
@@ -1580,37 +1581,33 @@ msgid ""
 "precise as possible so we can assist as fast as possible."
 msgstr ""
 
-#: lets-encrypt/wizard/class-wizard.php:405
-msgid "Priority Support"
-msgstr ""
-
-#: lets-encrypt/wizard/class-wizard.php:646
+#: lets-encrypt/wizard/class-wizard.php:649
 #, php-format
 msgid "The wizard is currently being edited by %s"
 msgstr ""
 
-#: lets-encrypt/wizard/class-wizard.php:648
+#: lets-encrypt/wizard/class-wizard.php:651
 #, php-format
 msgid "If this user stops editing, the lock will expire after %s minutes."
 msgstr ""
 
-#: lets-encrypt/wizard/class-wizard.php:824
+#: lets-encrypt/wizard/class-wizard.php:827
 msgid "Changes saved successfully"
 msgstr ""
 
-#: lets-encrypt/wizard/class-wizard.php:831
+#: lets-encrypt/wizard/class-wizard.php:834
 msgid "Previous"
 msgstr ""
 
-#: lets-encrypt/wizard/class-wizard.php:840
+#: lets-encrypt/wizard/class-wizard.php:843
 msgid "Next"
 msgstr ""
 
-#: lets-encrypt/wizard/class-wizard.php:897
+#: lets-encrypt/wizard/class-wizard.php:900
 msgid "Go to dashboard"
 msgstr ""
 
-#: lets-encrypt/wizard/class-wizard.php:966
+#: lets-encrypt/wizard/class-wizard.php:969
 #: lets-encrypt/wizard/config/class-config.php:258
 msgid "I don't know, or not listed, proceed with installation"
 msgstr ""
@@ -1625,12 +1622,12 @@ msgstr ""
 
 #: lets-encrypt/wizard/config/questions.php:39
 msgid ""
-"Your email address will used to create a Lets Encrypt account. This is also "
+"This email address will used to create a Let's Encrypt account. This is also "
 "where you will receive renewal notifications."
 msgstr ""
 
 #: lets-encrypt/wizard/config/questions.php:41
-msgid "Your email address"
+msgid "Email address"
 msgstr ""
 
 #: lets-encrypt/wizard/config/questions.php:42
@@ -1653,9 +1650,7 @@ msgid "Domain"
 msgstr ""
 
 #: lets-encrypt/wizard/config/questions.php:74
-msgid ""
-"If your site is without www, it is recommended to add the www domain to your "
-"certificate as well (and vice versa)."
+msgid "This will include both the www. and non-www. version of your domain."
 msgstr ""
 
 #: lets-encrypt/wizard/config/questions.php:74
@@ -1670,13 +1665,13 @@ msgstr ""
 
 #: lets-encrypt/wizard/config/questions.php:88
 msgid ""
-"This information may improve process, skipping unnecessary steps and "
-"improving suggested links."
+"By selecting your hosting provider we can tell you if your hosting provider "
+"already supports free SSL, and how you can activate it."
 msgstr ""
 
 #: lets-encrypt/wizard/config/questions.php:90
 msgid ""
-"By selecting your hosting provider we can tell you if your hosting company "
+"By selecting your hosting provider we can tell you if your hosting provider "
 "already supports free SSL, and/or where you can activate it."
 msgstr ""
 
