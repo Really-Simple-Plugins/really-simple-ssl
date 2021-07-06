@@ -316,7 +316,7 @@ class rsssl_letsencrypt_handler {
 	public function server_software(){
 	    $action = 'continue';
 	    $status = 'warning';
-	    $message = __("The Webhosting Dashboard software was not recognized. Depending on your hosting provider, the generated certificate may need to be installed manually.", "really-simple-ssl" );
+	    $message = __("The Hosting Panel software was not recognized. Depending on your hosting provider, the generated certificate may need to be installed manually.", "really-simple-ssl" );
 
         if ( rsssl_is_cpanel() ) {
 	        $status = 'success';
@@ -1447,8 +1447,7 @@ class rsssl_letsencrypt_handler {
 		} else {
 			$message = __("Please check if the www version of your site also points to this website.", "really-simple-ssl" );
 		}
-		$error_message = __( "Could not verify alias domain.", "really-simple-ssl") .' '. $message.' '. __( "If this is not the case, dont' add this variant to your certificate.", "really-simple-ssl");
-
+		$error_message = __( "Could not verify alias domain.", "really-simple-ssl") .' '. $message.' '. __( "If this is not the case, dont' add this alias to your certificate.", "really-simple-ssl");
 		//get cached status first.
 		$cached_status = get_transient('rsssl_alias_domain_available');
 		if ( $cached_status ) {
