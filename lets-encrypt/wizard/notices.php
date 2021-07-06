@@ -78,7 +78,7 @@ function rsssl_le_get_notices_list($notices) {
 					'dismissible' => false,
 				),
 				'manual-generation'             => array(
-					'msg'         => sprintf( __( "Automatic renewal of your certificate was not possible. The SSL certificate should be %srenewed% manually.", "really-simple-ssl-pro" ),
+					'msg'         => sprintf( __( "Automatic renewal of your certificate was not possible. The SSL certificate should be %srenewed%s manually.", "really-simple-ssl-pro" ),
 						'<a target="_blank" href="' . $ssl_generate_url . '">', '</a>' ),
 					'icon'        => 'open',
 					'plusone'     => true,

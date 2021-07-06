@@ -1447,7 +1447,7 @@ class rsssl_letsencrypt_handler {
 		} else {
 			$message = __("Please check if the www version of your site also points to this website.", "really-simple-ssl" );
 		}
-		$error_message = __( "Could not verify alias domain.", "really-simple-ssl") .' '. $message.' '. __( "If this is not the case, dont' add this alias to your certificate.", "really-simple-ssl");
+		$error_message = __( "Could not verify alias domain.", "really-simple-ssl") .' '. $message.' '. __( "If this is not the case, don't add this alias to your certificate.", "really-simple-ssl");
 		//get cached status first.
 		$cached_status = get_transient('rsssl_alias_domain_available');
 		if ( $cached_status ) {
