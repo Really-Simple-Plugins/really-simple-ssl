@@ -3,8 +3,8 @@ msgid ""
 msgstr ""
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 "Project-Id-Version: Really Simple SSL\n"
-"POT-Creation-Date: 2021-07-05 13:03+0200\n"
-"PO-Revision-Date: 2021-07-05 13:03+0200\n"
+"POT-Creation-Date: 2021-07-06 09:43+0200\n"
+"PO-Revision-Date: 2021-07-06 09:42+0200\n"
 "Last-Translator: Rogier Lankhorst <rogierlankhorst@gmail.com>\n"
 "Language-Team: Rogier Lankhorst <rogierlankhorst@gmail.com>\n"
 "MIME-Version: 1.0\n"
@@ -1057,9 +1057,8 @@ msgstr ""
 
 #: lets-encrypt/class-letsencrypt-handler.php:319
 msgid ""
-"The Webhosting Dashboard software was not recognized. Depending on your "
-"hosting provider, the generated certificate may need to be installed "
-"manually."
+"The Hosting Panel software was not recognized. Depending on your hosting "
+"provider, the generated certificate may need to be installed manually."
 msgstr ""
 
 #: lets-encrypt/class-letsencrypt-handler.php:323
@@ -1262,8 +1261,8 @@ msgid "Error code %s."
 msgstr ""
 
 #: lets-encrypt/class-letsencrypt-handler.php:1211
-#: lets-encrypt/class-letsencrypt-handler.php:1458
-#: lets-encrypt/class-letsencrypt-handler.php:1509
+#: lets-encrypt/class-letsencrypt-handler.php:1457
+#: lets-encrypt/class-letsencrypt-handler.php:1508
 msgid "Successfully verified alias domain."
 msgstr ""
 
@@ -1297,37 +1296,37 @@ msgid "Could not verify alias domain."
 msgstr ""
 
 #: lets-encrypt/class-letsencrypt-handler.php:1450
-msgid "If this is not the case, dont' add this variant to your certificate."
+msgid "If this is not the case, dont' add this alias to your certificate."
 msgstr ""
 
-#: lets-encrypt/class-letsencrypt-handler.php:1480
+#: lets-encrypt/class-letsencrypt-handler.php:1479
 msgid "Could not create test folder and file."
 msgstr ""
 
-#: lets-encrypt/class-letsencrypt-handler.php:1481
+#: lets-encrypt/class-letsencrypt-handler.php:1480
 msgid ""
 "Please create a folder 'rsssl' in the uploads directory, with 644 "
 "permissions."
 msgstr ""
 
-#: lets-encrypt/class-letsencrypt-handler.php:1498
+#: lets-encrypt/class-letsencrypt-handler.php:1497
 #, php-format
 msgid "Error code %s"
 msgstr ""
 
-#: lets-encrypt/class-letsencrypt-handler.php:1582
+#: lets-encrypt/class-letsencrypt-handler.php:1581
 msgid "The certificate installation was rate limited. Please try again later."
 msgstr ""
 
-#: lets-encrypt/class-letsencrypt-handler.php:1608
+#: lets-encrypt/class-letsencrypt-handler.php:1607
 msgid "Not recognized server."
 msgstr ""
 
-#: lets-encrypt/class-letsencrypt-handler.php:1614
+#: lets-encrypt/class-letsencrypt-handler.php:1613
 msgid "Installation failed."
 msgstr ""
 
-#: lets-encrypt/class-letsencrypt-handler.php:1619
+#: lets-encrypt/class-letsencrypt-handler.php:1618
 #: lets-encrypt/integrations/cloudways/functions.php:22
 #: lets-encrypt/integrations/cpanel/functions.php:16
 #: lets-encrypt/integrations/cpanel/functions.php:33
