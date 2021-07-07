@@ -208,7 +208,7 @@ class rsssl_admin extends rsssl_front_end
         add_action( 'admin_init', array( $this, 'check_upgrade' ), 10, 2 );
 
         //when SSL is enabled, and not enabled by user, ask for activation.
-        add_action("admin_notices", array($this, 'show_notice_activate_ssl'), 10);
+        add_action("admin_notices", array($this, 'show_notice_activate_ssl'), 10 );
         add_action('rsssl_activation_notice', array($this, 'ssl_detected'), 10);
         add_action('rsssl_activation_notice_inner', array($this, 'almost_ready_to_migrate'), 30);
         add_action('rsssl_activation_notice_footer', array($this, 'show_enable_ssl_button'), 50);
@@ -457,7 +457,7 @@ class rsssl_admin extends rsssl_front_end
       This message is shown when SSL is not enabled by the user yet
       */
 
-    public function show_notice_activate_ssl($hook)
+    public function show_notice_activate_ssl()
     {
         //prevent showing the review on edit screen, as gutenberg removes the class which makes it editable.
         $screen = get_current_screen();
