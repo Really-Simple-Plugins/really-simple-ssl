@@ -68,16 +68,16 @@ function rsssl_cpanel_set_txt_record(){
 
 function rsssl_cpanel_add_condition_actions($steps){
 	$cpanel = new rsssl_cPanel();
-	//this defaults to true, if not known.
-	$auto_ssl    = RSSSL_LE()->config->host_api_supported( 'cpanel:autossl' );
-	$default_ssl = RSSSL_LE()->config->host_api_supported( 'cpanel:default' );
-
-	$installation_index = array_search( 'installation', array_column( $steps['lets-encrypt'], 'id' ) );
-	$dns_index = array_search( 'dns-verification', array_column( $steps['lets-encrypt'], 'id' ) );
-	$installation_index ++;
-	$dns_index ++;
-
 	if ( $cpanel->credentials_available() ) {
+		//this defaults to true, if not known.
+		$auto_ssl    = RSSSL_LE()->config->host_api_supported( 'cpanel:autossl' );
+		$default_ssl = RSSSL_LE()->config->host_api_supported( 'cpanel:default' );
+
+		$installation_index = array_search( 'installation', array_column( $steps['lets-encrypt'], 'id' ) );
+		$dns_index = array_search( 'dns-verification', array_column( $steps['lets-encrypt'], 'id' ) );
+		$installation_index ++;
+		$dns_index ++;
+
 		//clear existing array
 		if ($auto_ssl || $default_ssl ) $steps['lets-encrypt'][ $installation_index ]['actions'] = array();
 		if ( $auto_ssl ) {
