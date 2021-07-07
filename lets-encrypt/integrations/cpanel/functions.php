@@ -35,33 +35,6 @@ function rsssl_install_cpanel_default(){
 	}
 }
 
-function rsssl_install_cpanel_shell(){
-
-	if (rsssl_is_ready_for('installation')) {
-		$cpanel = new rsssl_cPanel();
-		$domains = RSSSL_LE()->letsencrypt_handler->get_subjects();
-
-		if ( function_exists('shell_exec') || function_exists('system') || function_exists('passthru') || function_exists('exec') ) {
-			$response = $cpanel->installSSLShell( $domains );
-			if ( $response->status === 'success' ) {
-				update_option('rsssl_le_certificate_installed_by_rsssl', 'cpanel:default');
-			}
-			return $response;
-		} else {
-			$status = 'error';
-			$action = 'skip';
-			$message = rsssl_get_manual_instructions_text(RSSSL_LE()->letsencrypt_handler->ssl_installation_url);
-			return new RSSSL_RESPONSE($status, $action, $message);
-		}
-
-	} else {
-		$status = 'error';
-		$action = 'stop';
-		$message = __("The system is not ready for the installation yet. Please run the wizard again.", "really-simple-ssl");
-		return new RSSSL_RESPONSE($status, $action, $message);
-	}
-}
-
 function rsssl_cpanel_set_txt_record(){
 	if ( rsssl_is_ready_for('dns-verification') ) {
 		$cpanel = new rsssl_cPanel();
@@ -133,14 +106,6 @@ function rsssl_cpanel_add_condition_actions($steps){
 		}
 	}
 
-	if ( function_exists('shell_exec') || function_exists('system') || function_exists('passthru') || function_exists('exec') ) {
-		$steps['lets-encrypt'][ $installation_index ]['actions'][]
-			= array(
-			'description' => __( "Attempting to install certificate using shell...", "really-simple-ssl" ),
-			'action'      => 'rsssl_install_cpanel_shell',
-			'attempts'    => 1,
-		);
-	}
 	return $steps;
 }
 
