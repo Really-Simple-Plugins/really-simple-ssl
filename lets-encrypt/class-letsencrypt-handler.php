@@ -1585,11 +1585,7 @@ class rsssl_letsencrypt_handler {
 		if (rsssl_is_ready_for('installation')) {
 			try {
 				if ( $server === 'cpanel' ) {
-					if ($type==='default') {
-						$response = rsssl_install_cpanel_default();
-					} else {
-						$response = rsssl_install_cpanel_shell();
-					}
+					$response = rsssl_install_cpanel_default();
 
 					if ( $response->status === 'success' ) {
 						delete_option( "rsssl_le_start_installation" );
