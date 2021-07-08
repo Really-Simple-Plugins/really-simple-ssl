@@ -453,7 +453,6 @@ if ( ! class_exists( "rsssl_wizard" ) ) {
 			);
 
 			header( "Content-Type: application/json" );
-			error_log(json_encode( $out ));
 			echo json_encode( $out );
 			exit;
 		}
