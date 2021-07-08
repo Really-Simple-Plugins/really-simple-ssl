@@ -95,7 +95,7 @@ function rsssl_le_get_notices_list($notices) {
 	}
 
 	$notices['can_use_shell'] = array(
-		'condition' => array( 'rsssl_can_install_shell_addon' ),
+		'condition' => array('rsssl_can_install_shell_addon' , 'RSSSL()->really_simple_ssl->about_to_expire'),
 		'callback' => '_true_',
 		'score'     => 10,
 		'output'    => array(
