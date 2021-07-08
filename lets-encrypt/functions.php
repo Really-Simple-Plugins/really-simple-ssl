@@ -638,6 +638,11 @@ if ( !function_exists('rsssl_maybe_drop_subdomain_test') ) {
 
 if ( !function_exists('rsssl_can_install_shell_addon') ) {
 	function rsssl_can_install_shell_addon(){
+		//if not cpanel
+		if ( !rsssl_is_cpanel() ) {
+			return false;
+		}
+
 		//if already installed
 		if (defined('rsssl_shell_path')){
 			return false;
