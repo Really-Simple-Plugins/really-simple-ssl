@@ -2830,6 +2830,12 @@ class rsssl_admin extends rsssl_front_end
 	    $end_date = isset($certinfo['validTo_time_t']) ? $certinfo['validTo_time_t'] : false;
 	    $expiry_date = !empty($end_date) ? date( get_option('date_format'), $end_date ) : __("(Unknown)", "really-simple-ssl");
 
+	    if ( $this->ssl_enabled) {
+		    $install_ssl_dismissible = true;
+	    } else {
+		    $install_ssl_dismissible = false;
+	    }
+
         $notices = array(
             'deactivation_file_detected' => array(
                 'callback' => 'RSSSL()->really_simple_ssl->check_for_uninstall_file',
@@ -2935,6 +2941,7 @@ class rsssl_admin extends rsssl_front_end
 			                     '&nbsp;<input type="submit" class="button button-default" value="'.__("Retry", "really-simple-ssl").'" id="rsssl_recheck_certificate" name="rsssl_recheck_certificate"></form>',
 			            'icon' => 'warning',
 			            'admin_notice' => false,
+                        'dismissible' => $install_ssl_dismissible
 		            ),
 		            'ssl-detected' => array(
 			            'msg' => __('An SSL certificate was detected on your site.', 'really-simple-ssl'),
