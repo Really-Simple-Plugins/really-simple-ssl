@@ -2,7 +2,7 @@
 // Copyright 1999-2020. Plesk International GmbH.
 
 namespace PleskX\Api\Struct\Site;
-
+defined('ABSPATH') or die();
 class GeneralInfo extends \PleskX\Api\Struct
 {
     /** @var string */

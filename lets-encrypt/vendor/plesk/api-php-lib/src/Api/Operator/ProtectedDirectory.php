@@ -2,7 +2,7 @@
 // Copyright 1999-2020. Plesk International GmbH.
 
 namespace PleskX\Api\Operator;
-
+defined('ABSPATH') or die();
 use PleskX\Api\Struct\ProtectedDirectory as Struct;
 
 class ProtectedDirectory extends \PleskX\Api\Operator

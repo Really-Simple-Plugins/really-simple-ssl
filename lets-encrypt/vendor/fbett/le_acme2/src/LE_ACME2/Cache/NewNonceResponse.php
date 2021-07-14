@@ -1,5 +1,6 @@
 <?php
 namespace LE_ACME2\Cache;
+defined('ABSPATH') or die();
 
 use LE_ACME2\SingletonTrait;
 

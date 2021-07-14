@@ -1,6 +1,7 @@
 <?php
 
 namespace LE_ACME2;
+defined('ABSPATH') or die();
 
 use LE_ACME2\Request;
 use LE_ACME2\Response;
