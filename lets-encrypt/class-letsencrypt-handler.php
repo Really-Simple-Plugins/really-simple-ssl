@@ -762,7 +762,7 @@ class rsssl_letsencrypt_handler {
 	 *
 	 * @return RSSSL_RESPONSE
 	 */
-    public function get_order( ){
+    public function get_order(){
 	    if ( ! Order::exists( $this->account, $this->subjects ) ) {
 		    try {
 			    $response = new RSSSL_RESPONSE(
@@ -774,11 +774,10 @@ class rsssl_letsencrypt_handler {
 
 		    } catch(Exception $e) {
 			    error_log(print_r($e, true));
-			    $error = $this->get_error($e);
 			    $response = new RSSSL_RESPONSE(
 				    'error',
 				    'retry',
-				    $error
+				    $this->get_error($e)
 			    );
 		    }
 	    } else {
