@@ -750,9 +750,10 @@ class rsssl_letsencrypt_handler {
 
 	/**
 	 * Get the order object
+	 *
 	 * @return RSSSL_RESPONSE
 	 */
-    public function get_order(){
+    public function get_order( ){
 	    if ( ! Order::exists( $this->account, $this->subjects ) ) {
 		    try {
 			    $response = new RSSSL_RESPONSE(
@@ -764,11 +765,15 @@ class rsssl_letsencrypt_handler {
 
 		    } catch(Exception $e) {
 			    error_log(print_r($e, true));
+			    $error = $this->get_error($e);
 			    $response = new RSSSL_RESPONSE(
 				    'error',
 				    'retry',
-				    $this->get_error($e)
+				    $error
 			    );
+			    if ( strpos($error, 'No order for ID')) {
+			    	$this->clear_keys_directory();
+			    }
 		    }
 	    } else {
 		    //order exists already
