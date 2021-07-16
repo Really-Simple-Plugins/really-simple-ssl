@@ -443,10 +443,19 @@ class rsssl_letsencrypt_handler {
 						    }
 					    } catch ( Exception $e ) {
 						    error_log( print_r( $e, true ) );
+						    $error = $this->get_error( $e );
+
+						    //fixing a plesk bug
+						    if ( strpos($error, 'No order for ID ') !== FALSE){
+							    $error .= '&nbsp;'.__("Order ID mismatch, regenerate order.","really-simple-ssl");
+							    $order->clear();
+							    rsssl_progress_remove('dns-verification');
+							    $error .= '&nbsp;'.__("If you entered your DNS records before, they need to be changed.","really-simple-ssl");
+						    }
 						    $response = new RSSSL_RESPONSE(
 							    'error',
 							    'retry',
-							    $this->get_error( $e )
+							    $error
 						    );
 					    }
 				    }
@@ -771,9 +780,6 @@ class rsssl_letsencrypt_handler {
 				    'retry',
 				    $error
 			    );
-			    if ( strpos($error, 'No order for ID')) {
-			    	$this->clear_keys_directory();
-			    }
 		    }
 	    } else {
 		    //order exists already
