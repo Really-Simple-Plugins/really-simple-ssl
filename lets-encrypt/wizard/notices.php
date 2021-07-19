@@ -45,11 +45,11 @@ function rsssl_le_get_notices_list($notices) {
 				'score'     => 10,
 				'output'    => array(
 					'false' => array(
-						'msg'  => sprintf( __( "Your certificate is valid to: %s", "really-simple-ssl-pro" ), $expiry_date ),
+						'msg'  => sprintf( __( "Your certificate is valid to: %s", "really-simple-ssl" ), $expiry_date ),
 						'icon' => 'success'
 					),
 					'true'  => array(
-						'msg'         => sprintf( __( "Your certificate will expire on %s. You can renew it %shere%s.", "really-simple-ssl-pro" ), $expiry_date, $link_open, '</a>' ),
+						'msg'         => sprintf( __( "Your certificate will expire on %s. You can renew it %shere%s.", "really-simple-ssl" ), $expiry_date, $link_open, '</a>' ),
 						'icon'        => 'open',
 						'plusone'     => true,
 						'dismissible' => false,
@@ -65,27 +65,27 @@ function rsssl_le_get_notices_list($notices) {
 			'output'    => array(
 				'automatic-installation-failed' => array(
 					'msg'         => sprintf( __( "The automatic installation of your certificate has failed. Please check your credentials, and retry the %sinstallation%s.",
-						"really-simple-ssl-pro" ), '<a href="' . rsssl_letsencrypt_wizard_url() . '">', '</a>' ),
+						"really-simple-ssl" ), '<a href="' . rsssl_letsencrypt_wizard_url() . '">', '</a>' ),
 					'icon'        => 'open',
 					'plusone'     => true,
 					'dismissible' => false,
 				),
 				'manual-installation'           => array(
-					'msg'         => sprintf( __( "The SSL certificate has been renewed, and requires manual %sinstallation%s in your hosting dashboard.", "really-simple-ssl-pro" ),
+					'msg'         => sprintf( __( "The SSL certificate has been renewed, and requires manual %sinstallation%s in your hosting dashboard.", "really-simple-ssl" ),
 						'<a target="_blank" href="' . $url . '">', '</a>' ),
 					'icon'        => 'open',
 					'plusone'     => true,
 					'dismissible' => false,
 				),
 				'manual-generation'             => array(
-					'msg'         => sprintf( __( "Automatic renewal of your certificate was not possible. The SSL certificate should be %srenewed%s manually.", "really-simple-ssl-pro" ),
+					'msg'         => sprintf( __( "Automatic renewal of your certificate was not possible. The SSL certificate should be %srenewed%s manually.", "really-simple-ssl" ),
 						'<a target="_blank" href="' . $ssl_generate_url . '">', '</a>' ),
 					'icon'        => 'open',
 					'plusone'     => true,
 					'dismissible' => false,
 				),
 				'automatic'                     => array(
-					'msg'         => __( "Your certificate will be renewed and installed automatically.", "really-simple-ssl-pro" ),
+					'msg'         => __( "Your certificate will be renewed and installed automatically.", "really-simple-ssl" ),
 					'icon'        => 'open',
 					'plusone'     => true,
 					'dismissible' => false,
@@ -93,6 +93,24 @@ function rsssl_le_get_notices_list($notices) {
 			),
 		);
 	}
+
+	$notices['can_use_shell'] = array(
+		'condition' => array('rsssl_can_install_shell_addon' , 'RSSSL()->really_simple_ssl->about_to_expire'),
+		'callback' => '_true_',
+		'score'     => 10,
+		'output'    => array(
+			'true' => array(
+				'msg'         => __( "Your server provides shell functionality, which offers additional methods to install SSL. If installing SSL using the default methods is not possible, you can install the shell add on.", "really-simple-ssl" )
+				                 . '&nbsp;'
+				                 . '<a href="https://really-simple-ssl.com/installing-ssl-using-shell-functions">'
+				                 . __("Read more about this add on.","really-simple-ssl")
+				                 . '</a>',
+				'icon'        => 'open',
+				'plusone'     => true,
+				'dismissible' => true,
+			),
+		),
+	);
 
 	if ( get_option( 'rsssl_create_folders_in_root' ) ) {
 		if ( ! get_option( 'rsssl_htaccess_file_set_key' ) || ! get_option( 'rsssl_htaccess_file_set_certs' ) || ! get_option( 'rsssl_htaccess_file_set_ssl' ) ) {
@@ -102,7 +120,7 @@ function rsssl_le_get_notices_list($notices) {
 				'score'     => 10,
 				'output'    => array(
 					'true' => array(
-						'msg'         => __( "Your Key and Certificate directories are not properly protected.", "really-simple-ssl-pro" )
+						'msg'         => __( "Your Key and Certificate directories are not properly protected.", "really-simple-ssl" )
 						                 . rsssl_read_more( "https://really-simple-ssl.com/protect-ssl-generation-directories" ),
 						'icon'        => 'urgent',
 						'plusone'     => true,

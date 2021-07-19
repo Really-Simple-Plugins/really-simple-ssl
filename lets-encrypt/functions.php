@@ -635,3 +635,24 @@ if ( !function_exists('rsssl_maybe_drop_subdomain_test') ) {
 
 	add_filter( 'rsssl_steps', 'rsssl_maybe_drop_subdomain_test', 20 );
 }
+
+if ( !function_exists('rsssl_can_install_shell_addon') ) {
+	function rsssl_can_install_shell_addon(){
+		//if not cpanel
+		if ( !rsssl_is_cpanel() ) {
+			return false;
+		}
+
+		//if already installed
+		if (defined('rsssl_shell_path')){
+			return false;
+		}
+
+		if ( function_exists('shell_exec') || function_exists('system') || function_exists('passthru') || function_exists('exec') ) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+}
