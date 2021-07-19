@@ -2,7 +2,7 @@
 // Copyright 1999-2020. Plesk International GmbH.
 
 namespace PleskX\Api\Operator;
-
+defined('ABSPATH') or die();
 use PleskX\Api\Struct\Locale as Struct;
 
 class Locale extends \PleskX\Api\Operator

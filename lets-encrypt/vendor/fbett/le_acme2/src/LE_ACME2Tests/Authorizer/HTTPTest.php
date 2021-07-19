@@ -1,5 +1,6 @@
 <?php
 namespace LE_ACME2Tests\Authorizer;
+defined('ABSPATH') or die();
 
 use LE_ACME2Tests\AbstractTest;
 use LE_ACME2Tests\TestHelper;

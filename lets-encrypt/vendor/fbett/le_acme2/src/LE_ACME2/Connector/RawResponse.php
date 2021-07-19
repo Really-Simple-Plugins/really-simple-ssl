@@ -1,6 +1,7 @@
 <?php
 
 namespace LE_ACME2\Connector;
+defined('ABSPATH') or die();
 
 class RawResponse {
 

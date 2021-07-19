@@ -1,6 +1,7 @@
 <?php
 
 namespace LE_ACME2\Response;
+defined('ABSPATH') or die();
 
 class GetDirectory extends AbstractResponse {
 
