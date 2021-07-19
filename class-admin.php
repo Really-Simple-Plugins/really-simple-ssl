@@ -2881,6 +2881,21 @@ class rsssl_admin extends rsssl_front_end
 	            ),
             ),
 
+            'compatiblity_check' => array(
+	            'condition' => array('rsssl_incompatible_premium_version'),
+	            'callback' => '_true_',
+	            'score' => 5,
+	            'output' => array(
+		            'true' => array(
+			            'url' => 'https://really-simple-ssl.com/pro/',
+			            'msg' => __( "Really Simple SSL pro is not up to date. You should update Really Simple SSL pro plugin to ensure compatibility.", "really-simple-ssl"),
+			            'icon' => 'open',
+			            'dismissible' => false,
+			            'plusone' => true,
+		            ),
+	            ),
+            ),
+
             'google_analytics' => array(
 	            'dismiss_on_upgrade' => true,
 	            'callback' => '_true_',
@@ -4817,6 +4832,20 @@ if (!function_exists('rsssl_beta_5_addon_active')) {
         if (defined('rsssl_beta_addon') && rsssl_beta_addon ) {
             return true;
         }
+        return false;
+    }
+}
+
+if (!function_exists('rsssl_incompatible_premium_version')) {
+    function rsssl_incompatible_premium_version() {
+        if ( !defined('rsssl_pro_version') ) {
+           return false;
+        }
+
+        if ( version_compare(rsssl_pro_version,rsssl_add_on_version_requirement,'<' ) ){
+            return true;
+        }
+
         return false;
     }
 }
