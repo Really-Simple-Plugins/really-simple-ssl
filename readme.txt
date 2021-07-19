@@ -91,6 +91,7 @@ Yes. There is a dedicated network settings page where you can switch between net
 == Changelog ==
 = 5.0.3 =
 * Improvement: Install SSL notice dismissible, which allows for SSL already installed situations and not detected.
+* Fix: WordPress basepath detection in force deactivate function and in system status
 
 = 5.0.2 =
 * Improvement: remove some files to prevent false positive warnings from windows defender
