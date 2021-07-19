@@ -629,7 +629,13 @@ class rsssl_admin extends rsssl_front_end
                     margin-top: 5px;
                     margin-right:-30px;
                 }
-
+                .rsssl-notice-footer input[type="checkbox"] {
+                    margin-top:7px;
+                }
+                .rsssl-notice-footer label span {
+                    top:5px;
+                    position:relative;
+                }
                 #rsssl-message li.rsssl-error:before {
                     background-color: #D7263D;
                 }
@@ -686,6 +692,13 @@ class rsssl_admin extends rsssl_front_end
                     margin-left: 25px;
                     margin-right: 25px;
                 }
+                .rsssl-notice-footer input[type="checkbox"] {
+                    margin-top:7px;
+                }
+                .rsssl-notice-footer label span {
+                    top:5px;
+                    position:relative;
+                }
 
                 #rsssl-message {
                     padding: 0;
@@ -731,7 +744,6 @@ class rsssl_admin extends rsssl_front_end
                 }
             </style>
         <?php } ?>
-
         <div id="rsssl-message" class="<?php echo $class?> really-simple-plugins">
             <div class="rsssl-notice">
                 <?php if (!empty($title)) {?>
@@ -765,24 +777,39 @@ class rsssl_admin extends rsssl_front_end
 
 	public function show_enable_ssl_button()
 	{
-		?>
+	    $certificate_valid = RSSSL()->rsssl_certificate->is_valid();
+	    $activate_btn_disabled = !$certificate_valid ? 'disabled' : '';
+
+	    if ( !$certificate_valid ) { ?>
+            <script type="text/javascript">
+            jQuery(document).ready(function ($) {
+                $(document).on('click', 'input[name=rsssl_override_ssl_detection]', function(){
+                    if ( $(this).is(":checked") ) {
+                        $('#rsssl_do_activate_ssl').removeAttr('disabled');
+                    } else {
+                        $('#rsssl_do_activate_ssl').attr('disabled', 'disabled');
+                    }
+                });
+            });
+            </script>
+        <?php } ?>
+
         <form action="" method="post">
 			<?php wp_nonce_field('rsssl_nonce', 'rsssl_nonce'); ?>
-	        <?php if (!RSSSL()->rsssl_certificate->is_valid()) {?>
-                <input type="submit" class='button button-primary'
-                       value="<?php _e("Retry", "really-simple-ssl"); ?>" id="rsssl_recheck_certificate"
-                       name="rsssl_recheck_certificate">
-            <?php } else { ?>
-                <input type="submit" class='button button-primary'
-                       value="<?php _e("Go ahead, activate SSL!", "really-simple-ssl"); ?>" id="rsssl_do_activate_ssl"
-                       name="rsssl_do_activate_ssl">
-	        <?php } ?>
-	        <?php if (!RSSSL()->rsssl_certificate->is_valid() ){?>
-                <a href="<?php echo rsssl_letsencrypt_wizard_url()?>" type="submit" class="button button-default"><?php _e("Install SSL certificate", "really-simple-ssl"); ?></a>
-	        <?php } ?>
-            <?php if (!defined("rsssl_pro_version") ) { ?>
+            <input <?php echo $activate_btn_disabled?> type="submit" class='button button-primary'
+                   value="<?php _e("Activate SSL", "really-simple-ssl"); ?>" id="rsssl_do_activate_ssl"
+                   name="rsssl_do_activate_ssl">
+	        <?php if (!defined("rsssl_pro_version") ) { ?>
                 <a class="button button-default" href="<?php echo $this->pro_url ?>" target="_blank"><?php _e("Get ready with PRO!", "really-simple-ssl"); ?></a>
-			<?php } ?>
+	        <?php } ?>
+	        <?php if ( !$certificate_valid ){?>
+                <a href="<?php echo rsssl_letsencrypt_wizard_url()?>" type="submit" class="button button-default"><?php _e("Install SSL certificate", "really-simple-ssl"); ?></a>
+                <label for="rsssl_override_ssl_detection">
+                    <input type="checkbox" value="1" id="rsssl_override_ssl_detection" name="rsssl_override_ssl_detection">
+                    <span><?php _e("Override SSL detection", "really-simple-ssl")?></span>
+                </label>
+            <?php } ?>
+
         </form>
 		<?php
 	}
