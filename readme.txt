@@ -95,6 +95,7 @@ Yes. There is a dedicated network settings page where you can switch between net
 * Fix: not dismissible urgent notices were still dismissible
 * Improvement: add-on compatibility check
 * Improvement: due to bug in Plesk, a "no Order for ID" error could be returned. A second attempt will now automatically be made on the Let's Encrypt SSL certificate generation
+* Improvement: allow overriding of SSL detection of SSL was not detected as valid
 
 = 5.0.2 =
 * Improvement: remove some files to prevent false positive warnings from windows defender
