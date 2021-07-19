@@ -3274,15 +3274,24 @@ class rsssl_admin extends rsssl_front_end
 	        foreach ( $notices as $key => $notice ) {
 		        if ( isset( $notice['output']['url'] ) ) {
 			        $url    = $notice['output']['url'];
+			        $dismissible = isset($notice['output']['dismissible']) && $notice['output']['dismissible'];
 			        $target = '';
 			        if ( strpos( $url, 'https://really-simple-ssl.com' ) !== false ) {
-				        $info   = __( '%sMore info%s or %sdismiss%s', 'really-simple-ssl' );
+			            if ( $dismissible ){
+				            $info   = __( '%sMore info%s or %sdismiss%s', 'really-simple-ssl' );
+			            } else {
+				            $info   = __( '%sMore info%s', 'really-simple-ssl' );
+			            }
 				        $target = 'target="_blank"';
 			        } else {
 				        $info = __( '%sEnable%s or %sdismiss%s', 'really-simple-ssl' );
 			        }
 			        $dismiss_open                     = "<span class='rsssl-dashboard-dismiss' data-dismiss_type='" . $key . "'><a href='#' class='rsssl-dismiss-text rsssl-close-warning'>";
-			        $notices[ $key ]['output']['msg'] .= ' ' . sprintf( $info, '<a ' . $target . ' href="' . $url . '">', '</a>', $dismiss_open, "</a></span>" );
+			        if ( $dismissible ) {
+				        $notices[ $key ]['output']['msg'] .= ' ' . sprintf( $info, '<a ' . $target . ' href="' . $url . '">', '</a>', $dismiss_open, "</a></span>" );
+			        } else {
+				        $notices[ $key ]['output']['msg'] .= ' ' . sprintf( $info, '<a ' . $target . ' href="' . $url . '">', '</a>' );
+			        }
 		        }
 
 		        if ( isset( $notice['output']['plusone'] ) && $notice['output']['plusone'] ) {
