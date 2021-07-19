@@ -1,6 +1,7 @@
 <?php
 
 namespace LE_ACME2\Struct;
+defined('ABSPATH') or die();
 
 use LE_ACME2\Account;
 use LE_ACME2\Utilities;

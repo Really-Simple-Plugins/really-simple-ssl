@@ -2,7 +2,7 @@
 // Copyright 1999-2020. Plesk International GmbH.
 
 namespace PleskX\Api;
-
+defined('ABSPATH') or die();
 abstract class Struct
 {
     public function __set($property, $value)

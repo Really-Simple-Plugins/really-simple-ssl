@@ -2,7 +2,7 @@
 // Copyright 1999-2020. Plesk International GmbH.
 
 namespace PleskX\Api\Operator;
-
+defined('ABSPATH') or die();
 use PleskX\Api\Struct\EventLog as Struct;
 
 class EventLog extends \PleskX\Api\Operator

@@ -2,7 +2,7 @@
 // Copyright 1999-2020. Plesk International GmbH.
 
 namespace PleskX\Api\Struct\PhpHandler;
-
+defined('ABSPATH') or die();
 use PleskX\Api\Struct;
 
 class Info extends Struct

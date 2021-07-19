@@ -1,6 +1,7 @@
 <?php
 
 namespace LE_ACME2\Response\Authorization\Struct;
+defined('ABSPATH') or die();
 
 class Challenge {
 

@@ -2,7 +2,7 @@
 // Copyright 1999-2020. Plesk International GmbH.
 
 namespace PleskX\Api\Struct\EventLog;
-
+defined('ABSPATH') or die();
 class DetailedEvent extends \PleskX\Api\Struct
 {
     /** @var int */

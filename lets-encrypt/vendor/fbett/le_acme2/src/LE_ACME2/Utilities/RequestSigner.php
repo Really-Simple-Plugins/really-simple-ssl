@@ -1,6 +1,7 @@
 <?php
 
 namespace LE_ACME2\Utilities;
+defined('ABSPATH') or die();
 
 class RequestSigner {
 

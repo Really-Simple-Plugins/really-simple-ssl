@@ -1,5 +1,6 @@
 <?php
 namespace LE_ACME2;
+defined('ABSPATH') or die();
 
 trait SingletonTrait {
 
