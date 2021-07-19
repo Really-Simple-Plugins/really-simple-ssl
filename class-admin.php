@@ -2888,7 +2888,7 @@ class rsssl_admin extends rsssl_front_end
 	            'output' => array(
 		            'true' => array(
 			            'url' => 'https://really-simple-ssl.com/pro/',
-			            'msg' => __( "Really Simple SSL pro is not up to date. You should update Really Simple SSL pro plugin to ensure compatibility.", "really-simple-ssl"),
+			            'msg' => __( "Really Simple SSL pro is not up to date. Update Really Simple SSL pro to ensure compatibility.", "really-simple-ssl"),
 			            'icon' => 'open',
 			            'dismissible' => false,
 			            'plusone' => true,
