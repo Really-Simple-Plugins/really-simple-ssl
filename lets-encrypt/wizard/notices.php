@@ -36,7 +36,6 @@ function rsssl_le_get_notices_list($notices) {
 
 	$ssl_generate_url = add_query_arg( array( "page" => "rlrsssl_really_simple_ssl", "tab" => "letsencrypt" ), admin_url( "options-general.php" ) );
 
-
 	if ( RSSSL_LE()->letsencrypt_handler->generated_by_rsssl() ) {
 		if ( $expiry_date ) {
 			$notices['ssl_detected'] = array(
@@ -134,7 +133,6 @@ function rsssl_le_get_notices_list($notices) {
 
 	return $notices;
 }
-
 add_filter( 'rsssl_notices', 'rsssl_le_get_notices_list', 30, 1 );
 function rsssl_le_custom_field_notices($fields){
 	if ( rsssl_is_cpanel() ) {
