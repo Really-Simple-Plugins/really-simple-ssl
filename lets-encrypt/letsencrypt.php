@@ -7,7 +7,7 @@ defined('ABSPATH') or die();
  * php -r "readfile('https://getcomposer.org/installer');" | php
  */
 if (!function_exists('rsssl_letsencrypt_generation_allowed')) {
-	function rsssl_letsencrypt_generation_allowed() {
+	function rsssl_letsencrypt_generation_allowed($strict = false) {
 
 		if ( wp_doing_cron() ) {
 			return true;
@@ -17,8 +17,12 @@ if (!function_exists('rsssl_letsencrypt_generation_allowed')) {
 			return false;
 		}
 
-		if ( isset($_GET['page']) && $_GET['page'] === 'rlrsssl_really_simple_ssl' ){
-			return true;
+		if ( $strict ) {
+			if ( isset($_GET['tab']) && $_GET['tab'] === 'letsencrypt' ){
+				return true;
+			} else if ( isset($_GET['page']) && $_GET['page'] === 'rlrsssl_really_simple_ssl' ){
+				return true;
+			}
 		}
 
 		if ( isset($_GET['action']) && $_GET['action'] === 'rsssl_installation_progress' ){
