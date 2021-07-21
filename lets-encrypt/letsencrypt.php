@@ -20,7 +20,9 @@ if (!function_exists('rsssl_letsencrypt_generation_allowed')) {
 		if ( $strict ) {
 			if ( isset($_GET['tab']) && $_GET['tab'] === 'letsencrypt' ){
 				return true;
-			} else if ( isset($_GET['page']) && $_GET['page'] === 'rlrsssl_really_simple_ssl' ){
+			}
+		} else {
+			if ( isset($_GET['page']) && $_GET['page'] === 'rlrsssl_really_simple_ssl' ){
 				return true;
 			}
 		}
