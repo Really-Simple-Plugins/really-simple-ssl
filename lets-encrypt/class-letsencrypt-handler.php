@@ -450,7 +450,10 @@ class rsssl_letsencrypt_handler {
 					    } catch ( Exception $e ) {
 						    error_log( print_r( $e, true ) );
 						    $error = $this->get_error( $e );
-
+						    if (strpos($error, 'Order has status "invalid"')!==false) {
+							    $order->clear();
+							    $error = __("The order is invalid, possibly due to too many failed authorization attempts. Please start at the previous step.","really-simple-ssl");
+						    } else
 						    //fixing a plesk bug
 						    if ( strpos($error, 'No order for ID ') !== FALSE){
 							    $error .= '&nbsp;'.__("Order ID mismatch, regenerate order.","really-simple-ssl");
@@ -678,8 +681,6 @@ class rsssl_letsencrypt_handler {
 							    $response->status = 'warning';
 							    $response->message = __("OCSP not supported, the certificate will be generated without OCSP.","really-simple-ssl");
 						    }
-
-
 					    }
 				    }
 
