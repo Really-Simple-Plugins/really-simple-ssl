@@ -187,8 +187,12 @@ class rsssl_letsencrypt_handler {
     public function check_domain(){
 	    $details = parse_url(site_url());
 	    $path = isset($details['path']) ? $details['path'] : '';
-
-	    if (is_multisite() && get_current_blog_id() !== get_main_site_id() ) {
+        if ( strpos(site_url(), 'localhost')!==false ) {
+	        rsssl_progress_remove( 'system-status' );
+	        $action  = 'stop';
+	        $status  = 'error';
+	        $message = __( "It is not possible to install Let's Encrypt on a localhost environment.", "really-simple-ssl" );
+        } else if (is_multisite() && get_current_blog_id() !== get_main_site_id() ) {
 		    rsssl_progress_remove('system-status');
 		    $action = 'stop';
 		    $status = 'error';
@@ -198,16 +202,6 @@ class rsssl_letsencrypt_handler {
 		    $action = 'stop';
 		    $status = 'error';
 		    $message = __("It is not possible to install Let's Encrypt on a subfolder configuration.", "really-simple-ssl" ).rsssl_read_more('https://really-simple-ssl.com/install-ssl-on-subfolders');
-	    } else if ( strlen($path)>0 ) {
-		    rsssl_progress_remove('system-status');
-		    $action = 'stop';
-		    $status = 'error';
-		    $message = __("It is not possible to install Let's Encrypt on a subfolder configuration.", "really-simple-ssl" );
-	    } else if ( strpos(site_url(), 'localhost')!==false ) {
-		    rsssl_progress_remove('system-status');
-		    $action = 'stop';
-		    $status = 'error';
-		    $message = __("It is not possible to install Let's Encrypt on a localhost environment.", "really-simple-ssl" );
 	    } else {
 		    $action = 'continue';
 		    $status = 'success';
