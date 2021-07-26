@@ -6,7 +6,7 @@ Requires at least: 4.9
 License: GPL2
 Tested up to: 5.8
 Requires PHP: 5.6
-Stable tag: 5.0.3
+Stable tag: 5.0.4
 
 No setup required! You only need an SSL certificate, and this plugin will do the rest.
 
@@ -89,6 +89,11 @@ If you are experiencing redirect loops on your site, try these [instructions](ht
 Yes. There is a dedicated network settings page where you can switch between network activated SSL and per page SSL. In the dedicated pro for multisite plugin, you can override all site settings for SSL on the network level, and can activate and deactivate SSL in the network menu for each site.
 
 == Changelog ==
+= 5.0.4 =
+* Fix: php notices when in SSL certificate generation mode, due to wrong class usage
+* Improvement: Refresh option in case the certificate was just installed.
+* Improvement: catch invalid order during SSL certificate generation
+
 = 5.0.3 =
 * Improvement: Install SSL notice dismissible, which allows for SSL already installed situations and not detected.
 * Fix: WordPress basepath detection in force deactivate function and in system status
