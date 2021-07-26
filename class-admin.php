@@ -392,7 +392,8 @@ class rsssl_admin extends rsssl_front_end
     public function recheck_certificate(){
 	    if (!current_user_can($this->capability)) return;
 
-        if (isset($_POST['rsssl_recheck_certificate'])) {
+        if (isset($_POST['rsssl_recheck_certificate']) || isset($_GET['rsssl_recheck_certificate'])) {
+            error_log("recheck certificate");
 	        delete_transient('rsssl_certinfo');
         }
     }
@@ -503,7 +504,6 @@ class rsssl_admin extends rsssl_front_end
         $title = __("Almost ready to migrate to SSL!", "really-simple-ssl");
         echo $this->notice_html( $class, $title, $content, $footer);
     }
-
 	/**
 	 * Show almost ready to migrate notice
 	 */
@@ -524,7 +524,10 @@ class rsssl_admin extends rsssl_front_end
             if (RSSSL()->rsssl_certificate->is_valid()) { ?>
                 <li class="rsssl-success"><?php _e("An SSL certificate has been detected", "really-simple-ssl") ?></li>
             <?php } else { ?>
-                <li class="rsssl-error"><?php _e("No SSL certificate has been detected. Generate one by pressing the 'Install SSL certificate' button.", "really-simple-ssl") ?></li>
+                <li class="rsssl-error"><?php _e("No SSL certificate has been detected.", "really-simple-ssl") ?>&nbsp;
+                    <?php printf(__("Please %srefresh detection%s if a certificate has been installed recently.", "really-simple-ssl"), '<a href="'.add_query_arg(array('page'=>'rlrsssl_really_simple_ssl', 'rsssl_recheck_certificate'=>1), admin_url('options-general.php')).'">', '</a>') ?>
+                    <?php RSSSL()->rsssl_help->get_help_tip(__("This detection method is not 100% accurate. If you’re certain an SSL certificate is present, please check “Override SSL detection” to continue activating SSL.", "really-simple-ssl"), false, true );?>
+                </li>
             <?php }?>
         </ul>
         <?php if ( !defined('rsssl_pro_version') ) { ?>
@@ -809,7 +812,6 @@ class rsssl_admin extends rsssl_front_end
                     <span><?php _e("Override SSL detection", "really-simple-ssl")?></span>
                 </label>
             <?php } ?>
-
         </form>
 		<?php
 	}
@@ -2871,7 +2873,7 @@ class rsssl_admin extends rsssl_front_end
                     'fail' => array(
                         'title' => __("Major security issue!", "really-simple-ssl"),
                         'msg' => __("The 'force-deactivate.php' file has to be renamed to .txt. Otherwise your ssl can be deactivated by anyone on the internet.", "really-simple-ssl") .' '.
-                                 '<a href="'.add_query_arg(array('page'=>'rlrsssl_really_simple_ssl'), admin_url('options-general.php?page=')).'">'.__("Check again", "really-simple-ssl").'</a>',
+                                 '<a href="'.add_query_arg(array('page'=>'rlrsssl_really_simple_ssl'), admin_url('options-general.php')).'">'.__("Check again", "really-simple-ssl").'</a>',
                         'icon' => 'warning',
                         'admin_notice' => true,
                         'plusone' => true,
