@@ -118,7 +118,7 @@ function rsssl_le_get_notices_list($notices) {
 					'true' => array(
 						'msg'         => __( "Your Key and Certificate directories are not properly protected.", "really-simple-ssl" )
 						                 . rsssl_read_more( "https://really-simple-ssl.com/protect-ssl-generation-directories" ),
-						'icon'        => 'urgent',
+						'icon'        => 'warning',
 						'plusone'     => true,
 						'dismissible' => false,
 					),
