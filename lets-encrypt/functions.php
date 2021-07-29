@@ -654,5 +654,15 @@ if ( !function_exists('rsssl_can_install_shell_addon') ) {
 			return false;
 		}
 	}
+}
 
+if ( !function_exists('rsssl_generated_by_rsssl')) {
+	/**
+	 * If a bundle generation is completed, this value is set to true.
+	 *
+	 * @return bool
+	 */
+	function rsssl_generated_by_rsssl() {
+		return get_option( 'rsssl_le_certificate_generated_by_rsssl' );
+	}
 }

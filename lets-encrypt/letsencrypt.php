@@ -1,5 +1,6 @@
 <?php
 defined('ABSPATH') or die();
+
 /**
  * Capability handling for Let's Encrypt
  * @return bool
@@ -70,14 +71,12 @@ if ( rsssl_letsencrypt_generation_allowed() ) {
 		}
 
 		private function setup_constants() {
-			define('rsssl_le_php_version', '7.1');
 			define('rsssl_le_url', plugin_dir_url(__FILE__));
 			define('rsssl_le_path', trailingslashit(plugin_dir_path(__FILE__)));
 			define('rsssl_le_wizard_path', trailingslashit(plugin_dir_path(__FILE__)).'/wizard/');
 		}
 
 		private function includes() {
-			require_once( rsssl_le_path . 'cron.php' );
 			require_once( rsssl_le_path . 'wizard/assets/icons.php' );
 			require_once( rsssl_le_path . 'wizard/class-field.php' );
 			require_once( rsssl_le_path . 'wizard/class-wizard.php' );

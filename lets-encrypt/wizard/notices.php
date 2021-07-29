@@ -33,7 +33,7 @@ function rsssl_le_get_notices_list($notices) {
 
 	$ssl_generate_url = add_query_arg( array( "page" => "rlrsssl_really_simple_ssl", "tab" => "letsencrypt" ), admin_url( "options-general.php" ) );
 
-	if ( RSSSL_LE()->letsencrypt_handler->generated_by_rsssl() ) {
+	if ( rsssl_generated_by_rsssl() ) {
 		if ( $expiry_date ) {
 			$notices['ssl_detected'] = array(
 				'condition' => array( 'rsssl_ssl_enabled' ),
@@ -118,7 +118,7 @@ function rsssl_le_get_notices_list($notices) {
 					'true' => array(
 						'msg'         => __( "Your Key and Certificate directories are not properly protected.", "really-simple-ssl" )
 						                 . rsssl_read_more( "https://really-simple-ssl.com/protect-ssl-generation-directories" ),
-						'icon'        => 'urgent',
+						'icon'        => 'warning',
 						'plusone'     => true,
 						'dismissible' => false,
 					),
