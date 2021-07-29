@@ -813,13 +813,7 @@ class rsssl_letsencrypt_handler {
 		delete_transient('rsssl_le_generate_attempt_count');
 	}
 
-	/**
-     * If a bundle generation is completed, this value is set to true.
-	 * @return bool
-	 */
-    public function generated_by_rsssl(){
-	    return get_option('rsssl_le_certificate_generated_by_rsssl');
-    }
+
 
 	/**
 	 * Check if SSL generation renewal can be handled automatically
@@ -915,6 +909,10 @@ class rsssl_letsencrypt_handler {
     public function cron_certificate_needs_renewal(){
 
 	    $cert_file = get_option('rsssl_certificate_path');
+	    if ( empty($cert_file) ) {
+	    	return false;
+	    }
+
 	    $certificate = file_get_contents($cert_file);
 	    $certificateInfo = openssl_x509_parse($certificate);
 	    $valid_to = $certificateInfo['validTo_time_t'];
