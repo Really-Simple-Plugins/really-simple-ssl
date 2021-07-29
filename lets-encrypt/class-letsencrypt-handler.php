@@ -909,6 +909,10 @@ class rsssl_letsencrypt_handler {
     public function cron_certificate_needs_renewal(){
 
 	    $cert_file = get_option('rsssl_certificate_path');
+	    if ( empty($cert_file) ) {
+	    	return false;
+	    }
+
 	    $certificate = file_get_contents($cert_file);
 	    $certificateInfo = openssl_x509_parse($certificate);
 	    $valid_to = $certificateInfo['validTo_time_t'];
