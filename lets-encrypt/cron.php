@@ -14,7 +14,7 @@ function rsssl_le_schedule_cron() {
 		return;
 	}
 
-	if ( !RSSSL_LE()->letsencrypt_handler->generated_by_rsssl() ) {
+	if ( !rsssl_generated_by_rsssl() ) {
 		return;
 	}
 
@@ -44,7 +44,7 @@ function rsssl_le_schedule_cron() {
  */
 function rsssl_le_cron_maybe_start_renewal(){
 
-	if ( !RSSSL_LE()->letsencrypt_handler->generated_by_rsssl() ) {
+	if ( !rsssl_generated_by_rsssl() ) {
 		return;
 	}
 

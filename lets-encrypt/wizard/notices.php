@@ -33,7 +33,7 @@ function rsssl_le_get_notices_list($notices) {
 
 	$ssl_generate_url = add_query_arg( array( "page" => "rlrsssl_really_simple_ssl", "tab" => "letsencrypt" ), admin_url( "options-general.php" ) );
 
-	if ( RSSSL_LE()->letsencrypt_handler->generated_by_rsssl() ) {
+	if ( rsssl_generated_by_rsssl() ) {
 		if ( $expiry_date ) {
 			$notices['ssl_detected'] = array(
 				'condition' => array( 'rsssl_ssl_enabled' ),

@@ -813,13 +813,7 @@ class rsssl_letsencrypt_handler {
 		delete_transient('rsssl_le_generate_attempt_count');
 	}
 
-	/**
-     * If a bundle generation is completed, this value is set to true.
-	 * @return bool
-	 */
-    public function generated_by_rsssl(){
-	    return get_option('rsssl_le_certificate_generated_by_rsssl');
-    }
+
 
 	/**
 	 * Check if SSL generation renewal can be handled automatically
