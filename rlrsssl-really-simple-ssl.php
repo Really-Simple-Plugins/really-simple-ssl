@@ -144,7 +144,6 @@ class REALLY_SIMPLE_SSL
 			require_once(rsssl_path . 'class-server.php');
             require_once(rsssl_path . 'class-help.php');
 			require_once(rsssl_path . 'class-certificate.php');
-			require_once(rsssl_path . 'class-certificate.php');
 			require_once(rsssl_path . 'class-site-health.php');
 
 			if (!defined('rsssl_beta_addon')) {
