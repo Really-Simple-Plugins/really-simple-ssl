@@ -3,7 +3,7 @@
  * Plugin Name: Really Simple SSL
  * Plugin URI: https://really-simple-ssl.com
  * Description: Lightweight plugin without any setup to make your site SSL proof
- * Version: 5.0.5
+ * Version: 5.0.6
  * Author: Really Simple Plugins
  * Author URI: https://really-simple-plugins.com
  * License: GPL2
@@ -85,7 +85,7 @@ class REALLY_SIMPLE_SSL
 
 			$wpcli = defined( 'WP_CLI' ) && WP_CLI;
 
-			if (is_admin() || is_multisite() || $wpcli || defined('RSSSL_DOING_SYSTEM_STATUS') || defined('RSSSL_DOING_CSP') ) {
+			if (is_admin() || wp_doing_cron() || is_multisite() || $wpcli || defined('RSSSL_DOING_SYSTEM_STATUS') || defined('RSSSL_DOING_CSP') ) {
 				if (is_multisite()) {
 					self::$instance->rsssl_multisite = new rsssl_multisite();
 				}
@@ -135,7 +135,7 @@ class REALLY_SIMPLE_SSL
 			require_once(rsssl_path . 'class-rsssl-wp-cli.php');
 		}
 
-		if (is_admin() || is_multisite() || $wpcli || defined('RSSSL_DOING_SYSTEM_STATUS') || defined('RSSSL_DOING_CSP') ) {
+		if (is_admin() || wp_doing_cron() || is_multisite() || $wpcli || defined('RSSSL_DOING_SYSTEM_STATUS') || defined('RSSSL_DOING_CSP') ) {
 			if (is_multisite()) {
 				require_once(rsssl_path . 'class-multisite.php');
 				require_once(rsssl_path . 'multisite-cron.php');
@@ -144,7 +144,6 @@ class REALLY_SIMPLE_SSL
 			require_once(rsssl_path . 'class-cache.php');
 			require_once(rsssl_path . 'class-server.php');
             require_once(rsssl_path . 'class-help.php');
-			require_once(rsssl_path . 'class-certificate.php');
 			require_once(rsssl_path . 'class-certificate.php');
 			require_once(rsssl_path . 'class-site-health.php');
         }
