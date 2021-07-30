@@ -10,7 +10,7 @@ defined('ABSPATH') or die();
 if (!function_exists('rsssl_letsencrypt_generation_allowed')) {
 	function rsssl_letsencrypt_generation_allowed($strict = false) {
 
-		if ( wp_doing_cron() ) {
+		if ( get_option( 'rsssl_le_certificate_generated_by_rsssl' ) && wp_doing_cron() ) {
 			return true;
 		}
 

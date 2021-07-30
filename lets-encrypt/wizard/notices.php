@@ -37,7 +37,7 @@ function rsssl_le_get_notices_list($notices) {
 		if ( $expiry_date ) {
 			$notices['ssl_detected'] = array(
 				'condition' => array( 'rsssl_ssl_enabled' ),
-				'callback'  => 'RSSSL_LE()->letsencrypt_handler->certificate_about_to_expire',
+				'callback'  => 'RSSSL()->rsssl_certificate->about_to_expire',
 				'score'     => 10,
 				'output'    => array(
 					'false' => array(
@@ -55,7 +55,7 @@ function rsssl_le_get_notices_list($notices) {
 		}
 
 		$notices['certificate_installation'] = array(
-			'condition' => array( 'rsssl_ssl_enabled', 'RSSSL_LE()->letsencrypt_handler->certificate_about_to_expire' ),
+			'condition' => array( 'rsssl_ssl_enabled', 'RSSSL()->rsssl_certificate->about_to_expire' ),
 			'callback'  => 'RSSSL_LE()->letsencrypt_handler->certificate_renewal_status_notice',
 			'score'     => 10,
 			'output'    => array(
