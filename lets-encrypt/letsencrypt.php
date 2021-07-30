@@ -23,7 +23,10 @@ if (!function_exists('rsssl_letsencrypt_generation_allowed')) {
 				return true;
 			}
 		} else {
-			if ( isset($_GET['page']) && $_GET['page'] === 'rlrsssl_really_simple_ssl' ){
+			if ( isset($_GET['page']) && ( $_GET['page'] === 'rlrsssl_really_simple_ssl' ) ){
+				return true;
+			}
+			if ( isset($_GET['tab']) && $_GET['tab'] === 'letsencrypt' ){
 				return true;
 			}
 		}
