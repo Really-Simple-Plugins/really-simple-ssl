@@ -193,24 +193,26 @@ if ( !function_exists('rsssl_is_directadmin')) {
  * @param int $port
  *
  * @return bool
- * @throws Exception
  */
+
 function rsssl_check_port( $port)
 {
-	try {
-		$ipAddress = gethostbyname('localhost');
-		$link = @fsockopen($ipAddress, $port, $errno, $error);
-		if ($error) {
-			return false;
-		}
-	} catch (\Exception $ex) {
-		return false;
-	}
+	$port_check_status = get_option('rsssl_port_check');
+
+	if ($port_check_status === 'fail') return false;
+
+	$ipAddress = gethostbyname('localhost');
+	$link = @fsockopen($ipAddress, $port, $errno, $error, 2);
 
 	if ( $link ) {
+		update_option('rsssl_port_check', 'success');
 		return true;
 	}
-	return false;
+
+	if ($error) {
+		update_option('rsssl_port_check', 'fail');
+		return false;
+	}
 }
 
 if ( !function_exists('rsssl_get_other_host') ) {
