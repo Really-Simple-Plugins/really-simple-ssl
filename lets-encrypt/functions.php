@@ -150,8 +150,6 @@ if ( !function_exists('rsssl_is_plesk')) {
 		$open_basedir = ini_get("open_basedir");
 		if ( empty($open_basedir) && is_dir( '/usr/local/psa' ) ) {
 			return true;
-		} else if (rsssl_check_port(2222)) {
-			return true;
 		} else {
 			return false;
 		}
