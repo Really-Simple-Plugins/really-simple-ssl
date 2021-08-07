@@ -2434,7 +2434,11 @@ class rsssl_admin extends rsssl_front_end
 
     public function has_well_known_needle()
     {
-        $htaccess = file_get_contents($this->htaccess_file());
+        $file = $this->htaccess_file();
+        if ( !file_exists($file) ) {
+            return false;
+        }
+        $htaccess = file_get_contents( $file );
         $well_known_needle = "RewriteCond %{REQUEST_URI} !^/\.well-known/acme-challenge/";
 
         if (strpos($htaccess, $well_known_needle) !== false) {
