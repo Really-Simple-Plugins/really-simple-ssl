@@ -6,7 +6,7 @@ Requires at least: 4.9
 License: GPL2
 Tested up to: 5.8
 Requires PHP: 5.6
-Stable tag: 5.0.6
+Stable tag: 5.0.7
 
 No setup required! You only need an SSL certificate, and this plugin will do the rest.
 
@@ -91,6 +91,8 @@ Yes. There is a dedicated network settings page where you can switch between net
 == Changelog ==
 = 5.0.7 =
 * Fix: check for file existence in has_well_known_needle function, props @libertylink
+* Fix: fixed a timeout on SSL settings page on OVH due to failed port check
+* Improvement: allow SSL generation when a valid certificate has been found
 
 = 5.0.6 =
 * Fix: rsssl_server class not loaded on cron
