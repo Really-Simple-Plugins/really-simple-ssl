@@ -205,7 +205,7 @@
 }
 .rsssl-grid .rsssl-item .item-container .form-table tbody tr th,
 .rsssl-grid .rsssl-item .item-container .form-table tbody tr td {
-  padding: 8px 0 !important;
+  padding: 6px 0 !important;
   font-size: 13px;
 }
 .rsssl-grid .rsssl-item .item-container .form-table tbody tr th p,
@@ -488,29 +488,36 @@
 .rsssl-grid .rsssl-item.no-background .item-container {
   background-color: #f2f2f2;
 }
-.rsssl-grid #rsssl-progress-footer {
+.rsssl-grid #rsssl-progress-footer,
+.rsssl-grid #rsssl-premium-settings-footer {
   width: 100%;
   text-align: right;
   margin-right: 10px;
 }
-.rsssl-grid #rsssl-progress-footer .rsssl-footer-item form {
+.rsssl-grid #rsssl-progress-footer .rsssl-footer-item form,
+.rsssl-grid #rsssl-premium-settings-footer .rsssl-footer-item form {
   float: left;
 }
-.rsssl-grid #rsssl-progress-footer .rsssl-footer-item + .rsssl-footer-item {
+.rsssl-grid #rsssl-progress-footer .rsssl-footer-item + .rsssl-footer-item,
+.rsssl-grid #rsssl-premium-settings-footer .rsssl-footer-item + .rsssl-footer-item {
   margin-left: 20px;
   padding: 4px 0;
 }
-.rsssl-grid #rsssl-progress-footer .footer-left {
+.rsssl-grid #rsssl-progress-footer .footer-left,
+.rsssl-grid #rsssl-premium-settings-footer .footer-left {
   float: left;
 }
-.rsssl-grid #rsssl-progress-footer .footer-left .upsell {
+.rsssl-grid #rsssl-progress-footer .footer-left .upsell,
+.rsssl-grid #rsssl-premium-settings-footer .footer-left .upsell {
   min-width: 80px;
   text-align: center;
 }
-.rsssl-grid #rsssl-progress-footer .footer-right {
+.rsssl-grid #rsssl-progress-footer .footer-right,
+.rsssl-grid #rsssl-premium-settings-footer .footer-right {
   float: right;
 }
-.rsssl-grid #rsssl-progress-footer .hidden {
+.rsssl-grid #rsssl-progress-footer .hidden,
+.rsssl-grid #rsssl-premium-settings-footer .hidden {
   display: none;
 }
 .rsssl-grid .rsssl-system-status-footer-info {
