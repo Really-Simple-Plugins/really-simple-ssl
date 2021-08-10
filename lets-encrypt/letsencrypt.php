@@ -89,11 +89,7 @@ if ( rsssl_letsencrypt_generation_allowed() ) {
 			if (version_compare(PHP_VERSION, rsssl_le_php_version, '>=')) {
 				require_once( rsssl_le_path . 'wizard/notices.php' );
 				require_once( rsssl_le_path . 'class-letsencrypt-handler.php' );
-
-				//load integrations only in strict mode
-				if (rsssl_letsencrypt_generation_allowed(true)){
-					require_once( rsssl_le_path . 'integrations/integrations.php' );
-				}
+				require_once( rsssl_le_path . 'integrations/integrations.php' );
 			}
 
 		}
