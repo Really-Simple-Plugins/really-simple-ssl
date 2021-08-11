@@ -80,6 +80,8 @@ class rsssl_cPanel
      */
     public function installSSLPerDomain($domain)
     {
+	    $shell_addon_active = defined('rsssl_shell_path');
+
 	    $key_file = get_option('rsssl_private_key_path');
 	    $cert_file = get_option('rsssl_certificate_path');
 	    $cabundle_file = get_option('rsssl_intermediate_path');
@@ -98,7 +100,7 @@ class rsssl_cPanel
             error_log('Not able to login');
 	        update_option('rsssl_installation_error', 'cpanel:default');
 	        $status = 'warning';
-	        $action = 'stop';
+	        $action = $shell_addon_active ? 'skip' : 'stop';
 	        $message = rsssl_get_manual_instructions_text($this->ssl_installation_url);
         } else if ($response->status) {
 	        delete_option('rsssl_installation_error' );
@@ -111,7 +113,7 @@ class rsssl_cPanel
 	        update_option('rsssl_installation_error', 'cpanel:default');
 	        error_log($response->errors[0]);
 	        $status = 'error';
-	        $action = 'stop';
+	        $action = $shell_addon_active ? 'skip' : 'stop';
 	        $message = __("Errors were reported during installation","really-simple-ssl").'<br> '.$response->errors[0];
         }
 
