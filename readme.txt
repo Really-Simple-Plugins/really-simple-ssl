@@ -89,6 +89,9 @@ If you are experiencing redirect loops on your site, try these [instructions](ht
 Yes. There is a dedicated network settings page where you can switch between network activated SSL and per page SSL. In the dedicated pro for multisite plugin, you can override all site settings for SSL on the network level, and can activate and deactivate SSL in the network menu for each site.
 
 == Changelog ==
+= 5.0.8 =
+* Fix: when using the shell add-on, the action for a failed cpanel installation should be "skip" instead of "stop"
+
 = 5.0.7 =
 * Fix: check for file existence in has_well_known_needle function, props @libertylink
 * Fix: fixed a timeout on SSL settings page on OVH due to failed port check
