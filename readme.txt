@@ -90,6 +90,7 @@ Yes. There is a dedicated network settings page where you can switch between net
 
 == Changelog ==
 = 5.0.8 =
+* Improvement: move localhost test before subfolder test as the localhost warning won't show otherwise on most localhost setups
 * Fix: when using the shell add-on, the action for a failed cpanel installation should be "skip" instead of "stop"
 * Fix: drop obsolete arguments in the cron_renew_installation function, props @chulainna
 
