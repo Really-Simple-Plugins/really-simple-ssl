@@ -91,7 +91,7 @@ Yes. There is a dedicated network settings page where you can switch between net
 == Changelog ==
 = 5.0.8 =
 * Fix: when using the shell add-on, the action for a failed cpanel installation should be "skip" instead of "stop"
-* Fix: variables in the cron_renew_installation function should be optional. props @chulainna
+* Fix: drop obsolete arguments in the cron_renew_installation function, props @chulainna
 
 = 5.0.7 =
 * Fix: check for file existence in has_well_known_needle function, props @libertylink
