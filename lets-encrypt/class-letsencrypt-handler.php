@@ -1572,19 +1572,14 @@ class rsssl_letsencrypt_handler {
 
 	/**
 	 * Generic SSL cert installation function
-	 * @param string|bool $server
-	 * @param string|bool $type
 	 *
 	 * @return RSSSL_RESPONSE
 	 */
-	public function cron_renew_installation( $server=false, $type=false ) {
-		//autodetect if empty
-		if ( !$server ) {
-			$install_method = get_option('rsssl_le_certificate_installed_by_rsssl');
-			$data = explode($install_method, ':');
-			$server = isset($data[0]) ? $data[0] : false;
-			$type = isset($data[1]) ? $data[1] : false;
-		}
+	public function cron_renew_installation() {
+		$install_method = get_option('rsssl_le_certificate_installed_by_rsssl');
+		$data = explode($install_method, ':');
+		$server = isset($data[0]) ? $data[0] : false;
+		$type = isset($data[1]) ? $data[1] : false;
 
 		$attempt_count = intval(get_transient('rsssl_le_install_attempt_count'));
 		$attempt_count++;
