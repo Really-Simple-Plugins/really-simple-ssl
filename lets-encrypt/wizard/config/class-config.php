@@ -258,24 +258,26 @@ if ( ! class_exists( "rsssl_config" ) ) {
 		        'none' => __('I don\'t know, or not listed, proceed with installation', 'really-simple-ssl'),
 	        );
 	        $this->supported_hosts = $this->supported_hosts + wp_list_pluck($this->hosts, 'name');
-	        /* config files
+	        /*  config files
 				Load only on lets encrypt generation pages, or during cron.
 			 */
-	        if (rsssl_letsencrypt_generation_allowed(true)) {
+	        if ( rsssl_letsencrypt_generation_allowed(true) ) {
 		        require_once( rsssl_le_path . 'wizard/config/steps.php' );
 		        require_once( rsssl_le_path . 'wizard/config/questions.php' );
+
+		        /**
+		         * Preload fields with a filter, to allow for overriding types
+		         */
+		        add_action( 'plugins_loaded', array( $this, 'preload_init' ), 10 );
+
+
+		        /**
+		         * The integrations are loaded with priority 10
+		         * Because we want to initialize after that, we use 15 here
+		         */
+		        add_action( 'plugins_loaded', array( $this, 'init' ), 15 );
 	        }
 
-            /**
-             * Preload fields with a filter, to allow for overriding types
-             */
-            add_action( 'plugins_loaded', array( $this, 'preload_init' ), 10 );
-
-            /**
-             * The integrations are loaded with priority 10
-             * Because we want to initialize after that, we use 15 here
-             */
-            add_action( 'plugins_loaded', array( $this, 'init' ), 15 );
         }
 
         static function this() {
@@ -371,7 +373,7 @@ if ( ! class_exists( "rsssl_config" ) ) {
 
         public function preload_init(){
             $this->fields = apply_filters( 'rsssl_fields_load_types', $this->fields );
-            $this->steps = apply_filters( 'rsssl_steps', $this->steps );
+	        $this->steps = apply_filters( 'rsssl_steps', $this->steps );
         }
 
         public function init() {
