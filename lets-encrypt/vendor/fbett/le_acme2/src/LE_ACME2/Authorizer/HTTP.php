@@ -91,6 +91,10 @@ class HTTP extends AbstractAuthorizer {
      */
     private function _validateFile(string $domain, Response\Authorization\Struct\Challenge $challenge) : bool {
 
+	    if ( get_option('rsssl_skip_challenge_directory_request') ) {
+		    return true;
+	    }
+
         $challengeAuthorizationKey = new ChallengeAuthorizationKey($this->_account);
 
         $requestURL = 'http://' . $domain . '/.well-known/acme-challenge/' . $challenge->token;
