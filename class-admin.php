@@ -3229,13 +3229,6 @@ class rsssl_admin extends rsssl_front_end
             unset($notices['secure_cookies_set']);
         }
 
-	    /*
-	     * for LE notices, we make sure the necessary functions can run
-         **/
-	    if ( !defined( 'rsssl_loading_notices')) {
-	        define( 'rsssl_loading_notices', true);
-	    }
-
         $notices = apply_filters('rsssl_notices', $notices);
         foreach ($notices as $id => $notice) {
             $notices[$id] = wp_parse_args($notice, $notice_defaults);
