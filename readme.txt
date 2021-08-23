@@ -91,6 +91,7 @@ Yes. There is a dedicated network settings page where you can switch between net
 == Changelog ==
 = 5.0.9 =
 * Improvement: make sure plus one notices also get re-counted outside the settings page after cache clears
+* Fix: On Multisite a Let's Encrypt specific filter was loaded unnecessarily
 
 = 5.0.8 =
 * Improvement: move localhost test before subfolder test as the localhost warning won't show otherwise on most localhost setups
