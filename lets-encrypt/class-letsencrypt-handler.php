@@ -277,7 +277,7 @@ class rsssl_letsencrypt_handler {
 			    $status = 'success';
 			    $message = sprintf(__("Your certificate will expire on %s.", "really-simple-ssl" ).' '.__("Continue to renew.", "really-simple-ssl" ), $expiry_date);   ;
 		    } else {
-			    $action = 'stop';
+			    $action = 'continue';
 			    $status = 'error';
 			    $message = __("You already have a valid SSL certificate.", "really-simple-ssl" );
 		    }
