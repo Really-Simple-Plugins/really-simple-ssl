@@ -92,6 +92,7 @@ Yes. There is a dedicated network settings page where you can switch between net
 = 5.0.9 =
 * Improvement: make sure plus one notices also get re-counted outside the settings page after cache clears
 * Fix: On Multisite a Let's Encrypt specific filter was loaded unnecessarily
+* Improvement: also skip challenge directory check in the ACME library, when the user has selected the skip directory check option
 
 = 5.0.8 =
 * Improvement: move localhost test before subfolder test as the localhost warning won't show otherwise on most localhost setups
