@@ -6,7 +6,7 @@ Requires at least: 4.9
 License: GPL2
 Tested up to: 5.8
 Requires PHP: 5.6
-Stable tag: 5.0.9
+Stable tag: 5.0.10
 
 No setup required! You only need an SSL certificate, and this plugin will do the rest.
 
@@ -89,6 +89,9 @@ If you are experiencing redirect loops on your site, try these [instructions](ht
 Yes. There is a dedicated network settings page where you can switch between network activated SSL and per page SSL. In the dedicated pro for multisite plugin, you can override all site settings for SSL on the network level, and can activate and deactivate SSL in the network menu for each site.
 
 == Changelog ==
+= 5.0.10 =
+* Fix: Let's Encrypt SSL certificate download only possible through copy option, and not through downloading the file
+
 = 5.0.9 =
 * Improvement: make sure plus one notices also get re-counted outside the settings page after cache clears
 * Fix: On Multisite a Let's Encrypt specific filter was loaded unnecessarily
