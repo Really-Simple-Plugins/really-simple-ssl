@@ -1322,21 +1322,38 @@ class rsssl_letsencrypt_handler {
 
 	/**
 	 * Clear the keys directory, used in reset function
+	 * @since 5.0
 	 */
-	public function clear_keys_directory(){
+
+	public function clear_keys_directory() {
+
 		if (!current_user_can('manage_options')) {
 			return;
 		}
-		$path = $this->key_directory();
-		if ( file_exists( $path ) && $handle = opendir( $path ) ) {
-			while ( false !== ( $file = readdir( $handle ) ) ) {
-				if ( strpos($file, 'account_live_')!==false || strpos($file, 'account_staging_')!==false ){
-					unlink($path.'/'.$file);
+
+		$dir = $this->key_directory();
+		$this->delete_files_directories_recursively( $dir );
+
+	}
+
+	/**
+	 * @param $dir
+	 * Delete files and directories recursively. Used to clear the order from keys directory
+	 * @since 5.0.11
+	 */
+
+	private function delete_files_directories_recursively( $dir ) {
+
+		if ( strpos( $dir, 'ssl/keys' ) !== false ) {
+			foreach ( glob( $dir . '/*' ) as $file ) {
+				if ( is_dir( $file ) ) {
+					$this->delete_files_directories_recursively( $file );
+				} else {
+					unlink( $file );
 				}
 			}
-			closedir( $handle );
+			rmdir( $dir );
 		}
-
 	}
 
 	public function maybe_create_htaccess_directories(){
