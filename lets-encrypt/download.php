@@ -76,7 +76,7 @@ if ($fp) {
 fclose($fp);
 
 
-function find_wordpress_base_path()
+function rsssl_find_wordpress_base_path()
 {
 	$path = dirname(__FILE__);
 
