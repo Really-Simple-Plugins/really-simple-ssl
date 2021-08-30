@@ -92,6 +92,7 @@ Yes. There is a dedicated network settings page where you can switch between net
 = 5.0.11 =
 * Improvement: clear keys directory only clearing files
 * Improvement: added WP Version and PHP version to system status export
+* Improvement: check for duplicate SSL plugins
 
 = 5.0.10 =
 * Fix: Let's Encrypt SSL certificate download only possible through copy option, and not through downloading the file
