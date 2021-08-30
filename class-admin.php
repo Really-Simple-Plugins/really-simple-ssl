@@ -393,7 +393,6 @@ class rsssl_admin extends rsssl_front_end
 	    if (!current_user_can($this->capability)) return;
 
         if (isset($_POST['rsssl_recheck_certificate']) || isset($_GET['rsssl_recheck_certificate'])) {
-            error_log("recheck certificate");
 	        delete_transient('rsssl_certinfo');
         }
     }
