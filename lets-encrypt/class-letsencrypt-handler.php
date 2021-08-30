@@ -1163,6 +1163,10 @@ class rsssl_letsencrypt_handler {
 	public function directory_has_writing_permissions( $directory ){
 		set_error_handler(array($this, 'custom_error_handling'));
 		$test_file = fopen( $directory . "/really-simple-ssl-permissions-check.txt", "w" );
+		if ( !$test_file ) {
+			return false;
+		}
+
 		fwrite($test_file, 'file to test writing permissions for Really Simple SSL');
 		fclose( $test_file );
 		restore_error_handler();
