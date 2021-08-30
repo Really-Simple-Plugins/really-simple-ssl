@@ -3222,6 +3222,19 @@ class rsssl_admin extends rsssl_front_end
                     ),
                 ),
             ),
+            'duplicate-ssl-plugins' => array(
+	            'condition'  => array('rsssl_detected_duplicate_ssl_plugin'),
+	            'callback' => '_true_',
+	            'plus_one' => true,
+	            'output' => array(
+		            'true' => array(
+			            'msg' => sprintf(__( 'We have detected the %s plugin on your website.', 'really-simple-ssl' ),rsssl_detected_duplicate_ssl_plugin(true)).'&nbsp;'.__( 'As Really Simple SSL handles all the functionality this plugin provides, we recommend to disable this plugin to prevent unexpected behaviour.', 'really-simple-ssl' ),
+			            'icon' => 'warning',
+			            'dismissible' => true,
+			            'plusone' => true,
+		            ),
+	            ),
+            ),
         );
 
         //on multisite, don't show the notice on subsites.
@@ -4904,6 +4917,41 @@ if ( !function_exists('rsssl_letsencrypt_wizard_url') ) {
 			return add_query_arg(array('page' => 'rlrsssl_really_simple_ssl', 'tab' => 'letsencrypt'), get_admin_url(get_main_site_id(),'options-general.php') );
 		} else {
 			return add_query_arg(array('page' => 'rlrsssl_really_simple_ssl', 'tab' => 'letsencrypt'), admin_url('options-general.php') );
+		}
+	}
+}
+
+if ( !function_exists('rsssl_detected_duplicate_ssl_plugin')) {
+	function rsssl_detected_duplicate_ssl_plugin( $return_name = false ){
+		$plugin = false;
+		if ( defined('WPLE_VERSION') ){
+			$plugin = "WP Encryption";
+		} elseif( defined('WPSSL_VER') ) {
+			$plugin = "WP Free SSL";
+		} elseif( defined('SSL_ZEN_PLUGIN_VERSION') ) {
+			$plugin = "SSL Zen";
+		} elseif( defined('WPSSL_VER') ) {
+			$plugin = "WP Free SSL";
+		} elseif( defined('SSLFIX_PLUGIN_VERSION') ) {
+			$plugin = "SSL Insecure Content Fixer";
+		} elseif( class_exists('OCSSL',false) ) {
+			$plugin = "One Click SSL";
+		} elseif( class_exists('JSM_Force_SSL',false) ) {
+			$plugin = "JSM's Force HTTP to HTTPS (SSL)";
+		} elseif( function_exists('httpsrdrctn_plugin_init') ) {
+			$plugin = "Easy HTTPS (SSL) Redirection";
+		} elseif( defined('WPSSL_VER') ) {
+			$plugin = "WP Free SSL";
+		} elseif( defined('WPFSSL_OPTIONS_KEY') ) {
+			$plugin = "WP Force SSL";
+		}elseif( defined('ESSL_REQUIRED_PHP_VERSION') ) {
+			$plugin = "EasySSL";
+		}
+
+		if ( $plugin !== false && !$return_name ) {
+			return true;
+		} else {
+			return $plugin;
 		}
 	}
 }
