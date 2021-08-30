@@ -27,9 +27,12 @@ if ( current_user_can( 'manage_options' ) ) {
 		echo "SAFE MODE\n";
 	}
 
+	global $wp_version;
+
 	echo "General\n";
 	echo "Domain: " . site_url() . "\n";
 	echo "Plugin version: " . rsssl_version . "\n";
+	echo "WordPress version: " . $wp_version . "\n";
 
 	if ( RSSSL()->rsssl_certificate->is_valid() ) {
 		echo "SSL certificate is valid\n";
@@ -69,6 +72,10 @@ if ( current_user_can( 'manage_options' ) ) {
 	echo "Server: " . RSSSL()->rsssl_server->get_server() . "\n";
 	echo "SSL Type: " . RSSSL()->really_simple_ssl->ssl_type . "\n";
 
+	if ( function_exists('phpversion')) {
+		echo "PHP Version: " . phpversion() . "\n";
+	}
+
 	if ( is_multisite() ) {
 		echo "MULTISITE\n";
 		echo ( ! RSSSL()->rsssl_multisite->ssl_enabled_networkwide )
@@ -80,7 +87,7 @@ if ( current_user_can( 'manage_options' ) ) {
 
 	echo RSSSL()->really_simple_ssl->debug_log;
 
-	echo "\n\nConstants\n";
+	echo "\nConstants\n";
 
 	if ( defined( 'RSSSL_FORCE_ACTIVATE' ) ) {
 		echo "RSSSL_FORCE_ACTIVATE defined\n";
