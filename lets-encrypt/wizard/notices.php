@@ -133,13 +133,18 @@ function rsssl_le_get_notices_list($notices) {
 add_filter( 'rsssl_notices', 'rsssl_le_get_notices_list', 30, 1 );
 
 /**
- * Extend fields with some custom notices
+ * 	DNS is only necessary for multisite with subdomains, or with domain mapping.
+ *  On other setups, directory verification is the easiest.
+ *  On  cPanel, there are several subdirectories like mail. etc. which can only get an SSL with a wildcard cert.
+ *  For this reason, this option only appears when on cPanel
+ *
  * @param $fields
  *
  * @return array
  */
 
 function rsssl_le_custom_field_notices($fields){
+
 	if ( rsssl_is_cpanel() ) {
 		if( get_option('rsssl_verification_type') === 'DNS' ) {
 			$fields['email_address']['help'] =
@@ -153,6 +158,10 @@ function rsssl_le_custom_field_notices($fields){
 				'<br><br><button class="button button-default" name="rsssl-switch-to-dns">'.__("Switch to DNS verification", "really-simple-ssl").'</button>';
 		}
 	}
+
+
+
+
 	return $fields;
 }
 add_filter( 'rsssl_fields', 'rsssl_le_custom_field_notices', 30, 1 );
