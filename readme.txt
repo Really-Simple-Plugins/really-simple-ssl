@@ -11,83 +11,89 @@ Stable tag: 5.1.0
 No setup required! You only need an SSL certificate, and this plugin will do the rest.
 
 == Description ==
-Really Simple SSL automatically detects your settings and configures your website to run over https.
-To keep it lightweight, the options are kept to a minimum. The entire site will move to SSL.
+Really Simple SSL automatically detects your settings and configures your website to run over HTTPS. To keep it lightweight, we kept the options to a minimum. Your website will move to SSL with one click.
 
 = Three simple steps for setup: =
-* Activate this plugin
-* Activate SSL in your hosting environment, or generate a free Let's Encrypt certificate in [Really Simple SSL](https://really-simple-ssl.com/knowledge-base/how-to-install-a-free-ssl-certificate-on-your-wordpress-cpanel-hosting/).
-* Enable SSL with one click
+
+* Activate Really Simple SSL
+* Activate SSL in your hosting environment, or generate a free Let's Encrypt certificate in [Really Simple SSL](https://really-simple-ssl.com/install-ssl-certificate/). **(new)**
+* Enable SSL with One Click
 
 https://www.youtube.com/watch?v=BVx3ZrSsPrU
 
-Always backup before you go! If you do not have a sound backup policy, start having one! See [our recommendations](https://really-simple-ssl.com/knowledge-base/backing-up-your-site/).
-
-Any code suggestions? We're on [GitHub](https://github.com/rlankhorst/really-simple-ssl) as well!
-
 = Love Really Simple SSL? =
-Hopefully this plugin saves you some hours of work. If you want to support the continuing development of this plugin, you might consider buying the [premium](https://www.really-simple-ssl.com/pro/), which includes
-some cool features.
-= Pro features =
-* The mixed content scan, which shows you what you have to do if you don't have the secure lock yet
-* The option to enable HTTP Strict Transport Security
-* The option to configure your site for the HSTS preload list
-* Advanced security headers for additional security
-* Mixed Content Fixer for the back-end
-* More detailed feedback on the configuration page
-* Certificate expiration check: get an email when your SSL certificate is about to expire
-* Premium support
 
-= What does the plugin actually do =
-* It will first check for an existing SSL certificate. If you don't have one, you can generate one in the plugin. Depending on your hosting company, we can also install it for you, or help you with instructions
-* The plugin handles most issues that WordPress has with SSL, like when you're behind a reverse proxy/loadbalancer, or when no headers are passed which WordPress can use to detect SSL.
-* All incoming requests are redirected to https. Default with an internal WordPress redirect, but you can also enable a .htaccess redirect.
-* The siteurl and homeurl are changed to https.
-* Your insecure content is fixed by replacing all http:// URL's with https://, except hyperlinks to other domains. Dynamically, so no database changes are made (except for the siteurl and homeurl).
-* Cookies set with PHP are set securely, by setting them with the httpOnly flag
+Hopefully, this plugin saves you some hours of work. If you want to support the continuing development of this plugin, please consider buying [Really Simple SSL Pro](https://www.really-simple-ssl.com/pro/), which includes some excellent security features and premium support.
+
+= Improve Security with Really Simple SSL Pro =
+
+* The Mixed Content Scan & Fixer. Know which files are still requested over HTTP and how to fix it.
+* Enable HTTP Strict Transport Security
+* Configure your site for the HSTS preload list
+* Advanced Security Headers to Improve Security, e.g., Content Security Policy, Permissions Policy, and more.
+* Mixed Content Fixer for your Admin Area
+* Detailed Feedback and Active Support on your Security Dashboard
+* Premium Support
+
+= How does Really Simple SSL work? =
+
+* It will first check for an existing SSL certificate. If you don't have one, you can generate one in the plugin. Depending on your hosting provider, the plugin can also install it for you or assist with instructions.
+* The plugin handles most issues WordPress has with SSL. For example, a reverse proxy/load balancer or when no headers are passed to detect SSL.
+* All incoming requests are redirected to HTTPS. Default with an internal WordPress redirect, but you can also opt for a .htaccess redirect.
+* The site URL and home URL are changed to HTTPS.
+* Your insecure content is fixed by replacing all http:// URLs with https://, except hyperlinks to other domains. This happens dynamically, so no database changes are made (except for the site URL and home URL).
+* Cookies set with PHP are set securely by setting them with the httpOnly flag.
+
+= About Really Simple SSL =
 
 Check out other plugins developed by Really Simple Plugins as well: [Complianz](https://wordpress.org/plugins/complianz-gdpr/) and [Zip Recipes](https://wordpress.org/plugins/zip-recipes/).
 
-[contact](https://www.really-simple-ssl.com/contact/) me if you have any questions, issues, or suggestions. Really Simple SSL is developed by [Really Simple Plugins](https://www.really-simple-plugins.com).
+[contact](https://www.really-simple-ssl.com/contact/) us if you have any questions, issues, or suggestions. Really Simple SSL is developed by [Really Simple Plugins](https://www.really-simple-plugins.com).
 
-For free SSL certificate generation, Really Simple SSL uses the [le acme2 PHP](https://github.com/fbett/le-acme2-php/) Let's Encrypt client library, thanks to fbett for providing it.
+For free SSL certificate generation, Really Simple SSL uses the [le acme2 PHP](https://github.com/fbett/le-acme2-php/) Let's Encrypt client library, thanks to 'fbett' for providing it.
 
-= Like to have this plugin in your language? =
-Translations can be added very easily [here](https://translate.wordpress.org/projects/wp-plugins/really-simple-ssl). If you do, I can get you added as translation editor to approve the translations.
+Any code suggestions? We're on [GitHub (https://github.com/rlankhorst/really-simple-ssl) as well!
+
+= Really Simple SSL in your language? =
+Translations can be added very easily [here](https://translate.wordpress.org/projects/wp-plugins/really-simple-ssl). 
 
 == Installation ==
 
 To install this plugin:
 
-1. Make a backup!
-2. Install your SSL certificate
-3. Download the plugin
-4. Upload the plugin to the wp-content/plugins directory,
-5. Go to “plugins” in your WordPress admin, then click activate.
-6. You will now see a notice asking you to enable SSL. Click it and log in again.
+1. Make a backup! See [our recommendations](https://really-simple-ssl.com/knowledge-base/backing-up-your-site/).
+2. Install your SSL certificate or generate one with Really Simple SSL (after activating the plugin).
+3. Download the plugin.
+4. Upload the plugin to the /wp-content/plugins/ directory.
+5. You may need to log in again, so keep your credentials ready.
+6. Go to "Plugins" in your WordPress admin, then click "Activate".
+7. You will now see a notice asking you to enable SSL. Click it and log in again, if needed.
 
 == Frequently Asked Questions ==
 
-= Knowledge base =
-For more detailed explanations and documentation on redirect loops, deactivating, mixed content, errors, and so on, please search the [documentation](https://www.really-simple-ssl.com/knowledge-base/)
+= Knowledge Base =
+For more detailed explanations and documentation on redirect loops, Let's Encrypt, mixed content, errors, and so on, please search the [documentation](https://www.really-simple-ssl.com/knowledge-base/)
 
-= Does the mixed content fixer make my site slower? =
+= Mixed Content issues =
+Most mixed content issues are caused by URLs in CSS or JS files.
+For detailed instructions on how to find mixed content read this [article](https://really-simple-ssl.com/knowledge-base/how-to-track-down-mixed-content-or-insecure-content/).
+
+= Does the Mixed Content Fixer make my site slower? =
 On a site where the source consists of about 60.000 characters, the delay caused by the mixed content fixer is about 0.00188 seconds. If this is too much for you, fix the mixed content manually and deactivate it in the settings.
 
-= Uninstalling Really Simple SSL =
-The plugin checks your certificate before enabling, but if, for example, you migrated the site to a non-ssl environment, you might get locked out of the back-end.
-If you can't deactivate, do not just remove the plugin folder to uninstall! Follow these [instructions](https://really-simple-ssl.com/knowledge-base/uninstall-websitebackend-not-accessible/).
+= Generating a Let's Encrypt SSL Certificate =
 
-= Mixed content issues =
-Most mixed content issues are caused by URL's in css or js files.
-For detailed instructions on how to find mixed content read this [article](https://really-simple-ssl.com/knowledge-base/how-to-track-down-mixed-content-or-insecure-content/).
 
 = Redirect loop issues =
 If you are experiencing redirect loops on your site, try these [instructions](https://really-simple-ssl.com/knowledge-base/my-website-is-in-a-redirect-loop/).
 
 = Is the plugin multisite compatible? =
-Yes. There is a dedicated network settings page where you can switch between network activated SSL and per page SSL. In the dedicated pro for multisite plugin, you can override all site settings for SSL on the network level, and can activate and deactivate SSL in the network menu for each site.
+Yes. There is a dedicated network settings page where you can switch between network-activated SSL and per page SSL. In Really Simple SSL Pro for Multisite, you can override all site settings for SSL on the network level and activate or deactivate SSL in the network menu for each site.
 
+= Uninstalling Really Simple SSL =
+The plugin checks your certificate before enabling, but if, for example, you migrated the site to a non-SSL environment, you might get locked out of the back-end.
+
+If you can't deactivate, do not just remove the plugin folder to uninstall! Follow these [instructions] instead: (https://really-simple-ssl.com/knowledge-base/uninstall-websitebackend-not-accessible/).
 == Changelog ==
 = 5.1.0 =
 * Improvement: clear keys directory only clearing files
