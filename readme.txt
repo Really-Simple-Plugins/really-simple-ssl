@@ -22,7 +22,6 @@ Really Simple SSL automatically detects your settings and configures your websit
 https://www.youtube.com/watch?v=BVx3ZrSsPrU
 
 = Love Really Simple SSL? =
-
 Hopefully, this plugin saves you some hours of work. If you want to support the continuing development of this plugin, please consider buying [Really Simple SSL Pro](https://www.really-simple-ssl.com/pro/), which includes some excellent security features and premium support.
 
 = Improve Security with Really Simple SSL Pro =
@@ -45,7 +44,6 @@ Hopefully, this plugin saves you some hours of work. If you want to support the 
 * Cookies set with PHP are set securely by setting them with the httpOnly flag.
 
 = About Really Simple SSL =
-
 Check out other plugins developed by Really Simple Plugins as well: [Complianz](https://wordpress.org/plugins/complianz-gdpr/) and [Zip Recipes](https://wordpress.org/plugins/zip-recipes/).
 
 [contact](https://www.really-simple-ssl.com/contact/) us if you have any questions, issues, or suggestions. Really Simple SSL is developed by [Really Simple Plugins](https://www.really-simple-plugins.com).
@@ -58,7 +56,6 @@ Any code suggestions? We're on [GitHub (https://github.com/rlankhorst/really-sim
 Translations can be added very easily [here](https://translate.wordpress.org/projects/wp-plugins/really-simple-ssl). 
 
 == Installation ==
-
 To install this plugin:
 
 1. Make a backup! See [our recommendations](https://really-simple-ssl.com/knowledge-base/backing-up-your-site/).
@@ -82,7 +79,7 @@ For detailed instructions on how to find mixed content read this [article](https
 On a site where the source consists of about 60.000 characters, the delay caused by the mixed content fixer is about 0.00188 seconds. If this is too much for you, fix the mixed content manually and deactivate it in the settings.
 
 = Generating a Let's Encrypt SSL Certificate =
-
+We recently added the possibility to generate a Free SSL Certificate with Let's Encrypt in our Really Simple SSL Wizard. We have an updated list available for all possible integrations [here](https://really-simple-ssl.com/install-ssl-certificate/). Please leave feedback about another integration, incorrect information, or you need help.
 
 = Redirect loop issues =
 If you are experiencing redirect loops on your site, try these [instructions](https://really-simple-ssl.com/knowledge-base/my-website-is-in-a-redirect-loop/).
@@ -94,6 +91,7 @@ Yes. There is a dedicated network settings page where you can switch between net
 The plugin checks your certificate before enabling, but if, for example, you migrated the site to a non-SSL environment, you might get locked out of the back-end.
 
 If you can't deactivate, do not just remove the plugin folder to uninstall! Follow these [instructions] instead: (https://really-simple-ssl.com/knowledge-base/uninstall-websitebackend-not-accessible/).
+
 == Changelog ==
 = 5.1.0 =
 * Improvement: clear keys directory only clearing files
