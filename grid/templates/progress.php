@@ -4,8 +4,8 @@
 	$percentage_completed = RSSSL()->really_simple_ssl->get_score_percentage();
 	$lowest_possible_task_count = RSSSL()->really_simple_ssl->get_lowest_possible_task_count();
 	$progress_bar_class = '';
-	if ( $percentage_completed < 90 ) {
-		$progress_bar_class = 'rsssl_orange';
+	if ( $percentage_completed < 80 ) {
+		$progress_bar_class = 'orange';
 	}
 ?>
 
