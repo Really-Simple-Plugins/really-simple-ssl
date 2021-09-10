@@ -284,6 +284,9 @@
   height: 100%;
   background-color: #61ce70;
 }
+.rsssl-grid .rsssl-item .item-container .rsssl-grid-item-content .rsssl-progress-block .progress .bar.rsssl_orange {
+  background-color: #FBC43D;
+}
 .rsssl-grid .rsssl-item .item-container .rsssl-grid-item-content .rsssl-progress-block .progress-text {
   display: flex;
   align-items: center;
