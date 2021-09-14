@@ -3,13 +3,17 @@
 <?php
 	$percentage_completed = RSSSL()->really_simple_ssl->get_score_percentage();
 	$lowest_possible_task_count = RSSSL()->really_simple_ssl->get_lowest_possible_task_count();
+	$progress_bar_class = '';
+	if ( $percentage_completed < 80 ) {
+		$progress_bar_class = 'orange';
+	}
 ?>
 
 <div class="rsssl-progress-block">
     <div class="rsssl-progress-bar-text">
         <div class="progress-bar-container">
             <div class="progress">
-                <div class="bar" style="width:<?php echo $percentage_completed?>%"></div>
+                <div class="bar <?php echo $progress_bar_class?>" style="width:<?php echo $percentage_completed?>%"></div>
             </div>
         </div>
 

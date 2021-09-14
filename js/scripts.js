@@ -123,7 +123,13 @@ jQuery(document).ready(function ($) {
                 row.remove();
                 if (data.percentage !== '') {
                     $('.rsssl-progress-percentage').text(data.percentage + "%");
-                    $(".progress-bar-container .progress .bar").css("width", data.percentage + '%');
+                    var bar = $(".progress-bar-container .progress .bar");
+                    bar.css("width", data.percentage + '%');
+                    if (parseInt(data.percentage)>=80){
+                        bar.removeClass('orange');
+                    } else {
+                        bar.addClass('orange');
+                    }
                 }
 
                 if (data.tasks !== '') {
