@@ -120,7 +120,7 @@ function rsssl_le_get_notices_list($notices) {
 						                 . rsssl_read_more( "https://really-simple-ssl.com/protect-ssl-generation-directories" ),
 						'icon'        => 'warning',
 						'plusone'     => true,
-						'dismissible' => false,
+						'dismissible' => true,
 					),
 				),
 			);
