@@ -93,6 +93,7 @@ If you can't deactivate, do not just remove the plugin folder to uninstall! Foll
 = 5.1.1 =
 * Improvement: color of progress bar
 * Improvement: make notice about not protected directories dismissible, in case the Let's Encrypt certificate generation process is not completed.
+* Improvement: catch not existing fsock open function
 
 = 5.1.0 =
 * Improvement: clear keys directory only clearing files
