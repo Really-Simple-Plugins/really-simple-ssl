@@ -198,7 +198,7 @@ if ( !function_exists('rsssl_is_directadmin')) {
 function rsssl_check_port( $port)
 {
 	$port_check_status = get_option("rsssl_port_check_$port");
-	if ($port_check_status === 'fail') {
+	if ( !function_exists('fsockopen') || $port_check_status === 'fail' ) {
 		return false;
 	}
 
