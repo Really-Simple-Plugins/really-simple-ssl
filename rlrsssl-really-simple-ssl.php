@@ -117,7 +117,7 @@ class REALLY_SIMPLE_SSL
             define('rsssl_file', __FILE__);
         }
 		require_once(ABSPATH . 'wp-admin/includes/plugin.php');
-		$plugin_data = get_plugin_data(__FILE__);
+		$plugin_data = get_file_data( __FILE__, array( 'Version' => 'Version' ), false );
 		$debug = defined('RSSSL_DEBUG') && RSSSL_DEBUG ? time() : '';
 		define('rsssl_version', $plugin_data['Version'].$debug);
 
