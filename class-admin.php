@@ -3627,7 +3627,6 @@ class rsssl_admin extends rsssl_front_end
      */
 
     public function update_task_toggle_option() {
-
         if (!isset($_POST['token']) || (!wp_verify_nonce($_POST['token'], 'rsssl_nonce'))) {
             return;
         }
