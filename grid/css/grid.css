@@ -306,6 +306,9 @@
 .rsssl-grid .rsssl-item .item-container .rsssl-grid-item-content .rsssl-progress-block .progress-text .rsssl-progress-text a {
   margin-left: 3px;
 }
+.rsssl-grid .rsssl-item .item-container .rsssl-grid-item-content .rsssl-progress-block .rsssl-progress-table tr {
+  position: relative;
+}
 .rsssl-grid .rsssl-item .item-container .rsssl-grid-item-content .rsssl-progress-block .rsssl-progress-table td {
   padding: 10px 10px 10px 0;
 }
