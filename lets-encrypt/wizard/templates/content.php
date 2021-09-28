@@ -7,7 +7,10 @@
 
         <div class="rsssl-wizard-title rsssl-section-content-title-header">
 			<h1>{title}</h1>
-            <span><a href="<?php echo esc_url(add_query_arg(array("page"=>"rlrsssl_really_simple_ssl"),admin_url("options-general.php") ) );?>"><?php _e("Back to Dashboard","really-simple-ssl")?></a></span>
+            <span>
+                <a class="rsssl-reset" href="<?php echo esc_url(add_query_arg(array("page"=>"rlrsssl_really_simple_ssl", 'tab'=>"letsencrypt", "reset-letsencrypt" => 1),admin_url("options-general.php") ) );?>"><?php _e("Reset Let's Encrypt","really-simple-ssl")?></a>
+                <a href="<?php echo esc_url(add_query_arg(array("page"=>"rlrsssl_really_simple_ssl"),admin_url("options-general.php") ) );?>"><?php _e("Back to Dashboard","really-simple-ssl")?></a>
+            </span>
 		</div>
         <div class="rsssl-wizard-title rsssl-section-content-notifications-header">
 			<h1><?php _e("Notifications", 'really-simple-ssl')?></h1>
