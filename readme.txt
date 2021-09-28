@@ -90,6 +90,9 @@ The plugin checks your certificate before enabling, but if, for example, you mig
 If you can't deactivate, do not just remove the plugin folder to uninstall! Follow these [instructions] instead: (https://really-simple-ssl.com/knowledge-base/uninstall-websitebackend-not-accessible/).
 
 == Changelog ==
+= 5.1.2 =
+* Improvement: remove one recommendation from the activate ssl notice, to keep it clean
+
 = 5.1.1 =
 * Improvement: color of progress bar
 * Improvement: make notice about not protected directories dismissible, in case the Let's Encrypt certificate generation process is not completed.
