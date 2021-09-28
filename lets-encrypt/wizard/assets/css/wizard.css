@@ -167,9 +167,6 @@
 #rsssl-content-area .rsssl-section-content form .rsssl-section-content-title-header {
   background-color: white;
 }
-#rsssl-content-area .rsssl-section-content form .rsssl-section-content-title-header .rsssl-reset {
-  color: #D7263D;
-}
 #rsssl-content-area .rsssl-section-content form .rsssl-wizard-intro,
 #rsssl-content-area .rsssl-section-content form .rsssl-template-intro .rsssl-master-label {
   grid-column-start: 1;
