@@ -92,6 +92,7 @@ If you can't deactivate, do not just remove the plugin folder to uninstall! Foll
 == Changelog ==
 = 5.1.2 =
 * Improvement: remove one recommendation from the activate ssl notice, to keep it clean
+* Improvement: add reset option to Let's Encrypt generation wizard, to allow fully resetting Lets Encrypt
 
 = 5.1.1 =
 * Improvement: color of progress bar
