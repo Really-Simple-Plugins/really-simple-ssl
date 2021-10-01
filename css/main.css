@@ -617,6 +617,8 @@ settings saved
  */
 .rsssl-container .rsssl-settings-saved,
 #rsssl-wizard .rsssl-settings-saved {
+  display: none;
+  opacity: 0;
   top: 20px;
   height: 45px;
   position: fixed;
