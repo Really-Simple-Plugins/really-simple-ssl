@@ -100,7 +100,7 @@ class rsssl_cPanel
             error_log('Not able to login');
 	        update_option('rsssl_installation_error', 'cpanel:default');
 	        $status = 'warning';
-	        $action = $shell_addon_active ? 'skip' : 'stop';
+	        $action = $shell_addon_active ? 'skip' : 'continue';
 	        $message = rsssl_get_manual_instructions_text($this->ssl_installation_url);
         } else if ($response->status) {
 	        delete_option('rsssl_installation_error' );
