@@ -507,6 +507,15 @@ if ( ! class_exists( "rsssl_config" ) ) {
 		            'api' => false,
 		            'ssl_installation_link' => false,
 	            ),
+	            'upress' => array(
+		            'name' => 'Upress',
+		            'installation_renewal_required' => false,
+		            'local_ssl_generation_needed' => false,
+		            'free_ssl_available' => 'activation_required',
+		            'hosting_dashboard' => 'false',
+		            'api' => false,
+		            'ssl_installation_link' => 'https://support.upress.io',
+	            ),
             );
 
 	        $this->not_local_certificate_hosts = $this->filter_hosts( 'local_ssl_generation_needed', false);

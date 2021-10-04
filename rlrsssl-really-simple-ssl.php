@@ -112,12 +112,12 @@ class REALLY_SIMPLE_SSL
 		define('rsssl_path', trailingslashit(plugin_dir_path(__FILE__)));
         define('rsssl_template_path', trailingslashit(plugin_dir_path(__FILE__)).'grid/templates/');
         define('rsssl_plugin', plugin_basename(__FILE__));
-        define('rsssl_add_on_version_requirement', '5.0');
+        define('rsssl_add_on_version_requirement', '5.1');
         if (!defined('rsssl_file') ){
             define('rsssl_file', __FILE__);
         }
 		$debug = defined('RSSSL_DEBUG') && RSSSL_DEBUG ? time() : '';
-		define('rsssl_version', '5.1.1'.$debug);
+		define('rsssl_version', '5.1.2'.$debug);
 
 		define('rsssl_le_cron_generation_renewal_check', 20);
 		define('rsssl_le_manual_generation_renewal_check', 15);
