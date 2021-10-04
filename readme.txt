@@ -94,6 +94,7 @@ If you can't deactivate, do not just remove the plugin folder to uninstall! Foll
 * Improvement: remove one recommendation from the activate ssl notice, to keep it clean
 * Improvement: continue instead of stop when no auto installation possible
 * Improvement: add reset option to Let's Encrypt generation wizard, to allow fully resetting Lets Encrypt
+* Improvement: saved settings feedback
 
 = 5.1.1 =
 * Improvement: color of progress bar
