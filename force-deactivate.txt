@@ -140,6 +140,8 @@ function find_wordpress_base_path()
 	return false;
 }
 
+rename('force-deactivate.php' , 'force-deactivate.txt');
+
 ?>
 </body>
 </html>
