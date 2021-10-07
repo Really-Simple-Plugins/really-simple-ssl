@@ -32,16 +32,6 @@ if ( ! class_exists( 'rsssl_cache' ) ) {
 
     if (!current_user_can($this->capability)) return;
 
-//	$this->maybe_flush_w3tc_cache();
-//	$this->maybe_flush_wp_optimize_cache();
-//	$this->maybe_flush_litespeed_cache();
-//	$this->maybe_flush_hummingbird_cache();
-//	$this->maybe_flush_fastest_cache();
-//	$this->maybe_flush_autoptimize_cache();
-//	$this->maybe_flush_wp_rocket();
-//	$this->maybe_flush_cache_enabler();
-//	$this->maybe_flush_wp_super_cache();
-
     add_action( 'admin_head', array($this,'maybe_flush_w3tc_cache'));
     add_action( 'admin_head', array($this,'maybe_flush_wp_optimize_cache'));
 	add_action( 'admin_head', array($this,'maybe_flush_litespeed_cache'));

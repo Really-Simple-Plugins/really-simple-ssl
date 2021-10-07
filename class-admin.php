@@ -162,11 +162,19 @@ class rsssl_admin extends rsssl_front_end
 
         $activation_time = get_option('rsssl_flush_rewrite_rules');
         $more_than_one_minute_ago = $activation_time < strtotime("-1 minute");
-        $less_than_5_minutes_ago = $activation_time > strtotime("-5 minute");
-        if (get_option('rsssl_flush_rewrite_rules') && $more_than_one_minute_ago && $less_than_5_minutes_ago){
+        $less_than_2_minutes_ago = $activation_time > strtotime("-2 minute");
+        if (get_option('rsssl_flush_rewrite_rules') && $more_than_one_minute_ago && $less_than_2_minutes_ago){
             delete_option('rsssl_flush_rewrite_rules');
             add_action('shutdown', 'flush_rewrite_rules');
         }
+
+	    $more_than_2_minute_ago = get_option('rsssl_flush_caches') < strtotime("-2 minute");
+	    $less_than_5_minutes_ago = get_option('rsssl_flush_caches') > strtotime("-5 minute");
+
+	    if (get_option('rsssl_flush_caches') && $more_than_2_minute_ago && $less_than_5_minutes_ago){
+		    delete_option('rsssl_flush_caches');
+		    add_action('shutdown', RSSSL()->rsssl_cache->flush() );
+	    }
 
         // Set default progress toggle to remaining tasks if it hasn't been set
         if (!get_option('rsssl_all_tasks') && !get_option('rsssl_remaining_tasks') ) {
@@ -191,7 +199,7 @@ class rsssl_admin extends rsssl_front_end
 	            if (!defined('RSSSL_NO_FLUSH') || !RSSSL_NO_FLUSH) {
                     update_option('rsssl_flush_rewrite_rules', time());
                 }
-                add_action('admin_init', array(RSSSL()->rsssl_cache, 'flush'), 40);
+	            update_option('rsssl_flush_caches', time());
             }
 
             if (!$this->wpconfig_ok()) {
@@ -201,7 +209,7 @@ class rsssl_admin extends rsssl_front_end
                 $this->ssl_enabled = false;
                 $this->save_options();
             } elseif ($this->ssl_enabled) {
-                add_action('init', array($this, 'configure_ssl'), 20);
+                add_action('admin_init', array($this, 'configure_ssl'), 20);
             }
         }
 
@@ -374,8 +382,8 @@ class rsssl_admin extends rsssl_front_end
 
     private function clicked_activate_ssl()
     {
-        if (!current_user_can($this->capability)) return;
-        if (isset($_POST['rsssl_do_activate_ssl'])) {
+       if (!current_user_can($this->capability)) return;
+       if (isset($_POST['rsssl_do_activate_ssl'])) {
             $this->activate_ssl();
             update_option('rsssl_activation_timestamp', time());
 
