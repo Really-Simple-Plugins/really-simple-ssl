@@ -258,7 +258,7 @@ class rsssl_admin extends rsssl_front_end
             }
         }
 	    if ( $prev_version && version_compare( $prev_version, '5.1.1', '<=' ) ) {
-		    if ( rsssl_get_value( 'disable_ocsp' ) ) {
+		    if ( get_option( 'rsssl_disable_ocsp' ) ) {
 			    $options = get_option( 'rsssl_options_lets-encrypt' );
                 $options['disable_ocsp'] = true;
 			    update_option( 'rsssl_options_lets-encrypt', $options );
