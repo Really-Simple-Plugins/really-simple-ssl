@@ -2447,7 +2447,7 @@ class rsssl_admin extends rsssl_front_end
 
     public function show_leave_review_notice()
     {
-        if ($this->dismiss_all_notices) return;
+        if ($this->dismiss_all_notices || is_multisite() && rsssl_multisite::this()->dismiss_all_notices) return;
 
         //prevent showing the review on edit screen, as gutenberg removes the class which makes it editable.
         $screen = get_current_screen();
@@ -3269,7 +3269,8 @@ class rsssl_admin extends rsssl_front_end
             //check if all notices should be dismissed
             if ( ( isset( $notice['output'][$output]['dismissible'] )
                 && $notice['output'][$output]['dismissible']
-                && ( $this->dismiss_all_notices ) )
+                && ( $this->dismiss_all_notices
+                 || is_multisite() && rsssl_multisite::this()->dismiss_all_notices ) )
             ) {
                 unset($notices[$id]);
                 continue;
@@ -4199,13 +4200,22 @@ class rsssl_admin extends rsssl_front_end
 
 	public function get_option_dismiss_all_notices()
 	{
+		$disabled = "";
+		$comment = "";
+
+		if (is_multisite() && rsssl_multisite::this()->dismiss_all_notices) {
+			$disabled = "disabled";
+			$comment = __("This option is enabled on the network menu.", "really-simple-ssl");
+		}
+
 		?>
         <label class="rsssl-switch">
             <input id="rlrsssl_options" name="rlrsssl_options[dismiss_all_notices]" size="40" value="1"
-                   type="checkbox" <?php checked(1, $this->dismiss_all_notices, true) ?> />
+                   type="checkbox" <?php echo $disabled?> <?php checked(1, $this->dismiss_all_notices, true) ?> />
             <span class="rsssl-slider rsssl-round"></span>
         </label>
 		<?php
+		RSSSL()->rsssl_help->get_comment($comment);
 	}
 
     /**
