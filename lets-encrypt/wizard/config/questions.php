@@ -80,6 +80,16 @@ $this->fields = $this->fields + array(
 	        )
         ),
 
+		'disable_ocsp' => array(
+			'step'        => 2,
+			'section'     => 1,
+			'source'      => 'lets-encrypt',
+			'type'        => 'checkbox',
+			'default'     => '',
+			'title'       => __('OCSP Stapling',"really-simple-ssl"),
+			'option_text' => sprintf(__("Disable OCSP Stapling", 'really-simple-ssl'),'<a target="_blank" href="https://letsencrypt.org/documents/LE-SA-v1.2-November-15-2017.pdf">','</a>'),
+		),
+
         'other_host_type' => array(
 	        'step'        => 2,
 	        'section'     => 1,
