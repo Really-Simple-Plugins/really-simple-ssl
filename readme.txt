@@ -50,7 +50,7 @@ Check out other plugins developed by Really Simple Plugins as well: [Complianz](
 
 For free SSL certificate generation, Really Simple SSL uses the [le acme2 PHP](https://github.com/fbett/le-acme2-php/) Let's Encrypt client library, thanks to 'fbett' for providing it.
 
-Any code suggestions? We're on [GitHub](https://github.com/rlankhorst/really-simple-ssl) as well!
+Any code suggestions? We're on [GitHub](https://github.com/really-simple-plugins/really-simple-ssl) as well!
 
 = Really Simple SSL in your language? =
 Translations can be added very easily [here](https://translate.wordpress.org/projects/wp-plugins/really-simple-ssl). 
