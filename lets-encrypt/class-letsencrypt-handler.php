@@ -555,10 +555,12 @@ class rsssl_letsencrypt_handler {
 	 */
 	public function clear_order(){
 		$this->get_account();
-		$response = $this->get_order();
-		$order = $response->output;
-		if ( $order ) {
-			$order->clear();
+		if ( $this->account ) {
+			$response = $this->get_order();
+			$order = $response->output;
+			if ( $order ) {
+				$order->clear();
+			}
 		}
 	}
 
