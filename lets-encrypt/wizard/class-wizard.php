@@ -822,9 +822,7 @@ if ( ! class_exists( "rsssl_wizard" ) ) {
 			} else {
 				$args['title'] = RSSSL_LE()->config->steps[$page][$step]['title'];
 			}
-			if ( isset( $_POST['rsssl-save'] ) ) {
-				$args['save_notice'] = rsssl_notice( __( "Changes saved successfully", 'really-simple-ssl' ), 'success', true , false);
-			}
+
 			ob_start();
 			RSSSL_LE()->field->get_fields( $page, $step, $section );
 			$args['fields'] = ob_get_clean();
@@ -839,7 +837,7 @@ if ( ! class_exists( "rsssl_wizard" ) ) {
 				if ( count($action_list)>0 ) {
 					$disabled = 'disabled';
 				}
-				$args['next_button'] = '<input '.$disabled.' class="button button-primary rsssl-next" type="submit" name="rsssl-next" value="'. __( "Next", 'really-simple-ssl' ) . '">';
+				$args['next_button'] = '<input '.$disabled.' class="button button-primary rsssl-next" type="submit" name="rsssl-next" value="'. __( "Save and continue", 'really-simple-ssl' ) . '">';
 			}
 
 			if ( $step > 0  && $step < $this->total_steps( $page )) {

@@ -1307,6 +1307,7 @@ if ( ! class_exists( "rsssl_field" ) ) {
 	        $fields = RSSSL_LE()->config->fields( 'lets-encrypt', $step, $section);
 	        reset($fields);
 	        foreach ($fields as $key => $field ) {
+                error_log($field['callback']);
 		        if (isset($field['callback']) && strpos($field['callback'], '.php')!==false) {
 			        $button_text = __( "Refresh", 'really-simple-ssl' );
 			        $button_name = 'rsssl-refresh';
