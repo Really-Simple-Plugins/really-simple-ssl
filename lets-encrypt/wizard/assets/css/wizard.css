@@ -191,7 +191,7 @@
   grid-column-start: 1;
 }
 #rsssl-content-area .rsssl-section-content form .field-group .rsssl-help-warning-wrap {
-  margin-top: 20px;
+  margin-top: -20px;
 }
 #rsssl-content-area .rsssl-section-content form .rsssl-section-footer {
   grid-column-start: 1;

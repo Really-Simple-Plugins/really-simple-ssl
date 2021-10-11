@@ -52,6 +52,16 @@ $this->fields = $this->fields + array(
 			'title'       => __('Terms & Conditions',"really-simple-ssl"),
 			'option_text' => sprintf(__("I agree to the Let's Encrypt %sTerms & Conditions%s", 'really-simple-ssl'),'<a target="_blank" href="https://letsencrypt.org/documents/LE-SA-v1.2-November-15-2017.pdf">','</a>'),
 		),
+		'disable_ocsp' => array(
+			'step'        => 2,
+			'section'     => 1,
+			'source'      => 'lets-encrypt',
+			'type'        => 'checkbox',
+			'default'     => '',
+			'help'      => __( "By default, OCSP stapling is enabled, which is the best practice. In some cases this is not supported by a hosting company. In that case you can disable it here.","really-simple-ssl").rsssl_read_more('https://really-simple-ssl.com/ocsp-stapling'),
+			'title'       => __('OCSP Stapling',"really-simple-ssl"),
+			'option_text' => __("Disable OCSP Stapling", 'really-simple-ssl'),
+		),
 
         'domain' => array(
             'step'        => 2,
@@ -79,17 +89,6 @@ $this->fields = $this->fields + array(
 	        	'NOT rsssl_wildcard_certificate_required',
 	        )
         ),
-
-		'disable_ocsp' => array(
-			'step'        => 2,
-			'section'     => 1,
-			'source'      => 'lets-encrypt',
-			'type'        => 'checkbox',
-			'default'     => '',
-			'comment'      => __( "By default, OCSP stapling is enabled, which is the best practice. In some cases this is not supported by a hosting company. In that case you can disable it here.","really-simple-ssl").rsssl_read_more('https://really-simple-ssl.com/ocsp-stapling'),
-			'title'       => __('OCSP Stapling',"really-simple-ssl"),
-			'option_text' => sprintf(__("Disable OCSP Stapling", 'really-simple-ssl'),'<a target="_blank" href="https://letsencrypt.org/documents/LE-SA-v1.2-November-15-2017.pdf">','</a>'),
-		),
 
         'other_host_type' => array(
 	        'step'        => 2,
