@@ -119,6 +119,12 @@ $this->steps = array(
 	            "title" => __( "Generation", 'really-simple-ssl' ),
 	            "intro" => __( "We will now generate your SSL Certificate", "really-simple-ssl" ),
 	            'actions' => array(
+					array(
+						'description' => __("Checking if Terms & Conditions are accepted...", "really-simple-ssl"),
+						'action'=> 'terms_accepted',
+						'attempts' => 1,
+						'speed' => 'normal',
+					),
 		            array(
 			            'description' => __("Creating account...", "really-simple-ssl"),
 			            'action'=> 'get_account',
@@ -131,7 +137,6 @@ $this->steps = array(
 			            'attempts' => 5,
 			            'speed' => 'normal',
 		            ),
-
 	            ),
             ),
             6    => array(
