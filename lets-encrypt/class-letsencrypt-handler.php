@@ -159,12 +159,6 @@ class rsssl_letsencrypt_handler {
 			return;
 		}
 
-		if ($fieldname==='accept_le_terms'){
-		    if (!$fieldvalue) {
-		        rsssl_progress_remove('domain');
-            }
-        }
-
 		if ($fieldname==='other_host_type'){
 			if ( !rsssl_do_local_lets_encrypt_generation() ) {
 				rsssl_progress_add('directories');
