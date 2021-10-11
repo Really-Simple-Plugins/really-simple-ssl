@@ -400,7 +400,7 @@ if ( ! class_exists( "rsssl_wizard" ) ) {
 		    $url = $this->get_support_url();
 			ob_start();?>
 			<h2><?php _e("Before you begin!","really-simple-ssl") ?></h2>
-            <p><?php _e("We're currently in Beta. This means we need your help! During this process you might discover you want to give some feedback about your experiences or need some help. If so, keep or form ready and try to be so complete and precise as possible so we can assist as fast as possible.","really-simple-ssl")?></p>
+            <p><?php _e("During the SSL generation process you might discover you want to give some feedback about your experiences or need some help. If so, keep our form ready and try to be so complete and precise as possible so we can assist as fast as possible.","really-simple-ssl")?></p>
             <?php wp_nonce_field('rsssl_save', 'rsssl_le_nonce') ?>
             <a target="_blank" href="<?php echo $url?>" type="submit" class="button button-default rsssl-priority" name="rsssl-letsencrypt-support"><?php _e("Support","really-simple-ssl")?></a>
 			<?php
