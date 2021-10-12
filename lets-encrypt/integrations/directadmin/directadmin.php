@@ -102,7 +102,7 @@ class rsssl_directadmin {
 
 			//set a default error response
 			$status = 'warning';
-			$action = 'stop';
+			$action = 'continue';
 			$message = rsssl_get_manual_instructions_text($this->ssl_installation_url);
 
 
