@@ -121,6 +121,7 @@ if ( ! class_exists( "rsssl_wizard" ) ) {
 		    if (isset($_POST['rsssl-switch-to-dns'])) {
 			    update_option('rsssl_verification_type', 'DNS');
 			    $step = $this->step();
+			    rsssl_progress_add('directories');
 			    //if we're in step directories, skip to DNS step
 			    if ( $step == 3) {
 				    wp_redirect(rsssl_letsencrypt_wizard_url().'&step=4');
