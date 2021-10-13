@@ -3151,7 +3151,6 @@ class rsssl_admin extends rsssl_front_end
                     'set' => array(
                         'msg' =>__('HttpOnly Secure cookies have been set automatically!', 'really-simple-ssl'),
                         'icon' => 'success',
-                        'dismissible' => true,
                         'url' => 'https://really-simple-ssl.com/secure-cookies-with-httponly-secure-and-use_only_cookies/',
                     ),
                     'not-set' => array(
