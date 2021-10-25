@@ -6,7 +6,7 @@ Requires at least: 4.9
 License: GPL2
 Tested up to: 5.8
 Requires PHP: 5.6
-Stable tag: 5.1.2
+Stable tag: 5.1.3
 
 No setup required! You only need an SSL certificate, and this plugin will do the rest.
 
@@ -90,6 +90,9 @@ The plugin checks your certificate before enabling, but if, for example, you mig
 If you can't deactivate, do not just remove the plugin folder to uninstall! Follow these [instructions] instead: (https://really-simple-ssl.com/knowledge-base/uninstall-websitebackend-not-accessible/).
 
 == Changelog ==
+= 5.1.3 =
+* Improvement: auto rename force-deactivate.php back to .txt after running
+
 = 5.1.2 =
 * Improvement: remove one recommendation from the activate ssl notice, to keep it clean
 * Improvement: continue instead of stop when no auto installation possible
