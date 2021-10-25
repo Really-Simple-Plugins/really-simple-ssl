@@ -92,6 +92,7 @@ If you can't deactivate, do not just remove the plugin folder to uninstall! Foll
 == Changelog ==
 = 5.1.3 =
 * Improvement: auto rename force-deactivate.php back to .txt after running
+* Improvement: auto flush caches of popular caching plugins
 
 = 5.1.2 =
 * Improvement: remove one recommendation from the activate ssl notice, to keep it clean
