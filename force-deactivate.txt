@@ -3,8 +3,8 @@
 * Deactivation page to simple deactivate the plugin when backend is not accessible anymore
 * To deactivate:
 *       1) rename this file to force-deactivate.php
-*       2) Go in your browser to www.yourdomain.com/wp-content/plugins/really-simple-ssl/force-deactivate.php.
-*       3) IMPORTANT!!!! Rename this file back to .txt
+*       2) Go in your browser to (note use of http, not https) http://yourdomain.com/wp-content/plugins/really-simple-ssl/force-deactivate.php.
+*       3) IMPORTANT! On execution, this file will automatically get renamed to .txt. If you do not run it, don't forget to change it back.
 */
 
 ?>
@@ -139,6 +139,8 @@ function find_wordpress_base_path()
 
 	return false;
 }
+
+rename('force-deactivate.php' , 'force-deactivate.txt');
 
 ?>
 </body>
