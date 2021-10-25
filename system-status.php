@@ -63,7 +63,7 @@ if ( current_user_can( 'manage_options' ) ) {
 	if ( RSSSL()->really_simple_ssl->switch_mixed_content_fixer_hook ) {
 		echo "* Use alternative method to fix mixed content\n";
 	}
-	if ( RSSSL()->really_simple_ssl->dismiss_all_notices ) {
+	if ( RSSSL()->really_simple_ssl->dismiss_all_notices || is_multisite() && rsssl_multisite::this()->dismiss_all_notices ) {
 		echo "* Dismiss all Really Simple SSL notices\n";
 	}
 	echo "\n";
