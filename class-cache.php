@@ -29,7 +29,6 @@ if ( ! class_exists( 'rsssl_cache' ) ) {
    */
 
   public function flush() {
-
     if (!current_user_can($this->capability)) return;
 
     add_action( 'admin_head', array($this,'maybe_flush_w3tc_cache'));
