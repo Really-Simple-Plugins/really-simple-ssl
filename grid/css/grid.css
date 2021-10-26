@@ -18,7 +18,7 @@
 }
 .settings_page_rlrsssl_really_simple_ssl #wpcontent .nav-tab.nav-tab-active,
 .settings_page_really-simple-ssl #wpcontent .nav-tab.nav-tab-active {
-  border-bottom: 2px solid #FBC43D !important;
+  border-bottom: 2px solid #FBC43D;
   background: #fff;
   padding-bottom: 15px;
 }

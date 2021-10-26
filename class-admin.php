@@ -40,7 +40,8 @@ class rsssl_admin extends rsssl_front_end
     public $plugin_db_version;
     public $ssl_type = "NA";
     public $dismiss_all_notices = false;
-    public $pro_url;
+	public $high_contrast = false;
+	public $pro_url;
 
     function __construct()
     {
@@ -866,6 +867,7 @@ class rsssl_admin extends rsssl_front_end
             $this->htaccess_redirect = isset($options['htaccess_redirect']) ? $options['htaccess_redirect'] : FALSE;
             $this->switch_mixed_content_fixer_hook = isset($options['switch_mixed_content_fixer_hook']) ? $options['switch_mixed_content_fixer_hook'] : FALSE;
 	        $this->dismiss_all_notices = isset($options['dismiss_all_notices']) ? $options['dismiss_all_notices'] : FALSE;
+	        $this->high_contrast = isset($options['high_contrast']) ? $options['high_contrast'] : FALSE;
 	        $this->debug_log = isset($options['debug_log']) ? $options['debug_log'] : $this->debug_log;
             $this->dismiss_review_notice = isset($options['dismiss_review_notice']) ? $options['dismiss_review_notice'] : $this->dismiss_review_notice;
         }
@@ -1476,6 +1478,7 @@ class rsssl_admin extends rsssl_front_end
             'wp_redirect' => $this->wp_redirect,
             'switch_mixed_content_fixer_hook' => $this->switch_mixed_content_fixer_hook,
             'dismiss_all_notices' => $this->dismiss_all_notices,
+            'high_contrast' => $this->high_contrast,
             'dismiss_review_notice' => $this->dismiss_review_notice,
 
         );
@@ -1513,6 +1516,7 @@ class rsssl_admin extends rsssl_front_end
 	        $this->ssl_enabled = FALSE;
 	        $this->switch_mixed_content_fixer_hook = FALSE;
 	        $this->dismiss_all_notices = FALSE;
+            $this->high_contrast = FALSE;
 	        $this->dismiss_review_notice = FALSE;
 
 
@@ -2763,8 +2767,8 @@ class rsssl_admin extends rsssl_front_end
             $tabs['configuration'] = __("General", "really-simple-ssl");
         }
 
-        ?>
-        <div class="nav-tab-wrapper">
+	    $high_contrast = $this->high_contrast ? 'rsssl-high-contrast' : ''; ?>
+        <div class="nav-tab-wrapper <?php echo $high_contrast ?>">
             <div class="rsssl-logo-container">
                 <div id="rsssl-logo"><img src="<?php echo rsssl_url?>/assets/really-simple-ssl-logo.png" alt="review-logo"></div>
             </div>
@@ -3719,8 +3723,8 @@ class rsssl_admin extends rsssl_front_end
         if ( isset ($_GET['tab'] ) ) $this->admin_tabs( $_GET['tab'] ); else $this->admin_tabs('configuration');
         if ( isset ($_GET['tab'] ) ) $tab = $_GET['tab']; else $tab = 'configuration';
 
-        ?>
-        <div class="rsssl-container">
+	    $high_contrast = $this->high_contrast ? 'rsssl-high-contrast' : ''; ?>
+        <div class="rsssl-container <?php echo $high_contrast ?>">
             <div class="rsssl-main"><?php
                 switch ($tab) {
                     case 'configuration' :
@@ -3990,6 +3994,9 @@ class rsssl_admin extends rsssl_front_end
 	    $help_tip = RSSSL()->rsssl_help->get_help_tip(__("Enable this option to permanently dismiss all +1 notices in the 'Your progress' tab", "really-simple-ssl"), $return=true);
 	    add_settings_field('id_dismiss_all_notices', $help_tip . "<div class='rsssl-settings-text'>" .  __("Dismiss all Really Simple SSL notices", "really-simple-ssl"), array($this, 'get_option_dismiss_all_notices'), 'rlrsssl', 'rlrsssl_settings');
 
+	    $help_tip = RSSSL()->rsssl_help->get_help_tip(__("If enabled, all the Really Simple SSL pages within the WordPress admin will be in high contrast", "really-simple-ssl"), $return=true);
+	    add_settings_field('id_high_contrast', $help_tip . "<div class='rsssl-settings-text'>" .  __("Enable High Contrast mode", "really-simple-ssl"), array($this, 'get_option_high_contrast'), 'rlrsssl', 'rlrsssl_settings');
+
     }
 
     /**
@@ -4066,6 +4073,12 @@ class rsssl_admin extends rsssl_front_end
 		    $newinput['dismiss_all_notices'] = TRUE;
 	    } else {
 		    $newinput['dismiss_all_notices'] = FALSE;
+	    }
+
+	    if (!empty($input['high_contrast']) && $input['high_contrast'] == '1') {
+		    $newinput['high_contrast'] = TRUE;
+	    } else {
+		    $newinput['high_contrast'] = FALSE;
 	    }
 
         if (!empty($input['htaccess_redirect']) && $input['htaccess_redirect'] == '1') {
@@ -4201,6 +4214,27 @@ class rsssl_admin extends rsssl_front_end
         <label class="rsssl-switch">
             <input id="rlrsssl_options" name="rlrsssl_options[dismiss_all_notices]" size="40" value="1"
                    type="checkbox" <?php checked(1, $this->dismiss_all_notices, true) ?> />
+            <span class="rsssl-slider rsssl-round"></span>
+        </label>
+		<?php
+	}
+
+	/**
+	 *
+	 * Get the option to enable high contrast
+	 *
+	 * @since 5.1.3
+	 *
+	 * @access public
+	 *
+	 */
+
+	public function get_option_high_contrast()
+	{
+		?>
+        <label class="rsssl-switch">
+            <input id="rlrsssl_options" name="rlrsssl_options[high_contrast]" size="40" value="1"
+                   type="checkbox" <?php checked(1, $this->high_contrast, true) ?> />
             <span class="rsssl-slider rsssl-round"></span>
         </label>
 		<?php
