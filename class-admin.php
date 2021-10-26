@@ -170,10 +170,9 @@ class rsssl_admin extends rsssl_front_end
 
 	    $more_than_2_minute_ago = get_option('rsssl_flush_caches') < strtotime("-2 minute");
 	    $less_than_5_minutes_ago = get_option('rsssl_flush_caches') > strtotime("-5 minute");
-
 	    if (get_option('rsssl_flush_caches') && $more_than_2_minute_ago && $less_than_5_minutes_ago){
 		    delete_option('rsssl_flush_caches');
-		    add_action('shutdown', RSSSL()->rsssl_cache->flush() );
+		    add_action('shutdown', array( RSSSL()->rsssl_cache, 'flush' )  );
 	    }
 
         // Set default progress toggle to remaining tasks if it hasn't been set
