@@ -36,6 +36,9 @@
   color: white;
   border: 1px solid black;
 }
+.rsssl-high-contrast .rsssl-tasks {
+  color: black !important;
+}
 .rsssl-high-contrast .rsssl-close-warning-x {
   color: black;
 }
@@ -53,6 +56,7 @@
 .rsssl-high-contrast .revoke-from-csp,
 .rsssl-high-contrast .button-default {
   background-color: black !important;
+  border-color: black !important;
   color: white;
 }
 .rsssl-high-contrast .button:hover {
