@@ -56,7 +56,7 @@ class rsssl_letsencrypt_handler {
 			Connector::getInstance()->useStagingServer( false );
 			Logger::getInstance()->setDesiredLevel( Logger::LEVEL_DISABLED );
 
-			if ( !get_option('rsssl_disable_ocsp') ) {
+			if ( !rsssl_get_value( 'disable_ocsp' ) ) {
 				Certificate::enableFeatureOCSPMustStaple();
 			}
 
@@ -665,8 +665,8 @@ class rsssl_letsencrypt_handler {
 					        }
 					    } else {
 					    	//if OCSP is not disabled yet, and the order status is not invalid, we disable ocsp, and try again.
-					    	if ( !get_option('rsssl_disable_ocsp' ) ) {
-							    update_option('rsssl_disable_ocsp', true);
+					    	if ( !rsssl_get_value( 'disable_ocsp' ) ) {
+							    RSSSL_LE()->field->save_field('disable_ocsp', true);
 							    $response->action = 'retry';
 							    $response->status = 'warning';
 							    $response->message = __("OCSP not supported, the certificate will be generated without OCSP.","really-simple-ssl");

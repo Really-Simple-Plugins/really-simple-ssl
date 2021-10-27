@@ -110,7 +110,6 @@ if ( ! class_exists( "rsssl_wizard" ) ) {
 				delete_option('rsssl_skip_challenge_directory_request' );
 				delete_option('rsssl_force_plesk' );
 				delete_option('rsssl_force_cpanel' );
-				delete_option('rsssl_disable_ocsp' );
 				delete_option('rsssl_create_folders_in_root');
 				delete_option('rsssl_hosting_dashboard');
 				wp_redirect(rsssl_letsencrypt_wizard_url().'&step=1');
