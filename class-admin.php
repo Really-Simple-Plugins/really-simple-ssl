@@ -124,6 +124,30 @@ class rsssl_admin extends rsssl_front_end
     }
 
 	/**
+     * Check if current day falls within required date range.
+     *
+	 * @return bool
+	 */
+    public function is_bf(){
+	    if ( defined("rsssl_pro_version" ) ) {
+            return false;
+        }
+	    $start_day = 26;
+        $end_day = 29;
+	    $current_month = date("n");//e.g. 3
+        $current_day = date("j");//e.g. 4
+
+        if ( $current_month == 10 &&
+             $current_day >=$start_day &&
+             $current_day <= $end_day
+        ) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+	/**
 	 * Dismiss review notice of dismissed by the user
 	 */
 
@@ -3240,6 +3264,23 @@ class rsssl_admin extends rsssl_front_end
 		            'true' => array(
 			            'msg' => sprintf(__( 'We have detected the %s plugin on your website.', 'really-simple-ssl' ),rsssl_detected_duplicate_ssl_plugin(true)).'&nbsp;'.__( 'As Really Simple SSL handles all the functionality this plugin provides, we recommend to disable this plugin to prevent unexpected behaviour.', 'really-simple-ssl' ),
 			            'icon' => 'warning',
+			            'dismissible' => true,
+			            'plusone' => true,
+		            ),
+	            ),
+            ),
+
+            'bf_notice' => array(
+	            'condition'  => array(
+                        'RSSSL()->really_simple_ssl->is_bf'
+                ),
+	            'callback' => '_true_',
+	            'plus_one' => true,
+	            'output' => array(
+		            'true' => array(
+			            'msg' => __( "It's Black Friday! Get 40% Off Really Simple SSL Pro!", 'really-simple-ssl' ) ,
+			            'icon' => 'premium',
+			            'url' => 'https://really-simple-ssl.com/pro/',
 			            'dismissible' => true,
 			            'plusone' => true,
 		            ),
