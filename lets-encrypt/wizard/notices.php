@@ -65,14 +65,14 @@ function rsssl_le_get_notices_list($notices) {
 				),
 				'manual-installation'           => array(
 					'msg'         => sprintf( __( "The SSL certificate has been renewed, and requires manual %sinstallation%s in your hosting dashboard.", "really-simple-ssl" ),
-						'<a target="_blank" href="' . $ssl_download_url . '">', '</a>' ),
+						'<a href="' . $ssl_download_url . '">', '</a>' ),
 					'icon'        => 'open',
 					'plusone'     => true,
 					'dismissible' => false,
 				),
 				'manual-generation'             => array(
 					'msg'         => sprintf( __( "Automatic renewal of your certificate was not possible. The SSL certificate should be %srenewed%s manually.", "really-simple-ssl" ),
-						'<a target="_blank" href="' . $ssl_generate_url . '">', '</a>' ),
+						'<a href="' . $ssl_generate_url . '">', '</a>' ),
 					'icon'        => 'open',
 					'plusone'     => true,
 					'dismissible' => false,
