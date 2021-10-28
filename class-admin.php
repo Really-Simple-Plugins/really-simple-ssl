@@ -134,10 +134,11 @@ class rsssl_admin extends rsssl_front_end
         }
 	    $start_day = 26;
         $end_day = 29;
+	    $current_year = date("Y");//e.g. 2021
 	    $current_month = date("n");//e.g. 3
         $current_day = date("j");//e.g. 4
 
-        if ( $current_month == 11 &&
+        if ( $current_year == 2021 && $current_month == 11 &&
              $current_day >=$start_day &&
              $current_day <= $end_day
         ) {
