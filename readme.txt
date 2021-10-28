@@ -95,6 +95,7 @@ If you can't deactivate, do not just remove the plugin folder to uninstall! Foll
 * Improvement: auto flush caches of popular caching plugins
 * Improvement: "dismiss all notices" option on multisite network settings menu
 * Improvement: add option to disable OCSP stapling in the Let's Encrypt certificate generation, instead of doing this automatically only
+* Improvement: added high contrast option to settings for better WCAG compatibility
 
 = 5.1.2 =
 * Improvement: remove one recommendation from the activate ssl notice, to keep it clean
