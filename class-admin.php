@@ -137,7 +137,7 @@ class rsssl_admin extends rsssl_front_end
 	    $current_month = date("n");//e.g. 3
         $current_day = date("j");//e.g. 4
 
-        if ( $current_month == 10 &&
+        if ( $current_month == 11 &&
              $current_day >=$start_day &&
              $current_day <= $end_day
         ) {
