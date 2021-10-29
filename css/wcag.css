@@ -10,16 +10,32 @@
   background-color: black !important;
   color: white;
 }
+.rsssl-high-contrast .rsssl-wizard-progress-bar-value {
+  background: black !important;
+}
+.rsssl-high-contrast .rsssl-icon.rsssl-success {
+  color: black !important;
+}
+.rsssl-high-contrast .rsssl-icon.rsssl-success svg {
+  stroke: black !important;
+  fill: black !important;
+}
+.rsssl-high-contrast .rsssl-help-warning-wrap .rsssl-notice {
+  color: white !important;
+}
+.rsssl-high-contrast .rsssl-help-warning-wrap .rsssl-warning {
+  background-color: black;
+}
 .rsssl-high-contrast .progress .bar {
   background-color: black !important;
+}
+.rsssl-high-contrast .rsssl-notice a {
+  color: white !important;
 }
 .rsssl-high-contrast .rsssl.progress {
   background-color: black !important;
 }
 .rsssl-high-contrast .select2-results__option--highlighted[aria-selected] {
-  background-color: black;
-}
-.rsssl-high-contrast .rsssl-warning {
   background-color: black;
 }
 .rsssl-high-contrast .rsssl-save-settings-feedback {

@@ -132,7 +132,7 @@ class rsssl_admin extends rsssl_front_end
 	    if ( defined("rsssl_pro_version" ) ) {
             return false;
         }
-	    $start_day = 26;
+	    $start_day = 22;
         $end_day = 29;
 	    $current_year = date("Y");//e.g. 2021
 	    $current_month = date("n");//e.g. 3
@@ -3279,7 +3279,7 @@ class rsssl_admin extends rsssl_front_end
 	            'plus_one' => true,
 	            'output' => array(
 		            'true' => array(
-			            'msg' => __( "It's Black Friday! Get 40% Off Really Simple SSL Pro!", 'really-simple-ssl' ) ,
+			            'msg' => __( "Black Friday sale! Get 40% Off Really Simple SSL Pro", 'really-simple-ssl' ) ,
 			            'icon' => 'premium',
 			            'url' => 'https://really-simple-ssl.com/pro/',
 			            'dismissible' => true,
