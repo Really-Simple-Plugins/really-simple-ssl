@@ -58,7 +58,7 @@ $this->fields = $this->fields + array(
 			'source'      => 'lets-encrypt',
 			'type'        => 'checkbox',
 			'default'     => '',
-			'help'      => __( "OCSP stapling should be enabled by default. You can disable if this is not supported by your hosting provider. For more information on this subject, please read this article.","really-simple-ssl").rsssl_read_more('https://really-simple-ssl.com/ocsp-stapling'),
+			'help'      => __( "OCSP stapling should be enabled by default. You can disable if this is not supported by your hosting provider.","really-simple-ssl").rsssl_read_more('https://really-simple-ssl.com/ocsp-stapling'),
 			'title'       => __('OCSP Stapling',"really-simple-ssl"),
 			'option_text' => __("Disable OCSP Stapling", 'really-simple-ssl'),
 		),

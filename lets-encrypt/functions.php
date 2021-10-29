@@ -501,7 +501,7 @@ if (!function_exists('rsssl_read_more')) {
      * @return string
      */
     function rsssl_read_more( $url, $add_space = true ) {
-        $html = sprintf( __( "For more information on this subject, please read this %sarticle%s",
+        $html = sprintf( __( "For more information, please read this %sarticle%s",
             'really-simple-ssl' ), '<a target="_blank" href="' . $url . '">',
             '</a>' );
         if ( $add_space ) {
