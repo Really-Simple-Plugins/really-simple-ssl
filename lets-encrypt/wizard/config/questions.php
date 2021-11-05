@@ -49,6 +49,7 @@ $this->fields = $this->fields + array(
 			'source'      => 'lets-encrypt',
 			'type'        => 'checkbox',
 			'default'     => '',
+			'required'    => true,
 			'title'       => __('Terms & Conditions',"really-simple-ssl"),
 			'option_text' => sprintf(__("I agree to the Let's Encrypt %sTerms & Conditions%s", 'really-simple-ssl'),'<a target="_blank" href="https://letsencrypt.org/documents/LE-SA-v1.2-November-15-2017.pdf">','</a>'),
 		),
