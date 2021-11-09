@@ -2115,7 +2115,7 @@ class rsssl_admin extends rsssl_front_end
                 $header = $header[0];
                 
                 foreach ( $check_headers as $check_header ) {
-                    if ( $strpos( $header, $check_header->pattern ) !== false ) {
+                    if ( strpos( $header, $check_header->pattern ) !== false ) {
                         error_log("Not false, found header:");
                         var_dump($header);
                     }
