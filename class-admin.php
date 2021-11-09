@@ -2051,42 +2051,88 @@ class rsssl_admin extends rsssl_front_end
 
 	public function get_recommended_security_headers()
 	{
-		$not_used_headers = array();
-		if (RSSSL()->rsssl_server->uses_htaccess() && file_exists($this->htaccess_file())) {
-		    $check_headers = array(
-                array(
-                    'name' => 'HTTP Strict Transport Security',
-                    'pattern' =>  'Strict-Transport-Security',
-                ),
-                array(
-                    'name' => 'Content Security Policy: Upgrade Insecure Requests',
-                    'pattern' =>  'upgrade-insecure-requests',
-                ),
-			    array(
-				    'name' => 'X-XSS protection',
-				    'pattern' =>  'X-XSS-Protection',
-			    ),
-			    array(
-				    'name' => 'X-Content Type Options',
-				    'pattern' =>  'X-Content-Type-Options',
-			    ),
-                array(
-				    'name' => 'Referrer-Policy',
-				    'pattern' =>  'Referrer-Policy',
-			    ),
-                array(
-				    'name' => 'Expect-CT',
-				    'pattern' =>  'Expect-CT',
-			    ),
-            );
 
-			$htaccess = file_get_contents($this->htaccess_file());
-            foreach ($check_headers as $check_header){
-	            if ( !preg_match("/".$check_header['pattern']."/", $htaccess, $check) ) {
-	                $not_used_headers[] = $check_header['name'];
+		$not_used_headers = array();
+
+		$check_headers = array(
+			array(
+				'name' => 'HTTP Strict Transport Security',
+				'pattern' =>  'Strict-Transport-Security',
+			),
+			array(
+				'name' => 'Content Security Policy: Upgrade Insecure Requests',
+				'pattern' =>  'upgrade-insecure-requests',
+			),
+			array(
+				'name' => 'X-XSS protection',
+				'pattern' =>  'X-XSS-Protection',
+			),
+			array(
+				'name' => 'X-Content Type Options',
+				'pattern' =>  'X-Content-Type-Options',
+			),
+			array(
+				'name' => 'Referrer-Policy',
+				'pattern' =>  'Referrer-Policy',
+			),
+			array(
+				'name' => 'Expect-CT',
+				'pattern' =>  'Expect-CT',
+			),
+		);
+
+        // cURL check
+
+		$url = get_site_url();
+//        $url = 'http://localhost';
+
+		$ch = curl_init();
+		$headers = [];
+		curl_setopt($ch, CURLOPT_URL, $url);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+		curl_setopt($ch, CURLOPT_HEADERFUNCTION,
+
+			function($curl, $header) use (&$headers)
+			{
+				$len = strlen($header);
+				$header = explode(':', $header, 2);
+				if (count($header) < 2) // ignore invalid headers
+					return $len;
+
+				$headers[strtolower(trim($header[0]))][] = trim($header[1]);
+
+				return $len;
+			}
+		);
+
+		$data = curl_exec($ch);
+        var_dump($headers);
+		error_log(print_r($headers, true ) );
+
+        if (! empty( $headers ) ) {
+            foreach ( $headers as $header ) {
+
+                $header = $header[0];
+                
+                foreach ( $check_headers as $check_header ) {
+                    if ( $strpos( $header, $check_header->pattern ) !== false ) {
+                        error_log("Not false, found header:");
+                        var_dump($header);
+                    }
                 }
+
             }
-		}
+        } else {
+	        if (RSSSL()->rsssl_server->uses_htaccess() && file_exists($this->htaccess_file())) {
+
+		        $htaccess = file_get_contents($this->htaccess_file());
+		        foreach ($check_headers as $check_header){
+			        if ( !preg_match("/".$check_header['pattern']."/", $htaccess, $check) ) {
+				        $not_used_headers[] = $check_header['name'];
+			        }
+		        }
+	        }
+        }
 
 		return $not_used_headers;
 	}
