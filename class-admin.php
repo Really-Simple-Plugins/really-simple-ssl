@@ -2051,7 +2051,7 @@ class rsssl_admin extends rsssl_front_end
 
 	public function get_recommended_security_headers()
 	{
-
+		$used_headers = array();
 		$not_used_headers = array();
 
 		$check_headers = array(
@@ -2082,14 +2082,13 @@ class rsssl_admin extends rsssl_front_end
 		);
 
         // cURL check
-
 		$url = get_site_url();
-//        $url = 'http://localhost';
 
 		$ch = curl_init();
 		$headers = [];
 		curl_setopt($ch, CURLOPT_URL, $url);
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+		curl_setopt($ch, CURLOPT_TIMEOUT, 3); //timeout in seconds
 		curl_setopt($ch, CURLOPT_HEADERFUNCTION,
 
 			function($curl, $header) use (&$headers)
@@ -2105,26 +2104,23 @@ class rsssl_admin extends rsssl_front_end
 			}
 		);
 
-		$data = curl_exec($ch);
-        var_dump($headers);
-		error_log(print_r($headers, true ) );
+		curl_exec($ch);
 
-        if (! empty( $headers ) ) {
-            foreach ( $headers as $header ) {
-
-                $header = $header[0];
-                
+        // Only use cURL headers if cURL found headers
+		if ( ! empty( $headers ) ) {
+            foreach ( $headers as $name => $value ) {
+                // array_find??
                 foreach ( $check_headers as $check_header ) {
-                    if ( strpos( $header, $check_header->pattern ) !== false ) {
-                        error_log("Not false, found header:");
-                        var_dump($header);
+                    if ( stripos( $name, $check_header['pattern'] ) !== false ) {
+	                    // Add found headers to array
+	                    if ( ! in_array( $check_header['name'], $used_headers ) ) {
+		                    $used_headers[] = $check_header['name'];
+	                    }
                     }
                 }
-
             }
         } else {
 	        if (RSSSL()->rsssl_server->uses_htaccess() && file_exists($this->htaccess_file())) {
-
 		        $htaccess = file_get_contents($this->htaccess_file());
 		        foreach ($check_headers as $check_header){
 			        if ( !preg_match("/".$check_header['pattern']."/", $htaccess, $check) ) {
@@ -2134,9 +2130,27 @@ class rsssl_admin extends rsssl_front_end
 	        }
         }
 
+        // Remove found headers from not used headers
+
+        // If header is used,
+        // Remove from unused
+        if ( ! empty( $used_headers ) ) {
+	        foreach ( $used_headers as $header ) {
+                foreach ( $check_headers as $name => $pattern ) {
+	                if ( stripos( $header, $pattern ) !== false ) {
+		                error_log( "Unsetting $name" );
+		                $not_used_headers[] = $name;
+	                }
+                }
+	        }
+        }
+
+        error_log("Used");
+		error_log(print_r($used_headers, true));
+		error_log("Unused");
+        error_log(print_r($not_used_headers, true));
 		return $not_used_headers;
 	}
-
 
     /**
      * Adds redirect to https rules to the .htaccess file or htaccess.conf on Bitnami.
