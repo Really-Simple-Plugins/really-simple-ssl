@@ -2108,43 +2108,42 @@ class rsssl_admin extends rsssl_front_end
 
             curl_exec($ch);
 
-        }
+            // Only use cURL headers if cURL found headers
+            if ($headers && !empty($headers)) {
 
-        // Only use cURL headers if cURL found headers
-		if ( $headers && ! empty( $headers ) ) {
+                // Loop through each header and check if it's one of the recommended security headers. If so, add to used_headers array.
+                foreach ($headers as $name => $value) {
+                    foreach ($check_headers as $check_header) {
+                        if (stripos($name, $check_header['pattern']) !== false || stripos($value[0], $check_header['pattern']) !== false) {
+                            if (!in_array($check_header['name'], $used_headers)) {
+                                $used_headers[] = $check_header['name'];
+                            }
+                        }
+                    }
+                }
 
-		    // Loop through each header and check if it's one of the recommended security headers. If so, add to used_headers array.
-            foreach ( $headers as $name => $value ) {
-                foreach ( $check_headers as $check_header ) {
-                    if ( stripos( $name, $check_header['pattern'] ) !== false || stripos( $value[0], $check_header['pattern'] ) !== false ) {
-	                    if ( ! in_array( $check_header['name'], $used_headers ) ) {
-		                    $used_headers[] = $check_header['name'];
-	                    }
+                // Now loop through each header and check if it is used
+                foreach ($check_headers as $header) {
+                    if (in_array($header['name'], $used_headers)) {
+                        // Header is used, do not add to unused array
+                        continue;
+                    } else {
+                        // Header is not used
+                        $not_used_headers[] = $header['name'];
+                    }
+                }
+
+            }
+        } else {
+                if (RSSSL()->rsssl_server->uses_htaccess() && file_exists($this->htaccess_file())) {
+                    $htaccess = file_get_contents($this->htaccess_file());
+                    foreach ($check_headers as $check_header){
+                        if ( !preg_match("/".$check_header['pattern']."/", $htaccess, $check) ) {
+                            $not_used_headers[] = $check_header['name'];
+                        }
                     }
                 }
             }
-
-            // Now loop through each header and check if it is used
-            foreach ( $check_headers as $header ) {
-                if ( in_array( $header['name'], $used_headers ) ) {
-                    // Header is used, do not add to unused array
-                    continue;
-                } else {
-                    // Header is not used
-                    $not_used_headers[] = $header['name'];
-                }
-            }
-
-        } else {
-	        if (RSSSL()->rsssl_server->uses_htaccess() && file_exists($this->htaccess_file())) {
-		        $htaccess = file_get_contents($this->htaccess_file());
-		        foreach ($check_headers as $check_header){
-			        if ( !preg_match("/".$check_header['pattern']."/", $htaccess, $check) ) {
-				        $not_used_headers[] = $check_header['name'];
-			        }
-		        }
-	        }
-        }
 
 		return $not_used_headers;
 	}
