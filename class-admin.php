@@ -2108,13 +2108,15 @@ class rsssl_admin extends rsssl_front_end
 
             curl_exec($ch);
 
-            // Only use cURL headers if cURL found headers
+            // Check if any headers have been found
             if ($headers && !empty($headers)) {
 
                 // Loop through each header and check if it's one of the recommended security headers. If so, add to used_headers array.
                 foreach ($headers as $name => $value) {
                     foreach ($check_headers as $check_header) {
+                        // If the pattern occurs in either the header name or value, it's a security header.
                         if (stripos($name, $check_header['pattern']) !== false || stripos($value[0], $check_header['pattern']) !== false) {
+                            // Prevent duplicate entries
                             if (!in_array($check_header['name'], $used_headers)) {
                                 $used_headers[] = $check_header['name'];
                             }
@@ -2122,13 +2124,13 @@ class rsssl_admin extends rsssl_front_end
                     }
                 }
 
-                // Now loop through each header and check if it is used
+                // Now check which headers are unused. Compare the used headers against the $check_headers array.
                 foreach ($check_headers as $header) {
                     if (in_array($header['name'], $used_headers)) {
                         // Header is used, do not add to unused array
                         continue;
                     } else {
-                        // Header is not used
+                        // Header is not used. Add to not used array
                         $not_used_headers[] = $header['name'];
                     }
                 }
