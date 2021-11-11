@@ -2041,6 +2041,7 @@ class rsssl_admin extends rsssl_front_end
 	/**
 	 * returns list of recommended, but not active security headers for this site
      * returns empty array if no .htacces file exists
+     * Uses cURL, fallback to .htaccess check upon cURL failure
      * @return array
 	 *
 	 * @since  4.0
@@ -2060,7 +2061,7 @@ class rsssl_admin extends rsssl_front_end
 				'pattern' =>  'Strict-Transport-Security',
 			),
 			array(
-				'name' => 'Content Security Policy: Upgrade Insecure Requests',
+				'name' => 'Upgrade Insecure Requests',
 				'pattern' =>  'upgrade-insecure-requests',
 			),
 			array(
@@ -2082,43 +2083,58 @@ class rsssl_admin extends rsssl_front_end
 		);
 
         // cURL check
-		$url = get_site_url();
+        if ( function_exists('curl_init' ) ) {
 
-		$ch = curl_init();
-		$headers = [];
-		curl_setopt($ch, CURLOPT_URL, $url);
-		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-		curl_setopt($ch, CURLOPT_TIMEOUT, 3); //timeout in seconds
-		curl_setopt($ch, CURLOPT_HEADERFUNCTION,
+            $url = get_site_url();
 
-			function($curl, $header) use (&$headers)
-			{
-				$len = strlen($header);
-				$header = explode(':', $header, 2);
-				if (count($header) < 2) // ignore invalid headers
-					return $len;
+            $ch = curl_init();
+            $headers = [];
+            curl_setopt($ch, CURLOPT_URL, $url);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+            curl_setopt($ch, CURLOPT_TIMEOUT, 3); //timeout in seconds
+            curl_setopt($ch, CURLOPT_HEADERFUNCTION,
 
-				$headers[strtolower(trim($header[0]))][] = trim($header[1]);
+                function ($curl, $header) use (&$headers) {
+                    $len = strlen($header);
+                    $header = explode(':', $header, 2);
+                    if (count($header) < 2) // ignore invalid headers
+                        return $len;
 
-				return $len;
-			}
-		);
+                    $headers[strtolower(trim($header[0]))][] = trim($header[1]);
 
-		curl_exec($ch);
+                    return $len;
+                }
+            );
+
+            curl_exec($ch);
+
+        }
 
         // Only use cURL headers if cURL found headers
-		if ( ! empty( $headers ) ) {
+		if ( $headers && ! empty( $headers ) ) {
+
+		    // Loop through each header and check if it's one of the recommended security headers. If so, add to used_headers array.
             foreach ( $headers as $name => $value ) {
-                // array_find??
                 foreach ( $check_headers as $check_header ) {
-                    if ( stripos( $name, $check_header['pattern'] ) !== false ) {
-	                    // Add found headers to array
+                    if ( stripos( $name, $check_header['pattern'] ) !== false || stripos( $value[0], $check_header['pattern'] ) !== false ) {
 	                    if ( ! in_array( $check_header['name'], $used_headers ) ) {
 		                    $used_headers[] = $check_header['name'];
 	                    }
                     }
                 }
             }
+
+            // Now loop through each header and check if it is used
+            foreach ( $check_headers as $header ) {
+                if ( in_array( $header['name'], $used_headers ) ) {
+                    // Header is used, do not add to unused array
+                    continue;
+                } else {
+                    // Header is not used
+                    $not_used_headers[] = $header['name'];
+                }
+            }
+
         } else {
 	        if (RSSSL()->rsssl_server->uses_htaccess() && file_exists($this->htaccess_file())) {
 		        $htaccess = file_get_contents($this->htaccess_file());
@@ -2130,25 +2146,6 @@ class rsssl_admin extends rsssl_front_end
 	        }
         }
 
-        // Remove found headers from not used headers
-
-        // If header is used,
-        // Remove from unused
-        if ( ! empty( $used_headers ) ) {
-	        foreach ( $used_headers as $header ) {
-                foreach ( $check_headers as $name => $pattern ) {
-	                if ( stripos( $header, $pattern ) !== false ) {
-		                error_log( "Unsetting $name" );
-		                $not_used_headers[] = $name;
-	                }
-                }
-	        }
-        }
-
-        error_log("Used");
-		error_log(print_r($used_headers, true));
-		error_log("Unused");
-        error_log(print_r($not_used_headers, true));
 		return $not_used_headers;
 	}
 
