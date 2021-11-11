@@ -3016,8 +3016,8 @@ class rsssl_admin extends rsssl_front_end
 	            'score' => 30,
 	            'output' => array(
 		            'fail' => array(
-			            'msg' =>__('Cannot activate SSL due to system configuration.', 'really-simple-ssl'),
-			            'icon' => 'warning'
+			            'msg' => sprintf(__("WP Config fix needed. Make sure your wp-config.php is %swritable%s or check the file %smanually%s", "really-simple-ssl"),'<a target="_blank" href="https://really-simple-ssl.com/knowledge-base/htaccess-wp-config-file-not-writable/">','</a>','<a target="_blank" href="https://really-simple-ssl.com/wp-config-fix-needed/">','</a>'),
+                            'icon' => 'warning'
 		            ),
 		            'no-ssl-detected' => array(
 			            'title' => __("No SSL detected", "really-simple-ssl"),
@@ -4898,7 +4898,7 @@ if (!function_exists('rsssl_ssl_enabled')) {
 if (!function_exists('rsssl_ssl_detected')) {
 	function rsssl_ssl_detected() {
 
-		if ( ! RSSSL()->really_simple_ssl->wpconfig_ok() ) {
+        if ( ! RSSSL()->really_simple_ssl->wpconfig_ok() ) {
 			return apply_filters('rsssl_ssl_detected', 'fail');
 		}
 
