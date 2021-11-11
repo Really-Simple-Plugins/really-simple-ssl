@@ -2135,15 +2135,15 @@ class rsssl_admin extends rsssl_front_end
 
             }
         } else {
-                if (RSSSL()->rsssl_server->uses_htaccess() && file_exists($this->htaccess_file())) {
-                    $htaccess = file_get_contents($this->htaccess_file());
-                    foreach ($check_headers as $check_header){
-                        if ( !preg_match("/".$check_header['pattern']."/", $htaccess, $check) ) {
-                            $not_used_headers[] = $check_header['name'];
-                        }
+            if (RSSSL()->rsssl_server->uses_htaccess() && file_exists($this->htaccess_file())) {
+                $htaccess = file_get_contents($this->htaccess_file());
+                foreach ($check_headers as $check_header){
+                    if ( !preg_match("/".$check_header['pattern']."/", $htaccess, $check) ) {
+                        $not_used_headers[] = $check_header['name'];
                     }
                 }
             }
+        }
 
 		return $not_used_headers;
 	}
