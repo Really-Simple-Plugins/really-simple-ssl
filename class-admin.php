@@ -2054,7 +2054,7 @@ class rsssl_admin extends rsssl_front_end
 	{
 		$used_headers = array();
 		$not_used_headers = array();
-
+		$can_use_curl = false;
 		$check_headers = array(
 			array(
 				'name' => 'HTTP Strict Transport Security',
@@ -2083,68 +2083,82 @@ class rsssl_admin extends rsssl_front_end
 		);
 
         // cURL check
-        if ( function_exists('curl_init' ) ) {
+        $curl_check_done = get_transient('rsssl_can_use_curl_headers_check');//no, yes or false
+        if ( !$curl_check_done ) {
+	        //set a default
+	        set_transient( 'rsssl_can_use_curl_headers_check', 'no', WEEK_IN_SECONDS );
+	        if ( function_exists( 'curl_init' ) ) {
+		        $url     = get_site_url();
+		        $ch      = curl_init();
+		        $headers = [];
+		        curl_setopt( $ch, CURLOPT_URL, $url );
+		        curl_setopt( $ch, CURLOPT_RETURNTRANSFER, 1 );
+		        curl_setopt( $ch, CURLOPT_TIMEOUT, 3 ); //timeout in seconds
+		        curl_setopt( $ch, CURLOPT_HEADERFUNCTION,
+			        function ( $curl, $header ) use ( &$headers ) {
+				        $len    = strlen( $header );
+				        $header = explode( ':', $header, 2 );
+				        if ( count( $header ) < 2 ) // ignore invalid headers
+				        {
+					        return $len;
+				        }
 
-            $url = get_site_url();
+				        $headers[ strtolower( trim( $header[0] ) ) ][] = trim( $header[1] );
 
-            $ch = curl_init();
-            $headers = [];
-            curl_setopt($ch, CURLOPT_URL, $url);
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-            curl_setopt($ch, CURLOPT_TIMEOUT, 3); //timeout in seconds
-            curl_setopt($ch, CURLOPT_HEADERFUNCTION,
+				        return $len;
+			        }
+		        );
 
-                function ($curl, $header) use (&$headers) {
-                    $len = strlen($header);
-                    $header = explode(':', $header, 2);
-                    if (count($header) < 2) // ignore invalid headers
-                        return $len;
+		        curl_exec( $ch );
+		        // Check if any headers have been found
+		        if ( ! empty( $headers ) && is_array( $headers ) ) {
 
-                    $headers[strtolower(trim($header[0]))][] = trim($header[1]);
+			        // Loop through each header and check if it's one of the recommended security headers. If so, add to used_headers array.
+			        foreach ( $headers as $name => $value ) {
+				        foreach ( $check_headers as $check_header ) {
+					        // If the pattern occurs in either the header name or value, it's a security header.
+					        if ( stripos( $name, $check_header['pattern'] ) !== false || stripos( $value[0], $check_header['pattern'] ) !== false ) {
+						        // Prevent duplicate entries
+						        if ( ! in_array( $check_header['name'], $used_headers ) ) {
+							        $used_headers[] = $check_header['name'];
+						        }
+					        }
+				        }
+			        }
 
-                    return $len;
+			        // Now check which headers are unused. Compare the used headers against the $check_headers array.
+			        foreach ( $check_headers as $header ) {
+				        if ( in_array( $header['name'], $used_headers ) ) {
+					        // Header is used, do not add to unused array
+					        continue;
+				        } else {
+					        // Header is not used. Add to not used array
+					        $not_used_headers[] = $header['name'];
+				        }
+			        }
+			        $can_use_curl = 'yes';
+		        } else {
+			        $can_use_curl = 'no';
                 }
-            );
+	        } else {
+		        $can_use_curl = 'no';
+	        }
 
-            curl_exec($ch);
+	        set_transient( 'rsssl_can_use_curl_headers_check', $can_use_curl, WEEK_IN_SECONDS );
+        }
 
-            // Check if any headers have been found
-            if ($headers && !empty($headers)) {
+        //for readability
+		$can_use_curl = $curl_check_done;
 
-                // Loop through each header and check if it's one of the recommended security headers. If so, add to used_headers array.
-                foreach ($headers as $name => $value) {
-                    foreach ($check_headers as $check_header) {
-                        // If the pattern occurs in either the header name or value, it's a security header.
-                        if (stripos($name, $check_header['pattern']) !== false || stripos($value[0], $check_header['pattern']) !== false) {
-                            // Prevent duplicate entries
-                            if (!in_array($check_header['name'], $used_headers)) {
-                                $used_headers[] = $check_header['name'];
-                            }
-                        }
-                    }
-                }
-
-                // Now check which headers are unused. Compare the used headers against the $check_headers array.
-                foreach ($check_headers as $header) {
-                    if (in_array($header['name'], $used_headers)) {
-                        // Header is used, do not add to unused array
-                        continue;
-                    } else {
-                        // Header is not used. Add to not used array
-                        $not_used_headers[] = $header['name'];
-                    }
-                }
-
-            }
-        } else {
-            if (RSSSL()->rsssl_server->uses_htaccess() && file_exists($this->htaccess_file())) {
-                $htaccess = file_get_contents($this->htaccess_file());
-                foreach ($check_headers as $check_header){
-                    if ( !preg_match("/".$check_header['pattern']."/", $htaccess, $check) ) {
-                        $not_used_headers[] = $check_header['name'];
-                    }
-                }
-            }
+        if ( $can_use_curl === 'no' ) {
+	        if (RSSSL()->rsssl_server->uses_htaccess() && file_exists($this->htaccess_file())) {
+		        $htaccess = file_get_contents($this->htaccess_file());
+		        foreach ($check_headers as $check_header){
+			        if ( !preg_match("/".$check_header['pattern']."/", $htaccess, $check) ) {
+				        $not_used_headers[] = $check_header['name'];
+			        }
+		        }
+	        }
         }
 
 		return $not_used_headers;
