@@ -2054,7 +2054,6 @@ class rsssl_admin extends rsssl_front_end
 	{
 		$used_headers = array();
 		$not_used_headers = array();
-		$can_use_curl = false;
 		$check_headers = array(
 			array(
 				'name' => 'HTTP Strict Transport Security',
@@ -2136,21 +2135,17 @@ class rsssl_admin extends rsssl_front_end
 					        $not_used_headers[] = $header['name'];
 				        }
 			        }
-			        $can_use_curl = 'yes';
+			        $curl_check_done = $not_used_headers;
 		        } else {
-			        $can_use_curl = 'no';
+			        $curl_check_done = 'no';
                 }
 	        } else {
-		        $can_use_curl = 'no';
+		        $curl_check_done = 'no';
 	        }
-
-	        set_transient( 'rsssl_can_use_curl_headers_check', $can_use_curl, WEEK_IN_SECONDS );
+	        set_transient( 'rsssl_can_use_curl_headers_check', $curl_check_done, WEEK_IN_SECONDS );
         }
 
-        //for readability
-		$can_use_curl = $curl_check_done;
-
-        if ( $can_use_curl === 'no' ) {
+        if ( $curl_check_done === 'no' ) {
 	        if (RSSSL()->rsssl_server->uses_htaccess() && file_exists($this->htaccess_file())) {
 		        $htaccess = file_get_contents($this->htaccess_file());
 		        foreach ($check_headers as $check_header){
@@ -2159,6 +2154,8 @@ class rsssl_admin extends rsssl_front_end
 			        }
 		        }
 	        }
+        } else {
+	        $not_used_headers = $curl_check_done;
         }
 
 		return $not_used_headers;
