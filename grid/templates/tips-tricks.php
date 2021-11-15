@@ -50,6 +50,14 @@
                     <a href="https://really-simple-ssl.com/knowledge-base/avoid-landing-page-redirects/" target="_blank"><?php _e("Read more", "really-simple-ssl");?></a>
                 </div>
             </div>
+            <div class="rsssl-tips-tricks-element">
+                <div class="rsssl-tips-tricks-content">
+                    <?php _e("Install a Let's Encrypt SSL Certificate with Really Simple SSL", "really-simple-ssl");?>
+                </div>
+                <div class="rsssl-tips-tricks-read-more">
+                    <a href="https://really-simple-ssl.com/install-ssl-certificate/" target="_blank"><?php _e("Read more", "really-simple-ssl");?></a>
+                </div>
+            </div>
         </div>
         <div class="tips-tricks-bottom">
             <?php printf(
