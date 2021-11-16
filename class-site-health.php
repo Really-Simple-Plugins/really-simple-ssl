@@ -33,7 +33,7 @@ if (!class_exists("rsssl_site_health")) {
 					'test'  => array($this, "health_test"),
 				);
 
-				if ( RSSSL()->really_simple_ssl->ssl_enabled && RSSSL()->rsssl_server->uses_htaccess() && file_exists( RSSSL()->really_simple_ssl->htaccess_file() ) ) {
+				if ( RSSSL()->really_simple_ssl->ssl_enabled ) {
 					$tests['direct']['rsssl-headers'] = array(
 						'label' => __( 'Security Headers Test' , 'really-simple-ssl' ),
 						'test'  => array($this, "headers_test"),
@@ -55,7 +55,7 @@ if (!class_exists("rsssl_site_health")) {
 				'label'       => __( 'Recommended security headers installed', 'really-simple-ssl' ),
 				'status'      => 'good',
 				'badge'       => array(
-					'label' => 'SSL',
+					'label' => __('Security'),
 					'color' => 'blue',
 				),
 				'description' => sprintf(
@@ -99,7 +99,7 @@ if (!class_exists("rsssl_site_health")) {
 				'label'       => __( '301 SSL redirect enabled', 'really-simple-ssl' ),
 				'status'      => 'good',
 				'badge'       => array(
-					'label' => 'SSL',
+					'label' => __('Security'),
 					'color' => 'blue',
 				),
 				'description' => sprintf(
