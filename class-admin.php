@@ -2054,7 +2054,7 @@ class rsssl_admin extends rsssl_front_end
 	{
 		$used_headers = array();
 		$not_used_headers = array();
-		$check_headers = array(
+		$check_headers = apply_filters( 'rsssl_recommended_security_headers', array(
 			array(
 				'name' => 'HTTP Strict Transport Security',
 				'pattern' =>  'Strict-Transport-Security',
@@ -2078,8 +2078,8 @@ class rsssl_admin extends rsssl_front_end
 			array(
 				'name' => 'Expect-CT',
 				'pattern' =>  'Expect-CT',
-			),
-		);
+			) )
+        );
 
         // cURL check
         $curl_check_done = get_transient('rsssl_can_use_curl_headers_check');//no, yes or false
@@ -3296,11 +3296,13 @@ class rsssl_admin extends rsssl_front_end
 	            'score' => 5,
 	            'output' => array(
 		            'true' => array(
-			            'msg' => sprintf(__("Recommended security headers not enabled (%sRead more%s).", "really-simple-ssl"), '<a target="_blank" href="https://really-simple-ssl.com/everything-you-need-to-know-about-security-headers/">', '</a>'),
-			            'icon' => 'premium'
+			            'msg' => __("Recommended security headers not enabled (%sRead more%s).", "really-simple-ssl"),
+			            'icon' => 'premium',
+                        'url' => 'https://really-simple-ssl.com/everything-you-need-to-know-about-security-headers/'
 		            ),
 	            ),
             ),
+
             'uses_wp_engine' => array(
                 'condition' => array('rsssl_uses_wp_engine'),
                 'callback' => '_true_',
