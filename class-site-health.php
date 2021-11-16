@@ -73,7 +73,7 @@ if (!class_exists("rsssl_site_health")) {
 				$list = '<ul class="rsssl-sec-headers-list"><li>'.implode('</li><li>', $recommended_headers ).'</li></ul>';
 				$result['status']      = 'recommended';
 				$result['label']       = __( 'Not all recommended security headers are installed' , 'really-simple-ssl' );
-				$result['description'] = sprintf( '<p>%s</p>', __( 'Your .htaccess file does not contain all recommended security headers.', 'really-simple-ssl' ).$style.$list);
+				$result['description'] = sprintf( '<p>%s</p>', __( 'Your website does not send all recommended security headers.', 'really-simple-ssl' ).$style.$list);
 				$result['actions']     = sprintf(
 					'<p><a href="%s" target="_blank">%s</a></p>',
 					'https://really-simple-ssl.com/site-health-recommended-security-headers/',
