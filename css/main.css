@@ -590,10 +590,10 @@ hr {
 .rsssl-slider:before {
   position: absolute;
   content: "";
-  height: 13px;
-  width: 13px;
+  height: 14px;
+  width: 14px;
   left: 5px;
-  bottom: 2.5px;
+  bottom: 2px;
   background-color: white;
   -webkit-transition: 0.4s;
   transition: 0.4s;
