@@ -2056,10 +2056,6 @@ class rsssl_admin extends rsssl_front_end
 		$not_used_headers = array();
 		$check_headers = apply_filters( 'rsssl_recommended_security_headers', array(
 			array(
-				'name' => 'HTTP Strict Transport Security',
-				'pattern' =>  'Strict-Transport-Security',
-			),
-			array(
 				'name' => 'Upgrade Insecure Requests',
 				'pattern' =>  'upgrade-insecure-requests',
 			),
@@ -2078,7 +2074,24 @@ class rsssl_admin extends rsssl_front_end
 			array(
 				'name' => 'Expect-CT',
 				'pattern' =>  'Expect-CT',
-			) )
+			),
+            array(
+                'name' => 'X-Frame-Options',
+                'pattern' =>  'X-Frame-Options',
+            ),
+            array(
+                'name' => 'Permissions-Policy',
+                'pattern' =>  'Permissions-Policy',
+            ),
+//            array(
+//                'name' => 'Content-Security-Policy',
+//                'pattern' =>  'Content-Security-Policy',
+//            ),
+            array(
+                'name' => 'HTTP Strict Transport Security',
+                'pattern' =>  'Strict-Transport-Security',
+            ),
+            )
         );
 
         // cURL check
@@ -2159,6 +2172,55 @@ class rsssl_admin extends rsssl_front_end
         }
 
 		return $not_used_headers;
+	}
+
+	/**
+	 * Check if the recommended headers are enabled
+	 *
+	 * @return bool
+	 */
+
+	public function recommended_headers_enabled() {
+
+		$unused_headers = RSSSL()->really_simple_ssl->get_recommended_security_headers();
+
+		if ( empty( $unused_headers ) ) {
+			return true;
+		}
+
+		return false;
+
+	}
+
+	/**
+	 * @return string
+	 * Get HTML for recommended security headers dashboard notice
+	 * @since 5.2
+	 *
+	 */
+
+	public function generate_recommended_security_headers_html() {
+
+		$unused_headers = RSSSL()->really_simple_ssl->get_recommended_security_headers();
+
+		$html = '';
+        // Get count to skip latest <br>
+		$count = 0;
+		$unused_header_count = count($unused_headers);
+
+		foreach ( $unused_headers as $header ) {
+
+			$html .= $header;
+
+			$count++;
+
+			if ( $count < $unused_header_count ) {
+				$html .= "<br>";
+			}
+
+		}
+
+		return $html;
 	}
 
     /**
@@ -3291,17 +3353,24 @@ class rsssl_admin extends rsssl_front_end
                 ),
             ),
 
-            'recommended_security_headers_not_set' => array(
-	            'callback' => '_true_',
-	            'score' => 5,
-	            'output' => array(
-		            'true' => array(
-			            'msg' => __("Recommended security headers not enabled (%sRead more%s).", "really-simple-ssl"),
-			            'icon' => 'premium',
-                        'url' => 'https://really-simple-ssl.com/everything-you-need-to-know-about-security-headers/'
-		            ),
-	            ),
-            ),
+	        'recommended_security_headers_not_set' => array(
+		        'callback' => 'RSSSL()->really_simple_ssl->recommended_headers_enabled',
+		        'condition' => array('rsssl_ssl_enabled'),
+		        'score' => 5,
+		        'output' => array(
+			        'false' => array(
+				        'msg' => __("The following recommended security headers are not enabled:", "really-simple-ssl-pro")
+				                 ."<br><code style='padding: 0;'>".$this->generate_recommended_security_headers_html() . "</code>",
+				        'url' => 'https://really-simple-ssl.com/everything-you-need-to-know-about-security-headers',
+				        'icon' => 'open',
+				        'dismissible' => true
+			        ),
+			        'true' => array(
+				        'msg' => __("Recommended security headers enabled.", "really-simple-ssl-pro"),
+				        'icon' => 'success',
+			        ),
+		        ),
+	        ),
 
             'uses_wp_engine' => array(
                 'condition' => array('rsssl_uses_wp_engine'),
