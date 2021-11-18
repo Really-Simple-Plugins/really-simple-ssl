@@ -6,7 +6,7 @@ Requires at least: 4.9
 License: GPL2
 Tested up to: 5.8
 Requires PHP: 5.6
-Stable tag: 5.1.3
+Stable tag: 5.2.0
 
 No setup required! You only need an SSL certificate, and this plugin will do the rest.
 
@@ -90,13 +90,14 @@ The plugin checks your certificate before enabling, but if, for example, you mig
 If you can't deactivate, do not just remove the plugin folder to uninstall! Follow these [instructions] instead: (https://really-simple-ssl.com/knowledge-base/uninstall-websitebackend-not-accessible/).
 
 == Changelog ==
-= 5.1.3 =
+= 5.2.0 =
 * Improvement: auto rename force-deactivate.php back to .txt after running
 * Improvement: auto flush caches of popular caching plugins
 * Improvement: "dismiss all notices" option on multisite network settings menu
 * Improvement: add option to disable OCSP stapling in the Let's Encrypt certificate generation, instead of doing this automatically only
 * Improvement: added high contrast option to settings for better WCAG compatibility
 * Improvement: link in "install manually" on Let's Encrypt certificate renewal should point to certificate download instead of hosting installation url.
+* Improvement: updated wp-config needs fixes notice
 
 = 5.1.2 =
 * Improvement: remove one recommendation from the activate ssl notice, to keep it clean
