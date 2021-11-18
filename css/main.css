@@ -592,8 +592,8 @@ hr {
   content: "";
   height: 14px;
   width: 14px;
-  left: 5px;
-  bottom: 2px;
+  left: 3px;
+  bottom: 2.2px;
   background-color: white;
   -webkit-transition: 0.4s;
   transition: 0.4s;
@@ -608,9 +608,9 @@ input:checked + .rsssl-slider {
   background-color: #2DAAE1;
 }
 input:checked + .rsssl-slider:before {
-  -webkit-transform: translateX(13px);
-  -ms-transform: translateX(13px);
-  transform: translateX(13px);
+  -webkit-transform: translateX(16px);
+  -ms-transform: translateX(16px);
+  transform: translateX(16px);
 }
 input:disabled + .rsssl-slider {
   background-color: #b3e0f4;
