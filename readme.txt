@@ -92,13 +92,16 @@ If you can't deactivate, do not just remove the plugin folder to uninstall! Foll
 == Changelog ==
 = 5.2.0 =
 * Improvement: added link to Let's Encrypt article to tips & tricks
+* Improvement: updated setting slider styling
+* Added Let's Encrypt article link to tips & tricks section
+
+= 5.1.3 =
 * Improvement: auto rename force-deactivate.php back to .txt after running
 * Improvement: auto flush caches of popular caching plugins
 * Improvement: "dismiss all notices" option on multisite network settings menu
 * Improvement: add option to disable OCSP stapling in the Let's Encrypt certificate generation, instead of doing this automatically only
 * Improvement: added high contrast option to settings for better WCAG compatibility
 * Improvement: link in "install manually" on Let's Encrypt certificate renewal should point to certificate download instead of hosting installation url.
-* Improvement: updated setting slider styling
 
 = 5.1.2 =
 * Improvement: remove one recommendation from the activate ssl notice, to keep it clean
