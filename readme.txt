@@ -87,7 +87,7 @@ Yes. There is a dedicated network settings page where you can switch between net
 = Uninstalling Really Simple SSL =
 The plugin checks your certificate before enabling, but if, for example, you migrated the site to a non-SSL environment, you might get locked out of the back-end.
 
-If you can't deactivate, do not just remove the plugin folder to uninstall! Follow these [instructions] instead: (https://really-simple-ssl.com/knowledge-base/uninstall-websitebackend-not-accessible/).
+If you can't deactivate, do not just remove the plugin folder to uninstall! Follow these [instructions](https://really-simple-ssl.com/knowledge-base/uninstall-websitebackend-not-accessible/) instead.
 
 == Changelog ==
 = 5.2.0 =
