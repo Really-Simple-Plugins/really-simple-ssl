@@ -4,10 +4,10 @@
         <div class="tips-tricks-top">
             <div class="rsssl-tips-tricks-element">
                 <div class="rsssl-tips-tricks-content">
-			        <?php _e("Is your site still not secure? Do the extensive site scan", "really-simple-ssl")?>
+			        <?php _e("Improve security: Add Cross-Site Protection Headers to prevent malicious attacks", "really-simple-ssl")?>
                 </div>
                 <div class="rsssl-tips-tricks-read-more">
-                    <a href="https://really-simple-ssl.com/why-is-my-site-still-not-secure/" target="_blank"><?php _e("Read more", "really-simple-ssl");?></a>
+                    <a href="https://really-simple-ssl.com/cross-origin-security-headers/" target="_blank"><?php _e("Read more", "really-simple-ssl");?></a>
                 </div>
             </div>
 			<div class="rsssl-tips-tricks-element">
@@ -48,6 +48,14 @@
                 </div>
                 <div class="rsssl-tips-tricks-read-more">
                     <a href="https://really-simple-ssl.com/knowledge-base/avoid-landing-page-redirects/" target="_blank"><?php _e("Read more", "really-simple-ssl");?></a>
+                </div>
+            </div>
+            <div class="rsssl-tips-tricks-element">
+                <div class="rsssl-tips-tricks-content">
+                    <?php _e("Install a Let's Encrypt SSL Certificate with Really Simple SSL", "really-simple-ssl");?>
+                </div>
+                <div class="rsssl-tips-tricks-read-more">
+                    <a href="https://really-simple-ssl.com/install-ssl-certificate/" target="_blank"><?php _e("Read more", "really-simple-ssl");?></a>
                 </div>
             </div>
         </div>

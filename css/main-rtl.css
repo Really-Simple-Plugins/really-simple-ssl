@@ -497,13 +497,13 @@ hr {
 .rsssl-slider:before {
     position: absolute;
     content: "";
-    height: 15px;
-    width: 15px;
-    right: 4px;
-    bottom: 3px;
+    height: 14px;
+    width: 14px;
+    left: 5px;
+    bottom: 2px;
     background-color: white;
-    -webkit-transition: 0.4s;
-    transition: 0.4s;
+    -webkit-transition: .4s;
+    transition: .4s;
 }
 .rsssl-slider.rsssl-round {
     border-radius: 20px;
