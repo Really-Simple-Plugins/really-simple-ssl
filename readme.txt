@@ -93,7 +93,7 @@ If you can't deactivate, do not just remove the plugin folder to uninstall! Foll
 = 5.2.0
 * Improvement: updated tips & tricks with Let's Encrypt and Cross-Origin resource policy articles
 * Improvement: updated setting slider styling
-* Added Let's Encrypt article link to tips & tricks section
+* Improvement: updated WP Config not writable notice and article
 * Improvement: recommend headers check now uses cURL for header detection
 
 = 5.1.3 =
