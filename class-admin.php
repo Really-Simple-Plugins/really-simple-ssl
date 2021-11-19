@@ -2182,7 +2182,7 @@ class rsssl_admin extends rsssl_front_end
 
 	public function recommended_headers_enabled() {
 
-		$unused_headers = RSSSL()->really_simple_ssl->get_recommended_security_headers();
+		$unused_headers = $this->get_recommended_security_headers();
 
 		if ( empty( $unused_headers ) ) {
 			return true;
@@ -2201,7 +2201,7 @@ class rsssl_admin extends rsssl_front_end
 
 	public function generate_recommended_security_headers_html() {
 
-		$unused_headers = RSSSL()->really_simple_ssl->get_recommended_security_headers();
+		$unused_headers = $this->get_recommended_security_headers();
 
 		$html = '';
         // Get count to skip latest <br>
