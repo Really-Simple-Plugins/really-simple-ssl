@@ -90,10 +90,11 @@ The plugin checks your certificate before enabling, but if, for example, you mig
 If you can't deactivate, do not just remove the plugin folder to uninstall! Follow these [instructions](https://really-simple-ssl.com/knowledge-base/uninstall-websitebackend-not-accessible/) instead.
 
 == Changelog ==
-= 5.2.0 =
-* Improvement: added link to Let's Encrypt article to tips & tricks
+= 5.2.0
+* Improvement: updated tips & tricks with Let's Encrypt and Cross-Origin resource policy articles
 * Improvement: updated setting slider styling
 * Added Let's Encrypt article link to tips & tricks section
+* Improvement: recommend headers check now uses cURL for header detection
 
 = 5.1.3 =
 * Improvement: auto rename force-deactivate.php back to .txt after running
@@ -102,6 +103,7 @@ If you can't deactivate, do not just remove the plugin folder to uninstall! Foll
 * Improvement: add option to disable OCSP stapling in the Let's Encrypt certificate generation, instead of doing this automatically only
 * Improvement: added high contrast option to settings for better WCAG compatibility
 * Improvement: link in "install manually" on Let's Encrypt certificate renewal should point to certificate download instead of hosting installation url.
+* Improvement: recommend headers check now uses cURL for header detection
 
 = 5.1.2 =
 * Improvement: remove one recommendation from the activate ssl notice, to keep it clean

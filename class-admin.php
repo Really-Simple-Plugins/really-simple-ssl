@@ -2041,6 +2041,7 @@ class rsssl_admin extends rsssl_front_end
 	/**
 	 * returns list of recommended, but not active security headers for this site
      * returns empty array if no .htacces file exists
+     * Uses cURL, fallback to .htaccess check upon cURL failure
      * @return array
 	 *
 	 * @since  4.0
@@ -2051,46 +2052,176 @@ class rsssl_admin extends rsssl_front_end
 
 	public function get_recommended_security_headers()
 	{
+		$used_headers = array();
 		$not_used_headers = array();
-		if (RSSSL()->rsssl_server->uses_htaccess() && file_exists($this->htaccess_file())) {
-		    $check_headers = array(
-                array(
-                    'name' => 'HTTP Strict Transport Security',
-                    'pattern' =>  'Strict-Transport-Security',
-                ),
-                array(
-                    'name' => 'Content Security Policy: Upgrade Insecure Requests',
-                    'pattern' =>  'upgrade-insecure-requests',
-                ),
-			    array(
-				    'name' => 'X-XSS protection',
-				    'pattern' =>  'X-XSS-Protection',
-			    ),
-			    array(
-				    'name' => 'X-Content Type Options',
-				    'pattern' =>  'X-Content-Type-Options',
-			    ),
-                array(
-				    'name' => 'Referrer-Policy',
-				    'pattern' =>  'Referrer-Policy',
-			    ),
-                array(
-				    'name' => 'Expect-CT',
-				    'pattern' =>  'Expect-CT',
-			    ),
-            );
+		$check_headers = apply_filters( 'rsssl_recommended_security_headers', array(
+			array(
+				'name' => 'Upgrade Insecure Requests',
+				'pattern' =>  'upgrade-insecure-requests',
+			),
+			array(
+				'name' => 'X-XSS protection',
+				'pattern' =>  'X-XSS-Protection',
+			),
+			array(
+				'name' => 'X-Content Type Options',
+				'pattern' =>  'X-Content-Type-Options',
+			),
+			array(
+				'name' => 'Referrer-Policy',
+				'pattern' =>  'Referrer-Policy',
+			),
+			array(
+				'name' => 'Expect-CT',
+				'pattern' =>  'Expect-CT',
+			),
+            array(
+                'name' => 'X-Frame-Options',
+                'pattern' =>  'X-Frame-Options',
+            ),
+            array(
+                'name' => 'Permissions-Policy',
+                'pattern' =>  'Permissions-Policy',
+            ),
+//            array(
+//                'name' => 'Content-Security-Policy',
+//                'pattern' =>  'Content-Security-Policy',
+//            ),
+            array(
+                'name' => 'HTTP Strict Transport Security',
+                'pattern' =>  'Strict-Transport-Security',
+            ),
+            )
+        );
 
-			$htaccess = file_get_contents($this->htaccess_file());
-            foreach ($check_headers as $check_header){
-	            if ( !preg_match("/".$check_header['pattern']."/", $htaccess, $check) ) {
-	                $not_used_headers[] = $check_header['name'];
+        // cURL check
+        $curl_check_done = get_transient('rsssl_can_use_curl_headers_check');//no, yes or false
+        if ( !$curl_check_done ) {
+	        //set a default
+	        set_transient( 'rsssl_can_use_curl_headers_check', 'no', WEEK_IN_SECONDS );
+	        if ( function_exists( 'curl_init' ) ) {
+		        $url     = get_site_url();
+		        $ch      = curl_init();
+		        $headers = [];
+		        curl_setopt( $ch, CURLOPT_URL, $url );
+		        curl_setopt( $ch, CURLOPT_RETURNTRANSFER, 1 );
+		        curl_setopt( $ch, CURLOPT_TIMEOUT, 3 ); //timeout in seconds
+		        curl_setopt( $ch, CURLOPT_HEADERFUNCTION,
+			        function ( $curl, $header ) use ( &$headers ) {
+				        $len    = strlen( $header );
+				        $header = explode( ':', $header, 2 );
+				        if ( count( $header ) < 2 ) // ignore invalid headers
+				        {
+					        return $len;
+				        }
+
+				        $headers[ strtolower( trim( $header[0] ) ) ][] = trim( $header[1] );
+
+				        return $len;
+			        }
+		        );
+
+		        curl_exec( $ch );
+		        // Check if any headers have been found
+		        if ( ! empty( $headers ) && is_array( $headers ) ) {
+
+			        // Loop through each header and check if it's one of the recommended security headers. If so, add to used_headers array.
+			        foreach ( $headers as $name => $value ) {
+				        foreach ( $check_headers as $check_header ) {
+					        // If the pattern occurs in either the header name or value, it's a security header.
+					        if ( stripos( $name, $check_header['pattern'] ) !== false || stripos( $value[0], $check_header['pattern'] ) !== false ) {
+						        // Prevent duplicate entries
+						        if ( ! in_array( $check_header['name'], $used_headers ) ) {
+							        $used_headers[] = $check_header['name'];
+						        }
+					        }
+				        }
+			        }
+
+			        // Now check which headers are unused. Compare the used headers against the $check_headers array.
+			        foreach ( $check_headers as $header ) {
+				        if ( in_array( $header['name'], $used_headers ) ) {
+					        // Header is used, do not add to unused array
+					        continue;
+				        } else {
+					        // Header is not used. Add to not used array
+					        $not_used_headers[] = $header['name'];
+				        }
+			        }
+			        $curl_check_done = $not_used_headers;
+		        } else {
+			        $curl_check_done = 'no';
                 }
-            }
-		}
+	        } else {
+		        $curl_check_done = 'no';
+	        }
+	        set_transient( 'rsssl_can_use_curl_headers_check', $curl_check_done, WEEK_IN_SECONDS );
+        }
+
+        if ( $curl_check_done === 'no' ) {
+	        if (RSSSL()->rsssl_server->uses_htaccess() && file_exists($this->htaccess_file())) {
+		        $htaccess = file_get_contents($this->htaccess_file());
+		        foreach ($check_headers as $check_header){
+			        if ( !preg_match("/".$check_header['pattern']."/", $htaccess, $check) ) {
+				        $not_used_headers[] = $check_header['name'];
+			        }
+		        }
+	        }
+        } else {
+	        $not_used_headers = $curl_check_done;
+        }
 
 		return $not_used_headers;
 	}
 
+	/**
+	 * Check if the recommended headers are enabled
+	 *
+	 * @return bool
+	 */
+
+	public function recommended_headers_enabled() {
+
+		$unused_headers = RSSSL()->really_simple_ssl->get_recommended_security_headers();
+
+		if ( empty( $unused_headers ) ) {
+			return true;
+		}
+
+		return false;
+
+	}
+
+	/**
+	 * @return string
+	 * Get HTML for recommended security headers dashboard notice
+	 * @since 5.2
+	 *
+	 */
+
+	public function generate_recommended_security_headers_html() {
+
+		$unused_headers = RSSSL()->really_simple_ssl->get_recommended_security_headers();
+
+		$html = '';
+        // Get count to skip latest <br>
+		$count = 0;
+		$unused_header_count = count($unused_headers);
+
+		foreach ( $unused_headers as $header ) {
+
+			$html .= $header;
+
+			$count++;
+
+			if ( $count < $unused_header_count ) {
+				$html .= "<br>";
+			}
+
+		}
+
+		return $html;
+	}
 
     /**
      * Adds redirect to https rules to the .htaccess file or htaccess.conf on Bitnami.
@@ -3222,16 +3353,25 @@ class rsssl_admin extends rsssl_front_end
                 ),
             ),
 
-            'recommended_security_headers_not_set' => array(
-	            'callback' => '_true_',
-	            'score' => 5,
-	            'output' => array(
-		            'true' => array(
-			            'msg' => sprintf(__("Recommended security headers not enabled (%sRead more%s).", "really-simple-ssl"), '<a target="_blank" href="https://really-simple-ssl.com/everything-you-need-to-know-about-security-headers/">', '</a>'),
-			            'icon' => 'premium'
-		            ),
-	            ),
-            ),
+	        'recommended_security_headers_not_set' => array(
+		        'callback' => 'RSSSL()->really_simple_ssl->recommended_headers_enabled',
+		        'condition' => array('rsssl_ssl_enabled'),
+		        'score' => 5,
+		        'output' => array(
+			        'false' => array(
+				        'msg' => __("The following recommended security headers are not enabled:", "really-simple-ssl-pro")
+				                 ."<br><code style='padding: 0;'>".$this->generate_recommended_security_headers_html() . "</code>",
+				        'url' => 'https://really-simple-ssl.com/everything-you-need-to-know-about-security-headers',
+				        'icon' => 'open',
+				        'dismissible' => true
+			        ),
+			        'true' => array(
+				        'msg' => __("Recommended security headers enabled.", "really-simple-ssl-pro"),
+				        'icon' => 'success',
+			        ),
+		        ),
+	        ),
+
             'uses_wp_engine' => array(
                 'condition' => array('rsssl_uses_wp_engine'),
                 'callback' => '_true_',
