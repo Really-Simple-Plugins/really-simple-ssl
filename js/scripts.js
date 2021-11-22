@@ -159,4 +159,73 @@ jQuery(document).ready(function ($) {
         });
     });
 
+    check_required_checkbox();
+
+    document.querySelector(document).addEventListener('click','.is-required',function () {
+        if (this.checked) {
+            document.querySelector(".rsssl-next").prop('disabled', false);
+        } else {
+            document.querySelector(".rsssl-next").prop('disabled', true);
+        }
+    });
+
+    function check_required_checkbox() {
+
+        var checkboxes = document.querySelectorAll('.is-required');
+
+        // for (var i = 0, len = checkboxes.length; i < len; i++) {
+        //     if (this.classList) {
+                // if (document.querySelector(this).classList.contains('is-required')) {
+                // if (this.classList.contains('is-required')) {
+                    if (document.querySelectorAll('.is-required').checked) {
+                        document.querySelector(".rsssl-next").disabled = true;
+                    } else {
+                        // document.querySelector(".rsssl-next").prop('disabled', true);
+                        document.querySelector(".rsssl-next").disabled = false;
+                    }
+                // }
+        //     }
+        // }
+    }
+
+    // function check_required_checkbox() {
+    //
+    //     var checkboxes = document.querySelectorAll('.is-required');
+    //
+    //     for (var i = 0, len = checkboxes.length; i < len; i++) {
+    //         if (this.classList) {
+    //             // if (document.querySelector(this).classList.contains('is-required')) {
+    //             if (this.classList.contains('is-required')) {
+    //                 if (this.checked) {
+    //                     document.querySelector(".rsssl-next").prop('disabled', false);
+    //                 } else {
+    //                     document.querySelector(".rsssl-next").prop('disabled', true);
+    //                 }
+    //             }
+    //         }
+    //     }
+    // }
+
+    // $(document).on('click','.is-required',function () {
+    //     if (this.checked) {
+    //         $(".rsssl-next").prop('disabled', false);
+    //     } else {
+    //         $(".rsssl-next").prop('disabled', true);
+    //     }
+    // });
+    //
+    // function check_required_checkbox() {
+    //     $('input[type=checkbox]').each(function () {
+    //         if ($(this).hasClass('is-required')) {
+    //             if (this.checked) {
+    //                 $(".rsssl-next").prop('disabled', false);
+    //             } else {
+    //                 $(".rsssl-next").prop('disabled', true);
+    //             }
+    //         }
+    //     });
+    // }
+
+
+
 });
