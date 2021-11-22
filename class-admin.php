@@ -100,6 +100,7 @@ class rsssl_admin extends rsssl_front_end
 	    delete_transient('rsssl_mixed_content_fixer_detected');
 	    delete_transient('rsssl_plusone_count');
 	    delete_transient('rsssl_remaining_task_count');
+	    delete_transient( 'rsssl_can_use_curl_headers_check' );
     }
 
 	/**
