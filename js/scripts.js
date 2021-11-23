@@ -159,73 +159,52 @@ jQuery(document).ready(function ($) {
         });
     });
 
-    check_required_checkbox();
+    // Check for required checkboxes
+    check_required_checkboxes();
 
-    document.querySelector(document).addEventListener('click','.is-required',function () {
-        if (this.checked) {
-            document.querySelector(".rsssl-next").prop('disabled', false);
-        } else {
-            document.querySelector(".rsssl-next").prop('disabled', true);
-        }
+    // Handle click event on .is-required checkbox
+    addEvent('click', 'input[type=checkbox].is-required', function(e){
+        check_required_checkboxes();
     });
 
-    function check_required_checkbox() {
+    /**
+     * Loop through required checkboxes
+     * Disable next button if not all required checkboxes are checked
+     * Account for multiple .is-required checkboxes
+     */
+    function check_required_checkboxes() {
 
-        var checkboxes = document.querySelectorAll('.is-required');
+        var elements = document.querySelectorAll("input[type=checkbox].is-required");
+        // Get amount of required checkboxes
+        var elementCount = elements.length;
 
-        // for (var i = 0, len = checkboxes.length; i < len; i++) {
-        //     if (this.classList) {
-                // if (document.querySelector(this).classList.contains('is-required')) {
-                // if (this.classList.contains('is-required')) {
-                    if (document.querySelectorAll('.is-required').checked) {
-                        document.querySelector(".rsssl-next").disabled = true;
-                    } else {
-                        // document.querySelector(".rsssl-next").prop('disabled', true);
-                        document.querySelector(".rsssl-next").disabled = false;
-                    }
-                // }
-        //     }
-        // }
+        // Loop through elements
+        Array.prototype.forEach.call(elements, function(el, i){
+            // Increase count for each element
+            i++;
+            if ( el.checked ) {
+                // Only set disabled to false if all required checkboxes are checked
+                if ( i === elementCount ) {
+                    document.querySelector(".rsssl-next").disabled = false;
+                }
+            } else {
+                document.querySelector(".rsssl-next").disabled = true;
+            }
+        });
     }
 
-    // function check_required_checkbox() {
-    //
-    //     var checkboxes = document.querySelectorAll('.is-required');
-    //
-    //     for (var i = 0, len = checkboxes.length; i < len; i++) {
-    //         if (this.classList) {
-    //             // if (document.querySelector(this).classList.contains('is-required')) {
-    //             if (this.classList.contains('is-required')) {
-    //                 if (this.checked) {
-    //                     document.querySelector(".rsssl-next").prop('disabled', false);
-    //                 } else {
-    //                     document.querySelector(".rsssl-next").prop('disabled', true);
-    //                 }
-    //             }
-    //         }
-    //     }
-    // }
-
-    // $(document).on('click','.is-required',function () {
-    //     if (this.checked) {
-    //         $(".rsssl-next").prop('disabled', false);
-    //     } else {
-    //         $(".rsssl-next").prop('disabled', true);
-    //     }
-    // });
-    //
-    // function check_required_checkbox() {
-    //     $('input[type=checkbox]').each(function () {
-    //         if ($(this).hasClass('is-required')) {
-    //             if (this.checked) {
-    //                 $(".rsssl-next").prop('disabled', false);
-    //             } else {
-    //                 $(".rsssl-next").prop('disabled', true);
-    //             }
-    //         }
-    //     });
-    // }
-
-
-
+    /**
+     * Add an event
+     * @param event
+     * @param selector
+     * @param callback
+     * @param context
+     */
+    function addEvent(event, selector, callback ) {
+        document.addEventListener(event, e => {
+            if ( e.target.closest(selector) ) {
+                callback(e);
+            }
+        });
+    }
 });
