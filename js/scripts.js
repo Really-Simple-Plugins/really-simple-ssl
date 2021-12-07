@@ -125,7 +125,6 @@ jQuery(document).ready(function ($) {
             },
             url: rsssl.ajaxurl,
             success: function (data) {
-                //row.remove();
                 if (data.percentage !== '') {
                     $('.rsssl-progress-percentage').text(data.percentage + "%");
                     var bar = $(".progress-bar-container .progress .bar");
@@ -158,53 +157,4 @@ jQuery(document).ready(function ($) {
             }
         });
     });
-
-    // Check for required checkboxes
-    check_required_checkboxes();
-
-    // Handle click event on .is-required checkbox
-    addEvent('click', 'input[type=checkbox].is-required', function(e){
-        check_required_checkboxes();
-    });
-
-    /**
-     * Loop through required checkboxes
-     * Disable next button if not all required checkboxes are checked
-     * Account for multiple .is-required checkboxes
-     */
-    function check_required_checkboxes() {
-
-        var elements = document.querySelectorAll("input[type=checkbox].is-required");
-        // Get amount of required checkboxes
-        var elementCount = elements.length;
-
-        // Loop through elements
-        Array.prototype.forEach.call(elements, function(el, i){
-            // Increase count for each element
-            i++;
-            if ( el.checked ) {
-                // Only set disabled to false if all required checkboxes are checked
-                if ( i === elementCount ) {
-                    document.querySelector(".rsssl-next").disabled = false;
-                }
-            } else {
-                document.querySelector(".rsssl-next").disabled = true;
-            }
-        });
-    }
-
-    /**
-     * Add an event
-     * @param event
-     * @param selector
-     * @param callback
-     * @param context
-     */
-    function addEvent(event, selector, callback ) {
-        document.addEventListener(event, e => {
-            if ( e.target.closest(selector) ) {
-                callback(e);
-            }
-        });
-    }
 });

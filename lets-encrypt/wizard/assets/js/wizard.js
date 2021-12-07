@@ -1,6 +1,50 @@
 jQuery(document).ready(function ($) {
     'use strict';
 
+    // Check for required checkboxes
+    check_required_checkboxes();
+    // Handle click event on .is-required checkbox
+    rsssl_add_event('click', 'input[type=checkbox].is-required', function(e){
+        check_required_checkboxes();
+    });
+
+    /**
+     * Loop through required checkboxes
+     * Disable next button if not all required checkboxes are checked
+     * Account for multiple .is-required checkboxes
+     */
+    function check_required_checkboxes() {
+        var elements = document.querySelectorAll("input[type=checkbox].is-required");
+        var elementCount = elements.length;
+        Array.prototype.forEach.call(elements, function(el, i){
+            i++;
+            if ( el.checked ) {
+                // Only set disabled to false if all required checkboxes are checked
+                if ( i === elementCount ) {
+                    document.querySelector(".rsssl-next").disabled = false;
+                }
+            } else {
+                document.querySelector(".rsssl-next").disabled = true;
+            }
+        });
+    }
+
+    /**
+     * Add an event
+     * @param event
+     * @param selector
+     * @param callback
+     * @param context
+     */
+    function rsssl_add_event(event, selector, callback ) {
+        document.addEventListener(event, e => {
+            if ( e.target.closest(selector) ) {
+                callback(e);
+            }
+        });
+    }
+
+
     //select2 dropdown
     var select2Dropdown = $('.rsssl-select2');
     if (select2Dropdown.length) {
