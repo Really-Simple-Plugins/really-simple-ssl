@@ -951,10 +951,10 @@ if ( ! class_exists( "rsssl_wizard" ) ) {
 
 
 			// Let's encrypt
-			wp_register_style( 'rsssl-wizard', rsssl_le_url . "wizard/assets/css/wizard.css", false, rsssl_version );
+			wp_register_style( 'rsssl-wizard', rsssl_le_url . "wizard/assets/css/wizard$minified.css", false, rsssl_version );
 			wp_enqueue_style( 'rsssl-wizard' );
 			// @todo admin css in wizard.less
-			wp_register_style( 'rsssl-wizard-admin', rsssl_le_url . "wizard/assets/css/admin.css", false, rsssl_version );
+			wp_register_style( 'rsssl-wizard-admin', rsssl_le_url . "wizard/assets/css/admin$minified.css", false, rsssl_version );
 			wp_enqueue_style( 'rsssl-wizard-admin' );
 
 			wp_enqueue_script( 'rsssl-wizard', rsssl_le_url . "wizard/assets/js/wizard$minified.js", array( 'jquery', 'select2' ), rsssl_version.time(), true );
