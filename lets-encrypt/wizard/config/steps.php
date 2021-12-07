@@ -64,6 +64,12 @@ $this->steps = array(
                 "title"    => __( "Directories", 'really-simple-ssl' ),
                 'actions' => array(
 	                array(
+		                'description' => __("Checking host...", "really-simple-ssl"),
+		                'action'=> 'check_host',
+		                'attempts' => 1,
+		                'speed' => 'normal',
+	                ),
+	                array(
 		                'description' => __("Checking challenge directory...", "really-simple-ssl"),
 		                'action'=> 'check_challenge_directory',
 		                'attempts' => 1,
