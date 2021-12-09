@@ -2,11 +2,11 @@ jQuery(document).ready(function ($) {
     'use strict';
 
     // Check for required checkboxes
-    check_required_checkboxes();
-    // Handle click event on .is-required checkbox
-    rsssl_add_event('click', 'input[type=checkbox].is-required', function(e){
-        check_required_checkboxes();
-    });
+    // check_required_checkboxes();
+    // // Handle click event on .is-required checkbox
+    // rsssl_add_event('click', 'input[type=checkbox].is-required', function(e){
+    //     check_required_checkboxes();
+    // });
 
     /**
      * Loop through required checkboxes
