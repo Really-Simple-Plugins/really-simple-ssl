@@ -275,57 +275,6 @@
           }
         }
       }
-
-      .rsssl-add-pages-table {
-        display: grid;
-        grid-template-columns: auto auto auto;
-        grid-gap: 5px;
-        align-items: center;
-        margin-bottom: @green-gap;
-
-        span {
-          justify-self: end;
-          text-align: justify;
-        }
-      }
-
-      .rsssl-link-to-menu-table {
-        display: grid;
-        grid-template-columns: 30% 30%;
-        grid-gap: 5px;
-        align-items: center;
-
-        h3 {
-          grid-column: span 2;
-          margin-top: @green-gap;
-          margin-bottom: 5px;
-
-          &:first-child {
-            margin-top: 0;
-          }
-        }
-
-        select {
-          grid-column-start: 2;
-        }
-      }
-
-      .rsssl-cookies-table {
-        h2 {
-          font-weight: normal;
-          font-size: 15px;
-        }
-
-        .rsssl-cookies-table-body {
-          border-radius: 5px;
-          display: grid;
-          grid-template-columns: 1fr;
-          padding: 10px;
-          background-color: #f0f2f8;
-        }
-      }
-
-
     }
 
 #rsssl-wizard  {
@@ -593,19 +542,15 @@
   /* Text, Email, Select(2), Textarea Style */
 
   input[type="text"], input[type="password"], input[type="email"], select, .select2, textarea, input[type="number"] {
-    // box-shadow:
-    //   0 1px 1px rgba(0,0,0,0.06),
-    //   0 2px 2px rgba(0,0,0,0.06);
     margin-bottom: 2px;
   }
   textarea {
     padding:10px;
     width:100%;
     height: 100px;
-    margin: 20px 0;  }
-
+    margin: 20px 0;
+  }
   /* Placeholders */
-
   ::placeholder {
     color: @gray-light;
   }
@@ -624,209 +569,9 @@
     color: @gray-light;
   }
 
-
   /* Labels */
   .rsssl-master-label h2 {
     padding: @green-gap @green-gap 0 @green-gap !important;
-  }
-
-  .rsssl-footer-contents {
-    border-top: none;
-  }
-
-  .rsssl-grid.rsssl-gridless {
-    display: flex;
-    flex-wrap: wrap;
-    height: inherit !important;
-    .rsssl-grid-item {
-      position: relative;
-      //padding: 0 20px 20px 0;
-
-      .rsssl-help-warning-wrap {
-        display: none;
-      }
-      .rsssl-comment {
-        display: none;
-      }
-
-      .rsssl-grid-header {
-        height: initial;
-      }
-
-      .rsssl-grid-header-container {
-        display: flex;
-        justify-content: space-between;
-        align-content: center;
-
-        .rsssl-grid-controls {
-          margin: auto 0;
-        }
-      }
-
-      .item-container {
-        height: calc(100% - 20px);
-        width: calc(100% - 20px);
-        margin-left: 10px;
-        //margin-top: 10px;
-        display: grid;
-        grid-template-rows: auto 1fr auto;
-        background-color: white;
-      }
-
-      .item-container .item-content {
-        padding: 10px 0 0 0;
-        margin: 0;
-        clear: none;
-      }
-
-      .item-footer {
-        background-color: white;
-        height: initial;
-      }
-
-      .rsssl-checkbox .rsssl-field {
-        display: flex;
-        justify-content: space-between;
-        align-content: center;
-        padding: @green-gap @green-gap 0 @green-gap;
-      }
-    }
-
-    .rsssl-grid-item.big {
-      .item-container .item-content {
-        display: grid;
-        grid-auto-flow: row dense;
-        grid-template-columns: 50% 50%;
-        grid-auto-rows: minmax(min-content, max-content);
-      }
-
-      &.rsssl-customization .item-container .item-content {
-        grid-auto-flow: row;
-      }
-
-    }
-
-    .rsssl-cols-2 .rsssl-field {
-      grid-column: span 2;
-      display: grid;
-      grid-template-columns: 100px 100px;
-      grid-column-gap: 20px;
-
-      .rsssl-label {
-        grid-column: span 2;
-      }
-    }
-
-    .rsssl-cols-3 .rsssl-field {
-      grid-column: span 2;
-      display: grid;
-      grid-template-columns: 100px 100px 100px;
-      grid-column-gap: 20px;
-
-      .rsssl-label {
-        grid-column: span 3;
-      }
-    }
-
-    .rsssl-borderradius.rsssl-cols-5 .rsssl-field, .rsssl-borderwidth.rsssl-cols-5 .rsssl-field {
-      display: grid;
-      grid-template-columns: 50px 50px 50px 50px 50px;
-      grid-column-gap: 10px;
-
-      .rsssl-label {
-        grid-column: span 5;
-      }
-    }
-
-    .rsssl-border-input-type-wrap {
-      display: grid;
-      grid-template-rows: 16px 16px;
-      padding-top: 16px;
-
-      .rsssl-grey {
-        color: darkgrey;
-      }
-      span {
-        cursor: pointer;
-      }
-    }
-
-    select {
-      width: 100%;
-    }
-
-    .field-group {
-      grid-column: span 2;
-    }
-
-    .rsssl-field {
-      padding: 10px @green-gap 0 @green-gap;
-    }
-
-    .rsssl-borderradius,
-    .rsssl-borderwidth {
-      grid-column: span 1;
-    }
-
-    .field-group.rsssl-colspan-1 {
-      grid-column: span 1;
-    }
-
-    .field-group.rsssl-colspan-2 {
-      grid-column: span 2;
-    }
-
-    .field-group.rsssl-col-1 {
-      grid-column-start: 1;
-    }
-
-    .field-group.rsssl-col-2 {
-      grid-column-start: 2;
-    }
-
-    .rsssl-master-label h2 {
-      grid-column: span 2;
-      margin: 0;
-      padding: @green-gap @green-gap 0 @green-gap;
-      font-size: 18px;
-    }
-
-    .rsssl-sublabel label {
-      color: darkgrey;
-      font-size: 13px;
-    }
-
-    label .rsssl-icon {
-      display: inline;
-    }
-
-    .rsssl-switch {
-      margin-top: 0;
-    }
-
-    .wp-picker-input-wrap:not(.hidden) {
-      display: block;
-      position: absolute;
-      z-index: 10;
-    }
-
-    .wp-picker-holder {
-      position: absolute;
-      top: 132px;
-      z-index: 10;
-    }
-
-    .wp-picker-clear {
-      position: absolute;
-    }
-
-    .rsssl-grid-controls .rsssl-field {
-      padding: 0;
-      .rsssl-label {
-        margin: 0;
-      }
-    }
-
   }
 
   input::-webkit-outer-spin-button,
@@ -1006,24 +751,6 @@
   animation: tooltips-horz 300ms ease-out forwards;
 }
 
-#rsssl-header {
-  font-size:16px;
-  .button-black {
-    background-color: black;
-    color: white;
-    border-color: black;
-    padding: 0 25px;
-  }
-  .link-black {
-    color: black;
-    padding: 5px 5px;
-  }
-}
-
-.wp-editor-wrap iframe {
-  height: initial !important;
-}
-
 .rsssl-help-warning-wrap {
   .rsssl-help-modal {
     h2 {
@@ -1079,31 +806,6 @@ a:active, a:hover {
   color: #333;
 }
 
-a.button.rsssl-open-modal {
-  font-size: 9px;
-  line-height: 13px;
-  height: 15px;
-  min-height: 15px;
-  padding: 1px 3px;
-  margin-left: 10px;
-}
-
-.rsssl-panel-link {
-  text-decoration: none;
-  display: inline-block;
-  width: 80%;
-}
-
-#rsssl_language {
-  font-size: 15px;
-
-  &.rsssl_cookie_language_selector {
-    margin-bottom: 0;
-
-  }
-}
-
-
 .multiple-field {
   div {
     margin-top: 8px;
@@ -1111,45 +813,6 @@ a.button.rsssl-open-modal {
       margin-bottom: 8px;
     }
   }
-}
-
-.rsssl-list-container {
-
-  margin-bottom: 25px;
-
-  .rsssl-cookie-field > div,
-  .rsssl-service-field > div {
-    margin-top: 8px;
-    &:last-child {
-      margin-bottom: 8px;
-    }
-  }
-
-  .rsssl-disabled label,
-  .rsssl-disabled span {
-    color: #ababab !important;
-  }
-
-  .rsssl-service-cookie-list {
-    margin-bottom: @green-gap;
-    &:last-child {
-      margin-bottom: 0px;
-    }
-  }
-
-  .rsssl-service-divider {
-    font-size: 15px;
-    margin-bottom: 10px;
-  }
-
-}
-
-.rsssl-legenda {
-  padding: 10px 10px 0 10px;
-  display: grid;
-  grid-template-columns: 25px 200px 25px 300px;
-  grid-column-gap: 10px;
-  align-items: center;
 }
 
 .rsssl-panel {
@@ -1210,35 +873,11 @@ a.button.rsssl-open-modal {
 
       padding: 10px 15px 8px 0;
     }
-
-    .rsssl-add-to-policy {
-      text-decoration: underline;
-    }
-
   }
-
-  &.rsssl-link-panel {
-    &.selected, &:hover {
-      box-shadow: 0 5px 5px rgba(0, 0, 0, 0.2), 0 3px 5px rgba(0, 0, 0, 0.13);
-    }
-  }
-
-  .rsssl-panel-content {
-    display: none;
-    background-color: #fff;
-    border: 1px solid #d6d8db;
-    border-top: 0;
-    border-bottom-left-radius: 5px;
-    border-bottom-right-radius: 5px;
-    padding: 10px 15px;
-  }
-
   h1 {
     font-size: 22px;
   }
-
   font-size: 13px !important;
-
   p {
     font-size: 13px !important;
   }
@@ -1428,12 +1067,7 @@ input[type="text"], input[type="password"], input[type="email"], input[type="num
       margin-bottom: 12px;
     }
 
-    .rsssl-rescan {
-      padding: 0 10px 0 10px;
-    }
-
     /* CSS for the sections menu */
-
     .rsssl-menu-item.active {
       i {
         color: black;

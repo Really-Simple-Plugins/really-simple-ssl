@@ -207,45 +207,6 @@
 #rsssl-content-area .rsssl-section-content form .rsssl-section-footer .rsssl-buttons-container input + input {
   margin-left: 20px;
 }
-#rsssl-content-area .rsssl-add-pages-table {
-  display: grid;
-  grid-template-columns: auto auto auto;
-  grid-gap: 5px;
-  align-items: center;
-  margin-bottom: 20px;
-}
-#rsssl-content-area .rsssl-add-pages-table span {
-  justify-self: end;
-  text-align: justify;
-}
-#rsssl-content-area .rsssl-link-to-menu-table {
-  display: grid;
-  grid-template-columns: 30% 30%;
-  grid-gap: 5px;
-  align-items: center;
-}
-#rsssl-content-area .rsssl-link-to-menu-table h3 {
-  grid-column: span 2;
-  margin-top: 20px;
-  margin-bottom: 5px;
-}
-#rsssl-content-area .rsssl-link-to-menu-table h3:first-child {
-  margin-top: 0;
-}
-#rsssl-content-area .rsssl-link-to-menu-table select {
-  grid-column-start: 2;
-}
-#rsssl-content-area .rsssl-cookies-table h2 {
-  font-weight: normal;
-  font-size: 15px;
-}
-#rsssl-content-area .rsssl-cookies-table .rsssl-cookies-table-body {
-  border-radius: 5px;
-  display: grid;
-  grid-template-columns: 1fr;
-  padding: 10px;
-  background-color: #f0f2f8;
-}
 #rsssl-wizard {
   /* ----------- Icons ----------- */
   /* ----------- Fields ----------- */
@@ -519,165 +480,6 @@
 #rsssl-wizard .rsssl-master-label h2 {
   padding: 20px 20px 0 20px !important;
 }
-#rsssl-wizard .rsssl-footer-contents {
-  border-top: none;
-}
-#rsssl-wizard .rsssl-grid.rsssl-gridless {
-  display: flex;
-  flex-wrap: wrap;
-  height: inherit !important;
-}
-#rsssl-wizard .rsssl-grid.rsssl-gridless .rsssl-grid-item {
-  position: relative;
-}
-#rsssl-wizard .rsssl-grid.rsssl-gridless .rsssl-grid-item .rsssl-help-warning-wrap {
-  display: none;
-}
-#rsssl-wizard .rsssl-grid.rsssl-gridless .rsssl-grid-item .rsssl-comment {
-  display: none;
-}
-#rsssl-wizard .rsssl-grid.rsssl-gridless .rsssl-grid-item .rsssl-grid-header {
-  height: initial;
-}
-#rsssl-wizard .rsssl-grid.rsssl-gridless .rsssl-grid-item .rsssl-grid-header-container {
-  display: flex;
-  justify-content: space-between;
-  align-content: center;
-}
-#rsssl-wizard .rsssl-grid.rsssl-gridless .rsssl-grid-item .rsssl-grid-header-container .rsssl-grid-controls {
-  margin: auto 0;
-}
-#rsssl-wizard .rsssl-grid.rsssl-gridless .rsssl-grid-item .item-container {
-  height: calc(100% - 20px);
-  width: calc(100% - 20px);
-  margin-left: 10px;
-  display: grid;
-  grid-template-rows: auto 1fr auto;
-  background-color: white;
-}
-#rsssl-wizard .rsssl-grid.rsssl-gridless .rsssl-grid-item .item-container .item-content {
-  padding: 10px 0 0 0;
-  margin: 0;
-  clear: none;
-}
-#rsssl-wizard .rsssl-grid.rsssl-gridless .rsssl-grid-item .item-footer {
-  background-color: white;
-  height: initial;
-}
-#rsssl-wizard .rsssl-grid.rsssl-gridless .rsssl-grid-item .rsssl-checkbox .rsssl-field {
-  display: flex;
-  justify-content: space-between;
-  align-content: center;
-  padding: 20px 20px 0 20px;
-}
-#rsssl-wizard .rsssl-grid.rsssl-gridless .rsssl-grid-item.big .item-container .item-content {
-  display: grid;
-  grid-auto-flow: row dense;
-  grid-template-columns: 50% 50%;
-  grid-auto-rows: minmax(min-content, max-content);
-}
-#rsssl-wizard .rsssl-grid.rsssl-gridless .rsssl-grid-item.big.rsssl-customization .item-container .item-content {
-  grid-auto-flow: row;
-}
-#rsssl-wizard .rsssl-grid.rsssl-gridless .rsssl-cols-2 .rsssl-field {
-  grid-column: span 2;
-  display: grid;
-  grid-template-columns: 100px 100px;
-  grid-column-gap: 20px;
-}
-#rsssl-wizard .rsssl-grid.rsssl-gridless .rsssl-cols-2 .rsssl-field .rsssl-label {
-  grid-column: span 2;
-}
-#rsssl-wizard .rsssl-grid.rsssl-gridless .rsssl-cols-3 .rsssl-field {
-  grid-column: span 2;
-  display: grid;
-  grid-template-columns: 100px 100px 100px;
-  grid-column-gap: 20px;
-}
-#rsssl-wizard .rsssl-grid.rsssl-gridless .rsssl-cols-3 .rsssl-field .rsssl-label {
-  grid-column: span 3;
-}
-#rsssl-wizard .rsssl-grid.rsssl-gridless .rsssl-borderradius.rsssl-cols-5 .rsssl-field,
-#rsssl-wizard .rsssl-grid.rsssl-gridless .rsssl-borderwidth.rsssl-cols-5 .rsssl-field {
-  display: grid;
-  grid-template-columns: 50px 50px 50px 50px 50px;
-  grid-column-gap: 10px;
-}
-#rsssl-wizard .rsssl-grid.rsssl-gridless .rsssl-borderradius.rsssl-cols-5 .rsssl-field .rsssl-label,
-#rsssl-wizard .rsssl-grid.rsssl-gridless .rsssl-borderwidth.rsssl-cols-5 .rsssl-field .rsssl-label {
-  grid-column: span 5;
-}
-#rsssl-wizard .rsssl-grid.rsssl-gridless .rsssl-border-input-type-wrap {
-  display: grid;
-  grid-template-rows: 16px 16px;
-  padding-top: 16px;
-}
-#rsssl-wizard .rsssl-grid.rsssl-gridless .rsssl-border-input-type-wrap .rsssl-grey {
-  color: darkgrey;
-}
-#rsssl-wizard .rsssl-grid.rsssl-gridless .rsssl-border-input-type-wrap span {
-  cursor: pointer;
-}
-#rsssl-wizard .rsssl-grid.rsssl-gridless select {
-  width: 100%;
-}
-#rsssl-wizard .rsssl-grid.rsssl-gridless .field-group {
-  grid-column: span 2;
-}
-#rsssl-wizard .rsssl-grid.rsssl-gridless .rsssl-field {
-  padding: 10px 20px 0 20px;
-}
-#rsssl-wizard .rsssl-grid.rsssl-gridless .rsssl-borderradius,
-#rsssl-wizard .rsssl-grid.rsssl-gridless .rsssl-borderwidth {
-  grid-column: span 1;
-}
-#rsssl-wizard .rsssl-grid.rsssl-gridless .field-group.rsssl-colspan-1 {
-  grid-column: span 1;
-}
-#rsssl-wizard .rsssl-grid.rsssl-gridless .field-group.rsssl-colspan-2 {
-  grid-column: span 2;
-}
-#rsssl-wizard .rsssl-grid.rsssl-gridless .field-group.rsssl-col-1 {
-  grid-column-start: 1;
-}
-#rsssl-wizard .rsssl-grid.rsssl-gridless .field-group.rsssl-col-2 {
-  grid-column-start: 2;
-}
-#rsssl-wizard .rsssl-grid.rsssl-gridless .rsssl-master-label h2 {
-  grid-column: span 2;
-  margin: 0;
-  padding: 20px 20px 0 20px;
-  font-size: 18px;
-}
-#rsssl-wizard .rsssl-grid.rsssl-gridless .rsssl-sublabel label {
-  color: darkgrey;
-  font-size: 13px;
-}
-#rsssl-wizard .rsssl-grid.rsssl-gridless label .rsssl-icon {
-  display: inline;
-}
-#rsssl-wizard .rsssl-grid.rsssl-gridless .rsssl-switch {
-  margin-top: 0;
-}
-#rsssl-wizard .rsssl-grid.rsssl-gridless .wp-picker-input-wrap:not(.hidden) {
-  display: block;
-  position: absolute;
-  z-index: 10;
-}
-#rsssl-wizard .rsssl-grid.rsssl-gridless .wp-picker-holder {
-  position: absolute;
-  top: 132px;
-  z-index: 10;
-}
-#rsssl-wizard .rsssl-grid.rsssl-gridless .wp-picker-clear {
-  position: absolute;
-}
-#rsssl-wizard .rsssl-grid.rsssl-gridless .rsssl-grid-controls .rsssl-field {
-  padding: 0;
-}
-#rsssl-wizard .rsssl-grid.rsssl-gridless .rsssl-grid-controls .rsssl-field .rsssl-label {
-  margin: 0;
-}
 #rsssl-wizard input::-webkit-outer-spin-button,
 #rsssl-wizard input::-webkit-inner-spin-button {
   -webkit-appearance: none;
@@ -835,22 +637,6 @@
 [rsssl-tooltip][flow^="right"]:hover::after {
   animation: tooltips-horz 300ms ease-out forwards;
 }
-#rsssl-header {
-  font-size: 16px;
-}
-#rsssl-header .button-black {
-  background-color: black;
-  color: white;
-  border-color: black;
-  padding: 0 25px;
-}
-#rsssl-header .link-black {
-  color: black;
-  padding: 5px 5px;
-}
-.wp-editor-wrap iframe {
-  height: initial !important;
-}
 .rsssl-help-warning-wrap .rsssl-help-modal {
   position: relative;
   position: absolute;
@@ -907,62 +693,11 @@ a:active,
 a:hover {
   color: #333;
 }
-a.button.rsssl-open-modal {
-  font-size: 9px;
-  line-height: 13px;
-  height: 15px;
-  min-height: 15px;
-  padding: 1px 3px;
-  margin-left: 10px;
-}
-.rsssl-panel-link {
-  text-decoration: none;
-  display: inline-block;
-  width: 80%;
-}
-#rsssl_language {
-  font-size: 15px;
-}
-#rsssl_language.rsssl_cookie_language_selector {
-  margin-bottom: 0;
-}
 .multiple-field div {
   margin-top: 8px;
 }
 .multiple-field div:last-child {
   margin-bottom: 8px;
-}
-.rsssl-list-container {
-  margin-bottom: 25px;
-}
-.rsssl-list-container .rsssl-cookie-field > div,
-.rsssl-list-container .rsssl-service-field > div {
-  margin-top: 8px;
-}
-.rsssl-list-container .rsssl-cookie-field > div:last-child,
-.rsssl-list-container .rsssl-service-field > div:last-child {
-  margin-bottom: 8px;
-}
-.rsssl-list-container .rsssl-disabled label,
-.rsssl-list-container .rsssl-disabled span {
-  color: #ababab !important;
-}
-.rsssl-list-container .rsssl-service-cookie-list {
-  margin-bottom: 20px;
-}
-.rsssl-list-container .rsssl-service-cookie-list:last-child {
-  margin-bottom: 0px;
-}
-.rsssl-list-container .rsssl-service-divider {
-  font-size: 15px;
-  margin-bottom: 10px;
-}
-.rsssl-legenda {
-  padding: 10px 10px 0 10px;
-  display: grid;
-  grid-template-columns: 25px 200px 25px 300px;
-  grid-column-gap: 10px;
-  align-items: center;
 }
 .rsssl-panel {
   font-size: 13px !important;
@@ -1025,23 +760,6 @@ a.button.rsssl-open-modal {
   width: 18px;
   height: 18px;
   padding-top: 1px;
-}
-.rsssl-panel.rsssl-slide-panel .rsssl-add-to-policy,
-.rsssl-panel.rsssl-link-panel .rsssl-add-to-policy {
-  text-decoration: underline;
-}
-.rsssl-panel.rsssl-link-panel.selected,
-.rsssl-panel.rsssl-link-panel:hover {
-  box-shadow: 0 5px 5px rgba(0, 0, 0, 0.2), 0 3px 5px rgba(0, 0, 0, 0.13);
-}
-.rsssl-panel .rsssl-panel-content {
-  display: none;
-  background-color: #fff;
-  border: 1px solid #d6d8db;
-  border-top: 0;
-  border-bottom-left-radius: 5px;
-  border-bottom-right-radius: 5px;
-  padding: 10px 15px;
 }
 .rsssl-panel h1 {
   font-size: 22px;
@@ -1224,10 +942,6 @@ input[type="number"] {
 #rsssl-wizard .rsssl-body .rsssl-remove,
 #rsssl-wizard #rsssl-content-area .rsssl-remove {
   margin-bottom: 12px;
-}
-#rsssl-wizard .rsssl-body .rsssl-rescan,
-#rsssl-wizard #rsssl-content-area .rsssl-rescan {
-  padding: 0 10px 0 10px;
 }
 #rsssl-wizard .rsssl-body .rsssl-menu-item.active i,
 #rsssl-wizard #rsssl-content-area .rsssl-menu-item.active i {
