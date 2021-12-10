@@ -183,6 +183,15 @@ if ( ! class_exists( "rsssl_config" ) ) {
 		            'api' => false,
 		            'ssl_installation_link' => 'https://ovh.com',
 	            ),
+	            'bluehost' => array(
+		            'name' => 'BlueHost',
+		            'installation_renewal_required' => false,
+		            'local_ssl_generation_needed' => false,
+		            'free_ssl_available' => 'activated_by_default',
+		            'hosting_dashboard' => 'cpanel',
+		            'api' => false,
+		            'ssl_installation_link' => 'https://www.bluehost.com/help/article/how-to-activate-a-free-wordpress-ssl',
+	            ),
 	            'freeola' => array(
 		            'name' => 'Freeola',
 		            'installation_renewal_required' => false,
