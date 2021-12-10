@@ -59,11 +59,5 @@
                 </div>
             </div>
         </div>
-        <div class="tips-tricks-bottom">
-            <?php printf(
-            __('Any questions? See the %sdocumentation%s or the %sWordPress Forum%s.', 'really-simple-ssl'),
-            '<a href="https://really-simple-ssl.com/knowledge-base/" target="_blank">','</a>',  '<a href="https://wordpress.org/support/plugin/really-simple-ssl/" target="_blank">', '</a>' );
-            ?>
-        </div>
 	</div>
 </div>

@@ -3104,6 +3104,7 @@ class rsssl_admin extends rsssl_front_end
                     'false' => array(
                         'msg' => __('SSL is not enabled yet.', 'really-simple-ssl'),
                         'icon' => 'warning',
+                        'plusone' => true,
                     ),
                 ),
             ),
