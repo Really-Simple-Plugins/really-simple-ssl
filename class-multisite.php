@@ -63,9 +63,7 @@ if (!class_exists('rsssl_multisite')) {
             add_action('admin_init', array($this, 'listen_for_ssl_conversion_hook_switch'), 40);
 	        add_filter('rsssl_notices', array($this, 'add_multisite_notices'));
 	        add_filter('rsssl_ssl_detected', array($this, 'override_ssl_detection_ms'));
-
 	        add_action('rsssl_progress_feedback', array( $this, 'add_ms_progress_feedback' ));
-
         }
 
         static function this()
@@ -134,7 +132,7 @@ if (!class_exists('rsssl_multisite')) {
 	        );
 
             //we don't need a no ssl warning on multisite
-            unset( $notices['ssl_detected']['output']['no-ssl-detected'] );
+//            unset( $notices['ssl_detected']['output']['no-ssl-detected'] );
 
 	        $notices['multisite_server_variable_warning'] = array(
 		        'callback' => 'RSSSL()->rsssl_multisite->multisite_server_variable_warning',
