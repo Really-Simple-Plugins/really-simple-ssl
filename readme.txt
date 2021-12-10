@@ -93,6 +93,7 @@ If you can't deactivate, do not just remove the plugin folder to uninstall! Foll
 = 5.2.1 =
 * Improvement: changed text on security headers feedback
 * Improvement: some resources were not loaded minified on the back-end
+* Improvement: dropped one line from tips&tricks to ensure it all fits when translated
 
 = 5.2.0 =
 * Improvement: updated tips & tricks with Let's Encrypt and Cross-Origin resource policy articles
