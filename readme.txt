@@ -6,7 +6,7 @@ Requires at least: 4.9
 License: GPL2
 Tested up to: 5.8
 Requires PHP: 5.6
-Stable tag: 5.1.3
+Stable tag: 5.2.1
 
 No setup required! You only need an SSL certificate, and this plugin will do the rest.
 
@@ -87,9 +87,20 @@ Yes. There is a dedicated network settings page where you can switch between net
 = Uninstalling Really Simple SSL =
 The plugin checks your certificate before enabling, but if, for example, you migrated the site to a non-SSL environment, you might get locked out of the back-end.
 
-If you can't deactivate, do not just remove the plugin folder to uninstall! Follow these [instructions] instead: (https://really-simple-ssl.com/knowledge-base/uninstall-websitebackend-not-accessible/).
+If you can't deactivate, do not just remove the plugin folder to uninstall! Follow these [instructions](https://really-simple-ssl.com/knowledge-base/uninstall-websitebackend-not-accessible/) instead.
 
 == Changelog ==
+= 5.2.1 =
+* Improvement: changed text on security headers feedback
+* Improvement: some resources were not loaded minified on the back-end
+* Improvement: dropped one line from tips&tricks to ensure it all fits when translated
+
+= 5.2.0 =
+* Improvement: updated tips & tricks with Let's Encrypt and Cross-Origin resource policy articles
+* Improvement: updated setting slider styling
+* Improvement: updated WP Config not writable notice and article
+* Improvement: recommended headers check now uses cURL for header detection
+
 = 5.1.3 =
 * Improvement: auto rename force-deactivate.php back to .txt after running
 * Improvement: auto flush caches of popular caching plugins
@@ -97,6 +108,7 @@ If you can't deactivate, do not just remove the plugin folder to uninstall! Foll
 * Improvement: add option to disable OCSP stapling in the Let's Encrypt certificate generation, instead of doing this automatically only
 * Improvement: added high contrast option to settings for better WCAG compatibility
 * Improvement: link in "install manually" on Let's Encrypt certificate renewal should point to certificate download instead of hosting installation url.
+* Improvement: recommend headers check now uses cURL for header detection
 
 = 5.1.2 =
 * Improvement: remove one recommendation from the activate ssl notice, to keep it clean
