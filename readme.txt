@@ -97,7 +97,7 @@ If you can't deactivate, do not just remove the plugin folder to uninstall! Foll
 * Improvement: updated tips & tricks with Let's Encrypt and Cross-Origin resource policy articles
 * Improvement: updated setting slider styling
 * Improvement: updated WP Config not writable notice and article
-* Improvement: recommend headers check now uses cURL for header detection
+* Improvement: recommended headers check now uses cURL for header detection
 
 = 5.1.3 =
 * Improvement: auto rename force-deactivate.php back to .txt after running

@@ -300,7 +300,6 @@ if ( ! class_exists( "rsssl_wizard" ) ) {
                                 } else {
                                     console.log("response.action not found ".response.action);
                                 }
-
                             },
                             error: function(response) {
                                 console.log("error");
