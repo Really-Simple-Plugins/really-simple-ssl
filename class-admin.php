@@ -2084,10 +2084,6 @@ class rsssl_admin extends rsssl_front_end
                 'name' => 'Permissions-Policy',
                 'pattern' =>  'Permissions-Policy',
             ),
-//            array(
-//                'name' => 'Content-Security-Policy',
-//                'pattern' =>  'Content-Security-Policy',
-//            ),
             array(
                 'name' => 'HTTP Strict Transport Security',
                 'pattern' =>  'Strict-Transport-Security',
@@ -2184,44 +2180,12 @@ class rsssl_admin extends rsssl_front_end
 	public function recommended_headers_enabled() {
 
 		$unused_headers = $this->get_recommended_security_headers();
-
 		if ( empty( $unused_headers ) ) {
 			return true;
 		}
 
 		return false;
 
-	}
-
-	/**
-	 * @return string
-	 * Get HTML for recommended security headers dashboard notice
-	 * @since 5.2
-	 *
-	 */
-
-	public function generate_recommended_security_headers_html() {
-
-		$unused_headers = $this->get_recommended_security_headers();
-
-		$html = '';
-        // Get count to skip latest <br>
-		$count = 0;
-		$unused_header_count = count($unused_headers);
-
-		foreach ( $unused_headers as $header ) {
-
-			$html .= $header;
-
-			$count++;
-
-			if ( $count < $unused_header_count ) {
-				$html .= "<br>";
-			}
-
-		}
-
-		return $html;
 	}
 
     /**
@@ -3024,6 +2988,7 @@ class rsssl_admin extends rsssl_front_end
             'callback' => false,
         );
 
+
 	    $curl_error = get_transient('rsssl_curl_error');
         $current_plugin_folder = $this->get_current_rsssl_free_dirname();
 
@@ -3361,8 +3326,8 @@ class rsssl_admin extends rsssl_front_end
 		        'score' => 5,
 		        'output' => array(
 			        'false' => array(
-				        'msg' => __("The following recommended security headers are not enabled:", "really-simple-ssl-pro")
-				                 ."<br><code style='padding: 0;'>".$this->generate_recommended_security_headers_html() . "</code>",
+				        'msg' => __("The following recommended security headers are not detected:", "really-simple-ssl-pro")
+				                 ."<br><code style='padding: 0;'>". implode('<br>', $this->get_recommended_security_headers() ) . "</code>",
 				        'url' => 'https://really-simple-ssl.com/everything-you-need-to-know-about-security-headers',
 				        'icon' => 'open',
 				        'dismissible' => true
@@ -4103,24 +4068,22 @@ class rsssl_admin extends rsssl_front_end
     {
         //load on network admin or normal admin settings page
         if ( $hook !== 'settings_page_really-simple-ssl' && $hook !== 'settings_page_rlrsssl_really_simple_ssl' ) return;
-
+	    $minified = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? '' : '.min';
         if (is_rtl()) {
-            wp_register_style('rlrsssl-css', trailingslashit(rsssl_url) . 'css/main-rtl.min.css', array(), rsssl_version);
-            wp_register_style('rsssl-grid', trailingslashit(rsssl_url) . 'grid/css/grid-rtl.min.css', array(), rsssl_version);
+            wp_register_style('rlrsssl-css', trailingslashit(rsssl_url) . "css/main-rtl$minified.css", array(), rsssl_version);
+            wp_register_style('rsssl-grid', trailingslashit(rsssl_url) . "grid/css/grid-rtl$minified.css", array(), rsssl_version);
         } else {
-	        wp_register_style('rlrsssl-css', trailingslashit(rsssl_url) . 'css/main.min.css', array(), rsssl_version );
-            wp_register_style('rsssl-grid', trailingslashit(rsssl_url) . 'grid/css/grid.css', array(), rsssl_version );
+	        wp_register_style('rlrsssl-css', trailingslashit(rsssl_url) . "css/main$minified.css", array(), rsssl_version );
+            wp_register_style('rsssl-grid', trailingslashit(rsssl_url) . "grid/css/grid$minified.css", array(), rsssl_version );
         }
 
-        wp_register_style('rsssl-scrollbar', trailingslashit(rsssl_url) . 'includes/simple-scrollbar.css', "", rsssl_version);
+        wp_register_style('rsssl-scrollbar', trailingslashit(rsssl_url) . "includes/simple-scrollbar$minified.css", "", rsssl_version);
         wp_enqueue_style('rsssl-scrollbar');
 
 	    wp_enqueue_style('rlrsssl-css');
 	    wp_enqueue_style('rsssl-grid');
 
-        wp_register_script('rsssl',
-            trailingslashit(rsssl_url)
-            . 'js/scripts.js', array("jquery"), rsssl_version);
+        wp_register_script('rsssl', trailingslashit(rsssl_url) . "js/scripts$minified.js", array("jquery"), rsssl_version);
         wp_enqueue_script('rsssl');
 
         $finished_text = apply_filters('rsssl_finished_text', sprintf(__("Basic SSL configuration finished! Improve your score with %sReally Simple SSL Pro%s.", "really-simple-ssl"), '<a target="_blank" href="' . $this->pro_url . '">', '</a>') );
@@ -4144,9 +4107,7 @@ class rsssl_admin extends rsssl_front_end
                 'lowest_possible_task_count' =>	RSSSL()->really_simple_ssl->get_lowest_possible_task_count(),
             )
         );
-        wp_register_script('rsssl-scrollbar',
-            trailingslashit(rsssl_url)
-            . 'includes/simple-scrollbar.js', array("jquery"), rsssl_version);
+        wp_register_script('rsssl-scrollbar', trailingslashit(rsssl_url) . "includes/simple-scrollbar$minified.js", array("jquery"), rsssl_version);
         wp_enqueue_script('rsssl-scrollbar');
     }
 
