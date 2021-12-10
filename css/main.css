@@ -574,7 +574,9 @@ hr {
   height: 18px;
 }
 .rsssl-switch input {
-  display: none;
+  position: absolute;
+  opacity: 0;
+  display: block !important;
 }
 .rsssl-slider {
   position: absolute;

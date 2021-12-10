@@ -550,7 +550,9 @@ hr {
   width: 35px;
   height: 18px;
   input {
-    display: none;
+    position:absolute;
+    opacity:0;
+    display:block !important; //temporary fix to override pro setting
   }
 }
 
@@ -564,24 +566,25 @@ hr {
   background-color: #ccc;
   -webkit-transition: .4s;
   transition: .4s;
+  &:before {
+    position: absolute;
+    content: "";
+    height: 14px;
+    width: 14px;
+    left: 3px;
+    bottom: 2.2px;
+    background-color: white;
+    -webkit-transition: .4s;
+    transition: .4s;
+  }
+  &.rsssl-round {
+    border-radius: 20px;
+    &:before {
+      border-radius: 50%;
+    }
+  }
 }
-.rsssl-slider:before {
-  position: absolute;
-  content: "";
-  height: 14px;
-  width: 14px;
-  left: 3px;
-  bottom: 2.2px;
-  background-color: white;
-  -webkit-transition: .4s;
-  transition: .4s;
-}
-.rsssl-slider.rsssl-round {
-  border-radius: 20px;
-}
-.rsssl-slider.rsssl-round:before {
-  border-radius: 50%;
-}
+
 input:checked + .rsssl-slider {
   background-color: #2DAAE1;
 }
