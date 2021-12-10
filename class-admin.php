@@ -2084,10 +2084,6 @@ class rsssl_admin extends rsssl_front_end
                 'name' => 'Permissions-Policy',
                 'pattern' =>  'Permissions-Policy',
             ),
-//            array(
-//                'name' => 'Content-Security-Policy',
-//                'pattern' =>  'Content-Security-Policy',
-//            ),
             array(
                 'name' => 'HTTP Strict Transport Security',
                 'pattern' =>  'Strict-Transport-Security',
@@ -2184,44 +2180,12 @@ class rsssl_admin extends rsssl_front_end
 	public function recommended_headers_enabled() {
 
 		$unused_headers = $this->get_recommended_security_headers();
-
 		if ( empty( $unused_headers ) ) {
 			return true;
 		}
 
 		return false;
 
-	}
-
-	/**
-	 * @return string
-	 * Get HTML for recommended security headers dashboard notice
-	 * @since 5.2
-	 *
-	 */
-
-	public function generate_recommended_security_headers_html() {
-
-		$unused_headers = $this->get_recommended_security_headers();
-
-		$html = '';
-        // Get count to skip latest <br>
-		$count = 0;
-		$unused_header_count = count($unused_headers);
-
-		foreach ( $unused_headers as $header ) {
-
-			$html .= $header;
-
-			$count++;
-
-			if ( $count < $unused_header_count ) {
-				$html .= "<br>";
-			}
-
-		}
-
-		return $html;
 	}
 
     /**
@@ -3024,6 +2988,7 @@ class rsssl_admin extends rsssl_front_end
             'callback' => false,
         );
 
+
 	    $curl_error = get_transient('rsssl_curl_error');
         $current_plugin_folder = $this->get_current_rsssl_free_dirname();
 
@@ -3360,8 +3325,8 @@ class rsssl_admin extends rsssl_front_end
 		        'score' => 5,
 		        'output' => array(
 			        'false' => array(
-				        'msg' => __("The following recommended security headers are not enabled:", "really-simple-ssl-pro")
-				                 ."<br><code style='padding: 0;'>".$this->generate_recommended_security_headers_html() . "</code>",
+				        'msg' => __("The following recommended security headers are not detected:", "really-simple-ssl-pro")
+				                 ."<br><code style='padding: 0;'>". implode('<br>', $this->get_recommended_security_headers() ) . "</code>",
 				        'url' => 'https://really-simple-ssl.com/everything-you-need-to-know-about-security-headers',
 				        'icon' => 'open',
 				        'dismissible' => true
