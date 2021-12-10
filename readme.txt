@@ -6,7 +6,7 @@ Requires at least: 4.9
 License: GPL2
 Tested up to: 5.8
 Requires PHP: 5.6
-Stable tag: 5.2.0
+Stable tag: 5.2.1
 
 No setup required! You only need an SSL certificate, and this plugin will do the rest.
 
@@ -90,7 +90,10 @@ The plugin checks your certificate before enabling, but if, for example, you mig
 If you can't deactivate, do not just remove the plugin folder to uninstall! Follow these [instructions](https://really-simple-ssl.com/knowledge-base/uninstall-websitebackend-not-accessible/) instead.
 
 == Changelog ==
-= 5.2.0
+= 5.2.1 =
+* Improvement: changed text on security headers feedback
+
+= 5.2.0 =
 * Improvement: updated tips & tricks with Let's Encrypt and Cross-Origin resource policy articles
 * Improvement: updated setting slider styling
 * Improvement: updated WP Config not writable notice and article
