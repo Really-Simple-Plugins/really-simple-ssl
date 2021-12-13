@@ -227,7 +227,6 @@ class rsssl_admin extends rsssl_front_end
                 }
 	            update_option('rsssl_flush_caches', time());
             }
-
             if (!$this->wpconfig_ok()) {
                 //if we were to activate ssl, this could result in a redirect loop. So warn first.
                 add_action("admin_notices", array($this, 'show_notice_wpconfig_needs_fixes'));
@@ -3114,8 +3113,9 @@ class rsssl_admin extends rsssl_front_end
 	            'score' => 30,
 	            'output' => array(
 		            'fail' => array(
-			            'msg' =>__('Cannot activate SSL due to system configuration.', 'really-simple-ssl'),
-			            'icon' => 'warning'
+                        'url' => 'https://really-simple-ssl.com/wp-config-fix-needed',
+			            'msg' => __("The wp-config.php file is not writable, and needs to be edited. Please set this file to writable.", "really-simple-ssl"),
+                        'icon' => 'warning'
 		            ),
 		            'no-ssl-detected' => array(
 			            'title' => __("No SSL detected", "really-simple-ssl"),
@@ -5000,7 +5000,6 @@ if (!function_exists('rsssl_ssl_enabled')) {
 
 if (!function_exists('rsssl_ssl_detected')) {
 	function rsssl_ssl_detected() {
-
 		if ( ! RSSSL()->really_simple_ssl->wpconfig_ok() ) {
 			return apply_filters('rsssl_ssl_detected', 'fail');
 		}
