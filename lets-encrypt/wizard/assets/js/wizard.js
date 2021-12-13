@@ -1,6 +1,22 @@
 jQuery(document).ready(function ($) {
     'use strict';
 
+    /**
+     * Add an event
+     * @param event
+     * @param selector
+     * @param callback
+     * @param context
+     */
+    function rsssl_add_event(event, selector, callback ) {
+        document.addEventListener(event, e => {
+            if ( e.target.closest(selector) ) {
+                callback(e);
+            }
+        });
+    }
+
+
     //select2 dropdown
     var select2Dropdown = $('.rsssl-select2');
     if (select2Dropdown.length) {

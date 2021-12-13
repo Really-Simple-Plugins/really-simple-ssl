@@ -11,6 +11,7 @@
   padding: 16px 20px 17px 20px;
   margin-bottom: 0;
   color: #444;
+  
   font-weight: normal;
   font-size: 1.2em;
   background: inherit;
@@ -204,7 +205,6 @@
 }
 .rsssl-grid .rsssl-item .item-container .form-table tbody tr th .rsssl-tooltip-right {
   padding-left: 10px;
-  margin-top: -4px;
 }
 .rsssl-grid .rsssl-item .item-container .form-table tbody tr th,
 .rsssl-grid .rsssl-item .item-container .form-table tbody tr td {
@@ -335,9 +335,6 @@
 .rsssl-grid .rsssl-item .item-container .rsssl-grid-item-content .rsssl-tips-tricks .tips-tricks-content .tips-tricks-top .rsssl-tips-tricks-content {
   padding-left: 20px;
 }
-.rsssl-grid .rsssl-item .item-container .rsssl-grid-item-content .rsssl-tips-tricks .tips-tricks-content .tips-tricks-bottom {
-  color: #3c3c3c;
-}
 .rsssl-grid .rsssl-item .item-container .rsssl-grid-item-content .rsssl-tips-tricks .rsssl-tips-tricks-read-more a {
   text-decoration: none;
   white-space: nowrap;
@@ -466,7 +463,7 @@
   height: 247.5px;
 }
 .rsssl-grid .rsssl-item.half-height .item-container {
-  height: 237.5px;
+  height: 475px / 2;
 }
 .rsssl-grid .rsssl-item.half-height .item-container .rsssl-grid-item-content {
   height: 110px;
@@ -612,32 +609,32 @@
 }
 @media only screen and (min-width: 400px) {
   .rsssl-grid .rsssl-item.half-height {
-    height: 237.5px;
+    height: 475px / 2;
     min-height: 250px;
   }
 }
 @media only screen and (min-width: 600px) {
   .rsssl-grid .rsssl-item.half-height {
     min-height: 250px;
-    height: 237.5px;
+    height: 475px / 2;
   }
 }
 @media only screen and (min-width: 768px) {
   .rsssl-grid .rsssl-item.half-height {
     min-height: 250px;
-    height: 237.5px;
+    height: 475px / 2;
   }
 }
 @media only screen and (min-width: 992px) {
   .rsssl-grid .rsssl-item.half-height {
     min-height: 250px;
-    height: 237.5px;
+    height: 475px / 2;
   }
 }
 @media only screen and (min-width: 1555px) {
   .rsssl-grid .rsssl-item.half-height {
     min-height: 250px;
-    height: 237.5px;
+    height: 475px / 2;
   }
 }
 .rsssl-grid .rsssl-item.half-height .item-container {

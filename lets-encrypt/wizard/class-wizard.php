@@ -300,7 +300,6 @@ if ( ! class_exists( "rsssl_wizard" ) ) {
                                 } else {
                                     console.log("response.action not found ".response.action);
                                 }
-
                             },
                             error: function(response) {
                                 console.log("error");
@@ -386,27 +385,11 @@ if ( ! class_exists( "rsssl_wizard" ) ) {
                         </div>
                     </div>
                 </div>
-                <div class="rsssl-help-warning-wrap"><?php
-                    if ($this->step() === 1) {
-                        rsssl_sidebar_notice($this->support_form());
-                    } ?>
+                <div class="rsssl-help-warning-wrap">
                 </div>
             </div>
 			<?php
 		}
-
-
-		public function support_form(){
-		    $url = $this->get_support_url();
-			ob_start();?>
-			<h2><?php _e("Before you begin!","really-simple-ssl") ?></h2>
-            <p><?php _e("During the SSL generation process you might discover you want to give some feedback about your experiences or need some help. If so, keep our form ready and try to be as complete and precise as possible so we can assist as fast as possible.","really-simple-ssl")?></p>
-            <?php wp_nonce_field('rsssl_save', 'rsssl_le_nonce') ?>
-            <a target="_blank" href="<?php echo $url?>" type="submit" class="button button-default rsssl-priority" name="rsssl-letsencrypt-support"><?php _e("Support","really-simple-ssl")?></a>
-			<?php
-			return ob_get_clean();
-		}
-
 
 		public function get_installation_progress(){
 			$error   = false;
@@ -851,6 +834,10 @@ if ( ! class_exists( "rsssl_wizard" ) ) {
 
 		}
 
+		/**
+         * @deprecated
+		 * @return string
+		 */
 		public function get_support_url()
 		{
             $user_info = get_userdata(get_current_user_id());
@@ -951,10 +938,10 @@ if ( ! class_exists( "rsssl_wizard" ) ) {
 
 
 			// Let's encrypt
-			wp_register_style( 'rsssl-wizard', rsssl_le_url . "wizard/assets/css/wizard.css", false, rsssl_version );
+			wp_register_style( 'rsssl-wizard', rsssl_le_url . "wizard/assets/css/wizard$minified.css", false, rsssl_version );
 			wp_enqueue_style( 'rsssl-wizard' );
 			// @todo admin css in wizard.less
-			wp_register_style( 'rsssl-wizard-admin', rsssl_le_url . "wizard/assets/css/admin.css", false, rsssl_version );
+			wp_register_style( 'rsssl-wizard-admin', rsssl_le_url . "wizard/assets/css/admin$minified.css", false, rsssl_version );
 			wp_enqueue_style( 'rsssl-wizard-admin' );
 
 			wp_enqueue_script( 'rsssl-wizard', rsssl_le_url . "wizard/assets/js/wizard$minified.js", array( 'jquery', 'select2' ), rsssl_version.time(), true );

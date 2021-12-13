@@ -125,7 +125,6 @@ jQuery(document).ready(function ($) {
             },
             url: rsssl.ajaxurl,
             success: function (data) {
-                //row.remove();
                 if (data.percentage !== '') {
                     $('.rsssl-progress-percentage').text(data.percentage + "%");
                     var bar = $(".progress-bar-container .progress .bar");
@@ -158,5 +157,4 @@ jQuery(document).ready(function ($) {
             }
         });
     });
-
 });

@@ -3,19 +3,19 @@ $plugins = array(
 	'COMPLIANZTC' => array(
 		'constant_free' => 'cmplz_tc_version',
 		'constant_premium' => 'cmplz_tc_version',
-		'website' => 'https://complianz.io',
+		'website' => 'https://complianz.io?src=rsssl-plugin',
 		'search' => 'complianz+terms+conditions+stand-alone',
 	),
 	'COMPLIANZ' => array(
 		'constant_free' => 'cmplz_plugin',
 		'constant_premium' => 'cmplz_premium',
-		'website' => 'https://complianz.io/pricing',
+		'website' => 'https://complianz.io/pricing/?src=rsssl-plugin',
 		'search' => 'complianz+really+simple+cookies+rogierlankhorst',
 	),
 	'ZIP' => array(
 		'constant_free' => 'ZRDN_PLUGIN_BASENAME',
 		'constant_premium' => 'ZRDN_PREMIUM',
-		'website' => 'https://ziprecipes.net/premium/',
+		'website' => 'https://ziprecipes.net/premium/?src=rsssl-plugin',
 		'search' => 'zip+recipes+recipe+maker+really+simple+plugins+complianz',
 	),
 );

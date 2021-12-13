@@ -688,6 +688,9 @@ if ( ! class_exists( "rsssl_field" ) ) {
                     <?php if ( $args['disabled'] ) {
                         echo 'disabled';
                     } ?>
+                       <?php if ( $args['required'] ) {
+	                       echo 'required';
+                       } ?>
                        class="<?php if ( $args['required'] ) {
                            echo 'is-required';
                        } ?>"

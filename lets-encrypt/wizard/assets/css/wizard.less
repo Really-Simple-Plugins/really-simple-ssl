@@ -1,5 +1,5 @@
 // out: wizard.css, sourcemap: false, compress: false
-@import 'variables.less';
+@import '../../../../css/variables.less';
 @brand-primary: @rsp-yellow;
 @brand-secondary: #61ce70;
 @brand-tertiary: #29B6F6;
@@ -116,6 +116,10 @@
         }
         .rsssl-wizard-progress-bar {
           margin: @green-gap;
+        }
+
+        .rsssl-icon {
+          margin:4px 0 0 0;
         }
 
 
@@ -275,57 +279,6 @@
           }
         }
       }
-
-      .rsssl-add-pages-table {
-        display: grid;
-        grid-template-columns: auto auto auto;
-        grid-gap: 5px;
-        align-items: center;
-        margin-bottom: @green-gap;
-
-        span {
-          justify-self: end;
-          text-align: justify;
-        }
-      }
-
-      .rsssl-link-to-menu-table {
-        display: grid;
-        grid-template-columns: 30% 30%;
-        grid-gap: 5px;
-        align-items: center;
-
-        h3 {
-          grid-column: span 2;
-          margin-top: @green-gap;
-          margin-bottom: 5px;
-
-          &:first-child {
-            margin-top: 0;
-          }
-        }
-
-        select {
-          grid-column-start: 2;
-        }
-      }
-
-      .rsssl-cookies-table {
-        h2 {
-          font-weight: normal;
-          font-size: 15px;
-        }
-
-        .rsssl-cookies-table-body {
-          border-radius: 5px;
-          display: grid;
-          grid-template-columns: 1fr;
-          padding: 10px;
-          background-color: #f0f2f8;
-        }
-      }
-
-
     }
 
 #rsssl-wizard  {
@@ -593,19 +546,15 @@
   /* Text, Email, Select(2), Textarea Style */
 
   input[type="text"], input[type="password"], input[type="email"], select, .select2, textarea, input[type="number"] {
-    // box-shadow:
-    //   0 1px 1px rgba(0,0,0,0.06),
-    //   0 2px 2px rgba(0,0,0,0.06);
     margin-bottom: 2px;
   }
   textarea {
     padding:10px;
     width:100%;
     height: 100px;
-    margin: 20px 0;  }
-
+    margin: 20px 0;
+  }
   /* Placeholders */
-
   ::placeholder {
     color: @gray-light;
   }
@@ -624,209 +573,9 @@
     color: @gray-light;
   }
 
-
   /* Labels */
   .rsssl-master-label h2 {
     padding: @green-gap @green-gap 0 @green-gap !important;
-  }
-
-  .rsssl-footer-contents {
-    border-top: none;
-  }
-
-  .rsssl-grid.rsssl-gridless {
-    display: flex;
-    flex-wrap: wrap;
-    height: inherit !important;
-    .rsssl-grid-item {
-      position: relative;
-      //padding: 0 20px 20px 0;
-
-      .rsssl-help-warning-wrap {
-        display: none;
-      }
-      .rsssl-comment {
-        display: none;
-      }
-
-      .rsssl-grid-header {
-        height: initial;
-      }
-
-      .rsssl-grid-header-container {
-        display: flex;
-        justify-content: space-between;
-        align-content: center;
-
-        .rsssl-grid-controls {
-          margin: auto 0;
-        }
-      }
-
-      .item-container {
-        height: calc(100% - 20px);
-        width: calc(100% - 20px);
-        margin-left: 10px;
-        //margin-top: 10px;
-        display: grid;
-        grid-template-rows: auto 1fr auto;
-        background-color: white;
-      }
-
-      .item-container .item-content {
-        padding: 10px 0 0 0;
-        margin: 0;
-        clear: none;
-      }
-
-      .item-footer {
-        background-color: white;
-        height: initial;
-      }
-
-      .rsssl-checkbox .rsssl-field {
-        display: flex;
-        justify-content: space-between;
-        align-content: center;
-        padding: @green-gap @green-gap 0 @green-gap;
-      }
-    }
-
-    .rsssl-grid-item.big {
-      .item-container .item-content {
-        display: grid;
-        grid-auto-flow: row dense;
-        grid-template-columns: 50% 50%;
-        grid-auto-rows: minmax(min-content, max-content);
-      }
-
-      &.rsssl-customization .item-container .item-content {
-        grid-auto-flow: row;
-      }
-
-    }
-
-    .rsssl-cols-2 .rsssl-field {
-      grid-column: span 2;
-      display: grid;
-      grid-template-columns: 100px 100px;
-      grid-column-gap: 20px;
-
-      .rsssl-label {
-        grid-column: span 2;
-      }
-    }
-
-    .rsssl-cols-3 .rsssl-field {
-      grid-column: span 2;
-      display: grid;
-      grid-template-columns: 100px 100px 100px;
-      grid-column-gap: 20px;
-
-      .rsssl-label {
-        grid-column: span 3;
-      }
-    }
-
-    .rsssl-borderradius.rsssl-cols-5 .rsssl-field, .rsssl-borderwidth.rsssl-cols-5 .rsssl-field {
-      display: grid;
-      grid-template-columns: 50px 50px 50px 50px 50px;
-      grid-column-gap: 10px;
-
-      .rsssl-label {
-        grid-column: span 5;
-      }
-    }
-
-    .rsssl-border-input-type-wrap {
-      display: grid;
-      grid-template-rows: 16px 16px;
-      padding-top: 16px;
-
-      .rsssl-grey {
-        color: darkgrey;
-      }
-      span {
-        cursor: pointer;
-      }
-    }
-
-    select {
-      width: 100%;
-    }
-
-    .field-group {
-      grid-column: span 2;
-    }
-
-    .rsssl-field {
-      padding: 10px @green-gap 0 @green-gap;
-    }
-
-    .rsssl-borderradius,
-    .rsssl-borderwidth {
-      grid-column: span 1;
-    }
-
-    .field-group.rsssl-colspan-1 {
-      grid-column: span 1;
-    }
-
-    .field-group.rsssl-colspan-2 {
-      grid-column: span 2;
-    }
-
-    .field-group.rsssl-col-1 {
-      grid-column-start: 1;
-    }
-
-    .field-group.rsssl-col-2 {
-      grid-column-start: 2;
-    }
-
-    .rsssl-master-label h2 {
-      grid-column: span 2;
-      margin: 0;
-      padding: @green-gap @green-gap 0 @green-gap;
-      font-size: 18px;
-    }
-
-    .rsssl-sublabel label {
-      color: darkgrey;
-      font-size: 13px;
-    }
-
-    label .rsssl-icon {
-      display: inline;
-    }
-
-    .rsssl-switch {
-      margin-top: 0;
-    }
-
-    .wp-picker-input-wrap:not(.hidden) {
-      display: block;
-      position: absolute;
-      z-index: 10;
-    }
-
-    .wp-picker-holder {
-      position: absolute;
-      top: 132px;
-      z-index: 10;
-    }
-
-    .wp-picker-clear {
-      position: absolute;
-    }
-
-    .rsssl-grid-controls .rsssl-field {
-      padding: 0;
-      .rsssl-label {
-        margin: 0;
-      }
-    }
-
   }
 
   input::-webkit-outer-spin-button,
@@ -1006,24 +755,6 @@
   animation: tooltips-horz 300ms ease-out forwards;
 }
 
-#rsssl-header {
-  font-size:16px;
-  .button-black {
-    background-color: black;
-    color: white;
-    border-color: black;
-    padding: 0 25px;
-  }
-  .link-black {
-    color: black;
-    padding: 5px 5px;
-  }
-}
-
-.wp-editor-wrap iframe {
-  height: initial !important;
-}
-
 .rsssl-help-warning-wrap {
   .rsssl-help-modal {
     h2 {
@@ -1079,31 +810,6 @@ a:active, a:hover {
   color: #333;
 }
 
-a.button.rsssl-open-modal {
-  font-size: 9px;
-  line-height: 13px;
-  height: 15px;
-  min-height: 15px;
-  padding: 1px 3px;
-  margin-left: 10px;
-}
-
-.rsssl-panel-link {
-  text-decoration: none;
-  display: inline-block;
-  width: 80%;
-}
-
-#rsssl_language {
-  font-size: 15px;
-
-  &.rsssl_cookie_language_selector {
-    margin-bottom: 0;
-
-  }
-}
-
-
 .multiple-field {
   div {
     margin-top: 8px;
@@ -1111,45 +817,6 @@ a.button.rsssl-open-modal {
       margin-bottom: 8px;
     }
   }
-}
-
-.rsssl-list-container {
-
-  margin-bottom: 25px;
-
-  .rsssl-cookie-field > div,
-  .rsssl-service-field > div {
-    margin-top: 8px;
-    &:last-child {
-      margin-bottom: 8px;
-    }
-  }
-
-  .rsssl-disabled label,
-  .rsssl-disabled span {
-    color: #ababab !important;
-  }
-
-  .rsssl-service-cookie-list {
-    margin-bottom: @green-gap;
-    &:last-child {
-      margin-bottom: 0px;
-    }
-  }
-
-  .rsssl-service-divider {
-    font-size: 15px;
-    margin-bottom: 10px;
-  }
-
-}
-
-.rsssl-legenda {
-  padding: 10px 10px 0 10px;
-  display: grid;
-  grid-template-columns: 25px 200px 25px 300px;
-  grid-column-gap: 10px;
-  align-items: center;
 }
 
 .rsssl-panel {
@@ -1210,35 +877,11 @@ a.button.rsssl-open-modal {
 
       padding: 10px 15px 8px 0;
     }
-
-    .rsssl-add-to-policy {
-      text-decoration: underline;
-    }
-
   }
-
-  &.rsssl-link-panel {
-    &.selected, &:hover {
-      box-shadow: 0 5px 5px rgba(0, 0, 0, 0.2), 0 3px 5px rgba(0, 0, 0, 0.13);
-    }
-  }
-
-  .rsssl-panel-content {
-    display: none;
-    background-color: #fff;
-    border: 1px solid #d6d8db;
-    border-top: 0;
-    border-bottom-left-radius: 5px;
-    border-bottom-right-radius: 5px;
-    padding: 10px 15px;
-  }
-
   h1 {
     font-size: 22px;
   }
-
   font-size: 13px !important;
-
   p {
     font-size: 13px !important;
   }
@@ -1287,146 +930,6 @@ input[type="text"], input[type="password"], input[type="email"], input[type="num
   width: 100%;
 }
 
-/*
-    cool checkbox sliders
-*/
-
-.rsssl-switch {
-  input {
-    display: none !important;
-  }
-
-  position: relative;
-  display: inline-block;
-  width: 40px;
-  height: 21px;
-}
-
-.rsssl-slider {
-  position: absolute;
-  cursor: pointer;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: #ccc;
-  -webkit-transition: .4s;
-  transition: .4s;
-
-  &:before {
-    position: absolute;
-    content: "";
-    height: 15px;
-    width: 15px;
-    left: 4px;
-    bottom: 3px;
-    background-color: white;
-    -webkit-transition: .4s;
-    transition: .4s;
-  }
-
-  &.rsssl-round {
-    border-radius: 20px;
-  }
-
-  &.rsssl-round:before {
-    border-radius: 50%;
-  }
-}
-
-.rsssl-slider-na {
-  padding: 2px 8px;
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: #ccc;
-  -webkit-transition: .4s;
-  transition: .4s;
-
-  &:before {
-    position: absolute;
-    content: "N/A";
-    color: white;
-  }
-
-  &.rsssl-round {
-    border-radius: 20px;
-  }
-}
-
-
-input:checked + .rsssl-slider {
-  background-color: @brand-primary;
-
-  &:before {
-    -webkit-transform: translateX(17px);
-    -ms-transform: translateX(17px);
-    transform: translateX(17px);
-  }
-}
-
-//input:disabled + .rsssl-slider {
-//  background-color: lighten(#ccc, 40%);
-//  &:before{
-//    //background-color:#c6c6c6;
-//  }
-//}
-
-input:checked:disabled + .rsssl-slider {
-  background-color: lighten(@brand-primary, 40%);
-
-  &:before {
-    //background-color:#c6c6c6;
-  }
-}
-
-
-input:focus + .rsssl-slider {
-  box-shadow: 0 0 1px @brand-primary;
-}
-
-
-#complete_wizard_first_notice {
-  position: fixed; /* Sit on top of the page content */
-  width: 100%; /* Full width (cover the whole page) */
-  height: 100%; /* Full height (cover the whole page) */
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: rgba(0, 0, 0, 0.7); /* Black background with opacity */
-  z-index: 99;
-
-  p {
-    border-radius: 0px;
-    font-size: 16px;
-    background-color: @brand-primary;
-    color: white;
-    position: relative;
-    /* height: 100px; */
-    top: 150px;
-    padding: 30px;
-    width: 300px;
-    text-align: center;
-    margin: auto;
-  }
-
-}
-
-//prevent a too small editor width
-html .mceContentBody {
-  max-width: 100% !important;
-}
-
-.cookie-warning {
-  textarea {
-    width: 100%;
-    height: 100px;
-  }
-}
-
 .rsssl-comment {
   font-size:11px;
   margin-top: 10px;
@@ -1444,11 +947,6 @@ html .mceContentBody {
   input[type=text] {
     width: 60%;
   }
-}
-
-#rsssl-start-mail, #rsssl_close_tb_window {
-  margin-right: 15px;
-  margin-top: 15px;
 }
 
 #rsssl-wizard {
@@ -1573,12 +1071,7 @@ html .mceContentBody {
       margin-bottom: 12px;
     }
 
-    .rsssl-rescan {
-      padding: 0 10px 0 10px;
-    }
-
     /* CSS for the sections menu */
-
     .rsssl-menu-item.active {
       i {
         color: black;
@@ -1710,467 +1203,26 @@ a.rsssl.button, button.rsssl.button, input.rsssl.button {
 }
 
 //Icon override
-#rsssl-wizard .dashboard .fa-times {
-  color: black;
-}
-
-#rsssl-wizard .dashboard .fa-check {
-  color: @brand-primary;
-}
-
-/* building our new structured css here */
-
-.rsssl-dashboard-container {
-  .rsssl-dashboard-title {
-    padding-top: 22px;
-    font-weight: 600;
-    font-size: 24px;
-    line-height: 30px;
-    margin-bottom: 20px;
-    @media screen and (max-width: 720px) {
-      padding-bottom: 0px;
-    }
-
+#rsssl-wizard .dashboard {
+  .fa-times {
+    color: black;
   }
-}
-
-.rsssl-dashboard-header .rsssl-header-top {
-  min-height: 60px;
-}
-
-.rsssl-header-top {
-  grid-area: header-top;
-  background-color: #F2F2F2;
-  min-height: 30px;
-  padding-top: 25px;
-
-  .rsssl-premium-cta {
-    width: 150px;
-    float: right;
-    border-color: @brand-primary;
+  .fa-check {
     color: @brand-primary;
-    text-transform: uppercase;
-    display: flex;
   }
 }
-
-.rsssl-dashboard-container {
-  background-color: white;
-  display: flex;
-  flex-wrap: wrap;
-
-  .rsssl-dashboard-header {
-    margin-bottom: -270px;
-    width: 100%;
-    min-height: 220px;
-    background-color: @brand-primary;
-    background-repeat: no-repeat;
-    //background-image: url(../images/rsssl-header.png);
-    background-attachment: scroll;
-    background-position: bottom center;
-
-    .rsssl-header-text {
-      display: flex;
-      align-items: center;
-    }
-  }
-
-  .rsssl-dashboard-item {
-    background-color: #fff;
-    width: 450px;
-    margin-top: 10px;
-    border: 2px solid;
-    flex: 0 0 450px;
-    flex-shrink: 1;
-    -webkit-border-radius: 5px;
-    -moz-border-radius: 5px;
-    border-radius: 0px;
-    border-color: #f2f2f2;
-    overflow: hidden;
-  }
-
-  .rsssl-dashboard-item .rsssl-top h1 {
-    font-weight: 600;
-    font-size: 2.5em;
-    padding: 25px;
-  }
-
-  .rsssl-dashboard-content-container {
-    margin: 0 auto;
-    display: grid;
-    grid-template-areas: 'header-top header-top header-top header-top' 'text-completed text-completed text-completed text-completed' 'progress progress support support' 'progress progress documents documents' 'footer footer footer footer';
-    @media screen and (max-width: 1210px) {
-      grid-template-areas: 'header-top header-top' 'text-completed text-completed' 'progress progress' 'support support' 'documents documents' 'footer footer' 'footer footer';
-    }
-
-    .rsssl-logo {
-      display: flex;
-      align-items: center;
-      font-size: 1.5em;
-      font-weight: 600;
-    }
-
-    .rsssl-header-text {
-      display: flex;
-      align-items: center;
-    }
-
-    .rsssl-completed-text {
-      display: flex;
-      align-items: center;
-      margin-top: 35px;
-      grid-area: text-completed;
-      font-size: 24px;
-      color: white;
-      @media screen and (max-width: 720px) {
-        button {
-          width: 100px;
-        }
-      }
-    }
-
-    grid-gap: 10px;
-    padding: 10px;
-
-    .rsssl-dashboard-info {
-      font-size: 19px;
-      font-weight: bold;
-      padding-top: 20px;
-      padding-bottom: 10px;
-    }
-
-    .rsssl-dashboard-text {
-      color: black;
-      font-weight: 400;
-      padding: 15px;
-
-      li {
-        border-bottom: 1px solid;
-      }
-
-      .fa-plus {
-        margin-right: 8px;
-      }
-
-      &.free {
-        background-color: #000;
-        color: #fff;
-        min-height: 40px;
-      }
-    }
-
-    .rsssl-dashboard-progress {
-      @media screen and (max-width: 1210px) {
-        margin: 0 auto;
-      }
-      grid-area: progress;
-
-      .rsssl-dashboard-progress-top {
-        background-color: #F2F2F2;
-        min-height: 170px;
-
-        .rsssl-dashboard-top-text {
-          display: inline-grid;
-          font-size: 18px;
-          line-height: 22px;
-          max-width: 60%;
-          float: left;
-
-          .rsssl-dashboard-top-text-subtitle {
-            color: @brand-primary;
-          }
-        }
-      }
-
-      .rsssl-continue-wizard-btn {
-        padding-top: 125px;
-
-        button {
-          text-align: -webkit-left;
-          border-radius: 50px;
-        }
-      }
-
-      .rsssl-percentage-complete {
-        margin-top: 20px;
-        float: right;
-      }
-
-      .rsssl-steps-table {
-        padding-top: 10px;
-
-        .i.fa.fa-check {
-          color: black;
-        }
-
-        .rsssl-success,
-        .rsssl-error {
-          color: black;
-        }
-      }
-    }
-
-    .rsssl-dashboard-support {
-
-      width: 450px;
-      @media screen and (max-width: 1210px) {
-        margin: 0 auto;
-      }
-
-      input[type=text], input[type=email], textarea, input[type=submit] {
-        width: 425px;
-        margin-bottom: 5px;
-        margin-top: 5px;
-      }
-
-      textarea {
-        min-height: 100px;
-      }
-
-      input[type=submit] {
-        margin: auto;
-      }
-
-      grid-area: support;
-    }
-
-    .rsssl-dashboard-documents {
-      @media screen and (max-width: 1210px) {
-        margin: 0 auto;
-      }
-      grid-area: documents;
-      margin-top: 10px;
-
-      .rsssl-upgrade-table {
-        padding-bottom: 15px;
-
-        .fas {
-          margin-right: 8px;
-        }
-
-        ul {
-          margin: 5px;
-        }
-
-        li {
-          border-bottom: 2px solid;
-          margin-bottom: 5px;
-          text-indent: 5px;
-          display: flex;
-          vertical-align: middle;
-          margin-left: 8px;
-        }
-
-        .fa-plus {
-          color: @brand-primary;
-          font-size: 1.5em;
-        }
-      }
-
-      .rsssl-documents-bottom {
-        color: white;
-        background-color: black;
-        min-height: 70px;
-        font-size: 14px;
-
-        div {
-          margin-bottom: 10px;
-        }
-
-        //display: flex;
-      }
-    }
-
-    .rsssl-dashboard-footer {
-      grid-area: footer;
-      display: flex;
-      flex-shrink: 1;
-      flex-grow: 1;
-      margin-top: 20px;
-      flex-wrap: wrap;
-      justify-content: center;
-      padding-bottom: 20px;
-
-      .rsssl-footer-block {
-        position: relative;
-        -webkit-border-radius: 10px;
-        -moz-border-radius: 10px;
-        border-radius: 0px;
-        background-color: #F2F2F2;
-        width: 205px;
-        min-height: 70px;
-        //margin-top: 10px;
-        margin: 5px auto;
-
-        a {
-          position: absolute;
-          top: 5px;
-          right: 5px;
-        }
-
-        .rsssl-footer-title {
-          margin-top: 9px;
-          margin-left: 9px;
-          font-weight: 900;
-          font-size: 1.2em;
-          margin-right: 35px;
-        }
-
-        .rsssl-footer-description {
-          width: 70%;
-          margin-left: 9px;
-          font-size: 0.8em;
-          display: flex;
-        }
-
-        .rsssl-external-btn {
-          text-align: center;
-          border-radius: 7px;
-          color: @brand-primary;
-          width: 25px;
-          height: 20px;
-          float: right;
-
-          .fa-angle-right {
-            font-size: 1.5em;
-            vertical-align: middle;
-            margin-left: 2px;
-          }
-        }
-      }
-    }
-  }
-}
-
-
-
-/*skeleton*/
-@panelheight : 38px;
-@panelborder : 1px;
-@paneloffset : 3*(@panelborder+@panelheight);
-@rows : 6;
-.rsssl-skeleton:empty {
-  margin: auto;
-  margin-bottom: 25px;
-  width: 100%;
-  height: (@rows*@panelheight)+(@rows+1)*@panelborder; /* change height to see repeat-y behavior */
-
-  background-image:
-          linear-gradient( 100deg, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.5) 70%, rgba(255, 255, 255, 0.5) 15% ),
-          linear-gradient( #f2f2f2 @panelheight, transparent 0 ),
-          linear-gradient( #f2f2f2 @panelheight, transparent 0 ),
-          linear-gradient( #f2f2f2 @panelheight, transparent 0 ),
-          linear-gradient( #f2f2f2 @panelheight, transparent 0 );
-
-  background-repeat: repeat-y;
-
-  background-size:
-          50px 200px, /* highlight */
-          100% @paneloffset,
-          100% @paneloffset,
-          100% @paneloffset,
-          100% @paneloffset;
-
-  background-position:
-          0 0, /* highlight */
-          @panelborder @panelborder,
-          @panelborder @panelheight+(2*@panelborder),
-          @panelborder (2*@panelheight)+(3*@panelborder),
-          @panelborder (3*@panelheight)+(4*@panelborder);
-
-  background-color:#d6d8db;
-  animation: shine 2.5s infinite;
-}
-@keyframes shine {
-  to {
-    background-position:
-            100% 0, /* move highlight to right */
-            @panelborder @panelborder,
-            @panelborder @panelheight+(2*@panelborder),
-            @panelborder (2*@panelheight)+(3*@panelborder),
-            @panelborder (3*@panelheight)+(4*@panelborder);
-  }
-}
-
-
-
-@-webkit-keyframes sk-stretchdelay {
-  0%, 40%, 100% { -webkit-transform: scaleY(0.4) }
-  20% { -webkit-transform: scaleY(1.0) }
-}
-
-@keyframes sk-stretchdelay {
-  0%, 40%, 100% {
-    transform: scaleY(0.4);
-    -webkit-transform: scaleY(0.4);
-  }  20% {
-       transform: scaleY(1.0);
-       -webkit-transform: scaleY(1.0);
-     }
-}
-
 
 .rsssl-wizard-menu-menus {
   padding-top: 10px;
 }
 
-//.rsssl-cookie-settings-content {
-//  padding-top: 10px;
-//  display: grid;
-//  grid-template-columns: 815px 1fr;
-//  grid-template-rows: calc(100vh - 160px);
-//}
-
-.rsssl-scroll {
-  overflow: scroll;
-  scroll-behavior: smooth;
-  overflow-x: hidden;
-}
-
-
 #wpbody-content {
   padding-bottom: 0;
-}
-
-// This will make color pickers overlap
-#customization {
-  z-index: 10;
-}
-
-.cc-window {
-  right: 1em;
-}
-
-.cc-window.cc-center {
-  transform: translate(0%, -50%);
-  left: initial;
-}
-
-.cc-window.cc-left {
-  left: initial;
-}
-
-// At cookie settings, banner center is to the right
-@keyframes slideInUpCenter {
-  from {
-    -webkit-transform: translate3d(0, 150%, 0);
-    transform: translate3d(0, 150%, 0);
+  .update-nag {
+    display: none;
   }
-  to {
-    -webkit-transform: translate3d(0, -50%, 0);
-    transform: translate3d(0, -50%, 0);
-  }
-}
-@keyframes slideOutUpCenter {
-  to {
-    -webkit-transform: translate3d(0, 150%, 0);
-    transform: translate3d(0, 150%, 0);
-    opacity: 1;
-  }
-  from {
-    -webkit-transform: translate3d(0, -50%, 0);
-    transform: translate3d(0, -50%, 0);
-    opacity: 1;
+  .subsubsub {
+    display: none;
   }
 }
 
@@ -2178,118 +1230,4 @@ a.rsssl.button, button.rsssl.button, input.rsssl.button {
   margin: 0;
 }
 
-#rsssl-proof-of-consent,
-#rsssl-cookie-banner {
 
-  #rsssl-content-area {
-    display: block;
-
-    h1 {
-      background-color: white;
-      padding: @green-gap;
-      //margin: @red-gap;
-      border-bottom: 1px solid #eeeeee;
-    }
-
-    .rsssl-panel {
-      padding: @green-gap;
-      margin-bottom: @green-gap;
-    }
-
-    .rsssl-notice {
-      background-color: white;
-    }
-
-    input[name=rsssl_generate_snapshot] {
-      width: 120px;
-    }
-
-    .rsssl-month-select,
-    .rsssl-year-select,
-    #post-query-submit {
-      float: right;
-      margin-top: -50px;
-      width: 120px;
-    }
-
-    #post-query-submit {
-      margin-right: 0;
-    }
-
-    .rsssl-month-select {
-      margin-right: 290px;
-    }
-
-    .rsssl-year-select {
-      margin-right: 145px;
-    }
-
-    .tablenav {
-      display: none;
-    }
-
-    #rsssl-cookiestatement-snapshot-filter {
-      padding-top: @green-gap;
-    }
-
-    .wp-list-table {
-      font-weight: bold;
-      th {
-        font-weight: bold;
-        a {
-          padding: @red-gap;
-        }
-      }
-    }
-  }
-}
-
-#wpbody-content {
-  .update-nag {
-    display: none;
-  }
-  .subsubsub {
-    display: none;
-  }
-
-  .wp-heading-inline {
-    padding: @green-gap 0;
-  }
-
-  .rsssl-document-button {
-    margin-top: 22px;
-    margin-left: 15px;
-  }
-  .cookie-warning .rsssl-document-button{
-    margin-top: 0;
-  }
-
-  #rsssl-region-select {
-    margin-top: -6px;
-    margin-left: 15px;
-    width: 100px;
-  }
-}
-
-#posts-filter {
-  .bulkactions,
-  .tablenav-pages,
-  .search-box {
-    display: none;
-  }
-
-  .tablenav.top {
-    margin-top: 0;
-    padding-top: 0;
-  }
-
-  .wp-list-table {
-    font-weight: bold;
-    th {
-      font-weight: bold;
-      a {
-        padding: @red-gap;
-      }
-    }
-  }
-}
