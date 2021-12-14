@@ -98,6 +98,7 @@ If you can't deactivate, do not just remove the plugin folder to uninstall! Foll
 * Improvement: improve feedback on the Let's Encrypt terms & conditions checkbox being required
 * Improvement: improve feedback on chosen hosting company, if SSL is already available, or not available at all.
 * Improvement: updated wp-config needs fixes notice
+* Improvement: RTL css update
 
 = 5.2.0 =
 * Improvement: updated tips & tricks with Let's Encrypt and Cross-Origin resource policy articles
