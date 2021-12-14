@@ -3506,12 +3506,17 @@ class rsssl_admin extends rsssl_front_end
 			            }
 				        $target = 'target="_blank"';
 			        } else {
-				        $info = __( '%sEnable%s or %sdismiss%s', 'really-simple-ssl' );
+				        if ( $dismissible ){
+					        $info = __( '%sEnable%s or %sdismiss%s', 'really-simple-ssl' );
+				        } else {
+					        $info = __( '%sEnable%s', 'really-simple-ssl' );
+				        }
 			        }
-			        $dismiss_open                     = "<span class='rsssl-dashboard-dismiss' data-dismiss_type='" . $key . "'><a href='#' class='rsssl-dismiss-text rsssl-close-warning'>";
+			        $dismiss_open = "<span class='rsssl-dashboard-dismiss' data-dismiss_type='" . $key . "'><a href='#' class='rsssl-dismiss-text rsssl-close-warning'>";
 			        if ( $dismissible ) {
 				        $notices[ $key ]['output']['msg'] .= ' ' . sprintf( $info, '<a ' . $target . ' href="' . $url . '">', '</a>', $dismiss_open, "</a></span>" );
 			        } else {
+                        error_log($info);
 				        $notices[ $key ]['output']['msg'] .= ' ' . sprintf( $info, '<a ' . $target . ' href="' . $url . '">', '</a>' );
 			        }
 		        }
