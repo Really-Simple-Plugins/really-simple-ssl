@@ -3001,12 +3001,7 @@ class rsssl_admin extends rsssl_front_end
 	    $certinfo = get_transient('rsssl_certinfo');
 	    $end_date = isset($certinfo['validTo_time_t']) ? $certinfo['validTo_time_t'] : false;
 	    $expiry_date = !empty($end_date) ? date( get_option('date_format'), $end_date ) : __("(Unknown)", "really-simple-ssl");
-
-	    if ( $this->ssl_enabled) {
-		    $install_ssl_dismissible = true;
-	    } else {
-		    $install_ssl_dismissible = false;
-	    }
+	    $test_url = 'https://www.ssllabs.com/ssltest/analyze.html?d='.home_url();
 
         $notices = array(
             'deactivation_file_detected' => array(
@@ -3126,11 +3121,20 @@ class rsssl_admin extends rsssl_front_end
 		            'no-ssl-detected' => array(
 			            'title' => __("No SSL detected", "really-simple-ssl"),
 			            'msg' => __("No SSL detected. Use the retry button to check again.", "really-simple-ssl").
-                            '<br><br><form action="" method="POST"><a href="'.add_query_arg(array("page" => "rlrsssl_really_simple_ssl", "tab" => "letsencrypt"),admin_url("options-general.php")) .'" type="submit" class="button button-default">'.__("Install SSL certificate", "really-simple-ssl").'</a>'.
+			                     '<br><br><form action="" method="POST"><a href="'.add_query_arg(array("page" => "rlrsssl_really_simple_ssl", "tab" => "letsencrypt"),admin_url("options-general.php")) .'" type="submit" class="button button-default">'.__("Install SSL certificate", "really-simple-ssl").'</a>'.
 			                     '&nbsp;<input type="submit" class="button button-default" value="'.__("Retry", "really-simple-ssl").'" id="rsssl_recheck_certificate" name="rsssl_recheck_certificate"></form>',
 			            'icon' => 'warning',
 			            'admin_notice' => false,
-                        'dismissible' => $install_ssl_dismissible
+			            'dismissible' => $this->ssl_enabled
+		            ),
+		            'no-response' => array(
+			            'title' => __("Could not test certificate", "really-simple-ssl"),
+			            'msg' => __("Automatic certificate detection is not possible on your server.", "really-simple-ssl").
+			                     '<br><br><form action="" method="POST"><a href="'.add_query_arg(array("page" => "rlrsssl_really_simple_ssl", "tab" => "letsencrypt"),admin_url("options-general.php")) .'" type="submit" class="button button-default">'.__("Install SSL certificate", "really-simple-ssl").'</a>'.
+			                     '&nbsp;<a target="_blank" href="'.$test_url.'" class="button button-default">'.__("Check manually", "really-simple-ssl").'</a></form>',
+			            'icon' => 'warning',
+			            'admin_notice' => false,
+			            'dismissible' => true,
 		            ),
 		            'ssl-detected' => array(
 			            'msg' => __('An SSL certificate was detected on your site.', 'really-simple-ssl'),
@@ -5017,7 +5021,11 @@ if (!function_exists('rsssl_ssl_detected')) {
 
 		$valid = RSSSL()->rsssl_certificate->is_valid();
 		if ( !$valid ) {
-			return apply_filters('rsssl_ssl_detected', 'no-ssl-detected');
+		    if ( ! function_exists( 'stream_context_get_params' ) || RSSSL()->rsssl_certificate->detection_failed() ) {
+			    return apply_filters('rsssl_ssl_detected', 'no-response');
+		    } else {
+			    return apply_filters('rsssl_ssl_detected', 'no-ssl-detected');
+		    }
 		} else {
 		    $about_to_expire = RSSSL()->rsssl_certificate->about_to_expire();
 			if ( !$about_to_expire ) {

@@ -122,7 +122,6 @@ if ( ! class_exists( 'rsssl_certificate' ) ) {
 	     * @return bool
 	     */
         public function detection_failed(){
-			return true;
 	        $certinfo = get_transient('rsssl_certinfo');
 	        if ($certinfo && $certinfo === 'no-response' ) {
 	        	return true;
