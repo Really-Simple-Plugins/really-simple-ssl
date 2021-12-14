@@ -557,12 +557,17 @@ class rsssl_admin extends rsssl_front_end
             <?php
             if (RSSSL()->rsssl_certificate->is_valid()) { ?>
                 <li class="rsssl-success"><?php _e("An SSL certificate has been detected", "really-simple-ssl") ?></li>
+            <?php } else if ( !function_exists('stream_context_get_params') || RSSSL()->rsssl_certificate->detection_failed() ) { ?>
+                <li class="rsssl-error">
+                    <?php _e("Could not test certificate.", "really-simple-ssl") ?>&nbsp;<?php _e("Automatic certificate detection is not possible on your server.", "really-simple-ssl") ?>
+		            <?php RSSSL()->rsssl_help->get_help_tip(__("If you’re certain an SSL certificate is present, please check “Override SSL detection” to continue activating SSL.", "really-simple-ssl"), false, true );?>
+                </li>            
             <?php } else { ?>
                 <li class="rsssl-error"><?php _e("No SSL certificate has been detected.", "really-simple-ssl") ?>&nbsp;
                     <?php printf(__("Please %srefresh detection%s if a certificate has been installed recently.", "really-simple-ssl"), '<a href="'.add_query_arg(array('page'=>'rlrsssl_really_simple_ssl', 'rsssl_recheck_certificate'=>1), admin_url('options-general.php')).'">', '</a>') ?>
-                    <?php RSSSL()->rsssl_help->get_help_tip(__("This detection method is not 100% accurate. If you’re certain an SSL certificate is present, please check “Override SSL detection” to continue activating SSL.", "really-simple-ssl"), false, true );?>
+	                <?php RSSSL()->rsssl_help->get_help_tip(__("This detection method is not 100% accurate.", "really-simple-ssl")." ".__("If you’re certain an SSL certificate is present, please check “Override SSL detection” to continue activating SSL.", "really-simple-ssl"), false, true );?>
                 </li>
-            <?php }?>
+            <?php } ?>
         </ul>
         <?php if ( !defined('rsssl_pro_version') ) { ?>
             <?php _e('You can also let the automatic scan of the pro version handle this for you, and get premium support, increased security with HSTS and more!', 'really-simple-ssl'); ?>
@@ -816,8 +821,9 @@ class rsssl_admin extends rsssl_front_end
 	{
 	    $certificate_valid = RSSSL()->rsssl_certificate->is_valid();
 	    $activate_btn_disabled = !$certificate_valid ? 'disabled' : '';
+		$test_url = 'https://www.ssllabs.com/ssltest/analyze.html?d='.home_url();
 
-	    if ( !$certificate_valid ) { ?>
+        if ( !$certificate_valid ) { ?>
             <script type="text/javascript">
             jQuery(document).ready(function ($) {
                 $(document).on('click', 'input[name=rsssl_override_ssl_detection]', function(){
@@ -843,7 +849,7 @@ class rsssl_admin extends rsssl_front_end
                 <a href="<?php echo rsssl_letsencrypt_wizard_url()?>" type="submit" class="button button-default"><?php _e("Install SSL certificate", "really-simple-ssl"); ?></a>
                 <label for="rsssl_override_ssl_detection">
                     <input type="checkbox" value="1" id="rsssl_override_ssl_detection" name="rsssl_override_ssl_detection">
-                    <span><?php _e("Override SSL detection", "really-simple-ssl")?></span>
+                    <span><?php printf(__("Override SSL detection if %smanual check%s clears.", "really-simple-ssl"), '<a target="_blank" href="'.$test_url.'">', '</a>')?></span>
                 </label>
             <?php } ?>
         </form>

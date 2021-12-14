@@ -37,7 +37,9 @@ if ( current_user_can( 'manage_options' ) ) {
 	if ( RSSSL()->rsssl_certificate->is_valid() ) {
 		echo "SSL certificate is valid\n";
 	} else {
-		if ( RSSSL()->rsssl_certificate->detection_failed() ) {
+		if ( !function_exists('stream_context_get_params') ) {
+			echo "stream_context_get_params not available\n";
+		} else if ( RSSSL()->rsssl_certificate->detection_failed() ) {
 			echo "Not able to detect certificate\n";
 		} else {
 			echo "Invalid SSL certificate\n";
