@@ -1,4 +1,97 @@
-@import 'wcag.less';
+.rsssl-high-contrast {
+    /**
+      Let's Encrypt
+     */
+}
+.rsssl-high-contrast .rsssl-progress-status.rsssl-success,
+.rsssl-high-contrast .rsssl-progress-status.rsssl-warning,
+.rsssl-high-contrast .rsssl-progress-status.rsssl-premium,
+.rsssl-high-contrast .rsssl-progress-status.rsssl-open {
+    background-color: black !important;
+    color: white;
+}
+.rsssl-high-contrast .rsssl-wizard-progress-bar-value {
+    background: black !important;
+}
+.rsssl-high-contrast .rsssl-icon.rsssl-success {
+    color: black !important;
+}
+.rsssl-high-contrast .rsssl-icon.rsssl-success svg {
+    stroke: black !important;
+    fill: black !important;
+}
+.rsssl-high-contrast .rsssl-help-warning-wrap .rsssl-notice {
+    color: white !important;
+}
+.rsssl-high-contrast .rsssl-help-warning-wrap .rsssl-warning {
+    background-color: black;
+}
+.rsssl-high-contrast .progress .bar {
+    background-color: black !important;
+}
+.rsssl-high-contrast .rsssl-notice a {
+    color: white !important;
+}
+.rsssl-high-contrast .rsssl.progress {
+    background-color: black !important;
+}
+.rsssl-high-contrast .select2-results__option--highlighted[aria-selected] {
+    background-color: black;
+}
+.rsssl-high-contrast .rsssl-save-settings-feedback {
+    color: black !important;
+}
+.rsssl-high-contrast .nav-tab-active {
+    border-bottom: 2px solid black !important;
+}
+.rsssl-high-contrast .rsssl-update-count {
+    background-color: black !important;
+}
+.rsssl-high-contrast .paginate_button.current {
+    background-color: black !important;
+    color: white;
+    border: 1px solid black;
+}
+.rsssl-high-contrast .rsssl-tasks {
+    color: black !important;
+}
+.rsssl-high-contrast .rsssl-close-warning-x {
+    color: black;
+}
+.rsssl-high-contrast .update-count {
+    background-color: black;
+}
+.rsssl-high-contrast .rsssl-bullet:hover {
+    background-color: black;
+}
+.rsssl-high-contrast .button-rsssl-primary,
+.rsssl-high-contrast .button-primary,
+.rsssl-high-contrast .button-secondary,
+.rsssl-high-contrast .button-rsssl-secondary,
+.rsssl-high-contrast .button-rsssl-tertiary,
+.rsssl-high-contrast .revoke-from-csp,
+.rsssl-high-contrast .button-default {
+    background-color: black !important;
+    border-color: black !important;
+    color: white;
+}
+.rsssl-high-contrast .button:hover {
+    color: white;
+}
+.rsssl-high-contrast input:checked + .rsssl-slider {
+    background-color: black;
+}
+.rsssl-high-contrast .rsssl-help-modal,
+.rsssl-high-contrast .rsssl-help-modal h2 {
+    background-color: black !important;
+    color: white !important;
+}
+.rsssl-high-contrast .rsssl-help-modal.rsssl-notice:after {
+    border-left: 15px solid black;
+}
+.rsssl-high-contrast .rsssl-priority {
+    border: 1px solid white !important;
+}
 /*
     Hide nags from other plugins
 */
@@ -100,7 +193,7 @@
     min-width: 18px;
     height: 18px;
     border-radius: 9px;
-    background-color: #ca4a1f;
+    background-color: #D7263D;
     color: #fff;
     font-size: 11px;
     line-height: 1.6;
@@ -477,11 +570,13 @@ hr {
 .rsssl-switch {
     position: relative;
     display: inline-block;
-    width: 40px;
-    height: 21px;
+    width: 35px;
+    height: 18px;
 }
 .rsssl-switch input {
-    display: none;
+    position: absolute;
+    opacity: 0;
+    display: block !important;
 }
 .rsssl-slider {
     position: absolute;
@@ -499,11 +594,11 @@ hr {
     content: "";
     height: 14px;
     width: 14px;
-    left: 5px;
-    bottom: 2px;
+    right: 3px;
+    bottom: 2.2px;
     background-color: white;
-    -webkit-transition: .4s;
-    transition: .4s;
+    -webkit-transition: 0.4s;
+    transition: 0.4s;
 }
 .rsssl-slider.rsssl-round {
     border-radius: 20px;
@@ -515,9 +610,9 @@ input:checked + .rsssl-slider {
     background-color: #2DAAE1;
 }
 input:checked + .rsssl-slider:before {
-    -webkit-transform: translateX(-17px);
-    -ms-transform: translateX(-17px);
-    transform: translateX(-17px);
+    -webkit-transform: translateX(-16px);
+    -ms-transform: translateX(-16px);
+    transform: translateX(-16px);
 }
 input:disabled + .rsssl-slider {
     background-color: #b3e0f4;
@@ -613,3 +708,171 @@ input:focus + .rsssl-slider {
     list-style-type: disc;
     margin-right: 22px;
 }
+/**
+settings saved
+ */
+.rsssl-container .rsssl-settings-saved,
+#rsssl-wizard .rsssl-settings-saved {
+    display: none;
+    opacity: 0;
+    top: 20px;
+    height: 45px;
+    position: fixed;
+    background-color: #fff;
+    z-index: 999999;
+    right: 50%;
+    transform: translateX(50%);
+    text-align: right;
+    box-shadow: 0 0 5px 5px rgba(222, 222, 222, 0.2);
+}
+.rsssl-container .rsssl-settings-saved .rsssl-success,
+#rsssl-wizard .rsssl-settings-saved .rsssl-success {
+    color: #61ce70;
+}
+.rsssl-container .rsssl-settings-saved svg,
+#rsssl-wizard .rsssl-settings-saved svg {
+    stroke: #61ce70;
+    fill: #61ce70;
+}
+.rsssl-container .rsssl-settings-saved .rsssl-settings-saved__text_and_icon,
+#rsssl-wizard .rsssl-settings-saved .rsssl-settings-saved__text_and_icon {
+    display: flex;
+    align-content: center;
+    padding: 0 20px;
+}
+.rsssl-container .rsssl-settings-saved .rsssl-settings-saved__text_and_icon .rsssl-icon,
+#rsssl-wizard .rsssl-settings-saved .rsssl-settings-saved__text_and_icon .rsssl-icon {
+    margin: 12px 0 0 0;
+    height: 30px;
+    width: 30px;
+}
+.rsssl-container .rsssl-settings-saved .rsssl-settings-saved__text_and_icon span,
+#rsssl-wizard .rsssl-settings-saved .rsssl-settings-saved__text_and_icon span {
+    display: flex;
+    align-self: center;
+    font-size: 12px;
+    font-weight: 400;
+    color: #696969;
+}
+.rsssl-container .rsssl-settings-saved .rsssl-settings-saved__text_and_icon div,
+#rsssl-wizard .rsssl-settings-saved .rsssl-settings-saved__text_and_icon div {
+    display: flex;
+    align-self: center;
+}
+.rsssl-container .rsssl-settings-saved.rsssl-settings-saved--fade-in,
+#rsssl-wizard .rsssl-settings-saved.rsssl-settings-saved--fade-in {
+    display: block;
+    -webkit-animation: fadeInFromNone 5s ease-in-out;
+    -moz-animation: fadeInFromNone 5s ease-in-out;
+    -o-animation: fadeInFromNone 5s ease-in-out;
+    animation: fadeInFromNone 5s ease-in-out;
+}
+@-webkit-keyframes fadeInFromNone {
+    0% {
+        display: none;
+        opacity: 0;
+        top: 20px;
+    }
+    5% {
+        display: block;
+        opacity: 0;
+        top: -10px;
+    }
+    15% {
+        display: block;
+        opacity: 1;
+        top: 20px;
+    }
+    90% {
+        display: block;
+        opacity: 1;
+        top: 20px;
+    }
+    100% {
+        display: none;
+        opacity: 0;
+        top: 20px;
+    }
+}
+@-moz-keyframes fadeInFromNone {
+    0% {
+        display: none;
+        opacity: 0;
+        top: 20px;
+    }
+    5% {
+        display: block;
+        opacity: 0;
+        top: -10px;
+    }
+    15% {
+        display: block;
+        opacity: 1;
+        top: 20px;
+    }
+    90% {
+        display: block;
+        opacity: 1;
+        top: 20px;
+    }
+    100% {
+        display: none;
+        opacity: 0;
+        top: 20px;
+    }
+}
+@-o-keyframes fadeInFromNone {
+    0% {
+        display: none;
+        opacity: 0;
+        top: 20px;
+    }
+    5% {
+        display: block;
+        opacity: 0;
+        top: -10px;
+    }
+    15% {
+        display: block;
+        opacity: 1;
+        top: 20px;
+    }
+    90% {
+        display: block;
+        opacity: 1;
+        top: 20px;
+    }
+    100% {
+        display: none;
+        opacity: 0;
+        top: 20px;
+    }
+}
+@keyframes fadeInFromNone {
+    0% {
+        display: none;
+        opacity: 0;
+        top: 20px;
+    }
+    5% {
+        display: block;
+        opacity: 0;
+        top: -10px;
+    }
+    15% {
+        display: block;
+        opacity: 1;
+        top: 20px;
+    }
+    90% {
+        display: block;
+        opacity: 1;
+        top: 20px;
+    }
+    100% {
+        display: none;
+        opacity: 0;
+        top: 20px;
+    }
+}
+/*# sourceMappingURL=main.css.map */
