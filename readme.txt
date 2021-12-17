@@ -279,7 +279,7 @@ If you can't deactivate, do not just remove the plugin folder to uninstall! Foll
 
 = 3.2.8 =
 * Added redirect to settings page after activating SSL
-* Improved dashboard SSL certificate check by using the is_valid() check from rsssl_certificate instead of relying on site_has_ssl
+* Improved dashboard SSL certificate check by using the is_valid check from rsssl_certificate instead of relying on site_has_ssl
 * Updated activation notice
 * Updated settings page sidebar styling and links
 

@@ -172,9 +172,8 @@ if ( ! class_exists( 'rsssl_certificate' ) ) {
 	     * @return bool
 	     */
         public function about_to_expire(){
-	        $valid = $this->is_valid();
 	        //if not valid, it's already expired
-	        if (!$valid) {
+	        if ( !$this->is_valid() ) {
 	        	return true;
 	        }
 

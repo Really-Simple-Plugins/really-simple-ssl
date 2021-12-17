@@ -481,16 +481,18 @@ class rsssl_admin extends rsssl_front_end
 	        exit;
     }
 
-
+	/**
+     * Check if the wp config configuration is ok for SSL activation
+     *
+	 * @return bool
+	 */
     public function wpconfig_ok()
     {
-
         if (($this->do_wpconfig_loadbalancer_fix || $this->no_server_variable || $this->wpconfig_siteurl_not_fixed) && !$this->wpconfig_is_writable()) {
             $result = false;
         } else {
             $result = true;
         }
-
         return apply_filters('rsssl_wpconfig_ok_check', $result);
     }
 
@@ -544,6 +546,7 @@ class rsssl_admin extends rsssl_front_end
         $title = __("Almost ready to migrate to SSL!", "really-simple-ssl");
         echo $this->notice_html( $class, $title, $content, $footer);
     }
+
 	/**
 	 * Show almost ready to migrate notice
 	 */
@@ -1949,29 +1952,24 @@ class rsssl_admin extends rsssl_front_end
 
     public function htaccess_contains_redirect_rules()
     {
-
-        if (!file_exists($this->htaccess_file()))  {
+        if ( !file_exists($this->htaccess_file()) ) {
             return false;
         }
 
-        $htaccess = file_get_contents($this->htaccess_file());
-
-        $needle_old = "RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]";
-        $needle_new = "RewriteRule ^(.*)$ https://%{HTTP_HOST}/$1 [R=301,L]";
-        if (strpos($htaccess, $needle_old) !== FALSE || strpos($htaccess, $needle_new) !== FALSE || $this->contains_rsssl_rules()) {
+        $pattern = '/RewriteRule \^\(\.\*\)\$ https:\/\/%{HTTP_HOST}(\/\$1|%{REQUEST_URI}) (\[R=301,.*L\]|\[L,.*R=301\])/i';
+	    $htaccess = file_get_contents($this->htaccess_file());
+	    if ( preg_match( $pattern, $htaccess ) ) {
             return true;
         } else {
             $this->trace_log(".htaccess does not contain default Really Simple SSL redirect");
             return false;
         }
-
     }
 
-
-    /*
-  *    Checks if the htaccess contains the Really Simple SSL comment.
-  *
-  */
+    /**
+      *    Checks if the htaccess contains the Really Simple SSL comment.
+      *
+      */
 
     public function contains_rsssl_rules()
     {
