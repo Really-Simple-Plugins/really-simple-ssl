@@ -3266,22 +3266,6 @@ class rsssl_admin extends rsssl_front_end
 	            ),
             ),
 
-            'hsts_enabled' => array(
-                'condition' => array('NOT is_multisite'),
-                'callback' => 'RSSSL()->really_simple_ssl->contains_hsts',
-                'score' => 5,
-                'output' => array(
-                    'true' => array(
-                        'msg' =>__('HTTP Strict Transport Security was enabled.', 'really-simple-ssl'),
-                        'icon' => 'success'
-                    ),
-                    'false' => array(
-                        'msg' => sprintf(__('HTTP Strict Transport Security is not enabled %s(Read more)%s.', "really-simple-ssl"), '<a href="https://really-simple-ssl.com/hsts-http-strict-transport-security-good/" target="_blank">', '</a>' ),
-                        'icon' => 'premium'
-                    ),
-                ),
-            ),
-
             'secure_cookies_set' => array(
 	            'condition' => array(
 	                    'rsssl_ssl_enabled',
@@ -3329,7 +3313,7 @@ class rsssl_admin extends rsssl_front_end
 				        'msg' => __("The following recommended security headers are not detected:", "really-simple-ssl-pro")
 				                 ."<br><code style='padding: 0;'>". implode('<br>', $this->get_recommended_security_headers() ) . "</code>",
 				        'url' => 'https://really-simple-ssl.com/everything-you-need-to-know-about-security-headers',
-				        'icon' => 'open',
+				        'icon' => 'premium',
 				        'dismissible' => true
 			        ),
 			        'true' => array(
