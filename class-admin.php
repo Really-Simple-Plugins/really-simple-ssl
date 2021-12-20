@@ -3472,7 +3472,6 @@ class rsssl_admin extends rsssl_front_end
 		        $other[$key] = $notice;
 	        }
         }
-
 	    $notices = $warnings + $open + $other;
 
 	    //add plus ones, but not when in admin notice
@@ -3480,33 +3479,18 @@ class rsssl_admin extends rsssl_front_end
 	        foreach ( $notices as $key => $notice ) {
 		        if ( isset( $notice['output']['url'] ) ) {
 			        $url    = $notice['output']['url'];
-			        $dismissible = isset($notice['output']['dismissible']) && $notice['output']['dismissible'];
 			        $target = '';
 			        if ( strpos( $url, 'https://really-simple-ssl.com' ) !== false ) {
-			            if ( $dismissible ){
-				            $info   = __( '%sMore info%s or %sdismiss%s', 'really-simple-ssl' );
-			            } else {
-				            $info   = __( '%sMore info%s', 'really-simple-ssl' );
-			            }
+                        $info   = __( '%sMore info%s', 'really-simple-ssl' );
 				        $target = 'target="_blank"';
 			        } else {
-				        if ( $dismissible ){
-					        $info = __( '%sEnable%s or %sdismiss%s', 'really-simple-ssl' );
-				        } else {
-					        $info = __( '%sEnable%s', 'really-simple-ssl' );
-				        }
+                        $info = __( '%sEnable%s', 'really-simple-ssl' );
 			        }
-			        $dismiss_open = "<span class='rsssl-dashboard-dismiss' data-dismiss_type='" . $key . "'><a href='#' class='rsssl-dismiss-text rsssl-close-warning'>";
-			        if ( $dismissible ) {
-				        $notices[ $key ]['output']['msg'] .= ' ' . sprintf( $info, '<a ' . $target . ' href="' . $url . '">', '</a>', $dismiss_open, "</a></span>" );
-			        } else {
-                        error_log($info);
-				        $notices[ $key ]['output']['msg'] .= ' ' . sprintf( $info, '<a ' . $target . ' href="' . $url . '">', '</a>' );
-			        }
+                    $notices[ $key ]['output']['msg'] .= ' ' . sprintf( $info, '<a ' . $target . ' href="' . $url . '">', '</a>' );
 		        }
 
 		        if ( isset( $notice['output']['plusone'] ) && $notice['output']['plusone'] ) {
-			        $plusone                          = "<span class='rsssl-dashboard-plusone update-plugins rsssl-update-count'><span class='update-count'>1</span></span>";
+			        $plusone = "<span class='rsssl-dashboard-plusone update-plugins rsssl-update-count'><span class='update-count'>1</span></span>";
 			        $notices[ $key ]['output']['msg'] .= $plusone;
 		        }
 	        }
