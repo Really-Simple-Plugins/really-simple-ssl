@@ -3069,7 +3069,7 @@ class rsssl_admin extends rsssl_front_end
                 'score' => 5,
                 'output' => array(
                     'true' => array(
-                        'msg' => __("Remember to change your URL's in external services like Google Analytics, Search Console and others, to make sure there is no data loss.", "really-simple-ssl"),
+                        'msg' => __("Remember to change your URLs in external services like Google Analytics, Search Console and others. This should prevent any data loss resulting from the switch to https.", "really-simple-ssl"),
                         'url' => 'https://really-simple-ssl.com/knowledge-base/how-to-setup-google-analytics-and-google-search-consolewebmaster-tools/',
                         'icon' => 'open',
                         'dismissible' => true,
