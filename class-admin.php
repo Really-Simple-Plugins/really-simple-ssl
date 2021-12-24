@@ -33,7 +33,9 @@ class rsssl_admin extends rsssl_front_end
     public $review_notice_shown = FALSE;
     public $dismiss_review_notice = FALSE;
     public $ssl_success_message_shown = FALSE;
-    public $hsts = FALSE;
+	public $override_ssl_detection = FALSE;
+
+	public $hsts = FALSE;
     public $debug = TRUE;
     public $debug_log;
 
@@ -69,6 +71,7 @@ class rsssl_admin extends rsssl_front_end
 	    add_action( 'admin_init', array($this, 'insert_secure_cookie_settings'), 70 );
         add_action( 'admin_init', array($this, 'recheck_certificate') );
 	    add_action( "update_option_rlrsssl_options", array( $this, "maybe_clear_transients" ), 10, 3 );
+        add_action( 'wp_ajax_update_ssl_detection_overridden_option', array( $this, 'update_ssl_detection_overridden_option' ) );
 
 	    // Only show deactivate popup when SSL has been enabled.
 	    if ($this->ssl_enabled) {
@@ -159,6 +162,23 @@ class rsssl_admin extends rsssl_front_end
 		    $this->save_options();
 	    }
     }
+
+	/**
+	 * Update SSL detection overridden option
+	 */
+
+	public function update_ssl_detection_overridden_option() {
+		if ( isset( $_POST['update_ssl_detection_overridden_option'] ) ) {
+            if ( isset ( $_POST['checked'] ) && $_POST['checked'] === true ) {
+	            $this->override_ssl_detection = true;
+            } else {
+	            $this->override_ssl_detection = false;
+            }
+
+            $this->save_options();
+            wp_die();
+		}
+	}
 
     /**
      * Initializes the admin class
@@ -823,17 +843,32 @@ class rsssl_admin extends rsssl_front_end
 	    $activate_btn_disabled = !$certificate_valid ? 'disabled' : '';
 		$test_url = 'https://www.ssllabs.com/ssltest/analyze.html?d='.home_url();
 
-        if ( !$certificate_valid ) { ?>
+        if ( !$certificate_valid ) {
+	        $ajax_nonce = wp_create_nonce("really-simple-ssl");
+            ?>
             <script type="text/javascript">
-            jQuery(document).ready(function ($) {
-                $(document).on('click', 'input[name=rsssl_override_ssl_detection]', function(){
-                    if ( $(this).is(":checked") ) {
-                        $('#rsssl_do_activate_ssl').removeAttr('disabled');
-                    } else {
-                        $('#rsssl_do_activate_ssl').attr('disabled', 'disabled');
-                    }
+                jQuery(document).ready(function ($) {
+                    var checked;
+                    $(document).on('click', '#rsssl_override_ssl_detection', function() {
+                        if ( $(this).is(":checked") ) {
+                            $('#rsssl_do_activate_ssl').removeAttr('disabled');
+                            checked = true;
+                        } else {
+                            $('#rsssl_do_activate_ssl').attr('disabled', 'disabled');
+                            checked = false;
+                        }
+
+                        // Ajax update option
+                        var data = {
+                            'action': 'update_ssl_detection_overridden_option',
+                            'checked' : checked,
+                            'security': '<?php echo $ajax_nonce; ?>'
+                        };
+
+                        $.post(ajaxurl, data, function (response) {});
+
+                    });
                 });
-            });
             </script>
         <?php } ?>
 
@@ -916,6 +951,8 @@ class rsssl_admin extends rsssl_front_end
 	        $this->high_contrast = isset($options['high_contrast']) ? $options['high_contrast'] : FALSE;
 	        $this->debug_log = isset($options['debug_log']) ? $options['debug_log'] : $this->debug_log;
             $this->dismiss_review_notice = isset($options['dismiss_review_notice']) ? $options['dismiss_review_notice'] : $this->dismiss_review_notice;
+	        $this->override_ssl_detection = isset($options['override_ssl_detection']) ? $options['override_ssl_detection'] : $this->override_ssl_detection;
+
         }
 
         if (is_multisite()) {
@@ -1526,6 +1563,7 @@ class rsssl_admin extends rsssl_front_end
             'dismiss_all_notices' => $this->dismiss_all_notices,
             'high_contrast' => $this->high_contrast,
             'dismiss_review_notice' => $this->dismiss_review_notice,
+            'override_ssl_detection' => $this->override_ssl_detection,
 
         );
 
@@ -1564,7 +1602,7 @@ class rsssl_admin extends rsssl_front_end
 	        $this->dismiss_all_notices = FALSE;
             $this->high_contrast = FALSE;
 	        $this->dismiss_review_notice = FALSE;
-
+	        $this->override_ssl_detection = FALSE;
 
 	        $this->save_options();
 
@@ -3110,6 +3148,7 @@ class rsssl_admin extends rsssl_front_end
             ),
 
             'ssl_detected' => array(
+	            'condition' => array( 'rsssl_ssl_detection_overridden' ),
 	            'callback' => 'rsssl_ssl_detected',
 	            'score' => 30,
 	            'output' => array(
@@ -3803,6 +3842,7 @@ class rsssl_admin extends rsssl_front_end
      */
 
     public function update_task_toggle_option() {
+
         if (!isset($_POST['token']) || (!wp_verify_nonce($_POST['token'], 'rsssl_nonce'))) {
             return;
         }
@@ -4208,6 +4248,7 @@ class rsssl_admin extends rsssl_front_end
         $newinput['review_notice_shown'] = $this->review_notice_shown;
         $newinput['plugin_db_version'] = $this->plugin_db_version;
         $newinput['ssl_enabled'] = $this->ssl_enabled;
+        $newinput['override_ssl_detection'] = $this->override_ssl_detection;
 
         if (!empty($input['hsts']) && $input['hsts'] == '1') {
             $newinput['hsts'] = TRUE;
@@ -4262,6 +4303,12 @@ class rsssl_admin extends rsssl_front_end
         } else {
             $newinput['htaccess_redirect'] = FALSE;
         }
+
+	    if (!empty($input['override_ssl_detection']) && $input['override_ssl_detection'] == '1') {
+		    $newinput['override_ssl_detection'] = TRUE;
+	    } else {
+		    $newinput['override_ssl_detection'] = FALSE;
+	    }
 
         return $newinput;
     }
@@ -5165,5 +5212,14 @@ if ( !function_exists('rsssl_detected_duplicate_ssl_plugin')) {
 		} else {
 			return $plugin;
 		}
+	}
+}
+
+if ( !function_exists('rsssl_ssl_detection_overridden' ) ) {
+	function rsssl_ssl_detection_overridden() {
+		if ( RSSSL()->really_simple_ssl->override_ssl_detection !== false ) {
+			return true;
+		}
+		return false;
 	}
 }
