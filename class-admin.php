@@ -33,7 +33,6 @@ class rsssl_admin extends rsssl_front_end
     public $review_notice_shown = FALSE;
     public $dismiss_review_notice = FALSE;
     public $ssl_success_message_shown = FALSE;
-	public $override_ssl_detection = FALSE;
 
 	public $hsts = FALSE;
     public $debug = TRUE;
@@ -951,7 +950,6 @@ class rsssl_admin extends rsssl_front_end
 	        $this->high_contrast = isset($options['high_contrast']) ? $options['high_contrast'] : FALSE;
 	        $this->debug_log = isset($options['debug_log']) ? $options['debug_log'] : $this->debug_log;
             $this->dismiss_review_notice = isset($options['dismiss_review_notice']) ? $options['dismiss_review_notice'] : $this->dismiss_review_notice;
-	        $this->override_ssl_detection = isset($options['override_ssl_detection']) ? $options['override_ssl_detection'] : $this->override_ssl_detection;
 
         }
 
@@ -1563,7 +1561,6 @@ class rsssl_admin extends rsssl_front_end
             'dismiss_all_notices' => $this->dismiss_all_notices,
             'high_contrast' => $this->high_contrast,
             'dismiss_review_notice' => $this->dismiss_review_notice,
-            'override_ssl_detection' => $this->override_ssl_detection,
 
         );
 
@@ -1602,7 +1599,6 @@ class rsssl_admin extends rsssl_front_end
 	        $this->dismiss_all_notices = FALSE;
             $this->high_contrast = FALSE;
 	        $this->dismiss_review_notice = FALSE;
-	        $this->override_ssl_detection = FALSE;
 
 	        $this->save_options();
 
@@ -4248,7 +4244,6 @@ class rsssl_admin extends rsssl_front_end
         $newinput['review_notice_shown'] = $this->review_notice_shown;
         $newinput['plugin_db_version'] = $this->plugin_db_version;
         $newinput['ssl_enabled'] = $this->ssl_enabled;
-        $newinput['override_ssl_detection'] = $this->override_ssl_detection;
 
         if (!empty($input['hsts']) && $input['hsts'] == '1') {
             $newinput['hsts'] = TRUE;
@@ -4303,12 +4298,6 @@ class rsssl_admin extends rsssl_front_end
         } else {
             $newinput['htaccess_redirect'] = FALSE;
         }
-
-	    if (!empty($input['override_ssl_detection']) && $input['override_ssl_detection'] == '1') {
-		    $newinput['override_ssl_detection'] = TRUE;
-	    } else {
-		    $newinput['override_ssl_detection'] = FALSE;
-	    }
 
         return $newinput;
     }
