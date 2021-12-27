@@ -168,15 +168,15 @@ class rsssl_admin extends rsssl_front_end
 	 */
 
 	public function update_ssl_detection_overridden_option() {
-		if ( isset( $_POST['update_ssl_detection_overridden_option'] ) ) {
-            if ( isset ( $_POST['checked'] ) && $_POST['checked'] === true ) {
-	            $this->override_ssl_detection = true;
-            } else {
-	            $this->override_ssl_detection = false;
-            }
 
-            $this->save_options();
-            wp_die();
+		if ( ! current_user_can( 'manage_options') ) return;
+
+		if ( isset( $_POST['action'] ) && $_POST['action'] === 'update_ssl_detection_overridden_option' ) {
+			if ( isset ( $_POST['override_ssl_checked'] ) && $_POST['override_ssl_checked'] !== false ) {
+				update_option('rsssl_ssl_detection_overridden', true);
+			}
+
+			wp_die();
 		}
 	}
 
@@ -861,7 +861,7 @@ class rsssl_admin extends rsssl_front_end
                         // Ajax update option
                         var data = {
                             'action': 'update_ssl_detection_overridden_option',
-                            'checked' : checked,
+                            'override_ssl_checked' : checked,
                             'security': '<?php echo $ajax_nonce; ?>'
                         };
 
@@ -3148,7 +3148,7 @@ class rsssl_admin extends rsssl_front_end
             ),
 
             'ssl_detected' => array(
-	            'condition' => array( 'rsssl_ssl_detection_overridden' ),
+	            'condition' => array('NOT rsssl_ssl_detection_overridden'),
 	            'callback' => 'rsssl_ssl_detected',
 	            'score' => 30,
 	            'output' => array(
@@ -5217,7 +5217,7 @@ if ( !function_exists('rsssl_detected_duplicate_ssl_plugin')) {
 
 if ( !function_exists('rsssl_ssl_detection_overridden' ) ) {
 	function rsssl_ssl_detection_overridden() {
-		if ( RSSSL()->really_simple_ssl->override_ssl_detection !== false ) {
+		if ( get_option('rsssl_ssl_detection_overridden') && get_option('rsssl_ssl_detection_overridden') !== false ) {
 			return true;
 		}
 		return false;
