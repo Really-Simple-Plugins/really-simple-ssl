@@ -90,6 +90,8 @@ The plugin checks your certificate before enabling, but if, for example, you mig
 If you can't deactivate, do not just remove the plugin folder to uninstall! Follow these [instructions](https://really-simple-ssl.com/knowledge-base/uninstall-websitebackend-not-accessible/) instead.
 
 == Changelog ==
+= 5.2.2 =
+* Improvement: change text about Google Analytics for a more broader application
 
 = 5.2.1 =
 * Improvement: changed text on security headers feedback
