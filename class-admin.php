@@ -3983,14 +3983,23 @@ class rsssl_admin extends rsssl_front_end
      * Add a dismiss button which will dismiss the nearest <tr>. Used on 'Configuration' dashboard page
      *
      * @since 3.1.6
+     * @return string
      *
      */
 
     public function rsssl_dismiss_button()
     {
-         return '<button type="button" class="close">
-                <span class="rsssl-close-warning-x">X</span>
-            </button>';
+        $html = "<button type='button' class='close'>
+            <span class='rsssl-close-warning-x'>
+            <img src='";
+
+            $html .= rsssl_url . '/assets/cross.svg';
+
+            $html .= "'/>
+                </span>
+                </button>";
+
+        return $html;
     }
 
     /**
