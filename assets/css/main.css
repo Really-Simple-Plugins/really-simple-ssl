@@ -173,7 +173,6 @@
 .rsssl-scroll-container {
   height: 227px;
   overflow-y: auto;
-  padding: var(--rsp-spacing-s) var(--rsp-spacing-l);
   border-radius: 0;
 }
 .rsssl-scroll-container::-webkit-scrollbar-track {
