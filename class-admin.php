@@ -3184,7 +3184,7 @@ class rsssl_admin extends rsssl_front_end
             ),
 
             'wordpress_redirect' => array(
-	            'condition' => array('rsssl_ssl_enabled'),
+	            'condition' => array('rsssl_ssl_enabled', 'NOT RSSSL()->really_simple_ssl->htaccess_redirect_allowed'),
 	            'callback' => 'RSSSL()->really_simple_ssl->has_301_redirect',
                 'score' => 10,
                 'output' => array(
