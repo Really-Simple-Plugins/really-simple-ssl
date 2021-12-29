@@ -2261,18 +2261,18 @@ class rsssl_admin extends rsssl_front_end
         if (!current_user_can($this->capability)) return;
 
         //does it exist?
-        if (!file_exists($this->htaccess_file())) {
+        if ( !file_exists($this->htaccess_file()) ) {
             $this->trace_log(".htaccess not found.");
             return;
         }
 
-        if (!is_writable($this->htaccess_file())) {
+        if ( !is_writable($this->htaccess_file()) ) {
             $this->trace_log(".htaccess not writable.");
             return;
         }
 
         //check if editing is blocked.
-        if ($this->do_not_edit_htaccess) {
+        if ( $this->do_not_edit_htaccess ) {
             $this->trace_log("Edit of .htaccess blocked by setting or define 'do not edit htaccess' in Really Simple SSL.");
             return;
         }
@@ -4298,12 +4298,12 @@ class rsssl_admin extends rsssl_front_end
 	{
 		$comment = $disabled = "";
 		$link_open = '<a href="https://really-simple-ssl.com/knowledge-base/remove-htaccess-redirect-site-lockout/" target="_blank">';
-		if (!$this->htaccess_redirect) $comment = sprintf(__("Before you enable the htaccess redirect, make sure you know how to %sregain access%s to your site in case of a redirect loop.", "really-simple-ssl"), $link_open, '</a>');
+		if ( !$this->htaccess_redirect ) $comment = sprintf(__("Before you enable the htaccess redirect, make sure you know how to %sregain access%s to your site in case of a redirect loop.", "really-simple-ssl"), $link_open, '</a>');
 		//networkwide is not shown, so this only applies to per site activated sites.
-		if (is_multisite() && RSSSL()->rsssl_multisite->htaccess_redirect) {
+		if ( is_multisite() && RSSSL()->rsssl_multisite->htaccess_redirect ) {
             $disabled = "disabled";
             $comment = __("This option is enabled on the network menu.", "really-simple-ssl");
-		} elseif ($this->do_not_edit_htaccess) {
+		} elseif ( $this->do_not_edit_htaccess ) {
             //on multisite, the .htaccess do not edit option is not available
             $comment = __("If the setting 'stop editing the .htaccess file' is enabled, you can't change this setting.", "really-simple-ssl");
             $disabled = "disabled";
@@ -4311,7 +4311,7 @@ class rsssl_admin extends rsssl_front_end
 		?>
         <label class="rsssl-switch" id="rsssl-maybe-highlight-wp-redirect-to-htaccess">
             <input id="rlrsssl_options" name="rlrsssl_options[htaccess_redirect]" size="40" value="1"
-                   type="checkbox" <?php checked(1, $this->htaccess_redirect, true) ?> <?php echo $disabled?>/>
+                   type="checkbox" <?php checked(1, $this->htaccess_redirect) ?> <?php echo $disabled?>/>
             <span class="rsssl-slider rsssl-round"></span>
         </label>
 		<?php
