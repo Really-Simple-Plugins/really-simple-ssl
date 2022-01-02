@@ -93,6 +93,7 @@ If you can't deactivate, do not just remove the plugin folder to uninstall! Foll
 = 5.2.2 =
 * Improvement: change text about Google Analytics for a more broader application
 * Improvement: prevent duplicate notice
+* Improvement: better feedback on failed SSL detection
 
 = 5.2.1 =
 * Improvement: changed text on security headers feedback
