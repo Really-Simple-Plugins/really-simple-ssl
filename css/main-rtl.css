@@ -671,6 +671,10 @@ input:focus + .rsssl-slider {
     cursor: pointer;
     color: grey;
 }
+.rsssl-dashboard-dismiss span img {
+    height: 12px;
+    width: 12px;
+}
 /* License page */
 .rsssl-grid .rsssl-item.rsssl-license-grid .item-container .form-table tbody tr {
     max-width: 100%;

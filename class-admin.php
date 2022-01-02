@@ -3266,22 +3266,6 @@ class rsssl_admin extends rsssl_front_end
 	            ),
             ),
 
-            'hsts_enabled' => array(
-                'condition' => array('NOT is_multisite'),
-                'callback' => 'RSSSL()->really_simple_ssl->contains_hsts',
-                'score' => 5,
-                'output' => array(
-                    'true' => array(
-                        'msg' =>__('HTTP Strict Transport Security was enabled.', 'really-simple-ssl'),
-                        'icon' => 'success'
-                    ),
-                    'false' => array(
-                        'msg' => sprintf(__('HTTP Strict Transport Security is not enabled %s(Read more)%s.', "really-simple-ssl"), '<a href="https://really-simple-ssl.com/hsts-http-strict-transport-security-good/" target="_blank">', '</a>' ),
-                        'icon' => 'premium'
-                    ),
-                ),
-            ),
-
             'secure_cookies_set' => array(
 	            'condition' => array(
 	                    'rsssl_ssl_enabled',
@@ -3329,7 +3313,7 @@ class rsssl_admin extends rsssl_front_end
 				        'msg' => __("The following recommended security headers are not detected:", "really-simple-ssl-pro")
 				                 ."<br><code style='padding: 0;'>". implode('<br>', $this->get_recommended_security_headers() ) . "</code>",
 				        'url' => 'https://really-simple-ssl.com/everything-you-need-to-know-about-security-headers',
-				        'icon' => 'open',
+				        'icon' => 'premium',
 				        'dismissible' => true
 			        ),
 			        'true' => array(
@@ -3488,7 +3472,6 @@ class rsssl_admin extends rsssl_front_end
 		        $other[$key] = $notice;
 	        }
         }
-
 	    $notices = $warnings + $open + $other;
 
 	    //add plus ones, but not when in admin notice
@@ -3496,33 +3479,18 @@ class rsssl_admin extends rsssl_front_end
 	        foreach ( $notices as $key => $notice ) {
 		        if ( isset( $notice['output']['url'] ) ) {
 			        $url    = $notice['output']['url'];
-			        $dismissible = isset($notice['output']['dismissible']) && $notice['output']['dismissible'];
 			        $target = '';
 			        if ( strpos( $url, 'https://really-simple-ssl.com' ) !== false ) {
-			            if ( $dismissible ){
-				            $info   = __( '%sMore info%s or %sdismiss%s', 'really-simple-ssl' );
-			            } else {
-				            $info   = __( '%sMore info%s', 'really-simple-ssl' );
-			            }
+                        $info   = __( '%sMore info%s', 'really-simple-ssl' );
 				        $target = 'target="_blank"';
 			        } else {
-				        if ( $dismissible ){
-					        $info = __( '%sEnable%s or %sdismiss%s', 'really-simple-ssl' );
-				        } else {
-					        $info = __( '%sEnable%s', 'really-simple-ssl' );
-				        }
+                        $info = __( '%sEnable%s', 'really-simple-ssl' );
 			        }
-			        $dismiss_open = "<span class='rsssl-dashboard-dismiss' data-dismiss_type='" . $key . "'><a href='#' class='rsssl-dismiss-text rsssl-close-warning'>";
-			        if ( $dismissible ) {
-				        $notices[ $key ]['output']['msg'] .= ' ' . sprintf( $info, '<a ' . $target . ' href="' . $url . '">', '</a>', $dismiss_open, "</a></span>" );
-			        } else {
-                        error_log($info);
-				        $notices[ $key ]['output']['msg'] .= ' ' . sprintf( $info, '<a ' . $target . ' href="' . $url . '">', '</a>' );
-			        }
+                    $notices[ $key ]['output']['msg'] .= ' ' . sprintf( $info, '<a ' . $target . ' href="' . $url . '">', '</a>' );
 		        }
 
 		        if ( isset( $notice['output']['plusone'] ) && $notice['output']['plusone'] ) {
-			        $plusone                          = "<span class='rsssl-dashboard-plusone update-plugins rsssl-update-count'><span class='update-count'>1</span></span>";
+			        $plusone = "<span class='rsssl-dashboard-plusone update-plugins rsssl-update-count'><span class='update-count'>1</span></span>";
 			        $notices[ $key ]['output']['msg'] .= $plusone;
 		        }
 	        }
@@ -4015,14 +3983,23 @@ class rsssl_admin extends rsssl_front_end
      * Add a dismiss button which will dismiss the nearest <tr>. Used on 'Configuration' dashboard page
      *
      * @since 3.1.6
+     * @return string
      *
      */
 
     public function rsssl_dismiss_button()
     {
-         return '<button type="button" class="close">
-                <span class="rsssl-close-warning-x">X</span>
-            </button>';
+        $html = "<button type='button' class='close'>
+            <span class='rsssl-close-warning-x'>
+            <img src='";
+
+            $html .= rsssl_url . '/assets/cross.svg';
+
+            $html .= "'/>
+                </span>
+                </button>";
+
+        return $html;
     }
 
     /**
