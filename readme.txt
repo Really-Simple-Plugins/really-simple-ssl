@@ -94,6 +94,7 @@ If you can't deactivate, do not just remove the plugin folder to uninstall! Foll
 * Improvement: change text about Google Analytics for a more broader application
 * Improvement: prevent duplicate notice
 * Improvement: better feedback on failed SSL detection
+* Improvement: .htaccess redirect detection with preg_match
 
 = 5.2.1 =
 * Improvement: changed text on security headers feedback
