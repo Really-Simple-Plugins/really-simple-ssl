@@ -318,6 +318,20 @@ class rsssl_admin extends rsssl_front_end
 		    }
 	    }
 
+	    if ( $prev_version && version_compare( $prev_version, '5.2.1', '<=' ) ) {
+
+		    if ( file_exists($this->htaccess_file() ) && is_writable($this->htaccess_file() ) ) {
+			    $htaccess = file_get_contents( $this->htaccess_file() );
+
+                $pattern_old = "/rlrssslReallySimpleSSL rsssl_version\[.*.]/";
+
+			    if ( preg_match_all( $pattern_old, $htaccess ) ) {
+				    $htaccess = preg_replace( $pattern_old, "Really Simple SSL " . rsssl_version, $htaccess );
+				    file_put_contents( $this->htaccess_file(), $htaccess );
+			    }
+		    }
+	    }
+
         update_option( 'rsssl_current_version', rsssl_version );
     }
 
@@ -1919,9 +1933,11 @@ class rsssl_admin extends rsssl_front_end
 
             } else {
                 // remove everything
-                $pattern = "/#\s?BEGIN\s?rlrssslReallySimpleSSL.*?#\s?END\s?rlrssslReallySimpleSSL/s";
+                $pattern_old = "/#\s?BEGIN\s?rlrssslReallySimpleSSL.*?#\s?END\s?rlrssslReallySimpleSSL/s";
+                $pattern_new = "/#\s?BEGIN\s?Really Simple SSL.*?#\s?END\s?Really Simple SSL/s";
                 //only remove if the pattern is there at all
-                if (preg_match($pattern, $htaccess)) $htaccess = preg_replace($pattern, "", $htaccess);
+                if (preg_match($pattern_old, $htaccess)) $htaccess = preg_replace($pattern, "", $htaccess);
+	            if (preg_match($pattern_new, $htaccess)) $htaccess = preg_replace($pattern, "", $htaccess);
 
             }
 
@@ -1931,33 +1947,6 @@ class rsssl_admin extends rsssl_front_end
         } else {
             $this->errors['HTACCESS_NOT_WRITABLE'] = TRUE;
             $this->trace_log("could not remove rules from htaccess, file not writable");
-        }
-    }
-
-    /**
-     * @return bool|string
-     *
-     * Get the .htaccess version
-     *
-     * @access public
-     *
-     */
-
-    public function get_htaccess_version()
-    {
-        if (!file_exists($this->htaccess_file())) return false;
-
-        $htaccess = file_get_contents($this->htaccess_file());
-        $versionpos = strpos($htaccess, "rsssl_version");
-
-        if ($versionpos === false) {
-            //no version found, so not .htaccess rules.
-            return false;
-        } else {
-            //find closing marker of version
-            $close = strpos($htaccess, "]", $versionpos);
-            $version = substr($htaccess, $versionpos + 14, $close - ($versionpos + 14));
-            return $version;
         }
     }
 
@@ -2020,7 +2009,10 @@ class rsssl_admin extends rsssl_front_end
         $htaccess = file_get_contents($this->htaccess_file());
 
         $check = null;
+
         preg_match("/BEGIN rlrssslReallySimpleSSL/", $htaccess, $check);
+	    preg_match("/BEGIN Really Simple SSL/", $htaccess, $check);
+
         if (count($check) === 0) {
             return false;
         } else {
@@ -2317,9 +2309,13 @@ class rsssl_admin extends rsssl_front_end
             return;
         }
 
-        $htaccess = file_get_contents($this->htaccess_file());
-        $htaccess = preg_replace("/#\s?BEGIN\s?rlrssslReallySimpleSSL.*?#\s?END\s?rlrssslReallySimpleSSL/s", "", $htaccess);
-        $htaccess = preg_replace("/\n+/", "\n", $htaccess);
+	    $pattern_old = "/#\s?BEGIN\s?rlrssslReallySimpleSSL.*?#\s?END\s?rlrssslReallySimpleSSL/s";
+	    $pattern_new = "/#\s?BEGIN\s?Really Simple SSL.*?#\s?END\s?Really Simple SSL/s";
+
+	    $htaccess = file_get_contents($this->htaccess_file());
+        $htaccess = preg_replace($pattern_old, "", $htaccess);
+	    $htaccess = preg_replace($pattern_new, "", $htaccess);
+	    $htaccess = preg_replace("/\n+/", "\n", $htaccess);
 
         $rules = $this->get_redirect_rules();
 
@@ -2509,7 +2505,7 @@ class rsssl_admin extends rsssl_front_end
         }
 
         if (strlen($rule) > 0) {
-            $rule = "\n" . "# BEGIN rlrssslReallySimpleSSL rsssl_version[" . rsssl_version . "]\n" . $rule . "# END rlrssslReallySimpleSSL" . "\n";
+            $rule = "\n" . "# BEGIN Really Simple SSL " . rsssl_version . "\n" . $rule . "# END Really Simple SSL" . "\n";
         }
 
         $rule = apply_filters("rsssl_htaccess_output", $rule);
