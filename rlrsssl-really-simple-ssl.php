@@ -96,7 +96,7 @@ class REALLY_SIMPLE_SSL
 				self::$instance->rsssl_help = new rsssl_help();
 				self::$instance->rsssl_certificate = new rsssl_certificate();
 				self::$instance->rsssl_site_health = new rsssl_site_health();
-				if ( isset($_GET['install_pro']) ) {
+				if ( sanitize_title($_GET['plugin'])==='rsssl_pro' ) {
 					self::$instance->rsp_upgrade_to_pro = new rsp_upgrade_to_pro();
 				}
                 if ( $wpcli ) {
@@ -147,7 +147,7 @@ class REALLY_SIMPLE_SSL
             require_once(rsssl_path . 'class-help.php');
 			require_once(rsssl_path . 'class-certificate.php');
 			require_once(rsssl_path . 'class-site-health.php');
-			if ( isset($_GET['install_pro']) ) {
+			if ( sanitize_title($_GET['plugin'])==='rsssl_pro' ) {
 				require_once(rsssl_path . 'upgrade/upgrade-to-pro.php');
 			}
         }

@@ -7,7 +7,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  * @author Easy Digital Downloads
  * @version 1.7
  */
-if ( !class_exists('rsp_upgrade_to_pro')){
+if ( !class_exists('rsp_upgrade_to_pro') ){
 class rsp_upgrade_to_pro {
 	private $version     = cmplz_version;
     private $api_url     = "";
