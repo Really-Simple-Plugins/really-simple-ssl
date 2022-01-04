@@ -1,0 +1,182 @@
+@import '../assets/css/variables.less';
+
+#rsp-step-template, #rsp-plugin-suggestion-template {
+  display:none;
+}
+.rsp-recommended {
+  padding-bottom:10px;
+}
+.rsp-plugin-suggestion {
+  display:flex;
+  gap:10px;
+  padding:20px 10px;
+  background-color: #f0f6fc;
+  .rsp-title {
+	font-weight:bold;
+  }
+  .rsp-description-short{
+	font-weight: bold;
+	font-size:10px;
+  }
+  .rsp-icon img {
+	width:50px;
+	height:inherit;
+  }
+  .rsp-description {
+	color:@grey-dark;
+	font-size: 11px;
+	line-height: 13px;
+	width:300px;
+  }
+  .rsp-install-button {
+	align-items: center;
+	justify-content: center;
+	display: flex;
+	.button-secondary {
+	  font-size: 18px;
+	}
+  }
+  .star-rating .star {
+	width: 16px;
+	height: 16px;
+	font-size: 16px;
+  }
+}
+.rsp-modal-transparent-background {
+
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.7);
+  z-index: 9999;
+
+  .rsp-install-plugin-modal {
+
+    max-height: calc(100vh - 20px);
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    -ms-transform: translateX(-50%) translateY(-50%);
+    transform: translateX(-50%) translateY(-50%);
+    width: fit-content;
+    height: fit-content;
+	min-width: 700px;
+    padding: 25px;
+    background-color: white;
+    border-radius: 10px;
+	h3 {
+	  font-size:23px;
+	  margin: 0 0 20px 0;
+	}
+    .rsp-progress-bar-container {
+      margin: 0 0 15px 0;
+
+      .rsp-progress {
+        overflow: hidden;
+        height: 10px;
+        border-radius: 5px;
+        width: 100%;
+
+        .rsp-bar {
+          height: 100%;
+        }
+      }
+    }
+
+    .rsp-install-steps {
+      display: flex;
+      flex-direction: column;
+      margin: 0 0 15px 0;
+
+      .rsp-install-step {
+        display: grid;
+        grid-template-columns: 50px 1fr;
+        grid-template-rows: 25px;
+        align-items: center;
+      }
+
+    }
+	.rsp-footer {
+	  display:flex;
+	  gap:20px;
+	  align-items: center;
+	  .rsp-error-message {
+		color:@rsp-red;
+		font-weight:14px;
+		a {
+		  color:@rsp-red;
+		}
+	  }
+	  .rsp-btn {
+		width: fit-content;
+		margin: 0;
+
+		&.rsp-yellow {
+		  background-color: @rsp-yellow;
+		  color: #333;
+		  font-size:17px;
+		  border: 1px solid @rsp-yellow;
+
+		  &:hover {
+			background-color: @rsp-yellow;
+			border: 1px solid @rsp-yellow;
+		  }
+		}
+
+		&.rsp-red {
+		  background-color: @rsp-red;
+		  color: white;
+		  border: 1px solid @rsp-red;
+
+		  &:hover {
+			background-color: @rsp-red;
+			border: 1px solid @rsp-red;
+		  }
+		}
+	  }
+	}
+
+    .rsp-bullet {
+      height: 13px;
+      width: 13px;
+      border-radius: 50%;
+      margin-right: 10px;
+      text-decoration: none;
+    }
+
+    .rsp-grey {
+      background-color: @grey-light;
+    }
+
+    .rsp-green {
+      background-color: @rsp-green;
+    }
+
+    .rsp-red {
+      background-color: @rsp-red;
+    }
+
+    .rsp-yellow {
+      background-color: @rsp-yellow;
+    }
+
+    .rsp-hidden {
+      display: none;
+    }
+
+  }
+
+}
+
+
+
+
+
+
+
+
+

@@ -66,6 +66,7 @@ class REALLY_SIMPLE_SSL
 	public $really_simple_ssl;
 	public $rsssl_help;
 	public $rsssl_certificate;
+	public $rsp_upgrade_to_pro;
 
 	private function __construct()
 	{
@@ -95,7 +96,9 @@ class REALLY_SIMPLE_SSL
 				self::$instance->rsssl_help = new rsssl_help();
 				self::$instance->rsssl_certificate = new rsssl_certificate();
 				self::$instance->rsssl_site_health = new rsssl_site_health();
-
+				if ( isset($_GET['install_pro']) ) {
+					self::$instance->rsp_upgrade_to_pro = new rsp_upgrade_to_pro();
+				}
                 if ( $wpcli ) {
 					self::$instance->rsssl_wp_cli = new rsssl_wp_cli();
 				}
@@ -144,6 +147,9 @@ class REALLY_SIMPLE_SSL
             require_once(rsssl_path . 'class-help.php');
 			require_once(rsssl_path . 'class-certificate.php');
 			require_once(rsssl_path . 'class-site-health.php');
+			if ( isset($_GET['install_pro']) ) {
+				require_once(rsssl_path . 'upgrade/upgrade-to-pro.php');
+			}
         }
 
 		if ( is_admin() || wp_doing_cron() ) {
