@@ -753,6 +753,10 @@ input:focus + .rsssl-slider {
   color: black;
   font-family: sans-serif;
 }
+.rsssl-dashboard-dismiss span img {
+  height: 12px;
+  width: 12px;
+}
 .rsssl-dashboard-dismiss span:hover {
   cursor: pointer;
   color: grey;
