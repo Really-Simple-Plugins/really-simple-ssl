@@ -326,7 +326,7 @@ class rsssl_admin extends rsssl_front_end
                 $pattern_start = "/rlrssslReallySimpleSSL rsssl_version\[.*.]/";
                 $pattern_end = "/rlrssslReallySimpleSSL/";
 
-			    if ( preg_match_all( $pattern_old, $htaccess ) ) {
+			    if ( preg_match_all( $pattern_start, $htaccess ) ) {
 				    $htaccess = preg_replace( $pattern_start, "Really Simple SSL " . rsssl_version, $htaccess );
 				    $htaccess = preg_replace( $pattern_end, "Really Simple SSL", $htaccess );
 				    file_put_contents( $this->htaccess_file(), $htaccess );
