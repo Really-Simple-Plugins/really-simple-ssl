@@ -323,10 +323,12 @@ class rsssl_admin extends rsssl_front_end
 		    if ( file_exists($this->htaccess_file() ) && is_writable($this->htaccess_file() ) ) {
 			    $htaccess = file_get_contents( $this->htaccess_file() );
 
-                $pattern_old = "/rlrssslReallySimpleSSL rsssl_version\[.*.]/";
+                $pattern_start = "/rlrssslReallySimpleSSL rsssl_version\[.*.]/";
+                $pattern_end = "/rlrssslReallySimpleSSL/";
 
 			    if ( preg_match_all( $pattern_old, $htaccess ) ) {
-				    $htaccess = preg_replace( $pattern_old, "Really Simple SSL " . rsssl_version, $htaccess );
+				    $htaccess = preg_replace( $pattern_start, "Really Simple SSL " . rsssl_version, $htaccess );
+				    $htaccess = preg_replace( $pattern_end, "Really Simple SSL", $htaccess );
 				    file_put_contents( $this->htaccess_file(), $htaccess );
 			    }
 		    }
@@ -1936,8 +1938,8 @@ class rsssl_admin extends rsssl_front_end
                 $pattern_old = "/#\s?BEGIN\s?rlrssslReallySimpleSSL.*?#\s?END\s?rlrssslReallySimpleSSL/s";
                 $pattern_new = "/#\s?BEGIN\s?Really Simple SSL.*?#\s?END\s?Really Simple SSL/s";
                 //only remove if the pattern is there at all
-                if (preg_match($pattern_old, $htaccess)) $htaccess = preg_replace($pattern, "", $htaccess);
-	            if (preg_match($pattern_new, $htaccess)) $htaccess = preg_replace($pattern, "", $htaccess);
+                if (preg_match($pattern_old, $htaccess)) $htaccess = preg_replace($pattern_old, "", $htaccess);
+	            if (preg_match($pattern_new, $htaccess)) $htaccess = preg_replace($pattern_new, "", $htaccess);
 
             }
 
