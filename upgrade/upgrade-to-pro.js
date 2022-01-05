@@ -26,6 +26,9 @@ const rsp_set_progress = () => {
 }
 
 const rsp_stop_progress = () => {
+	clearInterval(window.rsp_interval);
+	let progress_bar_container = document.querySelector(".rsp-progress-bar-container");
+
 	let progressEl = progress_bar_container.querySelector(".rsp-progress");
 	var bar = progressEl.querySelector(".rsp-bar");
 	bar.style = "width: 100%;";
@@ -114,6 +117,3 @@ const rsp_process_step = (current_step) => {
 	});
 }
 rsp_process_step(0);
-
-
-

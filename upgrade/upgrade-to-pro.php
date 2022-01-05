@@ -9,7 +9,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  */
 if ( !class_exists('rsp_upgrade_to_pro') ){
 class rsp_upgrade_to_pro {
-	private $version     = cmplz_version;
+	private $version     = 1;
     private $api_url     = "";
     private $license     = "";
     private $item_id     = "";
@@ -18,6 +18,7 @@ class rsp_upgrade_to_pro {
     private $plugin_name = "";
     private $plugin_constant = "";
 	private $steps;
+	private $prefix;
 
     /**
      * Class constructor.
@@ -39,23 +40,26 @@ class rsp_upgrade_to_pro {
 
         if ( isset($_GET['plugin']) ) {
             $plugin = sanitize_title($_GET['plugin']);
-            switch ($plugin) {
-                case "rsssl_pro":
-                    $this->slug = "really-simple-ssl-pro/really-simple-ssl-pro.php";
-                    $this->plugin_name = "Really Simple SSL Pro";
-                    $this->plugin_constant = "rsssl_pro";
-                    break;
-                case "cmplz_pro":
-                    $this->slug = "complianz-gdpr-premium/complianz-gpdr-premium.php";
-                    $this->plugin_name = "Complianz";
-                    $this->plugin_constant = "cmplz_premium";
-					break;
-                case "brst_pro":
-                    $this->slug = "burst";
-	                $this->plugin_name = "Burst";
-	                $this->plugin_constant = "burst_premium";
-	                break;
-            }
+	        switch ($plugin) {
+		        case "rsssl_pro":
+			        $this->slug = "really-simple-ssl-pro/really-simple-ssl-pro.php";
+			        $this->plugin_name = "Really Simple SSL Pro";
+			        $this->plugin_constant = "rsssl_pro";
+			        $this->prefix = "rsssl_";
+			        break;
+		        case "cmplz_pro":
+			        $this->slug = "complianz-gdpr-premium/complianz-gpdr-premium.php";
+			        $this->plugin_name = "Complianz";
+			        $this->plugin_constant = "cmplz_premium";
+			        $this->prefix = "cmplz_";
+			        break;
+		        case "brst_pro":
+			        $this->slug = "burst";
+			        $this->plugin_name = "Burst";
+			        $this->plugin_constant = "burst_premium";
+			        $this->prefix = "burst_";
+			        break;
+	        }
         }
 
 		$this->steps = array(
@@ -102,17 +106,70 @@ class rsp_upgrade_to_pro {
     }
 
 	private function get_suggested_plugin($attr){
-		$suggestion = [
-			'icon_url' => 'https://ps.w.org/really-simple-ssl/assets/icon-128x128.png',
-			'constant' => 'rsssl_version',
-			'title' => 'Really Simple SSL',
-			'description_short' => __('One click SSL optimization', "complianz-gdpr"),
-			'disabled' => '',
-			'button_text' => __("Install", "complianz-gdpr"),
-			'slug' => 'really-simple-ssl',
-			'description' => __('Really Simple SSL automatically detects your settings and configures your website to run over HTTPS. To keep it lightweight, we kept the options to a minimum. Your website will move to SSL with one click.', "complianz-gdpr"),
-			'install_url' => 'ssl%20really%20simple%20plugins%20complianz+HSTS&tab=search&type=term',
-		];
+		$suggestion = false;
+        $plugin_to_be_installed = false;
+        if (isset($_GET['plugin']) && $_GET['plugin']==='cmplz_pro' ) {
+	        $plugin_to_be_installed = 'complianz-gdpr';
+        } else if (isset($_GET['plugin']) && $_GET['plugin']==='rsssl_pro' ) {
+			$plugin_to_be_installed = 'really-simple-ssl';
+		} else if (isset($_GET['plugin']) && $_GET['plugin']==='burst_pro' ) {
+	        $plugin_to_be_installed = 'burst';
+        }
+
+		$path = __FILE__;
+		if (strpos($path, 'really-simple-ssl')!==false) {
+			$current_plugin = 'really-simple-ssl';
+		} else if (strpos($path, 'complianz')!==false){
+			$current_plugin = 'complianz-gdpr';
+		} else if (strpos($path, 'burst')!==false){
+			$current_plugin = 'burst';
+		}
+
+        $fallback_suggestion = [
+            'icon_url' => 'https://ps.w.org/definitions-internal-linkbuilding/assets/icon-128x128.png',
+            'constant' => 'RSPDEF_VERSION',
+            'title' => 'Definitions – Internal Linkbuilding',
+            'description_short' => __('Simple internal link building for SEO', "complianz-gdpr"),
+            'disabled' => '',
+            'button_text' => __("Install", "complianz-gdpr"),
+            'slug' => 'definitions-internal-linkbuilding',
+            'description' => __('A lightweight SEO tool we use for internal linkbuilding in our knowledge base, but can be adapted to your needs.', "complianz-gdpr"),
+            'install_url' => 'complianz+gdpr+POPIA&tab=search&type=term',
+        ];
+
+		if ( $plugin_to_be_installed === 'really-simple-ssl' ){
+			$suggestion = [
+				'icon_url' => 'https://ps.w.org/complianz-gdpr/assets/icon-128x128.png',
+				'constant' => 'cmplz_version',
+				'title' => 'Complianz GDPR/CCPA',
+				'description_short' => __('GDPR/CCPA Privacy Suite', "complianz-gdpr"),
+				'disabled' => '',
+				'button_text' => __("Install", "complianz-gdpr"),
+				'slug' => 'complianz-gdpr',
+				'description' => __('Configure your Cookie Notice, Cookie Consent and Cookie Policy with our Wizard and Cookie Scan. Supports GDPR, DSGVO, TTDSG, LGPD, POPIA, RGPD, CCPA and PIPEDA.', "complianz-gdpr"),
+				'install_url' => 'complianz+gdpr+POPIA&tab=search&type=term',
+			];
+            if ($current_plugin==='complianz-gdpr') {
+	            $suggestion = $fallback_suggestion;
+            }
+        }
+
+		if ( $plugin_to_be_installed === 'complianz-gdpr' ){
+	        $suggestion = [
+		        'icon_url' => 'https://ps.w.org/complianz-gdpr/assets/icon-256x256.gif',
+		        'constant' => 'rsssl_version',
+		        'title' => 'Really Simple SSL',
+		        'description_short' => __('One click SSL optimization', "complianz-gdpr"),
+		        'disabled' => '',
+		        'button_text' => __("Install", "complianz-gdpr"),
+		        'slug' => 'really-simple-ssl',
+		        'description' => __('Really Simple SSL automatically detects your settings and configures your website to run over HTTPS. To keep it lightweight, we kept the options to a minimum. Your website will move to SSL with one click.', "complianz-gdpr"),
+		        'install_url' => 'ssl%20really%20simple%20plugins%20complianz+HSTS&tab=search&type=term',
+	        ];
+			if ($current_plugin==='really-simple-ssl') {
+				$suggestion = $fallback_suggestion;
+			}
+        }
 
 		$suggestion['install_url'] = admin_url('plugin-install.php?s=').$suggestion['install_url'];
 		if (defined($suggestion['constant'])){
@@ -290,6 +347,7 @@ class rsp_upgrade_to_pro {
 						<div class="rsp-description_short"><?=$this->get_suggested_plugin('description_short')?></div>
 						<div class="rsp-rating"><?php
 							$plugin_info = $this->get_plugin_info($this->get_suggested_plugin('slug'));
+
 							if (!is_wp_error($plugin_info) && !empty($plugin_info->rating)) {
 								wp_star_rating([
 										'rating' => $plugin_info->rating,
@@ -430,7 +488,7 @@ class rsp_upgrade_to_pro {
             $license  = sanitize_title($_GET['license']);
 			$item_id = intval($_GET['item_id']);
 			$response = $this->validate($license, $item_id);
-			update_site_option('rsp_auto_installed_license', $license);
+	        update_site_option($this->prefix.'auto_installed_license', $license);
         }
 
 		$response = json_encode($response);
@@ -664,4 +722,5 @@ class rsp_upgrade_to_pro {
     }
 
 }
+	$rsp_upgrade_to_pro = new rsp_upgrade_to_pro();
 }
