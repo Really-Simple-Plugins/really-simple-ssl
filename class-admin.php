@@ -103,6 +103,7 @@ class rsssl_admin extends rsssl_front_end
 	    delete_transient('rsssl_plusone_count');
 	    delete_transient('rsssl_remaining_task_count');
 	    delete_transient( 'rsssl_can_use_curl_headers_check' );
+	    delete_transient( 'rsssl_admin_notices' );
     }
 
 	/**
@@ -3353,18 +3354,31 @@ class rsssl_admin extends rsssl_front_end
 		        'score' => 5,
 		        'output' => array(
 			        'false' => array(
-				        'msg' => __("The following recommended security headers are not detected:", "really-simple-ssl-pro")
+				        'msg' => __("The following recommended security headers are not detected:", "really-simple-ssl")
 				                 ."<br><code style='padding: 0;'>". implode('<br>', $this->get_recommended_security_headers() ) . "</code>",
 				        'url' => 'https://really-simple-ssl.com/everything-you-need-to-know-about-security-headers',
 				        'icon' => 'premium',
-				        'dismissible' => true
+				        'dismissible' => false,
 			        ),
 			        'true' => array(
-				        'msg' => __("Recommended security headers enabled.", "really-simple-ssl-pro"),
+				        'msg' => __("Recommended security headers enabled.", "really-simple-ssl"),
 				        'icon' => 'success',
 			        ),
 		        ),
 	        ),
+
+            'pro_upsell' => array(
+	            'callback' => '_true_',
+	            'score' => 5,
+	            'output' => array(
+		            'true' => array(
+			            'msg' => __("Improve security with Really Simple SSL Pro.", "really-simple-ssl"),
+			            'url' => 'https://really-simple-ssl.com/pro',
+			            'icon' => 'premium',
+			            'dismissible' => false,
+		            ),
+	            ),
+            ),
 
             'uses_wp_engine' => array(
                 'condition' => array('rsssl_uses_wp_engine'),
@@ -3507,7 +3521,9 @@ class rsssl_admin extends rsssl_front_end
 	    $open = array();
 	    $other = array();
 	    foreach ($notices as $key => $notice){
-	        if ($notice['output']['icon']==='warning') {
+            if (!isset($notice['output']['icon'])) continue;
+
+		    if ($notice['output']['icon']==='warning') {
 	            $warnings[$key] = $notice;
             } else if ($notice['output']['icon']==='open') {
 		        $open[$key] = $notice;
