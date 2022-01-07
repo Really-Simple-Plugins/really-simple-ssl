@@ -3372,7 +3372,7 @@ class rsssl_admin extends rsssl_front_end
 	            'score' => 5,
 	            'output' => array(
 		            'true' => array(
-			            'msg' => __("Improve security with Really Simple SSL pro.", "really-simple-ssl"),
+			            'msg' => __("Improve security with Really Simple SSL Pro.", "really-simple-ssl"),
 			            'url' => 'https://really-simple-ssl.com/pro',
 			            'icon' => 'premium',
 			            'dismissible' => false,
