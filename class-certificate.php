@@ -38,12 +38,10 @@ if ( ! class_exists( 'rsssl_certificate' ) ) {
             $domain = site_url();
             //Parse to strip off any /subfolder/
             $parse = parse_url($domain);
-            $domain = $parse['host'];
-
-            if ( !function_exists('stream_context_get_params') ) {
+            if ( !isset($parse['host']) || !function_exists('stream_context_get_params') ) {
 				set_transient('rsssl_certinfo', 'no-response', DAY_IN_SECONDS);
             } else {
-                //get certificate info
+	            $domain = $parse['host'];
                 $certinfo = $this->get_certinfo($domain);
 
                 if ( !$certinfo ) {
