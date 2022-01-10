@@ -318,7 +318,7 @@ class rsssl_admin extends rsssl_front_end
 		    }
 	    }
 
-	    if ( $prev_version && version_compare( $prev_version, '5.2.1', '<=' ) ) {
+	    if ( $prev_version && version_compare( $prev_version, '5.3.0', '<=' ) ) {
 
 		    if ( file_exists($this->htaccess_file() ) && is_writable($this->htaccess_file() ) ) {
 			    $htaccess = file_get_contents( $this->htaccess_file() );
