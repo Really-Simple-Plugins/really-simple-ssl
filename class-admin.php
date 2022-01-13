@@ -2683,7 +2683,7 @@ class rsssl_admin extends rsssl_front_end
             <?php } ?>
             <div id="message" class="updated fade notice is-dismissible rlrsssl-review really-simple-plugins" style="border-left:4px solid #333">
                 <div class="rsssl-container">
-                    <div class="rsssl-review-image"><img width=80px" src="<?php echo rsssl_url?>/assets/icon-128x128.png" alt="review-logo"></div>
+                    <div class="rsssl-review-image"><img width=80px" src="<?php echo rsssl_url?>/assets/img/icon-128x128.png" alt="review-logo"></div>
                     <div style="margin-left:30px">
                         <?php if (get_option("rsssl_before_review_notice_user")){?>
                             <p><?php printf(__('Hi, Really Simple SSL has kept your site secure for some time now, awesome! If you have a moment, please consider leaving a review on WordPress.org to spread the word. We greatly appreciate it! If you have any questions or feedback, leave us a %smessage%s.', 'really-simple-ssl'),'<a href="https://really-simple-ssl.com/contact" target="_blank">','</a>'); ?></p>
@@ -2944,7 +2944,7 @@ class rsssl_admin extends rsssl_front_end
 	    $high_contrast = $this->high_contrast ? 'rsssl-high-contrast' : ''; ?>
         <div class="nav-tab-wrapper <?php echo $high_contrast ?>">
             <div class="rsssl-logo-container">
-                <div id="rsssl-logo"><img src="<?php echo rsssl_url?>/assets/really-simple-ssl-logo.png" alt="review-logo"></div>
+                <div id="rsssl-logo"><img src="<?php echo rsssl_url?>/assets/img/really-simple-ssl-logo.png" alt="review-logo"></div>
             </div>
             <?php
                 if (count($tabs)>1) {
@@ -4053,7 +4053,7 @@ class rsssl_admin extends rsssl_front_end
             <span class='rsssl-close-warning-x'>
             <img src='";
 
-            $html .= rsssl_url . '/assets/cross.svg';
+            $html .= rsssl_url . '/assets/img/cross.svg';
 
             $html .= "'/>
                 </span>
