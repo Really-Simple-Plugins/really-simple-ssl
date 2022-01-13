@@ -87,7 +87,45 @@ if ( current_user_can( 'manage_options' ) ) {
 
 	do_action( "rsssl_system_status" );
 
-	echo RSSSL()->really_simple_ssl->debug_log;
+	echo "<br>" . "<b>" . "SSL Configuration" . "</b>";
+	if ( RSSSL()->really_simple_ssl->wpconfig_siteurl_not_fixed ) {
+		echo "siteurl or home url defines found in wpconfig<br>";
+	}
+	if ( RSSSL()->really_simple_ssl->wpconfig_siteurl_not_fixed ) {
+		echo "not able to fix wpconfig siteurl/homeurl.<br>";
+	}
+	if ( RSSSL()->really_simple_ssl->wpconfig_loadbalancer_fix_failed ) {
+		echo "wp config loadbalancer fix FAILED.<br>";
+	}
+	if ( !is_writable(RSSSL()->really_simple_ssl->find_wp_config_path()) ) {
+		echo "wp-config.php not writable<br>";
+	}
+	echo "Detected SSL setup: ".RSSSL()->really_simple_ssl->ssl_type()."<br>";
+	if ( file_exists(RSSSL()->really_simple_ssl->htaccess_file()) ){
+		echo "htaccess file exists.<br>";
+		if ( !is_writable(RSSSL()->really_simple_ssl->htaccess_file()) ) {
+			echo "htaccess file not writable.<br>";
+		}
+	} else {
+		echo "no htaccess file available.<br>";
+	}
+	if ( RSSSL()->really_simple_ssl->do_not_edit_htaccess ) {
+		echo "Edit of .htaccess blocked by setting or define 'do not edit htaccess' in Really Simple SSL.<br>";
+	}
+	if (get_transient('rsssl_htaccess_test_success') === 'success') {
+		echo "htaccess redirect tested successfully.<br>";
+	} else if (get_transient('rsssl_htaccess_test_success') === 'error') {
+		echo "htaccess redirect test failed.<br>";
+	} else if (get_transient('rsssl_htaccess_test_success') === 'no-response') {
+		echo "htaccess redirect test failed: no response from server.<br>";
+	}
+
+	if ( !RSSSL()->really_simple_ssl->htaccess_contains_redirect_rules() ) {
+		echo ".htaccess does not contain default Really Simple SSL redirect.<br>";
+	}
+
+
+
 
 	echo "\nConstants\n";
 
