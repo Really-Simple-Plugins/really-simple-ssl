@@ -126,7 +126,6 @@ class REALLY_SIMPLE_SSL
 	{
 		require_once(rsssl_path . 'class-front-end.php');
 		require_once(rsssl_path . 'class-mixed-content-fixer.php');
-		require_once(rsssl_path . 'integrations/integrations.php');
 
 		$wpcli = defined( 'WP_CLI' ) && WP_CLI;
 		if ( $wpcli ) {
@@ -144,6 +143,7 @@ class REALLY_SIMPLE_SSL
             require_once(rsssl_path . 'class-help.php');
 			require_once(rsssl_path . 'class-certificate.php');
 			require_once(rsssl_path . 'class-site-health.php');
+            require_once(rsssl_path . '/security/integrations.php');
         }
 
 		if ( is_admin() || wp_doing_cron() ) {

@@ -5,10 +5,10 @@ if ( is_admin() ) {
 }
 //require_once( trailingslashit(rsssl_path) . 'integrations/forms.php' );
 //require_once( trailingslashit(rsssl_path) . 'integrations/settings.php' );
+//require_once( trailingslashit(rsssl_path) . 'integrations/functions.php' );
+
 
 function rsssl_enqueue_integrations_assets( $hook ) {
-	if ( strpos($hook, "rsssl-script-center")===false  ) return;
-
 //	wp_register_script( ' rsssl-pagify', trailingslashit( rsssl_url ) . 'assets/pagify/pagify.min.js', array( "jquery" ), rsssl_version );
 //	wp_enqueue_script( ' rsssl-pagify' );
 //
@@ -22,7 +22,14 @@ $rsssl_integrations_list = apply_filters( 'rsssl_integrations', array(
 	'xmlrpc' => array(
 		'constant_or_function' => 'rsssl_xmlrpc',
 		'label'                => 'XMLRPC',
+        'folder'               => 'wordpress'
 	),
+
+    'user-registration' => array(
+        'constant_or_function' => 'rsssl_user_registration',
+        'label'                => 'User registration',
+        'folder'               => 'wordpress'
+    ),
 
 //	'advanced-nocaptcha-recaptcha' => array(
 //		'constant_or_function' => 'ANR_PLUGIN_VERSION',
@@ -43,21 +50,24 @@ require_once( 'fields.php' );
 
 foreach ( $rsssl_integrations_list as $plugin => $details ) {
 
-	if ( ! isset( $details['early_load'] ) ) {
-		continue;
-	}
-	if ( ! file_exists( WP_PLUGIN_DIR . "/" . $plugin . "/" . $plugin
-	                    . ".php" )
+//    if ( ! isset( $details['early_load'] ) ) {
+//		continue;
+//	}
+
+
+	if ( ! file_exists( rsssl_path . 'security/' . $details['folder'] . "/" . $plugin . '.php' )
 	) {
 		continue;
-	}
+	} else {
+        $file = rsssl_path . 'security/' . $details['folder'] . "/" . $plugin . '.php';
+    }
 
-	$early_load = $details['early_load'];
-	$file       = apply_filters( 'rsssl_early_load_path',
-		rsssl_path . "integrations/plugins/$early_load", $details );
+//	$early_load = $details['early_load'];
+//	$file       = apply_filters( 'rsssl_early_load_path',
+//		rsssl_path . "integrations/plugins/$early_load", $details );
 
 	if ( file_exists( $file ) ) {
-		require_once( $file );
+        require_once( $file );
 	} else {
 		error_log( "searched for $plugin integration at $file, but did not find it" );
 	}
@@ -94,7 +104,7 @@ function rsssl_integration_plugin_is_active( $plugin ){
 	if ( !isset($rsssl_integrations_list[ $plugin ]) ) {
 		return false;
 	}
-	//because we need a default, we don't use the get_value from complianz. The fields array is not loaded yet, so there are no defaults
+	//because we need a default, we don't use the get_value from rsssl. The fields array is not loaded yet, so there are no defaults
 	$fields = get_option( 'rsssl_options_integrations' );
 	$details = $rsssl_integrations_list[ $plugin ];
 	$enabled = isset( $fields[ $plugin ] ) ? $fields[ $plugin ] : true;
@@ -137,6 +147,8 @@ function rsssl_integrations() {
 	if ( $stored_integrations_count != $actual_integrations_count) {
 		update_option('rsssl_integrations_changed', true );
 	}
+
+
 
 }
 

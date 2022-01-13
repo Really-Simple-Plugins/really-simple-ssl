@@ -13,7 +13,7 @@ function rsssl_filter_integration_fields( $fields ) {
 			$plugin_fields[ $plugin ] = array(
 				'source'                  => 'integrations',
 				'type'                    => 'checkbox',
-				'default'                 => false,
+				'default'                 => true,
 				'label'                   => $details['label'],
 				'table'                   => true,
 				'disabled'                => true,
