@@ -856,9 +856,7 @@ if ( ! class_exists( "rsssl_wizard" ) ) {
 			    $dashboard = 'directadmin';
 			}
 
-            $debug_log_contents = RSSSL()->really_simple_ssl->debug_log;
-            $debug_log_contents = str_replace("\n", '--br--', $debug_log_contents );
-            $debug_log_contents .= 'dashboard '.$dashboard.'--br--';
+            $debug_log_contents = 'dashboard '.$dashboard.'--br--';
             $debug_log_contents .= 'skip dns check '.$skip_dns_check.'--br--';
             $debug_log_contents .= 'skip directory check '.$skip_directory_check.'--br--';
             $debug_log_contents .= 'verification type '.$verification_type.'--br--';

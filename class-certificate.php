@@ -45,9 +45,7 @@ if ( ! class_exists( 'rsssl_certificate' ) ) {
             } else {
                 //get certificate info
                 $certinfo = $this->get_certinfo($domain);
-
                 if ( !$certinfo ) {
-                	RSSSL()->really_simple_ssl->trace_log("- SSL certificate not valid");
                 	return false;
                 }
 

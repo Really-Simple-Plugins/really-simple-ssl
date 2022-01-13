@@ -88,6 +88,18 @@ if ( current_user_can( 'manage_options' ) ) {
 	do_action( "rsssl_system_status" );
 
 	echo "<br>" . "<b>" . "SSL Configuration" . "</b>";
+	$certinfo = RSSSL()->rsssl_certificate->get_certinfo($domain);
+
+	if ( !$certinfo ) {
+		RSSSL()->really_simple_ssl->trace_log("- SSL certificate not valid");
+		return false;
+	}
+	$filecontents = get_transient('rsssl_testpage');
+	if ( strpos($filecontents, "#SSL TEST PAGE#") !== false ) {
+		echo "SSL test page loaded successfully<br>";
+	} else {
+		echo "Could not open testpage<br>";
+	}
 	if ( RSSSL()->really_simple_ssl->wpconfig_siteurl_not_fixed ) {
 		echo "siteurl or home url defines found in wpconfig<br>";
 	}
@@ -119,7 +131,26 @@ if ( current_user_can( 'manage_options' ) ) {
 	} else if (get_transient('rsssl_htaccess_test_success') === 'no-response') {
 		echo "htaccess redirect test failed: no response from server.<br>";
 	}
-
+	$mixed_content_fixer_detected = get_transient('rsssl_mixed_content_fixer_detected');
+	if ($mixed_content_fixer_detected === 'no-response'){
+		echo "Could not connect to webpage to detect mixed content fixer<br>";
+	}
+	if ($mixed_content_fixer_detected === 'not-found'){
+		echo "Mixed content marker not found in websource<br>";
+	}
+	if ($mixed_content_fixer_detected === 'error'){
+		echo "Mixed content marker not found: unknown error<br>";
+	}
+	if ($mixed_content_fixer_detected === 'curl-error'){
+		//Site has has a cURL error
+		echo "Mixed content fixer could not be detected: cURL error<br>";
+	}
+	if ($mixed_content_fixer_detected === 'found'){
+		echo "Mixed content fixer successfully detected<br>";
+	}
+	if ($mixed_content_fixer_detected === 'not-enabled') {
+		echo "Mixed content fixer not enabled<br>";
+	}
 	if ( !RSSSL()->really_simple_ssl->htaccess_contains_redirect_rules() ) {
 		echo ".htaccess does not contain default Really Simple SSL redirect.<br>";
 	}

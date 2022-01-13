@@ -31,11 +31,7 @@ class rsssl_admin extends rsssl_front_end
     public $review_notice_shown = FALSE;
     public $dismiss_review_notice = FALSE;
     public $ssl_success_message_shown = FALSE;
-
 	public $hsts = FALSE;
-    public $debug = TRUE;
-    public $debug_log;
-
     public $plugin_db_version;
     public $ssl_type = "NA";
     public $dismiss_all_notices = false;
@@ -963,7 +959,6 @@ class rsssl_admin extends rsssl_front_end
             $this->switch_mixed_content_fixer_hook = isset($options['switch_mixed_content_fixer_hook']) ? $options['switch_mixed_content_fixer_hook'] : FALSE;
 	        $this->dismiss_all_notices = isset($options['dismiss_all_notices']) ? $options['dismiss_all_notices'] : FALSE;
 	        $this->high_contrast = isset($options['high_contrast']) ? $options['high_contrast'] : FALSE;
-	        $this->debug_log = isset($options['debug_log']) ? $options['debug_log'] : $this->debug_log;
             $this->dismiss_review_notice = isset($options['dismiss_review_notice']) ? $options['dismiss_review_notice'] : $this->dismiss_review_notice;
 
         }
@@ -1013,13 +1008,10 @@ class rsssl_admin extends rsssl_front_end
             $this->sites = array();
             $nr_of_sites = RSSSL()->rsssl_multisite->get_total_blog_count();
             $sites = RSSSL()->rsssl_multisite->get_sites_bw_compatible(0, $nr_of_sites);
-
-            $this->trace_log("building domain list for multisite...");
             $has_sites_with_ssl = false;
             foreach ($sites as $site) {
                 $this->switch_to_blog_bw_compatible($site);
                 $options = get_option('rlrsssl_options');
-
                 $ssl_enabled = FALSE;
                 if (isset($options)) {
                     $site_has_ssl = isset($options['site_has_ssl']) ? $options['site_has_ssl'] : FALSE;
@@ -1027,17 +1019,12 @@ class rsssl_admin extends rsssl_front_end
                 }
 
                 if (is_plugin_active(rsssl_plugin) && $ssl_enabled) {
-                    $this->trace_log("- adding: " . home_url());
                     $this->sites[] = home_url();
 	                $has_sites_with_ssl = true;
                 }
                 restore_current_blog(); //switches back to previous blog, not current, so we have to do it each loop
             }
-
-            if (!$has_sites_with_ssl) $this->trace_log("- SSL not enabled on any site " );
-
             set_transient('rsssl_domain_list', $this->sites, HOUR_IN_SECONDS);
-
             $this->save_options();
         }
     }
@@ -1070,25 +1057,6 @@ class rsssl_admin extends rsssl_front_end
 
             $this->plugin_db_version = rsssl_version;
             $this->save_options();
-        }
-    }
-
-    /**
-     * Log events during plugin execution
-     *
-     * @param string $msg
-     *
-     * @since  2.1
-     *
-     * @access public
-     *
-     */
-
-    public function trace_log($msg)
-    {
-	    if (defined('RSSSL_DOING_SYSTEM_STATUS') || (defined('WP_DEBUG') && WP_DEBUG ) ){
-		    if (strpos($this->debug_log, $msg)) return;
-		    $this->debug_log = $this->debug_log . "\n" . $msg;
         }
     }
 
@@ -2272,77 +2240,44 @@ class rsssl_admin extends rsssl_front_end
     public function mixed_content_fixer_detected()
     {
         $status = 0;
-
         $mixed_content_fixer_detected = get_transient('rsssl_mixed_content_fixer_detected');
-
         if (!$mixed_content_fixer_detected) {
-
             $web_source = "";
             //check if the mixed content fixer is active
             $response = wp_remote_get(home_url());
-
-            if (!is_wp_error($response)) {
+            if ( !is_wp_error($response) ) {
 	            if ( is_array( $response ) ) {
 		            $status = wp_remote_retrieve_response_code( $response );
 		            $web_source = wp_remote_retrieve_body( $response );
 	            }
 
 	            if ( $status != 200 ) {
+		            //Could not connect to website
 		            $mixed_content_fixer_detected = 'no-response';
 	            } elseif ( strpos( $web_source, "data-rsssl=" ) === false ) {
+		            //Mixed content fixer marker not found in the websource
 		            $mixed_content_fixer_detected = 'not-found';
 	            } else {
 		            $mixed_content_fixer_detected = 'found';
 	            }
             }
 
-            if (is_wp_error($response)) {
+            if ( is_wp_error($response) ) {
+	            //Fallback since most errors should be cURL errors, Error encountered while retrieving the webpage.
                 $mixed_content_fixer_detected = 'error';
                 $error = $response->get_error_message();
                 set_transient('rsssl_curl_error' , $error, 600);
-                if (!empty($error) && (strpos($error, "cURL error") !== false) ) {
+                if ( !empty($error) && (strpos($error, "cURL error") !== false ) ) {
                     $mixed_content_fixer_detected = 'curl-error';
                 }
             }
-
-            if ($this->autoreplace_insecure_links == ! true) {
+            if ( $this->autoreplace_insecure_links == ! true ) {
                 $mixed_content_fixer_detected = 'not-enabled';
             }
-
             set_transient('rsssl_mixed_content_fixer_detected', $mixed_content_fixer_detected, 600);
         }
 
-        if ($mixed_content_fixer_detected === 'no-response'){
-            //Could not connect to website
-            $this->trace_log("Could not connect to webpage to detect mixed content fixer");
-            $this->mixed_content_fixer_detected = FALSE;
-        }
-        if ($mixed_content_fixer_detected === 'not-found'){
-            //Mixed content fixer marker not found in the websource
-            $this->trace_log("Mixed content marker not found in websource");
-            $this->mixed_content_fixer_detected = FALSE;
-        }
-	    if ($mixed_content_fixer_detected === 'error'){
-	        $this->trace_log("Mixed content marker not found: unknown error");
-		    //Error encountered while retrieving the webpage. Fallback since most errors should be cURL errors
-		    $this->mixed_content_fixer_detected = FALSE;
-	    }
-	    if ($mixed_content_fixer_detected === 'curl-error'){
-		    //Site has has a cURL error
-            $this->trace_log("Mixed content fixer could not be detected: cURL error");
-		    $this->mixed_content_fixer_detected = FALSE;
-	    }
-        if ($mixed_content_fixer_detected === 'found'){
-            $this->trace_log("Mixed content fixer successfully detected");
-            //Mixed content fixer was successfully detected on the front end
-            $this->mixed_content_fixer_detected = true;
-        }
-
-        if ($mixed_content_fixer_detected === 'not-enabled') {
-            $this->trace_log("Mixed content fixer not enabled");
-            $this->mixed_content_fixer_detected = FALSE;
-        }
-
+	    $this->mixed_content_fixer_detected = $mixed_content_fixer_detected === 'found';
         return $mixed_content_fixer_detected;
     }
 
@@ -2359,16 +2294,12 @@ class rsssl_admin extends rsssl_front_end
 
     public function get_redirect_rules($manual = false)
     {
-        $this->trace_log("retrieving redirect rules");
         //only add the redirect rules when a known type of SSL was detected. Otherwise, we use https.
         $rule = "";
         //if the htaccess test was successfull, and we know the redirectype, edit
         if ($this->htaccess_redirect && ($manual || $this->htaccess_test_success) && $this->ssl_type != "NA") {
-	        $this->trace_log("starting insertion of .htaccess redirects.");
             $rule .= "<IfModule mod_rewrite.c>" . "\n";
             $rule .= "RewriteEngine on" . "\n";
-
-            $or = "";
             if ($this->ssl_type == "SERVER-HTTPS-ON") {
                 $rule .= "RewriteCond %{HTTPS} !=on [NC]" . "\n";
             } elseif ($this->ssl_type == "SERVER-HTTPS-1") {
@@ -2394,18 +2325,12 @@ class rsssl_admin extends rsssl_front_end
             //if multisite, and NOT subfolder install (checked for in the detect_config function)
             //, add a condition so it only applies to sites where plugin is activated
             if (is_multisite() && !RSSSL()->rsssl_multisite->ssl_enabled_networkwide) {
-                $this->trace_log("multisite, per site activation");
-
                 foreach ($this->sites as $domain) {
-                    $this->trace_log("adding condition for:" . $domain);
-
                     //remove http or https.
                     $domain = preg_replace("/(http:\/\/|https:\/\/)/", "", $domain);
                     //We excluded subfolders, so treat as domain
-
                     $domain_no_www = str_replace("www.", "", $domain);
                     $domain_yes_www = "www." . $domain_no_www;
-
                     $rule .= "#wpmu rewritecond " . $domain . "\n";
                     $rule .= "RewriteCond %{HTTP_HOST} ^" . preg_quote($domain_no_www, "/") . " [OR]" . "\n";
                     $rule .= "RewriteCond %{HTTP_HOST} ^" . preg_quote($domain_yes_www, "/") . " [OR]" . "\n";
@@ -2416,8 +2341,6 @@ class rsssl_admin extends rsssl_front_end
                 if (count($this->sites) > 0) {
                     $rule = strrev(implode("", explode(strrev("[OR]"), strrev($rule), 2)));
                 }
-            } else {
-                $this->trace_log("single site or networkwide activation");
             }
 
             //fastest cache compatibility
@@ -4775,22 +4698,14 @@ class rsssl_admin extends rsssl_front_end
     protected function get_test_page_contents()
     {
         $filecontents = get_transient('rsssl_testpage');
-        if (!$filecontents) {
+        if ( !$filecontents ) {
             $testpage_url = trailingslashit($this->test_url()) . "ssl-test-page.php";
-            $this->trace_log("Opening testpage to check server configuration: " . $testpage_url);
             $response = wp_remote_get($testpage_url);
             if ( is_array($response) ) {
                 $filecontents = wp_remote_retrieve_body($response);
             }
 
-            $this->trace_log("test page url, enter in browser to check manually: " . $testpage_url);
-            if (!is_wp_error($response) && (strpos($filecontents, "#SSL TEST PAGE#") !== false)) {
-                $this->trace_log("SSL test page loaded successfully");
-            } else {
-	            $error = is_wp_error($response) ? $response->get_error_message() : "";
-                $this->trace_log("Could not open testpage " . $error);
-            }
-            if (empty($filecontents)) {
+            if ( empty($filecontents) ) {
                 $filecontents = 'not-valid';
             }
             set_transient('rsssl_testpage', $filecontents, 600);
