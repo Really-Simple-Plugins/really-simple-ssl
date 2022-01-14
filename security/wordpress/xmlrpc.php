@@ -25,7 +25,7 @@ if ( ! function_exists( 'rsssl_handle_xmlrpc_request' ) ) {
 }
 
 if ( ! function_exists( 'xmlrpc_notice' ) ) {
-    function xmlrpc_notice() {
+    function xmlrpc_notice( $notices ) {
         $notices['xmlrpc'] = array(
             'callback' => 'rsssl_xmlrpc_notice',
             'score' => 10,
@@ -88,7 +88,6 @@ if ( ! function_exists('rsssl_xmlrpc_allowed' ) ) {
                 curl_setopt($ch, CURLOPT_TIMEOUT, 3); //timeout in seconds
 
                 $response = curl_exec($ch);
-                error_log(print_r($response, true));
 
                 $response_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 

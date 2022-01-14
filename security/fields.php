@@ -11,10 +11,8 @@ function rsssl_filter_integration_fields( $fields ) {
 			rsssl_path . "integrations/plugins/$plugin.php", $plugin );
 		if ( file_exists( $file ) ) {
 			$plugin_fields[ $plugin ] = array(
-				'source'                  => 'integrations',
 				'type'                    => 'checkbox',
 				'default'                 => true,
-				'label'                   => $details['label'],
 				'table'                   => true,
 				'disabled'                => true,
 			);

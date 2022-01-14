@@ -22,20 +22,70 @@ $rsssl_integrations_list = apply_filters( 'rsssl_integrations', array(
 	'xmlrpc' => array(
 		'constant_or_function' => 'rsssl_xmlrpc',
 		'label'                => 'XMLRPC',
-        'folder'               => 'wordpress'
+        'folder'               => 'wordpress',
+		'impact'               => 'high',
+		'risk'                 => 'high',
+		'learning_mode'        => true,
+		'type'                 => 'checkbox',
+		'conditions'           => array(
+			'rsssl_xmlrpc_allowed',
+		),
+		'actions'              => array(
+			'fix'       => 'rsssl_maybe_disable_xmlrpc',
+			'ignore'    => 'disable_checkbox',
+		),
 	),
 
     'user-registration' => array(
         'constant_or_function' => 'rsssl_user_registration',
         'label'                => 'User registration',
-        'folder'               => 'wordpress'
+        'folder'               => 'wordpress',
+        'impact'               => 'high',
+        'risk'                 => 'high',
+        'learning_mode'        => true,
+        'type'                 => 'checkbox',
+        'conditions'           => array(
+	        'rsssl_user_registration_allowed',
+        ),
+        'actions'              => array(
+	        'fix'       => 'rsssl_maybe_disable_user_registration',
+	        'ignore'    => 'disable_checkbox',
+        ),
     ),
 
-//	'advanced-nocaptcha-recaptcha' => array(
-//		'constant_or_function' => 'ANR_PLUGIN_VERSION',
-//		'label'                => 'Advanced noCaptcha & invisible Captcha',
-//		'firstparty_marketing' => false,
-//	),
+	'file-editing' => array(
+		'constant_or_function' => 'rsssl_file_editing_registration',
+		'label'                => 'File editing',
+		'folder'               => 'wordpress',
+		'impact'               => 'medium',
+		'risk'                 => 'low',
+		'learning_mode'        => false,
+		'type'                 => 'checkbox',
+		'conditions'           => array(
+			'rsssl_file_editing_allowed',
+		),
+		'actions'              => array(
+			'fix'       => 'rsssl_maybe_disable_file_editing',
+//			'ignore'    => 'disable_checkbox',
+		),
+	),
+
+	'hide-wp-version' => array(
+		'constant_or_function' => 'rsssl_hide_wp_version',
+		'label'                => 'Hide WP version',
+		'folder'               => 'wordpress',
+		'impact'               => 'low',
+		'risk'                 => 'low',
+		'learning_mode'        => false,
+		'type'                 => 'checkbox',
+		'conditions'           => array(
+			'rsssl_file_editing_allowed',
+		),
+		'actions'              => array(
+			'fix'       => 'rsssl_maybe_hide_wp_version',
+//			'ignore'    => 'disable_checkbox',
+		),
+	),
 
 ) );
 

@@ -7,13 +7,13 @@ if ( is_admin() ) {
 }
 
 if ( ! function_exists( 'user_registration_notice' ) ) {
-    function user_registration_notice() {
+    function user_registration_notice( $notices ) {
         $notices['registration'] = array(
             'callback' => 'rsssl_user_registration_notice',
-            'score' => 10,
+            'score' => 5,
             'output' => array(
                 'can-register' => array(
-                    'msg' => __("Anyone can register on your site. Consider disabling user registration in the Wordpress general settings..", "really-simple-ssl"),
+                    'msg' => __("Anyone can register on your site. Consider disabling the 'Anyone can register' option in the Wordpress general settings.", "really-simple-ssl"),
                     'icon' => 'warning',
                     'plusone' => true,
                 ),

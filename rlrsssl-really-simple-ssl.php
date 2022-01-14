@@ -143,7 +143,6 @@ class REALLY_SIMPLE_SSL
             require_once(rsssl_path . 'class-help.php');
 			require_once(rsssl_path . 'class-certificate.php');
 			require_once(rsssl_path . 'class-site-health.php');
-            require_once(rsssl_path . '/security/integrations.php');
         }
 
 		if ( is_admin() || wp_doing_cron() ) {
@@ -155,6 +154,9 @@ class REALLY_SIMPLE_SSL
 		if (version_compare(PHP_VERSION, rsssl_le_php_version, '>=')) {
 			require_once( rsssl_path . 'lets-encrypt/cron.php' );
 		}
+
+		require_once(rsssl_path . '/security/integrations.php');
+
 	}
 
 	private function hooks()
