@@ -6,7 +6,7 @@ Requires at least: 4.9
 License: GPL2
 Tested up to: 5.8
 Requires PHP: 5.6
-Stable tag: 5.2.2
+Stable tag: 5.3.0
 
 No setup required! You only need an SSL certificate, and this plugin will do the rest.
 
@@ -90,6 +90,9 @@ The plugin checks your certificate before enabling, but if, for example, you mig
 If you can't deactivate, do not just remove the plugin folder to uninstall! Follow these [instructions](https://really-simple-ssl.com/knowledge-base/uninstall-websitebackend-not-accessible/) instead.
 
 == Changelog ==
+= 5.3.0 =
+* Improvement: updated .htaccess redirect comment
+
 = 5.2.2 =
 * Improvement: change text about Google Analytics for a more broader application
 * Improvement: prevent duplicate notice
