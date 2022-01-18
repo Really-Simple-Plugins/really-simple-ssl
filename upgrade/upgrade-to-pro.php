@@ -359,8 +359,8 @@ if ( !class_exists('rsp_upgrade_to_pro') ){
                             <a href="<?php echo $plugins_url ?>" role="button" class="button-primary rsp-red rsp-hidden rsp-btn rsp-cancel">
 								<?php echo __("Cancel", "really-simple-ssl") ?>
                             </a>
-                            <div class="rsp-error-message rsp-folder rsp-package rsp-install rsp-activate rsp-hidden"><span><?php _e('An Error Occurred:',"really-simple-ssl")?></span>&nbsp;<?php printf(__('Install %sManually%s.',"really-simple-ssl").'&nbsp;', '<a target="_blank" href="https://complianz.io/how-to-install-complianz-gdpr-premium-plugin/">','</a>')?></div>
-                            <div class="rsp-error-message rsp-license rsp-hidden"><span><?php _e('An Error Occurred:',"really-simple-ssl")?></span>&nbsp;<?php printf(__('Check your %slicense%s.',"really-simple-ssl").'&nbsp;', '<a target="_blank" href="https://complianz.io/account/">','</a>')?></div>
+                            <div class="rsp-error-message rsp-folder rsp-package rsp-install rsp-activate rsp-hidden"><span><?php _e('An Error Occurred:',"really-simple-ssl")?></span>&nbsp;<?php printf(__('Install %sManually%s.',"really-simple-ssl").'&nbsp;', '<a target="_blank" href="https://really-simple-ssl.com/knowledge-base/install-really-simple-ssl-pro/">','</a>')?></div>
+                            <div class="rsp-error-message rsp-license rsp-hidden"><span><?php _e('An Error Occurred:',"really-simple-ssl")?></span>&nbsp;<?php printf(__('Check your %slicense%s.',"really-simple-ssl").'&nbsp;', '<a target="_blank" href="https://really-simple-ssl.com/account/">','</a>')?></div>
                         </div>
                     </div>
                 </div>
