@@ -1,5 +1,5 @@
 <?php
-defined( 'ABSPATH' ) or die( "you do not have acces to this page!" );
+defined( 'ABSPATH' ) or die( "you do not have access to this page!" );
 add_filter( 'rsssl_fields_load_types', 'rsssl_filter_integration_fields', 10, 1 );
 function rsssl_filter_integration_fields( $fields ) {
 	global $rsssl_integrations_list;

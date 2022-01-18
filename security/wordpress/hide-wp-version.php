@@ -14,7 +14,6 @@ if ( ! function_exists( 'hide_wp_version_notice' ) ) {
 			'output' => array(
 				'visible' => array(
 					'msg' => __("Your WordPress version is visible.", "really-simple-ssl"),
-//					'url' => 'https://wordpress.org/support/article/editing-wp-config-php/#disable-the-plugin-and-theme-editor',
 					'icon' => 'open',
 					'dismissible' => true,
 				),
@@ -102,10 +101,13 @@ if ( ! function_exists('rsssl_remove_wp_version_head' ) ) {
 // remove wp version number from scripts and styles
 if ( ! function_exists('rsssl_remove_css_js_version' ) ) {
 	function rsssl_remove_css_js_version( $src ) {
-		if ( strpos( $src, '?ver=' ) ) {
+		if ( strpos( $src, '?ver=' ) && strpos( $src, 'wp-includes') ) {
 			$src = remove_query_arg( 'ver', $src );
+			$src = add_query_arg('cache', hash('md5', get_bloginfo( 'version' ) ), $src );
 		}
 
 		return $src;
 	}
 }
+
+rsssl_maybe_remove_wp_version(  );

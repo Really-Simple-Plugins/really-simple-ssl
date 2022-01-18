@@ -1,10 +1,10 @@
 <?php
-defined( 'ABSPATH' ) or die( "you do not have acces to this page!" );
+defined( 'ABSPATH' ) or die( "you do not have access to this page!" );
 if ( is_admin() ) {
 //	require_once( 'integrations-menu.php' );
 }
-//require_once( trailingslashit(rsssl_path) . 'integrations/forms.php' );
-//require_once( trailingslashit(rsssl_path) . 'integrations/settings.php' );
+require_once( trailingslashit(rsssl_path) . 'security/learning-mode.php' );
+require_once( trailingslashit(rsssl_path) . 'security/check-requests.php' );
 //require_once( trailingslashit(rsssl_path) . 'integrations/functions.php' );
 
 
@@ -83,6 +83,23 @@ $rsssl_integrations_list = apply_filters( 'rsssl_integrations', array(
 		),
 		'actions'              => array(
 			'fix'       => 'rsssl_maybe_hide_wp_version',
+//			'ignore'    => 'disable_checkbox',
+		),
+	),
+
+	'user-enumeration' => array(
+		'constant_or_function' => 'rsssl_user_enumeration',
+		'label'                => 'User Enumeration',
+		'folder'               => 'wordpress',
+		'impact'               => 'low',
+		'risk'                 => 'low',
+		'learning_mode'        => true,
+		'type'                 => 'checkbox',
+		'conditions'           => array(
+//			'rsssl_file_editing_allowed',
+		),
+		'actions'              => array(
+//			'fix'       => 'rsssl_maybe_hide_wp_version',
 //			'ignore'    => 'disable_checkbox',
 		),
 	),

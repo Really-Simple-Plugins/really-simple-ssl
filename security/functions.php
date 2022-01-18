@@ -18,3 +18,12 @@ if ( ! function_exists('rsssl_delete_transients' ) ) {
         }
     }
 }
+
+/**
+ * Check if string contains numbers
+ */
+if ( ! function_exists('contains_numbers' ) ) {
+	function contains_numbers( $string ) {
+		return preg_match( '/\\d/', $string ) > 0;
+	}
+}

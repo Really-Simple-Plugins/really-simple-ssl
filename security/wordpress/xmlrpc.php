@@ -1,15 +1,6 @@
 <?php
 defined( 'ABSPATH' ) or die( "you do not have access to this page!" );
 
-// Hook into XML-RPC call
-if ( defined('XMLRPC_REQUEST') && XMLRPC_REQUEST ) {
-    error_log("Detected XMLRPC req");
-    add_action( 'xmlrpc_call', 'rsssl_handle_xmlrpc_request' );
-}
-
-add_action( 'xmlrpc_call', 'rsssl_handle_xmlrpc_request' );
-
-
 // Add notice in backend
 if ( is_admin() ) {
     add_filter('rsssl_notices', 'xmlrpc_notice', 50, 1);
@@ -18,7 +9,6 @@ if ( is_admin() ) {
 if ( ! function_exists( 'rsssl_handle_xmlrpc_request' ) ) {
     function rsssl_handle_xmlrpc_request( $method ) {
         error_log("xmlrpc handler" . $method);
-//        error_log(print_r($request, true));
         rsssl_log_xmlrpc_request( $method );
         rsssl_filter_xmlrpc_requests( $method );
     }
@@ -52,6 +42,8 @@ if ( ! function_exists('rsssl_xmlrpc_notice' ) ) {
         if ( rsssl_xmlrpc_allowed() ) {
             return 'xmlrpc-on';
         }
+
+		return false;
     }
 }
 
@@ -87,7 +79,7 @@ if ( ! function_exists('rsssl_xmlrpc_allowed' ) ) {
                 curl_setopt($ch, CURLOPT_POSTFIELDS, $xmlstring );
                 curl_setopt($ch, CURLOPT_TIMEOUT, 3); //timeout in seconds
 
-                $response = curl_exec($ch);
+	            curl_exec($ch);
 
                 $response_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 
