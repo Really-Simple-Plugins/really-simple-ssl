@@ -7,7 +7,6 @@ require_once( trailingslashit(rsssl_path) . 'security/learning-mode.php' );
 require_once( trailingslashit(rsssl_path) . 'security/check-requests.php' );
 //require_once( trailingslashit(rsssl_path) . 'integrations/functions.php' );
 
-
 function rsssl_enqueue_integrations_assets( $hook ) {
 //	wp_register_script( ' rsssl-pagify', trailingslashit( rsssl_url ) . 'assets/pagify/pagify.min.js', array( "jquery" ), rsssl_version );
 //	wp_enqueue_script( ' rsssl-pagify' );
@@ -103,6 +102,56 @@ $rsssl_integrations_list = apply_filters( 'rsssl_integrations', array(
 //			'ignore'    => 'disable_checkbox',
 		),
 	),
+
+    'block-code-execution-uploads' => array(
+        'constant_or_function' => 'rsssl_user_enumeration',
+        'label'                => 'Block code execution in uploads directory',
+        'folder'               => 'wordpress',
+        'impact'               => 'low',
+        'risk'                 => 'low',
+        'learning_mode'        => false,
+        'type'                 => 'checkbox',
+        'conditions'           => array(
+//			'rsssl_file_editing_allowed',
+        ),
+        'actions'              => array(
+//			'fix'       => 'rsssl_disable_code_execution_uploads',
+//			'ignore'    => 'disable_checkbox',
+        ),
+    ),
+    'prevent-login-info-leakage' => array(
+        'constant_or_function' => 'rsssl_user_enumeration',
+        'label'                => 'Prevent login error leakage',
+        'folder'               => 'wordpress',
+        'impact'               => 'low',
+        'risk'                 => 'low',
+        'learning_mode'        => false,
+        'type'                 => 'checkbox',
+        'conditions'           => array(
+//			'rsssl_file_editing_allowed',
+        ),
+        'actions'              => array(
+//			'fix'       => 'rsssl_maybe_hide_wp_version',
+//			'ignore'    => 'disable_checkbox',
+        ),
+    ),
+    'disable-http-methods' => array(
+        'constant_or_function' => 'rsssl_user_enumeration',
+        'label'                => 'Disable HTTP methods',
+        'folder'               => 'server',
+        'impact'               => 'low',
+        'risk'                 => 'low',
+        'learning_mode'        => false,
+        'type'                 => 'checkbox',
+        'conditions'           => array(
+//			'rsssl_file_editing_allowed',
+        ),
+        'actions'              => array(
+//			'fix'       => 'rsssl_maybe_hide_wp_version',
+//			'ignore'    => 'disable_checkbox',
+        ),
+    ),
+
 
 ) );
 
