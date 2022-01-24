@@ -7,7 +7,6 @@ if ( ! function_exists( 'rsssl_check_requests' ) ) {
 
 		//XML-RPC
 		if ( defined('XMLRPC_REQUEST') && XMLRPC_REQUEST ) {
-			error_log("Detected XMLRPC req");
 			add_action( 'xmlrpc_call', 'rsssl_handle_xmlrpc_request' );
 		}
 

@@ -6,7 +6,11 @@ if ( is_admin() ) {
     add_filter('rsssl_notices', 'code_execution_uploads', 50, 3);
 }
 
-//error_log(RSSSL()->rsssl_server->get_server());
+add_action('admin_init' , 'rsssl_get_server');
+
+function rsssl_get_server() {
+	$server = RSSSL()->rsssl_server->get_server();
+}
 
 if ( ! function_exists( 'code_execution_uploads' ) ) {
     function code_execution_uploads( $notices ) {
