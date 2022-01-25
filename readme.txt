@@ -4,7 +4,7 @@ Donate link: https://www.paypal.me/reallysimplessl
 Tags: SSL, https, force SSL, mixed content, insecure content, secure website, website security, TLS, security, secure socket layers, HSTS
 Requires at least: 4.9
 License: GPL2
-Tested up to: 5.8
+Tested up to: 5.9
 Requires PHP: 5.6
 Stable tag: 5.3.0
 
@@ -92,6 +92,9 @@ If you can't deactivate, do not just remove the plugin folder to uninstall! Foll
 == Changelog ==
 = 5.3.0 =
 * Improvement: updated .htaccess redirect comment
+
+= 5.2.3 =
+* Bumped tested up to 5.9
 
 = 5.2.2 =
 * Improvement: change text about Google Analytics for a more broader application
