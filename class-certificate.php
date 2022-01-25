@@ -38,12 +38,10 @@ if ( ! class_exists( 'rsssl_certificate' ) ) {
             $domain = site_url();
             //Parse to strip off any /subfolder/
             $parse = parse_url($domain);
-            $domain = $parse['host'];
-
-            if ( !function_exists('stream_context_get_params') ) {
+            if ( !isset($parse['host']) || !function_exists('stream_context_get_params') ) {
 				set_transient('rsssl_certinfo', 'no-response', DAY_IN_SECONDS);
             } else {
-                //get certificate info
+	            $domain = $parse['host'];
                 $certinfo = $this->get_certinfo($domain);
 
                 if ( !$certinfo ) {
@@ -85,8 +83,8 @@ if ( ! class_exists( 'rsssl_certificate' ) ) {
         {
 	        //first check standard situation
 	        //Get both the common name(s) and the alternative names from the certificate
-	        $certificate_common_names = isset($certinfo['subject']['CN']) ? $certinfo['subject']['CN'] : false;
-	        $certificate_alternative_names = isset($certinfo['extensions']['subjectAltName']) ? $certinfo['extensions']['subjectAltName'] : false;
+	        $certificate_common_names = isset($certinfo['subject']['CN']) ? $certinfo['subject']['CN'] : '';
+	        $certificate_alternative_names = isset($certinfo['extensions']['subjectAltName']) ? $certinfo['extensions']['subjectAltName'] : '';
 	        //Check if the domain is found in either the certificate common name(s) (CN) or alternative name(s) (AN)
 	        $pos_cn = strpos($certificate_common_names, $domain);
 	        $pos_an = strpos($certificate_alternative_names, $domain);
@@ -100,7 +98,7 @@ if ( ! class_exists( 'rsssl_certificate' ) ) {
 	        //strip of asterisk, and check if the wildcard domain is part of current domain
 	        $cert_domains = array();
 	        if ( $this->is_wildcard() ) {
-		        $certificate_alternative_names = isset($certinfo['extensions']['subjectAltName']) ? explode(', ',$certinfo['extensions']['subjectAltName']) : false;
+		        $certificate_alternative_names = explode(', ',$certificate_alternative_names);
 		        $cert_domains[] = trim(str_replace('*', '', $certificate_common_names));
 		        foreach ($certificate_alternative_names as $subjectAltName) {
 			        $cert_domains[] = trim(str_replace('*', '', $subjectAltName));
