@@ -93,6 +93,7 @@ If you can't deactivate, do not just remove the plugin folder to uninstall! Foll
 = 5.3.0 =
 * Improvement: updated .htaccess redirect comment
 * New: add installation helper
+* Improvement: is_writable check in Let's Encrypt
 
 = 5.2.3 =
 * Bumped tested up to 5.9
