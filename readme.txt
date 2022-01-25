@@ -94,6 +94,7 @@ If you can't deactivate, do not just remove the plugin folder to uninstall! Foll
 * Improvement: updated .htaccess redirect comment
 * New: add installation helper
 * Improvement: is_writable check in Let's Encrypt
+* Improvement: Catch not set subject alternative and common names in cert
 
 = 5.2.3 =
 * Bumped tested up to 5.9
