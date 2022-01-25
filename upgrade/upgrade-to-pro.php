@@ -43,7 +43,7 @@ if ( !class_exists('rsp_upgrade_to_pro') ){
 						$this->plugin_name = "Really Simple SSL Pro";
 						$this->plugin_constant = "rsssl_pro";
 						$this->prefix = "rsssl_";
-						$this->api_url = "https://really-simple-plugins.com";
+						$this->api_url = "https://really-simple-ssl.com";
 						$this->dashboard_url = add_query_arg(["page" => "rlrsssl_really_simple_ssl"], admin_url( "admin.php/options-general.php" ));
 						break;
 					case "brst_pro":
