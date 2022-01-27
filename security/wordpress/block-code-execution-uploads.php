@@ -6,12 +6,6 @@ if ( is_admin() ) {
     add_filter('rsssl_notices', 'code_execution_uploads', 50, 3);
 }
 
-add_action('admin_init' , 'rsssl_get_server');
-
-function rsssl_get_server() {
-	$server = RSSSL()->rsssl_server->get_server();
-}
-
 if ( ! function_exists( 'code_execution_uploads' ) ) {
     function code_execution_uploads( $notices ) {
         $notices['code-execution-uploads'] = array(
@@ -100,7 +94,8 @@ if ( ! function_exists('rsssl_disable_code_execution_uploads' ) ) {
 
         $upload_dir = wp_get_upload_dir();
 
-//        if (RSSSL()->rsssl_server->get_server() === 'apache') {
+//        error_log($server);
+//        if ( $server === 'apache') {
 
             if (!is_writable($upload_dir['basedir'])) return;
 

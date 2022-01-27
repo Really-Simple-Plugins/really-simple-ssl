@@ -27,3 +27,19 @@ if ( ! function_exists('contains_numbers' ) ) {
 		return preg_match( '/\\d/', $string ) > 0;
 	}
 }
+if ( ! function_exists('find_wp_config_path' ) ) {
+    function find_wp_config_path()
+    {
+        //limit nr of iterations to 20
+        $i = 0;
+        $maxiterations = 20;
+        $dir = dirname(__FILE__);
+        do {
+            $i++;
+            if (file_exists($dir . "/wp-config.php")) {
+                return $dir . "/wp-config.php";
+            }
+        } while (($dir = realpath("$dir/..")) && ($i < $maxiterations));
+        return null;
+    }
+}

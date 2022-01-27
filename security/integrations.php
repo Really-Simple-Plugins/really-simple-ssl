@@ -3,9 +3,9 @@ defined( 'ABSPATH' ) or die( "you do not have access to this page!" );
 if ( is_admin() ) {
 //	require_once( 'integrations-menu.php' );
 }
+require_once( trailingslashit(rsssl_path) . 'security/functions.php' );
 require_once( trailingslashit(rsssl_path) . 'security/learning-mode.php' );
 require_once( trailingslashit(rsssl_path) . 'security/check-requests.php' );
-//require_once( trailingslashit(rsssl_path) . 'integrations/functions.php' );
 
 function rsssl_enqueue_integrations_assets( $hook ) {
 //	wp_register_script( ' rsssl-pagify', trailingslashit( rsssl_url ) . 'assets/pagify/pagify.min.js', array( "jquery" ), rsssl_version );
@@ -78,7 +78,7 @@ $rsssl_integrations_list = apply_filters( 'rsssl_integrations', array(
 		'learning_mode'        => false,
 		'type'                 => 'checkbox',
 		'conditions'           => array(
-			'rsssl_file_editing_allowed',
+//			'rsssl_file_editing_allowed',
 		),
 		'actions'              => array(
 			'fix'       => 'rsssl_maybe_hide_wp_version',
@@ -120,7 +120,7 @@ $rsssl_integrations_list = apply_filters( 'rsssl_integrations', array(
         ),
     ),
     'prevent-login-info-leakage' => array(
-        'constant_or_function' => 'rsssl_user_enumeration',
+        'constant_or_function' => 'rsssl_prevent_info_login_leake',
         'label'                => 'Prevent login error leakage',
         'folder'               => 'wordpress',
         'impact'               => 'low',
@@ -135,9 +135,43 @@ $rsssl_integrations_list = apply_filters( 'rsssl_integrations', array(
 //			'ignore'    => 'disable_checkbox',
         ),
     ),
-    'disable-http-methods' => array(
-        'constant_or_function' => 'rsssl_user_enumeration',
-        'label'                => 'Disable HTTP methods',
+//    'disable-http-methods' => array(
+//        'constant_or_function' => 'rsssl_http_methods',
+//        'label'                => 'Disable HTTP methods',
+//        'folder'               => 'server',
+//        'impact'               => 'low',
+//        'risk'                 => 'low',
+//        'learning_mode'        => false,
+//        'type'                 => 'checkbox',
+//        'conditions'           => array(
+////			'rsssl_file_editing_allowed',
+//        ),
+//        'actions'              => array(
+////			'fix'       => 'rsssl_maybe_hide_wp_version',
+////			'ignore'    => 'disable_checkbox',
+//        ),
+//    ),
+
+    'debug-log' => array(
+        'constant_or_function' => 'rsssl_debug_log',
+        'label'                => 'Move debug.log',
+        'folder'               => 'wordpress',
+        'impact'               => 'low',
+        'risk'                 => 'low',
+        'learning_mode'        => false,
+        'type'                 => 'checkbox',
+        'conditions'           => array(
+//			'rsssl_file_editing_allowed',
+        ),
+        'actions'              => array(
+//			'fix'       => 'rsssl_change_debug_log_location',
+//			'ignore'    => 'disable_checkbox',
+        ),
+    ),
+
+    'disable-indexing' => array(
+        'constant_or_function' => 'rsssl_disable_indexing',
+        'label'                => 'Disable directory indexing',
         'folder'               => 'server',
         'impact'               => 'low',
         'risk'                 => 'low',
@@ -147,11 +181,10 @@ $rsssl_integrations_list = apply_filters( 'rsssl_integrations', array(
 //			'rsssl_file_editing_allowed',
         ),
         'actions'              => array(
-//			'fix'       => 'rsssl_maybe_hide_wp_version',
+//			'fix'       => 'rsssl_change_debug_log_location',
 //			'ignore'    => 'disable_checkbox',
         ),
     ),
-
 
 ) );
 
