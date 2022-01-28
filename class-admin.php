@@ -1089,11 +1089,15 @@ class rsssl_admin extends rsssl_front_end
      *
      */
 
-    public function trace_log($msg)
+    public function trace_log( $msg )
     {
 	    if (defined('RSSSL_DOING_SYSTEM_STATUS') || (defined('WP_DEBUG') && WP_DEBUG ) )
 
-        if (strpos($this->debug_log, $msg)) return;
+        if ( $this->debug_log !== null ) {
+	        if ( strpos( $this->debug_log, $msg ) ) {
+		        return;
+	        }
+        }
         $this->debug_log = $this->debug_log . "\n" . $msg;
     }
 

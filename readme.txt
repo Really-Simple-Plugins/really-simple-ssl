@@ -91,6 +91,7 @@ If you can't deactivate, do not just remove the plugin folder to uninstall! Foll
 
 == Changelog ==
 = 5.3.0 =
+* Improvement: added PHP 8.1 compatibility
 * Improvement: updated .htaccess redirect comment
 * New: add installation helper
 * Improvement: is_writable check in Let's Encrypt
