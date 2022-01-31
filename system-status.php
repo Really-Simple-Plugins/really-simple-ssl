@@ -88,11 +88,20 @@ if ( current_user_can( 'manage_options' ) ) {
 	do_action( "rsssl_system_status" );
 
 	echo "<br>" . "<b>" . "SSL Configuration" . "</b>";
+	$domain = RSSSL()->rsssl_certificate->get_domain();
 	$certinfo = RSSSL()->rsssl_certificate->get_certinfo($domain);
-
 	if ( !$certinfo ) {
-		RSSSL()->really_simple_ssl->trace_log("- SSL certificate not valid");
-		return false;
+		echo "SSL certificate not valid<br>";
+	}
+
+	$domain_valid = RSSSL()->rsssl_certificate->is_domain_valid($certinfo, $domain);
+	if ( !$domain_valid ) {
+		echo "Domain on certificate does not match website's domain<br>";
+	}
+
+	$date_valid = RSSSL()->rsssl_certificate->is_date_valid($certinfo);
+	if ( !$date_valid ) {
+		echo "Date on certificate expired or not valid<br>";
 	}
 	$filecontents = get_transient('rsssl_testpage');
 	if ( strpos($filecontents, "#SSL TEST PAGE#") !== false ) {
@@ -154,8 +163,6 @@ if ( current_user_can( 'manage_options' ) ) {
 	if ( !RSSSL()->really_simple_ssl->htaccess_contains_redirect_rules() ) {
 		echo ".htaccess does not contain default Really Simple SSL redirect.<br>";
 	}
-
-
 
 
 	echo "\nConstants\n";
