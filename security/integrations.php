@@ -147,7 +147,7 @@ $rsssl_integrations_list = apply_filters( 'rsssl_integrations', array(
 ////			'rsssl_file_editing_allowed',
 //        ),
 //        'actions'              => array(
-////			'fix'       => 'rsssl_maybe_hide_wp_version',
+////			'fix'       => 'rsssl_disable_http_methods',
 ////			'ignore'    => 'disable_checkbox',
 //        ),
 //    ),
@@ -283,7 +283,7 @@ function rsssl_integrations() {
 	foreach ( $rsssl_integrations_list as $plugin => $details ) {
 		if ( rsssl_integration_plugin_is_active( $plugin ) ) {
 			$actual_integrations_count++;
-			$file = apply_filters( 'rsssl_integration_path', rsssl_path . "integrations/plugins/$plugin.php", $plugin );
+			$file = apply_filters( 'rsssl_integration_path', rsssl_path . "security/" . $details['folder']. '/' . $plugin.".php", $plugin );
 			if ( file_exists( $file ) ) {
 				require_once( $file );
 			} else {

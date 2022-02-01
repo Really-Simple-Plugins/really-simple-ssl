@@ -1,22 +1,37 @@
 <?php
 defined( 'ABSPATH' ) or die( "you do not have access to this page!" );
 
-add_action('rsssl_get_server' , 'rsssl_get_server');
-
-function rsssl_get_server() {
-    $server = RSSSL()->rsssl_server->get_server();
-}
-
 if ( !function_exists( 'rsssl_disable_indexing' ) ) {
     function rsssl_disable_indexing() {
 
-        error_log(do_action('rsssl_get_server'));
+	    if ( rsssl_get_server() == 'apache' ) {
+		    // Get .htaccess
+		    $htaccess_file = rsssl_htaccess_file();
+		    if ( file_exists( $htaccess_file ) && is_writable( $htaccess_file ) ) {
+			     $htaccess = file_get_contents($htaccess_file);
+				if ( stripos($htaccess, 'options -indexes') !== false ) {
+					return;
+				} else {
+					// insert into .htaccess
+					$rules = "\n" . "Options -Indexes" . "\n";
+					$htaccess = $htaccess . $rules;
+					file_put_contents($htaccess_file, $htaccess);
+				}
+		    }
+	    }
 
-        // Get .htaccess
+	    if ( rsssl_get_server() == 'nginx' ) {
 
-        // Contains options - indexes
+//			wrap_headers('nginx') {
+//
+//			}
+//		    server {
+//			    location /{anydir} {
+//				    autoindex off;
+			//  }
+			//}
 
-        // Add Options -Indexes
+	    }
     }
 }
 

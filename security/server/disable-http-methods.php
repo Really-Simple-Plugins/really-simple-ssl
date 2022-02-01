@@ -72,9 +72,16 @@ if ( ! function_exists('rsssl_disable_http_methods' ) ) {
     function rsssl_disable_http_methods()
     {
 
-        // Fix
-//RewriteCond %{REQUEST_METHOD} ^(TRACE|STACK)
-//	RewriteRule .* - [F]
+	    if ( rsssl_get_server() == 'apache' ) {
+			//RewriteCond %{REQUEST_METHOD} ^(TRACE|STACK)
+			//	RewriteRule .* - [F]
+		}
+
+	    if ( rsssl_get_server() == 'nginx' ) {
+			//	    add_header Allow "GET, POST, HEAD" always;
+			//if ( $request_method !~ ^(GET|POST|HEAD)$ ) {
+			//	    return 405;
+	    }
 
     }
 }

@@ -94,8 +94,7 @@ if ( ! function_exists('rsssl_disable_code_execution_uploads' ) ) {
 
         $upload_dir = wp_get_upload_dir();
 
-//        error_log($server);
-//        if ( $server === 'apache') {
+        if ( rsssl_get_server() === 'apache') {
 
             if (!is_writable($upload_dir['basedir'])) return;
 
@@ -115,12 +114,12 @@ if ( ! function_exists('rsssl_disable_code_execution_uploads' ) ) {
                 }
 
             }
-//        }
-//        if ( RSSSL()->rsssl_server->get_server() === 'nginx' ) {
+        }
+	    if ( rsssl_get_server() === 'nginx') {
             //location ~* /your_directory/.*\.php$ {
             //return 503;
             //}
-//        }
+        }
     }
 }
 
