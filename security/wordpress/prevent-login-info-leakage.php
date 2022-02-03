@@ -8,9 +8,7 @@ if ( is_admin() ) {
 
 add_filter( 'login_errors', 'rsssl_no_wp_login_errors' );
 
-if ( ! function_exists('rsssl_no_wp_login_errors') ) {
-    function rsssl_no_wp_login_errors()
-    {
-        return __("Could not log you in! Make sure your username and password are correct.", "really-simple-ssl");
-    }
+function rsssl_no_wp_login_errors()
+{
+    return __("Could not log you in! Make sure your username and password are correct.", "really-simple-ssl");
 }

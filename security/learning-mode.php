@@ -5,52 +5,59 @@
 
 add_action('admin_init', 'rsssl_add_learning_mode_table');
 
-if ( ! function_exists( 'rsssl_add_learning_mode_table' ) ) {
-	function rsssl_add_learning_mode_table() {
+/**
+ * @return void
+ * Add the learning mode table
+ */
+function rsssl_add_learning_mode_table() {
 
-		if ( ! current_user_can( 'manage_options' ) ) {
-			return;
-		}
-
-		$prev_db_version = get_option( 'rsssl_learning_mode_db_version', false );
-		if ( rsssl_version === $prev_db_version ) {
-			return;
-		}
-
-		require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
-
-		global $wpdb;
-		$table_name      = $wpdb->base_prefix . "rsssl_learning_mode";
-		$charset_collate = $wpdb->get_charset_collate();
-
-		$sql = "CREATE TABLE $table_name (
-			id mediumint(9) NOT NULL AUTO_INCREMENT,
-			time datetime DEFAULT '0000-00-00 00:00:00' NOT NULL,
-			type text NOT NULL,
-			action text  NOT NULL,
-			referrer text  NOT NULL,
-			user_id int(10)  NOT NULL,
-			PRIMARY KEY  (id)
-			) $charset_collate";
-
-		dbDelta( $sql );
-
-		update_option( 'rsssl_learning_mode_db_version', rsssl_version );
+	if ( ! current_user_can( 'manage_options' ) ) {
+		return;
 	}
+
+	$prev_db_version = get_option( 'rsssl_learning_mode_db_version', false );
+	if ( rsssl_version === $prev_db_version ) {
+		return;
+	}
+
+	require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
+
+	global $wpdb;
+	$table_name      = $wpdb->base_prefix . "rsssl_learning_mode";
+	$charset_collate = $wpdb->get_charset_collate();
+
+	$sql = "CREATE TABLE $table_name (
+		id mediumint(9) NOT NULL AUTO_INCREMENT,
+		time datetime DEFAULT '0000-00-00 00:00:00' NOT NULL,
+		type text NOT NULL,
+		action text  NOT NULL,
+		referrer text  NOT NULL,
+		user_id int(10)  NOT NULL,
+		PRIMARY KEY  (id)
+		) $charset_collate";
+
+	dbDelta( $sql );
+
+	update_option( 'rsssl_learning_mode_db_version', rsssl_version );
 }
 
-if ( ! function_exists( 'rsssl_log_to_learning_mode_table' ) ) {
-	function rsssl_log_to_learning_mode_table( $data ) {
+/**
+ * @param $data
+ *
+ * @return void
+ *
+ * Log requests to learning mode table
+ */
+function rsssl_log_to_learning_mode_table( $data ) {
 
-		global $wpdb;
-		$table_name = $wpdb->base_prefix . "rsssl_learning_mode";
+	global $wpdb;
+	$table_name = $wpdb->base_prefix . "rsssl_learning_mode";
 
-		$wpdb->insert( $table_name, array(
-			'time'              => current_time( 'mysql' ),
-			'type'              => $data['type'],
-			'action'            => $data['action'],
-			'referrer'          => $data['referrer'],
-			'user_id'           => $data['user_id'],
-		) );
-	}
+	$wpdb->insert( $table_name, array(
+		'time'              => current_time( 'mysql' ),
+		'type'              => $data['type'],
+		'action'            => $data['action'],
+		'referrer'          => $data['referrer'],
+		'user_id'           => $data['user_id'],
+	) );
 }

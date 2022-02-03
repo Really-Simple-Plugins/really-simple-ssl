@@ -135,22 +135,22 @@ $rsssl_integrations_list = apply_filters( 'rsssl_integrations', array(
 //			'ignore'    => 'disable_checkbox',
         ),
     ),
-//    'disable-http-methods' => array(
-//        'constant_or_function' => 'rsssl_http_methods',
-//        'label'                => 'Disable HTTP methods',
-//        'folder'               => 'server',
-//        'impact'               => 'low',
-//        'risk'                 => 'low',
-//        'learning_mode'        => false,
-//        'type'                 => 'checkbox',
-//        'conditions'           => array(
-////			'rsssl_file_editing_allowed',
-//        ),
-//        'actions'              => array(
-////			'fix'       => 'rsssl_disable_http_methods',
-////			'ignore'    => 'disable_checkbox',
-//        ),
-//    ),
+    'disable-http-methods' => array(
+        'constant_or_function' => 'rsssl_http_methods',
+        'label'                => 'Disable HTTP methods',
+        'folder'               => 'server',
+        'impact'               => 'low',
+        'risk'                 => 'low',
+        'learning_mode'        => false,
+        'type'                 => 'checkbox',
+        'conditions'           => array(
+//			'rsssl_file_editing_allowed',
+        ),
+        'actions'              => array(
+//			'fix'       => 'rsssl_disable_http_methods',
+//			'ignore'    => 'disable_checkbox',
+        ),
+    ),
 
     'debug-log' => array(
         'constant_or_function' => 'rsssl_debug_log',
