@@ -31,7 +31,7 @@ function rsssl_add_learning_mode_table() {
 		time datetime DEFAULT '0000-00-00 00:00:00' NOT NULL,
 		type text NOT NULL,
 		action text  NOT NULL,
-		referrer text  NOT NULL,
+		referer text  NOT NULL,
 		user_id int(10)  NOT NULL,
 		PRIMARY KEY  (id)
 		) $charset_collate";
@@ -57,7 +57,7 @@ function rsssl_log_to_learning_mode_table( $data ) {
 		'time'              => current_time( 'mysql' ),
 		'type'              => $data['type'],
 		'action'            => $data['action'],
-		'referrer'          => $data['referrer'],
+		'referer'           => $data['referer'],
 		'user_id'           => $data['user_id'],
 	) );
 }

@@ -21,10 +21,57 @@ function contains_debug_log_declaration() {
     $wpconfig_path = RSSSL()->really_simple_ssl->find_wp_config_path();
     $wpconfig = file_get_contents($wpconfig_path);
 
-    if ( strpos($wpconfig, "'WP_DEBUG_LOG'," ) !== FALSE) {
+	// Get WP_DEBUG_LOG declaration
+	$regex = "/(define)(.*WP_DEBUG_LOG.*)(?=;)/m";
+	preg_match($regex, $wpconfig, $matches);
+
+	// If str contains true, location is default
+    if ( strpos($matches[0], 'true' ) !== FALSE ) {
+		error_log("Default found!");
         return 'default';
     }
 
+	return false;
+}
+
+/**
+ * @return void
+ * Disable WP_DEBUG_LOG
+ */
+function disable_debug_log() {
+	$wpconfig_path = RSSSL()->really_simple_ssl->find_wp_config_path();
+	$wpconfig = file_get_contents($wpconfig_path);
+
+	// Get WP_DEBUG_LOG declaration
+	$regex = "/(define)(.*WP_DEBUG_LOG.*)(?=;)/m";
+	preg_match($regex, $wpconfig, $matches);
+
+	// If str contains true, location is default
+	if ( strpos($matches[0], 'true' ) !== FALSE ) {
+		if ( ( strlen( $wpconfig ) !=0 ) && is_writable( $wpconfig_path ) ) {
+			$new      = str_replace( 'true', 'false', $matches[0] );
+			$wpconfig = str_replace( $matches[0], $new, $wpconfig );
+			file_put_contents( $wpconfig_path, $wpconfig );
+		}
+	}
+}
+
+function enable_debug_log() {
+	$wpconfig_path = RSSSL()->really_simple_ssl->find_wp_config_path();
+	$wpconfig = file_get_contents($wpconfig_path);
+
+	// Get WP_DEBUG_LOG declaration
+	$regex = "/(define)(.*WP_DEBUG_LOG.*)(?=;)/m";
+	preg_match($regex, $wpconfig, $matches);
+
+	// If str contains true, location is default
+	if ( strpos($matches[0], 'false' ) !== FALSE ) {
+		if ( ( strlen( $wpconfig ) !=0 ) && is_writable( $wpconfig_path ) ) {
+			$new      = str_replace( 'false', 'true', $matches[0] );
+			$wpconfig = str_replace( $matches[0], $new, $wpconfig );
+			file_put_contents( $wpconfig_path, $wpconfig );
+		}
+	}
 }
 
 function rsssl_change_debug_log_location() {
@@ -32,16 +79,14 @@ function rsssl_change_debug_log_location() {
     $wpconfig_path = RSSSL()->really_simple_ssl->find_wp_config_path();
     $wpconfig = file_get_contents($wpconfig_path);
 
-    if ((strlen($wpconfig)!=0) && is_writable($wpconfig_path)) {
+	$regex = "/(define)(.*WP_DEBUG_LOG.*)(?=;)/m";
+	preg_match($regex, $wpconfig, $matches);
 
-        $old ="'WP_DEBUG_LOG', true";
-        $new = "'WP_DEBUG_LOG', 'wp-content/uploads/debug.log'";
+    if ( ( strlen( $wpconfig ) !=0 ) && is_writable( $wpconfig_path ) ) {
 
-        //now replace these urls
-        $wpconfig = str_replace($old, $new, $wpconfig);
-
-        file_put_contents($wpconfig_path, $wpconfig);
-    }
-
+	    $new = "define( 'WP_DEBUG_LOG', 'wp-content/uploads/debug.log' )";
+	    $wpconfig = str_replace( $matches[0], $new, $wpconfig );
+	    file_put_contents( $wpconfig_path, $wpconfig );
+	}
 }
 

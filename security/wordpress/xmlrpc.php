@@ -6,10 +6,10 @@ if ( is_admin() ) {
     add_filter('rsssl_notices', 'xmlrpc_notice', 50, 1);
 }
 
-function rsssl_handle_xmlrpc_request( $method ) {
-    error_log("xmlrpc handler" . $method);
-    rsssl_log_xmlrpc_request( $method );
-    rsssl_filter_xmlrpc_requests( $method );
+function rsssl_handle_xmlrpc_request() {
+	error_log("Handling XMLRPC request");
+    rsssl_filter_xmlrpc_requests();
+	rsssl_log_xmlrpc_request();
 }
 
 function xmlrpc_notice( $notices ) {
@@ -41,6 +41,8 @@ function rsssl_xmlrpc_notice()
 	return false;
 }
 
+add_action('init', 'rsssl_xmlrpc_allowed');
+
 /**
  * Check if XML-RPC requests are allowed on this site
  * POST a request, if the request returns a 200 response code the request is allowed
@@ -48,7 +50,9 @@ function rsssl_xmlrpc_notice()
 function rsssl_xmlrpc_allowed()
 {
 
-    if ( ! get_transient( 'rsssl_xmlrpc_allowed' ) ) {
+	error_log("test xmlrpc req");
+
+//    if ( ! get_transient( 'rsssl_xmlrpc_allowed' ) ) {
 
         if ( function_exists( 'curl_init' ) ) {
             $url = site_url() . '/xmlrpc.php';
@@ -86,9 +90,9 @@ function rsssl_xmlrpc_allowed()
 
         }
 
-    } else {
-        return get_transient( 'rsssl_xmlrpc_allowed' );
-    }
+//    } else {
+//        return get_transient( 'rsssl_xmlrpc_allowed' );
+//    }
 
     return false;
 
@@ -98,7 +102,7 @@ function rsssl_xmlrpc_allowed()
  * @return void
  * Filter XMLRPC requests based on whitelist/blacklist
  */
-function rsssl_filter_xmlrpc_requests( $method )
+function rsssl_filter_xmlrpc_requests()
 {
     // if in_array($ip, $whitelist) {
      // allow
@@ -116,12 +120,19 @@ function rsssl_filter_xmlrpc_requests( $method )
 
 /**
  * @param $method
- * @return void
+ * @return array
  * Log XMLRPC requests
  */
-function rsssl_log_xmlrpc_request( $method )
+function rsssl_log_xmlrpc_request()
 {
+	$data = array(
+		'type' => 'xmlrpc',
+		'action' => 'xmlrpc_request',
+		'referrer' => wp_get_referer(),
+		'user_id' => get_current_user_id(),
+	);
 
+	rsssl_log_to_learning_mode_table( $data );
 }
 
 /**

@@ -186,6 +186,22 @@ $rsssl_integrations_list = apply_filters( 'rsssl_integrations', array(
         ),
     ),
 
+	'application-passwords' => array(
+		'constant_or_function' => 'rsssl_application_passwords',
+		'label'                => 'Disable Application passwords',
+		'folder'               => 'wordpress',
+		'impact'               => 'low',
+		'risk'                 => 'low',
+		'learning_mode'        => false,
+		'type'                 => 'checkbox',
+		'conditions'           => array(
+			'rsssl_wordpress_version_above_5_6',
+		),
+		'actions'              => array(
+//			'fix'       => 'rsssl_disable_application_passwords',
+//			'ignore'    => 'disable_checkbox',
+		),
+	),
 ) );
 
 
@@ -202,7 +218,6 @@ foreach ( $rsssl_integrations_list as $plugin => $details ) {
 //    if ( ! isset( $details['early_load'] ) ) {
 //		continue;
 //	}
-
 
 	if ( ! file_exists( rsssl_path . 'security/' . $details['folder'] . "/" . $plugin . '.php' )
 	) {
