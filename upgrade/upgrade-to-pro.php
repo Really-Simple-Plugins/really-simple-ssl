@@ -129,15 +129,15 @@ if ( !class_exists('rsp_upgrade_to_pro') ){
 			$dir_url = plugin_dir_url(__FILE__).'img/';
 
 			$suggestion = $fallback_suggestion = [
-				'icon_url' => $dir_url.'definitions.png',
-				'constant' => 'RSPDEF_VERSION',
-				'title' => 'Definitions – Internal Linkbuilding',
-				'description_short' => __('Simple internal link building for SEO', "really-simple-ssl"),
+				'icon_url' => $dir_url.'burst.png',
+				'constant' => 'burst_version',
+				'title' => 'Burst – Privacy Friendly Statistics',
+				'description_short' => __('Self-hosted and privacy-friendly analytics tool.', "really-simple-ssl"),
 				'disabled' => '',
 				'button_text' => __("Install", "really-simple-ssl"),
-				'slug' => 'definitions-internal-linkbuilding',
-				'description' => __('A lightweight SEO tool we use for internal linkbuilding in our knowledge base, but can be adapted to your needs.', "really-simple-ssl"),
-				'install_url' => 'complianz+gdpr+POPIA&tab=search&type=term',
+				'slug' => 'burst-statistics',
+				'description' => __("Get detailed insights into visitors' behaviour with Burst Statistics, the privacy-friendly analytics dashboard from Really Simple Plugins.", "really-simple-ssl"),
+				'install_url' => 'burst%20statistics%20hesseldejong%20%20burst-statistics.com&tab=search&type=term',
 			];
 
 			if ( $plugin_to_be_installed === 'really-simple-ssl' ){
