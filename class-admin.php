@@ -1071,45 +1071,45 @@ class rsssl_admin extends rsssl_front_end
 
     public function configure_ssl()
     {
-        if (!current_user_can($this->capability)) return;
-        $safe_mode = FALSE;
-        if (defined('RSSSL_SAFE_MODE') && RSSSL_SAFE_MODE) $safe_mode = RSSSL_SAFE_MODE;
+        if ( !current_user_can($this->capability) ) {
+            return;
+        }
 
-        if (!current_user_can($this->capability)) return;
-        if ($this->site_has_ssl) {
+	    $safe_mode = defined('RSSSL_SAFE_MODE') && RSSSL_SAFE_MODE;
+
+        if ( $this->site_has_ssl ) {
             //when one of the used server variables was found, test if the redirect works
             if (RSSSL()->rsssl_server->uses_htaccess() && $this->ssl_type != "NA") {
                 $this->test_htaccess_redirect();
             }
 
             //in a configuration reverse proxy without a set server variable https, add code to wpconfig
-            if ($this->do_wpconfig_loadbalancer_fix) {
+            if ( $this->do_wpconfig_loadbalancer_fix ) {
                 $this->wpconfig_loadbalancer_fix();
             }
 
-            if ($this->no_server_variable)
+            if ( $this->no_server_variable )
                 $this->wpconfig_server_variable_fix();
 
-            if (!$safe_mode) {
+            if ( !$safe_mode ) {
                 $this->editHtaccess();
             }
 
-            if (!$safe_mode && $this->clicked_activate_ssl()) {
+            if ( !$safe_mode && $this->clicked_activate_ssl() ) {
                 $this->wp_redirect = TRUE;
                 $this->save_options();
             }
 
-            if (!$safe_mode && $this->wpconfig_siteurl_not_fixed)
+            if ( !$safe_mode && $this->wpconfig_siteurl_not_fixed )
                 $this->fix_siteurl_defines_in_wpconfig();
 
-            if (!$safe_mode) {
+            if ( !$safe_mode ) {
                 $this->set_siteurl_to_ssl();
             }
 
-	        if (!is_multisite()) {
+	        if ( !is_multisite() ) {
 		        $this->redirect_to_settings_page();
 	        }
-
         }
     }
 
@@ -1125,7 +1125,9 @@ class rsssl_admin extends rsssl_front_end
 
     public function is_settings_page()
     {
-        if (!isset($_SERVER['QUERY_STRING'])) return false;
+        if (!isset($_SERVER['QUERY_STRING'])) {
+            return false;
+        }
 
         parse_str($_SERVER['QUERY_STRING'], $params);
         if (array_key_exists("page", $params) && ($params["page"] == "rlrsssl_really_simple_ssl")) {
@@ -1140,6 +1142,7 @@ class rsssl_admin extends rsssl_front_end
      * @since  2.1
      *
      * @access public
+     * @return string|null
      *
      */
 
@@ -1165,19 +1168,22 @@ class rsssl_admin extends rsssl_front_end
      *
      * @access public
      *
+     * @return void
      */
 
     public function remove_ssl_from_siteurl_in_wpconfig()
     {
+	    if ( !current_user_can($this->capability) ) {
+		    return;
+	    }
         $wpconfig_path = $this->find_wp_config_path();
         if (!empty($wpconfig_path)) {
             $wpconfig = file_get_contents($wpconfig_path);
-
             $homeurl_pos = strpos($wpconfig, "define('WP_HOME','https://");
             $siteurl_pos = strpos($wpconfig, "define('WP_SITEURL','https://");
 
-            if (($homeurl_pos !== false) || ($siteurl_pos !== false)) {
-                if (is_writable($wpconfig_path)) {
+            if ( ($homeurl_pos !== false) || ($siteurl_pos !== false) ) {
+                if ( is_writable($wpconfig_path) ) {
                     $search_array = array("define('WP_HOME','https://", "define('WP_SITEURL','https://");
                     $ssl_array = array("define('WP_HOME','http://", "define('WP_SITEURL','http://");
                     //now replace these urls
@@ -1185,24 +1191,25 @@ class rsssl_admin extends rsssl_front_end
                     file_put_contents($wpconfig_path, $wpconfig);
                 }
             }
-
         }
     }
 
 
-    /**
+	/**
+     * Checks if the wp config contains any defined siteurl and homeurl
      *
-     *     Checks if the wp config contains any defined siteurl and homeurl
-     *
-     *
-     */
-
+	 * @return void
+	 */
     private function check_for_siteurl_in_wpconfig()
     {
+	    if ( !current_user_can($this->capability) ) {
+		    return;
+	    }
 
         $wpconfig_path = $this->find_wp_config_path();
-
-        if (empty($wpconfig_path)) return;
+        if ( empty($wpconfig_path) ) {
+            return;
+        }
 
         $wpconfig = file_get_contents($wpconfig_path);
         $homeurl_pattern = '/(define\(\s*\'WP_HOME\'\s*,\s*\'http\:\/\/)/';
@@ -1227,16 +1234,20 @@ class rsssl_admin extends rsssl_front_end
 
     private function fix_siteurl_defines_in_wpconfig()
     {
+	    if ( !current_user_can($this->capability) ) {
+		    return;
+	    }
         $wpconfig_path = $this->find_wp_config_path();
-
-        if (empty($wpconfig_path)) return;
+        if ( empty($wpconfig_path) ) {
+            return;
+        }
 
         $wpconfig = file_get_contents($wpconfig_path);
         $homeurl_pattern = '/(define\(\s*\'WP_HOME\'\s*,\s*\'http\:\/\/)/';
         $siteurl_pattern = '/(define\(\s*\'WP_SITEURL\'\s*,\s*\'http\:\/\/)/';
 
-        if (preg_match($homeurl_pattern, $wpconfig) || preg_match($siteurl_pattern, $wpconfig)) {
-            if (is_writable($wpconfig_path)) {
+        if ( preg_match($homeurl_pattern, $wpconfig) || preg_match($siteurl_pattern, $wpconfig) ) {
+            if ( is_writable($wpconfig_path) ) {
                 $wpconfig = preg_replace($homeurl_pattern, "define('WP_HOME','https://", $wpconfig);
                 $wpconfig = preg_replace($siteurl_pattern, "define('WP_SITEURL','https://", $wpconfig);
                 file_put_contents($wpconfig_path, $wpconfig);
@@ -1260,7 +1271,9 @@ class rsssl_admin extends rsssl_front_end
     public function wpconfig_has_fixes()
     {
         $wpconfig_path = $this->find_wp_config_path();
-        if (empty($wpconfig_path)) return false;
+        if ( empty($wpconfig_path) ) {
+            return false;
+        }
         $wpconfig = file_get_contents($wpconfig_path);
 
         //only one of two fixes possible.
@@ -1288,7 +1301,9 @@ class rsssl_admin extends rsssl_front_end
 
     public function wpconfig_loadbalancer_fix()
     {
-        if (!current_user_can($this->capability)) return;
+        if (!current_user_can($this->capability)) {
+            return;
+        }
 
         $wpconfig_path = $this->find_wp_config_path();
         if (empty($wpconfig_path)) return;
