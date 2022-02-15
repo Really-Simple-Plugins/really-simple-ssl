@@ -1,0 +1,106 @@
+
+.rsssl-wizard-menu {
+  background-color: white;
+  margin: 0.5 * @green-gap;
+  margin-bottom: 0;
+  padding-bottom: @green-gap;
+  box-shadow: 0 0 5px 5px rgba(222, 222, 222, 0.2);
+
+  .rsssl-wizard-menu h1 {
+    font-weight: bold;
+  }
+
+  .rsssl-wizard-progress-bar {
+    margin: @green-gap;
+  }
+
+  .rsssl-icon {
+    margin: 4px 0 0 0;
+  }
+
+
+  .rsssl-step {
+    .rsssl-step-header {
+      &.incomplete a h2 {
+        color: @gray;
+      }
+
+      text-decoration: none;
+
+      a {
+        display: inline-block;
+        padding: 5px @green-gap;
+        text-decoration: none;
+        width: calc(100% - (@green-gap + @green-gap));
+
+        h2 {
+          font-size: 15px;
+          margin: 0;
+        }
+      }
+
+      &.active a h2 {
+        color: @gray !important;
+      }
+
+      &:hover a {
+        h2 {
+          text-decoration: underline;
+        }
+      }
+
+      &.active:hover a {
+        background: white;
+        pointer-events: none;
+      }
+    }
+
+    .rsssl-section {
+      display: grid;
+      grid-template-columns: @green-gap 1fr;
+
+      span {
+        align-self: center;
+        justify-self: center;
+      }
+
+      margin: 0 @green-gap;
+
+      a {
+        h3 {
+          color: @gray;
+        }
+
+        &:visited h3 {
+          color: initial;
+        }
+
+        display: inline-block;
+        text-decoration: none;
+        padding: 3px 5px;
+
+        h3 {
+          font-size: 12px;
+          font-weight: normal;
+          margin: 0;
+        }
+      }
+
+      &.active a h3 {
+        color: grey;
+      }
+
+      &:hover a {
+        h3 {
+          text-decoration: underline;
+        }
+      }
+
+      &.active:hover a {
+        background: white;
+        pointer-events: none;
+      }
+    }
+  }
+
+}
