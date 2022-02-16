@@ -5160,7 +5160,7 @@ if ( !function_exists('rsssl_letsencrypt_wizard_url') ) {
 if ( !function_exists('rsssl_detected_duplicate_ssl_plugin')) {
 	function rsssl_detected_duplicate_ssl_plugin( $return_name = false ){
 		$plugin = false;
-		if ( defined('WPLE_VERSION') ){
+		if ( defined('WPLE_PLUGIN_VERSION') ){
 			$plugin = "WP Encryption";
 		} elseif( defined('WPSSL_VER') ) {
 			$plugin = "WP Free SSL";
