@@ -32,7 +32,7 @@ $plugins = array(
 			<?php echo RSSSL()->really_simple_ssl->get_status_link($plugins['COMPLIANZ'])?>
 		</div>
 	</div>
-	<div class="rsssl-upsell rsssl-zip">
+	<div class="rsssl-upsell rsssl-burst">
 		<div class="plugin-color">
 			<div class="burst-green rsssl-bullet"></div>
 		</div>
