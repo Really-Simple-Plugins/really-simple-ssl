@@ -25,7 +25,6 @@ class rsssl_admin extends rsssl_front_end
     public $plugin_filename = "rlrsssl-really-simple-ssl.php";
     public $ABSpath;
     public $do_not_edit_htaccess = FALSE;
-    public $javascript_redirect = FALSE;
     public $htaccess_redirect = FALSE;
     public $htaccess_warning_shown = FALSE;
     public $review_notice_shown = FALSE;
@@ -1532,7 +1531,6 @@ class rsssl_admin extends rsssl_front_end
             'do_not_edit_htaccess' => $this->do_not_edit_htaccess,
             'htaccess_redirect' => $this->htaccess_redirect,
             'ssl_enabled' => $this->ssl_enabled,
-            'javascript_redirect' => $this->javascript_redirect,
             'wp_redirect' => $this->wp_redirect,
             'switch_mixed_content_fixer_hook' => $this->switch_mixed_content_fixer_hook,
             'dismiss_all_notices' => $this->dismiss_all_notices,
@@ -1568,7 +1566,6 @@ class rsssl_admin extends rsssl_front_end
 	        $this->autoreplace_insecure_links = TRUE;
 	        $this->do_not_edit_htaccess = FALSE;
 	        $this->htaccess_redirect = FALSE;
-	        $this->javascript_redirect = FALSE;
 	        $this->wp_redirect = FALSE;
 	        $this->ssl_enabled = FALSE;
 	        $this->switch_mixed_content_fixer_hook = FALSE;
@@ -2248,7 +2245,6 @@ class rsssl_admin extends rsssl_front_end
             $htaccess = $htaccess . $rules;
         }
         file_put_contents($htaccess_file, $htaccess);
-
     }
 
     /**
@@ -2376,8 +2372,7 @@ class rsssl_admin extends rsssl_front_end
             }
 
             $rule .= "RewriteRule ^(.*)$ https://%{HTTP_HOST}/$1 [R=301,L]" . "\n";
-
-                $rule .= "</IfModule>" . "\n";
+            $rule .= "</IfModule>" . "\n";
         }
 
         if (strlen($rule) > 0) {
@@ -2385,7 +2380,6 @@ class rsssl_admin extends rsssl_front_end
         }
 
         $rule = apply_filters("rsssl_htaccess_output", $rule);
-
         $rule = preg_replace("/\n+/", "\n", $rule);
         return $rule;
     }
@@ -2496,11 +2490,15 @@ class rsssl_admin extends rsssl_front_end
 
     public function show_leave_review_notice()
     {
-        if ($this->dismiss_all_notices || is_multisite() && rsssl_multisite::this()->dismiss_all_notices) return;
+        if ($this->dismiss_all_notices || is_multisite() && rsssl_multisite::this()->dismiss_all_notices) {
+            return;
+        }
 
         //prevent showing the review on edit screen, as gutenberg removes the class which makes it editable.
         $screen = get_current_screen();
-	    if ( $screen->base === 'post' ) return;
+	    if ( $screen->base === 'post' ) {
+            return;
+	    }
 
         //this user has never had the review notice yet.
         if ($this->ssl_enabled && !get_option('rsssl_activation_timestamp')){
@@ -2734,13 +2732,16 @@ class rsssl_admin extends rsssl_front_end
 
     public function add_settings_page()
     {
-        if (!current_user_can($this->capability)) return;
+        if (!current_user_can($this->capability)) {
+            return;
+        }
 
         //hides the settings page if the hide menu for subsites setting is enabled
-        if (is_multisite() && rsssl_multisite::this()->hide_menu_for_subsites && !is_super_admin()) return;
+        if (is_multisite() && rsssl_multisite::this()->hide_menu_for_subsites && !is_super_admin()) {
+            return;
+        }
 
         global $rsssl_admin_page;
-
         $count = $this->count_plusones();
         if ($count > 0 ) {
             $update_count = "<span class='update-plugins rsssl-update-count'><span class='update-count'>$count</span></span>";
@@ -2768,7 +2769,9 @@ class rsssl_admin extends rsssl_front_end
 
     public function rsssl_edit_admin_menu()
     {
-        if (!current_user_can($this->capability)) return;
+        if (!current_user_can($this->capability)) {
+            return;
+        }
         global $menu;
         $count = $this->count_plusones();
         $menu_slug = 'options-general.php';
@@ -4056,67 +4059,19 @@ class rsssl_admin extends rsssl_front_end
     {
         //fill array with current values, so we don't lose any
         $newinput = array();
-        $newinput['site_has_ssl'] = $this->site_has_ssl;
-        $newinput['ssl_success_message_shown'] = $this->ssl_success_message_shown;
-        $newinput['htaccess_warning_shown'] = $this->htaccess_warning_shown;
-        $newinput['review_notice_shown'] = $this->review_notice_shown;
-        $newinput['plugin_db_version'] = $this->plugin_db_version;
-        $newinput['ssl_enabled'] = $this->ssl_enabled;
-
-        if (!empty($input['hsts']) && $input['hsts'] == '1') {
-            $newinput['hsts'] = TRUE;
-        } else {
-            $newinput['hsts'] = FALSE;
-        }
-
-        if (!empty($input['javascript_redirect']) && $input['javascript_redirect'] == '1') {
-            $newinput['javascript_redirect'] = TRUE;
-        } else {
-            $newinput['javascript_redirect'] = FALSE;
-        }
-
-        if (!empty($input['wp_redirect']) && $input['wp_redirect'] == '1') {
-            $newinput['wp_redirect'] = TRUE;
-        } else {
-            $newinput['wp_redirect'] = FALSE;
-        }
-
-        if (!empty($input['autoreplace_insecure_links']) && $input['autoreplace_insecure_links'] == '1') {
-            $newinput['autoreplace_insecure_links'] = TRUE;
-        } else {
-            $newinput['autoreplace_insecure_links'] = FALSE;
-        }
-
-        if (!empty($input['do_not_edit_htaccess']) && $input['do_not_edit_htaccess'] == '1') {
-            $newinput['do_not_edit_htaccess'] = TRUE;
-        } else {
-            $newinput['do_not_edit_htaccess'] = FALSE;
-        }
-
-        if (!empty($input['switch_mixed_content_fixer_hook']) && $input['switch_mixed_content_fixer_hook'] == '1') {
-            $newinput['switch_mixed_content_fixer_hook'] = TRUE;
-        } else {
-            $newinput['switch_mixed_content_fixer_hook'] = FALSE;
-        }
-
-	    if (!empty($input['dismiss_all_notices']) && $input['dismiss_all_notices'] == '1') {
-		    $newinput['dismiss_all_notices'] = TRUE;
-	    } else {
-		    $newinput['dismiss_all_notices'] = FALSE;
-	    }
-
-	    if (!empty($input['high_contrast']) && $input['high_contrast'] == '1') {
-		    $newinput['high_contrast'] = TRUE;
-	    } else {
-		    $newinput['high_contrast'] = FALSE;
-	    }
-
-        if (!empty($input['htaccess_redirect']) && $input['htaccess_redirect'] == '1') {
-            $newinput['htaccess_redirect'] = TRUE;
-        } else {
-            $newinput['htaccess_redirect'] = FALSE;
-        }
-
+	    $newinput['site_has_ssl']                    = $this->site_has_ssl;
+	    $newinput['ssl_success_message_shown']       = $this->ssl_success_message_shown;
+	    $newinput['htaccess_warning_shown']          = $this->htaccess_warning_shown;
+	    $newinput['review_notice_shown']             = $this->review_notice_shown;
+	    $newinput['plugin_db_version']               = $this->plugin_db_version;
+	    $newinput['ssl_enabled']                     = $this->ssl_enabled;
+	    $newinput['wp_redirect']                     = ! empty( $input['wp_redirect'] ) && $input['wp_redirect'] == '1';
+	    $newinput['autoreplace_insecure_links']      = ! empty( $input['autoreplace_insecure_links'] ) && $input['autoreplace_insecure_links'] == '1';
+	    $newinput['do_not_edit_htaccess']            = ! empty( $input['do_not_edit_htaccess'] ) && $input['do_not_edit_htaccess'] == '1';
+	    $newinput['switch_mixed_content_fixer_hook'] = ! empty( $input['switch_mixed_content_fixer_hook'] ) && $input['switch_mixed_content_fixer_hook'] == '1';
+	    $newinput['dismiss_all_notices']             = ! empty( $input['dismiss_all_notices'] ) && $input['dismiss_all_notices'] == '1';
+	    $newinput['high_contrast']                   = ! empty( $input['high_contrast'] ) && $input['high_contrast'] == '1';
+	    $newinput['htaccess_redirect']               = ! empty( $input['htaccess_redirect'] ) && $input['htaccess_redirect'] == '1';
         return $newinput;
     }
 
@@ -4467,12 +4422,10 @@ class rsssl_admin extends rsssl_front_end
                     e.preventDefault();
                     tb_show( '<?php _e("Are you sure?", "really-simple-ssl") ?>', '#TB_inline?height=420&inlineId=deactivate_keep_ssl', 'null');
                     $("#TB_window").addClass('rsssl-deactivation-popup');
-
                 });
                 if ($('#deactivate-really-simple-ssl').length){
                     $('.rsssl-button-deactivate-revert').attr('href',  $('#deactivate-really-simple-ssl').attr('href') );
                 }
-
             });
         </script>
         <div id="deactivate_keep_ssl" style="display: none;">
@@ -4615,9 +4568,13 @@ class rsssl_admin extends rsssl_front_end
 	 */
 
 	public function insert_secure_cookie_settings(){
-		if (!current_user_can("activate_plugins")) return;
+		if (!current_user_can("activate_plugins")) {
+            return;
+		}
 
-		if ( wp_doing_ajax() || !$this->is_settings_page() ) return;
+		if ( wp_doing_ajax() || !$this->is_settings_page() ) {
+            return;
+		}
 
 		//only if this site has SSL activated, otherwise, remove cookie settings and exit.
 		if (!$this->ssl_enabled) {
@@ -4626,7 +4583,9 @@ class rsssl_admin extends rsssl_front_end
 		}
 
 		//if multisite, only on network wide activated setups
-		if (is_multisite() && !RSSSL()->rsssl_multisite->ssl_enabled_networkwide ) return;
+		if (is_multisite() && !RSSSL()->rsssl_multisite->ssl_enabled_networkwide ) {
+            return;
+		}
 
 		//only if cookie settings were not inserted yet
 		if (!$this->contains_secure_cookie_settings() ) {
@@ -4974,7 +4933,7 @@ if ( !function_exists('rsssl_letsencrypt_wizard_url') ) {
 if ( !function_exists('rsssl_detected_duplicate_ssl_plugin')) {
 	function rsssl_detected_duplicate_ssl_plugin( $return_name = false ){
 		$plugin = false;
-		if ( defined('WPLE_VERSION') ){
+		if ( defined('WPLE_PLUGIN_VERSION') ){
 			$plugin = "WP Encryption";
 		} elseif( defined('WPSSL_VER') ) {
 			$plugin = "WP Free SSL";

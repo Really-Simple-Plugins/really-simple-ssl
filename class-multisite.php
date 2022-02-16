@@ -14,7 +14,6 @@ if (!class_exists('rsssl_multisite')) {
         public $htaccess_redirect;
         public $do_not_edit_htaccess;
         public $autoreplace_mixed_content;
-        public $javascript_redirect;
         public $hsts;
         public $mixed_content_admin;
         public $cert_expiration_warning;
@@ -295,7 +294,6 @@ if (!class_exists('rsssl_multisite')) {
             $this->htaccess_redirect = isset($options["htaccess_redirect"]) ? $options["htaccess_redirect"] : false;
             $this->do_not_edit_htaccess = isset($options["do_not_edit_htaccess"]) ? $options["do_not_edit_htaccess"] : false;
             $this->autoreplace_mixed_content = isset($options["autoreplace_mixed_content"]) ? $options["autoreplace_mixed_content"] : false;
-            $this->javascript_redirect = isset($options["javascript_redirect"]) ? $options["javascript_redirect"] : false;
             $this->hsts = isset($options["hsts"]) ? $options["hsts"] : false;
             $this->mixed_content_admin = isset($options["mixed_content_admin"]) ? $options["mixed_content_admin"] : false;
             $this->cert_expiration_warning = isset($options["cert_expiration_warning"]) ? $options["cert_expiration_warning"] : false;
@@ -512,7 +510,6 @@ if (!class_exists('rsssl_multisite')) {
                 $this->htaccess_redirect = isset($options["htaccess_redirect"]) ? $options["htaccess_redirect"] : false;
                 $this->do_not_edit_htaccess = isset($options["do_not_edit_htaccess"]) ? $options["do_not_edit_htaccess"] : false;
                 $this->autoreplace_mixed_content = isset($options["autoreplace_mixed_content"]) ? $options["autoreplace_mixed_content"] : false;
-                $this->javascript_redirect = isset($options["javascript_redirect"]) ? $options["javascript_redirect"] : false;
                 $this->hsts = isset($options["hsts"]) ? $options["hsts"] : false;
                 $this->mixed_content_admin = isset($options["mixed_content_admin"]) ? $options["mixed_content_admin"] : false;
                 $this->cert_expiration_warning = isset($options["cert_expiration_warning"]) ? $options["cert_expiration_warning"] : false;
@@ -676,7 +673,6 @@ if (!class_exists('rsssl_multisite')) {
             $options["htaccess_redirect"] = $this->htaccess_redirect;
             $options["do_not_edit_htaccess"] = $this->do_not_edit_htaccess;
             $options["autoreplace_mixed_content"] = $this->autoreplace_mixed_content;
-            $options["javascript_redirect"] = $this->javascript_redirect;
             $options["hsts"] = $this->hsts;
             $options["mixed_content_admin"] = $this->mixed_content_admin;
             $options["cert_expiration_warning"] = $this->cert_expiration_warning;
@@ -833,7 +829,6 @@ if (!class_exists('rsssl_multisite')) {
             $options["htaccess_redirect"] = false;
             $options["do_not_edit_htaccess"] = false;
             $options["autoreplace_mixed_content"] = false;
-            $options["javascript_redirect"] = false;
             $options["hsts"] = false;
             $options["mixed_content_admin"] = false;
             $options["cert_expiration_warning"] = false;
