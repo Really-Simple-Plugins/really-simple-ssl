@@ -1352,17 +1352,21 @@ class rsssl_admin extends rsssl_front_end
 
     public function wpconfig_server_variable_fix()
     {
-        if (!current_user_can($this->capability)) return;
-
-        $wpconfig_path = $this->find_wp_config_path();
-        if (empty($wpconfig_path)) return;
-        $wpconfig = file_get_contents($wpconfig_path);
-
-        //check permissions
-        if (!is_writable($wpconfig_path)) {
+        if (!current_user_can($this->capability)) {
             return;
         }
 
+        $wpconfig_path = $this->find_wp_config_path();
+        if (empty($wpconfig_path)) {
+            return;
+        }
+
+	    //check permissions
+	    if (!is_writable($wpconfig_path)) {
+		    return;
+	    }
+
+        $wpconfig = file_get_contents($wpconfig_path);
         //when more than one blog, first remove what we have
         if (is_multisite() && !RSSSL()->rsssl_multisite->is_multisite_subfolder_install() && !RSSSL()->rsssl_multisite->ssl_enabled_networkwide && count($this->sites) > 1) {
             $wpconfig = preg_replace("/\/\/Begin\s?Really\s?Simple\s?SSL.*?\/\/END\s?Really\s?Simple\s?SSL/s", "", $wpconfig);
@@ -1540,7 +1544,6 @@ class rsssl_admin extends rsssl_front_end
 	    update_option('rlrsssl_options', $options);
     }
 
-
     /**
      * Handles deactivation of this plugin
      *
@@ -1598,13 +1601,18 @@ class rsssl_admin extends rsssl_front_end
 
 	public function remove_secure_cookie_settings() {
 
-		if ( wp_doing_ajax() || !current_user_can("activate_plugins")) return;
+		if ( wp_doing_ajax() || !current_user_can("activate_plugins")) {
+            return;
+		}
 
-		if ( !$this->contains_secure_cookie_settings()) return;
+		if ( !$this->contains_secure_cookie_settings()) {
+            return;
+		}
 
 		$wpconfig_path = $this->find_wp_config_path();
-
-		if ( !is_writable($wpconfig_path) ) return;
+		if ( !is_writable($wpconfig_path) ) {
+            return;
+		}
 
 		if (!empty($wpconfig_path)) {
 			$wpconfig = file_get_contents($wpconfig_path);
@@ -1627,7 +1635,6 @@ class rsssl_admin extends rsssl_front_end
     public function is_ssl_extended()
     {
         $server_var = FALSE;
-
         if ((isset($_ENV['HTTPS']) && ('on' == $_ENV['HTTPS']))
             || (isset($_SERVER['HTTP_X_FORWARDED_SSL']) && (strpos($_SERVER['HTTP_X_FORWARDED_SSL'], '1') !== false))
             || (isset($_SERVER['HTTP_X_FORWARDED_SSL']) && (strpos($_SERVER['HTTP_X_FORWARDED_SSL'], 'on') !== false))
