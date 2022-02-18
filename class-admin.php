@@ -4476,7 +4476,7 @@ class rsssl_admin extends rsssl_front_end
                     text-align: center !important;
                 }
                 #TB_window.rsssl-deactivation-popup {
-                    height:400px!important;
+                    height:390px!important;
                     top:initial!important;
                     margin-top:initial!important;
                     margin-left:initial!important;
@@ -4503,17 +4503,17 @@ class rsssl_admin extends rsssl_front_end
 
                 .rsssl-deactivation-popup .tb-close-icon {
                     color:#333;
-                    width: 16px;
-                    height: 16px;
+                    width: 25px;
+                    height: 25px;
                     top: 12px;
                     right: 20px;
                 }
                 .rsssl-deactivation-popup .tb-close-icon:before {
-                    font: normal 16px/16px dashicons;
+                    font: normal 25px/25px dashicons;
                 }
                 .rsssl-deactivation-popup #TB_closeWindowButton:focus .tb-close-icon {
                     outline:0;
-                    color:#dedede;
+                    color:#666;
                 }
                 .rsssl-deactivation-popup #TB_closeWindowButton .tb-close-icon:hover {
                     color:#666;
@@ -4543,7 +4543,7 @@ class rsssl_admin extends rsssl_front_end
                     font-size: 12px!important;
                 }
                 .rsssl-deactivate-notice-content h3 , .rsssl-deactivate-notice-content ul{
-                    font-size:12px;
+                    font-size:12px!important;
                 }
 
                 .rsssl-deactivate-notice-footer {
@@ -4553,16 +4553,13 @@ class rsssl_admin extends rsssl_front_end
                 }
 
                 .rsssl-deactivation-popup ul {
-                    list-style: circle;
+                    list-style: disc;
                     padding-left: 20px;
-                }
-                .rsssl-deactivation-popup a {
-                    margin-right:10px !important;
                 }
                 .rsssl-deactivate-notice-footer .button {
                     border-radius: 6px!important;
                     padding: 10px;
-                    width: 100%;
+                    min-width: 120px;
                     white-space: nowrap;
                     border-radius: var(--cmplz_button_border_radius);
                     cursor: pointer;
