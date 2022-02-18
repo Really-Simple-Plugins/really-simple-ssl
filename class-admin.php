@@ -4467,10 +4467,7 @@ class rsssl_admin extends rsssl_front_end
 
         ?>
 	    <?php add_thickbox();?>
-        <?php if ( is_rtl() ) { ?>
-            <style>
-            </style>
-        <?php } else { ?>
+        <?php { ?>
             <style>
                 #TB_ajaxContent.rsssl-deactivation-popup {
                     text-align: center !important;
@@ -4548,6 +4545,7 @@ class rsssl_admin extends rsssl_front_end
 
                 .rsssl-deactivate-notice-footer {
                     display: flex;
+                    gap:10px;
                     padding: 20px 10px 20px 0;
                     position:absolute;
                 }
