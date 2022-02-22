@@ -600,7 +600,7 @@ class rsssl_admin extends rsssl_front_end
                 <li class="rsssl-error">
                     <?php _e("Could not test certificate.", "really-simple-ssl") ?>&nbsp;<?php _e("Automatic certificate detection is not possible on your server.", "really-simple-ssl") ?>
 		            <?php RSSSL()->rsssl_help->get_help_tip(__("If you’re certain an SSL certificate is present, please check “Override SSL detection” to continue activating SSL.", "really-simple-ssl"), false, true );?>
-                </li>            
+                </li>
             <?php } else { ?>
                 <li class="rsssl-error"><?php _e("No SSL certificate has been detected.", "really-simple-ssl") ?>&nbsp;
                     <?php printf(__("Please %srefresh detection%s if a certificate has been installed recently.", "really-simple-ssl"), '<a href="'.add_query_arg(array('page'=>'rlrsssl_really_simple_ssl', 'rsssl_recheck_certificate'=>1), admin_url('options-general.php')).'">', '</a>') ?>
@@ -4467,121 +4467,50 @@ class rsssl_admin extends rsssl_front_end
 
         ?>
 	    <?php add_thickbox();?>
-        <?php if ( is_rtl() ) { ?>
+        <?php { ?>
             <style>
                 #TB_ajaxContent.rsssl-deactivation-popup {
                     text-align: center !important;
-                    width:750px;
                 }
                 #TB_window.rsssl-deactivation-popup {
-                    height: 440px !important;
-                    border-right: 7px solid black;
+                    height:390px!important;
+                    top:initial!important;
+                    margin-top:initial!important;
+                    margin-left:initial!important;
+                    display:flex;
+                    flex-direction: column;
+                    top: 50%!important;
+                    left: 50%;
+                    transform: translate(-50%, -50%);
+                    width:576px!important;
+                    border-radius:12px!important;
                 }
                 .rsssl-deactivation-popup #TB_title{
-                    height: 70px;
-                    border-bottom: 1px solid #dedede;
+                    padding-bottom: 20px;
+                    border-radius:12px;
+                    border-bottom:none!important;
+                    background:#fff#important;
                 }
                 .rsssl-deactivation-popup #TB_ajaxWindowTitle {
                     font-weight:bold;
-                    font-size:30px;
+                    font-size:20px;
                     padding: 20px;
+                    background:#fff#important;
                 }
 
                 .rsssl-deactivation-popup .tb-close-icon {
-                    color:#dedede;
-                    width: 50px;
-                    height: 50px;
-                    top: 12px;
-                    left: 20px;
-                }
-                .rsssl-deactivation-popup .tb-close-icon:before {
-                    font: normal 50px/50px dashicons;
-                }
-                .rsssl-deactivation-popup #TB_closeWindowButton:focus .tb-close-icon {
-                    outline:0;
-                    box-shadow: 0 0 0 0 #5b9dd9, 0 0 0 0 rgba(30, 140, 190, .8);
-                    color:#dedede;
-                }
-                .rsssl-deactivation-popup #TB_closeWindowButton .tb-close-icon:hover {
-                    color:#666;
-                }
-                .rsssl-deactivation-popup #TB_closeWindowButton:focus {
-                    outline:0;
-                }
-                .rsssl-deactivation-popup #TB_ajaxContent {
-                    width: 100% !important;
-                    padding: 0;
-                }
-
-                .rsssl-deactivation-popup .button-rsssl-tertiary.button {
-                    background-color: #D7263D !important;
-                    color: white !important;
-                    border-color: #D7263D;
-                }
-
-                .rsssl-deactivation-popup .button-rsssl-tertiary.button:hover {
-                    background-color: #f1f1f1 !important;
-                    color: #d7263d !important;
-                }
-
-                .rsssl-deactivate-notice-content {
-                    margin: 20px
-                }
-                .rsssl-deactivate-notice-content h3 , .rsssl-deactivate-notice-content ul{
-                    font-size:1.1em;
-                }
-
-                .rsssl-deactivate-notice-footer {
-                    padding-top: 20px;
-                    position:absolute;
-                    bottom:15px;
-                    width: 94%;
-                    margin-right: 3%;
-                    border-top: 1px solid #dedede;
-                }
-
-                .rsssl-deactivation-popup ul {
-                    list-style: circle;
-                    padding-right: 20px;
-                }
-                .rsssl-deactivation-popup a {
-                    margin-left:10px !important;
-                }
-            </style>
-        <?php } else { ?>
-            <style>
-                #TB_ajaxContent.rsssl-deactivation-popup {
-                    text-align: center !important;
-                    width:750px;
-                }
-                #TB_window.rsssl-deactivation-popup {
-                    height: 440px !important;
-                    border-left: 7px solid black;
-                }
-                .rsssl-deactivation-popup #TB_title{
-                    height: 70px;
-                    border-bottom: 1px solid #dedede;
-                }
-                .rsssl-deactivation-popup #TB_ajaxWindowTitle {
-                    font-weight:bold;
-                    font-size:30px;
-                    padding: 20px;
-                }
-
-                .rsssl-deactivation-popup .tb-close-icon {
-                    color:#dedede;
-                    width: 50px;
-                    height: 50px;
+                    color:#333;
+                    width: 25px;
+                    height: 25px;
                     top: 12px;
                     right: 20px;
                 }
                 .rsssl-deactivation-popup .tb-close-icon:before {
-                    font: normal 50px/50px dashicons;
+                    font: normal 25px/25px dashicons;
                 }
                 .rsssl-deactivation-popup #TB_closeWindowButton:focus .tb-close-icon {
                     outline:0;
-                    box-shadow: 0 0 0 0 #5b9dd9, 0 0 0 0 rgba(30, 140, 190, .8);
-                    color:#dedede;
+                    color:#666;
                 }
                 .rsssl-deactivation-popup #TB_closeWindowButton .tb-close-icon:hover {
                     color:#666;
@@ -4591,7 +4520,8 @@ class rsssl_admin extends rsssl_front_end
                 }
                 .rsssl-deactivation-popup #TB_ajaxContent {
                     width: 100% !important;
-                    padding: 0;
+                    height:initial!important;
+                    padding-left: 20px!important;
                 }
 
                 .rsssl-deactivation-popup .button-rsssl-tertiary.button {
@@ -4607,26 +4537,33 @@ class rsssl_admin extends rsssl_front_end
 
                 .rsssl-deactivate-notice-content {
                     margin: 20px
+                    font-size: 12px!important;
                 }
                 .rsssl-deactivate-notice-content h3 , .rsssl-deactivate-notice-content ul{
-                    font-size:1.1em;
+                    font-size:12px!important;
                 }
 
                 .rsssl-deactivate-notice-footer {
-                    padding-top: 20px;
+                    display: flex;
+                    gap:10px;
+                    padding: 20px 10px 20px 0;
                     position:absolute;
-                    bottom:15px;
-                    width: 94%;
-                    margin-left: 3%;
-                    border-top: 1px solid #dedede;
                 }
 
                 .rsssl-deactivation-popup ul {
-                    list-style: circle;
+                    list-style: disc;
                     padding-left: 20px;
                 }
-                .rsssl-deactivation-popup a {
-                    margin-right:10px !important;
+                .rsssl-deactivate-notice-footer .button {
+                    border-radius: 6px!important;
+                    padding: 10px;
+                    min-width: 120px;
+                    white-space: nowrap;
+                    border-radius: var(--cmplz_button_border_radius);
+                    cursor: pointer;
+                    text-decoration: none;
+                    text-align: center;
+
                 }
             </style>
         <?php } ?>
@@ -4635,7 +4572,7 @@ class rsssl_admin extends rsssl_front_end
                 $('#rsssl_close_tb_window').click(tb_remove);
                 $(document).on('click', '#deactivate-really-simple-ssl', function(e){
                     e.preventDefault();
-                    tb_show( '<?php _e("Are you sure?", "really-simple-ssl") ?>', '#TB_inline?height=420&inlineId=deactivate_keep_ssl', 'null');
+                    tb_show( '<?php _e("Are you sure?", "really-simple-ssl") ?>', '#TB_inline?height=auto&inlineId=deactivate_keep_ssl', 'null');
                     $("#TB_window").addClass('rsssl-deactivation-popup');
 
                 });
