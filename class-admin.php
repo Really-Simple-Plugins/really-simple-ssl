@@ -328,8 +328,8 @@ class rsssl_admin extends rsssl_front_end
                 $pattern_end = "/rlrssslReallySimpleSSL/";
 
 			    if ( preg_match_all( $pattern_start, $htaccess ) ) {
-				    $htaccess = preg_replace( $pattern_start, "Really Simple SSL " . rsssl_version, $htaccess );
-				    $htaccess = preg_replace( $pattern_end, "Really Simple SSL", $htaccess );
+				    $htaccess = preg_replace( $pattern_start, "Really Simple SSL Redirect " . rsssl_version, $htaccess );
+				    $htaccess = preg_replace( $pattern_end, "Really Simple SSL Redirect", $htaccess );
 				    file_put_contents( $this->htaccess_file(), $htaccess );
 			    }
 		    }
@@ -1941,7 +1941,7 @@ class rsssl_admin extends rsssl_front_end
             } else {
                 // remove everything
                 $pattern_old = "/#\s?BEGIN\s?rlrssslReallySimpleSSL.*?#\s?END\s?rlrssslReallySimpleSSL/s";
-                $pattern_new = "/#\s?BEGIN\s?Really Simple SSL.*?#\s?END\s?Really Simple SSL/s";
+                $pattern_new = "/#\s?BEGIN\s?Really Simple SSL Redirect.*?#\s?END\s?Really Simple SSL Redirect/s";
                 //only remove if the pattern is there at all
                 if (preg_match($pattern_old, $htaccess)) $htaccess = preg_replace($pattern_old, "", $htaccess);
 	            if (preg_match($pattern_new, $htaccess)) $htaccess = preg_replace($pattern_new, "", $htaccess);
@@ -2018,7 +2018,7 @@ class rsssl_admin extends rsssl_front_end
         $check = null;
 
         preg_match("/BEGIN rlrssslReallySimpleSSL/", $htaccess, $check);
-	    preg_match("/BEGIN Really Simple SSL/", $htaccess, $check);
+	    preg_match("/BEGIN Really Simple SSL Redirect/", $htaccess, $check);
 
         if (count($check) === 0) {
             return false;
@@ -2317,7 +2317,7 @@ class rsssl_admin extends rsssl_front_end
         }
 
 	    $pattern_old = "/#\s?BEGIN\s?rlrssslReallySimpleSSL.*?#\s?END\s?rlrssslReallySimpleSSL/s";
-	    $pattern_new = "/#\s?BEGIN\s?Really Simple SSL.*?#\s?END\s?Really Simple SSL/s";
+	    $pattern_new = "/#\s?BEGIN\s?Really Simple SSL Redirect.*?#\s?END\s?Really Simple SSL Redirect/s";
 
 	    $htaccess = file_get_contents($this->htaccess_file());
         $htaccess = preg_replace($pattern_old, "", $htaccess);
@@ -2512,7 +2512,7 @@ class rsssl_admin extends rsssl_front_end
         }
 
         if (strlen($rule) > 0) {
-            $rule = "\n" . "# BEGIN Really Simple SSL " . rsssl_version . "\n" . $rule . "# END Really Simple SSL" . "\n";
+            $rule = "\n" . "# BEGIN Really Simple SSL Redirect" . rsssl_version . "\n" . $rule . "# END Really Simple SSL Redirect" . "\n";
         }
 
         $rule = apply_filters("rsssl_htaccess_output", $rule);
