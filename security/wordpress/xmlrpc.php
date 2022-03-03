@@ -50,9 +50,7 @@ add_action('init', 'rsssl_xmlrpc_allowed');
 function rsssl_xmlrpc_allowed()
 {
 
-	error_log("test xmlrpc req");
-
-//    if ( ! get_transient( 'rsssl_xmlrpc_allowed' ) ) {
+    if ( ! get_transient( 'rsssl_xmlrpc_allowed' ) ) {
 
         if ( function_exists( 'curl_init' ) ) {
             $url = site_url() . '/xmlrpc.php';
@@ -90,9 +88,9 @@ function rsssl_xmlrpc_allowed()
 
         }
 
-//    } else {
-//        return get_transient( 'rsssl_xmlrpc_allowed' );
-//    }
+    } else {
+        return get_transient( 'rsssl_xmlrpc_allowed' );
+    }
 
     return false;
 

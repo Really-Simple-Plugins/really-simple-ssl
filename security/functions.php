@@ -51,6 +51,12 @@ if ( ! function_exists('rsssl_wrap_headers' ) ) {
 				         "RewriteRule .* - [F]";
 			}
 
+            if ( get_option('rsssl_disable_user_enumeration') !== false ) {
+                $rules .= "RewriteCond %{QUERY_STRING} ^author= [NC]" . "\n" .
+                "RewriteRule .* - [F,L]" . "\n" .
+                "RewriteRule ^author/ - [F,L]";
+            }
+
 			file_put_contents($htaccess_file, $htaccess . $start . $rules . $end);
 		}
 	}

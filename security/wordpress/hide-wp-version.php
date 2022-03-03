@@ -35,6 +35,11 @@ function rsssl_hide_wp_version_notice()
 	return false;
 }
 
+/**
+ * @return bool
+ * Check if page source contains WordPress version information
+ */
+
 function rsssl_src_contains_wp_version() {
 
 	// wp get version
@@ -66,7 +71,6 @@ function rsssl_src_contains_wp_version() {
 				set_transient( 'rsssl_wp_version_detected', true, DAY_IN_SECONDS );
 
 				return true;
-				// found
 			}
 		}
 
@@ -75,7 +79,11 @@ function rsssl_src_contains_wp_version() {
 	return false;
 }
 
-function rsssl_maybe_remove_wp_version() {
+/**
+ * @return void
+ * Remove WordPress version info from page source
+ */
+function rsssl_remove_wp_version() {
 
 	// remove <meta name="generator" content="WordPress VERSION" />
 	add_filter( 'the_generator', 'rsssl_remove_wp_version_head' );
@@ -84,11 +92,19 @@ function rsssl_maybe_remove_wp_version() {
 	add_filter( 'script_loader_src', 'rsssl_remove_css_js_version', 9999 );
 }
 
+/**
+ * @return string
+ * Remove WordPress version from head
+ */
 function rsssl_remove_wp_version_head() {
 	return '';
 }
 
-// remove wp version number from scripts and styles
+/**
+ * @param $src
+ * @return mixed|string
+ * Remove WordPress version from css and js strings
+ */
 function rsssl_remove_css_js_version( $src ) {
 	if ( strpos( $src, '?ver=' ) && strpos( $src, 'wp-includes') ) {
 		$src = remove_query_arg( 'ver', $src );

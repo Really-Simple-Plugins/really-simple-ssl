@@ -1,6 +1,10 @@
 <?php
 defined( 'ABSPATH' ) or die( "you do not have access to this page!" );
 
+/**
+ * @return void
+ * Disable indexing
+ */
 function rsssl_disable_indexing() {
     if ( RSSSL()->rsssl_server->get_server() == 'apache' ) {
 	    // Get .htaccess

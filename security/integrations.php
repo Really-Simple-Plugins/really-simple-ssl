@@ -34,7 +34,7 @@ $rsssl_integrations_list = apply_filters( 'rsssl_integrations', array(
 			'ignore'    => 'disable_checkbox',
 		),
 	),
-
+//
     'user-registration' => array(
         'constant_or_function' => 'rsssl_user_registration',
         'label'                => 'User registration',
@@ -98,7 +98,7 @@ $rsssl_integrations_list = apply_filters( 'rsssl_integrations', array(
 //			'rsssl_file_editing_allowed',
 		),
 		'actions'              => array(
-//			'fix'       => 'rsssl_maybe_hide_wp_version',
+			'fix'       => 'rsssl_disable_user_enumeration',
 //			'ignore'    => 'disable_checkbox',
 		),
 	),
@@ -115,7 +115,7 @@ $rsssl_integrations_list = apply_filters( 'rsssl_integrations', array(
 //			'rsssl_file_editing_allowed',
         ),
         'actions'              => array(
-//			'fix'       => 'rsssl_disable_code_execution_uploads',
+			'fix'       => 'rsssl_disable_code_execution_uploads',
 //			'ignore'    => 'disable_checkbox',
         ),
     ),
@@ -131,7 +131,7 @@ $rsssl_integrations_list = apply_filters( 'rsssl_integrations', array(
 //			'rsssl_file_editing_allowed',
         ),
         'actions'              => array(
-//			'fix'       => 'rsssl_maybe_hide_wp_version',
+			'fix'       => 'rsssl_remove_wp_version',
 //			'ignore'    => 'disable_checkbox',
         ),
     ),
@@ -147,11 +147,11 @@ $rsssl_integrations_list = apply_filters( 'rsssl_integrations', array(
 //			'rsssl_file_editing_allowed',
         ),
         'actions'              => array(
-//			'fix'       => 'rsssl_disable_http_methods',
+			'fix'       => 'rsssl_disable_http_methods',
 //			'ignore'    => 'disable_checkbox',
         ),
     ),
-
+//
     'debug-log' => array(
         'constant_or_function' => 'rsssl_debug_log',
         'label'                => 'Move debug.log',
@@ -164,7 +164,7 @@ $rsssl_integrations_list = apply_filters( 'rsssl_integrations', array(
 //			'rsssl_file_editing_allowed',
         ),
         'actions'              => array(
-//			'fix'       => 'rsssl_change_debug_log_location',
+			'fix'       => 'rsssl_change_debug_log_location',
 //			'ignore'    => 'disable_checkbox',
         ),
     ),
@@ -181,7 +181,7 @@ $rsssl_integrations_list = apply_filters( 'rsssl_integrations', array(
 //			'rsssl_file_editing_allowed',
         ),
         'actions'              => array(
-//			'fix'       => 'rsssl_change_debug_log_location',
+			'fix'       => 'rsssl_disable_indexing',
 //			'ignore'    => 'disable_checkbox',
         ),
     ),
@@ -191,27 +191,21 @@ $rsssl_integrations_list = apply_filters( 'rsssl_integrations', array(
 		'label'                => 'Disable Application passwords',
 		'folder'               => 'wordpress',
 		'impact'               => 'low',
-		'risk'                 => 'low',
+		'risk'                 => 'high',
 		'learning_mode'        => false,
 		'type'                 => 'checkbox',
 		'conditions'           => array(
 			'rsssl_wordpress_version_above_5_6',
 		),
 		'actions'              => array(
-//			'fix'       => 'rsssl_disable_application_passwords',
+			'fix'       => 'rsssl_disable_application_passwords',
 //			'ignore'    => 'disable_checkbox',
 		),
 	),
 ) );
 
 
-require_once( 'fields.php' );
-
-///**
-// * Wordpress, include always
-// */
-//require_once( 'wordpress/wordpress.php' );
-
+//require_once( 'fields.php' );
 
 foreach ( $rsssl_integrations_list as $plugin => $details ) {
 
@@ -226,15 +220,18 @@ foreach ( $rsssl_integrations_list as $plugin => $details ) {
         $file = rsssl_path . 'security/' . $details['folder'] . "/" . $plugin . '.php';
     }
 
-//	$early_load = $details['early_load'];
-//	$file       = apply_filters( 'rsssl_early_load_path',
-//		rsssl_path . "integrations/plugins/$early_load", $details );
-
 	if ( file_exists( $file ) ) {
         require_once( $file );
 	} else {
 		error_log( "searched for $plugin integration at $file, but did not find it" );
 	}
+
+//    Apply fix on high risk
+    if ( $details['risk'] === 'high' && $details['impact'] === 'low' ) {
+        $fix = $details['actions']['fix'];
+        rsssl_validate_function($fix);
+    }
+
 }
 
 
@@ -311,8 +308,6 @@ function rsssl_integrations() {
 	if ( $stored_integrations_count != $actual_integrations_count) {
 		update_option('rsssl_integrations_changed', true );
 	}
-
-
 
 }
 

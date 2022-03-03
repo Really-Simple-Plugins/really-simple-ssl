@@ -1,38 +1,41 @@
 <?php
 defined( 'ABSPATH' ) or die( "you do not have access to this page!" );
 
-//
-//function rsssl_test_stack()
-//{
-//   // if ( ! get_transient( 'rsssl_stack_allowed' ) ) {
-//
-//        if (function_exists('curl_init')) {
-//
-//            $url = site_url();
-//            $ch = curl_init();
-//
-//            curl_setopt($ch, CURLOPT_URL, $url );
-//	        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'OPTIONS');
-//	        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-//	        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-//	        curl_setopt($ch,CURLOPT_RETURNTRANSFER, true);
-//	        curl_setopt($ch, CURLOPT_HEADER, true);
-//		    curl_setopt($ch,CURLOPT_NOBODY, true);
-//		    curl_setopt($ch,CURLOPT_VERBOSE, true);
-//
-//            $result = curl_exec($ch);
-//			error_log(print_r($result, true));
-//            if (curl_errno($ch)) {
-//	            echo 'Error:' . curl_error($ch);
-//            }
-//            curl_close($ch);
-//			exit;
-//
-//        }
-//
-//		set_transient('rsssl_stack_allowed', $response_code, DAY_IN_SECONDS);
-//    //}
-//}
+/**
+ * @return void
+ * Test if HTTP methods STACK and TRACE are allowed
+ */
+function rsssl_test_stack()
+{
+    if ( ! get_transient( 'rsssl_stack_allowed' ) ) {
+
+        if (function_exists('curl_init')) {
+
+            $url = site_url();
+            $ch = curl_init();
+
+            curl_setopt($ch, CURLOPT_URL, $url );
+	        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'OPTIONS');
+	        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+	        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+	        curl_setopt($ch,CURLOPT_RETURNTRANSFER, true);
+	        curl_setopt($ch, CURLOPT_HEADER, true);
+		    curl_setopt($ch,CURLOPT_NOBODY, true);
+		    curl_setopt($ch,CURLOPT_VERBOSE, true);
+
+            $result = curl_exec($ch);
+			error_log(print_r($result, true));
+            if (curl_errno($ch)) {
+	            echo 'Error:' . curl_error($ch);
+            }
+            curl_close($ch);
+			exit;
+
+        }
+
+		set_transient('rsssl_stack_allowed', $response_code, DAY_IN_SECONDS);
+    }
+}
 
 add_action('admin_init', 'rsssl_disable_http_methods');
 

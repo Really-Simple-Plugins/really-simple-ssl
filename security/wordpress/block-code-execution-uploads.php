@@ -6,6 +6,11 @@ if ( is_admin() ) {
     add_filter('rsssl_notices', 'code_execution_uploads', 50, 3);
 }
 
+/**
+ * @param $notices
+ * @return mixed
+ * Notice function
+ */
 function code_execution_uploads( $notices ) {
     $notices['code-execution-uploads'] = array(
         'callback' => 'rsssl_code_execution_uploads',
