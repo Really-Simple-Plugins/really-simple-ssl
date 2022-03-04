@@ -108,7 +108,7 @@ function rsssl_disable_code_execution_uploads()
 
             // Group 0 contains str
             if ( ! $matches[0] ) {
-                // Has .htaccess not no *.php rules, enter
+                // Does .htaccess not contain *.php rules, enter them
                 rsssl_insert_disable_code_execution_rules( $upload_dir );
             }
 

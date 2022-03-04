@@ -35,3 +35,12 @@ function rsssl_file_editing_notice()
 
 	return 'allowed';
 }
+
+function rsssl_disable_file_editing() {
+
+	if ( ! defined('DISALLOW_FILE_EDIT' ) ) {
+
+		define('DISALLOW_FILE_EDIT', true );
+
+	}
+}

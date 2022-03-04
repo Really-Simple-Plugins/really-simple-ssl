@@ -8,9 +8,10 @@ defined( 'ABSPATH' ) or die( "you do not have access to this page!" );
 if ( ! function_exists('rsssl_delete_transients' ) ) {
     function rsssl_delete_transients()
     {
-
         $transients = array(
-          'rsssl_xmlrpc_allowed',
+	        'rsssl_xmlrpc_allowed',
+			'rsssl_wp_version_detected',
+			'rsssl_stack_allowed',
         );
 
         foreach ( $transients as $transient ) {

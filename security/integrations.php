@@ -22,8 +22,8 @@ $rsssl_integrations_list = apply_filters( 'rsssl_integrations', array(
 		'constant_or_function' => 'rsssl_xmlrpc',
 		'label'                => 'XMLRPC',
         'folder'               => 'wordpress',
-		'impact'               => 'high',
-		'risk'                 => 'high',
+		'impact'               => 'medium',
+		'risk'                 => 'low',
 		'learning_mode'        => true,
 		'type'                 => 'checkbox',
 		'conditions'           => array(
@@ -39,12 +39,12 @@ $rsssl_integrations_list = apply_filters( 'rsssl_integrations', array(
         'constant_or_function' => 'rsssl_user_registration',
         'label'                => 'User registration',
         'folder'               => 'wordpress',
-        'impact'               => 'high',
-        'risk'                 => 'high',
+        'impact'               => 'medium',
+        'risk'                 => 'medium',
         'learning_mode'        => true,
         'type'                 => 'checkbox',
         'conditions'           => array(
-	        'rsssl_user_registration_allowed',
+//	        'rsssl_user_registration_allowed',
         ),
         'actions'              => array(
 	        'fix'       => 'rsssl_maybe_disable_user_registration',
@@ -61,10 +61,10 @@ $rsssl_integrations_list = apply_filters( 'rsssl_integrations', array(
 		'learning_mode'        => false,
 		'type'                 => 'checkbox',
 		'conditions'           => array(
-			'rsssl_file_editing_allowed',
+//			'rsssl_file_editing_allowed',
 		),
 		'actions'              => array(
-			'fix'       => 'rsssl_maybe_disable_file_editing',
+			'fix'       => 'rsssl_disable_file_editing',
 //			'ignore'    => 'disable_checkbox',
 		),
 	),
@@ -91,7 +91,7 @@ $rsssl_integrations_list = apply_filters( 'rsssl_integrations', array(
 		'label'                => 'User Enumeration',
 		'folder'               => 'wordpress',
 		'impact'               => 'low',
-		'risk'                 => 'low',
+		'risk'                 => 'medium',
 		'learning_mode'        => true,
 		'type'                 => 'checkbox',
 		'conditions'           => array(
@@ -104,10 +104,10 @@ $rsssl_integrations_list = apply_filters( 'rsssl_integrations', array(
 	),
 
     'block-code-execution-uploads' => array(
-        'constant_or_function' => 'rsssl_user_enumeration',
+        'constant_or_function' => 'rsssl_block_code_execution_uploads',
         'label'                => 'Block code execution in uploads directory',
         'folder'               => 'wordpress',
-        'impact'               => 'low',
+        'impact'               => 'medium',
         'risk'                 => 'low',
         'learning_mode'        => false,
         'type'                 => 'checkbox',
@@ -120,11 +120,11 @@ $rsssl_integrations_list = apply_filters( 'rsssl_integrations', array(
         ),
     ),
     'prevent-login-info-leakage' => array(
-        'constant_or_function' => 'rsssl_prevent_info_login_leake',
+        'constant_or_function' => 'rsssl_prevent_info_login_leakage',
         'label'                => 'Prevent login error leakage',
         'folder'               => 'wordpress',
         'impact'               => 'low',
-        'risk'                 => 'low',
+        'risk'                 => 'high',
         'learning_mode'        => false,
         'type'                 => 'checkbox',
         'conditions'           => array(
@@ -140,7 +140,7 @@ $rsssl_integrations_list = apply_filters( 'rsssl_integrations', array(
         'label'                => 'Disable HTTP methods',
         'folder'               => 'server',
         'impact'               => 'low',
-        'risk'                 => 'low',
+        'risk'                 => 'medium',
         'learning_mode'        => false,
         'type'                 => 'checkbox',
         'conditions'           => array(
@@ -156,8 +156,8 @@ $rsssl_integrations_list = apply_filters( 'rsssl_integrations', array(
         'constant_or_function' => 'rsssl_debug_log',
         'label'                => 'Move debug.log',
         'folder'               => 'wordpress',
-        'impact'               => 'low',
-        'risk'                 => 'low',
+        'impact'               => 'medium',
+        'risk'                 => 'medium',
         'learning_mode'        => false,
         'type'                 => 'checkbox',
         'conditions'           => array(
@@ -174,7 +174,7 @@ $rsssl_integrations_list = apply_filters( 'rsssl_integrations', array(
         'label'                => 'Disable directory indexing',
         'folder'               => 'server',
         'impact'               => 'low',
-        'risk'                 => 'low',
+        'risk'                 => 'medium',
         'learning_mode'        => false,
         'type'                 => 'checkbox',
         'conditions'           => array(
@@ -195,7 +195,7 @@ $rsssl_integrations_list = apply_filters( 'rsssl_integrations', array(
 		'learning_mode'        => false,
 		'type'                 => 'checkbox',
 		'conditions'           => array(
-			'rsssl_wordpress_version_above_5_6',
+			'rsssl_application_passwords_available',
 		),
 		'actions'              => array(
 			'fix'       => 'rsssl_disable_application_passwords',
@@ -220,20 +220,44 @@ foreach ( $rsssl_integrations_list as $plugin => $details ) {
         $file = rsssl_path . 'security/' . $details['folder'] . "/" . $plugin . '.php';
     }
 
-	if ( file_exists( $file ) ) {
+	$skip = false;
+
+	if ( isset( $details['conditions'] ) ) {
+
+		// Include file with output buffering, so we can unset it if the conditions are not met
+		ob_start();
+		include( $file );
+		$output = ob_get_contents();
+		ob_end_clean();
+
+		foreach ( $details['conditions'] as $condition ) {
+			$condition_met = rsssl_validate_function($condition);
+			if ( $condition_met != true ) {
+				$skip = true;
+			}
+		}
+
+		unset( $output );
+	}
+
+	if ( file_exists( $file ) && $skip !== true ) {
         require_once( $file );
+	} elseif ( $skip !== false ) {
+		error_log("$plugin skipped, conditions not met");
 	} else {
 		error_log( "searched for $plugin integration at $file, but did not find it" );
 	}
 
-//    Apply fix on high risk
-    if ( $details['risk'] === 'high' && $details['impact'] === 'low' ) {
+	$risk = $details['risk'];
+	$impact = $details['impact'];
+
+	// Apply fix on high risk, low impact
+    if ( $risk === 'high' && $impact === 'low' ) {
         $fix = $details['actions']['fix'];
         rsssl_validate_function($fix);
     }
 
 }
-
 
 /**
  * Check if this plugin's integration is enabled
