@@ -434,14 +434,22 @@
             color: @light-text-color;
 
             .plugin-text {
+              white-space: nowrap;
+              overflow: hidden;
+              text-overflow: ellipsis;
               a {
                 text-decoration: none;
                 color: @light-text-color;
+                font-weight: 500;
                 &:hover {
                   color: @color_open;
                 }
               }
             }
+            .plugin-status{
+              min-width: fit-content;
+            }
+
 
             .rsp-image {
               margin-right: 5px;
