@@ -2015,12 +2015,10 @@ class rsssl_admin extends rsssl_front_end
 
         $htaccess = file_get_contents($this->htaccess_file());
 
-        $check = null;
+        preg_match("/BEGIN rlrssslReallySimpleSSL/", $htaccess, $old);
+	    preg_match("/BEGIN Really Simple SSL Redirect/", $htaccess, $new);
 
-        preg_match("/BEGIN rlrssslReallySimpleSSL/", $htaccess, $check);
-	    preg_match("/BEGIN Really Simple SSL Redirect/", $htaccess, $check);
-
-        if (count($check) === 0) {
+        if ( count( $old ) === 0 && count( $new ) === 0 ) {
             return false;
         } else {
             return true;
