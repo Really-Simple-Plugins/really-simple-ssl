@@ -142,10 +142,12 @@ class REALLY_SIMPLE_SSL
             require_once(rsssl_path . 'class-help.php');
 			require_once(rsssl_path . 'class-certificate.php');
 			require_once(rsssl_path . 'class-site-health.php');
+			require_once( rsssl_path . 'settings/settings.php' );
+
 			if ( isset($_GET['install_pro'])) {
 				require_once(rsssl_path . 'upgrade/upgrade-to-pro.php');
 			}
-        }
+		}
 
 		if ( is_admin() || wp_doing_cron() ) {
 			if (!defined('rsssl_beta_addon')) {

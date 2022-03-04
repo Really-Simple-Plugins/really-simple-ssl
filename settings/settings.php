@@ -1,9 +1,14 @@
 <?php
+defined('ABSPATH') or die();
+
 /**
  * Enqueue Gutenberg block assets for backend editor.
  *
  * @since 1.0.0
  */
+
+
+require_once( rsssl_path . 'settings/config/config.php' );
 
 function rsp_react_plugin_admin_scripts() {
 	$script_asset_path = __DIR__."/build/index.asset.php";
@@ -33,121 +38,55 @@ function rsp_react_plugin_admin_scripts() {
 }
 
 function rsp_react_add_option_menu() {
+	if (!current_user_can('activate_plugins')) return;
 
-	$page_hook_suffix = add_submenu_page(
-			'complianz',
-			__( 'Settings' ),
-			__( 'Settings' ),
-			'manage_options',
-			"cmplz-settings",
-			function() {
-				ob_start();
-				?>
-					<div id="rsp-react-content">
-					</div>
-				<?php
-				$html = ob_get_clean();
-				$args = array(
-						'page' => 'settings',
-						'content' => $html,
-				);
-				echo cmplz_get_template('admin_wrap.php', $args );
-			}
-	);
+	//hides the settings page if the hide menu for subsites setting is enabled
+	if (is_multisite() && rsssl_multisite::this()->hide_menu_for_subsites && !is_super_admin()) return;
+
+	$count = RSSSL()->really_simple_ssl->count_plusones();
+	$update_count = $count > 0 ? "<span class='update-plugins rsssl-update-count'><span class='update-count'>$count</span></span>" : "";
+
+	$page_hook_suffix = add_options_page(
+		__("SSL settings", "really-simple-ssl"),
+		__("SSL", "really-simple-ssl") . $update_count,
+		'activate_plugins',
+		'rlrsssl_really_simple_ssl',
+		function() {
+			ob_start();
+			?>
+            <div id="rsp-react-content"></div>
+			<?php
+			    $html = ob_get_clean();
+                $args = array(
+                    'page' => 'settings',
+                    'content' => $html,
+                );
+			    echo RSSSL()->really_simple_ssl->get_template('admin_wrap.php', $args );
+		    }
+    );
 
 	add_action( "admin_print_scripts-{$page_hook_suffix}", 'rsp_react_plugin_admin_scripts' );
 }
 
-add_action( 'cmplz_admin_menu', 'rsp_react_add_option_menu' );
-
-function rsp_react_plugin_register_settings() {
-	register_setting(
-		'rsp_react_plugin_settings_group_2',
-		'rsp_react_plugin_example_select_2',
-		[
-			'default'      => '',
-			'show_in_rest' => true,
-			'type'         => 'string',
-		]
-	);
-
-	register_setting(
-		'complianz_options_settings',
-		'complianz_options_settings',
-		[
-			'default'      => array(),
-			'show_in_rest' => true,
-			'type'         => 'string',
-		]
-	);
-	register_setting(
-		'rsp_react_plugin_settings',
-		'rsp_react_plugin_example_select',
-		[
-			'default'      => '',
-			'show_in_rest' => true,
-			'type'         => 'string',
-		]
-	);
-
-	register_setting(
-		'rsp_react_plugin_settings',
-		'rsp_react_plugin_example_text',
-		[
-			'default'      => '',
-			'show_in_rest' => true,
-			'type'         => 'string',
-		]
-	);
-
-	register_setting(
-		'rsp_react_plugin_settings',
-		'rsp_react_plugin_example_text_2',
-		[
-			'default'      => '',
-			'show_in_rest' => true,
-			'type'         => 'string',
-		]
-	);
-
-	register_setting(
-		'rsp_react_plugin_settings',
-		'rsp_react_plugin_example_text_3',
-		[
-			'default'      => '',
-			'show_in_rest' => true,
-			'type'         => 'string',
-		]
-	);
-
-	register_setting(
-		'rsp_react_plugin_settings',
-		'rsp_react_plugin_example_toggle',
-		[
-			'default'      => '',
-			'show_in_rest' => true,
-			'type'         => 'string',
-		]
-	);
-}
-add_action( 'init', 'rsp_react_plugin_register_settings', 10 );
+add_action( 'admin_menu', 'rsp_react_add_option_menu' );
 
 
 
-add_action( 'rest_api_init', 'cmplz_settings_rest_route' );
-function cmplz_settings_rest_route() {
+
+add_action( 'rest_api_init', 'rsssl_settings_rest_route' );
+function rsssl_settings_rest_route() {
 	if (!current_user_can('manage_options')) {
 		return;
 	}
 
-	register_rest_route( 'complianz/v1', 'fields/get', array(
+	register_rest_route( 'reallysimplessl/v1', 'fields/get', array(
 		'methods'  => 'GET',
 		'callback' => 'cmplz_rest_api_fields_get',
 		'permission_callback' => function () {
 			return current_user_can( 'manage_options' );
 		}
 	) );
-	register_rest_route( 'complianz/v1', 'fields/set', array(
+	register_rest_route( 'reallysimplessl/v1', 'fields/set', array(
 		'methods'  => 'POST',
 		'callback' => 'cmplz_rest_api_fields_set',
 		'permission_callback' => function () {
@@ -204,8 +143,7 @@ function cmplz_rest_api_fields_set($request){
 
 	}
 
-	//		@todo update this hook to use the new type of field array
-	do_action('cmplz_after_saved_all_fields', $fields );
+	do_action('rsssl_after_saved_fields', $fields );
 
 	$output = ['success' => true];
 	$response               = json_encode( $output );
@@ -215,22 +153,34 @@ function cmplz_rest_api_fields_set($request){
 }
 
 /**
+ * Get a Really Simple SSL option by name
+ *
+ * @param string $name
+ * @param mixed $default
+ *
+ * @return mixed
+ */
+function rsssl_get_value($name, $default=false){
+    $options = get_option('rsssl_options', array());
+    return isset($options[$name]) ? $options[$name]: $default;
+}
+
+/**
  * Get the rest api fields
  * @return void
  */
 
-function cmplz_rest_api_fields_get(){
-	$fields_output = array();
+function rsssl_rest_api_fields_get(){
 	$output = array();
-	$fields = COMPLIANZ::$config->fields('settings');
-	$menu_items = COMPLIANZ::$config->menu('settings');
-	foreach ( $fields as $id => $field ) {
-		$field['id'] = $id;
-		$field['value'] = cmplz_get_value($id);
-		$fields_output[] = $field;
+    $current_menu = 'general';
+
+	$fields = rsssl_fields($current_menu);
+	$menu_items = rsssl_menu($current_menu);
+	foreach ( $fields as $index => $field ) {
+		$fields[$index]['value'] = rsssl_get_value($field['id']);
 	}
 
-	$output['fields'] = $fields_output;
+	$output['fields'] = $fields;
 	$output['menu'] = $menu_items;
 	$response = json_encode( $output );
 	header( "Content-Type: application/json" );
@@ -282,12 +232,8 @@ function cmplz_sanitize_field( $value, $type ) {
 			return  $value ;
 		case 'editor':
 		case 'textarea':
-			return wp_kses_post( $value );
-		case 'add_script':
-		case 'block_script':
-		case 'whitelist_script':
-			return array_map( array($this, 'sanitize_custom_scripts'), $value );
+		    return wp_kses_post( $value );
+		default:
+			return sanitize_text_field( $value );
 	}
-
-	return sanitize_text_field( $value );
 }

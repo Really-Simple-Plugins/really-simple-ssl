@@ -270,7 +270,6 @@ class rsssl_admin extends rsssl_front_end
         add_action('admin_enqueue_scripts', array($this, 'enqueue_assets'));
 
         //settings page, form  and settings link in the plugins page
-        add_action('admin_menu', array($this, 'add_settings_page'), 40);
 	    add_action('admin_init', array($this, 'create_form'), 40);
         add_action('admin_init', array($this, 'listen_for_deactivation'), 40);
         add_action( 'update_option_rlrsssl_options', array( $this, 'maybe_remove_highlight_from_url' ), 50 );
@@ -2852,40 +2851,6 @@ class rsssl_admin extends rsssl_front_end
 
         $this->save_options();
         wp_die(); // this is required to terminate immediately and return a proper response
-    }
-
-    /**
-     * Adds the admin options page
-     *
-     * @since  2.0
-     *
-     * @access public
-     *
-     */
-
-    public function add_settings_page()
-    {
-        if (!current_user_can($this->capability)) return;
-
-        //hides the settings page if the hide menu for subsites setting is enabled
-        if (is_multisite() && rsssl_multisite::this()->hide_menu_for_subsites && !is_super_admin()) return;
-
-        global $rsssl_admin_page;
-
-        $count = $this->count_plusones();
-        if ($count > 0 ) {
-            $update_count = "<span class='update-plugins rsssl-update-count'><span class='update-count'>$count</span></span>";
-        } else {
-            $update_count = "";
-        }
-
-        $rsssl_admin_page = add_options_page(
-            __("SSL settings", "really-simple-ssl"), //link title
-            __("SSL", "really-simple-ssl") . $update_count, //page title
-            $this->capability, //capability
-            'rlrsssl_really_simple_ssl', //url
-            array($this, 'settings_page')); //function
-
     }
 
     /**
