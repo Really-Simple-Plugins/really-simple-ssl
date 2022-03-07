@@ -10,19 +10,19 @@ defined('ABSPATH') or die();
 
 require_once( rsssl_path . 'settings/config/config.php' );
 
-function rsp_react_plugin_admin_scripts() {
+function rsssl_plugin_admin_scripts() {
 	$script_asset_path = __DIR__."/build/index.asset.php";
 	$script_asset = require( $script_asset_path );
 	wp_enqueue_script(
-		'rsp-react-plugin-admin-editor',
+		'rsssl-wizard-plugin-admin-editor',
 		plugins_url( 'build/index.js', __FILE__ ),
 		$script_asset['dependencies'],
 		$script_asset['version']
 	);
-	wp_set_script_translations( 'rsp-react-plugin-block-editor', 'rsp-react' );
+	wp_set_script_translations( 'rsssl-wizard-plugin-block-editor', 'really-simple-ssl' );
 	wp_localize_script(
-			'rsp-react-plugin-admin-editor',
-			'rsp_react',
+			'rsssl-wizard-plugin-admin-editor',
+			'rsssl_settings',
 			array(
 				'site_url' => get_rest_url(),
 				'nonce' => wp_create_nonce( 'wp_rest' ),//to authenticate the logged in user
@@ -30,14 +30,14 @@ function rsp_react_plugin_admin_scripts() {
 	);
 
 	wp_enqueue_style(
-		'rsp-react-plugin-admin',
+		'rsssl-wizard-plugin-admin',
 		plugins_url( 'css/admin.css', __FILE__ ),
 		['wp-components'],
 		filemtime( __DIR__."/css/admin.css" )
 	);
 }
 
-function rsp_react_add_option_menu() {
+function rsssl_add_option_menu() {
 	if (!current_user_can('activate_plugins')) return;
 
 	//hides the settings page if the hide menu for subsites setting is enabled
@@ -45,7 +45,6 @@ function rsp_react_add_option_menu() {
 
 	$count = RSSSL()->really_simple_ssl->count_plusones();
 	$update_count = $count > 0 ? "<span class='update-plugins rsssl-update-count'><span class='update-count'>$count</span></span>" : "";
-
 	$page_hook_suffix = add_options_page(
 		__("SSL settings", "really-simple-ssl"),
 		__("SSL", "really-simple-ssl") . $update_count,
@@ -54,7 +53,7 @@ function rsp_react_add_option_menu() {
 		function() {
 			ob_start();
 			?>
-            <div id="rsp-react-content"></div>
+            <div id="rsssl-wizard-content"></div>
 			<?php
 			    $html = ob_get_clean();
                 $args = array(
@@ -65,10 +64,9 @@ function rsp_react_add_option_menu() {
 		    }
     );
 
-	add_action( "admin_print_scripts-{$page_hook_suffix}", 'rsp_react_plugin_admin_scripts' );
+	add_action( "admin_print_scripts-{$page_hook_suffix}", 'rsssl_plugin_admin_scripts' );
 }
-
-add_action( 'admin_menu', 'rsp_react_add_option_menu' );
+add_action( 'admin_menu', 'rsssl_add_option_menu' );
 
 
 
@@ -88,65 +86,61 @@ function rsssl_settings_rest_route() {
 	) );
 	register_rest_route( 'reallysimplessl/v1', 'fields/set', array(
 		'methods'  => 'POST',
-		'callback' => 'cmplz_rest_api_fields_set',
+		'callback' => 'rsssl_rest_api_fields_set',
 		'permission_callback' => function () {
 			return current_user_can( 'manage_options' );
 		}
 	) );
 }
 
-function cmplz_rest_api_fields_set($request){
+function rsssl_sanitize_field_type($type){
+    $types = [
+        'checkbox',
+        'radio',
+        'text',
+        'number',
+        'email',
+        'select',
+
+    ];
+    if ( in_array($type, $types) ){
+        return $type;
+    }
+    return 'checkbox';
+}
+
+function rsssl_rest_api_fields_set($request){
 	$fields = $request->get_json_params();
-	$fields_by_source = [];
-	foreach ( $fields as $field ) {
-		if ( !isset( COMPLIANZ::$config->fields[ $field['id']] ) ){
-			continue;
+    $config_fields = rsssl_fields();
+	foreach ( $fields as $index => $field ) {
+		if ( !isset( $config_fields[ $field['id']] ) ){
+			unset($fields[$index]);
 		}
-		if ( isset( $field['callback'] ) ) {
-			return;
-		}
-		if (class_exists($field['source'], false)) {
-			return;
-		}
-		$field['value'] = apply_filters("cmplz_fieldvalue", $field['value'], $field['id']);
-		$field['value'] = cmplz_sanitize_field( $field['value'], $field['type'] );
-		//make translatable
-		if ( $field['type'] == 'text' || $field['type'] == 'textarea' || $field['type'] == 'editor' ) {
-			if ( isset( $field['translatable'] )
-			     && $field['translatable']
-			) {
-				do_action( 'cmplz_register_translation', $field['id'], $field['value'] );
-			}
-		}
-		$fields_by_source[ $field['source'] ][] = $field;
+        $value = rsssl_sanitize_field( $field['value'] , rsssl_sanitize_field_type($field['type']) );
+		$value = apply_filters("rsssl_fieldvalue", $value, sanitize_text_field($field['id']));
+		$field['value'] = $value;
+		$fields[$index] = $field;
 	}
+    $options = get_option( 'rsssl_options', array() );
 
-	foreach ( $fields_by_source  as $source => $fields) {
-		$options = get_option( 'complianz_options_' . $source );
-		if ( ! is_array( $options ) ) {
-			$options = array();
-		}
-		//build a new options array
-		foreach ( $fields as $field ) {
-			$prev_value = isset( $options[ $field['id'] ] ) ? $options[ $field['id'] ] : false;
-			do_action( "complianz_before_save_" . $source . "_option", $field['id'], $field['value'], $prev_value, $field['type'] );
-			$options[ $field['id'] ] = $field['value'];
-		}
+    //build a new options array
+    foreach ( $fields as $field ) {
+        $prev_value = isset( $options[ $field['id'] ] ) ? $options[ $field['id'] ] : false;
+        do_action( "rsssl_before_save_option", $field['id'], $field['value'], $prev_value, $field['type'] );
+        $options[ $field['id'] ] = $field['value'];
+    }
 
-		if ( ! empty( $options ) ) {
-			update_option( 'complianz_options_' . $source, $options );
-		}
+    if ( ! empty( $options ) ) {
+        update_option( 'rsssl_options', $options );
+    }
 
-		foreach ( $fields as $field ) {
-			do_action( "complianz_after_save_" . $source . "_option", $field['id'], $field['value'], $prev_value, $field['type'] );
-		}
-
-	}
+    foreach ( $fields as $field ) {
+        do_action( "rsssl_after_save_option", $field['id'], $field['value'], $prev_value, $field['type'] );
+    }
 
 	do_action('rsssl_after_saved_fields', $fields );
-
-	$output = ['success' => true];
-	$response               = json_encode( $output );
+	$output   = ['success' => true];
+	$response = json_encode( $output );
 	header( "Content-Type: application/json" );
 	echo $response;
 	exit;
@@ -161,7 +155,7 @@ function cmplz_rest_api_fields_set($request){
  * @return mixed
  */
 function rsssl_get_value($name, $default=false){
-    $options = get_option('rsssl_options', array());
+    $options = get_option( 'rsssl_options', array() );
     return isset($options[$name]) ? $options[$name]: $default;
 }
 
@@ -172,9 +166,7 @@ function rsssl_get_value($name, $default=false){
 
 function rsssl_rest_api_fields_get(){
 	$output = array();
-    $current_menu = 'general';
-
-	$fields = rsssl_fields($current_menu);
+	$fields = rsssl_fields();
 	$menu_items = rsssl_menu('group_general');
 	foreach ( $fields as $index => $field ) {
 		$fields[$index]['value'] = rsssl_get_value($field['id']);
@@ -203,36 +195,20 @@ function rsssl_sanitize_field( $value, $type ) {
 	switch ( $type ) {
 		case 'checkbox':
 			return intval($value);
-		case 'colorpicker':
-			return is_array($value ) ? array_map( 'sanitize_hex_color', $value ) : sanitize_hex_color($value);
-		case 'text_checkbox':
-			$value['text'] = sanitize_text_field($value['text']);
-			$value['show'] = intval($value['show']);
-			return $value;
+		case 'select':
 		case 'text':
 			return sanitize_text_field( $value );
 		case 'multicheckbox':
 			if ( ! is_array( $value ) ) {
 				$value = array( $value );
 			}
-
 			return array_map( 'sanitize_text_field', $value );
-		case 'phone':
-			$value = sanitize_text_field( $value );
-
-			return $value;
 		case 'email':
 			return sanitize_email( $value );
 		case 'url':
 			return esc_url_raw( $value );
 		case 'number':
 			return intval( $value );
-		case 'css':
-		case 'javascript':
-			return  $value ;
-		case 'editor':
-		case 'textarea':
-		    return wp_kses_post( $value );
 		default:
 			return sanitize_text_field( $value );
 	}

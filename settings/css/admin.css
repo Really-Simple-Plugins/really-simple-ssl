@@ -1,18 +1,14 @@
-/* Wizard.css reset, should be removed later */
-#cmplz-content-area {
-  display: block;
-}
-
-#rsp-react-content {
-  display: flex;
-}
-#rsp-react-content .rsp-react-menu {
+#rsssl-wizard-content .rsssl-wizard-menu {
   min-width: 200px;
   padding: 20px;
   margin: 20px;
   background-color: #fff;
 }
-#rsp-react-content .components-placeholder {
+
+#rsssl-wizard-content {
+  display: flex;
+}
+#rsssl-wizard-content .components-placeholder {
   box-shadow: 0 0 0;
   outline: 0px;
   border: 0 solid black !important;
@@ -35,57 +31,52 @@
     background-position: 100% 0, 1px 1px, 1px 40px, 1px 79px, 1px 118px;
   }
 }
-#rsp-react-content .rsp-react-settings {
-  width: 100%;
-}
-#rsp-react-content .rsp-react-settings .rsp-react-container {
+
+#rsssl-wizard-content {
   display: flex;
 }
-#rsp-react-content .rsp-react-settings .rsp-react-container .rsp-react__help {
-  min-width: 25%;
-}
-#rsp-react-content .rsp-react-settings .rsp-react-container .rsp-react__help .rsp-react__help_notice {
-  margin: 20px;
-  padding: 20px;
-  background-color: white;
-}
-#rsp-react-content .rsp-react-settings .rsp-react-container .rsp-react__main {
-  margin-left: auto;
-  margin-right: auto;
+#rsssl-wizard-content .rsssl-wizard-settings {
   display: flex;
+  flex: auto 1;
 }
-#rsp-react-content .rsp-react-settings .rsp-react-container .rsp-react__main .components-panel {
+#rsssl-wizard-content .rsssl-wizard-settings .rsssl-wizard__main {
+  display: flex;
+  flex: auto 1;
+}
+#rsssl-wizard-content .rsssl-wizard-settings .rsssl-wizard__main .components-panel {
   background: none;
   border: none;
+  flex: auto 1;
 }
-#rsp-react-content .rsp-react-settings .rsp-react-container .rsp-react__main .components-panel__body-title {
+#rsssl-wizard-content .rsssl-wizard-settings .rsssl-wizard__main .components-panel__body-title {
   display: none;
 }
-#rsp-react-content .rsp-react-settings .rsp-react-container .rsp-react__main .components-panel__body {
+#rsssl-wizard-content .rsssl-wizard-settings .rsssl-wizard__main .components-panel__body {
   background: #ffffff;
   border-top: 0;
   border-bottom: 0;
 }
-#rsp-react-content .rsp-react-settings .rsp-react-container .rsp-react__main .components-panel__body:first-child {
+#rsssl-wizard-content .rsssl-wizard-settings .rsssl-wizard__main .components-panel__body:first-child {
   margin-top: 20px;
 }
-#rsp-react-content .rsp-react-settings .rsp-react-container .rsp-react__main .components-panel__body .components-number-control .components-input-control__container {
+#rsssl-wizard-content .rsssl-wizard-settings .rsssl-wizard__main .components-panel__body .components-number-control .components-input-control__container {
   width: inherit;
 }
-#rsp-react-content .rsp-react-settings .rsp-react-container .components-panel__row > div {
-  flex-grow: 1;
-  margin-right: 1rem;
+#rsssl-wizard-content .rsssl-wizard-settings .rsssl-wizard__help {
+  min-width: 25%;
 }
-#rsp-react-content .rsp-react-settings .rsp-react-container .components-panel__row > div:last-of-type {
-  margin-right: 0;
+#rsssl-wizard-content .rsssl-wizard-settings .rsssl-wizard__help .rsssl-wizard__help_notice {
+  margin: 20px;
+  padding: 20px;
+  background-color: white;
 }
 
-.rsp-react__notices {
+.rsssl-wizard__notices {
   top: 0.5rem;
   position: fixed;
   z-index: 99999999;
 }
-.rsp-react__notices .components-snackbar {
+.rsssl-wizard__notices .components-snackbar {
   top: 35px;
   left: 50%;
   position: fixed;

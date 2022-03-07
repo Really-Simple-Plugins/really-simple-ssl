@@ -11,7 +11,7 @@ import axios from 'axios';
 export const getFields = () => {
 	let config = {
 		headers: {
-			'X-WP-Nonce': rsp_react.nonce,
+			'X-WP-Nonce': rsssl_settings.nonce,
 		}
 	}
     return axios.get(rsp_react.site_url+'reallysimplessl/v1/fields/get', config);
@@ -25,9 +25,10 @@ export const getFields = () => {
 export const setFields = (data) => {
 	let config = {
 		headers: {
-			'X-WP-Nonce': rsp_react.nonce,
+			'X-WP-Nonce': rsssl_settings.nonce,
 		}
 	}
 	return axios.post(rsp_react.site_url+'reallysimplessl/v1/fields/set', data, config );
 };
+
 

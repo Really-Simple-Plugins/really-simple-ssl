@@ -3,60 +3,98 @@ defined('ABSPATH') or die();
 
 function rsssl_menu( $group_id = 'group_general' ){
 	$menu_items = [
-		'group_general' => [
-				[
-					"id"    => "main",
-					"title" => __( "Main item 1", 'really-simple-ssl' ),
-					'sections' => [
-						[
-							'id' => 'general',
-							'title' => __('Visitors', 'really-simple-ssl'),
-						],
-						[
-							'id' => 'item-2',
-							'title' => __('Item 2', 'really-simple-ssl'),
-						],
-					],
-				],
 			[
-				"id"    => "main2",
-				"title" => __( "Main item 2", 'really-simple-ssl' ),
-				'sections' => [
+				"id"    => "group_general",
+				"title" => __( "General settings", 'really-simple-ssl' ),
+				"is_wizard" => true,
+				'menu_items' => [
 					[
-						'id' => 'general-2',
-						'title' => __('Visitors 2', 'really-simple-ssl'),
+						'id' => 'mixed_content',
+						'title' => __('Mixed content', 'really-simple-ssl'),
+						'step' => 1,
 					],
 					[
-						'id' => 'item-2',
-						'title' => __('Item 2 2', 'really-simple-ssl'),
+						'id' => 'headers',
+						'title' => __('Headers', 'really-simple-ssl'),
+						'menu_items' => [
+							[
+								'id' => 'mixed_content2',
+								'title' => __('Mixed content 2', 'really-simple-ssl'),
+							],
+							[
+								'id' => 'headers',
+								'title' => __('Headers', 'really-simple-ssl'),
+							],
+						],
+						'step' => 2,
+
 					],
 				],
 			],
-			]
+			[
+				"id"    => "group_letsencrypt",
+				"title" => __( "lets encrypt menu", 'really-simple-ssl' ),
+				'menu_items' => [
+					[
+						'id' => 'system-check',
+						'title' => __('system check', 'really-simple-ssl'),
+					],
+					[
+						'id' => 'general',
+						'title' => __('General', 'really-simple-ssl'),
+					],
+				],
+			],
+
 		];
 	$menu_items = apply_filters('rsssl_menu', $menu_items);
-	return isset($menu_items[$group_id]) ? $menu_items[$group_id] : array();
+	foreach ($menu_items as $index => $menu_item ) {
+		if ($menu_item['id']===$group_id) {
+			return $menu_item;
+		}
+	}
+	return array();
 }
 
-function rsssl_fields( $menu_id = 'main', $sub_menu_id = false ){
-	$fields = array(
-		array(
+function rsssl_fields(){
+	$fields = [
+		[
 			'id'          => 'mixed_content_fixer',
-			'menu_id' => 'general',
+			'menu_id'     => 'mixed_content',
 			'type'        => 'checkbox',
-			'label'       => __( "Field name", 'really-simple-ssl' ),
+			'label'       => __( "Field name 1", 'really-simple-ssl' ),
+			'help'     => __( 'A help text', 'really-simple-ssl' ),
+			'disabled'    => true,
+			'default'     => false,
+		],
+		[
+			'id'          => 'mixed_content_fixer_2',
+			'menu_id'     => 'mixed_content',
+			'type'        => 'checkbox',
+			'label'       => __( "Field name 2", 'really-simple-ssl' ),
 			'comment'     => __( 'A comment', 'really-simple-ssl' ),
 			'disabled'    => true,
 			'default'     => false,
-		),
-	);
+		],
+		[
+			'id'          => 'mixed_content_fixer_3',
+			'menu_id'     => 'headers',
+			'type'        => 'checkbox',
+			'label'       => __( "Field name 3", 'really-simple-ssl' ),
+			'comment'     => __( 'A comment', 'really-simple-ssl' ),
+			'disabled'    => true,
+			'default'     => false,
+		],
+		[
+			'id'          => 'mixed_content_fixer_4',
+			'menu_id'     => 'headers',
+			'type'        => 'checkbox',
+			'label'       => __( "Field name 4", 'really-simple-ssl' ),
+			'comment'     => __( 'A comment', 'really-simple-ssl' ),
+			'disabled'    => true,
+			'default'     => false,
+		],
+	];
 	$fields = apply_filters('rsssl_fields', $fields);
-	$output = array();
-
-	foreach ($fields as $key => $field ){
-		if ( $field['menu_id']===$menu_id ) {
-			$output[$key] = $field;
-		}
-	}
-	return $output;
+	return $fields;
 }
