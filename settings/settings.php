@@ -68,7 +68,87 @@ function rsssl_add_option_menu() {
 }
 add_action( 'admin_menu', 'rsssl_add_option_menu' );
 
+/**
+ * Render the settings page
+ */
 
+ function settings_page()
+{
+	if (!current_user_can('activate_plugins')) return;
+	if ( isset ($_GET['tab'] ) ) rsssl_admin_tabs( $_GET['tab'] ); else rsssl_admin_tabs('configuration');
+	if ( isset ($_GET['tab'] ) ) $tab = $_GET['tab']; else $tab = 'configuration';
+
+	$high_contrast = RSSSL()->really_simple_ssl->high_contrast ? 'rsssl-high-contrast' : ''; ?>
+    <div class="rsssl-container <?php echo $high_contrast ?>">
+        <div class="rsssl-main"><?php
+			switch ($tab) {
+				case 'configuration' :
+					RSSSL()->really_simple_ssl->render_grid(RSSSL()->really_simple_ssl->general_grid());
+					do_action("rsssl_configuration_page");
+					break;
+			}
+			//possibility to hook into the tabs.
+			do_action("show_tab_{$tab}");
+			?>
+        </div>
+    </div>
+	<?php
+}
+
+/**
+ * Create tabs on the settings page
+ *
+ * @since  2.1
+ *
+ * @access public
+ *
+ */
+
+function rsssl_admin_tabs($current = 'homepage')
+{
+	$tabs = array(
+		'configuration' => '',
+	);
+	$tabs = apply_filters("rsssl_grid_tabs", $tabs);
+
+	//allow the license tab to show up for older version, to allow for upgrading
+	$legacy_tabs = apply_filters("rsssl_tabs", array());
+	if (isset($legacy_tabs['license'])) $tabs['license']= $legacy_tabs['license'];
+
+	// Only show general tab if there are other tabs as well
+	if (count($tabs) > 1) {
+		$tabs['configuration'] = __("General", "really-simple-ssl");
+	}
+
+	$high_contrast = RSSSL()->really_simple_ssl->high_contrast ? 'rsssl-high-contrast' : ''; ?>
+    <div class="nav-tab-wrapper <?php echo $high_contrast ?>">
+        <div class="rsssl-logo-container">
+            <div id="rsssl-logo"><img src="<?php echo rsssl_url?>/assets/really-simple-ssl-logo.png" alt="review-logo"></div>
+        </div>
+		<?php
+		if (count($tabs)>1) {
+			foreach ( $tabs as $tab => $name ) {
+				$class = ( $tab == $current ) ? ' nav-tab-active' : '';
+				echo "<a class='nav-tab$class' href='?page=rlrsssl_really_simple_ssl&tab=$tab'>$name</a>";
+			}
+		}
+		?>
+        <div class="header-links">
+            <div class="documentation">
+                <a href="https://really-simple-ssl.com/knowledge-base" class="<?php if (defined('rsssl_pro_version')) echo "button button-primary"?>" target="_blank"><?php _e("Documentation", "really-simple-ssl");?></a>
+            </div>
+            <div class="header-upsell">
+				<?php if (defined('rsssl_pro_version')) { ?>
+				<?php } else { ?>
+                    <div class="documentation">
+                        <a href="https://wordpress.org/support/plugin/really-simple-ssl/" class="button button-primary" target="_blank"><?php _e("Support", "really-simple-ssl") ?></a>
+                    </div>
+				<?php } ?>
+            </div>
+        </div>
+    </div>
+	<?php
+}
 
 
 add_action( 'rest_api_init', 'rsssl_settings_rest_route' );
