@@ -3930,6 +3930,7 @@ class rsssl_admin extends rsssl_front_end
                         break;
                 }
                 do_action("show_tab_{$tab}");
+                do_action("rsssl_show_tab_{$tab}");
                 ?>
             </div>
         </div>
