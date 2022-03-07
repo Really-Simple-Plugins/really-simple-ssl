@@ -2925,7 +2925,7 @@ class rsssl_admin extends rsssl_front_end
      *
      */
 
-    public function admin_tabs($current = 'homepage')
+    public function admin_tabs($current = 'configuration')
     {
         $tabs = array(
             'configuration' => '',
@@ -3917,10 +3917,9 @@ class rsssl_admin extends rsssl_front_end
 
     public function settings_page()
     {
-        if (!current_user_can($this->capability)) return;
-        if ( isset ($_GET['tab'] ) ) $this->admin_tabs( $_GET['tab'] ); else $this->admin_tabs('configuration');
-        if ( isset ($_GET['tab'] ) ) $tab = $_GET['tab']; else $tab = 'configuration';
-
+	    if (!current_user_can($this->capability)) return;
+	    $tab = isset( $_GET['tab']) ? sanitize_title($_GET['tab']) : 'configuration';
+        $this->admin_tabs($tab );
 	    $high_contrast = $this->high_contrast ? 'rsssl-high-contrast' : ''; ?>
         <div class="rsssl-container <?php echo $high_contrast ?>">
             <div class="rsssl-main"><?php
@@ -3930,7 +3929,6 @@ class rsssl_admin extends rsssl_front_end
                         do_action("rsssl_configuration_page");
                         break;
                 }
-                //possibility to hook into the tabs.
                 do_action("show_tab_{$tab}");
                 ?>
             </div>
