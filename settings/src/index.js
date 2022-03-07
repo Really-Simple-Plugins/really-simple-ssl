@@ -34,10 +34,10 @@ import { __ } from '@wordpress/i18n';
 /**
  * Javascript and CSS editor components
  */
-import AceEditor from "react-ace";
-import "ace-builds/src-noconflict/mode-javascript";
-import "ace-builds/src-noconflict/mode-css";
-import "ace-builds/src-noconflict/theme-tomorrow_night_bright";
+// import AceEditor from "react-ace";
+// import "ace-builds/src-noconflict/mode-javascript";
+// import "ace-builds/src-noconflict/mode-css";
+// import "ace-builds/src-noconflict/theme-tomorrow_night_bright";
 
 class Help extends Component {
 	render(){
@@ -254,6 +254,8 @@ class Settings extends Component {
 		this.fields = this.props.fields;
 	}
 
+
+
 	render() {
 		const {
 			fields,
@@ -265,9 +267,11 @@ class Settings extends Component {
 				<Placeholder></Placeholder>
 			);
 		}
-
-		let selectedFields = fields.filter(field => field.step === selectedMenuItem.id);
-
+		console.log("fields");
+		console.log(fields);
+		let selectedFields = fields.filter(field => field.menu_id === selectedMenuItem.id);
+		console.log("selected fields");
+		console.log(selectedFields);
 		return (
 			<div className="rsp-react-settings">
 				<div className="rsp-react-container">
@@ -311,18 +315,22 @@ class SettingsPage extends Component {
 		this.getFields().then(( response ) => {
 			let fields = response.fields;
 			let menu = response.menu;
-
 			//if count >1, it's a wizard
 			//@todo extend this to allow for wizard
 			let menuItems = [];
-			if ( menu.length==1 ) {
+			console.log(menu);
+			//if ( menu.length==1 ) {
 				menuItems = menu[0].sections;
-			}
+			//}
+			console.log(menuItems);
+
 			let selectedMenuItem = menuItems[0];
 			this.menu = menu;
 			this.menuItems = menuItems;
 			this.fields = fields;
 			this.selectedMenuItem = selectedMenuItem;
+			console.log("fields");
+			console.log(fields);
 			this.setState({
 				isAPILoaded: true,
 				fields: fields,
@@ -357,7 +365,7 @@ class SettingsPage extends Component {
 		cmplz_api.setFields(saveFields).then(( response ) => {
 			dispatch('core/notices').createNotice(
 				'success',
-				__( 'Settings Saved', 'complianz-gdpr' ),
+				__( 'Settings Saved', 'really-simple-ssl' ),
 				{
 					type: 'snackbar',
 					isDismissible: true,

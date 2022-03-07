@@ -61,7 +61,7 @@ function rsp_react_add_option_menu() {
                     'page' => 'settings',
                     'content' => $html,
                 );
-			    echo RSSSL()->really_simple_ssl->get_template('admin_wrap.php', $args );
+			    echo RSSSL()->really_simple_ssl->get_template('admin-wrap.php', rsssl_path.'/settings', $args );
 		    }
     );
 
@@ -81,7 +81,7 @@ function rsssl_settings_rest_route() {
 
 	register_rest_route( 'reallysimplessl/v1', 'fields/get', array(
 		'methods'  => 'GET',
-		'callback' => 'cmplz_rest_api_fields_get',
+		'callback' => 'rsssl_rest_api_fields_get',
 		'permission_callback' => function () {
 			return current_user_can( 'manage_options' );
 		}
@@ -175,7 +175,7 @@ function rsssl_rest_api_fields_get(){
     $current_menu = 'general';
 
 	$fields = rsssl_fields($current_menu);
-	$menu_items = rsssl_menu($current_menu);
+	$menu_items = rsssl_menu('group_general');
 	foreach ( $fields as $index => $field ) {
 		$fields[$index]['value'] = rsssl_get_value($field['id']);
 	}
@@ -195,7 +195,7 @@ function rsssl_rest_api_fields_get(){
  *
  * @return array|bool|int|string|void
  */
-function cmplz_sanitize_field( $value, $type ) {
+function rsssl_sanitize_field( $value, $type ) {
 	if ( ! current_user_can( 'manage_options' ) ) {
 		return false;
 	}

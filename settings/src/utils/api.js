@@ -14,7 +14,7 @@ export const getFields = () => {
 			'X-WP-Nonce': rsp_react.nonce,
 		}
 	}
-    return axios.get(rsp_react.site_url+'complianz/v1/fields/get', config);
+    return axios.get(rsp_react.site_url+'reallysimplessl/v1/fields/get', config);
 };
 
 /**
@@ -28,6 +28,6 @@ export const setFields = (data) => {
 			'X-WP-Nonce': rsp_react.nonce,
 		}
 	}
-	return axios.post(rsp_react.site_url+'complianz/v1/fields/set', data, config );
+	return axios.post(rsp_react.site_url+'reallysimplessl/v1/fields/set', data, config );
 };
 
