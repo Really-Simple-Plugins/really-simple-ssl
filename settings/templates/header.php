@@ -2,7 +2,8 @@
 	$current = isset($_GET['tab']) ? sanitize_title($_GET['tab']) : 'dashboard';
 	$tabs = apply_filters("rsssl_grid_tabs",
 		$tabs = [
-			$tabs['dashboard'] = __("Dashboard", "really-simple-ssl")
+			'dashboard' => __("Dashboard", "really-simple-ssl"),
+			'settings' => __("Settings", "really-simple-ssl"),
 		]
 	);
 
@@ -16,12 +17,12 @@
 		<div id="rsssl-logo"><img src="<?php echo rsssl_url?>/assets/really-simple-ssl-logo.png" alt="review-logo"></div>
 	</div>
 	<?php
-	if (count($tabs)>1) {
-		foreach ( $tabs as $tab => $name ) {
-			$class = ( $tab == $current ) ? ' nav-tab-active' : '';
-			echo "<a class='nav-tab$class' href='?page=rlrsssl_really_simple_ssl&tab=$tab'>$name</a>";
-		}
-	}
+
+    foreach ( $tabs as $tab => $name ) {
+        $class = ( $tab == $current ) ? ' nav-tab-active' : '';
+        echo "<a class='nav-tab$class' href='?page=rlrsssl_really_simple_ssl&tab=$tab'>$name</a>";
+    }
+
 	?>
 	<div class="header-links">
 		<div class="documentation">

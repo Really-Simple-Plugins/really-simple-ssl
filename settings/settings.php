@@ -50,18 +50,7 @@ function rsssl_add_option_menu() {
 		__("SSL", "really-simple-ssl") . $update_count,
 		'activate_plugins',
 		'rlrsssl_really_simple_ssl',
-		function() {
-			ob_start();
-			?>
-            <div id="rsssl-wizard-content"></div>
-			<?php
-			    $html = ob_get_clean();
-                $args = array(
-                    'page' => 'settings',
-                    'content' => $html,
-                );
-			    echo RSSSL()->really_simple_ssl->get_template('admin-wrap.php', rsssl_path.'/settings', $args );
-		    }
+		'rsssl_settings_page'
     );
 
 	add_action( "admin_print_scripts-{$page_hook_suffix}", 'rsssl_plugin_admin_scripts' );
@@ -72,30 +61,30 @@ add_action( 'admin_menu', 'rsssl_add_option_menu' );
  * Render the settings page
  */
 
- function settings_page()
+ function rsssl_settings_page()
 {
 	if (!current_user_can('activate_plugins')) return;
 	$tab = isset($_GET['tab']) ? sanitize_title($_GET['tab']) : 'dashboard';
-    echo RSSSL()->really_simple_ssl->get_template('headert.php', rsssl_path . 'settings/');
+    echo RSSSL()->really_simple_ssl->get_template('header.php', rsssl_path . 'settings/');
 
     $high_contrast = RSSSL()->really_simple_ssl->high_contrast ? 'rsssl-high-contrast' : ''; ?>
     <div class="rsssl-container <?php echo $high_contrast ?>">
         <div class="rsssl-main"><?php
 			switch ($tab) {
-				case 'configuration' :
+				case 'dashboard' :
 					RSSSL()->really_simple_ssl->render_grid(RSSSL()->really_simple_ssl->general_grid());
 					break;
 				case 'settings' :
-					RSSSL()->really_simple_ssl->render_grid(RSSSL()->really_simple_ssl->general_grid());
+					$html = '<div id="rsssl-wizard-content"></div>';
+					$args = array(
+						'page' => 'settings',
+						'content' => $html,
+					);
+					echo RSSSL()->really_simple_ssl->get_template('admin-wrap.php', rsssl_path.'/settings', $args );
 					break;
 			}
-	        do_action("rsssl_{$tab}_page");
-
 	        do_action("rsssl_show_tab_{$tab}");
-
-            //deprecate, not prefixed
-			do_action("show_tab_{$tab}");
-			?>
+            ?>
         </div>
     </div>
 	<?php

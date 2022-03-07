@@ -26,7 +26,7 @@ function rsssl_menu( $group_id = 'group_general' ){
 								'title' => __('Headers', 'really-simple-ssl'),
 							],
 						],
-						'step' => 2,
+						'step' => 1,
 
 					],
 				],

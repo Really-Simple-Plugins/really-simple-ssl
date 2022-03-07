@@ -2381,7 +2381,7 @@ const getFields = () => {
       'X-WP-Nonce': rsssl_settings.nonce
     }
   };
-  return axios__WEBPACK_IMPORTED_MODULE_0___default().get(rsp_react.site_url + 'reallysimplessl/v1/fields/get', config);
+  return axios__WEBPACK_IMPORTED_MODULE_0___default().get(rsssl_settings.site_url + 'reallysimplessl/v1/fields/get', config);
 };
 /**
  * Post our data to the back-end
@@ -2395,7 +2395,7 @@ const setFields = data => {
       'X-WP-Nonce': rsssl_settings.nonce
     }
   };
-  return axios__WEBPACK_IMPORTED_MODULE_0___default().post(rsp_react.site_url + 'reallysimplessl/v1/fields/set', data, config);
+  return axios__WEBPACK_IMPORTED_MODULE_0___default().post(rsssl_settings.site_url + 'reallysimplessl/v1/fields/set', data, config);
 };
 
 /***/ }),
