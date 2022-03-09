@@ -7,7 +7,7 @@ defined( 'ABSPATH' ) or die( "you do not have access to this page!" );
  */
 function rsssl_test_stack()
 {
-    if ( ! get_transient( 'rsssl_stack_allowed' ) ) {
+    if ( ! get_transient( 'rsssl_http_options_allowed' ) ) {
 
         if (function_exists('curl_init')) {
 
@@ -33,7 +33,7 @@ function rsssl_test_stack()
 
         }
 
-		set_transient('rsssl_stack_allowed', $response_code, DAY_IN_SECONDS);
+		set_transient('rsssl_http_options_allowed', $response_code, DAY_IN_SECONDS);
     }
 }
 

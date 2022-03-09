@@ -11,7 +11,7 @@ if ( ! function_exists('rsssl_delete_transients' ) ) {
         $transients = array(
 	        'rsssl_xmlrpc_allowed',
 			'rsssl_wp_version_detected',
-			'rsssl_stack_allowed',
+			'rsssl_http_options_allowed',
         );
 
         foreach ( $transients as $transient ) {
@@ -70,6 +70,17 @@ function rsssl_wordpress_version_above_5_6() {
 	}
 
 	return true;
+}
+
+function rsssl_get_user_id() {
+
+	if ( is_user_logged_in() ) {
+		global $user;
+
+		return $user->ID;
+	}
+
+	return 0;
 }
 
 function rsssl_validate_function($func, $is_condition = false ){

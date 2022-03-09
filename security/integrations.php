@@ -202,6 +202,23 @@ $rsssl_integrations_list = apply_filters( 'rsssl_integrations', array(
 //			'ignore'    => 'disable_checkbox',
 		),
 	),
+
+	'rename-db-prefix' => array(
+		'constant_or_function' => 'rsssl_rename_db_prefix',
+		'label'                => 'Rename DB prefix',
+		'folder'               => 'wordpress',
+		'impact'               => 'low',
+		'risk'                 => 'high',
+		'learning_mode'        => false,
+		'type'                 => 'checkbox',
+		'conditions'           => array(
+//			'rsssl_application_passwords_available',
+		),
+		'actions'              => array(
+			'fix'       => 'rsssl_rename_db_prefix',
+//			'ignore'    => 'disable_checkbox',
+		),
+	),
 ) );
 
 
