@@ -17,7 +17,7 @@ import {
 import { __ } from '@wordpress/i18n';
 import Field from './fields';
 import Menu from './Menu';
-
+import GridBlock from './GridBlock';
 
 
 class Help extends Component {
@@ -99,37 +99,6 @@ class SettingsPage extends Component {
             isAPILoaded: false,
 			changedFields:'',
         };
-
-		this.getFields().then(( response ) => {
-			let fields = response.fields;
-			let menu = response.menu;
-			//if count >1, it's a wizard
-			let menuItems = [];
-			let changedFields = [];
-			menuItems = menu.menu_items;
-			let selectedMenuItem = menuItems[0];
-			let selectedStep = 1;
-			this.menu = menu;
-			this.menuItems = menuItems;
-			this.fields = fields;
-			this.selectedMenuItem = selectedMenuItem;
-			this.selectedStep = selectedStep;
-			this.changedFields = changedFields;
-			this.setState({
-				isAPILoaded: true,
-				fields: fields,
-				menu: menu,
-				menuItems:menuItems,
-				selectedMenuItem: selectedMenuItem,
-				selectedStep: selectedStep,
-				changedFields: changedFields,
-			});
-		});
-	}
-	getFields(){
-		return rsssl_api.getFields().then( ( response ) => {
-			return response.data;
-		});
 	}
 
 	selectMenu(selectedMenuItem){
@@ -186,6 +155,29 @@ class SettingsPage extends Component {
 		this.save = this.save.bind(this);
 		this.selectMenu = this.selectMenu.bind(this);
 		this.saveChangedFields = this.saveChangedFields.bind(this);
+		let fields = this.props.fields;
+		let menu = this.props.menu;
+		//if count >1, it's a wizard
+		let menuItems = [];
+		let changedFields = [];
+		menuItems = menu.menu_items;
+		let selectedMenuItem = menuItems[0];
+		let selectedStep = 1;
+		this.menu = menu;
+		this.menuItems = menuItems;
+		this.fields = fields;
+		this.selectedMenuItem = selectedMenuItem;
+		this.selectedStep = selectedStep;
+		this.changedFields = changedFields;
+		this.setState({
+			isAPILoaded: true,
+			fields: this.props.fields,
+			menu: this.props.menu,
+			menuItems:menuItems,
+			selectedMenuItem: selectedMenuItem,
+			selectedStep: selectedStep,
+			changedFields: changedFields,
+		});
     }
 
     render() {
@@ -227,15 +219,129 @@ class SettingsPage extends Component {
     }
 }
 
+class DashboardPage extends Component {
+	constructor() {
+		super( ...arguments );
+	}
+
+	render() {
+		let blocks = rsssl_settings.blocks;
+		return (
+			<div className="rsssl-grid">
+				{blocks.map((block, i) => <GridBlock key={i} block={block}/>)}
+			</div>
+		);
+	}
+}
+
+class Header extends Component {
+	constructor() {
+		super( ...arguments );
+	}
+	handleClick(menuId){
+		this.props.selectMenu(menuId);
+	}
+	componentDidMount() {
+		this.handleClick = this.handleClick.bind(this);
+	}
+	render() {
+		let menu = rsssl_settings.menu;
+		let plugin_url = rsssl_settings.plugin_url;
+		return (
+			<div className="rsssl-header nav-tab-wrapper <?php echo $high_contrast ?>">
+				<div className="rsssl-logo-container">
+					<div id="rsssl-logo"><img src={plugin_url+"/assets/really-simple-ssl-logo.png"} alt="review-logo" /></div>
+				</div>
+				{menu.map((menu_item, i) => <a key={i} onClick={ () => this.handleClick(menu_item.id) } className='nav-tab' href='#' >{menu_item.label}</a>)}
+				<div className="header-links">
+					<div className="documentation">
+						<a href="https://really-simple-ssl.com/knowledge-base"
+						   className={rsssl_settings.premium && 'button button-primary'}
+						   target="_blank">{__("Documentation", "really-simple-ssl")}</a>
+					</div>
+					<div className="header-upsell">
+						{rsssl_settings.premium &&
+						<div className="documentation">
+							<a href="https://wordpress.org/support/plugin/really-simple-ssl/"
+							   className="button button-primary"
+							   target="_blank">{__("Support", "really-simple-ssl")}</a>
+						</div>}
+					</div>
+				</div>
+			</div>
+		);
+	}
+}
+class Page extends Component {
+	constructor() {
+		super( ...arguments );
+		this.state = {
+			selectedMainMenuItem:'dashboard',
+			fields:'',
+			menu:'',
+			isAPILoaded: false,
+		};
+
+		this.getFields().then(( response ) => {
+			let fields = response.fields;
+			let menu = response.menu;
+			this.menu = menu;
+			this.fields = fields;
+			this.setState({
+				isAPILoaded: true,
+				fields: fields,
+				menu: menu,
+			});
+		});
+	}
+	getFields(){
+		return rsssl_api.getFields().then( ( response ) => {
+			return response.data;
+		});
+	}
+	componentDidMount() {
+		this.selectMenu = this.selectMenu.bind(this);
+		this.setState({
+			selectedMainMenuItem: 'dashboard',
+		});
+	}
+
+	selectMenu(selectedMainMenuItem){
+		this.setState({
+			selectedMainMenuItem :selectedMainMenuItem
+		});
+	}
+
+	render() {
+		const {
+			selectedMainMenuItem,
+			fields,
+			menu,
+			isAPILoaded,
+		} = this.state;
+		return (
+			<div id="rsssl-wrapper">
+				<Header selectedMainMenuItem={selectedMainMenuItem} selectMenu={this.selectMenu}/>
+				<div id="rsssl-container">
+					{selectedMainMenuItem==='settings' && <SettingsPage isAPILoaded={isAPILoaded} fields={fields} menu={menu}/> }
+					{selectedMainMenuItem==='dashboard' && <DashboardPage/> }
+				</div>
+			</div>
+		);
+	}
+}
+
 document.addEventListener( 'DOMContentLoaded', () => {
-	const htmlOutput = document.getElementById( 'rsssl-wizard-content' );
-	if ( htmlOutput ) {
+	const container = document.getElementById( 'really-simple-ssl' );
+	if ( container ) {
 		render(
-			<SettingsPage/>,
-			htmlOutput
+			<Page/>,
+			container
 		);
 	}
 });
+
+
 
 /**
  * Notice after saving was successfull
@@ -267,3 +373,14 @@ const Notices = () => {
         />
     );
 };
+
+// <div className="rsssl-settings-saved rsssl-settings-saved--fade-in">
+// 	<div className="rsssl-settings-saved__text_and_icon">
+// 		<span><div className="rsssl-tooltip-icon dashicons-before rsssl-icon rsssl-success check"><svg width="18"
+// 																									   height="18"
+// 																									   viewBox="0 0 1792 1792"
+// 																									   xmlns="http://www.w3.org/2000/svg"><path
+// 			d="M1671 566q0 40-28 68l-724 724-136 136q-28 28-68 28t-68-28l-136-136-362-362q-28-28-28-68t28-68l136-136q28-28 68-28t68 28l294 295 656-657q28-28 68-28t68 28l136 136q28 28 28 68z"></path></svg></div></span>
+// 		<span><?php _e('Changes saved successfully', 'really-simple-ssl') ?> </span>
+// 	</div>
+// </div>

@@ -20,11 +20,28 @@ function rsssl_plugin_admin_scripts() {
 		$script_asset['version']
 	);
 	wp_set_script_translations( 'rsssl-wizard-plugin-block-editor', 'really-simple-ssl' );
+
+	$menu = apply_filters("rsssl_grid_tabs",
+		[
+			[
+                'id' => 'dashboard',
+                'label'=> __("Dashboard", "really-simple-ssl"),
+            ],
+			[
+				'id' => 'settings',
+				'label'=> __("Settings", "really-simple-ssl"),
+			]
+		]
+	);
 	wp_localize_script(
 			'rsssl-wizard-plugin-admin-editor',
 			'rsssl_settings',
 			array(
 				'site_url' => get_rest_url(),
+				'plugin_url' => rsssl_url,
+				'blocks' => ['tasks','ssllabs'],
+				'premium' => defined('rsssl_pro_version'),
+				'menu' => $menu,
 				'nonce' => wp_create_nonce( 'wp_rest' ),//to authenticate the logged in user
 			)
 	);
@@ -65,29 +82,35 @@ add_action( 'admin_menu', 'rsssl_add_option_menu' );
 {
 	if (!current_user_can('activate_plugins')) return;
 	$tab = isset($_GET['tab']) ? sanitize_title($_GET['tab']) : 'dashboard';
-    echo RSSSL()->really_simple_ssl->get_template('header.php', rsssl_path . 'settings/');
 
     $high_contrast = RSSSL()->really_simple_ssl->high_contrast ? 'rsssl-high-contrast' : ''; ?>
-    <div class="rsssl-container <?php echo $high_contrast ?>">
-        <div class="rsssl-main"><?php
+    <div id="really-simple-ssl" class="<?php echo $high_contrast ?>">
+        <?php
 			switch ($tab) {
 				case 'dashboard' :
 					RSSSL()->really_simple_ssl->render_grid(RSSSL()->really_simple_ssl->general_grid());
 					break;
 				case 'settings' :
-					$html = '<div id="rsssl-wizard-content"></div>';
-					$args = array(
-						'page' => 'settings',
-						'content' => $html,
-					);
-					echo RSSSL()->really_simple_ssl->get_template('admin-wrap.php', rsssl_path.'/settings', $args );
+
 					break;
 			}
 	        do_action("rsssl_show_tab_{$tab}");
             ?>
-        </div>
     </div>
 	<?php
+}
+
+function rsssl_ajax_load_page(){
+	if (!current_user_can('activate_plugins')) return;
+    $tab='dashboard';
+	switch ($tab) {
+		case 'dashboard' :
+			RSSSL()->really_simple_ssl->render_grid(RSSSL()->really_simple_ssl->general_grid());
+			break;
+		case 'settings' :
+        default:
+			break;
+	}
 }
 
 
@@ -104,9 +127,18 @@ function rsssl_settings_rest_route() {
 			return current_user_can( 'manage_options' );
 		}
 	) );
+
 	register_rest_route( 'reallysimplessl/v1', 'fields/set', array(
 		'methods'  => 'POST',
 		'callback' => 'rsssl_rest_api_fields_set',
+		'permission_callback' => function () {
+			return current_user_can( 'manage_options' );
+		}
+	) );
+
+	register_rest_route( 'reallysimplessl/v1', 'block/(?P<block>[a-z\_]+)', array(
+		'methods'  => 'GET',
+		'callback' => 'rsssl_rest_api_block_get',
 		'permission_callback' => function () {
 			return current_user_can( 'manage_options' );
 		}
@@ -129,7 +161,16 @@ function rsssl_sanitize_field_type($type){
     return 'checkbox';
 }
 
+/**
+ * @param WP_REST_Request $request
+ *
+ * @return void
+ */
 function rsssl_rest_api_fields_set($request){
+    if (!current_user_can('manage_options')) {
+        return;
+    }
+
 	$fields = $request->get_json_params();
     $config_fields = rsssl_fields();
 	foreach ( $fields as $index => $field ) {
@@ -166,35 +207,47 @@ function rsssl_rest_api_fields_set($request){
 	exit;
 }
 
-/**
- * Get a Really Simple SSL option by name
- *
- * @param string $name
- * @param mixed $default
- *
- * @return mixed
- */
-function rsssl_get_value($name, $default=false){
-    $options = get_option( 'rsssl_options', array() );
-    return isset($options[$name]) ? $options[$name]: $default;
-}
+
 
 /**
  * Get the rest api fields
  * @return void
  */
 
-function rsssl_rest_api_fields_get(){
+function rsssl_rest_api_fields_get(  ){
+	if (!current_user_can('manage_options')) {
+		return;
+	}
+    error_log("get fields");
 	$output = array();
 	$fields = rsssl_fields();
 	$menu_items = rsssl_menu('group_general');
 	foreach ( $fields as $index => $field ) {
-		$fields[$index]['value'] = rsssl_get_value($field['id']);
+		$fields[$index]['value'] = rsssl_get_option($field['id']);
 	}
 
 	$output['fields'] = $fields;
 	$output['menu'] = $menu_items;
 	$response = json_encode( $output );
+	header( "Content-Type: application/json" );
+	echo $response;
+	exit;
+}
+
+/**
+ * Get grid block data
+ * @param WP_REST_Request $request
+ * @return void
+ */
+function rsssl_rest_api_block_get($request){
+	if (!current_user_can('manage_options')) {
+		return;
+	}
+    error_log("get block");
+	$block = $request->get_param('block');
+    $blocks = rsssl_blocks();
+	$out = isset($blocks[$block]) ? $blocks[$block] : [];
+	$response = json_encode( $out );
 	header( "Content-Type: application/json" );
 	echo $response;
 	exit;

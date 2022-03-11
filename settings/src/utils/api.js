@@ -31,4 +31,12 @@ export const setFields = (data) => {
 	return axios.post(rsssl_settings.site_url+'reallysimplessl/v1/fields/set', data, config );
 };
 
+export const getBlock = (block) => {
+	let config = {
+		headers: {
+			'X-WP-Nonce': rsssl_settings.nonce,
+		}
+	}
+	return axios.get(rsssl_settings.site_url+'reallysimplessl/v1/block/'+block, config);
+};
 

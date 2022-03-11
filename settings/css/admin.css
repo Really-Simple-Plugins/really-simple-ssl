@@ -1,14 +1,14 @@
-#rsssl-wizard-content .rsssl-wizard-menu {
+#rsssl-container .rsssl-wizard-menu {
   min-width: 200px;
   padding: 20px;
   margin: 20px;
   background-color: #fff;
 }
 
-#rsssl-wizard-content {
+#rsssl-container {
   display: flex;
 }
-#rsssl-wizard-content .components-placeholder {
+#rsssl-container .components-placeholder {
   box-shadow: 0 0 0;
   outline: 0px;
   border: 0 solid black !important;
@@ -32,40 +32,40 @@
   }
 }
 
-#rsssl-wizard-content {
+#rsssl-container {
   display: flex;
 }
-#rsssl-wizard-content .rsssl-wizard-settings {
-  display: flex;
-  flex: auto 1;
-}
-#rsssl-wizard-content .rsssl-wizard-settings .rsssl-wizard__main {
+#rsssl-container .rsssl-wizard-settings {
   display: flex;
   flex: auto 1;
 }
-#rsssl-wizard-content .rsssl-wizard-settings .rsssl-wizard__main .components-panel {
+#rsssl-container .rsssl-wizard-settings .rsssl-wizard__main {
+  display: flex;
+  flex: auto 1;
+}
+#rsssl-container .rsssl-wizard-settings .rsssl-wizard__main .components-panel {
   background: none;
   border: none;
   flex: auto 1;
 }
-#rsssl-wizard-content .rsssl-wizard-settings .rsssl-wizard__main .components-panel__body-title {
+#rsssl-container .rsssl-wizard-settings .rsssl-wizard__main .components-panel__body-title {
   display: none;
 }
-#rsssl-wizard-content .rsssl-wizard-settings .rsssl-wizard__main .components-panel__body {
+#rsssl-container .rsssl-wizard-settings .rsssl-wizard__main .components-panel__body {
   background: #ffffff;
   border-top: 0;
   border-bottom: 0;
 }
-#rsssl-wizard-content .rsssl-wizard-settings .rsssl-wizard__main .components-panel__body:first-child {
+#rsssl-container .rsssl-wizard-settings .rsssl-wizard__main .components-panel__body:first-child {
   margin-top: 20px;
 }
-#rsssl-wizard-content .rsssl-wizard-settings .rsssl-wizard__main .components-panel__body .components-number-control .components-input-control__container {
+#rsssl-container .rsssl-wizard-settings .rsssl-wizard__main .components-panel__body .components-number-control .components-input-control__container {
   width: inherit;
 }
-#rsssl-wizard-content .rsssl-wizard-settings .rsssl-wizard__help {
+#rsssl-container .rsssl-wizard-settings .rsssl-wizard__help {
   min-width: 25%;
 }
-#rsssl-wizard-content .rsssl-wizard-settings .rsssl-wizard__help .rsssl-wizard__help_notice {
+#rsssl-container .rsssl-wizard-settings .rsssl-wizard__help .rsssl-wizard__help_notice {
   margin: 20px;
   padding: 20px;
   background-color: white;

@@ -12,7 +12,7 @@
 	if (isset($legacy_tabs['license'])) $tabs['license']= $legacy_tabs['license'];
 
 	$high_contrast = RSSSL()->really_simple_ssl->high_contrast ? 'rsssl-high-contrast' : ''; ?>
-<div class="nav-tab-wrapper <?php echo $high_contrast ?>">
+<div class="rsssl-header nav-tab-wrapper <?php echo $high_contrast ?>">
 	<div class="rsssl-logo-container">
 		<div id="rsssl-logo"><img src="<?php echo rsssl_url?>/assets/really-simple-ssl-logo.png" alt="review-logo"></div>
 	</div>

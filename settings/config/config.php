@@ -95,6 +95,25 @@ function rsssl_fields(){
 			'default'     => false,
 		],
 	];
-	$fields = apply_filters('rsssl_fields', $fields);
-	return $fields;
+	return apply_filters('rsssl_fields', $fields);
+}
+
+function rsssl_blocks(){
+	$blocks = [
+		'tasks' => [
+			'id'          => 'tasks',
+			'url'        => 'https://really-simple-ssl.com/instructions',
+			'title'       => __( "Grid block title", 'really-simple-ssl' ),
+			'help'     => __( 'A help text', 'really-simple-ssl' ),
+			'html'      => '<div>This is some html</div>',
+		],
+		'ssllabs' => [
+			'id'          => 'ssllabs',
+			'url'        => 'https://really-simple-ssl.com/instructions',
+			'title'       => __( "Grid block title", 'really-simple-ssl' ),
+			'help'     => __( 'A help text', 'really-simple-ssl' ),
+			'html'      => '<div>This is some html</div>',
+		],
+	];
+	return apply_filters('rsssl_blocks', $blocks);
 }
