@@ -106,6 +106,8 @@ function rsssl_blocks(){
 			'title'       => __( "Grid block title", 'really-simple-ssl' ),
 			'help'     => __( 'A help text', 'really-simple-ssl' ),
 			'html'      => '<div>This is some html</div>',
+			'footer'      => '<div>footer</div>',
+			'size'      => 'default',
 		],
 		'ssllabs' => [
 			'id'          => 'ssllabs',
@@ -113,6 +115,9 @@ function rsssl_blocks(){
 			'title'       => __( "Grid block title", 'really-simple-ssl' ),
 			'help'     => __( 'A help text', 'really-simple-ssl' ),
 			'html'      => '<div>This is some html</div>',
+			'footer'      => '<div>footer</div>',
+			'size'      => 'small',
+
 		],
 	];
 	return apply_filters('rsssl_blocks', $blocks);

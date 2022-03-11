@@ -14,7 +14,7 @@ function rsssl_plugin_admin_scripts() {
 	$script_asset_path = __DIR__."/build/index.asset.php";
 	$script_asset = require( $script_asset_path );
 	wp_enqueue_script(
-		'rsssl-wizard-plugin-admin-editor',
+		'rsssl-settings',
 		plugins_url( 'build/index.js', __FILE__ ),
 		$script_asset['dependencies'],
 		$script_asset['version']
@@ -34,7 +34,7 @@ function rsssl_plugin_admin_scripts() {
 		]
 	);
 	wp_localize_script(
-			'rsssl-wizard-plugin-admin-editor',
+			'rsssl-settings',
 			'rsssl_settings',
 			array(
 				'site_url' => get_rest_url(),
@@ -45,9 +45,8 @@ function rsssl_plugin_admin_scripts() {
 				'nonce' => wp_create_nonce( 'wp_rest' ),//to authenticate the logged in user
 			)
 	);
-
 	wp_enqueue_style(
-		'rsssl-wizard-plugin-admin',
+		'rsssl-settings-css',
 		plugins_url( 'css/admin.css', __FILE__ ),
 		['wp-components'],
 		filemtime( __DIR__."/css/admin.css" )
@@ -85,17 +84,7 @@ add_action( 'admin_menu', 'rsssl_add_option_menu' );
 
     $high_contrast = RSSSL()->really_simple_ssl->high_contrast ? 'rsssl-high-contrast' : ''; ?>
     <div id="really-simple-ssl" class="<?php echo $high_contrast ?>">
-        <?php
-			switch ($tab) {
-				case 'dashboard' :
-					RSSSL()->really_simple_ssl->render_grid(RSSSL()->really_simple_ssl->general_grid());
-					break;
-				case 'settings' :
-
-					break;
-			}
-	        do_action("rsssl_show_tab_{$tab}");
-            ?>
+        <?php do_action("rsssl_show_tab_{$tab}"); ?>
     </div>
 	<?php
 }
@@ -105,7 +94,6 @@ function rsssl_ajax_load_page(){
     $tab='dashboard';
 	switch ($tab) {
 		case 'dashboard' :
-			RSSSL()->really_simple_ssl->render_grid(RSSSL()->really_simple_ssl->general_grid());
 			break;
 		case 'settings' :
         default:

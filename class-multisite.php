@@ -482,7 +482,7 @@ if (!class_exists('rsssl_multisite')) {
 
             <div class="rsssl-container">
                 <div class="rsssl-main"><?php
-                    RSSSL()->really_simple_ssl->render_grid($this->general_grid());
+                    //@todo change to react
                     do_action("rsssl_configuration_page");
 			        ?>
                 </div>

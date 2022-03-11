@@ -1,0 +1,46 @@
+.rsssl-scroll-container{
+  height: 227px;
+  overflow-y: auto;
+  border-radius: 0;
+
+  &::-webkit-scrollbar-track {
+    border-radius: 10px;
+    -webkit-box-shadow: inset 0 0 2px rgba(0, 0, 0, 0);
+    background-color: transparent;
+  }
+
+  &::-webkit-scrollbar {
+    border-radius: 10px;
+    width: 8px;
+    background-color: var(--rsp-grey-300);
+    cursor: pointer;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: var(--rsp-grey-400);
+    border-radius: 10px;
+  }
+}
+
+.rsssl-spacer {
+  width: 10px;
+}
+
+.rsssl-dashboard-dismiss .close {
+  all: initial;
+}
+
+.rsssl-dashboard-dismiss span {
+  font-size: 1.5em;
+  color: black;
+  font-family: sans-serif;
+  img {
+    height: 12px;
+    width: 12px;
+  }
+}
+
+.rsssl-dashboard-dismiss span:hover {
+  cursor: pointer;
+  color: grey;
+}

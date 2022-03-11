@@ -1,4 +1,4 @@
-// RTL generator: https://cssjanus.github.io/
+
 @gridblock_height: 475px;
 @gridblock_width: 800px;
 @gridblock_width_small:400px;
@@ -122,7 +122,7 @@
 }
 
 .rsssl-grid {
-  width: calc(100% - 20px); 
+  width: calc(100% - 20px);
   margin: @grid_margin;
   position: relative;
   display: flex;
@@ -130,9 +130,9 @@
   flex-wrap: wrap;
 
   .button-rsssl-tertiary {
-      background-color: #D7263D;
-      color: white;
-      border:0;
+    background-color: #D7263D;
+    color: white;
+    border:0;
   }
 
   .rsssl-wide-button {
@@ -174,7 +174,7 @@
 
   .rsssl-item {
     width: @gridblock_width ;
-    &.small {
+    &.rsssl-small {
       width: @gridblock_width_small;
     }
 
@@ -187,55 +187,55 @@
     height: @gridblock_height + @grid_margin;
     z-index: 1;
     .item-container {
-        .form-table {
+      .form-table {
+        display: flex;
+        tbody {
           display: flex;
-          tbody {
+          flex-direction: column;
+          flex-wrap: wrap;
+          max-height: 340px;
+          width: 100% !important;
+          tr {
+            padding: 0 0 0 0 !important;
             display: flex;
-            flex-direction: column;
-            flex-wrap: wrap;
-            max-height: 340px;
-            width: 100% !important;
-            tr {
-              padding: 0 0 0 0 !important;
+            align-items: center;
+            flex-direction: row;
+            width: 50%;
+
+            td {
+              padding: 0;
+              margin: 0;
+            }
+            th {
+              .dashicons-editor-help {
+                font-size: 22px;
+              }
+              margin-left: 0;
+              width: 90%;
               display: flex;
               align-items: center;
-              flex-direction: row;
-              width: 50%;
-
-              td {
-                padding: 0;
-                margin: 0;
+              font-size: 13px;
+              font-weight: normal;
+              .rsssl-tooltip-right {
+                padding-right: 10px;
               }
-              th {
-                .dashicons-editor-help {
-                  font-size: 22px;
-                }
-                margin-left: 0;
-                width: 90%;
-                display: flex;
-                align-items: center;
-                font-size: 13px;
-                font-weight: normal;
-                .rsssl-tooltip-right {
-                  padding-right: 10px;
-                }
-              }
-              th, td {
-                // Important to override default WP style
-                padding: 6px 0 !important;
-                font-size:13px;
-                p {font-size:13px}
-              }
+            }
+            th, td {
+              // Important to override default WP style
+              padding: 6px 0 !important;
+              font-size:13px;
+              p {font-size:13px}
             }
           }
         }
+      }
       h2 {
         display: none;
       }
 
       background-color: #fff;
       position: relative;
-      box-shadow: 0px 0px 5px 5px @box_shadow_color;
+      box-shadow: 0 0 5px 5px @box_shadow_color;
       width: @gridblock_width -  @grid_margin;
       height: @gridblock_height;
       .rsssl-save-settings-feedback {
@@ -337,28 +337,28 @@
           Tips and Tricks
        */
         .rsssl-tips-tricks {
-            color: @light-text-color;
-            padding-bottom: 15px;
-            .tips-tricks-content{
-              display: flex;
-              flex-direction: column;
-              margin-right:10px;
-              height: 340px;
-              .tips-tricks-top {
-                flex-grow:1;
+          color: @light-text-color;
+          padding-bottom: 15px;
+          .tips-tricks-content{
+            display: flex;
+            flex-direction: column;
+            margin-right:10px;
+            height: 340px;
+            .tips-tricks-top {
+              flex-grow:1;
 
-                .rsssl-tips-tricks-element {
-                  margin-top: 10px;
-                  margin-bottom: 15px;
-                  display: flex;
-                  flex-direction: row;
-                  justify-content: space-between;
-                }
-                .rsssl-tips-tricks-content {
-                  padding-right:20px;
-                }
+              .rsssl-tips-tricks-element {
+                margin-top: 10px;
+                margin-bottom: 15px;
+                display: flex;
+                flex-direction: row;
+                justify-content: space-between;
+              }
+              .rsssl-tips-tricks-content {
+                padding-right:20px;
               }
             }
+          }
 
 
           .rsssl-tips-tricks-read-more a {
@@ -412,11 +412,11 @@
               float: left;
               color: @light-text-color;
               &:hover {
-                  text-decoration: underline;
-                }
+                text-decoration: underline;
               }
             }
           }
+        }
 
         #rsssl-feedback {
           color: @color_warning;
@@ -426,46 +426,46 @@
             Other plugins
          */
 
-          .rsssl-upsell {
-            display: flex !important; //we need important here, because the grid switch overrides it on element level
-            flex-direction: row;
-            padding: 7px 0 7px 0;
-            align-items: center;
-            color: @light-text-color;
+        .rsssl-upsell {
+          display: flex !important; //we need important here, because the grid switch overrides it on element level
+          flex-direction: row;
+          padding: 7px 0 7px 0;
+          align-items: center;
+          color: @light-text-color;
 
-            .plugin-text {
-              a {
-                text-decoration: none;
-                color: @light-text-color;
-                &:hover {
-                  color: @color_open;
-                }
+          .plugin-text {
+            a {
+              text-decoration: none;
+              color: @light-text-color;
+              &:hover {
+                color: @color_open;
               }
             }
-
-            .rsp-image {
-              margin-right: 5px;
-            }
-
-            .wpsi-red {
-              background-color: @color_warning;
-            }
-            .cmplztc-black {
-              background-color:#333;
-            }
-
-            .cmplz-blue {
-              background-color: #27ADEA;
-            }
-
-            .zip-pink {
-              background-color: #E366A1;
-            }
-
-            .plugin-status {
-              margin-left: auto;
-            }
           }
+
+          .rsp-image {
+            margin-right: 5px;
+          }
+
+          .wpsi-red {
+            background-color: @color_warning;
+          }
+          .cmplztc-black {
+            background-color:#333;
+          }
+
+          .cmplz-blue {
+            background-color: #27ADEA;
+          }
+
+          .zip-pink {
+            background-color: #E366A1;
+          }
+
+          .plugin-status {
+            margin-left: auto;
+          }
+        }
 
         /*
           Progress labels
@@ -632,164 +632,160 @@
 
 // Code below should be integrated in to the code above.
 .rsssl-grid {
-    position: relative;
-    .rsssl-item {
-        width: calc(100% - 20px); 
-        padding: 10px;
-        height: @gridblock_height;
-        min-height: 500px;
-        z-index: 1;
-        @media only screen and (min-width: @break-xs) {
-            width: calc(100% - 20px); 
-        }
-
-        @media only screen and (min-width: @break-s) {
-            width: calc(100% - 20px); 
-        }
-
-        @media only screen and (min-width: @break-m) {
-            width: calc(100% - 20px); 
-        }
-
-        @media only screen and (min-width: @break-l) {
-            width: calc(100% - 20px); 
-        }
-
-        @media only screen and (min-width: @break-xl) {
-            width: calc(50% - 20px); 
-        }
-
-
-        &.small {
-            width: calc(100% - 20px);
-
-            @media only screen and (min-width: @break-xs) {
-                width: calc(100% - 20px); 
-            }
-
-            @media only screen and (min-width: @break-s) {
-                width: calc(100% - 20px); 
-            }
-
-            @media only screen and (min-width: @break-m) {
-                width: calc(50% - 20px); 
-            }
-
-            @media only screen and (min-width: @break-l) {
-                width: calc(50% - 20px); 
-            }
-
-            @media only screen and (min-width: @break-xl) {
-                width: calc(25% - 20px); 
-            }
-            .item-container{
-                width: 100%;
-                min-width: 200px;
-            }
-
-        }
-
-        &.half-height {
-                min-height: 250px;
-                 @media only screen and (min-width: @break-xs) {
-                    height: @gridblock_height / 2;
-                    min-height: 250px;
-                }
-
-                @media only screen and (min-width: @break-s) {
-                    min-height: 250px;
-                    height: @gridblock_height / 2;
-                }
-
-                @media only screen and (min-width: @break-m) {
-                    min-height: 250px;
-                    height: @gridblock_height / 2;
-                }
-
-                @media only screen and (min-width: @break-l) {
-                    min-height: 250px;
-                    height: @gridblock_height / 2;
-                }
-
-                @media only screen and (min-width: @break-xl) {
-                    min-height: 250px;
-                    height: @gridblock_height / 2;
-                }
-
-            .item-container {
-                width: 100%;
-                min-width: 200px;
-                min-height: 250px;
-            }
-        }
-        .settings.rsssl-item{
-          width: 100%;
-          padding: 0;
-        }
-
-        &.muuri-item-hidden {
-            z-index: 0;
-        }
-        &.muuri-item-releasing {
-            z-index: 2;
-        }
-        &.muuri-item-dragging {
-            z-index: 3;
-        }
-        .rsssl-grid-header {
-        border-bottom: 1px solid @light-grey;
-            padding: 0;
-            height: 60px;
-       .rsssl-grid-header-container {
-                margin: 0 20px;
-                height: 100%;
-            }
-            
-           
-            .rsssl-grid-title{
-                cursor: pointer;
-                font-size: 20px;
-                padding: 20px 0;
-                font-weight: bold;
-                float: left;
-            }
-            .rsssl-grid-controls {
-                float: right;
-                margin-top: 20px;
-          color: #cecece;
-            }
-        }
-        .item-container {
-            background-color: #fff;
-            position: relative;
-            box-shadow: 0 0 5px 5px rgba(222,222,222,0.2);
-            height: 100%;
-            width: 100%;
-            
-            .item-content {
-                clear:both;
-                margin:15px;
-                height: calc(100% - 100px);
-                padding-top: 0px;
-                padding-bottom:10px;
-            }
-
-        }
-        
-        &.no-border {
-            .item-container {
-                border: none;
-            }
-        }
-        &.no-background {
-            .item-container {
-                background-color: #F1F1F1;
-            }
-        }
-
-        &.muuri-item-placeholder .item-container {
-            border-style: dashed;
-            padding:0;
-        }
+  position: relative;
+  .rsssl-item {
+    width: calc(100% - 20px);
+    padding: 10px;
+    height: @gridblock_height;
+    min-height: 500px;
+    z-index: 1;
+    @media only screen and (min-width: @break-xs) {
+      width: calc(100% - 20px);
     }
+
+    @media only screen and (min-width: @break-s) {
+      width: calc(100% - 20px);
+    }
+
+    @media only screen and (min-width: @break-m) {
+      width: calc(100% - 20px);
+    }
+
+    @media only screen and (min-width: @break-l) {
+      width: calc(100% - 20px);
+    }
+
+    @media only screen and (min-width: @break-xl) {
+      width: calc(50% - 20px);
+    }
+
+
+    &.small {
+      width: calc(100% - 20px);
+
+      @media only screen and (min-width: @break-xs) {
+        width: calc(100% - 20px);
+      }
+
+      @media only screen and (min-width: @break-s) {
+        width: calc(100% - 20px);
+      }
+
+      @media only screen and (min-width: @break-m) {
+        width: calc(50% - 20px);
+      }
+
+      @media only screen and (min-width: @break-l) {
+        width: calc(50% - 20px);
+      }
+
+      @media only screen and (min-width: @break-xl) {
+        width: calc(25% - 20px);
+      }
+      .item-container{
+        width: 100%;
+        min-width: 200px;
+      }
+
+    }
+
+    &.half-height {
+      min-height: 250px;
+      @media only screen and (min-width: @break-xs) {
+        height: @gridblock_height / 2;
+        min-height: 250px;
+      }
+
+      @media only screen and (min-width: @break-s) {
+        min-height: 250px;
+        height: @gridblock_height / 2;
+      }
+
+      @media only screen and (min-width: @break-m) {
+        min-height: 250px;
+        height: @gridblock_height / 2;
+      }
+
+      @media only screen and (min-width: @break-l) {
+        min-height: 250px;
+        height: @gridblock_height / 2;
+      }
+
+      @media only screen and (min-width: @break-xl) {
+        min-height: 250px;
+        height: @gridblock_height / 2;
+      }
+
+      .item-container {
+        width: 100%;
+        min-width: 200px;
+        min-height: 250px;
+      }
+    }
+    .settings.rsssl-item{
+      width: 100%;
+      padding: 0;
+    }
+
+    &.muuri-item-hidden {
+      z-index: 0;
+    }
+    &.muuri-item-releasing {
+      z-index: 2;
+    }
+    &.muuri-item-dragging {
+      z-index: 3;
+    }
+    .rsssl-grid-header {
+      border-bottom: 1px solid @light-grey;
+      padding: 0;
+      height: 60px;
+      .rsssl-grid-header-container {
+        margin: 0 20px;
+        height: 100%;
+      }
+
+
+      .rsssl-grid-title{
+        cursor: pointer;
+        font-size: 20px;
+        padding: 20px 0;
+        font-weight: bold;
+        float: left;
+      }
+      .rsssl-grid-controls {
+        float: right;
+        margin-top: 20px;
+        color: #cecece;
+      }
+    }
+    .item-container {
+      background-color: #fff;
+      position: relative;
+      box-shadow: 0 0 5px 5px rgba(222,222,222,0.2);
+      height: 100%;
+      width: 100%;
+
+      .item-content {
+        clear:both;
+        margin:15px;
+        height: calc(100% - 100px);
+        padding-top: 0px;
+        padding-bottom:10px;
+      }
+
+    }
+
+    &.no-border {
+      .item-container {
+        border: none;
+      }
+    }
+
+    &.no-background {
+      .item-container {
+        background-color: #F1F1F1;
+      }
+    }
+  }
 }

@@ -1,24 +1,27 @@
 import {
+    Placeholder,
+} from '@wordpress/components';
+
+import {
     Component,
 } from '@wordpress/element';
 import * as rsssl_api from "./utils/api";
+
+
 
 class GridBlock extends Component {
     constructor() {
         super( ...arguments );
         this.state = {
-            block:this.props.block,
+            blockData:'',
             isAPILoaded: false,
         };
 
-        console.log(this.props.block);
         let block = this.props.block;
         this.getBlock(block).then(( response ) => {
-            console.log(response);
             this.setState({
                 isAPILoaded: true,
-                fields: fields,
-                menu: menu,
+                blockData: response,
             });
         });
     }
@@ -30,27 +33,31 @@ class GridBlock extends Component {
     }
     componentDidMount() {
         this.getBlock = this.getBlock.bind(this);
+        this.setState({
+            isAPILoaded: true,
+        });
     }
 
     render(){
-        // if ( ! isAPILoaded ) {
-        //     return (
-        //         <div className="rsssl-item {class}"><div className="item-container"><Placeholder></Placeholder></div></div>
-        //     );
-        // }
+        const {
+            blockData,
+            isAPILoaded,
+        } = this.state;
+        if ( ! isAPILoaded ) {
+            return (
+                <Placeholder></Placeholder>
+            );
+        }
+        let className = "rsssl-item rsssl-"+blockData.size+" rsssl-"+blockData.id;
         return (
-            <div className="rsssl-item {class}">
+            <div className={className}>
                 <div className="item-container">
                     <div className="rsssl-grid-item-header">
-                        <h3>Title</h3>
+                        <h3>{ blockData.title }</h3>
                         Header
                     </div>
-                    <div className="rsssl-grid-item-content">
-                        content
-                    </div>
-                    <div className="rsssl-grid-item-footer">
-                        footer
-                    </div>
+                    <div className="rsssl-grid-item-content" dangerouslySetInnerHTML={{__html: blockData.html}}></div>
+                    <div className="rsssl-grid-item-footer" dangerouslySetInnerHTML={{__html: blockData.footer}}></div>
                 </div>
             </div>
         );

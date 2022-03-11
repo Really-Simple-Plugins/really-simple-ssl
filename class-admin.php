@@ -3823,55 +3823,6 @@ class rsssl_admin extends rsssl_front_end
         return $status;
     }
 
-	/**
-     * Render grid from grid array
-	 * @param array $grid
-	 */
-    public function render_grid($grid){
-
-	    $container = $this->get_template('grid-container.php', rsssl_path . 'grid/');
-	    $element = $this->get_template('grid-element.php', rsssl_path . 'grid/');
-
-	    $output = '';
-	    $defaults = array(
-		    'title' => '',
-		    'header' => rsssl_template_path . 'header.php',
-		    'content' => '',
-		    'footer' => '',
-		    'class' => '',
-		    'type' => 'plugins',
-		    'can_hide' => true,
-		    'instructions' => false,
-	    );
-	    foreach ($grid as $index => $grid_item) {
-		    $grid_item = wp_parse_args($grid_item, $defaults);
-		    $footer = $this->get_template_part($grid_item, 'footer', $index);
-		    $content = $this->get_template_part($grid_item, 'content', $index);
-		    $header = $this->get_template_part($grid_item, 'header', $index);
-            $instructions = $grid_item['instructions'] ? '<a href="'.esc_url($grid_item['instructions']).'" target="_blank">'.__("Instructions manual", "really-simple-ssl").'</a>' : '';
-		    // Add form if type is settings
-		    $form_open = '';
-		    $form_close = '';
-		    if ( $grid_item['type'] === 'scan' ) {
-			    $form_open = '<form id="rsssl_scan_form" action="" method="post">';
-			    $form_close = '</form>';
-		    } elseif ( $grid_item['type'] === 'settings' ) {
-			    if ( is_network_admin() ) {
-				    $form_open = '<form action="edit.php?action=rsssl_update_network_settings" method="post">'.wp_nonce_field('rsssl_ms_settings_update', 'rsssl_ms_nonce');
-				    $form_close = '</form>';
-
-			    } else {
-				    $form_open = '<form action="options.php" method="post">';
-				    $form_close = '</form>';
-			    }
-		    }
-
-		    $block = str_replace(array('{class}', '{title}', '{header}', '{content}', '{footer}', '{instructions}', '{form_open}','{form_close}'), array($grid_item['class'], $grid_item['title'], $header, $content, $footer, $instructions, $form_open, $form_close), $element);
-		    $output .= $block;
-	    }
-
-	    echo str_replace('{content}', $output, $container);
-    }
 
 	/**
      * Render grid item based on template
@@ -3948,41 +3899,6 @@ class rsssl_admin extends rsssl_front_end
     }
 
     /**
-     * @param $args
-     *
-     * @since 3.0
-     *
-     * Generate the HTML for the settings page sidebar
-     *
-     */
-
-    private function get_banner_html($args)
-    {
-        $default = array(
-            'pro' => false,
-        );
-
-        $args = wp_parse_args($args, $default);
-
-        $pro = $args['pro'] ? '-pro' : '';
-        ?>
-        <div class="rsssl-sidebar-single-content-container<?php echo $pro ?>">
-            <img class="rsssl-sidebar-image<?php echo $pro ?>"
-                 src="<?php echo trailingslashit(rsssl_url) . 'assets/' . $args['img'] ?>"
-                 alt="<?php echo $args['title'] ?>">
-            <div class="rsssl-sidebar-text-content<?php echo $pro ?>">
-                <?php echo $args['description'] ?>
-            </div>
-            <div class="rsssl-more-info-button">
-                <a id="rsssl-premium-button<?php echo $pro ?>" class="button"
-                   href="<?php echo $args['url'] ?>"
-                   target="_blank"> <?php echo __("More info", "really-simple-ssl") ?> </a>
-            </div>
-        </div>
-        <?php
-    }
-
-    /**
      * Add some css for the settings page
      *
      * @since  2.0
@@ -3996,19 +3912,14 @@ class rsssl_admin extends rsssl_front_end
         //load on network admin or normal admin settings page
         if ( $hook !== 'settings_page_really-simple-ssl' && $hook !== 'settings_page_rlrsssl_really_simple_ssl' ) return;
 	    $minified = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? '' : '.min';
-        if (is_rtl()) {
-            wp_register_style('rlrsssl-css', trailingslashit(rsssl_url) . "assets/css/main-rtl$minified.css", array(), rsssl_version);
-            wp_register_style('rsssl-grid', trailingslashit(rsssl_url) . "grid/css/grid-rtl$minified.css", array(), rsssl_version);
+        if ( is_rtl() ) {
+            wp_register_style('rsssl-css', trailingslashit(rsssl_url) . "assets/css/main-rtl$minified.css", array(), rsssl_version);
         } else {
-	        wp_register_style('rlrsssl-css', trailingslashit(rsssl_url) . "assets/css/main$minified.css", array(), rsssl_version );
-            wp_register_style('rsssl-grid', trailingslashit(rsssl_url) . "grid/css/grid$minified.css", array(), rsssl_version );
+	        wp_register_style('rsssl-css', trailingslashit(rsssl_url) . "assets/css/main$minified.css", array(), rsssl_version );
         }
 
-	    wp_enqueue_style('rlrsssl-css');
-	    wp_enqueue_style('rsssl-grid');
-
-        wp_register_script('rsssl', trailingslashit(rsssl_url) . "assets/js/scripts$minified.js", array("jquery"), rsssl_version);
-        wp_enqueue_script('rsssl');
+	    wp_enqueue_style('rsssl-css');
+	    wp_enqueue_script('rsssl', trailingslashit(rsssl_url) . "assets/js/scripts$minified.js", array("jquery"), rsssl_version);
 
         $finished_text = apply_filters('rsssl_finished_text', sprintf(__("Basic SSL configuration finished! Improve your score with %sReally Simple SSL Pro%s.", "really-simple-ssl"), '<a target="_blank" href="' . $this->pro_url . '">', '</a>') );
 	    if ($this->ssl_enabled) {
