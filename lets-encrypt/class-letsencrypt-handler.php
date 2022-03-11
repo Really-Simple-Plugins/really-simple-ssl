@@ -1337,11 +1337,11 @@ class rsssl_letsencrypt_handler {
 
 	public function key_directory(){
 		$directory = $this->get_directory_path();
-		if ( ! file_exists( $directory . 'ssl' ) ) {
+		if ( ! file_exists( $directory . 'ssl' ) && is_writable($directory) ) {
 			mkdir( $directory . 'ssl' );
 		}
 
-		if ( ! file_exists( $directory . 'ssl/keys' ) ) {
+		if ( ! file_exists( $directory . 'ssl/keys' ) && is_writable($directory.'ssl') ) {
 			mkdir( $directory . 'ssl/keys' );
 		}
 

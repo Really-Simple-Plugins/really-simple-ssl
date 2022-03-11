@@ -95,7 +95,6 @@ class REALLY_SIMPLE_SSL
 				self::$instance->rsssl_help = new rsssl_help();
 				self::$instance->rsssl_certificate = new rsssl_certificate();
 				self::$instance->rsssl_site_health = new rsssl_site_health();
-
                 if ( $wpcli ) {
 					self::$instance->rsssl_wp_cli = new rsssl_wp_cli();
 				}
@@ -125,6 +124,7 @@ class REALLY_SIMPLE_SSL
 	private function includes()
 	{
 		require_once(rsssl_path . 'class-front-end.php');
+		require_once(rsssl_path . 'functions.php');
 		require_once(rsssl_path . 'class-mixed-content-fixer.php');
 
 		$wpcli = defined( 'WP_CLI' ) && WP_CLI;
@@ -132,7 +132,7 @@ class REALLY_SIMPLE_SSL
 			require_once(rsssl_path . 'class-rsssl-wp-cli.php');
 		}
 
-		if (is_admin() || wp_doing_cron() || is_multisite() || $wpcli || defined('RSSSL_DOING_SYSTEM_STATUS') || defined('RSSSL_DOING_CSP') ) {
+		if ( rsssl_is_logged_in_rest() || is_admin() || wp_doing_cron() || is_multisite() || $wpcli || defined('RSSSL_DOING_SYSTEM_STATUS') || defined('RSSSL_DOING_CSP') ) {
 			if (is_multisite()) {
 				require_once(rsssl_path . 'class-multisite.php');
 				require_once(rsssl_path . 'multisite-cron.php');
@@ -143,7 +143,12 @@ class REALLY_SIMPLE_SSL
             require_once(rsssl_path . 'class-help.php');
 			require_once(rsssl_path . 'class-certificate.php');
 			require_once(rsssl_path . 'class-site-health.php');
-        }
+			require_once( rsssl_path . 'settings/settings.php' );
+
+			if ( isset($_GET['install_pro'])) {
+				require_once(rsssl_path . 'upgrade/upgrade-to-pro.php');
+			}
+		}
 
 		if ( is_admin() || wp_doing_cron() ) {
 			if (!defined('rsssl_beta_addon')) {
@@ -222,5 +227,10 @@ function RSSSL()
 {
 	return REALLY_SIMPLE_SSL::instance();
 }
-
 add_action('plugins_loaded', 'RSSSL', 8);
+
+if ( !function_exists('rsssl_is_logged_in_rest')){
+	function rsssl_is_logged_in_rest(){
+		return isset($_SERVER['HTTP_X_WP_NONCE']) && wp_verify_nonce($_SERVER['HTTP_X_WP_NONCE'], 'wp_rest');
+	}
+}

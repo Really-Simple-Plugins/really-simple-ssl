@@ -46,7 +46,8 @@ if ( ! class_exists( 'rsssl_server' ) ) {
 			if ( defined( 'RSSSL_SERVER_OVERRIDE' ) ) {
 				return RSSSL_SERVER_OVERRIDE;
 			}
-			$server_raw = strtolower( filter_var( $_SERVER['SERVER_SOFTWARE'], FILTER_SANITIZE_STRING ) );
+
+			$server_raw = strtolower( htmlspecialchars( $_SERVER['SERVER_SOFTWARE'] ) );
 
 			//figure out what server they're using
 			if ( strpos( $server_raw, 'apache' ) !== false ) {
