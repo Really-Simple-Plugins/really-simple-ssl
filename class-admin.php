@@ -2510,7 +2510,7 @@ class rsssl_admin extends rsssl_front_end
         }
 
         if (strlen($rule) > 0) {
-            $rule = "\n" . "# BEGIN Really Simple SSL Redirect" . rsssl_version . "\n" . $rule . "# END Really Simple SSL Redirect" . "\n";
+            $rule = "\n" . "# BEGIN Really Simple SSL Redirect" . " " . rsssl_version . "\n" . $rule . "# END Really Simple SSL Redirect" . "\n";
         }
 
         $rule = apply_filters("rsssl_htaccess_output", $rule);
