@@ -2,6 +2,7 @@ import {
     Placeholder,
 } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
+import parse from 'html-react-parser';
 import {
     Component,
 } from '@wordpress/element';
@@ -90,7 +91,7 @@ class GridBlock extends Component {
                         {blockData.url && <a href={blockData.url}>{__("Instructions", "really-simple-ssl")}</a>}
                     </div>
                     {!isAPILoaded && <Placeholder></Placeholder>}
-                    {this.props.block.content.type==='react' && wp.element.createElement( Labs, null, null)}
+                    {this.props.block.content.type==='react' && parse( content, null, null)}
                     { (this.props.block.content.type==='html' || this.props.block.content.type==='test') && <div className="rsssl-grid-item-content" dangerouslySetInnerHTML={{__html: content}}></div>}
                     <div className="rsssl-grid-item-footer" dangerouslySetInnerHTML={{__html: blockData.footer}}></div>
                 </div>

@@ -114,7 +114,7 @@ function rsssl_blocks(){
 			'url'     => 'https://really-simple-ssl.com/instructions',
 			'title'   => __( "SSL Labs", 'really-simple-ssl' ),
 			'help'    => __( 'A help text', 'really-simple-ssl' ),
-			'content' => [ 'type' => 'react', 'data' => 'SslLabs' ],
+			'content' => [ 'type' => 'react', 'data' => '<Labs />' ],
 			'footer'  => '<div>footer</div>',
 			'size'    => 'small',
 
