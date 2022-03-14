@@ -100,23 +100,23 @@ function rsssl_fields(){
 
 function rsssl_blocks(){
 	$blocks = [
-		'tasks' => [
-			'id'          => 'tasks',
-			'url'        => 'https://really-simple-ssl.com/instructions',
-			'title'       => __( "Grid block title", 'really-simple-ssl' ),
-			'help'     => __( 'A help text', 'really-simple-ssl' ),
-			'html'      => '<div>This is some html</div>',
-			'footer'      => '<div>footer</div>',
-			'size'      => 'default',
+		[
+			'id'      => 'tasks',
+			'url'     => false,
+			'title'   => __( "Progress", 'really-simple-ssl' ),
+			'help'    => __( 'A help text', 'really-simple-ssl' ),
+			'content' => ['type'=>'html', 'data' => '<div>This is some html</div>'],
+			'footer'  => '<div>footer</div>',
+			'size'    => 'default',
 		],
-		'ssllabs' => [
-			'id'          => 'ssllabs',
-			'url'        => 'https://really-simple-ssl.com/instructions',
-			'title'       => __( "Grid block title", 'really-simple-ssl' ),
-			'help'     => __( 'A help text', 'really-simple-ssl' ),
-			'html'      => '<div>This is some html</div>',
-			'footer'      => '<div>footer</div>',
-			'size'      => 'small',
+		[
+			'id'      => 'ssllabs',
+			'url'     => 'https://really-simple-ssl.com/instructions',
+			'title'   => __( "SSL Labs", 'really-simple-ssl' ),
+			'help'    => __( 'A help text', 'really-simple-ssl' ),
+			'content' => [ 'type' => 'react', 'data' => 'SslLabs' ],
+			'footer'  => '<div>footer</div>',
+			'size'    => 'small',
 
 		],
 	];

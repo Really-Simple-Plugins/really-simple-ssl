@@ -39,7 +39,7 @@ function rsssl_plugin_admin_scripts() {
 			array(
 				'site_url' => get_rest_url(),
 				'plugin_url' => rsssl_url,
-				'blocks' => ['tasks','ssllabs'],
+				'blocks' => rsssl_blocks(),
 				'premium' => defined('rsssl_pro_version'),
 				'menu' => $menu,
 				'nonce' => wp_create_nonce( 'wp_rest' ),//to authenticate the logged in user
@@ -124,13 +124,55 @@ function rsssl_settings_rest_route() {
 		}
 	) );
 
-	register_rest_route( 'reallysimplessl/v1', 'block/(?P<block>[a-z\_]+)', array(
+	register_rest_route( 'reallysimplessl/v1', 'block/(?P<block>[a-z\_\-]+)', array(
 		'methods'  => 'GET',
 		'callback' => 'rsssl_rest_api_block_get',
 		'permission_callback' => function () {
 			return current_user_can( 'manage_options' );
 		}
 	) );
+
+	register_rest_route( 'reallysimplessl/v1', 'tests/(?P<test>[a-z\_\-]+)', array(
+		'methods'  => 'GET',
+		'callback' => 'rsssl_run_test',
+		'permission_callback' => function () {
+			return current_user_can( 'manage_options' );
+		}
+	) );
+}
+
+/**
+ * @param WP_REST_Request $request
+ *
+ * @return void
+ */
+function rsssl_run_test($request){
+	if (!current_user_can('manage_options')) {
+		return;
+	}
+
+	$test = sanitize_title($request->get_param('test'));
+    switch($test){
+        case 'ssltest':
+	        require_once( rsssl_path . 'ssllabs/class-ssllabs.php' );
+	        $test = new rsssl_ssllabs();
+	        $results = $test->get();
+            $data = 'progress: '.$results['progress'].'<br><br>';
+            if (isset($results['grade'])) {
+                $data .= 'grade: '.$results['grade'].'<br><br>';
+                $data .= 'Has HSTS: '.$results['hsts'].'<br><br>';
+                $data .= 'Has warnings: '.$results['warnings'].'<br><br>';
+                $data .= 'Host: '.$results['host'].'<br><br>';
+                $data .= 'Sername: '.$results['serverName'].'<br><br>';
+            }
+            break;
+        default:
+            $data = array();
+    }
+	$response = json_encode( $data );
+	header( "Content-Type: application/json" );
+	echo $response;
+	exit;
 }
 
 function rsssl_sanitize_field_type($type){
@@ -141,7 +183,6 @@ function rsssl_sanitize_field_type($type){
         'number',
         'email',
         'select',
-
     ];
     if ( in_array($type, $types) ){
         return $type;
@@ -231,7 +272,6 @@ function rsssl_rest_api_block_get($request){
 	if (!current_user_can('manage_options')) {
 		return;
 	}
-    error_log("get block");
 	$block = $request->get_param('block');
     $blocks = rsssl_blocks();
 	$out = isset($blocks[$block]) ? $blocks[$block] : [];

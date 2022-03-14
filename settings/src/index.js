@@ -197,7 +197,7 @@ class SettingsPage extends Component {
 		}
 
 		//maybe filter step
-		if (menu.is_wizard){
+		if ( menu.is_wizard ){
 			let length = menuItems.length;
 			let temp = []
 			for(let i = 0; i < length; i++) {
@@ -226,6 +226,7 @@ class DashboardPage extends Component {
 
 	render() {
 		let blocks = rsssl_settings.blocks;
+		console.log(blocks);
 		return (
 			<div className="rsssl-grid">
 				{blocks.map((block, i) => <GridBlock key={i} block={block}/>)}
