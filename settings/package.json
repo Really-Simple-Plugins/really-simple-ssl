@@ -10,11 +10,11 @@
   "author": "RogierLankhors",
   "license": "ISC",
   "devDependencies": {
-    "@wordpress/scripts": "^22.2.1"
+    "@wordpress/scripts": "^6.2.0"
   },
   "dependencies": {
     "ace-builds": "^1.4.13",
-    "html-react-parser": "^1.4.8",
+    "axios": "^0.26.1",
     "react-ace": "^9.5.0"
   }
 }

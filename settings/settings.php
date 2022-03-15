@@ -152,19 +152,14 @@ function rsssl_run_test($request){
 	}
 
 	$test = sanitize_title($request->get_param('test'));
+    $state = $request->get_param('state');
+    $state =  $state !== 'undefined' ? $state : false;
+
     switch($test){
         case 'ssltest':
 	        require_once( rsssl_path . 'ssllabs/class-ssllabs.php' );
 	        $test = new rsssl_ssllabs();
-	        $results = $test->get();
-            $data = 'progress: '.$results['progress'].'<br><br>';
-            if (isset($results['grade'])) {
-                $data .= 'grade: '.$results['grade'].'<br><br>';
-                $data .= 'Has HSTS: '.$results['hsts'].'<br><br>';
-                $data .= 'Has warnings: '.$results['warnings'].'<br><br>';
-                $data .= 'Host: '.$results['host'].'<br><br>';
-                $data .= 'Sername: '.$results['serverName'].'<br><br>';
-            }
+	        $data = $test->get($state);
             break;
         default:
             $data = array();

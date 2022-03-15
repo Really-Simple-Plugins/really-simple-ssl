@@ -2,20 +2,29 @@ import {
     Placeholder,
 } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
-import parse from 'html-react-parser';
 import {
     Component,
 } from '@wordpress/element';
 import * as rsssl_api from "./utils/api";
-
-
-class Labs extends Component {
+class GridButton extends Component {
+    constructor() {
+        super( ...arguments );
+    }
     render(){
+
         return (
-          <div>SSL Labs block</div>
+            <button className="button-primary" onClick={this.props.onClick}>{this.props.text}</button>
         );
     }
 }
+
+/**
+ * Mapping of components, for use in the config array
+ * @type {{SslLabs: JSX.Element}}
+ */
+var dynamicComponents = {
+    // "runTest": runTest,
+};
 
 class GridBlock extends Component {
     constructor() {
@@ -23,50 +32,56 @@ class GridBlock extends Component {
         this.state = {
             isAPILoaded: false,
             content:'',
+            progress:0,
+            testRunning:false,
+        };
+        this.dynamicComponents = {
+            "runTest": this.runTest,
         };
         if (this.props.block.content.type==='test') {
-            console.log("block is test");
-
-            this.runTest().then(( response ) => {
-                let content = response;
-                this.content = content;
-                this.setState({
-                    isAPILoaded: true,
-                    content:content,
-                })
-            });
+            this.runTest('initial');
         } else {
             this.content = this.props.block.content.data;
         }
     }
 
-    runTest(){
+    runTest(state){
+        let setState='clearcache';
+        if (state==='initial' || state==='refresh') {
+            setState = state;
+        }
+
         let test = this.props.block.content.data;
-        return rsssl_api.runTest(test).then((response) => {
-            return response.data;
+        return rsssl_api.runTest(test, setState).then((response) => {
+            console.log(response);
+            let progress = response.data.progress;
+            let content = response.data.html;
+            let testRunning = false;
+            if (progress<100) {
+                testRunning = true;
+            }
+            this.content = content
+            this.progress = progress
+            this.testRunning = testRunning
+            this.setState({
+                testRunning:testRunning,
+                content:content,
+                progress:progress,
+                isAPILoaded: true,
+
+            })
         });
     }
 
     componentDidMount() {
         this.runTest = this.runTest.bind(this);
-        console.log("did mount");
-        console.log(this.props.block);
-        if (this.props.block.content.type==='html') {
-            console.log("block is html");
-
+        if (this.props.block.content.type==='html' || this.props.block.content.type==='react') {
             let content = this.props.block.content.data;
             this.content = content;
             this.setState({
                 isAPILoaded: true,
                 content:content,
-            })
-        } else if ( this.props.block.content.type==='react' ) {
-            console.log("block is react");
-            let content = this.props.block.content.data;
-            this.content = content;
-            this.setState({
-                isAPILoaded: true,
-                content:content,
+                progress:100,
             })
         }
     }
@@ -81,8 +96,13 @@ class GridBlock extends Component {
         if ( this.props.block.content.type==='react') {
             content = this.props.block.content.data;
         }
-        console.log("loading block");
-        console.log(content);
+        if ( this.testRunning ){
+            console.log("progress <100");
+            const timer = setTimeout(() => {
+                console.log("run new test");
+                this.runTest('refresh');
+            }, 5000);
+        }
         return (
             <div className={className}>
                 <div className="item-container">
@@ -91,9 +111,12 @@ class GridBlock extends Component {
                         {blockData.url && <a href={blockData.url}>{__("Instructions", "really-simple-ssl")}</a>}
                     </div>
                     {!isAPILoaded && <Placeholder></Placeholder>}
-                    {this.props.block.content.type==='react' && parse( '<Labs />', null, null)}
-                    { (this.props.block.content.type==='html' || this.props.block.content.type==='test') && <div className="rsssl-grid-item-content" dangerouslySetInnerHTML={{__html: content}}></div>}
-                    <div className="rsssl-grid-item-footer" dangerouslySetInnerHTML={{__html: blockData.footer}}></div>
+                    {blockData.content.type!=='react' && <div className="rsssl-grid-item-content" dangerouslySetInnerHTML={{__html: content}}></div>}
+                    {blockData.content.type==='react' && <div className="rsssl-grid-item-content">{wp.element.createElement(dynamicComponents[blockData.content])}</div>}
+                    <div className="rsssl-grid-item-footer">
+                        { blockData.footer.hasOwnProperty('button') && <GridButton text={blockData.footer.button.text} onClick={this.runTest} action={blockData.footer.button.action} disabled={blockData.footer.button.disabled}/>}
+                        { blockData.footer.hasOwnProperty('html') && <span className="rsssl-footer-html" dangerouslySetInnerHTML={{__html: blockData.footer.html}}></span>}
+                    </div>
                 </div>
             </div>
         );

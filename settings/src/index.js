@@ -226,7 +226,6 @@ class DashboardPage extends Component {
 
 	render() {
 		let blocks = rsssl_settings.blocks;
-		console.log(blocks);
 		return (
 			<div className="rsssl-grid">
 				{blocks.map((block, i) => <GridBlock key={i} block={block}/>)}
