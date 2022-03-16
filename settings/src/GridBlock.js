@@ -97,11 +97,9 @@ class GridBlock extends Component {
             content = this.props.block.content.data;
         }
         if ( this.testRunning ){
-            console.log("progress <100");
             const timer = setTimeout(() => {
-                console.log("run new test");
                 this.runTest('refresh');
-            }, 5000);
+            }, blockData.content.interval );
         }
         return (
             <div className={className}>

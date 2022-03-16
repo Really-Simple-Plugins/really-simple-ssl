@@ -116,7 +116,7 @@ function rsssl_blocks(){
 			'url'     => 'https://really-simple-ssl.com/instructions',
 			'title'   => __( "SSL Labs", 'really-simple-ssl' ),
 			'help'    => __( 'A help text', 'really-simple-ssl' ),
-			'content' => [ 'type' => 'test', 'data' => 'ssltest', 'interval'=>10 ],
+			'content' => [ 'type' => 'test', 'data' => 'ssltest', 'interval'=>1000 ],
 			'footer'  => [
 					'button' => [ 'text' => __("Run test","really-simple-ssl"), 'action' => 'SslLabs', 'disabled' => false ],
 					'html' => '<div>Footer html</div>',
