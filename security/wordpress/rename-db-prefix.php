@@ -48,72 +48,130 @@ function rsssl_check_db_prefix() {
 
 /**
  * Rename DB prefix
+ * Copy all current wp_ tables
+ * Replace required wp_ prefixed values with new prefix
  */
-function rsssl_rename_db_prefix() {
+function rsssl_maybe_rename_db_prefix() {
 
 	global $wpdb;
 
-	if ( $wpdb->prefix === 'wp_' ) {
+	if ( $wpdb->prefix === 'wp_' && ! get_option('rsssl_db_prefix_updated') ) {
 
-		$tables = rsssl_get_tables_to_rename();
+        // Get all tables starting with wp_
+		$tables = $wpdb->get_results("SHOW TABLES LIKE '".$wpdb->prefix."%'", ARRAY_N);;
 
+        // Copy these tables with a new prefix
 		foreach ( $tables as $table ) {
-			$table_name = $table[0];
-			$new_prefix = 'rsssl_';
-			$copy = str_replace('wp_', $new_prefix, $table_name);
-			$wpdb->query("CREATE TABLE IF NOT EXISTS $copy LIKE $table_name");
-			$wpdb->query("INSERT IGNORE $copy SELECT * FROM $table_name");
 
-			$options = $new_prefix . 'options';
-			$options_names_old_prefix = $wpdb->get_results("SELECT * FROM $options WHERE `option_name` LIKE '%wp_%'");
+            $table_name = $table[0];
 
-			foreach ( $options_names_old_prefix as $to_replace ) {
-				$new_val = str_replace('wp_', $new_prefix, $to_replace->option_name);
-				// update
-				$wpdb->update($new_prefix.$table_name, array('meta_key' => ));
-			}
+            $new_prefix = rsssl_generate_random_prefix($length = 12);
 
-			$meta_key = $new_prefix . 'usermeta';
+            $new_table = str_replace('wp_', $new_prefix, $table_name);
+            $wpdb->query("CREATE TABLE IF NOT EXISTS $new_table LIKE $table_name");
+            $wpdb->query("INSERT IGNORE $new_table SELECT * FROM $table_name");
+        }
 
-			$usermeta_old_prefix = $wpdb->get_results("SELECT * FROM $meta_key WHERE `meta_key` LIKE '%wp_%'");
+        // Array containing the table, column and value to update
+        $to_update = array(
+            1 => array (
+                'table' => 'usermeta',
+                'column' => 'meta_key',
+                'value_no_prefix' => 'capabilities',
+            ),
+            2 => array(
+                'table' => 'usermeta',
+                'column' => 'meta_key',
+                'value_no_prefix' => 'user_level',
+            ),
+            3 => array(
+                'table' => 'usermeta',
+                'column' => 'meta_key',
+                'value_no_prefix' => 'autosave_draft_ids',
+            ),
+            4 => array(
+                'table' => 'options',
+                'column' => 'option_name',
+                'value_no_prefix' => 'user_roles',
+            ),
+        );
 
-			foreach( $usermeta_old_prefix as $to_replace_usermeta ) {
-				$new_val = str_replace('wp_', $new_prefix, $to_replace_usermeta->meta_key);
-				$wpdb->update();
-			}
+        // Loop through array and update options accordingly
+        foreach ( $to_update as $key => $option ) {
+            // Generate a query for each value to update
+            $table = $option['table'];
+            $column = $option['column'];
+            $value_no_prefix = $option['value_no_prefix'];
+            $wpdb->query("UPDATE `$new_prefix$table` set `$column` = '$new_prefix$value_no_prefix' where `$column` = '$wpdb->prefix$value_no_prefix'");
+        }
 
-		}
+        // Verify DB copy
+        if ( rsssl_verify_database_copy($new_prefix) !== true ) return;
+
+        // Update the prefix in wp-config.php
+        $wpconfig_path = rsssl_find_wp_config_path();
+        // Update wp_ prefix to new one
+        if ( is_writable( $wpconfig_path ) ) {
+            $wpconfig = file_get_contents($wpconfig_path);
+            $updated = str_replace('wp_', $new_prefix, $wpconfig);
+            file_put_contents($wpconfig_path, $updated);
+
+        } else {
+            // Cannot update. Remove new prefixed tables
+            $new_prefix_tables = $wpdb->get_results("SHOW TABLES LIKE '".$new_prefix."%'", ARRAY_N);
+
+            foreach ( $new_prefix_tables as $new_table ) {
+                $wpdb->query("DROP $new_table[0]");
+            }
+
+        }
+
+        // Remove old wp_ tables
+        foreach ( $tables as $table ) {
+            $wpdb->query("DROP $table[0]");
+        }
+
+        update_option('rsssl_db_prefix_updated', true);
+
 	}
 }
 
 /**
- * @return array|null
- * List tables that start with prefix_
+ * @return string
+ * Generate a random prefix
  */
-function rsssl_get_tables_to_rename() {
-	global $wpdb;
-	return $wpdb->get_results("SHOW TABLES LIKE '".$wpdb->prefix."%'", ARRAY_N);
 
-}
+function rsssl_generate_random_prefix($length) {
+    $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    $randomString = '';
 
-/**
- * @return void
- * Copy the database
- */
-function rsssl_copy_database() {
-	global $wpdb;
+    for ($i = 0; $i < $length; $i++) {
+        $index = rand(0, strlen($characters) - 1);
+        $randomString .= $characters[$index];
+    }
 
-//	$sql = "CREATE TABLE $copy  LIKE $db_name;
-//	INSERT $copy SELECT * FROM $db_name;";
-
+    return $randomString;
 }
 
 /**
  * @return void
  * Verify database copy
  */
-function rsssl_verify_database_copy() {
+function rsssl_verify_database_copy($new_prefix) {
 
+    global $wpdb;
+
+    $original_tables = $wpdb->get_results("SHOW TABLES LIKE '".$wpdb->prefix."%'", ARRAY_N);
+    $new_tables = $wpdb->get_results("SHOW TABLES LIKE '".$new_prefix."%'", ARRAY_N);
+    error_log(print_r($original_tables, true));
+    error_log(print_r($new_tables, true));
+
+    if ( count( $original_tables ) === count( $new_tables ) ) {
+        // Count rows in table
+        return true;
+    }
+
+    return false;
 }
 
-add_action('admin_init', 'rsssl_rename_db_prefix');
+add_action('admin_init', 'rsssl_maybe_rename_db_prefix');

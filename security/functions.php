@@ -120,3 +120,18 @@ function rsssl_validate_function($func, $is_condition = false ){
 	}
 	return sanitize_text_field($output);
 }
+
+function rsssl_find_wp_config_path()
+{
+    //limit nr of iterations to 20
+    $i = 0;
+    $maxiterations = 20;
+    $dir = dirname(__FILE__);
+    do {
+        $i++;
+        if (file_exists($dir . "/wp-config.php")) {
+            return $dir . "/wp-config.php";
+        }
+    } while (($dir = realpath("$dir/..")) && ($i < $maxiterations));
+    return null;
+}

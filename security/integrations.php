@@ -18,193 +18,193 @@ add_action( 'admin_enqueue_scripts', 'rsssl_enqueue_integrations_assets' );
 
 global $rsssl_integrations_list;
 $rsssl_integrations_list = apply_filters( 'rsssl_integrations', array(
-	'xmlrpc' => array(
-		'constant_or_function' => 'rsssl_xmlrpc',
-		'label'                => 'XMLRPC',
-        'folder'               => 'wordpress',
-		'impact'               => 'medium',
-		'risk'                 => 'low',
-		'learning_mode'        => true,
-		'type'                 => 'checkbox',
-		'conditions'           => array(
-			'rsssl_xmlrpc_allowed',
-		),
-		'actions'              => array(
-			'fix'       => 'rsssl_maybe_disable_xmlrpc',
-			'ignore'    => 'disable_checkbox',
-		),
-	),
+//	'xmlrpc' => array(
+//		'constant_or_function' => 'rsssl_xmlrpc',
+//		'label'                => 'XMLRPC',
+//        'folder'               => 'wordpress',
+//		'impact'               => 'medium',
+//		'risk'                 => 'low',
+//		'learning_mode'        => true,
+//		'type'                 => 'checkbox',
+//		'conditions'           => array(
+//			'rsssl_xmlrpc_allowed',
+//		),
+//		'actions'              => array(
+//			'fix'       => 'rsssl_maybe_disable_xmlrpc',
+//			'ignore'    => 'disable_checkbox',
+//		),
+//	),
+////
+//    'user-registration' => array(
+//        'constant_or_function' => 'rsssl_user_registration',
+//        'label'                => 'User registration',
+//        'folder'               => 'wordpress',
+//        'impact'               => 'medium',
+//        'risk'                 => 'medium',
+//        'learning_mode'        => true,
+//        'type'                 => 'checkbox',
+//        'conditions'           => array(
+////	        'rsssl_user_registration_allowed',
+//        ),
+//        'actions'              => array(
+//	        'fix'       => 'rsssl_maybe_disable_user_registration',
+//	        'ignore'    => 'disable_checkbox',
+//        ),
+//    ),
 //
-    'user-registration' => array(
-        'constant_or_function' => 'rsssl_user_registration',
-        'label'                => 'User registration',
-        'folder'               => 'wordpress',
-        'impact'               => 'medium',
-        'risk'                 => 'medium',
-        'learning_mode'        => true,
-        'type'                 => 'checkbox',
-        'conditions'           => array(
-//	        'rsssl_user_registration_allowed',
-        ),
-        'actions'              => array(
-	        'fix'       => 'rsssl_maybe_disable_user_registration',
-	        'ignore'    => 'disable_checkbox',
-        ),
-    ),
-
-	'file-editing' => array(
-		'constant_or_function' => 'rsssl_file_editing_registration',
-		'label'                => 'File editing',
-		'folder'               => 'wordpress',
-		'impact'               => 'medium',
-		'risk'                 => 'low',
-		'learning_mode'        => false,
-		'type'                 => 'checkbox',
-		'conditions'           => array(
-//			'rsssl_file_editing_allowed',
-		),
-		'actions'              => array(
-			'fix'       => 'rsssl_disable_file_editing',
-//			'ignore'    => 'disable_checkbox',
-		),
-	),
-
-	'hide-wp-version' => array(
-		'constant_or_function' => 'rsssl_hide_wp_version',
-		'label'                => 'Hide WP version',
-		'folder'               => 'wordpress',
-		'impact'               => 'low',
-		'risk'                 => 'low',
-		'learning_mode'        => false,
-		'type'                 => 'checkbox',
-		'conditions'           => array(
-//			'rsssl_file_editing_allowed',
-		),
-		'actions'              => array(
-			'fix'       => 'rsssl_maybe_hide_wp_version',
-//			'ignore'    => 'disable_checkbox',
-		),
-	),
-
-	'user-enumeration' => array(
-		'constant_or_function' => 'rsssl_user_enumeration',
-		'label'                => 'User Enumeration',
-		'folder'               => 'wordpress',
-		'impact'               => 'low',
-		'risk'                 => 'medium',
-		'learning_mode'        => true,
-		'type'                 => 'checkbox',
-		'conditions'           => array(
-//			'rsssl_file_editing_allowed',
-		),
-		'actions'              => array(
-			'fix'       => 'rsssl_disable_user_enumeration',
-//			'ignore'    => 'disable_checkbox',
-		),
-	),
-
-    'block-code-execution-uploads' => array(
-        'constant_or_function' => 'rsssl_block_code_execution_uploads',
-        'label'                => 'Block code execution in uploads directory',
-        'folder'               => 'wordpress',
-        'impact'               => 'medium',
-        'risk'                 => 'low',
-        'learning_mode'        => false,
-        'type'                 => 'checkbox',
-        'conditions'           => array(
-//			'rsssl_file_editing_allowed',
-        ),
-        'actions'              => array(
-			'fix'       => 'rsssl_disable_code_execution_uploads',
-//			'ignore'    => 'disable_checkbox',
-        ),
-    ),
-    'prevent-login-info-leakage' => array(
-        'constant_or_function' => 'rsssl_prevent_info_login_leakage',
-        'label'                => 'Prevent login error leakage',
-        'folder'               => 'wordpress',
-        'impact'               => 'low',
-        'risk'                 => 'high',
-        'learning_mode'        => false,
-        'type'                 => 'checkbox',
-        'conditions'           => array(
-//			'rsssl_file_editing_allowed',
-        ),
-        'actions'              => array(
-			'fix'       => 'rsssl_remove_wp_version',
-//			'ignore'    => 'disable_checkbox',
-        ),
-    ),
-    'disable-http-methods' => array(
-        'constant_or_function' => 'rsssl_http_methods',
-        'label'                => 'Disable HTTP methods',
-        'folder'               => 'server',
-        'impact'               => 'low',
-        'risk'                 => 'medium',
-        'learning_mode'        => false,
-        'type'                 => 'checkbox',
-        'conditions'           => array(
-//			'rsssl_file_editing_allowed',
-        ),
-        'actions'              => array(
-			'fix'       => 'rsssl_disable_http_methods',
-//			'ignore'    => 'disable_checkbox',
-        ),
-    ),
+//	'file-editing' => array(
+//		'constant_or_function' => 'rsssl_file_editing_registration',
+//		'label'                => 'File editing',
+//		'folder'               => 'wordpress',
+//		'impact'               => 'medium',
+//		'risk'                 => 'low',
+//		'learning_mode'        => false,
+//		'type'                 => 'checkbox',
+//		'conditions'           => array(
+////			'rsssl_file_editing_allowed',
+//		),
+//		'actions'              => array(
+//			'fix'       => 'rsssl_disable_file_editing',
+////			'ignore'    => 'disable_checkbox',
+//		),
+//	),
 //
-    'debug-log' => array(
-        'constant_or_function' => 'rsssl_debug_log',
-        'label'                => 'Move debug.log',
-        'folder'               => 'wordpress',
-        'impact'               => 'medium',
-        'risk'                 => 'medium',
-        'learning_mode'        => false,
-        'type'                 => 'checkbox',
-        'conditions'           => array(
-//			'rsssl_file_editing_allowed',
-        ),
-        'actions'              => array(
-			'fix'       => 'rsssl_change_debug_log_location',
-//			'ignore'    => 'disable_checkbox',
-        ),
-    ),
-
-    'disable-indexing' => array(
-        'constant_or_function' => 'rsssl_disable_indexing',
-        'label'                => 'Disable directory indexing',
-        'folder'               => 'server',
-        'impact'               => 'low',
-        'risk'                 => 'medium',
-        'learning_mode'        => false,
-        'type'                 => 'checkbox',
-        'conditions'           => array(
-//			'rsssl_file_editing_allowed',
-        ),
-        'actions'              => array(
-			'fix'       => 'rsssl_disable_indexing',
-//			'ignore'    => 'disable_checkbox',
-        ),
-    ),
-
-	'application-passwords' => array(
-		'constant_or_function' => 'rsssl_application_passwords',
-		'label'                => 'Disable Application passwords',
-		'folder'               => 'wordpress',
-		'impact'               => 'low',
-		'risk'                 => 'high',
-		'learning_mode'        => false,
-		'type'                 => 'checkbox',
-		'conditions'           => array(
-			'rsssl_application_passwords_available',
-		),
-		'actions'              => array(
-			'fix'       => 'rsssl_disable_application_passwords',
-//			'ignore'    => 'disable_checkbox',
-		),
-	),
+//	'hide-wp-version' => array(
+//		'constant_or_function' => 'rsssl_hide_wp_version',
+//		'label'                => 'Hide WP version',
+//		'folder'               => 'wordpress',
+//		'impact'               => 'low',
+//		'risk'                 => 'low',
+//		'learning_mode'        => false,
+//		'type'                 => 'checkbox',
+//		'conditions'           => array(
+////			'rsssl_file_editing_allowed',
+//		),
+//		'actions'              => array(
+//			'fix'       => 'rsssl_maybe_hide_wp_version',
+////			'ignore'    => 'disable_checkbox',
+//		),
+//	),
+//
+//	'user-enumeration' => array(
+//		'constant_or_function' => 'rsssl_user_enumeration',
+//		'label'                => 'User Enumeration',
+//		'folder'               => 'wordpress',
+//		'impact'               => 'low',
+//		'risk'                 => 'medium',
+//		'learning_mode'        => true,
+//		'type'                 => 'checkbox',
+//		'conditions'           => array(
+////			'rsssl_file_editing_allowed',
+//		),
+//		'actions'              => array(
+//			'fix'       => 'rsssl_disable_user_enumeration',
+////			'ignore'    => 'disable_checkbox',
+//		),
+//	),
+//
+//    'block-code-execution-uploads' => array(
+//        'constant_or_function' => 'rsssl_block_code_execution_uploads',
+//        'label'                => 'Block code execution in uploads directory',
+//        'folder'               => 'wordpress',
+//        'impact'               => 'medium',
+//        'risk'                 => 'low',
+//        'learning_mode'        => false,
+//        'type'                 => 'checkbox',
+//        'conditions'           => array(
+////			'rsssl_file_editing_allowed',
+//        ),
+//        'actions'              => array(
+//			'fix'       => 'rsssl_disable_code_execution_uploads',
+////			'ignore'    => 'disable_checkbox',
+//        ),
+//    ),
+//    'prevent-login-info-leakage' => array(
+//        'constant_or_function' => 'rsssl_prevent_info_login_leakage',
+//        'label'                => 'Prevent login error leakage',
+//        'folder'               => 'wordpress',
+//        'impact'               => 'low',
+//        'risk'                 => 'high',
+//        'learning_mode'        => false,
+//        'type'                 => 'checkbox',
+//        'conditions'           => array(
+////			'rsssl_file_editing_allowed',
+//        ),
+//        'actions'              => array(
+//			'fix'       => 'rsssl_remove_wp_version',
+////			'ignore'    => 'disable_checkbox',
+//        ),
+//    ),
+//    'disable-http-methods' => array(
+//        'constant_or_function' => 'rsssl_http_methods',
+//        'label'                => 'Disable HTTP methods',
+//        'folder'               => 'server',
+//        'impact'               => 'low',
+//        'risk'                 => 'medium',
+//        'learning_mode'        => false,
+//        'type'                 => 'checkbox',
+//        'conditions'           => array(
+////			'rsssl_file_editing_allowed',
+//        ),
+//        'actions'              => array(
+//			'fix'       => 'rsssl_disable_http_methods',
+////			'ignore'    => 'disable_checkbox',
+//        ),
+//    ),
+////
+//    'debug-log' => array(
+//        'constant_or_function' => 'rsssl_debug_log',
+//        'label'                => 'Move debug.log',
+//        'folder'               => 'wordpress',
+//        'impact'               => 'medium',
+//        'risk'                 => 'medium',
+//        'learning_mode'        => false,
+//        'type'                 => 'checkbox',
+//        'conditions'           => array(
+////			'rsssl_file_editing_allowed',
+//        ),
+//        'actions'              => array(
+//			'fix'       => 'rsssl_change_debug_log_location',
+////			'ignore'    => 'disable_checkbox',
+//        ),
+//    ),
+//
+//    'disable-indexing' => array(
+//        'constant_or_function' => 'rsssl_disable_indexing',
+//        'label'                => 'Disable directory indexing',
+//        'folder'               => 'server',
+//        'impact'               => 'low',
+//        'risk'                 => 'medium',
+//        'learning_mode'        => false,
+//        'type'                 => 'checkbox',
+//        'conditions'           => array(
+////			'rsssl_file_editing_allowed',
+//        ),
+//        'actions'              => array(
+//			'fix'       => 'rsssl_disable_indexing',
+////			'ignore'    => 'disable_checkbox',
+//        ),
+//    ),
+//
+//	'application-passwords' => array(
+//		'constant_or_function' => 'rsssl_application_passwords',
+//		'label'                => 'Disable Application passwords',
+//		'folder'               => 'wordpress',
+//		'impact'               => 'low',
+//		'risk'                 => 'high',
+//		'learning_mode'        => false,
+//		'type'                 => 'checkbox',
+//		'conditions'           => array(
+//			'rsssl_application_passwords_available',
+//		),
+//		'actions'              => array(
+//			'fix'       => 'rsssl_disable_application_passwords',
+////			'ignore'    => 'disable_checkbox',
+//		),
+//	),
 
 	'rename-db-prefix' => array(
-		'constant_or_function' => 'rsssl_rename_db_prefix',
+		'constant_or_function' => 'rsssl_maybe_rename_db_prefix',
 		'label'                => 'Rename DB prefix',
 		'folder'               => 'wordpress',
 		'impact'               => 'low',
@@ -215,7 +215,7 @@ $rsssl_integrations_list = apply_filters( 'rsssl_integrations', array(
 //			'rsssl_application_passwords_available',
 		),
 		'actions'              => array(
-			'fix'       => 'rsssl_rename_db_prefix',
+			'fix'       => 'rsssl_maybe_rename_db_prefix',
 //			'ignore'    => 'disable_checkbox',
 		),
 	),
