@@ -5,13 +5,25 @@ class rsssl_ssllabs {
 
 	}
 
-	public function get( $state, $clear_cache = false ){
+	public function get( $state ){
 		$ip = get_option( 'rsssl_ssltest_endpoint_ip' );
-		$domain = 'ziprecipes.net';
-		$message = ' empty message';
+		$message = '';
+		$footer_html = '';
+		$disabled = false;
+		$domain = $this->get_host();
+		if (strpos($domain, 'localhost')!==false){
+			return ['footerHtml'=>$footer_html,'disabled'=>true, 'html' => '<div class="rsssl-ssltest"><div class="rsssl-ssltest-element">'.__("SSL Test is not possible on localhost","really-simple-ssl").'</div></div>', 'progress' => 100];
+		}
+
+		$last_test = get_option('rsssl_last_ssltest');
+		$one_day_ago = strtotime('-1 day');
+		if ($last_test && $last_test>$one_day_ago){
+			$disabled = true;
+			$footer_html = sprintf(__("Available in %s hours", "really-simple-ssl"), gmdate("H:i", $last_test-$one_day_ago));
+		}
 
 		if ( $state==='initial' && !$ip ) {
-			return ['html' => '<div class="rsssl-ssltest"><div class="rsssl-ssltest-element">'.__("Start a test to see your SSL rating","really-simple-ssl").'</div></div>', 'progress' => 0];
+			return ['footerHtml'=>$footer_html,'disabled'=>$disabled, 'html' => '<div class="rsssl-ssltest"><div class="rsssl-ssltest-element">'.__("Start a test to see your SSL rating","really-simple-ssl").'</div></div>', 'progress' => 100];
 		} else if ( $state==='clearcache' ) {
 			update_option( 'rsssl_ssltest_endpoint_ip', false );
 			update_option( 'rsssl_ssltest_base_request', false );
@@ -41,8 +53,6 @@ class rsssl_ssllabs {
 			$response = wp_remote_get( $url );
 			$status   = wp_remote_retrieve_response_code( $response );
 			$endpoint_body     = wp_remote_retrieve_body( $response );
-
-
 			if ( $status == 200 ) {
 				$endpoint_body = json_decode( $endpoint_body );
 				$message = __('Finalizing results','really-simple-ssl');
@@ -58,9 +68,12 @@ class rsssl_ssllabs {
 		$html_arr[] = __('Servername:','really-simple-ssl').' '.$this->get_server();
 		if ( $total_progress<100 ){
 			$html_arr[] = $message;
+			$disabled = true;
 		} else {
-			$date = date(get_option('date_format'), substr($body->testTime, 0, 10));
-			$time = date(get_option('time_format'), substr($body->testTime, 0, 10));
+			$test_time = substr($body->testTime, 0, 10);
+			update_option('rsssl_last_ssltest', $test_time);
+			$date = date(get_option('date_format'),$test_time);
+			$time = date(get_option('time_format'), $test_time);
 			$html_arr[] = __('Last test:','really-simple-ssl').' '.$date.' - '.$time;
 			$html_arr[] = $this->supports_only_secure_tls() ? __('Secure TLS','really-simple-ssl') : __('Supports insecure TLS version','really-simple-ssl');
 			$html_arr[] = $this->has_hsts() ? __('HSTS enabled','really-simple-ssl') : __('HSTS not enabled','really-simple-ssl');
@@ -68,7 +81,7 @@ class rsssl_ssllabs {
 		}
 		$html = '<div class="rsssl-ssltest"><div><div>'.implode('</div><div>', $html_arr ).'</div></div><div class="rsssl-grade"><span>'.$body->endpoints[0]->grade.'</span></div></div>';
 		$html .= '<div class="rsssl-detailed-report"><a href="https://www.ssllabs.com/analyze.html?d='.urlencode($domain).'" target="_blank">'.__("View details report on Qualys SSL Labs", "really-simple-ssl").'</a></div>';
-		return ['html' => $html, 'progress' => $total_progress ];
+		return ['footerHtml'=>$footer_html,'disabled'=>$disabled, 'html' => $html, 'progress' => $total_progress ];
 	}
 
 	/**
@@ -184,6 +197,15 @@ class rsssl_ssllabs {
 
 		$total_progress =  $total_progress==0 ? 1 : $total_progress;
 		return ROUND($total_progress,0);
+	}
+
+	/**
+	 * Get host of this site
+	 * @return false|string
+	 */
+	private function get_host(){
+		$parse = parse_url(site_url());
+		return isset($parse['host']) ? $parse['host'] : false;
 	}
 }
 

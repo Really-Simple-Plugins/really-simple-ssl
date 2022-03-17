@@ -11,9 +11,9 @@ class GridButton extends Component {
         super( ...arguments );
     }
     render(){
-
+        let disabled = this.props.disabled ? 'disabled' : '';
         return (
-            <button className="button-primary" onClick={this.props.onClick}>{this.props.text}</button>
+            <button className="button-primary" disabled={disabled} onClick={this.props.onClick}>{this.props.text}</button>
         );
     }
 }
@@ -29,9 +29,12 @@ var dynamicComponents = {
 class GridBlock extends Component {
     constructor() {
         super( ...arguments );
+        this.footerHtml = this.props.block.footer.html;
         this.state = {
             isAPILoaded: false,
             content:'',
+            testDisabled:false,
+            footerHtml:this.props.block.footer.html,
             progress:0,
             testRunning:false,
         };
@@ -53,19 +56,24 @@ class GridBlock extends Component {
 
         let test = this.props.block.content.data;
         return rsssl_api.runTest(test, setState).then((response) => {
-            console.log(response);
             let progress = response.data.progress;
             let content = response.data.html;
+            let testDisabled = response.data.disabled;
+            let footerHtml = response.data.footerHtml;
             let testRunning = false;
             if (progress<100) {
                 testRunning = true;
             }
             this.content = content
+            this.testDisabled = testDisabled
             this.progress = progress
             this.testRunning = testRunning
+            this.footerHtml = footerHtml
             this.setState({
                 testRunning:testRunning,
                 content:content,
+                testDisabled:testDisabled,
+                footerHtml:footerHtml,
                 progress:progress,
                 isAPILoaded: true,
 
@@ -112,8 +120,8 @@ class GridBlock extends Component {
                     {blockData.content.type!=='react' && <div className="rsssl-grid-item-content" dangerouslySetInnerHTML={{__html: content}}></div>}
                     {blockData.content.type==='react' && <div className="rsssl-grid-item-content">{wp.element.createElement(dynamicComponents[blockData.content])}</div>}
                     <div className="rsssl-grid-item-footer">
-                        { blockData.footer.hasOwnProperty('button') && <GridButton text={blockData.footer.button.text} onClick={this.runTest} action={blockData.footer.button.action} disabled={blockData.footer.button.disabled}/>}
-                        { blockData.footer.hasOwnProperty('html') && <span className="rsssl-footer-html" dangerouslySetInnerHTML={{__html: blockData.footer.html}}></span>}
+                        { blockData.footer.hasOwnProperty('button') && <GridButton text={blockData.footer.button.text} onClick={this.runTest} disabled={this.testDisabled}/>}
+                        { blockData.footer.hasOwnProperty('html') && <span className="rsssl-footer-html" dangerouslySetInnerHTML={{__html: this.footerHtml}}></span>}
                     </div>
                 </div>
             </div>

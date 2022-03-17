@@ -118,7 +118,7 @@ function rsssl_blocks(){
 			'help'    => __( 'A help text', 'really-simple-ssl' ),
 			'content' => [ 'type' => 'test', 'data' => 'ssltest', 'interval'=>1000 ],
 			'footer'  => [
-					'button' => [ 'text' => __("Run test","really-simple-ssl"), 'action' => 'SslLabs', 'disabled' => false ],
+					'button' => [ 'text' => __("Run test","really-simple-ssl"), 'disabled' => false ],
 					'html' => '<div>Footer html</div>',
 					],
 			'size'    => 'small',
