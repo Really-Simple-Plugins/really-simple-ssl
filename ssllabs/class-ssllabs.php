@@ -80,7 +80,13 @@ class rsssl_ssllabs {
 			$html_arr[] = $this->has_warnings() ? __('Warnings detected, see the full report for details.','really-simple-ssl') : __("No warnings", 'really-simple-ssl');
 		}
 		$html = '<div class="rsssl-ssltest"><div><div>'.implode('</div><div>', $html_arr ).'</div></div><div class="rsssl-grade"><span>'.$body->endpoints[0]->grade.'</span></div></div>';
-		$html .= '<div class="rsssl-detailed-report"><a href="https://www.ssllabs.com/analyze.html?d='.urlencode($domain).'" target="_blank">'.__("View details report on Qualys SSL Labs", "really-simple-ssl").'</a></div>';
+		$url = 'https://www.ssllabs.com/analyze.html?d='.urlencode($domain);
+		$class = "rsssl-complete";
+		if ( $total_progress<100 ) {
+			$class = "rsssl-incomplete";
+			$url = '#';
+		}
+		$html .= '<div class="rsssl-detailed-report '.$class.'"><a href="'.$url.'" target="_blank">'.__("View details report on Qualys SSL Labs", "really-simple-ssl").'</a></div>';
 		return ['footerHtml'=>$footer_html,'disabled'=>$disabled, 'html' => $html, 'progress' => $total_progress ];
 	}
 
