@@ -23,7 +23,7 @@ function rsssl_add_learning_mode_table() {
 	require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
 
 	global $wpdb;
-	$table_name      = $wpdb->base_prefix . "rsssl_learning_mode";
+	$table_name      = $wpdb->prefix . "rsssl_learning_mode";
 	$charset_collate = $wpdb->get_charset_collate();
 
 	$sql = "CREATE TABLE $table_name (

@@ -34,6 +34,7 @@ function rsssl_db_prefix_notice( $notices ) {
 
 /**
  * Check DB prefix
+ * return string
  */
 function rsssl_check_db_prefix() {
 	global $wpdb;
@@ -60,12 +61,11 @@ function rsssl_maybe_rename_db_prefix() {
         // Get all tables starting with wp_
 		$tables = $wpdb->get_results("SHOW TABLES LIKE '".$wpdb->prefix."%'", ARRAY_N);;
 
-        // Copy these tables with a new prefix
+		$new_prefix = rsssl_generate_random_prefix( 10 );
+		// Copy these tables with a new prefix
 		foreach ( $tables as $table ) {
 
             $table_name = $table[0];
-
-            $new_prefix = rsssl_generate_random_prefix($length = 12);
 
             $new_table = str_replace('wp_', $new_prefix, $table_name);
             $wpdb->query("CREATE TABLE IF NOT EXISTS $new_table LIKE $table_name");
@@ -121,14 +121,14 @@ function rsssl_maybe_rename_db_prefix() {
             $new_prefix_tables = $wpdb->get_results("SHOW TABLES LIKE '".$new_prefix."%'", ARRAY_N);
 
             foreach ( $new_prefix_tables as $new_table ) {
-                $wpdb->query("DROP $new_table[0]");
+                $wpdb->query("DROP TABLE IF EXISTS $new_table[0]");
             }
 
         }
 
         // Remove old wp_ tables
         foreach ( $tables as $table ) {
-            $wpdb->query("DROP $table[0]");
+            $wpdb->query("DROP TABLE IF EXISTS $table[0]");
         }
 
         update_option('rsssl_db_prefix_updated', true);
@@ -150,11 +150,11 @@ function rsssl_generate_random_prefix($length) {
         $randomString .= $characters[$index];
     }
 
-    return $randomString;
+    return $randomString . '_';
 }
 
 /**
- * @return void
+ * @return bool
  * Verify database copy
  */
 function rsssl_verify_database_copy($new_prefix) {
@@ -163,8 +163,6 @@ function rsssl_verify_database_copy($new_prefix) {
 
     $original_tables = $wpdb->get_results("SHOW TABLES LIKE '".$wpdb->prefix."%'", ARRAY_N);
     $new_tables = $wpdb->get_results("SHOW TABLES LIKE '".$new_prefix."%'", ARRAY_N);
-    error_log(print_r($original_tables, true));
-    error_log(print_r($new_tables, true));
 
     if ( count( $original_tables ) === count( $new_tables ) ) {
         // Count rows in table
