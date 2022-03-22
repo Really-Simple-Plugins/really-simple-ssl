@@ -1,0 +1,135 @@
+/**move to css variables in time */
+:root {
+  --rsp-break-xs: 400px;
+  --rsp-break-s: 576px;
+  --rsp-break-m: 768px;
+  --rsp-break-l: 992px;
+  --rsp-break-xl: 1200px;
+  --rsp-break-xxl: 1400px;
+  --rsp-spacing-xs: 10px;
+  --rsp-spacing-s: 15px;
+  --rsp-spacing-m: 20px;
+  --rsp-spacing-l: 30px;
+  --rsp-spacing-xl: 40px;
+  --rsp-grid-margin: var(--rsp-spacing-xs);
+  --rsp-grid-gap: var(--rsp-spacing-m);
+  --rsp-border-radius: 12px;
+  --rsp-border: 1px solid var(--rsp-border-color);
+  --rsp-box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 6px -1px, rgba(0, 0, 0, 0.06) 0px 2px 4px -1px;
+  --rsp-border-color: #dfdfdf;
+  --rsp-black: #333;
+  --rsp-white: #fff;
+  --rsp-yellow: #f4bf3e;
+  --rsp-blue: #29b6f6;
+  --rsp-dark-blue: #5A6FA5;
+  --rsp-green: #2e8a37;
+  --rsp-red: #D7263D;
+  --rsp-pink: #E35899;
+  --rsp-orange: #f39c12;
+  --rsp-yellow-faded: rgba(244, 191, 62, 0.1);
+  --rsp-blue-faded: rgba(41, 182, 246, 0.1);
+  --rsp-dark-blue-faded: rgba(41, 182, 246, 0.1);
+  --rsp-green-faded: rgba(46, 138, 55, 0.1);
+  --rsp-red-faded: rgba(215, 38, 61, 0.1);
+  --rsp-pink-faded: rgba(227, 88, 153, 0.1);
+  --rsp-orange-faded: rgba(243, 156, 18, 0.1);
+  --rsp-background-block-color: var(--rsp-white);
+  --rsp-background-color: #f0f0f1;
+  --rsp-input-background-color: #F1F1F1;
+  --rsp-input-text-color: var(--rsp-text-color);
+  --rsp-input-border-color: #8c8f94;
+  --rsp-text-color: rgba(26, 26, 26, 0.9);
+  --rsp-text-color-invert: rgba(255, 255, 255, 0.9);
+  --rsp-text-color-white: rgba(255, 255, 255, 0.9);
+  --rsp-text-color-light: rgba(69, 69, 82, 0.9);
+  --rsp-grey-200: #fafafa;
+  --rsp-grey-300: #ededed;
+  --rsp-grey-400: #c6c6c6;
+  --rsp-grey-500: #737373;
+  --rsp-grey-600: #696969;
+  --rsp-color-success: var(--rsp-green);
+  --rsp-color-error: var(--rsp-red);
+  --rsp-color-warning: var(--rsp-orange);
+  --rsp-color-open: var(--rsp-yellow);
+  --rsp-fs-100: 0.6125rem;
+  --rsp-fs-200: 0.625rem;
+  --rsp-fs-300: 0.8125rem;
+  --rsp-fs-400: 0.875rem;
+  --rsp-fs-500: 1rem;
+  --rsp-fs-600: 1.125rem;
+  --rsp-fs-700: 1.25rem;
+  --rsp-fs-800: 1.5rem;
+  --rsp-fs-900: 2.5rem;
+  --rsp-brand-primary: var(--rsp-green);
+  --rsp-brand-secondary: var(--rsp-yellow);
+  --rsp-brand-primary-faded: var(--rsp-green-faded);
+}
+.rsssl-progress-block {
+  padding-top: 10px;
+}
+.rsssl-progress-block .rsssl-progress {
+  overflow: hidden;
+  height: 20px;
+  border-radius: 5px;
+  background-color: #f7f7f7;
+}
+.rsssl-progress-block .rsssl-progress .rsssl-bar {
+  height: 100%;
+  background-color: #61ce70;
+}
+.rsssl-progress-block .rsssl-progress .rsssl-bar.rsssl-orange {
+  background-color: #FBC43D;
+}
+.rsssl-progress-block .rsssl-progress-text {
+  display: flex;
+  align-items: center;
+  margin: 10px 0;
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+.rsssl-progress-block .rsssl-progress-text .rsssl-task-list {
+  height: 257px;
+  overflow: hidden;
+}
+.rsssl-progress-block .rsssl-progress-text .rsssl-toggle-active {
+  text-decoration: underline;
+}
+.rsssl-progress-block .rsssl-progress-text #rsssl-all-tasks,
+.rsssl-progress-block .rsssl-progress-text #rsssl-remaining-tasks {
+  display: none;
+}
+.rsssl-progress-block .rsssl-progress-text .rsssl-tasks-container {
+  border-bottom: 1px solid lightgrey;
+  color: lightgrey;
+}
+.rsssl-progress-block .rsssl-progress-text .rsssl-tasks-container.active {
+  text-decoration: none;
+  border-bottom: 0;
+  color: initial;
+}
+.rsssl-progress-block .rsssl-progress-text .rsssl-tasks-inactive {
+  text-decoration: underline;
+  color: lightgrey;
+}
+.rsssl-progress-block .rsssl-progress-text .rsssl-progress-percentage {
+  font-size: 32px;
+  font-weight: 700;
+}
+.rsssl-progress-block .rsssl-progress-text .rsssl-progress-text {
+  margin-left: 35px;
+  font-size: 18px;
+  font-weight: 600;
+}
+.rsssl-progress-block .rsssl-progress-text .rsssl-progress-text a {
+  margin-left: 3px;
+}
+.rsssl-progress-block .rsssl-progress-table tr {
+  position: relative;
+}
+.rsssl-progress-block .rsssl-progress-table td {
+  padding: 10px 10px 10px 0;
+}
+.rsssl-progress-block .rsssl-progress-table td + td {
+  padding-left: 15px;
+}
+/*# sourceMappingURL=progress.css.map */

@@ -283,30 +283,6 @@
 .rsssl-grid .rsssl-wide-button {
   width: 220px;
 }
-.rsssl-grid .rsssl-progress .rsssl-task-list {
-  height: 257px;
-  overflow: hidden;
-}
-.rsssl-grid .rsssl-progress .rsssl-toggle-active {
-  text-decoration: underline;
-}
-.rsssl-grid .rsssl-progress #rsssl-all-tasks,
-.rsssl-grid .rsssl-progress #rsssl-remaining-tasks {
-  display: none;
-}
-.rsssl-grid .rsssl-progress .rsssl-tasks-container {
-  border-bottom: 1px solid lightgrey;
-  color: lightgrey;
-}
-.rsssl-grid .rsssl-progress .rsssl-tasks-container.active {
-  text-decoration: none;
-  border-bottom: 0;
-  color: initial;
-}
-.rsssl-grid .rsssl-progress .rsssl-tasks-inactive {
-  text-decoration: underline;
-  color: lightgrey;
-}
 .rsssl-grid .rsssl-item {
   width: 800px;
   height: 485px;
@@ -323,7 +299,7 @@
 .rsssl-grid .rsssl-item .item-container {
   background-color: #fff;
   position: relative;
-  box-shadow: 0 0 5px 5px rgba(222, 222, 222, 0.2);
+  box-shadow: 0 0 5px 5px #dedede;
   width: 790px;
   height: 475px;
 }
@@ -389,18 +365,6 @@
 .rsssl-grid .rsssl-item .item-container .rsssl-grid-item-header .rsssl-instructions a {
   color: #3c3c3c;
 }
-.rsssl-grid .rsssl-item .item-container .rsssl-grid-item-header .rsssl-secondary-header-item {
-  display: flex;
-  color: #3c3c3c;
-}
-.rsssl-grid .rsssl-item .item-container .rsssl-grid-item-header .rsssl-secondary-header-item .all-task-count,
-.rsssl-grid .rsssl-item .item-container .rsssl-grid-item-header .rsssl-secondary-header-item .open-task-count {
-  padding-left: 3px;
-  padding-top: 3px;
-}
-.rsssl-grid .rsssl-item .item-container .rsssl-grid-item-header .rsssl-secondary-header-item .all-task-count {
-  margin-right: 5px;
-}
 .rsssl-grid .rsssl-item .item-container .rsssl-table-td-main-content {
   padding-left: 15px;
 }
@@ -408,9 +372,6 @@
   height: 360px;
   margin: 10px 25px 10px 25px;
   border-bottom: 1px solid #dedede;
-  /*
-          Progress block
-        */
   /*
           Tips and Tricks
        */
@@ -426,53 +387,6 @@
   /*
           Progress labels
          */
-}
-.rsssl-grid .rsssl-item .item-container .rsssl-grid-item-content .rsssl-progress-block {
-  padding-top: 10px;
-}
-.rsssl-grid .rsssl-item .item-container .rsssl-grid-item-content .rsssl-progress-block .progress-bar-container {
-  margin: 0 0 25px 0;
-}
-.rsssl-grid .rsssl-item .item-container .rsssl-grid-item-content .rsssl-progress-block .progress {
-  overflow: hidden;
-  height: 20px;
-  border-radius: 5px;
-  background-color: #f7f7f7;
-}
-.rsssl-grid .rsssl-item .item-container .rsssl-grid-item-content .rsssl-progress-block .progress .bar {
-  height: 100%;
-  background-color: #61ce70;
-}
-.rsssl-grid .rsssl-item .item-container .rsssl-grid-item-content .rsssl-progress-block .progress .bar.orange {
-  background-color: #FBC43D;
-}
-.rsssl-grid .rsssl-item .item-container .rsssl-grid-item-content .rsssl-progress-block .progress-text {
-  display: flex;
-  align-items: center;
-  margin: 10px 0;
-  padding-top: 10px;
-  padding-bottom: 10px;
-}
-.rsssl-grid .rsssl-item .item-container .rsssl-grid-item-content .rsssl-progress-block .progress-text .rsssl-progress-percentage {
-  font-size: 32px;
-  font-weight: 700;
-}
-.rsssl-grid .rsssl-item .item-container .rsssl-grid-item-content .rsssl-progress-block .progress-text .rsssl-progress-text {
-  margin-left: 35px;
-  font-size: 18px;
-  font-weight: 600;
-}
-.rsssl-grid .rsssl-item .item-container .rsssl-grid-item-content .rsssl-progress-block .progress-text .rsssl-progress-text a {
-  margin-left: 3px;
-}
-.rsssl-grid .rsssl-item .item-container .rsssl-grid-item-content .rsssl-progress-block .rsssl-progress-table tr {
-  position: relative;
-}
-.rsssl-grid .rsssl-item .item-container .rsssl-grid-item-content .rsssl-progress-block .rsssl-progress-table td {
-  padding: 10px 10px 10px 0;
-}
-.rsssl-grid .rsssl-item .item-container .rsssl-grid-item-content .rsssl-progress-block .rsssl-progress-table td + td {
-  padding-left: 15px;
 }
 .rsssl-grid .rsssl-item .item-container .rsssl-grid-item-content .rsssl-tips-tricks {
   color: #3c3c3c;
@@ -865,6 +779,95 @@
 .rsssl-grid .rsssl-item.no-background .item-container {
   background-color: #F1F1F1;
 }
+.rsssl-progress-block {
+  padding-top: 10px;
+}
+.rsssl-progress-block .rsssl-progress {
+  overflow: hidden;
+  height: 20px;
+  border-radius: 5px;
+  background-color: #f7f7f7;
+}
+.rsssl-progress-block .rsssl-progress .rsssl-bar {
+  height: 100%;
+  background-color: #61ce70;
+}
+.rsssl-progress-block .rsssl-progress .rsssl-bar.rsssl-orange {
+  background-color: #FBC43D;
+}
+.rsssl-progress-block .rsssl-progress-text {
+  display: flex;
+  align-items: center;
+  margin: 10px 0;
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+.rsssl-progress-block .rsssl-progress-text .rsssl-progress-percentage {
+  font-size: 32px;
+  font-weight: 700;
+}
+.rsssl-progress-block .rsssl-progress-text .rsssl-progress-text {
+  margin-left: 35px;
+  font-size: 18px;
+  font-weight: 600;
+}
+.rsssl-progress-block .rsssl-progress-text .rsssl-progress-text a {
+  margin-left: 3px;
+}
+.rsssl-header-html {
+  display: flex;
+  color: #3c3c3c;
+}
+.rsssl-header-html .rsssl-toggle-active {
+  text-decoration: underline;
+}
+.rsssl-task-control-container {
+  display: flex;
+}
+.rsssl-task-control-container label {
+  margin: 0 5px;
+  border-bottom: 1px solid lightgrey;
+  color: lightgrey;
+}
+.rsssl-task-control-container.rsssl-active-filter-remaining .rsssl-remaining-tasks label {
+  text-decoration: none;
+  border-bottom: 0;
+  color: initial;
+}
+.rsssl-task-control-container.rsssl-active-filter-all .rsssl-all-tasks label {
+  text-decoration: none;
+  border-bottom: 0;
+  color: initial;
+}
+/**
+* Task element, list of tasks
+ */
+.rsssl-task-element {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--rsp-spacing-m);
+  padding-bottom: var(--rsp-spacing-s);
+}
+.rsssl-task-element .rsssl-task-message {
+  flex: 1;
+}
+.rsssl-task-element .rsssl-task-dismiss button {
+  all: initial;
+}
+.rsssl-task-element .rsssl-task-dismiss span {
+  font-size: 1.5em;
+  color: black;
+  font-family: sans-serif;
+}
+.rsssl-task-element .rsssl-task-dismiss span:hover {
+  cursor: pointer;
+  color: grey;
+}
+.rsssl-task-element .rsssl-task-dismiss span svg {
+  height: 12px;
+  width: 12px;
+}
 .rsssl-scroll-container {
   height: 227px;
   overflow-y: auto;
@@ -887,22 +890,6 @@
 }
 .rsssl-spacer {
   width: 10px;
-}
-.rsssl-dashboard-dismiss .close {
-  all: initial;
-}
-.rsssl-dashboard-dismiss span {
-  font-size: 1.5em;
-  color: black;
-  font-family: sans-serif;
-}
-.rsssl-dashboard-dismiss span img {
-  height: 12px;
-  width: 12px;
-}
-.rsssl-dashboard-dismiss span:hover {
-  cursor: pointer;
-  color: grey;
 }
 /* rsssl-rsssl-tooltip for settings page */
 /* Base styles for the element that has a rsssl-tooltip */
@@ -1138,36 +1125,6 @@
   flex: 1;
   width: 80%;
   float: left;
-}
-.rsssl-sidebar img {
-  max-width: 100%;
-  /*height:inherit;*/
-}
-.really-simple-ssl-table {
-  display: flex;
-  flex-direction: column;
-}
-.rsssl-table-td-main-content {
-  width: 100%;
-}
-.really-simple-ssl-table tr:first-child {
-  border-top-left-radius: 0.55rem;
-  border-top-right-radius: 0.55rem;
-}
-.really-simple-ssl-table tr:last-child {
-  margin-bottom: 0;
-  border-bottom-left-radius: 0.55rem;
-  border-bottom-right-radius: 0.55rem;
-}
-.really-simple-ssl-table tr {
-  position: relative;
-  padding-left: 5px;
-  padding-top: 10px;
-  background-color: #fff;
-}
-.debug-log {
-  background-color: #fff;
-  padding: 15px;
 }
 .rsssl-icons {
   width: 15px;

@@ -85,7 +85,7 @@ class REALLY_SIMPLE_SSL
 
 			$wpcli = defined( 'WP_CLI' ) && WP_CLI;
 
-			if (is_admin() || wp_doing_cron() || is_multisite() || $wpcli || defined('RSSSL_DOING_SYSTEM_STATUS') || defined('RSSSL_DOING_CSP') ) {
+			if (rsssl_is_logged_in_rest() || is_admin() || wp_doing_cron() || is_multisite() || $wpcli || defined('RSSSL_DOING_SYSTEM_STATUS') || defined('RSSSL_DOING_CSP') ) {
 				if (is_multisite()) {
 					self::$instance->rsssl_multisite = new rsssl_multisite();
 				}
@@ -133,6 +133,7 @@ class REALLY_SIMPLE_SSL
 		}
 
 		if ( rsssl_is_logged_in_rest() || is_admin() || wp_doing_cron() || is_multisite() || $wpcli || defined('RSSSL_DOING_SYSTEM_STATUS') || defined('RSSSL_DOING_CSP') ) {
+			require_once( rsssl_path . 'settings/settings.php' );
 			if (is_multisite()) {
 				require_once(rsssl_path . 'class-multisite.php');
 				require_once(rsssl_path . 'multisite-cron.php');
@@ -143,7 +144,6 @@ class REALLY_SIMPLE_SSL
             require_once(rsssl_path . 'class-help.php');
 			require_once(rsssl_path . 'class-certificate.php');
 			require_once(rsssl_path . 'class-site-health.php');
-			require_once( rsssl_path . 'settings/settings.php' );
 
 			if ( isset($_GET['install_pro'])) {
 				require_once(rsssl_path . 'upgrade/upgrade-to-pro.php');

@@ -104,6 +104,7 @@ function rsssl_ajax_load_page(){
 
 add_action( 'rest_api_init', 'rsssl_settings_rest_route' );
 function rsssl_settings_rest_route() {
+
 	if (!current_user_can('manage_options')) {
 		return;
 	}
@@ -154,16 +155,21 @@ function rsssl_run_test($request){
 	$test = sanitize_title($request->get_param('test'));
     $state = $request->get_param('state');
     $state =  $state !== 'undefined' ? $state : false;
-
-    switch($test){
+	switch($test){
         case 'ssltest':
 	        require_once( rsssl_path . 'ssllabs/class-ssllabs.php' );
 	        $test = new rsssl_ssllabs();
 	        $data = $test->get($state);
             break;
+        case 'progressdata':
+	        require_once( rsssl_path . 'progress/class-progress.php' );
+	        $progress = new rsssl_progress($state);
+            $data = $progress->get();
+            break;
         default:
-            $data = array();
+	        $data = array();
     }
+    error_log(print_r($data, true));
 	$response = json_encode( $data );
 	header( "Content-Type: application/json" );
 	echo $response;
@@ -242,7 +248,6 @@ function rsssl_rest_api_fields_get(  ){
 	if (!current_user_can('manage_options')) {
 		return;
 	}
-    error_log("get fields");
 	$output = array();
 	$fields = rsssl_fields();
 	$menu_items = rsssl_menu('group_general');
@@ -309,3 +314,4 @@ function rsssl_sanitize_field( $value, $type ) {
 			return sanitize_text_field( $value );
 	}
 }
+

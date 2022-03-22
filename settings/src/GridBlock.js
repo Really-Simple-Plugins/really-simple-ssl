@@ -5,7 +5,11 @@ import { __ } from '@wordpress/i18n';
 import {
     Component,
 } from '@wordpress/element';
+
 import * as rsssl_api from "./utils/api";
+import ProgressBlock from "./ProgressBlock";
+import ProgressHeader from "./ProgressBlockHeader";
+
 class GridButton extends Component {
     constructor() {
         super( ...arguments );
@@ -23,13 +27,15 @@ class GridButton extends Component {
  * @type {{SslLabs: JSX.Element}}
  */
 var dynamicComponents = {
-    // "runTest": runTest,
+    "ProgressBlock": ProgressBlock,
+    "ProgressHeader": ProgressHeader,
 };
 
 class GridBlock extends Component {
     constructor() {
         super( ...arguments );
         this.footerHtml = this.props.block.footer.html;
+        this.BlockProps=[];
         this.state = {
             isAPILoaded: false,
             content:'',
@@ -37,6 +43,7 @@ class GridBlock extends Component {
             footerHtml:this.props.block.footer.html,
             progress:0,
             testRunning:false,
+            BlockProps:null,
         };
         this.dynamicComponents = {
             "runTest": this.runTest,
@@ -76,13 +83,13 @@ class GridBlock extends Component {
                 footerHtml:footerHtml,
                 progress:progress,
                 isAPILoaded: true,
-
             })
         });
     }
 
     componentDidMount() {
         this.runTest = this.runTest.bind(this);
+        this.setBlockProps = this.setBlockProps.bind(this);
         if (this.props.block.content.type==='html' || this.props.block.content.type==='react') {
             let content = this.props.block.content.data;
             this.content = content;
@@ -92,6 +99,12 @@ class GridBlock extends Component {
                 progress:100,
             })
         }
+    }
+    setBlockProps(BlockProps){
+        this.BlockProps = BlockProps;
+        this.setState({
+            BlockProps: this.BlockProps,
+        })
     }
 
     render(){
@@ -109,16 +122,19 @@ class GridBlock extends Component {
                 this.runTest('refresh');
             }, blockData.content.interval );
         }
+        let DynamicBlockProps = { setBlockProps: this.setBlockProps, BlockProps: this.BlockProps, runTest: this.runTest };
         return (
             <div className={className}>
                 <div className="item-container">
                     <div className="rsssl-grid-item-header">
                         <h3>{ blockData.title }</h3>
-                        {blockData.url && <a href={blockData.url}>{__("Instructions", "really-simple-ssl")}</a>}
+                        {blockData.header && blockData.header.type==='url' && <a href={blockData.header.data}>{__("Instructions", "really-simple-ssl")}</a>}
+                        {blockData.header && blockData.header.type==='html' && <span className="rsssl-header-html" dangerouslySetInnerHTML={{__html: blockData.header.data}}></span>}
+                        {blockData.header && blockData.header.type==='react' && wp.element.createElement(dynamicComponents[blockData.header.data], DynamicBlockProps)}
                     </div>
                     {!isAPILoaded && <Placeholder></Placeholder>}
                     {blockData.content.type!=='react' && <div className="rsssl-grid-item-content" dangerouslySetInnerHTML={{__html: content}}></div>}
-                    {blockData.content.type==='react' && <div className="rsssl-grid-item-content">{wp.element.createElement(dynamicComponents[blockData.content])}</div>}
+                    {blockData.content.type==='react' && <div className="rsssl-grid-item-content">{wp.element.createElement(dynamicComponents[content], DynamicBlockProps)}</div>}
                     <div className="rsssl-grid-item-footer">
                         { blockData.footer.hasOwnProperty('button') && <GridButton text={blockData.footer.button.text} onClick={this.runTest} disabled={this.testDisabled}/>}
                         { blockData.footer.hasOwnProperty('html') && <span className="rsssl-footer-html" dangerouslySetInnerHTML={{__html: this.footerHtml}}></span>}

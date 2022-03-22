@@ -1,0 +1,101 @@
+@import "variables.less";
+
+.rsssl-progress-block {
+  padding-top: 10px;
+  .rsssl-progress {
+    overflow: hidden;
+    height: 20px;
+    border-radius: 5px;
+    background-color: #f7f7f7;
+    .rsssl-bar {
+      height: 100%;
+      background-color: @color-success;
+      &.rsssl-orange {
+        background-color: @color_open;
+      }
+    }
+  }
+
+  .rsssl-progress-text {
+    display: flex;
+    align-items: center;
+    margin: 10px 0;
+    padding-top: 10px;
+    padding-bottom: 10px;
+
+    .rsssl-progress-percentage {
+      font-size: 32px;
+      font-weight: 700;
+    }
+
+    .rsssl-progress-text {
+      margin-left: 35px;
+      font-size:18px;
+      font-weight:600;
+      a {
+        margin-left: 3px;
+      }
+    }
+  }
+}
+
+
+.rsssl-header-html {
+  display: flex;
+  color: @light-text-color;
+  .rsssl-toggle-active {
+    text-decoration: underline;
+  }
+}
+
+.rsssl-task-control-container {
+  display:flex;
+  label {
+    margin:0 5px;
+    border-bottom:1px solid lightgrey;
+    color: lightgrey;
+  }
+  &.rsssl-active-filter-remaining .rsssl-remaining-tasks label {
+    text-decoration: none;
+    border-bottom:0;
+    color:initial;
+  }
+  &.rsssl-active-filter-all .rsssl-all-tasks label {
+    text-decoration: none;
+    border-bottom:0;
+    color:initial;
+  }
+}
+/**
+* Task element, list of tasks
+ */
+
+.rsssl-task-element {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--rsp-spacing-m);
+  padding-bottom: var(--rsp-spacing-s);
+  .rsssl-task-message {
+    flex:1;
+  }
+  .rsssl-task-dismiss {
+    button {
+      all:initial; //remove default button styles
+    }
+    span {
+      font-size: 1.5em;
+      color: black;
+      font-family: sans-serif;
+      &:hover {
+        cursor: pointer;
+        color: grey;
+      }
+      svg {
+        height: 12px;
+        width: 12px;
+      }
+    }
+  }
+}
+

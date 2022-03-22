@@ -46,7 +46,6 @@ class rsssl_admin extends rsssl_front_end
 
     function __construct()
     {
-
 	    if (isset(self::$_this))
             wp_die(sprintf(__('%s is a singleton class and you cannot create a second instance.', 'really-simple-ssl'), get_class($this)));
 
@@ -2213,6 +2212,7 @@ class rsssl_admin extends rsssl_front_end
 	 */
 
 	public function recommended_headers_enabled() {
+        return true;
 
 		$unused_headers = $this->get_recommended_security_headers();
 		if ( empty( $unused_headers ) ) {
@@ -2902,6 +2902,13 @@ class rsssl_admin extends rsssl_front_end
 
     public function get_notices_list( $args = array() )
     {
+	    $icon_labels = [
+		    'success' => __("Completed", "really-simple-ssl"),
+		    'warning' => __("Warning", "really-simple-ssl"),
+		    'open' => __("Open", "really-simple-ssl"),
+		    'premium' => __("Premium", "really-simple-ssl"),
+	    ];
+
         $defaults = array(
             'admin_notices' => false,
             'premium_only' => false,
@@ -3262,7 +3269,7 @@ class rsssl_admin extends rsssl_front_end
 
 	        'recommended_security_headers_not_set' => array(
 		        'callback' => 'RSSSL()->really_simple_ssl->recommended_headers_enabled',
-		        'condition' => array('rsssl_ssl_enabled'),
+		        //'condition' => array('rsssl_ssl_enabled'),
 		        'score' => 5,
 		        'output' => array(
 			        'false' => array(
@@ -3403,7 +3410,6 @@ class rsssl_admin extends rsssl_front_end
             }
 
 		    $notices[$id]['output']['status'] = ( $notices[$id]['output']['icon'] !== 'success') ? 'open' : 'completed';
-
 		    if ( $args['status'] === 'open' && ($notices[$id]['output']['status'] === 'completed' ) ){
 			    unset($notices[$id]);
 			    continue;
@@ -3416,6 +3422,10 @@ class rsssl_admin extends rsssl_front_end
 				    unset($notices[$id]);
 			    }
 		    }
+
+            if ( isset($notices[$id]) ) {
+	            $notices[$id]['output']['label'] = $icon_labels[ $notices[$id]['output']['icon'] ];
+            }
 	    }
 
         //if only admin_notices are required, filter out the rest.
@@ -3532,6 +3542,8 @@ class rsssl_admin extends rsssl_front_end
     }
 
     /**
+     * @Deprecated, moved to progress class
+     *
      * Calculate the percentage completed in the dashboard progress section
      * Determine max score by adding $notice['score'] to the $max_score variable
      * Determine actual score by adding $notice['score'] of each item with a 'success' output to $actual_score
@@ -3604,42 +3616,6 @@ class rsssl_admin extends rsssl_front_end
 
 	    return add_query_arg($args, $wp_page);
     }
-
-	/**
-	 * @param $id
-	 * @param $notice
-     *
-     * Generate a notice row in the configuration dashboard tab
-     *
-     * @since 3.2
-     *
-	 */
-
-    private function notice_row($id, $notice){
-        if (!current_user_can('manage_options')) return;
-
-        if (!isset($notice['output'])) {
-            return;
-        }
-
-        $msg = $notice['output']['msg'];
-        $icon_type = $notice['output']['icon'];
-
-        // Do not show completed tasks if remaining tasks are selected.
-        if ($icon_type === 'success' && !get_option('rsssl_all_tasks') && get_option('rsssl_remaining_tasks')) return;
-
-        $icon = $this->icon($icon_type);
-        $dismiss = (isset($notice['output']['dismissible']) && $notice['output']['dismissible']) ? $this->rsssl_dismiss_button() : '';
-
-        ?>
-        <tr>
-            <td><?php echo $icon?></td><td class="rsssl-table-td-main-content"><?php echo $msg?></td>
-            <td class="rsssl-dashboard-dismiss" data-dismiss_type="<?php echo $id?>"><?php echo $dismiss?></td>
-        </tr>
-        <?php
-    }
-
-
 
 	/**
      * Count the plusones
@@ -3849,30 +3825,7 @@ class rsssl_admin extends rsssl_front_end
 		return apply_filters("rsssl_template_part_".$key.'_'.$index, $template_part, $grid_item);
 	}
 
-    /**
-     * Returns a success, error or warning image for the settings page
-     *
-     * @since  2.0
-     *
-     * @access public
-     *
-     * @param string $type the type of image
-     *
-     * @return string
-     */
 
-    public function icon($type)
-    {
-        if ($type == 'success') {
-            return "<span class='rsssl-progress-status rsssl-success'>".__("Completed", "really-simple-ssl")."</span>";
-        } elseif ($type == "warning") {
-            return "<span class='rsssl-progress-status rsssl-warning'>".__("Warning", "really-simple-ssl")."</span>";
-        } elseif ($type == "open") {
-            return "<span class='rsssl-progress-status rsssl-open'>".__("Open", "really-simple-ssl")."</span>";
-        } elseif ($type == "premium") {
-	        return "<span class='rsssl-progress-status rsssl-premium'>".__("Premium", "really-simple-ssl")."</span>";
-        }
-    }
 
     /**
      *
