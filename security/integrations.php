@@ -3,8 +3,9 @@ defined( 'ABSPATH' ) or die( "you do not have access to this page!" );
 if ( is_admin() ) {
 //	require_once( 'integrations-menu.php' );
 }
-require_once( trailingslashit(rsssl_path) . 'security/functions.php' );
+
 require_once( trailingslashit(rsssl_path) . 'security/learning-mode.php' );
+require_once( trailingslashit(rsssl_path) . 'security/functions.php' );
 require_once( trailingslashit(rsssl_path) . 'security/check-requests.php' );
 
 function rsssl_enqueue_integrations_assets( $hook ) {

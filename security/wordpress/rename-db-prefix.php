@@ -68,6 +68,7 @@ function rsssl_maybe_rename_db_prefix() {
             $table_name = $table[0];
 
             $new_table = str_replace('wp_', $new_prefix, $table_name);
+
             $wpdb->query("CREATE TABLE IF NOT EXISTS $new_table LIKE $table_name");
             $wpdb->query("INSERT IGNORE $new_table SELECT * FROM $table_name");
         }
@@ -131,6 +132,8 @@ function rsssl_maybe_rename_db_prefix() {
             $wpdb->query("DROP TABLE IF EXISTS $table[0]");
         }
 
+		// Clear DB cache
+		$wpdb->flush();
         update_option('rsssl_db_prefix_updated', true);
 
 	}

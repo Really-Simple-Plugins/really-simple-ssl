@@ -1,11 +1,5 @@
 <?php
 /**
-* Add the Learning Mode table
-*/
-
-add_action('admin_init', 'rsssl_add_learning_mode_table');
-
-/**
  * @return void
  * Add the learning mode table
  */
@@ -24,6 +18,7 @@ function rsssl_add_learning_mode_table() {
 
 	global $wpdb;
 	$table_name      = $wpdb->prefix . "rsssl_learning_mode";
+
 	$charset_collate = $wpdb->get_charset_collate();
 
 	$sql = "CREATE TABLE $table_name (
@@ -51,7 +46,7 @@ function rsssl_add_learning_mode_table() {
 function rsssl_log_to_learning_mode_table( $data ) {
 
 	global $wpdb;
-	$table_name = $wpdb->base_prefix . "rsssl_learning_mode";
+	$table_name = $wpdb->prefix . "rsssl_learning_mode";
 
 	$wpdb->insert( $table_name, array(
 		'time'              => current_time( 'mysql' ),
@@ -61,3 +56,9 @@ function rsssl_log_to_learning_mode_table( $data ) {
 		'user_id'           => $data['user_id'],
 	) );
 }
+
+/**
+ * Add the Learning Mode table
+ */
+
+add_action('admin_init', 'rsssl_add_learning_mode_table');
