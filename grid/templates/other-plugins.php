@@ -12,11 +12,11 @@ $plugins = array(
 		'website' => 'https://complianz.io/pricing/?src=rsssl-plugin',
 		'search' => 'complianz+really+simple+cookies+rogierlankhorst',
 	),
-	'ZIP' => array(
-		'constant_free' => 'ZRDN_PLUGIN_BASENAME',
-		'constant_premium' => 'ZRDN_PREMIUM',
-		'website' => 'https://ziprecipes.net/premium/?src=rsssl-plugin',
-		'search' => 'zip+recipes+recipe+maker+really+simple+plugins+complianz',
+	'BURST' => array(
+		'constant_free' => 'burst_version',
+		'constant_premium' => 'burst_version',
+		'website' => 'https://burst-statistics.com',
+		'search' => 'burst+statistics+really+simple+plugins+self-hosted',
 	),
 );
 ?>
@@ -32,15 +32,15 @@ $plugins = array(
 			<?php echo RSSSL()->really_simple_ssl->get_status_link($plugins['COMPLIANZ'])?>
 		</div>
 	</div>
-	<div class="rsssl-upsell rsssl-zip">
+	<div class="rsssl-upsell rsssl-burst">
 		<div class="plugin-color">
-			<div class="zip-pink rsssl-bullet"></div>
+			<div class="burst-green rsssl-bullet"></div>
 		</div>
 		<div class="plugin-text">
-            <a href="https://wordpress.org/plugins/zip-recipes/" target="_blank">Zip Recipes - <?php _e("Beautiful recipes optimized for Google ", "really-simple-ssl")?></a>
+            <a href="https://wordpress.org/plugins/burst-statistics/" target="_blank">Burst Statistics - <?php _e("Self-hosted, Privacy-friendly analytics tool", "really-simple-ssl")?></a>
         </div>
 		<div class="plugin-status">
-			<?php echo RSSSL()->really_simple_ssl->get_status_link($plugins['ZIP'])?>
+			<?php echo RSSSL()->really_simple_ssl->get_status_link($plugins['BURST'])?>
 		</div>
 	</div>
     <div class="rsssl-upsell rsssl-cmplztc">

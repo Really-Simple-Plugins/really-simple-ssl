@@ -400,17 +400,14 @@
 .rsssl-grid .rsssl-item .item-container .rsssl-grid-item-content .rsssl-upsell .rsp-image {
   margin-left: 5px;
 }
-.rsssl-grid .rsssl-item .item-container .rsssl-grid-item-content .rsssl-upsell .wpsi-red {
-  background-color: #d7263d;
-}
 .rsssl-grid .rsssl-item .item-container .rsssl-grid-item-content .rsssl-upsell .cmplztc-black {
   background-color: #333;
 }
 .rsssl-grid .rsssl-item .item-container .rsssl-grid-item-content .rsssl-upsell .cmplz-blue {
   background-color: #27ADEA;
 }
-.rsssl-grid .rsssl-item .item-container .rsssl-grid-item-content .rsssl-upsell .zip-pink {
-  background-color: #E366A1;
+.rsssl-grid .rsssl-item .item-container .rsssl-grid-item-content .rsssl-upsell .burst-green {
+  background-color: #297A31;
 }
 .rsssl-grid .rsssl-item .item-container .rsssl-grid-item-content .rsssl-upsell .plugin-status {
   margin-right: auto;
