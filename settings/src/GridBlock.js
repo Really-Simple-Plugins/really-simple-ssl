@@ -10,6 +10,11 @@ import * as rsssl_api from "./utils/api";
 import ProgressBlock from "./ProgressBlock";
 import ProgressHeader from "./ProgressBlockHeader";
 
+/**
+ * using the gridbutton generates a button which will refresh the gridblock when clicked
+ * The onclick action triggers the getBlockData method
+ *
+ */
 class GridButton extends Component {
     constructor() {
         super( ...arguments );
@@ -46,51 +51,41 @@ class GridBlock extends Component {
             BlockProps:null,
         };
         this.dynamicComponents = {
-            "runTest": this.runTest,
+            "getBlockData": this.getBlockData,
         };
         if (this.props.block.content.type==='test') {
-            this.runTest('initial');
+            this.getBlockData('initial');
         } else {
             this.content = this.props.block.content.data;
         }
     }
 
-    runTest(state){
+    getBlockData(state){
         let setState='clearcache';
         if (state==='initial' || state==='refresh') {
             setState = state;
         }
-
         let test = this.props.block.content.data;
         return rsssl_api.runTest(test, setState).then((response) => {
-            let progress = response.data.progress;
-            let content = response.data.html;
-            let testDisabled = response.data.disabled;
-            let footerHtml = response.data.footerHtml;
-            let testRunning = false;
-            if (progress<100) {
-                testRunning = true;
-            }
-            this.content = content
-            this.testDisabled = testDisabled
-            this.progress = progress
-            this.testRunning = testRunning
-            this.footerHtml = footerHtml
+            this.content = response.data.html
+            this.testDisabled = response.data.disabled
+            this.progress = response.data.progress
+            this.testRunning = this.progress<100
+            this.footerHtml = response.data.footerHtml
             this.setState({
-                testRunning:testRunning,
-                content:content,
-                testDisabled:testDisabled,
-                footerHtml:footerHtml,
-                progress:progress,
+                testRunning:this.testRunning,
+                content:this.content,
+                testDisabled:this.testDisabled,
+                footerHtml:this.footerHtml,
+                progress:this.progress,
                 isAPILoaded: true,
             })
         });
     }
 
     componentDidMount() {
-        this.runTest = this.runTest.bind(this);
         this.setBlockProps = this.setBlockProps.bind(this);
-        if (this.props.block.content.type==='html' || this.props.block.content.type==='react') {
+        if ( this.props.block.content.type==='html' || this.props.block.content.type==='react' ) {
             let content = this.props.block.content.data;
             this.content = content;
             this.setState({
@@ -100,8 +95,8 @@ class GridBlock extends Component {
             })
         }
     }
-    setBlockProps(BlockProps){
-        this.BlockProps = BlockProps;
+    setBlockProps(key, value){
+        this.BlockProps[key] = value;
         this.setState({
             BlockProps: this.BlockProps,
         })
@@ -119,10 +114,10 @@ class GridBlock extends Component {
         }
         if ( this.testRunning ){
             const timer = setTimeout(() => {
-                this.runTest('refresh');
+                this.getBlockData('refresh');
             }, blockData.content.interval );
         }
-        let DynamicBlockProps = { setBlockProps: this.setBlockProps, BlockProps: this.BlockProps, runTest: this.runTest };
+        let DynamicBlockProps = { setBlockProps: this.setBlockProps, BlockProps: this.BlockProps };
         return (
             <div className={className}>
                 <div className="item-container">
@@ -136,7 +131,7 @@ class GridBlock extends Component {
                     {blockData.content.type!=='react' && <div className="rsssl-grid-item-content" dangerouslySetInnerHTML={{__html: content}}></div>}
                     {blockData.content.type==='react' && <div className="rsssl-grid-item-content">{wp.element.createElement(dynamicComponents[content], DynamicBlockProps)}</div>}
                     <div className="rsssl-grid-item-footer">
-                        { blockData.footer.hasOwnProperty('button') && <GridButton text={blockData.footer.button.text} onClick={this.runTest} disabled={this.testDisabled}/>}
+                        { blockData.footer.hasOwnProperty('button') && <GridButton text={blockData.footer.button.text} onClick={this.getBlockData} disabled={this.testDisabled}/>}
                         { blockData.footer.hasOwnProperty('html') && <span className="rsssl-footer-html" dangerouslySetInnerHTML={{__html: this.footerHtml}}></span>}
                     </div>
                 </div>

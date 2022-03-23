@@ -2699,6 +2699,11 @@ function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Re
 
 
 
+/**
+ * using the gridbutton generates a button which will refresh the gridblock when clicked
+ * The onclick action triggers the getBlockData method
+ *
+ */
 
 var GridButton = /*#__PURE__*/function (_Component) {
   _babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_2___default()(GridButton, _Component);
@@ -2759,11 +2764,11 @@ var GridBlock = /*#__PURE__*/function (_Component2) {
       BlockProps: null
     };
     _this.dynamicComponents = {
-      "runTest": _this.runTest
+      "getBlockData": _this.getBlockData
     };
 
     if (_this.props.block.content.type === 'test') {
-      _this.runTest('initial');
+      _this.getBlockData('initial');
     } else {
       _this.content = _this.props.block.content.data;
     }
@@ -2772,8 +2777,8 @@ var GridBlock = /*#__PURE__*/function (_Component2) {
   }
 
   _babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_1___default()(GridBlock, [{
-    key: "runTest",
-    value: function runTest(state) {
+    key: "getBlockData",
+    value: function getBlockData(state) {
       var _this2 = this;
 
       var setState = 'clearcache';
@@ -2784,28 +2789,18 @@ var GridBlock = /*#__PURE__*/function (_Component2) {
 
       var test = this.props.block.content.data;
       return _utils_api__WEBPACK_IMPORTED_MODULE_8__["runTest"](test, setState).then(function (response) {
-        var progress = response.data.progress;
-        var content = response.data.html;
-        var testDisabled = response.data.disabled;
-        var footerHtml = response.data.footerHtml;
-        var testRunning = false;
-
-        if (progress < 100) {
-          testRunning = true;
-        }
-
-        _this2.content = content;
-        _this2.testDisabled = testDisabled;
-        _this2.progress = progress;
-        _this2.testRunning = testRunning;
-        _this2.footerHtml = footerHtml;
+        _this2.content = response.data.html;
+        _this2.testDisabled = response.data.disabled;
+        _this2.progress = response.data.progress;
+        _this2.testRunning = _this2.progress < 100;
+        _this2.footerHtml = response.data.footerHtml;
 
         _this2.setState({
-          testRunning: testRunning,
-          content: content,
-          testDisabled: testDisabled,
-          footerHtml: footerHtml,
-          progress: progress,
+          testRunning: _this2.testRunning,
+          content: _this2.content,
+          testDisabled: _this2.testDisabled,
+          footerHtml: _this2.footerHtml,
+          progress: _this2.progress,
           isAPILoaded: true
         });
       });
@@ -2813,7 +2808,6 @@ var GridBlock = /*#__PURE__*/function (_Component2) {
   }, {
     key: "componentDidMount",
     value: function componentDidMount() {
-      this.runTest = this.runTest.bind(this);
       this.setBlockProps = this.setBlockProps.bind(this);
 
       if (this.props.block.content.type === 'html' || this.props.block.content.type === 'react') {
@@ -2828,8 +2822,8 @@ var GridBlock = /*#__PURE__*/function (_Component2) {
     }
   }, {
     key: "setBlockProps",
-    value: function setBlockProps(BlockProps) {
-      this.BlockProps = BlockProps;
+    value: function setBlockProps(key, value) {
+      this.BlockProps[key] = value;
       this.setState({
         BlockProps: this.BlockProps
       });
@@ -2851,14 +2845,13 @@ var GridBlock = /*#__PURE__*/function (_Component2) {
 
       if (this.testRunning) {
         var timer = setTimeout(function () {
-          _this3.runTest('refresh');
+          _this3.getBlockData('refresh');
         }, blockData.content.interval);
       }
 
       var DynamicBlockProps = {
         setBlockProps: this.setBlockProps,
-        BlockProps: this.BlockProps,
-        runTest: this.runTest
+        BlockProps: this.BlockProps
       };
       return Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_5__["createElement"])("div", {
         className: className
@@ -2884,7 +2877,7 @@ var GridBlock = /*#__PURE__*/function (_Component2) {
         className: "rsssl-grid-item-footer"
       }, blockData.footer.hasOwnProperty('button') && Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_5__["createElement"])(GridButton, {
         text: blockData.footer.button.text,
-        onClick: this.runTest,
+        onClick: this.getBlockData,
         disabled: this.testDisabled
       }), blockData.footer.hasOwnProperty('html') && Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_5__["createElement"])("span", {
         className: "rsssl-footer-html",
@@ -3116,6 +3109,8 @@ var ProgressBlock = /*#__PURE__*/function (_Component2) {
         notices: _this.notices,
         percentageCompleted: _this.percentageCompleted
       });
+
+      _this.props.setBlockProps('notices', _this.notices);
     });
 
     return _this;
@@ -3125,6 +3120,7 @@ var ProgressBlock = /*#__PURE__*/function (_Component2) {
     key: "componentDidMount",
     value: function componentDidMount() {
       this.getProgressData = this.getProgressData.bind(this);
+      this.onCloseTaskHandler = this.onCloseTaskHandler.bind(this);
     }
   }, {
     key: "getStyles",
@@ -3143,7 +3139,9 @@ var ProgressBlock = /*#__PURE__*/function (_Component2) {
   }, {
     key: "onCloseTaskHandler",
     value: function onCloseTaskHandler(e) {
-      var button = e.target;
+      var _this2 = this;
+
+      var button = e.target.closest('button');
       var type = button.getAttribute('data-id');
       var container = button.closest('.rsssl-task-element');
 
@@ -3157,11 +3155,24 @@ var ProgressBlock = /*#__PURE__*/function (_Component2) {
       }).onfinish = function () {
         container.parentElement.removeChild(container);
       };
+
+      var notices = this.props.BlockProps.notices;
+      notices = notices.filter(function (notice) {
+        return notice.id !== type;
+      });
+      this.props.setBlockProps('notices', notices);
+      return _utils_api__WEBPACK_IMPORTED_MODULE_7__["runTest"]('dismiss_task', type).then(function (response) {
+        _this2.percentageCompleted = response.data.percentage;
+
+        _this2.setState({
+          percentageCompleted: _this2.percentageCompleted
+        });
+      });
     }
   }, {
     key: "render",
     value: function render() {
-      var _this2 = this;
+      var _this3 = this;
 
       var progressBarColor = '';
 
@@ -3182,7 +3193,6 @@ var ProgressBlock = /*#__PURE__*/function (_Component2) {
       var notices = this.notices;
 
       if (filter === 'remaining') {
-        console.log("do filter");
         notices = notices.filter(function (notice) {
           return notice.output.status === 'open';
         });
@@ -3210,7 +3220,7 @@ var ProgressBlock = /*#__PURE__*/function (_Component2) {
           key: i,
           index: i,
           notice: notice,
-          onCloseTaskHandler: _this2.onCloseTaskHandler
+          onCloseTaskHandler: _this3.onCloseTaskHandler
         });
       })));
     }
@@ -3293,11 +3303,7 @@ var ProgressHeader = /*#__PURE__*/function (_Component) {
         this.setState({
           filter: this.filter
         });
-        var props;
-        props = {
-          'filterStatus': filter
-        };
-        this.props.setBlockProps(props);
+        this.props.setBlockProps('filterStatus', filter);
         sessionStorage.rsssl_task_filter = filter;
       }
     }
@@ -3308,8 +3314,19 @@ var ProgressHeader = /*#__PURE__*/function (_Component) {
         this.filter = sessionStorage.rsssl_task_filter;
       }
 
-      var all_task_count = 5;
-      var open_task_count = 2;
+      var all_task_count = 0;
+      var open_task_count = 0;
+      var notices = [];
+
+      if (this.props.BlockProps && this.props.BlockProps.notices) {
+        notices = this.props.BlockProps.notices;
+        all_task_count = notices.length;
+        var openNotices = notices.filter(function (notice) {
+          return notice.output.status === 'open';
+        });
+        open_task_count = openNotices.length;
+      }
+
       return Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_5__["createElement"])("div", {
         className: "rsssl-task-control-container rsssl-active-filter-" + this.filter
       }, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_5__["createElement"])("div", {

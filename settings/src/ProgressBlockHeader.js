@@ -15,6 +15,7 @@ class ProgressHeader extends Component {
         this.setState({
             filter: this.filter,
         })
+
     }
 
     onClickHandler(e){
@@ -24,23 +25,27 @@ class ProgressHeader extends Component {
             this.setState({
                 filter: this.filter,
             })
-            let props;
-            props = {
-                'filterStatus': filter,
-            }
-            this.props.setBlockProps(props);
+            this.props.setBlockProps('filterStatus', filter);
             sessionStorage.rsssl_task_filter = filter;
         }
-
     }
 
     render(){
         if ( typeof (Storage) !== "undefined" && sessionStorage.rsssl_task_filter  ) {
             this.filter = sessionStorage.rsssl_task_filter;
         }
+        let all_task_count = 0;
+        let open_task_count = 0;
+        let notices =[];
+        if ( this.props.BlockProps && this.props.BlockProps.notices ){
+            notices = this.props.BlockProps.notices;
+            all_task_count = notices.length;
+            let openNotices = notices.filter(function (notice) {
+                return notice.output.status==='open';
+            });
+            open_task_count = openNotices.length;
+        }
 
-        let all_task_count = 5;
-        let open_task_count = 2;
         return (
             <div className={"rsssl-task-control-container rsssl-active-filter-"+this.filter}>
                 <div className="rsssl-all-tasks">

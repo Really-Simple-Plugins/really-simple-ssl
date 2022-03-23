@@ -10,7 +10,7 @@ class rsssl_ssllabs {
 		$message = '';
 		$footer_html = '';
 		$disabled = false;
-		$domain = $this->get_host();
+		$domain = 'https://ziprecipes.net';//$this->get_host();
 		if (strpos($domain, 'localhost')!==false){
 			return ['footerHtml'=>$footer_html,'disabled'=>true, 'html' => '<div class="rsssl-ssltest"><div class="rsssl-ssltest-element">'.__("SSL Test is not possible on localhost","really-simple-ssl").'</div></div>', 'progress' => 100];
 		}
