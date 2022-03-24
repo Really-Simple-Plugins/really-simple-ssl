@@ -29,6 +29,22 @@ function rsssl_menu( $group_id = 'group_general' ){
 						'step' => 1,
 
 					],
+                    [
+                        'id' => 'hardening',
+						'title' => __('Hardening', 'really-simple-ssl'),
+						'menu_items' => [
+							[
+								'id' => 'application_passwords',
+								'title' => __('Disable application passwords', 'really-simple-ssl'),
+							],
+							[
+								'id' => 'code_execution_uploads',
+								'title' => __('Disable code execution in uploads folder', 'really-simple-ssl'),
+							],
+						],
+						'step' => 1,
+
+					],
 				],
 			],
 			[
@@ -91,6 +107,24 @@ function rsssl_fields(){
 			'type'        => 'checkbox',
 			'label'       => __( "Field name 4", 'really-simple-ssl' ),
 			'comment'     => __( 'A comment', 'really-simple-ssl' ),
+			'disabled'    => true,
+			'default'     => false,
+		],
+        [
+			'id'          => 'application_passwords',
+			'menu_id'     => 'hardening',
+			'type'        => 'checkbox',
+			'label'       => __( "Disable application passwords", 'really-simple-ssl' ),
+//			'comment'     => __( 'A comment', 'really-simple-ssl' ),
+			'disabled'    => true,
+			'default'     => false,
+		],
+        [
+			'id'          => 'code_execution_uploads',
+			'menu_id'     => 'hardening',
+			'type'        => 'checkbox',
+			'label'       => __( "Disable code execution in uploads folder", 'really-simple-ssl' ),
+//			'comment'     => __( 'A comment', 'really-simple-ssl' ),
 			'disabled'    => true,
 			'default'     => false,
 		],

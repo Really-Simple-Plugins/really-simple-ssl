@@ -17,6 +17,11 @@ function hide_debug_log_notice( $notices ) {
     return $notices;
 }
 
+/**
+ * @return false|string
+ *
+ * Check if wp-config.php contains debug.log declaration
+ */
 function contains_debug_log_declaration() {
     $wpconfig_path = RSSSL()->really_simple_ssl->find_wp_config_path();
     $wpconfig = file_get_contents($wpconfig_path);
@@ -56,6 +61,11 @@ function disable_debug_log() {
 	}
 }
 
+/**
+ * @return void
+ *
+ * Enable debugging in WordPress
+ */
 function enable_debug_log() {
 	$wpconfig_path = RSSSL()->really_simple_ssl->find_wp_config_path();
 	$wpconfig = file_get_contents($wpconfig_path);
@@ -74,6 +84,11 @@ function enable_debug_log() {
 	}
 }
 
+/**
+ * @return void
+ *
+ * Change debug.log location
+ */
 function rsssl_change_debug_log_location() {
 
     $wpconfig_path = RSSSL()->really_simple_ssl->find_wp_config_path();

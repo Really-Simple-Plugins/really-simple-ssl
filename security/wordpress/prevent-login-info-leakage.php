@@ -8,6 +8,11 @@ if ( is_admin() ) {
 
 add_filter( 'login_errors', 'rsssl_no_wp_login_errors' );
 
+/**
+ * @return string|void
+ *
+ * Override default login error message
+ */
 function rsssl_no_wp_login_errors()
 {
     return __("Could not log you in! Make sure your username and password are correct.", "really-simple-ssl");

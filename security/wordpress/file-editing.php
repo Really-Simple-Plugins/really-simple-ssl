@@ -36,6 +36,11 @@ function rsssl_file_editing_notice()
 	return 'allowed';
 }
 
+/**
+ * @return void
+ *
+ * Disable file editing
+ */
 function rsssl_disable_file_editing() {
 
 	if ( ! defined('DISALLOW_FILE_EDIT' ) ) {

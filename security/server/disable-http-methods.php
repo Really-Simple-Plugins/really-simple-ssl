@@ -22,18 +22,19 @@ function rsssl_test_stack()
 	        curl_setopt($ch, CURLOPT_HEADER, true);
 		    curl_setopt($ch,CURLOPT_NOBODY, true);
 		    curl_setopt($ch,CURLOPT_VERBOSE, true);
+            curl_setopt($ch, CURLOPT_TIMEOUT, 3); //timeout in seconds
 
-            $result = curl_exec($ch);
-			error_log(print_r($result, true));
+            curl_exec($ch);
             if (curl_errno($ch)) {
 	            echo 'Error:' . curl_error($ch);
             }
             curl_close($ch);
-			exit;
+            set_transient('rsssl_http_options_allowed', 'not-allowed', DAY_IN_SECONDS);
+            exit;
 
         }
 
-		set_transient('rsssl_http_options_allowed', $response_code, DAY_IN_SECONDS);
+		set_transient('rsssl_http_options_allowed', 'allowed', DAY_IN_SECONDS);
     }
 }
 

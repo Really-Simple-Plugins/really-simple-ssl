@@ -7,7 +7,6 @@ if ( is_admin() ) {
 }
 
 function rsssl_handle_xmlrpc_request() {
-	error_log("Handling XMLRPC request");
     rsssl_filter_xmlrpc_requests();
 	rsssl_log_xmlrpc_request();
 }
@@ -79,10 +78,10 @@ function rsssl_xmlrpc_allowed()
             $response_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 
             if ($response_code === 200) {
-                set_transient( 'rsssl_xmlrpc_allowed', true, DAY_IN_SECONDS );
+                set_transient( 'rsssl_xmlrpc_allowed', 'allowed', DAY_IN_SECONDS );
                 return true;
             } else {
-                set_transient( 'rsssl_xmlrpc_allowed', false, DAY_IN_SECONDS );
+                set_transient( 'rsssl_xmlrpc_allowed', 'not-allowed', DAY_IN_SECONDS );
                 return false;
             }
 
