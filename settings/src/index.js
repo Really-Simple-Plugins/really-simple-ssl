@@ -197,7 +197,7 @@ class SettingsPage extends Component {
 		}
 
 		//maybe filter step
-		if (menu.is_wizard){
+		if ( menu.is_wizard ){
 			let length = menuItems.length;
 			let temp = []
 			for(let i = 0; i < length; i++) {

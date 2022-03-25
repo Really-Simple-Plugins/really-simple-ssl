@@ -14,7 +14,7 @@ function rsssl_plugin_admin_scripts() {
 	$script_asset_path = __DIR__."/build/index.asset.php";
 	$script_asset = require( $script_asset_path );
 	wp_enqueue_script(
-		'rsssl-wizard-plugin-admin-editor',
+		'rsssl-settings',
 		plugins_url( 'build/index.js', __FILE__ ),
 		$script_asset['dependencies'],
 		$script_asset['version']
@@ -34,20 +34,19 @@ function rsssl_plugin_admin_scripts() {
 		]
 	);
 	wp_localize_script(
-			'rsssl-wizard-plugin-admin-editor',
+			'rsssl-settings',
 			'rsssl_settings',
 			array(
 				'site_url' => get_rest_url(),
 				'plugin_url' => rsssl_url,
-				'blocks' => ['tasks','ssllabs'],
+				'blocks' => rsssl_blocks(),
 				'premium' => defined('rsssl_pro_version'),
 				'menu' => $menu,
 				'nonce' => wp_create_nonce( 'wp_rest' ),//to authenticate the logged in user
 			)
 	);
-
 	wp_enqueue_style(
-		'rsssl-wizard-plugin-admin',
+		'rsssl-settings-css',
 		plugins_url( 'css/admin.css', __FILE__ ),
 		['wp-components'],
 		filemtime( __DIR__."/css/admin.css" )
@@ -85,17 +84,7 @@ add_action( 'admin_menu', 'rsssl_add_option_menu' );
 
     $high_contrast = RSSSL()->really_simple_ssl->high_contrast ? 'rsssl-high-contrast' : ''; ?>
     <div id="really-simple-ssl" class="<?php echo $high_contrast ?>">
-        <?php
-			switch ($tab) {
-				case 'dashboard' :
-					RSSSL()->really_simple_ssl->render_grid(RSSSL()->really_simple_ssl->general_grid());
-					break;
-				case 'settings' :
-
-					break;
-			}
-	        do_action("rsssl_show_tab_{$tab}");
-            ?>
+        <?php do_action("rsssl_show_tab_{$tab}"); ?>
     </div>
 	<?php
 }
@@ -105,7 +94,6 @@ function rsssl_ajax_load_page(){
     $tab='dashboard';
 	switch ($tab) {
 		case 'dashboard' :
-			RSSSL()->really_simple_ssl->render_grid(RSSSL()->really_simple_ssl->general_grid());
 			break;
 		case 'settings' :
         default:
@@ -116,6 +104,7 @@ function rsssl_ajax_load_page(){
 
 add_action( 'rest_api_init', 'rsssl_settings_rest_route' );
 function rsssl_settings_rest_route() {
+
 	if (!current_user_can('manage_options')) {
 		return;
 	}
@@ -136,13 +125,55 @@ function rsssl_settings_rest_route() {
 		}
 	) );
 
-	register_rest_route( 'reallysimplessl/v1', 'block/(?P<block>[a-z\_]+)', array(
+	register_rest_route( 'reallysimplessl/v1', 'block/(?P<block>[a-z\_\-]+)', array(
 		'methods'  => 'GET',
 		'callback' => 'rsssl_rest_api_block_get',
 		'permission_callback' => function () {
 			return current_user_can( 'manage_options' );
 		}
 	) );
+
+	register_rest_route( 'reallysimplessl/v1', 'tests/(?P<test>[a-z\_\-]+)', array(
+		'methods'  => 'GET',
+		'callback' => 'rsssl_run_test',
+		'permission_callback' => function () {
+			return current_user_can( 'manage_options' );
+		}
+	) );
+}
+
+/**
+ * @param WP_REST_Request $request
+ *
+ * @return void
+ */
+function rsssl_run_test($request){
+	if (!current_user_can('manage_options')) {
+		return;
+	}
+
+	$test = sanitize_title($request->get_param('test'));
+    $state = $request->get_param('state');
+    $state =  $state !== 'undefined' ? $state : false;
+	switch($test){
+        case 'ssltest':
+	        require_once( rsssl_path . 'ssllabs/class-ssllabs.php' );
+	        $test = new rsssl_ssllabs();
+	        $data = $test->get($state);
+            break;
+        case 'progressdata':
+	        require_once( rsssl_path . 'progress/class-progress.php' );
+	        $progress = new rsssl_progress($state);
+            $data = $progress->get();
+            break;
+        default:
+	        $data = array();
+    }
+    error_log(print_r($data, true));
+	$response = json_encode( $data );
+	header( "Content-Type: application/json" );
+	echo $response;
+	exit;
 }
 
 function rsssl_sanitize_field_type($type){
@@ -153,7 +184,6 @@ function rsssl_sanitize_field_type($type){
         'number',
         'email',
         'select',
-
     ];
     if ( in_array($type, $types) ){
         return $type;
@@ -218,7 +248,6 @@ function rsssl_rest_api_fields_get(  ){
 	if (!current_user_can('manage_options')) {
 		return;
 	}
-    error_log("get fields");
 	$output = array();
 	$fields = rsssl_fields();
 	$menu_items = rsssl_menu('group_general');
@@ -243,7 +272,6 @@ function rsssl_rest_api_block_get($request){
 	if (!current_user_can('manage_options')) {
 		return;
 	}
-    error_log("get block");
 	$block = $request->get_param('block');
     $blocks = rsssl_blocks();
 	$out = isset($blocks[$block]) ? $blocks[$block] : [];
@@ -286,3 +314,4 @@ function rsssl_sanitize_field( $value, $type ) {
 			return sanitize_text_field( $value );
 	}
 }
+

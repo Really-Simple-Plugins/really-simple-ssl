@@ -1,8 +1,8 @@
 <?php defined('ABSPATH') or die("you do not have access to this page!"); ?>
 
-<div class="rsssl-secondary-header-item">
 	<?php $all_task_count = RSSSL()->really_simple_ssl->get_all_task_count(); ?>
-	<div class="rsssl-tasks-container rsssl-all-tasks">
+
+    <div class="rsssl-tasks-container rsssl-all-tasks">
 		<input type="checkbox" class="rsssl-task-toggle" id="rsssl-all-tasks" name="rsssl_all_tasks" <?php if (get_option('rsssl_all_tasks') ) echo "checked"?>>
 		<label class="rsssl-tasks <?php if (get_option('rsssl_all_tasks') ) echo "active"?>" for="rsssl-all-tasks"><?php _e( "All tasks", "really-simple-ssl" ); ?><?php echo " " . "(" . $all_task_count . ")"; ?></label>
 	</div>
@@ -17,4 +17,4 @@
         <?php
 	}
 	?>
-</div>
+

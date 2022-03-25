@@ -1,0 +1,29 @@
+@import "progress.less";
+.rsssl-scroll-container{
+  height: 227px;
+  overflow-y: auto;
+  border-radius: 0;
+
+  &::-webkit-scrollbar-track {
+    border-radius: 10px;
+    -webkit-box-shadow: inset 0 0 2px rgba(0, 0, 0, 0);
+    background-color: transparent;
+  }
+
+  &::-webkit-scrollbar {
+    border-radius: 10px;
+    width: 8px;
+    background-color: var(--rsp-grey-300);
+    cursor: pointer;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: var(--rsp-grey-400);
+    border-radius: 10px;
+  }
+}
+
+.rsssl-spacer {
+  width: 10px;
+}
+

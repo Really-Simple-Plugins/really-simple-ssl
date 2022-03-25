@@ -134,19 +134,70 @@ function rsssl_fields(){
 
 function rsssl_blocks(){
 	$blocks = [
-		'tasks' => [
-			'id'          => 'tasks',
-			'url'        => 'https://really-simple-ssl.com/instructions',
-			'title'       => __( "Grid block title", 'really-simple-ssl' ),
-			'help'     => __( 'A help text', 'really-simple-ssl' ),
-			'html'      => '<div>This is some html</div>',
+		[
+			'id'      => 'progress',
+			'title'   => __( "Progress", 'really-simple-ssl' ),
+			'help'    => __( 'A help text', 'really-simple-ssl' ),
+			'header' => [
+				'type' => 'react', 'data' => 'ProgressHeader'
+			],
+			'content' => ['type'=>'react', 'data' => 'ProgressBlock'],
+			'footer'  => [
+				'html' => '<div>Footer html, no button</div>',
+			],
+			'size'    => 'default',
+			'height'    => 'default',
 		],
-		'ssllabs' => [
-			'id'          => 'ssllabs',
-			'url'        => 'https://really-simple-ssl.com/instructions',
-			'title'       => __( "Grid block title", 'really-simple-ssl' ),
-			'help'     => __( 'A help text', 'really-simple-ssl' ),
-			'html'      => '<div>This is some html</div>',
+		[
+			'id'      => 'ssllabs',
+			'header' => [
+				'type' => 'url', 'data' => 'https://really-simple-ssl.com/instructions'
+			],
+			'title'   => __( "SSL Labs", 'really-simple-ssl' ),
+			'help'    => __( 'A help text', 'really-simple-ssl' ),
+			'content' => [ 'type' => 'test', 'data' => 'ssltest', 'interval'=>1000 ],
+			'footer'  => [
+					'button' => [ 'text' => __("Run test","really-simple-ssl"), 'disabled' => false ],
+					'html' => '<div>Footer html</div>',
+					],
+			'size'    => 'small',
+			'height'    => 'default',
+		],
+		[
+			'id'      => 'tasks',
+			'header'  => false,
+			'title'   => __( "Tips & Tricks", 'really-simple-ssl' ),
+			'help'    => __( 'A help text', 'really-simple-ssl' ),
+			'content' => ['type'=>'html', 'data' => 'tips/tricks html'],
+			'footer'  => [
+				'html' => '<div>Footer html, no button</div>',
+			],
+			'size'    => 'small',
+			'height'    => 'default',
+		],
+		[
+			'id'      => 'security-features',
+			'header'  => false,
+			'title'   => __( "New: Security features", 'really-simple-ssl' ),
+			'help'    => __( 'A help text', 'really-simple-ssl' ),
+			'content' => ['type'=>'html', 'data' => 'tips/tricks html'],
+			'footer'  => [
+				'html' => '<div>Footer html, no button</div>',
+			],
+			'size'    => 'default',
+			'height'    => 'half',
+		],
+		[
+			'id'      => 'other-plugins',
+			'header'  => false,
+			'title'   => __( "Other Plugins", 'really-simple-ssl' ),
+			'help'    => __( 'A help text', 'really-simple-ssl' ),
+			'content' => ['type'=>'html', 'data' => 'tips/tricks html'],
+			'footer'  => [
+				'html' => '<div>Footer html, no button</div>',
+			],
+			'size'    => 'default',
+			'height'    => 'half',
 		],
 	];
 	return apply_filters('rsssl_blocks', $blocks);

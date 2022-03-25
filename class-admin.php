@@ -46,7 +46,6 @@ class rsssl_admin extends rsssl_front_end
 
     function __construct()
     {
-
 	    if (isset(self::$_this))
             wp_die(sprintf(__('%s is a singleton class and you cannot create a second instance.', 'really-simple-ssl'), get_class($this)));
 
@@ -2213,6 +2212,7 @@ class rsssl_admin extends rsssl_front_end
 	 */
 
 	public function recommended_headers_enabled() {
+        return true;
 
 		$unused_headers = $this->get_recommended_security_headers();
 		if ( empty( $unused_headers ) ) {
@@ -2902,6 +2902,13 @@ class rsssl_admin extends rsssl_front_end
 
     public function get_notices_list( $args = array() )
     {
+	    $icon_labels = [
+		    'success' => __("Completed", "really-simple-ssl"),
+		    'warning' => __("Warning", "really-simple-ssl"),
+		    'open' => __("Open", "really-simple-ssl"),
+		    'premium' => __("Premium", "really-simple-ssl"),
+	    ];
+
         $defaults = array(
             'admin_notices' => false,
             'premium_only' => false,
@@ -3262,7 +3269,7 @@ class rsssl_admin extends rsssl_front_end
 
 	        'recommended_security_headers_not_set' => array(
 		        'callback' => 'RSSSL()->really_simple_ssl->recommended_headers_enabled',
-		        'condition' => array('rsssl_ssl_enabled'),
+		        //'condition' => array('rsssl_ssl_enabled'),
 		        'score' => 5,
 		        'output' => array(
 			        'false' => array(
@@ -3403,7 +3410,6 @@ class rsssl_admin extends rsssl_front_end
             }
 
 		    $notices[$id]['output']['status'] = ( $notices[$id]['output']['icon'] !== 'success') ? 'open' : 'completed';
-
 		    if ( $args['status'] === 'open' && ($notices[$id]['output']['status'] === 'completed' ) ){
 			    unset($notices[$id]);
 			    continue;
@@ -3416,6 +3422,10 @@ class rsssl_admin extends rsssl_front_end
 				    unset($notices[$id]);
 			    }
 		    }
+
+            if ( isset($notices[$id]) ) {
+	            $notices[$id]['output']['label'] = $icon_labels[ $notices[$id]['output']['icon'] ];
+            }
 	    }
 
         //if only admin_notices are required, filter out the rest.
@@ -3532,6 +3542,8 @@ class rsssl_admin extends rsssl_front_end
     }
 
     /**
+     * @Deprecated, moved to progress class
+     *
      * Calculate the percentage completed in the dashboard progress section
      * Determine max score by adding $notice['score'] to the $max_score variable
      * Determine actual score by adding $notice['score'] of each item with a 'success' output to $actual_score
@@ -3604,42 +3616,6 @@ class rsssl_admin extends rsssl_front_end
 
 	    return add_query_arg($args, $wp_page);
     }
-
-	/**
-	 * @param $id
-	 * @param $notice
-     *
-     * Generate a notice row in the configuration dashboard tab
-     *
-     * @since 3.2
-     *
-	 */
-
-    private function notice_row($id, $notice){
-        if (!current_user_can('manage_options')) return;
-
-        if (!isset($notice['output'])) {
-            return;
-        }
-
-        $msg = $notice['output']['msg'];
-        $icon_type = $notice['output']['icon'];
-
-        // Do not show completed tasks if remaining tasks are selected.
-        if ($icon_type === 'success' && !get_option('rsssl_all_tasks') && get_option('rsssl_remaining_tasks')) return;
-
-        $icon = $this->icon($icon_type);
-        $dismiss = (isset($notice['output']['dismissible']) && $notice['output']['dismissible']) ? $this->rsssl_dismiss_button() : '';
-
-        ?>
-        <tr>
-            <td><?php echo $icon?></td><td class="rsssl-table-td-main-content"><?php echo $msg?></td>
-            <td class="rsssl-dashboard-dismiss" data-dismiss_type="<?php echo $id?>"><?php echo $dismiss?></td>
-        </tr>
-        <?php
-    }
-
-
 
 	/**
      * Count the plusones
@@ -3823,55 +3799,6 @@ class rsssl_admin extends rsssl_front_end
         return $status;
     }
 
-	/**
-     * Render grid from grid array
-	 * @param array $grid
-	 */
-    public function render_grid($grid){
-
-	    $container = $this->get_template('grid-container.php', rsssl_path . 'grid/');
-	    $element = $this->get_template('grid-element.php', rsssl_path . 'grid/');
-
-	    $output = '';
-	    $defaults = array(
-		    'title' => '',
-		    'header' => rsssl_template_path . 'header.php',
-		    'content' => '',
-		    'footer' => '',
-		    'class' => '',
-		    'type' => 'plugins',
-		    'can_hide' => true,
-		    'instructions' => false,
-	    );
-	    foreach ($grid as $index => $grid_item) {
-		    $grid_item = wp_parse_args($grid_item, $defaults);
-		    $footer = $this->get_template_part($grid_item, 'footer', $index);
-		    $content = $this->get_template_part($grid_item, 'content', $index);
-		    $header = $this->get_template_part($grid_item, 'header', $index);
-            $instructions = $grid_item['instructions'] ? '<a href="'.esc_url($grid_item['instructions']).'" target="_blank">'.__("Instructions manual", "really-simple-ssl").'</a>' : '';
-		    // Add form if type is settings
-		    $form_open = '';
-		    $form_close = '';
-		    if ( $grid_item['type'] === 'scan' ) {
-			    $form_open = '<form id="rsssl_scan_form" action="" method="post">';
-			    $form_close = '</form>';
-		    } elseif ( $grid_item['type'] === 'settings' ) {
-			    if ( is_network_admin() ) {
-				    $form_open = '<form action="edit.php?action=rsssl_update_network_settings" method="post">'.wp_nonce_field('rsssl_ms_settings_update', 'rsssl_ms_nonce');
-				    $form_close = '</form>';
-
-			    } else {
-				    $form_open = '<form action="options.php" method="post">';
-				    $form_close = '</form>';
-			    }
-		    }
-
-		    $block = str_replace(array('{class}', '{title}', '{header}', '{content}', '{footer}', '{instructions}', '{form_open}','{form_close}'), array($grid_item['class'], $grid_item['title'], $header, $content, $footer, $instructions, $form_open, $form_close), $element);
-		    $output .= $block;
-	    }
-
-	    echo str_replace('{content}', $output, $container);
-    }
 
 	/**
      * Render grid item based on template
@@ -3898,30 +3825,7 @@ class rsssl_admin extends rsssl_front_end
 		return apply_filters("rsssl_template_part_".$key.'_'.$index, $template_part, $grid_item);
 	}
 
-    /**
-     * Returns a success, error or warning image for the settings page
-     *
-     * @since  2.0
-     *
-     * @access public
-     *
-     * @param string $type the type of image
-     *
-     * @return string
-     */
 
-    public function icon($type)
-    {
-        if ($type == 'success') {
-            return "<span class='rsssl-progress-status rsssl-success'>".__("Completed", "really-simple-ssl")."</span>";
-        } elseif ($type == "warning") {
-            return "<span class='rsssl-progress-status rsssl-warning'>".__("Warning", "really-simple-ssl")."</span>";
-        } elseif ($type == "open") {
-            return "<span class='rsssl-progress-status rsssl-open'>".__("Open", "really-simple-ssl")."</span>";
-        } elseif ($type == "premium") {
-	        return "<span class='rsssl-progress-status rsssl-premium'>".__("Premium", "really-simple-ssl")."</span>";
-        }
-    }
 
     /**
      *
@@ -3948,41 +3852,6 @@ class rsssl_admin extends rsssl_front_end
     }
 
     /**
-     * @param $args
-     *
-     * @since 3.0
-     *
-     * Generate the HTML for the settings page sidebar
-     *
-     */
-
-    private function get_banner_html($args)
-    {
-        $default = array(
-            'pro' => false,
-        );
-
-        $args = wp_parse_args($args, $default);
-
-        $pro = $args['pro'] ? '-pro' : '';
-        ?>
-        <div class="rsssl-sidebar-single-content-container<?php echo $pro ?>">
-            <img class="rsssl-sidebar-image<?php echo $pro ?>"
-                 src="<?php echo trailingslashit(rsssl_url) . 'assets/' . $args['img'] ?>"
-                 alt="<?php echo $args['title'] ?>">
-            <div class="rsssl-sidebar-text-content<?php echo $pro ?>">
-                <?php echo $args['description'] ?>
-            </div>
-            <div class="rsssl-more-info-button">
-                <a id="rsssl-premium-button<?php echo $pro ?>" class="button"
-                   href="<?php echo $args['url'] ?>"
-                   target="_blank"> <?php echo __("More info", "really-simple-ssl") ?> </a>
-            </div>
-        </div>
-        <?php
-    }
-
-    /**
      * Add some css for the settings page
      *
      * @since  2.0
@@ -3996,19 +3865,14 @@ class rsssl_admin extends rsssl_front_end
         //load on network admin or normal admin settings page
         if ( $hook !== 'settings_page_really-simple-ssl' && $hook !== 'settings_page_rlrsssl_really_simple_ssl' ) return;
 	    $minified = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? '' : '.min';
-        if (is_rtl()) {
-            wp_register_style('rlrsssl-css', trailingslashit(rsssl_url) . "assets/css/main-rtl$minified.css", array(), rsssl_version);
-            wp_register_style('rsssl-grid', trailingslashit(rsssl_url) . "grid/css/grid-rtl$minified.css", array(), rsssl_version);
+        if ( is_rtl() ) {
+            wp_register_style('rsssl-css', trailingslashit(rsssl_url) . "assets/css/main-rtl$minified.css", array(), rsssl_version);
         } else {
-	        wp_register_style('rlrsssl-css', trailingslashit(rsssl_url) . "assets/css/main$minified.css", array(), rsssl_version );
-            wp_register_style('rsssl-grid', trailingslashit(rsssl_url) . "grid/css/grid$minified.css", array(), rsssl_version );
+	        wp_register_style('rsssl-css', trailingslashit(rsssl_url) . "assets/css/main$minified.css", array(), rsssl_version );
         }
 
-	    wp_enqueue_style('rlrsssl-css');
-	    wp_enqueue_style('rsssl-grid');
-
-        wp_register_script('rsssl', trailingslashit(rsssl_url) . "assets/js/scripts$minified.js", array("jquery"), rsssl_version);
-        wp_enqueue_script('rsssl');
+	    wp_enqueue_style('rsssl-css');
+	    wp_enqueue_script('rsssl', trailingslashit(rsssl_url) . "assets/js/scripts$minified.js", array("jquery"), rsssl_version);
 
         $finished_text = apply_filters('rsssl_finished_text', sprintf(__("Basic SSL configuration finished! Improve your score with %sReally Simple SSL Pro%s.", "really-simple-ssl"), '<a target="_blank" href="' . $this->pro_url . '">', '</a>') );
 	    if ($this->ssl_enabled) {

@@ -1,0 +1,29 @@
+.rsssl-grid .rsssl-ssllabs.rsssl-item {
+  .rsssl-grid-item-content {
+    margin:0;
+  }
+}
+
+.rsssl-ssltest {
+  padding: 10px 25px;
+  background-color:green;
+  display:flex;
+  color:#fff;
+  >div {
+    width:50%;
+  }
+
+  .rsssl-grade {
+    display:flex;
+    justify-content: center;
+    align-items: center;
+    span{
+
+    }
+  }
+}
+
+.rsssl-detailed-report {
+  margin:10px 25px;
+  text-align: center;
+}
