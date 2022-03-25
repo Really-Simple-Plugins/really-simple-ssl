@@ -29,6 +29,9 @@ if ( ! function_exists('rsssl_contains_numbers' ) ) {
 	}
 }
 
+/**
+ * Wrap the security headers
+ */
 if ( ! function_exists('rsssl_wrap_headers' ) ) {
 	function rsssl_wrap_headers() {
 
@@ -63,6 +66,10 @@ if ( ! function_exists('rsssl_wrap_headers' ) ) {
 	}
 }
 
+/**
+ * @return bool
+ * Check if WordPress version is above 5.6 for application password support
+ */
 function rsssl_wordpress_version_above_5_6() {
 	global $wp_version;
 	if ( $wp_version < 5.6 ) {
@@ -72,6 +79,10 @@ function rsssl_wordpress_version_above_5_6() {
 	return true;
 }
 
+/**
+ * @return int
+ * Get user ID
+ */
 function rsssl_get_user_id() {
 
 	if ( is_user_logged_in() ) {
@@ -83,6 +94,13 @@ function rsssl_get_user_id() {
 	return 0;
 }
 
+/**
+ * @param $func
+ * @param $is_condition
+ *
+ * @return string
+ * Validate function
+ */
 function rsssl_validate_function($func, $is_condition = false ){
 	$invert = false;
 	if (strpos($func, 'NOT ') !== FALSE ) {
@@ -121,6 +139,10 @@ function rsssl_validate_function($func, $is_condition = false ){
 	return sanitize_text_field($output);
 }
 
+/**
+ * @return string|null
+ * Get the wp-config.php path
+ */
 function rsssl_find_wp_config_path()
 {
     //limit nr of iterations to 20
@@ -134,4 +156,30 @@ function rsssl_find_wp_config_path()
         }
     } while (($dir = realpath("$dir/..")) && ($i < $maxiterations));
     return null;
+}
+
+/**
+ * Returns the server type of the plugin user.
+ *
+ * @return string|bool server type the user is using of false if undetectable.
+ */
+
+function rsssl_get_server() {
+	//Allows to override server authentication for testing or other reasons.
+	if ( defined( 'RSSSL_SERVER_OVERRIDE' ) ) {
+		return RSSSL_SERVER_OVERRIDE;
+	}
+
+	$server_raw = strtolower( htmlspecialchars( $_SERVER['SERVER_SOFTWARE'] ) );
+
+	//figure out what server they're using
+	if ( strpos( $server_raw, 'apache' ) !== false ) {
+		return 'apache';
+	} elseif ( strpos( $server_raw, 'nginx' ) !== false ) {
+		return 'nginx';
+	} elseif ( strpos( $server_raw, 'litespeed' ) !== false ) {
+		return 'litespeed';
+	} else { //unsupported server
+		return false;
+	}
 }

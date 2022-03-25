@@ -46,7 +46,7 @@ add_action('admin_init', 'rsssl_disable_http_methods');
  */
 function rsssl_disable_http_methods()
 {
-    if ( RSSSL()->rsssl_server->get_server() == 'apache' ) {
+    if ( rsssl_get_server() == 'apache' ) {
 
 	    $htaccess_file = RSSSL()->really_simple_ssl->htaccess_file();
 	    if ( file_exists( $htaccess_file ) && is_writable( $htaccess_file ) ) {
@@ -62,7 +62,7 @@ function rsssl_disable_http_methods()
 	    }
 	}
 
-    if ( RSSSL()->rsssl_server->get_server() == 'nginx' ) {
+    if ( rsssl_get_server() == 'nginx' ) {
 		//	    add_header Allow "GET, POST, HEAD" always;
 		//if ( $request_method !~ ^(GET|POST|HEAD)$ ) {
 		//	    return 405;

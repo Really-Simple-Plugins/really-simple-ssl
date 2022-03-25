@@ -19,7 +19,6 @@ import Field from './fields';
 import Menu from './Menu';
 import GridBlock from './GridBlock';
 
-
 class Help extends Component {
 	render(){
 		let field = this.props.field;

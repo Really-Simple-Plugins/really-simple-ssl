@@ -43,6 +43,7 @@ $rsssl_integrations_list = apply_filters( 'rsssl_integrations', array(
         'impact'               => 'medium',
         'risk'                 => 'medium',
         'learning_mode'        => true,
+        'option_id'            => 'anyone_can_register',
         'type'                 => 'checkbox',
         'conditions'           => array(
 //	        'rsssl_user_registration_allowed',
@@ -60,6 +61,7 @@ $rsssl_integrations_list = apply_filters( 'rsssl_integrations', array(
 		'impact'               => 'medium',
 		'risk'                 => 'low',
 		'learning_mode'        => false,
+		'option_id'            => 'file_editing',
 		'type'                 => 'checkbox',
 		'conditions'           => array(
 //			'rsssl_file_editing_allowed',
@@ -77,12 +79,13 @@ $rsssl_integrations_list = apply_filters( 'rsssl_integrations', array(
 		'impact'               => 'low',
 		'risk'                 => 'low',
 		'learning_mode'        => false,
+		'option_id'            => 'hide_wp_version',
 		'type'                 => 'checkbox',
 		'conditions'           => array(
 //			'rsssl_file_editing_allowed',
 		),
 		'actions'              => array(
-			'fix'       => 'rsssl_maybe_hide_wp_version',
+			'fix'       => 'rsssl_remove_wp_version',
 //			'ignore'    => 'disable_checkbox',
 		),
 	),
@@ -111,6 +114,7 @@ $rsssl_integrations_list = apply_filters( 'rsssl_integrations', array(
         'impact'               => 'medium',
         'risk'                 => 'low',
         'learning_mode'        => false,
+        'option_id'            => 'code_execution_uploads',
         'type'                 => 'checkbox',
         'conditions'           => array(
 //			'rsssl_file_editing_allowed',
@@ -127,6 +131,7 @@ $rsssl_integrations_list = apply_filters( 'rsssl_integrations', array(
         'impact'               => 'low',
         'risk'                 => 'high',
         'learning_mode'        => false,
+        'option_id'            => 'login_feedback',
         'type'                 => 'checkbox',
         'conditions'           => array(
 //			'rsssl_file_editing_allowed',
@@ -194,6 +199,7 @@ $rsssl_integrations_list = apply_filters( 'rsssl_integrations', array(
 		'impact'               => 'low',
 		'risk'                 => 'high',
 		'learning_mode'        => false,
+		'option_id'            => 'application_passwords',
 		'type'                 => 'checkbox',
 		'conditions'           => array(
 			'rsssl_application_passwords_available',
@@ -211,6 +217,7 @@ $rsssl_integrations_list = apply_filters( 'rsssl_integrations', array(
 		'impact'               => 'low',
 		'risk'                 => 'high',
 		'learning_mode'        => false,
+		'option_id'            => 'rename_db_prefix',
 		'type'                 => 'checkbox',
 		'conditions'           => array(
 //			'rsssl_application_passwords_available',
@@ -258,8 +265,10 @@ foreach ( $rsssl_integrations_list as $plugin => $details ) {
 		unset( $output );
 	}
 
-	if ( file_exists( $file ) && $skip !== true ) {
-        require_once( $file );
+	if ( isset( $details['option_id'] ) && rsssl_get_option( $details['option_id'] ) !== 1 ) {
+		error_log("$plugin skipped, option not enabled");
+	} elseif ( file_exists( $file ) && $skip !== true ) {
+		require_once( $file );
 	} elseif ( $skip !== false ) {
 		error_log("$plugin skipped, conditions not met");
 	} else {
@@ -269,10 +278,11 @@ foreach ( $rsssl_integrations_list as $plugin => $details ) {
 	$risk = $details['risk'];
 	$impact = $details['impact'];
 
-	// Apply fix on high risk, low impact
-    if ( $risk === 'high' && $impact === 'low' ) {
+	// Apply fix on high risk, low impact, OR when option has been enabled
+    if ( $risk === 'high' && $impact === 'low'
+         || ( isset($details['option_id']) && rsssl_get_option($details['option_id'] ) !== false ) ) {
         $fix = $details['actions']['fix'];
-        rsssl_validate_function($fix);
+        rsssl_validate_function( $fix );
     }
 
 }

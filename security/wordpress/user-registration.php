@@ -34,3 +34,11 @@ function rsssl_user_registration_notice()
 
     return false;
 }
+
+/**
+ * @return void
+ * Disable or enable user registration
+ */
+function rsssl_maybe_disable_user_registration() {
+
+}

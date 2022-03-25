@@ -9,6 +9,7 @@ import {
 import * as rsssl_api from "./utils/api";
 import ProgressBlock from "./ProgressBlock";
 import ProgressHeader from "./ProgressBlockHeader";
+import SecurityFeaturesBlock from './SecurityFeaturesBlock';
 
 class GridButton extends Component {
     constructor() {
@@ -29,6 +30,7 @@ class GridButton extends Component {
 var dynamicComponents = {
     "ProgressBlock": ProgressBlock,
     "ProgressHeader": ProgressHeader,
+    "SecurityFeaturesBlock": SecurityFeaturesBlock,
 };
 
 class GridBlock extends Component {
