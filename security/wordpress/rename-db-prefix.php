@@ -175,4 +175,4 @@ function rsssl_verify_database_copy($new_prefix) {
     return false;
 }
 
-add_action('admin_init', 'rsssl_maybe_rename_db_prefix');
+//add_action('admin_init', 'rsssl_maybe_rename_db_prefix');
