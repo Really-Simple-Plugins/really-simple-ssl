@@ -218,7 +218,6 @@ function rsssl_rest_api_fields_get(  ){
 	if (!current_user_can('manage_options')) {
 		return;
 	}
-    error_log("get fields");
 	$output = array();
 	$fields = rsssl_fields();
 	$menu_items = rsssl_menu('group_general');
@@ -243,7 +242,6 @@ function rsssl_rest_api_block_get($request){
 	if (!current_user_can('manage_options')) {
 		return;
 	}
-    error_log("get block");
 	$block = $request->get_param('block');
     $blocks = rsssl_blocks();
 	$out = isset($blocks[$block]) ? $blocks[$block] : [];
