@@ -211,10 +211,10 @@ $rsssl_integrations_list = apply_filters( 'rsssl_integrations', array(
 	),
 
 	'rename-db-prefix' => array(
-		'constant_or_function' => 'rsssl_maybe_rename_db_prefix',
+		'constant_or_function' => 'rsssl_rename_db_prefix',
 		'label'                => 'Rename DB prefix',
 		'folder'               => 'wordpress',
-		'impact'               => 'low',
+		'impact'               => 'high',
 		'risk'                 => 'high',
 		'learning_mode'        => false,
 		'option_id'            => 'rename_db_prefix',
@@ -279,12 +279,13 @@ foreach ( $rsssl_integrations_list as $plugin => $details ) {
 	$impact = $details['impact'];
 
 	// Apply fix on high risk, low impact, OR when option has been enabled
-    if ( $risk === 'high' && $impact === 'low'
-         || ( isset($details['option_id']) && rsssl_get_option($details['option_id'] ) !== false ) ) {
+    if (
+		( $risk === 'high' && $impact === 'low' )
+         || ( isset($details['option_id']) && rsssl_get_option($details['option_id'] ) === 1 )
+    ) {
         $fix = $details['actions']['fix'];
-        rsssl_validate_function( $fix );
-    }
-
+	    rsssl_validate_function( $fix );
+	  }
 }
 
 /**
