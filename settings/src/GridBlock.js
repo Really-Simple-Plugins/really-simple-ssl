@@ -122,7 +122,7 @@ class GridBlock extends Component {
                 this.runTest('refresh');
             }, blockData.content.interval );
         }
-        let DynamicBlockProps = { setBlockProps: this.setBlockProps, BlockProps: this.BlockProps, runTest: this.runTest };
+        let DynamicBlockProps = { setBlockProps: this.setBlockProps, BlockProps: this.BlockProps, runTest: this.runTest, fields: this.props.fields, isApiLoaded: this.props.isApiLoaded };
         return (
             <div className={className}>
                 <div className="item-container">

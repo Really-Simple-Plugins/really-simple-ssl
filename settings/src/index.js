@@ -226,9 +226,10 @@ class DashboardPage extends Component {
 
 	render() {
 		let blocks = rsssl_settings.blocks;
+
 		return (
 			<div className="rsssl-grid">
-				{blocks.map((block, i) => <GridBlock key={i} block={block}/>)}
+				{blocks.map((block, i) => <GridBlock key={i} block={block} isApiLoaded={this.props.isAPILoaded} fields={this.props.fields}/>)}
 			</div>
 		);
 	}
@@ -324,7 +325,7 @@ class Page extends Component {
 				<Header selectedMainMenuItem={selectedMainMenuItem} selectMenu={this.selectMenu}/>
 				<div id="rsssl-container">
 					{selectedMainMenuItem==='settings' && <SettingsPage isAPILoaded={isAPILoaded} fields={fields} menu={menu}/> }
-					{selectedMainMenuItem==='dashboard' && <DashboardPage/> }
+					{selectedMainMenuItem==='dashboard' && <DashboardPage isAPILoaded={isAPILoaded} fields={fields}/> }
 				</div>
 			</div>
 		);
