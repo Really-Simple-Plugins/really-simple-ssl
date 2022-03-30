@@ -162,14 +162,14 @@ function rsssl_run_test($request){
 	        $data = $test->get($state);
             break;
         case 'progressdata':
-	        require_once( rsssl_path . 'progress/class-progress.php' );
-	        $progress = new rsssl_progress($state);
-            $data = $progress->get();
+            $data = RSSSL()->progress->get();
+            break;
+        case 'dismiss_task':
+	        $data = RSSSL()->progress->dismiss_task($state);
             break;
         default:
 	        $data = array();
     }
-    error_log(print_r($data, true));
 	$response = json_encode( $data );
 	header( "Content-Type: application/json" );
 	echo $response;
