@@ -40,5 +40,5 @@ function rsssl_user_registration_notice()
  * Disable or enable user registration
  */
 function rsssl_maybe_disable_user_registration() {
-
+	update_option('users_can_register', false );
 }

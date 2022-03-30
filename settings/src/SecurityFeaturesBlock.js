@@ -7,14 +7,27 @@ class SecurityFeaturesBlock extends Component {
         super( ...arguments );
     }
 
-    status() {
-        // Get valid or invalid
-    }
-
-    render(){
+    render() {
 
         let fields = this.props.fields;
-        console.log(fields);
+
+        let shownFields = [
+            'file_editing',
+            'anyone_can_register',
+        ];
+
+        // fields.map(item => {
+        //     console.log(item);
+        // })
+
+        shownFields.forEach(function (e) {
+            console.log(fields.indexOf(e));
+            // console.log(fields);
+            if ( fields.id === e ) {
+
+            }
+        });
+
         return (
             <div className="rsssl-security-row">Security
                 <div className={this.props.status}></div>
