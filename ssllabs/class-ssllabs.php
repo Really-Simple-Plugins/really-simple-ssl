@@ -10,12 +10,12 @@ class rsssl_ssllabs {
 		$message = '';
 		$footer_html = '';
 		$disabled = false;
-		$domain = $this->get_host();
+		$domain = 'https://ziprecipes.net';//$this->get_host();
 		if (strpos($domain, 'localhost')!==false){
 			return ['footerHtml'=>$footer_html,'disabled'=>true, 'html' => '<div class="rsssl-ssltest"><div class="rsssl-ssltest-element">'.__("SSL Test is not possible on localhost","really-simple-ssl").'</div></div>', 'progress' => 100];
 		}
 
-		$last_test = get_option('rsssl_last_ssltest');
+		$last_test = false;//get_option('rsssl_last_ssltest');
 		$one_day_ago = strtotime('-1 day');
 		if ($last_test && $last_test>$one_day_ago){
 			$disabled = true;
@@ -79,7 +79,7 @@ class rsssl_ssllabs {
 			$html_arr[] = $this->has_hsts() ? __('HSTS enabled','really-simple-ssl') : __('HSTS not enabled','really-simple-ssl');
 			$html_arr[] = $this->has_warnings() ? __('Warnings detected, see the full report for details.','really-simple-ssl') : __("No warnings", 'really-simple-ssl');
 		}
-		$html = '<div class="rsssl-ssltest"><div><div>'.implode('</div><div>', $html_arr ).'</div></div><div class="rsssl-grade"><span>'.$body->endpoints[0]->grade.'</span></div></div>';
+		$html = '<div class="rsssl-gridblock-progress-container"><div class="rsssl-gridblock-progress" style="width:'.$total_progress.'%"></div></div><div class="rsssl-ssltest"><div><div>'.implode('</div><div>', $html_arr ).'</div></div><div class="rsssl-grade"><span>'.$body->endpoints[0]->grade.'</span></div></div>';
 		$url = 'https://www.ssllabs.com/analyze.html?d='.urlencode($domain);
 		$class = "rsssl-complete";
 		if ( $total_progress<100 ) {

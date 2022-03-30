@@ -9,11 +9,8 @@ class TaskElement extends Component {
         super( ...arguments);
     }
 
-
-
     render(){
         let notice = this.props.notice;
-
         return(
             <div className="rsssl-task-element">
                 <div className="rsssl-task-icon"><span className={'rsssl-progress-status rsssl-' + notice.output.icon}>{ notice.output.label }</span></div>
@@ -64,10 +61,12 @@ class ProgressBlock extends Component {
                 notices: this.notices,
                 percentageCompleted: this.percentageCompleted,
             });
+            this.props.setBlockProps('notices', this.notices);
         });
     }
     componentDidMount() {
         this.getProgressData = this.getProgressData.bind(this);
+        this.onCloseTaskHandler = this.onCloseTaskHandler.bind(this);
     }
     getStyles() {
         return Object.assign(
@@ -81,7 +80,7 @@ class ProgressBlock extends Component {
         });
     }
     onCloseTaskHandler(e){
-        let button = e.target;
+        let button = e.target.closest('button');
         let type = button.getAttribute('data-id');
         let container = button.closest('.rsssl-task-element');
         container.animate({
@@ -94,6 +93,19 @@ class ProgressBlock extends Component {
         }).onfinish = function() {
             container.parentElement.removeChild(container);
         }
+
+        let notices = this.props.BlockProps.notices;
+        notices = notices.filter(function (notice) {
+            return notice.id !== type;
+        });
+
+        this.props.setBlockProps('notices', notices);
+        return rsssl_api.runTest('dismiss_task', type).then(( response ) => {
+            this.percentageCompleted = response.data.percentage;
+            this.setState({
+                percentageCompleted:this.percentageCompleted
+            })
+        });
     }
     render(){
         let progressBarColor = '';
@@ -106,12 +118,11 @@ class ProgressBlock extends Component {
             );
         }
         let filter = 'all';
-        if (this.props.BlockProps && this.props.BlockProps.filterStatus) {
+        if ( this.props.BlockProps && this.props.BlockProps.filterStatus ) {
             filter = this.props.BlockProps.filterStatus;
         }
         let notices = this.notices;
-        if (filter==='remaining') {
-            console.log("do filter");
+        if ( filter==='remaining' ) {
             notices = notices.filter(function (notice) {
                 return notice.output.status==='open';
             });

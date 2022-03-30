@@ -64,6 +64,7 @@ class REALLY_SIMPLE_SSL
 	public $rsssl_cache;
 	public $rsssl_server;
 	public $really_simple_ssl;
+	public $progress;
 	public $rsssl_help;
 	public $rsssl_certificate;
 
@@ -93,6 +94,7 @@ class REALLY_SIMPLE_SSL
 				self::$instance->rsssl_server = new rsssl_server();
 				self::$instance->really_simple_ssl = new rsssl_admin();
 				self::$instance->rsssl_help = new rsssl_help();
+				self::$instance->progress = new rsssl_progress();
 				self::$instance->rsssl_certificate = new rsssl_certificate();
 				self::$instance->rsssl_site_health = new rsssl_site_health();
                 if ( $wpcli ) {
@@ -142,6 +144,7 @@ class REALLY_SIMPLE_SSL
 			require_once(rsssl_path . 'class-cache.php');
 			require_once(rsssl_path . 'class-server.php');
             require_once(rsssl_path . 'class-help.php');
+            require_once(rsssl_path . 'progress/class-progress.php');
 			require_once(rsssl_path . 'class-certificate.php');
 			require_once(rsssl_path . 'class-site-health.php');
 

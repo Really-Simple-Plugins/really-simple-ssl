@@ -282,7 +282,6 @@ class rsssl_admin extends rsssl_front_end
         //callbacks for the ajax dismiss buttons
         add_action('wp_ajax_dismiss_success_message', array($this, 'dismiss_success_message_callback'));
         add_action('wp_ajax_rsssl_dismiss_review_notice', array($this, 'dismiss_review_notice_callback'));
-        add_action('wp_ajax_rsssl_dismiss_settings_notice', array($this, 'dismiss_settings_notice_callback'));
         add_action('wp_ajax_rsssl_update_task_toggle_option', array($this, 'update_task_toggle_option'));
         add_action('wp_ajax_rsssl_redirect_to_le_wizard', array($this, 'rsssl_redirect_to_le_wizard'));
 
@@ -2792,41 +2791,7 @@ class rsssl_admin extends rsssl_front_end
         wp_die();
     }
 
-    /**
-     * Process the ajax dismissal of settings notice
-     *
-     * Since 3.1
-     *
-     * @access public
-     *
-     */
 
-    public function dismiss_settings_notice_callback()
-    {
-        if (!current_user_can($this->capability) ) return;
-
-	    if (!isset($_POST['token']) || (!wp_verify_nonce($_POST['token'], 'rsssl_nonce'))) {
-		    return;
-	    }
-
-	    if (isset($_POST['type'])) {
-	        $dismiss_type = sanitize_title( $_POST['type'] );
-	        update_option( "rsssl_".$dismiss_type."_dismissed", true );
-            delete_transient( 'rsssl_plusone_count' );
-        }
-
-	    // count should be updated, therefore clear cache
-	    $this->clear_transients();
-
-	    $data     = array(
-		    'tasks' => $this->get_remaining_tasks_count(),
-		    'percentage' => $this->get_score_percentage(),
-	    );
-	    $response = json_encode( $data );
-	    header( "Content-Type: application/json" );
-	    echo $response;
-	    exit;
-    }
 
     /**
      * Process the ajax dismissal of the htaccess message.
@@ -3541,52 +3506,6 @@ class rsssl_admin extends rsssl_front_end
 	    return sanitize_text_field($output);
     }
 
-    /**
-     * @Deprecated, moved to progress class
-     *
-     * Calculate the percentage completed in the dashboard progress section
-     * Determine max score by adding $notice['score'] to the $max_score variable
-     * Determine actual score by adding $notice['score'] of each item with a 'success' output to $actual_score
-     * @return int
-     *
-     * @since 4.0
-     *
-     */
-
-    public function get_score_percentage() {
-        if ( ! current_user_can( 'manage_options' ) ) {
-            return 0;
-        }
-
-        $max_score    = 0;
-        $actual_score = 0;
-        $notices = $this->get_notices_list(array(
-                'status' => 'all',
-        ));
-        foreach ( $notices as $id => $notice ) {
-            if (isset( $notice['score'] )) {
-                // Only items matching condition will show in the dashboard. Only use these to determine max count.
-                $max_score = $max_score + intval( $notice['score'] );
-                $success = ( isset( $notice['output']['icon'] )
-                             && ( $notice['output']['icon']
-                                  === 'success' ) ) ? true : false;
-                if ( $success ) {
-                    // If the output is success, task is completed. Add to actual count.
-                    $actual_score = $actual_score + intval( $notice['score'] );
-                }
-            }
-        }
-        if ($max_score>0) {
-	        $score = $actual_score / $max_score;
-        } else {
-            $score = 0;
-        }
-        $score = $score * 100;
-        $score = intval( round( $score ) );
-
-        return $score;
-    }
-
 	/**
      * Generate an enable link for the specific setting, redirects to settings page and highlights the setting.
      *
@@ -3744,31 +3663,6 @@ class rsssl_admin extends rsssl_front_end
         $count = count($this->get_notices_list(
             array( 'status' => 'all' )
         ));
-
-        return $count;
-    }
-
-    /**
-     * @return int
-     *
-     * Get the remaining open task count, shown in the progress header
-     *
-     */
-
-    public function get_remaining_tasks_count() {
-        if ( ! current_user_can( 'manage_options' ) ) {
-            return 0;
-        }
-
-        $cache = !$this->is_settings_page();
-
-        $count = get_transient( 'rsssl_remaining_task_count' );
-        if ( !$cache || $count === false ) {
-            $count = count($this->get_notices_list(
-                    array( 'status' => 'open' )
-            ) );
-            set_transient( 'rsssl_remaining_task_count', $count, DAY_IN_SECONDS );
-        }
 
         return $count;
     }
