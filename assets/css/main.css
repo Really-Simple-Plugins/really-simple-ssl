@@ -275,6 +275,13 @@
     Dots
    */
 }
+.rsssl-grid .rsssl-gridblock-progress-container {
+  background-color: green;
+}
+.rsssl-grid .rsssl-gridblock-progress-container .rsssl-gridblock-progress {
+  height: 3px;
+  background-color: #cddc39;
+}
 .rsssl-grid .button-rsssl-tertiary {
   background-color: #D7263D;
   color: white;

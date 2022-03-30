@@ -79,7 +79,7 @@ class rsssl_ssllabs {
 			$html_arr[] = $this->has_hsts() ? __('HSTS enabled','really-simple-ssl') : __('HSTS not enabled','really-simple-ssl');
 			$html_arr[] = $this->has_warnings() ? __('Warnings detected, see the full report for details.','really-simple-ssl') : __("No warnings", 'really-simple-ssl');
 		}
-		$html = '<div class="rsssl-ssltest"><div><div>'.implode('</div><div>', $html_arr ).'</div></div><div class="rsssl-grade"><span>'.$body->endpoints[0]->grade.'</span></div></div>';
+		$html = '<div class="rsssl-gridblock-progress-container"><div class="rsssl-gridblock-progress" style="width:'.$total_progress.'%"></div></div><div class="rsssl-ssltest"><div><div>'.implode('</div><div>', $html_arr ).'</div></div><div class="rsssl-grade"><span>'.$body->endpoints[0]->grade.'</span></div></div>';
 		$url = 'https://www.ssllabs.com/analyze.html?d='.urlencode($domain);
 		$class = "rsssl-complete";
 		if ( $total_progress<100 ) {
