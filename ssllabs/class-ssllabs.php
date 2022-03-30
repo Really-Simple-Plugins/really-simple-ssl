@@ -15,7 +15,7 @@ class rsssl_ssllabs {
 			return ['footerHtml'=>$footer_html,'disabled'=>true, 'html' => '<div class="rsssl-ssltest"><div class="rsssl-ssltest-element">'.__("SSL Test is not possible on localhost","really-simple-ssl").'</div></div>', 'progress' => 100];
 		}
 
-		$last_test = get_option('rsssl_last_ssltest');
+		$last_test = false;//get_option('rsssl_last_ssltest');
 		$one_day_ago = strtotime('-1 day');
 		if ($last_test && $last_test>$one_day_ago){
 			$disabled = true;

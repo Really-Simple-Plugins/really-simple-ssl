@@ -60,6 +60,11 @@ class GridBlock extends Component {
         }
     }
 
+    /**
+     * Get block data for this grid block, in object format, as defined in settings/config/config.php
+     * @param state
+     * @returns {Promise<AxiosResponse<any>>}
+     */
     getBlockData(state){
         let setState='clearcache';
         if (state==='initial' || state==='refresh') {
@@ -84,6 +89,7 @@ class GridBlock extends Component {
     }
 
     componentDidMount() {
+        this.getBlockData = this.getBlockData.bind(this);
         this.setBlockProps = this.setBlockProps.bind(this);
         if ( this.props.block.content.type==='html' || this.props.block.content.type==='react' ) {
             let content = this.props.block.content.data;
@@ -95,6 +101,12 @@ class GridBlock extends Component {
             })
         }
     }
+
+    /**
+     * Allow child blocks to set data on the gridblock
+     * @param key
+     * @param value
+     */
     setBlockProps(key, value){
         this.BlockProps[key] = value;
         this.setState({
