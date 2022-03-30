@@ -90,6 +90,13 @@ function rsssl_remove_wp_version() {
 	// remove WP ?ver=5.X.X from css/js
 	add_filter( 'style_loader_src', 'rsssl_remove_css_js_version', 9999 );
 	add_filter( 'script_loader_src', 'rsssl_remove_css_js_version', 9999 );
+
+	remove_action('wp_head', 'wp_generator'); // remove wordpress version
+
+	remove_action('wp_head', 'index_rel_link'); // remove link to index page
+	remove_action('wp_head', 'wlwmanifest_link'); // remove wlwmanifest.xml (needed to support windows live writer)
+
+	remove_action('wp_head', 'wp_shortlink_wp_head', 10, 0); // Remove shortlink
 }
 
 /**

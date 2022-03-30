@@ -61,7 +61,7 @@ function rsssl_maybe_rename_db_prefix() {
         // Get all tables starting with wp_
 		$tables = $wpdb->get_results("SHOW TABLES LIKE '".$wpdb->prefix."%'", ARRAY_N);;
 
-		$new_prefix = rsssl_generate_random_prefix( 10 );
+		$new_prefix = rsssl_generate_random_string( 5 ) . '_';
 		// Copy these tables with a new prefix
 		foreach ( $tables as $table ) {
 
@@ -137,23 +137,6 @@ function rsssl_maybe_rename_db_prefix() {
         update_option('rsssl_db_prefix_updated', true);
 
 	}
-}
-
-/**
- * @return string
- * Generate a random prefix
- */
-
-function rsssl_generate_random_prefix($length) {
-    $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
-    $randomString = '';
-
-    for ($i = 0; $i < $length; $i++) {
-        $index = rand(0, strlen($characters) - 1);
-        $randomString .= $characters[$index];
-    }
-
-    return $randomString . '_';
 }
 
 /**

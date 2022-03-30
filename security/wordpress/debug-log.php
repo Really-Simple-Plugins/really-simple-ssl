@@ -91,6 +91,8 @@ function enable_debug_log() {
  */
 function rsssl_change_debug_log_location() {
 
+	if ( get_option('rsssl_debug_log_location_changed') ) return;
+
     $wpconfig_path = RSSSL()->really_simple_ssl->find_wp_config_path();
     $wpconfig = file_get_contents($wpconfig_path);
 
@@ -99,9 +101,17 @@ function rsssl_change_debug_log_location() {
 
     if ( ( strlen( $wpconfig ) !=0 ) && is_writable( $wpconfig_path ) ) {
 
-	    $new = "define( 'WP_DEBUG_LOG', 'wp-content/uploads/debug.log' )";
+	    $random_string = rsssl_generate_random_string( 10 );
+		$new_location = 'wp-content/debug_' . $random_string;
+		mkdir($new_location);
+	    $new = "define( 'WP_DEBUG_LOG', '$new_location' )";
 	    $wpconfig = str_replace( $matches[0], $new, $wpconfig );
 	    file_put_contents( $wpconfig_path, $wpconfig );
+
+
+		update_option('rsssl_debug_log_location_changed', true);
 	}
 }
+
+add_action('admin_init', 'rsssl_change_debug_log_location');
 

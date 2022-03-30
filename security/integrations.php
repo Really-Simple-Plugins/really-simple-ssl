@@ -205,7 +205,7 @@ $rsssl_integrations_list = apply_filters( 'rsssl_integrations', array(
 			'rsssl_application_passwords_available',
 		),
 		'actions'              => array(
-			'fix'       => 'rsssl_disable_application_passwords',
+			'fix'       => 'rsssl_maybe_allow_application_passwords',
 //			'ignore'    => 'disable_checkbox',
 		),
 	),

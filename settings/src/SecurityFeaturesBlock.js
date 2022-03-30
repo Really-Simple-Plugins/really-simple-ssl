@@ -12,6 +12,9 @@ class SecurityFeaturesBlock extends Component {
     }
 
     render(){
+
+        let fields = this.props.fields;
+        console.log(fields);
         return (
             <div className="rsssl-security-row">Security
                 <div className={this.props.status}></div>

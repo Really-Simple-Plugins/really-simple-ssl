@@ -15,5 +15,5 @@ add_filter( 'login_errors', 'rsssl_no_wp_login_errors' );
  */
 function rsssl_no_wp_login_errors()
 {
-    return __("Could not log you in! Make sure your username and password are correct.", "really-simple-ssl");
+    return __("Invalid user and/or password.", "really-simple-ssl");
 }

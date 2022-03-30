@@ -183,3 +183,20 @@ function rsssl_get_server() {
 		return false;
 	}
 }
+
+/**
+ * @return string
+ * Generate a random prefix
+ */
+
+function rsssl_generate_random_string($length) {
+	$characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+	$randomString = '';
+
+	for ($i = 0; $i < $length; $i++) {
+		$index = rand(0, strlen($characters) - 1);
+		$randomString .= $characters[$index];
+	}
+
+	return $randomString;
+}

@@ -4,6 +4,8 @@ defined( 'ABSPATH' ) or die( "you do not have access to this page!" );
 add_action('application_password_did_authenticate', 'rsssl_application_password_success');
 add_action('application_password_failed_authentication', 'rsssl_application_password_fail');
 
+add_action('template_redirect', 'rsssl_maybe_allow_application_passwords');
+
 // Add notice in backend
 if ( is_admin() ) {
 	add_filter('rsssl_notices', 'rsssl_application_passwords_allowed', 50, 3);
@@ -45,18 +47,14 @@ function rsssl_application_passwords_available() {
 
 /**
  * @return void
- * Disable application passwords
+ * Enable or disable application passwords
  */
-function rsssl_disable_application_passwords() {
-	add_filter( 'wp_is_application_passwords_available', '__return_false' );
-}
-
-/**
- * @return void
- * Enable application passwords
- */
-function rsssl_enable_application_passwords() {
-	add_filter( 'wp_is_application_passwords_available', '__return_true' );
+function rsssl_maybe_allow_application_passwords() {
+	if ( rsssl_get_option('application_passwords' ) === 1 ) {
+		add_filter( 'wp_is_application_passwords_available', '__return_false' );
+	} else {
+		add_filter( 'wp_is_application_passwords_available', '__return_true' );
+	}
 }
 
 function rsssl_application_password_success() {
@@ -65,7 +63,7 @@ function rsssl_application_password_success() {
 		'type' => 'application_password',
 		'action' => 'authenticated',
 		'referer' => '',
-		'used_id' => rsssl_get_user_id(),
+		'user_id' => rsssl_get_user_id(),
 	);
 
 	rsssl_log_to_learning_mode_table($data);
@@ -77,7 +75,7 @@ function rsssl_application_password_fail() {
 		'type' => 'application_password',
 		'action' => 'failed',
 		'referer' => '',
-		'used_id' => rsssl_get_user_id(),
+		'user_id' => rsssl_get_user_id(),
 	);
 
 	rsssl_log_to_learning_mode_table($data);
