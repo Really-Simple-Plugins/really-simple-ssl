@@ -57,6 +57,10 @@ function rsssl_maybe_allow_application_passwords() {
 	}
 }
 
+/**
+ * @return void
+ * Log application password success
+ */
 function rsssl_application_password_success() {
 
 	$data = array(
@@ -69,6 +73,10 @@ function rsssl_application_password_success() {
 	rsssl_log_to_learning_mode_table($data);
 }
 
+/**
+ * @return void
+ * Log application password failure
+ */
 function rsssl_application_password_fail() {
 
 	$data = array(

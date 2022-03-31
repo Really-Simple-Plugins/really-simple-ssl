@@ -6,7 +6,7 @@ function hide_debug_log_notice( $notices ) {
         'callback' => 'contains_debug_log_declaration',
         'score' => 5,
         'output' => array(
-            'default' => array(
+            '_true_' => array(
                 'msg' => __("Errors are logged to default debug.log location.", "really-simple-ssl"),
                 'icon' => 'open',
                 'dismissible' => true,
@@ -22,7 +22,7 @@ function hide_debug_log_notice( $notices ) {
  *
  * Check if wp-config.php contains debug.log declaration
  */
-function contains_debug_log_declaration() {
+function rsssl_contains_debug_log_declaration() {
     $wpconfig_path = RSSSL()->really_simple_ssl->find_wp_config_path();
     $wpconfig = file_get_contents($wpconfig_path);
 
@@ -33,7 +33,7 @@ function contains_debug_log_declaration() {
 	// If str contains true, location is default
     if ( strpos($matches[0], 'true' ) !== FALSE ) {
 		error_log("Default found!");
-        return 'default';
+        return true;
     }
 
 	return false;
@@ -43,7 +43,7 @@ function contains_debug_log_declaration() {
  * @return void
  * Disable WP_DEBUG_LOG
  */
-function disable_debug_log() {
+function rsssl_disable_debug_log() {
 	$wpconfig_path = RSSSL()->really_simple_ssl->find_wp_config_path();
 	$wpconfig = file_get_contents($wpconfig_path);
 
@@ -66,7 +66,7 @@ function disable_debug_log() {
  *
  * Enable debugging in WordPress
  */
-function enable_debug_log() {
+function rsssl_enable_debug_log() {
 	$wpconfig_path = RSSSL()->really_simple_ssl->find_wp_config_path();
 	$wpconfig = file_get_contents($wpconfig_path);
 
@@ -112,6 +112,22 @@ function rsssl_change_debug_log_location() {
 		update_option('rsssl_debug_log_location_changed', true);
 	}
 }
+
+/**
+ * Check if debug.log is saved to default location
+ */
+function rsssl_is_default_debug_log_location() {
+    if (
+//        rsssl_contains_debug_log_declaration() &&
+        ! get_option('rsssl_debug_log_location_changed') )
+    {
+        return true;
+    }
+
+    return false;
+}
+
+
 
 add_action('admin_init', 'rsssl_change_debug_log_location');
 

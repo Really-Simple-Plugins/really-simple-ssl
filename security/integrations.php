@@ -1,19 +1,13 @@
 <?php
 defined( 'ABSPATH' ) or die( "you do not have access to this page!" );
-if ( is_admin() ) {
-//	require_once( 'integrations-menu.php' );
-}
 
 require_once( trailingslashit(rsssl_path) . 'security/learning-mode.php' );
 require_once( trailingslashit(rsssl_path) . 'security/functions.php' );
 require_once( trailingslashit(rsssl_path) . 'security/check-requests.php' );
+require_once( trailingslashit(rsssl_path) . 'security/sync-settings.php' );
 
 function rsssl_enqueue_integrations_assets( $hook ) {
-//	wp_register_script( ' rsssl-pagify', trailingslashit( rsssl_url ) . 'assets/pagify/pagify.min.js', array( "jquery" ), rsssl_version );
-//	wp_enqueue_script( ' rsssl-pagify' );
-//
-//	wp_register_style( ' rsssl-pagify', trailingslashit( rsssl_url ) . 'assets/pagify/pagify.css', false, rsssl_version );
-//	wp_enqueue_style( ' rsssl-pagify' );
+
 }
 add_action( 'admin_enqueue_scripts', 'rsssl_enqueue_integrations_assets' );
 
@@ -32,7 +26,6 @@ $rsssl_integrations_list = apply_filters( 'rsssl_integrations', array(
 		),
 		'actions'              => array(
 			'fix'       => 'rsssl_maybe_disable_xmlrpc',
-			'ignore'    => 'disable_checkbox',
 		),
 	),
 //
@@ -43,14 +36,13 @@ $rsssl_integrations_list = apply_filters( 'rsssl_integrations', array(
         'impact'               => 'medium',
         'risk'                 => 'medium',
         'learning_mode'        => true,
-        'option_id'            => 'anyone_can_register',
+        'option_id'            => 'rsssl_anyone_can_register',
         'type'                 => 'checkbox',
         'conditions'           => array(
-//	        'rsssl_user_registration_allowed',
+	        'rsssl_user_registration_allowed',
         ),
         'actions'              => array(
 	        'fix'       => 'rsssl_maybe_disable_user_registration',
-	        'ignore'    => 'disable_checkbox',
         ),
     ),
 
@@ -61,14 +53,13 @@ $rsssl_integrations_list = apply_filters( 'rsssl_integrations', array(
 		'impact'               => 'medium',
 		'risk'                 => 'low',
 		'learning_mode'        => false,
-		'option_id'            => 'file_editing',
+		'option_id'            => 'rsssl_file_editing',
 		'type'                 => 'checkbox',
 		'conditions'           => array(
-//			'rsssl_file_editing_allowed',
+			'rsssl_file_editing_allowed',
 		),
 		'actions'              => array(
 			'fix'       => 'rsssl_disable_file_editing',
-//			'ignore'    => 'disable_checkbox',
 		),
 	),
 
@@ -79,14 +70,13 @@ $rsssl_integrations_list = apply_filters( 'rsssl_integrations', array(
 		'impact'               => 'low',
 		'risk'                 => 'low',
 		'learning_mode'        => false,
-		'option_id'            => 'hide_wp_version',
+		'option_id'            => 'rsssl_hide_wp_version',
 		'type'                 => 'checkbox',
 		'conditions'           => array(
-//			'rsssl_file_editing_allowed',
+
 		),
 		'actions'              => array(
 			'fix'       => 'rsssl_remove_wp_version',
-//			'ignore'    => 'disable_checkbox',
 		),
 	),
 
@@ -98,12 +88,11 @@ $rsssl_integrations_list = apply_filters( 'rsssl_integrations', array(
 		'risk'                 => 'medium',
 		'learning_mode'        => true,
 		'type'                 => 'checkbox',
-		'conditions'           => array(
-//			'rsssl_file_editing_allowed',
-		),
+//		'conditions'           => array(
+//
+//		),
 		'actions'              => array(
 			'fix'       => 'rsssl_disable_user_enumeration',
-//			'ignore'    => 'disable_checkbox',
 		),
 	),
 
@@ -114,14 +103,13 @@ $rsssl_integrations_list = apply_filters( 'rsssl_integrations', array(
         'impact'               => 'medium',
         'risk'                 => 'low',
         'learning_mode'        => false,
-        'option_id'            => 'code_execution_uploads',
+        'option_id'            => 'rsssl_code_execution_uploads',
         'type'                 => 'checkbox',
-        'conditions'           => array(
-//			'rsssl_file_editing_allowed',
-        ),
+//        'conditions'           => array(
+//
+//        ),
         'actions'              => array(
 			'fix'       => 'rsssl_disable_code_execution_uploads',
-//			'ignore'    => 'disable_checkbox',
         ),
     ),
     'prevent-login-info-leakage' => array(
@@ -131,14 +119,13 @@ $rsssl_integrations_list = apply_filters( 'rsssl_integrations', array(
         'impact'               => 'low',
         'risk'                 => 'high',
         'learning_mode'        => false,
-        'option_id'            => 'login_feedback',
+        'option_id'            => 'rsssl_login_feedback',
         'type'                 => 'checkbox',
-        'conditions'           => array(
-//			'rsssl_file_editing_allowed',
-        ),
+//        'conditions'           => array(
+//
+//        ),
         'actions'              => array(
 			'fix'       => 'rsssl_remove_wp_version',
-//			'ignore'    => 'disable_checkbox',
         ),
     ),
     'disable-http-methods' => array(
@@ -149,12 +136,11 @@ $rsssl_integrations_list = apply_filters( 'rsssl_integrations', array(
         'risk'                 => 'medium',
         'learning_mode'        => false,
         'type'                 => 'checkbox',
-        'conditions'           => array(
-//			'rsssl_file_editing_allowed',
-        ),
+//        'conditions'           => array(
+//
+//        ),
         'actions'              => array(
 			'fix'       => 'rsssl_disable_http_methods',
-//			'ignore'    => 'disable_checkbox',
         ),
     ),
 //
@@ -165,13 +151,13 @@ $rsssl_integrations_list = apply_filters( 'rsssl_integrations', array(
         'impact'               => 'medium',
         'risk'                 => 'medium',
         'learning_mode'        => false,
+        'option_id'            => 'rsssl_debug_log_modified',
         'type'                 => 'checkbox',
         'conditions'           => array(
-//			'rsssl_file_editing_allowed',
+            'rsssl_is_default_debug_log_location',
         ),
         'actions'              => array(
 			'fix'       => 'rsssl_change_debug_log_location',
-//			'ignore'    => 'disable_checkbox',
         ),
     ),
 
@@ -183,12 +169,11 @@ $rsssl_integrations_list = apply_filters( 'rsssl_integrations', array(
         'risk'                 => 'medium',
         'learning_mode'        => false,
         'type'                 => 'checkbox',
-        'conditions'           => array(
-//			'rsssl_file_editing_allowed',
-        ),
+//        'conditions'           => array(
+//
+//        ),
         'actions'              => array(
 			'fix'       => 'rsssl_disable_indexing',
-//			'ignore'    => 'disable_checkbox',
         ),
     ),
 
@@ -199,14 +184,13 @@ $rsssl_integrations_list = apply_filters( 'rsssl_integrations', array(
 		'impact'               => 'low',
 		'risk'                 => 'high',
 		'learning_mode'        => false,
-		'option_id'            => 'application_passwords',
+		'option_id'            => 'rsssl_application_passwords',
 		'type'                 => 'checkbox',
 		'conditions'           => array(
 			'rsssl_application_passwords_available',
 		),
 		'actions'              => array(
 			'fix'       => 'rsssl_maybe_allow_application_passwords',
-//			'ignore'    => 'disable_checkbox',
 		),
 	),
 
@@ -217,26 +201,34 @@ $rsssl_integrations_list = apply_filters( 'rsssl_integrations', array(
 		'impact'               => 'high',
 		'risk'                 => 'high',
 		'learning_mode'        => false,
-		'option_id'            => 'rename_db_prefix',
+		'option_id'            => 'rsssl_rename_db_prefix',
 		'type'                 => 'checkbox',
 		'conditions'           => array(
-//			'rsssl_application_passwords_available',
+			'rsssl_is_default_wp_prefix',
 		),
 		'actions'              => array(
 			'fix'       => 'rsssl_maybe_rename_db_prefix',
-//			'ignore'    => 'disable_checkbox',
+		),
+	),
+    'rename-admin-user' => array(
+		'constant_or_function' => 'rsssl_rename_admin_user',
+		'label'                => 'Rename admin user',
+		'folder'               => 'wordpress',
+		'impact'               => 'high',
+		'risk'                 => 'high',
+		'learning_mode'        => false,
+		'option_id'            => 'rsssl_rename_admin_user',
+		'type'                 => 'checkbox',
+		'conditions'           => array(
+			'rsssl_has_admin_user',
+		),
+		'actions'              => array(
+			'fix'       => 'rsssl_maybe_rename_db_prefix',
 		),
 	),
 ) );
 
-
-//require_once( 'fields.php' );
-
 foreach ( $rsssl_integrations_list as $plugin => $details ) {
-
-//    if ( ! isset( $details['early_load'] ) ) {
-//		continue;
-//	}
 
 	if ( ! file_exists( rsssl_path . 'security/' . $details['folder'] . "/" . $plugin . '.php' )
 	) {

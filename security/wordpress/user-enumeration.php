@@ -25,13 +25,14 @@ function check_user_enumeration() {
 	}
 }
 
-add_action('do_feed', 'wpb_disable_feed', 1);
-add_action('do_feed_rdf', 'wpb_disable_feed', 1);
-add_action('do_feed_rss', 'wpb_disable_feed', 1);
-add_action('do_feed_rss2', 'wpb_disable_feed', 1);
-add_action('do_feed_atom', 'wpb_disable_feed', 1);
-add_action('do_feed_rss2_comments', 'wpb_disable_feed', 1);
-add_action('do_feed_atom_comments', 'wpb_disable_feed', 1);
+// Rss actions
+//add_action('do_feed', 'wpb_disable_feed', 1);
+//add_action('do_feed_rdf', 'wpb_disable_feed', 1);
+//add_action('do_feed_rss', 'wpb_disable_feed', 1);
+//add_action('do_feed_rss2', 'wpb_disable_feed', 1);
+//add_action('do_feed_atom', 'wpb_disable_feed', 1);
+//add_action('do_feed_rss2_comments', 'wpb_disable_feed', 1);
+//add_action('do_feed_atom_comments', 'wpb_disable_feed', 1);
 
 //PREVENT WP JSON API User Enumeration
 add_filter( 'rest_endpoints', function( $endpoints ){
