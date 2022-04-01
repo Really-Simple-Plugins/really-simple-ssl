@@ -114,7 +114,7 @@ function rsssl_fields(){
 			'id'          => 'anyone_can_register',
 			'menu_id'     => 'hardening',
 			'type'        => 'checkbox',
-			'label'       => __( "Disable \"anyone can register\"", 'really-simple-ssl' ),
+			'label'       => __( "Enable \"anyone can register\"", 'really-simple-ssl' ),
 			'disabled'    => true,
 			'default'     => false,
 		],

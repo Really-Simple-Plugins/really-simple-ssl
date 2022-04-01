@@ -42,7 +42,7 @@ $rsssl_integrations_list = apply_filters( 'rsssl_integrations', array(
 	        'rsssl_user_registration_allowed',
         ),
         'actions'              => array(
-	        'fix'       => 'rsssl_maybe_disable_user_registration',
+	        'fix'       => 'rsssl_disable_user_registration',
         ),
     ),
 

@@ -19,7 +19,7 @@ function rsssl_sync_wordpress_settings() {
 
         $mismatches = array();
 
-        if ( get_option('users_can_register') !== rsssl_get_option('rsssl_anyone_can_register') ) {
+        if ( get_option('users_can_register') !== rsssl_get_option('anyone_can_register') ) {
             rsssl_update_option('anyone_can_register', get_option('users_can_register'));
             $mismatches[] = 'rsssl_anyone_can_register';
         }

@@ -1,5 +1,5 @@
 <?php
-defined( 'ABSPATH' ) or die( "you do not have access to this page!" );
+defined( 'ABSPATH' ) or die( "you do not have access to this page!");
 
 // Add notice in backend
 if ( is_admin() ) {
@@ -169,9 +169,9 @@ function rsssl_rename_db_prefix() {
  */
 function rsssl_is_default_wp_prefix() {
 
-    global $wpdb;
+	global $wpdb;
 
-    if ( $wpdb->prefix === 'wp_') {
+	if ( $wpdb->prefix === 'wp_') {
         return true;
     }
 

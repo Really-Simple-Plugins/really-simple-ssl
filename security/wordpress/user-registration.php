@@ -23,7 +23,7 @@ function user_registration_notice( $notices ) {
 }
 
 /**
- * @return bool|void
+ * @return bool
  *
  * Check if user registration is allowed
  */
@@ -52,6 +52,6 @@ function rsssl_user_registration_notice()
  * @return void
  * Disable or enable user registration
  */
-function rsssl_maybe_disable_user_registration() {
-	update_option('users_can_register', false );
+function rsssl_disable_user_registration() {
+	update_option('users_can_register', 0 );
 }
