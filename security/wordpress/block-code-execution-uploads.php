@@ -3,7 +3,7 @@ defined( 'ABSPATH' ) or die( "you do not have access to this page!" );
 
 // Add notice in backend
 if ( is_admin() ) {
-    add_filter('rsssl_notices', 'code_execution_uploads', 50, 3);
+    add_filter('rsssl_notices', 'code_execution_uploads_notice', 50, 3);
 }
 
 /**
@@ -11,9 +11,9 @@ if ( is_admin() ) {
  * @return mixed
  * Notice function
  */
-function code_execution_uploads( $notices ) {
+function code_execution_uploads_notice( $notices ) {
     $notices['code-execution-uploads'] = array(
-        'callback' => 'rsssl_code_execution_uploads',
+        'callback' => 'rsssl_code_execution_uploads_test',
         'score' => 5,
         'output' => array(
             'allowed' => array(
@@ -46,7 +46,7 @@ function code_execution_uploads( $notices ) {
  * @return string
  * Test if code execution is allowed in /uploads folder
  */
-function rsssl_code_execution_uploads()
+function rsssl_code_execution_uploads_test()
 {
 
     $return = '';
@@ -132,3 +132,7 @@ function rsssl_insert_disable_code_execution_rules( $upload_dir )
 
     file_put_contents($upload_dir['basedir'] . '/' . '.htaccess', $rules);
 }
+
+//function code_execution_uploads() {
+//
+//}

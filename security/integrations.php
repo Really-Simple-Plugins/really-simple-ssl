@@ -36,7 +36,7 @@ $rsssl_integrations_list = apply_filters( 'rsssl_integrations', array(
         'impact'               => 'medium',
         'risk'                 => 'medium',
         'learning_mode'        => true,
-        'option_id'            => 'rsssl_anyone_can_register',
+        'option_id'            => 'anyone_can_register',
         'type'                 => 'checkbox',
         'conditions'           => array(
 	        'rsssl_user_registration_allowed',
@@ -53,7 +53,7 @@ $rsssl_integrations_list = apply_filters( 'rsssl_integrations', array(
 		'impact'               => 'medium',
 		'risk'                 => 'low',
 		'learning_mode'        => false,
-		'option_id'            => 'rsssl_file_editing',
+		'option_id'            => 'file_editing',
 		'type'                 => 'checkbox',
 		'conditions'           => array(
 			'rsssl_file_editing_allowed',
@@ -70,7 +70,7 @@ $rsssl_integrations_list = apply_filters( 'rsssl_integrations', array(
 		'impact'               => 'low',
 		'risk'                 => 'low',
 		'learning_mode'        => false,
-		'option_id'            => 'rsssl_hide_wp_version',
+		'option_id'            => 'hide_wp_version',
 		'type'                 => 'checkbox',
 		'conditions'           => array(
 
@@ -103,7 +103,7 @@ $rsssl_integrations_list = apply_filters( 'rsssl_integrations', array(
         'impact'               => 'medium',
         'risk'                 => 'low',
         'learning_mode'        => false,
-        'option_id'            => 'rsssl_code_execution_uploads',
+        'option_id'            => 'code_execution_uploads',
         'type'                 => 'checkbox',
 //        'conditions'           => array(
 //
@@ -119,7 +119,7 @@ $rsssl_integrations_list = apply_filters( 'rsssl_integrations', array(
         'impact'               => 'low',
         'risk'                 => 'high',
         'learning_mode'        => false,
-        'option_id'            => 'rsssl_login_feedback',
+        'option_id'            => 'login_feedback',
         'type'                 => 'checkbox',
 //        'conditions'           => array(
 //
@@ -151,7 +151,7 @@ $rsssl_integrations_list = apply_filters( 'rsssl_integrations', array(
         'impact'               => 'medium',
         'risk'                 => 'medium',
         'learning_mode'        => false,
-        'option_id'            => 'rsssl_debug_log_modified',
+        'option_id'            => 'debug_log_modified',
         'type'                 => 'checkbox',
         'conditions'           => array(
             'rsssl_is_default_debug_log_location',
@@ -184,7 +184,7 @@ $rsssl_integrations_list = apply_filters( 'rsssl_integrations', array(
 		'impact'               => 'low',
 		'risk'                 => 'high',
 		'learning_mode'        => false,
-		'option_id'            => 'rsssl_application_passwords',
+		'option_id'            => 'application_passwords',
 		'type'                 => 'checkbox',
 		'conditions'           => array(
 			'rsssl_application_passwords_available',
@@ -201,7 +201,7 @@ $rsssl_integrations_list = apply_filters( 'rsssl_integrations', array(
 		'impact'               => 'high',
 		'risk'                 => 'high',
 		'learning_mode'        => false,
-		'option_id'            => 'rsssl_rename_db_prefix',
+		'option_id'            => 'rename_db_prefix',
 		'type'                 => 'checkbox',
 		'conditions'           => array(
 			'rsssl_is_default_wp_prefix',
@@ -217,7 +217,7 @@ $rsssl_integrations_list = apply_filters( 'rsssl_integrations', array(
 		'impact'               => 'high',
 		'risk'                 => 'high',
 		'learning_mode'        => false,
-		'option_id'            => 'rsssl_rename_admin_user',
+		'option_id'            => 'rename_admin_user',
 		'type'                 => 'checkbox',
 		'conditions'           => array(
 			'rsssl_has_admin_user',
@@ -273,7 +273,7 @@ foreach ( $rsssl_integrations_list as $plugin => $details ) {
 	// Apply fix on high risk, low impact, OR when option has been enabled
     if (
 		( $risk === 'high' && $impact === 'low' )
-         || ( isset($details['option_id']) && rsssl_get_option($details['option_id'] ) === 1 )
+         || ( isset( $details['option_id']) && rsssl_get_option($details['option_id'] ) === '1' )
     ) {
         $fix = $details['actions']['fix'];
 	    rsssl_validate_function( $fix );
