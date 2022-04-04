@@ -4,5 +4,10 @@
     padding: 20px;
     margin: 20px;
     background-color: #fff;
+    .rsssl-menu-item {
+      .rsssl-submenu-item {
+        margin-left:20px;
+      }
+    }
   }
 }

@@ -4,6 +4,9 @@
   margin: 20px;
   background-color: #fff;
 }
+#rsssl-container .rsssl-wizard-menu .rsssl-menu-item .rsssl-submenu-item {
+  margin-left: 20px;
+}
 
 #rsssl-container {
   display: flex;
@@ -70,6 +73,10 @@
   background: none;
   border: none;
   flex: auto 1;
+}
+#rsssl-container .rsssl-wizard-settings .rsssl-wizard__main .components-panel .rsssl-buttons-row {
+  padding: 10px;
+  float: right;
 }
 #rsssl-container .rsssl-wizard-settings .rsssl-wizard__main .components-panel__body-title {
   display: none;

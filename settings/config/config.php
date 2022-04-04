@@ -1,38 +1,43 @@
 <?php
 defined('ABSPATH') or die();
 
-function rsssl_menu( $group_id = 'group_general' ){
+function rsssl_menu( $group_id = 'settings' ){
 	$menu_items = [
 			[
-				"id"    => "group_general",
-				"title" => __( "General settings", 'really-simple-ssl' ),
-				"is_wizard" => true,
+				"id"    => "settings",
+				"title" => __( "Settings", 'really-simple-ssl' ),
+				"is_wizard" => false,
 				'menu_items' => [
 					[
-						'id' => 'mixed_content',
-						'title' => __('Mixed content', 'really-simple-ssl'),
+						'id' => 'general',
+						'title' => __('General', 'really-simple-ssl'),
+						'intro' => __("An introduction on some cool stuff", "really-simple-ssl"),
 						'step' => 1,
 					],
 					[
-						'id' => 'headers',
-						'title' => __('Headers', 'really-simple-ssl'),
+						'id' => 'mixed_content_scan',
+						'title' => __('Mixed Content Scan', 'really-simple-ssl'),
 						'menu_items' => [
 							[
-								'id' => 'mixed_content2',
-								'title' => __('Mixed content 2', 'really-simple-ssl'),
+								'id' => 'recommended_security_headers',
+								'title' => __('Sub mixed content 1', 'really-simple-ssl'),
 							],
 							[
-								'id' => 'headers',
-								'title' => __('Headers', 'really-simple-ssl'),
+								'id' => 'recommended_security_headers',
+								'title' => __('Sub mixed content 2', 'really-simple-ssl'),
 							],
 						],
 						'step' => 1,
-
+					],
+					[
+						'id' => 'recommended_security_headers',
+						'title' => __('Recommended Security Headers', 'really-simple-ssl'),
+						'step' => 1,
 					],
 				],
 			],
 			[
-				"id"    => "group_letsencrypt",
+				"id"    => "letsencrypt",
 				"title" => __( "lets encrypt menu", 'really-simple-ssl' ),
 				'menu_items' => [
 					[
@@ -60,16 +65,28 @@ function rsssl_fields(){
 	$fields = [
 		[
 			'id'          => 'mixed_content_fixer',
-			'menu_id'     => 'mixed_content',
+			'menu_id'     => 'general',
+			'group_id'    => 'mixed_content',
 			'type'        => 'checkbox',
-			'label'       => __( "Field name 1", 'really-simple-ssl' ),
-			'help'     => __( 'A help text', 'really-simple-ssl' ),
+			'label'       => __( "Mixed content fixer", 'really-simple-ssl' ),
+			'help'     => __( 'A help text about the mixed content fixer ', 'really-simple-ssl' ),
+			'disabled'    => true,
+			'default'     => false,
+		],
+		[
+			'id'          => 'wp_redirect',
+			'menu_id'     => 'general',
+			'group_id'    => 'mixed_content',
+			'type'        => 'checkbox',
+			'label'       => __( "WP Redirect", 'really-simple-ssl' ),
+			'help'     => __( 'A help text about the wp redirect', 'really-simple-ssl' ),
 			'disabled'    => true,
 			'default'     => false,
 		],
 		[
 			'id'          => 'mixed_content_fixer_2',
-			'menu_id'     => 'mixed_content',
+			'menu_id'     => 'recommended_security_headers',
+			'group_id'    => 'mixed_content',
 			'type'        => 'checkbox',
 			'label'       => __( "Field name 2", 'really-simple-ssl' ),
 			'comment'     => __( 'A comment', 'really-simple-ssl' ),
@@ -78,7 +95,17 @@ function rsssl_fields(){
 		],
 		[
 			'id'          => 'mixed_content_fixer_3',
-			'menu_id'     => 'headers',
+			'menu_id'     => 'recommended_security_headers',
+			'group_id'    => 'mixed_content_2',
+			'type'        => 'checkbox',
+			'label'       => __( "Field name 3, group 2", 'really-simple-ssl' ),
+			'comment'     => __( 'A comment', 'really-simple-ssl' ),
+			'disabled'    => true,
+			'default'     => false,
+		],
+		[
+			'id'          => 'mixed_content_fixer_3',
+			'menu_id'     => 'recommended_security_headers',
 			'type'        => 'checkbox',
 			'label'       => __( "Field name 3", 'really-simple-ssl' ),
 			'comment'     => __( 'A comment', 'really-simple-ssl' ),
@@ -87,7 +114,7 @@ function rsssl_fields(){
 		],
 		[
 			'id'          => 'mixed_content_fixer_4',
-			'menu_id'     => 'headers',
+			'menu_id'     => 'recommended_security_headers',
 			'type'        => 'checkbox',
 			'label'       => __( "Field name 4", 'really-simple-ssl' ),
 			'comment'     => __( 'A comment', 'really-simple-ssl' ),

@@ -250,7 +250,7 @@ function rsssl_rest_api_fields_get(  ){
 	}
 	$output = array();
 	$fields = rsssl_fields();
-	$menu_items = rsssl_menu('group_general');
+	$menu_items = rsssl_menu('settings');
 	foreach ( $fields as $index => $field ) {
 		$fields[$index]['value'] = rsssl_get_option($field['id']);
 	}

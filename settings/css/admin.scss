@@ -15,6 +15,10 @@
         background: none;
         border: none;
         flex: auto 1;
+        .rsssl-buttons-row {
+          padding:10px;
+          float:right;
+        }
       }
 
       .components-panel__body-title {

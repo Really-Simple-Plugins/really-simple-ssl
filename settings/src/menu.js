@@ -27,9 +27,22 @@ class MenuItem extends Component {
             menuItem,
             isAPILoaded,
         } = this.state;
+
+          let menuIsSelected = this.props.selectedMenuItem===this.props.menuItem;
+        if (this.props.menuItem.menu_items) {
+            for (const item of this.props.menuItem.menu_items){
+                if (item === this.props.selectedMenuItem ){
+                    menuIsSelected=true;
+                }
+            }
+        }
+
         return (
-            <div>
+            <div className="rsssl-menu-item">
                 <a href="#" onClick={ () => this.handleClick() }>{this.props.menuItem.title}</a>
+                <div className="rsssl-submenu-item">
+                    {this.props.menuItem.menu_items && menuIsSelected && this.props.menuItem.menu_items.map((menuItem, i) => <MenuItem key={i} menuItem={menuItem} selectMenu={this.props.selectMenu} selectedMenuItem={this.props.selectedMenuItem}/>)}
+                </div>
             </div>
         )
     }
@@ -59,9 +72,10 @@ class Menu extends Component {
                 <Placeholder></Placeholder>
             );
         }
+
         return (
             <div className="rsssl-wizard-menu">
-                {menuItems.map((menuItem, i) => <MenuItem key={i} isAPILoaded={isAPILoaded} menuItem={menuItem} selectMenu={this.props.selectMenu} />)}
+                {menuItems.map((menuItem, i) => <MenuItem key={i} isAPILoaded={isAPILoaded} menuItem={menuItem} selectMenu={this.props.selectMenu} selectedMenuItem={this.props.selectedMenuItem}/>)}
             </div>
         )
     }

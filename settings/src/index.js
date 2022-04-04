@@ -19,7 +19,9 @@ import Field from './fields';
 import Menu from './Menu';
 import GridBlock from './GridBlock';
 
-
+/**
+ * Render a help notice in the sidebar
+ */
 class Help extends Component {
 	render(){
 		let field = this.props.field;
@@ -37,7 +39,43 @@ class Help extends Component {
 	}
 }
 
+/**
+ * Render a grouped block of settings
+ */
+class SettingsGroup extends Component {
+	constructor() {
+		super( ...arguments );
+		this.state = {
+			fields:this.props.fields,
+			isAPILoaded: this.props.isAPILoaded,
+		};
+		this.fields = this.props.fields;
+	}
 
+	render(){
+		const {
+			fields,
+			isAPILoaded,
+		} = this.state;
+		let selectedFields = [];
+		//get all fields with group_id this.props.group_id
+		for (const selectedField of this.props.fields){
+			if (selectedField.group_id === this.props.group ){
+				selectedFields.push(selectedField);
+			}
+		}
+		return (
+			<div className="rsssl-grouped-fields">
+				{selectedFields.map((field, i) => <Field key={i} index={i} saveChangedFields={this.props.saveChangedFields} field={field} fields={selectedFields}/>)}
+			</div>
+		)
+	}
+}
+
+/**
+ * Renders the selected settings
+ *
+ */
 class Settings extends Component {
 	constructor() {
 		super( ...arguments );
@@ -62,21 +100,26 @@ class Settings extends Component {
 			);
 		}
 		let selectedFields = fields.filter(field => field.menu_id === selectedMenuItem.id);
+		let groups = [];
+		for (const selectedField of selectedFields){
+			if (!in_array(selectedField.group_id, groups)){
+				groups.push(selectedField.group_id);
+			}
+		}
+		console.log(selectedMenuItem);
 		return (
 			<div className="rsssl-wizard-settings">
 				<div className="rsssl-wizard__main">
 					<Panel>
-						{selectedFields.map((field, i) => <Field key={i} index={i} saveChangedFields={this.props.saveChangedFields} field={field} fields={selectedFields}/>)}
-						<PanelBody
-							icon="admin-plugins"
-						>
+						{selectedMenuItem.intro && <PanelBody>{selectedMenuItem.intro}</PanelBody>}
+						{groups.map((group, i) => <SettingsGroup key={i} index={i} saveChangedFields={this.props.saveChangedFields} group={group} fields={selectedFields}/>)}
+						<div className="rsssl-buttons-row">
 							<Button
 								isPrimary
-								onClick={ this.props.save }
-							>
+								onClick={ this.props.save }>
 								{ __( 'Save', 'really-simple-ssl' ) }
 							</Button>
-						</PanelBody>
+						</div>
 					</Panel>
 				</div>
 				<div className="rsssl-wizard__help">
@@ -87,6 +130,10 @@ class Settings extends Component {
 	}
 }
 
+/**
+ * Renders the settings page with Menu and currently selected settings
+ *
+ */
 class SettingsPage extends Component {
     constructor() {
         super( ...arguments );
@@ -209,7 +256,7 @@ class SettingsPage extends Component {
 
         return (
             <Fragment>
-				<Menu isAPILoaded={isAPILoaded} menuItems={this.menuItems} menu={this.menu} selectMenu={this.selectMenu}/>
+				<Menu isAPILoaded={isAPILoaded} menuItems={this.menuItems} menu={this.menu} selectMenu={this.selectMenu} selectedMenuItem={selectedMenuItem}/>
 				<Settings isAPILoaded={isAPILoaded} fields={this.fields} saveChangedFields={this.saveChangedFields} menu={menu} save={this.save} selectedMenuItem={selectedMenuItem} selectedStep={selectedStep}/>
 				<div className="rsssl-wizard__notices">
 					<Notices/>
@@ -226,7 +273,6 @@ class DashboardPage extends Component {
 
 	render() {
 		let blocks = rsssl_settings.blocks;
-
 		return (
 			<div className="rsssl-grid">
 				{blocks.map((block, i) => <GridBlock key={i} block={block} isApiLoaded={this.props.isAPILoaded} fields={this.props.fields}/>)}
@@ -331,6 +377,10 @@ class Page extends Component {
 		);
 	}
 }
+
+/**
+ * Initialize the whole thing
+ */
 
 document.addEventListener( 'DOMContentLoaded', () => {
 	const container = document.getElementById( 'really-simple-ssl' );
