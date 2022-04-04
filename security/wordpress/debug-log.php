@@ -99,13 +99,13 @@ function rsssl_change_debug_log_location() {
 	$regex = "/(define)(.*WP_DEBUG_LOG.*)(?=;)/m";
 	preg_match($regex, $wpconfig, $matches);
 
-    if ( ( strlen( $wpconfig ) !=0 ) && is_writable( $wpconfig_path ) ) {
+    if ( ( strlen( $wpconfig ) !=0 ) && is_writable( $wpconfig_path ) && rsssl_contains_debug_log_declaration() ) {
 
 	    $random_string = rsssl_generate_random_string( 10 );
-		$new_location = 'wp-content/debug_' . $random_string . '/debug.log';
+		$new_location = ABSPATH . '/wp-content/debug_' . $random_string;
 		mkdir($new_location);
-	    $new = "define( 'WP_DEBUG_LOG', '$new_location' )";
-	    $wpconfig = str_replace( $matches[0], $new, $wpconfig );
+	    $new = "define( 'WP_DEBUG_LOG', '$new_location' . '/debug.log' )";
+	    $wpconfig = str_replace( $matches, $new, $wpconfig );
 	    file_put_contents( $wpconfig_path, $wpconfig );
 
 
@@ -126,8 +126,6 @@ function rsssl_is_default_debug_log_location() {
 
     return false;
 }
-
-
 
 add_action('admin_init', 'rsssl_change_debug_log_location');
 

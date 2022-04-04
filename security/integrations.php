@@ -87,6 +87,7 @@ $rsssl_integrations_list = apply_filters( 'rsssl_integrations', array(
 		'impact'               => 'low',
 		'risk'                 => 'medium',
 		'learning_mode'        => true,
+		'option_id'            => 'user_enumeration',
 		'type'                 => 'checkbox',
 //		'conditions'           => array(
 //

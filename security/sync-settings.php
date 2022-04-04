@@ -24,10 +24,10 @@ function rsssl_sync_wordpress_settings() {
             $mismatches[] = 'rsssl_anyone_can_register';
         }
 
-        if ( DEFINED('WP_DEBUG') && rsssl_get_option('rsssl_debug_log') !== 1) {
+        if ( DEFINED('WP_DEBUG') && rsssl_get_option('change_debug_log_location') !== 1) {
             rsssl_update_option('rsssl_debug_log_modified', true);
             $mismatches[] = 'rsssl_debug_log_modified';
-        } elseif ( ! DEFINED('WP_DEBUG') && rsssl_get_option('rsssl_debug_log' == 1) ) {
+        } elseif ( ! DEFINED('WP_DEBUG') && rsssl_get_option('change_debug_log_location' == 1) ) {
             rsssl_update_option('rsssl_debug_log_modified', false);
             $mismatches[] = 'rsssl_debug_log_modified';
         }
@@ -75,7 +75,7 @@ function rsssl_show_notices_for_mismatches() {
             'score' => 5,
             'output' => array(
                 'allowed' => array(
-                    'msg' => __("Debugging value has been changeed but not by Really Simple SSL.", "really-simple-ssl"),
+                    'msg' => __("Debugging value has been changed but not by Really Simple SSL.", "really-simple-ssl"),
                     'icon' => 'open',
                     'dismissible' => true,
                 ),
@@ -89,7 +89,7 @@ function rsssl_show_notices_for_mismatches() {
             'score' => 5,
             'output' => array(
                 'allowed' => array(
-                    'msg' => __("File editing has been changeed but not by Really Simple SSL.", "really-simple-ssl"),
+                    'msg' => __("File editing has been changed but not by Really Simple SSL.", "really-simple-ssl"),
                     'icon' => 'open',
                     'dismissible' => true,
                 ),

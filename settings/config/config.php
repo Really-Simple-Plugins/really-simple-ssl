@@ -166,6 +166,30 @@ function rsssl_fields(){
 			'disabled'    => true,
 			'default'     => false,
 		],
+        [
+			'id'          => 'user_enumeration',
+			'menu_id'     => 'hardening',
+			'type'        => 'checkbox',
+			'label'       => __( "Disable user enumeration", 'really-simple-ssl' ),
+			'disabled'    => true,
+			'default'     => false,
+		],
+        [
+			'id'          => 'disable_rss_feeds',
+			'menu_id'     => 'hardening',
+			'type'        => 'checkbox',
+			'label'       => __( "Disable RSS feeds (improve disable user enumeration)", 'really-simple-ssl' ),
+			'disabled'    => true,
+			'default'     => false,
+		],
+        [
+			'id'          => 'change_debug_log_location',
+			'menu_id'     => 'hardening',
+			'type'        => 'checkbox',
+			'label'       => __( "Change debug.log location", 'really-simple-ssl' ),
+			'disabled'    => true,
+			'default'     => false,
+		],
 	];
 	return apply_filters('rsssl_fields', $fields);
 }
