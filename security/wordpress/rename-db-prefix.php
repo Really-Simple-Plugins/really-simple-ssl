@@ -158,10 +158,6 @@ function rsssl_verify_database_copy($new_prefix) {
     return false;
 }
 
-function rsssl_rename_db_prefix() {
-
-}
-
 /**
  * @return bool
  *
