@@ -102,7 +102,7 @@ function rsssl_change_debug_log_location() {
     if ( ( strlen( $wpconfig ) !=0 ) && is_writable( $wpconfig_path ) ) {
 
 	    $random_string = rsssl_generate_random_string( 10 );
-		$new_location = 'wp-content/debug_' . $random_string;
+		$new_location = 'wp-content/debug_' . $random_string . '/debug.log';
 		mkdir($new_location);
 	    $new = "define( 'WP_DEBUG_LOG', '$new_location' )";
 	    $wpconfig = str_replace( $matches[0], $new, $wpconfig );
