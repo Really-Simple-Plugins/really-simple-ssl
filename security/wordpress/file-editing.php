@@ -53,8 +53,6 @@ function rsssl_disable_file_editing() {
 
 	if ( ! defined('DISALLOW_FILE_EDIT' ) ) {
 
-        error_log("Disallow file edit");
-
 		define('DISALLOW_FILE_EDIT', true );
 
 	}

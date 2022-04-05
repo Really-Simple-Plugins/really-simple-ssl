@@ -156,6 +156,7 @@ $rsssl_integrations_list = apply_filters( 'rsssl_integrations', array(
         'type'                 => 'checkbox',
         'conditions'           => array(
             'rsssl_is_default_debug_log_location',
+	        'rsssl_is_debug_log_enabled'
         ),
         'actions'              => array(
 			'fix'       => 'rsssl_change_debug_log_location',
@@ -259,7 +260,7 @@ foreach ( $rsssl_integrations_list as $plugin => $details ) {
 	}
 
 	if ( isset( $details['option_id'] ) && rsssl_get_option( $details['option_id'] ) !== 1 ) {
-		error_log("$plugin skipped, option not enabled");
+//		error_log("$plugin skipped, option not enabled");
 	} elseif ( file_exists( $file ) && $skip !== true ) {
 		require_once( $file );
 	} elseif ( $skip !== false ) {
