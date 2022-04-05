@@ -57,6 +57,7 @@ class SettingsGroup extends Component {
 			fields,
 			isAPILoaded,
 		} = this.state;
+		let selectedMenuItem = this.props.selectedMenuItem;
 		let selectedFields = [];
 		//get all fields with group_id this.props.group_id
 		for (const selectedField of this.props.fields){
@@ -66,6 +67,8 @@ class SettingsGroup extends Component {
 		}
 		return (
 			<div className="rsssl-grouped-fields">
+				{selectedMenuItem.title && <PanelBody><h1 className="rsssl-settings-block-title">{selectedMenuItem.title}</h1></PanelBody>}
+				{selectedMenuItem.intro && <PanelBody><div className="rsssl-settings-block-intro">{selectedMenuItem.intro}</div></PanelBody>}
 				{selectedFields.map((field, i) => <Field key={i} index={i} saveChangedFields={this.props.saveChangedFields} field={field} fields={selectedFields}/>)}
 			</div>
 		)
@@ -106,13 +109,11 @@ class Settings extends Component {
 				groups.push(selectedField.group_id);
 			}
 		}
-		console.log(selectedMenuItem);
 		return (
 			<div className="rsssl-wizard-settings">
 				<div className="rsssl-wizard__main">
 					<Panel>
-						{selectedMenuItem.intro && <PanelBody>{selectedMenuItem.intro}</PanelBody>}
-						{groups.map((group, i) => <SettingsGroup key={i} index={i} saveChangedFields={this.props.saveChangedFields} group={group} fields={selectedFields}/>)}
+						{groups.map((group, i) => <SettingsGroup key={i} index={i} selectedMenuItem={selectedMenuItem} saveChangedFields={this.props.saveChangedFields} group={group} fields={selectedFields}/>)}
 						<div className="rsssl-buttons-row">
 							<Button
 								isPrimary
@@ -247,7 +248,7 @@ class SettingsPage extends Component {
 		if ( menu.is_wizard ){
 			let length = menuItems.length;
 			let temp = []
-			for(let i = 0; i < length; i++) {
+			for ( let i = 0; i < length; i++ ) {
 				if ( menuItems[i]['step']!=selectedStep ){
 					menuItems.splice(i, 1);
 				}
@@ -366,6 +367,7 @@ class Page extends Component {
 			menu,
 			isAPILoaded,
 		} = this.state;
+
 		return (
 			<div id="rsssl-wrapper">
 				<Header selectedMainMenuItem={selectedMainMenuItem} selectMenu={this.selectMenu}/>

@@ -136,7 +136,7 @@ function rsssl_blocks(){
 			],
 			'content' => ['type'=>'react', 'data' => 'ProgressBlock'],
 			'footer'  => [
-				'html' => '',
+				['type'=>'html', 'data' => ''],
 			],
 			'size'    => 'default',
 			'height'    => 'default',
@@ -151,7 +151,7 @@ function rsssl_blocks(){
 			'content' => [ 'type' => 'test', 'data' => 'ssltest', 'interval'=>1000 ],
 			'footer'  => [
 				'button' => [ 'text' => __("Run test","really-simple-ssl"), 'disabled' => false ],
-				'html' => '',
+				['type'=>'html', 'data' => ''],
 			],
 			'size'    => 'small',
 			'height'    => 'default',
@@ -163,7 +163,7 @@ function rsssl_blocks(){
 			'help'    => __( 'A help text', 'really-simple-ssl' ),
 			'content' => ['type'=>'template', 'data' => 'tips-tricks.php'],
 			'footer'  => [
-				'html' => '<div>Footer html, no button</div>',
+				['type'=>'template', 'data' => 'tips-tricks.php'],
 			],
 			'size'    => 'small',
 			'height'    => 'default',
@@ -175,7 +175,7 @@ function rsssl_blocks(){
 			'help'    => __( 'A help text', 'really-simple-ssl' ),
 			'content' => ['type'=>'html', 'data' => 'tips/tricks html'],
 			'footer'  => [
-				'html' => '<div>Footer html, no button</div>',
+				['type'=>'html', 'data' => ''],
 			],
 			'size'    => 'default',
 			'height'    => 'half',
@@ -187,7 +187,7 @@ function rsssl_blocks(){
 			'help'    => __( 'A help text', 'really-simple-ssl' ),
 			'content' => ['type'=>'template', 'data' => 'other-plugins.php'],
 			'footer'  => [
-				'html' => '<div>Footer html, no button</div>',
+				['type'=>'html', 'data' => ''],
 			],
 			'size'    => 'default',
 			'height'    => 'half',
@@ -199,6 +199,11 @@ function rsssl_blocks(){
 			$template = $block['content']['data'];
 			$blocks[$index]['content']['type'] = 'html';
 			$blocks[$index]['content']['data'] = rsssl_get_template($template);
+		}
+		if ( $block['footer']['type'] === 'template' ) {
+			$template = $block['footer']['data'];
+			$blocks[$index]['footer']['type'] = 'html';
+			$blocks[$index]['footer']['data'] = rsssl_get_template($template);
 		}
 	}
 

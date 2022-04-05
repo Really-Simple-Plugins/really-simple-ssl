@@ -75,6 +75,7 @@ class Menu extends Component {
 
         return (
             <div className="rsssl-wizard-menu">
+                <h1>{this.props.menu.title}</h1>
                 {menuItems.map((menuItem, i) => <MenuItem key={i} isAPILoaded={isAPILoaded} menuItem={menuItem} selectMenu={this.props.selectMenu} selectedMenuItem={this.props.selectedMenuItem}/>)}
             </div>
         )

@@ -27,7 +27,7 @@ if ( ! class_exists( 'rsssl_front_end' ) ) {
         }
 
         /**
-         * Javascript redirect, when ssl is true.
+         * PHP redirect, when ssl is true.
          *
          * @since  2.2
          *

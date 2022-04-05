@@ -2895,7 +2895,7 @@ var GridBlock = /*#__PURE__*/function (_Component2) {
         text: blockData.footer.button.text,
         onClick: this.getBlockData,
         disabled: this.testDisabled
-      }), blockData.footer.hasOwnProperty('html') && Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_5__["createElement"])("span", {
+      }), blockData.footer.hasOwnProperty('type') && blockData.footer.hasOwnProperty('type') && Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_5__["createElement"])("span", {
         className: "rsssl-footer-html",
         dangerouslySetInnerHTML: {
           __html: this.footerHtml
@@ -3072,7 +3072,7 @@ var Menu = /*#__PURE__*/function (_Component2) {
 
       return Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_5__["createElement"])("div", {
         className: "rsssl-wizard-menu"
-      }, menuItems.map(function (menuItem, i) {
+      }, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_5__["createElement"])("h1", null, this.props.menu.title), menuItems.map(function (menuItem, i) {
         return Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_5__["createElement"])(MenuItem, {
           key: i,
           isAPILoaded: isAPILoaded,
@@ -3700,6 +3700,7 @@ var SettingsGroup = /*#__PURE__*/function (_Component2) {
       var _this$state = this.state,
           fields = _this$state.fields,
           isAPILoaded = _this$state.isAPILoaded;
+      var selectedMenuItem = this.props.selectedMenuItem;
       var selectedFields = []; //get all fields with group_id this.props.group_id
 
       var _iterator = _createForOfIteratorHelper(this.props.fields),
@@ -3721,7 +3722,11 @@ var SettingsGroup = /*#__PURE__*/function (_Component2) {
 
       return Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_5__["createElement"])("div", {
         className: "rsssl-grouped-fields"
-      }, selectedFields.map(function (field, i) {
+      }, selectedMenuItem.title && Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_5__["createElement"])(_wordpress_components__WEBPACK_IMPORTED_MODULE_8__["PanelBody"], null, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_5__["createElement"])("h1", {
+        className: "rsssl-settings-block-title"
+      }, selectedMenuItem.title)), selectedMenuItem.intro && Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_5__["createElement"])(_wordpress_components__WEBPACK_IMPORTED_MODULE_8__["PanelBody"], null, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_5__["createElement"])("div", {
+        className: "rsssl-settings-block-intro"
+      }, selectedMenuItem.intro)), selectedFields.map(function (field, i) {
         return Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_5__["createElement"])(_fields__WEBPACK_IMPORTED_MODULE_10__["default"], {
           key: i,
           index: i,
@@ -3798,15 +3803,15 @@ var Settings = /*#__PURE__*/function (_Component3) {
         _iterator2.f();
       }
 
-      console.log(selectedMenuItem);
       return Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_5__["createElement"])("div", {
         className: "rsssl-wizard-settings"
       }, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_5__["createElement"])("div", {
         className: "rsssl-wizard__main"
-      }, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_5__["createElement"])(_wordpress_components__WEBPACK_IMPORTED_MODULE_8__["Panel"], null, selectedMenuItem.intro && Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_5__["createElement"])(_wordpress_components__WEBPACK_IMPORTED_MODULE_8__["PanelBody"], null, selectedMenuItem.intro), groups.map(function (group, i) {
+      }, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_5__["createElement"])(_wordpress_components__WEBPACK_IMPORTED_MODULE_8__["Panel"], null, groups.map(function (group, i) {
         return Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_5__["createElement"])(SettingsGroup, {
           key: i,
           index: i,
+          selectedMenuItem: selectedMenuItem,
           saveChangedFields: _this4.props.saveChangedFields,
           group: group,
           fields: selectedFields
