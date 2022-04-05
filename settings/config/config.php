@@ -151,17 +151,17 @@ function rsssl_blocks(){
 			'content' => [ 'type' => 'test', 'data' => 'ssltest', 'interval'=>1000 ],
 			'footer'  => [
 				'button' => [ 'text' => __("Run test","really-simple-ssl"), 'disabled' => false ],
-				'html' => '<div>Footer html</div>',
+				'html' => '',
 			],
 			'size'    => 'small',
 			'height'    => 'default',
 		],
 		[
-			'id'      => 'tasks',
+			'id'      => 'tips_tricks',
 			'header'  => false,
 			'title'   => __( "Tips & Tricks", 'really-simple-ssl' ),
 			'help'    => __( 'A help text', 'really-simple-ssl' ),
-			'content' => ['type'=>'html', 'data' => 'tips/tricks html'],
+			'content' => ['type'=>'template', 'data' => 'tips-tricks.php'],
 			'footer'  => [
 				'html' => '<div>Footer html, no button</div>',
 			],
@@ -185,7 +185,7 @@ function rsssl_blocks(){
 			'header'  => false,
 			'title'   => __( "Other Plugins", 'really-simple-ssl' ),
 			'help'    => __( 'A help text', 'really-simple-ssl' ),
-			'content' => ['type'=>'html', 'data' => 'tips/tricks html'],
+			'content' => ['type'=>'template', 'data' => 'other-plugins.php'],
 			'footer'  => [
 				'html' => '<div>Footer html, no button</div>',
 			],
@@ -193,5 +193,38 @@ function rsssl_blocks(){
 			'height'    => 'half',
 		],
 	];
-	return apply_filters('rsssl_blocks', $blocks);
+	$blocks = apply_filters('rsssl_blocks', $blocks);
+	foreach ($blocks as $index => $block ) {
+		if ( $block['content']['type'] === 'template' ) {
+			$template = $block['content']['data'];
+			$blocks[$index]['content']['type'] = 'html';
+			$blocks[$index]['content']['data'] = rsssl_get_template($template);
+		}
+	}
+
+	return $blocks;
+}
+
+
+/**
+ * Render html based on template
+ *
+ * @param string $template
+ *
+ * @return string
+ */
+
+function rsssl_get_template($template) {
+	if ( !current_user_can('manage_options') ) {
+		return '';
+	}
+	$html='';
+	$file = trailingslashit(rsssl_path) . 'settings/templates/' .$template;
+	if ( file_exists($file)  ) {
+		ob_start();
+		require $file;
+		$html = ob_get_clean();
+	}
+
+	return $html;
 }
