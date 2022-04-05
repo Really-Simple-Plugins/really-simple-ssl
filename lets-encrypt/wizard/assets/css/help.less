@@ -1,0 +1,54 @@
+.rsssl-help-warning-wrap {
+  .rsssl-help-modal {
+    h2 {
+      margin-top: -5px;
+    }
+
+    .rsssl-pointer;
+    position: absolute;
+    z-index: 99;
+
+    &.rsssl-notice {
+      background-color: @brand-primary;
+
+      &:after {
+        border-right: 15px solid @brand-primary;
+        top: calc(50% - 15px);
+      }
+
+      color: black;
+      padding: @green-gap;
+    }
+
+    &.rsssl-success {
+      background-color: white;
+      color: #61ce70;
+      border: none;
+      padding: 0;
+    }
+
+    &.rsssl-warning {
+      &:after {
+        border-right: 15px solid #f8be2e;
+      }
+
+      color: #333333;
+      background-color: #f8be2e;
+      border-color: #f8be2e;
+    }
+
+    margin: 0 0 0 @green-gap;
+    padding: 10px 15px;
+    color: #fff;
+    background-color: @brand-primary;
+    text-align: left;
+
+    &:empty {
+      background-color: #f1f1f1;
+    }
+
+    a {
+      color: #333;
+    }
+  }
+}

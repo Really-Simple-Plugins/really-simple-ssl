@@ -856,9 +856,7 @@ if ( ! class_exists( "rsssl_wizard" ) ) {
 			    $dashboard = 'directadmin';
 			}
 
-            $debug_log_contents = RSSSL()->really_simple_ssl->debug_log;
-            $debug_log_contents = str_replace("\n", '--br--', $debug_log_contents );
-            $debug_log_contents .= 'dashboard '.$dashboard.'--br--';
+            $debug_log_contents = 'dashboard '.$dashboard.'--br--';
             $debug_log_contents .= 'skip dns check '.$skip_dns_check.'--br--';
             $debug_log_contents .= 'skip directory check '.$skip_directory_check.'--br--';
             $debug_log_contents .= 'verification type '.$verification_type.'--br--';
@@ -940,9 +938,6 @@ if ( ! class_exists( "rsssl_wizard" ) ) {
 			// Let's encrypt
 			wp_register_style( 'rsssl-wizard', rsssl_le_url . "wizard/assets/css/wizard$minified.css", false, rsssl_version );
 			wp_enqueue_style( 'rsssl-wizard' );
-			// @todo admin css in wizard.less
-			wp_register_style( 'rsssl-wizard-admin', rsssl_le_url . "wizard/assets/css/admin$minified.css", false, rsssl_version );
-			wp_enqueue_style( 'rsssl-wizard-admin' );
 
 			wp_enqueue_script( 'rsssl-wizard', rsssl_le_url . "wizard/assets/js/wizard$minified.js", array( 'jquery', 'select2' ), rsssl_version.time(), true );
 			wp_localize_script(
