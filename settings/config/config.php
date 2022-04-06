@@ -135,9 +135,7 @@ function rsssl_blocks(){
 				'type' => 'react', 'data' => 'ProgressHeader'
 			],
 			'content' => ['type'=>'react', 'data' => 'ProgressBlock'],
-			'footer'  => [
-				['type'=>'html', 'data' => ''],
-			],
+			'footer'  => ['type'=>'html', 'data' => ''],
 			'size'    => 'default',
 			'height'    => 'default',
 		],
@@ -149,10 +147,7 @@ function rsssl_blocks(){
 			'title'   => __( "SSL Labs", 'really-simple-ssl' ),
 			'help'    => __( 'A help text', 'really-simple-ssl' ),
 			'content' => [ 'type' => 'test', 'data' => 'ssltest', 'interval'=>1000 ],
-			'footer'  => [
-				'button' => [ 'text' => __("Run test","really-simple-ssl"), 'disabled' => false ],
-				['type'=>'html', 'data' => ''],
-			],
+			'footer'  => ['type'=>'html', 'data' => '','button' => [ 'text' => __("Run test","really-simple-ssl"), 'disabled' => false ]],
 			'size'    => 'small',
 			'height'    => 'default',
 		],
@@ -162,9 +157,7 @@ function rsssl_blocks(){
 			'title'   => __( "Tips & Tricks", 'really-simple-ssl' ),
 			'help'    => __( 'A help text', 'really-simple-ssl' ),
 			'content' => ['type'=>'template', 'data' => 'tips-tricks.php'],
-			'footer'  => [
-				['type'=>'template', 'data' => 'tips-tricks.php'],
-			],
+			'footer'  => ['type'=>'template', 'data' => 'tips-tricks.php'],
 			'size'    => 'small',
 			'height'    => 'default',
 		],
@@ -174,9 +167,7 @@ function rsssl_blocks(){
 			'title'   => __( "New: Security features", 'really-simple-ssl' ),
 			'help'    => __( 'A help text', 'really-simple-ssl' ),
 			'content' => ['type'=>'html', 'data' => 'tips/tricks html'],
-			'footer'  => [
-				['type'=>'html', 'data' => ''],
-			],
+			'footer'  => ['type'=>'html', 'data' => ''],
 			'size'    => 'default',
 			'height'    => 'half',
 		],
@@ -186,9 +177,7 @@ function rsssl_blocks(){
 			'title'   => __( "Other Plugins", 'really-simple-ssl' ),
 			'help'    => __( 'A help text', 'really-simple-ssl' ),
 			'content' => ['type'=>'template', 'data' => 'other-plugins.php'],
-			'footer'  => [
-				['type'=>'html', 'data' => ''],
-			],
+			'footer'  => ['type'=>'html', 'data' => ''],
 			'size'    => 'default',
 			'height'    => 'half',
 		],
@@ -200,6 +189,7 @@ function rsssl_blocks(){
 			$blocks[$index]['content']['type'] = 'html';
 			$blocks[$index]['content']['data'] = rsssl_get_template($template);
 		}
+		error_log(print_r($block, true));
 		if ( $block['footer']['type'] === 'template' ) {
 			$template = $block['footer']['data'];
 			$blocks[$index]['footer']['type'] = 'html';
