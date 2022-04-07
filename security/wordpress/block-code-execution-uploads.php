@@ -42,6 +42,22 @@ function code_execution_uploads_notice( $notices ) {
     return $notices;
 }
 
+function rsssl_code_execution_nginx_notice() {
+    $notices['code-execution-uploads'] = array(
+        'callback' => '_true_',
+        'score' => 5,
+        'output' => array(
+            '_true_' => array(
+                'msg' => __("Code execution allowed in uploads folder.", "really-simple-ssl"),
+                'icon' => 'open',
+                'dismissible' => true,
+            ),
+        ),
+    );
+
+    return $notices;
+}
+
 /**
  * @return string
  * Test if code execution is allowed in /uploads folder
@@ -115,6 +131,7 @@ function rsssl_disable_code_execution_uploads()
         }
     }
     if ( rsssl_get_server() === 'nginx') {
+        add_filter('rsssl_notices', 'rsssl_code_execution_nginx_notice');
         //location ~* /your_directory/.*\.php$ {
         //return 503;
         //}
@@ -132,7 +149,3 @@ function rsssl_insert_disable_code_execution_rules( $upload_dir )
 
     file_put_contents($upload_dir['basedir'] . '/' . '.htaccess', $rules);
 }
-
-//function code_execution_uploads() {
-//
-//}

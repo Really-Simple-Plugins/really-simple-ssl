@@ -1,9 +1,11 @@
 <?php
-add_action('admin_init', 'rsssl_sync_wordpress_settings');
-
 if ( is_admin() ) {
     add_filter('rsssl_notices', 'rsssl_show_notices_for_mismatches', 50, 3);
 }
+
+add_action( 'admin_init', 'rsssl_sync_wordpress_settings');
+add_action( 'rsssl_after_saved_fields', 'maybe_update_wordpress_user_registration_option' );
+add_action( 'update_option_users_can_register', 'maybe_update_rsssl_user_registration_option' );
 
 /**
  * @return void
@@ -19,10 +21,10 @@ function rsssl_sync_wordpress_settings() {
 
         $mismatches = array();
 
-        if ( get_option('users_can_register') !== rsssl_get_option('rsssl_anyone_can_register') ) {
-            rsssl_update_option('rsssl_anyone_can_register', get_option('users_can_register'));
-            $mismatches[] = 'rsssl_anyone_can_register';
-        }
+//        if ( get_option('users_can_register') !== rsssl_get_option('rsssl_disable_anyone_can_register') ) {
+//            rsssl_update_option('rsssl_disable_anyone_can_register', get_option('users_can_register'));
+//            $mismatches[] = 'rsssl_disable_anyone_can_register';
+//        }
 
         if ( DEFINED('WP_DEBUG') && rsssl_get_option('rsssl_change_debug_log_location') != '1') {
             rsssl_update_option('rsssl_change_debug_log_location', true);
@@ -55,7 +57,7 @@ function rsssl_show_notices_for_mismatches() {
 
     $mismatches = get_option('rsssl_option_mismatches');
 
-    if ( isset( $mismatches['rsssl_anyone_can_register'] ) ) {
+    if ( isset( $mismatches['rsssl_disable_anyone_can_register'] ) ) {
         $notices['rsssl-anyone-can-register-mismatch'] = array(
             'callback' => '_true_',
             'score' => 5,
@@ -95,5 +97,30 @@ function rsssl_show_notices_for_mismatches() {
                 ),
             ),
         );
+    }
+}
+
+/**
+ * @return void
+ *
+ * Sync users can register option when updated via Really Simple SSL
+ */
+function maybe_update_wordpress_user_registration_option() {
+    if ( get_option('users_can_register') != rsssl_get_option('rsssl_disable_anyone_can_register') ) {
+        update_option('users_can_register', rsssl_get_option('rsssl_disable_anyone_can_register' ) );
+    }
+}
+
+/**
+ * @return void
+ *
+ * Sync user can register option when updated via the WP general settings option
+ */
+function maybe_update_rsssl_user_registration_option()
+{
+    if ( get_option('users_can_register') ) {
+        rsssl_update_option('rsssl_disable_anyone_can_register', false);
+    } else {
+        rsssl_update_option('rsssl_disable_anyone_can_register', true);
     }
 }

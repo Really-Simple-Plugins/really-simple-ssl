@@ -47,11 +47,3 @@ function rsssl_user_registration_notice()
 
     return false;
 }
-
-/**
- * @return void
- * Disable or enable user registration
- */
-function rsssl_disable_user_registration() {
-	update_option('users_can_register', false );
-}

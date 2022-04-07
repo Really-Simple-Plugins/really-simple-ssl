@@ -36,7 +36,7 @@ $rsssl_integrations_list = apply_filters( 'rsssl_integrations', array(
         'impact'               => 'medium',
         'risk'                 => 'medium',
         'learning_mode'        => true,
-        'option_id'            => 'rsssl_anyone_can_register',
+        'option_id'            => 'rsssl_disable_anyone_can_register',
         'type'                 => 'checkbox',
         'conditions'           => array(
 	        'rsssl_user_registration_allowed',

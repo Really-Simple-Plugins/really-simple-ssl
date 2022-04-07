@@ -73,8 +73,6 @@ function rsssl_test_authorization_header() {
 			update_option('rsssl_test_authorization_header_passed', true );
 		}
 	}
-
-//	error_log(print_r($response, true));
 }
 
 add_action('init', 'rsssl_test_authorization_header');

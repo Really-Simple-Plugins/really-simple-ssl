@@ -111,12 +111,12 @@ function rsssl_fields(){
 			'default'     => false,
 		],
         [
-			'id'          => 'rsssl_anyone_can_register',
+			'id'          => 'rsssl_disable_anyone_can_register',
 			'menu_id'     => 'hardening',
 			'type'        => 'checkbox',
-			'label'       => __( "Enable \"anyone can register\"", 'really-simple-ssl' ),
+			'label'       => __( "Disable \"anyone can register\"", 'really-simple-ssl' ),
 			'disabled'    => true,
-			'default'     => false,
+			'default'     => rsssl_is_user_registration_enabled(),
 		],
         [
 			'id'          => 'rsssl_disable_file_editing',
@@ -263,4 +263,12 @@ function rsssl_blocks(){
 		],
 	];
 	return apply_filters('rsssl_blocks', $blocks);
+}
+
+function rsssl_is_user_registration_enabled() {
+    if ( get_option('users_can_register') !== false ) {
+        return true;
+    }
+
+    return false;
 }
