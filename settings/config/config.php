@@ -111,7 +111,7 @@ function rsssl_fields(){
 			'default'     => false,
 		],
         [
-			'id'          => 'anyone_can_register',
+			'id'          => 'rsssl_anyone_can_register',
 			'menu_id'     => 'hardening',
 			'type'        => 'checkbox',
 			'label'       => __( "Enable \"anyone can register\"", 'really-simple-ssl' ),
@@ -119,7 +119,7 @@ function rsssl_fields(){
 			'default'     => false,
 		],
         [
-			'id'          => 'file_editing',
+			'id'          => 'rsssl_disable_file_editing',
 			'menu_id'     => 'hardening',
 			'type'        => 'checkbox',
 			'label'       => __( "Disable file editing", 'really-simple-ssl' ),
@@ -127,7 +127,7 @@ function rsssl_fields(){
 			'default'     => false,
 		],
 		[
-			'id'          => 'code_execution_uploads',
+			'id'          => 'rsssl_block_code_execution_uploads',
 			'menu_id'     => 'hardening',
 			'type'        => 'checkbox',
 			'label'       => __( "Disable code execution in uploads folder", 'really-simple-ssl' ),
@@ -135,7 +135,7 @@ function rsssl_fields(){
 			'default'     => false,
 		],
         [
-			'id'          => 'hide_wp_version',
+			'id'          => 'rsssl_hide_wordpress_version',
 			'menu_id'     => 'hardening',
 			'type'        => 'checkbox',
 			'label'       => __( "Hide WordPress version", 'really-simple-ssl' ),
@@ -143,7 +143,7 @@ function rsssl_fields(){
 			'default'     => false,
 		],
         [
-			'id'          => 'login_feedback',
+			'id'          => 'rsssl_disable_login_feedback',
 			'menu_id'     => 'hardening',
 			'type'        => 'checkbox',
 			'label'       => __( "Disable login feedback", 'really-simple-ssl' ),
@@ -151,7 +151,7 @@ function rsssl_fields(){
 			'default'     => false,
 		],
         [
-			'id'          => 'rename_db_prefix',
+			'id'          => 'rsssl_rename_db_prefix',
 			'menu_id'     => 'hardening',
 			'type'        => 'checkbox',
 			'label'       => __( "Rename your database prefix", 'really-simple-ssl' ),
@@ -159,7 +159,7 @@ function rsssl_fields(){
 			'default'     => false,
 		],
         [
-			'id'          => 'application_passwords',
+			'id'          => 'rsssl_disable_application_passwords',
 			'menu_id'     => 'hardening',
 			'type'        => 'checkbox',
 			'label'       => __( "Disable application passwords", 'really-simple-ssl' ),
@@ -167,7 +167,7 @@ function rsssl_fields(){
 			'default'     => false,
 		],
         [
-			'id'          => 'user_enumeration',
+			'id'          => 'rsssl_disable_user_enumeration',
 			'menu_id'     => 'hardening',
 			'type'        => 'checkbox',
 			'label'       => __( "Disable user enumeration", 'really-simple-ssl' ),
@@ -175,7 +175,7 @@ function rsssl_fields(){
 			'default'     => false,
 		],
         [
-			'id'          => 'disable_rss_feeds',
+			'id'          => 'rsssl_disable_rss_feeds',
 			'menu_id'     => 'hardening',
 			'type'        => 'checkbox',
 			'label'       => __( "Disable RSS feeds (improve disable user enumeration)", 'really-simple-ssl' ),
@@ -183,7 +183,7 @@ function rsssl_fields(){
 			'default'     => false,
 		],
         [
-			'id'          => 'change_debug_log_location',
+			'id'          => 'rsssl_change_debug_log_location',
 			'menu_id'     => 'hardening',
 			'type'        => 'checkbox',
 			'label'       => __( "Change debug.log location", 'really-simple-ssl' ),

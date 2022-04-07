@@ -7,13 +7,18 @@ defined('ABSPATH') or die("you do not have access to this page!");
  * @param string $name
  * @param mixed $default
  *
- * @return mixed
+ * @return bool
  */
 
 function rsssl_get_option( $name, $default=false ) {
 	$name = sanitize_title($name);
 	$options = get_site_option( 'rsssl_options', array() );
-	return isset($options[$name]) ? $options[$name]: sanitize_title($default);
+
+	if ( isset($options[$name] ) && $options[$name] === 1 ) {
+		return true;
+	}
+
+	return false;
 }
 
 /**

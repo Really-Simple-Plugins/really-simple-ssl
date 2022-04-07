@@ -50,12 +50,34 @@ function rsssl_application_passwords_available() {
  * Enable or disable application passwords
  */
 function rsssl_maybe_allow_application_passwords() {
-	if ( rsssl_get_option('application_passwords' ) === 1 ) {
+	if ( rsssl_get_option('rsssl_disable_application_passwords' ) != '1' ) {
 		add_filter( 'wp_is_application_passwords_available', '__return_false' );
 	} else {
 		add_filter( 'wp_is_application_passwords_available', '__return_true' );
 	}
 }
+
+/**
+ * @return void
+ *
+ * Check if REST response contains the 'authorization' header. If so, app passwords have been enabled
+ */
+function rsssl_test_authorization_header() {
+	if ( function_exists('curl_init' ) && ! get_option('rsssl_test_authorization_header_failed') ) {
+		// Fire off a request to the root REST URL to check for the 'authorization' header
+		$response = wp_remote_get( get_rest_url(), array( 'sslverify' => false, 'timeout' => 1 ) );
+
+		if ( isset( $response->errors ) ) {
+			update_option('rsssl_test_authorization_header_failed', true );
+		} else {
+			update_option('rsssl_test_authorization_header_passed', true );
+		}
+	}
+
+//	error_log(print_r($response, true));
+}
+
+add_action('init', 'rsssl_test_authorization_header');
 
 /**
  * @return void

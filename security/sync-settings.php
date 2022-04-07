@@ -19,24 +19,24 @@ function rsssl_sync_wordpress_settings() {
 
         $mismatches = array();
 
-        if ( get_option('users_can_register') !== rsssl_get_option('anyone_can_register') ) {
-            rsssl_update_option('anyone_can_register', get_option('users_can_register'));
+        if ( get_option('users_can_register') !== rsssl_get_option('rsssl_anyone_can_register') ) {
+            rsssl_update_option('rsssl_anyone_can_register', get_option('users_can_register'));
             $mismatches[] = 'rsssl_anyone_can_register';
         }
 
-        if ( DEFINED('WP_DEBUG') && rsssl_get_option('change_debug_log_location') !== 1) {
-            rsssl_update_option('rsssl_debug_log_modified', true);
+        if ( DEFINED('WP_DEBUG') && rsssl_get_option('rsssl_change_debug_log_location') != '1') {
+            rsssl_update_option('rsssl_change_debug_log_location', true);
             $mismatches[] = 'rsssl_debug_log_modified';
-        } elseif ( ! DEFINED('WP_DEBUG') && rsssl_get_option('change_debug_log_location' == 1) ) {
-            rsssl_update_option('rsssl_debug_log_modified', false);
+        } elseif ( ! DEFINED('WP_DEBUG') && rsssl_get_option('rsssl_change_debug_log_location' == '1') ) {
+            rsssl_update_option('rsssl_change_debug_log_location', false);
             $mismatches[] = 'rsssl_debug_log_modified';
         }
 
-        if ( DEFINED('DISALLOW_FILE_EDIT') && rsssl_get_option('rsssl_file_editing') !== 1) {
-            rsssl_update_option('rsssl_file_editing', true);
+        if ( DEFINED('DISALLOW_FILE_EDIT') && rsssl_get_option('rsssl_disable_file_editing') != '1') {
+            rsssl_update_option('rsssl_disable_file_editing', true);
             $mismatches[] = 'rsssl_file_editing';
-        } elseif ( ! DEFINED('DISALLOW_FILE_EDIT') && rsssl_get_option('rsssl_file_editing') === 1) {
-            rsssl_update_option('rsssl_file_editing', false);
+        } elseif ( ! DEFINED('DISALLOW_FILE_EDIT') && rsssl_get_option('rsssl_disable_file_editing') == '1') {
+            rsssl_update_option('rsssl_disable_file_editing', false);
             $mismatches[] = 'rsssl_file_editing';
         }
 

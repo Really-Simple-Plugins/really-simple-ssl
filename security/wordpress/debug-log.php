@@ -1,9 +1,13 @@
 <?php
 defined( 'ABSPATH' ) or die( "you do not have access to this page!" );
 
-function hide_debug_log_notice( $notices ) {
+if ( is_admin() ) {
+	add_filter('rsssl_notices', 'rsssl_debug_log_notice', 50, 3);
+}
+
+function rsssl_debug_log_notice( $notices ) {
     $notices['debug-log-notice'] = array(
-        'callback' => 'contains_debug_log_declaration',
+        'callback' => 'rsssl_contains_debug_log_declaration',
         'score' => 5,
         'output' => array(
             '_true_' => array(
@@ -23,7 +27,7 @@ function hide_debug_log_notice( $notices ) {
  * Check if wp-config.php contains debug.log declaration
  */
 function rsssl_contains_debug_log_declaration() {
-    $wpconfig_path = RSSSL()->really_simple_ssl->find_wp_config_path();
+    $wpconfig_path = rsssl_find_wp_config_path();
     $wpconfig = file_get_contents($wpconfig_path);
 
 	// Get WP_DEBUG_LOG declaration
@@ -42,9 +46,9 @@ function rsssl_contains_debug_log_declaration() {
  * @return void
  * Disable WP_DEBUG_LOG. Revert to default
  */
-function rsssl_revert_debug_log() {
+function rsssl_revert_debug_log_location() {
 
-	$wpconfig_path = RSSSL()->really_simple_ssl->find_wp_config_path();
+	$wpconfig_path = rsssl_find_wp_config_path();
 	$wpconfig = file_get_contents($wpconfig_path);
 
 	// Get current declaration
@@ -70,29 +74,6 @@ function rsssl_revert_debug_log() {
 	delete_option('rsssl_debug_log_location_changed');
 	delete_option('rsssl_debug_log_folder_suffix');
 	delete_option('rsssl_debug_log_suffix');
-}
-
-/**
- * @return void
- *
- * Enable debugging in WordPress
- */
-function rsssl_enable_debug_log() {
-	$wpconfig_path = RSSSL()->really_simple_ssl->find_wp_config_path();
-	$wpconfig = file_get_contents($wpconfig_path);
-
-	// Get WP_DEBUG_LOG declaration
-	$regex = "/(define)(.*WP_DEBUG_LOG.*)(?=;)/m";
-	preg_match($regex, $wpconfig, $matches);
-
-	// If str contains true, location is default
-	if ( strpos( $matches[0], 'false' ) !== FALSE ) {
-		if ( ( strlen( $wpconfig ) !=0 ) && is_writable( $wpconfig_path ) ) {
-			$new      = str_replace( 'false', 'true', $matches[0] );
-			$wpconfig = str_replace( $matches[0], $new, $wpconfig );
-			file_put_contents( $wpconfig_path, $wpconfig );
-		}
-	}
 }
 
 /**
@@ -124,10 +105,7 @@ function rsssl_change_debug_log_location() {
 	// Change current debug.log name
 	rsssl_change_debug_log_name();
 
-	// Do not change if location has already been changed
-	if ( get_option('rsssl_debug_log_location_changed') ) return;
-
-    $wpconfig_path = RSSSL()->really_simple_ssl->find_wp_config_path();
+    $wpconfig_path = rsssl_find_wp_config_path();
     $wpconfig = file_get_contents($wpconfig_path);
 
 	$regex = "/(define)(.*WP_DEBUG_LOG.*)(?=;)/m";
@@ -152,6 +130,25 @@ function rsssl_change_debug_log_location() {
 		update_option('rsssl_debug_log_location_changed', true);
 	    update_option('rsssl_debug_log_folder_suffix', $debug_log_folder_suffix );
     }
+}
+
+/**
+ * @return void
+ * Handle differently based on option value
+ */
+function rsssl_maybe_change_debug_log_location() {
+	// Do not update if location has already been updated
+	if ( rsssl_get_option('rsssl_change_debug_log_location') == '1' && get_option('rsssl_debug_log_location_changed') ) {
+		return;
+	}
+
+	// If option enabled, and not updated yet, update
+	if ( rsssl_get_option('rsssl_change_debug_log_location') == '1' && ! get_option('rsssl_debug_log_location_changed') ){
+		rsssl_change_debug_log_location();
+	} else {
+		// Option disabled, revert
+		rsssl_revert_debug_log_location();
+	}
 }
 
 /**
@@ -180,4 +177,4 @@ function rsssl_is_debug_log_enabled() {
 	return false;
 }
 
-add_action('admin_init', 'rsssl_change_debug_log_name');
+add_action('init', 'rsssl_maybe_change_debug_log_location');

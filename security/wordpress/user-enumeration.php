@@ -36,7 +36,7 @@ function remove_author_from_yoast_sitemap( $users ) {
 }
 
 // Rss actions
-if ( rsssl_get_option('rsssl_disable_rss_feeds' ) ) {
+if ( rsssl_get_option('rsssl_disable_rss_feeds' ) !== false ) {
 	add_action( 'do_feed', 'wpb_disable_feed', 1 );
 	add_action( 'do_feed_rdf', 'wpb_disable_feed', 1 );
 	add_action( 'do_feed_rss', 'wpb_disable_feed', 1 );

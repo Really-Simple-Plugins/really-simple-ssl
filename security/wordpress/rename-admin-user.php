@@ -8,7 +8,7 @@ defined( 'ABSPATH' ) or die( "you do not have access to this page!" );
  */
 function rename_admin_user() {
 
-    if ( rsssl_get_option('rsssl_rename_admin_user') === '1' && ! get_option('rsssl_admin_user_updated') ) {
+    if ( rsssl_get_option('rsssl_rename_admin_user') == '1' && ! get_option('rsssl_admin_user_updated') ) {
 
         // Get user data for UID 1
         $userdata = get_userdata(1);
