@@ -42,13 +42,14 @@ function code_execution_uploads_notice( $notices ) {
     return $notices;
 }
 
-function rsssl_code_execution_nginx_notice() {
-    $notices['code-execution-uploads'] = array(
+function rsssl_code_execution_nginx_notice( $notices ) {
+    $notices['code-execution-uploads-nginx'] = array(
         'callback' => '_true_',
         'score' => 5,
         'output' => array(
-            '_true_' => array(
-                'msg' => __("Code execution allowed in uploads folder.", "really-simple-ssl"),
+            'true' => array(
+                'msg' => __("The code to block code execution in the uploads folder cannot be added automatically on nginx. Add the following code to your nginx.conf file:", "really-simple-ssl")
+                . "<br>" . rsssl_get_nginx_code_code_execution_uploads(),
                 'icon' => 'open',
                 'dismissible' => true,
             ),
@@ -131,11 +132,16 @@ function rsssl_disable_code_execution_uploads()
         }
     }
     if ( rsssl_get_server() === 'nginx') {
-        add_filter('rsssl_notices', 'rsssl_code_execution_nginx_notice');
-        //location ~* /your_directory/.*\.php$ {
-        //return 503;
-        //}
+        add_filter('rsssl_notices', 'rsssl_code_execution_nginx_notice', 50, 4);
     }
+}
+
+function rsssl_get_nginx_code_code_execution_uploads() {
+    $code = 'location ~* /uploads/.*\.php$ {' . "<br>";
+    $code .= '    return 503;' . "<br>";
+    $code .= '}' . "<br>";
+
+    return $code;
 }
 
 /**
