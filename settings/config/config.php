@@ -190,6 +190,14 @@ function rsssl_fields(){
 			'disabled'    => true,
 			'default'     => false,
 		],
+        [
+			'id'          => 'rsssl_disable_indexing',
+			'menu_id'     => 'hardening',
+			'type'        => 'checkbox',
+			'label'       => __( "Disable directory indexing", 'really-simple-ssl' ),
+			'disabled'    => true,
+			'default'     => false,
+		],
 	];
 	return apply_filters('rsssl_fields', $fields);
 }

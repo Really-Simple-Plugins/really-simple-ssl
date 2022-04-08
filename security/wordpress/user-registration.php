@@ -47,3 +47,7 @@ function rsssl_user_registration_notice()
 
     return false;
 }
+
+function rsssl_disable_user_registration() {
+	return true;
+}

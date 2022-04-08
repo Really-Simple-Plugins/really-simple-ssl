@@ -42,6 +42,14 @@ function code_execution_uploads_notice( $notices ) {
     return $notices;
 }
 
+/**
+ * @param $notices
+ *
+ * @return mixed
+ *
+ * Show NGINX code execution notice
+ */
+
 function rsssl_code_execution_nginx_notice( $notices ) {
     $notices['code-execution-uploads-nginx'] = array(
         'callback' => '_true_',

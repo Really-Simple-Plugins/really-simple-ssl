@@ -165,18 +165,19 @@ $rsssl_integrations_list = apply_filters( 'rsssl_integrations', array(
     ),
 
     'disable-indexing' => array(
-        'constant_or_function' => 'rsssl_disable_indexing',
+        'constant_or_function' => 'rsssl_disable_indexing_wrapper',
         'label'                => 'Disable directory indexing',
         'folder'               => 'server',
         'impact'               => 'low',
         'risk'                 => 'medium',
         'learning_mode'        => false,
+		'option_id'            => 'rsssl_disable_indexing',
         'type'                 => 'checkbox',
 //        'conditions'           => array(
 //
 //        ),
         'actions'              => array(
-			'fix'       => 'rsssl_disable_indexing',
+			'fix'       => 'rsssl_disable_indexing_wrapper',
         ),
     ),
 
