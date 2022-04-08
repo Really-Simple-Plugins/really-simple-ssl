@@ -137,9 +137,9 @@ function rsssl_disable_code_execution_uploads()
 }
 
 function rsssl_get_nginx_code_code_execution_uploads() {
-    $code = 'location ~* /uploads/.*\.php$ {' . "<br>";
-    $code .= '    return 503;' . "<br>";
-    $code .= '}' . "<br>";
+    $code = '<code>location ~* /uploads/.*\.php$ {' . "<br>";
+    $code .= '&nbsp;&nbsp;&nbsp;&nbsp;return 503;' . "<br>";
+    $code .= '}</code>' . "<br>";
 
     return $code;
 }
