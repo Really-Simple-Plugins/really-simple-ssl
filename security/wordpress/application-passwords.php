@@ -3,8 +3,7 @@ defined( 'ABSPATH' ) or die( "you do not have access to this page!" );
 
 add_action('application_password_did_authenticate', 'rsssl_application_password_success');
 add_action('application_password_failed_authentication', 'rsssl_application_password_fail');
-
-add_action('template_redirect', 'rsssl_maybe_allow_application_passwords');
+add_action('application_password_is_api_request', 'rsssl_maybe_allow_application_passwords' );
 
 // Add notice in backend
 if ( is_admin() ) {
@@ -50,7 +49,7 @@ function rsssl_application_passwords_available() {
  * Enable or disable application passwords
  */
 function rsssl_maybe_allow_application_passwords() {
-	if ( rsssl_get_option('rsssl_disable_application_passwords' ) != '1' ) {
+	if ( rsssl_get_option('rsssl_disable_application_passwords' ) !== false ) {
 		add_filter( 'wp_is_application_passwords_available', '__return_false' );
 	} else {
 		add_filter( 'wp_is_application_passwords_available', '__return_true' );
@@ -108,5 +107,3 @@ function rsssl_application_password_fail() {
 
 	rsssl_log_to_learning_mode_table($data);
 }
-
-add_action('admin_init', 'rsssl_application_passwords_available');
