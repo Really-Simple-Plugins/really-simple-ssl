@@ -222,13 +222,13 @@ $rsssl_integrations_list = apply_filters( 'rsssl_integrations', array(
 		'impact'               => 'high',
 		'risk'                 => 'high',
 		'learning_mode'        => false,
-		'option_id'            => 'rename_admin_user',
+		'option_id'            => 'rsssl_rename_admin_user',
 		'type'                 => 'checkbox',
 		'conditions'           => array(
 			'rsssl_has_admin_user',
 		),
 		'actions'              => array(
-			'fix'       => 'rsssl_maybe_rename_db_prefix',
+			'fix'       => 'rsssl_rename_admin_user',
 		),
 	),
 ) );

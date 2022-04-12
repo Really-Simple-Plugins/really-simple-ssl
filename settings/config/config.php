@@ -198,6 +198,14 @@ function rsssl_fields(){
 			'disabled'    => true,
 			'default'     => false,
 		],
+        [
+			'id'          => 'rsssl_rename_admin_user',
+			'menu_id'     => 'hardening',
+			'type'        => 'checkbox',
+			'label'       => __( "Rename user 'admin'", 'really-simple-ssl' ),
+			'disabled'    => true,
+			'default'     => false,
+		],
 	];
 	return apply_filters('rsssl_fields', $fields);
 }
