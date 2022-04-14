@@ -10,5 +10,5 @@ add_filter( 'login_errors', 'rsssl_no_wp_login_errors' );
  */
 function rsssl_no_wp_login_errors()
 {
-    return __("Invalid user and/or password.", "really-simple-ssl");
+    return __("Invalid login details.", "really-simple-ssl");
 }
