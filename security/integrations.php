@@ -137,9 +137,9 @@ $rsssl_integrations_list = apply_filters( 'rsssl_integrations', array(
         'risk'                 => 'medium',
         'learning_mode'        => false,
         'type'                 => 'checkbox',
-//        'conditions'           => array(
-//
-//        ),
+        'conditions'           => array(
+			'rsssl_test_if_http_methods_allowed',
+        ),
         'actions'              => array(
 			'fix'       => 'rsssl_disable_http_methods',
         ),
@@ -235,6 +235,8 @@ $rsssl_integrations_list = apply_filters( 'rsssl_integrations', array(
 
 foreach ( $rsssl_integrations_list as $plugin => $details ) {
 
+	if ( ! current_user_can('manage_options') ) return;
+
 	if ( ! file_exists( rsssl_path . 'security/' . $details['folder'] . "/" . $plugin . '.php' )
 	) {
 		continue;
@@ -270,7 +272,7 @@ foreach ( $rsssl_integrations_list as $plugin => $details ) {
 	} elseif ( file_exists( $file ) && $skip !== true ) {
 		require_once( $file );
 	} elseif ( $skip !== false ) {
-		error_log("$plugin skipped, conditions not met");
+//		error_log("$plugin skipped, conditions not met");
 	} else {
 		error_log( "searched for $plugin integration at $file, but did not find it" );
 	}

@@ -3,6 +3,7 @@ defined( 'ABSPATH' ) or die( "you do not have access to this page!" );
 
 if ( is_admin() ) {
 //	add_filter('rsssl_notices', 'rsssl_admin_username_changed', 50, 20);
+//	add_filter('rsssl_notices', 'rsssl_user_id_one_enumeration', 50, 21);
 }
 
 /**
@@ -16,8 +17,28 @@ function rsssl_admin_username_changed( $notices ) {
 		'callback' => '_true_',
 		'score' => 5,
 		'output' => array(
-			'_true_' => array(
+			'true' => array(
 				'msg' => sprintf(__("Username 'admin' has been changed to %s", "really-simple-ssl"), get_option('rsssl_new_admin_username') ),
+				'icon' => 'open',
+				'dismissible' => true,
+			),
+		),
+	);
+}
+
+/**
+ * @return void
+ *
+ * User id 1 exists, user enumeration allowed notice
+ */
+function rsssl_user_id_one_enumeration( $notices ) {
+	$notices['user_id_one'] = array(
+		'condition' => 'rsssl_id_one_no_enumeration',
+		'callback' => '_true_',
+		'score' => 5,
+		'output' => array(
+			'true' => array(
+				'msg' => __("User id 1 exists and user enumeration hasn't been disabled.", "really-simple-ssl"),
 				'icon' => 'open',
 				'dismissible' => true,
 			),
@@ -121,6 +142,20 @@ function rsssl_has_admin_user() {
  */
 function rsssl_username_admin_changed() {
 	if ( get_option('rsssl_username_admin_changed') ) {
+		return true;
+	}
+
+	return false;
+}
+
+/**
+ * @return bool
+ *
+ * Check if user ID 1 exists end if user enumeration has been disabled
+ */
+function rsssl_id_one_no_enumeration() {
+	$user_id_one = get_user_by('id', 1);
+	if ( $user_id_one && rsssl_get_option('rsssl_disable_user_enumeration') !== true ) {
 		return true;
 	}
 

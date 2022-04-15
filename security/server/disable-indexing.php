@@ -15,7 +15,10 @@ function rsssl_disable_indexing_wrapper() {
  * Disable indexing
  */
 function rsssl_disable_indexing() {
-    if ( rsssl_get_server() == 'apache' ) {
+
+	if ( ! current_user_can( 'manage_options' ) ) return;
+
+	if ( rsssl_get_server() == 'apache' ) {
 	    // Get .htaccess
 	    $htaccess_file = RSSSL()->really_simple_ssl->htaccess_file();
 	    if ( file_exists( $htaccess_file ) && is_writable( $htaccess_file ) ) {
