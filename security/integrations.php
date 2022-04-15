@@ -231,6 +231,23 @@ $rsssl_integrations_list = apply_filters( 'rsssl_integrations', array(
 			'fix'       => 'rsssl_rename_admin_user',
 		),
 	),
+
+	'display-name-is-login-name' => array(
+		'constant_or_function' => 'rsssl_display_name',
+		'label'                => 'Display name equals login name',
+		'folder'               => 'wordpress',
+		'impact'               => 'low',
+		'risk'                 => 'medium',
+		'learning_mode'        => false,
+//		'option_id'            => '',
+		'type'                 => 'checkbox',
+		'conditions'           => array(
+			'rsssl_has_admin_user',
+		),
+		'actions'              => array(
+//			'fix'       => 'rsssl_change_display_name',
+		),
+	),
 ) );
 
 foreach ( $rsssl_integrations_list as $plugin => $details ) {
