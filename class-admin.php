@@ -236,7 +236,6 @@ class rsssl_admin extends rsssl_front_end
 
         //when configuration should run again
         if ($this->clicked_activate_ssl() || !$this->ssl_enabled || !$this->site_has_ssl || $is_on_settings_page || is_network_admin() || defined('RSSSL_DOING_SYSTEM_STATUS') ) {
-            if (is_multisite()) $this->build_domain_list();//has to come after clicked_activate_ssl, otherwise this domain won't get counted.
             $this->detect_configuration();
 
             //flush caches when just activated ssl
@@ -999,55 +998,6 @@ class rsssl_admin extends rsssl_front_end
     }
 
     /**
-     * Creates an array of all domains where the plugin is active AND SSL is active, only used for multisite.
-     *
-     * @since  2.1
-     *
-     * @access public
-     *
-     */
-
-    public function build_domain_list()
-    {
-        if (!is_multisite()) return;
-
-        $this->sites = get_transient('rsssl_domain_list');
-        if (!$this->sites) {
-
-            //create list of all activated sites with SSL
-            $this->sites = array();
-            $nr_of_sites = RSSSL()->rsssl_multisite->get_total_blog_count();
-            $sites = RSSSL()->rsssl_multisite->get_sites_bw_compatible(0, $nr_of_sites);
-
-            $this->trace_log("building domain list for multisite...");
-            $has_sites_with_ssl = false;
-            foreach ($sites as $site) {
-                $this->switch_to_blog_bw_compatible($site);
-                $options = get_option('rlrsssl_options');
-
-                $ssl_enabled = FALSE;
-                if (isset($options)) {
-                    $site_has_ssl = isset($options['site_has_ssl']) ? $options['site_has_ssl'] : FALSE;
-                    $ssl_enabled = isset($options['ssl_enabled']) ? $options['ssl_enabled'] : $site_has_ssl;
-                }
-
-                if (is_plugin_active(rsssl_plugin) && $ssl_enabled) {
-                    $this->trace_log("- adding: " . home_url());
-                    $this->sites[] = home_url();
-	                $has_sites_with_ssl = true;
-                }
-                restore_current_blog(); //switches back to previous blog, not current, so we have to do it each loop
-            }
-
-            if (!$has_sites_with_ssl) $this->trace_log("- SSL not enabled on any site " );
-
-            set_transient('rsssl_domain_list', $this->sites, HOUR_IN_SECONDS);
-
-            $this->save_options();
-        }
-    }
-
-    /**
      * check if the plugin was upgraded to a new version
      *
      * @since  2.1
@@ -1629,7 +1579,6 @@ class rsssl_admin extends rsssl_front_end
 	        //when on multisite, per site activation, recreate domain list for htaccess and wpconfig rewrite actions
 	        if (is_multisite()) {
 		        RSSSL()->rsssl_multisite->deactivate();
-		        if (!RSSSL()->rsssl_multisite->ssl_enabled_networkwide) $this->build_domain_list();
 	        }
 	        do_action("rsssl_deactivate");
 

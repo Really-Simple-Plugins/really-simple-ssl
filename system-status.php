@@ -18,8 +18,6 @@ require_once( BASE_PATH . 'wp-admin/includes/plugin.php');
 
 //by deleting these we make sure these functions run again
 delete_transient('rsssl_testpage');
-delete_transient('rsssl_domain_list');
-
 if ( current_user_can( 'manage_options' ) ) {
 
 	ob_start();
