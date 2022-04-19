@@ -338,11 +338,9 @@ if (!class_exists('rsssl_multisite')) {
             add_settings_section('rsssl_network_settings', __("Settings", "really-simple-ssl"), array($this, 'section_text'), "really-simple-ssl");
             $help = rsssl_help::this()->get_help_tip(__("Select to enable SSL networkwide or per site.", "really-simple-ssl"), true );
             add_settings_field('id_ssl_enabled_networkwide', $help.__("Enable SSL", "really-simple-ssl"), array($this, 'get_option_enable_multisite'), "really-simple-ssl", 'rsssl_network_settings');
-
 	        $help = rsssl_help::this()->get_help_tip(__("Enable this option to permanently dismiss all +1 notices in the 'Your progress' tab", "really-simple-ssl"), true );
 	        add_settings_field('id_dismiss_all_notices', $help.__("Dismiss all Really Simple SSL notices", "really-simple-ssl"), array($this, 'get_option_dismiss_all_notices'), "really-simple-ssl", 'rsssl_network_settings');
-
-	        add_submenu_page('settings.php', "SSL", "SSL", 'manage_options', "really-simple-ssl", array(&$this, 'settings_tab'));
+	        add_submenu_page('settings.php', "SSL", "SSL", 'manage_network_options', "really-simple-ssl", array(&$this, 'settings_tab'));
         }
 
         /**
@@ -499,7 +497,7 @@ if (!class_exists('rsssl_multisite')) {
         public function update_network_options()
         {
             if (!isset($_POST['rsssl_ms_nonce']) || !wp_verify_nonce($_POST['rsssl_ms_nonce'], 'rsssl_ms_settings_update')) return;
-            if (!current_user_can('manage_options')) return;
+            if (!current_user_can('manage_network_options')) return;
 
 	        do_action('rsssl_process_network_options');
 
@@ -665,7 +663,7 @@ if (!class_exists('rsssl_multisite')) {
 
         public function save_options()
         {
-	        if ( ! current_user_can( 'manage_options' ) ) return;
+	        if ( ! current_user_can( 'manage_network_options' ) ) return;
 
             $options = get_site_option("rlrsssl_network_options");
             if (!is_array($options)) $options = array();
@@ -980,7 +978,7 @@ if (!class_exists('rsssl_multisite')) {
             //check if we are on ssl settings page
             if (!$this->is_settings_page()) return;
             //check user role
-            if (!current_user_can('manage_options')) return;
+            if (!current_user_can('manage_network_options')) return;
             //check nonce
             if (!isset($_GET['token']) || (!wp_verify_nonce($_GET['token'], 'run_ssl_to_admin_init'))) return;
             //check for action
