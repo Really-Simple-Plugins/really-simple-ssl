@@ -22,8 +22,8 @@ class Field extends Component {
     onChangeHandler(fieldValue) {
         let fields = this.props.fields;
         let field = this.props.field;
-        this.props.saveChangedFields( field.id )
         fields[this.props.index]['value'] = fieldValue;
+        this.props.saveChangedFields( field.id )
         this.setState( { fields } )
     }
     render(){
@@ -40,6 +40,11 @@ class Field extends Component {
                     options.push(item);
                 }
             }
+        }
+        if ( !field.visible ) {
+            return (
+                <span></span>
+            );
         }
         if ( field.type==='checkbox' ){
             return (

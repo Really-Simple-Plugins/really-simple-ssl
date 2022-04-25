@@ -64,6 +64,10 @@ function rsssl_menu( $group_id = 'settings' ){
 function rsssl_migrate_settings() {
 	//rlrsssl_options autoreplace_insecure_links => mixed_content_fixer
 	//wp_redirect
+	//htaccess_redirect
+	//do_not_edit_htaccess
+	//switch_mixed_content_fixer_hook
+	//dismiss_all_notices
 }
 
 function rsssl_fields(){
@@ -108,6 +112,7 @@ function rsssl_fields(){
 				'really-simple-ssl' ),
 			'disabled'          => false,
 			'default'           => false,
+			//when enabled networkwide, it's handled on the network settings page
 			'server_conditions' => [
 				'relation' => 'AND',
 				[
@@ -130,55 +135,65 @@ function rsssl_fields(){
 			'help'     => __( 'If you want to customize the Really Simple SSL .htaccess, you need to prevent Really Simple SSL from rewriting it. Enabling this option will do that.', 'really-simple-ssl' ),
 			'disabled'    => false,
 			'default'     => false,
+			//on multisite this setting can only be set networkwide
+			'server_conditions' => [
+				'relation' => 'AND',
+				[
+					'RSSSL()->rsssl_server->uses_htaccess()' => true,
+					'!is_multisite()',
+				]
+			],
 		],
 		[
-			'id'          => 'mixed_content_fixer_2',
-			'menu_id'     => 'recommended_security_headers',
-			'group_id'    => 'mixed_content',
+			'id'          => 'switch_mixed_content_fixer_hook',
+			'menu_id'     => 'general',
+			'group_id'    => 'general',
 			'type'        => 'checkbox',
-			'label'       => __( "Field name 2", 'really-simple-ssl' ),
-			'comment'     => __( 'A comment', 'really-simple-ssl' ),
+			'label'       => __( "Fire mixed content fixer with different method", 'really-simple-ssl' ),
+			'help'     => __( 'If this option is set to true, the mixed content fixer will fire on the init hook instead of the template_redirect hook. Only use this option when you experience problems with the mixed content fixer.', 'really-simple-ssl' ),
 			'disabled'    => false,
 			'default'     => false,
+			'react_conditions' => [
+				'relation' => 'AND',
+				[
+					'mixed_content_fixer' => 1,
+				]
+			],
 		],
 		[
-			'id'          => 'mixed_content_fixer_3',
-			'menu_id'     => 'recommended_security_headers',
-			'group_id'    => 'mixed_content_2',
+			'id'          => 'dismiss_all_notices',
+			'menu_id'     => 'general',
+			'group_id'    => 'general',
 			'type'        => 'checkbox',
-			'label'       => __( "Field name 3, group 2", 'really-simple-ssl' ),
-			'comment'     => __( 'A comment', 'really-simple-ssl' ),
+			'label'       => __( "Dismiss all Really Simple SSL notices", 'really-simple-ssl' ),
+			'help'     => __( "Enable this option to permanently dismiss all +1 notices in the 'Your progress' tab'", 'really-simple-ssl' ),
 			'disabled'    => true,
 			'default'     => false,
 		],
 		[
-			'id'          => 'mixed_content_fixer_3',
-			'menu_id'     => 'recommended_security_headers',
+			'id'          => 'high_contrast',
+			'menu_id'     => 'general',
+			'group_id'    => 'general',
 			'type'        => 'checkbox',
-			'label'       => __( "Field name 3", 'really-simple-ssl' ),
-			'comment'     => __( 'A comment', 'really-simple-ssl' ),
+			'label'       => __( "Enable High Contrast mode", 'really-simple-ssl' ),
+			'help'     => __( "If enabled, all the Really Simple SSL pages within the WordPress admin will be in high contrast", 'really-simple-ssl' ),
 			'disabled'    => true,
 			'default'     => false,
 		],
-		[
-			'id'          => 'mixed_content_fixer_4',
-			'menu_id'     => 'recommended_security_headers',
-			'type'        => 'checkbox',
-			'label'       => __( "Field name 4", 'really-simple-ssl' ),
-			'comment'     => __( 'A comment', 'really-simple-ssl' ),
-			'disabled'    => true,
-			'default'     => false,
-		],
+
 	];
 	$fields = apply_filters('rsssl_fields', $fields);
 	//handle server side conditions
 	foreach ( $fields as $key => $field ) {
+		$fields[$key] = wp_parse_args($field, ['visible'=> true]);
+
 		if (isset($field['server_conditions'])) {
 			if ( !rsssl_conditions_apply($field['server_conditions']) ){
 				unset($fields[$key]);
 			}
 		}
 	}
+
 	return array_values($fields);
 }
 

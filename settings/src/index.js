@@ -161,7 +161,18 @@ class SettingsPage extends Component {
 		});
 	}
 
+	updateFieldsListWithConditions(){
+		for (const field of this.props.fields){
+			if (field.hasOwnProperty('react_conditions') && !this.validateConditions(field.react_conditions, this.props.fields ) ){
+				this.props.fields[this.props.fields.indexOf(field)].visible = false;
+			} else {
+				this.props.fields[this.props.fields.indexOf(field)].visible = true;
+			}
+		}
+	}
+
 	saveChangedFields(changedField){
+		this.updateFieldsListWithConditions();
 		let changedFields = this.changedFields;
 		if (!in_array(changedField, changedFields)) {
 			changedFields.push(changedField);
@@ -199,11 +210,74 @@ class SettingsPage extends Component {
 		});
 	}
 
+	validateConditions(conditions, fields){
+		let relation = conditions.relation === 'OR' ? 'OR' : 'AND';
+		console.log("relation "+relation);
+		delete conditions['relation'];
+		let conditionApplies = true;
+		for (const key in conditions) {
+			if ( conditions.hasOwnProperty(key) ) {
+				let invert = key.indexOf('!')===0;
+				let thisConditionApplies = true;
+				let subConditionsArray = conditions[key];
+				if ( subConditionsArray.hasOwnProperty('relation') ) {
+					thisConditionApplies = this.validateConditions(subConditionsArray, fields)
+				} else {
+					for (const conditionField in subConditionsArray) {
+						if ( subConditionsArray.hasOwnProperty(conditionField) ) {
+							let conditionValue = subConditionsArray[conditionField];
+
+							let conditionFields = fields.filter(field => field.id === conditionField);
+							if (conditionFields.hasOwnProperty(0)){
+
+								if (conditionFields[0].type==='checkbox') {
+									let actualValue = +conditionFields[0].value;
+									conditionValue = +conditionValue;
+									console.log("actual value ");
+									console.log(actualValue);
+									console.log("condition value ");
+									console.log(conditionValue);
+									console.log("is equal");
+									console.log(actualValue == conditionValue);
+									console.log(actualValue === conditionValue);
+
+									thisConditionApplies = actualValue == conditionValue;
+								} else {
+									thisConditionApplies = conditionFields[0].value === conditionValue;
+								}
+								console.log("this condition in check "+thisConditionApplies);
+
+
+							}
+						}
+					}
+					if ( invert ){
+						thisConditionApplies = !thisConditionApplies;
+					}
+				}
+				console.log("this condition before "+thisConditionApplies);
+
+				if ( relation === 'AND' ) {
+					console.log("AND");
+					console.log("this condition "+thisConditionApplies);
+					conditionApplies = conditionApplies && thisConditionApplies;
+				} else {
+					conditionApplies = conditionApplies || thisConditionApplies;
+				}
+			}
+		}
+		console.log("condition applies "+conditionApplies);
+		return conditionApplies;
+	}
+
     componentDidMount() {
 		this.save = this.save.bind(this);
 		this.selectMenu = this.selectMenu.bind(this);
 		this.saveChangedFields = this.saveChangedFields.bind(this);
+		this.updateFieldsListWithConditions = this.updateFieldsListWithConditions.bind(this);
+		this.updateFieldsListWithConditions();
 		let fields = this.props.fields;
+
 		let menu = this.props.menu;
 		//if count >1, it's a wizard
 		let menuItems = [];
@@ -254,6 +328,8 @@ class SettingsPage extends Component {
 				}
 			}
 		}
+
+
 
         return (
             <Fragment>
@@ -332,6 +408,7 @@ class Page extends Component {
 
 		this.getFields().then(( response ) => {
 			let fields = response.fields;
+
 			let menu = response.menu;
 			this.menu = menu;
 			this.fields = fields;
@@ -347,6 +424,7 @@ class Page extends Component {
 			return response.data;
 		});
 	}
+
 	componentDidMount() {
 		this.selectMenu = this.selectMenu.bind(this);
 		this.setState({
@@ -367,8 +445,8 @@ class Page extends Component {
 			menu,
 			isAPILoaded,
 		} = this.state;
-		console.log(fields);
-		console.log(menu);
+
+		console.log("re-run state");
 		return (
 			<div id="rsssl-wrapper">
 				<Header selectedMainMenuItem={selectedMainMenuItem} selectMenu={this.selectMenu}/>

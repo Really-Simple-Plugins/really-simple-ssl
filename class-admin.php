@@ -263,8 +263,6 @@ class rsssl_admin extends rsssl_front_end
         //add the settings page for the plugin
         add_action('admin_enqueue_scripts', array($this, 'enqueue_assets'));
 
-        //settings page, form  and settings link in the plugins page
-	    add_action('admin_init', array($this, 'create_form'), 40);
         add_action('admin_init', array($this, 'listen_for_deactivation'), 40);
         add_action( 'update_option_rlrsssl_options', array( $this, 'maybe_remove_highlight_from_url' ), 50 );
 
@@ -3661,90 +3659,6 @@ class rsssl_admin extends rsssl_front_end
             )
         );
     }
-
-    /**
-     * Create the settings page form
-     *
-     * @since  2.0
-     *
-     * @access public
-     *
-     */
-
-    public function create_form()
-    {
-        if ($this->ssl_enabled) {
-
-            //when enabled networkwide, it's handled on the network settings page
-            if (RSSSL()->rsssl_server->uses_htaccess() && (!is_multisite() || !RSSSL()->rsssl_multisite->ssl_enabled_networkwide) ) {
-	            $help_tip = RSSSL()->rsssl_help->get_help_tip(__("A .htaccess redirect is faster and works better with caching. Really Simple SSL detects the redirect code that is most likely to work (99% of websites), but this is not 100%. Make sure you know how to regain access to your site if anything goes wrong!", "really-simple-ssl"), $return=true);
-	            add_settings_field('id_htaccess_redirect', $help_tip . "<div class='rsssl-settings-text'>" . __("Enable 301 .htaccess redirect", "really-simple-ssl"), array($this, 'get_option_htaccess_redirect'), 'rlrsssl', 'rlrsssl_settings');
-            }
-        }
-
-        //on multisite this setting can only be set networkwide
-        if (RSSSL()->rsssl_server->uses_htaccess() && !is_multisite()) {
-	        $help_tip = RSSSL()->rsssl_help->get_help_tip(__("If you want to customize the Really Simple SSL .htaccess, you need to prevent Really Simple SSL from rewriting it. Enabling this option will do that.", "really-simple-ssl"), $return=true);
-	        add_settings_field('id_do_not_edit_htaccess', $help_tip . "<div class='rsssl-settings-text'>" . __("Stop editing the .htaccess file", "really-simple-ssl"), array($this, 'get_option_do_not_edit_htaccess'), 'rlrsssl', 'rlrsssl_settings');
-        }
-
-        //don't show alternative mixed content fixer option if mixed content fixer is disabled.
-	    if ($this->autoreplace_insecure_links) {
-	        $help_tip = RSSSL()->rsssl_help->get_help_tip(__("If this option is set to true, the mixed content fixer will fire on the init hook instead of the template_redirect hook. Only use this option when you experience problems with the mixed content fixer.\"", "really-simple-ssl"), $return=true);
-		    add_settings_field('id_switch_mixed_content_fixer_hook', $help_tip . "<div class='rsssl-settings-text'>" . __("Fire mixed content fixer with different method", "really-simple-ssl"), array($this, 'get_option_switch_mixed_content_fixer_hook'), 'rlrsssl', 'rlrsssl_settings');
-	    }
-
-	    $help_tip = RSSSL()->rsssl_help->get_help_tip(__("Enable this option to permanently dismiss all +1 notices in the 'Your progress' tab", "really-simple-ssl"), $return=true);
-	    add_settings_field('id_dismiss_all_notices', $help_tip . "<div class='rsssl-settings-text'>" .  __("Dismiss all Really Simple SSL notices", "really-simple-ssl"), array($this, 'get_option_dismiss_all_notices'), 'rlrsssl', 'rlrsssl_settings');
-
-	    $help_tip = RSSSL()->rsssl_help->get_help_tip(__("If enabled, all the Really Simple SSL pages within the WordPress admin will be in high contrast", "really-simple-ssl"), $return=true);
-	    add_settings_field('id_high_contrast', $help_tip . "<div class='rsssl-settings-text'>" .  __("Enable High Contrast mode", "really-simple-ssl"), array($this, 'get_option_high_contrast'), 'rlrsssl', 'rlrsssl_settings');
-
-    }
-
-    /**
-     * Insert some explanation above the form
-     *
-     * @since  2.0
-     *
-     * @access public
-     *
-     */
-
-    public function section_text()
-    {
-
-    }
-
-    /**
-     * Check the posted values in the settings page for validity
-     *
-     * @since  2.0
-     *
-     * @access public
-     *
-     */
-
-    public function options_validate($input)
-    {
-        //fill array with current values, so we don't lose any
-        $newinput = array();
-	    $newinput['site_has_ssl']                    = $this->site_has_ssl;
-	    $newinput['ssl_success_message_shown']       = $this->ssl_success_message_shown;
-	    $newinput['htaccess_warning_shown']          = $this->htaccess_warning_shown;
-	    $newinput['review_notice_shown']             = $this->review_notice_shown;
-	    $newinput['plugin_db_version']               = $this->plugin_db_version;
-	    $newinput['ssl_enabled']                     = $this->ssl_enabled;
-	    $newinput['wp_redirect']                     = ! empty( $input['wp_redirect'] ) && $input['wp_redirect'] == '1';
-	    $newinput['autoreplace_insecure_links']      = ! empty( $input['autoreplace_insecure_links'] ) && $input['autoreplace_insecure_links'] == '1';
-	    $newinput['do_not_edit_htaccess']            = ! empty( $input['do_not_edit_htaccess'] ) && $input['do_not_edit_htaccess'] == '1';
-	    $newinput['switch_mixed_content_fixer_hook'] = ! empty( $input['switch_mixed_content_fixer_hook'] ) && $input['switch_mixed_content_fixer_hook'] == '1';
-	    $newinput['dismiss_all_notices']             = ! empty( $input['dismiss_all_notices'] ) && $input['dismiss_all_notices'] == '1';
-	    $newinput['high_contrast']                   = ! empty( $input['high_contrast'] ) && $input['high_contrast'] == '1';
-	    $newinput['htaccess_redirect']               = ! empty( $input['htaccess_redirect'] ) && $input['htaccess_redirect'] == '1';
-        return $newinput;
-    }
-
 
     /**
      * Insert option into settings form
