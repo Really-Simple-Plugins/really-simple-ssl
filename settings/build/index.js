@@ -4175,6 +4175,8 @@ var Page = /*#__PURE__*/function (_Component7) {
           fields = _this$state4.fields,
           menu = _this$state4.menu,
           isAPILoaded = _this$state4.isAPILoaded;
+      console.log(fields);
+      console.log(menu);
       return Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_5__["createElement"])("div", {
         id: "rsssl-wrapper"
       }, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_5__["createElement"])(Header, {

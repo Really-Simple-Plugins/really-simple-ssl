@@ -367,7 +367,8 @@ class Page extends Component {
 			menu,
 			isAPILoaded,
 		} = this.state;
-
+		console.log(fields);
+		console.log(menu);
 		return (
 			<div id="rsssl-wrapper">
 				<Header selectedMainMenuItem={selectedMainMenuItem} selectMenu={this.selectMenu}/>

@@ -67,7 +67,7 @@ function rsssl_migrate_settings() {
 }
 
 function rsssl_fields(){
-	if ( current_user_can('manage_options') ) {
+	if ( !current_user_can('manage_options') ) {
 		return array();
 	}
 
@@ -80,7 +80,7 @@ function rsssl_fields(){
 			'label'       => __( "Mixed content fixer", 'really-simple-ssl' ),
 			'help'        => __( 'In most cases you need to leave this enabled, to prevent mixed content issues on your site.', 'really-simple-ssl' ),
 			'disabled'    => false,
-			'default'     => false,
+			'default'     => true,
 		],
 		[
 			'id'          => 'wp_redirect',
