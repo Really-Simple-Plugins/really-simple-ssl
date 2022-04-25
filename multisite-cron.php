@@ -18,7 +18,7 @@ function rsssl_schedule_cron()
 {
     if (get_site_option('rsssl_ssl_activation_active') || get_site_option('rsssl_ssl_deactivation_active')) {
         if (!wp_next_scheduled('rsssl_ssl_process_hook')) {
-            wp_schedule_event(time(), 'oneminute', 'rsssl_ssl_process_hook');
+            wp_schedule_event( time(), 'oneminute', 'rsssl_ssl_process_hook');
         }
     } else {
         wp_clear_scheduled_hook('rsssl_ssl_process_hook');
