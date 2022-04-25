@@ -61,26 +61,74 @@ function rsssl_menu( $group_id = 'settings' ){
 	return array();
 }
 
+function rsssl_migrate_settings() {
+	//rlrsssl_options autoreplace_insecure_links => mixed_content_fixer
+	//wp_redirect
+}
+
 function rsssl_fields(){
+	if ( current_user_can('manage_options') ) {
+		return array();
+	}
+
 	$fields = [
 		[
 			'id'          => 'mixed_content_fixer',
 			'menu_id'     => 'general',
-			'group_id'    => 'mixed_content',
+			'group_id'    => 'general',
 			'type'        => 'checkbox',
 			'label'       => __( "Mixed content fixer", 'really-simple-ssl' ),
-			'help'     => __( 'A help text about the mixed content fixer ', 'really-simple-ssl' ),
-			'disabled'    => true,
+			'help'        => __( 'In most cases you need to leave this enabled, to prevent mixed content issues on your site.', 'really-simple-ssl' ),
+			'disabled'    => false,
 			'default'     => false,
 		],
 		[
 			'id'          => 'wp_redirect',
 			'menu_id'     => 'general',
-			'group_id'    => 'mixed_content',
+			'group_id'    => 'general',
 			'type'        => 'checkbox',
-			'label'       => __( "WP Redirect", 'really-simple-ssl' ),
-			'help'     => __( 'A help text about the wp redirect', 'really-simple-ssl' ),
-			'disabled'    => true,
+			'label'       => __( "Enable WordPress 301 redirect", 'really-simple-ssl' ),
+			'help'     => __( 'Redirects all requests over HTTP to HTTPS using a PHP 301 redirect. Enable if the .htaccess redirect cannot be used, for example on NGINX servers.', 'really-simple-ssl' ),
+			'disabled'    => false,
+			'default'     => false,
+			'server_conditions'  => [
+				'relation' => 'AND',
+				[
+					'RSSSL()->really_simple_ssl->ssl_enabled' => true,
+				]
+			],
+		],
+		[
+			'id'                => 'htaccess_redirect',
+			'menu_id'           => 'general',
+			'group_id'          => 'general',
+			'type'              => 'checkbox',
+			'label'             => __( "Enable 301 .htaccess redirect", 'really-simple-ssl' ),
+			'help'              => __( 'A .htaccess redirect is faster and works better with caching. Really Simple SSL detects the redirect code that is most likely to work (99% of websites), but this is not 100%. Make sure you know how to regain access to your site if anything goes wrong!',
+				'really-simple-ssl' ),
+			'disabled'          => false,
+			'default'           => false,
+			'server_conditions' => [
+				'relation' => 'AND',
+				[
+					'RSSSL()->really_simple_ssl->ssl_enabled' => true,
+					'RSSSL()->rsssl_server->uses_htaccess()' => true,
+					[
+						'relation' => 'OR',
+						'!is_multisite()',
+						'!RSSSL()->rsssl_multisite->ssl_enabled_networkwide'
+					]
+				]
+			],
+		],
+		[
+			'id'          => 'do_not_edit_htaccess',
+			'menu_id'     => 'general',
+			'group_id'    => 'general',
+			'type'        => 'checkbox',
+			'label'       => __( "Stop editing the .htaccess file", 'really-simple-ssl' ),
+			'help'     => __( 'If you want to customize the Really Simple SSL .htaccess, you need to prevent Really Simple SSL from rewriting it. Enabling this option will do that.', 'really-simple-ssl' ),
+			'disabled'    => false,
 			'default'     => false,
 		],
 		[
@@ -90,7 +138,7 @@ function rsssl_fields(){
 			'type'        => 'checkbox',
 			'label'       => __( "Field name 2", 'really-simple-ssl' ),
 			'comment'     => __( 'A comment', 'really-simple-ssl' ),
-			'disabled'    => true,
+			'disabled'    => false,
 			'default'     => false,
 		],
 		[
@@ -122,8 +170,84 @@ function rsssl_fields(){
 			'default'     => false,
 		],
 	];
-	return apply_filters('rsssl_fields', $fields);
+	$fields = apply_filters('rsssl_fields', $fields);
+	//handle server side conditions
+	foreach ( $fields as $key => $field ) {
+		if (isset($field['server_conditions'])) {
+			if ( !rsssl_conditions_apply($field['server_conditions']) ){
+				unset($fields[$key]);
+			}
+		}
+	}
+	return array_values($fields);
 }
+
+/**
+ * Check if the server side conditions apply
+ *
+ * @param array $conditions
+ *
+ * @return bool
+ */
+
+function rsssl_conditions_apply( $conditions ){
+	if ( current_user_can('manage_options') ) {
+		return false;
+	}
+
+	$defaults = ['relation' => 'AND'];
+	$conditions = wp_parse_args($conditions, $defaults);
+	$relation = $conditions['relation'] === 'AND' ? 'AND' : 'OR';
+	unset($conditions['relation']);
+	$condition_applies = true;
+	foreach ( $conditions as $condition => $condition_value ) {
+		$invert = substr($condition, 1)==='!';
+		$condition = ltrim($condition, '!');
+
+		if ( is_array($condition_value)) {
+			$this_condition_applies = rsssl_conditions_apply($condition_value);
+		} else {
+			//check if it's a function
+			if (substr($condition, -2) === '()'){
+				$func = $condition;
+				if ( preg_match( '/(.*)\(\)\-\>(.*)->(.*)/i', $func, $matches)) {
+					$base = $matches[1];
+					$class = $matches[2];
+					$func = $matches[3];
+					$func = str_replace('()', '', $func);
+					$this_condition_applies = call_user_func( array( $base()->{$class}, $func ) ) === $condition_value ;
+				} else {
+					$func = str_replace('()', '', $func);
+					$this_condition_applies = $func() === $condition_value;
+				}
+			} else {
+				$var = $condition;
+				if ( preg_match( '/(.*)\(\)\-\>(.*)->(.*)/i', $var, $matches)) {
+					$base = $matches[1];
+					$class = $matches[2];
+					$var = $matches[3];
+					$this_condition_applies = $base()->{$class}->_get($var) === $condition_value ;
+				} else {
+					$this_condition_applies = $var === $condition_value;
+				}
+			}
+
+			if ( $invert ){
+				$this_condition_applies = !$this_condition_applies;
+			}
+
+		}
+
+		if ($relation === 'AND') {
+			$condition_applies = $condition_applies && $this_condition_applies;
+		} else {
+			$condition_applies = $condition_applies || $this_condition_applies;
+		}
+	}
+
+	return $condition_applies;
+}
+
 
 function rsssl_blocks(){
 	$blocks = [
@@ -189,7 +313,6 @@ function rsssl_blocks(){
 			$blocks[$index]['content']['type'] = 'html';
 			$blocks[$index]['content']['data'] = rsssl_get_template($template);
 		}
-		error_log(print_r($block, true));
 		if ( $block['footer']['type'] === 'template' ) {
 			$template = $block['footer']['data'];
 			$blocks[$index]['footer']['type'] = 'html';

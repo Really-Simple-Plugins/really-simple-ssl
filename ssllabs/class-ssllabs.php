@@ -10,7 +10,7 @@ class rsssl_ssllabs {
 		$message = '';
 		$footer_html = '';
 		$disabled = false;
-		$domain = 'https://ziprecipes.net';//$this->get_host();
+		$domain = 'really-simple-ssl.com';//$this->get_host();
 		if (strpos($domain, 'localhost')!==false){
 			return ['footerHtml'=>$footer_html,'disabled'=>true, 'html' => '<div class="rsssl-ssltest"><div class="rsssl-ssltest-element">'.__("SSL Test is not possible on localhost","really-simple-ssl").'</div></div>', 'progress' => 100];
 		}
@@ -22,9 +22,9 @@ class rsssl_ssllabs {
 			$footer_html = sprintf(__("Available in %s hours", "really-simple-ssl"), gmdate("H:i", $last_test-$one_day_ago));
 		}
 
-		if ( $state==='initial' && !$ip ) {
+		if ( $state==='initial' && !$ip   ) {
 			return ['footerHtml'=>$footer_html,'disabled'=>$disabled, 'html' => '<div class="rsssl-ssltest"><div class="rsssl-ssltest-element">'.__("Start a test to see your SSL rating","really-simple-ssl").'</div></div>', 'progress' => 100];
-		} else if ( $state==='clearcache' ) {
+		} else if ( $state === 'clearcache' ) {
 			update_option( 'rsssl_ssltest_endpoint_ip', false );
 			update_option( 'rsssl_ssltest_base_request', false );
 			update_option( 'rsssl_ssltest_endpoint', false);
@@ -37,6 +37,7 @@ class rsssl_ssllabs {
 			$response = wp_remote_get( $url );
 			$status   = wp_remote_retrieve_response_code( $response );
 			$body     = wp_remote_retrieve_body( $response );
+
 			if ( $status == 200 ) {
 				$body = json_decode( $body );
 				//get active test
@@ -56,6 +57,10 @@ class rsssl_ssllabs {
 			if ( $status == 200 ) {
 				$endpoint_body = json_decode( $endpoint_body );
 				$message = __('Finalizing results','really-simple-ssl');
+				if ( $endpoint_body && isset($endpoint_body->errors[0]->message ) && $endpoint_body->errors[0]->message==='Could not find assessment results for the host') {
+					$endpoint_body = false;
+					$message = __('Encountered error, restarting...','really-simple-ssl');
+				}
 				update_option( 'rsssl_ssltest_endpoint', $endpoint_body );
 			}
 		}
@@ -79,7 +84,8 @@ class rsssl_ssllabs {
 			$html_arr[] = $this->has_hsts() ? __('HSTS enabled','really-simple-ssl') : __('HSTS not enabled','really-simple-ssl');
 			$html_arr[] = $this->has_warnings() ? __('Warnings detected, see the full report for details.','really-simple-ssl') : __("No warnings", 'really-simple-ssl');
 		}
-		$html = '<div class="rsssl-gridblock-progress-container"><div class="rsssl-gridblock-progress" style="width:'.$total_progress.'%"></div></div><div class="rsssl-ssltest"><div><div>'.implode('</div><div>', $html_arr ).'</div></div><div class="rsssl-grade"><span>'.$body->endpoints[0]->grade.'</span></div></div>';
+		$grade = isset($body->endpoints[0]->grade) ? $body->endpoints[0]->grade : '';
+		$html = '<div class="rsssl-gridblock-progress-container"><div class="rsssl-gridblock-progress" style="width:'.$total_progress.'%"></div></div><div class="rsssl-ssltest"><div><div>'.implode('</div><div>', $html_arr ).'</div></div><div class="rsssl-grade"><span>'.$grade.'</span></div></div>';
 		$url = 'https://www.ssllabs.com/analyze.html?d='.urlencode($domain);
 		$class = "rsssl-complete";
 		if ( $total_progress<100 ) {
@@ -96,7 +102,7 @@ class rsssl_ssllabs {
 	 */
 	private function has_hsts(){
 		$endpoint_body = get_option( 'rsssl_ssltest_endpoint');
-		return $endpoint_body->details->hstsPolicy->status === 'present';
+		return $endpoint_body && $endpoint_body->details->hstsPolicy->status === 'present';
 	}
 
 	/**
@@ -128,7 +134,7 @@ class rsssl_ssllabs {
 		if (isset($body->endpoints) && is_array($body->endpoints) ) {
 			$endpoints = $body->endpoints;
 			foreach ($endpoints as $endpoint){
-				$message = $endpoint->statusDetailsMessage;
+				$message = isset($endpoint->statusDetailsMessage) ? $endpoint->statusDetailsMessage : 'no message';
 				if ( $endpoint->statusMessage==='In progress'){
 					return $message;
 				}
@@ -148,7 +154,7 @@ class rsssl_ssllabs {
 			$endpoints = $body->endpoints;
 			$endpoints = array_reverse($endpoints);
 			foreach ($endpoints as $endpoint){
-				return $endpoint->serverName;
+				return isset($endpoint->serverName) ? $endpoint->serverName : __('searching...', 'really-simple-ssl');
 			}
 		}
 		return __('Searching...','really-simple-ssl');
@@ -188,7 +194,8 @@ class rsssl_ssllabs {
 			$total = count($endpoints);
 			$progress = 0;
 			foreach ($endpoints as $endpoint){
-				$progress += $endpoint->progress;
+				$new_progress = isset($endpoint->progress) ? $endpoint->progress :  0;
+				$progress += $new_progress;
 			}
 			$total_progress = $progress/$total;
 		}
