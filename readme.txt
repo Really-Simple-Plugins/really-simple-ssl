@@ -6,7 +6,7 @@ Requires at least: 4.9
 License: GPL2
 Tested up to: 5.9
 Requires PHP: 5.6
-Stable tag: 5.3.1
+Stable tag: 5.3.2
 
 No setup required! You only need an SSL certificate, and this plugin will do the rest.
 
@@ -90,6 +90,9 @@ The plugin checks your certificate before enabling, but if, for example, you mig
 If you can't deactivate, do not just remove the plugin folder to uninstall! Follow these [instructions](https://really-simple-ssl.com/knowledge-base/uninstall-websitebackend-not-accessible/) instead.
 
 == Changelog ==
+= 5.3.2 =
+* Fix: remove obsolete domain list generation function, preventing issues on large multisite installations
+
 = 5.3.1 =
 * Improvement: updated other plugins section
 * Improvement: added space in .htaccess comment for redirects
