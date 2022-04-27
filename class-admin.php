@@ -2895,6 +2895,9 @@ class rsssl_admin extends rsssl_front_end
                         'plusone' => true,
                     ),
                 ),
+                'setting' => [
+                        ''
+                ],
             ),
 
             'ssl_detected' => array(
