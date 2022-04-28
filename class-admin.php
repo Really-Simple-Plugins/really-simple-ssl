@@ -1028,7 +1028,7 @@ class rsssl_admin extends rsssl_front_end
 		if ( !is_multisite() ) return;
 
 		$this->sites = get_transient('rsssl_domain_list');
-		if ( !$this->sites ) {
+		if ( $this->sites ) {
 			//create list of all activated sites with SSL
 			$this->sites = array();
 			$nr_of_sites = RSSSL()->rsssl_multisite->get_total_blog_count();
@@ -1044,7 +1044,6 @@ class rsssl_admin extends rsssl_front_end
 					}
 
 					if (is_plugin_active(rsssl_plugin) && $ssl_enabled) {
-						$this->trace_log("- adding: " . home_url());
 						$this->sites[] = home_url();
 					}
 					restore_current_blog(); //switches back to previous blog, not current, so we have to do it each loop
@@ -1055,7 +1054,7 @@ class rsssl_admin extends rsssl_front_end
 		}
 	}
 
-    
+
 	/**
      * Configures the site for SSL
      *
