@@ -19,6 +19,14 @@ import {
 } from '@wordpress/element';
 
 class Field extends Component {
+    constructor() {
+        super( ...arguments );
+        this.highLightClass = this.props.highLightedField===this.props.field.id ? 'rsssl-highlight' : '';
+    }
+
+    componentDidMount() {
+        this.props.highLightField('');
+    }
     onChangeHandler(fieldValue) {
         let fields = this.props.fields;
         let field = this.props.field;
@@ -46,9 +54,11 @@ class Field extends Component {
                 <span></span>
             );
         }
+
+
         if ( field.type==='checkbox' ){
             return (
-                <PanelBody>
+                <PanelBody className={ this.highLightClass}>
                     <ToggleControl
                         checked= { field.value==1 }
                         help={ field.comment }
@@ -60,7 +70,7 @@ class Field extends Component {
         }
         if ( field.type==='radio' ){
             return (
-                <PanelBody>
+                <PanelBody className={ this.highLightClass}>
                     <RadioControl
                         label={ field.label }
                         onChange={ ( fieldValue ) => this.onChangeHandler(fieldValue) }
@@ -71,7 +81,7 @@ class Field extends Component {
         }
         if ( field.type==='text' ){
             return (
-                <PanelBody>
+                <PanelBody className={ this.highLightClass}>
                     <TextControl
                         help={ field.comment }
                         label={ field.label }
@@ -83,7 +93,7 @@ class Field extends Component {
         }
         if ( field.type==='number' ){
             return (
-                <PanelBody>
+                <PanelBody className={ this.highLightClass}>
                     <NumberControl
                         onChange={ ( fieldValue ) => this.onChangeHandler(fieldValue) }
                         help={ field.comment }
@@ -95,7 +105,7 @@ class Field extends Component {
         }
         if ( field.type==='email'){
             return (
-                <PanelBody>
+                <PanelBody className={ this.highLightClass}>
                     <TextControl
                         help={ field.comment }
                         label={ field.label }
@@ -107,7 +117,7 @@ class Field extends Component {
         }
         if ( field.type==='select') {
             return (
-                <PanelBody>
+                <PanelBody className={ this.highLightClass}>
                     <SelectControl
                         // multiple
                         help={ field.comment }

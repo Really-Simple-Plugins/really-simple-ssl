@@ -15,7 +15,7 @@ class MenuItem extends Component {
         };
     }
     handleClick(){
-        this.props.selectMenu(this.props.menuItem);
+        this.props.selectMenu(this.props.menuItem.id);
     }
 
     componentDidMount() {

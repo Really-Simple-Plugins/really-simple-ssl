@@ -62,6 +62,8 @@ function rsssl_menu( $group_id = 'settings' ){
 }
 
 function rsssl_migrate_settings() {
+	//upgrade both site and network settings
+
 	//rlrsssl_options autoreplace_insecure_links => mixed_content_fixer
 	//wp_redirect
 	//htaccess_redirect
@@ -78,11 +80,14 @@ function rsssl_fields(){
 	$fields = [
 		[
 			'id'          => 'mixed_content_fixer',
-			'menu_id'     => 'general',
-			'group_id'    => 'general',
+			'menu_id'     => 'mixed_content_scan',
+			'group_id'    => 'mixed_content_scan',
 			'type'        => 'checkbox',
 			'label'       => __( "Mixed content fixer", 'really-simple-ssl' ),
-			'help'        => __( 'In most cases you need to leave this enabled, to prevent mixed content issues on your site.', 'really-simple-ssl' ),
+			'help'        => [
+								'label' => 'default',
+								'text' => __( 'In most cases you need to leave this enabled, to prevent mixed content issues on your site.', 'really-simple-ssl' ),
+							 ],
 			'disabled'    => false,
 			'default'     => true,
 		],
@@ -92,7 +97,10 @@ function rsssl_fields(){
 			'group_id'    => 'general',
 			'type'        => 'checkbox',
 			'label'       => __( "Enable WordPress 301 redirect", 'really-simple-ssl' ),
-			'help'     => __( 'Redirects all requests over HTTP to HTTPS using a PHP 301 redirect. Enable if the .htaccess redirect cannot be used, for example on NGINX servers.', 'really-simple-ssl' ),
+			'help'        => [
+								'label' => 'default',
+								'text' => __( 'Redirects all requests over HTTP to HTTPS using a PHP 301 redirect. Enable if the .htaccess redirect cannot be used, for example on NGINX servers.', 'really-simple-ssl' ),
+							],
 			'disabled'    => false,
 			'default'     => false,
 			'server_conditions'  => [
@@ -108,8 +116,11 @@ function rsssl_fields(){
 			'group_id'          => 'general',
 			'type'              => 'checkbox',
 			'label'             => __( "Enable 301 .htaccess redirect", 'really-simple-ssl' ),
-			'help'              => __( 'A .htaccess redirect is faster and works better with caching. Really Simple SSL detects the redirect code that is most likely to work (99% of websites), but this is not 100%. Make sure you know how to regain access to your site if anything goes wrong!',
-				'really-simple-ssl' ),
+			'help'              => [
+									'label' => 'default',
+									'text' => __( 'A .htaccess redirect is faster and works better with caching. Really Simple SSL detects the redirect code that is most likely to work (99% of websites), but this is not 100%. Make sure you know how to regain access to your site if anything goes wrong!',
+									'really-simple-ssl' ),
+									],
 			'disabled'          => false,
 			'default'           => false,
 			//when enabled networkwide, it's handled on the network settings page
@@ -132,7 +143,10 @@ function rsssl_fields(){
 			'group_id'    => 'general',
 			'type'        => 'checkbox',
 			'label'       => __( "Stop editing the .htaccess file", 'really-simple-ssl' ),
-			'help'     => __( 'If you want to customize the Really Simple SSL .htaccess, you need to prevent Really Simple SSL from rewriting it. Enabling this option will do that.', 'really-simple-ssl' ),
+			'help'        => [
+							'label' => 'default',
+							'text' => __( 'If you want to customize the Really Simple SSL .htaccess, you need to prevent Really Simple SSL from rewriting it. Enabling this option will do that.', 'really-simple-ssl' ),
+							],
 			'disabled'    => false,
 			'default'     => false,
 			//on multisite this setting can only be set networkwide
@@ -150,7 +164,10 @@ function rsssl_fields(){
 			'group_id'    => 'general',
 			'type'        => 'checkbox',
 			'label'       => __( "Fire mixed content fixer with different method", 'really-simple-ssl' ),
-			'help'     => __( 'If this option is set to true, the mixed content fixer will fire on the init hook instead of the template_redirect hook. Only use this option when you experience problems with the mixed content fixer.', 'really-simple-ssl' ),
+			'help'        => [
+							'label' => 'default',
+							'text' => __( 'If this option is set to true, the mixed content fixer will fire on the init hook instead of the template_redirect hook. Only use this option when you experience problems with the mixed content fixer.', 'really-simple-ssl' ),
+							],
 			'disabled'    => false,
 			'default'     => false,
 			'react_conditions' => [
@@ -166,7 +183,10 @@ function rsssl_fields(){
 			'group_id'    => 'general',
 			'type'        => 'checkbox',
 			'label'       => __( "Dismiss all Really Simple SSL notices", 'really-simple-ssl' ),
-			'help'     => __( "Enable this option to permanently dismiss all +1 notices in the 'Your progress' tab'", 'really-simple-ssl' ),
+			'help'        => [
+							'label' => 'default',
+							'text' => __( "Enable this option to permanently dismiss all +1 notices in the 'Your progress' tab'", 'really-simple-ssl' ),
+							],
 			'disabled'    => true,
 			'default'     => false,
 		],
@@ -176,22 +196,29 @@ function rsssl_fields(){
 			'group_id'    => 'general',
 			'type'        => 'checkbox',
 			'label'       => __( "Enable High Contrast mode", 'really-simple-ssl' ),
-			'help'     => __( "If enabled, all the Really Simple SSL pages within the WordPress admin will be in high contrast", 'really-simple-ssl' ),
+			'help'        => [
+							'label' => 'default',
+							'text' => __( "If enabled, all the Really Simple SSL pages within the WordPress admin will be in high contrast", 'really-simple-ssl' ),
+							],
 			'disabled'    => true,
 			'default'     => false,
 		],
 
 	];
 	$fields = apply_filters('rsssl_fields', $fields);
-	//handle server side conditions
-	foreach ( $fields as $key => $field ) {
-		$fields[$key] = wp_parse_args($field, ['visible'=> true]);
 
+	foreach ( $fields as $key => $field ) {
+		$field = wp_parse_args($field, ['id'=>false, 'visible'=> true, 'disabled'=>false]);
+
+		//handle server side conditions
 		if (isset($field['server_conditions'])) {
 			if ( !rsssl_conditions_apply($field['server_conditions']) ){
 				unset($fields[$key]);
+				continue;
 			}
 		}
+		$field['value'] = rsssl_get_option($field['id']);
+		$fields[$key] = apply_filters('rsssl_field', $field, $field['id']);
 	}
 
 	return array_values($fields);

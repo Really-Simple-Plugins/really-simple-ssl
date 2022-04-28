@@ -1172,8 +1172,8 @@
 .rsssl-highlight {
   background-color: #fff;
   border-right: 4px solid #61ce70;
-  -o-animation: fadeIt 5s ease-in-out;
-  animation: fadeIt 5s ease-in-out;
+  -o-animation: fadeIt 3s ease-in-out;
+  animation: fadeIt 3s ease-in-out;
 }
 @-o-keyframes fadeIt {
   0% {

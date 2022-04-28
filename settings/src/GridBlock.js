@@ -90,6 +90,7 @@ class GridBlock extends Component {
 
     componentDidMount() {
         this.getBlockData = this.getBlockData.bind(this);
+        this.highLightField = this.highLightField.bind(this);
         this.setBlockProps = this.setBlockProps.bind(this);
         if ( this.props.block.content.type==='html' || this.props.block.content.type==='react' ) {
             let content = this.props.block.content.data;
@@ -114,6 +115,10 @@ class GridBlock extends Component {
         })
     }
 
+    highLightField(fieldId){
+        this.props.highLightField(fieldId);
+    }
+
     render(){
         let {
             isAPILoaded,
@@ -129,7 +134,7 @@ class GridBlock extends Component {
                 this.getBlockData('refresh');
             }, blockData.content.interval );
         }
-        let DynamicBlockProps = { setBlockProps: this.setBlockProps, BlockProps: this.BlockProps, runTest: this.runTest, fields: this.props.fields, isApiLoaded: this.props.isApiLoaded };
+        let DynamicBlockProps = { setBlockProps: this.setBlockProps, BlockProps: this.BlockProps, runTest: this.runTest, fields: this.props.fields, isApiLoaded: this.props.isApiLoaded, highLightField: this.highLightField };
         return (
             <div className={className}>
                 <div className="item-container">
