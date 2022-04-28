@@ -3831,6 +3831,7 @@ var SettingsGroup = /*#__PURE__*/function (_Component2) {
       var _this3 = this;
 
       var selectedMenuItem = this.props.selectedMenuItem;
+      console.log(selectedMenuItem);
       var selectedFields = []; //get all fields with group_id this.props.group_id
 
       var _iterator = _createForOfIteratorHelper(this.props.fields),
@@ -3910,6 +3911,7 @@ var Settings = /*#__PURE__*/function (_Component3) {
       var selectedMenuItem = this.props.selectedMenuItem;
       var selectedStep = this.props.selectedStep;
       var menu = this.props.menu;
+      console.log(menu);
 
       if (!isAPILoaded) {
         return Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_5__["createElement"])(_wordpress_components__WEBPACK_IMPORTED_MODULE_8__["Placeholder"], null);
@@ -3980,6 +3982,9 @@ var Settings = /*#__PURE__*/function (_Component3) {
         _iterator4.f();
       }
 
+      var selectedMenuItemObject = menu.menu_items.filter(function (menutItem) {
+        return menutItem.id === selectedMenuItem;
+      })[0];
       return Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_5__["createElement"])("div", {
         className: "rsssl-wizard-settings"
       }, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_5__["createElement"])("div", {
@@ -3990,7 +3995,7 @@ var Settings = /*#__PURE__*/function (_Component3) {
           index: i,
           highLightField: _this5.props.highLightField,
           highLightedField: _this5.props.highLightedField,
-          selectedMenuItem: selectedMenuItem,
+          selectedMenuItem: selectedMenuItemObject,
           saveChangedFields: _this5.props.saveChangedFields,
           group: group,
           fields: selectedFields

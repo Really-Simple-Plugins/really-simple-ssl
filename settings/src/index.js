@@ -67,6 +67,7 @@ class SettingsGroup extends Component {
 
 	render(){
 		let selectedMenuItem = this.props.selectedMenuItem;
+		console.log(selectedMenuItem);
 		let selectedFields = [];
 		//get all fields with group_id this.props.group_id
 		for (const selectedField of this.props.fields){
@@ -108,7 +109,7 @@ class Settings extends Component {
 		let selectedMenuItem = this.props.selectedMenuItem;
 		let selectedStep = this.props.selectedStep;
 		let menu = this.props.menu;
-
+		console.log(menu);
 		if ( ! isAPILoaded ) {
 			return (
 				<Placeholder></Placeholder>
@@ -139,11 +140,12 @@ class Settings extends Component {
 			help.id = notice.id;
 			notices.push(notice.help);
 		}
+		let selectedMenuItemObject = menu.menu_items.filter(menutItem => menutItem.id === selectedMenuItem)[0];
 		return (
 			<div className="rsssl-wizard-settings">
 				<div className="rsssl-wizard__main">
 					<Panel>
-						{groups.map((group, i) => <SettingsGroup key={i} index={i} highLightField={this.props.highLightField} highLightedField={this.props.highLightedField} selectedMenuItem={selectedMenuItem} saveChangedFields={this.props.saveChangedFields} group={group} fields={selectedFields}/>)}
+						{groups.map((group, i) => <SettingsGroup key={i} index={i} highLightField={this.props.highLightField} highLightedField={this.props.highLightedField} selectedMenuItem={selectedMenuItemObject} saveChangedFields={this.props.saveChangedFields} group={group} fields={selectedFields}/>)}
 						<div className="rsssl-buttons-row">
 							<Button
 								isPrimary
