@@ -228,6 +228,7 @@ class rsssl_admin extends rsssl_front_end
         //when configuration should run again
         if ($this->clicked_activate_ssl() || !$this->ssl_enabled || !$this->site_has_ssl || $is_on_settings_page || is_network_admin() || defined('RSSSL_DOING_SYSTEM_STATUS') ) {
             $this->detect_configuration();
+	        if (is_multisite()) $this->build_domain_list();//has to come after clicked_activate_ssl, otherwise this domain won't get counted.
 
             //flush caches when just activated ssl
             //flush the permalinks
