@@ -1013,7 +1013,50 @@ class rsssl_admin extends rsssl_front_end
         }
     }
 
-    /**
+
+	/**
+	 * Creates an array of all domains where the plugin is active AND SSL is active, only used for multisite.
+	 *
+	 * @since  2.1
+	 *
+	 * @access public
+	 *
+	 */
+
+	public function build_domain_list()
+	{
+		if ( !is_multisite() ) return;
+
+		$this->sites = get_transient('rsssl_domain_list');
+		if ( !$this->sites ) {
+			//create list of all activated sites with SSL
+			$this->sites = array();
+			$nr_of_sites = RSSSL()->rsssl_multisite->get_total_blog_count();
+			if ( $nr_of_sites < 50 ) {
+				$sites = RSSSL()->rsssl_multisite->get_sites_bw_compatible(0, $nr_of_sites);
+				foreach ($sites as $site) {
+					$this->switch_to_blog_bw_compatible($site);
+					$options = get_option('rlrsssl_options');
+					$ssl_enabled = FALSE;
+					if (isset($options)) {
+						$site_has_ssl = isset($options['site_has_ssl']) ? $options['site_has_ssl'] : FALSE;
+						$ssl_enabled = isset($options['ssl_enabled']) ? $options['ssl_enabled'] : $site_has_ssl;
+					}
+
+					if (is_plugin_active(rsssl_plugin) && $ssl_enabled) {
+						$this->trace_log("- adding: " . home_url());
+						$this->sites[] = home_url();
+					}
+					restore_current_blog(); //switches back to previous blog, not current, so we have to do it each loop
+				}
+			}
+
+			set_transient('rsssl_domain_list', $this->sites, HOUR_IN_SECONDS);
+		}
+	}
+
+    
+	/**
      * Configures the site for SSL
      *
      * @since  2.2
