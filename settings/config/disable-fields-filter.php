@@ -61,5 +61,5 @@ function rsssl_disable_fields($field, $field_id){
 
 	return $field;
 }
-add_filter('rsssl_field', 'rsssl_disable_fields');
+add_filter('rsssl_field', 'rsssl_disable_fields', 10, 2);
 

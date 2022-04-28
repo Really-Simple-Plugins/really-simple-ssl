@@ -1028,7 +1028,7 @@ class rsssl_admin extends rsssl_front_end
 		if ( !is_multisite() ) return;
 
 		$this->sites = get_transient('rsssl_domain_list');
-		if ( $this->sites ) {
+		if ( !$this->sites ) {
 			//create list of all activated sites with SSL
 			$this->sites = array();
 			$nr_of_sites = RSSSL()->rsssl_multisite->get_total_blog_count();

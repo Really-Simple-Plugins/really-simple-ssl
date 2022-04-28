@@ -166,7 +166,8 @@ function rsssl_fields(){
 			'label'       => __( "Fire mixed content fixer with different method", 'really-simple-ssl' ),
 			'help'        => [
 							'label' => 'default',
-							'text' => __( 'If this option is set to true, the mixed content fixer will fire on the init hook instead of the template_redirect hook. Only use this option when you experience problems with the mixed content fixer.', 'really-simple-ssl' ),
+							'title' => __( "Fire mixed content fixer with different method", 'really-simple-ssl' ),
+							'text'  => __( 'If this option is set to true, the mixed content fixer will fire on the init hook instead of the template_redirect hook. Only use this option when you experience problems with the mixed content fixer.', 'really-simple-ssl' ),
 							],
 			'disabled'    => false,
 			'default'     => false,

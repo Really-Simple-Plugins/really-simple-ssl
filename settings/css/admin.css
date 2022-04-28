@@ -94,11 +94,21 @@
 }
 #rsssl-container .rsssl-wizard-settings .rsssl-wizard__help {
   min-width: 25%;
+  max-width: 300px;
 }
 #rsssl-container .rsssl-wizard-settings .rsssl-wizard__help .rsssl-wizard__help_notice {
   margin: 20px;
   padding: 20px;
   background-color: white;
+}
+#rsssl-container .rsssl-wizard-settings .rsssl-wizard__help .rsssl-wizard__help_notice .rsssl-wizard__help_title.rsssl-wizard__help_has_content {
+  cursor: pointer;
+}
+#rsssl-container .rsssl-wizard-settings .rsssl-wizard__help .rsssl-wizard__help_notice .rsssl-wizard__help_content {
+  display: none;
+}
+#rsssl-container .rsssl-wizard-settings .rsssl-wizard__help .rsssl-wizard__help_notice.rsssl-wizard__help_open .rsssl-wizard__help_content {
+  display: block;
 }
 
 .rsssl-wizard__notices {

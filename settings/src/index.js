@@ -23,17 +23,32 @@ import GridBlock from './GridBlock';
  * Render a help notice in the sidebar
  */
 class Help extends Component {
+	handleClick(id){
+		console.log(id);
+		let el = document.querySelector('[data-help_index="'+id+'"]');
+		if (el.classList.contains('rsssl-wizard__help_open')) {
+			el.classList.remove('rsssl-wizard__help_open');
+		} else {
+			el.classList.add('rsssl-wizard__help_open');
+		}
+	}
 	render(){
 		let notice = this.props.help;
-		if (notice.text ) {
-			return (
-				<div className="rsssl-wizard__help_notice" data-field_id={this.props.fieldId} dangerouslySetInnerHTML={{__html: notice.text}}></div>
-			);
-		} else {
-			return (
-				<span></span>
-			);
+		if ( !notice.title ){
+			notice.title = notice.text;
+			notice.text = false;
 		}
+
+		let titleClass = 'rsssl-wizard__help_title';
+		if (notice.text) titleClass+= ' rsssl-wizard__help_has_content';
+
+		return (
+			<div data-help_index={this.props.index} className="rsssl-wizard__help_notice" data-field_id={this.props.field}>
+				<div className={titleClass} onClick={ () => this.handleClick(this.props.index) }>{notice.title}</div>
+				{notice.text && <div className="rsssl-wizard__help_content" dangerouslySetInnerHTML={{__html: notice.text}}></div>}
+			</div>
+		);
+
 	}
 }
 
@@ -112,13 +127,18 @@ class Settings extends Component {
 		for (const notice of progress.notices){
 			if ( notice.menu_id === selectedMenuItem ) {
 				let help = {};
+				help.title = notice.output.title ? notice.output.title : false;
 				help.label = notice.output.label;
-				help.fieldId = notice.field_id;
+				help.id = notice.field_id;
 				help.text = notice.output.msg;
 				notices.push(help);
 			}
 		}
-		let fieldNotices = selectedFields.filter(field => field.help);
+		for (const notice of selectedFields.filter(field => field.help)){
+			let help = notice.help;
+			help.id = notice.id;
+			notices.push(notice.help);
+		}
 		return (
 			<div className="rsssl-wizard-settings">
 				<div className="rsssl-wizard__main">
@@ -134,8 +154,7 @@ class Settings extends Component {
 					</Panel>
 				</div>
 				<div className="rsssl-wizard__help">
-					{notices.map((help, i) => <Help key={i} index={i} help={help} fieldId={help.fieldId}/>)}
-					{fieldNotices.map((field, i) => <Help key={i} index={i} help={field.help} fieldId={field.id}/>)}
+					{notices.map((field, i) => <Help key={i} index={i} help={field} fieldId={field.id}/>)}
 				</div>
 			</div>
 		)
