@@ -93,6 +93,7 @@ If you can't deactivate, do not just remove the plugin folder to uninstall! Foll
 = 5.3.2 =
 * Fix: remove obsolete domain list generation function, preventing issues on large multisite installations
 * Fix: Non-network admins can alter network settings props @madtownlems
+* Improvement: drop Expect-CT from recommended headers
 
 = 5.3.1 =
 * Improvement: updated other plugins section
