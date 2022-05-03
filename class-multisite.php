@@ -354,7 +354,7 @@ if (!class_exists('rsssl_multisite')) {
 	        $can_activate_per_site = '';
             //only block the network wide option if it's not enabled.
             if ( !$this->selected_networkwide_or_per_site || $this->ssl_enabled_networkwide) {
-	            $can_activate_per_site = RSSSL()->rsssl_multisite->get_total_blog_count()>50 && RSSSL()->really_simple_ssl->do_wpconfig_loadbalancer_fix ? 'disabled="disabled"':'';
+	            $can_activate_per_site = RSSSL()->rsssl_multisite->get_total_blog_count()>5 && RSSSL()->really_simple_ssl->do_wpconfig_loadbalancer_fix ? 'disabled="disabled"':'';
             }
             ?>
             <select name="rlrsssl_network_options[ssl_enabled_networkwide]">
@@ -569,7 +569,7 @@ if (!class_exists('rsssl_multisite')) {
 	        if ( $screen->base === 'post' ) return;
 
             if (is_network_admin() && RSSSL()->really_simple_ssl->wpconfig_ok()) {
-                $can_activate_per_site = RSSSL()->rsssl_multisite->get_total_blog_count()>50 && RSSSL()->really_simple_ssl->do_wpconfig_loadbalancer_fix ? 'disabled="disabled"':'';
+                $can_activate_per_site = RSSSL()->rsssl_multisite->get_total_blog_count()>5 && RSSSL()->really_simple_ssl->do_wpconfig_loadbalancer_fix ? 'disabled="disabled"':'';
 
                 $class = "updated notice activate-ssl really-simple-plugins";
                 $title = __("Setup", "really-simple-ssl");
