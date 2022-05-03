@@ -302,7 +302,7 @@ function rsssl_blocks(){
 				'type' => 'react', 'data' => 'ProgressHeader'
 			],
 			'content' => ['type'=>'react', 'data' => 'ProgressBlock'],
-			'footer'  => ['type'=>'html', 'data' => ''],
+			'footer'  => ['type'=>'template', 'data' => 'progress-footer.php'],
 			'size'    => 'default',
 			'height'    => 'default',
 		],
