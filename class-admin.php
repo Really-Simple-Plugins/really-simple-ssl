@@ -2055,10 +2055,6 @@ class rsssl_admin extends rsssl_front_end
 				'name' => 'Referrer-Policy',
 				'pattern' =>  'Referrer-Policy',
 			),
-			array(
-				'name' => 'Expect-CT',
-				'pattern' =>  'Expect-CT',
-			),
             array(
                 'name' => 'X-Frame-Options',
                 'pattern' =>  'X-Frame-Options',
