@@ -1015,7 +1015,7 @@ class rsssl_admin extends rsssl_front_end
 			//create list of all activated sites with SSL
 			$this->sites = array();
 			$nr_of_sites = RSSSL()->rsssl_multisite->get_total_blog_count();
-            if ( $nr_of_sites < 50 ) {
+            if ( $nr_of_sites <= 50 ) {
 	            $sites = RSSSL()->rsssl_multisite->get_sites_bw_compatible(0, $nr_of_sites);
 	            foreach ($sites as $site) {
 		            $this->switch_to_blog_bw_compatible($site);
@@ -1698,6 +1698,8 @@ class rsssl_admin extends rsssl_front_end
 
     public function detect_configuration()
     {
+        //@todo remove this line, for testing. 
+	    $this->do_wpconfig_loadbalancer_fix = TRUE;
         $this->trace_log("Detecting configuration");
         //if current page is on SSL, we can assume SSL is available, even when an errormsg was returned
         if ($this->is_ssl_extended()) {
