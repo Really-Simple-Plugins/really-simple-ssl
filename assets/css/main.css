@@ -1199,9 +1199,6 @@
     background-color: inherit;
   }
 }
-.form-table th {
-  padding-left: 10px;
-}
 /* License page */
 .rsssl-grid .rsssl-item.rsssl-license-grid .item-container .form-table tbody tr {
   max-width: 100%;
