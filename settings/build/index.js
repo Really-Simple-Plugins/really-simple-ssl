@@ -2752,7 +2752,7 @@ var GridBlock = /*#__PURE__*/function (_Component2) {
     _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_0___default()(this, GridBlock);
 
     _this = _super2.apply(this, arguments);
-    _this.footerHtml = _this.props.block.footer.html;
+    _this.footerHtml = _this.props.block.footer.data;
     _this.BlockProps = [];
     _this.state = {
       isAPILoaded: false,
@@ -2902,7 +2902,7 @@ var GridBlock = /*#__PURE__*/function (_Component2) {
         text: blockData.footer.button.text,
         onClick: this.getBlockData,
         disabled: this.testDisabled
-      }), blockData.footer.hasOwnProperty('type') && blockData.footer.hasOwnProperty('type') && Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_5__["createElement"])("span", {
+      }), blockData.footer.type === 'html' && Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_5__["createElement"])("span", {
         className: "rsssl-footer-html",
         dangerouslySetInnerHTML: {
           __html: this.footerHtml

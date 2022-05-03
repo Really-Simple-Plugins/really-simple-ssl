@@ -39,7 +39,7 @@ var dynamicComponents = {
 class GridBlock extends Component {
     constructor() {
         super( ...arguments );
-        this.footerHtml = this.props.block.footer.html;
+        this.footerHtml = this.props.block.footer.data;
         this.BlockProps=[];
         this.state = {
             isAPILoaded: false,
@@ -149,7 +149,7 @@ class GridBlock extends Component {
                     {blockData.content.type==='react' && <div className="rsssl-grid-item-content">{wp.element.createElement(dynamicComponents[content], DynamicBlockProps)}</div>}
                     <div className="rsssl-grid-item-footer">
                         { blockData.footer.hasOwnProperty('button') && <GridButton text={blockData.footer.button.text} onClick={this.getBlockData} disabled={this.testDisabled}/>}
-                        { blockData.footer.hasOwnProperty('type') && blockData.footer.hasOwnProperty('type') && <span className="rsssl-footer-html" dangerouslySetInnerHTML={{__html: this.footerHtml}}></span>}
+                        { blockData.footer.type==='html' && <span className="rsssl-footer-html" dangerouslySetInnerHTML={{__html: this.footerHtml}}></span>}
                     </div>
                 </div>
             </div>

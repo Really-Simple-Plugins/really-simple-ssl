@@ -324,7 +324,7 @@ function rsssl_blocks(){
 			'title'   => __( "Tips & Tricks", 'really-simple-ssl' ),
 			'help'    => __( 'A help text', 'really-simple-ssl' ),
 			'content' => ['type'=>'template', 'data' => 'tips-tricks.php'],
-			'footer'  => ['type'=>'template', 'data' => 'tips-tricks.php'],
+			'footer'  => ['type'=>'template', 'data' => 'tips-tricks-footer.php'],
 			'size'    => 'small',
 			'height'    => 'default',
 		],
