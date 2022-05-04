@@ -1698,8 +1698,6 @@ class rsssl_admin extends rsssl_front_end
 
     public function detect_configuration()
     {
-        //@todo remove this line, for testing. 
-	    $this->do_wpconfig_loadbalancer_fix = TRUE;
         $this->trace_log("Detecting configuration");
         //if current page is on SSL, we can assume SSL is available, even when an errormsg was returned
         if ($this->is_ssl_extended()) {

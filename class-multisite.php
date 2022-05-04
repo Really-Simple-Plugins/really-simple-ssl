@@ -371,7 +371,7 @@ if (!class_exists('rsssl_multisite')) {
 	        $can_activate_per_site = true;
 	        //only block the network wide option if it's not enabled.
 	        if ( !$this->selected_networkwide_or_per_site || $this->ssl_enabled_networkwide) {
-		        $can_activate_per_site = $this->get_total_blog_count()<5 || !RSSSL()->really_simple_ssl->do_wpconfig_loadbalancer_fix;
+		        $can_activate_per_site = $this->get_total_blog_count()<50 || !RSSSL()->really_simple_ssl->do_wpconfig_loadbalancer_fix;
 	        }
             return $can_activate_per_site;
         }
@@ -607,8 +607,6 @@ if (!class_exists('rsssl_multisite')) {
                 $content .= '</ul>';
 	            echo RSSSL()->really_simple_ssl->notice_html($class, $title, $content, $footer);
             }
-
-
         }
 
         /**
