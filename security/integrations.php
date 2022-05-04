@@ -126,7 +126,8 @@ $rsssl_integrations_list = apply_filters( 'rsssl_integrations', array(
 //
 //        ),
         'actions'              => array(
-			'fix'       => 'rsssl_no_wp_login_errors',
+			'fix'       => '_true_',
+//			'fix'       => 'rsssl_no_wp_login_errors',
         ),
     ),
     'disable-http-methods' => array(
