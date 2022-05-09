@@ -36,7 +36,6 @@ var dynamicComponents = {
     "SecurityFeaturesBlock": SecurityFeaturesBlock,
     "ProgressBlock": ProgressBlock,
     "ProgressHeader": ProgressHeader,
-    "SecurityFeaturesBlock": SecurityFeaturesBlock,
 };
 
 class GridBlock extends Component {
