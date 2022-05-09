@@ -74,7 +74,7 @@ function rsssl_migrate_settings() {
 
 function rsssl_fields(){
 	if ( !current_user_can('manage_options') ) {
-		return array();
+		return [];
 	}
 
 	$fields = [
@@ -90,6 +90,7 @@ function rsssl_fields(){
 							 ],
 			'disabled'    => false,
 			'default'     => true,
+			'new_features_block'     => true,
 		],
 		[
 			'id'          => 'wp_redirect',
@@ -109,6 +110,8 @@ function rsssl_fields(){
 					'RSSSL()->really_simple_ssl->ssl_enabled' => true,
 				]
 			],
+			'new_features_block'     => true,
+
 		],
 		[
 			'id'                => 'htaccess_redirect',
@@ -209,7 +212,7 @@ function rsssl_fields(){
 	$fields = apply_filters('rsssl_fields', $fields);
 
 	foreach ( $fields as $key => $field ) {
-		$field = wp_parse_args($field, ['id'=>false, 'visible'=> true, 'disabled'=>false]);
+		$field = wp_parse_args($field, ['id'=>false, 'visible'=> true, 'disabled'=>false, 'new_features_block' => false ]);
 
 		//handle server side conditions
 		if (isset($field['server_conditions'])) {
@@ -333,7 +336,7 @@ function rsssl_blocks(){
 			'header'  => false,
 			'title'   => __( "New: Security features", 'really-simple-ssl' ),
 			'help'    => __( 'A help text', 'really-simple-ssl' ),
-			'content' => ['type'=>'html', 'data' => 'tips/tricks html'],
+			'content' => ['type'=>'react', 'data' => 'NewFeatures'],
 			'footer'  => ['type'=>'html', 'data' => ''],
 			'size'    => 'default',
 			'height'    => 'half',
@@ -365,7 +368,6 @@ function rsssl_blocks(){
 
 	return $blocks;
 }
-
 
 /**
  * Render html based on template

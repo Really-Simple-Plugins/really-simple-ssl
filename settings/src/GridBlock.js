@@ -8,6 +8,7 @@ import {
 
 import * as rsssl_api from "./utils/api";
 import ProgressBlock from "./ProgressBlock";
+import NewFeatures from "./NewFeatures";
 import ProgressHeader from "./ProgressBlockHeader";
 
 /**
@@ -32,6 +33,7 @@ class GridButton extends Component {
  * @type {{SslLabs: JSX.Element}}
  */
 var dynamicComponents = {
+    "NewFeatures": NewFeatures,
     "ProgressBlock": ProgressBlock,
     "ProgressHeader": ProgressHeader,
 };
@@ -134,7 +136,8 @@ class GridBlock extends Component {
                 this.getBlockData('refresh');
             }, blockData.content.interval );
         }
-        let DynamicBlockProps = { setBlockProps: this.setBlockProps, BlockProps: this.BlockProps, runTest: this.runTest, fields: this.props.fields, isApiLoaded: this.props.isApiLoaded, highLightField: this.highLightField };
+
+        let DynamicBlockProps = { saveChangedFields: this.props.saveChangedFields, setBlockProps: this.setBlockProps, BlockProps: this.BlockProps, runTest: this.runTest, fields: this.props.fields, isApiLoaded: this.props.isApiLoaded, highLightField: this.highLightField };
         return (
             <div className={className}>
                 <div className="item-container">
