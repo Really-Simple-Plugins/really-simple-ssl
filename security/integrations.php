@@ -258,42 +258,23 @@ $rsssl_integrations_list = apply_filters( 'rsssl_integrations', array(
 		),
 	),
 ) );
-//
-///**
-// * Check if this plugin's integration is enabled
-// *
-// * @return bool
-// */
-//function rsssl_is_integration_enabled( $plugin_name ) {
-//	global $rsssl_integrations_list;
-//	if ( ! array_key_exists( $plugin_name, $rsssl_integrations_list ) ) {
-//		return false;
-//	}
-//	$fields = get_option( 'rsssl_options_integrations' );
-//	//default enabled, which means it's enabled when not set.
-//	if ( isset( $fields[ $plugin_name ] ) && $fields[ $plugin_name ] != 1 ) {
-//		return false;
-//	}
-//
-//	return true;
-//}
 
 /**
- * Check if a plugin from the integrations list is active
- * @param $plugin
+ * Check if this plugin's integration is enabled
  *
  * @return bool
  */
-//function rsssl_integration_plugin_is_active( $plugin ){
-//	return false;
-//	global $rsssl_integrations_list;
-//	if ( !isset($rsssl_integrations_list[ $plugin ]) ) {
-//		return false;
-//	}
-//	//because we need a default, we don't use the get_value from rsssl. The fields array is not loaded yet, so there are no defaults
-//	$fields = get_option( 'rsssl_options_integrations' );
-//	return isset( $fields[ $plugin ] ) ? $fields[ $plugin ] : true;
-//}
+function rsssl_is_integration_enabled( $plugin ) {
+	global $rsssl_integrations_list;
+	if ( ! array_key_exists( $plugin, $rsssl_integrations_list ) ) {
+		return false;
+	}
+	$field_id = $plugin['option_id'];
+	if (rsssl_get_option($field_id)) {
+		return true;
+	}
+	return false;
+}
 
 /**
  * code loaded without privileges to allow integrations between plugins and services, when enabled.
@@ -306,7 +287,7 @@ function rsssl_integrations() {
 	$actual_integrations_count = 0;
 
 	foreach ( $rsssl_integrations_list as $plugin => $details ) {
-		if ( rsssl_integration_plugin_is_active( $plugin ) ) {
+		if ( rsssl_is_integration_enabled( $plugin ) ) {
 			$actual_integrations_count++;
 			$details = wp_parse_args($details,
 				[
