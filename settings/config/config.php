@@ -449,7 +449,7 @@ function rsssl_blocks(){
 			'header'  => false,
 			'title'   => __( "New: Security features", 'really-simple-ssl' ),
 			'help'    => __( 'A help text', 'really-simple-ssl' ),
-			'content' => ['type'=>'react', 'data' => 'NewFeatures'],
+			'content' => ['type'=>'react', 'data' => 'SecurityFeaturesBlock'],
 			'footer'  => ['type'=>'html', 'data' => ''],
 			'size'    => 'default',
 			'height'    => 'half',

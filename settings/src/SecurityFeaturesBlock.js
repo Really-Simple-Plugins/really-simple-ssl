@@ -2,38 +2,53 @@ import {
     Component,
 } from '@wordpress/element';
 
-class SecurityFeaturesBlock extends Component {
+import {
+    Placeholder,
+} from '@wordpress/components';
+
+class SecurityFeatureBullet extends Component {
     constructor() {
-        super( ...arguments );
+        super( ...arguments);
+
+    }
+    componentDidMount() {
+
     }
 
-    render() {
+    render(){
+        let field = this.props.field;
+        let bulletClassName = field.value==1 ? 'rsssl-dot rsssl-dot-success' : 'rsssl-dot rsssl-dot-error';
+        return (
+            <div className="rsssl-new-feature">
+                <div className={bulletClassName}></div>
+                <div className="rssl-new-feature-label">{field.label}</div>
+            </div>
+        );
+    }
+}
+
+class SecurityFeaturesBlock extends Component {
+    constructor() {
+        super( ...arguments);
+
+    }
+    componentDidMount() {
+
+    }
+
+    render(){
+
+        if ( this.props.fields.length==0 ) {
+            return (
+                <Placeholder></Placeholder>
+            );
+        }
 
         let fields = this.props.fields;
-
-        let shownFields = [
-            'file_editing',
-            'anyone_can_register',
-        ];
-
-        // fields.map(item => {
-        //     console.log(item);
-        // })
-
-        shownFields.forEach(function (e) {
-            console.log(fields.indexOf(e));
-            // console.log(fields);
-            if ( fields.id === e ) {
-
-            }
-        });
-
+        fields = fields.filter( field => field.new_features_block===true );
         return (
-            <div className="rsssl-security-row">Security
-                <div className={this.props.status}></div>
-                <div className="rsssl-security-content">
-                    {this.props.content}
-                </div>
+            <div>
+                {fields.map((field, i) => <SecurityFeatureBullet key={i} index={i} field={field} fields={fields}/>)}
             </div>
         );
     }
