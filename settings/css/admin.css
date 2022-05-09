@@ -4,6 +4,9 @@
   margin: 20px;
   background-color: #fff;
 }
+#rsssl-container .rsssl-wizard-menu .rsssl-menu-item .rsssl-submenu-item {
+  margin-left: 20px;
+}
 
 #rsssl-container {
   display: flex;
@@ -50,8 +53,11 @@
   justify-content: center;
   align-items: center;
 }
-.rsssl-detailed-report {
+.rsssl-detailed-report, .rsssl-disclaimer {
   margin: 10px 25px;
+}
+
+.rsssl-detailed-report {
   text-align: center;
 }
 
@@ -71,6 +77,10 @@
   border: none;
   flex: auto 1;
 }
+#rsssl-container .rsssl-wizard-settings .rsssl-wizard__main .components-panel .rsssl-buttons-row {
+  padding: 10px;
+  float: right;
+}
 #rsssl-container .rsssl-wizard-settings .rsssl-wizard__main .components-panel__body-title {
   display: none;
 }
@@ -87,11 +97,21 @@
 }
 #rsssl-container .rsssl-wizard-settings .rsssl-wizard__help {
   min-width: 25%;
+  max-width: 300px;
 }
 #rsssl-container .rsssl-wizard-settings .rsssl-wizard__help .rsssl-wizard__help_notice {
   margin: 20px;
   padding: 20px;
   background-color: white;
+}
+#rsssl-container .rsssl-wizard-settings .rsssl-wizard__help .rsssl-wizard__help_notice .rsssl-wizard__help_title.rsssl-wizard__help_has_content {
+  cursor: pointer;
+}
+#rsssl-container .rsssl-wizard-settings .rsssl-wizard__help .rsssl-wizard__help_notice .rsssl-wizard__help_content {
+  display: none;
+}
+#rsssl-container .rsssl-wizard-settings .rsssl-wizard__help .rsssl-wizard__help_notice.rsssl-wizard__help_open .rsssl-wizard__help_content {
+  display: block;
 }
 
 .rsssl-wizard__notices {

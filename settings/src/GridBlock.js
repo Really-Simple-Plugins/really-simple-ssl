@@ -8,6 +8,7 @@ import {
 
 import * as rsssl_api from "./utils/api";
 import ProgressBlock from "./ProgressBlock";
+import NewFeatures from "./NewFeatures";
 import ProgressHeader from "./ProgressBlockHeader";
 import SecurityFeaturesBlock from './SecurityFeaturesBlock';
 
@@ -33,6 +34,7 @@ class GridButton extends Component {
  * @type {{SslLabs: JSX.Element}}
  */
 var dynamicComponents = {
+    "NewFeatures": NewFeatures,
     "ProgressBlock": ProgressBlock,
     "ProgressHeader": ProgressHeader,
     "SecurityFeaturesBlock": SecurityFeaturesBlock,
@@ -41,7 +43,7 @@ var dynamicComponents = {
 class GridBlock extends Component {
     constructor() {
         super( ...arguments );
-        this.footerHtml = this.props.block.footer.html;
+        this.footerHtml = this.props.block.footer.data;
         this.BlockProps=[];
         this.state = {
             isAPILoaded: false,
@@ -92,6 +94,7 @@ class GridBlock extends Component {
 
     componentDidMount() {
         this.getBlockData = this.getBlockData.bind(this);
+        this.highLightField = this.highLightField.bind(this);
         this.setBlockProps = this.setBlockProps.bind(this);
         if ( this.props.block.content.type==='html' || this.props.block.content.type==='react' ) {
             let content = this.props.block.content.data;
@@ -116,6 +119,10 @@ class GridBlock extends Component {
         })
     }
 
+    highLightField(fieldId){
+        this.props.highLightField(fieldId);
+    }
+
     render(){
         let {
             isAPILoaded,
@@ -131,7 +138,8 @@ class GridBlock extends Component {
                 this.getBlockData('refresh');
             }, blockData.content.interval );
         }
-        let DynamicBlockProps = { setBlockProps: this.setBlockProps, BlockProps: this.BlockProps, runTest: this.runTest, fields: this.props.fields, isApiLoaded: this.props.isApiLoaded };
+
+        let DynamicBlockProps = { saveChangedFields: this.props.saveChangedFields, setBlockProps: this.setBlockProps, BlockProps: this.BlockProps, runTest: this.runTest, fields: this.props.fields, isApiLoaded: this.props.isApiLoaded, highLightField: this.highLightField };
         return (
             <div className={className}>
                 <div className="item-container">
@@ -146,7 +154,7 @@ class GridBlock extends Component {
                     {blockData.content.type==='react' && <div className="rsssl-grid-item-content">{wp.element.createElement(dynamicComponents[content], DynamicBlockProps)}</div>}
                     <div className="rsssl-grid-item-footer">
                         { blockData.footer.hasOwnProperty('button') && <GridButton text={blockData.footer.button.text} onClick={this.getBlockData} disabled={this.testDisabled}/>}
-                        { blockData.footer.hasOwnProperty('html') && <span className="rsssl-footer-html" dangerouslySetInnerHTML={{__html: this.footerHtml}}></span>}
+                        { blockData.footer.type==='html' && <span className="rsssl-footer-html" dangerouslySetInnerHTML={{__html: this.footerHtml}}></span>}
                     </div>
                 </div>
             </div>

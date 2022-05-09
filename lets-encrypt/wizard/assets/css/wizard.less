@@ -1,6 +1,9 @@
 // out: wizard.css, sourcemap: false, compress: false
 @import '../../../../assets/css/variables.less';
+
 @brand-primary: @rsp-yellow;
+@color-success: @rsp-green;
+@light-grey: #eeeeee;
 @brand-secondary: #61ce70;
 @brand-tertiary: #29B6F6;
 @border-radius: 25px;
@@ -13,27 +16,35 @@
 @green-gap: 20px;
 @color-disabled: #F2F2F2;
 
+.rsssl-hidden {
+  display: none !important;
+}
+
 .rsssl-certificate-data {
-  right:10000px;
-  position:absolute;
-  background-color:#fff;
+  right: 10000px;
+  position: absolute;
+  background-color: #fff;
   padding: 0;
   white-space: nowrap;
 }
-.rsssl-copied-feedback-container{
-  padding:@default-padding;
-  color:@rsp-green;
+
+.rsssl-copied-feedback-container {
+  padding: @default-padding;
+  color: @rsp-green;
 }
+
 .rsssl-section .rsssl_letsencrypt_container {
   a.button {
-    margin-top:15px;
+    margin-top: 15px;
   }
 }
+
 /**
 * class to add a triangle pointer to each div
 */
 .rsssl-pointer {
-  position:relative;
+  position: relative;
+
   &:after {
     content: " ";
     position: absolute;
@@ -45,778 +56,139 @@
     border-bottom: 15px solid transparent;
   }
 }
+
 #rsssl-content-area {
-      display: grid;
-      grid-template-columns: 225px auto;
-      //grid-gap: @red-gap;
+  display: grid;
+  grid-template-columns: 225px auto;
+  //grid-gap: @red-gap;
+
+  h1 {
+    padding: 0;
+  }
+
+  .rsssl-wizard-title {
+    padding: @green-gap;
+    border-bottom: 1px solid #eeeeee;
+    display: flex;
+
+    h1 {
+      font-size: 18px;
+    }
+
+    justify-content: space-between;
+    align-content: center;
+
+    &.rsssl-section-content-notifications-header {
+      border-bottom: 1px solid #e6e6e6;
 
       h1 {
-        padding: 0;
+        font-weight: normal;
       }
+    }
+  }
 
-      .rsssl-wizard-title {
-        padding: @green-gap;
-        border-bottom: 1px solid #eeeeee;
-        display: flex;
+  .rsssl-wizard-subtitle h2 {
+    margin: @green-gap @green-gap 0 @green-gap;
+    font-size: 14px;
+  }
 
-        h1 {
-          font-size: 18px;
-        }
+  .rsssl-wizard-progress-bar {
+    background: #eeeeee;
+    height: 15px;
+    margin: @green-gap 0 0 0;
 
-        justify-content: space-between;
-        align-content: center;
+    .rsssl-wizard-progress-bar-value {
+      transition: width 0.5s;
+      -webkit-transition: width 0.5s;
+      height: 100%;
+      background: @rsp-green;
+      border-radius: 4px;
 
-        &.rsssl-section-content-notifications-header {
-          border-bottom: 1px solid #e6e6e6;
-
-          h1 {
-            font-weight: normal;
-          }
-        }
+      &.rsssl-error {
+        background-color: @rsp-red;
       }
+    }
+  }
 
-      .rsssl-wizard-subtitle h2 {
-        margin: @green-gap @green-gap 0 @green-gap;
-        font-size: 14px;
-      }
+  @import 'menu.less';
 
-      .rsssl-wizard-progress-bar {
-        background: #eeeeee;
-        height: 15px;
-        margin: @green-gap 0 0 0;
+  .rsssl-section-content {
+    margin: 0.5 * @green-gap;
 
-        .rsssl-wizard-progress-bar-value {
-          transition: width 0.5s;
-          -webkit-transition: width 0.5s;
-          height: 100%;
-          background: @rsp-green;
-          border-radius: 4px;
-          &.rsssl-error {
-            background-color: @rsp-red;
-          }
-        }
-      }
+    p {
+      margin: 0;
+    }
 
-      .rsssl-priority {
-        background-color: #000;
-        color:#fff;
-        border-color:#000;
-        margin-top:10px;
-      }
+    p:not(:first-child) {
+      margin-top: 1em;
+    }
 
-      .rsssl-wizard-menu {
+    form {
+      display: grid;
+      grid-template-columns: auto 325px;
+      grid-column-gap: @red-gap;
+
+      .rsssl-section-content-title-header {
         background-color: white;
-        margin: 0.5 * @green-gap;
-        margin-bottom: 0;
-        padding-bottom: @green-gap;
-        box-shadow: 0 0 5px 5px rgba(222, 222, 222, 0.2);
-
-        .rsssl-wizard-menu h1 {
-          font-weight: bold;
-        }
-        .rsssl-wizard-progress-bar {
-          margin: @green-gap;
-        }
-
-        .rsssl-icon {
-          margin:4px 0 0 0;
-        }
-
-
-        .rsssl-step {
-          .rsssl-step-header {
-            &.incomplete a h2 {
-              color: @gray;
-            }
-
-            text-decoration: none;
-
-            a {
-              display: inline-block;
-              padding: 5px @green-gap;
-              text-decoration: none;
-              width: calc(100% - (@green-gap + @green-gap));
-
-              h2 {
-                font-size: 15px;
-                margin: 0;
-              }
-            }
-
-            &.active a h2 {
-              color: @gray !important;
-            }
-
-            &:hover a {
-              h2 {
-                text-decoration: underline;
-              }
-            }
-
-            &.active:hover a {
-              background: white;
-              pointer-events: none;
-            }
-          }
-
-          .rsssl-section {
-            display: grid;
-            grid-template-columns: @green-gap 1fr;
-
-            span {
-              align-self: center;
-              justify-self: center;
-            }
-
-            margin: 0 @green-gap;
-
-            a {
-              h3 {
-                color: @gray;
-              }
-
-              &:visited h3 {
-                color: initial;
-              }
-
-              display: inline-block;
-              text-decoration: none;
-              padding: 3px 5px;
-
-              h3 {
-                font-size: 12px;
-                font-weight: normal;
-                margin: 0;
-              }
-            }
-
-            &.active a h3 {
-              color: grey;
-            }
-
-            &:hover a {
-              h3 {
-                text-decoration: underline;
-              }
-            }
-
-            &.active:hover a {
-              background: white;
-              pointer-events: none;
-            }
-          }
-        }
-
       }
 
-      .rsssl-section-content {
-        margin: 0.5 * @green-gap;
+      .rsssl-wizard-intro, .rsssl-template-intro {
+        grid-column-start: 1;
+        background-color: white;
+        padding: @green-gap @green-gap 0 @green-gap;
+      }
 
-        p {
-          margin: 0;
+      //if an intro is nested in a field, we don't need the padding, as the field already has padding
+      .rsssl-field .rsssl-wizard-intro {
+        padding: 0 0 @green-gap 0;
+      }
+
+      .rsssl-button {
+        background-color: white;
+        grid-column-start: 1;
+        padding: @green-gap @green-gap 0 @green-gap;
+      }
+
+      .field-group {
+        grid-column: span 2;
+        display: grid;
+        grid-template-columns: auto 325px;
+        grid-column-gap: @red-gap;
+
+        .rsssl-field {
+          grid-column-start: 1;
         }
 
-        p:not(:first-child) {
-          margin-top: 1em;
+        .rsssl-help-warning-wrap {
+          margin-top: -20px;
         }
+      }
 
-        form {
-          display: grid;
-          grid-template-columns: auto 325px;
-          grid-column-gap: @red-gap;
-
-          .rsssl-section-content-title-header {
-            background-color: white;
-          }
-
-          .rsssl-wizard-intro, .rsssl-template-intro
-          .rsssl-master-label {
-            grid-column-start: 1;
-            background-color: white;
-            padding: @green-gap @green-gap 0 @green-gap;
-          }
-
-          //if an intro is nested in a field, we don't need the padding, as the field already has padding
-          .rsssl-field .rsssl-wizard-intro {
-            padding: 0 0 @green-gap 0;
-          }
-
-          .rsssl-button {
-            background-color: white;
-            grid-column-start: 1;
-            padding: @green-gap @green-gap 0 @green-gap;
-          }
-
-          .field-group {
-            grid-column: span 2;
-            display: grid;
-            grid-template-columns: auto 325px;
-            grid-column-gap: @red-gap;
-
-            .rsssl-field {
-              grid-column-start: 1;
-            }
-            .rsssl-help-warning-wrap {
-              margin-top: -20px;
-            }
-          }
-
-          .rsssl-section-footer {
-            grid-column-start: 1;
-            background-color: white;
-            padding: @green-gap;
-            display: grid;
-            align-items: center;
-            grid-template-columns: 1fr auto;
-
-            .rsssl-buttons-container {
-              grid-column-start: 2;
-
-              input +input {
-                margin-left: @green-gap;
-              }
-            }
+      .rsssl-section-footer {
+        grid-column-start: 1;
+        background-color: white;
+        padding: @green-gap;
+        display: grid;
+        align-items: center;
+        grid-template-columns: 1fr auto;
+        .rsssl-buttons-container {
+          grid-column-start: 2;
+          input + input {
+            margin-left: @green-gap;
           }
         }
       }
     }
-
-#rsssl-wizard  {
-
-  /* ----------- Icons ----------- */
-
-  .rsssl-icon {
-    margin:0 5px;
-    width:initial;
-    border-radius: 50%;
-    &.rsssl-empty {
-      visibility:hidden;
-    }
-    &.rsssl-success {
-      color: @brand-primary;
-      svg {
-        fill: @brand-primary;
-        stroke: @brand-primary;
-      }
-    }
-
-    &.rsssl-green {
-      color: #61ce70;
-      svg {
-        fill: #61ce70;
-        stroke: #61ce70;
-      }
-    }
-
-    &.rsssl-disabled {
-      color: #ababab;
-      svg {
-        fill: #ababab;
-        stroke: #ababab;
-      }
-    }
-
-    &.rsssl-error {
-      color: #d7263d;
-      svg {
-        fill: #d7263d;
-        stroke: #d7263d;
-      }
-    }
-
-    &.arrow-right-alt2::before {
-      font-size: 14px;
-    }
-  }
-
-  .rsssl-circle-green {
-    height: 12px;
-    width: 12px;
-    border-radius: 12px;
-    background-color: #61ce70;
-  }
-  .rsssl-circle-red {
-    height: 12px;
-    width: 12px;
-    border-radius: 12px;
-    background-color: #d7263d;
-  }
-
-  /* ----------- Fields ----------- */
-
-  /* Checkbox */
-
-  /* Disabled option */
-  .rsssl-not-allowed {
-    cursor: not-allowed;
-  }
-
-  .rsssl-checkbox {
-    .rsssl-field {
-      display: flex;
-      align-items: center;
-      .rsssl-wizard-settings-text {
-        margin-left: 20px;
-        margin-top:5px;
-      }
-    }
-  }
-
-  /* Customize the label (the container) */
-  .rsssl-checkbox-container {
-    display: block;
-    position: relative;
-    padding-left: 35px;
-
-    /* Hide the browser's default checkbox */
-    input {
-      position: absolute;
-      opacity: 0;
-      cursor: pointer;
-      height: 0;
-      width: 0;
-    }
-
-    /* Create a custom checkbox */
-    .checkmark {
-      position: absolute;
-      top: -2px;
-      left: 0;
-      height: 20px;
-      width: 20px;
-      border-radius: 5px;
-      border: 1px solid @gray-light;
-    }
-
-    /* Checkmark (hidden when not checked) */
-    .checkmark svg {
-      content: "";
-      position: absolute;
-      display: none;
-    }
-
-    /* Show the checkmark when checked */
-    input:checked ~ .checkmark svg {
-      display: block;
-      fill: @brand-primary;
-      stroke: @brand-primary;
-    }
-
-    /* Style the checkmark/indicator */
-    .checkmark svg {
-      left: 2.5px;
-      top: 2px;
-      width: 15px;
-      height: 15px;
-    }
-
-    /* Show the default checkmark when default */
-    .checkmark.rsssl-default svg {
-      display: block;
-      fill: #eee;
-      stroke: #eee;
-    }
-
-    /* Disabled option */
-    &.rsssl-disabled {
-      pointer-events: none;
-      .checkmark {
-        background-color: #eee;
-        svg {
-          stroke: #eee !important;
-          fill: #eee !important;
-        }
-      }
-    }
-  }
-
-
-  /* Radio */
-
-  /* Customize the label (the container) */
-  .rsssl-radio-container {
-    display: block;
-    position: relative;
-    padding-left: 35px;
-
-    /* Hide the browser's default checkbox */
-    input {
-      position: absolute;
-      opacity: 0;
-      cursor: pointer;
-      height: 0;
-      width: 0;
-    }
-
-    /* Create a custom radio */
-    .radiobtn {
-      position: absolute;
-      top: -2px;
-      left: 0;
-      height: 20px;
-      width: 20px;
-      border-radius: 20px;
-      border: 1px solid @input-border-color;
-    }
-
-    /* Check icon (hidden when not checked) */
-    .radiobtn div {
-      content: "";
-      position: absolute;
-      display: none;
-    }
-
-    /* Show check icon when checked */
-    input:checked ~ .radiobtn .rsssl-icon {
-      display: block;
-      background-color: @brand-primary;
-    }
-
-    /* Style the check icon */
-    .radiobtn .rsssl-icon {
-      left: 5px;
-      top: 3px;
-      width: 10px;
-      height: 10px;
-    }
-
-    /* Show the default checkmark when default */
-    .radiobtn.rsssl-default .rsssl-icon {
-      display: block;
-      background-color: #eee;
-    }
-
-    /* Disabled option */
-    &.rsssl-disabled {
-      pointer-events: none;
-      .radiobtn {
-        background-color: #eee;
-        .rsssl-icon {
-          background-color: #eee !important;
-        }
-      }
-    }
-  }
-
-  /* Text & Email Validation */
-  textarea.validation,
-  input[type="text"].validation,
-  input[type="password"].validation,
-  input[type="email"].validation,
-  input[type="text"].rsssl-valid-page,
-  input[type="text"].rsssl-deleted-page {
-    position: relative;
-    padding-left: 30px;
-    ~ span .rsssl-icon {
-      display: block;
-      position: absolute;
-      padding-left: 7px;
-      margin-top: -25px;
-      z-index: 1;
-      svg {
-        width: 15px;
-        height: 15px;
-      }
-    }
-  }
-
-  textarea.validation {
-    &:invalid ~ span .rsssl-icon,
-    &:valid ~ span .rsssl-icon {
-      margin-top:-143px;
-    }
-  }
-
-  textarea.validation,
-  input[type="text"].validation,
-  input[type="password"].validation,
-  input[type="email"].validation {
-    &:valid ~ span .rsssl-failed {
-      display: none;
-    }
-    &:invalid ~ span .rsssl-success {
-      display: none;
-    }
-  }
-
-  input:disabled {
-    background-color: @color-disabled;
-  }
-
-  /* Text, Email, Select(2), Textarea Style */
-
-  input[type="text"], input[type="password"], input[type="email"], select, .select2, textarea, input[type="number"] {
-    margin-bottom: 2px;
-  }
-  textarea {
-    padding:10px;
-    width:100%;
-    height: 100px;
-    margin: 20px 0;
-  }
-  /* Placeholders */
-  ::placeholder {
-    color: @gray-light;
-  }
-  ::placeholder/* Chrome/Opera/Safari */ {
-    color: @gray-light;
-  }
-
-  ::-moz-placeholder /* Firefox 19+ */ {
-    color: @gray-light;
-  }
-
-  :-ms-input-placeholder  /* IE 10+ */ {
-    color: @gray-light;
-  }
-  :-moz-placeholder /* Firefox 18- */ {
-    color: @gray-light;
-  }
-
-  /* Labels */
-  .rsssl-master-label h2 {
-    padding: @green-gap @green-gap 0 @green-gap !important;
-  }
-
-  input::-webkit-outer-spin-button,
-  input::-webkit-inner-spin-button {
-    -webkit-appearance: none;
-    margin: 0;
-  }
-
-  /* Firefox */
-  input[type=number] {
-    -moz-appearance: textfield;
-  }
-
-}
-
-.rsssl-multiple-field-button-footer {
-  display: flex;
-  align-items: center;
-  .rsssl-edit-item {
-    margin-right: 5px;
   }
 }
 
-.rsssl-hidden {
-  display: none !important;
-}
 
-/* START TOOLTIP STYLES */
-[rsssl-tooltip] {
-  position: relative; /* opinion 1 */
-  margin-left: 5px;
-}
 
-/* Applies to all tooltips */
-[rsssl-tooltip]::before,
-[rsssl-tooltip]::after {
-  text-transform: none; /* opinion 2 */
-  font-size: 1em; /* opinion 3 */
-  line-height: 1;
-  user-select: none;
-  pointer-events: none;
-  position: absolute;
-  display: none;
-  opacity: 0;
-}
-
-[rsssl-tooltip]::before {
-  content: '';
-  border: 5px solid transparent; /* opinion 4 */
-  z-index: 1001; /* absurdity 1 */
-}
-
-[rsssl-tooltip]::after {
-  content: attr(rsssl-tooltip); /* magic! */
-  min-width: 3em;
-  font-weight:normal;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  padding: 1ch 1.5ch;
-  border-radius: .3ch;
-  box-shadow: 0 1em 2em -.5em rgba(0, 0, 0, 0.35);
-  background: #333;
-  color: #fff;
-  z-index: 1000; /* absurdity 2 */
-}
-
-/* Make the tooltips respond to hover */
-[rsssl-tooltip]:hover::before,
-[rsssl-tooltip]:hover::after {
-  display: block;
-}
-
-/* don't show empty tooltips */
-[rsssl-tooltip='']::before,
-[rsssl-tooltip='']::after {
-  display: none !important;
-}
-
-/* FLOW: UP */
-[rsssl-tooltip]:not([flow])::before,
-[rsssl-tooltip][flow^="up"]::before {
-  bottom: 100%;
-  border-bottom-width: 0;
-  border-top-color: #333;
-}
-
-[rsssl-tooltip]:not([flow])::after,
-[rsssl-tooltip][flow^="up"]::after {
-  bottom: calc(100% + 5px);
-}
-
-[rsssl-tooltip]:not([flow])::before,
-[rsssl-tooltip]:not([flow])::after,
-[rsssl-tooltip][flow^="up"]::before,
-[rsssl-tooltip][flow^="up"]::after {
-  left: 50%;
-  transform: translate(-50%, -.5em);
-}
-
-/* FLOW: DOWN */
-[rsssl-tooltip][flow^="down"]::before {
-  top: 100%;
-  border-top-width: 0;
-  border-bottom-color: #333;
-}
-
-[rsssl-tooltip][flow^="down"]::after {
-  top: calc(100% + 5px);
-}
-
-[rsssl-tooltip][flow^="down"]::before,
-[rsssl-tooltip][flow^="down"]::after {
-  left: 50%;
-  transform: translate(-50%, .5em);
-}
-
-/* FLOW: LEFT */
-[rsssl-tooltip][flow^="left"]::before {
-  top: 50%;
-  border-right-width: 0;
-  border-left-color: #333;
-  left: calc(0em - 5px);
-  transform: translate(-.5em, -50%);
-}
-
-[rsssl-tooltip][flow^="left"]::after {
-  top: 50%;
-  right: calc(100% + 5px);
-  transform: translate(-.5em, -50%);
-}
-
-/* FLOW: RIGHT */
-[rsssl-tooltip][flow^="right"]::before {
-  top: 50%;
-  border-left-width: 0;
-  border-right-color: #333;
-  right: calc(0em - 19px);
-  transform: translate(.5em, -50%);
-}
-
-[rsssl-tooltip][flow^="right"]::after {
-  top: 50%;
-  left: calc(100% + 19px);
-  transform: translate(.5em, -50%);
-  min-width:300px;
-}
-
-/* KEYFRAMES */
-@keyframes tooltips-vert {
-  to {
-    opacity: .9;
-    transform: translate(-50%, 0);
-  }
-}
-
-@keyframes tooltips-horz {
-  to {
-    opacity: .9;
-    transform: translate(0, -50%);
-  }
-}
-
-/* FX All The Things */
-[rsssl-tooltip]:not([flow]):hover::before,
-[rsssl-tooltip]:not([flow]):hover::after,
-[rsssl-tooltip][flow^="up"]:hover::before,
-[rsssl-tooltip][flow^="up"]:hover::after,
-[rsssl-tooltip][flow^="down"]:hover::before,
-[rsssl-tooltip][flow^="down"]:hover::after {
-  animation: tooltips-vert 300ms ease-out forwards;
-}
-
-[rsssl-tooltip][flow^="left"]:hover::before,
-[rsssl-tooltip][flow^="left"]:hover::after,
-[rsssl-tooltip][flow^="right"]:hover::before,
-[rsssl-tooltip][flow^="right"]:hover::after {
-  animation: tooltips-horz 300ms ease-out forwards;
-}
-
-.rsssl-help-warning-wrap {
-  .rsssl-help-modal {
-    h2 {
-      margin-top:-5px;
-    }
-    .rsssl-pointer;
-    position:absolute;
-    z-index:99;
-
-    &.rsssl-notice {
-      background-color: @brand-primary;
-      &:after {
-        border-right: 15px solid @brand-primary;
-        top: calc(50% - 15px);
-      }
-      color: black;
-      padding: @green-gap;
-    }
-
-    &.rsssl-success {
-      background-color: white;
-      color: #61ce70;
-      border: none;
-      padding: 0;
-    }
-
-    &.rsssl-warning {
-      &:after {
-        border-right: 15px solid #f8be2e;
-      }
-      color: #333333;
-      background-color: #f8be2e;
-      border-color: #f8be2e;
-    }
-
-    margin: 0 0 0 @green-gap;
-    padding: 10px 15px;
-    color: #fff;
-    background-color: @brand-primary;
-    text-align: left;
-
-    &:empty {
-      background-color: #f1f1f1;
-    }
-
-    a {
-      color: #333;
-    }
-  }
-}
+@import 'tooltips.less';
+@import 'help.less';
 
 a:active, a:hover {
   color: #333;
-}
-
-.multiple-field {
-  div {
-    margin-top: 8px;
-    &:last-child {
-      margin-bottom: 8px;
-    }
-  }
 }
 
 .rsssl-panel {
@@ -836,10 +208,6 @@ a:active, a:hover {
     margin: 10px 0;
   }
 
-  .rsssl-multiple-field-validation {
-    float: right;
-  }
-
   &.rsssl-slide-panel,
   &.rsssl-link-panel {
     padding: 0;
@@ -847,6 +215,7 @@ a:active, a:hover {
     .rsssl-panel-toggle {
       display: flex;
       align-items: center;
+
       span {
         padding-left: 10px;
       }
@@ -863,10 +232,12 @@ a:active, a:hover {
           white-space: nowrap;
           text-overflow: ellipsis;
         }
+
         &:last-of-type {
           display: flex;
           align-content: center;
           justify-content: flex-end;
+
           svg {
             width: 18px;
             height: 18px;
@@ -878,10 +249,13 @@ a:active, a:hover {
       padding: 10px 15px 8px 0;
     }
   }
+
   h1 {
     font-size: 22px;
   }
+
   font-size: 13px !important;
+
   p {
     font-size: 13px !important;
   }
@@ -890,7 +264,7 @@ a:active, a:hover {
   background-color: #F2F2F2;
   border: 1px solid #d6d8db;
   padding: 10px 15px;
-  border-radius: 0px;
+  border-radius: 0;
   margin: 0;
 
   &.rsssl-notice {
@@ -909,9 +283,11 @@ a:active, a:hover {
 
   &.rsssl-warning {
     .rsssl-pointer;
+
     &:after {
       border-right: 15px solid #f8be2e;
     }
+
     color: #333333;
     background-color: #f8be2e;
     border-color: #f8be2e;
@@ -931,31 +307,358 @@ input[type="text"], input[type="password"], input[type="email"], input[type="num
 }
 
 .rsssl-comment {
-  font-size:11px;
+  font-size: 11px;
   margin-top: 10px;
 }
 
-.rsssl-cookie-field {
-  .rsssl-cookie-header {
-    border-bottom: 1px solid #b6b7b8;
-    margin-bottom: 25px;
-  }
-
-}
-
-#rsssl-send-data {
-  input[type=text] {
-    width: 60%;
-  }
-}
-
 #rsssl-wizard {
+
+  /* ----------- Icons ----------- */
+
+  .rsssl-icon {
+    margin: 0 5px;
+    width: initial;
+    border-radius: 50%;
+
+    &.rsssl-empty {
+      visibility: hidden;
+    }
+
+    &.rsssl-success {
+      color: @brand-primary;
+
+      svg {
+        fill: @brand-primary;
+        stroke: @brand-primary;
+      }
+    }
+
+    &.rsssl-green {
+      color: #61ce70;
+
+      svg {
+        fill: #61ce70;
+        stroke: #61ce70;
+      }
+    }
+
+    &.rsssl-disabled {
+      color: #ababab;
+
+      svg {
+        fill: #ababab;
+        stroke: #ababab;
+      }
+    }
+
+    &.rsssl-error {
+      color: #d7263d;
+
+      svg {
+        fill: #d7263d;
+        stroke: #d7263d;
+      }
+    }
+
+    &.arrow-right-alt2::before {
+      font-size: 14px;
+    }
+  }
+
+  /* Disabled option */
+
+  .rsssl-not-allowed {
+    cursor: not-allowed;
+  }
+
+  .rsssl-checkbox {
+    .rsssl-field {
+      display: flex;
+      align-items: center;
+
+      .rsssl-wizard-settings-text {
+        margin-left: 20px;
+        margin-top: 5px;
+      }
+    }
+  }
+
+  /* Customize the label (the container) */
+
+  .rsssl-checkbox-container {
+    display: block;
+    position: relative;
+    padding-left: 35px;
+
+    /* Hide the browser's default checkbox */
+
+    input {
+      position: absolute;
+      opacity: 0;
+      cursor: pointer;
+      height: 0;
+      width: 0;
+    }
+
+    /* Create a custom checkbox */
+
+    .checkmark {
+      position: absolute;
+      top: -2px;
+      left: 0;
+      height: 20px;
+      width: 20px;
+      border-radius: 5px;
+      border: 1px solid @gray-light;
+    }
+
+    /* Checkmark (hidden when not checked) */
+
+    .checkmark svg {
+      content: "";
+      position: absolute;
+      display: none;
+    }
+
+    /* Show the checkmark when checked */
+
+    input:checked ~ .checkmark svg {
+      display: block;
+      fill: @brand-primary;
+      stroke: @brand-primary;
+    }
+
+    /* Style the checkmark/indicator */
+
+    .checkmark svg {
+      left: 2.5px;
+      top: 2px;
+      width: 15px;
+      height: 15px;
+    }
+
+    /* Show the default checkmark when default */
+
+    .checkmark.rsssl-default svg {
+      display: block;
+      fill: #eee;
+      stroke: #eee;
+    }
+
+    /* Disabled option */
+
+    &.rsssl-disabled {
+      pointer-events: none;
+
+      .checkmark {
+        background-color: #eee;
+
+        svg {
+          stroke: #eee !important;
+          fill: #eee !important;
+        }
+      }
+    }
+  }
+
+
+  /* Radio */
+
+  /* Customize the label (the container) */
+
+  .rsssl-radio-container {
+    display: block;
+    position: relative;
+    padding-left: 35px;
+
+    /* Hide the browser's default checkbox */
+
+    input {
+      position: absolute;
+      opacity: 0;
+      cursor: pointer;
+      height: 0;
+      width: 0;
+    }
+
+    /* Create a custom radio */
+
+    .radiobtn {
+      position: absolute;
+      top: -2px;
+      left: 0;
+      height: 20px;
+      width: 20px;
+      border-radius: 20px;
+      border: 1px solid @input-border-color;
+    }
+
+    /* Check icon (hidden when not checked) */
+
+    .radiobtn div {
+      content: "";
+      position: absolute;
+      display: none;
+    }
+
+    /* Show check icon when checked */
+
+    input:checked ~ .radiobtn .rsssl-icon {
+      display: block;
+      background-color: @brand-primary;
+    }
+
+    /* Style the check icon */
+
+    .radiobtn .rsssl-icon {
+      left: 5px;
+      top: 3px;
+      width: 10px;
+      height: 10px;
+    }
+
+    /* Show the default checkmark when default */
+
+    .radiobtn.rsssl-default .rsssl-icon {
+      display: block;
+      background-color: #eee;
+    }
+
+    /* Disabled option */
+
+    &.rsssl-disabled {
+      pointer-events: none;
+
+      .radiobtn {
+        background-color: #eee;
+
+        .rsssl-icon {
+          background-color: #eee !important;
+        }
+      }
+    }
+  }
+
+  /* Text & Email Validation */
+
+  textarea.validation,
+  input[type="text"].validation,
+  input[type="password"].validation,
+  input[type="email"].validation,
+  input[type="text"].rsssl-valid-page,
+  input[type="text"].rsssl-deleted-page {
+    position: relative;
+    padding-left: 30px;
+
+    ~ span .rsssl-icon {
+      display: block;
+      position: absolute;
+      padding-left: 7px;
+      margin-top: -25px;
+      z-index: 1;
+
+      svg {
+        width: 15px;
+        height: 15px;
+      }
+    }
+  }
+
+  textarea.validation {
+    &:invalid ~ span .rsssl-icon,
+    &:valid ~ span .rsssl-icon {
+      margin-top: -143px;
+    }
+  }
+
+  textarea.validation,
+  input[type="text"].validation,
+  input[type="password"].validation,
+  input[type="email"].validation {
+    &:valid ~ span .rsssl-failed {
+      display: none;
+    }
+
+    &:invalid ~ span .rsssl-success {
+      display: none;
+    }
+  }
+
+  input:disabled {
+    background-color: @color-disabled;
+  }
+
+  /* Text, Email, Select(2), Textarea Style */
+
+  input[type="text"], input[type="password"], input[type="email"], select, .select2, textarea, input[type="number"] {
+    margin-bottom: 2px;
+  }
+
+  textarea {
+    padding: 10px;
+    width: 100%;
+    height: 100px;
+    margin: 20px 0;
+  }
+
+  /* Placeholders */
+
+  ::placeholder {
+    color: @gray-light;
+  }
+
+  ::placeholder /* Chrome/Opera/Safari */ {
+    color: @gray-light;
+  }
+
+  ::-moz-placeholder /* Firefox 19+ */ {
+    color: @gray-light;
+  }
+
+  :-ms-input-placeholder /* IE 10+ */ {
+    color: @gray-light;
+  }
+
+  :-moz-placeholder /* Firefox 18- */ {
+    color: @gray-light;
+  }
+
+  /* Labels */
+
+  .rsssl-master-label h2 {
+    padding: @green-gap @green-gap 0 @green-gap !important;
+  }
+
+  input::-webkit-outer-spin-button,
+  input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
+  /* Firefox */
+
+  input[type=number] {
+    -moz-appearance: textfield;
+  }
+
+  .dashboard {
+    .fa-times {
+      color: black;
+    }
+
+    .fa-check {
+      color: @brand-primary;
+    }
+  }
+
   h1, h2, h3, h4, .rsssl-menu-item, .rsssl-step-title, .rsssl-button {
     font-variant: normal;
   }
+
   h2, h3 {
-    font-size:15px;
+    font-size: 15px;
   }
+
   h3 {
     font-weight: 400;
   }
@@ -970,6 +673,7 @@ input[type="text"], input[type="password"], input[type="email"], input[type="num
     .rsssl-field {
       padding: 0 @green-gap 0 @green-gap;
       background-color: white;
+
       .rsssl-template-intro {
         margin-top: @red-gap;
       }
@@ -983,16 +687,19 @@ input[type="text"], input[type="password"], input[type="email"], input[type="num
 
     .rsssl-label {
       margin-bottom: 10px;
+
       label {
-        display:flex;
+        display: flex;
         flex-direction: column;
-        font-size:15px;
+        font-size: 15px;
         cursor: default;
+
         .rsssl-label-wrap {
           display: flex;
           margin-top: @red-gap;
           font-weight: 700;
         }
+
         .rsssl-subtitle-wrap {
           font-size: 0.9em;
           margin: 5px 5px 0 0;
@@ -1002,22 +709,24 @@ input[type="text"], input[type="password"], input[type="email"], input[type="num
 
     //less margin when it's the editor
     &.rsssl-editor .rsssl-label {
-      margin-bottom:0;
+      margin-bottom: 0;
     }
 
     .rsssl-field {
       .field-group {
-        grid-column:1;
-        display:block;
+        grid-column: 1;
+        display: block;
       }
+
       .rsssl-field {
-        padding:0;
+        padding: 0;
       }
     }
 
   }
 
   /*body */
+
   .rsssl-body, #rsssl-content-area {
     input[type="text"].rsssl-document-custom-url {
       width: 250px;
@@ -1029,21 +738,25 @@ input[type="text"], input[type="password"], input[type="email"], input[type="num
 
     input.button {
       min-width: 100px;
+
       &.button-red {
         background-color: red;
         color: white;
         border-color: red;
       }
+
       &.button-black {
         background-color: black;
         color: white;
         border-color: black;
       }
+
       &.button-link {
         text-align: center;
-        min-width:initial;
+        min-width: initial;
+
         &:hover {
-          background-color:initial;
+          background-color: initial;
           text-decoration: none;
         }
 
@@ -1059,6 +772,7 @@ input[type="text"], input[type="password"], input[type="email"], input[type="num
     }
 
     /* Styling for the previous and next buttons */
+
     .rsssl-master-label h2 {
       margin: 0;
       padding: @green-gap @green-gap 0 0;
@@ -1072,6 +786,7 @@ input[type="text"], input[type="password"], input[type="email"], input[type="num
     }
 
     /* CSS for the sections menu */
+
     .rsssl-menu-item.active {
       i {
         color: black;
@@ -1108,6 +823,94 @@ input[type="text"], input[type="password"], input[type="email"], input[type="num
     }
   }
 
+  .rsssl-selectable {
+    -webkit-touch-callout: all; /* iOS Safari */
+    -webkit-user-select: all; /* Safari */
+    -khtml-user-select: all; /* Konqueror HTML */
+    -moz-user-select: all; /* Firefox */
+    -ms-user-select: all; /* Internet Explorer/Edge */
+    user-select: all; /* Chrome and Opera */
+  }
+
+  #rsssl-header {
+    display: flex;
+    justify-content: space-between;
+
+    img {
+      margin-left: @default-margin;
+      width: 120px;
+      height: 28px;
+    }
+
+    padding: @default-padding;
+    background-color: #fff;
+
+    .rsssl-header-right {
+      display: flex;
+      align-items: center;
+
+      a {
+        margin-right: @default-margin;
+      }
+    }
+  }
+
+  #rsssl-content-area {
+    margin: 10px;
+  }
+
+  .rsssl-section {
+    .rsssl-success {
+      &.check {
+        margin-left: 5px;
+      }
+    }
+  }
+
+  /**
+  icons
+   */
+
+  .rsssl-icon {
+    height: initial;
+
+    &.rsssl-success {
+      color: @color-success;
+
+      svg {
+        stroke: @color-success;;
+        fill: @color-success;;
+      }
+    }
+
+    &.rsssl-disabled {
+      color: @color-disabled;
+
+      svg {
+        stroke: @color-disabled;;
+        fill: @color-disabled;;
+      }
+    }
+
+    &:hover {
+      color: #000;
+    }
+
+    &.rsssl-bullet {
+      height: 11px;
+      width: 11px;
+      margin-top: 2px;
+
+      &.rsssl-disabled {
+        background-color: @color-disabled;
+      }
+
+      &.rsssl-success {
+        background-color: #27ADEA;
+      }
+    }
+
+  }
 
 }
 
@@ -1120,9 +923,11 @@ input[type="text"], input[type="password"], input[type="email"], input[type="num
     font-weight: normal;
     margin: 10px 0 2px;
   }
+
   .rsssl-color-picker.wp-color-picker {
     margin-top: -11px !important;
   }
+
   input[type="text"], input[type="email"], input[type="number"] {
     //max-width: 500px;
     border-color: @input-border-color;
@@ -1140,7 +945,7 @@ input[type="text"], input[type="password"], input[type="email"], input[type="num
 
   textarea {
     min-height: 150px;
-    width:100%;
+    width: 100%;
   }
 
   input[type=radio]:checked:before {
@@ -1165,9 +970,11 @@ input[type="text"], input[type="password"], input[type="email"], input[type="num
     display: flex;
     align-items: center;
     height: auto;
+
     input, select, div {
       margin-right: 20px;
     }
+
     margin-bottom: 10px;
   }
 
@@ -1179,7 +986,7 @@ input[type="text"], input[type="password"], input[type="email"], input[type="num
 
 //Button styling
 a.rsssl.button, button.rsssl.button, input.rsssl.button {
-  margin-left:15px;
+  margin-left: 15px;
   box-shadow: 0 0 0 #fff;
   background-color: @brand-primary;
   color: #fff;
@@ -1203,24 +1010,17 @@ a.rsssl.button, button.rsssl.button, input.rsssl.button {
 }
 
 //Icon override
-#rsssl-wizard .dashboard {
-  .fa-times {
-    color: black;
-  }
-  .fa-check {
-    color: @brand-primary;
-  }
-}
-
 .rsssl-wizard-menu-menus {
   padding-top: 10px;
 }
 
 #wpbody-content {
   padding-bottom: 0;
+
   .update-nag {
     display: none;
   }
+
   .subsubsub {
     display: none;
   }
@@ -1229,5 +1029,95 @@ a.rsssl.button, button.rsssl.button, input.rsssl.button {
 .rsssl-wizard-wrap {
   margin: 0;
 }
+
+
+.rsssl_letsencrypt_container {
+  margin-top: @big-margin;
+  background-color: @grey-lighter;
+
+  &.rsssl-progress-container {
+    margin: 20px 0 0;
+    padding: 10px 0;
+    border-radius: 5px;
+  }
+}
+
+.rsssl-dns-field {
+  border: 1px solid @input-border-color;
+  float: left;
+  margin-bottom: 10px;
+  width: 50%;
+  padding: 10px;
+  margin-left: 0;
+  margin-top: 10px;
+}
+
+.rsssl-dns-label {
+  font-weight: bold;
+  margin-top: 25px;
+  margin-bottom: 0;
+  width: 50%;
+}
+
+#rsssl-lets-encrypt ul {
+  margin-left: 50px;
+
+  li {
+    padding-right: 10px;
+
+    &:before {
+      background-color: @grey-light;
+      color: #fff;
+      height: 10px;
+      width: 10px;
+      border-radius: 50%;
+      content: '';
+      position: absolute;
+      margin-top: 5px;
+      margin-left: -30px;
+    }
+
+    &.rsssl-warning:before {
+      background-color: @brand-primary;
+    }
+
+    &.rsssl-error:before {
+      background-color: @color-warning;
+    }
+
+    &.rsssl-success:before {
+      background-color: @color-success;
+    }
+
+    /*Nested li */
+
+    ul li:before {
+      background-color: @grey-dark;
+      color: #fff;
+      height: 6px;
+      width: 6px;
+      border-radius: 50%;
+      content: '';
+      position: absolute;
+      margin-top: 7px;
+      margin-left: -19px;
+    }
+  }
+}
+
+//wordpress inserts notices after the first h1 or h2. To prevent breaking layout we insert an empty h1 tag at the start of our page, where WP can insert the notice.
+.rsssl-notice-hook-element {
+  display: none;
+}
+
+/*
+    Hide nags from other plugins
+*/
+.error, .notice, .update-nag, .notice-info {
+  &:not(.really-simple-plugins) {
+    display: none !important;
+  }
+}
+
 
 

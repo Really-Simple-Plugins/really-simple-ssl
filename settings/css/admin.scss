@@ -15,6 +15,10 @@
         background: none;
         border: none;
         flex: auto 1;
+        .rsssl-buttons-row {
+          padding:10px;
+          float:right;
+        }
       }
 
       .components-panel__body-title {
@@ -37,10 +41,22 @@
     }
     .rsssl-wizard__help {
       min-width: 25%;
+      max-width:300px;
       .rsssl-wizard__help_notice {
         margin: 20px;
         padding: 20px;
         background-color: white;
+        .rsssl-wizard__help_title.rsssl-wizard__help_has_content {
+          cursor:pointer;
+        }
+        .rsssl-wizard__help_content {
+          display:none;
+        }
+        &.rsssl-wizard__help_open{
+          .rsssl-wizard__help_content {
+            display:block;
+          }
+        }
       }
     }
   }

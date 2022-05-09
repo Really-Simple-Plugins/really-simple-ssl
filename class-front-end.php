@@ -6,7 +6,6 @@ if ( ! class_exists( 'rsssl_front_end' ) ) {
     class rsssl_front_end
     {
         private static $_this;
-        public $javascript_redirect = FALSE;
         public $wp_redirect = TRUE;
         public $autoreplace_insecure_links = TRUE;
         public $ssl_enabled;
@@ -28,7 +27,7 @@ if ( ! class_exists( 'rsssl_front_end' ) ) {
         }
 
         /**
-         * Javascript redirect, when ssl is true.
+         * PHP redirect, when ssl is true.
          *
          * @since  2.2
          *
@@ -105,20 +104,15 @@ if ( ! class_exists( 'rsssl_front_end' ) ) {
             if (isset($options)) {
                 $this->autoreplace_insecure_links = isset($options['autoreplace_insecure_links']) ? $options['autoreplace_insecure_links'] : TRUE;
                 $this->ssl_enabled = isset($options['ssl_enabled']) ? $options['ssl_enabled'] : false;
-                $this->javascript_redirect = isset($options['javascript_redirect']) ? $options['javascript_redirect'] : FALSE;
                 $this->wp_redirect = isset($options['wp_redirect']) ? $options['wp_redirect'] : FALSE;
                 $this->switch_mixed_content_fixer_hook = isset($options['switch_mixed_content_fixer_hook']) ? $options['switch_mixed_content_fixer_hook'] : FALSE;
 
                 //overrides from multisite
                 if (is_multisite()) {
                     $network_options = get_site_option('rlrsssl_network_options');
-
                     $site_wp_redirect = isset($network_options["wp_redirect"]) ? $network_options["wp_redirect"] : false;
-                    $javascript_redirect = isset($network_options["javascript_redirect"]) ? $network_options["javascript_redirect"] : false;
                     $autoreplace_insecure_links = isset($network_options["autoreplace_mixed_content"]) ? $network_options["autoreplace_mixed_content"] : false;
-
                     if ($site_wp_redirect) $this->wp_redirect = $site_wp_redirect;
-                    if ($javascript_redirect) $this->javascript_redirect = $javascript_redirect;
                     if ($autoreplace_insecure_links) $this->autoreplace_insecure_links = $autoreplace_insecure_links;
 
                 }

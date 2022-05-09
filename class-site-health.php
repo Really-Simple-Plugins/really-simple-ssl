@@ -1,20 +1,13 @@
-<?php
-defined('ABSPATH') or die("you do not have access to this page!");
+<?php defined('ABSPATH') or die();
 
-if (!class_exists("rsssl_site_health")) {
+if ( !class_exists("rsssl_site_health") ) {
 	class rsssl_site_health {
-
 		private static $_this;
-
 		function __construct() {
-
 			if ( isset( self::$_this ) ) {
 				wp_die( sprintf( __( '%s is a singleton class and you cannot create a second instance.', 'really-simple-ssl' ), get_class( $this ) ) );
 			}
-
-
-			add_filter( 'site_status_tests', array($this, 'rsssl_health_check' ) );
-
+			add_filter( 'site_status_tests', array($this, 'health_check' ) );
 			self::$_this = $this;
 		}
 
@@ -22,12 +15,15 @@ if (!class_exists("rsssl_site_health")) {
 			return self::$_this;
 		}
 
-		public function rsssl_health_check( $tests ) {
-
+		/**
+		 * Add SSL dedicated health check
+		 * @param array $tests
+		 *
+		 * @return array
+		 */
+		public function health_check( $tests ) {
 			unset($tests['async']['https_status']);
-
 			if ( !RSSSL()->really_simple_ssl->dismiss_all_notices || is_multisite() && !rsssl_multisite::this()->dismiss_all_notices ) {
-
 				$tests['direct']['rsssl-health'] = array(
 					'label' => __( 'SSL Status Test' , 'really-simple-ssl'),
 					'test'  => array($this, "health_test"),
@@ -39,7 +35,6 @@ if (!class_exists("rsssl_site_health")) {
 						'test'  => array($this, "headers_test"),
 					);
 				}
-
 			}
 
 			return $tests;
@@ -85,11 +80,11 @@ if (!class_exists("rsssl_site_health")) {
 		}
 
 		/**
-		 * Some basic health checks
+		 * Some basic SSL health checks
 		 * @return array
 		 */
 		public function health_test() {
-			if (is_multisite() && is_super_admin() ){
+			if ( is_multisite() && is_super_admin() ){
 				$url = add_query_arg(array('page' => 'really-simple-ssl'), network_admin_url('settings.php'));
 			} else {
 				$url = add_query_arg(array('page' => 'rlrsssl_really_simple_ssl'), admin_url("options-general.php") );
@@ -110,7 +105,7 @@ if (!class_exists("rsssl_site_health")) {
 				'test'        => 'health_test',
 			);
 
-			if (!RSSSL()->really_simple_ssl->ssl_enabled) {
+			if ( !RSSSL()->really_simple_ssl->ssl_enabled ) {
 				if ( RSSSL()->really_simple_ssl->site_has_ssl ) {
 					$result['status']      = 'critical';
 					$result['label']       = __( 'SSL is not enabled.', 'really-simple-ssl' );

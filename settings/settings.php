@@ -9,6 +9,7 @@ defined('ABSPATH') or die();
 
 
 require_once( rsssl_path . 'settings/config/config.php' );
+require_once( rsssl_path . 'settings/config/disable-fields-filter.php' );
 
 function rsssl_plugin_admin_scripts() {
 	$script_asset_path = __DIR__."/build/index.asset.php";
@@ -237,7 +238,11 @@ function rsssl_rest_api_fields_set($request){
     }
 
     if ( ! empty( $options ) ) {
-        update_option( 'rsssl_options', $options );
+        if ( is_multisite() && is_network_admin() ) {
+	        update_site_option( 'rsssl_options', $options );
+        } else {
+	        update_option( 'rsssl_options', $options );
+        }
     }
 
     foreach ( $fields as $field ) {
@@ -265,13 +270,10 @@ function rsssl_rest_api_fields_get(  ){
 	}
 	$output = array();
 	$fields = rsssl_fields();
-	$menu_items = rsssl_menu('group_general');
-	foreach ( $fields as $index => $field ) {
-		$fields[$index]['value'] = rsssl_get_option($field['id']);
-	}
-
+	$menu_items = rsssl_menu('settings');
 	$output['fields'] = $fields;
 	$output['menu'] = $menu_items;
+	$output['progress'] = RSSSL()->progress->get();
 	$response = json_encode( $output );
 	header( "Content-Type: application/json" );
 	echo $response;

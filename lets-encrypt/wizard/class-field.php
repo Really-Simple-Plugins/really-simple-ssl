@@ -384,8 +384,6 @@ if ( ! class_exists( "rsssl_field" ) ) {
             $col_class       = isset($args['col'])                    ? "rsssl-col-{$args['col']}" : '';
             $colspan_class   = isset($args['colspan'])                ? "rsssl-colspan-{$args['colspan']}" : '';
 
-            $this->get_master_label( $args );
-
             echo '<div class="field-group ' .
                 esc_attr( $args['fieldname'] . ' ' .
                     esc_attr( $cols_class ) . ' ' .
@@ -414,16 +412,6 @@ if ( ! class_exists( "rsssl_field" ) ) {
             if ($args['label']) {
                 echo '<div class="rsssl-label">';
             }
-        }
-
-        public function get_master_label( $args ) {
-            if ( ! isset( $args['master_label'] ) ) {
-                return;
-            }
-            ?>
-            <div class="rsssl-master-label"><h2><?php echo esc_html( $args['master_label'] ) ?></h2></div>
-            <?php
-
         }
 
         /**

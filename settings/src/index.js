@@ -19,25 +19,43 @@ import Field from './fields';
 import Menu from './Menu';
 import GridBlock from './GridBlock';
 
+/**
+ * Render a help notice in the sidebar
+ */
 class Help extends Component {
-	render(){
-		let field = this.props.field;
-		if (field.help) {
-			return (
-				<div className="rsssl-wizard__help_notice">
-					{field.help}
-				</div>
-			);
+	handleClick(id){
+		console.log(id);
+		let el = document.querySelector('[data-help_index="'+id+'"]');
+		if (el.classList.contains('rsssl-wizard__help_open')) {
+			el.classList.remove('rsssl-wizard__help_open');
 		} else {
-			return (
-				<p></p>
-			);
+			el.classList.add('rsssl-wizard__help_open');
 		}
+	}
+	render(){
+		let notice = this.props.help;
+		if ( !notice.title ){
+			notice.title = notice.text;
+			notice.text = false;
+		}
+
+		let titleClass = 'rsssl-wizard__help_title';
+		if (notice.text) titleClass+= ' rsssl-wizard__help_has_content';
+
+		return (
+			<div data-help_index={this.props.index} className="rsssl-wizard__help_notice" data-field_id={this.props.field}>
+				<div className={titleClass} onClick={ () => this.handleClick(this.props.index) }>{notice.title}</div>
+				{notice.text && <div className="rsssl-wizard__help_content" dangerouslySetInnerHTML={{__html: notice.text}}></div>}
+			</div>
+		);
+
 	}
 }
 
-
-class Settings extends Component {
+/**
+ * Render a grouped block of settings
+ */
+class SettingsGroup extends Component {
 	constructor() {
 		super( ...arguments );
 		this.state = {
@@ -47,9 +65,44 @@ class Settings extends Component {
 		this.fields = this.props.fields;
 	}
 
+	render(){
+		let selectedMenuItem = this.props.selectedMenuItem;
+		let selectedFields = [];
+		//get all fields with group_id this.props.group_id
+		for (const selectedField of this.props.fields){
+			if (selectedField.group_id === this.props.group ){
+				selectedFields.push(selectedField);
+			}
+		}
+		return (
+			<div className="rsssl-grouped-fields">
+				{selectedMenuItem.title && <PanelBody><h1 className="rsssl-settings-block-title">{selectedMenuItem.title}</h1></PanelBody>}
+				{selectedMenuItem.intro && <PanelBody><div className="rsssl-settings-block-intro">{selectedMenuItem.intro}</div></PanelBody>}
+				{selectedFields.map((field, i) => <Field key={i} index={i} highLightField={this.props.highLightField} highLightedField={this.props.highLightedField} saveChangedFields={this.props.saveChangedFields} field={field} fields={selectedFields}/>)}
+			</div>
+		)
+	}
+}
+
+/**
+ * Renders the selected settings
+ *
+ */
+class Settings extends Component {
+	constructor() {
+		super( ...arguments );
+		this.state = {
+			fields:this.props.fields,
+			progress:this.props.progress,
+			isAPILoaded: this.props.isAPILoaded,
+		};
+		this.fields = this.props.fields;
+	}
+
 	render() {
 		const {
 			fields,
+			progress,
 			isAPILoaded,
 		} = this.state;
 		let selectedMenuItem = this.props.selectedMenuItem;
@@ -60,59 +113,82 @@ class Settings extends Component {
 				<Placeholder></Placeholder>
 			);
 		}
-		let selectedFields = fields.filter(field => field.menu_id === selectedMenuItem.id);
+		let selectedFields = fields.filter(field => field.menu_id === selectedMenuItem);
+		let groups = [];
+		for (const selectedField of selectedFields){
+			if ( !in_array(selectedField.group_id, groups) ){
+				groups.push(selectedField.group_id);
+			}
+		}
+
+		//convert progress notices to an array useful for the help blocks
+		let notices = [];
+		for (const notice of progress.notices){
+			if ( notice.menu_id === selectedMenuItem ) {
+				let help = {};
+				help.title = notice.output.title ? notice.output.title : false;
+				help.label = notice.output.label;
+				help.id = notice.field_id;
+				help.text = notice.output.msg;
+				notices.push(help);
+			}
+		}
+		for (const notice of selectedFields.filter(field => field.help)){
+			let help = notice.help;
+			help.id = notice.id;
+			notices.push(notice.help);
+		}
+		let selectedMenuItemObject = menu.menu_items.filter(menutItem => menutItem.id === selectedMenuItem)[0];
 		return (
 			<div className="rsssl-wizard-settings">
 				<div className="rsssl-wizard__main">
 					<Panel>
-						{selectedFields.map((field, i) => <Field key={i} index={i} saveChangedFields={this.props.saveChangedFields} field={field} fields={selectedFields}/>)}
-						<PanelBody
-							icon="admin-plugins"
-						>
+						{groups.map((group, i) => <SettingsGroup key={i} index={i} highLightField={this.props.highLightField} highLightedField={this.props.highLightedField} selectedMenuItem={selectedMenuItemObject} saveChangedFields={this.props.saveChangedFields} group={group} fields={selectedFields}/>)}
+						<div className="rsssl-buttons-row">
 							<Button
 								isPrimary
-								onClick={ this.props.save }
-							>
+								onClick={ this.props.save }>
 								{ __( 'Save', 'really-simple-ssl' ) }
 							</Button>
-						</PanelBody>
+						</div>
 					</Panel>
 				</div>
 				<div className="rsssl-wizard__help">
-					{selectedFields.map((field, i) => <Help key={i} index={i} field={field} />)}
+					{notices.map((field, i) => <Help key={i} index={i} help={field} fieldId={field.id}/>)}
 				</div>
 			</div>
 		)
 	}
 }
 
+/**
+ * Renders the settings page with Menu and currently selected settings
+ *
+ */
+
 class SettingsPage extends Component {
     constructor() {
         super( ...arguments );
         this.state = {
-			selectedMenuItem:'',
+			selectedMenuItem:'general',
 			selectedStep:1,
 			fields:'',
 			menu:'',
 			menuItems:'',
             isAPILoaded: false,
 			changedFields:'',
+			progress:'',
         };
 	}
 
-	selectMenu(selectedMenuItem){
-		this.setState({
-			selectedMenuItem :selectedMenuItem
-		});
-	}
-
-	selectStep(selectedStep){
-		this.setState({
-			selectedStep :selectedStep
-		});
+	updateFieldsListWithConditions(){
+		for (const field of this.props.fields){
+			this.props.fields[this.props.fields.indexOf(field)].visible = !(field.hasOwnProperty('react_conditions') && !this.validateConditions(field.react_conditions, this.props.fields));
+		}
 	}
 
 	saveChangedFields(changedField){
+		this.updateFieldsListWithConditions();
 		let changedFields = this.changedFields;
 		if (!in_array(changedField, changedFields)) {
 			changedFields.push(changedField);
@@ -150,17 +226,60 @@ class SettingsPage extends Component {
 		});
 	}
 
+	validateConditions(conditions, fields){
+		let relation = conditions.relation === 'OR' ? 'OR' : 'AND';
+		delete conditions['relation'];
+		let conditionApplies = true;
+		for (const key in conditions) {
+			if ( conditions.hasOwnProperty(key) ) {
+				let invert = key.indexOf('!')===0;
+				let thisConditionApplies = true;
+				let subConditionsArray = conditions[key];
+				if ( subConditionsArray.hasOwnProperty('relation') ) {
+					thisConditionApplies = this.validateConditions(subConditionsArray, fields)
+				} else {
+					for (const conditionField in subConditionsArray) {
+						if ( subConditionsArray.hasOwnProperty(conditionField) ) {
+							let conditionValue = subConditionsArray[conditionField];
+							let conditionFields = fields.filter(field => field.id === conditionField);
+							if (conditionFields.hasOwnProperty(0)){
+								if (conditionFields[0].type==='checkbox') {
+									let actualValue = +conditionFields[0].value;
+									conditionValue = +conditionValue;
+									thisConditionApplies = actualValue == conditionValue;
+								} else {
+									thisConditionApplies = conditionFields[0].value === conditionValue;
+								}
+							}
+						}
+					}
+					if ( invert ){
+						thisConditionApplies = !thisConditionApplies;
+					}
+				}
+				if ( relation === 'AND' ) {
+					conditionApplies = conditionApplies && thisConditionApplies;
+				} else {
+					conditionApplies = conditionApplies || thisConditionApplies;
+				}
+			}
+		}
+		return conditionApplies;
+	}
+
     componentDidMount() {
 		this.save = this.save.bind(this);
-		this.selectMenu = this.selectMenu.bind(this);
 		this.saveChangedFields = this.saveChangedFields.bind(this);
+		this.updateFieldsListWithConditions = this.updateFieldsListWithConditions.bind(this);
+		this.updateFieldsListWithConditions();
 		let fields = this.props.fields;
 		let menu = this.props.menu;
+		let progress = this.props.progress;
 		//if count >1, it's a wizard
 		let menuItems = [];
 		let changedFields = [];
 		menuItems = menu.menu_items;
-		let selectedMenuItem = menuItems[0];
+		let selectedMenuItem = this.props.selectedMenuItem;
 		let selectedStep = 1;
 		this.menu = menu;
 		this.menuItems = menuItems;
@@ -172,6 +291,7 @@ class SettingsPage extends Component {
 			isAPILoaded: true,
 			fields: this.props.fields,
 			menu: this.props.menu,
+			progress: this.props.progress,
 			menuItems:menuItems,
 			selectedMenuItem: selectedMenuItem,
 			selectedStep: selectedStep,
@@ -183,6 +303,7 @@ class SettingsPage extends Component {
         const {
             fields,
 			menu,
+			progress,
 			menuItems,
 			selectedMenuItem,
 			selectedStep,
@@ -199,7 +320,7 @@ class SettingsPage extends Component {
 		if ( menu.is_wizard ){
 			let length = menuItems.length;
 			let temp = []
-			for(let i = 0; i < length; i++) {
+			for ( let i = 0; i < length; i++ ) {
 				if ( menuItems[i]['step']!=selectedStep ){
 					menuItems.splice(i, 1);
 				}
@@ -208,8 +329,8 @@ class SettingsPage extends Component {
 
         return (
             <Fragment>
-				<Menu isAPILoaded={isAPILoaded} menuItems={this.menuItems} menu={this.menu} selectMenu={this.selectMenu}/>
-				<Settings isAPILoaded={isAPILoaded} fields={this.fields} saveChangedFields={this.saveChangedFields} menu={menu} save={this.save} selectedMenuItem={selectedMenuItem} selectedStep={selectedStep}/>
+				<Menu isAPILoaded={isAPILoaded} menuItems={this.menuItems} menu={this.menu} selectMenu={this.props.selectMenu} selectedMenuItem={this.props.selectedMenuItem}/>
+				<Settings highLightField={this.props.highLightField} highLightedField={this.props.highLightedField} isAPILoaded={isAPILoaded} fields={this.fields} progress={progress} saveChangedFields={this.saveChangedFields} menu={menu} save={this.save} selectedMenuItem={this.props.selectedMenuItem} selectedStep={selectedStep}/>
 				<div className="rsssl-wizard__notices">
 					<Notices/>
 				</div>
@@ -225,10 +346,9 @@ class DashboardPage extends Component {
 
 	render() {
 		let blocks = rsssl_settings.blocks;
-
 		return (
 			<div className="rsssl-grid">
-				{blocks.map((block, i) => <GridBlock key={i} block={block} isApiLoaded={this.props.isAPILoaded} fields={this.props.fields}/>)}
+				{blocks.map((block, i) => <GridBlock key={i} block={block} isApiLoaded={this.props.isAPILoaded} fields={this.props.fields} highLightField={this.props.highLightField}/>)}
 			</div>
 		);
 	}
@@ -237,18 +357,37 @@ class DashboardPage extends Component {
 class Header extends Component {
 	constructor() {
 		super( ...arguments );
+		this.state = {
+			highContrast:false,
+		};
 	}
 	handleClick(menuId){
-		this.props.selectMenu(menuId);
+		this.props.selectMainMenu(menuId);
 	}
 	componentDidMount() {
 		this.handleClick = this.handleClick.bind(this);
+		console.log(this.props.fields);
+		for (const field of this.props.fields){
+			console.log("field");
+			console.log(field);
+			if (field.id === 'high_contrast' ){
+				this.highContrast = field.value;
+			}
+		}
+
+		this.setState({
+			highContrast: this.highContrast,
+		});
+
 	}
 	render() {
+		const {
+			highContrast,
+		} = this.state;
 		let menu = rsssl_settings.menu;
 		let plugin_url = rsssl_settings.plugin_url;
 		return (
-			<div className="rsssl-header nav-tab-wrapper <?php echo $high_contrast ?>">
+			<div className="rsssl-header nav-tab-wrapper">
 				<div className="rsssl-logo-container">
 					<div id="rsssl-logo"><img src={plugin_url+"/assets/really-simple-ssl-logo.png"} alt="review-logo" /></div>
 				</div>
@@ -277,20 +416,26 @@ class Page extends Component {
 		super( ...arguments );
 		this.state = {
 			selectedMainMenuItem:'dashboard',
+			selectedMenuItem:'general',
+			highLightedField:'',
 			fields:'',
 			menu:'',
+			progress:'',
 			isAPILoaded: false,
 		};
 
 		this.getFields().then(( response ) => {
 			let fields = response.fields;
 			let menu = response.menu;
+			let progress = response.progress;
 			this.menu = menu;
+			this.progress = progress;
 			this.fields = fields;
 			this.setState({
 				isAPILoaded: true,
 				fields: fields,
 				menu: menu,
+				progress: progress,
 			});
 		});
 	}
@@ -299,37 +444,73 @@ class Page extends Component {
 			return response.data;
 		});
 	}
+
 	componentDidMount() {
 		this.selectMenu = this.selectMenu.bind(this);
+		this.highLightField = this.highLightField.bind(this);
+		this.selectMainMenu = this.selectMainMenu.bind(this);
 		this.setState({
 			selectedMainMenuItem: 'dashboard',
+			selectedMenuItem: 'general',
 		});
 	}
 
-	selectMenu(selectedMainMenuItem){
+	selectMenu(selectedMenuItem){
+		this.setState({
+			selectedMenuItem :selectedMenuItem
+		});
+	}
+
+	selectStep(selectedStep){
+		this.setState({
+			selectedStep :selectedStep
+		});
+	}
+
+	selectMainMenu(selectedMainMenuItem){
 		this.setState({
 			selectedMainMenuItem :selectedMainMenuItem
 		});
 	}
 
+	highLightField(fieldId){
+		//switch to settings page
+		this.selectMainMenu('settings');
+		//get menu item based on fieldId
+		let selectedField = null;
+		let fields = this.fields.filter(field => field.id === fieldId);
+		if (fields.length) {
+			selectedField = fields[0];
+			this.selectMenu(selectedField.menu_id);
+		}
+		this.highLightedField = fieldId;
+	}
+
 	render() {
 		const {
 			selectedMainMenuItem,
+			selectedMenuItem,
 			fields,
 			menu,
+			progress,
 			isAPILoaded,
 		} = this.state;
+
 		return (
 			<div id="rsssl-wrapper">
-				<Header selectedMainMenuItem={selectedMainMenuItem} selectMenu={this.selectMenu}/>
+				<Header selectedMainMenuItem={selectedMainMenuItem} selectMainMenu={this.selectMainMenu} fields={fields}/>
 				<div id="rsssl-container">
-					{selectedMainMenuItem==='settings' && <SettingsPage isAPILoaded={isAPILoaded} fields={fields} menu={menu}/> }
-					{selectedMainMenuItem==='dashboard' && <DashboardPage isAPILoaded={isAPILoaded} fields={fields}/> }
+					{selectedMainMenuItem==='settings' && <SettingsPage selectMenu={this.selectMenu} highLightField={this.highLightField} highLightedField={this.highLightedField} selectedMenuItem={selectedMenuItem} isAPILoaded={isAPILoaded} fields={fields} menu={menu} progress={progress}/> }
+					{selectedMainMenuItem==='dashboard' && <DashboardPage isAPILoaded={isAPILoaded} fields={fields} highLightField={this.highLightField}/> }
 				</div>
 			</div>
 		);
 	}
 }
+
+/**
+ * Initialize the whole thing
+ */
 
 document.addEventListener( 'DOMContentLoaded', () => {
 	const container = document.getElementById( 'really-simple-ssl' );

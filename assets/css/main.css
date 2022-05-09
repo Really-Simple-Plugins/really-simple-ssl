@@ -611,16 +611,14 @@
 .rsssl-grid .rsssl-system-status-footer-info .system-status-info {
   margin-left: 6px;
 }
-.rsssl-grid .dot {
+.rsssl-grid .rsssl-dot {
   height: 10px;
   width: 10px;
   border-radius: 50%;
   display: inline-block;
-}
-.rsssl-grid .rsssl-dot-success {
   background-color: #61ce70;
 }
-.rsssl-grid .rsssl-dot-error {
+.rsssl-grid .rsssl-dot.rsssl-dot-error {
   background-color: #d7263d;
 }
 .upsell-grid-container .rsssl-secondary-header-item img {
@@ -1172,8 +1170,8 @@
 .rsssl-highlight {
   background-color: #fff;
   border-right: 4px solid #61ce70;
-  -o-animation: fadeIt 5s ease-in-out;
-  animation: fadeIt 5s ease-in-out;
+  -o-animation: fadeIt 3s ease-in-out;
+  animation: fadeIt 3s ease-in-out;
 }
 @-o-keyframes fadeIt {
   0% {
@@ -1198,9 +1196,6 @@
   100% {
     background-color: inherit;
   }
-}
-.form-table th {
-  padding-left: 10px;
 }
 /* License page */
 .rsssl-grid .rsssl-item.rsssl-license-grid .item-container .form-table tbody tr {

@@ -87,7 +87,83 @@ if ( current_user_can( 'manage_options' ) ) {
 
 	do_action( "rsssl_system_status" );
 
-	echo RSSSL()->really_simple_ssl->debug_log;
+	echo "<br>" . "<b>" . "SSL Configuration" . "</b>";
+	$domain = RSSSL()->rsssl_certificate->get_domain();
+	$certinfo = RSSSL()->rsssl_certificate->get_certinfo($domain);
+	if ( !$certinfo ) {
+		echo "SSL certificate not valid<br>";
+	}
+
+	$domain_valid = RSSSL()->rsssl_certificate->is_domain_valid($certinfo, $domain);
+	if ( !$domain_valid ) {
+		echo "Domain on certificate does not match website's domain<br>";
+	}
+
+	$date_valid = RSSSL()->rsssl_certificate->is_date_valid($certinfo);
+	if ( !$date_valid ) {
+		echo "Date on certificate expired or not valid<br>";
+	}
+	$filecontents = get_transient('rsssl_testpage');
+	if ( strpos($filecontents, "#SSL TEST PAGE#") !== false ) {
+		echo "SSL test page loaded successfully<br>";
+	} else {
+		echo "Could not open testpage<br>";
+	}
+	if ( RSSSL()->really_simple_ssl->wpconfig_siteurl_not_fixed ) {
+		echo "siteurl or home url defines found in wpconfig<br>";
+	}
+	if ( RSSSL()->really_simple_ssl->wpconfig_siteurl_not_fixed ) {
+		echo "not able to fix wpconfig siteurl/homeurl.<br>";
+	}
+	if ( RSSSL()->really_simple_ssl->wpconfig_loadbalancer_fix_failed ) {
+		echo "wp config loadbalancer fix FAILED.<br>";
+	}
+	if ( !is_writable(RSSSL()->really_simple_ssl->find_wp_config_path()) ) {
+		echo "wp-config.php not writable<br>";
+	}
+	echo "Detected SSL setup: ".RSSSL()->really_simple_ssl->ssl_type()."<br>";
+	if ( file_exists(RSSSL()->really_simple_ssl->htaccess_file()) ){
+		echo "htaccess file exists.<br>";
+		if ( !is_writable(RSSSL()->really_simple_ssl->htaccess_file()) ) {
+			echo "htaccess file not writable.<br>";
+		}
+	} else {
+		echo "no htaccess file available.<br>";
+	}
+	if ( RSSSL()->really_simple_ssl->do_not_edit_htaccess ) {
+		echo "Edit of .htaccess blocked by setting or define 'do not edit htaccess' in Really Simple SSL.<br>";
+	}
+	if (get_transient('rsssl_htaccess_test_success') === 'success') {
+		echo "htaccess redirect tested successfully.<br>";
+	} else if (get_transient('rsssl_htaccess_test_success') === 'error') {
+		echo "htaccess redirect test failed.<br>";
+	} else if (get_transient('rsssl_htaccess_test_success') === 'no-response') {
+		echo "htaccess redirect test failed: no response from server.<br>";
+	}
+	$mixed_content_fixer_detected = get_transient('rsssl_mixed_content_fixer_detected');
+	if ($mixed_content_fixer_detected === 'no-response'){
+		echo "Could not connect to webpage to detect mixed content fixer<br>";
+	}
+	if ($mixed_content_fixer_detected === 'not-found'){
+		echo "Mixed content marker not found in websource<br>";
+	}
+	if ($mixed_content_fixer_detected === 'error'){
+		echo "Mixed content marker not found: unknown error<br>";
+	}
+	if ($mixed_content_fixer_detected === 'curl-error'){
+		//Site has has a cURL error
+		echo "Mixed content fixer could not be detected: cURL error<br>";
+	}
+	if ($mixed_content_fixer_detected === 'found'){
+		echo "Mixed content fixer successfully detected<br>";
+	}
+	if ($mixed_content_fixer_detected === 'not-enabled') {
+		echo "Mixed content fixer not enabled<br>";
+	}
+	if ( !RSSSL()->really_simple_ssl->htaccess_contains_redirect_rules() ) {
+		echo ".htaccess does not contain default Really Simple SSL redirect.<br>";
+	}
+
 
 	echo "\nConstants\n";
 
