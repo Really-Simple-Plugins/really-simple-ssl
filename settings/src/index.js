@@ -165,6 +165,7 @@ class Settings extends Component {
  * Renders the settings page with Menu and currently selected settings
  *
  */
+
 class SettingsPage extends Component {
     constructor() {
         super( ...arguments );

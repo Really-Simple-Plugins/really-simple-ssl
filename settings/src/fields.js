@@ -25,9 +25,7 @@ class Field extends Component {
     }
 
     componentDidMount() {
-        if (typeof this.props.highLightField ==='function') {
-            this.props.highLightField('');
-        }
+        this.props.highLightField('');
     }
     onChangeHandler(fieldValue) {
         let fields = this.props.fields;

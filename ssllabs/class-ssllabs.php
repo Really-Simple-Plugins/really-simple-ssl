@@ -69,8 +69,7 @@ class rsssl_ssllabs {
 		$body = get_option( 'rsssl_ssltest_base_request');
         $html_arr[] = __('Progress:','really-simple-ssl').' '.$total_progress.'%';
 		$html_arr[] = __('Host:','really-simple-ssl').' '.$domain;
-		$html_arr[] = $ip;
-		$html_arr[] = __('Servername:','really-simple-ssl').' '.$this->get_server();
+//		$html_arr[] = $ip;
 		if ( $total_progress<100 ){
 			$html_arr[] = $message;
 			$disabled = true;
@@ -92,7 +91,8 @@ class rsssl_ssllabs {
 			$class = "rsssl-incomplete";
 			$url = '#';
 		}
-		$html .= '<div class="rsssl-detailed-report '.$class.'"><a href="'.$url.'" target="_blank">'.__("View details report on Qualys SSL Labs", "really-simple-ssl").'</a></div>';
+		$html .= '<div class="rsssl-detailed-report '.$class.'"><a href="'.$url.'" target="_blank">'.__("View detailed report on Qualys SSL Labs", "really-simple-ssl").'</a></div>';
+		$html .= '<div class="rsssl-disclaimer">'.__("This scan is provided by Qualis SSL Labs.", "really-simple-ssl").' '.sprintf(__('The use of this API is under the MIT license and subject to <a href="%s">terms & conditions</a> and privacy policy of Qualys.', "really-simple-ssl"), 'https://www.ssllabs.com/about/terms.html').'</div>';
 		return ['footerHtml'=>$footer_html,'disabled'=>$disabled, 'html' => $html, 'progress' => $total_progress ];
 	}
 
@@ -142,23 +142,6 @@ class rsssl_ssllabs {
 		}
 		//if none are in progress, get the 'ready' message
 		return $message;
-	}
-
-	/**
-	 * Get server
-	 * @return string
-	 */
-	private function get_server(){
-		$body = get_option('rsssl_ssltest_base_request');
-		if ($body && isset($body->endpoints) && is_array($body->endpoints) ) {
-			$endpoints = $body->endpoints;
-			$endpoints = array_reverse($endpoints);
-			foreach ($endpoints as $endpoint){
-				return isset($endpoint->serverName) ? $endpoint->serverName : __('searching...', 'really-simple-ssl');
-			}
-		}
-		return __('Searching...','really-simple-ssl');
-
 	}
 
 	/**

@@ -28,7 +28,7 @@ $items = [
 	<?php
 	foreach ($items as $item) { ?>
 		<span class="rsssl-footer-item footer-right">
-		    <span class="rsssl-grid-footer dot <?php echo $item['class']?>"></span>
+		    <span class="rsssl-grid-footer rsssl-dot <?php echo $item['class']?>"></span>
             <?php echo $item['text']?>
 		</span>
 	<?php }  ?>
