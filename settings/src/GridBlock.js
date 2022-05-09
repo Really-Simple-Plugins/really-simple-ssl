@@ -8,7 +8,7 @@ import {
 
 import * as rsssl_api from "./utils/api";
 import ProgressBlock from "./ProgressBlock";
-import NewFeatures from "./NewFeatures";
+import SecurityFeaturesBlock from "./SecurityFeaturesBlock";
 import ProgressHeader from "./ProgressBlockHeader";
 
 /**
@@ -33,7 +33,7 @@ class GridButton extends Component {
  * @type {{SslLabs: JSX.Element}}
  */
 var dynamicComponents = {
-    "NewFeatures": NewFeatures,
+    "SecurityFeaturesBlock": SecurityFeaturesBlock,
     "ProgressBlock": ProgressBlock,
     "ProgressHeader": ProgressHeader,
 };

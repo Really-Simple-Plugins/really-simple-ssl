@@ -8,7 +8,7 @@ import {
 } from '@wordpress/components';
 import * as rsssl_api from "./utils/api";
 import Field from "./fields";
-class NewFeatureBullet extends Component {
+class SecurityFeatureBullet extends Component {
     constructor() {
         super( ...arguments);
 
@@ -29,7 +29,7 @@ class NewFeatureBullet extends Component {
     }
 }
 
-class NewFeatures extends Component {
+class SecurityFeaturesBlock extends Component {
     constructor() {
         super( ...arguments);
 
@@ -50,9 +50,9 @@ class NewFeatures extends Component {
         fields = fields.filter( field => field.new_features_block===true );
         return (
             <div>
-                {fields.map((field, i) => <NewFeatureBullet key={i} index={i} field={field} fields={fields}/>)}
+                {fields.map((field, i) => <SecurityFeatureBullet key={i} index={i} field={field} fields={fields}/>)}
             </div>
         );
     }
 }
-export default NewFeatures;
+export default SecurityFeaturesBlock;
