@@ -23,14 +23,6 @@ function file_editing_notice( $notices ) {
 	return $notices;
 }
 
-function rsssl_file_editing_allowed() {
-    if ( ! defined('DISALLOW_FILE_EDIT' ) ) {
-        return true;
-    }
-
-    return false;
-}
-
 /**
  * @return string
  * Add a notice for this integration

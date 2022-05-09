@@ -157,19 +157,3 @@ function rsssl_verify_database_copy($new_prefix) {
 
     return false;
 }
-
-/**
- * @return bool
- *
- * Check if DB has default wp_ prefix
- */
-function rsssl_is_default_wp_prefix() {
-
-	global $wpdb;
-
-	if ( $wpdb->prefix === 'wp_') {
-        return true;
-    }
-
-    return false;
-}

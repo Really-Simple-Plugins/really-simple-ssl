@@ -151,30 +151,8 @@ function rsssl_maybe_change_debug_log_location() {
 	}
 }
 
-/**
- *
- * @return bool
- * Check if debug.log is saved to default location
- */
-function rsssl_is_default_debug_log_location() {
-    if ( ! get_option('rsssl_debug_log_location_changed') ) {
-        return true;
-    }
 
-    return false;
-}
 
-/**
- * @return bool
- *
- * Check if debugging in WordPress is enabled
- */
-function rsssl_is_debug_log_enabled() {
-	if ( defined('WP_DEBUG') && defined('WP_DEBUG_LOG') ) {
-		return true;
-	}
 
-	return false;
-}
 
 add_action('init', 'rsssl_maybe_change_debug_log_location');

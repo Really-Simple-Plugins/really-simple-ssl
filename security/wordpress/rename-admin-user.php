@@ -118,22 +118,6 @@ function rsssl_rename_admin_user() {
 	}
 }
 
-/**
- * @return bool
- *
- * Check if user admin exists
- */
-function rsssl_has_admin_user() {
-
-	$users = get_users();
-	foreach ( $users as $user ) {
-		if ( $user->data->user_login === 'admin') {
-			return true;
-		}
-	}
-
-    return false;
-}
 
 /**
  * @return bool

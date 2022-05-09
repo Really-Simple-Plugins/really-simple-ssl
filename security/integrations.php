@@ -1,7 +1,7 @@
 <?php
 defined( 'ABSPATH' ) or die( "you do not have access to this page!" );
-
 require_once( trailingslashit(rsssl_path) . 'security/learning-mode.php' );
+require_once( trailingslashit(rsssl_path) . 'security/tests.php' );
 require_once( trailingslashit(rsssl_path) . 'security/functions.php' );
 require_once( trailingslashit(rsssl_path) . 'security/check-requests.php' );
 require_once( trailingslashit(rsssl_path) . 'security/sync-settings.php' );
@@ -9,7 +9,7 @@ require_once( trailingslashit(rsssl_path) . 'security/sync-settings.php' );
 function rsssl_enqueue_integrations_assets( $hook ) {
 
 }
-add_action( 'admin_enqueue_scripts', 'rsssl_enqueue_integrations_assets' );
+//add_action( 'admin_enqueue_scripts', 'rsssl_enqueue_integrations_assets' );
 
 global $rsssl_integrations_list;
 $rsssl_integrations_list = apply_filters( 'rsssl_integrations', array(
@@ -120,8 +120,7 @@ $rsssl_integrations_list = apply_filters( 'rsssl_integrations', array(
         'option_id'            => 'rsssl_disable_login_feedback',
         'type'                 => 'checkbox',
         'actions'              => array(
-			'fix'       => '_true_',
-//			'fix'       => 'rsssl_no_wp_login_errors',
+			'fix'       => 'rsssl_no_wp_login_errors',
         ),
     ),
     'disable-http-methods' => array(
@@ -259,82 +258,25 @@ $rsssl_integrations_list = apply_filters( 'rsssl_integrations', array(
 		),
 	),
 ) );
-
-foreach ( $rsssl_integrations_list as $plugin => $details ) {
-	$details = wp_parse_args($details, ['conditions' => [], 'option_id' => false, 'always_include'=>false, 'folder' => false, 'constant_or_function' => false ]);
-
-	if ( ! current_user_can('manage_options') ) return;
-
-	if ( ! file_exists( rsssl_path . 'security/' . $details['folder'] . "/" . $plugin . '.php' )
-	) {
-		continue;
-	} else {
-        $file = rsssl_path . 'security/' . $details['folder'] . "/" . $plugin . '.php';
-    }
-
-	$skip = false;
-
-	if ( isset( $details['conditions'] ) ) {
-		$skip = !rsssl_conditions_apply($details['conditions']);
-		$test = $skip ? "do skip" : "do not skip";
-		error_log(print_r($details['conditions'], true));
-		error_log("Skip value $test");
-//		foreach ( $details['conditions'] as $condition ) {
-//			$condition_met = rsssl_validate_function($condition);
-//			if ( $condition_met != true ) {
-//				$skip = true;
-//			}
-//		}
-	}
-
-	// Always include if always_include is true
-	if ( $details['always_include'] !== false ) {
-		require_once( $file );
-	} elseif (  $details['option_id'] && rsssl_get_option( $details['option_id'] ) !== true ) {
-//		error_log("$plugin skipped, option not enabled");
-	} elseif ( file_exists( $file ) && $skip !== true ) {
-		require_once( $file );
-	} elseif ( $skip !== false ) {
-//		error_log("$plugin skipped, conditions not met");
-	} else {
-		error_log( "searched for $plugin integration at $file, but did not find it" );
-	}
-
-	$risk = $details['risk'];
-	$impact = $details['impact'];
-
-	// Apply fix on high risk, low impact, OR when option has been enabled
-    if (
-		( $risk === 'high' && $impact === 'low' )
-         || ( isset( $details['option_id']) && rsssl_get_option($details['option_id'] ) !== false )
-    ) {
-        $fix = $details['actions']['fix'];
-	    if (function_exists($fix)) {
-		    $fix();
-	    } else {
-		    error_log("Really Simple SSL: fix function $fix not found");
-	    }
-	  }
-}
-
-/**
- * Check if this plugin's integration is enabled
- *
- * @return bool
- */
-function rsssl_is_integration_enabled( $plugin_name ) {
-	global $rsssl_integrations_list;
-	if ( ! array_key_exists( $plugin_name, $rsssl_integrations_list ) ) {
-		return false;
-	}
-	$fields = get_option( 'rsssl_options_integrations' );
-	//default enabled, which means it's enabled when not set.
-	if ( isset( $fields[ $plugin_name ] ) && $fields[ $plugin_name ] != 1 ) {
-		return false;
-	}
-
-	return true;
-}
+//
+///**
+// * Check if this plugin's integration is enabled
+// *
+// * @return bool
+// */
+//function rsssl_is_integration_enabled( $plugin_name ) {
+//	global $rsssl_integrations_list;
+//	if ( ! array_key_exists( $plugin_name, $rsssl_integrations_list ) ) {
+//		return false;
+//	}
+//	$fields = get_option( 'rsssl_options_integrations' );
+//	//default enabled, which means it's enabled when not set.
+//	if ( isset( $fields[ $plugin_name ] ) && $fields[ $plugin_name ] != 1 ) {
+//		return false;
+//	}
+//
+//	return true;
+//}
 
 /**
  * Check if a plugin from the integrations list is active
@@ -342,36 +284,23 @@ function rsssl_is_integration_enabled( $plugin_name ) {
  *
  * @return bool
  */
-function rsssl_integration_plugin_is_active( $plugin ){
-	global $rsssl_integrations_list;
-	if ( !isset($rsssl_integrations_list[ $plugin ]) ) {
-		return false;
-	}
-	//because we need a default, we don't use the get_value from rsssl. The fields array is not loaded yet, so there are no defaults
-	$fields = get_option( 'rsssl_options_integrations' );
-	$details = $rsssl_integrations_list[ $plugin ];
-	error_log(print_r($details, true));
-
-	$enabled = isset( $fields[ $plugin ] ) ? $fields[ $plugin ] : true;
-	$theme = wp_get_theme();
-	if (
-		( defined($details['constant_or_function'])
-		  || function_exists( $details['constant_or_function'] )
-		  || class_exists( $details['constant_or_function'] )
-		  || ( $theme && ($theme->name === $details['constant_or_function']) )
-		)
-		&& $enabled
-	) {
-		return true;
-	}
-	return false;
-}
+//function rsssl_integration_plugin_is_active( $plugin ){
+//	return false;
+//	global $rsssl_integrations_list;
+//	if ( !isset($rsssl_integrations_list[ $plugin ]) ) {
+//		return false;
+//	}
+//	//because we need a default, we don't use the get_value from rsssl. The fields array is not loaded yet, so there are no defaults
+//	$fields = get_option( 'rsssl_options_integrations' );
+//	return isset( $fields[ $plugin ] ) ? $fields[ $plugin ] : true;
+//}
 
 /**
  * code loaded without privileges to allow integrations between plugins and services, when enabled.
  */
 
 function rsssl_integrations() {
+
 	global $rsssl_integrations_list;
 	$stored_integrations_count = get_option('rsssl_active_integrations', 0 );
 	$actual_integrations_count = 0;
@@ -379,11 +308,57 @@ function rsssl_integrations() {
 	foreach ( $rsssl_integrations_list as $plugin => $details ) {
 		if ( rsssl_integration_plugin_is_active( $plugin ) ) {
 			$actual_integrations_count++;
-			$file = apply_filters( 'rsssl_integration_path', rsssl_path . "security/" . $details['folder']. '/' . $plugin.".php", $plugin );
-			if ( file_exists( $file ) ) {
+			$details = wp_parse_args($details,
+				[
+				    'conditions' => [],
+				    'option_id' => false,
+					'always_include'=>false,
+					'folder' => false,
+					'constant_or_function' => false
+				]
+			);
+			$file = rsssl_path . 'security/' . $details['folder'] . "/" . $plugin . '.php';
+			$skip = false;
+
+			if ( isset( $details['conditions'] ) ) {
+				error_log(print_r($details['conditions'], true));
+				$skip = !rsssl_conditions_apply($details['conditions']);
+				$test = $skip ? "do skip" : "do not skip";
+
+				error_log("Skip value $test");
+			}
+
+			if ( ! file_exists( $file ) ) {
+				continue;
+			}
+
+			// Always include if always_include is true
+			if ( $details['always_include'] !== false ) {
+				error_log("load file $file");
 				require_once( $file );
+			} elseif ( file_exists( $file ) && $skip !== true ) {
+				error_log("load file $file");
+				require_once( $file );
+			} elseif ( $skip !== false ) {
+				error_log("$plugin skipped, conditions not met");
 			} else {
 				error_log( "searched for $plugin integration at $file, but did not find it" );
+			}
+
+			$risk = $details['risk'];
+			$impact = $details['impact'];
+
+			// Apply fix on high risk, low impact, OR when option has been enabled
+			if (
+				( $risk === 'high' && $impact === 'low' )
+				|| ( isset( $details['option_id']) && rsssl_get_option($details['option_id'] ) !== false )
+			) {
+				$fix = isset($details['actions']['fix']) ? $details['actions']['fix']: false;
+				if ($fix && function_exists($fix)) {
+					$fix();
+				} else {
+					error_log("Really Simple SSL: fix function $fix not found");
+				}
 			}
 		}
 	}
@@ -395,4 +370,4 @@ function rsssl_integrations() {
 
 }
 
-add_action( 'plugins_loaded', 'rsssl_integrations', 10 );
+//add_action( 'plugins_loaded', 'rsssl_integrations', 10 );

@@ -32,19 +32,6 @@ function rsssl_application_passwords_allowed( $notices ) {
 }
 
 /**
- * @return bool
- * Check if application passwords are available
- */
-function rsssl_application_passwords_available() {
-
-	if ( wp_is_application_passwords_available() ) {
-		return true;
-	}
-
-	return false;
-}
-
-/**
  * @return void
  * Enable or disable application passwords
  */

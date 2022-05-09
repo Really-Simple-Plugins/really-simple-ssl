@@ -23,19 +23,6 @@ function user_registration_notice( $notices ) {
 }
 
 /**
- * @return bool
- *
- * Check if user registration is allowed
- */
-function rsssl_user_registration_allowed() {
-    if ( get_option( 'users_can_register' ) !== false ) {
-        return true;
-    }
-
-    return false;
-}
-
-/**
  * @return string
  * Add a notice for this integration
  */

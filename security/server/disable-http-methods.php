@@ -1,48 +1,6 @@
 <?php
 defined( 'ABSPATH' ) or die( "you do not have access to this page!" );
 
-/**
- * @return bool
- * Test if HTTP methods are allowed
- */
-function rsssl_test_if_http_methods_allowed()
-{
-
-	if ( ! current_user_can( 'manage_options' ) ) return;
-
-		if ( ! get_transient( 'rsssl_http_options_allowed' ) ) {
-
-        if (function_exists('curl_init')) {
-
-            $url = site_url();
-            $ch = curl_init();
-
-            curl_setopt($ch, CURLOPT_URL, $url );
-	        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'OPTIONS');
-	        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-	        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-	        curl_setopt($ch,CURLOPT_RETURNTRANSFER, true);
-	        curl_setopt($ch, CURLOPT_HEADER, true);
-		    curl_setopt($ch,CURLOPT_NOBODY, true);
-		    curl_setopt($ch,CURLOPT_VERBOSE, true);
-            curl_setopt($ch, CURLOPT_TIMEOUT, 3); //timeout in seconds
-
-            curl_exec($ch);
-            if (curl_errno($ch)) {
-	            echo 'Error:' . curl_error($ch);
-            }
-
-            curl_close($ch);
-
-            set_transient('rsssl_http_options_allowed', 'not-allowed', DAY_IN_SECONDS);
-			return false;
-        }
-
-		set_transient('rsssl_http_options_allowed', 'allowed', DAY_IN_SECONDS);
-		return true;
-    }
-}
-
 add_action('admin_init', 'rsssl_disable_http_methods');
 
 /**

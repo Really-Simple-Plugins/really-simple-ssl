@@ -1,7 +1,5 @@
 <?php
-if ( is_admin() ) {
-    add_filter('rsssl_notices', 'rsssl_show_notices_for_mismatches', 50, 3);
-}
+add_filter('rsssl_notices', 'rsssl_show_notices_for_mismatches', 50, 1);
 
 add_action( 'admin_init', 'rsssl_sync_wordpress_settings');
 add_action( 'rsssl_after_saved_fields', 'maybe_update_wordpress_user_registration_option' );
@@ -16,9 +14,7 @@ add_action( 'update_option_users_can_register', 'maybe_update_rsssl_user_registr
 function rsssl_sync_wordpress_settings() {
 
     if ( ! get_transient('rsssl_settings_mismatch_check' ) ) {
-
         delete_option('rsssl_option_mismatches');
-
         $mismatches = array();
 
 //        if ( get_option('users_can_register') !== rsssl_get_option('rsssl_disable_anyone_can_register') ) {
@@ -53,7 +49,7 @@ function rsssl_sync_wordpress_settings() {
  *
  * Show notices for mismatched RSSSL & WordPress options
  */
-function rsssl_show_notices_for_mismatches() {
+function rsssl_show_notices_for_mismatches($notices) {
 
     $mismatches = get_option('rsssl_option_mismatches');
 
@@ -98,6 +94,7 @@ function rsssl_show_notices_for_mismatches() {
             ),
         );
     }
+	return $notices;
 }
 
 /**
