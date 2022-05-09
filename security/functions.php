@@ -95,51 +95,6 @@ function rsssl_get_user_id() {
 }
 
 /**
- * @param $func
- * @param $is_condition
- *
- * @return string
- * Validate function
- */
-function rsssl_validate_function($func, $is_condition = false ){
-	$invert = false;
-	if (strpos($func, 'NOT ') !== FALSE ) {
-		$func = str_replace('NOT ', '', $func);
-		$invert = true;
-	}
-
-	if ( $func === '_true_') {
-		$output = true;
-	} else if ( $func === '_false_' ) {
-		$output = false;
-	} else {
-		if ( preg_match( '/(.*)\(\)\-\>(.*)->(.*)/i', $func, $matches)) {
-			$base = $matches[1];
-			$class = $matches[2];
-			$function = $matches[3];
-			$output = call_user_func( array( $base()->{$class}, $function ) );
-		} else {
-			$output = $func();
-		}
-
-		if ( $invert ) {
-			$output = !$output;
-		}
-	}
-
-	//stringify booleans
-	if (!$is_condition) {
-		if ( $output === false || $output === 0 ) {
-			$output = 'false';
-		}
-		if ( $output === true || $output === 1 ) {
-			$output = 'true';
-		}
-	}
-	return sanitize_text_field($output);
-}
-
-/**
  * @return string|null
  * Get the wp-config.php path
  */

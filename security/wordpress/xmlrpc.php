@@ -84,7 +84,6 @@ function rsssl_xmlrpc_allowed()
                 set_transient( 'rsssl_xmlrpc_allowed', 'not-allowed', DAY_IN_SECONDS );
                 return false;
             }
-
         }
 
     } else {
