@@ -9,6 +9,7 @@ import {
 import * as rsssl_api from "./utils/api";
 import ProgressBlock from "./ProgressBlock";
 import ProgressHeader from "./ProgressBlockHeader";
+import SecurityFeaturesBlock from './SecurityFeaturesBlock';
 
 /**
  * using the gridbutton generates a button which will refresh the gridblock when clicked
@@ -32,6 +33,7 @@ class GridButton extends Component {
  * @type {{SslLabs: JSX.Element}}
  */
 var dynamicComponents = {
+    "SecurityFeaturesBlock": SecurityFeaturesBlock,
     "ProgressBlock": ProgressBlock,
     "ProgressHeader": ProgressHeader,
 };
@@ -39,7 +41,7 @@ var dynamicComponents = {
 class GridBlock extends Component {
     constructor() {
         super( ...arguments );
-        this.footerHtml = this.props.block.footer.html;
+        this.footerHtml = this.props.block.footer.data;
         this.BlockProps=[];
         this.state = {
             isAPILoaded: false,
@@ -134,7 +136,8 @@ class GridBlock extends Component {
                 this.getBlockData('refresh');
             }, blockData.content.interval );
         }
-        let DynamicBlockProps = { setBlockProps: this.setBlockProps, BlockProps: this.BlockProps, runTest: this.runTest, fields: this.props.fields, isApiLoaded: this.props.isApiLoaded, highLightField: this.highLightField };
+
+        let DynamicBlockProps = { saveChangedFields: this.props.saveChangedFields, setBlockProps: this.setBlockProps, BlockProps: this.BlockProps, runTest: this.runTest, fields: this.props.fields, isApiLoaded: this.props.isApiLoaded, highLightField: this.highLightField };
         return (
             <div className={className}>
                 <div className="item-container">
@@ -149,7 +152,7 @@ class GridBlock extends Component {
                     {blockData.content.type==='react' && <div className="rsssl-grid-item-content">{wp.element.createElement(dynamicComponents[content], DynamicBlockProps)}</div>}
                     <div className="rsssl-grid-item-footer">
                         { blockData.footer.hasOwnProperty('button') && <GridButton text={blockData.footer.button.text} onClick={this.getBlockData} disabled={this.testDisabled}/>}
-                        { blockData.footer.hasOwnProperty('type') && blockData.footer.hasOwnProperty('type') && <span className="rsssl-footer-html" dangerouslySetInnerHTML={{__html: this.footerHtml}}></span>}
+                        { blockData.footer.type==='html' && <span className="rsssl-footer-html" dangerouslySetInnerHTML={{__html: this.footerHtml}}></span>}
                     </div>
                 </div>
             </div>

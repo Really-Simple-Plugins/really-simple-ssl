@@ -168,6 +168,21 @@ function rsssl_run_test($request){
         case 'dismiss_task':
 	        $data = RSSSL()->progress->dismiss_task($state);
             break;
+        case 'fileEditingAllowed':
+	        require_once( rsssl_path . 'security/dashboard/file-editing.php' );
+	        $progress = new rsssl_progress($state);
+            $data = $progress->get();
+            break;
+        case 'userRegisgrationAllowed':
+	        require_once( rsssl_path . 'security/dashboard/user-registration.php' );
+	        $progress = new rsssl_progress($state);
+            $data = $progress->get();
+            break;
+        case 'debuggingEnabled':
+	        require_once( rsssl_path . 'security/dashboard/debugging-enabled.php' );
+	        $progress = new rsssl_progress($state);
+            $data = $progress->get();
+            break;
         default:
 	        $data = array();
     }

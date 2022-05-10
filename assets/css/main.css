@@ -611,16 +611,14 @@
 .rsssl-grid .rsssl-system-status-footer-info .system-status-info {
   margin-left: 6px;
 }
-.rsssl-grid .dot {
+.rsssl-grid .rsssl-dot {
   height: 10px;
   width: 10px;
   border-radius: 50%;
   display: inline-block;
-}
-.rsssl-grid .rsssl-dot-success {
   background-color: #61ce70;
 }
-.rsssl-grid .rsssl-dot-error {
+.rsssl-grid .rsssl-dot.rsssl-dot-error {
   background-color: #d7263d;
 }
 .upsell-grid-container .rsssl-secondary-header-item img {

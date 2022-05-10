@@ -67,7 +67,6 @@ class SettingsGroup extends Component {
 
 	render(){
 		let selectedMenuItem = this.props.selectedMenuItem;
-		console.log(selectedMenuItem);
 		let selectedFields = [];
 		//get all fields with group_id this.props.group_id
 		for (const selectedField of this.props.fields){
@@ -109,7 +108,6 @@ class Settings extends Component {
 		let selectedMenuItem = this.props.selectedMenuItem;
 		let selectedStep = this.props.selectedStep;
 		let menu = this.props.menu;
-		console.log(menu);
 		if ( ! isAPILoaded ) {
 			return (
 				<Placeholder></Placeholder>
@@ -167,6 +165,7 @@ class Settings extends Component {
  * Renders the settings page with Menu and currently selected settings
  *
  */
+
 class SettingsPage extends Component {
     constructor() {
         super( ...arguments );
@@ -375,8 +374,7 @@ class Header extends Component {
 				this.highContrast = field.value;
 			}
 		}
-		console.log("high contrast");
-		console.log(this.highContrast);
+
 		this.setState({
 			highContrast: this.highContrast,
 		});

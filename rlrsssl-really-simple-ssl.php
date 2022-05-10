@@ -162,6 +162,9 @@ class REALLY_SIMPLE_SSL
 		if (version_compare(PHP_VERSION, rsssl_le_php_version, '>=')) {
 			require_once( rsssl_path . 'lets-encrypt/cron.php' );
 		}
+
+		require_once(rsssl_path . '/security/integrations.php');
+
 	}
 
 	private function hooks()
