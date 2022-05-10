@@ -128,11 +128,10 @@ function rsssl_is_default_debug_log_location() {
  * @return bool
  */
 function rsssl_file_editing_allowed() {
-	if ( ! defined('DISALLOW_FILE_EDIT' ) ) {
-		return true;
+	if ( defined('DISALLOW_FILE_EDIT' ) ) {
+		return false;
 	}
-
-	return false;
+	return true;
 }
 
 /**

@@ -59,10 +59,7 @@ $rsssl_integrations_list = apply_filters( 'rsssl_integrations', array(
 		'option_id'            => 'disable_file_editing',
 		'type'                 => 'checkbox',
 		'conditions'           => array(
-			'rsssl_file_editing_allowed()',
-		),
-		'actions'              => array(
-			'fix'       => 'rsssl_disable_file_editing',
+			'rsssl_file_editing_allowed()' => true,
 		),
 	),
 
@@ -133,7 +130,7 @@ $rsssl_integrations_list = apply_filters( 'rsssl_integrations', array(
 			'fix'       => 'rsssl_disable_http_methods',
         ),
     ),
-//
+
     'debug-log' => array(
         'label'                => 'Move debug.log',
         'folder'               => 'wordpress',
@@ -266,11 +263,7 @@ function rsssl_is_integration_enabled( $plugin, $details ) {
 		error_log("not field id for $plugin");
 	}
 	if ($field_id && rsssl_get_option($field_id) ) {
-		error_log("setting $field_id is enabled");
 		return true;
-	} else {
-		error_log("setting $field_id is disabled");
-
 	}
 	return false;
 }
@@ -296,20 +289,18 @@ function rsssl_integrations() {
 		);
 
 		if ( rsssl_is_integration_enabled( $plugin, $details ) ) {
-			error_log("$plugin enabled");
 			$actual_integrations_count++;
 			$file = rsssl_path . 'security/' . $details['folder'] . "/" . $plugin . '.php';
 			$skip = true;
-
 			if ( isset( $details['conditions'] ) ) {
 				$skip = !rsssl_conditions_apply($details['conditions']);
 			}
 
 			if ( ! file_exists( $file ) || $skip ) {
+
 				continue;
 			}
 
-			error_log("load file $file");
 			require_once( $file );
 			$risk = $details['risk'];
 			$impact = $details['impact'];
@@ -323,8 +314,6 @@ function rsssl_integrations() {
 					error_log("Really Simple SSL: fix function $fix not found");
 				}
 			}
-		} else {
-			error_log("$plugin not enabled");
 		}
 	}
 	update_option('rsssl_active_integrations',  $actual_integrations_count);

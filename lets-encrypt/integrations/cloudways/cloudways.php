@@ -86,7 +86,6 @@ class rsssl_Cloudways {
 				return new RSSSL_RESPONSE( 'error', 'stop', $output->message );
 			} else if ( $httpcode != '200' ) {
 				$message = $httpcode . ' output: ' . substr( $output, 0, 10000 );
-				error_log(print_r($message, true));
 				return new RSSSL_RESPONSE( 'error', 'stop', $message );
 			}
 			curl_close( $ch );

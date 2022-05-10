@@ -376,9 +376,7 @@ function rsssl_conditions_apply( $conditions ){
 					$this_condition_applies = call_user_func( array( $base()->{$class}, $func ) ) === $condition_value ;
 				} else {
 					$func = str_replace('()', '', $func);
-					error_log("check $func");
 					$this_condition_applies = $func() === $condition_value;
-					error_log("condition applies: ".$this_condition_applies);
 				}
 			} else {
 				$var = $condition;

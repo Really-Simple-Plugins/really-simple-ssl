@@ -34,7 +34,7 @@ function rsssl_sync_wordpress_settings() {
             rsssl_update_option('disable_file_editing', true);
             $mismatches[] = 'rsssl_file_editing';
         } elseif ( ! DEFINED('DISALLOW_FILE_EDIT') && rsssl_get_option('disable_file_editing') ) {
-            rsssl_update_option('disable_file_editing', false);
+            //rsssl_update_option('disable_file_editing', false);
             $mismatches[] = 'rsssl_file_editing';
         }
 

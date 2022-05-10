@@ -46,3 +46,4 @@ function rsssl_disable_file_editing() {
 		define('DISALLOW_FILE_EDIT', true );
 	}
 }
+add_action("init", "rsssl_disable_file_editing");
