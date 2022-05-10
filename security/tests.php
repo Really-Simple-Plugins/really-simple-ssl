@@ -18,8 +18,6 @@ function rsssl_user_registration_allowed() {
  */
 function rsssl_xmlrpc_allowed()
 {
-
-	return false;
 	if ( ! get_transient( 'rsssl_xmlrpc_allowed' ) ) {
 
 		if ( function_exists( 'curl_init' ) ) {

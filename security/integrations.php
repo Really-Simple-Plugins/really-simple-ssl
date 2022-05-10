@@ -19,6 +19,7 @@ $rsssl_integrations_list = apply_filters( 'rsssl_integrations', array(
 		'impact'               => 'medium',
 		'risk'                 => 'low',
 		'learning_mode'        => true,
+		'option_id'            => 'xmlrpc',
 		'type'                 => 'checkbox',
 		'conditions'           => [
 			'relation' => 'AND',
@@ -26,11 +27,8 @@ $rsssl_integrations_list = apply_filters( 'rsssl_integrations', array(
 				'rsssl_xmlrpc_allowed()' => true,
 			]
 		],
-		'actions'              => array(
-			'fix'       => 'rsssl_maybe_disable_xmlrpc',
-		),
 	),
-//
+
     'user-registration' => array(
         'label'                => 'User registration',
         'folder'               => 'wordpress',
@@ -297,7 +295,6 @@ function rsssl_integrations() {
 			}
 
 			if ( ! file_exists( $file ) || $skip ) {
-
 				continue;
 			}
 

@@ -84,8 +84,4 @@ function rsssl_log_xmlrpc_request()
  * @return void
  * Maybe disable XMLRPC
  */
-function maybe_disable_xmlrpc()
-{
-    // if rsssl_xmlrpc_disabled
-    // add_filter('xmlrpc_enabled', '__return_false');
-}
+add_filter('xmlrpc_enabled', '__return_false');

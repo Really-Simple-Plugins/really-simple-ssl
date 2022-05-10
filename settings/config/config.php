@@ -233,6 +233,14 @@ function rsssl_fields(){
 			'default'     => rsssl_is_user_registration_enabled(),
 		],
         [
+			'id'          => 'xmlrpc',
+			'menu_id'     => 'hardening',
+			'type'        => 'checkbox',
+			'label'       => __( "Disable xmlrpc", 'really-simple-ssl' ),
+			'disabled'    => false,
+			'default'     => false,
+		],
+		[
 			'id'          => 'disable_file_editing',
 			'menu_id'     => 'hardening',
 			'type'        => 'checkbox',
