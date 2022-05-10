@@ -36,7 +36,7 @@ function rsssl_application_passwords_allowed( $notices ) {
  * Enable or disable application passwords
  */
 function rsssl_maybe_allow_application_passwords() {
-	if ( rsssl_get_option('rsssl_disable_application_passwords' ) !== false ) {
+	if ( rsssl_get_option('disable_application_passwords' ) ) {
 		add_filter( 'wp_is_application_passwords_available', '__return_false' );
 	} else {
 		add_filter( 'wp_is_application_passwords_available', '__return_true' );

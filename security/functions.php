@@ -55,7 +55,7 @@ if ( ! function_exists('rsssl_wrap_headers' ) ) {
 				         "RewriteRule .* - [F]";
 			}
 
-            if ( get_option('rsssl_disable_user_enumeration') !== false ) {
+            if ( !get_option('disable_user_enumeration') ) {
                 $rules .= "RewriteCond %{QUERY_STRING} ^author= [NC]" . "\n" .
                 "RewriteRule .* - [F,L]" . "\n" .
                 "RewriteRule ^author/ - [F,L]";

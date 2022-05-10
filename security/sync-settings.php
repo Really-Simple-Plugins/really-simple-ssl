@@ -17,24 +17,24 @@ function rsssl_sync_wordpress_settings() {
         delete_option('rsssl_option_mismatches');
         $mismatches = array();
 
-//        if ( get_option('users_can_register') !== rsssl_get_option('rsssl_disable_anyone_can_register') ) {
-//            rsssl_update_option('rsssl_disable_anyone_can_register', get_option('users_can_register'));
-//            $mismatches[] = 'rsssl_disable_anyone_can_register';
+//        if ( get_option('users_can_register') !== rsssl_get_option('disable_anyone_can_register') ) {
+//            rsssl_update_option('disable_anyone_can_register', get_option('users_can_register'));
+//            $mismatches[] = 'disable_anyone_can_register';
 //        }
 
-        if ( DEFINED('WP_DEBUG') && rsssl_get_option('rsssl_change_debug_log_location') != '1') {
-            rsssl_update_option('rsssl_change_debug_log_location', true);
+        if ( DEFINED('WP_DEBUG') && !rsssl_get_option('change_debug_log_location') ) {
+            rsssl_update_option('change_debug_log_location', true);
             $mismatches[] = 'rsssl_debug_log_modified';
-        } elseif ( ! DEFINED('WP_DEBUG') && rsssl_get_option('rsssl_change_debug_log_location' == '1') ) {
-            rsssl_update_option('rsssl_change_debug_log_location', false);
+        } elseif ( ! DEFINED('WP_DEBUG') && rsssl_get_option('change_debug_log_location') ) {
+            rsssl_update_option('change_debug_log_location', false);
             $mismatches[] = 'rsssl_debug_log_modified';
         }
 
-        if ( DEFINED('DISALLOW_FILE_EDIT') && rsssl_get_option('rsssl_disable_file_editing') != '1') {
-            rsssl_update_option('rsssl_disable_file_editing', true);
+        if ( DEFINED('DISALLOW_FILE_EDIT') && !rsssl_get_option('disable_file_editing') ) {
+            rsssl_update_option('disable_file_editing', true);
             $mismatches[] = 'rsssl_file_editing';
-        } elseif ( ! DEFINED('DISALLOW_FILE_EDIT') && rsssl_get_option('rsssl_disable_file_editing') == '1') {
-            rsssl_update_option('rsssl_disable_file_editing', false);
+        } elseif ( ! DEFINED('DISALLOW_FILE_EDIT') && rsssl_get_option('disable_file_editing') ) {
+            rsssl_update_option('disable_file_editing', false);
             $mismatches[] = 'rsssl_file_editing';
         }
 
@@ -53,7 +53,7 @@ function rsssl_show_notices_for_mismatches($notices) {
 
     $mismatches = get_option('rsssl_option_mismatches');
 
-    if ( isset( $mismatches['rsssl_disable_anyone_can_register'] ) ) {
+    if ( isset( $mismatches['disable_anyone_can_register'] ) ) {
         $notices['rsssl-anyone-can-register-mismatch'] = array(
             'callback' => '_true_',
             'score' => 5,
@@ -103,8 +103,8 @@ function rsssl_show_notices_for_mismatches($notices) {
  * Sync users can register option when updated via Really Simple SSL
  */
 function maybe_update_wordpress_user_registration_option() {
-    if ( get_option('users_can_register') != rsssl_get_option('rsssl_disable_anyone_can_register') ) {
-        update_option('users_can_register', rsssl_get_option('rsssl_disable_anyone_can_register' ) );
+    if ( get_option('users_can_register') != rsssl_get_option('disable_anyone_can_register') ) {
+        update_option('users_can_register', rsssl_get_option('disable_anyone_can_register' ) );
     }
 }
 
@@ -116,8 +116,8 @@ function maybe_update_wordpress_user_registration_option() {
 function maybe_update_rsssl_user_registration_option()
 {
     if ( get_option('users_can_register') ) {
-        rsssl_update_option('rsssl_disable_anyone_can_register', false);
+        rsssl_update_option('disable_anyone_can_register', false);
     } else {
-        rsssl_update_option('rsssl_disable_anyone_can_register', true);
+        rsssl_update_option('disable_anyone_can_register', true);
     }
 }

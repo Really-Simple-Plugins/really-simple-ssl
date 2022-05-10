@@ -139,7 +139,7 @@ function rsssl_username_admin_changed() {
  */
 function rsssl_id_one_no_enumeration() {
 	$user_id_one = get_user_by('id', 1);
-	if ( $user_id_one && rsssl_get_option('rsssl_disable_user_enumeration') !== true ) {
+	if ( $user_id_one && !rsssl_get_option('disable_user_enumeration') ) {
 		return true;
 	}
 

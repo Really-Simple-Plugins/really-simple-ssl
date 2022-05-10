@@ -5,7 +5,7 @@
  * Update option to disable user enumeration
  */
 function rsssl_disable_user_enumeration() {
-    update_option('rsssl_disable_user_enumeration', true );
+    update_option('disable_user_enumeration', true );
 }
 
 /**
@@ -13,7 +13,7 @@ function rsssl_disable_user_enumeration() {
  * Update option to enable user enumeration
  */
 function rsssl_enable_user_enumeration() {
-    update_option('rsssl_disable_user_enumeration', false );
+    update_option('disable_user_enumeration', false );
 }
 
 // User Enumeration
@@ -36,7 +36,7 @@ function remove_author_from_yoast_sitemap( $users ) {
 }
 
 // Rss actions
-if ( rsssl_get_option('rsssl_disable_rss_feeds' ) !== false ) {
+if ( rsssl_get_option('disable_rss_feeds' ) ) {
 	add_action( 'do_feed', 'wpb_disable_feed', 1 );
 	add_action( 'do_feed_rdf', 'wpb_disable_feed', 1 );
 	add_action( 'do_feed_rss', 'wpb_disable_feed', 1 );
