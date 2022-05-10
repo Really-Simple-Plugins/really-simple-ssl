@@ -24,10 +24,10 @@ function rsssl_disable_indexing() {
 	    if ( file_exists( $htaccess_file ) && is_writable( $htaccess_file ) ) {
 		     $htaccess = file_get_contents($htaccess_file);
 			if ( stripos($htaccess, 'options -indexes') !== false ) {
-				update_option('rsssl_disable_indexing', false);
+				update_option('disable_indexing', false);
 				return;
 			} else {
-			    update_option('rsssl_disable_indexing', true);
+			    update_option('disable_indexing', true);
 				rsssl_wrap_headers();
 			}
 	    }

@@ -138,12 +138,12 @@ function rsssl_change_debug_log_location() {
  */
 function rsssl_maybe_change_debug_log_location() {
 	// Do not update if location has already been updated
-	if ( rsssl_get_option('rsssl_change_debug_log_location') == '1' && get_option('rsssl_debug_log_location_changed') ) {
+	if ( rsssl_get_option('change_debug_log_location') && get_option('rsssl_debug_log_location_changed') ) {
 		return;
 	}
 
 	// If option enabled, and not updated yet, update
-	if ( rsssl_get_option('rsssl_change_debug_log_location') == '1' && ! get_option('rsssl_debug_log_location_changed') ){
+	if ( rsssl_get_option('change_debug_log_location') && ! get_option('rsssl_debug_log_location_changed') ){
 		rsssl_change_debug_log_location();
 	} else {
 		// Option disabled, revert

@@ -46,7 +46,7 @@ if ( ! function_exists('rsssl_wrap_headers' ) ) {
 			$start = "\n" . '#Begin Really Simple Security Headers';
 			$end   = "\n" . '#End Really Simple Security Headers' . "\n";
 
-			if ( get_option( 'rsssl_disable_indexing' ) !== false ) {
+			if ( !get_option( 'disable_indexing' ) ) {
 				$rules .= "\n" . "Options -Indexes";
 			}
 
