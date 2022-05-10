@@ -14,7 +14,6 @@ function rsssl_enqueue_integrations_assets( $hook ) {
 global $rsssl_integrations_list;
 $rsssl_integrations_list = apply_filters( 'rsssl_integrations', array(
 	'xmlrpc' => array(
-		'constant_or_function' => 'rsssl_xmlrpc',
 		'label'                => 'XMLRPC',
         'folder'               => 'wordpress',
 		'impact'               => 'medium',
@@ -33,7 +32,6 @@ $rsssl_integrations_list = apply_filters( 'rsssl_integrations', array(
 	),
 //
     'user-registration' => array(
-        'constant_or_function' => 'rsssl_user_registration',
         'label'                => 'User registration',
         'folder'               => 'wordpress',
         'impact'               => 'medium',
@@ -53,7 +51,6 @@ $rsssl_integrations_list = apply_filters( 'rsssl_integrations', array(
     ),
 
 	'file-editing' => array(
-		'constant_or_function' => 'rsssl_file_editing_registration',
 		'label'                => 'File editing',
 		'folder'               => 'wordpress',
 		'impact'               => 'medium',
@@ -70,7 +67,6 @@ $rsssl_integrations_list = apply_filters( 'rsssl_integrations', array(
 	),
 
 	'hide-wp-version' => array(
-		'constant_or_function' => 'rsssl_hide_wp_version',
 		'label'                => 'Hide WP version',
 		'folder'               => 'wordpress',
 		'impact'               => 'low',
@@ -84,7 +80,6 @@ $rsssl_integrations_list = apply_filters( 'rsssl_integrations', array(
 	),
 
 	'user-enumeration' => array(
-		'constant_or_function' => 'rsssl_user_enumeration',
 		'label'                => 'User Enumeration',
 		'folder'               => 'wordpress',
 		'impact'               => 'low',
@@ -98,7 +93,6 @@ $rsssl_integrations_list = apply_filters( 'rsssl_integrations', array(
 	),
 
     'block-code-execution-uploads' => array(
-        'constant_or_function' => 'rsssl_block_code_execution_uploads',
         'label'                => 'Block code execution in uploads directory',
         'folder'               => 'wordpress',
         'impact'               => 'medium',
@@ -111,7 +105,6 @@ $rsssl_integrations_list = apply_filters( 'rsssl_integrations', array(
         ),
     ),
     'prevent-login-info-leakage' => array(
-        'constant_or_function' => 'rsssl_prevent_info_login_leakage',
         'label'                => 'Prevent login error leakage',
         'folder'               => 'wordpress',
         'impact'               => 'low',
@@ -124,7 +117,6 @@ $rsssl_integrations_list = apply_filters( 'rsssl_integrations', array(
         ),
     ),
     'disable-http-methods' => array(
-        'constant_or_function' => 'rsssl_http_methods',
         'label'                => 'Disable HTTP methods',
         'folder'               => 'server',
         'impact'               => 'low',
@@ -143,7 +135,6 @@ $rsssl_integrations_list = apply_filters( 'rsssl_integrations', array(
     ),
 //
     'debug-log' => array(
-        'constant_or_function' => 'rsssl_debug_log',
         'label'                => 'Move debug.log',
         'folder'               => 'wordpress',
         'impact'               => 'medium',
@@ -165,7 +156,6 @@ $rsssl_integrations_list = apply_filters( 'rsssl_integrations', array(
     ),
 
     'disable-indexing' => array(
-        'constant_or_function' => 'rsssl_disable_indexing_wrapper',
         'label'                => 'Disable directory indexing',
         'folder'               => 'server',
         'impact'               => 'low',
@@ -179,7 +169,6 @@ $rsssl_integrations_list = apply_filters( 'rsssl_integrations', array(
     ),
 
 	'application-passwords' => array(
-		'constant_or_function' => 'rsssl_application_passwords',
 		'label'                => 'Disable Application passwords',
 		'folder'               => 'wordpress',
 		'impact'               => 'low',
@@ -200,7 +189,6 @@ $rsssl_integrations_list = apply_filters( 'rsssl_integrations', array(
 	),
 
 	'rename-db-prefix' => array(
-		'constant_or_function' => 'rsssl_maybe_rename_db_prefix',
 		'label'                => 'Rename DB prefix',
 		'folder'               => 'wordpress',
 		'impact'               => 'high',
@@ -219,7 +207,6 @@ $rsssl_integrations_list = apply_filters( 'rsssl_integrations', array(
 		),
 	),
     'rename-admin-user' => array(
-		'constant_or_function' => 'rsssl_rename_admin_user',
 		'label'                => 'Rename admin user',
 		'folder'               => 'wordpress',
 		'impact'               => 'high',
@@ -239,7 +226,6 @@ $rsssl_integrations_list = apply_filters( 'rsssl_integrations', array(
 	),
 
 	'display-name-is-login-name' => array(
-		'constant_or_function' => 'rsssl_display_name',
 		'label'                => 'Display name equals login name',
 		'folder'               => 'wordpress',
 		'impact'               => 'low',
@@ -261,17 +247,30 @@ $rsssl_integrations_list = apply_filters( 'rsssl_integrations', array(
 
 /**
  * Check if this plugin's integration is enabled
+ * @param string $plugin
+ * @param array $details
  *
  * @return bool
  */
-function rsssl_is_integration_enabled( $plugin ) {
+function rsssl_is_integration_enabled( $plugin, $details ) {
 	global $rsssl_integrations_list;
 	if ( ! array_key_exists( $plugin, $rsssl_integrations_list ) ) {
 		return false;
 	}
-	$field_id = $plugin['option_id'];
-	if (rsssl_get_option($field_id)) {
+	if ($details['always_include']) {
 		return true;
+	}
+
+	$field_id = isset($details['option_id']) ? $details['option_id'] : false;
+	if ( !$field_id){
+		error_log("not field id for $plugin");
+	}
+	if ($field_id && rsssl_get_option($field_id) ) {
+		error_log("setting $field_id is enabled");
+		return true;
+	} else {
+		error_log("setting $field_id is disabled");
+
 	}
 	return false;
 }
@@ -287,53 +286,36 @@ function rsssl_integrations() {
 	$actual_integrations_count = 0;
 
 	foreach ( $rsssl_integrations_list as $plugin => $details ) {
-		if ( rsssl_is_integration_enabled( $plugin ) ) {
+		$details = wp_parse_args($details,
+			[
+				'conditions' => [],
+				'option_id' => false,
+				'always_include'=>false,
+				'folder' => false,
+			]
+		);
+
+		if ( rsssl_is_integration_enabled( $plugin, $details ) ) {
+			error_log("$plugin enabled");
 			$actual_integrations_count++;
-			$details = wp_parse_args($details,
-				[
-				    'conditions' => [],
-				    'option_id' => false,
-					'always_include'=>false,
-					'folder' => false,
-					'constant_or_function' => false
-				]
-			);
 			$file = rsssl_path . 'security/' . $details['folder'] . "/" . $plugin . '.php';
-			$skip = false;
+			$skip = true;
 
 			if ( isset( $details['conditions'] ) ) {
-				error_log(print_r($details['conditions'], true));
 				$skip = !rsssl_conditions_apply($details['conditions']);
-				$test = $skip ? "do skip" : "do not skip";
-
-				error_log("Skip value $test");
 			}
 
-			if ( ! file_exists( $file ) ) {
+			if ( ! file_exists( $file ) || $skip ) {
 				continue;
 			}
 
-			// Always include if always_include is true
-			if ( $details['always_include'] !== false ) {
-				error_log("load file $file");
-				require_once( $file );
-			} elseif ( file_exists( $file ) && $skip !== true ) {
-				error_log("load file $file");
-				require_once( $file );
-			} elseif ( $skip !== false ) {
-				error_log("$plugin skipped, conditions not met");
-			} else {
-				error_log( "searched for $plugin integration at $file, but did not find it" );
-			}
-
+			error_log("load file $file");
+			require_once( $file );
 			$risk = $details['risk'];
 			$impact = $details['impact'];
 
-			// Apply fix on high risk, low impact, OR when option has been enabled
-			if (
-				( $risk === 'high' && $impact === 'low' )
-				|| ( isset( $details['option_id']) && rsssl_get_option($details['option_id'] ) !== false )
-			) {
+			// Apply fix on high risk, low impact
+			if ( $risk === 'high' && $impact === 'low' ) {
 				$fix = isset($details['actions']['fix']) ? $details['actions']['fix']: false;
 				if ($fix && function_exists($fix)) {
 					$fix();
@@ -341,14 +323,15 @@ function rsssl_integrations() {
 					error_log("Really Simple SSL: fix function $fix not found");
 				}
 			}
+		} else {
+			error_log("$plugin not enabled");
 		}
 	}
 	update_option('rsssl_active_integrations',  $actual_integrations_count);
-
 	if ( $stored_integrations_count != $actual_integrations_count) {
 		update_option('rsssl_integrations_changed', true );
 	}
 
 }
 
-//add_action( 'plugins_loaded', 'rsssl_integrations', 10 );
+add_action( 'plugins_loaded', 'rsssl_integrations', 10 );
