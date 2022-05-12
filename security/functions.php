@@ -19,6 +19,27 @@ defined( 'ABSPATH' ) or die( "you do not have access to this page!" );
 //        }
 //    }
 //}
+/**
+ * Complete a fix for an issue, either user triggered, or automatic
+ * @param $fix
+ *
+ * @return void
+ */
+function rsssl_do_fix($fix){
+	if ( !current_user_can('manage_options')) {
+		return;
+	}
+	$completed = get_option('rsssl_completed_fixes', []);
+	if ( !in_array($fix, $completed)) {
+		if ( $fix && function_exists($fix) ) {
+			$completed[]=$fix;
+			$fix();
+			update_option('rsssl_completed_fixes', $completed );
+		} elseif ($fix && !function_exists($fix) ) {
+			error_log("Really Simple SSL: fix function $fix not found");
+		}
+	}
+}
 
 /**
  * Wrap the security headers
@@ -41,7 +62,7 @@ if ( ! function_exists('rsssl_wrap_headers' ) ) {
 				$rules .= "\n" . "Options -Indexes";
 			}
 
-			if ( get_option('rsssl_disable_http_methods' ) !== false ) {
+			if ( rsssl_get_option('disable_http_methods' ) !== false ) {
 				$rules .= "\n" . "RewriteCond %{REQUEST_METHOD} ^(TRACE|STACK)" . "\n" .
 				         "RewriteRule .* - [F]";
 			}

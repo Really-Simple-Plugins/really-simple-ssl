@@ -301,16 +301,9 @@ function rsssl_integrations() {
 
 			// Apply fix automatically on high risk, low impact
 			//check if already executed
-			$completed = get_option('rsssl_completed_fixes', []);
 			if ( $risk === 'high' && $impact === 'low' ) {
 				$fix = isset($details['actions']['fix']) ? $details['actions']['fix']: false;
-				if ( !in_array($fix, $completed)) {
-					if ( $fix && function_exists($fix) ) {
-						$fix();
-					} elseif ($fix && !function_exists($fix) ) {
-						error_log("Really Simple SSL: fix function $fix not found");
-					}
-				}
+				rsssl_do_fix($fix);
 			}
 		}
 	}
