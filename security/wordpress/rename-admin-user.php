@@ -1,9 +1,8 @@
 <?php
 defined( 'ABSPATH' ) or die( "you do not have access to this page!" );
 /**
- * @return void
- *
  * Username 'admin' changed notice
+ * @return array
  */
 function rsssl_admin_username_changed( $notices ) {
 	$notices['username_admin_changed'] = array(

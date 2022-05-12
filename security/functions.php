@@ -50,20 +50,6 @@ function rsssl_has_fix($fix){
 }
 
 /**
- * @return bool
- *
- * Check if user ID 1 exists end if user enumeration has been disabled
- */
-function rsssl_id_one_no_enumeration() {
-	$user_id_one = get_user_by('id', 1);
-	if ( $user_id_one && !rsssl_get_option('disable_user_enumeration') ) {
-		return true;
-	}
-
-	return false;
-}
-
-/**
  * Wrap the security headers
  */
 if ( ! function_exists('rsssl_wrap_headers' ) ) {
@@ -98,19 +84,6 @@ if ( ! function_exists('rsssl_wrap_headers' ) ) {
 			file_put_contents($htaccess_file, $htaccess . $start . $rules . $end);
 		}
 	}
-}
-
-/**
- * @return bool
- * Check if WordPress version is above 5.6 for application password support
- */
-function rsssl_wordpress_version_above_5_6() {
-	global $wp_version;
-	if ( $wp_version < 5.6 ) {
-		return false;
-	}
-
-	return true;
 }
 
 /**

@@ -190,3 +190,43 @@ function rsssl_has_admin_user() {
 
 	return false;
 }
+/**
+ * @return bool
+ *
+ * Check if user ID 1 exists end if user enumeration has been disabled
+ */
+function rsssl_id_one_no_enumeration() {
+	$user_id_one = get_user_by('id', 1);
+	if ( $user_id_one && !rsssl_get_option('disable_user_enumeration') ) {
+		return true;
+	}
+
+	return false;
+}
+/**
+ * @return bool
+ *
+ * Check if display name is the same as login
+ */
+function rsssl_display_name_equals_login() {
+	$user = wp_get_current_user();
+	if ( $user->data->user_login === $user->data->display_name ) {
+		return true;
+	}
+
+	return false;
+
+}
+
+/**
+ * Check if WordPress version is above 5.6 for application password support
+ * @return bool
+ */
+function rsssl_wordpress_version_above_5_6() {
+	global $wp_version;
+	if ( $wp_version < 5.6 ) {
+		return false;
+	}
+
+	return true;
+}

@@ -1,4 +1,30 @@
-<?php
+<?php defined( 'ABSPATH' ) or die();
+
+/**
+ * Add notice is display name is the same as login
+ *
+ * @param array $notices
+ *
+ * @return array
+ *
+ */
+
+function rsssl_display_name_is_login_name( $notices ) {
+	$notices['display_name_is_login'] = array(
+		'condition' => ['rsssl_display_name_equals_login'],
+		'callback' => '_true_',
+		'score' => 5,
+		'output' => array(
+			'true' => array(
+				'msg' => __("Your display name is the same as your login. This is a security risk. We recommend to change your display name to something else.", "really-simple-ssl"),
+				'icon' => 'open',
+				'dismissible' => true,
+			),
+		),
+	);
+	return $notices;
+}
+add_filter('rsssl_notices', 'rsssl_display_name_is_login_name' );
 
 /**
  * @return void
