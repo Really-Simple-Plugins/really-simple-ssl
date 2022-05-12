@@ -98,6 +98,7 @@ function rsssl_remove_wp_version() {
 
 	remove_action('wp_head', 'wp_shortlink_wp_head', 10, 0); // Remove shortlink
 }
+add_action('init', 'rsssl_remove_wp_version');
 
 /**
  * @return string

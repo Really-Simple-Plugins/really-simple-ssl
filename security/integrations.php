@@ -69,9 +69,6 @@ $rsssl_integrations_list = apply_filters( 'rsssl_integrations', array(
 		'learning_mode'        => false,
 		'option_id'            => 'hide_wordpress_version',
 		'type'                 => 'checkbox',
-		'actions'              => array(
-			'fix'       => 'rsssl_remove_wp_version',
-		),
 	),
 
 	'user-enumeration' => array(
