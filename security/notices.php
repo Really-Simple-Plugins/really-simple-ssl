@@ -7,7 +7,7 @@
  */
 function rsssl_user_id_one_enumeration( $notices ) {
 	$notices['user_id_one'] = array(
-		'condition' => 'rsssl_id_one_no_enumeration',
+		'condition' => ['rsssl_id_one_no_enumeration'],
 		'callback' => '_true_',
 		'score' => 5,
 		'output' => array(
