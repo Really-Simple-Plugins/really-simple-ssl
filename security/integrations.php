@@ -2,6 +2,7 @@
 defined( 'ABSPATH' ) or die( "you do not have access to this page!" );
 require_once( trailingslashit(rsssl_path) . 'security/learning-mode.php' );
 require_once( trailingslashit(rsssl_path) . 'security/tests.php' );
+require_once( trailingslashit(rsssl_path) . 'security/cron.php' );
 require_once( trailingslashit(rsssl_path) . 'security/check-requests.php' );
 
 /**
@@ -53,7 +54,7 @@ $rsssl_integrations_list = apply_filters( 'rsssl_integrations', array(
     ),
 
 	'file-editing' => array(
-		'label'                => 'File editing',
+		'label'                => __('File editing', 'really-simple-ssl'),
 		'folder'               => 'wordpress',
 		'impact'               => 'medium',
 		'risk'                 => 'low',
@@ -66,7 +67,7 @@ $rsssl_integrations_list = apply_filters( 'rsssl_integrations', array(
 	),
 
 	'hide-wp-version' => array(
-		'label'                => 'Hide WP version',
+		'label'                => __('Hide WP version','really-simple-ssl'),
 		'folder'               => 'wordpress',
 		'impact'               => 'low',
 		'risk'                 => 'low',
@@ -76,7 +77,7 @@ $rsssl_integrations_list = apply_filters( 'rsssl_integrations', array(
 	),
 
 	'user-enumeration' => array(
-		'label'                => 'User Enumeration',
+		'label'                => __('User Enumeration','really-simple-ssl'),
 		'folder'               => 'wordpress',
 		'impact'               => 'low',
 		'risk'                 => 'medium',
@@ -86,7 +87,7 @@ $rsssl_integrations_list = apply_filters( 'rsssl_integrations', array(
 	),
 
     'block-code-execution-uploads' => array(
-        'label'                => 'Block code execution in uploads directory',
+        'label'                => __('Block code execution in uploads directory','really-simple-ssl'),
         'folder'               => 'wordpress',
         'impact'               => 'medium',
         'risk'                 => 'low',
@@ -98,7 +99,7 @@ $rsssl_integrations_list = apply_filters( 'rsssl_integrations', array(
         ),
     ),
     'prevent-login-info-leakage' => array(
-        'label'                => 'Prevent login error leakage',
+        'label'                => __('Prevent login error leakage','really-simple-ssl'),
         'folder'               => 'wordpress',
         'impact'               => 'low',
         'risk'                 => 'high',
@@ -143,9 +144,6 @@ $rsssl_integrations_list = apply_filters( 'rsssl_integrations', array(
 		        'rsssl_is_debug_log_enabled()' => true,
 	        ]
         ],
-        'actions'              => array(
-			'fix'       => 'rsssl_maybe_change_debug_log_location',
-        ),
     ),
 
     'disable-indexing' => array(

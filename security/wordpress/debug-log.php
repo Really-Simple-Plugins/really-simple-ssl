@@ -150,6 +150,7 @@ function rsssl_maybe_change_debug_log_location() {
 		rsssl_revert_debug_log_location();
 	}
 }
+add_action();
 
 
 
