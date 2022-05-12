@@ -2,13 +2,13 @@
 defined( 'ABSPATH' ) or die( "you do not have access to this page!" );
 require_once( trailingslashit(rsssl_path) . 'security/learning-mode.php' );
 require_once( trailingslashit(rsssl_path) . 'security/tests.php' );
-require_once( trailingslashit(rsssl_path) . 'security/functions.php' );
 require_once( trailingslashit(rsssl_path) . 'security/check-requests.php' );
 
 /**
  * Load only on back-end
  */
 if (is_admin() ) {
+	require_once( trailingslashit(rsssl_path) . 'security/functions.php' );
 	require_once( trailingslashit(rsssl_path) . 'security/sync-settings.php' );
 }
 
@@ -300,12 +300,16 @@ function rsssl_integrations() {
 			$impact = $details['impact'];
 
 			// Apply fix automatically on high risk, low impact
+			//check if already executed
+			$completed = get_option('rsssl_completed_fixes', []);
 			if ( $risk === 'high' && $impact === 'low' ) {
 				$fix = isset($details['actions']['fix']) ? $details['actions']['fix']: false;
-				if ( $fix && function_exists($fix) ) {
-					$fix();
-				} elseif ($fix && !function_exists($fix) ) {
-					error_log("Really Simple SSL: fix function $fix not found");
+				if ( !in_array($fix, $completed)) {
+					if ( $fix && function_exists($fix) ) {
+						$fix();
+					} elseif ($fix && !function_exists($fix) ) {
+						error_log("Really Simple SSL: fix function $fix not found");
+					}
 				}
 			}
 		}

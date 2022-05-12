@@ -54,5 +54,14 @@ add_filter( 'rest_endpoints', function( $endpoints ) {
 	}
 	return $endpoints;
 });
-
 add_action('template_redirect', 'check_user_enumeration');
+
+
+/**
+ * Check if string contains numbers
+ */
+if ( ! function_exists('rsssl_contains_numbers' ) ) {
+	function rsssl_contains_numbers( $string ) {
+		return preg_match( '/\\d/', $string ) > 0;
+	}
+}

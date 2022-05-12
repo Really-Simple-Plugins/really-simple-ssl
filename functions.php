@@ -1,5 +1,8 @@
 <?php
 defined('ABSPATH') or die("you do not have access to this page!");
+/**
+ *  Only functions also required on front-end here
+ */
 
 /**
  * Check if the server side conditions apply
