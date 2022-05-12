@@ -857,6 +857,9 @@
 .rsssl-task-element .rsssl-task-message {
   flex: 1;
 }
+.rsssl-task-element .rsssl-task-enable {
+  cursor: pointer;
+}
 .rsssl-task-element .rsssl-task-dismiss button {
   all: initial;
 }

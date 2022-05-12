@@ -26,7 +26,7 @@ class TaskElement extends Component {
                 <div className="rsssl-task-icon"><span className={'rsssl-progress-status rsssl-' + notice.output.icon}>{ notice.output.label }</span></div>
                 <div className="rsssl-task-message" dangerouslySetInnerHTML={{__html: notice.output.msg}}></div>
                 {notice.output.url && <a target="_blank" href={notice.output.url}>{__("More info", "really-simple-ssl")}</a> }
-                {notice.output.highlight_field_id && <span onClick={this.handleClick}>{__("Enable", "really-simple-ssl")}</span> }
+                {notice.output.highlight_field_id && <span className="rsssl-task-enable" onClick={this.handleClick}>{__("Enable", "really-simple-ssl")}</span> }
                 {notice.output.plusone && <span className='rsssl-dashboard-plusone update-plugins rsssl-update-count'><span className='update-count'>1</span></span>}
                 <div className="rsssl-task-dismiss">
                     {notice.output.dismissible &&

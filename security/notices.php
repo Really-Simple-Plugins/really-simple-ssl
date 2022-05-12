@@ -1,5 +1,23 @@
-<?php
+<?php defined( 'ABSPATH' ) or die();
 
+function rsssl_debug_log_notice( $notices ) {
+	$notices['debug-log-notice'] = array(
+		'condition' => ['rsssl_is_debug_log_enabled', 'rsssl_debug_log_in_default_location'],
+		'callback' => '_true_',
+		'score' => 5,
+		'output' => array(
+			'true' => array(
+				'highlight_field_id' => 'change_debug_log_location',
+				'msg' => __("Errors are logged to default debug.log location.", "really-simple-ssl"),
+				'icon' => 'open',
+				'dismissible' => true,
+			),
+		),
+	);
+
+	return $notices;
+}
+add_filter('rsssl_notices', 'rsssl_debug_log_notice' );
 /**
  * @return void
  *

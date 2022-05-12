@@ -1,7 +1,6 @@
 <?php
 add_filter('rsssl_notices', 'rsssl_show_notices_for_mismatches', 50, 1);
 add_action( 'admin_init', 'rsssl_sync_wordpress_settings');
-add_action( 'rsssl_after_saved_fields', 'maybe_update_wordpress_user_registration_option' );
 
 /**
  * @return void
@@ -91,3 +90,11 @@ function rsssl_option_anyone_can_register( $field, $field_id ) {
 	return $field;
 }
 add_filter("rsssl_field", 'rsssl_option_anyone_can_register', 10,2);
+
+/**
+ * When disable debug log location is disabled, revert back
+ */
+if ( get_site_option('rsssl_debug_log_suffix') && !rsssl_get_option('change_debug_log_location') && !rsssl_debug_log_in_default_location() && rsssl_is_debug_log_enabled() ) {
+	$file = rsssl_path . 'security/wordpress/debug-log.php';
+	require_once($file);
+}

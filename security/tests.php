@@ -108,19 +108,6 @@ function rsssl_test_if_http_methods_allowed()
 }
 
 /**
- *
- * @return bool
- * Check if debug.log is saved to default location
- */
-function rsssl_is_default_debug_log_location() {
-	if ( ! get_option('rsssl_debug_log_location_changed') ) {
-		return true;
-	}
-
-	return false;
-}
-
-/**
  * Check if file editing is allowed
  *
  * @return bool
@@ -130,19 +117,6 @@ function rsssl_file_editing_allowed() {
 		return false;
 	}
 	return true;
-}
-
-/**
- * @return bool
- *
- * Check if debugging in WordPress is enabled
- */
-function rsssl_is_debug_log_enabled() {
-	if ( defined('WP_DEBUG') && defined('WP_DEBUG_LOG') ) {
-		return true;
-	}
-
-	return false;
 }
 
 /**
@@ -186,6 +160,29 @@ function rsssl_has_admin_user() {
 		if ( $user->data->user_login === 'admin') {
 			return true;
 		}
+	}
+
+	return false;
+}
+
+
+
+/**
+ * @return bool
+ *
+ * Check if debug.log is in default location
+ */
+function rsssl_debug_log_in_default_location() {
+	return file_exists(WP_CONTENT_DIR.'/debug.log');
+}
+/**
+ * @return bool
+ *
+ * Check if debugging in WordPress is enabled
+ */
+function rsssl_is_debug_log_enabled() {
+	if ( defined('WP_DEBUG') && defined('WP_DEBUG_LOG') ) {
+		return true;
 	}
 
 	return false;
