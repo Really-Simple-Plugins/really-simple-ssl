@@ -60,6 +60,7 @@ class Field extends Component {
             return (
                 <PanelBody className={ this.highLightClass}>
                     <ToggleControl
+                        disabled = {field.disabled}
                         checked= { field.value==1 }
                         help={ field.comment }
                         label={ field.label }

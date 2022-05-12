@@ -34,7 +34,7 @@ $rsssl_integrations_list = apply_filters( 'rsssl_integrations', array(
         'folder'               => 'wordpress',
         'impact'               => 'medium',
         'risk'                 => 'medium',
-        'learning_mode'        => true,
+        'learning_mode'        => false,
         'option_id'            => 'disable_anyone_can_register',
         'type'                 => 'checkbox',
         'conditions'           => [
@@ -43,9 +43,6 @@ $rsssl_integrations_list = apply_filters( 'rsssl_integrations', array(
 	            'rsssl_user_registration_allowed()' => true,
 	        ]
         ],
-        'actions'              => array(
-	        'fix'       => 'rsssl_disable_user_registration',
-        ),
     ),
 
 	'file-editing' => array(
@@ -299,19 +296,20 @@ function rsssl_integrations() {
 			$risk = $details['risk'];
 			$impact = $details['impact'];
 
-			// Apply fix on high risk, low impact
+			// Apply fix automatically on high risk, low impact
 			if ( $risk === 'high' && $impact === 'low' ) {
 				$fix = isset($details['actions']['fix']) ? $details['actions']['fix']: false;
-				if ($fix && function_exists($fix)) {
+				if ( $fix && function_exists($fix) ) {
 					$fix();
-				} else {
+				} elseif ($fix && !function_exists($fix) ) {
 					error_log("Really Simple SSL: fix function $fix not found");
 				}
 			}
 		}
 	}
-	update_option('rsssl_active_integrations',  $actual_integrations_count);
+
 	if ( $stored_integrations_count != $actual_integrations_count) {
+		update_option('rsssl_active_integrations',  $actual_integrations_count);
 		update_option('rsssl_integrations_changed', true );
 	}
 

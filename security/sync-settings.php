@@ -1,9 +1,7 @@
 <?php
 add_filter('rsssl_notices', 'rsssl_show_notices_for_mismatches', 50, 1);
-
 add_action( 'admin_init', 'rsssl_sync_wordpress_settings');
 add_action( 'rsssl_after_saved_fields', 'maybe_update_wordpress_user_registration_option' );
-add_action( 'update_option_users_can_register', 'maybe_update_rsssl_user_registration_option' );
 
 /**
  * @return void
@@ -16,11 +14,6 @@ function rsssl_sync_wordpress_settings() {
     if ( ! get_transient('rsssl_settings_mismatch_check' ) ) {
         delete_option('rsssl_option_mismatches');
         $mismatches = array();
-
-//        if ( get_option('users_can_register') !== rsssl_get_option('disable_anyone_can_register') ) {
-//            rsssl_update_option('disable_anyone_can_register', get_option('users_can_register'));
-//            $mismatches[] = 'disable_anyone_can_register';
-//        }
 
         if ( DEFINED('WP_DEBUG') && !rsssl_get_option('change_debug_log_location') ) {
             rsssl_update_option('change_debug_log_location', true);
@@ -53,20 +46,6 @@ function rsssl_show_notices_for_mismatches($notices) {
 
     $mismatches = get_option('rsssl_option_mismatches');
 
-    if ( isset( $mismatches['disable_anyone_can_register'] ) ) {
-        $notices['rsssl-anyone-can-register-mismatch'] = array(
-            'callback' => '_true_',
-            'score' => 5,
-            'output' => array(
-                'allowed' => array(
-                    'msg' => __("The anyone can register option does not match the value in Really Simple SSL.", "really-simple-ssl"),
-                    'icon' => 'open',
-                    'dismissible' => true,
-                ),
-            ),
-        );
-    }
-
     if ( isset( $mismatches['rsssl_debug_log_modified'] ) ) {
         $notices['rsssl-debug-log-modified-mismatch'] = array(
             'callback' => '_true_',
@@ -98,26 +77,17 @@ function rsssl_show_notices_for_mismatches($notices) {
 }
 
 /**
- * @return void
+ * Enable this option in RSSSL if the WP option is disabled.
+ * @param $value
+ * @param $option
  *
- * Sync users can register option when updated via Really Simple SSL
+ * @return bool|mixed
  */
-function maybe_update_wordpress_user_registration_option() {
-    if ( get_option('users_can_register') != rsssl_get_option('disable_anyone_can_register') ) {
-        update_option('users_can_register', rsssl_get_option('disable_anyone_can_register' ) );
-    }
+function rsssl_option_anyone_can_register( $field, $field_id ) {
+	if ( $field_id === 'disable_anyone_can_register' && !$field['value'] && !get_option('users_can_register') ) {
+		$field['disabled'] = true;
+		$field['value'] = true;
+	}
+	return $field;
 }
-
-/**
- * @return void
- *
- * Sync user can register option when updated via the WP general settings option
- */
-function maybe_update_rsssl_user_registration_option()
-{
-    if ( get_option('users_can_register') ) {
-        rsssl_update_option('disable_anyone_can_register', false);
-    } else {
-        rsssl_update_option('disable_anyone_can_register', true);
-    }
-}
+add_filter("rsssl_field", 'rsssl_option_anyone_can_register', 10,2);

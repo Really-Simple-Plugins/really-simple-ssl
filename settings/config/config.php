@@ -207,7 +207,7 @@ function rsssl_fields(){
 							'label' => 'default',
 							'text' => __( "Enable this option to permanently dismiss all +1 notices in the 'Your progress' tab'", 'really-simple-ssl' ),
 							],
-			'disabled'    => true,
+			'disabled'    => false,
 			'default'     => false,
 		],
 		[
@@ -220,7 +220,7 @@ function rsssl_fields(){
 							'label' => 'default',
 							'text' => __( "If enabled, all the Really Simple SSL pages within the WordPress admin will be in high contrast", 'really-simple-ssl' ),
 							],
-			'disabled'    => true,
+			'disabled'    => false,
 			'default'     => false,
 		],
 
@@ -229,7 +229,7 @@ function rsssl_fields(){
 			'menu_id'     => 'hardening',
 			'type'        => 'checkbox',
 			'label'       => __( "Disable \"anyone can register\"", 'really-simple-ssl' ),
-			'disabled'    => true,
+			'disabled'    => false,
 			'default'     => rsssl_is_user_registration_enabled(),
 		],
         [
@@ -245,7 +245,7 @@ function rsssl_fields(){
 			'menu_id'     => 'hardening',
 			'type'        => 'checkbox',
 			'label'       => __( "Disable file editing", 'really-simple-ssl' ),
-			'disabled'    => true,
+			'disabled'    => false,
 			'default'     => false,
 		],
 		[
@@ -261,7 +261,7 @@ function rsssl_fields(){
 			'menu_id'     => 'hardening',
 			'type'        => 'checkbox',
 			'label'       => __( "Hide WordPress version", 'really-simple-ssl' ),
-			'disabled'    => true,
+			'disabled'    => false,
 			'default'     => false,
 		],
         [
@@ -269,7 +269,7 @@ function rsssl_fields(){
 			'menu_id'     => 'hardening',
 			'type'        => 'checkbox',
 			'label'       => __( "Disable login feedback", 'really-simple-ssl' ),
-			'disabled'    => true,
+			'disabled'    => false,
 			'default'     => false,
 		],
         [
@@ -277,7 +277,7 @@ function rsssl_fields(){
 			'menu_id'     => 'hardening',
 			'type'        => 'checkbox',
 			'label'       => __( "Rename your database prefix", 'really-simple-ssl' ),
-			'disabled'    => true,
+			'disabled'    => false,
 			'default'     => false,
 		],
         [
@@ -285,7 +285,7 @@ function rsssl_fields(){
 			'menu_id'     => 'hardening',
 			'type'        => 'checkbox',
 			'label'       => __( "Disable application passwords", 'really-simple-ssl' ),
-			'disabled'    => true,
+			'disabled'    => false,
 			'default'     => false,
 		],
         [
@@ -293,7 +293,7 @@ function rsssl_fields(){
 			'menu_id'     => 'hardening',
 			'type'        => 'checkbox',
 			'label'       => __( "Disable user enumeration", 'really-simple-ssl' ),
-			'disabled'    => true,
+			'disabled'    => false,
 			'default'     => false,
 		],
         [
@@ -301,7 +301,7 @@ function rsssl_fields(){
 			'menu_id'     => 'hardening',
 			'type'        => 'checkbox',
 			'label'       => __( "Disable RSS feeds (improve disable user enumeration)", 'really-simple-ssl' ),
-			'disabled'    => true,
+			'disabled'    => false,
 			'default'     => false,
 		],
         [
@@ -309,7 +309,7 @@ function rsssl_fields(){
 			'menu_id'     => 'hardening',
 			'type'        => 'checkbox',
 			'label'       => __( "Change debug.log location", 'really-simple-ssl' ),
-			'disabled'    => true,
+			'disabled'    => false,
 			'default'     => false,
 		],
         [
@@ -317,7 +317,7 @@ function rsssl_fields(){
 			'menu_id'     => 'hardening',
 			'type'        => 'checkbox',
 			'label'       => __( "Disable directory indexing", 'really-simple-ssl' ),
-			'disabled'    => true,
+			'disabled'    => false,
 			'default'     => false,
 		],
         [
@@ -325,7 +325,7 @@ function rsssl_fields(){
 			'menu_id'     => 'hardening',
 			'type'        => 'checkbox',
 			'label'       => __( "Rename user 'admin'", 'really-simple-ssl' ),
-			'disabled'    => true,
+			'disabled'    => false,
 			'default'     => false,
 		],
 
@@ -334,7 +334,6 @@ function rsssl_fields(){
 
 	foreach ( $fields as $key => $field ) {
 		$field = wp_parse_args($field, ['id'=>false, 'visible'=> true, 'disabled'=>false, 'new_features_block' => false ]);
-
 		//handle server side conditions
 		if (isset($field['server_conditions'])) {
 			if ( !rsssl_conditions_apply($field['server_conditions']) ){
@@ -345,7 +344,7 @@ function rsssl_fields(){
 		$field['value'] = rsssl_get_option($field['id']);
 		$fields[$key] = apply_filters('rsssl_field', $field, $field['id']);
 	}
-
+	$fields = apply_filters('rsssl_fields_values', $fields);
 	return array_values($fields);
 }
 
