@@ -26,6 +26,7 @@ add_filter('rsssl_notices', 'rsssl_admin_username_changed');
  * @return bool
  */
 function rsssl_rename_admin_user() {
+	error_log("rename admin");
 	if ( !current_user_can( 'manage_options' ) ) {
 		return false;
 	}
@@ -91,11 +92,14 @@ function rsssl_rename_admin_user() {
 
 
 function rsssl_maybe_rename_admin_user() {
-	if ( !rsssl_has_fix('rsssl_rename_admin_user') ) {
-		rsssl_do_fix('rsssl_rename_admin_user');
-	}
+	rsssl_do_fix('rsssl_rename_admin_user');
 }
 add_action('admin_init','rsssl_maybe_rename_admin_user');
+
+/**
+ * Run check once a day
+ */
+add_action( 'rsssl_every_day_hook', 'rsssl_rename_admin_user' );
 
 /**
  * @return bool
