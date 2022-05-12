@@ -7,7 +7,8 @@ require_once( trailingslashit(rsssl_path) . 'security/check-requests.php' );
 /**
  * Load only on back-end
  */
-if (is_admin() ) {
+if (is_admin() || rsssl_is_logged_in_rest() ) {
+	require_once( trailingslashit(rsssl_path) . 'security/notices.php' );
 	require_once( trailingslashit(rsssl_path) . 'security/functions.php' );
 	require_once( trailingslashit(rsssl_path) . 'security/sync-settings.php' );
 }
@@ -109,7 +110,7 @@ $rsssl_integrations_list = apply_filters( 'rsssl_integrations', array(
         ),
     ),
     'disable-http-methods' => array(
-        'label'                => 'Disable HTTP methods',
+        'label'                => __('Disable HTTP methods', 'really-simple-ssl'),
         'folder'               => 'server',
         'impact'               => 'low',
         'risk'                 => 'medium',
@@ -127,7 +128,7 @@ $rsssl_integrations_list = apply_filters( 'rsssl_integrations', array(
     ),
 
     'debug-log' => array(
-        'label'                => 'Move debug.log',
+        'label'                => __('Move debug.log', 'really-simple-ssl'),
         'folder'               => 'wordpress',
         'impact'               => 'medium',
         'risk'                 => 'medium',
@@ -148,7 +149,7 @@ $rsssl_integrations_list = apply_filters( 'rsssl_integrations', array(
     ),
 
     'disable-indexing' => array(
-        'label'                => 'Disable directory indexing',
+        'label'                => __('Disable directory indexing', 'really-simple-ssl'),
         'folder'               => 'server',
         'impact'               => 'low',
         'risk'                 => 'medium',
@@ -161,7 +162,7 @@ $rsssl_integrations_list = apply_filters( 'rsssl_integrations', array(
     ),
 
 	'application-passwords' => array(
-		'label'                => 'Disable Application passwords',
+		'label'                => __('Disable Application passwords', 'really-simple-ssl'),
 		'folder'               => 'wordpress',
 		'impact'               => 'low',
 		'risk'                 => 'high',
@@ -181,7 +182,7 @@ $rsssl_integrations_list = apply_filters( 'rsssl_integrations', array(
 	),
 
 	'rename-db-prefix' => array(
-		'label'                => 'Rename DB prefix',
+		'label'                => __('Rename DB prefix', 'really-simple-ssl'),
 		'folder'               => 'wordpress',
 		'impact'               => 'high',
 		'risk'                 => 'high',
@@ -198,27 +199,19 @@ $rsssl_integrations_list = apply_filters( 'rsssl_integrations', array(
 			'fix'       => 'rsssl_maybe_rename_db_prefix',
 		),
 	),
+
     'rename-admin-user' => array(
-		'label'                => 'Rename admin user',
+		'label'                => __('Do not allow users with admin username', 'really-simple-ssl'),
 		'folder'               => 'wordpress',
 		'impact'               => 'high',
 		'risk'                 => 'high',
 		'learning_mode'        => false,
 		'option_id'            => 'rename_admin_user',
 		'type'                 => 'checkbox',
-		'conditions'           => [
-			'relation' => 'AND',
-			[
-				'rsssl_has_admin_user()' => true,
-			]
-		],
-		'actions'              => array(
-			'fix'       => 'rsssl_rename_admin_user',
-		),
 	),
 
 	'display-name-is-login-name' => array(
-		'label'                => 'Display name equals login name',
+		'label'                => __('Display name equals login name', 'really-simple-ssl'),
 		'folder'               => 'wordpress',
 		'impact'               => 'low',
 		'risk'                 => 'medium',
@@ -254,9 +247,6 @@ function rsssl_is_integration_enabled( $plugin, $details ) {
 	}
 
 	$field_id = isset($details['option_id']) ? $details['option_id'] : false;
-	if ( !$field_id){
-		error_log("not field id for $plugin");
-	}
 	if ($field_id && rsssl_get_option($field_id) ) {
 		return true;
 	}

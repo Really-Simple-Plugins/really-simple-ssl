@@ -42,6 +42,20 @@ function rsssl_do_fix($fix){
 }
 
 /**
+ * @return bool
+ *
+ * Check if user ID 1 exists end if user enumeration has been disabled
+ */
+function rsssl_id_one_no_enumeration() {
+	$user_id_one = get_user_by('id', 1);
+	if ( $user_id_one && !rsssl_get_option('disable_user_enumeration') ) {
+		return true;
+	}
+
+	return false;
+}
+
+/**
  * Wrap the security headers
  */
 if ( ! function_exists('rsssl_wrap_headers' ) ) {
