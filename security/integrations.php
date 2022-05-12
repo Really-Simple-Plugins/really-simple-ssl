@@ -4,7 +4,13 @@ require_once( trailingslashit(rsssl_path) . 'security/learning-mode.php' );
 require_once( trailingslashit(rsssl_path) . 'security/tests.php' );
 require_once( trailingslashit(rsssl_path) . 'security/functions.php' );
 require_once( trailingslashit(rsssl_path) . 'security/check-requests.php' );
-require_once( trailingslashit(rsssl_path) . 'security/sync-settings.php' );
+
+/**
+ * Load only on back-end
+ */
+if (is_admin() ) {
+	require_once( trailingslashit(rsssl_path) . 'security/sync-settings.php' );
+}
 
 function rsssl_enqueue_integrations_assets( $hook ) {
 
@@ -76,9 +82,6 @@ $rsssl_integrations_list = apply_filters( 'rsssl_integrations', array(
 		'learning_mode'        => true,
 		'option_id'            => 'disable_user_enumeration',
 		'type'                 => 'checkbox',
-		'actions'              => array(
-			'fix'       => 'rsssl_disable_user_enumeration',
-		),
 	),
 
     'block-code-execution-uploads' => array(
