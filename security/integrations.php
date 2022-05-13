@@ -94,10 +94,8 @@ $rsssl_integrations_list = apply_filters( 'rsssl_integrations', array(
         'learning_mode'        => false,
         'option_id'            => 'block_code_execution_uploads',
         'type'                 => 'checkbox',
-        'actions'              => array(
-			'fix'       => 'rsssl_disable_code_execution_uploads',
-        ),
     ),
+
     'prevent-login-info-leakage' => array(
         'label'                => __('Prevent login error leakage','really-simple-ssl'),
         'folder'               => 'wordpress',
@@ -282,17 +280,16 @@ function rsssl_integrations() {
 			if ( ! file_exists( $file ) || $skip ) {
 				continue;
 			}
-
 			require_once( $file );
 			$risk = $details['risk'];
 			$impact = $details['impact'];
 
 			// Apply fix automatically on high risk, low impact
 			//check if already executed
-			if ( $risk === 'high' && $impact === 'low' ) {
-				$fix = isset($details['actions']['fix']) ? $details['actions']['fix']: false;
-				rsssl_do_fix($fix);
-			}
+//			if ( $risk === 'high' && $impact === 'low' ) {
+//				$fix = isset($details['actions']['fix']) ? $details['actions']['fix']: false;
+//				rsssl_do_fix($fix);
+//			}
 		}
 	}
 

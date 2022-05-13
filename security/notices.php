@@ -89,3 +89,25 @@ function rsssl_admin_username_exists( $notices ) {
 }
 add_filter('rsssl_notices', 'rsssl_admin_username_exists');
 
+/**
+ * @param $notices
+ * @return mixed
+ * Notice function
+ */
+function rsssl_code_execution_uploads_notice( $notices ) {
+	$notices['code-execution-uploads-allowed'] = array(
+		'callback' => 'rsssl_code_execution_allowed',
+		'score' => 5,
+		'output' => array(
+			'true' => array(
+				'highlight_field_id' => 'block_code_execution_uploads',
+				'msg' => __("Code execution allowed in uploads folder.", "really-simple-ssl"),
+				'icon' => 'open',
+				'dismissible' => true,
+			),
+		),
+	);
+
+	return $notices;
+}
+add_filter('rsssl_notices', 'rsssl_code_execution_uploads_notice');

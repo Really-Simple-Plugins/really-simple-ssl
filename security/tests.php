@@ -226,3 +226,33 @@ function rsssl_wordpress_version_above_5_6() {
 	return true;
 
 }
+
+
+/**
+ * @return string
+ * Test if code execution is allowed in /uploads folder
+ */
+function rsssl_code_execution_allowed()
+{
+	$result = false;
+	$upload_dir = wp_get_upload_dir();
+	$test_file = $upload_dir['basedir'] . '/' . 'code-execution.php';
+	if ( is_writable($upload_dir['basedir'] )  ) {
+		if ( ! file_exists( $test_file ) ) {
+			copy( rsssl_path . 'security/tests/code-execution.php', $test_file );
+		}
+	}
+
+	if ( file_exists( $test_file ) ) {
+		require_once( $test_file );
+		if ( function_exists( 'rsssl_test_code_execution' ) && rsssl_test_code_execution() ) {
+			error_log("code exec IS allowed");
+
+			$result = true;
+		} else {
+			error_log("code exec not allowed");
+		}
+	}
+
+	return $result;
+}

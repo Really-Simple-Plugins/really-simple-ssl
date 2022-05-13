@@ -253,7 +253,7 @@ function rsssl_fields(){
 			'menu_id'     => 'hardening',
 			'type'        => 'checkbox',
 			'label'       => __( "Disable code execution in uploads folder", 'really-simple-ssl' ),
-			'disabled'    => true,
+			'disabled'    => false,
 			'default'     => false,
 		],
         [
