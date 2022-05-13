@@ -191,9 +191,6 @@ $rsssl_integrations_list = apply_filters( 'rsssl_integrations', array(
 				'rsssl_is_default_wp_prefix()'=>true,
 			]
 		],
-		'actions'              => array(
-			'fix'       => 'rsssl_maybe_rename_db_prefix',
-		),
 	),
 
     'rename-admin-user' => array(

@@ -111,3 +111,30 @@ function rsssl_code_execution_uploads_notice( $notices ) {
 	return $notices;
 }
 add_filter('rsssl_notices', 'rsssl_code_execution_uploads_notice');
+
+/**
+ * @param $notices
+ * @return mixed
+ * Notice function
+ */
+function rsssl_db_prefix_notice( $notices ) {
+	$notices['db-prefix-notice'] = array(
+		'callback' => 'rsssl_is_default_wp_prefix',
+		'score' => 5,
+		'output' => array(
+			'false' => array(
+				'msg' => __("Database prefix is not default. Awesome!", "really-simple-ssl"),
+				'icon' => 'open',
+				'dismissible' => true,
+			),
+			'true' => array(
+				'msg' => __("Database prefix set to default wp_", "really-simple-ssl"),
+				'icon' => 'open',
+				'dismissible' => true,
+			),
+		),
+	);
+
+	return $notices;
+}
+add_filter('rsssl_notices', 'rsssl_db_prefix_notice' );
