@@ -56,7 +56,7 @@ function rsssl_has_fix($fix){
  * Wrap the security headers
  */
 if ( ! function_exists('rsssl_wrap_htaccess' ) ) {
-	function rsssl_wrap_htaccess( $rules ) {
+	function rsssl_wrap_htaccess() {
 		if ( ! current_user_can( 'manage_options' ) ) {
 			return false;
 		}
@@ -69,6 +69,7 @@ if ( ! function_exists('rsssl_wrap_htaccess' ) ) {
 			return false;
 		}
 
+		$rules = apply_filters('rsssl_htaccess_security_rules', '');
 		$htaccess_file = RSSSL()->really_simple_ssl->htaccess_file();
 		if ( !file_exists( $htaccess_file ) ) {
 			update_site_option('rsssl_htaccess_error', 'not-exists');
@@ -77,7 +78,7 @@ if ( ! function_exists('rsssl_wrap_htaccess' ) ) {
 		}
 
 		$htaccess = file_get_contents($htaccess_file);
-		if ( strpos( $htaccess, $rules ) !== false ) {
+		if ( !empty($rules) && strpos( $htaccess, $rules ) !== false ) {
 			return true;
 		}
 
@@ -89,13 +90,9 @@ if ( ! function_exists('rsssl_wrap_htaccess' ) ) {
 
 		$start = "\n" . '#Begin Really Simple Security';
 		$end   = "\n" . '#End Really Simple Security' . "\n";
-		$rules = "\n" . $rules;
 		//get current rules with regex
 		if (strpos( $htaccess, $start ) !== false ) {
 			$pattern = '/'.$start.'(.*?)'.$end.'/is';
-			if ( preg_match( $pattern, $htaccess, $matches ) ) {
-				$rules .= $matches[1];
-			}
 			$new_htaccess = preg_replace($pattern, $start.$rules.$end, $htaccess);
 		} else {
 			//add rules as new block
@@ -105,6 +102,7 @@ if ( ! function_exists('rsssl_wrap_htaccess' ) ) {
 
 		return true;
 	}
+	add_action('admin_init', 'rsssl_wrap_htaccess');
 }
 
 /**

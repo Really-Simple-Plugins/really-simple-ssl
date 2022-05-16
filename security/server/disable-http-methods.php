@@ -6,15 +6,12 @@
  * @return bool
  *
  */
-function rsssl_disable_http_methods()
+function rsssl_disable_http_methods_rules($rules)
 {
-	if ( ! rsssl_http_methods_allowed() ) {
-		return true;
-	}
-	$rules = "RewriteCond %{REQUEST_METHOD} ^(TRACE|STACK)" . "\n" ."RewriteRule .* - [F]";
-	rsssl_wrap_htaccess($rules);
+	$rules .= "\n" . "RewriteCond %{REQUEST_METHOD} ^(TRACE|STACK)" . "\n" ."RewriteRule .* - [F]";
+	return $rules;
 }
-add_action('admin_init', 'rsssl_disable_http_methods');
+add_filter('rsssl_htaccess_security_rules', 'rsssl_disable_http_methods_rules');
 
 /**
  * @param $notices

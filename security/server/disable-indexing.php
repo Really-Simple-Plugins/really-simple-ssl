@@ -6,12 +6,11 @@ defined( 'ABSPATH' ) or die( "you do not have access to this page!" );
  * Disable indexing
  */
 
-function rsssl_disable_indexing() {
-	$success = rsssl_wrap_htaccess('Options -Indexes');
-	return $success===true;
+function rsssl_disable_indexing_rules( $rules ) {
+	$rules .=  "\n" . 'Options -Indexes';
+	return $rules;
 }
-add_action('admin_init','rsssl_disable_indexing');
-
+add_filter('rsssl_htaccess_security_rules', 'rsssl_disable_indexing_rules');
 /**
  * @param $notices
  *
