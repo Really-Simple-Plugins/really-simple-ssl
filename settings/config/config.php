@@ -241,6 +241,14 @@ function rsssl_fields(){
 			'default'     => false,
 		],
 		[
+			'id'          => 'disable_http_methods',
+			'menu_id'     => 'hardening',
+			'type'        => 'checkbox',
+			'label'       => __( "Disable HTTP methods", 'really-simple-ssl' ),
+			'disabled'    => false,
+			'default'     => false,
+		],
+		[
 			'id'          => 'disable_file_editing',
 			'menu_id'     => 'hardening',
 			'type'        => 'checkbox',

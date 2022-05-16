@@ -115,15 +115,13 @@ $rsssl_integrations_list = apply_filters( 'rsssl_integrations', array(
         'risk'                 => 'medium',
         'learning_mode'        => false,
         'type'                 => 'checkbox',
+        'option_id'            => 'disable_http_methods',
         'conditions'           => [
 	        'relation' => 'AND',
 	        [
-				'rsssl_test_if_http_methods_allowed()' => true,
+				'rsssl_http_methods_allowed()' => true,
 	        ]
         ],
-        'actions'              => array(
-			'fix'       => 'rsssl_disable_http_methods',
-        ),
     ),
 
     'debug-log' => array(

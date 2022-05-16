@@ -69,13 +69,15 @@ function rsssl_xmlrpc_allowed()
  * @return bool
  * Test if HTTP methods are allowed
  */
-function rsssl_test_if_http_methods_allowed()
-{
+function rsssl_http_methods_allowed()
 
-	if ( ! current_user_can( 'manage_options' ) ) return;
+{
+	return true;
+	if ( ! current_user_can( 'manage_options' ) ) {
+		return false;
+	}
 
 	if ( ! get_transient( 'rsssl_http_options_allowed' ) ) {
-
 		if (function_exists('curl_init')) {
 
 			$url = site_url();
@@ -246,11 +248,7 @@ function rsssl_code_execution_allowed()
 	if ( file_exists( $test_file ) ) {
 		require_once( $test_file );
 		if ( function_exists( 'rsssl_test_code_execution' ) && rsssl_test_code_execution() ) {
-			error_log("code exec IS allowed");
-
 			$result = true;
-		} else {
-			error_log("code exec not allowed");
 		}
 	}
 

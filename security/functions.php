@@ -32,10 +32,12 @@ function rsssl_do_fix($fix){
 
 	if ( !rsssl_has_fix($fix) && function_exists($fix)) {
 		$completed[]=$fix;
-		$fix();
+		$success = $fix();
 		$completed = get_option('rsssl_completed_fixes', []);
-		$completed[] = $fix;
-		update_option('rsssl_completed_fixes', $completed );
+		if ($success) {
+			$completed[] = $fix;
+			update_option('rsssl_completed_fixes', $completed );
+		}
 	} elseif ($fix && !function_exists($fix) ) {
 		error_log("Really Simple SSL: fix function $fix not found");
 	}
@@ -53,38 +55,64 @@ function rsssl_has_fix($fix){
 /**
  * Wrap the security headers
  */
-if ( ! function_exists('rsssl_wrap_headers' ) ) {
-	function rsssl_wrap_headers() {
+if ( ! function_exists('rsssl_wrap_htaccess' ) ) {
+	function rsssl_wrap_htaccess( $rules ) {
+		if ( ! current_user_can( 'manage_options' ) ) {
+			return false;
+		}
+
+		if ( rsssl_get_server() !== 'apache' ) {
+			return false;
+		}
+
+		if ( !RSSSL()->really_simple_ssl->is_settings_page() ) {
+			return false;
+		}
 
 		$htaccess_file = RSSSL()->really_simple_ssl->htaccess_file();
-
-		if ( file_exists( $htaccess_file ) && is_writable( $htaccess_file ) ) {
-
-			$htaccess = file_get_contents($htaccess_file);
-
-			$rules = '';
-
-			$start = "\n" . '#Begin Really Simple Security Headers';
-			$end   = "\n" . '#End Really Simple Security Headers' . "\n";
-
-			if ( !get_option( 'disable_indexing' ) ) {
-				$rules .= "\n" . "Options -Indexes";
-			}
-
-			if ( rsssl_get_option('disable_http_methods' ) !== false ) {
-				$rules .= "\n" . "RewriteCond %{REQUEST_METHOD} ^(TRACE|STACK)" . "\n" .
-				         "RewriteRule .* - [F]";
-			}
-
-            if ( !get_option('disable_user_enumeration') ) {
-                $rules .= "RewriteCond %{QUERY_STRING} ^author= [NC]" . "\n" .
-                "RewriteRule .* - [F,L]" . "\n" .
-                "RewriteRule ^author/ - [F,L]";
-            }
-
-			file_put_contents($htaccess_file, $htaccess . $start . $rules . $end);
+		if ( !file_exists( $htaccess_file ) ) {
+			update_site_option('rsssl_htaccess_error', 'not-exists');
+			update_site_option('rsssl_htaccess_rules', $rules);
+			return false;
 		}
+
+		$htaccess = file_get_contents($htaccess_file);
+		if ( strpos( $htaccess, $rules ) !== false ) {
+			return true;
+		}
+
+		if ( !is_writable( $htaccess_file ) ) {
+			update_site_option('rsssl_htaccess_error', 'not-writable');
+			update_site_option('rsssl_htaccess_rules', $rules);
+			return false;
+		}
+
+		$start = "\n" . '#Begin Really Simple Security';
+		$end   = "\n" . '#End Really Simple Security' . "\n";
+		$rules = "\n" . $rules;
+		//get current rules with regex
+		if (strpos( $htaccess, $start ) !== false ) {
+			$pattern = '/'.$start.'(.*?)'.$end.'/is';
+			if ( preg_match( $pattern, $htaccess, $matches ) ) {
+				$rules .= $matches[1];
+			}
+			$new_htaccess = preg_replace($pattern, $start.$rules.$end, $htaccess);
+		} else {
+			//add rules as new block
+			$new_htaccess = $htaccess . $start . $rules . $end;
+		}
+		file_put_contents($htaccess_file, $new_htaccess);
+
+		return true;
 	}
+}
+
+/**
+ * Get htaccess status
+ * @return string | bool
+ */
+function rsssl_htaccess_status(){
+	return get_site_option('rsssl_htaccess_error');
 }
 
 /**

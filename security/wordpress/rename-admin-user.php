@@ -26,7 +26,6 @@ add_filter('rsssl_notices', 'rsssl_admin_username_changed');
  * @return bool
  */
 function rsssl_rename_admin_user() {
-	error_log("rename admin");
 	if ( !current_user_can( 'manage_options' ) ) {
 		return false;
 	}
@@ -86,6 +85,7 @@ function rsssl_rename_admin_user() {
 		}
 
 		set_site_transient('rsssl_username_admin_changed', $new_user_login, WEEK_IN_SECONDS );
+		return true;
 	}
 	return true;
 }

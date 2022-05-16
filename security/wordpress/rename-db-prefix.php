@@ -13,6 +13,10 @@ add_action('admin_init','rsssl_maybe_rename_db_prefix');
  */
 
 function rsssl_rename_db_prefix() {
+	if ( !current_user_can( 'manage_options' ) ) {
+		return false;
+	}
+
 	global $wpdb;
 	if ( $wpdb->prefix === 'wp_' ) {
         // Get all tables starting with wp_
@@ -87,7 +91,10 @@ function rsssl_rename_db_prefix() {
 
 		// Clear DB cache
 		$wpdb->flush();
+
 	}
+
+	return true;
 }
 
 /**
