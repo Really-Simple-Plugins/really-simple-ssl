@@ -72,7 +72,6 @@ function rsssl_xmlrpc_allowed()
 function rsssl_http_methods_allowed()
 
 {
-	return true;
 	if ( ! current_user_can( 'manage_options' ) ) {
 		return false;
 	}
