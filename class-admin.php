@@ -3858,21 +3858,19 @@ class rsssl_admin extends rsssl_front_end
 	}
 
     /**
-     * @return string
+     * Determine the htaccess file. This can be either the regular .htaccess file, or an htaccess.conf file on bitnami installations.
      *
      * since 3.1
      *
-     * Determine the htaccess file. This can be either the regular .htaccess file, or an htaccess.conf file on bitnami installations.
-     *
+     * @return string
      */
 
     public function htaccess_file() {
-        if ($this->uses_htaccess_conf()) {
+        if ( $this->uses_htaccess_conf() ) {
             $htaccess_file = realpath(dirname(ABSPATH) . "/conf/htaccess.conf");
         } else {
             $htaccess_file = $this->abs_path . ".htaccess";
         }
-
         return $htaccess_file;
     }
 
