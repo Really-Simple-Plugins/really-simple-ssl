@@ -231,6 +231,7 @@ function RSSSL()
 	return REALLY_SIMPLE_SSL::instance();
 }
 add_action('plugins_loaded', 'RSSSL', 8);
+
 if ( !function_exists('rsssl_is_logged_in_rest')){
 	function rsssl_is_logged_in_rest(){
 		$is_settings_page = isset($_SERVER['REQUEST_URI']) && strpos($_SERVER['REQUEST_URI'], 'wp-json/reallysimplessl/v1/')!==false ;
