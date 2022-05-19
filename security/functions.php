@@ -51,13 +51,18 @@ function rsssl_has_fix($fix){
 	}
 	return true;
 }
+//error_log(print_r($_SERVER,true));
+//error_log(print_r($_POST,true));
+//error_log(print_r($_GET,true));
+error_log("loads functions.php");
 
 /**
  * Wrap the security headers
  */
+
 if ( ! function_exists('rsssl_wrap_htaccess' ) ) {
 	function rsssl_wrap_htaccess() {
-		if ( ! current_user_can( 'manage_options' ) ) {
+		if ( ! current_user_can( 'manage_options' )  ) {
 			return false;
 		}
 
@@ -65,7 +70,7 @@ if ( ! function_exists('rsssl_wrap_htaccess' ) ) {
 			return false;
 		}
 
-		if ( !RSSSL()->really_simple_ssl->is_settings_page() ) {
+		if ( !RSSSL()->really_simple_ssl->is_settings_page() && !rsssl_is_logged_in_rest() ) {
 			return false;
 		}
 
@@ -99,10 +104,10 @@ if ( ! function_exists('rsssl_wrap_htaccess' ) ) {
 			$new_htaccess = $htaccess . $start . $rules . $end;
 		}
 		file_put_contents($htaccess_file, $new_htaccess);
-
 		return true;
 	}
 	add_action('admin_init', 'rsssl_wrap_htaccess');
+	add_action('rest_api_init', 'rsssl_wrap_htaccess');
 }
 
 /**

@@ -1108,7 +1108,6 @@ class rsssl_admin extends rsssl_front_end
         }
     }
 
-
     /**
      * Check to see if we are on the settings page, action hook independent
      *
@@ -1120,7 +1119,8 @@ class rsssl_admin extends rsssl_front_end
 
     public function is_settings_page()
     {
-        if (!isset($_SERVER['QUERY_STRING'])) {
+	    if ( !isset($_SERVER['QUERY_STRING']) ) {
+            error_log("no query string");
             return false;
         }
 
@@ -1128,7 +1128,8 @@ class rsssl_admin extends rsssl_front_end
         if (array_key_exists("page", $params) && ($params["page"] == "rlrsssl_really_simple_ssl")) {
             return true;
         }
-        return false;
+
+	    return false;
     }
 
     /**
