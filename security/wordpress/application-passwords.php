@@ -1,6 +1,4 @@
-<?php
-defined( 'ABSPATH' ) or die();
-
+<?php defined( 'ABSPATH' ) or die();
 /**
  * @return void
  * Enable or disable application passwords
@@ -12,7 +10,7 @@ function rsssl_maybe_allow_application_passwords() {
 		add_filter( 'wp_is_application_passwords_available', '__return_true' );
 	}
 }
-add_action('application_password_is_api_request', 'rsssl_maybe_allow_application_passwords' );
+add_action('rest_api_init', 'rsssl_maybe_allow_application_passwords' );
 
 /**
  * @return void
