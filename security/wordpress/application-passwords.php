@@ -1,35 +1,5 @@
 <?php
-defined( 'ABSPATH' ) or die( "you do not have access to this page!" );
-
-add_action('application_password_did_authenticate', 'rsssl_application_password_success');
-add_action('application_password_failed_authentication', 'rsssl_application_password_fail');
-add_action('application_password_is_api_request', 'rsssl_maybe_allow_application_passwords' );
-
-// Add notice in backend
-if ( is_admin() ) {
-	add_filter('rsssl_notices', 'rsssl_application_passwords_allowed', 50, 3);
-}
-
-/**
- * @param $notices
- * @return mixed
- * Notice function
- */
-function rsssl_application_passwords_allowed( $notices ) {
-	$notices['application-passwords'] = array(
-		'callback' => 'rsssl_application_passwords_available',
-		'score' => 5,
-		'output' => array(
-			'_true_' => array(
-				'msg' => __("Application passwords enabled.", "really-simple-ssl"),
-				'icon' => 'open',
-				'dismissible' => true,
-			),
-		),
-	);
-
-	return $notices;
-}
+defined( 'ABSPATH' ) or die();
 
 /**
  * @return void
@@ -42,12 +12,14 @@ function rsssl_maybe_allow_application_passwords() {
 		add_filter( 'wp_is_application_passwords_available', '__return_true' );
 	}
 }
+add_action('application_password_is_api_request', 'rsssl_maybe_allow_application_passwords' );
 
 /**
  * @return void
  *
  * Check if REST response contains the 'authorization' header. If so, app passwords have been enabled
  */
+
 function rsssl_test_authorization_header() {
 	if ( function_exists('curl_init' ) && ! get_option('rsssl_test_authorization_header_failed') ) {
 		// Fire off a request to the root REST URL to check for the 'authorization' header
@@ -60,7 +32,6 @@ function rsssl_test_authorization_header() {
 		}
 	}
 }
-
 add_action('init', 'rsssl_test_authorization_header');
 
 /**
@@ -78,6 +49,7 @@ function rsssl_application_password_success() {
 
 	rsssl_log_to_learning_mode_table($data);
 }
+add_action('application_password_did_authenticate', 'rsssl_application_password_success');
 
 /**
  * @return void
@@ -94,3 +66,4 @@ function rsssl_application_password_fail() {
 
 	rsssl_log_to_learning_mode_table($data);
 }
+add_action('application_password_failed_authentication', 'rsssl_application_password_fail');

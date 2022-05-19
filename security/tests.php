@@ -125,7 +125,6 @@ function rsssl_file_editing_allowed() {
  * Check if application passwords are available
  */
 function rsssl_application_passwords_available() {
-
 	if ( wp_is_application_passwords_available() ) {
 		return true;
 	}
