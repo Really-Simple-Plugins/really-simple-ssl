@@ -170,9 +170,6 @@ $rsssl_integrations_list = apply_filters( 'rsssl_integrations', array(
 				'rsssl_application_passwords_available()' => true,
 			]
 		],
-		'actions'              => array(
-			'fix'       => 'rsssl_maybe_allow_application_passwords',
-		),
 	),
 
 	'rename-db-prefix' => array(
