@@ -155,11 +155,13 @@ function rsssl_is_default_wp_prefix() {
  */
 function rsssl_has_admin_user() {
 
-	$users = get_users();
-	foreach ( $users as $user ) {
-		if ( $user->data->user_login === 'admin') {
-			return true;
-		}
+	global $wpdb;
+
+	$prepared = $wpdb->prepare("SELECT COUNT(*) FROM {$wpdb->prefix}users WHERE user_login = %s", 'admin');
+	$count = $wpdb->get_var( $prepared );
+
+	if ( $count > 0 ) {
+		return true;
 	}
 
 	return false;
