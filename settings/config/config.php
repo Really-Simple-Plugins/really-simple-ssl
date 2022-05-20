@@ -290,7 +290,7 @@ function rsssl_fields(){
 		],
         [
 			'id'          => 'disable_application_passwords',
-			'menu_id'     => 'hardening',
+			'menu_id'     => 'application_passwords',
 			'type'        => 'checkbox',
 			'label'       => __( "Disable application passwords", 'really-simple-ssl' ),
 			'disabled'    => false,

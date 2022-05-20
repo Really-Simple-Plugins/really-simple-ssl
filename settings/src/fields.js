@@ -13,7 +13,7 @@ import {
     ToggleControl,
 } from '@wordpress/components';
 import in_array from './utils/lib';
-
+import TaskNotice from './ProgressBlock';
 import {
     Component,
 } from '@wordpress/element';
@@ -92,6 +92,31 @@ class Field extends Component {
                 </PanelBody>
             );
         }
+
+        if ( field.type==='license' ){
+            /**
+             * There is no "PasswordControl" in WordPress react yet, so we create our own license field.
+             */
+            console.log(field.notices);
+            return (
+                <PanelBody className={ this.highLightClass}>
+                    <div className="components-base-control">
+                        <div className="components-base-control__field">
+                            <label
+                                className="components-base-control__label"
+                                htmlFor={field.id}>{field.label}</label>
+                            <input className="components-text-control__input"
+                                   type="password"
+                                   id={field.id}
+                                   value={fieldValue}
+                                   onChange={ ( fieldValue ) => this.onChangeHandler(fieldValue) }
+                            />
+                        </div>
+                        {/*{field.notices.map((notice, i) => <TaskElement key={i} index={i} notice={notice} />)}*/}
+                    </div>
+                </PanelBody>
+            );
+        }
         if ( field.type==='number' ){
             return (
                 <PanelBody className={ this.highLightClass}>
@@ -104,7 +129,7 @@ class Field extends Component {
                 </PanelBody>
             );
         }
-        if ( field.type==='email'){
+        if ( field.type==='email' ){
             return (
                 <PanelBody className={ this.highLightClass}>
                     <TextControl
@@ -116,6 +141,7 @@ class Field extends Component {
                 </PanelBody>
             );
         }
+
         if ( field.type==='select') {
             return (
                 <PanelBody className={ this.highLightClass}>
@@ -130,6 +156,7 @@ class Field extends Component {
                 </PanelBody>
             )
         }
+
         return (
             'not found field type '+field.type
         );

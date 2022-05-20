@@ -67,6 +67,8 @@ class SettingsGroup extends Component {
 
 	render(){
 		let selectedMenuItem = this.props.selectedMenuItem;
+		console.log("settings group");
+		console.log(selectedMenuItem);
 		let selectedFields = [];
 		//get all fields with group_id this.props.group_id
 		for (const selectedField of this.props.fields){
@@ -76,8 +78,8 @@ class SettingsGroup extends Component {
 		}
 		return (
 			<div className="rsssl-grouped-fields">
-				{selectedMenuItem.title && <PanelBody><h1 className="rsssl-settings-block-title">{selectedMenuItem.title}</h1></PanelBody>}
-				{selectedMenuItem.intro && <PanelBody><div className="rsssl-settings-block-intro">{selectedMenuItem.intro}</div></PanelBody>}
+				{selectedMenuItem && selectedMenuItem.title && <PanelBody><h1 className="rsssl-settings-block-title">{selectedMenuItem.title}</h1></PanelBody>}
+				{selectedMenuItem && selectedMenuItem.intro && <PanelBody><div className="rsssl-settings-block-intro">{selectedMenuItem.intro}</div></PanelBody>}
 				{selectedFields.map((field, i) => <Field key={i} index={i} highLightField={this.props.highLightField} highLightedField={this.props.highLightedField} saveChangedFields={this.props.saveChangedFields} field={field} fields={selectedFields}/>)}
 			</div>
 		)
@@ -138,7 +140,19 @@ class Settings extends Component {
 			help.id = notice.id;
 			notices.push(notice.help);
 		}
-		let selectedMenuItemObject = menu.menu_items.filter(menutItem => menutItem.id === selectedMenuItem)[0];
+
+		let selectedMenuItemObject;
+		for (const item of menu.menu_items){
+			if (item.id === selectedMenuItem ) {
+				selectedMenuItemObject = item;
+			} else if (item.menu_items) {
+				selectedMenuItemObject = item.menu_items.filter(menuItem => menuItem.id === selectedMenuItem)[0];
+			}
+			if ( selectedMenuItemObject ) {
+				break;
+			}
+		}
+
 		return (
 			<div className="rsssl-wizard-settings">
 				<div className="rsssl-wizard__main">
