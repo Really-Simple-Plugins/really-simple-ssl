@@ -162,3 +162,24 @@ function rsssl_generate_random_string($length) {
 
 	return $randomString;
 }
+
+/**
+ * @return array|bool
+ *
+ * Get users where display name is login name
+ */
+function get_users_where_display_name_is_login() {
+	$users = rsssl_display_name_equals_login( true );
+
+	return $users;
+}
+
+/**
+ * @return string
+ *
+ * Get users as string to display
+ */
+function rsssl_list_users_where_display_name_is_login_name() {
+
+	return implode( ', ', get_users_where_display_name_is_login() );
+}

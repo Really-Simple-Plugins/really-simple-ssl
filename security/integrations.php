@@ -218,12 +218,12 @@ $rsssl_integrations_list = apply_filters( 'rsssl_integrations', array(
 		'learning_mode'        => false,
 //		'option_id'            => '',
 		'type'                 => 'checkbox',
-		'conditions'           => array(
-			'relation' => 'AND',
-			[
-				'rsssl_has_admin_user()' => true,
-			]
-		),
+//		'conditions'           => array(
+//			'relation' => 'AND',
+//			[
+//				'rsssl_has_admin_user()' => true,
+//			]
+//		),
 		'actions'              => array(
 //			'fix'       => 'rsssl_change_display_name',
 		),
@@ -293,7 +293,7 @@ function rsssl_integrations() {
 			//check if already executed
 			if ( $risk === 'high' && $impact === 'low' ) {
 				$fix = isset($details['actions']['fix']) ? $details['actions']['fix']: false;
-				rsssl_do_fix($fix);
+//				rsssl_do_fix($fix);
 			}
 		}
 	}

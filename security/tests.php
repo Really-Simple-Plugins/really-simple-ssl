@@ -204,18 +204,51 @@ function rsssl_id_one_no_enumeration() {
 	return false;
 }
 /**
- * @return bool
+ * @return bool | array
  *
  * Check if display name is the same as login
  */
-function rsssl_display_name_equals_login() {
-	$user = wp_get_current_user();
-	if ( $user->data->user_login === $user->data->display_name ) {
+function rsssl_display_name_equals_login( $return_users=false ) {
+
+	global $wpdb;
+
+	$users = array();
+	$found = false;
+
+	// Get users where login equals display name
+	$results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}users WHERE user_login = display_name" );
+
+	// Get admin users
+	$args = array(
+		'role'    => 'administrator',
+	);
+
+	$admins = get_users( $args );
+
+	// Check if there's an admin where the login equals display name
+	foreach( $admins as $admin ) {
+
+		// Check if admin exists in results
+		$admin_user_with_equal_display_login_name = in_array( $admin->data->user_login, array_column( $results, 'user_login' ) );
+
+		// If true, update found and add to users array
+		if ( $admin_user_with_equal_display_login_name ) {
+			$found = true;
+			$found_users[] = $admin->data->user_login;
+		}
+	}
+
+	// Maybe return users in integration
+	if ( $return_users ) {
+		return $found_users;
+	}
+
+	// If found, return true
+	if ( $found ) {
 		return true;
 	}
 
 	return false;
-
 }
 
 /**

@@ -16,7 +16,8 @@ function rsssl_display_name_is_login_name( $notices ) {
 		'score' => 5,
 		'output' => array(
 			'true' => array(
-				'msg' => __("Your display name is the same as your login. This is a security risk. We recommend to change your display name to something else.", "really-simple-ssl"),
+				'msg' => __("The following admin users have set their display name equal to their login name: ", "really-simple-ssl") . "<b>" . rsssl_list_users_where_display_name_is_login_name() . "</b>"
+				. ". " . __("We recommend these users to change their display name.", "really-simple-ssl"),
 				'icon' => 'open',
 				'dismissible' => true,
 			),
@@ -70,4 +71,3 @@ function rsssl_admin_username_exists( $notices ) {
 
 }
 add_filter('rsssl_notices', 'rsssl_admin_username_exists');
-
