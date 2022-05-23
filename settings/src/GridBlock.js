@@ -140,7 +140,7 @@ class GridBlock extends Component {
         let DynamicBlockProps = { saveChangedFields: this.props.saveChangedFields, setBlockProps: this.setBlockProps, BlockProps: this.BlockProps, runTest: this.runTest, fields: this.props.fields, isApiLoaded: this.props.isApiLoaded, highLightField: this.highLightField };
         return (
             <div className={className}>
-                <div className="item-container">
+                <div className="rsssl-item-container">
                     <div className="rsssl-grid-item-header">
                         <h3>{ blockData.title }</h3>
                         {blockData.header && blockData.header.type==='url' && <a href={blockData.header.data}>{__("Instructions", "really-simple-ssl")}</a>}

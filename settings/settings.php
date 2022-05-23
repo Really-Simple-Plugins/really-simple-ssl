@@ -184,7 +184,7 @@ function rsssl_run_test($request){
             $data = $progress->get();
             break;
         default:
-	        $data = array();
+	        $data = apply_filters("rsssl_run_test", array(), $test);
     }
 	$response = json_encode( $data );
 	header( "Content-Type: application/json" );
@@ -274,6 +274,8 @@ function rsssl_rest_api_fields_get(  ){
 	$output['fields'] = $fields;
 	$output['menu'] = $menu_items;
 	$output['progress'] = RSSSL()->progress->get();
+
+    $output = apply_filters('rsssl_rest_api_fields_get', $output);
 	$response = json_encode( $output );
 	header( "Content-Type: application/json" );
 	echo $response;

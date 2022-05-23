@@ -1,5 +1,38 @@
 @import "variables.less";
 
+/*
+  Progress labels
+ */
+.rsssl-progress-status {
+  display: block;
+  min-width: 60px;
+  text-align: center;
+  border-radius: 15px;
+  padding: 4px 8px 4px 8px;
+  font-size: 0.8em;
+  font-weight: 600;
+  height: 17px;
+  line-height:17px;
+}
+
+.rsssl-premium {
+  background-color: #29b6f6;
+  color: white;
+}
+.rsssl-success {
+  background-color: @color-success;
+  color: white;
+}
+
+.rsssl-open {
+  background-color: @color_open;
+}
+
+.rsssl-warning {
+  background-color: @color_warning;
+  color: white;
+}
+
 // Override default WP settings style
 .settings_page_rlrsssl_really_simple_ssl #wpcontent, .settings_page_really-simple-ssl #wpcontent{
   padding: 0;
@@ -142,7 +175,7 @@
 
     height: @gridblock_height + @grid_margin;
     z-index: 1;
-    .item-container {
+    .rsssl-item-container {
       .form-table {
         display: flex;
         tbody {
@@ -356,38 +389,7 @@
           }
         }
 
-        /*
-          Progress labels
-         */
-        .rsssl-progress-status {
-          display: block;
-          min-width: 60px;
-          text-align: center;
-          border-radius: 15px;
-          padding: 4px 8px 4px 8px;
-          font-size: 0.8em;
-          font-weight: 600;
-          height: 17px;
-          line-height:17px;
-        }
 
-        .rsssl-premium {
-          background-color: #29b6f6;
-          color: white;
-        }
-        .rsssl-success {
-          background-color: @color-success;
-          color: white;
-        }
-
-        .rsssl-open {
-          background-color: @color_open;
-        }
-
-        .rsssl-warning {
-          background-color: @color_warning;
-          color: white;
-        }
       }
       .rsssl-grid-item-footer {
         display: flex;
@@ -414,7 +416,7 @@
     &.half-height {
       height: (@gridblock_height / 2) + @grid_margin;
 
-      .item-container {
+      .rsssl-item-container {
         height: @gridblock_height / 2;
         .rsssl-grid-item-content {
           height: 110px;
@@ -429,7 +431,7 @@
     }
 
     &.small {
-      .item-container {
+      .rsssl-item-container {
         width: @gridblock_width_small - @grid_margin;
         th {
           width: 90% !important;
@@ -440,12 +442,12 @@
       }
     }
     &.no-border {
-      .item-container {
+      .rsssl-item-container {
         border: none;
       }
     }
     &.no-background {
-      .item-container {
+      .rsssl-item-container {
         background-color: #f2f2f2;
       }
     }
@@ -571,7 +573,7 @@
       @media only screen and (min-width: @break-xl) {
         width: calc(25% - 20px);
       }
-      .item-container{
+      .rsssl-item-container{
         width: 100%;
         min-width: 200px;
       }
@@ -605,7 +607,7 @@
         height: @gridblock_height / 2;
       }
 
-      .item-container {
+      .rsssl-item-container {
         width: 100%;
         min-width: 200px;
         min-height: 250px;
@@ -648,7 +650,7 @@
         color: #cecece;
       }
     }
-    .item-container {
+    .rsssl-item-container {
       background-color: #fff;
       position: relative;
       box-shadow: 0 0 5px 5px rgba(222,222,222,0.2);
@@ -666,13 +668,13 @@
     }
 
     &.no-border {
-      .item-container {
+      .rsssl-item-container {
         border: none;
       }
     }
 
     &.no-background {
-      .item-container {
+      .rsssl-item-container {
         background-color: #F1F1F1;
       }
     }

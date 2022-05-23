@@ -3298,7 +3298,7 @@ class rsssl_admin extends rsssl_front_end
 			    }
 		    }
         }
-        return $notices;
+	    return $notices;
     }
 
 	/**

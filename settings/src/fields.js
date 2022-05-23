@@ -12,8 +12,8 @@ import {
     __experimentalNumberControl as NumberControl,
     ToggleControl,
 } from '@wordpress/components';
-import in_array from './utils/lib';
-import TaskNotice from './ProgressBlock';
+import TaskElement from "./TaskElement";
+import License from "./License";
 import {
     Component,
 } from '@wordpress/element';
@@ -33,6 +33,9 @@ class Field extends Component {
         fields[this.props.index]['value'] = fieldValue;
         this.props.saveChangedFields( field.id )
         this.setState( { fields } )
+    }
+    onCloseTaskHandler(){
+
     }
     render(){
         let field = this.props.field;
@@ -97,24 +100,11 @@ class Field extends Component {
             /**
              * There is no "PasswordControl" in WordPress react yet, so we create our own license field.
              */
-            console.log(field.notices);
+            let field = this.props.field;
+            let fieldValue = field.value;
+            let fields = this.props.fields;
             return (
-                <PanelBody className={ this.highLightClass}>
-                    <div className="components-base-control">
-                        <div className="components-base-control__field">
-                            <label
-                                className="components-base-control__label"
-                                htmlFor={field.id}>{field.label}</label>
-                            <input className="components-text-control__input"
-                                   type="password"
-                                   id={field.id}
-                                   value={fieldValue}
-                                   onChange={ ( fieldValue ) => this.onChangeHandler(fieldValue) }
-                            />
-                        </div>
-                        {/*{field.notices.map((notice, i) => <TaskElement key={i} index={i} notice={notice} />)}*/}
-                    </div>
-                </PanelBody>
+                <License fields={fields} field={field} fieldValue={fieldValue} saveChangedFields={this.props.saveChangedFields} highLightField={this.props.highLightField} highLightedField={this.props.highLightedField}/>
             );
         }
         if ( field.type==='number' ){

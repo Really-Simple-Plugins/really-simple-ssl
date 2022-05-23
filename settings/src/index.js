@@ -67,8 +67,6 @@ class SettingsGroup extends Component {
 
 	render(){
 		let selectedMenuItem = this.props.selectedMenuItem;
-		console.log("settings group");
-		console.log(selectedMenuItem);
 		let selectedFields = [];
 		//get all fields with group_id this.props.group_id
 		for (const selectedField of this.props.fields){
@@ -380,10 +378,7 @@ class Header extends Component {
 	}
 	componentDidMount() {
 		this.handleClick = this.handleClick.bind(this);
-		console.log(this.props.fields);
 		for (const field of this.props.fields){
-			console.log("field");
-			console.log(field);
 			if (field.id === 'high_contrast' ){
 				this.highContrast = field.value;
 			}
