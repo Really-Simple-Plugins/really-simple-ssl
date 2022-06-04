@@ -28,8 +28,6 @@ class rsssl_progress {
 			$notice['id'] = $id;
 			$out[] =  $notice;
 		}
-		error_log(print_r($out, true));
-
 		return $out;
 	}
 

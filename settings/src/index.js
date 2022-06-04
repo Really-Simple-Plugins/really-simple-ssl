@@ -24,7 +24,6 @@ import GridBlock from './GridBlock';
  */
 class Help extends Component {
 	handleClick(id){
-		console.log(id);
 		let el = document.querySelector('[data-help_index="'+id+'"]');
 		if (el.classList.contains('rsssl-wizard__help_open')) {
 			el.classList.remove('rsssl-wizard__help_open');
@@ -65,6 +64,13 @@ class SettingsGroup extends Component {
 		this.fields = this.props.fields;
 	}
 
+	getLicenseStatus(){
+		if (this.props.pageProps.hasOwnProperty('licenseStatus') ){
+			return this.props.pageProps['licenseStatus'];
+		}
+		return 'invalid';
+	}
+
 	render(){
 		let selectedMenuItem = this.props.selectedMenuItem;
 		let selectedFields = [];
@@ -74,11 +80,26 @@ class SettingsGroup extends Component {
 				selectedFields.push(selectedField);
 			}
 		}
+		let status = this.getLicenseStatus();
+		let disabled = status !=='valid' && selectedMenuItem.is_premium;
+		let msg;
+		if ( status === 'empty' || status === 'deactivated' ) {
+			msg = rsssl_settings.messageInactive;
+		} else {
+			msg = rsssl_settings.messageInvalid;
+		}
+
 		return (
 			<div className="rsssl-grouped-fields">
 				{selectedMenuItem && selectedMenuItem.title && <PanelBody><h1 className="rsssl-settings-block-title">{selectedMenuItem.title}</h1></PanelBody>}
 				{selectedMenuItem && selectedMenuItem.intro && <PanelBody><div className="rsssl-settings-block-intro">{selectedMenuItem.intro}</div></PanelBody>}
-				{selectedFields.map((field, i) => <Field key={i} index={i} highLightField={this.props.highLightField} highLightedField={this.props.highLightedField} saveChangedFields={this.props.saveChangedFields} field={field} fields={selectedFields}/>)}
+				{selectedFields.map((field, i) => <Field setPageProps={this.props.setPageProps} fieldsUpdateComplete = {this.props.fieldsUpdateComplete} key={i} index={i} highLightField={this.props.highLightField} highLightedField={this.props.highLightedField} saveChangedFields={this.props.saveChangedFields} field={field} fields={selectedFields}/>)}
+				{disabled && <div className="rsssl-locked">
+					<div className="rsssl-locked-overlay">
+						<span className="rsssl-progress-status rsssl-warning">{__("Warning","really-simple-ssl")}</span>
+						{msg}&nbsp;<a href={rsssl_settings.url}>{__("Check license", "really-simple-ssl")}</a>
+					</div>
+				</div>}
 			</div>
 		)
 	}
@@ -150,12 +171,11 @@ class Settings extends Component {
 				break;
 			}
 		}
-
 		return (
 			<div className="rsssl-wizard-settings">
 				<div className="rsssl-wizard__main">
 					<Panel>
-						{groups.map((group, i) => <SettingsGroup key={i} index={i} highLightField={this.props.highLightField} highLightedField={this.props.highLightedField} selectedMenuItem={selectedMenuItemObject} saveChangedFields={this.props.saveChangedFields} group={group} fields={selectedFields}/>)}
+						{groups.map((group, i) => <SettingsGroup pageProps={this.props.pageProps} setPageProps={this.props.setPageProps} fieldsUpdateComplete = {this.props.fieldsUpdateComplete} key={i} index={i} highLightField={this.props.highLightField} highLightedField={this.props.highLightedField} selectedMenuItem={selectedMenuItemObject} saveChangedFields={this.props.saveChangedFields} group={group} fields={selectedFields}/>)}
 						<div className="rsssl-buttons-row">
 							<Button
 								isPrimary
@@ -320,6 +340,7 @@ class SettingsPage extends Component {
 			selectedMenuItem,
 			selectedStep,
             isAPILoaded,
+			changedFields,
         } = this.state;
 
 		if ( ! isAPILoaded ) {
@@ -339,10 +360,13 @@ class SettingsPage extends Component {
 			}
 		}
 
+		let fieldsUpdateComplete=changedFields.length==0;
+
+
         return (
             <Fragment>
 				<Menu isAPILoaded={isAPILoaded} menuItems={this.menuItems} menu={this.menu} selectMenu={this.props.selectMenu} selectedMenuItem={this.props.selectedMenuItem}/>
-				<Settings highLightField={this.props.highLightField} highLightedField={this.props.highLightedField} isAPILoaded={isAPILoaded} fields={this.fields} progress={progress} saveChangedFields={this.saveChangedFields} menu={menu} save={this.save} selectedMenuItem={this.props.selectedMenuItem} selectedStep={selectedStep}/>
+				<Settings pageProps={this.props.pageProps} setPageProps={this.props.setPageProps} fieldsUpdateComplete = {fieldsUpdateComplete} highLightField={this.props.highLightField} highLightedField={this.props.highLightedField} isAPILoaded={isAPILoaded} fields={this.fields} progress={progress} saveChangedFields={this.saveChangedFields} menu={menu} save={this.save} selectedMenuItem={this.props.selectedMenuItem} selectedStep={selectedStep}/>
 				<div className="rsssl-wizard__notices">
 					<Notices/>
 				</div>
@@ -423,6 +447,8 @@ class Header extends Component {
 class Page extends Component {
 	constructor() {
 		super( ...arguments );
+		this.pageProps=[];
+		this.pageProps['licenseStatus'] = rsssl_settings.licenseStatus;
 		this.state = {
 			selectedMainMenuItem:'dashboard',
 			selectedMenuItem:'general',
@@ -431,6 +457,7 @@ class Page extends Component {
 			menu:'',
 			progress:'',
 			isAPILoaded: false,
+			pageProps:this.pageProps,
 		};
 
 		this.getFields().then(( response ) => {
@@ -453,11 +480,27 @@ class Page extends Component {
 			return response.data;
 		});
 	}
+	/**
+	 * Allow child blocks to set data on the gridblock
+	 * @param key
+	 * @param value
+	 */
+	setPageProps(key, value){
+		console.log("set page props");
+		console.log(key);
+		console.log(value);
+		this.pageProps[key] = value;
+		this.setState({
+			pageProps: this.pageProps,
+		})
+	}
 
 	componentDidMount() {
 		this.selectMenu = this.selectMenu.bind(this);
 		this.highLightField = this.highLightField.bind(this);
 		this.selectMainMenu = this.selectMainMenu.bind(this);
+		this.setPageProps = this.setPageProps.bind(this);
+
 		this.setState({
 			selectedMainMenuItem: 'dashboard',
 			selectedMenuItem: 'general',
@@ -509,7 +552,7 @@ class Page extends Component {
 			<div id="rsssl-wrapper">
 				<Header selectedMainMenuItem={selectedMainMenuItem} selectMainMenu={this.selectMainMenu} fields={fields}/>
 				<div id="rsssl-container">
-					{selectedMainMenuItem==='settings' && <SettingsPage selectMenu={this.selectMenu} highLightField={this.highLightField} highLightedField={this.highLightedField} selectedMenuItem={selectedMenuItem} isAPILoaded={isAPILoaded} fields={fields} menu={menu} progress={progress}/> }
+					{selectedMainMenuItem==='settings' && <SettingsPage pageProps={this.pageProps} setPageProps={this.setPageProps} selectMenu={this.selectMenu} highLightField={this.highLightField} highLightedField={this.highLightedField} selectedMenuItem={selectedMenuItem} isAPILoaded={isAPILoaded} fields={fields} menu={menu} progress={progress}/> }
 					{selectedMainMenuItem==='dashboard' && <DashboardPage isAPILoaded={isAPILoaded} fields={fields} highLightField={this.highLightField}/> }
 				</div>
 			</div>

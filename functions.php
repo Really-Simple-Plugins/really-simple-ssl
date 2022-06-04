@@ -101,18 +101,3 @@ function rsssl_get_network_option( $name, $default=false ){
 	return false;
 }
 
-/**
- * @param $name
- * @param $value
- * @return void
- *
- * Update an RSSSL option. Used to sync with WordPress options
- */
-function rsssl_update_option( $name, $value ) {
-    $name = sanitize_title($name);
-    $value = sanitize_title($value);
-    $options = get_site_option( 'rsssl_options', array() );
-
-    $options[$name] = $value;
-    update_site_option('rsssl_options', $options);
-}

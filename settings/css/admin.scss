@@ -15,6 +15,9 @@
         background: none;
         border: none;
         flex: auto 1;
+        .rsssl-grouped-fields {
+          position:relative;
+        }
         .rsssl-buttons-row {
           padding:10px;
           float:right;

@@ -77,6 +77,9 @@
   border: none;
   flex: auto 1;
 }
+#rsssl-container .rsssl-wizard-settings .rsssl-wizard__main .components-panel .rsssl-grouped-fields {
+  position: relative;
+}
 #rsssl-container .rsssl-wizard-settings .rsssl-wizard__main .components-panel .rsssl-buttons-row {
   padding: 10px;
   float: right;

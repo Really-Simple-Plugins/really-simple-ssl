@@ -37,14 +37,15 @@ function rsssl_plugin_admin_scripts() {
 	wp_localize_script(
 			'rsssl-settings',
 			'rsssl_settings',
-			array(
+			apply_filters('rsssl_localize_script',array(
 				'site_url' => get_rest_url(),
 				'plugin_url' => rsssl_url,
 				'blocks' => rsssl_blocks(),
 				'premium' => defined('rsssl_pro_version'),
 				'menu' => $menu,
 				'nonce' => wp_create_nonce( 'wp_rest' ),//to authenticate the logged in user
-			)
+				'rsssl_nonce' => wp_create_nonce( 'rsssl_save' ),
+			))
 	);
 	wp_enqueue_style(
 		'rsssl-settings-css',
@@ -194,6 +195,7 @@ function rsssl_run_test($request){
 
 function rsssl_sanitize_field_type($type){
     $types = [
+        'license',
         'checkbox',
         'radio',
         'text',
@@ -204,6 +206,7 @@ function rsssl_sanitize_field_type($type){
     if ( in_array($type, $types) ){
         return $type;
     }
+    error_log("TYPE NOT FOUND");
     return 'checkbox';
 }
 
@@ -220,7 +223,8 @@ function rsssl_rest_api_fields_set($request){
 	$fields = $request->get_json_params();
     $config_fields = rsssl_fields();
 	foreach ( $fields as $index => $field ) {
-		if ( !isset( $config_fields[ $field['id']] ) ){
+		if ( !isset( $config_fields[ $field['id'] ] ) ){
+            error_log("unsettting ".$field['id']." as not existing field in RSSSL ");
 			unset($fields[$index]);
 		}
         $value = rsssl_sanitize_field( $field['value'] , rsssl_sanitize_field_type($field['type']) );
@@ -244,7 +248,6 @@ function rsssl_rest_api_fields_set($request){
 	        update_option( 'rsssl_options', $options );
         }
     }
-
     foreach ( $fields as $field ) {
         do_action( "rsssl_after_save_option", $field['id'], $field['value'], $prev_value, $field['type'] );
     }
@@ -257,6 +260,39 @@ function rsssl_rest_api_fields_set($request){
 	exit;
 }
 
+/**
+ * @param $name
+ * @param $value
+ * @return void
+ *
+ * Update an RSSSL option. Used to sync with WordPress options
+ */
+function rsssl_update_option( $name, $value ) {
+	if ( !current_user_can('manage_options') ) {
+		return;
+	}
+
+	$type = false;
+	$config_fields = rsssl_fields();
+    foreach ($config_fields as $config_field ) {
+        if ($config_field['id']===$name){
+            $type = $config_field['type'];
+            break;
+        }
+    }
+
+    if ( !$type ) {
+        return;
+    }
+
+	$options = get_site_option( 'rsssl_options', array() );
+	$options[$name] = rsssl_sanitize_field( $value , $type );
+	if ( is_multisite() && is_network_admin() ) {
+		update_site_option( 'rsssl_options', $options );
+	} else {
+		update_option( 'rsssl_options', $options );
+	}
+}
 
 
 /**
@@ -317,7 +353,9 @@ function rsssl_sanitize_field( $value, $type ) {
 			return intval($value);
 		case 'select':
 		case 'text':
-			return sanitize_text_field( $value );
+		    return sanitize_text_field( $value );
+		case 'license':
+		    return $value;
 		case 'multicheckbox':
 			if ( ! is_array( $value ) ) {
 				$value = array( $value );

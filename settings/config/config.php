@@ -107,6 +107,7 @@ function rsssl_fields(){
 			'disabled'    => false,
 			'default'     => true,
 			'new_features_block'     => true,
+			'networkwide' => false,
 		],
 		[
 			'id'          => 'wp_redirect',
@@ -127,6 +128,7 @@ function rsssl_fields(){
 				]
 			],
 			'new_features_block'     => true,
+			'networkwide' => false,
 
 		],
 		[
@@ -155,6 +157,7 @@ function rsssl_fields(){
 					]
 				]
 			],
+			'networkwide' => false,
 		],
 		[
 			'id'          => 'do_not_edit_htaccess',

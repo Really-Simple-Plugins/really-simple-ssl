@@ -2976,28 +2976,21 @@ var License = /*#__PURE__*/function (_Component) {
 
     _this = _super.apply(this, arguments);
     _this.noticesLoaded = false;
+    _this.fieldsUpdateComplete = false;
+    _this.licenseStatus = 'invalid';
     _this.state = {
+      licenseStatus: 'invalid',
       noticesLoaded: false,
       notices: []
     };
     _this.highLightClass = _this.props.highLightedField === _this.props.field.id ? 'rsssl-highlight' : '';
-
-    _this.getLicenseNotices().then(function (response) {
-      _this.notices = response.notices;
-      console.log("result notices");
-      console.log(_this.notices);
-      _this.noticesLoaded = true;
-
-      _this.setState({
-        noticesLoaded: _this.noticesLoaded,
-        notices: _this.notices
-      });
-    });
-
     return _this;
   }
 
   _babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_1___default()(License, [{
+    key: "updateLicenseNotice",
+    value: function updateLicenseNotice() {}
+  }, {
     key: "getLicenseNotices",
     value: function getLicenseNotices() {
       return _utils_api__WEBPACK_IMPORTED_MODULE_6__["runTest"]('licenseNotices', 'refresh').then(function (response) {
@@ -3007,19 +3000,41 @@ var License = /*#__PURE__*/function (_Component) {
   }, {
     key: "componentDidMount",
     value: function componentDidMount() {
-      this.props.highLightField(''); // this.getLicenseNotices = this.getLicenseNotices.bind(this);
-      // let noticesLoaded = this.noticesLoaded;
-      // let notices = this.notices;
-      //
-
+      this.props.highLightField('');
+      this.getLicenseNotices = this.getLicenseNotices.bind(this);
       this.setState({
         noticesLoaded: this.noticesLoaded,
+        licenseStatus: this.licenseStatus,
         notices: this.notices
       });
     }
   }, {
+    key: "componentDidUpdate",
+    value: function componentDidUpdate(prevProps) {
+      var _this2 = this;
+
+      if (!this.fieldsUpdateComplete && this.props.fieldsUpdateComplete) {
+        this.getLicenseNotices().then(function (response) {
+          _this2.fieldsUpdateComplete = _this2.props.fieldsUpdateComplete;
+
+          _this2.props.setPageProps('licenseStatus', response.licenseStatus);
+
+          _this2.notices = response.notices;
+          _this2.licenseStatus = response.licenseStatus;
+          _this2.noticesLoaded = true;
+
+          _this2.setState({
+            noticesLoaded: _this2.noticesLoaded,
+            licenseStatus: _this2.licenseStatus,
+            notices: _this2.notices
+          });
+        });
+      }
+    }
+  }, {
     key: "onChangeHandler",
     value: function onChangeHandler(fieldValue) {
+      this.fieldsUpdateComplete = false;
       var fields = this.props.fields;
       var field = this.props.field;
       fields[this.props.index]['value'] = fieldValue;
@@ -3034,11 +3049,12 @@ var License = /*#__PURE__*/function (_Component) {
   }, {
     key: "render",
     value: function render() {
-      var _this2 = this;
+      var _this3 = this;
 
       var _this$state = this.state,
           noticesLoaded = _this$state.noticesLoaded,
-          notices = _this$state.notices;
+          notices = _this$state.notices,
+          licenseStatus = _this$state.licenseStatus;
       var field = this.props.field;
       var fieldValue = field.value;
       var fields = this.props.fields;
@@ -3060,15 +3076,15 @@ var License = /*#__PURE__*/function (_Component) {
         type: "password",
         id: field.id,
         value: fieldValue,
-        onChange: function onChange(fieldValue) {
-          return _this2.onChangeHandler(fieldValue);
+        onChange: function onChange(e) {
+          return _this3.onChangeHandler(e.target.value);
         }
-      })), noticesLoaded && notices.map(function (notice, i) {
+      })), !noticesLoaded && Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_5__["createElement"])(_wordpress_components__WEBPACK_IMPORTED_MODULE_7__["Placeholder"], null), noticesLoaded && notices.map(function (notice, i) {
         return Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_5__["createElement"])(_TaskElement__WEBPACK_IMPORTED_MODULE_8__["default"], {
           key: i,
           index: i,
           notice: notice,
-          onCloseTaskHandler: _this2.onCloseTaskHandler,
+          onCloseTaskHandler: _this3.onCloseTaskHandler,
           highLightField: ""
         });
       })));
@@ -3971,6 +3987,9 @@ var Field = /*#__PURE__*/function (_Component) {
         var _fieldValue = _field.value;
         var _fields = this.props.fields;
         return Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_5__["createElement"])(_License__WEBPACK_IMPORTED_MODULE_8__["default"], {
+          setPageProps: this.props.setPageProps,
+          fieldsUpdateComplete: this.props.fieldsUpdateComplete,
+          index: this.props.index,
           fields: _fields,
           field: _field,
           fieldValue: _fieldValue,
@@ -4109,7 +4128,6 @@ var Help = /*#__PURE__*/function (_Component) {
   _babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_1___default()(Help, [{
     key: "handleClick",
     value: function handleClick(id) {
-      console.log(id);
       var el = document.querySelector('[data-help_index="' + id + '"]');
 
       if (el.classList.contains('rsssl-wizard__help_open')) {
@@ -4177,6 +4195,15 @@ var SettingsGroup = /*#__PURE__*/function (_Component2) {
   }
 
   _babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_1___default()(SettingsGroup, [{
+    key: "getLicenseStatus",
+    value: function getLicenseStatus() {
+      if (this.props.pageProps.hasOwnProperty('licenseStatus')) {
+        return this.props.pageProps['licenseStatus'];
+      }
+
+      return 'invalid';
+    }
+  }, {
     key: "render",
     value: function render() {
       var _this3 = this;
@@ -4201,6 +4228,16 @@ var SettingsGroup = /*#__PURE__*/function (_Component2) {
         _iterator.f();
       }
 
+      var status = this.getLicenseStatus();
+      var disabled = status !== 'valid' && selectedMenuItem.is_premium;
+      var msg;
+
+      if (status === 'empty' || status === 'deactivated') {
+        msg = rsssl_settings.messageInactive;
+      } else {
+        msg = rsssl_settings.messageInvalid;
+      }
+
       return Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_5__["createElement"])("div", {
         className: "rsssl-grouped-fields"
       }, selectedMenuItem && selectedMenuItem.title && Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_5__["createElement"])(_wordpress_components__WEBPACK_IMPORTED_MODULE_8__["PanelBody"], null, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_5__["createElement"])("h1", {
@@ -4209,6 +4246,8 @@ var SettingsGroup = /*#__PURE__*/function (_Component2) {
         className: "rsssl-settings-block-intro"
       }, selectedMenuItem.intro)), selectedFields.map(function (field, i) {
         return Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_5__["createElement"])(_fields__WEBPACK_IMPORTED_MODULE_10__["default"], {
+          setPageProps: _this3.props.setPageProps,
+          fieldsUpdateComplete: _this3.props.fieldsUpdateComplete,
           key: i,
           index: i,
           highLightField: _this3.props.highLightField,
@@ -4217,7 +4256,15 @@ var SettingsGroup = /*#__PURE__*/function (_Component2) {
           field: field,
           fields: selectedFields
         });
-      }));
+      }), disabled && Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_5__["createElement"])("div", {
+        className: "rsssl-locked"
+      }, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_5__["createElement"])("div", {
+        className: "rsssl-locked-overlay"
+      }, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_5__["createElement"])("span", {
+        className: "rsssl-progress-status rsssl-warning"
+      }, Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_9__["__"])("Warning", "really-simple-ssl")), msg, "\xA0", Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_5__["createElement"])("a", {
+        href: rsssl_settings.url
+      }, Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_9__["__"])("Check license", "really-simple-ssl")))));
     }
   }]);
 
@@ -4364,6 +4411,9 @@ var Settings = /*#__PURE__*/function (_Component3) {
         className: "rsssl-wizard__main"
       }, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_5__["createElement"])(_wordpress_components__WEBPACK_IMPORTED_MODULE_8__["Panel"], null, groups.map(function (group, i) {
         return Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_5__["createElement"])(SettingsGroup, {
+          pageProps: _this5.props.pageProps,
+          setPageProps: _this5.props.setPageProps,
+          fieldsUpdateComplete: _this5.props.fieldsUpdateComplete,
           key: i,
           index: i,
           highLightField: _this5.props.highLightField,
@@ -4589,7 +4639,8 @@ var SettingsPage = /*#__PURE__*/function (_Component4) {
           menuItems = _this$state2.menuItems,
           selectedMenuItem = _this$state2.selectedMenuItem,
           selectedStep = _this$state2.selectedStep,
-          isAPILoaded = _this$state2.isAPILoaded;
+          isAPILoaded = _this$state2.isAPILoaded,
+          changedFields = _this$state2.changedFields;
 
       if (!isAPILoaded) {
         return Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_5__["createElement"])(_wordpress_components__WEBPACK_IMPORTED_MODULE_8__["Placeholder"], null);
@@ -4607,6 +4658,7 @@ var SettingsPage = /*#__PURE__*/function (_Component4) {
         }
       }
 
+      var fieldsUpdateComplete = changedFields.length == 0;
       return Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_5__["createElement"])(_wordpress_element__WEBPACK_IMPORTED_MODULE_5__["Fragment"], null, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_5__["createElement"])(_Menu__WEBPACK_IMPORTED_MODULE_11__["default"], {
         isAPILoaded: isAPILoaded,
         menuItems: this.menuItems,
@@ -4614,6 +4666,9 @@ var SettingsPage = /*#__PURE__*/function (_Component4) {
         selectMenu: this.props.selectMenu,
         selectedMenuItem: this.props.selectedMenuItem
       }), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_5__["createElement"])(Settings, {
+        pageProps: this.props.pageProps,
+        setPageProps: this.props.setPageProps,
+        fieldsUpdateComplete: fieldsUpdateComplete,
         highLightField: this.props.highLightField,
         highLightedField: this.props.highLightedField,
         isAPILoaded: isAPILoaded,
@@ -4775,6 +4830,8 @@ var Page = /*#__PURE__*/function (_Component7) {
     _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_0___default()(this, Page);
 
     _this11 = _super7.apply(this, arguments);
+    _this11.pageProps = [];
+    _this11.pageProps['licenseStatus'] = rsssl_settings.licenseStatus;
     _this11.state = {
       selectedMainMenuItem: 'dashboard',
       selectedMenuItem: 'general',
@@ -4782,7 +4839,8 @@ var Page = /*#__PURE__*/function (_Component7) {
       fields: '',
       menu: '',
       progress: '',
-      isAPILoaded: false
+      isAPILoaded: false,
+      pageProps: _this11.pageProps
     };
 
     _this11.getFields().then(function (response) {
@@ -4811,12 +4869,30 @@ var Page = /*#__PURE__*/function (_Component7) {
         return response.data;
       });
     }
+    /**
+     * Allow child blocks to set data on the gridblock
+     * @param key
+     * @param value
+     */
+
+  }, {
+    key: "setPageProps",
+    value: function setPageProps(key, value) {
+      console.log("set page props");
+      console.log(key);
+      console.log(value);
+      this.pageProps[key] = value;
+      this.setState({
+        pageProps: this.pageProps
+      });
+    }
   }, {
     key: "componentDidMount",
     value: function componentDidMount() {
       this.selectMenu = this.selectMenu.bind(this);
       this.highLightField = this.highLightField.bind(this);
       this.selectMainMenu = this.selectMainMenu.bind(this);
+      this.setPageProps = this.setPageProps.bind(this);
       this.setState({
         selectedMainMenuItem: 'dashboard',
         selectedMenuItem: 'general'
@@ -4880,6 +4956,8 @@ var Page = /*#__PURE__*/function (_Component7) {
       }), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_5__["createElement"])("div", {
         id: "rsssl-container"
       }, selectedMainMenuItem === 'settings' && Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_5__["createElement"])(SettingsPage, {
+        pageProps: this.pageProps,
+        setPageProps: this.setPageProps,
         selectMenu: this.selectMenu,
         highLightField: this.highLightField,
         highLightedField: this.highLightedField,
