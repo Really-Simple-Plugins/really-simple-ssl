@@ -1,0 +1,53 @@
+.cmplz-tips-tricks-container {
+  display: flex !important;
+  flex-direction: row;
+  flex-wrap: wrap;
+  margin-bottom: 10px;
+  font-size: var(--rsp-fs-300);
+  line-height: 1.7;
+  gap: var(--rsp-spacing-xxs);
+
+  @media screen and (max-width: 992px) {
+	flex-direction: row;
+	overflow: hidden;
+  }
+
+  .cmplz-tips-tricks-element {
+	width: calc(50% - var(--rsp-spacing-xxs));
+	@media( max-width: $rsp-break-xs ){
+	  width: 100%;
+	}
+	a {
+	  color: var(--rsp-text-color-light);
+	  transition: color 0.3s ease;
+	  display: flex;
+	  align-items: center;
+	  gap: var(--rsp-spacing-xs);
+	  min-width: 0; /* or some value */
+	  text-decoration: none;
+
+	  &:hover {
+		color: var(--rsp-brand-primary);
+		text-decoration: underline;
+
+		.cmplz-bullet {
+		  background-color: var(--rsp-brand-primary);
+		}
+
+		.cmplz-tips-tricks-content {
+		  text-decoration: underline;
+		}
+	  }
+	}
+
+	.cmplz-bullet {
+	  transition: background-color 0.3s ease;
+	  background-color: var(--rsp-grey-300);
+	}
+	.cmplz-tips-tricks-content {
+	  white-space: nowrap;
+	  overflow: hidden;
+	  text-overflow: ellipsis;
+	}
+  }
+}

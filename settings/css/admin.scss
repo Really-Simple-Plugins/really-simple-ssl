@@ -1,77 +1,77 @@
-@import 'menu.scss';
-@import 'placeholder.scss';
-@import 'ssltest.scss';
-
-#rsssl-container {
-  display: flex;
-  .rsssl-wizard-settings {
-    display: flex;
-    flex: auto 1;
-    .rsssl-wizard__main {
-      display: flex;
-      flex: auto 1;
-
-      .components-panel {
-        background: none;
-        border: none;
-        flex: auto 1;
-        .rsssl-buttons-row {
-          padding:10px;
-          float:right;
-        }
-      }
-
-      .components-panel__body-title {
-        display: none;
-      }
-
-      .components-panel__body {
-        &:first-child {
-          margin-top: 20px;
-        }
-
-        background: #ffffff;
-        border-top: 0;
-        border-bottom: 0;
-
-        .components-number-control .components-input-control__container {
-          width: inherit;
-        }
-      }
-    }
-    .rsssl-wizard__help {
-      min-width: 25%;
-      max-width:300px;
-      .rsssl-wizard__help_notice {
-        margin: 20px;
-        padding: 20px;
-        background-color: white;
-        .rsssl-wizard__help_title.rsssl-wizard__help_has_content {
-          cursor:pointer;
-        }
-        .rsssl-wizard__help_content {
-          display:none;
-        }
-        &.rsssl-wizard__help_open{
-          .rsssl-wizard__help_content {
-            display:block;
-          }
-        }
-      }
-    }
-  }
-}
-
-.rsssl-wizard__notices {
-  top: .5rem;
-  position: fixed;
-  z-index: 99999999;
-
-  .components-snackbar {
-    top: 35px;
-    left: 50%;
-    position: fixed;
-    z-index: 99999999;
-  }
-}
-
+//@import 'menu.scss';
+//@import 'placeholder.scss';
+//@import 'ssltest.scss';
+//
+//#rsssl-container {
+//  display: flex;
+//  .rsssl-wizard-settings {
+//    display: flex;
+//    flex: auto 1;
+//    .rsssl-wizard__main {
+//      display: flex;
+//      flex: auto 1;
+//
+//      .components-panel {
+//        background: none;
+//        border: none;
+//        flex: auto 1;
+//        .rsssl-buttons-row {
+//          padding:10px;
+//          float:right;
+//        }
+//      }
+//
+//      .components-panel__body-title {
+//        display: none;
+//      }
+//
+//      .components-panel__body {
+//        &:first-child {
+//          margin-top: 20px;
+//        }
+//
+//        background: #ffffff;
+//        border-top: 0;
+//        border-bottom: 0;
+//
+//        .components-number-control .components-input-control__container {
+//          width: inherit;
+//        }
+//      }
+//    }
+//    .rsssl-wizard__help {
+//      min-width: 25%;
+//      max-width:300px;
+//      .rsssl-wizard__help_notice {
+//        margin: 20px;
+//        padding: 20px;
+//        background-color: white;
+//        .rsssl-wizard__help_title.rsssl-wizard__help_has_content {
+//          cursor:pointer;
+//        }
+//        .rsssl-wizard__help_content {
+//          display:none;
+//        }
+//        &.rsssl-wizard__help_open{
+//          .rsssl-wizard__help_content {
+//            display:block;
+//          }
+//        }
+//      }
+//    }
+//  }
+//}
+//
+//.rsssl-wizard__notices {
+//  top: .5rem;
+//  position: fixed;
+//  z-index: 99999999;
+//
+//  .components-snackbar {
+//    top: 35px;
+//    left: 50%;
+//    position: fixed;
+//    z-index: 99999999;
+//  }
+//}
+//

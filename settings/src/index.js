@@ -387,24 +387,21 @@ class Header extends Component {
 		let menu = rsssl_settings.menu;
 		let plugin_url = rsssl_settings.plugin_url;
 		return (
-			<div className="rsssl-header nav-tab-wrapper">
-				<div className="rsssl-logo-container">
-					<div id="rsssl-logo"><img src={plugin_url+"/assets/really-simple-ssl-logo.png"} alt="review-logo" /></div>
-				</div>
-				{menu.map((menu_item, i) => <a key={i} onClick={ () => this.handleClick(menu_item.id) } className='nav-tab' href='#' >{menu_item.label}</a>)}
-				<div className="header-links">
-					<div className="documentation">
-						<a href="https://really-simple-ssl.com/knowledge-base"
-						   className={rsssl_settings.premium && 'button button-primary'}
-						   target="_blank">{__("Documentation", "really-simple-ssl")}</a>
+			<div className="rsssl-header-container">
+				<div className="rsssl-header">
+					<img className="rsssl-logo" src={plugin_url+"assets/img/really-simple-ssl-logo.png"} alt="Really Simple SSL logo" />
+					<div className="rsssl-header-left">
+						{menu.map((menu_item, i) => <a key={i} onClick={ () => this.handleClick(menu_item.id) } href='#' >{menu_item.label}</a>)}
 					</div>
-					<div className="header-upsell">
-						{rsssl_settings.premium &&
-						<div className="documentation">
-							<a href="https://wordpress.org/support/plugin/really-simple-ssl/"
-							   className="button button-primary"
-							   target="_blank">{__("Support", "really-simple-ssl")}</a>
-						</div>}
+					<div className="rsssl-header-right">
+							<a href="https://really-simple-ssl.com/knowledge-base"
+								 className={rsssl_settings.premium && 'button button-primary'}
+								 target="_blank">{__("Documentation", "really-simple-ssl")}</a>
+							{rsssl_settings.premium &&
+								<a href="https://wordpress.org/support/plugin/really-simple-ssl/"
+									 className="button button-black"
+									 target="_blank">{__("Support", "really-simple-ssl")}</a>
+							}
 					</div>
 				</div>
 			</div>
@@ -497,9 +494,9 @@ class Page extends Component {
 		} = this.state;
 
 		return (
-			<div id="rsssl-wrapper">
+			<div className="rsssl-wrapper">
 				<Header selectedMainMenuItem={selectedMainMenuItem} selectMainMenu={this.selectMainMenu} fields={fields}/>
-				<div id="rsssl-container">
+				<div className="rsssl-container">s
 					{selectedMainMenuItem==='settings' && <SettingsPage selectMenu={this.selectMenu} highLightField={this.highLightField} highLightedField={this.highLightedField} selectedMenuItem={selectedMenuItem} isAPILoaded={isAPILoaded} fields={fields} menu={menu} progress={progress}/> }
 					{selectedMainMenuItem==='dashboard' && <DashboardPage isAPILoaded={isAPILoaded} fields={fields} highLightField={this.highLightField}/> }
 				</div>

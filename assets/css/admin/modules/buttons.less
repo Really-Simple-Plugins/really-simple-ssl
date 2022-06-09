@@ -1,0 +1,40 @@
+.cmplz {
+  a.button, button.button, input.button {
+	font-size: var(--rsp-fs-300);
+	font-weight: 300;
+	letter-spacing: 0.5px;
+	transition: all 0.3s ease;
+
+	&.button-black {
+	  border: 0 solid transparent;
+	  background: var(--rsp-black);
+	  color: var(--rsp-text-color-white);
+	  &:hover, &:focus, &:active {
+		box-shadow: 0 0 0 1px #fff, 0 0 0 3px var(--rsp-black);
+	  }
+	}
+
+	&.button-tertiary, &.button-red {
+	  border: 0 solid transparent;
+	  background: var(--rsp-red);
+	  color: var(--rsp-text-color-white);
+	  &:hover, &:focus, &:active {
+		box-shadow: 0 0 0 1px #fff, 0 0 0 3px var(--rsp-red);
+		background: var(--rsp-red);
+		color: var(--rsp-text-color-white);
+	  }
+	}
+  }
+}
+/* Documents overview */
+.cmplz-shortcode {
+  right:10000px;
+  position:absolute;
+  background-color:#fff;
+  padding: 0;
+  white-space: nowrap;
+}
+
+.shortcode {
+  cursor:pointer;
+}

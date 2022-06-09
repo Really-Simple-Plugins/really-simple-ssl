@@ -1,0 +1,208 @@
+
+/* Grid */
+.rsssl {
+  .rsssl-header, .rsssl-content-area {
+	max-width: calc(100% - var(--rsp-spacing-xl) * 4);
+	margin: 0 auto;
+	@media(max-width: $rsp-break-xxl){
+	  max-width: calc(100% - var(--rsp-spacing-xl) * 1);
+	}
+	@media(max-width: $rsp-break-xl){
+	  max-width: calc(100% - var(--rsp-spacing-xl) * 2);
+	}
+	@media(max-width: $rsp-break-s){
+	  max-width: calc(100% - var(--rsp-spacing-xl) * 1);
+	}
+  }
+  .rsssl-header {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: space-between;
+	height: 70px;
+	box-sizing: border-box;
+	background-color: var(--rsp-background-block-color);
+	@media( max-width: $rsp-break-l ){
+	  height: auto;
+	}
+
+	img {
+	  margin: var(--rsp-spacing-m) 0;
+	}
+  }
+
+  .rsssl-header-left {
+	display: flex;
+	font-size: var(--rsp-fs-400);
+	@media( max-width: $rsp-break-l ){
+	  justify-content: center;
+	  margin: var(--rsp-spacing-xs) 0;
+	  order: 3;
+	  width: 100%;
+	  background-color: var(--rsp-background-block-color);
+	}
+
+	.rsssl-header-menu {
+	  margin: auto 15px;
+	  ul{
+		display: flex;
+	  }
+	  a {
+		padding: 23px 15px;
+		text-decoration: none;
+		color: var(--rsp-text-color);
+		height: 100%;
+		border-bottom: 4px solid transparent;
+		transition: border 0.3s ease-out;
+		box-sizing: border-box;
+		-moz-box-sizing: border-box;
+		-webkit-box-sizing: border-box;
+		@media( max-width: $rsp-break-l ){
+		  padding: 15px;
+		}
+
+		&.active {
+		  border-bottom: 4px solid var(--rsp-brand-primary);
+		}
+
+		&:hover {
+		  color: var(--rsp-brand-primary);
+		}
+	  }
+
+	}
+  }
+
+  .rsssl-header-right {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	margin-left: auto;
+	gap: var(--rsp-spacing-s);
+	select {
+	  max-width: 60ch;
+	}
+	@media( max-width: $rsp-break-xs ) {
+	  .button{
+		display: none;
+	  }
+	}
+  }
+
+  .rsssl-content-area {
+	margin-top: calc(var(--rsp-grid-margin) * 2);
+  }
+
+  .rsssl-header-container {
+	background: var(--rsp-background-block-color);
+  }
+  .rsssl-grid {
+	display: grid;
+	grid-template-columns: repeat(4, calc(25% - var(--rsp-spacing-s)) [col-start]); // We use calc because of the grid gap
+	grid-auto-rows: max-content;
+	gap: var(--rsp-grid-gap);
+	min-height: calc(100vh - 32px - 80px - 20px - var(--rsp-grid-gap)); //32px = wordpress bar, 80px = cmplz bar, 20px = margin-top, 20px is grid gap
+  }
+  .rsssl-grid-container {
+	@include cmplz-block;
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: flex-start;
+	flex-direction: column;
+	flex-basis: 100%;
+	min-height: 100%;
+	grid-column: span 1;
+	grid-row: span 1;
+	p{
+	  font-size: var(--rsp-fs-300);
+	}
+
+	&.no-background {
+	  background: none;
+	  border: none;
+	  box-shadow: none;
+	}
+	&.column-2 {
+	  grid-column: span 2;
+	}
+
+	&.row-2 {
+	  grid-row: span 2;
+	}
+	@media( max-width: $rsp-break-xxl ){
+	  grid-column: span 2;
+	  &.rsssl-progress, &.rsssl-overview{
+		grid-column: span 4;
+	  }
+	}
+	@media( max-width: $rsp-break-m ){
+	  grid-column: span 2;
+	  &.column-2 {
+		grid-column: span 4;
+	  }
+	}
+	@media( max-width: $rsp-break-s ) {
+	  grid-column: span 4;
+	}
+  }
+
+  .rsssl-grid-header {
+	width: 100%;
+	box-sizing: border-box;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding: var(--rsp-spacing-m) var(--rsp-spacing-l);
+	@media(max-width: $rsp-break-xl){
+	  padding: var(--rsp-spacing-s) var(--rsp-spacing-m);
+	}
+  }
+  .rsssl-grid-title, .rsssl-wizard-title .h4 {
+	margin: 4px 0 4px 0;
+  }
+
+  .rsssl-grid-controls {
+	font-size: var(--rsp-fs-300);
+	display: flex;
+	gap: var(--rsp-spacing-s);
+  }
+
+
+  .rsssl-grid-content {
+	width: 100%;
+	box-sizing: border-box;
+	padding: 0 var(--rsp-spacing-l);
+	@media(max-width: $rsp-break-xl){
+	  padding: 0 var(--rsp-spacing-m);
+	}
+	flex-grow: 100;
+  }
+
+  .rsssl-grid-footer {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	justify-content: space-between;
+	gap: var(--rsp-grid-margin);
+	width: 100%;
+	min-height: calc( 30px + var(--rsp-spacing-s) * 2);
+	box-sizing: border-box;
+	padding: var(--rsp-spacing-m) var(--rsp-spacing-l);
+	@media(max-width: $rsp-break-xl){
+	  padding: var(--rsp-spacing-s) var(--rsp-spacing-m);
+	}
+	align-self: flex-end;
+
+	  .rsssl-legend {
+		display:flex;
+		span {
+		  padding-left:5px;
+		}
+	  }
+	}
+  .rsssl-flex-push-right{
+	margin-left: auto;
+  }
+  .rsssl-flex-push-left{
+	margin-right: auto;
+  }
+}

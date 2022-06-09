@@ -1,0 +1,43 @@
+/**
+*
+* Prefix everything
+* Name descriptively
+* Structure radically
+*
+* CSS Structure
+*	css/
+*	├─ admin/
+*	│  ├─ base.scss
+*	│  ├─ layout.scss
+*	│  ├─ modules/
+*	│  │  ├─ button.scss
+*	│  │  ├─ modal.scss
+*	│  │  ├─ notices.scss
+*	│  │  ├─ tips-and-tricks.scss
+*	│  │  ├─ etc.....
+*	│  ├─ states.scss
+*	│  ├─ theme.scss
+*	├─ admin.scss
+*	├─ admin.min.css
+*	├─ admin.css
+*	├─ variables.scss
+*
+*/
+
+@import 'variables.scss';
+@import 'admin/base.scss';
+@import 'admin/layout.scss';
+  @import 'admin/modules/header.scss';
+  @import 'admin/modules/buttons.scss';
+  //@import 'admin/modules/dark-mode.scss';
+  //@import 'admin/modules/icons.scss';
+  //@import 'admin/modules/notices.scss';
+  //@import 'admin/modules/progress.scss';
+  //@import 'admin/modules/bullets.scss';
+  //@import 'admin/modules/tooltip.scss';
+  //@import 'admin/modules/icons.scss';
+  //@import 'admin/modules/other-plugins.scss';
+  //@import 'admin/modules/suggested-plugins.scss';
+  //@import 'admin/modules/tips-tricks.scss';
+@import 'admin/states.scss';
+@import 'admin/theme.scss';

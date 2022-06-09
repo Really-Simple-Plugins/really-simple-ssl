@@ -3466,9 +3466,9 @@ class rsssl_admin extends rsssl_front_end
     {
         //load on network admin or normal admin settings page
         if ( $hook !== 'settings_page_really-simple-ssl' && $hook !== 'settings_page_rlrsssl_really_simple_ssl' ) return;
-	    $minified = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? '' : '.min';
+	    $minified = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? '.css?debug='.time() : '.min.css';
         $rtl = is_rtl() ? '-rtl' : '';
-        $css_file = "main$rtl$minified.css";
+        $css_file = "admin$rtl$minified";
 	    wp_enqueue_style('rsssl-css', trailingslashit(rsssl_url) . "assets/css/$css_file", array(), rsssl_version);
         wp_enqueue_script('rsssl', trailingslashit(rsssl_url) . "assets/js/scripts$minified.js", array("jquery"), rsssl_version);
         wp_localize_script('rsssl', 'rsssl',
