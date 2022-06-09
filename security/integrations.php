@@ -289,7 +289,7 @@ function rsssl_integrations() {
 
 			// Apply fix automatically on high risk, low impact
 			//check if already executed
-			if ( $risk === 'high' && $impact === 'low' ) {
+			if ( $risk === 'high' && $impact === 'low' && is_admin() ) {
 				$fix = isset($details['actions']['fix']) ? $details['actions']['fix']: false;
 				rsssl_do_fix($fix);
 			}
