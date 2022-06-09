@@ -217,7 +217,8 @@ $rsssl_integrations_list = apply_filters( 'rsssl_integrations', array(
 		'risk'                 => 'medium',
 		'learning_mode'        => false,
 //		'option_id'            => '',
-		'type'                 => 'checkbox',
+        'always_include'       => true,
+        'type'                 => 'checkbox',
 //		'conditions'           => array(
 //			'relation' => 'AND',
 //			[
