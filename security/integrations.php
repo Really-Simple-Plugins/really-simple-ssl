@@ -211,13 +211,12 @@ $rsssl_integrations_list = apply_filters( 'rsssl_integrations', array(
 	),
 
 	'display-name-is-login-name' => array(
-		'label'                => __('Display name equals login name', 'really-simple-ssl'),
+		'label'                => __('Block user registration when login name equals display name', 'really-simple-ssl'),
 		'folder'               => 'wordpress',
 		'impact'               => 'low',
 		'risk'                 => 'medium',
 		'learning_mode'        => false,
-//		'option_id'            => '',
-        'always_include'       => true,
+		'option_id'            => 'block_registration_when_display_name_is_login_name',
         'type'                 => 'checkbox',
 //		'conditions'           => array(
 //			'relation' => 'AND',
