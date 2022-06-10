@@ -1,0 +1,53 @@
+.rsssl .rsssl-bullet {
+  height: 13px;
+  width: 13px;
+  -webkit-box-flex: 0;
+      -ms-flex: 0 0 13px;
+          flex: 0 0 13px;
+  border-radius: 50%;
+  display: inline-block;
+}
+.rsssl .rsssl-bullet.rsp-yellow {
+  background-color: var(--rsp-yellow);
+}
+.rsssl .rsssl-bullet.rsp-blue {
+  background-color: var(--rsp-blue);
+}
+.rsssl .rsssl-bullet.rsp-pink {
+  background-color: var(--rsp-pink);
+}
+.rsssl .rsssl-bullet.rsp-red {
+  background-color: var(--rsp-red);
+}
+.rsssl .rsssl-bullet.rsp-green {
+  background-color: var(--rsp-green);
+}
+.rsssl .rsssl-bullet.rsp-blue-yellow {
+  background: var(--rsp-blue);
+  background: linear-gradient(77deg, rgb(41, 182, 246) 0%, rgb(41, 182, 246) 30%, rgb(244, 191, 62) 70%, rgb(244, 191, 62) 100%);
+  -webkit-animation: gradient 2s ease infinite;
+          animation: gradient 2s ease infinite;
+  background-size: 200% 200%;
+}
+@-webkit-keyframes gradient {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+@keyframes gradient {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}

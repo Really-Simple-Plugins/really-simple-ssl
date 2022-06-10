@@ -127,7 +127,7 @@ class GridBlock extends Component {
             content,
         } = this.state;
         let blockData = this.props.block;
-        let className = "rsssl-item rsssl-"+blockData.size+" rsssl-"+blockData.id;
+        let className = "rsssl-grid-item rsssl-"+blockData.size+" rsssl-"+blockData.id;
         if ( this.props.block.content.type==='react') {
             content = this.props.block.content.data;
         }
@@ -140,20 +140,20 @@ class GridBlock extends Component {
         let DynamicBlockProps = { saveChangedFields: this.props.saveChangedFields, setBlockProps: this.setBlockProps, BlockProps: this.BlockProps, runTest: this.runTest, fields: this.props.fields, isApiLoaded: this.props.isApiLoaded, highLightField: this.highLightField };
         return (
             <div className={className}>
-                <div className="item-container">
-                    <div className="rsssl-grid-item-header">
-                        <h3>{ blockData.title }</h3>
+                <div className="rsssl-grid-item-header">
+                    <h3 className="burst-grid-title h4">{ blockData.title }</h3>
+                    <div className="rsssl-grid-item-controls">
                         {blockData.header && blockData.header.type==='url' && <a href={blockData.header.data}>{__("Instructions", "really-simple-ssl")}</a>}
                         {blockData.header && blockData.header.type==='html' && <span className="rsssl-header-html" dangerouslySetInnerHTML={{__html: blockData.header.data}}></span>}
                         {blockData.header && blockData.header.type==='react' && wp.element.createElement(dynamicComponents[blockData.header.data], DynamicBlockProps)}
                     </div>
-                    {!isAPILoaded && <Placeholder></Placeholder>}
-                    {blockData.content.type!=='react' && <div className="rsssl-grid-item-content" dangerouslySetInnerHTML={{__html: content}}></div>}
-                    {blockData.content.type==='react' && <div className="rsssl-grid-item-content">{wp.element.createElement(dynamicComponents[content], DynamicBlockProps)}</div>}
-                    <div className="rsssl-grid-item-footer">
-                        { blockData.footer.hasOwnProperty('button') && <GridButton text={blockData.footer.button.text} onClick={this.getBlockData} disabled={this.testDisabled}/>}
-                        { blockData.footer.type==='html' && <span className="rsssl-footer-html" dangerouslySetInnerHTML={{__html: this.footerHtml}}></span>}
-                    </div>
+                </div>
+                {!isAPILoaded && <Placeholder></Placeholder>}
+                {blockData.content.type!=='react' && <div className="rsssl-grid-item-content" dangerouslySetInnerHTML={{__html: content}}></div>}
+                {blockData.content.type==='react' && <div className="rsssl-grid-item-content">{wp.element.createElement(dynamicComponents[content], DynamicBlockProps)}</div>}
+                <div className="rsssl-grid-item-footer">
+                    { blockData.footer.hasOwnProperty('button') && <GridButton text={blockData.footer.button.text} onClick={this.getBlockData} disabled={this.testDisabled}/>}
+                    { blockData.footer.type==='html' && <span className="rsssl-footer-html" dangerouslySetInnerHTML={{__html: this.footerHtml}}></span>}
                 </div>
             </div>
         );

@@ -391,11 +391,15 @@ class Header extends Component {
 				<div className="rsssl-header">
 					<img className="rsssl-logo" src={plugin_url+"assets/img/really-simple-ssl-logo.png"} alt="Really Simple SSL logo" />
 					<div className="rsssl-header-left">
-						{menu.map((menu_item, i) => <a key={i} onClick={ () => this.handleClick(menu_item.id) } href='#' >{menu_item.label}</a>)}
+						<nav className="rsssl-header-menu">
+							<ul>
+							{menu.map((menu_item, i) => <li><a key={i} onClick={ () => this.handleClick(menu_item.id) } href='#' >{menu_item.label}</a></li>)}
+							</ul>
+						</nav>
 					</div>
 					<div className="rsssl-header-right">
 							<a href="https://really-simple-ssl.com/knowledge-base"
-								 className={rsssl_settings.premium && 'button button-primary'}
+								 className={!rsssl_settings.premium && 'button button-black'}
 								 target="_blank">{__("Documentation", "really-simple-ssl")}</a>
 							{rsssl_settings.premium &&
 								<a href="https://wordpress.org/support/plugin/really-simple-ssl/"
@@ -496,7 +500,7 @@ class Page extends Component {
 		return (
 			<div className="rsssl-wrapper">
 				<Header selectedMainMenuItem={selectedMainMenuItem} selectMainMenu={this.selectMainMenu} fields={fields}/>
-				<div className="rsssl-container">s
+				<div className="rsssl-content-area">
 					{selectedMainMenuItem==='settings' && <SettingsPage selectMenu={this.selectMenu} highLightField={this.highLightField} highLightedField={this.highLightedField} selectedMenuItem={selectedMenuItem} isAPILoaded={isAPILoaded} fields={fields} menu={menu} progress={progress}/> }
 					{selectedMainMenuItem==='dashboard' && <DashboardPage isAPILoaded={isAPILoaded} fields={fields} highLightField={this.highLightField}/> }
 				</div>

@@ -1,9 +1,9 @@
-.cmplz {
-  .cmplz-other-plugins .rsp-logo img {
+.rsssl {
+  .rsssl-other-plugins .rsp-logo img {
 	height: 34px;
   }
 
-  .cmplz-other-plugins-container {
+  .rsssl-other-plugins-container {
 	display: flex !important;
 	flex-direction: row;
 	flex-wrap: wrap;
@@ -17,7 +17,7 @@
 	  overflow: hidden;
 	}
 
-	.cmplz-other-plugins-element {
+	.rsssl-other-plugins-element {
 	  width: 100%;
 	  display: flex;
 	  align-content: space-between;
@@ -25,19 +25,19 @@
 	  gap: 10px;
 	  --rsp-other-plugins-color: var(---rsp-brand-primary);
 
-	  &.cmplz-zip {
+	  &.rsssl-zip {
 		--rsp-other-plugins-color: var(--rsp-pink);
 	  }
 
-	  &.cmplz-burst {
+	  &.rsssl-burst {
 		--rsp-other-plugins-color: var(--rsp-green);
 	  }
 
-	  &.cmplz-complianz, &.cmplz-complianztc {
+	  &.rsssl-complianz, &.rsssl-complianztc {
 		--rsp-other-plugins-color: var(--rsp-blue);
 	  }
 
-	  &.cmplz-rsssl {
+	  &.rsssl-rsssl {
 		--rsp-other-plugins-color: var(--rsp-yellow);
 	  }
 
@@ -55,27 +55,27 @@
 		  color: var(--rsp-other-plugins-color);
 		  text-decoration: underline;
 
-		  .cmplz-bullet {
+		  .rsssl-bullet {
 			background-color: var(--rsp-other-plugins-color);
 		  }
 
-		  .cmplz-other-plugins-content {
+		  .rsssl-other-plugins-content {
 			text-decoration: underline;
 		  }
 		}
 	  }
 
-	  .cmplz-bullet {
+	  .rsssl-bullet {
 		transition: background-color 0.3s ease;
 		background-color: var(--rsp-other-plugins-color);
 	  }
 
-	  .cmplz-other-plugins-content {
+	  .rsssl-other-plugins-content {
 		white-space: nowrap;
 		overflow: hidden;
 		text-overflow: ellipsis;
 	  }
-	  .cmplz-other-plugin-status{
+	  .rsssl-other-plugin-status{
 		min-width: fit-content;
 	  }
 	}

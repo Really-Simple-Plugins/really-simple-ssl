@@ -239,6 +239,9 @@
   display: -ms-flexbox;
   display: flex;
 }
+.rsssl .rsssl-header-left .rsssl-header-menu li {
+  margin-bottom: 0;
+}
 .rsssl .rsssl-header-left .rsssl-header-menu a {
   padding: 23px 15px;
   text-decoration: none;
@@ -298,7 +301,7 @@
   gap: var(--rsp-grid-gap);
   min-height: calc(100vh - 32px - 80px - 20px - var(--rsp-grid-gap));
 }
-.rsssl .rsssl-grid-container {
+.rsssl .rsssl-grid-item {
   background: var(--rsp-background-block-color);
   -webkit-box-shadow: var(--rsp-box-shadow);
           box-shadow: var(--rsp-box-shadow);
@@ -323,50 +326,50 @@
   -ms-grid-row-span: 1;
   grid-row: span 1;
 }
-.rsssl .rsssl-grid-container p {
+.rsssl .rsssl-grid-item p {
   font-size: var(--rsp-fs-300);
 }
-.rsssl .rsssl-grid-container.no-background {
+.rsssl .rsssl-grid-item.no-background {
   background: none;
   border: none;
   -webkit-box-shadow: none;
           box-shadow: none;
 }
-.rsssl .rsssl-grid-container.column-2 {
+.rsssl .rsssl-grid-item.column-2 {
   -ms-grid-column-span: 2;
   grid-column: span 2;
 }
-.rsssl .rsssl-grid-container.row-2 {
+.rsssl .rsssl-grid-item.row-2 {
   -ms-grid-row-span: 2;
   grid-row: span 2;
 }
 @media (max-width: 1599px) {
-  .rsssl .rsssl-grid-container {
+  .rsssl .rsssl-grid-item {
     -ms-grid-column-span: 2;
     grid-column: span 2;
   }
-  .rsssl .rsssl-grid-container.rsssl-progress, .rsssl .rsssl-grid-container.rsssl-overview {
+  .rsssl .rsssl-grid-item.rsssl-progress, .rsssl .rsssl-grid-item.rsssl-overview {
     -ms-grid-column-span: 4;
     grid-column: span 4;
   }
 }
 @media (max-width: 992px) {
-  .rsssl .rsssl-grid-container {
+  .rsssl .rsssl-grid-item {
     -ms-grid-column-span: 2;
     grid-column: span 2;
   }
-  .rsssl .rsssl-grid-container.column-2 {
+  .rsssl .rsssl-grid-item.column-2 {
     -ms-grid-column-span: 4;
     grid-column: span 4;
   }
 }
 @media (max-width: 768px) {
-  .rsssl .rsssl-grid-container {
+  .rsssl .rsssl-grid-item {
     -ms-grid-column-span: 4;
     grid-column: span 4;
   }
 }
-.rsssl .rsssl-grid-header {
+.rsssl .rsssl-grid-item-header {
   width: 100%;
   -webkit-box-sizing: border-box;
           box-sizing: border-box;
@@ -382,21 +385,21 @@
   padding: var(--rsp-spacing-m) var(--rsp-spacing-l);
 }
 @media (max-width: 1440px) {
-  .rsssl .rsssl-grid-header {
+  .rsssl .rsssl-grid-item-header {
     padding: var(--rsp-spacing-s) var(--rsp-spacing-m);
   }
 }
-.rsssl .rsssl-grid-title, .rsssl .rsssl-wizard-title .h4 {
+.rsssl .rsssl-grid-item-title {
   margin: 4px 0 4px 0;
 }
-.rsssl .rsssl-grid-controls {
+.rsssl .rsssl-grid-item-controls {
   font-size: var(--rsp-fs-300);
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
   gap: var(--rsp-spacing-s);
 }
-.rsssl .rsssl-grid-content {
+.rsssl .rsssl-grid-item-content {
   width: 100%;
   -webkit-box-sizing: border-box;
           box-sizing: border-box;
@@ -406,11 +409,11 @@
           flex-grow: 100;
 }
 @media (max-width: 1440px) {
-  .rsssl .rsssl-grid-content {
+  .rsssl .rsssl-grid-item-content {
     padding: 0 var(--rsp-spacing-m);
   }
 }
-.rsssl .rsssl-grid-footer {
+.rsssl .rsssl-grid-item-footer {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -432,16 +435,16 @@
       align-self: flex-end;
 }
 @media (max-width: 1440px) {
-  .rsssl .rsssl-grid-footer {
+  .rsssl .rsssl-grid-item-footer {
     padding: var(--rsp-spacing-s) var(--rsp-spacing-m);
   }
 }
-.rsssl .rsssl-grid-footer .rsssl-legend {
+.rsssl .rsssl-grid-item-footer .rsssl-legend {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
 }
-.rsssl .rsssl-grid-footer .rsssl-legend span {
+.rsssl .rsssl-grid-item-footer .rsssl-legend span {
   padding-left: 5px;
 }
 .rsssl .rsssl-flex-push-right {
@@ -512,6 +515,377 @@
 }
 .rsssl-header-container .rsssl-header .rsssl-header-actions select {
   max-width: 60ch;
+}
+
+.rsssl a.button, .rsssl button.button, .rsssl input.button {
+  font-size: var(--rsp-fs-300);
+  font-weight: 300;
+  letter-spacing: 0.5px;
+  -webkit-transition: all 0.3s ease;
+  transition: all 0.3s ease;
+}
+.rsssl a.button.button-black, .rsssl button.button.button-black, .rsssl input.button.button-black {
+  border: 0 solid transparent;
+  background: var(--rsp-black);
+  color: var(--rsp-text-color-white);
+}
+.rsssl a.button.button-black:hover, .rsssl a.button.button-black:focus, .rsssl a.button.button-black:active, .rsssl button.button.button-black:hover, .rsssl button.button.button-black:focus, .rsssl button.button.button-black:active, .rsssl input.button.button-black:hover, .rsssl input.button.button-black:focus, .rsssl input.button.button-black:active {
+  -webkit-box-shadow: 0 0 0 1px #fff, 0 0 0 3px var(--rsp-black);
+          box-shadow: 0 0 0 1px #fff, 0 0 0 3px var(--rsp-black);
+}
+.rsssl a.button.button-tertiary, .rsssl a.button.button-red, .rsssl button.button.button-tertiary, .rsssl button.button.button-red, .rsssl input.button.button-tertiary, .rsssl input.button.button-red {
+  border: 0 solid transparent;
+  background: var(--rsp-red);
+  color: var(--rsp-text-color-white);
+}
+.rsssl a.button.button-tertiary:hover, .rsssl a.button.button-tertiary:focus, .rsssl a.button.button-tertiary:active, .rsssl a.button.button-red:hover, .rsssl a.button.button-red:focus, .rsssl a.button.button-red:active, .rsssl button.button.button-tertiary:hover, .rsssl button.button.button-tertiary:focus, .rsssl button.button.button-tertiary:active, .rsssl button.button.button-red:hover, .rsssl button.button.button-red:focus, .rsssl button.button.button-red:active, .rsssl input.button.button-tertiary:hover, .rsssl input.button.button-tertiary:focus, .rsssl input.button.button-tertiary:active, .rsssl input.button.button-red:hover, .rsssl input.button.button-red:focus, .rsssl input.button.button-red:active {
+  -webkit-box-shadow: 0 0 0 1px #fff, 0 0 0 3px var(--rsp-red);
+          box-shadow: 0 0 0 1px #fff, 0 0 0 3px var(--rsp-red);
+  background: var(--rsp-red);
+  color: var(--rsp-text-color-white);
+}
+
+/* Documents overview */
+.rsssl-shortcode {
+  right: 10000px;
+  position: absolute;
+  background-color: #fff;
+  padding: 0;
+  white-space: nowrap;
+}
+
+.shortcode {
+  cursor: pointer;
+}
+
+.rsssl .rsssl-bullet {
+  height: 13px;
+  width: 13px;
+  -webkit-box-flex: 0;
+      -ms-flex: 0 0 13px;
+          flex: 0 0 13px;
+  border-radius: 50%;
+  display: inline-block;
+  background-color: var(--rsp-grey-300);
+}
+.rsssl .rsssl-bullet.rsp-yellow {
+  background-color: var(--rsp-yellow);
+}
+.rsssl .rsssl-bullet.rsp-blue {
+  background-color: var(--rsp-blue);
+}
+.rsssl .rsssl-bullet.rsp-pink {
+  background-color: var(--rsp-pink);
+}
+.rsssl .rsssl-bullet.rsp-red {
+  background-color: var(--rsp-red);
+}
+.rsssl .rsssl-bullet.rsp-green {
+  background-color: var(--rsp-green);
+}
+.rsssl .rsssl-bullet.rsp-blue-yellow {
+  background: var(--rsp-blue);
+  background: linear-gradient(77deg, rgb(41, 182, 246) 0%, rgb(41, 182, 246) 30%, rgb(244, 191, 62) 70%, rgb(244, 191, 62) 100%);
+  -webkit-animation: gradient 2s ease infinite;
+          animation: gradient 2s ease infinite;
+  background-size: 200% 200%;
+}
+@-webkit-keyframes gradient {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+@keyframes gradient {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.rsssl-progress-block {
+  padding-top: 10px;
+}
+.rsssl-progress-block .rsssl-progress {
+  overflow: hidden;
+  height: 20px;
+  border-radius: 5px;
+  background-color: #f7f7f7;
+}
+.rsssl-progress-block .rsssl-progress .rsssl-bar {
+  height: 100%;
+  background-color: var(--rsp-color-success);
+}
+.rsssl-progress-block .rsssl-progress .rsssl-bar.rsssl-orange {
+  background-color: var(--rsp-color-warning);
+}
+.rsssl-progress-block .rsssl-progress-text {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  margin: 10px 0;
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+.rsssl-progress-block .rsssl-progress-text .rsssl-progress-percentage {
+  font-size: 32px;
+  font-weight: 700;
+}
+.rsssl-progress-block .rsssl-progress-text .rsssl-progress-text {
+  margin-left: 35px;
+  font-size: 18px;
+  font-weight: 600;
+}
+.rsssl-progress-block .rsssl-progress-text .rsssl-progress-text a {
+  margin-left: 3px;
+}
+
+.rsssl-header-html {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  color: var(--rsp-text-color-light);
+}
+.rsssl-header-html .rsssl-toggle-active {
+  text-decoration: underline;
+}
+
+.rsssl-task-control-container {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+}
+.rsssl-task-control-container label {
+  margin: 0 5px;
+  border-bottom: 1px solid lightgrey;
+  color: lightgrey;
+}
+.rsssl-task-control-container.rsssl-active-filter-remaining .rsssl-remaining-tasks label {
+  text-decoration: none;
+  border-bottom: 0;
+  color: initial;
+}
+.rsssl-task-control-container.rsssl-active-filter-all .rsssl-all-tasks label {
+  text-decoration: none;
+  border-bottom: 0;
+  color: initial;
+}
+
+/**
+* Task element, list of tasks
+ */
+.rsssl-task-element {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  gap: var(--rsp-spacing-m);
+  padding-bottom: var(--rsp-spacing-s);
+}
+.rsssl-task-element .rsssl-task-message {
+  -webkit-box-flex: 1;
+      -ms-flex: 1;
+          flex: 1;
+}
+.rsssl-task-element .rsssl-task-enable {
+  cursor: pointer;
+}
+.rsssl-task-element .rsssl-task-dismiss button {
+  all: initial;
+}
+.rsssl-task-element .rsssl-task-dismiss span {
+  font-size: 1.5em;
+  color: black;
+  font-family: sans-serif;
+}
+.rsssl-task-element .rsssl-task-dismiss span:hover {
+  cursor: pointer;
+  color: grey;
+}
+.rsssl-task-element .rsssl-task-dismiss span svg {
+  height: 12px;
+  width: 12px;
+}
+
+.rsssl .rsssl-other-plugins .rsp-logo img {
+  height: 34px;
+}
+.rsssl .rsssl-other-plugins-container {
+  display: -webkit-box !important;
+  display: -ms-flexbox !important;
+  display: flex !important;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: row;
+          flex-direction: row;
+  -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
+  margin-bottom: 10px;
+  font-size: var(--rsp-fs-300);
+  line-height: 1.7;
+  gap: var(--rsp-spacing-xxs);
+}
+@media screen and (max-width: 992px) {
+  .rsssl .rsssl-other-plugins-container {
+    -webkit-box-orient: horizontal;
+    -webkit-box-direction: normal;
+        -ms-flex-direction: row;
+            flex-direction: row;
+    overflow: hidden;
+  }
+}
+.rsssl .rsssl-other-plugins-container .rsssl-other-plugins-element {
+  width: 100%;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-line-pack: justify;
+      align-content: space-between;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  gap: 10px;
+  --rsp-other-plugins-color: var(---rsp-brand-primary);
+}
+.rsssl .rsssl-other-plugins-container .rsssl-other-plugins-element.rsssl-zip {
+  --rsp-other-plugins-color: var(--rsp-pink);
+}
+.rsssl .rsssl-other-plugins-container .rsssl-other-plugins-element.rsssl-burst {
+  --rsp-other-plugins-color: var(--rsp-green);
+}
+.rsssl .rsssl-other-plugins-container .rsssl-other-plugins-element.rsssl-complianz, .rsssl .rsssl-other-plugins-container .rsssl-other-plugins-element.rsssl-complianztc {
+  --rsp-other-plugins-color: var(--rsp-blue);
+}
+.rsssl .rsssl-other-plugins-container .rsssl-other-plugins-element.rsssl-rsssl {
+  --rsp-other-plugins-color: var(--rsp-yellow);
+}
+.rsssl .rsssl-other-plugins-container .rsssl-other-plugins-element a {
+  width: -webkit-max-content;
+  width: -moz-max-content;
+  width: max-content;
+  color: var(--rsp-text-color-light);
+  -webkit-transition: color 0.3s ease;
+  transition: color 0.3s ease;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  min-width: 0;
+  gap: var(--rsp-spacing-xs);
+  text-decoration: none;
+}
+.rsssl .rsssl-other-plugins-container .rsssl-other-plugins-element a:hover {
+  color: var(--rsp-other-plugins-color);
+  text-decoration: underline;
+}
+.rsssl .rsssl-other-plugins-container .rsssl-other-plugins-element a:hover .rsssl-bullet {
+  background-color: var(--rsp-other-plugins-color);
+}
+.rsssl .rsssl-other-plugins-container .rsssl-other-plugins-element a:hover .rsssl-other-plugins-content {
+  text-decoration: underline;
+}
+.rsssl .rsssl-other-plugins-container .rsssl-other-plugins-element .rsssl-bullet {
+  -webkit-transition: background-color 0.3s ease;
+  transition: background-color 0.3s ease;
+  background-color: var(--rsp-other-plugins-color);
+}
+.rsssl .rsssl-other-plugins-container .rsssl-other-plugins-element .rsssl-other-plugins-content {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.rsssl .rsssl-other-plugins-container .rsssl-other-plugins-element .rsssl-other-plugin-status {
+  min-width: -webkit-fit-content;
+  min-width: -moz-fit-content;
+  min-width: fit-content;
+}
+
+.rsssl-tips-tricks-container {
+  display: -webkit-box !important;
+  display: -ms-flexbox !important;
+  display: flex !important;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: row;
+          flex-direction: row;
+  -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
+  margin-bottom: 10px;
+  font-size: var(--rsp-fs-300);
+  line-height: 1.7;
+  gap: var(--rsp-spacing-xxs);
+}
+@media screen and (max-width: 992px) {
+  .rsssl-tips-tricks-container {
+    -webkit-box-orient: horizontal;
+    -webkit-box-direction: normal;
+        -ms-flex-direction: row;
+            flex-direction: row;
+    overflow: hidden;
+  }
+}
+.rsssl-tips-tricks-container .rsssl-tips-tricks-element {
+  width: calc(50% - var(--rsp-spacing-xxs));
+}
+@media (max-width: 576px) {
+  .rsssl-tips-tricks-container .rsssl-tips-tricks-element {
+    width: 100%;
+  }
+}
+.rsssl-tips-tricks-container .rsssl-tips-tricks-element a {
+  color: var(--rsp-text-color-light);
+  -webkit-transition: color 0.3s ease;
+  transition: color 0.3s ease;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  gap: var(--rsp-spacing-xs);
+  min-width: 0;
+  /* or some value */
+  text-decoration: none;
+}
+.rsssl-tips-tricks-container .rsssl-tips-tricks-element a:hover {
+  color: var(--rsp-brand-primary);
+  text-decoration: underline;
+}
+.rsssl-tips-tricks-container .rsssl-tips-tricks-element a:hover .rsssl-bullet {
+  background-color: var(--rsp-brand-primary);
+}
+.rsssl-tips-tricks-container .rsssl-tips-tricks-element a:hover .rsssl-tips-tricks-content {
+  text-decoration: underline;
+}
+.rsssl-tips-tricks-container .rsssl-tips-tricks-element .rsssl-bullet {
+  -webkit-transition: background-color 0.3s ease;
+  transition: background-color 0.3s ease;
+  background-color: var(--rsp-grey-300);
+}
+.rsssl-tips-tricks-container .rsssl-tips-tricks-element .rsssl-tips-tricks-content {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .rsssl {
@@ -601,7 +975,7 @@
 }
 
 :root {
-  --rsp-brand-primary: var(--rsp-blue);
-  --rsp-brand-secondary: var(--rsp-yellow);
-  --rsp-brand-primary-faded: var(--rsp-blue-faded);
+  --rsp-brand-primary: var(--rsp-yellow);
+  --rsp-brand-secondary: var(--rsp-blue);
+  --rsp-brand-primary-faded: var(--rsp-yellow-faded);
 }

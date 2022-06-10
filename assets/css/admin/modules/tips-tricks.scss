@@ -1,4 +1,4 @@
-.cmplz-tips-tricks-container {
+.rsssl-tips-tricks-container {
   display: flex !important;
   flex-direction: row;
   flex-wrap: wrap;
@@ -12,7 +12,7 @@
 	overflow: hidden;
   }
 
-  .cmplz-tips-tricks-element {
+  .rsssl-tips-tricks-element {
 	width: calc(50% - var(--rsp-spacing-xxs));
 	@media( max-width: $rsp-break-xs ){
 	  width: 100%;
@@ -30,21 +30,21 @@
 		color: var(--rsp-brand-primary);
 		text-decoration: underline;
 
-		.cmplz-bullet {
+		.rsssl-bullet {
 		  background-color: var(--rsp-brand-primary);
 		}
 
-		.cmplz-tips-tricks-content {
+		.rsssl-tips-tricks-content {
 		  text-decoration: underline;
 		}
 	  }
 	}
 
-	.cmplz-bullet {
+	.rsssl-bullet {
 	  transition: background-color 0.3s ease;
 	  background-color: var(--rsp-grey-300);
 	}
-	.cmplz-tips-tricks-content {
+	.rsssl-tips-tricks-content {
 	  white-space: nowrap;
 	  overflow: hidden;
 	  text-overflow: ellipsis;

@@ -20,16 +20,10 @@ $items = [
 	],
 ];
 
-?>
-<div id="rsssl-progress-footer">
-    <span class="rsssl-footer-item footer-left">
-        <?php echo apply_filters("rsssl_progress_footer_left", '').$activate_btn.apply_filters("rsssl_progress_footer_right", $go_pro )?>
-    </span>
-	<?php
-	foreach ($items as $item) { ?>
-		<span class="rsssl-footer-item footer-right">
-		    <span class="rsssl-grid-footer rsssl-dot <?php echo $item['class']?>"></span>
-            <?php echo $item['text']?>
-		</span>
-	<?php }  ?>
-</div>
+echo apply_filters("rsssl_progress_footer_left", '').$activate_btn.apply_filters("rsssl_progress_footer_right", $go_pro );
+foreach ($items as $item) { ?>
+    <div class="rsssl-legend">
+        <span class="rsssl-grid-footer rsssl-bullet <?php echo $item['class']?>"></span>
+        <?php echo $item['text']?>
+    </div>
+<?php }  ?>

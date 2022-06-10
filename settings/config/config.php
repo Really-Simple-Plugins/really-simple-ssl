@@ -363,12 +363,12 @@ function rsssl_blocks(){
 			'id'      => 'progress',
 			'title'   => __( "Progress", 'really-simple-ssl' ),
 			'help'    => __( 'A help text', 'really-simple-ssl' ),
-			'header' => [
+			'header' => [ // @todo @rogier zullen we deze benaming veranderen naar controls?
 				'type' => 'react', 'data' => 'ProgressHeader'
 			],
 			'content' => ['type'=>'react', 'data' => 'ProgressBlock'],
 			'footer'  => ['type'=>'template', 'data' => 'progress-footer.php'],
-			'size'    => 'default',
+			'size'    => 'default', // @todo @rogier Zullen we dit gewoon veranderen naar class ipv size and height?
 			'height'    => 'default',
 		],
 		[
@@ -410,7 +410,7 @@ function rsssl_blocks(){
 			'help'    => __( 'A help text', 'really-simple-ssl' ),
 			'content' => ['type'=>'template', 'data' => 'other-plugins.php'],
 			'footer'  => ['type'=>'html', 'data' => ''],
-			'size'    => 'default',
+			'size'    => 'default no-border no-background',
 			'height'    => 'half',
 		],
 	];

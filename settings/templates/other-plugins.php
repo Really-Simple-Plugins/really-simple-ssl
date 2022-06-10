@@ -1,57 +1,44 @@
 <?php defined('ABSPATH') or die("you do not have access to this page!");
 $plugins = array(
+	'BURST' => array(
+		'constant_free' => 'burst_version',
+		'constant_premium' => 'burst_version',
+		'website' => 'https://burst-statistics.com/?src=rsssl-plugin',
+		'search' => 'burst+statistics+really+simple+plugins+self-hosted',
+		'url' => 'https://wordpress.org/plugins/burst-statistics/',
+		'title' => 'Burst Statistics - '. __("Self-hosted, Privacy-friendly analytics tool.", "really-simple-ssl"),
+	),
+    'COMPLIANZ' => array(
+        'constant_free' => 'cmplz_plugin',
+        'constant_premium' => 'cmplz_premium',
+        'url' => 'https://wordpress.org/plugins/complianz-gdpr/',
+        'website' => 'https://complianz.io/pricing?src=rsssl-plugin',
+        'search' => 'complianz',
+        'title' => __("Complianz Privacy Suite - Cookie Consent Management as it should be ", "really-simple-ssl" ),
+    ),
 	'COMPLIANZTC' => array(
 		'constant_free' => 'cmplz_tc_version',
 		'constant_premium' => 'cmplz_tc_version',
+		'url' => 'https://wordpress.org/plugins/complianz-terms-conditions/',
 		'website' => 'https://complianz.io?src=rsssl-plugin',
 		'search' => 'complianz+terms+conditions+stand-alone',
-	),
-	'COMPLIANZ' => array(
-		'constant_free' => 'cmplz_plugin',
-		'constant_premium' => 'cmplz_premium',
-		'website' => 'https://complianz.io/pricing/?src=rsssl-plugin',
-		'search' => 'complianz+really+simple+cookies+rogierlankhorst',
-	),
-	'ZIP' => array(
-		'constant_free' => 'ZRDN_PLUGIN_BASENAME',
-		'constant_premium' => 'ZRDN_PREMIUM',
-		'website' => 'https://ziprecipes.net/premium/?src=rsssl-plugin',
-		'search' => 'zip+recipes+recipe+maker+really+simple+plugins+complianz',
+		'title' => 'Complianz - '. __("Terms and Conditions", "really-simple-ssl"),
+
 	),
 );
 ?>
-<div>
-	<div class="rsssl-upsell rsssl-cmplz">
-		<div class="plugin-color">
-			<div class="cmplz-blue rsssl-bullet"></div>
-		</div>
-		<div class="plugin-text">
-			<a href="https://wordpress.org/plugins/complianz-gdpr/" target="_blank">Complianz – GDPR/CCPA Cookie Consent</a>
-		</div>
-		<div class="plugin-status">
-			<?php echo RSSSL()->really_simple_ssl->get_status_link($plugins['COMPLIANZ'])?>
-		</div>
-	</div>
-	<div class="rsssl-upsell rsssl-zip">
-		<div class="plugin-color">
-			<div class="zip-pink rsssl-bullet"></div>
-		</div>
-		<div class="plugin-text">
-            <a href="https://wordpress.org/plugins/zip-recipes/" target="_blank">Zip Recipes - <?php _e("Beautiful recipes optimized for Google ", "really-simple-ssl")?></a>
+<div class="rsssl-other-plugins-container">
+	<?php foreach ($plugins as $id => $plugin) {
+		$prefix = strtolower($id);
+		?>
+        <div class="rsssl-other-plugins-element rsssl-<?php echo $prefix?>">
+            <a href="<?php echo esc_url_raw($plugin['url'])?>" target="_blank" title="<?php echo esc_html($plugin['title'])?>">
+                <div class="rsssl-bullet"></div>
+                <div class="rsssl-other-plugins-content"><?php echo esc_html($plugin['title'])?></div>
+            </a>
+            <div class="rsssl-other-plugin-status">
+				<?php echo RSSSL()->really_simple_ssl->get_status_link($plugin)?>
+            </div>
         </div>
-		<div class="plugin-status">
-			<?php echo RSSSL()->really_simple_ssl->get_status_link($plugins['ZIP'])?>
-		</div>
-	</div>
-    <div class="rsssl-upsell rsssl-cmplztc">
-        <div class="plugin-color">
-            <div class="cmplztc-black rsssl-bullet"></div>
-        </div>
-        <div class="plugin-text">
-            <a href="https://wordpress.org/plugins/complianz-terms-conditions/" target="_blank">Complianz - Terms & Conditions</a>
-        </div>
-        <div class="plugin-status">
-			<?php echo RSSSL()->really_simple_ssl->get_status_link($plugins['COMPLIANZTC'])?>
-        </div>
-    </div>
+	<?php }?>
 </div>

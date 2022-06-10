@@ -1,11 +1,12 @@
-.cmplz{
-  // cmplz bullets
-  .cmplz-bullet {
+.rsssl{
+  // rsssl bullets
+  .rsssl-bullet {
 	height: 13px;
 	width: 13px;
 	flex: 0 0 13px;
 	border-radius: 50%;
 	display: inline-block;
+  	background-color: var(--rsp-grey-300);
 	&.rsp-yellow {
 	  background-color: var(--rsp-yellow);
 	}
