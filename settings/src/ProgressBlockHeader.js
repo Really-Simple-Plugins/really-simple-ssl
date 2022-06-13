@@ -15,7 +15,6 @@ class ProgressHeader extends Component {
         this.setState({
             filter: this.filter,
         })
-
     }
 
     onClickHandler(e){
@@ -47,7 +46,7 @@ class ProgressHeader extends Component {
         }
 
         return (
-            <div className={"rsssl-task-control-container rsssl-active-filter-"+this.filter}>
+            <div className={"rsssl-task-switcher rsssl-active-filter-"+this.filter}>
                 <div className="rsssl-all-tasks">
                     <label onClick={this.onClickHandler} htmlFor="rsssl-all-tasks" data-filter="all">
                         { __( "All tasks", "really-simple-ssl" ) }

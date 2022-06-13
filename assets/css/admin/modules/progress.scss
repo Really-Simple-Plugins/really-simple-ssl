@@ -41,7 +41,6 @@
   }
 }
 
-
 .rsssl-header-html {
   display: flex;
   color: var(--rsp-text-color-light);
@@ -50,28 +49,48 @@
     text-decoration: underline;
   }
 }
-
-.rsssl-task-control-container {
+.cmplz-task-switcher-container{
   display: flex;
-
-  label {
-    margin: 0 5px;
-    border-bottom: 1px solid lightgrey;
-    color: lightgrey;
-  }
-
-  &.rsssl-active-filter-remaining .rsssl-remaining-tasks label {
-    text-decoration: none;
-    border-bottom: 0;
-    color: initial;
-  }
-
-  &.rsssl-active-filter-all .rsssl-all-tasks label {
-    text-decoration: none;
-    border-bottom: 0;
-    color: initial;
+  border-radius: var(--rsp-border-radius);
+  .cmplz-task-switcher{
+    &:first-of-type{
+      border-right: 1px solid var(--rsp-grey-400);
+      padding-right: 10px;
+    }
+    &:last-of-type{
+      padding-left: 10px;
+    }
   }
 }
+.cmplz-task-switcher {
+  font-size: var(--rsp-fs-200);
+  cursor:	pointer;
+  transition: 0.3s;
+  &:hover, &.active, &.active:hover{
+    text-decoration: underline;
+  }
+}
+//.rsssl-task-control-container {
+//  display: flex;
+//
+//  label {
+//    margin: 0 5px;
+//    border-bottom: 1px solid lightgrey;
+//    color: lightgrey;
+//  }
+//
+//  &.rsssl-active-filter-remaining .rsssl-remaining-tasks label {
+//    text-decoration: none;
+//    border-bottom: 0;
+//    color: initial;
+//  }
+//
+//  &.rsssl-active-filter-all .rsssl-all-tasks label {
+//    text-decoration: none;
+//    border-bottom: 0;
+//    color: initial;
+//  }
+//}
 
 /**
 * Task element, list of tasks
@@ -113,5 +132,73 @@
       }
     }
   }
+}
+.rsssl-scroll-container {
+  margin-top: 20px;
+  height: 242px;
+  overflow-y: auto;
+  padding: 0;
+  border-radius: 0;
+
+  &::-webkit-scrollbar-track {
+    border-radius: 10px;
+    -webkit-box-shadow: inset 0 0 2px rgba(0, 0, 0, 0);
+    background-color: transparent;
+  }
+
+  &::-webkit-scrollbar {
+    width: 8px;
+    background-color: var(--rsp-grey-300);
+    cursor: pointer;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: var(--rsp-grey-400);
+    border-radius: 10px;
+  }
+}
+.rsssl-progress-status-container {
+  margin-right:40px;
+}
+
+.rsssl-task-status {
+  display: block;
+  min-width: 96px;
+  text-align: center;
+  border-radius: 15px;
+  padding: 4px 8px;
+  font-size: var(--rsp-fs-100);
+  font-weight: 600;
+
+  &.rsssl-completed {
+    background-color: var(--rsp-color-success);
+    color: var(--rsp-text-color-white);
+  }
+
+  &.rsssl-open {
+    background-color: var(--rsp-color-open);
+  }
+
+  &.rsssl-urgent {
+    background-color: var(--rsp-color-error);
+    color: var(--rsp-text-color-white);
+  }
+
+  &.rsssl-warning {
+    background-color: var(--rsp-color-warning);
+    color: var(--rsp-text-color-white);
+  }
+
+  &.rsssl-premium {
+    background-color: var(--rsp-color-success);
+    color: var(--rsp-text-color-white);
+  }
+}
+.rsssl-plusone {
+  border-radius: 50%;
+  background-color: x;
+  color: #fff;
+  padding: 2px 6px;
+  font-size: 10px;
 }
 

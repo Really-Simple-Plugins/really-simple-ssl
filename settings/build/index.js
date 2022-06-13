@@ -3170,11 +3170,9 @@ var TaskElement = /*#__PURE__*/function (_Component) {
       var notice = this.props.notice;
       return Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_5__["createElement"])("div", {
         className: "rsssl-task-element"
-      }, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_5__["createElement"])("div", {
-        className: "rsssl-task-icon"
       }, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_5__["createElement"])("span", {
-        className: 'rsssl-progress-status rsssl-' + notice.output.icon
-      }, notice.output.label)), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_5__["createElement"])("div", {
+        className: 'rsssl-task-status rsssl-' + notice.output.icon
+      }, notice.output.label), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_5__["createElement"])("p", {
         className: "rsssl-task-message",
         dangerouslySetInnerHTML: {
           __html: notice.output.msg
@@ -3189,9 +3187,9 @@ var TaskElement = /*#__PURE__*/function (_Component) {
         className: "rsssl-dashboard-plusone update-plugins rsssl-update-count"
       }, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_5__["createElement"])("span", {
         className: "update-count"
-      }, "1")), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_5__["createElement"])("div", {
+      }, "1")), notice.output.dismissible && Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_5__["createElement"])("div", {
         className: "rsssl-task-dismiss"
-      }, notice.output.dismissible && Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_5__["createElement"])("button", {
+      }, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_5__["createElement"])("button", {
         type: "button",
         "data-id": notice.id,
         onClick: this.props.onCloseTaskHandler
@@ -3471,7 +3469,7 @@ var ProgressHeader = /*#__PURE__*/function (_Component) {
       }
 
       return Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_5__["createElement"])("div", {
-        className: "rsssl-task-control-container rsssl-active-filter-" + this.filter
+        className: "rsssl-task-switcher rsssl-active-filter-" + this.filter
       }, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_5__["createElement"])("div", {
         className: "rsssl-all-tasks"
       }, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_5__["createElement"])("label", {
