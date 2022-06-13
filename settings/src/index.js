@@ -5,14 +5,17 @@ import {
     Button,
     Panel,
     PanelBody,
+		PanelRow,
     Placeholder,
 } from '@wordpress/components';
+
 
 import {
     Fragment,
     render,
     Component,
 } from '@wordpress/element';
+import { more } from '@wordpress/icons';
 
 import { __ } from '@wordpress/i18n';
 import Field from './fields';
@@ -75,11 +78,17 @@ class SettingsGroup extends Component {
 			}
 		}
 		return (
-			<div className="rsssl-grouped-fields">
-				{selectedMenuItem.title && <PanelBody><h1 className="rsssl-settings-block-title">{selectedMenuItem.title}</h1></PanelBody>}
-				{selectedMenuItem.intro && <PanelBody><div className="rsssl-settings-block-intro">{selectedMenuItem.intro}</div></PanelBody>}
-				{selectedFields.map((field, i) => <Field key={i} index={i} highLightField={this.props.highLightField} highLightedField={this.props.highLightedField} saveChangedFields={this.props.saveChangedFields} field={field} fields={selectedFields}/>)}
-			</div>
+				<Panel>
+					<PanelBody title={selectedMenuItem.title} initialOpen={ true }>
+						{selectedMenuItem.intro && <div className="rsssl-settings-block-intro">{selectedMenuItem.intro}</div>}
+						{selectedFields.map((field, i) => <Field key={i} index={i} highLightField={this.props.highLightField} highLightedField={this.props.highLightedField} saveChangedFields={this.props.saveChangedFields} field={field} fields={selectedFields}/>)}
+							<Button
+									isPrimary
+									onClick={ this.props.save }>
+								{ __( 'Save', 'really-simple-ssl' ) }
+							</Button>
+					</PanelBody>
+				</Panel>
 		)
 	}
 }
@@ -142,16 +151,7 @@ class Settings extends Component {
 		return (
 			<div className="rsssl-wizard-settings">
 				<div className="rsssl-wizard__main">
-					<Panel>
 						{groups.map((group, i) => <SettingsGroup key={i} index={i} highLightField={this.props.highLightField} highLightedField={this.props.highLightedField} selectedMenuItem={selectedMenuItemObject} saveChangedFields={this.props.saveChangedFields} group={group} fields={selectedFields}/>)}
-						<div className="rsssl-buttons-row">
-							<Button
-								isPrimary
-								onClick={ this.props.save }>
-								{ __( 'Save', 'really-simple-ssl' ) }
-							</Button>
-						</div>
-					</Panel>
 				</div>
 				<div className="rsssl-wizard__help">
 					{notices.map((field, i) => <Help key={i} index={i} help={field} fieldId={field.id}/>)}
@@ -331,9 +331,7 @@ class SettingsPage extends Component {
             <Fragment>
 				<Menu isAPILoaded={isAPILoaded} menuItems={this.menuItems} menu={this.menu} selectMenu={this.props.selectMenu} selectedMenuItem={this.props.selectedMenuItem}/>
 				<Settings highLightField={this.props.highLightField} highLightedField={this.props.highLightedField} isAPILoaded={isAPILoaded} fields={this.fields} progress={progress} saveChangedFields={this.saveChangedFields} menu={menu} save={this.save} selectedMenuItem={this.props.selectedMenuItem} selectedStep={selectedStep}/>
-				<div className="rsssl-wizard__notices">
-					<Notices/>
-				</div>
+				<Notices className="rsssl-wizard-notices"/>
             </Fragment>
         )
     }

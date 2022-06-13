@@ -113,7 +113,7 @@
   }
 
   .rsssl-grid-item {
-    @include cmplz-block;
+    @include rsssl-block;
     display: flex;
     flex-wrap: wrap;
     justify-content: flex-start;

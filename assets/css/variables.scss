@@ -93,9 +93,21 @@ $rsp-break-xxl: 1599px;
   --rsp-brand-primary-faded: var(--rsp-blue-faded);
 }
 
-@mixin cmplz-block {
+@mixin rsssl-block {
   background: var(--rsp-background-block-color);
   box-shadow: var(--rsp-box-shadow);
   border-radius: var(--rsp-border-radius);
+}
+
+@mixin rsssl-block-padding {
+  padding: var(--rsp-spacing-m) var(--rsp-spacing-l);
+
+  @media screen and (max-width: $rsp-break-m) {
+    padding: var(--rsp-spacing-xs) var(--rsp-spacing-m);
+  }
+
+  @media screen and (max-width: $rsp-break-s) {
+    padding: var(--rsp-spacing-xs) var(--rsp-spacing-s);
+  }
 }
 

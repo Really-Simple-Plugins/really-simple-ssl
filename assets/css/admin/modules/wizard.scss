@@ -1,0 +1,10 @@
+.rsssl-wizard-menu{
+  @include rsssl-block;
+  @include rsssl-block-padding;
+}
+.rsssl{
+  .components-panel__body{
+    @include rsssl-block;
+    @include rsssl-block-padding;
+  }
+}
