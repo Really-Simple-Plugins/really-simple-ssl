@@ -13,10 +13,31 @@ import {
     ToggleControl,
 } from '@wordpress/components';
 import TaskElement from "./TaskElement";
+import { __ } from '@wordpress/i18n';
+
 import License from "./License";
 import {
     Component,
 } from '@wordpress/element';
+
+/**
+ * https://react-data-table-component.netlify.app
+ */
+import DataTable from "react-data-table-component";
+import * as rsssl_api from "./utils/api";
+
+class ChangeStatus extends Component {
+    constructor() {
+        super( ...arguments );
+    }
+    render(){
+        let statusClass = this.props.status==1 ? 'rsssl-status-allowed' : 'rsssl-status-revoked';
+        let label = this.props.status==1 ? __("Revoke", "really-simple-ssl") : __("Allow", "really-simple-ssl");
+        return (
+            <button className={statusClass}>{label}</button>
+        )
+    }
+}
 
 class Field extends Component {
     constructor() {
@@ -27,12 +48,30 @@ class Field extends Component {
     componentDidMount() {
         this.props.highLightField('');
     }
+
     onChangeHandler(fieldValue) {
-        let fields = this.props.fields;
+         let fields = this.props.fields;
         let field = this.props.field;
         fields[this.props.index]['value'] = fieldValue;
         this.props.saveChangedFields( field.id )
         this.setState( { fields } )
+    }
+
+    onChangeHandlerDataTable(enabled, item) {
+
+        console.log("change action");
+        console.log(enabled);
+        console.log(item);
+        let fields = this.props.fields;
+        let field = this.props.field;
+        fields[this.props.index]['value'] = fieldValue;
+//        this.setState( { fields } );
+        rsssl_api.setFields(saveFields).then(( response ) => {
+            //this.changedFields = [];
+            this.setState({
+                changedFields :[]
+            });
+        });
     }
     onCloseTaskHandler(){
 
@@ -57,7 +96,6 @@ class Field extends Component {
                 <span></span>
             );
         }
-
 
         if ( field.type==='checkbox' ){
             return (
@@ -142,6 +180,68 @@ class Field extends Component {
                         onChange={ ( fieldValue ) => this.onChangeHandler(fieldValue) }
                         value= { fieldValue }
                         options={ options }
+                    />
+                </PanelBody>
+            )
+        }
+
+        if ( field.type==='permissionspolicy' ) {
+            let columns =   [
+                {
+                    name: 'Feature',
+                    selector: row => row.title,
+                    sortable: true,
+                },
+                {
+                    name: __('Own domain only', 'really-simple-ssl'),
+                    selector: row => row.owndomain,
+
+                },
+                {
+                    name: __('Allow/Deny', 'really-simple-ssl'),
+                    selector: row => row.status,
+
+                },
+            ];
+
+            let checked = false;
+            let data = [
+                    {
+                        id: 'accelerometer',
+                        title: 'Accelerometer',
+                        owndomain: true,
+                        status: true,
+                    },
+                    {
+                        id: 'autoplay',
+                        title: 'Autoplay',
+                        owndomain: false,
+                        status: false,
+                    },
+                    {
+                        id: 'camera',
+                        title: 'Camera',
+                        owndomain: false,
+                        status: false,
+                    },
+                ]
+            let reactData = [];
+
+            for (const item of data){
+                item.owndomain = <ToggleControl
+                                 checked= {item.owndomain==1}
+                                 label=''
+                                 onChange={ ( fieldValue ) => this.onChangeHandlerDataTable( fieldValue, item ) }
+                             />
+                item.status = <ChangeStatus status={item.status} />;
+            }
+            return (
+                <PanelBody className={ this.highLightClass}>
+                    <DataTable
+                        columns={columns}
+                        data={data}
+                        dense
+                        pagination
                     />
                 </PanelBody>
             )

@@ -48,8 +48,8 @@ function rsssl_menu( $group_id = 'settings' ){
 							],
 						],
 						'step' => 1,
-
 					],
+
 				],
 			],
 			[
@@ -339,7 +339,6 @@ function rsssl_fields(){
 			'disabled'    => false,
 			'default'     => false,
 		],
-
 	];
 	$fields = apply_filters('rsssl_fields', $fields);
 

@@ -10,11 +10,15 @@
   "author": "RogierLankhors",
   "license": "ISC",
   "devDependencies": {
-    "@wordpress/scripts": "^6.2.0"
+    "@wordpress/scripts": "^23.2.0"
   },
   "dependencies": {
+    "@material-ui/core": "^4.12.4",
+    "@material-ui/icons": "^4.11.3",
     "ace-builds": "^1.4.13",
     "axios": "^0.26.1",
-    "react-ace": "^9.5.0"
+    "react-ace": "^9.5.0",
+    "react-data-table-component": "^7.5.2",
+    "styled-components": "^5.3.5"
   }
 }
