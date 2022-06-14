@@ -368,7 +368,7 @@ function rsssl_blocks(){
 			],
 			'content' => ['type'=>'react', 'data' => 'ProgressBlock'],
 			'footer'  => ['type'=>'template', 'data' => 'progress-footer.php'],
-			'size'    => 'default', // @todo @rogier Zullen we dit gewoon veranderen naar class ipv size and height?
+			'size'    => ' rsssl-column-2', // @todo @rogier Zullen we dit gewoon veranderen naar class ipv size and height?
 			'height'    => 'default',
 		],
 		[
@@ -400,7 +400,7 @@ function rsssl_blocks(){
 			'help'    => __( 'A help text', 'really-simple-ssl' ),
 			'content' => ['type'=>'react', 'data' => 'SecurityFeaturesBlock'],
 			'footer'  => ['type'=>'html', 'data' => ''],
-			'size'    => 'default',
+			'size'    => ' rsssl-column-2',
 			'height'    => 'half',
 		],
 		[
@@ -410,7 +410,7 @@ function rsssl_blocks(){
 			'help'    => __( 'A help text', 'really-simple-ssl' ),
 			'content' => ['type'=>'template', 'data' => 'other-plugins.php'],
 			'footer'  => ['type'=>'html', 'data' => ''],
-			'size'    => 'default no-border no-background',
+			'size'    => ' rsssl-column-2 no-border no-background',
 			'height'    => 'half',
 		],
 	];

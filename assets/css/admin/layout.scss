@@ -133,11 +133,11 @@
       box-shadow: none;
     }
 
-    &.column-2 {
+    &.rsssl-column-2 {
       grid-column: span 2;
     }
 
-    &.row-2 {
+    &.rsssl-row-2 {
       grid-row: span 2;
     }
 
@@ -149,7 +149,7 @@
     }
     @media(max-width: $rsp-break-m) {
       grid-column: span 2;
-      &.column-2 {
+      &.rsssl-column-2 {
         grid-column: span 4;
       }
     }

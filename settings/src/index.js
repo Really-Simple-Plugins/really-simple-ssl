@@ -149,14 +149,14 @@ class Settings extends Component {
 		}
 		let selectedMenuItemObject = menu.menu_items.filter(menutItem => menutItem.id === selectedMenuItem)[0];
 		return (
-			<div className="rsssl-wizard-settings">
-				<div className="rsssl-wizard__main">
+			<Fragment>
+				<div className="rsssl-wizard-settings">
 						{groups.map((group, i) => <SettingsGroup key={i} index={i} highLightField={this.props.highLightField} highLightedField={this.props.highLightedField} selectedMenuItem={selectedMenuItemObject} saveChangedFields={this.props.saveChangedFields} group={group} fields={selectedFields}/>)}
 				</div>
-				<div className="rsssl-wizard__help">
+				<div className="rsssl-wizard-help">
 					{notices.map((field, i) => <Help key={i} index={i} help={field} fieldId={field.id}/>)}
 				</div>
-			</div>
+			</Fragment>
 		)
 	}
 }
@@ -329,9 +329,9 @@ class SettingsPage extends Component {
 
         return (
             <Fragment>
-				<Menu isAPILoaded={isAPILoaded} menuItems={this.menuItems} menu={this.menu} selectMenu={this.props.selectMenu} selectedMenuItem={this.props.selectedMenuItem}/>
-				<Settings highLightField={this.props.highLightField} highLightedField={this.props.highLightedField} isAPILoaded={isAPILoaded} fields={this.fields} progress={progress} saveChangedFields={this.saveChangedFields} menu={menu} save={this.save} selectedMenuItem={this.props.selectedMenuItem} selectedStep={selectedStep}/>
-				<Notices className="rsssl-wizard-notices"/>
+							<Menu isAPILoaded={isAPILoaded} menuItems={this.menuItems} menu={this.menu} selectMenu={this.props.selectMenu} selectedMenuItem={this.props.selectedMenuItem}/>
+							<Settings highLightField={this.props.highLightField} highLightedField={this.props.highLightedField} isAPILoaded={isAPILoaded} fields={this.fields} progress={progress} saveChangedFields={this.saveChangedFields} menu={menu} save={this.save} selectedMenuItem={this.props.selectedMenuItem} selectedStep={selectedStep}/>
+							<Notices className="rsssl-wizard-notices"/>
             </Fragment>
         )
     }
@@ -345,9 +345,9 @@ class DashboardPage extends Component {
 	render() {
 		let blocks = rsssl_settings.blocks;
 		return (
-			<div className="rsssl-grid">
+			<Fragment>
 				{blocks.map((block, i) => <GridBlock key={i} block={block} isApiLoaded={this.props.isAPILoaded} fields={this.props.fields} highLightField={this.props.highLightField}/>)}
-			</div>
+			</Fragment>
 		);
 	}
 }
@@ -391,7 +391,7 @@ class Header extends Component {
 					<div className="rsssl-header-left">
 						<nav className="rsssl-header-menu">
 							<ul>
-							{menu.map((menu_item, i) => <li><a key={i} onClick={ () => this.handleClick(menu_item.id) } href='#' >{menu_item.label}</a></li>)}
+							{menu.map((menu_item, i) => <li><a key={i} onClick={ () => this.handleClick(menu_item.id) } href={"#" + menu_item.id.toString()} >{menu_item.label}</a></li>)}
 							</ul>
 						</nav>
 					</div>
@@ -498,7 +498,7 @@ class Page extends Component {
 		return (
 			<div className="rsssl-wrapper">
 				<Header selectedMainMenuItem={selectedMainMenuItem} selectMainMenu={this.selectMainMenu} fields={fields}/>
-				<div className="rsssl-content-area">
+				<div className={"rsssl-content-area rsssl-grid rsssl-" + selectedMainMenuItem}>
 					{selectedMainMenuItem==='settings' && <SettingsPage selectMenu={this.selectMenu} highLightField={this.highLightField} highLightedField={this.highLightedField} selectedMenuItem={selectedMenuItem} isAPILoaded={isAPILoaded} fields={fields} menu={menu} progress={progress}/> }
 					{selectedMainMenuItem==='dashboard' && <DashboardPage isAPILoaded={isAPILoaded} fields={fields} highLightField={this.highLightField}/> }
 				</div>

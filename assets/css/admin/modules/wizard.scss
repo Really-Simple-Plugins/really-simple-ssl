@@ -1,10 +1,21 @@
-.rsssl-wizard-menu{
+.rsssl-wizard-menu {
   @include rsssl-block;
   @include rsssl-block-padding;
 }
-.rsssl{
-  .components-panel__body{
-    @include rsssl-block;
-    @include rsssl-block-padding;
+
+.rsssl {
+  .components-panel {
+    border-radius: var(--rsp-border-radius);
+    border: 0px;
   }
+  .components-panel__row label {
+    max-width: 100%;
+  }
+}
+
+.cmplz-wizard{
+    .cmplz-wizard-menu {
+        @include rsssl-block;
+        @include rsssl-block-padding;
+    }
 }
