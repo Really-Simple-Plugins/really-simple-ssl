@@ -111,6 +111,36 @@
     gap: var(--rsp-grid-gap);
     min-height: calc(100vh - 32px - 80px - 20px - var(--rsp-grid-gap)); //32px = wordpress bar, 80px = cmplz bar, 20px = margin-top, 20px is grid gap
   }
+  .no-background {
+    background: none;
+    border: none;
+    box-shadow: none;
+  }
+
+  .rsssl-column-2 {
+    grid-column: span 2;
+  }
+
+  .rsssl-row-2 {
+    grid-row: span 2;
+  }
+
+  @media(max-width: $rsp-break-xxl) {
+    grid-column: span 2;
+    .rsssl-progress, .rsssl-overview {
+      grid-column: span 4;
+    }
+  }
+  @media(max-width: $rsp-break-m) {
+    grid-column: span 2;
+    .rsssl-column-2 {
+      grid-column: span 4;
+    }
+  }
+  @media(max-width: $rsp-break-s) {
+    grid-column: span 4;
+  }
+}
 
   .rsssl-grid-item {
     @include rsssl-block;
@@ -126,37 +156,6 @@
     p {
       font-size: var(--rsp-fs-300);
     }
-
-    &.no-background {
-      background: none;
-      border: none;
-      box-shadow: none;
-    }
-
-    &.rsssl-column-2 {
-      grid-column: span 2;
-    }
-
-    &.rsssl-row-2 {
-      grid-row: span 2;
-    }
-
-    @media(max-width: $rsp-break-xxl) {
-      grid-column: span 2;
-      &.rsssl-progress, &.rsssl-overview {
-        grid-column: span 4;
-      }
-    }
-    @media(max-width: $rsp-break-m) {
-      grid-column: span 2;
-      &.rsssl-column-2 {
-        grid-column: span 4;
-      }
-    }
-    @media(max-width: $rsp-break-s) {
-      grid-column: span 4;
-    }
-  }
 
   .rsssl-grid-item-header {
     width: 100%;

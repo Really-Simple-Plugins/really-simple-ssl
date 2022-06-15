@@ -11361,23 +11361,22 @@ var MenuItem = /*#__PURE__*/function (_Component) {
         }
       }
 
+      var activeClass = menuIsSelected ? 'rsssl-active' : '';
       return Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_5__["createElement"])("div", {
-        className: "rsssl-menu-item"
+        className: "rsssl-menu-item " + activeClass
       }, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_5__["createElement"])("a", {
         href: "#",
         onClick: function onClick() {
           return _this2.handleClick();
         }
-      }, this.props.menuItem.title), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_5__["createElement"])("div", {
+      }, this.props.menuItem.title), this.props.menuItem.menu_items && menuIsSelected && Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_5__["createElement"])("div", {
         className: "rsssl-submenu-item"
-      }, this.props.menuItem.menu_items && menuIsSelected && this.props.menuItem.menu_items.map(function (menuItem, i) {
-        return Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_5__["createElement"])(MenuItem, {
-          key: i,
-          menuItem: menuItem,
-          selectMenu: _this2.props.selectMenu,
-          selectedMenuItem: _this2.props.selectedMenuItem
-        });
-      })));
+      }, " this.props.menuItem.menu_items.map((menuItem, i) => ", Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_5__["createElement"])(MenuItem, {
+        key: i,
+        menuItem: menuItem,
+        selectMenu: this.props.selectMenu,
+        selectedMenuItem: this.props.selectedMenuItem
+      }), ") "));
     }
   }]);
 
@@ -11420,10 +11419,16 @@ var Menu = /*#__PURE__*/function (_Component2) {
       }
 
       return Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_5__["createElement"])("div", {
-        className: "rsssl-wizard-menu"
+        className: "rsssl-grid-item"
+      }, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_5__["createElement"])("div", {
+        className: "rsssl-grid-item-header"
       }, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_5__["createElement"])("h1", {
         className: "h4"
-      }, this.props.menu.title), menuItems.map(function (menuItem, i) {
+      }, this.props.menu.title)), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_5__["createElement"])("div", {
+        className: "rsssl-grid-item-content"
+      }, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_5__["createElement"])("div", {
+        className: "rsssl-wizard-menu-items"
+      }, menuItems.map(function (menuItem, i) {
         return Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_5__["createElement"])(MenuItem, {
           key: i,
           isAPILoaded: isAPILoaded,
@@ -11431,6 +11436,8 @@ var Menu = /*#__PURE__*/function (_Component2) {
           selectMenu: _this4.props.selectMenu,
           selectedMenuItem: _this4.props.selectedMenuItem
         });
+      }))), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_5__["createElement"])("div", {
+        className: "rsssl-grid-item-footer"
       }));
     }
   }]);
@@ -12225,32 +12232,19 @@ var Help = /*#__PURE__*/function (_Component) {
   }, {
     key: "render",
     value: function render() {
-      var _this = this;
-
       var notice = this.props.help;
+      console.log(notice);
 
       if (!notice.title) {
         notice.title = notice.text;
         notice.text = false;
       }
 
-      var titleClass = 'rsssl-wizard__help_title';
-      if (notice.text) titleClass += ' rsssl-wizard__help_has_content';
-      return Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_5__["createElement"])("div", {
-        "data-help_index": this.props.index,
-        className: "rsssl-wizard__help_notice",
-        "data-field_id": this.props.field
-      }, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_5__["createElement"])("div", {
-        className: titleClass,
-        onClick: function onClick() {
-          return _this.handleClick(_this.props.index);
-        }
-      }, notice.title), notice.text && Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_5__["createElement"])("div", {
-        className: "rsssl-wizard__help_content",
-        dangerouslySetInnerHTML: {
-          __html: notice.text
-        }
-      }));
+      return Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_5__["createElement"])(_wordpress_element__WEBPACK_IMPORTED_MODULE_5__["Fragment"], null, notice.title && notice.text && Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_5__["createElement"])("details", {
+        className: "rsssl-wizard-help-notice rsssl-" + notice.label.toLowerCase()
+      }, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_5__["createElement"])("summary", null, notice.title), notice.text), notice.title && !notice.text && Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_5__["createElement"])("div", {
+        className: "rsssl-wizard-help-notice  rsssl-" + notice.label.toLowerCase()
+      }, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_5__["createElement"])("p", null, notice.title)));
     }
   }]);
 
@@ -12267,23 +12261,23 @@ var SettingsGroup = /*#__PURE__*/function (_Component2) {
   var _super2 = _createSuper(SettingsGroup);
 
   function SettingsGroup() {
-    var _this2;
+    var _this;
 
     _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_0___default()(this, SettingsGroup);
 
-    _this2 = _super2.apply(this, arguments);
-    _this2.state = {
-      fields: _this2.props.fields,
-      isAPILoaded: _this2.props.isAPILoaded
+    _this = _super2.apply(this, arguments);
+    _this.state = {
+      fields: _this.props.fields,
+      isAPILoaded: _this.props.isAPILoaded
     };
-    _this2.fields = _this2.props.fields;
-    return _this2;
+    _this.fields = _this.props.fields;
+    return _this;
   }
 
   _babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_1___default()(SettingsGroup, [{
     key: "render",
     value: function render() {
-      var _this3 = this;
+      var _this2 = this;
 
       var selectedMenuItem = this.props.selectedMenuItem;
       var selectedFields = []; //get all fields with group_id this.props.group_id
@@ -12305,22 +12299,29 @@ var SettingsGroup = /*#__PURE__*/function (_Component2) {
         _iterator.f();
       }
 
-      return Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_5__["createElement"])(_wordpress_components__WEBPACK_IMPORTED_MODULE_8__["Panel"], null, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_5__["createElement"])(_wordpress_components__WEBPACK_IMPORTED_MODULE_8__["PanelBody"], {
-        title: selectedMenuItem.title,
-        initialOpen: true
+      return Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_5__["createElement"])("div", {
+        className: "rsssl-grid-item"
+      }, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_5__["createElement"])("div", {
+        className: "rsssl-grid-item-header"
+      }, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_5__["createElement"])("h3", {
+        className: "h4"
+      }, selectedMenuItem.title)), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_5__["createElement"])("div", {
+        className: "rsssl-grid-item-content"
       }, selectedMenuItem.intro && Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_5__["createElement"])("div", {
         className: "rsssl-settings-block-intro"
       }, selectedMenuItem.intro), selectedFields.map(function (field, i) {
         return Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_5__["createElement"])(_fields__WEBPACK_IMPORTED_MODULE_11__["default"], {
           key: i,
           index: i,
-          highLightField: _this3.props.highLightField,
-          highLightedField: _this3.props.highLightedField,
-          saveChangedFields: _this3.props.saveChangedFields,
+          highLightField: _this2.props.highLightField,
+          highLightedField: _this2.props.highLightedField,
+          saveChangedFields: _this2.props.saveChangedFields,
           field: field,
           fields: selectedFields
         });
-      }), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_5__["createElement"])(_wordpress_components__WEBPACK_IMPORTED_MODULE_8__["Button"], {
+      })), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_5__["createElement"])("div", {
+        className: "rsssl-grid-item-footer"
+      }, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_5__["createElement"])(_wordpress_components__WEBPACK_IMPORTED_MODULE_8__["Button"], {
         isPrimary: true,
         onClick: this.props.save
       }, Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_10__["__"])('Save', 'really-simple-ssl'))));
@@ -12341,24 +12342,24 @@ var Settings = /*#__PURE__*/function (_Component3) {
   var _super3 = _createSuper(Settings);
 
   function Settings() {
-    var _this4;
+    var _this3;
 
     _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_0___default()(this, Settings);
 
-    _this4 = _super3.apply(this, arguments);
-    _this4.state = {
-      fields: _this4.props.fields,
-      progress: _this4.props.progress,
-      isAPILoaded: _this4.props.isAPILoaded
+    _this3 = _super3.apply(this, arguments);
+    _this3.state = {
+      fields: _this3.props.fields,
+      progress: _this3.props.progress,
+      isAPILoaded: _this3.props.isAPILoaded
     };
-    _this4.fields = _this4.props.fields;
-    return _this4;
+    _this3.fields = _this3.props.fields;
+    return _this3;
   }
 
   _babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_1___default()(Settings, [{
     key: "render",
     value: function render() {
-      var _this5 = this;
+      var _this4 = this;
 
       var _this$state = this.state,
           fields = _this$state.fields,
@@ -12441,15 +12442,15 @@ var Settings = /*#__PURE__*/function (_Component3) {
         return menutItem.id === selectedMenuItem;
       })[0];
       return Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_5__["createElement"])(_wordpress_element__WEBPACK_IMPORTED_MODULE_5__["Fragment"], null, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_5__["createElement"])("div", {
-        className: "rsssl-wizard-settings"
+        className: "rsssl-wizard-settings rsssl-column-2"
       }, groups.map(function (group, i) {
         return Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_5__["createElement"])(SettingsGroup, {
           key: i,
           index: i,
-          highLightField: _this5.props.highLightField,
-          highLightedField: _this5.props.highLightedField,
+          highLightField: _this4.props.highLightField,
+          highLightedField: _this4.props.highLightedField,
           selectedMenuItem: selectedMenuItemObject,
-          saveChangedFields: _this5.props.saveChangedFields,
+          saveChangedFields: _this4.props.saveChangedFields,
           group: group,
           fields: selectedFields
         });
@@ -12480,12 +12481,12 @@ var SettingsPage = /*#__PURE__*/function (_Component4) {
   var _super4 = _createSuper(SettingsPage);
 
   function SettingsPage() {
-    var _this6;
+    var _this5;
 
     _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_0___default()(this, SettingsPage);
 
-    _this6 = _super4.apply(this, arguments);
-    _this6.state = {
+    _this5 = _super4.apply(this, arguments);
+    _this5.state = {
       selectedMenuItem: 'general',
       selectedStep: 1,
       fields: '',
@@ -12495,7 +12496,7 @@ var SettingsPage = /*#__PURE__*/function (_Component4) {
       changedFields: '',
       progress: ''
     };
-    return _this6;
+    return _this5;
   }
 
   _babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_1___default()(SettingsPage, [{
@@ -12533,7 +12534,7 @@ var SettingsPage = /*#__PURE__*/function (_Component4) {
   }, {
     key: "save",
     value: function save() {
-      var _this7 = this;
+      var _this6 = this;
 
       var fields = this.state.fields;
       var saveFields = [];
@@ -12560,9 +12561,9 @@ var SettingsPage = /*#__PURE__*/function (_Component4) {
           type: 'snackbar',
           isDismissible: true
         });
-        _this7.changedFields = [];
+        _this6.changedFields = [];
 
-        _this7.setState({
+        _this6.setState({
           changedFields: []
         });
       });
@@ -12722,16 +12723,16 @@ var DashboardPage = /*#__PURE__*/function (_Component5) {
   _babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_1___default()(DashboardPage, [{
     key: "render",
     value: function render() {
-      var _this8 = this;
+      var _this7 = this;
 
       var blocks = rsssl_settings.blocks;
       return Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_5__["createElement"])(_wordpress_element__WEBPACK_IMPORTED_MODULE_5__["Fragment"], null, blocks.map(function (block, i) {
         return Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_5__["createElement"])(_GridBlock__WEBPACK_IMPORTED_MODULE_13__["default"], {
           key: i,
           block: block,
-          isApiLoaded: _this8.props.isAPILoaded,
-          fields: _this8.props.fields,
-          highLightField: _this8.props.highLightField
+          isApiLoaded: _this7.props.isAPILoaded,
+          fields: _this7.props.fields,
+          highLightField: _this7.props.highLightField
         });
       }));
     }
@@ -12746,15 +12747,15 @@ var Header = /*#__PURE__*/function (_Component6) {
   var _super6 = _createSuper(Header);
 
   function Header() {
-    var _this9;
+    var _this8;
 
     _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_0___default()(this, Header);
 
-    _this9 = _super6.apply(this, arguments);
-    _this9.state = {
+    _this8 = _super6.apply(this, arguments);
+    _this8.state = {
       highContrast: false
     };
-    return _this9;
+    return _this8;
   }
 
   _babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_1___default()(Header, [{
@@ -12794,11 +12795,12 @@ var Header = /*#__PURE__*/function (_Component6) {
   }, {
     key: "render",
     value: function render() {
-      var _this10 = this;
+      var _this9 = this;
 
       var highContrast = this.state.highContrast;
       var menu = rsssl_settings.menu;
       var plugin_url = rsssl_settings.plugin_url;
+      var active_menu_item = this.props.selectedMainMenuItem;
       return Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_5__["createElement"])("div", {
         className: "rsssl-header-container"
       }, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_5__["createElement"])("div", {
@@ -12812,10 +12814,12 @@ var Header = /*#__PURE__*/function (_Component6) {
       }, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_5__["createElement"])("nav", {
         className: "rsssl-header-menu"
       }, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_5__["createElement"])("ul", null, menu.map(function (menu_item, i) {
-        return Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_5__["createElement"])("li", null, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_5__["createElement"])("a", {
-          key: i,
+        return Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_5__["createElement"])("li", {
+          key: i
+        }, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_5__["createElement"])("a", {
+          className: active_menu_item === menu_item.id ? 'active' : '',
           onClick: function onClick() {
-            return _this10.handleClick(menu_item.id);
+            return _this9.handleClick(menu_item.id);
           },
           href: "#" + menu_item.id.toString()
         }, menu_item.label));
@@ -12842,12 +12846,12 @@ var Page = /*#__PURE__*/function (_Component7) {
   var _super7 = _createSuper(Page);
 
   function Page() {
-    var _this11;
+    var _this10;
 
     _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_0___default()(this, Page);
 
-    _this11 = _super7.apply(this, arguments);
-    _this11.state = {
+    _this10 = _super7.apply(this, arguments);
+    _this10.state = {
       selectedMainMenuItem: 'dashboard',
       selectedMenuItem: 'general',
       highLightedField: '',
@@ -12857,15 +12861,15 @@ var Page = /*#__PURE__*/function (_Component7) {
       isAPILoaded: false
     };
 
-    _this11.getFields().then(function (response) {
+    _this10.getFields().then(function (response) {
       var fields = response.fields;
       var menu = response.menu;
       var progress = response.progress;
-      _this11.menu = menu;
-      _this11.progress = progress;
-      _this11.fields = fields;
+      _this10.menu = menu;
+      _this10.progress = progress;
+      _this10.fields = fields;
 
-      _this11.setState({
+      _this10.setState({
         isAPILoaded: true,
         fields: fields,
         menu: menu,
@@ -12873,7 +12877,7 @@ var Page = /*#__PURE__*/function (_Component7) {
       });
     });
 
-    return _this11;
+    return _this10;
   }
 
   _babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_1___default()(Page, [{

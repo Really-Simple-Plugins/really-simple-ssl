@@ -37,19 +37,26 @@ class Help extends Component {
 	}
 	render(){
 		let notice = this.props.help;
+		console.log(notice);
 		if ( !notice.title ){
 			notice.title = notice.text;
 			notice.text = false;
 		}
 
-		let titleClass = 'rsssl-wizard__help_title';
-		if (notice.text) titleClass+= ' rsssl-wizard__help_has_content';
 
 		return (
-			<div data-help_index={this.props.index} className="rsssl-wizard__help_notice" data-field_id={this.props.field}>
-				<div className={titleClass} onClick={ () => this.handleClick(this.props.index) }>{notice.title}</div>
-				{notice.text && <div className="rsssl-wizard__help_content" dangerouslySetInnerHTML={{__html: notice.text}}></div>}
-			</div>
+			<Fragment>
+				{ notice.title && notice.text &&
+						<details className={"rsssl-wizard-help-notice rsssl-" + notice.label.toLowerCase()}>
+							<summary>{notice.title}</summary>
+							{notice.text}
+						</details>
+				}
+				{ notice.title && !notice.text &&
+						<div className={"rsssl-wizard-help-notice  rsssl-" + notice.label.toLowerCase()}><p>{notice.title}</p></div>
+				}
+			</Fragment>
+
 		);
 
 	}
@@ -78,17 +85,22 @@ class SettingsGroup extends Component {
 			}
 		}
 		return (
-				<Panel>
-					<PanelBody title={selectedMenuItem.title} initialOpen={ true }>
+				<div className="rsssl-grid-item">
+					<div className="rsssl-grid-item-header">
+						<h3 className="h4">{selectedMenuItem.title}</h3>
+					</div>
+					<div className="rsssl-grid-item-content">
 						{selectedMenuItem.intro && <div className="rsssl-settings-block-intro">{selectedMenuItem.intro}</div>}
 						{selectedFields.map((field, i) => <Field key={i} index={i} highLightField={this.props.highLightField} highLightedField={this.props.highLightedField} saveChangedFields={this.props.saveChangedFields} field={field} fields={selectedFields}/>)}
+					</div>
+					<div className="rsssl-grid-item-footer">
 							<Button
 									isPrimary
 									onClick={ this.props.save }>
 								{ __( 'Save', 'really-simple-ssl' ) }
 							</Button>
-					</PanelBody>
-				</Panel>
+					</div>
+				</div>
 		)
 	}
 }
@@ -150,7 +162,7 @@ class Settings extends Component {
 		let selectedMenuItemObject = menu.menu_items.filter(menutItem => menutItem.id === selectedMenuItem)[0];
 		return (
 			<Fragment>
-				<div className="rsssl-wizard-settings">
+				<div className="rsssl-wizard-settings rsssl-column-2">
 						{groups.map((group, i) => <SettingsGroup key={i} index={i} highLightField={this.props.highLightField} highLightedField={this.props.highLightedField} selectedMenuItem={selectedMenuItemObject} saveChangedFields={this.props.saveChangedFields} group={group} fields={selectedFields}/>)}
 				</div>
 				<div className="rsssl-wizard-help">
@@ -384,6 +396,7 @@ class Header extends Component {
 		} = this.state;
 		let menu = rsssl_settings.menu;
 		let plugin_url = rsssl_settings.plugin_url;
+		let active_menu_item = this.props.selectedMainMenuItem;
 		return (
 			<div className="rsssl-header-container">
 				<div className="rsssl-header">
@@ -391,7 +404,7 @@ class Header extends Component {
 					<div className="rsssl-header-left">
 						<nav className="rsssl-header-menu">
 							<ul>
-							{menu.map((menu_item, i) => <li><a key={i} onClick={ () => this.handleClick(menu_item.id) } href={"#" + menu_item.id.toString()} >{menu_item.label}</a></li>)}
+							{menu.map((menu_item, i) => <li key={i}><a className={ active_menu_item === menu_item.id ? 'active' : '' } onClick={ () => this.handleClick(menu_item.id) } href={"#" + menu_item.id.toString()} >{menu_item.label}</a></li>)}
 							</ul>
 						</nav>
 					</div>

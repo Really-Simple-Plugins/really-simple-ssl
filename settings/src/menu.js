@@ -36,13 +36,12 @@ class MenuItem extends Component {
                 }
             }
         }
+        let activeClass = menuIsSelected ? 'rsssl-active' : '';
 
         return (
-            <div className="rsssl-menu-item">
+            <div className={"rsssl-menu-item " + activeClass}>
                 <a href="#" onClick={ () => this.handleClick() }>{this.props.menuItem.title}</a>
-                <div className="rsssl-submenu-item">
-                    {this.props.menuItem.menu_items && menuIsSelected && this.props.menuItem.menu_items.map((menuItem, i) => <MenuItem key={i} menuItem={menuItem} selectMenu={this.props.selectMenu} selectedMenuItem={this.props.selectedMenuItem}/>)}
-                </div>
+                {this.props.menuItem.menu_items && menuIsSelected && <div className="rsssl-submenu-item"> this.props.menuItem.menu_items.map((menuItem, i) => <MenuItem key={i} menuItem={menuItem} selectMenu={this.props.selectMenu} selectedMenuItem={this.props.selectedMenuItem}/>) </div> }
             </div>
         )
     }
@@ -74,10 +73,19 @@ class Menu extends Component {
         }
 
         return (
-            <div className="rsssl-wizard-menu">
-                <h1 className="h4">{this.props.menu.title}</h1>
-                {menuItems.map((menuItem, i) => <MenuItem key={i} isAPILoaded={isAPILoaded} menuItem={menuItem} selectMenu={this.props.selectMenu} selectedMenuItem={this.props.selectedMenuItem}/>)}
-            </div>
+                <div className="rsssl-grid-item">
+                    <div className="rsssl-grid-item-header">
+                        <h1 className="h4">{this.props.menu.title}</h1>
+                    </div>
+                    <div className="rsssl-grid-item-content">
+                        <div className="rsssl-wizard-menu-items">
+                            {menuItems.map((menuItem, i) => <MenuItem key={i} isAPILoaded={isAPILoaded} menuItem={menuItem} selectMenu={this.props.selectMenu} selectedMenuItem={this.props.selectedMenuItem}/>)}
+                        </div>
+                    </div>
+                    <div className="rsssl-grid-item-footer">
+
+                    </div>
+                </div>
         )
     }
 }
