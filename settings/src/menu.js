@@ -5,6 +5,9 @@ import {
     Component,
 } from '@wordpress/element';
 
+/**
+ * Menu item, one menu item or child menu item
+ */
 class MenuItem extends Component {
     constructor() {
         super( ...arguments );
@@ -27,11 +30,13 @@ class MenuItem extends Component {
             menuItem,
             isAPILoaded,
         } = this.state;
-
-          let menuIsSelected = this.props.selectedMenuItem===this.props.menuItem;
+        /**
+         * Menu is selected if the item is the same, or if it is a child.
+         */
+        let menuIsSelected = this.props.selectedMenuItem===this.props.menuItem.id;
         if (this.props.menuItem.menu_items) {
             for (const item of this.props.menuItem.menu_items){
-                if (item === this.props.selectedMenuItem ){
+                if (item.id === this.props.selectedMenuItem ){
                     menuIsSelected=true;
                 }
             }
@@ -47,6 +52,9 @@ class MenuItem extends Component {
     }
 }
 
+/**
+ * Menu block, rendering th entire menu
+ */
 class Menu extends Component {
     constructor() {
         super( ...arguments );

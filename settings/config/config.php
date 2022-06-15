@@ -48,8 +48,8 @@ function rsssl_menu( $group_id = 'settings' ){
 							],
 						],
 						'step' => 1,
-
 					],
+
 				],
 			],
 			[
@@ -107,6 +107,7 @@ function rsssl_fields(){
 			'disabled'    => false,
 			'default'     => true,
 			'new_features_block'     => true,
+			'networkwide' => false,
 		],
 		[
 			'id'          => 'wp_redirect',
@@ -127,6 +128,7 @@ function rsssl_fields(){
 				]
 			],
 			'new_features_block'     => true,
+			'networkwide' => false,
 
 		],
 		[
@@ -155,6 +157,7 @@ function rsssl_fields(){
 					]
 				]
 			],
+			'networkwide' => false,
 		],
 		[
 			'id'          => 'do_not_edit_htaccess',
@@ -290,7 +293,7 @@ function rsssl_fields(){
 		],
         [
 			'id'          => 'disable_application_passwords',
-			'menu_id'     => 'hardening',
+			'menu_id'     => 'application_passwords',
 			'type'        => 'checkbox',
 			'label'       => __( "Disable application passwords", 'really-simple-ssl' ),
 			'disabled'    => false,
@@ -336,7 +339,6 @@ function rsssl_fields(){
 			'disabled'    => false,
 			'default'     => false,
 		],
-
 	];
 	$fields = apply_filters('rsssl_fields', $fields);
 

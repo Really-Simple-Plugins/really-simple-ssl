@@ -51,10 +51,6 @@ function rsssl_has_fix($fix){
 	}
 	return true;
 }
-//error_log(print_r($_SERVER,true));
-//error_log(print_r($_POST,true));
-//error_log(print_r($_GET,true));
-error_log("loads functions.php");
 
 /**
  * Wrap the security headers
