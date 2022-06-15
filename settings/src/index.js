@@ -100,7 +100,7 @@ class SettingsGroup extends Component {
 		}
 
 		return (
-				<div className="rsssl-grid-item">
+				<Fragment>
 					<div className="rsssl-grid-item-header">
 						<h3 className="h4">{selectedMenuItem.title}</h3>
 					</div>
@@ -108,14 +108,8 @@ class SettingsGroup extends Component {
 						{selectedMenuItem.intro && <div className="rsssl-settings-block-intro">{selectedMenuItem.intro}</div>}
 						{selectedFields.map((field, i) => <Field key={i} index={i} highLightField={this.props.highLightField} highLightedField={this.props.highLightedField} saveChangedFields={this.props.saveChangedFields} field={field} fields={selectedFields}/>)}
 					</div>
-					<div className="rsssl-grid-item-footer">
-							<Button
-									isPrimary
-									onClick={ this.props.save }>
-								{ __( 'Save', 'really-simple-ssl' ) }
-							</Button>
-					</div>
-				</div>
+				</Fragment>
+
 			// <div className="rsssl-grouped-fields">
 			// 	{selectedMenuItem && selectedMenuItem.title && <PanelBody><h1 className="rsssl-settings-block-title">{selectedMenuItem.title}</h1></PanelBody>}
 			// 	{selectedMenuItem && selectedMenuItem.intro && <PanelBody><div className="rsssl-settings-block-intro">{selectedMenuItem.intro}</div></PanelBody>}
@@ -200,19 +194,16 @@ class Settings extends Component {
 		return (
 			<Fragment>
 				<div className="rsssl-wizard-settings rsssl-column-2">
-						{groups.map((group, i) => <SettingsGroup key={i} index={i} highLightField={this.props.highLightField} highLightedField={this.props.highLightedField} selectedMenuItem={selectedMenuItemObject} saveChangedFields={this.props.saveChangedFields} group={group} fields={selectedFields}/>)}
-			{/*<div className="rsssl-wizard-settings">*/}
-			{/*	<div className="rsssl-wizard__main">*/}
-			{/*		<Panel>*/}
-			{/*			{groups.map((group, i) => <SettingsGroup pageProps={this.props.pageProps} setPageProps={this.props.setPageProps} fieldsUpdateComplete = {this.props.fieldsUpdateComplete} key={i} index={i} highLightField={this.props.highLightField} highLightedField={this.props.highLightedField} selectedMenuItem={selectedMenuItemObject} saveChangedFields={this.props.saveChangedFields} group={group} fields={selectedFields}/>)}*/}
-			{/*			<div className="rsssl-buttons-row">*/}
-			{/*				<Button*/}
-			{/*					isPrimary*/}
-			{/*					onClick={ this.props.save }>*/}
-			{/*					{ __( 'Save', 'really-simple-ssl' ) }*/}
-			{/*				</Button>*/}
-			{/*			</div>*/}
-			{/*		</Panel>*/}
+					<div className="rsssl-grid-item">
+						{groups.map((group, i) => <SettingsGroup pageProps={this.props.pageProps} setPageProps={this.props.setPageProps} fieldsUpdateComplete = {this.props.fieldsUpdateComplete} key={i} index={i} highLightField={this.props.highLightField} highLightedField={this.props.highLightedField} selectedMenuItem={selectedMenuItemObject} saveChangedFields={this.props.saveChangedFields} group={group} fields={selectedFields}/>)}
+						<div className="rsssl-grid-item-footer">
+							<Button
+									isPrimary
+									onClick={ this.props.save }>
+								{ __( 'Save', 'really-simple-ssl' ) }
+							</Button>
+						</div>
+					</div>
 				</div>
 				<div className="rsssl-wizard-help">
 					{notices.map((field, i) => <Help key={i} index={i} help={field} fieldId={field.id}/>)}

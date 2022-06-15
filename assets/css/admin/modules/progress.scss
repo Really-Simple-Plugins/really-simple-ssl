@@ -49,10 +49,10 @@
     text-decoration: underline;
   }
 }
-.cmplz-task-switcher-container{
+.rsssl-task-switcher-container{
   display: flex;
   border-radius: var(--rsp-border-radius);
-  .cmplz-task-switcher{
+  .rsssl-task-switcher{
     &:first-of-type{
       border-right: 1px solid var(--rsp-grey-400);
       padding-right: 10px;
@@ -62,14 +62,18 @@
     }
   }
 }
-.cmplz-task-switcher {
+.rsssl-task-switcher {
   font-size: var(--rsp-fs-200);
   cursor:	pointer;
   transition: 0.3s;
-  &:hover, &.active, &.active:hover{
+  &:hover{
     text-decoration: underline;
   }
 }
+.rsssl-active-filter-remaining .rsssl-remaining-tasks, .rsssl-active-filter-all .rsssl-all-tasks{
+  text-decoration: underline;
+}
+
 //.rsssl-task-control-container {
 //  display: flex;
 //
