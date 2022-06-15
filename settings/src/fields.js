@@ -186,25 +186,17 @@ class Field extends Component {
         }
 
         if ( field.type==='permissionspolicy' ) {
-            let columns =   [
-                {
-                    name: 'Feature',
-                    selector: row => row.title,
-                    sortable: true,
-                },
-                {
-                    name: __('Own domain only', 'really-simple-ssl'),
-                    selector: row => row.owndomain,
+            //build our header
+            columns = [];
+            field.columns.forEach(function(item, i) {
+                let newItem = {
+                    name: item.name,
+                    sortable: item.sortable,
+                    selector: row => row[item.column],
+                }
+                columns.push(newItem);
+            });
 
-                },
-                {
-                    name: __('Allow/Deny', 'really-simple-ssl'),
-                    selector: row => row.status,
-
-                },
-            ];
-
-            let checked = false;
             let data = [
                     {
                         id: 'accelerometer',
@@ -225,6 +217,8 @@ class Field extends Component {
                         status: false,
                     },
                 ]
+            let checked = false;
+
             let reactData = [];
 
             for (const item of data){

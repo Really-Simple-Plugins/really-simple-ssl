@@ -3975,18 +3975,16 @@ class Field extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Component {
     }
 
     if (field.type === 'permissionspolicy') {
-      let columns = [{
-        name: 'Feature',
-        selector: row => row.title,
-        sortable: true
-      }, {
-        name: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)('Own domain only', 'really-simple-ssl'),
-        selector: row => row.owndomain
-      }, {
-        name: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)('Allow/Deny', 'really-simple-ssl'),
-        selector: row => row.status
-      }];
-      let checked = false;
+      //build our header
+      columns = [];
+      field.columns.forEach(function (item, i) {
+        let newItem = {
+          name: item.name,
+          sortable: item.sortable,
+          selector: row => row[item.column]
+        };
+        columns.push(newItem);
+      });
       let data = [{
         id: 'accelerometer',
         title: 'Accelerometer',
@@ -4003,6 +4001,7 @@ class Field extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Component {
         owndomain: false,
         status: false
       }];
+      let checked = false;
       let reactData = [];
 
       for (const item of data) {
