@@ -3855,17 +3855,20 @@ class Field extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Component {
     console.log(clickedItem);
     let field = this.props.field;
     console.log(field); //find this item in the field list
-    // for (const item of field.value){
-    //     if (item.id === clickedItem.id) {
-    //         item[type] = enabled;
-    //     }
-    // }
+
+    for (const item of field.value) {
+      if (item.id === clickedItem.id) {
+        item[type] = enabled;
+      }
+    }
 
     console.log("current datatable value ");
     console.log(this.props.fields);
     console.log(this.props.field);
     let saveFields = [];
-    saveFields.push(field); //        this.setState( { fields } );
+    saveFields.push(field);
+    console.log("save fields");
+    console.log(saveFields); //        this.setState( { fields } );
 
     _utils_api__WEBPACK_IMPORTED_MODULE_6__.setFields(saveFields).then(response => {//this.changedFields = [];
     });
@@ -3995,22 +3998,7 @@ class Field extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Component {
         };
         columns.push(newItem);
       });
-      let data = [{
-        id: 'accelerometer',
-        title: 'Accelerometer',
-        owndomain: true,
-        status: true
-      }, {
-        id: 'autoplay',
-        title: 'Autoplay',
-        owndomain: false,
-        status: false
-      }, {
-        id: 'camera',
-        title: 'Camera',
-        owndomain: false,
-        status: false
-      }];
+      let data = field.value;
 
       for (const item of data) {
         item.owndomainControl = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.ToggleControl, {
