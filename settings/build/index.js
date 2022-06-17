@@ -3846,7 +3846,7 @@ class Field extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Component {
     });
   }
 
-  onChangeHandlerDataTable(enabled, item) {
+  onChangeHandlerDataTable(enabled, item, type) {
     console.log("change action");
     console.log(enabled);
     console.log(item);
@@ -4005,12 +4005,12 @@ class Field extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Component {
       let reactData = [];
 
       for (const item of data) {
-        item.owndomain = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.ToggleControl, {
+        item.owndomainControl = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.ToggleControl, {
           checked: item.owndomain == 1,
           label: "",
-          onChange: fieldValue => this.onChangeHandlerDataTable(fieldValue, item)
+          onChange: fieldValue => this.onChangeHandlerDataTable(fieldValue, item, 'owndomain')
         });
-        item.status = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(ChangeStatus, {
+        item.statusControl = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(ChangeStatus, {
           status: item.status
         });
       }

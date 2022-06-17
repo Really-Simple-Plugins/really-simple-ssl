@@ -57,7 +57,7 @@ class Field extends Component {
         this.setState( { fields } )
     }
 
-    onChangeHandlerDataTable(enabled, item) {
+    onChangeHandlerDataTable(enabled, item, type) {
 
         console.log("change action");
         console.log(enabled);
@@ -222,12 +222,12 @@ class Field extends Component {
             let reactData = [];
 
             for (const item of data){
-                item.owndomain = <ToggleControl
+                item.owndomainControl = <ToggleControl
                                  checked= {item.owndomain==1}
                                  label=''
-                                 onChange={ ( fieldValue ) => this.onChangeHandlerDataTable( fieldValue, item ) }
+                                 onChange={ ( fieldValue ) => this.onChangeHandlerDataTable( fieldValue, item, 'owndomain' ) }
                              />
-                item.status = <ChangeStatus status={item.status} />;
+                item.statusControl = <ChangeStatus status={item.status} />;
             }
             return (
                 <PanelBody className={ this.highLightClass}>
