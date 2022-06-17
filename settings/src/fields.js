@@ -25,6 +25,7 @@ import {
  */
 import DataTable from "react-data-table-component";
 import * as rsssl_api from "./utils/api";
+import in_array from "./utils/lib";
 
 class ChangeStatus extends Component {
     constructor() {
@@ -50,6 +51,7 @@ class Field extends Component {
     }
 
     onChangeHandler(fieldValue) {
+        console.log("default changehandler");
          let fields = this.props.fields;
         let field = this.props.field;
         fields[this.props.index]['value'] = fieldValue;
@@ -57,20 +59,29 @@ class Field extends Component {
         this.setState( { fields } )
     }
 
-    onChangeHandlerDataTable(enabled, item, type) {
-
+    onChangeHandlerDataTable(enabled, clickedItem, type) {
         console.log("change action");
         console.log(enabled);
-        console.log(item);
-        let fields = this.props.fields;
+        console.log(clickedItem);
+
         let field = this.props.field;
-        fields[this.props.index]['value'] = fieldValue;
+        console.log(field);
+        //find this item in the field list
+        // for (const item of field.value){
+        //     if (item.id === clickedItem.id) {
+        //         item[type] = enabled;
+        //     }
+        // }
+        console.log("current datatable value ");
+        console.log(this.props.fields);
+        console.log(this.props.field);
+
+        let saveFields = [];
+        saveFields.push(field);
+
 //        this.setState( { fields } );
         rsssl_api.setFields(saveFields).then(( response ) => {
             //this.changedFields = [];
-            this.setState({
-                changedFields :[]
-            });
         });
     }
     onCloseTaskHandler(){
@@ -186,6 +197,7 @@ class Field extends Component {
         }
 
         if ( field.type==='permissionspolicy' ) {
+            console.log(this.props.field);
             //build our header
             columns = [];
             field.columns.forEach(function(item, i) {
@@ -217,10 +229,6 @@ class Field extends Component {
                         status: false,
                     },
                 ]
-            let checked = false;
-
-            let reactData = [];
-
             for (const item of data){
                 item.owndomainControl = <ToggleControl
                                  checked= {item.owndomain==1}

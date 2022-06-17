@@ -3798,6 +3798,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _License__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./License */ "./src/License.js");
 /* harmony import */ var react_data_table_component__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! react-data-table-component */ "./node_modules/react-data-table-component/dist/index.cjs.js");
 /* harmony import */ var _utils_api__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./utils/api */ "./src/utils/api.js");
+/* harmony import */ var _utils_lib__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./utils/lib */ "./src/utils/lib.js");
 
 
 
@@ -3807,6 +3808,7 @@ __webpack_require__.r(__webpack_exports__);
 /**
  * https://react-data-table-component.netlify.app
  */
+
 
 
 
@@ -3837,6 +3839,7 @@ class Field extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Component {
   }
 
   onChangeHandler(fieldValue) {
+    console.log("default changehandler");
     let fields = this.props.fields;
     let field = this.props.field;
     fields[this.props.index]['value'] = fieldValue;
@@ -3846,19 +3849,25 @@ class Field extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Component {
     });
   }
 
-  onChangeHandlerDataTable(enabled, item, type) {
+  onChangeHandlerDataTable(enabled, clickedItem, type) {
     console.log("change action");
     console.log(enabled);
-    console.log(item);
-    let fields = this.props.fields;
+    console.log(clickedItem);
     let field = this.props.field;
-    fields[this.props.index]['value'] = fieldValue; //        this.setState( { fields } );
+    console.log(field); //find this item in the field list
+    // for (const item of field.value){
+    //     if (item.id === clickedItem.id) {
+    //         item[type] = enabled;
+    //     }
+    // }
 
-    _utils_api__WEBPACK_IMPORTED_MODULE_6__.setFields(saveFields).then(response => {
-      //this.changedFields = [];
-      this.setState({
-        changedFields: []
-      });
+    console.log("current datatable value ");
+    console.log(this.props.fields);
+    console.log(this.props.field);
+    let saveFields = [];
+    saveFields.push(field); //        this.setState( { fields } );
+
+    _utils_api__WEBPACK_IMPORTED_MODULE_6__.setFields(saveFields).then(response => {//this.changedFields = [];
     });
   }
 
@@ -3975,7 +3984,8 @@ class Field extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Component {
     }
 
     if (field.type === 'permissionspolicy') {
-      //build our header
+      console.log(this.props.field); //build our header
+
       columns = [];
       field.columns.forEach(function (item, i) {
         let newItem = {
@@ -4001,8 +4011,6 @@ class Field extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Component {
         owndomain: false,
         status: false
       }];
-      let checked = false;
-      let reactData = [];
 
       for (const item of data) {
         item.owndomainControl = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.ToggleControl, {
