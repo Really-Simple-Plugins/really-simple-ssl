@@ -375,13 +375,11 @@ function rsssl_blocks(){
 		],
 		[
 			'id'      => 'ssllabs',
-			'header' => [
-				'type' => 'url', 'data' => 'https://really-simple-ssl.com/instructions'
-			],
+			'header' => false,
 			'title'   => __( "SSL Labs", 'really-simple-ssl' ),
 			'help'    => __( 'A help text', 'really-simple-ssl' ),
 			'content' => [ 'type' => 'test', 'data' => 'ssltest', 'interval'=>1000 ],
-			'footer'  => ['type'=>'html', 'data' => '','button' => [ 'text' => __("Run test","really-simple-ssl"), 'disabled' => false ]],
+			'footer'  => ['type'=>'html', 'data' => '','button' => [ 'text' => __("Check SSL Health","really-simple-ssl"), 'disabled' => false ]],
 			'size'    => 'small',
 			'height'    => 'default',
 		],

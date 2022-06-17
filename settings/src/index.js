@@ -15,7 +15,6 @@ import {
     render,
     Component,
 } from '@wordpress/element';
-import { more } from '@wordpress/icons';
 
 import { __ } from '@wordpress/i18n';
 import Field from './fields';

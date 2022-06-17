@@ -163,9 +163,9 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: var(--rsp-spacing-m) var(--rsp-spacing-l);
-    @media(max-width: $rsp-break-xl) {
-      padding: var(--rsp-spacing-s) var(--rsp-spacing-m);
+    @include rsssl-block-padding;
+    &:empty{
+      display: none;
     }
   }
 
@@ -183,11 +183,12 @@
   .rsssl-grid-item-content {
     width: 100%;
     box-sizing: border-box;
-    padding: 0 var(--rsp-spacing-l);
-    @media(max-width: $rsp-break-xl) {
-      padding: 0 var(--rsp-spacing-m);
-    }
+    @include rsssl-block-padding;
+    padding-block: 0;
     flex-grow: 100;
+    &:empty{
+      display: none;
+    }
   }
 
   .rsssl-grid-item-footer {
@@ -199,10 +200,7 @@
     width: 100%;
     min-height: calc(30px + var(--rsp-spacing-s) * 2);
     box-sizing: border-box;
-    padding: var(--rsp-spacing-m) var(--rsp-spacing-l);
-    @media(max-width: $rsp-break-xl) {
-      padding: var(--rsp-spacing-s) var(--rsp-spacing-m);
-    }
+    @include rsssl-block-padding;
     align-self: flex-end;
 
     .rsssl-legend {
@@ -211,6 +209,9 @@
       span {
         padding-left: 5px;
       }
+    }
+    &:empty{
+      display: none;
     }
   }
 

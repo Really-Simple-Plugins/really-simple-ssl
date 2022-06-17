@@ -1,6 +1,3 @@
-import {
-    Placeholder,
-} from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
 import {
     Component,
@@ -10,6 +7,8 @@ import * as rsssl_api from "./utils/api";
 import ProgressBlock from "./ProgressBlock";
 import ProgressHeader from "./ProgressBlockHeader";
 import SecurityFeaturesBlock from './SecurityFeaturesBlock';
+import Placeholder from './Placeholder';
+
 
 /**
  * using the gridbutton generates a button which will refresh the gridblock when clicked
@@ -148,13 +147,12 @@ class GridBlock extends Component {
                         {blockData.header && blockData.header.type==='react' && wp.element.createElement(dynamicComponents[blockData.header.data], DynamicBlockProps)}
                     </div>
                 </div>
-                {!isAPILoaded && <Placeholder></Placeholder>}
+                {!isAPILoaded && <Placeholder lines="12"></Placeholder>}
                 {blockData.content.type!=='react' && <div className="rsssl-grid-item-content" dangerouslySetInnerHTML={{__html: content}}></div>}
                 {blockData.content.type==='react' && <div className="rsssl-grid-item-content">{wp.element.createElement(dynamicComponents[content], DynamicBlockProps)}</div>}
-                <div className="rsssl-grid-item-footer">
-                    { blockData.footer.hasOwnProperty('button') && <GridButton text={blockData.footer.button.text} onClick={this.getBlockData} disabled={this.testDisabled}/>}
-                    { blockData.footer.type==='html' && <span className="rsssl-footer-html" dangerouslySetInnerHTML={{__html: this.footerHtml}}></span>}
-                </div>
+
+                { blockData.footer.hasOwnProperty('button') && <div className="rsssl-grid-item-footer"><GridButton text={blockData.footer.button.text} onClick={this.getBlockData} disabled={this.testDisabled}/></div>}
+                { blockData.footer.type==='html' && <div className="rsssl-grid-item-footer" dangerouslySetInnerHTML={{__html: this.footerHtml}}></div>}
             </div>
         );
     }
