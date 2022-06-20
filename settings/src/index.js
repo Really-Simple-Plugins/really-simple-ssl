@@ -153,6 +153,8 @@ class SettingsGroup extends Component {
 				selectedFields.push(selectedField);
 			}
 		}
+		console.log("groep");
+		console.log(this.props.group);
 		let status = this.getLicenseStatus();
 		let disabled = status !=='valid' && selectedMenuItem.is_premium;
 		let msg;
@@ -161,11 +163,15 @@ class SettingsGroup extends Component {
 		} else {
 			msg = rsssl_settings.messageInvalid;
 		}
+		//get current group, if the id exists
+		let currentGroup = selectedMenuItem.groups.filter(group => group.id === this.props.group)[0];
+		console.log(currentGroup);
 
+		let activeGroup = currentGroup ? currentGroup : selectedMenuItem;
 		return (
 			<div className="rsssl-grouped-fields">
-				{selectedMenuItem && selectedMenuItem.title && <PanelBody><h1 className="rsssl-settings-block-title">{selectedMenuItem.title}</h1></PanelBody>}
-				{selectedMenuItem && selectedMenuItem.intro && <PanelBody><div className="rsssl-settings-block-intro">{selectedMenuItem.intro}</div></PanelBody>}
+				{activeGroup && activeGroup.title && <PanelBody><h1 className="rsssl-settings-block-title">{activeGroup.title}</h1></PanelBody>}
+				{activeGroup && activeGroup.intro && <PanelBody><div className="rsssl-settings-block-intro">{activeGroup.intro}</div></PanelBody>}
 				{selectedFields.map((field, i) => <Field setPageProps={this.props.setPageProps} fieldsUpdateComplete = {this.props.fieldsUpdateComplete} key={i} index={i} highLightField={this.props.highLightField} highLightedField={this.props.highLightedField} saveChangedFields={this.props.saveChangedFields} field={field} fields={selectedFields}/>)}
 				{disabled && <div className="rsssl-locked">
 					<div className="rsssl-locked-overlay">
