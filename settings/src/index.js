@@ -9,6 +9,10 @@ import {
 } from '@wordpress/components';
 
 import Placeholder from './Placeholder';
+import {
+	CSSTransition,
+	TransitionGroup,
+} from 'react-transition-group'
 
 import {
     Fragment,
