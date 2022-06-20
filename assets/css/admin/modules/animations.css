@@ -1,18 +1,18 @@
-.rsssl-grid-block-enter {
+.rsssl-fade-enter {
   opacity: 0;
 }
 
-.rsssl-grid-block-enter-active {
+.rsssl-fade-enter-active {
   opacity: 1;
   -webkit-transition: opacity 200ms;
   transition: opacity 200ms;
 }
 
-.rsssl-grid-block-exit {
+.rsssl-fade-exit {
   opacity: 1;
 }
 
-.rsssl-grid-block-exit-active {
+.rsssl-fade-exit-active {
   opacity: 0;
   -webkit-transition: opacity 200ms;
   transition: opacity 200ms;
