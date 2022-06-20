@@ -586,6 +586,7 @@ class Page extends Component {
 	componentDidMount() {
 		this.selectMenu = this.selectMenu.bind(this);
 		this.highLightField = this.highLightField.bind(this);
+		this.updateField = this.updateField.bind(this);
 		this.selectMainMenu = this.selectMainMenu.bind(this);
 		this.setPageProps = this.setPageProps.bind(this);
 
@@ -614,15 +615,17 @@ class Page extends Component {
 	}
 
 	updateField(field) {
-		const {
-			fields,
-		} = this.state;
+		console.log("run global update field for ");
+		console.log(field);
+		let fields = this.fields;
 		for (const fieldItem of fields){
 			if (fieldItem.id === field.id ){
 				fieldItem.value = field.value;
 			}
 		}
-
+		console.log("NEW FIELDS LIST");
+		console.log(fields);
+		this.fields = fields;
 		this.setState({
 			fields :fields
 		});
