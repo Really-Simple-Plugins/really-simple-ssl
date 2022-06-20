@@ -3282,9 +3282,6 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-/**
- * Menu item, one menu item or child menu item
- */
 
 class MenuItem extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Component {
   constructor() {
@@ -3323,20 +3320,26 @@ class MenuItem extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Component
       }
     }
 
-    let activeClass = menuIsSelected ? 'rsssl-active' : '';
+    let activeClass = menuIsSelected ? 'rsssl-active' : ''; // return (
+    //     <div className={"rsssl-menu-item " + activeClass}>
+    //         <a href="#" onClick={ () => this.handleClick() }>{this.props.menuItem.title}</a>
+    //         {this.props.menuItem.menu_items && menuIsSelected && <div className="rsssl-submenu-item"> this.props.menuItem.menu_items.map((menuItem, i) => <MenuItem key={i} menuItem={menuItem} selectMenu={this.props.selectMenu} selectedMenuItem={this.props.selectedMenuItem}/>) </div> }
+    //     </div>
+    // )
+
     return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-      className: "rsssl-menu-item " + activeClass
+      className: "rsssl-menu-item"
     }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
       href: "#",
       onClick: () => this.handleClick()
-    }, this.props.menuItem.title), this.props.menuItem.menu_items && menuIsSelected && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    }, this.props.menuItem.title), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
       className: "rsssl-submenu-item"
-    }, " this.props.menuItem.menu_items.map((menuItem, i) => ", (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(MenuItem, {
+    }, this.props.menuItem.menu_items && menuIsSelected && this.props.menuItem.menu_items.map((menuItem, i) => (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(MenuItem, {
       key: i,
       menuItem: menuItem,
       selectMenu: this.props.selectMenu,
       selectedMenuItem: this.props.selectedMenuItem
-    }), ") "));
+    }))));
   }
 
 }
@@ -3850,6 +3853,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _License__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./License */ "./src/License.js");
 /* harmony import */ var react_data_table_component__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! react-data-table-component */ "./node_modules/react-data-table-component/dist/index.cjs.js");
 /* harmony import */ var _utils_api__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./utils/api */ "./src/utils/api.js");
+/* harmony import */ var _utils_lib__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./utils/lib */ "./src/utils/lib.js");
 
 
 
@@ -3859,6 +3863,7 @@ __webpack_require__.r(__webpack_exports__);
 /**
  * https://react-data-table-component.netlify.app
  */
+
 
 
 
@@ -3889,6 +3894,7 @@ class Field extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Component {
   }
 
   onChangeHandler(fieldValue) {
+    console.log("default changehandler");
     let fields = this.props.fields;
     let field = this.props.field;
     fields[this.props.index]['value'] = fieldValue;
@@ -3898,19 +3904,30 @@ class Field extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Component {
     });
   }
 
-  onChangeHandlerDataTable(enabled, item) {
-    console.log("change action");
-    console.log(enabled);
-    console.log(item);
-    let fields = this.props.fields;
+  onChangeHandlerDataTable(enabled, clickedItem, type) {
+    // let field = this.props.field;
     let field = this.props.field;
-    fields[this.props.index]['value'] = fieldValue; //        this.setState( { fields } );
+    console.log(field); //find this item in the field list
 
-    _utils_api__WEBPACK_IMPORTED_MODULE_6__.setFields(saveFields).then(response => {
-      //this.changedFields = [];
-      this.setState({
-        changedFields: []
-      });
+    for (const item of field.value) {
+      if (item.id === clickedItem.id) {
+        item[type] = enabled;
+      }
+
+      delete item.owndomainControl;
+      delete item.statusControl;
+    }
+
+    console.log("current datatable value ");
+    console.log(this.props.fields);
+    console.log(this.props.field);
+    let saveFields = [];
+    saveFields.push(field);
+    console.log("save fields");
+    console.log(saveFields); //        this.setState( { fields } );
+
+    this.props.updateField(field);
+    _utils_api__WEBPACK_IMPORTED_MODULE_6__.setFields(saveFields).then(response => {//this.changedFields = [];
     });
   }
 
@@ -4027,43 +4044,26 @@ class Field extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Component {
     }
 
     if (field.type === 'permissionspolicy') {
-      let columns = [{
-        name: 'Feature',
-        selector: row => row.title,
-        sortable: true
-      }, {
-        name: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)('Own domain only', 'really-simple-ssl'),
-        selector: row => row.owndomain
-      }, {
-        name: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)('Allow/Deny', 'really-simple-ssl'),
-        selector: row => row.status
-      }];
-      let checked = false;
-      let data = [{
-        id: 'accelerometer',
-        title: 'Accelerometer',
-        owndomain: true,
-        status: true
-      }, {
-        id: 'autoplay',
-        title: 'Autoplay',
-        owndomain: false,
-        status: false
-      }, {
-        id: 'camera',
-        title: 'Camera',
-        owndomain: false,
-        status: false
-      }];
-      let reactData = [];
+      console.log(this.props.field); //build our header
+
+      columns = [];
+      field.columns.forEach(function (item, i) {
+        let newItem = {
+          name: item.name,
+          sortable: item.sortable,
+          selector: row => row[item.column]
+        };
+        columns.push(newItem);
+      });
+      let data = field.value;
 
       for (const item of data) {
-        item.owndomain = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.ToggleControl, {
+        item.owndomainControl = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.ToggleControl, {
           checked: item.owndomain == 1,
           label: "",
-          onChange: fieldValue => this.onChangeHandlerDataTable(fieldValue, item)
+          onChange: fieldValue => this.onChangeHandlerDataTable(fieldValue, item, 'owndomain')
         });
-        item.status = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(ChangeStatus, {
+        item.statusControl = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(ChangeStatus, {
           status: item.status
         });
       }
@@ -5458,6 +5458,68 @@ class Help extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Component {
 /**
  * Render a grouped block of settings
  */
+//this breaks
+// class SettingsGroup extends Component {
+// 	constructor() {
+// 		super( ...arguments );
+// 		this.state = {
+// 			fields:this.props.fields,
+// 			isAPILoaded: this.props.isAPILoaded,
+// 		};
+// 		this.fields = this.props.fields;
+// 	}
+//
+// 	getLicenseStatus(){
+// 		if (this.props.pageProps.hasOwnProperty('licenseStatus') ){
+// 			return this.props.pageProps['licenseStatus'];
+// 		}
+// 		return 'invalid';
+// 	}
+//
+// 	render(){
+// 		let selectedMenuItem = this.props.selectedMenuItem;
+// 		let selectedFields = [];
+// 		//get all fields with group_id this.props.group_id
+// 		for (const selectedField of this.props.fields){
+// 			if (selectedField.group_id === this.props.group ){
+// 				selectedFields.push(selectedField);
+// 			}
+// 		}
+// 		let status = this.getLicenseStatus();
+// 		let disabled = status !=='valid' && selectedMenuItem.is_premium;
+// 		let msg;
+// 		if ( status === 'empty' || status === 'deactivated' ) {
+// 			msg = rsssl_settings.messageInactive;
+// 		} else {
+// 			msg = rsssl_settings.messageInvalid;
+// 		}
+//
+// 		return (
+// 				// <Fragment>
+// 				// 	<div className="rsssl-grid-item-header">
+// 				// 		<h3 className="h4">{selectedMenuItem.title}</h3>
+// 				// 	</div>
+// 				// 	<div className="rsssl-grid-item-content">
+// 				// 		{selectedMenuItem.intro && <div className="rsssl-settings-block-intro">{selectedMenuItem.intro}</div>}
+// 				// 		{selectedFields.map((field, i) => <Field key={i} index={i} highLightField={this.props.highLightField} highLightedField={this.props.highLightedField} saveChangedFields={this.props.saveChangedFields} field={field} fields={selectedFields}/>)}
+// 				// 	</div>
+// 				// </Fragment>
+//
+// 			<div className="rsssl-grouped-fields">
+// 				{selectedMenuItem && selectedMenuItem.title && <PanelBody><h1 className="rsssl-settings-block-title">{selectedMenuItem.title}</h1></PanelBody>}
+// 				{selectedMenuItem && selectedMenuItem.intro && <PanelBody><div className="rsssl-settings-block-intro">{selectedMenuItem.intro}</div></PanelBody>}
+// 				{selectedFields.map((field, i) => <Field setPageProps={this.props.setPageProps} fieldsUpdateComplete = {this.props.fieldsUpdateComplete} key={i} index={i} highLightField={this.props.highLightField} highLightedField={this.props.highLightedField} saveChangedFields={this.props.saveChangedFields} field={field} fields={selectedFields}/>)}
+// 				{disabled && <div className="rsssl-locked">
+// 					<div className="rsssl-locked-overlay">
+// 						<span className="rsssl-progress-status rsssl-warning">{__("Warning","really-simple-ssl")}</span>
+// 						{msg}&nbsp;<a href={rsssl_settings.url}>{__("Check license", "really-simple-ssl")}</a>
+// 					</div>
+// 				</div>}
+// 			</div>
+// 		)
+// 	}
+// }
+//this one working
 
 
 class SettingsGroup extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Component {
@@ -5488,6 +5550,8 @@ class SettingsGroup extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Comp
       }
     }
 
+    console.log("groep");
+    console.log(this.props.group);
     let status = this.getLicenseStatus();
     let disabled = status !== 'valid' && selectedMenuItem.is_premium;
     let msg;
@@ -5496,17 +5560,35 @@ class SettingsGroup extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Comp
       msg = rsssl_settings.messageInactive;
     } else {
       msg = rsssl_settings.messageInvalid;
+    } //get current group, if the id exists
+
+
+    let activeGroup = selectedMenuItem;
+
+    if (selectedMenuItem.hasOwnProperty('groups')) {
+      let currentGroup = selectedMenuItem.groups.filter(group => group.id === this.props.group);
+
+      if (currentGroup.length > 0) {
+        activeGroup = currentGroup[0];
+      }
     }
 
-    return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    console.log("active group");
+    console.log(activeGroup);
+    return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+      className: "rsssl-grid-item"
+    }, activeGroup && activeGroup.title && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
       className: "rsssl-grid-item-header"
     }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("h3", {
       className: "rsssl-h4"
-    }, selectedMenuItem.title)), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    }, activeGroup.title)), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
       className: "rsssl-grid-item-content"
-    }, selectedMenuItem.intro && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    }, activeGroup && activeGroup.intro && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
       className: "rsssl-settings-block-intro"
-    }, selectedMenuItem.intro), selectedFields.map((field, i) => (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_fields__WEBPACK_IMPORTED_MODULE_6__["default"], {
+    }, activeGroup.intro), selectedFields.map((field, i) => (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_fields__WEBPACK_IMPORTED_MODULE_6__["default"], {
+      updateField: this.props.updateField,
+      setPageProps: this.props.setPageProps,
+      fieldsUpdateComplete: this.props.fieldsUpdateComplete,
       key: i,
       index: i,
       highLightField: this.props.highLightField,
@@ -5514,10 +5596,18 @@ class SettingsGroup extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Comp
       saveChangedFields: this.props.saveChangedFields,
       field: field,
       fields: selectedFields
-    })))) // <div className="rsssl-grouped-fields">
-    // 	{selectedMenuItem && selectedMenuItem.title && <PanelBody><h1 className="rsssl-settings-block-title">{selectedMenuItem.title}</h1></PanelBody>}
-    // 	{selectedMenuItem && selectedMenuItem.intro && <PanelBody><div className="rsssl-settings-block-intro">{selectedMenuItem.intro}</div></PanelBody>}
-    // 	{selectedFields.map((field, i) => <Field setPageProps={this.props.setPageProps} fieldsUpdateComplete = {this.props.fieldsUpdateComplete} key={i} index={i} highLightField={this.props.highLightField} highLightedField={this.props.highLightedField} saveChangedFields={this.props.saveChangedFields} field={field} fields={selectedFields}/>)}
+    })), disabled && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+      className: "rsssl-locked"
+    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+      className: "rsssl-locked-overlay"
+    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
+      className: "rsssl-progress-status rsssl-warning"
+    }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_5__.__)("Warning", "really-simple-ssl")), msg, "\xA0", (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
+      href: rsssl_settings.url
+    }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_5__.__)("Check license", "really-simple-ssl")))))) // <div className="rsssl-grouped-fields">
+    // 	{activeGroup && activeGroup.title && <PanelBody><h1 className="rsssl-settings-block-title">{activeGroup.title}</h1></PanelBody>}
+    // 	{activeGroup && activeGroup.intro && <PanelBody><div className="rsssl-settings-block-intro">{activeGroup.intro}</div></PanelBody>}
+    // 	{selectedFields.map((field, i) => <Field updateField={this.props.updateField} setPageProps={this.props.setPageProps} fieldsUpdateComplete = {this.props.fieldsUpdateComplete} key={i} index={i} highLightField={this.props.highLightField} highLightedField={this.props.highLightedField} saveChangedFields={this.props.saveChangedFields} field={field} fields={selectedFields}/>)}
     // 	{disabled && <div className="rsssl-locked">
     // 		<div className="rsssl-locked-overlay">
     // 			<span className="rsssl-progress-status rsssl-warning">{__("Warning","really-simple-ssl")}</span>
@@ -5605,9 +5695,8 @@ class Settings extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Component
 
     return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
       className: "rsssl-wizard-settings rsssl-column-2"
-    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-      className: "rsssl-grid-item"
     }, groups.map((group, i) => (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(SettingsGroup, {
+      updateField: this.props.updateField,
       pageProps: this.props.pageProps,
       setPageProps: this.props.setPageProps,
       fieldsUpdateComplete: this.props.fieldsUpdateComplete,
@@ -5624,7 +5713,7 @@ class Settings extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Component
     }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_3__.Button, {
       isPrimary: true,
       onClick: this.props.save
-    }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_5__.__)('Save', 'really-simple-ssl'))))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_5__.__)('Save', 'really-simple-ssl')))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
       className: "rsssl-wizard-help"
     }, notices.map((field, i) => (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(Help, {
       key: i,
@@ -5815,6 +5904,7 @@ class SettingsPage extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Compo
       selectMenu: this.props.selectMenu,
       selectedMenuItem: this.props.selectedMenuItem
     }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(Settings, {
+      updateField: this.props.updateField,
       pageProps: this.props.pageProps,
       setPageProps: this.props.setPageProps,
       fieldsUpdateComplete: fieldsUpdateComplete,
@@ -6002,6 +6092,22 @@ class Page extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Component {
     });
   }
 
+  updateField(field) {
+    const {
+      fields
+    } = this.state;
+
+    for (const fieldItem of fields) {
+      if (fieldItem.id === field.id) {
+        fieldItem.value = field.value;
+      }
+    }
+
+    this.setState({
+      fields: fields
+    });
+  }
+
   highLightField(fieldId) {
     //switch to settings page
     this.selectMainMenu('settings'); //get menu item based on fieldId
@@ -6036,6 +6142,7 @@ class Page extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Component {
       className: "rsssl-content-area rsssl-grid rsssl-" + selectedMainMenuItem
     }, selectedMainMenuItem === 'settings' && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(SettingsPage, {
       pageProps: this.pageProps,
+      updateField: this.updateField,
       setPageProps: this.setPageProps,
       selectMenu: this.selectMenu,
       highLightField: this.highLightField,

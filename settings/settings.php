@@ -202,6 +202,7 @@ function rsssl_sanitize_field_type($type){
         'number',
         'email',
         'select',
+        'permissionspolicy',
     ];
     if ( in_array($type, $types) ){
         return $type;
@@ -367,6 +368,8 @@ function rsssl_sanitize_field( $value, $type ) {
 			return esc_url_raw( $value );
 		case 'number':
 			return intval( $value );
+        case 'permissionspolicy':
+            return $value;
 		default:
 			return sanitize_text_field( $value );
 	}

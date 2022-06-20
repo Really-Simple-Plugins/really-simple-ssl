@@ -10,10 +10,24 @@ function rsssl_menu( $group_id = 'settings' ){
 				'menu_items' => [
 					[
 						'id' => 'general',
+						'group_id' => 'general',
 						'title' => __('General', 'really-simple-ssl'),
 						'intro' => __("An introduction on some cool stuff", "really-simple-ssl"),
 						'step' => 1,
+						'groups' => [
+//							[
+//								'id' => 'general',
+//								'title' => __('General', 'really-simple-ssl'),
+//								'intro' => __("An introduction on some cool stuff", "really-simple-ssl"),
+//							],
+							[
+								'id' => 'general_2',
+								'title' => __('General 2', 'really-simple-ssl'),
+								'intro' => __("Group intro", "really-simple-ssl"),
+							]
+						],
 					],
+
 					[
 						'id' => 'mixed_content_scan',
 						'title' => __('Mixed Content Scan', 'really-simple-ssl'),
@@ -203,7 +217,7 @@ function rsssl_fields(){
 		[
 			'id'          => 'dismiss_all_notices',
 			'menu_id'     => 'general',
-			'group_id'    => 'general',
+			'group_id'    => 'general_2',
 			'type'        => 'checkbox',
 			'label'       => __( "Dismiss all Really Simple SSL notices", 'really-simple-ssl' ),
 			'help'        => [

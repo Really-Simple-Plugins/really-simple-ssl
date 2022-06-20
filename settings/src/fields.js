@@ -25,6 +25,7 @@ import {
  */
 import DataTable from "react-data-table-component";
 import * as rsssl_api from "./utils/api";
+import in_array from "./utils/lib";
 
 class ChangeStatus extends Component {
     constructor() {
@@ -50,6 +51,7 @@ class Field extends Component {
     }
 
     onChangeHandler(fieldValue) {
+        console.log("default changehandler");
          let fields = this.props.fields;
         let field = this.props.field;
         fields[this.props.index]['value'] = fieldValue;
@@ -57,20 +59,32 @@ class Field extends Component {
         this.setState( { fields } )
     }
 
-    onChangeHandlerDataTable(enabled, item) {
+    onChangeHandlerDataTable(enabled, clickedItem, type) {
 
-        console.log("change action");
-        console.log(enabled);
-        console.log(item);
-        let fields = this.props.fields;
+        // let field = this.props.field;
         let field = this.props.field;
-        fields[this.props.index]['value'] = fieldValue;
+        console.log(field);
+        //find this item in the field list
+        for (const item of field.value){
+            if (item.id === clickedItem.id) {
+                item[type] = enabled;
+            }
+            delete item.owndomainControl;
+            delete item.statusControl;
+        }
+
+        console.log("current datatable value ");
+        console.log(this.props.fields);
+        console.log(this.props.field);
+
+        let saveFields = [];
+        saveFields.push(field);
+        console.log("save fields");
+        console.log(saveFields);
 //        this.setState( { fields } );
+        this.props.updateField(field)
         rsssl_api.setFields(saveFields).then(( response ) => {
             //this.changedFields = [];
-            this.setState({
-                changedFields :[]
-            });
         });
     }
     onCloseTaskHandler(){
@@ -186,54 +200,27 @@ class Field extends Component {
         }
 
         if ( field.type==='permissionspolicy' ) {
-            let columns =   [
-                {
-                    name: 'Feature',
-                    selector: row => row.title,
-                    sortable: true,
-                },
-                {
-                    name: __('Own domain only', 'really-simple-ssl'),
-                    selector: row => row.owndomain,
+            console.log(this.props.field);
+            //build our header
+            columns = [];
+            field.columns.forEach(function(item, i) {
+                let newItem = {
+                    name: item.name,
+                    sortable: item.sortable,
+                    selector: row => row[item.column],
+                }
+                columns.push(newItem);
+            });
 
-                },
-                {
-                    name: __('Allow/Deny', 'really-simple-ssl'),
-                    selector: row => row.status,
-
-                },
-            ];
-
-            let checked = false;
-            let data = [
-                    {
-                        id: 'accelerometer',
-                        title: 'Accelerometer',
-                        owndomain: true,
-                        status: true,
-                    },
-                    {
-                        id: 'autoplay',
-                        title: 'Autoplay',
-                        owndomain: false,
-                        status: false,
-                    },
-                    {
-                        id: 'camera',
-                        title: 'Camera',
-                        owndomain: false,
-                        status: false,
-                    },
-                ]
-            let reactData = [];
+            let data = field.value;
 
             for (const item of data){
-                item.owndomain = <ToggleControl
+                item.owndomainControl = <ToggleControl
                                  checked= {item.owndomain==1}
                                  label=''
-                                 onChange={ ( fieldValue ) => this.onChangeHandlerDataTable( fieldValue, item ) }
+                                 onChange={ ( fieldValue ) => this.onChangeHandlerDataTable( fieldValue, item, 'owndomain' ) }
                              />
-                item.status = <ChangeStatus status={item.status} />;
+                item.statusControl = <ChangeStatus status={item.status} />;
             }
             return (
                 <PanelBody className={ this.highLightClass}>
