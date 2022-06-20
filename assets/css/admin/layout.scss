@@ -144,6 +144,7 @@
 
   .rsssl-grid-item {
     @include rsssl-block;
+    transition: all 1s ease;
     display: flex;
     flex-wrap: wrap;
     justify-content: flex-start;

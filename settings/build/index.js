@@ -3095,7 +3095,7 @@ class GridBlock extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Componen
     }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
       className: "rsssl-grid-item-header"
     }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("h3", {
-      className: "burst-grid-title h4"
+      className: "burst-grid-title rsssl-h4"
     }, blockData.title), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
       className: "rsssl-grid-item-controls"
     }, blockData.header && blockData.header.type === 'url' && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {

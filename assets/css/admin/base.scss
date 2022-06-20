@@ -3,6 +3,8 @@
   margin-left: -20px;
   font-size: var(--rsp-fs-300);
   box-sizing: border-box;
+  color: var(--rsp-text-color);
+  font-weight: 400;
   line-height: 1.5;
 
   *, *:before, *:after {
@@ -73,7 +75,7 @@
 	line-height: 1.5;
   }
 
-  .small-text {
+  .rsssl-small-text {
 	font-size: var(--rsp-fs-200);
 	line-height: 1.5;
 	color: var(--rsp-text-color-light);
