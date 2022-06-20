@@ -5886,6 +5886,7 @@ class Header extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Component {
     let menu = rsssl_settings.menu;
     let plugin_url = rsssl_settings.plugin_url;
     let active_menu_item = this.props.selectedMainMenuItem;
+    let knowledgeBaseBtnClass = !rsssl_settings.premium ? 'button button-black' : '';
     return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
       className: "rsssl-header-container"
     }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
@@ -5908,7 +5909,7 @@ class Header extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Component {
       className: "rsssl-header-right"
     }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
       href: "https://really-simple-ssl.com/knowledge-base",
-      className: !rsssl_settings.premium && 'button button-black',
+      className: knowledgeBaseBtnClass,
       target: "_blank"
     }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_5__.__)("Documentation", "really-simple-ssl")), rsssl_settings.premium && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
       href: "https://wordpress.org/support/plugin/really-simple-ssl/",

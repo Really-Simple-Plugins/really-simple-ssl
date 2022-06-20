@@ -40,7 +40,6 @@ class MenuItem extends Component {
             }
         }
         let activeClass = menuIsSelected ? 'rsssl-active' : '';
-
         return (
             <div className={"rsssl-menu-item " + activeClass}>
                 <a href="#" onClick={ () => this.handleClick() }>{this.props.menuItem.title}</a>
