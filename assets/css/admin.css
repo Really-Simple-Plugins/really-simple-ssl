@@ -784,64 +784,64 @@
   animation: shine-lines 1.6s infinite linear;
 }
 .post .line:nth-of-type(1) {
-  width: 71%;
+  width: 65%;
 }
 .post .line:nth-of-type(2) {
-  width: 88%;
+  width: 97%;
 }
 .post .line:nth-of-type(3) {
-  width: 83%;
+  width: 92%;
 }
 .post .line:nth-of-type(4) {
-  width: 70%;
+  width: 82%;
 }
 .post .line:nth-of-type(5) {
-  width: 80%;
+  width: 68%;
 }
 .post .line:nth-of-type(6) {
-  width: 91%;
+  width: 100%;
 }
 .post .line:nth-of-type(7) {
-  width: 90%;
+  width: 96%;
 }
 .post .line:nth-of-type(8) {
-  width: 73%;
+  width: 86%;
 }
 .post .line:nth-of-type(9) {
-  width: 87%;
+  width: 93%;
 }
 .post .line:nth-of-type(10) {
-  width: 85%;
+  width: 68%;
 }
 .post .line:nth-of-type(11) {
-  width: 75%;
+  width: 70%;
 }
 .post .line:nth-of-type(12) {
-  width: 71%;
-}
-.post .line:nth-of-type(13) {
-  width: 68%;
-}
-.post .line:nth-of-type(14) {
   width: 63%;
 }
+.post .line:nth-of-type(13) {
+  width: 87%;
+}
+.post .line:nth-of-type(14) {
+  width: 85%;
+}
 .post .line:nth-of-type(15) {
-  width: 68%;
+  width: 71%;
 }
 .post .line:nth-of-type(16) {
-  width: 81%;
+  width: 62%;
 }
 .post .line:nth-of-type(17) {
-  width: 77%;
+  width: 98%;
 }
 .post .line:nth-of-type(18) {
-  width: 99%;
+  width: 71%;
 }
 .post .line:nth-of-type(19) {
-  width: 81%;
+  width: 70%;
 }
 .post .line:nth-of-type(20) {
-  width: 83%;
+  width: 69%;
 }
 .post .line ~ .line {
   background-color: #ddd;

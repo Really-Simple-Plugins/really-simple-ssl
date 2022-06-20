@@ -5,9 +5,6 @@ import {
     Component,
 } from '@wordpress/element';
 
-/**
- * Menu item, one menu item or child menu item
- */
 class MenuItem extends Component {
     constructor() {
         super( ...arguments );
@@ -41,11 +38,20 @@ class MenuItem extends Component {
                 }
             }
         }
+
         let activeClass = menuIsSelected ? 'rsssl-active' : '';
+        // return (
+        //     <div className={"rsssl-menu-item " + activeClass}>
+        //         <a href="#" onClick={ () => this.handleClick() }>{this.props.menuItem.title}</a>
+        //         {this.props.menuItem.menu_items && menuIsSelected && <div className="rsssl-submenu-item"> this.props.menuItem.menu_items.map((menuItem, i) => <MenuItem key={i} menuItem={menuItem} selectMenu={this.props.selectMenu} selectedMenuItem={this.props.selectedMenuItem}/>) </div> }
+        //     </div>
+        // )
         return (
             <div className={"rsssl-menu-item " + activeClass}>
                 <a href="#" onClick={ () => this.handleClick() }>{this.props.menuItem.title}</a>
-                {this.props.menuItem.menu_items && menuIsSelected && <div className="rsssl-submenu-item"> this.props.menuItem.menu_items.map((menuItem, i) => <MenuItem key={i} menuItem={menuItem} selectMenu={this.props.selectMenu} selectedMenuItem={this.props.selectedMenuItem}/>) </div> }
+                <div className="rsssl-submenu-item">
+                    {this.props.menuItem.menu_items && menuIsSelected && this.props.menuItem.menu_items.map((menuItem, i) => <MenuItem key={i} menuItem={menuItem} selectMenu={this.props.selectMenu} selectedMenuItem={this.props.selectedMenuItem}/>)}
+                </div>
             </div>
         )
     }
