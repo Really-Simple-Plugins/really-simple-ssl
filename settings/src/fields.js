@@ -111,7 +111,7 @@ class Field extends Component {
 
         if ( field.type==='checkbox' ){
             return (
-                <PanelBody className={ this.highLightClass}>
+                <PanelRow className={ this.highLightClass}>
                     <ToggleControl
                         disabled = {field.disabled}
                         checked= { field.value==1 }
@@ -119,19 +119,19 @@ class Field extends Component {
                         label={ field.label }
                         onChange={ ( fieldValue ) => this.onChangeHandler(fieldValue) }
                     />
-                </PanelBody>
+                </PanelRow>
             );
         }
         if ( field.type==='radio' ){
             return (
-                <PanelBody className={ this.highLightClass}>
+                <PanelRow className={ this.highLightClass}>
                     <RadioControl
                         label={ field.label }
                         onChange={ ( fieldValue ) => this.onChangeHandler(fieldValue) }
                         selected={ fieldValue }
                         options={ options }
                     />
-                </PanelBody>			);
+                </PanelRow>			);
         }
         if ( field.type==='text' ){
             return (

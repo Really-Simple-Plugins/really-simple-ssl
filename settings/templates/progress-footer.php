@@ -1,6 +1,6 @@
 <?php defined('ABSPATH') or die();
 
-$go_pro = '<a href="'.RSSSL()->really_simple_ssl->pro_url.'" target="_blank" class="button button-default upsell">'.__("Go PRO!", "really-simple-ssl")."</a>";
+$go_pro = '<a href="'.RSSSL()->really_simple_ssl->pro_url.'" target="_blank" class="button button-default">'.__("Go PRO!", "really-simple-ssl")."</a>";
 $activate_btn = "";
 if ( 
      !RSSSL()->really_simple_ssl->ssl_enabled && 
@@ -20,16 +20,15 @@ $items = [
 	],
 ];
 
-?>
-<div id="rsssl-progress-footer">
-    <span class="rsssl-footer-item footer-left">
-        <?php echo apply_filters("rsssl_progress_footer_left", '').$activate_btn.apply_filters("rsssl_progress_footer_right", $go_pro )?>
-    </span>
-	<?php
-	foreach ($items as $item) { ?>
-		<span class="rsssl-footer-item footer-right">
-		    <span class="rsssl-grid-footer rsssl-dot <?php echo $item['class']?>"></span>
-            <?php echo $item['text']?>
-		</span>
-	<?php }  ?>
-</div>
+echo apply_filters("rsssl_progress_footer_left", '').$activate_btn.apply_filters("rsssl_progress_footer_right", $go_pro );
+$n = 0;
+foreach ($items as $item) {
+	$push_right = $n === 0 ? ' rsssl-flex-push-right' : '';
+    ?>
+    <div class="rsssl-legend<?php echo $push_right ?>">
+        <span class="rsssl-grid-footer rsssl-bullet <?php echo $item['class']?>"></span>
+        <?php echo $item['text']?>
+    </div>
+    <?php
+    $n++;
+}

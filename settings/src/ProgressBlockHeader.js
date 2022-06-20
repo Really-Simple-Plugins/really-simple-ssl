@@ -15,7 +15,6 @@ class ProgressHeader extends Component {
         this.setState({
             filter: this.filter,
         })
-
     }
 
     onClickHandler(e){
@@ -47,18 +46,15 @@ class ProgressHeader extends Component {
         }
 
         return (
-            <div className={"rsssl-task-control-container rsssl-active-filter-"+this.filter}>
-                <div className="rsssl-all-tasks">
-                    <label onClick={this.onClickHandler} htmlFor="rsssl-all-tasks" data-filter="all">
+            <div className={"rsssl-task-switcher-container rsssl-active-filter-"+this.filter}>
+                <span className="rsssl-task-switcher rsssl-all-tasks" onClick={this.onClickHandler} htmlFor="rsssl-all-tasks" data-filter="all">
                         { __( "All tasks", "really-simple-ssl" ) }
                         <span className="rsssl_task_count">({all_task_count})</span>
-                    </label>
-                </div>
-                <div className="rsssl-remaining-tasks">
-                    <label onClick={this.onClickHandler} htmlFor="rsssl-remaining-tasks" data-filter="remaining">
+                </span>
+                <span className="rsssl-task-switcher rsssl-remaining-tasks" onClick={this.onClickHandler} htmlFor="rsssl-remaining-tasks" data-filter="remaining">
                         { __( "Remaining tasks", "really-simple-ssl" )}
-                        <span className="rsssl_task_count">({open_task_count})</span></label>
-                </div>
+                        <span className="rsssl_task_count">({open_task_count})</span>
+                </span>
             </div>
         );
     }

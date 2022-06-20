@@ -5,8 +5,10 @@ import {
     Button,
     Panel,
     PanelBody,
+		PanelRow,
     Placeholder,
 } from '@wordpress/components';
+
 
 import {
     Fragment,
@@ -33,19 +35,26 @@ class Help extends Component {
 	}
 	render(){
 		let notice = this.props.help;
+		console.log(notice);
 		if ( !notice.title ){
 			notice.title = notice.text;
 			notice.text = false;
 		}
 
-		let titleClass = 'rsssl-wizard__help_title';
-		if (notice.text) titleClass+= ' rsssl-wizard__help_has_content';
 
 		return (
-			<div data-help_index={this.props.index} className="rsssl-wizard__help_notice" data-field_id={this.props.field}>
-				<div className={titleClass} onClick={ () => this.handleClick(this.props.index) }>{notice.title}</div>
-				{notice.text && <div className="rsssl-wizard__help_content" dangerouslySetInnerHTML={{__html: notice.text}}></div>}
-			</div>
+			<Fragment>
+				{ notice.title && notice.text &&
+						<details className={"rsssl-wizard-help-notice rsssl-" + notice.label.toLowerCase()}>
+							<summary>{notice.title}</summary>
+							{notice.text}
+						</details>
+				}
+				{ notice.title && !notice.text &&
+						<div className={"rsssl-wizard-help-notice  rsssl-" + notice.label.toLowerCase()}><p>{notice.title}</p></div>
+				}
+			</Fragment>
+
 		);
 
 	}
@@ -90,17 +99,27 @@ class SettingsGroup extends Component {
 		}
 
 		return (
-			<div className="rsssl-grouped-fields">
-				{selectedMenuItem && selectedMenuItem.title && <PanelBody><h1 className="rsssl-settings-block-title">{selectedMenuItem.title}</h1></PanelBody>}
-				{selectedMenuItem && selectedMenuItem.intro && <PanelBody><div className="rsssl-settings-block-intro">{selectedMenuItem.intro}</div></PanelBody>}
-				{selectedFields.map((field, i) => <Field setPageProps={this.props.setPageProps} fieldsUpdateComplete = {this.props.fieldsUpdateComplete} key={i} index={i} highLightField={this.props.highLightField} highLightedField={this.props.highLightedField} saveChangedFields={this.props.saveChangedFields} field={field} fields={selectedFields}/>)}
-				{disabled && <div className="rsssl-locked">
-					<div className="rsssl-locked-overlay">
-						<span className="rsssl-progress-status rsssl-warning">{__("Warning","really-simple-ssl")}</span>
-						{msg}&nbsp;<a href={rsssl_settings.url}>{__("Check license", "really-simple-ssl")}</a>
+				<Fragment>
+					<div className="rsssl-grid-item-header">
+						<h3 className="h4">{selectedMenuItem.title}</h3>
 					</div>
-				</div>}
-			</div>
+					<div className="rsssl-grid-item-content">
+						{selectedMenuItem.intro && <div className="rsssl-settings-block-intro">{selectedMenuItem.intro}</div>}
+						{selectedFields.map((field, i) => <Field key={i} index={i} highLightField={this.props.highLightField} highLightedField={this.props.highLightedField} saveChangedFields={this.props.saveChangedFields} field={field} fields={selectedFields}/>)}
+					</div>
+				</Fragment>
+
+			// <div className="rsssl-grouped-fields">
+			// 	{selectedMenuItem && selectedMenuItem.title && <PanelBody><h1 className="rsssl-settings-block-title">{selectedMenuItem.title}</h1></PanelBody>}
+			// 	{selectedMenuItem && selectedMenuItem.intro && <PanelBody><div className="rsssl-settings-block-intro">{selectedMenuItem.intro}</div></PanelBody>}
+			// 	{selectedFields.map((field, i) => <Field setPageProps={this.props.setPageProps} fieldsUpdateComplete = {this.props.fieldsUpdateComplete} key={i} index={i} highLightField={this.props.highLightField} highLightedField={this.props.highLightedField} saveChangedFields={this.props.saveChangedFields} field={field} fields={selectedFields}/>)}
+			// 	{disabled && <div className="rsssl-locked">
+			// 		<div className="rsssl-locked-overlay">
+			// 			<span className="rsssl-progress-status rsssl-warning">{__("Warning","really-simple-ssl")}</span>
+			// 			{msg}&nbsp;<a href={rsssl_settings.url}>{__("Check license", "really-simple-ssl")}</a>
+			// 		</div>
+			// 	</div>}
+			// </div>
 		)
 	}
 }
@@ -172,23 +191,23 @@ class Settings extends Component {
 			}
 		}
 		return (
-			<div className="rsssl-wizard-settings">
-				<div className="rsssl-wizard__main">
-					<Panel>
+			<Fragment>
+				<div className="rsssl-wizard-settings rsssl-column-2">
+					<div className="rsssl-grid-item">
 						{groups.map((group, i) => <SettingsGroup pageProps={this.props.pageProps} setPageProps={this.props.setPageProps} fieldsUpdateComplete = {this.props.fieldsUpdateComplete} key={i} index={i} highLightField={this.props.highLightField} highLightedField={this.props.highLightedField} selectedMenuItem={selectedMenuItemObject} saveChangedFields={this.props.saveChangedFields} group={group} fields={selectedFields}/>)}
-						<div className="rsssl-buttons-row">
+						<div className="rsssl-grid-item-footer">
 							<Button
-								isPrimary
-								onClick={ this.props.save }>
+									isPrimary
+									onClick={ this.props.save }>
 								{ __( 'Save', 'really-simple-ssl' ) }
 							</Button>
 						</div>
-					</Panel>
+					</div>
 				</div>
-				<div className="rsssl-wizard__help">
+				<div className="rsssl-wizard-help">
 					{notices.map((field, i) => <Help key={i} index={i} help={field} fieldId={field.id}/>)}
 				</div>
-			</div>
+			</Fragment>
 		)
 	}
 }
@@ -365,11 +384,9 @@ class SettingsPage extends Component {
 
         return (
             <Fragment>
-				<Menu isAPILoaded={isAPILoaded} menuItems={this.menuItems} menu={this.menu} selectMenu={this.props.selectMenu} selectedMenuItem={this.props.selectedMenuItem}/>
-				<Settings pageProps={this.props.pageProps} setPageProps={this.props.setPageProps} fieldsUpdateComplete = {fieldsUpdateComplete} highLightField={this.props.highLightField} highLightedField={this.props.highLightedField} isAPILoaded={isAPILoaded} fields={this.fields} progress={progress} saveChangedFields={this.saveChangedFields} menu={menu} save={this.save} selectedMenuItem={this.props.selectedMenuItem} selectedStep={selectedStep}/>
-				<div className="rsssl-wizard__notices">
-					<Notices/>
-				</div>
+							<Menu isAPILoaded={isAPILoaded} menuItems={this.menuItems} menu={this.menu} selectMenu={this.props.selectMenu} selectedMenuItem={this.props.selectedMenuItem}/>
+							<Settings pageProps={this.props.pageProps} setPageProps={this.props.setPageProps} fieldsUpdateComplete = {fieldsUpdateComplete} highLightField={this.props.highLightField} highLightedField={this.props.highLightedField} isAPILoaded={isAPILoaded} fields={this.fields} progress={progress} saveChangedFields={this.saveChangedFields} menu={menu} save={this.save} selectedMenuItem={this.props.selectedMenuItem} selectedStep={selectedStep}/>
+							<Notices className="rsssl-wizard-notices"/>
             </Fragment>
         )
     }
@@ -383,9 +400,9 @@ class DashboardPage extends Component {
 	render() {
 		let blocks = rsssl_settings.blocks;
 		return (
-			<div className="rsssl-grid">
+			<Fragment>
 				{blocks.map((block, i) => <GridBlock key={i} block={block} isApiLoaded={this.props.isAPILoaded} fields={this.props.fields} highLightField={this.props.highLightField}/>)}
-			</div>
+			</Fragment>
 		);
 	}
 }
@@ -419,25 +436,28 @@ class Header extends Component {
 		} = this.state;
 		let menu = rsssl_settings.menu;
 		let plugin_url = rsssl_settings.plugin_url;
+		let active_menu_item = this.props.selectedMainMenuItem;
+		let knowledgeBaseBtnClass = !rsssl_settings.premium ?'button button-black' :'';
 		return (
-			<div className="rsssl-header nav-tab-wrapper">
-				<div className="rsssl-logo-container">
-					<div id="rsssl-logo"><img src={plugin_url+"/assets/really-simple-ssl-logo.png"} alt="review-logo" /></div>
-				</div>
-				{menu.map((menu_item, i) => <a key={i} onClick={ () => this.handleClick(menu_item.id) } className='nav-tab' href='#' >{menu_item.label}</a>)}
-				<div className="header-links">
-					<div className="documentation">
-						<a href="https://really-simple-ssl.com/knowledge-base"
-						   className={rsssl_settings.premium && 'button button-primary'}
-						   target="_blank">{__("Documentation", "really-simple-ssl")}</a>
+			<div className="rsssl-header-container">
+				<div className="rsssl-header">
+					<img className="rsssl-logo" src={plugin_url+"assets/img/really-simple-ssl-logo.png"} alt="Really Simple SSL logo" />
+					<div className="rsssl-header-left">
+						<nav className="rsssl-header-menu">
+							<ul>
+							{menu.map((menu_item, i) => <li key={i}><a className={ active_menu_item === menu_item.id ? 'active' : '' } onClick={ () => this.handleClick(menu_item.id) } href={"#" + menu_item.id.toString()} >{menu_item.label}</a></li>)}
+							</ul>
+						</nav>
 					</div>
-					<div className="header-upsell">
-						{rsssl_settings.premium &&
-						<div className="documentation">
-							<a href="https://wordpress.org/support/plugin/really-simple-ssl/"
-							   className="button button-primary"
-							   target="_blank">{__("Support", "really-simple-ssl")}</a>
-						</div>}
+					<div className="rsssl-header-right">
+							<a href="https://really-simple-ssl.com/knowledge-base"
+								 className={knowledgeBaseBtnClass}
+								 target="_blank">{__("Documentation", "really-simple-ssl")}</a>
+							{rsssl_settings.premium &&
+								<a href="https://wordpress.org/support/plugin/really-simple-ssl/"
+									 className="button button-black"
+									 target="_blank">{__("Support", "really-simple-ssl")}</a>
+							}
 					</div>
 				</div>
 			</div>
@@ -549,9 +569,9 @@ class Page extends Component {
 		} = this.state;
 
 		return (
-			<div id="rsssl-wrapper">
+			<div className="rsssl-wrapper">
 				<Header selectedMainMenuItem={selectedMainMenuItem} selectMainMenu={this.selectMainMenu} fields={fields}/>
-				<div id="rsssl-container">
+				<div className={"rsssl-content-area rsssl-grid rsssl-" + selectedMainMenuItem}>
 					{selectedMainMenuItem==='settings' && <SettingsPage pageProps={this.pageProps} setPageProps={this.setPageProps} selectMenu={this.selectMenu} highLightField={this.highLightField} highLightedField={this.highLightedField} selectedMenuItem={selectedMenuItem} isAPILoaded={isAPILoaded} fields={fields} menu={menu} progress={progress}/> }
 					{selectedMainMenuItem==='dashboard' && <DashboardPage isAPILoaded={isAPILoaded} fields={fields} highLightField={this.highLightField}/> }
 				</div>

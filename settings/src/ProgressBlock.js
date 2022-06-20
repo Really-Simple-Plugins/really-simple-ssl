@@ -4,6 +4,7 @@ import {
 } from '@wordpress/element';
 
 import * as rsssl_api from "./utils/api";
+
 import TaskElement from "./TaskElement";
 
 class ProgressBlock extends Component {

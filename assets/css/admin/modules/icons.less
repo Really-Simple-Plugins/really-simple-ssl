@@ -1,0 +1,40 @@
+.cmplz-icon, .cmplz-icon-tooltip{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  svg{
+	fill: currentColor;
+  }
+}
+
+.cmplz-copy-shortcode{
+  cursor:pointer;
+  display: flex;
+  justify-content: center;
+  transition: transform 0.1s ease-in;
+  &.cmplz-click-animation .cmplz-icon{
+	animation: beat 0.4s ease-out;
+  }
+  @keyframes beat {
+	0% {
+	  transform: scale(1);
+	}
+	50% {
+	  transform: scale(0.80);
+	}
+	95% {
+	  transform: scale(1.1);
+	}
+	100% {
+	  transform: scale(1);
+	}
+  }
+}
+
+.cmplz-copy-shortcode-text {
+  right:10000px;
+  position:absolute;
+  background-color:#fff;
+  padding: 0;
+  white-space: nowrap;
+}

@@ -1,0 +1,204 @@
+.rsssl-progress-block {
+  .rsssl-progress {
+    overflow: hidden;
+    height: 20px;
+    border-radius: 5px;
+    background-color: #f7f7f7;
+
+    .rsssl-bar {
+      height: 100%;
+      background-color: var(--rsp-color-success);
+
+      &.rsssl-orange {
+        background-color: var(--rsp-color-warning);
+      }
+    }
+  }
+
+  .rsssl-progress-text {
+    display: flex;
+    align-items: center;
+    padding-top: 10px;
+
+    .rsssl-progress-percentage {
+      font-size: 32px;
+      font-weight: 700;
+    }
+
+    .rsssl-progress-text {
+      margin-left: 35px;
+      font-size: 18px;
+      font-weight: 600;
+
+      a {
+        margin-left: 3px;
+      }
+    }
+  }
+}
+
+.rsssl-header-html {
+  display: flex;
+  color: var(--rsp-text-color-light);
+
+  .rsssl-toggle-active {
+    text-decoration: underline;
+  }
+}
+.rsssl-task-switcher-container{
+  display: flex;
+  border-radius: var(--rsp-border-radius);
+  .rsssl-task-switcher{
+    &:first-of-type{
+      border-right: 1px solid var(--rsp-grey-400);
+      padding-right: 10px;
+    }
+    &:last-of-type{
+      padding-left: 10px;
+    }
+  }
+}
+.rsssl-task-switcher {
+  font-size: var(--rsp-fs-200);
+  cursor:	pointer;
+  transition: 0.3s;
+  &:hover{
+    text-decoration: underline;
+  }
+}
+.rsssl-active-filter-remaining .rsssl-remaining-tasks, .rsssl-active-filter-all .rsssl-all-tasks{
+  text-decoration: underline;
+}
+
+//.rsssl-task-control-container {
+//  display: flex;
+//
+//  label {
+//    margin: 0 5px;
+//    border-bottom: 1px solid lightgrey;
+//    color: lightgrey;
+//  }
+//
+//  &.rsssl-active-filter-remaining .rsssl-remaining-tasks label {
+//    text-decoration: none;
+//    border-bottom: 0;
+//    color: initial;
+//  }
+//
+//  &.rsssl-active-filter-all .rsssl-all-tasks label {
+//    text-decoration: none;
+//    border-bottom: 0;
+//    color: initial;
+//  }
+//}
+
+/**
+* Task element, list of tasks
+ */
+
+.rsssl-task-element {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--rsp-spacing-m);
+  padding-bottom: var(--rsp-spacing-s);
+
+  .rsssl-task-message {
+    flex: 1;
+  }
+
+  .rsssl-task-enable {
+    cursor: pointer;
+  }
+
+  .rsssl-task-dismiss {
+    button {
+      all: initial; //remove default button styles
+    }
+
+    span {
+      font-size: 1.5em;
+      color: black;
+      font-family: sans-serif;
+
+      &:hover {
+        cursor: pointer;
+        color: grey;
+      }
+
+      svg {
+        height: 12px;
+        width: 12px;
+      }
+    }
+  }
+}
+.rsssl-scroll-container {
+  margin-top: 20px;
+  height: 202px;
+  overflow-y: auto;
+  padding: 0;
+  border-radius: 0;
+
+  &::-webkit-scrollbar-track {
+    border-radius: 10px;
+    -webkit-box-shadow: inset 0 0 2px rgba(0, 0, 0, 0);
+    background-color: transparent;
+  }
+
+  &::-webkit-scrollbar {
+    width: 8px;
+    background-color: var(--rsp-grey-300);
+    cursor: pointer;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: var(--rsp-grey-400);
+    border-radius: 10px;
+  }
+}
+.rsssl-progress-status-container {
+  margin-right:40px;
+}
+
+.rsssl-task-status {
+  display: block;
+  min-width: 96px;
+  text-align: center;
+  border-radius: 15px;
+  padding: 4px 8px;
+  font-size: var(--rsp-fs-100);
+  font-weight: 600;
+
+  &.rsssl-completed {
+    background-color: var(--rsp-color-success);
+    color: var(--rsp-text-color-white);
+  }
+
+  &.rsssl-open {
+    background-color: var(--rsp-color-open);
+  }
+
+  &.rsssl-urgent {
+    background-color: var(--rsp-color-error);
+    color: var(--rsp-text-color-white);
+  }
+
+  &.rsssl-warning {
+    background-color: var(--rsp-color-warning);
+    color: var(--rsp-text-color-white);
+  }
+
+  &.rsssl-premium {
+    background-color: var(--rsp-color-success);
+    color: var(--rsp-text-color-white);
+  }
+}
+.rsssl-plusone {
+  border-radius: 50%;
+  background-color: x;
+  color: #fff;
+  padding: 2px 6px;
+  font-size: 10px;
+}
+
