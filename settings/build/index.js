@@ -3416,15 +3416,19 @@ class Placeholder extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Compon
   }
 
   render() {
+    let lines = this.props.lines;
+    if (!lines) lines = 1;
     return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-      class: "rsssl-placeholder"
+      className: "rsssl-placeholder"
     }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
       className: "post"
     }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
       className: "line"
-    }, " ", this.props.lines, " "), [...Array(this.props.lines)].map((e, i) => (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
+    }, Array.from({
+      length: lines
+    }).map((item, i) => (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
       key: i
-    }))));
+    })))));
   }
 
 }
@@ -4928,25 +4932,6 @@ if (true) {
   (function() {
 'use strict';
 
-// ATTENTION
-// When adding new symbols to this file,
-// Please consider also adding to 'react-devtools-shared/src/backend/ReactSymbols'
-// The Symbol used to tag the ReactElement-like types.
-var REACT_ELEMENT_TYPE = Symbol.for('react.element');
-var REACT_PORTAL_TYPE = Symbol.for('react.portal');
-var REACT_FRAGMENT_TYPE = Symbol.for('react.fragment');
-var REACT_STRICT_MODE_TYPE = Symbol.for('react.strict_mode');
-var REACT_PROFILER_TYPE = Symbol.for('react.profiler');
-var REACT_PROVIDER_TYPE = Symbol.for('react.provider');
-var REACT_CONTEXT_TYPE = Symbol.for('react.context');
-var REACT_SERVER_CONTEXT_TYPE = Symbol.for('react.server_context');
-var REACT_FORWARD_REF_TYPE = Symbol.for('react.forward_ref');
-var REACT_SUSPENSE_TYPE = Symbol.for('react.suspense');
-var REACT_SUSPENSE_LIST_TYPE = Symbol.for('react.suspense_list');
-var REACT_MEMO_TYPE = Symbol.for('react.memo');
-var REACT_LAZY_TYPE = Symbol.for('react.lazy');
-var REACT_OFFSCREEN_TYPE = Symbol.for('react.offscreen');
-
 // -----------------------------------------------------------------------------
 
 var enableScopeAPI = false; // Experimental Create Event Handle API.
@@ -4958,6 +4943,23 @@ var enableLegacyHidden = false; // Enables unstable_avoidThisFallback feature in
 // issues in DEV builds.
 
 var enableDebugTracing = false; // Track which Fiber(s) schedule render work.
+
+// ATTENTION
+
+var REACT_ELEMENT_TYPE =  Symbol.for('react.element');
+var REACT_PORTAL_TYPE =  Symbol.for('react.portal');
+var REACT_FRAGMENT_TYPE =  Symbol.for('react.fragment');
+var REACT_STRICT_MODE_TYPE =  Symbol.for('react.strict_mode');
+var REACT_PROFILER_TYPE =  Symbol.for('react.profiler');
+var REACT_PROVIDER_TYPE =  Symbol.for('react.provider');
+var REACT_CONTEXT_TYPE =  Symbol.for('react.context');
+var REACT_SERVER_CONTEXT_TYPE =  Symbol.for('react.server_context');
+var REACT_FORWARD_REF_TYPE =  Symbol.for('react.forward_ref');
+var REACT_SUSPENSE_TYPE =  Symbol.for('react.suspense');
+var REACT_SUSPENSE_LIST_TYPE =  Symbol.for('react.suspense_list');
+var REACT_MEMO_TYPE =  Symbol.for('react.memo');
+var REACT_LAZY_TYPE =  Symbol.for('react.lazy');
+var REACT_OFFSCREEN_TYPE =  Symbol.for('react.offscreen');
 
 var REACT_MODULE_REFERENCE;
 

@@ -3471,7 +3471,7 @@ class rsssl_admin extends rsssl_front_end
         $rtl = is_rtl() ? '-rtl' : '';
         $css_file = "admin$rtl$minified_css";
 	    wp_enqueue_style('rsssl-css', trailingslashit(rsssl_url) . "assets/css/$css_file", array(), rsssl_version);
-        wp_enqueue_script('rsssl', trailingslashit(rsssl_url) . "assets/js/scripts$minified_js.js", array("jquery"), rsssl_version);
+        wp_enqueue_script('rsssl', trailingslashit(rsssl_url) . "assets/js/scripts$minified_js", array("jquery"), rsssl_version);
         wp_localize_script('rsssl', 'rsssl',
             array(
                 'ajaxurl' => admin_url( 'admin-ajax.php' ),
