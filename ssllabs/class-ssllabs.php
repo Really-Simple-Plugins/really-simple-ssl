@@ -99,7 +99,7 @@ class rsssl_ssllabs {
 						<p>' . implode( '</p>
 						<p>', $html_arr ) . '...</p>
 					</div>
-					<div class="rsssl-ssl-test-grade rsssl-garde-' . $grade . ''">
+					<div class="rsssl-ssl-test-grade rsssl-garde-' . $grade . '">
 						<span>' . $grade . '</span>
 					</div>
 				</div>';
