@@ -60,10 +60,8 @@ class Field extends Component {
     }
 
     onChangeHandlerDataTable(enabled, clickedItem, type) {
-        console.log("change action");
-        console.log(enabled);
-        console.log(clickedItem);
 
+        // let field = this.props.field;
         let field = this.props.field;
         console.log(field);
         //find this item in the field list
@@ -71,7 +69,10 @@ class Field extends Component {
             if (item.id === clickedItem.id) {
                 item[type] = enabled;
             }
+            delete item.owndomainControl;
+            delete item.statusControl;
         }
+
         console.log("current datatable value ");
         console.log(this.props.fields);
         console.log(this.props.field);
@@ -211,6 +212,7 @@ class Field extends Component {
             });
 
             let data = field.value;
+
             for (const item of data){
                 item.owndomainControl = <ToggleControl
                                  checked= {item.owndomain==1}

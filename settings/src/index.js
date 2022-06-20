@@ -99,27 +99,27 @@ class SettingsGroup extends Component {
 		}
 
 		return (
-				<Fragment>
-					<div className="rsssl-grid-item-header">
-						<h3 className="h4">{selectedMenuItem.title}</h3>
-					</div>
-					<div className="rsssl-grid-item-content">
-						{selectedMenuItem.intro && <div className="rsssl-settings-block-intro">{selectedMenuItem.intro}</div>}
-						{selectedFields.map((field, i) => <Field key={i} index={i} highLightField={this.props.highLightField} highLightedField={this.props.highLightedField} saveChangedFields={this.props.saveChangedFields} field={field} fields={selectedFields}/>)}
-					</div>
-				</Fragment>
+				// <Fragment>
+				// 	<div className="rsssl-grid-item-header">
+				// 		<h3 className="h4">{selectedMenuItem.title}</h3>
+				// 	</div>
+				// 	<div className="rsssl-grid-item-content">
+				// 		{selectedMenuItem.intro && <div className="rsssl-settings-block-intro">{selectedMenuItem.intro}</div>}
+				// 		{selectedFields.map((field, i) => <Field key={i} index={i} highLightField={this.props.highLightField} highLightedField={this.props.highLightedField} saveChangedFields={this.props.saveChangedFields} field={field} fields={selectedFields}/>)}
+				// 	</div>
+				// </Fragment>
 
-			// <div className="rsssl-grouped-fields">
-			// 	{selectedMenuItem && selectedMenuItem.title && <PanelBody><h1 className="rsssl-settings-block-title">{selectedMenuItem.title}</h1></PanelBody>}
-			// 	{selectedMenuItem && selectedMenuItem.intro && <PanelBody><div className="rsssl-settings-block-intro">{selectedMenuItem.intro}</div></PanelBody>}
-			// 	{selectedFields.map((field, i) => <Field setPageProps={this.props.setPageProps} fieldsUpdateComplete = {this.props.fieldsUpdateComplete} key={i} index={i} highLightField={this.props.highLightField} highLightedField={this.props.highLightedField} saveChangedFields={this.props.saveChangedFields} field={field} fields={selectedFields}/>)}
-			// 	{disabled && <div className="rsssl-locked">
-			// 		<div className="rsssl-locked-overlay">
-			// 			<span className="rsssl-progress-status rsssl-warning">{__("Warning","really-simple-ssl")}</span>
-			// 			{msg}&nbsp;<a href={rsssl_settings.url}>{__("Check license", "really-simple-ssl")}</a>
-			// 		</div>
-			// 	</div>}
-			// </div>
+			<div className="rsssl-grouped-fields">
+				{selectedMenuItem && selectedMenuItem.title && <PanelBody><h1 className="rsssl-settings-block-title">{selectedMenuItem.title}</h1></PanelBody>}
+				{selectedMenuItem && selectedMenuItem.intro && <PanelBody><div className="rsssl-settings-block-intro">{selectedMenuItem.intro}</div></PanelBody>}
+				{selectedFields.map((field, i) => <Field setPageProps={this.props.setPageProps} fieldsUpdateComplete = {this.props.fieldsUpdateComplete} key={i} index={i} highLightField={this.props.highLightField} highLightedField={this.props.highLightedField} saveChangedFields={this.props.saveChangedFields} field={field} fields={selectedFields}/>)}
+				{disabled && <div className="rsssl-locked">
+					<div className="rsssl-locked-overlay">
+						<span className="rsssl-progress-status rsssl-warning">{__("Warning","really-simple-ssl")}</span>
+						{msg}&nbsp;<a href={rsssl_settings.url}>{__("Check license", "really-simple-ssl")}</a>
+					</div>
+				</div>}
+			</div>
 		)
 	}
 }
@@ -544,6 +544,21 @@ class Page extends Component {
 			selectedMainMenuItem :selectedMainMenuItem
 		});
 	}
+
+	// updateField(id, value) {
+	// 	const {
+	// 		fields,
+	// 	} = this.state;
+	// 	for (const field of fields){
+	// 		if (field.id === id ){
+	// 			field.value = value;
+	// 		}
+	// 	}
+	//
+	// 	this.setState({
+	// 		fields :fields
+	// 	});
+	// }
 
 	highLightField(fieldId){
 		//switch to settings page
