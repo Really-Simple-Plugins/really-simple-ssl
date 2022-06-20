@@ -31,5 +31,4 @@ foreach ($items as $item) {
     </div>
     <?php
     $n++;
-
 }
