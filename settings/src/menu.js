@@ -1,6 +1,4 @@
-import {
-    Placeholder,
-} from '@wordpress/components';
+import Placeholder from './Placeholder';
 import {
     Component,
 } from '@wordpress/element';
@@ -83,7 +81,7 @@ class Menu extends Component {
         return (
                 <div className="rsssl-grid-item">
                     <div className="rsssl-grid-item-header">
-                        <h1 className="h4">{this.props.menu.title}</h1>
+                        <h1 className="rsssl-h4">{this.props.menu.title}</h1>
                     </div>
                     <div className="rsssl-grid-item-content">
                         <div className="rsssl-wizard-menu-items">

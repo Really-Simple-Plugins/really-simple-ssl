@@ -2,9 +2,7 @@ import {
     Component,
 } from '@wordpress/element';
 
-import {
-    Placeholder,
-} from '@wordpress/components';
+import Placeholder from './Placeholder';
 
 class SecurityFeatureBullet extends Component {
     constructor() {

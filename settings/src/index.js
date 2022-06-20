@@ -6,9 +6,9 @@ import {
     Panel,
     PanelBody,
 		PanelRow,
-    Placeholder,
 } from '@wordpress/components';
 
+import Placeholder from './Placeholder';
 
 import {
     Fragment,
@@ -101,7 +101,7 @@ class SettingsGroup extends Component {
 		return (
 				<Fragment>
 					<div className="rsssl-grid-item-header">
-						<h3 className="h4">{selectedMenuItem.title}</h3>
+						<h3 className="rsssl-h4">{selectedMenuItem.title}</h3>
 					</div>
 					<div className="rsssl-grid-item-content">
 						{selectedMenuItem.intro && <div className="rsssl-settings-block-intro">{selectedMenuItem.intro}</div>}

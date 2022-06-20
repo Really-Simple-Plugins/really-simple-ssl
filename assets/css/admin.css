@@ -114,38 +114,38 @@
   color: var(--rsp-text-color);
   line-height: 1.5;
 }
-.rsssl .h0 {
+.rsssl .rsssl-h0 {
   font-size: var(--rsp-fs-900);
   font-weight: 700;
   letter-spacing: 0.025rem;
 }
-.rsssl h1, .rsssl .h1 {
+.rsssl h1, .rsssl .rsssl-h1 {
   font-size: var(--rsp-fs-800);
   line-height: 1.5;
   font-weight: 500;
   letter-spacing: 0.025rem;
 }
-.rsssl h2, .rsssl .h2 {
+.rsssl h2, .rsssl .rsssl-h2 {
   font-size: var(--rsp-fs-700);
   font-weight: 700;
   letter-spacing: 0.025rem;
 }
-.rsssl h3, .rsssl .h3 {
+.rsssl h3, .rsssl .rsssl-h3 {
   font-size: var(--rsp-fs-600);
   font-weight: 600;
   letter-spacing: 0.0125rem;
 }
-.rsssl h4, .rsssl .h4 {
+.rsssl h4, .rsssl .rsssl-h4 {
   font-size: var(--rsp-fs-500);
   font-weight: 600;
   letter-spacing: 0.0125rem;
 }
-.rsssl h5, .rsssl .h5 {
+.rsssl h5, .rsssl .rsssl-h5 {
   font-size: var(--rsp-fs-400);
   font-weight: 400;
   letter-spacing: 0.1px;
 }
-.rsssl h6, .rsssl .h6 {
+.rsssl h6, .rsssl .rsssl-h6 {
   font-size: var(--rsp-fs-300);
   letter-spacing: 0.1px;
 }
@@ -865,10 +865,6 @@
   letter-spacing: 0.01ch;
   line-height: 2;
 }
-.rsssl-ssl-test .rsssl-ssl-test-grade {
-  font-size: var(--rsp-fs-900);
-  font-weight: 900;
-}
 
 .rsssl-detailed-report {
   text-align: center;
@@ -889,12 +885,10 @@
 .rsssl-placeholder {
   -webkit-box-sizing: border-box;
           box-sizing: border-box;
-  position: relative;
-  padding: 1em;
-  min-height: 200px;
   width: 100%;
   text-align: left;
   margin: 0;
+  padding-bottom: 24px;
   color: #1e1e1e;
   -moz-font-smoothing: subpixel-antialiased;
   -webkit-font-smoothing: subpixel-antialiased;
@@ -904,11 +898,7 @@
       -ms-flex-positive: 100;
           flex-grow: 100;
 }
-
-.post {
-  width: 100%;
-}
-.post .line {
+.rsssl-placeholder .rsssl-placeholder-line {
   float: left;
   width: 100%;
   height: 16px;
@@ -919,85 +909,88 @@
   -webkit-animation: shine-lines 1.6s infinite linear;
           animation: shine-lines 1.6s infinite linear;
 }
-.post .line:nth-of-type(1) {
-  width: 95%;
+.rsssl-placeholder .rsssl-placeholder-line:last-of-type {
+  margin-bottom: 24px;
 }
-.post .line:nth-of-type(2) {
-  width: 68%;
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(1) {
+  width: 70%;
 }
-.post .line:nth-of-type(3) {
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(2) {
+  width: 86%;
+}
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(3) {
   width: 69%;
 }
-.post .line:nth-of-type(4) {
-  width: 79%;
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(4) {
+  width: 64%;
 }
-.post .line:nth-of-type(5) {
-  width: 97%;
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(5) {
+  width: 86%;
 }
-.post .line:nth-of-type(6) {
-  width: 98%;
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(6) {
+  width: 75%;
 }
-.post .line:nth-of-type(7) {
-  width: 99%;
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(7) {
+  width: 65%;
 }
-.post .line:nth-of-type(8) {
-  width: 66%;
-}
-.post .line:nth-of-type(9) {
-  width: 74%;
-}
-.post .line:nth-of-type(10) {
-  width: 77%;
-}
-.post .line:nth-of-type(11) {
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(8) {
   width: 80%;
 }
-.post .line:nth-of-type(12) {
-  width: 87%;
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(9) {
+  width: 82%;
 }
-.post .line:nth-of-type(13) {
-  width: 98%;
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(10) {
+  width: 94%;
 }
-.post .line:nth-of-type(14) {
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(11) {
   width: 80%;
 }
-.post .line:nth-of-type(15) {
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(12) {
   width: 91%;
 }
-.post .line:nth-of-type(16) {
-  width: 67%;
-}
-.post .line:nth-of-type(17) {
-  width: 87%;
-}
-.post .line:nth-of-type(18) {
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(13) {
   width: 81%;
 }
-.post .line:nth-of-type(19) {
-  width: 98%;
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(14) {
+  width: 88%;
 }
-.post .line:nth-of-type(20) {
-  width: 89%;
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(15) {
+  width: 63%;
 }
-.post .line ~ .line {
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(16) {
+  width: 95%;
+}
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(17) {
+  width: 95%;
+}
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(18) {
+  width: 79%;
+}
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(19) {
+  width: 65%;
+}
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(20) {
+  width: 80%;
+}
+.rsssl-placeholder .rsssl-placeholder-line ~ .rsssl-placeholder-line {
   background-color: #ddd;
 }
 
 @-webkit-keyframes shine-lines {
   0% {
-    background-position: -100px;
+    background-position: -400px;
   }
-  40%, 100% {
-    background-position: 140px;
+  100% {
+    background-position: 220px;
   }
 }
 
 @keyframes shine-lines {
   0% {
-    background-position: -100px;
+    background-position: -400px;
   }
-  40%, 100% {
-    background-position: 140px;
+  100% {
+    background-position: 220px;
   }
 }
 .rsssl .rsssl-other-plugins .rsp-logo img {

@@ -147,7 +147,7 @@ class GridBlock extends Component {
                         {blockData.header && blockData.header.type==='react' && wp.element.createElement(dynamicComponents[blockData.header.data], DynamicBlockProps)}
                     </div>
                 </div>
-                {!isAPILoaded && <Placeholder lines="12"></Placeholder>}
+                {!isAPILoaded && <Placeholder lines="4"></Placeholder>}
                 {blockData.content.type!=='react' && <div className="rsssl-grid-item-content" dangerouslySetInnerHTML={{__html: content}}></div>}
                 {blockData.content.type==='react' && <div className="rsssl-grid-item-content">{wp.element.createElement(dynamicComponents[content], DynamicBlockProps)}</div>}
 
