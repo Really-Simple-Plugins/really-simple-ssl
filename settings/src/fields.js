@@ -82,6 +82,7 @@ class Field extends Component {
         console.log("save fields");
         console.log(saveFields);
 //        this.setState( { fields } );
+        this.props.updateField(field)
         rsssl_api.setFields(saveFields).then(( response ) => {
             //this.changedFields = [];
         });

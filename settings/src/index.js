@@ -164,15 +164,23 @@ class SettingsGroup extends Component {
 			msg = rsssl_settings.messageInvalid;
 		}
 		//get current group, if the id exists
-		let currentGroup = selectedMenuItem.groups.filter(group => group.id === this.props.group)[0];
-		console.log(currentGroup);
+		let activeGroup = selectedMenuItem;
 
-		let activeGroup = currentGroup ? currentGroup : selectedMenuItem;
+		if (selectedMenuItem.hasOwnProperty('groups')) {
+			let currentGroup = selectedMenuItem.groups.filter(group => group.id === this.props.group);
+			if (currentGroup.length>0) {
+				activeGroup = currentGroup[0];
+			}
+
+		}
+		console.log("active group");
+		console.log(activeGroup);
+
 		return (
 			<div className="rsssl-grouped-fields">
 				{activeGroup && activeGroup.title && <PanelBody><h1 className="rsssl-settings-block-title">{activeGroup.title}</h1></PanelBody>}
 				{activeGroup && activeGroup.intro && <PanelBody><div className="rsssl-settings-block-intro">{activeGroup.intro}</div></PanelBody>}
-				{selectedFields.map((field, i) => <Field setPageProps={this.props.setPageProps} fieldsUpdateComplete = {this.props.fieldsUpdateComplete} key={i} index={i} highLightField={this.props.highLightField} highLightedField={this.props.highLightedField} saveChangedFields={this.props.saveChangedFields} field={field} fields={selectedFields}/>)}
+				{selectedFields.map((field, i) => <Field updateField={this.props.updateField} setPageProps={this.props.setPageProps} fieldsUpdateComplete = {this.props.fieldsUpdateComplete} key={i} index={i} highLightField={this.props.highLightField} highLightedField={this.props.highLightedField} saveChangedFields={this.props.saveChangedFields} field={field} fields={selectedFields}/>)}
 				{disabled && <div className="rsssl-locked">
 					<div className="rsssl-locked-overlay">
 						<span className="rsssl-progress-status rsssl-warning">{__("Warning","really-simple-ssl")}</span>
@@ -254,7 +262,7 @@ class Settings extends Component {
 			<Fragment>
 				<div className="rsssl-wizard-settings rsssl-column-2">
 					<div className="rsssl-grid-item">
-						{groups.map((group, i) => <SettingsGroup pageProps={this.props.pageProps} setPageProps={this.props.setPageProps} fieldsUpdateComplete = {this.props.fieldsUpdateComplete} key={i} index={i} highLightField={this.props.highLightField} highLightedField={this.props.highLightedField} selectedMenuItem={selectedMenuItemObject} saveChangedFields={this.props.saveChangedFields} group={group} fields={selectedFields}/>)}
+						{groups.map((group, i) => <SettingsGroup updateField={this.props.updateField} pageProps={this.props.pageProps} setPageProps={this.props.setPageProps} fieldsUpdateComplete = {this.props.fieldsUpdateComplete} key={i} index={i} highLightField={this.props.highLightField} highLightedField={this.props.highLightedField} selectedMenuItem={selectedMenuItemObject} saveChangedFields={this.props.saveChangedFields} group={group} fields={selectedFields}/>)}
 						<div className="rsssl-grid-item-footer">
 							<Button
 									isPrimary
@@ -445,7 +453,7 @@ class SettingsPage extends Component {
         return (
             <Fragment>
 							<Menu isAPILoaded={isAPILoaded} menuItems={this.menuItems} menu={this.menu} selectMenu={this.props.selectMenu} selectedMenuItem={this.props.selectedMenuItem}/>
-							<Settings pageProps={this.props.pageProps} setPageProps={this.props.setPageProps} fieldsUpdateComplete = {fieldsUpdateComplete} highLightField={this.props.highLightField} highLightedField={this.props.highLightedField} isAPILoaded={isAPILoaded} fields={this.fields} progress={progress} saveChangedFields={this.saveChangedFields} menu={menu} save={this.save} selectedMenuItem={this.props.selectedMenuItem} selectedStep={selectedStep}/>
+							<Settings updateField={this.props.updateField} pageProps={this.props.pageProps} setPageProps={this.props.setPageProps} fieldsUpdateComplete = {fieldsUpdateComplete} highLightField={this.props.highLightField} highLightedField={this.props.highLightedField} isAPILoaded={isAPILoaded} fields={this.fields} progress={progress} saveChangedFields={this.saveChangedFields} menu={menu} save={this.save} selectedMenuItem={this.props.selectedMenuItem} selectedStep={selectedStep}/>
 							<Notices className="rsssl-wizard-notices"/>
             </Fragment>
         )
@@ -605,20 +613,20 @@ class Page extends Component {
 		});
 	}
 
-	// updateField(id, value) {
-	// 	const {
-	// 		fields,
-	// 	} = this.state;
-	// 	for (const field of fields){
-	// 		if (field.id === id ){
-	// 			field.value = value;
-	// 		}
-	// 	}
-	//
-	// 	this.setState({
-	// 		fields :fields
-	// 	});
-	// }
+	updateField(field) {
+		const {
+			fields,
+		} = this.state;
+		for (const fieldItem of fields){
+			if (fieldItem.id === field.id ){
+				fieldItem.value = field.value;
+			}
+		}
+
+		this.setState({
+			fields :fields
+		});
+	}
 
 	highLightField(fieldId){
 		//switch to settings page
@@ -647,7 +655,7 @@ class Page extends Component {
 			<div className="rsssl-wrapper">
 				<Header selectedMainMenuItem={selectedMainMenuItem} selectMainMenu={this.selectMainMenu} fields={fields}/>
 				<div className={"rsssl-content-area rsssl-grid rsssl-" + selectedMainMenuItem}>
-					{selectedMainMenuItem==='settings' && <SettingsPage pageProps={this.pageProps} setPageProps={this.setPageProps} selectMenu={this.selectMenu} highLightField={this.highLightField} highLightedField={this.highLightedField} selectedMenuItem={selectedMenuItem} isAPILoaded={isAPILoaded} fields={fields} menu={menu} progress={progress}/> }
+					{selectedMainMenuItem==='settings' && <SettingsPage pageProps={this.pageProps} updateField={this.updateField} setPageProps={this.setPageProps} selectMenu={this.selectMenu} highLightField={this.highLightField} highLightedField={this.highLightedField} selectedMenuItem={selectedMenuItem} isAPILoaded={isAPILoaded} fields={fields} menu={menu} progress={progress}/> }
 					{selectedMainMenuItem==='dashboard' && <DashboardPage isAPILoaded={isAPILoaded} fields={fields} highLightField={this.highLightField}/> }
 				</div>
 			</div>
