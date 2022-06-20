@@ -63,6 +63,70 @@ class Help extends Component {
 /**
  * Render a grouped block of settings
  */
+//this breaks
+
+// class SettingsGroup extends Component {
+// 	constructor() {
+// 		super( ...arguments );
+// 		this.state = {
+// 			fields:this.props.fields,
+// 			isAPILoaded: this.props.isAPILoaded,
+// 		};
+// 		this.fields = this.props.fields;
+// 	}
+//
+// 	getLicenseStatus(){
+// 		if (this.props.pageProps.hasOwnProperty('licenseStatus') ){
+// 			return this.props.pageProps['licenseStatus'];
+// 		}
+// 		return 'invalid';
+// 	}
+//
+// 	render(){
+// 		let selectedMenuItem = this.props.selectedMenuItem;
+// 		let selectedFields = [];
+// 		//get all fields with group_id this.props.group_id
+// 		for (const selectedField of this.props.fields){
+// 			if (selectedField.group_id === this.props.group ){
+// 				selectedFields.push(selectedField);
+// 			}
+// 		}
+// 		let status = this.getLicenseStatus();
+// 		let disabled = status !=='valid' && selectedMenuItem.is_premium;
+// 		let msg;
+// 		if ( status === 'empty' || status === 'deactivated' ) {
+// 			msg = rsssl_settings.messageInactive;
+// 		} else {
+// 			msg = rsssl_settings.messageInvalid;
+// 		}
+//
+// 		return (
+// 				// <Fragment>
+// 				// 	<div className="rsssl-grid-item-header">
+// 				// 		<h3 className="h4">{selectedMenuItem.title}</h3>
+// 				// 	</div>
+// 				// 	<div className="rsssl-grid-item-content">
+// 				// 		{selectedMenuItem.intro && <div className="rsssl-settings-block-intro">{selectedMenuItem.intro}</div>}
+// 				// 		{selectedFields.map((field, i) => <Field key={i} index={i} highLightField={this.props.highLightField} highLightedField={this.props.highLightedField} saveChangedFields={this.props.saveChangedFields} field={field} fields={selectedFields}/>)}
+// 				// 	</div>
+// 				// </Fragment>
+//
+// 			<div className="rsssl-grouped-fields">
+// 				{selectedMenuItem && selectedMenuItem.title && <PanelBody><h1 className="rsssl-settings-block-title">{selectedMenuItem.title}</h1></PanelBody>}
+// 				{selectedMenuItem && selectedMenuItem.intro && <PanelBody><div className="rsssl-settings-block-intro">{selectedMenuItem.intro}</div></PanelBody>}
+// 				{selectedFields.map((field, i) => <Field setPageProps={this.props.setPageProps} fieldsUpdateComplete = {this.props.fieldsUpdateComplete} key={i} index={i} highLightField={this.props.highLightField} highLightedField={this.props.highLightedField} saveChangedFields={this.props.saveChangedFields} field={field} fields={selectedFields}/>)}
+// 				{disabled && <div className="rsssl-locked">
+// 					<div className="rsssl-locked-overlay">
+// 						<span className="rsssl-progress-status rsssl-warning">{__("Warning","really-simple-ssl")}</span>
+// 						{msg}&nbsp;<a href={rsssl_settings.url}>{__("Check license", "really-simple-ssl")}</a>
+// 					</div>
+// 				</div>}
+// 			</div>
+// 		)
+// 	}
+// }
+
+	//this one working
 class SettingsGroup extends Component {
 	constructor() {
 		super( ...arguments );
@@ -99,16 +163,6 @@ class SettingsGroup extends Component {
 		}
 
 		return (
-				// <Fragment>
-				// 	<div className="rsssl-grid-item-header">
-				// 		<h3 className="h4">{selectedMenuItem.title}</h3>
-				// 	</div>
-				// 	<div className="rsssl-grid-item-content">
-				// 		{selectedMenuItem.intro && <div className="rsssl-settings-block-intro">{selectedMenuItem.intro}</div>}
-				// 		{selectedFields.map((field, i) => <Field key={i} index={i} highLightField={this.props.highLightField} highLightedField={this.props.highLightedField} saveChangedFields={this.props.saveChangedFields} field={field} fields={selectedFields}/>)}
-				// 	</div>
-				// </Fragment>
-
 			<div className="rsssl-grouped-fields">
 				{selectedMenuItem && selectedMenuItem.title && <PanelBody><h1 className="rsssl-settings-block-title">{selectedMenuItem.title}</h1></PanelBody>}
 				{selectedMenuItem && selectedMenuItem.intro && <PanelBody><div className="rsssl-settings-block-intro">{selectedMenuItem.intro}</div></PanelBody>}
