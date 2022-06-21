@@ -9,14 +9,10 @@ class Placeholder extends Component {
 
   render() {
     let lines = this.props.lines;
-    if ( !lines ) lines = 1;
+    if ( !lines ) lines = 4;
     return (
       <div className="rsssl-placeholder">
-        <div className="post">
-          <div className="line">
-            {Array.from({length: lines}).map((item, i) => (<span key={i} ></span>))}
-          </div>
-        </div>
+        {Array.from({length: lines}).map((item, i) => (<div className="rsssl-placeholder-line" key={i} ></div>))}
       </div>
     );
   }

@@ -2,17 +2,10 @@
   .rsssl-wizard-menu {
       @include rsssl-block;
       @include rsssl-block-padding;
-    }
-
-
-  .components-panel {
-    border-radius: var(--rsp-border-radius);
-    border: 0px;
   }
-  .components-panel .components-panel__body {
-    //@include rsssl-block-padding;
-  }
-  .components-panel__row label {
-    max-width: 100%;
+  .rsssl-wizard-settings{
+      .rsssl-grid-item{
+        margin-bottom: var(--rsp-grid-gap);
+      }
   }
 }

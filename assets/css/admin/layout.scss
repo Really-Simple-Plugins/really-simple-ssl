@@ -144,12 +144,13 @@
 
   .rsssl-grid-item {
     @include rsssl-block;
+    transition: all 1s ease;
     display: flex;
     flex-wrap: wrap;
     justify-content: flex-start;
     flex-direction: column;
     flex-basis: 100%;
-    min-height: 100%;
+    //min-height: 100%;
     grid-column: span 1;
     grid-row: span 1;
 

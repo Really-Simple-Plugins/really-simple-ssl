@@ -6,9 +6,13 @@ import {
     Panel,
     PanelBody,
 		PanelRow,
-    Placeholder,
 } from '@wordpress/components';
 
+import Placeholder from './Placeholder';
+import {
+	CSSTransition,
+	TransitionGroup,
+} from 'react-transition-group'
 
 import {
     Fragment,
@@ -177,17 +181,31 @@ class SettingsGroup extends Component {
 		console.log(activeGroup);
 
 		return (
-			<div className="rsssl-grouped-fields">
-				{activeGroup && activeGroup.title && <PanelBody><h1 className="rsssl-settings-block-title">{activeGroup.title}</h1></PanelBody>}
-				{activeGroup && activeGroup.intro && <PanelBody><div className="rsssl-settings-block-intro">{activeGroup.intro}</div></PanelBody>}
-				{selectedFields.map((field, i) => <Field updateField={this.props.updateField} setPageProps={this.props.setPageProps} fieldsUpdateComplete = {this.props.fieldsUpdateComplete} key={i} index={i} highLightField={this.props.highLightField} highLightedField={this.props.highLightedField} saveChangedFields={this.props.saveChangedFields} field={field} fields={selectedFields}/>)}
-				{disabled && <div className="rsssl-locked">
-					<div className="rsssl-locked-overlay">
-						<span className="rsssl-progress-status rsssl-warning">{__("Warning","really-simple-ssl")}</span>
-						{msg}&nbsp;<a href={rsssl_settings.url}>{__("Check license", "really-simple-ssl")}</a>
-					</div>
-				</div>}
+
+			<div className="rsssl-grid-item">
+				{activeGroup && activeGroup.title && <div className="rsssl-grid-item-header"><h3 className="rsssl-h4">{activeGroup.title}</h3></div>}
+				<div className="rsssl-grid-item-content">
+					{activeGroup && activeGroup.intro && <div className="rsssl-settings-block-intro">{activeGroup.intro}</div>}
+					{selectedFields.map((field, i) => <Field updateField={this.props.updateField} setPageProps={this.props.setPageProps} fieldsUpdateComplete = {this.props.fieldsUpdateComplete} key={i} index={i} highLightField={this.props.highLightField} highLightedField={this.props.highLightedField} saveChangedFields={this.props.saveChangedFields} field={field} fields={selectedFields}/>)}
+					{disabled && <div className="rsssl-locked">
+						<div className="rsssl-locked-overlay">
+							<span className="rsssl-progress-status rsssl-warning">{__("Warning","really-simple-ssl")}</span>
+							{msg}&nbsp;<a href={rsssl_settings.url}>{__("Check license", "really-simple-ssl")}</a>
+						</div>
+					</div>}
+				</div>
 			</div>
+			// <div className="rsssl-grouped-fields">
+			// 	{activeGroup && activeGroup.title && <PanelBody><h1 className="rsssl-settings-block-title">{activeGroup.title}</h1></PanelBody>}
+			// 	{activeGroup && activeGroup.intro && <PanelBody><div className="rsssl-settings-block-intro">{activeGroup.intro}</div></PanelBody>}
+			// 	{selectedFields.map((field, i) => <Field updateField={this.props.updateField} setPageProps={this.props.setPageProps} fieldsUpdateComplete = {this.props.fieldsUpdateComplete} key={i} index={i} highLightField={this.props.highLightField} highLightedField={this.props.highLightedField} saveChangedFields={this.props.saveChangedFields} field={field} fields={selectedFields}/>)}
+			// 	{disabled && <div className="rsssl-locked">
+			// 		<div className="rsssl-locked-overlay">
+			// 			<span className="rsssl-progress-status rsssl-warning">{__("Warning","really-simple-ssl")}</span>
+			// 			{msg}&nbsp;<a href={rsssl_settings.url}>{__("Check license", "really-simple-ssl")}</a>
+			// 		</div>
+			// 	</div>}
+			// </div>
 		)
 	}
 }
@@ -261,7 +279,6 @@ class Settings extends Component {
 		return (
 			<Fragment>
 				<div className="rsssl-wizard-settings rsssl-column-2">
-					<div className="rsssl-grid-item">
 						{groups.map((group, i) => <SettingsGroup updateField={this.props.updateField} pageProps={this.props.pageProps} setPageProps={this.props.setPageProps} fieldsUpdateComplete = {this.props.fieldsUpdateComplete} key={i} index={i} highLightField={this.props.highLightField} highLightedField={this.props.highLightedField} selectedMenuItem={selectedMenuItemObject} saveChangedFields={this.props.saveChangedFields} group={group} fields={selectedFields}/>)}
 						<div className="rsssl-grid-item-footer">
 							<Button
@@ -270,7 +287,6 @@ class Settings extends Component {
 								{ __( 'Save', 'really-simple-ssl' ) }
 							</Button>
 						</div>
-					</div>
 				</div>
 				<div className="rsssl-wizard-help">
 					{notices.map((field, i) => <Help key={i} index={i} help={field} fieldId={field.id}/>)}

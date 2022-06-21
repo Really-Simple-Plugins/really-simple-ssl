@@ -1,0 +1,25 @@
+.rsssl-wizard-help {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--rsp-spacing-xs);
+  details{
+    font-size: var(--rsp-fs-300);
+  }
+  summary, p {
+    font-size: var(--rsp-fs-400);
+  }
+  summary {
+    padding: var(--rsp-spacing-xs) var(--rsp-spacing-xxs);
+  }
+}
+
+.rsssl-wizard-help-notice {
+  width: 100%;
+  @include rsssl-block;
+  @include rsssl-block-padding;
+  background-color: var(--rsp-dark-blue-faded);
+  &.rsssl-warning {
+    background-color: var(--rsp-yellow-faded);
+  }
+}
+

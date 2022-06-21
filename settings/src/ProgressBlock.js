@@ -6,6 +6,7 @@ import {
 import * as rsssl_api from "./utils/api";
 
 import TaskElement from "./TaskElement";
+import Placeholder from './Placeholder';
 
 class ProgressBlock extends Component {
     constructor() {
@@ -89,7 +90,7 @@ class ProgressBlock extends Component {
         }
         if ( !this.progressLoaded ) {
             return (
-                <div></div>
+                <Placeholder></Placeholder>
             );
         }
         let filter = 'all';

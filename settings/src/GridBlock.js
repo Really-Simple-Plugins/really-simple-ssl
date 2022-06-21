@@ -140,14 +140,14 @@ class GridBlock extends Component {
         return (
             <div className={className}>
                 <div className="rsssl-grid-item-header">
-                    <h3 className="burst-grid-title h4">{ blockData.title }</h3>
+                    <h3 className="burst-grid-title rsssl-h4">{ blockData.title }</h3>
                     <div className="rsssl-grid-item-controls">
                         {blockData.header && blockData.header.type==='url' && <a href={blockData.header.data}>{__("Instructions", "really-simple-ssl")}</a>}
                         {blockData.header && blockData.header.type==='html' && <span className="rsssl-header-html" dangerouslySetInnerHTML={{__html: blockData.header.data}}></span>}
                         {blockData.header && blockData.header.type==='react' && wp.element.createElement(dynamicComponents[blockData.header.data], DynamicBlockProps)}
                     </div>
                 </div>
-                {!isAPILoaded && <Placeholder lines="12"></Placeholder>}
+                {!isAPILoaded && <Placeholder lines="4"></Placeholder>}
                 {blockData.content.type!=='react' && <div className="rsssl-grid-item-content" dangerouslySetInnerHTML={{__html: content}}></div>}
                 {blockData.content.type==='react' && <div className="rsssl-grid-item-content">{wp.element.createElement(dynamicComponents[content], DynamicBlockProps)}</div>}
 
