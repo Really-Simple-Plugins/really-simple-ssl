@@ -25,17 +25,17 @@ import {
  */
 import DataTable from "react-data-table-component";
 import * as rsssl_api from "./utils/api";
-import in_array from "./utils/lib";
 
 class ChangeStatus extends Component {
     constructor() {
         super( ...arguments );
     }
+
     render(){
-        let statusClass = this.props.status==1 ? 'rsssl-status-allowed' : 'rsssl-status-revoked';
-        let label = this.props.status==1 ? __("Revoke", "really-simple-ssl") : __("Allow", "really-simple-ssl");
+        let statusClass = this.props.item.status==1 ? 'rsssl-status-allowed' : 'rsssl-status-revoked';
+        let label = this.props.item.status==1 ? __("Revoke", "really-simple-ssl") : __("Allow", "really-simple-ssl");
         return (
-            <button className={statusClass}>{label}</button>
+            <button onClick={ () => this.props.onChangeHandlerDataTable(!this.props.item.status, this.props.item, 'status' ) } className={statusClass}>{label}</button>
         )
     }
 }
@@ -48,6 +48,8 @@ class Field extends Component {
 
     componentDidMount() {
         this.props.highLightField('');
+        this.onChangeHandlerDataTable = this.onChangeHandlerDataTable.bind(this);
+
     }
 
     onChangeHandler(fieldValue) {
@@ -59,11 +61,14 @@ class Field extends Component {
         this.setState( { fields } )
     }
 
-    onChangeHandlerDataTable(enabled, clickedItem, type) {
-
-        // let field = this.props.field;
-        let field = this.props.field;
-        console.log(field);
+    /**
+     * Handle data update for a datatable
+     * @param enabled
+     * @param clickedItem
+     * @param type
+     */
+    onChangeHandlerDataTable(enabled, clickedItem, type ) {
+        let field=this.props.field;
         //find this item in the field list
         for (const item of field.value){
             if (item.id === clickedItem.id) {
@@ -72,20 +77,10 @@ class Field extends Component {
             delete item.owndomainControl;
             delete item.statusControl;
         }
-
-        console.log("current datatable value ");
-        console.log(this.props.fields);
-        console.log(this.props.field);
-
         let saveFields = [];
         saveFields.push(field);
-        console.log("save fields");
-        console.log(saveFields);
-//        this.setState( { fields } );
         this.props.updateField(field)
-        rsssl_api.setFields(saveFields).then(( response ) => {
-            //this.changedFields = [];
-        });
+        rsssl_api.setFields(saveFields).then(( response ) => {});
     }
     onCloseTaskHandler(){
 
@@ -213,14 +208,14 @@ class Field extends Component {
             });
 
             let data = field.value;
-
             for (const item of data){
                 item.owndomainControl = <ToggleControl
                                  checked= {item.owndomain==1}
                                  label=''
                                  onChange={ ( fieldValue ) => this.onChangeHandlerDataTable( fieldValue, item, 'owndomain' ) }
                              />
-                item.statusControl = <ChangeStatus status={item.status} />;
+                item.statusControl = <ChangeStatus item={item} onChangeHandlerDataTable={this.onChangeHandlerDataTable}
+                />;
             }
             return (
                 <PanelBody className={ this.highLightClass}>
