@@ -127,7 +127,7 @@ class GridBlock extends Component {
             content,
         } = this.state;
         let blockData = this.props.block;
-        let className = "rsssl-grid-item rsssl-"+blockData.size+" rsssl-"+blockData.id;
+        let className = "rsssl-grid-item "+blockData.class+" rsssl-"+blockData.id;
         if ( this.props.block.content.type==='react') {
             content = this.props.block.content.data;
         }
@@ -144,9 +144,9 @@ class GridBlock extends Component {
                     <div className="rsssl-grid-item-header">
                         <h3 className="burst-grid-title rsssl-h4">{ blockData.title }</h3>
                         <div className="rsssl-grid-item-controls">
-                            {blockData.header && blockData.header.type==='url' && <a href={blockData.header.data}>{__("Instructions", "really-simple-ssl")}</a>}
-                            {blockData.header && blockData.header.type==='html' && <span className="rsssl-header-html" dangerouslySetInnerHTML={{__html: blockData.header.data}}></span>}
-                            {blockData.header && blockData.header.type==='react' && wp.element.createElement(dynamicComponents[blockData.header.data], DynamicBlockProps)}
+                            {blockData.controls && blockData.controls.type==='url' && <a href={blockData.controls.data}>{__("Instructions", "really-simple-ssl")}</a>}
+                            {blockData.controls && blockData.controls.type==='html' && <span className="rsssl-header-html" dangerouslySetInnerHTML={{__html: blockData.controls.data}}></span>}
+                            {blockData.controls && blockData.controls.type==='react' && wp.element.createElement(dynamicComponents[blockData.controls.data], DynamicBlockProps)}
                         </div>
                     </div>
                     {!isAPILoaded && <Placeholder lines="4"></Placeholder>}
