@@ -35,4 +35,9 @@
   @include rsssl-block-padding;
   padding-block: var(--rsp-spacing-xs);
 }
+.rsssl-disclaimer{
+  font-size: var(--rsp-fs-100);
+  @include rsssl-block-padding;
+  padding-block: var(--rsp-spacing-xs);
+}
 
