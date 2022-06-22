@@ -295,7 +295,6 @@ function rsssl_update_option( $name, $value ) {
 	}
 }
 
-
 /**
  * Get the rest api fields
  * @return void
@@ -369,9 +368,39 @@ function rsssl_sanitize_field( $value, $type ) {
 		case 'number':
 			return intval( $value );
         case 'permissionspolicy':
-            return $value;
+        case 'contentsecuritypolicy':
+            return rsssl_sanitize_datatable($value);
 		default:
 			return sanitize_text_field( $value );
 	}
 }
 
+function rsssl_sanitize_datatable($value){
+    $possible_keys = apply_filters('rsssl_datatable_datatypes', [
+	    'id'=>'int',
+	    'title' =>'string',
+    ]);
+
+    if (!is_array($value)) {
+        return false;
+    } else {
+        foreach ($value as $index => $item_value ) {
+            if (!isset($possible_keys[$index])) {
+                unset($value[$index]);
+            }
+            $datatype = $possible_keys[$index];
+	        switch ($datatype) {
+		        case 'string':
+			        $value[$index] = sanitize_text_field($item_value);
+			        break;
+		        case 'int':
+		        case 'boolean':
+                default:
+			        $value[$index] = intval($item_value);
+			        break;
+	        }
+
+        }
+    }
+    return $value;
+}

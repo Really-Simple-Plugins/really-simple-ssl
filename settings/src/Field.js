@@ -228,6 +228,40 @@ class Field extends Component {
             )
         }
 
+        if ( field.type==='contentsecuritypolicy' ) {
+            //build our header
+            columns = [];
+            field.columns.forEach(function(item, i) {
+                let newItem = {
+                    name: item.name,
+                    sortable: item.sortable,
+                    selector: row => row[item.column],
+                }
+                columns.push(newItem);
+            });
+
+            let data = field.value;
+            for (const item of data){
+                item.owndomainControl = <ToggleControl
+                    checked= {item.owndomain==1}
+                    label=''
+                    onChange={ ( fieldValue ) => this.onChangeHandlerDataTable( fieldValue, item, 'owndomain' ) }
+                />
+                item.statusControl = <ChangeStatus item={item} onChangeHandlerDataTable={this.onChangeHandlerDataTable}
+                />;
+            }
+            return (
+                <PanelBody className={ this.highLightClass}>
+                    <DataTable
+                        columns={columns}
+                        data={data}
+                        dense
+                        pagination
+                    />
+                </PanelBody>
+            )
+        }
+
         return (
             'not found field type '+field.type
         );

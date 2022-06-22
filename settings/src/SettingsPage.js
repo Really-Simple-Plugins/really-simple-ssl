@@ -60,12 +60,11 @@ class SettingsPage extends Component {
         //remove after 2 seconds
         setTimeout(
             function() {
-                let notice = document.querySelector('.components-snackbar-list.edit-site-notices');
-                if (notice) {
-                    notice.css.display='none';
+                let notice = document.querySelector('.components-snackbar-list.edit-site-notices .components-snackbar__content');
+                if ( notice ) {
+                    notice.parentElement.remove(notice);
                 }
             }, 2000);
-
     }
 
     save(){
