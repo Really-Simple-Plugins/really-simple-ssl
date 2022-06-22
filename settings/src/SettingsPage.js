@@ -61,7 +61,9 @@ class SettingsPage extends Component {
         setTimeout(
             function() {
                 let notice = document.querySelector('.components-snackbar-list.edit-site-notices');
-                notice.css.display='none';
+                if (notice) {
+                    notice.css.display='none';
+                }
             }, 2000);
 
     }
