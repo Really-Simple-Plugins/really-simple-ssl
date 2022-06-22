@@ -7,4 +7,4 @@ jQuery(document).ready(function ($) {
     }, function() {
         $(this).find('.rsssl-bullet').css("background-color",""); //to remove property set it to ''
     });
-});
+}); // @todo @rogier Dit kan weg of niet?
