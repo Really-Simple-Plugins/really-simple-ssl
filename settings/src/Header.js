@@ -35,7 +35,7 @@ class Header extends Component {
         return (
             <div className="rsssl-header-container">
                 <div className="rsssl-header">
-                    <img className="rsssl-logo" src={plugin_url+"assets/img/really-simple-ssl-logo.png"} alt="Really Simple SSL logo" />
+                    <img className="rsssl-logo" src={plugin_url+"assets/img/really-simple-ssl-logo.svg"} alt="Really Simple SSL logo" />
                     <div className="rsssl-header-left">
                         <nav className="rsssl-header-menu">
                             <ul>

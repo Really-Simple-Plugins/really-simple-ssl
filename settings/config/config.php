@@ -384,7 +384,7 @@ function rsssl_blocks(){
 			],
 			'content' => ['type'=>'react', 'data' => 'ProgressBlock'],
 			'footer'  => ['type'=>'template', 'data' => 'progress-footer.php'],
-			'size'    => ' rsssl-column-2', // @todo @rogier Zullen we dit gewoon veranderen naar class ipv size and height?
+			'size'    => ' rsssl-column-2', // @todo @rogier Zullen we dit gewoon veranderen naar class ipv size and height? ja
 			'height'    => 'default',
 		],
 		[
@@ -398,24 +398,24 @@ function rsssl_blocks(){
 			'height'    => 'default',
 		],
 		[
-			'id'      => 'tips_tricks',
-			'header'  => false,
-			'title'   => __( "Tips & Tricks", 'really-simple-ssl' ),
-			'help'    => __( 'A help text', 'really-simple-ssl' ),
-			'content' => ['type'=>'template', 'data' => 'tips-tricks.php'],
-			'footer'  => ['type'=>'template', 'data' => 'tips-tricks-footer.php'],
-			'size'    => 'small',
-			'height'    => 'default',
-		],
-		[
 			'id'      => 'security-features',
 			'header'  => false,
 			'title'   => __( "New: Security features", 'really-simple-ssl' ),
 			'help'    => __( 'A help text', 'really-simple-ssl' ),
 			'content' => ['type'=>'react', 'data' => 'SecurityFeaturesBlock'],
 			'footer'  => ['type'=>'html', 'data' => ''],
-			'size'    => ' rsssl-column-2',
+			'size'    => '',
 			'height'    => 'half',
+		],
+		[
+			'id'      => 'tips_tricks',
+			'header'  => false,
+			'title'   => __( "Tips & Tricks", 'really-simple-ssl' ),
+			'help'    => __( 'A help text', 'really-simple-ssl' ),
+			'content' => ['type'=>'template', 'data' => 'tips-tricks.php'],
+			'footer'  => ['type'=>'template', 'data' => 'tips-tricks-footer.php'],
+			'size'    => ' rsssl-column-2',
+			'height'    => 'default',
 		],
 		[
 			'id'      => 'other-plugins',

@@ -2909,8 +2909,8 @@ class rsssl_admin extends rsssl_front_end
 		            'no-ssl-detected' => array(
 			            'title' => __("No SSL detected", "really-simple-ssl"),
 			            'msg' => __("No SSL detected. Use the retry button to check again.", "really-simple-ssl").
-			                     '<br><br><form action="" method="POST"><a href="'.add_query_arg(array("page" => "rlrsssl_really_simple_ssl", "tab" => "letsencrypt"),admin_url("options-general.php")) .'" type="submit" class="button button-default">'.__("Install SSL certificate", "really-simple-ssl").'</a>'.
-			                     '&nbsp;<input type="submit" class="button button-default" value="'.__("Retry", "really-simple-ssl").'" id="rsssl_recheck_certificate" name="rsssl_recheck_certificate"></form>',
+			                     '<form class="rsssl-task-form"  action="" method="POST"><a href="'.add_query_arg(array("page" => "rlrsssl_really_simple_ssl", "tab" => "letsencrypt"),admin_url("options-general.php")) .'" type="submit" class="button button-default">'.__("Install SSL certificate", "really-simple-ssl").'</a>'.
+			                     '<input type="submit" class="button button-default" value="'.__("Retry", "really-simple-ssl").'" id="rsssl_recheck_certificate" name="rsssl_recheck_certificate"></form>',
 			            'icon' => 'warning',
 			            'admin_notice' => false,
 			            'dismissible' => $this->ssl_enabled
@@ -2918,8 +2918,8 @@ class rsssl_admin extends rsssl_front_end
 		            'no-response' => array(
 			            'title' => __("Could not test certificate", "really-simple-ssl"),
 			            'msg' => __("Automatic certificate detection is not possible on your server.", "really-simple-ssl").
-			                     '<br><br><form action="" method="POST"><a href="'.add_query_arg(array("page" => "rlrsssl_really_simple_ssl", "tab" => "letsencrypt"),admin_url("options-general.php")) .'" type="submit" class="button button-default">'.__("Install SSL certificate", "really-simple-ssl").'</a>'.
-			                     '&nbsp;<a target="_blank" href="'.$test_url.'" class="button button-default">'.__("Check manually", "really-simple-ssl").'</a></form>',
+			                     '<form class="rsssl-task-form" action="" method="POST"><a href="'.add_query_arg(array("page" => "rlrsssl_really_simple_ssl", "tab" => "letsencrypt"),admin_url("options-general.php")) .'" type="submit" class="button button-default">'.__("Install SSL certificate", "really-simple-ssl").'</a>'.
+			                     '<a target="_blank" href="'.$test_url.'" class="button button-default">'.__("Check manually", "really-simple-ssl").'</a></form>',
 			            'icon' => 'warning',
 			            'admin_notice' => false,
 			            'dismissible' => true,
@@ -3471,7 +3471,6 @@ class rsssl_admin extends rsssl_front_end
         $rtl = is_rtl() ? '-rtl' : '';
         $css_file = "admin$rtl$minified_css";
 	    wp_enqueue_style('rsssl-css', trailingslashit(rsssl_url) . "assets/css/$css_file", array(), rsssl_version);
-        wp_enqueue_script('rsssl', trailingslashit(rsssl_url) . "assets/js/scripts$minified_js", array("jquery"), rsssl_version);
         wp_localize_script('rsssl', 'rsssl',
             array(
                 'ajaxurl' => admin_url( 'admin-ajax.php' ),

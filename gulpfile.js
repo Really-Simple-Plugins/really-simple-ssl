@@ -4,7 +4,6 @@ const concat = require('gulp-concat');
 const cssbeautify = require('gulp-cssbeautify');
 const cssuglify = require('gulp-uglifycss');
 const jsuglify = require('gulp-uglify');
-
 const sass = require('gulp-sass')(require('node-sass'));
 
 function scssTask(cb) {
