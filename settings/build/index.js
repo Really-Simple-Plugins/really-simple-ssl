@@ -2913,6 +2913,299 @@ module.exports = {
 
 /***/ }),
 
+/***/ "./src/DashboardPage.js":
+/*!******************************!*\
+  !*** ./src/DashboardPage.js ***!
+  \******************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _GridBlock__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./GridBlock */ "./src/GridBlock.js");
+
+
+
+
+class DashboardPage extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Component {
+  constructor() {
+    super(...arguments);
+  }
+
+  render() {
+    let blocks = rsssl_settings.blocks;
+    return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, blocks.map((block, i) => (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_GridBlock__WEBPACK_IMPORTED_MODULE_1__["default"], {
+      key: i,
+      block: block,
+      isApiLoaded: this.props.isAPILoaded,
+      fields: this.props.fields,
+      highLightField: this.props.highLightField
+    })));
+  }
+
+}
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (DashboardPage);
+
+/***/ }),
+
+/***/ "./src/Field.js":
+/*!**********************!*\
+  !*** ./src/Field.js ***!
+  \**********************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/components */ "@wordpress/components");
+/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _License__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./License */ "./src/License.js");
+/* harmony import */ var react_data_table_component__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! react-data-table-component */ "./node_modules/react-data-table-component/dist/index.cjs.js");
+/* harmony import */ var _utils_api__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./utils/api */ "./src/utils/api.js");
+
+
+
+
+
+/**
+ * https://react-data-table-component.netlify.app
+ */
+
+
+
+
+class ChangeStatus extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Component {
+  constructor() {
+    super(...arguments);
+  }
+
+  render() {
+    let statusClass = this.props.item.status == 1 ? 'rsssl-status-allowed' : 'rsssl-status-revoked';
+    let label = this.props.item.status == 1 ? (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Revoke", "really-simple-ssl") : (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Allow", "really-simple-ssl");
+    return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
+      onClick: () => this.props.onChangeHandlerDataTable(!this.props.item.status, this.props.item, 'status'),
+      className: statusClass
+    }, label);
+  }
+
+}
+
+class Field extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Component {
+  constructor() {
+    super(...arguments);
+    this.highLightClass = this.props.highLightedField === this.props.field.id ? 'rsssl-highlight' : '';
+  }
+
+  componentDidMount() {
+    this.props.highLightField('');
+    this.onChangeHandlerDataTable = this.onChangeHandlerDataTable.bind(this);
+  }
+
+  onChangeHandler(fieldValue) {
+    let fields = this.props.fields;
+    let field = this.props.field;
+    fields[this.props.index]['value'] = fieldValue;
+    this.props.saveChangedFields(field.id);
+    this.setState({
+      fields
+    });
+  }
+  /**
+   * Handle data update for a datatable
+   * @param enabled
+   * @param clickedItem
+   * @param type
+   */
+
+
+  onChangeHandlerDataTable(enabled, clickedItem, type) {
+    let field = this.props.field; //find this item in the field list
+
+    for (const item of field.value) {
+      if (item.id === clickedItem.id) {
+        item[type] = enabled;
+      }
+
+      delete item.owndomainControl;
+      delete item.statusControl;
+    }
+
+    let saveFields = [];
+    saveFields.push(field);
+    this.props.updateField(field);
+    _utils_api__WEBPACK_IMPORTED_MODULE_5__.setFields(saveFields).then(response => {
+      this.props.showSavedSettingsNotice();
+    });
+  }
+
+  onCloseTaskHandler() {}
+
+  render() {
+    let field = this.props.field;
+    let fieldValue = field.value;
+    let fields = this.props.fields;
+    let options = [];
+
+    if (field.type === 'radio' || field.type === 'select') {
+      for (var key in field.options) {
+        if (field.options.hasOwnProperty(key)) {
+          let item = new Object();
+          item.label = field.options[key];
+          item.value = key;
+          options.push(item);
+        }
+      }
+    }
+
+    if (!field.visible) {
+      return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", null);
+    }
+
+    if (field.type === 'checkbox') {
+      return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.PanelRow, {
+        className: this.highLightClass
+      }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.ToggleControl, {
+        disabled: field.disabled,
+        checked: field.value == 1,
+        help: field.comment,
+        label: field.label,
+        onChange: fieldValue => this.onChangeHandler(fieldValue)
+      }));
+    }
+
+    if (field.type === 'radio') {
+      return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.PanelRow, {
+        className: this.highLightClass
+      }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.RadioControl, {
+        label: field.label,
+        onChange: fieldValue => this.onChangeHandler(fieldValue),
+        selected: fieldValue,
+        options: options
+      }));
+    }
+
+    if (field.type === 'text') {
+      return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.PanelBody, {
+        className: this.highLightClass
+      }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.TextControl, {
+        help: field.comment,
+        label: field.label,
+        onChange: fieldValue => this.onChangeHandler(fieldValue),
+        value: fieldValue
+      }));
+    }
+
+    if (field.type === 'license') {
+      /**
+       * There is no "PasswordControl" in WordPress react yet, so we create our own license field.
+       */
+      let field = this.props.field;
+      let fieldValue = field.value;
+      let fields = this.props.fields;
+      return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_License__WEBPACK_IMPORTED_MODULE_3__["default"], {
+        setPageProps: this.props.setPageProps,
+        fieldsUpdateComplete: this.props.fieldsUpdateComplete,
+        index: this.props.index,
+        fields: fields,
+        field: field,
+        fieldValue: fieldValue,
+        saveChangedFields: this.props.saveChangedFields,
+        highLightField: this.props.highLightField,
+        highLightedField: this.props.highLightedField
+      });
+    }
+
+    if (field.type === 'number') {
+      return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.PanelBody, {
+        className: this.highLightClass
+      }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.__experimentalNumberControl, {
+        onChange: fieldValue => this.onChangeHandler(fieldValue),
+        help: field.comment,
+        label: field.label,
+        value: fieldValue
+      }));
+    }
+
+    if (field.type === 'email') {
+      return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.PanelBody, {
+        className: this.highLightClass
+      }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.TextControl, {
+        help: field.comment,
+        label: field.label,
+        onChange: fieldValue => this.onChangeHandler(fieldValue),
+        value: fieldValue
+      }));
+    }
+
+    if (field.type === 'select') {
+      return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.PanelBody, {
+        className: this.highLightClass
+      }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.SelectControl // multiple
+      , {
+        help: field.comment,
+        label: field.label,
+        onChange: fieldValue => this.onChangeHandler(fieldValue),
+        value: fieldValue,
+        options: options
+      }));
+    }
+
+    if (field.type === 'permissionspolicy') {
+      console.log(this.props.field); //build our header
+
+      columns = [];
+      field.columns.forEach(function (item, i) {
+        let newItem = {
+          name: item.name,
+          sortable: item.sortable,
+          selector: row => row[item.column]
+        };
+        columns.push(newItem);
+      });
+      let data = field.value;
+
+      for (const item of data) {
+        item.owndomainControl = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.ToggleControl, {
+          checked: item.owndomain == 1,
+          label: "",
+          onChange: fieldValue => this.onChangeHandlerDataTable(fieldValue, item, 'owndomain')
+        });
+        item.statusControl = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(ChangeStatus, {
+          item: item,
+          onChangeHandlerDataTable: this.onChangeHandlerDataTable
+        });
+      }
+
+      return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.PanelBody, {
+        className: this.highLightClass
+      }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_data_table_component__WEBPACK_IMPORTED_MODULE_4__["default"], {
+        columns: columns,
+        data: data,
+        dense: true,
+        pagination: true
+      }));
+    }
+
+    return 'not found field type ' + field.type;
+  }
+
+}
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Field);
+
+/***/ }),
+
 /***/ "./src/GridBlock.js":
 /*!**************************!*\
   !*** ./src/GridBlock.js ***!
@@ -3131,6 +3424,147 @@ class GridBlock extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Componen
 }
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (GridBlock);
+
+/***/ }),
+
+/***/ "./src/Header.js":
+/*!***********************!*\
+  !*** ./src/Header.js ***!
+  \***********************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__);
+
+
+
+
+class Header extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Component {
+  constructor() {
+    super(...arguments);
+    this.state = {
+      highContrast: false
+    };
+  }
+
+  handleClick(menuId) {
+    this.props.selectMainMenu(menuId);
+  }
+
+  componentDidMount() {
+    this.handleClick = this.handleClick.bind(this);
+
+    for (const field of this.props.fields) {
+      if (field.id === 'high_contrast') {
+        this.highContrast = field.value;
+      }
+    }
+
+    this.setState({
+      highContrast: this.highContrast
+    });
+  }
+
+  render() {
+    const {
+      highContrast
+    } = this.state;
+    let menu = rsssl_settings.menu;
+    let plugin_url = rsssl_settings.plugin_url;
+    let active_menu_item = this.props.selectedMainMenuItem;
+    let knowledgeBaseBtnClass = !rsssl_settings.premium ? 'button button-black' : '';
+    return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+      className: "rsssl-header-container"
+    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+      className: "rsssl-header"
+    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("img", {
+      className: "rsssl-logo",
+      src: plugin_url + "assets/img/really-simple-ssl-logo.png",
+      alt: "Really Simple SSL logo"
+    }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+      className: "rsssl-header-left"
+    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("nav", {
+      className: "rsssl-header-menu"
+    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("ul", null, menu.map((menu_item, i) => (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("li", {
+      key: i
+    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
+      className: active_menu_item === menu_item.id ? 'active' : '',
+      onClick: () => this.handleClick(menu_item.id),
+      href: "#" + menu_item.id.toString()
+    }, menu_item.label)))))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+      className: "rsssl-header-right"
+    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
+      href: "https://really-simple-ssl.com/knowledge-base",
+      className: knowledgeBaseBtnClass,
+      target: "_blank"
+    }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Documentation", "really-simple-ssl")), rsssl_settings.premium && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
+      href: "https://wordpress.org/support/plugin/really-simple-ssl/",
+      className: "button button-black",
+      target: "_blank"
+    }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Support", "really-simple-ssl")))));
+  }
+
+}
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Header);
+
+/***/ }),
+
+/***/ "./src/Help.js":
+/*!*********************!*\
+  !*** ./src/Help.js ***!
+  \*********************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__);
+
+
+/**
+ * Render a help notice in the sidebar
+ */
+
+class Help extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Component {
+  handleClick(id) {
+    let el = document.querySelector('[data-help_index="' + id + '"]');
+
+    if (el.classList.contains('rsssl-wizard__help_open')) {
+      el.classList.remove('rsssl-wizard__help_open');
+    } else {
+      el.classList.add('rsssl-wizard__help_open');
+    }
+  }
+
+  render() {
+    let notice = this.props.help;
+
+    if (!notice.title) {
+      notice.title = notice.text;
+      notice.text = false;
+    }
+
+    return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, notice.title && notice.text && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("details", {
+      className: "rsssl-wizard-help-notice rsssl-" + notice.label.toLowerCase()
+    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("summary", null, notice.title), notice.text), notice.title && !notice.text && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+      className: "rsssl-wizard-help-notice  rsssl-" + notice.label.toLowerCase()
+    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", null, notice.title)));
+  }
+
+}
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Help);
 
 /***/ }),
 
@@ -3448,6 +3882,189 @@ const Notices = () => {
 // 		<span><?php _e('Changes saved successfully', 'really-simple-ssl') ?> </span>
 // 	</div>
 // </div>
+
+/***/ }),
+
+/***/ "./src/Page.js":
+/*!*********************!*\
+  !*** ./src/Page.js ***!
+  \*********************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _utils_api__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./utils/api */ "./src/utils/api.js");
+/* harmony import */ var _Header__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Header */ "./src/Header.js");
+/* harmony import */ var _DashboardPage__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./DashboardPage */ "./src/DashboardPage.js");
+/* harmony import */ var _SettingsPage__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./SettingsPage */ "./src/SettingsPage.js");
+
+
+
+
+
+
+
+class Page extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Component {
+  constructor() {
+    super(...arguments);
+    this.pageProps = [];
+    this.pageProps['licenseStatus'] = rsssl_settings.licenseStatus;
+    this.state = {
+      selectedMainMenuItem: 'dashboard',
+      selectedMenuItem: 'general',
+      highLightedField: '',
+      fields: '',
+      menu: '',
+      progress: '',
+      isAPILoaded: false,
+      pageProps: this.pageProps
+    };
+    this.getFields().then(response => {
+      let fields = response.fields;
+      let menu = response.menu;
+      let progress = response.progress;
+      this.menu = menu;
+      this.progress = progress;
+      this.fields = fields;
+      this.setState({
+        isAPILoaded: true,
+        fields: fields,
+        menu: menu,
+        progress: progress
+      });
+    });
+  }
+
+  getFields() {
+    return _utils_api__WEBPACK_IMPORTED_MODULE_1__.getFields().then(response => {
+      return response.data;
+    });
+  }
+  /**
+   * Allow child blocks to set data on the gridblock
+   * @param key
+   * @param value
+   */
+
+
+  setPageProps(key, value) {
+    console.log("set page props");
+    console.log(key);
+    console.log(value);
+    this.pageProps[key] = value;
+    this.setState({
+      pageProps: this.pageProps
+    });
+  }
+
+  componentDidMount() {
+    this.selectMenu = this.selectMenu.bind(this);
+    this.highLightField = this.highLightField.bind(this);
+    this.updateField = this.updateField.bind(this);
+    this.selectMainMenu = this.selectMainMenu.bind(this);
+    this.setPageProps = this.setPageProps.bind(this);
+    this.setState({
+      selectedMainMenuItem: 'dashboard',
+      selectedMenuItem: 'general'
+    });
+  }
+
+  selectMenu(selectedMenuItem) {
+    this.setState({
+      selectedMenuItem: selectedMenuItem
+    });
+  }
+
+  selectStep(selectedStep) {
+    this.setState({
+      selectedStep: selectedStep
+    });
+  }
+
+  selectMainMenu(selectedMainMenuItem) {
+    this.setState({
+      selectedMainMenuItem: selectedMainMenuItem
+    });
+  }
+
+  updateField(field) {
+    console.log("run global update field for ");
+    console.log(field);
+    let fields = this.fields;
+
+    for (const fieldItem of fields) {
+      if (fieldItem.id === field.id) {
+        fieldItem.value = field.value;
+      }
+    }
+
+    console.log("NEW FIELDS LIST");
+    console.log(fields);
+    this.fields = fields;
+    this.setState({
+      fields: fields
+    });
+  }
+
+  highLightField(fieldId) {
+    //switch to settings page
+    this.selectMainMenu('settings'); //get menu item based on fieldId
+
+    let selectedField = null;
+    let fields = this.fields.filter(field => field.id === fieldId);
+
+    if (fields.length) {
+      selectedField = fields[0];
+      this.selectMenu(selectedField.menu_id);
+    }
+
+    this.highLightedField = fieldId;
+  }
+
+  render() {
+    const {
+      selectedMainMenuItem,
+      selectedMenuItem,
+      fields,
+      menu,
+      progress,
+      isAPILoaded
+    } = this.state;
+    return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+      className: "rsssl-wrapper"
+    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_Header__WEBPACK_IMPORTED_MODULE_2__["default"], {
+      selectedMainMenuItem: selectedMainMenuItem,
+      selectMainMenu: this.selectMainMenu,
+      fields: fields
+    }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+      className: "rsssl-content-area rsssl-grid rsssl-" + selectedMainMenuItem
+    }, selectedMainMenuItem === 'settings' && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_SettingsPage__WEBPACK_IMPORTED_MODULE_4__["default"], {
+      pageProps: this.pageProps,
+      updateField: this.updateField,
+      setPageProps: this.setPageProps,
+      selectMenu: this.selectMenu,
+      highLightField: this.highLightField,
+      highLightedField: this.highLightedField,
+      selectedMenuItem: selectedMenuItem,
+      isAPILoaded: isAPILoaded,
+      fields: fields,
+      menu: menu,
+      progress: progress
+    }), selectedMainMenuItem === 'dashboard' && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_DashboardPage__WEBPACK_IMPORTED_MODULE_3__["default"], {
+      isAPILoaded: isAPILoaded,
+      fields: fields,
+      highLightField: this.highLightField
+    })));
+  }
+
+}
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Page);
 
 /***/ }),
 
@@ -3806,6 +4423,513 @@ class SecurityFeaturesBlock extends _wordpress_element__WEBPACK_IMPORTED_MODULE_
 
 /***/ }),
 
+/***/ "./src/Settings.js":
+/*!*************************!*\
+  !*** ./src/Settings.js ***!
+  \*************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _Placeholder__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Placeholder */ "./src/Placeholder.js");
+/* harmony import */ var _utils_lib__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./utils/lib */ "./src/utils/lib.js");
+/* harmony import */ var _SettingsGroup__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./SettingsGroup */ "./src/SettingsGroup.js");
+/* harmony import */ var _Help__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./Help */ "./src/Help.js");
+/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @wordpress/components */ "@wordpress/components");
+/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(_wordpress_components__WEBPACK_IMPORTED_MODULE_5__);
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_6__);
+
+
+
+
+
+
+
+
+/**
+ * Renders the selected settings
+ *
+ */
+
+class Settings extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Component {
+  constructor() {
+    super(...arguments);
+    this.state = {
+      fields: this.props.fields,
+      progress: this.props.progress,
+      isAPILoaded: this.props.isAPILoaded
+    };
+    this.fields = this.props.fields;
+  }
+
+  render() {
+    const {
+      fields,
+      progress,
+      isAPILoaded
+    } = this.state;
+    let selectedMenuItem = this.props.selectedMenuItem;
+    let selectedStep = this.props.selectedStep;
+    let menu = this.props.menu;
+
+    if (!isAPILoaded) {
+      return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_Placeholder__WEBPACK_IMPORTED_MODULE_1__["default"], null);
+    }
+
+    let selectedFields = fields.filter(field => field.menu_id === selectedMenuItem);
+    let groups = [];
+
+    for (const selectedField of selectedFields) {
+      if (!(0,_utils_lib__WEBPACK_IMPORTED_MODULE_2__["default"])(selectedField.group_id, groups)) {
+        groups.push(selectedField.group_id);
+      }
+    } //convert progress notices to an array useful for the help blocks
+
+
+    let notices = [];
+
+    for (const notice of progress.notices) {
+      if (notice.menu_id === selectedMenuItem) {
+        let help = {};
+        help.title = notice.output.title ? notice.output.title : false;
+        help.label = notice.output.label;
+        help.id = notice.field_id;
+        help.text = notice.output.msg;
+        notices.push(help);
+      }
+    }
+
+    for (const notice of selectedFields.filter(field => field.help)) {
+      let help = notice.help;
+      help.id = notice.id;
+      notices.push(notice.help);
+    }
+
+    let selectedMenuItemObject;
+
+    for (const item of menu.menu_items) {
+      if (item.id === selectedMenuItem) {
+        selectedMenuItemObject = item;
+      } else if (item.menu_items) {
+        selectedMenuItemObject = item.menu_items.filter(menuItem => menuItem.id === selectedMenuItem)[0];
+      }
+
+      if (selectedMenuItemObject) {
+        break;
+      }
+    }
+
+    return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+      className: "rsssl-wizard-settings rsssl-column-2"
+    }, groups.map((group, i) => (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_SettingsGroup__WEBPACK_IMPORTED_MODULE_3__["default"], {
+      showSavedSettingsNotice: this.props.showSavedSettingsNotice,
+      updateField: this.props.updateField,
+      pageProps: this.props.pageProps,
+      setPageProps: this.props.setPageProps,
+      fieldsUpdateComplete: this.props.fieldsUpdateComplete,
+      key: i,
+      index: i,
+      highLightField: this.props.highLightField,
+      highLightedField: this.props.highLightedField,
+      selectedMenuItem: selectedMenuItemObject,
+      saveChangedFields: this.props.saveChangedFields,
+      group: group,
+      fields: selectedFields
+    })), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+      className: "rsssl-grid-item-footer"
+    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_5__.Button, {
+      isPrimary: true,
+      onClick: this.props.save
+    }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_6__.__)('Save', 'really-simple-ssl')))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+      className: "rsssl-wizard-help"
+    }, notices.map((field, i) => (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_Help__WEBPACK_IMPORTED_MODULE_4__["default"], {
+      key: i,
+      index: i,
+      help: field,
+      fieldId: field.id
+    }))));
+  }
+
+}
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Settings);
+
+/***/ }),
+
+/***/ "./src/SettingsGroup.js":
+/*!******************************!*\
+  !*** ./src/SettingsGroup.js ***!
+  \******************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _Field__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Field */ "./src/Field.js");
+
+
+
+/**
+ * Render a grouped block of settings
+ */
+
+class SettingsGroup extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Component {
+  constructor() {
+    super(...arguments);
+    this.state = {
+      fields: this.props.fields,
+      isAPILoaded: this.props.isAPILoaded
+    };
+    this.fields = this.props.fields;
+  }
+
+  getLicenseStatus() {
+    if (this.props.pageProps.hasOwnProperty('licenseStatus')) {
+      return this.props.pageProps['licenseStatus'];
+    }
+
+    return 'invalid';
+  }
+
+  render() {
+    let selectedMenuItem = this.props.selectedMenuItem;
+    let selectedFields = []; //get all fields with group_id this.props.group_id
+
+    for (const selectedField of this.props.fields) {
+      if (selectedField.group_id === this.props.group) {
+        selectedFields.push(selectedField);
+      }
+    }
+
+    let status = this.getLicenseStatus();
+    let disabled = status !== 'valid' && selectedMenuItem.is_premium;
+    let msg;
+
+    if (status === 'empty' || status === 'deactivated') {
+      msg = rsssl_settings.messageInactive;
+    } else {
+      msg = rsssl_settings.messageInvalid;
+    } //get current group, if the id exists
+
+
+    let activeGroup = selectedMenuItem;
+
+    if (selectedMenuItem.hasOwnProperty('groups')) {
+      let currentGroup = selectedMenuItem.groups.filter(group => group.id === this.props.group);
+
+      if (currentGroup.length > 0) {
+        activeGroup = currentGroup[0];
+      }
+    }
+
+    return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+      className: "rsssl-grid-item"
+    }, activeGroup && activeGroup.title && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+      className: "rsssl-grid-item-header"
+    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("h3", {
+      className: "rsssl-h4"
+    }, activeGroup.title)), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+      className: "rsssl-grid-item-content"
+    }, activeGroup && activeGroup.intro && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+      className: "rsssl-settings-block-intro"
+    }, activeGroup.intro), selectedFields.map((field, i) => (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_Field__WEBPACK_IMPORTED_MODULE_1__["default"], {
+      showSavedSettingsNotice: this.props.showSavedSettingsNotice,
+      updateField: this.props.updateField,
+      setPageProps: this.props.setPageProps,
+      fieldsUpdateComplete: this.props.fieldsUpdateComplete,
+      key: i,
+      index: i,
+      highLightField: this.props.highLightField,
+      highLightedField: this.props.highLightedField,
+      saveChangedFields: this.props.saveChangedFields,
+      field: field,
+      fields: selectedFields
+    })), disabled && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+      className: "rsssl-locked"
+    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+      className: "rsssl-locked-overlay"
+    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
+      className: "rsssl-progress-status rsssl-warning"
+    }, __("Warning", "really-simple-ssl")), msg, "\xA0", (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
+      href: rsssl_settings.url
+    }, __("Check license", "really-simple-ssl")))))) // <div className="rsssl-grouped-fields">
+    // 	{activeGroup && activeGroup.title && <PanelBody><h1 className="rsssl-settings-block-title">{activeGroup.title}</h1></PanelBody>}
+    // 	{activeGroup && activeGroup.intro && <PanelBody><div className="rsssl-settings-block-intro">{activeGroup.intro}</div></PanelBody>}
+    // 	{selectedFields.map((field, i) => <Field updateField={this.props.updateField} setPageProps={this.props.setPageProps} fieldsUpdateComplete = {this.props.fieldsUpdateComplete} key={i} index={i} highLightField={this.props.highLightField} highLightedField={this.props.highLightedField} saveChangedFields={this.props.saveChangedFields} field={field} fields={selectedFields}/>)}
+    // 	{disabled && <div className="rsssl-locked">
+    // 		<div className="rsssl-locked-overlay">
+    // 			<span className="rsssl-progress-status rsssl-warning">{__("Warning","really-simple-ssl")}</span>
+    // 			{msg}&nbsp;<a href={rsssl_settings.url}>{__("Check license", "really-simple-ssl")}</a>
+    // 		</div>
+    // 	</div>}
+    // </div>
+    ;
+  }
+
+}
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (SettingsGroup);
+
+/***/ }),
+
+/***/ "./src/SettingsPage.js":
+/*!*****************************!*\
+  !*** ./src/SettingsPage.js ***!
+  \*****************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _utils_lib__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./utils/lib */ "./src/utils/lib.js");
+/* harmony import */ var _utils_api__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./utils/api */ "./src/utils/api.js");
+/* harmony import */ var _Placeholder__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./Placeholder */ "./src/Placeholder.js");
+/* harmony import */ var _Menu__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./Menu */ "./src/Menu.js");
+/* harmony import */ var _Notices__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./Notices */ "./src/Notices.js");
+/* harmony import */ var _Settings__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./Settings */ "./src/Settings.js");
+/* harmony import */ var _wordpress_data__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @wordpress/data */ "@wordpress/data");
+/* harmony import */ var _wordpress_data__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(_wordpress_data__WEBPACK_IMPORTED_MODULE_7__);
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_8___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_8__);
+
+
+
+
+
+
+
+
+
+
+/**
+ * Renders the settings page with Menu and currently selected settings
+ *
+ */
+
+class SettingsPage extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Component {
+  constructor() {
+    super(...arguments);
+    this.state = {
+      selectedMenuItem: 'general',
+      selectedStep: 1,
+      fields: '',
+      menu: '',
+      menuItems: '',
+      isAPILoaded: false,
+      changedFields: '',
+      progress: ''
+    };
+  }
+
+  updateFieldsListWithConditions() {
+    for (const field of this.props.fields) {
+      this.props.fields[this.props.fields.indexOf(field)].visible = !(field.hasOwnProperty('react_conditions') && !this.validateConditions(field.react_conditions, this.props.fields));
+    }
+  }
+
+  saveChangedFields(changedField) {
+    this.updateFieldsListWithConditions();
+    let changedFields = this.changedFields;
+
+    if (!(0,_utils_lib__WEBPACK_IMPORTED_MODULE_1__["default"])(changedField, changedFields)) {
+      changedFields.push(changedField);
+    }
+
+    this.changedFields = changedFields;
+    this.setState({
+      changedFields: changedFields
+    });
+  }
+
+  showSavedSettingsNotice() {
+    (0,_wordpress_data__WEBPACK_IMPORTED_MODULE_7__.dispatch)('core/notices').createNotice('success', (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_8__.__)('Settings Saved', 'really-simple-ssl'), {
+      type: 'snackbar',
+      isDismissible: true
+    }); //remove after 2 seconds
+
+    setTimeout(function () {
+      let notice = document.querySelector('.components-snackbar-list.edit-site-notices');
+      notice.css.display = 'none';
+    }, 2000);
+  }
+
+  save() {
+    const {
+      fields
+    } = this.state;
+    let saveFields = [];
+
+    for (const field of fields) {
+      if ((0,_utils_lib__WEBPACK_IMPORTED_MODULE_1__["default"])(field.id, this.changedFields)) {
+        saveFields.push(field);
+      }
+    }
+
+    _utils_api__WEBPACK_IMPORTED_MODULE_2__.setFields(saveFields).then(response => {
+      this.changedFields = [];
+      this.setState({
+        changedFields: []
+      });
+      this.showSavedSettingsNotice();
+    });
+  }
+
+  validateConditions(conditions, fields) {
+    let relation = conditions.relation === 'OR' ? 'OR' : 'AND';
+    delete conditions['relation'];
+    let conditionApplies = true;
+
+    for (const key in conditions) {
+      if (conditions.hasOwnProperty(key)) {
+        let invert = key.indexOf('!') === 0;
+        let thisConditionApplies = true;
+        let subConditionsArray = conditions[key];
+
+        if (subConditionsArray.hasOwnProperty('relation')) {
+          thisConditionApplies = this.validateConditions(subConditionsArray, fields);
+        } else {
+          for (const conditionField in subConditionsArray) {
+            if (subConditionsArray.hasOwnProperty(conditionField)) {
+              let conditionValue = subConditionsArray[conditionField];
+              let conditionFields = fields.filter(field => field.id === conditionField);
+
+              if (conditionFields.hasOwnProperty(0)) {
+                if (conditionFields[0].type === 'checkbox') {
+                  let actualValue = +conditionFields[0].value;
+                  conditionValue = +conditionValue;
+                  thisConditionApplies = actualValue == conditionValue;
+                } else {
+                  thisConditionApplies = conditionFields[0].value === conditionValue;
+                }
+              }
+            }
+          }
+
+          if (invert) {
+            thisConditionApplies = !thisConditionApplies;
+          }
+        }
+
+        if (relation === 'AND') {
+          conditionApplies = conditionApplies && thisConditionApplies;
+        } else {
+          conditionApplies = conditionApplies || thisConditionApplies;
+        }
+      }
+    }
+
+    return conditionApplies;
+  }
+
+  componentDidMount() {
+    this.save = this.save.bind(this);
+    this.saveChangedFields = this.saveChangedFields.bind(this);
+    this.updateFieldsListWithConditions = this.updateFieldsListWithConditions.bind(this);
+    this.showSavedSettingsNotice = this.showSavedSettingsNotice.bind(this);
+    this.updateFieldsListWithConditions();
+    let fields = this.props.fields;
+    let menu = this.props.menu;
+    let progress = this.props.progress; //if count >1, it's a wizard
+
+    let menuItems = [];
+    let changedFields = [];
+    menuItems = menu.menu_items;
+    let selectedMenuItem = this.props.selectedMenuItem;
+    let selectedStep = 1;
+    this.menu = menu;
+    this.menuItems = menuItems;
+    this.fields = fields;
+    this.selectedMenuItem = selectedMenuItem;
+    this.selectedStep = selectedStep;
+    this.changedFields = changedFields;
+    this.setState({
+      isAPILoaded: true,
+      fields: this.props.fields,
+      menu: this.props.menu,
+      progress: this.props.progress,
+      menuItems: menuItems,
+      selectedMenuItem: selectedMenuItem,
+      selectedStep: selectedStep,
+      changedFields: changedFields
+    });
+  }
+
+  render() {
+    const {
+      fields,
+      menu,
+      progress,
+      menuItems,
+      selectedMenuItem,
+      selectedStep,
+      isAPILoaded,
+      changedFields
+    } = this.state;
+
+    if (!isAPILoaded) {
+      return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_Placeholder__WEBPACK_IMPORTED_MODULE_3__["default"], null);
+    } //maybe filter step
+
+
+    if (menu.is_wizard) {
+      let length = menuItems.length;
+      let temp = [];
+
+      for (let i = 0; i < length; i++) {
+        if (menuItems[i]['step'] != selectedStep) {
+          menuItems.splice(i, 1);
+        }
+      }
+    }
+
+    let fieldsUpdateComplete = changedFields.length == 0;
+    return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_Menu__WEBPACK_IMPORTED_MODULE_4__["default"], {
+      isAPILoaded: isAPILoaded,
+      menuItems: this.menuItems,
+      menu: this.menu,
+      selectMenu: this.props.selectMenu,
+      selectedMenuItem: this.props.selectedMenuItem
+    }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_Settings__WEBPACK_IMPORTED_MODULE_6__["default"], {
+      showSavedSettingsNotice: this.showSavedSettingsNotice,
+      updateField: this.props.updateField,
+      pageProps: this.props.pageProps,
+      setPageProps: this.props.setPageProps,
+      fieldsUpdateComplete: fieldsUpdateComplete,
+      highLightField: this.props.highLightField,
+      highLightedField: this.props.highLightedField,
+      isAPILoaded: isAPILoaded,
+      fields: this.fields,
+      progress: progress,
+      saveChangedFields: this.saveChangedFields,
+      menu: menu,
+      save: this.save,
+      selectedMenuItem: this.props.selectedMenuItem,
+      selectedStep: selectedStep
+    }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_Notices__WEBPACK_IMPORTED_MODULE_5__["default"], {
+      className: "rsssl-wizard-notices"
+    }));
+  }
+
+}
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (SettingsPage);
+
+/***/ }),
+
 /***/ "./src/TaskElement.js":
 /*!****************************!*\
   !*** ./src/TaskElement.js ***!
@@ -3882,266 +5006,6 @@ class TaskElement extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Compon
 }
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (TaskElement);
-
-/***/ }),
-
-/***/ "./src/fields.js":
-/*!***********************!*\
-  !*** ./src/fields.js ***!
-  \***********************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
-/* harmony export */ });
-/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
-/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/components */ "@wordpress/components");
-/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _TaskElement__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./TaskElement */ "./src/TaskElement.js");
-/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
-/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__);
-/* harmony import */ var _License__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./License */ "./src/License.js");
-/* harmony import */ var react_data_table_component__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! react-data-table-component */ "./node_modules/react-data-table-component/dist/index.cjs.js");
-/* harmony import */ var _utils_api__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./utils/api */ "./src/utils/api.js");
-/* harmony import */ var _Notices__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./Notices */ "./src/Notices.js");
-/* harmony import */ var _wordpress_data__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! @wordpress/data */ "@wordpress/data");
-/* harmony import */ var _wordpress_data__WEBPACK_IMPORTED_MODULE_8___default = /*#__PURE__*/__webpack_require__.n(_wordpress_data__WEBPACK_IMPORTED_MODULE_8__);
-
-
-
-
-
-
-/**
- * https://react-data-table-component.netlify.app
- */
-
-
-
-
-
-
-class ChangeStatus extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Component {
-  constructor() {
-    super(...arguments);
-  }
-
-  render() {
-    let statusClass = this.props.item.status == 1 ? 'rsssl-status-allowed' : 'rsssl-status-revoked';
-    let label = this.props.item.status == 1 ? (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)("Revoke", "really-simple-ssl") : (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)("Allow", "really-simple-ssl");
-    return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
-      onClick: () => this.props.onChangeHandlerDataTable(!this.props.item.status, this.props.item, 'status'),
-      className: statusClass
-    }, label);
-  }
-
-}
-
-class Field extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Component {
-  constructor() {
-    super(...arguments);
-    this.highLightClass = this.props.highLightedField === this.props.field.id ? 'rsssl-highlight' : '';
-  }
-
-  componentDidMount() {
-    this.props.highLightField('');
-    this.onChangeHandlerDataTable = this.onChangeHandlerDataTable.bind(this);
-  }
-
-  onChangeHandler(fieldValue) {
-    let fields = this.props.fields;
-    let field = this.props.field;
-    fields[this.props.index]['value'] = fieldValue;
-    this.props.saveChangedFields(field.id);
-    this.setState({
-      fields
-    });
-  }
-  /**
-   * Handle data update for a datatable
-   * @param enabled
-   * @param clickedItem
-   * @param type
-   */
-
-
-  onChangeHandlerDataTable(enabled, clickedItem, type) {
-    let field = this.props.field; //find this item in the field list
-
-    for (const item of field.value) {
-      if (item.id === clickedItem.id) {
-        item[type] = enabled;
-      }
-
-      delete item.owndomainControl;
-      delete item.statusControl;
-    }
-
-    let saveFields = [];
-    saveFields.push(field);
-    this.props.updateField(field);
-    _utils_api__WEBPACK_IMPORTED_MODULE_6__.setFields(saveFields).then(response => {
-      this.props.showSavedSettingsNotice();
-    });
-  }
-
-  onCloseTaskHandler() {}
-
-  render() {
-    let field = this.props.field;
-    let fieldValue = field.value;
-    let fields = this.props.fields;
-    let options = [];
-
-    if (field.type === 'radio' || field.type === 'select') {
-      for (var key in field.options) {
-        if (field.options.hasOwnProperty(key)) {
-          let item = new Object();
-          item.label = field.options[key];
-          item.value = key;
-          options.push(item);
-        }
-      }
-    }
-
-    if (!field.visible) {
-      return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", null);
-    }
-
-    if (field.type === 'checkbox') {
-      return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.PanelRow, {
-        className: this.highLightClass
-      }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.ToggleControl, {
-        disabled: field.disabled,
-        checked: field.value == 1,
-        help: field.comment,
-        label: field.label,
-        onChange: fieldValue => this.onChangeHandler(fieldValue)
-      }));
-    }
-
-    if (field.type === 'radio') {
-      return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.PanelRow, {
-        className: this.highLightClass
-      }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.RadioControl, {
-        label: field.label,
-        onChange: fieldValue => this.onChangeHandler(fieldValue),
-        selected: fieldValue,
-        options: options
-      }));
-    }
-
-    if (field.type === 'text') {
-      return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.PanelBody, {
-        className: this.highLightClass
-      }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.TextControl, {
-        help: field.comment,
-        label: field.label,
-        onChange: fieldValue => this.onChangeHandler(fieldValue),
-        value: fieldValue
-      }));
-    }
-
-    if (field.type === 'license') {
-      /**
-       * There is no "PasswordControl" in WordPress react yet, so we create our own license field.
-       */
-      let field = this.props.field;
-      let fieldValue = field.value;
-      let fields = this.props.fields;
-      return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_License__WEBPACK_IMPORTED_MODULE_4__["default"], {
-        setPageProps: this.props.setPageProps,
-        fieldsUpdateComplete: this.props.fieldsUpdateComplete,
-        index: this.props.index,
-        fields: fields,
-        field: field,
-        fieldValue: fieldValue,
-        saveChangedFields: this.props.saveChangedFields,
-        highLightField: this.props.highLightField,
-        highLightedField: this.props.highLightedField
-      });
-    }
-
-    if (field.type === 'number') {
-      return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.PanelBody, {
-        className: this.highLightClass
-      }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.__experimentalNumberControl, {
-        onChange: fieldValue => this.onChangeHandler(fieldValue),
-        help: field.comment,
-        label: field.label,
-        value: fieldValue
-      }));
-    }
-
-    if (field.type === 'email') {
-      return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.PanelBody, {
-        className: this.highLightClass
-      }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.TextControl, {
-        help: field.comment,
-        label: field.label,
-        onChange: fieldValue => this.onChangeHandler(fieldValue),
-        value: fieldValue
-      }));
-    }
-
-    if (field.type === 'select') {
-      return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.PanelBody, {
-        className: this.highLightClass
-      }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.SelectControl // multiple
-      , {
-        help: field.comment,
-        label: field.label,
-        onChange: fieldValue => this.onChangeHandler(fieldValue),
-        value: fieldValue,
-        options: options
-      }));
-    }
-
-    if (field.type === 'permissionspolicy') {
-      console.log(this.props.field); //build our header
-
-      columns = [];
-      field.columns.forEach(function (item, i) {
-        let newItem = {
-          name: item.name,
-          sortable: item.sortable,
-          selector: row => row[item.column]
-        };
-        columns.push(newItem);
-      });
-      let data = field.value;
-
-      for (const item of data) {
-        item.owndomainControl = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.ToggleControl, {
-          checked: item.owndomain == 1,
-          label: "",
-          onChange: fieldValue => this.onChangeHandlerDataTable(fieldValue, item, 'owndomain')
-        });
-        item.statusControl = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(ChangeStatus, {
-          item: item,
-          onChangeHandlerDataTable: this.onChangeHandlerDataTable
-        });
-      }
-
-      return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.PanelBody, {
-        className: this.highLightClass
-      }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_data_table_component__WEBPACK_IMPORTED_MODULE_5__["default"], {
-        columns: columns,
-        data: data,
-        dense: true,
-        pagination: true
-      }));
-    }
-
-    return 'not found field type ' + field.type;
-  }
-
-}
-
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Field);
 
 /***/ }),
 
@@ -5456,794 +6320,20 @@ var __webpack_exports__ = {};
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _utils_api__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./utils/api */ "./src/utils/api.js");
-/* harmony import */ var _utils_lib__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./utils/lib */ "./src/utils/lib.js");
-/* harmony import */ var _wordpress_data__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @wordpress/data */ "@wordpress/data");
-/* harmony import */ var _wordpress_data__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_wordpress_data__WEBPACK_IMPORTED_MODULE_3__);
-/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @wordpress/components */ "@wordpress/components");
-/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_wordpress_components__WEBPACK_IMPORTED_MODULE_4__);
-/* harmony import */ var _Placeholder__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./Placeholder */ "./src/Placeholder.js");
-/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
-/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_6__);
-/* harmony import */ var _fields__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./fields */ "./src/fields.js");
-/* harmony import */ var _Menu__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./Menu */ "./src/Menu.js");
-/* harmony import */ var _Notices__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./Notices */ "./src/Notices.js");
-/* harmony import */ var _GridBlock__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./GridBlock */ "./src/GridBlock.js");
+/* harmony import */ var _Page__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Page */ "./src/Page.js");
 
 
 
 
-
-
-
-
-
-
-
-
-
-/**
- * Render a help notice in the sidebar
- */
-
-class Help extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Component {
-  handleClick(id) {
-    let el = document.querySelector('[data-help_index="' + id + '"]');
-
-    if (el.classList.contains('rsssl-wizard__help_open')) {
-      el.classList.remove('rsssl-wizard__help_open');
-    } else {
-      el.classList.add('rsssl-wizard__help_open');
-    }
-  }
-
-  render() {
-    let notice = this.props.help;
-    console.log(notice);
-
-    if (!notice.title) {
-      notice.title = notice.text;
-      notice.text = false;
-    }
-
-    return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, notice.title && notice.text && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("details", {
-      className: "rsssl-wizard-help-notice rsssl-" + notice.label.toLowerCase()
-    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("summary", null, notice.title), notice.text), notice.title && !notice.text && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-      className: "rsssl-wizard-help-notice  rsssl-" + notice.label.toLowerCase()
-    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", null, notice.title)));
-  }
-
-}
-/**
- * Render a grouped block of settings
- */
-//this breaks
-// class SettingsGroup extends Component {
-// 	constructor() {
-// 		super( ...arguments );
-// 		this.state = {
-// 			fields:this.props.fields,
-// 			isAPILoaded: this.props.isAPILoaded,
-// 		};
-// 		this.fields = this.props.fields;
-// 	}
-//
-// 	getLicenseStatus(){
-// 		if (this.props.pageProps.hasOwnProperty('licenseStatus') ){
-// 			return this.props.pageProps['licenseStatus'];
-// 		}
-// 		return 'invalid';
-// 	}
-//
-// 	render(){
-// 		let selectedMenuItem = this.props.selectedMenuItem;
-// 		let selectedFields = [];
-// 		//get all fields with group_id this.props.group_id
-// 		for (const selectedField of this.props.fields){
-// 			if (selectedField.group_id === this.props.group ){
-// 				selectedFields.push(selectedField);
-// 			}
-// 		}
-// 		let status = this.getLicenseStatus();
-// 		let disabled = status !=='valid' && selectedMenuItem.is_premium;
-// 		let msg;
-// 		if ( status === 'empty' || status === 'deactivated' ) {
-// 			msg = rsssl_settings.messageInactive;
-// 		} else {
-// 			msg = rsssl_settings.messageInvalid;
-// 		}
-//
-// 		return (
-// 				// <Fragment>
-// 				// 	<div className="rsssl-grid-item-header">
-// 				// 		<h3 className="h4">{selectedMenuItem.title}</h3>
-// 				// 	</div>
-// 				// 	<div className="rsssl-grid-item-content">
-// 				// 		{selectedMenuItem.intro && <div className="rsssl-settings-block-intro">{selectedMenuItem.intro}</div>}
-// 				// 		{selectedFields.map((field, i) => <Field key={i} index={i} highLightField={this.props.highLightField} highLightedField={this.props.highLightedField} saveChangedFields={this.props.saveChangedFields} field={field} fields={selectedFields}/>)}
-// 				// 	</div>
-// 				// </Fragment>
-//
-// 			<div className="rsssl-grouped-fields">
-// 				{selectedMenuItem && selectedMenuItem.title && <PanelBody><h1 className="rsssl-settings-block-title">{selectedMenuItem.title}</h1></PanelBody>}
-// 				{selectedMenuItem && selectedMenuItem.intro && <PanelBody><div className="rsssl-settings-block-intro">{selectedMenuItem.intro}</div></PanelBody>}
-// 				{selectedFields.map((field, i) => <Field setPageProps={this.props.setPageProps} fieldsUpdateComplete = {this.props.fieldsUpdateComplete} key={i} index={i} highLightField={this.props.highLightField} highLightedField={this.props.highLightedField} saveChangedFields={this.props.saveChangedFields} field={field} fields={selectedFields}/>)}
-// 				{disabled && <div className="rsssl-locked">
-// 					<div className="rsssl-locked-overlay">
-// 						<span className="rsssl-progress-status rsssl-warning">{__("Warning","really-simple-ssl")}</span>
-// 						{msg}&nbsp;<a href={rsssl_settings.url}>{__("Check license", "really-simple-ssl")}</a>
-// 					</div>
-// 				</div>}
-// 			</div>
-// 		)
-// 	}
-// }
-//this one working
-
-
-class SettingsGroup extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Component {
-  constructor() {
-    super(...arguments);
-    this.state = {
-      fields: this.props.fields,
-      isAPILoaded: this.props.isAPILoaded
-    };
-    this.fields = this.props.fields;
-  }
-
-  getLicenseStatus() {
-    if (this.props.pageProps.hasOwnProperty('licenseStatus')) {
-      return this.props.pageProps['licenseStatus'];
-    }
-
-    return 'invalid';
-  }
-
-  render() {
-    let selectedMenuItem = this.props.selectedMenuItem;
-    let selectedFields = []; //get all fields with group_id this.props.group_id
-
-    for (const selectedField of this.props.fields) {
-      if (selectedField.group_id === this.props.group) {
-        selectedFields.push(selectedField);
-      }
-    }
-
-    console.log("groep");
-    console.log(this.props.group);
-    let status = this.getLicenseStatus();
-    let disabled = status !== 'valid' && selectedMenuItem.is_premium;
-    let msg;
-
-    if (status === 'empty' || status === 'deactivated') {
-      msg = rsssl_settings.messageInactive;
-    } else {
-      msg = rsssl_settings.messageInvalid;
-    } //get current group, if the id exists
-
-
-    let activeGroup = selectedMenuItem;
-
-    if (selectedMenuItem.hasOwnProperty('groups')) {
-      let currentGroup = selectedMenuItem.groups.filter(group => group.id === this.props.group);
-
-      if (currentGroup.length > 0) {
-        activeGroup = currentGroup[0];
-      }
-    }
-
-    return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-      className: "rsssl-grid-item"
-    }, activeGroup && activeGroup.title && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-      className: "rsssl-grid-item-header"
-    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("h3", {
-      className: "rsssl-h4"
-    }, activeGroup.title)), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-      className: "rsssl-grid-item-content"
-    }, activeGroup && activeGroup.intro && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-      className: "rsssl-settings-block-intro"
-    }, activeGroup.intro), selectedFields.map((field, i) => (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_fields__WEBPACK_IMPORTED_MODULE_7__["default"], {
-      showSavedSettingsNotice: this.props.showSavedSettingsNotice,
-      updateField: this.props.updateField,
-      setPageProps: this.props.setPageProps,
-      fieldsUpdateComplete: this.props.fieldsUpdateComplete,
-      key: i,
-      index: i,
-      highLightField: this.props.highLightField,
-      highLightedField: this.props.highLightedField,
-      saveChangedFields: this.props.saveChangedFields,
-      field: field,
-      fields: selectedFields
-    })), disabled && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-      className: "rsssl-locked"
-    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-      className: "rsssl-locked-overlay"
-    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
-      className: "rsssl-progress-status rsssl-warning"
-    }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_6__.__)("Warning", "really-simple-ssl")), msg, "\xA0", (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
-      href: rsssl_settings.url
-    }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_6__.__)("Check license", "really-simple-ssl")))))) // <div className="rsssl-grouped-fields">
-    // 	{activeGroup && activeGroup.title && <PanelBody><h1 className="rsssl-settings-block-title">{activeGroup.title}</h1></PanelBody>}
-    // 	{activeGroup && activeGroup.intro && <PanelBody><div className="rsssl-settings-block-intro">{activeGroup.intro}</div></PanelBody>}
-    // 	{selectedFields.map((field, i) => <Field updateField={this.props.updateField} setPageProps={this.props.setPageProps} fieldsUpdateComplete = {this.props.fieldsUpdateComplete} key={i} index={i} highLightField={this.props.highLightField} highLightedField={this.props.highLightedField} saveChangedFields={this.props.saveChangedFields} field={field} fields={selectedFields}/>)}
-    // 	{disabled && <div className="rsssl-locked">
-    // 		<div className="rsssl-locked-overlay">
-    // 			<span className="rsssl-progress-status rsssl-warning">{__("Warning","really-simple-ssl")}</span>
-    // 			{msg}&nbsp;<a href={rsssl_settings.url}>{__("Check license", "really-simple-ssl")}</a>
-    // 		</div>
-    // 	</div>}
-    // </div>
-    ;
-  }
-
-}
-/**
- * Renders the selected settings
- *
- */
-
-
-class Settings extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Component {
-  constructor() {
-    super(...arguments);
-    this.state = {
-      fields: this.props.fields,
-      progress: this.props.progress,
-      isAPILoaded: this.props.isAPILoaded
-    };
-    this.fields = this.props.fields;
-  }
-
-  render() {
-    const {
-      fields,
-      progress,
-      isAPILoaded
-    } = this.state;
-    let selectedMenuItem = this.props.selectedMenuItem;
-    let selectedStep = this.props.selectedStep;
-    let menu = this.props.menu;
-
-    if (!isAPILoaded) {
-      return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_Placeholder__WEBPACK_IMPORTED_MODULE_5__["default"], null);
-    }
-
-    let selectedFields = fields.filter(field => field.menu_id === selectedMenuItem);
-    let groups = [];
-
-    for (const selectedField of selectedFields) {
-      if (!(0,_utils_lib__WEBPACK_IMPORTED_MODULE_2__["default"])(selectedField.group_id, groups)) {
-        groups.push(selectedField.group_id);
-      }
-    } //convert progress notices to an array useful for the help blocks
-
-
-    let notices = [];
-
-    for (const notice of progress.notices) {
-      if (notice.menu_id === selectedMenuItem) {
-        let help = {};
-        help.title = notice.output.title ? notice.output.title : false;
-        help.label = notice.output.label;
-        help.id = notice.field_id;
-        help.text = notice.output.msg;
-        notices.push(help);
-      }
-    }
-
-    for (const notice of selectedFields.filter(field => field.help)) {
-      let help = notice.help;
-      help.id = notice.id;
-      notices.push(notice.help);
-    }
-
-    let selectedMenuItemObject;
-
-    for (const item of menu.menu_items) {
-      if (item.id === selectedMenuItem) {
-        selectedMenuItemObject = item;
-      } else if (item.menu_items) {
-        selectedMenuItemObject = item.menu_items.filter(menuItem => menuItem.id === selectedMenuItem)[0];
-      }
-
-      if (selectedMenuItemObject) {
-        break;
-      }
-    }
-
-    return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-      className: "rsssl-wizard-settings rsssl-column-2"
-    }, groups.map((group, i) => (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(SettingsGroup, {
-      showSavedSettingsNotice: this.props.showSavedSettingsNotice,
-      updateField: this.props.updateField,
-      pageProps: this.props.pageProps,
-      setPageProps: this.props.setPageProps,
-      fieldsUpdateComplete: this.props.fieldsUpdateComplete,
-      key: i,
-      index: i,
-      highLightField: this.props.highLightField,
-      highLightedField: this.props.highLightedField,
-      selectedMenuItem: selectedMenuItemObject,
-      saveChangedFields: this.props.saveChangedFields,
-      group: group,
-      fields: selectedFields
-    })), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-      className: "rsssl-grid-item-footer"
-    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_4__.Button, {
-      isPrimary: true,
-      onClick: this.props.save
-    }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_6__.__)('Save', 'really-simple-ssl')))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-      className: "rsssl-wizard-help"
-    }, notices.map((field, i) => (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(Help, {
-      key: i,
-      index: i,
-      help: field,
-      fieldId: field.id
-    }))));
-  }
-
-}
-/**
- * Renders the settings page with Menu and currently selected settings
- *
- */
-
-
-class SettingsPage extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Component {
-  constructor() {
-    super(...arguments);
-    this.state = {
-      selectedMenuItem: 'general',
-      selectedStep: 1,
-      fields: '',
-      menu: '',
-      menuItems: '',
-      isAPILoaded: false,
-      changedFields: '',
-      progress: ''
-    };
-  }
-
-  updateFieldsListWithConditions() {
-    for (const field of this.props.fields) {
-      this.props.fields[this.props.fields.indexOf(field)].visible = !(field.hasOwnProperty('react_conditions') && !this.validateConditions(field.react_conditions, this.props.fields));
-    }
-  }
-
-  saveChangedFields(changedField) {
-    this.updateFieldsListWithConditions();
-    let changedFields = this.changedFields;
-
-    if (!(0,_utils_lib__WEBPACK_IMPORTED_MODULE_2__["default"])(changedField, changedFields)) {
-      changedFields.push(changedField);
-    }
-
-    this.changedFields = changedFields;
-    this.setState({
-      changedFields: changedFields
-    });
-  }
-
-  showSavedSettingsNotice() {
-    (0,_wordpress_data__WEBPACK_IMPORTED_MODULE_3__.dispatch)('core/notices').createNotice('success', (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_6__.__)('Settings Saved', 'really-simple-ssl'), {
-      type: 'snackbar',
-      isDismissible: true
-    }); //remove after 2 seconds
-
-    setTimeout(function () {
-      let notice = document.querySelector('.components-snackbar-list.edit-site-notices');
-      notice.parentElement.removeChild(notice);
-    }, 2000);
-  }
-
-  save() {
-    const {
-      fields
-    } = this.state;
-    let saveFields = [];
-
-    for (const field of fields) {
-      if ((0,_utils_lib__WEBPACK_IMPORTED_MODULE_2__["default"])(field.id, this.changedFields)) {
-        saveFields.push(field);
-      }
-    }
-
-    _utils_api__WEBPACK_IMPORTED_MODULE_1__.setFields(saveFields).then(response => {
-      this.showSavedSettingsNotice();
-      this.changedFields = [];
-      this.setState({
-        changedFields: []
-      });
-    });
-  }
-
-  validateConditions(conditions, fields) {
-    let relation = conditions.relation === 'OR' ? 'OR' : 'AND';
-    delete conditions['relation'];
-    let conditionApplies = true;
-
-    for (const key in conditions) {
-      if (conditions.hasOwnProperty(key)) {
-        let invert = key.indexOf('!') === 0;
-        let thisConditionApplies = true;
-        let subConditionsArray = conditions[key];
-
-        if (subConditionsArray.hasOwnProperty('relation')) {
-          thisConditionApplies = this.validateConditions(subConditionsArray, fields);
-        } else {
-          for (const conditionField in subConditionsArray) {
-            if (subConditionsArray.hasOwnProperty(conditionField)) {
-              let conditionValue = subConditionsArray[conditionField];
-              let conditionFields = fields.filter(field => field.id === conditionField);
-
-              if (conditionFields.hasOwnProperty(0)) {
-                if (conditionFields[0].type === 'checkbox') {
-                  let actualValue = +conditionFields[0].value;
-                  conditionValue = +conditionValue;
-                  thisConditionApplies = actualValue == conditionValue;
-                } else {
-                  thisConditionApplies = conditionFields[0].value === conditionValue;
-                }
-              }
-            }
-          }
-
-          if (invert) {
-            thisConditionApplies = !thisConditionApplies;
-          }
-        }
-
-        if (relation === 'AND') {
-          conditionApplies = conditionApplies && thisConditionApplies;
-        } else {
-          conditionApplies = conditionApplies || thisConditionApplies;
-        }
-      }
-    }
-
-    return conditionApplies;
-  }
-
-  componentDidMount() {
-    this.save = this.save.bind(this);
-    this.saveChangedFields = this.saveChangedFields.bind(this);
-    this.updateFieldsListWithConditions = this.updateFieldsListWithConditions.bind(this);
-    this.showSavedSettingsNotice = this.showSavedSettingsNotice.bind(this);
-    this.updateFieldsListWithConditions();
-    let fields = this.props.fields;
-    let menu = this.props.menu;
-    let progress = this.props.progress; //if count >1, it's a wizard
-
-    let menuItems = [];
-    let changedFields = [];
-    menuItems = menu.menu_items;
-    let selectedMenuItem = this.props.selectedMenuItem;
-    let selectedStep = 1;
-    this.menu = menu;
-    this.menuItems = menuItems;
-    this.fields = fields;
-    this.selectedMenuItem = selectedMenuItem;
-    this.selectedStep = selectedStep;
-    this.changedFields = changedFields;
-    this.setState({
-      isAPILoaded: true,
-      fields: this.props.fields,
-      menu: this.props.menu,
-      progress: this.props.progress,
-      menuItems: menuItems,
-      selectedMenuItem: selectedMenuItem,
-      selectedStep: selectedStep,
-      changedFields: changedFields
-    });
-  }
-
-  render() {
-    const {
-      fields,
-      menu,
-      progress,
-      menuItems,
-      selectedMenuItem,
-      selectedStep,
-      isAPILoaded,
-      changedFields
-    } = this.state;
-
-    if (!isAPILoaded) {
-      return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_Placeholder__WEBPACK_IMPORTED_MODULE_5__["default"], null);
-    } //maybe filter step
-
-
-    if (menu.is_wizard) {
-      let length = menuItems.length;
-      let temp = [];
-
-      for (let i = 0; i < length; i++) {
-        if (menuItems[i]['step'] != selectedStep) {
-          menuItems.splice(i, 1);
-        }
-      }
-    }
-
-    let fieldsUpdateComplete = changedFields.length == 0;
-    return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_Menu__WEBPACK_IMPORTED_MODULE_8__["default"], {
-      isAPILoaded: isAPILoaded,
-      menuItems: this.menuItems,
-      menu: this.menu,
-      selectMenu: this.props.selectMenu,
-      selectedMenuItem: this.props.selectedMenuItem
-    }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(Settings, {
-      showSavedSettingsNotice: this.showSavedSettingsNotice,
-      updateField: this.props.updateField,
-      pageProps: this.props.pageProps,
-      setPageProps: this.props.setPageProps,
-      fieldsUpdateComplete: fieldsUpdateComplete,
-      highLightField: this.props.highLightField,
-      highLightedField: this.props.highLightedField,
-      isAPILoaded: isAPILoaded,
-      fields: this.fields,
-      progress: progress,
-      saveChangedFields: this.saveChangedFields,
-      menu: menu,
-      save: this.save,
-      selectedMenuItem: this.props.selectedMenuItem,
-      selectedStep: selectedStep
-    }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_Notices__WEBPACK_IMPORTED_MODULE_9__["default"], {
-      className: "rsssl-wizard-notices"
-    }));
-  }
-
-}
-
-class DashboardPage extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Component {
-  constructor() {
-    super(...arguments);
-  }
-
-  render() {
-    let blocks = rsssl_settings.blocks;
-    return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, blocks.map((block, i) => (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_GridBlock__WEBPACK_IMPORTED_MODULE_10__["default"], {
-      key: i,
-      block: block,
-      isApiLoaded: this.props.isAPILoaded,
-      fields: this.props.fields,
-      highLightField: this.props.highLightField
-    })));
-  }
-
-}
-
-class Header extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Component {
-  constructor() {
-    super(...arguments);
-    this.state = {
-      highContrast: false
-    };
-  }
-
-  handleClick(menuId) {
-    this.props.selectMainMenu(menuId);
-  }
-
-  componentDidMount() {
-    this.handleClick = this.handleClick.bind(this);
-
-    for (const field of this.props.fields) {
-      if (field.id === 'high_contrast') {
-        this.highContrast = field.value;
-      }
-    }
-
-    this.setState({
-      highContrast: this.highContrast
-    });
-  }
-
-  render() {
-    const {
-      highContrast
-    } = this.state;
-    let menu = rsssl_settings.menu;
-    let plugin_url = rsssl_settings.plugin_url;
-    let active_menu_item = this.props.selectedMainMenuItem;
-    let knowledgeBaseBtnClass = !rsssl_settings.premium ? 'button button-black' : '';
-    return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-      className: "rsssl-header-container"
-    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-      className: "rsssl-header"
-    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("img", {
-      className: "rsssl-logo",
-      src: plugin_url + "assets/img/really-simple-ssl-logo.png",
-      alt: "Really Simple SSL logo"
-    }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-      className: "rsssl-header-left"
-    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("nav", {
-      className: "rsssl-header-menu"
-    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("ul", null, menu.map((menu_item, i) => (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("li", {
-      key: i
-    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
-      className: active_menu_item === menu_item.id ? 'active' : '',
-      onClick: () => this.handleClick(menu_item.id),
-      href: "#" + menu_item.id.toString()
-    }, menu_item.label)))))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-      className: "rsssl-header-right"
-    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
-      href: "https://really-simple-ssl.com/knowledge-base",
-      className: knowledgeBaseBtnClass,
-      target: "_blank"
-    }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_6__.__)("Documentation", "really-simple-ssl")), rsssl_settings.premium && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
-      href: "https://wordpress.org/support/plugin/really-simple-ssl/",
-      className: "button button-black",
-      target: "_blank"
-    }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_6__.__)("Support", "really-simple-ssl")))));
-  }
-
-}
-
-class Page extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Component {
-  constructor() {
-    super(...arguments);
-    this.pageProps = [];
-    this.pageProps['licenseStatus'] = rsssl_settings.licenseStatus;
-    this.state = {
-      selectedMainMenuItem: 'dashboard',
-      selectedMenuItem: 'general',
-      highLightedField: '',
-      fields: '',
-      menu: '',
-      progress: '',
-      isAPILoaded: false,
-      pageProps: this.pageProps
-    };
-    this.getFields().then(response => {
-      let fields = response.fields;
-      let menu = response.menu;
-      let progress = response.progress;
-      this.menu = menu;
-      this.progress = progress;
-      this.fields = fields;
-      this.setState({
-        isAPILoaded: true,
-        fields: fields,
-        menu: menu,
-        progress: progress
-      });
-    });
-  }
-
-  getFields() {
-    return _utils_api__WEBPACK_IMPORTED_MODULE_1__.getFields().then(response => {
-      return response.data;
-    });
-  }
-  /**
-   * Allow child blocks to set data on the gridblock
-   * @param key
-   * @param value
-   */
-
-
-  setPageProps(key, value) {
-    console.log("set page props");
-    console.log(key);
-    console.log(value);
-    this.pageProps[key] = value;
-    this.setState({
-      pageProps: this.pageProps
-    });
-  }
-
-  componentDidMount() {
-    this.selectMenu = this.selectMenu.bind(this);
-    this.highLightField = this.highLightField.bind(this);
-    this.updateField = this.updateField.bind(this);
-    this.selectMainMenu = this.selectMainMenu.bind(this);
-    this.setPageProps = this.setPageProps.bind(this);
-    this.setState({
-      selectedMainMenuItem: 'dashboard',
-      selectedMenuItem: 'general'
-    });
-  }
-
-  selectMenu(selectedMenuItem) {
-    this.setState({
-      selectedMenuItem: selectedMenuItem
-    });
-  }
-
-  selectStep(selectedStep) {
-    this.setState({
-      selectedStep: selectedStep
-    });
-  }
-
-  selectMainMenu(selectedMainMenuItem) {
-    this.setState({
-      selectedMainMenuItem: selectedMainMenuItem
-    });
-  }
-
-  updateField(field) {
-    console.log("run global update field for ");
-    console.log(field);
-    let fields = this.fields;
-
-    for (const fieldItem of fields) {
-      if (fieldItem.id === field.id) {
-        fieldItem.value = field.value;
-      }
-    }
-
-    console.log("NEW FIELDS LIST");
-    console.log(fields);
-    this.fields = fields;
-    this.setState({
-      fields: fields
-    });
-  }
-
-  highLightField(fieldId) {
-    //switch to settings page
-    this.selectMainMenu('settings'); //get menu item based on fieldId
-
-    let selectedField = null;
-    let fields = this.fields.filter(field => field.id === fieldId);
-
-    if (fields.length) {
-      selectedField = fields[0];
-      this.selectMenu(selectedField.menu_id);
-    }
-
-    this.highLightedField = fieldId;
-  }
-
-  render() {
-    const {
-      selectedMainMenuItem,
-      selectedMenuItem,
-      fields,
-      menu,
-      progress,
-      isAPILoaded
-    } = this.state;
-    return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-      className: "rsssl-wrapper"
-    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(Header, {
-      selectedMainMenuItem: selectedMainMenuItem,
-      selectMainMenu: this.selectMainMenu,
-      fields: fields
-    }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-      className: "rsssl-content-area rsssl-grid rsssl-" + selectedMainMenuItem
-    }, selectedMainMenuItem === 'settings' && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(SettingsPage, {
-      pageProps: this.pageProps,
-      updateField: this.updateField,
-      setPageProps: this.setPageProps,
-      selectMenu: this.selectMenu,
-      highLightField: this.highLightField,
-      highLightedField: this.highLightedField,
-      selectedMenuItem: selectedMenuItem,
-      isAPILoaded: isAPILoaded,
-      fields: fields,
-      menu: menu,
-      progress: progress
-    }), selectedMainMenuItem === 'dashboard' && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(DashboardPage, {
-      isAPILoaded: isAPILoaded,
-      fields: fields,
-      highLightField: this.highLightField
-    })));
-  }
-
-}
 /**
  * Initialize the whole thing
  */
-
 
 document.addEventListener('DOMContentLoaded', () => {
   const container = document.getElementById('really-simple-ssl');
 
   if (container) {
-    (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.render)((0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(Page, null), container);
+    (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.render)((0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_Page__WEBPACK_IMPORTED_MODULE_1__["default"], null), container);
   }
 });
 })();

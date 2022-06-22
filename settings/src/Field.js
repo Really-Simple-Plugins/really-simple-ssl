@@ -12,7 +12,6 @@ import {
     __experimentalNumberControl as NumberControl,
     ToggleControl,
 } from '@wordpress/components';
-import TaskElement from "./TaskElement";
 import { __ } from '@wordpress/i18n';
 
 import License from "./License";
@@ -25,10 +24,6 @@ import {
  */
 import DataTable from "react-data-table-component";
 import * as rsssl_api from "./utils/api";
-import Notices from './Notices';
-import {
-    dispatch,
-} from '@wordpress/data';
 class ChangeStatus extends Component {
     constructor() {
         super( ...arguments );
