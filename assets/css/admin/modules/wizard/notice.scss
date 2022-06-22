@@ -17,6 +17,7 @@
   width: 100%;
   @include rsssl-block;
   @include rsssl-block-padding;
+  height: fit-content;
   background-color: var(--rsp-dark-blue-faded);
   &.rsssl-warning {
     background-color: var(--rsp-yellow-faded);

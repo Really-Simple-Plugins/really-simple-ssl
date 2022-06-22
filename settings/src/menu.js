@@ -37,7 +37,7 @@ class MenuItem extends Component {
             }
         }
 
-        let activeClass = menuIsSelected ? 'rsssl-active' : '';
+        let activeClass = menuIsSelected ? ' rsssl-active' : '';
         // return (
         //     <div className={"rsssl-menu-item " + activeClass}>
         //         <a href="#" onClick={ () => this.handleClick() }>{this.props.menuItem.title}</a>
@@ -45,7 +45,7 @@ class MenuItem extends Component {
         //     </div>
         // )
         return (
-            <div className="rsssl-menu-item">
+            <div className={"rsssl-menu-item " + activeClass}>
                 <a href="#" onClick={ () => this.handleClick() }>{this.props.menuItem.title}</a>
                 <div className="rsssl-submenu-item">
                     {this.props.menuItem.menu_items && menuIsSelected && this.props.menuItem.menu_items.map((menuItem, i) => <MenuItem key={i} menuItem={menuItem} selectMenu={this.props.selectMenu} selectedMenuItem={this.props.selectedMenuItem}/>)}
@@ -84,7 +84,7 @@ class Menu extends Component {
         }
 
         return (
-                <div className="rsssl-grid-item">
+                <div className="rsssl-wizard-menu rsssl-grid-item">
                     <div className="rsssl-grid-item-header">
                         <h1 className="rsssl-h4">{this.props.menu.title}</h1>
                     </div>

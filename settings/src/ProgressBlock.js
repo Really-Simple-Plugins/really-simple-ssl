@@ -90,7 +90,7 @@ class ProgressBlock extends Component {
         }
         if ( !this.progressLoaded ) {
             return (
-                <Placeholder></Placeholder>
+                <Placeholder lines='9'></Placeholder>
             );
         }
         let filter = 'all';

@@ -39,6 +39,5 @@ exports.default = function() {
   // You can use a single task
   console.log('default task');
   watch('./assets/css/**/*.scss', { ignoreInitial: false }, scssTask);
-  watch('./assets/css/**/*.scss', { ignoreInitial: false }, jsTask);
-
+  watch('./assets/js/**/*.js', { ignoreInitial: false }, jsTask);
 };
