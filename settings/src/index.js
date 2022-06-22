@@ -1,6 +1,8 @@
 import * as rsssl_api from './utils/api';
 import in_array from './utils/lib';
-
+import {
+	dispatch,
+} from '@wordpress/data';
 import {
     Button,
     Panel,
@@ -23,6 +25,7 @@ import {
 import { __ } from '@wordpress/i18n';
 import Field from './fields';
 import Menu from './Menu';
+import Notices from './Notices';
 import GridBlock from './GridBlock';
 
 /**
@@ -177,16 +180,13 @@ class SettingsGroup extends Component {
 			}
 
 		}
-		console.log("active group");
-		console.log(activeGroup);
-
 		return (
 
 			<div className="rsssl-grid-item">
 				{activeGroup && activeGroup.title && <div className="rsssl-grid-item-header"><h3 className="rsssl-h4">{activeGroup.title}</h3></div>}
 				<div className="rsssl-grid-item-content">
 					{activeGroup && activeGroup.intro && <div className="rsssl-settings-block-intro">{activeGroup.intro}</div>}
-					{selectedFields.map((field, i) => <Field updateField={this.props.updateField} setPageProps={this.props.setPageProps} fieldsUpdateComplete = {this.props.fieldsUpdateComplete} key={i} index={i} highLightField={this.props.highLightField} highLightedField={this.props.highLightedField} saveChangedFields={this.props.saveChangedFields} field={field} fields={selectedFields}/>)}
+					{selectedFields.map((field, i) => <Field showSavedSettingsNotice={this.props.showSavedSettingsNotice} updateField={this.props.updateField} setPageProps={this.props.setPageProps} fieldsUpdateComplete = {this.props.fieldsUpdateComplete} key={i} index={i} highLightField={this.props.highLightField} highLightedField={this.props.highLightedField} saveChangedFields={this.props.saveChangedFields} field={field} fields={selectedFields}/>)}
 					{disabled && <div className="rsssl-locked">
 						<div className="rsssl-locked-overlay">
 							<span className="rsssl-progress-status rsssl-warning">{__("Warning","really-simple-ssl")}</span>
@@ -279,7 +279,7 @@ class Settings extends Component {
 		return (
 			<Fragment>
 				<div className="rsssl-wizard-settings rsssl-column-2">
-						{groups.map((group, i) => <SettingsGroup updateField={this.props.updateField} pageProps={this.props.pageProps} setPageProps={this.props.setPageProps} fieldsUpdateComplete = {this.props.fieldsUpdateComplete} key={i} index={i} highLightField={this.props.highLightField} highLightedField={this.props.highLightedField} selectedMenuItem={selectedMenuItemObject} saveChangedFields={this.props.saveChangedFields} group={group} fields={selectedFields}/>)}
+						{groups.map((group, i) => <SettingsGroup showSavedSettingsNotice={this.props.showSavedSettingsNotice}  updateField={this.props.updateField} pageProps={this.props.pageProps} setPageProps={this.props.setPageProps} fieldsUpdateComplete = {this.props.fieldsUpdateComplete} key={i} index={i} highLightField={this.props.highLightField} highLightedField={this.props.highLightedField} selectedMenuItem={selectedMenuItemObject} saveChangedFields={this.props.saveChangedFields} group={group} fields={selectedFields}/>)}
 						<div className="rsssl-grid-item-footer">
 							<Button
 									isPrimary
@@ -334,6 +334,24 @@ class SettingsPage extends Component {
 		});
 	}
 
+	showSavedSettingsNotice(){
+		dispatch('core/notices').createNotice(
+			'success',
+			__( 'Settings Saved', 'really-simple-ssl' ),
+			{
+				type: 'snackbar',
+				isDismissible: true,
+			}
+		);
+		//remove after 2 seconds
+		setTimeout(
+			function() {
+				let notice = document.querySelector('.components-snackbar-list.edit-site-notices');
+				notice.parentElement.removeChild(notice);
+			}, 2000);
+
+	}
+
 	save(){
 		const {
 			fields,
@@ -345,19 +363,11 @@ class SettingsPage extends Component {
 			}
 		}
 		rsssl_api.setFields(saveFields).then(( response ) => {
-			dispatch('core/notices').createNotice(
-				'success',
-				__( 'Settings Saved', 'really-simple-ssl' ),
-				{
-					type: 'snackbar',
-					isDismissible: true,
-				}
-			);
+			this.showSavedSettingsNotice();
 			this.changedFields = [];
 			this.setState({
 				changedFields :[]
 			});
-
 		});
 	}
 
@@ -406,6 +416,7 @@ class SettingsPage extends Component {
 		this.save = this.save.bind(this);
 		this.saveChangedFields = this.saveChangedFields.bind(this);
 		this.updateFieldsListWithConditions = this.updateFieldsListWithConditions.bind(this);
+		this.showSavedSettingsNotice = this.showSavedSettingsNotice.bind(this);
 		this.updateFieldsListWithConditions();
 		let fields = this.props.fields;
 		let menu = this.props.menu;
@@ -469,7 +480,7 @@ class SettingsPage extends Component {
         return (
             <Fragment>
 							<Menu isAPILoaded={isAPILoaded} menuItems={this.menuItems} menu={this.menu} selectMenu={this.props.selectMenu} selectedMenuItem={this.props.selectedMenuItem}/>
-							<Settings updateField={this.props.updateField} pageProps={this.props.pageProps} setPageProps={this.props.setPageProps} fieldsUpdateComplete = {fieldsUpdateComplete} highLightField={this.props.highLightField} highLightedField={this.props.highLightedField} isAPILoaded={isAPILoaded} fields={this.fields} progress={progress} saveChangedFields={this.saveChangedFields} menu={menu} save={this.save} selectedMenuItem={this.props.selectedMenuItem} selectedStep={selectedStep}/>
+							<Settings showSavedSettingsNotice={this.showSavedSettingsNotice} updateField={this.props.updateField} pageProps={this.props.pageProps} setPageProps={this.props.setPageProps} fieldsUpdateComplete = {fieldsUpdateComplete} highLightField={this.props.highLightField} highLightedField={this.props.highLightedField} isAPILoaded={isAPILoaded} fields={this.fields} progress={progress} saveChangedFields={this.saveChangedFields} menu={menu} save={this.save} selectedMenuItem={this.props.selectedMenuItem} selectedStep={selectedStep}/>
 							<Notices className="rsssl-wizard-notices"/>
             </Fragment>
         )
@@ -698,44 +709,4 @@ document.addEventListener( 'DOMContentLoaded', () => {
 
 
 
-/**
- * Notice after saving was successfull
- */
-import { SnackbarList } from '@wordpress/components';
 
-import {
-    dispatch,
-    useDispatch,
-    useSelect,
-} from '@wordpress/data';
-
-import { store as noticesStore } from '@wordpress/notices';
-
-const Notices = () => {
-    const notices = useSelect(
-        ( select ) =>
-            select( noticesStore )
-                .getNotices()
-                .filter( ( notice ) => notice.type === 'snackbar' ),
-        []
-    );
-    const { removeNotice } = useDispatch( noticesStore );
-    return (
-        <SnackbarList
-            className="edit-site-notices"
-            notices={ notices }
-            onRemove={ removeNotice }
-        />
-    );
-};
-
-// <div className="rsssl-settings-saved rsssl-settings-saved--fade-in">
-// 	<div className="rsssl-settings-saved__text_and_icon">
-// 		<span><div className="rsssl-tooltip-icon dashicons-before rsssl-icon rsssl-success check"><svg width="18"
-// 																									   height="18"
-// 																									   viewBox="0 0 1792 1792"
-// 																									   xmlns="http://www.w3.org/2000/svg"><path
-// 			d="M1671 566q0 40-28 68l-724 724-136 136q-28 28-68 28t-68-28l-136-136-362-362q-28-28-28-68t28-68l136-136q28-28 68-28t68 28l294 295 656-657q28-28 68-28t68 28l136 136q28 28 28 68z"></path></svg></div></span>
-// 		<span><?php _e('Changes saved successfully', 'really-simple-ssl') ?> </span>
-// 	</div>
-// </div>

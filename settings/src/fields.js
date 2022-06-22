@@ -25,7 +25,10 @@ import {
  */
 import DataTable from "react-data-table-component";
 import * as rsssl_api from "./utils/api";
-
+import Notices from './Notices';
+import {
+    dispatch,
+} from '@wordpress/data';
 class ChangeStatus extends Component {
     constructor() {
         super( ...arguments );
@@ -49,11 +52,9 @@ class Field extends Component {
     componentDidMount() {
         this.props.highLightField('');
         this.onChangeHandlerDataTable = this.onChangeHandlerDataTable.bind(this);
-
     }
 
     onChangeHandler(fieldValue) {
-        console.log("default changehandler");
          let fields = this.props.fields;
         let field = this.props.field;
         fields[this.props.index]['value'] = fieldValue;
@@ -80,11 +81,14 @@ class Field extends Component {
         let saveFields = [];
         saveFields.push(field);
         this.props.updateField(field)
-        rsssl_api.setFields(saveFields).then(( response ) => {});
+        rsssl_api.setFields(saveFields).then(( response ) => {
+            this.props.showSavedSettingsNotice();
+        });
     }
     onCloseTaskHandler(){
 
     }
+
     render(){
         let field = this.props.field;
         let fieldValue = field.value;
