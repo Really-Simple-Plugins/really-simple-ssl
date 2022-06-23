@@ -1,6 +1,11 @@
 .rsssl-grid-item.rsssl-ssllabs .rsssl-grid-item-content {
   padding: 0;
 }
+.rsssl-ssllabs {
+  .rsssl-placeholder{
+    @include rsssl-block-padding;
+  }
+}
 
 .rsssl-gridblock-progress-container.rsssl-incomplete {
   height: 4px;

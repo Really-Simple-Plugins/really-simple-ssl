@@ -107,6 +107,12 @@
     flex: 1;
   }
 
+  .rsssl-task-form{
+    margin-top: var(--rsp-spacing-xxs);
+    display: flex;
+    gap: var(--rsp-spacing-xs);
+  }
+
   .rsssl-task-enable {
     cursor: pointer;
   }
@@ -195,10 +201,18 @@
   }
 }
 .rsssl-plusone {
-  border-radius: 50%;
-  background-color: x;
+  display: inline-block;
+  vertical-align: top;
+  box-sizing: border-box;
+  margin: 1px 0 -1px 2px;
+  padding: 0 5px;
+  min-width: 18px;
+  height: 18px;
+  border-radius: 9px;
+  background-color: #d63638;
   color: #fff;
-  padding: 2px 6px;
-  font-size: 10px;
+  font-size: var(--rsp-fs-100);
+  line-height: 1.6;
+  text-align: center;
 }
 

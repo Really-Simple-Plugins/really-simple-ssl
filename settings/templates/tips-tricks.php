@@ -24,10 +24,6 @@ $items = array(
 		'content' => "Information about landing page redirects",
 		'link'    => 'https://really-simple-ssl.com/knowledge-base/avoid-landing-page-redirects/',
 	),
-	7 => array(
-		'content' => "Install a Let's Encrypt SSL Certificate with Really Simple SSL",
-		'link'    => 'https://really-simple-ssl.com/install-ssl-certificate/',
-	),
 );
 
 $container = '<div class="rsssl-tips-tricks-element">
