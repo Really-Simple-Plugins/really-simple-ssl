@@ -1,7 +1,7 @@
 .rsssl {
   .rsssl-wizard-menu {
-      @include rsssl-block;
-      @include rsssl-block-padding;
+      //@include rsssl-block;
+      //@include rsssl-block-padding;
   }
   .rsssl-wizard-settings{
       .rsssl-grid-item{

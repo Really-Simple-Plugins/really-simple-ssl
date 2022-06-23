@@ -37,9 +37,12 @@
   @import 'admin/modules/other-plugins.scss';
   @import 'admin/modules/tips-tricks.scss';
   @import 'admin/modules/wizard.scss';
-  @import 'admin/modules/wizard/notice.scss';
-  @import 'admin/modules/wizard/menu.scss';
+    @import 'admin/modules/wizard/notice.scss';
+    @import 'admin/modules/wizard/menu.scss';
+    @import 'admin/modules/wizard/snackbar.scss';
   @import 'admin/modules/notices.scss';
+  @import 'admin/modules/datatables.scss';
+  @import 'admin/modules/security-features.scss';
 
   //@import 'admin/modules/dark-mode.scss';
   //@import 'admin/modules/icons.scss';

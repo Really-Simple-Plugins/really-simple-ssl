@@ -11,11 +11,11 @@ if (
 
 $items = [
 	[
-        'class' => RSSSL()->really_simple_ssl->ssl_enabled ? "rsssl-dot-success" :"rsssl-dot-error",
+        'class' => RSSSL()->really_simple_ssl->ssl_enabled ? "rsssl-bullet-success" :"rsssl-bullet-error",
 	    'text' => RSSSL()->really_simple_ssl->ssl_enabled ? __("SSL Activated", "really-simple-ssl") :__("SSL Not activated", "really-simple-ssl"),
 	],
 	[
-		'class' => RSSSL()->really_simple_ssl->has_301_redirect() ? "rsssl-dot-success" :"rsssl-dot-error",
+		'class' => RSSSL()->really_simple_ssl->has_301_redirect() ? "rsssl-bullet-success" :"rsssl-bullet-error",
 		'text' => __("301 Redirect", "really-simple-ssl"),
 	],
 ];
@@ -26,8 +26,8 @@ foreach ($items as $item) {
 	$push_right = $n === 0 ? ' rsssl-flex-push-right' : '';
     ?>
     <div class="rsssl-legend<?php echo $push_right ?>">
-        <span class="rsssl-grid-footer rsssl-bullet <?php echo $item['class']?>"></span>
-        <?php echo $item['text']?>
+        <div class="rsssl-grid-footer rsssl-bullet <?php echo $item['class']?>"></div>
+        <div><?php echo $item['text']?></div>
     </div>
     <?php
     $n++;
