@@ -51,7 +51,7 @@ function rsssl_plugin_admin_scripts() {
 		'rsssl-settings-css',
 		plugins_url( 'css/admin.css', __FILE__ ),
 		['wp-components'],
-		filemtime( __DIR__."/css/admin.css" )
+		rsssl_version
 	);
 }
 
