@@ -28,6 +28,7 @@ class MenuItem extends Component {
         /**
          * Menu is selected if the item is the same, or if it is a child.
          */
+
         let menuIsSelected = this.props.selectedMenuItem===this.props.menuItem.id;
         if (this.props.menuItem.menu_items) {
             for (const item of this.props.menuItem.menu_items){
