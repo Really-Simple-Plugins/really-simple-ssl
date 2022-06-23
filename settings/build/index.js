@@ -3162,8 +3162,7 @@ class Field extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Component {
     }
 
     if (field.type === 'permissionspolicy') {
-      console.log(this.props.field); //build our header
-
+      //build our header
       columns = [];
       field.columns.forEach(function (item, i) {
         let newItem = {
@@ -3174,6 +3173,12 @@ class Field extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Component {
         columns.push(newItem);
       });
       let data = field.value;
+      console.log("data " + field.id);
+      console.log(data);
+
+      if (!Array.isArray(data)) {
+        data = [];
+      }
 
       for (const item of data) {
         item.owndomainControl = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.ToggleControl, {
@@ -3208,7 +3213,13 @@ class Field extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Component {
         };
         columns.push(newItem);
       });
+      console.log("data " + field.id);
+      console.log(data);
       let data = field.value;
+
+      if (!Array.isArray(data)) {
+        data = [];
+      }
 
       for (const item of data) {
         item.owndomainControl = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.ToggleControl, {
@@ -3222,14 +3233,15 @@ class Field extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Component {
         });
       }
 
-      return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.PanelBody, {
-        className: this.highLightClass
-      }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_data_table_component__WEBPACK_IMPORTED_MODULE_4__["default"], {
-        columns: columns,
-        data: data,
-        dense: true,
-        pagination: true
-      }));
+      return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, "test") // <PanelBody className={ this.highLightClass}>
+      //     <DataTable
+      //         columns={columns}
+      //         data={data}
+      //         dense
+      //         pagination
+      //     />
+      // </PanelBody>
+      ;
     }
 
     return 'not found field type ' + field.type;
@@ -3797,13 +3809,7 @@ class MenuItem extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Component
       }
     }
 
-    let activeClass = menuIsSelected ? ' rsssl-active' : ''; // return (
-    //     <div className={"rsssl-menu-item " + activeClass}>
-    //         <a href="#" onClick={ () => this.handleClick() }>{this.props.menuItem.title}</a>
-    //         {this.props.menuItem.menu_items && menuIsSelected && <div className="rsssl-submenu-item"> this.props.menuItem.menu_items.map((menuItem, i) => <MenuItem key={i} menuItem={menuItem} selectMenu={this.props.selectMenu} selectedMenuItem={this.props.selectedMenuItem}/>) </div> }
-    //     </div>
-    // )
-
+    let activeClass = menuIsSelected ? ' rsssl-active' : '';
     return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
       className: "rsssl-menu-item " + activeClass
     }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
@@ -3811,9 +3817,9 @@ class MenuItem extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Component
       onClick: () => this.handleClick()
     }, this.props.menuItem.title), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
       className: "rsssl-submenu-item"
-    }, this.props.menuItem.menu_items && menuIsSelected && this.props.menuItem.menu_items.map((menuItem, i) => (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(MenuItem, {
+    }, this.props.menuItem.menu_items && menuIsSelected && this.props.menuItem.menu_items.map((subMenuItem, i) => (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(MenuItem, {
       key: i,
-      menuItem: menuItem,
+      menuItem: subMenuItem,
       selectMenu: this.props.selectMenu,
       selectedMenuItem: this.props.selectedMenuItem
     }))));

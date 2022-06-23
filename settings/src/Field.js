@@ -194,7 +194,6 @@ class Field extends Component {
         }
 
         if ( field.type==='permissionspolicy' ) {
-            console.log(this.props.field);
             //build our header
             columns = [];
             field.columns.forEach(function(item, i) {
@@ -207,6 +206,11 @@ class Field extends Component {
             });
 
             let data = field.value;
+            console.log("data "+field.id);
+            console.log(data);
+            if (!Array.isArray(data) ) {
+                data = [];
+            }
             for (const item of data){
                 item.owndomainControl = <ToggleControl
                                  checked= {item.owndomain==1}
@@ -239,8 +243,13 @@ class Field extends Component {
                 }
                 columns.push(newItem);
             });
+            console.log("data "+field.id);
 
+            console.log(data);
             let data = field.value;
+            if (!Array.isArray(data) ) {
+                data = [];
+            }
             for (const item of data){
                 item.owndomainControl = <ToggleControl
                     checked= {item.owndomain==1}
@@ -251,14 +260,15 @@ class Field extends Component {
                 />;
             }
             return (
-                <PanelBody className={ this.highLightClass}>
-                    <DataTable
-                        columns={columns}
-                        data={data}
-                        dense
-                        pagination
-                    />
-                </PanelBody>
+                <div>test</div>
+                // <PanelBody className={ this.highLightClass}>
+                //     <DataTable
+                //         columns={columns}
+                //         data={data}
+                //         dense
+                //         pagination
+                //     />
+                // </PanelBody>
             )
         }
 
