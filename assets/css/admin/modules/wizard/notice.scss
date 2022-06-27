@@ -4,10 +4,10 @@
   align-content: flex-start;
   gap: var(--rsp-spacing-xs);
   details{
-    font-size: var(--rsp-fs-300);
+    font-size: var(--rsp-fs-200);
   }
   summary, p {
-    font-size: var(--rsp-fs-400);
+    font-size: var(--rsp-fs-300);
   }
   details[open]{
     @include rsssl-block-padding;
@@ -25,6 +25,7 @@
   background-color: var(--rsp-dark-blue-faded);
   &.rsssl-warning {
     background-color: var(--rsp-yellow-faded);
+    border: 1px solid var(--rsp-yellow);
   }
   summary, p{
     @include rsssl-block-padding;

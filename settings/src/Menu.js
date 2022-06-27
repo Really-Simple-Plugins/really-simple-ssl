@@ -1,7 +1,14 @@
 import Placeholder from './Placeholder';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import {faCircle} from '@fortawesome/pro-regular-svg-icons';
+import {faCircleCaretRight as faCircleSolid} from '@fortawesome/pro-solid-svg-icons';
+
+
 import {
     Component,
 } from '@wordpress/element';
+
+
 
 class MenuItem extends Component {
     constructor() {
@@ -39,14 +46,35 @@ class MenuItem extends Component {
         }
 
         let activeClass = menuIsSelected ? ' rsssl-active' : '';
-        return (
-            <div className={"rsssl-menu-item " + activeClass}>
-                <a href="#" onClick={ () => this.handleClick() }>{this.props.menuItem.title}</a>
-                <div className="rsssl-submenu-item">
-                    {this.props.menuItem.menu_items && menuIsSelected && this.props.menuItem.menu_items.map((subMenuItem, i) => <MenuItem key={i} menuItem={subMenuItem} selectMenu={this.props.selectMenu} selectedMenuItem={this.props.selectedMenuItem}/>)}
+        let icon = menuIsSelected ? faCircleSolid : faCircle;
+        if ( this.props.menuItem.menu_items && menuIsSelected ) {
+            return (
+                <div className={"rsssl-menu-item" + activeClass}>
+                    <a href="#" onClick={() => this.handleClick()}>
+                        <FontAwesomeIcon icon={icon}/>
+                        <span>{this.props.menuItem.title}</span>
+                    </a>
+                    <div className="rsssl-submenu-item">
+                        {this.props.menuItem.menu_items.map(
+                            (subMenuItem, i) => <MenuItem key={i}
+                                                          menuItem={subMenuItem}
+                                                          selectMenu={this.props.selectMenu}
+                                                          selectedMenuItem={this.props.selectedMenuItem}/>
+                        )}
+                    </div>
                 </div>
-            </div>
-        )
+            )
+        } else {
+            return (
+                <div className={'rsssl-menu-item ' + activeClass}>
+                    <a href="#" onClick={() => this.handleClick()}>
+                        <FontAwesomeIcon icon={icon}/>
+                        <span>{this.props.menuItem.title}</span>
+                    </a>
+                </div>
+            )
+        }
+
     }
 }
 

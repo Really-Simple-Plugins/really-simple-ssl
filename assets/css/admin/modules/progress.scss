@@ -2,8 +2,13 @@
   .rsssl-grid-item-content {
     padding: 0;
   }
-  .rsssl-grid-item-footer{
-    box-shadow: box-shadow: rgba(149, 157, 165, 0.25) 0px -12px 24px;
+
+  .rsssl-grid-item-footer {
+    box-shadow: rgba(149, 157, 165, 0.25) 0px -12px 24px;
+  }
+
+  .rsssl-placeholder {
+    @include rsssl-block-padding;
   }
 }
 
