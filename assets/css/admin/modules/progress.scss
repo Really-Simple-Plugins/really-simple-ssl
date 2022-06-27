@@ -3,10 +3,6 @@
     padding: 0;
   }
 
-  .rsssl-grid-item-footer {
-    box-shadow: rgba(149, 157, 165, 0.25) 0px -12px 24px;
-  }
-
   .rsssl-placeholder {
     @include rsssl-block-padding;
   }
@@ -146,14 +142,24 @@
 }
 
 .rsssl-scroll-container {
+  @include rsssl-block-padding;
+  --rsp-scroll-bg-clr: var(--rsp-dark-blue-faded);
   margin-top: 20px;
   height: 202px;
   overflow-y: auto;
-  @include rsssl-block-padding;
   padding-block: 0;
   padding-top: var(--rsp-spacing-s);
   border-radius: 0;
-  background-color: var(--rsp-dark-blue-faded);
+  background-image: linear-gradient(to top, var(--rsp-scroll-bg-clr), var(--rsp-scroll-bg-clr)),
+  linear-gradient(to top, var(--rsp-scroll-bg-clr), var(--rsp-scroll-bg-clr)),
+  linear-gradient(to top, rgba(0, 0, 0, 0.15), rgba(255, 255, 255, 0)),
+  linear-gradient(to bottom, rgba(0, 0, 0, 0.15), rgba(255, 255, 255, 0));
+  background-position: bottom center, top center, bottom center, top center;
+  background-color: var(--rsp-scroll-bg-clr);
+  background-repeat: no-repeat;
+  background-size: 100% 25px, 100% 25px, 100% 15px, 100% 15px;
+  background-attachment: local, local, scroll, scroll;
+
 
   &::-webkit-scrollbar-track {
     border-radius: 10px;
