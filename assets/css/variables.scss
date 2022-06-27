@@ -109,4 +109,13 @@ $rsp-break-xxl: 1599px;
     padding: var(--rsp-spacing-xs) var(--rsp-spacing-s);
   }
 }
+@mixin rsssl-fade-in {
+  animation-name: fade-in;
+  animation-duration: 0.4s;
+  animation-timing-function: ease-in;
+}
+@keyframes fade-in{
+  0%   { opacity: 0 }
+  100% { opacity: 1; }
+}
 

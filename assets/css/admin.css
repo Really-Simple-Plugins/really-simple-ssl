@@ -90,6 +90,16 @@
     --rsp-brand-primary-faded: var(--rsp-blue-faded);
 }
 
+@keyframes fade-in {
+    0% {
+        opacity: 0;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}
+
 .rsssl {
     margin: 0;
     margin-left: -20px;
@@ -873,7 +883,7 @@
     flex: 0 1 auto;
     align-items: center;
     justify-content: space-between;
-    background: var(--rsp-green-faded);
+    background: var(--rsp-dark-blue-faded);
     padding: var(--rsp-spacing-m) var(--rsp-spacing-l);
 }
 
@@ -961,83 +971,83 @@
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(1) {
-    width: 96%;
-}
-
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(2) {
     width: 62%;
 }
 
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(2) {
+    width: 71%;
+}
+
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(3) {
-    width: 70%;
+    width: 65%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(4) {
-    width: 83%;
+    width: 100%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(5) {
-    width: 89%;
+    width: 78%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(6) {
-    width: 69%;
-}
-
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(7) {
-    width: 96%;
-}
-
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(8) {
-    width: 77%;
-}
-
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(9) {
-    width: 98%;
-}
-
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(10) {
     width: 74%;
 }
 
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(11) {
-    width: 81%;
-}
-
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(12) {
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(7) {
     width: 67%;
 }
 
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(8) {
+    width: 65%;
+}
+
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(9) {
+    width: 71%;
+}
+
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(10) {
+    width: 97%;
+}
+
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(11) {
+    width: 62%;
+}
+
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(12) {
+    width: 62%;
+}
+
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(13) {
-    width: 94%;
+    width: 74%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(14) {
-    width: 77%;
+    width: 97%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(15) {
-    width: 91%;
+    width: 81%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(16) {
-    width: 89%;
+    width: 79%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(17) {
-    width: 95%;
+    width: 63%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(18) {
-    width: 77%;
+    width: 74%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(19) {
-    width: 86%;
+    width: 94%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(20) {
-    width: 97%;
+    width: 78%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line ~ .rsssl-placeholder-line {
@@ -1353,24 +1363,6 @@ Admin notice
     min-width: 0;
     gap: var(--rsp-spacing-xs);
     text-decoration: none;
-}
-
-.rsssl-fade-enter {
-    opacity: 0;
-}
-
-.rsssl-fade-enter-active {
-    opacity: 1;
-    transition: opacity 400ms ease-in;
-}
-
-.rsssl-fade-exit {
-    opacity: 1;
-}
-
-.rsssl-fade-exit-active {
-    opacity: 0;
-    transition: opacity 900ms;
 }
 
 /* rsssl-rsssl-tooltip for settings page */
