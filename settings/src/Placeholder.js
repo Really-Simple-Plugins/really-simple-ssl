@@ -1,7 +1,6 @@
 import {
   Component,
 } from '@wordpress/element';
-import { CSSTransition } from 'react-transition-group';
 
 class Placeholder extends Component {
   constructor() {
