@@ -245,8 +245,9 @@ class Field extends Component {
             });
             console.log("data "+field.id);
 
-            console.log(data);
             let data = field.value;
+            console.log(data);
+
             if (!Array.isArray(data) ) {
                 data = [];
             }
@@ -260,15 +261,14 @@ class Field extends Component {
                 />;
             }
             return (
-                <div>test</div>
-                // <PanelBody className={ this.highLightClass}>
-                //     <DataTable
-                //         columns={columns}
-                //         data={data}
-                //         dense
-                //         pagination
-                //     />
-                // </PanelBody>
+                <PanelBody className={ this.highLightClass}>
+                    <DataTable
+                        columns={columns}
+                        data={data}
+                        dense
+                        pagination
+                    />
+                </PanelBody>
             )
         }
 

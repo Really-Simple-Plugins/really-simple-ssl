@@ -5,6 +5,8 @@ import Placeholder from "./Placeholder";
 import Menu from "./Menu";
 import Notices from "./Notices";
 import Settings from "./Settings";
+import sleeper from "./utils/sleeper.js";
+
 import {
     dispatch,
 } from '@wordpress/data';
@@ -48,23 +50,20 @@ class SettingsPage extends Component {
         });
     }
 
+
     showSavedSettingsNotice(){
-        dispatch('core/notices').createNotice(
+        const notice = dispatch('core/notices').createNotice(
             'success',
             __( 'Settings Saved', 'really-simple-ssl' ),
             {
+                id: 'rsssl_settings_saved',
                 type: 'snackbar',
                 isDismissible: true,
             }
-        );
-        //remove after 2 seconds
-        setTimeout(
-            function() {
-                let notice = document.querySelector('.components-snackbar-list.edit-site-notices .components-snackbar__content');
-                if ( notice ) {
-                    notice.parentElement.remove(notice);
-                }
-            }, 2000);
+        ).then(sleeper(2000)).then(( response ) => {
+            dispatch('core/notices').removeNotice('rsssl_settings_saved');
+        });
+
     }
 
     save(){
