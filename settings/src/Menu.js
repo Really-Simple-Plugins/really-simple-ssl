@@ -28,6 +28,7 @@ class MenuItem extends Component {
         /**
          * Menu is selected if the item is the same, or if it is a child.
          */
+
         let menuIsSelected = this.props.selectedMenuItem===this.props.menuItem.id;
         if (this.props.menuItem.menu_items) {
             for (const item of this.props.menuItem.menu_items){
@@ -38,17 +39,11 @@ class MenuItem extends Component {
         }
 
         let activeClass = menuIsSelected ? ' rsssl-active' : '';
-        // return (
-        //     <div className={"rsssl-menu-item " + activeClass}>
-        //         <a href="#" onClick={ () => this.handleClick() }>{this.props.menuItem.title}</a>
-        //         {this.props.menuItem.menu_items && menuIsSelected && <div className="rsssl-submenu-item"> this.props.menuItem.menu_items.map((menuItem, i) => <MenuItem key={i} menuItem={menuItem} selectMenu={this.props.selectMenu} selectedMenuItem={this.props.selectedMenuItem}/>) </div> }
-        //     </div>
-        // )
         return (
             <div className={"rsssl-menu-item " + activeClass}>
                 <a href="#" onClick={ () => this.handleClick() }>{this.props.menuItem.title}</a>
                 <div className="rsssl-submenu-item">
-                    {this.props.menuItem.menu_items && menuIsSelected && this.props.menuItem.menu_items.map((menuItem, i) => <MenuItem key={i} menuItem={menuItem} selectMenu={this.props.selectMenu} selectedMenuItem={this.props.selectedMenuItem}/>)}
+                    {this.props.menuItem.menu_items && menuIsSelected && this.props.menuItem.menu_items.map((subMenuItem, i) => <MenuItem key={i} menuItem={subMenuItem} selectMenu={this.props.selectMenu} selectedMenuItem={this.props.selectedMenuItem}/>)}
                 </div>
             </div>
         )

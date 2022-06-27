@@ -33,11 +33,11 @@ function rsssl_menu( $group_id = 'settings' ){
 						'title' => __('Mixed Content Scan', 'really-simple-ssl'),
 						'menu_items' => [
 							[
-								'id' => 'recommended_security_headers',
+								'id' => 'sub_mixed_content_1',
 								'title' => __('Sub mixed content 1', 'really-simple-ssl'),
 							],
 							[
-								'id' => 'recommended_security_headers',
+								'id' => 'sub_mixed_content_2',
 								'title' => __('Sub mixed content 2', 'really-simple-ssl'),
 							],
 						],
