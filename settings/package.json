@@ -13,6 +13,7 @@
     "@wordpress/scripts": "^23.2.0"
   },
   "dependencies": {
+    "@fortawesome/fontawesome-pro": "^6.1.1",
     "@material-ui/core": "^4.12.4",
     "@material-ui/icons": "^4.11.3",
     "@wordpress/icons": "^9.1.0",
