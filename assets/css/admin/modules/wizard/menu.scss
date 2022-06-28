@@ -14,22 +14,17 @@
       text-decoration: none;
       color: var(--rsp-text-color);
       font-size: var(--rsp-fs-400);
-      padding: var(--rsp-spacing-xs) var(--rsp-spacing-l);
+      font-weight: 600;
+      padding: var(--rsp-spacing-s) var(--rsp-spacing-l);
       transition: all 0.2s ease-in-out;
       width: 100%;
-      svg{
-        font-size: var(--rsp-fs-300);
-        > *{
-          fill: var(--rsp-grey-400);
-        }
-      }
     }
     &.rsssl-active{
       > a{
-        text-decoration: underline;
-        svg > path{
-            fill: var(--rsp-yellow);
-          }
+        //text-decoration: underline;
+        //color: var(--rsp-blue);
+        border-left: 4px solid var(--rsp-yellow);
+        background-color: #f2e6c966;
       }
     }
     &.rsssl-featured{

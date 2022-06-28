@@ -52,7 +52,6 @@ class MenuItem extends Component {
             return (
                 <div className={"rsssl-menu-item" + activeClass + featuredClass}>
                     <a href="#" onClick={() => this.handleClick()}>
-                        <FontAwesomeIcon icon={icon}/>
                         <span>{this.props.menuItem.title}</span>
                         {this.props.menuItem.featured && <p className="rsssl-menu-item-featured">{this.props.menuItem.featured}</p>}
                     </a>
@@ -70,7 +69,6 @@ class MenuItem extends Component {
             return (
                 <div className={'rsssl-menu-item ' + activeClass + featuredClass}>
                     <a href="#" onClick={() => this.handleClick()}>
-                        <FontAwesomeIcon icon={icon}/>
                         <span>{this.props.menuItem.title}</span>
                         {this.props.menuItem.featured && <p className="rsssl-menu-item-featured">{this.props.menuItem.featured}</p>}
                     </a>
