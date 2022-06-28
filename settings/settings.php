@@ -217,7 +217,7 @@ function rsssl_sanitize_field_type($type){
  * @return void
  */
 function rsssl_rest_api_fields_set($request){
-    if (!current_user_can('manage_options')) {
+    if ( !current_user_can('manage_options')) {
         return;
     }
 
@@ -310,7 +310,6 @@ function rsssl_rest_api_fields_get(  ){
 	$output['fields'] = $fields;
 	$output['menu'] = $menu_items;
 	$output['progress'] = RSSSL()->progress->get();
-
     $output = apply_filters('rsssl_rest_api_fields_get', $output);
 	$response = json_encode( $output );
 	header( "Content-Type: application/json" );

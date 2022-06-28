@@ -366,6 +366,8 @@ function rsssl_fields(){
 			}
 		}
 		$field['value'] = rsssl_get_option($field['id']);
+		error_log("value for ".$field['id']);
+		error_log(print_r( $field['value'], true ));
 		$fields[$key] = apply_filters('rsssl_field', $field, $field['id']);
 	}
 	$fields = apply_filters('rsssl_fields_values', $fields);

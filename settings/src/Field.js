@@ -77,7 +77,7 @@ class Field extends Component {
         saveFields.push(field);
         this.props.updateField(field)
         rsssl_api.setFields(saveFields).then(( response ) => {
-            this.props.showSavedSettingsNotice();
+            //this.props.showSavedSettingsNotice();
         });
     }
     onCloseTaskHandler(){
@@ -206,8 +206,6 @@ class Field extends Component {
             });
 
             let data = field.value;
-            console.log("data "+field.id);
-            console.log(data);
             if (!Array.isArray(data) ) {
                 data = [];
             }
@@ -243,20 +241,14 @@ class Field extends Component {
                 }
                 columns.push(newItem);
             });
-            console.log("data "+field.id);
-
             let data = field.value;
+            console.log("data "+field.id);
             console.log(data);
 
             if (!Array.isArray(data) ) {
                 data = [];
             }
             for (const item of data){
-                item.owndomainControl = <ToggleControl
-                    checked= {item.owndomain==1}
-                    label=''
-                    onChange={ ( fieldValue ) => this.onChangeHandlerDataTable( fieldValue, item, 'owndomain' ) }
-                />
                 item.statusControl = <ChangeStatus item={item} onChangeHandlerDataTable={this.onChangeHandlerDataTable}
                 />;
             }
