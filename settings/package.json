@@ -24,7 +24,6 @@
     "@wordpress/icons": "^9.1.0",
     "ace-builds": "^1.4.13",
     "axios": "^0.26.1",
-    "babel-plugin-macros": "^3.1.0",
     "react-ace": "^9.5.0",
     "react-data-table-component": "^7.5.2",
     "react-transition-group": "^4.4.2",

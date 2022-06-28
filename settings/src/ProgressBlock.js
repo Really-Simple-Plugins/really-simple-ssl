@@ -116,7 +116,7 @@ class ProgressBlock extends Component {
                     <span className="rsssl-progress-percentage">
                         {this.percentageCompleted}%
                     </span>
-                    <span className="rsssl-progress-text">
+                    <span className="rsssl-progress-text-span">
                         {this.progressText}
                     </span>
                 </div>

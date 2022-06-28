@@ -11,6 +11,8 @@ import {
     dispatch,
 } from '@wordpress/data';
 import { __ } from '@wordpress/i18n';
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
+import {faCheck} from '@fortawesome/pro-solid-svg-icons';
 
 /**
  * Renders the settings page with Menu and currently selected settings
@@ -56,6 +58,7 @@ class SettingsPage extends Component {
             'success',
             __( 'Settings Saved', 'really-simple-ssl' ),
             {
+                __unstableHTML: true,
                 id: 'rsssl_settings_saved',
                 type: 'snackbar',
                 isDismissible: true,

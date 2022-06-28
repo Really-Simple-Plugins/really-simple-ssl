@@ -51,6 +51,7 @@ function rsssl_menu( $group_id = 'settings' ){
                     [
                         'id' => 'hardening',
 						'title' => __('Hardening', 'really-simple-ssl'),
+	                    'featured' => __('Improve your security with the most popular security features of Wordpress', 'really-simple-ssl'),
 						'menu_items' => [
 							[
 								'id' => 'application_passwords',
@@ -388,7 +389,9 @@ function rsssl_blocks(){
 		],
 		[
 			'id'      => 'ssllabs',
-			'controls' => false,
+			'controls' => [
+				'type' => 'html', 'data' => __( "Powered by Qualis SSL Labs", 'really-simple-ssl' ),
+				],
 			'title'   => __( "SSL Labs", 'really-simple-ssl' ),
 			'help'    => __( 'A help text', 'really-simple-ssl' ),
 			'content' => [ 'type' => 'test', 'data' => 'ssltest', 'interval'=>1000 ],

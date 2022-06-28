@@ -35,6 +35,7 @@
     &.rsssl-featured{
       a{
         background: var(--rsp-dark-blue-faded);
+        flex-wrap: wrap;
       }
     }
   }
