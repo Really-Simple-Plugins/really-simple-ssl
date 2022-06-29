@@ -7,10 +7,10 @@
  * @return bool
  */
 
-function rsssl_disable_user_enumeration($value, $option) {
+function rsssl_disable_user_enumeration() {
 	return true;
 }
-add_filter( "option_users_disable_user_enumeration", 'rsssl_disable_user_enumeration', 999, 2 );
+add_filter( "option_users_disable_user_enumeration", 'rsssl_disable_user_enumeration', 999 );
 
 /**
  * Prevent User Enumeration in YOAST

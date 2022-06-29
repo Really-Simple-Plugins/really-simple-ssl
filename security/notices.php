@@ -63,3 +63,27 @@ function rsssl_admin_username_exists( $notices ) {
 }
 add_filter('rsssl_notices', 'rsssl_admin_username_exists');
 
+/**
+ * @return void
+ *
+ * Username 'admin' changed notice
+ */
+function rsssl_admin_user_renamed_user_enumeration_enabled( $notices ) {
+	$notices['admin_user_renamed_user_enumeration_enabled'] = array(
+		'condition' => ['check_admin_user_renamed_and_enumeration_disabled'],
+		'callback' => '_true_',
+		'score' => 5,
+		'output' => array(
+			'true' => array(
+				'highlight_field_id' => 'disable_user_enumeration',
+				'msg' => __("To prevent attackers from identifying the renamed administrator user you should activate the 'Disable User Enumeration' setting.", "really-simple-ssl"),
+				'icon' => 'open',
+				'dismissible' => true,
+			),
+		),
+	);
+	return $notices;
+
+}
+add_filter('rsssl_notices', 'rsssl_admin_user_renamed_user_enumeration_enabled');
+
