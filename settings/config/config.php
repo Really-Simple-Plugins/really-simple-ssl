@@ -355,7 +355,6 @@ function rsssl_fields(){
 		],
 	];
 	$fields = apply_filters('rsssl_fields', $fields);
-
 	foreach ( $fields as $key => $field ) {
 		$field = wp_parse_args($field, ['id'=>false, 'visible'=> true, 'disabled'=>false, 'new_features_block' => false ]);
 		//handle server side conditions
@@ -365,9 +364,7 @@ function rsssl_fields(){
 				continue;
 			}
 		}
-		$field['value'] = rsssl_get_option($field['id']);
-		error_log("value for ".$field['id']);
-		error_log(print_r( $field['value'], true ));
+		$field['value'] = rsssl_sanitize_field( rsssl_get_option($field['id'], $field['default'] ), $field['type'], $field['id']);
 		$fields[$key] = apply_filters('rsssl_field', $field, $field['id']);
 	}
 	$fields = apply_filters('rsssl_fields_values', $fields);

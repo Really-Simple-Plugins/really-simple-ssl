@@ -78,7 +78,20 @@ function rsssl_conditions_apply( $conditions ){
 function rsssl_get_option( $name, $default=false ) {
 	$name = sanitize_title($name);
 	$options = get_option( 'rsssl_options', array() );
-	$value = isset($options[$name]) ? $options[$name]: sanitize_title($default);
+//	if ( $name === 'permissions_policy') {
+//		$options[$name] = false;
+//	}
+
+	if ( !isset($options[$name]) ) {
+		$value = false;
+	} else {
+		$value = $options[$name];
+	}
+
+	if ( $value===false && $default!==false ) {
+		$value = $default;
+	}
+
 	return apply_filters("rsssl_option_$name", $value, $name);
 }
 

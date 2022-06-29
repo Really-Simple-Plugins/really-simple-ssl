@@ -193,6 +193,12 @@ function rsssl_run_test($request){
 	exit;
 }
 
+/**
+ * List of allowed field types
+ * @param $type
+ *
+ * @return mixed|string
+ */
 function rsssl_sanitize_field_type($type){
     $types = [
         'license',
@@ -203,6 +209,7 @@ function rsssl_sanitize_field_type($type){
         'email',
         'select',
         'permissionspolicy',
+        'contentsecuritypolicy',
     ];
     if ( in_array($type, $types) ){
         return $type;
@@ -228,8 +235,10 @@ function rsssl_rest_api_fields_set($request){
             error_log("unsettting ".$field['id']." as not existing field in RSSSL ");
 			unset($fields[$index]);
 		}
-        $value = rsssl_sanitize_field( $field['value'] , rsssl_sanitize_field_type($field['type']) );
+        $value = rsssl_sanitize_field( $field['value'] , rsssl_sanitize_field_type($field['type']), $field['id'] );
 		$value = apply_filters("rsssl_fieldvalue", $value, sanitize_text_field($field['id']));
+		error_log("AFTER sanitize value");
+		error_log(print_r($value, true));
 		$field['value'] = $value;
 		$fields[$index] = $field;
 	}
@@ -287,7 +296,7 @@ function rsssl_update_option( $name, $value ) {
     }
 
 	$options = get_site_option( 'rsssl_options', array() );
-	$options[$name] = rsssl_sanitize_field( $value , $type );
+	$options[$name] = rsssl_sanitize_field( $value , $type, $name );
 	if ( is_multisite() && is_network_admin() ) {
 		update_site_option( 'rsssl_options', $options );
 	} else {
@@ -337,16 +346,19 @@ function rsssl_rest_api_block_get($request){
 
 /**
  * Sanitize a field
- * @param $value
- * @param $type
+ * @param mixed $value
+ * @param string $type
+ * @oaram string $id
  *
  * @return array|bool|int|string|void
  */
-function rsssl_sanitize_field( $value, $type ) {
+function rsssl_sanitize_field( $value, $type, $id ) {
 	if ( ! current_user_can( 'manage_options' ) ) {
 		return false;
 	}
 
+    error_log("before sanitize value");
+    error_log(print_r($value, true));
 	switch ( $type ) {
 		case 'checkbox':
 			return intval($value);
@@ -368,37 +380,67 @@ function rsssl_sanitize_field( $value, $type ) {
 			return intval( $value );
         case 'permissionspolicy':
         case 'contentsecuritypolicy':
-            return rsssl_sanitize_datatable($value);
+            return rsssl_sanitize_datatable($value, $type);
 		default:
 			return sanitize_text_field( $value );
 	}
 }
 
-function rsssl_sanitize_datatable($value){
-    $possible_keys = apply_filters('rsssl_datatable_datatypes', [
-	    'id'=>'int',
+function rsssl_sanitize_datatable( $value, $type ){
+    $possible_keys = apply_filters("rsssl_datatable_datatypes_$type", [
+	    'id'=>'string',
 	    'title' =>'string',
     ]);
 
+    // Datatable array will look something like this, whith 0 the row index, and id, title the col indexes.
+    // [0] => Array
+    //	(
+    //		[id] => camera
+    //		[title] => Camera
+    //	    [owndomain] =>
+    //      [status] =>
+    //   )
+    //)
     if (!is_array($value)) {
         return false;
     } else {
-        foreach ($value as $index => $item_value ) {
-            if (!isset($possible_keys[$index])) {
-                unset($value[$index]);
-            }
-            $datatype = $possible_keys[$index];
-	        switch ($datatype) {
-		        case 'string':
-			        $value[$index] = sanitize_text_field($item_value);
-			        break;
-		        case 'int':
-		        case 'boolean':
-                default:
-			        $value[$index] = intval($item_value);
-			        break;
+        foreach ($value as $row_index => $row) {
+	        //has to be an array.
+	        if (!is_array($row)) {
+                //in this case, there's something off with our data, so we reset to default values, if available.
+		        $config_fields = rsssl_fields();
+		        foreach ($config_fields as $config_field ) {
+			        if ($config_field['id']===$name){
+				        $type = $config_field['type'];
+				        break;
+			        }
+		        }
+		        $value[$row_index] = $row = [];
 	        }
+            foreach ( $row as $col_index => $col_value ){
+                if ( !isset( $possible_keys[$col_index])) {
+                    unset($value[$row_index]);
+                } else {
+	                $datatype = $possible_keys[$col_index];
+	                switch ($datatype) {
+		                case 'string':
+			                $value[$row_index][$col_index] = sanitize_text_field($col_value);
+			                break;
+		                case 'int':
+		                case 'boolean':
+		                default:
+			                $value[$row_index][$col_index] = intval($col_value);
+			                break;
+	                }
+                }
+            }
 
+	        //Ensure that all required keys are set with at least an empty value
+            foreach ( $possible_keys as $col_index => $datatype ) {
+                if ( !isset($value[$row_index][$col_index])){
+	                $value[$row_index][$col_index] = false;
+                }
+            }
         }
     }
     return $value;
