@@ -43,12 +43,17 @@ function rsssl_revert_debug_log_location() {
 function rsssl_change_debug_log_name() {
 	$debug_log = WP_CONTENT_DIR . '/debug.log';
 	// Only change if the file exists
-	if ( file_exists( $debug_log ) ) {
+	if ( file_exists( $debug_log ) && ! get_site_option('rsssl_debug_log_suffix') ) {
 		$debug_log_suffix = strtolower( rsssl_generate_random_string(5) );
 		rename( $debug_log,  'debug_' . $debug_log_suffix . '.log' );
 		wp_delete_file(trailingslashit(WP_CONTENT_DIR ) . 'debug.log');
 		update_site_option('rsssl_debug_log_suffix', $debug_log_suffix);
 	}
+
+	if ( ! file_exists( $debug_log ) ) {
+		file_put_contents( $debug_log, 'Access denied' );
+	}
+
 }
 
 /**

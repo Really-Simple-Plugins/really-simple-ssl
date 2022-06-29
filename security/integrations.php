@@ -140,7 +140,7 @@ $rsssl_integrations_list = apply_filters( 'rsssl_integrations', array(
         'conditions'           => [
 	        'relation' => 'AND',
 	        [
-	            'rsssl_debug_log_in_default_location()' => true,
+//	            'rsssl_debug_log_in_default_location()' => true,
 		        'rsssl_is_debug_log_enabled()' => true,
 	        ]
         ],
