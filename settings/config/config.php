@@ -102,7 +102,7 @@ function rsssl_migrate_settings() {
 	//dismiss_all_notices
 }
 
-function rsssl_fields(){
+function rsssl_fields( $load_values = true ){
 	if ( !current_user_can('manage_options') ) {
 		return [];
 	}
@@ -364,7 +364,7 @@ function rsssl_fields(){
 				continue;
 			}
 		}
-		$field['value'] = rsssl_sanitize_field( rsssl_get_option($field['id'], $field['default'] ), $field['type'], $field['id']);
+		if ($load_values) $field['value'] = rsssl_sanitize_field( rsssl_get_option($field['id'], $field['default'] ), $field['type'], $field['id']);
 		$fields[$key] = apply_filters('rsssl_field', $field, $field['id']);
 	}
 	$fields = apply_filters('rsssl_fields_values', $fields);

@@ -319,6 +319,7 @@ function rsssl_rest_api_fields_get(  ){
 	$output['fields'] = $fields;
 	$output['menu'] = $menu_items;
 	$output['progress'] = RSSSL()->progress->get();
+    error_log(print_r($menu_items,true));
     $output = apply_filters('rsssl_rest_api_fields_get', $output);
 	$response = json_encode( $output );
 	header( "Content-Type: application/json" );
@@ -357,8 +358,6 @@ function rsssl_sanitize_field( $value, $type, $id ) {
 		return false;
 	}
 
-    error_log("before sanitize value");
-    error_log(print_r($value, true));
 	switch ( $type ) {
 		case 'checkbox':
 			return intval($value);
@@ -380,13 +379,13 @@ function rsssl_sanitize_field( $value, $type, $id ) {
 			return intval( $value );
         case 'permissionspolicy':
         case 'contentsecuritypolicy':
-            return rsssl_sanitize_datatable($value, $type);
+            return rsssl_sanitize_datatable($value, $type, $id);
 		default:
 			return sanitize_text_field( $value );
 	}
 }
 
-function rsssl_sanitize_datatable( $value, $type ){
+function rsssl_sanitize_datatable( $value, $type, $id ){
     $possible_keys = apply_filters("rsssl_datatable_datatypes_$type", [
 	    'id'=>'string',
 	    'title' =>'string',
@@ -401,22 +400,36 @@ function rsssl_sanitize_datatable( $value, $type ){
     //      [status] =>
     //   )
     //)
-    if (!is_array($value)) {
+    if ( !is_array($value) ) {
         return false;
     } else {
         foreach ($value as $row_index => $row) {
 	        //has to be an array.
-	        if (!is_array($row)) {
+	        if ( !is_array($row) ) {
+                error_log("is not an array ");
                 //in this case, there's something off with our data, so we reset to default values, if available.
-		        $config_fields = rsssl_fields();
+		        $config_fields = rsssl_fields(false);
 		        foreach ($config_fields as $config_field ) {
-			        if ($config_field['id']===$name){
-				        $type = $config_field['type'];
-				        break;
+			        if ($config_field['id']===$id){
+				        $default = $config_field['default'];
+                        error_log("break");
+				        error_log(print_r($default, true));
+
+				        //   break;
 			        }
 		        }
-		        $value[$row_index] = $row = [];
-	        }
+                error_log("set default");
+                if (isset($default[$row_index])) {
+	                $value[$row_index] = $default[$row_index];
+                } else {
+                    unset($value[$row_index]);
+                }
+                error_log("new value ");
+                error_log(print_r($value, true));
+	        } else {
+		        error_log("Is an array  ");
+		        error_log(print_r($value, true));
+            }
             foreach ( $row as $col_index => $col_value ){
                 if ( !isset( $possible_keys[$col_index])) {
                     unset($value[$row_index]);
