@@ -93,6 +93,7 @@ If you can't deactivate, do not just remove the plugin folder to uninstall! Foll
 = 6.0.0 =
 * Disable File editing feature
 * Disable user registration feature
+* Rename Database prefix feature
 
 = 5.3.0 =
 * Improvement: added PHP 8.1 compatibility
