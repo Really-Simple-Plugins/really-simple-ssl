@@ -8,7 +8,7 @@
  */
 function rsssl_disable_http_methods_rules($rules)
 {
-	$rules .= "\n" . "RewriteCond %{REQUEST_METHOD} ^(TRACE|STACK)" . "\n" ."RewriteRule .* - [F]";
+	$rules .= "\n" . "<LimitExcept GET POST>" . "\n" ."deny from all" . "\n" . "</LimitExcept>";
 	return $rules;
 }
 add_filter('rsssl_htaccess_security_rules', 'rsssl_disable_http_methods_rules');
@@ -47,9 +47,8 @@ add_filter('rsssl_notices', 'rsssl_http_methods_nginx');
  */
 function rsssl_wrap_http_methods_code_nginx() {
 	$code = '<code>';
-	$code .= 'add_header Allow "GET, POST, HEAD" always;' . '<br>';
-	$code .= 'if ( $request_method !~ ^(GET|POST|HEAD)$ ) {' . '<br>';
-	$code .= '&nbsp;&nbsp;&nbsp;&nbsp;return 405;' . '<br>';
+	$code .= 'limit_except GET POST {' . '<br>';
+	$code .= '&nbsp;&nbsp;&nbsp;&nbsp;deny all;' . '<br>';
 	$code .= '}' . '<br>';
 	$code .= '</code>';
 
