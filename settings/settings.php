@@ -47,12 +47,6 @@ function rsssl_plugin_admin_scripts() {
 				'rsssl_nonce' => wp_create_nonce( 'rsssl_save' ),
 			))
 	);
-	wp_enqueue_style(
-		'rsssl-settings-css',
-		plugins_url( 'css/admin.css', __FILE__ ),
-		['wp-components'],
-		rsssl_version
-	);
 }
 
 function rsssl_add_option_menu() {
