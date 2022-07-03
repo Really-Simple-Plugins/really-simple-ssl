@@ -210,6 +210,7 @@ class Field extends Component {
                 data = [];
             }
             for (const item of data){
+                console.log(item);
                 item.owndomainControl = <ToggleControl
                                  checked= {item.owndomain==1}
                                  label=''

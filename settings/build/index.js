@@ -3178,6 +3178,7 @@ class Field extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Component {
       }
 
       for (const item of data) {
+        console.log(item);
         item.owndomainControl = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.ToggleControl, {
           checked: item.owndomain == 1,
           label: "",
