@@ -224,15 +224,40 @@ function rsssl_rest_api_fields_set($request){
 
 	$fields = $request->get_json_params();
     $config_fields = rsssl_fields();
+    $config_ids = array_column($config_fields, 'id');
+
+
 	foreach ( $fields as $index => $field ) {
-		if ( !isset( $config_fields[ $field['id'] ] ) ){
-            error_log("unsettting ".$field['id']." as not existing field in RSSSL ");
+        //the updateItemId allows us to update one specific item in a field set.
+        $update_item_id = isset($field['updateItemId']) ? $field['updateItemId'] : false;
+        $config_field_index = array_search($field['id'], $config_ids);
+        $config_field = $config_fields[$config_field_index];
+		if ( !$config_field_index ){
+            error_log("unsetting ".$field['id']." as not existing field in RSSSL ");
 			unset($fields[$index]);
+			continue;
 		}
-        $value = rsssl_sanitize_field( $field['value'] , rsssl_sanitize_field_type($field['type']), $field['id'] );
+		$value = rsssl_sanitize_field( $field['value'] , rsssl_sanitize_field_type($field['type']), $field['id'] );
 		$value = apply_filters("rsssl_fieldvalue", $value, sanitize_text_field($field['id']));
-		error_log("AFTER sanitize value");
-		error_log(print_r($value, true));
+
+        //if an endpoint is defined, we use that endpoint instead
+        if ( isset($config_field['data_endpoint'])){
+	        /**
+	         * Update data to an endpoint
+	         */
+	        if ( isset($config_field['data_endpoint']) ){
+		        $endpoint = $config_field['data_endpoint'];
+		        if (is_array($endpoint)) {
+			        $main = $endpoint[0];
+			        $class = $endpoint[1];
+			        $function = $endpoint[2];
+                    $main()->$class->$function( $value, $update_item_id );
+		        }
+	        }
+	        unset($fields[$index]);
+            continue;
+        }
+
 		$field['value'] = $value;
 		$fields[$index] = $field;
 	}
@@ -310,10 +335,28 @@ function rsssl_rest_api_fields_get(  ){
 	$output = array();
 	$fields = rsssl_fields();
 	$menu_items = rsssl_menu('settings');
+	foreach ( $fields as $index => $field ) {
+		/**
+		 * Load data from source
+		 */
+		if ( isset($field['data_source']) ){
+			$data_source = $field['data_source'];
+			if (is_array($data_source)) {
+				$main = $data_source[0];
+				$class = $data_source[1];
+				$function = $data_source[2];
+				$field['value'] = $main()->$class->$function();
+			}
+		}
+//			if ($field['id']==='permissions_policy'){
+//				$field['value'] = $field['default'];
+//			}
+		$fields[$index] = $field;
+	}
 	$output['fields'] = $fields;
+
 	$output['menu'] = $menu_items;
 	$output['progress'] = RSSSL()->progress->get();
-    error_log(print_r($menu_items,true));
     $output = apply_filters('rsssl_rest_api_fields_get', $output);
 	$response = json_encode( $output );
 	header( "Content-Type: application/json" );
@@ -383,6 +426,7 @@ function rsssl_sanitize_datatable( $value, $type, $id ){
     $possible_keys = apply_filters("rsssl_datatable_datatypes_$type", [
 	    'id'=>'string',
 	    'title' =>'string',
+	    'status' => 'boolean',
     ]);
 
     // Datatable array will look something like this, whith 0 the row index, and id, title the col indexes.
@@ -400,30 +444,19 @@ function rsssl_sanitize_datatable( $value, $type, $id ){
         foreach ($value as $row_index => $row) {
 	        //has to be an array.
 	        if ( !is_array($row) ) {
-                error_log("is not an array ");
                 //in this case, there's something off with our data, so we reset to default values, if available.
 		        $config_fields = rsssl_fields(false);
 		        foreach ($config_fields as $config_field ) {
 			        if ($config_field['id']===$id){
 				        $default = $config_field['default'];
-                        error_log("break");
-				        error_log(print_r($default, true));
-
-				        //   break;
 			        }
 		        }
-                error_log("set default");
                 if (isset($default[$row_index])) {
 	                $value[$row_index] = $default[$row_index];
                 } else {
                     unset($value[$row_index]);
                 }
-                error_log("new value ");
-                error_log(print_r($value, true));
-	        } else {
-		        error_log("Is an array  ");
-		        error_log(print_r($value, true));
-            }
+	        }
             foreach ( $row as $col_index => $col_value ){
                 if ( !isset( $possible_keys[$col_index])) {
                     unset($value[$row_index]);

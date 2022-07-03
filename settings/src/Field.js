@@ -73,6 +73,8 @@ class Field extends Component {
             delete item.owndomainControl;
             delete item.statusControl;
         }
+        //the updateItemId allows us to update one specific item in a field set.
+        field.updateItemId = clickedItem.id;
         let saveFields = [];
         saveFields.push(field);
         this.props.updateField(field)
@@ -210,7 +212,6 @@ class Field extends Component {
                 data = [];
             }
             for (const item of data){
-                console.log(item);
                 item.owndomainControl = <ToggleControl
                                  checked= {item.owndomain==1}
                                  label=''
@@ -243,8 +244,6 @@ class Field extends Component {
                 columns.push(newItem);
             });
             let data = field.value;
-            console.log("data "+field.id);
-            console.log(data);
 
             if (!Array.isArray(data) ) {
                 data = [];

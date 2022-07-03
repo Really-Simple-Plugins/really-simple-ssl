@@ -86,17 +86,17 @@ class Page extends Component {
         });
     }
 
+    /**
+     * Update a field
+     * @param field
+     */
     updateField(field) {
-        console.log("run global update field for ");
-        console.log(field);
         let fields = this.fields;
         for (const fieldItem of fields){
             if (fieldItem.id === field.id ){
                 fieldItem.value = field.value;
             }
         }
-        console.log("NEW FIELDS LIST");
-        console.log(fields);
         this.fields = fields;
         this.setState({
             fields :fields

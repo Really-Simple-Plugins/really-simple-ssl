@@ -3039,8 +3039,10 @@ class Field extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Component {
 
       delete item.owndomainControl;
       delete item.statusControl;
-    }
+    } //the updateItemId allows us to update one specific item in a field set.
 
+
+    field.updateItemId = clickedItem.id;
     let saveFields = [];
     saveFields.push(field);
     this.props.updateField(field);
@@ -3178,7 +3180,6 @@ class Field extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Component {
       }
 
       for (const item of data) {
-        console.log(item);
         item.owndomainControl = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.ToggleControl, {
           checked: item.owndomain == 1,
           label: "",
@@ -3212,8 +3213,6 @@ class Field extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Component {
         columns.push(newItem);
       });
       let data = field.value;
-      console.log("data " + field.id);
-      console.log(data);
 
       if (!Array.isArray(data)) {
         data = [];
@@ -4032,10 +4031,13 @@ class Page extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Component {
       selectedMainMenuItem: selectedMainMenuItem
     });
   }
+  /**
+   * Update a field
+   * @param field
+   */
+
 
   updateField(field) {
-    console.log("run global update field for ");
-    console.log(field);
     let fields = this.fields;
 
     for (const fieldItem of fields) {
@@ -4044,8 +4046,6 @@ class Page extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Component {
       }
     }
 
-    console.log("NEW FIELDS LIST");
-    console.log(fields);
     this.fields = fields;
     this.setState({
       fields: fields
