@@ -102,7 +102,7 @@ function rsssl_migrate_settings() {
 	//dismiss_all_notices
 }
 
-function rsssl_fields(){
+function rsssl_fields( $load_values = true ){
 	if ( !current_user_can('manage_options') ) {
 		return [];
 	}
@@ -355,7 +355,6 @@ function rsssl_fields(){
 		],
 	];
 	$fields = apply_filters('rsssl_fields', $fields);
-
 	foreach ( $fields as $key => $field ) {
 		$field = wp_parse_args($field, ['id'=>false, 'visible'=> true, 'disabled'=>false, 'new_features_block' => false ]);
 		//handle server side conditions
@@ -365,9 +364,14 @@ function rsssl_fields(){
 				continue;
 			}
 		}
-		$field['value'] = rsssl_get_option($field['id']);
-		$fields[$key] = apply_filters('rsssl_field', $field, $field['id']);
+
+		if ($load_values) {
+			$value = rsssl_sanitize_field( rsssl_get_option($field['id'], $field['default'] ), $field['type'], $field['id']);
+			$field['value'] = apply_filters('rsssl_field_value_'.$field['id'], $value, $field );
+		}
+		$fields[$key] = apply_filters( 'rsssl_field', $field, $field['id'] );
 	}
+
 	$fields = apply_filters('rsssl_fields_values', $fields);
 	return array_values($fields);
 }

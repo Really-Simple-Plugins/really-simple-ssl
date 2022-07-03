@@ -47,12 +47,6 @@ function rsssl_plugin_admin_scripts() {
 				'rsssl_nonce' => wp_create_nonce( 'rsssl_save' ),
 			))
 	);
-	wp_enqueue_style(
-		'rsssl-settings-css',
-		plugins_url( 'css/admin.css', __FILE__ ),
-		['wp-components'],
-		rsssl_version
-	);
 }
 
 function rsssl_add_option_menu() {
@@ -193,6 +187,12 @@ function rsssl_run_test($request){
 	exit;
 }
 
+/**
+ * List of allowed field types
+ * @param $type
+ *
+ * @return mixed|string
+ */
 function rsssl_sanitize_field_type($type){
     $types = [
         'license',
@@ -203,6 +203,7 @@ function rsssl_sanitize_field_type($type){
         'email',
         'select',
         'permissionspolicy',
+        'contentsecuritypolicy',
     ];
     if ( in_array($type, $types) ){
         return $type;
@@ -217,19 +218,46 @@ function rsssl_sanitize_field_type($type){
  * @return void
  */
 function rsssl_rest_api_fields_set($request){
-    if (!current_user_can('manage_options')) {
+    if ( !current_user_can('manage_options')) {
         return;
     }
 
 	$fields = $request->get_json_params();
     $config_fields = rsssl_fields();
+    $config_ids = array_column($config_fields, 'id');
+
+
 	foreach ( $fields as $index => $field ) {
-		if ( !isset( $config_fields[ $field['id'] ] ) ){
-            error_log("unsettting ".$field['id']." as not existing field in RSSSL ");
+        //the updateItemId allows us to update one specific item in a field set.
+        $update_item_id = isset($field['updateItemId']) ? $field['updateItemId'] : false;
+        $config_field_index = array_search($field['id'], $config_ids);
+        $config_field = $config_fields[$config_field_index];
+		if ( !$config_field_index ){
+            error_log("unsetting ".$field['id']." as not existing field in RSSSL ");
 			unset($fields[$index]);
+			continue;
 		}
-        $value = rsssl_sanitize_field( $field['value'] , rsssl_sanitize_field_type($field['type']) );
+		$value = rsssl_sanitize_field( $field['value'] , rsssl_sanitize_field_type($field['type']), $field['id'] );
 		$value = apply_filters("rsssl_fieldvalue", $value, sanitize_text_field($field['id']));
+
+        //if an endpoint is defined, we use that endpoint instead
+        if ( isset($config_field['data_endpoint'])){
+	        /**
+	         * Update data to an endpoint
+	         */
+	        if ( isset($config_field['data_endpoint']) ){
+		        $endpoint = $config_field['data_endpoint'];
+		        if (is_array($endpoint)) {
+			        $main = $endpoint[0];
+			        $class = $endpoint[1];
+			        $function = $endpoint[2];
+                    $main()->$class->$function( $value, $update_item_id );
+		        }
+	        }
+	        unset($fields[$index]);
+            continue;
+        }
+
 		$field['value'] = $value;
 		$fields[$index] = $field;
 	}
@@ -287,7 +315,7 @@ function rsssl_update_option( $name, $value ) {
     }
 
 	$options = get_site_option( 'rsssl_options', array() );
-	$options[$name] = rsssl_sanitize_field( $value , $type );
+	$options[$name] = rsssl_sanitize_field( $value , $type, $name );
 	if ( is_multisite() && is_network_admin() ) {
 		update_site_option( 'rsssl_options', $options );
 	} else {
@@ -307,10 +335,28 @@ function rsssl_rest_api_fields_get(  ){
 	$output = array();
 	$fields = rsssl_fields();
 	$menu_items = rsssl_menu('settings');
+	foreach ( $fields as $index => $field ) {
+		/**
+		 * Load data from source
+		 */
+		if ( isset($field['data_source']) ){
+			$data_source = $field['data_source'];
+			if (is_array($data_source)) {
+				$main = $data_source[0];
+				$class = $data_source[1];
+				$function = $data_source[2];
+				$field['value'] = $main()->$class->$function();
+			}
+		}
+//			if ($field['id']==='permissions_policy'){
+//				$field['value'] = $field['default'];
+//			}
+		$fields[$index] = $field;
+	}
 	$output['fields'] = $fields;
+
 	$output['menu'] = $menu_items;
 	$output['progress'] = RSSSL()->progress->get();
-
     $output = apply_filters('rsssl_rest_api_fields_get', $output);
 	$response = json_encode( $output );
 	header( "Content-Type: application/json" );
@@ -338,12 +384,13 @@ function rsssl_rest_api_block_get($request){
 
 /**
  * Sanitize a field
- * @param $value
- * @param $type
+ * @param mixed $value
+ * @param string $type
+ * @oaram string $id
  *
  * @return array|bool|int|string|void
  */
-function rsssl_sanitize_field( $value, $type ) {
+function rsssl_sanitize_field( $value, $type, $id ) {
 	if ( ! current_user_can( 'manage_options' ) ) {
 		return false;
 	}
@@ -369,37 +416,71 @@ function rsssl_sanitize_field( $value, $type ) {
 			return intval( $value );
         case 'permissionspolicy':
         case 'contentsecuritypolicy':
-            return rsssl_sanitize_datatable($value);
+            return rsssl_sanitize_datatable($value, $type, $id);
 		default:
 			return sanitize_text_field( $value );
 	}
 }
 
-function rsssl_sanitize_datatable($value){
-    $possible_keys = apply_filters('rsssl_datatable_datatypes', [
-	    'id'=>'int',
+function rsssl_sanitize_datatable( $value, $type, $id ){
+    $possible_keys = apply_filters("rsssl_datatable_datatypes_$type", [
+	    'id'=>'string',
 	    'title' =>'string',
+	    'status' => 'boolean',
     ]);
 
-    if (!is_array($value)) {
+    // Datatable array will look something like this, whith 0 the row index, and id, title the col indexes.
+    // [0] => Array
+    //	(
+    //		[id] => camera
+    //		[title] => Camera
+    //	    [owndomain] =>
+    //      [status] =>
+    //   )
+    //)
+    if ( !is_array($value) ) {
         return false;
     } else {
-        foreach ($value as $index => $item_value ) {
-            if (!isset($possible_keys[$index])) {
-                unset($value[$index]);
-            }
-            $datatype = $possible_keys[$index];
-	        switch ($datatype) {
-		        case 'string':
-			        $value[$index] = sanitize_text_field($item_value);
-			        break;
-		        case 'int':
-		        case 'boolean':
-                default:
-			        $value[$index] = intval($item_value);
-			        break;
+        foreach ($value as $row_index => $row) {
+	        //has to be an array.
+	        if ( !is_array($row) ) {
+                //in this case, there's something off with our data, so we reset to default values, if available.
+		        $config_fields = rsssl_fields(false);
+		        foreach ($config_fields as $config_field ) {
+			        if ($config_field['id']===$id){
+				        $default = $config_field['default'];
+			        }
+		        }
+                if (isset($default[$row_index])) {
+	                $value[$row_index] = $default[$row_index];
+                } else {
+                    unset($value[$row_index]);
+                }
 	        }
+            foreach ( $row as $col_index => $col_value ){
+                if ( !isset( $possible_keys[$col_index])) {
+                    unset($value[$row_index]);
+                } else {
+	                $datatype = $possible_keys[$col_index];
+	                switch ($datatype) {
+		                case 'string':
+			                $value[$row_index][$col_index] = sanitize_text_field($col_value);
+			                break;
+		                case 'int':
+		                case 'boolean':
+		                default:
+			                $value[$row_index][$col_index] = intval($col_value);
+			                break;
+	                }
+                }
+            }
 
+	        //Ensure that all required keys are set with at least an empty value
+            foreach ( $possible_keys as $col_index => $datatype ) {
+                if ( !isset($value[$row_index][$col_index])){
+	                $value[$row_index][$col_index] = false;
+                }
+            }
         }
     }
     return $value;
