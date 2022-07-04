@@ -223,9 +223,8 @@ function rsssl_rest_api_fields_set($request){
     }
 
 	$fields = $request->get_json_params();
-    $config_fields = rsssl_fields();
+    $config_fields = rsssl_fields(false);
     $config_ids = array_column($config_fields, 'id');
-
 
 	foreach ( $fields as $index => $field ) {
         //the updateItemId allows us to update one specific item in a field set.
@@ -261,7 +260,11 @@ function rsssl_rest_api_fields_set($request){
 		$field['value'] = $value;
 		$fields[$index] = $field;
 	}
-    $options = get_option( 'rsssl_options', array() );
+	if ( rsssl_is_networkwide_active() ) {
+		$options = get_site_option( 'rsssl_options', array() );
+	} else {
+		$options = get_option( 'rsssl_options', array() );
+	}
 
     //build a new options array
     foreach ( $fields as $field ) {
@@ -271,7 +274,7 @@ function rsssl_rest_api_fields_set($request){
     }
 
     if ( ! empty( $options ) ) {
-        if ( is_multisite() && is_network_admin() ) {
+        if ( rsssl_is_networkwide_active() ) {
 	        update_site_option( 'rsssl_options', $options );
         } else {
 	        update_option( 'rsssl_options', $options );
@@ -290,33 +293,41 @@ function rsssl_rest_api_fields_set($request){
 }
 
 /**
- * @param $name
- * @param $value
- * @return void
+ * Update a rsssl option
+ * @param string $name
+ * @param mixed $value
  *
- * Update an RSSSL option. Used to sync with WordPress options
+ * @return void
  */
 function rsssl_update_option( $name, $value ) {
 	if ( !current_user_can('manage_options') ) {
 		return;
 	}
 
-	$type = false;
-	$config_fields = rsssl_fields();
-    foreach ($config_fields as $config_field ) {
-        if ($config_field['id']===$name){
-            $type = $config_field['type'];
-            break;
-        }
-    }
+	$config_fields = rsssl_fields(false);
+	$config_ids = array_column($config_fields, 'id');
+	$config_field_index = array_search($name, $config_ids);
+	$config_field = $config_fields[$config_field_index];
+	if ( !$config_field_index ){
+		error_log("exiting ".$name." as not existing field in RSSSL ");
+		return;
+	}
 
+	$type = isset( $config_field['type'] ) ? $config_field['type'] : false;
     if ( !$type ) {
         return;
     }
+	if ( rsssl_is_networkwide_active() ) {
+		$options = get_site_option( 'rsssl_options', array() );
+	} else {
+		$options = get_option( 'rsssl_options', array() );
+	}
 
-	$options = get_site_option( 'rsssl_options', array() );
-	$options[$name] = rsssl_sanitize_field( $value , $type, $name );
-	if ( is_multisite() && is_network_admin() ) {
+    $name = sanitize_text_field($name);
+	$value = rsssl_sanitize_field( $value, rsssl_sanitize_field_type($config_field['type']), $name );
+	$value = apply_filters("rsssl_fieldvalue", $value, sanitize_text_field($name));
+	$options[$name] = $value;
+	if ( rsssl_is_networkwide_active() ) {
 		update_site_option( 'rsssl_options', $options );
 	} else {
 		update_option( 'rsssl_options', $options );
@@ -348,9 +359,7 @@ function rsssl_rest_api_fields_get(  ){
 				$field['value'] = $main()->$class->$function();
 			}
 		}
-//			if ($field['id']==='permissions_policy'){
-//				$field['value'] = $field['default'];
-//			}
+
 		$fields[$index] = $field;
 	}
 	$output['fields'] = $fields;

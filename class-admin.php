@@ -2969,7 +2969,7 @@ class rsssl_admin extends rsssl_front_end
                         'dismissible' => true
                     ),
                     'not-enabled' => array(
-	                    'highlight_field_id' => 'autoreplace_insecure_links',
+	                    'highlight_field_id' => 'mixed_content_fixer',
 	                    'msg' =>__('Mixed content fixer not enabled. Enable the option to fix mixed content on your site.', 'really-simple-ssl'),
                         'icon' => 'open',
                         'dismissible' => true
