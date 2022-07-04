@@ -7,7 +7,6 @@ defined('ABSPATH') or die();
  * @since 1.0.0
  */
 
-
 require_once( rsssl_path . 'settings/config/config.php' );
 require_once( rsssl_path . 'settings/config/disable-fields-filter.php' );
 
@@ -281,7 +280,7 @@ function rsssl_rest_api_fields_set($request){
         }
     }
     foreach ( $fields as $field ) {
-        do_action( "rsssl_after_save_option", $field['id'], $field['value'], $prev_value, $field['type'] );
+        do_action( "rsssl_after_save_field", $field['id'], $field['value'], $prev_value, $field['type'] );
     }
 
 	do_action('rsssl_after_saved_fields', $fields );
@@ -424,51 +423,140 @@ function rsssl_sanitize_field( $value, $type, $id ) {
 		case 'number':
 			return intval( $value );
         case 'permissionspolicy':
-        case 'contentsecuritypolicy':
+	        return rsssl_sanitize_permissions_policy($value, $type, $id);
+		case 'contentsecuritypolicy':
             return rsssl_sanitize_datatable($value, $type, $id);
 		default:
 			return sanitize_text_field( $value );
 	}
 }
 
-function rsssl_sanitize_datatable( $value, $type, $id ){
+/**
+ * Dedicated permission policy sanitization
+ *
+ * @param $value
+ * @param $type
+ * @param $field_name
+ *
+ * @return array|false
+ */
+function rsssl_sanitize_permissions_policy( $value, $type, $field_name ){
+	$possible_keys = apply_filters("rsssl_datatable_datatypes_$type", [
+		'id'=>'string',
+		'title' =>'string',
+		'status' => 'boolean',
+	]);
+
+	// Datatable array will look something like this, whith 0 the row index, and id, title the col indexes.
+	// [0] => Array
+	//	(
+	//		[id] => camera
+	//		[title] => Camera
+	//	    [value] => ()
+	//      [status] => 1/0
+	//   )
+	//)
+	if ( !is_array($value) ) {
+		return false;
+	} else {
+		//check if there is a default available
+		$default = false;
+		//in this case, there's something off with our data, so we reset to default values, if available.
+		$config_fields = rsssl_fields(false);
+		foreach ($config_fields as $config_field ) {
+			if ($config_field['id']===$field_name){
+				$default = isset($config_field['default']) ? $config_field['default'] : false;
+			}
+		}
+
+		foreach ($value as $row_index => $row) {
+			//check if we have invalid values
+			if ( is_array($row) ) {
+				foreach ($row as $column_index => $row_value ) {
+					if ($column_index==='id' && $row_value===false) {
+						unset($value[$column_index]);
+					}
+				}
+			}
+
+			//has to be an array.
+			if ( !is_array($row) ) {
+				if (isset($default[$row_index])) {
+					$value[$row_index] = $default[$row_index];
+				} else {
+					unset($value[$row_index]);
+				}
+			}
+
+			foreach ( $row as $col_index => $col_value ){
+				if ( !isset( $possible_keys[$col_index])) {
+					unset($value[$row_index][$col_index]);
+				} else {
+					$datatype = $possible_keys[$col_index];
+					switch ($datatype) {
+						case 'string':
+							$value[$row_index][$col_index] = sanitize_text_field($col_value);
+							break;
+						case 'int':
+						case 'boolean':
+						default:
+							$value[$row_index][$col_index] = intval($col_value);
+							break;
+					}
+				}
+			}
+
+			//Ensure that all required keys are set with at least an empty value
+			foreach ($possible_keys as $key => $data_type ) {
+				if ( !isset($value[$row_index][$key])){
+					$value[$row_index][$key] = false;
+				}
+			}
+		}
+	}
+
+    //if the default contains items not in the setting (newly added), add them.
+    if ( count($value)<count($default) ) {
+        $ids = array_column($value, 'id');
+        foreach ($default as $def_row_index => $def_row ) {
+            //check if it is available in the array. If not, add
+	        $found = array_search($def_row['id'], $ids);
+            if ( !$found ) {
+                $value[] = $def_row;
+            }
+        }
+    }
+	return $value;
+}
+
+function rsssl_sanitize_datatable( $value, $type, $field_name ){
     $possible_keys = apply_filters("rsssl_datatable_datatypes_$type", [
 	    'id'=>'string',
 	    'title' =>'string',
 	    'status' => 'boolean',
     ]);
 
-    // Datatable array will look something like this, whith 0 the row index, and id, title the col indexes.
-    // [0] => Array
-    //	(
-    //		[id] => camera
-    //		[title] => Camera
-    //	    [owndomain] =>
-    //      [status] =>
-    //   )
-    //)
     if ( !is_array($value) ) {
         return false;
     } else {
         foreach ($value as $row_index => $row) {
-	        //has to be an array.
-	        if ( !is_array($row) ) {
-                //in this case, there's something off with our data, so we reset to default values, if available.
-		        $config_fields = rsssl_fields(false);
-		        foreach ($config_fields as $config_field ) {
-			        if ($config_field['id']===$id){
-				        $default = $config_field['default'];
-			        }
-		        }
-                if (isset($default[$row_index])) {
-	                $value[$row_index] = $default[$row_index];
-                } else {
-                    unset($value[$row_index]);
+            //check if we have invalid values
+	        if ( is_array($row) ) {
+		        foreach ($row as $column_index => $row_value ) {
+                    if ($column_index==='id' && $row_value===false) {
+	                    unset($value[$column_index]);
+                    }
                 }
 	        }
+
+	        //has to be an array.
+	        if ( !is_array($row) ) {
+                unset($value[$row_index]);
+	        }
+
             foreach ( $row as $col_index => $col_value ){
                 if ( !isset( $possible_keys[$col_index])) {
-                    unset($value[$row_index]);
+                    unset($value[$row_index][$col_index]);
                 } else {
 	                $datatype = $possible_keys[$col_index];
 	                switch ($datatype) {
@@ -485,10 +573,10 @@ function rsssl_sanitize_datatable( $value, $type, $id ){
             }
 
 	        //Ensure that all required keys are set with at least an empty value
-            foreach ( $possible_keys as $col_index => $datatype ) {
-                if ( !isset($value[$row_index][$col_index])){
-	                $value[$row_index][$col_index] = false;
-                }
+            foreach ($possible_keys as $key => $data_type ) {
+	            if ( !isset($value[$row_index][$key])){
+		            $value[$row_index][$key] = false;
+	            }
             }
         }
     }

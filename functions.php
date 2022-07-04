@@ -72,7 +72,7 @@ function rsssl_conditions_apply( $conditions ){
  * @param string $name
  * @param mixed $default
  *
- * @return bool
+ * @return mixed
  */
 
 function rsssl_get_option( $name, $default=false ) {

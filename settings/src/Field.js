@@ -70,7 +70,7 @@ class Field extends Component {
             if (item.id === clickedItem.id) {
                 item[type] = enabled;
             }
-            delete item.owndomainControl;
+            delete item.valueControl;
             delete item.statusControl;
         }
         //the updateItemId allows us to update one specific item in a field set.
@@ -91,7 +91,7 @@ class Field extends Component {
         let fieldValue = field.value;
         let fields = this.props.fields;
         let options = [];
-        if ( field.type==='radio' || field.type==='select' ) {
+        if ( field.options ) {
             for (var key in field.options) {
                 if (field.options.hasOwnProperty(key)) {
                     let item = new Object;
@@ -206,20 +206,30 @@ class Field extends Component {
                 }
                 columns.push(newItem);
             });
+            console.log(columns);
 
             let data = field.value;
             if (!Array.isArray(data) ) {
                 data = [];
             }
             for (const item of data){
-                item.owndomainControl = <ToggleControl
-                                 checked= {item.owndomain==1}
-                                 label=''
-                                 onChange={ ( fieldValue ) => this.onChangeHandlerDataTable( fieldValue, item, 'owndomain' ) }
+                let disabled = false;
+                if (item.status!=1) {
+                    item.value = '()';
+                    disabled = true;
+                }
+                item.valueControl = <SelectControl
+                    help=''
+                    value={item.value}
+                    disabled={disabled}
+                    options={options}
+                    label=''
+                    onChange={ ( fieldValue ) => this.onChangeHandlerDataTable( fieldValue, item, 'value' ) }
                              />
                 item.statusControl = <ChangeStatus item={item} onChangeHandlerDataTable={this.onChangeHandlerDataTable}
                 />;
             }
+
             return (
                 <PanelBody className={ this.highLightClass}>
                     <DataTable
