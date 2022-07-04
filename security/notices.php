@@ -16,8 +16,8 @@ function rsssl_display_name_is_login_name( $notices ) {
 		'score' => 5,
 		'output' => array(
 			'true' => array(
-				'msg' => __("The following admin users have set their display name equal to their login name: ", "really-simple-ssl") . "<b>" . rsssl_list_users_where_display_name_is_login_name() . "</b>"
-				. ". " . __("We recommend these users to change their display name.", "really-simple-ssl"),
+				'msg' => __("You have users with a matching login and display name. This makes it easy for attackers to find valid login names. We recommend changing the display name for affected users: ", "really-simple-ssl") . "<b>" . rsssl_list_users_where_display_name_is_login_name() . "</b>",
+				'url' => 'https://really-simple-ssl.com/',
 				'icon' => 'open',
 				'dismissible' => true,
 			),
