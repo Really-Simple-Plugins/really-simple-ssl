@@ -72,16 +72,12 @@ function rsssl_conditions_apply( $conditions ){
  * @param string $name
  * @param mixed $default
  *
- * @return bool
+ * @return bool|string
  */
 
 function rsssl_get_option( $name, $default=false ) {
 	$name = sanitize_title($name);
 	$options = get_option( 'rsssl_options', array() );
-//	if ( $name === 'permissions_policy') {
-//		$options[$name] = false;
-//	}
-
 	if ( !isset($options[$name]) ) {
 		$value = false;
 	} else {
