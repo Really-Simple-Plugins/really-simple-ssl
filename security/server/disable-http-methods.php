@@ -3,15 +3,15 @@
 /**
  * Disable TRACE & STACK HTTP methods
  *
- * @return bool
+ * @return string
  *
  */
-function rsssl_disable_http_methods_rules($rules)
+function rsssl_disable_http_methods_rules( $rules )
 {
-	$rules .= "\n" . "<LimitExcept GET POST>" . "\n" ."deny from all" . "\n" . "</LimitExcept>";
+	$rules .= "\n" . "<LimitExcept GET POST" . ">" . "\n" ."deny from all" . "\n" . "</LimitExcept>";
 	return $rules;
 }
-add_filter('rsssl_htaccess_security_rules', 'rsssl_disable_http_methods_rules');
+add_filter('rsssl_htaccess_security_rules', 'rsssl_disable_http_methods_rules' );
 
 /**
  * @param $notices
@@ -39,7 +39,6 @@ function rsssl_http_methods_nginx( $notices ) {
 }
 add_filter('rsssl_notices', 'rsssl_http_methods_nginx');
 
-
 /**
  * @return string
  *
@@ -53,6 +52,4 @@ function rsssl_wrap_http_methods_code_nginx() {
 	$code .= '</code>';
 
 	return $code;
-	//if ( $request_method !~ ^(GET|POST|HEAD)$ ) {
-	//	    return 405;
 }

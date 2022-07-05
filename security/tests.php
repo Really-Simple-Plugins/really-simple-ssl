@@ -63,8 +63,6 @@ function rsssl_xmlrpc_allowed()
 
 }
 
-
-
 /**
  * @return bool
  * Test if HTTP methods are allowed
@@ -77,7 +75,7 @@ function rsssl_http_methods_allowed()
 	}
 
 	if ( ! get_transient( 'rsssl_http_options_allowed' ) ) {
-		if (function_exists('curl_init')) {
+		if ( function_exists('curl_init' ) ) {
 
 			$url = site_url();
 			$ch = curl_init();
@@ -97,15 +95,24 @@ function rsssl_http_methods_allowed()
 				echo 'Error:' . curl_error($ch);
 			}
 
-			curl_close($ch);
+			$httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 
-			set_transient('rsssl_http_options_allowed', 'not-allowed', DAY_IN_SECONDS);
+			if ( $httpcode === 200 ) {
+				set_transient('rsssl_http_options_allowed', 'allowed', DAY_IN_SECONDS);
+				return true;
+			}
+
+			if ( $httpcode === 403 ) {
+				set_transient('rsssl_http_options_allowed', 'not-allowed', DAY_IN_SECONDS);
+				return false;
+			}
+
+			curl_close($ch);
 			return false;
 		}
-
-		set_transient('rsssl_http_options_allowed', 'allowed', DAY_IN_SECONDS);
-		return true;
 	}
+
+	return true;
 }
 
 /**

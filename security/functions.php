@@ -69,7 +69,9 @@ if ( ! function_exists('rsssl_wrap_htaccess' ) ) {
 			return false;
 		}
 
-		$rules = apply_filters('rsssl_htaccess_security_rules', '');
+		$rules = '';
+
+		$rules = apply_filters('rsssl_htaccess_security_rules', $rules );
 		$htaccess_file = RSSSL()->really_simple_ssl->htaccess_file();
 		if ( !file_exists( $htaccess_file ) ) {
 			update_site_option('rsssl_htaccess_error', 'not-exists');
