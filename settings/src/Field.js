@@ -15,6 +15,7 @@ import {
 import { __ } from '@wordpress/i18n';
 
 import License from "./License";
+import MixedContentScan from "./MixedContentScan";
 import {
     Component,
 } from '@wordpress/element';
@@ -34,26 +35,6 @@ class ChangeStatus extends Component {
         let label = this.props.item.status==1 ? __("Revoke", "really-simple-ssl") : __("Allow", "really-simple-ssl");
         return (
             <button onClick={ () => this.props.onChangeHandlerDataTable(!this.props.item.status, this.props.item, 'status' ) } className={statusClass}>{label}</button>
-        )
-    }
-}
-class ModalControl extends Component{
-    constructor() {
-        super( ...arguments );
-    }
-    componentDidMount() {
-        this.onClickHandler = this.onClickHandler.bind(this);
-    }
-
-    onClickHandler(){
-        this.props.handleModal(true, this.props.modalData );
-    }
-
-    render(){
-        console.log("modal");
-        console.log(this.props);
-        return (
-            <button onClick={this.onClickHandler}>{this.props.btnText}</button>
         )
     }
 }
@@ -114,7 +95,7 @@ class Field extends Component {
         if ( field.options ) {
             for (var key in field.options) {
                 if (field.options.hasOwnProperty(key)) {
-                    let item = new Object;
+                    let item = {};
                     item.label = field.options[key];
                     item.value = key;
                     options.push(item);
@@ -293,45 +274,8 @@ class Field extends Component {
         }
 
         if ( field.type === 'mixedcontentscan' ) {
-            //build our header
-
-            columns = [];
-            field.columns.forEach(function(item, i) {
-                let newItem = {
-                    name: item.name,
-                    sortable: item.sortable,
-                    selector: row => row[item.column],
-                }
-                columns.push(newItem);
-            });
-            let data = field.value;
-            console.log(data);
-
-            if (!Array.isArray(data) ) {
-                data = [];
-            }
-            for (const item of data){
-                if ( item.path.length >0 ){
-                    item.locationControl = item.path;
-                } else if ( item.file_url.length>0) {
-                    if (item.file_url.indexOf('http://')!==-1 || item.path.indexOf('https://')!==-1) {
-                        item.locationControl = <a href={item.file_url} target="_blank">{__("View", "really-simple-ssl")}</a>
-                    } else {
-                        item.locationControl = item.file_url;
-                    }
-                }
-                item.detailsControl = item.details && <ModalControl handleModal={this.props.handleModal} item={item} btnText={__("Details", "really-simple-ssl")} modalData={item.details} />;
-                item.fixControl = item.fix && <ModalControl handleModal={this.props.handleModal} item={item} btnText={__("Fix", "really-simple-ssl")} modalData={item.fix}/>;
-            }
             return (
-                <PanelBody className={ this.highLightClass}>
-                    <DataTable
-                        columns={columns}
-                        data={data}
-                        dense
-                        pagination
-                    />
-                </PanelBody>
+               <MixedContentScan handleModal={this.props.handleModal} field={this.props.field} fields={this.props.selectedFields}/>
             )
         }
 

@@ -20,6 +20,7 @@ class Page extends Component {
             isAPILoaded: false,
             pageProps:this.pageProps,
             showModal:false,
+            modalData:[],
         };
 
         this.getFields().then(( response ) => {
@@ -48,9 +49,6 @@ class Page extends Component {
      * @param value
      */
     setPageProps(key, value){
-        console.log("set page props");
-        console.log(key);
-        console.log(value);
         this.pageProps[key] = value;
         this.setState({
             pageProps: this.pageProps,
@@ -65,8 +63,8 @@ class Page extends Component {
     handleModal(showModal, data) {
         this.setState({
             showModal: showModal,
+            modalData : data,
         })
-        this.modalData = data;
     }
 
     componentDidMount() {
@@ -140,11 +138,12 @@ class Page extends Component {
             progress,
             isAPILoaded,
             showModal,
+            modalData,
         } = this.state;
 
         return (
             <div className="rsssl-wrapper">
-                {showModal && <Modal handleModal={this.handleModal} data={this.modalData}/>}
+                {showModal && <Modal handleModal={this.handleModal} data={modalData}/>}
                 <Header selectedMainMenuItem={selectedMainMenuItem} selectMainMenu={this.selectMainMenu} fields={fields}/>
                 <div className={"rsssl-content-area rsssl-grid rsssl-" + selectedMainMenuItem}>
                     {selectedMainMenuItem==='settings' && <SettingsPage pageProps={this.pageProps} handleModal={this.handleModal} updateField={this.updateField} setPageProps={this.setPageProps} selectMenu={this.selectMenu} highLightField={this.highLightField} highLightedField={this.highLightedField} selectedMenuItem={selectedMenuItem} isAPILoaded={isAPILoaded} fields={fields} menu={menu} progress={progress}/> }

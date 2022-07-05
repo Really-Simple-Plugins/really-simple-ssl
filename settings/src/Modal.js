@@ -6,21 +6,70 @@ import * as rsssl_api from "./utils/api";
 class Modal extends Component {
     constructor() {
         super( ...arguments );
+        this.state = {
+            data:[],
+            buttonsDisabled:false,
+        };
     }
 
     dismissModal(){
         this.props.handleModal(false, null);
     }
+    componentDidMount() {
+        this.setState({
+            data:this.props.data,
+            buttonsDisabled:false,
+        });
+    }
 
-    handleFix(){
-        return rsssl_api.runTest('licenseNotices', 'refresh').then( ( response ) => {
-            return response.data;
+    handleFix(e){
+        //set to disabled
+        let action = this.props.data.action;
+        console.log("handle fix for "+action);
+        this.setState({
+            buttonsDisabled:true
+        });
+        rsssl_api.runTest(action, 'refresh', this.props.data ).then( ( response ) => {
+            console.log(response.data);
+            this.props.data
+            let {
+                data,
+            } = this.state;
+            data.description = response.data.msg;
+            data.subtitle = '';
+            this.setState({
+                data: data,
+            });
+        });
+    }
+
+    handleIgnore(e){
+        //set to disabled
+        let action = this.props.data.ignore;
+        console.log("handle ignore for "+action);
+        this.setState({
+            buttonsDisabled:true
+        });
+        rsssl_api.runTest(action, 'refresh', this.props.data ).then( ( response ) => {
+            console.log(response.data);
+            this.props.data
+            let {
+                data,
+            } = this.state;
+            data.description = response.data.msg;
+            data.subtitle = '';
+            this.setState({
+                data: data,
+            });
         });
     }
 
     render(){
-        console.log(this.props.data);
-        let data = this.props.data;
+        const {
+            data,
+            buttonsDisabled,
+        } = this.state;
+        let disabled = buttonsDisabled ? 'disabled' : '';
         return (
             <div>
                 <div className="rsssl-modal-backdrop" onClick={ (e) => this.dismissModal(e) }>&nbsp;</div>
@@ -40,10 +89,10 @@ class Modal extends Component {
                         <p className="rsssl-modal-description">{data.description}</p>
                     </div>
                     <div className="rsssl-modal-footer">
-                        {data.edit && <a href={data.edit} target="_blank" className="button button-secondary">{__("Edit", "really-simple-ssl")}</a>}
-                        {data.help && <a href={data.help} target="_blank"  className="button rsssl-button-help">{__("Help", "really-simple-ssl")}</a>}
-                        {data.ignore && <button className="button button-primary">{__("Ignore", "really-simple-ssl")}</button>}
-                        {data.action && <button className="button button-primary" onClick={ (e) => this.handleFix(e) }>{__("Fix", "really-simple-ssl")}</button>}
+                        { data.edit && <a href={data.edit} target="_blank" className="button button-secondary">{__("Edit", "really-simple-ssl")}</a>}
+                        { data.help && <a href={data.help} target="_blank"  className="button rsssl-button-help">{__("Help", "really-simple-ssl")}</a>}
+                        { data.ignore && <button disabled={disabled} className="button button-primary" onClick={ (e) => this.handleIgnore(e) }>{__("Ignore", "really-simple-ssl")}</button>}
+                        { data.action && <button disabled={disabled} className="button button-primary" onClick={ (e) => this.handleFix(e) }>{__("Fix", "really-simple-ssl")}</button>}
                     </div>
                 </div>
             </div>

@@ -178,7 +178,7 @@ function rsssl_run_test($request){
             $data = $progress->get();
             break;
         default:
-	        $data = apply_filters("rsssl_run_test", array(), $test);
+	        $data = apply_filters("rsssl_run_test", array(), $test, $request);
     }
 	$response = json_encode( $data );
 	header( "Content-Type: application/json" );
