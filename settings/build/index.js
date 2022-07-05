@@ -3001,6 +3001,29 @@ class ChangeStatus extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Compo
 
 }
 
+class ModalControl extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Component {
+  constructor() {
+    super(...arguments);
+  }
+
+  componentDidMount() {
+    this.onClickHandler = this.onClickHandler.bind(this);
+  }
+
+  onClickHandler() {
+    this.props.handleModal(true, this.props.modalData);
+  }
+
+  render() {
+    console.log("modal");
+    console.log(this.props);
+    return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
+      onClick: this.onClickHandler
+    }, this.props.btnText);
+  }
+
+}
+
 class Field extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Component {
   constructor() {
     super(...arguments);
@@ -3173,7 +3196,6 @@ class Field extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Component {
         };
         columns.push(newItem);
       });
-      console.log(columns);
       let data = field.value;
 
       if (!Array.isArray(data)) {
@@ -3233,6 +3255,62 @@ class Field extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Component {
         item.statusControl = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(ChangeStatus, {
           item: item,
           onChangeHandlerDataTable: this.onChangeHandlerDataTable
+        });
+      }
+
+      return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.PanelBody, {
+        className: this.highLightClass
+      }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_data_table_component__WEBPACK_IMPORTED_MODULE_4__["default"], {
+        columns: columns,
+        data: data,
+        dense: true,
+        pagination: true
+      }));
+    }
+
+    if (field.type === 'mixedcontentscan') {
+      //build our header
+      columns = [];
+      field.columns.forEach(function (item, i) {
+        let newItem = {
+          name: item.name,
+          sortable: item.sortable,
+          selector: row => row[item.column]
+        };
+        columns.push(newItem);
+      });
+      let data = field.value;
+      console.log(data);
+
+      if (!Array.isArray(data)) {
+        data = [];
+      }
+
+      for (const item of data) {
+        if (item.path.length > 0) {
+          item.locationControl = item.path;
+        } else if (item.file_url.length > 0) {
+          if (item.file_url.indexOf('http://') !== -1 || item.path.indexOf('https://') !== -1) {
+            item.locationControl = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
+              href: item.file_url,
+              target: "_blank"
+            }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("View", "really-simple-ssl"));
+          } else {
+            item.locationControl = item.file_url;
+          }
+        }
+
+        item.detailsControl = item.details && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(ModalControl, {
+          handleModal: this.props.handleModal,
+          item: item,
+          btnText: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Details", "really-simple-ssl"),
+          modalData: item.details
+        });
+        item.fixControl = item.fix && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(ModalControl, {
+          handleModal: this.props.handleModal,
+          item: item,
+          btnText: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Fix", "really-simple-ssl"),
+          modalData: item.fix
         });
       }
 
@@ -3883,6 +3961,102 @@ class Menu extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Component {
 
 /***/ }),
 
+/***/ "./src/Modal.js":
+/*!**********************!*\
+  !*** ./src/Modal.js ***!
+  \**********************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _utils_api__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./utils/api */ "./src/utils/api.js");
+
+
+
+
+
+
+class Modal extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Component {
+  constructor() {
+    super(...arguments);
+  }
+
+  dismissModal() {
+    this.props.handleModal(false, null);
+  }
+
+  handleFix() {
+    return _utils_api__WEBPACK_IMPORTED_MODULE_2__.runTest('licenseNotices', 'refresh').then(response => {
+      return response.data;
+    });
+  }
+
+  render() {
+    console.log(this.props.data);
+    let data = this.props.data;
+    return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+      className: "rsssl-modal-backdrop",
+      onClick: e => this.dismissModal(e)
+    }, "\xA0"), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+      className: "rsssl-modal",
+      id: "{id}"
+    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+      className: "rsssl-modal-header"
+    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("h2", {
+      className: "modal-title"
+    }, data.title), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
+      type: "button",
+      className: "rsssl-modal-close",
+      "data-dismiss": "modal",
+      "aria-label": "Close",
+      onClick: e => this.dismissModal(e)
+    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("svg", {
+      "aria-hidden": "true",
+      focusable: "false",
+      role: "img",
+      xmlns: "http://www.w3.org/2000/svg",
+      viewBox: "0 0 320 512",
+      height: "24"
+    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("path", {
+      fill: "#000000",
+      d: "M310.6 361.4c12.5 12.5 12.5 32.75 0 45.25C304.4 412.9 296.2 416 288 416s-16.38-3.125-22.62-9.375L160 301.3L54.63 406.6C48.38 412.9 40.19 416 32 416S15.63 412.9 9.375 406.6c-12.5-12.5-12.5-32.75 0-45.25l105.4-105.4L9.375 150.6c-12.5-12.5-12.5-32.75 0-45.25s32.75-12.5 45.25 0L160 210.8l105.4-105.4c12.5-12.5 32.75-12.5 45.25 0s12.5 32.75 0 45.25l-105.4 105.4L310.6 361.4z"
+    })))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+      className: "rsssl-modal-content"
+    }, data.subtitle && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+      className: "rsssl-modal-subtitle"
+    }, data.subtitle), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", {
+      className: "rsssl-modal-description"
+    }, data.description)), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+      className: "rsssl-modal-footer"
+    }, data.edit && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
+      href: data.edit,
+      target: "_blank",
+      className: "button button-secondary"
+    }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Edit", "really-simple-ssl")), data.help && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
+      href: data.help,
+      target: "_blank",
+      className: "button rsssl-button-help"
+    }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Help", "really-simple-ssl")), data.ignore && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
+      className: "button button-primary"
+    }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Ignore", "really-simple-ssl")), data.action && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
+      className: "button button-primary",
+      onClick: e => this.handleFix(e)
+    }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Fix", "really-simple-ssl")))));
+  }
+
+}
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Modal);
+
+/***/ }),
+
 /***/ "./src/Notices.js":
 /*!************************!*\
   !*** ./src/Notices.js ***!
@@ -3953,6 +4127,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _Header__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Header */ "./src/Header.js");
 /* harmony import */ var _DashboardPage__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./DashboardPage */ "./src/DashboardPage.js");
 /* harmony import */ var _SettingsPage__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./SettingsPage */ "./src/SettingsPage.js");
+/* harmony import */ var _Modal__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./Modal */ "./src/Modal.js");
+
 
 
 
@@ -3973,7 +4149,8 @@ class Page extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Component {
       menu: '',
       progress: '',
       isAPILoaded: false,
-      pageProps: this.pageProps
+      pageProps: this.pageProps,
+      showModal: false
     };
     this.getFields().then(response => {
       let fields = response.fields;
@@ -4012,9 +4189,23 @@ class Page extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Component {
       pageProps: this.pageProps
     });
   }
+  /**
+   * Handle instantiation of a modal window
+   * @param showModal
+   * @param data
+   */
+
+
+  handleModal(showModal, data) {
+    this.setState({
+      showModal: showModal
+    });
+    this.modalData = data;
+  }
 
   componentDidMount() {
     this.selectMenu = this.selectMenu.bind(this);
+    this.handleModal = this.handleModal.bind(this);
     this.highLightField = this.highLightField.bind(this);
     this.updateField = this.updateField.bind(this);
     this.selectMainMenu = this.selectMainMenu.bind(this);
@@ -4085,11 +4276,15 @@ class Page extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Component {
       fields,
       menu,
       progress,
-      isAPILoaded
+      isAPILoaded,
+      showModal
     } = this.state;
     return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
       className: "rsssl-wrapper"
-    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_Header__WEBPACK_IMPORTED_MODULE_2__["default"], {
+    }, showModal && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_Modal__WEBPACK_IMPORTED_MODULE_5__["default"], {
+      handleModal: this.handleModal,
+      data: this.modalData
+    }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_Header__WEBPACK_IMPORTED_MODULE_2__["default"], {
       selectedMainMenuItem: selectedMainMenuItem,
       selectMainMenu: this.selectMainMenu,
       fields: fields
@@ -4097,6 +4292,7 @@ class Page extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Component {
       className: "rsssl-content-area rsssl-grid rsssl-" + selectedMainMenuItem
     }, selectedMainMenuItem === 'settings' && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_SettingsPage__WEBPACK_IMPORTED_MODULE_4__["default"], {
       pageProps: this.pageProps,
+      handleModal: this.handleModal,
       updateField: this.updateField,
       setPageProps: this.setPageProps,
       selectMenu: this.selectMenu,
@@ -4590,6 +4786,7 @@ class Settings extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Component
     return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
       className: "rsssl-wizard-settings rsssl-column-2"
     }, groups.map((group, i) => (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_SettingsGroup__WEBPACK_IMPORTED_MODULE_3__["default"], {
+      handleModal: this.props.handleModal,
       showSavedSettingsNotice: this.props.showSavedSettingsNotice,
       updateField: this.props.updateField,
       pageProps: this.props.pageProps,
@@ -4705,6 +4902,7 @@ class SettingsGroup extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Comp
     }, activeGroup && activeGroup.intro && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
       className: "rsssl-settings-block-intro"
     }, activeGroup.intro), selectedFields.map((field, i) => (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_Field__WEBPACK_IMPORTED_MODULE_1__["default"], {
+      handleModal: this.props.handleModal,
       showSavedSettingsNotice: this.props.showSavedSettingsNotice,
       updateField: this.props.updateField,
       setPageProps: this.props.setPageProps,
@@ -4966,6 +5164,7 @@ class SettingsPage extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Compo
       selectMenu: this.props.selectMenu,
       selectedMenuItem: this.props.selectedMenuItem
     }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_Settings__WEBPACK_IMPORTED_MODULE_6__["default"], {
+      handleModal: this.props.handleModal,
       showSavedSettingsNotice: this.showSavedSettingsNotice,
       updateField: this.props.updateField,
       pageProps: this.props.pageProps,

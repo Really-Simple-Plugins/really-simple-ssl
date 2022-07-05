@@ -1,5 +1,4 @@
 import {Component, Fragment} from "@wordpress/element";
-
 /**
  * Render a help notice in the sidebar
  */

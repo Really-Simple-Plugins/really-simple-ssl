@@ -10,6 +10,7 @@
 *	│  ├─ base.scss
 *	│  ├─ layout.scss
 *	│  ├─ modules/
+*	│  │  ├─ modal.scss
 *	│  │  ├─ button.scss
 *	│  │  ├─ modal.scss
 *	│  │  ├─ notices.scss
@@ -27,6 +28,7 @@
 @import 'variables.scss';
 @import 'admin/base.scss';
 @import 'admin/layout.scss';
+  @import 'admin/modules/modal.scss';
   @import 'admin/modules/header.scss';
   @import 'admin/modules/buttons.scss';
   @import 'admin/modules/bullets.scss';

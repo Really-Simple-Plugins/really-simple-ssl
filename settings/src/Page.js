@@ -3,6 +3,7 @@ import * as rsssl_api from "./utils/api";
 import Header from "./Header";
 import DashboardPage from "./DashboardPage";
 import SettingsPage from "./SettingsPage";
+import Modal from "./Modal";
 
 class Page extends Component {
     constructor() {
@@ -18,6 +19,7 @@ class Page extends Component {
             progress:'',
             isAPILoaded: false,
             pageProps:this.pageProps,
+            showModal:false,
         };
 
         this.getFields().then(( response ) => {
@@ -55,8 +57,21 @@ class Page extends Component {
         })
     }
 
+    /**
+     * Handle instantiation of a modal window
+     * @param showModal
+     * @param data
+     */
+    handleModal(showModal, data) {
+        this.setState({
+            showModal: showModal,
+        })
+        this.modalData = data;
+    }
+
     componentDidMount() {
         this.selectMenu = this.selectMenu.bind(this);
+        this.handleModal = this.handleModal.bind(this);
         this.highLightField = this.highLightField.bind(this);
         this.updateField = this.updateField.bind(this);
         this.selectMainMenu = this.selectMainMenu.bind(this);
@@ -124,13 +139,15 @@ class Page extends Component {
             menu,
             progress,
             isAPILoaded,
+            showModal,
         } = this.state;
 
         return (
             <div className="rsssl-wrapper">
+                {showModal && <Modal handleModal={this.handleModal} data={this.modalData}/>}
                 <Header selectedMainMenuItem={selectedMainMenuItem} selectMainMenu={this.selectMainMenu} fields={fields}/>
                 <div className={"rsssl-content-area rsssl-grid rsssl-" + selectedMainMenuItem}>
-                    {selectedMainMenuItem==='settings' && <SettingsPage pageProps={this.pageProps} updateField={this.updateField} setPageProps={this.setPageProps} selectMenu={this.selectMenu} highLightField={this.highLightField} highLightedField={this.highLightedField} selectedMenuItem={selectedMenuItem} isAPILoaded={isAPILoaded} fields={fields} menu={menu} progress={progress}/> }
+                    {selectedMainMenuItem==='settings' && <SettingsPage pageProps={this.pageProps} handleModal={this.handleModal} updateField={this.updateField} setPageProps={this.setPageProps} selectMenu={this.selectMenu} highLightField={this.highLightField} highLightedField={this.highLightedField} selectedMenuItem={selectedMenuItem} isAPILoaded={isAPILoaded} fields={fields} menu={menu} progress={progress}/> }
                     {selectedMainMenuItem==='dashboard' && <DashboardPage isAPILoaded={isAPILoaded} fields={fields} highLightField={this.highLightField}/> }
                 </div>
             </div>

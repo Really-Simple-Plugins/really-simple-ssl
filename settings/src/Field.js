@@ -37,6 +37,26 @@ class ChangeStatus extends Component {
         )
     }
 }
+class ModalControl extends Component{
+    constructor() {
+        super( ...arguments );
+    }
+    componentDidMount() {
+        this.onClickHandler = this.onClickHandler.bind(this);
+    }
+
+    onClickHandler(){
+        this.props.handleModal(true, this.props.modalData );
+    }
+
+    render(){
+        console.log("modal");
+        console.log(this.props);
+        return (
+            <button onClick={this.onClickHandler}>{this.props.btnText}</button>
+        )
+    }
+}
 
 class Field extends Component {
     constructor() {
@@ -206,8 +226,6 @@ class Field extends Component {
                 }
                 columns.push(newItem);
             });
-            console.log(columns);
-
             let data = field.value;
             if (!Array.isArray(data) ) {
                 data = [];
@@ -261,6 +279,49 @@ class Field extends Component {
             for (const item of data){
                 item.statusControl = <ChangeStatus item={item} onChangeHandlerDataTable={this.onChangeHandlerDataTable}
                 />;
+            }
+            return (
+                <PanelBody className={ this.highLightClass}>
+                    <DataTable
+                        columns={columns}
+                        data={data}
+                        dense
+                        pagination
+                    />
+                </PanelBody>
+            )
+        }
+
+        if ( field.type === 'mixedcontentscan' ) {
+            //build our header
+
+            columns = [];
+            field.columns.forEach(function(item, i) {
+                let newItem = {
+                    name: item.name,
+                    sortable: item.sortable,
+                    selector: row => row[item.column],
+                }
+                columns.push(newItem);
+            });
+            let data = field.value;
+            console.log(data);
+
+            if (!Array.isArray(data) ) {
+                data = [];
+            }
+            for (const item of data){
+                if ( item.path.length >0 ){
+                    item.locationControl = item.path;
+                } else if ( item.file_url.length>0) {
+                    if (item.file_url.indexOf('http://')!==-1 || item.path.indexOf('https://')!==-1) {
+                        item.locationControl = <a href={item.file_url} target="_blank">{__("View", "really-simple-ssl")}</a>
+                    } else {
+                        item.locationControl = item.file_url;
+                    }
+                }
+                item.detailsControl = item.details && <ModalControl handleModal={this.props.handleModal} item={item} btnText={__("Details", "really-simple-ssl")} modalData={item.details} />;
+                item.fixControl = item.fix && <ModalControl handleModal={this.props.handleModal} item={item} btnText={__("Fix", "really-simple-ssl")} modalData={item.fix}/>;
             }
             return (
                 <PanelBody className={ this.highLightClass}>

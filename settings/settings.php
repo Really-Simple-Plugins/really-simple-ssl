@@ -203,6 +203,7 @@ function rsssl_sanitize_field_type($type){
         'select',
         'permissionspolicy',
         'contentsecuritypolicy',
+        'mixedcontentscan',
     ];
     if ( in_array($type, $types) ){
         return $type;
@@ -426,6 +427,8 @@ function rsssl_sanitize_field( $value, $type, $id ) {
 	        return rsssl_sanitize_permissions_policy($value, $type, $id);
 		case 'contentsecuritypolicy':
             return rsssl_sanitize_datatable($value, $type, $id);
+        case 'mixedcontentscan':
+            return $value;
 		default:
 			return sanitize_text_field( $value );
 	}
