@@ -61,7 +61,7 @@ if ( ! function_exists('rsssl_wrap_htaccess' ) ) {
 			return false;
 		}
 
-		if ( rsssl_get_server() !== 'apache' ) {
+		if ( ! rsssl_uses_htaccess() ) {
 			return false;
 		}
 
@@ -103,6 +103,18 @@ if ( ! function_exists('rsssl_wrap_htaccess' ) ) {
 		return true;
 	}
 	add_action('admin_init', 'rsssl_wrap_htaccess');
+}
+
+/**
+ * Check if server uses .htaccess
+ * @return bool
+ */
+function rsssl_uses_htaccess() {
+	if ( rsssl_get_server() !== 'apache' || rsssl_get_server() !== 'litespeed' ) {
+		return true;
+	}
+
+	return false;
 }
 
 /**
