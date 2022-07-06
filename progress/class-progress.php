@@ -112,7 +112,7 @@ class rsssl_progress {
 	{
 		if ( !empty($id) ) {
 			$id = sanitize_title( $id );
-			update_option( "rsssl_".$id."_dismissed", true );
+			update_option( "rsssl_".$id."_dismissed", true, false );
 			delete_transient( 'rsssl_plusone_count' );
 
 			// count should be updated, therefore clear cache

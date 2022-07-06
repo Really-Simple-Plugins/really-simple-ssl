@@ -72,7 +72,7 @@ function rsssl_conditions_apply( $conditions ){
  * @param string $name
  * @param mixed $default
  *
- * @return bool|string
+ * @return mixed
  */
 
 function rsssl_get_option( $name, $default=false ) {
@@ -92,21 +92,18 @@ function rsssl_get_option( $name, $default=false ) {
 }
 
 /**
- * Get a Really Simple SSL network option by name
- * @param string $name
- * @param mixed $default
+ * Check if we should treat the plugin as networkwide or not.
  *
- * @return mixed
+ * @return bool
  */
+function rsssl_is_networkwide_active(){
 
-function rsssl_get_network_option( $name, $default=false ){
-	$name = sanitize_title($name);
-	$options = get_site_option( 'rsssl_options', array() );
+	if (!function_exists('is_plugin_active_for_network'))
+		require_once(ABSPATH . '/wp-admin/includes/plugin.php');
 
-	if ( isset($options[$name] ) && $options[$name] === 1 ) {
+	if (is_plugin_active_for_network(rsssl_plugin)) {
 		return true;
+	} else {
+		return false;
 	}
-
-	return false;
 }
-
