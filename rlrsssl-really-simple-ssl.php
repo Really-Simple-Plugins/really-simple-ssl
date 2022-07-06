@@ -50,7 +50,7 @@ if (!function_exists('rsssl_le_activation_check')) {
 	 */
 	function rsssl_le_activation_check()
 	{
-		update_option("rsssl_activated_plugin", true);
+		update_option("rsssl_activated_plugin", true, false);
 	}
 	register_activation_hook( __FILE__, 'rsssl_le_activation_check' );
 }

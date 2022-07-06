@@ -30,7 +30,7 @@ function rsssl_sync_wordpress_settings() {
             $mismatches[] = 'rsssl_file_editing';
         }
 
-        update_option('rsssl_option_mismatches', $mismatches );
+        update_option('rsssl_option_mismatches', $mismatches, false );
         set_transient('rsssl_settings_mismatch_check', true, MINUTE_IN_SECONDS * 5);
     }
 

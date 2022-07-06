@@ -289,8 +289,8 @@ function rsssl_integrations() {
 	}
 
 	if ( $stored_integrations_count != $actual_integrations_count) {
-		update_option('rsssl_active_integrations',  $actual_integrations_count);
-		update_option('rsssl_integrations_changed', true );
+		update_option('rsssl_active_integrations',  $actual_integrations_count, false);
+		update_option('rsssl_integrations_changed', true, false );
 	}
 
 }

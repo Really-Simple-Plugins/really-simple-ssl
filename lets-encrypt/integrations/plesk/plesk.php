@@ -81,14 +81,14 @@ class rsssl_plesk
 				'ca' => file_get_contents($cabundle_file),
 			]);
 			error_log(print_r($response,true));
-			update_option('rsssl_le_certificate_installed_by_rsssl', 'plesk');
+			update_option('rsssl_le_certificate_installed_by_rsssl', 'plesk', false);
 			delete_option('rsssl_installation_error' );
 			$status = 'success';
 			$action = 'continue';
 			$message = __('Successfully installed SSL',"really-simple-ssl");
 		} catch(Exception $e) {
 			error_log(print_r($e,true));
-			update_option('rsssl_installation_error', 'plesk');
+			update_option('rsssl_installation_error', 'plesk', false);
 			$status = 'warning';
 			$action = 'continue';
 			$message = $e->getMessage();
