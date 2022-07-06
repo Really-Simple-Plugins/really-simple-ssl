@@ -9,13 +9,12 @@ class ModalControl extends Component{
     }
 
     onClickHandler(){
-
         this.props.handleModal(true, this.props.modalData );
     }
 
     render(){
         return (
-            <button onClick={this.onClickHandler}>{this.props.btnText}</button>
+            <button onClick={ (e) => this.onClickHandler(e) }>{this.props.btnText}</button>
         )
     }
 }

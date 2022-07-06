@@ -12,8 +12,8 @@ class Modal extends Component {
         };
     }
 
-    dismissModal(){
-        this.props.handleModal(false, null);
+    dismissModal(dropItem){
+        this.props.handleModal(false, null, dropItem);
     }
     componentDidMount() {
         this.setState({
@@ -25,12 +25,10 @@ class Modal extends Component {
     handleFix(e){
         //set to disabled
         let action = this.props.data.action;
-        console.log("handle fix for "+action);
         this.setState({
             buttonsDisabled:true
         });
         rsssl_api.runTest(action, 'refresh', this.props.data ).then( ( response ) => {
-            console.log(response.data);
             this.props.data
             let {
                 data,
@@ -40,27 +38,10 @@ class Modal extends Component {
             this.setState({
                 data: data,
             });
-        });
-    }
-
-    handleIgnore(e){
-        //set to disabled
-        let action = this.props.data.ignore;
-        console.log("handle ignore for "+action);
-        this.setState({
-            buttonsDisabled:true
-        });
-        rsssl_api.runTest(action, 'refresh', this.props.data ).then( ( response ) => {
-            console.log(response.data);
-            this.props.data
-            let {
-                data,
-            } = this.state;
-            data.description = response.data.msg;
-            data.subtitle = '';
-            this.setState({
-                data: data,
-            });
+            let item = this.props.data;
+            if (response.data.success) {
+                this.dismissModal(this.props.data);
+            }
         });
     }
 
@@ -69,7 +50,10 @@ class Modal extends Component {
             data,
             buttonsDisabled,
         } = this.state;
+        console.log(data);
         let disabled = buttonsDisabled ? 'disabled' : '';
+        let description = data.description;
+
         return (
             <div>
                 <div className="rsssl-modal-backdrop" onClick={ (e) => this.dismissModal(e) }>&nbsp;</div>
@@ -86,13 +70,13 @@ class Modal extends Component {
                     </div>
                     <div className="rsssl-modal-content">
                         {data.subtitle && <div className="rsssl-modal-subtitle">{data.subtitle}</div>}
-                        <p className="rsssl-modal-description">{data.description}</p>
+                        { Array.isArray(description) && description.map(s=><div className="rsssl-modal-description">{s}</div>) }
                     </div>
                     <div className="rsssl-modal-footer">
                         { data.edit && <a href={data.edit} target="_blank" className="button button-secondary">{__("Edit", "really-simple-ssl")}</a>}
                         { data.help && <a href={data.help} target="_blank"  className="button rsssl-button-help">{__("Help", "really-simple-ssl")}</a>}
-                        { data.ignore && <button disabled={disabled} className="button button-primary" onClick={ (e) => this.handleIgnore(e) }>{__("Ignore", "really-simple-ssl")}</button>}
-                        { data.action && <button disabled={disabled} className="button button-primary" onClick={ (e) => this.handleFix(e) }>{__("Fix", "really-simple-ssl")}</button>}
+                        { !data.ignored && <button disabled={disabled} className="button button-primary" onClick={ (e) => this.handleFix(e) }>{ data.action==='ignore_url' && __("Ignore", "really-simple-ssl")}</button>}
+                        { data.action!=='ignore_url' &&  <button disabled={disabled} className="button button-primary" onClick={ (e) => this.handleFix(e) }>{__("Fix", "really-simple-ssl")}</button> }
                     </div>
                 </div>
             </div>

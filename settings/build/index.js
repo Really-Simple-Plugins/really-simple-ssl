@@ -3249,6 +3249,7 @@ class Field extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Component {
 
     if (field.type === 'mixedcontentscan') {
       return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_MixedContentScan__WEBPACK_IMPORTED_MODULE_4__["default"], {
+        dropItemFromModal: this.props.dropItemFromModal,
         handleModal: this.props.handleModal,
         field: this.props.field,
         fields: this.props.selectedFields
@@ -3922,15 +3923,29 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
+class subHeaderComponentMemo extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Component {
+  constructor() {
+    super(...arguments);
+  }
+
+  render() {
+    return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("select", null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("option", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)("All results", "really-simple-ssl")), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("option", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)("Show", "really-simple-ssl")), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("option", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)("All results", "really-simple-ssl")));
+  }
+
+}
+
 class MixedContentScan extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Component {
   constructor() {
     super(...arguments);
+    this.nonce = '';
     this.state = {
       data: [],
       progress: 0,
       action: '',
       state: 'stop',
-      paused: false
+      paused: false,
+      showIgnoredUrls: false,
+      resetPaginationToggle: false
     };
   }
 
@@ -3954,6 +3969,10 @@ class MixedContentScan extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.C
 
     if (this.props.field.value.state) {
       state = this.props.field.value.state;
+    }
+
+    if (this.props.field.value.nonce) {
+      this.nonce = this.props.field.value.nonce;
     }
 
     this.setState({
@@ -3985,15 +4004,16 @@ class MixedContentScan extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.C
       });
 
       if (response.data.state === 'running') {
-        console.log("finished start, execute run. ");
         this.run();
       }
     });
   }
 
   run(e) {
-    if (this.state.paused) return;
-    console.log("Run function, setting state to running");
+    if (this.state.paused) {
+      return;
+    }
+
     _utils_api__WEBPACK_IMPORTED_MODULE_4__.runTest('mixed_content_scan', 'running').then(response => {
       this.setState({
         data: response.data.data,
@@ -4012,6 +4032,15 @@ class MixedContentScan extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.C
     });
   }
 
+  toggleIgnoredUrls(e) {
+    let {
+      showIgnoredUrls
+    } = this.state;
+    this.setState({
+      showIgnoredUrls: !showIgnoredUrls
+    });
+  }
+
   stop(e) {
     this.setState({
       state: 'stop',
@@ -4025,13 +4054,27 @@ class MixedContentScan extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.C
       });
     });
   }
+  /**
+   * After an update, remove an item from the data array
+   * @param removeItem
+   */
+
+
+  removeDataItem(removeItem) {
+    const updatedData = this.state.data.filter(item => item.id === removeItem.id);
+    this.setState({
+      data: updatedData
+    });
+  }
 
   render() {
     let {
       data,
       action,
       progress,
-      state
+      state,
+      showIgnoredUrls,
+      resetPaginationToggle
     } = this.state;
     let field = this.props.field;
     let fieldValue = field.value;
@@ -4050,7 +4093,30 @@ class MixedContentScan extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.C
       data = [];
     }
 
+    let dropItem = this.props.dropItemFromModal;
+
     for (const item of data) {
+      //@todo check action for correct filter or drop action.
+      if (dropItem && dropItem.url === item.blocked_url) {
+        if (dropItem.action === 'ignore_url') {
+          item.ignored = true;
+        } else {
+          item.fixed = true;
+        }
+      } //give fix and details the url as prop
+
+
+      if (item.fix) {
+        item.fix.url = item.blocked_url;
+        item.fix.nonce = this.nonce;
+      }
+
+      if (item.details) {
+        item.details.url = item.blocked_url;
+        item.details.nonce = this.nonce;
+        item.details.ignored = item.ignored;
+      }
+
       if (item.location.length > 0) {
         if (item.location.indexOf('http://') !== -1 || item.location.indexOf('https://') !== -1) {
           item.locationControl = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
@@ -4063,12 +4129,14 @@ class MixedContentScan extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.C
       }
 
       item.detailsControl = item.details && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_ModalControl__WEBPACK_IMPORTED_MODULE_5__["default"], {
+        removeDataItem: this.removeDataItem,
         handleModal: this.props.handleModal,
         item: item,
         btnText: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)("Details", "really-simple-ssl"),
         modalData: item.details
       });
       item.fixControl = item.fix && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_ModalControl__WEBPACK_IMPORTED_MODULE_5__["default"], {
+        removeDataItem: this.removeDataItem,
         handleModal: this.props.handleModal,
         item: item,
         btnText: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)("Fix", "really-simple-ssl"),
@@ -4076,8 +4144,13 @@ class MixedContentScan extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.C
       });
     }
 
+    if (!showIgnoredUrls) {
+      data = data.filter(item => !item.ignored);
+    } //filter also recently fixed items
+
+
+    data = data.filter(item => !item.fixed);
     progress += '%';
-    console.log("Actual state " + state);
     let startDisabled = state === 'running';
     let stopDisabled = state !== 'running';
     return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
@@ -4087,11 +4160,17 @@ class MixedContentScan extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.C
       style: {
         width: progress
       }
-    })), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__.PanelBody, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_data_table_component__WEBPACK_IMPORTED_MODULE_1__["default"], {
+    })), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
+      className: "rsssl-current-scan-action"
+    }, action), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__.PanelBody, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_data_table_component__WEBPACK_IMPORTED_MODULE_1__["default"], {
       columns: columns,
       data: data,
       dense: true,
-      pagination: true
+      pagination: true,
+      paginationResetDefaultPage: resetPaginationToggle // optionally, a hook to reset pagination to page 1
+      // subHeader
+      // subHeaderComponent=<subHeaderComponentMemo/>
+
     })), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
       className: "button",
       disabled: startDisabled,
@@ -4100,9 +4179,12 @@ class MixedContentScan extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.C
       className: "button",
       disabled: stopDisabled,
       onClick: e => this.stop(e)
-    }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)("Pause", "really-simple-ssl-pro")), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
-      className: "rsssl-current-scan-action"
-    }, action));
+    }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)("Pause", "really-simple-ssl-pro")), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("label", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)("Show ignored URLs"), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("input", {
+      value: showIgnoredUrls,
+      type: "checkbox",
+      id: "rsssl_show_ignored_urls",
+      onClick: e => this.toggleIgnoredUrls(e)
+    })));
   }
 
 }
@@ -4142,8 +4224,8 @@ class Modal extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Component {
     };
   }
 
-  dismissModal() {
-    this.props.handleModal(false, null);
+  dismissModal(dropItem) {
+    this.props.handleModal(false, null, dropItem);
   }
 
   componentDidMount() {
@@ -4156,12 +4238,10 @@ class Modal extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Component {
   handleFix(e) {
     //set to disabled
     let action = this.props.data.action;
-    console.log("handle fix for " + action);
     this.setState({
       buttonsDisabled: true
     });
     _utils_api__WEBPACK_IMPORTED_MODULE_2__.runTest(action, 'refresh', this.props.data).then(response => {
-      console.log(response.data);
       this.props.data;
       let {
         data
@@ -4171,27 +4251,11 @@ class Modal extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Component {
       this.setState({
         data: data
       });
-    });
-  }
+      let item = this.props.data;
 
-  handleIgnore(e) {
-    //set to disabled
-    let action = this.props.data.ignore;
-    console.log("handle ignore for " + action);
-    this.setState({
-      buttonsDisabled: true
-    });
-    _utils_api__WEBPACK_IMPORTED_MODULE_2__.runTest(action, 'refresh', this.props.data).then(response => {
-      console.log(response.data);
-      this.props.data;
-      let {
-        data
-      } = this.state;
-      data.description = response.data.msg;
-      data.subtitle = '';
-      this.setState({
-        data: data
-      });
+      if (response.data.success) {
+        this.dismissModal(this.props.data);
+      }
     });
   }
 
@@ -4200,7 +4264,9 @@ class Modal extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Component {
       data,
       buttonsDisabled
     } = this.state;
+    console.log(data);
     let disabled = buttonsDisabled ? 'disabled' : '';
+    let description = data.description;
     return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
       className: "rsssl-modal-backdrop",
       onClick: e => this.dismissModal(e)
@@ -4231,9 +4297,9 @@ class Modal extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Component {
       className: "rsssl-modal-content"
     }, data.subtitle && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
       className: "rsssl-modal-subtitle"
-    }, data.subtitle), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", {
+    }, data.subtitle), Array.isArray(description) && description.map(s => (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
       className: "rsssl-modal-description"
-    }, data.description)), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    }, s))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
       className: "rsssl-modal-footer"
     }, data.edit && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
       href: data.edit,
@@ -4243,11 +4309,11 @@ class Modal extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Component {
       href: data.help,
       target: "_blank",
       className: "button rsssl-button-help"
-    }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Help", "really-simple-ssl")), data.ignore && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
+    }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Help", "really-simple-ssl")), !data.ignored && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
       disabled: disabled,
       className: "button button-primary",
-      onClick: e => this.handleIgnore(e)
-    }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Ignore", "really-simple-ssl")), data.action && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
+      onClick: e => this.handleFix(e)
+    }, data.action === 'ignore_url' && (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Ignore", "really-simple-ssl")), data.action !== 'ignore_url' && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
       disabled: disabled,
       className: "button button-primary",
       onClick: e => this.handleFix(e)
@@ -4291,7 +4357,7 @@ class ModalControl extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Compo
 
   render() {
     return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
-      onClick: this.onClickHandler
+      onClick: e => this.onClickHandler(e)
     }, this.props.btnText);
   }
 
@@ -4438,7 +4504,8 @@ class Page extends _wordpress_element__WEBPACK_IMPORTED_MODULE_1__.Component {
       isAPILoaded: false,
       pageProps: this.pageProps,
       showModal: false,
-      modalData: []
+      modalData: [],
+      dropItemFromModal: false
     };
     this.getFields().then(response => {
       let fields = response.fields;
@@ -4478,13 +4545,15 @@ class Page extends _wordpress_element__WEBPACK_IMPORTED_MODULE_1__.Component {
    * Handle instantiation of a modal window
    * @param showModal
    * @param data
+   * @param dropItem
    */
 
 
-  handleModal(showModal, data) {
+  handleModal(showModal, data, dropItem) {
     this.setState({
       showModal: showModal,
-      modalData: data
+      modalData: data,
+      dropItemFromModal: dropItem
     });
   }
 
@@ -4496,9 +4565,7 @@ class Page extends _wordpress_element__WEBPACK_IMPORTED_MODULE_1__.Component {
     this.selectMainMenu = this.selectMainMenu.bind(this);
     this.setPageProps = this.setPageProps.bind(this);
     let selectedMainMenuItem = this.get_anchor('main') || 'dashboard';
-    console.log("main " + selectedMainMenuItem);
     let selectedMenuItem = this.get_anchor('menu') || 'general';
-    console.log("sub " + selectedMenuItem);
     this.setState({
       selectedMainMenuItem: selectedMainMenuItem,
       selectedMenuItem: selectedMenuItem
@@ -4572,7 +4639,8 @@ class Page extends _wordpress_element__WEBPACK_IMPORTED_MODULE_1__.Component {
       progress,
       isAPILoaded,
       showModal,
-      modalData
+      modalData,
+      dropItemFromModal
     } = this.state;
     return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.createElement)("div", {
       className: "rsssl-wrapper"
@@ -4586,6 +4654,7 @@ class Page extends _wordpress_element__WEBPACK_IMPORTED_MODULE_1__.Component {
     }), isAPILoaded && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.createElement)("div", {
       className: "rsssl-content-area rsssl-grid rsssl-" + selectedMainMenuItem
     }, selectedMainMenuItem === 'settings' && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.createElement)(_SettingsPage__WEBPACK_IMPORTED_MODULE_5__["default"], {
+      dropItemFromModal: dropItemFromModal,
       pageProps: this.pageProps,
       handleModal: this.handleModal,
       updateField: this.updateField,
@@ -5081,6 +5150,7 @@ class Settings extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Component
     return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
       className: "rsssl-wizard-settings rsssl-column-2"
     }, groups.map((group, i) => (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_SettingsGroup__WEBPACK_IMPORTED_MODULE_3__["default"], {
+      dropItemFromModal: this.props.dropItemFromModal,
       handleModal: this.props.handleModal,
       showSavedSettingsNotice: this.props.showSavedSettingsNotice,
       updateField: this.props.updateField,
@@ -5197,6 +5267,7 @@ class SettingsGroup extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Comp
     }, activeGroup && activeGroup.intro && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
       className: "rsssl-settings-block-intro"
     }, activeGroup.intro), selectedFields.map((field, i) => (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_Field__WEBPACK_IMPORTED_MODULE_1__["default"], {
+      dropItemFromModal: this.props.dropItemFromModal,
       handleModal: this.props.handleModal,
       showSavedSettingsNotice: this.props.showSavedSettingsNotice,
       updateField: this.props.updateField,
@@ -5459,6 +5530,7 @@ class SettingsPage extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Compo
       selectMenu: this.props.selectMenu,
       selectedMenuItem: this.props.selectedMenuItem
     }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_Settings__WEBPACK_IMPORTED_MODULE_6__["default"], {
+      dropItemFromModal: this.props.dropItemFromModal,
       handleModal: this.props.handleModal,
       showSavedSettingsNotice: this.showSavedSettingsNotice,
       updateField: this.props.updateField,

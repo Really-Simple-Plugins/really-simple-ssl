@@ -275,7 +275,7 @@ class Field extends Component {
 
         if ( field.type === 'mixedcontentscan' ) {
             return (
-               <MixedContentScan handleModal={this.props.handleModal} field={this.props.field} fields={this.props.selectedFields}/>
+               <MixedContentScan dropItemFromModal={this.props.dropItemFromModal} handleModal={this.props.handleModal} field={this.props.field} fields={this.props.selectedFields}/>
             )
         }
 

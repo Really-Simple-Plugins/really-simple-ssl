@@ -22,6 +22,7 @@ class Page extends Component {
             pageProps:this.pageProps,
             showModal:false,
             modalData:[],
+            dropItemFromModal:false,
         };
 
         this.getFields().then(( response ) => {
@@ -60,11 +61,13 @@ class Page extends Component {
      * Handle instantiation of a modal window
      * @param showModal
      * @param data
+     * @param dropItem
      */
-    handleModal(showModal, data) {
+    handleModal(showModal, data, dropItem) {
         this.setState({
             showModal: showModal,
             modalData : data,
+            dropItemFromModal : dropItem
         })
     }
 
@@ -76,10 +79,7 @@ class Page extends Component {
         this.selectMainMenu = this.selectMainMenu.bind(this);
         this.setPageProps = this.setPageProps.bind(this);
         let selectedMainMenuItem = this.get_anchor('main') || 'dashboard';
-        console.log("main "+selectedMainMenuItem);
         let selectedMenuItem = this.get_anchor('menu') || 'general';
-        console.log("sub "+selectedMenuItem);
-
         this.setState({
             selectedMainMenuItem: selectedMainMenuItem,
             selectedMenuItem: selectedMenuItem,
@@ -179,6 +179,7 @@ class Page extends Component {
             isAPILoaded,
             showModal,
             modalData,
+            dropItemFromModal,
         } = this.state;
 
         return (
@@ -187,7 +188,7 @@ class Page extends Component {
                 {showModal && <Modal handleModal={this.handleModal} data={modalData}/>}
                 {isAPILoaded && <Header selectedMainMenuItem={selectedMainMenuItem} selectMainMenu={this.selectMainMenu} fields={fields}/> }
                 {isAPILoaded && <div className={"rsssl-content-area rsssl-grid rsssl-" + selectedMainMenuItem}>
-                    {selectedMainMenuItem==='settings' && <SettingsPage pageProps={this.pageProps} handleModal={this.handleModal} updateField={this.updateField} setPageProps={this.setPageProps} selectMenu={this.selectMenu} highLightField={this.highLightField} highLightedField={this.highLightedField} selectedMenuItem={selectedMenuItem} isAPILoaded={isAPILoaded} fields={fields} menu={menu} progress={progress}/> }
+                    {selectedMainMenuItem==='settings' && <SettingsPage dropItemFromModal={dropItemFromModal} pageProps={this.pageProps} handleModal={this.handleModal} updateField={this.updateField} setPageProps={this.setPageProps} selectMenu={this.selectMenu} highLightField={this.highLightField} highLightedField={this.highLightedField} selectedMenuItem={selectedMenuItem} isAPILoaded={isAPILoaded} fields={fields} menu={menu} progress={progress}/> }
                     {selectedMainMenuItem==='dashboard' && <DashboardPage isAPILoaded={isAPILoaded} fields={fields} highLightField={this.highLightField}/> }
                 </div> }
             </div>
