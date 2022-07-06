@@ -99,12 +99,11 @@ class MixedContentScan extends Component {
                 action:response.data.action,
                 state:response.data.state,
             });
+            console.log(this.state.data);
             //if scan was stopped while running, set it to stopped now.
             if ( this.state.paused ) {
                 this.stop();
             } else if ( response.data.state==='running' ) {
-                console.log("finished run step, next run");
-                console.log(response.data.state);
                 this.run();
             }
 
@@ -229,7 +228,7 @@ class MixedContentScan extends Component {
                 <div className="rsssl-progress-container">
                     <div className="rsssl-progress-bar" style={{width: progress}} ></div>
                 </div>
-                <span className="rsssl-current-scan-action">{action}</span>
+                <span className="rsssl-current-scan-action">{state==='running' && action}</span>
                 <PanelBody>
                     <DataTable
                         columns={columns}
