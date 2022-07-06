@@ -6,4 +6,5 @@ const in_array = (needle, haystack) => {
     }
     return false;
 }
+
 export default in_array;

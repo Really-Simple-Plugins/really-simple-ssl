@@ -3821,10 +3821,11 @@ class MenuItem extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Component
     }
 
     let activeClass = menuIsSelected ? ' rsssl-active' : '';
+    let href = '#settings/' + this.props.menuItem.id;
     return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
       className: "rsssl-menu-item " + activeClass
     }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
-      href: "#",
+      href: href,
       onClick: () => this.handleClick()
     }, this.props.menuItem.title), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
       className: "rsssl-submenu-item"
@@ -3925,33 +3926,112 @@ class MixedContentScan extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.C
   constructor() {
     super(...arguments);
     this.state = {
-      data: []
+      data: [],
+      progress: 0,
+      action: '',
+      state: 'stop',
+      paused: false
     };
   }
 
   componentDidMount() {
-    let data = this.props.field.value;
+    let data = [];
+    let progress = 0;
+    let action = '';
+    let state = 'stop';
 
-    if (!Array.isArray(data)) {
-      data = [];
+    if (this.props.field.value.data) {
+      data = this.props.field.value.data;
+    }
+
+    if (this.props.field.value.progress) {
+      progress = this.props.field.value.progress;
+    }
+
+    if (this.props.field.value.action) {
+      action = this.props.field.value.action;
+    }
+
+    if (this.props.field.value.state) {
+      state = this.props.field.value.state;
     }
 
     this.setState({
-      data: data
+      data: data,
+      progress: progress,
+      action: action,
+      state: state
     });
   }
 
-  startScan(e) {
-    _utils_api__WEBPACK_IMPORTED_MODULE_4__.runTest('mixed_content_scan', 'refresh').then(response => {
+  start(e) {
+    //add start_full option
+    let state = 'start';
+
+    if (this.state.paused) {
+      state = 'running';
+    }
+
+    this.setState({
+      state: 'running',
+      paused: false
+    });
+    _utils_api__WEBPACK_IMPORTED_MODULE_4__.runTest('mixed_content_scan', state).then(response => {
       this.setState({
-        data: response.data.data
+        data: response.data.data,
+        progress: response.data.progress,
+        action: response.data.action,
+        state: response.data.state
+      });
+
+      if (response.data.state === 'running') {
+        console.log("finished start, execute run. ");
+        this.run();
+      }
+    });
+  }
+
+  run(e) {
+    if (this.state.paused) return;
+    console.log("Run function, setting state to running");
+    _utils_api__WEBPACK_IMPORTED_MODULE_4__.runTest('mixed_content_scan', 'running').then(response => {
+      this.setState({
+        data: response.data.data,
+        progress: response.data.progress,
+        action: response.data.action,
+        state: response.data.state
+      }); //if scan was stopped while running, set it to stopped now.
+
+      if (this.state.paused) {
+        this.stop();
+      } else if (response.data.state === 'running') {
+        console.log("finished run step, next run");
+        console.log(response.data.state);
+        this.run();
+      }
+    });
+  }
+
+  stop(e) {
+    this.setState({
+      state: 'stop',
+      paused: true
+    });
+    _utils_api__WEBPACK_IMPORTED_MODULE_4__.runTest('mixed_content_scan', 'stop').then(response => {
+      this.setState({
+        data: response.data.data,
+        progress: response.data.progress,
+        action: response.data.action
       });
     });
   }
 
   render() {
     let {
-      data
+      data,
+      action,
+      progress,
+      state
     } = this.state;
     let field = this.props.field;
     let fieldValue = field.value;
@@ -3965,6 +4045,10 @@ class MixedContentScan extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.C
       };
       columns.push(newItem);
     });
+
+    if (!Array.isArray(data)) {
+      data = [];
+    }
 
     for (const item of data) {
       if (item.location.length > 0) {
@@ -3992,14 +4076,33 @@ class MixedContentScan extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.C
       });
     }
 
-    return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__.PanelBody, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_data_table_component__WEBPACK_IMPORTED_MODULE_1__["default"], {
+    progress += '%';
+    console.log("Actual state " + state);
+    let startDisabled = state === 'running';
+    let stopDisabled = state !== 'running';
+    return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+      className: "rsssl-progress-container"
+    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+      className: "rsssl-progress-bar",
+      style: {
+        width: progress
+      }
+    })), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__.PanelBody, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_data_table_component__WEBPACK_IMPORTED_MODULE_1__["default"], {
       columns: columns,
       data: data,
       dense: true,
       pagination: true
     })), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
-      onClick: e => this.startScan(e)
-    }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)("Scan", "really-simple-ssl-pro")));
+      className: "button",
+      disabled: startDisabled,
+      onClick: e => this.start(e)
+    }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)("Scan", "really-simple-ssl-pro")), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
+      className: "button",
+      disabled: stopDisabled,
+      onClick: e => this.stop(e)
+    }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)("Pause", "really-simple-ssl-pro")), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
+      className: "rsssl-current-scan-action"
+    }, action));
   }
 
 }
@@ -4262,13 +4365,15 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
-/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _utils_api__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./utils/api */ "./src/utils/api.js");
-/* harmony import */ var _Header__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Header */ "./src/Header.js");
-/* harmony import */ var _DashboardPage__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./DashboardPage */ "./src/DashboardPage.js");
-/* harmony import */ var _SettingsPage__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./SettingsPage */ "./src/SettingsPage.js");
-/* harmony import */ var _Modal__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./Modal */ "./src/Modal.js");
+/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/esm/defineProperty.js");
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _utils_api__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./utils/api */ "./src/utils/api.js");
+/* harmony import */ var _Header__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./Header */ "./src/Header.js");
+/* harmony import */ var _DashboardPage__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./DashboardPage */ "./src/DashboardPage.js");
+/* harmony import */ var _SettingsPage__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./SettingsPage */ "./src/SettingsPage.js");
+/* harmony import */ var _Modal__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./Modal */ "./src/Modal.js");
+/* harmony import */ var _Placeholder__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./Placeholder */ "./src/Placeholder.js");
 
 
 
@@ -4277,9 +4382,50 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-class Page extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Component {
+
+
+class Page extends _wordpress_element__WEBPACK_IMPORTED_MODULE_1__.Component {
   constructor() {
     super(...arguments);
+
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__["default"])(this, "get_anchor", level => {
+      let url = window.location.href;
+
+      if (url.indexOf('#') == -1) {
+        return false;
+      }
+
+      let queryString = url.split('#');
+
+      if (queryString.length == 1) {
+        return false;
+      }
+
+      let url_variables = queryString[1].split('#');
+
+      if (url_variables.length > 0) {
+        let anchor = url_variables[0];
+
+        if (url.indexOf('/') == -1) {
+          return anchor;
+        } else {
+          let anchor_variables = anchor.split('/');
+
+          if (anchor_variables.length > 0) {
+            if (level === 'main') {
+              return anchor_variables[0];
+            } else if (anchor_variables.hasOwnProperty(1)) {
+              return anchor_variables[1];
+            } else {
+              return false;
+            }
+          }
+        }
+      }
+
+      return false;
+    });
+
     this.pageProps = [];
     this.pageProps['licenseStatus'] = rsssl_settings.licenseStatus;
     this.state = {
@@ -4311,7 +4457,7 @@ class Page extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Component {
   }
 
   getFields() {
-    return _utils_api__WEBPACK_IMPORTED_MODULE_1__.getFields().then(response => {
+    return _utils_api__WEBPACK_IMPORTED_MODULE_2__.getFields().then(response => {
       return response.data;
     });
   }
@@ -4349,9 +4495,13 @@ class Page extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Component {
     this.updateField = this.updateField.bind(this);
     this.selectMainMenu = this.selectMainMenu.bind(this);
     this.setPageProps = this.setPageProps.bind(this);
+    let selectedMainMenuItem = this.get_anchor('main') || 'dashboard';
+    console.log("main " + selectedMainMenuItem);
+    let selectedMenuItem = this.get_anchor('menu') || 'general';
+    console.log("sub " + selectedMenuItem);
     this.setState({
-      selectedMainMenuItem: 'dashboard',
-      selectedMenuItem: 'general'
+      selectedMainMenuItem: selectedMainMenuItem,
+      selectedMenuItem: selectedMenuItem
     });
   }
 
@@ -4407,6 +4557,11 @@ class Page extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Component {
 
     this.highLightedField = fieldId;
   }
+  /**
+   * Get # anchor from URL
+   * @returns {string|boolean}
+   */
+
 
   render() {
     const {
@@ -4419,18 +4574,18 @@ class Page extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Component {
       showModal,
       modalData
     } = this.state;
-    return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.createElement)("div", {
       className: "rsssl-wrapper"
-    }, showModal && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_Modal__WEBPACK_IMPORTED_MODULE_5__["default"], {
+    }, !isAPILoaded && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.createElement)("div", null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.createElement)(_Placeholder__WEBPACK_IMPORTED_MODULE_7__["default"], null)), showModal && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.createElement)(_Modal__WEBPACK_IMPORTED_MODULE_6__["default"], {
       handleModal: this.handleModal,
       data: modalData
-    }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_Header__WEBPACK_IMPORTED_MODULE_2__["default"], {
+    }), isAPILoaded && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.createElement)(_Header__WEBPACK_IMPORTED_MODULE_3__["default"], {
       selectedMainMenuItem: selectedMainMenuItem,
       selectMainMenu: this.selectMainMenu,
       fields: fields
-    }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    }), isAPILoaded && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.createElement)("div", {
       className: "rsssl-content-area rsssl-grid rsssl-" + selectedMainMenuItem
-    }, selectedMainMenuItem === 'settings' && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_SettingsPage__WEBPACK_IMPORTED_MODULE_4__["default"], {
+    }, selectedMainMenuItem === 'settings' && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.createElement)(_SettingsPage__WEBPACK_IMPORTED_MODULE_5__["default"], {
       pageProps: this.pageProps,
       handleModal: this.handleModal,
       updateField: this.updateField,
@@ -4443,7 +4598,7 @@ class Page extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Component {
       fields: fields,
       menu: menu,
       progress: progress
-    }), selectedMainMenuItem === 'dashboard' && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_DashboardPage__WEBPACK_IMPORTED_MODULE_3__["default"], {
+    }), selectedMainMenuItem === 'dashboard' && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.createElement)(_DashboardPage__WEBPACK_IMPORTED_MODULE_4__["default"], {
       isAPILoaded: isAPILoaded,
       fields: fields,
       highLightField: this.highLightField
@@ -9020,6 +9175,34 @@ module.exports = window["wp"]["i18n"];
 
 "use strict";
 module.exports = window["wp"]["notices"];
+
+/***/ }),
+
+/***/ "./node_modules/@babel/runtime/helpers/esm/defineProperty.js":
+/*!*******************************************************************!*\
+  !*** ./node_modules/@babel/runtime/helpers/esm/defineProperty.js ***!
+  \*******************************************************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ _defineProperty)
+/* harmony export */ });
+function _defineProperty(obj, key, value) {
+  if (key in obj) {
+    Object.defineProperty(obj, key, {
+      value: value,
+      enumerable: true,
+      configurable: true,
+      writable: true
+    });
+  } else {
+    obj[key] = value;
+  }
+
+  return obj;
+}
 
 /***/ }),
 

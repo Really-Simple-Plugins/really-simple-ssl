@@ -4,6 +4,7 @@ import Header from "./Header";
 import DashboardPage from "./DashboardPage";
 import SettingsPage from "./SettingsPage";
 import Modal from "./Modal";
+import Placeholder from "./Placeholder";
 
 class Page extends Component {
     constructor() {
@@ -74,10 +75,14 @@ class Page extends Component {
         this.updateField = this.updateField.bind(this);
         this.selectMainMenu = this.selectMainMenu.bind(this);
         this.setPageProps = this.setPageProps.bind(this);
+        let selectedMainMenuItem = this.get_anchor('main') || 'dashboard';
+        console.log("main "+selectedMainMenuItem);
+        let selectedMenuItem = this.get_anchor('menu') || 'general';
+        console.log("sub "+selectedMenuItem);
 
         this.setState({
-            selectedMainMenuItem: 'dashboard',
-            selectedMenuItem: 'general',
+            selectedMainMenuItem: selectedMainMenuItem,
+            selectedMenuItem: selectedMenuItem,
         });
     }
 
@@ -128,6 +133,41 @@ class Page extends Component {
         }
         this.highLightedField = fieldId;
     }
+    /**
+     * Get # anchor from URL
+     * @returns {string|boolean}
+     */
+    get_anchor = (level) => {
+        let url = window.location.href;
+        if ( url.indexOf('#')==-1) {
+            return false;
+        }
+
+        let queryString = url.split('#');
+        if (queryString.length == 1) {
+            return false;
+        }
+
+        let url_variables = queryString[1].split('#');
+        if (url_variables.length>0) {
+            let anchor = url_variables[0];
+            if ( url.indexOf('/')==-1) {
+                return anchor;
+            } else {
+                let anchor_variables = anchor.split('/');
+                if (anchor_variables.length>0){
+                    if (level==='main') {
+                        return anchor_variables[0];
+                    } else if (anchor_variables.hasOwnProperty(1)) {
+                        return anchor_variables[1];
+                    } else {
+                        return false;
+                    }
+                }
+            }
+        }
+        return false;
+    }
 
     render() {
         const {
@@ -143,12 +183,13 @@ class Page extends Component {
 
         return (
             <div className="rsssl-wrapper">
+                {!isAPILoaded && <div><Placeholder></Placeholder></div>}
                 {showModal && <Modal handleModal={this.handleModal} data={modalData}/>}
-                <Header selectedMainMenuItem={selectedMainMenuItem} selectMainMenu={this.selectMainMenu} fields={fields}/>
-                <div className={"rsssl-content-area rsssl-grid rsssl-" + selectedMainMenuItem}>
+                {isAPILoaded && <Header selectedMainMenuItem={selectedMainMenuItem} selectMainMenu={this.selectMainMenu} fields={fields}/> }
+                {isAPILoaded && <div className={"rsssl-content-area rsssl-grid rsssl-" + selectedMainMenuItem}>
                     {selectedMainMenuItem==='settings' && <SettingsPage pageProps={this.pageProps} handleModal={this.handleModal} updateField={this.updateField} setPageProps={this.setPageProps} selectMenu={this.selectMenu} highLightField={this.highLightField} highLightedField={this.highLightedField} selectedMenuItem={selectedMenuItem} isAPILoaded={isAPILoaded} fields={fields} menu={menu} progress={progress}/> }
                     {selectedMainMenuItem==='dashboard' && <DashboardPage isAPILoaded={isAPILoaded} fields={fields} highLightField={this.highLightField}/> }
-                </div>
+                </div> }
             </div>
         );
     }

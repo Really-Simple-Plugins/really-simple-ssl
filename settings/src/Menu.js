@@ -39,9 +39,10 @@ class MenuItem extends Component {
         }
 
         let activeClass = menuIsSelected ? ' rsssl-active' : '';
+        let href = '#settings/'+this.props.menuItem.id;
         return (
             <div className={"rsssl-menu-item " + activeClass}>
-                <a href="#" onClick={ () => this.handleClick() }>{this.props.menuItem.title}</a>
+                <a href={href} onClick={ () => this.handleClick() }>{this.props.menuItem.title}</a>
                 <div className="rsssl-submenu-item">
                     {this.props.menuItem.menu_items && menuIsSelected && this.props.menuItem.menu_items.map((subMenuItem, i) => <MenuItem key={i} menuItem={subMenuItem} selectMenu={this.props.selectMenu} selectedMenuItem={this.props.selectedMenuItem}/>)}
                 </div>
