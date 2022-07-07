@@ -75,7 +75,7 @@ class Modal extends Component {
                     <div className="rsssl-modal-footer">
                         { data.edit && <a href={data.edit} target="_blank" className="button button-secondary">{__("Edit", "really-simple-ssl")}</a>}
                         { data.help && <a href={data.help} target="_blank"  className="button rsssl-button-help">{__("Help", "really-simple-ssl")}</a>}
-                        { !data.ignored && <button disabled={disabled} className="button button-primary" onClick={ (e) => this.handleFix(e) }>{ data.action==='ignore_url' && __("Ignore", "really-simple-ssl")}</button>}
+                        { (!data.ignored && data.action==='ignore_url') && <button disabled={disabled} className="button button-primary" onClick={ (e) => this.handleFix(e) }>{ __("Ignore", "really-simple-ssl")}</button>}
                         { data.action!=='ignore_url' &&  <button disabled={disabled} className="button button-primary" onClick={ (e) => this.handleFix(e) }>{__("Fix", "really-simple-ssl")}</button> }
                     </div>
                 </div>

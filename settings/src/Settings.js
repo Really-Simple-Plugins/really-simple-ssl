@@ -1,6 +1,6 @@
 import {Component, Fragment} from "@wordpress/element";
 import Placeholder from "./Placeholder";
-import in_array from "./utils/lib";
+import {in_array} from "./utils/lib";
 import SettingsGroup from "./SettingsGroup";
 import Help from "./Help";
 import {
@@ -77,7 +77,7 @@ class Settings extends Component {
         return (
             <Fragment>
                 <div className="rsssl-wizard-settings rsssl-column-2">
-                    {groups.map((group, i) => <SettingsGroup dropItemFromModal={this.props.dropItemFromModal} handleModal={this.props.handleModal} showSavedSettingsNotice={this.props.showSavedSettingsNotice}  updateField={this.props.updateField} pageProps={this.props.pageProps} setPageProps={this.props.setPageProps} fieldsUpdateComplete = {this.props.fieldsUpdateComplete} key={i} index={i} highLightField={this.props.highLightField} highLightedField={this.props.highLightedField} selectedMenuItem={selectedMenuItemObject} saveChangedFields={this.props.saveChangedFields} group={group} fields={selectedFields}/>)}
+                    {groups.map((group, i) => <SettingsGroup dropItemFromModal={this.props.dropItemFromModal} selectMenu={this.props.selectMenu} handleModal={this.props.handleModal} showSavedSettingsNotice={this.props.showSavedSettingsNotice}  updateField={this.props.updateField} pageProps={this.props.pageProps} setPageProps={this.props.setPageProps} fieldsUpdateComplete = {this.props.fieldsUpdateComplete} key={i} index={i} highLightField={this.props.highLightField} highLightedField={this.props.highLightedField} selectedMenuItem={selectedMenuItemObject} saveChangedFields={this.props.saveChangedFields} group={group} fields={selectedFields}/>)}
                     <div className="rsssl-grid-item-footer">
                         <Button
                             isPrimary

@@ -40,7 +40,7 @@ function rsssl_plugin_admin_scripts() {
 				'site_url' => get_rest_url(),
 				'plugin_url' => rsssl_url,
 				'blocks' => rsssl_blocks(),
-				'premium' => defined('rsssl_pro_version'),
+				'pro_plugin_active' => defined('rsssl_pro_version'),
 				'menu' => $menu,
 				'nonce' => wp_create_nonce( 'wp_rest' ),//to authenticate the logged in user
 				'rsssl_nonce' => wp_create_nonce( 'rsssl_save' ),
@@ -246,11 +246,13 @@ function rsssl_rest_api_fields_set($request){
 	         */
 	        if ( isset($config_field['data_endpoint']) ){
 		        $endpoint = $config_field['data_endpoint'];
-		        if (is_array($endpoint)) {
+		        if (is_array($endpoint) ) {
 			        $main = $endpoint[0];
 			        $class = $endpoint[1];
 			        $function = $endpoint[2];
-                    $main()->$class->$function( $value, $update_item_id );
+			        if (function_exists($main)) {
+				        $main()->$class->$function( $value, $update_item_id );
+			        }
 		        }
 	        }
 	        unset($fields[$index]);
@@ -356,7 +358,10 @@ function rsssl_rest_api_fields_get(  ){
 				$main = $data_source[0];
 				$class = $data_source[1];
 				$function = $data_source[2];
-				$field['value'] = $main()->$class->$function();
+				$field['value'] = [];
+                if (function_exists($main)){
+	                $field['value'] = $main()->$class->$function();
+                }
 			}
 		}
 
@@ -459,24 +464,28 @@ function rsssl_sanitize_permissions_policy( $value, $type, $field_name ){
 	//      [status] => 1/0
 	//   )
 	//)
-	if ( !is_array($value) ) {
-		return false;
-	} else {
-		//check if there is a default available
-		$default = false;
-		//in this case, there's something off with our data, so we reset to default values, if available.
-		$config_fields = rsssl_fields(false);
-		foreach ($config_fields as $config_field ) {
-			if ($config_field['id']===$field_name){
-				$default = isset($config_field['default']) ? $config_field['default'] : false;
-			}
-		}
 
+	$config_fields = rsssl_fields(false);
+	//check if there is a default available
+	$default = false;
+	foreach ($config_fields as $config_field ) {
+		if ($config_field['id']===$field_name){
+			$default = isset($config_field['default']) ? $config_field['default'] : false;
+		}
+	}
+
+    $stored_ids = [];
+	if ( !is_array($value) ) {
+        error_log("not array ");
+		return $default;
+	} else {
+        error_log("is array");
 		foreach ($value as $row_index => $row) {
 			//check if we have invalid values
 			if ( is_array($row) ) {
 				foreach ($row as $column_index => $row_value ) {
 					if ($column_index==='id' && $row_value===false) {
+                        error_log("unset ".$column_index);
 						unset($value[$column_index]);
 					}
 				}
@@ -493,6 +502,8 @@ function rsssl_sanitize_permissions_policy( $value, $type, $field_name ){
 
 			foreach ( $row as $col_index => $col_value ){
 				if ( !isset( $possible_keys[$col_index])) {
+					error_log("unset ".$row_index.' '.$column_index);
+
 					unset($value[$row_index][$col_index]);
 				} else {
 					$datatype = $possible_keys[$col_index];
@@ -518,13 +529,23 @@ function rsssl_sanitize_permissions_policy( $value, $type, $field_name ){
 		}
 	}
 
+	//ensure that there are no duplicate ids
+	foreach ($value as $index => $item ) {
+		if ( in_array($item['id'], $stored_ids) ){
+			error_log("exists in arrr ".$item['id']);
+			unset($value[$index]);
+			continue;
+		}
+		$stored_ids[] = $item['id'];
+	}
+
     //if the default contains items not in the setting (newly added), add them.
     if ( count($value)<count($default) ) {
-        $ids = array_column($value, 'id');
         foreach ($default as $def_row_index => $def_row ) {
             //check if it is available in the array. If not, add
-	        $found = array_search($def_row['id'], $ids);
-            if ( !$found ) {
+            if ( !in_array($def_row['id'], $stored_ids) ) {
+                error_log("adding missing item ");
+                error_log(print_r($def_row, true));
                 $value[] = $def_row;
             }
         }

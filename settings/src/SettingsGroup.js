@@ -1,5 +1,8 @@
 import {Component} from "@wordpress/element";
 import Field from "./Field";
+import Hyperlink from "./Utils/Hyperlink";
+
+import { __ } from '@wordpress/i18n';
 
 /**
  * Render a grouped block of settings
@@ -8,10 +11,45 @@ class SettingsGroup extends Component {
     constructor() {
         super( ...arguments );
         this.state = {
+            disabled:false,
+            status:'invalid',
             fields:this.props.fields,
             isAPILoaded: this.props.isAPILoaded,
         };
+        this.upgrade='https://really-simple-ssl.com/pro';
+        this.msg='';
+        this.status='invalid';
         this.fields = this.props.fields;
+        this.activeGroup='';
+    }
+
+    componentDidMount() {
+        this.getLicenseStatus = this.getLicenseStatus.bind(this);
+        let selectedMenuItem = this.props.selectedMenuItem;
+        this.msg = __("Learn more about %sPremium%s", "really-simple-ssl");
+        if ( rsssl_settings.pro_plugin_active ) {
+            this.status = this.getLicenseStatus();
+            if ( this.status === 'empty' || this.status === 'deactivated' ) {
+                this.msg = rsssl_settings.messageInactive;
+            } else {
+                this.msg = rsssl_settings.messageInvalid;
+            }
+        }
+
+        //set group default to current menu item
+        this.activeGroup = selectedMenuItem;
+        if ( selectedMenuItem.hasOwnProperty('groups') ) {
+            let currentGroup = selectedMenuItem.groups.filter(group => group.id === this.props.group);
+            if (currentGroup.length>0) {
+                this.activeGroup = currentGroup[0];
+            }
+        }
+        this.upgrade = this.activeGroup.upgrade ? this.activeGroup.upgrade : this.upgrade;
+        let disabled = this.status !=='valid' && this.activeGroup.premium;
+        this.setState({
+            status: this.status,
+            disabled: disabled,
+        });
     }
 
     getLicenseStatus(){
@@ -21,7 +59,15 @@ class SettingsGroup extends Component {
         return 'invalid';
     }
 
+    handleMenuLink(id){
+        this.props.selectMenu(id);
+    }
+
     render(){
+        const {
+            disabled,
+            status,
+        } = this.state;
         let selectedMenuItem = this.props.selectedMenuItem;
         let selectedFields = [];
         //get all fields with group_id this.props.group_id
@@ -30,26 +76,8 @@ class SettingsGroup extends Component {
                 selectedFields.push(selectedField);
             }
         }
-        let status = this.getLicenseStatus();
-        let disabled = status !=='valid' && selectedMenuItem.is_premium;
-        let msg;
-        if ( status === 'empty' || status === 'deactivated' ) {
-            msg = rsssl_settings.messageInactive;
-        } else {
-            msg = rsssl_settings.messageInvalid;
-        }
-        //get current group, if the id exists
-        let activeGroup = selectedMenuItem;
-
-        if (selectedMenuItem.hasOwnProperty('groups')) {
-            let currentGroup = selectedMenuItem.groups.filter(group => group.id === this.props.group);
-            if (currentGroup.length>0) {
-                activeGroup = currentGroup[0];
-            }
-
-        }
+        let activeGroup = this.activeGroup;
         return (
-
             <div className="rsssl-grid-item">
                 {activeGroup && activeGroup.title && <div className="rsssl-grid-item-header"><h3 className="rsssl-h4">{activeGroup.title}</h3></div>}
                 <div className="rsssl-grid-item-content">
@@ -57,23 +85,13 @@ class SettingsGroup extends Component {
                     {selectedFields.map((field, i) => <Field dropItemFromModal={this.props.dropItemFromModal} handleModal={this.props.handleModal} showSavedSettingsNotice={this.props.showSavedSettingsNotice} updateField={this.props.updateField} setPageProps={this.props.setPageProps} fieldsUpdateComplete = {this.props.fieldsUpdateComplete} key={i} index={i} highLightField={this.props.highLightField} highLightedField={this.props.highLightedField} saveChangedFields={this.props.saveChangedFields} field={field} fields={selectedFields}/>)}
                     {disabled && <div className="rsssl-locked">
                         <div className="rsssl-locked-overlay">
-                            <span className="rsssl-progress-status rsssl-warning">{__("Warning","really-simple-ssl")}</span>
-                            {msg}&nbsp;<a href={rsssl_settings.url}>{__("Check license", "really-simple-ssl")}</a>
+                            <span className="rsssl-progress-status rsssl-premium">{__("Premium","really-simple-ssl")}</span>
+                            { rsssl_settings.pro_plugin_active && <span>{this.msg}<a className="rsssl-locked-link" href="#" onClick={ () => this.handleMenuLink('license') }>{__("Check license", "really-simple-ssl")}</a></span>}
+                            { !rsssl_settings.pro_plugin_active && <Hyperlink target="_blank" text={this.msg} url={this.upgrade}/> }
                         </div>
                     </div>}
                 </div>
             </div>
-            // <div className="rsssl-grouped-fields">
-            // 	{activeGroup && activeGroup.title && <PanelBody><h1 className="rsssl-settings-block-title">{activeGroup.title}</h1></PanelBody>}
-            // 	{activeGroup && activeGroup.intro && <PanelBody><div className="rsssl-settings-block-intro">{activeGroup.intro}</div></PanelBody>}
-            // 	{selectedFields.map((field, i) => <Field updateField={this.props.updateField} setPageProps={this.props.setPageProps} fieldsUpdateComplete = {this.props.fieldsUpdateComplete} key={i} index={i} highLightField={this.props.highLightField} highLightedField={this.props.highLightedField} saveChangedFields={this.props.saveChangedFields} field={field} fields={selectedFields}/>)}
-            // 	{disabled && <div className="rsssl-locked">
-            // 		<div className="rsssl-locked-overlay">
-            // 			<span className="rsssl-progress-status rsssl-warning">{__("Warning","really-simple-ssl")}</span>
-            // 			{msg}&nbsp;<a href={rsssl_settings.url}>{__("Check license", "really-simple-ssl")}</a>
-            // 		</div>
-            // 	</div>}
-            // </div>
         )
     }
 }

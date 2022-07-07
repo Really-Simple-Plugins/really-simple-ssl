@@ -24,10 +24,6 @@ class License extends Component {
         this.highLightClass = this.props.highLightedField===this.props.field.id ? 'rsssl-highlight' : '';
     }
 
-    updateLicenseNotice(){
-
-    }
-
     getLicenseNotices(){
         return rsssl_api.runTest('licenseNotices', 'refresh').then( ( response ) => {
             return response.data;

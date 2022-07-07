@@ -103,8 +103,6 @@ class MixedContentScan extends Component {
             if ( this.state.paused ) {
                 this.stop();
             } else if ( response.data.state==='running' ) {
-                console.log("finished run step, next run");
-                console.log(response.data.state);
                 this.run();
             }
 
@@ -169,11 +167,15 @@ class MixedContentScan extends Component {
             columns.push(newItem);
         });
 
-        if ( !Array.isArray(data) ) {
+        if (typeof data === 'object') {
+            data = Object.values(data);
+        }
+        if (!Array.isArray(data) ) {
             data = [];
         }
         let dropItem = this.props.dropItemFromModal;
         for (const item of data) {
+            item.warningControl = <span className="rsssl-warning">{__("Warning", "really-simple-ssl")}</span>
             //@todo check action for correct filter or drop action.
             if ( dropItem && dropItem.url === item.blocked_url ) {
                 if (dropItem.action==='ignore_url'){
@@ -229,7 +231,7 @@ class MixedContentScan extends Component {
                 <div className="rsssl-progress-container">
                     <div className="rsssl-progress-bar" style={{width: progress}} ></div>
                 </div>
-                <span className="rsssl-current-scan-action">{action}</span>
+                <span className="rsssl-current-scan-action">{state==='running' && action}</span>
                 <PanelBody>
                     <DataTable
                         columns={columns}

@@ -4,7 +4,10 @@ import Header from "./Header";
 import DashboardPage from "./DashboardPage";
 import SettingsPage from "./SettingsPage";
 import Modal from "./Modal";
-import Placeholder from "./Placeholder";
+
+import {
+    Spinner,
+} from '@wordpress/components';
 
 class Page extends Component {
     constructor() {
@@ -52,6 +55,7 @@ class Page extends Component {
      */
     setPageProps(key, value){
         this.pageProps[key] = value;
+        console.log("set page props "+key+value);
         this.setState({
             pageProps: this.pageProps,
         })
@@ -184,7 +188,7 @@ class Page extends Component {
 
         return (
             <div className="rsssl-wrapper">
-                {!isAPILoaded && <div><Placeholder></Placeholder></div>}
+                {!isAPILoaded && <div><Spinner></Spinner></div>}
                 {showModal && <Modal handleModal={this.handleModal} data={modalData}/>}
                 {isAPILoaded && <Header selectedMainMenuItem={selectedMainMenuItem} selectMainMenu={this.selectMainMenu} fields={fields}/> }
                 {isAPILoaded && <div className={"rsssl-content-area rsssl-grid rsssl-" + selectedMainMenuItem}>
