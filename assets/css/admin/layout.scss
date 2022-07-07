@@ -111,6 +111,7 @@
     gap: var(--rsp-grid-gap);
     min-height: calc(100vh - 32px - 80px - 20px - var(--rsp-grid-gap)); //32px = wordpress bar, 80px = cmplz bar, 20px = margin-top, 20px is grid gap
   }
+
   .no-background {
     background: none;
     border: none;
@@ -123,6 +124,7 @@
 
   .rsssl-row-2 {
     grid-row: span 2;
+    min-height: 400px;
   }
 
   @media(max-width: $rsp-break-xxl) {
@@ -150,7 +152,7 @@
     justify-content: flex-start;
     flex-direction: column;
     flex-basis: 100%;
-    //min-height: 100%;
+    min-height: 250px;
     grid-column: span 1;
     grid-row: span 1;
 

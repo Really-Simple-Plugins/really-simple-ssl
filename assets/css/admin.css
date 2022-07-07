@@ -11,6 +11,7 @@
 *	│  ├─ base.scss
 *	│  ├─ layout.scss
 *	│  ├─ modules/
+*	│  │  ├─ modal.scss
 *	│  │  ├─ button.scss
 *	│  │  ├─ modal.scss
 *	│  │  ├─ notices.scss
@@ -338,6 +339,7 @@
 
 .rsssl .rsssl-row-2 {
     grid-row: span 2;
+    min-height: 400px;
 }
 
 @media (max-width: 1599px) {
@@ -376,6 +378,7 @@
     justify-content: flex-start;
     flex-direction: column;
     flex-basis: 100%;
+    min-height: 250px;
     grid-column: span 1;
     grid-row: span 1;
 }
@@ -486,6 +489,105 @@
 
 .rsssl-grid-item .rsssl-flex-push-left {
     margin-right: auto;
+}
+
+.rsssl-modal-backdrop {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background-color: grey;
+    opacity: 0.45;
+    width: 100%;
+    height: 100%;
+    z-index: 2;
+}
+
+.rsssl-modal {
+    max-width: 526px;
+    min-width: 200px;
+    position: fixed;
+    z-index: 3;
+    border-radius: 12px;
+    background-color: white;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    margin: 25px;
+}
+
+.rsssl-modal .rsssl-modal-header {
+    background-color: white;
+    padding: 20px 20px 10px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-radius: 12px;
+}
+
+.rsssl-modal .rsssl-modal-header .modal-title {
+    font-size: 20px;
+    margin: 0;
+    background-color: white;
+}
+
+.rsssl-modal .rsssl-modal-header .rsssl-modal-close {
+    cursor: pointer;
+    background: none;
+    border: none;
+    font-size: 1.5em;
+    font-weight: 700;
+}
+
+.rsssl-modal .rsssl-modal-header button img {
+    height: 16px;
+    width: 16px;
+}
+
+.rsssl-modal .rsssl-modal-content {
+    position: relative;
+    padding: 10px 20px 10px 20px;
+    font-size: 12px;
+}
+
+.rsssl-modal .rsssl-modal-content .rsssl-modal-subtitle {
+    font-weight: 600;
+    font-size: 15px;
+    margin-bottom: 10px;
+}
+
+.rsssl-modal .rsssl-modal-content .rsssl-modal-description {
+    overflow-wrap: anywhere;
+    margin-top: 0;
+    font-weight: 500;
+}
+
+.rsssl-modal .rsssl-modal-footer {
+    display: flex;
+    flex-direction: row;
+    padding: 10px 20px 20px 20px;
+    gap: 10px;
+}
+
+.rsssl-modal .rsssl-modal-footer .button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 45px;
+    width: 100%;
+    text-align: center;
+    border-radius: 6px;
+}
+
+.rsssl-modal .rsssl-modal-footer .rsssl-button-help {
+    background-color: #D7263D;
+    color: white;
+    border-color: #D7263D;
+}
+
+.rsssl-modal .rsssl-modal-footer .rsssl-button-help:hover {
+    opacity: 0.9;
 }
 
 .rsssl-header-container .rsssl-header {
@@ -1043,83 +1145,83 @@
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(1) {
-    width: 89%;
+    width: 77%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(2) {
-    width: 94%;
+    width: 80%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(3) {
-    width: 97%;
-}
-
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(4) {
-    width: 61%;
-}
-
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(5) {
-    width: 64%;
-}
-
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(6) {
-    width: 65%;
-}
-
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(7) {
-    width: 67%;
-}
-
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(8) {
-    width: 95%;
-}
-
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(9) {
-    width: 80%;
-}
-
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(10) {
     width: 89%;
 }
 
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(11) {
-    width: 70%;
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(4) {
+    width: 77%;
 }
 
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(12) {
-    width: 88%;
-}
-
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(13) {
-    width: 92%;
-}
-
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(14) {
-    width: 65%;
-}
-
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(15) {
-    width: 98%;
-}
-
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(16) {
-    width: 64%;
-}
-
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(17) {
-    width: 88%;
-}
-
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(18) {
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(5) {
     width: 80%;
 }
 
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(19) {
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(6) {
+    width: 66%;
+}
+
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(7) {
+    width: 99%;
+}
+
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(8) {
+    width: 68%;
+}
+
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(9) {
+    width: 96%;
+}
+
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(10) {
     width: 94%;
 }
 
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(11) {
+    width: 61%;
+}
+
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(12) {
+    width: 99%;
+}
+
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(13) {
+    width: 84%;
+}
+
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(14) {
+    width: 89%;
+}
+
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(15) {
+    width: 69%;
+}
+
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(16) {
+    width: 78%;
+}
+
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(17) {
+    width: 100%;
+}
+
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(18) {
+    width: 71%;
+}
+
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(19) {
+    width: 64%;
+}
+
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(20) {
-    width: 96%;
+    width: 66%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line ~ .rsssl-placeholder-line {
