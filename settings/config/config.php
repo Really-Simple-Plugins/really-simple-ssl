@@ -31,16 +31,17 @@ function rsssl_menu( $group_id = 'settings' ){
 					[
 						'id' => 'mixed_content_scan',
 						'title' => __('Mixed Content Scan', 'really-simple-ssl'),
-						'menu_items' => [
-							[
-								'id' => 'sub_mixed_content_1',
-								'title' => __('Sub mixed content 1', 'really-simple-ssl'),
-							],
-							[
-								'id' => 'sub_mixed_content_2',
-								'title' => __('Sub mixed content 2', 'really-simple-ssl'),
-							],
-						],
+						//example of submenu
+//						'menu_items' => [
+//							[
+//								'id' => 'sub_mixed_content_1',
+//								'title' => __('Sub mixed content 1', 'really-simple-ssl'),
+//							],
+//							[
+//								'id' => 'sub_mixed_content_2',
+//								'title' => __('Sub mixed content 2', 'really-simple-ssl'),
+//							],
+//						],
 						'step' => 1,
 					],
 					[
@@ -517,6 +518,11 @@ function rsssl_fields( $load_values = true ){
 			'data_source' => ['RSSSL_PRO', 'rsssl_scan', 'get'],
 			'columns'     => [
 				[
+					'name' => __('Type', 'really-simple-ssl-pro'),
+					'sortable' => true,
+					'column' =>'warningControl',
+				],
+				[
 					'name' => __('Description', 'really-simple-ssl-pro'),
 					'sortable' => true,
 					'column' =>'description',
@@ -548,7 +554,6 @@ function rsssl_fields( $load_values = true ){
 			'options'     => ['*' => __("Allow", "really-simple-ssl"), '()' => __("Deny", "really-simple-ssl"), 'self' => __("Own domain only", "really-simple-ssl")],
 			'label'       => __( "Permissions Policy", 'really-simple-ssl-pro' ),
 			'disabled'    => false,
-			'data_source' => '',
 			'columns'     => [
 				[
 					'name' => __('Feature', 'really-simple-ssl-pro'),

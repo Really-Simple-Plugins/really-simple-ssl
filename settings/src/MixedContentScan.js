@@ -99,7 +99,6 @@ class MixedContentScan extends Component {
                 action:response.data.action,
                 state:response.data.state,
             });
-            console.log(this.state.data);
             //if scan was stopped while running, set it to stopped now.
             if ( this.state.paused ) {
                 this.stop();
@@ -168,11 +167,15 @@ class MixedContentScan extends Component {
             columns.push(newItem);
         });
 
-        if ( !Array.isArray(data) ) {
+        if (typeof data === 'object') {
+            data = Object.values(data);
+        }
+        if (!Array.isArray(data) ) {
             data = [];
         }
         let dropItem = this.props.dropItemFromModal;
         for (const item of data) {
+            item.warningControl = <span className="rsssl-warning">{__("Warning", "really-simple-ssl")}</span>
             //@todo check action for correct filter or drop action.
             if ( dropItem && dropItem.url === item.blocked_url ) {
                 if (dropItem.action==='ignore_url'){

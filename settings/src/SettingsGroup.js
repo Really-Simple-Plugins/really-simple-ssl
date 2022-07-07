@@ -76,8 +76,6 @@ class SettingsGroup extends Component {
                 selectedFields.push(selectedField);
             }
         }
-        console.log("disabled in redner");
-        console.log(disabled);
         let activeGroup = this.activeGroup;
         return (
             <div className="rsssl-grid-item">

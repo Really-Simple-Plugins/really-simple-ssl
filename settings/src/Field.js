@@ -66,6 +66,10 @@ class Field extends Component {
      */
     onChangeHandlerDataTable(enabled, clickedItem, type ) {
         let field=this.props.field;
+        console.log(field.value);
+        if (typeof field.value === 'object') {
+            field.value = Object.values(field.value);
+        }
         //find this item in the field list
         for (const item of field.value){
             if (item.id === clickedItem.id) {
@@ -208,10 +212,20 @@ class Field extends Component {
                 columns.push(newItem);
             });
             let data = field.value;
-            if (!Array.isArray(data) ) {
-                data = [];
+            console.log("permisions policy");
+            console.log(data);
+            console.log(data[0]);
+
+            if (typeof data === 'object') {
+                data = Object.values(data);
             }
+            if (!Array.isArray(data) ) {
+               data = [];
+            }
+            console.log(data.length);
+            console.log(data[0]);
             for (const item of data){
+                console.log(item);
                 let disabled = false;
                 if (item.status!=1) {
                     item.value = '()';
@@ -254,6 +268,9 @@ class Field extends Component {
             });
             let data = field.value;
 
+            if (typeof data === 'object') {
+                data = Object.values(data);
+            }
             if (!Array.isArray(data) ) {
                 data = [];
             }
