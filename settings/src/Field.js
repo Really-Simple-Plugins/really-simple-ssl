@@ -207,14 +207,12 @@ class Field extends Component {
                 let newItem = {
                     name: item.name,
                     sortable: item.sortable,
+                    width: item.width,
                     selector: row => row[item.column],
                 }
                 columns.push(newItem);
             });
             let data = field.value;
-            console.log("permisions policy");
-            console.log(data);
-            console.log(data[0]);
 
             if (typeof data === 'object') {
                 data = Object.values(data);
@@ -222,8 +220,6 @@ class Field extends Component {
             if (!Array.isArray(data) ) {
                data = [];
             }
-            console.log(data.length);
-            console.log(data[0]);
             for (const item of data){
                 console.log(item);
                 let disabled = false;
@@ -262,6 +258,7 @@ class Field extends Component {
                 let newItem = {
                     name: item.name,
                     sortable: item.sortable,
+                    width: item.width,
                     selector: row => row[item.column],
                 }
                 columns.push(newItem);

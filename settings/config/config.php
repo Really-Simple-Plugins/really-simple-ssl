@@ -521,6 +521,7 @@ function rsssl_fields( $load_values = true ){
 					'name' => __('Type', 'really-simple-ssl-pro'),
 					'sortable' => true,
 					'column' =>'warningControl',
+					'width' => '100px',
 				],
 				[
 					'name' => __('Description', 'really-simple-ssl-pro'),
@@ -536,11 +537,13 @@ function rsssl_fields( $load_values = true ){
 					'name' => __('Fix', 'really-simple-ssl-pro'),
 					'sortable' => false,
 					'column' =>'fixControl',
+					'width' => '100px',
 				],
 				[
 					'name' => __('Details', 'really-simple-ssl-pro'),
 					'sortable' => false,
 					'column' =>'detailsControl',
+					'width' => '100px',
 				],
 			],
 			'disabled'    => false,

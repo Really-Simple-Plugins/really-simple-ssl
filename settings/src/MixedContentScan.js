@@ -161,6 +161,7 @@ class MixedContentScan extends Component {
         field.columns.forEach(function(item, i) {
             let newItem = {
                 name: item.name,
+                width: item.width,
                 sortable: item.sortable,
                 selector: row => row[item.column],
             }
