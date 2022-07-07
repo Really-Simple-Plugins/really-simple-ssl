@@ -1,11 +1,10 @@
 {
   "name": "really-simple-ssl",
   "version": "1.0.0",
-  "description": "",
   "main": "build/index.js",
   "scripts": {
-    "start": "start",
-    "build": "run build"
+    "start": "wp-scripts start",
+    "build": "wp-scripts build"
   },
   "author": "Really Simple Plugins",
   "license": "GPL-2.0-only",
@@ -13,6 +12,8 @@
     "@wordpress/scripts": "^23.4.0"
   },
   "dependencies": {
-    "react-data-table-component": "^7.5.2"
-  }
+    "react-data-table-component": "^7.5.2",
+    "react-transition-group": "^4.4.2"
+  },
+  "description": "Really Simple SSL settings module"
 }
