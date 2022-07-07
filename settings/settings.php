@@ -40,7 +40,7 @@ function rsssl_plugin_admin_scripts() {
 				'site_url' => get_rest_url(),
 				'plugin_url' => rsssl_url,
 				'blocks' => rsssl_blocks(),
-				'premium' => defined('rsssl_pro_version'),
+				'pro_plugin_active' => defined('rsssl_pro_version'),
 				'menu' => $menu,
 				'nonce' => wp_create_nonce( 'wp_rest' ),//to authenticate the logged in user
 				'rsssl_nonce' => wp_create_nonce( 'rsssl_save' ),
@@ -356,7 +356,9 @@ function rsssl_rest_api_fields_get(  ){
 				$main = $data_source[0];
 				$class = $data_source[1];
 				$function = $data_source[2];
-				$field['value'] = $main()->$class->$function();
+                if ( class_exists($main) && property_exists($main, $class) && property_exists($main()->$class, $function ) ) {
+	                $field['value'] = $main()->$class->$function();
+                }
 			}
 		}
 

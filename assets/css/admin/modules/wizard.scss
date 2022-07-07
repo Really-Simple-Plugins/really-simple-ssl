@@ -5,7 +5,37 @@
   }
   .rsssl-wizard-settings{
       .rsssl-grid-item{
+        position:relative; //to ensure the rsssl-lock stays within the div
         margin-bottom: var(--rsp-grid-gap);
       }
+
+    .rsssl-locked{
+      position: absolute;
+      top:0;
+      left: 0;
+      bottom: 0;
+      right: 0;
+      background: rgba(255, 255, 255, 0.8);
+      .rsssl-locked-overlay{
+        z-index:99;
+        .rsssl-open {
+          float: left;
+          margin-right:12px;
+        }
+        .rsssl-progress-status {
+          float:left;
+          margin-right:20px;
+        }
+        position:absolute;
+        width: calc(100% - 65px);
+        bottom: 0;
+        background-color: #fff;
+        padding: 20px;
+        margin:12px;
+        box-shadow: 0 0 5px 5px rgba(223,222,222,0.4);
+      }
+    }
   }
+
+
 }
