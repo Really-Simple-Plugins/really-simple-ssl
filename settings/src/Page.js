@@ -3,6 +3,8 @@ import * as rsssl_api from "./utils/api";
 import Header from "./Header";
 import DashboardPage from "./DashboardPage";
 import SettingsPage from "./SettingsPage";
+import Modal from "./Modal";
+import Placeholder from "./Placeholder";
 
 class Page extends Component {
     constructor() {
@@ -18,6 +20,9 @@ class Page extends Component {
             progress:'',
             isAPILoaded: false,
             pageProps:this.pageProps,
+            showModal:false,
+            modalData:[],
+            dropItemFromModal:false,
         };
 
         this.getFields().then(( response ) => {
@@ -46,25 +51,38 @@ class Page extends Component {
      * @param value
      */
     setPageProps(key, value){
-        console.log("set page props");
-        console.log(key);
-        console.log(value);
         this.pageProps[key] = value;
         this.setState({
             pageProps: this.pageProps,
         })
     }
 
+    /**
+     * Handle instantiation of a modal window
+     * @param showModal
+     * @param data
+     * @param dropItem
+     */
+    handleModal(showModal, data, dropItem) {
+        this.setState({
+            showModal: showModal,
+            modalData : data,
+            dropItemFromModal : dropItem
+        })
+    }
+
     componentDidMount() {
         this.selectMenu = this.selectMenu.bind(this);
+        this.handleModal = this.handleModal.bind(this);
         this.highLightField = this.highLightField.bind(this);
         this.updateField = this.updateField.bind(this);
         this.selectMainMenu = this.selectMainMenu.bind(this);
         this.setPageProps = this.setPageProps.bind(this);
-
+        let selectedMainMenuItem = this.get_anchor('main') || 'dashboard';
+        let selectedMenuItem = this.get_anchor('menu') || 'general';
         this.setState({
-            selectedMainMenuItem: 'dashboard',
-            selectedMenuItem: 'general',
+            selectedMainMenuItem: selectedMainMenuItem,
+            selectedMenuItem: selectedMenuItem,
         });
     }
 
@@ -86,17 +104,17 @@ class Page extends Component {
         });
     }
 
+    /**
+     * Update a field
+     * @param field
+     */
     updateField(field) {
-        console.log("run global update field for ");
-        console.log(field);
         let fields = this.fields;
         for (const fieldItem of fields){
             if (fieldItem.id === field.id ){
                 fieldItem.value = field.value;
             }
         }
-        console.log("NEW FIELDS LIST");
-        console.log(fields);
         this.fields = fields;
         this.setState({
             fields :fields
@@ -115,6 +133,41 @@ class Page extends Component {
         }
         this.highLightedField = fieldId;
     }
+    /**
+     * Get # anchor from URL
+     * @returns {string|boolean}
+     */
+    get_anchor = (level) => {
+        let url = window.location.href;
+        if ( url.indexOf('#')==-1) {
+            return false;
+        }
+
+        let queryString = url.split('#');
+        if (queryString.length == 1) {
+            return false;
+        }
+
+        let url_variables = queryString[1].split('#');
+        if (url_variables.length>0) {
+            let anchor = url_variables[0];
+            if ( url.indexOf('/')==-1) {
+                return anchor;
+            } else {
+                let anchor_variables = anchor.split('/');
+                if (anchor_variables.length>0){
+                    if (level==='main') {
+                        return anchor_variables[0];
+                    } else if (anchor_variables.hasOwnProperty(1)) {
+                        return anchor_variables[1];
+                    } else {
+                        return false;
+                    }
+                }
+            }
+        }
+        return false;
+    }
 
     render() {
         const {
@@ -124,15 +177,20 @@ class Page extends Component {
             menu,
             progress,
             isAPILoaded,
+            showModal,
+            modalData,
+            dropItemFromModal,
         } = this.state;
 
         return (
             <div className="rsssl-wrapper">
-                <Header selectedMainMenuItem={selectedMainMenuItem} selectMainMenu={this.selectMainMenu} fields={fields}/>
-                <div className={"rsssl-content-area rsssl-grid rsssl-" + selectedMainMenuItem}>
-                    {selectedMainMenuItem==='settings' && <SettingsPage pageProps={this.pageProps} updateField={this.updateField} setPageProps={this.setPageProps} selectMenu={this.selectMenu} highLightField={this.highLightField} highLightedField={this.highLightedField} selectedMenuItem={selectedMenuItem} isAPILoaded={isAPILoaded} fields={fields} menu={menu} progress={progress}/> }
+                {!isAPILoaded && <div><Placeholder></Placeholder></div>}
+                {showModal && <Modal handleModal={this.handleModal} data={modalData}/>}
+                {isAPILoaded && <Header selectedMainMenuItem={selectedMainMenuItem} selectMainMenu={this.selectMainMenu} fields={fields}/> }
+                {isAPILoaded && <div className={"rsssl-content-area rsssl-grid rsssl-" + selectedMainMenuItem}>
+                    {selectedMainMenuItem==='settings' && <SettingsPage dropItemFromModal={dropItemFromModal} pageProps={this.pageProps} handleModal={this.handleModal} updateField={this.updateField} setPageProps={this.setPageProps} selectMenu={this.selectMenu} highLightField={this.highLightField} highLightedField={this.highLightedField} selectedMenuItem={selectedMenuItem} isAPILoaded={isAPILoaded} fields={fields} menu={menu} progress={progress}/> }
                     {selectedMainMenuItem==='dashboard' && <DashboardPage isAPILoaded={isAPILoaded} fields={fields} highLightField={this.highLightField}/> }
-                </div>
+                </div> }
             </div>
         );
     }

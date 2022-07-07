@@ -33,7 +33,7 @@ function rsssl_add_learning_mode_table() {
 
 	dbDelta( $sql );
 
-	update_option( 'rsssl_learning_mode_db_version', rsssl_version );
+	update_option( 'rsssl_learning_mode_db_version', rsssl_version, false );
 }
 
 /**

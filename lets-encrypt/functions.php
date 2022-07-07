@@ -206,11 +206,11 @@ function rsssl_check_port( $port)
 	$link = @fsockopen( $ipAddress, $port, $errno, $error, 5 );
 
 	if ( $link ) {
-		update_option("rsssl_port_check_$port", 'success');
+		update_option("rsssl_port_check_$port", 'success', false);
 		return true;
 	}
 
-	update_option("rsssl_port_check_$port", 'fail');
+	update_option("rsssl_port_check_$port", 'fail', false);
 	return false;
 }
 
@@ -232,7 +232,7 @@ if ( !function_exists('rsssl_progress_add')) {
 		$progress = get_option( "rsssl_le_installation_progress", array() );
 		if ( ! in_array( $item, $progress ) ) {
 			$progress[] = $item;
-			update_option( "rsssl_le_installation_progress", $progress );
+			update_option( "rsssl_le_installation_progress", $progress, false );
 		}
 	}
 }
@@ -298,7 +298,7 @@ if ( !function_exists('rsssl_progress_remove')) {
 		if ( in_array( $item, $progress ) ) {
 			$index = array_search( $item, $progress );
 			unset( $progress[ $index ] );
-			update_option( "rsssl_le_installation_progress", $progress );
+			update_option( "rsssl_le_installation_progress", $progress, false );
 		}
 	}
 }
@@ -516,7 +516,7 @@ if (!function_exists('rsssl_read_more')) {
 register_activation_hook( __FILE__, 'rsssl_set_activation_time_stamp' );
 if ( ! function_exists( 'rsssl_set_activation_time_stamp' ) ) {
     function rsssl_set_activation_time_stamp( $networkwide ) {
-        update_option( 'rsssl_activation_time', time() );
+        update_option( 'rsssl_activation_time', time(), false );
     }
 }
 

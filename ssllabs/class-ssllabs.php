@@ -27,9 +27,9 @@ class rsssl_ssllabs {
 		if ( $state==='initial' && !$ip   ) {
 			return ['footerHtml'=>$footer_html,'disabled'=>$disabled, 'html' => '<div class="rsssl-ssl-test"><div class="rsssl-ssl-test-element">'.__("Start a test to see your SSL rating","really-simple-ssl").'</div></div>', 'progress' => 100];
 		} else if ( $state === 'clearcache' ) {
-			update_option( 'rsssl_ssltest_endpoint_ip', false );
-			update_option( 'rsssl_ssltest_base_request', false );
-			update_option( 'rsssl_ssltest_endpoint', false);
+			update_option( 'rsssl_ssltest_endpoint_ip', false, false );
+			update_option( 'rsssl_ssltest_base_request', false, false );
+			update_option( 'rsssl_ssltest_endpoint', false, false);
 			$ip = false;
 		}
 
@@ -43,11 +43,11 @@ class rsssl_ssllabs {
 			if ( $status == 200 ) {
 				$body = json_decode( $body );
 				//get active test
-				update_option( 'rsssl_ssltest_base_request', $body );
+				update_option( 'rsssl_ssltest_base_request', $body, false );
 				$message = $this->get_message();
 				if ( $body->status === 'READY' && isset( $body->endpoints ) && is_array( $body->endpoints ) ) {
 					$ip = $body->endpoints[0]->ipAddress;
-					update_option( 'rsssl_ssltest_endpoint_ip', $body->endpoints[0]->ipAddress );
+					update_option( 'rsssl_ssltest_endpoint_ip', $body->endpoints[0]->ipAddress, false );
 				}
 			}
 
@@ -63,7 +63,7 @@ class rsssl_ssllabs {
 					$endpoint_body = false;
 					$message = __('Encountered error, restarting...','really-simple-ssl');
 				}
-				update_option( 'rsssl_ssltest_endpoint', $endpoint_body );
+				update_option( 'rsssl_ssltest_endpoint', $endpoint_body , false);
 			}
 		}
 
@@ -81,7 +81,7 @@ class rsssl_ssllabs {
 			$disabled = true;
 		} else {
 			$test_time = substr($body->testTime, 0, 10);
-			update_option('rsssl_last_ssltest', $test_time);
+			update_option('rsssl_last_ssltest', $test_time, false);
 			$date = date(get_option('date_format'),$test_time);
 			$time = date(get_option('time_format'), $test_time);
 			$html_arr[] = $this->has_hsts() ? __('HSTS enabled','really-simple-ssl') : __('HSTS not enabled','really-simple-ssl');

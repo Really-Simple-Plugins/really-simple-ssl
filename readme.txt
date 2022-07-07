@@ -90,6 +90,12 @@ The plugin checks your certificate before enabling, but if, for example, you mig
 If you can't deactivate, do not just remove the plugin folder to uninstall! Follow these [instructions](https://really-simple-ssl.com/knowledge-base/uninstall-websitebackend-not-accessible/) instead.
 
 == Changelog ==
+= 6.0.0 =
+* Disable File editing feature
+* Disable user registration feature
+* Rename Database prefix feature
+* Hide WP version
+
 = 5.3.0 =
 * Improvement: added PHP 8.1 compatibility
 * Improvement: updated .htaccess redirect comment

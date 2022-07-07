@@ -164,7 +164,7 @@ class rsssl_admin extends rsssl_front_end
 
 		if ( isset( $_POST['action'] ) && $_POST['action'] === 'update_ssl_detection_overridden_option' ) {
 			if ( isset ( $_POST['override_ssl_checked'] ) && $_POST['override_ssl_checked'] !== false ) {
-				update_option('rsssl_ssl_detection_overridden', true);
+				update_option('rsssl_ssl_detection_overridden', true, false );
 			}
 
 			wp_die();
@@ -215,7 +215,7 @@ class rsssl_admin extends rsssl_front_end
 
         // Set default progress toggle to remaining tasks if it hasn't been set
         if (!get_option('rsssl_all_tasks') && !get_option('rsssl_remaining_tasks') ) {
-            update_option('rsssl_remaining_tasks', true);
+            update_option('rsssl_remaining_tasks', true, false );
         }
 
         /*
@@ -234,9 +234,9 @@ class rsssl_admin extends rsssl_front_end
             //flush the permalinks
             if ($this->clicked_activate_ssl()) {
 	            if (!defined('RSSSL_NO_FLUSH') || !RSSSL_NO_FLUSH) {
-                    update_option('rsssl_flush_rewrite_rules', time());
+                    update_option('rsssl_flush_rewrite_rules', time(), false );
                 }
-	            update_option('rsssl_flush_caches', time());
+	            update_option('rsssl_flush_caches', time(), false );
             }
             if (!$this->wpconfig_ok()) {
                 //if we were to activate ssl, this could result in a redirect loop. So warn first.
@@ -285,7 +285,7 @@ class rsssl_admin extends rsssl_front_end
     public function check_upgrade() {
 	    $prev_version = get_option( 'rsssl_current_version', false );
         if ( $prev_version && version_compare( $prev_version, '4.0', '<' ) ) {
-            update_option('rsssl_remaining_tasks', true);
+            update_option('rsssl_remaining_tasks', true, false );
         }
 
         if ( $prev_version && version_compare( $prev_version, '4.0.10', '<=' ) ) {
@@ -299,7 +299,7 @@ class rsssl_admin extends rsssl_front_end
 		    if ( get_option( 'rsssl_disable_ocsp' ) ) {
 			    $options = get_option( 'rsssl_options_lets-encrypt' );
                 $options['disable_ocsp'] = true;
-			    update_option( 'rsssl_options_lets-encrypt', $options );
+			    update_option( 'rsssl_options_lets-encrypt', $options, false );
                 delete_option('rsssl_disable_ocsp');
 		    }
 	    }
@@ -439,7 +439,7 @@ class rsssl_admin extends rsssl_front_end
        if (!current_user_can($this->capability)) return;
        if (isset($_POST['rsssl_do_activate_ssl'])) {
             $this->activate_ssl();
-            update_option('rsssl_activation_timestamp', time());
+            update_option('rsssl_activation_timestamp', time(), false );
 
             return true;
         }
@@ -995,7 +995,7 @@ class rsssl_admin extends rsssl_front_end
     {
         if ($this->plugin_db_version != rsssl_version) {
 	        if ( $this->plugin_db_version !== '1.0'  && version_compare( $this->plugin_db_version, '4.0.0', '<' ) ) {
-	            update_option('rsssl_upgraded_to_four', true);
+	            update_option('rsssl_upgraded_to_four', true, false );
 	        }
 
 	        if ( $this->plugin_db_version !== '1.0' ) {
@@ -1003,7 +1003,7 @@ class rsssl_admin extends rsssl_front_end
 			        'dismiss_on_upgrade' => true,
 		        ) );
 		        foreach ($dismiss_options as $dismiss_option ) {
-			        update_option( "rsssl_" . $dismiss_option . "_dismissed" , true);
+			        update_option( "rsssl_" . $dismiss_option . "_dismissed" , true, false );
 		        }
 		        delete_transient( 'rsssl_plusone_count' );
 	        }
@@ -2501,8 +2501,8 @@ class rsssl_admin extends rsssl_front_end
         if ($this->ssl_enabled && !get_option('rsssl_activation_timestamp')){
             $month = rand ( 0, 11);
             $trigger_notice_date = time() + $month * MONTH_IN_SECONDS;
-	        update_option('rsssl_activation_timestamp', $trigger_notice_date);
-	        update_option('rsssl_before_review_notice_user', true);
+	        update_option('rsssl_activation_timestamp', $trigger_notice_date, false );
+	        update_option('rsssl_before_review_notice_user', true, false );
         }
 
         if (!$this->review_notice_shown && get_option('rsssl_activation_timestamp') && get_option('rsssl_activation_timestamp') < strtotime("-1 month")) {
@@ -2677,7 +2677,7 @@ class rsssl_admin extends rsssl_front_end
         }
         if ($type === 'later') {
             //Reset activation timestamp, notice will show again in one month.
-            update_option('rsssl_activation_timestamp', time());
+            update_option('rsssl_activation_timestamp', time(), false );
         }
 
         $this->save_options();
@@ -2969,7 +2969,7 @@ class rsssl_admin extends rsssl_front_end
                         'dismissible' => true
                     ),
                     'not-enabled' => array(
-	                    'highlight_field_id' => 'autoreplace_insecure_links',
+	                    'highlight_field_id' => 'mixed_content_fixer',
 	                    'msg' =>__('Mixed content fixer not enabled. Enable the option to fix mixed content on your site.', 'really-simple-ssl'),
                         'icon' => 'open',
                         'dismissible' => true
@@ -3467,10 +3467,9 @@ class rsssl_admin extends rsssl_front_end
         //load on network admin or normal admin settings page
         if ( $hook !== 'settings_page_really-simple-ssl' && $hook !== 'settings_page_rlrsssl_really_simple_ssl' ) return;
 	    $minified_css = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? '.css?debug='.time() : '.min.css';
-	    $minified_js = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? '.js?debug='.time() : '.min.js';
         $rtl = is_rtl() ? '-rtl' : '';
         $css_file = "admin$rtl$minified_css";
-	    wp_enqueue_style('rsssl-css', trailingslashit(rsssl_url) . "assets/css/$css_file", array(), rsssl_version);
+	    wp_enqueue_style('rsssl-css', trailingslashit(rsssl_url) . "assets/css/$css_file", ['wp-components'], rsssl_version);
         wp_localize_script('rsssl', 'rsssl',
             array(
                 'ajaxurl' => admin_url( 'admin-ajax.php' ),

@@ -48,10 +48,11 @@ class MenuItem extends Component {
         let activeClass = menuIsSelected ? ' rsssl-active' : '';
         let featuredClass = this.props.menuItem.featured ? ' rsssl-featured' : '';
         let icon = menuIsSelected ? faCircleSolid : faCircle;
+        let href = '#settings/'+this.props.menuItem.id;
         if ( this.props.menuItem.menu_items && menuIsSelected ) {
             return (
                 <div className={"rsssl-menu-item" + activeClass + featuredClass}>
-                    <a href="#" onClick={() => this.handleClick()}>
+                    <a href={href} onClick={() => this.handleClick()}>
                         <span>{this.props.menuItem.title}</span>
                         {this.props.menuItem.featured && <p className="rsssl-menu-item-featured">{this.props.menuItem.featured}</p>}
                     </a>
