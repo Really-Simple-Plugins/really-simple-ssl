@@ -213,6 +213,7 @@ function rsssl_display_name_equals_login( $return_users=false ) {
 	global $wpdb;
 
 	$found = false;
+	$found_users = [];
 
 	// Get users where login equals display name
 	$users = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}users WHERE user_login = display_name" );
