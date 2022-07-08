@@ -24,5 +24,23 @@ function rsssl_hide_pw_reset_error() {
            display: none;
        }
     </style>
-<?php }
-add_action( 'login_enqueue_scripts', 'rsssl_hide_pw_reset_error' ); ?>
+    <?php
+}
+add_action( 'login_enqueue_scripts', 'rsssl_hide_pw_reset_error' );
+
+/**
+ *
+ * Clear username when username is valid but password is incorrect
+ *
+ * @return void
+ */
+function rsssl_clear_username_on_correct_username() {
+    ?>
+    <script>
+        if ( document.getElementById('login_error') ) {
+            document.getElementById('user_login').value = '';
+        }
+    </script>
+    <?php
+}
+add_action( 'login_footer', 'rsssl_clear_username_on_correct_username' );
