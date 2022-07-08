@@ -19,6 +19,7 @@ class MenuItem extends Component {
             isAPILoaded: this.props.isAPILoaded,
         };
     }
+
     handleClick(){
         this.props.selectMenu(this.props.menuItem.id);
     }

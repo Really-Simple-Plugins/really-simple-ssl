@@ -1,5 +1,5 @@
 import {Component, Fragment} from "@wordpress/element";
-import in_array from "./utils/lib";
+import {in_array} from "./utils/lib";
 import * as rsssl_api from "./utils/api";
 import Placeholder from "./Placeholder";
 import Menu from "./Menu";
@@ -197,7 +197,7 @@ class SettingsPage extends Component {
         return (
             <Fragment>
                 <Menu isAPILoaded={isAPILoaded} menuItems={this.menuItems} menu={this.menu} selectMenu={this.props.selectMenu} selectedMenuItem={this.props.selectedMenuItem}/>
-                <Settings dropItemFromModal={this.props.dropItemFromModal} handleModal={this.props.handleModal} showSavedSettingsNotice={this.showSavedSettingsNotice} updateField={this.props.updateField} pageProps={this.props.pageProps} setPageProps={this.props.setPageProps} fieldsUpdateComplete = {fieldsUpdateComplete} highLightField={this.props.highLightField} highLightedField={this.props.highLightedField} isAPILoaded={isAPILoaded} fields={this.fields} progress={progress} saveChangedFields={this.saveChangedFields} menu={menu} save={this.save} selectedMenuItem={this.props.selectedMenuItem} selectedStep={selectedStep}/>
+                <Settings dropItemFromModal={this.props.dropItemFromModal} selectMenu={this.props.selectMenu} handleModal={this.props.handleModal} showSavedSettingsNotice={this.showSavedSettingsNotice} updateField={this.props.updateField} pageProps={this.props.pageProps} setPageProps={this.props.setPageProps} fieldsUpdateComplete = {fieldsUpdateComplete} highLightField={this.props.highLightField} highLightedField={this.props.highLightedField} isAPILoaded={isAPILoaded} fields={this.fields} progress={progress} saveChangedFields={this.saveChangedFields} menu={menu} save={this.save} selectedMenuItem={this.props.selectedMenuItem} selectedStep={selectedStep}/>
                 <Notices className="rsssl-wizard-notices"/>
             </Fragment>
         )

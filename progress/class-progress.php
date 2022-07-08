@@ -80,7 +80,7 @@ class rsssl_progress {
 		$lowest_possible_task_count = RSSSL()->really_simple_ssl->get_lowest_possible_task_count();
 		$open_task_count = count( RSSSL()->really_simple_ssl->get_notices_list( array( 'status' => 'open' ) ));
 		if (RSSSL()->really_simple_ssl->ssl_enabled) {
-			$doing_well = __( "SSL is activated on your site.",  'really-simple-ssl' ) . ' ' . sprintf( _n( "You still have %s task open.", "You still have %s tasks open.", $open_task_count, 'really-simple-ssl' ), '<span class="rsssl-progress-count">'.$open_task_count.'</span>' );
+			$doing_well = __( "SSL is activated on your site.",  'really-simple-ssl' ) . ' ' . sprintf( _n( "You still have %s task open.", "You still have %s tasks open.", $open_task_count, 'really-simple-ssl' ), $open_task_count );
 			if ( $open_task_count === 0 ) {
 				_e("SSL configuration finished!", "really-simple-ssl");
 			} elseif ( !defined('rsssl_pro_version') ){
