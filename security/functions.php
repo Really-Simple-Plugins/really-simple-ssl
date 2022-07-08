@@ -169,6 +169,7 @@ function rsssl_generate_random_string($length) {
  * Get users where display name is login name
  */
 function get_users_where_display_name_is_login() {
+
 	$users = rsssl_display_name_equals_login( true );
 
 	if ( $users ) {
@@ -185,7 +186,9 @@ function get_users_where_display_name_is_login() {
  */
 function rsssl_list_users_where_display_name_is_login_name() {
 
-	if ( ! empty( get_users_where_display_name_is_login() ) ) {
+	if ( is_array( get_users_where_display_name_is_login() ) ) {
 		return implode( ', ', get_users_where_display_name_is_login() );
 	}
+
+	return '';
 }
