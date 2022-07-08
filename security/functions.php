@@ -171,7 +171,11 @@ function rsssl_generate_random_string($length) {
 function get_users_where_display_name_is_login() {
 	$users = rsssl_display_name_equals_login( true );
 
-	return $users;
+	if ( $users ) {
+		return true;
+	}
+
+	return false;
 }
 
 /**
@@ -181,5 +185,7 @@ function get_users_where_display_name_is_login() {
  */
 function rsssl_list_users_where_display_name_is_login_name() {
 
-	return implode( ', ', get_users_where_display_name_is_login() );
+	if ( ! empty( get_users_where_display_name_is_login() ) ) {
+		return implode( ', ', get_users_where_display_name_is_login() );
+	}
 }
