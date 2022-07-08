@@ -89,6 +89,7 @@ function rsssl_change_debug_log_location() {
  *
  * Check if wp-config.php contains debug.log declaration
  */
+
 function rsssl_contains_debug_log_declaration() {
 	$wpconfig_path = rsssl_find_wp_config_path();
 	$wpconfig = file_get_contents($wpconfig_path);

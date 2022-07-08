@@ -104,9 +104,6 @@ $rsssl_integrations_list = apply_filters( 'rsssl_integrations', array(
         'learning_mode'        => false,
         'option_id'            => 'disable_login_feedback',
         'type'                 => 'checkbox',
-        'actions'              => array(
-			'fix'       => 'rsssl_no_wp_login_errors',
-        ),
     ),
     'disable-http-methods' => array(
         'label'                => __('Disable HTTP methods', 'really-simple-ssl'),
