@@ -1,3 +1,13 @@
+.rsssl-grid-item.rsssl-progress {
+  .rsssl-grid-item-content {
+    padding: 0;
+  }
+
+  .rsssl-placeholder {
+    @include rsssl-block-padding;
+  }
+}
+
 .rsssl-progress-block {
   .rsssl-progress {
     overflow: hidden;
@@ -15,9 +25,16 @@
     }
   }
 
+  .rsssl-progress-bar {
+    @include rsssl-block-padding;
+    padding-block: 0;
+  }
+
   .rsssl-progress-text {
     display: flex;
     align-items: center;
+    @include rsssl-block-padding;
+    padding-block: 0;
     padding-top: 10px;
 
     .rsssl-progress-percentage {
@@ -25,7 +42,7 @@
       font-weight: 700;
     }
 
-    .rsssl-progress-text {
+    .rsssl-progress-text-span {
       margin-left: 35px;
       font-size: 18px;
       font-weight: 600;
@@ -45,52 +62,36 @@
     text-decoration: underline;
   }
 }
-.rsssl-task-switcher-container{
+
+.rsssl-task-switcher-container {
   display: flex;
   border-radius: var(--rsp-border-radius);
-  .rsssl-task-switcher{
-    &:first-of-type{
+
+  .rsssl-task-switcher {
+    &:first-of-type {
       border-right: 1px solid var(--rsp-grey-400);
       padding-right: 10px;
     }
-    &:last-of-type{
+
+    &:last-of-type {
       padding-left: 10px;
     }
   }
 }
+
 .rsssl-task-switcher {
   font-size: var(--rsp-fs-200);
-  cursor:	pointer;
+  cursor: pointer;
   transition: 0.3s;
-  &:hover{
+
+  &:hover {
     text-decoration: underline;
   }
 }
-.rsssl-active-filter-remaining .rsssl-remaining-tasks, .rsssl-active-filter-all .rsssl-all-tasks{
+
+.rsssl-active-filter-remaining .rsssl-remaining-tasks, .rsssl-active-filter-all .rsssl-all-tasks {
   text-decoration: underline;
 }
-
-//.rsssl-task-control-container {
-//  display: flex;
-//
-//  label {
-//    margin: 0 5px;
-//    border-bottom: 1px solid lightgrey;
-//    color: lightgrey;
-//  }
-//
-//  &.rsssl-active-filter-remaining .rsssl-remaining-tasks label {
-//    text-decoration: none;
-//    border-bottom: 0;
-//    color: initial;
-//  }
-//
-//  &.rsssl-active-filter-all .rsssl-all-tasks label {
-//    text-decoration: none;
-//    border-bottom: 0;
-//    color: initial;
-//  }
-//}
 
 /**
 * Task element, list of tasks
@@ -107,7 +108,7 @@
     flex: 1;
   }
 
-  .rsssl-task-form{
+  .rsssl-task-form {
     margin-top: var(--rsp-spacing-xxs);
     display: flex;
     gap: var(--rsp-spacing-xs);
@@ -139,12 +140,26 @@
     }
   }
 }
+
 .rsssl-scroll-container {
+  @include rsssl-block-padding;
+  --rsp-scroll-bg-clr: var(--rsp-dark-blue-faded);
   margin-top: 20px;
   height: 202px;
   overflow-y: auto;
-  padding: 0;
+  padding-block: 0;
+  padding-top: var(--rsp-spacing-s);
   border-radius: 0;
+  background-image: linear-gradient(to top, var(--rsp-scroll-bg-clr), var(--rsp-scroll-bg-clr)),
+  linear-gradient(to top, var(--rsp-scroll-bg-clr), var(--rsp-scroll-bg-clr)),
+  linear-gradient(to top, rgba(0, 0, 0, 0.15), rgba(255, 255, 255, 0)),
+  linear-gradient(to bottom, rgba(0, 0, 0, 0.15), rgba(255, 255, 255, 0));
+  background-position: bottom center, top center, bottom center, top center;
+  background-color: var(--rsp-scroll-bg-clr);
+  background-repeat: no-repeat;
+  background-size: 100% 25px, 100% 25px, 100% 15px, 100% 15px;
+  background-attachment: local, local, scroll, scroll;
+
 
   &::-webkit-scrollbar-track {
     border-radius: 10px;
@@ -163,8 +178,9 @@
     border-radius: 10px;
   }
 }
+
 .rsssl-progress-status-container {
-  margin-right:40px;
+  margin-right: 40px;
 }
 
 .rsssl-task-status {
@@ -176,7 +192,7 @@
   font-size: var(--rsp-fs-100);
   font-weight: 600;
 
-  &.rsssl-completed {
+  &.rsssl-completed, &.rsssl-success {
     background-color: var(--rsp-color-success);
     color: var(--rsp-text-color-white);
   }
@@ -200,6 +216,7 @@
     color: var(--rsp-text-color-white);
   }
 }
+
 .rsssl-plusone {
   display: inline-block;
   vertical-align: top;

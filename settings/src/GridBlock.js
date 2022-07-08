@@ -8,7 +8,6 @@ import ProgressBlock from "./ProgressBlock";
 import ProgressHeader from "./ProgressBlockHeader";
 import SecurityFeaturesBlock from './SecurityFeaturesBlock';
 import Placeholder from './Placeholder';
-import {CSSTransition} from 'react-transition-group';
 
 
 /**
@@ -139,24 +138,23 @@ class GridBlock extends Component {
 
         let DynamicBlockProps = { saveChangedFields: this.props.saveChangedFields, setBlockProps: this.setBlockProps, BlockProps: this.BlockProps, runTest: this.runTest, fields: this.props.fields, isApiLoaded: this.props.isApiLoaded, highLightField: this.highLightField };
         return (
-            <CSSTransition in={isAPILoaded} timeout={1000} classNames="rsssl-fade" mountOnEnter unmountOnExit>
-                <div className={className}>
-                    <div className="rsssl-grid-item-header">
-                        <h3 className="burst-grid-title rsssl-h4">{ blockData.title }</h3>
-                        <div className="rsssl-grid-item-controls">
-                            {blockData.controls && blockData.controls.type==='url' && <a href={blockData.controls.data}>{__("Instructions", "really-simple-ssl")}</a>}
-                            {blockData.controls && blockData.controls.type==='html' && <span className="rsssl-header-html" dangerouslySetInnerHTML={{__html: blockData.controls.data}}></span>}
-                            {blockData.controls && blockData.controls.type==='react' && wp.element.createElement(dynamicComponents[blockData.controls.data], DynamicBlockProps)}
-                        </div>
+            <div className={className}>
+                <div className="rsssl-grid-item-header">
+                    <h3 className="burst-grid-title rsssl-h4">{ blockData.title }</h3>
+                    <div className="rsssl-grid-item-controls">
+                        {blockData.controls && blockData.controls.type==='url' && <a href={blockData.controls.data}>{__("Instructions", "really-simple-ssl")}</a>}
+                        {blockData.controls && blockData.controls.type==='html' && <span className="rsssl-header-html" dangerouslySetInnerHTML={{__html: blockData.controls.data}}></span>}
+                        {blockData.controls && blockData.controls.type==='react' && wp.element.createElement(dynamicComponents[blockData.controls.data], DynamicBlockProps)}
                     </div>
-                    {!isAPILoaded && <Placeholder lines="4"></Placeholder>}
-                    {blockData.content.type!=='react' && <div className="rsssl-grid-item-content" dangerouslySetInnerHTML={{__html: content}}></div>}
-                    {blockData.content.type==='react' && <div className="rsssl-grid-item-content">{wp.element.createElement(dynamicComponents[content], DynamicBlockProps)}</div>}
-
-                    { blockData.footer.hasOwnProperty('button') && <div className="rsssl-grid-item-footer"><GridButton text={blockData.footer.button.text} onClick={this.getBlockData} disabled={this.testDisabled}/></div>}
-                    { blockData.footer.type==='html' && <div className="rsssl-grid-item-footer" dangerouslySetInnerHTML={{__html: this.footerHtml}}></div>}
                 </div>
-            </CSSTransition>
+                {!isAPILoaded && <Placeholder lines="4"></Placeholder>}
+                {blockData.content.type!=='react' && <div className="rsssl-grid-item-content" dangerouslySetInnerHTML={{__html: content}}></div>}
+                {blockData.content.type==='react' && <div className="rsssl-grid-item-content">{wp.element.createElement(dynamicComponents[content], DynamicBlockProps)}</div>}
+
+                { blockData.footer.hasOwnProperty('button') && <div className="rsssl-grid-item-footer"><GridButton text={blockData.footer.button.text} onClick={this.getBlockData} disabled={this.testDisabled}/></div>}
+                { blockData.footer.type==='html' && <div className="rsssl-grid-item-footer" dangerouslySetInnerHTML={{__html: this.footerHtml}}></div>}
+
+            </div>
         );
     }
 }

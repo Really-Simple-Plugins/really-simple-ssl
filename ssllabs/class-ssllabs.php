@@ -104,7 +104,6 @@ class rsssl_ssllabs {
 					</div>
 				</div>';
 		$html .= '<div class="rsssl-detailed-report '.$class.'"><a href="'.$url.'" target="_blank">'.__("View detailed report on Qualys SSL Labs", "really-simple-ssl").'</a></div>';
-		$html .= '<div class="rsssl-disclaimer">'.__("This scan is provided by Qualis SSL Labs.", "really-simple-ssl").' '.sprintf(__('The use of this API is under the MIT license and subject to <a href="%s">terms & conditions</a> and privacy policy of Qualys.', "really-simple-ssl"), 'https://www.ssllabs.com/about/terms.html').'</div>';
 		return ['footerHtml'=>$footer_html,'disabled'=>$disabled, 'html' => $html, 'progress' => $total_progress ];
 	}
 

@@ -110,3 +110,26 @@ $rsp-break-xxl: 1599px;
   }
 }
 
+@mixin rsssl-block-padding {
+  padding: var(--rsp-spacing-m) var(--rsp-spacing-l);
+
+  @media screen and (max-width: $rsp-break-m) {
+    padding: var(--rsp-spacing-xs) var(--rsp-spacing-m);
+  }
+
+  @media screen and (max-width: $rsp-break-s) {
+    padding: var(--rsp-spacing-xs) var(--rsp-spacing-s);
+  }
+}
+
+@mixin rsssl-fade-in {
+  animation-name: fade-in;
+  animation-duration: 0.4s;
+  animation-timing-function: ease-in;
+}
+
+@keyframes fade-in{
+  0%   { opacity: 0 }
+  100% { opacity: 1; }
+}
+

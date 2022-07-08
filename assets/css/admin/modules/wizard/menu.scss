@@ -2,33 +2,42 @@
   height: fit-content;
   .rsssl-grid-item-content{
     padding: 0;
+    padding-bottom: var(--rsp-spacing-s);
   }
 }
 .rsssl-wizard-menu-items {
   .rsssl-menu-item{
     a{
-      display: block;
+      display: flex;
+      align-items: center;
+      gap: var(--rsp-spacing-xs);
       text-decoration: none;
       color: var(--rsp-text-color);
       font-size: var(--rsp-fs-400);
+      font-weight: 600;
       padding: var(--rsp-spacing-s) var(--rsp-spacing-l);
-      transition: background-color 0.2s ease-in-out;
+      transition: all 0.2s ease-in-out;
       width: 100%;
     }
-    &.rsssl-active, &:hover{
+    &.rsssl-active{
+      > a{
+        //text-decoration: underline;
+        //color: var(--rsp-blue);
+        border-left: 4px solid var(--rsp-yellow);
+        background-color: #f2e6c966;
+      }
+    }
+    &.rsssl-featured{
       a{
         background: var(--rsp-dark-blue-faded);
+        flex-wrap: wrap;
       }
-
     }
   }
   .rsssl-submenu-item{
     a{
       padding-left: calc(var(--rsp-spacing-l) + var(--rsp-spacing-m));
       font-size: var(--rsp-fs-300);
-    }
-    .rsssl-menu-item:nth-of-type(2n -1) a{
-      background-color: var(--rsp-grey-100);
     }
   }
 }

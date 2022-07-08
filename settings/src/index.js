@@ -1,8 +1,4 @@
 import {
-	CSSTransition,
-	TransitionGroup,
-} from 'react-transition-group'
-import {
     render,
 } from '@wordpress/element';
 import Page from './Page';
