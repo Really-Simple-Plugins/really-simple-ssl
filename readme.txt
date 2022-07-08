@@ -95,6 +95,7 @@ If you can't deactivate, do not just remove the plugin folder to uninstall! Foll
 * Disable user registration feature
 * Rename Database prefix feature
 * Hide WP version
+* Disable login info leakage
 
 = 5.3.0 =
 * Improvement: added PHP 8.1 compatibility
