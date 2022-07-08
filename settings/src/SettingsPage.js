@@ -11,8 +11,6 @@ import {
     dispatch,
 } from '@wordpress/data';
 import { __ } from '@wordpress/i18n';
-import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
-import {faCheck} from '@fortawesome/pro-solid-svg-icons';
 
 /**
  * Renders the settings page with Menu and currently selected settings
