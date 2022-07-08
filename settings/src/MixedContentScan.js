@@ -240,6 +240,7 @@ class MixedContentScan extends Component {
                         dense
                         pagination
                         paginationResetDefaultPage={resetPaginationToggle} // optionally, a hook to reset pagination to page 1
+                        noDataComponent={__("No results", "really-simple-ssl")} //or your component
                         // subHeader
                         // subHeaderComponent=<subHeaderComponentMemo/>
                     />

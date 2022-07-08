@@ -282,6 +282,7 @@ class Field extends Component {
                         data={data}
                         dense
                         pagination
+                        noDataComponent={__("No results", "really-simple-ssl")} //or your component
                     />
                 </PanelBody>
             )

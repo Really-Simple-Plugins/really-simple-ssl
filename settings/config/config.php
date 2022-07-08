@@ -31,6 +31,8 @@ function rsssl_menu( $group_id = 'settings' ){
 					[
 						'id' => 'mixed_content_scan',
 						'title' => __('Mixed Content Scan', 'really-simple-ssl'),
+						'premium' => true,
+						'premium_text' => __("Learn more about %HSTS%s", 'really-simple-ssl'),
 						//example of submenu
 //						'menu_items' => [
 //							[
