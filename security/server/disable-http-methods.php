@@ -8,7 +8,16 @@
  */
 function rsssl_disable_http_methods_rules( $rules )
 {
-	$rules .= "\n" . "<LimitExcept GET POST" . ">" . "\n" ."deny from all" . "\n" . "</LimitExcept>";
+
+	if ( rsssl_get_server() === 'apache') {
+		$rules .= "\n" . "<LimitExcept GET POST" . ">" . "\n" . "deny from all" . "\n" . "</LimitExcept>";
+	}
+
+	if ( rsssl_get_server() === 'litespeed') {
+		$rules .= "\n" . "RewriteCond %{REQUEST_METHOD} ^(OPTIONS|TRACE|TRACK|PUT|PATCH|DELETE|COPY|HEAD|LINK|UNLINK|PURGE|LOCK|UNLOCK|PROPFIND|VIEW)";
+		$rules .= "\n" . "RewriteRule .* - [F]" . "\n";
+	}
+	
 	return $rules;
 }
 add_filter('rsssl_htaccess_security_rules', 'rsssl_disable_http_methods_rules' );
