@@ -15,11 +15,11 @@ function rsssl_menu( $group_id = 'settings' ){
 						'intro' => __("An introduction on some cool stuff", "really-simple-ssl"),
 						'step' => 1,
 						'groups' => [
-//							[
-//								'id' => 'general',
-//								'title' => __('General', 'really-simple-ssl'),
-//								'intro' => __("An introduction on some cool stuff", "really-simple-ssl"),
-//							],
+							[
+								'id' => 'general',
+								'title' => __('General', 'really-simple-ssl'),
+								'intro' => __("An introduction on some cool stuff", "really-simple-ssl"),
+							],
 							[
 								'id' => 'general_2',
 								'title' => __('General 2', 'really-simple-ssl'),
@@ -51,6 +51,22 @@ function rsssl_menu( $group_id = 'settings' ){
 						'title' => __('Recommended Security Headers', 'really-simple-ssl'),
 						'step' => 1,
 					],
+					[
+						'id' => 'hsts',
+						'title' => __('HSTS', 'really-simple-ssl-pro'),
+						'intro' => __("", "really-simple-ssl"),
+						'step' => 4,
+						'groups' => [
+							[
+								'id' => 'hsts',
+								'premium' => false,
+								'premium_text' => __("Learn more about %HSTS%s", 'really-simple-ssl'),
+								'upgrade' => 'https://really-simple-ssl.com/pro',
+								'title' => __('HSTS ', 'really-simple-ssl'),
+								'intro' => __("HSTS explanation", "really-simple-ssl"),
+							],
+						],
+					],
                     [
                         'id' => 'hardening',
 						'title' => __('Hardening', 'really-simple-ssl'),
@@ -70,17 +86,9 @@ function rsssl_menu( $group_id = 'settings' ){
 					[
 						'id' => 'premium',
 						'title' => __('Premium', 'really-simple-ssl-pro'),
-						'intro' => __("An introduction on some cool stuff", "really-simple-ssl"),
+						'intro' => __("Premium options", "really-simple-ssl"),
 						'step' => 1,
 						'groups' => [
-							[
-								'id' => 'hsts',
-								'premium' => true,
-								'premium_text' => __("Learn more about %HSTS%s", 'really-simple-ssl'),
-								'upgrade' => 'https://really-simple-ssl.com/pro',
-								'title' => __('HSTS ', 'really-simple-ssl'),
-								'intro' => __("HSTS explanation", "really-simple-ssl"),
-							],
 							[
 								'id' => 'permissionspolicy',
 								'premium' => true,
@@ -167,16 +175,24 @@ function rsssl_fields( $load_values = true ){
 			'new_features_block'     => true,
 			'networkwide' => false,
 		],
+
+		/**
+		 * General
+		 */
 		[
 			'id'          => 'wp_redirect',
 			'menu_id'     => 'general',
 			'group_id'    => 'general',
-			'type'        => 'checkbox',
+			'type'        => 'select',
 			'label'       => __( "Enable WordPress 301 redirect", 'really-simple-ssl' ),
 			'help'        => [
 								'label' => 'default',
 								'text' => __( 'Redirects all requests over HTTP to HTTPS using a PHP 301 redirect. Enable if the .htaccess redirect cannot be used, for example on NGINX servers.', 'really-simple-ssl' ),
 							],
+			'options'     => [
+				'.htaccess'              => __(".htaccess", "really-simple-ssl"),
+				'WordPress 301 redirect' => __(".WordPress 301 redirect", "really-simple-ssl"),
+			],
 			'disabled'    => false,
 			'default'     => false,
 			'server_conditions'  => [
@@ -189,34 +205,34 @@ function rsssl_fields( $load_values = true ){
 			'networkwide' => false,
 
 		],
-		[
-			'id'                => 'htaccess_redirect',
-			'menu_id'           => 'general',
-			'group_id'          => 'general',
-			'type'              => 'checkbox',
-			'label'             => __( "Enable 301 .htaccess redirect", 'really-simple-ssl' ),
-			'help'              => [
-									'label' => 'default',
-									'text' => __( 'A .htaccess redirect is faster and works better with caching. Really Simple SSL detects the redirect code that is most likely to work (99% of websites), but this is not 100%. Make sure you know how to regain access to your site if anything goes wrong!',
-									'really-simple-ssl' ),
-									],
-			'disabled'          => false,
-			'default'           => false,
-			//when enabled networkwide, it's handled on the network settings page
-			'server_conditions' => [
-				'relation' => 'AND',
-				[
-					'RSSSL()->really_simple_ssl->ssl_enabled' => true,
-					'RSSSL()->rsssl_server->uses_htaccess()' => true,
-					[
-						'relation' => 'OR',
-						'!is_multisite()',
-						'!RSSSL()->rsssl_multisite->ssl_enabled_networkwide'
-					]
-				]
-			],
-			'networkwide' => false,
-		],
+//		[
+//			'id'                => 'htaccess_redirect',
+//			'menu_id'           => 'general',
+//			'group_id'          => 'general',
+//			'type'              => 'checkbox',
+//			'label'             => __( "Enable 301 .htaccess redirect", 'really-simple-ssl' ),
+//			'help'              => [
+//									'label' => 'default',
+//									'text' => __( 'A .htaccess redirect is faster and works better with caching. Really Simple SSL detects the redirect code that is most likely to work (99% of websites), but this is not 100%. Make sure you know how to regain access to your site if anything goes wrong!',
+//									'really-simple-ssl' ),
+//									],
+//			'disabled'          => false,
+//			'default'           => false,
+//			//when enabled networkwide, it's handled on the network settings page
+//			'server_conditions' => [
+//				'relation' => 'AND',
+//				[
+//					'RSSSL()->really_simple_ssl->ssl_enabled' => true,
+//					'RSSSL()->rsssl_server->uses_htaccess()' => true,
+//					[
+//						'relation' => 'OR',
+//						'!is_multisite()',
+//						'!RSSSL()->rsssl_multisite->ssl_enabled_networkwide'
+//					]
+//				]
+//			],
+//			'networkwide' => false,
+//		],
 		[
 			'id'          => 'do_not_edit_htaccess',
 			'menu_id'     => 'general',
@@ -261,7 +277,7 @@ function rsssl_fields( $load_values = true ){
 		[
 			'id'          => 'dismiss_all_notices',
 			'menu_id'     => 'general',
-			'group_id'    => 'general_2',
+			'group_id'    => 'general',
 			'type'        => 'checkbox',
 			'label'       => __( "Dismiss all Really Simple SSL notices", 'really-simple-ssl' ),
 			'help'        => [
@@ -284,6 +300,24 @@ function rsssl_fields( $load_values = true ){
 			'disabled'    => false,
 			'default'     => false,
 		],
+		[
+			'id'          => 'premium_support',
+			'menu_id'     => 'general',
+			'group_id'    => 'general_2',
+			'type'        => 'textarea',
+			'label'       => __( "Premium support", 'really-simple-ssl' ),
+			'help'        => [
+							'label' => 'default',
+							'placeholder' => __( "If enabled, all the Really Simple SSL pages within the WordPress admin will be in high contrast", 'really-simple-ssl' ),
+							],
+			'disabled'    => false,
+			'default'     => false,
+		],
+
+
+		/**
+		 * Hardening
+		 */
 
         [
 			'id'          => 'disable_anyone_can_register',
@@ -490,7 +524,7 @@ function rsssl_fields( $load_values = true ){
 		],
 		[
 			'id'          => 'hsts',
-			'menu_id'     => 'premium',
+			'menu_id'     => 'hsts',
 			'group_id'    => 'hsts',
 			'type'        => 'checkbox',
 			'label'       => __("HSTS", "really-simple-ssl-pro"),
@@ -498,11 +532,45 @@ function rsssl_fields( $load_values = true ){
 			'default'     => false,
 		],
 		[
-			'id'          => 'hsts_preload',
-			'menu_id'     => 'premium',
+			'id'          => 'hsts_subdomains',
+			'menu_id'     => 'hsts',
 			'group_id'    => 'hsts',
 			'type'        => 'checkbox',
-			'label'       => __("HSTS preload", "really-simple-ssl-pro"),
+			'label'       => __("Include subdomains", "really-simple-ssl-pro"),
+			'react_conditions' => [
+				'relation' => 'AND',
+				[
+					'hsts' => 1,
+				]
+			],
+			'disabled'    => false,
+			'default'     => false,
+		],
+		[
+			'id'          => 'hsts_preload',
+			'menu_id'     => 'hsts',
+			'group_id'    => 'hsts',
+			'type'        => 'checkbox',
+			'label'       => __("Include preload", "really-simple-ssl-pro"),
+			'react_conditions' => [
+				'relation' => 'AND',
+				[
+					'hsts' => 1,
+				]
+			],
+			'disabled'    => false,
+			'default'     => false,
+		],
+		[
+			'id'          => 'hsts_max_age',
+			'menu_id'     => 'hsts',
+			'group_id'    => 'hsts',
+			'type'        => 'select',
+			'options'     => [
+				'31536000' => __('31536000', 'really-simple-ssl-pro'),
+				'63072000' => __('63072000', 'really-simple-ssl-pro'),
+			],
+			'label'       => __("Choose the max-age for HSTS", "really-simple-ssl-pro"),
 			'react_conditions' => [
 				'relation' => 'AND',
 				[

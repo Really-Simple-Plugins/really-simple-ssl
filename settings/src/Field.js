@@ -9,6 +9,7 @@ import {
     TextControl,
     RadioControl,
     SelectControl,
+    TextareaControl,
     __experimentalNumberControl as NumberControl,
     ToggleControl,
 } from '@wordpress/components';
@@ -94,6 +95,7 @@ class Field extends Component {
     render(){
         let field = this.props.field;
         let fieldValue = field.value;
+        console.log(fieldValue);
         let fields = this.props.fields;
         let options = [];
         if ( field.options ) {
@@ -144,6 +146,19 @@ class Field extends Component {
                         label={ field.label }
                         onChange={ ( fieldValue ) => this.onChangeHandler(fieldValue) }
                         value= { fieldValue }
+                    />
+                </PanelBody>
+            );
+        }
+
+        if ( field.type==='textarea' ){
+            return (
+                <PanelBody className={ this.highLightClass}>
+                    <TextareaControl
+                        label={ field.label }
+                        help={ field.comment }
+                        value= { fieldValue }
+                        onChange={ ( fieldValue ) => this.onChangeHandler(fieldValue) }
                     />
                 </PanelBody>
             );

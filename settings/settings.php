@@ -198,6 +198,7 @@ function rsssl_sanitize_field_type($type){
         'checkbox',
         'radio',
         'text',
+        'textarea',
         'number',
         'email',
         'select',
@@ -414,6 +415,8 @@ function rsssl_sanitize_field( $value, $type, $id ) {
 			return intval($value);
 		case 'select':
 		case 'text':
+		    return sanitize_text_field( $value );
+        case 'textarea':
 		    return sanitize_text_field( $value );
 		case 'license':
 		    return $value;
