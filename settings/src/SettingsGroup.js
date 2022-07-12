@@ -77,6 +77,7 @@ class SettingsGroup extends Component {
             }
         }
         let activeGroup = this.activeGroup;
+        // console.log(activeGroup);
         return (
             <div className="rsssl-grid-item">
                 {activeGroup && activeGroup.title && <div className="rsssl-grid-item-header"><h3 className="rsssl-h4">{activeGroup.title}</h3></div>}

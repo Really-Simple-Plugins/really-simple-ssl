@@ -95,7 +95,6 @@ class Field extends Component {
     render(){
         let field = this.props.field;
         let fieldValue = field.value;
-        console.log(fieldValue);
         let fields = this.props.fields;
         let options = [];
         if ( field.options ) {

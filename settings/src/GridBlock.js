@@ -140,7 +140,7 @@ class GridBlock extends Component {
         return (
             <div className={className}>
                 <div className="rsssl-grid-item-header">
-                    <h3 className="burst-grid-title rsssl-h4">{ blockData.title }</h3>
+                    <h3 className="rsssl-grid-title rsssl-h4">{ blockData.title }</h3>
                     <div className="rsssl-grid-item-controls">
                         {blockData.controls && blockData.controls.type==='url' && <a href={blockData.controls.data}>{__("Instructions", "really-simple-ssl")}</a>}
                         {blockData.controls && blockData.controls.type==='html' && <span className="rsssl-header-html" dangerouslySetInnerHTML={{__html: blockData.controls.data}}></span>}
