@@ -224,7 +224,6 @@ function rsssl_fields( $load_values = true ){
 								'text' => __( 'Redirects all requests over HTTP to HTTPS using a PHP 301 redirect. Enable if the .htaccess redirect cannot be used, for example on NGINX servers.', 'really-simple-ssl' ),
 							],
 			'options'     => [
-				'htaccess_redirect'              => __(".htaccess", "really-simple-ssl"),
 				'wp_redirect' => __(".WordPress 301 redirect", "really-simple-ssl"),
 			],
 			'disabled'    => false,
@@ -239,34 +238,34 @@ function rsssl_fields( $load_values = true ){
 			'networkwide' => false,
 
 		],
-//		[
-//			'id'                => 'htaccess_redirect',
-//			'menu_id'           => 'general',
-//			'group_id'          => 'general',
-//			'type'              => 'checkbox',
-//			'label'             => __( "Enable 301 .htaccess redirect", 'really-simple-ssl' ),
-//			'help'              => [
-//									'label' => 'default',
-//									'text' => __( 'A .htaccess redirect is faster and works better with caching. Really Simple SSL detects the redirect code that is most likely to work (99% of websites), but this is not 100%. Make sure you know how to regain access to your site if anything goes wrong!',
-//									'really-simple-ssl' ),
-//									],
-//			'disabled'          => false,
-//			'default'           => false,
-//			//when enabled networkwide, it's handled on the network settings page
-//			'server_conditions' => [
-//				'relation' => 'AND',
-//				[
-//					'RSSSL()->really_simple_ssl->ssl_enabled' => true,
-//					'RSSSL()->rsssl_server->uses_htaccess()' => true,
-//					[
-//						'relation' => 'OR',
-//						'!is_multisite()',
-//						'!RSSSL()->rsssl_multisite->ssl_enabled_networkwide'
-//					]
-//				]
-//			],
-//			'networkwide' => false,
-//		],
+		[
+			'id'                => 'htaccess_redirect',
+			'menu_id'           => 'general',
+			'group_id'          => 'general',
+			'type'              => 'checkbox',
+			'label'             => __( "Enable 301 .htaccess redirect", 'really-simple-ssl' ),
+			'help'              => [
+									'label' => 'default',
+									'text' => __( 'A .htaccess redirect is faster and works better with caching. Really Simple SSL detects the redirect code that is most likely to work (99% of websites), but this is not 100%. Make sure you know how to regain access to your site if anything goes wrong!',
+									'really-simple-ssl' ),
+									],
+			'disabled'          => false,
+			'default'           => false,
+			//when enabled networkwide, it's handled on the network settings page
+			'server_conditions' => [
+				'relation' => 'AND',
+				[
+					'RSSSL()->really_simple_ssl->ssl_enabled' => true,
+					'RSSSL()->rsssl_server->uses_htaccess()' => true,
+					[
+						'relation' => 'OR',
+						'!is_multisite()',
+						'!RSSSL()->rsssl_multisite->ssl_enabled_networkwide'
+					]
+				]
+			],
+			'networkwide' => false,
+		],
 		[
 			'id'          => 'do_not_edit_htaccess',
 			'menu_id'     => 'general',
@@ -354,19 +353,19 @@ function rsssl_fields( $load_values = true ){
 				]
 			],
 		],
-		[
-			'id'          => 'high_contrast',
-			'menu_id'     => 'general',
-			'group_id'    => 'general',
-			'type'        => 'checkbox',
-			'label'       => __( "Enable High Contrast mode", 'really-simple-ssl' ),
-			'help'        => [
-							'label' => 'default',
-							'text' => __( "If enabled, all the Really Simple SSL pages within the WordPress admin will be in high contrast", 'really-simple-ssl' ),
-							],
-			'disabled'    => false,
-			'default'     => false,
-		],
+//		[
+//			'id'          => 'high_contrast',
+//			'menu_id'     => 'general',
+//			'group_id'    => 'general',
+//			'type'        => 'checkbox',
+//			'label'       => __( "Enable High Contrast mode", 'really-simple-ssl' ),
+//			'help'        => [
+//							'label' => 'default',
+//							'text' => __( "If enabled, all the Really Simple SSL pages within the WordPress admin will be in high contrast", 'really-simple-ssl' ),
+//							],
+//			'disabled'    => false,
+//			'default'     => false,
+//		],
 		[
 			'id'          => 'premium_support',
 			'menu_id'     => 'general',
