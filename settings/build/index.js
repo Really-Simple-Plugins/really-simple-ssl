@@ -3453,7 +3453,8 @@ class GridBlock extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Componen
       const timer = setTimeout(() => {
         this.getBlockData('refresh');
       }, blockData.content.interval);
-    }
+    } // console.log(blockData);
+
 
     let DynamicBlockProps = {
       saveChangedFields: this.props.saveChangedFields,
@@ -5286,7 +5287,8 @@ class SettingsGroup extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Comp
       disabled: false,
       status: 'invalid',
       fields: this.props.fields,
-      isAPILoaded: this.props.isAPILoaded
+      isAPILoaded: this.props.isAPILoaded // activeGroup: this.activeGroup,
+
     };
     this.upgrade = 'https://really-simple-ssl.com/pro';
     this.msg = '';
@@ -5318,6 +5320,7 @@ class SettingsGroup extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Comp
 
       if (currentGroup.length > 0) {
         this.activeGroup = currentGroup[0];
+        console.log(this.activeGroup);
       }
     }
 
@@ -5355,8 +5358,8 @@ class SettingsGroup extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Comp
       }
     }
 
-    let activeGroup = this.activeGroup; // console.log(activeGroup);
-
+    let activeGroup = this.activeGroup;
+    console.log(activeGroup);
     return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
       className: "rsssl-grid-item"
     }, activeGroup && activeGroup.title && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {

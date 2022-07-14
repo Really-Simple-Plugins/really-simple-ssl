@@ -15,6 +15,7 @@ class SettingsGroup extends Component {
             status:'invalid',
             fields:this.props.fields,
             isAPILoaded: this.props.isAPILoaded,
+            // activeGroup: this.activeGroup,
         };
         this.upgrade='https://really-simple-ssl.com/pro';
         this.msg='';
@@ -42,6 +43,7 @@ class SettingsGroup extends Component {
             let currentGroup = selectedMenuItem.groups.filter(group => group.id === this.props.group);
             if (currentGroup.length>0) {
                 this.activeGroup = currentGroup[0];
+                console.log(this.activeGroup);
             }
         }
         this.upgrade = this.activeGroup.upgrade ? this.activeGroup.upgrade : this.upgrade;
@@ -77,10 +79,11 @@ class SettingsGroup extends Component {
             }
         }
         let activeGroup = this.activeGroup;
-        // console.log(activeGroup);
+        console.log(activeGroup);
         return (
             <div className="rsssl-grid-item">
                 {activeGroup && activeGroup.title && <div className="rsssl-grid-item-header"><h3 className="rsssl-h4">{activeGroup.title}</h3></div>}
+                {/*{activeGroup && activeGroup.helpLink && <div className="rsssl-grid-item-controls"><h3 className="rsssl-help-link">{activeGroup.helpLink}</h3></div>}*/}
                 <div className="rsssl-grid-item-content">
                     {activeGroup && activeGroup.intro && <div className="rsssl-settings-block-intro">{activeGroup.intro}</div>}
                     {selectedFields.map((field, i) => <Field dropItemFromModal={this.props.dropItemFromModal} handleModal={this.props.handleModal} showSavedSettingsNotice={this.props.showSavedSettingsNotice} updateField={this.props.updateField} setPageProps={this.props.setPageProps} fieldsUpdateComplete = {this.props.fieldsUpdateComplete} key={i} index={i} highLightField={this.props.highLightField} highLightedField={this.props.highLightedField} saveChangedFields={this.props.saveChangedFields} field={field} fields={selectedFields}/>)}

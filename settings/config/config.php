@@ -13,7 +13,8 @@ function rsssl_menu( $group_id = 'settings' ){
 						'group_id' => 'general',
 						'title' => __('General', 'really-simple-ssl'),
 						'intro' => __("An introduction on some cool stuff", "really-simple-ssl"),
-						'step' => 1,
+                        'helpLink'  => 'https://really-simple-ssl.com',
+                        'step' => 1,
 						'groups' => [
 							[
 								'id' => 'general',
@@ -44,7 +45,7 @@ function rsssl_menu( $group_id = 'settings' ){
 //								'title' => __('Sub mixed content 2', 'really-simple-ssl'),
 //							],
 //						],
-						'step' => 1,
+						'step' => 2,
 					],
 					[
 						'id' => 'recommended_security_headers',
@@ -96,6 +97,12 @@ function rsssl_menu( $group_id = 'settings' ){
 							[
 								'id' => 'contentsecuritypolicy',
 								'premium' => true,
+								'title' => __('Upgrade insecure requests', 'really-simple-ssl'),
+//								'intro' => __("Content Security Policy explanation", "really-simple-ssl"),
+							],
+							[
+								'id' => 'contentsecuritypolicy_2',
+								'premium' => true,
 								'title' => __('Content Security Policy', 'really-simple-ssl'),
 								'intro' => __("Content Security Policy explanation", "really-simple-ssl"),
 							]
@@ -119,22 +126,22 @@ function rsssl_menu( $group_id = 'settings' ){
 						'id' => 'hardening',
 						'title' => __('Hardening', 'really-simple-ssl'),
 						'featured' => __('Improve your security with the most popular security features of Wordpress', 'really-simple-ssl'),
-						'menu_items' => [
-							[
-								'id' => 'application_passwords',
-								'title' => __('Disable application passwords', 'really-simple-ssl'),
-							],
-							[
-								'id' => 'code_execution_uploads',
-								'title' => __('Disable code execution in uploads folder', 'really-simple-ssl'),
-							],
-						],
+//						'menu_items' => [
+//							[
+//								'id' => 'application_passwords',
+//								'title' => __('Disable application passwords', 'really-simple-ssl'),
+//							],
+//							[
+//								'id' => 'code_execution_uploads',
+//								'title' => __('Disable code execution in uploads folder', 'really-simple-ssl'),
+//							],
+//						],
 						'step' => 1,
 					],
 					[
 						'id' => 'licensing',
 						'title' => __('Licensing', 'really-simple-ssl'),
-//						'featured' => __(' your seImprovecurity with the most popular security features of Wordpress', 'really-simple-ssl'),
+//						'featured' => __(' Improv security with the most popular security features of Wordpress', 'really-simple-ssl'),
 						'step' => 1,
 					],
 				],
@@ -213,6 +220,40 @@ function rsssl_fields( $load_values = true ){
 		/**
 		 * General
 		 */
+        [
+            'id'          => 'cert_expiration_warning',
+            'menu_id'     => 'general',
+            'group_id'    => 'general',
+            'type'        => 'checkbox',
+            'label'       => __("Receive an e-mail when your certificate is about to expire", "really-simple-ssl-pro"),
+            'disabled'    => false,
+            'default'     => false,
+        ],
+        [
+            'id'          => 'mixed_content_fixer_method',
+            'menu_id'     => 'general',
+            'group_id'    => 'general',
+            'type'        => 'select',
+            'options'      => [
+                'mixed_content_fixer'       => __('Always', 'really-simple-ssl'),
+                'admin_mixed_content_fixer' => __('Fix mixed content on back-end', 'really-simple-ssl'),
+                'switch_mixed_content_fixer_hook' => __('Switch mixed content fixer hook', 'really-simple-ssl'),
+            ],
+            'label'       => __( "Mixed content fixer", 'really-simple-ssl' ),
+            'help'        => [
+                'label' => 'default',
+                'title' => __( "Fire mixed content fixer with different method", 'really-simple-ssl' ),
+                'text'  => __( 'If this option is set to true, the mixed content fixer will fire on the init hook instead of the template_redirect hook. Only use this option when you experience problems with the mixed content fixer.', 'really-simple-ssl' ),
+            ],
+            'disabled'    => false,
+            'default'     => false,
+            'react_conditions' => [
+                'relation' => 'AND',
+                [
+                    'mixed_content_fixer' => 1,
+                ]
+            ],
+        ],
 		[
 			'id'          => 'wp_redirect',
 			'menu_id'     => 'general',
@@ -238,6 +279,19 @@ function rsssl_fields( $load_values = true ){
 			'networkwide' => false,
 
 		],
+        [
+            'id'          => 'dismiss_all_notices',
+            'menu_id'     => 'general',
+            'group_id'    => 'general',
+            'type'        => 'checkbox',
+            'label'       => __( "Dismiss all Really Simple SSL notices", 'really-simple-ssl' ),
+            'help'        => [
+                'label' => 'default',
+                'text' => __( "Enable this option to permanently dismiss all +1 notices in the 'Your progress' tab'", 'really-simple-ssl' ),
+            ],
+            'disabled'    => false,
+            'default'     => false,
+        ],
 		[
 			'id'                => 'htaccess_redirect',
 			'menu_id'           => 'general',
@@ -287,28 +341,10 @@ function rsssl_fields( $load_values = true ){
 				]
 			],
 		],
-		[
-			'id'          => 'dismiss_all_notices',
-			'menu_id'     => 'general',
-			'group_id'    => 'general',
-			'type'        => 'checkbox',
-			'label'       => __( "Dismiss all Really Simple SSL notices", 'really-simple-ssl' ),
-			'help'        => [
-							'label' => 'default',
-							'text' => __( "Enable this option to permanently dismiss all +1 notices in the 'Your progress' tab'", 'really-simple-ssl' ),
-							],
-			'disabled'    => false,
-			'default'     => false,
-		],
-		[
-			'id'          => 'cert_expiration_warning',
-			'menu_id'     => 'general',
-			'group_id'    => 'general',
-			'type'        => 'checkbox',
-			'label'       => __("Receive an e-mail when your certificate is about to expire", "really-simple-ssl-pro"),
-			'disabled'    => false,
-			'default'     => false,
-		],
+
+        /**
+         * Security headers
+         */
 		[
 			'id'          => 'security_headers_method',
 			'menu_id'     => 'recommended_security_headers',
@@ -328,31 +364,6 @@ function rsssl_fields( $load_values = true ){
 //			'disabled'    => false,
 //			'default'     => false,
 //		],
-		[
-			'id'          => 'switch_mixed_content_fixer_hook',
-			'menu_id'     => 'general',
-			'group_id'    => 'general',
-			'type'        => 'select',
-			'options'      => [
-				'mixed_content_fixer'       => __('Always', 'really-simple-ssl'),
-				'admin_mixed_content_fixer' => __('Fix mixed content on back-end', 'really-simple-ssl'),
-				'switch_mixed_content_fixer_hook' => __('Switch mixed content fixer hook', 'really-simple-ssl'),
-			],
-			'label'       => __( "Fire mixed content fixer with different method", 'really-simple-ssl' ),
-			'help'        => [
-				'label' => 'default',
-				'title' => __( "Fire mixed content fixer with different method", 'really-simple-ssl' ),
-				'text'  => __( 'If this option is set to true, the mixed content fixer will fire on the init hook instead of the template_redirect hook. Only use this option when you experience problems with the mixed content fixer.', 'really-simple-ssl' ),
-			],
-			'disabled'    => false,
-			'default'     => false,
-			'react_conditions' => [
-				'relation' => 'AND',
-				[
-					'mixed_content_fixer' => 1,
-				]
-			],
-		],
 //		[
 //			'id'          => 'high_contrast',
 //			'menu_id'     => 'general',
@@ -754,10 +765,19 @@ function rsssl_fields( $load_values = true ){
 			'disabled'    => false,
 			'default'     => false,
 		],
+        [
+            'id'          => 'upgrade_insecure_requests',
+            'menu_id'     => 'content_security_policy_menu',
+            'group_id'    => 'contentsecuritypolicy',
+            'type'        => 'checkbox',
+            'label'       => __( "Encrypted and authenticated response", 'really-simple-ssl-pro' ),
+            'disabled'    => false,
+            'default'     => false,
+        ],
 		[
 			'id'          => 'content_security_policy_status',
 			'menu_id'     => 'content_security_policy_menu',
-			'group_id'    => 'contentsecuritypolicy',
+			'group_id'    => 'contentsecuritypolicy_2',
 			'type'        => 'select',
 			'options'     => [
 				'disabled'    => __( "Disabled", "really-simple-ssl-pro" ),
@@ -772,7 +792,7 @@ function rsssl_fields( $load_values = true ){
 		[
 			'id'          => 'content_security_policy',
 			'menu_id'     => 'content_security_policy_menu',
-			'group_id'    => 'contentsecuritypolicy',
+			'group_id'    => 'contentsecuritypolicy_2',
 			'type'        => 'contentsecuritypolicy',
 			'label'       => __( "Content Security Policy", 'really-simple-ssl-pro' ),
 			'disabled'    => false,

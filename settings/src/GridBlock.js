@@ -136,6 +136,8 @@ class GridBlock extends Component {
             }, blockData.content.interval );
         }
 
+        // console.log(blockData);
+
         let DynamicBlockProps = { saveChangedFields: this.props.saveChangedFields, setBlockProps: this.setBlockProps, BlockProps: this.BlockProps, runTest: this.runTest, fields: this.props.fields, isApiLoaded: this.props.isApiLoaded, highLightField: this.highLightField };
         return (
             <div className={className}>
