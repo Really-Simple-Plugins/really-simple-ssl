@@ -224,6 +224,8 @@ function rsssl_rest_api_fields_set($request){
     }
 
 	$fields = $request->get_json_params();
+
+//    error_log(print_r($fields, true));
     $config_fields = rsssl_fields(false);
     $config_ids = array_column($config_fields, 'id');
 
@@ -269,9 +271,10 @@ function rsssl_rest_api_fields_set($request){
 		$options = get_option( 'rsssl_options', array() );
 	}
 
-    //build a new options array
+	//build a new options array
     foreach ( $fields as $field ) {
         $prev_value = isset( $options[ $field['id'] ] ) ? $options[ $field['id'] ] : false;
+	    error_log("Updating " . $field['id']);
         do_action( "rsssl_before_save_option", $field['id'], $field['value'], $prev_value, $field['type'] );
         $options[ $field['id'] ] = $field['value'];
     }
@@ -280,10 +283,15 @@ function rsssl_rest_api_fields_set($request){
         if ( rsssl_is_networkwide_active() ) {
 	        update_site_option( 'rsssl_options', $options );
         } else {
+	        error_log("Oopdatin");
 	        update_option( 'rsssl_options', $options );
         }
     }
-    foreach ( $fields as $field ) {
+
+//	error_log(print_r($options, true));
+
+
+	foreach ( $fields as $field ) {
         do_action( "rsssl_after_save_field", $field['id'], $field['value'], $prev_value, $field['type'] );
     }
 

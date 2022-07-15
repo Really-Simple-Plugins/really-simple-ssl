@@ -56,8 +56,10 @@ class rsssl_admin extends rsssl_front_end
 	    add_action( 'admin_init', array($this, 'maybe_dismiss_review_notice') );
 	    add_action( 'admin_init', array($this, 'insert_secure_cookie_settings'), 70 );
         add_action( 'admin_init', array($this, 'recheck_certificate') );
-	    add_action( "update_option_rlrsssl_options", array( $this, "maybe_clear_transients" ), 10, 3 );
         add_action( 'wp_ajax_update_ssl_detection_overridden_option', array( $this, 'update_ssl_detection_overridden_option' ) );
+        // Saved fields hook fired through REST settings save
+	    add_action( "rsssl_after_saved_fields", array( $this, "maybe_clear_transients" ), 10, 3 );
+	    add_action( "rsssl_after_saved_fields", array($this, "update_htaccess_after_settings_save"), 20, 3);
 
 	    // Only show deactivate popup when SSL has been enabled.
 	    if ($this->ssl_enabled) {
@@ -79,7 +81,7 @@ class rsssl_admin extends rsssl_front_end
 	 * @param $newvalue
 	 * @param $option
 	 */
-    public function maybe_clear_transients($oldvalue, $newvalue, $option){
+    public function maybe_clear_transients($oldvalue=false, $newvalue=false, $option=false){
         if ($oldvalue !== $newvalue ) {
             $this->clear_transients();
         }
@@ -186,9 +188,9 @@ class rsssl_admin extends rsssl_front_end
         $is_on_settings_page = $this->is_settings_page();
 
         if (defined("RSSSL_FORCE_ACTIVATE") && RSSSL_FORCE_ACTIVATE) {
-            $options = get_option('rlrsssl_options');
+            $options = get_option('rsssl_options');
             $options['ssl_enabled'] = true;
-            update_option('rlrsssl_options', $options);
+            update_option('rsssl_options', $options);
         }
 
         /*
@@ -279,7 +281,6 @@ class rsssl_admin extends rsssl_front_end
         if (!defined("rsssl_pro_version") && (!defined("rsssl_pp_version")) && (!defined("rsssl_soc_version")) && (!class_exists('RSSSL_PRO')) && (!is_multisite())) {
             add_action('admin_notices', array($this, 'show_leave_review_notice'));
         }
-        add_action("update_option_rlrsssl_options", array($this, "update_htaccess_after_settings_save"), 20, 3);
     }
 
     public function check_upgrade() {
@@ -318,6 +319,12 @@ class rsssl_admin extends rsssl_front_end
 				    file_put_contents( $this->htaccess_file(), $htaccess );
 			    }
 		    }
+	    }
+
+        if ( $prev_version && version_compare( $prev_version, '6.0', '<=' ) ) {
+
+            //@todo move rlrsssl_options to rsssl_options
+
 	    }
 
         update_option( 'rsssl_current_version', rsssl_version );
@@ -939,9 +946,10 @@ class rsssl_admin extends rsssl_front_end
     public function get_admin_options()
     {
 
-        $options = get_option('rlrsssl_options');
+        $options = get_option('rsssl_options');
 
         if (isset($options)) {
+            error_log(print_r($options, true));
             $this->site_has_ssl = isset($options['site_has_ssl']) ? $options['site_has_ssl'] : FALSE;
             $this->hsts = isset($options['hsts']) ? $options['hsts'] : FALSE;
             $this->htaccess_warning_shown = isset($options['htaccess_warning_shown']) ? $options['htaccess_warning_shown'] : FALSE;
@@ -1036,7 +1044,7 @@ class rsssl_admin extends rsssl_front_end
 				$sites = RSSSL()->rsssl_multisite->get_sites_bw_compatible(0, $nr_of_sites);
 				foreach ($sites as $site) {
 					$this->switch_to_blog_bw_compatible($site);
-					$options = get_option('rlrsssl_options');
+					$options = get_option('rsssl_options');
 					$ssl_enabled = FALSE;
 					if (isset($options)) {
 						$site_has_ssl = isset($options['site_has_ssl']) ? $options['site_has_ssl'] : FALSE;
@@ -1536,7 +1544,7 @@ class rsssl_admin extends rsssl_front_end
 
         );
 
-	    update_option('rlrsssl_options', $options);
+	    update_option('rsssl_options', $options);
     }
 
     /**
@@ -2208,6 +2216,7 @@ class rsssl_admin extends rsssl_front_end
 
     public function update_htaccess_after_settings_save($oldvalue = false, $newvalue = false, $option = false)
     {
+
         if (!current_user_can($this->capability)) {
             return;
         }
