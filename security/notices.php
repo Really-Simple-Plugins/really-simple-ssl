@@ -99,6 +99,29 @@ function rsssl_general_security_notices( $notices ) {
 			),
 		),
 	);
+	$notices['disable-indexing-enabled-htaccess-not-writable'] = array(
+		'callback' => 'rsssl_indexing_disabled_by_user_htaccess_not_writable',
+		'score' => 5,
+		'output' => array(
+			'true' => array(
+				'msg' => __("To disable directory browsing you need to add the line 'Options -Indexes' to your .htaccess file", "really-simple-ssl"),
+				'icon' => 'open',
+				'dismissible' => true,
+			),
+		),
+	);
+	$notices['disable-indexing-enabled-is-nginx'] = array(
+		'callback' => 'rsssl_indexing_enabled_nginx',
+		'score' => 5,
+		'output' => array(
+			'true' => array(
+				'msg' => __("To disable directory browsing you need to add the line 'Options -Indexes' to your .htaccess file", "really-simple-ssl"),
+				'icon' => 'open',
+				'dismissible' => true,
+			),
+		),
+	);
+
 	return $notices;
 }
 add_filter('rsssl_notices', 'rsssl_general_security_notices');

@@ -228,7 +228,6 @@ function rsssl_wordpress_version_above_5_6() {
 
 }
 
-
 /**
  * @return string
  * Test if code execution is allowed in /uploads folder
@@ -252,4 +251,70 @@ function rsssl_code_execution_allowed()
 	}
 
 	return $result;
+}
+
+/**
+ * Test if directory indexing is allowed
+ * @return bool
+ */
+function rsssl_directory_indexing_allowed() {
+
+	$test_folder = 'rssslbrowsingtest';
+	$test_dir = trailingslashit(ABSPATH) . $test_folder;
+
+	if ( ! is_dir( $test_dir ) ) {
+		mkdir( $test_dir, 755 );
+	}
+
+	$response = wp_remote_get(trailingslashit( site_url() ) . $test_folder );
+
+	if ( is_dir( $test_dir )  ) {
+		rmdir( $test_dir );
+	}
+
+	// WP_Error won't contain response code, return false
+	if ( is_wp_error( $response ) ) {
+		return false;
+	}
+
+	$response_code = $response['response']['code'];
+
+	if ( $response_code === 403 ) {
+		return false;
+	}
+
+	return true;
+}
+
+/**
+ * Check if disable indexing has been enabled by user and .htaccess is not writable
+ * @return bool
+ */
+function rsssl_indexing_disabled_by_user_htaccess_not_writable() {
+
+	if ( rsssl_uses_htaccess()
+	     && rsssl_directory_indexing_allowed()
+	     && get_option('disable_indexing') !== false
+	     && file_exists( RSSSL()->really_simple_ssl->htaccess_file() )
+	     && ! is_writable( RSSSL()->really_simple_ssl->htaccess_file() )
+	) {
+		return true;
+	}
+
+	return false;
+}
+
+/**
+ * Check if indexing is enabled and site uses NGINX
+ * @return bool
+ */
+function rsssl_indexing_enabled_nginx() {
+	if ( rsssl_directory_indexing_allowed()
+	     && get_option('disable_indexing') !== false
+		 && rsssl_get_server() === 'nginx'
+	) {
+		return true;
+	}
+
+	return false;
 }

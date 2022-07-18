@@ -326,7 +326,7 @@ function rsssl_fields(){
 			'type'        => 'checkbox',
 			'label'       => __( "Prevent directory browsing", 'really-simple-ssl' ),
 			'disabled'    => false,
-			'default'     => false,
+			'default'     => "NOT rsssl_directory_indexing_allowed()",
 		],
         [
 			'id'          => 'rename_admin_user',
@@ -438,7 +438,6 @@ function rsssl_is_user_registration_enabled() {
     }
 
     return false;
-
 
 }
 

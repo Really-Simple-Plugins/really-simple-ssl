@@ -7,9 +7,16 @@ defined( 'ABSPATH' ) or die( "you do not have access to this page!" );
  */
 
 function rsssl_disable_indexing_rules( $rules ) {
-	$rules .=  "\n" . 'Options -Indexes';
+
+	$rules = '';
+
+	if ( get_option('disable_indexing') !== false
+	) {
+		$rules .= "\n" . 'Options -Indexes';
+	}
 	return $rules;
 }
+
 add_filter('rsssl_htaccess_security_rules', 'rsssl_disable_indexing_rules');
 
 /**
