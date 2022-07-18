@@ -241,11 +241,7 @@ if ( ! function_exists( 'rsssl_user_can_manage' ) ) {
 		if ( ! is_user_logged_in() ) {
 			return false;
 		}
-
-//        if ( ! current_user_can( 'manage_options' ) ) {
-//            return false;
-//        }
-
+        
 		if ( ! current_user_can('manage_security') ) {
 			return false;
 		}
