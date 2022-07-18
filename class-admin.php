@@ -334,6 +334,11 @@ class rsssl_admin extends rsssl_front_end
 		    }
 	    }
 
+        // Add manage_security capability
+	    if ( $prev_version && version_compare( $prev_version, '5.3.2', '<=' ) ) {
+		    rsssl_add_manage_security_capability();
+	    }
+
         update_option( 'rsssl_current_version', rsssl_version );
     }
 
