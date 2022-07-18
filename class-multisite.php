@@ -510,7 +510,7 @@ if (!class_exists('rsssl_multisite')) {
         public function update_network_options()
         {
             if (!isset($_POST['rsssl_ms_nonce']) || !wp_verify_nonce($_POST['rsssl_ms_nonce'], 'rsssl_ms_settings_update')) return;
-            if (!current_user_can('manage_network_options')) return;
+            if (! rsssl_user_can_manage() ) return;
 
 	        do_action('rsssl_process_network_options');
 
@@ -680,7 +680,7 @@ if (!class_exists('rsssl_multisite')) {
 
         public function save_options()
         {
-	        if ( ! current_user_can( 'manage_network_options' ) ) return;
+	        if ( ! rsssl_user_can_manage() ) return;
 
             $options = get_site_option("rlrsssl_network_options");
             if (!is_array($options)) $options = array();
@@ -995,7 +995,7 @@ if (!class_exists('rsssl_multisite')) {
             //check if we are on ssl settings page
             if (!$this->is_settings_page()) return;
             //check user role
-            if (!current_user_can('manage_network_options')) return;
+            if (! rsssl_user_can_manage() ) return;
             //check nonce
             if (!isset($_GET['token']) || (!wp_verify_nonce($_GET['token'], 'run_ssl_to_admin_init'))) return;
             //check for action

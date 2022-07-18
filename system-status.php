@@ -18,7 +18,7 @@ require_once( BASE_PATH . 'wp-admin/includes/plugin.php');
 
 //by deleting these we make sure these functions run again
 delete_transient('rsssl_testpage');
-if ( current_user_can( 'manage_options' ) ) {
+if ( rsssl_user_can_manage() ) {
 
 	ob_start();
 	if ( defined( 'RSSSL_SAFE_MODE' ) && RSSSL_SAFE_MODE ) {

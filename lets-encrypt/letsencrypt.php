@@ -21,7 +21,7 @@ if (!function_exists('rsssl_letsencrypt_generation_allowed')) {
 			return true;
 		}
 
-		if ( !current_user_can( 'manage_options' ) ) {
+		if ( ! rsssl_user_can_manage() ) {
 			return false;
 		}
 
