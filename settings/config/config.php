@@ -433,6 +433,7 @@ function rsssl_blocks(){
 }
 
 function rsssl_is_user_registration_enabled() {
+
     if ( get_option('users_can_register') !== false ) {
         return true;
     }
