@@ -12,8 +12,9 @@ class Page extends Component {
         this.pageProps=[];
         this.pageProps['licenseStatus'] = rsssl_settings.licenseStatus;
         this.state = {
-            selectedMainMenuItem:'dashboard',
-            selectedMenuItem:'general',
+            selectedMainMenuItem: this.get_anchor('main') || 'dashboard',
+            selectedMenuItem: this.get_anchor('menu') || 'general',
+            selectedStep: 1,
             highLightedField:'',
             fields:'',
             menu:'',
@@ -39,7 +40,16 @@ class Page extends Component {
                 progress: progress,
             });
         });
+
+        this.selectMenu = this.selectMenu.bind(this);
+        this.selectStep = this.selectStep.bind(this);
+        this.handleModal = this.handleModal.bind(this);
+        this.highLightField = this.highLightField.bind(this);
+        this.updateField = this.updateField.bind(this);
+        this.selectMainMenu = this.selectMainMenu.bind(this);
+        this.setPageProps = this.setPageProps.bind(this);
     }
+
     getFields(){
         return rsssl_api.getFields().then( ( response ) => {
             return response.data;
@@ -72,30 +82,15 @@ class Page extends Component {
         })
     }
 
-    componentDidMount() {
-        this.selectMenu = this.selectMenu.bind(this);
-        this.handleModal = this.handleModal.bind(this);
-        this.highLightField = this.highLightField.bind(this);
-        this.updateField = this.updateField.bind(this);
-        this.selectMainMenu = this.selectMainMenu.bind(this);
-        this.setPageProps = this.setPageProps.bind(this);
-        let selectedMainMenuItem = this.get_anchor('main') || 'dashboard';
-        let selectedMenuItem = this.get_anchor('menu') || 'general';
-        this.setState({
-            selectedMainMenuItem: selectedMainMenuItem,
-            selectedMenuItem: selectedMenuItem,
-        });
-    }
-
     selectMenu(selectedMenuItem){
         this.setState({
-            selectedMenuItem :selectedMenuItem
+            selectedMenuItem: selectedMenuItem
         });
     }
 
     selectStep(selectedStep){
         this.setState({
-            selectedStep :selectedStep
+            selectedStep: selectedStep
         });
     }
 
@@ -140,24 +135,24 @@ class Page extends Component {
      */
     get_anchor = (level) => {
         let url = window.location.href;
-        if ( url.indexOf('#')==-1) {
+        if ( url.indexOf('#') === -1) {
             return false;
         }
 
         let queryString = url.split('#');
-        if (queryString.length == 1) {
+        if (queryString.length === 1) {
             return false;
         }
 
         let url_variables = queryString[1].split('#');
-        if (url_variables.length>0) {
+        if (url_variables.length > 0) {
             let anchor = url_variables[0];
-            if ( url.indexOf('/')==-1) {
+            if ( url.indexOf('/') === -1) {
                 return anchor;
             } else {
                 let anchor_variables = anchor.split('/');
-                if (anchor_variables.length>0){
-                    if (level==='main') {
+                if (anchor_variables.length > 0){
+                    if (level === 'main') {
                         return anchor_variables[0];
                     } else if (anchor_variables.hasOwnProperty(1)) {
                         return anchor_variables[1];
@@ -189,8 +184,27 @@ class Page extends Component {
                 {showModal && <Modal handleModal={this.handleModal} data={modalData}/>}
                 {isAPILoaded && <Header selectedMainMenuItem={selectedMainMenuItem} selectMainMenu={this.selectMainMenu} fields={fields}/> }
                 {isAPILoaded && <div className={"rsssl-content-area rsssl-grid rsssl-" + selectedMainMenuItem}>
-                    {selectedMainMenuItem==='settings' && <SettingsPage dropItemFromModal={dropItemFromModal} pageProps={this.pageProps} handleModal={this.handleModal} updateField={this.updateField} setPageProps={this.setPageProps} selectMenu={this.selectMenu} highLightField={this.highLightField} highLightedField={this.highLightedField} selectedMenuItem={selectedMenuItem} isAPILoaded={isAPILoaded} fields={fields} menu={menu} progress={progress}/> }
-                    {selectedMainMenuItem==='dashboard' && <DashboardPage isAPILoaded={isAPILoaded} fields={fields} highLightField={this.highLightField}/> }
+                    { selectedMainMenuItem === 'settings' &&
+                        <SettingsPage
+                            dropItemFromModal={dropItemFromModal}
+                            pageProps={this.pageProps}
+                            handleModal={this.handleModal}
+                            updateField={this.updateField}
+                            setPageProps={this.setPageProps}
+                            selectMenu={this.selectMenu}
+                            selectStep={this.selectStep}
+                            selectedStep={this.state.selectedStep}
+                            highLightField={this.highLightField}
+                            highLightedField={this.highLightedField}
+                            selectedMenuItem={selectedMenuItem}
+                            isAPILoaded={isAPILoaded}
+                            fields={fields}
+                            menu={menu}
+                            progress={progress}/>
+                    }
+                    { selectedMainMenuItem === 'dashboard' &&
+                        <DashboardPage isAPILoaded={isAPILoaded} fields={fields} highLightField={this.highLightField}/>
+                    }
                 </div> }
             </div>
         );

@@ -32,6 +32,8 @@ class Settings extends Component {
         let selectedMenuItem = this.props.selectedMenuItem;
         let selectedStep = this.props.selectedStep;
         let menu = this.props.menu;
+        const { menu_items: menuItems } = menu;
+        console.log(menuItems);
         if ( ! isAPILoaded ) {
             return (
                 <Placeholder></Placeholder>
@@ -77,13 +79,45 @@ class Settings extends Component {
         return (
             <Fragment>
                 <div className="rsssl-wizard-settings rsssl-column-2">
-                    {groups.map((group, i) => <SettingsGroup dropItemFromModal={this.props.dropItemFromModal} selectMenu={this.props.selectMenu} handleModal={this.props.handleModal} showSavedSettingsNotice={this.props.showSavedSettingsNotice}  updateField={this.props.updateField} pageProps={this.props.pageProps} setPageProps={this.props.setPageProps} fieldsUpdateComplete = {this.props.fieldsUpdateComplete} key={i} index={i} highLightField={this.props.highLightField} highLightedField={this.props.highLightedField} selectedMenuItem={selectedMenuItemObject} saveChangedFields={this.props.saveChangedFields} group={group} fields={selectedFields}/>)}
+                    { groups.map((group, i) =>
+                        <SettingsGroup
+                            dropItemFromModal={this.props.dropItemFromModal}
+                            selectMenu={this.props.selectMenu}
+                            handleModal={this.props.handleModal}
+                            showSavedSettingsNotice={this.props.showSavedSettingsNotice}
+                            updateField={this.props.updateField}
+                            pageProps={this.props.pageProps}
+                            setPageProps={this.props.setPageProps}
+                            fieldsUpdateComplete = {this.props.fieldsUpdateComplete}
+                            key={i}
+                            index={i}
+                            highLightField={this.props.highLightField}
+                            highLightedField={this.props.highLightedField}
+                            selectedMenuItem={selectedMenuItemObject}
+                            saveChangedFields={this.props.saveChangedFields}
+                            group={group}
+                            fields={selectedFields}/>)
+                    }
                     <div className="rsssl-grid-item-footer">
+                        {/*This will be shown only if current step is not the first one*/}
+                        { this.props.selectedStep !== 1 &&
+                            <Button isPrimary onClick={ () => this.props.previousStep(true) }>
+                                { __('Previous', 'really-simple-ssl') }
+                            </Button>
+                        }
+
                         <Button
                             isPrimary
                             onClick={ this.props.save }>
                             { __( 'Save', 'really-simple-ssl' ) }
                         </Button>
+
+                        {/*This will be shown only if current step is not the last one*/}
+                        { this.props.selectedStep !== menuItems.length &&
+                            <Button isPrimary onClick={ this.props.saveAndContinue }>
+                                { __( 'Save and Continue', 'really-simple-ssl' ) }
+                            </Button>
+                        }
                     </div>
                 </div>
                 <div className="rsssl-wizard-help">

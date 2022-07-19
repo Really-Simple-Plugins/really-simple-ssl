@@ -18,6 +18,7 @@ class MenuItem extends Component {
 
     handleClick(){
         this.props.selectMenu(this.props.menuItem.id);
+        this.props.selectStep(this.props.menuItem.step);
     }
 
     componentDidMount() {
@@ -47,7 +48,7 @@ class MenuItem extends Component {
         let href = '#settings/'+this.props.menuItem.id;
             return (
                 <div className={"rsssl-menu-item" + activeClass + featuredClass}>
-                    <a href={href} onClick={() => this.handleClick()}>
+                    <a onClick={() => this.handleClick()}>
                         <span>{this.props.menuItem.title}</span>
                         {this.props.menuItem.featured && <p className="rsssl-menu-item-featured">{this.props.menuItem.featured}</p>}
                     </a>
@@ -99,7 +100,18 @@ class Menu extends Component {
                     </div>
                     <div className="rsssl-grid-item-content">
                         <div className="rsssl-wizard-menu-items">
-                            {menuItems.map((menuItem, i) => <MenuItem key={i} isAPILoaded={isAPILoaded} menuItem={menuItem} selectMenu={this.props.selectMenu} selectedMenuItem={this.props.selectedMenuItem}/>)}
+                            {
+                                menuItems.map((menuItem, i) =>
+                                    <MenuItem
+                                        key={i}
+                                        isAPILoaded={isAPILoaded}
+                                        menuItem={menuItem}
+                                        selectMenu={this.props.selectMenu}
+                                        selectStep={this.props.selectStep}
+                                        selectedMenuItem={this.props.selectedMenuItem}
+                                    />
+                                )
+                            }
                         </div>
                     </div>
                     <div className="rsssl-grid-item-footer">

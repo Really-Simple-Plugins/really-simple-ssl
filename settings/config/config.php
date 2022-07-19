@@ -44,12 +44,12 @@ function rsssl_menu( $group_id = 'settings' ){
 //								'title' => __('Sub mixed content 2', 'really-simple-ssl'),
 //							],
 //						],
-						'step' => 1,
+						'step' => 2,
 					],
 					[
 						'id' => 'recommended_security_headers',
 						'title' => __('Recommended Security Headers', 'really-simple-ssl'),
-						'step' => 1,
+						'step' => 3,
 					],
                     [
                         'id' => 'hardening',
@@ -65,13 +65,13 @@ function rsssl_menu( $group_id = 'settings' ){
 								'title' => __('Disable code execution in uploads folder', 'really-simple-ssl'),
 							],
 						],
-						'step' => 1,
+						'step' => 4,
 					],
 					[
 						'id' => 'premium',
 						'title' => __('Premium', 'really-simple-ssl-pro'),
 						'intro' => __("An introduction on some cool stuff", "really-simple-ssl"),
-						'step' => 1,
+						'step' => 5,
 						'groups' => [
 							[
 								'id' => 'hsts',
