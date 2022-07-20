@@ -60,6 +60,7 @@ class rsssl_admin extends rsssl_front_end
         add_action( 'wp_ajax_update_ssl_detection_overridden_option', array( $this, 'update_ssl_detection_overridden_option' ) );
 
         add_filter( "pre_update_option", array( $this, "check_if_option_disabled_by_user" ), 4, 3 );
+//        add_action( "update_option_rsssl_options", array( $this, "check_if_option_disabled_by_user" ), 4, 3 );
 
 	    // Only show deactivate popup when SSL has been enabled.
 	    if ($this->ssl_enabled) {
@@ -3947,7 +3948,6 @@ class rsssl_admin extends rsssl_front_end
 	 * @param $option
 	 * @param $old_value
 	 *
-	 * @return false|mixed
 	 */
 	public function check_if_option_disabled_by_user( $value, $option, $old_value ) {
 
@@ -3966,27 +3966,60 @@ class rsssl_admin extends rsssl_front_end
                     }
 
                     // Get corresponding default value from rsssl_fields
-                    foreach( rsssl_fields() as $field ) {
-                        if ( $field['id'] === $key ) {
-                            // If new value is 0 (empty), while the default should be 1 (true), add to disabled options array
-                            if ( ! $val && !empty( $field['default']) && $field['default'] == '1' ) {
-                                $disabled_by_user[] = $key;
-                            } elseif ( $val && in_array( $key, $disabled_by_user ) ) {
-                                // The option has been enabled, remove it from disabled array
-                                unset($disabled_by_user[$key]);
-                            }
-                        }
-                    }
-                    error_log(print_r($disabled_by_user, true));
+//                    foreach( rsssl_fields() as $field ) {
+//                        if ( $field['id'] === $key ) {
+//                            // If new value is 0 (empty), while the default should be 1 (true), add to disabled options array
+//                            if ( ! $val && !empty( $field['default']) && $field['default'] == '1' ) {
+//                                $disabled_by_user[] = $key;
+//                            } elseif ( $val && in_array( $key, $disabled_by_user ) ) {
+//                                // The option has been enabled, remove it from disabled array
+//                                unset($disabled_by_user[$key]);
+//                            }
+//                        }
+//                    }
+                    error_log( print_r( $disabled_by_user, true ) );
                     // Update the array with new values
                     update_option('rsssl_option_disabled_by_user', $disabled_by_user );
                 }
             }
         }
-
-		return $value;
-	}
-
+    }
+//	public function check_if_option_disabled_by_user( $value, $option, $old_value ) {
+//        // If new value does not match the old value
+//
+//        if ( $option !== 'rsssl_options') return;
+//
+//        if ( $value !== $old_value ) {
+//
+//            $changed_options = array_diff($value, $old_value);
+//            // Get disabled by user option
+//            $disabled_by_user = get_option('rsssl_option_disabled_by_user');
+//
+//            // Set default
+//            if ( ! $disabled_by_user ) {
+//                $disabled_by_user = [];
+//            }
+//
+//            // Get corresponding default value from rsssl_fields
+//            foreach( rsssl_fields() as $field ) {
+//	            error_log(print_r($changed_options, true));
+//                error_log($field['id']);
+//	            if ( isset( $changed_options[ $field['id'] ] ) ) {
+//                    // If new value is 0 (empty), while the default should be 1 (true), add to disabled options array
+//                    if ( $changed_options[$field['id'] ] != '1' ) {
+//                        $disabled_by_user[$field['id']] = true ;
+//                    } elseif ( ! $field['id'] && in_array( $field['id'], $disabled_by_user ) ) {
+//                        // The option has been enabled, remove it from disabled array
+//                        unset($disabled_by_user[ $field['id'] ] );
+//                    }
+//                }
+//            }
+//
+//            error_log( print_r( $disabled_by_user, true ) );
+//            // Update the array with new values
+//            update_option('rsssl_option_disabled_by_user', $disabled_by_user );
+//        }
+//    }
 
 } //class closure
 

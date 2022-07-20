@@ -122,7 +122,23 @@ function rsssl_general_security_notices( $notices ) {
 		),
 	);
 
-	return $notices;
+	$disabled_by_user = get_option('rsssl_option_disabled_by_user');
+
+	if ( $disabled_by_user ) {
+		foreach ( $disabled_by_user as $disabled ) {
+			$notices[$disabled] = array(
+				'callback' => '_true_',
+				'score' => 5,
+				'output' => array(
+					'true' => array(
+						'msg' => $disabled . " " . __("setting could not be disabled by Really Simple SSL", "really-simple-ssl"),
+						'icon' => 'open',
+						'dismissible' => true,
+					),
+				),
+			);
+        }
+	}
 }
 add_filter('rsssl_notices', 'rsssl_general_security_notices');
 
