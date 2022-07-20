@@ -3,7 +3,7 @@
 defined('ABSPATH') or die("you do not have access to this page!");
 if ( ! class_exists( 'rsssl_cache' ) ) {
   class rsssl_cache {
-    private $capability  = 'manage_options';
+    private $capability  = 'manage_security';
     private static $_this;
 
   function __construct() {

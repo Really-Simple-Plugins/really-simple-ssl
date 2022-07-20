@@ -18,7 +18,7 @@ class rsssl_admin extends rsssl_front_end
     public $sites = array(); //for multisite, list of all activated sites.
 
     //general settings
-    public $capability = 'activate_plugins';
+    public $capability = 'manage_security';
 
     public $htaccess_test_success = FALSE;
     public $plugin_version = rsssl_version; //deprecated, but used in pro plugin until 1.0.25
@@ -191,11 +191,18 @@ class rsssl_admin extends rsssl_front_end
 
     public function init()
     {
-        //@todo replace with rsssl_user_can_manage after upgrade
-        if (! current_user_can('manage_options') ) return;
+
+        $manage_security = get_role('manage_security');
+
+        if ( $manage_security ) {
+	        if ( ! current_user_can($this->capability ) ) return;
+        } else {
+	        if ( ! current_user_can('manage_options') ) return;
+        }
+
         $is_on_settings_page = $this->is_settings_page();
 
-        if (defined("RSSSL_FORCE_ACTIVATE") && RSSSL_FORCE_ACTIVATE) {
+	    if (defined("RSSSL_FORCE_ACTIVATE") && RSSSL_FORCE_ACTIVATE) {
             $options = get_option('rlrsssl_options');
             $options['ssl_enabled'] = true;
             update_option('rlrsssl_options', $options);
@@ -270,7 +277,9 @@ class rsssl_admin extends rsssl_front_end
         add_action('admin_enqueue_scripts', array($this, 'enqueue_assets'));
 
         //settings page, form  and settings link in the plugins page
-        add_action('admin_menu', array($this, 'add_settings_page'), 40);
+	    add_filter( "option_page_capability_rlrsssl_options", array( $this, 'capability_check_wrapper') );
+	    add_filter( "option_page_capability_rsssl_network_options", array( $this, 'capability_check_wrapper') );
+	    add_action('admin_menu', array($this, 'add_settings_page'), 40);
 	    add_action('admin_init', array($this, 'create_form'), 40);
         add_action('admin_init', array($this, 'listen_for_deactivation'), 40);
         add_action( 'update_option_rlrsssl_options', array( $this, 'maybe_remove_highlight_from_url' ), 50 );
@@ -295,6 +304,14 @@ class rsssl_admin extends rsssl_front_end
             add_action('admin_notices', array($this, 'show_leave_review_notice'));
         }
         add_action("update_option_rlrsssl_options", array($this, "update_htaccess_after_settings_save"), 20, 3);
+    }
+
+	/**
+     * Return capability for use in option_page_capability_ filter
+	 * @return string
+	 */
+    public function capability_check_wrapper() {
+        return $this->capability;
     }
 
     public function check_upgrade() {
@@ -2855,7 +2872,7 @@ class rsssl_admin extends rsssl_front_end
 
     public function add_settings_page()
     {
-        if (!rsssl_user_can_manage()) return;
+        if ( ! rsssl_user_can_manage() ) return;
 
         //hides the settings page if the hide menu for subsites setting is enabled
         if (is_multisite() && rsssl_multisite::this()->hide_menu_for_subsites && !is_super_admin()) return;
