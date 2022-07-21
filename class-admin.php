@@ -192,13 +192,7 @@ class rsssl_admin extends rsssl_front_end
     public function init()
     {
 
-        $manage_security = get_role('manage_security');
-
-        if ( $manage_security ) {
-	        if ( ! current_user_can($this->capability ) ) return;
-        } else {
-	        if ( ! current_user_can('manage_options') ) return;
-        }
+        if ( ! current_user_can('manage_options') && ! current_user_can('manage_security') ) return;
 
         $is_on_settings_page = $this->is_settings_page();
 
