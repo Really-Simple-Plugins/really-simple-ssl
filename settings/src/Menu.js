@@ -18,7 +18,6 @@ class MenuItem extends Component {
 
     handleClick(){
         this.props.selectMenu(this.props.menuItem.id);
-        this.props.selectStep(this.props.menuItem.step);
     }
 
     componentDidMount() {
@@ -48,7 +47,7 @@ class MenuItem extends Component {
         let href = '#settings/'+this.props.menuItem.id;
             return (
                 <div className={"rsssl-menu-item" + activeClass + featuredClass}>
-                    <a onClick={() => this.handleClick()}>
+                    <a href={href} onClick={() => this.handleClick()}>
                         <span>{this.props.menuItem.title}</span>
                         {this.props.menuItem.featured && <p className="rsssl-menu-item-featured">{this.props.menuItem.featured}</p>}
                     </a>
@@ -109,6 +108,7 @@ class Menu extends Component {
                                         selectMenu={this.props.selectMenu}
                                         selectStep={this.props.selectStep}
                                         selectedMenuItem={this.props.selectedMenuItem}
+                                        getPreviousAndNextMenuItems={this.props.getPreviousAndNextMenuItems}
                                     />
                                 )
                             }

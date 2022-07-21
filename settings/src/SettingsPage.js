@@ -26,7 +26,7 @@ class SettingsPage extends Component {
             menuItems:'',
             isAPILoaded: false,
             changedFields:'',
-            progress:'',
+            progress:''
         };
     }
 
@@ -116,17 +116,8 @@ class SettingsPage extends Component {
     }
 
     wizardNextPrevious(isPrevious) {
-        const { menuItems } = this.state;
-
-        let nextStep = isPrevious ? this.props.selectedStep - 1 : this.props.selectedStep + 1;
-
-        // Finds next/previous menu item
-        const menuItem = menuItems.find((menuItem) => menuItem.step === nextStep)
-
-        if (menuItem) {
-            this.props.selectStep(nextStep);
-            this.props.selectMenu(menuItem.id)
-        }
+        const { nextMenuItem, previousMenuItem } = this.props.getPreviousAndNextMenuItems()
+        this.props.selectMenu(isPrevious ? previousMenuItem : nextMenuItem);
     }
 
     saveAndContinue() {
@@ -204,7 +195,6 @@ class SettingsPage extends Component {
 
         let fieldsUpdateComplete = changedFields.length === 0;
 
-
         return (
             <Fragment>
                 <Menu
@@ -215,6 +205,7 @@ class SettingsPage extends Component {
                     selectStep={this.props.selectStep}
                     selectedStep={this.props.selectedStep}
                     selectedMenuItem={this.props.selectedMenuItem}
+                    getPreviousAndNextMenuItems={this.props.getPreviousAndNextMenuItems}
                 />
                 <Settings
                     dropItemFromModal={this.props.dropItemFromModal}
@@ -236,7 +227,9 @@ class SettingsPage extends Component {
                     saveAndContinue={this.saveAndContinue}
                     selectedMenuItem={this.props.selectedMenuItem}
                     selectedStep={this.props.selectedStep}
-                    previousStep = {this.wizardNextPrevious}/>
+                    previousStep = {this.wizardNextPrevious}
+                    nextMenuItem = {this.props.nextMenuItem}
+                    previousMenuItem = {this.props.previousMenuItem}/>
                 <Notices className="rsssl-wizard-notices"/>
             </Fragment>
         )

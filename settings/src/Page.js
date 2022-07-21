@@ -24,6 +24,8 @@ class Page extends Component {
             showModal:false,
             modalData:[],
             dropItemFromModal:false,
+            nextMenuItem: '',
+            previousMenuItem: ''
         };
 
         this.getFields().then(( response ) => {
@@ -33,11 +35,14 @@ class Page extends Component {
             this.menu = menu;
             this.progress = progress;
             this.fields = fields;
+
             this.setState({
                 isAPILoaded: true,
                 fields: fields,
                 menu: menu,
                 progress: progress,
+            }, () => {
+                this.getPreviousAndNextMenuItems();
             });
         });
 
@@ -48,6 +53,7 @@ class Page extends Component {
         this.updateField = this.updateField.bind(this);
         this.selectMainMenu = this.selectMainMenu.bind(this);
         this.setPageProps = this.setPageProps.bind(this);
+        this.getPreviousAndNextMenuItems = this.getPreviousAndNextMenuItems.bind(this);
     }
 
     getFields(){
@@ -165,6 +171,44 @@ class Page extends Component {
         return false;
     }
 
+    // Parses menu items and nested items in single array
+    menuItemParser (parsedMenuItems, menuItems) {
+
+        menuItems.forEach((menuItem) => {
+            parsedMenuItems.push(menuItem.id);
+            if(menuItem.hasOwnProperty('menu_items')) {
+                this.menuItemParser(parsedMenuItems, menuItem.menu_items);
+            }
+        });
+
+        return parsedMenuItems;
+    }
+
+    getPreviousAndNextMenuItems () {
+        let previousMenuItem;
+        let nextMenuItem;
+        const { menu_items: menuItems } = this.state.menu;
+
+        const parsedMenuItems = [];
+        this.menuItemParser(parsedMenuItems, menuItems);
+
+        // Finds current menu item index
+        const currentMenuItemIndex = parsedMenuItems.findIndex((menuItem) => menuItem === this.state.selectedMenuItem)
+
+        if(currentMenuItemIndex !== -1) {
+            previousMenuItem = parsedMenuItems[ currentMenuItemIndex === 0 ? '' : currentMenuItemIndex - 1];
+            nextMenuItem = parsedMenuItems[ currentMenuItemIndex === parsedMenuItems.length - 1 ? '' : currentMenuItemIndex + 1];
+
+            this.setState({
+                previousMenuItem: previousMenuItem ? previousMenuItem : parsedMenuItems[0],
+                nextMenuItem: nextMenuItem ? nextMenuItem : parsedMenuItems[parsedMenuItems.length - 1]
+            });
+        }
+
+
+        return { nextMenuItem, previousMenuItem };
+    }
+
     render() {
         const {
             selectedMainMenuItem,
@@ -182,30 +226,42 @@ class Page extends Component {
             <div className="rsssl-wrapper">
                 {!isAPILoaded && <PagePlaceholder></PagePlaceholder>}
                 {showModal && <Modal handleModal={this.handleModal} data={modalData}/>}
-                {isAPILoaded && <Header selectedMainMenuItem={selectedMainMenuItem} selectMainMenu={this.selectMainMenu} fields={fields}/> }
-                {isAPILoaded && <div className={"rsssl-content-area rsssl-grid rsssl-" + selectedMainMenuItem}>
-                    { selectedMainMenuItem === 'settings' &&
-                        <SettingsPage
-                            dropItemFromModal={dropItemFromModal}
-                            pageProps={this.pageProps}
-                            handleModal={this.handleModal}
-                            updateField={this.updateField}
-                            setPageProps={this.setPageProps}
-                            selectMenu={this.selectMenu}
-                            selectStep={this.selectStep}
-                            selectedStep={this.state.selectedStep}
-                            highLightField={this.highLightField}
-                            highLightedField={this.highLightedField}
-                            selectedMenuItem={selectedMenuItem}
-                            isAPILoaded={isAPILoaded}
-                            fields={fields}
-                            menu={menu}
-                            progress={progress}/>
-                    }
-                    { selectedMainMenuItem === 'dashboard' &&
-                        <DashboardPage isAPILoaded={isAPILoaded} fields={fields} highLightField={this.highLightField}/>
-                    }
-                </div> }
+                {isAPILoaded &&
+                    (
+                        <>
+                            <Header
+                                selectedMainMenuItem={selectedMainMenuItem}
+                                selectMainMenu={this.selectMainMenu}
+                                fields={fields} />
+                            <div className={"rsssl-content-area rsssl-grid rsssl-" + selectedMainMenuItem}>
+                                { selectedMainMenuItem === 'settings' &&
+                                    <SettingsPage
+                                        dropItemFromModal={dropItemFromModal}
+                                        pageProps={this.pageProps}
+                                        handleModal={this.handleModal}
+                                        updateField={this.updateField}
+                                        setPageProps={this.setPageProps}
+                                        selectMenu={this.selectMenu}
+                                        selectStep={this.selectStep}
+                                        selectedStep={this.state.selectedStep}
+                                        highLightField={this.highLightField}
+                                        highLightedField={this.highLightedField}
+                                        selectedMenuItem={selectedMenuItem}
+                                        isAPILoaded={isAPILoaded}
+                                        fields={fields}
+                                        menu={menu}
+                                        progress={progress}
+                                        getPreviousAndNextMenuItems={this.getPreviousAndNextMenuItems}
+                                        nextMenuItem={this.state.nextMenuItem}
+                                        previousMenuItem={this.state.previousMenuItem} />
+                                }
+                                { selectedMainMenuItem === 'dashboard' &&
+                                    <DashboardPage isAPILoaded={isAPILoaded} fields={fields} highLightField={this.highLightField}/>
+                                }
+                            </div>
+                        </>
+                    )
+                }
             </div>
         );
     }

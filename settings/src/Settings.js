@@ -33,7 +33,7 @@ class Settings extends Component {
         let selectedStep = this.props.selectedStep;
         let menu = this.props.menu;
         const { menu_items: menuItems } = menu;
-        console.log(menuItems);
+
         if ( ! isAPILoaded ) {
             return (
                 <Placeholder></Placeholder>
@@ -100,10 +100,10 @@ class Settings extends Component {
                     }
                     <div className="rsssl-grid-item-footer">
                         {/*This will be shown only if current step is not the first one*/}
-                        { this.props.selectedStep !== 1 &&
-                            <Button isPrimary onClick={ () => this.props.previousStep(true) }>
+                        { this.props.selectedMenuItem !== menuItems[0].id &&
+                            <a href={`#settings/${this.props.previousMenuItem}`} onClick={ () => this.props.previousStep(true) }>
                                 { __('Previous', 'really-simple-ssl') }
-                            </Button>
+                            </a>
                         }
 
                         <Button
@@ -113,10 +113,10 @@ class Settings extends Component {
                         </Button>
 
                         {/*This will be shown only if current step is not the last one*/}
-                        { this.props.selectedStep !== menuItems.length &&
-                            <Button isPrimary onClick={ this.props.saveAndContinue }>
+                        { this.props.selectedMenuItem !== menuItems[menuItems.length-1].id &&
+                            <a href={`#settings/${this.props.nextMenuItem}`} onClick={ this.props.saveAndContinue }>
                                 { __( 'Save and Continue', 'really-simple-ssl' ) }
-                            </Button>
+                            </a>
                         }
                     </div>
                 </div>
