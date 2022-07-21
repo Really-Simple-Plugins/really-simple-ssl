@@ -1,5 +1,6 @@
 <?php
 defined( 'ABSPATH' ) or die();
+require_once( trailingslashit(rsssl_path) . 'security/functions.php' );
 require_once( trailingslashit(rsssl_path) . 'security/learning-mode.php' );
 require_once( trailingslashit(rsssl_path) . 'security/tests.php' );
 require_once( trailingslashit(rsssl_path) . 'security/cron.php' );
@@ -10,7 +11,6 @@ require_once( trailingslashit(rsssl_path) . 'security/check-requests.php' );
  */
 if (is_admin() || rsssl_is_logged_in_rest() ) {
 	require_once( trailingslashit(rsssl_path) . 'security/notices.php' );
-	require_once( trailingslashit(rsssl_path) . 'security/functions.php' );
 	require_once( trailingslashit(rsssl_path) . 'security/sync-settings.php' );
 }
 
@@ -140,7 +140,6 @@ $rsssl_integrations_list = apply_filters( 'rsssl_integrations', array(
         'conditions'           => [
 	        'relation' => 'AND',
 	        [
-//	            'rsssl_debug_log_in_default_location()' => true,
 		        'rsssl_is_debug_log_enabled()' => true,
 	        ]
         ],

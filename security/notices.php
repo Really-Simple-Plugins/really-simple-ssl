@@ -61,5 +61,27 @@ function rsssl_admin_username_exists( $notices ) {
 	return $notices;
 
 }
-add_filter('rsssl_notices', 'rsssl_admin_username_exists');
+
+/**
+ * @return void
+ *
+ * Username 'admin' changed notice
+ */
+function rsssl_debug_log_reverted_by_rsssl_notice( $notices ) {
+	$notices['username_admin_exists'] = array(
+		'condition' => ['rsssl_debug_log_reverted_by_rsssl'],
+		'callback' => '_true_',
+		'score' => 5,
+		'output' => array(
+			'true' => array(
+				'msg' => __("Warning: debug.log security risk", "really-simple-ssl"),
+				'icon' => 'open',
+				'dismissible' => true,
+			),
+		),
+	);
+	return $notices;
+
+}
+add_filter('rsssl_notices', 'rsssl_debug_log_reverted_by_rsssl_notice');
 

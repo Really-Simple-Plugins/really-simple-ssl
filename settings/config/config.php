@@ -308,9 +308,9 @@ function rsssl_fields(){
 			'id'          => 'change_debug_log_location',
 			'menu_id'     => 'hardening',
 			'type'        => 'checkbox',
-			'label'       => __( "Change debug.log location", 'really-simple-ssl' ),
+			'label'       => rsssl_get_debug_log_label(),
 			'disabled'    => false,
-			'default'     => false,
+			'default'     => rsssl_debug_log_already_moved(),
 		],
         [
 			'id'          => 'disable_indexing',
@@ -430,8 +430,16 @@ function rsssl_is_user_registration_enabled() {
     }
 
     return false;
+}
 
+function rsssl_get_debug_log_label() {
+    if ( get_site_option('rsssl_debug_log_location_changed') == '1') {
+        $label = __( "Change debug.log location", 'really-simple-ssl' ) . ". " . __("New location: ", 'really-simple-ssl') . ' /wp-content/debug_' . get_site_option('rsssl_debug_log_folder_suffix') .'/debug.log';
+    } else{
+        $label = __( "Change debug.log location", 'really-simple-ssl' );
+    }
 
+    return $label;
 }
 
 /**

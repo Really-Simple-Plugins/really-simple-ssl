@@ -165,20 +165,45 @@ function rsssl_has_admin_user() {
 	return false;
 }
 
-
-
 /**
+ * Wrapper function to check if debug.log has been reverted to default by Really Simple SSL
  * @return bool
- *
- * Check if debug.log is in default location
  */
-function rsssl_debug_log_in_default_location() {
-	return file_exists(WP_CONTENT_DIR.'/debug.log');
+function rsssl_debug_log_reverted_by_rsssl() {
+    if ( get_site_option('rsssl_debug_log_reverted_by_rsssl') ) {
+        return true;
+    }
+
+    return false;
 }
+
 /**
+ * Check if debug.log has already been moved from default location
  * @return bool
  *
+ */
+function rsssl_debug_log_already_moved() {
+    $matches = rsssl_get_debug_log_declaration();
+
+    // If option has been updated, the debug.log has been moved
+    if ( get_site_option('rsssl_debug_log_location_changed') == '1' )
+    {
+        return true;
+    }
+
+    // If str contains true, location is default
+    if ( $matches && strpos($matches[0], 'true' ) !== false ) {
+        return false;
+    } elseif ( $matches && strpos($matches[0], 'true' ) !== true ) {
+        return true;
+    }
+
+    return false;
+}
+
+/**
  * Check if debugging in WordPress is enabled
+ * @return bool
  */
 function rsssl_is_debug_log_enabled() {
 	if ( defined('WP_DEBUG') && defined('WP_DEBUG_LOG') ) {
@@ -186,4 +211,35 @@ function rsssl_is_debug_log_enabled() {
 	}
 
 	return false;
+}
+
+/**
+ * Check if default.log is in default location
+ * @return bool
+ */
+function rsssl_debug_log_in_default_location() {
+
+    $matches = rsssl_get_debug_log_declaration();
+
+    // If str contains true, location is default
+    if ( $matches && strpos($matches[0], 'true' ) !== false ) {
+        return true;
+    }
+
+    return false;
+}
+
+/**
+ * Get the debug.log declaration from wp-config
+ * @return mixed
+ */
+function rsssl_get_debug_log_declaration() {
+    $wpconfig_path = rsssl_find_wp_config_path();
+    $wpconfig = file_get_contents($wpconfig_path);
+
+    // Get WP_DEBUG_LOG declaration
+    $regex = "/(define)(.*WP_DEBUG_LOG.*)(?=;)/m";
+    preg_match($regex, $wpconfig, $matches);
+
+    return $matches;
 }
