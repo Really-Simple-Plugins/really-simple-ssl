@@ -6,13 +6,6 @@
  * @return string
  */
 
-function rsssl_disable_user_enumeration_rules( $rules ) {
-	$rules .= "\n" ."RewriteCond %{QUERY_STRING} ^author= [NC]" . "\n" .
-	         "RewriteRule .* - [F,L]" . "\n" .
-	         "RewriteRule ^author/ - [F,L]";
-	return $rules;
-}
-add_filter('rsssl_htaccess_security_rules', 'rsssl_disable_user_enumeration_rules');
 /**
  * Prevent User Enumeration in YOAST
  * @return void
@@ -24,7 +17,7 @@ function check_user_enumeration() {
 		}
 	}
 }
-add_filter('wpseo_sitemap_exclude_author', 'remove_author_from_yoast_sitemap', 10, 1 );
+add_action('init', 'check_user_enumeration');
 
 /**
  * @return bool
@@ -33,16 +26,21 @@ add_filter('wpseo_sitemap_exclude_author', 'remove_author_from_yoast_sitemap', 1
 function remove_author_from_yoast_sitemap( $users ) {
 	return false;
 }
+add_filter('wpseo_sitemap_exclude_author', 'remove_author_from_yoast_sitemap', 10, 1 );
+
+function rsssl_disable_rss() {
+	wp_die( __('RSS Feeds disabled by user', 'really-simple-ssl') );
+}
 
 // Rss actions
 if ( rsssl_get_option('disable_rss_feeds' ) ) {
-	add_action( 'do_feed', 'wpb_disable_feed', 1 );
-	add_action( 'do_feed_rdf', 'wpb_disable_feed', 1 );
-	add_action( 'do_feed_rss', 'wpb_disable_feed', 1 );
-	add_action( 'do_feed_rss2', 'wpb_disable_feed', 1 );
-	add_action( 'do_feed_atom', 'wpb_disable_feed', 1 );
-	add_action( 'do_feed_rss2_comments', 'wpb_disable_feed', 1 );
-	add_action( 'do_feed_atom_comments', 'wpb_disable_feed', 1 );
+	add_action( 'do_feed', 'rsssl_disable_rss', 1 );
+	add_action( 'do_feed_rdf', 'rsssl_disable_rss', 1 );
+	add_action( 'do_feed_rss', 'rsssl_disable_rss', 1 );
+	add_action( 'do_feed_rss2', 'rsssl_disable_rss', 1 );
+	add_action( 'do_feed_atom', 'rsssl_disable_rss', 1 );
+	add_action( 'do_feed_rss2_comments', 'rsssl_disable_rss', 1 );
+	add_action( 'do_feed_atom_comments', 'rsssl_disable_rss', 1 );
 }
 
 //PREVENT WP JSON API User Enumeration
@@ -55,8 +53,6 @@ add_filter( 'rest_endpoints', function( $endpoints ) {
 	}
 	return $endpoints;
 });
-add_action('template_redirect', 'check_user_enumeration');
-
 
 /**
  * Check if string contains numbers
