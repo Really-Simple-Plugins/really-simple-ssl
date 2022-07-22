@@ -2,22 +2,6 @@
 
 defined( 'ABSPATH' ) or die( "you do not have access to this page!" );
 
-if ( ! function_exists( 'rsssl_user_can_manage' ) ) {
-    function rsssl_user_can_manage() {
-        if ( ! is_user_logged_in() ) {
-            return false;
-        }
-
-        if ( ! current_user_can( 'manage_options' ) ) {
-            return false;
-        }
-
-        return true;
-    }
-}
-
-
-
 /**
  * Check if we need to use DNS verification
  * @return bool
@@ -329,7 +313,7 @@ if ( !function_exists('rsssl_php_requirement_met')) {
 if ( ! function_exists( 'rsssl_get_value' ) ) {
 
     /**
-     * Get value for an a rsssl option
+     * Get value for a rsssl option
      * For usage very early in the execution order, use the $page option. This bypasses the class usage.
      *
      * @param string $fieldname

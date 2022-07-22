@@ -236,7 +236,7 @@ if ( !class_exists('rsp_upgrade_to_pro') ){
 		 * @return false|object
 		 */
 		private function api_request() {
-			if ( !current_user_can('manage_options') ) {
+			if ( !rsssl_user_can_manage() ) {
 				return false;
 			}
 			global $edd_plugin_url_available;
@@ -299,7 +299,7 @@ if ( !class_exists('rsp_upgrade_to_pro') ){
 		 */
 		public function print_install_modal()
 		{
-			if ( !current_user_can('manage_options') ) {
+			if ( !rsssl_user_can_manage() ) {
 				return false;
 			}
 
@@ -409,7 +409,7 @@ if ( !class_exists('rsp_upgrade_to_pro') ){
 				'success' => false,
 			];
 
-			if ( !current_user_can('manage_options') ) {
+			if ( !rsssl_user_can_manage() ) {
 				$error = true;
 			}
 
@@ -458,7 +458,7 @@ if ( !class_exists('rsp_upgrade_to_pro') ){
 				'message' => '',
 			];
 
-			if ( !current_user_can('manage_options') ) {
+			if ( !rsssl_user_can_manage() ) {
 				$error = true;
 			}
 
@@ -494,7 +494,7 @@ if ( !class_exists('rsp_upgrade_to_pro') ){
 			$message = "";
 			$success = false;
 
-			if ( !current_user_can('manage_options') ) {
+			if ( !rsssl_user_can_manage() ) {
 				return [
 					'success' => $success,
 					'message' => $message,
@@ -580,7 +580,7 @@ if ( !class_exists('rsp_upgrade_to_pro') ){
 		 */
 		public function process_ajax_package_information()
 		{
-			if ( !current_user_can('manage_options') ) {
+			if ( !rsssl_user_can_manage() ) {
 				return false;
 			}
 
@@ -622,7 +622,7 @@ if ( !class_exists('rsp_upgrade_to_pro') ){
 		{
 			$message = '';
 
-			if ( !current_user_can('manage_options') ) {
+			if ( !rsssl_user_can_manage() ) {
 				return [
 					'success' => false,
 					'message' => $message,
@@ -674,7 +674,7 @@ if ( !class_exists('rsp_upgrade_to_pro') ){
 		 */
 		public function process_ajax_activate_plugin()
 		{
-			if ( !current_user_can('manage_options') ) {
+			if ( !rsssl_user_can_manage() ) {
 				return false;
 			}
 

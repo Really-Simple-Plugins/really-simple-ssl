@@ -77,7 +77,7 @@ class rsssl_letsencrypt_handler {
 	 */
 	public function maybe_add_htaccess_exclude(){
 
-		if (!current_user_can('manage_options')) {
+		if (!rsssl_user_can_manage()) {
 			return;
 		}
 
@@ -135,7 +135,7 @@ class rsssl_letsencrypt_handler {
 	 * Cleanup. If user did not consent to storage, all password fields should be removed on activation, unless they're needed for renewals
 	 */
 	public function cleanup_on_ssl_activation(){
-		if (!current_user_can('manage_options')) return;
+		if (!rsssl_user_can_manage()) return;
 		$delete_credentials = !rsssl_get_value('store_credentials');
 		if ( !$this->certificate_automatic_install_possible() || !$this->certificate_install_required() || $delete_credentials ) {
 			$fields = RSSSL_LE()->config->fields;
@@ -1366,7 +1366,7 @@ class rsssl_letsencrypt_handler {
 
 	public function clear_keys_directory() {
 
-		if (!current_user_can('manage_options')) {
+		if (!rsssl_user_can_manage()) {
 			return;
 		}
 
@@ -1396,7 +1396,7 @@ class rsssl_letsencrypt_handler {
 	}
 
 	public function maybe_create_htaccess_directories(){
-		if (!current_user_can('manage_options')) {
+		if (!rsssl_user_can_manage()) {
 			return;
 		}
 
@@ -1731,7 +1731,7 @@ class rsssl_letsencrypt_handler {
 	 * @return string
 	 */
     public function decode($string){
-		if ( !wp_doing_cron() && !current_user_can('manage_options') ) {
+		if ( !wp_doing_cron() && !rsssl_user_can_manage() ) {
 			return '';
 		}
 

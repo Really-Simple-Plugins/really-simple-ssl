@@ -18,7 +18,7 @@ class rsssl_admin extends rsssl_front_end
     public $sites = array(); //for multisite, list of all activated sites.
 
     //general settings
-    public $capability = 'activate_plugins';
+    public $capability = 'manage_security';
 
     public $htaccess_test_success = FALSE;
     public $plugin_version = rsssl_version; //deprecated, but used in pro plugin until 1.0.25
@@ -169,7 +169,7 @@ class rsssl_admin extends rsssl_front_end
 
 	public function update_ssl_detection_overridden_option() {
 
-		if ( ! current_user_can( 'manage_options') ) return;
+		if ( ! rsssl_user_can_manage() ) return;
 
 		if ( isset( $_POST['action'] ) && $_POST['action'] === 'update_ssl_detection_overridden_option' ) {
 			if ( isset ( $_POST['override_ssl_checked'] ) && $_POST['override_ssl_checked'] !== false ) {
@@ -191,10 +191,12 @@ class rsssl_admin extends rsssl_front_end
 
     public function init()
     {
-        if (!current_user_can($this->capability)) return;
+
+        if ( ! current_user_can('manage_options') && ! current_user_can('manage_security') ) return;
+
         $is_on_settings_page = $this->is_settings_page();
 
-        if (defined("RSSSL_FORCE_ACTIVATE") && RSSSL_FORCE_ACTIVATE) {
+	    if (defined("RSSSL_FORCE_ACTIVATE") && RSSSL_FORCE_ACTIVATE) {
             $options = get_option('rlrsssl_options');
             $options['ssl_enabled'] = true;
             update_option('rlrsssl_options', $options);
@@ -269,7 +271,9 @@ class rsssl_admin extends rsssl_front_end
         add_action('admin_enqueue_scripts', array($this, 'enqueue_assets'));
 
         //settings page, form  and settings link in the plugins page
-        add_action('admin_menu', array($this, 'add_settings_page'), 40);
+	    add_filter( "option_page_capability_rlrsssl_options", array( $this, 'capability_check_wrapper') );
+	    add_filter( "option_page_capability_rsssl_network_options", array( $this, 'capability_check_wrapper') );
+	    add_action('admin_menu', array($this, 'add_settings_page'), 40);
 	    add_action('admin_init', array($this, 'create_form'), 40);
         add_action('admin_init', array($this, 'listen_for_deactivation'), 40);
         add_action( 'update_option_rlrsssl_options', array( $this, 'maybe_remove_highlight_from_url' ), 50 );
@@ -294,6 +298,14 @@ class rsssl_admin extends rsssl_front_end
             add_action('admin_notices', array($this, 'show_leave_review_notice'));
         }
         add_action("update_option_rlrsssl_options", array($this, "update_htaccess_after_settings_save"), 20, 3);
+    }
+
+	/**
+     * Return capability for use in option_page_capability_ filter
+	 * @return string
+	 */
+    public function capability_check_wrapper() {
+        return $this->capability;
     }
 
     public function check_upgrade() {
@@ -334,6 +346,11 @@ class rsssl_admin extends rsssl_front_end
 		    }
 	    }
 
+        // Add manage_security capability
+	    if ( $prev_version && version_compare( $prev_version, '5.3.2', '<' ) ) {
+		    rsssl_add_manage_security_capability();
+	    }
+
         update_option( 'rsssl_current_version', rsssl_version );
     }
 
@@ -346,7 +363,7 @@ class rsssl_admin extends rsssl_front_end
     public function listen_for_deactivation()
     {
         //check user role
-        if (!current_user_can($this->capability)) return;
+        if (! rsssl_user_can_manage() ) return;
 
         //check nonce
         if (!isset($_GET['token']) || (!wp_verify_nonce($_GET['token'], 'rsssl_deactivate_plugin'))) return;
@@ -450,7 +467,7 @@ class rsssl_admin extends rsssl_front_end
 
     private function clicked_activate_ssl()
     {
-       if (!current_user_can($this->capability)) return;
+       if ( ! rsssl_user_can_manage() ) return;
        if (isset($_POST['rsssl_do_activate_ssl'])) {
             $this->activate_ssl();
             update_option('rsssl_activation_timestamp', time());
@@ -466,7 +483,7 @@ class rsssl_admin extends rsssl_front_end
 	 * @return void
 	 */
     public function recheck_certificate(){
-	    if (!current_user_can($this->capability)) return;
+	    if (!rsssl_user_can_manage()) return;
 
         if (isset($_POST['rsssl_recheck_certificate']) || isset($_GET['rsssl_recheck_certificate'])) {
 	        delete_transient('rsssl_certinfo');
@@ -557,7 +574,7 @@ class rsssl_admin extends rsssl_front_end
 
         if (!$this->wpconfig_ok()) return;
 
-        if (!current_user_can($this->capability)) return;
+        if (!rsssl_user_can_manage()) return;
 
         do_action('rsssl_activation_notice');
 
@@ -1103,11 +1120,11 @@ class rsssl_admin extends rsssl_front_end
 
     public function configure_ssl()
     {
-        if (!current_user_can($this->capability)) return;
+        if (!rsssl_user_can_manage()) return;
         $safe_mode = FALSE;
         if (defined('RSSSL_SAFE_MODE') && RSSSL_SAFE_MODE) $safe_mode = RSSSL_SAFE_MODE;
 
-        if (!current_user_can($this->capability)) return;
+        if (!rsssl_user_can_manage()) return;
         $this->trace_log("<br>" . "<b>" . "SSL Configuration" . "</b>");
         if ($this->site_has_ssl) {
             //when one of the used server variables was found, test if the redirect works
@@ -1328,7 +1345,7 @@ class rsssl_admin extends rsssl_front_end
 
     public function wpconfig_loadbalancer_fix()
     {
-        if (!current_user_can($this->capability)) return;
+        if (!rsssl_user_can_manage()) return;
 
         $wpconfig_path = $this->find_wp_config_path();
         if (empty($wpconfig_path)) return;
@@ -1381,7 +1398,7 @@ class rsssl_admin extends rsssl_front_end
 
     public function wpconfig_server_variable_fix()
     {
-        if (!current_user_can($this->capability)) return;
+        if (!rsssl_user_can_manage()) return;
 
         $wpconfig_path = $this->find_wp_config_path();
         if (empty($wpconfig_path)) return;
@@ -1639,7 +1656,7 @@ class rsssl_admin extends rsssl_front_end
 
 	public function remove_secure_cookie_settings() {
 
-		if ( wp_doing_ajax() || !current_user_can("activate_plugins")) return;
+		if ( wp_doing_ajax() || !rsssl_user_can_manage()) return;
 
 		if ( !$this->contains_secure_cookie_settings()) return;
 
@@ -1777,7 +1794,7 @@ class rsssl_admin extends rsssl_front_end
 
     public function test_htaccess_redirect()
     {
-        if (!current_user_can($this->capability)) return;
+        if (!rsssl_user_can_manage()) return;
 
         $this->htaccess_test_success = get_transient('rsssl_htaccess_test_success');
         if (!$this->htaccess_test_success) {
@@ -2219,7 +2236,7 @@ class rsssl_admin extends rsssl_front_end
 
     public function editHtaccess()
     {
-        if (!current_user_can($this->capability)) return;
+        if (!rsssl_user_can_manage()) return;
 
         //check if htaccess exists and  if htaccess is writable
         //update htaccess to redirect to ssl
@@ -2281,7 +2298,7 @@ class rsssl_admin extends rsssl_front_end
 
     public function update_htaccess_after_settings_save($oldvalue = false, $newvalue = false, $option = false)
     {
-        if (!current_user_can($this->capability)) return;
+        if (!rsssl_user_can_manage()) return;
 
         //does it exist?
         if ( !file_exists($this->htaccess_file()) ) {
@@ -2771,7 +2788,7 @@ class rsssl_admin extends rsssl_front_end
 
     public function dismiss_success_message_callback()
     {
-        if (!current_user_can($this->capability) ) return;
+        if (!rsssl_user_can_manage() ) return;
         $this->ssl_success_message_shown = TRUE;
         $this->save_options();
         wp_die();
@@ -2788,7 +2805,7 @@ class rsssl_admin extends rsssl_front_end
 
     public function dismiss_settings_notice_callback()
     {
-        if (!current_user_can($this->capability) ) return;
+        if (!rsssl_user_can_manage() ) return;
 
 	    if (!isset($_POST['token']) || (!wp_verify_nonce($_POST['token'], 'rsssl_nonce'))) {
 		    return;
@@ -2849,7 +2866,7 @@ class rsssl_admin extends rsssl_front_end
 
     public function add_settings_page()
     {
-        if (!current_user_can($this->capability)) return;
+        if ( ! rsssl_user_can_manage() ) return;
 
         //hides the settings page if the hide menu for subsites setting is enabled
         if (is_multisite() && rsssl_multisite::this()->hide_menu_for_subsites && !is_super_admin()) return;
@@ -2883,7 +2900,7 @@ class rsssl_admin extends rsssl_front_end
 
     public function rsssl_edit_admin_menu()
     {
-        if (!current_user_can($this->capability)) return;
+        if (!rsssl_user_can_manage()) return;
         global $menu;
         $count = $this->count_plusones();
         $menu_slug = 'options-general.php';
@@ -3616,7 +3633,7 @@ class rsssl_admin extends rsssl_front_end
      */
 
     public function get_score_percentage() {
-        if ( ! current_user_can( 'manage_options' ) ) {
+        if ( ! rsssl_user_can_manage() ) {
             return 0;
         }
 
@@ -3690,7 +3707,7 @@ class rsssl_admin extends rsssl_front_end
 	 */
 
     private function notice_row($id, $notice){
-        if (!current_user_can('manage_options')) return;
+        if (!rsssl_user_can_manage()) return;
 
         if (!isset($notice['output'])) {
             return;
@@ -3724,7 +3741,7 @@ class rsssl_admin extends rsssl_front_end
 	 */
 
 	public function count_plusones() {
-		if ( ! current_user_can( 'manage_options' ) ) {
+		if ( ! rsssl_user_can_manage() ) {
 			return 0;
 		}
 
@@ -3835,7 +3852,7 @@ class rsssl_admin extends rsssl_front_end
 	 * @return int
 	 */
     public function get_all_task_count() {
-        if ( ! current_user_can( 'manage_options' ) ) {
+        if ( ! rsssl_user_can_manage() ) {
             return 0;
         }
 
@@ -3854,7 +3871,7 @@ class rsssl_admin extends rsssl_front_end
      */
 
     public function get_remaining_tasks_count() {
-        if ( ! current_user_can( 'manage_options' ) ) {
+        if ( ! rsssl_user_can_manage() ) {
             return 0;
         }
 
@@ -3903,7 +3920,7 @@ class rsssl_admin extends rsssl_front_end
 
     public function settings_page()
     {
-	    if (!current_user_can($this->capability)) return;
+	    if (!rsssl_user_can_manage()) return;
 	    $tab = isset( $_GET['tab']) ? sanitize_title($_GET['tab']) : 'configuration';
         $this->admin_tabs($tab );
 	    $high_contrast = $this->high_contrast ? 'rsssl-high-contrast' : ''; ?>
@@ -4706,7 +4723,7 @@ class rsssl_admin extends rsssl_front_end
 	 */
 
 	public function insert_secure_cookie_settings(){
-		if (!current_user_can("activate_plugins")) return;
+		if (!rsssl_user_can_manage() ) return;
 
 		if ( wp_doing_ajax() || !$this->is_settings_page() ) return;
 
