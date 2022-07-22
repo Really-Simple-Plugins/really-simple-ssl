@@ -2,7 +2,7 @@
 
 function rsssl_general_security_notices( $notices ) {
 	$code = get_site_option('rsssl_htaccess_rules');
-	$code            = '<br><code>' . $code . '</code><br>';
+	$code = '<br><code style="white-space: pre-line">' . esc_html($code) . '</code><br>';
 
 	$notices['htaccess_status'] = array(
 		'callback' => 'rsssl_htaccess_status',

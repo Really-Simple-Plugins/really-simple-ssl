@@ -246,7 +246,7 @@ function rsssl_fields(){
 			'type'        => 'checkbox',
 			'label'       => __( "Disable HTTP methods", 'really-simple-ssl' ),
 			'disabled'    => false,
-			'default'     => false,
+			'default'     => rsssl_http_methods_allowed(),
 		],
 		[
 			'id'          => 'disable_file_editing',

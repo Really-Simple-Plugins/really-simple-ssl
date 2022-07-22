@@ -10,11 +10,11 @@ function rsssl_disable_http_methods_rules( $rules )
 {
 
 	if ( rsssl_get_server() === 'apache') {
-		$rules .= "\n" . "<LimitExcept GET POST" . ">" . "\n" . "deny from all" . "\n" . "</LimitExcept>";
+		$rules .= addslashes("\n" . "<LimitExcept GET POST OPTIONS>" . "\n" . "deny from all" . "\n" . "</LimitExcept>");
 	}
 
 	if ( rsssl_get_server() === 'litespeed') {
-		$rules .= "\n" . "RewriteCond %{REQUEST_METHOD} ^(OPTIONS|TRACE|TRACK|PUT|PATCH|DELETE|COPY|HEAD|LINK|UNLINK|PURGE|LOCK|UNLOCK|PROPFIND|VIEW)";
+		$rules .= "\n" . "RewriteCond %{REQUEST_METHOD} ^(TRACE|TRACK|PUT|PATCH|DELETE|COPY|HEAD|LINK|UNLINK|PURGE|LOCK|UNLOCK|PROPFIND|VIEW)";
 		$rules .= "\n" . "RewriteRule .* - [F]" . "\n";
 	}
 	
@@ -55,7 +55,7 @@ add_filter('rsssl_notices', 'rsssl_http_methods_nginx');
  */
 function rsssl_wrap_http_methods_code_nginx() {
 	$code = '<code>';
-	$code .= 'limit_except GET POST {' . '<br>';
+	$code .= 'limit_except GET POST OPTIONS {' . '<br>';
 	$code .= '&nbsp;&nbsp;&nbsp;&nbsp;deny all;' . '<br>';
 	$code .= '}' . '<br>';
 	$code .= '</code>';
