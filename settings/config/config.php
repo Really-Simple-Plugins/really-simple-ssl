@@ -13,7 +13,6 @@ function rsssl_menu( $group_id = 'settings' ){
                     'group_id' => 'general',
                     'title' => __('General', 'really-simple-ssl'),
                     'intro' => __("An introduction on some cool stuff", "really-simple-ssl"),
-                    'step' => 1,
                     'groups' => [
 //							[
 //								'id' => 'general',
@@ -44,12 +43,10 @@ function rsssl_menu( $group_id = 'settings' ){
 //								'title' => __('Sub mixed content 2', 'really-simple-ssl'),
 //							],
 //						],
-                    'step' => 1,
                 ],
                 [
                     'id' => 'recommended_security_headers',
                     'title' => __('Recommended Security Headers', 'really-simple-ssl'),
-                    'step' => 1,
                 ],
                 [
                     'id' => 'hardening',
@@ -64,14 +61,16 @@ function rsssl_menu( $group_id = 'settings' ){
                             'id' => 'code_execution_uploads',
                             'title' => __('Disable code execution in uploads folder', 'really-simple-ssl'),
                         ],
+	                    [
+		                    'id' => 'empty_menu_item',
+		                    'title' => __('Empty menu item', 'really-simple-ssl'),
+	                    ],
                     ],
-                    'step' => 1,
                 ],
                 [
                     'id' => 'premium',
                     'title' => __('Premium', 'really-simple-ssl-pro'),
                     'intro' => __("An introduction on some cool stuff", "really-simple-ssl"),
-                    'step' => 1,
                     'groups' => [
                         [
                             'id' => 'hsts',
@@ -96,7 +95,6 @@ function rsssl_menu( $group_id = 'settings' ){
                     ],
                 ],
             ],
-
         ],
         [
             "id"    => "letsencrypt",
