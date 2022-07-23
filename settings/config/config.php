@@ -369,6 +369,20 @@ function rsssl_fields( $load_values = true ){
 	            ]
             ],
         ],
+	    [
+		    'id'          => 'placeholder_setting_id_2',
+		    'menu_id'     => 'empty_menu_item',
+		    'type'        => 'checkbox',
+		    'label'       => __( "Placeholder Setting 2", 'really-simple-ssl' ),
+		    'disabled'    => false,
+		    'default'     => false,
+		    'server_conditions'  => [
+			    'relation' => 'AND',
+			    [
+				    'RSSSL()->really_simple_ssl->ssl_enabled' => true,
+			    ]
+		    ],
+	    ],
         [
             'id'          => 'disable_user_enumeration',
             'menu_id'     => 'hardening',
