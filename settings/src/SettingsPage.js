@@ -7,10 +7,8 @@ import Notices from "./Notices";
 import Settings from "./Settings";
 import sleeper from "./utils/sleeper.js";
 
-import {
-    dispatch,
-} from '@wordpress/data';
-import { __ } from '@wordpress/i18n';
+import {dispatch,} from '@wordpress/data';
+import {__} from '@wordpress/i18n';
 
 /**
  * Renders the settings page with Menu and currently selected settings
@@ -36,6 +34,7 @@ class SettingsPage extends Component {
         this.wizardNextPrevious = this.wizardNextPrevious.bind(this);
         this.saveChangedFields = this.saveChangedFields.bind(this);
         this.updateFieldsListWithConditions = this.updateFieldsListWithConditions.bind(this);
+        this.filterMenuItems = this.filterMenuItems.bind(this);
         this.showSavedSettingsNotice = this.showSavedSettingsNotice.bind(this);
         this.updateFieldsListWithConditions();
         let fields = this.props.fields;
@@ -44,6 +43,8 @@ class SettingsPage extends Component {
         //if count >1, it's a wizard
         let menuItems = [];
         let changedFields = [];
+        const newMenuItems = this.filterMenuItems(menu.menu_items);
+        menu.menu_items = newMenuItems;
         menuItems = menu.menu_items;
         let selectedMenuItem = this.props.selectedMenuItem;
         this.menu = menu;
@@ -59,6 +60,21 @@ class SettingsPage extends Component {
             menuItems:menuItems,
             changedFields: changedFields,
         });
+    }
+
+    filterMenuItems(menuItems) {
+        const newMenuItems = menuItems;
+        for (const [index, value] of menuItems.entries()) {
+            const searchResult = this.props.fields.filter((field) => (field.menu_id === value.id && field.visible));
+            if(searchResult.length === 0) {
+                newMenuItems.splice(index, 1);
+            } else {
+                if(value.hasOwnProperty('menu_items')) {
+                    newMenuItems[index].menu_items = this.filterMenuItems(value.menu_items);
+                }
+            }
+        }
+        return newMenuItems;
     }
 
     updateFieldsListWithConditions(){
