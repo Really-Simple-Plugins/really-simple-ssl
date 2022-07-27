@@ -52,7 +52,7 @@ function rsssl_admin_username_exists( $notices ) {
 		'output' => array(
 			'true' => array(
 				'highlight_field_id' => 'rename_admin_user',
-				'msg' => __("A Username 'admin' exists", "really-simple-ssl"),
+				'msg' => __("You have a user with username 'admin'", "really-simple-ssl"),
 				'icon' => 'open',
 				'dismissible' => true,
 			),

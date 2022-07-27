@@ -93,9 +93,9 @@ function rsssl_rename_admin_user() {
 
 
 function rsssl_maybe_rename_admin_user() {
-	rsssl_do_fix('rsssl_rename_admin_user');
+//	rsssl_do_fix('rsssl_rename_admin_user');
 }
-add_action('admin_init','rsssl_maybe_rename_admin_user');
+add_action('admin_init','rsssl_rename_admin_user');
 
 /**
  * Run check once a day
