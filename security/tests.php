@@ -157,7 +157,7 @@ function rsssl_has_admin_user() {
 
 	global $wpdb;
 
-	$prepared = $wpdb->prepare("SELECT COUNT(*) FROM {$wpdb->prefix}users WHERE user_login = %s", 'admin');
+	$prepared = $wpdb->prepare("SELECT COUNT(*) FROM {$wpdb->prefix}users WHERE user_login = %s LIMIT 1", 'admin');
 	$count = $wpdb->get_var( $prepared );
 
 	if ( $count > 0 ) {
