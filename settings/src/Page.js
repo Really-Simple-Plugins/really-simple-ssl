@@ -175,9 +175,11 @@ class Page extends Component {
     menuItemParser (parsedMenuItems, menuItems) {
 
         menuItems.forEach((menuItem) => {
-            parsedMenuItems.push(menuItem.id);
-            if(menuItem.hasOwnProperty('menu_items')) {
-                this.menuItemParser(parsedMenuItems, menuItem.menu_items);
+            if(menuItem.visible) {
+                parsedMenuItems.push(menuItem.id);
+                if(menuItem.hasOwnProperty('menu_items')) {
+                    this.menuItemParser(parsedMenuItems, menuItem.menu_items);
+                }
             }
         });
 
