@@ -37,15 +37,12 @@ class SettingsPage extends Component {
         this.filterMenuItems = this.filterMenuItems.bind(this);
         this.showSavedSettingsNotice = this.showSavedSettingsNotice.bind(this);
         this.updateFieldsListWithConditions();
-        let fields = this.props.fields;
         let menu = this.props.menu;
+        let fields = this.props.fields;
         let progress = this.props.progress;
         //if count >1, it's a wizard
-        let menuItems = [];
+        let menuItems = menu.menu_items;
         let changedFields = [];
-        const newMenuItems = this.filterMenuItems(menu.menu_items);
-        menu.menu_items = newMenuItems;
-        menuItems = menu.menu_items;
         let selectedMenuItem = this.props.selectedMenuItem;
         this.menu = menu;
         this.menuItems = menuItems;
@@ -65,10 +62,13 @@ class SettingsPage extends Component {
     filterMenuItems(menuItems) {
         const newMenuItems = menuItems;
         for (const [index, value] of menuItems.entries()) {
-            const searchResult = this.props.fields.filter((field) => (field.menu_id === value.id && field.visible));
+            const searchResult = this.props.fields.filter((field) => {
+                return (field.menu_id === value.id && field.visible)
+            });
             if(searchResult.length === 0) {
-                newMenuItems.splice(index, 1);
+                value.visible = false;
             } else {
+                value.visible = true;
                 if(value.hasOwnProperty('menu_items')) {
                     newMenuItems[index].menu_items = this.filterMenuItems(value.menu_items);
                 }
@@ -81,17 +81,19 @@ class SettingsPage extends Component {
         for (const field of this.props.fields){
             this.props.fields[this.props.fields.indexOf(field)].visible = !(field.hasOwnProperty('react_conditions') && !this.validateConditions(field.react_conditions, this.props.fields));
         }
+        this.filterMenuItems(this.props.menu.menu_items)
     }
 
     saveChangedFields(changedField){
         this.updateFieldsListWithConditions();
+
         let changedFields = this.changedFields;
         if (!in_array(changedField, changedFields)) {
             changedFields.push(changedField);
         }
         this.changedFields = changedFields;
         this.setState({
-            changedFields :changedFields
+            changedFields:changedFields,
         });
     }
 
@@ -162,7 +164,7 @@ class SettingsPage extends Component {
                                 if (conditionFields[0].type==='checkbox') {
                                     let actualValue = +conditionFields[0].value;
                                     conditionValue = +conditionValue;
-                                    thisConditionApplies = actualValue == conditionValue;
+                                    thisConditionApplies = actualValue === conditionValue;
                                 } else {
                                     thisConditionApplies = conditionFields[0].value === conditionValue;
                                 }
@@ -180,7 +182,7 @@ class SettingsPage extends Component {
                 }
             }
         }
-        return conditionApplies;
+        return conditionApplies ? 1 : 0;
     }
 
     render() {
@@ -215,7 +217,7 @@ class SettingsPage extends Component {
             <Fragment>
                 <Menu
                     isAPILoaded={isAPILoaded}
-                    menuItems={this.menuItems}
+                    menuItems={this.state.menu.menu_items}
                     menu={this.menu}
                     selectMenu={this.props.selectMenu}
                     selectStep={this.props.selectStep}
