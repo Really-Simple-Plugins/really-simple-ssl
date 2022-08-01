@@ -15,18 +15,16 @@ class SettingsGroup extends Component {
             status:'invalid',
             fields:this.props.fields,
             isAPILoaded: this.props.isAPILoaded,
-            // activeGroup: this.activeGroup,
         };
         this.upgrade='https://really-simple-ssl.com/pro';
         this.msg='';
         this.status='invalid';
         this.fields = this.props.fields;
-        this.activeGroup='';
+
     }
 
     componentDidMount() {
         this.getLicenseStatus = this.getLicenseStatus.bind(this);
-        let selectedMenuItem = this.props.selectedMenuItem;
         this.msg = __("Learn more about %sPremium%s", "really-simple-ssl");
         if ( rsssl_settings.pro_plugin_active ) {
             this.status = this.getLicenseStatus();
@@ -37,17 +35,8 @@ class SettingsGroup extends Component {
             }
         }
 
-        //set group default to current menu item
-        this.activeGroup = selectedMenuItem;
-        if ( selectedMenuItem.hasOwnProperty('groups') ) {
-            let currentGroup = selectedMenuItem.groups.filter(group => group.id === this.props.group);
-            if (currentGroup.length>0) {
-                this.activeGroup = currentGroup[0];
-                console.log(this.activeGroup);
-            }
-        }
-        this.upgrade = this.activeGroup.upgrade ? this.activeGroup.upgrade : this.upgrade;
-        let disabled = this.status !=='valid' && this.activeGroup.premium;
+
+        let disabled = this.status !=='valid' && activeGroup.premium;
         this.setState({
             status: this.status,
             disabled: disabled,
@@ -78,8 +67,17 @@ class SettingsGroup extends Component {
                 selectedFields.push(selectedField);
             }
         }
-        let activeGroup = this.activeGroup;
-        console.log(activeGroup);
+
+        //set group default to current menu item
+        let activeGroup = selectedMenuItem;
+        if ( selectedMenuItem.hasOwnProperty('groups') ) {
+            let currentGroup = selectedMenuItem.groups.filter(group => group.id === this.props.group);
+            if (currentGroup.length>0) {
+                activeGroup = currentGroup[0];
+                console.log(activeGroup);
+            }
+        }
+        this.upgrade = activeGroup.upgrade ? activeGroup.upgrade : this.upgrade;
         return (
             <div className="rsssl-grid-item">
                 {activeGroup && activeGroup.title && <div className="rsssl-grid-item-header"><h3 className="rsssl-h4">{activeGroup.title}</h3></div>}
