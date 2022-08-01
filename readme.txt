@@ -92,7 +92,7 @@ If you can't deactivate, do not just remove the plugin folder to uninstall! Foll
 == Changelog ==
 
 = 5.3.3 =
-* Added manage_security capability
+* Added manage_security capability, props @madtownlems
 
 = 5.3.2 =
 * Fix: remove obsolete domain list generation function, preventing issues on large multisite installations
