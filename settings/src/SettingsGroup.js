@@ -11,7 +11,6 @@ class SettingsGroup extends Component {
     constructor() {
         super( ...arguments );
         this.state = {
-            disabled:false,
             status:'invalid',
             fields:this.props.fields,
             isAPILoaded: this.props.isAPILoaded,
@@ -20,12 +19,10 @@ class SettingsGroup extends Component {
         this.msg='';
         this.status='invalid';
         this.fields = this.props.fields;
-        this.activeGroup='';
     }
 
     componentDidMount() {
         this.getLicenseStatus = this.getLicenseStatus.bind(this);
-        let selectedMenuItem = this.props.selectedMenuItem;
         this.msg = __("Learn more about %sPremium%s", "really-simple-ssl");
         if ( rsssl_settings.pro_plugin_active ) {
             this.status = this.getLicenseStatus();
@@ -35,20 +32,8 @@ class SettingsGroup extends Component {
                 this.msg = rsssl_settings.messageInvalid;
             }
         }
-
-        //set group default to current menu item
-        this.activeGroup = selectedMenuItem;
-        if ( selectedMenuItem.hasOwnProperty('groups') ) {
-            let currentGroup = selectedMenuItem.groups.filter(group => group.id === this.props.group);
-            if (currentGroup.length>0) {
-                this.activeGroup = currentGroup[0];
-            }
-        }
-        this.upgrade = this.activeGroup.upgrade ? this.activeGroup.upgrade : this.upgrade;
-        let disabled = this.status !=='valid' && this.activeGroup.premium;
         this.setState({
             status: this.status,
-            disabled: disabled,
         });
     }
 
@@ -65,7 +50,6 @@ class SettingsGroup extends Component {
 
     render(){
         const {
-            disabled,
             status,
         } = this.state;
         let selectedMenuItem = this.props.selectedMenuItem;
@@ -76,7 +60,17 @@ class SettingsGroup extends Component {
                 selectedFields.push(selectedField);
             }
         }
-        let activeGroup = this.activeGroup;
+        //set group default to current menu item
+        let activeGroup = selectedMenuItem;
+
+        if ( selectedMenuItem.hasOwnProperty('groups') ) {
+            let currentGroup = selectedMenuItem.groups.filter(group => group.id === this.props.group);
+            if (currentGroup.length>0) {
+                activeGroup = currentGroup[0];
+            }
+        }
+        let disabled = this.status !=='valid' && activeGroup.premium;
+        this.upgrade = activeGroup.upgrade ? activeGroup.upgrade : this.upgrade;
         return (
             <div className="rsssl-grid-item">
                 {activeGroup && activeGroup.title && <div className="rsssl-grid-item-header"><h3 className="rsssl-h4">{activeGroup.title}</h3></div>}
