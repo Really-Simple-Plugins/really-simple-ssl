@@ -2351,9 +2351,8 @@ class rsssl_admin extends rsssl_front_end
 	 */
     public function add_htaccess_redirect_before_wp_rocket() {
 
-	    if ( file_exists($this->htaccess_file()) && is_writable($this->htaccess_file() ) ) {
-		    return $this->get_redirect_rules();
-	    }
+        return $this->get_redirect_rules();
+
     }
 
     /**
