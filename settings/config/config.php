@@ -13,7 +13,6 @@ function rsssl_menu( $group_id = 'settings' ){
                     'group_id' => 'general',
                     'title' => __('General', 'really-simple-ssl'),
                     'intro' => __("An introduction on some cool stuff", "really-simple-ssl"),
-                    'visible' => true,
                     'groups' => [
 //							[
 //								'id' => 'general',
@@ -31,7 +30,6 @@ function rsssl_menu( $group_id = 'settings' ){
                 [
                     'id' => 'mixed_content_scan',
                     'title' => __('Mixed Content Scan', 'really-simple-ssl'),
-                    'visible' => true,
                     'premium' => true,
                     'premium_text' => __("Learn more about %HSTS%s", 'really-simple-ssl'),
                     //example of submenu
@@ -49,28 +47,23 @@ function rsssl_menu( $group_id = 'settings' ){
                 [
                     'id' => 'recommended_security_headers',
                     'title' => __('Recommended Security Headers', 'really-simple-ssl'),
-                    'visible' => true,
                 ],
                 [
                     'id' => 'hardening',
                     'title' => __('Hardening', 'really-simple-ssl'),
                     'featured' => __('Improve your security with the most popular security features of Wordpress', 'really-simple-ssl'),
-                    'visible' => true,
                     'menu_items' => [
                         [
                             'id' => 'application_passwords',
                             'title' => __('Disable application passwords', 'really-simple-ssl'),
-                            'visible' => true,
                         ],
                         [
                             'id' => 'code_execution_uploads',
                             'title' => __('Disable code execution in uploads folder', 'really-simple-ssl'),
-                            'visible' => true,
                         ],
 	                    [
 		                    'id' => 'empty_menu_item',
 		                    'title' => __('Empty menu item', 'really-simple-ssl'),
-                            'visible' => true,
 	                    ],
                     ],
                 ],
@@ -78,7 +71,6 @@ function rsssl_menu( $group_id = 'settings' ){
                     'id' => 'premium',
                     'title' => __('Premium', 'really-simple-ssl-pro'),
                     'intro' => __("An introduction on some cool stuff", "really-simple-ssl"),
-                    'visible' => true,
                     'groups' => [
                         [
                             'id' => 'hsts',

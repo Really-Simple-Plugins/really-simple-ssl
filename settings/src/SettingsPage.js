@@ -33,9 +33,12 @@ class SettingsPage extends Component {
         this.saveAndContinue = this.saveAndContinue.bind(this);
         this.wizardNextPrevious = this.wizardNextPrevious.bind(this);
         this.saveChangedFields = this.saveChangedFields.bind(this);
+        this.addVisibleToMenuItems = this.addVisibleToMenuItems.bind(this);
         this.updateFieldsListWithConditions = this.updateFieldsListWithConditions.bind(this);
         this.filterMenuItems = this.filterMenuItems.bind(this);
         this.showSavedSettingsNotice = this.showSavedSettingsNotice.bind(this);
+
+        this.props.menu.menu_items = this.addVisibleToMenuItems(this.props.menu.menu_items);
         this.updateFieldsListWithConditions();
         let menu = this.props.menu;
         let fields = this.props.fields;
@@ -57,6 +60,17 @@ class SettingsPage extends Component {
             menuItems:menuItems,
             changedFields: changedFields,
         });
+    }
+
+    addVisibleToMenuItems(menuItems) {
+        const newMenuItems = menuItems;
+        for (const [index, value] of menuItems.entries()) {
+            newMenuItems[index].visible = true;
+            if(value.hasOwnProperty('menu_items')) {
+                newMenuItems[index].menu_items = this.addVisibleToMenuItems(value.menu_items);
+            }
+        }
+        return newMenuItems;
     }
 
     filterMenuItems(menuItems) {
