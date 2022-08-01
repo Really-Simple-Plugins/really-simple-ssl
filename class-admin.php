@@ -281,7 +281,9 @@ class rsssl_admin extends rsssl_front_end
         $plugin = rsssl_plugin;
         add_filter("plugin_action_links_$plugin", array($this, 'plugin_settings_link'));
 
-        //Add update notification to Settings admin menu
+	    add_filter( 'before_rocket_htaccess_rules', array($this, 'add_htaccess_redirect_before_wp_rocket' ) );
+
+	    //Add update notification to Settings admin menu
         add_action('admin_menu', array($this, 'rsssl_edit_admin_menu') );
 
         //callbacks for the ajax dismiss buttons
@@ -2311,6 +2313,11 @@ class rsssl_admin extends rsssl_front_end
             return;
         }
 
+	    if ( function_exists("rocket_clean_domain") ) {
+		    $this->trace_log("Uses WP Rocket. Using before_rocket_htaccess_rules hook to insert before WP Rocket.");
+		    return;
+	    }
+
         //check if editing is blocked.
         if ( $this->do_not_edit_htaccess ) {
             $this->trace_log("Edit of .htaccess blocked by setting or define 'do not edit htaccess' in Really Simple SSL.");
@@ -2336,6 +2343,17 @@ class rsssl_admin extends rsssl_front_end
         }
         file_put_contents($this->htaccess_file(), $htaccess);
 
+    }
+
+	/**
+     * Return .htaccess redirect when using WP Rocket
+	 * @return string
+	 */
+    public function add_htaccess_redirect_before_wp_rocket() {
+
+	    if ( file_exists($this->htaccess_file()) && is_writable($this->htaccess_file() ) ) {
+		    return $this->get_redirect_rules();
+	    }
     }
 
     /**
