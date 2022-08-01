@@ -321,6 +321,7 @@ class rsssl_admin extends rsssl_front_end
                 $this->save_options();
             }
         }
+        
 	    if ( $prev_version && version_compare( $prev_version, '5.1.3', '<=' ) ) {
 		    if ( get_option( 'rsssl_disable_ocsp' ) ) {
 			    $options = get_option( 'rsssl_options_lets-encrypt' );
@@ -331,7 +332,6 @@ class rsssl_admin extends rsssl_front_end
 	    }
 
 	    if ( $prev_version && version_compare( $prev_version, '5.3.0', '<=' ) ) {
-
 		    if ( file_exists($this->htaccess_file() ) && is_writable($this->htaccess_file() ) ) {
 			    $htaccess = file_get_contents( $this->htaccess_file() );
 
@@ -347,7 +347,7 @@ class rsssl_admin extends rsssl_front_end
 	    }
 
         // Add manage_security capability
-	    if ( $prev_version && version_compare( $prev_version, '5.3.2', '<' ) ) {
+	    if ( $prev_version && version_compare( $prev_version, '5.3.3', '<' ) ) {
 		    rsssl_add_manage_security_capability();
 	    }
 
