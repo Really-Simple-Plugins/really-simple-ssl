@@ -103,7 +103,7 @@ function rsssl_ajax_load_page(){
 }
 
 
-add_action( 'rest_api_init', 'rsssl_settings_rest_route' );
+add_action( 'rest_api_init', 'rsssl_settings_rest_route', 10 );
 function rsssl_settings_rest_route() {
 
 	if (!current_user_can('manage_options')) {
@@ -216,7 +216,7 @@ function rsssl_rest_api_fields_set($request){
     if (!current_user_can('manage_options')) {
         return;
     }
-
+    error_log("update options rsssl");
 	$fields = $request->get_json_params();
     $config_fields = rsssl_fields();
 	foreach ( $fields as $index => $field ) {
@@ -248,7 +248,7 @@ function rsssl_rest_api_fields_set($request){
     foreach ( $fields as $field ) {
         do_action( "rsssl_after_save_option", $field['id'], $field['value'], $prev_value, $field['type'] );
     }
-
+    error_log("saved options");
 	do_action('rsssl_after_saved_fields', $fields );
 	$output   = ['success' => true];
 	$response = json_encode( $output );
