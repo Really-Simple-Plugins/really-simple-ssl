@@ -77,7 +77,7 @@ add_action( 'admin_menu', 'rsssl_add_option_menu' );
 	if (!current_user_can('activate_plugins')) return;
 	$tab = isset($_GET['tab']) ? sanitize_title($_GET['tab']) : 'dashboard';
     ?>
-    <div id="really-simple-ssl" class="rsssl>">
+    <div id="really-simple-ssl" class="rsssl">
         <?php do_action("rsssl_show_tab_{$tab}"); ?>
     </div>
 	<?php

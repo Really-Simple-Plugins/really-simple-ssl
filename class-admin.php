@@ -19,8 +19,6 @@ class rsssl_admin extends rsssl_front_end
     public $plugin_filename = "rlrsssl-really-simple-ssl.php";
     public $abs_path;
     public $review_notice_shown = FALSE;
-    public $dismiss_review_notice = FALSE;
-    public $ssl_success_message_shown = FALSE;
     public $ssl_type = "NA";
 	public $pro_url;
 
@@ -256,7 +254,6 @@ class rsssl_admin extends rsssl_front_end
         add_action('admin_menu', array($this, 'rsssl_edit_admin_menu') );
 
         //callbacks for the ajax dismiss buttons
-        add_action('wp_ajax_dismiss_success_message', array($this, 'dismiss_success_message_callback'));
         add_action('wp_ajax_rsssl_dismiss_review_notice', array($this, 'dismiss_review_notice_callback'));
         add_action('wp_ajax_rsssl_redirect_to_le_wizard', array($this, 'rsssl_redirect_to_le_wizard'));
 
@@ -944,8 +941,6 @@ class rsssl_admin extends rsssl_front_end
         if (isset($options)) {
             $this->site_has_ssl = isset($options['site_has_ssl']) ? $options['site_has_ssl'] : FALSE;
             $this->review_notice_shown = isset($options['review_notice_shown']) ? $options['review_notice_shown'] : FALSE;
-            $this->ssl_success_message_shown = isset($options['ssl_success_message_shown']) ? $options['ssl_success_message_shown'] : FALSE;
-            $this->dismiss_review_notice = isset($options['dismiss_review_notice']) ? $options['dismiss_review_notice'] : $this->dismiss_review_notice;
         }
 
         if (is_multisite()) {
@@ -1469,19 +1464,10 @@ class rsssl_admin extends rsssl_front_end
 
     public function save_options()
     {
-	    //any options added here should also be added to function options_validate()
         $options = array(
             'site_has_ssl' => $this->site_has_ssl,
             'review_notice_shown' => $this->review_notice_shown,
-            'ssl_success_message_shown' => $this->ssl_success_message_shown,
-            'autoreplace_insecure_links' => $this->autoreplace_insecure_links,
-            'htaccess_redirect' => $this->htaccess_redirect,
-            'ssl_enabled' => $this->ssl_enabled,
-            'wp_redirect' => $this->wp_redirect,
-            'dismiss_review_notice' => $this->dismiss_review_notice,
-
         );
-
 	    update_option('rsssl_options', $options);
     }
 
@@ -1503,9 +1489,7 @@ class rsssl_admin extends rsssl_front_end
 
 	        $this->site_has_ssl = FALSE;
 	        $this->review_notice_shown = FALSE;
-	        $this->ssl_success_message_shown = FALSE;
 	        $this->ssl_enabled = FALSE;
-	        $this->dismiss_review_notice = FALSE;
 	        $this->save_options();
 
 	        rsssl_update_option('dismiss_all_notices', false);
@@ -2564,26 +2548,6 @@ class rsssl_admin extends rsssl_front_end
         <?php
     }
 
-
-    /**
-     * Process the ajax dismissal of the success message.
-     *
-     * @since  2.0
-     *
-     * @access public
-     *
-     */
-
-    public function dismiss_success_message_callback()
-    {
-        if (!current_user_can($this->capability) ) return;
-        $this->ssl_success_message_shown = TRUE;
-        $this->save_options();
-        wp_die();
-    }
-
-
-
     /**
      * Process the ajax dismissal of the htaccess message.
      *
@@ -2641,14 +2605,6 @@ class rsssl_admin extends rsssl_front_end
         }
     }
 
-	/**
-     * Check if user has upgraded to four from a previous version
-	 * @return bool
-	 */
-
-    public function upgraded_to_four(){
-        return get_option( 'rsssl_upgraded_to_four' ) ? true : false;
-    }
 
     /**
      * Get array of notices
@@ -2787,20 +2743,6 @@ class rsssl_admin extends rsssl_front_end
                         'plusone' => true,
                     ),
                 ),
-            ),
-
-            'upgraded_to_four' => array(
-	            'callback' => 'RSSSL()->really_simple_ssl->upgraded_to_four',
-	            'score' => 5,
-	            'output' => array(
-		            'true' => array(
-                        'url' => __('https://really-simple-ssl.com/really-simple-ssl-4-a-new-dashboard'),
-			            'msg' => __("Really Simple SSL 4.0. Learn more about our newest major release.", "really-simple-ssl"),
-			            'icon' => 'open',
-			            'dismissible' => true,
-			            'plusone' => true,
-		            ),
-	            ),
             ),
 
             'ssl_enabled' => array(

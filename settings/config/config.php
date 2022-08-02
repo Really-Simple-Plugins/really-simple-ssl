@@ -174,7 +174,6 @@ function rsssl_menu( $group_id = 'settings' ){
 
 function rsssl_migrate_settings($prev_version) {
 	//upgrade both site and network settings
-	//rlrsssl_options autoreplace_insecure_links => mixed_content_fixer
 
 	if ( $prev_version && version_compare( $prev_version, '6.0.0', '<=' ) ) {
 		$options = get_option( 'rlrsssl_options' );
@@ -202,10 +201,13 @@ function rsssl_migrate_settings($prev_version) {
 		rsssl_update_option('switch_mixed_content_fixer_hook', $switch_mixed_content_fixer_hook);
 		unset($options['switch_mixed_content_fixer_hook']);
 		unset($options['plugin_db_version']);
+		unset($options['dismiss_review_notice']);
+		unset($options['ssl_success_message_shown']);
 		update_option( 'rlrsssl_options', $options, false );
+		delete_option( "rsssl_upgraded_to_four" );
 	}
 }
-add_action('rsssl_upgrade', 10, 1);
+add_action('rsssl_upgrade', 'rsssl_migrate_settings', 10, 1);
 
 function rsssl_fields( $load_values = true ){
 	if ( !current_user_can('manage_options') ) {
