@@ -36,7 +36,7 @@ function rsssl_do_fix($fix){
 		$completed = get_option('rsssl_completed_fixes', []);
 		if ($success) {
 			$completed[] = $fix;
-			update_option('rsssl_completed_fixes', $completed );
+			update_option('rsssl_completed_fixes', $completed, false );
 		}
 	} elseif ($fix && !function_exists($fix) ) {
 		error_log("Really Simple SSL: fix function $fix not found");
@@ -51,6 +51,7 @@ function rsssl_has_fix($fix){
 	}
 	return true;
 }
+
 //error_log(print_r($_SERVER,true));
 //error_log(print_r($_POST,true));
 //error_log(print_r($_GET,true));
@@ -96,6 +97,7 @@ if ( !function_exists('rsssl_remove_htaccess_security_edits') ) {
 		}
 	}
 }
+
 
 /**
  * Wrap the security headers
