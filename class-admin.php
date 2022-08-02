@@ -72,6 +72,9 @@ class rsssl_admin extends rsssl_front_end
 	    add_action( "update_option_rlrsssl_options", array( $this, "maybe_clear_transients" ), 10, 3 );
         add_action( 'wp_ajax_update_ssl_detection_overridden_option', array( $this, 'update_ssl_detection_overridden_option' ) );
 
+        // @todo remove
+        add_action('admin_init', 'rsssl_has_pro_valid_license');
+
 	    // Only show deactivate popup when SSL has been enabled.
 	    if ($this->ssl_enabled) {
             add_action('admin_footer', array($this, 'deactivate_popup'), 40);
@@ -3039,7 +3042,20 @@ class rsssl_admin extends rsssl_front_end
 	    $expiry_date = !empty($end_date) ? date( get_option('date_format'), $end_date ) : __("(Unknown)", "really-simple-ssl");
 	    $test_url = 'https://www.ssllabs.com/ssltest/analyze.html?d='.home_url();
 
-        $notices = array(
+	    $activate_link = add_query_arg(
+		    array(
+			    'page' => 'rlrsssl_really_simple_ssl',
+			    'tab' => 'license'
+		    ), admin_url('options-general.php'));
+	    $activate =  ' '.sprintf(__("%sActivate%s your license.", "really-simple-ssl"), '<a href="'.$activate_link.'">', '</a>');
+
+	    if ( is_network_admin() ) {
+		    $url = add_query_arg(array('page' => "really-simple-ssl", 'tab' => 'license'), network_admin_url('settings.php'));
+	    } else {
+		    $url = add_query_arg(array('page' => "rlrsssl_really_simple_ssl", 'tab' => 'license'), admin_url('options-general.php'));
+	    }
+
+	    $notices = array(
             'deactivation_file_detected' => array(
                 'callback' => 'RSSSL()->really_simple_ssl->check_for_uninstall_file',
                 'score' => 30,
@@ -3417,6 +3433,20 @@ class rsssl_admin extends rsssl_front_end
 			            'msg' => sprintf(__( 'We have detected the %s plugin on your website.', 'really-simple-ssl' ),rsssl_detected_duplicate_ssl_plugin(true)).'&nbsp;'.__( 'As Really Simple SSL handles all the functionality this plugin provides, we recommend to disable this plugin to prevent unexpected behaviour.', 'really-simple-ssl' ),
 			            'icon' => 'warning',
 			            'dismissible' => true,
+			            'plusone' => true,
+		            ),
+	            ),
+            ),
+
+            'rsssl-pro-license-valid' => array(
+	            'condition'  => array('NOT rsssl_has_pro_valid_license'),
+	            'callback' => '_true_',
+	            'plus_one' => true,
+	            'output' => array(
+		            'true' => array(
+			            'msg' => __("Your Really Simple SSL pro license is not valid.","really-simple-ssl").'&nbsp;'.sprintf(__("You can upgrade or renew your license on the %slicense tab%s.","really-simple-ssl"), '<a href="'.$url.'">', '</a>'),
+			            'icon' => 'warning',
+			            'dismissible' => false,
 			            'plusone' => true,
 		            ),
 	            ),
@@ -4966,6 +4996,239 @@ class rsssl_admin extends rsssl_front_end
 
 		return $contents;
 	}
+
+	/**
+	 * Get latest license data from license key
+	 * @param string $action
+	 * @param bool $clear_cache
+	 * @return string
+	 *   empty => no license key yet
+	 *   invalid, disabled, deactivated
+	 *   revoked, missing, invalid, site_inactive, item_name_mismatch, no_activations_left
+	 *   inactive, expired, valid
+	 */
+
+	public function get_license_status($action = 'check_license', $clear_cache = false )
+	{
+		//if we're in the process of auto installing, return 'valid' here.
+		if ($action==='check_license' && get_site_option('rsssl_auto_installed_license')){
+			return 'valid';
+		}
+
+		$status = $this->get_transient('rsssl_pro_license_status_free');
+		if ($clear_cache) $status = false;
+		if ( !$status || get_site_option('rsssl_pro_license_activation_limit') === FALSE ){
+            error_log("Fresh call, no transient");
+			$status = 'invalid';
+			$transient_expiration = WEEK_IN_SECONDS;
+			//set default
+			$this->set_transient('rsssl_pro_license_status_free', 'empty', $transient_expiration);
+			update_site_option('rsssl_pro_license_activation_limit', 'none');
+
+			$license = $this->maybe_decode( $this->license_key() );
+			if ( strlen($license) ===0 ) return 'empty';
+
+			$home_url = home_url();
+
+			//the multisite plugin should activate for the main domain
+			if ( defined('rsssl_pro_ms_version') ) {
+				$home_url = network_site_url();
+			}
+
+			// data to send in our API request
+			$api_params = array(
+				'edd_action' => $action,
+				'license' => $license,
+				'item_id' => RSSSL_ITEM_ID,
+				'url' => $home_url,
+			);
+			$ssl_verify = get_site_option('rsssl_ssl_verify', 'true' ) === 'true';
+			$args = apply_filters('rsssl_license_verification_args', array('timeout' => 15, 'sslverify' => $ssl_verify, 'body' => $api_params) );
+			$response = wp_remote_post(REALLY_SIMPLE_SSL_URL, $args);
+			$attempts = get_site_option('rsssl_license_attempts', 0);
+			$attempts++;
+			if (is_wp_error($response) || 200 !== wp_remote_retrieve_response_code($response)) {
+				if (is_wp_error($response)) {
+					$message = $response->get_error_message( 'http_request_failed' );
+					if ( strpos( $message, '60' ) !== false ) {
+						update_site_option( 'rsssl_ssl_verify', 'false' );
+						if ( $attempts < 5 ) {
+							$transient_expiration = 5 * MINUTE_IN_SECONDS;
+						} else {
+							update_site_option( 'rsssl_ssl_verify', 'true' );
+						}
+					}
+				}
+				$this->set_transient('rsssl_pro_license_status_free', 'error', $transient_expiration);
+				update_option('rsssl_license_attempts', $attempts);
+			} else {
+				update_option('rsssl_license_attempts', 0);
+				$license_data = json_decode(wp_remote_retrieve_body($response));
+				if ( !$license_data || ($license_data->license === 'failed' ) ) {
+					$status = 'empty';
+					delete_site_option('rsssl_pro_license_expires' );
+				} elseif ( isset($license_data->error) ){
+					$status = $license_data->error; //revoked, missing, invalid, site_inactive, item_name_mismatch, no_activations_left
+					if ($status==='no_activations_left') {
+						update_site_option('rsssl_pro_license_activations_left', 0);
+					}
+				} elseif ( $license_data->license === 'invalid' || $license_data->license === 'disabled' ) {
+					$status = $license_data->license;
+				} elseif ( true === $license_data->success ) {
+					$status = $license_data->license; //inactive, expired, valid, deactivated
+					if ($status === 'deactivated'){
+						$left = get_site_option('rsssl_pro_license_activations_left', 1 );
+						$activations_left = is_numeric($left) ? $left + 1 : $left;
+						update_site_option('rsssl_pro_license_activations_left', $activations_left);
+					}
+				}
+
+				if ( $license_data && isset($license_data->expires) ) {
+					$date = $license_data->expires;
+					if ( $date !== 'lifetime' ) {
+						if (!is_numeric($date)) $date = strtotime($date);
+						$date = date(get_option('date_format'), $date);
+					}
+					update_site_option('rsssl_pro_license_expires', $date);
+
+					if ( isset($license_data->license_limit) ) update_site_option('rsssl_pro_license_activation_limit', $license_data->license_limit);
+					if ( isset($license_data->activations_left) ) update_site_option('rsssl_pro_license_activations_left', $license_data->activations_left);
+				}
+			}
+
+			$this->set_transient('rsssl_pro_license_status_free', $status, $transient_expiration);
+		}
+		return $status;
+	}
+
+	public function encode( $string ) {
+		if ( strlen(trim($string)) === 0 ) return $string;
+
+		if (strpos( $string , 'really_simple_ssl_') !== FALSE ) {
+			return $string;
+		}
+
+		$key = $this->get_key();
+		if ( !$key ) {
+			$key = $this->set_key();
+		}
+
+		$ivlength = openssl_cipher_iv_length('aes-256-cbc');
+		$iv = openssl_random_pseudo_bytes($ivlength);
+		$ciphertext_raw = openssl_encrypt($string, 'aes-256-cbc', $key, 0, $iv);
+		$key = base64_encode( $iv.$ciphertext_raw );
+
+		return 'really_simple_ssl_'.$key;
+	}
+
+	public function get_key() {
+
+		if ( !get_site_option('rsssl_key') ) {
+			//check if we're upgraded to network option already. If multisite, we need to upgrade
+			if ( is_multisite() && !get_site_option('rsssl_upgraded_license_key') ) {
+				//if this is the main site, set this option as network wide option
+				if ( is_main_site() ) {
+					update_site_option('rsssl_key', get_option( 'rsssl_key') );
+				} else {
+					//if we're on a subsite, try to get the key from the main site
+					switch_to_blog( get_main_site_id() );
+					update_site_option('rsssl_key', get_option( 'rsssl_key') );
+					restore_current_blog();
+				}
+				update_site_option('rsssl_upgraded_license_key', true );
+			}
+		}
+
+		return get_site_option( 'rsssl_key' );
+	}
+
+	/**
+	 * We use our own transient, as the wp transient is not always persistent
+	 * Specifically made for license transients, as it stores on network level if multisite.
+	 *
+	 * @param string $name
+	 *
+	 * @return mixed
+	 */
+	private function get_transient( $name ) {
+		$value = false;
+		$now = time();
+		$transients = get_site_option('rsssl_transients', array());
+		if (isset($transients[$name])) {
+			$data = $transients[$name];
+			$expires = isset($data['expires']) ? $data['expires'] : 0;
+			$value = isset($data['value']) ? $data['value'] : false;
+			if ( $expires < $now ) {
+				unset($transients[$name]);
+				update_site_option('rsssl_transients', $transients);
+				$value = false;
+			}
+		}
+		return $value;
+	}
+
+	/**
+	 * We use our own transient, as the wp transient is not always persistent
+	 * Specifically made for license transients, as it stores on network level if multisite.
+	 *
+	 * @param string $name
+	 * @param mixed $value
+	 * @param int $expiration
+	 *
+	 * @return void
+	 */
+	private function set_transient( $name, $value, $expiration ) {
+		$transients = get_site_option('rsssl_transients', array());
+		$transients[$name] = array(
+			'value' => sanitize_text_field($value),
+			'expires' => time() + intval($expiration),
+		);
+		update_site_option('rsssl_transients', $transients);
+	}
+
+	/**
+	 * Decode a license key
+	 * @param string $string
+	 *
+	 * @return string
+	 */
+
+	public function maybe_decode( $string ) {
+		if (strpos( $string , 'really_simple_ssl_') !== FALSE ) {
+			$key = $this->get_key();
+			$string = str_replace('really_simple_ssl_', '', $string);
+
+			// To decrypt, split the encrypted data from our IV
+			$ivlength = openssl_cipher_iv_length('aes-256-cbc');
+			$iv = substr(base64_decode($string), 0, $ivlength);
+			$encrypted_data = substr(base64_decode($string), $ivlength);
+
+			$decrypted =  openssl_decrypt($encrypted_data, 'aes-256-cbc', $key, 0, $iv);
+			return $decrypted;
+		}
+
+		//not encoded, return
+		return $string;
+	}
+
+	public function license_key() {
+		return $this->encode( get_site_option('rsssl_pro_license_key') );
+	}
+
+	/**
+	 * Check if license is valid
+	 * @return bool
+	 */
+
+	public function license_is_valid() {
+		$status = $this->get_license_status();
+		if ($status == "valid") {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
 } //class closure
 
 if (!function_exists('rsssl_ssl_enabled')) {
@@ -5135,5 +5398,40 @@ if ( !function_exists('rsssl_ssl_detection_overridden' ) ) {
 			return true;
 		}
 		return false;
+	}
+}
+
+/**
+ * Check if Really Simple SSL Pro exists
+ * @return bool
+ */
+if ( !function_exists('rsssl_has_pro_valid_license' ) ) {
+	function rsssl_has_pro_valid_license() {
+        error_log("yy");
+		if ( ! rsssl_uses_pro() ) {
+			return true;
+		}
+
+//        error_log("PRO: " . RSSSL_PRO()->rsssl_licensing->license_is_valid() );
+//        error_log("FREE: " . RSSSL()->really_simple_ssl->license_is_valid() );
+		if ( RSSSL_PRO()->rsssl_licensing->license_is_valid() === RSSSL()->really_simple_ssl->license_is_valid() ) {
+            error_log("license pro free is same");
+			return false;
+		}
+
+		return false;
+	}
+}
+
+/**
+ * Check if Pro plugin is active
+ */
+if ( !function_exists('rsssl_uses_pro' ) ) {
+	function rsssl_uses_pro() {
+		if ( defined( 'rsssl_pro_version' ) ) {
+			return true;
+		}
+
+        return false;
 	}
 }
