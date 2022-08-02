@@ -172,16 +172,40 @@ function rsssl_menu( $group_id = 'settings' ){
 	return array();
 }
 
-function rsssl_migrate_settings() {
+function rsssl_migrate_settings($prev_version) {
 	//upgrade both site and network settings
-
 	//rlrsssl_options autoreplace_insecure_links => mixed_content_fixer
-	//wp_redirect
-	//htaccess_redirect
-	//do_not_edit_htaccess
-	//switch_mixed_content_fixer_hook
-	//dismiss_all_notices
+
+	if ( $prev_version && version_compare( $prev_version, '6.0.0', '<=' ) ) {
+		$options = get_option( 'rlrsssl_options' );
+		$autoreplace_insecure_links      = isset( $options['autoreplace_insecure_links'] ) ? $options['autoreplace_insecure_links'] : false;
+		unset($options['autoreplace_insecure_links']);
+		rsssl_update_option('mixed_content_fixer', $autoreplace_insecure_links);
+
+		$wp_redirect                     = isset( $options['wp_redirect'] ) ? $options['wp_redirect'] : false;
+		rsssl_update_option('wp_redirect', $wp_redirect);
+		unset($options['wp_redirect']);
+
+		$do_not_edit_htaccess            = isset( $options['do_not_edit_htaccess'] ) ? $options['do_not_edit_htaccess'] : false;
+		rsssl_update_option('do_not_edit_htaccess', $do_not_edit_htaccess);
+		unset($options['do_not_edit_htaccess']);
+
+		$htaccess_redirect               = isset( $options['htaccess_redirect'] ) ? $options['htaccess_redirect'] : false;
+		rsssl_update_option('htaccess_redirect', $htaccess_redirect);
+		unset($options['htaccess_redirect']);
+
+		$dismiss_all_notices             = isset( $options['dismiss_all_notices'] ) ? $options['dismiss_all_notices'] : false;
+		rsssl_update_option('dismiss_all_notices', $dismiss_all_notices);
+		unset($options['dismiss_all_notices']);
+
+		$switch_mixed_content_fixer_hook = isset( $options['switch_mixed_content_fixer_hook'] ) ? $options['switch_mixed_content_fixer_hook'] : false;
+		rsssl_update_option('switch_mixed_content_fixer_hook', $switch_mixed_content_fixer_hook);
+		unset($options['switch_mixed_content_fixer_hook']);
+		unset($options['plugin_db_version']);
+		update_option( 'rlrsssl_options', $options, false );
+	}
 }
+add_action('rsssl_upgrade', 10, 1);
 
 function rsssl_fields( $load_values = true ){
 	if ( !current_user_can('manage_options') ) {
@@ -230,15 +254,10 @@ function rsssl_fields( $load_values = true ){
             'default'     => false,
         ],
         [
-            'id'          => 'mixed_content_fixer_method',
+            'id'          => 'mixed_content_fixer',
             'menu_id'     => 'general',
             'group_id'    => 'general',
-            'type'        => 'select',
-            'options'      => [
-                'mixed_content_fixer'       => __('Always', 'really-simple-ssl'),
-                'admin_mixed_content_fixer' => __('Fix mixed content on back-end', 'really-simple-ssl'),
-                'switch_mixed_content_fixer_hook' => __('Switch mixed content fixer hook', 'really-simple-ssl'),
-            ],
+            'type'        => 'checkbox',
             'label'       => __( "Mixed content fixer", 'really-simple-ssl' ),
             'help'        => [
                 'label' => 'default',
