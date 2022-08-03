@@ -24,16 +24,6 @@ class Settings extends Component {
         this.fields = this.props.fields;
     }
 
-    componentDidMount() {
-        this.getProgressData = this.getProgressData.bind(this);
-    }
-
-    getProgressData(){
-        return rsssl_api.runTest('progressData', 'refresh').then( ( response ) => {
-            return response.data;
-        });
-    }
-
     render() {
         const {
             fields,
