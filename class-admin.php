@@ -72,7 +72,6 @@ class rsssl_admin extends rsssl_front_end
 	    add_action( "update_option_rlrsssl_options", array( $this, "maybe_clear_transients" ), 10, 3 );
         add_action( 'wp_ajax_update_ssl_detection_overridden_option', array( $this, 'update_ssl_detection_overridden_option' ) );
 
-        // @todo remove
         add_action('admin_init', 'rsssl_has_pro_valid_license');
 
 	    // Only show deactivate popup when SSL has been enabled.
@@ -4998,7 +4997,7 @@ class rsssl_admin extends rsssl_front_end
 	}
 
 	/**
-	 * Get latest license data from license key
+	 * Get the latest license data from license key
 	 * @param string $action
 	 * @param bool $clear_cache
 	 * @return string
@@ -5010,17 +5009,12 @@ class rsssl_admin extends rsssl_front_end
 
 	public function get_license_status($action = 'check_license', $clear_cache = false )
 	{
-		//if we're in the process of auto installing, return 'valid' here.
-		if ($action==='check_license' && get_site_option('rsssl_auto_installed_license')){
-			return 'valid';
-		}
 
 		$status = $this->get_transient('rsssl_pro_license_status_free');
 		if ($clear_cache) $status = false;
-		if ( !$status || get_site_option('rsssl_pro_license_activation_limit') === FALSE ){
-            error_log("Fresh call, no transient");
+		if ( ! $status || get_site_option('rsssl_pro_license_activation_limit') === FALSE ) {
 			$status = 'invalid';
-			$transient_expiration = WEEK_IN_SECONDS;
+			$transient_expiration = MONTH_IN_SECONDS;
 			//set default
 			$this->set_transient('rsssl_pro_license_status_free', 'empty', $transient_expiration);
 			update_site_option('rsssl_pro_license_activation_limit', 'none');
@@ -5101,6 +5095,12 @@ class rsssl_admin extends rsssl_front_end
 		return $status;
 	}
 
+	/**
+     * Encode the key
+	 * @param $string
+	 *
+	 * @return string
+	 */
 	public function encode( $string ) {
 		if ( strlen(trim($string)) === 0 ) return $string;
 
@@ -5121,9 +5121,13 @@ class rsssl_admin extends rsssl_front_end
 		return 'really_simple_ssl_'.$key;
 	}
 
+	/**
+     * Get the key
+	 * @return false|mixed
+	 */
 	public function get_key() {
 
-		if ( !get_site_option('rsssl_key') ) {
+		if ( ! get_site_option('rsssl_key') ) {
 			//check if we're upgraded to network option already. If multisite, we need to upgrade
 			if ( is_multisite() && !get_site_option('rsssl_upgraded_license_key') ) {
 				//if this is the main site, set this option as network wide option
@@ -5211,6 +5215,10 @@ class rsssl_admin extends rsssl_front_end
 		return $string;
 	}
 
+	/**
+     * Get the license key
+	 * @return string
+	 */
 	public function license_key() {
 		return $this->encode( get_site_option('rsssl_pro_license_key') );
 	}
@@ -5407,16 +5415,19 @@ if ( !function_exists('rsssl_ssl_detection_overridden' ) ) {
  */
 if ( !function_exists('rsssl_has_pro_valid_license' ) ) {
 	function rsssl_has_pro_valid_license() {
-        error_log("yy");
+
 		if ( ! rsssl_uses_pro() ) {
 			return true;
 		}
 
-//        error_log("PRO: " . RSSSL_PRO()->rsssl_licensing->license_is_valid() );
-//        error_log("FREE: " . RSSSL()->really_simple_ssl->license_is_valid() );
+        // Check if Pro constant matches
+        if ( defined( 'RSSSL_PRO_DETECTION' )
+             && RSSSL_PRO_DETECTION === 'rsssl_pro_' . strtolower(date('lj') ) ) {
+            return true;
+        }
+
 		if ( RSSSL_PRO()->rsssl_licensing->license_is_valid() === RSSSL()->really_simple_ssl->license_is_valid() ) {
-            error_log("license pro free is same");
-			return false;
+			return true;
 		}
 
 		return false;
