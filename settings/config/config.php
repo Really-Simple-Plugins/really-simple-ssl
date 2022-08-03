@@ -164,7 +164,7 @@ function rsssl_fields( $load_values = true ){
 							 ],
 			'disabled'    => false,
 			'default'     => true,
-			'new_features_block'     => true,
+			'new_features_block' => true,
 			'networkwide' => false,
 		],
 		[

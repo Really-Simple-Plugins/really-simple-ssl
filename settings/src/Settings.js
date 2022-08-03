@@ -7,6 +7,7 @@ import {
     Button,
 } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
+import * as rsssl_api from "./utils/api";
 
 /**
  * Renders the selected settings
@@ -21,6 +22,16 @@ class Settings extends Component {
             isAPILoaded: this.props.isAPILoaded,
         };
         this.fields = this.props.fields;
+    }
+
+    componentDidMount() {
+        this.getProgressData = this.getProgressData.bind(this);
+    }
+
+    getProgressData(){
+        return rsssl_api.runTest('progressData', 'refresh').then( ( response ) => {
+            return response.data;
+        });
     }
 
     render() {

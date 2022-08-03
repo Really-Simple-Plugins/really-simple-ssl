@@ -3,6 +3,22 @@ import {Component, Fragment} from "@wordpress/element";
  * Render a help notice in the sidebar
  */
 class Help extends Component {
+    constructor() {
+        super( ...arguments);
+        this.getProgressData().then(( response ) => {
+            this.filter = response.filter;
+            this.notices = response.notices;
+            this.progressLoaded = true;
+            this.setState({
+                progressLoaded: this.progressLoaded,
+                filter: this.filter,
+                notices: this.notices,
+            });
+            this.props.setBlockProps('notices', this.notices);
+        });
+    }
+
+
     handleClick(id){
         let el = document.querySelector('[data-help_index="'+id+'"]');
         if (el.classList.contains('rsssl-wizard__help_open')) {
@@ -11,7 +27,13 @@ class Help extends Component {
             el.classList.add('rsssl-wizard__help_open');
         }
     }
+
+
     render(){
+        let {
+            isAPILoaded,
+            content,
+        } = this.state;
         let notice = this.props.help;
         if ( !notice.title ){
             notice.title = notice.text;

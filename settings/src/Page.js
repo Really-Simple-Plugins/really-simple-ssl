@@ -52,7 +52,6 @@ class Page extends Component {
      */
     setPageProps(key, value){
         this.pageProps[key] = value;
-        console.log("set page props "+key+value);
         this.setState({
             pageProps: this.pageProps,
         })
