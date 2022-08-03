@@ -185,7 +185,6 @@ function rsssl_fields( $load_values = true ){
             ],
             'new_features_block'     => true,
             'networkwide' => false,
-
         ],
         [
             'id'                => 'htaccess_redirect',

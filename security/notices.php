@@ -21,22 +21,25 @@ function rsssl_general_security_notices( $notices ) {
 		'score' => 5,
 		'output' => array(
 			'not-writable' => array(
-				'msg' => __("An option was enabled which requires the .htaccess to get written, but the .htaccess is not writable.", "really-simple-ssl").__("Please add the following lines to your .htaccess, or site it to writable:", "really-simple-ssl").$code,
+				'msg' => __("An option was enabled which requires the .htaccess to get written, but the .htaccess is not writable.", "really-simple-ssl").' '.__("Please add the following lines to your .htaccess, or set it to writable:", "really-simple-ssl").$code,
 				'icon' => 'open',
 				'dismissible' => true,
 			),
 			'not-exists' => array(
-				'msg' => __("An option was enabled which requires the .htaccess to get written, but the .htaccess does not exist.", "really-simple-ssl").__("Please add the following lines to your .htaccess, or site it to writable:", "really-simple-ssl").$code,
+				'msg' => __("An option was enabled which requires the .htaccess to get written, but the .htaccess does not exist.", "really-simple-ssl").' '.__("Please add the following lines to your .htaccess, or set it to writable:", "really-simple-ssl").$code,
 				'icon' => 'open',
 				'dismissible' => true,
 			),
 
 			'not-writable-uploads' => array(
-				'msg' => __("An option was enabled which requires the .htaccess in the uploads directory to get written, but the .htaccess or directory is not writable.", "really-simple-ssl").__("Please add the following lines to your .htaccess, or site it to writable:", "really-simple-ssl").$code,
+				'msg' => __("An option was enabled which requires the .htaccess in the uploads directory to get written, but the .htaccess or directory is not writable.", "really-simple-ssl").' '.__("Please add the following lines to your .htaccess, or set it to writable:", "really-simple-ssl").$code,
 				'icon' => 'open',
 				'dismissible' => true,
 			),
 		),
+		'show_with_options' => [
+			'block_code_execution_uploads',
+		]
 	);
 
 	$notices['display_name_is_login'] = array(

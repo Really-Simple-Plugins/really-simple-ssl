@@ -11,6 +11,7 @@ class Help extends Component {
             el.classList.add('rsssl-wizard__help_open');
         }
     }
+
     render(){
         let notice = this.props.help;
         if ( !notice.title ){

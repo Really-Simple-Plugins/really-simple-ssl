@@ -243,7 +243,7 @@ function rsssl_is_integration_enabled( $plugin, $details ) {
  */
 
 function rsssl_integrations() {
-
+	error_log("load integrations");
 	global $rsssl_integrations_list;
 	$stored_integrations_count = get_option('rsssl_active_integrations', 0 );
 	$actual_integrations_count = 0;
@@ -290,3 +290,4 @@ function rsssl_integrations() {
 }
 
 add_action( 'plugins_loaded', 'rsssl_integrations', 10 );
+add_action( 'rsssl_after_saved_fields', 'rsssl_integrations', 20 );

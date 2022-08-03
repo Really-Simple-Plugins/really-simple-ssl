@@ -66,7 +66,6 @@ class Field extends Component {
      */
     onChangeHandlerDataTable(enabled, clickedItem, type ) {
         let field=this.props.field;
-        console.log(field.value);
         if (typeof field.value === 'object') {
             field.value = Object.values(field.value);
         }
