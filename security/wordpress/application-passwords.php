@@ -1,16 +1,15 @@
 <?php defined( 'ABSPATH' ) or die();
 /**
  * @return void
- * Enable or disable application passwords
+ * Disable application passwords
  */
-function rsssl_maybe_allow_application_passwords() {
-	if ( rsssl_get_option( 'disable_application_passwords' ) ) {
-		add_filter( 'wp_is_application_passwords_available', '__return_false' );
-	} else {
-		add_filter( 'wp_is_application_passwords_available', '__return_true' );
-	}
+$set_to_value = '__return_false';
+$deactivate_list = get_option('rsssl_deactivate_list', []);
+if ( in_array('application_passwords', $deactivate_list )){
+	$set_to_value = '__return_true';
+	unset($deactivate_list['application_passwords']);
 }
-add_action('rest_api_init', 'rsssl_maybe_allow_application_passwords' );
+add_filter( 'wp_is_application_passwords_available', $set_to_value );
 
 ///**
 // * @return void

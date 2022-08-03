@@ -1,5 +1,6 @@
 <?php
 defined( 'ABSPATH' ) or die();
+require_once( trailingslashit(rsssl_path) . 'security/deactivate-integration.php' );
 require_once( trailingslashit(rsssl_path) . 'security/learning-mode.php' );
 require_once( trailingslashit(rsssl_path) . 'security/tests.php' );
 require_once( trailingslashit(rsssl_path) . 'security/cron.php' );
