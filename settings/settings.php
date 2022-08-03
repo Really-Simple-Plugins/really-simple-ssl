@@ -367,15 +367,43 @@ function rsssl_rest_api_fields_get(  ){
 
 		$fields[$index] = $field;
 	}
+
+    $updated_menu_items = rsssl_filter_menu_items($menu_items['menu_items'], $fields);
+    $menu_items['menu_items'] = $updated_menu_items;
+
 	$output['fields'] = $fields;
 
 	$output['menu'] = $menu_items;
 	$output['progress'] = RSSSL()->progress->get();
     $output = apply_filters('rsssl_rest_api_fields_get', $output);
+
 	$response = json_encode( $output );
 	header( "Content-Type: application/json" );
 	echo $response;
 	exit;
+}
+
+/**
+ * Checks if there are field linked to menu_item if not removes menu_item from menu_item array
+ * @param $menu_items
+ * @param $fields
+ * @return array
+ */
+function rsssl_filter_menu_items( $menu_items, $fields) {
+    $new_menu_items = $menu_items;
+    foreach($menu_items as $key => $menu_item) {
+        $searchResult = array_search($menu_item['id'], array_column($fields, 'menu_id'));
+        if($searchResult === false) {
+            unset($new_menu_items[$key]);
+        } else {
+            if(isset($menu_item['menu_items'])){
+                $updatedValue = rsssl_filter_menu_items($menu_item['menu_items'], $fields);
+                $new_menu_items[$key]['menu_items'] = $updatedValue;
+            }
+        }
+    }
+
+    return $new_menu_items;
 }
 
 /**
