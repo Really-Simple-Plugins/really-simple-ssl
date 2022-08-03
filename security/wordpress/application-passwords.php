@@ -24,9 +24,9 @@ function rsssl_test_authorization_header() {
 		$response = wp_remote_get( get_rest_url(), array( 'sslverify' => false, 'timeout' => 1 ) );
 
 		if ( isset( $response->errors ) ) {
-			update_option('rsssl_test_authorization_header_failed', true );
+			update_option('rsssl_test_authorization_header_failed', true, false );
 		} else {
-			update_option('rsssl_test_authorization_header_passed', true );
+			update_option('rsssl_test_authorization_header_passed', true, false );
 		}
 	}
 }

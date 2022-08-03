@@ -2,9 +2,7 @@ import {
     Component,
 } from '@wordpress/element';
 
-import {
-    Placeholder,
-} from '@wordpress/components';
+import Placeholder from './Placeholder';
 
 class SecurityFeatureBullet extends Component {
     constructor() {
@@ -17,7 +15,7 @@ class SecurityFeatureBullet extends Component {
 
     render(){
         let field = this.props.field;
-        let bulletClassName = field.value==1 ? 'rsssl-dot rsssl-dot-success' : 'rsssl-dot rsssl-dot-error';
+        let bulletClassName = field.value==1 ? 'rsssl-bullet rsssl-bullet-success' : 'rsssl-bullet rsssl-bullet-error';
         return (
             <div className="rsssl-new-feature">
                 <div className={bulletClassName}></div>

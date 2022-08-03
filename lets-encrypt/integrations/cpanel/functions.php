@@ -7,7 +7,7 @@ function rsssl_install_cpanel_autossl(){
 		$domains = RSSSL_LE()->letsencrypt_handler->get_subjects();
 		$response = $cpanel->enableAutoSSL($domains);
 		if ( $response->status === 'success' ) {
-			update_option('rsssl_le_certificate_installed_by_rsssl', 'cpanel:autossl');
+			update_option('rsssl_le_certificate_installed_by_rsssl', 'cpanel:autossl', false);
 		}
 		return $response;
 	} else {
@@ -24,7 +24,7 @@ function rsssl_install_cpanel_default(){
 		$domains = RSSSL_LE()->letsencrypt_handler->get_subjects();
 		$response = $cpanel->installSSL($domains);
 		if ( $response->status === 'success' ) {
-			update_option('rsssl_le_certificate_installed_by_rsssl', 'cpanel:default');
+			update_option('rsssl_le_certificate_installed_by_rsssl', 'cpanel:default', false);
 		}
 		return $response;
 	} else {
@@ -52,7 +52,7 @@ function rsssl_cpanel_set_txt_record(){
 		}
 
 		if ( $response->status === 'success' ) {
-			update_option('rsssl_le_dns_configured_by_rsssl', true);
+			update_option('rsssl_le_dns_configured_by_rsssl', true, false);
 		}
 		return $response;
 	} else {

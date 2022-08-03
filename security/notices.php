@@ -30,6 +30,12 @@ function rsssl_general_security_notices( $notices ) {
 				'icon' => 'open',
 				'dismissible' => true,
 			),
+
+			'not-writable-uploads' => array(
+				'msg' => __("An option was enabled which requires the .htaccess in the uploads directory to get written, but the .htaccess or directory is not writable.", "really-simple-ssl").__("Please add the following lines to your .htaccess, or site it to writable:", "really-simple-ssl").$code,
+				'icon' => 'open',
+				'dismissible' => true,
+			),
 		),
 	);
 

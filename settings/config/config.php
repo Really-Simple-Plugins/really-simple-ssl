@@ -10,23 +10,40 @@ function rsssl_menu( $group_id = 'settings' ){
 				'menu_items' => [
 					[
 						'id' => 'general',
+						'group_id' => 'general',
 						'title' => __('General', 'really-simple-ssl'),
 						'intro' => __("An introduction on some cool stuff", "really-simple-ssl"),
 						'step' => 1,
+						'groups' => [
+//							[
+//								'id' => 'general',
+//								'title' => __('General', 'really-simple-ssl'),
+//								'intro' => __("An introduction on some cool stuff", "really-simple-ssl"),
+//							],
+							[
+								'id' => 'general_2',
+								'title' => __('General 2', 'really-simple-ssl'),
+								'intro' => __("Group intro", "really-simple-ssl"),
+							]
+						],
 					],
+
 					[
 						'id' => 'mixed_content_scan',
 						'title' => __('Mixed Content Scan', 'really-simple-ssl'),
-						'menu_items' => [
-							[
-								'id' => 'recommended_security_headers',
-								'title' => __('Sub mixed content 1', 'really-simple-ssl'),
-							],
-							[
-								'id' => 'recommended_security_headers',
-								'title' => __('Sub mixed content 2', 'really-simple-ssl'),
-							],
-						],
+						'premium' => true,
+						'premium_text' => __("Learn more about %HSTS%s", 'really-simple-ssl'),
+						//example of submenu
+//						'menu_items' => [
+//							[
+//								'id' => 'sub_mixed_content_1',
+//								'title' => __('Sub mixed content 1', 'really-simple-ssl'),
+//							],
+//							[
+//								'id' => 'sub_mixed_content_2',
+//								'title' => __('Sub mixed content 2', 'really-simple-ssl'),
+//							],
+//						],
 						'step' => 1,
 					],
 					[
@@ -37,6 +54,7 @@ function rsssl_menu( $group_id = 'settings' ){
                     [
                         'id' => 'hardening',
 						'title' => __('Hardening', 'really-simple-ssl'),
+	                    'featured' => __('Improve your security with the most popular security features of Wordpress', 'really-simple-ssl'),
 						'menu_items' => [
 							[
 								'id' => 'application_passwords',
@@ -48,9 +66,37 @@ function rsssl_menu( $group_id = 'settings' ){
 							],
 						],
 						'step' => 1,
-
+					],
+					[
+						'id' => 'premium',
+						'title' => __('Premium', 'really-simple-ssl-pro'),
+						'intro' => __("An introduction on some cool stuff", "really-simple-ssl"),
+						'step' => 1,
+						'groups' => [
+							[
+								'id' => 'hsts',
+								'premium' => true,
+								'premium_text' => __("Learn more about %HSTS%s", 'really-simple-ssl'),
+								'upgrade' => 'https://really-simple-ssl.com/pro',
+								'title' => __('HSTS ', 'really-simple-ssl'),
+								'intro' => __("HSTS explanation", "really-simple-ssl"),
+							],
+							[
+								'id' => 'permissionspolicy',
+								'premium' => true,
+								'title' => __('Permissions Policy', 'really-simple-ssl'),
+								'intro' => __("Permissions Policy explanation", "really-simple-ssl"),
+							],
+							[
+								'id' => 'contentsecuritypolicy',
+								'premium' => true,
+								'title' => __('Content Security Policy', 'really-simple-ssl'),
+								'intro' => __("Content Security Policy explanation", "really-simple-ssl"),
+							]
+						],
 					],
 				],
+
 			],
 			[
 				"id"    => "letsencrypt",
@@ -88,9 +134,21 @@ function rsssl_migrate_settings() {
 	//dismiss_all_notices
 }
 
-function rsssl_fields(){
+function rsssl_fields( $load_values = true ){
 	if ( !current_user_can('manage_options') ) {
 		return [];
+	}
+	$header_method_options = [
+		'advancedheaders' => 'advanced-headers.php',
+		'htaccess' => '.htaccess',
+	];
+	//keep this one for backward compatibility for users that have it enabled.
+	$security_headers_method = rsssl_get_option('security_headers_method');
+	if ( $security_headers_method==='nginxconf' ) {
+		$header_method_options['nginxconf'] = 'nginx.conf';
+	}
+	if ( $security_headers_method==='php' ) {
+		$header_method_options['php'] = 'PHP';
 	}
 
 	$fields = [
@@ -107,6 +165,7 @@ function rsssl_fields(){
 			'disabled'    => false,
 			'default'     => true,
 			'new_features_block'     => true,
+			'networkwide' => false,
 		],
 		[
 			'id'          => 'wp_redirect',
@@ -127,6 +186,7 @@ function rsssl_fields(){
 				]
 			],
 			'new_features_block'     => true,
+			'networkwide' => false,
 
 		],
 		[
@@ -155,6 +215,7 @@ function rsssl_fields(){
 					]
 				]
 			],
+			'networkwide' => false,
 		],
 		[
 			'id'          => 'do_not_edit_htaccess',
@@ -200,7 +261,7 @@ function rsssl_fields(){
 		[
 			'id'          => 'dismiss_all_notices',
 			'menu_id'     => 'general',
-			'group_id'    => 'general',
+			'group_id'    => 'general_2',
 			'type'        => 'checkbox',
 			'label'       => __( "Dismiss all Really Simple SSL notices", 'really-simple-ssl' ),
 			'help'        => [
@@ -290,7 +351,7 @@ function rsssl_fields(){
 		],
         [
 			'id'          => 'disable_application_passwords',
-			'menu_id'     => 'hardening',
+			'menu_id'     => 'application_passwords',
 			'type'        => 'checkbox',
 			'label'       => __( "Disable application passwords", 'really-simple-ssl' ),
 			'disabled'    => false,
@@ -336,10 +397,313 @@ function rsssl_fields(){
 			'disabled'    => false,
 			'default'     => false,
 		],
-
+		[
+			'id'          => 'cert_expiration_warning',
+			'menu_id'     => 'general',
+			'group_id'    => 'general',
+			'type'        => 'checkbox',
+			'label'       => __("Certificate expiration warning", "really-simple-ssl-pro"),
+			'disabled'    => false,
+			'default'     => false,
+		],
+		[
+			'id'          => 'security_headers_method',
+			'menu_id'     => 'general',
+			'group_id'    => 'general',
+			'type'        => 'select',
+			'label'       => __("Security Headers method", "really-simple-ssl-pro"),
+			'options'     => $header_method_options,
+			'disabled'    => false,
+			'default'     => false,
+		],
+		[
+			'id'          => 'admin_mixed_content_fixer',
+			'menu_id'     => 'general',
+			'group_id'    => 'general',
+			'type'        => 'checkbox',
+			'label'       => __("Mixed content fixer on the back-end", "really-simple-ssl-pro"),
+			'disabled'    => false,
+			'default'     => false,
+		],
+		[
+			'id'          => 'x_xss_protection',
+			'menu_id'     => 'recommended_security_headers',
+			'group_id'    => 'recommended_security_headers',
+			'type'        => 'checkbox',
+			'label'       => __("X XSS protection", "really-simple-ssl-pro"),
+			'disabled'    => false,
+			'default'     => false,
+		],
+		[
+			'id'          => 'x_frame_options',
+			'menu_id'     => 'recommended_security_headers',
+			'group_id'    => 'recommended_security_headers',
+			'type'        => 'checkbox',
+			'label'       => __("X-Frame options", "really-simple-ssl-pro"),
+			'disabled'    => false,
+			'default'     => false,
+		],
+		[
+			'id'          => 'x_content_type_options',
+			'menu_id'     => 'recommended_security_headers',
+			'group_id'    => 'recommended_security_headers',
+			'type'        => 'checkbox',
+			'label'       => __("X-Content-Type options", "really-simple-ssl-pro"),
+			'disabled'    => false,
+			'default'     => false,
+		],
+		[
+			'id'          => 'referrer_policy',
+			'menu_id'     => 'recommended_security_headers',
+			'group_id'    => 'recommended_security_headers',
+			'type'        => 'checkbox',
+			'label'       => __("Referrer Policy", "really-simple-ssl-pro"),
+			'disabled'    => false,
+			'default'     => false,
+		],
+		[
+			'id'          => 'block_third_party_popups',
+			'menu_id'     => 'recommended_security_headers',
+			'group_id'    => 'recommended_security_headers',
+			'type'        => 'select',
+			'options'     => [
+				'yes' => __('Yes', 'really-simple-ssl-pro'),
+				'no' => __('No', 'really-simple-ssl-pro'),
+			],
+			'label'       => __("Block third party popups", "really-simple-ssl-pro"),
+			'disabled'    => false,
+			'default'     => false,
+		],
+		[
+			'id'          => 'share_resources_third_parties',
+			'menu_id'     => 'recommended_security_headers',
+			'group_id'    => 'recommended_security_headers',
+			'type'        => 'select',
+			'options'     => [
+				'yes' => __('Sharing on', 'really-simple-ssl-pro'),
+				'yes_own_domain' => __('Share only with own domain', 'really-simple-ssl-pro'),
+				'no' => __('Sharing off', 'really-simple-ssl-pro'),
+			],
+			'label'       => __("Share third party resources", "really-simple-ssl-pro"),
+			'disabled'    => false,
+			'default'     => false,
+		],
+		[
+			'id'          => 'hsts',
+			'menu_id'     => 'premium',
+			'group_id'    => 'hsts',
+			'type'        => 'checkbox',
+			'label'       => __("HSTS", "really-simple-ssl-pro"),
+			'disabled'    => false,
+			'default'     => false,
+		],
+		[
+			'id'          => 'hsts_preload',
+			'menu_id'     => 'premium',
+			'group_id'    => 'hsts',
+			'type'        => 'checkbox',
+			'label'       => __("HSTS preload", "really-simple-ssl-pro"),
+			'react_conditions' => [
+				'relation' => 'AND',
+				[
+					'hsts' => 1,
+				]
+			],
+			'disabled'    => false,
+			'default'     => false,
+		],
+		[
+			'id'          => 'mixedcontentscan',
+			'menu_id'     => 'mixed_content_scan',
+			'group_id'    => 'mixedcontentscan',
+			'type'        => 'mixedcontentscan',
+			'label'       => __("Mixed content scan", "really-simple-ssl-pro"),
+			'data_source' => ['RSSSL_PRO', 'rsssl_scan', 'get'],
+			'columns'     => [
+				[
+					'name' => __('Type', 'really-simple-ssl-pro'),
+					'sortable' => true,
+					'column' =>'warningControl',
+					'width' => '100px',
+				],
+				[
+					'name' => __('Description', 'really-simple-ssl-pro'),
+					'sortable' => true,
+					'column' =>'description',
+				],
+				[
+					'name' => __('Location', 'really-simple-ssl-pro'),
+					'sortable' => true,
+					'column' =>'locationControl',
+				],
+				[
+					'name' => __('Fix', 'really-simple-ssl-pro'),
+					'sortable' => false,
+					'column' =>'fixControl',
+					'width' => '100px',
+				],
+				[
+					'name' => __('Details', 'really-simple-ssl-pro'),
+					'sortable' => false,
+					'column' =>'detailsControl',
+					'width' => '100px',
+				],
+			],
+			'disabled'    => false,
+			'default'     => false,
+		],
+		[
+			'id'          => 'permissions_policy',
+			'menu_id'     => 'premium',
+			'group_id'    => 'permissionspolicy',
+			'type'        => 'permissionspolicy',
+			'options'     => ['*' => __("Allow", "really-simple-ssl"), '()' => __("Deny", "really-simple-ssl"), 'self' => __("Own domain only", "really-simple-ssl")],
+			'label'       => __( "Permissions Policy", 'really-simple-ssl-pro' ),
+			'disabled'    => false,
+			'columns'     => [
+				[
+					'name' => __('Feature', 'really-simple-ssl-pro'),
+					'sortable' => true,
+					'column' =>'title',
+				],
+				[
+					'name' => __('Options', 'really-simple-ssl-pro'),
+					'sortable' => false,
+					'column' =>'valueControl',
+				],
+				[
+					'name' => __('Allow/Deny', 'really-simple-ssl-pro'),
+					'sortable' => false,
+					'column' =>'statusControl',
+				],
+			],
+			'default' => [
+				[
+					'id'=> 'accelerometer',
+					'title'=> __('Accelerometer','really-simple-ssl-pro'),
+					'value'=> 'self',
+					'status'=> true,
+				],
+				[
+					'id'=> 'autoplay',
+					'title'=> __('Autoplay','really-simple-ssl-pro'),
+					'value'=> 'self',
+					'status'=> false,
+				],
+				[
+					'id'=> 'camera',
+					'title'=> __('Camera','really-simple-ssl-pro'),
+					'value'=> 'self',
+					'status'=> false,
+				],
+				[
+					'id'=> 'encrypted-media',
+					'title'=> __('Encrypted Media','really-simple-ssl-pro'),
+					'value'=> 'self',
+					'status'=> false,
+				],
+				[
+					'id'=> 'fullscreen',
+					'title'=> __('Fullscreen','really-simple-ssl-pro'),
+					'value'=> 'self',
+					'status'=> false,
+				],
+				[
+					'id'=> 'geolocation',
+					'title'=> __('Geolocation','really-simple-ssl-pro'),
+					'value'=> '*',
+					'status'=> false,
+				],
+				[
+					'id'=> 'microphone',
+					'title'=> __('Microphone','really-simple-ssl-pro'),
+					'value'=> 'self',
+					'status'=> false,
+				],
+				[
+					'id'=> 'midi',
+					'title'=> __('Midi','really-simple-ssl-pro'),
+					'value'=> 'self',
+					'status'=> false,
+				],
+				[
+					'id'=> 'payment',
+					'title'=> __('Payment','really-simple-ssl-pro'),
+					'value'=> 'self',
+					'status'=> false,
+				],
+				[
+					'id'=> 'display-capture',
+					'title'=> __('Display Capture','really-simple-ssl-pro'),
+					'value'=> 'self',
+					'status'=> false,
+				],
+			],
+		],
+		[
+			'id'          => 'enable_permissions_policy',
+			'menu_id'     => 'premium',
+			'group_id'    => 'permissionspolicy',
+			'type'        => 'checkbox',
+			'label'       => __( "Enable Permissions Policy", 'really-simple-ssl-pro' ),
+			'disabled'    => false,
+			'default'     => false,
+		],
+		[
+			'id'          => 'content_security_policy',
+			'menu_id'     => 'premium',
+			'group_id'    => 'contentsecuritypolicy',
+			'type'        => 'contentsecuritypolicy',
+			'label'       => __( "Content Security Policy", 'really-simple-ssl-pro' ),
+			'disabled'    => false,
+			'default'     => false,
+			'data_source' => ["RSSSL_PRO", "rsssl_csp_backend", "get"],
+			'data_endpoint' => ["RSSSL_PRO", "rsssl_csp_backend", "update"],
+			'columns'     => [
+				[
+					'name' => __('Date',"really-simple-ssl-pro"),
+					'sortable' => true,
+					'column' =>'time',
+				],
+				[
+					'name' => __('URL', 'really-simple-ssl'),
+					'sortable' => false,
+					'column' =>'documenturi',
+				],
+				[
+					'name' => __('Directive', 'really-simple-ssl'),
+					'sortable' => false,
+					'column' =>'violateddirective',
+				],
+				[
+					'name' => __('Blocked URI', 'really-simple-ssl'),
+					'sortable' => false,
+					'column' =>'blockeduri',
+				],
+				[
+					'name' => __('Allow/revoke', 'really-simple-ssl'),
+					'sortable' => false,
+					'column' =>'statusControl',
+				],
+			],
+		],
+		[
+			'id'          => 'content_security_policy_status',
+			'menu_id'     => 'premium',
+			'group_id'    => 'contentsecuritypolicy',
+			'type'        => 'select',
+			'options'     => [
+				'disabled'    => __( "Disabled", "really-simple-ssl-pro" ),
+				'report-only' => __( "Report only", "really-simple-ssl-pro" ),
+				'report-paused'      => __( "Paused", "really-simple-ssl-pro" ),
+				'enforce'     => __( "Enforce", "really-simple-ssl-pro" ),
+			],
+			'label'       => __( "Enable Content Security Policy", 'really-simple-ssl-pro' ),
+			'disabled'    => false,
+			'default'     => false,
+		],
 	];
 	$fields = apply_filters('rsssl_fields', $fields);
-
 	foreach ( $fields as $key => $field ) {
 		$field = wp_parse_args($field, ['id'=>false, 'visible'=> true, 'disabled'=>false, 'new_features_block' => false ]);
 		//handle server side conditions
@@ -349,9 +713,14 @@ function rsssl_fields(){
 				continue;
 			}
 		}
-		$field['value'] = rsssl_get_option($field['id']);
-		$fields[$key] = apply_filters('rsssl_field', $field, $field['id']);
+
+		if ($load_values) {
+			$value = rsssl_sanitize_field( rsssl_get_option($field['id'], $field['default'] ), $field['type'], $field['id']);
+			$field['value'] = apply_filters('rsssl_field_value_'.$field['id'], $value, $field );
+		}
+		$fields[$key] = apply_filters( 'rsssl_field', $field, $field['id'] );
 	}
+
 	$fields = apply_filters('rsssl_fields_values', $fields);
 	return array_values($fields);
 }
@@ -363,55 +732,50 @@ function rsssl_blocks(){
 			'id'      => 'progress',
 			'title'   => __( "Progress", 'really-simple-ssl' ),
 			'help'    => __( 'A help text', 'really-simple-ssl' ),
-			'header' => [
+			'controls' => [
 				'type' => 'react', 'data' => 'ProgressHeader'
 			],
 			'content' => ['type'=>'react', 'data' => 'ProgressBlock'],
 			'footer'  => ['type'=>'template', 'data' => 'progress-footer.php'],
-			'size'    => 'default',
-			'height'    => 'default',
+			'class'    => ' rsssl-column-2',
 		],
 		[
 			'id'      => 'ssllabs',
-			'header' => [
-				'type' => 'url', 'data' => 'https://really-simple-ssl.com/instructions'
-			],
+			'controls' => [
+				'type' => 'html', 'data' => __( "Powered by Qualis SSL Labs", 'really-simple-ssl' ),
+				],
 			'title'   => __( "SSL Labs", 'really-simple-ssl' ),
 			'help'    => __( 'A help text', 'really-simple-ssl' ),
 			'content' => [ 'type' => 'test', 'data' => 'ssltest', 'interval'=>1000 ],
-			'footer'  => ['type'=>'html', 'data' => '','button' => [ 'text' => __("Run test","really-simple-ssl"), 'disabled' => false ]],
-			'size'    => 'small',
-			'height'    => 'default',
-		],
-		[
-			'id'      => 'tips_tricks',
-			'header'  => false,
-			'title'   => __( "Tips & Tricks", 'really-simple-ssl' ),
-			'help'    => __( 'A help text', 'really-simple-ssl' ),
-			'content' => ['type'=>'template', 'data' => 'tips-tricks.php'],
-			'footer'  => ['type'=>'template', 'data' => 'tips-tricks-footer.php'],
-			'size'    => 'small',
-			'height'    => 'default',
+			'footer'  => ['type'=>'html', 'data' => '','button' => [ 'text' => __("Check SSL Health","really-simple-ssl"), 'disabled' => false ]],
+			'class'    => '',
 		],
 		[
 			'id'      => 'security-features',
-			'header'  => false,
+			'controls'  => false,
 			'title'   => __( "New: Security features", 'really-simple-ssl' ),
 			'help'    => __( 'A help text', 'really-simple-ssl' ),
 			'content' => ['type'=>'react', 'data' => 'SecurityFeaturesBlock'],
 			'footer'  => ['type'=>'html', 'data' => ''],
-			'size'    => 'default',
-			'height'    => 'half',
+			'class'    => '',
+		],
+		[
+			'id'      => 'tips_tricks',
+			'controls'  => false,
+			'title'   => __( "Tips & Tricks", 'really-simple-ssl' ),
+			'help'    => __( 'A help text', 'really-simple-ssl' ),
+			'content' => ['type'=>'template', 'data' => 'tips-tricks.php'],
+			'footer'  => ['type'=>'template', 'data' => 'tips-tricks-footer.php'],
+			'class'    => ' rsssl-column-2',
 		],
 		[
 			'id'      => 'other-plugins',
-			'header'  => false,
+			'controls'  => false,
 			'title'   => __( "Other Plugins", 'really-simple-ssl' ),
 			'help'    => __( 'A help text', 'really-simple-ssl' ),
 			'content' => ['type'=>'template', 'data' => 'other-plugins.php'],
 			'footer'  => ['type'=>'html', 'data' => ''],
-			'size'    => 'default',
-			'height'    => 'half',
+			'class'    => ' rsssl-column-2 no-border no-background',
 		],
 	];
 

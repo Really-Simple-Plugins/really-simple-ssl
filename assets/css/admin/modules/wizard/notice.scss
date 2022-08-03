@@ -1,0 +1,34 @@
+.rsssl-wizard-help {
+  display: flex;
+  flex-wrap: wrap;
+  align-content: flex-start;
+  gap: var(--rsp-spacing-xs);
+  details{
+    font-size: var(--rsp-fs-200);
+  }
+  summary, p {
+    font-size: var(--rsp-fs-300);
+  }
+  details[open]{
+    @include rsssl-block-padding;
+    summary{
+      padding: 0;
+      padding-bottom: var(--rsp-spacing-xs);
+    }
+  }
+}
+
+.rsssl-wizard-help-notice {
+  width: 100%;
+  @include rsssl-block;
+  height: fit-content;
+  background-color: var(--rsp-dark-blue-faded);
+  &.rsssl-warning {
+    background-color: var(--rsp-yellow-faded);
+    border: 1px solid var(--rsp-yellow);
+  }
+  summary, p{
+    @include rsssl-block-padding;
+  }
+}
+
