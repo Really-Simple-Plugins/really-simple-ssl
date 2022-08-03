@@ -9,7 +9,7 @@ require_once( trailingslashit(rsssl_path) . 'security/check-requests.php' );
 /**
  * Load only on back-end
  */
-if (is_admin() || rsssl_is_logged_in_rest() ) {
+if ( is_admin() || rsssl_is_logged_in_rest() ) {
 	require_once( trailingslashit(rsssl_path) . 'security/notices.php' );
 	require_once( trailingslashit(rsssl_path) . 'security/functions.php' );
 	require_once( trailingslashit(rsssl_path) . 'security/sync-settings.php' );
@@ -129,7 +129,7 @@ $rsssl_integrations_list = apply_filters( 'rsssl_integrations', array(
         'risk'                 => 'medium',
         'learning_mode'        => false,
         'option_id'            => 'change_debug_log_location',
-		'always_include'       => true,
+		'always_include'       => false,
         'type'                 => 'checkbox',
         'conditions'           => [
 	        'relation' => 'AND',
@@ -160,7 +160,7 @@ $rsssl_integrations_list = apply_filters( 'rsssl_integrations', array(
 		'risk'                 => 'high',
 		'learning_mode'        => false,
 		'option_id'            => 'disable_application_passwords',
-		'always_include'       => true,
+		'always_include'       => false,
 		'type'                 => 'checkbox',
 	),
 
@@ -222,7 +222,12 @@ function rsssl_is_integration_enabled( $plugin, $details ) {
 	if ( ! array_key_exists( $plugin, $rsssl_integrations_list ) ) {
 		return false;
 	}
-	if ($details['always_include']) {
+	if ( $details['always_include'] ) {
+		return true;
+	}
+
+	//if an integration was just enabled, we keep it enabled until it removes itself from the list.
+	if ( rsssl_is_in_deactivation_list($plugin) ) {
 		return true;
 	}
 
