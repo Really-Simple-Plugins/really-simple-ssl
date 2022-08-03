@@ -122,18 +122,6 @@ function rsssl_file_editing_allowed() {
 
 /**
  * @return bool
- * Check if application passwords are available
- */
-function rsssl_application_passwords_available() {
-	if ( wp_is_application_passwords_available() ) {
-		return true;
-	}
-
-	return false;
-}
-
-/**
- * @return bool
  *
  * Check if DB has default wp_ prefix
  */

@@ -161,12 +161,6 @@ $rsssl_integrations_list = apply_filters( 'rsssl_integrations', array(
 		'option_id'            => 'disable_application_passwords',
 		'always_include'       => true,
 		'type'                 => 'checkbox',
-		'conditions'           => [
-			'relation' => 'AND',
-			[
-				'rsssl_application_passwords_available()' => true,
-			]
-		],
 	),
 
 	'rename-db-prefix' => array(
@@ -243,7 +237,6 @@ function rsssl_is_integration_enabled( $plugin, $details ) {
  */
 
 function rsssl_integrations() {
-	error_log("load integrations");
 	global $rsssl_integrations_list;
 	$stored_integrations_count = get_option('rsssl_active_integrations', 0 );
 	$actual_integrations_count = 0;
@@ -265,7 +258,6 @@ function rsssl_integrations() {
 			if ( isset( $details['conditions'] ) ) {
 				$skip = !rsssl_conditions_apply($details['conditions']);
 			}
-
 			if ( ! file_exists( $file ) || $skip ) {
 				continue;
 			}
@@ -290,4 +282,5 @@ function rsssl_integrations() {
 }
 
 add_action( 'plugins_loaded', 'rsssl_integrations', 10 );
+//also run when fields are saved.
 add_action( 'rsssl_after_saved_fields', 'rsssl_integrations', 20 );

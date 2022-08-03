@@ -162,7 +162,7 @@ class REALLY_SIMPLE_SSL
 			require_once( rsssl_path . 'lets-encrypt/cron.php' );
 		}
 
-		//require_once(rsssl_path . '/security/integrations.php');
+		require_once(rsssl_path . '/security/integrations.php');
 
 	}
 

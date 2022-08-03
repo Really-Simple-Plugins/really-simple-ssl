@@ -209,21 +209,6 @@ function rsssl_htaccess_status(){
 }
 
 /**
- * @return int
- * Get user ID
- */
-function rsssl_get_user_id() {
-
-	if ( is_user_logged_in() ) {
-		global $user;
-
-		return $user->ID;
-	}
-
-	return 0;
-}
-
-/**
  * @return string|null
  * Get the wp-config.php path
  */

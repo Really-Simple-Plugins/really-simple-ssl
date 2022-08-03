@@ -742,8 +742,8 @@ function rsssl_fields( $load_values = true ){
         if ($load_values) {
             $value = rsssl_sanitize_field( rsssl_get_option($field['id'], $field['default'] ), $field['type'], $field['id']);
             $field['value'] = apply_filters('rsssl_field_value_'.$field['id'], $value, $field );
+	        $fields[$key] = apply_filters( 'rsssl_field', $field, $field['id'] );
         }
-        $fields[$key] = apply_filters( 'rsssl_field', $field, $field['id'] );
     }
 
     $fields = apply_filters('rsssl_fields_values', $fields);

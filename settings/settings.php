@@ -504,10 +504,8 @@ function rsssl_sanitize_permissions_policy( $value, $type, $field_name ){
 
     $stored_ids = [];
 	if ( !is_array($value) ) {
-        error_log("not array ");
 		return $default;
 	} else {
-        error_log("is array");
 		foreach ($value as $row_index => $row) {
 			//check if we have invalid values
 			if ( is_array($row) ) {
