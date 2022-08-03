@@ -52,3 +52,24 @@ export const runTest = (test, state, data ) => {
 	return axios.get(rsssl_settings.site_url+'reallysimplessl/v1/tests/'+test+'?state='+state+'&data='+data, config);
 };
 
+export const getOnboarding = () => {
+	let config = {
+		headers: {
+			'X-WP-Nonce': rsssl_settings.nonce,
+		}
+	}
+	return axios.get(rsssl_settings.site_url+'reallysimplessl/v1/onboarding', config);
+}
+
+
+export const overrideSSLDetection = (override_ssl_checked) => {
+	const { ajax_url, ajax_nonce } = rsssl_settings;
+
+	let formData = new FormData();
+	formData.append("action", "update_ssl_detection_overridden_option")
+	formData.append("_ajax_nonce", ajax_nonce)
+	formData.append("security", ajax_nonce)
+	formData.append("override_ssl_checked", override_ssl_checked)
+
+	return axios.post(ajax_url, formData)
+}

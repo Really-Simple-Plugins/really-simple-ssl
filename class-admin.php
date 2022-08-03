@@ -1,5 +1,6 @@
 <?php
 defined('ABSPATH') or die("you do not have access to this page!");
+require_once(rsssl_path . 'class-installer.php');
 
 class rsssl_admin extends rsssl_front_end
 {

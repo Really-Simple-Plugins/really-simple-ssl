@@ -39,10 +39,12 @@ function rsssl_plugin_admin_scripts() {
 			apply_filters('rsssl_localize_script',array(
 				'site_url' => get_rest_url(),
 				'plugin_url' => rsssl_url,
+                'ajax_url' => admin_url('admin-ajax.php'),
 				'blocks' => rsssl_blocks(),
 				'pro_plugin_active' => defined('rsssl_pro_version'),
 				'menu' => $menu,
 				'nonce' => wp_create_nonce( 'wp_rest' ),//to authenticate the logged in user
+                'ajax_nonce' => wp_create_nonce("really-simple-ssl"),
 				'rsssl_nonce' => wp_create_nonce( 'rsssl_save' ),
 			))
 	);
@@ -81,6 +83,7 @@ add_action( 'admin_menu', 'rsssl_add_option_menu' );
     <div id="really-simple-ssl" class="rsssl <?php echo $high_contrast ?>">
         <?php do_action("rsssl_show_tab_{$tab}"); ?>
     </div>
+    <div id="really-simple-ssl-modal"></div>
 	<?php
 }
 
@@ -135,6 +138,14 @@ function rsssl_settings_rest_route() {
 			return current_user_can( 'manage_options' );
 		}
 	) );
+
+    register_rest_route( 'reallysimplessl/v1', 'onboarding', array(
+        'methods'  => 'GET',
+        'callback' => 'rsssl_rest_api_onboarding',
+        'permission_callback' => function () {
+            return current_user_can( 'manage_options' );
+        }
+    ) );
 }
 
 /**
@@ -341,7 +352,7 @@ function rsssl_update_option( $name, $value ) {
  * @return void
  */
 
-function rsssl_rest_api_fields_get(  ){
+function rsssl_rest_api_fields_get(){
 	if (!current_user_can('manage_options')) {
 		return;
 	}
@@ -633,4 +644,16 @@ function rsssl_sanitize_datatable( $value, $type, $field_name ){
         }
     }
     return $value;
+}
+
+function rsssl_rest_api_onboarding($request) {
+    if (!current_user_can('manage_options')) {
+        return;
+    }
+
+    $onboarding = rsssl_get_onboarding_fields();
+    $response = json_encode( $onboarding );
+    header( "Content-Type: application/json" );
+    echo $response;
+    exit;
 }
