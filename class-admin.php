@@ -5147,6 +5147,16 @@ class rsssl_admin extends rsssl_front_end
 	}
 
 	/**
+	 * Set a new key
+	 * @return string
+	 */
+
+	public function set_key(){
+		update_site_option( 'rsssl_key' , time() );
+		return get_site_option('rsssl_key');
+	}
+
+	/**
 	 * We use our own transient, as the wp transient is not always persistent
 	 * Specifically made for license transients, as it stores on network level if multisite.
 	 *
