@@ -5429,13 +5429,7 @@ if ( !function_exists('rsssl_has_pro_valid_license' ) ) {
 		if ( ! rsssl_uses_pro() ) {
 			return true;
 		}
-
-        // Check if Pro constant matches
-        if ( defined( 'RSSSL_PRO_DETECTION' )
-             && RSSSL_PRO_DETECTION === 'rsssl_pro_' . strtolower(date('lj') ) ) {
-            return true;
-        }
-
+        
 		if ( RSSSL_PRO()->rsssl_licensing->license_is_valid() === RSSSL()->really_simple_ssl->license_is_valid() ) {
 			return true;
 		}
