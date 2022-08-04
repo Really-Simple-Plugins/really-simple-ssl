@@ -13,7 +13,12 @@ function rsssl_handle_integration_deactivation($field_id, $new_value, $prev_valu
 		//check if this field id exists in the list of plugins
 		global $rsssl_integrations_list;
 		foreach ( $rsssl_integrations_list as $plugin => $plugin_data ) {
-			if ( isset($plugin_data['option_id']) && $plugin_data['option_id'] === $field_id ) {
+			if (
+				isset($plugin_data['has_deactivation']) &&
+				$plugin_data['has_deactivation'] &&
+				isset($plugin_data['option_id']) &&
+				$plugin_data['option_id'] === $field_id
+			) {
 				//add to deactivated list
 				$current_list = get_option('rsssl_deactivate_list', []);
 				if ( !in_array($plugin, $current_list)) {
