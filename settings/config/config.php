@@ -1066,7 +1066,7 @@ function rsssl_get_onboarding_fields() {
             "title" => __( "Congratulations!", 'really-simple-ssl' ),
             "subtitle" => __("Now have a look at our new features", "really-simple-ssl"),
             "items" => get_items_for_upgrade(),
-            "info_text" => __("Want to know more about our features and plugins? Please read this article."),
+            "info_text" => __("Want to know more about our features and plugins? Please read this article.", 'really-simple-ssl'),
             "buttons" => [
                 [
                     "title" => __('Go to Dashboard', 'really-simple-ssl'),
@@ -1093,7 +1093,7 @@ function rsssl_get_onboarding_fields() {
                 "title" => __("Congratulations!", "really-simple-ssl"),
                 "subtitle" => __("Now have a look at our new features.", "really-simple-ssl"),
                 "items" => get_items_for_upgrade(),
-                "info_text" => __("Want to know more about our features and plugins? Please read this article."),
+                "info_text" => __("Want to know more about our features and plugins? Please read this article.", 'really-simple-ssl'),
                 "buttons" => [
                     [
                         "title" => __('Go to Dashboard', 'really-simple-ssl'),
@@ -1151,7 +1151,7 @@ function rsssl_get_onboarding_fields() {
                 "title" => __("Thanks for updating!", "really-simple-ssl"),
                 "subtitle" => __("Now have a look at our new features.", "really-simple-ssl"),
                 "items" => get_items_for_upgrade(),
-                "info_text" => __("Want to know more about our features and plugins? Please read this article."),
+                "info_text" => __("Want to know more about our features and plugins? Please read this article.", "really-simple-ssl"),
                 "buttons" => [
                     [
                         "title" => __('Go to Dashboard', 'really-simple-ssl'),
