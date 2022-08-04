@@ -886,7 +886,8 @@ function get_items_for_new_installs ($ssl_detected) {
             "title" => __("Activate SSL", "really-simple-ssl"),
             "variant" => "primary",
             "disabled" => false,
-            "type" => "button"
+            "type" => "button",
+            "action" => "activate_ssl",
         ];
         if(!defined('rsssl_pro_version')) {
             $buttons[] = [
@@ -894,6 +895,7 @@ function get_items_for_new_installs ($ssl_detected) {
                 "variant" => "secondary",
                 "disabled" => false,
                 "type" => "link",
+                "target" => "_blank",
                 "href" => RSSSL()->really_simple_ssl->pro_url
             ];
         }
@@ -908,14 +910,17 @@ function get_items_for_new_installs ($ssl_detected) {
             "title" => __("Activate SSL", "really-simple-ssl"),
             "variant" => "primary",
             "disabled" => true,
-            "type" => "button"
+            "type" => "button",
+            "action" => "activate_ssl",
         ];
 
         $buttons[] = [
             "title" => __("Install SSL", "really-simple-ssl"),
             "variant" => "secondary",
             "disabled" => false,
-            "type" => "button"
+            "type" => "link",
+            "target" => "_self",
+            "href" => rsssl_letsencrypt_wizard_url()
         ];
 
         $buttons[] = [
@@ -934,13 +939,16 @@ function get_items_for_new_installs ($ssl_detected) {
             "title" => __("Activate SSL", "really-simple-ssl"),
             "variant" => "primary",
             "disabled" => true,
-            "type" => "button"
+            "type" => "button",
+            "action" => "activate_ssl",
         ];
         $buttons[] = [
             "title" => __("Install SSL", "really-simple-ssl"),
             "variant" => "secondary",
             "disabled" => false,
-            "type" => "button"
+            "type" => "link",
+            "target" => "_self",
+            "href" => rsssl_letsencrypt_wizard_url()
         ];
 
         $buttons[] = [
@@ -981,7 +989,10 @@ function get_items_for_upgrade () {
     if("hardening features are disabled") {
         $items[] = [
             "title" => __("Enable recommended hardening features in Really Simple SSL", "really-simple-ssl"),
-            "status" => "warning"
+            "status" => "warning",
+            "button" => [
+                "title" => __("Enable", "really-simple-ssl"),
+            ]
         ];
     } else {
         $items[] = [
@@ -995,14 +1006,22 @@ function get_items_for_upgrade () {
         if(!$plugin->plugin_is_downloaded() && !$plugin->plugin_is_activated()){
             $items[] = [
                 "title" => sprintf(__("Install our plugin %s", "really-simple-ssl"), $plugin_info["title"]),
-                "status" => "warning"
+                "status" => "inactive",
+                "plugin_slug" => $plugin_info['slug'],
+                "button" => [
+                    "title" => __("Install", "really-simple-ssl"),
+                ]
             ];
         }
 
         if ($plugin->plugin_is_downloaded() && !$plugin->plugin_is_activated() ) {
             $items[] = [
                 "title" => sprintf(__("Enable our plugin %s", "really-simple-ssl"), $plugin_info["title"]),
-                "status" => "warning"
+                "status" => "warning",
+                "plugin_slug" => $plugin_info['slug'],
+                "button" => [
+                    "title" => __("Enable", "really-simple-ssl"),
+                ]
             ];
         }
 
@@ -1018,9 +1037,9 @@ function get_items_for_upgrade () {
 }
 
 function rsssl_get_onboarding_fields() {
-    $is_upgrade = true;//get_option('rsssl_upgraded_to_6');
-    $ssl_detected = true;//RSSSL()->rsssl_certificate->is_valid();
-    $ssl_enabled = true;//RSSSL()->really_simple_ssl->ssl_enabled;
+    $is_upgrade = get_option('rsssl_upgraded_to_6');
+    $ssl_detected = RSSSL()->rsssl_certificate->is_valid();
+    $ssl_enabled = RSSSL()->really_simple_ssl->ssl_enabled;
 
     // "warning", // yellow dot
     // "error", // red dot
@@ -1039,6 +1058,7 @@ function rsssl_get_onboarding_fields() {
         "items" => $itemsAndButtons["items"],
         "info_text" => $info,
         "buttons" => $itemsAndButtons["buttons"],
+        "visible" => true
     ];
 
     if ($ssl_detected) {
@@ -1052,18 +1072,79 @@ function rsssl_get_onboarding_fields() {
                     "title" => __('Go to Dashboard', 'really-simple-ssl'),
                     "variant" => "primary",
                     "disabled" => false,
-                    "type" => "button"
+                    "type" => "button",
+                    "action" => "dismiss"
                 ],
                 [
                     "title" => __('Dismiss', 'really-simple-ssl'),
                     "variant" => "secondary",
                     "disabled" => false,
-                    "type" => "button"
+                    "type" => "button",
+                    "action" => "dismiss"
                 ]
+            ],
+            "visible" => false
+        ];
+    }
+
+    if($ssl_enabled) {
+        $steps = [
+            [
+                "title" => __("Congratulations!", "really-simple-ssl"),
+                "subtitle" => __("Now have a look at our new features.", "really-simple-ssl"),
+                "items" => get_items_for_upgrade(),
+                "info_text" => __("Want to know more about our features and plugins? Please read this article."),
+                "buttons" => [
+                    [
+                        "title" => __('Go to Dashboard', 'really-simple-ssl'),
+                        "variant" => "primary",
+                        "disabled" => false,
+                        "type" => "button",
+                        "action" => "dismiss"
+                    ],
+                    [
+                        "title" => __('Dismiss', 'really-simple-ssl'),
+                        "variant" => "secondary",
+                        "disabled" => false,
+                        "type" => "button",
+                        "action" => "dismiss"
+                    ]
+                ],
+                "visible" => true,
             ]
         ];
     }
 
+    // Case when is not updated to 6.0 but SSL Detected & Activated
+    if(!$is_upgrade && $ssl_detected && $ssl_enabled) {
+        $steps = [
+            [
+                "title" => __("Congratulations!", "really-simple-ssl"),
+                "subtitle" => __("Now have a look at our new features.", "really-simple-ssl"),
+                "items" => get_items_for_upgrade(),
+                "info_text" => __("Want to know more about our features and plugins? Please read this article."),
+                "buttons" => [
+                    [
+                        "title" => __('Go to Dashboard', 'really-simple-ssl'),
+                        "variant" => "primary",
+                        "disabled" => false,
+                        "type" => "button",
+                        "action" => "dismiss"
+                    ],
+                    [
+                        "title" => __('Dismiss', 'really-simple-ssl'),
+                        "variant" => "secondary",
+                        "disabled" => false,
+                        "type" => "button",
+                        "action" => "dismiss"
+                    ]
+                ],
+                "visible" => true,
+            ]
+        ];
+    }
+
+    // Case when is updated to 6.0, SSL Detected & Activated
     if($is_upgrade && $ssl_detected && $ssl_enabled) {
         $steps = [
             [
@@ -1076,15 +1157,18 @@ function rsssl_get_onboarding_fields() {
                         "title" => __('Go to Dashboard', 'really-simple-ssl'),
                         "variant" => "primary",
                         "disabled" => false,
-                        "type" => "button"
+                        "type" => "button",
+                        "action" => "dismiss"
                     ],
                     [
                         "title" => __('Dismiss', 'really-simple-ssl'),
                         "variant" => "secondary",
                         "disabled" => false,
-                        "type" => "button"
+                        "type" => "button",
+                        "action" => "dismiss"
                     ]
-                ]
+                ],
+                "visible" => true,
             ]
         ];
     }
@@ -1092,4 +1176,24 @@ function rsssl_get_onboarding_fields() {
     return [
         "steps" => $steps
     ];
+}
+
+function rsssl_install_plugin ($plugin_slug) {
+    $plugin = new rsssl_installer($plugin_slug);
+    if(!$plugin->plugin_is_downloaded()) {
+        $plugin->download_plugin();
+        return true;
+    }
+
+    return false;
+}
+
+function rsssl_activate_plugin ($plugin_slug) {
+    $plugin = new rsssl_installer($plugin_slug);
+    if(!$plugin->plugin_is_activated()) {
+        $plugin->activate_plugin();
+        return true;
+    }
+
+    return false;
 }

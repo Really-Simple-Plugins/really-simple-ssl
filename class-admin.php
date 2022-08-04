@@ -59,6 +59,7 @@ class rsssl_admin extends rsssl_front_end
         add_action( 'admin_init', array($this, 'recheck_certificate') );
 	    add_action( "update_option_rlrsssl_options", array( $this, "maybe_clear_transients" ), 10, 3 );
         add_action( 'wp_ajax_update_ssl_detection_overridden_option', array( $this, 'update_ssl_detection_overridden_option' ) );
+        add_action( 'wp_ajax_clicked_activate_ssl', array( $this, 'clicked_activate_ssl' ) );
 
 	    // Only show deactivate popup when SSL has been enabled.
 	    if ($this->ssl_enabled) {

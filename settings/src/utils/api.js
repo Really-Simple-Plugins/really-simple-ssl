@@ -73,3 +73,15 @@ export const overrideSSLDetection = (override_ssl_checked) => {
 
 	return axios.post(ajax_url, formData)
 }
+
+export const activateSSL = (rsssl_do_activate_ssl) => {
+	const { ajax_url, ajax_nonce } = rsssl_settings;
+
+	let formData = new FormData();
+	formData.append("action", "clicked_activate_ssl")
+	formData.append("_ajax_nonce", ajax_nonce)
+	formData.append("security", ajax_nonce)
+	formData.append("rsssl_do_activate_ssl", rsssl_do_activate_ssl)
+
+	return axios.post(ajax_url, formData)
+}

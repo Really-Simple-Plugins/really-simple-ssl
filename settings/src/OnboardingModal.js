@@ -2,11 +2,11 @@ import {useState, useEffect} from "@wordpress/element";
 import { Button, ToggleControl } from '@wordpress/components';
 import * as rsssl_api from "./utils/api";
 
-const MultiStepModal = () => {
+const OnboardingModal = () => {
     const [show, setShow] = useState(true);
     const [steps, setSteps] = useState([]);
     const [overrideSSL, setOverrideSSL] = useState(false);
-    const [activateSSL, setActivateSSL] = useState(true);
+    const [activateSSLDisabled, setActivateSSLDisabled] = useState(true);
 
     useEffect(() => {
         const showModal = localStorage.getItem("showModal");
@@ -25,36 +25,74 @@ const MultiStepModal = () => {
         setShow(!show)
     }
 
+    const activateSSL = () => {
+        rsssl_api.activateSSL(true).then((response) => {
+            if(steps.length > 1) {
+                steps[0].visible = false;
+                steps[1].visible = true;
+                console.log(steps)
+                setSteps(steps);
+            }
+        });
+    }
+
+    const itemButtonHandler = (status, pluginSlug) => {
+        if(status === "inactive") {
+            rsssl_api.installPlugin(pluginSlug).then((response) => {
+                console.log(response)
+            }).catch((err) => { console.log(err) })
+        }
+
+        if(status === "warning") {
+            rsssl_api.activateRecommendedPlugin(pluginSlug).then((response) => {
+                console.log(response)
+            })
+        }
+    }
+
     const parseStepItems = (items) => {
         return items.map((item, index) => {
-            const { title, status, help } = item
+            const { title, status, help, button, plugin_slug: pluginSlug } = item
             const statuses = {
+                'inactive': 'rsssl-inactive',
                 'warning': 'rsssl-warning',
                 'error': 'rsssl-error',
                 'active': 'rsssl-success'
             };
             return (
-                <li key={index} className={statuses[status]}>{title}</li>
+                <li key={index} className={statuses[status]}>
+                    {title} {button && <> - <Button isLink={true} onClick={() => itemButtonHandler(status, pluginSlug)}>{button.title}</Button></>}
+                </li>
             )
         })
     }
 
     const parseStepButtons = (buttons) => {
         return buttons.map((button) => {
-            const {title, variant, disabled, type, href} = button;
+            const {title, variant, disabled, type, href, target, action} = button;
             const buttonTypes = {
-                'button': <Button variant={variant} disabled={activateSSL}>{title}</Button>,
-                'link': <Button variant={variant} href={href} disabled={disabled} isLink={true}>{title}</Button>,
+                'button': <Button
+                    variant={variant}
+                    disabled={disabled && activateSSLDisabled}
+                    onClick={() => {
+                        if(action === "dismiss") {
+                            dismissModal();
+                        }
+                        if(action === "activate_ssl") {
+                            activateSSL();
+                        }
+                    }}>
+                    {title}
+                </Button>,
+                'link': <Button variant={variant} href={href} disabled={disabled} isLink={true} target={target}>{title}</Button>,
                 'checkbox': <ToggleControl
                     label={title}
                     disabled={disabled}
                     checked={overrideSSL}
                     onChange={(value) => {
-                        setActivateSSL(!value)
-                        setOverrideSSL(value)
-
                         rsssl_api.overrideSSLDetection(value).then((response) => {
-                            console.log(response)
+                            setOverrideSSL(value)
+                            setActivateSSLDisabled(!value)
                         });
                     }}
                 />
@@ -64,14 +102,45 @@ const MultiStepModal = () => {
         })
     }
 
+    const css = `
+        #rsssl-message li {
+            position: relative;
+            padding-left: 15px;
+        }
+        #rsssl-message li:before {
+            position: absolute;
+            left: 0;
+            color: #fff;
+            height: 10px;
+            width: 10px;
+            border-radius:50%;
+            content: '';
+            position: absolute;
+            margin-top: 4px;
+        }
+        #rsssl-message li.rsssl-inactive:before {
+            background-color: #ABB0B8;
+        }
+        #rsssl-message li.rsssl-warning:before {
+            background-color: #f8be2e;
+        }
+        #rsssl-message li.rsssl-error:before {
+            background-color: #D7263D;
+        }
+        #rsssl-message li.rsssl-success:before {
+            background-color: #61ce70;
+        }
+    `
+
     const renderSteps = () => {
         return (
             <>
                 {
                     steps.map((step, index) => {
-                        const {title, subtitle, items, info_text: infoText, buttons} = step;
+                        const {title, subtitle, items, info_text: infoText, buttons, visible} = step;
                         return (
-                            <div className="rsssl-modal-content-step" key={index}>
+                            <div className="rsssl-modal-content-step" key={index} style={{ display: visible ? 'block' : 'none' }}>
+                                {steps.length > 1 && <div>{index + 1}/{steps.length}</div>}
                                 {title && <div className="rsssl-modal-subtitle">{title}</div>}
                                 {subtitle && <div className="rsssl-modal-description">{subtitle}</div>}
                                 <ul>
@@ -94,6 +163,7 @@ const MultiStepModal = () => {
     return (
         <>
             { (steps.length > 0 && show) && <>
+                <style>{css}</style>
                 <div className="rsssl-modal-backdrop" onClick={ dismissModal }>&nbsp;</div>
                 <div className="rsssl-modal">
                     <div className="rsssl-modal-header">
@@ -118,4 +188,4 @@ const MultiStepModal = () => {
     )
 }
 
-export default MultiStepModal;
+export default OnboardingModal;

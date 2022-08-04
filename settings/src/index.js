@@ -2,7 +2,7 @@ import {
     render,
 } from '@wordpress/element';
 import Page from './Page';
-import MultiStepModal from "./MultiStepModal";
+import OnboardingModal from "./OnboardingModal";
 
 /**
  * Initialize the whole thing
@@ -14,7 +14,7 @@ document.addEventListener( 'DOMContentLoaded', () => {
 		render(
 			<>
 				<Page/>
-				<MultiStepModal/>
+				<OnboardingModal/>
 			</>,
 			container
 		);
