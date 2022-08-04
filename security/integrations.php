@@ -162,6 +162,7 @@ $rsssl_integrations_list = apply_filters( 'rsssl_integrations', array(
 		'option_id'            => 'disable_application_passwords',
 		'always_include'       => false,
 		'type'                 => 'checkbox',
+		'has_deactivation'     => true,
 	),
 
 	'rename-db-prefix' => array(
