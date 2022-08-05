@@ -167,7 +167,8 @@ if ( ! function_exists('rsssl_wrap_htaccess' ) ) {
 		$htaccess_file = RSSSL()->really_simple_ssl->htaccess_file();
 		if ( !file_exists( $htaccess_file ) ) {
 			update_site_option('rsssl_htaccess_error', 'not-exists');
-			update_site_option('rsssl_htaccess_rules', $rules);
+			$rules_result = implode('',array_column($rules, 'rules'));
+			update_site_option('rsssl_htaccess_rules', $rules_result);
 			return;
 		}
 
