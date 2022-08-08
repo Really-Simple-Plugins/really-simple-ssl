@@ -5,7 +5,7 @@ Tags: SSL, https, force SSL, mixed content, insecure content, secure website, we
 Requires at least: 4.9
 License: GPL2
 Tested up to: 6.0
-Requires PHP: 5.6
+Requires PHP: 7.2
 Stable tag: 5.3.3
 
 No setup required! You only need an SSL certificate, and this plugin will do the rest.
@@ -90,6 +90,8 @@ The plugin checks your certificate before enabling, but if, for example, you mig
 If you can't deactivate, do not just remove the plugin folder to uninstall! Follow these [instructions](https://really-simple-ssl.com/knowledge-base/uninstall-websitebackend-not-accessible/) instead.
 
 == Changelog ==
+= 5.3.4 =
+* Bumped required PHP version to 7.2
 
 = 5.3.3 =
 * Added manage_security capability, props @madtownlems
