@@ -212,15 +212,10 @@ function rsssl_get_debug_log_value(){
  */
 function rsssl_debug_log_in_default_location() {
 	$debug_log_value = rsssl_get_debug_log_value();
-
-	error_log("debug value ".$debug_log_value);
-
 	// If str contains true, location is default
     if ( trim($debug_log_value) === 'true' ) {
-		error_log("in default location");
         return true;
     }
-	error_log("not in default location");
     return false;
 }
 

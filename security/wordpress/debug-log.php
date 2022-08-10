@@ -1,5 +1,4 @@
 <?php defined( 'ABSPATH' ) or die();
-error_log("RUN DEBUG LOG INTEGRATION");
 /**
  * Disable changed debug log location
  */
@@ -61,8 +60,6 @@ function rsssl_change_debug_log_location() {
  * @since 6.0
  */
 function rsssl_revert_debug_log_location() {
-	error_log( "revert debug log location" );
-
 	$wpconfig_path = rsssl_find_wp_config_path();
 	$wpconfig      = file_get_contents( $wpconfig_path );
 	// Get current declaration
@@ -79,7 +76,6 @@ function rsssl_revert_debug_log_location() {
 
 	//cleanup file
 	if ( file_exists( $rsssl_debug_log ) ) {
-		error_log( "file does not exist" );
 		unlink( $rsssl_debug_log );
 		rmdir( ABSPATH . 'wp-content/debug_' . get_site_option( 'rsssl_debug_log_folder_suffix' ) );
 	}
