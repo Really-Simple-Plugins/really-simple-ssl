@@ -1,20 +1,19 @@
 {
-  "name": "react-admin",
+  "name": "really-simple-ssl",
   "version": "1.0.0",
-  "description": "test",
   "main": "build/index.js",
   "scripts": {
     "start": "wp-scripts start",
     "build": "wp-scripts build"
   },
-  "author": "RogierLankhors",
-  "license": "ISC",
+  "author": "Really Simple Plugins",
+  "license": "GPL-2.0-only",
   "devDependencies": {
-    "@wordpress/scripts": "^6.2.0"
+    "@wordpress/scripts": "^23.4.0"
   },
   "dependencies": {
-    "ace-builds": "^1.4.13",
-    "axios": "^0.26.1",
-    "react-ace": "^9.5.0"
-  }
+    "react-data-table-component": "^7.5.2",
+    "react-transition-group": "^4.4.2"
+  },
+  "description": "Really Simple SSL settings module"
 }

@@ -1,0 +1,37 @@
+{
+  "name": "really-simple-ssl",
+  "version": "1.0.0",
+  "description": "Package to manage assets and tests",
+  "main": "default.html",
+  "scripts": {
+    "test": "test",
+    "watch": "gulp scss:watch"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Really-Simple-Plugins/really-simple-ssl.git"
+  },
+  "keywords": [
+    "security",
+    "ssl"
+  ],
+  "author": "Really Simple Plugins",
+  "license": "GPL2",
+  "bugs": {
+    "url": "https://github.com/Really-Simple-Plugins/really-simple-ssl/issues"
+  },
+  "homepage": "https://github.com/Really-Simple-Plugins/really-simple-ssl#readme",
+  "devDependencies": {
+    "gulp": "^4.0.2",
+    "gulp-concat": "^2.6.1",
+    "gulp-cssbeautify": "^3.0.1",
+    "gulp-sass": "^5.1.0",
+    "gulp-uglifycss": "^1.1.0",
+    "node-sass": "^7.0.1",
+    "sass": "^1.52.3"
+  },
+  "dependencies": {
+    "gulp-cli": "^2.3.0",
+    "gulp-uglify": "^3.0.2"
+  }
+}

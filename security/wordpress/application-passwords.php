@@ -1,83 +1,28 @@
-<?php
-defined( 'ABSPATH' ) or die( "you do not have access to this page!" );
-
-add_action('application_password_did_authenticate', 'rsssl_application_password_success');
-add_action('application_password_failed_authentication', 'rsssl_application_password_fail');
-add_action('application_password_is_api_request', 'rsssl_maybe_allow_application_passwords' );
-
-// Add notice in backend
-if ( is_admin() ) {
-	add_filter('rsssl_notices', 'rsssl_application_passwords_allowed', 50, 3);
-}
-
+<?php defined( 'ABSPATH' ) or die();
 /**
- * @param $notices
- * @return mixed
- * Notice function
+ * Disable application passwords
  */
-function rsssl_application_passwords_allowed( $notices ) {
-	$notices['application-passwords'] = array(
-		'callback' => 'rsssl_application_passwords_available',
-		'score' => 5,
-		'output' => array(
-			'_true_' => array(
-				'msg' => __("Application passwords enabled.", "really-simple-ssl"),
-				'icon' => 'open',
-				'dismissible' => true,
-			),
-		),
-	);
-
-	return $notices;
+$set_to_value = '__return_false';
+if ( rsssl_is_in_deactivation_list('application-passwords') ){
+	$set_to_value = '__return_true';
+	rsssl_remove_from_deactivation_list('application-passwords');
 }
-
-/**
- * @return void
- * Enable or disable application passwords
- */
-function rsssl_maybe_allow_application_passwords() {
-	if ( rsssl_get_option('disable_application_passwords' ) ) {
-		add_filter( 'wp_is_application_passwords_available', '__return_false' );
-	} else {
-		add_filter( 'wp_is_application_passwords_available', '__return_true' );
-	}
-}
-
-/**
- * @return void
- *
- * Check if REST response contains the 'authorization' header. If so, app passwords have been enabled
- */
-function rsssl_test_authorization_header() {
-	if ( function_exists('curl_init' ) && ! get_option('rsssl_test_authorization_header_failed') ) {
-		// Fire off a request to the root REST URL to check for the 'authorization' header
-		$response = wp_remote_get( get_rest_url(), array( 'sslverify' => false, 'timeout' => 1 ) );
-
-		if ( isset( $response->errors ) ) {
-			update_option('rsssl_test_authorization_header_failed', true );
-		} else {
-			update_option('rsssl_test_authorization_header_passed', true );
-		}
-	}
-}
-
-add_action('init', 'rsssl_test_authorization_header');
+add_filter( 'wp_is_application_passwords_available', $set_to_value );
 
 /**
  * @return void
  * Log application password success
  */
 function rsssl_application_password_success() {
-
 	$data = array(
 		'type' => 'application_password',
 		'action' => 'authenticated',
 		'referer' => '',
-		'user_id' => rsssl_get_user_id(),
+		'user_id' => get_current_user_id(),
 	);
-
 	rsssl_log_to_learning_mode_table($data);
 }
+add_action('application_password_did_authenticate', 'rsssl_application_password_success');
 
 /**
  * @return void
@@ -89,8 +34,9 @@ function rsssl_application_password_fail() {
 		'type' => 'application_password',
 		'action' => 'failed',
 		'referer' => '',
-		'user_id' => rsssl_get_user_id(),
+		'user_id' => get_current_user_id(),
 	);
 
 	rsssl_log_to_learning_mode_table($data);
 }
+add_action('application_password_failed_authentication', 'rsssl_application_password_fail');

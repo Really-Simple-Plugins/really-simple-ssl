@@ -1,0 +1,235 @@
+.rsssl-grid-item.rsssl-progress {
+  .rsssl-grid-item-content {
+    padding: 0;
+  }
+
+  .rsssl-placeholder {
+    @include rsssl-block-padding;
+  }
+}
+
+.rsssl-progress-block {
+  .rsssl-progress {
+    overflow: hidden;
+    height: 20px;
+    border-radius: 5px;
+    background-color: #f7f7f7;
+
+    .rsssl-bar {
+      height: 100%;
+      background-color: var(--rsp-color-success);
+
+      &.rsssl-orange {
+        background-color: var(--rsp-color-warning);
+      }
+    }
+  }
+
+  .rsssl-progress-bar {
+    @include rsssl-block-padding;
+    padding-block: 0;
+  }
+
+  .rsssl-progress-text {
+    display: flex;
+    align-items: center;
+    @include rsssl-block-padding;
+    padding-block: 0;
+    padding-top: 10px;
+
+    .rsssl-progress-percentage {
+      font-size: 32px;
+      font-weight: 700;
+    }
+
+    .rsssl-progress-text-span {
+      margin-left: 35px;
+      font-size: 18px;
+      font-weight: 600;
+
+      a {
+        margin-left: 3px;
+      }
+    }
+  }
+}
+
+.rsssl-header-html {
+  display: flex;
+  color: var(--rsp-text-color-light);
+
+  .rsssl-toggle-active {
+    text-decoration: underline;
+  }
+}
+
+.rsssl-task-switcher-container {
+  display: flex;
+  border-radius: var(--rsp-border-radius);
+
+  .rsssl-task-switcher {
+    &:first-of-type {
+      border-right: 1px solid var(--rsp-grey-400);
+      padding-right: 10px;
+    }
+
+    &:last-of-type {
+      padding-left: 10px;
+    }
+  }
+}
+
+.rsssl-task-switcher {
+  font-size: var(--rsp-fs-200);
+  cursor: pointer;
+  transition: 0.3s;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+.rsssl-active-filter-remaining .rsssl-remaining-tasks, .rsssl-active-filter-all .rsssl-all-tasks {
+  text-decoration: underline;
+}
+
+/**
+* Task element, list of tasks
+ */
+
+.rsssl-task-element {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--rsp-spacing-m);
+  padding-bottom: var(--rsp-spacing-s);
+
+  .rsssl-task-message {
+    flex: 1;
+  }
+
+  .rsssl-task-form {
+    margin-top: var(--rsp-spacing-xxs);
+    display: flex;
+    gap: var(--rsp-spacing-xs);
+  }
+
+  .rsssl-task-enable {
+    cursor: pointer;
+  }
+
+  .rsssl-task-dismiss {
+    button {
+      all: initial; //remove default button styles
+    }
+
+    span {
+      font-size: 1.5em;
+      color: black;
+      font-family: sans-serif;
+
+      &:hover {
+        cursor: pointer;
+        color: grey;
+      }
+
+      svg {
+        height: 12px;
+        width: 12px;
+      }
+    }
+  }
+}
+
+.rsssl-scroll-container {
+  @include rsssl-block-padding;
+  --rsp-scroll-bg-clr: var(--rsp-dark-blue-faded);
+  margin-top: 20px;
+  height: 202px;
+  overflow-y: auto;
+  padding-block: 0;
+  padding-top: var(--rsp-spacing-s);
+  border-radius: 0;
+  background-image: linear-gradient(to top, var(--rsp-scroll-bg-clr), var(--rsp-scroll-bg-clr)),
+  linear-gradient(to top, var(--rsp-scroll-bg-clr), var(--rsp-scroll-bg-clr)),
+  linear-gradient(to top, rgba(0, 0, 0, 0.15), rgba(255, 255, 255, 0)),
+  linear-gradient(to bottom, rgba(0, 0, 0, 0.15), rgba(255, 255, 255, 0));
+  background-position: bottom center, top center, bottom center, top center;
+  background-color: var(--rsp-scroll-bg-clr);
+  background-repeat: no-repeat;
+  background-size: 100% 25px, 100% 25px, 100% 15px, 100% 15px;
+  background-attachment: local, local, scroll, scroll;
+
+
+  &::-webkit-scrollbar-track {
+    border-radius: 10px;
+    -webkit-box-shadow: inset 0 0 2px rgba(0, 0, 0, 0);
+    background-color: transparent;
+  }
+
+  &::-webkit-scrollbar {
+    width: 8px;
+    background-color: var(--rsp-grey-300);
+    cursor: pointer;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: var(--rsp-grey-400);
+    border-radius: 10px;
+  }
+}
+
+.rsssl-progress-status-container {
+  margin-right: 40px;
+}
+
+.rsssl-task-status {
+  display: block;
+  min-width: 96px;
+  text-align: center;
+  border-radius: 15px;
+  padding: 4px 8px;
+  font-size: var(--rsp-fs-100);
+  font-weight: 600;
+
+  &.rsssl-completed, &.rsssl-success {
+    background-color: var(--rsp-color-success);
+    color: var(--rsp-text-color-white);
+  }
+
+  &.rsssl-open {
+    background-color: var(--rsp-color-open);
+  }
+
+  &.rsssl-urgent {
+    background-color: var(--rsp-color-error);
+    color: var(--rsp-text-color-white);
+  }
+
+  &.rsssl-warning {
+    background-color: var(--rsp-color-warning);
+    color: var(--rsp-text-color-white);
+  }
+
+  &.rsssl-premium {
+    background-color: var(--rsp-color-success);
+    color: var(--rsp-text-color-white);
+  }
+}
+
+.rsssl-plusone {
+  display: inline-block;
+  vertical-align: top;
+  box-sizing: border-box;
+  margin: 1px 0 -1px 2px;
+  padding: 0 5px;
+  min-width: 18px;
+  height: 18px;
+  border-radius: 9px;
+  background-color: #d63638;
+  color: #fff;
+  font-size: var(--rsp-fs-100);
+  line-height: 1.6;
+  text-align: center;
+}
+

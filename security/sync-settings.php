@@ -14,10 +14,11 @@ function rsssl_sync_wordpress_settings() {
         delete_option('rsssl_option_mismatches');
         $mismatches = array();
 
-        if ( DEFINED('WP_DEBUG') && !rsssl_get_option('change_debug_log_location') ) {
-            rsssl_update_option('change_debug_log_location', true);
-            $mismatches[] = 'rsssl_debug_log_modified';
-        } elseif ( ! DEFINED('WP_DEBUG') && rsssl_get_option('change_debug_log_location') ) {
+//        if ( DEFINED('WP_DEBUG') && !rsssl_get_option('change_debug_log_location') ) {
+//            rsssl_update_option('change_debug_log_location', true);
+//            $mismatches[] = 'rsssl_debug_log_modified';
+//        } else
+		if ( ! DEFINED('WP_DEBUG') && rsssl_get_option('change_debug_log_location') ) {
             rsssl_update_option('change_debug_log_location', false);
             $mismatches[] = 'rsssl_debug_log_modified';
         }
@@ -30,7 +31,7 @@ function rsssl_sync_wordpress_settings() {
             $mismatches[] = 'rsssl_file_editing';
         }
 
-        update_option('rsssl_option_mismatches', $mismatches );
+        update_option('rsssl_option_mismatches', $mismatches, false );
         set_transient('rsssl_settings_mismatch_check', true, MINUTE_IN_SECONDS * 5);
     }
 
@@ -83,6 +84,9 @@ function rsssl_show_notices_for_mismatches($notices) {
  * @return bool|mixed
  */
 function rsssl_option_anyone_can_register( $field, $field_id ) {
+	if ( !isset($field['value']) ) {
+		return $field;
+	}
 	if ( $field_id === 'disable_anyone_can_register' && !$field['value'] && !get_option('users_can_register') ) {
 		$field['disabled'] = true;
 		$field['value'] = true;
