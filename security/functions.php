@@ -142,6 +142,10 @@ if ( ! function_exists('rsssl_wrap_htaccess' ) ) {
 			}
 			//might be empty, if already in .htaccess
 			if ( !empty($rules_uploads_result) ) {
+				if ( !file_exists($htaccess_file_uploads) ) {
+					file_put_contents( $htaccess_file_uploads, '' );
+				}
+
 				if ( !is_writable( $htaccess_file_uploads )) {
 					update_site_option( 'rsssl_htaccess_error', 'not-writable-uploads' );
 					update_site_option( 'rsssl_htaccess_rules', $rules_uploads_result );
@@ -166,7 +170,8 @@ if ( ! function_exists('rsssl_wrap_htaccess' ) ) {
 		$htaccess_file = RSSSL()->really_simple_ssl->htaccess_file();
 		if ( !file_exists( $htaccess_file ) ) {
 			update_site_option('rsssl_htaccess_error', 'not-exists');
-			update_site_option('rsssl_htaccess_rules', $rules);
+			$rules_result = implode('',array_column($rules, 'rules'));
+			update_site_option('rsssl_htaccess_rules', $rules_result);
 			return;
 		}
 
