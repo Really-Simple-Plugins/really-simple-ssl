@@ -148,9 +148,6 @@ $rsssl_integrations_list = apply_filters( 'rsssl_integrations', array(
         'learning_mode'        => false,
 		'option_id'            => 'disable_indexing',
         'type'                 => 'checkbox',
-        'actions'              => array(
-			'fix'       => 'rsssl_disable_indexing_wrapper',
-        ),
     ),
 
 	'application-passwords' => array(
@@ -259,6 +256,7 @@ function rsssl_integrations() {
 		);
 
 		if ( rsssl_is_integration_enabled( $plugin, $details ) ) {
+			error_log("$plugin enabled");
 			$actual_integrations_count++;
 			$file = rsssl_path . 'security/' . $details['folder'] . "/" . $plugin . '.php';
 			$skip = true;

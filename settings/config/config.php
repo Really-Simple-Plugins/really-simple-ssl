@@ -396,7 +396,7 @@ function rsssl_fields( $load_values = true ){
 			'type'        => 'checkbox',
 			'label'       => __( "Prevent directory browsing", 'really-simple-ssl' ),
 			'disabled'    => false,
-			'default'     => "NOT rsssl_directory_indexing_allowed()",
+			'default'     => false,
 		],
 	    [
             'id'          => 'disable_user_enumeration',
@@ -411,14 +411,6 @@ function rsssl_fields( $load_values = true ){
             'menu_id'     => 'hardening',
             'type'        => 'checkbox',
             'label'       => __( "Disable RSS feeds (improve disable user enumeration)", 'really-simple-ssl' ),
-            'disabled'    => false,
-            'default'     => false,
-        ],
-        [
-            'id'          => 'disable_indexing',
-            'menu_id'     => 'hardening',
-            'type'        => 'checkbox',
-            'label'       => __( "Disable directory indexing", 'really-simple-ssl' ),
             'disabled'    => false,
             'default'     => false,
         ],

@@ -138,6 +138,8 @@ class SettingsPage extends Component {
                 saveFields.push(field);
             }
         }
+        console.log("set fields");
+        console.log(saveFields);
         rsssl_api.setFields(saveFields).then(( response ) => {
             this.changedFields = [];
             this.setState({

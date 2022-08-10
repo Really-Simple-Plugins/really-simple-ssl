@@ -316,7 +316,7 @@ function rsssl_indexing_disabled_by_user_htaccess_not_writable() {
 
 	if ( rsssl_uses_htaccess()
 	     && rsssl_directory_indexing_allowed()
-	     && get_option('disable_indexing') !== false
+	     && rsssl_get_option('disable_indexing') !== false
 	     && file_exists( RSSSL()->really_simple_ssl->htaccess_file() )
 	     && ! is_writable( RSSSL()->really_simple_ssl->htaccess_file() )
 	) {
@@ -330,9 +330,10 @@ function rsssl_indexing_disabled_by_user_htaccess_not_writable() {
  * Check if indexing is enabled and site uses NGINX
  * @return bool
  */
+
 function rsssl_indexing_enabled_nginx() {
 	if ( rsssl_directory_indexing_allowed()
-	     && get_option('disable_indexing') !== false
+	     && rsssl_get_option('disable_indexing') !== false
 		 && rsssl_get_server() === 'nginx'
 	) {
 		return true;

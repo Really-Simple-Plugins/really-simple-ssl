@@ -263,9 +263,9 @@ function rsssl_rest_api_fields_set($request){
 		$fields[$index] = $field;
 	}
 	if ( rsssl_is_networkwide_active() ) {
-		$options = get_site_option( 'rsssl_options', array() );
+		$options = get_site_option( 'rsssl_options', [] );
 	} else {
-		$options = get_option( 'rsssl_options', array() );
+		$options = get_option( 'rsssl_options', [] );
 	}
 
     //build a new options array
