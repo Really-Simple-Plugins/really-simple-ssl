@@ -130,6 +130,7 @@ $rsssl_integrations_list = apply_filters( 'rsssl_integrations', array(
         'learning_mode'        => false,
         'option_id'            => 'change_debug_log_location',
 		'always_include'       => false,
+        'has_deactivation'     => true,
         'type'                 => 'checkbox',
         'conditions'           => [
 	        'relation' => 'AND',
@@ -228,11 +229,13 @@ function rsssl_is_integration_enabled( $plugin, $details ) {
 
 	//if an integration was just enabled, we keep it enabled until it removes itself from the list.
 	if ( rsssl_is_in_deactivation_list($plugin) ) {
+		error_log("$plugin is in deactivation list");
 		return true;
 	}
 
 	$field_id = isset($details['option_id']) ? $details['option_id'] : false;
 	if ($field_id && rsssl_get_option($field_id) ) {
+		error_log("$plugin is enabled");
 		return true;
 	}
 	return false;

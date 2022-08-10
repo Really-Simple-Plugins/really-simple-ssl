@@ -14,10 +14,11 @@ function rsssl_sync_wordpress_settings() {
         delete_option('rsssl_option_mismatches');
         $mismatches = array();
 
-        if ( DEFINED('WP_DEBUG') && !rsssl_get_option('change_debug_log_location') ) {
-            rsssl_update_option('change_debug_log_location', true);
-            $mismatches[] = 'rsssl_debug_log_modified';
-        } elseif ( ! DEFINED('WP_DEBUG') && rsssl_get_option('change_debug_log_location') ) {
+//        if ( DEFINED('WP_DEBUG') && !rsssl_get_option('change_debug_log_location') ) {
+//            rsssl_update_option('change_debug_log_location', true);
+//            $mismatches[] = 'rsssl_debug_log_modified';
+//        } else
+		if ( ! DEFINED('WP_DEBUG') && rsssl_get_option('change_debug_log_location') ) {
             rsssl_update_option('change_debug_log_location', false);
             $mismatches[] = 'rsssl_debug_log_modified';
         }

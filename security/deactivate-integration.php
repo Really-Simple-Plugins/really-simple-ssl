@@ -40,7 +40,8 @@ add_action( "rsssl_after_save_field", "rsssl_handle_integration_deactivation", 1
 function rsssl_remove_from_deactivation_list($plugin){
 	$deactivate_list = get_option('rsssl_deactivate_list', []);
 	if ( in_array($plugin, $deactivate_list )) {
-		unset( $deactivate_list[ $plugin ] );
+		$index = array_search($plugin, $deactivate_list);
+		unset($deactivate_list[$index]);
 		update_option('rsssl_deactivate_list', $deactivate_list, false );
 	}
 }
@@ -52,5 +53,7 @@ function rsssl_remove_from_deactivation_list($plugin){
  * @return bool
  */
 function rsssl_is_in_deactivation_list( $plugin ){
+	x_log("deactivation list");
+	x_log(get_option('rsssl_deactivate_list',[]));
 	return in_array($plugin, get_option('rsssl_deactivate_list',[]) );
 }

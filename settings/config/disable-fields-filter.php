@@ -9,11 +9,13 @@ defined('ABSPATH') or die();
  * @return array
  */
 function rsssl_disable_fields($field, $field_id){
-
-
+//	if ( !rsssl_debug_log_in_default_location() ){
+//		$field['value'] = true;
+//		$field['disabled'] = true;
+//	}
 	return $field;
 }
-//add_filter('rsssl_field', 'rsssl_disable_fields', 10, 2);
+add_filter('rsssl_field', 'rsssl_disable_fields', 10, 2);
 
 ///**
 // * @param $fields

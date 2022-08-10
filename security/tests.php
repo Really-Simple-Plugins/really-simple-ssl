@@ -180,42 +180,6 @@ function rsssl_display_name_equals_login() {
 }
 
 /**
- * Wrapper function to check if debug.log has been reverted to default by Really Simple SSL
- * @return bool
- */
-function rsssl_debug_log_reverted_by_rsssl() {
-    if ( get_site_option('rsssl_debug_log_reverted_by_rsssl') ) {
-        return true;
-    }
-
-    return false;
-}
-
-/**
- * Check if debug.log has already been moved from default location
- * @return bool
- *
- */
-function rsssl_debug_log_already_moved() {
-	$matches = rsssl_get_debug_log_declaration();
-
-	// If option has been updated, the debug.log has been moved
-	if ( get_site_option( 'rsssl_debug_log_location_changed' ) == '1' ) {
-		return true;
-	}
-
-	// If str contains true, location is default
-	if ( $matches && strpos( $matches[0], 'true' ) !== false ) {
-		return false;
-	} elseif ( $matches && strpos( $matches[0], 'true' ) !== true ) {
-		return true;
-	}
-
-	return false;
-}
-
-
-/**
  * Check if debugging in WordPress is enabled
  * @return bool
  */
@@ -234,7 +198,6 @@ function rsssl_is_debug_log_enabled() {
 function rsssl_debug_log_in_default_location() {
 
     $matches = rsssl_get_debug_log_declaration();
-
     // If str contains true, location is default
     if ( $matches && strpos($matches[0], 'true' ) !== false ) {
         return true;

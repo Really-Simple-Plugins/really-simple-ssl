@@ -121,8 +121,8 @@ function rsssl_general_security_notices( $notices ) {
 		),
 	);
 
-	$notices['username_admin_exists'] = array(
-		'condition' => ['rsssl_debug_log_reverted_by_rsssl'],
+	$notices['debug_log'] = array(
+		'condition' => ['rsssl_debug_log_in_default_location'],
 		'callback' => '_true_',
 		'score' => 5,
 		'output' => array(

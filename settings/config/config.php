@@ -352,7 +352,7 @@ function rsssl_fields( $load_values = true ){
 			'type'        => 'checkbox',
 			'label'       => rsssl_get_debug_log_label(),
 			'disabled'    => false,
-			'default'     => rsssl_debug_log_already_moved(),
+			'default'     => false,
 		],
 	    [
             'id'          => 'disable_application_passwords',
@@ -403,14 +403,6 @@ function rsssl_fields( $load_values = true ){
             'menu_id'     => 'hardening',
             'type'        => 'checkbox',
             'label'       => __( "Disable RSS feeds (improve disable user enumeration)", 'really-simple-ssl' ),
-            'disabled'    => false,
-            'default'     => false,
-        ],
-        [
-            'id'          => 'change_debug_log_location',
-            'menu_id'     => 'hardening',
-            'type'        => 'checkbox',
-            'label'       => __( "Change debug.log location", 'really-simple-ssl' ),
             'disabled'    => false,
             'default'     => false,
         ],
@@ -838,8 +830,13 @@ function rsssl_is_user_registration_enabled() {
 }
 
 function rsssl_get_debug_log_label() {
-    if ( get_site_option('rsssl_debug_log_location_changed') == '1') {
-        $label = __( "Change debug.log location", 'really-simple-ssl' ) . ". " . __("New location: ", 'really-simple-ssl') . ' /wp-content/debug_' . get_site_option('rsssl_debug_log_folder_suffix') .'/debug.log';
+    if ( !rsssl_debug_log_in_default_location() ) {
+	    $matches = rsssl_get_debug_log_declaration();
+	    // If str contains true, location is default
+	    if ( $matches && isset($matches[0]) ) {
+		    $location = $matches[0];
+	    }
+        $label = __( "Change debug.log location", 'really-simple-ssl' ) . ". " . __("New location: ", 'really-simple-ssl') . $location;
     } else{
         $label = __( "Change debug.log location", 'really-simple-ssl' );
     }
