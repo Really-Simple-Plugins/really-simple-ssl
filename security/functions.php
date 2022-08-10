@@ -1,5 +1,8 @@
 <?php
-defined( 'ABSPATH' ) or die( "you do not have access to this page!" );
+defined( 'ABSPATH' ) or die( );
+/**
+ * Back-end available only
+ */
 
 /**
  * @return string
@@ -211,21 +214,6 @@ if ( ! function_exists('rsssl_wrap_htaccess' ) ) {
  */
 function rsssl_htaccess_status(){
 	return get_site_option('rsssl_htaccess_error');
-}
-
-/**
- * @return int
- * Get user ID
- */
-function rsssl_get_user_id() {
-
-	if ( is_user_logged_in() ) {
-		global $user;
-
-		return $user->ID;
-	}
-
-	return 0;
 }
 
 /**

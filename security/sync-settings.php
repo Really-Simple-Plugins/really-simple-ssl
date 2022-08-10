@@ -83,6 +83,9 @@ function rsssl_show_notices_for_mismatches($notices) {
  * @return bool|mixed
  */
 function rsssl_option_anyone_can_register( $field, $field_id ) {
+	if ( !isset($field['value']) ) {
+		return $field;
+	}
 	if ( $field_id === 'disable_anyone_can_register' && !$field['value'] && !get_option('users_can_register') ) {
 		$field['disabled'] = true;
 		$field['value'] = true;

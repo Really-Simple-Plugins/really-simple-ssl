@@ -4,6 +4,18 @@ function rsssl_general_security_notices( $notices ) {
 	$code = get_site_option('rsssl_htaccess_rules');
 	$code            = '<br><code>' . $code . '</code><br>';
 
+	$notices['application-passwords'] = array(
+		'callback' => 'wp_is_application_passwords_available',
+		'score' => 5,
+		'output' => array(
+			'_true_' => array(
+				'msg' => __("Application passwords enabled.", "really-simple-ssl"),
+				'icon' => 'open',
+				'dismissible' => true,
+			),
+		),
+	);
+
 	$notices['htaccess_status'] = array(
 		'callback' => 'rsssl_htaccess_status',
 		'score' => 5,
