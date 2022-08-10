@@ -274,32 +274,38 @@ function rsssl_code_execution_allowed()
  * @return bool
  */
 function rsssl_directory_indexing_allowed() {
+	$status = get_transient('rsssl_directory_indexing_status');
+	if ( !$status ) {
+		$test_folder = 'rssslbrowsingtest';
+		$test_dir = trailingslashit(ABSPATH) . $test_folder;
+		if ( ! is_dir( $test_dir ) ) {
+			mkdir( $test_dir, 755 );
+		}
+		$response = wp_remote_get(trailingslashit( site_url($test_folder) ) );
+		if ( is_dir( $test_dir )  ) {
+			rmdir( $test_dir );
+		}
 
-	$test_folder = 'rssslbrowsingtest';
-	$test_dir = trailingslashit(ABSPATH) . $test_folder;
-
-	if ( ! is_dir( $test_dir ) ) {
-		mkdir( $test_dir, 755 );
+		// WP_Error won't contain response code, return false
+		if ( is_wp_error( $response ) ) {
+			$status = 'error';
+		} else {
+			$response_code = $response['response']['code'];
+			if ( $response_code === 403 ) {
+				$status = 'forbidden';
+			} else {
+				$status = 'allowed';
+			}
+		}
+		set_transient('rsssl_directory_indexing_status', $status, WEEK_IN_SECONDS );
 	}
 
-	$response = wp_remote_get(trailingslashit( site_url() ) . $test_folder );
-
-	if ( is_dir( $test_dir )  ) {
-		rmdir( $test_dir );
-	}
-
-	// WP_Error won't contain response code, return false
-	if ( is_wp_error( $response ) ) {
+	if ($status==='allowed') {
+		return true;
+	} else {
 		return false;
 	}
 
-	$response_code = $response['response']['code'];
-
-	if ( $response_code === 403 ) {
-		return false;
-	}
-
-	return true;
 }
 
 /**
