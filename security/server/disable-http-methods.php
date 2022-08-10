@@ -1,37 +1,17 @@
-<?php
-defined( 'ABSPATH' ) or die( "you do not have access to this page!" );
-
-add_action('admin_init', 'rsssl_disable_http_methods');
+<?php defined( 'ABSPATH' ) or die();
 
 /**
- * @return void
  * Disable TRACE & STACK HTTP methods
+ *
+ * @return bool
+ *
  */
-function rsssl_disable_http_methods()
+function rsssl_disable_http_methods_rules($rules)
 {
-
-	if ( ! rsssl_test_if_http_methods_allowed() ) return;
-
-    if ( rsssl_get_server() == 'apache' ) {
-
-	    $htaccess_file = RSSSL()->really_simple_ssl->htaccess_file();
-	    if ( file_exists( $htaccess_file ) && is_writable( $htaccess_file ) ) {
-		    $htaccess = file_get_contents($htaccess_file);
-		    if ( stripos($htaccess, '^(TRACE') !== false || stripos($htaccess, '^(STACK') !== false ) {
-			    update_option('rsssl_disable_http_methods', false);
-			    return;
-		    } else {
-			    // insert into .htaccess
-			    update_option('rsssl_disable_http_methods', true);
-			    rsssl_wrap_headers();
-		    }
-	    }
-	}
-
-    if ( rsssl_get_server() == 'nginx' ) {
-		add_filter('rsssl_notices', 'rsssl_http_methods_nginx', 20, 5);
-    }
+	$rules .= "\n" . "RewriteCond %{REQUEST_METHOD} ^(TRACE|STACK)" . "\n" ."RewriteRule .* - [F]";
+	return $rules;
 }
+add_filter('rsssl_htaccess_security_rules', 'rsssl_disable_http_methods_rules');
 
 /**
  * @param $notices
@@ -41,19 +21,24 @@ function rsssl_disable_http_methods()
  * Add http methods on NGINX notice
  */
 function rsssl_http_methods_nginx( $notices ) {
-	$notices['user_id_one'] = array(
-		'callback' => '_true_',
-		'score' => 5,
-		'output' => array(
-			'true' => array(
-				'msg' => __("HTTP methods allowed, add the following code to your nginx.conf file to block:", "really-simple-ssl")
-				. rsssl_wrap_http_methods_code_nginx() ,
-				'icon' => 'open',
-				'dismissible' => true,
+	if ( rsssl_get_server() == 'nginx' ) {
+		$notices['http_methods_nginx'] = array(
+			'callback' => '_true_',
+			'score' => 5,
+			'output' => array(
+				'true' => array(
+					'msg' => __("HTTP methods allowed, add the following code to your nginx.conf file to block:", "really-simple-ssl")
+					         . rsssl_wrap_http_methods_code_nginx() ,
+					'icon' => 'open',
+					'dismissible' => true,
+				),
 			),
-		),
-	);
+		);
+	}
+	return $notices;
 }
+add_filter('rsssl_notices', 'rsssl_http_methods_nginx');
+
 
 /**
  * @return string

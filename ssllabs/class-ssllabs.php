@@ -10,12 +10,14 @@ class rsssl_ssllabs {
 		$message = '';
 		$footer_html = '';
 		$disabled = false;
-		$domain = 'really-simple-ssl.com';//$this->get_host();
+		$domain = $this->get_host();
+//		$domain = 'really-simple-ssl.com';
 		if (strpos($domain, 'localhost')!==false){
-			return ['footerHtml'=>$footer_html,'disabled'=>true, 'html' => '<div class="rsssl-ssltest"><div class="rsssl-ssltest-element">'.__("SSL Test is not possible on localhost","really-simple-ssl").'</div></div>', 'progress' => 100];
+			return ['footerHtml'=>$footer_html,'disabled'=>true, 'html' => '<div class="rsssl-ssl-test"><div class="rsssl-ssl-test-element">'.__("SSL Test is not possible on localhost","really-simple-ssl").'</div></div>', 'progress' => 100];
 		}
 
-		$last_test = false;//get_option('rsssl_last_ssltest');
+		$last_test = get_option('rsssl_last_ssltest');
+		$last_test = false;
 		$one_day_ago = strtotime('-1 day');
 		if ($last_test && $last_test>$one_day_ago){
 			$disabled = true;
@@ -23,11 +25,11 @@ class rsssl_ssllabs {
 		}
 
 		if ( $state==='initial' && !$ip   ) {
-			return ['footerHtml'=>$footer_html,'disabled'=>$disabled, 'html' => '<div class="rsssl-ssltest"><div class="rsssl-ssltest-element">'.__("Start a test to see your SSL rating","really-simple-ssl").'</div></div>', 'progress' => 100];
+			return ['footerHtml'=>$footer_html,'disabled'=>$disabled, 'html' => '<div class="rsssl-ssl-test"><div class="rsssl-ssl-test-element">'.__("Start a test to see your SSL rating","really-simple-ssl").'</div></div>', 'progress' => 100];
 		} else if ( $state === 'clearcache' ) {
-			update_option( 'rsssl_ssltest_endpoint_ip', false );
-			update_option( 'rsssl_ssltest_base_request', false );
-			update_option( 'rsssl_ssltest_endpoint', false);
+			update_option( 'rsssl_ssltest_endpoint_ip', false, false );
+			update_option( 'rsssl_ssltest_base_request', false, false );
+			update_option( 'rsssl_ssltest_endpoint', false, false);
 			$ip = false;
 		}
 
@@ -41,11 +43,11 @@ class rsssl_ssllabs {
 			if ( $status == 200 ) {
 				$body = json_decode( $body );
 				//get active test
-				update_option( 'rsssl_ssltest_base_request', $body );
+				update_option( 'rsssl_ssltest_base_request', $body, false );
 				$message = $this->get_message();
 				if ( $body->status === 'READY' && isset( $body->endpoints ) && is_array( $body->endpoints ) ) {
 					$ip = $body->endpoints[0]->ipAddress;
-					update_option( 'rsssl_ssltest_endpoint_ip', $body->endpoints[0]->ipAddress );
+					update_option( 'rsssl_ssltest_endpoint_ip', $body->endpoints[0]->ipAddress, false );
 				}
 			}
 
@@ -61,38 +63,47 @@ class rsssl_ssllabs {
 					$endpoint_body = false;
 					$message = __('Encountered error, restarting...','really-simple-ssl');
 				}
-				update_option( 'rsssl_ssltest_endpoint', $endpoint_body );
+				update_option( 'rsssl_ssltest_endpoint', $endpoint_body , false);
 			}
 		}
 
 		$total_progress = $this->get_progress();
-		$body = get_option( 'rsssl_ssltest_base_request');
-        $html_arr[] = __('Progress:','really-simple-ssl').' '.$total_progress.'%';
-		$html_arr[] = __('Host:','really-simple-ssl').' '.$domain;
-//		$html_arr[] = $ip;
-		if ( $total_progress<100 ){
-			$html_arr[] = $message;
-			$disabled = true;
-		} else {
-			$test_time = substr($body->testTime, 0, 10);
-			update_option('rsssl_last_ssltest', $test_time);
-			$date = date(get_option('date_format'),$test_time);
-			$time = date(get_option('time_format'), $test_time);
-			$html_arr[] = __('Last test:','really-simple-ssl').' '.$date.' - '.$time;
-			$html_arr[] = $this->supports_only_secure_tls() ? __('Secure TLS','really-simple-ssl') : __('Supports insecure TLS version','really-simple-ssl');
-			$html_arr[] = $this->has_hsts() ? __('HSTS enabled','really-simple-ssl') : __('HSTS not enabled','really-simple-ssl');
-			$html_arr[] = $this->has_warnings() ? __('Warnings detected, see the full report for details.','really-simple-ssl') : __("No warnings", 'really-simple-ssl');
-		}
-		$grade = isset($body->endpoints[0]->grade) ? $body->endpoints[0]->grade : '';
-		$html = '<div class="rsssl-gridblock-progress-container"><div class="rsssl-gridblock-progress" style="width:'.$total_progress.'%"></div></div><div class="rsssl-ssltest"><div><div>'.implode('</div><div>', $html_arr ).'</div></div><div class="rsssl-grade"><span>'.$grade.'</span></div></div>';
 		$url = 'https://www.ssllabs.com/analyze.html?d='.urlencode($domain);
 		$class = "rsssl-complete";
 		if ( $total_progress<100 ) {
 			$class = "rsssl-incomplete";
 			$url = '#';
 		}
+		$body = get_option( 'rsssl_ssltest_base_request');
+		//$html_arr[] = $ip;
+		if ( $total_progress<100 ){
+			$html_arr[] = $message;
+			$disabled = true;
+		} else {
+			$test_time = substr($body->testTime, 0, 10);
+			update_option('rsssl_last_ssltest', $test_time, false);
+			$date = date(get_option('date_format'),$test_time);
+			$time = date(get_option('time_format'), $test_time);
+			$html_arr[] = $this->has_hsts() ? __('HSTS enabled','really-simple-ssl') : __('HSTS not enabled','really-simple-ssl');
+			$html_arr[] = $this->supports_only_secure_tls() ? __('Secure TLS','really-simple-ssl') : __('Supports insecure TLS version','really-simple-ssl');
+			$html_arr[] = $this->has_warnings() ? __('Warnings detected, see the full report for details.','really-simple-ssl') : __("No warnings", 'really-simple-ssl');
+			$html_arr[] = __('Last check:','really-simple-ssl').' '.$date.' - '.$time;
+			$html_arr[] = '<a href="#">' . __('More information', 'really-simple-ssl').'</a>';
+		}
+		$grade = isset($body->endpoints[0]->grade) ? $body->endpoints[0]->grade : '?';
+		$html = '<div class="rsssl-gridblock-progress-container ' . $class . '">
+					<div class="rsssl-gridblock-progress" style="width:' . $total_progress . '%"></div>
+				</div>';
+		$html .= '<div class="rsssl-ssl-test ' . $class . '">
+					<div class="rsssl-ssl-test-information">
+						<p>' . implode( '</p>
+						<p>', $html_arr ) . '...</p>
+					</div>
+					<div class="rsssl-ssl-test-grade rsssl-h0 rsssl-garde-' . $grade . '">
+						<span>' . $grade . '</span>
+					</div>
+				</div>';
 		$html .= '<div class="rsssl-detailed-report '.$class.'"><a href="'.$url.'" target="_blank">'.__("View detailed report on Qualys SSL Labs", "really-simple-ssl").'</a></div>';
-		$html .= '<div class="rsssl-disclaimer">'.__("This scan is provided by Qualis SSL Labs.", "really-simple-ssl").' '.sprintf(__('The use of this API is under the MIT license and subject to <a href="%s">terms & conditions</a> and privacy policy of Qualys.', "really-simple-ssl"), 'https://www.ssllabs.com/about/terms.html').'</div>';
 		return ['footerHtml'=>$footer_html,'disabled'=>$disabled, 'html' => $html, 'progress' => $total_progress ];
 	}
 

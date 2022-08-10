@@ -155,6 +155,28 @@ function rsssl_comment_out_default_debug_log() {
 
 /**
  * Function to maybe change the debug.log location
+ * @return bool
+ *
+ * Check if wp-config.php contains debug.log declaration
+ */
+
+function rsssl_contains_debug_log_declaration() {
+	$wpconfig_path = rsssl_find_wp_config_path();
+	$wpconfig = file_get_contents($wpconfig_path);
+
+	// Get WP_DEBUG_LOG declaration
+	$regex = "/(define)(.*WP_DEBUG_LOG.*)(?=;)/m";
+	preg_match($regex, $wpconfig, $matches);
+
+	// If str contains true, location is default
+	if ( $matches && strpos($matches[0], 'true' ) !== FALSE ) {
+		return true;
+	}
+
+	return false;
+}
+
+/**
  * @return void
  * @since 6.0
  */

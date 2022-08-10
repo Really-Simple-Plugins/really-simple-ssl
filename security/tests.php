@@ -69,13 +69,14 @@ function rsssl_xmlrpc_allowed()
  * @return bool
  * Test if HTTP methods are allowed
  */
-function rsssl_test_if_http_methods_allowed()
-{
+function rsssl_http_methods_allowed()
 
-	if ( ! current_user_can( 'manage_options' ) ) return;
+{
+	if ( ! current_user_can( 'manage_options' ) ) {
+		return false;
+	}
 
 	if ( ! get_transient( 'rsssl_http_options_allowed' ) ) {
-
 		if (function_exists('curl_init')) {
 
 			$url = site_url();
@@ -166,6 +167,32 @@ function rsssl_has_admin_user() {
 }
 
 /**
+ * @return bool
+ *
+ * Check if user ID 1 exists end if user enumeration has been disabled
+ */
+function rsssl_id_one_no_enumeration() {
+	$user_id_one = get_user_by( 'id', 1 );
+	if ( $user_id_one && ! rsssl_get_option( 'disable_user_enumeration' ) ) {
+		return true;
+	}
+
+	return false;
+}
+
+/**
+ * Check if display name is the same as login
+ */
+function rsssl_display_name_equals_login() {
+	$user = wp_get_current_user();
+	if ( $user->data->user_login === $user->data->display_name ) {
+		return true;
+	}
+
+	return false;
+}
+
+/**
  * Wrapper function to check if debug.log has been reverted to default by Really Simple SSL
  * @return bool
  */
@@ -183,23 +210,23 @@ function rsssl_debug_log_reverted_by_rsssl() {
  *
  */
 function rsssl_debug_log_already_moved() {
-    $matches = rsssl_get_debug_log_declaration();
+	$matches = rsssl_get_debug_log_declaration();
 
-    // If option has been updated, the debug.log has been moved
-    if ( get_site_option('rsssl_debug_log_location_changed') == '1' )
-    {
-        return true;
-    }
+	// If option has been updated, the debug.log has been moved
+	if ( get_site_option( 'rsssl_debug_log_location_changed' ) == '1' ) {
+		return true;
+	}
 
-    // If str contains true, location is default
-    if ( $matches && strpos($matches[0], 'true' ) !== false ) {
-        return false;
-    } elseif ( $matches && strpos($matches[0], 'true' ) !== true ) {
-        return true;
-    }
+	// If str contains true, location is default
+	if ( $matches && strpos( $matches[0], 'true' ) !== false ) {
+		return false;
+	} elseif ( $matches && strpos( $matches[0], 'true' ) !== true ) {
+		return true;
+	}
 
-    return false;
+	return false;
 }
+
 
 /**
  * Check if debugging in WordPress is enabled
@@ -234,12 +261,51 @@ function rsssl_debug_log_in_default_location() {
  * @return mixed
  */
 function rsssl_get_debug_log_declaration() {
-    $wpconfig_path = rsssl_find_wp_config_path();
-    $wpconfig = file_get_contents($wpconfig_path);
+	$wpconfig_path = rsssl_find_wp_config_path();
+	$wpconfig      = file_get_contents( $wpconfig_path );
 
-    // Get WP_DEBUG_LOG declaration
-    $regex = "/(define)(.*WP_DEBUG_LOG.*)(?=;)/m";
-    preg_match($regex, $wpconfig, $matches);
+	// Get WP_DEBUG_LOG declaration
+	$regex = "/(define)(.*WP_DEBUG_LOG.*)(?=;)/m";
+	preg_match( $regex, $wpconfig, $matches );
 
-    return $matches;
+	return $matches;
+}
+
+/**
+ * Check if WordPress version is above 5.6 for application password support
+ * @return bool
+ */
+function rsssl_wordpress_version_above_5_6() {
+	global $wp_version;
+	if ( $wp_version < 5.6 ) {
+		return false;
+	}
+
+	return true;
+}
+
+
+/**
+ * @return string
+ * Test if code execution is allowed in /uploads folder
+ */
+function rsssl_code_execution_allowed()
+{
+	$result = false;
+	$upload_dir = wp_get_upload_dir();
+	$test_file = $upload_dir['basedir'] . '/' . 'code-execution.php';
+	if ( is_writable($upload_dir['basedir'] )  ) {
+		if ( ! file_exists( $test_file ) ) {
+			copy( rsssl_path . 'security/tests/code-execution.php', $test_file );
+		}
+	}
+
+	if ( file_exists( $test_file ) ) {
+		require_once( $test_file );
+		if ( function_exists( 'rsssl_test_code_execution' ) && rsssl_test_code_execution() ) {
+			$result = true;
+		}
+	}
+
+	return $result;
 }

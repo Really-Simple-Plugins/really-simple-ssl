@@ -93,7 +93,6 @@ if ( ! class_exists( "rsssl_field" ) ) {
             }
         }
 
-
         /**
          * santize an array for save storage
          *
@@ -116,8 +115,6 @@ if ( ! class_exists( "rsssl_field" ) ) {
 
         }
 
-
-
         /**
          * Check if this is a conditional field
          *
@@ -135,64 +132,6 @@ if ( ! class_exists( "rsssl_field" ) ) {
             }
 
             return false;
-        }
-
-        /**
-         * Check if this is a multiple field
-         *
-         * @param $fieldname
-         *
-         * @return bool
-         */
-
-        public function is_multiple_field( $fieldname ) {
-            $fields = RSSSL_LE()->config->fields();
-            if ( isset( $fields[ $fieldname ]['type'] )
-                && ( $fields[ $fieldname ]['type'] == 'thirdparties' )
-            ) {
-                return true;
-            }
-            if ( isset( $fields[ $fieldname ]['type'] )
-                && ( $fields[ $fieldname ]['type'] == 'processors' )
-            ) {
-                return true;
-            }
-
-            return false;
-        }
-
-
-        public function save_multiple( $fieldnames ) {
-            if ( ! current_user_can( 'manage_options' ) ) {
-                return;
-            }
-
-            $fields = RSSSL_LE()->config->fields();
-            foreach ( $fieldnames as $fieldname => $saved_fields ) {
-
-                if ( ! isset( $fields[ $fieldname ] ) ) {
-                    return;
-                }
-
-                $page           = $fields[ $fieldname ]['source'];
-                $options        = get_option( 'rsssl_options_' . $page );
-                $multiple_field = $this->get_value( $fieldname, array() );
-
-
-                foreach ( $saved_fields as $key => $value ) {
-                    $value = is_array( $value )
-                        ? array_map( 'sanitize_text_field', $value )
-                        : sanitize_text_field( $value );
-                    //store the fact that this value was saved from the back-end, so should not get overwritten.
-                    $value['saved_by_user'] = true;
-                    $multiple_field[ $key ] = $value;
-                }
-
-                $options[ $fieldname ] = $multiple_field;
-                if ( ! empty( $options ) ) {
-                    update_option( 'rsssl_options_' . $page, $options );
-                }
-            }
         }
 
         /**
@@ -238,62 +177,10 @@ if ( ! class_exists( "rsssl_field" ) ) {
             $options[ $fieldname ] = $fieldvalue;
 
             if ( ! empty( $options ) ) {
-                update_option( 'rsssl_options_' . $page, $options );
+                update_option( 'rsssl_options_' . $page, $options, false );
             }
 
             do_action( "rsssl_after_save_" . $page . "_option", $fieldname, $fieldvalue, $prev_value, $type );
-        }
-
-
-        public function add_multiple_field( $fieldname, $cookie_type = false ) {
-            if ( ! current_user_can( 'manage_options' ) ) {
-                return;
-            }
-
-            $fields = RSSSL_LE()->config->fields();
-
-            $page    = $fields[ $fieldname ]['source'];
-            $options = get_option( 'rsssl_options_' . $page );
-
-            $multiple_field = $this->get_value( $fieldname, array() );
-            if ( $fieldname === 'used_cookies' && ! $cookie_type ) {
-                $cookie_type = 'custom_' . time();
-            }
-            if ( ! is_array( $multiple_field ) ) {
-                $multiple_field = array( $multiple_field );
-            }
-
-            if ( $cookie_type ) {
-                //prevent key from being added twice
-                foreach ( $multiple_field as $index => $cookie ) {
-                    if ( $cookie['key'] === $cookie_type ) {
-                        return;
-                    }
-                }
-
-                //don't add field if it was deleted previously
-                $deleted_cookies = get_option( 'rsssl_deleted_cookies' );
-                if ( ( $deleted_cookies
-                    && in_array( $cookie_type, $deleted_cookies ) )
-                ) {
-                    return;
-                }
-
-                //don't add default wordpress cookies
-                if ( strpos( $cookie_type, 'wordpress_' ) !== false ) {
-                    return;
-                }
-
-                $multiple_field[] = array( 'key' => $cookie_type );
-            } else {
-                $multiple_field[] = array();
-            }
-
-            $options[ $fieldname ] = $multiple_field;
-
-            if ( ! empty( $options ) ) {
-                update_option( 'rsssl_options_' . $page, $options );
-            }
         }
 
         /**
@@ -309,29 +196,14 @@ if ( ! class_exists( "rsssl_field" ) ) {
             }
 
             switch ( $type ) {
-                case 'colorpicker':
-                    return sanitize_hex_color( $value );
                 case 'text':
                     return sanitize_text_field( $value );
-                case 'multicheckbox':
-                    if ( ! is_array( $value ) ) {
-                        $value = array( $value );
-                    }
-
-                    return array_map( 'sanitize_text_field', $value );
-                case 'phone':
-                    $value = sanitize_text_field( $value );
-
-                    return $value;
                 case 'email':
                     return sanitize_email( $value );
                 case 'url':
                     return esc_url_raw( $value );
                 case 'number':
                     return intval( $value );
-                case 'css':
-                case 'javascript':
-                    return  $value ;
                 case 'editor':
                 case 'textarea':
 	            case 'password':
@@ -574,40 +446,6 @@ if ( ! class_exists( "rsssl_field" ) ) {
                 type="email"
                 value="<?php echo esc_html( $value ) ?>"
                 name="<?php echo esc_html( $fieldname ) ?>"
-            >
-            <?php echo $check_icon ?>
-            <?php echo $times_icon ?>
-
-            <?php do_action( 'rsssl_after_field', $args ); ?>
-
-            <?php
-        }
-
-        public function phone( $args )
-        {
-            if ( ! $this->show_field( $args ) ) {
-                return;
-            }
-
-            $fieldname = 'rsssl_' . $args['fieldname'];
-            $value     = $this->get_value( $args['fieldname'], $args['default'] );
-            $required = $args['required'] ? 'required' : '';
-            $is_required = $args['required'] ? 'is-required' : '';
-            $check_icon = rsssl_icon('check', 'success');
-            $times_icon = rsssl_icon('check', 'failed');
-
-            ?>
-
-            <?php do_action( 'rsssl_before_label', $args ); ?>
-            <?php do_action( 'rsssl_label_html' , $args );?>
-            <?php do_action( 'rsssl_after_label', $args ); ?>
-
-            <input autocomplete="tel" <?php echo $required ?>
-                   class="validation <?php echo $is_required ?>"
-                   placeholder="<?php echo esc_html( $args['placeholder'] ) ?>"
-                   type="text"
-                   value="<?php echo esc_html( $value ) ?>"
-                   name="<?php echo esc_html( $fieldname ) ?>"
             >
             <?php echo $check_icon ?>
             <?php echo $times_icon ?>
@@ -917,115 +755,6 @@ if ( ! class_exists( "rsssl_field" ) ) {
             <?php
         }
 
-        /*
-         * Show field with editor
-         *
-         *
-         * */
-
-        public function editor( $args, $step = '' ) {
-            $fieldname     = 'rsssl_' . $args['fieldname'];
-            $args['first'] = true;
-            $media         = $args['media'] ? true : false;
-
-            $value = $this->get_value( $args['fieldname'], $args['default'] );
-
-            if ( ! $this->show_field( $args ) ) {
-                return;
-            }
-
-            ?>
-
-            <?php do_action( 'rsssl_before_label', $args ); ?>
-            <?php do_action( 'rsssl_label_html' , $args );?>
-            <?php do_action( 'rsssl_after_label', $args ); ?>
-
-            <?php
-            $settings = array(
-                'media_buttons' => $media,
-                'editor_height' => 300,
-                // In pixels, takes precedence and has no default value
-                'textarea_rows' => 15,
-            );
-            wp_editor( $value, $fieldname, $settings ); ?>
-            <?php do_action( 'rsssl_after_field', $args ); ?>
-            <?php
-        }
-
-        public
-        function javascript(
-            $args
-        ) {
-            $fieldname = 'rsssl_' . $args['fieldname'];
-            $value     = $this->get_value( $args['fieldname'],
-                $args['default'] );
-            if ( ! $this->show_field( $args ) ) {
-                return;
-            }
-            ?>
-
-            <?php do_action( 'rsssl_before_label', $args ); ?>
-            <?php do_action( 'rsssl_label_html' , $args );?>
-            <?php do_action( 'rsssl_after_label', $args ); ?>
-            <div id="<?php echo esc_html( $fieldname ) ?>editor"
-                 style="height: 200px; width: 100%"><?php echo $value ?></div>
-            <?php do_action( 'rsssl_after_field', $args ); ?>
-            <script>
-                var <?php echo esc_html( $fieldname )?> =
-                ace.edit("<?php echo esc_html( $fieldname )?>editor");
-                <?php echo esc_html( $fieldname )?>.setTheme("ace/theme/monokai");
-                <?php echo esc_html( $fieldname )?>.session.setMode("ace/mode/javascript");
-                jQuery(document).ready(function ($) {
-                    var textarea = $('textarea[name="<?php echo esc_html( $fieldname )?>"]');
-                    <?php echo esc_html( $fieldname )?>.
-                    getSession().on("change", function () {
-                        textarea.val(<?php echo esc_html( $fieldname )?>.getSession().getValue()
-                    )
-                    });
-                });
-            </script>
-            <textarea style="display:none"
-                      name="<?php echo esc_html( $fieldname ) ?>"><?php echo $value ?></textarea>
-            <?php
-        }
-
-        public
-        function css(
-            $args
-        ) {
-            $fieldname = 'rsssl_' . $args['fieldname'];
-
-            $value = $this->get_value( $args['fieldname'], $args['default'] );
-            if ( ! $this->show_field( $args ) ) {
-                return;
-            }
-            ?>
-
-            <?php do_action( 'rsssl_before_label', $args ); ?>
-            <?php do_action( 'rsssl_label_html' , $args );?>
-            <?php do_action( 'rsssl_after_label', $args ); ?>
-            <div id="<?php echo esc_html( $fieldname ) ?>editor"
-                 style="height: 290px; width: 100%"><?php echo $value ?></div>
-            <?php do_action( 'rsssl_after_field', $args ); ?>
-            <script>
-                var <?php echo esc_html( $fieldname )?> =
-                ace.edit("<?php echo esc_html( $fieldname )?>editor");
-                <?php echo esc_html( $fieldname )?>.setTheme("ace/theme/monokai");
-                <?php echo esc_html( $fieldname )?>.session.setMode("ace/mode/css");
-                jQuery(document).ready(function ($) {
-                    var textarea = $('textarea[name="<?php echo esc_html( $fieldname )?>"]');
-                    <?php echo esc_html( $fieldname )?>.
-                    getSession().on("change", function () {
-                        textarea.val(<?php echo esc_html( $fieldname )?>.getSession().getValue()
-                    )
-                    });
-                });
-            </script>
-            <textarea style="display:none"
-                      name="<?php echo esc_html( $fieldname ) ?>"><?php echo $value ?></textarea>
-            <?php
-        }
-
         /**
          * Check if a step has any fields
          * @param string $page
@@ -1084,9 +813,6 @@ if ( ! class_exists( "rsssl_field" ) ) {
                     case 'button':
                         $this->button( $args );
                         break;
-                    case 'upload':
-                        $this->upload( $args );
-                        break;
                     case 'url':
                         $this->url( $args );
                         break;
@@ -1102,26 +828,14 @@ if ( ! class_exists( "rsssl_field" ) ) {
                     case 'radio':
                         $this->radio( $args );
                         break;
-                    case 'javascript':
-                        $this->javascript( $args );
-                        break;
-                    case 'css':
-                        $this->css( $args );
-                        break;
                     case 'email':
                         $this->email( $args );
-                        break;
-                    case 'phone':
-                        $this->phone( $args );
                         break;
                     case 'number':
                         $this->number( $args );
                         break;
                     case 'notice':
                         $this->notice( $args );
-                        break;
-                    case 'editor':
-                        $this->editor( $args, $step );
                         break;
                     case 'label':
                         $this->label( $args );
@@ -1255,39 +969,6 @@ if ( ! class_exists( "rsssl_field" ) ) {
             <?php do_action( 'rsssl_after_field', $args ); ?>
             <?php
         }
-
-        /**
-         * Upload field
-         *
-         * @param $args
-         *
-         * @echo string $html
-         */
-
-        public
-        function upload(
-            $args
-        ) {
-            if ( ! $this->show_field( $args ) ) {
-                return;
-            }
-
-            ?>
-            <?php do_action( 'rsssl_before_label', $args ); ?>
-            <?php do_action( 'rsssl_label_html' , $args );?>
-            <?php do_action( 'rsssl_after_label', $args ); ?>
-
-            <input type="file" type="submit" name="rsssl-upload-file"
-                   value="<?php echo esc_html( $args['label'] ) ?>">
-            <input <?php if ( $args['disabled'] )
-                echo "disabled" ?> class="button" type="submit"
-                                   name="<?php echo $args['action'] ?>"
-                                   value="<?php _e( 'Start',
-                                       'really-simple-ssl' ) ?>">
-            <?php do_action( 'rsssl_after_field', $args ); ?>
-            <?php
-        }
-
 
         public function save_button() {
             $button_text = __( "Save", 'really-simple-ssl' );

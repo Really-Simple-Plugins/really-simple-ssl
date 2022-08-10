@@ -13,7 +13,7 @@ function rsssl_cloudways_install_ssl(){
 		$cloudways = new rsssl_Cloudways();
 		$response =  $cloudways->installSSL($domains);
 		if ($response->status === 'success') {
-			update_option('rsssl_le_certificate_installed_by_rsssl', 'cloudways');
+			update_option('rsssl_le_certificate_installed_by_rsssl', 'cloudways', false);
 		}
 		return $response;
 	} else {

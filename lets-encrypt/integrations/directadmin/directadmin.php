@@ -122,7 +122,7 @@ class rsssl_directadmin {
 					$status = 'success';
 					$action = 'finalize';
 					$message = sprintf(__("SSL successfully installed on %s","really-simple-ssl"), $domain);
-					update_option( 'rsssl_le_certificate_installed_by_rsssl', 'directadmin' );
+					update_option( 'rsssl_le_certificate_installed_by_rsssl', 'directadmin', false );
 					delete_option( 'rsssl_installation_error' );
 				}
 			}
@@ -130,7 +130,7 @@ class rsssl_directadmin {
 
 		} catch ( Exception $e ) {
 			error_log( print_r( $e, true ) );
-			update_option( 'rsssl_installation_error', 'directadmin' );
+			update_option( 'rsssl_installation_error', 'directadmin', false );
 			$status  = 'warning';
 			$action  = 'continue';
 			$message = $e->getMessage();

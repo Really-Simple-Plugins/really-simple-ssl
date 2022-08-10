@@ -146,7 +146,7 @@ class rsssl_letsencrypt_handler {
 			foreach ($fields as $fieldname => $field ) {
 				unset($options[$fieldname]);
 			}
-			update_option( 'rsssl_options_lets-encrypt', $options );
+			update_option( 'rsssl_options_lets-encrypt', $options, false );
 		}
 	}
 
@@ -397,7 +397,7 @@ class rsssl_letsencrypt_handler {
 					    public function write( Order $order, string $identifier, string $digest ): bool {
 						    $tokens                = get_option( 'rsssl_le_dns_tokens', array() );
 						    $tokens[ $identifier ] = $digest;
-						    update_option( "rsssl_le_dns_tokens", $tokens );
+						    update_option( "rsssl_le_dns_tokens", $tokens, false );
 						    rsssl_progress_add( 'dns-verification' );
 
 						    //return false, as we will continue later on.
@@ -492,7 +492,7 @@ class rsssl_letsencrypt_handler {
 
 	public function verify_dns(){
 		if (rsssl_is_ready_for('generation')) {
-			update_option('rsssl_le_dns_records_verified', false);
+			update_option('rsssl_le_dns_records_verified', false, false );
 
 			$tokens = get_option('rsssl_le_dns_tokens');
 			if ( !$tokens) {
@@ -514,7 +514,7 @@ class rsssl_letsencrypt_handler {
 							'continue',
 							sprintf(__('Successfully verified DNS records', "really-simple-ssl"), "_acme-challenge.$identifier")
 						);
-						update_option('rsssl_le_dns_records_verified', true);
+						update_option('rsssl_le_dns_records_verified', true, false );
 					} else {
 						$response = new RSSSL_RESPONSE(
 							'error',
@@ -687,16 +687,16 @@ class rsssl_letsencrypt_handler {
 
 							    if ( file_exists( $pathToPrivateKey ) ) {
 								    $success_private = true;
-								    update_option( 'rsssl_private_key_path', $pathToPrivateKey );
+								    update_option( 'rsssl_private_key_path', $pathToPrivateKey, false );
 							    }
 							    if ( file_exists( $pathToCertificate ) ) {
 								    $success_cert = true;
-								    update_option( 'rsssl_certificate_path', $pathToCertificate );
+								    update_option( 'rsssl_certificate_path', $pathToCertificate, false );
 							    }
 
 							    if ( file_exists( $pathToIntermediate ) ) {
 								    $success_intermediate = true;
-								    update_option( 'rsssl_intermediate_path', $pathToIntermediate );
+								    update_option( 'rsssl_intermediate_path', $pathToIntermediate, false );
 							    }
 
 							    if ( ! $success_cert || ! $success_private || ! $success_intermediate ) {
@@ -745,7 +745,7 @@ class rsssl_letsencrypt_handler {
 
 	    if ( $bundle_completed ){
 		    rsssl_progress_add('generation');
-		    update_option('rsssl_le_certificate_generated_by_rsssl', true);
+		    update_option('rsssl_le_certificate_generated_by_rsssl', true, false);
 		    delete_option("rsssl_le_start_renewal");
 	    } else {
 		    rsssl_progress_remove('generation');
@@ -1319,7 +1319,7 @@ class rsssl_letsencrypt_handler {
 		if ( get_option('rsssl_create_folders_in_root') ) {
 			if ( !get_option('rsssl_ssl_dirname') ) {
 				$token = str_shuffle ( time() );
-				update_option('rsssl_ssl_dirname', $token );
+				update_option('rsssl_ssl_dirname', $token, false );
 			}
 			if ( ! file_exists( $root_directory . get_option('rsssl_ssl_dirname') ) ) {
 				mkdir( $root_directory . get_option('rsssl_ssl_dirname') );
@@ -1353,7 +1353,7 @@ class rsssl_letsencrypt_handler {
 		    $has_writing_permissions = $this->directory_has_writing_permissions( $challenge_dir );
 		    //we're guessing that if the challenge dir has writing permissions, the new dir will also have it.
 		    if ( RSSSL()->rsssl_server->uses_htaccess() && $has_writing_permissions ) {
-			    update_option('rsssl_create_folders_in_root', true);
+			    update_option('rsssl_create_folders_in_root', true, false);
 		    }
 			return false;
 		}
@@ -1431,7 +1431,7 @@ class rsssl_letsencrypt_handler {
 
 		$htaccess = file_get_contents( $path );
 		if ( strpos($htaccess, 'deny from all') !== FALSE ) {
-			update_option('rsssl_htaccess_file_set_'.$type, true);
+			update_option('rsssl_htaccess_file_set_'.$type, true, false);
 			return;
 		}
 	}
@@ -1566,7 +1566,7 @@ class rsssl_letsencrypt_handler {
 					//make sure we only set this value once, during first setup.
 					if ( !get_option('rsssl_initial_alias_domain_value_set') ) {
 						RSSSL_LE()->field->save_field('rsssl_include_alias', true);
-						update_option('rsssl_initial_alias_domain_value_set', true);
+						update_option('rsssl_initial_alias_domain_value_set', true, false);
 					}
 					$status  = 'success';
 					$action  = 'continue';

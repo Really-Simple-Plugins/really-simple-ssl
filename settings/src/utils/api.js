@@ -40,12 +40,15 @@ export const getBlock = (block) => {
 	return axios.get(rsssl_settings.site_url+'reallysimplessl/v1/block/'+block, config);
 };
 
-export const runTest = (test, state) => {
+export const runTest = (test, state, data ) => {
 	let config = {
 		headers: {
 			'X-WP-Nonce': rsssl_settings.nonce,
 		}
 	}
-	return axios.get(rsssl_settings.site_url+'reallysimplessl/v1/tests/'+test+'?state='+state, config);
+	if (data) {
+		data = encodeURIComponent(JSON.stringify(data));
+	}
+	return axios.get(rsssl_settings.site_url+'reallysimplessl/v1/tests/'+test+'?state='+state+'&data='+data, config);
 };
 

@@ -50,7 +50,7 @@ if (!function_exists('rsssl_le_activation_check')) {
 	 */
 	function rsssl_le_activation_check()
 	{
-		update_option("rsssl_activated_plugin", true);
+		update_option("rsssl_activated_plugin", true, false);
 	}
 	register_activation_hook( __FILE__, 'rsssl_le_activation_check' );
 }
@@ -113,7 +113,7 @@ class REALLY_SIMPLE_SSL
 		define('rsssl_path', trailingslashit(plugin_dir_path(__FILE__)));
         define('rsssl_template_path', trailingslashit(plugin_dir_path(__FILE__)).'grid/templates/');
         define('rsssl_plugin', plugin_basename(__FILE__));
-        define('rsssl_add_on_version_requirement', '5.1');
+        define('rsssl_add_on_version_requirement', '6.0');
         if (!defined('rsssl_file') ){
             define('rsssl_file', __FILE__);
         }
@@ -128,7 +128,6 @@ class REALLY_SIMPLE_SSL
 		require_once(rsssl_path . 'class-front-end.php');
 		require_once(rsssl_path . 'functions.php');
 		require_once(rsssl_path . 'class-mixed-content-fixer.php');
-
 		$wpcli = defined( 'WP_CLI' ) && WP_CLI;
 		if ( $wpcli ) {
 			require_once(rsssl_path . 'class-rsssl-wp-cli.php');
@@ -163,7 +162,7 @@ class REALLY_SIMPLE_SSL
 			require_once( rsssl_path . 'lets-encrypt/cron.php' );
 		}
 
-		require_once(rsssl_path . '/security/integrations.php');
+		//require_once(rsssl_path . '/security/integrations.php');
 
 	}
 
@@ -234,6 +233,7 @@ add_action('plugins_loaded', 'RSSSL', 8);
 
 if ( !function_exists('rsssl_is_logged_in_rest')){
 	function rsssl_is_logged_in_rest(){
-		return isset($_SERVER['HTTP_X_WP_NONCE']) && wp_verify_nonce($_SERVER['HTTP_X_WP_NONCE'], 'wp_rest');
+		$is_settings_page = isset($_SERVER['REQUEST_URI']) && strpos($_SERVER['REQUEST_URI'], 'wp-json/reallysimplessl/v1/')!==false ;
+		return $is_settings_page && isset($_SERVER['HTTP_X_WP_NONCE']) && wp_verify_nonce($_SERVER['HTTP_X_WP_NONCE'], 'wp_rest');
 	}
 }
