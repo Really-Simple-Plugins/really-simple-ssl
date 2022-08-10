@@ -2,12 +2,13 @@
 defined( 'ABSPATH' ) or die( "you do not have access to this page!" );
 
 /**
- * @return string
  * Disable indexing
+ * @param array $rules
+ * @return []
  */
 
 function rsssl_disable_indexing_rules( $rules ) {
-	$rules .=  "\n" . 'Options -Indexes';
+	$rules[] = ['rules' => "\n" . 'Options -Indexes', 'identifier' => 'Options -Indexes'];
 	return $rules;
 }
 add_filter('rsssl_htaccess_security_rules', 'rsssl_disable_indexing_rules');

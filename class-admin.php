@@ -1585,6 +1585,7 @@ class rsssl_admin extends rsssl_front_end
 
 	        $this->remove_wpconfig_edit();
 	        $this->removeHtaccessEdit();
+            rsssl_remove_htaccess_security_edits();
         }
     }
 
@@ -1859,8 +1860,8 @@ class rsssl_admin extends rsssl_front_end
 
     public function removeHtaccessEdit()
     {
-        if (file_exists($this->htaccess_file()) && is_writable($this->htaccess_file())) {
-            $htaccess = file_get_contents($this->htaccess_file());
+        if ( file_exists($this->htaccess_file()) && is_writable($this->htaccess_file()) ) {
+            $htaccess = file_get_contents( $this->htaccess_file() );
 
             //if multisite, per site activation and more than one blog remaining on ssl, remove condition for this site only
             //the domain list has been rebuilt already, so current site is already removed.

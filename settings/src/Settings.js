@@ -7,6 +7,7 @@ import {
     Button,
 } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
+import * as rsssl_api from "./utils/api";
 
 /**
  * Renders the selected settings

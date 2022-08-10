@@ -2,13 +2,15 @@
 
 /**
  * Disable TRACE & STACK HTTP methods
+ * @param array $rules
  *
- * @return bool
+ * @return []
  *
  */
 function rsssl_disable_http_methods_rules($rules)
 {
-	$rules .= "\n" . "RewriteCond %{REQUEST_METHOD} ^(TRACE|STACK)" . "\n" ."RewriteRule .* - [F]";
+	$rule = "\n" . "RewriteCond %{REQUEST_METHOD} ^(TRACE|STACK)" . "\n" ."RewriteRule .* - [F]";
+	$rules[] = ['rules' => $rule, 'identifier' => 'TRACE|STACK'];
 	return $rules;
 }
 add_filter('rsssl_htaccess_security_rules', 'rsssl_disable_http_methods_rules');
@@ -57,3 +59,9 @@ function rsssl_wrap_http_methods_code_nginx() {
 	//if ( $request_method !~ ^(GET|POST|HEAD)$ ) {
 	//	    return 405;
 }
+
+//if ($_SERVER['REQUEST_METHOD'] === 'GET') {
+//	header('Method Not Allowed', true, 405);
+//	echo "GET method requests are not accepted for this resource";
+//	exit;
+//}
