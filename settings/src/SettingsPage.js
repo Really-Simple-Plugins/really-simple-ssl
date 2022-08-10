@@ -134,7 +134,7 @@ class SettingsPage extends Component {
         } = this.state;
         let saveFields = [];
         for (const field of fields){
-            if (in_array(field.id, this.changedFields)){
+            if ( in_array(field.id, this.changedFields) ){
                 saveFields.push(field);
             }
         }

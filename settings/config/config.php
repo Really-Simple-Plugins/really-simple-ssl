@@ -350,7 +350,7 @@ function rsssl_fields( $load_values = true ){
 			'id'          => 'change_debug_log_location',
 			'menu_id'     => 'hardening',
 			'type'        => 'checkbox',
-			'label'       => rsssl_get_debug_log_label(),
+			'label'       => __( "Change debug.log location", 'really-simple-ssl' ),
 			'disabled'    => false,
 			'default'     => false,
 		],
@@ -827,21 +827,6 @@ function rsssl_is_user_registration_enabled() {
     }
 
     return false;
-}
-
-function rsssl_get_debug_log_label() {
-    if ( !rsssl_debug_log_in_default_location() ) {
-	    $matches = rsssl_get_debug_log_declaration();
-	    // If str contains true, location is default
-	    if ( $matches && isset($matches[0]) ) {
-		    $location = $matches[0];
-	    }
-        $label = __( "Change debug.log location", 'really-simple-ssl' ) . ". " . __("New location: ", 'really-simple-ssl') . $location;
-    } else{
-        $label = __( "Change debug.log location", 'really-simple-ssl' );
-    }
-
-    return $label;
 }
 
 /**

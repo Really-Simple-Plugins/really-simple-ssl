@@ -511,7 +511,6 @@ function rsssl_sanitize_permissions_policy( $value, $type, $field_name ){
 			if ( is_array($row) ) {
 				foreach ($row as $column_index => $row_value ) {
 					if ($column_index==='id' && $row_value===false) {
-                        error_log("unset ".$column_index);
 						unset($value[$column_index]);
 					}
 				}
@@ -528,8 +527,6 @@ function rsssl_sanitize_permissions_policy( $value, $type, $field_name ){
 
 			foreach ( $row as $col_index => $col_value ){
 				if ( !isset( $possible_keys[$col_index])) {
-					error_log("unset ".$row_index.' '.$column_index);
-
 					unset($value[$row_index][$col_index]);
 				} else {
 					$datatype = $possible_keys[$col_index];

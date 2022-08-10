@@ -191,34 +191,49 @@ function rsssl_is_debug_log_enabled() {
 	return false;
 }
 
+function rsssl_get_debug_log_value(){
+	$wpconfig_path = rsssl_find_wp_config_path();
+	if ( !$wpconfig_path ) return false;
+
+	$wpconfig      = file_get_contents( $wpconfig_path );
+
+	// Get WP_DEBUG_LOG declaration
+	$regex = "/^\s*define\([ ]{0,2}[\'|\"]WP_DEBUG_LOG[\'|\"][ ]{0,2},[ ]{0,2}(.*)[ ]{0,2}\);/m";
+	preg_match( $regex, $wpconfig, $matches );
+	if ($matches && isset($matches[1]) ){
+		return $matches[1];
+	} else {
+		return 'true';
+	}
+}
 /**
  * Check if default.log is in default location
  * @return bool
  */
 function rsssl_debug_log_in_default_location() {
+	$debug_log_value = rsssl_get_debug_log_value();
 
-    $matches = rsssl_get_debug_log_declaration();
-    // If str contains true, location is default
-    if ( $matches && strpos($matches[0], 'true' ) !== false ) {
+	error_log("debug value ".$debug_log_value);
+
+	// If str contains true, location is default
+    if ( trim($debug_log_value) === 'true' ) {
+		error_log("in default location");
         return true;
     }
-
+	error_log("not in default location");
     return false;
 }
 
 /**
- * Get the debug.log declaration from wp-config
- * @return mixed
+ * Check if debug location is not default, and if that is done by RSSSL>
+ * @return bool
  */
-function rsssl_get_debug_log_declaration() {
-	$wpconfig_path = rsssl_find_wp_config_path();
-	$wpconfig      = file_get_contents( $wpconfig_path );
-
-	// Get WP_DEBUG_LOG declaration
-	$regex = "/(define)(.*WP_DEBUG_LOG.*)(?=;)/m";
-	preg_match( $regex, $wpconfig, $matches );
-
-	return $matches;
+function rsssl_changed_debug_log_location_by_rsssl(){
+	if ( !rsssl_debug_log_in_default_location() && rsssl_get_value('change_debug_log_location') ){
+		return true;
+	} else {
+		return false;
+	}
 }
 
 /**

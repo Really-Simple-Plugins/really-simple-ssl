@@ -53,7 +53,5 @@ function rsssl_remove_from_deactivation_list($plugin){
  * @return bool
  */
 function rsssl_is_in_deactivation_list( $plugin ){
-	x_log("deactivation list");
-	x_log(get_option('rsssl_deactivate_list',[]));
 	return in_array($plugin, get_option('rsssl_deactivate_list',[]) );
 }
