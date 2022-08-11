@@ -133,7 +133,6 @@ function rsssl_general_security_notices( $notices ) {
 			),
 		),
 	);
-
 	return $notices;
 }
 add_filter('rsssl_notices', 'rsssl_general_security_notices');
