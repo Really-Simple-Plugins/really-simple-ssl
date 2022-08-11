@@ -222,12 +222,17 @@ function rsssl_debug_log_in_default_location() {
 /**
  * Check if debug location is not default, and if that is done by RSSSL>
  * @return bool
- */
-function rsssl_changed_debug_log_location_by_rsssl(){
-	if ( !rsssl_debug_log_in_default_location() && rsssl_get_value('change_debug_log_location') ){
-		return true;
-	} else {
+*/
+function rsssl_enabled_by_rsssl($option_name, $test){
+	$test_result = false;
+	if (function_exists($test)) {
+		$test_result = $test();
+	}
+
+	if ( $test_result && !rsssl_get_value('change_debug_log_location') ) {
 		return false;
+	} else {
+		return true;
 	}
 }
 
@@ -305,39 +310,4 @@ function rsssl_directory_indexing_allowed() {
 	} else {
 		return false;
 	}
-
-}
-
-/**
- * Check if disable indexing has been enabled by user and .htaccess is not writable
- * @return bool
- */
-function rsssl_indexing_disabled_by_user_htaccess_not_writable() {
-
-	if ( rsssl_uses_htaccess()
-	     && rsssl_directory_indexing_allowed()
-	     && rsssl_get_option('disable_indexing') !== false
-	     && file_exists( RSSSL()->really_simple_ssl->htaccess_file() )
-	     && ! is_writable( RSSSL()->really_simple_ssl->htaccess_file() )
-	) {
-		return true;
-	}
-
-	return false;
-}
-
-/**
- * Check if indexing is enabled and site uses NGINX
- * @return bool
- */
-
-function rsssl_indexing_enabled_nginx() {
-	if ( rsssl_directory_indexing_allowed()
-	     && rsssl_get_option('disable_indexing') !== false
-		 && rsssl_get_server() === 'nginx'
-	) {
-		return true;
-	}
-
-	return false;
 }

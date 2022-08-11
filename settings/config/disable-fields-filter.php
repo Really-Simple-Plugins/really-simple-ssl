@@ -10,6 +10,10 @@ defined('ABSPATH') or die();
  */
 
 function rsssl_disable_fields($field, $field_id){
+	/**
+	 * If a feature is already enabled, but not by RSSSL, we can simply check for that feature, and if the option in RSSSL is active.
+	 * We set is as true, but disabled. Because our react interface only updates changed option, and this option never changes, this won't get set to true in the database.
+	 */
 	if ( $field_id==='change_debug_log_location' ){
 		if ( !rsssl_debug_log_in_default_location()) {
 			if (!$field['value'] ) {
@@ -24,8 +28,8 @@ function rsssl_disable_fields($field, $field_id){
 		}
 	}
 
-//	if ( $field_id==='disable_indexing' ){
-//		if ( !rsssl_directory_indexing_allowed()) {
+	if ( $field_id==='disable_indexing' ){
+//		if ( !rsssl_directory_indexing_allowed() ) {
 //			if ( !$field['value'] ) {
 //				$field['value'] = true;
 //				$field['disabled'] = true;
@@ -35,7 +39,7 @@ function rsssl_disable_fields($field, $field_id){
 //				];
 //			}
 //		}
-//	}
+	}
 
 	return $field;
 }
