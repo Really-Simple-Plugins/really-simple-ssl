@@ -75,11 +75,3 @@ function rsssl_show_notices_for_mismatches($notices) {
     }
 	return $notices;
 }
-
-/**
- * When disable debug log location is disabled, revert back
- */
-if ( get_site_option('rsssl_debug_log_suffix') && !rsssl_get_option('change_debug_log_location') && !rsssl_debug_log_in_default_location() && rsssl_is_debug_log_enabled() ) {
-	$file = rsssl_path . 'security/wordpress/debug-log.php';
-	require_once($file);
-}
