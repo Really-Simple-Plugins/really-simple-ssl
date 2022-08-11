@@ -32,6 +32,8 @@ function rsssl_menu( $group_id = 'settings' ){
 						[
 							'id' => 'mixedcontentscan',
 							'title' => __('Mixed Content Scan', 'really-simple-ssl'),
+							'premium' => true,
+							'premium_text' => __("Learn more about %HSTS%s", 'really-simple-ssl'),
 						],
 					],
 					//example of submenu
@@ -69,7 +71,7 @@ function rsssl_menu( $group_id = 'settings' ){
 					'groups' => [
 						[
 							'id' => 'hsts',
-							'premium' => false,
+							'premium' => true,
 							'premium_text' => __("Learn more about %HSTS%s", 'really-simple-ssl'),
 							'upgrade' => 'https://really-simple-ssl.com/pro',
 							'title' => __('HSTS ', 'really-simple-ssl'),
@@ -150,7 +152,6 @@ function rsssl_menu( $group_id = 'settings' ){
 		],
 	];
 
-
 	$menu_items = apply_filters('rsssl_menu', $menu_items);
 	foreach ($menu_items as $index => $menu_item ) {
 		if ($menu_item['id']===$group_id) {
@@ -200,6 +201,11 @@ function rsssl_migrate_settings($prev_version) {
 	}
 //	//security_headers_method
 //
+
+	//premium
+	$headers_method = is_multisite() ? get_site_option( 'rsssl_security_headers_method' ) : get_option( 'rsssl_security_headers_method' );
+	rsssl_update_option('security_headers_method', $headers_method);
+
 }
 add_action('rsssl_upgrade', 'rsssl_migrate_settings', 10, 1);
 
@@ -620,6 +626,26 @@ function rsssl_fields( $load_values = true ){
 			'default'     => false,
 		],
 		[
+			'id'          => 'hsts_max_age',
+			'menu_id'     => 'hsts',
+			'group_id'    => 'hsts',
+			'type'        => 'select',
+			'options'     => [
+				'86400' => __('One day (for testing only)', 'really-simple-ssl-pro'),
+				'31536000' => __('One year', 'really-simple-ssl-pro'),
+				'63072000' => __('Two years (required for preload)', 'really-simple-ssl-pro'),
+			],
+			'label'       => __("Choose the max-age for HSTS", "really-simple-ssl-pro"),
+			'react_conditions' => [
+				'relation' => 'AND',
+				[
+					'hsts' => 1,
+				]
+			],
+			'disabled'    => false,
+			'default'     => '63072000',
+		],
+		[
 			'id'          => 'hsts_preload',
 			'menu_id'     => 'hsts',
 			'group_id'    => 'hsts',
@@ -628,26 +654,8 @@ function rsssl_fields( $load_values = true ){
 			'react_conditions' => [
 				'relation' => 'AND',
 				[
-					'hsts' => 1,
-				]
-			],
-			'disabled'    => false,
-			'default'     => false,
-		],
-		[
-			'id'          => 'hsts_max_age',
-			'menu_id'     => 'hsts',
-			'group_id'    => 'hsts',
-			'type'        => 'select',
-			'options'     => [
-				'31536000' => __('31536000', 'really-simple-ssl-pro'),
-				'63072000' => __('63072000', 'really-simple-ssl-pro'),
-			],
-			'label'       => __("Choose the max-age for HSTS", "really-simple-ssl-pro"),
-			'react_conditions' => [
-				'relation' => 'AND',
-				[
-					'hsts' => 1,
+					'hsts_max_age' => '63072000',
+					'hsts_subdomains' => 1,
 				]
 			],
 			'disabled'    => false,
