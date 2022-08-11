@@ -29,16 +29,16 @@ function rsssl_disable_fields($field, $field_id){
 	}
 
 	if ( $field_id==='disable_indexing' ){
-//		if ( !rsssl_directory_indexing_allowed() ) {
-//			if ( !$field['value'] ) {
-//				$field['value'] = true;
-//				$field['disabled'] = true;
-//				$field['help'] = [
-//					'label' => 'default',
-//					'text' => __( "Directory browsing is is already disabled.", 'really-simple-ssl' ).$location,
-//				];
-//			}
-//		}
+		if ( !rsssl_directory_indexing_allowed() ) {
+			if ( !$field['value'] ) {
+				$field['value'] = true;
+				$field['disabled'] = true;
+				$field['help'] = [
+					'label' => 'default',
+					'text' => __( "Directory browsing is is already disabled.", 'really-simple-ssl' ).$location,
+				];
+			}
+		}
 	}
 
 	return $field;
