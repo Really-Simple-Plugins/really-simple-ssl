@@ -281,14 +281,13 @@ function rsssl_fields( $load_values = true ){
             'disabled'    => false,
             'default'     => false,
         ],
-
         [
             'id'          => 'disable_anyone_can_register',
             'menu_id'     => 'hardening',
             'type'        => 'checkbox',
             'label'       => __( "Disable \"anyone can register\"", 'really-simple-ssl' ),
             'disabled'    => false,
-            'default'     => rsssl_is_user_registration_enabled(),
+            'default'     => false,
         ],
         [
             'id'          => 'xmlrpc',
@@ -362,34 +361,34 @@ function rsssl_fields( $load_values = true ){
             'disabled'    => false,
             'default'     => false,
         ],
-	    [
-            'id'          => 'placeholder_setting_id',
-            'menu_id'     => 'code_execution_uploads',
-            'type'        => 'checkbox',
-            'label'       => __( "Placeholder Setting", 'really-simple-ssl' ),
-            'disabled'    => false,
-            'default'     => false,
-            'react_conditions' => [
-	            'relation' => 'AND',
-	            [
-		            'disable_application_passwords' => 1,
-	            ]
-            ],
-        ],
-	    [
-		    'id'          => 'placeholder_setting_id_2',
-		    'menu_id'     => 'empty_menu_item',
-		    'type'        => 'checkbox',
-		    'label'       => __( "Placeholder Setting 2", 'really-simple-ssl' ),
-		    'disabled'    => false,
-		    'default'     => false,
-		    'server_conditions'  => [
-			    'relation' => 'AND',
-			    [
-				    'RSSSL()->really_simple_ssl->ssl_enabled' => true,
-			    ]
-		    ],
-	    ],
+//	    [
+//            'id'          => 'placeholder_setting_id',
+//            'menu_id'     => 'code_execution_uploads',
+//            'type'        => 'checkbox',
+//            'label'       => __( "Placeholder Setting", 'really-simple-ssl' ),
+//            'disabled'    => false,
+//            'default'     => false,
+//            'react_conditions' => [
+//	            'relation' => 'AND',
+//	            [
+//		            'disable_application_passwords' => 1,
+//	            ]
+//            ],
+//        ],
+//	    [
+//		    'id'          => 'placeholder_setting_id_2',
+//		    'menu_id'     => 'empty_menu_item',
+//		    'type'        => 'checkbox',
+//		    'label'       => __( "Placeholder Setting 2", 'really-simple-ssl' ),
+//		    'disabled'    => false,
+//		    'default'     => false,
+//		    'server_conditions'  => [
+//			    'relation' => 'AND',
+//			    [
+//				    'RSSSL()->really_simple_ssl->ssl_enabled' => true,
+//			    ]
+//		    ],
+//	    ],
         [
 			'id'          => 'disable_indexing',
 			'menu_id'     => 'hardening',

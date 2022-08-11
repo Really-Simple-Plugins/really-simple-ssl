@@ -35,11 +35,26 @@ function rsssl_disable_fields($field, $field_id){
 				$field['disabled'] = true;
 				$field['help'] = [
 					'label' => 'default',
-					'text' => __( "Directory browsing is is already disabled.", 'really-simple-ssl' ).$location,
+					'text' => __( "Directory browsing is is already disabled.", 'really-simple-ssl' ),
 				];
 			}
 		}
 	}
+
+	if ( $field_id==='disable_anyone_can_register' ){
+		if ( !rsssl_is_user_registration_enabled() ) {
+			if ( !$field['value'] ) {
+				$field['value'] = true;
+				$field['disabled'] = true;
+				$field['help'] = [
+					'label' => 'default',
+					'text' => __( "User registration is is already disabled.", 'really-simple-ssl' ),
+				];
+			}
+		}
+	}
+
+
 
 	return $field;
 }
