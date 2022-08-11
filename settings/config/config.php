@@ -527,7 +527,8 @@ function rsssl_fields( $load_values = true ){
             'default'     => false,
             'new_features_block' => [
 	            'active' => __("User registration is restricted", 'really-simple-ssl'),
-	            'inactive' => __("Registration is open to anyone", 'really-simple-ssl').rsssl_read_more('#', ' - '),
+	            'inactive' => __("Registration is open to anyone", 'really-simple-ssl'),
+	            'readmore' => '#',
             ],
         ],
         [
@@ -555,7 +556,8 @@ function rsssl_fields( $load_values = true ){
             'default'     => false,
             'new_features_block' => [
 				'active' => __("File editing is disabled", 'really-simple-ssl'),
-				'inactive' => __("File editing is allowed", 'really-simple-ssl').rsssl_read_more('#', ' - '),
+				'inactive' => __("File editing is allowed", 'really-simple-ssl'),
+				'readmore' => '#',
             ],
         ],
         [
@@ -567,7 +569,8 @@ function rsssl_fields( $load_values = true ){
             'default'     => false,
             'new_features_block' => [
 	            'active' => __("Code execution in uploads folder is disabled", 'really-simple-ssl'),
-	            'inactive' => __("Code execution not restricted properly", 'really-simple-ssl').rsssl_read_more('#', ' - '),
+	            'inactive' => __("Code execution not restricted properly", 'really-simple-ssl'),
+	            'readmore' => '#',
             ],
         ],
         [
@@ -603,7 +606,8 @@ function rsssl_fields( $load_values = true ){
 			'default'     => false,
 			'new_features_block' => [
 				'active' => __("Debug log not in default location", 'really-simple-ssl'),
-				'inactive' => __("Debug log in default location", 'really-simple-ssl').rsssl_read_more('#', ' - '),
+				'inactive' => __("Debug log in default location", 'really-simple-ssl'),
+				'readmore' => '#',
 			],
         ],
 	    [
@@ -651,7 +655,8 @@ function rsssl_fields( $load_values = true ){
 			'default'     => false,
 			'new_features_block' => [
 				'active' => __("Browsing/indexing of folders blocked", 'really-simple-ssl'),
-				'inactive' => __("Browsing/indexing of folders possible", 'really-simple-ssl').rsssl_read_more('#', ' - '),
+				'inactive' => __("Browsing/indexing of folders possible", 'really-simple-ssl'),
+				'readmore' => '#',
 			],
         ],
 	    [
@@ -663,7 +668,8 @@ function rsssl_fields( $load_values = true ){
             'default'     => false,
             'new_features_block' => [
 	            'active' => __("User enumeration is restricted", 'really-simple-ssl'),
-	            'inactive' => __("User enumeration is not restricted", 'really-simple-ssl').rsssl_read_more('#', ' - '),
+	            'inactive' => __("User enumeration is not restricted", 'really-simple-ssl'),
+	            'readmore' => '#',
             ],
 	    ],
 		[
@@ -683,7 +689,8 @@ function rsssl_fields( $load_values = true ){
 			'default'     => false,
 			'new_features_block' => [
 				'active' => __("Admin username not allowed", 'really-simple-ssl'),
-				'inactive' => __("Admin username in use", 'really-simple-ssl').rsssl_read_more('#', ' - '),
+				'inactive' => __("Admin username in use", 'really-simple-ssl'),
+				'readmore' => '#',
 			],
         ],
 		[
