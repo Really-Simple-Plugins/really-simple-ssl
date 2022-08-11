@@ -31,7 +31,7 @@ function rsssl_menu( $group_id = 'settings' ){
                     'id' => 'mixed_content_scan',
                     'title' => __('Mixed Content Scan', 'really-simple-ssl'),
                     'premium' => true,
-                    'premium_text' => __("Learn more about %HSTS%s", 'really-simple-ssl'),
+                    'premium_text' => __("Learn more about the %Mixed Content Scan Pro%s", 'really-simple-ssl'),
                     //example of submenu
 //						'menu_items' => [
 //							[
@@ -264,19 +264,6 @@ function rsssl_fields( $load_values = true ){
             'help'        => [
                 'label' => 'default',
                 'text' => __( "Enable this option to permanently dismiss all +1 notices in the 'Your progress' tab'", 'really-simple-ssl' ),
-            ],
-            'disabled'    => false,
-            'default'     => false,
-        ],
-        [
-            'id'          => 'high_contrast',
-            'menu_id'     => 'general',
-            'group_id'    => 'general',
-            'type'        => 'checkbox',
-            'label'       => __( "Enable High Contrast mode", 'really-simple-ssl' ),
-            'help'        => [
-                'label' => 'default',
-                'text' => __( "If enabled, all the Really Simple SSL pages within the WordPress admin will be in high contrast", 'really-simple-ssl' ),
             ],
             'disabled'    => false,
             'default'     => false,

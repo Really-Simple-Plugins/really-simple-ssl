@@ -4,30 +4,14 @@ import { __ } from '@wordpress/i18n';
 class Header extends Component {
     constructor() {
         super( ...arguments );
-        this.state = {
-            highContrast:false,
-        };
     }
     handleClick(menuId){
         this.props.selectMainMenu(menuId);
     }
     componentDidMount() {
         this.handleClick = this.handleClick.bind(this);
-        for (const field of this.props.fields){
-            if (field.id === 'high_contrast' ){
-                this.highContrast = field.value;
-            }
-        }
-
-        this.setState({
-            highContrast: this.highContrast,
-        });
-
     }
     render() {
-        const {
-            highContrast,
-        } = this.state;
         let menu = rsssl_settings.menu;
         let plugin_url = rsssl_settings.plugin_url;
         let active_menu_item = this.props.selectedMainMenuItem;

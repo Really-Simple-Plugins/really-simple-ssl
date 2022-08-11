@@ -31,7 +31,6 @@ class rsssl_admin extends rsssl_front_end
     public $plugin_db_version;
     public $ssl_type = "NA";
     public $dismiss_all_notices = false;
-	public $high_contrast = false;
 	public $pro_url;
 
     function __construct()
@@ -955,7 +954,6 @@ class rsssl_admin extends rsssl_front_end
             $this->htaccess_redirect = isset($options['htaccess_redirect']) ? $options['htaccess_redirect'] : FALSE;
             $this->switch_mixed_content_fixer_hook = isset($options['switch_mixed_content_fixer_hook']) ? $options['switch_mixed_content_fixer_hook'] : FALSE;
 	        $this->dismiss_all_notices = isset($options['dismiss_all_notices']) ? $options['dismiss_all_notices'] : FALSE;
-	        $this->high_contrast = isset($options['high_contrast']) ? $options['high_contrast'] : FALSE;
             $this->dismiss_review_notice = isset($options['dismiss_review_notice']) ? $options['dismiss_review_notice'] : $this->dismiss_review_notice;
 
         }
@@ -1534,7 +1532,6 @@ class rsssl_admin extends rsssl_front_end
             'wp_redirect' => $this->wp_redirect,
             'switch_mixed_content_fixer_hook' => $this->switch_mixed_content_fixer_hook,
             'dismiss_all_notices' => $this->dismiss_all_notices,
-            'high_contrast' => $this->high_contrast,
             'dismiss_review_notice' => $this->dismiss_review_notice,
 
         );
@@ -1570,7 +1567,6 @@ class rsssl_admin extends rsssl_front_end
 	        $this->ssl_enabled = FALSE;
 	        $this->switch_mixed_content_fixer_hook = FALSE;
 	        $this->dismiss_all_notices = FALSE;
-            $this->high_contrast = FALSE;
 	        $this->dismiss_review_notice = FALSE;
 
 	        $this->save_options();
