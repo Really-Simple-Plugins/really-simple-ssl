@@ -42,7 +42,7 @@ function rsssl_disable_fields($field, $field_id){
 	}
 
 	if ( $field_id==='disable_anyone_can_register' ){
-		if ( !rsssl_is_user_registration_enabled() ) {
+		if ( !get_option('users_can_register') ) {
 			if ( !$field['value'] ) {
 				$field['value'] = true;
 				$field['disabled'] = true;
@@ -53,8 +53,6 @@ function rsssl_disable_fields($field, $field_id){
 			}
 		}
 	}
-
-
 
 	return $field;
 }

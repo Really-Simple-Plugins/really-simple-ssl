@@ -162,7 +162,6 @@ function rsssl_fields( $load_values = true ){
             ],
             'disabled'    => false,
             'default'     => true,
-            'new_features_block'     => true,
             'networkwide' => false,
         ],
         [
@@ -177,12 +176,12 @@ function rsssl_fields( $load_values = true ){
             ],
             'disabled'    => false,
             'default'     => false,
-            'server_conditions'  => [
-                'relation' => 'AND',
-                [
-                    'RSSSL()->really_simple_ssl->ssl_enabled' => true,
-                ]
-            ],
+//            'server_conditions'  => [
+//                'relation' => 'AND',
+//                [
+//                    'RSSSL()->really_simple_ssl->ssl_enabled' => true,
+//                ]
+//            ],
             'new_features_block'     => true,
             'networkwide' => false,
         ],
@@ -275,6 +274,7 @@ function rsssl_fields( $load_values = true ){
             'label'       => __( "Disable \"anyone can register\"", 'really-simple-ssl' ),
             'disabled'    => false,
             'default'     => false,
+            'new_features_block'     => true,
         ],
         [
             'id'          => 'xmlrpc',
@@ -299,6 +299,7 @@ function rsssl_fields( $load_values = true ){
             'label'       => __( "Disable file editing", 'really-simple-ssl' ),
             'disabled'    => false,
             'default'     => false,
+            'new_features_block'     => true,
         ],
         [
             'id'          => 'block_code_execution_uploads',
@@ -307,6 +308,7 @@ function rsssl_fields( $load_values = true ){
             'label'       => __( "Disable code execution in uploads folder", 'really-simple-ssl' ),
             'disabled'    => false,
             'default'     => false,
+            'new_features_block'     => true,
         ],
         [
             'id'          => 'hide_wordpress_version',
@@ -339,7 +341,8 @@ function rsssl_fields( $load_values = true ){
 			'label'       => __( "Change debug.log location", 'really-simple-ssl' ),
 			'disabled'    => false,
 			'default'     => false,
-		],
+			'new_features_block'     => true,
+        ],
 	    [
             'id'          => 'disable_application_passwords',
             'menu_id'     => 'application_passwords',
@@ -383,7 +386,8 @@ function rsssl_fields( $load_values = true ){
 			'label'       => __( "Prevent directory browsing", 'really-simple-ssl' ),
 			'disabled'    => false,
 			'default'     => false,
-		],
+			'new_features_block'     => true,
+        ],
 	    [
             'id'          => 'disable_user_enumeration',
             'menu_id'     => 'hardening',
@@ -391,7 +395,8 @@ function rsssl_fields( $load_values = true ){
             'label'       => __( "Disable user enumeration", 'really-simple-ssl' ),
             'disabled'    => false,
             'default'     => false,
-        ],
+            'new_features_block'     => true,
+	    ],
         [
             'id'          => 'disable_rss_feeds',
             'menu_id'     => 'hardening',
@@ -407,6 +412,7 @@ function rsssl_fields( $load_values = true ){
             'label'       => __( "Rename user 'admin'", 'really-simple-ssl' ),
             'disabled'    => false,
             'default'     => false,
+            'new_features_block'     => true,
         ],
         [
             'id'          => 'cert_expiration_warning',
@@ -807,14 +813,7 @@ function rsssl_blocks(){
     return $blocks;
 }
 
-function rsssl_is_user_registration_enabled() {
 
-    if ( get_option('users_can_register') !== false ) {
-        return true;
-    }
-
-    return false;
-}
 
 /**
  * Render html based on template

@@ -77,25 +77,6 @@ function rsssl_show_notices_for_mismatches($notices) {
 }
 
 /**
- * Enable this option in RSSSL if the WP option is disabled.
- * @param $value
- * @param $option
- *
- * @return bool|mixed
- */
-function rsssl_option_anyone_can_register( $field, $field_id ) {
-	if ( !isset($field['value']) ) {
-		return $field;
-	}
-	if ( $field_id === 'disable_anyone_can_register' && !$field['value'] && !get_option('users_can_register') ) {
-		$field['disabled'] = true;
-		$field['value'] = true;
-	}
-	return $field;
-}
-add_filter("rsssl_field", 'rsssl_option_anyone_can_register', 10,2);
-
-/**
  * When disable debug log location is disabled, revert back
  */
 if ( get_site_option('rsssl_debug_log_suffix') && !rsssl_get_option('change_debug_log_location') && !rsssl_debug_log_in_default_location() && rsssl_is_debug_log_enabled() ) {
