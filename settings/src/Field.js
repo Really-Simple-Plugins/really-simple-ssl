@@ -234,7 +234,6 @@ class Field extends Component {
                data = [];
             }
             for (const item of data){
-                console.log(item);
                 let disabled = false;
                 if (item.status!=1) {
                     item.value = '()';

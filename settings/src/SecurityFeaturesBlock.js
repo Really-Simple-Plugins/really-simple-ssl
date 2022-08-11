@@ -22,9 +22,9 @@ class SecurityFeatureBullet extends Component {
             <div className="rsssl-new-feature">
                 <div className={bulletClassName}></div>
                 <div className="rssl-new-feature-label">
-                    { field.value===1 && field.new_features_block.active}
-                    { field.value!==1 && field.new_features_block.inactive}
-                    { field.new_features_block.readmore.length>0 && <span>&nbsp;-&nbsp;<Hyperlink target="_blank" text={__("read more","really-simple-ssl")} url={field.new_features_block.readmore}/></span> }
+                    { field.value==1 && field.new_features_block.active}
+                    { field.value!=1 && field.new_features_block.inactive}
+                    { field.value!=1 && field.new_features_block.readmore.length>0 && <span>&nbsp;-&nbsp;<Hyperlink target="_blank" text={__("read more","really-simple-ssl")} url={field.new_features_block.readmore}/></span> }
                 </div>
             </div>
         );

@@ -206,6 +206,9 @@ function rsssl_get_debug_log_value(){
 		return 'true';
 	}
 }
+function rsssl_debugging_enabled(){
+	return defined('WP_DEBUG') && WP_DEBUG;
+}
 /**
  * Check if default.log is in default location
  * @return bool
