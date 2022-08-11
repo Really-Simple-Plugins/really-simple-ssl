@@ -96,7 +96,7 @@ function rsssl_ajax_load_page(){
 }
 
 
-add_action( 'rest_api_init', 'rsssl_settings_rest_route' );
+add_action( 'rest_api_init', 'rsssl_settings_rest_route', 10 );
 function rsssl_settings_rest_route() {
 
 	if (!current_user_can('manage_options')) {
@@ -221,7 +221,7 @@ function rsssl_rest_api_fields_set($request){
     if ( !current_user_can('manage_options')) {
         return;
     }
-
+    error_log("update options rsssl");
 	$fields = $request->get_json_params();
 
 //    error_log(print_r($fields, true));
@@ -265,9 +265,9 @@ function rsssl_rest_api_fields_set($request){
 		$fields[$index] = $field;
 	}
 	if ( rsssl_is_networkwide_active() ) {
-		$options = get_site_option( 'rsssl_options', array() );
+		$options = get_site_option( 'rsssl_options', [] );
 	} else {
-		$options = get_option( 'rsssl_options', array() );
+		$options = get_option( 'rsssl_options', [] );
 	}
 
 	//build a new options array
@@ -293,7 +293,7 @@ function rsssl_rest_api_fields_set($request){
 	foreach ( $fields as $field ) {
         do_action( "rsssl_after_save_field", $field['id'], $field['value'], $prev_value, $field['type'] );
     }
-
+    error_log("saved options");
 	do_action('rsssl_after_saved_fields', $fields );
 	$output   = ['success' => true];
 	$response = json_encode( $output );
@@ -375,15 +375,43 @@ function rsssl_rest_api_fields_get(  ){
 
 		$fields[$index] = $field;
 	}
+
+    $updated_menu_items = rsssl_filter_menu_items($menu_items['menu_items'], $fields);
+    $menu_items['menu_items'] = $updated_menu_items;
+
 	$output['fields'] = $fields;
 
 	$output['menu'] = $menu_items;
 	$output['progress'] = RSSSL()->progress->get();
     $output = apply_filters('rsssl_rest_api_fields_get', $output);
+
 	$response = json_encode( $output );
 	header( "Content-Type: application/json" );
 	echo $response;
 	exit;
+}
+
+/**
+ * Checks if there are field linked to menu_item if not removes menu_item from menu_item array
+ * @param $menu_items
+ * @param $fields
+ * @return array
+ */
+function rsssl_filter_menu_items( $menu_items, $fields) {
+    $new_menu_items = $menu_items;
+    foreach($menu_items as $key => $menu_item) {
+        $searchResult = array_search($menu_item['id'], array_column($fields, 'menu_id'));
+        if($searchResult === false) {
+            unset($new_menu_items[$key]);
+        } else {
+            if(isset($menu_item['menu_items'])){
+                $updatedValue = rsssl_filter_menu_items($menu_item['menu_items'], $fields);
+                $new_menu_items[$key]['menu_items'] = $updatedValue;
+            }
+        }
+    }
+
+    return $new_menu_items;
 }
 
 /**
@@ -486,16 +514,13 @@ function rsssl_sanitize_permissions_policy( $value, $type, $field_name ){
 
     $stored_ids = [];
 	if ( !is_array($value) ) {
-        error_log("not array ");
 		return $default;
 	} else {
-        error_log("is array");
 		foreach ($value as $row_index => $row) {
 			//check if we have invalid values
 			if ( is_array($row) ) {
 				foreach ($row as $column_index => $row_value ) {
 					if ($column_index==='id' && $row_value===false) {
-                        error_log("unset ".$column_index);
 						unset($value[$column_index]);
 					}
 				}
@@ -512,8 +537,6 @@ function rsssl_sanitize_permissions_policy( $value, $type, $field_name ){
 
 			foreach ( $row as $col_index => $col_value ){
 				if ( !isset( $possible_keys[$col_index])) {
-					error_log("unset ".$row_index.' '.$column_index);
-
 					unset($value[$row_index][$col_index]);
 				} else {
 					$datatype = $possible_keys[$col_index];

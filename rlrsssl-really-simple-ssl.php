@@ -132,9 +132,8 @@ class REALLY_SIMPLE_SSL
 		if ( $wpcli ) {
 			require_once(rsssl_path . 'class-rsssl-wp-cli.php');
 		}
-
 		if ( rsssl_is_logged_in_rest() || is_admin() || wp_doing_cron() || is_multisite() || $wpcli || defined('RSSSL_DOING_SYSTEM_STATUS') || defined('RSSSL_DOING_CSP') ) {
-			require_once( rsssl_path . 'settings/settings.php' );
+            require_once( rsssl_path . 'settings/settings.php' );
 			if (is_multisite()) {
 				require_once(rsssl_path . 'class-multisite.php');
 				require_once(rsssl_path . 'multisite-cron.php');
@@ -162,7 +161,7 @@ class REALLY_SIMPLE_SSL
 			require_once( rsssl_path . 'lets-encrypt/cron.php' );
 		}
 
-		//require_once(rsssl_path . '/security/integrations.php');
+		require_once(rsssl_path . '/security/integrations.php');
 
 	}
 

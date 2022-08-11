@@ -11,7 +11,6 @@ class SettingsGroup extends Component {
     constructor() {
         super( ...arguments );
         this.state = {
-            disabled:false,
             status:'invalid',
             fields:this.props.fields,
             isAPILoaded: this.props.isAPILoaded,
@@ -20,7 +19,6 @@ class SettingsGroup extends Component {
         this.msg='';
         this.status='invalid';
         this.fields = this.props.fields;
-
     }
 
     componentDidMount() {
@@ -34,12 +32,8 @@ class SettingsGroup extends Component {
                 this.msg = rsssl_settings.messageInvalid;
             }
         }
-
-
-        let disabled = this.status !=='valid' && activeGroup.premium;
         this.setState({
             status: this.status,
-            disabled: disabled,
         });
     }
 
@@ -56,7 +50,6 @@ class SettingsGroup extends Component {
 
     render(){
         const {
-            disabled,
             status,
         } = this.state;
         let selectedMenuItem = this.props.selectedMenuItem;
@@ -70,13 +63,15 @@ class SettingsGroup extends Component {
 
         //set group default to current menu item
         let activeGroup = selectedMenuItem;
+
         if ( selectedMenuItem.hasOwnProperty('groups') ) {
             let currentGroup = selectedMenuItem.groups.filter(group => group.id === this.props.group);
             if (currentGroup.length>0) {
                 activeGroup = currentGroup[0];
-                console.log(activeGroup);
             }
         }
+
+        let disabled = this.status !=='valid' && activeGroup.premium;
         this.upgrade = activeGroup.upgrade ? activeGroup.upgrade : this.upgrade;
         return (
             <div className="rsssl-grid-item">

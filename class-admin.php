@@ -40,6 +40,7 @@ class rsssl_admin extends rsssl_front_end
 	    add_action( 'admin_init', array($this, 'insert_secure_cookie_settings'), 70 );
         add_action( 'admin_init', array($this, 'recheck_certificate') );
         add_action( 'wp_ajax_update_ssl_detection_overridden_option', array( $this, 'update_ssl_detection_overridden_option' ) );
+
         // Saved fields hook fired through REST settings save
 	    add_action( "rsssl_after_saved_fields", array( $this, "maybe_clear_transients" ), 10, 3 );
 	    add_action( "rsssl_after_saved_fields", array($this, "update_htaccess_after_settings_save"), 20, 3);
@@ -312,6 +313,10 @@ class rsssl_admin extends rsssl_front_end
 				    file_put_contents( $this->htaccess_file(), $htaccess );
 			    }
 		    }
+	    }
+        
+	    if ( $prev_version && version_compare( $prev_version, '6.0.0', '<=' ) ) {
+		    update_option('rsssl_upgraded_to_6', true, false);
 	    }
 
 	    if ( $prev_version && version_compare( $prev_version, '6.0.0', '<=' ) ) {
@@ -1506,6 +1511,7 @@ class rsssl_admin extends rsssl_front_end
 
 	        $this->remove_wpconfig_edit();
 	        $this->removeHtaccessEdit();
+            rsssl_remove_htaccess_security_edits();
         }
     }
 
@@ -1780,8 +1786,8 @@ class rsssl_admin extends rsssl_front_end
 
     public function removeHtaccessEdit()
     {
-        if (file_exists($this->htaccess_file()) && is_writable($this->htaccess_file())) {
-            $htaccess = file_get_contents($this->htaccess_file());
+        if ( file_exists($this->htaccess_file()) && is_writable($this->htaccess_file()) ) {
+            $htaccess = file_get_contents( $this->htaccess_file() );
 
             //if multisite, per site activation and more than one blog remaining on ssl, remove condition for this site only
             //the domain list has been rebuilt already, so current site is already removed.
@@ -3802,7 +3808,6 @@ class rsssl_admin extends rsssl_front_end
 
 		return 'default';
 	}
-
 } //class closure
 
 if (!function_exists('rsssl_ssl_enabled')) {
