@@ -3,38 +3,38 @@ defined('ABSPATH') or die();
 
 function rsssl_menu( $group_id = 'settings' ){
 	$menu_items = [
-			[
-				"id"    => "settings",
-				"title" => __( "Settings", 'really-simple-ssl' ),
-				"is_wizard" => false,
-				'menu_items' => [
-					[
-						'id' => 'general',
-						'group_id' => 'general',
-						'title' => __('General', 'really-simple-ssl'),
-						'intro' => __("An introduction on some cool stuff", "really-simple-ssl"),
-                        'helpLink'  => 'https://really-simple-ssl.com',
-                        'step' => 1,
-						'groups' => [
-							[
-								'id' => 'general',
-								'title' => __('General', 'really-simple-ssl'),
-								'intro' => __("An introduction on some cool stuff", "really-simple-ssl"),
-							],
-							[
-								'id' => 'general_2',
-								'title' => __('General 2', 'really-simple-ssl'),
-								'intro' => __("Group intro", "really-simple-ssl"),
-							]
+		[
+			"id"    => "settings",
+			"title" => __( "Settings", 'really-simple-ssl' ),
+			"is_wizard" => false,
+			'menu_items' => [
+				[
+					'id' => 'general',
+					'group_id' => 'general',
+					'title' => __('General', 'really-simple-ssl'),
+					'intro' => __("An introduction on some cool stuff", "really-simple-ssl"),
+                    'helpLink'  => 'https://really-simple-ssl.com',
+                    'step' => 1,
+					'groups' => [
+						[
+							'id' => 'general',
+							'title' => __('General', 'really-simple-ssl'),
+							'intro' => __("An introduction on some cool stuff", "really-simple-ssl"),
 						],
+						[
+							'id' => 'general_2',
+							'title' => __('General 2', 'really-simple-ssl'),
+							'intro' => __("Group intro", "really-simple-ssl"),
+						]
 					],
+				],
 
-                [
-                    'id' => 'mixed_content_scan',
-                    'title' => __('Mixed Content Scan', 'really-simple-ssl'),
-                    'premium' => true,
-                    'premium_text' => __("Learn more about the %Mixed Content Scan Pro%s", 'really-simple-ssl'),
-                    //example of submenu
+            [
+                'id' => 'mixed_content_scan',
+                'title' => __('Mixed Content Scan', 'really-simple-ssl'),
+                'premium' => true,
+                'premium_text' => __("Learn more about the %Mixed Content Scan Pro%s", 'really-simple-ssl'),
+                //example of submenu
 //						'menu_items' => [
 //							[
 //								'id' => 'sub_mixed_content_1',
@@ -45,86 +45,86 @@ function rsssl_menu( $group_id = 'settings' ){
 //								'title' => __('Sub mixed content 2', 'really-simple-ssl'),
 //							],
 //						],
-					],
-					[
-						'id' => 'recommended_security_headers',
-						'title' => __('Recommended Security Headers', 'really-simple-ssl'),
-						'step' => 1,
-					],
-					[
-						'id' => 'hsts',
-						'title' => __('HSTS', 'really-simple-ssl-pro'),
-						'intro' => __("Intro HSTS", "really-simple-ssl"),
-						'step' => 4,
-						'groups' => [
-							[
-								'id' => 'hsts',
-								'premium' => false,
-								'premium_text' => __("Learn more about %HSTS%s", 'really-simple-ssl'),
-								'upgrade' => 'https://really-simple-ssl.com/pro',
-								'title' => __('HSTS ', 'really-simple-ssl'),
-								'intro' => __("HSTS explanation", "really-simple-ssl"),
-							],
+				],
+				[
+					'id' => 'recommended_security_headers',
+					'title' => __('Recommended Security Headers', 'really-simple-ssl'),
+					'step' => 1,
+				],
+				[
+					'id' => 'hsts',
+					'title' => __('HSTS', 'really-simple-ssl-pro'),
+					'intro' => __("Intro HSTS", "really-simple-ssl"),
+					'step' => 4,
+					'groups' => [
+						[
+							'id' => 'hsts',
+							'premium' => false,
+							'premium_text' => __("Learn more about %HSTS%s", 'really-simple-ssl'),
+							'upgrade' => 'https://really-simple-ssl.com/pro',
+							'title' => __('HSTS ', 'really-simple-ssl'),
+							'intro' => __("HSTS explanation", "really-simple-ssl"),
 						],
 					],
-					[
-						'id' => 'permissions_policy',
-						'title' => __('Permissions Policy', 'really-simple-ssl-pro'),
-						'intro' => __("Permissions Policy", "really-simple-ssl"),
-						'step' => 1,
-						'groups' => [
-							[
-								'id' => 'permissionspolicy',
-								'premium' => true,
-								'title' => __('Permissions Policy', 'really-simple-ssl'),
-								'intro' => __("Permissions Policy explanation", "really-simple-ssl"),
-							],
+				],
+				[
+					'id' => 'permissions_policy',
+					'title' => __('Permissions Policy', 'really-simple-ssl-pro'),
+					'intro' => __("Permissions Policy", "really-simple-ssl"),
+					'step' => 1,
+					'groups' => [
+						[
+							'id' => 'permissionspolicy',
+							'premium' => true,
+							'title' => __('Permissions Policy', 'really-simple-ssl'),
+							'intro' => __("Permissions Policy explanation", "really-simple-ssl"),
+						],
 //							[
 //								'id' => 'contentsecuritypolicy',
 //								'premium' => true,
 //								'title' => __('Content Security Policy', 'really-simple-ssl'),
 //								'intro' => __("Content Security Policy explanation", "really-simple-ssl"),
 //							]
-						],
 					],
-					[
-						'id' => 'content_security_policy_menu',
-						'title' => __('Content Security Policy', 'really-simple-ssl-pro'),
-						'intro' => __("Content Security Policy intro", "really-simple-ssl"),
-						'step' => 1,
-						'groups' => [
-							[
-								'id' => 'contentsecuritypolicy',
-								'premium' => true,
-								'title' => __('Upgrade insecure requests', 'really-simple-ssl'),
+				],
+				[
+					'id' => 'content_security_policy_menu',
+					'title' => __('Content Security Policy', 'really-simple-ssl-pro'),
+					'intro' => __("Content Security Policy intro", "really-simple-ssl"),
+					'step' => 1,
+					'groups' => [
+						[
+							'id' => 'contentsecuritypolicy',
+							'premium' => true,
+							'title' => __('Upgrade insecure requests', 'really-simple-ssl'),
 //								'intro' => __("Content Security Policy explanation", "really-simple-ssl"),
-							],
-							[
-								'id' => 'contentsecuritypolicy_2',
-								'premium' => true,
-								'title' => __('Content Security Policy', 'really-simple-ssl'),
-								'intro' => __("Content Security Policy explanation", "really-simple-ssl"),
-							]
+						],
+						[
+							'id' => 'contentsecuritypolicy_2',
+							'premium' => true,
+							'title' => __('Content Security Policy', 'really-simple-ssl'),
+							'intro' => __("Content Security Policy explanation", "really-simple-ssl"),
+						]
+					],
+				],
+				[
+					'id' => 'cross_origin_policy',
+					'title' => __('Cross Origin Policy', 'really-simple-ssl-pro'),
+					'intro' => __("", "really-simple-ssl"),
+					'step' => 1,
+					'groups' => [
+						[
+							'id' => 'permissionspolicy',
+							'premium' => true,
+							'title' => __('Permissions Policy', 'really-simple-ssl'),
+							'intro' => __("Permissions Policy explanation", "really-simple-ssl"),
 						],
 					],
-					[
-						'id' => 'cross_origin_policy',
-						'title' => __('Cross Origin Policy', 'really-simple-ssl-pro'),
-						'intro' => __("", "really-simple-ssl"),
-						'step' => 1,
-						'groups' => [
-							[
-								'id' => 'permissionspolicy',
-								'premium' => true,
-								'title' => __('Permissions Policy', 'really-simple-ssl'),
-								'intro' => __("Permissions Policy explanation", "really-simple-ssl"),
-							],
-						],
-					],
-					[
-						'id' => 'hardening',
-						'title' => __('Hardening', 'really-simple-ssl'),
-						'featured' => __('Improve your security with the most popular security features of Wordpress', 'really-simple-ssl'),
+				],
+				[
+					'id' => 'hardening',
+					'title' => __('Hardening', 'really-simple-ssl'),
+					'featured' => __('Improve your security with the most popular security features of Wordpress', 'really-simple-ssl'),
 //						'menu_items' => [
 //							[
 //								'id' => 'application_passwords',
@@ -135,16 +135,16 @@ function rsssl_menu( $group_id = 'settings' ){
 //								'title' => __('Disable code execution in uploads folder', 'really-simple-ssl'),
 //							],
 //						],
-						'step' => 1,
-					],
-					[
-						'id' => 'licensing',
-						'title' => __('Licensing', 'really-simple-ssl'),
-//						'featured' => __(' Improv security with the most popular security features of Wordpress', 'really-simple-ssl'),
-						'step' => 1,
-					],
+					'step' => 1,
 				],
-
+				[
+					'id' => 'licensing',
+					'title' => __('Licensing', 'really-simple-ssl'),
+//						'featured' => __(' Improv security with the most popular security features of Wordpress', 'really-simple-ssl'),
+					'step' => 1,
+				],
+			],
+		],
         [
             "id"    => "letsencrypt",
             "title" => __( "lets encrypt menu", 'really-simple-ssl' ),
@@ -236,22 +236,6 @@ function rsssl_fields( $load_values = true ){
 	}
 
 	$fields = [
-//		[
-//			'id'          => 'mixed_content_fixer',
-//			'menu_id'     => 'mixed_content_scan',
-//			'group_id'    => 'mixed_content_scan',
-//			'type'        => 'checkbox',
-//			'label'       => __( "Mixed content fixer", 'really-simple-ssl' ),
-//			'help'        => [
-//								'label' => 'default',
-//								'text' => __( 'In most cases you need to leave this enabled, to prevent mixed content issues on your site.', 'really-simple-ssl' ),
-//							 ],
-//			'disabled'    => false,
-//			'default'     => true,
-//			'new_features_block'     => true,
-//			'networkwide' => false,
-//		],
-
 		/**
 		 * General
 		 */
@@ -305,9 +289,7 @@ function rsssl_fields( $load_values = true ){
 					'RSSSL()->really_simple_ssl->ssl_enabled' => true,
 				]
 			],
-			'new_features_block'     => true,
 			'networkwide' => false,
-
 		],
         [
             'id'          => 'dismiss_all_notices',
@@ -456,7 +438,6 @@ function rsssl_fields( $load_values = true ){
 //                    'RSSSL()->really_simple_ssl->ssl_enabled' => true,
 //                ]
 //            ],
-            'new_features_block'     => true,
             'networkwide' => false,
         ],
         [
@@ -548,7 +529,10 @@ function rsssl_fields( $load_values = true ){
             'label'       => __( "Disable \"anyone can register\"", 'really-simple-ssl' ),
             'disabled'    => false,
             'default'     => false,
-            'new_features_block'     => true,
+            'new_features_block' => [
+	            'active' => __("User registration is restricted", 'really-simple-ssl'),
+	            'inactive' => __("Registration is open to anyone", 'really-simple-ssl').rsssl_read_more('#', ' - '),
+            ],
         ],
         [
             'id'          => 'xmlrpc',
@@ -573,7 +557,10 @@ function rsssl_fields( $load_values = true ){
             'label'       => __( "Disable file editing", 'really-simple-ssl' ),
             'disabled'    => false,
             'default'     => false,
-            'new_features_block'     => true,
+            'new_features_block' => [
+				'active' => __("File editing is disabled", 'really-simple-ssl'),
+				'inactive' => __("File editing is allowed", 'really-simple-ssl').rsssl_read_more('#', ' - '),
+            ],
         ],
         [
             'id'          => 'block_code_execution_uploads',
@@ -582,7 +569,10 @@ function rsssl_fields( $load_values = true ){
             'label'       => __( "Disable code execution in uploads folder", 'really-simple-ssl' ),
             'disabled'    => false,
             'default'     => false,
-            'new_features_block'     => true,
+            'new_features_block' => [
+	            'active' => __("Code execution in uploads folder is disabled", 'really-simple-ssl'),
+	            'inactive' => __("Code execution not restricted properly", 'really-simple-ssl').rsssl_read_more('#', ' - '),
+            ],
         ],
         [
             'id'          => 'hide_wordpress_version',
@@ -615,7 +605,10 @@ function rsssl_fields( $load_values = true ){
 			'label'       => __( "Change debug.log location", 'really-simple-ssl' ),
 			'disabled'    => false,
 			'default'     => false,
-			'new_features_block'     => true,
+			'new_features_block' => [
+				'active' => __("Debug log not in default location", 'really-simple-ssl'),
+				'inactive' => __("Debug log in default location", 'really-simple-ssl').rsssl_read_more('#', ' - '),
+			],
         ],
 	    [
             'id'          => 'disable_application_passwords',
@@ -660,7 +653,10 @@ function rsssl_fields( $load_values = true ){
 			'label'       => __( "Prevent directory browsing", 'really-simple-ssl' ),
 			'disabled'    => false,
 			'default'     => false,
-			'new_features_block'     => true,
+			'new_features_block' => [
+				'active' => __("Browsing/indexing of folders blocked", 'really-simple-ssl'),
+				'inactive' => __("Browsing/indexing of folders possible", 'really-simple-ssl').rsssl_read_more('#', ' - '),
+			],
         ],
 	    [
             'id'          => 'disable_user_enumeration',
@@ -669,7 +665,10 @@ function rsssl_fields( $load_values = true ){
             'label'       => __( "Disable user enumeration", 'really-simple-ssl' ),
             'disabled'    => false,
             'default'     => false,
-            'new_features_block'     => true,
+            'new_features_block' => [
+	            'active' => __("User enumeration is restricted", 'really-simple-ssl'),
+	            'inactive' => __("User enumeration is not restricted", 'really-simple-ssl').rsssl_read_more('#', ' - '),
+            ],
 	    ],
 		[
 			'id'          => 'disable_rss_feeds',
@@ -678,7 +677,6 @@ function rsssl_fields( $load_values = true ){
 			'label'       => __( "Disable RSS feeds (improve disable user enumeration)", 'really-simple-ssl' ),
 			'disabled'    => false,
 			'default'     => false,
-			'new_features_block'     => true,
 		],
         [
 			'id'          => 'rename_admin_user',
@@ -687,7 +685,10 @@ function rsssl_fields( $load_values = true ){
 			'label'       => __( "Rename user 'admin'", 'really-simple-ssl' ),
 			'disabled'    => false,
 			'default'     => false,
-			'new_features_block'     => true,
+			'new_features_block' => [
+				'active' => __("Admin username not allowed", 'really-simple-ssl'),
+				'inactive' => __("Admin username in use", 'really-simple-ssl').rsssl_read_more('#', ' - '),
+			],
         ],
 		[
 			'id'          => 'x_xss_protection',

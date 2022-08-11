@@ -491,28 +491,6 @@ if ( ! function_exists( 'rsssl_sidebar_notice' ) ) {
 }
 
 
-if (!function_exists('rsssl_read_more')) {
-    /**
-     * Create a generic read more text with link for help texts.
-     *
-     * @param string $url
-     * @param bool   $add_space
-     *
-     * @return string
-     */
-    function rsssl_read_more( $url, $add_space = true ) {
-        $html = sprintf( __( "For more information, please read this %sarticle%s",
-            'really-simple-ssl' ), '<a target="_blank" href="' . $url . '">',
-            '</a>' );
-        if ( $add_space ) {
-            $html = '&nbsp;' . $html;
-        }
-
-        return $html;
-    }
-}
-
-
 register_activation_hook( __FILE__, 'rsssl_set_activation_time_stamp' );
 if ( ! function_exists( 'rsssl_set_activation_time_stamp' ) ) {
     function rsssl_set_activation_time_stamp( $networkwide ) {
