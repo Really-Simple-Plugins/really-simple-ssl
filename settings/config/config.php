@@ -248,6 +248,20 @@ function rsssl_fields( $load_values = true ){
             'disabled'    => false,
             'default'     => false,
         ],
+		[
+			'id'          => 'mixed_content_fixer',
+			'menu_id'     => 'general',
+			'group_id'    => 'general',
+			'type'        => 'checkbox',
+			'label'       => __( "Mixed content fixer", 'really-simple-ssl' ),
+			'help'        => [
+				'label' => 'default',
+				'text' => __( 'In most cases you need to leave this enabled, to prevent mixed content issues on your site.', 'really-simple-ssl' ),
+			],
+			'disabled'    => false,
+			'default'     => true,
+			'networkwide' => false,
+		],
         [
             'id'          => 'mixed_content_fixer',
             'menu_id'     => 'general',
@@ -402,24 +416,6 @@ function rsssl_fields( $load_values = true ){
 			'disabled'    => false,
 			'default'     => false,
 		],
-
-		/**
-		 * Hardening
-		 */
-        [
-            'id'          => 'mixed_content_fixer',
-            'menu_id'     => 'mixed_content_scan',
-            'group_id'    => 'mixed_content_scan',
-            'type'        => 'checkbox',
-            'label'       => __( "Mixed content fixer", 'really-simple-ssl' ),
-            'help'        => [
-                'label' => 'default',
-                'text' => __( 'In most cases you need to leave this enabled, to prevent mixed content issues on your site.', 'really-simple-ssl' ),
-            ],
-            'disabled'    => false,
-            'default'     => true,
-            'networkwide' => false,
-        ],
         [
             'id'          => 'wp_redirect',
             'menu_id'     => 'general',
