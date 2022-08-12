@@ -282,8 +282,6 @@ function rsssl_rest_api_fields_set($request){
         if ( rsssl_is_networkwide_active() ) {
 	        update_site_option( 'rsssl_options', $options );
         } else {
-	        error_log("updating option value for rsssl");
-            x_log($options);
 	        update_option( 'rsssl_options', $options );
         }
     }
@@ -291,7 +289,6 @@ function rsssl_rest_api_fields_set($request){
 	foreach ( $fields as $field ) {
         do_action( "rsssl_after_save_field", $field['id'], $field['value'], $prev_value, $field['type'] );
     }
-    error_log("saved options");
 	do_action('rsssl_after_saved_fields', $fields );
 	$output   = ['success' => true];
 	$response = json_encode( $output );
