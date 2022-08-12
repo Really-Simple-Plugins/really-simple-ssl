@@ -36,7 +36,7 @@ class SecurityFeaturesBlock extends Component {
 
     render(){
 
-        if ( this.props.fields.length==0 ) {
+        if ( this.props.fields && this.props.fields.length==0 ) {
             return (
                 <Placeholder></Placeholder>
             );
