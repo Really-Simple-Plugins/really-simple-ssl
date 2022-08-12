@@ -223,19 +223,7 @@ if ( ! function_exists('rsssl_wrap_htaccess' ) ) {
  * @return bool
  */
 function rsssl_uses_htaccess() {
-	if ( rsssl_get_server() !== 'apache' || rsssl_get_server() !== 'litespeed' ) {
-		return true;
-	}
-
-	return false;
-}
-
-/**
- * Check if server uses .htaccess
- * @return bool
- */
-function rsssl_uses_htaccess() {
-	if ( rsssl_get_server() !== 'apache' || rsssl_get_server() !== 'litespeed' ) {
+	if ( rsssl_get_server() === 'apache' || rsssl_get_server() === 'litespeed' ) {
 		return true;
 	}
 
