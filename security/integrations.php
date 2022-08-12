@@ -1,25 +1,5 @@
 <?php
 defined( 'ABSPATH' ) or die();
-require_once( trailingslashit(rsssl_path) . 'security/functions.php' );
-require_once( trailingslashit(rsssl_path) . 'security/deactivate-integration.php' );
-require_once( trailingslashit(rsssl_path) . 'security/learning-mode.php' );
-require_once( trailingslashit(rsssl_path) . 'security/tests.php' );
-require_once( trailingslashit(rsssl_path) . 'security/cron.php' );
-require_once( trailingslashit(rsssl_path) . 'security/check-requests.php' );
-
-/**
- * Load only on back-end
- */
-if ( is_admin() || rsssl_is_logged_in_rest() ) {
-	require_once( trailingslashit(rsssl_path) . 'security/notices.php' );
-	require_once( trailingslashit(rsssl_path) . 'security/sync-settings.php' );
-}
-
-function rsssl_enqueue_integrations_assets( $hook ) {
-
-}
-//add_action( 'admin_enqueue_scripts', 'rsssl_enqueue_integrations_assets' );
-
 global $rsssl_integrations_list;
 $rsssl_integrations_list = apply_filters( 'rsssl_integrations', array(
 	'xmlrpc' => array(

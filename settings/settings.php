@@ -282,18 +282,13 @@ function rsssl_rest_api_fields_set($request){
         if ( rsssl_is_networkwide_active() ) {
 	        update_site_option( 'rsssl_options', $options );
         } else {
-	        error_log("Oopdatin");
 	        update_option( 'rsssl_options', $options );
         }
     }
 
-//	error_log(print_r($options, true));
-
-
 	foreach ( $fields as $field ) {
         do_action( "rsssl_after_save_field", $field['id'], $field['value'], $prev_value, $field['type'] );
     }
-    error_log("saved options");
 	do_action('rsssl_after_saved_fields', $fields );
 	$output   = ['success' => true];
 	$response = json_encode( $output );

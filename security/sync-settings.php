@@ -58,6 +58,17 @@ function rsssl_disable_fields($field, $field_id){
 		}
 	}
 
+	if ( $field_id==='disable_http_methods' ){
+		if ( !rsssl_http_methods_allowed() && !$field['value'] ) {
+			$field['value'] = true;
+			$field['disabled'] = true;
+			$field['help'] = [
+				'label' => 'default',
+				'text' => __( "HTTP methods are already disabled.", 'really-simple-ssl' ),
+			];
+		}
+	}
+
 	if ( $field_id==='disable_file_editing' ){
 		if ( defined('DISALLOW_FILE_EDIT') && DISALLOW_FILE_EDIT && !$field['value'] ) {
 			$field['value'] = true;

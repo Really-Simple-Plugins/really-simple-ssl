@@ -41,11 +41,8 @@ function rsssl_xmlrpc_allowed()
 			// Post string
 			curl_setopt($ch, CURLOPT_POSTFIELDS, $xmlstring );
 			curl_setopt($ch, CURLOPT_TIMEOUT, 3); //timeout in seconds
-
 			curl_exec($ch);
-
 			$response_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-
 			if ($response_code === 200) {
 				set_transient( 'rsssl_xmlrpc_allowed', 'allowed', DAY_IN_SECONDS );
 				return true;
@@ -58,54 +55,71 @@ function rsssl_xmlrpc_allowed()
 	} else {
 		return get_transient( 'rsssl_xmlrpc_allowed' );
 	}
-
 	return false;
-
 }
-
-
 
 /**
  * @return bool
  * Test if HTTP methods are allowed
  */
 function rsssl_http_methods_allowed()
-
 {
 	if ( ! current_user_can( 'manage_options' ) ) {
 		return false;
 	}
 
-	if ( ! get_transient( 'rsssl_http_options_allowed' ) ) {
-		if (function_exists('curl_init')) {
+	$tested = get_transient( 'rsssl_http_methods_allowed' );
+	if ( ! $tested ) {
+		$tested = [];
+		if ( function_exists('curl_init' ) ) {
+			$methods = array(
+				'GET',
+				'POST',
+				'PUT',
+				'DELETE',
+				'HEAD',
+				'OPTIONS',
+				'CONNECT',
+				'TRACE',
+				'TRACK',
+				'PATCH',
+				'COPY',
+				'LINK',
+				'UNLINK',
+				'PURGE',
+				'LOCK',
+				'UNLOCK',
+				'PROPFIND',
+				'VIEW',
+			);
 
-			$url = site_url();
-			$ch = curl_init();
-
-			curl_setopt($ch, CURLOPT_URL, $url );
-			curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'OPTIONS');
-			curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-			curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-			curl_setopt($ch,CURLOPT_RETURNTRANSFER, true);
-			curl_setopt($ch, CURLOPT_HEADER, true);
-			curl_setopt($ch,CURLOPT_NOBODY, true);
-			curl_setopt($ch,CURLOPT_VERBOSE, true);
-			curl_setopt($ch, CURLOPT_TIMEOUT, 3); //timeout in seconds
-
-			curl_exec($ch);
-			if (curl_errno($ch)) {
-				echo 'Error:' . curl_error($ch);
+			foreach ( $methods as $method ) {
+				$ch = curl_init();
+				curl_setopt( $ch, CURLOPT_URL, site_url() );
+				curl_setopt( $ch, CURLOPT_CUSTOMREQUEST, $method );
+				curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+				curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+				curl_setopt($ch,CURLOPT_RETURNTRANSFER, true);
+				curl_setopt($ch, CURLOPT_HEADER, true);
+				curl_setopt($ch,CURLOPT_NOBODY, true);
+				curl_setopt($ch,CURLOPT_VERBOSE, true);
+				curl_setopt($ch, CURLOPT_TIMEOUT, 3); //timeout in seconds
+				curl_exec($ch);
+				if ( curl_errno( $ch ) == 405 || curl_errno( $ch ) == 403 ) {
+					$tested['not-allowed'][] = $method;
+				} else {
+					$tested['allowed'][] = $method;
+				}
+				curl_close($ch);
 			}
-
-			curl_close($ch);
-
-			set_transient('rsssl_http_options_allowed', 'not-allowed', DAY_IN_SECONDS);
-			return false;
+			set_transient('rsssl_http_methods_allowed', $tested);
 		}
+	}
 
-		set_transient('rsssl_http_options_allowed', 'allowed', DAY_IN_SECONDS);
+	if ( !empty($tested['allowed'])) {
 		return true;
 	}
+	return false;
 }
 
 /**

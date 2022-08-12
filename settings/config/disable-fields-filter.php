@@ -18,9 +18,3 @@ defined('ABSPATH') or die();
 //add_filter('rsssl_fields', 'rsssl_remove_fields', 10, 1);
 
 
-
-////if the define is true, it overrides the db setting.
-//if (defined('RLRSSSL_DO_NOT_EDIT_HTACCESS')) {
-//	$this->do_not_edit_htaccess = RLRSSSL_DO_NOT_EDIT_HTACCESS;
-//}
-
