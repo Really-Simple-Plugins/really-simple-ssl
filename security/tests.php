@@ -41,11 +41,8 @@ function rsssl_xmlrpc_allowed()
 			// Post string
 			curl_setopt($ch, CURLOPT_POSTFIELDS, $xmlstring );
 			curl_setopt($ch, CURLOPT_TIMEOUT, 3); //timeout in seconds
-
 			curl_exec($ch);
-
 			$response_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-
 			if ($response_code === 200) {
 				set_transient( 'rsssl_xmlrpc_allowed', 'allowed', DAY_IN_SECONDS );
 				return true;
@@ -58,9 +55,7 @@ function rsssl_xmlrpc_allowed()
 	} else {
 		return get_transient( 'rsssl_xmlrpc_allowed' );
 	}
-
 	return false;
-
 }
 
 /**
@@ -74,13 +69,9 @@ function rsssl_http_methods_allowed()
 	}
 
 	$tested = get_transient( 'rsssl_http_methods_allowed' );
-
 	if ( ! $tested ) {
-
 		$tested = [];
-
 		if ( function_exists('curl_init' ) ) {
-
 			$methods = array(
 				'GET',
 				'POST',
@@ -125,12 +116,11 @@ function rsssl_http_methods_allowed()
 		}
 	}
 
-	if ( ! empty($tested['allowed'])) {
+	if ( !empty($tested['allowed'])) {
 		return true;
 	}
 	return false;
 }
-add_action('admin_init', 'rsssl_http_methods_allowed');
 
 /**
  * Check if file editing is allowed

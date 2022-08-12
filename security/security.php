@@ -32,7 +32,6 @@ class REALLY_SIMPLE_SECURITY
 		require_once( $path . 'learning-mode.php' );
 		require_once( $path . 'tests.php' );
 		require_once( $path . 'cron.php' );
-		require_once( $path . 'check-requests.php' );
 		require_once( $path . 'integrations.php');
 
 		/**
