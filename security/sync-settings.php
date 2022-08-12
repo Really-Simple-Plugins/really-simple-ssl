@@ -80,7 +80,7 @@ function rsssl_disable_fields($field, $field_id){
 		}
 	}
 	if ( $field_id==='block_code_execution_uploads' ){
-		if ( rsssl_code_execution_allowed() && !$field['value'] ) {
+		if ( !rsssl_code_execution_allowed() && !$field['value'] ) {
 			$field['value'] = true;
 			$field['disabled'] = true;
 			$field['help'] = [
