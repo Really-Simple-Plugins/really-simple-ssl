@@ -26,7 +26,7 @@ function rsssl_general_security_notices( $notices ) {
 				'dismissible' => true,
 			),
 			'not-exists' => array(
-				'msg' => __("An option was enabled which requires the .htaccess to get written, but the .htaccess does not exist.", "really-simple-ssl").' '.__("Please add the following lines to your .htaccess, or set it to writable:", "really-simple-ssl").$code,
+				'msg' => __("An option was enabled which requires the .htaccess to get written, but the .htaccess does not exist.", "really-simple-ssl").' '.__("Please add the following lines to your .htaccess, or set it to writable:", "really-simple-ssl"),
 				'icon' => 'open',
 				'dismissible' => true,
 			),
