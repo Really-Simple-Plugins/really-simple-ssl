@@ -8,9 +8,8 @@ function rsssl_add_http_method_rules($rules){
 	$rules .= 'if ( !$is_rest_request ) {'."\n";
 	$rules .= '	$current_method = isset($_SERVER["REQUEST_METHOD"]) ? $_SERVER["REQUEST_METHOD"]: false;'."\n";
 	$rules .= '	if( !in_array($current_method, ["GET", "POST"]) ){'."\n";
-	$rules .= '	error_log(print_r($_SERVER, true));'."\n";
-//	$rules .= '		header($_SERVER["SERVER_PROTOCOL"]." 405 Method Not Allowed", true, 405);'."\n";
-//	$rules .= '		exit;'."\n";
+	$rules .= '		header($_SERVER["SERVER_PROTOCOL"]." 405 Method Not Allowed", true, 405);'."\n";
+	$rules .= '		exit;'."\n";
 	$rules .= '	}'."\n";
 	$rules .= '}'."\n\n";
 
