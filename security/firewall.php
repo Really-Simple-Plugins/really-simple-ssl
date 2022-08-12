@@ -82,7 +82,7 @@ class rsssl_firewall {
 		$contents .= "defined('ABSPATH') or die();" . "\n\n";
 		//allow disabling of headers for detection purposes
 		$contents .= 'if ( isset($_GET["rsssl_header_test"]) && intval($_GET["rsssl_header_test"]) ===  ' . $this->get_headers_nonce() . ' ) return;' . "\n\n";
-		$contents .= "//RULES START\n\n".$rules;
+		$contents .= "//RULES START\n".$rules;
 
 		// write to advanced-header.php file
 		if ( is_writable( $dir ) ) {

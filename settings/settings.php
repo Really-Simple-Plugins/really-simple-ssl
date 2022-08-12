@@ -222,7 +222,6 @@ function rsssl_rest_api_fields_set($request){
         return;
     }
     error_log("update options rsssl");
-    x_log($request);
 	$fields = $request->get_json_params();
 
 //    error_log(print_r($fields, true));
