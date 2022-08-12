@@ -1,6 +1,6 @@
 <?php
 /**
- * Action to disable user registration
+ * Action to disable user enumeration
  * @param array $rules
  *
  * @return []
