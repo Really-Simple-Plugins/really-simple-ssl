@@ -1459,7 +1459,7 @@ class rsssl_admin extends rsssl_front_end
     }
 
     /**
-     * Save the plugin options
+     * Save the plugin options (not settings)
      *
      * @since  2.0
      *
@@ -1469,10 +1469,9 @@ class rsssl_admin extends rsssl_front_end
 
     public function save_options()
     {
-        $options = array(
-            'site_has_ssl' => $this->site_has_ssl,
-            'review_notice_shown' => $this->review_notice_shown,
-        );
+	    $options = get_option('rsssl_options', []);
+        $options['site_has_ssl'] = $this->site_has_ssl;
+        $options['review_notice_shown'] = $this->review_notice_shown;
 	    update_option('rsssl_options', $options);
     }
 
@@ -2227,7 +2226,7 @@ class rsssl_admin extends rsssl_front_end
         //only add the redirect rules when a known type of SSL was detected. Otherwise, we use https.
         $rule = "";
         //if the htaccess test was successfull, and we know the redirectype, edit
-        if ($this->htaccess_redirect && ($manual || $this->htaccess_test_success) && $this->ssl_type != "NA") {
+        if ( rsssl_get_option('redirect')==='htaccess' && ($manual || $this->htaccess_test_success) && $this->ssl_type != "NA") {
             $rule .= "<IfModule mod_rewrite.c>" . "\n";
             $rule .= "RewriteEngine on" . "\n";
             if ($this->ssl_type == "SERVER-HTTPS-ON") {
