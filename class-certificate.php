@@ -54,7 +54,7 @@ if ( ! class_exists( 'rsssl_certificate' ) ) {
 			$domain = site_url();
 			//Parse to strip off any /subfolder/
 			$parse = parse_url($domain);
-			return $parse['host'] ?? false;
+			return isset($parse['host']) ? $parse['host'] : false;
 		}
 
        /**

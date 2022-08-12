@@ -7,7 +7,7 @@ function rsssl_plesk_install(){
 		$domains = RSSSL_LE()->letsencrypt_handler->get_subjects();
 		$response = $cpanel->installSSL($domains);
 		if ( $response->status === 'success' ) {
-			update_option('rsssl_le_certificate_installed_by_rsssl', 'cpanel:default');
+			update_option('rsssl_le_certificate_installed_by_rsssl', 'cpanel:default', false);
 		}
 		return $response;
 	} else {
