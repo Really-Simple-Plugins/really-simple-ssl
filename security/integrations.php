@@ -148,6 +148,7 @@ $rsssl_integrations_list = apply_filters( 'rsssl_integrations', array(
         'learning_mode'        => false,
 		'option_id'            => 'disable_indexing',
         'type'                 => 'checkbox',
+        'has_deactivation'     => true,
     ),
 
 	'application-passwords' => array(

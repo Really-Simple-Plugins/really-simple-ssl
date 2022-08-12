@@ -1,6 +1,19 @@
 <?php
-defined( 'ABSPATH' ) or die( "you do not have access to this page!" );
-error_log("load integration");
+defined( 'ABSPATH' ) or die();
+/**
+ * Clear the test cache after settings change.
+ * @return void
+ */
+function rsssl_disable_http_methods_clear_transient(){
+	delete_transient('rsssl_directory_indexing_status' );
+}
+add_action( 'rsssl_after_saved_fields', 'rsssl_disable_http_methods_clear_transient', 20 );
+
+if ( rsssl_is_in_deactivation_list('disable-indexing') ){
+	rsssl_disable_http_methods_clear_transient();
+	rsssl_remove_from_deactivation_list('disable-indexing');
+}
+
 /**
  * Disable indexing
  * @param array $rules
