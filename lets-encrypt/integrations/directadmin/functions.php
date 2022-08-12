@@ -7,7 +7,7 @@ function rsssl_install_directadmin(){
 		$domains = RSSSL_LE()->letsencrypt_handler->get_subjects();
 		$response = $directadmin->installSSL($domains);
 		if ( $response->status === 'success' ) {
-			update_option('rsssl_le_certificate_installed_by_rsssl', 'directadmin');
+			update_option('rsssl_le_certificate_installed_by_rsssl', 'directadmin', false );
 		}
 		return $response;
 	} else {

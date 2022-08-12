@@ -1,10 +1,21 @@
 <?php
 /**
  * Action to disable user registration
- * @param string $rules
+ * @param array $rules
  *
- * @return string
+ * @return []
  */
+
+
+function rsssl_disable_user_enumeration_rules( $rules ) {
+	$rule = "\n" ."RewriteCond %{QUERY_STRING} ^author= [NC]" . "\n" .
+	         "RewriteRule .* - [F,L]" . "\n" .
+	         "RewriteRule ^author/ - [F,L]";
+
+	$rules[] = ['rules' => $rule, 'identifier' => 'RewriteRule ^author'];
+	return $rules;
+}
+add_filter('rsssl_htaccess_security_rules', 'rsssl_disable_user_enumeration_rules');
 
 /**
  * Prevent User Enumeration in YOAST

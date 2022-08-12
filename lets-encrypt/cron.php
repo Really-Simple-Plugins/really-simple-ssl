@@ -40,11 +40,11 @@ function rsssl_le_cron_maybe_start_renewal(){
 	}
 
 	if ( RSSSL_LE()->letsencrypt_handler->cron_certificate_needs_renewal() ) {
-		update_option("rsssl_le_start_renewal", true);
+		update_option("rsssl_le_start_renewal", true, false);
 	}
 
 	if ( RSSSL_LE()->letsencrypt_handler->certificate_install_required() ) {
-		update_option("rsssl_le_start_installation", true);
+		update_option("rsssl_le_start_installation", true, false);
 	}
 
 }

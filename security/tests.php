@@ -72,7 +72,6 @@ function rsssl_xmlrpc_allowed()
 function rsssl_http_methods_allowed()
 
 {
-	return true;
 	if ( ! current_user_can( 'manage_options' ) ) {
 		return false;
 	}
@@ -123,19 +122,6 @@ function rsssl_file_editing_allowed() {
 
 /**
  * @return bool
- * Check if application passwords are available
- */
-function rsssl_application_passwords_available() {
-
-	if ( wp_is_application_passwords_available() ) {
-		return true;
-	}
-
-	return false;
-}
-
-/**
- * @return bool
  *
  * Check if DB has default wp_ prefix
  */
@@ -182,23 +168,12 @@ function rsssl_id_one_no_enumeration() {
 }
 
 /**
- * @return bool
- *
- * Check if debug.log is in default location
- */
-function rsssl_debug_log_in_default_location() {
-	return file_exists(WP_CONTENT_DIR.'/debug.log');
-}
-
-/**
- * @return bool
- *
  * Check if display name is the same as login
  */
 function rsssl_display_name_equals_login() {
 	$user = wp_get_current_user();
 	if ( $user->data->user_login === $user->data->display_name ) {
-			return true;
+		return true;
 	}
 
 	return false;
@@ -206,6 +181,7 @@ function rsssl_display_name_equals_login() {
 
 /**
  * Check if debugging in WordPress is enabled
+ * @return bool
  */
 function rsssl_is_debug_log_enabled() {
 	if ( defined('WP_DEBUG') && defined('WP_DEBUG_LOG') ) {
@@ -213,6 +189,54 @@ function rsssl_is_debug_log_enabled() {
 	}
 
 	return false;
+}
+
+function rsssl_get_debug_log_value(){
+	$wpconfig_path = rsssl_find_wp_config_path();
+	if ( !$wpconfig_path ) return false;
+
+	$wpconfig      = file_get_contents( $wpconfig_path );
+
+	// Get WP_DEBUG_LOG declaration
+	$regex = "/^\s*define\([ ]{0,2}[\'|\"]WP_DEBUG_LOG[\'|\"][ ]{0,2},[ ]{0,2}(.*)[ ]{0,2}\);/m";
+	preg_match( $regex, $wpconfig, $matches );
+	if ($matches && isset($matches[1]) ){
+		return $matches[1];
+	} else {
+		return 'true';
+	}
+}
+function rsssl_debugging_enabled(){
+	return defined('WP_DEBUG') && WP_DEBUG;
+}
+/**
+ * Check if default.log is in default location
+ * @return bool
+ */
+function rsssl_debug_log_in_default_location() {
+	$debug_log_value = rsssl_get_debug_log_value();
+	// If str contains true, location is default
+    if ( trim($debug_log_value) === 'true' ) {
+        return true;
+    }
+    return false;
+}
+
+/**
+ * Check if debug location is not default, and if that is done by RSSSL>
+ * @return bool
+*/
+function rsssl_enabled_by_rsssl($option_name, $test){
+	$test_result = false;
+	if (function_exists($test)) {
+		$test_result = $test();
+	}
+
+	if ( $test_result && !rsssl_get_value('change_debug_log_location') ) {
+		return false;
+	} else {
+		return true;
+	}
 }
 
 /**
@@ -226,9 +250,7 @@ function rsssl_wordpress_version_above_5_6() {
 	}
 
 	return true;
-
 }
-
 
 /**
  * @return string
@@ -253,4 +275,42 @@ function rsssl_code_execution_allowed()
 	}
 
 	return $result;
+}
+
+/**
+ * Test if directory indexing is allowed
+ * @return bool
+ */
+function rsssl_directory_indexing_allowed() {
+	$status = get_transient('rsssl_directory_indexing_status');
+	if ( !$status ) {
+		$test_folder = 'rssslbrowsingtest';
+		$test_dir = trailingslashit(ABSPATH) . $test_folder;
+		if ( ! is_dir( $test_dir ) ) {
+			mkdir( $test_dir, 755 );
+		}
+		$response = wp_remote_get(trailingslashit( site_url($test_folder) ) );
+		if ( is_dir( $test_dir )  ) {
+			rmdir( $test_dir );
+		}
+
+		// WP_Error won't contain response code, return false
+		if ( is_wp_error( $response ) ) {
+			$status = 'error';
+		} else {
+			$response_code = $response['response']['code'];
+			if ( $response_code === 403 ) {
+				$status = 'forbidden';
+			} else {
+				$status = 'allowed';
+			}
+		}
+		set_transient('rsssl_directory_indexing_status', $status, WEEK_IN_SECONDS );
+	}
+
+	if ($status==='allowed') {
+		return true;
+	} else {
+		return false;
+	}
 }
