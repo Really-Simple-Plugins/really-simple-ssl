@@ -336,6 +336,7 @@ function rsssl_fields( $load_values = true ){
             ],
             'networkwide' => false,
         ],
+
         [
             'id'          => 'do_not_edit_htaccess',
             'menu_id'     => 'general',
