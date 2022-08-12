@@ -305,9 +305,9 @@ function rsssl_directory_indexing_allowed() {
 		set_transient('rsssl_directory_indexing_status', $status, WEEK_IN_SECONDS );
 	}
 
-	if ($status==='allowed') {
-		return true;
-	} else {
+	if ( $status==='forbidden' ) {
 		return false;
+	} else {
+		return true;
 	}
 }
