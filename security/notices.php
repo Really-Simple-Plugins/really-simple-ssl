@@ -2,7 +2,7 @@
 
 function rsssl_general_security_notices( $notices ) {
 	$code = get_site_option('rsssl_htaccess_rules');
-	$code            = '<br><code>' . $code . '</code><br>';
+	$code = '<br><code style="white-space: pre-line">' . esc_html($code) . '</code><br>';
 
 	$notices['application-passwords'] = array(
 		'callback' => 'wp_is_application_passwords_available',
@@ -133,7 +133,6 @@ function rsssl_general_security_notices( $notices ) {
 			),
 		),
 	);
-
 	return $notices;
 }
 add_filter('rsssl_notices', 'rsssl_general_security_notices');

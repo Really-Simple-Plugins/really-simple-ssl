@@ -136,11 +136,13 @@ class GridBlock extends Component {
             }, blockData.content.interval );
         }
 
+        // console.log(blockData);
+
         let DynamicBlockProps = { saveChangedFields: this.props.saveChangedFields, setBlockProps: this.setBlockProps, BlockProps: this.BlockProps, runTest: this.runTest, fields: this.props.fields, isApiLoaded: this.props.isApiLoaded, highLightField: this.highLightField };
         return (
             <div className={className}>
                 <div className="rsssl-grid-item-header">
-                    <h3 className="burst-grid-title rsssl-h4">{ blockData.title }</h3>
+                    <h3 className="rsssl-grid-title rsssl-h4">{ blockData.title }</h3>
                     <div className="rsssl-grid-item-controls">
                         {blockData.controls && blockData.controls.type==='url' && <a href={blockData.controls.data}>{__("Instructions", "really-simple-ssl")}</a>}
                         {blockData.controls && blockData.controls.type==='html' && <span className="rsssl-header-html" dangerouslySetInnerHTML={{__html: blockData.controls.data}}></span>}

@@ -161,8 +161,7 @@ class REALLY_SIMPLE_SSL
 			require_once( rsssl_path . 'lets-encrypt/cron.php' );
 		}
 
-		require_once(rsssl_path . '/security/integrations.php');
-
+		require_once(rsssl_path . '/security/security.php');
 	}
 
 	private function hooks()
@@ -209,6 +208,7 @@ class REALLY_SIMPLE_SSL
 	 *
 	 * @return bool
 	 */
+
 	public static function has_old_addon($file) {
 		require_once(ABSPATH.'wp-admin/includes/plugin.php');
 		$data = false;

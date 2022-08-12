@@ -69,7 +69,15 @@ if ( !function_exists('rsssl_remove_htaccess_security_edits') ) {
 			return;
 		}
 
-		if ( rsssl_get_server() !== 'apache' ) {
+		if ( ! rsssl_uses_htaccess() ) {
+			return;
+		}
+
+		$rules = '';
+		$htaccess_file = RSSSL()->really_simple_ssl->htaccess_file();
+		if ( !file_exists( $htaccess_file ) ) {
+			update_site_option('rsssl_htaccess_error', 'not-exists');
+			update_site_option('rsssl_htaccess_rules', $rules);
 			return;
 		}
 
@@ -215,7 +223,7 @@ if ( ! function_exists('rsssl_wrap_htaccess' ) ) {
  * @return bool
  */
 function rsssl_uses_htaccess() {
-	if ( rsssl_get_server() !== 'apache' || rsssl_get_server() !== 'litespeed' ) {
+	if ( rsssl_get_server() === 'apache' || rsssl_get_server() === 'litespeed' ) {
 		return true;
 	}
 
@@ -290,4 +298,25 @@ function rsssl_generate_random_string($length) {
 	}
 
 	return $randomString;
+}
+
+if (!function_exists('rsssl_read_more')) {
+	/**
+	 * Create a generic read more text with link for help texts.
+	 *
+	 * @param string $url
+	 * @param bool   $add_space
+	 *
+	 * @return string
+	 */
+	function rsssl_read_more( $url, $add_character = ' ' ) {
+		$html = sprintf( __( "For more information, please read this %sarticle%s",
+			'really-simple-ssl' ), '<a target="_blank" href="' . $url . '">',
+			'</a>' );
+		if ( is_string($add_character) ) {
+			$html = $add_character . $html;
+		}
+
+		return $html;
+	}
 }
