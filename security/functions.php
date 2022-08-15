@@ -23,31 +23,6 @@ defined( 'ABSPATH' ) or die( );
 //    }
 //}
 
-/**
- * Complete a fix for an issue, either user triggered, or automatic
- * @param $fix
- *
- * @return void
- */
-function rsssl_do_fix($fix){
-	if ( !current_user_can('manage_options')) {
-		return;
-	}
-
-	if ( !rsssl_has_fix($fix) && function_exists($fix)) {
-		$completed[]=$fix;
-		$success = $fix();
-		$completed = get_option('rsssl_completed_fixes', []);
-		if ($success) {
-			$completed[] = $fix;
-			update_option('rsssl_completed_fixes', $completed, false );
-		}
-	} elseif ($fix && !function_exists($fix) ) {
-		error_log("Really Simple SSL: fix function $fix not found");
-	}
-
-}
-
 function rsssl_has_fix($fix){
 	$completed = get_option('rsssl_completed_fixes', []);
 	if ( !in_array($fix, $completed)) {
