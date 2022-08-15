@@ -16,18 +16,11 @@ import * as rsssl_api from "./utils/api";
 class Settings extends Component {
     constructor() {
         super( ...arguments );
-        this.state = {
-            fields:this.props.fields,
-            progress:this.props.progress,
-            isAPILoaded: this.props.isAPILoaded,
-        };
     }
 
     render() {
-        const {
-            progress,
-            isAPILoaded,
-        } = this.state;
+        let isAPILoaded = this.props.isAPILoaded;
+        let progress = this.props.progress;
         let selectedMenuItem = this.props.selectedMenuItem;
         let fields = this.props.fields;
         let selectedStep = this.props.selectedStep;
@@ -61,7 +54,7 @@ class Settings extends Component {
                 help.label = notice.output.label;
                 help.id = notice.field_id;
                 help.text = notice.output.msg;
-                help.linked_option = notice.show_with_option;
+                help.linked_field = notice.show_with_option;
                 notices.push(help);
             }
         }

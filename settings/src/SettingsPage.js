@@ -138,12 +138,13 @@ class SettingsPage extends Component {
                 saveFields.push(field);
             }
         }
-        console.log("set fields");
-        console.log(saveFields);
+
         rsssl_api.setFields(saveFields).then(( response ) => {
+            console.log(response);
             this.changedFields = [];
             this.setState({
-                changedFields :[]
+                changedFields :[],
+                progress: response.data.progress,
             });
             this.showSavedSettingsNotice();
         });
@@ -156,7 +157,6 @@ class SettingsPage extends Component {
 
     saveAndContinue() {
         this.save()
-
         this.wizardNextPrevious(false);
     }
 
@@ -215,17 +215,6 @@ class SettingsPage extends Component {
                 <Placeholder></Placeholder>
             );
         }
-
-        //maybe filter step
-        // if ( menu.is_wizard ){
-        //     let length = menuItems.length;
-        //     let temp = []
-        //     for ( let i = 0; i < length; i++ ) {
-        //         if ( menuItems[i]['step'] !== selectedStep ){
-        //             menuItems.splice(i, 1);
-        //         }
-        //     }
-        // }
 
         let fieldsUpdateComplete = changedFields.length === 0;
 

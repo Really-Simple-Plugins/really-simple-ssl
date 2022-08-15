@@ -274,6 +274,7 @@ function rsssl_wordpress_version_above_5_6() {
  */
 function rsssl_code_execution_allowed()
 {
+	return true;
 	$code_execution_allowed = false;
 	$upload_dir = wp_get_upload_dir();
 	$test_file = $upload_dir['basedir'] . '/' . 'code-execution.php';

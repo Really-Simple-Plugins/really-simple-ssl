@@ -3613,13 +3613,12 @@ class Help extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Component {
 
   render() {
     let notice = this.props.help;
-    console.log("notice text");
-    console.log(notice.text);
 
     if (!notice.title) {
       notice.title = notice.text;
       notice.text = false;
-    }
+    } //we can use notice.linked_field to create a visual link to the field.
+
 
     return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, notice.title && notice.text && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("details", {
       className: "rsssl-wizard-help-notice rsssl-" + notice.label.toLowerCase()
@@ -5202,18 +5201,11 @@ __webpack_require__.r(__webpack_exports__);
 class Settings extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Component {
   constructor() {
     super(...arguments);
-    this.state = {
-      fields: this.props.fields,
-      progress: this.props.progress,
-      isAPILoaded: this.props.isAPILoaded
-    };
   }
 
   render() {
-    const {
-      progress,
-      isAPILoaded
-    } = this.state;
+    let isAPILoaded = this.props.isAPILoaded;
+    let progress = this.props.progress;
     let selectedMenuItem = this.props.selectedMenuItem;
     let fields = this.props.fields;
     let selectedStep = this.props.selectedStep;
@@ -5251,7 +5243,7 @@ class Settings extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Component
         help.label = notice.output.label;
         help.id = notice.field_id;
         help.text = notice.output.msg;
-        help.linked_option = notice.show_with_option;
+        help.linked_field = notice.show_with_option;
         notices.push(help);
       }
     }
@@ -5633,12 +5625,12 @@ class SettingsPage extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Compo
       }
     }
 
-    console.log("set fields");
-    console.log(saveFields);
     _utils_api__WEBPACK_IMPORTED_MODULE_2__.setFields(saveFields).then(response => {
+      console.log(response);
       this.changedFields = [];
       this.setState({
-        changedFields: []
+        changedFields: [],
+        progress: response.data.progress
       });
       this.showSavedSettingsNotice();
     });
@@ -5715,17 +5707,7 @@ class SettingsPage extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Compo
 
     if (!isAPILoaded) {
       return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_Placeholder__WEBPACK_IMPORTED_MODULE_3__["default"], null);
-    } //maybe filter step
-    // if ( menu.is_wizard ){
-    //     let length = menuItems.length;
-    //     let temp = []
-    //     for ( let i = 0; i < length; i++ ) {
-    //         if ( menuItems[i]['step'] !== selectedStep ){
-    //             menuItems.splice(i, 1);
-    //         }
-    //     }
-    // }
-
+    }
 
     let fieldsUpdateComplete = changedFields.length === 0;
     return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_Menu__WEBPACK_IMPORTED_MODULE_4__["default"], {

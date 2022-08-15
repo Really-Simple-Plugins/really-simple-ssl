@@ -221,10 +221,7 @@ function rsssl_rest_api_fields_set($request){
     if ( !current_user_can('manage_options')) {
         return;
     }
-    error_log("update options rsssl");
 	$fields = $request->get_json_params();
-
-//    error_log(print_r($fields, true));
     $config_fields = rsssl_fields(false);
     $config_ids = array_column($config_fields, 'id');
 
@@ -273,7 +270,6 @@ function rsssl_rest_api_fields_set($request){
 	//build a new options array
     foreach ( $fields as $field ) {
         $prev_value = isset( $options[ $field['id'] ] ) ? $options[ $field['id'] ] : false;
-	    error_log("Updating " . $field['id']);
         do_action( "rsssl_before_save_option", $field['id'], $field['value'], $prev_value, $field['type'] );
         $options[ $field['id'] ] = $field['value'];
     }
@@ -290,7 +286,12 @@ function rsssl_rest_api_fields_set($request){
         do_action( "rsssl_after_save_field", $field['id'], $field['value'], $prev_value, $field['type'] );
     }
 	do_action('rsssl_after_saved_fields', $fields );
-	$output   = ['success' => true];
+	$output   = [
+            'success' => true,
+            'progress' => RSSSL()->progress->get()
+    ];
+    error_log("progress");
+    x_log(RSSSL()->progress->get());
 	$response = json_encode( $output );
 	header( "Content-Type: application/json" );
 	echo $response;
