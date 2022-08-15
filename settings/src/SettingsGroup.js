@@ -1,6 +1,6 @@
 import {Component} from "@wordpress/element";
 import Field from "./Field";
-import Hyperlink from "./Utils/Hyperlink";
+import Hyperlink from "./utils/Hyperlink";
 
 import { __ } from '@wordpress/i18n';
 

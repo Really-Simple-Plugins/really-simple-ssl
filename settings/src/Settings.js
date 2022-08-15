@@ -50,15 +50,22 @@ class Settings extends Component {
         //convert progress notices to an array useful for the help blocks
         let notices = [];
         for (const notice of progress.notices){
-            if ( notice.menu_id === selectedMenuItem ) {
+            let noticeField = false;
+            if ( notice.show_with_options ) {
+                noticeField = selectedFields.filter(field => notice.show_with_options && notice.show_with_options.includes(field.id) );
+            }
+
+            if ( noticeField || notice.menu_id === selectedMenuItem ) {
                 let help = {};
                 help.title = notice.output.title ? notice.output.title : false;
                 help.label = notice.output.label;
                 help.id = notice.field_id;
                 help.text = notice.output.msg;
+                help.linked_option = notice.show_with_option;
                 notices.push(help);
             }
         }
+
         for (const notice of selectedFields.filter(field => field.help)){
             let help = notice.help;
             help.id = notice.id;

@@ -21,17 +21,20 @@ function rsssl_general_security_notices( $notices ) {
 		'score' => 5,
 		'output' => array(
 			'not-writable' => array(
+				'title' => __(".htaccess not writable", "really-simple-ssl"),
 				'msg' => __("An option was enabled which requires the .htaccess to get written, but the .htaccess is not writable.", "really-simple-ssl").' '.__("Please add the following lines to your .htaccess, or set it to writable:", "really-simple-ssl").$code,
 				'icon' => 'open',
 				'dismissible' => true,
 			),
 			'not-exists' => array(
+				'title' => __(".htaccess does not exist", "really-simple-ssl"),
 				'msg' => __("An option was enabled which requires the .htaccess to get written, but the .htaccess does not exist.", "really-simple-ssl").' '.__("Please add the following lines to your .htaccess, or set it to writable:", "really-simple-ssl").$code,
 				'icon' => 'open',
 				'dismissible' => true,
 			),
 
 			'not-writable-uploads' => array(
+				'title' => __(".htaccess in uploads directory not writable", "really-simple-ssl"),
 				'msg' => __("An option was enabled which requires the .htaccess in the uploads directory to get written, but the .htaccess or directory is not writable.", "really-simple-ssl").' '.__("Please add the following lines to your .htaccess, or set it to writable:", "really-simple-ssl").$code,
 				'icon' => 'open',
 				'dismissible' => true,
