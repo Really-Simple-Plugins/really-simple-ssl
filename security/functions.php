@@ -23,14 +23,6 @@ defined( 'ABSPATH' ) or die( );
 //    }
 //}
 
-function rsssl_has_fix($fix){
-	$completed = get_option('rsssl_completed_fixes', []);
-	if ( !in_array($fix, $completed)) {
-		return false;
-	}
-	return true;
-}
-
 //error_log(print_r($_SERVER,true));
 //error_log(print_r($_POST,true));
 //error_log(print_r($_GET,true));

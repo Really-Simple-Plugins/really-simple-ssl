@@ -26,7 +26,6 @@ add_filter('rsssl_notices', 'rsssl_admin_username_changed');
  * @return bool
  */
 function rsssl_rename_admin_user() {
-	error_log("do rename check");
 	if ( !current_user_can( 'manage_options' ) ) {
 		return false;
 	}
