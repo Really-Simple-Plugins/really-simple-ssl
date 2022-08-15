@@ -2351,7 +2351,8 @@ class rsssl_admin extends rsssl_front_end
 	 */
     public function add_htaccess_redirect_before_wp_rocket() {
 
-        return $this->get_redirect_rules();
+        $this->detect_configuration();
+        return $this->get_redirect_rules( true );
 
     }
 
@@ -2454,6 +2455,7 @@ class rsssl_admin extends rsssl_front_end
     public function get_redirect_rules($manual = false)
     {
         $this->trace_log("retrieving redirect rules");
+
         //only add the redirect rules when a known type of SSL was detected. Otherwise, we use https.
         $rule = "";
         //if the htaccess test was successfull, and we know the redirectype, edit
