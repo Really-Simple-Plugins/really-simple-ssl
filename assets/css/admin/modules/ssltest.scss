@@ -1,0 +1,48 @@
+.rsssl-grid-item.rsssl-ssllabs .rsssl-grid-item-content {
+  padding: 0;
+}
+.rsssl-ssllabs {
+  .rsssl-placeholder{
+    @include rsssl-block-padding;
+  }
+}
+
+.rsssl-gridblock-progress-container.rsssl-incomplete {
+  height: 4px;
+  width: 100%;
+  display: flex;
+  background: var(--rsp-grey-300);
+
+  .rsssl-gridblock-progress {
+    transition: width 1s ease-in-out;
+    background: var(--rsp-green);
+  }
+}
+
+.rsssl-ssl-test {
+  display: flex;
+  flex: 0 1 auto;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--rsp-dark-blue-faded);
+  @include rsssl-block-padding;
+
+  .rsssl-ssl-test-information{
+    p{
+      font-size: var(--rsp-fs-100);
+      letter-spacing: 0.01ch;
+      line-height: 2;
+    }
+  }
+}
+.rsssl-detailed-report{
+  text-align: center;
+  @include rsssl-block-padding;
+  padding-block: var(--rsp-spacing-xs);
+}
+.rsssl-disclaimer{
+  font-size: var(--rsp-fs-100);
+  @include rsssl-block-padding;
+  padding-block: var(--rsp-spacing-xs);
+}
+

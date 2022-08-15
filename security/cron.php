@@ -31,7 +31,7 @@ function rsssl_filter_cron_schedules( $schedules ) {
 	return $schedules;
 }
 
-register_deactivation_hook( __FILE__, 'rsssl_clear_scheduled_hooks' );
+register_deactivation_hook( rsssl_file, 'rsssl_clear_scheduled_hooks' );
 function rsssl_clear_scheduled_hooks() {
 	wp_clear_scheduled_hook( 'rsssl_every_day_hook' );
 }

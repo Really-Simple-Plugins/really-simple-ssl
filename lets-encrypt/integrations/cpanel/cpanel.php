@@ -65,7 +65,7 @@ class rsssl_cPanel
 	    }
 
 	    if ( $response->status === 'success' ) {
-		    update_option('rsssl_le_certificate_installed_by_rsssl', 'cpanel:default');
+		    update_option('rsssl_le_certificate_installed_by_rsssl', 'cpanel:default', false);
 	    }
 
 	    return $response;
@@ -98,7 +98,7 @@ class rsssl_cPanel
         //Validate $response
         if (empty($response)) {
             error_log('Not able to login');
-	        update_option('rsssl_installation_error', 'cpanel:default');
+	        update_option('rsssl_installation_error', 'cpanel:default', false);
 	        $status = 'warning';
 	        $action = $shell_addon_active ? 'skip' : 'continue';
 	        $message = rsssl_get_manual_instructions_text($this->ssl_installation_url);
@@ -110,7 +110,7 @@ class rsssl_cPanel
 	        $action = 'continue';
 	        $message = sprintf(__("SSL successfully installed on %s","really-simple-ssl"), $domain);
         } else {
-	        update_option('rsssl_installation_error', 'cpanel:default');
+	        update_option('rsssl_installation_error', 'cpanel:default', false);
 	        error_log($response->errors[0]);
 	        $status = 'error';
 	        $action = $shell_addon_active ? 'skip' : 'continue';
@@ -137,7 +137,7 @@ class rsssl_cPanel
 
 	    //Validate $response
 	    if (empty($response)) {
-	    	update_option('rsssl_installation_error', 'cpanel:autossl');
+	    	update_option('rsssl_installation_error', 'cpanel:autossl', false);
 		    error_log('The install_ssl cURL call did not return valid JSON');
 		    $status = 'error';
 		    $action = 'skip';
@@ -149,7 +149,7 @@ class rsssl_cPanel
 		    $action = 'finalize';
 		    $message = __("SSL successfully installed on $domains","really-simple-ssl");
 	    } else {
-		    update_option('rsssl_installation_error', 'cpanel:autossl');
+		    update_option('rsssl_installation_error', 'cpanel:autossl', false);
 		    error_log('The auto SSL cURL call returned valid JSON, but reported errors:');
 		    error_log($response->errors[0]);
 		    $status = 'error';

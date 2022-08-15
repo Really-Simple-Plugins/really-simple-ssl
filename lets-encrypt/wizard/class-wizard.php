@@ -118,7 +118,7 @@ if ( ! class_exists( "rsssl_wizard" ) ) {
 			}
 
 		    if (isset($_POST['rsssl-switch-to-dns'])) {
-			    update_option('rsssl_verification_type', 'DNS');
+			    update_option('rsssl_verification_type', 'DNS', false);
 			    $step = $this->step();
 			    rsssl_progress_add('directories');
 			    //if we're in step directories, skip to DNS step
@@ -133,19 +133,19 @@ if ( ! class_exists( "rsssl_wizard" ) ) {
             }
 
 		    if (isset($_POST['rsssl-skip-dns-check'])) {
-			    update_option('rsssl_skip_dns_check', true);
+			    update_option('rsssl_skip_dns_check', true, false);
             }
 
 		    if (isset($_POST['rsssl-skip-challenge-directory-request'])) {
-			    update_option('rsssl_skip_challenge_directory_request', true);
+			    update_option('rsssl_skip_challenge_directory_request', true, false);
             }
 
 		    if (isset($_POST['rsssl-force-plesk'])) {
-			    update_option('rsssl_force_plesk', true);
+			    update_option('rsssl_force_plesk', true, false);
             }
 
 			if (isset($_POST['rsssl-force-cpanel'])) {
-				update_option('rsssl_force_cpanel', true);
+				update_option('rsssl_force_cpanel', true, false);
 			}
 
         }
@@ -467,7 +467,7 @@ if ( ! class_exists( "rsssl_wizard" ) ) {
 			if ( $fieldname==='other_host_type'){
 			    if ( isset(RSSSL_LE()->config->hosts[$fieldvalue]) ){
 			        $dashboard = RSSSL_LE()->config->hosts[$fieldvalue]['hosting_dashboard'];
-			        update_option('rsssl_hosting_dashboard', $dashboard);
+			        update_option('rsssl_hosting_dashboard', $dashboard, false);
                 }
             }
 

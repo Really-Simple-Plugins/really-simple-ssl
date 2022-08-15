@@ -1,0 +1,363 @@
+/* rsssl-rsssl-tooltip for settings page */
+/* Base styles for the element that has a rsssl-tooltip */
+[data-rsssl-tooltip],
+.rsssl-tooltip {
+  position: relative;
+  cursor: pointer;
+}
+
+/* Base styles for the entire tooltip */
+[data-rsssl-tooltip]:before,
+[data-rsssl-tooltip]:after,
+.rsssl-tooltip:before,
+.rsssl-tooltip:after {
+  position: absolute;
+  visibility: hidden;
+  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
+  filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=0);
+  opacity: 0;
+  -webkit-transition:
+          opacity 0.2s ease-in-out,
+          visibility 0.2s ease-in-out,
+          -webkit-transform 0.2s cubic-bezier(0.71, 1.7, 0.77, 1.24);
+  -moz-transition:
+          opacity 0.2s ease-in-out,
+          visibility 0.2s ease-in-out,
+          -moz-transform 0.2s cubic-bezier(0.71, 1.7, 0.77, 1.24);
+  transition:
+          opacity 0.2s ease-in-out,
+          visibility 0.2s ease-in-out,
+          transform 0.2s cubic-bezier(0.71, 1.7, 0.77, 1.24);
+  -webkit-transform: translate3d(0, 0, 0);
+  -moz-transform:    translate3d(0, 0, 0);
+  transform:         translate3d(0, 0, 0);
+  pointer-events: none;
+}
+
+/* Show the entire rsssl-tooltip on hover and focus */
+[data-rsssl-tooltip]:hover:before,
+[data-rsssl-tooltip]:hover:after,
+[data-rsssl-tooltip]:focus:before,
+[data-rsssl-tooltip]:focus:after,
+.rsssl-tooltip:hover:before,
+.rsssl-tooltip:hover:after,
+.rsssl-tooltip:focus:before,
+.rsssl-tooltip:focus:after {
+  visibility: visible;
+  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=100)";
+  filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=100);
+  opacity: 1;
+}
+
+/* Base styles for the rsssl-tooltip's directional arrow */
+.rsssl-tooltip:before,
+[data-rsssl-tooltip]:before {
+  z-index: 1001;
+  border: 6px solid transparent;
+  background: transparent;
+  content: "";
+}
+
+/* Base styles for the rsssl-tooltip's content area */
+.rsssl-tooltip:after,
+[data-rsssl-tooltip]:after {
+  z-index: 1000;
+  padding: 8px;
+  width: 220px;
+  background-color: #000;
+  background-color: hsla(0, 0%, 20%, 0.9);
+  color: #fff;
+  content: attr(data-rsssl-tooltip);
+  font-size: 14px;
+  line-height: 1.2;
+}
+
+/* Directions */
+
+/* Top (default) */
+.rsssl-tooltip-right {
+  font-weight:normal;
+}
+[data-rsssl-tooltip]:before,
+[data-rsssl-tooltip]:after,
+.rsssl-tooltip:before,
+.rsssl-tooltip:after,
+.rsssl-tooltip-top:before,
+.rsssl-tooltip-top:after {
+  bottom: 100%;
+  left: 50%;
+}
+
+[data-rsssl-tooltip]:before,
+.rsssl-tooltip:before,
+.rsssl-tooltip-top:before {
+  margin-left: -6px;
+  margin-bottom: -12px;
+  border-top-color: #000;
+  border-top-color: hsla(0, 0%, 20%, 0.9);
+}
+
+/* Horizontally align top/bottom rsssl-tooltips */
+[data-rsssl-tooltip]:after,
+.rsssl-tooltip:after,
+.rsssl-tooltip-top:after {
+  margin-left: -80px;
+}
+
+[data-rsssl-tooltip]:hover:before,
+[data-rsssl-tooltip]:hover:after,
+[data-rsssl-tooltip]:focus:before,
+[data-rsssl-tooltip]:focus:after,
+.rsssl-tooltip:hover:before,
+.rsssl-tooltip:hover:after,
+.rsssl-tooltip:focus:before,
+.rsssl-tooltip:focus:after,
+.rsssl-tooltip-top:hover:before,
+.rsssl-tooltip-top:hover:after,
+.rsssl-tooltip-top:focus:before,
+.rsssl-tooltip-top:focus:after {
+  -webkit-transform: translateY(-12px);
+  -moz-transform:    translateY(-12px);
+  transform:         translateY(-12px);
+}
+
+/* Left */
+.rsssl-tooltip-left:before,
+.rsssl-tooltip-left:after {
+  right: 100%;
+  /*bottom: 50%;*/
+  left: auto;
+}
+
+.rsssl-tooltip-left:before {
+  margin-left: 0;
+  margin-right: -12px;
+  margin-bottom: 0;
+  border-top-color: transparent;
+  border-left-color: #000;
+  border-left-color: hsla(0, 0%, 20%, 0.9);
+}
+
+.rsssl-tooltip-left:hover:before,
+.rsssl-tooltip-left:hover:after,
+.rsssl-tooltip-left:focus:before,
+.rsssl-tooltip-left:focus:after {
+  -webkit-transform: translateX(-12px);
+  -moz-transform:    translateX(-12px);
+  transform:         translateX(-12px);
+}
+
+/* Bottom */
+.rsssl-tooltip-bottom:before,
+.rsssl-tooltip-bottom:after {
+  top: 100%;
+  bottom: auto;
+  left: 50%;
+}
+
+.rsssl-tooltip-bottom:before {
+  margin-top: -12px;
+  margin-bottom: 0;
+  border-top-color: transparent;
+  border-bottom-color: #000;
+  border-bottom-color: hsla(0, 0%, 20%, 0.9);
+}
+
+.rsssl-tooltip-bottom:hover:before,
+.rsssl-tooltip-bottom:hover:after,
+.rsssl-tooltip-bottom:focus:before,
+.rsssl-tooltip-bottom:focus:after {
+  -webkit-transform: translateY(12px);
+  -moz-transform:    translateY(12px);
+  transform:         translateY(12px);
+}
+
+/* Right */
+.rsssl-tooltip-right:before,
+.rsssl-tooltip-right:after {
+  bottom: 50%;
+  left: 100%;
+}
+
+.rsssl-tooltip-right:before {
+  margin-bottom: 0;
+  margin-left: -12px;
+  border-top-color: transparent;
+  border-right-color: #000;
+  border-right-color: hsla(0, 0%, 20%, 0.9);
+}
+
+.rsssl-tooltip-right:hover:before,
+.rsssl-tooltip-right:hover:after,
+.rsssl-tooltip-right:focus:before,
+.rsssl-tooltip-right:focus:after {
+  -webkit-transform: translateX(12px);
+  -moz-transform:    translateX(12px);
+  transform:         translateX(12px);
+}
+
+/* Move directional arrows down a bit for left/right rsssl-tooltips */
+.rsssl-tooltip-left:before,
+.rsssl-tooltip-right:before {
+  top: 3px;
+}
+
+/* Vertically center rsssl-tooltip content for left/right rsssl-tooltips */
+.rsssl-tooltip-left:after,
+.rsssl-tooltip-right:after {
+  margin-left: 0;
+  margin-bottom: -25px;
+
+}
+//
+///* START TOOLTIP STYLES */
+//[rsssl-tooltip] {
+//  position: relative; /* opinion 1 */
+//  margin-left: 5px;
+//}
+//
+///* Applies to all tooltips */
+//[rsssl-tooltip]::before,
+//[rsssl-tooltip]::after {
+//  text-transform: none; /* opinion 2 */
+//  font-size: 1em; /* opinion 3 */
+//  line-height: 1;
+//  user-select: none;
+//  pointer-events: none;
+//  position: absolute;
+//  display: none;
+//  opacity: 0;
+//}
+//
+//[rsssl-tooltip]::before {
+//  content: '';
+//  border: 5px solid transparent; /* opinion 4 */
+//  z-index: 1001; /* absurdity 1 */
+//}
+//
+//[rsssl-tooltip]::after {
+//  content: attr(rsssl-tooltip); /* magic! */
+//  min-width: 3em;
+//  font-weight:normal;
+//  overflow: hidden;
+//  text-overflow: ellipsis;
+//  padding: 1ch 1.5ch;
+//  border-radius: .3ch;
+//  box-shadow: 0 1em 2em -.5em rgba(0, 0, 0, 0.35);
+//  background: #333;
+//  color: #fff;
+//  z-index: 1000; /* absurdity 2 */
+//}
+//
+///* Make the tooltips respond to hover */
+//[rsssl-tooltip]:hover::before,
+//[rsssl-tooltip]:hover::after {
+//  display: block;
+//}
+//
+///* don't show empty tooltips */
+//[rsssl-tooltip='']::before,
+//[rsssl-tooltip='']::after {
+//  display: none !important;
+//}
+//
+///* FLOW: UP */
+//[rsssl-tooltip]:not([flow])::before,
+//[rsssl-tooltip][flow^="up"]::before {
+//  bottom: 100%;
+//  border-bottom-width: 0;
+//  border-top-color: #333;
+//}
+//
+//[rsssl-tooltip]:not([flow])::after,
+//[rsssl-tooltip][flow^="up"]::after {
+//  bottom: calc(100% + 5px);
+//}
+//
+//[rsssl-tooltip]:not([flow])::before,
+//[rsssl-tooltip]:not([flow])::after,
+//[rsssl-tooltip][flow^="up"]::before,
+//[rsssl-tooltip][flow^="up"]::after {
+//  left: 50%;
+//  transform: translate(-50%, -.5em);
+//}
+//
+///* FLOW: DOWN */
+//[rsssl-tooltip][flow^="down"]::before {
+//  top: 100%;
+//  border-top-width: 0;
+//  border-bottom-color: #333;
+//}
+//
+//[rsssl-tooltip][flow^="down"]::after {
+//  top: calc(100% + 5px);
+//}
+//
+//[rsssl-tooltip][flow^="down"]::before,
+//[rsssl-tooltip][flow^="down"]::after {
+//  left: 50%;
+//  transform: translate(-50%, .5em);
+//}
+//
+///* FLOW: LEFT */
+//[rsssl-tooltip][flow^="left"]::before {
+//  top: 50%;
+//  border-right-width: 0;
+//  border-left-color: #333;
+//  left: calc(0em - 5px);
+//  transform: translate(-.5em, -50%);
+//}
+//
+//[rsssl-tooltip][flow^="left"]::after {
+//  top: 50%;
+//  right: calc(100% + 5px);
+//  transform: translate(-.5em, -50%);
+//}
+//
+///* FLOW: RIGHT */
+//[rsssl-tooltip][flow^="right"]::before {
+//  top: 50%;
+//  border-left-width: 0;
+//  border-right-color: #333;
+//  right: calc(0em - 19px);
+//  transform: translate(.5em, -50%);
+//}
+//
+//[rsssl-tooltip][flow^="right"]::after {
+//  top: 50%;
+//  left: calc(100% + 19px);
+//  transform: translate(.5em, -50%);
+//  min-width:300px;
+//}
+//
+///* KEYFRAMES */
+//@keyframes tooltips-vert {
+//  to {
+//    opacity: .9;
+//    transform: translate(-50%, 0);
+//  }
+//}
+//
+//@keyframes tooltips-horz {
+//  to {
+//    opacity: .9;
+//    transform: translate(0, -50%);
+//  }
+//}
+//
+///* FX All The Things */
+//[rsssl-tooltip]:not([flow]):hover::before,
+//[rsssl-tooltip]:not([flow]):hover::after,
+//[rsssl-tooltip][flow^="up"]:hover::before,
+//[rsssl-tooltip][flow^="up"]:hover::after,
+//[rsssl-tooltip][flow^="down"]:hover::before,
+//[rsssl-tooltip][flow^="down"]:hover::after {
+//  animation: tooltips-vert 300ms ease-out forwards;
+//}
+//
+//[rsssl-tooltip][flow^="left"]:hover::before,
+//[rsssl-tooltip][flow^="left"]:hover::after,
+//[rsssl-tooltip][flow^="right"]:hover::before,
+//[rsssl-tooltip][flow^="right"]:hover::after {
+//  animation: tooltips-horz 300ms ease-out forwards;
+//}

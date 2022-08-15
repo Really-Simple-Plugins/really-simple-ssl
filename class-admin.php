@@ -3,35 +3,23 @@ defined('ABSPATH') or die("you do not have access to this page!");
 
 class rsssl_admin extends rsssl_front_end
 {
-
     private static $_this;
     public $wpconfig_siteurl_not_fixed = FALSE;
     public $no_server_variable = FALSE;
     public $do_wpconfig_loadbalancer_fix = FALSE;
     public $site_has_ssl = FALSE;
     public $ssl_enabled = FALSE;
-
     //multisite variables
     public $sites = array(); //for multisite, list of all activated sites.
 
     //general settings
     public $capability = 'activate_plugins';
-
     public $htaccess_test_success = FALSE;
     public $plugin_dir = "really-simple-ssl";
     public $plugin_filename = "rlrsssl-really-simple-ssl.php";
     public $abs_path;
-    public $do_not_edit_htaccess = FALSE;
-    public $htaccess_redirect = FALSE;
-    public $htaccess_warning_shown = FALSE;
     public $review_notice_shown = FALSE;
-    public $dismiss_review_notice = FALSE;
-    public $ssl_success_message_shown = FALSE;
-	public $hsts = FALSE;
-    public $plugin_db_version;
     public $ssl_type = "NA";
-    public $dismiss_all_notices = false;
-	public $high_contrast = false;
 	public $pro_url;
 
     function __construct()
@@ -43,21 +31,19 @@ class rsssl_admin extends rsssl_front_end
         $this->abs_path = $this->getabs_path();
         $this->get_options();
         $this->get_admin_options();
-        $this->get_plugin_upgraded(); //call always, otherwise db version will not match anymore.
 
-	    if (is_multisite()) {
-	        $this->pro_url = 'https://really-simple-ssl.com/pro-multisite';
-        } else {
-	        $this->pro_url = 'https://really-simple-ssl.com/pro';
-        }
+	    $this->pro_url = is_multisite() ? 'https://really-simple-ssl.com/pro-multisite' : 'https://really-simple-ssl.com/pro';
 
         register_deactivation_hook(dirname(__FILE__) . "/" . $this->plugin_filename, array($this, 'deactivate'));
 	    add_action( 'admin_init', array($this, 'add_privacy_info') );
 	    add_action( 'admin_init', array($this, 'maybe_dismiss_review_notice') );
 	    add_action( 'admin_init', array($this, 'insert_secure_cookie_settings'), 70 );
         add_action( 'admin_init', array($this, 'recheck_certificate') );
-	    add_action( "update_option_rlrsssl_options", array( $this, "maybe_clear_transients" ), 10, 3 );
         add_action( 'wp_ajax_update_ssl_detection_overridden_option', array( $this, 'update_ssl_detection_overridden_option' ) );
+
+        // Saved fields hook fired through REST settings save
+	    add_action( "rsssl_after_saved_fields", array( $this, "maybe_clear_transients" ), 10, 3 );
+	    add_action( "rsssl_after_saved_fields", array($this, "update_htaccess_after_settings_save"), 20, 3);
 
 	    // Only show deactivate popup when SSL has been enabled.
 	    if ($this->ssl_enabled) {
@@ -79,7 +65,7 @@ class rsssl_admin extends rsssl_front_end
 	 * @param $newvalue
 	 * @param $option
 	 */
-    public function maybe_clear_transients($oldvalue, $newvalue, $option){
+    public function maybe_clear_transients($oldvalue=false, $newvalue=false, $option=false){
         if ($oldvalue !== $newvalue ) {
             $this->clear_transients();
         }
@@ -164,7 +150,7 @@ class rsssl_admin extends rsssl_front_end
 
 		if ( isset( $_POST['action'] ) && $_POST['action'] === 'update_ssl_detection_overridden_option' ) {
 			if ( isset ( $_POST['override_ssl_checked'] ) && $_POST['override_ssl_checked'] !== false ) {
-				update_option('rsssl_ssl_detection_overridden', true);
+				update_option('rsssl_ssl_detection_overridden', true, false );
 			}
 
 			wp_die();
@@ -186,9 +172,9 @@ class rsssl_admin extends rsssl_front_end
         $is_on_settings_page = $this->is_settings_page();
 
         if (defined("RSSSL_FORCE_ACTIVATE") && RSSSL_FORCE_ACTIVATE) {
-            $options = get_option('rlrsssl_options');
+            $options = get_option('rsssl_options');
             $options['ssl_enabled'] = true;
-            update_option('rlrsssl_options', $options);
+            update_option('rsssl_options', $options);
         }
 
         /*
@@ -215,7 +201,7 @@ class rsssl_admin extends rsssl_front_end
 
         // Set default progress toggle to remaining tasks if it hasn't been set
         if (!get_option('rsssl_all_tasks') && !get_option('rsssl_remaining_tasks') ) {
-            update_option('rsssl_remaining_tasks', true);
+            update_option('rsssl_remaining_tasks', true, false );
         }
 
         /*
@@ -234,9 +220,9 @@ class rsssl_admin extends rsssl_front_end
             //flush the permalinks
             if ($this->clicked_activate_ssl()) {
 	            if (!defined('RSSSL_NO_FLUSH') || !RSSSL_NO_FLUSH) {
-                    update_option('rsssl_flush_rewrite_rules', time());
+                    update_option('rsssl_flush_rewrite_rules', time(), false );
                 }
-	            update_option('rsssl_flush_caches', time());
+	            update_option('rsssl_flush_caches', time(), false );
             }
             if (!$this->wpconfig_ok()) {
                 //if we were to activate ssl, this could result in a redirect loop. So warn first.
@@ -269,7 +255,6 @@ class rsssl_admin extends rsssl_front_end
         add_action('admin_menu', array($this, 'rsssl_edit_admin_menu') );
 
         //callbacks for the ajax dismiss buttons
-        add_action('wp_ajax_dismiss_success_message', array($this, 'dismiss_success_message_callback'));
         add_action('wp_ajax_rsssl_dismiss_review_notice', array($this, 'dismiss_review_notice_callback'));
         add_action('wp_ajax_rsssl_redirect_to_le_wizard', array($this, 'rsssl_redirect_to_le_wizard'));
 
@@ -279,19 +264,30 @@ class rsssl_admin extends rsssl_front_end
         if (!defined("rsssl_pro_version") && (!defined("rsssl_pp_version")) && (!defined("rsssl_soc_version")) && (!class_exists('RSSSL_PRO')) && (!is_multisite())) {
             add_action('admin_notices', array($this, 'show_leave_review_notice'));
         }
-        add_action("update_option_rlrsssl_options", array($this, "update_htaccess_after_settings_save"), 20, 3);
     }
 
     public function check_upgrade() {
 	    $prev_version = get_option( 'rsssl_current_version', false );
+
+		//dismiss notices that should be dismissed on plugin upgrade
+	    if ( $prev_version ) {
+		    $dismiss_options = $this->get_notices_list( array(
+			    'dismiss_on_upgrade' => true,
+		    ) );
+		    foreach ($dismiss_options as $dismiss_option ) {
+			    update_option( "rsssl_" . $dismiss_option . "_dismissed" , true, false );
+		    }
+		    delete_transient( 'rsssl_plusone_count' );
+	    }
+
         if ( $prev_version && version_compare( $prev_version, '4.0', '<' ) ) {
-            update_option('rsssl_remaining_tasks', true);
+            update_option('rsssl_remaining_tasks', true, false );
         }
 
         if ( $prev_version && version_compare( $prev_version, '4.0.10', '<=' ) ) {
             if (function_exists('is_wpe') && is_wpe()) {
-                $this->wp_redirect = true;
-                $this->htaccess_redirect = false;
+                rsssl_update_option('wp_redirect', true);
+                rsssl_update_option('htaccess_redirect', false);
                 $this->save_options();
             }
         }
@@ -299,13 +295,12 @@ class rsssl_admin extends rsssl_front_end
 		    if ( get_option( 'rsssl_disable_ocsp' ) ) {
 			    $options = get_option( 'rsssl_options_lets-encrypt' );
                 $options['disable_ocsp'] = true;
-			    update_option( 'rsssl_options_lets-encrypt', $options );
+			    update_option( 'rsssl_options_lets-encrypt', $options, false );
                 delete_option('rsssl_disable_ocsp');
 		    }
 	    }
 
 	    if ( $prev_version && version_compare( $prev_version, '5.3.0', '<=' ) ) {
-
 		    if ( file_exists($this->htaccess_file() ) && is_writable($this->htaccess_file() ) ) {
 			    $htaccess = file_get_contents( $this->htaccess_file() );
 
@@ -319,7 +314,16 @@ class rsssl_admin extends rsssl_front_end
 			    }
 		    }
 	    }
+        
+	    if ( $prev_version && version_compare( $prev_version, '6.0.0', '<=' ) ) {
+		    update_option('rsssl_upgraded_to_6', true, false);
+	    }
 
+	    if ( $prev_version && version_compare( $prev_version, '6.0.0', '<=' ) ) {
+            update_option('rsssl_upgraded_to_6', true, false);
+	    }
+
+        do_action("rsssl_upgrade", $prev_version);
         update_option( 'rsssl_current_version', rsssl_version );
     }
 
@@ -439,7 +443,7 @@ class rsssl_admin extends rsssl_front_end
        if (!current_user_can($this->capability)) return;
        if (isset($_POST['rsssl_do_activate_ssl'])) {
             $this->activate_ssl();
-            update_option('rsssl_activation_timestamp', time());
+            update_option('rsssl_activation_timestamp', time(), false );
 
             return true;
         }
@@ -480,9 +484,9 @@ class rsssl_admin extends rsssl_front_end
     {
         //only revert if SSL was enabled first.
         if ($this->ssl_enabled) {
-	        $this->ssl_enabled       = false;
-	        $this->wp_redirect       = false;
-	        $this->htaccess_redirect = false;
+	        rsssl_update_option('wp_redirect', false);
+	        rsssl_update_option('htaccess_redirect', false);
+	        $this->ssl_enabled = false;
 	        $this->remove_ssl_from_siteurl();
 	        $this->save_options();
         }
@@ -938,29 +942,15 @@ class rsssl_admin extends rsssl_front_end
 
     public function get_admin_options()
     {
-
         $options = get_option('rlrsssl_options');
-
         if (isset($options)) {
             $this->site_has_ssl = isset($options['site_has_ssl']) ? $options['site_has_ssl'] : FALSE;
-            $this->hsts = isset($options['hsts']) ? $options['hsts'] : FALSE;
-            $this->htaccess_warning_shown = isset($options['htaccess_warning_shown']) ? $options['htaccess_warning_shown'] : FALSE;
             $this->review_notice_shown = isset($options['review_notice_shown']) ? $options['review_notice_shown'] : FALSE;
-            $this->ssl_success_message_shown = isset($options['ssl_success_message_shown']) ? $options['ssl_success_message_shown'] : FALSE;
-            $this->plugin_db_version = isset($options['plugin_db_version']) ? $options['plugin_db_version'] : "1.0";
-            $this->do_not_edit_htaccess = isset($options['do_not_edit_htaccess']) ? $options['do_not_edit_htaccess'] : FALSE;
-            $this->htaccess_redirect = isset($options['htaccess_redirect']) ? $options['htaccess_redirect'] : FALSE;
-            $this->switch_mixed_content_fixer_hook = isset($options['switch_mixed_content_fixer_hook']) ? $options['switch_mixed_content_fixer_hook'] : FALSE;
-	        $this->dismiss_all_notices = isset($options['dismiss_all_notices']) ? $options['dismiss_all_notices'] : FALSE;
-	        $this->high_contrast = isset($options['high_contrast']) ? $options['high_contrast'] : FALSE;
-            $this->dismiss_review_notice = isset($options['dismiss_review_notice']) ? $options['dismiss_review_notice'] : $this->dismiss_review_notice;
-
         }
 
         if (is_multisite()) {
             $network_options = get_site_option('rlrsssl_network_options');
             $network_htaccess_redirect = isset($network_options["htaccess_redirect"]) ? $network_options["htaccess_redirect"] : false;
-            $network_do_not_edit_htaccess = isset($network_options["do_not_edit_htaccess"]) ? $network_options["do_not_edit_htaccess"] : false;
             /*
               If multiste, and networkwide, only the networkwide setting counts.
               if multisite, and per site, only the networkwide setting counts if it is true.
@@ -968,51 +958,14 @@ class rsssl_admin extends rsssl_front_end
             $ssl_enabled_networkwide = isset($network_options["ssl_enabled_networkwide"]) ? $network_options["ssl_enabled_networkwide"] : false;
             if ($ssl_enabled_networkwide) {
                 $this->htaccess_redirect = $network_htaccess_redirect;
-                $this->do_not_edit_htaccess = $network_do_not_edit_htaccess;
             } else {
-                if ($network_do_not_edit_htaccess) $this->do_not_edit_htaccess = $network_do_not_edit_htaccess;
                 if ($network_htaccess_redirect) $this->htaccess_redirect = $network_htaccess_redirect;
             }
         }
 
-        //if the define is true, it overrides the db setting.
-        if (defined('RLRSSSL_DO_NOT_EDIT_HTACCESS')) {
-            $this->do_not_edit_htaccess = RLRSSSL_DO_NOT_EDIT_HTACCESS;
-        }
+
 
     }
-
-    /**
-     * check if the plugin was upgraded to a new version
-     *
-     * @since  2.1
-     *
-     * @access public
-     *
-     */
-
-    public function get_plugin_upgraded()
-    {
-        if ($this->plugin_db_version != rsssl_version) {
-	        if ( $this->plugin_db_version !== '1.0'  && version_compare( $this->plugin_db_version, '4.0.0', '<' ) ) {
-	            update_option('rsssl_upgraded_to_four', true);
-	        }
-
-	        if ( $this->plugin_db_version !== '1.0' ) {
-		        $dismiss_options = $this->get_notices_list( array(
-			        'dismiss_on_upgrade' => true,
-		        ) );
-		        foreach ($dismiss_options as $dismiss_option ) {
-			        update_option( "rsssl_" . $dismiss_option . "_dismissed" , true);
-		        }
-		        delete_transient( 'rsssl_plusone_count' );
-	        }
-
-            $this->plugin_db_version = rsssl_version;
-            $this->save_options();
-        }
-    }
-
 
 	/**
 	 * Creates an array of all domains where the plugin is active AND SSL is active, only used for multisite.
@@ -1036,7 +989,7 @@ class rsssl_admin extends rsssl_front_end
 				$sites = RSSSL()->rsssl_multisite->get_sites_bw_compatible(0, $nr_of_sites);
 				foreach ($sites as $site) {
 					$this->switch_to_blog_bw_compatible($site);
-					$options = get_option('rlrsssl_options');
+					$options = get_option('rsssl_options');
 					$ssl_enabled = FALSE;
 					if (isset($options)) {
 						$site_has_ssl = isset($options['site_has_ssl']) ? $options['site_has_ssl'] : FALSE;
@@ -1108,7 +1061,6 @@ class rsssl_admin extends rsssl_front_end
         }
     }
 
-
     /**
      * Check to see if we are on the settings page, action hook independent
      *
@@ -1120,7 +1072,8 @@ class rsssl_admin extends rsssl_front_end
 
     public function is_settings_page()
     {
-        if (!isset($_SERVER['QUERY_STRING'])) {
+	    if ( !isset($_SERVER['QUERY_STRING']) ) {
+            error_log("no query string");
             return false;
         }
 
@@ -1128,7 +1081,8 @@ class rsssl_admin extends rsssl_front_end
         if (array_key_exists("page", $params) && ($params["page"] == "rlrsssl_really_simple_ssl")) {
             return true;
         }
-        return false;
+
+	    return false;
     }
 
     /**
@@ -1505,7 +1459,7 @@ class rsssl_admin extends rsssl_front_end
     }
 
     /**
-     * Save the plugin options
+     * Save the plugin options (not settings)
      *
      * @since  2.0
      *
@@ -1515,27 +1469,10 @@ class rsssl_admin extends rsssl_front_end
 
     public function save_options()
     {
-	    //any options added here should also be added to function options_validate()
-        $options = array(
-            'site_has_ssl' => $this->site_has_ssl,
-            'hsts' => $this->hsts,
-            'htaccess_warning_shown' => $this->htaccess_warning_shown,
-            'review_notice_shown' => $this->review_notice_shown,
-            'ssl_success_message_shown' => $this->ssl_success_message_shown,
-            'autoreplace_insecure_links' => $this->autoreplace_insecure_links,
-            'plugin_db_version' => $this->plugin_db_version,
-            'do_not_edit_htaccess' => $this->do_not_edit_htaccess,
-            'htaccess_redirect' => $this->htaccess_redirect,
-            'ssl_enabled' => $this->ssl_enabled,
-            'wp_redirect' => $this->wp_redirect,
-            'switch_mixed_content_fixer_hook' => $this->switch_mixed_content_fixer_hook,
-            'dismiss_all_notices' => $this->dismiss_all_notices,
-            'high_contrast' => $this->high_contrast,
-            'dismiss_review_notice' => $this->dismiss_review_notice,
-
-        );
-
-	    update_option('rlrsssl_options', $options);
+	    $options = get_option('rsssl_options', []);
+        $options['site_has_ssl'] = $this->site_has_ssl;
+        $options['review_notice_shown'] = $this->review_notice_shown;
+	    update_option('rsssl_options', $options);
     }
 
     /**
@@ -1555,24 +1492,17 @@ class rsssl_admin extends rsssl_front_end
 	        $this->remove_secure_cookie_settings();
 
 	        $this->site_has_ssl = FALSE;
-	        $this->hsts = FALSE;
-	        $this->htaccess_warning_shown = FALSE;
 	        $this->review_notice_shown = FALSE;
-	        $this->ssl_success_message_shown = FALSE;
-	        $this->autoreplace_insecure_links = TRUE;
-	        $this->do_not_edit_htaccess = FALSE;
-	        $this->htaccess_redirect = FALSE;
-	        $this->wp_redirect = FALSE;
 	        $this->ssl_enabled = FALSE;
-	        $this->switch_mixed_content_fixer_hook = FALSE;
-	        $this->dismiss_all_notices = FALSE;
-            $this->high_contrast = FALSE;
-	        $this->dismiss_review_notice = FALSE;
-
 	        $this->save_options();
 
+	        rsssl_update_option('dismiss_all_notices', false);
+	        rsssl_update_option('wp_redirect', false);
+	        rsssl_update_option('htaccess_redirect', false);
+	        rsssl_update_option('mixed_content_fixer', false);
+
 	        //when on multisite, per site activation, recreate domain list for htaccess and wpconfig rewrite actions
-	        if (is_multisite()) {
+	        if ( is_multisite() ) {
 		        RSSSL()->rsssl_multisite->deactivate();
 		        if (!RSSSL()->rsssl_multisite->ssl_enabled_networkwide) $this->build_domain_list();
 	        }
@@ -1580,6 +1510,7 @@ class rsssl_admin extends rsssl_front_end
 
 	        $this->remove_wpconfig_edit();
 	        $this->removeHtaccessEdit();
+            rsssl_remove_htaccess_security_edits();
         }
     }
 
@@ -1854,8 +1785,8 @@ class rsssl_admin extends rsssl_front_end
 
     public function removeHtaccessEdit()
     {
-        if (file_exists($this->htaccess_file()) && is_writable($this->htaccess_file())) {
-            $htaccess = file_get_contents($this->htaccess_file());
+        if ( file_exists($this->htaccess_file()) && is_writable($this->htaccess_file()) ) {
+            $htaccess = file_get_contents( $this->htaccess_file() );
 
             //if multisite, per site activation and more than one blog remaining on ssl, remove condition for this site only
             //the domain list has been rebuilt already, so current site is already removed.
@@ -1971,30 +1902,13 @@ class rsssl_admin extends rsssl_front_end
     }
 
     /**
-     * Checks if the HSTS rule is already in the htaccess file
-     * Set the hsts variable in the db accordingly. applies to preload version as well.
-     *
-     * @since  2.1
-     *
-     * @access public
+     * @deprecated since 6.0
      *
      */
 
     public function contains_hsts()
     {
-        if ( !file_exists($this->htaccess_file()) ) {
-            $result = $this->hsts; //just return the setting.
-        } else {
-            $htaccess = file_get_contents($this->htaccess_file());
-            preg_match("/Strict-Transport-Security/", $htaccess, $check);
-            if (count($check) === 0) {
-                $result = false;
-            } else {
-                $result = true;
-            }
-        }
-
-        return $result;
+        return true;
     }
 
 	/**
@@ -2163,7 +2077,7 @@ class rsssl_admin extends rsssl_front_end
             return;
         }
 
-        if ( $this->do_not_edit_htaccess ) {
+        if ( rsssl_get_option('do_not_edit_htaccess') ) {
             return;
         }
 
@@ -2207,6 +2121,7 @@ class rsssl_admin extends rsssl_front_end
 
     public function update_htaccess_after_settings_save($oldvalue = false, $newvalue = false, $option = false)
     {
+
         if (!current_user_can($this->capability)) {
             return;
         }
@@ -2220,7 +2135,7 @@ class rsssl_admin extends rsssl_front_end
             return;
         }
 
-        if ( $this->do_not_edit_htaccess ) {
+        if ( rsssl_get_option('do_not_edit_htaccess') ) {
             return;
         }
 
@@ -2311,7 +2226,7 @@ class rsssl_admin extends rsssl_front_end
         //only add the redirect rules when a known type of SSL was detected. Otherwise, we use https.
         $rule = "";
         //if the htaccess test was successfull, and we know the redirectype, edit
-        if ($this->htaccess_redirect && ($manual || $this->htaccess_test_success) && $this->ssl_type != "NA") {
+        if ( rsssl_get_option('redirect')==='htaccess' && ($manual || $this->htaccess_test_success) && $this->ssl_type != "NA") {
             $rule .= "<IfModule mod_rewrite.c>" . "\n";
             $rule .= "RewriteEngine on" . "\n";
             if ($this->ssl_type == "SERVER-HTTPS-ON") {
@@ -2486,7 +2401,7 @@ class rsssl_admin extends rsssl_front_end
 
     public function show_leave_review_notice()
     {
-        if ($this->dismiss_all_notices || is_multisite() && rsssl_multisite::this()->dismiss_all_notices) {
+        if ( rsssl_get_option('dismiss_all_notices') || is_multisite() && rsssl_multisite::this()->dismiss_all_notices) {
             return;
         }
 
@@ -2500,8 +2415,8 @@ class rsssl_admin extends rsssl_front_end
         if ($this->ssl_enabled && !get_option('rsssl_activation_timestamp')){
             $month = rand ( 0, 11);
             $trigger_notice_date = time() + $month * MONTH_IN_SECONDS;
-	        update_option('rsssl_activation_timestamp', $trigger_notice_date);
-	        update_option('rsssl_before_review_notice_user', true);
+	        update_option('rsssl_activation_timestamp', $trigger_notice_date, false );
+	        update_option('rsssl_before_review_notice_user', true, false );
         }
 
         if (!$this->review_notice_shown && get_option('rsssl_activation_timestamp') && get_option('rsssl_activation_timestamp') < strtotime("-1 month")) {
@@ -2638,26 +2553,6 @@ class rsssl_admin extends rsssl_front_end
         <?php
     }
 
-
-    /**
-     * Process the ajax dismissal of the success message.
-     *
-     * @since  2.0
-     *
-     * @access public
-     *
-     */
-
-    public function dismiss_success_message_callback()
-    {
-        if (!current_user_can($this->capability) ) return;
-        $this->ssl_success_message_shown = TRUE;
-        $this->save_options();
-        wp_die();
-    }
-
-
-
     /**
      * Process the ajax dismissal of the htaccess message.
      *
@@ -2676,7 +2571,7 @@ class rsssl_admin extends rsssl_front_end
         }
         if ($type === 'later') {
             //Reset activation timestamp, notice will show again in one month.
-            update_option('rsssl_activation_timestamp', time());
+            update_option('rsssl_activation_timestamp', time(), false );
         }
 
         $this->save_options();
@@ -2715,14 +2610,6 @@ class rsssl_admin extends rsssl_front_end
         }
     }
 
-	/**
-     * Check if user has upgraded to four from a previous version
-	 * @return bool
-	 */
-
-    public function upgraded_to_four(){
-        return get_option( 'rsssl_upgraded_to_four' ) ? true : false;
-    }
 
     /**
      * Get array of notices
@@ -2863,20 +2750,6 @@ class rsssl_admin extends rsssl_front_end
                 ),
             ),
 
-            'upgraded_to_four' => array(
-	            'callback' => 'RSSSL()->really_simple_ssl->upgraded_to_four',
-	            'score' => 5,
-	            'output' => array(
-		            'true' => array(
-                        'url' => __('https://really-simple-ssl.com/really-simple-ssl-4-a-new-dashboard'),
-			            'msg' => __("Really Simple SSL 4.0. Learn more about our newest major release.", "really-simple-ssl"),
-			            'icon' => 'open',
-			            'dismissible' => true,
-			            'plusone' => true,
-		            ),
-	            ),
-            ),
-
             'ssl_enabled' => array(
                 'callback' => 'rsssl_ssl_enabled',
                 'score' => 30,
@@ -2908,8 +2781,8 @@ class rsssl_admin extends rsssl_front_end
 		            'no-ssl-detected' => array(
 			            'title' => __("No SSL detected", "really-simple-ssl"),
 			            'msg' => __("No SSL detected. Use the retry button to check again.", "really-simple-ssl").
-			                     '<br><br><form action="" method="POST"><a href="'.add_query_arg(array("page" => "rlrsssl_really_simple_ssl", "tab" => "letsencrypt"),admin_url("options-general.php")) .'" type="submit" class="button button-default">'.__("Install SSL certificate", "really-simple-ssl").'</a>'.
-			                     '&nbsp;<input type="submit" class="button button-default" value="'.__("Retry", "really-simple-ssl").'" id="rsssl_recheck_certificate" name="rsssl_recheck_certificate"></form>',
+			                     '<form class="rsssl-task-form"  action="" method="POST"><a href="'.add_query_arg(array("page" => "rlrsssl_really_simple_ssl", "tab" => "letsencrypt"),admin_url("options-general.php")) .'" type="submit" class="button button-default  rsssl-button-small">'.__("Install SSL certificate", "really-simple-ssl").'</a>'.
+			                     '<input type="submit" class="button button-default rsssl-button-small" value="'.__("Retry", "really-simple-ssl").'" id="rsssl_recheck_certificate" name="rsssl_recheck_certificate"></form>',
 			            'icon' => 'warning',
 			            'admin_notice' => false,
 			            'dismissible' => $this->ssl_enabled
@@ -2917,8 +2790,8 @@ class rsssl_admin extends rsssl_front_end
 		            'no-response' => array(
 			            'title' => __("Could not test certificate", "really-simple-ssl"),
 			            'msg' => __("Automatic certificate detection is not possible on your server.", "really-simple-ssl").
-			                     '<br><br><form action="" method="POST"><a href="'.add_query_arg(array("page" => "rlrsssl_really_simple_ssl", "tab" => "letsencrypt"),admin_url("options-general.php")) .'" type="submit" class="button button-default">'.__("Install SSL certificate", "really-simple-ssl").'</a>'.
-			                     '&nbsp;<a target="_blank" href="'.$test_url.'" class="button button-default">'.__("Check manually", "really-simple-ssl").'</a></form>',
+			                     '<form class="rsssl-task-form" action="" method="POST"><a href="'.add_query_arg(array("page" => "rlrsssl_really_simple_ssl", "tab" => "letsencrypt"),admin_url("options-general.php")) .'" type="submit" class="button button-default  rsssl-button-small">'.__("Install SSL certificate", "really-simple-ssl").'</a>'.
+			                     '<a target="_blank" href="'.$test_url.'" class="button button-default  rsssl-button-small">'.__("Check manually", "really-simple-ssl").'</a></form>',
 			            'icon' => 'warning',
 			            'admin_notice' => false,
 			            'dismissible' => true,
@@ -2968,7 +2841,7 @@ class rsssl_admin extends rsssl_front_end
                         'dismissible' => true
                     ),
                     'not-enabled' => array(
-	                    'highlight_field_id' => 'autoreplace_insecure_links',
+	                    'highlight_field_id' => 'mixed_content_fixer',
 	                    'msg' =>__('Mixed content fixer not enabled. Enable the option to fix mixed content on your site.', 'really-simple-ssl'),
                         'icon' => 'open',
                         'dismissible' => true
@@ -3229,7 +3102,7 @@ class rsssl_admin extends rsssl_front_end
             //check if all notices should be dismissed
             if ( ( isset( $notice['output'][$output]['dismissible'] )
                 && $notice['output'][$output]['dismissible']
-                && ( $this->dismiss_all_notices
+                && ( rsssl_get_option('dismiss_all_notices')
                  || is_multisite() && rsssl_multisite::this()->dismiss_all_notices ) )
             ) {
                 unset($notices[$id]);
@@ -3297,7 +3170,7 @@ class rsssl_admin extends rsssl_front_end
 			    }
 		    }
         }
-        return $notices;
+	    return $notices;
     }
 
 	/**
@@ -3465,11 +3338,10 @@ class rsssl_admin extends rsssl_front_end
     {
         //load on network admin or normal admin settings page
         if ( $hook !== 'settings_page_really-simple-ssl' && $hook !== 'settings_page_rlrsssl_really_simple_ssl' ) return;
-	    $minified = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? '' : '.min';
+	    $minified_css = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? '.css?debug='.time() : '.min.css';
         $rtl = is_rtl() ? '-rtl' : '';
-        $css_file = "main$rtl$minified.css";
-	    wp_enqueue_style('rsssl-css', trailingslashit(rsssl_url) . "assets/css/$css_file", array(), rsssl_version);
-        wp_enqueue_script('rsssl', trailingslashit(rsssl_url) . "assets/js/scripts$minified.js", array("jquery"), rsssl_version);
+        $css_file = "admin$rtl$minified_css";
+	    wp_enqueue_style('rsssl-css', trailingslashit(rsssl_url) . "assets/css/$css_file", ['wp-components'], rsssl_version);
         wp_localize_script('rsssl', 'rsssl',
             array(
                 'ajaxurl' => admin_url( 'admin-ajax.php' ),
@@ -3857,21 +3729,19 @@ class rsssl_admin extends rsssl_front_end
 	}
 
     /**
-     * @return string
+     * Determine the htaccess file. This can be either the regular .htaccess file, or an htaccess.conf file on bitnami installations.
      *
      * since 3.1
      *
-     * Determine the htaccess file. This can be either the regular .htaccess file, or an htaccess.conf file on bitnami installations.
-     *
+     * @return string
      */
 
     public function htaccess_file() {
-        if ($this->uses_htaccess_conf()) {
+        if ( $this->uses_htaccess_conf() ) {
             $htaccess_file = realpath(dirname(ABSPATH) . "/conf/htaccess.conf");
         } else {
             $htaccess_file = $this->abs_path . ".htaccess";
         }
-
         return $htaccess_file;
     }
 
@@ -3937,7 +3807,6 @@ class rsssl_admin extends rsssl_front_end
 
 		return 'default';
 	}
-
 } //class closure
 
 if (!function_exists('rsssl_ssl_enabled')) {

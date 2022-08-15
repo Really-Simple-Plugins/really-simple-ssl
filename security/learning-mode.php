@@ -1,4 +1,13 @@
 <?php
+add_action('template_redirect', 'rsssl_check_requests');
+function rsssl_check_requests() {
+
+	//XML-RPC
+	if ( defined('XMLRPC_REQUEST') && XMLRPC_REQUEST ) {
+		add_action( 'xmlrpc_call', 'rsssl_handle_xmlrpc_request' );
+	}
+}
+
 /**
  * @return void
  * Add the learning mode table
@@ -33,7 +42,7 @@ function rsssl_add_learning_mode_table() {
 
 	dbDelta( $sql );
 
-	update_option( 'rsssl_learning_mode_db_version', rsssl_version );
+	update_option( 'rsssl_learning_mode_db_version', rsssl_version, false );
 }
 
 /**

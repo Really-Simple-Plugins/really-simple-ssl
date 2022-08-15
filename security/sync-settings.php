@@ -1,100 +1,85 @@
 <?php
-add_filter('rsssl_notices', 'rsssl_show_notices_for_mismatches', 50, 1);
-add_action( 'admin_init', 'rsssl_sync_wordpress_settings');
 
 /**
- * @return void
+ * Conditionally we can decide to disable fields, add comments, and manipulate the value here
+ * @param array $field
+ * @param string $field_id
  *
- * Check for mismatches between RSSSL & WordPress options
- * If so, update RSSSL option and add a notice
+ * @return array
  */
-function rsssl_sync_wordpress_settings() {
 
-    if ( ! get_transient('rsssl_settings_mismatch_check' ) ) {
-        delete_option('rsssl_option_mismatches');
-        $mismatches = array();
-
-        if ( DEFINED('WP_DEBUG') && !rsssl_get_option('change_debug_log_location') ) {
-            rsssl_update_option('change_debug_log_location', true);
-            $mismatches[] = 'rsssl_debug_log_modified';
-        } elseif ( ! DEFINED('WP_DEBUG') && rsssl_get_option('change_debug_log_location') ) {
-            rsssl_update_option('change_debug_log_location', false);
-            $mismatches[] = 'rsssl_debug_log_modified';
-        }
-
-        if ( DEFINED('DISALLOW_FILE_EDIT') && !rsssl_get_option('disable_file_editing') ) {
-            rsssl_update_option('disable_file_editing', true);
-            $mismatches[] = 'rsssl_file_editing';
-        } elseif ( ! DEFINED('DISALLOW_FILE_EDIT') && rsssl_get_option('disable_file_editing') ) {
-            //rsssl_update_option('disable_file_editing', false);
-            $mismatches[] = 'rsssl_file_editing';
-        }
-
-        update_option('rsssl_option_mismatches', $mismatches );
-        set_transient('rsssl_settings_mismatch_check', true, MINUTE_IN_SECONDS * 5);
-    }
-
-}
-
-/**
- * @return void
- *
- * Show notices for mismatched RSSSL & WordPress options
- */
-function rsssl_show_notices_for_mismatches($notices) {
-
-    $mismatches = get_option('rsssl_option_mismatches');
-
-    if ( isset( $mismatches['rsssl_debug_log_modified'] ) ) {
-        $notices['rsssl-debug-log-modified-mismatch'] = array(
-            'callback' => '_true_',
-            'score' => 5,
-            'output' => array(
-                'allowed' => array(
-                    'msg' => __("Debugging value has been changed but not by Really Simple SSL.", "really-simple-ssl"),
-                    'icon' => 'open',
-                    'dismissible' => true,
-                ),
-            ),
-        );
-    }
-
-    if ( isset( $mismatches['rsssl_file_editing'] ) ) {
-        $notices['rsssl-file-editing-mismatch'] = array(
-            'callback' => '_true_',
-            'score' => 5,
-            'output' => array(
-                'allowed' => array(
-                    'msg' => __("File editing has been changed but not by Really Simple SSL.", "really-simple-ssl"),
-                    'icon' => 'open',
-                    'dismissible' => true,
-                ),
-            ),
-        );
-    }
-	return $notices;
-}
-
-/**
- * Enable this option in RSSSL if the WP option is disabled.
- * @param $value
- * @param $option
- *
- * @return bool|mixed
- */
-function rsssl_option_anyone_can_register( $field, $field_id ) {
-	if ( $field_id === 'disable_anyone_can_register' && !$field['value'] && !get_option('users_can_register') ) {
-		$field['disabled'] = true;
-		$field['value'] = true;
+function rsssl_disable_fields($field, $field_id){
+	/**
+	 * If a feature is already enabled, but not by RSSSL, we can simply check for that feature, and if the option in RSSSL is active.
+	 * We set is as true, but disabled. Because our react interface only updates changed option, and this option never changes, this won't get set to true in the database.
+	 */
+	if ( $field_id==='change_debug_log_location' ){
+		if ( !rsssl_debugging_enabled() ) {
+			if ( !$field['value'] ) {
+				$field['value'] = true;
+				$field['disabled'] = true;
+			}
+			$field['help'] = [
+				'label' => 'default',
+				'text' => __( "Debugging is disabled", 'really-simple-ssl' ),
+			];
+		} else if ( !rsssl_debug_log_in_default_location() ) {
+			if ( !$field['value'] ) {
+				$field['value'] = true;
+				$field['disabled'] = true;
+			}
+			$location = strstr( rsssl_get_debug_log_value(), 'wp-content' );
+			$field['help'] = [
+				'label' => 'default',
+				'text' => __( "Changed debug.log location:", 'really-simple-ssl' ).$location,
+			];
+		}
 	}
+
+	if ( $field_id==='disable_indexing' ){
+		if ( !rsssl_directory_indexing_allowed() && !$field['value']) {
+			$field['value'] = true;
+			$field['disabled'] = true;
+			$field['help'] = [
+				'label' => 'default',
+				'text' => __( "Directory browsing is is already disabled.", 'really-simple-ssl' ),
+			];
+		}
+	}
+
+	if ( $field_id==='disable_anyone_can_register' ){
+		if ( !get_option('users_can_register') && !$field['value'] ) {
+			$field['value'] = true;
+			$field['disabled'] = true;
+			$field['help'] = [
+				'label' => 'default',
+				'text' => __( "User registration is is already disabled.", 'really-simple-ssl' ),
+			];
+		}
+	}
+
+	if ( $field_id==='disable_http_methods' ){
+		if ( !rsssl_http_methods_allowed() && !$field['value'] ) {
+			$field['value'] = true;
+			$field['disabled'] = true;
+			$field['help'] = [
+				'label' => 'default',
+				'text' => __( "HTTP methods are already disabled.", 'really-simple-ssl' ),
+			];
+		}
+	}
+
+	if ( $field_id==='disable_file_editing' ){
+		if ( defined('DISALLOW_FILE_EDIT') && DISALLOW_FILE_EDIT && !$field['value'] ) {
+			$field['value'] = true;
+			$field['disabled'] = true;
+			$field['help'] = [
+				'label' => 'default',
+				'text' => __( "File editing is is already disabled.", 'really-simple-ssl' ),
+			];
+		}
+	}
+
 	return $field;
 }
-add_filter("rsssl_field", 'rsssl_option_anyone_can_register', 10,2);
-
-/**
- * When disable debug log location is disabled, revert back
- */
-if ( get_site_option('rsssl_debug_log_suffix') && !rsssl_get_option('change_debug_log_location') && !rsssl_debug_log_in_default_location() && rsssl_is_debug_log_enabled() ) {
-	$file = rsssl_path . 'security/wordpress/debug-log.php';
-	require_once($file);
-}
+add_filter('rsssl_field', 'rsssl_disable_fields', 10, 2);
