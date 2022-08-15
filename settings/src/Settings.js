@@ -21,16 +21,15 @@ class Settings extends Component {
             progress:this.props.progress,
             isAPILoaded: this.props.isAPILoaded,
         };
-        this.fields = this.props.fields;
     }
 
     render() {
         const {
-            fields,
             progress,
             isAPILoaded,
         } = this.state;
         let selectedMenuItem = this.props.selectedMenuItem;
+        let fields = this.props.fields;
         let selectedStep = this.props.selectedStep;
         let menu = this.props.menu;
         const { menu_items: menuItems } = menu;

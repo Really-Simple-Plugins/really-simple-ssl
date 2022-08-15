@@ -9,6 +9,7 @@ import {
     TextControl,
     RadioControl,
     SelectControl,
+    TextareaControl,
     __experimentalNumberControl as NumberControl,
     ToggleControl,
 } from '@wordpress/components';
@@ -148,6 +149,19 @@ class Field extends Component {
             );
         }
 
+        if ( field.type==='textarea' ){
+            return (
+                <PanelBody className={ this.highLightClass}>
+                    <TextareaControl
+                        label={ field.label }
+                        help={ field.comment }
+                        value= { fieldValue }
+                        onChange={ ( fieldValue ) => this.onChangeHandler(fieldValue) }
+                    />
+                </PanelBody>
+            );
+        }
+
         if ( field.type==='license' ){
             /**
              * There is no "PasswordControl" in WordPress react yet, so we create our own license field.
@@ -220,7 +234,6 @@ class Field extends Component {
                data = [];
             }
             for (const item of data){
-                console.log(item);
                 let disabled = false;
                 if (item.status!=1) {
                     item.value = '()';

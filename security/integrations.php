@@ -1,25 +1,5 @@
 <?php
 defined( 'ABSPATH' ) or die();
-require_once( trailingslashit(rsssl_path) . 'security/functions.php' );
-require_once( trailingslashit(rsssl_path) . 'security/deactivate-integration.php' );
-require_once( trailingslashit(rsssl_path) . 'security/learning-mode.php' );
-require_once( trailingslashit(rsssl_path) . 'security/tests.php' );
-require_once( trailingslashit(rsssl_path) . 'security/cron.php' );
-require_once( trailingslashit(rsssl_path) . 'security/check-requests.php' );
-
-/**
- * Load only on back-end
- */
-if ( is_admin() || rsssl_is_logged_in_rest() ) {
-	require_once( trailingslashit(rsssl_path) . 'security/notices.php' );
-	require_once( trailingslashit(rsssl_path) . 'security/sync-settings.php' );
-}
-
-function rsssl_enqueue_integrations_assets( $hook ) {
-
-}
-//add_action( 'admin_enqueue_scripts', 'rsssl_enqueue_integrations_assets' );
-
 global $rsssl_integrations_list;
 $rsssl_integrations_list = apply_filters( 'rsssl_integrations', array(
 	'xmlrpc' => array(
@@ -286,6 +266,38 @@ function rsssl_integrations() {
 	}
 
 }
+
+/**
+ * Complete a fix for an issue, either user triggered, or automatic
+ * @param $fix
+ *
+ * @return void
+ */
+function rsssl_do_fix($fix){
+	if ( !current_user_can('manage_options')) {
+		return;
+	}
+
+	if ( !rsssl_has_fix($fix) && function_exists($fix)) {
+		$completed[]=$fix;
+		$fix();
+		$completed = get_option('rsssl_completed_fixes', []);
+		$completed[] = $fix;
+		update_option('rsssl_completed_fixes', $completed );
+	} elseif ($fix && !function_exists($fix) ) {
+		error_log("Really Simple SSL: fix function $fix not found");
+	}
+
+}
+
+function rsssl_has_fix($fix){
+	$completed = get_option('rsssl_completed_fixes', []);
+	if ( !in_array($fix, $completed)) {
+		return false;
+	}
+	return true;
+}
+
 
 add_action( 'plugins_loaded', 'rsssl_integrations', 10 );
 //also run when fields are saved.

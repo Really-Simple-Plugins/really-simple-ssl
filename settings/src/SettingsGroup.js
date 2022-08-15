@@ -60,6 +60,7 @@ class SettingsGroup extends Component {
                 selectedFields.push(selectedField);
             }
         }
+
         //set group default to current menu item
         let activeGroup = selectedMenuItem;
 
@@ -69,11 +70,13 @@ class SettingsGroup extends Component {
                 activeGroup = currentGroup[0];
             }
         }
+
         let disabled = this.status !=='valid' && activeGroup.premium;
         this.upgrade = activeGroup.upgrade ? activeGroup.upgrade : this.upgrade;
         return (
             <div className="rsssl-grid-item">
                 {activeGroup && activeGroup.title && <div className="rsssl-grid-item-header"><h3 className="rsssl-h4">{activeGroup.title}</h3></div>}
+                {/*{activeGroup && activeGroup.helpLink && <div className="rsssl-grid-item-controls"><h3 className="rsssl-help-link">{activeGroup.helpLink}</h3></div>}*/}
                 <div className="rsssl-grid-item-content">
                     {activeGroup && activeGroup.intro && <div className="rsssl-settings-block-intro">{activeGroup.intro}</div>}
                     {selectedFields.map((field, i) => <Field dropItemFromModal={this.props.dropItemFromModal} handleModal={this.props.handleModal} showSavedSettingsNotice={this.props.showSavedSettingsNotice} updateField={this.props.updateField} setPageProps={this.props.setPageProps} fieldsUpdateComplete = {this.props.fieldsUpdateComplete} key={i} index={i} highLightField={this.props.highLightField} highLightedField={this.props.highLightedField} saveChangedFields={this.props.saveChangedFields} field={field} fields={selectedFields}/>)}

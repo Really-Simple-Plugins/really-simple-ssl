@@ -76,9 +76,8 @@ add_action( 'admin_menu', 'rsssl_add_option_menu' );
 {
 	if (!current_user_can('activate_plugins')) return;
 	$tab = isset($_GET['tab']) ? sanitize_title($_GET['tab']) : 'dashboard';
-
-    $high_contrast = RSSSL()->really_simple_ssl->high_contrast ? 'rsssl-high-contrast' : ''; ?>
-    <div id="really-simple-ssl" class="rsssl <?php echo $high_contrast ?>">
+    ?>
+    <div id="really-simple-ssl" class="rsssl">
         <?php do_action("rsssl_show_tab_{$tab}"); ?>
     </div>
 	<?php
@@ -198,6 +197,7 @@ function rsssl_sanitize_field_type($type){
         'checkbox',
         'radio',
         'text',
+        'textarea',
         'number',
         'email',
         'select',
@@ -223,6 +223,8 @@ function rsssl_rest_api_fields_set($request){
     }
     error_log("update options rsssl");
 	$fields = $request->get_json_params();
+
+//    error_log(print_r($fields, true));
     $config_fields = rsssl_fields(false);
     $config_ids = array_column($config_fields, 'id');
 
@@ -268,9 +270,10 @@ function rsssl_rest_api_fields_set($request){
 		$options = get_option( 'rsssl_options', [] );
 	}
 
-    //build a new options array
+	//build a new options array
     foreach ( $fields as $field ) {
         $prev_value = isset( $options[ $field['id'] ] ) ? $options[ $field['id'] ] : false;
+	    error_log("Updating " . $field['id']);
         do_action( "rsssl_before_save_option", $field['id'], $field['value'], $prev_value, $field['type'] );
         $options[ $field['id'] ] = $field['value'];
     }
@@ -282,10 +285,10 @@ function rsssl_rest_api_fields_set($request){
 	        update_option( 'rsssl_options', $options );
         }
     }
-    foreach ( $fields as $field ) {
+
+	foreach ( $fields as $field ) {
         do_action( "rsssl_after_save_field", $field['id'], $field['value'], $prev_value, $field['type'] );
     }
-    error_log("saved options");
 	do_action('rsssl_after_saved_fields', $fields );
 	$output   = ['success' => true];
 	$response = json_encode( $output );
@@ -442,6 +445,8 @@ function rsssl_sanitize_field( $value, $type, $id ) {
 			return intval($value);
 		case 'select':
 		case 'text':
+		    return sanitize_text_field( $value );
+        case 'textarea':
 		    return sanitize_text_field( $value );
 		case 'license':
 		    return $value;
