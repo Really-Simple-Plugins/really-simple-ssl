@@ -42,7 +42,7 @@ function rsssl_disable_fields($field, $field_id){
 			$field['disabled'] = true;
 			$field['help'] = [
 				'label' => 'default',
-				'text' => __( "Directory browsing is is already disabled.", 'really-simple-ssl' ),
+				'text' => __( "Directory browsing is already disabled.", 'really-simple-ssl' ),
 			];
 		}
 	}
@@ -53,7 +53,7 @@ function rsssl_disable_fields($field, $field_id){
 			$field['disabled'] = true;
 			$field['help'] = [
 				'label' => 'default',
-				'text' => __( "User registration is is already disabled.", 'really-simple-ssl' ),
+				'text' => __( "User registration is already disabled.", 'really-simple-ssl' ),
 			];
 		}
 	}
@@ -75,7 +75,17 @@ function rsssl_disable_fields($field, $field_id){
 			$field['disabled'] = true;
 			$field['help'] = [
 				'label' => 'default',
-				'text' => __( "File editing is is already disabled.", 'really-simple-ssl' ),
+				'text' => __( "File editing is already disabled.", 'really-simple-ssl' ),
+			];
+		}
+	}
+	if ( $field_id==='block_code_execution_uploads' ){
+		if ( !rsssl_code_execution_allowed() && !$field['value'] ) {
+			$field['value'] = true;
+			$field['disabled'] = true;
+			$field['help'] = [
+				'label' => 'default',
+				'text' => __( "Code execution is already disabled.", 'really-simple-ssl' ),
 			];
 		}
 	}

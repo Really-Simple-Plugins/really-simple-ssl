@@ -274,7 +274,7 @@ function rsssl_wordpress_version_above_5_6() {
  */
 function rsssl_code_execution_allowed()
 {
-	$result = false;
+	$code_execution_allowed = false;
 	$upload_dir = wp_get_upload_dir();
 	$test_file = $upload_dir['basedir'] . '/' . 'code-execution.php';
 	if ( is_writable($upload_dir['basedir'] )  ) {
@@ -284,13 +284,16 @@ function rsssl_code_execution_allowed()
 	}
 
 	if ( file_exists( $test_file ) ) {
-		require_once( $test_file );
-		if ( function_exists( 'rsssl_test_code_execution' ) && rsssl_test_code_execution() ) {
-			$result = true;
+		$uploads    = wp_upload_dir();
+		$upload_url = trailingslashit($uploads['baseurl']).'code-execution.php';
+		$response = wp_remote_get($upload_url);
+		$filecontents = is_array($response) ? wp_remote_retrieve_body($response) : '';
+		if ( !is_wp_error($response) && (strpos($filecontents, "RSSSL CODE EXECUTION MARKER") !== false) ) {
+			$code_execution_allowed = true;
 		}
 	}
 
-	return $result;
+	return $code_execution_allowed;
 }
 
 /**
