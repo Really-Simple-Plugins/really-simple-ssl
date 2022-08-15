@@ -145,12 +145,8 @@ if ( ! function_exists('rsssl_wrap_htaccess' ) ) {
 		/**
 		 * htaccess in root dir
 		 */
-		error_log("load filter");
 
 		$rules = apply_filters( 'rsssl_htaccess_security_rules', [] );
-		error_log("wrap htaccess");
-
-		x_log($rules);
 		$htaccess_file = RSSSL()->really_simple_ssl->htaccess_file();
 		if ( !file_exists( $htaccess_file ) ) {
 			update_site_option('rsssl_htaccess_error', 'not-exists');

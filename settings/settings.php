@@ -290,8 +290,6 @@ function rsssl_rest_api_fields_set($request){
             'success' => true,
             'progress' => RSSSL()->progress->get()
     ];
-    error_log("progress");
-    x_log(RSSSL()->progress->get());
 	$response = json_encode( $output );
 	header( "Content-Type: application/json" );
 	echo $response;
