@@ -44,10 +44,12 @@ class Settings extends Component {
         let notices = [];
         for (const notice of progress.notices){
             let noticeField = false;
+            //notices that are linked to a field.
             if ( notice.show_with_options ) {
                 noticeField = selectedFields.filter(field => notice.show_with_options && notice.show_with_options.includes(field.id) );
+                if (noticeField.length===0) noticeField = false;
             }
-
+            //notices that are linked to a menu id.
             if ( noticeField || notice.menu_id === selectedMenuItem ) {
                 let help = {};
                 help.title = notice.output.title ? notice.output.title : false;

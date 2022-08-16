@@ -201,7 +201,7 @@ function rsssl_general_security_notices( $notices ) {
 		'output' => array(
 			'true' => array(
 				'highlight_field_id' => 'disable_file_editing',
-				'msg' => __("File editing is enabled. Consider adding the 'DISALLOW_FILE_EDIT' constant in your wp-config.php file.", "really-simple-ssl"),
+				'msg' => __("File editing is allowed.", "really-simple-ssl"),
 //					'url' => 'https://wordpress.org/support/article/editing-wp-config-php/#disable-the-plugin-and-theme-editor',
 				'icon' => 'open',
 				'dismissible' => true,
