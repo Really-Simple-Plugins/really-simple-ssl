@@ -18,13 +18,16 @@ function rsssl_user_registration_allowed() {
  */
 function rsssl_xmlrpc_allowed()
 {
-	if ( ! get_transient( 'rsssl_xmlrpc_allowed' ) ) {
+	$allowed = get_transient( 'rsssl_xmlrpc_allowed' );
+	if ( RSSSL()->really_simple_ssl->is_settings_page() || rsssl_is_logged_in_rest() ) {
+		set_transient('rsssl_xmlrpc_allowed', $allowed, MINUTE_IN_SECONDS );
+	}
 
+	if ( !$allowed ) {
+		$allowed = 'allowed';
 		if ( function_exists( 'curl_init' ) ) {
 			$url = site_url() . '/xmlrpc.php';
-
 			$ch = curl_init($url);
-
 			// XML-RPC listMethods call
 			// Valid XML-RPC request
 			$xmlstring = '<?xml version="1.0" encoding="utf-8"?> 
@@ -44,18 +47,14 @@ function rsssl_xmlrpc_allowed()
 			curl_exec($ch);
 			$response_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 			if ($response_code === 200) {
-				set_transient( 'rsssl_xmlrpc_allowed', 'allowed', DAY_IN_SECONDS );
-				return true;
+				$allowed = 'allowed';
 			} else {
-				set_transient( 'rsssl_xmlrpc_allowed', 'not-allowed', DAY_IN_SECONDS );
-				return false;
+				$allowed = 'not-allowed';
 			}
 		}
-
-	} else {
-		return get_transient( 'rsssl_xmlrpc_allowed' );
+		set_transient( 'rsssl_xmlrpc_allowed', $allowed, DAY_IN_SECONDS );
 	}
-	return false;
+	return $allowed === 'allowed';
 }
 
 /**
@@ -67,8 +66,11 @@ function rsssl_http_methods_allowed()
 	if ( ! current_user_can( 'manage_options' ) ) {
 		return false;
 	}
-
 	$tested = get_transient( 'rsssl_http_methods_allowed' );
+	if ( RSSSL()->really_simple_ssl->is_settings_page() || rsssl_is_logged_in_rest() ) {
+		set_transient('rsssl_http_methods_allowed', $tested, MINUTE_IN_SECONDS );
+	}
+
 	if ( ! $tested ) {
 		$tested = [];
 		if ( function_exists('curl_init' ) ) {
@@ -157,11 +159,13 @@ function rsssl_is_default_wp_prefix() {
  */
 function rsssl_has_admin_user() {
 
-	$users = get_users();
-	foreach ( $users as $user ) {
-		if ( $user->data->user_login === 'admin') {
-			return true;
-		}
+	global $wpdb;
+
+	$prepared = $wpdb->prepare("SELECT COUNT(*) FROM {$wpdb->prefix}users WHERE user_login = %s LIMIT 1", 'admin');
+	$count = $wpdb->get_var( $prepared );
+
+	if ( $count > 0 ) {
+		return true;
 	}
 
 	return false;
@@ -296,38 +300,53 @@ function rsssl_code_execution_allowed()
 
 /**
  * Test if directory indexing is allowed
+ * We assume allowed if test is not possible due to restrictions. Only an explicity 403 on the response results in "forbidden".
+ * On non htaccess servers, the default is non indexing, so we return forbidden.
+ *
  * @return bool
  */
 function rsssl_directory_indexing_allowed() {
-	$status = get_transient('rsssl_directory_indexing_status');
-	if ( !$status ) {
-		$test_folder = 'rssslbrowsingtest';
-		$test_dir = trailingslashit(ABSPATH) . $test_folder;
-		if ( ! is_dir( $test_dir ) ) {
-			mkdir( $test_dir, 755 );
-		}
-		$response = wp_remote_get(trailingslashit( site_url($test_folder) ) );
-		if ( is_dir( $test_dir )  ) {
-			rmdir( $test_dir );
-		}
 
-		// WP_Error won't contain response code, return false
-		if ( is_wp_error( $response ) ) {
-			$status = 'error';
+	$status = get_transient('rsssl_directory_indexing_status');
+	//lower experation when on settings page
+	if ( RSSSL()->really_simple_ssl->is_settings_page() || rsssl_is_logged_in_rest() ) {
+		set_transient('rsssl_directory_indexing_status', $status, MINUTE_IN_SECONDS );
+	}
+	if ( !$status ) {
+		if ( !rsssl_uses_htaccess() ) {
+			$status = 'forbidden';
 		} else {
-			$response_code = $response['response']['code'];
-			if ( $response_code === 403 ) {
-				$status = 'forbidden';
-			} else {
-				$status = 'allowed';
+			$status = 'allowed';
+			try {
+				$test_folder = 'indexing-test';
+				$test_dir = trailingslashit(ABSPATH) . $test_folder;
+				if ( ! is_dir( $test_dir ) ) {
+					mkdir( $test_dir, 0755 );
+				}
+
+				$response = wp_remote_get(trailingslashit( site_url($test_folder) ) );
+				if ( is_dir( $test_dir )  ) {
+					rmdir( $test_dir );
+				}
+
+				// WP_Error doesn't contain response code, return false
+				if ( !is_wp_error( $response ) ) {
+					$response_code = $response['response']['code'];
+					if ( $response_code === 403 ) {
+						$status = 'forbidden';
+					}
+				}
+			} catch( Exception $e ) {
+
 			}
 		}
+
 		set_transient('rsssl_directory_indexing_status', $status, WEEK_IN_SECONDS );
 	}
 
-	if ($status==='allowed') {
-		return true;
-	} else {
+	if ( $status==='forbidden' ) {
 		return false;
+	} else {
+		return true;
 	}
 }

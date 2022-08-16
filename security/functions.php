@@ -22,38 +22,6 @@ defined( 'ABSPATH' ) or die( );
 //        }
 //    }
 //}
-/**
- * Complete a fix for an issue, either user triggered, or automatic
- * @param $fix
- *
- * @return void
- */
-function rsssl_do_fix($fix){
-	if ( !current_user_can('manage_options')) {
-		return;
-	}
-
-	if ( !rsssl_has_fix($fix) && function_exists($fix)) {
-		$completed[]=$fix;
-		$success = $fix();
-		$completed = get_option('rsssl_completed_fixes', []);
-		if ($success) {
-			$completed[] = $fix;
-			update_option('rsssl_completed_fixes', $completed, false );
-		}
-	} elseif ($fix && !function_exists($fix) ) {
-		error_log("Really Simple SSL: fix function $fix not found");
-	}
-
-}
-
-function rsssl_has_fix($fix){
-	$completed = get_option('rsssl_completed_fixes', []);
-	if ( !in_array($fix, $completed)) {
-		return false;
-	}
-	return true;
-}
 
 //error_log(print_r($_SERVER,true));
 //error_log(print_r($_POST,true));
@@ -300,23 +268,37 @@ function rsssl_generate_random_string($length) {
 	return $randomString;
 }
 
-if (!function_exists('rsssl_read_more')) {
-	/**
-	 * Create a generic read more text with link for help texts.
-	 *
-	 * @param string $url
-	 * @param bool   $add_space
-	 *
-	 * @return string
-	 */
-	function rsssl_read_more( $url, $add_character = ' ' ) {
-		$html = sprintf( __( "For more information, please read this %sarticle%s",
-			'really-simple-ssl' ), '<a target="_blank" href="' . $url . '">',
-			'</a>' );
-		if ( is_string($add_character) ) {
-			$html = $add_character . $html;
-		}
 
-		return $html;
+/**
+ * Wrapper for admin user renamed but user enumeration enabled check
+ * @return bool
+ */
+function check_admin_user_renamed_and_enumeration_disabled() {
+	// Check if rename-admin-user has been loaded, while user-enumeration hasn't been loaded
+	if ( function_exists( 'rsssl_username_admin_changed' ) && ! function_exists( 'rsssl_disable_user_enumeration' ) ) {
+		if ( rsssl_username_admin_changed() !== false ) {
+			return true;
+		}
 	}
+
+	return false;
+}
+
+/**
+ * Create a generic read more text with link for help texts.
+ *
+ * @param string $url
+ * @param bool   $add_space
+ *
+ * @return string
+ */
+function rsssl_read_more( $url, $add_character = ' ' ) {
+	$html = sprintf( __( "For more information, please read this %sarticle%s",
+		'really-simple-ssl' ), '<a target="_blank" href="' . $url . '">',
+		'</a>' );
+	if ( is_string($add_character) ) {
+		$html = $add_character . $html;
+	}
+
+	return $html;
 }
