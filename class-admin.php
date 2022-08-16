@@ -2261,40 +2261,41 @@ class rsssl_admin extends rsssl_front_end
             return;
         }
 
-         $htaccess = file_get_contents($this->htaccess_file());
-
-        if (!$this->htaccess_contains_redirect_rules()) {
-
-            if (!is_writable($this->htaccess_file())) {
-                //set the wp redirect as fallback, because .htaccess couldn't be edited.
-                if ($this->clicked_activate_ssl()) $this->wp_redirect = true;
-                if (is_multisite()) {
-                    RSSSL()->rsssl_multisite->wp_redirect = true;
-                    RSSSL()->rsssl_multisite->save_options();
-                }
-                $this->save_options();
-                $this->trace_log(".htaccess not writable.");
-                return;
-            }
-
-            $rules = $this->get_redirect_rules();
-
-	        // Do remove when WP Rocket, do not add. Adding is handled by before_rocket_htaccess filter
-	        if ( ! function_exists('rocket_clean_domain') ) {
-		        //insert rules before wordpress part.
-		        if ( strlen( $rules ) > 0 ) {
-			        $wptag = "# BEGIN WordPress";
-			        if ( strpos( $htaccess, $wptag ) !== false ) {
-				        $htaccess = str_replace( $wptag, $rules . $wptag, $htaccess );
-			        } else {
-				        $htaccess = $htaccess . $rules;
-			        }
-			        error_log("Putting 3");
-			        file_put_contents( $this->htaccess_file(), $htaccess );
-		        }
-	        }
-	        $this->maybe_flush_wprocket_htaccess();
+        if ( $this->htaccess_contains_redirect_rules() ) {
+            return;
         }
+
+	    $htaccess = file_get_contents($this->htaccess_file());
+        if ( !is_writable($this->htaccess_file()) ) {
+            //set the wp redirect as fallback, because .htaccess couldn't be edited.
+            if ($this->clicked_activate_ssl()) $this->wp_redirect = true;
+            if (is_multisite()) {
+                RSSSL()->rsssl_multisite->wp_redirect = true;
+                RSSSL()->rsssl_multisite->save_options();
+            }
+            $this->save_options();
+            $this->trace_log(".htaccess not writable.");
+            return;
+        }
+
+        $rules = $this->get_redirect_rules();
+
+        // Do remove when WP Rocket, do not add. Adding is handled by before_rocket_htaccess filter
+        if ( ! function_exists('rocket_clean_domain') ) {
+            //insert rules before wordpress part.
+            if ( strlen( $rules ) > 0 ) {
+                $wptag = "# BEGIN WordPress";
+                if ( strpos( $htaccess, $wptag ) !== false ) {
+                    $htaccess = str_replace( $wptag, $rules . $wptag, $htaccess );
+                } else {
+                    $htaccess = $htaccess . $rules;
+                }
+                error_log("Putting 3");
+                file_put_contents( $this->htaccess_file(), $htaccess );
+            }
+        }
+        $this->maybe_flush_wprocket_htaccess();
+
     }
 
 	/**
@@ -2340,18 +2341,19 @@ class rsssl_admin extends rsssl_front_end
 	    $htaccess = preg_replace($pattern_new, "", $htaccess);
 	    $htaccess = preg_replace("/\n+/", "\n", $htaccess);
 
-        $rules = $this->get_redirect_rules();
+        $rules = '';
+	    if ( ! function_exists('rocket_clean_domain') ) {
+		    $rules = $this->get_redirect_rules();
+	    }
 
         // Do remove when WP Rocket, do not add. Adding is handled by before_rocket_htaccess filter
-	    if ( ! function_exists('rocket_clean_domain') ) {
-		    //insert rules before WordPress part.
-		    $wptag = "# BEGIN WordPress";
-		    if ( strpos( $htaccess, $wptag ) !== false ) {
-			    $htaccess = str_replace( $wptag, $rules . $wptag, $htaccess );
-		    } else {
-			    $htaccess = $htaccess . $rules;
-		    }
-	    }
+        //insert rules before WordPress part.
+        $wptag = "# BEGIN WordPress";
+        if ( strpos( $htaccess, $wptag ) !== false ) {
+            $htaccess = str_replace( $wptag, $rules . $wptag, $htaccess );
+        } else {
+            $htaccess = $htaccess . $rules;
+        }
 
 	    error_log("Putting 4");
 	    file_put_contents($this->htaccess_file(), $htaccess);
