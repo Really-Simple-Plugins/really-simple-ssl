@@ -19,10 +19,6 @@ function rsssl_user_registration_allowed() {
 function rsssl_xmlrpc_allowed()
 {
 	$allowed = get_transient( 'rsssl_xmlrpc_allowed' );
-	if ( RSSSL()->really_simple_ssl->is_settings_page() || rsssl_is_logged_in_rest() ) {
-		set_transient('rsssl_xmlrpc_allowed', $allowed, MINUTE_IN_SECONDS );
-	}
-
 	if ( !$allowed ) {
 		$allowed = 'allowed';
 		if ( function_exists( 'curl_init' ) ) {
@@ -67,10 +63,6 @@ function rsssl_http_methods_allowed()
 		return false;
 	}
 	$tested = get_transient( 'rsssl_http_methods_allowed' );
-	if ( RSSSL()->really_simple_ssl->is_settings_page() || rsssl_is_logged_in_rest() ) {
-		set_transient('rsssl_http_methods_allowed', $tested, MINUTE_IN_SECONDS );
-	}
-
 	if ( ! $tested ) {
 		$tested = [];
 		if ( function_exists('curl_init' ) ) {
@@ -308,10 +300,6 @@ function rsssl_code_execution_allowed()
 function rsssl_directory_indexing_allowed() {
 
 	$status = get_transient('rsssl_directory_indexing_status');
-	//lower experation when on settings page
-	if ( RSSSL()->really_simple_ssl->is_settings_page() || rsssl_is_logged_in_rest() ) {
-		set_transient('rsssl_directory_indexing_status', $status, MINUTE_IN_SECONDS );
-	}
 	if ( !$status ) {
 		if ( !rsssl_uses_htaccess() ) {
 			$status = 'forbidden';

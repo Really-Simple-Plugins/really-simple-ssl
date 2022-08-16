@@ -302,3 +302,14 @@ function rsssl_has_fix($fix){
 add_action( 'plugins_loaded', 'rsssl_integrations', 10 );
 //also run when fields are saved.
 add_action( 'rsssl_after_saved_fields', 'rsssl_integrations', 20 );
+
+/**
+ * Clear our transients on settings update.
+ * @return void
+ */
+function rsssl_clear_transients(){
+	delete_transient('rsssl_http_methods_allowed');
+	delete_transient('rsssl_xmlrpc_allowed');
+	delete_transient('rsssl_directory_indexing_status');
+}
+add_action( 'rsssl_after_saved_fields', 'rsssl_clear_transients', 50 );
