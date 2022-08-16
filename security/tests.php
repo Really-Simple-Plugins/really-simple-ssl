@@ -18,13 +18,16 @@ function rsssl_user_registration_allowed() {
  */
 function rsssl_xmlrpc_allowed()
 {
-	if ( ! get_transient( 'rsssl_xmlrpc_allowed' ) ) {
+	$allowed = get_transient( 'rsssl_xmlrpc_allowed' );
+	if ( RSSSL()->really_simple_ssl->is_settings_page() || rsssl_is_logged_in_rest() ) {
+		set_transient('rsssl_xmlrpc_allowed', $allowed, MINUTE_IN_SECONDS );
+	}
 
+	if ( !$allowed ) {
+		$allowed = 'allowed';
 		if ( function_exists( 'curl_init' ) ) {
 			$url = site_url() . '/xmlrpc.php';
-
 			$ch = curl_init($url);
-
 			// XML-RPC listMethods call
 			// Valid XML-RPC request
 			$xmlstring = '<?xml version="1.0" encoding="utf-8"?> 
@@ -44,18 +47,14 @@ function rsssl_xmlrpc_allowed()
 			curl_exec($ch);
 			$response_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 			if ($response_code === 200) {
-				set_transient( 'rsssl_xmlrpc_allowed', 'allowed', DAY_IN_SECONDS );
-				return true;
+				$allowed = 'allowed';
 			} else {
-				set_transient( 'rsssl_xmlrpc_allowed', 'not-allowed', DAY_IN_SECONDS );
-				return false;
+				$allowed = 'not-allowed';
 			}
 		}
-
-	} else {
-		return get_transient( 'rsssl_xmlrpc_allowed' );
+		set_transient( 'rsssl_xmlrpc_allowed', $allowed, DAY_IN_SECONDS );
 	}
-	return false;
+	return $allowed === 'allowed';
 }
 
 /**
@@ -67,8 +66,11 @@ function rsssl_http_methods_allowed()
 	if ( ! current_user_can( 'manage_options' ) ) {
 		return false;
 	}
-
 	$tested = get_transient( 'rsssl_http_methods_allowed' );
+	if ( RSSSL()->really_simple_ssl->is_settings_page() || rsssl_is_logged_in_rest() ) {
+		set_transient('rsssl_http_methods_allowed', $tested, MINUTE_IN_SECONDS );
+	}
+
 	if ( ! $tested ) {
 		$tested = [];
 		if ( function_exists('curl_init' ) ) {
@@ -303,6 +305,10 @@ function rsssl_code_execution_allowed()
 function rsssl_directory_indexing_allowed() {
 
 	$status = get_transient('rsssl_directory_indexing_status');
+	//lower experation when on settings page
+	if ( RSSSL()->really_simple_ssl->is_settings_page() || rsssl_is_logged_in_rest() ) {
+		set_transient('rsssl_directory_indexing_status', $status, MINUTE_IN_SECONDS );
+	}
 	if ( !$status ) {
 		if ( !rsssl_uses_htaccess() ) {
 			$status = 'forbidden';
