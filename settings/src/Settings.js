@@ -64,6 +64,8 @@ class Settings extends Component {
             help.id = notice.id;
             notices.push(notice.help);
         }
+        console.log('notices');
+        console.log(notices);
 
         let selectedMenuItemObject;
         for (const item of menu.menu_items){

@@ -2664,7 +2664,6 @@ class rsssl_admin extends rsssl_front_end
             'callback' => false,
         );
 
-
 	    $curl_error = get_transient('rsssl_curl_error');
         $current_plugin_folder = $this->get_current_rsssl_free_dirname();
 

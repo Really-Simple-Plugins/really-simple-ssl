@@ -147,7 +147,7 @@ function rsssl_general_security_notices( $notices ) {
 		'output' => array(
 			'false' => array(
 				'msg' => __("Database prefix is not default. Awesome!", "really-simple-ssl"),
-				'icon' => 'open',
+				'icon' => 'success',
 				'dismissible' => true,
 			),
 			'true' => array(

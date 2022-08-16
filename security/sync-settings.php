@@ -79,6 +79,7 @@ function rsssl_disable_fields($field, $field_id){
 			];
 		}
 	}
+
 	if ( $field_id==='block_code_execution_uploads' ){
 		if ( !rsssl_code_execution_allowed() && !$field['value'] ) {
 			$field['value'] = true;
@@ -88,6 +89,17 @@ function rsssl_disable_fields($field, $field_id){
 				'text' => __( "Code execution is already disabled.", 'really-simple-ssl' ),
 			];
 		}
+	}
+
+	if ( $field_id==='rename_db_prefix' ){
+//		if ( !rsssl_code_execution_allowed() && !$field['value'] ) {
+//			$field['value'] = true;
+//			$field['disabled'] = true;
+//			$field['help'] = [
+//				'label' => 'default',
+//				'text' => __( "Code execution is already disabled.", 'really-simple-ssl' ),
+//			];
+//		}
 	}
 
 	return $field;
