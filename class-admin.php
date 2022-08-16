@@ -343,7 +343,6 @@ class rsssl_admin extends rsssl_front_end
 			    if ( preg_match_all( $pattern_start, $htaccess ) ) {
 				    $htaccess = preg_replace( $pattern_start, "Really Simple SSL Redirect " . rsssl_version, $htaccess );
 				    $htaccess = preg_replace( $pattern_end, "Really Simple SSL Redirect", $htaccess );
-                    error_log("Putting 1");
 				    file_put_contents( $this->htaccess_file(), $htaccess );
 			    }
 		    }
