@@ -19,7 +19,6 @@ class TaskElement extends Component {
     render(){
 
         let notice = this.props.notice;
-
         return(
             <div className="rsssl-task-element">
                 <span className={'rsssl-task-status rsssl-' + notice.output.icon}>{ notice.output.label }</span>
@@ -27,7 +26,7 @@ class TaskElement extends Component {
                 {notice.output.url && <a target="_blank" href={notice.output.url}>{__("More info", "really-simple-ssl")}</a> }
                 {notice.output.highlight_field_id && <span className="rsssl-task-enable" onClick={this.handleClick}>{__("Enable", "really-simple-ssl")}</span> }
                 {notice.output.plusone && <span className='rsssl-plusone'>1</span>}
-                {notice.output.dismissible &&
+                {notice.output.dismissible && notice.output.status!=='completed' &&
                     <div className="rsssl-task-dismiss">
                       <button type='button' data-id={notice.id} onClick={this.props.onCloseTaskHandler}>
                               <span className='rsssl-close-warning-x'>

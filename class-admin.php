@@ -3090,11 +3090,6 @@ class rsssl_admin extends rsssl_front_end
 	     */
 
 	    foreach ( $notices as $id => $notice ) {
-		    if (get_option( "rsssl_" . $id . "_dismissed" )) {
-			    unset($notices[$id]);
-			    continue;
-		    }
-
 		    $func   = $notice['callback'];
 		    $output = $this->validate_function($func);
 
@@ -3132,6 +3127,11 @@ class rsssl_admin extends rsssl_front_end
             if ( isset($notices[$id]) ) {
 	            $notices[$id]['output']['label'] = $icon_labels[ $notices[$id]['output']['icon'] ];
             }
+
+            //only remove this option if it's both dismissed AND not completed. This way we keep completed notices in the list.
+		    if ( isset($notices[$id]) && get_option( "rsssl_" . $id . "_dismissed" ) && $notices[$id]['output']['status'] !== 'completed') {
+			    unset($notices[$id]);
+		    }
 	    }
 
         //if only admin_notices are required, filter out the rest.
@@ -3169,6 +3169,7 @@ class rsssl_admin extends rsssl_front_end
 			    }
 		    }
         }
+
 	    return $notices;
     }
 

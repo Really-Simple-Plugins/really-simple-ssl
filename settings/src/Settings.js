@@ -64,8 +64,7 @@ class Settings extends Component {
             help.id = notice.id;
             notices.push(notice.help);
         }
-        console.log('notices');
-        console.log(notices);
+        notices = notices.filter(notice => notice.label.toLowerCase()!=='completed');
 
         let selectedMenuItemObject;
         for (const item of menu.menu_items){

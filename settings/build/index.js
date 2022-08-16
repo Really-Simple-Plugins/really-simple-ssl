@@ -5254,8 +5254,7 @@ class Settings extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Component
       notices.push(notice.help);
     }
 
-    console.log('notices');
-    console.log(notices);
+    notices = notices.filter(notice => notice.label.toLowerCase() !== 'completed');
     let selectedMenuItemObject;
 
     for (const item of menu.menu_items) {
@@ -5806,7 +5805,7 @@ class TaskElement extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Compon
       onClick: this.handleClick
     }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Enable", "really-simple-ssl")), notice.output.plusone && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
       className: "rsssl-plusone"
-    }, "1"), notice.output.dismissible && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    }, "1"), notice.output.dismissible && notice.output.status !== 'completed' && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
       className: "rsssl-task-dismiss"
     }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
       type: "button",
