@@ -1,13 +1,12 @@
 import {Component, Fragment} from "@wordpress/element";
-import Placeholder from "./Placeholder";
-import {in_array} from "./utils/lib";
+import Placeholder from "../Placeholder/Placeholder";
+import {in_array} from "../utils/lib";
 import SettingsGroup from "./SettingsGroup";
 import Help from "./Help";
 import {
     Button,
 } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
-import * as rsssl_api from "./utils/api";
 
 /**
  * Renders the selected settings
@@ -110,14 +109,14 @@ class Settings extends Component {
                         }
 
                         <Button
-                            isPrimary
+                            isDefault
                             onClick={ this.props.save }>
                             { __( 'Save', 'really-simple-ssl' ) }
                         </Button>
 
                         {/*This will be shown only if current step is not the last one*/}
                         { this.props.selectedMenuItem !== menuItems[menuItems.length-1].id &&
-                            <a href={`#settings/${this.props.nextMenuItem}`} onClick={ this.props.saveAndContinue }>
+                            <a className="button button-primary" href={`#settings/${this.props.nextMenuItem}`} onClick={ this.props.saveAndContinue }>
                                 { __( 'Save and Continue', 'really-simple-ssl' ) }
                             </a>
                         }

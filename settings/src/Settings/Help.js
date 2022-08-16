@@ -3,15 +3,6 @@ import {Component, Fragment} from "@wordpress/element";
  * Render a help notice in the sidebar
  */
 class Help extends Component {
-    handleClick(id){
-        let el = document.querySelector('[data-help_index="'+id+'"]');
-        if (el.classList.contains('rsssl-wizard__help_open')) {
-            el.classList.remove('rsssl-wizard__help_open');
-        } else {
-            el.classList.add('rsssl-wizard__help_open');
-        }
-    }
-
     render(){
         let notice = this.props.help;
         if ( !notice.title ){

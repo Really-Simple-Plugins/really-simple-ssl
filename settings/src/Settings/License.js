@@ -1,14 +1,12 @@
-import {runTest} from "./utils/api";
 import {
     PanelBody,
-    TextControl
 } from '@wordpress/components';
 import {
     Component,
 } from '@wordpress/element';
-import TaskElement from "./TaskElement";
-import Placeholder from './Placeholder';
-import * as rsssl_api from "./utils/api";
+import TaskElement from "../DashBoard/TaskElement";
+import Placeholder from '../Placeholder/Placeholder';
+import * as rsssl_api from "../utils/api";
 
 class License extends Component {
     constructor() {

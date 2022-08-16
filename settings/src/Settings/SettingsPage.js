@@ -1,12 +1,11 @@
 import {Component, Fragment} from "@wordpress/element";
-import {in_array} from "./utils/lib";
-import * as rsssl_api from "./utils/api";
-import Placeholder from "./Placeholder";
-import Menu from "./Menu";
+import {in_array} from "../utils/lib";
+import * as rsssl_api from "../utils/api";
+import Placeholder from "../Placeholder/Placeholder";
+import Menu from "../Menu/Menu";
 import Notices from "./Notices";
 import Settings from "./Settings";
-import sleeper from "./utils/sleeper.js";
-
+import sleeper from "../utils/sleeper.js";
 import {dispatch,} from '@wordpress/data';
 import {__} from '@wordpress/i18n';
 
@@ -140,7 +139,6 @@ class SettingsPage extends Component {
         }
 
         rsssl_api.setFields(saveFields).then(( response ) => {
-            console.log(response);
             this.changedFields = [];
             this.setState({
                 changedFields :[],
