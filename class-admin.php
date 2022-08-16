@@ -343,6 +343,7 @@ class rsssl_admin extends rsssl_front_end
 			    if ( preg_match_all( $pattern_start, $htaccess ) ) {
 				    $htaccess = preg_replace( $pattern_start, "Really Simple SSL Redirect " . rsssl_version, $htaccess );
 				    $htaccess = preg_replace( $pattern_end, "Really Simple SSL Redirect", $htaccess );
+                    error_log("Putting 1");
 				    file_put_contents( $this->htaccess_file(), $htaccess );
 			    }
 		    }
@@ -1674,7 +1675,6 @@ class rsssl_admin extends rsssl_front_end
 		}
 	}
 
-
     /**
      * Checks if we are currently on SSL protocol, but extends standard wp with loadbalancer check.
      *
@@ -1948,6 +1948,7 @@ class rsssl_admin extends rsssl_front_end
                 $htaccess = preg_replace($pattern, "", $htaccess, 1);
 
             } else {
+                error_log("Removing!");
                 // remove everything
                 $pattern_old = "/#\s?BEGIN\s?rlrssslReallySimpleSSL.*?#\s?END\s?rlrssslReallySimpleSSL/s";
                 $pattern_new = "/#\s?BEGIN\s?Really Simple SSL Redirect.*?#\s?END\s?Really Simple SSL Redirect/s";
@@ -1958,12 +1959,15 @@ class rsssl_admin extends rsssl_front_end
             }
 
             $htaccess = preg_replace("/\n+/", "\n", $htaccess);
+            error_log("Putting 2 -> This should not contain redirect rules: ");
+            error_log($htaccess);
             file_put_contents($this->htaccess_file(), $htaccess);
             $this->save_options();
         } else {
             $this->errors['HTACCESS_NOT_WRITABLE'] = TRUE;
             $this->trace_log("could not remove rules from htaccess, file not writable");
         }
+
     }
 
 	/**
@@ -2275,17 +2279,21 @@ class rsssl_admin extends rsssl_front_end
 
             $rules = $this->get_redirect_rules();
 
-            //insert rules before wordpress part.
-            if (strlen($rules) > 0) {
-                $wptag = "# BEGIN WordPress";
-                if (strpos($htaccess, $wptag) !== false) {
-                    $htaccess = str_replace($wptag, $rules . $wptag, $htaccess);
-                } else {
-                    $htaccess = $htaccess . $rules;
-                }
-                file_put_contents($this->htaccess_file(), $htaccess);
-            }
-
+	        // Do remove when WP Rocket, do not add. Adding is handled by before_rocket_htaccess filter
+	        if ( ! function_exists('rocket_clean_domain') ) {
+		        //insert rules before wordpress part.
+		        if ( strlen( $rules ) > 0 ) {
+			        $wptag = "# BEGIN WordPress";
+			        if ( strpos( $htaccess, $wptag ) !== false ) {
+				        $htaccess = str_replace( $wptag, $rules . $wptag, $htaccess );
+			        } else {
+				        $htaccess = $htaccess . $rules;
+			        }
+			        error_log("Putting 3");
+			        file_put_contents( $this->htaccess_file(), $htaccess );
+		        }
+	        }
+	        $this->maybe_flush_wprocket_htaccess();
         }
     }
 
@@ -2334,14 +2342,20 @@ class rsssl_admin extends rsssl_front_end
 
         $rules = $this->get_redirect_rules();
 
-        //insert rules before WordPress part.
-        $wptag = "# BEGIN WordPress";
-        if (strpos($htaccess, $wptag) !== false) {
-            $htaccess = str_replace($wptag, $rules . $wptag, $htaccess);
-        } else {
-            $htaccess = $htaccess . $rules;
-        }
-        file_put_contents($this->htaccess_file(), $htaccess);
+        // Do remove when WP Rocket, do not add. Adding is handled by before_rocket_htaccess filter
+	    if ( ! function_exists('rocket_clean_domain') ) {
+		    //insert rules before WordPress part.
+		    $wptag = "# BEGIN WordPress";
+		    if ( strpos( $htaccess, $wptag ) !== false ) {
+			    $htaccess = str_replace( $wptag, $rules . $wptag, $htaccess );
+		    } else {
+			    $htaccess = $htaccess . $rules;
+		    }
+	    }
+
+	    error_log("Putting 4");
+	    file_put_contents($this->htaccess_file(), $htaccess);
+        $this->maybe_flush_wprocket_htaccess();
 
     }
 
@@ -2352,9 +2366,31 @@ class rsssl_admin extends rsssl_front_end
     public function add_htaccess_redirect_before_wp_rocket() {
 
         $this->detect_configuration();
+        $this->removeHtaccessEdit();
         return $this->get_redirect_rules( true );
 
     }
+
+	/**
+	 * Regenerate the wp rocket .htaccess rules
+	 */
+	public function maybe_flush_wprocket_htaccess(){
+		if ( wp_doing_ajax()
+		     || !$this->is_settings_page()
+		     || !$this->ssl_enabled
+		     || !current_user_can("activate_plugins")
+		     || $this->do_not_edit_htaccess
+		) return;
+
+		if ( function_exists('flush_rocket_htaccess') ) {
+			flush_rocket_htaccess();
+		}
+
+		if ( function_exists('rocket_generate_config_file') ) {
+			rocket_generate_config_file();
+		}
+
+	}
 
     /**
      *
