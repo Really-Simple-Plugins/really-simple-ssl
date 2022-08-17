@@ -193,6 +193,7 @@ function rsssl_run_test($request){
  */
 function rsssl_sanitize_field_type($type){
     $types = [
+        'hidden',
         'license',
         'checkbox',
         'radio',
@@ -224,6 +225,7 @@ function rsssl_rest_api_fields_set($request){
 	$fields = $request->get_json_params();
     $config_fields = rsssl_fields(false);
     $config_ids = array_column($config_fields, 'id');
+    error_log("saving...");
 
 	foreach ( $fields as $index => $field ) {
         //the updateItemId allows us to update one specific item in a field set.
@@ -441,6 +443,7 @@ function rsssl_sanitize_field( $value, $type, $id ) {
 
 	switch ( $type ) {
 		case 'checkbox':
+		case 'hidden':
 			return intval($value);
 		case 'select':
 		case 'text':
@@ -559,7 +562,7 @@ function rsssl_sanitize_permissions_policy( $value, $type, $field_name ){
 	//ensure that there are no duplicate ids
 	foreach ($value as $index => $item ) {
 		if ( in_array($item['id'], $stored_ids) ){
-			error_log("exists in arrr ".$item['id']);
+			error_log("exists in arr ".$item['id']);
 			unset($value[$index]);
 			continue;
 		}

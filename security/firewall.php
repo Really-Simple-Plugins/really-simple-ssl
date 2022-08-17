@@ -10,7 +10,7 @@ class rsssl_firewall {
 		self::$_this = $this;
 
 		add_action( 'plugins_loaded', array($this, 'insert_advanced_header_file'), 10 );
-		add_action( 'rsssl_after_saved_fields', array($this, 'insert_advanced_header_file'), 20 );
+		add_action( 'rsssl_after_saved_fields', array($this, 'insert_advanced_header_file'), 100 );
 		add_filter('rsssl_notices', array($this, 'notices') );
 
 	}
@@ -69,6 +69,8 @@ class rsssl_firewall {
 		$file = $dir . '/advanced-headers.php';
 
 		$rules    = apply_filters('rsssl_firewall', '');
+		error_log("new rules");
+		x_log($rules);
 		//no rules? remove the file
 		if ( empty(trim($rules) ) ) {
 			if ( file_exists($file) ) {

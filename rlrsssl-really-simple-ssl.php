@@ -65,6 +65,7 @@ class REALLY_SIMPLE_SSL
 	public $rsssl_server;
 	public $really_simple_ssl;
 	public $progress;
+	public $placeholder;
 	public $rsssl_help;
 	public $rsssl_certificate;
 
@@ -91,6 +92,8 @@ class REALLY_SIMPLE_SSL
 					self::$instance->rsssl_multisite = new rsssl_multisite();
 				}
 				self::$instance->rsssl_cache = new rsssl_cache();
+
+				self::$instance->placeholder = new RSSSL_PLACEHOLDER();
 				self::$instance->rsssl_server = new rsssl_server();
 				self::$instance->really_simple_ssl = new rsssl_admin();
 				self::$instance->rsssl_help = new rsssl_help();
@@ -134,6 +137,7 @@ class REALLY_SIMPLE_SSL
 		}
 		if ( rsssl_is_logged_in_rest() || is_admin() || wp_doing_cron() || is_multisite() || $wpcli || defined('RSSSL_DOING_SYSTEM_STATUS') || defined('RSSSL_DOING_CSP') ) {
             require_once( rsssl_path . 'settings/settings.php' );
+            require_once( rsssl_path . 'placeholders/class-placeholder.php' );
 			if (is_multisite()) {
 				require_once(rsssl_path . 'class-multisite.php');
 				require_once(rsssl_path . 'multisite-cron.php');

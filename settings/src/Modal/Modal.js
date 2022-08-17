@@ -49,7 +49,6 @@ class Modal extends Component {
             data,
             buttonsDisabled,
         } = this.state;
-        console.log(data);
         let disabled = buttonsDisabled ? 'disabled' : '';
         let description = data.description;
 

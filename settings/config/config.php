@@ -118,14 +118,6 @@ function rsssl_menu( $group_id = 'settings' ){
 					'title' => __('Cross Origin Policy', 'really-simple-ssl-pro'),
 					'intro' => __("", "really-simple-ssl"),
 					'step' => 1,
-					'groups' => [
-						[
-							'id' => 'permissionspolicy',
-							'premium' => true,
-							'title' => __('Permissions Policy', 'really-simple-ssl'),
-							'intro' => __("Permissions Policy explanation", "really-simple-ssl"),
-						],
-					],
 				],
 				[
 					'id' => 'hardening',
@@ -697,7 +689,7 @@ function rsssl_fields( $load_values = true ){
 			'group_id'    => 'mixedcontentscan',
 			'type'        => 'mixedcontentscan',
 			'label'       => __("Mixed content scan", "really-simple-ssl-pro"),
-			'data_source' => ['RSSSL_PRO', 'rsssl_scan', 'get'],
+			'data_source' => ['RSSSL', 'placeholder', 'mixed_content_data'],
 			'columns'     => [
 				[
 					'name' => __('Type', 'really-simple-ssl-pro'),
@@ -822,8 +814,8 @@ function rsssl_fields( $load_values = true ){
 		[
 			'id'          => 'enable_permissions_policy',
 			'menu_id'     => 'permissions_policy',
-			'group_id'    => 'permissionspolicy',
-			'type'        => 'checkbox',
+			'group_id'    => 'permissions_policy',
+			'type'        => 'hidden',
 			'label'       => __( "Enable Permissions Policy", 'really-simple-ssl-pro' ),
 			'disabled'    => false,
 			'default'     => false,
@@ -864,12 +856,7 @@ function rsssl_fields( $load_values = true ){
 			'data_endpoint' => ["RSSSL_PRO", "rsssl_csp_backend", "update"],
 			'columns'     => [
 				[
-					'name' => __('Date',"really-simple-ssl-pro"),
-					'sortable' => true,
-					'column' =>'time',
-				],
-				[
-					'name' => __('URL', 'really-simple-ssl'),
+					'name' => __('Location', 'really-simple-ssl'),
 					'sortable' => false,
 					'column' =>'documenturi',
 				],
@@ -879,7 +866,7 @@ function rsssl_fields( $load_values = true ){
 					'column' =>'violateddirective',
 				],
 				[
-					'name' => __('Blocked URI', 'really-simple-ssl'),
+					'name' => __('Source', 'really-simple-ssl'),
 					'sortable' => false,
 					'column' =>'blockeduri',
 				],
