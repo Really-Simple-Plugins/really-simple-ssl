@@ -109,7 +109,7 @@ class Settings extends Component {
                         }
 
                         <Button
-                            isDefault
+                            variant="secondary"
                             onClick={ this.props.save }>
                             { __( 'Save', 'really-simple-ssl' ) }
                         </Button>

@@ -67,10 +67,8 @@ class rsssl_firewall {
 
 		$dir  = ABSPATH . 'wp-content';
 		$file = $dir . '/advanced-headers.php';
-
 		$rules    = apply_filters('rsssl_firewall', '');
-		error_log("new rules");
-		x_log($rules);
+		error_log(print_r($rules, true));
 		//no rules? remove the file
 		if ( empty(trim($rules) ) ) {
 			if ( file_exists($file) ) {

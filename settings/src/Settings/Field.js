@@ -93,7 +93,7 @@ class Field extends Component {
                 }
             }
         }
-        if ( !field.visible ) {
+        if ( !field.visible || field.type==='database' ) {
             return (
                 <span></span>
             );
@@ -116,7 +116,7 @@ class Field extends Component {
         if ( field.type==='hidden' ){
             return (
                 <>
-                    <input type="hidden" value={field.value} onChange={ ( fieldValue ) => this.onChangeHandler(fieldValue) }/>
+                    <input type="hidden" value={field.value}/>
                 </>
             );
         }

@@ -4402,7 +4402,7 @@ class SecurityFeaturesBlock extends _wordpress_element__WEBPACK_IMPORTED_MODULE_
       text: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_5__.__)("WordPress forum", "really-simple-ssl"),
       url: "https://wordpress.org/plugins/really-simple-ssl"
     }))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Button, {
-      isDefault: true,
+      variant: "secondary",
       onClick: e => this.redirectToSettingsMenu(e)
     }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_5__.__)('Settings', 'really-simple-ssl')));
   }
@@ -4438,7 +4438,7 @@ class ChangeStatus extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Compo
   }
 
   render() {
-    let statusClass = this.props.item.status == 1 ? 'rsssl-status-allowed' : 'rsssl-status-revoked';
+    let statusClass = this.props.item.status == 1 ? 'button button-primary rsssl-status-allowed' : 'button button-default rsssl-status-revoked';
     let label = this.props.item.status == 1 ? (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Revoke", "really-simple-ssl") : (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Allow", "really-simple-ssl");
     return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
       onClick: () => this.props.onChangeHandlerDataTable(!this.props.item.status, this.props.item, 'status'),
@@ -4484,26 +4484,53 @@ class ContentSecurityPolicy extends _wordpress_element__WEBPACK_IMPORTED_MODULE_
   constructor() {
     super(...arguments);
     this.state = {
-      enable_permissions_policy: 0
+      csp_enforce: 0,
+      csp_learning_mode: 0
     };
   }
 
-  componentDidMount() {//         let field = this.props.fields.filter(field => field.id === 'enable_permissions_policy')[0];
-    //         this.setState({
-    //             enable_permissions_policy :field.value
-    //         });
+  componentDidMount() {
+    let enforce_field = this.props.fields.filter(field => field.id === 'csp_enforce')[0];
+    let learning_mode_field = this.props.fields.filter(field => field.id === 'csp_learning_mode')[0];
+    this.setState({
+      csp_enforce: enforce_field.value,
+      csp_learning_mode: learning_mode_field.value
+    });
   }
 
-  toggleStatus(e, enforce) {
-    console.log("enforce");
-    console.log(enforce);
+  toggleEnforce(e, enforce) {
     let fields = this.props.fields; //look up permissions policy enable field //enable_permissions_policy
 
-    let field = fields.filter(field => field.id === 'enable_permissions_policy')[0]; //enforce this setting
+    let field = fields.filter(field => field.id === 'csp_enforce')[0];
+    let learning_mode_field = fields.filter(field => field.id === 'csp_learning_mode')[0]; //disable learning mode if enforced
+
+    if (enforce == 1) {
+      learning_mode_field.value = 0;
+    } //enforce this setting
+
 
     field.value = enforce;
     this.setState({
-      enable_permissions_policy: enforce
+      csp_enforce: enforce
+    });
+    let saveFields = [];
+    saveFields.push(field);
+    saveFields.push(learning_mode_field);
+    this.props.updateField(field);
+    this.props.updateField(learning_mode_field);
+    _utils_api__WEBPACK_IMPORTED_MODULE_5__.setFields(saveFields).then(response => {//this.props.showSavedSettingsNotice();
+    });
+  }
+
+  toggleLearningMode(e, enforce) {
+    let fields = this.props.fields; //look up permissions policy enable field //enable_permissions_policy
+
+    let field = fields.filter(field => field.id === 'csp_learning_mode')[0]; //enforce this setting
+
+    enforce = field.value == 1 ? 0 : 1;
+    field.value = enforce;
+    this.setState({
+      csp_learning_mode: enforce
     });
     let saveFields = [];
     saveFields.push(field);
@@ -4515,7 +4542,11 @@ class ContentSecurityPolicy extends _wordpress_element__WEBPACK_IMPORTED_MODULE_
   render() {
     let field = this.props.field;
     let fieldValue = field.value;
-    let options = this.props.options; //build our header
+    let options = this.props.options;
+    const {
+      csp_enforce,
+      csp_learning_mode
+    } = this.state; //build our header
 
     columns = [];
     field.columns.forEach(function (item, i) {
@@ -4540,7 +4571,7 @@ class ContentSecurityPolicy extends _wordpress_element__WEBPACK_IMPORTED_MODULE_
     for (const item of data) {
       item.statusControl = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_ChangeStatus__WEBPACK_IMPORTED_MODULE_3__["default"], {
         item: item,
-        onChangeHandlerDataTable: this.onChangeHandlerDataTable
+        onChangeHandlerDataTable: this.props.onChangeHandlerDataTable
       });
     }
 
@@ -4552,7 +4583,19 @@ class ContentSecurityPolicy extends _wordpress_element__WEBPACK_IMPORTED_MODULE_
       dense: true,
       pagination: true,
       noDataComponent: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("No results", "really-simple-ssl")
-    }));
+    }), csp_enforce != 1 && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
+      className: "button",
+      onClick: e => this.toggleEnforce(e, true)
+    }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Enforce", "really-simple-ssl")), csp_enforce == 1 && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
+      className: "button",
+      onClick: e => this.toggleEnforce(e, false)
+    }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Disable", "really-simple-ssl")), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("label", null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("input", {
+      type: "checkbox",
+      disabled: csp_enforce,
+      checked: csp_learning_mode == 1,
+      value: csp_learning_mode,
+      onChange: fieldValue => this.toggleLearningMode()
+    }), (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Enable Learning Mode", "really-simple-ssl")));
   }
 
 }
@@ -4676,7 +4719,7 @@ class Field extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Component {
       }
     }
 
-    if (!field.visible) {
+    if (!field.visible || field.type === 'database') {
       return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", null);
     }
 
@@ -4695,8 +4738,7 @@ class Field extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Component {
     if (field.type === 'hidden') {
       return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("input", {
         type: "hidden",
-        value: field.value,
-        onChange: fieldValue => this.onChangeHandler(fieldValue)
+        value: field.value
       }));
     }
 
@@ -5625,7 +5667,7 @@ class Settings extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Component
       href: `#settings/${this.props.previousMenuItem}`,
       onClick: () => this.props.previousStep(true)
     }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_6__.__)('Previous', 'really-simple-ssl')), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_5__.Button, {
-      isDefault: true,
+      variant: "secondary",
       onClick: this.props.save
     }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_6__.__)('Save', 'really-simple-ssl')), this.props.selectedMenuItem !== menuItems[menuItems.length - 1].id && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
       className: "button button-primary",
@@ -5750,7 +5792,14 @@ class SettingsGroup extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Comp
       className: "rsssl-grid-item-header"
     }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("h3", {
       className: "rsssl-h4"
-    }, activeGroup.title)), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    }, activeGroup.title), activeGroup && activeGroup.helpLink && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+      className: "rsssl-grid-item-controls"
+    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_utils_Hyperlink__WEBPACK_IMPORTED_MODULE_2__["default"], {
+      target: "_blank",
+      className: "rsssl-helplink",
+      text: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)("Instructions manual", "really-simple-ssl"),
+      url: activeGroup.helpLink
+    }))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
       className: "rsssl-grid-item-content"
     }, activeGroup && activeGroup.intro && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
       className: "rsssl-settings-block-intro"
@@ -6120,7 +6169,9 @@ class Hyperlink extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Componen
       link_text = this.props.text;
     }
 
-    return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", null, label_pre, " ", (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
+    let className = this.props.className ? this.props.className : 'rsssl-link';
+    return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, label_pre, " ", (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
+      className: className,
       target: this.props.target,
       href: this.props.url
     }, link_text), label_post);

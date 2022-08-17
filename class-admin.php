@@ -9,6 +9,7 @@ class rsssl_admin extends rsssl_front_end
     public $do_wpconfig_loadbalancer_fix = FALSE;
     public $site_has_ssl = FALSE;
     public $ssl_enabled = FALSE;
+    public $redirect = FALSE;
     //multisite variables
     public $sites = array(); //for multisite, list of all activated sites.
 
@@ -286,8 +287,7 @@ class rsssl_admin extends rsssl_front_end
 
         if ( $prev_version && version_compare( $prev_version, '4.0.10', '<=' ) ) {
             if (function_exists('is_wpe') && is_wpe()) {
-                rsssl_update_option('wp_redirect', true);
-                rsssl_update_option('htaccess_redirect', false);
+                rsssl_update_option('redirect', 'wp_redirect');
                 $this->save_options();
             }
         }
@@ -521,8 +521,7 @@ class rsssl_admin extends rsssl_front_end
     {
         //only revert if SSL was enabled first.
         if ($this->ssl_enabled) {
-	        rsssl_update_option('wp_redirect', false);
-	        rsssl_update_option('htaccess_redirect', false);
+	        rsssl_update_option('redirect', 'none');
 	        $this->ssl_enabled = false;
 	        $this->remove_ssl_from_siteurl();
 	        $this->save_options();
@@ -983,8 +982,6 @@ class rsssl_admin extends rsssl_front_end
 		$options['ssl_enabled'] = $this->ssl_enabled;
 		$options['site_has_ssl'] = $this->site_has_ssl;
 		$options['review_notice_shown'] = $this->review_notice_shown;
-		error_log("save these options");
-		error_log(print_r($options, true));
 		update_option('rsssl_options', $options);
 	}
 
@@ -999,15 +996,9 @@ class rsssl_admin extends rsssl_front_end
 
     public function get_admin_options()
     {
-        $options = get_option('rsssl_options');
-	    error_log("loading admin options");
-	    error_log(print_r($options, true));
-        if ( isset($options) ) {
-            $this->review_notice_shown = isset($options['review_notice_shown']) ? $options['review_notice_shown'] : FALSE;
-	        $this->site_has_ssl = isset($options['site_has_ssl']) ? $options['site_has_ssl'] : false;
-        }
-        error_log("admin object");
-        error_log(print_r($this, true));
+        $this->review_notice_shown = rsssl_get_option('review_notice_shown');
+        $this->site_has_ssl = rsssl_get_option('site_has_ssl');
+        $this->redirect = rsssl_get_option('redirect');
     }
 
 	/**
@@ -3822,11 +3813,11 @@ class rsssl_admin extends rsssl_front_end
 			return 'htaccess-not-writeable';
 		}
 
-		if ( RSSSL()->really_simple_ssl->htaccess_redirect && !RSSSL()->really_simple_ssl->htaccess_test_success) {
+		if ( RSSSL()->really_simple_ssl->redirect==='htaccess' && !RSSSL()->really_simple_ssl->htaccess_test_success) {
 			return 'htaccess-rules-test-failed';
 		}
 
-		if ( RSSSL()->really_simple_ssl->has_301_redirect() && RSSSL()->really_simple_ssl->wp_redirect && RSSSL()->rsssl_server->uses_htaccess() && ! RSSSL()->really_simple_ssl->htaccess_redirect && ( ! is_multisite() || ! RSSSL()->rsssl_multisite->is_per_site_activated_multisite_subfolder_install() )) {
+		if ( RSSSL()->really_simple_ssl->has_301_redirect() && RSSSL()->really_simple_ssl->wp_redirect && RSSSL()->rsssl_server->uses_htaccess() && RSSSL()->really_simple_ssl->redirect!=='htaccess' && ( ! is_multisite() || ! RSSSL()->rsssl_multisite->is_per_site_activated_multisite_subfolder_install() )) {
 			return 'wp-redirect-to-htaccess';
 		}
 

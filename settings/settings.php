@@ -226,8 +226,6 @@ function rsssl_rest_api_fields_set($request){
 	$fields = $request->get_json_params();
     $config_fields = rsssl_fields(false);
     $config_ids = array_column($config_fields, 'id');
-    error_log("saving...");
-
 	foreach ( $fields as $index => $field ) {
         //the updateItemId allows us to update one specific item in a field set.
         $update_item_id = isset($field['updateItemId']) ? $field['updateItemId'] : false;
@@ -355,6 +353,7 @@ function rsssl_rest_api_fields_get(  ){
 	if (!current_user_can('manage_options')) {
 		return;
 	}
+
 	$output = array();
 	$fields = rsssl_fields();
 	$menu_items = rsssl_menu('settings');

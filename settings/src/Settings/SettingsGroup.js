@@ -74,8 +74,10 @@ class SettingsGroup extends Component {
         this.upgrade = activeGroup.upgrade ? activeGroup.upgrade : this.upgrade;
         return (
             <div className="rsssl-grid-item">
-                {activeGroup && activeGroup.title && <div className="rsssl-grid-item-header"><h3 className="rsssl-h4">{activeGroup.title}</h3></div>}
-                {/*{activeGroup && activeGroup.helpLink && <div className="rsssl-grid-item-controls"><h3 className="rsssl-help-link">{activeGroup.helpLink}</h3></div>}*/}
+                {activeGroup && activeGroup.title && <div className="rsssl-grid-item-header">
+                    <h3 className="rsssl-h4">{activeGroup.title}</h3>
+                    {activeGroup && activeGroup.helpLink && <div className="rsssl-grid-item-controls"><Hyperlink target="_blank" className="rsssl-helplink" text={__("Instructions manual","really-simple-ssl")} url={activeGroup.helpLink}/></div>}
+                </div>}
                 <div className="rsssl-grid-item-content">
                     {activeGroup && activeGroup.intro && <div className="rsssl-settings-block-intro">{activeGroup.intro}</div>}
                     {selectedFields.map((field, i) => <Field dropItemFromModal={this.props.dropItemFromModal} handleModal={this.props.handleModal} showSavedSettingsNotice={this.props.showSavedSettingsNotice} updateField={this.props.updateField} setPageProps={this.props.setPageProps} fieldsUpdateComplete = {this.props.fieldsUpdateComplete} key={i} index={i} highLightField={this.props.highLightField} highLightedField={this.props.highLightedField} saveChangedFields={this.props.saveChangedFields} field={field} fields={selectedFields}/>)}
