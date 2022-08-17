@@ -9,7 +9,6 @@ if ( ! class_exists( 'rsssl_front_end' ) ) {
         public $wp_redirect = TRUE;
         public $autoreplace_insecure_links = TRUE;
         public $ssl_enabled;
-        public $switch_mixed_content_fixer_hook = FALSE;
 
         function __construct()
         {
@@ -100,22 +99,9 @@ if ( ! class_exists( 'rsssl_front_end' ) ) {
 
         public function get_options()
         {
-            $options = get_option('rlrsssl_options');
+            $options = get_option('rsssl_options');
             if (isset($options)) {
-                $this->autoreplace_insecure_links = isset($options['autoreplace_insecure_links']) ? $options['autoreplace_insecure_links'] : TRUE;
                 $this->ssl_enabled = isset($options['ssl_enabled']) ? $options['ssl_enabled'] : false;
-                $this->wp_redirect = isset($options['wp_redirect']) ? $options['wp_redirect'] : FALSE;
-                $this->switch_mixed_content_fixer_hook = isset($options['switch_mixed_content_fixer_hook']) ? $options['switch_mixed_content_fixer_hook'] : FALSE;
-
-                //overrides from multisite
-                if (is_multisite()) {
-                    $network_options = get_site_option('rlrsssl_network_options');
-                    $site_wp_redirect = isset($network_options["wp_redirect"]) ? $network_options["wp_redirect"] : false;
-                    $autoreplace_insecure_links = isset($network_options["autoreplace_mixed_content"]) ? $network_options["autoreplace_mixed_content"] : false;
-                    if ($site_wp_redirect) $this->wp_redirect = $site_wp_redirect;
-                    if ($autoreplace_insecure_links) $this->autoreplace_insecure_links = $autoreplace_insecure_links;
-
-                }
             }
         }
 

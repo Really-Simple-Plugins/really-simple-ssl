@@ -12,7 +12,6 @@ if (!class_exists('rsssl_multisite')) {
         public $selected_networkwide_or_per_site;
         public $wp_redirect;
         public $htaccess_redirect;
-        public $do_not_edit_htaccess;
         public $autoreplace_mixed_content;
         public $hsts;
         public $mixed_content_admin;
@@ -782,7 +781,6 @@ if (!class_exists('rsssl_multisite')) {
             $options["selected_networkwide_or_per_site"] = false;
             $options["wp_redirect"] = false;
             $options["htaccess_redirect"] = false;
-            $options["do_not_edit_htaccess"] = false;
             $options["autoreplace_mixed_content"] = false;
             $options["hsts"] = false;
             $options["mixed_content_admin"] = false;

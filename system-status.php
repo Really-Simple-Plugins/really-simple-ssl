@@ -59,9 +59,7 @@ if ( current_user_can( 'manage_options' ) ) {
 	if ( RSSSL()->really_simple_ssl->htaccess_redirect ) {
 		echo "* htaccess redirect\n";
 	}
-	if ( rsssl_get_option("do_not_edit_htaccess") ) {
-		echo "* Stop editing the .htaccess file\n";
-	}
+
 	if ( rsssl_get_option("switch_mixed_content_fixer_hook") ) {
 		echo "* Use alternative method to fix mixed content\n";
 	}
@@ -129,10 +127,6 @@ if ( current_user_can( 'manage_options' ) ) {
 		}
 	} else {
 		echo "no htaccess file available.<br>";
-	}
-
-	if ( rsssl_get_option("do_not_edit_htaccess") ) {
-		echo "Edit of .htaccess blocked by setting or define 'do not edit htaccess' in Really Simple SSL.<br>";
 	}
 
 	if (get_transient('rsssl_htaccess_test_success') === 'success') {
