@@ -281,6 +281,7 @@ class rsssl_admin extends rsssl_front_end
         $plugin = rsssl_plugin;
         add_filter("plugin_action_links_$plugin", array($this, 'plugin_settings_link'));
 
+	    add_action( 'rocket_activation', array($this, 'removeHtaccessEdit' ) );
 	    add_filter( 'before_rocket_htaccess_rules', array($this, 'add_htaccess_redirect_before_wp_rocket' ) );
 
 	    //Add update notification to Settings admin menu
@@ -299,7 +300,6 @@ class rsssl_admin extends rsssl_front_end
         if (!defined("rsssl_pro_version") && (!defined("rsssl_pp_version")) && (!defined("rsssl_soc_version")) && (!class_exists('RSSSL_PRO')) && (!is_multisite())) {
             add_action('admin_notices', array($this, 'show_leave_review_notice'));
         }
-//        add_action("update_option_rlrsssl_options", array($this, "update_htaccess_after_settings_save"), 20, 3);
     }
 
 	/**
@@ -1956,7 +1956,7 @@ class rsssl_admin extends rsssl_front_end
             }
 
 	        $htaccess = preg_replace("/\n+/", "\n", $htaccess);
-            file_put_contents($this->htaccess_file(), $htaccess);
+	        file_put_contents($this->htaccess_file(), $htaccess);
             $this->save_options();
         } else {
             $this->errors['HTACCESS_NOT_WRITABLE'] = TRUE;
@@ -2292,7 +2292,6 @@ class rsssl_admin extends rsssl_front_end
 	    file_put_contents($this->htaccess_file(), $htaccess);
 
         $this->maybe_flush_wprocket_htaccess();
-        $this->maybe_flush_wprocket_htaccess();
 
     }
 
@@ -2303,7 +2302,6 @@ class rsssl_admin extends rsssl_front_end
     public function add_htaccess_redirect_before_wp_rocket() {
 
         $this->detect_configuration();
-//        $this->editHtaccess(  );
         return $this->get_redirect_rules( true );
 
     }
