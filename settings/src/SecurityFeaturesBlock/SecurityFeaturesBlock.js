@@ -1,35 +1,13 @@
 import {
     Component,
 } from '@wordpress/element';
-
-import Placeholder from './Placeholder';
-import Hyperlink from "./utils/Hyperlink";
+import {
+    Button,
+} from '@wordpress/components';
+import SecurityFeatureBullet from './SecurityFeatureBullet';
+import Placeholder from '../Placeholder/Placeholder';
+import Hyperlink from "../utils/Hyperlink";
 import { __ } from '@wordpress/i18n';
-
-class SecurityFeatureBullet extends Component {
-    constructor() {
-        super( ...arguments);
-
-    }
-    componentDidMount() {
-
-    }
-
-    render(){
-        let field = this.props.field;
-        let bulletClassName = field.value==1 ? 'rsssl-bullet rsssl-bullet-success' : 'rsssl-bullet rsssl-bullet-error';
-        return (
-            <div className="rsssl-new-feature">
-                <div className={bulletClassName}></div>
-                <div className="rssl-new-feature-label">
-                    { field.value==1 && field.new_features_block.active}
-                    { field.value!=1 && field.new_features_block.inactive}
-                    { field.value!=1 && field.new_features_block.readmore.length>0 && <span>&nbsp;-&nbsp;<Hyperlink target="_blank" text={__("read more","really-simple-ssl")} url={field.new_features_block.readmore}/></span> }
-                </div>
-            </div>
-        );
-    }
-}
 
 class SecurityFeaturesBlock extends Component {
     constructor() {
@@ -38,6 +16,10 @@ class SecurityFeaturesBlock extends Component {
     }
     componentDidMount() {
 
+    }
+
+    redirectToSettingsMenu(){
+        this.props.selectMainMenu('settings');
     }
 
     render(){
@@ -59,6 +41,7 @@ class SecurityFeaturesBlock extends Component {
                     {__("or the", "really-simple-ssl")}&nbsp;
                         <Hyperlink target="_blank" text={__("WordPress forum","really-simple-ssl")} url="https://wordpress.org/plugins/really-simple-ssl"/></p>
                 </div>
+                <Button isDefault onClick={ (e) => this.redirectToSettingsMenu(e)}>{ __( 'Settings', 'really-simple-ssl' ) }</Button>
             </div>
 
         );

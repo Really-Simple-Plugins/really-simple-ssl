@@ -237,7 +237,6 @@ function rsssl_integrations() {
 		);
 
 		if ( rsssl_is_integration_enabled( $plugin, $details ) ) {
-			error_log("$plugin enabled");
 			$actual_integrations_count++;
 			$file = rsssl_path . 'security/' . $details['folder'] . "/" . $plugin . '.php';
 			$skip = true;

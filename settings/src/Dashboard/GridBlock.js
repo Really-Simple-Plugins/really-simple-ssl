@@ -3,11 +3,11 @@ import {
     Component,
 } from '@wordpress/element';
 
-import * as rsssl_api from "./utils/api";
+import * as rsssl_api from "../utils/api";
 import ProgressBlock from "./ProgressBlock";
 import ProgressHeader from "./ProgressBlockHeader";
-import SecurityFeaturesBlock from './SecurityFeaturesBlock';
-import Placeholder from './Placeholder';
+import SecurityFeaturesBlock from '../SecurityFeaturesBlock/SecurityFeaturesBlock';
+import Placeholder from '../Placeholder/Placeholder';
 
 
 /**
@@ -138,7 +138,7 @@ class GridBlock extends Component {
 
         // console.log(blockData);
 
-        let DynamicBlockProps = { saveChangedFields: this.props.saveChangedFields, setBlockProps: this.setBlockProps, BlockProps: this.BlockProps, runTest: this.runTest, fields: this.props.fields, isApiLoaded: this.props.isApiLoaded, highLightField: this.highLightField };
+        let DynamicBlockProps = { saveChangedFields: this.props.saveChangedFields, setBlockProps: this.setBlockProps, BlockProps: this.BlockProps, runTest: this.runTest, fields: this.props.fields, isApiLoaded: this.props.isApiLoaded, highLightField: this.highLightField, selectMainMenu: this.props.selectMainMenu };
         return (
             <div className={className}>
                 <div className="rsssl-grid-item-header">

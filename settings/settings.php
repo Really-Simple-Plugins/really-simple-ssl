@@ -194,6 +194,7 @@ function rsssl_run_test($request){
 function rsssl_sanitize_field_type($type){
     $types = [
         'license',
+        'database',
         'checkbox',
         'radio',
         'text',
@@ -221,10 +222,7 @@ function rsssl_rest_api_fields_set($request){
     if ( !current_user_can('manage_options')) {
         return;
     }
-    error_log("update options rsssl");
 	$fields = $request->get_json_params();
-
-//    error_log(print_r($fields, true));
     $config_fields = rsssl_fields(false);
     $config_ids = array_column($config_fields, 'id');
 
@@ -273,7 +271,6 @@ function rsssl_rest_api_fields_set($request){
 	//build a new options array
     foreach ( $fields as $field ) {
         $prev_value = isset( $options[ $field['id'] ] ) ? $options[ $field['id'] ] : false;
-	    error_log("Updating " . $field['id']);
         do_action( "rsssl_before_save_option", $field['id'], $field['value'], $prev_value, $field['type'] );
         $options[ $field['id'] ] = $field['value'];
     }
@@ -282,6 +279,8 @@ function rsssl_rest_api_fields_set($request){
         if ( rsssl_is_networkwide_active() ) {
 	        update_site_option( 'rsssl_options', $options );
         } else {
+            error_log("fields_set function");
+            error_log(print_r($options, true));
 	        update_option( 'rsssl_options', $options );
         }
     }
@@ -290,7 +289,10 @@ function rsssl_rest_api_fields_set($request){
         do_action( "rsssl_after_save_field", $field['id'], $field['value'], $prev_value, $field['type'] );
     }
 	do_action('rsssl_after_saved_fields', $fields );
-	$output   = ['success' => true];
+	$output   = [
+            'success' => true,
+            'progress' => RSSSL()->progress->get()
+    ];
 	$response = json_encode( $output );
 	header( "Content-Type: application/json" );
 	echo $response;
@@ -320,12 +322,13 @@ function rsssl_update_option( $name, $value ) {
 
 	$type = isset( $config_field['type'] ) ? $config_field['type'] : false;
     if ( !$type ) {
-        return;
+	    error_log("exiting ".$name." has not existing type ");
+	    return;
     }
 	if ( rsssl_is_networkwide_active() ) {
-		$options = get_site_option( 'rsssl_options', array() );
+		$options = get_site_option( 'rsssl_options', [] );
 	} else {
-		$options = get_option( 'rsssl_options', array() );
+		$options = get_option( 'rsssl_options', [] );
 	}
 
     $name = sanitize_text_field($name);
@@ -335,6 +338,8 @@ function rsssl_update_option( $name, $value ) {
 	if ( rsssl_is_networkwide_active() ) {
 		update_site_option( 'rsssl_options', $options );
 	} else {
+		error_log("fields_set function");
+		error_log(print_r($options, true));
 		update_option( 'rsssl_options', $options );
 	}
 }
@@ -442,6 +447,7 @@ function rsssl_sanitize_field( $value, $type, $id ) {
 
 	switch ( $type ) {
 		case 'checkbox':
+		case 'database':
 			return intval($value);
 		case 'select':
 		case 'text':

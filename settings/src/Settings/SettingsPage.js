@@ -1,12 +1,11 @@
 import {Component, Fragment} from "@wordpress/element";
-import {in_array} from "./utils/lib";
-import * as rsssl_api from "./utils/api";
-import Placeholder from "./Placeholder";
-import Menu from "./Menu";
+import {in_array} from "../utils/lib";
+import * as rsssl_api from "../utils/api";
+import Placeholder from "../Placeholder/Placeholder";
+import Menu from "../Menu/Menu";
 import Notices from "./Notices";
 import Settings from "./Settings";
-import sleeper from "./utils/sleeper.js";
-
+import sleeper from "../utils/sleeper.js";
 import {dispatch,} from '@wordpress/data';
 import {__} from '@wordpress/i18n';
 
@@ -138,12 +137,12 @@ class SettingsPage extends Component {
                 saveFields.push(field);
             }
         }
-        console.log("set fields");
-        console.log(saveFields);
+
         rsssl_api.setFields(saveFields).then(( response ) => {
             this.changedFields = [];
             this.setState({
-                changedFields :[]
+                changedFields :[],
+                progress: response.data.progress,
             });
             this.showSavedSettingsNotice();
         });
@@ -156,7 +155,6 @@ class SettingsPage extends Component {
 
     saveAndContinue() {
         this.save()
-
         this.wizardNextPrevious(false);
     }
 
@@ -215,17 +213,6 @@ class SettingsPage extends Component {
                 <Placeholder></Placeholder>
             );
         }
-
-        //maybe filter step
-        // if ( menu.is_wizard ){
-        //     let length = menuItems.length;
-        //     let temp = []
-        //     for ( let i = 0; i < length; i++ ) {
-        //         if ( menuItems[i]['step'] !== selectedStep ){
-        //             menuItems.splice(i, 1);
-        //         }
-        //     }
-        // }
 
         let fieldsUpdateComplete = changedFields.length === 0;
 

@@ -114,7 +114,7 @@ function rsssl_le_get_notices_list($notices) {
 				'output'    => array(
 					'true' => array(
 						'msg'         => __( "Your Key and Certificate directories are not properly protected.", "really-simple-ssl" )
-						                 . rsssl_read_more( "https://really-simple-ssl.com/protect-ssl-generation-directories" ),
+						                 . rsssl_le_read_more( "https://really-simple-ssl.com/protect-ssl-generation-directories" ),
 						'icon'        => 'warning',
 						'plusone'     => true,
 						'dismissible' => true,
@@ -162,5 +162,30 @@ function rsssl_le_custom_field_notices($fields){
 	return $fields;
 }
 add_filter( 'rsssl_fields', 'rsssl_le_custom_field_notices', 30, 1 );
+
+/**
+ * Replace the go pro or scan button with a renew SSL button when the cert should be renewed.
+ */
+function rsssl_le_progress_footer_renew_ssl($button){
+	if ( rsssl_ssl_enabled() && RSSSL()->rsssl_certificate->about_to_expire() ){
+		$status = RSSSL_LE()->letsencrypt_handler->certificate_renewal_status_notice;
+		switch ($status){
+			case 'manual-installation':
+				$button_text = __("Renew installation", "really-simple-ssl");
+				break;
+			case 'manual-generation':
+				$button_text = __("Renew certificate", "really-simple-ssl");
+				break;
+			default:
+				$button_text = __("Renew certificate", "really-simple-ssl");//false;
+		}
+		if ($button_text) {
+			$url = rsssl_letsencrypt_wizard_url();
+			$button = '<a href="'.$url.'" class="button button-default">'.$button_text.'</a>';
+		}
+	}
+	return $button;
+}
+add_filter("rsssl_progress_footer_right", "rsssl_le_progress_footer_renew_ssl", 30);
 
 
