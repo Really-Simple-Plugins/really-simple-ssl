@@ -88,7 +88,7 @@ if ( ! function_exists('rsssl_wrap_htaccess' ) ) {
 			return;
 		}
 
-		if ( rsssl_get_server() !== 'apache' ) {
+		if ( !rsssl_uses_htaccess() ) {
 			return;
 		}
 
@@ -106,7 +106,8 @@ if ( ! function_exists('rsssl_wrap_htaccess' ) ) {
 		$upload_dir = wp_get_upload_dir();
 		$htaccess_file_uploads = trailingslashit( $upload_dir['basedir']).'.htaccess';
 		$content_htaccess_uploads = file_exists($htaccess_file_uploads ) ? file_get_contents($htaccess_file_uploads) : '';
-
+		delete_site_option( 'rsssl_htaccess_error' );
+		delete_site_option( 'rsssl_htaccess_rules' );
 		preg_match($pattern, $content_htaccess_uploads, $matches );
 		if ( (!empty($matches[1]) && empty($rules_uploads)) || !empty($rules_uploads) ) {
 			$rules_uploads_result = '';
@@ -127,6 +128,8 @@ if ( ! function_exists('rsssl_wrap_htaccess' ) ) {
 					update_site_option( 'rsssl_htaccess_error', 'not-writable-uploads' );
 					update_site_option( 'rsssl_htaccess_rules', $rules_uploads_result );
 				} else {
+					delete_site_option( 'rsssl_htaccess_error' );
+					delete_site_option( 'rsssl_htaccess_rules' );
 					//get current rules with regex
 					if ( strpos( $content_htaccess_uploads, $start ) !== false ) {
 						$new_htaccess = preg_replace( $pattern, $start . $rules_uploads_result . $end, $content_htaccess_uploads );
@@ -166,10 +169,13 @@ if ( ! function_exists('rsssl_wrap_htaccess' ) ) {
 			//should replace if rules is not empty, OR if rules is empty and htaccess is not.
 			$htaccess_has_rsssl_rules = !preg_match("/#Begin Really Simple Security[ \n\t]+#End Really Simple Security/", $content_htaccess);
 			if ( !empty($rules_result) || $htaccess_has_rsssl_rules ) {
+				error_log("has rules");
 				if (  !is_writable( $htaccess_file ) ) {
+					error_log("not writable");
 					update_site_option('rsssl_htaccess_error', 'not-writable');
 					update_site_option('rsssl_htaccess_rules', get_site_option('rsssl_htaccess_rules').$rules_result);
 				} else {
+					error_log("is writable");
 					//get current rules with regex
 					if ( strpos( $content_htaccess, $start ) !== false ) {
 						$new_htaccess = preg_replace($pattern, $start.$rules_result.$end, $content_htaccess);

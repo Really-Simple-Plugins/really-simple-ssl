@@ -1,7 +1,6 @@
 import {Component} from "@wordpress/element";
 import { __ } from '@wordpress/i18n';
-import {runTest} from "./utils/api";
-import * as rsssl_api from "./utils/api";
+import * as rsssl_api from "../utils/api";
 
 class Modal extends Component {
     constructor() {

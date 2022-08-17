@@ -1,11 +1,6 @@
 import {
-    Button,
-    Icon,
-    Panel,
     PanelBody,
     PanelRow,
-    Placeholder,
-    Spinner,
     TextControl,
     RadioControl,
     SelectControl,
@@ -14,7 +9,7 @@ import {
     ToggleControl,
 } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
-
+import * as rsssl_api from "../utils/api";
 import License from "./License";
 import MixedContentScan from "./MixedContentScan";
 import {
@@ -25,7 +20,6 @@ import {
  * https://react-data-table-component.netlify.app
  */
 import DataTable from "react-data-table-component";
-import * as rsssl_api from "./utils/api";
 class ChangeStatus extends Component {
     constructor() {
         super( ...arguments );

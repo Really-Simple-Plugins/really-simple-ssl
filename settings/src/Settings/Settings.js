@@ -1,13 +1,12 @@
 import {Component, Fragment} from "@wordpress/element";
-import Placeholder from "./Placeholder";
-import {in_array} from "./utils/lib";
+import Placeholder from "../Placeholder/Placeholder";
+import {in_array} from "../utils/lib";
 import SettingsGroup from "./SettingsGroup";
 import Help from "./Help";
 import {
     Button,
 } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
-import * as rsssl_api from "./utils/api";
 
 /**
  * Renders the selected settings
@@ -16,18 +15,11 @@ import * as rsssl_api from "./utils/api";
 class Settings extends Component {
     constructor() {
         super( ...arguments );
-        this.state = {
-            fields:this.props.fields,
-            progress:this.props.progress,
-            isAPILoaded: this.props.isAPILoaded,
-        };
     }
 
     render() {
-        const {
-            progress,
-            isAPILoaded,
-        } = this.state;
+        let isAPILoaded = this.props.isAPILoaded;
+        let progress = this.props.progress;
         let selectedMenuItem = this.props.selectedMenuItem;
         let fields = this.props.fields;
         let selectedStep = this.props.selectedStep;
@@ -50,20 +42,30 @@ class Settings extends Component {
         //convert progress notices to an array useful for the help blocks
         let notices = [];
         for (const notice of progress.notices){
-            if ( notice.menu_id === selectedMenuItem ) {
+            let noticeField = false;
+            //notices that are linked to a field.
+            if ( notice.show_with_options ) {
+                noticeField = selectedFields.filter(field => notice.show_with_options && notice.show_with_options.includes(field.id) );
+                if (noticeField.length===0) noticeField = false;
+            }
+            //notices that are linked to a menu id.
+            if ( noticeField || notice.menu_id === selectedMenuItem ) {
                 let help = {};
                 help.title = notice.output.title ? notice.output.title : false;
                 help.label = notice.output.label;
                 help.id = notice.field_id;
                 help.text = notice.output.msg;
+                help.linked_field = notice.show_with_option;
                 notices.push(help);
             }
         }
+
         for (const notice of selectedFields.filter(field => field.help)){
             let help = notice.help;
             help.id = notice.id;
             notices.push(notice.help);
         }
+        notices = notices.filter(notice => notice.label.toLowerCase()!=='completed');
 
         let selectedMenuItemObject;
         for (const item of menu.menu_items){
@@ -107,14 +109,14 @@ class Settings extends Component {
                         }
 
                         <Button
-                            isPrimary
+                            isDefault
                             onClick={ this.props.save }>
                             { __( 'Save', 'really-simple-ssl' ) }
                         </Button>
 
                         {/*This will be shown only if current step is not the last one*/}
                         { this.props.selectedMenuItem !== menuItems[menuItems.length-1].id &&
-                            <a href={`#settings/${this.props.nextMenuItem}`} onClick={ this.props.saveAndContinue }>
+                            <a className="button button-primary" href={`#settings/${this.props.nextMenuItem}`} onClick={ this.props.saveAndContinue }>
                                 { __( 'Save and Continue', 'really-simple-ssl' ) }
                             </a>
                         }

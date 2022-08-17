@@ -195,7 +195,7 @@ class rsssl_letsencrypt_handler {
 		    rsssl_progress_remove('system-status');
 		    $action = 'stop';
 		    $status = 'error';
-		    $message = __("It is not possible to install Let's Encrypt on a subfolder configuration.", "really-simple-ssl" ).rsssl_read_more('https://really-simple-ssl.com/install-ssl-on-subfolders');
+		    $message = __("It is not possible to install Let's Encrypt on a subfolder configuration.", "really-simple-ssl" ).rsssl_le_read_more('https://really-simple-ssl.com/install-ssl-on-subfolders');
 	    } else {
 		    $action = 'continue';
 		    $status = 'success';

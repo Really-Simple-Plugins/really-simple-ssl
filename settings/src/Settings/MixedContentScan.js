@@ -4,9 +4,8 @@ import {
     PanelBody,
 } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
-import {runTest} from "./utils/api";
-import * as rsssl_api from "./utils/api";
-import ModalControl from "./ModalControl";
+import * as rsssl_api from "../utils/api";
+import ModalControl from "../Modal/ModalControl";
 
 class subHeaderComponentMemo extends Component {
     constructor() {

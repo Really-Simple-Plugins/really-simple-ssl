@@ -1,47 +1,10 @@
 <?php
 defined( 'ABSPATH' ) or die( "you do not have access to this page!" );
 
-// Add notice in backend
-if ( is_admin() ) {
-    add_filter('rsssl_notices', 'xmlrpc_notice', 50, 1);
-}
-
 function rsssl_handle_xmlrpc_request() {
     rsssl_filter_xmlrpc_requests();
 	rsssl_log_xmlrpc_request();
 }
-
-function xmlrpc_notice( $notices ) {
-    $notices['xmlrpc'] = array(
-        'callback' => 'rsssl_xmlrpc_notice',
-        'score' => 10,
-        'output' => array(
-            'xmlrpc-on' => array(
-                'msg' => __("XMLRPC is enabled on your site.", "really-simple-ssl"),
-                'icon' => 'warning',
-                'plusone' => true,
-            ),
-        ),
-    );
-
-    return $notices;
-}
-
-/**
- * @return string
- * Add a notice for this integration
- */
-function rsssl_xmlrpc_notice()
-{
-    if ( rsssl_xmlrpc_allowed() ) {
-        return 'xmlrpc-on';
-    }
-
-	return false;
-}
-
-add_action('init', 'rsssl_xmlrpc_allowed');
-
 
 /**
  * @return void

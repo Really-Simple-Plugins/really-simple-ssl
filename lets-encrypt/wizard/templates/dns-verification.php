@@ -6,7 +6,7 @@ rsssl_progress_add('dns-verification');
 	<div class="rsssl-hidden rsssl-get_dns_token rsssl-show-on-success">
         <h2><?php _e("Next step", "really-simple-ssl"); ?></h2>
         <p><?php echo __("Add the following token as text record to your DNS records. We recommend to use a short TTL during installation, in case you need to change it.", "really-simple-ssl").
-                 rsssl_read_more("https://really-simple-ssl.com/how-to-add-a-txt-record-to-dns/"); ?></p>
+                      rsssl_le_read_more("https://really-simple-ssl.com/how-to-add-a-txt-record-to-dns/"); ?></p>
         <div id="rsssl-dns-text-records"></div>
 		<script>
             jQuery(document).ready(function ($) {

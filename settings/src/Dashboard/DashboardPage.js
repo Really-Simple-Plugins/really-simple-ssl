@@ -10,7 +10,7 @@ class DashboardPage extends Component {
         let blocks = rsssl_settings.blocks;
         return (
             <Fragment>
-                {blocks.map((block, i) => <GridBlock key={i} block={block} isApiLoaded={this.props.isAPILoaded} fields={this.props.fields} highLightField={this.props.highLightField}/>)}
+                {blocks.map((block, i) => <GridBlock key={i} block={block} isApiLoaded={this.props.isAPILoaded} fields={this.props.fields} highLightField={this.props.highLightField} selectMainMenu={this.props.selectMainMenu}/>)}
             </Fragment>
         );
     }
