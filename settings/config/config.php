@@ -162,49 +162,7 @@ function rsssl_menu( $group_id = 'settings' ){
 }
 
 function rsssl_migrate_settings($prev_version) {
-	//upgrade both site and network settings
 
-	if ( $prev_version && version_compare( $prev_version, '6.0.0', '<=' ) ) {
-		$options = get_option( 'rlrsssl_options' );
-		$autoreplace_insecure_links = isset( $options['autoreplace_insecure_links'] ) ? $options['autoreplace_insecure_links'] : true;
-		unset($options['autoreplace_insecure_links']);
-		rsssl_update_option('mixed_content_fixer', $autoreplace_insecure_links);
-
-		$wp_redirect  = isset( $options['wp_redirect'] ) ? $options['wp_redirect'] : false;
-		$htaccess_redirect = isset( $options['htaccess_redirect'] ) ? $options['htaccess_redirect'] : false;
-		$redirect = 'none;';
-		if ( $htaccess_redirect ) {
-			$redirect = 'htaccess';
-		} else if ( $wp_redirect ) {
-			$redirect = 'wp_redirect';
-		}
-		rsssl_update_option('redirect', $redirect);
-		unset($options['wp_redirect']);
-		unset($options['htaccess_redirect']);
-
-		$do_not_edit_htaccess            = isset( $options['do_not_edit_htaccess'] ) ? $options['do_not_edit_htaccess'] : false;
-		rsssl_update_option('do_not_edit_htaccess', $do_not_edit_htaccess);
-		unset($options['do_not_edit_htaccess']);
-
-		$dismiss_all_notices             = isset( $options['dismiss_all_notices'] ) ? $options['dismiss_all_notices'] : false;
-		rsssl_update_option('dismiss_all_notices', $dismiss_all_notices);
-		unset($options['dismiss_all_notices']);
-
-		$switch_mixed_content_fixer_hook = isset( $options['switch_mixed_content_fixer_hook'] ) ? $options['switch_mixed_content_fixer_hook'] : false;
-		rsssl_update_option('switch_mixed_content_fixer_hook', $switch_mixed_content_fixer_hook);
-		unset($options['switch_mixed_content_fixer_hook']);
-		unset($options['plugin_db_version']);
-		unset($options['dismiss_review_notice']);
-		unset($options['ssl_success_message_shown']);
-		update_option( 'rlrsssl_options', $options, false );
-		delete_option( "rsssl_upgraded_to_four" );
-	}
-//	//security_headers_method
-//
-
-	//premium
-	$headers_method = is_multisite() ? get_site_option( 'rsssl_security_headers_method' ) : get_option( 'rsssl_security_headers_method' );
-	rsssl_update_option('security_headers_method', $headers_method);
 
 }
 add_action('rsssl_upgrade', 'rsssl_migrate_settings', 10, 1);
@@ -226,9 +184,37 @@ function rsssl_fields( $load_values = true ){
 	if ( $security_headers_method==='php' ) {
 		$header_method_options['php'] = 'PHP';
 	}
-
+//	$config_ids = $config_ids + ['', '',''];
+//    x_log($config_ids);
 	$fields = [
         [
+            'id'          => 'ssl_enabled',
+            'menu_id'     => 'general',
+            'group_id'    => 'general',
+            'type'        => 'database',
+            'label'       => '',
+            'disabled'    => false,
+            'default'     => false,
+        ],
+		[
+			'id'          => 'site_has_ssl',
+			'menu_id'     => 'general',
+			'group_id'    => 'general',
+			'type'        => 'database',
+			'label'       => '',
+			'disabled'    => false,
+			'default'     => false,
+		],
+		[
+			'id'          => 'review_notice_shown',
+			'menu_id'     => 'general',
+			'group_id'    => 'general',
+			'type'        => 'database',
+			'label'       => '',
+			'disabled'    => false,
+			'default'     => false,
+		],
+		[
             'id'          => 'cert_expiration_warning',
             'menu_id'     => 'general',
             'group_id'    => 'general',
@@ -337,27 +323,27 @@ function rsssl_fields( $load_values = true ){
             'networkwide' => false,
         ],
 
-        [
-            'id'          => 'do_not_edit_htaccess',
-            'menu_id'     => 'general',
-            'group_id'    => 'general',
-            'type'        => 'checkbox',
-            'label'       => __( "Stop editing the .htaccess file", 'really-simple-ssl' ),
-            'help'        => [
-                'label' => 'default',
-                'text' => __( 'If you want to customize the Really Simple SSL .htaccess, you need to prevent Really Simple SSL from rewriting it. Enabling this option will do that.', 'really-simple-ssl' ),
-            ],
-            'disabled'    => false,
-            'default'     => false,
-            //on multisite this setting can only be set networkwide
-            'server_conditions' => [
-                'relation' => 'AND',
-                [
-                    'RSSSL()->rsssl_server->uses_htaccess()' => true,
-                    '!is_multisite()',
-                ]
-            ],
-        ],
+//        [
+//            'id'          => 'do_not_edit_htaccess',
+//            'menu_id'     => 'general',
+//            'group_id'    => 'general',
+//            'type'        => 'checkbox',
+//            'label'       => __( "Stop editing the .htaccess file", 'really-simple-ssl' ),
+//            'help'        => [
+//                'label' => 'default',
+//                'text' => __( 'If you want to customize the Really Simple SSL .htaccess, you need to prevent Really Simple SSL from rewriting it. Enabling this option will do that.', 'really-simple-ssl' ),
+//            ],
+//            'disabled'    => false,
+//            'default'     => false,
+//            //on multisite this setting can only be set networkwide
+//            'server_conditions' => [
+//                'relation' => 'AND',
+//                [
+//                    'RSSSL()->rsssl_server->uses_htaccess()' => true,
+//                    '!is_multisite()',
+//                ]
+//            ],
+//        ],
         [
             'id'          => 'switch_mixed_content_fixer_hook',
             'menu_id'     => 'general',

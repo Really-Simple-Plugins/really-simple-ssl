@@ -303,7 +303,6 @@ class rsssl_admin extends rsssl_front_end
 	    if ( $prev_version && version_compare( $prev_version, '5.3.0', '<=' ) ) {
 		    if ( file_exists($this->htaccess_file() ) && is_writable($this->htaccess_file() ) ) {
 			    $htaccess = file_get_contents( $this->htaccess_file() );
-
                 $pattern_start = "/rlrssslReallySimpleSSL rsssl_version\[.*.]/";
                 $pattern_end = "/rlrssslReallySimpleSSL/";
 
@@ -315,12 +314,48 @@ class rsssl_admin extends rsssl_front_end
 		    }
 	    }
         
-	    if ( $prev_version && version_compare( $prev_version, '6.0.0', '<=' ) ) {
+	    if ( $prev_version && version_compare( $prev_version, '6.0.0', '<' ) ) {
 		    update_option('rsssl_upgraded_to_6', true, false);
-	    }
 
-	    if ( $prev_version && version_compare( $prev_version, '6.0.0', '<=' ) ) {
-            update_option('rsssl_upgraded_to_6', true, false);
+		    //upgrade both site and network settings
+            $options = get_option( 'rlrsssl_options' );
+
+            $autoreplace_insecure_links = isset( $options['autoreplace_insecure_links'] ) ? $options['autoreplace_insecure_links'] : true;
+            unset($options['autoreplace_insecure_links']);
+            rsssl_update_option('mixed_content_fixer', $autoreplace_insecure_links);
+
+            $wp_redirect  = isset( $options['wp_redirect'] ) ? $options['wp_redirect'] : false;
+            $htaccess_redirect = isset( $options['htaccess_redirect'] ) ? $options['htaccess_redirect'] : false;
+            $redirect = 'none;';
+            if ( $htaccess_redirect ) {
+                $redirect = 'htaccess';
+            } else if ( $wp_redirect ) {
+                $redirect = 'wp_redirect';
+            }
+            rsssl_update_option('redirect', $redirect);
+            unset($options['wp_redirect']);
+            unset($options['htaccess_redirect']);
+
+            $do_not_edit_htaccess            = isset( $options['do_not_edit_htaccess'] ) ? $options['do_not_edit_htaccess'] : false;
+            rsssl_update_option('do_not_edit_htaccess', $do_not_edit_htaccess);
+            unset($options['do_not_edit_htaccess']);
+
+            $dismiss_all_notices             = isset( $options['dismiss_all_notices'] ) ? $options['dismiss_all_notices'] : false;
+            rsssl_update_option('dismiss_all_notices', $dismiss_all_notices);
+            unset($options['dismiss_all_notices']);
+
+            $switch_mixed_content_fixer_hook = isset( $options['switch_mixed_content_fixer_hook'] ) ? $options['switch_mixed_content_fixer_hook'] : false;
+            rsssl_update_option('switch_mixed_content_fixer_hook', $switch_mixed_content_fixer_hook);
+            unset($options['switch_mixed_content_fixer_hook']);
+            unset($options['plugin_db_version']);
+            unset($options['dismiss_review_notice']);
+            unset($options['ssl_success_message_shown']);
+            update_option( 'rsssl_options', $options );
+            delete_option( "rsssl_upgraded_to_four" );
+
+		    //premium
+		    $headers_method = is_multisite() ? get_site_option( 'rsssl_security_headers_method' ) : get_option( 'rsssl_security_headers_method' );
+		    rsssl_update_option('security_headers_method', $headers_method);
 	    }
 
         do_action("rsssl_upgrade", $prev_version);
@@ -470,9 +505,11 @@ class rsssl_admin extends rsssl_front_end
 
     public function activate_ssl()
     {
+        error_log("activate ssl");
         $this->ssl_enabled = true;
-        $this->wp_redirect = true;
+        rsssl_update_option('redirect', 'wp_redirect');
         $this->set_siteurl_to_ssl();
+        error_log("save options");
         $this->save_options();
     }
 
@@ -931,6 +968,26 @@ class rsssl_admin extends rsssl_front_end
         return 'success';
     }
 
+	/**
+	 * Save the plugin options (not settings)
+	 *
+	 * @since  2.0
+	 *
+	 * @access public
+	 *
+	 */
+
+	public function save_options()
+	{
+		$options = get_option('rsssl_options', []);
+		$options['ssl_enabled'] = $this->ssl_enabled;
+		$options['site_has_ssl'] = $this->site_has_ssl;
+		$options['review_notice_shown'] = $this->review_notice_shown;
+		error_log("save these options");
+		error_log(print_r($options, true));
+		update_option('rsssl_options', $options);
+	}
+
     /**
      * Get the options for this plugin
      *
@@ -942,29 +999,15 @@ class rsssl_admin extends rsssl_front_end
 
     public function get_admin_options()
     {
-        $options = get_option('rlrsssl_options');
-        if (isset($options)) {
-            $this->site_has_ssl = isset($options['site_has_ssl']) ? $options['site_has_ssl'] : FALSE;
+        $options = get_option('rsssl_options');
+	    error_log("loading admin options");
+	    error_log(print_r($options, true));
+        if ( isset($options) ) {
             $this->review_notice_shown = isset($options['review_notice_shown']) ? $options['review_notice_shown'] : FALSE;
+	        $this->site_has_ssl = isset($options['site_has_ssl']) ? $options['site_has_ssl'] : false;
         }
-
-        if (is_multisite()) {
-            $network_options = get_site_option('rlrsssl_network_options');
-            $network_htaccess_redirect = isset($network_options["htaccess_redirect"]) ? $network_options["htaccess_redirect"] : false;
-            /*
-              If multiste, and networkwide, only the networkwide setting counts.
-              if multisite, and per site, only the networkwide setting counts if it is true.
-           */
-            $ssl_enabled_networkwide = isset($network_options["ssl_enabled_networkwide"]) ? $network_options["ssl_enabled_networkwide"] : false;
-            if ($ssl_enabled_networkwide) {
-                $this->htaccess_redirect = $network_htaccess_redirect;
-            } else {
-                if ($network_htaccess_redirect) $this->htaccess_redirect = $network_htaccess_redirect;
-            }
-        }
-
-
-
+        error_log("admin object");
+        error_log(print_r($this, true));
     }
 
 	/**
@@ -1459,23 +1502,6 @@ class rsssl_admin extends rsssl_front_end
     }
 
     /**
-     * Save the plugin options (not settings)
-     *
-     * @since  2.0
-     *
-     * @access public
-     *
-     */
-
-    public function save_options()
-    {
-	    $options = get_option('rsssl_options', []);
-        $options['site_has_ssl'] = $this->site_has_ssl;
-        $options['review_notice_shown'] = $this->review_notice_shown;
-	    update_option('rsssl_options', $options);
-    }
-
-    /**
      * Handles deactivation of this plugin
      *
      * @since  2.0
@@ -1497,8 +1523,7 @@ class rsssl_admin extends rsssl_front_end
 	        $this->save_options();
 
 	        rsssl_update_option('dismiss_all_notices', false);
-	        rsssl_update_option('wp_redirect', false);
-	        rsssl_update_option('htaccess_redirect', false);
+	        rsssl_update_option('redirect', 'none');
 	        rsssl_update_option('mixed_content_fixer', false);
 
 	        //when on multisite, per site activation, recreate domain list for htaccess and wpconfig rewrite actions
