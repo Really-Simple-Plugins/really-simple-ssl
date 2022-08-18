@@ -983,8 +983,6 @@ class rsssl_admin extends rsssl_front_end
 		$options['ssl_enabled'] = $this->ssl_enabled;
 		$options['site_has_ssl'] = $this->site_has_ssl;
 		$options['review_notice_shown'] = $this->review_notice_shown;
-		error_log("save these options");
-		error_log(print_r($options, true));
 		update_option('rsssl_options', $options);
 	}
 
@@ -1000,14 +998,10 @@ class rsssl_admin extends rsssl_front_end
     public function get_admin_options()
     {
         $options = get_option('rsssl_options');
-	    error_log("loading admin options");
-	    error_log(print_r($options, true));
         if ( isset($options) ) {
             $this->review_notice_shown = isset($options['review_notice_shown']) ? $options['review_notice_shown'] : FALSE;
 	        $this->site_has_ssl = isset($options['site_has_ssl']) ? $options['site_has_ssl'] : false;
         }
-        error_log("admin object");
-        error_log(print_r($this, true));
     }
 
 	/**

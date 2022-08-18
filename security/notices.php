@@ -55,12 +55,16 @@ function rsssl_general_security_notices( $notices ) {
 		'score' => 5,
 		'output' => array(
 			'true' => array(
-				'msg' => __("You have users with a matching login and display name. This makes it easy for attackers to find valid login names. We recommend changing the display name for affected users: ", "really-simple-ssl") . "<b>" . rsssl_list_users_where_display_name_is_login_name() . "</b>",
+				'highlight_field_id' => 'block_registration_when_display_name_is_login_name',
+				'msg' => __("Really Simple SSL detected users with administrator role where login and display name are the same. This makes it easy for attackers to find valid login names. We recommend to change. You can disable this for future users in Really Simple SSL.", "really-simple-ssl") . "&nbsp;<b>" . rsssl_list_users_where_display_name_is_login_name() . "</b>",
 				'url' => 'https://really-simple-ssl.com/',
 				'icon' => 'open',
 				'dismissible' => true,
 			),
 		),
+		'show_with_options' => [
+			'block_registration_when_display_name_is_login_name',
+		]
 
 	);
 	$notices['debug-log-notice'] = array(

@@ -124,17 +124,14 @@ function rsssl_is_default_wp_prefix() {
  *
  * Check if user admin exists
  */
+
 function rsssl_has_admin_user() {
-
 	global $wpdb;
-
 	$prepared = $wpdb->prepare("SELECT COUNT(*) FROM {$wpdb->prefix}users WHERE user_login = %s LIMIT 1", 'admin');
 	$count = $wpdb->get_var( $prepared );
-
 	if ( $count > 0 ) {
 		return true;
 	}
-
 	return false;
 }
 
@@ -161,12 +158,15 @@ function rsssl_id_one_no_enumeration() {
  */
 
 function rsssl_get_users_where_display_name_is_login( $return_users=false ) {
-	global $wpdb;
 	$found_users = [];
-	// Get users where login equals display name
-	$users = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}users WHERE user_login = display_name" );
-	foreach( $users as $user ) {
-		$found_users[] = $user->user_login;
+	$args = array(
+		'role'    => 'administrator',
+	);
+	$users = get_users( $args );
+	foreach ( $users as $user ) {
+		if ($user->display_name = $user->user_login) {
+			$found_users[] = $user->user_login;
+		}
 	}
 
 	// Maybe return users in integration

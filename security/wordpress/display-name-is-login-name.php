@@ -5,6 +5,7 @@ defined( 'ABSPATH' ) or die();
  * Add javascript to make first and last name fields required
  */
 function rsssl_maybe_disable_registration_js() {
+    x_log($_GET);
     ?>
     <script>
         window.addEventListener('load', () => {
