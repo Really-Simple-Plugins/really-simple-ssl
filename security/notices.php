@@ -50,7 +50,7 @@ function rsssl_general_security_notices( $notices ) {
 	);
 
 	$notices['display_name_is_login'] = array(
-		'condition' => ['rsssl_display_name_equals_login'],
+		'condition' => ['rsssl_get_users_where_display_name_is_login'],
 		'callback' => '_true_',
 		'score' => 5,
 		'output' => array(

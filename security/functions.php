@@ -290,29 +290,16 @@ function check_admin_user_renamed_and_enumeration_disabled() {
 }
 
 /**
- * @return bool
- *
- * Get users where display name is login name
- */
-
-function get_users_where_display_name_is_login() {
-	$users = rsssl_display_name_equals_login( true );
-	if ( $users ) {
-		return true;
-	}
-	return false;
-}
-
-/**
  * @return string
  *
  * Get users as string to display
  */
 function rsssl_list_users_where_display_name_is_login_name() {
-
-	$users = rsssl_display_name_equals_login( true );
+	$users = rsssl_get_users_where_display_name_is_login( true );
 	if ( is_array( $users ) ) {
-		return implode( ', ', $users );
+		$ext  = count($users)>=10 ? $ext = '...' : '';
+		$users = array_slice($users, 0, 10);
+		return implode( ', ', $users ).$ext;
 	}
 
 	return '';

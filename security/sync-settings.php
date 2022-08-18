@@ -14,7 +14,7 @@ function rsssl_disable_fields($field, $field_id){
 	 * We set is as true, but disabled. Because our react interface only updates changed option, and this option never changes, this won't get set to true in the database.
 	 */
 	if ( $field_id==='change_debug_log_location' ){
-		if ( !rsssl_debugging_enabled() ) {
+		if ( !rsssl_is_debug_log_enabled() ) {
 			if ( !$field['value'] ) {
 				$field['value'] = true;
 				$field['disabled'] = true;

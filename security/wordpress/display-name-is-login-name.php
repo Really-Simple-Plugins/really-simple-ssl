@@ -1,7 +1,5 @@
 <?php
-defined( 'ABSPATH' ) or die( "you do not have access to this page!" );
-
-add_action( 'admin_print_footer_scripts', 'rsssl_maybe_disable_registration_js' );
+defined( 'ABSPATH' ) or die();
 
 /**
  * Add javascript to make first and last name fields required
@@ -12,10 +10,10 @@ function rsssl_maybe_disable_registration_js() {
         window.addEventListener('load', () => {
             let firstName = document.getElementById('first_name');
             let lastName = document.getElementById('last_name');
-
             firstName.closest('tr').classList.add("form-required");
             lastName.closest('tr').classList.add("form-required");
         });
-    </script >
+    </script>
     <?php
 }
+add_action( 'admin_print_footer_scripts', 'rsssl_maybe_disable_registration_js' );
