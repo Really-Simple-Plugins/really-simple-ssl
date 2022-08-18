@@ -307,8 +307,10 @@ add_action( 'rsssl_after_saved_fields', 'rsssl_integrations', 20 );
  * @return void
  */
 function rsssl_clear_transients(){
+	error_log("clearing transients");
 	delete_transient('rsssl_http_methods_allowed');
 	delete_transient('rsssl_xmlrpc_allowed');
 	delete_transient('rsssl_directory_indexing_status');
+	delete_transient('rsssl_code_execution_allowed_status');
 }
 add_action( 'rsssl_after_saved_fields', 'rsssl_clear_transients', 50 );

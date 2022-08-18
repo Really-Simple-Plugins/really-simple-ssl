@@ -12,14 +12,21 @@ function rsssl_menu( $group_id = 'settings' ){
 					'id' => 'general',
 					'group_id' => 'general',
 					'title' => __('General', 'really-simple-ssl'),
-					'intro' => __("An introduction on some cool stuff", "really-simple-ssl"),
 					'helpLink'  => 'https://really-simple-ssl.com',
 					'step' => 1,
 					'groups' => [
 						[
 							'id' => 'general',
 							'title' => __('General', 'really-simple-ssl'),
-							'intro' => __("An introduction on some cool stuff", "really-simple-ssl"),
+							'helpLink'  => 'https://really-simple-ssl.com',
+						],
+						[
+							'id' => 'support',
+							'title' => __('Premium support', 'really-simple-ssl'),
+							'intro' => __('When you send this form, we will attach the following information: license key, scan results, your', 'really-simple-ssl'),
+							'premium' => true,
+							'premium_text' => __("Get Premium support, and more with %sReally Simple SSL pro%s", 'really-simple-ssl'),
+							'helpLink'  => 'https://really-simple-ssl.com',
 						],
 					],
 				],
@@ -56,23 +63,22 @@ function rsssl_menu( $group_id = 'settings' ){
 						[
 							'id' => 'recommended_security_headers',
 							'premium' => true,
-							'premium_text' => __("Learn more about %HSTS%s", 'really-simple-ssl'),
+							'premium_text' => __("Get recommended security headers and more, with %sReally Simple SSL Pro%s", 'really-simple-ssl'),
 							'upgrade' => 'https://really-simple-ssl.com/pro',
-							'title' => __('HSTS ', 'really-simple-ssl'),
-							'intro' => __("HSTS explanation", "really-simple-ssl"),
+							'title' => __('Recommended Security Headers ', 'really-simple-ssl'),
+							'helpLink'  => 'https://really-simple-ssl.com',
 						],
 					],
 				],
 				[
 					'id' => 'hsts',
-					'title' => __('HSTS', 'really-simple-ssl-pro'),
+					'title' => __('HTTP Strict Transport Security', 'really-simple-ssl'),
 					'intro' => __("Intro HSTS", "really-simple-ssl"),
-					'step' => 4,
 					'groups' => [
 						[
 							'id' => 'hsts',
 							'premium' => true,
-							'premium_text' => __("Learn more about %HSTS%s", 'really-simple-ssl'),
+							'premium_text' => __("Learn more about %sHSTS%s", 'really-simple-ssl'),
 							'upgrade' => 'https://really-simple-ssl.com/pro',
 							'title' => __('HSTS ', 'really-simple-ssl'),
 							'intro' => __("HSTS explanation", "really-simple-ssl"),
@@ -107,11 +113,16 @@ function rsssl_menu( $group_id = 'settings' ){
 //								'intro' => __("Content Security Policy explanation", "really-simple-ssl"),
 						],
 						[
+							'id' => 'frame_ancestors',
+							'premium' => true,
+							'helpLink'  => 'https://really-simple-ssl.com',
+							'title' => __('Frame Ancestors', 'really-simple-ssl'),
+						],
+						[
 							'id' => 'content_security_policy',
 							'helpLink'  => 'https://really-simple-ssl.com',
 							'premium' => true,
-							'title' => __('Content Security Policy', 'really-simple-ssl'),
-							'intro' => __("Content Security Policy explanation", "really-simple-ssl"),
+							'title' => __('Source Directives', 'really-simple-ssl'),
 						]
 					],
 				],
@@ -166,18 +177,7 @@ function rsssl_fields( $load_values = true ){
 	if ( !current_user_can('manage_options') ) {
 		return [];
 	}
-	$header_method_options = [
-		'advancedheaders' => 'advanced-headers.php',
-		'htaccess' => '.htaccess',
-	];
-	//keep this one for backward compatibility for users that have it enabled.
-	$security_headers_method = rsssl_get_option('security_headers_method');
-	if ( $security_headers_method==='nginxconf' ) {
-		$header_method_options['nginxconf'] = 'nginx.conf';
-	}
-	if ( $security_headers_method==='php' ) {
-		$header_method_options['php'] = 'PHP';
-	}
+
 //	$config_ids = $config_ids + ['', '',''];
 //    x_log($config_ids);
 	$fields = [
@@ -209,14 +209,30 @@ function rsssl_fields( $load_values = true ){
 			'default'     => false,
 		],
 		[
-            'id'          => 'cert_expiration_warning',
-            'menu_id'     => 'general',
-            'group_id'    => 'general',
-            'type'        => 'checkbox',
-            'label'       => __("Receive an e-mail when your certificate is about to expire", "really-simple-ssl-pro"),
-            'disabled'    => false,
-            'default'     => false,
-        ],
+			'id'          => 'redirect',
+			'menu_id'     => 'general',
+			'group_id'    => 'general',
+			'type'        => 'select',
+			'label'       => __( "Redirect method", 'really-simple-ssl' ),
+			'options'     => [
+				'none' => __("No redirect", "really-simple-ssl"),
+				'wp_redirect' => __("301 PHP redirect", "really-simple-ssl"),
+				'htaccess' => __("301 .htaccess redirect", "really-simple-ssl"),
+			],
+			'help'        => [
+				'label' => 'default',
+				'text' => __( 'Redirects all requests over HTTP to HTTPS using a PHP 301 redirect. Enable if the .htaccess redirect cannot be used, for example on NGINX servers.', 'really-simple-ssl' ),
+			],
+			'disabled'    => false,
+			'default'     => false,
+//            'server_conditions'  => [
+//                'relation' => 'AND',
+//                [
+//                    'RSSSL()->really_simple_ssl->ssl_enabled' => true,
+//                ]
+//            ],
+			'networkwide' => false,
+		],
 		[
 			'id'          => 'mixed_content_fixer',
 			'menu_id'     => 'general',
@@ -232,90 +248,47 @@ function rsssl_fields( $load_values = true ){
 			'networkwide' => false,
 		],
 		[
-			'id'          => 'security_headers_method',
-			'menu_id'     => 'recommended_security_headers',
-			'group_id'    => 'recommended_security_headers',
-			'type'        => 'select',
-			'label'       => __("Security Headers method", "really-simple-ssl-pro"),
-			'options'     => $header_method_options,
+			'id'          => 'switch_mixed_content_fixer_hook',
+			'menu_id'     => 'general',
+			'group_id'    => 'general',
+			'type'        => 'checkbox',
+			'label'       => __( "Mixed content fixer - init hook", 'really-simple-ssl' ),
+			'help'        => [
+				'label' => 'default',
+				'title' => __( "Fire mixed content fixer with different method", 'really-simple-ssl' ),
+				'text'  => __( 'If this option is set to true, the mixed content fixer will fire on the init hook instead of the template_redirect hook. Only use this option when you experience problems with the mixed content fixer.', 'really-simple-ssl' ),
+			],
 			'disabled'    => false,
 			'default'     => false,
+			'react_conditions' => [
+				'relation' => 'AND',
+				[
+					'mixed_content_fixer' => 1,
+				]
+			],
 		],
 		[
 			'id'          => 'admin_mixed_content_fixer',
 			'menu_id'     => 'general',
 			'group_id'    => 'general',
 			'type'        => 'checkbox',
-			'label'       => __("Mixed content fixer on the back-end", "really-simple-ssl-pro"),
+			'label'       => __("Mixed content fixer - back-end", "really-simple-ssl-pro"),
 			'disabled'    => false,
 			'default'     => false,
 		],
 		[
-			'id'          => 'premium_support',
+			'id'          => 'dismiss_all_notices',
 			'menu_id'     => 'general',
 			'group_id'    => 'general',
-			'type'        => 'textarea',
-			'label'       => __( "Premium support", 'really-simple-ssl' ),
+			'type'        => 'checkbox',
+			'label'       => __( "Dismiss all notices", 'really-simple-ssl' ),
 			'help'        => [
-							'label' => 'default',
-							'placeholder' => __( "If enabled, all the Really Simple SSL pages within the WordPress admin will be in high contrast", 'really-simple-ssl' ),
-							],
+				'label' => 'default',
+				'text' => __( "Enable this option to permanently dismiss all +1 notices in the 'Your progress' tab'", 'really-simple-ssl' ),
+			],
 			'disabled'    => false,
 			'default'     => false,
 		],
-        [
-            'id'          => 'redirect',
-            'menu_id'     => 'general',
-            'group_id'    => 'general',
-            'type'        => 'select',
-            'label'       => __( "Enable WordPress 301 redirect", 'really-simple-ssl' ),
-	        'options'     => [
-				'none' => __("No redirect", "really-simple-ssl"),
-				'wp_redirect' => __("301 PHP redirect", "really-simple-ssl"),
-				'htaccess' => __("301 .htaccess redirect", "really-simple-ssl"),
-	        ],
-            'help'        => [
-                'label' => 'default',
-                'text' => __( 'Redirects all requests over HTTP to HTTPS using a PHP 301 redirect. Enable if the .htaccess redirect cannot be used, for example on NGINX servers.', 'really-simple-ssl' ),
-            ],
-            'disabled'    => false,
-            'default'     => false,
-//            'server_conditions'  => [
-//                'relation' => 'AND',
-//                [
-//                    'RSSSL()->really_simple_ssl->ssl_enabled' => true,
-//                ]
-//            ],
-            'networkwide' => false,
-        ],
-        [
-            'id'                => 'htaccess_redirect',
-            'menu_id'           => 'general',
-            'group_id'          => 'general',
-            'type'              => 'checkbox',
-            'label'             => __( "Enable 301 .htaccess redirect", 'really-simple-ssl' ),
-            'help'              => [
-                'label' => 'default',
-                'text' => __( 'A .htaccess redirect is faster and works better with caching. Really Simple SSL detects the redirect code that is most likely to work (99% of websites), but this is not 100%. Make sure you know how to regain access to your site if anything goes wrong!',
-                    'really-simple-ssl' ),
-            ],
-            'disabled'          => false,
-            'default'           => false,
-            //when enabled networkwide, it's handled on the network settings page
-            'server_conditions' => [
-                'relation' => 'AND',
-                [
-                    'RSSSL()->really_simple_ssl->ssl_enabled' => true,
-                    'RSSSL()->rsssl_server->uses_htaccess()' => true,
-                    [
-                        'relation' => 'OR',
-                        '!is_multisite()',
-                        '!RSSSL()->rsssl_multisite->ssl_enabled_networkwide'
-                    ]
-                ]
-            ],
-            'networkwide' => false,
-        ],
         [
             'id'          => 'do_not_edit_htaccess',
             'menu_id'     => 'general',
@@ -337,39 +310,19 @@ function rsssl_fields( $load_values = true ){
                 ]
             ],
         ],
-        [
-            'id'          => 'switch_mixed_content_fixer_hook',
-            'menu_id'     => 'general',
-            'group_id'    => 'general',
-            'type'        => 'checkbox',
-            'label'       => __( "Fire mixed content fixer with different method", 'really-simple-ssl' ),
-            'help'        => [
-                'label' => 'default',
-                'title' => __( "Fire mixed content fixer with different method", 'really-simple-ssl' ),
-                'text'  => __( 'If this option is set to true, the mixed content fixer will fire on the init hook instead of the template_redirect hook. Only use this option when you experience problems with the mixed content fixer.', 'really-simple-ssl' ),
-            ],
-            'disabled'    => false,
-            'default'     => false,
-            'react_conditions' => [
-                'relation' => 'AND',
-                [
-                    'mixed_content_fixer' => 1,
-                ]
-            ],
-        ],
-        [
-            'id'          => 'dismiss_all_notices',
-            'menu_id'     => 'general',
-            'group_id'    => 'general',
-            'type'        => 'checkbox',
-            'label'       => __( "Dismiss all Really Simple SSL notices", 'really-simple-ssl' ),
-            'help'        => [
-                'label' => 'default',
-                'text' => __( "Enable this option to permanently dismiss all +1 notices in the 'Your progress' tab'", 'really-simple-ssl' ),
-            ],
-            'disabled'    => false,
-            'default'     => false,
-        ],
+		[
+			'id'          => 'premium_support',
+			'menu_id'     => 'general',
+			'group_id'    => 'support',
+			'type'        => 'textarea',
+			'label'       => __( "Premium support", 'really-simple-ssl' ),
+			'help'        => [
+				'label' => 'default',
+				'placeholder' => __( "If enabled, all the Really Simple SSL pages within the WordPress admin will be in high contrast", 'really-simple-ssl' ),
+			],
+			'disabled'    => false,
+			'default'     => false,
+		],
         [
             'id'          => 'disable_anyone_can_register',
             'menu_id'     => 'hardening',
@@ -816,6 +769,29 @@ function rsssl_fields( $load_values = true ){
             'disabled'    => false,
             'default'     => false,
         ],
+		[
+			'id'          => 'csp_frame_ancestors',
+			'menu_id'     => 'content_security_policy',
+			'group_id'    => 'frame_ancestors',
+			'type'        => 'select',
+			'options'     => [
+				'disabled' => __("Disabled","really-simple-ssl"),
+				'none' => "None",
+				'self' => "Self",
+			],
+			'label'       => __("Frame Ancestors", "really-simple-ssl"),
+			'disabled'    => false,
+			'default'     => 'self',
+		],
+		[
+			'id'          => 'csp_frame_ancestors_urls',
+			'menu_id'     => 'content_security_policy',
+			'group_id'    => 'frame_ancestors',
+			'type'        => 'textarea',
+			'label'       => __("Add domains comma separated if needed", "really-simple-ssl"),
+			'disabled'    => false,
+			'default'     => false,
+		],
 		[
 			'id'          => 'csp_enforce',
 			'menu_id'     => 'content_security_policy',

@@ -158,6 +158,7 @@ function rsssl_id_one_no_enumeration() {
  * Check if display name is the same as login
  */
 function rsssl_display_name_equals_login() {
+	return false;
 	$user = wp_get_current_user();
 	if ( $user->data->user_login === $user->data->display_name ) {
 		return true;
@@ -179,6 +180,8 @@ function rsssl_is_debug_log_enabled() {
 }
 
 function rsssl_get_debug_log_value(){
+	return false;
+
 	$wpconfig_path = rsssl_find_wp_config_path();
 	if ( !$wpconfig_path ) return false;
 
@@ -245,23 +248,26 @@ function rsssl_wordpress_version_above_5_6() {
  */
 function rsssl_code_execution_allowed()
 {
-	$code_execution_allowed = false;
-	$upload_dir = wp_get_upload_dir();
-	$test_file = $upload_dir['basedir'] . '/' . 'code-execution.php';
-	if ( is_writable($upload_dir['basedir'] )  ) {
-		if ( ! file_exists( $test_file ) ) {
-			copy( rsssl_path . 'security/tests/code-execution.php', $test_file );
+	$code_execution_allowed = get_transient('rsssl_code_execution_allowed_status');
+	if ( !$code_execution_allowed ) {
+		$upload_dir = wp_get_upload_dir();
+		$test_file = $upload_dir['basedir'] . '/' . 'code-execution.php';
+		if ( is_writable($upload_dir['basedir'] )  ) {
+			if ( ! file_exists( $test_file ) ) {
+				copy( rsssl_path . 'security/tests/code-execution.php', $test_file );
+			}
 		}
-	}
 
-	if ( file_exists( $test_file ) ) {
-		$uploads    = wp_upload_dir();
-		$upload_url = trailingslashit($uploads['baseurl']).'code-execution.php';
-		$response = wp_remote_get($upload_url);
-		$filecontents = is_array($response) ? wp_remote_retrieve_body($response) : '';
-		if ( !is_wp_error($response) && (strpos($filecontents, "RSSSL CODE EXECUTION MARKER") !== false) ) {
-			$code_execution_allowed = true;
+		if ( file_exists( $test_file ) ) {
+			$uploads    = wp_upload_dir();
+			$upload_url = trailingslashit($uploads['baseurl']).'code-execution.php';
+			$response = wp_remote_get($upload_url);
+			$filecontents = is_array($response) ? wp_remote_retrieve_body($response) : '';
+			if ( !is_wp_error($response) && (strpos($filecontents, "RSSSL CODE EXECUTION MARKER") !== false) ) {
+				$code_execution_allowed = true;
+			}
 		}
+		set_transient('rsssl_code_execution_allowed_status', $code_execution_allowed, DAY_IN_SECONDS);
 	}
 
 	return $code_execution_allowed;
@@ -275,7 +281,6 @@ function rsssl_code_execution_allowed()
  * @return bool
  */
 function rsssl_directory_indexing_allowed() {
-
 	$status = get_transient('rsssl_directory_indexing_status');
 	if ( !$status ) {
 		if ( !rsssl_uses_htaccess() ) {
@@ -306,7 +311,7 @@ function rsssl_directory_indexing_allowed() {
 			}
 		}
 
-		set_transient('rsssl_directory_indexing_status', $status, WEEK_IN_SECONDS );
+		set_transient('rsssl_directory_indexing_status', $status, DAY_IN_SECONDS );
 	}
 
 	if ( $status==='forbidden' ) {

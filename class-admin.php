@@ -43,7 +43,7 @@ class rsssl_admin extends rsssl_front_end
         add_action( 'wp_ajax_update_ssl_detection_overridden_option', array( $this, 'update_ssl_detection_overridden_option' ) );
 
         // Saved fields hook fired through REST settings save
-	    add_action( "rsssl_after_saved_fields", array( $this, "maybe_clear_transients" ), 10, 3 );
+	    add_action( "rsssl_after_saved_fields", array( $this, "clear_transients" ), 10, 3 );
 	    add_action( "rsssl_after_saved_fields", array($this, "update_htaccess_after_settings_save"), 20, 3);
 
 	    // Only show deactivate popup when SSL has been enabled.
@@ -59,17 +59,6 @@ class rsssl_admin extends rsssl_front_end
 
     public function _get($var){
         return $this->{$var};
-    }
-
-	/**
-	 * @param $oldvalue
-	 * @param $newvalue
-	 * @param $option
-	 */
-    public function maybe_clear_transients($oldvalue=false, $newvalue=false, $option=false){
-        if ($oldvalue !== $newvalue ) {
-            $this->clear_transients();
-        }
     }
 
 	/**

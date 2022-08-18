@@ -13,10 +13,10 @@ if (!class_exists('rsssl_admin_mixed_content_fixer')) {
                 wp_die(sprintf(__('%s is a singleton class and you cannot create a second instance.', 'really-simple-ssl'), get_class($this)));
 
             self::$_this = $this;
-
-            //exclude admin here: for all well built plugins and themes, this should not be necessary.
             if ( !is_admin() && is_ssl() && rsssl_get_option('mixed_content_fixer') ) {
                 $this->fix_mixed_content();
+            } else if (is_admin() && is_ssl() && rsssl_get_option("admin_mixed_content_fixer") ) {
+	            $this->fix_mixed_content();
             }
         }
 
@@ -37,7 +37,6 @@ if (!class_exists('rsssl_admin_mixed_content_fixer')) {
 
         public function fix_mixed_content()
         {
-
             /* Do not fix mixed content when call is coming from wp_api or from xmlrpc */
             if (defined('JSON_REQUEST') && JSON_REQUEST) return;
             if (defined('XMLRPC_REQUEST') && XMLRPC_REQUEST) return;

@@ -5754,33 +5754,15 @@ class SettingsGroup extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Comp
   constructor() {
     super(...arguments);
     this.state = {
-      status: 'invalid',
       fields: this.props.fields,
       isAPILoaded: this.props.isAPILoaded
     };
     this.upgrade = 'https://really-simple-ssl.com/pro';
-    this.msg = '';
-    this.status = 'invalid';
     this.fields = this.props.fields;
   }
 
   componentDidMount() {
     this.getLicenseStatus = this.getLicenseStatus.bind(this);
-    this.msg = (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)("Learn more about %sPremium%s", "really-simple-ssl");
-
-    if (rsssl_settings.pro_plugin_active) {
-      this.status = this.getLicenseStatus();
-
-      if (this.status === 'empty' || this.status === 'deactivated') {
-        this.msg = rsssl_settings.messageInactive;
-      } else {
-        this.msg = rsssl_settings.messageInvalid;
-      }
-    }
-
-    this.setState({
-      status: this.status
-    });
   }
 
   getLicenseStatus() {
@@ -5796,9 +5778,6 @@ class SettingsGroup extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Comp
   }
 
   render() {
-    const {
-      status
-    } = this.state;
     let selectedMenuItem = this.props.selectedMenuItem;
     let selectedFields = []; //get all fields with group_id this.props.group_id
 
@@ -5819,7 +5798,20 @@ class SettingsGroup extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Comp
       }
     }
 
-    let disabled = this.status !== 'valid' && activeGroup.premium;
+    let status = 'invalid';
+    let msg = activeGroup.premium_text ? activeGroup.premium_text : (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)("Learn more about %sPremium%s", "really-simple-ssl");
+
+    if (rsssl_settings.pro_plugin_active) {
+      status = this.getLicenseStatus();
+
+      if (status === 'empty' || status === 'deactivated') {
+        msg = rsssl_settings.messageInactive;
+      } else {
+        msg = rsssl_settings.messageInvalid;
+      }
+    }
+
+    let disabled = status !== 'valid' && activeGroup.premium;
     this.upgrade = activeGroup.upgrade ? activeGroup.upgrade : this.upgrade;
     return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
       className: "rsssl-grid-item"
@@ -5858,13 +5850,13 @@ class SettingsGroup extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Comp
       className: "rsssl-locked-overlay"
     }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
       className: "rsssl-progress-status rsssl-premium"
-    }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)("Premium", "really-simple-ssl")), rsssl_settings.pro_plugin_active && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", null, this.msg, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
+    }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)("Premium", "really-simple-ssl")), rsssl_settings.pro_plugin_active && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", null, msg, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
       className: "rsssl-locked-link",
       href: "#",
       onClick: () => this.handleMenuLink('license')
     }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)("Check license", "really-simple-ssl"))), !rsssl_settings.pro_plugin_active && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_utils_Hyperlink__WEBPACK_IMPORTED_MODULE_2__["default"], {
       target: "_blank",
-      text: this.msg,
+      text: msg,
       url: this.upgrade
     })))));
   }
