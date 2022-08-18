@@ -4480,6 +4480,17 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
+class subHeaderComponentMemo extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Component {
+  constructor() {
+    super(...arguments);
+  }
+
+  render() {
+    return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("select", null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("option", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Allowed", "really-simple-ssl")), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("option", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Revoked", "really-simple-ssl")));
+  }
+
+}
+
 class ContentSecurityPolicy extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Component {
   constructor() {
     super(...arguments);
@@ -4594,7 +4605,8 @@ class ContentSecurityPolicy extends _wordpress_element__WEBPACK_IMPORTED_MODULE_
       disabled: csp_enforce,
       checked: csp_learning_mode == 1,
       value: csp_learning_mode,
-      onChange: fieldValue => this.toggleLearningMode()
+      onChange: fieldValue => this.toggleLearningMode(),
+      subHeaderComponent: subHeaderComponentMemo
     }), (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Enable Learning Mode", "really-simple-ssl")));
   }
 

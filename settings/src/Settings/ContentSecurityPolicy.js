@@ -11,6 +11,20 @@ import ChangeStatus from "./ChangeStatus";
 import DataTable from "react-data-table-component";
 import * as rsssl_api from "../utils/api";
 
+class subHeaderComponentMemo extends Component {
+    constructor() {
+        super( ...arguments );
+    }
+    render() {
+        return (
+            <select>
+                <option>{__("Allowed", "really-simple-ssl")}</option>
+                <option>{__("Revoked", "really-simple-ssl")}</option>
+            </select>
+        );
+    }
+}
+
 class ContentSecurityPolicy extends Component {
     constructor() {
         super( ...arguments );
@@ -123,6 +137,7 @@ class ContentSecurityPolicy extends Component {
                         checked ={csp_learning_mode==1}
                         value = {csp_learning_mode}
                         onChange={ ( fieldValue ) => this.toggleLearningMode() }
+                        subHeaderComponent={subHeaderComponentMemo}
                     />
                     {__("Enable Learning Mode","really-simple-ssl")}
                     </label>
