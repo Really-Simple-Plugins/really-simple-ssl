@@ -4480,32 +4480,29 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-class subHeaderComponentMemo extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Component {
-  constructor() {
-    super(...arguments);
-  }
-
-  render() {
-    return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("select", null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("option", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Allowed", "really-simple-ssl")), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("option", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Revoked", "really-simple-ssl")));
-  }
-
-}
-
 class ContentSecurityPolicy extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Component {
   constructor() {
     super(...arguments);
     this.state = {
       csp_enforce: 0,
-      csp_learning_mode: 0
+      csp_learning_mode: 0,
+      filterValue: 0
     };
   }
 
   componentDidMount() {
+    this.doFilter = this.doFilter.bind(this);
     let enforce_field = this.props.fields.filter(field => field.id === 'csp_enforce')[0];
     let learning_mode_field = this.props.fields.filter(field => field.id === 'csp_learning_mode')[0];
     this.setState({
       csp_enforce: enforce_field.value,
       csp_learning_mode: learning_mode_field.value
+    });
+  }
+
+  doFilter(e) {
+    this.setState({
+      filterValue: e.target.value
     });
   }
 
@@ -4555,9 +4552,24 @@ class ContentSecurityPolicy extends _wordpress_element__WEBPACK_IMPORTED_MODULE_
     let fieldValue = field.value;
     let options = this.props.options;
     const {
+      filterValue,
       csp_enforce,
       csp_learning_mode
-    } = this.state; //build our header
+    } = this.state;
+
+    const Filter = () => (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("select", {
+      onChange: e => this.doFilter(e)
+    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("option", {
+      value: "-1",
+      selected: filterValue == -1
+    }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("All", "really-simple-ssl")), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("option", {
+      value: "1",
+      selected: filterValue == 1
+    }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Allowed", "really-simple-ssl")), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("option", {
+      value: "0",
+      selected: filterValue == 0
+    }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Blocked", "really-simple-ssl")))); //build our header
+
 
     columns = [];
     field.columns.forEach(function (item, i) {
@@ -4579,6 +4591,10 @@ class ContentSecurityPolicy extends _wordpress_element__WEBPACK_IMPORTED_MODULE_
       data = [];
     }
 
+    if (filterValue != -1) {
+      data = data.filter(item => item.status == filterValue);
+    }
+
     for (const item of data) {
       item.statusControl = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_ChangeStatus__WEBPACK_IMPORTED_MODULE_3__["default"], {
         item: item,
@@ -4586,6 +4602,10 @@ class ContentSecurityPolicy extends _wordpress_element__WEBPACK_IMPORTED_MODULE_
       });
     }
 
+    const conditionalRowStyles = [{
+      when: row => row.status == 0,
+      classNames: ['rsssl-csp-revoked']
+    }];
     return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.PanelBody, {
       className: this.highLightClass
     }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_data_table_component__WEBPACK_IMPORTED_MODULE_4__["default"], {
@@ -4593,7 +4613,11 @@ class ContentSecurityPolicy extends _wordpress_element__WEBPACK_IMPORTED_MODULE_
       data: data,
       dense: true,
       pagination: true,
-      noDataComponent: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("No results", "really-simple-ssl")
+      noDataComponent: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("No results", "really-simple-ssl"),
+      persistTableHead: true,
+      subHeader: true,
+      subHeaderComponent: (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(Filter, null),
+      conditionalRowStyles: conditionalRowStyles
     }), csp_enforce != 1 && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
       className: "button",
       onClick: e => this.toggleEnforce(e, true)
@@ -4605,8 +4629,7 @@ class ContentSecurityPolicy extends _wordpress_element__WEBPACK_IMPORTED_MODULE_
       disabled: csp_enforce,
       checked: csp_learning_mode == 1,
       value: csp_learning_mode,
-      onChange: fieldValue => this.toggleLearningMode(),
-      subHeaderComponent: subHeaderComponentMemo
+      onChange: fieldValue => this.toggleLearningMode()
     }), (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Enable Learning Mode", "really-simple-ssl")));
   }
 

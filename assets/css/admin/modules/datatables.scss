@@ -4,3 +4,7 @@
 .rsssl-status-revoked{
   background-color:green;
 }
+
+.rsssl-csp-revoked >div:nth-child(-n+3) {
+  opacity:0.3;
+}

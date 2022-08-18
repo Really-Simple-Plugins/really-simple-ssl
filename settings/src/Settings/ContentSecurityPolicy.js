@@ -11,30 +11,18 @@ import ChangeStatus from "./ChangeStatus";
 import DataTable from "react-data-table-component";
 import * as rsssl_api from "../utils/api";
 
-class subHeaderComponentMemo extends Component {
-    constructor() {
-        super( ...arguments );
-    }
-    render() {
-        return (
-            <select>
-                <option>{__("Allowed", "really-simple-ssl")}</option>
-                <option>{__("Revoked", "really-simple-ssl")}</option>
-            </select>
-        );
-    }
-}
-
 class ContentSecurityPolicy extends Component {
     constructor() {
         super( ...arguments );
         this.state = {
             csp_enforce :0,
-            csp_learning_mode :0
+            csp_learning_mode :0,
+            filterValue: 0,
         };
     }
 
     componentDidMount() {
+        this.doFilter = this.doFilter.bind(this);
         let enforce_field = this.props.fields.filter(field => field.id === 'csp_enforce')[0];
         let learning_mode_field = this.props.fields.filter(field => field.id === 'csp_learning_mode')[0];
         this.setState({
@@ -42,6 +30,13 @@ class ContentSecurityPolicy extends Component {
             csp_learning_mode :learning_mode_field.value
         });
     }
+
+    doFilter(e){
+        this.setState({
+            filterValue :e.target.value,
+        });
+    }
+
 
     toggleEnforce(e, enforce){
 
@@ -87,14 +82,30 @@ class ContentSecurityPolicy extends Component {
         });
     }
 
+
+
     render(){
             let field = this.props.field;
             let fieldValue = field.value;
             let options = this.props.options;
+
+
             const {
+                filterValue,
                 csp_enforce,
                 csp_learning_mode,
             } = this.state;
+
+            const Filter = () => (
+              <>
+                <select onChange={ ( e ) => this.doFilter(e) }>
+                    <option value="-1" selected={filterValue==-1}>{__("All", "really-simple-ssl")}</option>
+                    <option value="1" selected={filterValue==1}>{__("Allowed", "really-simple-ssl")}</option>
+                    <option value="0" selected={filterValue==0}>{__("Blocked", "really-simple-ssl")}</option>
+                </select>
+              </>
+            );
+
             //build our header
             columns = [];
             field.columns.forEach(function(item, i) {
@@ -114,12 +125,20 @@ class ContentSecurityPolicy extends Component {
             if (!Array.isArray(data) ) {
                 data = [];
             }
+            if (filterValue!=-1) {
+                data = data.filter(item => item.status==filterValue);
+            }
             for (const item of data){
                 item.statusControl = <ChangeStatus item={item} onChangeHandlerDataTable={this.props.onChangeHandlerDataTable}
                 />;
             }
-
-            return (
+            const conditionalRowStyles = [
+              {
+                when: row => row.status ==0,
+                classNames: ['rsssl-csp-revoked'],
+              },
+            ];
+             return (
                 <PanelBody className={ this.highLightClass}>
                     <DataTable
                         columns={columns}
@@ -127,19 +146,22 @@ class ContentSecurityPolicy extends Component {
                         dense
                         pagination
                         noDataComponent={__("No results", "really-simple-ssl")}
+                        persistTableHead
+                        subHeader
+                        subHeaderComponent={<Filter />}
+                        conditionalRowStyles={conditionalRowStyles}
                     />
 
                     { csp_enforce!=1 && <button className="button" onClick={ (e) => this.toggleEnforce(e, true ) }>{__("Enforce","really-simple-ssl")}</button> }
                     { csp_enforce==1 && <button className="button" onClick={ (e) => this.toggleEnforce(e, false ) }>{__("Disable","really-simple-ssl")}</button> }
                     <label>
-                    <input type="checkbox"
-                        disabled = {csp_enforce}
-                        checked ={csp_learning_mode==1}
-                        value = {csp_learning_mode}
-                        onChange={ ( fieldValue ) => this.toggleLearningMode() }
-                        subHeaderComponent={subHeaderComponentMemo}
-                    />
-                    {__("Enable Learning Mode","really-simple-ssl")}
+                        <input type="checkbox"
+                            disabled = {csp_enforce}
+                            checked ={csp_learning_mode==1}
+                            value = {csp_learning_mode}
+                            onChange={ ( fieldValue ) => this.toggleLearningMode() }
+                        />
+                        {__("Enable Learning Mode","really-simple-ssl")}
                     </label>
                 </PanelBody>
             )

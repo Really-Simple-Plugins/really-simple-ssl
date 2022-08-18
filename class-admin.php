@@ -246,7 +246,6 @@ class rsssl_admin extends rsssl_front_end
 
         //add the settings page for the plugin
         add_action('admin_enqueue_scripts', array($this, 'enqueue_assets'));
-
         add_action('admin_init', array($this, 'listen_for_deactivation'), 40);
 
         $plugin = rsssl_plugin;
