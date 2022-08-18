@@ -1,0 +1,20 @@
+/**
+Admin notice
+ */
+.cmplz-admin-notice {
+
+  .cmplz-admin-notice-container {
+	display: flex;
+	padding: 12px;
+	align-items: center;
+
+	.cmplz-logo img {
+	  margin-top: 0.5em;
+	}
+
+	.dashicons {
+	  margin-left: 10px;
+	  margin-right: 5px;
+	}
+  }
+}

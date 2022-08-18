@@ -4,22 +4,8 @@ defined( 'ABSPATH' ) or die( );
 /*
  * condition: if a question should be dynamically shown or hidden, depending on another answer. Use NOT answer to hide if not answer.
  * callback_condition: if should be shown or hidden based on an answer in another screen.
- * callback roept action rsssl_$page_$callback aan
- * required: verplicht veld.
- * help: helptext die achter het veld getoond wordt.
-
-                "fieldname" => '',
-                "type" => 'text',
-                "required" => false,
-                'default' => '',
-                'label' => '',
-                'table' => false,
-                'callback_condition' => false,
-                'condition' => false,
-                'callback' => false,
-                'placeholder' => '',
-                'optional' => false,
-
+ * callback calls action rsssl_$page_$callback
+ * required: required field
 * */
 
 $this->fields = $this->fields + array(
@@ -59,7 +45,7 @@ $this->fields = $this->fields + array(
 			'source'      => 'lets-encrypt',
 			'type'        => 'checkbox',
 			'default'     => '',
-			'help'      => __( "OCSP stapling should be enabled by default. You can disable if this is not supported by your hosting provider.","really-simple-ssl").rsssl_read_more('https://really-simple-ssl.com/ocsp-stapling'),
+			'help'      => __( "OCSP stapling should be enabled by default. You can disable if this is not supported by your hosting provider.","really-simple-ssl").rsssl_le_read_more('https://really-simple-ssl.com/ocsp-stapling'),
 			'title'       => __('OCSP Stapling',"really-simple-ssl"),
 			'option_text' => __("Disable OCSP Stapling", 'really-simple-ssl'),
 		),

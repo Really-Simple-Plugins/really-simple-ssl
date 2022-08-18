@@ -15,7 +15,7 @@ if (!class_exists('rsssl_admin_mixed_content_fixer')) {
             self::$_this = $this;
 
             //exclude admin here: for all well built plugins and themes, this should not be necessary.
-            if (!is_admin() && is_ssl() && RSSSL()->rsssl_front_end->autoreplace_insecure_links) {
+            if ( !is_admin() && is_ssl() && rsssl_get_option('mixed_content_fixer') ) {
                 $this->fix_mixed_content();
             }
         }
@@ -44,19 +44,11 @@ if (!class_exists('rsssl_admin_mixed_content_fixer')) {
 
             $this->build_url_list();
 
-            /*
-                Take care with modifications to hooks here:
-                hooks tend to differ between front and back-end.
-            */
-
-            if (is_admin()) {
-
+            if ( is_admin() ) {
                 add_action("admin_init", array($this, "start_buffer"), 100);
                 add_action("shutdown", array($this, "end_buffer"), 999);
-
             } else {
-
-                if (RSSSL()->rsssl_front_end->switch_mixed_content_fixer_hook || (defined('RSSSL_CONTENT_FIXER_ON_INIT') && RSSSL_CONTENT_FIXER_ON_INIT)) {
+                if ( rsssl_get_option("switch_mixed_content_fixer_hook") || (defined('RSSSL_CONTENT_FIXER_ON_INIT') && RSSSL_CONTENT_FIXER_ON_INIT)) {
                     add_action("init", array($this, "start_buffer"));
                 } else {
                     add_action("template_redirect", array($this, "start_buffer"));
@@ -177,7 +169,7 @@ if (!class_exists('rsssl_admin_mixed_content_fixer')) {
 
         }
 
-        /*
+        /**
          * Helper function to maintain PHP 5.2 compatibility. Yes. 5.2.. It's still used...
          *
          * */

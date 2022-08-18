@@ -1,30 +1,18 @@
 <?php
 defined( 'ABSPATH' ) or die();
-/**
- * @return bool
- *
- * Check if user registration is allowed
- */
-function rsssl_user_registration_allowed() {
-	if ( get_option( 'users_can_register' ) !== false ) {
-		return true;
-	}
 
-	return false;
-}
 /**
  * Check if XML-RPC requests are allowed on this site
  * POST a request, if the request returns a 200 response code the request is allowed
  */
 function rsssl_xmlrpc_allowed()
 {
-	if ( ! get_transient( 'rsssl_xmlrpc_allowed' ) ) {
-
+	$allowed = get_transient( 'rsssl_xmlrpc_allowed' );
+	if ( !$allowed ) {
+		$allowed = 'allowed';
 		if ( function_exists( 'curl_init' ) ) {
 			$url = site_url() . '/xmlrpc.php';
-
 			$ch = curl_init($url);
-
 			// XML-RPC listMethods call
 			// Valid XML-RPC request
 			$xmlstring = '<?xml version="1.0" encoding="utf-8"?> 
@@ -41,120 +29,79 @@ function rsssl_xmlrpc_allowed()
 			// Post string
 			curl_setopt($ch, CURLOPT_POSTFIELDS, $xmlstring );
 			curl_setopt($ch, CURLOPT_TIMEOUT, 3); //timeout in seconds
-
 			curl_exec($ch);
-
 			$response_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-
 			if ($response_code === 200) {
-				set_transient( 'rsssl_xmlrpc_allowed', 'allowed', DAY_IN_SECONDS );
-				return true;
+				$allowed = 'allowed';
 			} else {
-				set_transient( 'rsssl_xmlrpc_allowed', 'not-allowed', DAY_IN_SECONDS );
-				return false;
+				$allowed = 'not-allowed';
 			}
 		}
-
-	} else {
-		return get_transient( 'rsssl_xmlrpc_allowed' );
+		set_transient( 'rsssl_xmlrpc_allowed', $allowed, DAY_IN_SECONDS );
 	}
-
-	return false;
-
+	return $allowed === 'allowed';
 }
-
-
 
 /**
  * @return bool
  * Test if HTTP methods are allowed
  */
-function rsssl_test_if_http_methods_allowed()
+function rsssl_http_methods_allowed()
 {
-
-	if ( ! current_user_can( 'manage_options' ) ) return;
-
-	if ( ! get_transient( 'rsssl_http_options_allowed' ) ) {
-
-		if (function_exists('curl_init')) {
-
-			$url = site_url();
-			$ch = curl_init();
-
-			curl_setopt($ch, CURLOPT_URL, $url );
-			curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'OPTIONS');
-			curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-			curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-			curl_setopt($ch,CURLOPT_RETURNTRANSFER, true);
-			curl_setopt($ch, CURLOPT_HEADER, true);
-			curl_setopt($ch,CURLOPT_NOBODY, true);
-			curl_setopt($ch,CURLOPT_VERBOSE, true);
-			curl_setopt($ch, CURLOPT_TIMEOUT, 3); //timeout in seconds
-
-			curl_exec($ch);
-			if (curl_errno($ch)) {
-				echo 'Error:' . curl_error($ch);
-			}
-
-			curl_close($ch);
-
-			set_transient('rsssl_http_options_allowed', 'not-allowed', DAY_IN_SECONDS);
-			return false;
-		}
-
-		set_transient('rsssl_http_options_allowed', 'allowed', DAY_IN_SECONDS);
-		return true;
-	}
-}
-
-/**
- *
- * @return bool
- * Check if debug.log is saved to default location
- */
-function rsssl_is_default_debug_log_location() {
-	if ( ! get_option('rsssl_debug_log_location_changed') ) {
-		return true;
-	}
-
-	return false;
-}
-
-/**
- * Check if file editing is allowed
- *
- * @return bool
- */
-function rsssl_file_editing_allowed() {
-	if ( defined('DISALLOW_FILE_EDIT' ) ) {
+	if ( ! current_user_can( 'manage_options' ) ) {
 		return false;
 	}
-	return true;
-}
+	$tested = get_transient( 'rsssl_http_methods_allowed' );
+	if ( ! $tested ) {
+		$tested = [];
+		if ( function_exists('curl_init' ) ) {
+			$methods = array(
+				'GET',
+				'POST',
+				'PUT',
+				'DELETE',
+				'HEAD',
+				'OPTIONS',
+				'CONNECT',
+				'TRACE',
+				'TRACK',
+				'PATCH',
+				'COPY',
+				'LINK',
+				'UNLINK',
+				'PURGE',
+				'LOCK',
+				'UNLOCK',
+				'PROPFIND',
+				'VIEW',
+			);
 
-/**
- * @return bool
- *
- * Check if debugging in WordPress is enabled
- */
-function rsssl_is_debug_log_enabled() {
-	if ( defined('WP_DEBUG') && defined('WP_DEBUG_LOG') ) {
-		return true;
+			foreach ( $methods as $method ) {
+				$ch = curl_init();
+				curl_setopt( $ch, CURLOPT_URL, site_url() );
+				curl_setopt( $ch, CURLOPT_CUSTOMREQUEST, $method );
+				curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+				curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+				curl_setopt($ch,CURLOPT_RETURNTRANSFER, true);
+				curl_setopt($ch, CURLOPT_HEADER, true);
+				curl_setopt($ch,CURLOPT_NOBODY, true);
+				curl_setopt($ch,CURLOPT_VERBOSE, true);
+				curl_setopt($ch, CURLOPT_TIMEOUT, 3); //timeout in seconds
+				curl_exec($ch);
+				if ( curl_errno( $ch ) == 405 || curl_errno( $ch ) == 403 ) {
+					$tested['not-allowed'][] = $method;
+				} else {
+					$tested['allowed'][] = $method;
+				}
+				curl_close($ch);
+			}
+			set_transient('rsssl_http_methods_allowed', $tested);
+		}
 	}
 
-	return false;
-}
-
-/**
- * @return bool
- * Check if application passwords are available
- */
-function rsssl_application_passwords_available() {
-
-	if ( wp_is_application_passwords_available() ) {
+	if ( !empty($tested['allowed'])) {
 		return true;
 	}
-
 	return false;
 }
 
@@ -181,43 +128,45 @@ function rsssl_is_default_wp_prefix() {
  */
 function rsssl_has_admin_user() {
 
-	$users = get_users();
-	foreach ( $users as $user ) {
-		if ( $user->data->user_login === 'admin') {
-			return true;
-		}
-	}
+	global $wpdb;
 
-	return false;
-}
-/**
- * @return bool
- *
- * Check if user ID 1 exists end if user enumeration has been disabled
- */
-function rsssl_id_one_no_enumeration() {
-	$user_id_one = get_user_by('id', 1);
-	if ( $user_id_one && !rsssl_get_option('disable_user_enumeration') ) {
+	$prepared = $wpdb->prepare("SELECT COUNT(*) FROM {$wpdb->prefix}users WHERE user_login = %s LIMIT 1", 'admin');
+	$count = $wpdb->get_var( $prepared );
+
+	if ( $count > 0 ) {
 		return true;
 	}
 
 	return false;
 }
+
 /**
+ * @return bool
+ *
+ * Check if user ID 1 exists end if user enumeration has been disabled
+ */
+
+function rsssl_id_one_no_enumeration() {
+	$user_id_one = get_user_by( 'id', 1 );
+	if ( $user_id_one && ! rsssl_get_option( 'disable_user_enumeration' ) ) {
+		return true;
+	}
+
+	return false;
+}
+
+/**
+ * Check if display name is the same as login
  * @return bool | array
  *
- * Check if display name is the same as login
  */
+
 function rsssl_display_name_equals_login( $return_users=false ) {
-
 	global $wpdb;
-
 	$found = false;
 	$found_users = [];
-
 	// Get users where login equals display name
 	$users = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}users WHERE user_login = display_name" );
-
 	foreach( $users as $user ) {
 		$found = true;
 		$found_users[] = $user->user_login;
@@ -237,6 +186,66 @@ function rsssl_display_name_equals_login( $return_users=false ) {
 }
 
 /**
+ * Check if debugging in WordPress is enabled
+ * @return bool
+ */
+function rsssl_is_debug_log_enabled() {
+	if ( defined('WP_DEBUG') && defined('WP_DEBUG_LOG') ) {
+		return true;
+	}
+
+	return false;
+}
+
+function rsssl_get_debug_log_value(){
+	$wpconfig_path = rsssl_find_wp_config_path();
+	if ( !$wpconfig_path ) return false;
+
+	$wpconfig      = file_get_contents( $wpconfig_path );
+
+	// Get WP_DEBUG_LOG declaration
+	$regex = "/^\s*define\([ ]{0,2}[\'|\"]WP_DEBUG_LOG[\'|\"][ ]{0,2},[ ]{0,2}(.*)[ ]{0,2}\);/m";
+	preg_match( $regex, $wpconfig, $matches );
+	if ($matches && isset($matches[1]) ){
+		return $matches[1];
+	} else {
+		return 'true';
+	}
+}
+function rsssl_debugging_enabled(){
+	return defined('WP_DEBUG') && WP_DEBUG;
+}
+/**
+ * Check if default.log is in default location
+ * @return bool
+ */
+function rsssl_debug_log_in_default_location() {
+	$debug_log_value = rsssl_get_debug_log_value();
+	// If str contains true, location is default
+    if ( trim($debug_log_value) === 'true' ) {
+        return true;
+    }
+    return false;
+}
+
+/**
+ * Check if debug location is not default, and if that is done by RSSSL>
+ * @return bool
+*/
+function rsssl_enabled_by_rsssl($option_name, $test){
+	$test_result = false;
+	if ( function_exists($test) ) {
+		$test_result = $test();
+	}
+
+	if ( $test_result && !rsssl_get_value($option_name) ) {
+		return false;
+	} else {
+		return true;
+	}
+}
+
+/**
  * Check if WordPress version is above 5.6 for application password support
  * @return bool
  */
@@ -247,4 +256,131 @@ function rsssl_wordpress_version_above_5_6() {
 	}
 
 	return true;
+}
+
+/**
+ * @return string
+ * Test if code execution is allowed in /uploads folder
+ */
+function rsssl_code_execution_allowed()
+{
+	$code_execution_allowed = false;
+	$upload_dir = wp_get_upload_dir();
+	$test_file = $upload_dir['basedir'] . '/' . 'code-execution.php';
+	if ( is_writable($upload_dir['basedir'] )  ) {
+		if ( ! file_exists( $test_file ) ) {
+			copy( rsssl_path . 'security/tests/code-execution.php', $test_file );
+		}
+	}
+
+	if ( file_exists( $test_file ) ) {
+		$uploads    = wp_upload_dir();
+		$upload_url = trailingslashit($uploads['baseurl']).'code-execution.php';
+		$response = wp_remote_get($upload_url);
+		$filecontents = is_array($response) ? wp_remote_retrieve_body($response) : '';
+		if ( !is_wp_error($response) && (strpos($filecontents, "RSSSL CODE EXECUTION MARKER") !== false) ) {
+			$code_execution_allowed = true;
+		}
+	}
+
+	return $code_execution_allowed;
+}
+
+/**
+ * Test if directory indexing is allowed
+ * We assume allowed if test is not possible due to restrictions. Only an explicity 403 on the response results in "forbidden".
+ * On non htaccess servers, the default is non indexing, so we return forbidden.
+ *
+ * @return bool
+ */
+function rsssl_directory_indexing_allowed() {
+
+	$status = get_transient('rsssl_directory_indexing_status');
+	if ( !$status ) {
+		if ( !rsssl_uses_htaccess() ) {
+			$status = 'forbidden';
+		} else {
+			$status = 'allowed';
+			try {
+				$test_folder = 'indexing-test';
+				$test_dir = trailingslashit(ABSPATH) . $test_folder;
+				if ( ! is_dir( $test_dir ) ) {
+					mkdir( $test_dir, 0755 );
+				}
+
+				$response = wp_remote_get(trailingslashit( site_url($test_folder) ) );
+				if ( is_dir( $test_dir )  ) {
+					rmdir( $test_dir );
+				}
+
+				// WP_Error doesn't contain response code, return false
+				if ( !is_wp_error( $response ) ) {
+					$response_code = $response['response']['code'];
+					if ( $response_code === 403 ) {
+						$status = 'forbidden';
+					}
+				}
+			} catch( Exception $e ) {
+
+			}
+		}
+		set_transient('rsssl_directory_indexing_status', $status, WEEK_IN_SECONDS );
+	}
+
+	if ( $status==='forbidden' ) {
+		return false;
+	} else {
+		return true;
+	}
+}
+
+
+/**
+ * Check if file editing is allowed
+ * @return bool
+ */
+function rsssl_file_editing_allowed()
+{
+	return !defined('DISALLOW_FILE_EDIT' );
+}
+
+/**
+ * Check if user registration is allowed
+ * @return bool
+ */
+function rsssl_user_registration_allowed()
+{
+	return get_option( 'users_can_register' );
+}
+
+/**
+ * Check if page source contains WordPress version information
+ * @return bool
+ */
+
+function rsssl_src_contains_wp_version() {
+	$wp_version = get_bloginfo( 'version' );
+	$result = get_transient('rsssl_wp_version_detected' );
+	if ( !$result ) {
+		$result = 'found';
+		$web_source = "";
+		//check if the mixed content fixer is active
+		$response = wp_remote_get( home_url() );
+		if ( ! is_wp_error( $response ) ) {
+			if ( is_array( $response ) ) {
+				$status     = wp_remote_retrieve_response_code( $response );
+				$web_source = wp_remote_retrieve_body( $response );
+			}
+
+			if ( $status != 200 ) {
+				$result = 'no-response';
+			} elseif ( strpos( $web_source, $wp_version ) === false ) {
+				$result = 'not-found';
+			} else {
+				$result = 'found';
+			}
+		}
+		set_transient( 'rsssl_wp_version_detected', $result, DAY_IN_SECONDS );
+	}
+	return $result==='found';
 }

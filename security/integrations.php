@@ -1,23 +1,5 @@
 <?php
-defined( 'ABSPATH' ) or die( "you do not have access to this page!" );
-require_once( trailingslashit(rsssl_path) . 'security/learning-mode.php' );
-require_once( trailingslashit(rsssl_path) . 'security/tests.php' );
-require_once( trailingslashit(rsssl_path) . 'security/check-requests.php' );
-
-/**
- * Load only on back-end
- */
-if (is_admin() || rsssl_is_logged_in_rest() ) {
-	require_once( trailingslashit(rsssl_path) . 'security/notices.php' );
-	require_once( trailingslashit(rsssl_path) . 'security/functions.php' );
-	require_once( trailingslashit(rsssl_path) . 'security/sync-settings.php' );
-}
-
-function rsssl_enqueue_integrations_assets( $hook ) {
-
-}
-//add_action( 'admin_enqueue_scripts', 'rsssl_enqueue_integrations_assets' );
-
+defined( 'ABSPATH' ) or die();
 global $rsssl_integrations_list;
 $rsssl_integrations_list = apply_filters( 'rsssl_integrations', array(
 	'xmlrpc' => array(
@@ -53,7 +35,7 @@ $rsssl_integrations_list = apply_filters( 'rsssl_integrations', array(
     ),
 
 	'file-editing' => array(
-		'label'                => 'File editing',
+		'label'                => __('File editing', 'really-simple-ssl'),
 		'folder'               => 'wordpress',
 		'impact'               => 'medium',
 		'risk'                 => 'low',
@@ -66,7 +48,7 @@ $rsssl_integrations_list = apply_filters( 'rsssl_integrations', array(
 	),
 
 	'hide-wp-version' => array(
-		'label'                => 'Hide WP version',
+		'label'                => __('Hide WP version','really-simple-ssl'),
 		'folder'               => 'wordpress',
 		'impact'               => 'low',
 		'risk'                 => 'low',
@@ -76,7 +58,7 @@ $rsssl_integrations_list = apply_filters( 'rsssl_integrations', array(
 	),
 
 	'user-enumeration' => array(
-		'label'                => 'User Enumeration',
+		'label'                => __('User Enumeration','really-simple-ssl'),
 		'folder'               => 'wordpress',
 		'impact'               => 'low',
 		'risk'                 => 'medium',
@@ -86,28 +68,23 @@ $rsssl_integrations_list = apply_filters( 'rsssl_integrations', array(
 	),
 
     'block-code-execution-uploads' => array(
-        'label'                => 'Block code execution in uploads directory',
+        'label'                => __('Block code execution in uploads directory','really-simple-ssl'),
         'folder'               => 'wordpress',
         'impact'               => 'medium',
         'risk'                 => 'low',
         'learning_mode'        => false,
         'option_id'            => 'block_code_execution_uploads',
         'type'                 => 'checkbox',
-        'actions'              => array(
-			'fix'       => 'rsssl_disable_code_execution_uploads',
-        ),
     ),
+
     'prevent-login-info-leakage' => array(
-        'label'                => 'Prevent login error leakage',
+        'label'                => __('Prevent login error leakage','really-simple-ssl'),
         'folder'               => 'wordpress',
         'impact'               => 'low',
         'risk'                 => 'high',
         'learning_mode'        => false,
         'option_id'            => 'disable_login_feedback',
         'type'                 => 'checkbox',
-        'actions'              => array(
-			'fix'       => 'rsssl_no_wp_login_errors',
-        ),
     ),
     'disable-http-methods' => array(
         'label'                => __('Disable HTTP methods', 'really-simple-ssl'),
@@ -116,15 +93,13 @@ $rsssl_integrations_list = apply_filters( 'rsssl_integrations', array(
         'risk'                 => 'medium',
         'learning_mode'        => false,
         'type'                 => 'checkbox',
+        'option_id'            => 'disable_http_methods',
         'conditions'           => [
 	        'relation' => 'AND',
 	        [
-				'rsssl_test_if_http_methods_allowed()' => true,
+				'rsssl_http_methods_allowed()' => true,
 	        ]
         ],
-        'actions'              => array(
-			'fix'       => 'rsssl_disable_http_methods',
-        ),
     ),
 
     'debug-log' => array(
@@ -134,18 +109,15 @@ $rsssl_integrations_list = apply_filters( 'rsssl_integrations', array(
         'risk'                 => 'medium',
         'learning_mode'        => false,
         'option_id'            => 'change_debug_log_location',
-		'always_include'       => true,
+		'always_include'       => false,
+        'has_deactivation'     => true,
         'type'                 => 'checkbox',
         'conditions'           => [
 	        'relation' => 'AND',
 	        [
-	            'rsssl_is_default_debug_log_location()' => true,
 		        'rsssl_is_debug_log_enabled()' => true,
 	        ]
         ],
-        'actions'              => array(
-			'fix'       => 'rsssl_maybe_change_debug_log_location',
-        ),
     ),
 
     'disable-indexing' => array(
@@ -156,9 +128,7 @@ $rsssl_integrations_list = apply_filters( 'rsssl_integrations', array(
         'learning_mode'        => false,
 		'option_id'            => 'disable_indexing',
         'type'                 => 'checkbox',
-        'actions'              => array(
-			'fix'       => 'rsssl_disable_indexing_wrapper',
-        ),
+        'has_deactivation'     => true,
     ),
 
 	'application-passwords' => array(
@@ -168,17 +138,9 @@ $rsssl_integrations_list = apply_filters( 'rsssl_integrations', array(
 		'risk'                 => 'high',
 		'learning_mode'        => false,
 		'option_id'            => 'disable_application_passwords',
-		'always_include'       => true,
+		'always_include'       => false,
 		'type'                 => 'checkbox',
-		'conditions'           => [
-			'relation' => 'AND',
-			[
-				'rsssl_application_passwords_available()' => true,
-			]
-		],
-		'actions'              => array(
-			'fix'       => 'rsssl_maybe_allow_application_passwords',
-		),
+		'has_deactivation'     => true,
 	),
 
 	'rename-db-prefix' => array(
@@ -195,9 +157,6 @@ $rsssl_integrations_list = apply_filters( 'rsssl_integrations', array(
 				'rsssl_is_default_wp_prefix()'=>true,
 			]
 		],
-		'actions'              => array(
-			'fix'       => 'rsssl_maybe_rename_db_prefix',
-		),
 	),
 
     'rename-admin-user' => array(
@@ -242,7 +201,12 @@ function rsssl_is_integration_enabled( $plugin, $details ) {
 	if ( ! array_key_exists( $plugin, $rsssl_integrations_list ) ) {
 		return false;
 	}
-	if ($details['always_include']) {
+	if ( $details['always_include'] ) {
+		return true;
+	}
+
+	//if an integration was just enabled, we keep it enabled until it removes itself from the list.
+	if ( rsssl_is_in_deactivation_list($plugin) ) {
 		return true;
 	}
 
@@ -258,7 +222,6 @@ function rsssl_is_integration_enabled( $plugin, $details ) {
  */
 
 function rsssl_integrations() {
-
 	global $rsssl_integrations_list;
 	$stored_integrations_count = get_option('rsssl_active_integrations', 0 );
 	$actual_integrations_count = 0;
@@ -280,18 +243,16 @@ function rsssl_integrations() {
 			if ( isset( $details['conditions'] ) ) {
 				$skip = !rsssl_conditions_apply($details['conditions']);
 			}
-
 			if ( ! file_exists( $file ) || $skip ) {
 				continue;
 			}
-
 			require_once( $file );
 			$risk = $details['risk'];
 			$impact = $details['impact'];
 
 			// Apply fix automatically on high risk, low impact
 			//check if already executed
-			if ( $risk === 'high' && $impact === 'low' ) {
+			if ( $risk === 'high' && $impact === 'low' && is_admin() ) {
 				$fix = isset($details['actions']['fix']) ? $details['actions']['fix']: false;
 //				rsssl_do_fix($fix);
 			}
@@ -299,10 +260,55 @@ function rsssl_integrations() {
 	}
 
 	if ( $stored_integrations_count != $actual_integrations_count) {
-		update_option('rsssl_active_integrations',  $actual_integrations_count);
-		update_option('rsssl_integrations_changed', true );
+		update_option('rsssl_active_integrations',  $actual_integrations_count, false);
+		update_option('rsssl_integrations_changed', true, false );
 	}
 
 }
 
+/**
+ * Complete a fix for an issue, either user triggered, or automatic
+ * @param $fix
+ *
+ * @return void
+ */
+function rsssl_do_fix($fix){
+	if ( !current_user_can('manage_options')) {
+		return;
+	}
+
+	if ( !rsssl_has_fix($fix) && function_exists($fix)) {
+		$completed[]=$fix;
+		$fix();
+		$completed = get_option('rsssl_completed_fixes', []);
+		$completed[] = $fix;
+		update_option('rsssl_completed_fixes', $completed );
+	} elseif ($fix && !function_exists($fix) ) {
+		error_log("Really Simple SSL: fix function $fix not found");
+	}
+
+}
+
+function rsssl_has_fix($fix){
+	$completed = get_option('rsssl_completed_fixes', []);
+	if ( !in_array($fix, $completed)) {
+		return false;
+	}
+	return true;
+}
+
+
 add_action( 'plugins_loaded', 'rsssl_integrations', 10 );
+//also run when fields are saved.
+add_action( 'rsssl_after_saved_fields', 'rsssl_integrations', 20 );
+
+/**
+ * Clear our transients on settings update.
+ * @return void
+ */
+function rsssl_clear_transients(){
+	delete_transient('rsssl_http_methods_allowed');
+	delete_transient('rsssl_xmlrpc_allowed');
+	delete_transient('rsssl_directory_indexing_status');
+}
+add_action( 'rsssl_after_saved_fields', 'rsssl_clear_transients', 50 );

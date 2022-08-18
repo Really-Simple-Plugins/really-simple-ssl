@@ -85,17 +85,16 @@ function rsssl_rename_admin_user() {
 		}
 
 		set_site_transient('rsssl_username_admin_changed', $new_user_login, WEEK_IN_SECONDS );
+		return true;
 	}
 	return true;
 }
+add_action('rsssl_after_saved_fields','rsssl_rename_admin_user', 30);
 
-
-function rsssl_maybe_rename_admin_user() {
-	if ( !rsssl_has_fix('rsssl_rename_admin_user') ) {
-		rsssl_do_fix('rsssl_rename_admin_user');
-	}
-}
-add_action('admin_init','rsssl_maybe_rename_admin_user');
+/**
+ * Run check once a day
+ */
+add_action( 'rsssl_every_day_hook', 'rsssl_rename_admin_user' );
 
 /**
  * @return bool

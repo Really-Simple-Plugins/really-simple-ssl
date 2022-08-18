@@ -16,6 +16,25 @@ if ( ! function_exists( 'rsssl_user_can_manage' ) ) {
     }
 }
 
+/**
+ * Create a generic read more text with link for help texts.
+ *
+ * @param string $url
+ * @param bool   $add_space
+ *
+ * @return string
+ */
+function rsssl_le_read_more( $url, $add_character = ' ' ) {
+	$html = sprintf( __( "For more information, please read this %sarticle%s",
+		'really-simple-ssl' ), '<a target="_blank" href="' . $url . '">',
+		'</a>' );
+	if ( is_string($add_character) ) {
+		$html = $add_character . $html;
+	}
+
+	return $html;
+}
+
 
 
 /**
@@ -206,11 +225,11 @@ function rsssl_check_port( $port)
 	$link = @fsockopen( $ipAddress, $port, $errno, $error, 5 );
 
 	if ( $link ) {
-		update_option("rsssl_port_check_$port", 'success');
+		update_option("rsssl_port_check_$port", 'success', false);
 		return true;
 	}
 
-	update_option("rsssl_port_check_$port", 'fail');
+	update_option("rsssl_port_check_$port", 'fail', false);
 	return false;
 }
 
@@ -232,7 +251,7 @@ if ( !function_exists('rsssl_progress_add')) {
 		$progress = get_option( "rsssl_le_installation_progress", array() );
 		if ( ! in_array( $item, $progress ) ) {
 			$progress[] = $item;
-			update_option( "rsssl_le_installation_progress", $progress );
+			update_option( "rsssl_le_installation_progress", $progress, false );
 		}
 	}
 }
@@ -298,7 +317,7 @@ if ( !function_exists('rsssl_progress_remove')) {
 		if ( in_array( $item, $progress ) ) {
 			$index = array_search( $item, $progress );
 			unset( $progress[ $index ] );
-			update_option( "rsssl_le_installation_progress", $progress );
+			update_option( "rsssl_le_installation_progress", $progress, false );
 		}
 	}
 }
@@ -491,32 +510,10 @@ if ( ! function_exists( 'rsssl_sidebar_notice' ) ) {
 }
 
 
-if (!function_exists('rsssl_read_more')) {
-    /**
-     * Create a generic read more text with link for help texts.
-     *
-     * @param string $url
-     * @param bool   $add_space
-     *
-     * @return string
-     */
-    function rsssl_read_more( $url, $add_space = true ) {
-        $html = sprintf( __( "For more information, please read this %sarticle%s",
-            'really-simple-ssl' ), '<a target="_blank" href="' . $url . '">',
-            '</a>' );
-        if ( $add_space ) {
-            $html = '&nbsp;' . $html;
-        }
-
-        return $html;
-    }
-}
-
-
 register_activation_hook( __FILE__, 'rsssl_set_activation_time_stamp' );
 if ( ! function_exists( 'rsssl_set_activation_time_stamp' ) ) {
     function rsssl_set_activation_time_stamp( $networkwide ) {
-        update_option( 'rsssl_activation_time', time() );
+        update_option( 'rsssl_activation_time', time(), false );
     }
 }
 
