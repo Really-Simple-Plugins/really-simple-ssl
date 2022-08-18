@@ -100,6 +100,7 @@ If you can't deactivate, do not just remove the plugin folder to uninstall! Foll
 * Rename admin user
 * Disable application passwords
 * Disable code execution
+* Prevent indexing of directories
 
 = 5.3.0 =
 * Improvement: added PHP 8.1 compatibility
