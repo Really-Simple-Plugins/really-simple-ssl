@@ -174,7 +174,7 @@ function rsssl_general_security_notices( $notices ) {
 		'output' => array(
 			'true' => array(
 				'highlight_field_id' => 'change_debug_log_location',
-				'msg' => __("Warning: debug.log security risk", "really-simple-ssl"),
+				'msg' => __("Your site is set to log errors to a potentially public file.", "really-simple-ssl"),
 				'icon' => 'open',
 				'dismissible' => true,
 			),

@@ -41,7 +41,7 @@ class SecurityFeaturesBlock extends Component {
                     {__("or the", "really-simple-ssl")}&nbsp;
                         <Hyperlink target="_blank" text={__("WordPress forum","really-simple-ssl")} url="https://wordpress.org/plugins/really-simple-ssl"/></p>
                 </div>
-                <Button isDefault onClick={ (e) => this.redirectToSettingsMenu(e)}>{ __( 'Settings', 'really-simple-ssl' ) }</Button>
+                <Button variant="secondary" onClick={ (e) => this.redirectToSettingsMenu(e)}>{ __( 'Settings', 'really-simple-ssl' ) }</Button>
             </div>
 
         );

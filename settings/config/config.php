@@ -102,11 +102,13 @@ function rsssl_menu( $group_id = 'settings' ){
 						[
 							'id' => 'upgrade_insecure_requests',
 							'premium' => true,
-							'title' => __('Upgrade insecure requests', 'really-simple-ssl'),
+							'helpLink'  => 'https://really-simple-ssl.com',
+							'title' => __('Upgrade Insecure Requests', 'really-simple-ssl'),
 //								'intro' => __("Content Security Policy explanation", "really-simple-ssl"),
 						],
 						[
 							'id' => 'content_security_policy',
+							'helpLink'  => 'https://really-simple-ssl.com',
 							'premium' => true,
 							'title' => __('Content Security Policy', 'really-simple-ssl'),
 							'intro' => __("Content Security Policy explanation", "really-simple-ssl"),
@@ -118,14 +120,6 @@ function rsssl_menu( $group_id = 'settings' ){
 					'title' => __('Cross Origin Policy', 'really-simple-ssl-pro'),
 					'intro' => __("", "really-simple-ssl"),
 					'step' => 1,
-					'groups' => [
-						[
-							'id' => 'permissionspolicy',
-							'premium' => true,
-							'title' => __('Permissions Policy', 'really-simple-ssl'),
-							'intro' => __("Permissions Policy explanation", "really-simple-ssl"),
-						],
-					],
 				],
 				[
 					'id' => 'hardening',
@@ -322,28 +316,27 @@ function rsssl_fields( $load_values = true ){
             ],
             'networkwide' => false,
         ],
-
-//        [
-//            'id'          => 'do_not_edit_htaccess',
-//            'menu_id'     => 'general',
-//            'group_id'    => 'general',
-//            'type'        => 'checkbox',
-//            'label'       => __( "Stop editing the .htaccess file", 'really-simple-ssl' ),
-//            'help'        => [
-//                'label' => 'default',
-//                'text' => __( 'If you want to customize the Really Simple SSL .htaccess, you need to prevent Really Simple SSL from rewriting it. Enabling this option will do that.', 'really-simple-ssl' ),
-//            ],
-//            'disabled'    => false,
-//            'default'     => false,
-//            //on multisite this setting can only be set networkwide
-//            'server_conditions' => [
-//                'relation' => 'AND',
-//                [
-//                    'RSSSL()->rsssl_server->uses_htaccess()' => true,
-//                    '!is_multisite()',
-//                ]
-//            ],
-//        ],
+        [
+            'id'          => 'do_not_edit_htaccess',
+            'menu_id'     => 'general',
+            'group_id'    => 'general',
+            'type'        => 'checkbox',
+            'label'       => __( "Stop editing the .htaccess file", 'really-simple-ssl' ),
+            'help'        => [
+                'label' => 'default',
+                'text' => __( 'If you want to customize the Really Simple SSL .htaccess, you need to prevent Really Simple SSL from rewriting it. Enabling this option will do that.', 'really-simple-ssl' ),
+            ],
+            'disabled'    => false,
+            'default'     => false,
+            //on multisite this setting can only be set networkwide
+            'server_conditions' => [
+                'relation' => 'AND',
+                [
+                    'RSSSL()->rsssl_server->uses_htaccess()' => true,
+                    '!is_multisite()',
+                ]
+            ],
+        ],
         [
             'id'          => 'switch_mixed_content_fixer_hook',
             'menu_id'     => 'general',
@@ -691,7 +684,7 @@ function rsssl_fields( $load_values = true ){
 			'group_id'    => 'mixedcontentscan',
 			'type'        => 'mixedcontentscan',
 			'label'       => __("Mixed content scan", "really-simple-ssl-pro"),
-			'data_source' => ['RSSSL_PRO', 'rsssl_scan', 'get'],
+			'data_source' => ['RSSSL', 'placeholder', 'mixed_content_data'],
 			'columns'     => [
 				[
 					'name' => __('Type', 'really-simple-ssl-pro'),
@@ -816,15 +809,15 @@ function rsssl_fields( $load_values = true ){
 		[
 			'id'          => 'enable_permissions_policy',
 			'menu_id'     => 'permissions_policy',
-			'group_id'    => 'permissionspolicy',
-			'type'        => 'checkbox',
+			'group_id'    => 'permissions_policy',
+			'type'        => 'hidden',
 			'label'       => __( "Enable Permissions Policy", 'really-simple-ssl-pro' ),
 			'disabled'    => false,
 			'default'     => false,
 		],
         [
             'id'          => 'upgrade_insecure_requests',
-            'menu_id'     => 'content_security_policy_menu',
+            'menu_id'     => 'content_security_policy',
             'group_id'    => 'upgrade_insecure_requests',
             'type'        => 'checkbox',
             'label'       => __( "Encrypted and authenticated response", 'really-simple-ssl-pro' ),
@@ -832,17 +825,20 @@ function rsssl_fields( $load_values = true ){
             'default'     => false,
         ],
 		[
-			'id'          => 'content_security_policy_status',
+			'id'          => 'csp_enforce',
 			'menu_id'     => 'content_security_policy',
 			'group_id'    => 'content_security_policy',
-			'type'        => 'select',
-			'options'     => [
-				'disabled'    => __( "Disabled", "really-simple-ssl-pro" ),
-				'report-only' => __( "Report only", "really-simple-ssl-pro" ),
-				'report-paused'      => __( "Paused", "really-simple-ssl-pro" ),
-				'enforce'     => __( "Enforce", "really-simple-ssl-pro" ),
-			],
-			'label'       => __( "Enable Content Security Policy", 'really-simple-ssl-pro' ),
+			'type'        => 'hidden',
+			'label'       => '',
+			'disabled'    => false,
+			'default'     => false,
+		],
+		[
+			'id'          => 'csp_learning_mode',
+			'menu_id'     => 'content_security_policy',
+			'group_id'    => 'content_security_policy',
+			'type'        => 'hidden',
+			'label'       => '',
 			'disabled'    => false,
 			'default'     => false,
 		],
@@ -858,12 +854,7 @@ function rsssl_fields( $load_values = true ){
 			'data_endpoint' => ["RSSSL_PRO", "rsssl_csp_backend", "update"],
 			'columns'     => [
 				[
-					'name' => __('Date',"really-simple-ssl-pro"),
-					'sortable' => true,
-					'column' =>'time',
-				],
-				[
-					'name' => __('URL', 'really-simple-ssl'),
+					'name' => __('Location', 'really-simple-ssl'),
 					'sortable' => false,
 					'column' =>'documenturi',
 				],
@@ -873,7 +864,7 @@ function rsssl_fields( $load_values = true ){
 					'column' =>'violateddirective',
 				],
 				[
-					'name' => __('Blocked URI', 'really-simple-ssl'),
+					'name' => __('Source', 'really-simple-ssl'),
 					'sortable' => false,
 					'column' =>'blockeduri',
 				],
