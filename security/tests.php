@@ -241,19 +241,6 @@ function rsssl_enabled_by_rsssl($option_name, $test){
 }
 
 /**
- * Check if WordPress version is above 5.6 for application password support
- * @return bool
- */
-function rsssl_wordpress_version_above_5_6() {
-	global $wp_version;
-	if ( $wp_version < 5.6 ) {
-		return false;
-	}
-
-	return true;
-}
-
-/**
  * @return string
  * Test if code execution is allowed in /uploads folder
  */
