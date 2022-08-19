@@ -17,6 +17,7 @@ class ContentSecurityPolicy extends Component {
         this.state = {
             csp_enforce :0,
             csp_learning_mode :0,
+            learning_mode_completed :0,
             filterValue: 0,
         };
     }
@@ -25,9 +26,11 @@ class ContentSecurityPolicy extends Component {
         this.doFilter = this.doFilter.bind(this);
         let enforce_field = this.props.fields.filter(field => field.id === 'csp_enforce')[0];
         let learning_mode_field = this.props.fields.filter(field => field.id === 'csp_learning_mode')[0];
+        let learning_mode_completed = this.props.fields.filter(field => field.id === 'csp_learning_mode_completed')[0];
         this.setState({
             csp_enforce :enforce_field.value,
-            csp_learning_mode :learning_mode_field.value
+            csp_learning_mode :learning_mode_field.value,
+            learning_mode_completed :learning_mode_completed.value
         });
     }
 
@@ -37,49 +40,55 @@ class ContentSecurityPolicy extends Component {
         });
     }
 
-
     toggleEnforce(e, enforce){
-
+        e.preventDefault();
         let fields = this.props.fields;
         //look up permissions policy enable field //enable_permissions_policy
         let field = fields.filter(field => field.id === 'csp_enforce')[0];
         let learning_mode_field = fields.filter(field => field.id === 'csp_learning_mode')[0];
+        let learning_mode_completed_field = fields.filter(field => field.id === 'learning_mode_completed')[0];
         //disable learning mode if enforced
         if (enforce==1){
             learning_mode_field.value=0;
+            learning_mode_completed_field.value=0;
         }
         //enforce this setting
         field.value=enforce;
         this.setState({
-            csp_enforce :enforce
+            csp_enforce :enforce,
+            learning_mode_completed:0,
         });
         let saveFields = [];
         saveFields.push(field);
         saveFields.push(learning_mode_field);
-        this.props.updateField(field);
-        this.props.updateField(learning_mode_field);
+        saveFields.push(learning_mode_completed_field);
+//         this.props.updateField(field);
+//         this.props.updateField(learning_mode_field);
         rsssl_api.setFields(saveFields).then(( response ) => {
             //this.props.showSavedSettingsNotice();
         });
     }
 
-    toggleLearningMode(e, enforce){
-
+    toggleLearningMode(e){
+         e.preventDefault();
         let fields = this.props.fields;
         //look up permissions policy enable field //enable_permissions_policy
         let field = fields.filter(field => field.id === 'csp_learning_mode')[0];
         //enforce this setting
-        enforce = field.value==1 ? 0 : 1;
-        field.value=enforce;
+        let enableLearningMode = field.value==1 ? 0 : 1;
+        field.value=enableLearningMode;
         this.setState({
-            csp_learning_mode :enforce
+            csp_learning_mode :enableLearningMode
         });
         let saveFields = [];
         saveFields.push(field);
-        this.props.updateField(field);
-        rsssl_api.setFields(saveFields).then(( response ) => {
-            //this.props.showSavedSettingsNotice();
-        });
+//         this.props.updateField(field);
+        //if new value is disabled, also reset the "completedLearningMode" value
+        field = fields.filter(field => field.id === 'csp_learning_mode_completed')[0];
+        field.value = 0;
+        saveFields.push(field);
+//         this.props.updateField(field);
+        rsssl_api.setFields(saveFields).then(( response ) => {});
     }
 
     render(){
@@ -90,6 +99,7 @@ class ContentSecurityPolicy extends Component {
                 filterValue,
                 csp_enforce,
                 csp_learning_mode,
+                learning_mode_completed,
             } = this.state;
 
             const Filter = () => (
@@ -135,31 +145,47 @@ class ContentSecurityPolicy extends Component {
               },
             ];
              return (
-                <PanelBody className={ this.highLightClass}>
-                    <DataTable
-                        columns={columns}
-                        data={data}
-                        dense
-                        pagination
-                        noDataComponent={__("No results", "really-simple-ssl")}
-                        persistTableHead
-                        subHeader
-                        subHeaderComponent={<Filter />}
-                        conditionalRowStyles={conditionalRowStyles}
-                    />
-
-                    { csp_enforce!=1 && <button className="button" onClick={ (e) => this.toggleEnforce(e, true ) }>{__("Enforce","really-simple-ssl")}</button> }
-                    { csp_enforce==1 && <button className="button" onClick={ (e) => this.toggleEnforce(e, false ) }>{__("Disable","really-simple-ssl")}</button> }
-                    <label>
-                        <input type="checkbox"
-                            disabled = {csp_enforce}
-                            checked ={csp_learning_mode==1}
-                            value = {csp_learning_mode}
-                            onChange={ ( fieldValue ) => this.toggleLearningMode() }
+                <>
+                    <PanelBody className={ this.highLightClass}>
+                        <DataTable
+                            columns={columns}
+                            data={data}
+                            dense
+                            pagination
+                            noDataComponent={__("No results", "really-simple-ssl")}
+                            persistTableHead
+                            subHeader
+                            subHeaderComponent={<Filter />}
+                            conditionalRowStyles={conditionalRowStyles}
                         />
-                        {__("Enable Learning Mode","really-simple-ssl")}
-                    </label>
-                </PanelBody>
+
+                        { csp_enforce!=1 && <button className="button" onClick={ (e) => this.toggleEnforce(e, true ) }>{__("Enforce","really-simple-ssl")}</button> }
+                        { csp_enforce==1 && <button className="button" onClick={ (e) => this.toggleEnforce(e, false ) }>{__("Disable","really-simple-ssl")}</button> }
+                        <label>
+                            <input type="checkbox"
+                                disabled = {csp_enforce}
+                                checked ={csp_learning_mode==1}
+                                value = {csp_learning_mode}
+                                onChange={ ( e ) => this.toggleLearningMode(e) }
+                            />
+                            {__("Enable Learning Mode","really-simple-ssl")}
+                        </label>
+                    </PanelBody>
+                    {csp_learning_mode==1 && <div className="rsssl-locked">
+                        <div className="rsssl-locked-overlay">
+                            <span className="rsssl-progress-status rsssl-learning-mode">{__("Learning Mode","really-simple-ssl")}</span>
+                            {__("We're configuring your Content Security Policy.", "really-simple-ssl")}&nbsp;
+                            <a className="rsssl-learning-mode-link" href="#" onClick={ (e) => this.toggleLearningMode(e) }>{__("Disable learning mode and configure manually", "really-simple-ssl") }</a>
+                        </div>
+                    </div>}
+                    {learning_mode_completed==1 && <div className="rsssl-locked">
+                        <div className="rsssl-locked-overlay">
+                            <span className="rsssl-progress-status rsssl-learning-mode-completed">{__("Learning Mode","really-simple-ssl")}</span>
+                            {__("We finished the configuration.", "really-simple-ssl")}&nbsp;
+                            <a className="rsssl-learning-mode-link" href="#" onClick={ (e) => this.toggleLearningMode(e) }>{__("Review the settings and enforce the policy", "really-simple-ssl") }</a>
+                        </div>
+                    </div>}
+                </>
             )
     }
 }

@@ -843,6 +843,15 @@ function rsssl_fields( $load_values = true ){
 			'default'     => false,
 		],
 		[
+			'id'          => 'csp_learning_mode_completed',
+			'menu_id'     => 'content_security_policy',
+			'group_id'    => 'content_security_policy',
+			'type'        => 'hidden',
+			'label'       => '',
+			'disabled'    => false,
+			'default'     => false,
+		],
+		[
 			'id'          => 'content_security_policy',
 			'menu_id'     => 'content_security_policy',
 			'group_id'    => 'content_security_policy',
