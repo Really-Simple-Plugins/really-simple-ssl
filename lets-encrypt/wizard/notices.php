@@ -161,7 +161,7 @@ function rsssl_le_custom_field_notices($fields){
 
 	return $fields;
 }
-add_filter( 'rsssl_fields', 'rsssl_le_custom_field_notices', 30, 1 );
+add_filter( 'rsssl_le_fields', 'rsssl_le_custom_field_notices', 30, 1 );
 
 /**
  * Replace the go pro or scan button with a renew SSL button when the cert should be renewed.

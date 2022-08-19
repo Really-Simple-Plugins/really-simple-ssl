@@ -362,6 +362,8 @@ function rsssl_rest_api_fields_get(  ){
 		 */
 		if ( isset($field['data_source']) ){
 			$data_source = $field['data_source'];
+            x_log($field);
+            error_log(print_r($data_source, true));
 			if (is_array($data_source)) {
 				$main = $data_source[0];
 				$class = $data_source[1];
@@ -378,9 +380,7 @@ function rsssl_rest_api_fields_get(  ){
 
     $updated_menu_items = rsssl_filter_menu_items($menu_items['menu_items'], $fields);
     $menu_items['menu_items'] = $updated_menu_items;
-
 	$output['fields'] = $fields;
-
 	$output['menu'] = $menu_items;
 	$output['progress'] = RSSSL()->progress->get();
     $output = apply_filters('rsssl_rest_api_fields_get', $output);

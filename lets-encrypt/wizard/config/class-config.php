@@ -664,7 +664,7 @@ if ( ! class_exists( "rsssl_config" ) ) {
         }
 
         public function init() {
-	        $this->fields = apply_filters( 'rsssl_fields', $this->fields );
+	        $this->fields = apply_filters( 'rsssl_le_fields', $this->fields );
         }
     }
 
