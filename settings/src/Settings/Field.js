@@ -13,6 +13,7 @@ import * as rsssl_api from "../utils/api";
 import License from "./License";
 import MixedContentScan from "./MixedContentScan";
 import PermissionsPolicy from "./PermissionsPolicy";
+import Support from "./Support";
 import ContentSecurityPolicy from "./ContentSecurityPolicy";
 import ChangeStatus from "./ChangeStatus";
 import {
@@ -206,6 +207,12 @@ class Field extends Component {
                         options={ options }
                     />
                 </PanelBody>
+            )
+        }
+
+        if ( field.type==='support' ) {
+            return (
+                <Support/>
             )
         }
 

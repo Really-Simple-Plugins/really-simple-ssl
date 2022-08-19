@@ -5,8 +5,8 @@ import {
     Button,
 } from '@wordpress/components';
 import SecurityFeatureBullet from './SecurityFeatureBullet';
-import Placeholder from '../Placeholder/Placeholder';
-import Hyperlink from "../utils/Hyperlink";
+import Placeholder from '../../Placeholder/Placeholder';
+import Hyperlink from "../../utils/Hyperlink";
 import { __ } from '@wordpress/i18n';
 
 class SecurityFeaturesBlock extends Component {

@@ -6,7 +6,7 @@ import {
 import * as rsssl_api from "../utils/api";
 import ProgressBlock from "./ProgressBlock";
 import ProgressHeader from "./ProgressBlockHeader";
-import SecurityFeaturesBlock from '../SecurityFeaturesBlock/SecurityFeaturesBlock';
+import SecurityFeaturesBlock from './SecurityFeaturesBlock/SecurityFeaturesBlock';
 import Placeholder from '../Placeholder/Placeholder';
 
 

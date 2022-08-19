@@ -65,11 +65,12 @@ class SettingsGroup extends Component {
         let disabled = status !=='valid' && activeGroup.premium;
 
         this.upgrade = activeGroup.upgrade ? activeGroup.upgrade : this.upgrade;
+        let helplinkText = activeGroup.helpLink_text ? activeGroup.helpLink_text : __("Instructions manual","really-simple-ssl");
         return (
             <div className="rsssl-grid-item">
                 {activeGroup && activeGroup.title && <div className="rsssl-grid-item-header">
                     <h3 className="rsssl-h4">{activeGroup.title}</h3>
-                    {activeGroup && activeGroup.helpLink && <div className="rsssl-grid-item-controls"><Hyperlink target="_blank" className="rsssl-helplink" text={__("Instructions manual","really-simple-ssl")} url={activeGroup.helpLink}/></div>}
+                    {activeGroup && activeGroup.helpLink && <div className="rsssl-grid-item-controls"><Hyperlink target="_blank" className="rsssl-helplink" text={helplinkText} url={activeGroup.helpLink}/></div>}
                 </div>}
                 <div className="rsssl-grid-item-content">
                     {activeGroup && activeGroup.intro && <div className="rsssl-settings-block-intro">{activeGroup.intro}</div>}

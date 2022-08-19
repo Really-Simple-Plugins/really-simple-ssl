@@ -95,7 +95,6 @@ function rsssl_ajax_load_page(){
 	}
 }
 
-
 add_action( 'rest_api_init', 'rsssl_settings_rest_route', 10 );
 function rsssl_settings_rest_route() {
 

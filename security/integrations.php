@@ -303,14 +303,25 @@ add_action( 'plugins_loaded', 'rsssl_integrations', 10 );
 add_action( 'rsssl_after_saved_fields', 'rsssl_integrations', 20 );
 
 /**
- * Clear our transients on settings update.
+ * If the corresponding setting has been changed, clear the test cache and re-run it.
  * @return void
  */
-function rsssl_clear_transients(){
-	error_log("clearing transients");
-	delete_transient('rsssl_http_methods_allowed');
-	delete_transient('rsssl_xmlrpc_allowed');
-	delete_transient('rsssl_directory_indexing_status');
-	delete_transient('rsssl_code_execution_allowed_status');
+function rsssl_maybe_clear_transients($field_id, $field_value, $prev_value, $field_type ){
+	if ( $field_id==='disable_http_methods' ){
+		delete_transient('rsssl_http_methods_allowed');
+		rsssl_http_methods_allowed();
+	}
+	if ( $field_id==='xmlrpc' ){
+		delete_transient('rsssl_xmlrpc_allowed');
+		rsssl_xmlrpc_allowed();
+	}
+	if ( $field_id==='disable_indexing' ){
+		delete_transient('rsssl_directory_indexing_status');
+		rsssl_directory_indexing_allowed();
+	}
+	if ( $field_id==='block_code_execution_uploads' ){
+		delete_transient('rsssl_code_execution_allowed_status');
+		rsssl_code_execution_allowed();
+	}
 }
-add_action( 'rsssl_after_saved_fields', 'rsssl_clear_transients', 50 );
+add_action( "rsssl_after_save_field", 'rsssl_maybe_clear_transients', 100, 4 );

@@ -6,6 +6,55 @@ if ( ! class_exists( 'RSSSL_PLACEHOLDER' ) ) {
 
 		}
 
+		/**
+		 * Set some placeholder data for CSP
+		 * @return array
+		 */
+		public function csp_data(){
+			$rules = array(
+				'script-src-data' => array(
+					'violateddirective' => 'script-src',
+					'blockeduri' => 'data:',
+				),
+				'script-src-eval' => array(
+					'violateddirective' => 'script-src',
+					'blockeduri' => 'unsafe-eval',
+				),
+				'img-src-gravatar' => array(
+					'violateddirective' => 'img-src',
+					'blockeduri' => 'https://secure.gravatar.com',
+				),
+				'img-src-data' => array(
+					'violateddirective' => 'img-src',
+					'blockeduri' => 'data:',
+				),
+				'img-src-self' => array(
+					'violateddirective' => 'img-src',
+					'blockeduri' => 'self',
+				),
+				'font-src-self' => array(
+					'violateddirective' => 'font-src',
+					'blockeduri' => 'self',
+				),
+				'font-src-data' => array(
+					'violateddirective' => 'font-src',
+					'blockeduri' => 'data:',
+				),
+			);
+
+			$output = [];
+			foreach ( $rules as $rule ) {
+				$output[] = [
+					'documenturi' => site_url(),
+					'violateddirective' => $rule['violateddirective'],
+					'blockeduri' => $rule['blockeduri'],
+					'status' => 0,
+				];
+			}
+
+			return $output;
+		}
+
 		public function mixed_content_data(){
 			$data[] = [
 				'id'               => 1,

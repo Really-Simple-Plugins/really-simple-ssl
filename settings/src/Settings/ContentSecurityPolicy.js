@@ -82,14 +82,10 @@ class ContentSecurityPolicy extends Component {
         });
     }
 
-
-
     render(){
             let field = this.props.field;
             let fieldValue = field.value;
             let options = this.props.options;
-
-
             const {
                 filterValue,
                 csp_enforce,

@@ -15,6 +15,7 @@ class PermissionsPolicy extends Component {
     constructor() {
         super( ...arguments );
         this.state = {
+            filterValue:0,
             enable_permissions_policy: 0,
         };
     }
@@ -45,13 +46,30 @@ class PermissionsPolicy extends Component {
         });
     }
 
+    doFilter(e){
+        this.setState({
+            filterValue :e.target.value,
+        });
+    }
+
     render(){
         let field = this.props.field;
         let fieldValue = field.value;
         let options = this.props.options;
         const {
             enable_permissions_policy,
+            filterValue,
         } = this.state;
+
+    const Filter = () => (
+      <>
+        <select onChange={ ( e ) => this.doFilter(e) }>
+            <option value="-1" selected={filterValue==-1}>{__("All", "really-simple-ssl")}</option>
+            <option value="1" selected={filterValue==1}>{__("Allowed", "really-simple-ssl")}</option>
+            <option value="0" selected={filterValue==0}>{__("Blocked", "really-simple-ssl")}</option>
+        </select>
+      </>
+    );
         columns = [];
         field.columns.forEach(function(item, i) {
             let newItem = {
@@ -70,6 +88,9 @@ class PermissionsPolicy extends Component {
         if (!Array.isArray(data) ) {
             data = [];
         }
+        if (filterValue!=-1) {
+            data = data.filter(item => item.status==filterValue);
+        }
         for (const item of data){
             let disabled = false;
             if (item.status!=1) {
@@ -83,10 +104,12 @@ class PermissionsPolicy extends Component {
                 options={options}
                 label=''
                 onChange={ ( fieldValue ) => this.onChangeHandlerDataTable( fieldValue, item, 'value' ) }
+
             />
             item.statusControl = <ChangeStatus item={item} onChangeHandlerDataTable={this.props.onChangeHandlerDataTable}
             />;
         }
+
 
         return (
             <div>
@@ -96,6 +119,9 @@ class PermissionsPolicy extends Component {
                         data={data}
                         dense
                         pagination
+                        subHeader
+                        subHeaderComponent={<Filter />}
+
                     />
                     { enable_permissions_policy!=1 && <button className="button" onClick={ (e) => this.togglePermissionsPolicyStatus(e, true ) }>{__("Enforce","really-simple-ssl")}</button> }
                     { enable_permissions_policy==1 && <button className="button" onClick={ (e) => this.togglePermissionsPolicyStatus(e, false ) }>{__("Disable","really-simple-ssl")}</button> }

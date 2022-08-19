@@ -1,7 +1,7 @@
 import {
     Component,
 } from '@wordpress/element';
-import Hyperlink from "../utils/Hyperlink";
+import Hyperlink from "../../utils/Hyperlink";
 import { __ } from '@wordpress/i18n';
 
 class SecurityFeatureBullet extends Component {
