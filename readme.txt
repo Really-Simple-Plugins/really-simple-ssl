@@ -101,6 +101,7 @@ If you can't deactivate, do not just remove the plugin folder to uninstall! Foll
 * Disable application passwords
 * Disable code execution
 * Prevent indexing of directories
+* Warning when display name is the same as login name
 
 = 5.3.0 =
 * Improvement: added PHP 8.1 compatibility
