@@ -15,7 +15,7 @@ if ( rsssl_is_in_deactivation_list('debug-log') ){
  */
 
 function rsssl_change_debug_log_location() {
-	if ( !current_user_can('manage_options') ) {
+	if ( !current_user_can('manage_options') || !is_admin() ) {
 		return;
 	}
 	//only change if currently default location

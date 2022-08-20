@@ -47,22 +47,17 @@ class rsssl_firewall {
 	}
 
 	/**
-	 *
 	 * Generate security rules, and advanced-headers.php file
 	 *
-	 * @param bool $force
 	 */
-	public function insert_advanced_header_file( $force = false ) {
+	public function insert_advanced_header_file() {
 		error_log("run insert advanced header file");
-		$wpconfig_path = RSSSL()->really_simple_ssl->find_wp_config_path();
-		$wpconfig      = file_get_contents( $wpconfig_path );
-		if (
-			( !$force && !$this->is_settings_page() )
-			|| wp_doing_ajax()
-		) {
+
+		if ( wp_doing_ajax() ) {
 			return;
 		}
-
+		$wpconfig_path = RSSSL()->really_simple_ssl->find_wp_config_path();
+		$wpconfig      = file_get_contents( $wpconfig_path );
 		error_log("start insert rules");
 
 		$dir  = ABSPATH . 'wp-content';

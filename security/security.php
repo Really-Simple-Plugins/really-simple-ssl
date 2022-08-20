@@ -34,7 +34,7 @@ class REALLY_SIMPLE_SECURITY
 		/**
 		 * Load only on back-end
 		 */
-		if ( rsssl_is_logged_in_rest() || is_admin() || wp_doing_cron() ) {
+		if ( rsssl_is_logged_in_rest() || is_admin() || wp_doing_cron() || defined('RSSSL_DOING_CSP')  ) {
 			require_once( $path . 'firewall.php' );
 			require_once( $path . 'tests.php' );
 			require_once( $path . 'notices.php' );
