@@ -15,7 +15,7 @@ class REALLY_SIMPLE_SECURITY
 			self::$instance = new REALLY_SIMPLE_SECURITY;
 			self::$instance->includes();
 
-			if ( rsssl_is_logged_in_rest() || is_admin() || wp_doing_cron() ) {
+			if ( rsssl_is_logged_in_rest() || is_admin() || wp_doing_cron() || defined('RSSSL_DOING_CSP') ) {
 				self::$instance->firewall = new rsssl_firewall();
 			}
 			self::$instance->hooks();
@@ -27,17 +27,16 @@ class REALLY_SIMPLE_SECURITY
 	{
 		$path = rsssl_path.'security/';
 		require_once( $path . 'functions.php' );
-		require_once( $path . 'firewall.php' );
-		require_once( $path . 'deactivate-integration.php' );
-		require_once( $path . 'learning-mode.php' );
-		require_once( $path . 'tests.php' );
 		require_once( $path . 'cron.php' );
+		require_once( $path . 'deactivate-integration.php' );
 		require_once( $path . 'integrations.php');
 
 		/**
 		 * Load only on back-end
 		 */
 		if ( rsssl_is_logged_in_rest() || is_admin() || wp_doing_cron() ) {
+			require_once( $path . 'firewall.php' );
+			require_once( $path . 'tests.php' );
 			require_once( $path . 'notices.php' );
 			require_once( $path . 'sync-settings.php' );
 		}

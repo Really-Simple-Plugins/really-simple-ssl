@@ -9,13 +9,6 @@ $rsssl_integrations_list = apply_filters( 'rsssl_integrations', array(
 		'risk'                 => 'low',
 		'learning_mode'        => true,
 		'option_id'            => 'xmlrpc',
-		'type'                 => 'checkbox',
-		'conditions'           => [
-			'relation' => 'AND',
-			[
-				'rsssl_xmlrpc_allowed()' => true,
-			]
-		],
 	),
 
     'user-registration' => array(
@@ -25,13 +18,6 @@ $rsssl_integrations_list = apply_filters( 'rsssl_integrations', array(
         'risk'                 => 'medium',
         'learning_mode'        => false,
         'option_id'            => 'disable_anyone_can_register',
-        'type'                 => 'checkbox',
-        'conditions'           => [
-	        'relation' => 'AND',
-	        [
-	            'rsssl_user_registration_allowed()' => true,
-	        ]
-        ],
     ),
 
 	'file-editing' => array(
@@ -41,10 +27,6 @@ $rsssl_integrations_list = apply_filters( 'rsssl_integrations', array(
 		'risk'                 => 'low',
 		'learning_mode'        => false,
 		'option_id'            => 'disable_file_editing',
-		'type'                 => 'checkbox',
-		'conditions'           => array(
-			'rsssl_file_editing_allowed()' => true,
-		),
 	),
 
 	'hide-wp-version' => array(
@@ -54,7 +36,6 @@ $rsssl_integrations_list = apply_filters( 'rsssl_integrations', array(
 		'risk'                 => 'low',
 		'learning_mode'        => false,
 		'option_id'            => 'hide_wordpress_version',
-		'type'                 => 'checkbox',
 	),
 
 	'user-enumeration' => array(
@@ -64,7 +45,6 @@ $rsssl_integrations_list = apply_filters( 'rsssl_integrations', array(
 		'risk'                 => 'medium',
 		'learning_mode'        => true,
 		'option_id'            => 'disable_user_enumeration',
-		'type'                 => 'checkbox',
 	),
 
     'block-code-execution-uploads' => array(
@@ -74,7 +54,6 @@ $rsssl_integrations_list = apply_filters( 'rsssl_integrations', array(
         'risk'                 => 'low',
         'learning_mode'        => false,
         'option_id'            => 'block_code_execution_uploads',
-        'type'                 => 'checkbox',
     ),
 
     'prevent-login-info-leakage' => array(
@@ -84,7 +63,6 @@ $rsssl_integrations_list = apply_filters( 'rsssl_integrations', array(
         'risk'                 => 'high',
         'learning_mode'        => false,
         'option_id'            => 'disable_login_feedback',
-        'type'                 => 'checkbox',
     ),
     'disable-http-methods' => array(
         'label'                => __('Disable HTTP methods', 'really-simple-ssl'),
@@ -92,14 +70,7 @@ $rsssl_integrations_list = apply_filters( 'rsssl_integrations', array(
         'impact'               => 'low',
         'risk'                 => 'medium',
         'learning_mode'        => false,
-        'type'                 => 'checkbox',
         'option_id'            => 'disable_http_methods',
-        'conditions'           => [
-	        'relation' => 'AND',
-	        [
-				'rsssl_http_methods_allowed()' => true,
-	        ]
-        ],
     ),
 
     'debug-log' => array(
@@ -111,13 +82,6 @@ $rsssl_integrations_list = apply_filters( 'rsssl_integrations', array(
         'option_id'            => 'change_debug_log_location',
 		'always_include'       => false,
         'has_deactivation'     => true,
-        'type'                 => 'checkbox',
-        'conditions'           => [
-	        'relation' => 'AND',
-	        [
-		        'rsssl_is_debug_log_enabled()' => true,
-	        ]
-        ],
     ),
 
     'disable-indexing' => array(
@@ -127,7 +91,6 @@ $rsssl_integrations_list = apply_filters( 'rsssl_integrations', array(
         'risk'                 => 'medium',
         'learning_mode'        => false,
 		'option_id'            => 'disable_indexing',
-        'type'                 => 'checkbox',
         'has_deactivation'     => true,
     ),
 
@@ -139,7 +102,6 @@ $rsssl_integrations_list = apply_filters( 'rsssl_integrations', array(
 		'learning_mode'        => false,
 		'option_id'            => 'disable_application_passwords',
 		'always_include'       => false,
-		'type'                 => 'checkbox',
 		'has_deactivation'     => true,
 	),
 
@@ -150,13 +112,6 @@ $rsssl_integrations_list = apply_filters( 'rsssl_integrations', array(
 		'risk'                 => 'high',
 		'learning_mode'        => false,
 		'option_id'            => 'rename_db_prefix',
-		'type'                 => 'checkbox',
-		'conditions'           => [
-			'relation' => 'AND',
-			[
-				'rsssl_is_default_wp_prefix()'=>true,
-			]
-		],
 	),
 
     'rename-admin-user' => array(
@@ -166,7 +121,6 @@ $rsssl_integrations_list = apply_filters( 'rsssl_integrations', array(
 		'risk'                 => 'high',
 		'learning_mode'        => false,
 		'option_id'            => 'rename_admin_user',
-		'type'                 => 'checkbox',
 	),
 
 	'display-name-is-login-name' => array(
@@ -176,16 +130,6 @@ $rsssl_integrations_list = apply_filters( 'rsssl_integrations', array(
 		'risk'                 => 'medium',
 		'learning_mode'        => false,
 //		'option_id'            => '',
-		'type'                 => 'checkbox',
-		'conditions'           => array(
-			'relation' => 'AND',
-			[
-				'rsssl_has_admin_user()' => true,
-			]
-		),
-		'actions'              => array(
-//			'fix'       => 'rsssl_change_display_name',
-		),
 	),
 ) );
 
@@ -229,7 +173,6 @@ function rsssl_integrations() {
 	foreach ( $rsssl_integrations_list as $plugin => $details ) {
 		$details = wp_parse_args($details,
 			[
-				'conditions' => [],
 				'option_id' => false,
 				'always_include'=>false,
 				'folder' => false,
@@ -239,11 +182,8 @@ function rsssl_integrations() {
 		if ( rsssl_is_integration_enabled( $plugin, $details ) ) {
 			$actual_integrations_count++;
 			$file = rsssl_path . 'security/' . $details['folder'] . "/" . $plugin . '.php';
-			$skip = true;
-			if ( isset( $details['conditions'] ) ) {
-				$skip = !rsssl_conditions_apply($details['conditions']);
-			}
-			if ( ! file_exists( $file ) || $skip ) {
+
+			if ( ! file_exists( $file ) ) {
 				continue;
 			}
 			require_once( $file );
