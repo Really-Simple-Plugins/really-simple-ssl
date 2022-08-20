@@ -51,14 +51,12 @@ class rsssl_firewall {
 	 *
 	 */
 	public function insert_advanced_header_file() {
-		error_log("run insert advanced header file");
 
 		if ( wp_doing_ajax() ) {
 			return;
 		}
 		$wpconfig_path = RSSSL()->really_simple_ssl->find_wp_config_path();
 		$wpconfig      = file_get_contents( $wpconfig_path );
-		error_log("start insert rules");
 
 		$dir  = ABSPATH . 'wp-content';
 		$file = $dir . '/advanced-headers.php';

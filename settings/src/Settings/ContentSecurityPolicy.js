@@ -46,7 +46,8 @@ class ContentSecurityPolicy extends Component {
         //look up permissions policy enable field //enable_permissions_policy
         let field = fields.filter(field => field.id === 'csp_enforce')[0];
         let learning_mode_field = fields.filter(field => field.id === 'csp_learning_mode')[0];
-        let learning_mode_completed_field = fields.filter(field => field.id === 'learning_mode_completed')[0];
+        console.log(fields);
+        let learning_mode_completed_field = fields.filter(field => field.id === 'csp_learning_mode_completed')[0];
         //disable learning mode if enforced
         if (enforce==1){
             learning_mode_field.value=0;
