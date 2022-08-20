@@ -124,12 +124,12 @@ $rsssl_integrations_list = apply_filters( 'rsssl_integrations', array(
 	),
 
 	'display-name-is-login-name' => array(
-		'label'                => __('Display name equals login name', 'really-simple-ssl'),
+		'label'                => __('Block user registration when login name equals display name', 'really-simple-ssl'),
 		'folder'               => 'wordpress',
 		'impact'               => 'low',
 		'risk'                 => 'medium',
 		'learning_mode'        => false,
-//		'option_id'            => '',
+		'option_id'            => 'block_registration_when_display_name_is_login_name',
 	),
 ) );
 
@@ -194,7 +194,7 @@ function rsssl_integrations() {
 			//check if already executed
 			if ( $risk === 'high' && $impact === 'low' && is_admin() ) {
 				$fix = isset($details['actions']['fix']) ? $details['actions']['fix']: false;
-				rsssl_do_fix($fix);
+//				rsssl_do_fix($fix);
 			}
 		}
 	}

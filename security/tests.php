@@ -110,14 +110,12 @@ function rsssl_http_methods_allowed()
  *
  * Check if DB has default wp_ prefix
  */
+
 function rsssl_is_default_wp_prefix() {
-
 	global $wpdb;
-
-	if ( $wpdb->prefix === 'wp_') {
+	if ( $wpdb->prefix === 'wp_' ) {
 		return true;
 	}
-
 	return false;
 }
 
@@ -126,17 +124,14 @@ function rsssl_is_default_wp_prefix() {
  *
  * Check if user admin exists
  */
+
 function rsssl_has_admin_user() {
-
 	global $wpdb;
-
 	$prepared = $wpdb->prepare("SELECT COUNT(*) FROM {$wpdb->prefix}users WHERE user_login = %s LIMIT 1", 'admin');
 	$count = $wpdb->get_var( $prepared );
-
 	if ( $count > 0 ) {
 		return true;
 	}
-
 	return false;
 }
 
@@ -145,6 +140,7 @@ function rsssl_has_admin_user() {
  *
  * Check if user ID 1 exists end if user enumeration has been disabled
  */
+
 function rsssl_id_one_no_enumeration() {
 	$user_id_one = get_user_by( 'id', 1 );
 	if ( $user_id_one && ! rsssl_get_option( 'disable_user_enumeration' ) ) {
@@ -155,12 +151,30 @@ function rsssl_id_one_no_enumeration() {
 }
 
 /**
- * Check if display name is the same as login
+ * Get users where display name is the same as login
+ *
+ * @param bool $return_users
+ *
+ * @return bool | array
+ *
  */
-function rsssl_display_name_equals_login() {
-	return false;
-	$user = wp_get_current_user();
-	if ( $user->data->user_login === $user->data->display_name ) {
+
+function rsssl_get_users_where_display_name_is_login( $return_users=false ) {
+	$found_users = [];
+	$args = array(
+		'role'    => 'administrator',
+	);
+	$users = get_users( $args );
+	foreach ( $users as $user ) {
+		if ($user->display_name === $user->user_login) {
+			$found_users[] = $user->user_login;
+		}
+	}
+
+	// Maybe return users in integration
+	if ( $return_users ) {
+		return $found_users;
+	} else if ( count($found_users)>0 ) {
 		return true;
 	}
 
@@ -169,15 +183,18 @@ function rsssl_display_name_equals_login() {
 
 /**
  * Check if debugging in WordPress is enabled
+ *
  * @return bool
  */
 function rsssl_is_debug_log_enabled() {
-	if ( defined('WP_DEBUG') && defined('WP_DEBUG_LOG') ) {
-		return true;
-	}
-
-	return false;
+	return ( defined('WP_DEBUG') && WP_DEBUG && defined('WP_DEBUG_LOG') && WP_DEBUG_LOG );
 }
+
+/**
+ * Get value of debug_log constant
+ *
+ * @return bool|string
+ */
 
 function rsssl_get_debug_log_value(){
 	return false;
@@ -196,9 +213,7 @@ function rsssl_get_debug_log_value(){
 		return 'true';
 	}
 }
-function rsssl_debugging_enabled(){
-	return defined('WP_DEBUG') && WP_DEBUG;
-}
+
 /**
  * Check if default.log is in default location
  * @return bool
@@ -218,28 +233,15 @@ function rsssl_debug_log_in_default_location() {
 */
 function rsssl_enabled_by_rsssl($option_name, $test){
 	$test_result = false;
-	if (function_exists($test)) {
+	if ( function_exists($test) ) {
 		$test_result = $test();
 	}
 
-	if ( $test_result && !rsssl_get_value('change_debug_log_location') ) {
+	if ( $test_result && !rsssl_get_value($option_name) ) {
 		return false;
 	} else {
 		return true;
 	}
-}
-
-/**
- * Check if WordPress version is above 5.6 for application password support
- * @return bool
- */
-function rsssl_wordpress_version_above_5_6() {
-	global $wp_version;
-	if ( $wp_version < 5.6 ) {
-		return false;
-	}
-
-	return true;
 }
 
 /**
@@ -310,7 +312,6 @@ function rsssl_directory_indexing_allowed() {
 
 			}
 		}
-
 		set_transient('rsssl_directory_indexing_status', $status, DAY_IN_SECONDS );
 	}
 

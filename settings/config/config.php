@@ -655,6 +655,15 @@ function rsssl_fields( $load_values = true ){
 			'default'     => 'disabled',
 		],
 
+        [
+			'id'          => 'block_registration_when_display_name_is_login_name',
+			'menu_id'     => 'hardening',
+			'type'        => 'checkbox',
+			'label'       => __( "Block user registration when login name equals display name", 'really-simple-ssl' ),
+			'disabled'    => false,
+			'default'     => false,
+		],
+
 		[
 			'id'          => 'mixedcontentscan',
 			'menu_id'     => 'mixed_content_scan',

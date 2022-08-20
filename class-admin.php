@@ -307,7 +307,6 @@ class rsssl_admin extends rsssl_front_end
 
 		    //upgrade both site and network settings
             $options = get_option( 'rlrsssl_options' );
-
             $autoreplace_insecure_links = isset( $options['autoreplace_insecure_links'] ) ? $options['autoreplace_insecure_links'] : true;
             unset($options['autoreplace_insecure_links']);
             rsssl_update_option('mixed_content_fixer', $autoreplace_insecure_links);
@@ -987,6 +986,7 @@ class rsssl_admin extends rsssl_front_end
         $this->review_notice_shown = rsssl_get_option('review_notice_shown');
         $this->site_has_ssl = rsssl_get_option('site_has_ssl');
         $this->redirect = rsssl_get_option('redirect');
+
     }
 
 	/**

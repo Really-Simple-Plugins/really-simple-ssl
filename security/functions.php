@@ -274,7 +274,6 @@ function rsssl_generate_random_string($length) {
 	return $randomString;
 }
 
-
 /**
  * Wrapper for admin user renamed but user enumeration enabled check
  * @return bool
@@ -291,6 +290,22 @@ function check_admin_user_renamed_and_enumeration_disabled() {
 }
 
 /**
+ * @return string
+ *
+ * Get users as string to display
+ */
+function rsssl_list_users_where_display_name_is_login_name() {
+	$users = rsssl_get_users_where_display_name_is_login( true );
+	if ( is_array( $users ) ) {
+		$ext  = count($users)>=10 ? $ext = '...' : '';
+		$users = array_slice($users, 0, 10);
+		return implode( ', ', $users ).$ext;
+	}
+
+	return '';
+}
+
+/**
  * Create a generic read more text with link for help texts.
  *
  * @param string $url
@@ -298,6 +313,7 @@ function check_admin_user_renamed_and_enumeration_disabled() {
  *
  * @return string
  */
+
 function rsssl_read_more( $url, $add_character = ' ' ) {
 	$html = sprintf( __( "For more information, please read this %sarticle%s",
 		'really-simple-ssl' ), '<a target="_blank" href="' . $url . '">',
