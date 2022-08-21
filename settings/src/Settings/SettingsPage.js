@@ -9,7 +9,7 @@ import sleeper from "../utils/sleeper.js";
 import {dispatch,} from '@wordpress/data';
 import {__} from '@wordpress/i18n';
 
-/**
+/*
  * Renders the settings page with Menu and currently selected settings
  *
  */
@@ -100,7 +100,6 @@ class SettingsPage extends Component {
 
     saveChangedFields(changedField){
         this.updateFieldsListWithConditions();
-
         let changedFields = this.changedFields;
         if (!in_array(changedField, changedFields)) {
             changedFields.push(changedField);
@@ -110,7 +109,6 @@ class SettingsPage extends Component {
             changedFields:changedFields,
         });
     }
-
 
     showSavedSettingsNotice(){
         const notice = dispatch('core/notices').createNotice(
@@ -125,7 +123,6 @@ class SettingsPage extends Component {
         ).then(sleeper(2000)).then(( response ) => {
             dispatch('core/notices').removeNotice('rsssl_settings_saved');
         });
-
     }
 
     save(){
@@ -155,8 +152,8 @@ class SettingsPage extends Component {
     }
 
     saveAndContinue() {
-        this.save()
         this.wizardNextPrevious(false);
+        this.save()
     }
 
     validateConditions(conditions, fields){

@@ -119,7 +119,7 @@ class rsssl_firewall_manager {
 	 */
 	public function notices( $notices ) {
 		$notices['firewall-error'] = array(
-			'callback' => 'RSSSL_SECURITY()->firewall->firewall_write_error',
+			'callback' => 'RSSSL_SECURITY()->firewall_manager->firewall_write_error',
 			'score' => 5,
 			'output' => array(
 				'wpconfig-notwritable' => array(

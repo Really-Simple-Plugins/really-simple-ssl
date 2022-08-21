@@ -105,7 +105,7 @@ class Page extends Component {
         });
     }
 
-    /**
+    /*
      * Update a field
      * @param field
      */
@@ -134,8 +134,8 @@ class Page extends Component {
         }
         this.highLightedField = fieldId;
     }
-    /**
-     * Get # anchor from URL
+    /*
+     * Get anchor from URL
      * @returns {string|boolean}
      */
     get_anchor = (level) => {

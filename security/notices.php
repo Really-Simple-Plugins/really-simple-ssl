@@ -65,7 +65,6 @@ function rsssl_general_security_notices( $notices ) {
 		'show_with_options' => [
 			'block_registration_when_display_name_is_login_name',
 		]
-
 	);
 	$notices['debug-log-notice'] = array(
 		'condition' => ['rsssl_is_debug_log_enabled', 'rsssl_debug_log_in_default_location'],
