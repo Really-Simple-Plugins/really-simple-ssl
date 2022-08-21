@@ -15,4 +15,4 @@ function rsssl_add_http_method_rules($rules){
 
 	return $rules;
 }
-add_filter('rsssl_firewall', 'rsssl_add_http_method_rules');
+add_filter('rsssl_firewall_rules', 'rsssl_add_http_method_rules');

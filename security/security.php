@@ -2,7 +2,7 @@
 class REALLY_SIMPLE_SECURITY
 {
 	private static $instance;
-	public $firewall;
+	public $firewall_manager;
 
 	private function __construct()
 	{
@@ -15,8 +15,8 @@ class REALLY_SIMPLE_SECURITY
 			self::$instance = new REALLY_SIMPLE_SECURITY;
 			self::$instance->includes();
 
-			if ( rsssl_is_logged_in_rest() || is_admin() || wp_doing_cron() || defined('RSSSL_DOING_CSP') ) {
-				self::$instance->firewall = new rsssl_firewall();
+			if ( rsssl_is_logged_in_rest() || is_admin() || wp_doing_cron() || defined('RSSSL_LEARNING_MODE') ) {
+				self::$instance->firewall_manager = new rsssl_firewall_manager();
 			}
 			self::$instance->hooks();
 		}
@@ -34,8 +34,8 @@ class REALLY_SIMPLE_SECURITY
 		/**
 		 * Load only on back-end
 		 */
-		if ( rsssl_is_logged_in_rest() || is_admin() || wp_doing_cron() || defined('RSSSL_DOING_CSP')  ) {
-			require_once( $path . 'firewall.php' );
+		if ( rsssl_is_logged_in_rest() || is_admin() || wp_doing_cron() || defined('RSSSL_LEARNING_MODE')  ) {
+			require_once( $path . 'firewall-manager.php' );
 			require_once( $path . 'tests.php' );
 			require_once( $path . 'notices.php' );
 			require_once( $path . 'sync-settings.php' );

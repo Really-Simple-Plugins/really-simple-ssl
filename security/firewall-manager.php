@@ -1,5 +1,5 @@
 <?php
-class rsssl_firewall {
+class rsssl_firewall_manager {
 	private static $_this;
 	public $cors_headers;
 
@@ -60,7 +60,7 @@ class rsssl_firewall {
 
 		$dir  = ABSPATH . 'wp-content';
 		$file = $dir . '/advanced-headers.php';
-		$rules    = apply_filters('rsssl_firewall', '');
+		$rules    = apply_filters('rsssl_firewall_rules', '');
 		//no rules? remove the file
 		if ( empty(trim($rules) ) ) {
 			if ( file_exists($file) ) {
