@@ -41,7 +41,9 @@ const OnboardingModal = () => {
             steps[1].visible = true;
             //change url to https, after final check
             if (response.data.success) {
-                //window.location.href=sslUrl;
+                //we need to ensure that the rest url is with the new protocol
+                rsssl_settings.site_url = rsssl_settings.site_url.replace("http://", "https://");
+                window.location.href=sslUrl;
             }
             setSteps(steps);
             setsslActivated(response.data.success);

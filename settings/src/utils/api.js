@@ -81,7 +81,8 @@ export const activateSSL = (data) => {
 }
 
 export const onboardingActions = (data) => {
-console.log(data);
+    console.log("rest url");
+    console.log(rsssl_settings.site_url);
 	let config = {
 		headers: {
 			'X-WP-Nonce': rsssl_settings.nonce,
