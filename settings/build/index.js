@@ -3970,6 +3970,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/components */ "@wordpress/components");
 /* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _utils_api__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./utils/api */ "./src/utils/api.js");
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__);
+
 
 
 
@@ -3980,18 +3983,26 @@ const OnboardingModal = () => {
   const [steps, setSteps] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)([]);
   const [overrideSSL, setOverrideSSL] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)(false);
   const [activateSSLDisabled, setActivateSSLDisabled] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)(true);
+  const [currentActionId, setcurrentActionId] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)('none');
+  const [currentActionStatus, setcurrentActionStatus] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)('none');
   (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
     _utils_api__WEBPACK_IMPORTED_MODULE_2__.getOnboarding().then(response => {
       let steps = response.data.steps;
       steps[0].visible = true;
       setSteps(steps);
+      setcurrentActionStatus('none');
       setShow(!response.data.dismissed);
     });
   }, []);
 
   const dismissModal = () => {
-    localStorage.setItem("showModal", false);
-    setShow(!show);
+    let data = {};
+    data.id = 'dismiss_onboarding_modal';
+    data.action = 'dismiss';
+    data.type = '';
+    _utils_api__WEBPACK_IMPORTED_MODULE_2__.onboardingActions(data).then(response => {
+      setShow(false);
+    });
   };
 
   const activateSSL = () => {
@@ -4009,41 +4020,87 @@ const OnboardingModal = () => {
     });
   };
 
-  const itemButtonHandler = (status, pluginSlug) => {//         if(status === "inactive") {
-    //             rsssl_api.installPlugin(pluginSlug).then((response) => {
-    //                 console.log(response)
-    //             }).catch((err) => { console.log(err) })
-    //         }
-    //
-    //         if(status === "warning") {
-    //             rsssl_api.activateRecommendedPlugin(pluginSlug).then((response) => {
-    //                 console.log(response)
-    //             })
-    //         }
+  const updateActionForItem = (findItem, newAction) => {
+    steps.forEach(function (step, i) {
+      step.items.forEach(function (item, j) {
+        if (item.id === findItem) {
+          steps[i].items[j].action = newAction;
+        }
+      });
+    });
+    setcurrentActionId(findItem);
+    setcurrentActionStatus(newAction);
+    setSteps(steps);
+  };
+
+  const itemButtonHandler = (id, type, action) => {
+    let data = {};
+    data.action = action;
+    data.id = id;
+    data.type = type;
+    updateActionForItem(id, action);
+    _utils_api__WEBPACK_IMPORTED_MODULE_2__.onboardingActions(data).then(response => {
+      if (response.data.success) {
+        let nextAction = response.data.next_action;
+        updateActionForItem(id, nextAction);
+
+        if (nextAction !== 'none') {
+          data.action = nextAction;
+          updateActionForItem(id, nextAction);
+          _utils_api__WEBPACK_IMPORTED_MODULE_2__.onboardingActions(data).then(response => {
+            nextAction = response.data.next_action;
+            updateActionForItem(id, nextAction);
+            data.action = 'none';
+            console.log(response);
+          });
+        }
+      }
+    });
   };
 
   const parseStepItems = items => {
     return items.map((item, index) => {
       const {
         title,
-        status,
+        action,
         help,
         button,
-        plugin_slug: pluginSlug
+        id,
+        type
       } = item;
       const statuses = {
-        'inactive': 'rsssl-inactive',
-        'warning': 'rsssl-warning',
+        'activate_plugin': 'rsssl-inactive',
+        'install_plugin': 'rsssl-inactive',
+        'activate': 'rsssl-warning',
         'error': 'rsssl-error',
-        'active': 'rsssl-success'
+        'none': 'rsssl-success'
       };
+      let buttonTitle = 'waiting...';
+
+      if (button) {
+        buttonTitle = button.title;
+
+        if (currentActionStatus !== 'none' && currentActionId === id) {
+          const currentActionStatuses = {
+            'activate_plugin': (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)('activating...', "really-simple-ssl"),
+            'install_plugin': (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)('installing...', "really-simple-ssl"),
+            'activate': '',
+            'error': '',
+            'none': (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)('finished', "really-simple-ssl")
+          };
+          buttonTitle = currentActionStatuses[currentActionStatus];
+        }
+      }
+
       return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("li", {
         key: index,
-        className: statuses[status]
+        className: statuses[action]
       }, title, " ", button && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, " - ", (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Button, {
         isLink: true,
-        onClick: () => itemButtonHandler(status, pluginSlug)
-      }, button.title)));
+        onClick: () => itemButtonHandler(id, type, action)
+      }, buttonTitle), currentActionStatus !== 'none' && currentActionId === id && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
+        className: "rsssl-loader"
+      }, "...")));
     });
   };
 
@@ -4135,8 +4192,6 @@ const OnboardingModal = () => {
         buttons,
         visible
       } = step;
-      console.log("step data " + index);
-      console.log(visible);
       return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
         className: "rsssl-modal-content-step",
         key: index,
@@ -6554,6 +6609,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "getBlock": () => (/* binding */ getBlock),
 /* harmony export */   "getFields": () => (/* binding */ getFields),
 /* harmony export */   "getOnboarding": () => (/* binding */ getOnboarding),
+/* harmony export */   "onboardingActions": () => (/* binding */ onboardingActions),
 /* harmony export */   "overrideSSLDetection": () => (/* binding */ overrideSSLDetection),
 /* harmony export */   "runTest": () => (/* binding */ runTest),
 /* harmony export */   "setFields": () => (/* binding */ setFields)
@@ -6636,6 +6692,15 @@ const activateSSL = data => {
     }
   };
   return axios__WEBPACK_IMPORTED_MODULE_0___default().post(rsssl_settings.site_url + 'reallysimplessl/v1/activate_ssl', data, config);
+};
+const onboardingActions = data => {
+  console.log(data);
+  let config = {
+    headers: {
+      'X-WP-Nonce': rsssl_settings.nonce
+    }
+  };
+  return axios__WEBPACK_IMPORTED_MODULE_0___default().post(rsssl_settings.site_url + 'reallysimplessl/v1/onboarding_actions', data, config);
 };
 
 /***/ }),

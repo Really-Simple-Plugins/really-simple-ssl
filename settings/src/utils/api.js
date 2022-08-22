@@ -79,3 +79,13 @@ export const activateSSL = (data) => {
 	}
 	return axios.post(rsssl_settings.site_url+'reallysimplessl/v1/activate_ssl', data, config );
 }
+
+export const onboardingActions = (data) => {
+console.log(data);
+	let config = {
+		headers: {
+			'X-WP-Nonce': rsssl_settings.nonce,
+		}
+	}
+	return axios.post(rsssl_settings.site_url+'reallysimplessl/v1/onboarding_actions', data, config );
+}

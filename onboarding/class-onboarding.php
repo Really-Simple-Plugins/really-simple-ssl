@@ -4,7 +4,14 @@ require_once(rsssl_path . 'class-installer.php');
 
 class rsssl_onboarding {
 	private static $_this;
-
+	private $hardening = [
+		'disable_file_editing',
+		'hide_wordpress_version',
+		'block_code_execution_uploads',
+		'disable_login_feedback',
+		'disable_user_enumeration',
+		'disable_indexing',
+	];
 
 	function __construct() {
 		if ( isset( self::$_this ) ) {
@@ -17,6 +24,20 @@ class rsssl_onboarding {
 
 	static function this() {
 		return self::$_this;
+	}
+
+	/**
+	 * Check if any of the recommended features has been disabled
+	 * @return bool
+	 */
+	public function all_recommended_hardening_features_enabled(){
+		foreach ($this->hardening as $h ){
+			if ( rsssl_get_option($h)!=1 ) {
+				error_log("$h not enabled");
+				return false;
+			}
+		}
+		return true;
 	}
 
 	public function onboarding_rest_route() {
@@ -41,6 +62,56 @@ class rsssl_onboarding {
 				return current_user_can( 'manage_options' );
 			}
 		) );
+		register_rest_route( 'reallysimplessl/v1', 'onboarding_actions', array(
+			'methods'  => 'POST',
+			'callback' => array( $this, 'onboarding_actions' ),
+			'permission_callback' => function () {
+				return current_user_can( 'manage_options' );
+			}
+
+		) );
+	}
+
+	/**
+	 * @param WP_REST_Request $request
+	 *
+	 * @return void
+	 */
+	public function onboarding_actions($request){
+		if (!current_user_can('manage_options')){
+			return;
+		}
+		$error = false;
+		$data = $request->get_json_params();
+		$next_action = 'none';
+
+		if ( $data['type']==='plugin') {
+			require_once(rsssl_path . 'class-installer.php');
+			$plugin = new rsssl_installer($data['id']);
+			if ( $data['action']==='install_plugin') {
+				$plugin->download_plugin();
+				$next_action = 'activate_plugin';
+			} else {
+				$plugin->activate_plugin();
+			}
+		} else if ($data['type']==='setting') {
+			if ( $data['id'] ==='hardening' ) {
+				foreach ($this->hardening as $h ){
+					rsssl_update_option($h, true);
+				}
+			}
+		} else if ( $data['id'] ==='dismiss_onboarding_modal'){
+			update_option("rsssl_onboarding_dismissed", true, false);
+		}
+		$output = [
+			'next_action' => $next_action,
+			'success' => !$error
+		];
+		$response = json_encode( $output );
+		header( "Content-Type: application/json" );
+		echo $response;
+		exit;
+
 	}
 
 	/**
@@ -61,21 +132,16 @@ class rsssl_onboarding {
 	 */
 
 	function show_notice_activate_ssl() {
-
-		if ( ! RSSSL()->really_simple_ssl->ssl_enabled ) {
+		$is_upgrade = get_option('rsssl_upgraded_to_6');
+		if ( RSSSL()->really_simple_ssl->ssl_enabled && !$is_upgrade ) {
 			return false;
 		}
+
 		if ( defined( "RSSSL_DISMISS_ACTIVATE_SSL_NOTICE" ) && RSSSL_DISMISS_ACTIVATE_SSL_NOTICE ) {
 			return false;
 		}
 
-		//for multisite, show only activate when a choice has been made to activate networkwide or per site.
-		if ( is_multisite() && ! RSSSL()->rsssl_multisite->selected_networkwide_or_per_site ) {
-			return false;
-		}
-
-		//on multisite, only show this message on the network admin. Per site activated sites have to go to the settings page.
-		//otherwise sites that do not need SSL possibly get to see this message.
+		//on multisite, only show this message on the network admin.
 		if ( is_multisite() && ! is_network_admin() ) {
 			return false;
 		}

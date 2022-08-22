@@ -8,10 +8,7 @@
  * @return array
  */
 function rsssl_rest_api_onboarding() {
-	$is_upgrade = false;//get_option('rsssl_upgraded_to_6');
-	$ssl_detected = RSSSL()->rsssl_certificate->is_valid();
-	$ssl_enabled = RSSSL()->really_simple_ssl->ssl_enabled;
-
+	$is_upgrade = true;//get_option('rsssl_upgraded_to_6');
 	// "warning", // yellow dot
 	// "error", // red dot
 	// "active" // green dot
@@ -57,39 +54,9 @@ function rsssl_rest_api_onboarding() {
 		"visible" => false
 	];
 
-
-	// Case when is not updated to 6.0 but SSL Detected & Activated
-	if( !$is_upgrade && $ssl_detected && $ssl_enabled ) {
-		$steps = [
-			[
-				"title" => __("Congratulations!", "really-simple-ssl"),
-				"subtitle" => __("Now have a look at our new features.", "really-simple-ssl"),
-				"items" => get_items_for_upgrade(),
-				"info_text" => __("Want to know more about our features and plugins? Please read this article."),
-				"buttons" => [
-					[
-						"title" => __('Go to Dashboard', 'really-simple-ssl'),
-						"variant" => "primary",
-						"disabled" => false,
-						"type" => "button",
-						"action" => "dismiss"
-					],
-					[
-						"title" => __('Dismiss', 'really-simple-ssl'),
-						"variant" => "secondary",
-						"disabled" => false,
-						"type" => "button",
-						"action" => "dismiss"
-					]
-				],
-				"visible" => true,
-			]
-		];
-	}
-
 	return [
 		"steps" => $steps,
-		"dismissed" => get_option("rsssl_onboarding_dismissed"),
+		"dismissed" => get_option("rsssl_onboarding_dismissed") || !RSSSL()->onboarding->show_notice_activate_ssl(),
 	];
 }
 
@@ -115,7 +82,6 @@ function rsssl_activate_plugin ($plugin_slug) {
 
 /**
  * Returns onboarding items if user upgraded plugin to 6.0 or SSL is detected
- * @param $ssl_detected
  * @return array
  */
 function get_items_for_upgrade () {
@@ -134,14 +100,17 @@ function get_items_for_upgrade () {
 
 	$items[] = [
 		"title" => __("SSL has been activated with Really Simple SSL", "really-simple-ssl"),
-		"status" => "active"
+		"action" => "none"
 	];
 
 	// TODO: hardening features are enabled
-	if("hardening features are disabled") {
+	$all_enabled = RSSSL()->onboarding->all_recommended_hardening_features_enabled();
+	if( !$all_enabled ) {
 		$items[] = [
 			"title" => __("Enable recommended hardening features in Really Simple SSL", "really-simple-ssl"),
-			"status" => "warning",
+			"id" => "hardening",
+			"action" => "activate",
+			"type" => "setting",
 			"button" => [
 				"title" => __("Enable", "really-simple-ssl"),
 			]
@@ -149,17 +118,21 @@ function get_items_for_upgrade () {
 	} else {
 		$items[] = [
 			"title" => __("Hardening features are enabled!", "really-simple-ssl"),
-			"status" => "active"
+			"type" => "setting",
+			"action" => "none",
+			"id" => "hardening",
 		];
 	}
 
 	foreach ($plugins_to_install as $plugin_info) {
+		require_once(rsssl_path . 'class-installer.php');
 		$plugin = new rsssl_installer($plugin_info["slug"]);
 		if(!$plugin->plugin_is_downloaded() && !$plugin->plugin_is_activated()){
 			$items[] = [
 				"title" => sprintf(__("Install our plugin %s", "really-simple-ssl"), $plugin_info["title"]),
-				"status" => "inactive",
-				"plugin_slug" => $plugin_info['slug'],
+				"action" => "install_plugin",
+				"type" => "plugin",
+				"id" => $plugin_info['slug'],
 				"button" => [
 					"title" => __("Install", "really-simple-ssl"),
 				]
@@ -168,11 +141,12 @@ function get_items_for_upgrade () {
 
 		if ($plugin->plugin_is_downloaded() && !$plugin->plugin_is_activated() ) {
 			$items[] = [
-				"title" => sprintf(__("Enable our plugin %s", "really-simple-ssl"), $plugin_info["title"]),
-				"status" => "warning",
-				"plugin_slug" => $plugin_info['slug'],
+				"title" => sprintf(__("Activate our plugin %s", "really-simple-ssl"), $plugin_info["title"]),
+				"action" => "activate_plugin",
+				"type" => "plugin",
+				"id" => $plugin_info['slug'],
 				"button" => [
-					"title" => __("Enable", "really-simple-ssl"),
+					"title" => __("Activate", "really-simple-ssl"),
 				]
 			];
 		}
@@ -180,7 +154,7 @@ function get_items_for_upgrade () {
 		if($plugin->plugin_is_downloaded() && $plugin->plugin_is_activated()) {
 			$items[] = [
 				"title" => sprintf(__("%s has been installed!", "really-simple-ssl"), $plugin_info["title"]),
-				"status" => "active"
+				"action" => "none"
 			];
 		}
 	}
