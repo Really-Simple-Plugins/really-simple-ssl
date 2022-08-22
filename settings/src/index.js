@@ -5,7 +5,7 @@ import Page from './Page';
 import OnboardingModal from "./OnboardingModal";
 
 /**
- * Initialize the whole thing
+ * Initialize
  */
 
 document.addEventListener( 'DOMContentLoaded', () => {

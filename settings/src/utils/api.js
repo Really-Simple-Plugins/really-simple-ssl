@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-/**
+/*
  * Makes a get request to the fields list
  *
  * @param {string|boolean} restBase - rest base for the query.
@@ -17,7 +17,7 @@ export const getFields = () => {
     return axios.get(rsssl_settings.site_url+'reallysimplessl/v1/fields/get', config);
 };
 
-/**
+/*
  * Post our data to the back-end
  * @param data
  * @returns {Promise<AxiosResponse<any>>}
@@ -58,30 +58,24 @@ export const getOnboarding = () => {
 			'X-WP-Nonce': rsssl_settings.nonce,
 		}
 	}
+	console.log("run get onboarding");
 	return axios.get(rsssl_settings.site_url+'reallysimplessl/v1/onboarding', config);
 }
 
+export const overrideSSLDetection = (data) => {
+	let config = {
+		headers: {
+			'X-WP-Nonce': rsssl_settings.nonce,
+		}
+	}
+	return axios.post(rsssl_settings.site_url+'reallysimplessl/v1/override_ssl_detection', data, config );
+};
 
-export const overrideSSLDetection = (override_ssl_checked) => {
-	const { ajax_url, ajax_nonce } = rsssl_settings;
-
-	let formData = new FormData();
-	formData.append("action", "update_ssl_detection_overridden_option")
-	formData.append("_ajax_nonce", ajax_nonce)
-	formData.append("security", ajax_nonce)
-	formData.append("override_ssl_checked", override_ssl_checked)
-
-	return axios.post(ajax_url, formData)
-}
-
-export const activateSSL = (rsssl_do_activate_ssl) => {
-	const { ajax_url, ajax_nonce } = rsssl_settings;
-
-	let formData = new FormData();
-	formData.append("action", "clicked_activate_ssl")
-	formData.append("_ajax_nonce", ajax_nonce)
-	formData.append("security", ajax_nonce)
-	formData.append("rsssl_do_activate_ssl", rsssl_do_activate_ssl)
-
-	return axios.post(ajax_url, formData)
+export const activateSSL = (data) => {
+	let config = {
+		headers: {
+			'X-WP-Nonce': rsssl_settings.nonce,
+		}
+	}
+	return axios.post(rsssl_settings.site_url+'reallysimplessl/v1/activate_ssl', data, config );
 }

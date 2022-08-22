@@ -254,7 +254,7 @@ if (!class_exists('rsssl_multisite')) {
             if ($this->ssl_enabled_networkwide) {
                 $site = get_blog_details($blog_id);
                 $this->switch_to_blog_bw_compatible($site);
-                RSSSL()->really_simple_ssl->activate_ssl();
+                RSSSL()->really_simple_ssl->activate_ssl(false);
                 restore_current_blog();
             }
         }
@@ -270,7 +270,7 @@ if (!class_exists('rsssl_multisite')) {
         {
             if ($this->ssl_enabled_networkwide) {
                 $this->switch_to_blog_bw_compatible($site);
-                RSSSL()->really_simple_ssl->activate_ssl();
+                RSSSL()->really_simple_ssl->activate_ssl(false);
                 restore_current_blog();
             }
         }
@@ -734,7 +734,7 @@ if (!class_exists('rsssl_multisite')) {
             } else {
                 foreach ($sites as $site) {
                     $this->switch_to_blog_bw_compatible($site);
-                    RSSSL()->really_simple_ssl->activate_ssl();
+                    RSSSL()->really_simple_ssl->activate_ssl(false);
                     restore_current_blog(); //switches back to previous blog, not current, so we have to do it each loop
                     update_site_option('rsssl_siteprocessing_progress', $current_offset+$nr_of_sites);
                 }

@@ -3,21 +3,18 @@ import { Button, ToggleControl } from '@wordpress/components';
 import * as rsssl_api from "./utils/api";
 
 const OnboardingModal = () => {
-    const [show, setShow] = useState(true);
+    const [show, setShow] = useState(false);
     const [steps, setSteps] = useState([]);
     const [overrideSSL, setOverrideSSL] = useState(false);
     const [activateSSLDisabled, setActivateSSLDisabled] = useState(true);
 
     useEffect(() => {
-        const showModal = localStorage.getItem("showModal");
-        const modalShow = showModal ? (showModal === 'true') : true;
-        setShow(modalShow)
-
-        if(modalShow) {
-            rsssl_api.getOnboarding().then( ( response ) => {
-                setSteps(response.data.steps)
-            });
-        }
+        rsssl_api.getOnboarding().then( ( response ) => {
+            let steps = response.data.steps;
+            steps[0].visible = true;
+            setSteps(steps);
+            setShow(!response.data.dismissed);
+        });
     }, [])
 
     const dismissModal = () => {
@@ -26,28 +23,31 @@ const OnboardingModal = () => {
     }
 
     const activateSSL = () => {
-        rsssl_api.activateSSL(true).then((response) => {
-            if(steps.length > 1) {
-                steps[0].visible = false;
-                steps[1].visible = true;
-                console.log(steps)
-                setSteps(steps);
+        let sslUrl = window.location.href.replace("http://", "https://");
+        rsssl_api.activateSSL().then((response) => {
+            steps[0].visible = false;
+            steps[1].visible = true;
+            setActivateSSLDisabled(true);
+            //change url to https, after final check
+            if (response.data.success) {
+                window.location.href=url;
             }
+            setSteps(steps);
         });
     }
 
     const itemButtonHandler = (status, pluginSlug) => {
-        if(status === "inactive") {
-            rsssl_api.installPlugin(pluginSlug).then((response) => {
-                console.log(response)
-            }).catch((err) => { console.log(err) })
-        }
-
-        if(status === "warning") {
-            rsssl_api.activateRecommendedPlugin(pluginSlug).then((response) => {
-                console.log(response)
-            })
-        }
+//         if(status === "inactive") {
+//             rsssl_api.installPlugin(pluginSlug).then((response) => {
+//                 console.log(response)
+//             }).catch((err) => { console.log(err) })
+//         }
+//
+//         if(status === "warning") {
+//             rsssl_api.activateRecommendedPlugin(pluginSlug).then((response) => {
+//                 console.log(response)
+//             })
+//         }
     }
 
     const parseStepItems = (items) => {
@@ -138,6 +138,8 @@ const OnboardingModal = () => {
                 {
                     steps.map((step, index) => {
                         const {title, subtitle, items, info_text: infoText, buttons, visible} = step;
+                        console.log("step data "+index);
+                        console.log(visible);
                         return (
                             <div className="rsssl-modal-content-step" key={index} style={{ display: visible ? 'block' : 'none' }}>
                                 {steps.length > 1 && <div>{index + 1}/{steps.length}</div>}
@@ -147,8 +149,6 @@ const OnboardingModal = () => {
                                     { parseStepItems(items) }
                                 </ul>
                                 { infoText && <div className="rsssl-modal-description" dangerouslySetInnerHTML={{__html: infoText}} /> }
-
-
                                 <div className="rsssl-modal-content-step-footer">
                                     {parseStepButtons(buttons)}
                                 </div>

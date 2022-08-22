@@ -39,12 +39,10 @@ function rsssl_plugin_admin_scripts() {
 			apply_filters('rsssl_localize_script',array(
 				'site_url' => get_rest_url(),
 				'plugin_url' => rsssl_url,
-                'ajax_url' => admin_url('admin-ajax.php'),
 				'blocks' => rsssl_blocks(),
 				'pro_plugin_active' => defined('rsssl_pro_version'),
 				'menu' => $menu,
 				'nonce' => wp_create_nonce( 'wp_rest' ),//to authenticate the logged in user
-                'ajax_nonce' => wp_create_nonce("really-simple-ssl"),
 				'rsssl_nonce' => wp_create_nonce( 'rsssl_save' ),
 			))
 	);
@@ -316,6 +314,7 @@ function rsssl_rest_api_fields_set($request){
  *
  * @return void
  */
+
 function rsssl_update_option( $name, $value ) {
 	if ( !current_user_can('manage_options') ) {
 		return;
@@ -373,8 +372,6 @@ function rsssl_rest_api_fields_get(){
 		 */
 		if ( isset($field['data_source']) ){
 			$data_source = $field['data_source'];
-            x_log($field);
-            error_log(print_r($data_source, true));
 			if (is_array($data_source)) {
 				$main = $data_source[0];
 				$class = $data_source[1];
@@ -651,16 +648,4 @@ function rsssl_sanitize_datatable( $value, $type, $field_name ){
         }
     }
     return $value;
-}
-
-function rsssl_rest_api_onboarding($request) {
-    if (!current_user_can('manage_options')) {
-        return;
-    }
-
-    $onboarding = rsssl_get_onboarding_fields();
-    $response = json_encode( $onboarding );
-    header( "Content-Type: application/json" );
-    echo $response;
-    exit;
 }

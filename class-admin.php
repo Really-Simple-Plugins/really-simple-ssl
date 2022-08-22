@@ -1,5 +1,5 @@
 <?php
-defined('ABSPATH') or die("you do not have access to this page!");
+defined('ABSPATH') or die();
 require_once(rsssl_path . 'class-installer.php');
 
 class rsssl_admin extends rsssl_front_end
@@ -41,15 +41,13 @@ class rsssl_admin extends rsssl_front_end
 	    add_action( 'admin_init', array($this, 'maybe_dismiss_review_notice') );
 	    add_action( 'admin_init', array($this, 'insert_secure_cookie_settings'), 70 );
         add_action( 'admin_init', array($this, 'recheck_certificate') );
-        add_action( 'wp_ajax_update_ssl_detection_overridden_option', array( $this, 'update_ssl_detection_overridden_option' ) );
-        add_action( 'wp_ajax_clicked_activate_ssl', array( $this, 'clicked_activate_ssl' ) );
 
         // Saved fields hook fired through REST settings save
 	    add_action( "rsssl_after_saved_fields", array( $this, "clear_transients" ), 10, 3 );
 	    add_action( "rsssl_after_saved_fields", array($this, "update_htaccess_after_settings_save"), 20, 3);
 
 	    // Only show deactivate popup when SSL has been enabled.
-	    if ($this->ssl_enabled) {
+	    if ( $this->ssl_enabled ) {
             add_action('admin_footer', array($this, 'deactivate_popup'), 40);
         }
     }
@@ -101,6 +99,7 @@ class rsssl_admin extends rsssl_front_end
      *
 	 * @return bool
 	 */
+
     public function is_bf(){
 	    if ( defined("rsssl_pro_version" ) ) {
             return false;
@@ -131,23 +130,6 @@ class rsssl_admin extends rsssl_front_end
 		    $this->save_options();
 	    }
     }
-
-	/**
-	 * Update SSL detection overridden option
-	 */
-
-	public function update_ssl_detection_overridden_option() {
-
-		if ( ! current_user_can( 'manage_options') ) return;
-
-		if ( isset( $_POST['action'] ) && $_POST['action'] === 'update_ssl_detection_overridden_option' ) {
-			if ( isset ( $_POST['override_ssl_checked'] ) && $_POST['override_ssl_checked'] !== false ) {
-				update_option('rsssl_ssl_detection_overridden', true, false );
-			}
-
-			wp_die();
-		}
-	}
 
     /**
      * Initializes the admin class
@@ -204,35 +186,26 @@ class rsssl_admin extends rsssl_front_end
         */
 
         //when configuration should run again
-        if ($this->clicked_activate_ssl() || !$this->ssl_enabled || !$this->site_has_ssl || $is_on_settings_page || is_network_admin() || defined('RSSSL_DOING_SYSTEM_STATUS') ) {
+        if ( !$this->ssl_enabled || !$this->site_has_ssl || $is_on_settings_page || is_network_admin() || defined('RSSSL_DOING_SYSTEM_STATUS') ) {
             $this->detect_configuration();
-	        if (is_multisite()) $this->build_domain_list();//has to come after clicked_activate_ssl, otherwise this domain won't get counted.
+	        if (is_multisite()) $this->build_domain_list();//has to come after clicked activate_ssl, otherwise this domain won't get counted.
 
-            //flush caches when just activated ssl
-            //flush the permalinks
-            if ($this->clicked_activate_ssl()) {
-	            if (!defined('RSSSL_NO_FLUSH') || !RSSSL_NO_FLUSH) {
-                    update_option('rsssl_flush_rewrite_rules', time(), false );
-                }
-	            update_option('rsssl_flush_caches', time(), false );
-            }
             if (!$this->wpconfig_ok()) {
                 //if we were to activate ssl, this could result in a redirect loop. So warn first.
                 add_action("admin_notices", array($this, 'show_notice_wpconfig_needs_fixes'));
                 if (is_multisite()) add_action('network_admin_notices', array($this, 'show_notice_wpconfig_needs_fixes'), 10);
                 $this->ssl_enabled = false;
                 $this->save_options();
-            } elseif ($this->ssl_enabled) {
-                add_action('admin_init', array($this, 'configure_ssl'), 20);
+            } else {
+	            //when one of the used server variables was found, test if the redirect works
+	            if (RSSSL()->rsssl_server->uses_htaccess() && $this->ssl_type != "NA") {
+		            $this->test_htaccess_redirect();
+	            }
             }
         }
 
         add_action( 'admin_init', array( $this, 'check_upgrade' ), 10, 2 );
 
-        //when SSL is enabled, and not enabled by user, ask for activation.
-        add_action("admin_notices", array($this, 'show_notice_activate_ssl'), 10 );
-        add_action('rsssl_activation_notice', array($this, 'ssl_detected'), 10);
-        add_action('rsssl_activation_notice_inner', array($this, 'almost_ready_to_migrate'), 30);
         add_action('rsssl_activation_notice_footer', array($this, 'show_enable_ssl_button'), 50);
 
         //add the settings page for the plugin
@@ -457,24 +430,6 @@ class rsssl_admin extends rsssl_front_end
         }
     }
 
-
-    /**
-     *   checks if the user just clicked the "activate SSL" button.
-    */
-
-    private function clicked_activate_ssl()
-    {
-       if (!current_user_can($this->capability)) return;
-       if (isset($_POST['rsssl_do_activate_ssl'])) {
-            $this->activate_ssl();
-            update_option('rsssl_activation_timestamp', time(), false );
-
-            return true;
-        }
-
-        return false;
-    }
-
 	/**
      * If the user has clicked "recheck certificate, clear the cache for the certificate check.
 	 * @return void
@@ -487,19 +442,65 @@ class rsssl_admin extends rsssl_front_end
         }
     }
 
-
 	/**
 	 *  Activate the SSL for this site
 	 */
 
-    public function activate_ssl()
+    public function activate_ssl($is_ajax_request=true)
     {
-        error_log("activate ssl");
-        $this->ssl_enabled = true;
-        rsssl_update_option('redirect', 'wp_redirect');
-        $this->set_siteurl_to_ssl();
-        error_log("save options");
-        $this->save_options();
+	    error_log("activate SSL");
+
+	    if ( !current_user_can('manage_options') ) {
+		    return;
+	    }
+	    $safe_mode = defined('RSSSL_SAFE_MODE') && RSSSL_SAFE_MODE;
+        $error = false;
+
+        if ( $this->site_has_ssl || get_option('rsssl_ssl_detection_overridden') ){
+
+	        //in a configuration reverse proxy without a set server variable https, add code to wpconfig
+	        if ( $this->do_wpconfig_loadbalancer_fix ) {
+		        $this->wpconfig_loadbalancer_fix();
+	        }
+
+	        if ( $this->no_server_variable ){
+		        $this->wpconfig_server_variable_fix();
+	        }
+
+	        if ( !$safe_mode ) {
+		        $this->editHtaccess();
+	        }
+
+	        if ( !$safe_mode && $this->wpconfig_siteurl_not_fixed ){
+		        $this->fix_siteurl_defines_in_wpconfig();
+	        }
+
+	        if ( !$safe_mode ) {
+		        //flush caches when just activated ssl
+		        //flush the permalinks
+		        update_option('rsssl_activation_timestamp', time(), false );
+		        if (!defined('RSSSL_NO_FLUSH') || !RSSSL_NO_FLUSH) {
+			        update_option('rsssl_flush_rewrite_rules', time(), false );
+		        }
+		        update_option('rsssl_flush_caches', time(), false );
+		        rsssl_update_option('redirect', 'wp_redirect');
+	        }
+	        $this->ssl_enabled = true;
+	        rsssl_update_option('ssl_enabled', true);
+	        $this->set_siteurl_to_ssl();
+	        wp_set_auth_cookie(get_current_user_id(), false, true);
+
+        } else {
+	        $error = true;
+        }
+
+        if ( $is_ajax_request ) {
+	        $output = ['success' => !$error];
+	        $response = json_encode( $output );
+	        header( "Content-Type: application/json" );
+	        echo $response;
+	        exit;
+        }
     }
 
 	/**
@@ -546,88 +547,8 @@ class rsssl_admin extends rsssl_front_end
         return apply_filters('rsssl_wpconfig_ok_check', $result);
     }
 
-    /**
-      This message is shown when SSL is not enabled by the user yet
-      */
 
-    public function show_notice_activate_ssl()
-    {
-        //prevent showing the review on edit screen, as gutenberg removes the class which makes it editable.
-        $screen = get_current_screen();
-	    if ( $screen->base === 'post' ) return;
 
-        if ($this->ssl_enabled) return;
-
-        if (defined("RSSSL_DISMISS_ACTIVATE_SSL_NOTICE") && RSSSL_DISMISS_ACTIVATE_SSL_NOTICE) return;
-
-        //for multisite, show only activate when a choice has been made to activate networkwide or per site.
-        if (is_multisite() && !RSSSL()->rsssl_multisite->selected_networkwide_or_per_site) return;
-
-        //on multisite, only show this message on the network admin. Per site activated sites have to go to the settings page.
-        //otherwise sites that do not need SSL possibly get to see this message.
-        if (is_multisite() && !is_network_admin()) return;
-
-        //don't show in our Let's Encrypt wizard
-        if (isset($_GET['tab']) && $_GET['tab']==='letsencrypt') return;
-
-        if (!$this->wpconfig_ok()) return;
-
-        if (!current_user_can($this->capability)) return;
-
-        do_action('rsssl_activation_notice');
-
-    }
-
-	/**
-	 *  Show a notice that the website is ready to migrate to SSL.
-	 */
-
-    public function ssl_detected()
-    {
-        ob_start();
-        do_action('rsssl_activation_notice_inner');
-        $content = ob_get_clean();
-
-        ob_start();
-        do_action('rsssl_activation_notice_footer');
-        $footer = ob_get_clean();
-
-        $class = apply_filters("rsssl_activation_notice_classes", "updated activate-ssl rsssl-pro-dismiss-notice");
-        $title = __("Almost ready to migrate to SSL!", "really-simple-ssl");
-        echo $this->notice_html( $class, $title, $content, $footer);
-    }
-
-	/**
-	 * Show almost ready to migrate notice
-	 */
-	public function almost_ready_to_migrate()
-	{
-		_e("Before you migrate, please check for: ", 'really-simple-ssl'); ?>
-        <ul>
-            <li><?php _e('Http references in your .css and .js files: change any http:// into https://', 'really-simple-ssl'); ?></li>
-            <li><?php _e('Images, stylesheets or scripts from a domain without an SSL certificate: remove them or move to your own server', 'really-simple-ssl'); ?></li>
-            <li><?php _e("You may need to login in again.", "really-simple-ssl") ?></li>
-            <?php
-            if (RSSSL()->rsssl_certificate->is_valid()) { ?>
-                <li class="rsssl-success"><?php _e("An SSL certificate has been detected", "really-simple-ssl") ?></li>
-            <?php } else if ( !function_exists('stream_context_get_params') || RSSSL()->rsssl_certificate->detection_failed() ) { ?>
-                <li class="rsssl-error">
-                    <?php _e("Could not test certificate.", "really-simple-ssl") ?>&nbsp;<?php _e("Automatic certificate detection is not possible on your server.", "really-simple-ssl") ?>
-		            <?php RSSSL()->rsssl_help->get_help_tip(__("If you’re certain an SSL certificate is present, please check “Override SSL detection” to continue activating SSL.", "really-simple-ssl"), false, true );?>
-                </li>
-            <?php } else { ?>
-                <li class="rsssl-error"><?php _e("No SSL certificate has been detected.", "really-simple-ssl") ?>&nbsp;
-                    <?php printf(__("Please %srefresh detection%s if a certificate has been installed recently.", "really-simple-ssl"), '<a href="'.add_query_arg(array('page'=>'rlrsssl_really_simple_ssl', 'rsssl_recheck_certificate'=>1), admin_url('options-general.php')).'">', '</a>') ?>
-	                <?php RSSSL()->rsssl_help->get_help_tip(__("This detection method is not 100% accurate.", "really-simple-ssl")." ".__("If you’re certain an SSL certificate is present, please check “Override SSL detection” to continue activating SSL.", "really-simple-ssl"), false, true );?>
-                </li>
-            <?php } ?>
-        </ul>
-        <?php if ( !defined('rsssl_pro_version') ) { ?>
-            <?php _e('You can also let the automatic scan of the pro version handle this for you, and get premium support, increased security with HSTS and more!', 'really-simple-ssl'); ?>
-            <a target="_blank" href="<?php echo $this->pro_url; ?>"><?php _e("Check out Really Simple SSL Pro", "really-simple-ssl");?></a>
-        <?php } ?>
-		<?php
-	}
 
 
 	/**
@@ -863,68 +784,6 @@ class rsssl_admin extends rsssl_front_end
 		return $content;
 	}
 
-
-    /**
-     * @since 2.3
-     * Returns button to enable SSL.
-     * @access public
-     */
-
-	public function show_enable_ssl_button()
-	{
-	    $certificate_valid = RSSSL()->rsssl_certificate->is_valid();
-	    $activate_btn_disabled = !$certificate_valid ? 'disabled' : '';
-		$test_url = 'https://www.ssllabs.com/ssltest/analyze.html?d='.home_url();
-
-        if ( !$certificate_valid ) {
-	        $ajax_nonce = wp_create_nonce("really-simple-ssl");
-            ?>
-            <script type="text/javascript">
-                jQuery(document).ready(function ($) {
-                    var checked;
-                    $(document).on('click', '#rsssl_override_ssl_detection', function() {
-                        if ( $(this).is(":checked") ) {
-                            $('#rsssl_do_activate_ssl').removeAttr('disabled');
-                            checked = true;
-                        } else {
-                            $('#rsssl_do_activate_ssl').attr('disabled', 'disabled');
-                            checked = false;
-                        }
-
-                        // Ajax update option
-                        var data = {
-                            'action': 'update_ssl_detection_overridden_option',
-                            'override_ssl_checked' : checked,
-                            'security': '<?php echo $ajax_nonce; ?>'
-                        };
-
-                        $.post(ajaxurl, data, function (response) {});
-
-                    });
-                });
-            </script>
-        <?php } ?>
-
-        <form action="" method="post">
-			<?php wp_nonce_field('rsssl_nonce', 'rsssl_nonce'); ?>
-            <input <?php echo $activate_btn_disabled?> type="submit" class='button button-primary'
-                   value="<?php _e("Activate SSL", "really-simple-ssl"); ?>" id="rsssl_do_activate_ssl"
-                   name="rsssl_do_activate_ssl">
-	        <?php if (!defined("rsssl_pro_version") ) { ?>
-                <a class="button button-default" href="<?php echo $this->pro_url ?>" target="_blank"><?php _e("Get ready with PRO!", "really-simple-ssl"); ?></a>
-	        <?php } ?>
-	        <?php if ( !$certificate_valid ){?>
-                <a href="<?php echo rsssl_letsencrypt_wizard_url()?>" type="submit" class="button button-default"><?php _e("Install SSL certificate", "really-simple-ssl"); ?></a>
-                <label for="rsssl_override_ssl_detection">
-                    <input type="checkbox" value="1" id="rsssl_override_ssl_detection" name="rsssl_override_ssl_detection">
-                    <span><?php printf(__("Override SSL detection if %smanual check%s clears.", "really-simple-ssl"), '<a target="_blank" href="'.$test_url.'">', '</a>')?></span>
-                </label>
-            <?php } ?>
-        </form>
-		<?php
-	}
-
-
     /**
      * @return bool
      *
@@ -1030,60 +889,6 @@ class rsssl_admin extends rsssl_front_end
 			set_transient('rsssl_domain_list', $this->sites, HOUR_IN_SECONDS);
 		}
 	}
-
-
-	/**
-     * Configures the site for SSL
-     *
-     * @since  2.2
-     *
-     * @access public
-     *
-     */
-
-    public function configure_ssl()
-    {
-        if ( !current_user_can($this->capability) ) {
-            return;
-        }
-
-	    $safe_mode = defined('RSSSL_SAFE_MODE') && RSSSL_SAFE_MODE;
-
-        if ( $this->site_has_ssl ) {
-            //when one of the used server variables was found, test if the redirect works
-            if (RSSSL()->rsssl_server->uses_htaccess() && $this->ssl_type != "NA") {
-                $this->test_htaccess_redirect();
-            }
-
-            //in a configuration reverse proxy without a set server variable https, add code to wpconfig
-            if ( $this->do_wpconfig_loadbalancer_fix ) {
-                $this->wpconfig_loadbalancer_fix();
-            }
-
-            if ( $this->no_server_variable )
-                $this->wpconfig_server_variable_fix();
-
-            if ( !$safe_mode ) {
-                $this->editHtaccess();
-            }
-
-            if ( !$safe_mode && $this->clicked_activate_ssl() ) {
-                $this->wp_redirect = TRUE;
-                $this->save_options();
-            }
-
-            if ( !$safe_mode && $this->wpconfig_siteurl_not_fixed )
-                $this->fix_siteurl_defines_in_wpconfig();
-
-            if ( !$safe_mode ) {
-                $this->set_siteurl_to_ssl();
-            }
-
-	        if ( !is_multisite() ) {
-		        $this->redirect_to_settings_page();
-	        }
-        }
-    }
 
     /**
      * Check to see if we are on the settings page, action hook independent
@@ -2091,7 +1896,7 @@ class rsssl_admin extends rsssl_front_end
         if (!$this->htaccess_contains_redirect_rules()) {
             if ( !is_writable($htaccess_file) ) {
                 //set the wp redirect as fallback, because .htaccess couldn't be edited.
-                if ($this->clicked_activate_ssl()) {
+                if ( $this->ssl_enabled ) {
                     $this->wp_redirect = true;
                 }
                 if (is_multisite()) {
@@ -2645,7 +2450,7 @@ class rsssl_admin extends rsssl_front_end
 	    $cache_admin_notices = !$this->is_settings_page() && $args['admin_notices'];
 
 	    //if we're on the settings page, we need to clear the admin notices transient, because this list never gets requested on the settings page, and won'd get cleared otherwise
-	    if ($this->clicked_activate_ssl() || $this->is_settings_page() || isset($_GET['ssl_reload_https']) ) {
+	    if ($this->ssl_enabled || $this->is_settings_page() || isset($_GET['ssl_reload_https']) ) {
 	        delete_transient('rsssl_admin_notices');
 	    }
 	    if ( $cache_admin_notices) {
