@@ -2235,7 +2235,7 @@ class rsssl_admin extends rsssl_front_end
      *
      */
 
-    public function editHtaccess( $on_wp_rocket_hook=false )
+    public function editHtaccess()
     {
 
         if (!rsssl_user_can_manage()) return;
@@ -2302,7 +2302,7 @@ class rsssl_admin extends rsssl_front_end
     public function add_htaccess_redirect_before_wp_rocket() {
 
         $this->detect_configuration();
-        return $this->get_redirect_rules( true );
+        return $this->get_redirect_rules();
 
     }
 
