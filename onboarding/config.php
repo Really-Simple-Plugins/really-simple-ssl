@@ -8,7 +8,7 @@
  * @return array
  */
 function rsssl_rest_api_onboarding() {
-	$is_upgrade = true;//get_option('rsssl_upgraded_to_6');
+	$is_upgrade = get_option('rsssl_upgraded_to_6');
 	// "warning", // yellow dot
 	// "error", // red dot
 	// "active" // green dot
@@ -19,13 +19,13 @@ function rsssl_rest_api_onboarding() {
 		$info = __('You can also let the automatic scan of the pro version handle this for you, and get premium support, increased security with HSTS and more!', 'really-simple-ssl'). " " . sprintf('<a target="_blank" href="%s">%s</a>', RSSSL()->really_simple_ssl->pro_url, __("Check out Really Simple SSL Pro", "really-simple-ssl"));;
 	}
 
-	if ( !$is_upgrade ) {
+	if ( !$is_upgrade && !rsssl_get_option('ssl_enabled') ) {
 		$steps[] = [
 			"title" => __( "Almost ready to migrate to SSL!", 'really-simple-ssl' ),
 			"subtitle" => __("Before you migrate, please check for:", "really-simple-ssl"),
-			"items" => get_items_for_new_installs(),
+			"items" => get_items_for_first_step(),
 			"info_text" => $info,
-			"buttons" => get_buttons_for_new_installs(),
+			"buttons" => get_buttons(),
 			"visible" => false
 		];
 	}
@@ -33,8 +33,8 @@ function rsssl_rest_api_onboarding() {
 	$steps[] = [
 		"title" => $is_upgrade ? __( "Thanks for updating!", 'really-simple-ssl' ) : __( "Congratulations!", 'really-simple-ssl' ),
 		"subtitle" => __("Now have a look at our new features", "really-simple-ssl"),
-		"items" => get_items_for_upgrade(),
-		"info_text" => __("Want to know more about our features and plugins? Please read this article.", 'really-simple-ssl'),
+		"items" => get_items_for_second_step(),
+		"info_text" => __("Want to know more about our features and plugins?", "really-simple-ssl").' '.sprintf(__("Please read this %sarticle%s.", 'really-simple-ssl'), '<a target="_blank" href="https://really-simple-ssl.com">', '</a>'),
 		"buttons" => [
 			[
 				"title" => __('Go to Dashboard', 'really-simple-ssl'),
@@ -56,7 +56,8 @@ function rsssl_rest_api_onboarding() {
 
 	return [
 		"steps" => $steps,
-		"dismissed" => get_option("rsssl_onboarding_dismissed") || !RSSSL()->onboarding->show_notice_activate_ssl(),
+		"ssl_enabled" => rsssl_get_option("ssl_enabled"),
+		"dismissed" => false,//get_option("rsssl_onboarding_dismissed") || !RSSSL()->onboarding->show_notice_activate_ssl(),
 	];
 }
 
@@ -64,7 +65,7 @@ function rsssl_rest_api_onboarding() {
  * Returns onboarding items if user upgraded plugin to 6.0 or SSL is detected
  * @return array
  */
-function get_items_for_upgrade () {
+function get_items_for_second_step () {
 	$plugins_to_install = [
 		[
 			"slug" => "burst-statistics",
@@ -152,18 +153,19 @@ function get_items_for_upgrade () {
  * @param $ssl_detected
  * @return array[]
  */
-function get_buttons_for_new_installs () {
+function get_buttons () {
 
+	$has_valid_cert = RSSSL()->rsssl_certificate->is_valid();
 	$buttons = [];
 	$buttons[] = [
 		"title" => __("Activate SSL", "really-simple-ssl"),
 		"variant" => "primary",
-		"disabled" => true,
+		"disabled" => !$has_valid_cert,
 		"type" => "button",
 		"action" => "activate_ssl",
 	];
 
-	if( !defined('rsssl_pro_version') ) {
+	if( $has_valid_cert && !defined('rsssl_pro_version') ) {
 		$buttons[] = [
 			"title" => __("Improve Security with PRO", "really-simple-ssl"),
 			"variant" => "secondary",
@@ -174,7 +176,7 @@ function get_buttons_for_new_installs () {
 		];
 	}
 
-	//if ( !RSSSL()->rsssl_certificate->is_valid()) {
+	if ( !$has_valid_cert ) {
 		$buttons[] = [
 			"title" => __("Install SSL", "really-simple-ssl"),
 			"variant" => "secondary",
@@ -189,7 +191,7 @@ function get_buttons_for_new_installs () {
 			"disabled" => false,
 			"type" => "checkbox",
 		];
-	//}
+	}
 
 	return $buttons;
 }
@@ -199,7 +201,7 @@ function get_buttons_for_new_installs () {
  * @param $ssl_detected
  * @return array[]
  */
-function get_items_for_new_installs () {
+function get_items_for_first_step () {
 	$items = [
 		[
 			"title" => __("Http references in your .css and .js files: change any http:// into https://", "really-simple-ssl"),
@@ -209,16 +211,16 @@ function get_items_for_new_installs () {
 			"title" => __("Images, stylesheets or scripts from a domain without an SSL certificate: remove them or move to your own server.", "really-simple-ssl"),
 			"status" => "warning",
 		],
-		[
-			"title" => __("You may need to login in again.", "really-simple-ssl"),
-			"status" => "warning",
-		],
+//		[
+//			"title" => __("You may need to login in again.", "really-simple-ssl"),
+//			"status" => "warning",
+//		],
 	];
 
 	if (RSSSL()->rsssl_certificate->is_valid()) {
 		$items[] = [
 			"title" => __("An SSL certificate has been detected", "really-simple-ssl"),
-			"status" => "active"
+			"status" => "success"
 		];
 	} else if ( RSSSL()->rsssl_certificate->detection_failed() ) {
 		$items[] = [

@@ -7,6 +7,7 @@ const OnboardingModal = () => {
     const [show, setShow] = useState(false);
     const [steps, setSteps] = useState([]);
     const [overrideSSL, setOverrideSSL] = useState(false);
+    const [sslActivated, setsslActivated] = useState(false);
     const [activateSSLDisabled, setActivateSSLDisabled] = useState(true);
     const [currentActionId, setcurrentActionId] = useState('none');
     const [currentAction, setcurrentAction] = useState('none');
@@ -16,6 +17,7 @@ const OnboardingModal = () => {
         rsssl_api.getOnboarding().then( ( response ) => {
             let steps = response.data.steps;
             steps[0].visible = true;
+            setsslActivated(response.data.ssl_enabled);
             setSteps(steps);
             setShow(!response.data.dismissed);
         });
@@ -32,16 +34,18 @@ const OnboardingModal = () => {
     }
 
     const activateSSL = () => {
+        console.log("clicked activate SSL");
         let sslUrl = window.location.href.replace("http://", "https://");
         rsssl_api.activateSSL().then((response) => {
             steps[0].visible = false;
             steps[1].visible = true;
-            setActivateSSLDisabled(true);
             //change url to https, after final check
             if (response.data.success) {
-                window.location.href=url;
+                //window.location.href=sslUrl;
             }
             setSteps(steps);
+            setsslActivated(response.data.success);
+            window.location.reload();
         });
     }
 
@@ -64,14 +68,15 @@ const OnboardingModal = () => {
         data.id = id;
         data.type = type;
         updateActionForItem(id, action);
-        rsssl_api.onboardingActions(data).then(( response ) => {
+        rsssl_api.onboardingActions(data).then( ( response ) => {
+
             if ( response.data.success ){
                 let nextAction = response.data.next_action;
                 updateActionForItem(id, nextAction );
                 if (nextAction!=='none') {
                     data.action = nextAction;
                     updateActionForItem(id, nextAction );
-                    rsssl_api.onboardingActions(data).then(( response ) => {
+                    rsssl_api.onboardingActions(data).then( ( response ) => {
                         if ( response.data.success ){
                             updateActionForItem(id, response.data.next_action );
                             setcurrentStatus('success');
@@ -79,7 +84,9 @@ const OnboardingModal = () => {
                             updateActionForItem(id, 'failed' );
                             setcurrentStatus('error');
                         }
-                    });
+                    }).catch(error => {
+                        setcurrentStatus('error');
+                    })
                 } else {
                     updateActionForItem(id, 'failed' );
                     setcurrentStatus('success');
@@ -87,6 +94,8 @@ const OnboardingModal = () => {
             } else {
                 setcurrentStatus('error');
             }
+        }).catch(error => {
+            setcurrentStatus('error');
         });
     }
 
@@ -109,23 +118,26 @@ const OnboardingModal = () => {
                             'activate_plugin': __('activating...',"really-simple-ssl"),
                             'install_plugin': __('installing...',"really-simple-ssl"),
                             'error': __('failed',"really-simple-ssl"),
-                            'none': __('finished',"really-simple-ssl"),
+                            'completed': __('finished',"really-simple-ssl"),
                         };
                         buttonTitle = currentActions[currentAction];
                         if (status==='error') {
                             buttonTitle = currentActions['error'];
                         }
                     }
-
                 }
             }
-            console.log(id);
-            console.log(status);
-            console.log(currentAction);
             return (
                 <li key={index} className={statuses[status]}>
                     {title} {button && <> - <Button isLink={true} onClick={() => itemButtonHandler(id, type, action)}>{buttonTitle}</Button>
-                        {currentAction!=='none' && currentActionId===id && <span className="rsssl-loader">...</span>}
+                    {currentAction!=='none' && currentAction!=='completed' && status!=='error' && currentActionId===id &&
+                        <div className="rsssl-loader">
+                            <div className="rect1" key="1"></div>
+                            <div className="rect2" key="2"></div>
+                            <div className="rect3" key="3"></div>
+                            <div className="rect4" key="4"></div>
+                            <div className="rect5" key="5"></div>
+                        </div>}
                     </>}
                 </li>
             )

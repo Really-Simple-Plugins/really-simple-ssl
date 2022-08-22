@@ -40,7 +40,9 @@ if (!function_exists('rsssl_activation_check')) {
 			deactivate_plugins(plugin_basename(__FILE__));
 			wp_die(__('Really Simple SSL cannot be activated. The plugin requires WordPress 4.8 or higher', 'really-simple-ssl'));
 		}
-	}
+
+        set_transient('rsssl_redirect_to_settings_page', true, HOUR_IN_SECONDS );
+    }
 	register_activation_hook( __FILE__, 'rsssl_activation_check' );
 }
 

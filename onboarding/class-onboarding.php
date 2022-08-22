@@ -20,10 +20,26 @@ class rsssl_onboarding {
 
 		self::$_this = $this;
 		add_action( 'rest_api_init', array($this, 'onboarding_rest_route'), 10 );
+		add_action( 'admin_init', array( $this, 'maybe_redirect_to_settings_page'), 40);
 	}
 
 	static function this() {
 		return self::$_this;
+	}
+
+	public function maybe_redirect_to_settings_page() {
+		if ( get_transient('rsssl_redirect_to_settings_page' ) ) {
+			delete_transient('rsssl_redirect_to_settings_page' );
+			if ( !RSSSL()->really_simple_ssl->is_settings_page() ) {
+				if ( is_multisite() && is_super_admin() ) {
+					wp_redirect( add_query_arg(array('page' => 'really-simple-ssl'), network_admin_url('settings.php') )  );
+					exit;
+				} else {
+					wp_redirect( add_query_arg(array('page'=>'rlrsssl_really_simple_ssl#dashboard'), admin_url('options-general.php') ) );
+					exit;
+				}
+			}
+		}
 	}
 
 	/**
@@ -33,7 +49,6 @@ class rsssl_onboarding {
 	public function all_recommended_hardening_features_enabled(){
 		foreach ($this->hardening as $h ){
 			if ( rsssl_get_option($h)!=1 ) {
-				error_log("$h not enabled");
 				return false;
 			}
 		}
@@ -95,12 +110,14 @@ class rsssl_onboarding {
 			} else {
 				$success = $plugin->activate_plugin();
 				$error = !$success;
+				$next_action = 'completed';
 			}
 		} else if ($data['type']==='setting') {
 			if ( $data['id'] ==='hardening' ) {
 				foreach ($this->hardening as $h ){
 					rsssl_update_option($h, true);
 				}
+				$next_action = 'completed';
 			}
 		} else if ( $data['id'] ==='dismiss_onboarding_modal'){
 			update_option("rsssl_onboarding_dismissed", true, false);
@@ -125,7 +142,7 @@ class rsssl_onboarding {
 			return;
 		}
 
-		update_option('rsssl_ssl_detection_overridden', false, false );
+		update_option('rsssl_ssl_detection_overridden', true, false );
 		exit;
 	}
 
@@ -134,6 +151,7 @@ class rsssl_onboarding {
 	 */
 
 	function show_notice_activate_ssl() {
+		return true;
 		$is_upgrade = get_option('rsssl_upgraded_to_6');
 		if ( RSSSL()->really_simple_ssl->ssl_enabled && !$is_upgrade ) {
 			return false;

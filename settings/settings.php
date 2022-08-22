@@ -324,7 +324,7 @@ function rsssl_update_option( $name, $value ) {
 	$config_ids = array_column($config_fields, 'id');
 	$config_field_index = array_search($name, $config_ids);
 	$config_field = $config_fields[$config_field_index];
-	if ( !$config_field_index ){
+	if ( $config_field_index === false ){
 		error_log("exiting ".$name." as not existing field in RSSSL ");
 		return;
 	}

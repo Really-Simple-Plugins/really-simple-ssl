@@ -56,7 +56,7 @@ if ( !class_exists('rsssl_installer') ){
         public function get_activation_slug(){
             $slugs = [
                 'burst-statistics' => 'burst-statistics/burst.php',
-                'complianz-gdpr' => 'complianz-gdpr/complianz-gdpr.php'
+                'complianz-gdpr' => 'complianz-gdpr/complianz-gpdr.php'
             ];
             return $slugs[$this->slug];
         }
