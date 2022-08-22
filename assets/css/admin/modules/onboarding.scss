@@ -1,0 +1,47 @@
+.rsssl-modal.rsssl-onboarding {
+  max-width:100%;
+  width:80%;
+  .rsssl-step-feedback {
+    float:right;
+  }
+  .rsssl-logo {
+    width:200px;
+  }
+  #rsssl-message li {
+    position: relative;
+    padding-left: 15px;
+
+    &:before {
+      position: absolute;
+      left: 0;
+      color: #fff;
+      height: 10px;
+      width: 10px;
+      border-radius: 50%;
+      content: '';
+      margin-top: 4px;
+    }
+
+    &.rsssl-inactive:before {
+      background-color: #ABB0B8;
+    }
+
+    &.rsssl-warning:before {
+      background-color: #f8be2e;
+    }
+
+    &.rsssl-error:before {
+      background-color: #D7263D;
+    }
+
+    &.rsssl-success:before {
+      background-color: #61ce70;
+    }
+  }
+  .rsssl-modal-content-step-footer {
+    display:flex;
+    button, a {
+      margin-right:10px;
+    }
+  }
+}

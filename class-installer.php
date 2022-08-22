@@ -77,14 +77,15 @@ if ( !class_exists('rsssl_installer') ){
 
         /**
          * Download the plugin
-         * @return void
+         * @return bool
          */
         public function download_plugin() {
-            if ( !current_user_can('install_plugins')) return;
-	        delete_transient("rsssl_plugin_download_active");
+            if ( !current_user_can('install_plugins')) {
+				return false;
+            }
 
 	        if ( !get_transient("rsssl_plugin_download_active") ) {
-                set_transient("rsssl_plugin_download_active", 1 * MINUTE_IN_SECONDS );
+                set_transient("rsssl_plugin_download_active", MINUTE_IN_SECONDS );
                 $info          = $this->get_plugin_info();
                 $download_link = esc_url_raw( $info->versions['trunk'] );
                 require_once ABSPATH . 'wp-admin/includes/class-wp-upgrader.php';
@@ -92,20 +93,30 @@ if ( !class_exists('rsssl_installer') ){
                 include_once ABSPATH . 'wp-admin/includes/plugin-install.php';
                 $skin     = new WP_Ajax_Upgrader_Skin();
 	            $upgrader = new Plugin_Upgrader( $skin );
-	            $upgrader->install( $download_link );
+	            $result = $upgrader->install( $download_link );
+		        if (is_wp_error($result)){
+			        return false;
+		        }
 	            delete_transient("rsssl_plugin_download_active");
             }
+			return true;
         }
 
         /**
          * Activate the plugin
          *
-         * @return void
+         * @return bool
          */
         public function activate_plugin() {
-            if ( !current_user_can('install_plugins')) return;
-            activate_plugin( $this->get_activation_slug() );
+            if ( !current_user_can('install_plugins')) {
+				return false;
+            }
+            $result = activate_plugin( $this->get_activation_slug() );
+			if (is_wp_error($result)){
+				return false;
+			}
             $this->cancel_tour();
+			return true;
         }
 
         /**

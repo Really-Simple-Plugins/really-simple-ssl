@@ -31,7 +31,7 @@ function rsssl_rest_api_onboarding() {
 	}
 
 	$steps[] = [
-		"title" => __( "Congratulations!", 'really-simple-ssl' ),
+		"title" => $is_upgrade ? __( "Thanks for updating!", 'really-simple-ssl' ) : __( "Congratulations!", 'really-simple-ssl' ),
 		"subtitle" => __("Now have a look at our new features", "really-simple-ssl"),
 		"items" => get_items_for_upgrade(),
 		"info_text" => __("Want to know more about our features and plugins? Please read this article.", 'really-simple-ssl'),
@@ -48,7 +48,7 @@ function rsssl_rest_api_onboarding() {
 				"variant" => "secondary",
 				"disabled" => false,
 				"type" => "button",
-				"action" => "dismiss"
+				"action" => "dismiss",
 			]
 		],
 		"visible" => false
@@ -58,26 +58,6 @@ function rsssl_rest_api_onboarding() {
 		"steps" => $steps,
 		"dismissed" => get_option("rsssl_onboarding_dismissed") || !RSSSL()->onboarding->show_notice_activate_ssl(),
 	];
-}
-
-function rsssl_install_plugin ($plugin_slug) {
-	$plugin = new rsssl_installer($plugin_slug);
-	if(!$plugin->plugin_is_downloaded()) {
-		$plugin->download_plugin();
-		return true;
-	}
-
-	return false;
-}
-
-function rsssl_activate_plugin ($plugin_slug) {
-	$plugin = new rsssl_installer($plugin_slug);
-	if(!$plugin->plugin_is_activated()) {
-		$plugin->activate_plugin();
-		return true;
-	}
-
-	return false;
 }
 
 /**
@@ -100,16 +80,17 @@ function get_items_for_upgrade () {
 
 	$items[] = [
 		"title" => __("SSL has been activated with Really Simple SSL", "really-simple-ssl"),
-		"action" => "none"
+		"action" => "none",
+		"status" => "success",
 	];
 
-	// TODO: hardening features are enabled
 	$all_enabled = RSSSL()->onboarding->all_recommended_hardening_features_enabled();
 	if( !$all_enabled ) {
 		$items[] = [
 			"title" => __("Enable recommended hardening features in Really Simple SSL", "really-simple-ssl"),
 			"id" => "hardening",
 			"action" => "activate",
+			"status" => "warning",
 			"type" => "setting",
 			"button" => [
 				"title" => __("Enable", "really-simple-ssl"),
@@ -120,6 +101,7 @@ function get_items_for_upgrade () {
 			"title" => __("Hardening features are enabled!", "really-simple-ssl"),
 			"type" => "setting",
 			"action" => "none",
+			"status" => "success",
 			"id" => "hardening",
 		];
 	}
@@ -131,6 +113,7 @@ function get_items_for_upgrade () {
 			$items[] = [
 				"title" => sprintf(__("Install our plugin %s", "really-simple-ssl"), $plugin_info["title"]),
 				"action" => "install_plugin",
+				"status" => "warning",
 				"type" => "plugin",
 				"id" => $plugin_info['slug'],
 				"button" => [
@@ -143,6 +126,7 @@ function get_items_for_upgrade () {
 			$items[] = [
 				"title" => sprintf(__("Activate our plugin %s", "really-simple-ssl"), $plugin_info["title"]),
 				"action" => "activate_plugin",
+				"status" => "warning",
 				"type" => "plugin",
 				"id" => $plugin_info['slug'],
 				"button" => [
@@ -154,7 +138,9 @@ function get_items_for_upgrade () {
 		if($plugin->plugin_is_downloaded() && $plugin->plugin_is_activated()) {
 			$items[] = [
 				"title" => sprintf(__("%s has been installed!", "really-simple-ssl"), $plugin_info["title"]),
-				"action" => "none"
+				"action" => "none",
+				"status" => "success",
+
 			];
 		}
 	}
@@ -188,7 +174,7 @@ function get_buttons_for_new_installs () {
 		];
 	}
 
-	if ( !RSSSL()->rsssl_certificate->is_valid()) {
+	//if ( !RSSSL()->rsssl_certificate->is_valid()) {
 		$buttons[] = [
 			"title" => __("Install SSL", "really-simple-ssl"),
 			"variant" => "secondary",
@@ -203,7 +189,7 @@ function get_buttons_for_new_installs () {
 			"disabled" => false,
 			"type" => "checkbox",
 		];
-	}
+	//}
 
 	return $buttons;
 }

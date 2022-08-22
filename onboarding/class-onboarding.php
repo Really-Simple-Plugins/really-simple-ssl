@@ -89,10 +89,12 @@ class rsssl_onboarding {
 			require_once(rsssl_path . 'class-installer.php');
 			$plugin = new rsssl_installer($data['id']);
 			if ( $data['action']==='install_plugin') {
-				$plugin->download_plugin();
+				$success = $plugin->download_plugin();
+				$error = !$success;
 				$next_action = 'activate_plugin';
 			} else {
-				$plugin->activate_plugin();
+				$success = $plugin->activate_plugin();
+				$error = !$success;
 			}
 		} else if ($data['type']==='setting') {
 			if ( $data['id'] ==='hardening' ) {
@@ -119,9 +121,9 @@ class rsssl_onboarding {
 	 */
 
 	public function override_ssl_detection() {
-		error_log("override SSL");
-
-		if ( ! current_user_can( 'manage_options') ) return;
+		if ( ! current_user_can( 'manage_options') ) {
+			return;
+		}
 
 		update_option('rsssl_ssl_detection_overridden', false, false );
 		exit;

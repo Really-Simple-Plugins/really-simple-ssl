@@ -9,14 +9,14 @@ const OnboardingModal = () => {
     const [overrideSSL, setOverrideSSL] = useState(false);
     const [activateSSLDisabled, setActivateSSLDisabled] = useState(true);
     const [currentActionId, setcurrentActionId] = useState('none');
-    const [currentActionStatus, setcurrentActionStatus] = useState('none');
+    const [currentAction, setcurrentAction] = useState('none');
+    const [currentStatus, setcurrentStatus] = useState('warning');
 
     useEffect(() => {
         rsssl_api.getOnboarding().then( ( response ) => {
             let steps = response.data.steps;
             steps[0].visible = true;
             setSteps(steps);
-            setcurrentActionStatus('none');
             setShow(!response.data.dismissed);
         });
     }, [])
@@ -54,7 +54,7 @@ const OnboardingModal = () => {
             });
         });
         setcurrentActionId(findItem);
-        setcurrentActionStatus(newAction);
+        setcurrentAction(newAction);
         setSteps(steps);
     }
 
@@ -63,7 +63,7 @@ const OnboardingModal = () => {
         data.action = action;
         data.id = id;
         data.type = type;
-        updateActionForItem(id, action );
+        updateActionForItem(id, action);
         rsssl_api.onboardingActions(data).then(( response ) => {
             if ( response.data.success ){
                 let nextAction = response.data.next_action;
@@ -72,45 +72,60 @@ const OnboardingModal = () => {
                     data.action = nextAction;
                     updateActionForItem(id, nextAction );
                     rsssl_api.onboardingActions(data).then(( response ) => {
-                        nextAction = response.data.next_action;
-                        updateActionForItem(id, nextAction );
-                        data.action = 'none';
-                        console.log(response);
+                        if ( response.data.success ){
+                            updateActionForItem(id, response.data.next_action );
+                            setcurrentStatus('success');
+                        } else {
+                            updateActionForItem(id, 'failed' );
+                            setcurrentStatus('error');
+                        }
                     });
+                } else {
+                    updateActionForItem(id, 'failed' );
+                    setcurrentStatus('success');
                 }
+            } else {
+                setcurrentStatus('error');
             }
         });
     }
 
     const parseStepItems = (items) => {
         return items.map((item, index) => {
-            const { title, action, help, button, id, type } = item
+            let { title, action, status, help, button, id, type } = item
             const statuses = {
-                'activate_plugin': 'rsssl-inactive',
-                'install_plugin': 'rsssl-inactive',
-                'activate': 'rsssl-warning',
+                'warning': 'rsssl-warning',
                 'error': 'rsssl-error',
-                'none': 'rsssl-success'
+                'success': 'rsssl-success'
             };
 
-            let buttonTitle = 'waiting...';
+            let buttonTitle = '';
             if ( button ) {
                 buttonTitle = button.title;
-                if (currentActionStatus!=='none' && currentActionId===id) {
-                    const currentActionStatuses = {
-                        'activate_plugin': __('activating...',"really-simple-ssl"),
-                        'install_plugin': __('installing...',"really-simple-ssl"),
-                        'activate': '',
-                        'error': '',
-                        'none': __('finished',"really-simple-ssl"),
-                    };
-                    buttonTitle = currentActionStatuses[currentActionStatus];
+                if (currentActionId===id) {
+                    status = currentStatus;
+                    if ( currentAction!=='none' ) {
+                        const currentActions = {
+                            'activate_plugin': __('activating...',"really-simple-ssl"),
+                            'install_plugin': __('installing...',"really-simple-ssl"),
+                            'error': __('failed',"really-simple-ssl"),
+                            'none': __('finished',"really-simple-ssl"),
+                        };
+                        buttonTitle = currentActions[currentAction];
+                        if (status==='error') {
+                            buttonTitle = currentActions['error'];
+                        }
+                    }
+
                 }
             }
+            console.log(id);
+            console.log(status);
+            console.log(currentAction);
             return (
-                <li key={index} className={statuses[action]}>
+                <li key={index} className={statuses[status]}>
                     {title} {button && <> - <Button isLink={true} onClick={() => itemButtonHandler(id, type, action)}>{buttonTitle}</Button>
-                        {currentActionStatus!=='none' && currentActionId===id && <span className="rsssl-loader">...</span>}
+                        {currentAction!=='none' && currentActionId===id && <span className="rsssl-loader">...</span>}
                     </>}
                 </li>
             )
@@ -152,36 +167,6 @@ const OnboardingModal = () => {
         })
     }
 
-    const css = `
-        #rsssl-message li {
-            position: relative;
-            padding-left: 15px;
-        }
-        #rsssl-message li:before {
-            position: absolute;
-            left: 0;
-            color: #fff;
-            height: 10px;
-            width: 10px;
-            border-radius:50%;
-            content: '';
-            position: absolute;
-            margin-top: 4px;
-        }
-        #rsssl-message li.rsssl-inactive:before {
-            background-color: #ABB0B8;
-        }
-        #rsssl-message li.rsssl-warning:before {
-            background-color: #f8be2e;
-        }
-        #rsssl-message li.rsssl-error:before {
-            background-color: #D7263D;
-        }
-        #rsssl-message li.rsssl-success:before {
-            background-color: #61ce70;
-        }
-    `
-
     const renderSteps = () => {
         return (
             <>
@@ -190,7 +175,7 @@ const OnboardingModal = () => {
                         const {title, subtitle, items, info_text: infoText, buttons, visible} = step;
                         return (
                             <div className="rsssl-modal-content-step" key={index} style={{ display: visible ? 'block' : 'none' }}>
-                                {steps.length > 1 && <div>{index + 1}/{steps.length}</div>}
+                                {steps.length > 1 && <div className="rsssl-step-feedback">{index + 1}/{steps.length}</div>}
                                 {title && <div className="rsssl-modal-subtitle">{title}</div>}
                                 {subtitle && <div className="rsssl-modal-description">{subtitle}</div>}
                                 <ul>
@@ -211,13 +196,12 @@ const OnboardingModal = () => {
     return (
         <>
             { (steps.length > 0 && show) && <>
-                <style>{css}</style>
                 <div className="rsssl-modal-backdrop" onClick={ dismissModal }>&nbsp;</div>
-                <div className="rsssl-modal">
+                <div className="rsssl-modal rsssl-onboarding">
                     <div className="rsssl-modal-header">
-                        <h2 className="modal-title">
-                            Really Simple SSL
-                        </h2>
+                      <img className="rsssl-logo"
+                           src={rsssl_settings.plugin_url + 'assets/img/really-simple-ssl-logo.svg'}
+                           alt="Really Simple SSL logo"/>
                         <button type="button" className="rsssl-modal-close" data-dismiss="modal" aria-label="Close" onClick={ dismissModal }>
                             <svg aria-hidden="true" focusable="false" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512" height="24" >
                                 <path fill="#000000" d="M310.6 361.4c12.5 12.5 12.5 32.75 0 45.25C304.4 412.9 296.2 416 288 416s-16.38-3.125-22.62-9.375L160 301.3L54.63 406.6C48.38 412.9 40.19 416 32 416S15.63 412.9 9.375 406.6c-12.5-12.5-12.5-32.75 0-45.25l105.4-105.4L9.375 150.6c-12.5-12.5-12.5-32.75 0-45.25s32.75-12.5 45.25 0L160 210.8l105.4-105.4c12.5-12.5 32.75-12.5 45.25 0s12.5 32.75 0 45.25l-105.4 105.4L310.6 361.4z"/>
