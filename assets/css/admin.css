@@ -626,7 +626,7 @@
 }
 .rsssl .rsssl-bullet.rsp-blue-yellow {
   background: var(--rsp-blue);
-  background: linear-gradient(77deg, #29b6f6 0%, #29b6f6 30%, #f4bf3e 70%, #f4bf3e 100%);
+  background: linear-gradient(77deg, rgb(41, 182, 246) 0%, rgb(41, 182, 246) 30%, rgb(244, 191, 62) 70%, rgb(244, 191, 62) 100%);
   animation: gradient 2s ease infinite;
   background-size: 200% 200%;
 }
@@ -998,64 +998,64 @@
   margin-bottom: 24px;
 }
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(1) {
-  width: 97%;
+  width: 68%;
 }
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(2) {
-  width: 73%;
+  width: 77%;
 }
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(3) {
-  width: 98%;
-}
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(4) {
-  width: 99%;
-}
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(5) {
-  width: 69%;
-}
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(6) {
-  width: 73%;
-}
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(7) {
-  width: 80%;
-}
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(8) {
-  width: 89%;
-}
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(9) {
-  width: 87%;
-}
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(10) {
-  width: 97%;
-}
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(11) {
-  width: 81%;
-}
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(12) {
-  width: 74%;
-}
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(13) {
-  width: 100%;
-}
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(14) {
-  width: 67%;
-}
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(15) {
-  width: 81%;
-}
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(16) {
   width: 79%;
 }
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(17) {
-  width: 63%;
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(4) {
+  width: 89%;
 }
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(18) {
-  width: 63%;
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(5) {
+  width: 91%;
 }
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(19) {
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(6) {
+  width: 97%;
+}
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(7) {
   width: 64%;
 }
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(8) {
+  width: 82%;
+}
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(9) {
+  width: 100%;
+}
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(10) {
+  width: 81%;
+}
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(11) {
+  width: 94%;
+}
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(12) {
+  width: 87%;
+}
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(13) {
+  width: 76%;
+}
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(14) {
+  width: 88%;
+}
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(15) {
+  width: 68%;
+}
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(16) {
+  width: 65%;
+}
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(17) {
+  width: 72%;
+}
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(18) {
+  width: 83%;
+}
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(19) {
+  width: 80%;
+}
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(20) {
-  width: 92%;
+  width: 86%;
 }
 .rsssl-placeholder .rsssl-placeholder-line ~ .rsssl-placeholder-line {
   background-color: #ddd;
@@ -1169,8 +1169,7 @@
   display: flex;
   align-items: center;
   gap: var(--rsp-spacing-xs);
-  min-width: 0;
-  /* or some value */
+  min-width: 0; /* or some value */
   text-decoration: none;
 }
 .rsssl-tips-tricks-container .rsssl-tips-tricks-element a:hover {
@@ -1193,6 +1192,10 @@
   text-overflow: ellipsis;
 }
 
+.rsssl .rsssl-helplink {
+  color: #000;
+  z-index: 9999;
+}
 .rsssl .rsssl-wizard-settings .rsssl-grid-item {
   position: relative;
   margin-bottom: var(--rsp-grid-gap);
@@ -1302,7 +1305,7 @@
 }
 .rsssl-wizard-menu-items .rsssl-menu-item.rsssl-active > a {
   border-left: 4px solid var(--rsp-yellow);
-  background-color: #f2e6c966;
+  background-color: rgba(242, 230, 201, 0.4);
 }
 .rsssl-wizard-menu-items .rsssl-menu-item.rsssl-featured a {
   background: var(--rsp-dark-blue-faded);
@@ -1351,6 +1354,10 @@ Admin notice
 
 .rsssl-status-revoked {
   background-color: green;
+}
+
+.rsssl-csp-revoked > div:nth-child(-n+3) {
+  opacity: 0.3;
 }
 
 .rsssl-new-feature {
@@ -1421,7 +1428,7 @@ Admin notice
   padding: 8px;
   width: 220px;
   background-color: #000;
-  background-color: rgba(51, 51, 51, 0.9);
+  background-color: hsla(0deg, 0%, 20%, 0.9);
   color: #fff;
   content: attr(data-rsssl-tooltip);
   font-size: 14px;
@@ -1450,7 +1457,7 @@ Admin notice
   margin-left: -6px;
   margin-bottom: -12px;
   border-top-color: #000;
-  border-top-color: rgba(51, 51, 51, 0.9);
+  border-top-color: hsla(0deg, 0%, 20%, 0.9);
 }
 
 /* Horizontally align top/bottom rsssl-tooltips */
@@ -1491,7 +1498,7 @@ Admin notice
   margin-bottom: 0;
   border-top-color: transparent;
   border-left-color: #000;
-  border-left-color: rgba(51, 51, 51, 0.9);
+  border-left-color: hsla(0deg, 0%, 20%, 0.9);
 }
 
 .rsssl-tooltip-left:hover:before,
@@ -1516,7 +1523,7 @@ Admin notice
   margin-bottom: 0;
   border-top-color: transparent;
   border-bottom-color: #000;
-  border-bottom-color: rgba(51, 51, 51, 0.9);
+  border-bottom-color: hsla(0deg, 0%, 20%, 0.9);
 }
 
 .rsssl-tooltip-bottom:hover:before,
@@ -1540,7 +1547,7 @@ Admin notice
   margin-left: -12px;
   border-top-color: transparent;
   border-right-color: #000;
-  border-right-color: rgba(51, 51, 51, 0.9);
+  border-right-color: hsla(0deg, 0%, 20%, 0.9);
 }
 
 .rsssl-tooltip-right:hover:before,
@@ -1573,8 +1580,7 @@ Admin notice
   margin: auto;
   margin-bottom: 25px;
   width: 100%;
-  height: 235px;
-  /* change height to see repeat-y behavior */
+  height: 235px; /* change height to see repeat-y behavior */
   background-image: linear-gradient(100deg, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.5) 70%, rgba(255, 255, 255, 0.5) 15%), linear-gradient(#f2f2f2 38px, transparent 0), linear-gradient(#f2f2f2 38px, transparent 0), linear-gradient(#f2f2f2 38px, transparent 0), linear-gradient(#f2f2f2 38px, transparent 0);
   background-repeat: repeat-y;
   background-size: 50px 200px, 100% 117px, 100% 117px, 100% 117px, 100% 117px;

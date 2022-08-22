@@ -1,12 +1,10 @@
-import { __ } from '@wordpress/i18n';
 import {
     Component,
 } from '@wordpress/element';
 
-import * as rsssl_api from "./utils/api";
-
+import * as rsssl_api from "../utils/api";
 import TaskElement from "./TaskElement";
-import Placeholder from './Placeholder';
+import Placeholder from '../Placeholder/Placeholder';
 
 class ProgressBlock extends Component {
     constructor() {

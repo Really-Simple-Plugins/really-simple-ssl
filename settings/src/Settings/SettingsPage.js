@@ -1,16 +1,15 @@
 import {Component, Fragment} from "@wordpress/element";
-import {in_array} from "./utils/lib";
-import * as rsssl_api from "./utils/api";
-import Placeholder from "./Placeholder";
-import Menu from "./Menu";
+import {in_array} from "../utils/lib";
+import * as rsssl_api from "../utils/api";
+import Placeholder from "../Placeholder/Placeholder";
+import Menu from "../Menu/Menu";
 import Notices from "./Notices";
 import Settings from "./Settings";
-import sleeper from "./utils/sleeper.js";
-
+import sleeper from "../utils/sleeper.js";
 import {dispatch,} from '@wordpress/data';
 import {__} from '@wordpress/i18n';
 
-/**
+/*
  * Renders the settings page with Menu and currently selected settings
  *
  */
@@ -93,14 +92,14 @@ class SettingsPage extends Component {
 
     updateFieldsListWithConditions(){
         for (const field of this.props.fields){
-            this.props.fields[this.props.fields.indexOf(field)].visible = !(field.hasOwnProperty('react_conditions') && !this.validateConditions(field.react_conditions, this.props.fields));
+          let enabled = !(field.hasOwnProperty('react_conditions') && !this.validateConditions(field.react_conditions, this.props.fields));
+          this.props.fields[this.props.fields.indexOf(field)].disabled = !enabled;
         }
         this.filterMenuItems(this.props.menu.menu_items)
     }
 
     saveChangedFields(changedField){
         this.updateFieldsListWithConditions();
-
         let changedFields = this.changedFields;
         if (!in_array(changedField, changedFields)) {
             changedFields.push(changedField);
@@ -110,7 +109,6 @@ class SettingsPage extends Component {
             changedFields:changedFields,
         });
     }
-
 
     showSavedSettingsNotice(){
         const notice = dispatch('core/notices').createNotice(
@@ -125,7 +123,6 @@ class SettingsPage extends Component {
         ).then(sleeper(2000)).then(( response ) => {
             dispatch('core/notices').removeNotice('rsssl_settings_saved');
         });
-
     }
 
     save(){
@@ -134,14 +131,16 @@ class SettingsPage extends Component {
         } = this.state;
         let saveFields = [];
         for (const field of fields){
-            if (in_array(field.id, this.changedFields)){
+            if ( in_array(field.id, this.changedFields) ){
                 saveFields.push(field);
             }
         }
+
         rsssl_api.setFields(saveFields).then(( response ) => {
             this.changedFields = [];
             this.setState({
-                changedFields :[]
+                changedFields :[],
+                progress: response.data.progress,
             });
             this.showSavedSettingsNotice();
         });
@@ -153,9 +152,8 @@ class SettingsPage extends Component {
     }
 
     saveAndContinue() {
-        this.save()
-
         this.wizardNextPrevious(false);
+        this.save()
     }
 
     validateConditions(conditions, fields){
@@ -213,17 +211,6 @@ class SettingsPage extends Component {
                 <Placeholder></Placeholder>
             );
         }
-
-        //maybe filter step
-        // if ( menu.is_wizard ){
-        //     let length = menuItems.length;
-        //     let temp = []
-        //     for ( let i = 0; i < length; i++ ) {
-        //         if ( menuItems[i]['step'] !== selectedStep ){
-        //             menuItems.splice(i, 1);
-        //         }
-        //     }
-        // }
 
         let fieldsUpdateComplete = changedFields.length === 0;
 

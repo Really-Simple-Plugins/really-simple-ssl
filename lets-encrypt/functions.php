@@ -16,6 +16,25 @@ if ( ! function_exists( 'rsssl_user_can_manage' ) ) {
     }
 }
 
+/**
+ * Create a generic read more text with link for help texts.
+ *
+ * @param string $url
+ * @param bool   $add_space
+ *
+ * @return string
+ */
+function rsssl_le_read_more( $url, $add_character = ' ' ) {
+	$html = sprintf( __( "For more information, please read this %sarticle%s",
+		'really-simple-ssl' ), '<a target="_blank" href="' . $url . '">',
+		'</a>' );
+	if ( is_string($add_character) ) {
+		$html = $add_character . $html;
+	}
+
+	return $html;
+}
+
 
 
 /**
@@ -487,28 +506,6 @@ if ( ! function_exists( 'rsssl_sidebar_notice' ) ) {
         } else {
             return $html;
         }
-    }
-}
-
-
-if (!function_exists('rsssl_read_more')) {
-    /**
-     * Create a generic read more text with link for help texts.
-     *
-     * @param string $url
-     * @param bool   $add_space
-     *
-     * @return string
-     */
-    function rsssl_read_more( $url, $add_space = true ) {
-        $html = sprintf( __( "For more information, please read this %sarticle%s",
-            'really-simple-ssl' ), '<a target="_blank" href="' . $url . '">',
-            '</a>' );
-        if ( $add_space ) {
-            $html = '&nbsp;' . $html;
-        }
-
-        return $html;
     }
 }
 

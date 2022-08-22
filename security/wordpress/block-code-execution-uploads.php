@@ -77,15 +77,21 @@ function rsssl_code_execution_uploads_test()
 
 /**
  * Block code execution
+ * @param array $rules
  *
- * @return string
+ * @return []
  *
  */
 function rsssl_disable_code_execution_rules($rules)
 {
-	$rules .= "\n" ."<Files *.php>";
-	$rules .= "\n" . "deny from all";
-	$rules .= "\n" . "</Files>";
+	if ( !rsssl_get_option('block_code_execution_uploads')) {
+		return $rules;
+	}
+	$rule = "\n" ."<Files *.php>";
+	$rule .= "\n" . "deny from all";
+	$rule .= "\n" . "</Files>";
+
+	$rules[] = ['rules' => $rule, 'identifier' => 'deny from all'];
 	return $rules;
 }
 add_filter('rsssl_htaccess_security_rules_uploads', 'rsssl_disable_code_execution_rules');

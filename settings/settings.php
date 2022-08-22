@@ -78,9 +78,8 @@ add_action( 'admin_menu', 'rsssl_add_option_menu' );
 {
 	if (!current_user_can('activate_plugins')) return;
 	$tab = isset($_GET['tab']) ? sanitize_title($_GET['tab']) : 'dashboard';
-
-    $high_contrast = RSSSL()->really_simple_ssl->high_contrast ? 'rsssl-high-contrast' : ''; ?>
-    <div id="really-simple-ssl" class="rsssl <?php echo $high_contrast ?>">
+    ?>
+    <div id="really-simple-ssl" class="rsssl">
         <?php do_action("rsssl_show_tab_{$tab}"); ?>
     </div>
     <div id="really-simple-ssl-modal"></div>
@@ -99,8 +98,7 @@ function rsssl_ajax_load_page(){
 	}
 }
 
-
-add_action( 'rest_api_init', 'rsssl_settings_rest_route' );
+add_action( 'rest_api_init', 'rsssl_settings_rest_route', 10 );
 function rsssl_settings_rest_route() {
 
 	if (!current_user_can('manage_options')) {
@@ -205,10 +203,13 @@ function rsssl_run_test($request){
  */
 function rsssl_sanitize_field_type($type){
     $types = [
+        'hidden',
         'license',
+        'database',
         'checkbox',
         'radio',
         'text',
+        'textarea',
         'number',
         'email',
         'select',
@@ -232,11 +233,9 @@ function rsssl_rest_api_fields_set($request){
     if ( !current_user_can('manage_options')) {
         return;
     }
-
 	$fields = $request->get_json_params();
     $config_fields = rsssl_fields(false);
     $config_ids = array_column($config_fields, 'id');
-
 	foreach ( $fields as $index => $field ) {
         //the updateItemId allows us to update one specific item in a field set.
         $update_item_id = isset($field['updateItemId']) ? $field['updateItemId'] : false;
@@ -274,12 +273,12 @@ function rsssl_rest_api_fields_set($request){
 		$fields[$index] = $field;
 	}
 	if ( rsssl_is_networkwide_active() ) {
-		$options = get_site_option( 'rsssl_options', array() );
+		$options = get_site_option( 'rsssl_options', [] );
 	} else {
-		$options = get_option( 'rsssl_options', array() );
+		$options = get_option( 'rsssl_options', [] );
 	}
 
-    //build a new options array
+	//build a new options array
     foreach ( $fields as $field ) {
         $prev_value = isset( $options[ $field['id'] ] ) ? $options[ $field['id'] ] : false;
         do_action( "rsssl_before_save_option", $field['id'], $field['value'], $prev_value, $field['type'] );
@@ -290,15 +289,20 @@ function rsssl_rest_api_fields_set($request){
         if ( rsssl_is_networkwide_active() ) {
 	        update_site_option( 'rsssl_options', $options );
         } else {
+            error_log("fields_set function");
+            error_log(print_r($options, true));
 	        update_option( 'rsssl_options', $options );
         }
     }
-    foreach ( $fields as $field ) {
+
+	foreach ( $fields as $field ) {
         do_action( "rsssl_after_save_field", $field['id'], $field['value'], $prev_value, $field['type'] );
     }
-
 	do_action('rsssl_after_saved_fields', $fields );
-	$output   = ['success' => true];
+	$output   = [
+            'success' => true,
+            'progress' => RSSSL()->progress->get()
+    ];
 	$response = json_encode( $output );
 	header( "Content-Type: application/json" );
 	echo $response;
@@ -328,12 +332,13 @@ function rsssl_update_option( $name, $value ) {
 
 	$type = isset( $config_field['type'] ) ? $config_field['type'] : false;
     if ( !$type ) {
-        return;
+	    error_log("exiting ".$name." has not existing type ");
+	    return;
     }
 	if ( rsssl_is_networkwide_active() ) {
-		$options = get_site_option( 'rsssl_options', array() );
+		$options = get_site_option( 'rsssl_options', [] );
 	} else {
-		$options = get_option( 'rsssl_options', array() );
+		$options = get_option( 'rsssl_options', [] );
 	}
 
     $name = sanitize_text_field($name);
@@ -343,6 +348,8 @@ function rsssl_update_option( $name, $value ) {
 	if ( rsssl_is_networkwide_active() ) {
 		update_site_option( 'rsssl_options', $options );
 	} else {
+		error_log("fields_set function");
+		error_log(print_r($options, true));
 		update_option( 'rsssl_options', $options );
 	}
 }
@@ -356,6 +363,7 @@ function rsssl_rest_api_fields_get(){
 	if (!current_user_can('manage_options')) {
 		return;
 	}
+
 	$output = array();
 	$fields = rsssl_fields();
 	$menu_items = rsssl_menu('settings');
@@ -365,6 +373,8 @@ function rsssl_rest_api_fields_get(){
 		 */
 		if ( isset($field['data_source']) ){
 			$data_source = $field['data_source'];
+            x_log($field);
+            error_log(print_r($data_source, true));
 			if (is_array($data_source)) {
 				$main = $data_source[0];
 				$class = $data_source[1];
@@ -381,9 +391,7 @@ function rsssl_rest_api_fields_get(){
 
     $updated_menu_items = rsssl_filter_menu_items($menu_items['menu_items'], $fields);
     $menu_items['menu_items'] = $updated_menu_items;
-
 	$output['fields'] = $fields;
-
 	$output['menu'] = $menu_items;
 	$output['progress'] = RSSSL()->progress->get();
     $output = apply_filters('rsssl_rest_api_fields_get', $output);
@@ -450,9 +458,13 @@ function rsssl_sanitize_field( $value, $type, $id ) {
 
 	switch ( $type ) {
 		case 'checkbox':
+		case 'hidden':
+		case 'database':
 			return intval($value);
 		case 'select':
 		case 'text':
+		    return sanitize_text_field( $value );
+        case 'textarea':
 		    return sanitize_text_field( $value );
 		case 'license':
 		    return $value;
@@ -515,16 +527,13 @@ function rsssl_sanitize_permissions_policy( $value, $type, $field_name ){
 
     $stored_ids = [];
 	if ( !is_array($value) ) {
-        error_log("not array ");
 		return $default;
 	} else {
-        error_log("is array");
 		foreach ($value as $row_index => $row) {
 			//check if we have invalid values
 			if ( is_array($row) ) {
 				foreach ($row as $column_index => $row_value ) {
 					if ($column_index==='id' && $row_value===false) {
-                        error_log("unset ".$column_index);
 						unset($value[$column_index]);
 					}
 				}
@@ -541,8 +550,6 @@ function rsssl_sanitize_permissions_policy( $value, $type, $field_name ){
 
 			foreach ( $row as $col_index => $col_value ){
 				if ( !isset( $possible_keys[$col_index])) {
-					error_log("unset ".$row_index.' '.$column_index);
-
 					unset($value[$row_index][$col_index]);
 				} else {
 					$datatype = $possible_keys[$col_index];
@@ -571,7 +578,7 @@ function rsssl_sanitize_permissions_policy( $value, $type, $field_name ){
 	//ensure that there are no duplicate ids
 	foreach ($value as $index => $item ) {
 		if ( in_array($item['id'], $stored_ids) ){
-			error_log("exists in arrr ".$item['id']);
+			error_log("exists in arr ".$item['id']);
 			unset($value[$index]);
 			continue;
 		}

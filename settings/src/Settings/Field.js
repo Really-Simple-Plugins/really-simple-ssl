@@ -1,21 +1,21 @@
 import {
-    Button,
-    Icon,
-    Panel,
     PanelBody,
     PanelRow,
-    Placeholder,
-    Spinner,
     TextControl,
     RadioControl,
     SelectControl,
+    TextareaControl,
     __experimentalNumberControl as NumberControl,
     ToggleControl,
 } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
-
+import * as rsssl_api from "../utils/api";
 import License from "./License";
 import MixedContentScan from "./MixedContentScan";
+import PermissionsPolicy from "./PermissionsPolicy";
+import Support from "./Support";
+import ContentSecurityPolicy from "./ContentSecurityPolicy";
+import ChangeStatus from "./ChangeStatus";
 import {
     Component,
 } from '@wordpress/element';
@@ -24,20 +24,7 @@ import {
  * https://react-data-table-component.netlify.app
  */
 import DataTable from "react-data-table-component";
-import * as rsssl_api from "./utils/api";
-class ChangeStatus extends Component {
-    constructor() {
-        super( ...arguments );
-    }
 
-    render(){
-        let statusClass = this.props.item.status==1 ? 'rsssl-status-allowed' : 'rsssl-status-revoked';
-        let label = this.props.item.status==1 ? __("Revoke", "really-simple-ssl") : __("Allow", "really-simple-ssl");
-        return (
-            <button onClick={ () => this.props.onChangeHandlerDataTable(!this.props.item.status, this.props.item, 'status' ) } className={statusClass}>{label}</button>
-        )
-    }
-}
 
 class Field extends Component {
     constructor() {
@@ -51,8 +38,10 @@ class Field extends Component {
     }
 
     onChangeHandler(fieldValue) {
-         let fields = this.props.fields;
+        let fields = this.props.fields;
         let field = this.props.field;
+        console.log("change field "+field.id);
+        console.log(fieldValue);
         fields[this.props.index]['value'] = fieldValue;
         this.props.saveChangedFields( field.id )
         this.setState( { fields } )
@@ -66,7 +55,6 @@ class Field extends Component {
      */
     onChangeHandlerDataTable(enabled, clickedItem, type ) {
         let field=this.props.field;
-        console.log(field.value);
         if (typeof field.value === 'object') {
             field.value = Object.values(field.value);
         }
@@ -106,7 +94,7 @@ class Field extends Component {
                 }
             }
         }
-        if ( !field.visible ) {
+        if ( !field.visible || field.type==='database' ) {
             return (
                 <span></span>
             );
@@ -125,6 +113,15 @@ class Field extends Component {
                 </PanelRow>
             );
         }
+
+        if ( field.type==='hidden' ){
+            return (
+                <>
+                    <input type="hidden" value={field.value}/>
+                </>
+            );
+        }
+
         if ( field.type==='radio' ){
             return (
                 <PanelRow className={ this.highLightClass}>
@@ -144,6 +141,19 @@ class Field extends Component {
                         label={ field.label }
                         onChange={ ( fieldValue ) => this.onChangeHandler(fieldValue) }
                         value= { fieldValue }
+                    />
+                </PanelBody>
+            );
+        }
+
+        if ( field.type==='textarea' ){
+            return (
+                <PanelBody className={ this.highLightClass}>
+                    <TextareaControl
+                        label={ field.label }
+                        help={ field.comment }
+                        value= { fieldValue }
+                        onChange={ ( fieldValue ) => this.onChangeHandler(fieldValue) }
                     />
                 </PanelBody>
             );
@@ -200,91 +210,21 @@ class Field extends Component {
             )
         }
 
-        if ( field.type==='permissionspolicy' ) {
-            //build our header
-            columns = [];
-            field.columns.forEach(function(item, i) {
-                let newItem = {
-                    name: item.name,
-                    sortable: item.sortable,
-                    width: item.width,
-                    selector: row => row[item.column],
-                }
-                columns.push(newItem);
-            });
-            let data = field.value;
-
-            if (typeof data === 'object') {
-                data = Object.values(data);
-            }
-            if (!Array.isArray(data) ) {
-               data = [];
-            }
-            for (const item of data){
-                console.log(item);
-                let disabled = false;
-                if (item.status!=1) {
-                    item.value = '()';
-                    disabled = true;
-                }
-                item.valueControl = <SelectControl
-                    help=''
-                    value={item.value}
-                    disabled={disabled}
-                    options={options}
-                    label=''
-                    onChange={ ( fieldValue ) => this.onChangeHandlerDataTable( fieldValue, item, 'value' ) }
-                             />
-                item.statusControl = <ChangeStatus item={item} onChangeHandlerDataTable={this.onChangeHandlerDataTable}
-                />;
-            }
-
+        if ( field.type==='support' ) {
             return (
-                <PanelBody className={ this.highLightClass}>
-                    <DataTable
-                        columns={columns}
-                        data={data}
-                        dense
-                        pagination
-                    />
-                </PanelBody>
+                <Support/>
+            )
+        }
+
+        if ( field.type==='permissionspolicy' ) {
+            return (
+                <PermissionsPolicy onChangeHandlerDataTable={this.onChangeHandlerDataTable} updateField={this.props.updateField} field={this.props.field} options={options} highLightClass={this.highLightClass} fields={fields}/>
             )
         }
 
         if ( field.type==='contentsecuritypolicy' ) {
-            //build our header
-            columns = [];
-            field.columns.forEach(function(item, i) {
-                let newItem = {
-                    name: item.name,
-                    sortable: item.sortable,
-                    width: item.width,
-                    selector: row => row[item.column],
-                }
-                columns.push(newItem);
-            });
-            let data = field.value;
-
-            if (typeof data === 'object') {
-                data = Object.values(data);
-            }
-            if (!Array.isArray(data) ) {
-                data = [];
-            }
-            for (const item of data){
-                item.statusControl = <ChangeStatus item={item} onChangeHandlerDataTable={this.onChangeHandlerDataTable}
-                />;
-            }
-            return (
-                <PanelBody className={ this.highLightClass}>
-                    <DataTable
-                        columns={columns}
-                        data={data}
-                        dense
-                        pagination
-                        noDataComponent={__("No results", "really-simple-ssl")} //or your component
-                    />
-                </PanelBody>
+            return(
+                <ContentSecurityPolicy onChangeHandlerDataTable={this.onChangeHandlerDataTable} updateField={this.props.updateField} field={this.props.field} options={options} highLightClass={this.highLightClass} fields={fields}/>
             )
         }
 

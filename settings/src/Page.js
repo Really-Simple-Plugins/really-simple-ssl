@@ -1,10 +1,10 @@
 import {Component} from "@wordpress/element";
 import * as rsssl_api from "./utils/api";
 import Header from "./Header";
-import DashboardPage from "./DashboardPage";
-import SettingsPage from "./SettingsPage";
-import Modal from "./Modal";
-import PagePlaceholder from './PagePlaceholder';
+import DashboardPage from "./DashBoard/DashboardPage";
+import SettingsPage from "./Settings/SettingsPage";
+import Modal from "./Modal/Modal";
+import PagePlaceholder from './Placeholder/PagePlaceholder';
 
 class Page extends Component {
     constructor() {
@@ -68,7 +68,6 @@ class Page extends Component {
      */
     setPageProps(key, value){
         this.pageProps[key] = value;
-        console.log("set page props "+key+value);
         this.setState({
             pageProps: this.pageProps,
         })
@@ -106,7 +105,7 @@ class Page extends Component {
         });
     }
 
-    /**
+    /*
      * Update a field
      * @param field
      */
@@ -135,8 +134,8 @@ class Page extends Component {
         }
         this.highLightedField = fieldId;
     }
-    /**
-     * Get # anchor from URL
+    /*
+     * Get anchor from URL
      * @returns {string|boolean}
      */
     get_anchor = (level) => {
@@ -258,7 +257,7 @@ class Page extends Component {
                                         previousMenuItem={this.state.previousMenuItem} />
                                 }
                                 { selectedMainMenuItem === 'dashboard' &&
-                                    <DashboardPage isAPILoaded={isAPILoaded} fields={fields} highLightField={this.highLightField}/>
+                                    <DashboardPage isAPILoaded={isAPILoaded} fields={fields} selectMainMenu={this.selectMainMenu} highLightField={this.highLightField}/>
                                 }
                             </div>
                         </>

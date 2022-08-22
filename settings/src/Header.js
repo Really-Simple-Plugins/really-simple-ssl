@@ -4,34 +4,17 @@ import { __ } from '@wordpress/i18n';
 class Header extends Component {
     constructor() {
         super( ...arguments );
-        this.state = {
-            highContrast:false,
-        };
     }
     handleClick(menuId){
         this.props.selectMainMenu(menuId);
     }
     componentDidMount() {
         this.handleClick = this.handleClick.bind(this);
-        for (const field of this.props.fields){
-            if (field.id === 'high_contrast' ){
-                this.highContrast = field.value;
-            }
-        }
-
-        this.setState({
-            highContrast: this.highContrast,
-        });
-
     }
     render() {
-        const {
-            highContrast,
-        } = this.state;
         let menu = rsssl_settings.menu;
         let plugin_url = rsssl_settings.plugin_url;
         let active_menu_item = this.props.selectedMainMenuItem;
-        let knowledgeBaseBtnClass = !rsssl_settings.pro_active ?'button button-black' :'';
         return (
             <div className="rsssl-header-container">
                 <div className="rsssl-header">
@@ -44,11 +27,14 @@ class Header extends Component {
                         </nav>
                     </div>
                     <div className="rsssl-header-right">
-                        <a href="https://really-simple-ssl.com/knowledge-base"
-                           className={knowledgeBaseBtnClass}
-                           target="_blank">{__("Documentation", "really-simple-ssl")}</a>
+                        <a className="rsssl-knowledge-base-link" href="https://really-simple-ssl.com/knowledge-base" target="_blank">{__("Documentation", "really-simple-ssl")}</a>
                         {rsssl_settings.pro_active &&
                             <a href="https://wordpress.org/support/plugin/really-simple-ssl/"
+                               className="button button-black"
+                               target="_blank">{__("Support", "really-simple-ssl")}</a>
+                        }
+                        {!rsssl_settings.pro_active &&
+                            <a href="https://really-simple-ssl.com/pro"
                                className="button button-black"
                                target="_blank">{__("Support", "really-simple-ssl")}</a>
                         }

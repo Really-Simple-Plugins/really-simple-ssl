@@ -1,4 +1,8 @@
 .rsssl {
+  .rsssl-helplink {
+    color:#000;
+    z-index: 9999;
+  }
   .rsssl-wizard-menu {
       //@include rsssl-block;
       //@include rsssl-block-padding;

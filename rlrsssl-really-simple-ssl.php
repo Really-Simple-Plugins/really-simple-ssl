@@ -65,13 +65,14 @@ class REALLY_SIMPLE_SSL
 	public $rsssl_server;
 	public $really_simple_ssl;
 	public $progress;
+	public $placeholder;
 	public $rsssl_help;
 	public $rsssl_certificate;
 
 	private function __construct()
 	{
         if (isset($_GET['rsssl_apitoken']) && $_GET['rsssl_apitoken'] == get_option('rsssl_csp_report_token') ) {
-            if ( !defined('RSSSL_DOING_CSP') ) define( 'RSSSL_DOING_CSP' , true );
+            if ( !defined('RSSSL_LEARNING_MODE') ) define( 'RSSSL_LEARNING_MODE' , true );
         }
 	}
 
@@ -86,11 +87,13 @@ class REALLY_SIMPLE_SSL
 
 			$wpcli = defined( 'WP_CLI' ) && WP_CLI;
 
-			if (rsssl_is_logged_in_rest() || is_admin() || wp_doing_cron() || is_multisite() || $wpcli || defined('RSSSL_DOING_SYSTEM_STATUS') || defined('RSSSL_DOING_CSP') ) {
+			if (rsssl_is_logged_in_rest() || is_admin() || wp_doing_cron() || is_multisite() || $wpcli || defined('RSSSL_DOING_SYSTEM_STATUS') || defined('RSSSL_LEARNING_MODE') ) {
 				if (is_multisite()) {
 					self::$instance->rsssl_multisite = new rsssl_multisite();
 				}
 				self::$instance->rsssl_cache = new rsssl_cache();
+
+				self::$instance->placeholder = new RSSSL_PLACEHOLDER();
 				self::$instance->rsssl_server = new rsssl_server();
 				self::$instance->really_simple_ssl = new rsssl_admin();
 				self::$instance->rsssl_help = new rsssl_help();
@@ -132,9 +135,9 @@ class REALLY_SIMPLE_SSL
 		if ( $wpcli ) {
 			require_once(rsssl_path . 'class-rsssl-wp-cli.php');
 		}
-
-		if ( rsssl_is_logged_in_rest() || is_admin() || wp_doing_cron() || is_multisite() || $wpcli || defined('RSSSL_DOING_SYSTEM_STATUS') || defined('RSSSL_DOING_CSP') ) {
-			require_once( rsssl_path . 'settings/settings.php' );
+		if ( rsssl_is_logged_in_rest() || is_admin() || wp_doing_cron() || is_multisite() || $wpcli || defined('RSSSL_DOING_SYSTEM_STATUS') || defined('RSSSL_LEARNING_MODE') ) {
+            require_once( rsssl_path . 'settings/settings.php' );
+            require_once( rsssl_path . 'placeholders/class-placeholder.php' );
 			if (is_multisite()) {
 				require_once(rsssl_path . 'class-multisite.php');
 				require_once(rsssl_path . 'multisite-cron.php');
@@ -162,8 +165,7 @@ class REALLY_SIMPLE_SSL
 			require_once( rsssl_path . 'lets-encrypt/cron.php' );
 		}
 
-		//require_once(rsssl_path . '/security/integrations.php');
-
+		require_once(rsssl_path . '/security/security.php');
 	}
 
 	private function hooks()
@@ -210,6 +212,7 @@ class REALLY_SIMPLE_SSL
 	 *
 	 * @return bool
 	 */
+
 	public static function has_old_addon($file) {
 		require_once(ABSPATH.'wp-admin/includes/plugin.php');
 		$data = false;
