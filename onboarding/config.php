@@ -1,6 +1,4 @@
 <?php defined('ABSPATH') or die();
-
-
 /**
  * Two possibilities:
  * - a new install: show activation notice, and process onboarding
@@ -41,7 +39,7 @@ function rsssl_rest_api_onboarding() {
 				"variant" => "primary",
 				"disabled" => false,
 				"type" => "button",
-				"action" => "dismiss"
+				"action" => "dismiss",
 			],
 			[
 				"title" => __('Dismiss', 'really-simple-ssl'),
@@ -57,7 +55,7 @@ function rsssl_rest_api_onboarding() {
 	return [
 		"steps" => $steps,
 		"ssl_enabled" => rsssl_get_option("ssl_enabled"),
-		"dismissed" => false,//get_option("rsssl_onboarding_dismissed") || !RSSSL()->onboarding->show_notice_activate_ssl(),
+		"dismissed" => get_option("rsssl_onboarding_dismissed") || !RSSSL()->onboarding->show_notice_activate_ssl(),
 	];
 }
 
@@ -91,6 +89,7 @@ function get_items_for_second_step () {
 			"title" => __("Enable recommended hardening features in Really Simple SSL", "really-simple-ssl"),
 			"id" => "hardening",
 			"action" => "activate",
+			"current_action" => "none",
 			"status" => "warning",
 			"type" => "setting",
 			"button" => [
@@ -102,6 +101,7 @@ function get_items_for_second_step () {
 			"title" => __("Hardening features are enabled!", "really-simple-ssl"),
 			"type" => "setting",
 			"action" => "none",
+			"current_action" => "none",
 			"status" => "success",
 			"id" => "hardening",
 		];
@@ -114,6 +114,7 @@ function get_items_for_second_step () {
 			$items[] = [
 				"title" => sprintf(__("Install our plugin %s", "really-simple-ssl"), $plugin_info["title"]),
 				"action" => "install_plugin",
+				"current_action" => "none",
 				"status" => "warning",
 				"type" => "plugin",
 				"id" => $plugin_info['slug'],
@@ -126,7 +127,8 @@ function get_items_for_second_step () {
 		if ($plugin->plugin_is_downloaded() && !$plugin->plugin_is_activated() ) {
 			$items[] = [
 				"title" => sprintf(__("Activate our plugin %s", "really-simple-ssl"), $plugin_info["title"]),
-				"action" => "activate_plugin",
+				"action" => "activate",
+				"current_action" => "none",
 				"status" => "warning",
 				"type" => "plugin",
 				"id" => $plugin_info['slug'],
@@ -140,8 +142,8 @@ function get_items_for_second_step () {
 			$items[] = [
 				"title" => sprintf(__("%s has been installed!", "really-simple-ssl"), $plugin_info["title"]),
 				"action" => "none",
+				"current_action" => "none",
 				"status" => "success",
-
 			];
 		}
 	}
@@ -205,16 +207,16 @@ function get_items_for_first_step () {
 	$items = [
 		[
 			"title" => __("Http references in your .css and .js files: change any http:// into https://", "really-simple-ssl"),
-			"status" => "warning",
+			"status" => "inactive",
 		],
 		[
 			"title" => __("Images, stylesheets or scripts from a domain without an SSL certificate: remove them or move to your own server.", "really-simple-ssl"),
-			"status" => "warning",
+			"status" => "inactive",
 		],
-//		[
-//			"title" => __("You may need to login in again.", "really-simple-ssl"),
-//			"status" => "warning",
-//		],
+		[
+			"title" => __("You may need to login in again.", "really-simple-ssl"),
+			"status" => "inactive",
+		],
 	];
 
 	if (RSSSL()->rsssl_certificate->is_valid()) {

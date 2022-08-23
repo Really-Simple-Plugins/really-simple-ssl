@@ -84,8 +84,8 @@ if ( !class_exists('rsssl_installer') ){
 				return false;
             }
 
-	        if ( !get_transient("rsssl_plugin_download_active") ) {
-                set_transient("rsssl_plugin_download_active", MINUTE_IN_SECONDS );
+	        if ( get_transient("rsssl_plugin_download_active")!==$this->slug ) {
+                set_transient("rsssl_plugin_download_active", $this->slug,MINUTE_IN_SECONDS );
                 $info          = $this->get_plugin_info();
                 $download_link = esc_url_raw( $info->versions['trunk'] );
                 require_once ABSPATH . 'wp-admin/includes/class-wp-upgrader.php';
@@ -95,6 +95,7 @@ if ( !class_exists('rsssl_installer') ){
 	            $upgrader = new Plugin_Upgrader( $skin );
 	            $result = $upgrader->install( $download_link );
 		        if (is_wp_error($result)){
+					x_log($result);
 			        return false;
 		        }
 	            delete_transient("rsssl_plugin_download_active");
@@ -113,6 +114,8 @@ if ( !class_exists('rsssl_installer') ){
             }
             $result = activate_plugin( $this->get_activation_slug() );
 			if (is_wp_error($result)){
+				x_log($result);
+
 				return false;
 			}
             $this->cancel_tour();

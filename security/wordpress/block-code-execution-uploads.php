@@ -7,7 +7,7 @@
  */
 function rsssl_code_execution_errors_notice( $notices ) {
 	$notices['code-execution-uploads'] = array(
-		'callback' => 'rsssl_code_execution_uploads_test',
+		'callback' => 'rsssl_code_execution_allowed',
 		'score' => 5,
 		'output' => array(
 			'file-not-found' => array(
@@ -28,9 +28,9 @@ function rsssl_code_execution_errors_notice( $notices ) {
 		),
 	);
 
-	if ( rsssl_code_execution_allowed() && rsssl_get_server() === 'nginx') {
+	if ( rsssl_get_server() === 'nginx') {
 		$notices['code-execution-uploads-nginx'] = array(
-			'callback' => '_true_',
+			'callback' => 'rsssl_code_execution_allowed',
 			'score' => 5,
 			'output' => array(
 				'true' => array(
@@ -46,34 +46,6 @@ function rsssl_code_execution_errors_notice( $notices ) {
 }
 add_filter('rsssl_notices', 'rsssl_code_execution_errors_notice');
 
-/**
- * @return string
- * Test if code execution is allowed in /uploads folder
- */
-
-function rsssl_code_execution_uploads_test()
-{
-    $upload_dir = wp_get_upload_dir();
-	$return = '';
-    $test_file = $upload_dir['basedir'] . '/' . 'code-execution.php';
-	if ( is_writable($upload_dir['basedir'] )  ) {
-		if ( ! file_exists( $test_file ) ) {
-			copy( rsssl_path . 'security/tests/code-execution.php', $test_file );
-		}
-	}
-
-    if ( file_exists( $test_file ) ) {
-        require_once( $test_file );
-        if ( function_exists( 'rsssl_test_code_execution' ) && rsssl_test_code_execution() ) {
-            $return = 'allowed';
-        }
-    } else {
-        if ( ! is_writable( $upload_dir['basedir'] ) ) $return = 'uploads-folder-not-writable';
-        if ( ! file_exists( $test_file ) ) $return = 'could-not-create-test-file';
-    }
-
-    return $return;
-}
 
 /**
  * Block code execution

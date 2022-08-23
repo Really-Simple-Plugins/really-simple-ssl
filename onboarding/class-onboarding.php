@@ -106,7 +106,7 @@ class rsssl_onboarding {
 			if ( $data['action']==='install_plugin') {
 				$success = $plugin->download_plugin();
 				$error = !$success;
-				$next_action = 'activate_plugin';
+				$next_action = 'activate';
 			} else {
 				$success = $plugin->activate_plugin();
 				$error = !$success;
@@ -151,7 +151,6 @@ class rsssl_onboarding {
 	 */
 
 	function show_notice_activate_ssl() {
-		return true;
 		$is_upgrade = get_option('rsssl_upgraded_to_6');
 		if ( RSSSL()->really_simple_ssl->ssl_enabled && !$is_upgrade ) {
 			return false;

@@ -183,21 +183,21 @@ function rsssl_general_security_notices( $notices ) {
 		],
 	);
 
-	$notices['xmlrpc'] = array(
-		'callback' => 'rsssl_xmlrpc_allowed',
-		'score' => 10,
-		'output' => array(
-			'true' => array(
-				'highlight_field_id' => 'xmlrpc',
-				'msg' => __("XMLRPC is enabled on your site.", "really-simple-ssl"),
-				'icon' => 'warning',
-				'plusone' => true,
-			),
-		),
-		'show_with_options' => [
-			'xmlrpc',
-		],
-	);
+//	$notices['xmlrpc'] = array(
+//		'callback' => 'rsssl_xmlrpc_allowed',
+//		'score' => 10,
+//		'output' => array(
+//			'true' => array(
+//				'highlight_field_id' => 'xmlrpc',
+//				'msg' => __("XMLRPC is enabled on your site.", "really-simple-ssl"),
+//				'icon' => 'warning',
+//				'plusone' => true,
+//			),
+//		),
+//		'show_with_options' => [
+//			'xmlrpc',
+//		],
+//	);
 
 	$notices['file-editing'] = array(
 		'callback' => 'rsssl_file_editing_allowed',

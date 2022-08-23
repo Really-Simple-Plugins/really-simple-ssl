@@ -452,8 +452,7 @@ class rsssl_admin extends rsssl_front_end
 	    }
 	    $safe_mode = defined('RSSSL_SAFE_MODE') && RSSSL_SAFE_MODE;
         $error = false;
-        error_log("do activate ssl");
-        error_log("ssl detection overridden ".get_option('rsssl_ssl_detection_overridden'));
+	    $site_url_changed = false;
         if ( $this->site_has_ssl || get_option('rsssl_ssl_detection_overridden') ){
 
 	        //in a configuration reverse proxy without a set server variable https, add code to wpconfig
@@ -483,16 +482,18 @@ class rsssl_admin extends rsssl_front_end
 		        update_option('rsssl_flush_caches', time(), false );
 		        rsssl_update_option('redirect', 'wp_redirect');
 	        }
-            error_log("set SSL enabled to true");
 	        $this->ssl_enabled = true;
 	        rsssl_update_option('ssl_enabled', true);
-	        $this->set_siteurl_to_ssl();
+	        $site_url_changed = $this->set_siteurl_to_ssl();
         } else {
 	        $error = true;
         }
 
         if ( $is_ajax_request ) {
-	        $output = ['success' => !$error];
+	        $output = [
+                    'success' => !$error,
+                    'site_url_changed' => $site_url_changed,
+            ];
 	        $response = json_encode( $output );
 	        header( "Content-Type: application/json" );
 	        echo $response;
@@ -1253,24 +1254,25 @@ class rsssl_admin extends rsssl_front_end
      * @since  2.0
      *
      * @access public
-     *
+     * @return bool
      */
 
     public function set_siteurl_to_ssl()
     {
-        $site_url = get_option('siteurl');
-        $home_url = get_option('home');
-        error_log($site_url);
-        if ( strpos($site_url,'https://')===false || strpos($home_url, 'https://')===false) {
-            error_log("changing site url to https");
-	        update_option('siteurl', str_replace("http://", "https://", $site_url ));
-	        update_option('home', str_replace("http://", "https://", $home_url ));
+	    $site_url_changed = false;
+	    $site_url = get_option('siteurl');
+	    $home_url = get_option('home');
+	    if ( strpos($site_url,'https://')===false || strpos($home_url, 'https://')===false) {
+		    update_option('siteurl', str_replace("http://", "https://", $site_url ));
+		    update_option('home', str_replace("http://", "https://", $home_url ));
+		    $site_url_changed = true;
         } else {
             error_log("no url change needed");
         }
 
         //RSSSL has it's own, more extensive mixed content fixer.
 	    update_option( 'https_migration_required', false );
+        return $site_url_changed;
     }
 
     /**

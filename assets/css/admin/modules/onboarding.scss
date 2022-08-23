@@ -1,3 +1,4 @@
+@import "../../variables.scss";
 .rsssl-modal.rsssl-onboarding {
   max-width:100%;
   width:80%;
@@ -8,6 +9,7 @@
     width:200px;
   }
   #rsssl-message li {
+    display:flex; //to get the loader nicely behind the items in the onboarding modal
     position: relative;
     padding-left: 15px;
 
@@ -23,19 +25,19 @@
     }
 
     &.rsssl-inactive:before {
-      background-color: #ABB0B8;
+      background-color: var(--rsp-grey-300);
     }
 
     &.rsssl-warning:before {
-      background-color: #f8be2e;
+      background-color: var(--rsp-yellow);
     }
 
     &.rsssl-error:before {
-      background-color: #D7263D;
+      background-color: var(--rsp-red);
     }
 
     &.rsssl-success:before {
-      background-color: #61ce70;
+      background-color: var(--rsp-green);
     }
   }
   .rsssl-modal-content-step-footer {

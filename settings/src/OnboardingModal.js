@@ -2,6 +2,7 @@ import {useState, useEffect} from "@wordpress/element";
 import { Button, ToggleControl } from '@wordpress/components';
 import * as rsssl_api from "./utils/api";
 import { __ } from '@wordpress/i18n';
+import update from 'immutability-helper';
 
 const OnboardingModal = () => {
     const [show, setShow] = useState(false);
@@ -9,9 +10,7 @@ const OnboardingModal = () => {
     const [overrideSSL, setOverrideSSL] = useState(false);
     const [sslActivated, setsslActivated] = useState(false);
     const [activateSSLDisabled, setActivateSSLDisabled] = useState(true);
-    const [currentActionId, setcurrentActionId] = useState('none');
-    const [currentAction, setcurrentAction] = useState('none');
-    const [currentStatus, setcurrentStatus] = useState('warning');
+    const [stepsChanged, setStepsChanged] = useState('');
 
     useEffect(() => {
         rsssl_api.getOnboarding().then( ( response ) => {
@@ -19,6 +18,7 @@ const OnboardingModal = () => {
             steps[0].visible = true;
             setsslActivated(response.data.ssl_enabled);
             setSteps(steps);
+            setStepsChanged('initial');
             setShow(!response.data.dismissed);
         });
     }, [])
@@ -28,118 +28,119 @@ const OnboardingModal = () => {
         data.id='dismiss_onboarding_modal';
         data.action='dismiss';
         data.type='';
+        setShow(false)
         rsssl_api.onboardingActions(data).then(( response ) => {
-            setShow(false)
+
         });
     }
 
     const activateSSL = () => {
-        console.log("clicked activate SSL");
         let sslUrl = window.location.href.replace("http://", "https://");
         rsssl_api.activateSSL().then((response) => {
             steps[0].visible = false;
             steps[1].visible = true;
             //change url to https, after final check
             if (response.data.success) {
-                //we need to ensure that the rest url is with the new protocol
-                rsssl_settings.site_url = rsssl_settings.site_url.replace("http://", "https://");
-                window.location.href=sslUrl;
+                setSteps(steps);
+                setsslActivated(response.data.success);
+                window.location.reload();
             }
-            setSteps(steps);
-            setsslActivated(response.data.success);
-            window.location.reload();
         });
     }
 
-    const updateActionForItem = (findItem, newAction) => {
-        steps.forEach(function(step, i) {
-            step.items.forEach(function(item, j) {
+    const updateActionForItem = (findItem, newAction, newStatus) => {
+        let stepsCopy = steps;
+        stepsCopy.forEach(function(step, i) {
+            stepsCopy[i].items.forEach(function(item, j) {
                 if (item.id===findItem){
-                   steps[i].items[j].action=newAction;
+                  let itemCopy = stepsCopy[i].items[j];
+                  itemCopy.current_action = newAction;
+                  if (newStatus) {
+                       itemCopy.status=newStatus;
+                  }
+                  stepsCopy[i].items[j] = itemCopy;
                 }
             });
         });
-        setcurrentActionId(findItem);
-        setcurrentAction(newAction);
-        setSteps(steps);
+        setSteps(stepsCopy);
+        setStepsChanged(findItem+newAction+newStatus);
     }
 
     const itemButtonHandler = (id, type, action) => {
+
         let data={};
         data.action = action;
         data.id = id;
         data.type = type;
-        updateActionForItem(id, action);
+        updateActionForItem(id, action, false);
         rsssl_api.onboardingActions(data).then( ( response ) => {
-
             if ( response.data.success ){
                 let nextAction = response.data.next_action;
-                updateActionForItem(id, nextAction );
                 if (nextAction!=='none') {
                     data.action = nextAction;
-                    updateActionForItem(id, nextAction );
+                    updateActionForItem(id, nextAction, false);
                     rsssl_api.onboardingActions(data).then( ( response ) => {
                         if ( response.data.success ){
-                            updateActionForItem(id, response.data.next_action );
-                            setcurrentStatus('success');
+                            updateActionForItem(id, 'completed', 'success' );
                         } else {
-                            updateActionForItem(id, 'failed' );
-                            setcurrentStatus('error');
+                            updateActionForItem(id, 'failed', 'error' );
                         }
                     }).catch(error => {
-                        setcurrentStatus('error');
+                        updateActionForItem(id, 'failed', 'error' );
                     })
                 } else {
-                    updateActionForItem(id, 'failed' );
-                    setcurrentStatus('success');
+                    updateActionForItem(id, 'completed', 'success' );
                 }
             } else {
-                setcurrentStatus('error');
+                updateActionForItem(id, 'failed', 'error' );
             }
         }).catch(error => {
-            setcurrentStatus('error');
+            updateActionForItem(id, 'failed', 'error' );
         });
     }
 
     const parseStepItems = (items) => {
         return items.map((item, index) => {
-            let { title, action, status, help, button, id, type } = item
+            let { title, current_action, action, status, help, button, id, type } = item
             const statuses = {
+                'inactive': 'rsssl-inactive',
                 'warning': 'rsssl-warning',
                 'error': 'rsssl-error',
                 'success': 'rsssl-success'
+            };
+            const currentActions = {
+                'activate': __('Activating...',"really-simple-ssl"),
+                'install_plugin': __('Installing...',"really-simple-ssl"),
+                'error': __('Failed',"really-simple-ssl"),
+                'completed': __('Finished',"really-simple-ssl"),
             };
 
             let buttonTitle = '';
             if ( button ) {
                 buttonTitle = button.title;
-                if (currentActionId===id) {
-                    status = currentStatus;
-                    if ( currentAction!=='none' ) {
-                        const currentActions = {
-                            'activate_plugin': __('activating...',"really-simple-ssl"),
-                            'install_plugin': __('installing...',"really-simple-ssl"),
-                            'error': __('failed',"really-simple-ssl"),
-                            'completed': __('finished',"really-simple-ssl"),
-                        };
-                        buttonTitle = currentActions[currentAction];
-                        if (status==='error') {
-                            buttonTitle = currentActions['error'];
-                        }
+                if ( current_action!=='none' ) {
+                    buttonTitle = currentActions[current_action];
+                    if (current_action==='failed') {
+                        buttonTitle = currentActions['error'];
                     }
                 }
             }
+            let isLink = (button && button.title===buttonTitle);
+
             return (
                 <li key={index} className={statuses[status]}>
-                    {title} {button && <> - <Button isLink={true} onClick={() => itemButtonHandler(id, type, action)}>{buttonTitle}</Button>
-                    {currentAction!=='none' && currentAction!=='completed' && status!=='error' && currentActionId===id &&
-                        <div className="rsssl-loader">
-                            <div className="rect1" key="1"></div>
-                            <div className="rect2" key="2"></div>
-                            <div className="rect3" key="3"></div>
-                            <div className="rect4" key="4"></div>
-                            <div className="rect5" key="5"></div>
-                        </div>}
+                    {title} {button && <>&nbsp;-&nbsp;
+                         {isLink && <Button isLink={true} onClick={() => itemButtonHandler(id, type, action)}>{buttonTitle}</Button>}
+                         {!isLink && <>{buttonTitle}</>}
+                        {current_action==='activate' || current_action==='install_plugin' &&
+                            <div className="rsssl-loader">
+                                <div className="rect1" key="1"></div>
+                                <div className="rect2" key="2"></div>
+                                <div className="rect3" key="3"></div>
+                                <div className="rect4" key="4"></div>
+                                <div className="rect5" key="5"></div>
+                            </div>
+                        }
                     </>}
                 </li>
             )
@@ -185,7 +186,7 @@ const OnboardingModal = () => {
         return (
             <>
                 {
-                    steps.map((step, index) => {
+                    stepsChanged && steps.map((step, index) => {
                         const {title, subtitle, items, info_text: infoText, buttons, visible} = step;
                         return (
                             <div className="rsssl-modal-content-step" key={index} style={{ display: visible ? 'block' : 'none' }}>
@@ -209,7 +210,7 @@ const OnboardingModal = () => {
 
     return (
         <>
-            { (steps.length > 0 && show) && <>
+            { (show) && <>
                 <div className="rsssl-modal-backdrop" onClick={ dismissModal }>&nbsp;</div>
                 <div className="rsssl-modal rsssl-onboarding">
                     <div className="rsssl-modal-header">

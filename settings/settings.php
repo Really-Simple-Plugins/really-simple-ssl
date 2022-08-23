@@ -134,14 +134,6 @@ function rsssl_settings_rest_route() {
 			return current_user_can( 'manage_options' );
 		}
 	) );
-
-    register_rest_route( 'reallysimplessl/v1', 'onboarding', array(
-        'methods'  => 'GET',
-        'callback' => 'rsssl_rest_api_onboarding',
-        'permission_callback' => function () {
-            return current_user_can( 'manage_options' );
-        }
-    ) );
 }
 
 /**
