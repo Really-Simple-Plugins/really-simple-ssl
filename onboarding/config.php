@@ -232,7 +232,7 @@ function get_items_for_first_step () {
 		];
 	} else {
 		$items[] = [
-			"title" => __("No SSL certificate has been detected.", "really-simple-ssl") . " " . sprintf(__("Please %srefresh detection%s if a certificate has been installed recently.", "really-simple-ssl"), '<a href="'.add_query_arg(array('page'=>'rlrsssl_really_simple_ssl', 'rsssl_recheck_certificate'=>1), admin_url('options-general.php')).'">', '</a>'),
+			"title" => __("No SSL certificate has been detected.", "really-simple-ssl") . " " . sprintf(__("Please %srefresh detection%s if a certificate has been installed recently.", "really-simple-ssl"), '<a href="'.add_query_arg(array('page'=>'really-simple-security', 'rsssl_recheck_certificate'=>1), admin_url('options-general.php')).'">', '</a>'),
 			"help" => __("This detection method is not 100% accurate.", "really-simple-ssl")." ".__("If you’re certain an SSL certificate is present, please check “Override SSL detection” to continue activating SSL.", "really-simple-ssl"),
 			"status" => "error"
 		];

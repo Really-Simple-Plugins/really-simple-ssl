@@ -35,7 +35,7 @@ class rsssl_onboarding {
 					wp_redirect( add_query_arg(array('page' => 'really-simple-ssl'), network_admin_url('settings.php') )  );
 					exit;
 				} else {
-					wp_redirect( add_query_arg(array('page'=>'rlrsssl_really_simple_ssl#dashboard'), admin_url('options-general.php') ) );
+					wp_redirect( add_query_arg(array('page'=>'really-simple-security#dashboard'), admin_url('options-general.php') ) );
 					exit;
 				}
 			}

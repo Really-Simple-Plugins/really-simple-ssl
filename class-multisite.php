@@ -220,7 +220,7 @@ if (!class_exists('rsssl_multisite')) {
 
 	    public function plugin_settings_link($links)
 	    {
-		    $settings_link = '<a href="' . admin_url("options-general.php?page=rlrsssl_really_simple_ssl") . '">' . __("Settings", "really-simple-ssl") . '</a>';
+		    $settings_link = '<a href="' . admin_url("options-general.php?page=really-simple-security") . '">' . __("Settings", "really-simple-ssl") . '</a>';
 		    array_unshift($links, $settings_link);
 
 		    if ( apply_filters('rsssl_settings_link', 'free') === 'free' ) {

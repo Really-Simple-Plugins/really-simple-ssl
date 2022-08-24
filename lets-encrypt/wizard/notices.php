@@ -28,7 +28,7 @@ function rsssl_le_get_notices_list($notices) {
 	$renew_link  = rsssl_letsencrypt_wizard_url();
 	$link_open   = '<a href="' . $renew_link . '">';
 
-	$ssl_generate_url = add_query_arg( array( "page" => "rlrsssl_really_simple_ssl", "tab" => "letsencrypt" ), admin_url( "options-general.php" ) );
+	$ssl_generate_url = add_query_arg( array( "page" => "really-simple-security", "tab" => "letsencrypt" ), admin_url( "options-general.php" ) );
 	$ssl_download_url = add_query_arg( array( "step" => 6), $ssl_generate_url );
 	if ( rsssl_generated_by_rsssl() ) {
 		if ( $expiry_date ) {

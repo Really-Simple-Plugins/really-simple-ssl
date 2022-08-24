@@ -60,7 +60,7 @@ function rsssl_add_option_menu() {
 		__("SSL settings", "really-simple-ssl"),
 		__("SSL", "really-simple-ssl") . $update_count,
 		'activate_plugins',
-		'rlrsssl_really_simple_ssl',
+		'really-simple-security',
 		'rsssl_settings_page'
     );
 

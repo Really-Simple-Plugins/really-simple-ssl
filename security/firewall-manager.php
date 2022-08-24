@@ -28,7 +28,7 @@ class rsssl_firewall_manager {
 			return true;
 		}
 
-		if (isset($_GET["page"]) && ($_GET["page"] == "rlrsssl_really_simple_ssl" || $_GET["page"] == "really-simple-ssl") ) {
+		if (isset($_GET["page"]) && ($_GET["page"] == "really-simple-security" || $_GET["page"] == "really-simple-ssl") ) {
 			return true;
 		}
 

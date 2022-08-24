@@ -87,7 +87,7 @@ if ( !class_exists("rsssl_site_health") ) {
 			if ( is_multisite() && is_super_admin() ){
 				$url = add_query_arg(array('page' => 'really-simple-ssl'), network_admin_url('settings.php'));
 			} else {
-				$url = add_query_arg(array('page' => 'rlrsssl_really_simple_ssl'), admin_url("options-general.php") );
+				$url = add_query_arg(array('page' => 'really-simple-security'), admin_url("options-general.php") );
 			}
 
 			$result = array(
