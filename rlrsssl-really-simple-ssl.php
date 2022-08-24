@@ -240,12 +240,7 @@ add_action('plugins_loaded', 'RSSSL', 8);
 
 if ( !function_exists('rsssl_is_logged_in_rest')){
 	function rsssl_is_logged_in_rest(){
-        x_log($_SERVER);
 		$is_settings_page_request = isset($_SERVER['REQUEST_URI']) && strpos($_SERVER['REQUEST_URI'], 'wp-json/reallysimplessl/v1/')!==false ;
-        x_log("is rest request authenticated ".($is_settings_page_request && isset($_SERVER['HTTP_X_WP_NONCE']) && wp_verify_nonce($_SERVER['HTTP_X_WP_NONCE'], 'wp_rest')));
-        x_log("is rest request authenticated is settings page ".($is_settings_page_request ));
-        x_log("is rest request authenticated is nonce existing".(isset($_SERVER['HTTP_X_WP_NONCE']) ));
-        x_log("is rest request authenticated is nonce authenticated".(isset($_SERVER['HTTP_X_WP_NONCE']) && wp_verify_nonce($_SERVER['HTTP_X_WP_NONCE'], 'wp_rest')));
 		return $is_settings_page_request && isset($_SERVER['HTTP_X_WP_NONCE']) && wp_verify_nonce($_SERVER['HTTP_X_WP_NONCE'], 'wp_rest');
 	}
 }

@@ -4,12 +4,8 @@ if ( !defined( 'WP_UNINSTALL_PLUGIN' ) ) {
     exit();
 }
 
-delete_all_options('rlrsssl_options');
-delete_all_options('rlrsssl_network_options');
-delete_all_options('rsssl_debug_log_folder_suffix');
-
-function delete_all_options($option_name) {
-  delete_option( $option_name );
-  // For site options in Multisite
-  delete_site_option( $option_name );
+function delete_all_options() {
+//  delete_option( $option_name );
+//  // For site options in Multisite
+//  delete_site_option( $option_name );
 }

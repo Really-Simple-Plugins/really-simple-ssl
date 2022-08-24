@@ -49,10 +49,14 @@ function rsssl_plugin_admin_scripts() {
 }
 
 function rsssl_add_option_menu() {
-	if (!current_user_can('activate_plugins')) return;
+	if (!current_user_can('activate_plugins')) {
+        return;
+	}
 
-	//hides the settings page if the hide menu for subsites setting is enabled
-	if (is_multisite() && rsssl_multisite::this()->hide_menu_for_subsites && !is_super_admin()) return;
+	//hides the settings page the plugin is network activated. The settings can be found on the network settings menu.
+	if ( rsssl_treat_as_multisite() ) {
+        return;
+	}
 
 	$count = RSSSL()->really_simple_ssl->count_plusones();
 	$update_count = $count > 0 ? "<span class='update-plugins rsssl-update-count'><span class='update-count'>$count</span></span>" : "";
@@ -75,11 +79,8 @@ add_action( 'admin_menu', 'rsssl_add_option_menu' );
  function rsssl_settings_page()
 {
 	if (!current_user_can('activate_plugins')) return;
-	$tab = isset($_GET['tab']) ? sanitize_title($_GET['tab']) : 'dashboard';
     ?>
-    <div id="really-simple-ssl" class="rsssl">
-        <?php do_action("rsssl_show_tab_{$tab}"); ?>
-    </div>
+    <div id="really-simple-ssl" class="rsssl"></div>
     <div id="really-simple-ssl-modal"></div>
 	<?php
 }
@@ -251,7 +252,7 @@ function rsssl_rest_api_fields_set($request){
 		$field['value'] = $value;
 		$fields[$index] = $field;
 	}
-	if ( rsssl_is_networkwide_active() ) {
+	if ( rsssl_treat_as_multisite() ) {
 		$options = get_site_option( 'rsssl_options', [] );
 	} else {
 		$options = get_option( 'rsssl_options', [] );
@@ -265,11 +266,9 @@ function rsssl_rest_api_fields_set($request){
     }
 
     if ( ! empty( $options ) ) {
-        if ( rsssl_is_networkwide_active() ) {
+        if ( rsssl_treat_as_multisite() ) {
 	        update_site_option( 'rsssl_options', $options );
         } else {
-            error_log("fields_set function");
-            error_log(print_r($options, true));
 	        update_option( 'rsssl_options', $options );
         }
     }
@@ -315,7 +314,7 @@ function rsssl_update_option( $name, $value ) {
 	    error_log("exiting ".$name." has not existing type ");
 	    return;
     }
-	if ( rsssl_is_networkwide_active() ) {
+	if ( rsssl_treat_as_multisite() ) {
 		$options = get_site_option( 'rsssl_options', [] );
 	} else {
 		$options = get_option( 'rsssl_options', [] );
@@ -325,11 +324,10 @@ function rsssl_update_option( $name, $value ) {
 	$value = rsssl_sanitize_field( $value, rsssl_sanitize_field_type($config_field['type']), $name );
 	$value = apply_filters("rsssl_fieldvalue", $value, sanitize_text_field($name));
 	$options[$name] = $value;
-	if ( rsssl_is_networkwide_active() ) {
+
+	if ( rsssl_treat_as_multisite() ) {
 		update_site_option( 'rsssl_options', $options );
 	} else {
-		error_log("fields_set function");
-		error_log(print_r($options, true));
 		update_option( 'rsssl_options', $options );
 	}
 }

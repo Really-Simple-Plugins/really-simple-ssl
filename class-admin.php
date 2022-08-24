@@ -1,7 +1,7 @@
 <?php
 defined('ABSPATH') or die();
 
-class rsssl_admin extends rsssl_front_end
+class rsssl_admin
 {
     private static $_this;
     public $wpconfig_siteurl_not_fixed = FALSE;
@@ -31,7 +31,6 @@ class rsssl_admin extends rsssl_front_end
         self::$_this = $this;
         $this->abs_path = $this->getabs_path();
         $this->get_options();
-        $this->get_admin_options();
 
 	    $this->pro_url = is_multisite() ? 'https://really-simple-ssl.com/pro-multisite' : 'https://really-simple-ssl.com/pro';
 
@@ -143,11 +142,8 @@ class rsssl_admin extends rsssl_front_end
     {
         if (!current_user_can($this->capability)) return;
         $is_on_settings_page = $this->is_settings_page();
-
         if (defined("RSSSL_FORCE_ACTIVATE") && RSSSL_FORCE_ACTIVATE) {
-            $options = get_option('rsssl_options');
-            $options['ssl_enabled'] = true;
-            update_option('rsssl_options', $options);
+            rsssl_update_option( 'ssl_enabled', true );
         }
 
         /*
@@ -282,7 +278,6 @@ class rsssl_admin extends rsssl_front_end
 		    //upgrade both site and network settings
             $options = get_option( 'rlrsssl_options' );
             $autoreplace_insecure_links = isset( $options['autoreplace_insecure_links'] ) ? $options['autoreplace_insecure_links'] : true;
-            unset($options['autoreplace_insecure_links']);
             rsssl_update_option('mixed_content_fixer', $autoreplace_insecure_links);
 
             $wp_redirect  = isset( $options['wp_redirect'] ) ? $options['wp_redirect'] : false;
@@ -294,30 +289,39 @@ class rsssl_admin extends rsssl_front_end
                 $redirect = 'wp_redirect';
             }
             rsssl_update_option('redirect', $redirect);
-            unset($options['wp_redirect']);
-            unset($options['htaccess_redirect']);
-
             $do_not_edit_htaccess            = isset( $options['do_not_edit_htaccess'] ) ? $options['do_not_edit_htaccess'] : false;
             rsssl_update_option('do_not_edit_htaccess', $do_not_edit_htaccess);
-            unset($options['do_not_edit_htaccess']);
-
             $dismiss_all_notices             = isset( $options['dismiss_all_notices'] ) ? $options['dismiss_all_notices'] : false;
             rsssl_update_option('dismiss_all_notices', $dismiss_all_notices);
-            unset($options['dismiss_all_notices']);
 
             $switch_mixed_content_fixer_hook = isset( $options['switch_mixed_content_fixer_hook'] ) ? $options['switch_mixed_content_fixer_hook'] : false;
             rsssl_update_option('switch_mixed_content_fixer_hook', $switch_mixed_content_fixer_hook);
-            unset($options['switch_mixed_content_fixer_hook']);
-            unset($options['plugin_db_version']);
-            unset($options['dismiss_review_notice']);
-            unset($options['ssl_success_message_shown']);
-            update_option( 'rsssl_options', $options );
+
             delete_option( "rsssl_upgraded_to_four" );
 
-		    //premium
-		    $headers_method = is_multisite() ? get_site_option( 'rsssl_security_headers_method' ) : get_option( 'rsssl_security_headers_method' );
-		    rsssl_update_option('security_headers_method', $headers_method);
+
+            /**
+             * Multisite
+             */
+//		    rlrsssl_network_options[ssl_enabled_networkwide]
+//		    rlrsssl_network_options[dismiss_all_notices]
+//		    $options = get_site_option('rlrsssl_network_options');
+//		    $this->selected_networkwide_or_per_site = isset($options["selected_networkwide_or_per_site"]) ? $options["selected_networkwide_or_per_site"] : false;
+//		    $this->ssl_enabled_networkwide = isset($options["ssl_enabled_networkwide"]) ? $options["ssl_enabled_networkwide"] : false;
+//		    $this->wp_redirect = isset($options["wp_redirect"]) ? $options["wp_redirect"] : false;
+//		    $this->htaccess_redirect = isset($options["htaccess_redirect"]) ? $options["htaccess_redirect"] : false;
+//		    $this->do_not_edit_htaccess = isset($options["do_not_edit_htaccess"]) ? $options["do_not_edit_htaccess"] : false;
+//		    $this->autoreplace_mixed_content = isset($options["autoreplace_mixed_content"]) ? $options["autoreplace_mixed_content"] : false;
+//		    $this->javascript_redirect = isset($options["javascript_redirect"]) ? $options["javascript_redirect"] : false;
+//		    $this->hsts = isset($options["hsts"]) ? $options["hsts"] : false;
+//		    $this->mixed_content_admin = isset($options["mixed_content_admin"]) ? $options["mixed_content_admin"] : false;
+//		    $this->cert_expiration_warning = isset($options["cert_expiration_warning"]) ? $options["cert_expiration_warning"] : false;
+//		    $this->hide_menu_for_subsites = isset($options["hide_menu_for_subsites"]) ? $options["hide_menu_for_subsites"] : false;
+//		    $this->dismiss_all_notices = isset($options["dismiss_all_notices"]) ? $options["dismiss_all_notices"] : false;
+//		    update_site_option("rsssl_wildcard_message_shown", true);
 	    }
+
+        //delete_option( 'rlrsssl_options' );
 
         do_action("rsssl_upgrade", $prev_version);
         update_option( 'rsssl_current_version', rsssl_version );
@@ -353,7 +357,7 @@ class rsssl_admin extends rsssl_front_end
                 //remove plugin one by one on each site
                 $sites = get_sites();
                 foreach ($sites as $site) {
-                    RSSSL()->rsssl_multisite->switch_to_blog_bw_compatible($site);
+	                switch_to_blog($site->blog_id);
 
                     $current = get_option('active_plugins', array());
                     $current = $this->remove_plugin_from_array($plugin, $current);
@@ -403,29 +407,6 @@ class rsssl_admin extends rsssl_front_end
             return true;
         } else {
             return false;
-        }
-    }
-
-    public function get_sites_bw_compatible()
-    {
-        global $wp_version;
-        $sites = ($wp_version >= 4.6) ? get_sites() : wp_get_sites();
-        return $sites;
-    }
-
-	/**
-     * The new get_sites function returns an object.
-	 * @param $site
-	 */
-
-    public function switch_to_blog_bw_compatible($site)
-    {
-
-        global $wp_version;
-        if ($wp_version >= 4.6) {
-            switch_to_blog($site->blog_id);
-        } else {
-            switch_to_blog($site['blog_id']);
         }
     }
 
@@ -806,11 +787,9 @@ class rsssl_admin extends rsssl_front_end
 
 	public function save_options()
 	{
-		$options = get_option('rsssl_options', []);
-		$options['ssl_enabled'] = $this->ssl_enabled;
-		$options['site_has_ssl'] = $this->site_has_ssl;
-		$options['review_notice_shown'] = $this->review_notice_shown;
-		update_option('rsssl_options', $options);
+		rsssl_update_option('ssl_enabled', $this->ssl_enabled);
+		rsssl_update_option('site_has_ssl', $this->site_has_ssl);
+		rsssl_update_option('review_notice_shown', $this->review_notice_shown);
 	}
 
     /**
@@ -822,12 +801,12 @@ class rsssl_admin extends rsssl_front_end
      *
      */
 
-    public function get_admin_options()
+    public function get_options()
     {
+        $this->ssl_enabled = rsssl_get_option('ssl_enabled');
         $this->review_notice_shown = rsssl_get_option('review_notice_shown');
         $this->site_has_ssl = rsssl_get_option('site_has_ssl');
         $this->redirect = rsssl_get_option('redirect');
-
     }
 
 	/**
@@ -849,9 +828,13 @@ class rsssl_admin extends rsssl_front_end
 			$this->sites = array();
 			$nr_of_sites = RSSSL()->rsssl_multisite->get_total_blog_count();
 			if ( $nr_of_sites < 50 ) {
-				$sites = RSSSL()->rsssl_multisite->get_sites_bw_compatible(0, $nr_of_sites);
+				$args = array(
+					'number' => $nr_of_sites,
+					'offset' => 0,
+				);
+				$sites = get_sites($args);
 				foreach ($sites as $site) {
-					$this->switch_to_blog_bw_compatible($site);
+					switch_to_blog($site->blog_id);
 					$options = get_option('rsssl_options');
 					$ssl_enabled = FALSE;
 					if (isset($options)) {
