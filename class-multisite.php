@@ -35,7 +35,6 @@ if (!class_exists('rsssl_multisite')) {
             add_filter('home_url', array($this, 'check_site_protocol'), 20, 4);
             add_filter('site_url', array($this, 'check_site_protocol'), 20, 4);
             add_action("plugins_loaded", array($this, "process_networkwide_choice"), 10, 0);
-            add_action("plugins_loaded", array($this, "networkwide_choice_notice"), 20, 0);
             add_action('network_admin_menu', array(&$this, 'add_multisite_menu'));
 
             if (is_network_admin()) {
@@ -272,14 +271,6 @@ if (!class_exists('rsssl_multisite')) {
                 $this->switch_to_blog_bw_compatible($site);
                 RSSSL()->really_simple_ssl->activate_ssl(false);
                 restore_current_blog();
-            }
-        }
-
-
-        public function networkwide_choice_notice()
-        {
-            if ($this->plugin_network_wide_active() && !$this->selected_networkwide_or_per_site) {
-                add_action('network_admin_notices', array($this, 'show_notice_activate_networkwide'), 10);
             }
         }
 
@@ -522,50 +513,6 @@ if (!class_exists('rsssl_multisite')) {
 
 
         /**
-         * Give the user an option to activate networkwide or not.
-         * Needs to be called after detect_configuration function
-         *
-         * @since  2.3
-         *
-         * @access public
-         *
-         */
-
-        public function show_notice_activate_networkwide()
-        {
-            //prevent showing the review on edit screen, as gutenberg removes the class which makes it editable.
-            $screen = get_current_screen();
-	        if ( $screen->base === 'post' ) return;
-
-            if (is_network_admin() && RSSSL()->really_simple_ssl->wpconfig_ok()) {
-                $class = "updated notice activate-ssl really-simple-plugins";
-                $title = __("Setup", "really-simple-ssl");
-                $content = '<h2>' . __("Some things can't be done automatically. Before you migrate, please check for: ", "really-simple-ssl") . '</h2>';
-                $content .= '<ul>
-                                <li>'. __("Http references in your .css and .js files: change any http:// into https://", "really-simple-ssl") .'</li>
-                                <li>'. __("Images, stylesheets or scripts from a domain without an SSL certificate: remove them or move to your own server.", "really-simple-ssl") .'</li>
-                            </ul>';
-                $content .= __('You can also let the automatic scan of the pro version handle this for you, and get premium support and increased security with HSTS included.', 'really-simple-ssl') . " "
-                    . '<a target="_blank"
-                     href="https://really-simple-ssl.com/pro-multisite">' . __("Check out Really Simple SSL Premium", "really-simple-ssl") . '</a>' . "<br>";
-
-                $footer = '<form action="" method="post">
-                            '. wp_nonce_field('rsssl_nonce', 'rsssl_nonce').'
-                            <input type="submit" class="button button-primary"
-                                   value="'. __("Activate SSL networkwide", "really-simple-ssl").'"
-                                   id="rsssl_do_activate_ssl_networkwide" name="rsssl_do_activate_ssl_networkwide">
-                            <input type="submit" class="button button-primary"
-                                   value="'. __("Activate SSL per site", "really-simple-ssl").'"
-                                   id="rsssl_do_activate_ssl_per_site" name="rsssl_do_activate_ssl_per_site">
-                        </form>';
-                $content .= __("Networkwide activation does not check if a site has an SSL certificate. It just migrates all sites to SSL.", "really-simple-ssl");
-                echo RSSSL()->really_simple_ssl->notice_html($class, $title, $content, $footer);
-            }
-
-
-        }
-
-        /**
          * @since 2.3
          * Shows option to buy pro
          */
@@ -633,6 +580,10 @@ if (!class_exists('rsssl_multisite')) {
 	        }
         }
 
+
+        public function upgrade(){
+	        rsssl_get_option('redirect')==='wp_redirect';
+        }
 
 
 
