@@ -178,8 +178,6 @@ function rsssl_fields( $load_values = true ){
 		return [];
 	}
 
-//	$config_ids = $config_ids + ['', '',''];
-//    x_log($config_ids);
 	$fields = [
         [
             'id'          => 'ssl_enabled',
