@@ -18,18 +18,11 @@ const OnboardingModal = () => {
 
     useUpdateEffect(()=> {
         // do componentDidUpdate logic
-        console.log("progress "+networkProgress);
-        console.log("networkwide "+networkwide);
-        console.log("networkActivationStatus "+networkActivationStatus);
         if ( networkProgress<100 && networkwide && networkActivationStatus==='main_site_activated' ){
-            console.log("activate SSL network wide");
             rsssl_api.activateSSLNetworkwide().then((response) => {
-                console.log("response from network wide");
-                console.log(response);
                 if (response.data.success) {
                     setNetworkProgress(response.data.progress);
                     if (response.data.progress>=100) {
-                        console.log("set to success");
                         updateActionForItem('ssl_enabled', '', 'success');
                     }
                 }
@@ -65,7 +58,6 @@ const OnboardingModal = () => {
     }
 
     const activateSSL = () => {
-        console.log("activate SSL main site");
         let sslUrl = window.location.href.replace("http://", "https://");
         rsssl_api.activateSSL().then((response) => {
             steps[0].visible = false;
@@ -77,7 +69,6 @@ const OnboardingModal = () => {
                 if (response.data.site_url_changed) {
                     window.location.reload();
                 } else if (networkwide) {
-                    console.log("on site activation, set main site activated ");
                     setNetworkActivationStatus('main_site_activated');
                 }
             }
@@ -86,11 +77,8 @@ const OnboardingModal = () => {
 
     const updateActionForItem = (findItem, newAction, newStatus) => {
         let stepsCopy = steps;
-                        console.log("find "+findItem);
-
         stepsCopy.forEach(function(step, i) {
             stepsCopy[i].items.forEach(function(item, j) {
-                console.log(item.id);
                 if (item.id===findItem){
                   let itemCopy = stepsCopy[i].items[j];
                   itemCopy.current_action = newAction;

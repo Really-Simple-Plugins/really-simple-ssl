@@ -56,7 +56,7 @@ function rsssl_rest_api_onboarding() {
 		"ssl_enabled" => rsssl_get_option("ssl_enabled"),
 		"networkwide" => rsssl_treat_as_multisite(),
 		"network_activation_status" => get_site_option('rsssl_network_activation_status'),
-		"dismissed" => false,//get_option("rsssl_onboarding_dismissed") || !RSSSL()->onboarding->show_notice_activate_ssl(),
+		"dismissed" => get_option("rsssl_onboarding_dismissed") || !RSSSL()->onboarding->show_notice_activate_ssl(),
 	];
 }
 
