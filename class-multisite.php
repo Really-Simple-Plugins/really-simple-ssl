@@ -16,6 +16,7 @@ if (!class_exists('rsssl_multisite')) {
             self::$_this = $this;
 
             register_activation_hook(dirname(__FILE__) . "/" . rsssl_plugin, array($this, 'activate'));
+	        add_action('network_admin_menu', array($this, 'add_plus_ones') );
 
             /*filters to make sure WordPress returns the correct protocol */
             add_filter("admin_url", array($this, "check_admin_protocol"), 20, 3);
@@ -47,6 +48,37 @@ if (!class_exists('rsssl_multisite')) {
             return self::$_this;
         }
 
+	    /**
+	     *
+	     * @since 3.1.6
+	     *
+	     * Add an update count to the WordPress admin Settings menu item
+	     * Doesn't work when the Admin Menu Editor plugin is active
+	     *
+	     */
+
+	    public function add_plus_ones()
+	    {
+		    if (!current_user_can('manage_options')) {
+			    return;
+		    }
+
+		    $count = RSSSL()->really_simple_ssl->count_plusones();
+			if ( $count > 0 ) {
+				global $menu;
+				foreach( $menu as $index => $menu_item ){
+					if (!isset($menu_item[2]) || !isset($menu_item[0])) continue;
+					if ( $menu_item[2]==='settings.php' ){
+						$pattern = '/<span.*>([1-9])<\/span><\/span>/i';
+						if (preg_match($pattern, $menu_item[0], $matches)){
+							if (isset($matches[1])) $count = intval($count) + intval($matches[1]);
+						}
+						$menu[$index][0] = __('Settings') .  "<span class='update-plugins rsssl-update-count'><span class='update-count'>$count</span></span>";
+					}
+				}
+			}
+	    }
+
         public function add_multisite_notices($notices) {
         	//only on network
 	        if ( !is_network_admin()) {
@@ -62,18 +94,18 @@ if (!class_exists('rsssl_multisite')) {
             foreach ( $unset_array as $unset_item ) {
                 unset( $notices[$unset_item] );
             }
-
 	        $notices['ssl_enabled'] = array(
-		        'callback' => 'RSSSL()->rsssl_multisite->ssl_activation_status',
+		        'callback' => 'rsssl_ssl_enabled',
 		        'score' => 30,
 		        'output' => array(
-			        'ssl-networkwide' => array(
+			        'true' => array(
 				        'msg' =>__('SSL is enabled networkwide.', 'really-simple-ssl'),
 				        'icon' => 'success'
 			        ),
-			        'ssl-not-enabled' => array(
-				        'msg' => __('SSL is not enabled yet', 'really-simple-ssl'),
+			        'false' => array(
+				        'msg' => __('SSL is not enabled on your network', 'really-simple-ssl'),
 				        'icon' => 'open',
+				        'plusone' => true,
 			        ),
 		        ),
 	        );
@@ -109,25 +141,15 @@ if (!class_exists('rsssl_multisite')) {
         }
 
 	    /**
-         * Get string success or fail network wide or per site
-	     * @return string
-	     */
-
-        public function ssl_activation_status(){
-            if ( $this->ssl_enabled_networkwide ){
-               return 'ssl-networkwide';
-            } else {
-                return 'ssl-not-enabled';
-            }
-        }
-
-	    /**
          * Check if site has a server var issue.
 	     * @return string
 	     */
 
         public function multisite_server_variable_warning(){
-	        if ( !$this->ssl_enabled_networkwide && $this->is_multisite_subfolder_install() ) {
+	        if (!function_exists('is_plugin_active_for_network'))
+		        require_once(ABSPATH . '/wp-admin/includes/plugin.php');
+
+	        if ( is_multisite() && !is_plugin_active_for_network(rsssl_plugin) && $this->is_multisite_subfolder_install() ) {
 		        //with no server variables, the website could get into a redirect loop.
 		        if (RSSSL()->really_simple_ssl->no_server_variable) {
                     return 'no-server-variable';
@@ -238,7 +260,17 @@ if (!class_exists('rsssl_multisite')) {
             if ( !rsssl_treat_as_multisite() ) {
 				return;
             }
-	        $page_hook_suffix = add_submenu_page('settings.php', "SSL", "SSL", 'manage_options', "really-simple-security", 'rsssl_settings_page');
+	        $count = RSSSL()->really_simple_ssl->count_plusones();
+	        $update_count = $count > 0 ? "<span class='update-plugins rsssl-update-count'><span class='update-count'>$count</span></span>" : "";
+
+	        $page_hook_suffix = add_submenu_page(
+				'settings.php',
+				"SSL",
+				"SSL".$update_count,
+				'manage_options',
+				"really-simple-security",
+				'rsssl_settings_page'
+	        );
 	        add_action( "admin_print_scripts-{$page_hook_suffix}", 'rsssl_plugin_admin_scripts' );
         }
 
@@ -477,16 +509,6 @@ if (!class_exists('rsssl_multisite')) {
             //remove slashes of the http(s)
             $domain = preg_replace("/(http:\/\/|https:\/\/)/", "", $domain);
             if (strpos($domain, "/") !== FALSE) {
-                return true;
-            }
-            return false;
-        }
-
-
-
-        public function is_per_site_activated_multisite_subfolder_install()
-        {
-            if (is_multisite() && $this->is_multisite_subfolder_install() && !$this->ssl_enabled_networkwide) {
                 return true;
             }
             return false;

@@ -869,7 +869,7 @@ class rsssl_admin
         }
 
         parse_str($_SERVER['QUERY_STRING'], $params);
-        if (array_key_exists("page", $params) && ($params["page"] == "really-simple-security")) {
+        if ( array_key_exists("page", $params) && ($params["page"] == "really-simple-security") ) {
             return true;
         }
 
@@ -1608,7 +1608,7 @@ class rsssl_admin
 
     public function htaccess_redirect_allowed()
     {
-        if (is_multisite() && RSSSL()->rsssl_multisite->is_per_site_activated_multisite_subfolder_install()) {
+        if ( is_multisite() && !$this->can_apply_networkwide() ) {
             return false;
         } if (RSSSL()->rsssl_server->uses_htaccess()) {
             return true;
@@ -1672,9 +1672,11 @@ class rsssl_admin
 
     public function has_301_redirect()
     {
-        if ($this->wp_redirect) return true;
+        if ( $this->redirect === 'wp_redirect' ) {
+            return true;
+        }
 
-        if (RSSSL()->rsssl_server->uses_htaccess() && $this->htaccess_contains_redirect_rules()) {
+        if ( RSSSL()->rsssl_server->uses_htaccess() && $this->htaccess_contains_redirect_rules()) {
             return true;
         }
 
@@ -2372,37 +2374,18 @@ class rsssl_admin
         if (!current_user_can($this->capability)) {
             return;
         }
-        if ( rsssl_treat_as_multisite() ) {
-	        global $menu;
-	        $count = $this->count_plusones();
-	        $menu_slug = 'settings.php';
-            error_log(print_r($menu, true));
-	        foreach( $menu as $index => $menu_item ){
-		        if (!isset($menu_item[2]) || !isset($menu_item[0])) continue;
-		        if ($menu_item[2]===$menu_slug){
-			        $pattern = '/<span.*>([1-9])<\/span><\/span>/i';
-			        if (preg_match($pattern, $menu_item[0], $matches)){
-				        if (isset($matches[1])) $count = intval($count) + intval($matches[1]);
-			        }
 
-			        $update_count = $count > 0 ? "<span class='update-plugins rsssl-update-count'><span class='update-count'>$count</span></span>":'';
-			        $menu[$index][0] = __('Settings') . $update_count;
-		        }
-	        }
-        } else {
+        $count = $this->count_plusones();
+        if ($count > 0 ){
 	        global $menu;
-	        $count = $this->count_plusones();
-	        $menu_slug = 'options-general.php';
 	        foreach($menu as $index => $menu_item){
 		        if (!isset($menu_item[2]) || !isset($menu_item[0])) continue;
-		        if ($menu_item[2]===$menu_slug){
+		        if ($menu_item[2]==='options-general.php'){
 			        $pattern = '/<span.*>([1-9])<\/span><\/span>/i';
 			        if (preg_match($pattern, $menu_item[0], $matches)){
 				        if (isset($matches[1])) $count = intval($count) + intval($matches[1]);
 			        }
-
-			        $update_count = $count > 0 ? "<span class='update-plugins rsssl-update-count'><span class='update-count'>$count</span></span>":'';
-			        $menu[$index][0] = __('Settings') . $update_count;
+			        $menu[$index][0] = __('Settings') . "<span class='update-plugins rsssl-update-count'><span class='update-count'>$count</span></span>";
 		        }
 	        }
         }
@@ -3590,15 +3573,15 @@ class rsssl_admin
 			return 'htaccess-redirect-set';
 		}
 
-		if ( RSSSL()->rsssl_server->uses_htaccess() && ! is_writable( RSSSL()->really_simple_ssl->htaccess_file()) && ( ! is_multisite() || ! RSSSL()->rsssl_multisite->is_per_site_activated_multisite_subfolder_install() ) ) {
+		if ( RSSSL()->rsssl_server->uses_htaccess() && ! is_writable( RSSSL()->really_simple_ssl->htaccess_file()) && $this->can_apply_networkwide() ) {
 			return 'htaccess-not-writeable';
 		}
 
-		if ( RSSSL()->really_simple_ssl->redirect==='htaccess' && !RSSSL()->really_simple_ssl->htaccess_test_success) {
+		if ( RSSSL()->really_simple_ssl->redirect==='htaccess' && !RSSSL()->really_simple_ssl->htaccess_test_success && $this->can_apply_networkwide()) {
 			return 'htaccess-rules-test-failed';
 		}
 
-		if ( RSSSL()->really_simple_ssl->has_301_redirect() && RSSSL()->really_simple_ssl->wp_redirect && RSSSL()->rsssl_server->uses_htaccess() && RSSSL()->really_simple_ssl->redirect!=='htaccess' && ( ! is_multisite() || ! RSSSL()->rsssl_multisite->is_per_site_activated_multisite_subfolder_install() )) {
+		if ( RSSSL()->really_simple_ssl->has_301_redirect() && RSSSL()->really_simple_ssl->wp_redirect && RSSSL()->rsssl_server->uses_htaccess() && RSSSL()->really_simple_ssl->redirect!=='htaccess' && $this->can_apply_networkwide() ) {
 			return 'wp-redirect-to-htaccess';
 		}
 
@@ -3608,7 +3591,7 @@ class rsssl_admin
 
 if (!function_exists('rsssl_ssl_enabled')) {
     function rsssl_ssl_enabled() {
-        return RSSSL()->really_simple_ssl->ssl_enabled;
+        return rsssl_get_option('ssl_enabled');
     }
 }
 

@@ -55,7 +55,7 @@ function rsssl_rest_api_onboarding() {
 	return [
 		"steps" => $steps,
 		"ssl_enabled" => rsssl_get_option("ssl_enabled"),
-		"dismissed" => get_option("rsssl_onboarding_dismissed") || !RSSSL()->onboarding->show_notice_activate_ssl(),
+		"dismissed" => false,//get_option("rsssl_onboarding_dismissed") || !RSSSL()->onboarding->show_notice_activate_ssl(),
 	];
 }
 

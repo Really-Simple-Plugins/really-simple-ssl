@@ -48,6 +48,11 @@ function rsssl_plugin_admin_scripts() {
 	);
 }
 
+/**
+ * Add SSL menu
+ *
+ * @return void
+ */
 function rsssl_add_option_menu() {
 	if (!current_user_can('activate_plugins')) {
         return;
@@ -86,9 +91,7 @@ add_action( 'admin_menu', 'rsssl_add_option_menu' );
 }
 
 add_action( 'rest_api_init', 'rsssl_settings_rest_route', 10 );
- error_log("load settings.php");
 function rsssl_settings_rest_route() {
-    x_log("register rest route settings");
 	if (!current_user_can('manage_options')) {
 		return;
 	}

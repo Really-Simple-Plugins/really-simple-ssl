@@ -95,7 +95,6 @@ if ( !class_exists('rsssl_installer') ){
 	            $upgrader = new Plugin_Upgrader( $skin );
 	            $result = $upgrader->install( $download_link );
 		        if (is_wp_error($result)){
-					x_log($result);
 			        return false;
 		        }
 	            delete_transient("rsssl_plugin_download_active");
@@ -114,8 +113,6 @@ if ( !class_exists('rsssl_installer') ){
             }
             $result = activate_plugin( $this->get_activation_slug() );
 			if (is_wp_error($result)){
-				x_log($result);
-
 				return false;
 			}
             $this->cancel_tour();
