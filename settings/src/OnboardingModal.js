@@ -217,6 +217,7 @@ const OnboardingModal = () => {
     }
 
     const renderSteps = () => {
+
         return (
             <>
                 {
@@ -246,7 +247,7 @@ const OnboardingModal = () => {
     return (
         <>
             { (show) && <>
-                <div className="rsssl-modal-backdrop" onClick={ dismissModal }>&nbsp;</div>
+                <div className="rsssl-modal-backdrop">&nbsp;</div>
                 <div className="rsssl-modal rsssl-onboarding">
                     <div className="rsssl-modal-header">
                       <img className="rsssl-logo"
