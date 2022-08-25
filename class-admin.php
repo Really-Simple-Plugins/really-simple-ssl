@@ -211,7 +211,7 @@ class rsssl_admin
         add_filter("plugin_action_links_$plugin", array($this, 'plugin_settings_link'));
 
         //Add update notification to Settings admin menu
-        add_action('admin_menu', array($this, 'rsssl_edit_admin_menu') );
+        add_action('admin_menu', array($this, 'add_plus_ones') );
 
         //callbacks for the ajax dismiss buttons
         add_action('wp_ajax_rsssl_dismiss_review_notice', array($this, 'dismiss_review_notice_callback'));
@@ -2367,29 +2367,47 @@ class rsssl_admin
      *
      */
 
-    public function rsssl_edit_admin_menu()
+    public function add_plus_ones()
     {
         if (!current_user_can($this->capability)) {
             return;
         }
-        global $menu;
-        $count = $this->count_plusones();
-        $menu_slug = 'options-general.php';
-        $menu_title = __('Settings');
-        foreach($menu as $index => $menu_item){
-            if (!isset($menu_item[2]) || !isset($menu_item[0])) continue;
-            if ($menu_item[2]===$menu_slug){
-                $pattern = '/<span.*>([1-9])<\/span><\/span>/i';
-                    if (preg_match($pattern, $menu_item[0], $matches)){
-                        if (isset($matches[1])) $count = intval($count) + intval($matches[1]);
-                    }
+        if ( rsssl_treat_as_multisite() ) {
+	        global $menu;
+	        $count = $this->count_plusones();
+	        $menu_slug = 'settings.php';
+            error_log(print_r($menu, true));
+	        foreach( $menu as $index => $menu_item ){
+		        if (!isset($menu_item[2]) || !isset($menu_item[0])) continue;
+		        if ($menu_item[2]===$menu_slug){
+			        $pattern = '/<span.*>([1-9])<\/span><\/span>/i';
+			        if (preg_match($pattern, $menu_item[0], $matches)){
+				        if (isset($matches[1])) $count = intval($count) + intval($matches[1]);
+			        }
 
-                $update_count = $count > 0 ? "<span class='update-plugins rsssl-update-count'><span class='update-count'>$count</span></span>":'';
-                $menu[$index][0] = $menu_title . $update_count;
-            }
+			        $update_count = $count > 0 ? "<span class='update-plugins rsssl-update-count'><span class='update-count'>$count</span></span>":'';
+			        $menu[$index][0] = __('Settings') . $update_count;
+		        }
+	        }
+        } else {
+	        global $menu;
+	        $count = $this->count_plusones();
+	        $menu_slug = 'options-general.php';
+	        foreach($menu as $index => $menu_item){
+		        if (!isset($menu_item[2]) || !isset($menu_item[0])) continue;
+		        if ($menu_item[2]===$menu_slug){
+			        $pattern = '/<span.*>([1-9])<\/span><\/span>/i';
+			        if (preg_match($pattern, $menu_item[0], $matches)){
+				        if (isset($matches[1])) $count = intval($count) + intval($matches[1]);
+			        }
+
+			        $update_count = $count > 0 ? "<span class='update-plugins rsssl-update-count'><span class='update-count'>$count</span></span>":'';
+			        $menu[$index][0] = __('Settings') . $update_count;
+		        }
+	        }
         }
-    }
 
+    }
 
     /**
      * Get array of notices
@@ -2874,10 +2892,9 @@ class rsssl_admin
 		    $output = $this->validate_function($func);
 
             //check if all notices should be dismissed
-            if ( ( isset( $notice['output'][$output]['dismissible'] )
+            if ( isset( $notice['output'][$output]['dismissible'] )
                 && $notice['output'][$output]['dismissible']
-                && ( rsssl_get_option('dismiss_all_notices')
-                 || is_multisite() && rsssl_multisite::this()->dismiss_all_notices ) )
+                && rsssl_get_option('dismiss_all_notices')
             ) {
                 unset($notices[$id]);
                 continue;
@@ -3366,7 +3383,7 @@ class rsssl_admin
 		}
 
 		//if multisite, only on network wide activated setups
-		if ( is_multisite() && !RSSSL()->rsssl_multisite->ssl_enabled_networkwide ) {
+		if ( rsssl_treat_as_multisite() ) {
             return;
 		}
 
@@ -3427,7 +3444,7 @@ class rsssl_admin
     public function can_apply_networkwide(){
         if ( !is_multisite() ) {
             return true;
-        } elseif (RSSSL()->rsssl_multisite->ssl_enabled_networkwide) {
+        } elseif ( rsssl_treat_as_multisite() ) {
             return true;
         }
         return false;
