@@ -307,7 +307,10 @@ class rsssl_admin
 	            $enabled_network_wide = isset($network_options["ssl_enabled_networkwide"]) ? $options["ssl_enabled_networkwide"] : false;
 	            if ( $enabled_network_wide ) {
 		            update_site_option('rsssl_network_activation_status', 'completed');
-	            }
+	            } else {
+                    //convert entire site to SSL
+                    RSSSL()->rsssl_multisite->start_ssl_activation();
+                }
 	            $dismiss_all_notices = isset($network_options["dismiss_all_notices"]) ? $network_options["dismiss_all_notices"] : false;
 	            rsssl_update_option('dismiss_all_notices', $dismiss_all_notices);
 
