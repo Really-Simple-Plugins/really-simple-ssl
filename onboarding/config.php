@@ -17,7 +17,7 @@ function rsssl_rest_api_onboarding() {
 		$info = __('You can also let the automatic scan of the pro version handle this for you, and get premium support, increased security with HSTS and more!', 'really-simple-ssl'). " " . sprintf('<a target="_blank" href="%s">%s</a>', RSSSL()->really_simple_ssl->pro_url, __("Check out Really Simple SSL Pro", "really-simple-ssl"));;
 	}
 
-	if ( !$is_upgrade && !rsssl_get_option('ssl_enabled') ) {
+	if ( !rsssl_get_option('ssl_enabled') ) {
 		$steps[] = [
 			"title" => __( "Almost ready to migrate to SSL!", 'really-simple-ssl' ),
 			"subtitle" => __("Before you migrate, please check for:", "really-simple-ssl"),
@@ -76,7 +76,6 @@ function get_items_for_second_step () {
 	];
 
 	$items = [];
-
 	$items[] = [
 		"title" => __("SSL has been activated with Really Simple SSL", "really-simple-ssl"),
 		"action" => "none",
