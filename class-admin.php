@@ -299,32 +299,27 @@ class rsssl_admin
 
             delete_option( "rsssl_upgraded_to_four" );
 
-
             /**
              * Multisite
              */
-//            migrate network activated sites this option
-//		    get_site_option('rsssl_network_activation_status')==='completed'
+            if (rsssl_treat_as_multisite() ) {
+	            $network_options = get_site_option('rlrsssl_network_options');
+	            $enabled_network_wide = isset($network_options["ssl_enabled_networkwide"]) ? $options["ssl_enabled_networkwide"] : false;
+	            if ( $enabled_network_wide ) {
+		            update_site_option('rsssl_network_activation_status', 'completed');
+	            }
+	            $dismiss_all_notices = isset($network_options["dismiss_all_notices"]) ? $network_options["dismiss_all_notices"] : false;
+	            rsssl_update_option('dismiss_all_notices', $dismiss_all_notices);
 
-
-
-
-//		    rlrsssl_network_options[ssl_enabled_networkwide]
-//		    rlrsssl_network_options[dismiss_all_notices]
-//		    $options = get_site_option('rlrsssl_network_options');
-//		    $this->selected_networkwide_or_per_site = isset($options["selected_networkwide_or_per_site"]) ? $options["selected_networkwide_or_per_site"] : false;
-//		    $this->ssl_enabled_networkwide = isset($options["ssl_enabled_networkwide"]) ? $options["ssl_enabled_networkwide"] : false;
-//		    $this->wp_redirect = isset($options["wp_redirect"]) ? $options["wp_redirect"] : false;
-//		    $this->htaccess_redirect = isset($options["htaccess_redirect"]) ? $options["htaccess_redirect"] : false;
-//		    $this->do_not_edit_htaccess = isset($options["do_not_edit_htaccess"]) ? $options["do_not_edit_htaccess"] : false;
-//		    $this->autoreplace_mixed_content = isset($options["autoreplace_mixed_content"]) ? $options["autoreplace_mixed_content"] : false;
-//		    $this->javascript_redirect = isset($options["javascript_redirect"]) ? $options["javascript_redirect"] : false;
-//		    $this->hsts = isset($options["hsts"]) ? $options["hsts"] : false;
-//		    $this->mixed_content_admin = isset($options["mixed_content_admin"]) ? $options["mixed_content_admin"] : false;
-//		    $this->cert_expiration_warning = isset($options["cert_expiration_warning"]) ? $options["cert_expiration_warning"] : false;
-//		    $this->hide_menu_for_subsites = isset($options["hide_menu_for_subsites"]) ? $options["hide_menu_for_subsites"] : false;
-//		    $this->dismiss_all_notices = isset($options["dismiss_all_notices"]) ? $options["dismiss_all_notices"] : false;
-//		    update_site_option("rsssl_wildcard_message_shown", true);
+	            $wp_redirect = isset($network_options["wp_redirect"]) ? $network_options["wp_redirect"] : false;
+	            if ($wp_redirect) rsssl_update_option('redirect', 'wp_redirect');
+	            $htaccess_redirect = isset($network_options["htaccess_redirect"]) ? $network_options["htaccess_redirect"] : false;
+	            if ($htaccess_redirect) rsssl_update_option('redirect', 'htaccess');
+	            $do_not_edit_htaccess = isset($network_options["do_not_edit_htaccess"]) ? $network_options["do_not_edit_htaccess"] : false;
+	            rsssl_update_option('do_not_edit_htaccess', $do_not_edit_htaccess);
+	            $autoreplace_mixed_content = isset($network_options["autoreplace_mixed_content"]) ? $network_options["autoreplace_mixed_content"] : false;
+	            rsssl_update_option('mixed_content_fixer', $autoreplace_mixed_content);
+            }
 	    }
 
         //delete_option( 'rlrsssl_options' );
