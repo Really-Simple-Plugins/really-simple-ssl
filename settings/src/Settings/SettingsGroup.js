@@ -66,8 +66,9 @@ class SettingsGroup extends Component {
 
         this.upgrade = activeGroup.upgrade ? activeGroup.upgrade : this.upgrade;
         let helplinkText = activeGroup.helpLink_text ? activeGroup.helpLink_text : __("Instructions manual","really-simple-ssl");
+
         return (
-            <div className="rsssl-grid-item">
+            <div className={"rsssl-grid-item rsssl-"+activeGroup.id}>
                 {activeGroup && activeGroup.title && <div className="rsssl-grid-item-header">
                     <h3 className="rsssl-h4">{activeGroup.title}</h3>
                     {activeGroup && activeGroup.helpLink && <div className="rsssl-grid-item-controls"><Hyperlink target="_blank" className="rsssl-helplink" text={helplinkText} url={activeGroup.helpLink}/></div>}
