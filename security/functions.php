@@ -55,9 +55,7 @@ if ( !function_exists('rsssl_get_wp_option') ) {
 //    }
 //}
 
-//error_log(print_r($_SERVER,true));
-//error_log(print_r($_POST,true));
-//error_log(print_r($_GET,true));
+
 if ( !function_exists('rsssl_remove_htaccess_security_edits') ) {
 	/**
 	 * Clean up on deactivation

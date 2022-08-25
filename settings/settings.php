@@ -569,8 +569,6 @@ function rsssl_sanitize_permissions_policy( $value, $type, $field_name ){
         foreach ($default as $def_row_index => $def_row ) {
             //check if it is available in the array. If not, add
             if ( !in_array($def_row['id'], $stored_ids) ) {
-                error_log("adding missing item ");
-                error_log(print_r($def_row, true));
                 $value[] = $def_row;
             }
         }
