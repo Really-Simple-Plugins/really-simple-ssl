@@ -150,7 +150,7 @@ class rsssl_onboarding {
 	 * Logic if the activation notice should be shown
 	 */
 
-	function show_notice_activate_ssl() {
+	function show_onboarding_modal() {
 		$is_upgrade = get_option('rsssl_upgraded_to_6');
 		if ( RSSSL()->really_simple_ssl->ssl_enabled && !$is_upgrade ) {
 			return false;

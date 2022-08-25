@@ -55,7 +55,7 @@ function rsssl_rest_api_onboarding() {
 	return [
 		"steps" => $steps,
 		"ssl_enabled" => rsssl_get_option("ssl_enabled"),
-		"dismissed" => get_option("rsssl_onboarding_dismissed") || !RSSSL()->onboarding->show_notice_activate_ssl(),
+		"dismissed" => get_option("rsssl_onboarding_dismissed") || !RSSSL()->onboarding->show_onboarding_modal(),
 	];
 }
 
@@ -67,11 +67,13 @@ function get_items_for_second_step () {
 	$plugins_to_install = [
 		[
 			"slug" => "burst-statistics",
-			"title" => __("Burst Statistics", "really-simple-ssl")
+			"title" => __("Burst Statistics", "really-simple-ssl"),
+			"description" => __("Gather privacy-friendly statistics with Burst Statistics", "really-simple-ssl"),
 		],
 		[
 			"slug" => "complianz-gdpr",
-			"title" => __("Complianz - The Privacy Suite for Wordpress", "really-simple-ssl")
+			"title" => __("Complianz - The Privacy Suite for Wordpress", "really-simple-ssl"),
+			"description" => __("Manage privacy compliance with Complianz", "really-simple-ssl"),
 		]
 	];
 
@@ -111,7 +113,7 @@ function get_items_for_second_step () {
 		$plugin = new rsssl_installer($plugin_info["slug"]);
 		if(!$plugin->plugin_is_downloaded() && !$plugin->plugin_is_activated()){
 			$items[] = [
-				"title" => sprintf(__("Install our plugin %s", "really-simple-ssl"), $plugin_info["title"]),
+				"title" => $plugin_info["description"],
 				"action" => "install_plugin",
 				"current_action" => "none",
 				"status" => "warning",
