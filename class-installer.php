@@ -111,7 +111,9 @@ if ( !class_exists('rsssl_installer') ){
             if ( !current_user_can('install_plugins')) {
 				return false;
             }
-            $result = activate_plugin( $this->get_activation_slug() );
+			$slug = $this->get_activation_slug();
+	        $networkwide = rsssl_treat_as_multisite();
+            $result = activate_plugin( $slug, '', $networkwide );
 			if (is_wp_error($result)){
 				return false;
 			}

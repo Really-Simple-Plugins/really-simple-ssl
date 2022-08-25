@@ -3,6 +3,7 @@ import { Button, ToggleControl } from '@wordpress/components';
 import * as rsssl_api from "./utils/api";
 import { __ } from '@wordpress/i18n';
 import update from 'immutability-helper';
+import {useUpdateEffect} from 'react-use';
 
 const OnboardingModal = () => {
     const [show, setShow] = useState(false);
@@ -11,16 +12,45 @@ const OnboardingModal = () => {
     const [sslActivated, setsslActivated] = useState(false);
     const [activateSSLDisabled, setActivateSSLDisabled] = useState(true);
     const [stepsChanged, setStepsChanged] = useState('');
+    const [networkwide, setNetworkwide] = useState(false);
+    const [networkActivationStatus, setNetworkActivationStatus] = useState(false);
+    const [networkProgress, setNetworkProgress] = useState(0);
 
+    useUpdateEffect(()=> {
+        // do componentDidUpdate logic
+        console.log("progress "+networkProgress);
+        console.log("networkwide "+networkwide);
+        console.log("networkActivationStatus "+networkActivationStatus);
+        if ( networkProgress<100 && networkwide && networkActivationStatus==='main_site_activated' ){
+            console.log("activate SSL network wide");
+            rsssl_api.activateSSLNetworkwide().then((response) => {
+                console.log("response from network wide");
+                console.log(response);
+                if (response.data.success) {
+                    setNetworkProgress(response.data.progress);
+                    if (response.data.progress>=100) {
+                        console.log("set to success");
+                        updateActionForItem('ssl_enabled', '', 'success');
+                    }
+                }
+
+            });
+        }
+    })
     useEffect(() => {
         rsssl_api.getOnboarding().then( ( response ) => {
             let steps = response.data.steps;
+            setNetworkwide(response.data.networkwide)
             steps[0].visible = true;
             setsslActivated(response.data.ssl_enabled);
+            setNetworkActivationStatus(response.data.network_activation_status);
             setSteps(steps);
             setStepsChanged('initial');
             setShow(!response.data.dismissed);
         });
+
+
+
     }, [])
 
     const dismissModal = () => {
@@ -35,23 +65,32 @@ const OnboardingModal = () => {
     }
 
     const activateSSL = () => {
+        console.log("activate SSL main site");
         let sslUrl = window.location.href.replace("http://", "https://");
         rsssl_api.activateSSL().then((response) => {
             steps[0].visible = false;
             steps[1].visible = true;
             //change url to https, after final check
-            if (response.data.success) {
+            if ( response.data.success ) {
                 setSteps(steps);
                 setsslActivated(response.data.success);
-                window.location.reload();
+                if (response.data.site_url_changed) {
+                    window.location.reload();
+                } else if (networkwide) {
+                    console.log("on site activation, set main site activated ");
+                    setNetworkActivationStatus('main_site_activated');
+                }
             }
         });
     }
 
     const updateActionForItem = (findItem, newAction, newStatus) => {
         let stepsCopy = steps;
+                        console.log("find "+findItem);
+
         stepsCopy.forEach(function(step, i) {
             stepsCopy[i].items.forEach(function(item, j) {
+                console.log(item.id);
                 if (item.id===findItem){
                   let itemCopy = stepsCopy[i].items[j];
                   itemCopy.current_action = newAction;
@@ -101,12 +140,13 @@ const OnboardingModal = () => {
 
     const parseStepItems = (items) => {
         return items.map((item, index) => {
-            let { title, current_action, action, status, help, button, id, type } = item
+            let { title, current_action, action, status, help, button, id, type, percentage } = item
             const statuses = {
                 'inactive': 'rsssl-inactive',
                 'warning': 'rsssl-warning',
                 'error': 'rsssl-error',
-                'success': 'rsssl-success'
+                'success': 'rsssl-success',
+                'processing': 'rsssl-processing',
             };
             const currentActions = {
                 'activate': __('Activating...',"really-simple-ssl"),
@@ -129,18 +169,24 @@ const OnboardingModal = () => {
 
             return (
                 <li key={index} className={statuses[status]}>
-                    {title} {button && <>&nbsp;-&nbsp;
-                         {isLink && <Button isLink={true} onClick={() => itemButtonHandler(id, type, action)}>{buttonTitle}</Button>}
-                         {!isLink && <>{buttonTitle}</>}
-                        {current_action==='activate' || current_action==='install_plugin' &&
-                            <div className="rsssl-loader">
-                                <div className="rect1" key="1"></div>
-                                <div className="rect2" key="2"></div>
-                                <div className="rect3" key="3"></div>
-                                <div className="rect4" key="4"></div>
-                                <div className="rect5" key="5"></div>
-                            </div>
-                        }
+                    {title}
+                    {percentage && networkActivationStatus==='main_site_activated' && <>
+                        &nbsp;-&nbsp;
+                        {networkProgress<100 && <>{__("working", "really-simple-ssl")}&nbsp;{networkProgress}%</>}
+                        {networkProgress>=100 && __("completed", "really-simple-ssl") }
+                        </>}
+                    {button && <>&nbsp;-&nbsp;
+                    {isLink && <Button isLink={true} onClick={() => itemButtonHandler(id, type, action)}>{buttonTitle}</Button>}
+                    {!isLink && <>{buttonTitle}</>}
+                    {current_action==='activate' || current_action==='install_plugin' &&
+                        <div className="rsssl-loader">
+                            <div className="rect1" key="1"></div>
+                            <div className="rect2" key="2"></div>
+                            <div className="rect3" key="3"></div>
+                            <div className="rect4" key="4"></div>
+                            <div className="rect5" key="5"></div>
+                        </div>
+                    }
                     </>}
                 </li>
             )
@@ -170,8 +216,8 @@ const OnboardingModal = () => {
                     disabled={disabled}
                     checked={overrideSSL}
                     onChange={(value) => {
+                        setOverrideSSL(value)
                         rsssl_api.overrideSSLDetection(value).then((response) => {
-                            setOverrideSSL(value)
                             setActivateSSLDisabled(!value)
                         });
                     }}
@@ -200,6 +246,7 @@ const OnboardingModal = () => {
                                 <div className="rsssl-modal-content-step-footer">
                                     {parseStepButtons(buttons)}
                                 </div>
+
                             </div>
                         )
                     })

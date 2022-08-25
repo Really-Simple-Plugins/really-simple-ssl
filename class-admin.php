@@ -303,6 +303,12 @@ class rsssl_admin
             /**
              * Multisite
              */
+//            migrate network activated sites this option
+//		    get_site_option('rsssl_network_activation_status')==='completed'
+
+
+
+
 //		    rlrsssl_network_options[ssl_enabled_networkwide]
 //		    rlrsssl_network_options[dismiss_all_notices]
 //		    $options = get_site_option('rlrsssl_network_options');
@@ -426,51 +432,59 @@ class rsssl_admin
 	 *  Activate the SSL for this site
 	 */
 
-    public function activate_ssl($is_ajax_request=true)
+    public function activate_ssl($request)
     {
 	    if ( !current_user_can('manage_options') ) {
 		    return;
 	    }
 	    $safe_mode = defined('RSSSL_SAFE_MODE') && RSSSL_SAFE_MODE;
         $error = false;
+	    $is_rest_request =  $request instanceof WP_REST_Request;
 	    $site_url_changed = false;
-        if ( $this->site_has_ssl || get_option('rsssl_ssl_detection_overridden') ){
 
-	        //in a configuration reverse proxy without a set server variable https, add code to wpconfig
-	        if ( $this->do_wpconfig_loadbalancer_fix ) {
-		        $this->wpconfig_loadbalancer_fix();
-	        }
+//        if ( $this->site_has_ssl || get_option('rsssl_ssl_detection_overridden') ){
+//
+//	        //in a configuration reverse proxy without a set server variable https, add code to wpconfig
+//	        if ( $this->do_wpconfig_loadbalancer_fix ) {
+//		        $this->wpconfig_loadbalancer_fix();
+//	        }
+//
+//	        if ( $this->no_server_variable ){
+//		        $this->wpconfig_server_variable_fix();
+//	        }
+//
+//	        if ( !$safe_mode ) {
+//		        $this->editHtaccess();
+//	        }
+//
+//	        if ( !$safe_mode && $this->wpconfig_siteurl_not_fixed ){
+//		        $this->fix_siteurl_defines_in_wpconfig();
+//	        }
+//
+//	        if ( !$safe_mode ) {
+//		        //flush caches when just activated ssl
+//		        //flush the permalinks
+//		        update_option('rsssl_activation_timestamp', time(), false );
+//		        if (!defined('RSSSL_NO_FLUSH') || !RSSSL_NO_FLUSH) {
+//			        update_option('rsssl_flush_rewrite_rules', time(), false );
+//		        }
+//		        update_option('rsssl_flush_caches', time(), false );
+//		        rsssl_update_option('redirect', 'wp_redirect');
+//	        }
+//	        $this->ssl_enabled = true;
+//	        rsssl_update_option('ssl_enabled', true);
+//	        $site_url_changed = $this->set_siteurl_to_ssl();
+//        } else {
+//	        $error = true;
+//        }
 
-	        if ( $this->no_server_variable ){
-		        $this->wpconfig_server_variable_fix();
-	        }
-
-	        if ( !$safe_mode ) {
-		        $this->editHtaccess();
-	        }
-
-	        if ( !$safe_mode && $this->wpconfig_siteurl_not_fixed ){
-		        $this->fix_siteurl_defines_in_wpconfig();
-	        }
-
-	        if ( !$safe_mode ) {
-		        //flush caches when just activated ssl
-		        //flush the permalinks
-		        update_option('rsssl_activation_timestamp', time(), false );
-		        if (!defined('RSSSL_NO_FLUSH') || !RSSSL_NO_FLUSH) {
-			        update_option('rsssl_flush_rewrite_rules', time(), false );
-		        }
-		        update_option('rsssl_flush_caches', time(), false );
-		        rsssl_update_option('redirect', 'wp_redirect');
-	        }
-	        $this->ssl_enabled = true;
-	        rsssl_update_option('ssl_enabled', true);
-	        $site_url_changed = $this->set_siteurl_to_ssl();
-        } else {
-	        $error = true;
+        //if this is true, this is a request from the network admin. We save an option to ensure we know that this part is completed
+        if ( rsssl_treat_as_multisite() ) {
+            error_log("set to main site activated");
+            update_site_option('rsssl_network_activation_status', 'main_site_activated');
         }
 
-        if ( $is_ajax_request ) {
+        if ( $is_rest_request ) {
 	        $output = [
                     'success' => !$error,
                     'site_url_changed' => $site_url_changed,
@@ -1982,7 +1996,8 @@ class rsssl_admin
                     $mixed_content_fixer_detected = 'curl-error';
                 }
             }
-            if ( $this->autoreplace_insecure_links == ! true ) {
+
+            if ( !rsssl_get_option( 'mixed_content_fixer' ) ) {
                 $mixed_content_fixer_detected = 'not-enabled';
             }
             set_transient('rsssl_mixed_content_fixer_detected', $mixed_content_fixer_detected, 600);
@@ -3581,7 +3596,7 @@ class rsssl_admin
 			return 'htaccess-rules-test-failed';
 		}
 
-		if ( RSSSL()->really_simple_ssl->has_301_redirect() && RSSSL()->really_simple_ssl->wp_redirect && RSSSL()->rsssl_server->uses_htaccess() && RSSSL()->really_simple_ssl->redirect!=='htaccess' && $this->can_apply_networkwide() ) {
+		if ( RSSSL()->really_simple_ssl->has_301_redirect() && RSSSL()->really_simple_ssl->redirect==='wp_redirect' && RSSSL()->rsssl_server->uses_htaccess() && RSSSL()->really_simple_ssl->redirect!=='htaccess' && $this->can_apply_networkwide() ) {
 			return 'wp-redirect-to-htaccess';
 		}
 

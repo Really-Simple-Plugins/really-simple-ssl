@@ -1,6 +1,4 @@
-<?php
-
-defined('ABSPATH') or die("you do not have access to this page!");
+<?php defined('ABSPATH') or die();
 
 if (!class_exists('rsssl_multisite')) {
     class rsssl_multisite
@@ -17,13 +15,11 @@ if (!class_exists('rsssl_multisite')) {
 
             register_activation_hook(dirname(__FILE__) . "/" . rsssl_plugin, array($this, 'activate'));
 	        add_action('network_admin_menu', array($this, 'add_plus_ones') );
-
             /*filters to make sure WordPress returns the correct protocol */
             add_filter("admin_url", array($this, "check_admin_protocol"), 20, 3);
             add_filter('home_url', array($this, 'check_site_protocol'), 20, 4);
             add_filter('site_url', array($this, 'check_site_protocol'), 20, 4);
             add_action('network_admin_menu', array(&$this, 'add_multisite_menu'));
-
             if ( is_network_admin() ) {
                 add_action('network_admin_notices', array($this, 'show_notices'), 10);
             }
@@ -38,8 +34,6 @@ if (!class_exists('rsssl_multisite')) {
                 add_action('wpmu_new_blog', array($this, 'maybe_activate_ssl_in_new_blog_deprecated'), 10, 6);
             }
 
-            //Listen for run_ssl_process hook switch
-            add_action('admin_init', array($this, 'listen_for_ssl_conversion_hook_switch'), 40);
 	        add_filter('rsssl_notices', array($this, 'add_multisite_notices'));
         }
 
@@ -164,7 +158,7 @@ if (!class_exists('rsssl_multisite')) {
 	     */
 
 	    public function subdomains_no_wildcard(){
-		    if (!RSSSL()->really_simple_ssl->ssl_enabled && !$this->is_multisite_subfolder_install() && !RSSSL()->rsssl_certificate->is_wildcard() && !get_site_option("rsssl_wildcard_message_shown")) {
+		    if ( get_site_option('rsssl_network_activation_status' !== 'completed') && !$this->is_multisite_subfolder_install() && !RSSSL()->rsssl_certificate->is_wildcard() ) {
                 return 'subdomains-no-wildcard';
 		    }
 		    return 'success';
@@ -208,7 +202,7 @@ if (!class_exists('rsssl_multisite')) {
 
         public function maybe_activate_ssl_in_new_blog_deprecated($blog_id, $user_id=false, $domain=false, $path=false, $site_id=false, $meta=false)
         {
-            if ($this->ssl_enabled_networkwide) {
+	        if ( get_site_option('rsssl_network_activation_status' === 'completed') ) {
                 $site = get_blog_details($blog_id);
 	            switch_to_blog($site->blog_id);
                 RSSSL()->really_simple_ssl->activate_ssl(false);
@@ -225,28 +219,10 @@ if (!class_exists('rsssl_multisite')) {
 
         public function maybe_activate_ssl_in_new_blog($site)
         {
-            if ($this->ssl_enabled_networkwide) {
+            if ( get_site_option('rsssl_network_activation_status' === 'completed') ) {
 	            switch_to_blog($site->blog_id);
                 RSSSL()->really_simple_ssl->activate_ssl(false);
                 restore_current_blog();
-            }
-        }
-
-        /**
-         * @param $networkwide
-         *
-         * On plugin activation, we can check if it is networkwide or not.
-         *
-         * @since  2.1
-         *
-         * @access public
-         */
-
-        public function activate($networkwide)
-        {
-            //if networkwide, we ask, if not, we set it as selected.
-            if (!$networkwide) {
-                $this->ssl_enabled_networkwide = false;
             }
         }
 
@@ -274,33 +250,14 @@ if (!class_exists('rsssl_multisite')) {
 	        add_action( "admin_print_scripts-{$page_hook_suffix}", 'rsssl_plugin_admin_scripts' );
         }
 
-        /**
-         * Save network settings
-         */
-
-        public function update_network_options()
-        {
-            if (!current_user_can('manage_options')) {
-                return;
-            }
-	        do_action('rsssl_process_network_options');
-            if (isset($_POST["rlrsssl_network_options"])) {
-	            if ( $this->ssl_enabled_networkwide ) {
-		            $this->start_ssl_activation();
-	            }
-            }
-        }
-
 	    /**
 	     * Check if an SSL process is active
 	     * @return bool
 	     */
         public function ssl_process_active(){
-
-            if (get_site_option('rsssl_ssl_activation_active')){
+            if ( get_site_option('rsssl_ssl_activation_active') ){
                 return true;
             }
-
             return false;
         }
 
@@ -310,11 +267,32 @@ if (!class_exists('rsssl_multisite')) {
 	     * @return void
 	     */
         public function run_ssl_process(){
-            if (get_site_option('rsssl_ssl_activation_active')){
+            if ( get_site_option('rsssl_ssl_activation_active') ){
                 $this->activate_ssl_networkwide();
             }
             update_site_option('rsssl_run', false);
         }
+
+	    /**
+	     * @param WP_REST_Request $request
+	     *
+	     * @return void
+	     */
+		public function process_ssl_activation_step(){
+			if ( !$this->ssl_process_active() ) {
+				$this->start_ssl_activation();
+			}
+			$this->run_ssl_process();
+			$progress = $this->get_process_completed_percentage();
+			$output = [
+				'progress' => $progress,
+				'success' => true
+			];
+			$response = json_encode( $output );
+			header( "Content-Type: application/json" );
+			echo $response;
+			exit;
+		}
 
 	    /**
 	     * Get SSL process completed percentage
@@ -323,7 +301,9 @@ if (!class_exists('rsssl_multisite')) {
         public function get_process_completed_percentage(){
             $complete_count = get_site_option('rsssl_siteprocessing_progress');
             $percentage = round(($complete_count/$this->get_total_blog_count())*100,0);
-            if ($percentage > 99) $percentage = 100;
+            if ( $percentage > 99 ) {
+				$percentage = 100;
+            }
 
             return intval($percentage);
         }
@@ -357,19 +337,33 @@ if (!class_exists('rsssl_multisite')) {
             //run chunked
             $nr_of_sites = 200;
             $current_offset = get_site_option('rsssl_siteprocessing_progress');
-
             //set batch of sites
 	        $args = array(
 		        'number' => $nr_of_sites,
 		        'offset' => $current_offset,
+                'meta_query' => [
+			        'relation' => 'or',
+			        [
+				        'key'   => 'rsssl_ssl_activated',
+				        'compare' => 'NOT EXISTS'
+			        ],
+			        [
+				        'key'   => 'rsssl_ssl_activated',
+				        'value' => false,
+				        'compare' => '=',
+			        ],
+		        ]
 	        );
+
 	        $sites = get_sites($args);
             //if no sites are found, we assume we're done.
-            if (count($sites)==0) {
+            if ( count($sites)==0 ) {
                 $this->end_ssl_activation();
+	            update_site_option('rsssl_network_activation_status', 'completed');
             } else {
                 foreach ($sites as $site) {
 	                switch_to_blog($site->blog_id);
+	                update_site_meta($site->blog_id, 'rsssl_ssl_activated', true );
                     RSSSL()->really_simple_ssl->activate_ssl(false);
                     restore_current_blog(); //switches back to previous blog, not current, so we have to do it each loop
                     update_site_option('rsssl_siteprocessing_progress', $current_offset+$nr_of_sites);
@@ -389,8 +383,9 @@ if (!class_exists('rsssl_multisite')) {
 			rsssl_update_option('mixed_content_admin', false );
 			rsssl_update_option('cert_expiration_warning', false );
 			rsssl_update_option('dismiss_all_notices', false );
+	        delete_site_option('rsssl_network_activation_status');
 
-            //because the deactivation should be a one click procedure, chunking this would cause difficulties
+	        //because the deactivation should be a one click procedure, chunking this would cause difficulties
 	        $args = array(
 		        'number' => $this->get_total_blog_count(),
 		        'offset' => 0,
@@ -398,7 +393,8 @@ if (!class_exists('rsssl_multisite')) {
 	        $sites = get_sites($args);
             foreach ($sites as $site) {
 	            switch_to_blog($site->blog_id);
-                RSSSL()->really_simple_ssl->deactivate_ssl();
+	            update_site_meta($site->blog_id, 'rsssl_ssl_activated', false );
+	            RSSSL()->really_simple_ssl->deactivate_ssl();
                 restore_current_blog(); //switches back to previous blog, not current, so we have to do it each loop
             }
         }
@@ -413,7 +409,7 @@ if (!class_exists('rsssl_multisite')) {
 
         public function check_admin_protocol($url, $path, $blog_id)
         {
-            if (!$blog_id) $blog_id = get_current_blog_id();
+            if ( !$blog_id ) $blog_id = get_current_blog_id();
 
             //if the force_ssl_admin is defined, the admin_url should not be forced back to http: all admin panels should be https.
             if (defined('FORCE_SSL_ADMIN')) return $url;
@@ -424,7 +420,10 @@ if (!class_exists('rsssl_multisite')) {
             if (get_current_blog_id() == $blog_id) return $url;
 
             //now check if the blog is http or https, and change the url accordingly
-            if (!$this->ssl_enabled_networkwide) {
+	        if (!function_exists('is_plugin_active_for_network'))
+		        require_once(ABSPATH . '/wp-admin/includes/plugin.php');
+
+            if ( !is_plugin_active_for_network(rsssl_plugin) ) {
                 $home_url = get_blog_option($blog_id, 'home');
                 if (strpos($home_url, "https://") === false) {
                     $url = str_replace("https://", "http://", $url);
@@ -449,8 +448,11 @@ if (!class_exists('rsssl_multisite')) {
 
             if (get_current_blog_id() == $blog_id) return $url;
 
-            if (!$this->ssl_enabled_networkwide) {
-                $home_url = get_blog_option($blog_id, 'home');
+	        if (!function_exists('is_plugin_active_for_network'))
+		        require_once(ABSPATH . '/wp-admin/includes/plugin.php');
+
+	        if ( !is_plugin_active_for_network(rsssl_plugin) ) {
+				$home_url = get_blog_option($blog_id, 'home');
                 if (strpos($home_url, "https://") === false) {
                     $url = str_replace("https://", "http://", $url);
                 }
@@ -474,7 +476,7 @@ if (!class_exists('rsssl_multisite')) {
                 return false;
             }
             //we check this manually, as the SUBDOMAIN_INSTALL constant of wordpress might return false for domain mapping configs
-            $is_subfolder = FALSE;
+            $is_subfolder = false;
 	        $args = array(
 		        'number' => 5,
 		        'offset' => 0,
@@ -483,13 +485,13 @@ if (!class_exists('rsssl_multisite')) {
             foreach ($sites as $site) {
 	            switch_to_blog($site->blog_id);
 				if ($this->is_subfolder(home_url())) {
-                    $is_subfolder = TRUE;
+                    $is_subfolder = true;
                 }
                 restore_current_blog(); //switches back to previous blog, not current, so we have to do it each loop
                 if ($is_subfolder) return true;
             }
 
-            return $is_subfolder;
+            return false;
         }
 
         /**
@@ -512,26 +514,6 @@ if (!class_exists('rsssl_multisite')) {
                 return true;
             }
             return false;
-        }
-
-        /**
-         * Sometimes conversion of websites hangs on 0%. If user clicks the link, the hook where run_ssl_process (multisite-cron.php)
-         * fires on will be switched to admin_init
-         *
-         */
-
-        public function listen_for_ssl_conversion_hook_switch()
-        {
-            //check if we are on ssl settings page
-            if (!$this->is_settings_page()) return;
-            //check user role
-            if (!current_user_can('manage_options')) return;
-            //check nonce
-            if (!isset($_GET['token']) || (!wp_verify_nonce($_GET['token'], 'run_ssl_to_admin_init'))) return;
-            //check for action
-            if (isset($_GET["action"]) && $_GET["action"] == 'ssl_conversion_hook_switch') {
-                update_site_option('run_ssl_process_hook_switched', true);
-            }
         }
 
         /**

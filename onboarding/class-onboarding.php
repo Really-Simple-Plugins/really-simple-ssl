@@ -32,7 +32,7 @@ class rsssl_onboarding {
 			delete_transient('rsssl_redirect_to_settings_page' );
 			if ( !RSSSL()->really_simple_ssl->is_settings_page() ) {
 				if ( is_multisite() && is_super_admin() ) {
-					wp_redirect( add_query_arg(array('page' => 'really-simple-ssl'), network_admin_url('settings.php') )  );
+					wp_redirect( add_query_arg(array('page' => 'really-simple-security'), network_admin_url('settings.php') )  );
 					exit;
 				} else {
 					wp_redirect( add_query_arg(array('page'=>'really-simple-security#dashboard'), admin_url('options-general.php') ) );
@@ -70,6 +70,14 @@ class rsssl_onboarding {
 				return current_user_can( 'manage_options' );
 			}
 		) );
+
+		register_rest_route( 'reallysimplessl/v1', 'activate_ssl_networkwide', array(
+			'methods'  => 'POST',
+			'callback' => array( RSSSL()->rsssl_multisite, 'process_ssl_activation_step' ),
+			'permission_callback' => function () {
+				return current_user_can( 'manage_options' );
+			}
+		) );
 		register_rest_route( 'reallysimplessl/v1', 'override_ssl_detection', array(
 			'methods'  => 'POST',
 			'callback' => array( $this, 'override_ssl_detection' ),
@@ -83,7 +91,6 @@ class rsssl_onboarding {
 			'permission_callback' => function () {
 				return current_user_can( 'manage_options' );
 			}
-
 		) );
 	}
 

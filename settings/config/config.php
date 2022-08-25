@@ -223,14 +223,8 @@ function rsssl_fields( $load_values = true ){
 				'label' => 'default',
 				'text' => __( 'Redirects all requests over HTTP to HTTPS using a PHP 301 redirect. Enable if the .htaccess redirect cannot be used, for example on NGINX servers.', 'really-simple-ssl' ),
 			],
-			'disabled'    => false,
+			'disabled'    => !rsssl_get_option('ssl_enabled'),
 			'default'     => false,
-//            'server_conditions'  => [
-//                'relation' => 'AND',
-//                [
-//                    'RSSSL()->really_simple_ssl->ssl_enabled' => true,
-//                ]
-//            ],
 			'networkwide' => false,
 		],
 		[

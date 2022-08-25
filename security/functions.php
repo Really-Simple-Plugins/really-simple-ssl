@@ -4,6 +4,38 @@ defined( 'ABSPATH' ) or die( );
  * Back-end available only
  */
 
+
+if ( !function_exists('rsssl_update_wp_option') ) {
+	/**
+	 * Wrapper function to get an option either for the network, or for the site, in case if !multisite, or not network activated
+	 * @param string $option_name
+	 * @param mixed $option_value
+	 */
+	function rsssl_update_wp_option($option_name, $option_value){
+		if ( rsssl_treat_as_multisite() ){
+			update_site_option($option_name, $option_value );
+		} else {
+			update_option($option_name, $option_value );
+		}
+	}
+}
+
+if ( !function_exists('rsssl_get_wp_option') ) {
+	/**
+	 * Wrapper function to get an option either for the network, or for the site, in case if !multisite, or not network activated
+	 * @param string $option_name
+	 *
+	 * @return mixed
+	 */
+	function rsssl_get_wp_option($option_name){
+		if ( rsssl_treat_as_multisite() ){
+			return get_site_option($option_name);
+		} else {
+			return get_option($option_name);
+		}
+	}
+}
+
 /**
  * @return string
  * Delete transients
