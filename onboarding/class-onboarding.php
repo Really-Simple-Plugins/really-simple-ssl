@@ -158,7 +158,8 @@ class rsssl_onboarding {
 	 */
 
 	function show_onboarding_modal() {
-		$is_upgrade = get_option('rsssl_upgraded_to_6');
+		return true;
+		$is_upgrade = get_option('rsssl_show_onboarding');
 		if ( RSSSL()->really_simple_ssl->ssl_enabled && !$is_upgrade ) {
 			return false;
 		}
