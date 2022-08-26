@@ -159,16 +159,11 @@ class rsssl_onboarding {
 
 	function show_onboarding_modal() {
 		$is_upgrade = get_option('rsssl_show_onboarding');
-		if ( RSSSL()->really_simple_ssl->ssl_enabled && !$is_upgrade ) {
+		if ( rsssl_get_option('ssl_enabled') && !$is_upgrade ) {
 			return false;
 		}
 
 		if ( defined( "RSSSL_DISMISS_ACTIVATE_SSL_NOTICE" ) && RSSSL_DISMISS_ACTIVATE_SSL_NOTICE ) {
-			return false;
-		}
-
-		//on multisite, only show this message on the network admin.
-		if ( is_multisite() && ! is_network_admin() ) {
 			return false;
 		}
 

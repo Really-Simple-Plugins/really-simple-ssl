@@ -74,11 +74,6 @@ if (!class_exists('rsssl_multisite')) {
 	    }
 
         public function add_multisite_notices($notices) {
-        	//only on network
-	        if ( !is_network_admin()) {
-				return $notices;
-	        }
-
             $unset_array = array(
                 'mixed_content_fixer_detected',
                 'elementor',
@@ -325,7 +320,6 @@ if (!class_exists('rsssl_multisite')) {
 	     */
         public function end_ssl_activation(){
             update_site_option('rsssl_ssl_activation_active', false);
-            update_site_option('run_ssl_process_hook_switched', false);
         }
 
 	    /**

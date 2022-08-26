@@ -52,6 +52,10 @@ function rsssl_rest_api_onboarding() {
 		],
 		"visible" => false
 	];
+
+//	delete_option('rsssl_network_activation_status');
+//	delete_option("rsssl_onboarding_dismissed");
+
 	return [
 		"steps" => $steps,
 		"ssl_enabled" => rsssl_get_option("ssl_enabled"),

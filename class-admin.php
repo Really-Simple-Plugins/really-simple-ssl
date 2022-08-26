@@ -311,6 +311,10 @@ class rsssl_admin
                     //convert entire site to SSL
                     RSSSL()->rsssl_multisite->start_ssl_activation();
                 }
+                //ensure this doesn't run again
+	            $network_options["ssl_enabled_networkwide"] = false;
+	            update_site_option('rlrsssl_network_options', $network_options);
+
 	            $dismiss_all_notices = isset($network_options["dismiss_all_notices"]) ? $network_options["dismiss_all_notices"] : false;
 	            rsssl_update_option('dismiss_all_notices', $dismiss_all_notices);
 
@@ -2384,6 +2388,10 @@ class rsssl_admin
     public function add_plus_ones()
     {
         if (!current_user_can($this->capability)) {
+            return;
+        }
+
+	    if ( is_multisite() && rsssl_is_networkwide_active() ) {
             return;
         }
 
