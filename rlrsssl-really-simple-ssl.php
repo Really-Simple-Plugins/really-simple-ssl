@@ -133,6 +133,7 @@ class REALLY_SIMPLE_SSL
 	{
 		require_once(rsssl_path . 'class-front-end.php');
 		require_once(rsssl_path . 'functions.php');
+		require_once(rsssl_path . 'upgrade.php');
 		require_once(rsssl_path . 'class-mixed-content-fixer.php');
 		$wpcli = defined( 'WP_CLI' ) && WP_CLI;
 		if ( $wpcli ) {
