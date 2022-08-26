@@ -222,7 +222,7 @@ class REALLY_SIMPLE_SSL
 		require_once(ABSPATH.'wp-admin/includes/plugin.php');
 		$data = false;
 		if (is_plugin_active($file)) $data = get_plugin_data( trailingslashit(WP_PLUGIN_DIR) . $file, false, false );
-		if ($data && version_compare($data['Version'], '4.0.0', '<')) {
+		if ($data && version_compare($data['Version'], '6.0.0', '<')) {
 			return true;
 		}
 
