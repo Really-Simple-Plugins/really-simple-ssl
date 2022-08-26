@@ -42,7 +42,7 @@ function rsssl_plugin_admin_scripts() {
             'network_link' => network_site_url('plugins.php'),
             'blocks' => rsssl_blocks(),
             'pro_plugin_active' => defined('rsssl_pro_version'),
-            'networkwide_active' => false,//!is_multisite() || rsssl_is_networkwide_active(),//true for single sites and network wide activated
+            'networkwide_active' => !is_multisite() || rsssl_is_networkwide_active(),//true for single sites and network wide activated
             'menu' => $menu,
             'nonce' => wp_create_nonce( 'wp_rest' ),//to authenticate the logged in user
             'rsssl_nonce' => wp_create_nonce( 'rsssl_save' ),
