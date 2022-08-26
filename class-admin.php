@@ -72,6 +72,10 @@ class rsssl_admin extends rsssl_front_end
 	    add_action( "update_option_rlrsssl_options", array( $this, "maybe_clear_transients" ), 10, 3 );
         add_action( 'wp_ajax_update_ssl_detection_overridden_option', array( $this, 'update_ssl_detection_overridden_option' ) );
 
+	    $plugin = rsssl_plugin;
+	    add_action( "in_plugin_update_message-{$plugin}", array( $this, 'plugin_update_message'), 10, 2 );
+	    add_filter( "auto_update_plugin", array( $this, 'override_auto_updates'), 99, 2 );
+
 	    // Only show deactivate popup when SSL has been enabled.
 	    if ($this->ssl_enabled) {
             add_action('admin_footer', array($this, 'deactivate_popup'), 40);
@@ -82,6 +86,37 @@ class rsssl_admin extends rsssl_front_end
     {
         return self::$_this;
     }
+
+	/**
+	 * Add a major changes notice to the plugin updates message
+	 * @param $plugin_data
+	 * @param $response
+	 */
+	public function plugin_update_message($plugin_data, $response){
+		if ( strpos($response->slug , 'really-simple-ssl') !==false && $response->new_version === '6.0.0' ) {
+			echo '<br><b>' . '&nbsp'.sprintf(__("Important: Please %sread about%s Really Simple SSL 6.0 before updating. This is a major release and includes changes and new features that might need your attention.").'</b>','<a target="_blank" href="https://really-simple-ssl.com/upgrade-to-really-simple-ssl-6-0/">','</a>');
+
+            if (is_multisite() && !RSSSL()->rsssl_multisite->ssl_enabled_networkwide){
+	            echo '<br><b>' . '&nbsp'.sprintf(__("Important: Really Simple SSL 6.0 drops per site SSL management. Upgrading will upgrade all subsites to SSL. %sRead more%s.").'</b>','<a target="_blank" href="https://really-simple-ssl.com/upgrade-to-multisite-6-0/">','</a>');
+            }
+        }
+	}
+
+	/**
+	 * If this update is to 6, don't auto update
+	 * Deactivated as of 6.0
+	 *
+	 * @param $update
+	 * @param $item
+	 *
+	 * @return false|mixed
+	 */
+	public function override_auto_updates( $update, $item ) {
+		if ( strpos($item->slug , 'complianz') !==false && version_compare($item->new_version, '6.0.0', '>=') ) {
+			return false;
+		}
+		return $update;
+	}
 
 	/**
 	 * @param $oldvalue
@@ -3438,7 +3473,28 @@ class rsssl_admin extends rsssl_front_end
 		            ),
 	            ),
             ),
+            '6_multisite_networkwide' => array(
+		        'callback'  => '_true_',
+		        'condition' => array(
+			        'is_multisite',
+			        'NOT RSSSL()->rsssl_multisite->ssl_enabled_networkwide',
+		        ),
+		        'score'     => 0,
+		        'output'    => array(
+			        'true' => array(
+				        'msg'         => __( "Important: Really Simple SSL 6.0 drops per site SSL management. Upgrading will upgrade all subsites to SSL." ),
+				        'icon'        => 'warning',
+				        'url'         => 'https://really-simple-ssl.com/how-to-set-security-headers-on-apache-and-nginx/',
+				        'dismissible' => true,
+				        'plusone' => true,
+				        'admin_notice' => true,
+			        ),
+		        ),
+	        ),
         );
+
+
+
 
         //on multisite, don't show the notice on subsites.
         if ( is_multisite() && !is_network_admin() ) {
