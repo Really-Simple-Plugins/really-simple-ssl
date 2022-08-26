@@ -77,7 +77,7 @@ function rsssl_conditions_apply( $conditions ){
 
 function rsssl_get_option( $name, $default=false ) {
 	$name = sanitize_title($name);
-	if ( rsssl_treat_as_multisite() ) {
+	if ( is_multisite() && rsssl_is_networkwide_active() ) {
 		$options = get_site_option( 'rsssl_options', [] );
 	} else {
 		$options = get_option( 'rsssl_options', [] );
@@ -92,11 +92,12 @@ function rsssl_get_option( $name, $default=false ) {
 }
 
 /**
- * Check if we should treat the plugin as multisite or not.
+ * Check if we should treat the plugin as networkwide or not.
+ * Note that this function returns false for single sites! Always use icw is_multisite()
  *
  * @return bool
  */
-function rsssl_treat_as_multisite(){
+function rsssl_is_networkwide_active(){
 	if ( !is_multisite() ) {
 		return false;
 	}

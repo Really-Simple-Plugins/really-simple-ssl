@@ -34,17 +34,19 @@ function rsssl_plugin_admin_scripts() {
 		]
 	);
 	wp_localize_script(
-			'rsssl-settings',
-			'rsssl_settings',
-			apply_filters('rsssl_localize_script',array(
-				'site_url' => get_rest_url(),
-				'plugin_url' => rsssl_url,
-				'blocks' => rsssl_blocks(),
-				'pro_plugin_active' => defined('rsssl_pro_version'),
-				'menu' => $menu,
-				'nonce' => wp_create_nonce( 'wp_rest' ),//to authenticate the logged in user
-				'rsssl_nonce' => wp_create_nonce( 'rsssl_save' ),
-			))
+        'rsssl-settings',
+        'rsssl_settings',
+        apply_filters('rsssl_localize_script',array(
+            'site_url' => get_rest_url(),
+            'plugin_url' => rsssl_url,
+            'network_link' => network_site_url('plugins.php'),
+            'blocks' => rsssl_blocks(),
+            'pro_plugin_active' => defined('rsssl_pro_version'),
+            'networkwide_active' => false,//!is_multisite() || rsssl_is_networkwide_active(),//true for single sites and network wide activated
+            'menu' => $menu,
+            'nonce' => wp_create_nonce( 'wp_rest' ),//to authenticate the logged in user
+            'rsssl_nonce' => wp_create_nonce( 'rsssl_save' ),
+        ))
 	);
 }
 
@@ -59,7 +61,7 @@ function rsssl_add_option_menu() {
 	}
 
 	//hides the settings page the plugin is network activated. The settings can be found on the network settings menu.
-	if ( rsssl_treat_as_multisite() ) {
+	if ( is_multisite() && rsssl_is_networkwide_active() ) {
         return;
 	}
 
@@ -255,7 +257,8 @@ function rsssl_rest_api_fields_set($request){
 		$field['value'] = $value;
 		$fields[$index] = $field;
 	}
-	if ( rsssl_treat_as_multisite() ) {
+
+	if ( is_multisite() && rsssl_is_networkwide_active() ) {
 		$options = get_site_option( 'rsssl_options', [] );
 	} else {
 		$options = get_option( 'rsssl_options', [] );
@@ -269,7 +272,7 @@ function rsssl_rest_api_fields_set($request){
     }
 
     if ( ! empty( $options ) ) {
-        if ( rsssl_treat_as_multisite() ) {
+        if ( is_multisite() && rsssl_is_networkwide_active() ) {
 	        update_site_option( 'rsssl_options', $options );
         } else {
 	        update_option( 'rsssl_options', $options );
@@ -317,7 +320,7 @@ function rsssl_update_option( $name, $value ) {
 	    error_log("exiting ".$name." has not existing type ");
 	    return;
     }
-	if ( rsssl_treat_as_multisite() ) {
+	if ( is_multisite() && rsssl_is_networkwide_active() ) {
 		$options = get_site_option( 'rsssl_options', [] );
 	} else {
 		$options = get_option( 'rsssl_options', [] );
@@ -327,8 +330,7 @@ function rsssl_update_option( $name, $value ) {
 	$value = rsssl_sanitize_field( $value, rsssl_sanitize_field_type($config_field['type']), $name );
 	$value = apply_filters("rsssl_fieldvalue", $value, sanitize_text_field($name));
 	$options[$name] = $value;
-
-	if ( rsssl_treat_as_multisite() ) {
+	if ( is_multisite() && rsssl_is_networkwide_active() ) {
 		update_site_option( 'rsssl_options', $options );
 	} else {
 		update_option( 'rsssl_options', $options );

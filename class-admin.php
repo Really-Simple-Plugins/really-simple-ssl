@@ -302,7 +302,7 @@ class rsssl_admin
             /**
              * Multisite
              */
-            if (rsssl_treat_as_multisite() ) {
+            if ( is_multisite() && rsssl_is_networkwide_active() ) {
 	            $network_options = get_site_option('rlrsssl_network_options');
 	            $enabled_network_wide = isset($network_options["ssl_enabled_networkwide"]) ? $options["ssl_enabled_networkwide"] : false;
 	            if ( $enabled_network_wide ) {
@@ -477,7 +477,7 @@ class rsssl_admin
         }
 
         //if this is true, this is a request from the network admin. We save an option to ensure we know that this part is completed
-        if ( rsssl_treat_as_multisite() ) {
+        if ( is_multisite() && rsssl_is_networkwide_active() ) {
             update_site_option('rsssl_network_activation_status', 'main_site_activated');
         }
 
@@ -3378,7 +3378,7 @@ class rsssl_admin
 		}
 
 		//if multisite, only on network wide activated setups
-		if ( rsssl_treat_as_multisite() ) {
+		if ( is_multisite() && rsssl_is_networkwide_active() ) {
             return;
 		}
 
@@ -3439,7 +3439,7 @@ class rsssl_admin
     public function can_apply_networkwide(){
         if ( !is_multisite() ) {
             return true;
-        } elseif ( rsssl_treat_as_multisite() ) {
+        } elseif ( is_multisite() && rsssl_is_networkwide_active() ) {
             return true;
         }
         return false;

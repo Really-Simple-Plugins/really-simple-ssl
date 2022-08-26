@@ -12,7 +12,7 @@ if ( !function_exists('rsssl_update_wp_option') ) {
 	 * @param mixed $option_value
 	 */
 	function rsssl_update_wp_option($option_name, $option_value){
-		if ( rsssl_treat_as_multisite() ){
+		if ( is_multisite() && rsssl_is_networkwide_active() ){
 			update_site_option($option_name, $option_value );
 		} else {
 			update_option($option_name, $option_value );
@@ -28,7 +28,7 @@ if ( !function_exists('rsssl_get_wp_option') ) {
 	 * @return mixed
 	 */
 	function rsssl_get_wp_option($option_name){
-		if ( rsssl_treat_as_multisite() ){
+		if ( is_multisite() && rsssl_is_networkwide_active() ){
 			return get_site_option($option_name);
 		} else {
 			return get_option($option_name);

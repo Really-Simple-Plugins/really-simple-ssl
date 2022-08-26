@@ -55,7 +55,7 @@ function rsssl_rest_api_onboarding() {
 	return [
 		"steps" => $steps,
 		"ssl_enabled" => rsssl_get_option("ssl_enabled"),
-		"networkwide" => rsssl_treat_as_multisite(),
+		"networkwide" => is_multisite() && rsssl_is_networkwide_active(),
 		"network_activation_status" => get_site_option('rsssl_network_activation_status'),
 		"dismissed" => get_option("rsssl_onboarding_dismissed") || !RSSSL()->onboarding->show_onboarding_modal(),
 	];
@@ -80,7 +80,7 @@ function get_items_for_second_step () {
 	];
 
 	$items = [];
-	if ( rsssl_treat_as_multisite() ) {
+	if ( is_multisite() && rsssl_is_networkwide_active() ) {
 		if ( get_site_option('rsssl_network_activation_status')==='completed') {
 			$items[] = [
 				"id" => 'ssl_enabled',
@@ -182,7 +182,7 @@ function get_buttons () {
 	$has_valid_cert = RSSSL()->rsssl_certificate->is_valid();
 	$buttons = [];
 	$buttons[] = [
-		"title" => rsssl_treat_as_multisite() ? __("Activate SSL networkwide", "really-simple-ssl") : __("Activate SSL", "really-simple-ssl"),
+		"title" => is_multisite() && rsssl_is_networkwide_active() ? __("Activate SSL networkwide", "really-simple-ssl") : __("Activate SSL", "really-simple-ssl"),
 		"variant" => "primary",
 		"disabled" => !$has_valid_cert,
 		"type" => "button",

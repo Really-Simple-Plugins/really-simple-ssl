@@ -233,7 +233,7 @@ if (!class_exists('rsssl_multisite')) {
 
         public function add_multisite_menu()
         {
-            if ( !rsssl_treat_as_multisite() ) {
+            if ( !is_multisite() || !rsssl_is_networkwide_active() ) {
 				return;
             }
 	        $count = RSSSL()->really_simple_ssl->count_plusones();
