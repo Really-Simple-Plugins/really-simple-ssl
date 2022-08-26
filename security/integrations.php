@@ -2,15 +2,6 @@
 defined( 'ABSPATH' ) or die();
 global $rsssl_integrations_list;
 $rsssl_integrations_list = apply_filters( 'rsssl_integrations', array(
-	'xmlrpc' => array(
-		'label'                => 'XMLRPC',
-        'folder'               => 'wordpress',
-		'impact'               => 'medium',
-		'risk'                 => 'low',
-		'learning_mode'        => true,
-		'option_id'            => 'xmlrpc',
-	),
-
     'user-registration' => array(
         'label'                => 'User registration',
         'folder'               => 'wordpress',
@@ -64,26 +55,6 @@ $rsssl_integrations_list = apply_filters( 'rsssl_integrations', array(
         'learning_mode'        => false,
         'option_id'            => 'disable_login_feedback',
     ),
-    'disable-http-methods' => array(
-        'label'                => __('Disable HTTP methods', 'really-simple-ssl'),
-        'folder'               => 'server',
-        'impact'               => 'low',
-        'risk'                 => 'medium',
-        'learning_mode'        => false,
-        'option_id'            => 'disable_http_methods',
-    ),
-
-    'debug-log' => array(
-        'label'                => __('Move debug.log', 'really-simple-ssl'),
-        'folder'               => 'wordpress',
-        'impact'               => 'medium',
-        'risk'                 => 'medium',
-        'learning_mode'        => false,
-        'option_id'            => 'change_debug_log_location',
-		'always_include'       => false,
-        'has_deactivation'     => true,
-    ),
-
     'disable-indexing' => array(
         'label'                => __('Disable directory indexing', 'really-simple-ssl'),
         'folder'               => 'server',
@@ -93,26 +64,6 @@ $rsssl_integrations_list = apply_filters( 'rsssl_integrations', array(
 		'option_id'            => 'disable_indexing',
         'has_deactivation'     => true,
     ),
-
-	'application-passwords' => array(
-		'label'                => __('Disable Application passwords', 'really-simple-ssl'),
-		'folder'               => 'wordpress',
-		'impact'               => 'low',
-		'risk'                 => 'high',
-		'learning_mode'        => false,
-		'option_id'            => 'disable_application_passwords',
-		'always_include'       => false,
-		'has_deactivation'     => true,
-	),
-
-	'rename-db-prefix' => array(
-		'label'                => __('Rename DB prefix', 'really-simple-ssl'),
-		'folder'               => 'wordpress',
-		'impact'               => 'high',
-		'risk'                 => 'high',
-		'learning_mode'        => false,
-		'option_id'            => 'rename_db_prefix',
-	),
 
     'rename-admin-user' => array(
 		'label'                => __('Do not allow users with admin username', 'really-simple-ssl'),
@@ -169,8 +120,8 @@ function rsssl_integrations() {
 	global $rsssl_integrations_list;
 	$stored_integrations_count = get_option('rsssl_active_integrations', 0 );
 	$actual_integrations_count = 0;
-
 	foreach ( $rsssl_integrations_list as $plugin => $details ) {
+
 		$details = wp_parse_args($details,
 			[
 				'option_id' => false,
@@ -181,7 +132,8 @@ function rsssl_integrations() {
 
 		if ( rsssl_is_integration_enabled( $plugin, $details ) ) {
 			$actual_integrations_count++;
-			$file = rsssl_path . 'security/' . $details['folder'] . "/" . $plugin . '.php';
+			$path = apply_filters('rsssl_integrations_path', rsssl_path, $plugin);
+			$file = $path . 'security/' . $details['folder'] . "/" . $plugin . '.php';
 
 			if ( ! file_exists( $file ) ) {
 				continue;

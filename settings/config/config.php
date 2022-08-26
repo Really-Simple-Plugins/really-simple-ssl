@@ -137,6 +137,19 @@ function rsssl_menu( $group_id = 'settings' ){
 					'id' => 'hardening',
 					'title' => __('Hardening', 'really-simple-ssl'),
 					'featured' => __('Improve your security with the most popular security features for Wordpress', 'really-simple-ssl'),
+					'groups' => [
+						[
+							'id' => 'hardening_basic',
+							'helpLink'  => 'https://really-simple-ssl.com',
+							'title' => __('Hardening features', 'really-simple-ssl'),
+						],
+						[
+							'id' => 'hardening_extended',
+							'premium' => true,
+							'helpLink'  => 'https://really-simple-ssl.com',
+							'title' => __('Advanced hardening features', 'really-simple-ssl'),
+						],
+					],
 				],
 
 			],
@@ -324,6 +337,7 @@ function rsssl_fields( $load_values = true ){
         [
             'id'          => 'disable_anyone_can_register',
             'menu_id'     => 'hardening',
+	        'group_id'    => 'hardening_basic',
             'type'        => 'checkbox',
             'label'       => __( "Disable \"anyone can register\"", 'really-simple-ssl' ),
             'disabled'    => false,
@@ -337,6 +351,7 @@ function rsssl_fields( $load_values = true ){
         [
             'id'          => 'xmlrpc',
             'menu_id'     => 'hardening',
+            'group_id'    => 'hardening_extended',
             'type'        => 'checkbox',
             'label'       => __( "Disable xmlrpc", 'really-simple-ssl' ),
             'disabled'    => false,
@@ -345,6 +360,7 @@ function rsssl_fields( $load_values = true ){
         [
             'id'          => 'disable_http_methods',
             'menu_id'     => 'hardening',
+            'group_id'    => 'hardening_extended',
             'type'        => 'checkbox',
             'label'       => __( "Disable HTTP methods", 'really-simple-ssl' ),
             'disabled'    => false,
@@ -353,6 +369,7 @@ function rsssl_fields( $load_values = true ){
         [
             'id'          => 'disable_file_editing',
             'menu_id'     => 'hardening',
+            'group_id'    => 'hardening_basic',
             'type'        => 'checkbox',
             'label'       => __( "Disable file editing", 'really-simple-ssl' ),
             'disabled'    => false,
@@ -366,6 +383,7 @@ function rsssl_fields( $load_values = true ){
         [
             'id'          => 'block_code_execution_uploads',
             'menu_id'     => 'hardening',
+            'group_id'    => 'hardening_basic',
             'type'        => 'checkbox',
             'label'       => __( "Disable code execution in uploads folder", 'really-simple-ssl' ),
             'disabled'    => false,
@@ -379,6 +397,7 @@ function rsssl_fields( $load_values = true ){
         [
             'id'          => 'hide_wordpress_version',
             'menu_id'     => 'hardening',
+            'group_id'    => 'hardening_basic',
             'type'        => 'checkbox',
             'label'       => __( "Hide WordPress version", 'really-simple-ssl' ),
             'disabled'    => false,
@@ -387,6 +406,7 @@ function rsssl_fields( $load_values = true ){
         [
             'id'          => 'disable_login_feedback',
             'menu_id'     => 'hardening',
+            'group_id'    => 'hardening_basic',
             'type'        => 'checkbox',
             'label'       => __( "Disable login feedback", 'really-simple-ssl' ),
             'disabled'    => false,
@@ -395,6 +415,7 @@ function rsssl_fields( $load_values = true ){
         [
             'id'          => 'rename_db_prefix',
             'menu_id'     => 'hardening',
+            'group_id'    => 'hardening_extended',
             'type'        => 'checkbox',
             'label'       => __( "Rename your database prefix", 'really-simple-ssl' ),
             'disabled'    => false,
@@ -402,6 +423,7 @@ function rsssl_fields( $load_values = true ){
         ],
         [
 			'id'          => 'change_debug_log_location',
+			'group_id'    => 'hardening_extended',
 			'menu_id'     => 'hardening',
 			'type'        => 'checkbox',
 			'label'       => __( "Change debug.log location", 'really-simple-ssl' ),
@@ -415,43 +437,17 @@ function rsssl_fields( $load_values = true ){
         ],
 	    [
             'id'          => 'disable_application_passwords',
-            'menu_id'     => 'application_passwords',
+            'menu_id'     => 'hardening',
+            'group_id'    => 'hardening_extended',
             'type'        => 'checkbox',
             'label'       => __( "Disable application passwords", 'really-simple-ssl' ),
             'disabled'    => false,
             'default'     => false,
         ],
-	    [
-            'id'          => 'placeholder_setting_id',
-            'menu_id'     => 'code_execution_uploads',
-            'type'        => 'checkbox',
-            'label'       => __( "Placeholder Setting", 'really-simple-ssl' ),
-            'disabled'    => false,
-            'default'     => false,
-            'react_conditions' => [
-	            'relation' => 'AND',
-	            [
-		            'disable_application_passwords' => 1,
-	            ]
-            ],
-        ],
-	    [
-		    'id'          => 'placeholder_setting_id_2',
-		    'menu_id'     => 'empty_menu_item',
-		    'type'        => 'checkbox',
-		    'label'       => __( "Placeholder Setting 2", 'really-simple-ssl' ),
-		    'disabled'    => false,
-		    'default'     => false,
-		    'server_conditions'  => [
-			    'relation' => 'AND',
-			    [
-				    'RSSSL()->really_simple_ssl->ssl_enabled' => true,
-			    ]
-		    ],
-	    ],
         [
 			'id'          => 'disable_indexing',
 			'menu_id'     => 'hardening',
+			'group_id'    => 'hardening_basic',
 			'type'        => 'checkbox',
 			'label'       => __( "Prevent directory browsing", 'really-simple-ssl' ),
 			'disabled'    => false,
@@ -465,6 +461,7 @@ function rsssl_fields( $load_values = true ){
 	    [
             'id'          => 'disable_user_enumeration',
             'menu_id'     => 'hardening',
+            'group_id'    => 'hardening_basic',
             'type'        => 'checkbox',
             'label'       => __( "Disable user enumeration", 'really-simple-ssl' ),
             'disabled'    => false,
@@ -478,6 +475,7 @@ function rsssl_fields( $load_values = true ){
 		[
 			'id'          => 'disable_rss_feeds',
 			'menu_id'     => 'hardening',
+			'group_id'    => 'hardening_extended',
 			'type'        => 'checkbox',
 			'label'       => __( "Disable RSS feeds (improve disable user enumeration)", 'really-simple-ssl' ),
 			'disabled'    => false,
@@ -486,6 +484,7 @@ function rsssl_fields( $load_values = true ){
         [
 			'id'          => 'rename_admin_user',
 			'menu_id'     => 'hardening',
+			'group_id'    => 'hardening_basic',
 			'type'        => 'checkbox',
 			'label'       => __( "Rename user 'admin'", 'really-simple-ssl' ),
 			'disabled'    => false,
@@ -656,6 +655,7 @@ function rsssl_fields( $load_values = true ){
         [
 			'id'          => 'block_registration_when_display_name_is_login_name',
 			'menu_id'     => 'hardening',
+			'group_id'    => 'hardening_basic',
 			'type'        => 'checkbox',
 			'label'       => __( "Block user registration when login name equals display name", 'really-simple-ssl' ),
 			'disabled'    => false,
