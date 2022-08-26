@@ -15,12 +15,13 @@ import MixedContentScan from "./MixedContentScan";
 import PermissionsPolicy from "./PermissionsPolicy";
 import Support from "./Support";
 import ContentSecurityPolicy from "./ContentSecurityPolicy";
+import Xmlrpc from "./Xmlrpc";
 import ChangeStatus from "./ChangeStatus";
 import {
     Component,
 } from '@wordpress/element';
 
-/**
+/*
  * https://react-data-table-component.netlify.app
  */
 import DataTable from "react-data-table-component";
@@ -80,6 +81,7 @@ class Field extends Component {
     }
 
     render(){
+
         let field = this.props.field;
         let fieldValue = field.value;
         let fields = this.props.fields;
@@ -96,7 +98,7 @@ class Field extends Component {
         }
         if ( !field.visible || field.type==='database' ) {
             return (
-                <span></span>
+                <></>
             );
         }
 
@@ -160,7 +162,7 @@ class Field extends Component {
         }
 
         if ( field.type==='license' ){
-            /**
+            /*
              * There is no "PasswordControl" in WordPress react yet, so we create our own license field.
              */
             let field = this.props.field;
@@ -219,6 +221,12 @@ class Field extends Component {
         if ( field.type==='permissionspolicy' ) {
             return (
                 <PermissionsPolicy onChangeHandlerDataTable={this.onChangeHandlerDataTable} updateField={this.props.updateField} field={this.props.field} options={options} highLightClass={this.highLightClass} fields={fields}/>
+            )
+        }
+
+        if ( field.type==='xmlrpc' ) {
+            return(
+                <Xmlrpc onChangeHandlerDataTable={this.onChangeHandlerDataTable} updateField={this.props.updateField} field={this.props.field} options={options} highLightClass={this.highLightClass} fields={fields}/>
             )
         }
 

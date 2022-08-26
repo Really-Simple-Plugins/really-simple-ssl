@@ -55,6 +55,18 @@ if ( ! class_exists( 'RSSSL_PLACEHOLDER' ) ) {
 			return $output;
 		}
 
+		public function xml_data(){
+
+			$data[] = [
+				'id'      => 1,
+				'time'  => time(),
+				'method'  => 'wp.getPosts',
+				'user_id' => get_current_user_id(),
+				'status'  => 1,
+			];
+			return $data;
+		}
+
 		public function mixed_content_data(){
 			$data[] = [
 				'id'               => 1,

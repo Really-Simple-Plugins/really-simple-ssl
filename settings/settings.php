@@ -206,6 +206,7 @@ function rsssl_sanitize_field_type($type){
         'permissionspolicy',
         'contentsecuritypolicy',
         'mixedcontentscan',
+        'xmlrpc',
     ];
     if ( in_array($type, $types) ){
         return $type;
@@ -253,7 +254,9 @@ function rsssl_rest_api_fields_set($request){
 			        if (function_exists($main)) {
 				        $main()->$class->$function( $value, $update_item_id );
 			        }
-		        }
+		        } else if ( function_exists($endpoint) ){
+			        $endpoint($value, $update_item_id);
+                }
 	        }
 	        unset($fields[$index]);
             continue;
@@ -364,7 +367,7 @@ function rsssl_rest_api_fields_get(){
 		 */
 		if ( isset($field['data_source']) ){
 			$data_source = $field['data_source'];
-			if (is_array($data_source)) {
+			if ( is_array($data_source)) {
 				$main = $data_source[0];
 				$class = $data_source[1];
 				$function = $data_source[2];
@@ -372,7 +375,10 @@ function rsssl_rest_api_fields_get(){
                 if (function_exists($main)){
 	                $field['value'] = $main()->$class->$function();
                 }
-			}
+			} else if ( function_exists($field['data_source'])) {
+                $func = $field['data_source'];
+				$field['value'] = $func();
+            }
 		}
 
 		$fields[$index] = $field;
