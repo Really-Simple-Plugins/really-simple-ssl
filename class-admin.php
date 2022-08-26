@@ -277,7 +277,7 @@ class rsssl_admin extends rsssl_front_end
 	    }
         
 	    if ( $prev_version && version_compare( $prev_version, '6.0.0', '<' ) ) {
-		    update_option('rsssl_upgraded_to_6', true, false);
+		    update_option('rsssl_show_onboarding', true, false);
 
 		    //upgrade both site and network settings
             $options = get_option( 'rlrsssl_options' );

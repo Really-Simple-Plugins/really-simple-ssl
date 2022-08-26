@@ -6,7 +6,7 @@
  * @return array
  */
 function rsssl_rest_api_onboarding() {
-	$is_upgrade = get_option('rsssl_upgraded_to_6');
+	$is_upgrade = get_option('rsssl_show_onboarding');
 	// "warning", // yellow dot
 	// "error", // red dot
 	// "active" // green dot
@@ -19,6 +19,7 @@ function rsssl_rest_api_onboarding() {
 
 	if ( !rsssl_get_option('ssl_enabled') ) {
 		$steps[] = [
+			"id" => 'activate_ssl',
 			"title" => __( "Almost ready to migrate to SSL!", 'really-simple-ssl' ),
 			"subtitle" => __("Before you migrate, please check for:", "really-simple-ssl"),
 			"items" => get_items_for_first_step(),
@@ -29,6 +30,7 @@ function rsssl_rest_api_onboarding() {
 	}
 
 	$steps[] = [
+		"id" => 'onboarding',
 		"title" => $is_upgrade ? __( "Thanks for updating!", 'really-simple-ssl' ) : __( "Congratulations!", 'really-simple-ssl' ),
 		"subtitle" => __("Now have a look at our new features", "really-simple-ssl"),
 		"items" => get_items_for_second_step(),
@@ -51,7 +53,6 @@ function rsssl_rest_api_onboarding() {
 		],
 		"visible" => false
 	];
-
 	return [
 		"steps" => $steps,
 		"ssl_enabled" => rsssl_get_option("ssl_enabled"),
