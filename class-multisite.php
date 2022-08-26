@@ -294,6 +294,9 @@ if (!class_exists('rsssl_multisite')) {
 	     * @return int
 	     */
         public function get_process_completed_percentage(){
+			if ( get_site_option('rsssl_network_activation_status') === 'completed' ) {
+				return 100;
+			}
             $complete_count = get_site_option('rsssl_siteprocessing_progress');
             $percentage = round(($complete_count/$this->get_total_blog_count())*100,0);
             if ( $percentage > 99 ) {

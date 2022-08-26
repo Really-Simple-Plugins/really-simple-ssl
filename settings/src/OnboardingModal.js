@@ -5,7 +5,7 @@ import { __ } from '@wordpress/i18n';
 import update from 'immutability-helper';
 import {useUpdateEffect} from 'react-use';
 
-const OnboardingModal = () => {
+const OnboardingModal = (props) => {
     const [show, setShow] = useState(false);
     const [steps, setSteps] = useState([]);
     const [overrideSSL, setOverrideSSL] = useState(false);
@@ -20,14 +20,14 @@ const OnboardingModal = () => {
         // do componentDidUpdate logic
         if ( networkProgress<100 && networkwide && networkActivationStatus==='main_site_activated' ){
             rsssl_api.activateSSLNetworkwide().then((response) => {
-                if (response.data.success) {
+               if (response.data.success) {
                     setNetworkProgress(response.data.progress);
                     if (response.data.progress>=100) {
                         updateActionForItem('ssl_enabled', '', 'success');
                     }
                 }
-
             });
+
         }
     })
     useEffect(() => {
@@ -41,9 +41,6 @@ const OnboardingModal = () => {
             setStepsChanged('initial');
             setShow(!response.data.dismissed);
         });
-
-
-
     }, [])
 
     const dismissModal = () => {

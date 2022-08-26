@@ -2,7 +2,6 @@ import {
     render,
 } from '@wordpress/element';
 import Page from './Page';
-import OnboardingModal from "./OnboardingModal";
 
 /**
  * Initialize
@@ -14,7 +13,6 @@ document.addEventListener( 'DOMContentLoaded', () => {
 		render(
 			<>
 				<Page/>
-				<OnboardingModal/>
 			</>,
 			container
 		);
