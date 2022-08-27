@@ -1,4 +1,6 @@
 @import "../../variables.scss";
+
+
 .rsssl-modal.rsssl-onboarding {
   max-width:100%;
   width:80%;
@@ -38,6 +40,24 @@
 
     &.rsssl-success:before {
       background-color: var(--rsp-green);
+    }
+    &.rsssl-processing:before {
+      background: var(--rsp-blue);
+      background: linear-gradient(77deg, rgba(41, 182, 246, 1) 0%, rgba(41, 182, 246, 1) 30%, rgba(244, 191, 62, 1) 70%, rgba(244, 191, 62, 1) 100%);
+      animation: gradient 2s ease infinite;
+      background-size: 200% 200%;
+    }
+
+    @keyframes gradient {
+      0% {
+        background-position: 0% 50%;
+      }
+      50% {
+        background-position: 100% 50%;
+      }
+      100% {
+        background-position: 0% 50%;
+      }
     }
   }
   .rsssl-modal-content-step-footer {

@@ -6,8 +6,7 @@ if ( ! class_exists( 'rsssl_front_end' ) ) {
     class rsssl_front_end
     {
         private static $_this;
-        public $wp_redirect = TRUE;
-        public $autoreplace_insecure_links = TRUE;
+        public $wp_redirect;
         public $ssl_enabled;
 
         function __construct()
@@ -16,8 +15,9 @@ if ( ! class_exists( 'rsssl_front_end' ) ) {
                 wp_die(sprintf(__('%s is a singleton class and you cannot create a second instance.', 'really-simple-ssl'), get_class($this)));
 
             self::$_this = $this;
-            $this->get_options();
-            add_action('rest_api_init', array($this, 'wp_rest_api_force_ssl'), ~PHP_INT_MAX);
+	        $this->ssl_enabled = rsssl_get_option('ssl_enabled');
+	        $this->wp_redirect = rsssl_get_option('redirect') === 'wp_redirect';
+			add_action('rest_api_init', array($this, 'wp_rest_api_force_ssl'), ~PHP_INT_MAX);
         }
 
         static function this()
@@ -36,8 +36,8 @@ if ( ! class_exists( 'rsssl_front_end' ) ) {
 
         public function force_ssl()
         {
-            if ($this->ssl_enabled) {
-                if ($this->wp_redirect) add_action('wp', array($this, 'wp_redirect_to_ssl'), 40, 3);
+            if ( $this->ssl_enabled && $this->wp_redirect ) {
+                add_action('wp', array($this, 'wp_redirect_to_ssl'), 40, 3);
             }
         }
 
@@ -77,33 +77,16 @@ if ( ! class_exists( 'rsssl_front_end' ) ) {
 
         public function wp_redirect_to_ssl()
         {
-            if (!array_key_exists('HTTP_HOST', $_SERVER)) return;
+            if ( !array_key_exists('HTTP_HOST', $_SERVER) ) {
+				return;
+            }
 
-            if (!is_ssl() && !(defined("rsssl_no_wp_redirect") && rsssl_no_wp_redirect)) {
+            if ( !is_ssl() && !(defined("rsssl_no_wp_redirect") && rsssl_no_wp_redirect) ) {
                 $redirect_url = "https://" . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
                 $redirect_url = apply_filters("rsssl_wp_redirect_url", $redirect_url);
                 wp_redirect($redirect_url, 301);
                 exit;
             }
         }
-
-
-        /**
-         * Get the options for this plugin
-         *
-         * @since  2.0
-         *
-         * @access public
-         *
-         */
-
-        public function get_options()
-        {
-            $options = get_option('rsssl_options');
-            if (isset($options)) {
-                $this->ssl_enabled = isset($options['ssl_enabled']) ? $options['ssl_enabled'] : false;
-            }
-        }
-
     }
 }

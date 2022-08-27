@@ -100,7 +100,7 @@ class rsssl_progress {
 	}
 
 	/**
-	 * Process the ajax dismissal of a task
+	 * Process the react dismissal of a task
 	 *
 	 * Since 3.1
 	 *
@@ -122,19 +122,5 @@ class rsssl_progress {
 		return [
 			'percentage' => $this->percentage(),
 		];
-	}
-
-	public function progress_footer_button(){
-		$button_text = __("Go PRO!", "really-simple-ssl");
-		$button_link = RSSSL()->really_simple_ssl->pro_url;
-		$go_pro = "<a href='$button_link' target='_blank' class='button button-default upsell'>$button_text</a>";
-		$activate_btn = "";
-		if (!RSSSL()->really_simple_ssl->ssl_enabled) {
-			if ( RSSSL()->really_simple_ssl->site_has_ssl || ( defined( 'RSSSL_FORCE_ACTIVATE' ) && RSSSL_FORCE_ACTIVATE ) ) {
-				$button_text = __( "Activate SSL", "really-simple-ssl" );
-				$activate_btn = '<form action="" method="post" ><input type="submit" class="button button-primary" value="' . $button_text . '" id="rsssl_do_activate_ssl" name="rsssl_do_activate_ssl"></form>';
-			}
-		}
-		return '<span class="rsssl-footer-item footer-left">'.apply_filters("rsssl_progress_footer_left", '').$activate_btn.apply_filters("rsssl_progress_footer_right", $go_pro ).'</span>';
 	}
 }

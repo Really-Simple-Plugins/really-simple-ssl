@@ -10,14 +10,13 @@ function rsssl_rest_api_onboarding() {
 	// "warning", // yellow dot
 	// "error", // red dot
 	// "active" // green dot
-
 	$steps = [];
 	$info = "";
 	if( !defined('rsssl_pro_version')) {
 		$info = __('You can also let the automatic scan of the pro version handle this for you, and get premium support, increased security with HSTS and more!', 'really-simple-ssl'). " " . sprintf('<a target="_blank" href="%s">%s</a>', RSSSL()->really_simple_ssl->pro_url, __("Check out Really Simple SSL Pro", "really-simple-ssl"));;
 	}
 
-	if ( !rsssl_get_option('ssl_enabled') ) {
+	if ( !rsssl_get_option('ssl_enabled') || get_site_option('rsssl_network_activation_status')!=='completed' ) {
 		$steps[] = [
 			"id" => 'activate_ssl',
 			"title" => __( "Almost ready to migrate to SSL!", 'really-simple-ssl' ),
@@ -53,9 +52,15 @@ function rsssl_rest_api_onboarding() {
 		],
 		"visible" => false
 	];
+
+//	delete_option('rsssl_network_activation_status');
+//	delete_option("rsssl_onboarding_dismissed");
+
 	return [
 		"steps" => $steps,
 		"ssl_enabled" => rsssl_get_option("ssl_enabled"),
+		"networkwide" => is_multisite() && rsssl_is_networkwide_active(),
+		"network_activation_status" => get_site_option('rsssl_network_activation_status'),
 		"dismissed" => get_option("rsssl_onboarding_dismissed") || !RSSSL()->onboarding->show_onboarding_modal(),
 	];
 }
@@ -79,11 +84,31 @@ function get_items_for_second_step () {
 	];
 
 	$items = [];
-	$items[] = [
-		"title" => __("SSL has been activated with Really Simple SSL", "really-simple-ssl"),
-		"action" => "none",
-		"status" => "success",
-	];
+	if ( is_multisite() && rsssl_is_networkwide_active() ) {
+		if ( get_site_option('rsssl_network_activation_status')==='completed') {
+			$items[] = [
+				"id" => 'ssl_enabled',
+				"title"  => __( "SSL has been activated network wide with Really Simple SSL", "really-simple-ssl" ),
+				"action" => "none",
+				"status" => "success",
+			];
+		} else {
+			$items[] = [
+				"id" => 'ssl_enabled',
+				"title"  => __( "Processing activation of subsites networkwide", "really-simple-ssl" ),
+				"action" => "none",
+				"status" => "processing",
+				"percentage" => true,
+			];
+		}
+	} else {
+		$items[] = [
+			"id" => 'ssl_enabled',
+			"title" => __("SSL has been activated with Really Simple SSL", "really-simple-ssl"),
+			"action" => "none",
+			"status" => "success",
+		];
+	}
 
 	$all_enabled = RSSSL()->onboarding->all_recommended_hardening_features_enabled();
 	if( !$all_enabled ) {
@@ -158,11 +183,10 @@ function get_items_for_second_step () {
  * @return array[]
  */
 function get_buttons () {
-
 	$has_valid_cert = RSSSL()->rsssl_certificate->is_valid();
 	$buttons = [];
 	$buttons[] = [
-		"title" => __("Activate SSL", "really-simple-ssl"),
+		"title" => is_multisite() && rsssl_is_networkwide_active() ? __("Activate SSL networkwide", "really-simple-ssl") : __("Activate SSL", "really-simple-ssl"),
 		"variant" => "primary",
 		"disabled" => !$has_valid_cert,
 		"type" => "button",

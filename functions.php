@@ -77,13 +77,13 @@ function rsssl_conditions_apply( $conditions ){
 
 function rsssl_get_option( $name, $default=false ) {
 	$name = sanitize_title($name);
-	$options = get_option( 'rsssl_options', array() );
-	if ( !isset($options[$name]) ) {
-		$value = false;
+	if ( is_multisite() && rsssl_is_networkwide_active() ) {
+		$options = get_site_option( 'rsssl_options', [] );
 	} else {
-		$value = $options[$name];
+		$options = get_option( 'rsssl_options', [] );
 	}
 
+	$value = isset($options[$name]) ? $options[$name] : false;
 	if ( $value===false && $default!==false ) {
 		$value = $default;
 	}
@@ -93,15 +93,18 @@ function rsssl_get_option( $name, $default=false ) {
 
 /**
  * Check if we should treat the plugin as networkwide or not.
+ * Note that this function returns false for single sites! Always use icw is_multisite()
  *
  * @return bool
  */
 function rsssl_is_networkwide_active(){
-
+	if ( !is_multisite() ) {
+		return false;
+	}
 	if (!function_exists('is_plugin_active_for_network'))
 		require_once(ABSPATH . '/wp-admin/includes/plugin.php');
 
-	if (is_plugin_active_for_network(rsssl_plugin)) {
+	if ( is_plugin_active_for_network(rsssl_plugin) ) {
 		return true;
 	} else {
 		return false;

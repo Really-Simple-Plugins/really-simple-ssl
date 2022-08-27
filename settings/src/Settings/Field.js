@@ -11,6 +11,7 @@ import {
 import { __ } from '@wordpress/i18n';
 import * as rsssl_api from "../utils/api";
 import License from "./License";
+import Hyperlink from "../utils/Hyperlink";
 import MixedContentScan from "./MixedContentScan";
 import PermissionsPolicy from "./PermissionsPolicy";
 import Support from "./Support";
@@ -48,7 +49,7 @@ class Field extends Component {
         this.setState( { fields } )
     }
 
-    /**
+    /*
      * Handle data update for a datatable
      * @param enabled
      * @param clickedItem
@@ -96,6 +97,13 @@ class Field extends Component {
                 }
             }
         }
+
+        //if a feature can only be used on networkwide or single site setups, pass that info here.
+        if ( !rsssl_settings.networkwide_active && field.networkwide ) {
+            field.disabled = true;
+            field.comment = <>{__("This feature is only available networkwide.","really-simple-ssl")}<Hyperlink target="_blank" text={__("Network settings","really-simple-ssl")} url={rsssl_settings.network_link}/></>
+        }
+
         if ( !field.visible || field.type==='database' ) {
             return (
                 <></>
