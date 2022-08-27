@@ -265,6 +265,7 @@ function rsssl_rest_api_fields_set($request){
 		$field['value'] = $value;
 		$fields[$index] = $field;
 	}
+
 	if ( rsssl_is_networkwide_active() ) {
 		$options = get_site_option( 'rsssl_options', [] );
 	} else {
@@ -360,6 +361,7 @@ function rsssl_rest_api_fields_get(){
 
 	$output = array();
 	$fields = rsssl_fields();
+
 	$menu_items = rsssl_menu('settings');
 	foreach ( $fields as $index => $field ) {
 		/**
@@ -390,7 +392,6 @@ function rsssl_rest_api_fields_get(){
 	$output['menu'] = $menu_items;
 	$output['progress'] = RSSSL()->progress->get();
     $output = apply_filters('rsssl_rest_api_fields_get', $output);
-
 	$response = json_encode( $output );
 	header( "Content-Type: application/json" );
 	echo $response;
@@ -453,9 +454,10 @@ function rsssl_sanitize_field( $value, $type, $id ) {
 
 	switch ( $type ) {
 		case 'checkbox':
+			return intval($value);
 		case 'hidden':
 		case 'database':
-			return intval($value);
+			return sanitize_title($value);
 		case 'select':
 		case 'text':
 		    return sanitize_text_field( $value );

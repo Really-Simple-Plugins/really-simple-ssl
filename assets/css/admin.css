@@ -1474,7 +1474,7 @@ Admin notice
   background-color: green;
 }
 
-.rsssl-csp-revoked > div:nth-child(-n+3) {
+.rsssl-datatables-revoked > div:nth-child(-n+3) {
   opacity: 0.3;
 }
 

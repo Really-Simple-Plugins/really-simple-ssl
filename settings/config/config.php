@@ -493,7 +493,7 @@ function rsssl_fields( $load_values = true ){
 			'default'     => false,
 		],
 		[
-			'id'          => 'xmlrpc_enforce',
+			'id'          => 'xmlrpc_status',
 			'menu_id'     => 'hardening',
 			'group_id'    => 'hardening_xml',
 			'type'        => 'hidden',
@@ -502,25 +502,7 @@ function rsssl_fields( $load_values = true ){
 			'default'     => false,
 		],
 		[
-			'id'          => 'xmlrpc_learning_mode',
-			'menu_id'     => 'hardening',
-			'group_id'    => 'hardening_xml',
-			'type'        => 'hidden',
-			'label'       => '',
-			'disabled'    => false,
-			'default'     => false,
-		],
-		[
-			'id'          => 'xmlrpc_learning_mode_completed',
-			'menu_id'     => 'hardening',
-			'group_id'    => 'hardening_xml',
-			'type'        => 'hidden',
-			'label'       => '',
-			'disabled'    => false,
-			'default'     => false,
-		],
-		[
-			'id'          => 'xmlrpc',
+			'id'          => 'xmlrpc_allow_list',
 			'menu_id'     => 'hardening',
 			'group_id'    => 'hardening_xml',
 			'type'        => 'xmlrpc',
@@ -541,9 +523,14 @@ function rsssl_fields( $load_values = true ){
 					'column' =>'method',
 				],
 				[
-					'name' => __('User', 'really-simple-ssl'),
+					'name' => __('Login status', 'really-simple-ssl'),
 					'sortable' => false,
-					'column' =>'user_id',
+					'column' =>'login_statusControl',
+				],
+				[
+					'name' => __('Count', 'really-simple-ssl'),
+					'sortable' => false,
+					'column' =>'count',
 				],
 				[
 					'name' => __('Allow/revoke', 'really-simple-ssl'),

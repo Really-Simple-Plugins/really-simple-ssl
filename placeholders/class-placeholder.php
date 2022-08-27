@@ -56,7 +56,6 @@ if ( ! class_exists( 'RSSSL_PLACEHOLDER' ) ) {
 		}
 
 		public function xml_data(){
-
 			$data[] = [
 				'id'      => 1,
 				'time'  => time(),

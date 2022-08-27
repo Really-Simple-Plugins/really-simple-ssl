@@ -142,7 +142,7 @@ class ContentSecurityPolicy extends Component {
             const conditionalRowStyles = [
               {
                 when: row => row.status ==0,
-                classNames: ['rsssl-csp-revoked'],
+                classNames: ['rsssl-datatables-revoked'],
               },
             ];
              return (

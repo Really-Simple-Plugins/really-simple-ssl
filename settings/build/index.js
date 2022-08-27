@@ -4860,7 +4860,7 @@ class ContentSecurityPolicy extends _wordpress_element__WEBPACK_IMPORTED_MODULE_
 
     const conditionalRowStyles = [{
       when: row => row.status == 0,
-      classNames: ['rsssl-csp-revoked']
+      classNames: ['rsssl-datatables-revoked']
     }];
     return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.PanelBody, {
       className: this.highLightClass
@@ -6602,8 +6602,8 @@ class Xmlrpc extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Component {
   constructor() {
     super(...arguments);
     this.state = {
-      csp_enforce: 0,
-      csp_learning_mode: 0,
+      enforce: 0,
+      learning_mode: 0,
       learning_mode_completed: 0,
       filterValue: 0
     };
@@ -6611,13 +6611,13 @@ class Xmlrpc extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Component {
 
   componentDidMount() {
     this.doFilter = this.doFilter.bind(this);
-    let enforce_field = this.props.fields.filter(field => field.id === 'xmlrpc_enforce')[0];
-    let learning_mode_field = this.props.fields.filter(field => field.id === 'xmlrpc_learning_mode')[0];
-    let learning_mode_completed = this.props.fields.filter(field => field.id === 'xmlrpc_learning_mode_completed')[0];
+    let enforce = this.props.fields.filter(field => field.id === 'xmlrpc_status')[0].value === 'enforce';
+    let learning_mode = this.props.fields.filter(field => field.id === 'xmlrpc_status')[0].value === 'learning_mode';
+    let learning_mode_completed = this.props.fields.filter(field => field.id === 'xmlrpc_status')[0].value === 'completed';
     this.setState({
-      xmlrpc_enforce: enforce_field.value,
-      xmlrpc_learning_mode: learning_mode_field.value,
-      learning_mode_completed: learning_mode_completed.value
+      enforce: enforce,
+      learning_mode: learning_mode,
+      learning_mode_completed: learning_mode_completed
     });
   }
 
@@ -6630,51 +6630,30 @@ class Xmlrpc extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Component {
   toggleEnforce(e, enforce) {
     e.preventDefault();
     let fields = this.props.fields;
-    let field = fields.filter(field => field.id === 'xmlrpc_enforce')[0];
-    let learning_mode_field = fields.filter(field => field.id === 'xmlrpc_learning_mode')[0];
-    console.log(fields);
-    let learning_mode_completed_field = fields.filter(field => field.id === 'xmlrpc_learning_mode_completed')[0]; //disable learning mode if enforced
+    let field = fields.filter(field => field.id === 'xmlrpc_status')[0]; //enforce this setting
 
-    if (enforce == 1) {
-      learning_mode_field.value = 0;
-      learning_mode_completed_field.value = 0;
-    } //enforce this setting
-
-
-    field.value = enforce;
+    field.value = enforce == 1 ? 'enforce' : 'disabled';
     this.setState({
-      xmlrpc_enforce: enforce,
+      enforce: enforce,
       learning_mode_completed: 0
     });
     let saveFields = [];
     saveFields.push(field);
-    saveFields.push(learning_mode_field);
-    saveFields.push(learning_mode_completed_field); //         this.props.updateField(field);
-    //         this.props.updateField(learning_mode_field);
-
-    _utils_api__WEBPACK_IMPORTED_MODULE_5__.setFields(saveFields).then(response => {//this.props.showSavedSettingsNotice();
-    });
+    _utils_api__WEBPACK_IMPORTED_MODULE_5__.setFields(saveFields).then(response => {});
   }
 
   toggleLearningMode(e) {
     e.preventDefault();
-    let fields = this.props.fields; //look up permissions policy enable field //enable_permissions_policy
+    let fields = this.props.fields;
+    let field = fields.filter(field => field.id === 'xmlrpc_status')[0]; //toggle
 
-    let field = fields.filter(field => field.id === 'xmlrpc_learning_mode')[0]; //enforce this setting
-
-    let enableLearningMode = field.value == 1 ? 0 : 1;
-    field.value = enableLearningMode;
+    let enableLearningMode = field.value === 'learning_mode' ? 0 : 1;
+    field.value = enableLearningMode == 1 ? 'learning_mode' : 'disabled';
     this.setState({
-      xmlrpc_learning_mode: enableLearningMode
+      learning_mode: enableLearningMode
     });
     let saveFields = [];
-    saveFields.push(field); //         this.props.updateField(field);
-    //if new value is disabled, also reset the "completedLearningMode" value
-
-    field = fields.filter(field => field.id === 'xmlrpc_learning_mode_completed')[0];
-    field.value = 0;
-    saveFields.push(field); //         this.props.updateField(field);
-
+    saveFields.push(field);
     _utils_api__WEBPACK_IMPORTED_MODULE_5__.setFields(saveFields).then(response => {});
   }
 
@@ -6682,11 +6661,10 @@ class Xmlrpc extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Component {
     let field = this.props.field;
     let fieldValue = field.value;
     let options = this.props.options;
-    console.log(fieldValue);
     const {
       filterValue,
-      xmlrpc_enforce,
-      xmlrpc_learning_mode,
+      enforce,
+      learning_mode,
       learning_mode_completed
     } = this.state;
 
@@ -6729,6 +6707,7 @@ class Xmlrpc extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Component {
     }
 
     for (const item of data) {
+      item.login_statusControl = item.login_status == 1 ? (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("success", "really-simple-ssl") : (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("failed", "really-simple-ssl");
       item.statusControl = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_ChangeStatus__WEBPACK_IMPORTED_MODULE_3__["default"], {
         item: item,
         onChangeHandlerDataTable: this.props.onChangeHandlerDataTable
@@ -6737,7 +6716,7 @@ class Xmlrpc extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Component {
 
     const conditionalRowStyles = [{
       when: row => row.status == 0,
-      classNames: ['rsssl-csp-revoked']
+      classNames: ['rsssl-datatables-revoked']
     }];
     return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.PanelBody, {
       className: this.highLightClass
@@ -6751,25 +6730,25 @@ class Xmlrpc extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Component {
       subHeader: true,
       subHeaderComponent: (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(Filter, null),
       conditionalRowStyles: conditionalRowStyles
-    }), xmlrpc_enforce != 1 && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
+    }), enforce != 1 && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
       className: "button",
       onClick: e => this.toggleEnforce(e, true)
-    }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Enforce", "really-simple-ssl")), xmlrpc_enforce == 1 && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
+    }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Enforce", "really-simple-ssl")), enforce == 1 && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
       className: "button",
       onClick: e => this.toggleEnforce(e, false)
     }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Disable", "really-simple-ssl")), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("label", null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("input", {
       type: "checkbox",
-      disabled: xmlrpc_enforce,
-      checked: xmlrpc_learning_mode == 1,
-      value: xmlrpc_learning_mode,
+      disabled: enforce,
+      checked: learning_mode == 1,
+      value: learning_mode,
       onChange: e => this.toggleLearningMode(e)
-    }), (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Enable Learning Mode", "really-simple-ssl"))), xmlrpc_learning_mode == 1 && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    }), (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Enable Learning Mode", "really-simple-ssl"))), learning_mode == 1 && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
       className: "rsssl-locked"
     }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
       className: "rsssl-locked-overlay"
     }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
       className: "rsssl-progress-status rsssl-learning-mode"
-    }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Learning Mode", "really-simple-ssl")), (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("We're configuring your Content Security Policy.", "really-simple-ssl"), "\xA0", (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
+    }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Learning Mode", "really-simple-ssl")), (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("We're configuring your XMLRPC.", "really-simple-ssl"), "\xA0", (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
       className: "rsssl-learning-mode-link",
       href: "#",
       onClick: e => this.toggleLearningMode(e)
