@@ -220,6 +220,7 @@ function rsssl_rest_api_fields_set($request){
         return;
     }
 	$fields = $request->get_json_params();
+    x_log($fields);
     $config_fields = rsssl_fields(false);
     $config_ids = array_column($config_fields, 'id');
 	foreach ( $fields as $index => $field ) {
@@ -260,7 +261,7 @@ function rsssl_rest_api_fields_set($request){
 		$field['value'] = $value;
 		$fields[$index] = $field;
 	}
-    
+
 	if ( is_multisite() && rsssl_is_networkwide_active() ) {
 		$options = get_site_option( 'rsssl_options', [] );
 	} else {

@@ -60,13 +60,19 @@ class Xmlrpc extends Component {
          e.preventDefault();
         let fields = this.props.fields;
         let field = fields.filter(field => field.id === 'xmlrpc_status')[0];
+        let learning_mode = field.value === 'learning_mode' ? 1 : 0;
+        let learning_mode_completed = field.value === 'completed' ? 1 : 0;
 
-        //toggle
-        let enableLearningMode = field.value === 'learning_mode' ? 0 : 1;
-
-        field.value=enableLearningMode==1 ? 'learning_mode' : 'disabled';
+        field.value = learning_mode || learning_mode_completed ? 'disabled' : 'learning_mode';
+        if (learning_mode || learning_mode_completed) {
+            learning_mode = 0;
+        } else {
+            learning_mode = 1;
+        }
+        learning_mode_completed = 0;
         this.setState({
-            learning_mode :enableLearningMode
+            learning_mode : learning_mode,
+            learning_mode_completed : learning_mode_completed,
         });
         let saveFields = [];
         saveFields.push(field);

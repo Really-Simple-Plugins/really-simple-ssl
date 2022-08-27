@@ -133,14 +133,14 @@ class REALLY_SIMPLE_SSL
 	{
 		require_once(rsssl_path . 'class-front-end.php');
 		require_once(rsssl_path . 'functions.php');
-		require_once(rsssl_path . 'upgrade.php');
 		require_once(rsssl_path . 'class-mixed-content-fixer.php');
 		$wpcli = defined( 'WP_CLI' ) && WP_CLI;
 		if ( $wpcli ) {
 			require_once(rsssl_path . 'class-rsssl-wp-cli.php');
 		}
 		if ( rsssl_is_logged_in_rest() || is_admin() || wp_doing_cron() || is_multisite() || $wpcli || defined('RSSSL_DOING_SYSTEM_STATUS') || defined('RSSSL_LEARNING_MODE') ) {
-            require_once( rsssl_path . 'settings/settings.php' );
+			require_once(rsssl_path . 'upgrade.php');
+			require_once( rsssl_path . 'settings/settings.php' );
             require_once( rsssl_path . 'onboarding/config.php' );
             require_once( rsssl_path . 'onboarding/class-onboarding.php' );
             require_once( rsssl_path . 'placeholders/class-placeholder.php' );
@@ -171,6 +171,7 @@ class REALLY_SIMPLE_SSL
 		}
 
 		require_once(rsssl_path . '/security/security.php');
+
 	}
 
 	private function hooks()

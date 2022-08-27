@@ -2803,8 +2803,8 @@ class rsssl_admin
 			    unset($notices[$id]);
 			    continue;
             }
-
 		    $condition_functions = $notice['condition'];
+
 		    foreach ( $condition_functions as $func ) {
 			    $condition = $this->validate_function($func, true);
 			    if ( ! $condition ) {

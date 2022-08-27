@@ -1,12 +1,12 @@
 <?php
 defined('ABSPATH') or die();
 
-add_action('plugins_loaded', 'rsssl_upgrade');
+add_action('plugins_loaded', 'rsssl_upgrade', 20);
 function rsssl_upgrade() {
 	$prev_version = get_option( 'rsssl_current_version', false );
 
 	//dismiss notices that should be dismissed on plugin upgrade
-	if ( $prev_version ) {
+	if ( $prev_version && version_compare( $prev_version, rsssl_version, '!=' )) {
 		$dismiss_options = RSSSL()->really_simple_ssl->get_notices_list( array(
 			'dismiss_on_upgrade' => true,
 		) );
