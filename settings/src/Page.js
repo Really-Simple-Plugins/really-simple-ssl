@@ -5,6 +5,7 @@ import DashboardPage from "./DashBoard/DashboardPage";
 import SettingsPage from "./Settings/SettingsPage";
 import Modal from "./Modal/Modal";
 import PagePlaceholder from './Placeholder/PagePlaceholder';
+import OnboardingModal from "./OnboardingModal";
 
 class Page extends Component {
     constructor() {
@@ -61,7 +62,7 @@ class Page extends Component {
             return response.data;
         });
     }
-    /**
+    /*
      * Allow child blocks to set data on the gridblock
      * @param key
      * @param value
@@ -73,7 +74,7 @@ class Page extends Component {
         })
     }
 
-    /**
+    /*
      * Handle instantiation of a modal window
      * @param showModal
      * @param data
@@ -225,6 +226,7 @@ class Page extends Component {
 
         return (
             <div className="rsssl-wrapper">
+                <OnboardingModal setPageProps={this.setPageProps} />
                 {!isAPILoaded && <PagePlaceholder></PagePlaceholder>}
                 {showModal && <Modal handleModal={this.handleModal} data={modalData}/>}
                 {isAPILoaded &&
@@ -257,7 +259,7 @@ class Page extends Component {
                                         previousMenuItem={this.state.previousMenuItem} />
                                 }
                                 { selectedMainMenuItem === 'dashboard' &&
-                                    <DashboardPage isAPILoaded={isAPILoaded} fields={fields} selectMainMenu={this.selectMainMenu} highLightField={this.highLightField}/>
+                                    <DashboardPage isAPILoaded={isAPILoaded} fields={fields} selectMainMenu={this.selectMainMenu} highLightField={this.highLightField} pageProps={this.pageProps}/>
                                 }
                             </div>
                         </>

@@ -82,6 +82,15 @@ $rsssl_integrations_list = apply_filters( 'rsssl_integrations', array(
 		'learning_mode'        => false,
 		'option_id'            => 'block_registration_when_display_name_is_login_name',
 	),
+    'disable_xmlrpc' => array(
+	    'label'                => 'XMLRPC',
+	    'folder'               => 'wordpress',
+	    'impact'               => 'medium',
+	    'risk'                 => 'low',
+	    'learning_mode'        => true,
+	    'option_id'            => 'disable_xmlrpc',
+	    'always_include'       => false,
+    ),
 ) );
 
 /**

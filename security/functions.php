@@ -4,6 +4,38 @@ defined( 'ABSPATH' ) or die( );
  * Back-end available only
  */
 
+
+if ( !function_exists('rsssl_update_wp_option') ) {
+	/**
+	 * Wrapper function to get an option either for the network, or for the site, in case if !multisite, or not network activated
+	 * @param string $option_name
+	 * @param mixed $option_value
+	 */
+	function rsssl_update_wp_option($option_name, $option_value){
+		if ( is_multisite() && rsssl_is_networkwide_active() ){
+			update_site_option($option_name, $option_value );
+		} else {
+			update_option($option_name, $option_value );
+		}
+	}
+}
+
+if ( !function_exists('rsssl_get_wp_option') ) {
+	/**
+	 * Wrapper function to get an option either for the network, or for the site, in case if !multisite, or not network activated
+	 * @param string $option_name
+	 *
+	 * @return mixed
+	 */
+	function rsssl_get_wp_option($option_name){
+		if ( is_multisite() && rsssl_is_networkwide_active() ){
+			return get_site_option($option_name);
+		} else {
+			return get_option($option_name);
+		}
+	}
+}
+
 /**
  * @return string
  * Delete transients
@@ -23,9 +55,7 @@ defined( 'ABSPATH' ) or die( );
 //    }
 //}
 
-//error_log(print_r($_SERVER,true));
-//error_log(print_r($_POST,true));
-//error_log(print_r($_GET,true));
+
 if ( !function_exists('rsssl_remove_htaccess_security_edits') ) {
 	/**
 	 * Clean up on deactivation

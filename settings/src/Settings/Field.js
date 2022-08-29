@@ -11,16 +11,17 @@ import {
 import { __ } from '@wordpress/i18n';
 import * as rsssl_api from "../utils/api";
 import License from "./License";
+import Hyperlink from "../utils/Hyperlink";
 import MixedContentScan from "./MixedContentScan";
 import PermissionsPolicy from "./PermissionsPolicy";
 import Support from "./Support";
-import ContentSecurityPolicy from "./ContentSecurityPolicy";
+import LearningMode from "./LearningMode";
 import ChangeStatus from "./ChangeStatus";
 import {
     Component,
 } from '@wordpress/element';
 
-/**
+/*
  * https://react-data-table-component.netlify.app
  */
 import DataTable from "react-data-table-component";
@@ -47,7 +48,7 @@ class Field extends Component {
         this.setState( { fields } )
     }
 
-    /**
+    /*
      * Handle data update for a datatable
      * @param enabled
      * @param clickedItem
@@ -80,6 +81,7 @@ class Field extends Component {
     }
 
     render(){
+
         let field = this.props.field;
         let fieldValue = field.value;
         let fields = this.props.fields;
@@ -94,9 +96,16 @@ class Field extends Component {
                 }
             }
         }
+
+        //if a feature can only be used on networkwide or single site setups, pass that info here.
+        if ( !rsssl_settings.networkwide_active && field.networkwide ) {
+            field.disabled = true;
+            field.comment = <>{__("This feature is only available networkwide.","really-simple-ssl")}<Hyperlink target="_blank" text={__("Network settings","really-simple-ssl")} url={rsssl_settings.network_link}/></>
+        }
+
         if ( !field.visible || field.type==='database' ) {
             return (
-                <span></span>
+                <></>
             );
         }
 
@@ -160,7 +169,7 @@ class Field extends Component {
         }
 
         if ( field.type==='license' ){
-            /**
+            /*
              * There is no "PasswordControl" in WordPress react yet, so we create our own license field.
              */
             let field = this.props.field;
@@ -222,9 +231,9 @@ class Field extends Component {
             )
         }
 
-        if ( field.type==='contentsecuritypolicy' ) {
+        if ( field.type==='learningmode' ) {
             return(
-                <ContentSecurityPolicy onChangeHandlerDataTable={this.onChangeHandlerDataTable} updateField={this.props.updateField} field={this.props.field} options={options} highLightClass={this.highLightClass} fields={fields}/>
+                <LearningMode onChangeHandlerDataTable={this.onChangeHandlerDataTable} updateField={this.props.updateField} field={this.props.field} options={options} highLightClass={this.highLightClass} fields={fields}/>
             )
         }
 

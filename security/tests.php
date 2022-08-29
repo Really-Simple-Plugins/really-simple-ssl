@@ -119,6 +119,10 @@ function rsssl_is_default_wp_prefix() {
 	return false;
 }
 
+function rsssl_xmlrpc_enabled(){
+	return apply_filters('xmlrpc_enabled', true );
+}
+
 /**
  * @return bool
  *

@@ -139,13 +139,13 @@ class REALLY_SIMPLE_SSL
 			require_once(rsssl_path . 'class-rsssl-wp-cli.php');
 		}
 		if ( rsssl_is_logged_in_rest() || is_admin() || wp_doing_cron() || is_multisite() || $wpcli || defined('RSSSL_DOING_SYSTEM_STATUS') || defined('RSSSL_LEARNING_MODE') ) {
-            require_once( rsssl_path . 'settings/settings.php' );
+			require_once(rsssl_path . 'upgrade.php');
+			require_once( rsssl_path . 'settings/settings.php' );
             require_once( rsssl_path . 'onboarding/config.php' );
             require_once( rsssl_path . 'onboarding/class-onboarding.php' );
             require_once( rsssl_path . 'placeholders/class-placeholder.php' );
 			if (is_multisite()) {
 				require_once(rsssl_path . 'class-multisite.php');
-				require_once(rsssl_path . 'multisite-cron.php');
 			}
             require_once(rsssl_path . 'class-admin.php');
 			require_once(rsssl_path . 'class-cache.php');
@@ -171,6 +171,7 @@ class REALLY_SIMPLE_SSL
 		}
 
 		require_once(rsssl_path . '/security/security.php');
+
 	}
 
 	private function hooks()
@@ -241,7 +242,7 @@ add_action('plugins_loaded', 'RSSSL', 8);
 
 if ( !function_exists('rsssl_is_logged_in_rest')){
 	function rsssl_is_logged_in_rest(){
-		$is_settings_page = isset($_SERVER['REQUEST_URI']) && strpos($_SERVER['REQUEST_URI'], 'wp-json/reallysimplessl/v1/')!==false ;
-		return $is_settings_page && isset($_SERVER['HTTP_X_WP_NONCE']) && wp_verify_nonce($_SERVER['HTTP_X_WP_NONCE'], 'wp_rest');
+		$is_settings_page_request = isset($_SERVER['REQUEST_URI']) && strpos($_SERVER['REQUEST_URI'], 'wp-json/reallysimplessl/v1/')!==false ;
+		return $is_settings_page_request && isset($_SERVER['HTTP_X_WP_NONCE']) && wp_verify_nonce($_SERVER['HTTP_X_WP_NONCE'], 'wp_rest');
 	}
 }

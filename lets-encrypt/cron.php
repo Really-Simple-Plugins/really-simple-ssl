@@ -4,7 +4,7 @@ defined( 'ABSPATH' ) or die();
 add_action( 'plugins_loaded', 'rsssl_le_schedule_cron' );
 function rsssl_le_schedule_cron() {
 	//only run if SSL is enabled.
-	if ( !RSSSL()->rsssl_front_end->ssl_enabled ) {
+	if ( !rsssl_get_option('ssl_enabled') ) {
 		return;
 	}
 

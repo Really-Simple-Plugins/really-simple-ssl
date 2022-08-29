@@ -32,7 +32,7 @@ class rsssl_onboarding {
 			delete_transient('rsssl_redirect_to_settings_page' );
 			if ( !RSSSL()->really_simple_ssl->is_settings_page() ) {
 				if ( is_multisite() && is_super_admin() ) {
-					wp_redirect( add_query_arg(array('page' => 'really-simple-ssl'), network_admin_url('settings.php') )  );
+					wp_redirect( add_query_arg(array('page' => 'really-simple-security'), network_admin_url('settings.php') )  );
 					exit;
 				} else {
 					wp_redirect( add_query_arg(array('page'=>'really-simple-security#dashboard'), admin_url('options-general.php') ) );
@@ -66,6 +66,14 @@ class rsssl_onboarding {
 		register_rest_route( 'reallysimplessl/v1', 'activate_ssl', array(
 			'methods'  => 'POST',
 			'callback' => array( RSSSL()->really_simple_ssl, 'activate_ssl' ),
+			'permission_callback' => function () {
+				return current_user_can( 'manage_options' );
+			}
+		) );
+
+		register_rest_route( 'reallysimplessl/v1', 'activate_ssl_networkwide', array(
+			'methods'  => 'POST',
+			'callback' => array( RSSSL()->rsssl_multisite, 'process_ssl_activation_step' ),
 			'permission_callback' => function () {
 				return current_user_can( 'manage_options' );
 			}
@@ -151,16 +159,11 @@ class rsssl_onboarding {
 
 	function show_onboarding_modal() {
 		$is_upgrade = get_option('rsssl_show_onboarding');
-		if ( RSSSL()->really_simple_ssl->ssl_enabled && !$is_upgrade ) {
+		if ( rsssl_get_option('ssl_enabled') && !$is_upgrade ) {
 			return false;
 		}
 
 		if ( defined( "RSSSL_DISMISS_ACTIVATE_SSL_NOTICE" ) && RSSSL_DISMISS_ACTIVATE_SSL_NOTICE ) {
-			return false;
-		}
-
-		//on multisite, only show this message on the network admin.
-		if ( is_multisite() && ! is_network_admin() ) {
 			return false;
 		}
 
