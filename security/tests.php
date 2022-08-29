@@ -224,7 +224,16 @@ function rsssl_get_debug_log_value(){
  *
  */
 function rsssl_debug_log_file_exists_in_default_location(){
-	return file_exists(trailingslashit(WP_CONTENT_DIR).'debug.log');
+	$default_file = trailingslashit(WP_CONTENT_DIR).'debug.log';
+	if ( !file_exists($default_file) ) {
+		return false;
+	}
+
+	$content = file_get_contents($default_file);
+	if (trim($content) === 'Access denied'){
+		return true;
+	}
+	return false;
 }
 
 /**

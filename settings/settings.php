@@ -566,7 +566,6 @@ function rsssl_sanitize_permissions_policy( $value, $type, $field_name ){
 	//ensure that there are no duplicate ids
 	foreach ($value as $index => $item ) {
 		if ( in_array($item['id'], $stored_ids) ){
-			error_log("exists in arr ".$item['id']);
 			unset($value[$index]);
 			continue;
 		}
