@@ -15,8 +15,7 @@ import Hyperlink from "../utils/Hyperlink";
 import MixedContentScan from "./MixedContentScan";
 import PermissionsPolicy from "./PermissionsPolicy";
 import Support from "./Support";
-import ContentSecurityPolicy from "./ContentSecurityPolicy";
-import Xmlrpc from "./Xmlrpc";
+import LearningMode from "./LearningMode";
 import ChangeStatus from "./ChangeStatus";
 import {
     Component,
@@ -232,15 +231,9 @@ class Field extends Component {
             )
         }
 
-        if ( field.type==='xmlrpc' ) {
+        if ( field.type==='learningmode' ) {
             return(
-                <Xmlrpc onChangeHandlerDataTable={this.onChangeHandlerDataTable} updateField={this.props.updateField} field={this.props.field} options={options} highLightClass={this.highLightClass} fields={fields}/>
-            )
-        }
-
-        if ( field.type==='contentsecuritypolicy' ) {
-            return(
-                <ContentSecurityPolicy onChangeHandlerDataTable={this.onChangeHandlerDataTable} updateField={this.props.updateField} field={this.props.field} options={options} highLightClass={this.highLightClass} fields={fields}/>
+                <LearningMode onChangeHandlerDataTable={this.onChangeHandlerDataTable} updateField={this.props.updateField} field={this.props.field} options={options} highLightClass={this.highLightClass} fields={fields}/>
             )
         }
 

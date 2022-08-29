@@ -11,7 +11,7 @@ import ChangeStatus from "./ChangeStatus";
 import DataTable from "react-data-table-component";
 import * as rsssl_api from "../utils/api";
 
-class Xmlrpc extends Component {
+class LearningMode extends Component {
     constructor() {
         super( ...arguments );
         this.state = {
@@ -24,7 +24,7 @@ class Xmlrpc extends Component {
 
     componentDidMount() {
         this.doFilter = this.doFilter.bind(this);
-        let field = this.props.fields.filter(field => field.id === 'xmlrpc_status')[0];
+        let field = this.props.fields.filter(field => field.id === this.props.field.control_field )[0];
         let enforce = field.value==='enforce';
         let learning_mode = field.value==='learning_mode';
         let learning_mode_completed = field.value==='completed';
@@ -44,7 +44,7 @@ class Xmlrpc extends Component {
     toggleEnforce(e, enforce){
         e.preventDefault();
         let fields = this.props.fields;
-        let field = fields.filter(field => field.id === 'xmlrpc_status')[0];
+        let field = fields.filter(field => field.id === this.props.field.control_field)[0];
 
         //enforce this setting
         field.value=enforce==1 ? 'enforce' : 'disabled';
@@ -60,7 +60,7 @@ class Xmlrpc extends Component {
     toggleLearningMode(e){
          e.preventDefault();
         let fields = this.props.fields;
-        let field = fields.filter(field => field.id === 'xmlrpc_status')[0];
+        let field = fields.filter(field => field.id === this.props.field.control_field )[0];
         let learning_mode = field.value === 'learning_mode' ? 1 : 0;
         let learning_mode_completed = field.value === 'completed' ? 1 : 0;
 
@@ -84,6 +84,8 @@ class Xmlrpc extends Component {
             let field = this.props.field;
             let fieldValue = field.value;
             let options = this.props.options;
+            let configuringString = __("We're configuring your %s", "really-simple-ssl").replace('%s', field.label);
+            let disabledString = __("%s has been disabled.", "really-simple-ssl").replace('%s', field.label);
             const {
                 filterValue,
                 enforce,
@@ -164,7 +166,7 @@ class Xmlrpc extends Component {
                     {learning_mode==1 && <div className="rsssl-locked">
                         <div className="rsssl-locked-overlay">
                             <span className="rsssl-progress-status rsssl-learning-mode">{__("Learning Mode","really-simple-ssl")}</span>
-                            {__("We're configuring your XMLRPC.", "really-simple-ssl")}&nbsp;
+                            {configuringString}&nbsp;
                             <a className="rsssl-learning-mode-link" href="#" onClick={ (e) => this.toggleLearningMode(e) }>{__("Disable learning mode and configure manually", "really-simple-ssl") }</a>
                         </div>
                     </div>}
@@ -178,7 +180,7 @@ class Xmlrpc extends Component {
                     { rsssl_settings.pro_plugin_active && field.disabled && <div className="rsssl-locked">
                         <div className="rsssl-locked-overlay">
                             <span className="rsssl-progress-status rsssl-disabled">{__("disabled ","really-simple-ssl")}</span>
-                            {__("XMLRPC has been disabled.", "really-simple-ssl")}
+                            {disabledString}
                         </div>
                     </div>}
                 </>
@@ -186,5 +188,4 @@ class Xmlrpc extends Component {
     }
 }
 
-
-export default Xmlrpc
+export default LearningMode
