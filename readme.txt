@@ -103,6 +103,7 @@ If you can't deactivate, do not just remove the plugin folder to uninstall! Foll
 * Prevent indexing of directories
 * Warning when display name is the same as login name
 * Disable HTTP methods
+* New React SSL activation notice
 
 = 5.3.0 =
 * Improvement: added PHP 8.1 compatibility
