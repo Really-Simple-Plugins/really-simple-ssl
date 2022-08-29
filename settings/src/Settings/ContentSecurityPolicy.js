@@ -15,8 +15,8 @@ class ContentSecurityPolicy extends Component {
     constructor() {
         super( ...arguments );
         this.state = {
-            csp_enforce :0,
-            csp_learning_mode :0,
+            enforce :0,
+            learning_mode :0,
             learning_mode_completed :0,
             filterValue: 0,
         };
@@ -24,13 +24,14 @@ class ContentSecurityPolicy extends Component {
 
     componentDidMount() {
         this.doFilter = this.doFilter.bind(this);
-        let enforce_field = this.props.fields.filter(field => field.id === 'csp_enforce')[0];
-        let learning_mode_field = this.props.fields.filter(field => field.id === 'csp_learning_mode')[0];
-        let learning_mode_completed = this.props.fields.filter(field => field.id === 'csp_learning_mode_completed')[0];
+        let field = this.props.fields.filter(field => field.id === 'csp_status')[0];
+        let enforce = field.value==='enforce';
+        let learning_mode = field.value==='learning_mode';
+        let learning_mode_completed = field.value==='completed';
         this.setState({
-            csp_enforce :enforce_field.value,
-            csp_learning_mode :learning_mode_field.value,
-            learning_mode_completed :learning_mode_completed.value
+            enforce :enforce,
+            learning_mode :learning_mode,
+            learning_mode_completed :learning_mode_completed,
         });
     }
 
@@ -43,52 +44,38 @@ class ContentSecurityPolicy extends Component {
     toggleEnforce(e, enforce){
         e.preventDefault();
         let fields = this.props.fields;
-        //look up permissions policy enable field //enable_permissions_policy
-        let field = fields.filter(field => field.id === 'csp_enforce')[0];
-        let learning_mode_field = fields.filter(field => field.id === 'csp_learning_mode')[0];
-        console.log(fields);
-        let learning_mode_completed_field = fields.filter(field => field.id === 'csp_learning_mode_completed')[0];
-        //disable learning mode if enforced
-        if (enforce==1){
-            learning_mode_field.value=0;
-            learning_mode_completed_field.value=0;
-        }
+        let field = fields.filter(field => field.id === 'csp_status')[0];
+
         //enforce this setting
-        field.value=enforce;
+        field.value=enforce==1 ? 'enforce' : 'disabled';
         this.setState({
-            csp_enforce :enforce,
+            enforce :enforce,
             learning_mode_completed:0,
         });
         let saveFields = [];
         saveFields.push(field);
-        saveFields.push(learning_mode_field);
-        saveFields.push(learning_mode_completed_field);
-//         this.props.updateField(field);
-//         this.props.updateField(learning_mode_field);
-        rsssl_api.setFields(saveFields).then(( response ) => {
-            //this.props.showSavedSettingsNotice();
-        });
+        rsssl_api.setFields(saveFields).then(( response ) => { });
     }
 
     toggleLearningMode(e){
          e.preventDefault();
         let fields = this.props.fields;
-        //look up permissions policy enable field //enable_permissions_policy
-        let field = fields.filter(field => field.id === 'csp_learning_mode')[0];
-        //enforce this setting
-        let enableLearningMode = field.value==1 ? 0 : 1;
-        field.value=enableLearningMode;
+        let field = fields.filter(field => field.id === 'csp_status')[0];
+        let learning_mode = field.value === 'learning_mode' ? 1 : 0;
+        let learning_mode_completed = field.value === 'completed' ? 1 : 0;
+        field.value = learning_mode || learning_mode_completed ? 'disabled' : 'learning_mode';
+        if (learning_mode || learning_mode_completed) {
+            learning_mode = 0;
+        } else {
+            learning_mode = 1;
+        }
+        learning_mode_completed = 0;
         this.setState({
-            csp_learning_mode :enableLearningMode
+            learning_mode : learning_mode,
+            learning_mode_completed : learning_mode_completed,
         });
         let saveFields = [];
         saveFields.push(field);
-//         this.props.updateField(field);
-        //if new value is disabled, also reset the "completedLearningMode" value
-        field = fields.filter(field => field.id === 'csp_learning_mode_completed')[0];
-        field.value = 0;
-        saveFields.push(field);
-//         this.props.updateField(field);
         rsssl_api.setFields(saveFields).then(( response ) => {});
     }
 
@@ -98,8 +85,8 @@ class ContentSecurityPolicy extends Component {
             let options = this.props.options;
             const {
                 filterValue,
-                csp_enforce,
-                csp_learning_mode,
+                enforce,
+                learning_mode,
                 learning_mode_completed,
             } = this.state;
 
@@ -160,19 +147,19 @@ class ContentSecurityPolicy extends Component {
                             conditionalRowStyles={conditionalRowStyles}
                         />
 
-                        { csp_enforce!=1 && <button className="button" onClick={ (e) => this.toggleEnforce(e, true ) }>{__("Enforce","really-simple-ssl")}</button> }
-                        { csp_enforce==1 && <button className="button" onClick={ (e) => this.toggleEnforce(e, false ) }>{__("Disable","really-simple-ssl")}</button> }
+                        { enforce!=1 && <button className="button" onClick={ (e) => this.toggleEnforce(e, true ) }>{__("Enforce","really-simple-ssl")}</button> }
+                        { enforce==1 && <button className="button" onClick={ (e) => this.toggleEnforce(e, false ) }>{__("Disable","really-simple-ssl")}</button> }
                         <label>
                             <input type="checkbox"
-                                disabled = {csp_enforce}
-                                checked ={csp_learning_mode==1}
-                                value = {csp_learning_mode}
+                                disabled = {enforce}
+                                checked ={learning_mode==1}
+                                value = {learning_mode}
                                 onChange={ ( e ) => this.toggleLearningMode(e) }
                             />
                             {__("Enable Learning Mode","really-simple-ssl")}
                         </label>
                     </PanelBody>
-                    {csp_learning_mode==1 && <div className="rsssl-locked">
+                    {learning_mode==1 && <div className="rsssl-locked">
                         <div className="rsssl-locked-overlay">
                             <span className="rsssl-progress-status rsssl-learning-mode">{__("Learning Mode","really-simple-ssl")}</span>
                             {__("We're configuring your Content Security Policy.", "really-simple-ssl")}&nbsp;

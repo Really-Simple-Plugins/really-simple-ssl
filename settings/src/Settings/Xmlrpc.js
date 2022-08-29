@@ -24,13 +24,15 @@ class Xmlrpc extends Component {
 
     componentDidMount() {
         this.doFilter = this.doFilter.bind(this);
-        let enforce = this.props.fields.filter(field => field.id === 'xmlrpc_status')[0].value==='enforce';
-        let learning_mode = this.props.fields.filter(field => field.id === 'xmlrpc_status')[0].value==='learning_mode';
-        let learning_mode_completed = this.props.fields.filter(field => field.id === 'xmlrpc_status')[0].value==='completed';
+        console.log(this.props.fields);
+        let field = this.props.fields.filter(field => field.id === 'xmlrpc_status')[0];
+        let enforce = field.value==='enforce';
+        let learning_mode = field.value==='learning_mode';
+        let learning_mode_completed = field.value==='completed';
         this.setState({
             enforce :enforce,
             learning_mode :learning_mode,
-            learning_mode_completed :learning_mode_completed
+            learning_mode_completed :learning_mode_completed,
         });
     }
 

@@ -91,15 +91,26 @@ function rsssl_disable_fields($field, $field_id){
 		}
 	}
 
+	if ( $field_id==='disable_xmlrpc' ){
+		if ( rsssl_xmlrpc_enabled() && !$field['value'] ) {
+			$field['value'] = true;
+			$field['disabled'] = true;
+			$field['help'] = [
+				'label' => 'default',
+				'text' => __( "XMLRPC is already disabled.", 'really-simple-ssl' ),
+			];
+		}
+	}
+
 	if ( $field_id==='rename_db_prefix' ){
-//		if ( !rsssl_code_execution_allowed() && !$field['value'] ) {
-//			$field['value'] = true;
-//			$field['disabled'] = true;
-//			$field['help'] = [
-//				'label' => 'default',
-//				'text' => __( "Code execution is already disabled.", 'really-simple-ssl' ),
-//			];
-//		}
+		if ( !rsssl_is_default_wp_prefix() && !$field['value'] ) {
+			$field['value'] = true;
+			$field['disabled'] = true;
+			$field['help'] = [
+				'label' => 'default',
+				'text' => __( "Database prefix is already changed.", 'really-simple-ssl' ),
+			];
+		}
 	}
 
 	return $field;
