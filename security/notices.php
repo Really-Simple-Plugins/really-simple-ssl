@@ -66,21 +66,21 @@ function rsssl_general_security_notices( $notices ) {
 			'block_registration_when_display_name_is_login_name',
 		]
 	);
-	$notices['debug-log-notice'] = array(
-		'condition' => ['rsssl_is_debug_log_enabled', 'rsssl_debug_log_in_default_location'],
-		'callback' => '_true_',
+	$notices['debug_log'] = array(
+		'condition' => ['rsssl_debug_log_file_exists_in_default_location'],
+		'callback' => 'rsssl_is_debugging_enabled',
 		'score' => 5,
 		'output' => array(
 			'true' => array(
 				'highlight_field_id' => 'change_debug_log_location',
-				'msg' => __("Errors are logged to default debug.log location.", "really-simple-ssl"),
+				'msg' => __("Your site is set to log errors to a potentially public file.", "really-simple-ssl"),
 				'icon' => 'open',
 				'dismissible' => true,
 			),
 		),
 		'show_with_options' => [
 			'change_debug_log_location',
-		]
+		],
 	);
 	$notices['user_id_one'] = array(
 		'condition' => ['rsssl_id_one_no_enumeration'],
@@ -163,23 +163,6 @@ function rsssl_general_security_notices( $notices ) {
 		),
 		'show_with_options' => [
 			'rename_db_prefix',
-		],
-	);
-
-	$notices['debug_log'] = array(
-		'condition' => ['rsssl_debug_log_in_default_location'],
-		'callback' => '_true_',
-		'score' => 5,
-		'output' => array(
-			'true' => array(
-				'highlight_field_id' => 'change_debug_log_location',
-				'msg' => __("Your site is set to log errors to a potentially public file.", "really-simple-ssl"),
-				'icon' => 'open',
-				'dismissible' => true,
-			),
-		),
-		'show_with_options' => [
-			'change_debug_log_location',
 		],
 	);
 

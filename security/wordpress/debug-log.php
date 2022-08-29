@@ -19,7 +19,7 @@ function rsssl_change_debug_log_location() {
 		return;
 	}
 	//only change if currently default location
-	if ( !rsssl_debug_log_in_default_location() ) {
+	if ( !rsssl_get_debug_log_value() ) {
 		return;
 	}
     $wpconfig_path = rsssl_find_wp_config_path();

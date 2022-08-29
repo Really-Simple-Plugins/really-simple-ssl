@@ -14,26 +14,33 @@ function rsssl_disable_fields($field, $field_id){
 	 * We set is as true, but disabled. Because our react interface only updates changed option, and this option never changes, this won't get set to true in the database.
 	 */
 	if ( $field_id==='change_debug_log_location' ){
-		if ( !rsssl_is_debug_log_enabled() ) {
-			if ( !$field['value'] ) {
-				$field['value'] = true;
-				$field['disabled'] = true;
+		if ( !rsssl_debug_log_file_exists_in_default_location() ) {
+			if ( !rsssl_is_debugging_enabled() ) {
+				if ( !$field['value'] ) {
+					$field['value'] = true;
+					$field['disabled'] = true;
+				}
+				$field['help'] = [
+					'label' => 'default',
+					'text' => __( "Debugging is disabled", 'really-simple-ssl' ),
+				];
+			} else {
+				if ( !$field['value'] ) {
+					$field['value'] = true;
+					$field['disabled'] = true;
+				}
 			}
-			$field['help'] = [
-				'label' => 'default',
-				'text' => __( "Debugging is disabled", 'really-simple-ssl' ),
-			];
-		} else if ( !rsssl_debug_log_in_default_location() ) {
-			if ( !$field['value'] ) {
-				$field['value'] = true;
-				$field['disabled'] = true;
+
+			//if not the defaul location
+			if ( !rsssl_get_debug_log_value() ) {
+				$field['help'] = [
+					'label' => 'default',
+					'text' => __( "Changed debug.log location:", 'really-simple-ssl' ).strstr( rsssl_get_debug_log_value(), 'wp-content' ),
+				];
 			}
-			$location = strstr( rsssl_get_debug_log_value(), 'wp-content' );
-			$field['help'] = [
-				'label' => 'default',
-				'text' => __( "Changed debug.log location:", 'really-simple-ssl' ).$location,
-			];
+
 		}
+
 	}
 
 	if ( $field_id==='disable_indexing' ){

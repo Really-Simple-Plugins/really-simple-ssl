@@ -186,7 +186,7 @@ function rsssl_get_users_where_display_name_is_login( $return_users=false ) {
  *
  * @return bool
  */
-function rsssl_is_debug_log_enabled() {
+function rsssl_is_debugging_enabled() {
 	return ( defined('WP_DEBUG') && WP_DEBUG && defined('WP_DEBUG_LOG') && WP_DEBUG_LOG );
 }
 
@@ -215,19 +215,12 @@ function rsssl_get_debug_log_value(){
 }
 
 /**
- * Check if default.log is in default location
+ * Check if the debug log file exists in the default location, regardless of debugging
  * @return bool
+ *
  */
-function rsssl_debug_log_in_default_location() {
-	$debug_log_value = rsssl_get_debug_log_value();
-    if ( $debug_log_value === false ) {
-        return true;
-    }
-    return false;
-}
-
 function rsssl_debug_log_file_exists_in_default_location(){
-
+	return file_exists(trailingslashit(WP_CONTENT_DIR).'debug.log');
 }
 
 /**
