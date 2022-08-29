@@ -24,8 +24,8 @@ class Xmlrpc extends Component {
 
     componentDidMount() {
         this.doFilter = this.doFilter.bind(this);
-        console.log(this.props.fields);
         let field = this.props.fields.filter(field => field.id === 'xmlrpc_status')[0];
+        console.log("disabled "+field.disabled);
         let enforce = field.value==='enforce';
         let learning_mode = field.value==='learning_mode';
         let learning_mode_completed = field.value==='completed';

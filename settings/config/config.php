@@ -498,6 +498,12 @@ function rsssl_fields( $load_values = true ){
 			'label'       => '',
 			'disabled'    => false,
 			'default'     => false,
+			'react_conditions' => [
+				'relation' => 'AND',
+				[
+					'disable_xmlrpc' => false,
+				]
+			]
 		],
 		[
 			'id'          => 'xmlrpc_allow_list',
