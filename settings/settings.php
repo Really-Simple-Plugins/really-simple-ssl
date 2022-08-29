@@ -90,7 +90,7 @@ add_action( 'admin_menu', 'rsssl_add_option_menu' );
 	if ( !get_option('permalink_structure') ){
         $permalinks_url = admin_url('options-permalink.php');
         ?>
-            <div class="rsssl-permalinks-warning">
+            <div class="rsssl-permalinks-warning notice notice-error settings-error is-dismissible">
                 <h1><?php _e("Pretty permalinks not enabled", "really-simple-ssl")?></h1>
                 <p><?php _e("Pretty permalinks are not enabled on your site. This prevents the REST API from working, which is required for the settings page.", "really-simple-ssl")?></p>
                 <p><?php printf(__('To resolve, please go to the <a href="%s">permalinks settings</a>, and set to anything but plain.', "really-simple-ssl"), $permalinks_url)?></p>
