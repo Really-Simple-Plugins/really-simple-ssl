@@ -197,10 +197,10 @@ function rsssl_is_debug_log_enabled() {
  */
 
 function rsssl_get_debug_log_value(){
-	return false;
-
 	$wpconfig_path = rsssl_find_wp_config_path();
-	if ( !$wpconfig_path ) return false;
+	if ( !$wpconfig_path ) {
+		return false;
+	}
 
 	$wpconfig      = file_get_contents( $wpconfig_path );
 
@@ -210,7 +210,7 @@ function rsssl_get_debug_log_value(){
 	if ($matches && isset($matches[1]) ){
 		return $matches[1];
 	} else {
-		return 'true';
+		return false;
 	}
 }
 
@@ -220,11 +220,14 @@ function rsssl_get_debug_log_value(){
  */
 function rsssl_debug_log_in_default_location() {
 	$debug_log_value = rsssl_get_debug_log_value();
-	// If str contains true, location is default
-    if ( trim($debug_log_value) === 'true' ) {
+    if ( $debug_log_value === false ) {
         return true;
     }
     return false;
+}
+
+function rsssl_debug_log_file_exists_in_default_location(){
+
 }
 
 /**
