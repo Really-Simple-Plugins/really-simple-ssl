@@ -92,6 +92,7 @@ If you can't deactivate, do not just remove the plugin folder to uninstall! Foll
 == Changelog ==
 = 5.3.4 =
 * Bumped required PHP version to 7.2
+* Fix: type in Let's Encrypt wizard
 
 = 5.3.3 =
 * Added manage_security capability, props @madtownlems
