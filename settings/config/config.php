@@ -440,6 +440,24 @@ function rsssl_fields( $load_values = true ){
 				'readmore' => '#',
 			],
 		],
+		[
+			'id'          => 'disable_xmlrpc',
+			'menu_id'     => 'hardening',
+			'group_id'    => 'hardening_basic',
+			'type'        => 'checkbox',
+			'label'       => __( "Disable xmlrpc", 'really-simple-ssl' ),
+			'disabled'    => false,
+			'default'     => false,
+		],
+		[
+			'id'          => 'block_registration_when_display_name_is_login_name',
+			'menu_id'     => 'hardening',
+			'group_id'    => 'hardening_basic',
+			'type'        => 'checkbox',
+			'label'       => __( "Block user registration when login name equals display name", 'really-simple-ssl' ),
+			'disabled'    => false,
+			'default'     => false,
+		],
         [
             'id'          => 'disable_http_methods',
             'menu_id'     => 'hardening',
@@ -482,15 +500,6 @@ function rsssl_fields( $load_values = true ){
             'default'     => false,
         ],
 		[
-			'id'          => 'disable_xmlrpc',
-			'menu_id'     => 'hardening',
-			'group_id'    => 'hardening_extended',
-			'type'        => 'checkbox',
-			'label'       => __( "Disable xmlrpc", 'really-simple-ssl' ),
-			'disabled'    => false,
-			'default'     => false,
-		],
-		[
 			'id'          => 'xmlrpc_status',
 			'menu_id'     => 'hardening',
 			'group_id'    => 'hardening_xml',
@@ -498,12 +507,6 @@ function rsssl_fields( $load_values = true ){
 			'label'       => '',
 			'disabled'    => false,
 			'default'     => false,
-			'react_conditions' => [
-				'relation' => 'AND',
-				[
-					'disable_xmlrpc' => false,
-				]
-			]
 		],
 		[
 			'id'          => 'xmlrpc_allow_list',
@@ -515,6 +518,12 @@ function rsssl_fields( $load_values = true ){
 			'default'     => false,
 			'data_source' => ['RSSSL', 'placeholder', 'xml_data'],
 			'data_endpoint' => "rsssl_xml_update_allowlist",
+			'react_conditions' => [
+				'relation' => 'AND',
+				[
+					'disable_xmlrpc' => false,
+				]
+			],
 			'columns'     => [
 //				[
 //					'name' => __('Time', 'really-simple-ssl'),
@@ -699,17 +708,6 @@ function rsssl_fields( $load_values = true ){
 			'disabled'    => false,
 			'default'     => 'disabled',
 		],
-
-        [
-			'id'          => 'block_registration_when_display_name_is_login_name',
-			'menu_id'     => 'hardening',
-			'group_id'    => 'hardening_basic',
-			'type'        => 'checkbox',
-			'label'       => __( "Block user registration when login name equals display name", 'really-simple-ssl' ),
-			'disabled'    => false,
-			'default'     => false,
-		],
-
 		[
 			'id'          => 'mixedcontentscan',
 			'menu_id'     => 'mixed_content_scan',

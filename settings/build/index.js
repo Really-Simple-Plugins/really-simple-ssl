@@ -6657,7 +6657,6 @@ class Xmlrpc extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Component {
   componentDidMount() {
     this.doFilter = this.doFilter.bind(this);
     let field = this.props.fields.filter(field => field.id === 'xmlrpc_status')[0];
-    console.log("disabled " + field.disabled);
     let enforce = field.value === 'enforce';
     let learning_mode = field.value === 'learning_mode';
     let learning_mode_completed = field.value === 'completed';
@@ -6818,7 +6817,13 @@ class Xmlrpc extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Component {
       className: "rsssl-learning-mode-link",
       href: "#",
       onClick: e => this.toggleLearningMode(e)
-    }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Review the settings and enforce the policy", "really-simple-ssl")))));
+    }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Review the settings and enforce the policy", "really-simple-ssl")))), rsssl_settings.pro_plugin_active && field.disabled && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+      className: "rsssl-locked"
+    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+      className: "rsssl-locked-overlay"
+    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
+      className: "rsssl-progress-status rsssl-disabled"
+    }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("disabled ", "really-simple-ssl")), (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("XMLRPC has been disabled.", "really-simple-ssl"))));
   }
 
 }
