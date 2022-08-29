@@ -2780,8 +2780,6 @@ class rsssl_admin
 
 	    foreach ( $notices as $id => $notice ) {
 		    $func   = $notice['callback'];
-		    x_log($id.' (*)');
-
 		    $output = $this->validate_function($func);
 
             //check if all notices should be dismissed
@@ -2806,7 +2804,6 @@ class rsssl_admin
 			    continue;
             }
 		    $condition_functions = $notice['condition'];
-            x_log($id);
 		    foreach ( $condition_functions as $func ) {
 			    $condition = $this->validate_function($func, true);
 			    if ( ! $condition ) {

@@ -220,7 +220,6 @@ function rsssl_rest_api_fields_set($request){
         return;
     }
 	$fields = $request->get_json_params();
-    x_log($fields);
     $config_fields = rsssl_fields(false);
     $config_ids = array_column($config_fields, 'id');
 	foreach ( $fields as $index => $field ) {
