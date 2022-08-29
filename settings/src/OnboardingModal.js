@@ -191,7 +191,6 @@ const OnboardingModal = () => {
                         const {title, subtitle, items, info_text: infoText, buttons, visible} = step;
                         return (
                             <div className="rsssl-modal-content-step" key={index} style={{ display: visible ? 'block' : 'none' }}>
-                                {steps.length > 1 && <div className="rsssl-step-feedback">{index + 1}/{steps.length}</div>}
                                 {title && <div className="rsssl-modal-subtitle">{title}</div>}
                                 {subtitle && <div className="rsssl-modal-description">{subtitle}</div>}
                                 <ul>
