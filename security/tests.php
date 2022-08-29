@@ -219,7 +219,7 @@ function rsssl_get_debug_log_value(){
 }
 
 /**
- * Check if the debug log file exists in the default location, regardless of debugging
+ * Check if the debug log file exists in the default location, and if it contains our bogus info
  * @return bool
  *
  */
@@ -231,9 +231,9 @@ function rsssl_debug_log_file_exists_in_default_location(){
 
 	$content = file_get_contents($default_file);
 	if (trim($content) === 'Access denied'){
-		return true;
+		return false;
 	}
-	return false;
+	return true;
 }
 
 /**
