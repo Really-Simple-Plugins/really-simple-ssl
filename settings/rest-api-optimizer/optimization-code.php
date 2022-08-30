@@ -14,9 +14,7 @@ if ( ! function_exists( 'rsssl_exclude_plugins_for_rest_api' ) ) {
 			return $plugins;
 		}
 
-		/**
-		 * Only leave RSSSL and premium add ons active for this request
-		 */
+		//Only leave RSSSL and premium add ons active for this request
 		foreach ( $plugins as $key => $plugin ) {
 			if ( strpos($plugin, 'really-simple-ssl') !== false ){
 				continue;
