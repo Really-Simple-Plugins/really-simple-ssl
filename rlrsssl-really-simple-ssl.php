@@ -224,30 +224,14 @@ if ( ! function_exists('rsssl_add_manage_security_capability')){
 	 */
 	function rsssl_add_manage_security_capability(){
 		$roles = apply_filters('rsssl_add_manage_security_capability', array('administrator') );
-		$admin_role_found = false;
 		foreach( $roles as $role ){
 			$role = get_role( $role );
             if ( $role ) {
-	            $admin_role_found = true;
 	            if( !$role->has_cap( 'manage_security' ) ){
 		            $role->add_cap( 'manage_security' );
 	            }
             }
 		}
-
-        //no administrator role found. give roles with manage_options capability the manage_security cap 
-        if ( !$admin_role_found ) {
-	        global $wp_roles;
-	        $roles = $wp_roles->roles;
-	        foreach( $roles as $role ){
-		        $role = get_role( $role );
-		        if ( $role ) {
-			        if( $role->has_cap( 'manage_options' ) ){
-				        $role->add_cap( 'manage_security' );
-			        }
-		        }
-	        }
-        }
 	}
 
 	register_activation_hook( __FILE__, 'rsssl_add_manage_security_capability' );
