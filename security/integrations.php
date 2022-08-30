@@ -7,7 +7,6 @@ $rsssl_integrations_list = apply_filters( 'rsssl_integrations', array(
         'folder'               => 'wordpress',
         'impact'               => 'medium',
         'risk'                 => 'medium',
-        'learning_mode'        => false,
         'option_id'            => 'disable_anyone_can_register',
     ),
 
@@ -16,7 +15,6 @@ $rsssl_integrations_list = apply_filters( 'rsssl_integrations', array(
 		'folder'               => 'wordpress',
 		'impact'               => 'medium',
 		'risk'                 => 'low',
-		'learning_mode'        => false,
 		'option_id'            => 'disable_file_editing',
 	),
 
@@ -25,7 +23,6 @@ $rsssl_integrations_list = apply_filters( 'rsssl_integrations', array(
 		'folder'               => 'wordpress',
 		'impact'               => 'low',
 		'risk'                 => 'low',
-		'learning_mode'        => false,
 		'option_id'            => 'hide_wordpress_version',
 	),
 
@@ -34,7 +31,6 @@ $rsssl_integrations_list = apply_filters( 'rsssl_integrations', array(
 		'folder'               => 'wordpress',
 		'impact'               => 'low',
 		'risk'                 => 'medium',
-		'learning_mode'        => true,
 		'option_id'            => 'disable_user_enumeration',
 	),
 
@@ -43,7 +39,6 @@ $rsssl_integrations_list = apply_filters( 'rsssl_integrations', array(
         'folder'               => 'wordpress',
         'impact'               => 'medium',
         'risk'                 => 'low',
-        'learning_mode'        => false,
         'option_id'            => 'block_code_execution_uploads',
     ),
 
@@ -52,7 +47,6 @@ $rsssl_integrations_list = apply_filters( 'rsssl_integrations', array(
         'folder'               => 'wordpress',
         'impact'               => 'low',
         'risk'                 => 'high',
-        'learning_mode'        => false,
         'option_id'            => 'disable_login_feedback',
     ),
     'disable-indexing' => array(
@@ -60,7 +54,6 @@ $rsssl_integrations_list = apply_filters( 'rsssl_integrations', array(
         'folder'               => 'server',
         'impact'               => 'low',
         'risk'                 => 'medium',
-        'learning_mode'        => false,
 		'option_id'            => 'disable_indexing',
         'has_deactivation'     => true,
     ),
@@ -70,7 +63,6 @@ $rsssl_integrations_list = apply_filters( 'rsssl_integrations', array(
 		'folder'               => 'wordpress',
 		'impact'               => 'high',
 		'risk'                 => 'high',
-		'learning_mode'        => false,
 		'option_id'            => 'rename_admin_user',
 	),
 
@@ -79,7 +71,6 @@ $rsssl_integrations_list = apply_filters( 'rsssl_integrations', array(
 		'folder'               => 'wordpress',
 		'impact'               => 'low',
 		'risk'                 => 'medium',
-		'learning_mode'        => false,
 		'option_id'            => 'block_registration_when_display_name_is_login_name',
 	),
     'disable_xmlrpc' => array(
@@ -87,7 +78,6 @@ $rsssl_integrations_list = apply_filters( 'rsssl_integrations', array(
 	    'folder'               => 'wordpress',
 	    'impact'               => 'medium',
 	    'risk'                 => 'low',
-	    'learning_mode'        => true,
 	    'option_id'            => 'disable_xmlrpc',
 	    'always_include'       => false,
     ),

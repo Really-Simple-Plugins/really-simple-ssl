@@ -99,7 +99,7 @@ function rsssl_disable_fields($field, $field_id){
 	}
 
 	if ( $field_id==='disable_xmlrpc' ){
-		if ( rsssl_xmlrpc_enabled() && !$field['value'] ) {
+		if ( !rsssl_xmlrpc_enabled() && !$field['value'] ) {
 			$field['value'] = true;
 			$field['disabled'] = true;
 			$field['help'] = [

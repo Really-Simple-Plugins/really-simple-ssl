@@ -212,14 +212,14 @@ function rsssl_sanitize_field_type($type){
         'email',
         'select',
         'permissionspolicy',
-        'contentsecuritypolicy',
+        'learningmode',
+        'xmlrpc',
         'mixedcontentscan',
         'xmlrpc',
     ];
     if ( in_array($type, $types) ){
         return $type;
     }
-    error_log("TYPE NOT FOUND");
     return 'checkbox';
 }
 
@@ -236,8 +236,6 @@ function rsssl_rest_api_fields_set($request){
     $config_fields = rsssl_fields(false);
     $config_ids = array_column($config_fields, 'id');
 	foreach ( $fields as $index => $field ) {
-        //the updateItemId allows us to update one specific item in a field set.
-        $update_item_id = isset($field['updateItemId']) ? $field['updateItemId'] : false;
         $config_field_index = array_search($field['id'], $config_ids);
         $config_field = $config_fields[$config_field_index];
 		if ( !$config_field_index ){
@@ -250,22 +248,21 @@ function rsssl_rest_api_fields_set($request){
 
         //if an endpoint is defined, we use that endpoint instead
         if ( isset($config_field['data_endpoint'])){
-	        /**
-	         * Update data to an endpoint
-	         */
-	        if ( isset($config_field['data_endpoint']) ){
-		        $endpoint = $config_field['data_endpoint'];
-		        if (is_array($endpoint) ) {
-			        $main = $endpoint[0];
-			        $class = $endpoint[1];
-			        $function = $endpoint[2];
-			        if (function_exists($main)) {
-				        $main()->$class->$function( $value, $update_item_id );
-			        }
-		        } else if ( function_exists($endpoint) ){
-			        $endpoint($value, $update_item_id);
+	        //the updateItemId allows us to update one specific item in a field set.
+	        $update_item_id = isset($field['updateItemId']) ? $field['updateItemId'] : false;
+	        $action = isset($field['action']) && $field['action']==='delete' ? 'delete' : 'update';
+            $endpoint = $config_field['data_endpoint'];
+            if (is_array($endpoint) ) {
+                $main = $endpoint[0];
+                $class = $endpoint[1];
+                $function = $endpoint[2];
+                if (function_exists($main)) {
+                    $main()->$class->$function( $value, $update_item_id, $action );
                 }
-	        }
+            } else if ( function_exists($endpoint) ){
+                $endpoint($value, $update_item_id, $action);
+            }
+
 	        unset($fields[$index]);
             continue;
         }
@@ -482,7 +479,7 @@ function rsssl_sanitize_field( $value, $type, $id ) {
 			return intval( $value );
         case 'permissionspolicy':
 	        return rsssl_sanitize_permissions_policy($value, $type, $id);
-		case 'contentsecuritypolicy':
+		case 'learningmode':
             return rsssl_sanitize_datatable($value, $type, $id);
         case 'mixedcontentscan':
             return $value;

@@ -92,8 +92,18 @@ class SettingsPage extends Component {
 
     updateFieldsListWithConditions(){
         for (const field of this.props.fields){
+         console.log(field.id);
+         if (field.hasOwnProperty('react_conditions')) {
+            console.log("has react conditions");
+                     if (this.validateConditions(field.react_conditions, this.props.fields)) {
+                         console.log(field.react_conditions);
+                         console.log("react conditinos validated");
+                     }
+         }
+
+
           let enabled = !(field.hasOwnProperty('react_conditions') && !this.validateConditions(field.react_conditions, this.props.fields));
-          this.props.fields[this.props.fields.indexOf(field)].disabled = !enabled;
+          this.props.fields[this.props.fields.indexOf(field)].conditionallyDisabled = !enabled;
         }
         this.filterMenuItems(this.props.menu.menu_items)
     }

@@ -41,8 +41,6 @@ class Field extends Component {
     onChangeHandler(fieldValue) {
         let fields = this.props.fields;
         let field = this.props.field;
-        console.log("change field "+field.id);
-        console.log(fieldValue);
         fields[this.props.index]['value'] = fieldValue;
         this.props.saveChangedFields( field.id )
         this.setState( { fields } )
@@ -66,6 +64,7 @@ class Field extends Component {
             }
             delete item.valueControl;
             delete item.statusControl;
+            delete item.deleteControl;
         }
         //the updateItemId allows us to update one specific item in a field set.
         field.updateItemId = clickedItem.id;
@@ -85,6 +84,7 @@ class Field extends Component {
         let field = this.props.field;
         let fieldValue = field.value;
         let fields = this.props.fields;
+        let disabled = field.disabled;
         let options = [];
         if ( field.options ) {
             for (var key in field.options) {
@@ -99,8 +99,12 @@ class Field extends Component {
 
         //if a feature can only be used on networkwide or single site setups, pass that info here.
         if ( !rsssl_settings.networkwide_active && field.networkwide ) {
-            field.disabled = true;
+            disabled = true;
             field.comment = <>{__("This feature is only available networkwide.","really-simple-ssl")}<Hyperlink target="_blank" text={__("Network settings","really-simple-ssl")} url={rsssl_settings.network_link}/></>
+        }
+
+        if ( field.conditionallyDisabled ) {
+            disabled = true;
         }
 
         if ( !field.visible || field.type==='database' ) {
@@ -113,7 +117,7 @@ class Field extends Component {
             return (
                 <PanelRow className={ this.highLightClass}>
                     <ToggleControl
-                        disabled = {field.disabled}
+                        disabled = {disabled}
                         checked= { field.value==1 }
                         help={ field.comment }
                         label={ field.label }

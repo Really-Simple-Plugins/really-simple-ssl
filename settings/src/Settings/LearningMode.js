@@ -11,6 +11,21 @@ import ChangeStatus from "./ChangeStatus";
 import DataTable from "react-data-table-component";
 import * as rsssl_api from "../utils/api";
 
+class Delete extends Component {
+    constructor() {
+        super( ...arguments );
+    }
+    render(){
+       return (
+           <button type="button" className="rsssl-learning-mode-delete" onClick={ () => this.props.onDeleteHandler( this.props.item ) }>
+               <svg aria-hidden="true" focusable="false" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512" height="16" >
+                   <path fill="#000000" d="M310.6 361.4c12.5 12.5 12.5 32.75 0 45.25C304.4 412.9 296.2 416 288 416s-16.38-3.125-22.62-9.375L160 301.3L54.63 406.6C48.38 412.9 40.19 416 32 416S15.63 412.9 9.375 406.6c-12.5-12.5-12.5-32.75 0-45.25l105.4-105.4L9.375 150.6c-12.5-12.5-12.5-32.75 0-45.25s32.75-12.5 45.25 0L160 210.8l105.4-105.4c12.5-12.5 32.75-12.5 45.25 0s12.5 32.75 0 45.25l-105.4 105.4L310.6 361.4z"/>
+               </svg>
+           </button>
+        )
+    }
+}
+
 class LearningMode extends Component {
     constructor() {
         super( ...arguments );
@@ -20,10 +35,12 @@ class LearningMode extends Component {
             learning_mode_completed :0,
             filterValue: 0,
         };
+
     }
 
     componentDidMount() {
         this.doFilter = this.doFilter.bind(this);
+        this.onDeleteHandler = this.onDeleteHandler.bind(this);
         let field = this.props.fields.filter(field => field.id === this.props.field.control_field )[0];
         let enforce = field.value==='enforce';
         let learning_mode = field.value==='learning_mode';
@@ -80,6 +97,38 @@ class LearningMode extends Component {
         rsssl_api.setFields(saveFields).then(( response ) => {});
     }
 
+    /*
+     * Handle data delete
+     * @param enabled
+     * @param clickedItem
+     * @param type
+     */
+    onDeleteHandler( clickedItem ) {
+        let field=this.props.field;
+        if (typeof field.value === 'object') {
+            field.value = Object.values(field.value);
+        }
+        //find this item in the field list
+        field.value.forEach(function(item, i) {
+            delete item.valueControl;
+            delete item.statusControl;
+            delete item.deleteControl;
+            if (item.id === clickedItem.id) {
+                field.value.splice(i, 1);
+            }
+        });
+
+        //the updateItemId allows us to update one specific item in a field set.
+        field.updateItemId = clickedItem.id;
+        field.action = 'delete';
+        let saveFields = [];
+        saveFields.push(field);
+        console.log("update field");
+        console.log(field);
+        this.props.updateField(field);
+        rsssl_api.setFields(saveFields).then(( response ) => {});
+    }
+
     render(){
             let field = this.props.field;
             let fieldValue = field.value;
@@ -127,8 +176,9 @@ class LearningMode extends Component {
             }
             for (const item of data){
                 item.login_statusControl = item.login_status == 1 ? __("success", "really-simple-ssl") : __("failed", "really-simple-ssl");
-                item.statusControl = <ChangeStatus item={item} onChangeHandlerDataTable={this.props.onChangeHandlerDataTable}
-                />;
+                item.statusControl = <ChangeStatus item={item} onChangeHandlerDataTable={this.props.onChangeHandlerDataTable} />;
+                item.deleteControl = <Delete item={item} onDeleteHandler={this.onDeleteHandler} />;
+
             }
             const conditionalRowStyles = [
               {
