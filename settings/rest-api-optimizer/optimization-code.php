@@ -1,0 +1,29 @@
+<?php defined( 'ABSPATH' ) or die();
+define('rsssl_rest_api_optimizer', true);
+if ( ! function_exists( 'rsssl_exclude_plugins_for_rest_api' ) ) {
+	/**
+	 * Exclude the plugin from the active plugins list.
+	 *
+	 * @param array $plugins The active plugins.
+	 *
+	 * @return array The filtered active plugins.
+	 */
+	function rsssl_exclude_plugins_for_rest_api( $plugins ) {
+		// if not an rsp request return all plugins
+		if ( isset($_SERVER['REQUEST_URI']) && strpos($_SERVER['REQUEST_URI'], 'wp-json/reallysimplessl/v') === false ) {
+			return $plugins;
+		}
+
+		/**
+		 * Only leave RSSSL and premium add ons active for this request
+		 */
+		foreach ( $plugins as $key => $plugin ) {
+			if ( strpos($plugin, 'really-simple-ssl') !== false ){
+				continue;
+			}
+			unset( $plugins[ $key ] );
+		}
+		return $plugins;
+	}
+	add_filter( 'option_active_plugins', 'rsssl_exclude_plugins_for_rest_api' );
+}

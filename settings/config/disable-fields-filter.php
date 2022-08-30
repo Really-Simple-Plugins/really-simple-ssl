@@ -13,7 +13,7 @@ function rsssl_remove_fields($fields){
 		$index = array_search('redirect', array_column($fields, 'id') );
 		unset($fields[$index]['options']['htaccess']);
 	}
-	if ( is_multisite() || !rsssl_is_networkwide_active() ){
+	if ( is_multisite() && !rsssl_is_networkwide_active() ){
 		$index = array_search('redirect', array_column($fields, 'id') );
 		unset($fields[$index]['options']['htaccess']);
 	}

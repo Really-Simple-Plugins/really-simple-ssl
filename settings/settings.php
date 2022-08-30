@@ -9,6 +9,7 @@ defined('ABSPATH') or die();
 
 require_once( rsssl_path . 'settings/config/config.php' );
 require_once( rsssl_path . 'settings/config/disable-fields-filter.php' );
+require_once( rsssl_path . 'settings/rest-api-optimizer/rest-api-optimizer.php' );
 
 function rsssl_plugin_admin_scripts() {
 	$script_asset_path = __DIR__."/build/index.asset.php";
