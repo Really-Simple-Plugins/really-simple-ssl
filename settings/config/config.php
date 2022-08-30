@@ -526,11 +526,6 @@ function rsssl_fields( $load_values = true ){
 				]
 			],
 			'columns'     => [
-//				[
-//					'name' => __('Time', 'really-simple-ssl'),
-//					'sortable' => false,
-//					'column' =>'time',
-//				],
 				[
 					'name' => __('Method', 'really-simple-ssl'),
 					'sortable' => false,

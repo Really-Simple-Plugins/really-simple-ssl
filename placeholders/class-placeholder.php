@@ -56,12 +56,35 @@ if ( ! class_exists( 'RSSSL_PLACEHOLDER' ) ) {
 		}
 
 		public function xml_data(){
-			$data[] = [
+			$data = [
+				[
 				'id'      => 1,
-				'time'  => time(),
-				'method'  => 'wp.getPosts',
-				'user_id' => get_current_user_id(),
+				'method'  => 'wp.deletePost',
+				'login_status' => 1,
+				'count' => 63,
 				'status'  => 1,
+				],
+				[
+					'id'      => 2,
+					'method'  => 'wp.getPost',
+					'login_status' => 1,
+					'count' => 78,
+					'status'  => 1,
+				],
+				[
+					'id'      => 3,
+					'method'  => 'wp.editTerm',
+					'login_status' => 1,
+					'count' => 9,
+					'status'  => 1,
+				],
+				[
+					'id'      => 4,
+					'method'  => 'wp.getPosts',
+					'login_status' => 1,
+					'count' => 9,
+					'status'  => 1,
+				],
 			];
 			return $data;
 		}
