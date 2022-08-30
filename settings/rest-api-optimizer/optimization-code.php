@@ -2,7 +2,7 @@
 define('rsssl_rest_api_optimizer', true);
 if ( ! function_exists( 'rsssl_exclude_plugins_for_rest_api' ) ) {
 	/**
-	 * Exclude the plugin from the active plugins list.
+	 * Exclude all other plugins from the active plugins list if this is a Really Simple SSL rest request
 	 *
 	 * @param array $plugins The active plugins.
 	 *

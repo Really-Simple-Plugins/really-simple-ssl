@@ -13,9 +13,9 @@ if ( !function_exists('rsssl_update_wp_option') ) {
 	 */
 	function rsssl_update_wp_option($option_name, $option_value){
 		if ( is_multisite() && rsssl_is_networkwide_active() ){
-			update_site_option($option_name, $option_value );
+			update_site_option($option_name, $option_value );//default autoload false
 		} else {
-			update_option($option_name, $option_value );
+			update_option($option_name, $option_value, false );
 		}
 	}
 }
