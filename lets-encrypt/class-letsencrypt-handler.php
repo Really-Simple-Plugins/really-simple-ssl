@@ -1275,11 +1275,11 @@ class rsssl_letsencrypt_handler {
 	public function challenge_directory() {
 		$root_directory = trailingslashit(ABSPATH);
 		if ( ! file_exists( $root_directory . '.well-known' ) ) {
-			mkdir( $root_directory . '.well-known' );
+			mkdir( $root_directory . '.well-known', 0755 );
 		}
 
 		if ( ! file_exists( $root_directory . '.well-known/acme-challenge' ) ) {
-			mkdir( $root_directory . '.well-known/acme-challenge' );
+			mkdir( $root_directory . '.well-known/acme-challenge', 0755 );
 		}
 
 		if ( file_exists( $root_directory . '.well-known/acme-challenge' ) ){
@@ -1296,11 +1296,11 @@ class rsssl_letsencrypt_handler {
 	public function certs_directory(){
 		$directory = $this->get_directory_path();
 		if ( ! file_exists( $directory . 'ssl' ) ) {
-			mkdir( $directory . 'ssl' );
+			mkdir( $directory . 'ssl', 0755 );
 		}
 
 		if ( ! file_exists( $directory . 'ssl/certs' ) ) {
-			mkdir( $directory . 'ssl/certs' );
+			mkdir( $directory . 'ssl/certs', 0755 );
 		}
 
 		if ( file_exists( $directory . 'ssl/certs' ) ){
@@ -1322,7 +1322,7 @@ class rsssl_letsencrypt_handler {
 				update_option('rsssl_ssl_dirname', $token );
 			}
 			if ( ! file_exists( $root_directory . get_option('rsssl_ssl_dirname') ) ) {
-				mkdir( $root_directory . get_option('rsssl_ssl_dirname') );
+				mkdir( $root_directory . get_option('rsssl_ssl_dirname') , 0755 );
 			}
 			return $root_directory . trailingslashit( get_option('rsssl_ssl_dirname') );
 		} else {
@@ -1338,11 +1338,11 @@ class rsssl_letsencrypt_handler {
 	public function key_directory(){
 		$directory = $this->get_directory_path();
 		if ( ! file_exists( $directory . 'ssl' ) && is_writable($directory) ) {
-			mkdir( $directory . 'ssl' );
+			mkdir( $directory . 'ssl', 0755 );
 		}
 
 		if ( ! file_exists( $directory . 'ssl/keys' ) && is_writable($directory.'ssl') ) {
-			mkdir( $directory . 'ssl/keys' );
+			mkdir( $directory . 'ssl/keys', 0755 );
 		}
 
 		if ( file_exists( $directory . 'ssl/keys' ) ){
@@ -1529,7 +1529,7 @@ class rsssl_letsencrypt_handler {
 		}
 
 		if ( ! file_exists( $upload_dir . 'rsssl' ) ) {
-			mkdir( $upload_dir . 'rsssl' );
+			mkdir( $upload_dir . 'rsssl', 0755 );
 		}
 
 		$test_string = 'file to test alias domain existence';
