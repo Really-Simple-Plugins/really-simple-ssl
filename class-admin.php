@@ -281,7 +281,10 @@ class rsssl_admin extends rsssl_front_end
         $plugin = rsssl_plugin;
         add_filter("plugin_action_links_$plugin", array($this, 'plugin_settings_link'));
 
-        //Add update notification to Settings admin menu
+	    add_action( 'rocket_activation', array($this, 'removeHtaccessEdit' ) );
+	    add_filter( 'before_rocket_htaccess_rules', array($this, 'add_htaccess_redirect_before_wp_rocket' ) );
+
+	    //Add update notification to Settings admin menu
         add_action('admin_menu', array($this, 'rsssl_edit_admin_menu') );
 
         //callbacks for the ajax dismiss buttons
@@ -297,7 +300,6 @@ class rsssl_admin extends rsssl_front_end
         if (!defined("rsssl_pro_version") && (!defined("rsssl_pp_version")) && (!defined("rsssl_soc_version")) && (!class_exists('RSSSL_PRO')) && (!is_multisite())) {
             add_action('admin_notices', array($this, 'show_leave_review_notice'));
         }
-        add_action("update_option_rlrsssl_options", array($this, "update_htaccess_after_settings_save"), 20, 3);
     }
 
 	/**
@@ -1672,7 +1674,6 @@ class rsssl_admin extends rsssl_front_end
 		}
 	}
 
-
     /**
      * Checks if we are currently on SSL protocol, but extends standard wp with loadbalancer check.
      *
@@ -1947,21 +1948,21 @@ class rsssl_admin extends rsssl_front_end
 
             } else {
                 // remove everything
-                $pattern_old = "/#\s?BEGIN\s?rlrssslReallySimpleSSL.*?#\s?END\s?rlrssslReallySimpleSSL/s";
-                $pattern_new = "/#\s?BEGIN\s?Really Simple SSL Redirect.*?#\s?END\s?Really Simple SSL Redirect/s";
-                //only remove if the pattern is there at all
-                if (preg_match($pattern_old, $htaccess)) $htaccess = preg_replace($pattern_old, "", $htaccess);
+	            $pattern_old = "/#\s?BEGIN\s?rlrssslReallySimpleSSL.*?#\s?END\s?rlrssslReallySimpleSSL/s";
+	            $pattern_new = "/#\s?BEGIN\s?Really Simple SSL Redirect.*?#\s?END\s?Really Simple SSL Redirect/s";
+	            //only remove if the pattern is there at all
+	            if (preg_match($pattern_old, $htaccess)) $htaccess = preg_replace($pattern_old, "", $htaccess);
 	            if (preg_match($pattern_new, $htaccess)) $htaccess = preg_replace($pattern_new, "", $htaccess);
-
             }
 
-            $htaccess = preg_replace("/\n+/", "\n", $htaccess);
-            file_put_contents($this->htaccess_file(), $htaccess);
+	        $htaccess = preg_replace("/\n+/", "\n", $htaccess);
+	        file_put_contents($this->htaccess_file(), $htaccess);
             $this->save_options();
         } else {
             $this->errors['HTACCESS_NOT_WRITABLE'] = TRUE;
             $this->trace_log("could not remove rules from htaccess, file not writable");
         }
+
     }
 
 	/**
@@ -2236,10 +2237,8 @@ class rsssl_admin extends rsssl_front_end
 
     public function editHtaccess()
     {
-        if (!rsssl_user_can_manage()) return;
 
-        //check if htaccess exists and  if htaccess is writable
-        //update htaccess to redirect to ssl
+        if (!rsssl_user_can_manage()) return;
 
         $this->trace_log("checking if .htaccess can or should be edited...");
 
@@ -2255,88 +2254,78 @@ class rsssl_admin extends rsssl_front_end
             return;
         }
 
-         $htaccess = file_get_contents($this->htaccess_file());
-
-        if (!$this->htaccess_contains_redirect_rules()) {
-
-            if (!is_writable($this->htaccess_file())) {
-                //set the wp redirect as fallback, because .htaccess couldn't be edited.
-                if ($this->clicked_activate_ssl()) $this->wp_redirect = true;
-                if (is_multisite()) {
-                    RSSSL()->rsssl_multisite->wp_redirect = true;
-                    RSSSL()->rsssl_multisite->save_options();
-                }
-                $this->save_options();
-                $this->trace_log(".htaccess not writable.");
-                return;
-            }
-
-            $rules = $this->get_redirect_rules();
-
-            //insert rules before wordpress part.
-            if (strlen($rules) > 0) {
-                $wptag = "# BEGIN WordPress";
-                if (strpos($htaccess, $wptag) !== false) {
-                    $htaccess = str_replace($wptag, $rules . $wptag, $htaccess);
-                } else {
-                    $htaccess = $htaccess . $rules;
-                }
-                file_put_contents($this->htaccess_file(), $htaccess);
-            }
-
-        }
-    }
-
-	/**
-	 * @param bool $oldvalue
-	 * @param bool $newvalue
-	 * @param bool $option
-     *
-     * Update the .htaccess file after saving settings
-     *
-	 */
-
-    public function update_htaccess_after_settings_save($oldvalue = false, $newvalue = false, $option = false)
-    {
-        if (!rsssl_user_can_manage()) return;
-
-        //does it exist?
-        if ( !file_exists($this->htaccess_file()) ) {
-            $this->trace_log(".htaccess not found.");
-            return;
-        }
-
         if ( !is_writable($this->htaccess_file()) ) {
+            //set the wp redirect as fallback, because .htaccess couldn't be edited.
+            if ($this->clicked_activate_ssl()) $this->wp_redirect = true;
+            if (is_multisite()) {
+                RSSSL()->rsssl_multisite->wp_redirect = true;
+                RSSSL()->rsssl_multisite->save_options();
+            }
+            $this->save_options();
             $this->trace_log(".htaccess not writable.");
             return;
         }
 
-        //check if editing is blocked.
-        if ( $this->do_not_edit_htaccess ) {
-            $this->trace_log("Edit of .htaccess blocked by setting or define 'do not edit htaccess' in Really Simple SSL.");
-            return;
-        }
+	    $htaccess = file_get_contents($this->htaccess_file());
 
 	    $pattern_old = "/#\s?BEGIN\s?rlrssslReallySimpleSSL.*?#\s?END\s?rlrssslReallySimpleSSL/s";
 	    $pattern_new = "/#\s?BEGIN\s?Really Simple SSL Redirect.*?#\s?END\s?Really Simple SSL Redirect/s";
 
-	    $htaccess = file_get_contents($this->htaccess_file());
-        $htaccess = preg_replace($pattern_old, "", $htaccess);
+	    $htaccess = preg_replace($pattern_old, "", $htaccess);
 	    $htaccess = preg_replace($pattern_new, "", $htaccess);
 	    $htaccess = preg_replace("/\n+/", "\n", $htaccess);
 
-        $rules = $this->get_redirect_rules();
+        // If using WP Rocket, .htaccess insertion is handled by before_rocket_htaccess_rules filter
+	    $rules = '';
+	    if ( ! function_exists('rocket_clean_domain') ) {
+		    $rules = $this->get_redirect_rules();
+	    }
 
         //insert rules before WordPress part.
-        $wptag = "# BEGIN WordPress";
-        if (strpos($htaccess, $wptag) !== false) {
-            $htaccess = str_replace($wptag, $rules . $wptag, $htaccess);
-        } else {
-            $htaccess = $htaccess . $rules;
-        }
-        file_put_contents($this->htaccess_file(), $htaccess);
+	    $wptag = "# BEGIN WordPress";
+	    if ( strpos( $htaccess, $wptag ) !== false ) {
+		    $htaccess = str_replace( $wptag, $rules . $wptag, $htaccess );
+	    } else {
+		    $htaccess = $htaccess . $rules;
+	    }
+
+	    file_put_contents($this->htaccess_file(), $htaccess);
+
+        $this->maybe_flush_wprocket_htaccess();
 
     }
+
+	/**
+     * Return .htaccess redirect when using WP Rocket
+	 * @return string
+	 */
+    public function add_htaccess_redirect_before_wp_rocket() {
+
+        $this->detect_configuration();
+        return $this->get_redirect_rules();
+
+    }
+
+	/**
+	 * Regenerate the wp rocket .htaccess rules
+	 */
+	public function maybe_flush_wprocket_htaccess(){
+		if ( wp_doing_ajax()
+		     || !$this->is_settings_page()
+		     || !$this->ssl_enabled
+		     || !current_user_can("activate_plugins")
+		     || $this->do_not_edit_htaccess
+		) return;
+
+		if ( function_exists('flush_rocket_htaccess') ) {
+			flush_rocket_htaccess();
+		}
+
+		if ( function_exists('rocket_generate_config_file') ) {
+			rocket_generate_config_file();
+		}
+
+	}
 
     /**
      *
@@ -2437,6 +2426,7 @@ class rsssl_admin extends rsssl_front_end
     public function get_redirect_rules($manual = false)
     {
         $this->trace_log("retrieving redirect rules");
+
         //only add the redirect rules when a known type of SSL was detected. Otherwise, we use https.
         $rule = "";
         //if the htaccess test was successfull, and we know the redirectype, edit
