@@ -94,6 +94,7 @@ If you can't deactivate, do not just remove the plugin folder to uninstall! Foll
 * Bumped required PHP version to 7.2
 * Fix: type in Let's Encrypt wizard
 * Improvement: SSL redirect icw WP Rocket included in WP Rocket htaccess rules
+* Improvement: defaults for created directories
 
 = 5.3.3 =
 * Added manage_security capability, props @madtownlems
