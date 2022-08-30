@@ -226,10 +226,8 @@ if ( ! function_exists('rsssl_add_manage_security_capability')){
 		$roles = apply_filters('rsssl_add_manage_security_capability', array('administrator') );
 		foreach( $roles as $role ){
 			$role = get_role( $role );
-            if ( $role ) {
-	            if( !$role->has_cap( 'manage_security' ) ){
-		            $role->add_cap( 'manage_security' );
-	            }
+            if( $role && !$role->has_cap( 'manage_security' ) ){
+                $role->add_cap( 'manage_security' );
             }
 		}
 	}
