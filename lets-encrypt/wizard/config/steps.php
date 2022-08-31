@@ -53,7 +53,7 @@ $this->steps = array(
                     ),
                     2 => array(
                         'title' => __( 'Hosting', 'really-simple-ssl' ),
-                        'intro' => __( 'Below you will find the instructions for different hosting environments and configurations. If you start the process with the necessary instructions and credentials the next view steps will be done in no time.', 'really-simple-ssl'),
+                        'intro' => __( 'Below you will find the instructions for different hosting environments and configurations. If you start the process with the necessary instructions and credentials the next few steps will be done in no time.', 'really-simple-ssl'),
                     ),
                 ),
                 'actions' => array(),

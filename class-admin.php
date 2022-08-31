@@ -207,7 +207,8 @@ class rsssl_admin
 
         $plugin = rsssl_plugin;
         add_filter("plugin_action_links_$plugin", array($this, 'plugin_settings_link'));
-
+	    add_action( 'rocket_activation', array($this, 'removeHtaccessEdit' ) );
+	    add_filter( 'before_rocket_htaccess_rules', array($this, 'add_htaccess_redirect_before_wp_rocket' ) );
         //Add update notification to Settings admin menu
         add_action('admin_menu', array($this, 'add_plus_ones') );
 
@@ -1811,6 +1812,11 @@ class rsssl_admin
             return;
         }
 
+	    if ( function_exists("rocket_clean_domain") ) {
+		    $this->trace_log("Uses WP Rocket. Using before_rocket_htaccess_rules hook to insert before WP Rocket.");
+		    return;
+	    }
+
         $htaccess_file = $this->htaccess_file();
         if ( !file_exists($htaccess_file) ) {
             return;
@@ -1842,6 +1848,15 @@ class rsssl_admin
         }
         file_put_contents($htaccess_file, $htaccess);
     }
+
+	/**
+	 * Return .htaccess redirect when using WP Rocket
+	 * @return string
+	 */
+	public function add_htaccess_redirect_before_wp_rocket() {
+		$this->detect_configuration();
+		return $this->get_redirect_rules();
+	}
 
     /**
      *
