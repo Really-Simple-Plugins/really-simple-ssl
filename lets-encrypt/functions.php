@@ -8,7 +8,7 @@ if ( ! function_exists( 'rsssl_user_can_manage' ) ) {
             return false;
         }
 
-        if ( ! current_user_can( 'manage_options' ) ) {
+        if ( ! rsssl_user_can_manage() ) {
             return false;
         }
 

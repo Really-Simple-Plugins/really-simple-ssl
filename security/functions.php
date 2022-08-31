@@ -63,7 +63,7 @@ if ( !function_exists('rsssl_remove_htaccess_security_edits') ) {
 	 * @return void
 	 */
 	function rsssl_remove_htaccess_security_edits(){
-		if ( ! current_user_can( 'manage_options' )  ) {
+		if ( ! rsssl_user_can_manage()  ) {
 			return;
 		}
 
@@ -114,7 +114,7 @@ if ( !function_exists('rsssl_remove_htaccess_security_edits') ) {
 
 if ( ! function_exists('rsssl_wrap_htaccess' ) ) {
 	function rsssl_wrap_htaccess() {
-		if ( ! current_user_can( 'manage_options' )  ) {
+		if ( ! rsssl_user_can_manage()  ) {
 			return;
 		}
 

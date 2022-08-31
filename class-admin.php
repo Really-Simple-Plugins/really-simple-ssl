@@ -14,7 +14,6 @@ class rsssl_admin
     public $sites = array(); //for multisite, list of all activated sites.
 
     //general settings
-    public $capability = 'activate_plugins';
     public $htaccess_test_success = FALSE;
     public $plugin_dir = "really-simple-ssl";
     public $plugin_filename = "rlrsssl-really-simple-ssl.php";
@@ -140,7 +139,7 @@ class rsssl_admin
 
     public function init()
     {
-        if (!current_user_can($this->capability)) return;
+        if (!rsssl_user_can_manage()) return;
         $is_on_settings_page = $this->is_settings_page();
         if (defined("RSSSL_FORCE_ACTIVATE") && RSSSL_FORCE_ACTIVATE) {
             rsssl_update_option( 'ssl_enabled', true );
@@ -233,7 +232,7 @@ class rsssl_admin
     public function listen_for_deactivation()
     {
         //check user role
-        if (!current_user_can($this->capability)) return;
+        if (!rsssl_user_can_manage()) return;
 
         //check nonce
         if (!isset($_GET['token']) || (!wp_verify_nonce($_GET['token'], 'rsssl_deactivate_plugin'))) return;
@@ -312,7 +311,7 @@ class rsssl_admin
 	 * @return void
 	 */
     public function recheck_certificate(){
-	    if (!current_user_can($this->capability)) return;
+	    if (!rsssl_user_can_manage()) return;
 
         if (isset($_POST['rsssl_recheck_certificate']) || isset($_GET['rsssl_recheck_certificate'])) {
 	        delete_transient('rsssl_certinfo');
@@ -325,7 +324,7 @@ class rsssl_admin
 
     public function activate_ssl($request)
     {
-	    if ( !current_user_can('manage_options') ) {
+	    if ( !rsssl_user_can_manage() ) {
 		    return;
 	    }
 	    $safe_mode = defined('RSSSL_SAFE_MODE') && RSSSL_SAFE_MODE;
@@ -817,7 +816,7 @@ class rsssl_admin
 
     public function remove_ssl_from_siteurl_in_wpconfig()
     {
-	    if ( !current_user_can($this->capability) ) {
+	    if ( !rsssl_user_can_manage() ) {
 		    return;
 	    }
         $wpconfig_path = $this->find_wp_config_path();
@@ -846,7 +845,7 @@ class rsssl_admin
 	 */
     private function check_for_siteurl_in_wpconfig()
     {
-	    if ( !current_user_can($this->capability) ) {
+	    if ( !rsssl_user_can_manage() ) {
 		    return;
 	    }
 
@@ -878,7 +877,7 @@ class rsssl_admin
 
     private function fix_siteurl_defines_in_wpconfig()
     {
-	    if ( !current_user_can($this->capability) ) {
+	    if ( !rsssl_user_can_manage() ) {
 		    return;
 	    }
         $wpconfig_path = $this->find_wp_config_path();
@@ -945,7 +944,7 @@ class rsssl_admin
 
     public function wpconfig_loadbalancer_fix()
     {
-        if (!current_user_can($this->capability)) {
+        if (!rsssl_user_can_manage()) {
             return;
         }
 
@@ -996,7 +995,7 @@ class rsssl_admin
 
     public function wpconfig_server_variable_fix()
     {
-        if (!current_user_can($this->capability)) {
+        if (!rsssl_user_can_manage()) {
             return;
         }
 
@@ -1346,7 +1345,7 @@ class rsssl_admin
 
     public function test_htaccess_redirect()
     {
-        if (!current_user_can($this->capability)) return;
+        if (!rsssl_user_can_manage()) return;
 
         $this->htaccess_test_success = get_transient('rsssl_htaccess_test_success');
         if (!$this->htaccess_test_success) {
@@ -1822,7 +1821,7 @@ class rsssl_admin
 		if ( wp_doing_ajax()
 		     || !$this->is_settings_page()
 		     || !$this->ssl_enabled
-		     || !current_user_can("activate_plugins")
+		     || ! rsssl_user_can_manage()
 		     || $this->do_not_edit_htaccess
 		) return;
 
@@ -2277,7 +2276,7 @@ class rsssl_admin
 
     public function add_plus_ones()
     {
-        if (!current_user_can($this->capability)) {
+        if (!rsssl_user_can_manage()) {
             return;
         }
 
@@ -2925,7 +2924,7 @@ class rsssl_admin
 	 */
 
 	public function count_plusones() {
-		if ( ! current_user_can( 'manage_options' ) ) {
+		if ( ! rsssl_user_can_manage() ) {
 			return 0;
 		}
 
@@ -2953,7 +2952,7 @@ class rsssl_admin
 	 * @return int
 	 */
     public function get_all_task_count() {
-        if ( ! current_user_can( 'manage_options' ) ) {
+        if ( ! rsssl_user_can_manage() ) {
             return 0;
         }
 
@@ -3260,7 +3259,7 @@ class rsssl_admin
 	 */
 
 	public function insert_secure_cookie_settings(){
-		if ( !current_user_can("activate_plugins") ) {
+		if ( !rsssl_user_can_manage() ) {
             return;
 		}
 

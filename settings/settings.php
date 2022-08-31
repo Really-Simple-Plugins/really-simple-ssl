@@ -57,7 +57,7 @@ function rsssl_plugin_admin_scripts() {
  * @return void
  */
 function rsssl_add_option_menu() {
-	if (!current_user_can('activate_plugins')) {
+	if (!rsssl_user_can_manage()) {
         return;
 	}
 
@@ -86,7 +86,7 @@ add_action( 'admin_menu', 'rsssl_add_option_menu' );
 
  function rsssl_settings_page()
 {
-	if (!current_user_can('activate_plugins')) return;
+	if (!rsssl_user_can_manage()) return;
 
 	if ( !get_option('permalink_structure') ){
         $permalinks_url = admin_url('options-permalink.php');
@@ -107,7 +107,7 @@ add_action( 'admin_menu', 'rsssl_add_option_menu' );
 
 add_action( 'rest_api_init', 'rsssl_settings_rest_route', 10 );
 function rsssl_settings_rest_route() {
-	if (!current_user_can('manage_options')) {
+	if (!rsssl_user_can_manage()) {
 		return;
 	}
 
@@ -115,7 +115,7 @@ function rsssl_settings_rest_route() {
 		'methods'  => 'GET',
 		'callback' => 'rsssl_rest_api_fields_get',
 		'permission_callback' => function () {
-			return current_user_can( 'manage_options' );
+			return rsssl_user_can_manage();
 		}
 	) );
 
@@ -123,7 +123,7 @@ function rsssl_settings_rest_route() {
 		'methods'  => 'POST',
 		'callback' => 'rsssl_rest_api_fields_set',
 		'permission_callback' => function () {
-			return current_user_can( 'manage_options' );
+			return rsssl_user_can_manage();
 		}
 	) );
 
@@ -131,7 +131,7 @@ function rsssl_settings_rest_route() {
 		'methods'  => 'GET',
 		'callback' => 'rsssl_rest_api_block_get',
 		'permission_callback' => function () {
-			return current_user_can( 'manage_options' );
+			return rsssl_user_can_manage();
 		}
 	) );
 
@@ -139,7 +139,7 @@ function rsssl_settings_rest_route() {
 		'methods'  => 'GET',
 		'callback' => 'rsssl_run_test',
 		'permission_callback' => function () {
-			return current_user_can( 'manage_options' );
+			return rsssl_user_can_manage();
 		}
 	) );
 }
@@ -150,7 +150,7 @@ function rsssl_settings_rest_route() {
  * @return void
  */
 function rsssl_run_test($request){
-	if (!current_user_can('manage_options')) {
+	if (!rsssl_user_can_manage()) {
 		return;
 	}
 
@@ -229,7 +229,7 @@ function rsssl_sanitize_field_type($type){
  * @return void
  */
 function rsssl_rest_api_fields_set($request){
-    if ( !current_user_can('manage_options')) {
+    if ( !rsssl_user_can_manage()) {
         return;
     }
 	$fields = $request->get_json_params();
@@ -315,7 +315,7 @@ function rsssl_rest_api_fields_set($request){
  */
 
 function rsssl_update_option( $name, $value ) {
-	if ( !current_user_can('manage_options') ) {
+	if ( !rsssl_user_can_manage() ) {
 		return;
 	}
 
@@ -356,7 +356,7 @@ function rsssl_update_option( $name, $value ) {
  */
 
 function rsssl_rest_api_fields_get(){
-	if (!current_user_can('manage_options')) {
+	if (!rsssl_user_can_manage()) {
 		return;
 	}
 
@@ -428,7 +428,7 @@ function rsssl_filter_menu_items( $menu_items, $fields) {
  * @return void
  */
 function rsssl_rest_api_block_get($request){
-	if (!current_user_can('manage_options')) {
+	if (!rsssl_user_can_manage()) {
 		return;
 	}
 	$block = $request->get_param('block');
@@ -449,7 +449,7 @@ function rsssl_rest_api_block_get($request){
  * @return array|bool|int|string|void
  */
 function rsssl_sanitize_field( $value, $type, $id ) {
-	if ( ! current_user_can( 'manage_options' ) ) {
+	if ( ! rsssl_user_can_manage() ) {
 		return false;
 	}
 

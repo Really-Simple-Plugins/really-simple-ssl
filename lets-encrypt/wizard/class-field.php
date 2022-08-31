@@ -75,7 +75,7 @@ if ( ! class_exists( "rsssl_field" ) ) {
         }
 
         public function process_save() {
-            if ( ! current_user_can( 'manage_options' ) ) {
+            if ( ! rsssl_user_can_manage() ) {
                 return;
             }
 
@@ -141,7 +141,7 @@ if ( ! class_exists( "rsssl_field" ) ) {
          */
 
         public function save_field( $fieldname, $fieldvalue ) {
-            if ( ! current_user_can( 'manage_options' ) ) {
+            if ( ! rsssl_user_can_manage() ) {
                 return;
             }
 
@@ -191,7 +191,7 @@ if ( ! class_exists( "rsssl_field" ) ) {
          * @return array|bool|int|string|void
          */
         public function sanitize( $value, $type ) {
-            if ( ! current_user_can( 'manage_options' ) ) {
+            if ( ! rsssl_user_can_manage() ) {
                 return false;
             }
 
