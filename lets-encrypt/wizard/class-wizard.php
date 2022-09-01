@@ -19,11 +19,9 @@ if ( ! class_exists( "rsssl_wizard" ) ) {
 			}
 
 			self::$_this = $this;
-			add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_assets' ) );
-			add_action( 'show_tab_letsencrypt', array($this, 'wizard') );
-			add_action( 'rsssl_le_installation_step', array( $this, 'installation_progress' ), 10 );
-			add_action( 'wp_ajax_rsssl_installation_progress', array($this, 'get_installation_progress'));
-			add_action( 'rsssl_after_save_lets-encrypt_option', array( $this, 'after_save_wizard_option' ), 10, 4 );
+			add_filter("rsssl_run_test", array($this, 'get_installation_progress'), 10, 3);
+
+			add_action( 'rsssl_after_save_field', array( $this, 'after_save_field' ), 10, 4 );
 			add_action( 'plugins_loaded', array( $this, 'catch_settings_switches' ), 10 );
 			//add_filter( 'rsssl_fields_load_types', array( $this, 'maybe_drop_directories_step' )  );
 			add_filter( 'rsssl_steps', array($this, 'adjust_for_dns_actions') );
@@ -391,22 +389,14 @@ if ( ! class_exists( "rsssl_wizard" ) ) {
 			<?php
 		}
 
-		public function get_installation_progress(){
+		public function get_installation_progress( $data, $function, $request ){
 			$error   = false;
 			$action = '';
 			$message = '';
 			$output = '';
 			$status = 'none';
-			if ( ! is_user_logged_in() ) {
+			if ( ! current_user_can('manage_security') ) {
 				$error = true;
-			}
-
-			if ( !isset($_GET['function']) ) {
-				$error = true;
-			}
-
-			if ( !$error ) {
-				$function = sanitize_title($_GET['function']);
 			}
 
 			if ( !$error ) {
@@ -427,42 +417,38 @@ if ( ! class_exists( "rsssl_wizard" ) ) {
 				$status = $response->status;
 				$output = $response->output;
 			}
-			$out = array(
+			return array(
 				'success' => ! $error,
 				'message' => $message,
 				'action' => $action,
 				'status' => $status,
 				'output' => $output,
 			);
-
-			header( "Content-Type: application/json" );
-			echo json_encode( $out );
-			exit;
 		}
 
 		/**
 		 * Handle some custom options after saving the wizard options
-		 * @param string $fieldname
-		 * @param mixed $fieldvalue
+		 * @param string $field_id
+		 * @param mixed $field_value
 		 * @param mixed $prev_value
 		 * @param string $type
 		 */
 
-		public function after_save_wizard_option( $fieldname, $fieldvalue, $prev_value, $type ) {
+		public function after_save_field( $field_id, $field_value, $prev_value, $type ) {
 			//only run when changes have been made
-			if ( $fieldvalue === $prev_value ) {
+			if ( $field_value === $prev_value ) {
 				return;
 			}
 
-			if ( $fieldname==='other_host_type'){
-			    if ( isset(RSSSL_LE()->config->hosts[$fieldvalue]) ){
-			        $dashboard = RSSSL_LE()->config->hosts[$fieldvalue]['hosting_dashboard'];
+			if ( $field_id==='other_host_type'){
+			    if ( isset(RSSSL_LE()->config->hosts[$field_value]) ){
+			        $dashboard = RSSSL_LE()->config->hosts[$field_value]['hosting_dashboard'];
 			        update_option('rsssl_hosting_dashboard', $dashboard, false);
                 }
             }
 
-			if ( $fieldname === 'email_address'&& is_email($fieldvalue) ) {
-				RSSSL_LE()->letsencrypt_handler->update_account($fieldvalue);
+			if ( $field_id === 'email_address'&& is_email($field_value) ) {
+				RSSSL_LE()->letsencrypt_handler->update_account($field_value);
 			}
 		}
 
@@ -527,287 +513,6 @@ if ( ! class_exists( "rsssl_wizard" ) ) {
                 <?php } ?>
             <?php
             return ob_get_clean();
-		}
-
-		/**
-		 * If a section does not contain any fields to be filled, just drop it from the menu.
-		 * @return bool
-		 *
-		 * */
-
-		public function section_is_empty( $page, $step, $section ) {
-			$section_compare = $this->get_next_not_empty_section( $page, $step, $section );
-			if ( $section != $section_compare ) {
-				return true;
-			}
-
-			return false;
-		}
-
-		public function step_is_empty( $page, $step ) {
-			$step_compare = $this->get_next_not_empty_step( $page, $step );
-			if ( $step != $step_compare ) {
-				return true;
-			}
-
-			return false;
-		}
-
-		/**
-		 * Enqueue assets
-		 * @param $hook
-		 */
-		public function enqueue_assets( $hook ) {
-			if (!isset($_GET['tab']) || $_GET['tab']!=='letsencrypt') return;
-
-			$minified = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? '' : '.min';
-
-			wp_register_style( 'select2', rsssl_le_url . 'wizard/assets/select2/css/select2.min.css', false, rsssl_version );
-			wp_enqueue_style( 'select2' );
-			wp_enqueue_script( 'select2', rsssl_le_url . "wizard/assets/select2/js/select2.min.js", array( 'jquery' ), rsssl_version, true );
-
-
-			// Let's encrypt
-			wp_register_style( 'rsssl-wizard', rsssl_le_url . "wizard/assets/css/wizard$minified.css", false, rsssl_version );
-			wp_enqueue_style( 'rsssl-wizard' );
-
-			wp_enqueue_script( 'rsssl-wizard', rsssl_le_url . "wizard/assets/js/wizard$minified.js", array( 'jquery', 'select2' ), rsssl_version.time(), true );
-			wp_localize_script(
-				'rsssl-wizard',
-				'rsssl_wizard',
-				array(
-					'admin_url'    => admin_url( 'admin-ajax.php' ),
-					'no_results'    => __("I don't know, or not listed, proceed with installation","really-simple-ssl"),
-				)
-			);
-		}
-
-
-		/**
-		 * Foreach required field, check if it's been answered
-		 * if section is false, check all fields of the step.
-		 * @param string $page
-		 * @param int $step
-		 * @param int $section
-		 *
-		 * @return bool
-		 */
-
-
-		public function required_fields_completed( $page, $step, $section ) {
-			//get all required fields for this section, and check if they're filled in
-			$fields = RSSSL_LE()->config->fields( $page, $step, $section );
-			$fields = rsssl_array_filter_multidimensional( $fields, 'required', true );
-			foreach ( $fields as $fieldname => $args ) {
-				//if a condition exists, only check for this field if the condition applies.
-				if ( isset( $args['condition'] )
-				     || isset( $args['callback_condition'] )
-				        && ! RSSSL_LE()->field->condition_applies( $args )
-				) {
-					continue;
-				}
-				$value = RSSSL_LE()->field->get_value( $fieldname );
-				if ( empty( $value ) ) {
-					return false;
-				}
-			}
-			return true;
-		}
-
-		public function all_required_fields_completed_wizard(){
-			return $this->all_required_fields_completed('lets-encrypt');
-		}
-
-		/**
-		 * Check if all required fields are filled
-		 * @return bool
-		 *
-		 * */
-
-		public function all_required_fields_completed( $page ) {
-			for ( $step = 1; $step <= $this->total_steps( $page ); $step ++ ) {
-				if ( RSSSL_LE()->config->has_sections( $page, $step ) ) {
-					for (
-						$section = $this->first_section( $page, $step );
-						$section <= $this->last_section( $page, $step );
-						$section ++
-					) {
-						if ( ! $this->required_fields_completed( $page, $step,
-							$section )
-						) {
-							return false;
-						}
-					}
-				} else {
-					if ( ! $this->required_fields_completed( $page, $step,
-						false )
-					) {
-						return false;
-					}
-				}
-			}
-
-			return true;
-		}
-
-		/**
-		 * Get a notice style header with an intro above a step or section
-		 *
-		 * @param string $page
-		 * @param int $step
-		 * @param int $section
-		 *
-		 * @return string
-		 */
-
-		public function get_intro( $page, $step, $section ) {
-			//only show when in action
-			$intro = '';
-			if ( RSSSL_LE()->config->has_sections( $page, $step ) ) {
-				if ( isset( RSSSL_LE()->config->steps[ $page ][ $step ]['sections'][ $section ]['intro'] ) ) {
-					$intro .= RSSSL_LE()->config->steps[ $page ][ $step ]['sections'][ $section ]['intro'];
-				}
-			} else {
-				if ( isset( RSSSL_LE()->config->steps[ $page ][ $step ]['intro'] ) ) {
-					$intro .= RSSSL_LE()->config->steps[ $page ][ $step ]['intro'];
-				}
-			}
-
-			if ( strlen( $intro ) > 0 ) {
-				$intro = '<div class="rsssl-wizard-intro">'
-				         . $intro
-				         . '</div>';
-			}
-
-			return $intro;
-		}
-
-
-		public function get_type( $post_id = false ) {
-			$page = false;
-			if ( $post_id ) {
-				$post_type = get_post_type( $post_id );
-				$page      = str_replace( 'rsssl-', '', $post_type );
-			}
-			if ( isset( $_GET['page'] ) ) {
-				$page = str_replace( 'rsssl-', '',
-					sanitize_title( $_GET['page'] ) );
-			}
-
-			return $page;
-		}
-
-		public function step( $page = false ) {
-			$step = 1;
-			if ( ! $page ) {
-				$page = 'lets-encrypt';
-			}
-
-			$total_steps = $this->total_steps( $page );
-
-			if ( isset( $_GET["step"] ) ) {
-				$step = intval( $_GET['step'] );
-			}
-
-			if ( isset( $_POST["step"] ) ) {
-				$step = intval( $_POST['step'] );
-			}
-
-			if ( $step > $total_steps ) {
-				$step = $total_steps;
-			}
-
-			if ( $step <= 1 ) {
-				$step = 1;
-			}
-
-			return $step;
-		}
-
-		public function section() {
-			$section = 1;
-			if ( isset( $_GET["section"] ) ) {
-				$section = intval( $_GET['section'] );
-			}
-
-			if ( isset( $_POST["section"] ) ) {
-				$section = intval( $_POST['section'] );
-			}
-
-			if ( $section > $this->last_section ) {
-				$section = $this->last_section;
-			}
-
-			if ( $section <= 1 ) {
-				$section = 1;
-			}
-
-			return $section;
-		}
-
-		/**
-		 * Get total number of steps for a page
-		 *
-		 * @param $page
-		 *
-		 * @return int
-		 */
-
-		public function total_steps( $page ) {
-			return count( RSSSL_LE()->config->steps[ $page ] );
-		}
-
-		public function total_sections( $page, $step ) {
-			if ( ! isset( RSSSL_LE()->config->steps[ $page ][ $step ]['sections'] ) ) {
-				return 0;
-			}
-
-			return count( RSSSL_LE()->config->steps[ $page ][ $step ]['sections'] );
-		}
-
-		public function last_section( $page, $step ) {
-			if ( ! isset( RSSSL_LE()->config->steps[ $page ][ $step ]["sections"] ) ) {
-				return 1;
-			}
-
-			$array = RSSSL_LE()->config->steps[ $page ][ $step ]["sections"];
-
-			return max( array_keys( $array ) );
-
-		}
-
-		public function first_section( $page, $step ) {
-			if ( ! isset( RSSSL_LE()->config->steps[ $page ][ $step ]["sections"] ) ) {
-				return 1;
-			}
-
-			$arr       = RSSSL_LE()->config->steps[ $page ][ $step ]["sections"];
-			$first_key = key( $arr );
-
-			return $first_key;
-		}
-
-
-		/**
-		 *
-		 * Check which percentage of the wizard is completed
-		 * @param bool $count_warnings
-		 *
-		 * @return int
-		 * */
-
-
-		public function wizard_percentage_complete( $page, $step )
-		{
-			//store to make sure it only runs once.
-			if ( $this->percentage_complete !== false ) {
-				return $this->percentage_complete;
-			}
-
-			$total_steps = $this->total_steps( 'lets-encrypt' );
-			$percentage = round( 100 * ( $step / $total_steps ) + 0.45 );
-			$this->percentage_complete = $percentage;
-			return $percentage;
 		}
 
 	}

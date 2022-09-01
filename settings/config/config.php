@@ -190,11 +190,35 @@ function rsssl_menu(){
 					'id' => 'le-hosting',
 					'title' => __( 'Hosting', 'really-simple-ssl' ),
 					'intro' => __( 'Below you will find the instructions for different hosting environments and configurations. If you start the process with the necessary instructions and credentials the next view steps will be done in no time.', 'really-simple-ssl'),
-				]
+				],
+				[
+					'id' => 'le-directories',
+					'title' => __( 'Directories', 'really-simple-ssl' ),
+//					'intro' => __( 'Below you will find the instructions for different hosting environments and configurations. If you start the process with the necessary instructions and credentials the next view steps will be done in no time.', 'really-simple-ssl'),
+				],
+				[
+					'id' => 'le-dns-verification',
+					'title' => __( 'DNS verification', 'really-simple-ssl' ),
+//					'intro' => __( 'Below you will find the instructions for different hosting environments and configurations. If you start the process with the necessary instructions and credentials the next view steps will be done in no time.', 'really-simple-ssl'),
+				],
+				[
+					'id' => 'le-generation',
+					'title' => __( 'Generation', 'really-simple-ssl' ),
+//					'intro' => __( 'Below you will find the instructions for different hosting environments and configurations. If you start the process with the necessary instructions and credentials the next view steps will be done in no time.', 'really-simple-ssl'),
+				],
+				[
+					'id' => 'le-installation',
+					'title' => __( 'Installation', 'really-simple-ssl' ),
+//					'intro' => __( 'Below you will find the instructions for different hosting environments and configurations. If you start the process with the necessary instructions and credentials the next view steps will be done in no time.', 'really-simple-ssl'),
+				],
+				[
+					'id' => 'le-activate_ssl',
+					'title' => __( 'Activate', 'really-simple-ssl' ),
+//					'intro' => __( 'Below you will find the instructions for different hosting environments and configurations. If you start the process with the necessary instructions and credentials the next view steps will be done in no time.', 'really-simple-ssl'),
+				],
 			],
 		],
 	];
-
 	return $menu_items;
 }
 
@@ -942,8 +966,41 @@ function rsssl_fields( $load_values = true ){
 		[
 			'id'      => 'system-status',
 			'menu_id' => 'le-system-status',
-			'type'    => 'letsencrypt/system-status',
+			"intro"    => __( "Detected status of your setup.", "really-simple-ssl" ),
+			'type'    => 'letsencrypt',
 			'default' => false,
+			'actions' => [
+				[
+					'description' => __("Checking PHP version...", "really-simple-ssl"),
+					'action'=> 'rsssl_php_requirement_met',
+					'attempts' => 1,
+				],
+				[
+					'description' => __("Checking SSL certificate...", "really-simple-ssl"),
+					'action'=> 'certificate_status',
+					'attempts' => 1,
+				],
+				[
+					'description' => __("Checking if CURL is available...", "really-simple-ssl"),
+					'action'=> 'curl_exists',
+					'attempts' => 1,
+				],
+				[
+					'description' => __("Checking server software...", "really-simple-ssl"),
+					'action'=> 'server_software',
+					'attempts' => 1,
+				],
+				[
+					'description' => __("Checking alias domain...", "really-simple-ssl"),
+					'action'=> 'alias_domain_available',
+					'attempts' => 3,
+				],
+				[
+					'description' => __("Checking for website configuration...", "really-simple-ssl"),
+					'action'=> 'check_domain',
+					'attempts' => 1,
+				],
+			],
 		],
 		[
 			'id'       => 'email_address',
@@ -1008,8 +1065,8 @@ function rsssl_fields( $load_values = true ){
 			'server_conditions' => [
 				'relation' => 'AND',
 				[
-					'rsssl_is_subdomain' => false,
-					'rsssl_wildcard_certificate_required' => false,
+					'rsssl_is_subdomain()' => false,
+					'rsssl_wildcard_certificate_required()' => false,
 				]
 			],
 		],
@@ -1047,10 +1104,10 @@ function rsssl_fields( $load_values = true ){
 			'server_conditions' => [
 				'relation' => 'AND',
 				[
-					'rsssl_is_cpanel'            => true,
-					'rsssl_activated_by_default' => false,
-					'rsssl_activation_required'  => false,
-					'rsssl_paid_only'            => false,
+					'rsssl_is_cpanel()'            => true,
+					'rsssl_activated_by_default()' => false,
+					'rsssl_activation_required()'  => false,
+					'rsssl_paid_only()'            => false,
 				]
 			],
 		],
@@ -1065,10 +1122,10 @@ function rsssl_fields( $load_values = true ){
 			'server_conditions' => [
 				'relation' => 'AND',
 				[
-					'rsssl_cpanel_api_supported' => true,
-					'rsssl_activated_by_default' => false,
-					'rsssl_activation_required'  => false,
-					'rsssl_paid_only'            => false,
+					'rsssl_cpanel_api_supported()' => true,
+					'rsssl_activated_by_default()' => false,
+					'rsssl_activation_required()'  => false,
+					'rsssl_paid_only()'            => false,
 				]
 			],
 		],
@@ -1083,36 +1140,233 @@ function rsssl_fields( $load_values = true ){
 			'server_conditions' => [
 				'relation' => 'AND',
 				[
-					'rsssl_cpanel_api_supported' => true,
-					'rsssl_activated_by_default' => false,
-					'rsssl_activation_required'  => false,
-					'rsssl_paid_only'            => false,
+					'rsssl_cpanel_api_supported()' => true,
+					'rsssl_activated_by_default()' => false,
+					'rsssl_activation_required()'  => false,
+					'rsssl_paid_only()'            => false,
 				]
 			],
 		],
-//		[
-//			'id'          => 'directadmin_host',
-//			'step'        => 2,
-//			'section'     => 2,
-//			'source'      => 'lets-encrypt',
-//			'type'        => 'text',
-//			'default'     => '',
-//			'label'       => __( "DirectAdmin host", 'really-simple-ssl' ),
-//			'help'       => __( "The URL you use to access your DirectAdmin dashboard. Ends on :2222.", 'really-simple-ssl' ),
-//			'required'    => false,
-//			'disabled'    => false,
-//			'callback_condition' => array(
-//				'rsssl_is_directadmin',
-//				'NOT rsssl_activated_by_default',
-//				'NOT rsssl_activation_required',
-//				'NOT rsssl_paid_only',
-//			)
-//		],
+		[
+			'id'          => 'directadmin_host',
+			'menu_id'     => 'le-hosting',
+			'type'        => 'text',
+			'default'     => '',
+			'label'       => __( "DirectAdmin host", 'really-simple-ssl' ),
+			'help'              => [
+				'label' => 'default',
+				'title' => __( "Direct Admin URL", "really-simple-ssl" ),
+				'text'  => __( "The URL you use to access your DirectAdmin dashboard. Ends on :2222.", 'really-simple-ssl' ),
+			],
+			'required'    => false,
+			'disabled'    => false,
+			'server_conditions' => [
+				'relation' => 'AND',
+				[
+					'rsssl_is_directadmin()' => true,
+					'rsssl_activated_by_default()' => false,
+					'rsssl_activation_required()'  => false,
+					'rsssl_paid_only()'            => false,
+				]
+			],
+		],
+		[
+			'id'          => 'directadmin_username',
+			'menu_id'     => 'le-hosting',
+			'type'        => 'text',
+			'default'     => '',
+			'label'       => __( "DirectAdmin username", 'really-simple-ssl' ),
+			'required'    => false,
+			'disabled'    => false,
+			'server_conditions' => [
+				'relation' => 'AND',
+				[
+					'rsssl_is_directadmin()' => true,
+					'rsssl_activated_by_default()' => false,
+					'rsssl_activation_required()'  => false,
+					'rsssl_paid_only()'            => false,
+				]
+			],
+		],
+		[
+			'id'          => 'directadmin_password',
+			'menu_id'     => 'le-hosting',
+			'type'        => 'password',
+			'default'     => '',
+			'label'       => __( "DirectAdmin password", 'really-simple-ssl' ),
+			'required'    => false,
+			'disabled'    => false,
+			'server_conditions' => [
+				'relation' => 'AND',
+				[
+					'rsssl_is_directadmin()' => true,
+					'rsssl_activated_by_default()' => false,
+					'rsssl_activation_required()'  => false,
+					'rsssl_paid_only()'            => false,
+				]
+			],
+		],
+		[
+			'id'          => 'cloudways_user_email',
+			'menu_id'     => 'le-hosting',
+			'type'        => 'text',
+			'default'     => '',
+			'placeholder' => 'email@email.com',
+			'label'       => __( "CloudWays user email", 'really-simple-ssl' ),
+			'required'    => false,
+			'disabled'    => false,
+			'server_conditions' => [
+				'relation' => 'AND',
+				[
+					'other_host_type' => 'cloudways',
+				]
+			],
+		],
+		[
+			'id'          => 'cloudways_api_key',
+			'menu_id'     => 'le-hosting',
+			'type'        => 'password',
+			'default'     => '',
+			'label'       => __( "CloudWays api key", 'really-simple-ssl' ),
+			'required'    => false,
+			'disabled'    => false,
+			'help'        => [
+				'label' => 'default',
+				'title' => __( "CloudWays API key", "really-simple-ssl" ),
+				'text'  => sprintf(__("You can find your api key %shere%s (make sure you're logged in with your main account).","really-simple-ssl"),'<a target="_blank" href="https://platform.cloudways.com/api">','</a>'),
+			],
+			'server_conditions' => [
+				'relation' => 'AND',
+				[
+					'other_host_type' => 'cloudways',
+				]
+			],
+		],
+		[
+			'id'          => 'plesk_host',
+			'menu_id'     => 'le-hosting',
+			'type'        => 'text',
+			'default'     => '',
+			'label'       => __( "Plesk host", 'really-simple-ssl' ),
+			'help'              => [
+				'label' => 'default',
+				'title' => __( "Plesk admin URL", "really-simple-ssl" ),
+				'text'  => __( "The URL you use to access your Plesk dashboard. Ends on :8443.", 'really-simple-ssl' ),
+			],
+			'required'    => false,
+			'disabled'    => false,
+			'server_conditions' => [
+				'relation' => 'AND',
+				[
+					'rsssl_is_plesk()' => true,
+					'rsssl_activated_by_default()' => false,
+					'rsssl_activation_required()' => false,
+					'rsssl_paid_only()' => false,
+				]
+			],
+		],
+		[
+			'id'          => 'plesk_username',
+			'menu_id'     => 'le-hosting',
+			'type'        => 'text',
+			'default'     => '',
+			'label'       => __( "Plesk username", 'really-simple-ssl' ),
+			'help'              => [
+				'label' => 'default',
+				'title' => __( "Plesk username and password", "really-simple-ssl" ),
+				'text'  => sprintf(__( "You can find your Plesk username and password in %s", 'really-simple-ssl' ),'https://{your-plesk-host-name}:8443/smb/my-profile'),
+			],
+			'required'    => false,
+			'disabled'    => false,
+			'server_conditions' => [
+				'relation' => 'AND',
+				[
+					'rsssl_is_plesk()' => true,
+					'rsssl_activated_by_default()' => false,
+					'rsssl_activation_required()' => false,
+					'rsssl_paid_only()' => false,
+				]
+			],
+		],
+		 [
+			'id'         => 'plesk_password',
+			'menu_id'     => 'le-hosting',
+			'type'        => 'password',
+			'default'     => '',
+			'label'       => __( "Plesk password", 'really-simple-ssl' ),
+			'required'    => false,
+			'disabled'    => false,
+			'server_conditions' => [
+				'relation' => 'AND',
+				[
+					'rsssl_is_plesk()' => true,
+					'rsssl_activated_by_default()' => false,
+					'rsssl_activation_required()' => false,
+					'rsssl_paid_only()' => false,
+				]
+			],
+		],
+
+		[
+			'id'          => 'store_credentials',
+			'menu_id'     => 'le-hosting',
+			'type'        => 'checkbox',
+			'default'     => '',
+			'title'       => __( "Credentials storage", 'really-simple-ssl' ),
+			'help'              => [
+				'label' => 'default',
+				'text'  => __( "Store for renewal purposes. If not stored, renewal may need to be done manually.", 'really-simple-ssl' ),
+			],
+			'required'    => false,
+			'disabled'    => false,
+			'server_conditions' => [
+				'relation' => 'AND',
+				[
+					'rsssl_uses_known_dashboard()' => true,
+					'rsssl_activated_by_default()' => false,
+					'rsssl_activation_required()' => false,
+					'rsssl_paid_only()' => false,
+				]
+			],
+		],
+		[
+			'id'          => 'directories',
+			'menu_id'     => 'le-directories',
+			'callback'    => 'directories.php',
+			'callback_condition' => 'rsssl_do_local_lets_encrypt_generation',
+			'type'    => 'letsencrypt',
+		],
+		[
+			'id'          => 'dns-verification',
+			'menu_id'     => 'le-dns-verification',
+			'callback'    => 'dns-verification.php',
+			'callback_condition' => 'rsssl_dns_verification_required',
+			'type'    => 'letsencrypt',
+		],
+		[
+			'id'          => 'generation',
+			'menu_id'     => 'le-generation',
+			'callback'    => 'generation.php',
+			'callback_condition' => 'rsssl_do_local_lets_encrypt_generation',
+			'type'    => 'letsencrypt',
+		],
+		[
+			'id'          => 'installation',
+			'menu_id'     => 'le-installation',
+			'callback'    => 'installation.php',
+			'type'    => 'letsencrypt',
+		],
+		[
+			'id'          => 'activate_ssl',
+			'menu_id'     => 'le-activate_ssl',
+			'callback' => 'activate.php',
+			'type'    => 'letsencrypt',
+		],
 	];
 
 	$fields = apply_filters('rsssl_fields', $fields);
 	foreach ( $fields as $key => $field ) {
-		$field = wp_parse_args($field, ['id'=>false, 'visible'=> true, 'disabled'=>false, 'new_features_block' => false ]);
+		$field = wp_parse_args($field, ['default'=>'', 'id'=>false, 'visible'=> true, 'disabled'=>false, 'new_features_block' => false ]);
 		//handle server side conditions
 		if (isset($field['server_conditions'])) {
 			if ( !rsssl_conditions_apply($field['server_conditions']) ){

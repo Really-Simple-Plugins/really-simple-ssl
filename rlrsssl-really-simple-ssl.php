@@ -160,7 +160,7 @@ class REALLY_SIMPLE_SSL
 			}
 		}
 
-		if ( rsssl_is_logged_in_rest() ||is_admin() || wp_doing_cron() ) {
+		if ( rsssl_is_logged_in_rest() || is_admin() || wp_doing_cron() ) {
             require_once( rsssl_path . 'lets-encrypt/letsencrypt.php' );
         }
 

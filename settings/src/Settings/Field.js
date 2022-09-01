@@ -12,6 +12,7 @@ import { __ } from '@wordpress/i18n';
 import * as rsssl_api from "../utils/api";
 import License from "./License";
 import Hyperlink from "../utils/Hyperlink";
+import LetsEncrypt from "../LetsEncrypt/LetsEncrypt";
 import MixedContentScan from "./MixedContentScan";
 import PermissionsPolicy from "./PermissionsPolicy";
 import Support from "./Support";
@@ -248,9 +249,9 @@ class Field extends Component {
             )
         }
 
-        if ( field.type === 'letsencrypt/system-status' ) {
+        if ( field.type === 'letsencrypt' ) {
                     return (
-                       <>System Status</>
+                       <LetsEncrypt field={field} />
                     )
         }
 

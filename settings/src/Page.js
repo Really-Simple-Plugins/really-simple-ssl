@@ -44,13 +44,12 @@ class Page extends Component {
             this.superMenu = response.menu;
             let selectedMainMenuItem =  getAnchor('main') || 'dashboard';
             this.menu = this.getSelectedMenu(this.superMenu, selectedMainMenuItem);
-            let firstMenuItem = this.menu && this.menu.menu_items.hasOwnProperty(0) ? this.menu.menu_items[0].id : 'general';
             this.fields = response.fields;
             this.progress = response.progress;
             this.setState({
                 isAPILoaded: true,
                 selectedMainMenuItem: selectedMainMenuItem,
-                selectedMenuItem: getAnchor('menu') || firstMenuItem,
+                selectedMenuItem: this.getDefaultMenuItem(),
                 fields: this.fields,
                 menu: this.menu,
                 progress: this.progress,

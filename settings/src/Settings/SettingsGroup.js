@@ -62,8 +62,6 @@ class SettingsGroup extends Component {
             }
         }
 
-
-
         let status = 'invalid';
         let msg = activeGroup.premium_text ? activeGroup.premium_text : __("Learn more about %sPremium%s", "really-simple-ssl");
         if ( rsssl_settings.pro_plugin_active ) {
