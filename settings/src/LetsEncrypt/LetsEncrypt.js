@@ -49,12 +49,13 @@ const LetsEncrypt = (props) => {
 
     return (
         <>
-            <div className="rsssl-progress-bar"><div className="rsssl-progress"><div className="rsssl-bar rsssl-orange" ></div></div></div>
-            <div className="rsssl_letsencrypt_container rsssl-progress-container field-group">
-                <ul>
-                {props.field.actions.map((action, i) => <li key={i}><a className={"rsssl_action_"+action.action} >{action.description}</a></li>)}
-                </ul>
-
+            <div className="rsssl-lets-encrypt-tests">
+                <div className="rsssl-progress-bar"><div className="rsssl-progress"><div className="rsssl-bar rsssl-orange" ></div></div></div>
+                <div className="rsssl_letsencrypt_container rsssl-progress-container field-group">
+                    <ul>
+                    {props.field.actions.map((action, i) => <li key={i}><a className={"rsssl_action_"+action.action} >{action.description}</a></li>)}
+                    </ul>
+                </div>
             </div>
         </>
     )

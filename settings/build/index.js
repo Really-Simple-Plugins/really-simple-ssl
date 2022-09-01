@@ -3702,6 +3702,8 @@ const LetsEncrypt = props => {
     });
   }, []);
   return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "rsssl-lets-encrypt-tests"
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "rsssl-progress-bar"
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "rsssl-progress"
@@ -3713,7 +3715,7 @@ const LetsEncrypt = props => {
     key: i
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
     className: "rsssl_action_" + action.action
-  }, action.description))))));
+  }, action.description)))))));
 };
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (LetsEncrypt);
