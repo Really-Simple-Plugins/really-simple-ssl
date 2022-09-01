@@ -239,7 +239,7 @@ if ( !function_exists('rsssl_get_other_host') ) {
 	 * @return bool|string
 	 */
 	function rsssl_get_other_host() {
-		return rsssl_get_value( 'other_host_type', false );
+		return rsssl_get_option( 'other_host_type', false );
 	}
 }
 
@@ -341,36 +341,6 @@ if ( !function_exists('rsssl_php_requirement_met')) {
 		}
 
 		return new RSSSL_RESPONSE( $status, $action, $message );
-	}
-}
-
-
-if ( ! function_exists( 'rsssl_get_value' ) ) {
-
-    /**
-     * Get value for an a rsssl option
-     * For usage very early in the execution order, use the $page option. This bypasses the class usage.
-     *
-     * @param string $fieldname
-     * @param bool $use_default
-     *
-     * @return array|bool|mixed|string
-     */
-
-	function rsssl_get_value(
-		$fieldname, $use_default = true
-	) {
-		$default = false;
-		$fields = get_option( 'rsssl_options_lets-encrypt' );
-		if ($use_default) {
-			if ( ! isset( RSSSL_LE()->config->fields[ $fieldname ] ) ) {
-				return false;
-			}
-			$default = ( isset( RSSSL_LE()->config->fields[ $fieldname ]['default'] ) ) ? RSSSL_LE()->config->fields[ $fieldname ]['default'] : '';
-		}
-
-		$value   = isset( $fields[ $fieldname ] ) ? $fields[ $fieldname ] : $default;
-		return $value;
 	}
 }
 
@@ -564,6 +534,12 @@ if ( !function_exists('rsssl_get_subdomain') ) {
 			$sub = rsssl_get_root_domain(explode('.', $sub, 2)[1]);
 		}
 		return $sub;
+	}
+}
+
+if ( !function_exists('rsssl_supported_hosts')) {
+	function rsssl_supported_hosts(){
+
 	}
 }
 

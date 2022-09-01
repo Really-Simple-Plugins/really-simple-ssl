@@ -1,19 +1,24 @@
 <?php
 defined('ABSPATH') or die();
 
-function rsssl_menu( $group_id = 'settings' ){
+function rsssl_menu(){
 	$menu_items = [
+		[
+			"id"    => "dashboard",
+			"title" => __( "Dashboard", 'really-simple-ssl' ),
+			'default_hidden' => false,
+			'menu_items' => [],
+		],
 		[
 			"id"    => "settings",
 			"title" => __( "Settings", 'really-simple-ssl' ),
-			"is_wizard" => false,
+			'default_hidden' => false,
 			'menu_items' => [
 				[
 					'id' => 'general',
 					'group_id' => 'general',
 					'title' => __('General', 'really-simple-ssl'),
 					'helpLink'  => 'https://really-simple-ssl.com',
-					'step' => 1,
 					'groups' => [
 						[
 							'id' => 'general',
@@ -59,7 +64,6 @@ function rsssl_menu( $group_id = 'settings' ){
 				[
 					'id' => 'recommended_security_headers',
 					'title' => __('Recommended Security Headers', 'really-simple-ssl'),
-					'step' => 1,
 					'groups' => [
 						[
 							'id' => 'recommended_security_headers',
@@ -92,7 +96,6 @@ function rsssl_menu( $group_id = 'settings' ){
 					'id' => 'permissions_policy',
 					'title' => __('Permissions Policy', 'really-simple-ssl'),
 					'intro' => __("Permissions Policy", "really-simple-ssl"),
-					'step' => 1,
 					'groups' => [
 						[
 							'id' => 'permissions_policy',
@@ -106,7 +109,6 @@ function rsssl_menu( $group_id = 'settings' ){
 					'id' => 'content_security_policy',
 					'title' => __('Content Security Policy', 'really-simple-ssl'),
 					'intro' => __("Content Security Policy intro", "really-simple-ssl"),
-					'step' => 1,
 					'groups' => [
 						[
 							'id' => 'upgrade_insecure_requests',
@@ -168,27 +170,32 @@ function rsssl_menu( $group_id = 'settings' ){
 		],
 		[
 			"id"    => "letsencrypt",
-			"title" => __( "lets encrypt menu", 'really-simple-ssl' ),
+			'default_hidden' => true,
+			"title" => __( "Let's Encrypt", 'really-simple-ssl' ),
+			'intro' => sprintf(__('We have tried to make our Wizard as simple and fast as possible. Although these questions are all necessary, if there’s any way you think we can improve the plugin, please let us %sknow%s!', 'really-simple-ssl'),'<a target="_blank" href="https://really-simple-ssl.com/contact">', '</a>').
+			           sprintf(__(' Please note that you can always save and finish the wizard later, use our %sdocumentation%s for additional information or log a %ssupport ticket%s if you need our assistance.', 'really-simple-ssl'),'<a target="_blank" href="https://really-simple-ssl.com/knowledge-base/generate-your-free-ssl-certificate/">', '</a>','<a target="_blank" href="https://wordpress.org/support/plugin/really-simple-ssl/">', '</a>'),
+
 			'menu_items' => [
 				[
-					'id' => 'system-check',
-					'title' => __('system check', 'really-simple-ssl'),
+					'id' => 'le-system-status',
+					'title' => __('System Status', 'really-simple-ssl'),
+					'intro' => __( 'Letʼs Encrypt is a free, automated and open certificate authority brought to you by the nonprofit Internet Security Research Group (ISRG).', 'really-simple-ssl' ),
+					'helpLink'  => 'https://really-simple-ssl.com/about-lets-encrypt/',
 				],
 				[
-					'id' => 'general',
-					'title' => __('General', 'really-simple-ssl'),
+					'id' => 'le-general',
+					'title' => __('General Settings', 'really-simple-ssl'),
 				],
+				[
+					'id' => 'le-hosting',
+					'title' => __( 'Hosting', 'really-simple-ssl' ),
+					'intro' => __( 'Below you will find the instructions for different hosting environments and configurations. If you start the process with the necessary instructions and credentials the next view steps will be done in no time.', 'really-simple-ssl'),
+				]
 			],
 		],
 	];
 
-	$menu_items = apply_filters('rsssl_menu', $menu_items);
-	foreach ($menu_items as $index => $menu_item ) {
-		if ($menu_item['id']===$group_id) {
-			return $menu_item;
-		}
-	}
-	return array();
+	return $menu_items;
 }
 
 function rsssl_migrate_settings($prev_version) {
@@ -196,13 +203,15 @@ function rsssl_migrate_settings($prev_version) {
 
 }
 add_action('rsssl_upgrade', 'rsssl_migrate_settings', 10, 1);
+add_action('plugins_loaded', 'rsssl_test');
+function rsssl_test(){
+
+}
 
 function rsssl_fields( $load_values = true ){
-
 	if ( !current_user_can('manage_options') ) {
 		return [];
 	}
-
 	$fields = [
         [
             'id'          => 'ssl_enabled',
@@ -926,6 +935,179 @@ function rsssl_fields( $load_values = true ){
 				],
 			],
 		],
+
+		/**
+		 * Let's Encrypt
+		 */
+		[
+			'id'      => 'system-status',
+			'menu_id' => 'le-system-status',
+			'type'    => 'letsencrypt/system-status',
+			'default' => false,
+		],
+		[
+			'id'       => 'email_address',
+			'menu_id'  => 'le-general',
+			'type'     => 'email',
+			'label'    => __( "Email address", 'really-simple-ssl' ),
+			'help'     => [
+				'label' => 'default',
+				'title' => __( "Let's Encrypt email address", "really-simple-ssl" ),
+				'text'  => __( "This email address will used to create a Let's Encrypt account. This is also where you will receive renewal notifications.", 'really-simple-ssl' ),
+			],
+			'disabled' => ! rsssl_get_option( 'ssl_enabled' ),
+			'default'  => get_option( 'admin_email' ),
+			'required' => true,
+		],
+		[
+			'id'       => 'accept_le_terms',
+			'menu_id'  => 'le-general',
+			'type'     => 'checkbox',
+			'default'  => false,
+			'required' => true,
+			'label'    => __( 'Terms & Conditions', "really-simple-ssl" ),
+			'comment'  => sprintf( __( "I agree to the Let's Encrypt %sTerms & Conditions%s", 'really-simple-ssl' ),
+				'<a target="_blank" href="https://letsencrypt.org/documents/LE-SA-v1.2-November-15-2017.pdf">', '</a>' ),
+		],
+		[
+			'id'      => 'disable_ocsp',
+			'menu_id' => 'le-general',
+			'type'    => 'checkbox',
+			'default' => true,
+			'help'     => [
+				'label' => 'default',
+				'title' => __( "OCSP stapling", "really-simple-ssl" ),
+				'text'  => __( "OCSP stapling should be enabled by default. You can disable if this is not supported by your hosting provider.", "really-simple-ssl" ) . rsssl_read_more( 'https://really-simple-ssl.com/ocsp-stapling' ),
+			],
+			'label'   => __( "Disable OCSP Stapling", 'really-simple-ssl' ),
+		],
+		[
+			'id' => 'domain',
+			'menu_id' => 'le-general',
+			'type'        => 'text',
+			'default'     => rsssl_get_domain(),
+			'label'       => __( "Domain", 'really-simple-ssl' ),
+			'help'     => [
+				'label' => 'default',
+				'title' => __( "Domain", "really-simple-ssl" ),
+				'text'  => __("This field is prefilled based on your configuration", 'really-simple-ssl'),
+			],
+			'required'    => false,
+			'disabled'    => true,
+		],
+		[
+			'id'          => 'include_alias',
+			'menu_id' => 'le-general',
+			'type'        => 'checkbox',
+			'default'     => '',
+			'help'     => [
+				'label' => 'default',
+				'title' => __( "Include alias", "really-simple-ssl" ),
+				'text'  => __( "This will include both the www. and non-www. version of your domain.", "really-simple-ssl").' '.__("You should have the www domain pointed to the same website as the non-www domain.", 'really-simple-ssl' ),
+			],
+			'server_conditions' => [
+				'relation' => 'AND',
+				[
+					'rsssl_is_subdomain' => false,
+					'rsssl_wildcard_certificate_required' => false,
+				]
+			],
+		],
+		[
+			'id'       => 'other_host_type',
+			'menu_id'  => 'le-hosting',
+			'type'     => 'select',
+			'options'  => RSSSL_LE()->config->supported_hosts,
+			'help'     => [
+				'label' => 'default',
+				'title' => __( "Hosting Provider", "really-simple-ssl" ),
+				'text'  => __( "By selecting your hosting provider we can tell you if your hosting provider already supports free SSL, and/or where you can activate it.", "really-simple-ssl" )
+				           . "&nbsp;" .
+				           sprintf( __( "If your hosting provider is not listed, and there's an SSL activation/installation link, please let us %sknow%s.", "really-simple-ssl" ),
+					           '<a target="_blank" href="https://really-simple-ssl.com/install-ssl-certificate/#hostingdetails">', '</a>' ),
+			],
+			'default'  => false,
+			'label'    => __( "Hosting provider", 'really-simple-ssl' ),
+			'required' => true,
+			'disabled' => false,
+		],
+		[
+			'id'                => 'cpanel_host',
+			'menu_id'           => 'le-hosting',
+			'type'              => 'text',
+			'default'           => '',
+			'label'             => __( "CPanel host", 'really-simple-ssl' ),
+			'help'              => [
+				'label' => 'default',
+				'title' => __( "CPanel host", "really-simple-ssl" ),
+				'text'  => __( "The URL you use to access your cPanel dashboard. Ends on :2083.", 'really-simple-ssl' ),
+			],
+			'required'          => false,
+			'disabled'          => false,
+			'server_conditions' => [
+				'relation' => 'AND',
+				[
+					'rsssl_is_cpanel'            => true,
+					'rsssl_activated_by_default' => false,
+					'rsssl_activation_required'  => false,
+					'rsssl_paid_only'            => false,
+				]
+			],
+		],
+		[
+			'id'          => 'cpanel_username',
+			'menu_id'           => 'le-hosting',
+			'type'        => 'text',
+			'default'     => '',
+			'label'       => __( "CPanel username", 'really-simple-ssl' ),
+			'required'    => false,
+			'disabled'    => false,
+			'server_conditions' => [
+				'relation' => 'AND',
+				[
+					'rsssl_cpanel_api_supported' => true,
+					'rsssl_activated_by_default' => false,
+					'rsssl_activation_required'  => false,
+					'rsssl_paid_only'            => false,
+				]
+			],
+		],
+		[
+			'id'          => 'cpanel_password',
+			'menu_id'     => 'le-hosting',
+			'type'        => 'password',
+			'default'     => '',
+			'label'       => __( "CPanel password", 'really-simple-ssl' ),
+			'required'    => false,
+			'disabled'    => false,
+			'server_conditions' => [
+				'relation' => 'AND',
+				[
+					'rsssl_cpanel_api_supported' => true,
+					'rsssl_activated_by_default' => false,
+					'rsssl_activation_required'  => false,
+					'rsssl_paid_only'            => false,
+				]
+			],
+		],
+//		[
+//			'id'          => 'directadmin_host',
+//			'step'        => 2,
+//			'section'     => 2,
+//			'source'      => 'lets-encrypt',
+//			'type'        => 'text',
+//			'default'     => '',
+//			'label'       => __( "DirectAdmin host", 'really-simple-ssl' ),
+//			'help'       => __( "The URL you use to access your DirectAdmin dashboard. Ends on :2222.", 'really-simple-ssl' ),
+//			'required'    => false,
+//			'disabled'    => false,
+//			'callback_condition' => array(
+//				'rsssl_is_directadmin',
+//				'NOT rsssl_activated_by_default',
+//				'NOT rsssl_activation_required',
+//				'NOT rsssl_paid_only',
+//			)
+//		],
 	];
 
 	$fields = apply_filters('rsssl_fields', $fields);

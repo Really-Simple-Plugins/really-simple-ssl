@@ -103,12 +103,23 @@ function rsssl_upgrade() {
 			rsssl_update_option('do_not_edit_htaccess', $do_not_edit_htaccess);
 			$autoreplace_mixed_content = isset($network_options["autoreplace_mixed_content"]) ? $network_options["autoreplace_mixed_content"] : false;
 			rsssl_update_option('mixed_content_fixer', $autoreplace_mixed_content);
+
+			//upgrade lets encrypt options
+			$le_options = get_option( 'rsssl_options_lets-encrypt' );
+			if (!empty($le_options)) {
+				foreach ($options as $fieldname => $value ) {
+					rsssl_update_option($fieldname, $value);
+				}
+			}
+
 		}
 	}
 
 	//delete in future upgrade
 	//delete_option( 'rlrsssl_options' );
 	//delete_site_option( 'rlrsssl_network_options' );
+	//delete_option( 'rsssl_options_lets-encrypt' );
+
 
 	do_action("rsssl_upgrade", $prev_version);
 	update_option( 'rsssl_current_version', rsssl_version );

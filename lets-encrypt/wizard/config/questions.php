@@ -8,158 +8,20 @@ defined( 'ABSPATH' ) or die( );
  * required: required field
 * */
 
+
+
+
 $this->fields = $this->fields + array(
-		'system_status' => array(
-			'step'        => 1,
-			'section'     => 1,
-			'source'      => 'lets-encrypt',
-			'callback'    => 'system-status.php',
-		),
+//		'system_status' => array(
+//			'step'        => 1,
+//			'section'     => 1,
+//			'source'      => 'lets-encrypt',
+//			'callback'    => 'system-status.php',
+//		),
 
-		'email_address'      => array(
-			'step'      => 2,
-			'section'   => 1,
-			'source'    => 'lets-encrypt',
-			'type'      => 'email',
-			'default'   => get_option('admin_email'),
-			'tooltip'   => __( "This email address will used to create a Let's Encrypt account. This is also where you will receive renewal notifications.", 'really-simple-ssl' ),
-			'tooltip-position' => 'title',
-			'label'     => __( "Email address", 'really-simple-ssl' ),
-			'sublabel'  => __("This field is prefilled based on your configuration", 'really-simple-ssl'),
-			'required'  => true,
-		),
 
-		'accept_le_terms' => array(
-			'step'        => 2,
-			'section'     => 1,
-			'source'      => 'lets-encrypt',
-			'type'        => 'checkbox',
-			'default'     => '',
-			'required'    => true,
-			'title'       => __('Terms & Conditions',"really-simple-ssl"),
-			'option_text' => sprintf(__("I agree to the Let's Encrypt %sTerms & Conditions%s", 'really-simple-ssl'),'<a target="_blank" href="https://letsencrypt.org/documents/LE-SA-v1.2-November-15-2017.pdf">','</a>'),
-		),
-		'disable_ocsp' => array(
-			'step'        => 2,
-			'section'     => 1,
-			'source'      => 'lets-encrypt',
-			'type'        => 'checkbox',
-			'default'     => '',
-			'help'      => __( "OCSP stapling should be enabled by default. You can disable if this is not supported by your hosting provider.","really-simple-ssl").rsssl_le_read_more('https://really-simple-ssl.com/ocsp-stapling'),
-			'title'       => __('OCSP Stapling',"really-simple-ssl"),
-			'option_text' => __("Disable OCSP Stapling", 'really-simple-ssl'),
-		),
 
-        'domain' => array(
-            'step'        => 2,
-            'section'     => 1,
-            'source'      => 'lets-encrypt',
-            'type'        => 'text',
-            'default'     => rsssl_get_domain(),
-            'label'       => __( "Domain", 'really-simple-ssl' ),
-            'sublabel'    => __("This field is prefilled based on your configuration", 'really-simple-ssl'),
-            'required'    => false,
-            'disabled'    => true,
-        ),
 
-        'include_alias' => array(
-	        'step'        => 2,
-	        'section'     => 1,
-	        'source'      => 'lets-encrypt',
-	        'type'        => 'checkbox',
-	        'default'     => '',
-	        'tooltip'   => __( "This will include both the www. and non-www. version of your domain.", "really-simple-ssl").' '.__("You should have the www domain pointed to the same website as the non-www domain.", 'really-simple-ssl' ),
-	        'tooltip-position' => 'after',
-	        'option_text' => __("Include alias domain too?", 'really-simple-ssl'),
-	        'callback_condition' => array(
-	        	'NOT rsssl_is_subdomain',
-	        	'NOT rsssl_wildcard_certificate_required',
-	        )
-        ),
-
-        'other_host_type' => array(
-	        'step'        => 2,
-	        'section'     => 1,
-	        'source'      => 'lets-encrypt',
-	        'type'        => 'select',
-	        'tooltip'   => __( "By selecting your hosting provider we can tell you if your hosting provider already supports free SSL, and how you can activate it.", "really-simple-ssl"),
-	        'options'     => $this->supported_hosts,
-	        'help'      => __( "By selecting your hosting provider we can tell you if your hosting provider already supports free SSL, and/or where you can activate it.","really-simple-ssl")."&nbsp;".
-	                       sprintf(__("If your hosting provider is not listed, and there's an SSL activation/installation link, please let us %sknow%s.","really-simple-ssl"),'<a target="_blank" href="https://really-simple-ssl.com/install-ssl-certificate/#hostingdetails">','</a>'),
-	        'default'     => false,
-	        'label'       => __( "Hosting provider", 'really-simple-ssl' ),
-	        'required'    => true,
-	        'disabled'    => false,
-        ),
-
-        'cpanel_host' => array(
-            'step'        => 2,
-            'section'     => 2,
-            'source'      => 'lets-encrypt',
-            'type'        => 'text',
-            'default'     => '',
-            'label'       => __( "CPanel host", 'really-simple-ssl' ),
-            'help'       => __( "The URL you use to access your cPanel dashboard. Ends on :2083.", 'really-simple-ssl' ),
-            'required'    => false,
-            'disabled'    => false,
-	        'callback_condition' => array(
-	        	'rsssl_is_cpanel',
-		        'NOT rsssl_activated_by_default',
-		        'NOT rsssl_activation_required',
-		        'NOT rsssl_paid_only',
-	        )
-        ),
-
-        'cpanel_username' => array(
-	        'step'        => 2,
-	        'section'     => 2,
-	        'source'      => 'lets-encrypt',
-	        'type'        => 'text',
-	        'default'     => '',
-	        'label'       => __( "CPanel username", 'really-simple-ssl' ),
-	        'required'    => false,
-	        'disabled'    => false,
-	        'callback_condition' => array(
-		        'rsssl_cpanel_api_supported',
-		        'NOT rsssl_activated_by_default',
-		        'NOT rsssl_activation_required',
-		        'NOT rsssl_paid_only',
-	        )
-        ),
-
-        'cpanel_password' => array(
-	        'step'        => 2,
-	        'section'     => 2,
-	        'source'      => 'lets-encrypt',
-	        'type'        => 'password',
-	        'default'     => '',
-	        'label'       => __( "CPanel password", 'really-simple-ssl' ),
-	        'required'    => false,
-	        'disabled'    => false,
-	        'callback_condition' => array(
-		        'rsssl_cpanel_api_supported',
-		        'NOT rsssl_activated_by_default',
-		        'NOT rsssl_activation_required',
-		        'NOT rsssl_paid_only',
-	        )        ),
-
-		'directadmin_host' => array(
-			'step'        => 2,
-			'section'     => 2,
-			'source'      => 'lets-encrypt',
-			'type'        => 'text',
-			'default'     => '',
-			'label'       => __( "DirectAdmin host", 'really-simple-ssl' ),
-			'help'       => __( "The URL you use to access your DirectAdmin dashboard. Ends on :2222.", 'really-simple-ssl' ),
-			'required'    => false,
-			'disabled'    => false,
-	        'callback_condition' => array(
-				'rsssl_is_directadmin',
-				'NOT rsssl_activated_by_default',
-				'NOT rsssl_activation_required',
-				'NOT rsssl_paid_only',
-			)
-		),
 
 		'directadmin_username' => array(
 			'step'        => 2,

@@ -34,6 +34,7 @@ class SettingsGroup extends Component {
 
     render(){
         let selectedMenuItem = this.props.selectedMenuItem;
+
         let selectedFields = [];
         //get all fields with group_id this.props.group_id
         for (const selectedField of this.props.fields){
@@ -41,14 +42,27 @@ class SettingsGroup extends Component {
                 selectedFields.push(selectedField);
             }
         }
-        //set group default to current menu item
-        let activeGroup = selectedMenuItem;
-        if ( selectedMenuItem.hasOwnProperty('groups') ) {
+
+        let activeGroup;
+        for (const item of this.props.menu.menu_items){
+            if (item.id === selectedMenuItem ) {
+                activeGroup = item;
+            } else if (item.menu_items) {
+                activeGroup = item.menu_items.filter(menuItem => menuItem.id === selectedMenuItem)[0];
+            }
+            if ( activeGroup ) {
+                break;
+            }
+        }
+
+        if ( selectedMenuItem && selectedMenuItem.hasOwnProperty('groups') ) {
             let currentGroup = selectedMenuItem.groups.filter(group => group.id === this.props.group);
             if (currentGroup.length>0) {
                 activeGroup = currentGroup[0];
             }
         }
+
+
 
         let status = 'invalid';
         let msg = activeGroup.premium_text ? activeGroup.premium_text : __("Learn more about %sPremium%s", "really-simple-ssl");

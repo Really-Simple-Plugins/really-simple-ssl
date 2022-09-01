@@ -5,11 +5,6 @@ import {
 class MenuItem extends Component {
     constructor() {
         super( ...arguments );
-        this.menuItem = this.props.menuItem;
-        this.state = {
-            menuItem: this.props.menuItem,
-            isAPILoaded: this.props.isAPILoaded,
-        };
     }
 
     handleClick(){
@@ -21,14 +16,9 @@ class MenuItem extends Component {
     }
 
     render(){
-        const {
-            menuItem,
-            isAPILoaded,
-        } = this.state;
-        /**
+        /*
          * Menu is selected if the item is the same, or if it is a child.
          */
-
         let menuIsSelected = this.props.selectedMenuItem===this.props.menuItem.id;
         if (this.props.menuItem.menu_items) {
             for (const item of this.props.menuItem.menu_items){
@@ -40,9 +30,10 @@ class MenuItem extends Component {
 
         let activeClass = menuIsSelected ? ' rsssl-active' : '';
         let featuredClass = this.props.menuItem.featured ? ' rsssl-featured' : '';
-        let href = '#settings/'+this.props.menuItem.id;
+        let href = '#'+this.props.selectedMainMenuItem+'/'+this.props.menuItem.id;
         return (
-            this.props.menuItem.visible && <div className={"rsssl-menu-item" + activeClass + featuredClass}>
+            <>
+            {this.props.menuItem.visible && <div className={"rsssl-menu-item" + activeClass + featuredClass}>
                 <a href={href} onClick={() => this.handleClick()}>
                     <span>{this.props.menuItem.title}</span>
                     {this.props.menuItem.featured && <p className="rsssl-menu-item-featured">{this.props.menuItem.featured}</p>}
@@ -55,7 +46,8 @@ class MenuItem extends Component {
                                                                              selectedMenuItem={this.props.selectedMenuItem}/>
                     )}
                 </div>}
-            </div>
+            </div>}
+            </>
         )
     }
 }

@@ -34,7 +34,6 @@ class Field extends Component {
     }
 
     componentDidMount() {
-        this.props.highLightField('');
         this.onChangeHandlerDataTable = this.onChangeHandlerDataTable.bind(this);
     }
 
@@ -115,15 +114,19 @@ class Field extends Component {
 
         if ( field.type==='checkbox' ){
             return (
-                <PanelRow className={ this.highLightClass}>
-                    <ToggleControl
-                        disabled = {disabled}
-                        checked= { field.value==1 }
-                        help={ field.comment }
-                        label={ field.label }
-                        onChange={ ( fieldValue ) => this.onChangeHandler(fieldValue) }
-                    />
-                </PanelRow>
+                <>
+                    <PanelRow className={ this.highLightClass}>
+                        <ToggleControl
+                            disabled = {disabled}
+                            checked= { field.value==1 }
+
+                            label={ field.label }
+                            onChange={ ( fieldValue ) => this.onChangeHandler(fieldValue) }
+                        />
+
+                    </PanelRow>
+                    {field.comment && <PanelRow><div dangerouslySetInnerHTML={{__html:field.comment}}></div></PanelRow>}
+                </>
             );
         }
 
@@ -146,7 +149,7 @@ class Field extends Component {
                     />
                 </PanelRow>			);
         }
-        if ( field.type==='text' ){
+        if ( field.type==='text' || field.type==='email' ){
             return (
                 <PanelBody className={ this.highLightClass}>
                     <TextControl
@@ -173,9 +176,7 @@ class Field extends Component {
         }
 
         if ( field.type==='license' ){
-            /*
-             * There is no "PasswordControl" in WordPress react yet, so we create our own license field.
-             */
+            //There is no "PasswordControl" in WordPress react yet, so we create our own license field.
             let field = this.props.field;
             let fieldValue = field.value;
             let fields = this.props.fields;
@@ -245,6 +246,12 @@ class Field extends Component {
             return (
                <MixedContentScan dropItemFromModal={this.props.dropItemFromModal} handleModal={this.props.handleModal} field={this.props.field} fields={this.props.selectedFields}/>
             )
+        }
+
+        if ( field.type === 'letsencrypt/system-status' ) {
+                    return (
+                       <>System Status</>
+                    )
         }
 
         return (

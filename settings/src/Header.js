@@ -1,5 +1,7 @@
 import {Component} from "@wordpress/element";
 import { __ } from '@wordpress/i18n';
+import getAnchor from "./utils/getAnchor";
+
 
 class Header extends Component {
     constructor() {
@@ -12,9 +14,14 @@ class Header extends Component {
         this.handleClick = this.handleClick.bind(this);
     }
     render() {
-        let menu = rsssl_settings.menu;
         let plugin_url = rsssl_settings.plugin_url;
         let active_menu_item = this.props.selectedMainMenuItem;
+        var menu =Object.values(this.props.superMenu);
+        menu = menu.filter( item => item!==null );
+        //filter out hidden menus if not in the anchor
+        let anchor = getAnchor('main');
+        menu = menu.filter( item => !item.default_hidden || anchor===item.id);
+
         return (
             <div className="rsssl-header-container">
                 <div className="rsssl-header">
@@ -22,7 +29,7 @@ class Header extends Component {
                     <div className="rsssl-header-left">
                         <nav className="rsssl-header-menu">
                             <ul>
-                                {menu.map((menu_item, i) => <li key={i}><a className={ active_menu_item === menu_item.id ? 'active' : '' } onClick={ () => this.handleClick(menu_item.id) } href={"#" + menu_item.id.toString()} >{menu_item.label}</a></li>)}
+                                {menu.map((menu_item, i) => <li key={i}><a className={ active_menu_item === menu_item.id ? 'active' : '' } onClick={ () => this.handleClick(menu_item.id) } href={"#" + menu_item.id.toString()} >{menu_item.title}</a></li>)}
                             </ul>
                         </nav>
                     </div>

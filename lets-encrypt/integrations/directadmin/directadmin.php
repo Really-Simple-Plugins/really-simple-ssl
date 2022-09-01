@@ -25,10 +25,10 @@ class rsssl_directadmin {
 	 *
 	 */
 	public function __construct() {
-		$password                   = RSSSL_LE()->letsencrypt_handler->decode( rsssl_get_value( 'directadmin_password' ) );
-		$host                       = rsssl_get_value( 'directadmin_host' );
+		$password                   = RSSSL_LE()->letsencrypt_handler->decode( rsssl_get_option( 'directadmin_password' ) );
+		$host                       = rsssl_get_option( 'directadmin_host' );
 		$this->host                 = str_replace( array( 'http://', 'https://', ':2222' ), '', $host );
-		$this->login                = rsssl_get_value( 'directadmin_username' );
+		$this->login                = rsssl_get_option( 'directadmin_username' );
 		$this->password             = $password;
 		$this->ssl_installation_url = 'https://' . $this->host . "";
 	}

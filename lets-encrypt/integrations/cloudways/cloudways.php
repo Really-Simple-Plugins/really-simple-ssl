@@ -35,8 +35,8 @@ class rsssl_Cloudways {
 	 */
 
 	public function __construct( ) {
-		$this->email             = rsssl_get_value('cloudways_user_email');
-		$this->api_key = RSSSL_LE()->letsencrypt_handler->decode( rsssl_get_value('cloudways_api_key') );
+		$this->email             = rsssl_get_option('cloudways_user_email');
+		$this->api_key = RSSSL_LE()->letsencrypt_handler->decode( rsssl_get_option('cloudways_api_key') );
 		$this->ssl_installation_url = "";
 	}
 

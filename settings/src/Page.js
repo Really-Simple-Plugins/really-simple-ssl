@@ -6,19 +6,30 @@ import SettingsPage from "./Settings/SettingsPage";
 import Modal from "./Modal/Modal";
 import PagePlaceholder from './Placeholder/PagePlaceholder';
 import OnboardingModal from "./OnboardingModal";
+import getAnchor from "./utils/getAnchor";
 
 class Page extends Component {
     constructor() {
         super( ...arguments );
         this.pageProps=[];
         this.pageProps['licenseStatus'] = rsssl_settings.licenseStatus;
+
+        this.selectMenu = this.selectMenu.bind(this);
+        this.getSelectedMenu = this.getSelectedMenu.bind(this);
+        this.selectStep = this.selectStep.bind(this);
+        this.handleModal = this.handleModal.bind(this);
+        this.highLightField = this.highLightField.bind(this);
+        this.updateField = this.updateField.bind(this);
+        this.selectMainMenu = this.selectMainMenu.bind(this);
+        this.setPageProps = this.setPageProps.bind(this);
+        this.getPreviousAndNextMenuItems = this.getPreviousAndNextMenuItems.bind(this);
         this.state = {
-            selectedMainMenuItem: this.get_anchor('main') || 'dashboard',
-            selectedMenuItem: this.get_anchor('menu') || 'general',
+            selectedMainMenuItem: '',
+            selectedMenuItem: '',
             selectedStep: 1,
             highLightedField:'',
             fields:'',
-            menu:'',
+            menu:[],
             progress:'',
             isAPILoaded: false,
             pageProps:this.pageProps,
@@ -30,31 +41,51 @@ class Page extends Component {
         };
 
         this.getFields().then(( response ) => {
-            let fields = response.fields;
-            let menu = response.menu;
-            let progress = response.progress;
-            this.menu = menu;
-            this.progress = progress;
-            this.fields = fields;
-
+            this.superMenu = response.menu;
+            let selectedMainMenuItem =  getAnchor('main') || 'dashboard';
+            this.menu = this.getSelectedMenu(this.superMenu, selectedMainMenuItem);
+            let firstMenuItem = this.menu && this.menu.menu_items.hasOwnProperty(0) ? this.menu.menu_items[0].id : 'general';
+            this.fields = response.fields;
+            this.progress = response.progress;
             this.setState({
                 isAPILoaded: true,
-                fields: fields,
-                menu: menu,
-                progress: progress,
+                selectedMainMenuItem: selectedMainMenuItem,
+                selectedMenuItem: getAnchor('menu') || firstMenuItem,
+                fields: this.fields,
+                menu: this.menu,
+                progress: this.progress,
             }, () => {
                 this.getPreviousAndNextMenuItems();
             });
         });
+    }
 
-        this.selectMenu = this.selectMenu.bind(this);
-        this.selectStep = this.selectStep.bind(this);
-        this.handleModal = this.handleModal.bind(this);
-        this.highLightField = this.highLightField.bind(this);
-        this.updateField = this.updateField.bind(this);
-        this.selectMainMenu = this.selectMainMenu.bind(this);
-        this.setPageProps = this.setPageProps.bind(this);
-        this.getPreviousAndNextMenuItems = this.getPreviousAndNextMenuItems.bind(this);
+    componentDidMount(){
+        window.addEventListener('hashchange', () => {
+            let selectedMainMenuItem =  getAnchor('main') || 'dashboard';
+            this.menu = this.getSelectedMenu(this.superMenu, selectedMainMenuItem);
+            this.setState({
+                selectedMainMenuItem: selectedMainMenuItem,
+                selectedMenuItem: this.getDefaultMenuItem(),
+                menu:this.menu,
+            }, () => {
+                this.getPreviousAndNextMenuItems();
+            });
+        });
+    }
+
+    /*
+    * filter sidebar menu from complete menu structure
+    */
+
+    getSelectedMenu(superMenu, selectedMainMenuItem){
+        for (const key in superMenu) {
+            if ( superMenu.hasOwnProperty(key) ){
+                if ( superMenu[key] && superMenu[key].id === selectedMainMenuItem) {
+                    return superMenu[key];
+                }
+            }
+        }
     }
 
     getFields(){
@@ -100,9 +131,27 @@ class Page extends Component {
         });
     }
 
+    getDefaultMenuItem(){
+        let fallBackMenuItem = this.menu && this.menu.menu_items.hasOwnProperty(0) ? this.menu.menu_items[0].id : 'general';
+        let anchor = getAnchor('menu');
+        let foundAnchorInMenu = false;
+        //check if this anchor actually exists in our current submenu. If not, clear it
+        for (const key in this.menu.menu_items) {
+            if ( this.menu.menu_items.hasOwnProperty(key) &&  this.menu.menu_items[key].id === anchor ){
+                foundAnchorInMenu=true;
+            }
+        }
+        if ( !foundAnchorInMenu ) anchor = false;
+        return anchor ? anchor : fallBackMenuItem;
+    }
+
     selectMainMenu(selectedMainMenuItem){
+        this.menu = this.getSelectedMenu(this.superMenu, selectedMainMenuItem);
+        let selectedMenuItem = this.getDefaultMenuItem();
         this.setState({
-            selectedMainMenuItem :selectedMainMenuItem
+            menu : this.menu,
+            selectedMainMenuItem :selectedMainMenuItem,
+            selectedMenuItem :selectedMenuItem
         });
     }
 
@@ -125,6 +174,7 @@ class Page extends Component {
 
     highLightField(fieldId){
         //switch to settings page
+        console.log("highlight field id switch to settings page");
         this.selectMainMenu('settings');
         //get menu item based on fieldId
         let selectedField = null;
@@ -139,41 +189,9 @@ class Page extends Component {
      * Get anchor from URL
      * @returns {string|boolean}
      */
-    get_anchor = (level) => {
-        let url = window.location.href;
-        if ( url.indexOf('#') === -1) {
-            return false;
-        }
-
-        let queryString = url.split('#');
-        if (queryString.length === 1) {
-            return false;
-        }
-
-        let url_variables = queryString[1].split('#');
-        if (url_variables.length > 0) {
-            let anchor = url_variables[0];
-            if ( url.indexOf('/') === -1) {
-                return anchor;
-            } else {
-                let anchor_variables = anchor.split('/');
-                if (anchor_variables.length > 0){
-                    if (level === 'main') {
-                        return anchor_variables[0];
-                    } else if (anchor_variables.hasOwnProperty(1)) {
-                        return anchor_variables[1];
-                    } else {
-                        return false;
-                    }
-                }
-            }
-        }
-        return false;
-    }
 
     // Parses menu items and nested items in single array
     menuItemParser (parsedMenuItems, menuItems) {
-
         menuItems.forEach((menuItem) => {
             if(menuItem.visible) {
                 parsedMenuItems.push(menuItem.id);
@@ -190,24 +208,18 @@ class Page extends Component {
         let previousMenuItem;
         let nextMenuItem;
         const { menu_items: menuItems } = this.state.menu;
-
         const parsedMenuItems = [];
         this.menuItemParser(parsedMenuItems, menuItems);
-
         // Finds current menu item index
         const currentMenuItemIndex = parsedMenuItems.findIndex((menuItem) => menuItem === this.state.selectedMenuItem)
-
         if(currentMenuItemIndex !== -1) {
             previousMenuItem = parsedMenuItems[ currentMenuItemIndex === 0 ? '' : currentMenuItemIndex - 1];
             nextMenuItem = parsedMenuItems[ currentMenuItemIndex === parsedMenuItems.length - 1 ? '' : currentMenuItemIndex + 1];
-
             this.setState({
                 previousMenuItem: previousMenuItem ? previousMenuItem : parsedMenuItems[0],
                 nextMenuItem: nextMenuItem ? nextMenuItem : parsedMenuItems[parsedMenuItems.length - 1]
             });
         }
-
-
         return { nextMenuItem, previousMenuItem };
     }
 
@@ -223,7 +235,6 @@ class Page extends Component {
             modalData,
             dropItemFromModal,
         } = this.state;
-
         return (
             <div className="rsssl-wrapper">
                 <OnboardingModal setPageProps={this.setPageProps} />
@@ -235,13 +246,15 @@ class Page extends Component {
                             <Header
                                 selectedMainMenuItem={selectedMainMenuItem}
                                 selectMainMenu={this.selectMainMenu}
+                                superMenu = {this.superMenu}
                                 fields={fields} />
                             <div className={"rsssl-content-area rsssl-grid rsssl-" + selectedMainMenuItem}>
-                                { selectedMainMenuItem === 'settings' &&
+                                { selectedMainMenuItem !== 'dashboard' &&
                                     <SettingsPage
                                         dropItemFromModal={dropItemFromModal}
                                         pageProps={this.pageProps}
                                         handleModal={this.handleModal}
+                                        getDefaultMenuItem={this.getDefaultMenuItem}
                                         updateField={this.updateField}
                                         setPageProps={this.setPageProps}
                                         selectMenu={this.selectMenu}
@@ -250,6 +263,7 @@ class Page extends Component {
                                         highLightField={this.highLightField}
                                         highLightedField={this.highLightedField}
                                         selectedMenuItem={selectedMenuItem}
+                                        selectedMainMenuItem={selectedMainMenuItem}
                                         isAPILoaded={isAPILoaded}
                                         fields={fields}
                                         menu={menu}

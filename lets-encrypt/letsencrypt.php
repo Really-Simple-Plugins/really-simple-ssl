@@ -26,14 +26,14 @@ if (!function_exists('rsssl_letsencrypt_generation_allowed')) {
 		}
 
 		if ( $strict ) {
-			if ( isset($_GET['tab']) && $_GET['tab'] === 'letsencrypt' ){
+			if ( isset($_GET['letsencrypt'])){
 				return true;
 			}
 		} else {
 			if ( isset($_GET['page']) && ( $_GET['page'] === 'really-simple-security' ) ){
 				return true;
 			}
-			if ( isset($_GET['tab']) && $_GET['tab'] === 'letsencrypt' ){
+			if ( isset($_GET['letsencrypt']) ){
 				return true;
 			}
 		}
@@ -45,76 +45,67 @@ if (!function_exists('rsssl_letsencrypt_generation_allowed')) {
 		if ( isset($_POST['rsssl_le_nonce']) && wp_verify_nonce( $_POST['rsssl_le_nonce'], 'rsssl_save' )){
 			return true;
 		}
-
 		return false;
 	}
 }
 
-if ( rsssl_letsencrypt_generation_allowed() ) {
+class RSSSL_LETSENCRYPT {
+	private static $instance;
 
-	class RSSSL_LETSENCRYPT {
-		private static $instance;
+	public $wizard;
+	public $field;
+	public $config;
+	public $letsencrypt_handler;
 
-		public $wizard;
-		public $field;
-		public $config;
-		public $letsencrypt_handler;
+	private function __construct() {
 
-		private function __construct() {
-
-		}
-
-		public static function instance() {
-			if ( ! isset( self::$instance ) && ! ( self::$instance instanceof RSSSL_LETSENCRYPT ) ) {
-				self::$instance = new RSSSL_LETSENCRYPT;
-				self::$instance->setup_constants();
-				self::$instance->includes();
-				self::$instance->field               = new rsssl_field();
-				self::$instance->wizard              = new rsssl_wizard();
-				self::$instance->config              = new rsssl_config();
-				if (version_compare(PHP_VERSION, rsssl_le_php_version, '>')) {
-					self::$instance->letsencrypt_handler = new rsssl_letsencrypt_handler();
-				}
-			}
-
-			return self::$instance;
-		}
-
-		private function setup_constants() {
-			define('rsssl_le_url', plugin_dir_url(__FILE__));
-			define('rsssl_le_path', trailingslashit(plugin_dir_path(__FILE__)));
-			define('rsssl_le_wizard_path', trailingslashit(plugin_dir_path(__FILE__)).'/wizard/');
-		}
-
-		private function includes() {
-			require_once( rsssl_le_path . 'wizard/assets/icons.php' );
-			require_once( rsssl_le_path . 'wizard/class-field.php' );
-			require_once( rsssl_le_path . 'wizard/class-wizard.php' );
-			require_once( rsssl_le_path . 'wizard/config/class-config.php' );
-			require_once( rsssl_le_path . 'functions.php');
-
-			if (version_compare(PHP_VERSION, rsssl_le_php_version, '>=')) {
-				require_once( rsssl_le_path . 'wizard/notices.php' );
-				require_once( rsssl_le_path . 'class-letsencrypt-handler.php' );
-				require_once( rsssl_le_path . 'integrations/integrations.php' );
-			}
-
-		}
-
-		/**
-		 * Notice about possible compatibility issues with add ons
-		 */
-		public static function admin_notices() {
-
-		}
 	}
 
-	function RSSSL_LE() {
-		return RSSSL_LETSENCRYPT::instance();
+	public static function instance() {
+		if ( ! isset( self::$instance ) && ! ( self::$instance instanceof RSSSL_LETSENCRYPT ) ) {
+			self::$instance = new RSSSL_LETSENCRYPT;
+			self::$instance->setup_constants();
+			self::$instance->includes();
+			self::$instance->config = new rsssl_config();
+			if (rsssl_letsencrypt_generation_allowed() && version_compare(PHP_VERSION, rsssl_le_php_version, '>')) {
+				self::$instance->letsencrypt_handler = new rsssl_letsencrypt_handler();
+			}
+		}
+
+		return self::$instance;
 	}
 
-	add_action( 'plugins_loaded', 'RSSSL_LE', 9 );
+	private function setup_constants() {
+		define('rsssl_le_url', plugin_dir_url(__FILE__));
+		define('rsssl_le_path', trailingslashit(plugin_dir_path(__FILE__)));
+		define('rsssl_le_wizard_path', trailingslashit(plugin_dir_path(__FILE__)).'/wizard/');
+	}
+
+	private function includes() {
+		require_once( rsssl_le_path . 'wizard/config/class-config.php' );
+		require_once( rsssl_le_path . 'functions.php');
+
+		if ( rsssl_letsencrypt_generation_allowed() && version_compare(PHP_VERSION, rsssl_le_php_version, '>=')) {
+			require_once( rsssl_le_path . 'wizard/notices.php' );
+			require_once( rsssl_le_path . 'class-letsencrypt-handler.php' );
+			require_once( rsssl_le_path . 'integrations/integrations.php' );
+		}
+
+	}
+
+	/**
+	 * Notice about possible compatibility issues with add ons
+	 */
+	public static function admin_notices() {
+
+	}
 }
+
+function RSSSL_LE() {
+	return RSSSL_LETSENCRYPT::instance();
+}
+
+add_action( 'plugins_loaded', 'RSSSL_LE', 9 );
 
 
 class RSSSL_RESPONSE

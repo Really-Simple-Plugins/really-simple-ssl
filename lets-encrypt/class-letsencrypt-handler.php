@@ -56,7 +56,7 @@ class rsssl_letsencrypt_handler {
 			Connector::getInstance()->useStagingServer( false );
 			Logger::getInstance()->setDesiredLevel( Logger::LEVEL_DISABLED );
 
-			if ( !rsssl_get_value( 'disable_ocsp' ) ) {
+			if ( !rsssl_get_option( 'disable_ocsp' ) ) {
 				Certificate::enableFeatureOCSPMustStaple();
 			}
 
@@ -135,18 +135,38 @@ class rsssl_letsencrypt_handler {
 	 * Cleanup. If user did not consent to storage, all password fields should be removed on activation, unless they're needed for renewals
 	 */
 	public function cleanup_on_ssl_activation(){
-		if (!current_user_can('manage_options')) return;
-		$delete_credentials = !rsssl_get_value('store_credentials');
+		if ( !current_user_can('manage_security') ) {
+			return;
+		}
+		$delete_credentials = !rsssl_get_option('store_credentials');
+		//get le menu items
+		$menu_items = rsssl_menu();
+		//filter out non LE stuff
+		$le_menu_items = [];
+		foreach ($menu_items as $menu_item ) {
+			if ( $menu_item['id'] === 'letsencrypt' ) {
+				$le_menu_items = wp_list_pluck($menu_item['menu_items'], 'id');
+			}
+		}
+
+		//get all fields with one of these menu id's
+		$fields = rsssl_fields();
+		$le_fields = [];
+		foreach ( $fields as $index => $field ) {
+			if ( in_array( $field['menu_id'], $le_menu_items )) {
+				$le_fields[] = $field;
+			}
+		}
+
 		if ( !$this->certificate_automatic_install_possible() || !$this->certificate_install_required() || $delete_credentials ) {
-			$fields = RSSSL_LE()->config->fields;
-			$fields = array_filter($fields, function($i){
+			$le_fields = array_filter($le_fields, function($i){
 				return isset( $i['type'] ) && $i['type'] === 'password';
 			});
-			$options = get_option( 'rsssl_options_lets-encrypt' );
-			foreach ($fields as $fieldname => $field ) {
-				unset($options[$fieldname]);
+			$options = get_option( 'rsssl_options' );
+			foreach ($le_fields as $index => $field ) {
+				unset($options[$field['id']]);
 			}
-			update_option( 'rsssl_options_lets-encrypt', $options, false );
+			update_option( 'rsssl_options', $options, false );
 		}
 	}
 
@@ -665,7 +685,7 @@ class rsssl_letsencrypt_handler {
 					        }
 					    } else {
 					    	//if OCSP is not disabled yet, and the order status is not invalid, we disable ocsp, and try again.
-					    	if ( !rsssl_get_value( 'disable_ocsp' ) ) {
+					    	if ( !rsssl_get_option( 'disable_ocsp' ) ) {
 							    RSSSL_LE()->field->save_field('disable_ocsp', true);
 							    $response->action = 'retry';
 							    $response->status = 'warning';
@@ -921,7 +941,7 @@ class rsssl_letsencrypt_handler {
 	 */
 	public function account_email(){
 	    //don't use the default value: we want users to explicitly enter a value
-	    return rsssl_get_value('email_address', false);
+	    return rsssl_get_option('email_address', false);
     }
 	/**
      * Get terms accepted
@@ -930,7 +950,7 @@ class rsssl_letsencrypt_handler {
 
 	public function terms_accepted(){
 	    //don't use the default value: we want users to explicitly enter a value
-	    $accepted =  rsssl_get_value('accept_le_terms', false);
+	    $accepted =  rsssl_get_option('accept_le_terms', false);
 		if ( $accepted ) {
 			$status = 'success';
 			$action = 'continue';
@@ -973,7 +993,7 @@ class rsssl_letsencrypt_handler {
 		$subjects[] = $domain;
 		//don't offer aliasses for subdomains
 		if ( !rsssl_is_subdomain() ) {
-			if (rsssl_get_value( 'include_alias' )) {
+			if (rsssl_get_option( 'include_alias' )) {
 				//main is www.
 				if ( strpos( $domain, 'www.' ) !== false ) {
 					$alias_domain = $root;
@@ -1703,25 +1723,7 @@ class rsssl_letsencrypt_handler {
 	 */
 
 	public function encode( $string ) {
-		if ( strlen(trim($string)) === 0 ) {
-			return $string;
-		}
 
-		if (strpos( $string , 'rsssl_') !== FALSE ) {
-			return $string;
-		}
-
-		$key = $this->get_key();
-		if ( !$key ) {
-			$key = $this->set_key();
-		}
-
-		$ivlength = openssl_cipher_iv_length('aes-256-cbc');
-		$iv = openssl_random_pseudo_bytes($ivlength);
-		$ciphertext_raw = openssl_encrypt($string, 'aes-256-cbc', $key, 0, $iv);
-		$key = base64_encode( $iv.$ciphertext_raw );
-
-		return 'rsssl_'.$key;
 	}
 
 	/**
@@ -1736,7 +1738,7 @@ class rsssl_letsencrypt_handler {
 		}
 
 		if (strpos( $string , 'rsssl_') !== FALSE ) {
-			$key = $this->get_key();
+			$key = get_site_option( 'rsssl_key' );
 			$string = str_replace('rsssl_', '', $string);
 
 			// To decrypt, split the encrypted data from our IV
@@ -1751,25 +1753,5 @@ class rsssl_letsencrypt_handler {
 		//not encoded, return
 		return $string;
 	}
-
-	/**
-	 * Set a new key
-	 * @return string
-	 */
-
-	private function set_key(){
-		update_site_option( 'rsssl_key' , time() );
-		return get_site_option('rsssl_key');
-	}
-
-	/**
-	 * Get a decode/encode key
-	 * @return false|string
-	 */
-
-	private function get_key() {
-		return get_site_option( 'rsssl_key' );
-	}
-
 
 }

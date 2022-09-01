@@ -19,8 +19,6 @@ class SettingsPage extends Component {
         super( ...arguments );
         this.state = {
             fields:'',
-            menu:'',
-            menuItems:'',
             isAPILoaded: false,
             changedFields:'',
             progress:''
@@ -36,54 +34,47 @@ class SettingsPage extends Component {
         this.updateFieldsListWithConditions = this.updateFieldsListWithConditions.bind(this);
         this.filterMenuItems = this.filterMenuItems.bind(this);
         this.showSavedSettingsNotice = this.showSavedSettingsNotice.bind(this);
-
-        this.props.menu.menu_items = this.addVisibleToMenuItems(this.props.menu.menu_items);
-        this.updateFieldsListWithConditions();
-        let menu = this.props.menu;
         let fields = this.props.fields;
         let progress = this.props.progress;
         //if count >1, it's a wizard
-        let menuItems = menu.menu_items;
         let changedFields = [];
         let selectedMenuItem = this.props.selectedMenuItem;
-        this.menu = menu;
-        this.menuItems = menuItems;
-        this.fields = fields;
         this.selectedMenuItem = selectedMenuItem;
         this.changedFields = changedFields;
         this.setState({
             isAPILoaded: true,
             fields: this.props.fields,
-            menu: this.props.menu,
             progress: this.props.progress,
-            menuItems:menuItems,
             changedFields: changedFields,
+            selectedMainMenuItem: this.props.selectedMainMenuItem,
         });
     }
 
     addVisibleToMenuItems(menuItems) {
         const newMenuItems = menuItems;
-        for (const [index, value] of menuItems.entries()) {
-            newMenuItems[index].visible = true;
-            if(value.hasOwnProperty('menu_items')) {
-                newMenuItems[index].menu_items = this.addVisibleToMenuItems(value.menu_items);
+        for (const [index, menuItem] of menuItems.entries()) {
+            menuItem.visible = true;
+            if( menuItem.hasOwnProperty('menu_items') ) {
+                menuItem.menu_items = this.addVisibleToMenuItems(menuItem.menu_items);
             }
+            newMenuItems[index] = menuItem;
         }
+
         return newMenuItems;
     }
 
     filterMenuItems(menuItems) {
         const newMenuItems = menuItems;
-        for (const [index, value] of menuItems.entries()) {
+        for (const [index, menuItem] of menuItems.entries()) {
             const searchResult = this.props.fields.filter((field) => {
-                return (field.menu_id === value.id && field.visible)
+                return (field.menu_id === menuItem.id && field.visible)
             });
             if(searchResult.length === 0) {
-                value.visible = false;
+                newMenuItems[index].visible = false;
             } else {
-                value.visible = true;
-                if(value.hasOwnProperty('menu_items')) {
-                    newMenuItems[index].menu_items = this.filterMenuItems(value.menu_items);
+                newMenuItems[index].visible = true;
+                if(menuItem.hasOwnProperty('menu_items')) {
+                    newMenuItems[index].menu_items = this.filterMenuItems(menuItem.menu_items);
                 }
             }
         }
@@ -92,16 +83,6 @@ class SettingsPage extends Component {
 
     updateFieldsListWithConditions(){
         for (const field of this.props.fields){
-         console.log(field.id);
-         if (field.hasOwnProperty('react_conditions')) {
-            console.log("has react conditions");
-                     if (this.validateConditions(field.react_conditions, this.props.fields)) {
-                         console.log(field.react_conditions);
-                         console.log("react conditinos validated");
-                     }
-         }
-
-
           let enabled = !(field.hasOwnProperty('react_conditions') && !this.validateConditions(field.react_conditions, this.props.fields));
           this.props.fields[this.props.fields.indexOf(field)].conditionallyDisabled = !enabled;
         }
@@ -209,36 +190,37 @@ class SettingsPage extends Component {
 
     render() {
         const {
-            menu,
             progress,
             selectedStep,
             isAPILoaded,
             changedFields,
         } = this.state;
 
+
         if ( ! isAPILoaded ) {
             return (
                 <Placeholder></Placeholder>
             );
         }
-
+        this.props.menu.menu_items = this.addVisibleToMenuItems(this.props.menu.menu_items);
+        this.updateFieldsListWithConditions();
         let fieldsUpdateComplete = changedFields.length === 0;
-
         return (
             <Fragment>
                 <Menu
                     isAPILoaded={isAPILoaded}
-                    menuItems={this.state.menu.menu_items}
-                    menu={this.menu}
+                    menu={this.props.menu}
                     selectMenu={this.props.selectMenu}
                     selectStep={this.props.selectStep}
                     selectedStep={this.props.selectedStep}
                     selectedMenuItem={this.props.selectedMenuItem}
+                    selectedMainMenuItem={this.props.selectedMainMenuItem}
                     getPreviousAndNextMenuItems={this.props.getPreviousAndNextMenuItems}
                 />
                 <Settings
                     dropItemFromModal={this.props.dropItemFromModal}
                     selectMenu={this.props.selectMenu}
+                    getDefaultMenuItem={this.props.getDefaultMenuItem}
                     handleModal={this.props.handleModal}
                     showSavedSettingsNotice={this.showSavedSettingsNotice}
                     updateField={this.props.updateField}
@@ -248,13 +230,14 @@ class SettingsPage extends Component {
                     highLightField={this.props.highLightField}
                     highLightedField={this.props.highLightedField}
                     isAPILoaded={isAPILoaded}
-                    fields={this.fields}
+                    fields={this.props.fields}
                     progress={progress}
                     saveChangedFields={this.saveChangedFields}
-                    menu={menu}
+                    menu={this.props.menu}
                     save={this.save}
                     saveAndContinue={this.saveAndContinue}
                     selectedMenuItem={this.props.selectedMenuItem}
+                    selectedMainMenuItem={this.props.selectedMainMenuItem}
                     selectedStep={this.props.selectedStep}
                     previousStep = {this.wizardNextPrevious}
                     nextMenuItem = {this.props.nextMenuItem}

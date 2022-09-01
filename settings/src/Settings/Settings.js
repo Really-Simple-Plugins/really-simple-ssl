@@ -66,18 +66,6 @@ class Settings extends Component {
             notices.push(notice.help);
         }
         notices = notices.filter(notice => notice.label.toLowerCase()!=='completed');
-
-        let selectedMenuItemObject;
-        for (const item of menu.menu_items){
-            if (item.id === selectedMenuItem ) {
-                selectedMenuItemObject = item;
-            } else if (item.menu_items) {
-                selectedMenuItemObject = item.menu_items.filter(menuItem => menuItem.id === selectedMenuItem)[0];
-            }
-            if ( selectedMenuItemObject ) {
-                break;
-            }
-        }
         return (
             <Fragment>
                 <div className="rsssl-wizard-settings rsssl-column-2">
@@ -85,6 +73,7 @@ class Settings extends Component {
                         <SettingsGroup
                             dropItemFromModal={this.props.dropItemFromModal}
                             selectMenu={this.props.selectMenu}
+                            menu={this.props.menu}
                             handleModal={this.props.handleModal}
                             showSavedSettingsNotice={this.props.showSavedSettingsNotice}
                             updateField={this.props.updateField}
@@ -95,7 +84,7 @@ class Settings extends Component {
                             index={i}
                             highLightField={this.props.highLightField}
                             highLightedField={this.props.highLightedField}
-                            selectedMenuItem={selectedMenuItemObject}
+                            selectedMenuItem={selectedMenuItem}
                             saveChangedFields={this.props.saveChangedFields}
                             group={group}
                             fields={selectedFields}/>)

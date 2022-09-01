@@ -58,7 +58,6 @@ export const getOnboarding = () => {
 			'X-WP-Nonce': rsssl_settings.nonce,
 		}
 	}
-	console.log("run get onboarding");
 	return axios.get(rsssl_settings.site_url+'reallysimplessl/v1/onboarding', config);
 }
 
