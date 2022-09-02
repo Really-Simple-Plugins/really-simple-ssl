@@ -123,7 +123,7 @@ class LearningMode extends Component {
         field.action = 'delete';
         let saveFields = [];
         saveFields.push(field);
-        this.props.updateField(field);
+        this.props.updateField(field.id, field.value);
         rsssl_api.setFields(saveFields).then(( response ) => {});
     }
 

@@ -6,32 +6,7 @@ rsssl_progress_add('directories');
 <div class="rsssl-section">
 
 
-    <div class="rsssl-hidden rsssl-check_challenge_directory rsssl-show-on-error">
-        <h2>
-			<?php _e("Create a challenge directory", "really-simple-ssl")
-			      . RSSSL()->rsssl_help->get_help_tip(__("The challenge directory is used to verify the domain ownership.", "really-simple-ssl") ); ?>
-        </h2>
-        <p>
-			<?php _e("Navigate in FTP or File Manager to the root of your WordPress installation:", "really-simple-ssl"); ?>
-        </p>
-        <ul>
-            <li class="rsssl-tooltip-icon dashicons-before rsssl-icon arrow-right-alt2 dashicons-arrow-right-alt2">
-				<?php _e('Create a folder called “.well-known”', 'really-simple-ssl'); ?>
-            </li>
-            <li class="rsssl-tooltip-icon dashicons-before rsssl-icon arrow-right-alt2 dashicons-arrow-right-alt2">
-				<?php _e('Inside the folder called “.well-known” create a new folder called “acme-challenge”, with 644 writing permissions.', 'really-simple-ssl'); ?>
-            </li>
-            <li class="rsssl-tooltip-icon dashicons-before rsssl-icon arrow-right-alt2 dashicons-arrow-right-alt2">
-				<?php _e('Click the refresh button.', 'really-simple-ssl'); ?>
-            </li>
-        </ul>
-        <h2>
-		    <?php _e("Or you can switch to DNS verification", "really-simple-ssl"); ?>
-        </h2>
-        <p><?php _e("If the challenge directory cannot be created, you can either remove the server limitation, or change to DNS verification.", "really-simple-ssl"); ?></p><br>
-        <button class="button button-default" name="rsssl-switch-to-dns"><?php _e("Switch to DNS verification", "really-simple-ssl"); ?></button>
 
-    </div>
 
     <div class="rsssl-hidden rsssl-check_key_directory rsssl-show-on-error">
         <h3>

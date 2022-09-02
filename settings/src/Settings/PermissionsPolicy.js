@@ -38,7 +38,7 @@ class PermissionsPolicy extends Component {
         });
         let saveFields = [];
         saveFields.push(field);
-        this.props.updateField(field);
+        this.props.updateField(field.id, field.value);
         rsssl_api.setFields(saveFields).then(( response ) => {
             //this.props.showSavedSettingsNotice();
         });

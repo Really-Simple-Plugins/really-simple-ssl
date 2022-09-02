@@ -3648,6 +3648,18 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _utils_api__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../utils/api */ "./src/utils/api.js");
+/* harmony import */ var _wordpress_data__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @wordpress/data */ "@wordpress/data");
+/* harmony import */ var _wordpress_data__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_wordpress_data__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var _Settings_Notices__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../Settings/Notices */ "./src/Settings/Notices.js");
+/* harmony import */ var _utils_sleeper_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../utils/sleeper.js */ "./src/utils/sleeper.js");
+/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @wordpress/components */ "@wordpress/components");
+/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(_wordpress_components__WEBPACK_IMPORTED_MODULE_6__);
+
+
+
+
+
 
 
 
@@ -3665,23 +3677,45 @@ const Directories = props => {
   }
 
   const handleSwitchToDNS = () => {
-    return rsssl_api.runTest('switch_to_dns', 'refresh').then(response => {
-      const notice = dispatch('core/notices').createNotice('success', (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Switched to DNS', 'really-simple-ssl'), {
+    props.updateField('verification_type', 'DNS');
+    return _utils_api__WEBPACK_IMPORTED_MODULE_2__.runLetsEncryptTest('switch_to_dns', 'dns').then(response => {
+      props.selectMenu('le-dns-verification');
+      const notice = (0,_wordpress_data__WEBPACK_IMPORTED_MODULE_3__.dispatch)('core/notices').createNotice('success', (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Switched to DNS', 'really-simple-ssl'), {
         __unstableHTML: true,
         id: 'rsssl_switched_to_dns',
         type: 'snackbar',
         isDismissible: true
-      }).then(sleeper(3000)).then(response => {
-        dispatch('core/notices').removeNotice('rsssl_switched_to_dns');
+      }).then((0,_utils_sleeper_js__WEBPACK_IMPORTED_MODULE_5__["default"])(3000)).then(response => {
+        (0,_wordpress_data__WEBPACK_IMPORTED_MODULE_3__.dispatch)('core/notices').removeNotice('rsssl_switched_to_dns');
       });
     });
   };
 
-  console.log(action);
-  return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, action.status === 'error' && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("h4", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Next step", "really-simple-ssl"))), (action.action === 'check_challenge_directory' || action.action === 'challenge_directory_reachable') && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("If the challenge directory cannot be created, or is not reachable, you can either remove the server limitation, or change to DNS verification.", "really-simple-ssl")), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(Button, {
+  const addHelp = () => {
+    let help = {};
+    help.label = 'default';
+    help.text = 'test';
+    help.title = 'title';
+    props.updateField(props.field.id, props.field.value, help);
+  };
+
+  if (action.action === 'challenge_directory_reachable' && action.status === 'error') {
+    addHelp((0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("The challenge directory is used to verify the domain ownership.", "really-simple-ssl"));
+  }
+
+  return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, action.status === 'error' && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("h4", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Next step", "really-simple-ssl"))), (action.action === 'check_challenge_directory' || action.action === 'challenge_directory_reachable') && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("If the challenge directory cannot be created, or is not reachable, you can either remove the server limitation, or change to DNS verification.", "really-simple-ssl")), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_6__.Button, {
     variant: "secondary",
-    onClick: undefined.handleSwitchToDNS
-  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Switch to DNS verification', 'really-simple-ssl'))));
+    onClick: () => handleSwitchToDNS()
+  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Switch to DNS verification', 'really-simple-ssl'))), action.action === 'check_challenge_directory' && action.status === 'error' && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("h4", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Create a challenge directory", "really-simple-ssl"), addHelp((0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("The challenge directory is used to verify the domain ownership.", "really-simple-ssl"))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Navigate in FTP or File Manager to the root of your WordPress installation:", "really-simple-ssl")), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("ul", null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("li", {
+    class: "rsssl-tooltip-icon dashicons-before rsssl-icon arrow-right-alt2 dashicons-arrow-right-alt2"
+  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Create a folder called “.well-known”', 'really-simple-ssl')), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("li", {
+    class: "rsssl-tooltip-icon dashicons-before rsssl-icon arrow-right-alt2 dashicons-arrow-right-alt2"
+  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Inside the folder called “.well-known” create a new folder called “acme-challenge”, with 644 writing permissions.', 'really-simple-ssl')), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("li", {
+    class: "rsssl-tooltip-icon dashicons-before rsssl-icon arrow-right-alt2 dashicons-arrow-right-alt2"
+  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Click the refresh button.', 'really-simple-ssl'))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("h2", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Or you can switch to DNS verification", "really-simple-ssl")), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("If the challenge directory cannot be created, you can either remove the server limitation, or change to DNS verification.", "really-simple-ssl")), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
+    class: "button button-default",
+    name: "rsssl-switch-to-dns"
+  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Switch to DNS verification", "really-simple-ssl"))));
 };
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Directories);
@@ -3862,6 +3896,9 @@ const LetsEncrypt = props => {
       __html: action.description
     }
   }))))), props.field.id === 'directories' && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_Directories__WEBPACK_IMPORTED_MODULE_3__["default"], {
+    selectMenu: props.selectMenu,
+    field: props.field,
+    updateField: props.updateField,
     progress: progress,
     action: props.field.actions[actionIndex]
   })));
@@ -4702,12 +4739,17 @@ class Page extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Component {
    */
 
 
-  updateField(field) {
+  updateField(id, value, help) {
+    console.log("update " + id + ' ' + value);
     let fields = this.fields;
 
     for (const fieldItem of fields) {
-      if (fieldItem.id === field.id) {
-        fieldItem.value = field.value;
+      if (fieldItem.id === id) {
+        fieldItem.value = value;
+
+        if (help) {
+          fieldItem.help = help;
+        }
       }
     }
 
@@ -5064,7 +5106,7 @@ class Field extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Component {
     field.updateItemId = clickedItem.id;
     let saveFields = [];
     saveFields.push(field);
-    this.props.updateField(field);
+    this.props.updateField(field.id, field.value);
     _utils_api__WEBPACK_IMPORTED_MODULE_3__.setFields(saveFields).then(response => {//this.props.showSavedSettingsNotice();
     });
   }
@@ -5171,7 +5213,6 @@ class Field extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Component {
         setPageProps: this.props.setPageProps,
         fieldsUpdateComplete: this.props.fieldsUpdateComplete,
         index: this.props.index,
-        fields: fields,
         field: field,
         fieldValue: fieldValue,
         saveChangedFields: this.props.saveChangedFields,
@@ -5253,6 +5294,9 @@ class Field extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Component {
     if (field.type === 'letsencrypt') {
       return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_LetsEncrypt_LetsEncrypt__WEBPACK_IMPORTED_MODULE_6__["default"], {
         key: field.id,
+        selectMenu: this.props.selectMenu,
+        updateField: this.props.updateField,
+        fiels: fields,
         field: field,
         handleNextButtonDisabled: this.props.handleNextButtonDisabled
       });
@@ -5465,7 +5509,7 @@ class LearningMode extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Compo
     field.action = 'delete';
     let saveFields = [];
     saveFields.push(field);
-    this.props.updateField(field);
+    this.props.updateField(field.id, field.value);
     _utils_api__WEBPACK_IMPORTED_MODULE_5__.setFields(saveFields).then(response => {});
   }
 
@@ -6140,7 +6184,7 @@ class PermissionsPolicy extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.
     });
     let saveFields = [];
     saveFields.push(field);
-    this.props.updateField(field);
+    this.props.updateField(field.id, field.value);
     _utils_api__WEBPACK_IMPORTED_MODULE_5__.setFields(saveFields).then(response => {//this.props.showSavedSettingsNotice();
     });
   }
@@ -6509,6 +6553,7 @@ class SettingsGroup extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Comp
     }, activeGroup.intro), selectedFields.map((field, i) => (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_Field__WEBPACK_IMPORTED_MODULE_1__["default"], {
       key: i,
       index: i,
+      selectMenu: this.props.selectMenu,
       dropItemFromModal: this.props.dropItemFromModal,
       handleNextButtonDisabled: this.props.handleNextButtonDisabled,
       handleModal: this.props.handleModal,
@@ -6702,9 +6747,19 @@ class SettingsPage extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Compo
   }
 
   updateFieldsListWithConditions() {
+    console.log("update fields list with conditinos");
+    console.log(this.props.fields);
+
     for (const field of this.props.fields) {
       let enabled = !(field.hasOwnProperty('react_conditions') && !this.validateConditions(field.react_conditions, this.props.fields));
       this.props.fields[this.props.fields.indexOf(field)].conditionallyDisabled = !enabled;
+
+      if (!enabled && field.type === 'letsencrypt') {
+        console.log("drop field " + field.id);
+        this.props.fields[this.props.fields.indexOf(field)].visible = false;
+      } else {
+        this.props.fields[this.props.fields.indexOf(field)].visible = true;
+      }
     }
 
     this.filterMenuItems(this.props.menu.menu_items);
@@ -6772,22 +6827,26 @@ class SettingsPage extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Compo
   }
 
   validateConditions(conditions, fields) {
-    let relation = conditions.relation === 'OR' ? 'OR' : 'AND';
-    delete conditions['relation'];
+    console.log(conditions);
+    let relation = conditions.relation === 'OR' ? 'OR' : 'AND'; //         delete conditions['relation'];
+
     let conditionApplies = true;
 
     for (const key in conditions) {
       if (conditions.hasOwnProperty(key)) {
-        let invert = key.indexOf('!') === 0;
         let thisConditionApplies = true;
         let subConditionsArray = conditions[key];
 
         if (subConditionsArray.hasOwnProperty('relation')) {
           thisConditionApplies = this.validateConditions(subConditionsArray, fields);
         } else {
-          for (const conditionField in subConditionsArray) {
+          for (let conditionField in subConditionsArray) {
+            console.log("index of ! " + conditionField.indexOf('!'));
+            let invert = conditionField.indexOf('!') === 0;
+
             if (subConditionsArray.hasOwnProperty(conditionField)) {
               let conditionValue = subConditionsArray[conditionField];
+              conditionField = conditionField.replace('!', '');
               let conditionFields = fields.filter(field => field.id === conditionField);
 
               if (conditionFields.hasOwnProperty(0)) {
@@ -6796,14 +6855,17 @@ class SettingsPage extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Compo
                   conditionValue = +conditionValue;
                   thisConditionApplies = actualValue === conditionValue;
                 } else {
-                  thisConditionApplies = conditionFields[0].value === conditionValue;
+                  thisConditionApplies = conditionFields[0].value.toLowerCase() === conditionValue.toLowerCase();
                 }
               }
+            } else {
+              console.log("property not found " + conditionField);
             }
-          }
 
-          if (invert) {
-            thisConditionApplies = !thisConditionApplies;
+            if (invert) {
+              console.log("invert condition");
+              thisConditionApplies = !thisConditionApplies;
+            }
           }
         }
 

@@ -91,8 +91,17 @@ if ( ! class_exists( "rsssl_wizard" ) ) {
 			return $steps;
 		}
 
+		/**
+         * Switch to DNS verification
+		 * @return []
+		 */
         public function switch_to_dns(){
-	        update_option('rsssl_verification_type', 'DNS', false);
+            x_log("switch to dns");
+	        rsssl_update_option('verification_type', 'DNS');
+	        rsssl_progress_add('directories');
+	        return array(
+		        'success' => true,
+	        );
         }
 
 
@@ -106,7 +115,7 @@ if ( ! class_exists( "rsssl_wizard" ) ) {
              */
 			if (isset($_GET['reset-letsencrypt'])) {
 			    RSSSL_LE()->letsencrypt_handler->clear_order();
-				delete_option('rsssl_verification_type');
+				rsssl_update_option('verification_type', false );
 				delete_option('rsssl_skip_dns_check' );
 				delete_option('rsssl_skip_challenge_directory_request' );
 				delete_option('rsssl_force_plesk' );
@@ -118,19 +127,8 @@ if ( ! class_exists( "rsssl_wizard" ) ) {
 				exit;
 			}
 
-		    if (isset($_POST['rsssl-switch-to-dns'])) {
-			    update_option('rsssl_verification_type', 'DNS', false);
-			    $step = $this->step();
-			    rsssl_progress_add('directories');
-			    //if we're in step directories, skip to DNS step
-			    if ( $step == 3) {
-				    wp_redirect(rsssl_letsencrypt_wizard_url().'&step=4');
-				    exit;
-			    }
-            }
-
 		    if (isset($_POST['rsssl-switch-to-directory'])) {
-			    delete_option('rsssl_verification_type' );
+			    rsssl_update_option('verification_type', false );
             }
 
 		    if (isset($_POST['rsssl-skip-dns-check'])) {
@@ -356,10 +354,9 @@ if ( ! class_exists( "rsssl_wizard" ) ) {
 	        if ( ! current_user_can('manage_security') ) {
 		        $error = true;
 	        }
-
 	        switch($test){
                 case 'switch_to_dns':
-                    $this->switch_to_dns();
+                    return $this->switch_to_dns();
 		        case 'rsssl_php_requirement_met':
 		        case 'certificate_status':
 		        case 'curl_exists':
@@ -376,7 +373,7 @@ if ( ! class_exists( "rsssl_wizard" ) ) {
 		        case 'get_dns_token':
 		        case 'terms_accepted':
 		        case 'create_bundle_or_renew':
-                return $this->get_installation_progress($data, $test, $request);
+                    return $this->get_installation_progress($data, $test, $request);
             }
         }
 
@@ -463,7 +460,7 @@ if ( ! class_exists( "rsssl_wizard" ) ) {
             $user_info = get_userdata(get_current_user_id());
             $email = urlencode($user_info->user_email);
             $name = urlencode($user_info->display_name);
-			$verification_type = get_option('rsssl_verification_type') === 'DNS' ? 'DNS' : 'DIR';
+			$verification_type = rsssl_get_option('verification_type') === 'DNS' ? 'DNS' : 'DIR';
 			$skip_dns_check = get_option('rsssl_skip_dns_check' ) ? 'Skip DNS check' : 'Do DNS check';
 			$skip_directory_check = get_option('rsssl_skip_challenge_directory_request' ) ? 'Skip directory check' : 'Do directory check';
 			$hosting_company = rsssl_get_other_host();

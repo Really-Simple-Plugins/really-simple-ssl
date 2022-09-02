@@ -41,6 +41,11 @@ function rsssl_le_add_fields($fields) {
 
 	$fields =  array_merge($fields,  [
 			[
+				'id' => 'verification_type',
+				'menu_id' => 'le-system-status',
+				'type' =>  'hidden',
+			],
+			[
 				'id'      => 'system-status',
 				'menu_id' => 'le-system-status',
 				"intro"   => __( "Detected status of your setup.", "really-simple-ssl" ),
@@ -412,8 +417,6 @@ function rsssl_le_add_fields($fields) {
 			[
 				'id'                 => 'directories',
 				'menu_id'            => 'le-directories',
-				'callback'           => 'directories.php',
-				'callback_condition' => 'rsssl_do_local_lets_encrypt_generation',
 				'type'               => 'letsencrypt',
 				'actions'            => [
 					[
@@ -454,18 +457,16 @@ function rsssl_le_add_fields($fields) {
 						'speed'       => 'normal',
 					],
 				],
-				'server_conditions' => [
+				'react_conditions' => [
 					'relation' => 'AND',
 					[
-						'rsssl_dns_verification_required()' => false,
+						'!verification_type' => 'dns',
 					]
 				],
 			],
 			[
 				'id'                 => 'dns-verification',
 				'menu_id'            => 'le-dns-verification',
-				'callback'           => 'dns-verification.php',
-				'callback_condition' => 'rsssl_dns_verification_required',
 				'type'               => 'letsencrypt',
 				'actions' => [
 					[
@@ -481,19 +482,23 @@ function rsssl_le_add_fields($fields) {
 						'speed' => 'normal',
 					],
 				],
-				'server_conditions' => [
+				'react_conditions' => [
 					'relation' => 'AND',
 					[
-						'rsssl_dns_verification_required()' => true,
+						'verification_type' => 'dns',
 					]
 				],
 			],
 			[
 				'id'                 => 'generation',
 				'menu_id'            => 'le-generation',
-				'callback'           => 'generation.php',
-				'callback_condition' => 'rsssl_do_local_lets_encrypt_generation',
 				'type'               => 'letsencrypt',
+//				'server_conditions' => [
+//					'relation' => 'AND',
+//					[
+//						'rsssl_do_local_lets_encrypt_generation' => true,
+//					]
+//				],
 				'actions' => [
 					[
 						'description' => __("Checking if Terms & Conditions are accepted...", "really-simple-ssl"),

@@ -73,7 +73,7 @@ class Field extends Component {
         field.updateItemId = clickedItem.id;
         let saveFields = [];
         saveFields.push(field);
-        this.props.updateField(field);
+        this.props.updateField(field.id, field.value);
         rsssl_api.setFields(saveFields).then(( response ) => {
             //this.props.showSavedSettingsNotice();
         });
@@ -184,7 +184,7 @@ class Field extends Component {
             let fieldValue = field.value;
             let fields = this.props.fields;
             return (
-                <License setPageProps={this.props.setPageProps} fieldsUpdateComplete = {this.props.fieldsUpdateComplete} index={this.props.index} fields={fields} field={field} fieldValue={fieldValue} saveChangedFields={this.props.saveChangedFields} highLightField={this.props.highLightField} highLightedField={this.props.highLightedField}/>
+                <License setPageProps={this.props.setPageProps} fieldsUpdateComplete = {this.props.fieldsUpdateComplete} index={this.props.index} field={field} fieldValue={fieldValue} saveChangedFields={this.props.saveChangedFields} highLightField={this.props.highLightField} highLightedField={this.props.highLightedField}/>
             );
         }
         if ( field.type==='number' ){
@@ -253,7 +253,7 @@ class Field extends Component {
 
         if ( field.type === 'letsencrypt' ) {
                 return (
-                   <LetsEncrypt key={field.id} field={field} handleNextButtonDisabled={this.props.handleNextButtonDisabled}/>
+                   <LetsEncrypt key={field.id} selectMenu={this.props.selectMenu} updateField={this.props.updateField} fiels={fields} field={field} handleNextButtonDisabled={this.props.handleNextButtonDisabled}/>
                 )
         }
 

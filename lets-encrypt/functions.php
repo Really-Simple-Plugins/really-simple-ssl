@@ -52,7 +52,7 @@ function rsssl_dns_verification_required(){
 		return false;
 	}
 
-	if ( get_option('rsssl_verification_type')==='DNS' ) {
+	if ( rsssl_get_option('verification_type')==='DNS' ) {
 		return true;
 	}
 
@@ -576,7 +576,7 @@ if ( !function_exists('rsssl_wildcard_certificate_required') ) {
 	 */
 	function rsssl_wildcard_certificate_required() {
 		//if DNS verification, create wildcard.
-		if ( get_option('rsssl_verification_type') === 'DNS' ) {
+		if ( rsssl_get_option('verification_type') === 'DNS' ) {
 			return true;
 		}
 

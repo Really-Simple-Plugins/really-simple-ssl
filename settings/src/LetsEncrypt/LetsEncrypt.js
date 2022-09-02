@@ -147,7 +147,7 @@ const LetsEncrypt = (props) => {
                         }
                     </ul>
                 </div>
-                {props.field.id === 'directories' && <Directories progress={progress} action={props.field.actions[actionIndex]}/> }
+                {props.field.id === 'directories' && <Directories selectMenu={props.selectMenu} field={props.field} updateField={props.updateField} progress={progress} action={props.field.actions[actionIndex]}/> }
             </div>
         </>
     )

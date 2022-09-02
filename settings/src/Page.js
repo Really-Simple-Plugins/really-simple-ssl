@@ -158,11 +158,15 @@ class Page extends Component {
      * Update a field
      * @param field
      */
-    updateField(field) {
+    updateField(id, value, help ) {
+        console.log("update "+id+' '+value);
         let fields = this.fields;
         for (const fieldItem of fields){
-            if (fieldItem.id === field.id ){
-                fieldItem.value = field.value;
+            if (fieldItem.id === id ){
+                fieldItem.value = value;
+                if (help) {
+                    fieldItem.help = help
+                }
             }
         }
         this.fields = fields;

@@ -106,6 +106,10 @@ function rsssl_upgrade() {
 
 			//upgrade lets encrypt options
 			$le_options = get_option( 'rsssl_options_lets-encrypt' );
+			$verification_type = get_option('rsssl_verification_type');
+			if ($verification_type) {
+				rsssl_update_option('verification_type', $verification_type);
+			}
 			if (!empty($le_options)) {
 				foreach ($options as $fieldname => $value ) {
 					rsssl_update_option($fieldname, $value);

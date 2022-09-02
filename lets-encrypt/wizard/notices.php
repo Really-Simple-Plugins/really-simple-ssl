@@ -143,7 +143,7 @@ add_filter( 'rsssl_notices', 'rsssl_le_get_notices_list', 30, 1 );
 function rsssl_le_custom_field_notices($fields){
 
 	if ( rsssl_is_cpanel() ) {
-		if( get_option('rsssl_verification_type') === 'DNS' ) {
+		if( rsssl_get_option('verification_type') === 'DNS' ) {
 			$fields['email_address']['help'] =
 				__("You have switched to DNS verification.","really-simple-ssl").'&nbsp;'.
 				__("You can switch back to directory verification here.","really-simple-ssl").

@@ -111,9 +111,20 @@ class SettingsPage extends Component {
     }
 
     updateFieldsListWithConditions(){
+
+        console.log("update fields list with conditinos");
+        console.log(this.props.fields);
         for (const field of this.props.fields){
+
           let enabled = !(field.hasOwnProperty('react_conditions') && !this.validateConditions(field.react_conditions, this.props.fields));
+
           this.props.fields[this.props.fields.indexOf(field)].conditionallyDisabled = !enabled;
+          if (!enabled && field.type==='letsencrypt') {
+            console.log("drop field "+field.id);
+            this.props.fields[this.props.fields.indexOf(field)].visible = false;
+          } else {
+            this.props.fields[this.props.fields.indexOf(field)].visible = true;
+          }
         }
         this.filterMenuItems(this.props.menu.menu_items)
     }
@@ -178,20 +189,23 @@ class SettingsPage extends Component {
     }
 
     validateConditions(conditions, fields){
+        console.log(conditions);
         let relation = conditions.relation === 'OR' ? 'OR' : 'AND';
-        delete conditions['relation'];
+//         delete conditions['relation'];
         let conditionApplies = true;
         for (const key in conditions) {
             if ( conditions.hasOwnProperty(key) ) {
-                let invert = key.indexOf('!')===0;
                 let thisConditionApplies = true;
                 let subConditionsArray = conditions[key];
                 if ( subConditionsArray.hasOwnProperty('relation') ) {
                     thisConditionApplies = this.validateConditions(subConditionsArray, fields)
                 } else {
-                    for (const conditionField in subConditionsArray) {
+                    for (let conditionField in subConditionsArray) {
+                        console.log("index of ! "+conditionField.indexOf('!'));
+                        let invert = conditionField.indexOf('!')===0;
                         if ( subConditionsArray.hasOwnProperty(conditionField) ) {
                             let conditionValue = subConditionsArray[conditionField];
+                            conditionField = conditionField.replace('!','');
                             let conditionFields = fields.filter(field => field.id === conditionField);
                             if (conditionFields.hasOwnProperty(0)){
                                 if (conditionFields[0].type==='checkbox') {
@@ -199,14 +213,20 @@ class SettingsPage extends Component {
                                     conditionValue = +conditionValue;
                                     thisConditionApplies = actualValue === conditionValue;
                                 } else {
-                                    thisConditionApplies = conditionFields[0].value === conditionValue;
+                                    thisConditionApplies = conditionFields[0].value.toLowerCase() === conditionValue.toLowerCase();
                                 }
                             }
+                        } else {
+                            console.log("property not found "+conditionField)
                         }
+
+                        if ( invert ){
+                            console.log("invert condition");
+                            thisConditionApplies = !thisConditionApplies;
+                        }
+
                     }
-                    if ( invert ){
-                        thisConditionApplies = !thisConditionApplies;
-                    }
+
                 }
                 if ( relation === 'AND' ) {
                     conditionApplies = conditionApplies && thisConditionApplies;

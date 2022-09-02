@@ -89,6 +89,7 @@ class SettingsGroup extends Component {
                     {activeGroup && activeGroup.intro && <div className="rsssl-settings-block-intro">{activeGroup.intro}</div>}
                     {selectedFields.map((field, i) =>
                         <Field key={i} index={i}
+                            selectMenu={this.props.selectMenu}
                             dropItemFromModal={this.props.dropItemFromModal}
                             handleNextButtonDisabled={this.props.handleNextButtonDisabled}
                             handleModal={this.props.handleModal}

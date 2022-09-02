@@ -830,7 +830,7 @@ class rsssl_letsencrypt_handler {
 	 * @return bool
 	 */
     public function ssl_generation_can_auto_renew(){
-	    if ( get_option('rsssl_verification_type')==='DNS' && !get_option('rsssl_le_dns_configured_by_rsssl') ) {
+	    if ( rsssl_get_option('verification_type')==='DNS' && !get_option('rsssl_le_dns_configured_by_rsssl') ) {
 		    return false;
 	    } else {
 		    return true;
