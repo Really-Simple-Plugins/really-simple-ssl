@@ -104,7 +104,7 @@ if (!function_exists('rsssl_activated_by_default')) {
 	 */
 	function rsssl_activated_by_default() {
 		$activated_by_default =  false;
-		$activated_by_default_hosts = RSSSL_LE()->config->activated_by_default;
+		$activated_by_default_hosts = RSSSL_LE()->hosts->activated_by_default;
 		$current_host         = rsssl_get_other_host();
 		if ( in_array( $current_host, $activated_by_default_hosts ) ) {
 			$activated_by_default =  true;
@@ -121,7 +121,7 @@ if (!function_exists('rsssl_activation_required')) {
 	 */
 	function rsssl_activation_required() {
 		$dashboard_activation_required =  false;
-		$dashboard_activation_required_hosts = RSSSL_LE()->config->dashboard_activation_required;
+		$dashboard_activation_required_hosts = RSSSL_LE()->hosts->dashboard_activation_required;
 		$current_host         = rsssl_get_other_host();
 		if ( in_array( $current_host, $dashboard_activation_required_hosts ) ) {
 			$dashboard_activation_required =  true;
@@ -138,7 +138,7 @@ if (!function_exists('rsssl_paid_only')) {
 	 */
 	function rsssl_paid_only() {
 		$paid_only =  false;
-		$paid_only_hosts = RSSSL_LE()->config->paid_only;
+		$paid_only_hosts = RSSSL_LE()->hosts->paid_only;
 		$current_host         = rsssl_get_other_host();
 		if ( in_array( $current_host, $paid_only_hosts ) ) {
 			$paid_only =  true;
@@ -293,7 +293,7 @@ if ( !function_exists('rsssl_is_ready_for')) {
 }
 
  function rsssl_get_not_completed_steps($item){
-	$sequence = array_column( RSSSL_LE()->config->steps['lets-encrypt'], 'id');
+	$sequence = array_column( rsssl_le_steps(), 'id');
 	//drop all statuses after $item. We only need to know if all previous ones have been completed
 	$index = array_search($item, $sequence);
 	$sequence = array_slice($sequence, 0, $index, true);
@@ -350,7 +350,7 @@ if ( !function_exists('rsssl_do_local_lets_encrypt_generation')) {
 	 * @return bool
 	 */
 	function rsssl_do_local_lets_encrypt_generation() {
-		$not_local_cert_hosts = RSSSL_LE()->config->not_local_certificate_hosts;
+		$not_local_cert_hosts = RSSSL_LE()->hosts->not_local_certificate_hosts;
 		$current_host         = rsssl_get_other_host();
 		if ( in_array( $current_host, $not_local_cert_hosts ) ) {
 			return false;

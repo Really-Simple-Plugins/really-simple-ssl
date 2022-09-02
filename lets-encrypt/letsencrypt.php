@@ -54,7 +54,7 @@ class RSSSL_LETSENCRYPT {
 
 	public $wizard;
 	public $field;
-	public $config;
+	public $hosts;
 	public $letsencrypt_handler;
 
 	private function __construct() {
@@ -66,7 +66,7 @@ class RSSSL_LETSENCRYPT {
 			self::$instance = new RSSSL_LETSENCRYPT;
 			self::$instance->setup_constants();
 			self::$instance->includes();
-			self::$instance->config = new rsssl_config();
+			self::$instance->hosts = new rsssl_le_hosts();
 			if (rsssl_letsencrypt_generation_allowed() && version_compare(PHP_VERSION, rsssl_le_php_version, '>')) {
 				self::$instance->letsencrypt_handler = new rsssl_letsencrypt_handler();
 				self::$instance->wizard = new rsssl_wizard();
@@ -83,8 +83,9 @@ class RSSSL_LETSENCRYPT {
 	}
 
 	private function includes() {
-		require_once( rsssl_le_path . 'wizard/config/class-config.php' );
+		require_once( rsssl_le_path . 'wizard/class-hosts.php' );
 		require_once( rsssl_le_path . 'functions.php');
+		require_once( rsssl_le_path . 'wizard/fields.php');
 
 		if ( rsssl_letsencrypt_generation_allowed() && version_compare(PHP_VERSION, rsssl_le_php_version, '>=')) {
 			require_once( rsssl_le_path . 'wizard/notices.php' );
@@ -126,5 +127,3 @@ class RSSSL_RESPONSE
 	}
 
 }
-
-

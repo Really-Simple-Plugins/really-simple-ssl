@@ -1133,64 +1133,64 @@
   margin-bottom: 24px;
 }
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(1) {
-  width: 85%;
-}
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(2) {
-  width: 68%;
-}
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(3) {
-  width: 67%;
-}
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(4) {
-  width: 70%;
-}
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(5) {
-  width: 81%;
-}
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(6) {
-  width: 91%;
-}
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(7) {
-  width: 88%;
-}
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(8) {
-  width: 72%;
-}
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(9) {
-  width: 84%;
-}
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(10) {
-  width: 61%;
-}
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(11) {
-  width: 74%;
-}
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(12) {
-  width: 66%;
-}
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(13) {
-  width: 86%;
-}
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(14) {
-  width: 83%;
-}
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(15) {
-  width: 92%;
-}
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(16) {
-  width: 62%;
-}
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(17) {
   width: 63%;
 }
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(2) {
+  width: 86%;
+}
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(3) {
+  width: 87%;
+}
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(4) {
+  width: 68%;
+}
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(5) {
+  width: 66%;
+}
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(6) {
+  width: 78%;
+}
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(7) {
+  width: 76%;
+}
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(8) {
+  width: 88%;
+}
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(9) {
+  width: 87%;
+}
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(10) {
+  width: 86%;
+}
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(11) {
+  width: 84%;
+}
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(12) {
+  width: 74%;
+}
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(13) {
+  width: 71%;
+}
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(14) {
+  width: 88%;
+}
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(15) {
+  width: 82%;
+}
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(16) {
+  width: 82%;
+}
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(17) {
+  width: 69%;
+}
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(18) {
-  width: 61%;
+  width: 70%;
 }
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(19) {
-  width: 99%;
+  width: 70%;
 }
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(20) {
-  width: 65%;
+  width: 84%;
 }
 .rsssl-placeholder .rsssl-placeholder-line ~ .rsssl-placeholder-line {
   background-color: #ddd;
@@ -1478,6 +1478,52 @@
   border: none;
   font-size: 1.5em;
   font-weight: 700;
+}
+
+.rsssl-lets-encrypt-tests .rsssl-progress {
+  overflow: hidden;
+  height: 20px;
+  border-radius: 5px;
+  background-color: #f7f7f7;
+}
+.rsssl-lets-encrypt-tests .rsssl-progress .rsssl-bar {
+  height: 100%;
+  background-color: var(--rsp-color-success);
+}
+.rsssl-lets-encrypt-tests .rsssl-progress .rsssl-bar.rsssl-orange {
+  background-color: var(--rsp-color-warning);
+}
+.rsssl-lets-encrypt-tests .rsssl-progress-bar {
+  padding-block: 0;
+}
+.rsssl-lets-encrypt-tests .rsssl-progress-text {
+  display: flex;
+  align-items: center;
+  padding: var(--rsp-spacing-m) var(--rsp-spacing-l);
+  padding-block: 0;
+  padding-top: 10px;
+}
+@media screen and (max-width: 992px) {
+  .rsssl-lets-encrypt-tests .rsssl-progress-text {
+    padding: var(--rsp-spacing-xs) var(--rsp-spacing-m);
+  }
+}
+@media screen and (max-width: 768px) {
+  .rsssl-lets-encrypt-tests .rsssl-progress-text {
+    padding: var(--rsp-spacing-xs) var(--rsp-spacing-s);
+  }
+}
+.rsssl-lets-encrypt-tests .rsssl-progress-text .rsssl-progress-percentage {
+  font-size: 32px;
+  font-weight: 700;
+}
+.rsssl-lets-encrypt-tests .rsssl-progress-text .rsssl-progress-text-span {
+  margin-left: 35px;
+  font-size: 18px;
+  font-weight: 600;
+}
+.rsssl-lets-encrypt-tests .rsssl-progress-text .rsssl-progress-text-span a {
+  margin-left: 3px;
 }
 
 .rsssl-lets-encrypt-tests ul {

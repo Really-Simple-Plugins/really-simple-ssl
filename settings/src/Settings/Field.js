@@ -39,12 +39,15 @@ class Field extends Component {
     }
 
     onChangeHandler(fieldValue) {
+
         let fields = this.props.fields;
         let field = this.props.field;
         fields[this.props.index]['value'] = fieldValue;
         this.props.saveChangedFields( field.id )
         this.setState( { fields } )
     }
+
+
 
     /*
      * Handle data update for a datatable
@@ -120,7 +123,6 @@ class Field extends Component {
                         <ToggleControl
                             disabled = {disabled}
                             checked= { field.value==1 }
-
                             label={ field.label }
                             onChange={ ( fieldValue ) => this.onChangeHandler(fieldValue) }
                         />
@@ -250,9 +252,9 @@ class Field extends Component {
         }
 
         if ( field.type === 'letsencrypt' ) {
-                    return (
-                       <LetsEncrypt field={field} />
-                    )
+                return (
+                   <LetsEncrypt key={field.id} field={field} handleNextButtonDisabled={this.props.handleNextButtonDisabled}/>
+                )
         }
 
         return (

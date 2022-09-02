@@ -52,16 +52,13 @@ export const runTest = (test, state, data ) => {
 	return axios.get(rsssl_settings.site_url+'reallysimplessl/v1/tests/'+test+'?state='+state+'&data='+data, config);
 };
 
-export const runLetsEncryptTest = (test, data ) => {
+export const runLetsEncryptTest = (test, id ) => {
 	let config = {
 		headers: {
 			'X-WP-Nonce': rsssl_settings.nonce,
 		}
 	}
-	if (data) {
-		data = encodeURIComponent(JSON.stringify(data));
-	}
-	return axios.get(rsssl_settings.site_url+'reallysimplessl/v1/tests/'+test+'?letsencrypt=1&data='+data, config);
+	return axios.get(rsssl_settings.site_url+'reallysimplessl/v1/tests/'+test+'?letsencrypt=1&id='+id, config);
 };
 
 export const getOnboarding = () => {

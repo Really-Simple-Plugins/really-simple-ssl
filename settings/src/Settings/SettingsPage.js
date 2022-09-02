@@ -21,7 +21,8 @@ class SettingsPage extends Component {
             fields:'',
             isAPILoaded: false,
             changedFields:'',
-            progress:''
+            progress:'',
+            nextButtonDisabled: false,
         };
     }
 
@@ -34,6 +35,8 @@ class SettingsPage extends Component {
         this.updateFieldsListWithConditions = this.updateFieldsListWithConditions.bind(this);
         this.filterMenuItems = this.filterMenuItems.bind(this);
         this.showSavedSettingsNotice = this.showSavedSettingsNotice.bind(this);
+        this.handleNextButtonDisabled = this.handleNextButtonDisabled.bind(this);
+        this.checkRequiredFields = this.checkRequiredFields.bind(this);
         let fields = this.props.fields;
         let progress = this.props.progress;
         //if count >1, it's a wizard
@@ -41,6 +44,7 @@ class SettingsPage extends Component {
         let selectedMenuItem = this.props.selectedMenuItem;
         this.selectedMenuItem = selectedMenuItem;
         this.changedFields = changedFields;
+        this.checkRequiredFields();
         this.setState({
             isAPILoaded: true,
             fields: this.props.fields,
@@ -61,6 +65,31 @@ class SettingsPage extends Component {
         }
 
         return newMenuItems;
+    }
+    /*
+    * Set next button to disabled from the fields
+    */
+    handleNextButtonDisabled(disable) {
+        this.setState({
+            nextButtonDisabled:disable,
+        });
+    }
+
+    //check if all required fields have been enabled. If so, enable save/continue button
+    checkRequiredFields(){
+        let fieldsOnPage = [];
+        //get all fields with group_id this.props.group_id
+        for (const field of this.props.fields){
+            if (field.menu_id === this.props.selectedMenuItem ){
+                fieldsOnPage.push(field);
+            }
+        }
+        let requiredFields = fieldsOnPage.filter(field => field.required && (field.value.length==0 || !field.value) );
+        if ( requiredFields.length>0) {
+            this.handleNextButtonDisabled(true);
+        } else {
+            this.handleNextButtonDisabled(false);
+        }
     }
 
     filterMenuItems(menuItems) {
@@ -99,6 +128,7 @@ class SettingsPage extends Component {
         this.setState({
             changedFields:changedFields,
         });
+        this.checkRequiredFields();
     }
 
     showSavedSettingsNotice(){
@@ -194,6 +224,7 @@ class SettingsPage extends Component {
             selectedStep,
             isAPILoaded,
             changedFields,
+            nextButtonDisabled,
         } = this.state;
 
 
@@ -220,6 +251,8 @@ class SettingsPage extends Component {
                 <Settings
                     dropItemFromModal={this.props.dropItemFromModal}
                     selectMenu={this.props.selectMenu}
+                    nextButtonDisabled={nextButtonDisabled}
+                    handleNextButtonDisabled={this.handleNextButtonDisabled}
                     getDefaultMenuItem={this.props.getDefaultMenuItem}
                     handleModal={this.props.handleModal}
                     showSavedSettingsNotice={this.showSavedSettingsNotice}

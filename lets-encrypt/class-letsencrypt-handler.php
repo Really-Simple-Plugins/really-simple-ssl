@@ -53,7 +53,7 @@ class rsssl_letsencrypt_handler {
 			}
 
 			// General configs
-			Connector::getInstance()->useStagingServer( false );
+			Connector::getInstance()->useStagingServer( true );
 			Logger::getInstance()->setDesiredLevel( Logger::LEVEL_DISABLED );
 
 			if ( !rsssl_get_option( 'disable_ocsp' ) ) {
@@ -201,7 +201,7 @@ class rsssl_letsencrypt_handler {
     public function check_domain(){
 	    $details = parse_url(site_url());
 	    $path = isset($details['path']) ? $details['path'] : '';
-        if ( strpos(site_url(), 'localhost')!==false ) {
+        if ( strpos(site_url(), 'localhost')==false ) {
 	        rsssl_progress_remove( 'system-status' );
 	        $action  = 'stop';
 	        $status  = 'error';
@@ -254,7 +254,7 @@ class rsssl_letsencrypt_handler {
 
 	    $hosting_company = rsssl_get_other_host();
 	    if ( $hosting_company && $hosting_company !== 'none' ) {
-		    $hosting_specific_link = RSSSL_LE()->config->hosts[$hosting_company]['ssl_installation_link'];
+		    $hosting_specific_link = RSSSL_LE()->hosts->hosts[$hosting_company]['ssl_installation_link'];
 		    if ($hosting_specific_link) {
 			    $site = trailingslashit( str_replace(array('https://','http://', 'www.'),'', site_url()) );
 			    if ( strpos($hosting_specific_link,'{host}') !==false && empty($host) ) {
@@ -904,7 +904,7 @@ class rsssl_letsencrypt_handler {
     public function certificate_install_required(){
 	    $install_method = get_option('rsssl_le_certificate_installed_by_rsssl');
 	    $hosting_company = rsssl_get_other_host();
-	    if ( in_array($install_method, RSSSL_LE()->config->no_installation_renewal_needed) || in_array($hosting_company, RSSSL_LE()->config->no_installation_renewal_needed)) {
+	    if ( in_array($install_method, RSSSL_LE()->hosts->no_installation_renewal_needed) || in_array($hosting_company, RSSSL_LE()->hosts->no_installation_renewal_needed)) {
 		    return false;
 	    }
 
@@ -1063,9 +1063,10 @@ class rsssl_letsencrypt_handler {
 	public function not_completed_steps_message($step){
 		$not_completed_steps = rsssl_get_not_completed_steps($step);
 		$nice_names = array();
+		$steps = rsssl_le_steps();
 		foreach ($not_completed_steps as $not_completed_step ) {
-			$index = array_search($not_completed_step, array_column( RSSSL_LE()->config->steps['lets-encrypt'], 'id'));
-			$nice_names[] = RSSSL_LE()->config->steps['lets-encrypt'][$index+1]['title'];
+			$index = array_search($not_completed_step, array_column( $steps, 'id'));
+			$nice_names[] = $steps[$index+1]['title'];
 		}
 		return sprintf(__('Please complete the following step(s) first: %s', "really-simple-ssl"), implode(", ", $nice_names) );
 	}
@@ -1092,6 +1093,7 @@ class rsssl_letsencrypt_handler {
 			$status = 'success';
 			$message = __("The required directories have the necessary writing permissions.", "really-simple-ssl" );
 		}
+
 		return new RSSSL_RESPONSE($status, $action, $message);
 	}
 
@@ -1104,15 +1106,15 @@ class rsssl_letsencrypt_handler {
 		$message = __("We have not detected any known hosting limitations.", "really-simple-ssl" );
 		$host = rsssl_get_other_host();
 		if ( $host === 'none' ) $host = false;
-		if ( isset(RSSSL_LE()->config->hosts[$host]) ){
-			if ( RSSSL_LE()->config->hosts[$host]['free_ssl_available'] === 'paid_only' ) {
+		if ( isset(RSSSL_LE()->hosts->hosts[$host]) ){
+			if ( RSSSL_LE()->hosts->hosts[$host]['free_ssl_available'] === 'paid_only' ) {
 				$action = 'stop';
 				$status = 'error';
 				$message = sprintf(__("According to our information, your hosting provider does not allow any kind of SSL installation, other then their own paid certificate. For an alternative hosting provider with SSL, see this %sarticle%s.","really-simple-ssl"), '<a target="_blank" href="https://really-simple-ssl.com/hosting-providers-with-free-ssl">', '</a>');
 			}
 
-			if ( RSSSL_LE()->config->hosts[$host]['free_ssl_available'] === 'activated_by_default' ) {
-				$url = RSSSL_LE()->config->hosts[$host]['ssl_installation_link'];
+			if ( RSSSL_LE()->hosts->hosts[$host]['free_ssl_available'] === 'activated_by_default' ) {
+				$url = RSSSL_LE()->hosts->hosts[$host]['ssl_installation_link'];
 				$action = 'continue';
 				$status = 'error';
 				$message = sprintf(__("According to our information, your hosting provider supplies your account with an SSL certificate by default. Please contact your %shosting support%s if this is not the case.","really-simple-ssl"), '<a target="_blank" href="'.$url.'">', '</a>').'&nbsp'.
@@ -1246,12 +1248,12 @@ class rsssl_letsencrypt_handler {
 		$error_message = sprintf(__( "Could not reach challenge directory over %s.", "really-simple-ssl"), '<a target="_blank" href="'.$url.'">'.$url.'</a>');
 		$test_string = 'Really Simple SSL';
 		$folders = $this->directories_without_writing_permissions();
-		if ( !$this->challenge_directory() || count($folders) !==0 ) {
+//		if ( !$this->challenge_directory() || count($folders) !==0 ) {
 			$status  = 'error';
 			$action  = 'stop';
 			$message = __( "Challenge directory not writable.", "really-simple-ssl");
 			return new RSSSL_RESPONSE($status, $action, $message);
-		}
+//		}
 
 		$response       = wp_remote_get( $url );
 		if ( is_array( $response ) ) {
@@ -1270,8 +1272,6 @@ class rsssl_letsencrypt_handler {
 				$message = $error_message.' '.sprintf( __( "Error code %s.", "really-simple-ssl" ), $status_code );
 				rsssl_progress_remove('directories');
 			}
-
-
 		} else {
 			if ( ! is_wp_error( $response ) && ( strpos( $file_content, $test_string ) !== false ) ) {
 				$status  = 'success';
@@ -1285,6 +1285,7 @@ class rsssl_letsencrypt_handler {
 				rsssl_progress_remove('directories');
 			}
 		}
+
 		return new RSSSL_RESPONSE($status, $action, $message);
 	}
 

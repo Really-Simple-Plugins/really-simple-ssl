@@ -3633,6 +3633,61 @@ class Header extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Component {
 
 /***/ }),
 
+/***/ "./src/LetsEncrypt/Directories.js":
+/*!****************************************!*\
+  !*** ./src/LetsEncrypt/Directories.js ***!
+  \****************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__);
+
+
+
+
+const Directories = props => {
+  const action = props.action;
+  (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {}, []);
+
+  if (!action) {
+    return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null);
+  }
+
+  if (action.status !== 'error' && action.status !== 'warning') {
+    return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null);
+  }
+
+  const handleSwitchToDNS = () => {
+    return rsssl_api.runTest('switch_to_dns', 'refresh').then(response => {
+      const notice = dispatch('core/notices').createNotice('success', (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Switched to DNS', 'really-simple-ssl'), {
+        __unstableHTML: true,
+        id: 'rsssl_switched_to_dns',
+        type: 'snackbar',
+        isDismissible: true
+      }).then(sleeper(3000)).then(response => {
+        dispatch('core/notices').removeNotice('rsssl_switched_to_dns');
+      });
+    });
+  };
+
+  console.log(action);
+  return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, action.status === 'error' && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("h4", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Next step", "really-simple-ssl"))), (action.action === 'check_challenge_directory' || action.action === 'challenge_directory_reachable') && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("If the challenge directory cannot be created, or is not reachable, you can either remove the server limitation, or change to DNS verification.", "really-simple-ssl")), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(Button, {
+    variant: "secondary",
+    onClick: undefined.handleSwitchToDNS
+  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Switch to DNS verification', 'really-simple-ssl'))));
+};
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Directories);
+
+/***/ }),
+
 /***/ "./src/LetsEncrypt/LetsEncrypt.js":
 /*!****************************************!*\
   !*** ./src/LetsEncrypt/LetsEncrypt.js ***!
@@ -3646,13 +3701,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/components */ "@wordpress/components");
-/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _utils_api__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../utils/api */ "./src/utils/api.js");
-/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
-/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__);
-/* harmony import */ var immutability_helper__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! immutability-helper */ "./node_modules/immutability-helper/index.js");
-/* harmony import */ var immutability_helper__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(immutability_helper__WEBPACK_IMPORTED_MODULE_4__);
+/* harmony import */ var _utils_api__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../utils/api */ "./src/utils/api.js");
+/* harmony import */ var _utils_sleeper__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../utils/sleeper */ "./src/utils/sleeper.js");
+/* harmony import */ var _Directories__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./Directories */ "./src/LetsEncrypt/Directories.js");
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_4__);
 /* harmony import */ var react_use__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! react-use */ "./node_modules/react-use/esm/useUpdateEffect.js");
 
 
@@ -3663,44 +3716,133 @@ __webpack_require__.r(__webpack_exports__);
 
 
 const LetsEncrypt = props => {
-  const starttime = new Date();
-  let endTime;
   const [actionIndex, setActionIndex] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)(0);
-  const [responseArray, setResponseArray] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)([]);
+  const [id, setId] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)(props.field.id);
+  const [lastActionStatus, setLastActionStatus] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)('');
+  const [progress, setProgress] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)(0);
+  const [previousActionIndex, setPreviousActionIndex] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)(-1);
+  const [previousProgress, setPreviousProgress] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)(0);
+  let sleep = 100;
+  let maxAttempts = 1;
+  let rsssl_interval;
+  (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
+    props.handleNextButtonDisabled(true);
+    runTest(0, progress);
+    rsssl_interval = setInterval(() => setProgress(progress => progress + 0.2), 100);
+  }, []);
 
-  const elapsedTime = () => {
-    endTime = new Date();
-    var timeDiff = endTime - startTime; //in ms
-
-    return Math.round(timeDiff);
+  const stop_progress = status => {
+    clearInterval(rsssl_interval);
   };
 
-  (0,react_use__WEBPACK_IMPORTED_MODULE_5__["default"])(() => {//         // do componentDidUpdate logic
-    //         if ( networkProgress<100 && networkwide && networkActivationStatus==='main_site_activated' ){
-    //             rsssl_api.activateSSLNetworkwide().then((response) => {
-    //                if (response.data.success) {
-    //                     setNetworkProgress(response.data.progress);
-    //                     if (response.data.progress>=100) {
-    //                         updateActionForItem('ssl_enabled', '', 'success');
-    //                     }
-    //                 }
-    //             });
-    //
-    //         }
-  });
-  (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
-    let actions = props.field.actions;
-    let test = actions[actionIndex].action;
-    let state = 'letsencrypt'; //the state tells the lets encrypt module to load
+  const getAction = actionIndex => {
+    let newActions = props.field.actions;
+    return newActions[actionIndex];
+  };
 
-    _utils_api__WEBPACK_IMPORTED_MODULE_2__.runLetsEncryptTest(test).then(response => {
-      console.log(response); //             let elapsedTime = elapsedTime();
-      //             if (elapsedTime<1000) {
-      //                 rsssl_sleep(1000-elapsedTime);
-      //             }
-      //             responseArray[actionIndex] =
+  (0,react_use__WEBPACK_IMPORTED_MODULE_5__["default"])(() => {
+    if (actionIndex > previousActionIndex) {
+      setPreviousActionIndex(actionIndex);
+      setProgress(100 / props.field.actions.length * actionIndex);
+    }
+
+    setPreviousProgress(progress); //ensure that progress does not get to 100 when retries are still running
+
+    let currentAction = getAction(actionIndex);
+
+    if (currentAction && currentAction.do === 'retry' && currentAction.attemptCount > 1) {
+      setProgress(90);
+    }
+  });
+
+  const processTestResult = currentActionIndex => {
+    let action = getAction(currentActionIndex);
+    setLastActionStatus(action.status);
+
+    if (action.status === 'success') {
+      action.attemptCount = 0;
+    } else {
+      if (!Number.isInteger(action.attemptCount)) {
+        action.attemptCount = 0;
+      }
+
+      action.attemptCount += 1;
+    }
+
+    console.log(action); //used for dns verification actions
+
+    var event = new CustomEvent('rsssl_le_response', {
+      detail: action
     });
-  }, []);
+    document.dispatchEvent(event); //if all tests are finished with success
+
+    if (action.do === 'finalize') {
+      //finalize
+      setActionIndex(actions.length);
+    } else if (action.do === 'continue' || action.do === 'skip') {
+      //new action, so reset the attempts count
+      action.attemptCount = 1; //rsssl_maybe_show_elements(current_action, response.status);
+      //skip:  drop previous completely, skip to next.
+
+      if (action.do === 'skip') {
+        action.hide = true;
+      } //move to next action
+
+
+      setActionIndex(currentActionIndex + 1);
+
+      if (currentActionIndex + 1 === props.field.actions.length) {
+        props.handleNextButtonDisabled(false);
+        setActionIndex(props.field.actions.length);
+        clearInterval(rsssl_interval);
+      } else {
+        runTest(currentActionIndex + 1);
+      }
+    } else if (action.do === 'retry') {
+      if (action.attemptCount >= maxAttempts) {
+        // rsssl_maybe_show_elements(current_action, response.status);
+        setActionIndex(props.field.actions.length);
+        clearInterval(rsssl_interval);
+      } else {
+        // clearInterval(rsssl_interval);
+        runTest(currentActionIndex);
+      }
+    } else if (action.do === 'stop') {
+      clearInterval(rsssl_interval); //setActionIndex(props.field.actions.length);
+    }
+  };
+
+  const runTest = currentActionIndex => {
+    const startTime = new Date();
+    let action = getAction(currentActionIndex);
+    let test = action.action;
+    console.log("run test " + test);
+    maxAttempts = action.attempts;
+    _utils_api__WEBPACK_IMPORTED_MODULE_1__.runLetsEncryptTest(test, props.field.id).then(response => {
+      const endTime = new Date();
+      let timeDiff = endTime - startTime; //in ms
+
+      const elapsedTime = Math.round(timeDiff);
+      let action = getAction(currentActionIndex);
+      action.status = response.data.status;
+      action.description = response.data.message;
+      action.do = response.data.action;
+      sleep = 100;
+
+      if (elapsedTime < 600) {//sleep = 600-elapsedTime;
+      }
+    }).then((0,_utils_sleeper__WEBPACK_IMPORTED_MODULE_2__["default"])(sleep)).then(() => {
+      processTestResult(currentActionIndex);
+    });
+  };
+
+  const getStyles = () => {
+    return Object.assign({}, {
+      width: progress + "%"
+    });
+  };
+
+  let progressBarColor = lastActionStatus === 'error' ? 'rsssl-orange' : '';
   return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "rsssl-lets-encrypt-tests"
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
@@ -3708,14 +3850,21 @@ const LetsEncrypt = props => {
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "rsssl-progress"
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "rsssl-bar rsssl-orange"
+    className: 'rsssl-bar ' + progressBarColor,
+    style: getStyles()
   }))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "rsssl_letsencrypt_container rsssl-progress-container field-group"
-  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("ul", null, props.field.actions.map((action, i) => (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("li", {
-    key: i
-  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
-    className: "rsssl_action_" + action.action
-  }, action.description)))))));
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("ul", null, "`                       ", props.field.actions.map((action, i) => (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("li", {
+    key: i,
+    className: "rsssl_action_" + action.action + " rsssl-" + action.status
+  }, action.do === 'retry' && action.attemptCount >= 1 && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_4__.__)("Attempt %s.", "really-simple-ssl").replace('%s', action.attemptCount), " "), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
+    dangerouslySetInnerHTML: {
+      __html: action.description
+    }
+  }))))), props.field.id === 'directories' && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_Directories__WEBPACK_IMPORTED_MODULE_3__["default"], {
+    progress: progress,
+    action: props.field.actions[actionIndex]
+  })));
 };
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (LetsEncrypt);
@@ -5103,7 +5252,9 @@ class Field extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Component {
 
     if (field.type === 'letsencrypt') {
       return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_LetsEncrypt_LetsEncrypt__WEBPACK_IMPORTED_MODULE_6__["default"], {
-        field: field
+        key: field.id,
+        field: field,
+        handleNextButtonDisabled: this.props.handleNextButtonDisabled
       });
     }
 
@@ -6190,6 +6341,7 @@ class Settings extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Component
     }, groups.map((group, i) => (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_SettingsGroup__WEBPACK_IMPORTED_MODULE_3__["default"], {
       dropItemFromModal: this.props.dropItemFromModal,
       selectMenu: this.props.selectMenu,
+      handleNextButtonDisabled: this.props.handleNextButtonDisabled,
       menu: this.props.menu,
       handleModal: this.props.handleModal,
       showSavedSettingsNotice: this.props.showSavedSettingsNotice,
@@ -6208,14 +6360,15 @@ class Settings extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Component
     })), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
       className: "rsssl-grid-item-footer"
     }, this.props.selectedMenuItem !== menuItems[0].id && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
-      href: `#settings/${this.props.previousMenuItem}`,
+      href: `#${this.props.selectedMainMenuItem}/${this.props.previousMenuItem}`,
       onClick: () => this.props.previousStep(true)
     }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_6__.__)('Previous', 'really-simple-ssl')), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_5__.Button, {
       variant: "secondary",
       onClick: this.props.save
     }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_6__.__)('Save', 'really-simple-ssl')), this.props.selectedMenuItem !== menuItems[menuItems.length - 1].id && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
+      disabled: this.props.nextButtonDisabled,
       className: "button button-primary",
-      href: `#settings/${this.props.nextMenuItem}`,
+      href: `#${this.props.selectedMainMenuItem}/${this.props.nextMenuItem}`,
       onClick: this.props.saveAndContinue
     }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_6__.__)('Save and Continue', 'really-simple-ssl')))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
       className: "rsssl-wizard-help"
@@ -6354,14 +6507,15 @@ class SettingsGroup extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Comp
     }, activeGroup && activeGroup.intro && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
       className: "rsssl-settings-block-intro"
     }, activeGroup.intro), selectedFields.map((field, i) => (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_Field__WEBPACK_IMPORTED_MODULE_1__["default"], {
+      key: i,
+      index: i,
       dropItemFromModal: this.props.dropItemFromModal,
+      handleNextButtonDisabled: this.props.handleNextButtonDisabled,
       handleModal: this.props.handleModal,
       showSavedSettingsNotice: this.props.showSavedSettingsNotice,
       updateField: this.props.updateField,
       setPageProps: this.props.setPageProps,
       fieldsUpdateComplete: this.props.fieldsUpdateComplete,
-      key: i,
-      index: i,
       highLightField: this.props.highLightField,
       highLightedField: this.props.highLightedField,
       saveChangedFields: this.props.saveChangedFields,
@@ -6447,7 +6601,8 @@ class SettingsPage extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Compo
       fields: '',
       isAPILoaded: false,
       changedFields: '',
-      progress: ''
+      progress: '',
+      nextButtonDisabled: false
     };
   }
 
@@ -6460,6 +6615,8 @@ class SettingsPage extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Compo
     this.updateFieldsListWithConditions = this.updateFieldsListWithConditions.bind(this);
     this.filterMenuItems = this.filterMenuItems.bind(this);
     this.showSavedSettingsNotice = this.showSavedSettingsNotice.bind(this);
+    this.handleNextButtonDisabled = this.handleNextButtonDisabled.bind(this);
+    this.checkRequiredFields = this.checkRequiredFields.bind(this);
     let fields = this.props.fields;
     let progress = this.props.progress; //if count >1, it's a wizard
 
@@ -6467,6 +6624,7 @@ class SettingsPage extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Compo
     let selectedMenuItem = this.props.selectedMenuItem;
     this.selectedMenuItem = selectedMenuItem;
     this.changedFields = changedFields;
+    this.checkRequiredFields();
     this.setState({
       isAPILoaded: true,
       fields: this.props.fields,
@@ -6490,6 +6648,35 @@ class SettingsPage extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Compo
     }
 
     return newMenuItems;
+  }
+  /*
+  * Set next button to disabled from the fields
+  */
+
+
+  handleNextButtonDisabled(disable) {
+    this.setState({
+      nextButtonDisabled: disable
+    });
+  } //check if all required fields have been enabled. If so, enable save/continue button
+
+
+  checkRequiredFields() {
+    let fieldsOnPage = []; //get all fields with group_id this.props.group_id
+
+    for (const field of this.props.fields) {
+      if (field.menu_id === this.props.selectedMenuItem) {
+        fieldsOnPage.push(field);
+      }
+    }
+
+    let requiredFields = fieldsOnPage.filter(field => field.required && (field.value.length == 0 || !field.value));
+
+    if (requiredFields.length > 0) {
+      this.handleNextButtonDisabled(true);
+    } else {
+      this.handleNextButtonDisabled(false);
+    }
   }
 
   filterMenuItems(menuItems) {
@@ -6535,6 +6722,7 @@ class SettingsPage extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Compo
     this.setState({
       changedFields: changedFields
     });
+    this.checkRequiredFields();
   }
 
   showSavedSettingsNotice() {
@@ -6635,7 +6823,8 @@ class SettingsPage extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Compo
       progress,
       selectedStep,
       isAPILoaded,
-      changedFields
+      changedFields,
+      nextButtonDisabled
     } = this.state;
 
     if (!isAPILoaded) {
@@ -6657,6 +6846,8 @@ class SettingsPage extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Compo
     }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_Settings__WEBPACK_IMPORTED_MODULE_6__["default"], {
       dropItemFromModal: this.props.dropItemFromModal,
       selectMenu: this.props.selectMenu,
+      nextButtonDisabled: nextButtonDisabled,
+      handleNextButtonDisabled: this.handleNextButtonDisabled,
       getDefaultMenuItem: this.props.getDefaultMenuItem,
       handleModal: this.props.handleModal,
       showSavedSettingsNotice: this.showSavedSettingsNotice,
@@ -6897,18 +7088,13 @@ const runTest = (test, state, data) => {
 
   return axios__WEBPACK_IMPORTED_MODULE_0___default().get(rsssl_settings.site_url + 'reallysimplessl/v1/tests/' + test + '?state=' + state + '&data=' + data, config);
 };
-const runLetsEncryptTest = (test, data) => {
+const runLetsEncryptTest = (test, id) => {
   let config = {
     headers: {
       'X-WP-Nonce': rsssl_settings.nonce
     }
   };
-
-  if (data) {
-    data = encodeURIComponent(JSON.stringify(data));
-  }
-
-  return axios__WEBPACK_IMPORTED_MODULE_0___default().get(rsssl_settings.site_url + 'reallysimplessl/v1/tests/' + test + '?letsencrypt=1&data=' + data, config);
+  return axios__WEBPACK_IMPORTED_MODULE_0___default().get(rsssl_settings.site_url + 'reallysimplessl/v1/tests/' + test + '?letsencrypt=1&id=' + id, config);
 };
 const getOnboarding = () => {
   let config = {
@@ -7048,7 +7234,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/**
+/*
  * helper function to delay after a promise
  * @param ms
  * @returns {function(*): Promise<unknown>}

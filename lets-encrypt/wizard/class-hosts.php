@@ -1,9 +1,9 @@
 <?php
 defined( 'ABSPATH' ) or die( );
 
-if ( ! class_exists( "rsssl_config" ) ) {
+if ( ! class_exists( "rsssl_le_hosts" ) ) {
 
-    class rsssl_config {
+    class rsssl_le_hosts {
         private static $_this;
         public $steps;
         public $hosts;
@@ -534,12 +534,6 @@ if ( ! class_exists( "rsssl_config" ) ) {
 		        'none' => __('I don\'t know, or not listed, proceed with installation', 'really-simple-ssl'),
 	        );
 	        $this->supported_hosts = $this->supported_hosts + wp_list_pluck($this->hosts, 'name');
-	        /*  config files
-				Load only on lets encrypt generation pages, or during cron.
-			 */
-	        if ( rsssl_letsencrypt_generation_allowed(true) ) {
-		        require_once( rsssl_le_path . 'wizard/config/steps.php' );
-	        }
         }
 
         static function this() {
@@ -573,7 +567,7 @@ if ( ! class_exists( "rsssl_config" ) ) {
 			    return true;
 		    }
 
-		    $hosts_has_dashboard = RSSSL_LE()->config->filter_hosts( 'api', $type);
+		    $hosts_has_dashboard = RSSSL_LE()->hosts->filter_hosts( 'api', $type);
 		    if ( in_array($hosting_company, $hosts_has_dashboard) ) {
 			    return true;
 		    } else {

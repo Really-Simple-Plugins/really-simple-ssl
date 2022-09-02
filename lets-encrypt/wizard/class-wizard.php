@@ -19,7 +19,7 @@ if ( ! class_exists( "rsssl_wizard" ) ) {
 			}
 
 			self::$_this = $this;
-			add_filter("rsssl_run_test", array($this, 'get_installation_progress'), 10, 3);
+			add_filter("rsssl_run_test", array($this, 'handle_lets_encrypt_request'), 10, 3);
 
 			add_action( 'rsssl_after_save_field', array( $this, 'after_save_field' ), 10, 4 );
 			add_action( 'plugins_loaded', array( $this, 'catch_settings_switches' ), 10 );
@@ -91,6 +91,9 @@ if ( ! class_exists( "rsssl_wizard" ) ) {
 			return $steps;
 		}
 
+        public function switch_to_dns(){
+	        update_option('rsssl_verification_type', 'DNS', false);
+        }
 
 
 		public function catch_settings_switches(){
@@ -153,16 +156,7 @@ if ( ! class_exists( "rsssl_wizard" ) ) {
 		 */
 
 		public function installation_progress(){
-			$step = $this->calculate_next('step');
 
-			if (empty($step)) return;
-
-			$action_list = RSSSL_LE()->config->steps['lets-encrypt'][$step]['actions'];
-			if (count($action_list)==0) return;
-			$actions = array_column($action_list, 'action');
-			$attempts = array_column($action_list, 'attempts');
-			$descriptions = array_column($action_list, 'description');
-			$speed = array_column($action_list, 'speed');
 			?>
 			<script>
                 jQuery(document).ready(function ($) {
@@ -172,7 +166,6 @@ if ( ! class_exists( "rsssl_wizard" ) ) {
                     var stored_attempts = ['<?php echo implode( "','",$attempts) ?>'];
                     var stored_descriptions = ['<?php echo implode( "','",$descriptions) ?>'];
                     var actions = stored_actions;//enabled us to reset
-                    var attempts = stored_attempts;//enabled us to reset
                     var descriptions = stored_descriptions;//enabled us to reset
                     var progress_step = Math.ceil(100/actions.length);
                     var attempt_string = '<?php _e("Attempt %s.", "really-simple-ssl")?>';
@@ -183,22 +176,8 @@ if ( ! class_exists( "rsssl_wizard" ) ) {
                     rsssl_process_installation_step();
 
                     function rsssl_process_installation_step() {
-                        //get next action to process
-                        console.log("remaining actions");
-                        console.log(actions);
-                        var current_action = actions[0];
-                        var max_attempts = attempts[0];
-                        //set up a counter to slowly increment the progress value until we get a response.
-                        clearInterval(window.rsssl_interval);
-                        window.rsssl_interval = setInterval(function () {
-                            progress += 0.2;
-                            if (progress >= 100) {
-                                progress = previous_progress;
-                            }
-                            rsssl_set_progress();
-                        }, 100);
 
-                        rsssl_start();
+
                         $.ajax({
                             type: "GET",
                             url: rsssl_wizard.admin_url,
@@ -208,23 +187,11 @@ if ( ! class_exists( "rsssl_wizard" ) ) {
                                 function: current_action,
                             }),
                             success: function (response) {
-                                var elapsedTime = rsssl_elapsed_time();
-                                if (elapsedTime<1000) {
-                                    rsssl_sleep(1000-elapsedTime);
-                                }
 
-                                var msg = response.message;
-                                if (actual_attempts_count>1) {
-                                    msg = attempt_string.replace('%s', actual_attempts_count)+' '+msg;
-                                }
-                                var current_action_container = $('.rsssl_action_'+current_action);
-                                current_action_container.html(msg);
-                                current_action_container.addClass('rsssl-'+response.status);
-                                var event = new CustomEvent('rsssl_le_response', { detail: response });
-                                document.dispatchEvent(event);
+
                                 if (response.action === 'finalize' ) {
                                     rsssl_maybe_show_elements(current_action, response.status);
-                                    rsssl_set_status(response.status);
+
                                     //do not remove current action
                                     //remove remaining list items.
                                     for (var action in actions) {
@@ -336,10 +303,6 @@ if ( ! class_exists( "rsssl_wizard" ) ) {
                         clearInterval(window.rsssl_interval);
                     }
 
-                    function rsssl_start() {
-                        startTime = new Date();
-                    }
-
                     function rsssl_elapsed_time() {
                         endTime = new Date();
                         var timeDiff = endTime - startTime; //in ms
@@ -389,7 +352,44 @@ if ( ! class_exists( "rsssl_wizard" ) ) {
 			<?php
 		}
 
+        public function handle_lets_encrypt_request($data, $test, $request){
+	        if ( ! current_user_can('manage_security') ) {
+		        $error = true;
+	        }
+
+	        switch($test){
+                case 'switch_to_dns':
+                    $this->switch_to_dns();
+		        case 'rsssl_php_requirement_met':
+		        case 'certificate_status':
+		        case 'curl_exists':
+		        case 'server_software':
+		        case 'alias_domain_available':
+		        case 'check_domain':
+		        case 'check_host':
+		        case 'check_challenge_directory':
+		        case 'check_key_directory':
+		        case 'check_certs_directory':
+		        case 'check_writing_permissions':
+		        case 'challenge_directory_reachable':
+		        case 'get_account':
+		        case 'get_dns_token':
+		        case 'terms_accepted':
+		        case 'create_bundle_or_renew':
+                return $this->get_installation_progress($data, $test, $request);
+            }
+        }
+
+		/**
+         * Run a LE test
+		 * @param $data
+		 * @param $function
+		 * @param $request
+		 *
+		 * @return array
+		 */
 		public function get_installation_progress( $data, $function, $request ){
+			$id = $request->get_param('id');
 			$error   = false;
 			$action = '';
 			$message = '';
@@ -398,6 +398,8 @@ if ( ! class_exists( "rsssl_wizard" ) ) {
 			if ( ! current_user_can('manage_security') ) {
 				$error = true;
 			}
+
+			rsssl_progress_add($id);
 
 			if ( !$error ) {
 				if (!function_exists($function) && !method_exists(RSSSL_LE()->letsencrypt_handler, $function)) {
@@ -441,8 +443,8 @@ if ( ! class_exists( "rsssl_wizard" ) ) {
 			}
 
 			if ( $field_id==='other_host_type'){
-			    if ( isset(RSSSL_LE()->config->hosts[$field_value]) ){
-			        $dashboard = RSSSL_LE()->config->hosts[$field_value]['hosting_dashboard'];
+			    if ( isset(RSSSL_LE()->hosts->hosts[$field_value]) ){
+			        $dashboard = RSSSL_LE()->hosts->hosts[$field_value]['hosting_dashboard'];
 			        update_option('rsssl_hosting_dashboard', $dashboard, false);
                 }
             }

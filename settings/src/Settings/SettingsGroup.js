@@ -20,7 +20,6 @@ class SettingsGroup extends Component {
     componentDidMount() {
         this.getLicenseStatus = this.getLicenseStatus.bind(this);
     }
-
     getLicenseStatus(){
         if (this.props.pageProps.hasOwnProperty('licenseStatus') ){
             return this.props.pageProps['licenseStatus'];
@@ -31,10 +30,8 @@ class SettingsGroup extends Component {
     handleMenuLink(id){
         this.props.selectMenu(id);
     }
-
     render(){
         let selectedMenuItem = this.props.selectedMenuItem;
-
         let selectedFields = [];
         //get all fields with group_id this.props.group_id
         for (const selectedField of this.props.fields){
@@ -90,7 +87,21 @@ class SettingsGroup extends Component {
                 </div>}
                 <div className="rsssl-grid-item-content">
                     {activeGroup && activeGroup.intro && <div className="rsssl-settings-block-intro">{activeGroup.intro}</div>}
-                    {selectedFields.map((field, i) => <Field dropItemFromModal={this.props.dropItemFromModal} handleModal={this.props.handleModal} showSavedSettingsNotice={this.props.showSavedSettingsNotice} updateField={this.props.updateField} setPageProps={this.props.setPageProps} fieldsUpdateComplete = {this.props.fieldsUpdateComplete} key={i} index={i} highLightField={this.props.highLightField} highLightedField={this.props.highLightedField} saveChangedFields={this.props.saveChangedFields} field={field} fields={selectedFields}/>)}
+                    {selectedFields.map((field, i) =>
+                        <Field key={i} index={i}
+                            dropItemFromModal={this.props.dropItemFromModal}
+                            handleNextButtonDisabled={this.props.handleNextButtonDisabled}
+                            handleModal={this.props.handleModal}
+                            showSavedSettingsNotice={this.props.showSavedSettingsNotice}
+                            updateField={this.props.updateField}
+                            setPageProps={this.props.setPageProps}
+                            fieldsUpdateComplete = {this.props.fieldsUpdateComplete}
+                            highLightField={this.props.highLightField}
+                            highLightedField={this.props.highLightedField}
+                            saveChangedFields={this.props.saveChangedFields}
+                            field={field}
+                            fields={selectedFields}
+                            />)}
                     {disabled && !networkwide_error && <div className="rsssl-locked">
                         <div className="rsssl-locked-overlay">
                             <span className="rsssl-progress-status rsssl-premium">{__("Premium","really-simple-ssl")}</span>

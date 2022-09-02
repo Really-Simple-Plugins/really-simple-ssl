@@ -70,8 +70,8 @@ function rsssl_cpanel_add_condition_actions($steps){
 	$cpanel = new rsssl_cPanel();
 	if ( $cpanel->credentials_available() ) {
 		//this defaults to true, if not known.
-		$auto_ssl    = RSSSL_LE()->config->host_api_supported( 'cpanel:autossl' );
-		$default_ssl = RSSSL_LE()->config->host_api_supported( 'cpanel:default' );
+		$auto_ssl    = RSSSL_LE()->hosts->host_api_supported( 'cpanel:autossl' );
+		$default_ssl = RSSSL_LE()->hosts->host_api_supported( 'cpanel:default' );
 
 		$installation_index = array_search( 'installation', array_column( $steps['lets-encrypt'], 'id' ) );
 		$dns_index = array_search( 'dns-verification', array_column( $steps['lets-encrypt'], 'id' ) );
