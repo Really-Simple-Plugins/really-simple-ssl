@@ -46,6 +46,7 @@ class Support extends Component {
             + '&licensekey=' + encodeURIComponent(response.data.license_key)
             + '&supportrequest=' + encodeURIComponent(encodedMessage)
             + '&htaccesscontents=' + response.data.htaccess_contents;
+            + '&debuglog=' + encodeURIComponent(response.data.system_status);
             window.location.assign(url);
         });
     }
