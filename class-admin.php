@@ -280,7 +280,10 @@ class rsssl_admin extends rsssl_front_end
 
         $plugin = rsssl_plugin;
         add_filter("plugin_action_links_$plugin", array($this, 'plugin_settings_link'));
+
+	    add_action( 'rocket_activation', array($this, 'removeHtaccessEdit' ) );
 	    add_filter( 'before_rocket_htaccess_rules', array($this, 'add_htaccess_redirect_before_wp_rocket' ) );
+
 	    //Add update notification to Settings admin menu
         add_action('admin_menu', array($this, 'rsssl_edit_admin_menu') );
 
