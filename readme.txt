@@ -95,6 +95,7 @@ If you can't deactivate, do not just remove the plugin folder to uninstall! Foll
 * Fix: type in Let's Encrypt wizard
 * Improvement: SSL redirect icw WP Rocket included in WP Rocket htaccess rules
 * Improvement: defaults for created directories
+* Improvement: fallback in case of missing administrator role, props @msigloo
 
 = 5.3.3 =
 * Added manage_security capability, props @madtownlems
