@@ -9,10 +9,7 @@ if ( !class_exists("rsssl_site_health") ) {
 			}
 
 			add_filter( 'site_status_tests', array($this, 'health_check' ), 1, 10 );
-
-			if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
-				add_filter( 'site_status_tests', array( $this, 'add_rsssl_debug_log_notice' ), 1, 20 );
-			}
+			add_filter( 'site_status_tests', array( $this, 'add_rsssl_debug_log_notice' ), 1, 20 );
 
 			self::$_this = $this;
 		}
@@ -29,13 +26,13 @@ if ( !class_exists("rsssl_site_health") ) {
 		 */
 		public function health_check( $tests ) {
 			unset($tests['async']['https_status']);
-			if ( ! RSSSL()->really_simple_ssl->dismiss_all_notices || is_multisite() && !rsssl_multisite::this()->dismiss_all_notices ) {
+			if ( ! rsssl_get_option('dismiss_all_notices') ) {
 				$tests['direct']['rsssl-health'] = array(
 					'label' => __( 'SSL Status Test' , 'really-simple-ssl'),
 					'test'  => array($this, "health_test"),
 				);
 
-				if ( RSSSL()->really_simple_ssl->ssl_enabled ) {
+				if ( rsssl_get_option('ssl_enabled') ) {
 					$tests['direct']['rsssl-headers'] = array(
 						'label' => __( 'Security Headers Test' , 'really-simple-ssl' ),
 						'test'  => array($this, "headers_test"),
@@ -55,9 +52,17 @@ if ( !class_exists("rsssl_site_health") ) {
 
 			unset( $tests['direct']['debug_enabled'] );
 
-			$tests['direct']['rsssl_debug_log'] = array(
-				'test'        => array($this, "rsssl_site_health_debug_notice_test"),
-			);
+			if ( rsssl_is_debugging_enabled() && rsssl_get_debug_log_value()===true ) {
+				$tests['direct']['rsssl_debug_log'] = array(
+					'test' => array( $this, "rsssl_site_health_debug_log_test" ),
+				);
+			}
+
+			if ( defined('WP_DEBUG_DISPLAY') && WP_DEBUG_DISPLAY ) {
+				$tests['direct']['rsssl_debug_display'] = array(
+					'test' => array( $this, "rsssl_site_health_debug_display_test" ),
+				);
+			}
 
 			return $tests;
 		}
@@ -66,7 +71,7 @@ if ( !class_exists("rsssl_site_health") ) {
 		 * Generate the WP_DEBUG notice
 		 *
 		 */
-		public function rsssl_site_health_debug_notice_test() {
+		public function rsssl_site_health_debug_log_test() {
 			$result = array(
 				'label'       => __( 'Your site is set to log errors to a potentially public file' ),
 				'status'      => 'critical',
@@ -74,30 +79,50 @@ if ( !class_exists("rsssl_site_health") ) {
 					'label' => __( 'Security' ),
 					'color' => 'blue',
 				),
-				'description' => '',
+				'description' => sprintf(
+					'<p>%s</p>',
+					__( 'The value, WP_DEBUG_LOG, has been added to this website’s configuration file. This means any errors on the site will be written to a file which is potentially available to all users.' ,'really-simple-ssl' )
+				),
 				'actions'     => sprintf(
 					'<p><a href="%s" target="_blank" rel="noopener">%s <span class="screen-reader-text">%s</span><span aria-hidden="true" class="dashicons dashicons-external"></span></a></p>',
 					/* translators: Documentation explaining debugging in WordPress. */
 					esc_url( __( add_query_arg(array('page'=>'really-simple-security#settings/hardening'), admin_url('options-general.php') ) ) ),
-					__( 'Fix with Really Simple SSL', 'really-simple-ssl' ),
+					__( 'Remove from public location with Really Simple SSL', 'really-simple-ssl' ),
 					/* translators: Accessibility text. */
 					__( '(opens in a new tab)' )
 				),
 				'test' => '',
 			);
 
-			if ( defined('WP_DEBUG_LOG') && WP_DEBUG_LOG ) {
-				$result['description'] = sprintf(
-					'<p>%s</p>',
-					__( 'The value, WP_DEBUG_LOG, has been added to this website’s configuration file. This means any errors on the site will be written to a file which is potentially available to all users.' ,'really-simple-ssl' )
-				);
-			}
-			if ( defined('WP_DEBUG_DISPLAY') && WP_DEBUG_DISPLAY ) {
-				$result['description'] .= sprintf(
+			return $result;
+		}
+
+		/**
+		 * Explain users about risks of debug display
+		 *
+		 */
+		public function rsssl_site_health_debug_display_test() {
+			$result = array(
+				'label'       => __( 'Your site is set to display errors on your website', 'really-simple-ssl' ),
+				'status'      => 'critical',
+				'badge'       => array(
+					'label' => __( 'Security' ),
+					'color' => 'blue',
+				),
+				'description' => sprintf(
 					'<p>%s</p>',
 					__( 'The value, WP_DEBUG_DISPLAY, has either been enabled by WP_DEBUG or added to your configuration file. This will make errors display on the front end of your site.' ,'really-simple-ssl' )
-				);
-			}
+				),
+				'actions'     => sprintf(
+					'<p><a href="%s" target="_blank" rel="noopener">%s <span class="screen-reader-text">%s</span><span aria-hidden="true" class="dashicons dashicons-external"></span></a></p>',
+					/* translators: Documentation explaining debugging in WordPress. */
+					esc_url( 'https://really-simple-ssl.com/security/debug-display-enabled' ),
+					__( 'Read more about security concerns with debug display enabled', 'really-simple-ssl' ),
+					/* translators: Accessibility text. */
+					__( '(opens in a new tab)' )
+				),
+				'test' => '',
+			);
 
 			return $result;
 		}
