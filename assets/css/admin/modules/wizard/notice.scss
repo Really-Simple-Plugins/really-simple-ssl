@@ -5,12 +5,22 @@
   gap: var(--rsp-spacing-xs);
   details{
     font-size: var(--rsp-fs-200);
+    summary{
+      font-size: var(--rsp-fs-400);
+      font-weight: 600;
+      &::-webkit-details-marker {
+        display:none;
+      }
+      &:first-of-type {
+        list-style-type: none;
+      }
+    }
   }
   summary, p {
-    font-size: var(--rsp-fs-300);
+    font-size: var(--rsp-fs-200);
   }
   details[open]{
-    @include rsssl-block-padding;
+    padding: var(--rsp-spacing-s) var(--rsp-spacing-m);
     summary{
       padding: 0;
       padding-bottom: var(--rsp-spacing-xs);
@@ -28,7 +38,7 @@
     border: 1px solid var(--rsp-yellow);
   }
   summary, p{
-    @include rsssl-block-padding;
+    padding: var(--rsp-spacing-s) var(--rsp-spacing-m);
   }
 }
 

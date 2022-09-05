@@ -1,0 +1,60 @@
+.rsssl{
+  div[class^="rsssl-wizard-"]{ // starts with selector
+    .components-flex{
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+      .components-flex-item label{
+        margin: 0;
+      }
+      .components-input-control__container {
+        max-width: max-content;
+      }
+    }
+    .components-toggle-control{
+      .components-base-control__field{
+        display: flex;
+        flex-direction: row-reverse;
+        align-items: center;
+        justify-content: space-between;
+        .components-form-toggle{
+            margin-right: 0;
+        }
+      }
+    }
+    .rsssl-grid-item{
+      .rsssl-grid-item-content{
+        padding: var(--rsp-spacing-xs) 0;
+      }
+    }
+    .rsssl-field-wrap{
+      padding: var(--rsp-spacing-xxs) var(--rsp-spacing-l);
+      overflow: hidden;
+    }
+  }
+
+  .rsssl-highlight {
+    background-color: transparent;
+    border-left: 4px solid var(--rsp-green);
+    -o-animation: fadeIt 3s ease-in-out;
+    animation: fadeIt 3s ease-in-out;
+  }
+
+  @-o-keyframes fadeIt {
+    0%   { background-color: transparent; }
+    30%  { background-color: var(--rsp-green-faded); }
+    100% {
+      border-right: 0;
+      background-color: inherit;
+    }
+  }
+  @keyframes fadeIt {
+    0%   {
+      background-color: transparent;
+      border-right: 0;
+    }
+    30%  { background-color: var(--rsp-green-faded); }
+    100% { background-color: inherit; }
+  }
+}

@@ -103,22 +103,32 @@ class Settings extends Component {
                     <div className="rsssl-grid-item-footer">
                         {/*This will be shown only if current step is not the first one*/}
                         { this.props.selectedMenuItem !== menuItems[0].id &&
-                            <a href={`#settings/${this.props.previousMenuItem}`} onClick={ () => this.props.previousStep(true) }>
+                            <a className="button button-secondary" href={`#settings/${this.props.previousMenuItem}`} onClick={ () => this.props.previousStep(true) }>
                                 { __('Previous', 'really-simple-ssl') }
                             </a>
                         }
 
-                        <Button
-                            variant="secondary"
-                            onClick={ this.props.save }>
-                            { __( 'Save', 'really-simple-ssl' ) }
-                        </Button>
-
                         {/*This will be shown only if current step is not the last one*/}
                         { this.props.selectedMenuItem !== menuItems[menuItems.length-1].id &&
-                            <a className="button button-primary" href={`#settings/${this.props.nextMenuItem}`} onClick={ this.props.saveAndContinue }>
-                                { __( 'Save and Continue', 'really-simple-ssl' ) }
-                            </a>
+                            <>
+                                <button
+                                    className="button button-secondary"
+                                    onClick={ this.props.save }>
+                                    { __( 'Save', 'really-simple-ssl' ) }
+                                </button>
+                                <a className="button button-primary" href={`#settings/${this.props.nextMenuItem}`} onClick={ this.props.saveAndContinue }>
+                                    { __( 'Save and Continue', 'really-simple-ssl' ) }
+                                </a>
+                            </>
+
+                        }
+
+                        { this.props.selectedMenuItem === menuItems[menuItems.length-1].id &&
+                            <button
+                                className="button button-primary"
+                                onClick={ this.props.save }>
+                                { __( 'Save', 'really-simple-ssl' ) }
+                            </button>
                         }
                     </div>
                 </div>

@@ -1,45 +1,79 @@
 .rsssl {
-  .rsssl-helplink {
-    color:#000;
-    z-index: 9999;
-  }
-  .rsssl-wizard-menu {
-      //@include rsssl-block;
-      //@include rsssl-block-padding;
-  }
-  .rsssl-wizard-settings{
-      .rsssl-grid-item{
-        position:relative; //to ensure the rsssl-lock stays within the div
-        margin-bottom: var(--rsp-grid-gap);
-      }
+  div[class^="rsssl-wizard-"] { // starts with selector
+    .rsssl-helplink {
+      color: var(--rsp-text-color);
+      z-index: 2;
+    }
 
-    .rsssl-locked{
+    .rsssl-grid-item {
+      position: relative; //to ensure the rsssl-lock stays within the div
+      margin-bottom: var(--rsp-grid-gap);
+    }
+
+    .rsssl-locked {
       position: absolute;
-      top:0;
+      top: 0;
       left: 0;
       bottom: 0;
       right: 0;
       background: rgba(255, 255, 255, 0.8);
-      .rsssl-locked-overlay{
-        z-index:99;
+      border-radius: var(--rsp-border-radius);
+
+      .rsssl-locked-overlay {
+        z-index: 5;
+        top: calc(100% - 95px);
+        position: relative;
+        display: flex;
+        align-items: center;
+        gap: var(--rsp-spacing-s);
+        background-color: var(--rsp-white);
+        padding: var(--rsp-spacing-m) var(--rsp-spacing-l);
+        border-radius: var(--rsp-border-radius);
+        margin: var(--rsp-spacing-s);
+        box-shadow: var(--rsp-box-shadow-dark);
+
         .rsssl-open {
           float: left;
-          margin-right:12px;
+          margin-right: 12px;
         }
+
         .rsssl-progress-status {
-          float:left;
-          margin-right:20px;
+          float: left;
+          margin-right: 20px;
         }
-        position:absolute;
-        width: calc(100% - 65px);
-        bottom: 0;
-        background-color: #fff;
-        padding: 20px;
-        margin:12px;
-        box-shadow: 0 0 5px 5px rgba(223,222,222,0.4);
+      }
+    }
+
+    .rsssl-disabled {
+      .rsssl-grid-item-header, .rsssl-grid-item-content {
+        filter: blur(1px);
+      }
+    }
+
+    .rsssl-grid-item-footer {
+      justify-content: flex-end;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: var(--rsp-grid-margin);
+      width: 100%;
+      min-height: calc(30px + var(--rsp-spacing-s) * 2);
+      box-sizing: border-box;
+      @include rsssl-block-padding;
+      padding-top: var(--rsp-spacing-xxs);
+      align-self: flex-end;
+
+      .rsssl-legend {
+        display: flex;
+
+        span {
+          padding-left: 5px;
+        }
+      }
+
+      &:empty {
+        display: none;
       }
     }
   }
-
-
 }

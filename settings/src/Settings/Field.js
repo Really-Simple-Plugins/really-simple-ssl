@@ -30,7 +30,7 @@ import DataTable from "react-data-table-component";
 class Field extends Component {
     constructor() {
         super( ...arguments );
-        this.highLightClass = this.props.highLightedField===this.props.field.id ? 'rsssl-highlight' : '';
+        this.highLightClass = this.props.highLightedField===this.props.field.id ? 'rsssl-field-wrap rsssl-highlight' : 'rsssl-field-wrap';
     }
 
     componentDidMount() {
@@ -115,60 +115,59 @@ class Field extends Component {
 
         if ( field.type==='checkbox' ){
             return (
-                <PanelRow className={ this.highLightClass}>
-                    <ToggleControl
-                        disabled = {disabled}
-                        checked= { field.value==1 }
-                        help={ field.comment }
-                        label={ field.label }
-                        onChange={ ( fieldValue ) => this.onChangeHandler(fieldValue) }
-                    />
-                </PanelRow>
+                <div className={this.highLightClass}>
+                  <ToggleControl
+                      disabled = {disabled}
+                      checked= { field.value==1 }
+                      help={ field.comment }
+                      label={ field.label }
+                      onChange={ ( fieldValue ) => this.onChangeHandler(fieldValue) }
+                  />
+                </div>
             );
         }
 
         if ( field.type==='hidden' ){
             return (
-                <>
-                    <input type="hidden" value={field.value}/>
-                </>
+                <input type="hidden" value={field.value}/>
             );
         }
 
         if ( field.type==='radio' ){
             return (
-                <PanelRow className={ this.highLightClass}>
-                    <RadioControl
-                        label={ field.label }
-                        onChange={ ( fieldValue ) => this.onChangeHandler(fieldValue) }
-                        selected={ fieldValue }
-                        options={ options }
-                    />
-                </PanelRow>			);
+                <div className={this.highLightClass}>
+                  <RadioControl
+                      label={ field.label }
+                      onChange={ ( fieldValue ) => this.onChangeHandler(fieldValue) }
+                      selected={ fieldValue }
+                      options={ options }
+                  />
+                </div>
+            );
         }
         if ( field.type==='text' ){
             return (
-                <PanelBody className={ this.highLightClass}>
-                    <TextControl
-                        help={ field.comment }
-                        label={ field.label }
-                        onChange={ ( fieldValue ) => this.onChangeHandler(fieldValue) }
-                        value= { fieldValue }
-                    />
-                </PanelBody>
+                <div className={this.highLightClass}>
+                  <TextControl
+                      help={ field.comment }
+                      label={ field.label }
+                      onChange={ ( fieldValue ) => this.onChangeHandler(fieldValue) }
+                      value= { fieldValue }
+                  />
+                </div>
             );
         }
 
         if ( field.type==='textarea' ){
             return (
-                <PanelBody className={ this.highLightClass}>
-                    <TextareaControl
-                        label={ field.label }
-                        help={ field.comment }
-                        value= { fieldValue }
-                        onChange={ ( fieldValue ) => this.onChangeHandler(fieldValue) }
-                    />
-                </PanelBody>
+                <div className={this.highLightClass}>
+                  <TextareaControl
+                      label={ field.label }
+                      help={ field.comment }
+                      value= { fieldValue }
+                      onChange={ ( fieldValue ) => this.onChangeHandler(fieldValue) }
+                  />
+                </div>
             );
         }
 
@@ -180,70 +179,80 @@ class Field extends Component {
             let fieldValue = field.value;
             let fields = this.props.fields;
             return (
-                <License setPageProps={this.props.setPageProps} fieldsUpdateComplete = {this.props.fieldsUpdateComplete} index={this.props.index} fields={fields} field={field} fieldValue={fieldValue} saveChangedFields={this.props.saveChangedFields} highLightField={this.props.highLightField} highLightedField={this.props.highLightedField}/>
+                <div className={this.highLightClass}>
+                  <License setPageProps={this.props.setPageProps} fieldsUpdateComplete = {this.props.fieldsUpdateComplete} index={this.props.index} fields={fields} field={field} fieldValue={fieldValue} saveChangedFields={this.props.saveChangedFields} highLightField={this.props.highLightField} highLightedField={this.props.highLightedField}/>
+                </div>
             );
         }
         if ( field.type==='number' ){
             return (
-                <PanelBody className={ this.highLightClass}>
+                <div className={this.highLightClass}>
                     <NumberControl
                         onChange={ ( fieldValue ) => this.onChangeHandler(fieldValue) }
                         help={ field.comment }
                         label={ field.label }
                         value= { fieldValue }
                     />
-                </PanelBody>
+                </div>
             );
         }
         if ( field.type==='email' ){
             return (
-                <PanelBody className={ this.highLightClass}>
-                    <TextControl
-                        help={ field.comment }
-                        label={ field.label }
-                        onChange={ ( fieldValue ) => this.onChangeHandler(fieldValue) }
-                        value= { fieldValue }
-                    />
-                </PanelBody>
+                <div className={this.highLightClass}>
+                  <TextControl
+                      help={ field.comment }
+                      label={ field.label }
+                      onChange={ ( fieldValue ) => this.onChangeHandler(fieldValue) }
+                      value= { fieldValue }
+                  />
+                </div>
             );
         }
 
         if ( field.type==='select') {
             return (
-                <PanelBody className={ this.highLightClass}>
-                    <SelectControl
-                        // multiple
-                        help={ field.comment }
-                        label={ field.label }
-                        onChange={ ( fieldValue ) => this.onChangeHandler(fieldValue) }
-                        value= { fieldValue }
-                        options={ options }
-                    />
-                </PanelBody>
+                <div className={this.highLightClass}>
+                  <SelectControl
+                      // multiple
+                      help={ field.comment }
+                      label={ field.label }
+                      onChange={ ( fieldValue ) => this.onChangeHandler(fieldValue) }
+                      value= { fieldValue }
+                      options={ options }
+                  />
+                </div>
             )
         }
 
         if ( field.type==='support' ) {
             return (
-                <Support/>
+                <div className={this.highLightClass}>
+                  <Support/>
+                </div>
             )
         }
 
         if ( field.type==='permissionspolicy' ) {
             return (
-                <PermissionsPolicy onChangeHandlerDataTable={this.onChangeHandlerDataTable} updateField={this.props.updateField} field={this.props.field} options={options} highLightClass={this.highLightClass} fields={fields}/>
+                <div className={this.highLightClass}>
+                  <PermissionsPolicy onChangeHandlerDataTable={this.onChangeHandlerDataTable} updateField={this.props.updateField} field={this.props.field} options={options} highLightClass={this.highLightClass} fields={fields}/>
+                </div>
             )
         }
 
         if ( field.type==='learningmode' ) {
             return(
-                <LearningMode onChangeHandlerDataTable={this.onChangeHandlerDataTable} updateField={this.props.updateField} field={this.props.field} options={options} highLightClass={this.highLightClass} fields={fields}/>
+                <div className={this.highLightClass}>
+                  <LearningMode onChangeHandlerDataTable={this.onChangeHandlerDataTable} updateField={this.props.updateField} field={this.props.field} options={options} highLightClass={this.highLightClass} fields={fields}/>
+                </div>
             )
         }
 
         if ( field.type === 'mixedcontentscan' ) {
             return (
-               <MixedContentScan dropItemFromModal={this.props.dropItemFromModal} handleModal={this.props.handleModal} field={this.props.field} fields={this.props.selectedFields}/>
+                <div className={this.highLightClass}>
+                  <MixedContentScan dropItemFromModal={this.props.dropItemFromModal} handleModal={this.props.handleModal} field={this.props.field} fields={this.props.selectedFields}/>
+                </div>
             )
         }
 
