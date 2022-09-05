@@ -42,7 +42,7 @@ class rsssl_progress {
 	 */
 
 	private function percentage() {
-		if ( ! current_user_can( 'manage_options' ) ) {
+		if ( ! rsssl_user_can_manage() ) {
 			return 0;
 		}
 
@@ -74,7 +74,7 @@ class rsssl_progress {
 	 * @return string
 	 */
 	private function get_text(){
-		if (!current_user_can('manage_options')) return '';
+		if (!rsssl_user_can_manage()) return '';
 		ob_start();
 
 		$lowest_possible_task_count = RSSSL()->really_simple_ssl->get_lowest_possible_task_count();

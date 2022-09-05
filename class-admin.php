@@ -14,7 +14,6 @@ class rsssl_admin
     public $sites = array(); //for multisite, list of all activated sites.
 
     //general settings
-    public $capability = 'activate_plugins';
     public $htaccess_test_success = FALSE;
     public $plugin_dir = "really-simple-ssl";
     public $plugin_filename = "rlrsssl-really-simple-ssl.php";
@@ -140,7 +139,7 @@ class rsssl_admin
 
     public function init()
     {
-        if (!current_user_can($this->capability)) return;
+        if (!rsssl_user_can_manage()) return;
         $is_on_settings_page = $this->is_settings_page();
         if (defined("RSSSL_FORCE_ACTIVATE") && RSSSL_FORCE_ACTIVATE) {
             rsssl_update_option( 'ssl_enabled', true );
@@ -207,7 +206,8 @@ class rsssl_admin
 
         $plugin = rsssl_plugin;
         add_filter("plugin_action_links_$plugin", array($this, 'plugin_settings_link'));
-
+	    add_action( 'rocket_activation', array($this, 'removeHtaccessEdit' ) );
+	    add_filter( 'before_rocket_htaccess_rules', array($this, 'add_htaccess_redirect_before_wp_rocket' ) );
         //Add update notification to Settings admin menu
         add_action('admin_menu', array($this, 'add_plus_ones') );
 
@@ -232,7 +232,7 @@ class rsssl_admin
     public function listen_for_deactivation()
     {
         //check user role
-        if (!current_user_can($this->capability)) return;
+        if (!rsssl_user_can_manage()) return;
 
         //check nonce
         if (!isset($_GET['token']) || (!wp_verify_nonce($_GET['token'], 'rsssl_deactivate_plugin'))) return;
@@ -311,7 +311,7 @@ class rsssl_admin
 	 * @return void
 	 */
     public function recheck_certificate(){
-	    if (!current_user_can($this->capability)) return;
+	    if (!rsssl_user_can_manage()) return;
 
         if (isset($_POST['rsssl_recheck_certificate']) || isset($_GET['rsssl_recheck_certificate'])) {
 	        delete_transient('rsssl_certinfo');
@@ -324,7 +324,7 @@ class rsssl_admin
 
     public function activate_ssl($request)
     {
-	    if ( !current_user_can('manage_options') ) {
+	    if ( !rsssl_user_can_manage() ) {
 		    return;
 	    }
 	    $safe_mode = defined('RSSSL_SAFE_MODE') && RSSSL_SAFE_MODE;
@@ -816,7 +816,7 @@ class rsssl_admin
 
     public function remove_ssl_from_siteurl_in_wpconfig()
     {
-	    if ( !current_user_can($this->capability) ) {
+	    if ( !rsssl_user_can_manage() ) {
 		    return;
 	    }
         $wpconfig_path = $this->find_wp_config_path();
@@ -845,7 +845,7 @@ class rsssl_admin
 	 */
     private function check_for_siteurl_in_wpconfig()
     {
-	    if ( !current_user_can($this->capability) ) {
+	    if ( !rsssl_user_can_manage() ) {
 		    return;
 	    }
 
@@ -877,7 +877,7 @@ class rsssl_admin
 
     private function fix_siteurl_defines_in_wpconfig()
     {
-	    if ( !current_user_can($this->capability) ) {
+	    if ( !rsssl_user_can_manage() ) {
 		    return;
 	    }
         $wpconfig_path = $this->find_wp_config_path();
@@ -944,7 +944,7 @@ class rsssl_admin
 
     public function wpconfig_loadbalancer_fix()
     {
-        if (!current_user_can($this->capability)) {
+        if (!rsssl_user_can_manage()) {
             return;
         }
 
@@ -995,7 +995,7 @@ class rsssl_admin
 
     public function wpconfig_server_variable_fix()
     {
-        if (!current_user_can($this->capability)) {
+        if (!rsssl_user_can_manage()) {
             return;
         }
 
@@ -1345,7 +1345,7 @@ class rsssl_admin
 
     public function test_htaccess_redirect()
     {
-        if (!current_user_can($this->capability)) return;
+        if (!rsssl_user_can_manage()) return;
 
         $this->htaccess_test_success = get_transient('rsssl_htaccess_test_success');
         if (!$this->htaccess_test_success) {
@@ -1466,39 +1466,42 @@ class rsssl_admin
      *
      */
 
-    public function removeHtaccessEdit()
-    {
-        if ( file_exists($this->htaccess_file()) && is_writable($this->htaccess_file()) ) {
-            $htaccess = file_get_contents( $this->htaccess_file() );
+	public function removeHtaccessEdit()
+	{
+		if (file_exists($this->htaccess_file()) && is_writable($this->htaccess_file())) {
+			$htaccess = file_get_contents($this->htaccess_file());
 
-            //if multisite, per site activation and more than one blog remaining on ssl, remove condition for this site only
-            //the domain list has been rebuilt already, so current site is already removed.
-            if (is_multisite() && !RSSSL()->rsssl_multisite->ssl_enabled_networkwide && count($this->sites) > 0) {
-                //remove http or https.
-                $domain = preg_replace("/(http:\/\/|https:\/\/)/", "", home_url());
-                $pattern = "/#wpmu\srewritecond\s?" . preg_quote($domain, "/") . "\n.*?#end\swpmu\srewritecond\s?" . preg_quote($domain, "/") . "\n/s";
+			//if multisite, per site activation and more than one blog remaining on ssl, remove condition for this site only
+			//the domain list has been rebuilt already, so current site is already removed.
+			if (is_multisite() && !RSSSL()->rsssl_multisite->ssl_enabled_networkwide && count($this->sites) > 0) {
+				//remove http or https.
+				$domain = preg_replace("/(http:\/\/|https:\/\/)/", "", home_url());
+				$pattern = "/#wpmu\srewritecond\s?" . preg_quote($domain, "/") . "\n.*?#end\swpmu\srewritecond\s?" . preg_quote($domain, "/") . "\n/s";
 
-                //only remove if the pattern is there at all
-                if (preg_match($pattern, $htaccess)) $htaccess = preg_replace($pattern, "", $htaccess);
-                //now replace any remaining "or" on the last condition.
-                $pattern = "/(\[OR\])(?!.*(\[OR\]|#start).*?RewriteRule)/s";
-                $htaccess = preg_replace($pattern, "", $htaccess, 1);
+				//only remove if the pattern is there at all
+				if (preg_match($pattern, $htaccess)) $htaccess = preg_replace($pattern, "", $htaccess);
+				//now replace any remaining "or" on the last condition.
+				$pattern = "/(\[OR\])(?!.*(\[OR\]|#start).*?RewriteRule)/s";
+				$htaccess = preg_replace($pattern, "", $htaccess, 1);
 
-            } else {
-                // remove everything
-                $pattern_old = "/#\s?BEGIN\s?rlrssslReallySimpleSSL.*?#\s?END\s?rlrssslReallySimpleSSL/s";
-                $pattern_new = "/#\s?BEGIN\s?Really Simple SSL Redirect.*?#\s?END\s?Really Simple SSL Redirect/s";
-                //only remove if the pattern is there at all
-                if (preg_match($pattern_old, $htaccess)) $htaccess = preg_replace($pattern_old, "", $htaccess);
-	            if (preg_match($pattern_new, $htaccess)) $htaccess = preg_replace($pattern_new, "", $htaccess);
+			} else {
+				// remove everything
+				$pattern_old = "/#\s?BEGIN\s?rlrssslReallySimpleSSL.*?#\s?END\s?rlrssslReallySimpleSSL/s";
+				$pattern_new = "/#\s?BEGIN\s?Really Simple SSL Redirect.*?#\s?END\s?Really Simple SSL Redirect/s";
+				//only remove if the pattern is there at all
+				if (preg_match($pattern_old, $htaccess)) $htaccess = preg_replace($pattern_old, "", $htaccess);
+				if (preg_match($pattern_new, $htaccess)) $htaccess = preg_replace($pattern_new, "", $htaccess);
+			}
 
-            }
+			$htaccess = preg_replace("/\n+/", "\n", $htaccess);
+			file_put_contents($this->htaccess_file(), $htaccess);
+			$this->save_options();
+		} else {
+			$this->errors['HTACCESS_NOT_WRITABLE'] = TRUE;
+			$this->trace_log("could not remove rules from htaccess, file not writable");
+		}
 
-            $htaccess = preg_replace("/\n+/", "\n", $htaccess);
-            file_put_contents($this->htaccess_file(), $htaccess);
-            $this->save_options();
-        }
-    }
+	}
 
 	/**
 	 * @return bool
@@ -1751,97 +1754,95 @@ class rsssl_admin
      *
      */
 
-    public function editHtaccess()
-    {
-        if ( !current_user_can($this->capability) ) {
-            return;
-        }
+	public function editHtaccess()
+	{
 
-        $htaccess_file = $this->htaccess_file();
-        if ( !file_exists($htaccess_file) ) {
-            return;
-        }
+		if (!rsssl_user_can_manage()) return;
 
-        if ( rsssl_get_option('do_not_edit_htaccess') ) {
-            return;
-        }
+		$this->trace_log("checking if .htaccess can or should be edited...");
 
-        $htaccess = file_get_contents($htaccess_file);
-        if (!$this->htaccess_contains_redirect_rules()) {
-            if ( !is_writable($htaccess_file) ) {
-                //set the wp redirect as fallback, because .htaccess couldn't be edited.
-                if ( $this->ssl_enabled ) {
-                    $this->wp_redirect = true;
-                }
-                if (is_multisite()) {
-                    RSSSL()->rsssl_multisite->wp_redirect = true;
-                    RSSSL()->rsssl_multisite->save_options();
-                }
-                $this->save_options();
-                return;
-            }
+		//does it exist?
+		if (!file_exists($this->htaccess_file()) ) {
+			$this->trace_log(".htaccess not found.");
+			return;
+		}
 
-            $rules = $this->get_redirect_rules();
-            //insert rules before wordpress part.
-            if ( strlen($rules) > 0 ) {
-                $wptag = "# BEGIN WordPress";
-                if (strpos($htaccess, $wptag) !== false) {
-                    $htaccess = str_replace($wptag, $rules . $wptag, $htaccess);
-                } else {
-                    $htaccess = $htaccess . $rules;
-                }
-                file_put_contents($this->htaccess_file(), $htaccess);
-            }
-        }
-    }
+		//check if editing is blocked.
+		if ($this->do_not_edit_htaccess) {
+			$this->trace_log("Edit of .htaccess blocked by setting or define 'do not edit htaccess' in Really Simple SSL.");
+			return;
+		}
+
+		if ( !is_writable($this->htaccess_file()) ) {
+			//set the wp redirect as fallback, because .htaccess couldn't be edited.
+			if ($this->clicked_activate_ssl()) $this->wp_redirect = true;
+			if (is_multisite()) {
+				RSSSL()->rsssl_multisite->wp_redirect = true;
+				RSSSL()->rsssl_multisite->save_options();
+			}
+			$this->save_options();
+			$this->trace_log(".htaccess not writable.");
+			return;
+		}
+
+		$htaccess = file_get_contents($this->htaccess_file());
+
+		$pattern_old = "/#\s?BEGIN\s?rlrssslReallySimpleSSL.*?#\s?END\s?rlrssslReallySimpleSSL/s";
+		$pattern_new = "/#\s?BEGIN\s?Really Simple SSL Redirect.*?#\s?END\s?Really Simple SSL Redirect/s";
+
+		$htaccess = preg_replace($pattern_old, "", $htaccess);
+		$htaccess = preg_replace($pattern_new, "", $htaccess);
+		$htaccess = preg_replace("/\n+/", "\n", $htaccess);
+
+		// If using WP Rocket, .htaccess insertion is handled by before_rocket_htaccess_rules filter
+		$rules = '';
+		if ( ! function_exists('rocket_clean_domain') ) {
+			$rules = $this->get_redirect_rules();
+		}
+
+		//insert rules before WordPress part.
+		$wptag = "# BEGIN WordPress";
+		if ( strpos( $htaccess, $wptag ) !== false ) {
+			$htaccess = str_replace( $wptag, $rules . $wptag, $htaccess );
+		} else {
+			$htaccess = $htaccess . $rules;
+		}
+
+		file_put_contents($this->htaccess_file(), $htaccess);
+
+		$this->maybe_flush_wprocket_htaccess();
+
+	}
 
 	/**
-	 * @param bool $oldvalue
-	 * @param bool $newvalue
-	 * @param bool $option
-     *
-     * Update the .htaccess file after saving settings
-     *
+	 * Regenerate the wp rocket .htaccess rules
 	 */
+	public function maybe_flush_wprocket_htaccess(){
+		if ( wp_doing_ajax()
+		     || !$this->is_settings_page()
+		     || !$this->ssl_enabled
+		     || ! rsssl_user_can_manage()
+		     || $this->do_not_edit_htaccess
+		) return;
 
-    public function update_htaccess_after_settings_save($oldvalue = false, $newvalue = false, $option = false)
-    {
+		if ( function_exists('flush_rocket_htaccess') ) {
+			flush_rocket_htaccess();
+		}
 
-        if (!current_user_can($this->capability)) {
-            return;
-        }
+		if ( function_exists('rocket_generate_config_file') ) {
+			rocket_generate_config_file();
+		}
 
-        $htaccess_file = $this->htaccess_file();
-        if ( !file_exists($htaccess_file) ) {
-            return;
-        }
+	}
 
-        if ( !is_writable($htaccess_file) ) {
-            return;
-        }
-
-        if ( rsssl_get_option('do_not_edit_htaccess') ) {
-            return;
-        }
-
-	    $pattern_old = "/#\s?BEGIN\s?rlrssslReallySimpleSSL.*?#\s?END\s?rlrssslReallySimpleSSL/s";
-	    $pattern_new = "/#\s?BEGIN\s?Really Simple SSL Redirect.*?#\s?END\s?Really Simple SSL Redirect/s";
-
-	    $htaccess = file_get_contents($this->htaccess_file());
-        $htaccess = preg_replace($pattern_old, "", $htaccess);
-	    $htaccess = preg_replace($pattern_new, "", $htaccess);
-	    $htaccess = preg_replace("/\n+/", "\n", $htaccess);
-        $rules = $this->get_redirect_rules();
-
-        //insert rules before WordPress part.
-        $wptag = "# BEGIN WordPress";
-        if (strpos($htaccess, $wptag) !== false) {
-            $htaccess = str_replace($wptag, $rules . $wptag, $htaccess);
-        } else {
-            $htaccess = $htaccess . $rules;
-        }
-        file_put_contents($htaccess_file, $htaccess);
-    }
+	/**
+	 * Return .htaccess redirect when using WP Rocket
+	 * @return string
+	 */
+	public function add_htaccess_redirect_before_wp_rocket() {
+		$this->detect_configuration();
+		return $this->get_redirect_rules();
+	}
 
     /**
      *
@@ -2275,7 +2276,7 @@ class rsssl_admin
 
     public function add_plus_ones()
     {
-        if (!current_user_can($this->capability)) {
+        if (!rsssl_user_can_manage()) {
             return;
         }
 
@@ -2923,7 +2924,7 @@ class rsssl_admin
 	 */
 
 	public function count_plusones() {
-		if ( ! current_user_can( 'manage_options' ) ) {
+		if ( ! rsssl_user_can_manage() ) {
 			return 0;
 		}
 
@@ -2951,7 +2952,7 @@ class rsssl_admin
 	 * @return int
 	 */
     public function get_all_task_count() {
-        if ( ! current_user_can( 'manage_options' ) ) {
+        if ( ! rsssl_user_can_manage() ) {
             return 0;
         }
 
@@ -3258,7 +3259,7 @@ class rsssl_admin
 	 */
 
 	public function insert_secure_cookie_settings(){
-		if ( !current_user_can("activate_plugins") ) {
+		if ( !rsssl_user_can_manage() ) {
             return;
 		}
 
