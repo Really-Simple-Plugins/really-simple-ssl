@@ -1278,7 +1278,7 @@ class rsssl_admin
             $this->site_has_ssl = RSSSL()->rsssl_certificate->is_valid();
         }
 
-        if ($this->site_has_ssl) {
+        if ( $this->site_has_ssl ) {
             $filecontents = $this->get_test_page_contents();
             //get filecontents to check .htaccess redirection method and wpconfig fix
             //check the type of SSL, either by parsing the returned string, or by reading the server vars.
