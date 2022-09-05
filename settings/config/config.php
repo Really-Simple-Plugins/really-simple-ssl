@@ -304,6 +304,21 @@ function rsssl_fields( $load_values = true ){
 			'disabled'    => false,
 			'default'     => false,
 		],
+		[
+			'id'          => 'download-system-status',
+			'menu_id'     => 'general',
+			'group_id'    => 'general',
+			'type'        => 'button',
+			'url'         => trailingslashit(rsssl_url).'system-status.php?download',
+			'button_text' => __("System Status", "really-simple-ssl"),
+			'label'       => __( "Download system status", 'really-simple-ssl' ),
+			'help'        => [
+				'label' => 'default',
+				'text' => __( "Enable this option to permanently dismiss all +1 notices in the 'Your progress' tab'", 'really-simple-ssl' ),
+			],
+			'disabled'    => false,
+			'default'     => false,
+		],
         [
             'id'          => 'do_not_edit_htaccess',
             'menu_id'     => 'general',
