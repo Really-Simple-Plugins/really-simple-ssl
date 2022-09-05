@@ -1,9 +1,15 @@
-.rsssl-new-feature{
-  width: max-content;
-  color: var(--rsp-text-color-light);
-  display: flex;
-  align-items: center;
-  min-width: 0;
-  gap: var(--rsp-spacing-xs);
-  text-decoration: none;
+.rsssl{
+  .rsssl-new-feature{
+    width: 100%;
+    color: var(--rsp-text-color-light);
+    display: flex;
+    align-items: flex-start;
+    min-width: 0;
+    gap: var(--rsp-spacing-xs);
+    text-decoration: none;
+    margin: var(--rsp-spacing-xxs) 0;
+    .rsssl-bullet{
+      margin-top: 2px;
+    }
+  }
 }

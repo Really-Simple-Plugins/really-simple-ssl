@@ -1,7 +1,4 @@
 import {
-    PanelBody,
-} from '@wordpress/components';
-import {
     Component,
 } from '@wordpress/element';
 import TaskElement from "../DashBoard/TaskElement";
@@ -82,7 +79,7 @@ class License extends Component {
          * There is no "PasswordControl" in WordPress react yet, so we create our own license field.
          */
         return (
-            <PanelBody className={ this.highLightClass}>
+            <div className={ this.highLightClass}>
                 <div className="components-base-control">
                  <div className="components-base-control__field">
                      <label
@@ -98,7 +95,7 @@ class License extends Component {
                     {!noticesLoaded && <Placeholder></Placeholder>}
                     {noticesLoaded && notices.map((notice, i) => <TaskElement key={i} index={i} notice={notice} onCloseTaskHandler={this.onCloseTaskHandler} highLightField=""/>)}
                 </div>
-            </PanelBody>
+            </div>
         );
 
     }

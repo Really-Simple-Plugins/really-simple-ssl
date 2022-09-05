@@ -14,7 +14,7 @@ class ModalControl extends Component{
 
     render(){
         return (
-            <button onClick={ (e) => this.onClickHandler(e) }>{this.props.btnText}</button>
+            <button className={"button button-" + this.props.btnStyle} onClick={ (e) => this.onClickHandler(e) }>{this.props.btnText}</button>
         )
     }
 }

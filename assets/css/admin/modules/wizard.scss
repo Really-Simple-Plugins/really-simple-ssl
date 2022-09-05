@@ -28,7 +28,7 @@
         gap: var(--rsp-spacing-s);
         background-color: var(--rsp-white);
         padding: var(--rsp-spacing-m) var(--rsp-spacing-l);
-        border-radius: var(--rsp-border-radius);
+        border-radius: var(--rsp-border-radius-input);
         margin: var(--rsp-spacing-s);
         box-shadow: var(--rsp-box-shadow-dark);
 
@@ -52,15 +52,14 @@
 
     .rsssl-grid-item-footer {
       justify-content: flex-end;
+      padding-top: var(--rsp-spacing-xxs);
       display: flex;
       flex-wrap: wrap;
       align-items: center;
       gap: var(--rsp-grid-margin);
       width: 100%;
-      min-height: calc(30px + var(--rsp-spacing-s) * 2);
+      min-height: 20px;
       box-sizing: border-box;
-      @include rsssl-block-padding;
-      padding-top: var(--rsp-spacing-xxs);
       align-self: flex-end;
 
       .rsssl-legend {

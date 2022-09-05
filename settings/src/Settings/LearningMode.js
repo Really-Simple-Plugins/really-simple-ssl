@@ -1,8 +1,3 @@
-import {
-    PanelBody,
-    SelectControl,
-    ToggleControl,
-} from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
 import {
     Component,
@@ -188,7 +183,7 @@ class LearningMode extends Component {
             ];
              return (
                 <>
-                    <PanelBody className={ this.highLightClass}>
+                    <div className={ this.highLightClass}>
                         <DataTable
                             columns={columns}
                             data={data}
@@ -212,7 +207,7 @@ class LearningMode extends Component {
                             />
                             {__("Enable Learning Mode","really-simple-ssl")}
                         </label>
-                    </PanelBody>
+                    </div>
                     {learning_mode==1 && <div className="rsssl-locked">
                         <div className="rsssl-locked-overlay">
                             <span className="rsssl-progress-status rsssl-learning-mode">{__("Learning Mode","really-simple-ssl")}</span>

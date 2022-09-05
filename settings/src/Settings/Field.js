@@ -1,6 +1,4 @@
 import {
-    PanelBody,
-    PanelRow,
     TextControl,
     RadioControl,
     SelectControl,

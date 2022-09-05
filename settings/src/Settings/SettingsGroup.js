@@ -69,6 +69,7 @@ class SettingsGroup extends Component {
 
         this.upgrade = activeGroup.upgrade ? activeGroup.upgrade : this.upgrade;
         let helplinkText = activeGroup.helpLink_text ? activeGroup.helpLink_text : __("Instructions manual","really-simple-ssl");
+        disabled = false;
         let disabledClass = disabled || networkwide_error ? 'rsssl-disabled' : '';
 
         return (
@@ -83,7 +84,7 @@ class SettingsGroup extends Component {
                 </div>
                 {disabled && !networkwide_error && <div className="rsssl-locked">
                     <div className="rsssl-locked-overlay">
-                        <span className="rsssl-task-status rsssl-premium">{__("Premium","really-simple-ssl")}</span>
+                        <span className="rsssl-task-status rsssl-premium">{__("Upgrade to Pro","really-simple-ssl")}</span>
                         { rsssl_settings.pro_plugin_active && <span>{msg}<a className="rsssl-locked-link" href="#" onClick={ () => this.handleMenuLink('license') }>{__("Check license", "really-simple-ssl")}</a></span>}
                         { !rsssl_settings.pro_plugin_active && <Hyperlink target="_blank" text={msg} url={this.upgrade}/> }
                     </div>

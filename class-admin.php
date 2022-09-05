@@ -2314,7 +2314,7 @@ class rsssl_admin
 		    'success' => __("Completed", "really-simple-ssl"),
 		    'warning' => __("Warning", "really-simple-ssl"),
 		    'open' => __("Open", "really-simple-ssl"),
-		    'premium' => __("Premium", "really-simple-ssl"),
+		    'premium' => __("Upgrade to Pro", "really-simple-ssl"),
 	    ];
 
         $defaults = array(

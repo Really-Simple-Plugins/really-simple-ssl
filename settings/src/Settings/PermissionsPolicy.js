@@ -1,7 +1,5 @@
 import {
-    PanelBody,
     SelectControl,
-    ToggleControl,
 } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
 import {
@@ -112,8 +110,7 @@ class PermissionsPolicy extends Component {
 
 
         return (
-            <div>
-                <PanelBody className={ this.props.highLightClass}>
+            <div className={ this.props.highLightClass}>
                     <DataTable
                         columns={columns}
                         data={data}
@@ -125,7 +122,6 @@ class PermissionsPolicy extends Component {
                     />
                     { enable_permissions_policy!=1 && <button className="button" onClick={ (e) => this.togglePermissionsPolicyStatus(e, true ) }>{__("Enforce","really-simple-ssl")}</button> }
                     { enable_permissions_policy==1 && <button className="button" onClick={ (e) => this.togglePermissionsPolicyStatus(e, false ) }>{__("Disable","really-simple-ssl")}</button> }
-                </PanelBody>
             </div>
         )
     }

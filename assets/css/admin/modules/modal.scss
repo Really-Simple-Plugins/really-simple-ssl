@@ -4,28 +4,25 @@
   right: 0;
   bottom: 0;
   left: 0;
-  background-color: grey;
-  opacity: 0.45;
+  background-color: rgba(0, 0, 0, 0.6);
   width: 100%;
   height: 100%;
   z-index: 2;
 }
 
 .rsssl-modal {
-  max-width: 526px;
-  min-width:200px;
+  width: #{"min(100%, 600px)"};
   position: fixed;
   z-index: 3;
   border-radius: 12px;
-  background-color: white;
+  background-color: var(--rsp-white);
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
   margin: 25px;
 
   .rsssl-modal-header {
-    background-color: white;
-    padding: 20px 20px 10px 20px;
+    @include rsssl-block-padding;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -52,7 +49,7 @@
 
   .rsssl-modal-content {
     position: relative;
-    padding: 10px 20px 10px 20px;
+    @include rsssl-block-padding;
     font-size: 12px;
     .rsssl-modal-subtitle {
       font-weight: 600;
@@ -68,15 +65,17 @@
   .rsssl-modal-footer {
     display: flex;
     flex-direction: row;
-    padding: 10px 20px 20px 20px;
+    @include rsssl-block-padding;
     gap:10px;
     // text-align: right;
     .button {
       display: flex;
-      align-items: center;
+      align-items: flex-start;
       justify-content: center;
-      height: 45px;
-      width: 100%;
+      min-width: 105px;
+
+      //height: 45px;
+      //width: 100%;
       text-align: center;
       // margin-right: 20px;
       border-radius: 6px;

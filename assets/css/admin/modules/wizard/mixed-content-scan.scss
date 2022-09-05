@@ -1,6 +1,23 @@
-.rsssl-mixedcontentscan .rsssl-progress-container {
-  .rsssl-progress-bar {
-    height:20px;
-    background-color:var(--rsp-green);
+.rsssl-mixedcontentscan {
+  .rsssl-progress-container {
+    .rsssl-progress-bar {
+      height:20px;
+      background-color:var(--rsp-green);
+    }
+  }
+  .rsssl-task-status{
+    min-width: min-content;
+    &.rsssl-warning {
+      background-color: var(--rsp-yellow);
+      color: var(--rsp-text-color);
+    }
+  }
+  button.button{
+    line-height: 1.5;
+    min-height: 10px;
+  }
+  .rsssl-grid-item-content-footer{
+    display: flex;
+    gap: var(--rsp-spacing-s);
   }
 }

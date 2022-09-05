@@ -1,5 +1,4 @@
 import {
-    PanelBody,
     Button,
     TextareaControl,
 } from '@wordpress/components';
@@ -60,13 +59,11 @@ class Support extends Component {
         let textAreaDisabled = sending;
         return (
             <>
-                <PanelBody>
-                    <TextareaControl
+                <TextareaControl
                         disabled={textAreaDisabled}
                         placeholder={__("Type your question here","really-simple-ssl")}
                         onChange={ ( message ) => this.onChangeHandler(message) }
-                    />
-                </PanelBody>
+                />
                 <Button
                     disabled={disabled}
                     variant="secondary"
