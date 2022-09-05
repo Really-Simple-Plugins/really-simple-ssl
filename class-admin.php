@@ -41,7 +41,6 @@ class rsssl_admin
 
         // Saved fields hook fired through REST settings save
 	    add_action( "rsssl_after_saved_fields", array( $this, "clear_transients" ), 10, 3 );
-	    add_action( "rsssl_after_saved_fields", array($this, "update_htaccess_after_settings_save"), 20, 3);
 
 	    // Only show deactivate popup when SSL has been enabled.
 	    if ( $this->ssl_enabled ) {
