@@ -199,7 +199,7 @@ add_action('rsssl_upgrade', 'rsssl_migrate_settings', 10, 1);
 
 function rsssl_fields( $load_values = true ){
 
-	if ( !current_user_can('manage_options') ) {
+	if ( !rsssl_user_can_manage() ) {
 		return [];
 	}
 
@@ -1027,7 +1027,7 @@ function rsssl_blocks(){
  */
 
 function rsssl_get_template($template) {
-    if ( !current_user_can('manage_options') ) {
+    if ( !rsssl_user_can_manage() ) {
         return '';
     }
     $html='';

@@ -164,7 +164,7 @@ function rsssl_integrations() {
  * @return void
  */
 function rsssl_do_fix($fix){
-	if ( !current_user_can('manage_options')) {
+	if ( !rsssl_user_can_manage()) {
 		return;
 	}
 

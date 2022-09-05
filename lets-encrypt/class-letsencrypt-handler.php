@@ -77,7 +77,7 @@ class rsssl_letsencrypt_handler {
 	 */
 	public function maybe_add_htaccess_exclude(){
 
-		if (!current_user_can('manage_options')) {
+		if (!rsssl_user_can_manage()) {
 			return;
 		}
 
@@ -135,7 +135,7 @@ class rsssl_letsencrypt_handler {
 	 * Cleanup. If user did not consent to storage, all password fields should be removed on activation, unless they're needed for renewals
 	 */
 	public function cleanup_on_ssl_activation(){
-		if (!current_user_can('manage_options')) return;
+		if (!rsssl_user_can_manage()) return;
 		$delete_credentials = !rsssl_get_value('store_credentials');
 		if ( !$this->certificate_automatic_install_possible() || !$this->certificate_install_required() || $delete_credentials ) {
 			$fields = RSSSL_LE()->config->fields;
@@ -1275,11 +1275,11 @@ class rsssl_letsencrypt_handler {
 	public function challenge_directory() {
 		$root_directory = trailingslashit(ABSPATH);
 		if ( ! file_exists( $root_directory . '.well-known' ) ) {
-			mkdir( $root_directory . '.well-known' );
+			mkdir( $root_directory . '.well-known', 0755 );
 		}
 
 		if ( ! file_exists( $root_directory . '.well-known/acme-challenge' ) ) {
-			mkdir( $root_directory . '.well-known/acme-challenge' );
+			mkdir( $root_directory . '.well-known/acme-challenge', 0755 );
 		}
 
 		if ( file_exists( $root_directory . '.well-known/acme-challenge' ) ){
@@ -1296,11 +1296,11 @@ class rsssl_letsencrypt_handler {
 	public function certs_directory(){
 		$directory = $this->get_directory_path();
 		if ( ! file_exists( $directory . 'ssl' ) ) {
-			mkdir( $directory . 'ssl' );
+			mkdir( $directory . 'ssl', 0755 );
 		}
 
 		if ( ! file_exists( $directory . 'ssl/certs' ) ) {
-			mkdir( $directory . 'ssl/certs' );
+			mkdir( $directory . 'ssl/certs', 0755 );
 		}
 
 		if ( file_exists( $directory . 'ssl/certs' ) ){
@@ -1322,7 +1322,7 @@ class rsssl_letsencrypt_handler {
 				update_option('rsssl_ssl_dirname', $token, false );
 			}
 			if ( ! file_exists( $root_directory . get_option('rsssl_ssl_dirname') ) ) {
-				mkdir( $root_directory . get_option('rsssl_ssl_dirname') );
+				mkdir( $root_directory . get_option('rsssl_ssl_dirname'), 0755 );
 			}
 			return $root_directory . trailingslashit( get_option('rsssl_ssl_dirname') );
 		} else {
@@ -1338,11 +1338,11 @@ class rsssl_letsencrypt_handler {
 	public function key_directory(){
 		$directory = $this->get_directory_path();
 		if ( ! file_exists( $directory . 'ssl' ) && is_writable($directory) ) {
-			mkdir( $directory . 'ssl' );
+			mkdir( $directory . 'ssl', 0755 );
 		}
 
 		if ( ! file_exists( $directory . 'ssl/keys' ) && is_writable($directory.'ssl') ) {
-			mkdir( $directory . 'ssl/keys' );
+			mkdir( $directory . 'ssl/keys', 0755 );
 		}
 
 		if ( file_exists( $directory . 'ssl/keys' ) ){
@@ -1366,7 +1366,7 @@ class rsssl_letsencrypt_handler {
 
 	public function clear_keys_directory() {
 
-		if (!current_user_can('manage_options')) {
+		if (!rsssl_user_can_manage()) {
 			return;
 		}
 
@@ -1396,7 +1396,7 @@ class rsssl_letsencrypt_handler {
 	}
 
 	public function maybe_create_htaccess_directories(){
-		if (!current_user_can('manage_options')) {
+		if (!rsssl_user_can_manage()) {
 			return;
 		}
 
@@ -1529,7 +1529,7 @@ class rsssl_letsencrypt_handler {
 		}
 
 		if ( ! file_exists( $upload_dir . 'rsssl' ) ) {
-			mkdir( $upload_dir . 'rsssl' );
+			mkdir( $upload_dir . 'rsssl', 0755 );
 		}
 
 		$test_string = 'file to test alias domain existence';
@@ -1731,7 +1731,7 @@ class rsssl_letsencrypt_handler {
 	 * @return string
 	 */
     public function decode($string){
-		if ( !wp_doing_cron() && !current_user_can('manage_options') ) {
+		if ( !wp_doing_cron() && !rsssl_user_can_manage() ) {
 			return '';
 		}
 
