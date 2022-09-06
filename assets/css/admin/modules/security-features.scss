@@ -1,4 +1,17 @@
 .rsssl{
+  .rsssl-security-features{
+    .rsssl-grid-item-content{
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+  }
+  .rsssl-new-features{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: var(--rsp-spacing-xxs);
+  }
   .rsssl-new-feature{
     width: 100%;
     color: var(--rsp-text-color-light);
@@ -7,7 +20,6 @@
     min-width: 0;
     gap: var(--rsp-spacing-xs);
     text-decoration: none;
-    margin: var(--rsp-spacing-xxs) 0;
     .rsssl-bullet{
       margin-top: 2px;
     }

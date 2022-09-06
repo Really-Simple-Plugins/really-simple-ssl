@@ -992,8 +992,9 @@
     display: flex;
     align-items: center;
     padding: var(--rsp-spacing-m) var(--rsp-spacing-l);
-    padding-block: 0;
-    padding-top: 10px;
+    padding-block: var(--rsp-spacing-s);
+    justify-content: flex-start;
+    gap: var(--rsp-spacing-m);
 }
 
 @media screen and (max-width: 992px) {
@@ -1009,14 +1010,12 @@
 }
 
 .rsssl-progress-block .rsssl-progress-text .rsssl-progress-percentage {
-    font-size: 32px;
+    font-size: var(--rsp-fs-800);
     font-weight: 700;
 }
 
 .rsssl-progress-block .rsssl-progress-text .rsssl-progress-text-span {
-    margin-left: 35px;
-    font-size: 18px;
-    font-weight: 600;
+    font-weight: 500;
 }
 
 .rsssl-progress-block .rsssl-progress-text .rsssl-progress-text-span a {
@@ -1108,7 +1107,6 @@
 .rsssl-scroll-container {
     padding: var(--rsp-spacing-m) var(--rsp-spacing-l);
     --rsp-scroll-bg-clr: var(--rsp-dark-blue-faded);
-    margin-top: 20px;
     height: 202px;
     overflow-y: auto;
     padding-block: 0;
@@ -1330,83 +1328,83 @@
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(1) {
-    width: 76%;
+    width: 77%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(2) {
-    width: 75%;
+    width: 73%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(3) {
-    width: 94%;
-}
-
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(4) {
-    width: 98%;
-}
-
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(5) {
-    width: 98%;
-}
-
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(6) {
-    width: 72%;
-}
-
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(7) {
-    width: 82%;
-}
-
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(8) {
-    width: 71%;
-}
-
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(9) {
-    width: 100%;
-}
-
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(10) {
-    width: 88%;
-}
-
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(11) {
-    width: 92%;
-}
-
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(12) {
-    width: 65%;
-}
-
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(13) {
     width: 70%;
 }
 
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(14) {
-    width: 81%;
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(4) {
+    width: 68%;
 }
 
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(15) {
-    width: 64%;
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(5) {
+    width: 70%;
 }
 
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(16) {
-    width: 65%;
-}
-
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(17) {
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(6) {
     width: 94%;
 }
 
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(7) {
+    width: 69%;
+}
+
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(8) {
+    width: 87%;
+}
+
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(9) {
+    width: 90%;
+}
+
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(10) {
+    width: 96%;
+}
+
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(11) {
+    width: 87%;
+}
+
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(12) {
+    width: 69%;
+}
+
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(13) {
+    width: 88%;
+}
+
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(14) {
+    width: 82%;
+}
+
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(15) {
+    width: 63%;
+}
+
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(16) {
+    width: 82%;
+}
+
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(17) {
+    width: 83%;
+}
+
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(18) {
-    width: 98%;
+    width: 100%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(19) {
-    width: 91%;
+    width: 95%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(20) {
-    width: 85%;
+    width: 93%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line ~ .rsssl-placeholder-line {
@@ -1750,6 +1748,10 @@
     max-width: max-content;
 }
 
+.rsssl div[class^="rsssl-wizard-"] .components-base-control__field {
+    margin-bottom: 0;
+}
+
 .rsssl div[class^="rsssl-wizard-"] .components-toggle-control .components-base-control__field {
     display: flex;
     flex-direction: row-reverse;
@@ -1766,12 +1768,19 @@
 }
 
 .rsssl div[class^="rsssl-wizard-"] .rsssl-field-wrap, .rsssl div[class^="rsssl-wizard-"] .rsssl-settings-block-intro {
-    padding: var(--rsp-spacing-xxs) var(--rsp-spacing-l);
+    padding: var(--rsp-spacing-xs) var(--rsp-spacing-l);
     overflow: hidden;
 }
 
 .rsssl div[class^="rsssl-wizard-"] .rsssl-field-wrap > .rsssl-field-wrap, .rsssl div[class^="rsssl-wizard-"] .rsssl-settings-block-intro > .rsssl-field-wrap {
     padding: 0;
+}
+
+.rsssl div[class^="rsssl-wizard-"] .rsssl-field-button {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    align-items: center;
 }
 
 .rsssl .rsssl-highlight {
@@ -1891,6 +1900,19 @@ Admin notice
     opacity: 0.3;
 }
 
+.rsssl .rsssl-security-features .rsssl-grid-item-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.rsssl .rsssl-new-features {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: var(--rsp-spacing-xxs);
+}
+
 .rsssl .rsssl-new-feature {
     width: 100%;
     color: var(--rsp-text-color-light);
@@ -1899,7 +1921,6 @@ Admin notice
     min-width: 0;
     gap: var(--rsp-spacing-xs);
     text-decoration: none;
-    margin: var(--rsp-spacing-xxs) 0;
 }
 
 .rsssl .rsssl-new-feature .rsssl-bullet {

@@ -3,7 +3,7 @@ import {
     Component,
 } from '@wordpress/element';
 import ChangeStatus from "./ChangeStatus";
-import DataTable from "react-data-table-component";
+import DataTable, {createTheme} from 'react-data-table-component';
 import * as rsssl_api from "../utils/api";
 
 class Delete extends Component {
@@ -181,6 +181,28 @@ class LearningMode extends Component {
                 classNames: ['rsssl-datatables-revoked'],
               },
             ];
+
+            const customStyles = {
+              headCells: {
+                style: {
+                  paddingLeft: '0', // override the cell padding for head cells
+                  paddingRight: '0',
+                },
+              },
+              cells: {
+                style: {
+                  paddingLeft: '0', // override the cell padding for data cells
+                  paddingRight: '0',
+                },
+              },
+            };
+
+            createTheme('really-simple-plugins', {
+              divider: {
+                default: 'transparent',
+              },
+            }, 'light');
+
              return (
                 <>
                     <div className={ this.highLightClass}>
@@ -191,6 +213,8 @@ class LearningMode extends Component {
                             pagination
                             noDataComponent={__("No results", "really-simple-ssl")}
                             persistTableHead
+                            theme="really-simple-plugins"
+                            customStyles={customStyles}
                             subHeader
                             subHeaderComponent={<Filter />}
                             conditionalRowStyles={conditionalRowStyles}

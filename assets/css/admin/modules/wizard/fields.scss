@@ -12,6 +12,9 @@
         max-width: max-content;
       }
     }
+    .components-base-control__field{
+      margin-bottom: 0;
+    }
     .components-toggle-control{
       .components-base-control__field{
         display: flex;
@@ -29,11 +32,17 @@
       }
     }
     .rsssl-field-wrap, .rsssl-settings-block-intro{
-      padding: var(--rsp-spacing-xxs) var(--rsp-spacing-l);
+      padding: var(--rsp-spacing-xs) var(--rsp-spacing-l);
       overflow: hidden;
       & > .rsssl-field-wrap{
         padding: 0;
       }
+    }
+    .rsssl-field-button{
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      align-items: center;
     }
   }
 

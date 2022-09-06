@@ -1,7 +1,7 @@
 import {Component} from "@wordpress/element";
-import DataTable from "react-data-table-component";
+import DataTable, { createTheme }  from "react-data-table-component";
 import {
-    RadioControl,
+    ToggleControl,
 } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
 import * as rsssl_api from "../utils/api";
@@ -232,6 +232,29 @@ class MixedContentScan extends Component {
         let startDisabled = state === 'running';
         let stopDisabled = state !== 'running';
         let label = __("Show ignored URLs", 'burst-statistics')
+
+        const customStyles = {
+            headCells: {
+                style: {
+                    paddingLeft: '0', // override the cell padding for head cells
+                    paddingRight: '0',
+                },
+            },
+            cells: {
+                style: {
+                    paddingLeft: '0', // override the cell padding for data cells
+                    paddingRight: '0',
+                },
+            },
+        };
+
+        createTheme('really-simple-plugins', {
+            divider: {
+                default: 'transparent',
+            },
+        }, 'light');
+
+
         return (
             <div>
                 <div className="rsssl-progress-container">
@@ -245,17 +268,19 @@ class MixedContentScan extends Component {
                         pagination
                         paginationResetDefaultPage={resetPaginationToggle} // optionally, a hook to reset pagination to page 1
                         noDataComponent={__("No results", "really-simple-ssl")} //or your component
+                        theme="really-simple-plugins"
+                        customStyles={customStyles}
                         // subHeader
                         // subHeaderComponent=<subHeaderComponentMemo/>
                     />
                 <div className="rsssl-grid-item-content-footer">
                     <button className="button" disabled={startDisabled} onClick={ (e) => this.start(e) }>{__("Start scan","really-simple-ssl-pro")}</button>
                     <button className="button" disabled={stopDisabled} onClick={ (e) => this.stop(e) }>{__("Pause","really-simple-ssl-pro")}</button>
-                    <RadioControl
-                        label={label}
-                        onClick={ (e) => this.toggleIgnoredUrls(e) }
+                    <ToggleControl
+                        checked= { showIgnoredUrls==1 }
+                        onChange={ (e) => this.toggleIgnoredUrls(e) }
                     />
-                    <input value={showIgnoredUrls} type="checkbox" id="rsssl_show_ignored_urls" onClick={ (e) => this.toggleIgnoredUrls(e) } />
+                    <label>{__('Show ignored URLs', 'burst-statistics')}</label>
                 </div>
 
             </div>

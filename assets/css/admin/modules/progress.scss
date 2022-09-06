@@ -34,19 +34,18 @@
     display: flex;
     align-items: center;
     @include rsssl-block-padding;
-    padding-block: 0;
-    padding-top: 10px;
+    padding-block: var(--rsp-spacing-s);
+    justify-content: flex-start;
+    gap: var(--rsp-spacing-m);
+
 
     .rsssl-progress-percentage {
-      font-size: 32px;
+      font-size: var(--rsp-fs-800);
       font-weight: 700;
     }
 
     .rsssl-progress-text-span {
-      margin-left: 35px;
-      font-size: 18px;
-      font-weight: 600;
-
+      font-weight: 500;
       a {
         margin-left: 3px;
       }
@@ -144,7 +143,6 @@
 .rsssl-scroll-container {
   @include rsssl-block-padding;
   --rsp-scroll-bg-clr: var(--rsp-dark-blue-faded);
-  margin-top: 20px;
   height: 202px;
   overflow-y: auto;
   padding-block: 0;

@@ -6,7 +6,7 @@ import {
     Component,
 } from '@wordpress/element';
 import ChangeStatus from "./ChangeStatus";
-import DataTable from "react-data-table-component";
+import DataTable, {createTheme} from 'react-data-table-component';
 import * as rsssl_api from "../utils/api";
 
 class PermissionsPolicy extends Component {
@@ -108,6 +108,26 @@ class PermissionsPolicy extends Component {
             />;
         }
 
+        const customStyles = {
+            headCells: {
+                style: {
+                    paddingLeft: '0', // override the cell padding for head cells
+                    paddingRight: '0',
+                },
+            },
+            cells: {
+                style: {
+                    paddingLeft: '0', // override the cell padding for data cells
+                    paddingRight: '0',
+                },
+            },
+        };
+
+        createTheme('really-simple-plugins', {
+            divider: {
+                default: 'transparent',
+            },
+        }, 'light');
 
         return (
             <div className={ this.props.highLightClass}>
@@ -118,7 +138,8 @@ class PermissionsPolicy extends Component {
                         pagination
                         subHeader
                         subHeaderComponent={<Filter />}
-
+                        customStyles={customStyles}
+                        theme="really-simple-plugins"
                     />
                     { enable_permissions_policy!=1 && <button className="button" onClick={ (e) => this.togglePermissionsPolicyStatus(e, true ) }>{__("Enforce","really-simple-ssl")}</button> }
                     { enable_permissions_policy==1 && <button className="button" onClick={ (e) => this.togglePermissionsPolicyStatus(e, false ) }>{__("Disable","really-simple-ssl")}</button> }

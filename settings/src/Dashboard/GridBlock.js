@@ -7,6 +7,7 @@ import * as rsssl_api from "../utils/api";
 import ProgressBlock from "./ProgressBlock";
 import ProgressHeader from "./ProgressBlockHeader";
 import SecurityFeaturesBlock from './SecurityFeaturesBlock/SecurityFeaturesBlock';
+import SecurityFeaturesFooter from './SecurityFeaturesBlock/SecurityFeaturesFooter';
 import Placeholder from '../Placeholder/Placeholder';
 
 
@@ -33,6 +34,7 @@ class GridButton extends Component {
  */
 var dynamicComponents = {
     "SecurityFeaturesBlock": SecurityFeaturesBlock,
+    "SecurityFeaturesFooter": SecurityFeaturesFooter,
     "ProgressBlock": ProgressBlock,
     "ProgressHeader": ProgressHeader,
 };
@@ -102,6 +104,15 @@ class GridBlock extends Component {
                 progress:100,
             })
         }
+        if ( this.props.block.footer.type==='html' || this.props.block.footer.type==='react' ) {
+            let footer = this.props.block.footer.data;
+            this.content = footer;
+            this.setState({
+                isAPILoaded: true,
+                footer:footer,
+                progress:100,
+            })
+        }
     }
 
     /**
@@ -124,11 +135,15 @@ class GridBlock extends Component {
         let {
             isAPILoaded,
             content,
+            footer
         } = this.state;
         let blockData = this.props.block;
         let className = "rsssl-grid-item "+blockData.class+" rsssl-"+blockData.id;
         if ( this.props.block.content.type==='react') {
             content = this.props.block.content.data;
+        }
+        if ( this.props.block.footer.type==='react') {
+            footer = this.props.block.footer.data;
         }
         if ( this.testRunning ){
             const timer = setTimeout(() => {
@@ -155,6 +170,7 @@ class GridBlock extends Component {
 
                 { blockData.footer.hasOwnProperty('button') && <div className="rsssl-grid-item-footer"><GridButton text={blockData.footer.button.text} onClick={this.getBlockData} disabled={this.testDisabled}/></div>}
                 { blockData.footer.type==='html' && <div className="rsssl-grid-item-footer" dangerouslySetInnerHTML={{__html: this.footerHtml}}></div>}
+                { blockData.footer.type==='react' && <div className="rsssl-grid-item-footer">{wp.element.createElement(dynamicComponents[footer], DynamicBlockProps)}</div>}
 
             </div>
         );

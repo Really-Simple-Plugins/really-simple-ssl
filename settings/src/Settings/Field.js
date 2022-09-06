@@ -158,14 +158,10 @@ class Field extends Component {
 
         if ( field.type==='button' ){
             return (
-                <PanelBody className={ this.highLightClass}>
-                    <div className="components-base-control ">
-                        <div class="components-base-control__field">
-                            <Hyperlink className="button button-default" text={field.button_text} url={field.url}/>
-                            <label>{field.label}</label>
-                        </div>
-                    </div>
-                </PanelBody>
+                <div className={'rsssl-field-button ' + this.highLightClass}>
+                    <label>{field.label}</label>
+                    <Hyperlink className="button button-default" text={field.button_text} url={field.url}/>
+                </div>
             );
         }
 
