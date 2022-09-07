@@ -33,6 +33,7 @@ class rsssl_letsencrypt_handler {
 		//loading of these hooks is stricter. The class can be used in the notices, which are needed on the generic dashboard
 		//These functionality is not needed on the dashboard, so should only be loaded in strict circumstances
 		if ( rsssl_letsencrypt_generation_allowed( true ) ) {
+			error_log("add after save fields action");
 			add_action( 'rsssl_after_save_field', array( $this, 'before_save_wizard_option' ), 10, 4 );
 			add_action( 'rsssl_le_activation', array( $this, 'cleanup_on_ssl_activation'));
 			add_action( 'rsssl_le_activation', array( $this, 'plugin_activation_actions'));
@@ -173,6 +174,7 @@ class rsssl_letsencrypt_handler {
 	public function before_save_wizard_option(
 		$fieldname, $fieldvalue, $prev_value, $type
 	) {
+		error_log("add domain as progress");
 		rsssl_progress_add('domain');
 		//only run when changes have been made
 		if ( $fieldvalue === $prev_value ) {

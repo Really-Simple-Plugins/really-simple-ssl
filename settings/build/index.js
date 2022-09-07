@@ -3905,18 +3905,17 @@ const LetsEncrypt = props => {
     }
   });
 
-  const adjustActionsForDNS = () => {
+  const adjustActionsForDNS = actions => {
     //find verification_type
     let verification_type = 'DIR';
 
-    for (const fieldItem of fields) {
+    for (const fieldItem of props.fields) {
       if (fieldItem.id === 'verification_type') {
         verification_type = fieldItem.value;
       }
     }
 
-    if (verification_type === 'DNS') {//remove check_challenge_directory and challenge_directory_reachable actions
-      //add new actions for the generation step
+    if (verification_type === 'DNS') {//add new actions for the generation step
       //     $index = array_search( 'generation', array_column( $steps['lets-encrypt'], 'id' ) );
       //     $index ++;
       //     $steps['lets-encrypt'][ $index ]['actions'] = array (
@@ -3934,6 +3933,8 @@ const LetsEncrypt = props => {
       // )
       // );
     }
+
+    return actions;
   };
 
   const processTestResult = currentActionIndex => {
@@ -3993,11 +3994,10 @@ const LetsEncrypt = props => {
   const runTest = currentActionIndex => {
     console.log(props.field);
 
-    if (props.field.id === 'dns-verification') {
+    if (props.field.id === 'generation') {
       props.field.actions = adjustActionsForDNS(props.field.actions);
     }
 
-    console.log(props.field.actions);
     const startTime = new Date();
     let action = getAction(currentActionIndex);
     let test = action.action;
@@ -7271,6 +7271,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
 /* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _getAnchor__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./getAnchor */ "./src/utils/getAnchor.js");
+
 
 /*
  * Makes a get request to the fields list
@@ -7281,12 +7283,14 @@ __webpack_require__.r(__webpack_exports__);
  */
 
 const getFields = () => {
+  //we pass the anchor, so we know when LE is loaded
+  let anchor = (0,_getAnchor__WEBPACK_IMPORTED_MODULE_1__["default"])('main');
   let config = {
     headers: {
       'X-WP-Nonce': rsssl_settings.nonce
     }
   };
-  return axios__WEBPACK_IMPORTED_MODULE_0___default().get(rsssl_settings.site_url + 'reallysimplessl/v1/fields/get', config);
+  return axios__WEBPACK_IMPORTED_MODULE_0___default().get(rsssl_settings.site_url + 'reallysimplessl/v1/fields/get?' + anchor, config);
 };
 /*
  * Post our data to the back-end
@@ -7295,12 +7299,14 @@ const getFields = () => {
  */
 
 const setFields = data => {
+  //we pass the anchor, so we know when LE is loaded
+  let anchor = (0,_getAnchor__WEBPACK_IMPORTED_MODULE_1__["default"])('main');
   let config = {
     headers: {
       'X-WP-Nonce': rsssl_settings.nonce
     }
   };
-  return axios__WEBPACK_IMPORTED_MODULE_0___default().post(rsssl_settings.site_url + 'reallysimplessl/v1/fields/set', data, config);
+  return axios__WEBPACK_IMPORTED_MODULE_0___default().post(rsssl_settings.site_url + 'reallysimplessl/v1/fields/set?' + anchor, data, config);
 };
 const getBlock = block => {
   let config = {

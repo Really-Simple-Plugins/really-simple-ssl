@@ -47,20 +47,16 @@ const LetsEncrypt = (props) => {
         }
     })
 
-    const adjustActionsForDNS = () => {
+    const adjustActionsForDNS = (actions) => {
         //find verification_type
         let verification_type='DIR';
-        for (const fieldItem of fields){
+        for (const fieldItem of props.fields){
             if (fieldItem.id === 'verification_type' ){
                 verification_type = fieldItem.value;
             }
         }
 
         if (verification_type==='DNS') {
-
-            //remove check_challenge_directory and challenge_directory_reachable actions
-
-
             //add new actions for the generation step
 
 
@@ -81,6 +77,8 @@ const LetsEncrypt = (props) => {
         // )
         // );
         }
+
+        return actions;
     }
 
     const processTestResult = (currentActionIndex) => {
@@ -135,10 +133,9 @@ const LetsEncrypt = (props) => {
 
     const runTest = (currentActionIndex) => {
         console.log(props.field);
-        if (props.field.id==='dns-verification') {
+        if (props.field.id==='generation') {
             props.field.actions = adjustActionsForDNS(props.field.actions);
         }
-        console.log(props.field.actions);
         const startTime = new Date();
         let action = getAction(currentActionIndex);
         let test = action.action;

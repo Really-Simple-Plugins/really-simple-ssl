@@ -1,6 +1,6 @@
 <?php
 defined('ABSPATH') or die();
-
+error_log("loading lets encrypt file");
 /**
  * Capability handling for Let's Encrypt
  * @return bool
@@ -20,22 +20,16 @@ if (!function_exists('rsssl_letsencrypt_generation_allowed')) {
 			return true;
 		}
 
-		if ( !current_user_can( 'manage_options' ) ) {
+		if ( !current_user_can( 'manage_security' ) ) {
 			return false;
 		}
 
-		$letsencrypt = isset($_GET['letsencrypt']);
-		if ( $strict ) {
-			if ( $letsencrypt){
-				return true;
-			}
-		} else {
-			if ( isset($_GET['page']) && ( $_GET['page'] === 'really-simple-security' ) ){
-				return true;
-			}
-			if ( $letsencrypt ){
-				return true;
-			}
+		if ( isset($_GET['letsencrypt'])) {
+			return true;
+		}
+
+		if ( !$strict && isset($_GET['page']) && ( $_GET['page'] === 'really-simple-security' )) {
+			return true;
 		}
 
 		if ( isset($_GET['action']) && $_GET['action'] === 'rsssl_installation_progress' ){

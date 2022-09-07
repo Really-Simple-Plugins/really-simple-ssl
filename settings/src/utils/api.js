@@ -1,4 +1,5 @@
 import axios from 'axios';
+import getAnchor from "./getAnchor";
 
 /*
  * Makes a get request to the fields list
@@ -9,12 +10,14 @@ import axios from 'axios';
  */
 
 export const getFields = () => {
+    //we pass the anchor, so we know when LE is loaded
+    let anchor = getAnchor('main');
 	let config = {
 		headers: {
 			'X-WP-Nonce': rsssl_settings.nonce,
 		}
 	}
-    return axios.get(rsssl_settings.site_url+'reallysimplessl/v1/fields/get', config);
+    return axios.get(rsssl_settings.site_url+'reallysimplessl/v1/fields/get?'+anchor, config);
 };
 
 /*
@@ -23,12 +26,14 @@ export const getFields = () => {
  * @returns {Promise<AxiosResponse<any>>}
  */
 export const setFields = (data) => {
+    //we pass the anchor, so we know when LE is loaded
+    let anchor = getAnchor('main');
 	let config = {
 		headers: {
 			'X-WP-Nonce': rsssl_settings.nonce,
 		}
 	}
-	return axios.post(rsssl_settings.site_url+'reallysimplessl/v1/fields/set', data, config );
+	return axios.post(rsssl_settings.site_url+'reallysimplessl/v1/fields/set?'+anchor, data, config );
 };
 
 export const getBlock = (block) => {

@@ -29,7 +29,9 @@ class Header extends Component {
                     <div className="rsssl-header-left">
                         <nav className="rsssl-header-menu">
                             <ul>
-                                {menu.map((menu_item, i) => <li key={i}><a className={ active_menu_item === menu_item.id ? 'active' : '' } onClick={ () => this.handleClick(menu_item.id) } href={"#" + menu_item.id.toString()} >{menu_item.title}</a></li>)}
+                                {menu.map((menu_item, i) =>
+                                  <li key={i}><a className={ active_menu_item === menu_item.id ? 'active' : '' } onClick={ () => this.handleClick(menu_item.id) } href={"#" + menu_item.id.toString()} >{menu_item.title}</a></li>)}
+
                             </ul>
                         </nav>
                     </div>

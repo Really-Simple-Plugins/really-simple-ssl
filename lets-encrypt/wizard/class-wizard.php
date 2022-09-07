@@ -40,12 +40,6 @@ if ( ! class_exists( "rsssl_wizard" ) ) {
 		public function adjust_for_dns_actions($steps){
 			$use_dns = rsssl_dns_verification_required();
             if ($use_dns) {
-	            $index_directories = array_search( 'directories', array_column( $steps['lets-encrypt'], 'id' ) );
-	            $index_directories ++;
-	            $challenge_key = array_search( 'check_challenge_directory', array_column( $steps['lets-encrypt'][ $index_directories ]['actions'], 'action' ) );
-	            $challenge_reachable_key = array_search( 'challenge_directory_reachable', array_column( $steps['lets-encrypt'][ $index_directories ]['actions'], 'action' ) );
-	            unset( $steps['lets-encrypt'][ $index_directories ]['actions'][$challenge_key] );
-	            unset( $steps['lets-encrypt'][ $index_directories ]['actions'][$challenge_reachable_key] );
 
 	            $index = array_search( 'generation', array_column( $steps['lets-encrypt'], 'id' ) );
 	            $index ++;

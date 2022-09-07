@@ -263,6 +263,7 @@ function rsssl_rest_api_fields_set($request){
         }
     }
 
+    error_log("run after save fields action");
 	foreach ( $fields as $field ) {
         do_action( "rsssl_after_save_field", $field['id'], $field['value'], $prev_value, $field['type'] );
     }
