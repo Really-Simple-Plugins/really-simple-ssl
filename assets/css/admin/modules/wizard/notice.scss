@@ -6,6 +6,9 @@
   details{
     font-size: var(--rsp-fs-200);
     summary{
+      display: grid;
+      grid-template-columns: 1fr auto;
+      justify-content: space-between;
       font-size: var(--rsp-fs-400);
       font-weight: 600;
       &::-webkit-details-marker {
@@ -13,6 +16,10 @@
       }
       &:first-of-type {
         list-style-type: none;
+      }
+      .rsssl-icon{
+        transition: all .3s ease-in-out;
+        transform: rotate(0deg);
       }
     }
   }
@@ -24,6 +31,9 @@
     summary{
       padding: 0;
       padding-bottom: var(--rsp-spacing-xs);
+      .rsssl-icon{
+        transform: rotate(180deg);
+      }
     }
   }
 }

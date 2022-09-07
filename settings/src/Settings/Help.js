@@ -1,4 +1,5 @@
 import {Component, Fragment} from "@wordpress/element";
+import Icon from "../utils/Icon";
 /**
  * Render a help notice in the sidebar
  */
@@ -14,7 +15,7 @@ class Help extends Component {
             <Fragment>
                 { notice.title && notice.text &&
                     <details className={"rsssl-wizard-help-notice rsssl-" + notice.label.toLowerCase()}>
-                        <summary>{notice.title}</summary>
+                        <summary>{notice.title} <Icon name='chevron-up' /></summary>
                         {/*some notices contain html, like for the htaccess notices. A title is required for those options, otherwise the text becomes the title. */}
                         <div dangerouslySetInnerHTML={{__html:notice.text}}></div>
                     </details>
