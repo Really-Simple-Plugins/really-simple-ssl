@@ -253,7 +253,7 @@ class Field extends Component {
 
         if ( field.type === 'letsencrypt' ) {
                 return (
-                   <LetsEncrypt key={field.id} selectMenu={this.props.selectMenu} updateField={this.props.updateField} fiels={fields} field={field} handleNextButtonDisabled={this.props.handleNextButtonDisabled}/>
+                   <LetsEncrypt key={field.id} save={this.props.save} selectMenu={this.props.selectMenu} addHelp={this.props.addHelp} updateField={this.props.updateField} fiels={fields} field={field} handleNextButtonDisabled={this.props.handleNextButtonDisabled}/>
                 )
         }
 

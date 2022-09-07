@@ -95,6 +95,7 @@ class SettingsGroup extends Component {
                             handleModal={this.props.handleModal}
                             showSavedSettingsNotice={this.props.showSavedSettingsNotice}
                             updateField={this.props.updateField}
+                            addHelp={this.props.addHelp}
                             setPageProps={this.props.setPageProps}
                             fieldsUpdateComplete = {this.props.fieldsUpdateComplete}
                             highLightField={this.props.highLightField}

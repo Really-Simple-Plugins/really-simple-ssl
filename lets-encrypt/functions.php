@@ -248,6 +248,7 @@ if ( !function_exists('rsssl_progress_add')) {
 	 * @param string $item
 	 */
 	function rsssl_progress_add( $item ) {
+		error_log("progress add $item");
 		$progress = get_option( "rsssl_le_installation_progress", array() );
 		if ( ! in_array( $item, $progress ) ) {
 			$progress[] = $item;
@@ -313,6 +314,8 @@ if ( !function_exists('rsssl_progress_remove')) {
 	 * @param string $item
 	 */
 	function rsssl_progress_remove( $item ) {
+		error_log("progress remove $item");
+
 		$progress = get_option( "rsssl_le_installation_progress", array() );
 		if ( in_array( $item, $progress ) ) {
 			$index = array_search( $item, $progress );

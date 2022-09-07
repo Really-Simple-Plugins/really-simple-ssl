@@ -2,6 +2,7 @@ import {useState, useEffect} from "@wordpress/element";
 import * as rsssl_api from "../utils/api";
 import sleeper from "../utils/sleeper";
 import Directories from "./Directories";
+import DnsVerification from "./DnsVerification";
 import { __ } from '@wordpress/i18n';
 import {useUpdateEffect} from 'react-use';
 
@@ -46,6 +47,42 @@ const LetsEncrypt = (props) => {
         }
     })
 
+    const adjustActionsForDNS = () => {
+        //find verification_type
+        let verification_type='DIR';
+        for (const fieldItem of fields){
+            if (fieldItem.id === 'verification_type' ){
+                verification_type = fieldItem.value;
+            }
+        }
+
+        if (verification_type==='DNS') {
+
+            //remove check_challenge_directory and challenge_directory_reachable actions
+
+
+            //add new actions for the generation step
+
+
+        //     $index = array_search( 'generation', array_column( $steps['lets-encrypt'], 'id' ) );
+        //     $index ++;
+        //     $steps['lets-encrypt'][ $index ]['actions'] = array (
+        //         array(
+        //             'description' => __("Verifying DNS records...", "really-simple-ssl"),
+        //         'action'=> 'verify_dns',
+        //         'attempts' => 2,
+        //         'speed' => 'slow',
+        // ),
+        //     array(
+        //         'description' => __("Generating SSL certificate...", "really-simple-ssl"),
+        //         'action'=> 'create_bundle_or_renew',
+        //         'attempts' => 4,
+        //         'speed' => 'slow',
+        // )
+        // );
+        }
+    }
+
     const processTestResult = (currentActionIndex) => {
          let action = getAction(currentActionIndex);
         setLastActionStatus(action.status);
@@ -57,8 +94,6 @@ const LetsEncrypt = (props) => {
             }
             action.attemptCount +=1;
         }
-        console.log(action);
-
         //used for dns verification actions
         var event = new CustomEvent('rsssl_le_response', { detail: action });
         document.dispatchEvent(event);
@@ -71,7 +106,6 @@ const LetsEncrypt = (props) => {
         } else if (action.do === 'continue' || action.do === 'skip' ) {
             //new action, so reset the attempts count
             action.attemptCount=1;
-            //rsssl_maybe_show_elements(current_action, response.status);
             //skip:  drop previous completely, skip to next.
             if ( action.do === 'skip' ) {
                 action.hide = true;
@@ -87,22 +121,24 @@ const LetsEncrypt = (props) => {
             }
         } else if (action.do === 'retry' ) {
             if ( action.attemptCount >= maxAttempts ) {
-                // rsssl_maybe_show_elements(current_action, response.status);
                 setActionIndex(props.field.actions.length);
                 clearInterval(rsssl_interval);
             } else {
                 // clearInterval(rsssl_interval);
-
                 runTest(currentActionIndex);
             }
         } else if ( action.do === 'stop' ){
             clearInterval(rsssl_interval);
-            //setActionIndex(props.field.actions.length);
         }
 
     }
 
     const runTest = (currentActionIndex) => {
+        console.log(props.field);
+        if (props.field.id==='dns-verification') {
+            props.field.actions = adjustActionsForDNS(props.field.actions);
+        }
+        console.log(props.field.actions);
         const startTime = new Date();
         let action = getAction(currentActionIndex);
         let test = action.action;
@@ -116,6 +152,7 @@ const LetsEncrypt = (props) => {
                 action.status = response.data.status;
                 action.description = response.data.message;
                 action.do = response.data.action;
+                action.output = response.data.output ? response.data.output : false;
                 sleep = 100;
                 if (elapsedTime<600) {
                     //sleep = 600-elapsedTime;
@@ -147,7 +184,8 @@ const LetsEncrypt = (props) => {
                         }
                     </ul>
                 </div>
-                {props.field.id === 'directories' && <Directories selectMenu={props.selectMenu} field={props.field} updateField={props.updateField} progress={progress} action={props.field.actions[actionIndex]}/> }
+                {props.field.id === 'directories' && <Directories save={props.save} selectMenu={props.selectMenu} field={props.field} updateField={props.updateField} addHelp={props.addHelp} progress={progress} action={props.field.actions[actionIndex]}/> }
+                {props.field.id === 'dns-verification' && <DnsVerification save={props.save} selectMenu={props.selectMenu} field={props.field} updateField={props.updateField} addHelp={props.addHelp} progress={progress} action={props.field.actions[actionIndex]}/> }
             </div>
         </>
     )

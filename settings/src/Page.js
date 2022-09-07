@@ -20,6 +20,7 @@ class Page extends Component {
         this.handleModal = this.handleModal.bind(this);
         this.highLightField = this.highLightField.bind(this);
         this.updateField = this.updateField.bind(this);
+        this.addHelp = this.addHelp.bind(this);
         this.selectMainMenu = this.selectMainMenu.bind(this);
         this.setPageProps = this.setPageProps.bind(this);
         this.getPreviousAndNextMenuItems = this.getPreviousAndNextMenuItems.bind(this);
@@ -158,21 +159,39 @@ class Page extends Component {
      * Update a field
      * @param field
      */
-    updateField(id, value, help ) {
-        console.log("update "+id+' '+value);
+    updateField(id, value) {
         let fields = this.fields;
         for (const fieldItem of fields){
             if (fieldItem.id === id ){
                 fieldItem.value = value;
-                if (help) {
-                    fieldItem.help = help
-                }
             }
         }
         this.fields = fields;
         this.setState({
             fields :fields
         });
+    }
+
+    addHelp(id, label, text, title) {
+        //create help object
+        let help = {};
+        help.label=label;
+        help.text=text;
+        if (title) help.title=title;
+        let fields = this.fields;
+
+        //add to selected field
+        for (const fieldItem of fields){
+            if (fieldItem.id === id && !fieldItem.help ){
+                fieldItem.help = help
+                this.fields = fields;
+                this.setState({
+                    fields :fields
+                });
+            }
+        }
+
+
     }
 
     highLightField(fieldId){
@@ -259,6 +278,7 @@ class Page extends Component {
                                         handleModal={this.handleModal}
                                         getDefaultMenuItem={this.getDefaultMenuItem}
                                         updateField={this.updateField}
+                                        addHelp={this.addHelp}
                                         setPageProps={this.setPageProps}
                                         selectMenu={this.selectMenu}
                                         selectStep={this.selectStep}

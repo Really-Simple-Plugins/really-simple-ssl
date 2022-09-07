@@ -111,16 +111,12 @@ class SettingsPage extends Component {
     }
 
     updateFieldsListWithConditions(){
-
-        console.log("update fields list with conditinos");
-        console.log(this.props.fields);
         for (const field of this.props.fields){
 
           let enabled = !(field.hasOwnProperty('react_conditions') && !this.validateConditions(field.react_conditions, this.props.fields));
 
           this.props.fields[this.props.fields.indexOf(field)].conditionallyDisabled = !enabled;
           if (!enabled && field.type==='letsencrypt') {
-            console.log("drop field "+field.id);
             this.props.fields[this.props.fields.indexOf(field)].visible = false;
           } else {
             this.props.fields[this.props.fields.indexOf(field)].visible = true;
@@ -189,9 +185,7 @@ class SettingsPage extends Component {
     }
 
     validateConditions(conditions, fields){
-        console.log(conditions);
         let relation = conditions.relation === 'OR' ? 'OR' : 'AND';
-//         delete conditions['relation'];
         let conditionApplies = true;
         for (const key in conditions) {
             if ( conditions.hasOwnProperty(key) ) {
@@ -201,7 +195,6 @@ class SettingsPage extends Component {
                     thisConditionApplies = this.validateConditions(subConditionsArray, fields)
                 } else {
                     for (let conditionField in subConditionsArray) {
-                        console.log("index of ! "+conditionField.indexOf('!'));
                         let invert = conditionField.indexOf('!')===0;
                         if ( subConditionsArray.hasOwnProperty(conditionField) ) {
                             let conditionValue = subConditionsArray[conditionField];
@@ -216,12 +209,9 @@ class SettingsPage extends Component {
                                     thisConditionApplies = conditionFields[0].value.toLowerCase() === conditionValue.toLowerCase();
                                 }
                             }
-                        } else {
-                            console.log("property not found "+conditionField)
                         }
 
                         if ( invert ){
-                            console.log("invert condition");
                             thisConditionApplies = !thisConditionApplies;
                         }
 
@@ -277,6 +267,7 @@ class SettingsPage extends Component {
                     handleModal={this.props.handleModal}
                     showSavedSettingsNotice={this.showSavedSettingsNotice}
                     updateField={this.props.updateField}
+                    addHelp={this.props.addHelp}
                     pageProps={this.props.pageProps}
                     setPageProps={this.props.setPageProps}
                     fieldsUpdateComplete = {fieldsUpdateComplete}
