@@ -3548,7 +3548,7 @@ class rsssl_admin extends rsssl_front_end
 			    unset($notices[$id]);
 			    continue;
             }
-            x_log($id);
+
 		    $condition_functions = $notice['condition'];
 		    foreach ( $condition_functions as $func ) {
 			    $condition = $this->validate_function($func, true);
