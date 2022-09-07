@@ -89,7 +89,7 @@ if ( ! class_exists( "rsssl_wizard" ) ) {
 		 * @return []
 		 */
         public function switch_to_dns(){
-	        rsssl_update_option('verification_type', 'DNS');
+	        rsssl_update_option('verification_type', 'dns');
 	        rsssl_progress_add('directories');
 	        return array(
 		        'success' => true,
@@ -140,12 +140,23 @@ if ( ! class_exists( "rsssl_wizard" ) ) {
 			}
         }
 
+        public function set_step_completed($step){
+            x_log("set step copmleted");
+            rsssl_progress_add($step);
+	        return array(
+		        'success' => true,
+	        );
+        }
 
         public function handle_lets_encrypt_request($data, $test, $request){
 	        if ( ! current_user_can('manage_security') ) {
-		        $error = true;
+		        return array(
+			        'success' => false,
+		        );
 	        }
 	        switch($test){
+                case 'set_step_completed':
+	                return $this->set_step_completed();
                 case 'switch_to_dns':
                     return $this->switch_to_dns();
 		        case 'rsssl_php_requirement_met':

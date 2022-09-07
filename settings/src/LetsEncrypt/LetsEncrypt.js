@@ -24,6 +24,11 @@ const LetsEncrypt = (props) => {
         rsssl_interval = setInterval(() => setProgress((progress) => progress + 0.2), 100);
        }, [])
 
+    const setStepCompleted = (menu_id) => {
+        menu_id = menu_id.replace('le-', '');
+        rsssl_api.runLetsEncryptTest('set_step_completed', menu_id ).then( ( response ) => {});
+    }
+
     const stop_progress = ( status ) => {
         clearInterval(rsssl_interval);
     }
@@ -111,6 +116,7 @@ const LetsEncrypt = (props) => {
             //move to next action
             setActionIndex(currentActionIndex+1);
             if ( currentActionIndex+1===props.field.actions.length ) {
+                // setStepCompleted(props.menu_id);
                 props.handleNextButtonDisabled(false);
                 setActionIndex(props.field.actions.length);
                 clearInterval(rsssl_interval);

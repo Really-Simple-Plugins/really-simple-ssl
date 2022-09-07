@@ -49,10 +49,14 @@ function rsssl_dns_verification_required(){
 	 */
 
 	if ( !rsssl_do_local_lets_encrypt_generation() ) {
+		error_log("not do local le generation");
 		return false;
 	}
 
-	if ( rsssl_get_option('verification_type')==='DNS' ) {
+	error_log("Verification type ".rsssl_get_option('verification_type'));
+	if ( strtolower(rsssl_get_option('verification_type'))==='dns' ) {
+		error_log("verification type DNS");
+
 		return true;
 	}
 
@@ -300,6 +304,8 @@ if ( !function_exists('rsssl_is_ready_for')) {
 	$sequence = array_slice($sequence, 0, $index, true);
 	$not_completed = array();
 	$finished = get_option("rsssl_le_installation_progress", array());
+	x_log("completed stepls");
+	x_log($finished);
 	foreach ($sequence as $status ) {
 		if (!in_array($status, $finished)) {
 			$not_completed[] = $status;
@@ -356,9 +362,10 @@ if ( !function_exists('rsssl_do_local_lets_encrypt_generation')) {
 		$not_local_cert_hosts = RSSSL_LE()->hosts->not_local_certificate_hosts;
 		$current_host         = rsssl_get_other_host();
 		if ( in_array( $current_host, $not_local_cert_hosts ) ) {
+			error_log("not local cert hosts");
 			return false;
 		}
-
+		error_log("do local le generation");
 		return true;
 	}
 }
@@ -579,7 +586,7 @@ if ( !function_exists('rsssl_wildcard_certificate_required') ) {
 	 */
 	function rsssl_wildcard_certificate_required() {
 		//if DNS verification, create wildcard.
-		if ( rsssl_get_option('verification_type') === 'DNS' ) {
+		if ( strtolower(rsssl_get_option('verification_type')) === 'dns' ) {
 			return true;
 		}
 

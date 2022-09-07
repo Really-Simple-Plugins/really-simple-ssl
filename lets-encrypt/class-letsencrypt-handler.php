@@ -213,11 +213,11 @@ class rsssl_letsencrypt_handler {
 		    $action = 'stop';
 		    $status = 'error';
 		    $message = __("It is not possible to install Let's Encrypt on a subsite. Please go to the main site of your website.", "really-simple-ssl" );
-	    } else if ( strlen($path)>0 ) {
-		    rsssl_progress_remove('system-status');
-		    $action = 'stop';
-		    $status = 'error';
-		    $message = __("It is not possible to install Let's Encrypt on a subfolder configuration.", "really-simple-ssl" ).rsssl_le_read_more('https://really-simple-ssl.com/install-ssl-on-subfolders');
+//	    } else if ( strlen($path)>0 ) {
+//		    rsssl_progress_remove('system-status');
+//		    $action = 'stop';
+//		    $status = 'error';
+//		    $message = __("It is not possible to install Let's Encrypt on a subfolder configuration.", "really-simple-ssl" ).rsssl_le_read_more('https://really-simple-ssl.com/install-ssl-on-subfolders');
 	    } else {
 		    $action = 'continue';
 		    $status = 'success';
@@ -409,7 +409,7 @@ class rsssl_letsencrypt_handler {
 	 * @return RSSSL_RESPONSE
 	 */
     public function get_dns_token(){
-	    if (rsssl_is_ready_for('dns-verification')) {
+	    if ( rsssl_is_ready_for('dns-verification') ) {
 		    $use_dns        = rsssl_dns_verification_required();
 		    $challenge_type = $use_dns ? Order::CHALLENGE_TYPE_DNS : Order::CHALLENGE_TYPE_HTTP;
 		    if ( $use_dns ) {
@@ -832,7 +832,7 @@ class rsssl_letsencrypt_handler {
 	 * @return bool
 	 */
     public function ssl_generation_can_auto_renew(){
-	    if ( rsssl_get_option('verification_type')==='DNS' && !get_option('rsssl_le_dns_configured_by_rsssl') ) {
+	    if ( rsssl_get_option('verification_type')==='dns' && !get_option('rsssl_le_dns_configured_by_rsssl') ) {
 		    return false;
 	    } else {
 		    return true;
@@ -1064,8 +1064,12 @@ class rsssl_letsencrypt_handler {
 
 	public function not_completed_steps_message($step){
 		$not_completed_steps = rsssl_get_not_completed_steps($step);
+		x_log("not_completed_steps");
+		x_log($not_completed_steps);
 		$nice_names = array();
 		$steps = rsssl_le_steps();
+		x_log("steps");
+		x_log($steps);
 		foreach ($not_completed_steps as $not_completed_step ) {
 			$index = array_search($not_completed_step, array_column( $steps, 'id'));
 			$nice_names[] = $steps[$index+1]['title'];
