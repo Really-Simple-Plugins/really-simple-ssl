@@ -1,8 +1,9 @@
 // Break points
-$rsp-break-xs: 576px;
-$rsp-break-s: 768px;
-$rsp-break-m: 992px;
-$rsp-break-l: 1279px;
+$rsp-break-xxs: 576px;
+$rsp-break-xs: 768px;
+$rsp-break-s: 992px;
+$rsp-break-m: 1280px;
+$rsp-break-l: 1366px;
 $rsp-break-xl: 1440px; // common 13 inch macbook pro width is 1425px
 $rsp-break-xxl: 1599px;
 
@@ -102,25 +103,19 @@ $rsp-break-xxl: 1599px;
 @mixin rsssl-block-padding {
   padding: var(--rsp-spacing-m) var(--rsp-spacing-l);
 
-  @media screen and (max-width: $rsp-break-m) {
-    padding: var(--rsp-spacing-xs) var(--rsp-spacing-m);
+  @media screen and (max-width: $rsp-break-l) {
+    padding: var(--rsp-spacing-s) var(--rsp-spacing-m);
   }
-
-  @media screen and (max-width: $rsp-break-s) {
+  @media screen and (max-width: $rsp-break-m) {
     padding: var(--rsp-spacing-xs) var(--rsp-spacing-s);
   }
-}
-
-@mixin rsssl-block-padding {
-  padding: var(--rsp-spacing-m) var(--rsp-spacing-l);
-
-  @media screen and (max-width: $rsp-break-m) {
-    padding: var(--rsp-spacing-xs) var(--rsp-spacing-m);
-  }
-
   @media screen and (max-width: $rsp-break-s) {
-    padding: var(--rsp-spacing-xs) var(--rsp-spacing-s);
+    padding: var(--rsp-spacing-xxs) var(--rsp-spacing-xs);
   }
+
+  //@media screen and (max-width: $rsp-break-xs) {
+  //  padding: var(--rsp-spacing-xs) var(--rsp-spacing-s);
+  //}
 }
 
 @mixin rsssl-fade-in {

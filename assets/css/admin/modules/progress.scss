@@ -98,7 +98,7 @@
 
 .rsssl-task-element {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: center;
   gap: var(--rsp-spacing-m);
   padding-bottom: var(--rsp-spacing-s);
@@ -143,7 +143,7 @@
 .rsssl-scroll-container {
   @include rsssl-block-padding;
   //--rsp-scroll-bg-clr: var(--rsp-dark-blue-faded);
-  height: 202px;
+  height: 230px;
   overflow-y: auto;
   padding-block: 0;
   padding-top: var(--rsp-spacing-s);

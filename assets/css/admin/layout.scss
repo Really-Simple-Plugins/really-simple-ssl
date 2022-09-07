@@ -1,16 +1,20 @@
 /* Grid */
 .rsssl {
   .rsssl-header, .rsssl-content-area {
-    max-width: calc(100% - var(--rsp-spacing-xl) * 4);
+    max-width: clamp(300px, calc(100% - var(--rsp-grid-gap) * 2), 1650px);
     margin: 0 auto;
     @media(max-width: $rsp-break-xxl) {
-      max-width: calc(100% - var(--rsp-spacing-xl) * 1);
+        --rsp-grid-gap: var(--rsp-spacing-m);
     }
-    @media(max-width: $rsp-break-xl) {
-      max-width: calc(100% - var(--rsp-spacing-xl) * 2);
+    @media(max-width: $rsp-break-xl) { // 1440 px
+        --rsp-grid-gap: var(--rsp-spacing-s);
+    }
+    @media(max-width: $rsp-break-l) { // 1366px
+        --rsp-grid-gap: var(--rsp-spacing-xs);
+    }
+    @media(max-width: $rsp-break-m) {
     }
     @media(max-width: $rsp-break-s) {
-      max-width: calc(100% - var(--rsp-spacing-xl) * 1);
     }
   }
 
@@ -21,7 +25,7 @@
     height: 70px;
     box-sizing: border-box;
     background-color: var(--rsp-background-block-color);
-    @media(max-width: $rsp-break-l) {
+    @media(max-width: $rsp-break-s) {
       height: auto;
     }
 
@@ -33,7 +37,7 @@
   .rsssl-header-left {
     display: flex;
     font-size: var(--rsp-fs-400);
-    @media(max-width: $rsp-break-l) {
+    @media(max-width: $rsp-break-s) {
       justify-content: center;
       margin: var(--rsp-spacing-xs) 0;
       order: 3;
@@ -62,9 +66,6 @@
         box-sizing: border-box;
         -moz-box-sizing: border-box;
         -webkit-box-sizing: border-box;
-        @media(max-width: $rsp-break-l) {
-          padding: 15px;
-        }
 
         &.active {
           border-bottom: 4px solid var(--rsp-brand-primary);
@@ -97,7 +98,7 @@
   }
 
   .rsssl-content-area {
-    margin-top: calc(var(--rsp-grid-margin) * 2);
+    margin-top: var(--rsp-grid-gap);
   }
 
   .rsssl-header-container {
@@ -106,7 +107,7 @@
 
   .rsssl-grid {
     display: grid;
-    grid-template-columns: repeat(4, calc(25% - var(--rsp-spacing-s)) [col-start]); // We use calc because of the grid gap
+    grid-template-columns: repeat(4, 1fr); // We use calc because of the grid gap
     grid-auto-rows: max-content;
     gap: var(--rsp-grid-gap);
     min-height: calc(100vh - 32px - 80px - 20px - var(--rsp-grid-gap)); //32px = wordpress bar, 80px = cmplz bar, 20px = margin-top, 20px is grid gap
@@ -130,10 +131,10 @@
   @media(max-width: $rsp-break-xxl) {
     grid-column: span 2;
     .rsssl-progress, .rsssl-overview {
-      grid-column: span 4;
+      grid-column: span 2;
     }
   }
-  @media(max-width: $rsp-break-m) {
+  @media(max-width: $rsp-break-s) {
     grid-column: span 2;
     .rsssl-column-2 {
       grid-column: span 4;
