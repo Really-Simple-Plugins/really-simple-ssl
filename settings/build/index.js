@@ -6626,6 +6626,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _utils_getAnchor__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../utils/getAnchor */ "./src/utils/getAnchor.js");
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_4__);
+/* harmony import */ var _utils_api__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../utils/api */ "./src/utils/api.js");
+
 
 
 
@@ -6659,7 +6661,11 @@ class SettingsGroup extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Comp
     return 'invalid';
   }
 
-  handleLetsEncryptReset() {}
+  handleLetsEncryptReset() {
+    _utils_api__WEBPACK_IMPORTED_MODULE_5__.runLetsEncryptTest('reset', 'all').then(response => {
+      location.reload();
+    });
+  }
 
   handleMenuLink(id) {
     this.props.selectMenu(id);

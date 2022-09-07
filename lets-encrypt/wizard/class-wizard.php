@@ -102,22 +102,6 @@ if ( ! class_exists( "rsssl_wizard" ) ) {
 		        return;
             }
 
-			/*
-			 * reset all option
-             */
-			if (isset($_GET['reset-letsencrypt'])) {
-			    RSSSL_LE()->letsencrypt_handler->clear_order();
-				rsssl_update_option('verification_type', false );
-				delete_option('rsssl_skip_dns_check' );
-				delete_option('rsssl_skip_challenge_directory_request' );
-				delete_option('rsssl_force_plesk' );
-				delete_option('rsssl_force_cpanel' );
-				delete_option('rsssl_create_folders_in_root');
-				delete_option('rsssl_hosting_dashboard');
-				wp_redirect(rsssl_letsencrypt_wizard_url().'&step=1');
-				RSSSL_LE()->letsencrypt_handler->clear_keys_directory();
-				exit;
-			}
 
 		    if (isset($_POST['rsssl-switch-to-directory'])) {
 			    rsssl_update_option('verification_type', false );
@@ -140,23 +124,27 @@ if ( ! class_exists( "rsssl_wizard" ) ) {
 			}
         }
 
-		public function reset_lets_encrypt(){
+		public function reset($request){
 			if ( !rsssl_user_can_manage() ) {
 				return [
 					'success' => true,
 				];
 			}
 
-            RSSSL_LE()->letsencrypt_handler->clear_order();
-            rsssl_update_option('verification_type', false );
-            delete_option('rsssl_skip_dns_check' );
-            delete_option('rsssl_skip_challenge_directory_request' );
-            delete_option('rsssl_force_plesk' );
-            delete_option('rsssl_force_cpanel' );
-            delete_option('rsssl_create_folders_in_root');
-            delete_option('rsssl_hosting_dashboard');
-            wp_redirect(rsssl_letsencrypt_wizard_url().'&step=1');
-            RSSSL_LE()->letsencrypt_handler->clear_keys_directory();
+			$type = $request->get_param('id');
+            if ( $type==='all' ) {
+	            RSSSL_LE()->letsencrypt_handler->clear_order();
+	            rsssl_update_option('verification_type', 'dir' );
+	            delete_option('rsssl_skip_dns_check' );
+	            delete_option('rsssl_skip_challenge_directory_request' );
+	            delete_option('rsssl_force_plesk' );
+	            delete_option('rsssl_force_cpanel' );
+	            delete_option('rsssl_create_folders_in_root');
+	            delete_option('rsssl_hosting_dashboard');
+	            wp_redirect(rsssl_letsencrypt_wizard_url().'&step=1');
+	            RSSSL_LE()->letsencrypt_handler->clear_keys_directory();
+            }
+
 			return [
 				'success' => true,
 			];
@@ -178,9 +166,9 @@ if ( ! class_exists( "rsssl_wizard" ) ) {
 		        );
 	        }
 	        switch($test){
-                case 'switch_to_dns':
-	                return $this->switch_to_dns();
-		        case 'reset':
+                case 'reset':
+	                return $this->reset($request);
+		        case 'switch_to_dns':
                     return $this->switch_to_dns();
 		        case 'rsssl_php_requirement_met':
 		        case 'certificate_status':

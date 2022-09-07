@@ -3,6 +3,8 @@ import Field from "./Field";
 import Hyperlink from "../utils/Hyperlink";
 import getAnchor from "../utils/getAnchor";
 import { __ } from '@wordpress/i18n';
+import * as rsssl_api from "../utils/api";
+
 
 /**
  * Render a grouped block of settings
@@ -29,7 +31,9 @@ class SettingsGroup extends Component {
     }
 
     handleLetsEncryptReset(){
-
+        rsssl_api.runLetsEncryptTest('reset', 'all' ).then( ( response ) => {
+            location.reload();
+        });
     }
 
     handleMenuLink(id){
