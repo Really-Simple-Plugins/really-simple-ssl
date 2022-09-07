@@ -112,7 +112,7 @@ class rsssl_admin extends rsssl_front_end
 	 * @return false|mixed
 	 */
 	public function override_auto_updates( $update, $item ) {
-		if ( strpos($item->slug , 'complianz') !==false && version_compare($item->new_version, '6.0.0', '>=') ) {
+		if ( strpos($item->slug , 'really-simple-ssl') !==false && version_compare($item->new_version, '6.0.0', '>=') ) {
 			return false;
 		}
 		return $update;
