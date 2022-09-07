@@ -6390,7 +6390,6 @@ class SettingsGroup extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Comp
     let networkwide_error = !rsssl_settings.networkwide_active && activeGroup.networkwide;
     this.upgrade = activeGroup.upgrade ? activeGroup.upgrade : this.upgrade;
     let helplinkText = activeGroup.helpLink_text ? activeGroup.helpLink_text : (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)("Instructions manual", "really-simple-ssl");
-    disabled = false;
     let disabledClass = disabled || networkwide_error ? 'rsssl-disabled' : '';
     return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
       className: "rsssl-grid-item rsssl-" + activeGroup.id + ' ' + disabledClass

@@ -69,7 +69,6 @@ class SettingsGroup extends Component {
 
         this.upgrade = activeGroup.upgrade ? activeGroup.upgrade : this.upgrade;
         let helplinkText = activeGroup.helpLink_text ? activeGroup.helpLink_text : __("Instructions manual","really-simple-ssl");
-        disabled = false;
         let disabledClass = disabled || networkwide_error ? 'rsssl-disabled' : '';
 
         return (
