@@ -93,7 +93,7 @@ class rsssl_admin extends rsssl_front_end
 	 * @param $response
 	 */
 	public function plugin_update_message($plugin_data, $response){
-		if ( strpos($response->slug , 'really-simple-ssl') !==false && $response->new_version === '6.0.0' ) {
+		if ( strpos($response->slug , 'really-simple-ssl') !==false && $response->new_version >= '6.0.0' ) {
 			echo '<br><b>' . '&nbsp'.sprintf(__("Important: Please %sread about%s Really Simple SSL 6.0 before updating. This is a major release and includes changes and new features that might need your attention.").'</b>','<a target="_blank" href="https://really-simple-ssl.com/upgrade-to-really-simple-ssl-6-0/">','</a>');
 
             if (is_multisite() && !RSSSL()->rsssl_multisite->ssl_enabled_networkwide){
@@ -3473,28 +3473,21 @@ class rsssl_admin extends rsssl_front_end
 		            ),
 	            ),
             ),
-            '6_multisite_networkwide' => array(
-		        'callback'  => '_true_',
-		        'condition' => array(
-			        'is_multisite',
-			        'NOT RSSSL()->rsssl_multisite->ssl_enabled_networkwide',
-		        ),
-		        'score'     => 0,
-		        'output'    => array(
-			        'true' => array(
-				        'msg'         => __( "Important: Really Simple SSL 6.0 drops per site SSL management. Upgrading will upgrade all subsites to SSL." ),
-				        'icon'        => 'warning',
-				        'url'         => 'https://really-simple-ssl.com/how-to-set-security-headers-on-apache-and-nginx/',
-				        'dismissible' => true,
-				        'plusone' => true,
-				        'admin_notice' => true,
-			        ),
-		        ),
-	        ),
+
+            'meet_6' => array(
+	            'callback' => '_true_',
+	            'plus_one' => true,
+	            'output' => array(
+		            'true' => array(
+			            'msg' => __( "Really Simple SSL 6.0 is now in beta. Join our beta program and get all new features now!", 'really-simple-ssl' ) ,
+			            'icon' => 'open',
+			            'url' => 'https://really-simple-ssl.com/meet-really-simple-ssl-6/',
+			            'dismissible' => true,
+			            'plusone' => true,
+		            ),
+	            ),
+            ),
         );
-
-
-
 
         //on multisite, don't show the notice on subsites.
         if ( is_multisite() && !is_network_admin() ) {
@@ -3555,7 +3548,7 @@ class rsssl_admin extends rsssl_front_end
 			    unset($notices[$id]);
 			    continue;
             }
-
+            x_log($id);
 		    $condition_functions = $notice['condition'];
 		    foreach ( $condition_functions as $func ) {
 			    $condition = $this->validate_function($func, true);
