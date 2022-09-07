@@ -1,6 +1,5 @@
 <?php
 defined('ABSPATH') or die();
-error_log("loading lets encrypt file");
 /**
  * Capability handling for Let's Encrypt
  * @return bool

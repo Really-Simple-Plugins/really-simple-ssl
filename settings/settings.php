@@ -331,7 +331,6 @@ function rsssl_rest_api_fields_get(){
 	if (!current_user_can('manage_options')) {
 		return;
 	}
-	rsssl_update_option('verification_type', 'DIR');
 
 	$output = array();
 	$fields = rsssl_fields();

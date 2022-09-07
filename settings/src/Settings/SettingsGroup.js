@@ -1,6 +1,7 @@
 import {Component} from "@wordpress/element";
 import Field from "./Field";
 import Hyperlink from "../utils/Hyperlink";
+import getAnchor from "../utils/getAnchor";
 import { __ } from '@wordpress/i18n';
 
 /**
@@ -25,6 +26,10 @@ class SettingsGroup extends Component {
             return this.props.pageProps['licenseStatus'];
         }
         return 'invalid';
+    }
+
+    handleLetsEncryptReset(){
+
     }
 
     handleMenuLink(id){
@@ -70,23 +75,25 @@ class SettingsGroup extends Component {
             }
         }
 
-
         let disabled = status !=='valid' && activeGroup.premium;
-
         //if a feature can only be used on networkwide or single site setups, pass that info here.
         let networkwide_error = !rsssl_settings.networkwide_active && activeGroup.networkwide;
 
         this.upgrade = activeGroup.upgrade ? activeGroup.upgrade : this.upgrade;
         let helplinkText = activeGroup.helpLink_text ? activeGroup.helpLink_text : __("Instructions manual","really-simple-ssl");
+        let anchor = getAnchor('main');
 
         return (
             <div className={"rsssl-grid-item rsssl-"+activeGroup.id}>
-                {activeGroup && activeGroup.title && <div className="rsssl-grid-item-header">
+                {activeGroup.title && <div className="rsssl-grid-item-header">
                     <h3 className="rsssl-h4">{activeGroup.title}</h3>
-                    {activeGroup && activeGroup.helpLink && <div className="rsssl-grid-item-controls"><Hyperlink target="_blank" className="rsssl-helplink" text={helplinkText} url={activeGroup.helpLink}/></div>}
+                    {activeGroup.helpLink && anchor!=='letsencrypt'&& <div className="rsssl-grid-item-controls"><Hyperlink target="_blank" className="rsssl-helplink" text={helplinkText} url={activeGroup.helpLink}/></div>}
+                    {anchor==='letsencrypt' && <div className="rsssl-grid-item-controls">
+                        <a href="#">{__("Reset Let's Encrypt","really-simple-ssl")}</a>
+                    </div>}
                 </div>}
                 <div className="rsssl-grid-item-content">
-                    {activeGroup && activeGroup.intro && <div className="rsssl-settings-block-intro">{activeGroup.intro}</div>}
+                    {activeGroup.intro && <div className="rsssl-settings-block-intro">{activeGroup.intro}</div>}
                     {selectedFields.map((field, i) =>
                         <Field key={i} index={i}
                             selectMenu={this.props.selectMenu}

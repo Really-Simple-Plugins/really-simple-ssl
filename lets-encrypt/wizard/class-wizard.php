@@ -140,14 +140,37 @@ if ( ! class_exists( "rsssl_wizard" ) ) {
 			}
         }
 
-        public function set_step_completed($step){
-            x_log("set step copmleted");
-            rsssl_progress_add($step);
-	        return array(
-		        'success' => true,
-	        );
-        }
+		public function reset_lets_encrypt(){
+			if ( !rsssl_user_can_manage() ) {
+				return [
+					'success' => true,
+				];
+			}
 
+            RSSSL_LE()->letsencrypt_handler->clear_order();
+            rsssl_update_option('verification_type', false );
+            delete_option('rsssl_skip_dns_check' );
+            delete_option('rsssl_skip_challenge_directory_request' );
+            delete_option('rsssl_force_plesk' );
+            delete_option('rsssl_force_cpanel' );
+            delete_option('rsssl_create_folders_in_root');
+            delete_option('rsssl_hosting_dashboard');
+            wp_redirect(rsssl_letsencrypt_wizard_url().'&step=1');
+            RSSSL_LE()->letsencrypt_handler->clear_keys_directory();
+			return [
+				'success' => true,
+			];
+		}
+
+		/**
+         * Process a Let's Encrypt test request
+         *
+		 * @param array $data
+		 * @param string $test
+		 * @param WP_REST_Request $request
+		 *
+		 * @return array|bool[]|false[]|void
+		 */
         public function handle_lets_encrypt_request($data, $test, $request){
 	        if ( ! current_user_can('manage_security') ) {
 		        return array(
@@ -155,9 +178,9 @@ if ( ! class_exists( "rsssl_wizard" ) ) {
 		        );
 	        }
 	        switch($test){
-                case 'set_step_completed':
-	                return $this->set_step_completed();
                 case 'switch_to_dns':
+	                return $this->switch_to_dns();
+		        case 'reset':
                     return $this->switch_to_dns();
 		        case 'rsssl_php_requirement_met':
 		        case 'certificate_status':
@@ -263,7 +286,7 @@ if ( ! class_exists( "rsssl_wizard" ) ) {
             $user_info = get_userdata(get_current_user_id());
             $email = urlencode($user_info->user_email);
             $name = urlencode($user_info->display_name);
-			$verification_type = rsssl_get_option('verification_type') === 'DNS' ? 'DNS' : 'DIR';
+			$verification_type = rsssl_get_option('verification_type') === 'dns' ? 'dns' : 'dir';
 			$skip_dns_check = get_option('rsssl_skip_dns_check' ) ? 'Skip DNS check' : 'Do DNS check';
 			$skip_directory_check = get_option('rsssl_skip_challenge_directory_request' ) ? 'Skip directory check' : 'Do directory check';
 			$hosting_company = rsssl_get_other_host();

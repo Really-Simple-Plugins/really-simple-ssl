@@ -24,11 +24,6 @@ const LetsEncrypt = (props) => {
         rsssl_interval = setInterval(() => setProgress((progress) => progress + 0.2), 100);
        }, [])
 
-    const setStepCompleted = (menu_id) => {
-        menu_id = menu_id.replace('le-', '');
-        rsssl_api.runLetsEncryptTest('set_step_completed', menu_id ).then( ( response ) => {});
-    }
-
     const stop_progress = ( status ) => {
         clearInterval(rsssl_interval);
     }
@@ -54,14 +49,14 @@ const LetsEncrypt = (props) => {
 
     const adjustActionsForDNS = (actions) => {
         //find verification_type
-        let verification_type='DIR';
+        let verification_type='dir';
         for (const fieldItem of props.fields){
             if (fieldItem.id === 'verification_type' ){
                 verification_type = fieldItem.value;
             }
         }
 
-        if (verification_type==='DNS') {
+        if (verification_type==='dns') {
             //add new actions for the generation step
 
 
@@ -116,7 +111,6 @@ const LetsEncrypt = (props) => {
             //move to next action
             setActionIndex(currentActionIndex+1);
             if ( currentActionIndex+1===props.field.actions.length ) {
-                // setStepCompleted(props.menu_id);
                 props.handleNextButtonDisabled(false);
                 setActionIndex(props.field.actions.length);
                 clearInterval(rsssl_interval);

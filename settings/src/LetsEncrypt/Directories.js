@@ -49,7 +49,7 @@ const Directories = (props) => {
     }
 
     const handleSwitchToDNS = () => {
-        props.updateField('verification_type', 'DNS');
+        props.updateField('verification_type', 'dns');
         return rsssl_api.runLetsEncryptTest('switch_to_dns', 'dns').then( ( response ) => {
             props.selectMenu('le-dns-verification');
             const notice = dispatch('core/notices').createNotice(

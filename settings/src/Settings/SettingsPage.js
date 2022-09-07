@@ -45,6 +45,7 @@ class SettingsPage extends Component {
         this.selectedMenuItem = selectedMenuItem;
         this.changedFields = changedFields;
         this.checkRequiredFields();
+        console.log(fields);
         this.setState({
             isAPILoaded: true,
             fields: this.props.fields,

@@ -54,7 +54,7 @@ function rsssl_dns_verification_required(){
 	}
 
 	error_log("Verification type ".rsssl_get_option('verification_type'));
-	if ( strtolower(rsssl_get_option('verification_type'))==='dns' ) {
+	if ( rsssl_get_option('verification_type')==='dns' ) {
 		error_log("verification type DNS");
 
 		return true;
@@ -586,7 +586,7 @@ if ( !function_exists('rsssl_wildcard_certificate_required') ) {
 	 */
 	function rsssl_wildcard_certificate_required() {
 		//if DNS verification, create wildcard.
-		if ( strtolower(rsssl_get_option('verification_type')) === 'dns' ) {
+		if ( rsssl_get_option('verification_type') === 'dns' ) {
 			return true;
 		}
 

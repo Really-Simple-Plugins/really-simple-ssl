@@ -8,14 +8,11 @@ import Hyperlink from "../utils/Hyperlink";
 import {useUpdateEffect} from 'react-use';
 import sleeper from "../utils/sleeper";
 
-import {
-    Button,
-} from '@wordpress/components';
-
 const DnsVerification = (props) => {
     const action = props.action;
      useUpdateEffect(()=> {
-        if ((action.action==='challenge_directory_reachable' && action.status==='error')) {
+
+        if (action && action.action==='challenge_directory_reachable' && action.status==='error') {
             props.addHelp(
                 props.field.id,
                  'default',
@@ -33,7 +30,7 @@ const DnsVerification = (props) => {
     }
 
     const handleSwitchToDNS = () => {
-        props.updateField('verification_type', 'DNS');
+        props.updateField('verification_type', 'dns');
         return rsssl_api.runLetsEncryptTest('switch_to_dns', 'dns').then( ( response ) => {
             props.selectMenu('le-dns-verification');
             const notice = dispatch('core/notices').createNotice(
@@ -63,10 +60,10 @@ const DnsVerification = (props) => {
             <div id="rsssl-dns-text-records">
                 {tokens.map((token, i) =>
                     <>
-                        <div class="rsssl-dns-label" >@/{ __("domain","really-simple-ssl") }</div>
-                        <div class="rsssl-dns-field rsssl-selectable">_acme-challenge{i}</div>
-                        <div class="rsssl-dns-label" >{__("Value","really-simple-ssl") }</div>
-                        <div class="rsssl-dns-field rsssl-selectable">{token}</div>
+                        <div className="rsssl-dns-label" >@/{ __("domain","really-simple-ssl") }</div>
+                        <div className="rsssl-dns-field rsssl-selectable">_acme-challenge{i}</div>
+                        <div className="rsssl-dns-label" >{__("Value","really-simple-ssl") }</div>
+                        <div className="rsssl-dns-field rsssl-selectable">{token}</div>
                     </>
                 )}
 
