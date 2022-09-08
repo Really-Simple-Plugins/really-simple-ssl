@@ -22,17 +22,24 @@ class SettingsGroup extends Component {
 
     componentDidMount() {
         this.getLicenseStatus = this.getLicenseStatus.bind(this);
+        this.handleLetsEncryptReset = this.handleLetsEncryptReset.bind(this);
     }
     getLicenseStatus(){
-        if (this.props.pageProps.hasOwnProperty('licenseStatus') ){
+        if ( this.props.pageProps.hasOwnProperty('licenseStatus') ){
             return this.props.pageProps['licenseStatus'];
         }
         return 'invalid';
     }
 
-    handleLetsEncryptReset(){
-        rsssl_api.runLetsEncryptTest('reset', 'all' ).then( ( response ) => {
-            location.reload();
+    /*
+    * On reset of LE, send this info to the back-end, and redirect to the first step.
+    * reload to ensure that.
+    */
+    handleLetsEncryptReset(e){
+        e.preventDefault();
+        rsssl_api.runLetsEncryptTest('reset' ).then( ( response ) => {
+            let url = window.location.href.replace(/#letsencrypt.*/, '&r='+(+new Date())+'#letsencrypt/le-system-status');
+            window.location.href = url;
         });
     }
 
@@ -93,7 +100,7 @@ class SettingsGroup extends Component {
                     <h3 className="rsssl-h4">{activeGroup.title}</h3>
                     {activeGroup.helpLink && anchor!=='letsencrypt'&& <div className="rsssl-grid-item-controls"><Hyperlink target="_blank" className="rsssl-helplink" text={helplinkText} url={activeGroup.helpLink}/></div>}
                     {anchor==='letsencrypt' && <div className="rsssl-grid-item-controls">
-                        <a href="#">{__("Reset Let's Encrypt","really-simple-ssl")}</a>
+                        <a href="#" className="rsssl-helplink" onClick={ (e) => this.handleLetsEncryptReset(e) }>{__("Reset Let's Encrypt","really-simple-ssl")}</a>
                     </div>}
                 </div>}
                 <div className="rsssl-grid-item-content">
@@ -107,6 +114,8 @@ class SettingsGroup extends Component {
                             showSavedSettingsNotice={this.props.showSavedSettingsNotice}
                             updateField={this.props.updateField}
                             getFieldValue={this.props.getFieldValue}
+                            refreshTests={this.props.refreshTests}
+                            resetRefreshTests={this.props.resetRefreshTests}
                             addHelp={this.props.addHelp}
                             setPageProps={this.props.setPageProps}
                             fieldsUpdateComplete = {this.props.fieldsUpdateComplete}

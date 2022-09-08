@@ -92,8 +92,14 @@
     h4 {
       margin:20px 0;
     }
+    a+button {
+      margin-left:20px;
+    }
     button {
-      margin: 20px 0 0 0;
+      //margin: 20px 0 0 0;
+    }
+    .rsssl-certificate-data {
+      display:none;
     }
   }
 }

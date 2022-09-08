@@ -213,11 +213,11 @@ class rsssl_letsencrypt_handler {
 		    $action = 'stop';
 		    $status = 'error';
 		    $message = __("It is not possible to install Let's Encrypt on a subsite. Please go to the main site of your website.", "really-simple-ssl" );
-//	    } else if ( strlen($path)>0 ) {
-//		    rsssl_progress_remove('system-status');
-//		    $action = 'stop';
-//		    $status = 'error';
-//		    $message = __("It is not possible to install Let's Encrypt on a subfolder configuration.", "really-simple-ssl" ).rsssl_le_read_more('https://really-simple-ssl.com/install-ssl-on-subfolders');
+	    } else if ( strlen($path)>0 ) {
+		    rsssl_progress_remove('system-status');
+		    $action = 'stop';
+		    $status = 'error';
+		    $message = __("It is not possible to install Let's Encrypt on a subfolder configuration.", "really-simple-ssl" ).rsssl_le_read_more('https://really-simple-ssl.com/install-ssl-on-subfolders');
 	    } else {
 		    $action = 'continue';
 		    $status = 'success';
@@ -1254,12 +1254,12 @@ class rsssl_letsencrypt_handler {
 		$error_message = sprintf(__( "Could not reach challenge directory over %s.", "really-simple-ssl"), '<a target="_blank" href="'.$url.'">'.$url.'</a>');
 		$test_string = 'Really Simple SSL';
 		$folders = $this->directories_without_writing_permissions();
-//		if ( !$this->challenge_directory() || count($folders) !==0 ) {
+		if ( !$this->challenge_directory() || count($folders) !==0 ) {
 			$status  = 'error';
 			$action  = 'stop';
 			$message = __( "Challenge directory not writable.", "really-simple-ssl");
 			return new RSSSL_RESPONSE($status, $action, $message);
-//		}
+		}
 
 		$response       = wp_remote_get( $url );
 		if ( is_array( $response ) ) {

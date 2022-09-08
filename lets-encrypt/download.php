@@ -46,7 +46,7 @@ switch($type) {
 }
 
 if (!file_exists($file)) {
-	echo __("File missing. Please retry the previous steps.", "really-simple-ssl");
+	$content = __("File missing. Please retry the previous steps.", "really-simple-ssl");
 	die();
 } else {
 	$content = file_get_contents($file);

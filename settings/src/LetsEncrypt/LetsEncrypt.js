@@ -3,6 +3,8 @@ import * as rsssl_api from "../utils/api";
 import sleeper from "../utils/sleeper";
 import Directories from "./Directories";
 import DnsVerification from "./DnsVerification";
+import Generation from "./Generation";
+import Installation from "./Installation";
 import { __ } from '@wordpress/i18n';
 import {useUpdateEffect} from 'react-use';
 
@@ -20,13 +22,25 @@ const LetsEncrypt = (props) => {
 
     useEffect(() => {
         props.handleNextButtonDisabled(true);
-        runTest(0, progress);
+        runTest(0);
         rsssl_interval = setInterval(() => setProgress((progress) => progress + 0.2), 100);
        }, [])
 
-    const stop_progress = ( status ) => {
-        clearInterval(rsssl_interval);
-    }
+    const restartTests = () => {
+        //clear statuses to ensure the bullets are grey
+        let actions = props.field.actions;
+        for ( const action of actions) {
+            action.status='';
+        }
+        props.field.actions = actions;
+
+        runTest(0);
+        setActionIndex(0);
+        setPreviousActionIndex(-1);
+        setLastActionStatus('');
+        setPreviousProgress(0);
+        setProgress(0);
+     }
 
     const getAction = (actionIndex) => {
         let newActions = props.field.actions;
@@ -34,16 +48,21 @@ const LetsEncrypt = (props) => {
     }
 
     useUpdateEffect(()=> {
+        let maxIndex = props.field.actions.length-1;
         if (actionIndex>previousActionIndex) {
             setPreviousActionIndex(actionIndex);
-            setProgress( ((100 / props.field.actions.length) * actionIndex) );
+            setProgress( ( 100 / maxIndex ) * actionIndex );
         }
         setPreviousProgress(progress);
 
         //ensure that progress does not get to 100 when retries are still running
         let currentAction = getAction(actionIndex);
-        if (currentAction && currentAction.do==='retry' && currentAction.attemptCount>1 ){
+        if ( currentAction && currentAction.do==='retry' && currentAction.attemptCount>1 ){
             setProgress(90);
+        }
+        if (props.refreshTests){
+            props.resetRefreshTests();
+            restartTests();
         }
     })
 
@@ -52,32 +71,31 @@ const LetsEncrypt = (props) => {
         let verification_type = props.getFieldValue('verification_type');
         if ( !verification_type ) verification_type = 'dir';
 
-        console.log("verification_type");
-        console.log(verification_type);
-        console.log(actions);
 
         if ( verification_type==='dns' ) {
-            //add new actions for the generation step
-            for (const action in actions ) {
+            //find bundle index
+            let create_bundle_index = -1;
+            actions.forEach(function(action, i) {
+                if (action.action==="create_bundle_or_renew"){
+                    create_bundle_index = i;
+                }
+            });
+            if (create_bundle_index>0) {
+                //overwrite create bundle action
+                let newAction = {};
+                newAction.action = 'verify_dns';
+                newAction.description = __("Verifying DNS records...", "really-simple-ssl");
+                newAction.attempts = 2;
+                actions[create_bundle_index] = newAction;
 
+                //add create bundle at end
+                newAction = {};
+                newAction.action = '"create_bundle_or_renew"';
+                newAction.description = __("Generating SSL certificate...", "really-simple-ssl");
+                newAction.attempts = 4;
+                actions.push(newAction);
             }
-            let newAction = {};
-            newAction.action = 'verify_dns';
-            newAction.description = __("Verifying DNS records...", "really-simple-ssl");
-            newAction.attempts = 2;
-            actions.push(newAction);
 
-            newAction.action = 'verify_dns';
-            newAction.description = __("Generating SSL certificate...", "really-simple-ssl");
-            newAction.attempts = 2;
-            actions.push(newAction);
-        //     array(
-        //         'description' => ,
-        //         'action'=> 'create_bundle_or_renew',
-        //         'attempts' => 4,
-        //         'speed' => 'slow',
-        // )
-        // );
         }
 
         return actions;
@@ -86,6 +104,7 @@ const LetsEncrypt = (props) => {
     const processTestResult = (currentActionIndex) => {
          let action = getAction(currentActionIndex);
         setLastActionStatus(action.status);
+        let maxIndex = props.field.actions.length-1;
         if (action.status==='success') {
             action.attemptCount = 0;
         } else {
@@ -101,7 +120,7 @@ const LetsEncrypt = (props) => {
 
         if ( action.do === 'finalize' ) {
             //finalize
-            setActionIndex(actions.length);
+            setActionIndex(maxIndex);
 
         } else if (action.do === 'continue' || action.do === 'skip' ) {
             //new action, so reset the attempts count
@@ -110,18 +129,20 @@ const LetsEncrypt = (props) => {
             if ( action.do === 'skip' ) {
                 action.hide = true;
             }
-            //move to next action
-            setActionIndex(currentActionIndex+1);
-            if ( currentActionIndex+1===props.field.actions.length ) {
-                props.handleNextButtonDisabled(false);
-                setActionIndex(props.field.actions.length);
-                clearInterval(rsssl_interval);
-            } else {
+            //move to next action, but not if we're already on the max
+            if ( maxIndex > currentActionIndex ) {
+                console.log("go to next step, increase to "+(currentActionIndex+1));
+                setActionIndex(currentActionIndex+1);
                 runTest(currentActionIndex+1);
+            } else {
+                console.log("stopping, increase to "+maxIndex);
+                setActionIndex(maxIndex);
+                props.handleNextButtonDisabled(false);
+                clearInterval(rsssl_interval);
             }
         } else if (action.do === 'retry' ) {
             if ( action.attemptCount >= maxAttempts ) {
-                setActionIndex(props.field.actions.length);
+                setActionIndex(maxIndex);
                 clearInterval(rsssl_interval);
             } else {
                 // clearInterval(rsssl_interval);
@@ -133,7 +154,7 @@ const LetsEncrypt = (props) => {
 
     }
 
-    const runTest = (currentActionIndex) => {
+    const runTest = (currentActionIndex ) => {
 
         if (props.field.id==='generation') {
             props.field.actions = adjustActionsForDNS(props.field.actions);
@@ -155,8 +176,8 @@ const LetsEncrypt = (props) => {
                 action.do = response.data.action;
                 action.output = response.data.output ? response.data.output : false;
                 sleep = 100;
-                if (elapsedTime<600) {
-                    //sleep = 600-elapsedTime;
+                if (elapsedTime<1000) {
+                   // sleep = 1000-elapsedTime;
                 }
             }).then(sleeper(sleep)).then(() => {
               processTestResult(currentActionIndex);
@@ -171,6 +192,7 @@ const LetsEncrypt = (props) => {
     }
 
     let progressBarColor = lastActionStatus==='error' ? 'rsssl-orange' : '';
+
     return (
         <>
             <div className="rsssl-lets-encrypt-tests">
@@ -187,6 +209,8 @@ const LetsEncrypt = (props) => {
                 </div>
                 {props.field.id === 'directories' && <Directories save={props.save} selectMenu={props.selectMenu} field={props.field} updateField={props.updateField} addHelp={props.addHelp} progress={progress} action={props.field.actions[actionIndex]}/> }
                 {props.field.id === 'dns-verification' && <DnsVerification save={props.save} selectMenu={props.selectMenu} field={props.field} updateField={props.updateField} addHelp={props.addHelp} progress={progress} action={props.field.actions[actionIndex]}/> }
+                {props.field.id === 'generation' && <Generation restartTests={restartTests} save={props.save} selectMenu={props.selectMenu} field={props.field} updateField={props.updateField} addHelp={props.addHelp} progress={progress} action={props.field.actions[actionIndex]}/> }
+                {props.field.id === 'installation' && <Installation restartTests={restartTests} save={props.save} selectMenu={props.selectMenu} field={props.field} updateField={props.updateField} addHelp={props.addHelp} progress={progress} action={props.field.actions[actionIndex]}/> }
             </div>
         </>
     )

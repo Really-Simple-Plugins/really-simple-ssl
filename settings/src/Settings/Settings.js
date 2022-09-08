@@ -38,6 +38,12 @@ class Settings extends Component {
                 groups.push(selectedField.group_id);
             }
         }
+        let btnSaveText = __('Save', 'really-simple-ssl');
+        for (const menuItem of menuItems ) {
+            if (menuItem.id===selectedMenuItem && menuItem.tests_only ) {
+                btnSaveText = __('Refresh', 'really-simple-ssl');
+            }
+        }
 
         //convert progress notices to an array useful for the help blocks
         let notices = [];
@@ -79,6 +85,8 @@ class Settings extends Component {
                             showSavedSettingsNotice={this.props.showSavedSettingsNotice}
                             updateField={this.props.updateField}
                             getFieldValue={this.props.getFieldValue}
+                            refreshTests={this.props.refreshTests}
+                            resetRefreshTests={this.props.resetRefreshTests}
                             addHelp={this.props.addHelp}
                             pageProps={this.props.pageProps}
                             setPageProps={this.props.setPageProps}
@@ -103,7 +111,7 @@ class Settings extends Component {
                         <Button
                             variant="secondary"
                             onClick={ this.props.save }>
-                            { __( 'Save', 'really-simple-ssl' ) }
+                            { btnSaveText }
                         </Button>
 
                         {/*This will be shown only if current step is not the last one*/}

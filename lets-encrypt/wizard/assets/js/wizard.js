@@ -1,31 +1,10 @@
 jQuery(document).ready(function ($) {
     'use strict';
 
-    $(document).on('click','#rsssl-no-results-container',function(){
-        console.log("clicked");
-        select2Dropdown.val('none');
-        select2Dropdown.trigger('change');
-        select2Dropdown.select2('close');
-    });
 
     var copied_element = $('.rsssl-copied-feedback').html();
     $(document).on('click', '.rsssl-copy-content', function () {
-        var type = $(this).data('item');
-        var success;
-        var data = $('.rsssl-'+type).text();
-        var temp_element = $("<textarea>");
-        $("body").append(temp_element);
-        temp_element.val(data).select();
-        try {
-            success = document.execCommand("copy");
-        } catch (e) {
-            success = false;
-        }
-        temp_element.remove();
-        if (success) {
-            $('<span class="rsssl-copied-feedback-container">'+copied_element+'</span>').insertAfter($(this));
-            setTimeout(function(){ $('.rsssl-copied-feedback-container').fadeOut('slow') }, 5000);
-        }
+
     });
 
     function maybe_show_password_delete_questions(){

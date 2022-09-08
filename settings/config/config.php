@@ -181,6 +181,7 @@ function rsssl_menu(){
 					'title' => __('System Status', 'really-simple-ssl'),
 					'intro' => __( 'Letʼs Encrypt is a free, automated and open certificate authority brought to you by the nonprofit Internet Security Research Group (ISRG).', 'really-simple-ssl' ),
 					'helpLink'  => 'https://really-simple-ssl.com/about-lets-encrypt/',
+					'tests_only' => true,
 				],
 				[
 					'id' => 'le-general',
@@ -195,26 +196,32 @@ function rsssl_menu(){
 					'id' => 'le-directories',
 					'title' => __( 'Directories', 'really-simple-ssl' ),
 //					'intro' => __( 'Below you will find the instructions for different hosting environments and configurations. If you start the process with the necessary instructions and credentials the next view steps will be done in no time.', 'really-simple-ssl'),
+					'tests_only' => true,
 				],
 				[
 					'id' => 'le-dns-verification',
 					'title' => __( 'DNS verification', 'really-simple-ssl' ),
 //					'intro' => __( 'Below you will find the instructions for different hosting environments and configurations. If you start the process with the necessary instructions and credentials the next view steps will be done in no time.', 'really-simple-ssl'),
+					'tests_only' => true,
 				],
 				[
 					'id' => 'le-generation',
 					'title' => __( 'Generation', 'really-simple-ssl' ),
 //					'intro' => __( 'Below you will find the instructions for different hosting environments and configurations. If you start the process with the necessary instructions and credentials the next view steps will be done in no time.', 'really-simple-ssl'),
+					'tests_only' => true,
 				],
 				[
 					'id' => 'le-installation',
 					'title' => __( 'Installation', 'really-simple-ssl' ),
 //					'intro' => __( 'Below you will find the instructions for different hosting environments and configurations. If you start the process with the necessary instructions and credentials the next view steps will be done in no time.', 'really-simple-ssl'),
+					'tests_only' => true,
 				],
 				[
 					'id' => 'le-activate_ssl',
 					'title' => __( 'Activate', 'really-simple-ssl' ),
 //					'intro' => __( 'Below you will find the instructions for different hosting environments and configurations. If you start the process with the necessary instructions and credentials the next view steps will be done in no time.', 'really-simple-ssl'),
+					'tests_only' => true,
+
 				],
 			],
 		],

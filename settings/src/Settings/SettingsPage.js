@@ -18,6 +18,7 @@ class SettingsPage extends Component {
     constructor() {
         super( ...arguments );
         this.state = {
+            refreshTests:false,
             fields:'',
             isAPILoaded: false,
             changedFields:'',
@@ -35,6 +36,7 @@ class SettingsPage extends Component {
         this.updateFieldsListWithConditions = this.updateFieldsListWithConditions.bind(this);
         this.filterMenuItems = this.filterMenuItems.bind(this);
         this.showSavedSettingsNotice = this.showSavedSettingsNotice.bind(this);
+        this.resetRefreshTests = this.resetRefreshTests.bind(this);
         this.handleNextButtonDisabled = this.handleNextButtonDisabled.bind(this);
         this.checkRequiredFields = this.checkRequiredFields.bind(this);
         let fields = this.props.fields;
@@ -167,10 +169,17 @@ class SettingsPage extends Component {
         rsssl_api.setFields(saveFields).then(( response ) => {
             this.changedFields = [];
             this.setState({
+                refreshTests:true,
                 changedFields :[],
                 progress: response.data.progress,
             });
             this.showSavedSettingsNotice();
+        });
+    }
+
+    resetRefreshTests(){
+        this.setState({
+            refreshTests:false,
         });
     }
 
@@ -233,6 +242,7 @@ class SettingsPage extends Component {
             progress,
             selectedStep,
             isAPILoaded,
+            refreshTests,
             changedFields,
             nextButtonDisabled,
         } = this.state;
@@ -268,6 +278,8 @@ class SettingsPage extends Component {
                     showSavedSettingsNotice={this.showSavedSettingsNotice}
                     updateField={this.props.updateField}
                     getFieldValue={this.props.getFieldValue}
+                    resetRefreshTests={this.resetRefreshTests}
+                    refreshTests={refreshTests}
                     addHelp={this.props.addHelp}
                     pageProps={this.props.pageProps}
                     setPageProps={this.props.setPageProps}

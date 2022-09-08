@@ -102,13 +102,13 @@ const Directories = (props) => {
              			{ __("Navigate in FTP or File Manager to the root of your WordPress installation:", "really-simple-ssl")}
                      </p>
                      <ul>
-                         <li class="rsssl-tooltip-icon dashicons-before rsssl-icon arrow-right-alt2 dashicons-arrow-right-alt2">
+                         <li className="rsssl-tooltip-icon dashicons-before rsssl-icon arrow-right-alt2 dashicons-arrow-right-alt2">
              				{ __('Create a folder called “.well-known”', 'really-simple-ssl')}
                          </li>
-                         <li class="rsssl-tooltip-icon dashicons-before rsssl-icon arrow-right-alt2 dashicons-arrow-right-alt2">
+                         <li className="rsssl-tooltip-icon dashicons-before rsssl-icon arrow-right-alt2 dashicons-arrow-right-alt2">
              				{ __('Inside the folder called “.well-known” create a new folder called “acme-challenge”, with 644 writing permissions.', 'really-simple-ssl')}
                          </li>
-                         <li class="rsssl-tooltip-icon dashicons-before rsssl-icon arrow-right-alt2 dashicons-arrow-right-alt2">
+                         <li className="rsssl-tooltip-icon dashicons-before rsssl-icon arrow-right-alt2 dashicons-arrow-right-alt2">
              				{ __('Click the refresh button.', 'really-simple-ssl')}
                          </li>
                      </ul>
@@ -134,13 +134,13 @@ const Directories = (props) => {
                  			{ __("Navigate in FTP or File Manager to one level above the root of your WordPress installation:", "really-simple-ssl")}
                          </p>
                          <ul>
-                             <li class="rsssl-tooltip-icon dashicons-before rsssl-icon arrow-right-alt2 dashicons-arrow-right-alt2">
+                             <li className="rsssl-tooltip-icon dashicons-before rsssl-icon arrow-right-alt2 dashicons-arrow-right-alt2">
                  				{ __('Create a folder called “ssl”', 'really-simple-ssl')}
                              </li>
-                             <li class="rsssl-tooltip-icon dashicons-before rsssl-icon arrow-right-alt2 dashicons-arrow-right-alt2">
+                             <li className="rsssl-tooltip-icon dashicons-before rsssl-icon arrow-right-alt2 dashicons-arrow-right-alt2">
                  				{ __('Inside the folder called “ssl” create a new folder called “keys”, with 644 writing permissions.', 'really-simple-ssl')}
                              </li>
-                             <li class="rsssl-tooltip-icon dashicons-before rsssl-icon arrow-right-alt2 dashicons-arrow-right-alt2">
+                             <li className="rsssl-tooltip-icon dashicons-before rsssl-icon arrow-right-alt2 dashicons-arrow-right-alt2">
                  				{ __('Click the refresh button.', 'really-simple-ssl')}
                              </li>
                          </ul>
@@ -156,13 +156,13 @@ const Directories = (props) => {
                  			{ __("Navigate in FTP or File Manager to one level above the root of your WordPress installation:", "really-simple-ssl")}
                          </p>
                          <ul>
-                             <li class="rsssl-tooltip-icon dashicons-before rsssl-icon arrow-right-alt2 dashicons-arrow-right-alt2">
+                             <li className="rsssl-tooltip-icon dashicons-before rsssl-icon arrow-right-alt2 dashicons-arrow-right-alt2">
                  				{ __('Create a folder called “ssl”', 'really-simple-ssl')}
                              </li>
-                             <li class="rsssl-tooltip-icon dashicons-before rsssl-icon arrow-right-alt2 dashicons-arrow-right-alt2">
+                             <li className="rsssl-tooltip-icon dashicons-before rsssl-icon arrow-right-alt2 dashicons-arrow-right-alt2">
                  				{ __('Inside the folder called “ssl” create a new folder called “certs”, with 644 writing permissions.', 'really-simple-ssl')}
                              </li>
-                             <li class="rsssl-tooltip-icon dashicons-before rsssl-icon arrow-right-alt2 dashicons-arrow-right-alt2">
+                             <li className="rsssl-tooltip-icon dashicons-before rsssl-icon arrow-right-alt2 dashicons-arrow-right-alt2">
                  				{ __('Click the refresh button.', 'really-simple-ssl')}
                              </li>
                          </ul>
