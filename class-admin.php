@@ -3587,16 +3587,33 @@ if (!function_exists('rsssl_ssl_activation_time_no_longer_then_3_days_ago')) {
 }
 
 if ( !function_exists('rsssl_letsencrypt_wizard_url') ) {
-	function rsssl_letsencrypt_wizard_url(){
+	/**
+     * Get link to SSL certificate generation page
+     *
+	 * @param string $page
+	 *
+	 * @return string
+	 */
+	function rsssl_letsencrypt_wizard_url($page = ''){
+        if ( !empty($page) ) {
+	        $page = '/'.$page;
+        }
 		if (is_multisite() && !is_main_site()) {
-			return add_query_arg(array('page' => 'really-simple-security', 'letsencrypt'=>1), get_admin_url(get_main_site_id(),'options-general.php') ).'#letsencrypt';
+			return add_query_arg(array('page' => 'really-simple-security', 'letsencrypt'=>1), get_admin_url(get_main_site_id(),'options-general.php') )."#letsencrypt$page";
 		} else {
-			return add_query_arg(array('page' => 'really-simple-security', 'letsencrypt'=>1), admin_url('options-general.php') ).'#letsencrypt';
+			return add_query_arg(array('page' => 'really-simple-security', 'letsencrypt'=>1), admin_url('options-general.php') )."#letsencrypt$page";
 		}
 	}
 }
 
 if ( !function_exists('rsssl_detected_duplicate_ssl_plugin')) {
+	/**
+     * Duplicate functionality test
+     *
+	 * @param string $return_name
+	 *
+	 * @return bool|string
+	 */
 	function rsssl_detected_duplicate_ssl_plugin( $return_name = false ){
 		$plugin = false;
 		if ( defined('WPLE_PLUGIN_VERSION') ){

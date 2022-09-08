@@ -6,12 +6,6 @@ if ( ! class_exists( "rsssl_wizard" ) ) {
 	class rsssl_wizard{
 
 		private static $_this;
-		public $position;
-		public $total_steps = false;
-		public $last_section;
-		public $page_url;
-		public $percentage_complete = false;
-
 		function __construct() {
 			if ( isset( self::$_this ) ) {
 				wp_die( sprintf( '%s is a singleton class and you cannot create a second instance.',
@@ -20,6 +14,7 @@ if ( ! class_exists( "rsssl_wizard" ) ) {
 
 			self::$_this = $this;
 			add_filter("rsssl_run_test", array($this, 'handle_lets_encrypt_request'), 10, 3);
+			add_filter("rsssl_localize_script", array($this, 'localize_script'), 10, 3);
 
 			add_action( 'rsssl_after_save_field', array( $this, 'after_save_field' ), 10, 4 );
 			add_action( 'plugins_loaded', array( $this, 'catch_settings_switches' ), 10 );
@@ -31,6 +26,14 @@ if ( ! class_exists( "rsssl_wizard" ) ) {
 			return self::$_this;
 		}
 
+        public function localize_script($args){
+            $hosting_dashboard = 'other';
+            if ( rsssl_is_cpanel() ) $hosting_dashboard = 'cpanel';
+            if ( rsssl_is_directadmin() ) $hosting_dashboard = 'directadmin';
+            if ( rsssl_is_plesk() ) $hosting_dashboard = 'plesk';
+            $args['hosting_dashboard'] = $hosting_dashboard;
+            return $args;
+        }
 		/**
          * Change the steps in the generation page if DNS verification is enabled
 		 * @param $steps
@@ -86,11 +89,18 @@ if ( ! class_exists( "rsssl_wizard" ) ) {
 
 		/**
          * Switch to DNS verification
+         * @param WP_REST_Request $request
 		 * @return []
 		 */
-        public function switch_to_dns(){
-	        rsssl_update_option('verification_type', 'dns');
-	        rsssl_progress_add('directories');
+        public function update_verification_type($request){
+	        $type = $request->get_param('id');
+            $type = $type === 'dns' ? 'dns' : 'dir';
+	        rsssl_update_option('verification_type', $type );
+            if ($type==='dns') {
+	            rsssl_progress_add('directories');
+            } else {
+	            rsssl_progress_add('dns-verification');
+            }
 	        return array(
 		        'success' => true,
 	        );
@@ -168,8 +178,8 @@ if ( ! class_exists( "rsssl_wizard" ) ) {
 	        switch($test){
                 case 'reset':
 	                return $this->reset($request);
-		        case 'switch_to_dns':
-                    return $this->switch_to_dns();
+		        case 'update_verification_type':
+                    return $this->update_verification_type($request);
 		        case 'rsssl_php_requirement_met':
 		        case 'certificate_status':
 		        case 'curl_exists':

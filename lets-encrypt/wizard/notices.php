@@ -28,8 +28,9 @@ function rsssl_le_get_notices_list($notices) {
 	$renew_link  = rsssl_letsencrypt_wizard_url();
 	$link_open   = '<a href="' . $renew_link . '">';
 
-	$ssl_generate_url = add_query_arg( array( "page" => "really-simple-security", "tab" => "letsencrypt" ), admin_url( "options-general.php" ) );
-	$ssl_download_url = add_query_arg( array( "step" => 6), $ssl_generate_url );
+	$ssl_generate_url = rsssl_letsencrypt_wizard_url();
+	$ssl_download_url = rsssl_letsencrypt_wizard_url('le-installation');
+
 	if ( rsssl_generated_by_rsssl() ) {
 		if ( $expiry_date ) {
 			$notices['ssl_detected'] = array(
@@ -123,45 +124,9 @@ function rsssl_le_get_notices_list($notices) {
 			);
 		}
 	}
-
-
 	return $notices;
 }
 add_filter( 'rsssl_notices', 'rsssl_le_get_notices_list', 30, 1 );
-
-/**
- * 	DNS is only necessary for multisite with subdomains, or with domain mapping.
- *  On other setups, directory verification is the easiest.
- *  On  cPanel, there are several subdirectories like mail. etc. which can only get an SSL with a wildcard cert.
- *  For this reason, this option only appears when on cPanel
- *
- * @param $fields
- *
- * @return array
- */
-
-function rsssl_le_custom_field_notices($fields){
-
-	if ( rsssl_is_cpanel() ) {
-		if( rsssl_get_option('verification_type') === 'dns' ) {
-			$fields['email_address']['help'] =
-				__("You have switched to DNS verification.","really-simple-ssl").'&nbsp;'.
-				__("You can switch back to directory verification here.","really-simple-ssl").
-				'<br><br><button class="button button-default" name="rsssl-switch-to-directory">'.__("Switch to directory verification", "really-simple-ssl").'</button>';
-		} else {
-			$fields['email_address']['help'] =
-				sprintf(__("If you also want to secure subdomains like mail.domain.com, cpanel.domain.com, you have to use the %sDNS%s challenge.","really-simple-ssl"),'<a target="_blank" href="https://really-simple-ssl.com/lets-encrypt-authorization-with-dns">', '</a>').'&nbsp;'.
-				__("Please note that auto-renewal with a DNS challenge might not be possible.","really-simple-ssl").
-				'<br><br><button class="button button-default" name="rsssl-switch-to-dns">'.__("Switch to DNS verification", "really-simple-ssl").'</button>';
-		}
-	}
-
-
-
-
-	return $fields;
-}
-add_filter( 'rsssl_le_fields', 'rsssl_le_custom_field_notices', 30, 1 );
 
 /**
  * Replace the go pro or scan button with a renew SSL button when the cert should be renewed.

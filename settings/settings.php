@@ -25,7 +25,7 @@ function rsssl_plugin_admin_scripts() {
 	wp_localize_script(
         'rsssl-settings',
         'rsssl_settings',
-        apply_filters('rsssl_localize_script',array(
+        apply_filters('rsssl_localize_script',[
             'site_url' => get_rest_url(),
             'plugin_url' => rsssl_url,
             'network_link' => network_site_url('plugins.php'),
@@ -34,7 +34,7 @@ function rsssl_plugin_admin_scripts() {
             'networkwide_active' => !is_multisite() || rsssl_is_networkwide_active(),//true for single sites and network wide activated
             'nonce' => wp_create_nonce( 'wp_rest' ),//to authenticate the logged in user
             'rsssl_nonce' => wp_create_nonce( 'rsssl_save' ),
-        ))
+        ])
 	);
 }
 
@@ -263,7 +263,6 @@ function rsssl_rest_api_fields_set($request){
         }
     }
 
-    error_log("run after save fields action");
 	foreach ( $fields as $field ) {
         do_action( "rsssl_after_save_field", $field['id'], $field['value'], $prev_value, $field['type'] );
     }

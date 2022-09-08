@@ -6,6 +6,8 @@ import Notices from "../Settings/Notices";
 import update from 'immutability-helper';
 import {useUpdateEffect} from 'react-use';
 import sleeper from "../utils/sleeper";
+import Hyperlink from "../utils/Hyperlink";
+
 import {
     Button,
 } from '@wordpress/components';
@@ -44,13 +46,9 @@ const Directories = (props) => {
         return (<></>);
     }
 
-    if ( action.status !== 'error' ) {
-        return (<></>);
-    }
-
     const handleSwitchToDNS = () => {
         props.updateField('verification_type', 'dns');
-        return rsssl_api.runLetsEncryptTest('switch_to_dns', 'dns').then( ( response ) => {
+        return rsssl_api.runLetsEncryptTest('update_verification_type', 'dns').then( ( response ) => {
             props.selectMenu('le-dns-verification');
             const notice = dispatch('core/notices').createNotice(
                 'success',
@@ -68,11 +66,10 @@ const Directories = (props) => {
     }
 
     return (
-            <div className="rsssl-test-results">
-                <h4>{ __("Next step", "really-simple-ssl") }</h4>
+        <div className="rsssl-test-results">
+            {action.status === 'error' && <h4>{ __("Next step", "really-simple-ssl") }</h4> }
 
-
-            { (action.action==='challenge_directory_reachable') &&
+            { (action.status === 'error' && action.action==='challenge_directory_reachable') &&
                 <div>
                     <p>
                     { __("If the challenge directory cannot be created, or is not reachable, you can either remove the server limitation, or change to DNS verification.", "really-simple-ssl")}
@@ -85,7 +82,18 @@ const Directories = (props) => {
                     </Button>
                 </div>
              }
-             { (action.action==='check_challenge_directory' ) &&
+             { action.status !== 'error' && rsssl_settings.hosting_dashboard === 'cpanel' &&
+                     <><p>
+                        <Hyperlink target="_blank" text={__("If you also want to secure subdomains like mail.domain.com, cpanel.domain.com, you have to use the %sDNS%s challenge.","really-simple-ssl")}
+                        url="https://really-simple-ssl.com/lets-encrypt-authorization-with-dns"/>
+                        {__("Please note that auto-renewal with a DNS challenge might not be possible.","really-simple-ssl")}
+                    </p>
+                     <Button
+                         variant="secondary"
+                         onClick={() => handleSwitchToDNS()}
+                     >{ __( 'Switch to DNS verification', 'really-simple-ssl' ) }</Button></>
+             }
+             { (action.status === 'error' && action.action==='check_challenge_directory' ) &&
                  <div>
                      <h4>
              			{__("Create a challenge directory", "really-simple-ssl") }
@@ -117,7 +125,7 @@ const Directories = (props) => {
                  </div>
                  }
 
-                 { (action.action==='check_key_directory' ) &&
+                 { (action.status === 'error' && action.action==='check_key_directory' ) &&
                      <div>
                          <h2>
                  			{ __("Create a key directory", "really-simple-ssl")}
@@ -139,7 +147,7 @@ const Directories = (props) => {
                      </div>
                  }
 
-                 { (action.action==='check_certs_directory' ) &&
+                 { (action.status === 'error' && action.action==='check_certs_directory' ) &&
                      <div>
                          <h2>
                  			{ __("Create a certs directory", "really-simple-ssl")}

@@ -7,6 +7,9 @@ import update from 'immutability-helper';
 import Hyperlink from "../utils/Hyperlink";
 import {useUpdateEffect} from 'react-use';
 import sleeper from "../utils/sleeper";
+import {
+    Button,
+} from '@wordpress/components';
 
 const DnsVerification = (props) => {
     const action = props.action;
@@ -19,23 +22,17 @@ const DnsVerification = (props) => {
                 __("The challenge directory is used to verify the domain ownership.", "really-simple-ssl"),
             );
         }
+
+
      });
 
-    if (!action) {
-        return (<></>);
-    }
-
-    if ( action.status !== 'success' ) {
-        return (<></>);
-    }
-
-    const handleSwitchToDNS = () => {
-        props.updateField('verification_type', 'dns');
-        return rsssl_api.runLetsEncryptTest('switch_to_dns', 'dns').then( ( response ) => {
-            props.selectMenu('le-dns-verification');
+    const handleSwitchToDir = () => {
+        props.updateField('verification_type', 'dir');
+        return rsssl_api.runLetsEncryptTest('update_verification_type', 'dir').then( ( response ) => {
+            props.selectMenu('le-directories');
             const notice = dispatch('core/notices').createNotice(
                 'success',
-                __( 'Switched to DNS', 'really-simple-ssl' ),
+                __( 'Switched to directory', 'really-simple-ssl' ),
                 {
                     __unstableHTML: true,
                     id: 'rsssl_switched_to_dns',
@@ -48,27 +45,40 @@ const DnsVerification = (props) => {
         });
     }
 
-    var tokens = action.output;
-    if (!tokens) return (<></>)
-    console.log(tokens);
-    return (
-        <div className="rsssl-test-results">
-            <h2>{__("Next step", "really-simple-ssl") }</h2>
-            <p>{__("Add the following token as text record to your DNS records. We recommend to use a short TTL during installation, in case you need to change it.", "really-simple-ssl")}
-                <Hyperlink target="_blank" text={__("Read more","really-simple-ssl")} url="https://really-simple-ssl.com/how-to-add-a-txt-record-to-dns"/>
-             </p>
-            <div id="rsssl-dns-text-records">
-                {tokens.map((token, i) =>
-                    <>
-                        <div className="rsssl-dns-label" >@/{ __("domain","really-simple-ssl") }</div>
-                        <div className="rsssl-dns-field rsssl-selectable">_acme-challenge{i}</div>
-                        <div className="rsssl-dns-label" >{__("Value","really-simple-ssl") }</div>
-                        <div className="rsssl-dns-field rsssl-selectable">{token}</div>
-                    </>
-                )}
+    let tokens = action ? action.output : false;
 
+    return (
+        <>
+           {action && action.status === 'success' && tokens &&
+                <div className="rsssl-test-results">
+                    <h2>{__("Next step", "really-simple-ssl")}</h2>
+                    <p>{__("Add the following token as text record to your DNS records. We recommend to use a short TTL during installation, in case you need to change it.", "really-simple-ssl")}
+                        <Hyperlink target="_blank" text={__("Read more", "really-simple-ssl")}
+                                   url="https://really-simple-ssl.com/how-to-add-a-txt-record-to-dns"/>
+                    </p>
+                    <div id="rsssl-dns-text-records">
+                        {tokens.map((token, i) =>
+                            <>
+                                <div className="rsssl-dns-label">@/{__("domain", "really-simple-ssl")}</div>
+                                <div className="rsssl-dns-field rsssl-selectable">_acme-challenge{i}</div>
+                                <div className="rsssl-dns-label">{__("Value", "really-simple-ssl")}</div>
+                                <div className="rsssl-dns-field rsssl-selectable">{token}</div>
+                            </>
+                        )}
+
+                    </div>
+                </div>
+            }
+
+            <div className="rsssl-test-results">
+                <p>{__("DNS verification active. You can switch back to directory verification here.","really-simple-ssl")}</p>
+                <Button
+                    variant="secondary"
+                    onClick={() => handleSwitchToDir()}
+                >{ __( 'Switch to directory verification', 'really-simple-ssl' ) }</Button>
             </div>
-        </div>
+
+        </>
     )
 }
 
