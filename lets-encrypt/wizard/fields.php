@@ -391,19 +391,27 @@ function rsssl_le_add_fields($fields) {
 					]
 				],
 			],
-
 			[
 				'id'                => 'store_credentials',
 				'menu_id'           => 'le-hosting',
 				'type'              => 'checkbox',
 				'default'           => '',
-				'title'             => __( "Credentials storage", 'really-simple-ssl' ),
+				'label'             => __( "Do you want to store these credentials for renewal purposes?", 'really-simple-ssl' ),
 				'help'              => [
 					'label' => 'default',
 					'text'  => __( "Store for renewal purposes. If not stored, renewal may need to be done manually.", 'really-simple-ssl' ),
 				],
 				'required'          => false,
 				'disabled'          => false,
+				'react_conditions' => [
+					'relation' => 'OR',
+					[
+						'plesk_password' => 'NOT EMPTY',
+						'cloudways_api_key' => 'NOT EMPTY',
+						'directadmin_password' => 'NOT EMPTY',
+						'cpanel_password' => 'NOT EMPTY',
+					]
+				],
 				'server_conditions' => [
 					'relation' => 'AND',
 					[
@@ -523,7 +531,6 @@ function rsssl_le_add_fields($fields) {
 			[
 				'id'       => 'installation',
 				'menu_id'  => 'le-installation',
-				'callback' => 'installation.php',
 				'type'     => 'letsencrypt',
 				'actions' => [
 					[
@@ -537,8 +544,7 @@ function rsssl_le_add_fields($fields) {
 			[
 				'id'       => 'activate_ssl',
 				'menu_id'  => 'le-activate_ssl',
-				'callback' => 'activate.php',
-				'type'     => 'letsencrypt',
+				'type'     => 'activate',
 			],
 		]);
 

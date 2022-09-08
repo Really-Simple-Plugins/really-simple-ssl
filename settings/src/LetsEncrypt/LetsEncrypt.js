@@ -4,6 +4,7 @@ import sleeper from "../utils/sleeper";
 import Directories from "./Directories";
 import DnsVerification from "./DnsVerification";
 import Generation from "./Generation";
+import Activate from "./Activate";
 import Installation from "./Installation";
 import { __ } from '@wordpress/i18n';
 import {useUpdateEffect} from 'react-use';
@@ -192,7 +193,9 @@ const LetsEncrypt = (props) => {
     }
 
     let progressBarColor = lastActionStatus==='error' ? 'rsssl-orange' : '';
-
+    if (!props.field.actions) {
+        return (<></>);
+    }
     return (
         <>
             <div className="rsssl-lets-encrypt-tests">
@@ -211,6 +214,7 @@ const LetsEncrypt = (props) => {
                 {props.field.id === 'dns-verification' && <DnsVerification save={props.save} selectMenu={props.selectMenu} field={props.field} updateField={props.updateField} addHelp={props.addHelp} progress={progress} action={props.field.actions[actionIndex]}/> }
                 {props.field.id === 'generation' && <Generation restartTests={restartTests} save={props.save} selectMenu={props.selectMenu} field={props.field} updateField={props.updateField} addHelp={props.addHelp} progress={progress} action={props.field.actions[actionIndex]}/> }
                 {props.field.id === 'installation' && <Installation restartTests={restartTests} save={props.save} selectMenu={props.selectMenu} field={props.field} updateField={props.updateField} addHelp={props.addHelp} progress={progress} action={props.field.actions[actionIndex]}/> }
+                {props.field.id === 'activate' && <Activate restartTests={restartTests} save={props.save} selectMenu={props.selectMenu} field={props.field} updateField={props.updateField} addHelp={props.addHelp} progress={progress} action={props.field.actions[actionIndex]}/> }
             </div>
         </>
     )

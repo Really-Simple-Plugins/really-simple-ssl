@@ -127,9 +127,9 @@ const Directories = (props) => {
 
                  { (action.status === 'error' && action.action==='check_key_directory' ) &&
                      <div>
-                         <h2>
+                         <h4>
                  			{ __("Create a key directory", "really-simple-ssl")}
-                         </h2>
+                         </h4>
                          <p>
                  			{ __("Navigate in FTP or File Manager to one level above the root of your WordPress installation:", "really-simple-ssl")}
                          </p>
@@ -149,9 +149,9 @@ const Directories = (props) => {
 
                  { (action.status === 'error' && action.action==='check_certs_directory' ) &&
                      <div>
-                         <h2>
+                         <h4>
                  			{ __("Create a certs directory", "really-simple-ssl")}
-                         </h2>
+                         </h4>
                          <p>
                  			{ __("Navigate in FTP or File Manager to one level above the root of your WordPress installation:", "really-simple-ssl")}
                          </p>

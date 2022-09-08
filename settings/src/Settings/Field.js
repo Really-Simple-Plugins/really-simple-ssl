@@ -11,8 +11,10 @@ import {
 import { __ } from '@wordpress/i18n';
 import * as rsssl_api from "../utils/api";
 import License from "./License";
+import Password from "./Password";
 import Hyperlink from "../utils/Hyperlink";
 import LetsEncrypt from "../LetsEncrypt/LetsEncrypt";
+import Activate from "../LetsEncrypt/Activate";
 import MixedContentScan from "./MixedContentScan";
 import PermissionsPolicy from "./PermissionsPolicy";
 import Support from "./Support";
@@ -152,6 +154,7 @@ class Field extends Component {
                     />
                 </PanelRow>			);
         }
+
         if ( field.type==='text' || field.type==='email' ){
             return (
                 <PanelBody className={ this.highLightClass}>
@@ -160,6 +163,19 @@ class Field extends Component {
                         label={ field.label }
                         onChange={ ( fieldValue ) => this.onChangeHandler(fieldValue) }
                         value= { fieldValue }
+                    />
+                </PanelBody>
+            );
+        }
+
+        if ( field.type==='password' ){
+            return (
+                <PanelBody className={ this.highLightClass}>
+                    <Password
+                        index={ this.props.index }
+                        field={ field }
+                        fields={ this.props.fields }
+                        saveChangedFields={this.props.saveChangedFields}
                     />
                 </PanelBody>
             );
@@ -254,6 +270,12 @@ class Field extends Component {
         if ( field.type === 'letsencrypt' ) {
                 return (
                    <LetsEncrypt key={field.id} resetRefreshTests={this.props.resetRefreshTests} refreshTests={this.props.refreshTests} getFieldValue={this.props.getFieldValue} save={this.props.save} selectMenu={this.props.selectMenu} addHelp={this.props.addHelp} updateField={this.props.updateField} fields={this.props.fields} field={field} handleNextButtonDisabled={this.props.handleNextButtonDisabled}/>
+                )
+        }
+
+        if ( field.type === 'activate' ) {
+                return (
+                   <Activate key={field.id} resetRefreshTests={this.props.resetRefreshTests} refreshTests={this.props.refreshTests} getFieldValue={this.props.getFieldValue} save={this.props.save} selectMenu={this.props.selectMenu} addHelp={this.props.addHelp} updateField={this.props.updateField} fields={this.props.fields} field={field} handleNextButtonDisabled={this.props.handleNextButtonDisabled}/>
                 )
         }
 

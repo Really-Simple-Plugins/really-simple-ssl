@@ -51,7 +51,7 @@ const DnsVerification = (props) => {
         <>
            {action && action.status === 'success' && tokens &&
                 <div className="rsssl-test-results">
-                    <h2>{__("Next step", "really-simple-ssl")}</h2>
+                    <h4>{__("Next step", "really-simple-ssl")}</h4>
                     <p>{__("Add the following token as text record to your DNS records. We recommend to use a short TTL during installation, in case you need to change it.", "really-simple-ssl")}
                         <Hyperlink target="_blank" text={__("Read more", "really-simple-ssl")}
                                    url="https://really-simple-ssl.com/how-to-add-a-txt-record-to-dns"/>
