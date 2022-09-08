@@ -1,69 +1,25 @@
-@import "../../variables.scss";
-
-
 .rsssl-modal.rsssl-onboarding {
   max-width:100%;
-  width:80%;
-  .rsssl-step-feedback {
-    float:right;
-  }
+  width: 75vw;
   .rsssl-logo {
     width:200px;
   }
   #rsssl-message li {
-    display:flex; //to get the loader nicely behind the items in the onboarding modal
-    position: relative;
-    padding-left: 15px;
-
-    &:before {
-      position: absolute;
-      left: 0;
-      color: #fff;
-      height: 10px;
-      width: 10px;
-      border-radius: 50%;
-      content: '';
-      margin-top: 4px;
+    display: flex; //to get the loader nicely behind the items in the onboarding modal
+    .rsssl-icon {
+        margin-right: 7px;
     }
-
-    &.rsssl-inactive:before {
-      background-color: var(--rsp-grey-300);
-    }
-
-    &.rsssl-warning:before {
-      background-color: var(--rsp-yellow);
-    }
-
-    &.rsssl-error:before {
-      background-color: var(--rsp-red);
-    }
-
-    &.rsssl-success:before {
-      background-color: var(--rsp-green);
-    }
-    &.rsssl-processing:before {
-      background: var(--rsp-blue);
-      background: linear-gradient(77deg, rgba(41, 182, 246, 1) 0%, rgba(41, 182, 246, 1) 30%, rgba(244, 191, 62, 1) 70%, rgba(244, 191, 62, 1) 100%);
-      animation: gradient 2s ease infinite;
-      background-size: 200% 200%;
-    }
-
-    @keyframes gradient {
-      0% {
-        background-position: 0% 50%;
-      }
-      50% {
-        background-position: 100% 50%;
-      }
-      100% {
-        background-position: 0% 50%;
-      }
-    }
+  }
+  .rsssl-modal-content{
+    padding-top: 0;
   }
   .rsssl-modal-content-step-footer {
     display:flex;
-    button, a {
-      margin-right:10px;
+    align-items: center;
+    margin-top: var(--rsp-spacing-l);
+    gap: var(--rsp-spacing-m);
+    .components-toggle-control .components-base-control__field{
+      margin:0;
     }
   }
 }

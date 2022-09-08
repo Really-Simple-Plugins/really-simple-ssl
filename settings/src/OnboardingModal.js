@@ -4,6 +4,7 @@ import * as rsssl_api from "./utils/api";
 import { __ } from '@wordpress/i18n';
 import update from 'immutability-helper';
 import {useUpdateEffect} from 'react-use';
+import Icon from "./utils/Icon";
 
 const OnboardingModal = (props) => {
     const [show, setShow] = useState(false);
@@ -39,7 +40,8 @@ const OnboardingModal = (props) => {
             setNetworkActivationStatus(response.data.network_activation_status);
             setSteps(steps);
             setStepsChanged('initial');
-            setShow(!response.data.dismissed);
+            // setShow(!response.data.dismissed);
+            setShow(response.data.dismissed);
         });
     }, [])
 
@@ -127,12 +129,30 @@ const OnboardingModal = (props) => {
         return items.map((item, index) => {
             let { title, current_action, action, status, help, button, id, type, percentage } = item
             const statuses = {
-                'inactive': 'rsssl-inactive',
-                'warning': 'rsssl-warning',
-                'error': 'rsssl-error',
-                'success': 'rsssl-success',
-                'processing': 'rsssl-processing',
+                'inactive': {
+                    'icon': 'circle-times',
+                    'color': 'grey',
+                },
+                'warning': {
+                    'icon': 'circle-times',
+                    'color': 'orange',
+                },
+                'error': {
+                    'icon': 'circle-times',
+                    'color': 'red',
+                },
+                'success': {
+                    'icon': 'circle-check',
+                    'color': 'green',
+                },
+                'processing': {
+                    'icon': 'file-download',
+                    'color': 'red',
+                },
             };
+            const statusIcon = statuses[status].icon;
+            const statusColor = statuses[status].color;
+
             const currentActions = {
                 'activate': __('Activating...',"really-simple-ssl"),
                 'install_plugin': __('Installing...',"really-simple-ssl"),
@@ -153,7 +173,8 @@ const OnboardingModal = (props) => {
             let isLink = (button && button.title===buttonTitle);
 
             return (
-                <li key={index} className={statuses[status]}>
+                <li key={index} >
+                    <Icon name = {statusIcon} color = {statusColor} />
                     {title}
                     {percentage && networkActivationStatus==='main_site_activated' && <>
                         &nbsp;-&nbsp;
@@ -222,7 +243,7 @@ const OnboardingModal = (props) => {
                         const {title, subtitle, items, info_text: infoText, buttons, visible} = step;
                         return (
                             <div className="rsssl-modal-content-step" key={index} style={{ display: visible ? 'block' : 'none' }}>
-                                {title && <div className="rsssl-modal-subtitle">{title}</div>}
+                                {title && <h2 className="rsssl-modal-subtitle">{title}</h2>}
                                 {subtitle && <div className="rsssl-modal-description">{subtitle}</div>}
                                 <ul>
                                     { parseStepItems(items) }

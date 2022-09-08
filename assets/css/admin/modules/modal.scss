@@ -28,7 +28,6 @@
     align-items: center;
     border-radius: 12px;
     .modal-title {
-      font-size: 20px;
       margin: 0;
       background-color: white;
     }
@@ -36,7 +35,6 @@
       cursor: pointer;
       background: none;
       border: none;
-      font-size: 1.5em;
       font-weight: 700;
     }
     button {
@@ -50,16 +48,17 @@
   .rsssl-modal-content {
     position: relative;
     @include rsssl-block-padding;
-    font-size: 12px;
     .rsssl-modal-subtitle {
       font-weight: 600;
-      font-size: 15px;
-      margin-bottom: 10px;
+      margin-bottom: var(--rsp-spacing-m);
     }
     .rsssl-modal-description {
       overflow-wrap: anywhere;
       margin-top: 0;
       font-weight: 500;
+      font-size: var(--rsp-fs-400);
+      line-height: 1.5;
+      margin-bottom: var(--rsp-spacing-s);
     }
   }
   .rsssl-modal-footer {

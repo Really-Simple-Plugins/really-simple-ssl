@@ -30,7 +30,7 @@ class TaskElement extends Component {
                 {notice.output.dismissible && notice.output.status!=='completed' &&
                     <div className="rsssl-task-dismiss">
                       <button type='button' data-id={notice.id} onClick={this.props.onCloseTaskHandler}>
-                             <Icon name={'times'} />
+                             <Icon name='times' />
                       </button>
                     </div>
                 }
