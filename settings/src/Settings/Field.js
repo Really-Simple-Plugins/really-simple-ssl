@@ -250,10 +250,11 @@ class Field extends Component {
                <MixedContentScan dropItemFromModal={this.props.dropItemFromModal} handleModal={this.props.handleModal} field={this.props.field} fields={this.props.selectedFields}/>
             )
         }
-
+        console.log("LE ");
+        console.log(this.props.fields);
         if ( field.type === 'letsencrypt' ) {
                 return (
-                   <LetsEncrypt key={field.id} save={this.props.save} selectMenu={this.props.selectMenu} addHelp={this.props.addHelp} updateField={this.props.updateField} fiels={fields} field={field} handleNextButtonDisabled={this.props.handleNextButtonDisabled}/>
+                   <LetsEncrypt key={field.id} getFieldValue={this.props.getFieldValue} save={this.props.save} selectMenu={this.props.selectMenu} addHelp={this.props.addHelp} updateField={this.props.updateField} fields={this.props.fields} field={field} handleNextButtonDisabled={this.props.handleNextButtonDisabled}/>
                 )
         }
 

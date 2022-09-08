@@ -3907,26 +3907,26 @@ const LetsEncrypt = props => {
 
   const adjustActionsForDNS = actions => {
     //find verification_type
-    let verification_type = 'dir';
+    let verification_type = props.getFieldValue('verification_type');
+    if (!verification_type) verification_type = 'dir';
+    console.log("verification_type");
+    console.log(verification_type);
+    console.log(actions);
 
-    for (const fieldItem of props.fields) {
-      if (fieldItem.id === 'verification_type') {
-        verification_type = fieldItem.value;
-      }
-    }
+    if (verification_type === 'dns') {
+      //add new actions for the generation step
+      for (const action in actions) {}
 
-    if (verification_type === 'dns') {//add new actions for the generation step
-      //     $index = array_search( 'generation', array_column( $steps['lets-encrypt'], 'id' ) );
-      //     $index ++;
-      //     $steps['lets-encrypt'][ $index ]['actions'] = array (
-      //         array(
-      //             'description' => __("Verifying DNS records...", "really-simple-ssl"),
-      //         'action'=> 'verify_dns',
-      //         'attempts' => 2,
-      //         'speed' => 'slow',
-      // ),
-      //     array(
-      //         'description' => __("Generating SSL certificate...", "really-simple-ssl"),
+      let newAction = {};
+      newAction.action = 'verify_dns';
+      newAction.description = (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_5__.__)("Verifying DNS records...", "really-simple-ssl");
+      newAction.attempts = 2;
+      actions.push(newAction);
+      newAction.action = 'verify_dns';
+      newAction.description = (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_5__.__)("Generating SSL certificate...", "really-simple-ssl");
+      newAction.attempts = 2;
+      actions.push(newAction); //     array(
+      //         'description' => ,
       //         'action'=> 'create_bundle_or_renew',
       //         'attempts' => 4,
       //         'speed' => 'slow',
@@ -3992,8 +3992,6 @@ const LetsEncrypt = props => {
   };
 
   const runTest = currentActionIndex => {
-    console.log(props.field);
-
     if (props.field.id === 'generation') {
       props.field.actions = adjustActionsForDNS(props.field.actions);
     }
@@ -4009,6 +4007,8 @@ const LetsEncrypt = props => {
 
       const elapsedTime = Math.round(timeDiff);
       let action = getAction(currentActionIndex);
+      console.log("action response");
+      console.log(action);
       action.status = response.data.status;
       action.description = response.data.message;
       action.do = response.data.action;
@@ -4759,6 +4759,7 @@ class Page extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Component {
     this.handleModal = this.handleModal.bind(this);
     this.highLightField = this.highLightField.bind(this);
     this.updateField = this.updateField.bind(this);
+    this.getFieldValue = this.getFieldValue.bind(this);
     this.addHelp = this.addHelp.bind(this);
     this.selectMainMenu = this.selectMainMenu.bind(this);
     this.setPageProps = this.setPageProps.bind(this);
@@ -4916,6 +4917,22 @@ class Page extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Component {
       fields: fields
     });
   }
+  /*
+  * Allow children to check a field value from another page (in a page, only visible fields are know)
+  */
+
+
+  getFieldValue(id) {
+    let fields = this.fields;
+
+    for (const fieldItem of fields) {
+      if (fieldItem.id === id) {
+        return fieldItem.value;
+      }
+    }
+
+    return false;
+  }
 
   addHelp(id, label, text, title) {
     //create help object
@@ -4938,7 +4955,6 @@ class Page extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Component {
 
   highLightField(fieldId) {
     //switch to settings page
-    console.log("highlight field id switch to settings page");
     this.selectMainMenu('settings'); //get menu item based on fieldId
 
     let selectedField = null;
@@ -5029,6 +5045,7 @@ class Page extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Component {
       handleModal: this.handleModal,
       getDefaultMenuItem: this.getDefaultMenuItem,
       updateField: this.updateField,
+      getFieldValue: this.getFieldValue,
       addHelp: this.addHelp,
       setPageProps: this.setPageProps,
       selectMenu: this.selectMenu,
@@ -5469,14 +5486,18 @@ class Field extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Component {
       });
     }
 
+    console.log("LE ");
+    console.log(this.props.fields);
+
     if (field.type === 'letsencrypt') {
       return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_LetsEncrypt_LetsEncrypt__WEBPACK_IMPORTED_MODULE_6__["default"], {
         key: field.id,
+        getFieldValue: this.props.getFieldValue,
         save: this.props.save,
         selectMenu: this.props.selectMenu,
         addHelp: this.props.addHelp,
         updateField: this.props.updateField,
-        fiels: fields,
+        fields: this.props.fields,
         field: field,
         handleNextButtonDisabled: this.props.handleNextButtonDisabled
       });
@@ -6570,6 +6591,7 @@ class Settings extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Component
       handleModal: this.props.handleModal,
       showSavedSettingsNotice: this.props.showSavedSettingsNotice,
       updateField: this.props.updateField,
+      getFieldValue: this.props.getFieldValue,
       addHelp: this.props.addHelp,
       pageProps: this.props.pageProps,
       setPageProps: this.props.setPageProps,
@@ -6755,6 +6777,7 @@ class SettingsGroup extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Comp
       handleModal: this.props.handleModal,
       showSavedSettingsNotice: this.props.showSavedSettingsNotice,
       updateField: this.props.updateField,
+      getFieldValue: this.props.getFieldValue,
       addHelp: this.props.addHelp,
       setPageProps: this.props.setPageProps,
       fieldsUpdateComplete: this.props.fieldsUpdateComplete,
@@ -6867,7 +6890,6 @@ class SettingsPage extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Compo
     this.selectedMenuItem = selectedMenuItem;
     this.changedFields = changedFields;
     this.checkRequiredFields();
-    console.log(fields);
     this.setState({
       isAPILoaded: true,
       fields: this.props.fields,
@@ -7102,6 +7124,7 @@ class SettingsPage extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Compo
       handleModal: this.props.handleModal,
       showSavedSettingsNotice: this.showSavedSettingsNotice,
       updateField: this.props.updateField,
+      getFieldValue: this.props.getFieldValue,
       addHelp: this.props.addHelp,
       pageProps: this.props.pageProps,
       setPageProps: this.props.setPageProps,

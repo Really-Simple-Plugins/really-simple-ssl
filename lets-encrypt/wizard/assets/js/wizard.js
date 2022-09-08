@@ -1,40 +1,6 @@
 jQuery(document).ready(function ($) {
     'use strict';
 
-    /**
-     * Add an event
-     * @param event
-     * @param selector
-     * @param callback
-     * @param context
-     */
-    function rsssl_add_event(event, selector, callback ) {
-        document.addEventListener(event, e => {
-            if ( e.target.closest(selector) ) {
-                callback(e);
-            }
-        });
-    }
-
-
-    //select2 dropdown
-    var select2Dropdown = $('.rsssl-select2');
-    if (select2Dropdown.length) {
-        select2Dropdown.select2({
-            //tags: true,
-            width:'400px',
-            placeholder: 'Select or Add',
-            language: {
-                noResults: function() {
-                    return '<span id="rsssl-no-results-container">'+rsssl_wizard.no_results+'</span>';
-                },
-            },
-            escapeMarkup: function(markup) {
-                return markup;
-            },
-        });
-    }
-
     $(document).on('click','#rsssl-no-results-container',function(){
         console.log("clicked");
         select2Dropdown.val('none');

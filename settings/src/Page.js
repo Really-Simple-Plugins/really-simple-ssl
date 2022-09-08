@@ -20,6 +20,7 @@ class Page extends Component {
         this.handleModal = this.handleModal.bind(this);
         this.highLightField = this.highLightField.bind(this);
         this.updateField = this.updateField.bind(this);
+        this.getFieldValue = this.getFieldValue.bind(this);
         this.addHelp = this.addHelp.bind(this);
         this.selectMainMenu = this.selectMainMenu.bind(this);
         this.setPageProps = this.setPageProps.bind(this);
@@ -172,6 +173,19 @@ class Page extends Component {
         });
     }
 
+    /*
+    * Allow children to check a field value from another page (in a page, only visible fields are know)
+    */
+    getFieldValue(id) {
+        let fields = this.fields;
+        for (const fieldItem of fields){
+            if (fieldItem.id === id ){
+                return fieldItem.value;
+            }
+        }
+        return false;
+    }
+
     addHelp(id, label, text, title) {
         //create help object
         let help = {};
@@ -190,13 +204,10 @@ class Page extends Component {
                 });
             }
         }
-
-
     }
 
     highLightField(fieldId){
         //switch to settings page
-        console.log("highlight field id switch to settings page");
         this.selectMainMenu('settings');
         //get menu item based on fieldId
         let selectedField = null;
@@ -278,6 +289,7 @@ class Page extends Component {
                                         handleModal={this.handleModal}
                                         getDefaultMenuItem={this.getDefaultMenuItem}
                                         updateField={this.updateField}
+                                        getFieldValue={this.getFieldValue}
                                         addHelp={this.addHelp}
                                         setPageProps={this.setPageProps}
                                         selectMenu={this.selectMenu}

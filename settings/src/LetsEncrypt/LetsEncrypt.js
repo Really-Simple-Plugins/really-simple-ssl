@@ -49,28 +49,30 @@ const LetsEncrypt = (props) => {
 
     const adjustActionsForDNS = (actions) => {
         //find verification_type
-        let verification_type='dir';
-        for (const fieldItem of props.fields){
-            if (fieldItem.id === 'verification_type' ){
-                verification_type = fieldItem.value;
-            }
-        }
+        let verification_type = props.getFieldValue('verification_type');
+        if ( !verification_type ) verification_type = 'dir';
 
-        if (verification_type==='dns') {
+        console.log("verification_type");
+        console.log(verification_type);
+        console.log(actions);
+
+        if ( verification_type==='dns' ) {
             //add new actions for the generation step
+            for (const action in actions ) {
 
+            }
+            let newAction = {};
+            newAction.action = 'verify_dns';
+            newAction.description = __("Verifying DNS records...", "really-simple-ssl");
+            newAction.attempts = 2;
+            actions.push(newAction);
 
-        //     $index = array_search( 'generation', array_column( $steps['lets-encrypt'], 'id' ) );
-        //     $index ++;
-        //     $steps['lets-encrypt'][ $index ]['actions'] = array (
-        //         array(
-        //             'description' => __("Verifying DNS records...", "really-simple-ssl"),
-        //         'action'=> 'verify_dns',
-        //         'attempts' => 2,
-        //         'speed' => 'slow',
-        // ),
+            newAction.action = 'verify_dns';
+            newAction.description = __("Generating SSL certificate...", "really-simple-ssl");
+            newAction.attempts = 2;
+            actions.push(newAction);
         //     array(
-        //         'description' => __("Generating SSL certificate...", "really-simple-ssl"),
+        //         'description' => ,
         //         'action'=> 'create_bundle_or_renew',
         //         'attempts' => 4,
         //         'speed' => 'slow',
@@ -132,7 +134,7 @@ const LetsEncrypt = (props) => {
     }
 
     const runTest = (currentActionIndex) => {
-        console.log(props.field);
+
         if (props.field.id==='generation') {
             props.field.actions = adjustActionsForDNS(props.field.actions);
         }
@@ -146,6 +148,8 @@ const LetsEncrypt = (props) => {
                 let timeDiff = endTime - startTime; //in ms
                 const elapsedTime = Math.round(timeDiff);
                 let action = getAction(currentActionIndex);
+                console.log("action response");
+                console.log(action);
                 action.status = response.data.status;
                 action.description = response.data.message;
                 action.do = response.data.action;

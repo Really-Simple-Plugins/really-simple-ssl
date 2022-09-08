@@ -1,15 +1,4 @@
 <?php
-add_action( 'rsssl_notice_include_alias', 'rsssl_notice_include_alias', 10, 1 );
-function rsssl_notice_include_alias( $args ) {
-	if (!rsssl_is_subdomain() && !RSSSL_LE()->letsencrypt_handler->alias_domain_available() ) {
-		if (strpos(site_url(), 'www.') !== false ) {
-			rsssl_sidebar_notice(  __( "The non-www version of your site does not point to this website. This is recommended, as it will allow you to add it to the certificate as well.", 'really-simple-ssl' ), 'warning' );
-		} else {
-			rsssl_sidebar_notice(  __( "The www version of your site does not point to this website. This is recommended, as it will allow you to add it to the certificate as well.", 'really-simple-ssl' ), 'warning' );
-		}
-	}
-}
-
 /**
  * Show notice if certificate needs to be renewed.
  *
@@ -25,11 +14,28 @@ function rsssl_le_get_notices_list($notices) {
 	//if the certificate expires within the grace period, allow renewal
 	//e.g. expiry date 30 may, now = 10 may => grace period 9 june.
 	$expiry_date = ! empty( $end_date ) ? date( get_option( 'date_format' ), $end_date ) : false;
-	$renew_link  = rsssl_letsencrypt_wizard_url();
-	$link_open   = '<a href="' . $renew_link . '">';
 
-	$ssl_generate_url = rsssl_letsencrypt_wizard_url();
-	$ssl_download_url = rsssl_letsencrypt_wizard_url('le-installation');
+	if ( strpos(site_url(), 'www.') !== false ) {
+		$text = __( "The non-www version of your site does not point to this website. This is recommended, as it will allow you to add it to the certificate as well.", 'really-simple-ssl' );
+	} else {
+		$text = __( "The www version of your site does not point to this website. This is recommended, as it will allow you to add it to the certificate as well.", 'really-simple-ssl' );
+	}
+	$notices['alias_domain_notice'] = array(
+		'condition' => array( 'NOT rsssl_is_subdomain' ),
+		'callback'  => 'RSSSL_LE()->letsencrypt_handler->alias_domain_available',
+		'score'     => 10,
+		'output'    => array(
+			'false'  => array(
+				'msg'         => $text,
+				'icon'        => 'open',
+				'plusone'     => true,
+				'dismissible' => true,
+			),
+		),
+		'show_with_options' => [
+			'domain',
+		]
+	);
 
 	if ( rsssl_generated_by_rsssl() ) {
 		if ( $expiry_date ) {
@@ -43,7 +49,7 @@ function rsssl_le_get_notices_list($notices) {
 						'icon' => 'success'
 					),
 					'true'  => array(
-						'msg'         => sprintf( __( "Your certificate will expire on %s. You can renew it %shere%s.", "really-simple-ssl" ), $expiry_date, $link_open, '</a>' ),
+						'msg'         => sprintf( __( "Your certificate will expire on %s. You can renew it %shere%s.", "really-simple-ssl" ), $expiry_date, '<a href="' . rsssl_letsencrypt_wizard_url() . '">', '</a>' ),
 						'icon'        => 'open',
 						'plusone'     => true,
 						'dismissible' => false,
@@ -66,14 +72,14 @@ function rsssl_le_get_notices_list($notices) {
 				),
 				'manual-installation'           => array(
 					'msg'         => sprintf( __( "The SSL certificate has been renewed, and requires manual %sinstallation%s in your hosting dashboard.", "really-simple-ssl" ),
-						'<a href="' . $ssl_download_url . '">', '</a>' ),
+						'<a href="' . rsssl_letsencrypt_wizard_url('le-installation') . '">', '</a>' ),
 					'icon'        => 'open',
 					'plusone'     => true,
 					'dismissible' => false,
 				),
 				'manual-generation'             => array(
 					'msg'         => sprintf( __( "Automatic renewal of your certificate was not possible. The SSL certificate should be %srenewed%s manually.", "really-simple-ssl" ),
-						'<a href="' . $ssl_generate_url . '">', '</a>' ),
+						'<a href="' . rsssl_letsencrypt_wizard_url() . '">', '</a>' ),
 					'icon'        => 'open',
 					'plusone'     => true,
 					'dismissible' => false,

@@ -45,7 +45,6 @@ class SettingsPage extends Component {
         this.selectedMenuItem = selectedMenuItem;
         this.changedFields = changedFields;
         this.checkRequiredFields();
-        console.log(fields);
         this.setState({
             isAPILoaded: true,
             fields: this.props.fields,
@@ -268,6 +267,7 @@ class SettingsPage extends Component {
                     handleModal={this.props.handleModal}
                     showSavedSettingsNotice={this.showSavedSettingsNotice}
                     updateField={this.props.updateField}
+                    getFieldValue={this.props.getFieldValue}
                     addHelp={this.props.addHelp}
                     pageProps={this.props.pageProps}
                     setPageProps={this.props.setPageProps}
