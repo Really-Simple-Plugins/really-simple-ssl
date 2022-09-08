@@ -1,9 +1,27 @@
-.rsssl-new-feature{
-  width: max-content;
-  color: var(--rsp-text-color-light);
-  display: flex;
-  align-items: center;
-  min-width: 0;
-  gap: var(--rsp-spacing-xs);
-  text-decoration: none;
+.rsssl{
+  .rsssl-security-features{
+    .rsssl-grid-item-content{
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+  }
+  .rsssl-new-features{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: var(--rsp-spacing-xs);
+  }
+  .rsssl-new-feature{
+    width: 100%;
+    color: var(--rsp-text-color-light);
+    display: flex;
+    align-items: flex-start;
+    min-width: 0;
+    gap: var(--rsp-spacing-xs);
+    text-decoration: none;
+    .rsssl-icon{
+      margin-top: 2px;
+    }
+  }
 }

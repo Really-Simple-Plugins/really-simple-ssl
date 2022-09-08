@@ -1,10 +1,10 @@
 const gulp = require('gulp');
-const { watch } = require('gulp');
 const concat = require('gulp-concat');
 const cssbeautify = require('gulp-cssbeautify');
 const cssuglify = require('gulp-uglifycss');
 const jsuglify = require('gulp-uglify');
 const sass = require('gulp-sass')(require('node-sass'));
+const spawn = require('child_process').spawn;
 
 function scssTask(cb) {
   // compile scss to css and minify
@@ -34,9 +34,11 @@ function jsTask(cb) {
 }
 exports.js = jsTask
 
-exports.default = function() {
-  // You can use a single task
-  console.log('default task');
-  watch('./assets/css/**/*.scss', { ignoreInitial: false }, scssTask);
-  watch('./assets/js/**/*.js', { ignoreInitial: false }, jsTask);
-};
+function defaultTask(cb) {
+  gulp.watch('./assets/css/**/*.scss', { ignoreInitial: false }, scssTask);
+  gulp.watch('./assets/js/**/*.js', { ignoreInitial: false }, jsTask);
+  spawn('npm', ['start'], { cwd: 'settings', stdio: 'inherit' })
+  cb();
+}
+exports.default = defaultTask
+

@@ -60,14 +60,14 @@ class rsssl_onboarding {
 			'methods'  => 'GET',
 			'callback' => 'rsssl_rest_api_onboarding',
 			'permission_callback' => function () {
-				return current_user_can( 'manage_options' );
+				return rsssl_user_can_manage();
 			}
 		) );
 		register_rest_route( 'reallysimplessl/v1', 'activate_ssl', array(
 			'methods'  => 'POST',
 			'callback' => array( RSSSL()->really_simple_ssl, 'activate_ssl' ),
 			'permission_callback' => function () {
-				return current_user_can( 'manage_options' );
+				return rsssl_user_can_manage();
 			}
 		) );
 
@@ -75,21 +75,21 @@ class rsssl_onboarding {
 			'methods'  => 'POST',
 			'callback' => array( RSSSL()->rsssl_multisite, 'process_ssl_activation_step' ),
 			'permission_callback' => function () {
-				return current_user_can( 'manage_options' );
+				return rsssl_user_can_manage();
 			}
 		) );
 		register_rest_route( 'reallysimplessl/v1', 'override_ssl_detection', array(
 			'methods'  => 'POST',
 			'callback' => array( $this, 'override_ssl_detection' ),
 			'permission_callback' => function () {
-				return current_user_can( 'manage_options' );
+				return rsssl_user_can_manage();
 			}
 		) );
 		register_rest_route( 'reallysimplessl/v1', 'onboarding_actions', array(
 			'methods'  => 'POST',
 			'callback' => array( $this, 'onboarding_actions' ),
 			'permission_callback' => function () {
-				return current_user_can( 'manage_options' );
+				return rsssl_user_can_manage();
 			}
 		) );
 	}
@@ -100,7 +100,7 @@ class rsssl_onboarding {
 	 * @return void
 	 */
 	public function onboarding_actions($request){
-		if (!current_user_can('manage_options')){
+		if (!rsssl_user_can_manage()){
 			return;
 		}
 		$error = false;
@@ -145,7 +145,7 @@ class rsssl_onboarding {
 	 */
 
 	public function override_ssl_detection() {
-		if ( ! current_user_can( 'manage_options') ) {
+		if ( ! rsssl_user_can_manage() ) {
 			return;
 		}
 
@@ -176,7 +176,7 @@ class rsssl_onboarding {
 			return false;
 		}
 
-		if ( ! current_user_can( 'manage_options' ) ) {
+		if ( ! rsssl_user_can_manage() ) {
 			return false;
 		}
 

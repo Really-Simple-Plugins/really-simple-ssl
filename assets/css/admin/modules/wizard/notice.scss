@@ -5,15 +5,35 @@
   gap: var(--rsp-spacing-xs);
   details{
     font-size: var(--rsp-fs-200);
+    summary{
+      display: grid;
+      grid-template-columns: 1fr auto;
+      justify-content: space-between;
+      font-size: var(--rsp-fs-400);
+      font-weight: 600;
+      &::-webkit-details-marker {
+        display:none;
+      }
+      &:first-of-type {
+        list-style-type: none;
+      }
+      .rsssl-icon{
+        transition: all .3s ease-in-out;
+        transform: rotate(0deg);
+      }
+    }
   }
   summary, p {
-    font-size: var(--rsp-fs-300);
+    font-size: var(--rsp-fs-200);
   }
   details[open]{
-    @include rsssl-block-padding;
+    padding: var(--rsp-spacing-s) var(--rsp-spacing-m);
     summary{
       padding: 0;
       padding-bottom: var(--rsp-spacing-xs);
+      .rsssl-icon{
+        transform: rotate(180deg);
+      }
     }
   }
 }
@@ -28,7 +48,7 @@
     border: 1px solid var(--rsp-yellow);
   }
   summary, p{
-    @include rsssl-block-padding;
+    padding: var(--rsp-spacing-s) var(--rsp-spacing-m);
   }
 }
 

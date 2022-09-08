@@ -111,12 +111,12 @@ class ProgressBlock extends Component {
                 </div>
 
                 <div className="rsssl-progress-text">
-                    <span className="rsssl-progress-percentage">
+                    <h1 className="rsssl-progress-percentage">
                         {this.percentageCompleted}%
-                    </span>
-                    <span className="rsssl-progress-text-span">
+                    </h1>
+                    <h5 className="rsssl-progress-text-span">
                         {this.progressText}
-                    </span>
+                    </h5>
                 </div>
 
                 <div className="rsssl-scroll-container">

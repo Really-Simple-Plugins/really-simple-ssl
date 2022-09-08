@@ -1,39 +1,44 @@
 /* Grid */
 .rsssl {
   .rsssl-header, .rsssl-content-area {
-    max-width: calc(100% - var(--rsp-spacing-xl) * 4);
+    max-width: clamp(300px, calc(100% - var(--rsp-grid-gap) * 2), 1650px);
     margin: 0 auto;
     @media(max-width: $rsp-break-xxl) {
-      max-width: calc(100% - var(--rsp-spacing-xl) * 1);
+      --rsp-grid-gap: var(--rsp-spacing-m);
     }
-    @media(max-width: $rsp-break-xl) {
-      max-width: calc(100% - var(--rsp-spacing-xl) * 2);
+    @media(max-width: $rsp-break-xl) { // 1440px
+      --rsp-grid-gap: var(--rsp-spacing-s);
     }
-    @media(max-width: $rsp-break-s) {
-      max-width: calc(100% - var(--rsp-spacing-xl) * 1);
+    @media(max-width: $rsp-break-l) { // 1366px
+      --rsp-grid-gap: var(--rsp-spacing-xs);
+    }
+    @media(max-width: $rsp-break-m) { // 1280px
+    }
+    @media(max-width: $rsp-break-s) { // 1080px
+
     }
   }
 
-  .rsssl-header {
+  .rsssl-header-container .rsssl-header {
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
     height: 70px;
     box-sizing: border-box;
     background-color: var(--rsp-background-block-color);
-    @media(max-width: $rsp-break-l) {
-      height: auto;
+    @media(max-width: $rsp-break-s) {
+      height: 100%;
     }
 
     img {
-      margin: var(--rsp-spacing-m) 0;
+      margin: var(--rsp-spacing-xs) 0;
     }
   }
 
   .rsssl-header-left {
     display: flex;
     font-size: var(--rsp-fs-400);
-    @media(max-width: $rsp-break-l) {
+    @media(max-width: $rsp-break-s) {
       justify-content: center;
       margin: var(--rsp-spacing-xs) 0;
       order: 3;
@@ -62,10 +67,9 @@
         box-sizing: border-box;
         -moz-box-sizing: border-box;
         -webkit-box-sizing: border-box;
-        @media(max-width: $rsp-break-l) {
-          padding: 15px;
+        @media(max-width: $rsp-break-s) {
+          padding: 10px 15px;
         }
-
         &.active {
           border-bottom: 4px solid var(--rsp-brand-primary);
         }
@@ -74,7 +78,6 @@
           color: var(--rsp-brand-primary);
         }
       }
-
     }
   }
 
@@ -96,8 +99,9 @@
     }
   }
 
+
   .rsssl-content-area {
-    margin-top: calc(var(--rsp-grid-margin) * 2);
+    margin-top: var(--rsp-grid-gap);
   }
 
   .rsssl-header-container {
@@ -106,43 +110,11 @@
 
   .rsssl-grid {
     display: grid;
-    grid-template-columns: repeat(4, calc(25% - var(--rsp-spacing-s)) [col-start]); // We use calc because of the grid gap
+    grid-template-columns: repeat(4, 1fr); // We use calc because of the grid gap
     grid-auto-rows: max-content;
     gap: var(--rsp-grid-gap);
     min-height: calc(100vh - 32px - 80px - 20px - var(--rsp-grid-gap)); //32px = wordpress bar, 80px = cmplz bar, 20px = margin-top, 20px is grid gap
   }
-
-  .no-background {
-    background: none;
-    border: none;
-    box-shadow: none;
-  }
-
-  .rsssl-column-2 {
-    grid-column: span 2;
-  }
-
-  .rsssl-row-2 {
-    grid-row: span 2;
-    min-height: 400px;
-  }
-
-  @media(max-width: $rsp-break-xxl) {
-    grid-column: span 2;
-    .rsssl-progress, .rsssl-overview {
-      grid-column: span 4;
-    }
-  }
-  @media(max-width: $rsp-break-m) {
-    grid-column: span 2;
-    .rsssl-column-2 {
-      grid-column: span 4;
-    }
-  }
-  @media(max-width: $rsp-break-s) {
-    grid-column: span 4;
-  }
-}
 
   .rsssl-grid-item {
     @include rsssl-block;
@@ -152,77 +124,98 @@
     justify-content: flex-start;
     flex-direction: column;
     flex-basis: 100%;
-    min-height: 250px;
+    min-height: 100px;
     grid-column: span 1;
     grid-row: span 1;
 
-    p {
-      font-size: var(--rsp-fs-300);
+    @media(max-width: $rsp-break-s) {
+      grid-column: span 4;
     }
 
-  .rsssl-grid-item-header {
-    width: 100%;
-    box-sizing: border-box;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    @include rsssl-block-padding;
-    &:empty{
-      display: none;
+    &.no-background {
+      background: none;
+      border: none;
+      box-shadow: none;
     }
-  }
 
-  .rsssl-grid-item-title{
-    margin: 4px 0 4px 0;
-  }
-
-  .rsssl-grid-item-controls {
-    font-size: var(--rsp-fs-300);
-    display: flex;
-    gap: var(--rsp-spacing-s);
-  }
-
-
-  .rsssl-grid-item-content {
-    width: 100%;
-    box-sizing: border-box;
-    @include rsssl-block-padding;
-    padding-block: 0;
-    flex-grow: 100;
-    &:empty{
-      display: none;
-    }
-  }
-
-  .rsssl-grid-item-footer {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    justify-content: space-between;
-    gap: var(--rsp-grid-margin);
-    width: 100%;
-    min-height: calc(30px + var(--rsp-spacing-s) * 2);
-    box-sizing: border-box;
-    @include rsssl-block-padding;
-    align-self: flex-end;
-
-    .rsssl-legend {
-      display: flex;
-
-      span {
-        padding-left: 5px;
+    &.rsssl-column-2 {
+      grid-column: span 2;
+      @media(max-width: $rsp-break-s) {
+        grid-column: span 4;
       }
     }
-    &:empty{
-      display: none;
+
+    &.rsssl-row-2 {
+      grid-row: span 2;
+      min-height: 400px;
     }
-  }
 
-  .rsssl-flex-push-right {
-    margin-left: auto;
-  }
+    &-header {
+      width: 100%;
+      box-sizing: border-box;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      @include rsssl-block-padding;
 
-  .rsssl-flex-push-left {
-    margin-right: auto;
+      &:empty {
+        display: none;
+      }
+    }
+
+    &-title {
+      margin: 4px 0 4px 0;
+    }
+
+    &-controls {
+      font-size: var(--rsp-fs-300);
+      display: flex;
+      gap: var(--rsp-spacing-s);
+    }
+
+    &-content {
+      width: 100%;
+      box-sizing: border-box;
+      @include rsssl-block-padding;
+      padding-block: 0;
+      flex-grow: 100;
+
+      &:empty {
+        display: none;
+      }
+    }
+
+    &-footer {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--rsp-grid-margin);
+      width: 100%;
+      min-height: calc(30px + var(--rsp-spacing-s) * 2);
+      box-sizing: border-box;
+      @include rsssl-block-padding;
+      align-self: flex-end;
+
+      .rsssl-legend {
+        display: flex;
+
+        span {
+          padding-left: 5px;
+        }
+      }
+
+      &:empty {
+        display: none;
+      }
+    }
+
+    .rsssl-flex-push-right {
+      margin-left: auto;
+    }
+
+    .rsssl-flex-push-left {
+      margin-right: auto;
+    }
   }
 }

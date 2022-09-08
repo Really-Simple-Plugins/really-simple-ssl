@@ -92,10 +92,12 @@ class SettingsGroup extends Component {
 
         this.upgrade = activeGroup.upgrade ? activeGroup.upgrade : this.upgrade;
         let helplinkText = activeGroup.helpLink_text ? activeGroup.helpLink_text : __("Instructions manual","really-simple-ssl");
+
         let anchor = getAnchor('main');
+        let disabledClass = disabled || networkwide_error ? 'rsssl-disabled' : '';
 
         return (
-            <div className={"rsssl-grid-item rsssl-"+activeGroup.id}>
+            <div className={"rsssl-grid-item rsssl-"+activeGroup.id + ' ' +  disabledClass}>
                 {activeGroup.title && <div className="rsssl-grid-item-header">
                     <h3 className="rsssl-h4">{activeGroup.title}</h3>
                     {activeGroup.helpLink && anchor!=='letsencrypt'&& <div className="rsssl-grid-item-controls"><Hyperlink target="_blank" className="rsssl-helplink" text={helplinkText} url={activeGroup.helpLink}/></div>}
@@ -139,6 +141,20 @@ class SettingsGroup extends Component {
                         </div>
                     </div>}
                 </div>
+                {disabled && !networkwide_error && <div className="rsssl-locked">
+                    <div className="rsssl-locked-overlay">
+                        <span className="rsssl-task-status rsssl-premium">{__("Upgrade to Pro","really-simple-ssl")}</span>
+                        { rsssl_settings.pro_plugin_active && <span>{msg}<a className="rsssl-locked-link" href="#" onClick={ () => this.handleMenuLink('license') }>{__("Check license", "really-simple-ssl")}</a></span>}
+                        { !rsssl_settings.pro_plugin_active && <Hyperlink target="_blank" text={msg} url={this.upgrade}/> }
+                    </div>
+                </div>}
+                {networkwide_error && <div className="rsssl-locked">
+                    <div className="rsssl-locked-overlay">
+                        <span className="rsssl-task-status rsssl-warning">{__("Network feature","really-simple-ssl")}</span>
+                        <span>{__("This feature is only available networkwide.","really-simple-ssl")}<Hyperlink target="_blank" text={__("Network settings","really-simple-ssl")} url={rsssl_settings.network_link}/></span>
+                    </div>
+                </div>}
+
             </div>
         )
     }

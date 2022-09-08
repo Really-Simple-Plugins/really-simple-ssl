@@ -53,7 +53,7 @@ if (!class_exists('rsssl_multisite')) {
 
 	    public function add_plus_ones()
 	    {
-		    if (!current_user_can('manage_options')) {
+		    if (!rsssl_user_can_manage()) {
 			    return;
 		    }
 

@@ -1,14 +1,9 @@
-import {
-    PanelBody,
-    SelectControl,
-    ToggleControl,
-} from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
 import {
     Component,
 } from '@wordpress/element';
 import ChangeStatus from "./ChangeStatus";
-import DataTable from "react-data-table-component";
+import DataTable, {createTheme} from 'react-data-table-component';
 import * as rsssl_api from "../utils/api";
 
 class Delete extends Component {
@@ -184,9 +179,31 @@ class LearningMode extends Component {
                 classNames: ['rsssl-datatables-revoked'],
               },
             ];
+
+            const customStyles = {
+              headCells: {
+                style: {
+                  paddingLeft: '0', // override the cell padding for head cells
+                  paddingRight: '0',
+                },
+              },
+              cells: {
+                style: {
+                  paddingLeft: '0', // override the cell padding for data cells
+                  paddingRight: '0',
+                },
+              },
+            };
+
+            createTheme('really-simple-plugins', {
+              divider: {
+                default: 'transparent',
+              },
+            }, 'light');
+
              return (
                 <>
-                    <PanelBody className={ this.highLightClass}>
+                    <div className={ this.highLightClass}>
                         <DataTable
                             columns={columns}
                             data={data}
@@ -194,6 +211,8 @@ class LearningMode extends Component {
                             pagination
                             noDataComponent={__("No results", "really-simple-ssl")}
                             persistTableHead
+                            theme="really-simple-plugins"
+                            customStyles={customStyles}
                             subHeader
                             subHeaderComponent={<Filter />}
                             conditionalRowStyles={conditionalRowStyles}
@@ -210,7 +229,7 @@ class LearningMode extends Component {
                             />
                             {__("Enable Learning Mode","really-simple-ssl")}
                         </label>
-                    </PanelBody>
+                    </div>
                     {learning_mode==1 && <div className="rsssl-locked">
                         <div className="rsssl-locked-overlay">
                             <span className="rsssl-progress-status rsssl-learning-mode">{__("Learning Mode","really-simple-ssl")}</span>

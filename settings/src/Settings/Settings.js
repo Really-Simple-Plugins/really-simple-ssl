@@ -103,22 +103,23 @@ class Settings extends Component {
                     <div className="rsssl-grid-item-footer">
                         {/*This will be shown only if current step is not the first one*/}
                         { this.props.selectedMenuItem !== menuItems[0].id &&
-                            <a href={`#${this.props.selectedMainMenuItem}/${this.props.previousMenuItem}`} onClick={ () => this.props.previousStep(true) }>
+                            <a className="button button-secondary" href={`#${this.props.selectedMainMenuItem}/${this.props.previousMenuItem}`} onClick={ () => this.props.previousStep(true) }>
                                 { __('Previous', 'really-simple-ssl') }
                             </a>
                         }
 
-                        <Button
-                            variant="secondary"
-                            onClick={ this.props.save }>
-                            { btnSaveText }
-                        </Button>
-
                         {/*This will be shown only if current step is not the last one*/}
                         { this.props.selectedMenuItem !== menuItems[menuItems.length-1].id &&
-                            <a disabled={this.props.nextButtonDisabled} className="button button-primary" href={`#${this.props.selectedMainMenuItem}/${this.props.nextMenuItem}`} onClick={ this.props.saveAndContinue }>
-                                { __( 'Save and Continue', 'really-simple-ssl' ) }
-                            </a>
+                            <>
+                                <button
+                                    className="button button-primary"
+                                    onClick={ this.props.save }>
+                                    { btnSaveText }
+                                </button>
+                                <a disabled={this.props.nextButtonDisabled} className="button button-primary" href={`#${this.props.selectedMainMenuItem}/${this.props.nextMenuItem}`} onClick={ this.props.saveAndContinue }>
+                                    { __( 'Save and Continue', 'really-simple-ssl' ) }
+                                </a>
+                            </>
                         }
                     </div>
                 </div>

@@ -48,7 +48,7 @@ function rsssl_xmlrpc_allowed()
  */
 function rsssl_http_methods_allowed()
 {
-	if ( ! current_user_can( 'manage_options' ) ) {
+	if ( ! rsssl_user_can_manage() ) {
 		return false;
 	}
 	$tested = get_transient( 'rsssl_http_methods_allowed' );

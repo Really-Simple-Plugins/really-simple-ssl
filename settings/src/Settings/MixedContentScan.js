@@ -1,7 +1,7 @@
 import {Component} from "@wordpress/element";
-import DataTable from "react-data-table-component";
+import DataTable, { createTheme }  from "react-data-table-component";
 import {
-    PanelBody,
+    ToggleControl,
 } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
 import * as rsssl_api from "../utils/api";
@@ -158,11 +158,13 @@ class MixedContentScan extends Component {
 
         columns = [];
         field.columns.forEach(function(item, i) {
+
             let newItem = {
                 name: item.name,
-                width: item.width,
                 sortable: item.sortable,
+                grow: item.grow,
                 selector: row => row[item.column],
+                right: !!item.right,
             }
             columns.push(newItem);
         });
@@ -175,7 +177,7 @@ class MixedContentScan extends Component {
         }
         let dropItem = this.props.dropItemFromModal;
         for (const item of data) {
-            item.warningControl = <span className="rsssl-warning">{__("Warning", "really-simple-ssl")}</span>
+            item.warningControl = <span className="rsssl-task-status rsssl-warning">{__("Warning", "really-simple-ssl")}</span>
             //@todo check action for correct filter or drop action.
             if ( dropItem && dropItem.url === item.blocked_url ) {
                 if (dropItem.action==='ignore_url'){
@@ -205,10 +207,13 @@ class MixedContentScan extends Component {
             item.detailsControl = item.details && <ModalControl removeDataItem={this.removeDataItem}
                                                                 handleModal={this.props.handleModal} item={item}
                                                                 btnText={__("Details", "really-simple-ssl")}
+                                                                btnStyle={"secondary"}
                                                                 modalData={item.details}/>;
-            item.fixControl = item.fix && <ModalControl removeDataItem={this.removeDataItem}
+            item.fixControl = item.fix && <ModalControl className={"button button-primary"}
+                                                        removeDataItem={this.removeDataItem}
                                                         handleModal={this.props.handleModal} item={item}
                                                         btnText={__("Fix", "really-simple-ssl")}
+                                                        btnStyle={"primary"}
                                                         modalData={item.fix}/>;
         }
 
@@ -226,13 +231,36 @@ class MixedContentScan extends Component {
         progress+='%';
         let startDisabled = state === 'running';
         let stopDisabled = state !== 'running';
+        let label = __("Show ignored URLs", 'burst-statistics')
+
+        const customStyles = {
+            headCells: {
+                style: {
+                    paddingLeft: '0', // override the cell padding for head cells
+                    paddingRight: '0',
+                },
+            },
+            cells: {
+                style: {
+                    paddingLeft: '0', // override the cell padding for data cells
+                    paddingRight: '0',
+                },
+            },
+        };
+
+        createTheme('really-simple-plugins', {
+            divider: {
+                default: 'transparent',
+            },
+        }, 'light');
+
+
         return (
             <div>
                 <div className="rsssl-progress-container">
                     <div className="rsssl-progress-bar" style={{width: progress}} ></div>
                 </div>
                 <span className="rsssl-current-scan-action">{state==='running' && action}</span>
-                <PanelBody>
                     <DataTable
                         columns={columns}
                         data={data}
@@ -240,15 +268,20 @@ class MixedContentScan extends Component {
                         pagination
                         paginationResetDefaultPage={resetPaginationToggle} // optionally, a hook to reset pagination to page 1
                         noDataComponent={__("No results", "really-simple-ssl")} //or your component
+                        theme="really-simple-plugins"
+                        customStyles={customStyles}
                         // subHeader
                         // subHeaderComponent=<subHeaderComponentMemo/>
                     />
-                </PanelBody>
-                <button className="button" disabled={startDisabled} onClick={ (e) => this.start(e) }>{__("Scan","really-simple-ssl-pro")}</button>
-                <button className="button" disabled={stopDisabled} onClick={ (e) => this.stop(e) }>{__("Pause","really-simple-ssl-pro")}</button>
-                <label>{__("Show ignored URLs")}
-                    <input value={showIgnoredUrls} type="checkbox" id="rsssl_show_ignored_urls" onClick={ (e) => this.toggleIgnoredUrls(e) } />
-                </label>
+                <div className="rsssl-grid-item-content-footer">
+                    <button className="button" disabled={startDisabled} onClick={ (e) => this.start(e) }>{__("Start scan","really-simple-ssl-pro")}</button>
+                    <button className="button" disabled={stopDisabled} onClick={ (e) => this.stop(e) }>{__("Pause","really-simple-ssl-pro")}</button>
+                    <ToggleControl
+                        checked= { showIgnoredUrls==1 }
+                        onChange={ (e) => this.toggleIgnoredUrls(e) }
+                    />
+                    <label>{__('Show ignored URLs', 'burst-statistics')}</label>
+                </div>
 
             </div>
         )

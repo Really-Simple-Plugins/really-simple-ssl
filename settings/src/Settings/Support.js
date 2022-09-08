@@ -1,5 +1,4 @@
 import {
-    PanelBody,
     Button,
     TextareaControl,
 } from '@wordpress/components';
@@ -45,7 +44,8 @@ class Support extends Component {
             + '&scanresults=' + encodeURIComponent(response.data.scan_results)
             + '&licensekey=' + encodeURIComponent(response.data.license_key)
             + '&supportrequest=' + encodeURIComponent(encodedMessage)
-            + '&htaccesscontents=' + response.data.htaccess_contents;
+            + '&htaccesscontents=' + response.data.htaccess_contents
+            + '&debuglog=' + response.data.system_status;
             window.location.assign(url);
         });
     }
@@ -59,13 +59,11 @@ class Support extends Component {
         let textAreaDisabled = sending;
         return (
             <>
-                <PanelBody>
-                    <TextareaControl
+                <TextareaControl
                         disabled={textAreaDisabled}
                         placeholder={__("Type your question here","really-simple-ssl")}
                         onChange={ ( message ) => this.onChangeHandler(message) }
-                    />
-                </PanelBody>
+                />
                 <Button
                     disabled={disabled}
                     variant="secondary"

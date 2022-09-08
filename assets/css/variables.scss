@@ -1,8 +1,9 @@
 // Break points
-$rsp-break-xs: 576px;
-$rsp-break-s: 768px;
-$rsp-break-m: 992px;
-$rsp-break-l: 1279px;
+$rsp-break-xxs: 576px;
+$rsp-break-xs: 768px;
+$rsp-break-s: 1080px;
+$rsp-break-m: 1280px;
+$rsp-break-l: 1366px;
 $rsp-break-xl: 1440px; // common 13 inch macbook pro width is 1425px
 $rsp-break-xxl: 1599px;
 
@@ -24,6 +25,7 @@ $rsp-break-xxl: 1599px;
   --rsp-border-radius-s: 8px;
   --rsp-border: 1px solid var(--rsp-border-color);
   --rsp-box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 6px -1px, rgba(0, 0, 0, 0.06) 0px 2px 4px -1px;
+  --rsp-box-shadow-dark: rgba(0, 0, 0, 0.2) 0px 4px 6px -1px, rgba(0, 0, 0, 0.12) 1px 0px 4px 1px;
   --rsp-border-color: #dfdfdf;
 
   // RSP Brand Colors
@@ -70,7 +72,7 @@ $rsp-break-xxl: 1599px;
   // Notification colors
   --rsp-color-success: var(--rsp-green);
   --rsp-color-error: var(--rsp-red);
-  --rsp-color-warning: var(--rsp-red);
+  --rsp-color-warning: var(--rsp-orange);
   --rsp-color-open: var(--rsp-yellow);
   --rsp-color-disabled: var(--rsp-grey-300);
 
@@ -85,6 +87,29 @@ $rsp-break-xxl: 1599px;
   --rsp-fs-700: 1.25rem;          // 20px
   --rsp-fs-800: 1.5rem;           // 24px
   --rsp-fs-900: 2.5rem;           // 40px
+
+  @media screen and (max-width: $rsp-break-xl) {
+--rsp-fs-100: 0.625rem;        // 10px
+    --rsp-fs-200: 0.75rem;         // 12px
+    --rsp-fs-300: 0.8125rem;       // 13px
+    --rsp-fs-400: 0.875rem;        // 14px
+    --rsp-fs-500: 1rem;            // 16px
+    --rsp-fs-600: 1.125rem;        // 18px
+    --rsp-fs-700: 1.25rem;         // 20px
+    --rsp-fs-800: 1.5rem;          // 24px
+    --rsp-fs-900: 2.5rem;          // 40px
+  }
+  @media screen and (max-width: $rsp-break-l) {
+    --rsp-fs-100: 0.625rem;        // 10px
+    --rsp-fs-200: 0.675rem;         // 12px
+    --rsp-fs-300: 0.75rem;       // 13px
+    --rsp-fs-400: 0.8125rem;        // 14px
+    --rsp-fs-500: 0.875rem;
+    --rsp-fs-600: 1;        // 18px
+    --rsp-fs-700: 1.125rem;         // 20px
+    --rsp-fs-800: 1.25rem;          // 24px
+    --rsp-fs-900: 1.5rem;          // 40px
+  }
 
   // Plugin specific variables down here please
   --rsp-brand-primary: var(--rsp-blue);
@@ -101,25 +126,19 @@ $rsp-break-xxl: 1599px;
 @mixin rsssl-block-padding {
   padding: var(--rsp-spacing-m) var(--rsp-spacing-l);
 
-  @media screen and (max-width: $rsp-break-m) {
-    padding: var(--rsp-spacing-xs) var(--rsp-spacing-m);
+  @media screen and (max-width: $rsp-break-l) {
+    padding: var(--rsp-spacing-s) var(--rsp-spacing-m);
   }
-
-  @media screen and (max-width: $rsp-break-s) {
+  @media screen and (max-width: $rsp-break-m) {
     padding: var(--rsp-spacing-xs) var(--rsp-spacing-s);
   }
-}
-
-@mixin rsssl-block-padding {
-  padding: var(--rsp-spacing-m) var(--rsp-spacing-l);
-
-  @media screen and (max-width: $rsp-break-m) {
-    padding: var(--rsp-spacing-xs) var(--rsp-spacing-m);
-  }
-
   @media screen and (max-width: $rsp-break-s) {
-    padding: var(--rsp-spacing-xs) var(--rsp-spacing-s);
+    padding: var(--rsp-spacing-xxs) var(--rsp-spacing-xs);
   }
+
+  //@media screen and (max-width: $rsp-break-xs) {
+  //  padding: var(--rsp-spacing-xs) var(--rsp-spacing-s);
+  //}
 }
 
 @mixin rsssl-fade-in {

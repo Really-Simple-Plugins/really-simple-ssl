@@ -28,7 +28,7 @@ function rsssl_menu(){
 						[
 							'id' => 'support',
 							'title' => __('Premium support', 'really-simple-ssl'),
-							'intro' => __('When you send this form, we will attach the following information: license key, scan results, your', 'really-simple-ssl'),
+							'intro' => __('When you send this form, we will attach the following information: license key, scan results, your domain,.htaccess file, debug log and a list of active plugins.', 'really-simple-ssl'),
 							'premium' => true,
 							'premium_text' => __("Get Premium support, and more with %sReally Simple SSL pro%s", 'really-simple-ssl'),
 							'helpLink'  => 'https://really-simple-ssl.com',
@@ -46,7 +46,7 @@ function rsssl_menu(){
 							'id' => 'mixedcontentscan',
 							'title' => __('Mixed Content Scan', 'really-simple-ssl'),
 							'premium' => true,
-							'premium_text' => __("Learn more about %HSTS%s", 'really-simple-ssl'),
+							'premium_text' => __("Learn more about %sHSTS%s", 'really-simple-ssl'),
 						],
 					],
 					//example of submenu
@@ -240,7 +240,7 @@ function rsssl_test(){
 }
 
 function rsssl_fields( $load_values = true ){
-	if ( !current_user_can('manage_options') ) {
+	if ( !rsssl_user_can_manage() ) {
 		return [];
 	}
 	$fields = [
@@ -338,6 +338,21 @@ function rsssl_fields( $load_values = true ){
 			'group_id'    => 'general',
 			'type'        => 'checkbox',
 			'label'       => __( "Dismiss all notices", 'really-simple-ssl' ),
+			'help'        => [
+				'label' => 'default',
+				'text' => __( "Enable this option to permanently dismiss all +1 notices in the 'Your progress' tab'", 'really-simple-ssl' ),
+			],
+			'disabled'    => false,
+			'default'     => false,
+		],
+		[
+			'id'          => 'download-system-status',
+			'menu_id'     => 'general',
+			'group_id'    => 'general',
+			'type'        => 'button',
+			'url'         => trailingslashit(rsssl_url).'system-status.php?download',
+			'button_text' => __("System Status", "really-simple-ssl"),
+			'label'       => __( "Download system status", 'really-simple-ssl' ),
 			'help'        => [
 				'label' => 'default',
 				'text' => __( "Enable this option to permanently dismiss all +1 notices in the 'Your progress' tab'", 'really-simple-ssl' ),
@@ -762,29 +777,33 @@ function rsssl_fields( $load_values = true ){
 					'name' => __('Type', 'really-simple-ssl'),
 					'sortable' => true,
 					'column' =>'warningControl',
-					'width' => '100px',
+					'grow' => 0,
 				],
 				[
 					'name' => __('Description', 'really-simple-ssl'),
 					'sortable' => true,
 					'column' =>'description',
+					'grow' => 10,
 				],
 				[
 					'name' => __('Location', 'really-simple-ssl'),
 					'sortable' => true,
 					'column' =>'locationControl',
+					'grow' => 4,
+				],
+
+				[
+					'name' => __('Details', 'really-simple-ssl'),
+					'sortable' => false,
+					'column' =>'detailsControl',
+					'grow' => 0,
 				],
 				[
 					'name' => __('Fix', 'really-simple-ssl'),
 					'sortable' => false,
 					'column' =>'fixControl',
-					'width' => '100px',
-				],
-				[
-					'name' => __('Details', 'really-simple-ssl'),
-					'sortable' => false,
-					'column' =>'detailsControl',
-					'width' => '100px',
+					'grow' => 0,
+					'right' => true,
 				],
 			],
 			'disabled'    => false,
@@ -1020,7 +1039,7 @@ function rsssl_blocks(){
 			'title'   => __( "New: Security features", 'really-simple-ssl' ),
 			'help'    => __( 'A help text', 'really-simple-ssl' ),
 			'content' => ['type'=>'react', 'data' => 'SecurityFeaturesBlock'],
-			'footer'  => ['type'=>'html', 'data' => ''],
+			'footer' => ['type'=>'react', 'data' => 'SecurityFeaturesFooter'],
 			'class'    => '',
 		],
 		[
@@ -1068,7 +1087,7 @@ function rsssl_blocks(){
  */
 
 function rsssl_get_template($template) {
-    if ( !current_user_can('manage_options') ) {
+    if ( !rsssl_user_can_manage() ) {
         return '';
     }
     $html='';

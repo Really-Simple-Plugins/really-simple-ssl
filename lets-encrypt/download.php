@@ -12,7 +12,7 @@ require_once( BASE_PATH.'wp-load.php' );
 require_once( BASE_PATH.'wp-includes/class-phpass.php' );
 require_once( BASE_PATH . 'wp-admin/includes/image.php' );
 
-if ( !current_user_can('manage_options') ) {
+if ( !rsssl_user_can_manage() ) {
 	die();
 }
 if ( !isset($_GET["type"]) ) {
