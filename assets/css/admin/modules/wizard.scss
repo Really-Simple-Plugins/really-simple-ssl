@@ -8,6 +8,15 @@
     .rsssl-grid-item {
       position: relative; //to ensure the rsssl-lock stays within the div
       margin-bottom: var(--rsp-grid-gap);
+      @media(max-width: $rsp-break-s) {
+        grid-column: span 4;
+      }
+    }
+    &.rsssl-column-2{
+      grid-column: span 2;
+      @media(max-width: $rsp-break-s) {
+        grid-column: span 4;
+      }
     }
 
     .rsssl-locked {

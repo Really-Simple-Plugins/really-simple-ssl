@@ -85,6 +85,9 @@
   a {
 	font-size: 1em;
   }
+  .rsssl-link{
+    color: var(--rsp-text-color);
+  }
 
   //wordpress inserts notices after the first h1 or h2. To prevent breaking layout we insert an empty h1 tag at the start of our page, where WP can insert the notice.
   .rsssl-notice-hook-element {

@@ -46,6 +46,7 @@
 
     .rsssl-progress-text-span {
       font-weight: 500;
+
       a {
         margin-left: 3px;
       }
@@ -102,6 +103,9 @@
   justify-content: center;
   gap: var(--rsp-spacing-m);
   padding-bottom: var(--rsp-spacing-s);
+  @media(max-width: $rsp-break-m) {
+    gap: var(--rsp-spacing-xs);
+  }
 
   .rsssl-task-message {
     flex: 1;
@@ -115,29 +119,27 @@
 
   .rsssl-task-enable {
     cursor: pointer;
+    line-height: 1.5;
   }
 
   .rsssl-task-dismiss {
+
+    &:hover {
+      transform: scale(1.1);
+    }
+
     button {
       all: initial; //remove default button styles
+      cursor: pointer;
+      padding: 4px;
     }
 
-    span {
-      font-size: 1.5em;
-      color: black;
-      font-family: sans-serif;
-
-      &:hover {
-        cursor: pointer;
-        color: grey;
-      }
-
-      svg {
-        height: 12px;
-        width: 12px;
-      }
+    svg {
+      height: 12px;
+      width: 12px;
     }
   }
+
 }
 
 .rsssl-scroll-container {
@@ -189,6 +191,17 @@
   padding: 4px 8px;
   font-size: var(--rsp-fs-100);
   font-weight: 600;
+  @media(max-width: $rsp-break-m) {
+    min-width: 80px;
+  }
+  @media(max-width: $rsp-break-s) {
+    aspect-ratio: 1 / 1;
+    min-width: 10px;
+    height: 16px;
+    border-radius: 100%;
+    text-indent: -9999px; /* sends the text off-screen */
+    white-space: nowrap;
+  }
 
   &.rsssl-completed, &.rsssl-success {
     background-color: var(--rsp-color-success);

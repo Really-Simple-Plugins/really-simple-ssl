@@ -1,9 +1,14 @@
 .rsssl {
-  a.button, button.button, input.button {
+  a.button, button.button, input.button, span.button {
     font-size: var(--rsp-fs-300);
     font-weight: 300;
     letter-spacing: 0.5px;
     transition: all 0.3s ease;
+    min-height: 10px;
+
+    &.button-secondary, &.button-default{
+      background: transparent;
+    }
 
     &.button-black {
       border: 0 solid transparent;

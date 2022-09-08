@@ -23,7 +23,7 @@ class GridButton extends Component {
     render(){
         let disabled = this.props.disabled ? 'disabled' : '';
         return (
-            <button className="button-primary" disabled={disabled} onClick={this.props.onClick}>{this.props.text}</button>
+            <button className="button button-primary" disabled={disabled} onClick={this.props.onClick}>{this.props.text}</button>
         );
     }
 }
