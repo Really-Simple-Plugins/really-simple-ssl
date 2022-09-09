@@ -40,8 +40,7 @@ const OnboardingModal = (props) => {
             setNetworkActivationStatus(response.data.network_activation_status);
             setSteps(steps);
             setStepsChanged('initial');
-            // setShow(!response.data.dismissed);
-            setShow(response.data.dismissed);
+            setShow(!response.data.dismissed);
         });
     }, [])
 

@@ -1,23 +1,26 @@
 .rsssl-lets-encrypt-tests {
-  margin-bottom:30px;
-  .rsssl-progress {
-    overflow: hidden;
-    height: 20px;
-    border-radius: 5px;
-    background-color: #f7f7f7;
+  margin:30px;
+  .rsssl-progress-bar {
+    padding-block: 0;
+    .rsssl-progress {
+      overflow: hidden;
+      height: 20px;
+      border-radius: 5px;
+      background-color: #f7f7f7;
 
-    .rsssl-bar {
-      height: 100%;
-      background-color: var(--rsp-color-success);
+      .rsssl-bar {
+        height: 100%;
+        background-color: var(--rsp-color-success);
 
-      &.rsssl-orange {
-        background-color: var(--rsp-color-warning);
+        &.rsssl-orange {
+          background-color: var(--rsp-color-warning);
+        }
       }
     }
   }
 
-  .rsssl-progress-bar {
-    padding-block: 0;
+  p {
+    margin-bottom:20px;
   }
 
   .rsssl-progress-text {
