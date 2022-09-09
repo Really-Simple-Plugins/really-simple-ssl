@@ -155,6 +155,18 @@ function rsssl_id_one_no_enumeration() {
 }
 
 /**
+ * For backward compatibility we need to wrap this function, as older versions do not have this function (<5.6)
+ * @return bool
+ */
+function rsssl_wp_is_application_passwords_available(){
+	if (function_exists('wp_is_application_passwords_available')) {
+		return wp_is_application_passwords_available();
+	} else {
+		return false;
+	}
+}
+
+/**
  * Get users where display name is the same as login
  *
  * @param bool $return_users
