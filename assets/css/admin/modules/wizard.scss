@@ -29,7 +29,7 @@
       border-radius: var(--rsp-border-radius);
 
       .rsssl-locked-overlay {
-        z-index: 5;
+        z-index: 1;
         top: calc(100% - 95px);
         position: relative;
         display: flex;
