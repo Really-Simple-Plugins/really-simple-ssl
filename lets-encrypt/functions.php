@@ -157,7 +157,6 @@ if ( !function_exists('rsssl_is_plesk')) {
 	 * @return false
 	 */
 	function rsssl_is_plesk() {
-		return true;
 		if (get_option('rsssl_force_plesk')) {
 			return true;
 		}

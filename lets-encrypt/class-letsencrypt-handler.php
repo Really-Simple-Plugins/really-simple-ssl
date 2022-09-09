@@ -35,8 +35,6 @@ class rsssl_letsencrypt_handler {
 		if ( rsssl_letsencrypt_generation_allowed( true ) ) {
 			error_log("add after save fields action");
 			add_action( 'rsssl_after_save_field', array( $this, 'before_save_wizard_option' ), 10, 4 );
-			add_action( 'rsssl_le_activation', array( $this, 'cleanup_on_ssl_activation'));
-			add_action( 'rsssl_le_activation', array( $this, 'plugin_activation_actions'));
 			add_action( 'admin_init', array( $this, 'maybe_add_htaccess_exclude'));
 			add_action( 'admin_init', array( $this, 'maybe_create_htaccess_directories'));
 
@@ -122,14 +120,6 @@ class rsssl_letsencrypt_handler {
 		$installation_failed = get_option("rsssl_installation_error");
 
 		return $installation_active && $installation_failed;
-	}
-
-	public function plugin_activation_actions(){
-		if (get_option('rsssl_activated_plugin')) {
-			//do some actions
-
-			delete_option('rsssl_activated_plugin');
-		}
 	}
 
 	/**

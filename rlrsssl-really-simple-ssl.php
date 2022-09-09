@@ -46,17 +46,6 @@ if (!function_exists('rsssl_activation_check')) {
 	register_activation_hook( __FILE__, 'rsssl_activation_check' );
 }
 
-if (!function_exists('rsssl_le_activation_check')) {
-	/**
-	 * Checks if the plugin can safely be activated, at least php 5.6 and wp 4.8
-	 */
-	function rsssl_le_activation_check()
-	{
-		update_option("rsssl_activated_plugin", true, false);
-	}
-	register_activation_hook( __FILE__, 'rsssl_le_activation_check' );
-}
-
 class REALLY_SIMPLE_SSL
 {
 	private static $instance;

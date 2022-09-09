@@ -45,7 +45,7 @@ if (!function_exists('rsssl_letsencrypt_generation_allowed')) {
 class RSSSL_LETSENCRYPT {
 	private static $instance;
 
-	public $wizard;
+	public $le_restapi;
 	public $field;
 	public $hosts;
 	public $letsencrypt_handler;
@@ -62,7 +62,7 @@ class RSSSL_LETSENCRYPT {
 			self::$instance->hosts = new rsssl_le_hosts();
 			if (rsssl_letsencrypt_generation_allowed() && version_compare(PHP_VERSION, rsssl_le_php_version, '>')) {
 				self::$instance->letsencrypt_handler = new rsssl_letsencrypt_handler();
-				self::$instance->wizard = new rsssl_wizard();
+				self::$instance->le_restapi = new rsssl_le_restapi();
 			}
 		}
 
@@ -72,21 +72,19 @@ class RSSSL_LETSENCRYPT {
 	private function setup_constants() {
 		define('rsssl_le_url', plugin_dir_url(__FILE__));
 		define('rsssl_le_path', trailingslashit(plugin_dir_path(__FILE__)));
-		define('rsssl_le_wizard_path', trailingslashit(plugin_dir_path(__FILE__)).'/wizard/');
 	}
 
 	private function includes() {
-		require_once( rsssl_le_path . 'wizard/class-hosts.php' );
+		require_once( rsssl_le_path . 'config/class-hosts.php' );
 		require_once( rsssl_le_path . 'functions.php');
-		require_once( rsssl_le_path . 'wizard/fields.php');
+		require_once( rsssl_le_path . 'config/fields.php');
 
 		if ( rsssl_letsencrypt_generation_allowed() && version_compare(PHP_VERSION, rsssl_le_php_version, '>=')) {
-			require_once( rsssl_le_path . 'wizard/notices.php' );
-			require_once( rsssl_le_path . 'wizard/class-wizard.php' );
+			require_once( rsssl_le_path . 'config/notices.php' );
+			require_once( rsssl_le_path . 'class-le-restapi.php' );
 			require_once( rsssl_le_path . 'class-letsencrypt-handler.php' );
 			require_once( rsssl_le_path . 'integrations/integrations.php' );
 		}
-
 	}
 
 	/**

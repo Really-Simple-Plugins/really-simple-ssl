@@ -1,7 +1,7 @@
 <?php defined( 'ABSPATH' ) or die();
 
-if ( ! class_exists( "rsssl_wizard" ) ) {
-	class rsssl_wizard{
+if ( ! class_exists( "rsssl_le_restapi" ) ) {
+	class rsssl_le_restapi{
 
 		private static $_this;
 		function __construct() {
@@ -117,9 +117,13 @@ if ( ! class_exists( "rsssl_wizard" ) ) {
 					''
 				);
 			}
+
 			$response = RSSSL_LE()->letsencrypt_handler->certificate_status();
 			$certificate_is_valid = $response->status === 'error'; //seems weird, but is correct.
 			$ssl_enabled = RSSSL()->really_simple_ssl->ssl_enabled;
+            //clean up stored pw, if requested
+			RSSSL_LE()->letsencrypt_handler->cleanup_on_ssl_activation();
+
 			$data = [
 				'certificate_is_valid' => $certificate_is_valid,
 				'ssl_enabled' => $ssl_enabled,
