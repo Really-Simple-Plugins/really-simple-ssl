@@ -7,7 +7,6 @@ import { __ } from '@wordpress/i18n';
 class SecurityFeaturesFooter extends Component {
   constructor() {
     super( ...arguments);
-    console.log('SecurityFeaturesBlockFooter');
   }
 
   redirectToSettingsMenu(){

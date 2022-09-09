@@ -14,6 +14,7 @@ class Page extends Component {
         this.pageProps=[];
         this.pageProps['licenseStatus'] = rsssl_settings.licenseStatus;
 
+        this.updateFields = this.updateFields.bind(this);
         this.selectMenu = this.selectMenu.bind(this);
         this.getSelectedMenu = this.getSelectedMenu.bind(this);
         this.selectStep = this.selectStep.bind(this);
@@ -57,7 +58,16 @@ class Page extends Component {
                 progress: this.progress,
             }, () => {
                 this.getPreviousAndNextMenuItems();
+
             });
+        });
+    }
+
+
+    updateFields(fields){
+        this.fields = fields;
+        this.setState({
+            fields: fields,
         });
     }
 
@@ -285,6 +295,7 @@ class Page extends Component {
                                 { selectedMainMenuItem !== 'dashboard' &&
                                     <SettingsPage
                                         dropItemFromModal={dropItemFromModal}
+                                        updateFields={this.updateFields}
                                         pageProps={this.pageProps}
                                         handleModal={this.handleModal}
                                         getDefaultMenuItem={this.getDefaultMenuItem}

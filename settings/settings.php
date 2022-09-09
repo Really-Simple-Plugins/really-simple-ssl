@@ -183,6 +183,7 @@ function rsssl_sanitize_field_type($type){
         'number',
         'email',
         'select',
+        'host',
         'permissionspolicy',
         'learningmode',
         'mixedcontentscan',
@@ -269,7 +270,8 @@ function rsssl_rest_api_fields_set($request){
 	do_action('rsssl_after_saved_fields', $fields );
 	$output   = [
             'success' => true,
-            'progress' => RSSSL()->progress->get()
+            'progress' => RSSSL()->progress->get(),
+            'fields' => rsssl_fields(true),
     ];
 	$response = json_encode( $output );
 	header( "Content-Type: application/json" );
@@ -356,7 +358,6 @@ function rsssl_rest_api_fields_get(){
 
 		$fields[$index] = $field;
 	}
-    x_log($fields);
 
     //remove empty menu items
     foreach ($menu as $key => $menu_group ){
@@ -436,6 +437,7 @@ function rsssl_sanitize_field( $value, $type, $id ) {
 		case 'database':
 			return sanitize_title($value);
 		case 'select':
+		case 'host':
 		case 'text':
 		    return sanitize_text_field( $value );
         case 'textarea':

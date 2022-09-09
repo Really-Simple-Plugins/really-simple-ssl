@@ -10,6 +10,7 @@ import { __ } from '@wordpress/i18n';
 import * as rsssl_api from "../utils/api";
 import License from "./License";
 import Password from "./Password";
+import Host from "./Host";
 import Hyperlink from "../utils/Hyperlink";
 import LetsEncrypt from "../LetsEncrypt/LetsEncrypt";
 import Activate from "../LetsEncrypt/Activate";
@@ -35,6 +36,8 @@ class Field extends Component {
     }
 
     componentDidMount() {
+        //set default to enabled
+        this.props.handleNextButtonDisabled(false);
         this.onChangeHandlerDataTable = this.onChangeHandlerDataTable.bind(this);
     }
 
@@ -101,7 +104,7 @@ class Field extends Component {
         }
 
         //if a feature can only be used on networkwide or single site setups, pass that info here.
-        if ( !rsssl_settings.networkwide_active && field.networkwide ) {
+        if ( !rsssl_settings.networkwide_active && field.networkwide_required ) {
             disabled = true;
             field.comment = <>{__("This feature is only available networkwide.","really-simple-ssl")}<Hyperlink target="_blank" text={__("Network settings","really-simple-ssl")} url={rsssl_settings.network_link}/></>
         }
@@ -232,6 +235,21 @@ class Field extends Component {
                   />
                 </div>
             );
+        }
+
+        if ( field.type==='host') {
+            return (
+                <div className={this.highLightClass}>
+                  <Host
+                       index={this.props.index}
+                       saveChangedFields={this.props.saveChangedFields}
+                       handleNextButtonDisabled={this.props.handleNextButtonDisabled}
+                       updateFields={this.props.updateFields}
+                      fields={this.props.fields}
+                      field={this.props.field}
+                  />
+                </div>
+            )
         }
 
         if ( field.type==='select') {

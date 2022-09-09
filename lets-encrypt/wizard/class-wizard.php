@@ -14,7 +14,6 @@ if ( ! class_exists( "rsssl_wizard" ) ) {
 			add_filter("rsssl_run_test", array($this, 'handle_lets_encrypt_request'), 10, 3);
 			add_filter("rsssl_localize_script", array($this, 'localize_script'), 10, 3);
 			add_action( 'rsssl_after_save_field', array( $this, 'after_save_field' ), 10, 4 );
-			add_filter( 'rsssl_steps', array($this, 'maybe_add_multisite_test') );
 		}
 
 		static function this() {
@@ -35,29 +34,6 @@ if ( ! class_exists( "rsssl_wizard" ) ) {
             $args['hosting_dashboard'] = $hosting_dashboard;
             return $args;
         }
-
-		/**
-         * In case of multisite, we add a step to test for subdomains
-		 * @param $steps
-		 *
-		 * @return mixed
-		 */
-		public function maybe_add_multisite_test($steps){
-			if ( is_multisite() ) {
-				$index = array_search( 'system-status', array_column( $steps['lets-encrypt'], 'id' ) );
-				$index ++;
-				$steps['lets-encrypt'][ $index ]['actions'] = array_merge(
-					array(
-                        array(
-                            'description' => __("Checking for subdomain setup...", "really-simple-ssl"),
-                            'action'=> 'is_subdomain_setup',
-                            'attempts' => 1,
-                            'speed' => 'normal',
-                        )
-                    ) , $steps['lets-encrypt'][ $index ]['actions']);
-			}
-			return $steps;
-		}
 
 		/**
          * Switch to DNS verification
@@ -241,6 +217,7 @@ if ( ! class_exists( "rsssl_wizard" ) ) {
 			        return $this->installation_data();
                 case 'activation_data':
 			        return $this->activation_data();
+		        case 'is_subdomain_setup':
 		        case 'verify_dns':
 		        case 'rsssl_php_requirement_met':
 		        case 'certificate_status':

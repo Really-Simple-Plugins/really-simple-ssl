@@ -139,26 +139,8 @@ class rsssl_letsencrypt_handler {
 		if ( !current_user_can('manage_security') ) {
 			return;
 		}
-		$delete_credentials = !rsssl_get_option('store_credentials');
-		//get le menu items
-		$menu_items = rsssl_menu();
-		//filter out non LE stuff
-		$le_menu_items = [];
-		foreach ($menu_items as $menu_item ) {
-			if ( $menu_item['id'] === 'letsencrypt' ) {
-				$le_menu_items = wp_list_pluck($menu_item['menu_items'], 'id');
-			}
-		}
-
-		//get all fields with one of these menu id's
-		$fields = rsssl_fields();
-		$le_fields = [];
-		foreach ( $fields as $index => $field ) {
-			if ( in_array( $field['menu_id'], $le_menu_items )) {
-				$le_fields[] = $field;
-			}
-		}
-
+		$delete_credentials = true;//!rsssl_get_option('store_credentials');
+		$le_fields = rsssl_le_add_fields([]);
 		if ( !$this->certificate_automatic_install_possible() || !$this->certificate_install_required() || $delete_credentials ) {
 			$le_fields = array_filter($le_fields, function($i){
 				return isset( $i['type'] ) && $i['type'] === 'password';

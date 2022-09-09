@@ -157,7 +157,7 @@ function rsssl_le_add_fields($fields) {
 			[
 				'id'       => 'other_host_type',
 				'menu_id'  => 'le-hosting',
-				'type'     => 'select',
+				'type'     => 'host',
 				'options'  => RSSSL_LE()->hosts->supported_hosts,
 				'help'     => [
 					'label' => 'default',
@@ -547,6 +547,18 @@ function rsssl_le_add_fields($fields) {
 				'type'     => 'activate',
 			],
 		]);
+
+	if ( is_multisite() ) {
+		$index           = array_search( 'system-status', array_column( $fields, 'id' ) );
+		$new_test        = [
+			'description' => __( "Checking for subdomain setup...", "really-simple-ssl" ),
+			'action'      => 'is_subdomain_setup',
+			'attempts'    => 1,
+		];
+		$current_tests   = $fields[ $index ]['actions'];
+		$current_tests[] = $new_test;
+		$fields[ $index ]['actions'] = $current_tests;;
+	}
 
 	return $fields;
 }

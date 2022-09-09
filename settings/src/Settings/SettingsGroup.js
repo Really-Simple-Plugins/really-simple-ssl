@@ -57,6 +57,7 @@ class SettingsGroup extends Component {
         }
 
         let activeGroup;
+        //first, set the selected menu item as activate group, so we have a default in case there are no groups
         for (const item of this.props.menu.menu_items){
             if (item.id === selectedMenuItem ) {
                 activeGroup = item;
@@ -68,10 +69,13 @@ class SettingsGroup extends Component {
             }
         }
 
-        if ( selectedMenuItem && selectedMenuItem.hasOwnProperty('groups') ) {
-            let currentGroup = selectedMenuItem.groups.filter(group => group.id === this.props.group);
-            if (currentGroup.length>0) {
-                activeGroup = currentGroup[0];
+        //now check if we have actual groups
+        for (const item of this.props.menu.menu_items){
+            if (item.id === selectedMenuItem && item.hasOwnProperty('groups')) {
+                let currentGroup = item.groups.filter(group => group.id === this.props.group);
+                if (currentGroup.length>0) {
+                    activeGroup = currentGroup[0];
+                }
             }
         }
 
@@ -85,11 +89,9 @@ class SettingsGroup extends Component {
                 msg = rsssl_settings.messageInvalid;
             }
         }
-
         let disabled = status !=='valid' && activeGroup.premium;
         //if a feature can only be used on networkwide or single site setups, pass that info here.
-        let networkwide_error = !rsssl_settings.networkwide_active && activeGroup.networkwide;
-
+        let networkwide_error = !rsssl_settings.networkwide_active && activeGroup.networkwide_required;
         this.upgrade = activeGroup.upgrade ? activeGroup.upgrade : this.upgrade;
         let helplinkText = activeGroup.helpLink_text ? activeGroup.helpLink_text : __("Instructions manual","really-simple-ssl");
 
@@ -109,6 +111,7 @@ class SettingsGroup extends Component {
                     {activeGroup.intro && <div className="rsssl-settings-block-intro">{activeGroup.intro}</div>}
                     {selectedFields.map((field, i) =>
                         <Field key={i} index={i}
+                            updateFields={this.props.updateFields}
                             selectMenu={this.props.selectMenu}
                             dropItemFromModal={this.props.dropItemFromModal}
                             handleNextButtonDisabled={this.props.handleNextButtonDisabled}
@@ -127,19 +130,6 @@ class SettingsGroup extends Component {
                             field={field}
                             fields={selectedFields}
                             />)}
-                    {disabled && !networkwide_error && <div className="rsssl-locked">
-                        <div className="rsssl-locked-overlay">
-                            <span className="rsssl-progress-status rsssl-premium">{__("Premium","really-simple-ssl")}</span>
-                            { rsssl_settings.pro_plugin_active && <span>{msg}<a className="rsssl-locked-link" href="#" onClick={ () => this.handleMenuLink('license') }>{__("Check license", "really-simple-ssl")}</a></span>}
-                            { !rsssl_settings.pro_plugin_active && <Hyperlink target="_blank" text={msg} url={this.upgrade}/> }
-                        </div>
-                    </div>}
-                    {networkwide_error && <div className="rsssl-locked">
-                        <div className="rsssl-locked-overlay">
-                            <span className="rsssl-progress-status rsssl-warning">{__("Network feature","really-simple-ssl")}</span>
-                            <span>{__("This feature is only available networkwide.","really-simple-ssl")}<Hyperlink target="_blank" text={__("Network settings","really-simple-ssl")} url={rsssl_settings.network_link}/></span>
-                        </div>
-                    </div>}
                 </div>
                 {disabled && !networkwide_error && <div className="rsssl-locked">
                     <div className="rsssl-locked-overlay">

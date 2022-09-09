@@ -40,7 +40,7 @@ function rsssl_menu(){
 					'id' => 'mixed_content_scan',
 					'title' => __('Mixed Content Scan', 'really-simple-ssl'),
 					'premium' => true,
-					'premium_text' => __("Learn more about the %Mixed Content Scan Pro%s", 'really-simple-ssl'),
+					'premium_text' => __("Learn more about the %sMixed Content Scan Pro%s", 'really-simple-ssl'),
 					'groups' => [
 						[
 							'id' => 'mixedcontentscan',
@@ -67,7 +67,7 @@ function rsssl_menu(){
 					'groups' => [
 						[
 							'id' => 'recommended_security_headers',
-							'networkwide' => true,
+							'networkwide_required' => true,
 							'premium' => true,
 							'premium_text' => __("Get recommended security headers and more, with %sReally Simple SSL Pro%s", 'really-simple-ssl'),
 							'upgrade' => 'https://really-simple-ssl.com/pro',
@@ -84,7 +84,7 @@ function rsssl_menu(){
 						[
 							'id' => 'hsts',
 							'premium' => true,
-							'networkwide' => true,
+							'networkwide_required' => true,
 							'premium_text' => __("Learn more about %sHSTS%s", 'really-simple-ssl'),
 							'upgrade' => 'https://really-simple-ssl.com/pro',
 							'title' => __('HSTS ', 'really-simple-ssl'),
@@ -99,7 +99,7 @@ function rsssl_menu(){
 					'groups' => [
 						[
 							'id' => 'permissions_policy',
-							'networkwide' => true,
+							'networkwide_required' => true,
 							'premium' => true,
 							'title' => __('Permissions Policy', 'really-simple-ssl'),
 						],
@@ -112,21 +112,21 @@ function rsssl_menu(){
 					'groups' => [
 						[
 							'id' => 'upgrade_insecure_requests',
-							'networkwide' => true,
+							'networkwide_required' => true,
 							'premium' => true,
 							'helpLink'  => 'https://really-simple-ssl.com',
 							'title' => __('Upgrade Insecure Requests', 'really-simple-ssl'),
 						],
 						[
 							'id' => 'frame_ancestors',
-							'networkwide' => true,
+							'networkwide_required' => true,
 							'premium' => true,
 							'helpLink'  => 'https://really-simple-ssl.com',
 							'title' => __('Frame Ancestors', 'really-simple-ssl'),
 						],
 						[
 							'id' => 'content_security_policy',
-							'networkwide' => true,
+							'networkwide_required' => true,
 							'helpLink'  => 'https://really-simple-ssl.com',
 							'premium' => true,
 							'title' => __('Source Directives', 'really-simple-ssl'),
@@ -135,7 +135,7 @@ function rsssl_menu(){
 				],
 				[
 					'id' => 'cross_origin_policy',
-					'networkwide' => true,
+					'networkwide_required' => true,
 					'premium' => true,
 					'premium_text' => __('Get Cross Origin Policy Headers and more, with %sReally Simple SSL pro%s', 'really-simple-ssl'),
 					'title' => __('Cross Origin Policy', 'really-simple-ssl'),
@@ -373,7 +373,7 @@ function rsssl_fields( $load_values = true ){
             'disabled'    => false,
             'default'     => false,
             //on multisite this setting can only be set networkwide
-            'networkwide' => true,
+            'networkwide_required' => true,
             'server_conditions' => [
                 'relation' => 'AND',
                 [

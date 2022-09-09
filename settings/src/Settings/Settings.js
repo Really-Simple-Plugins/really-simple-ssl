@@ -77,6 +77,7 @@ class Settings extends Component {
                 <div className="rsssl-wizard-settings rsssl-column-2">
                     { groups.map((group, i) =>
                         <SettingsGroup
+                            updateFields={this.props.updateFields}
                             dropItemFromModal={this.props.dropItemFromModal}
                             selectMenu={this.props.selectMenu}
                             handleNextButtonDisabled={this.props.handleNextButtonDisabled}

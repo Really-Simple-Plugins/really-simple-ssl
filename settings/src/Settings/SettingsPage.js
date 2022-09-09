@@ -114,9 +114,7 @@ class SettingsPage extends Component {
 
     updateFieldsListWithConditions(){
         for (const field of this.props.fields){
-
           let enabled = !(field.hasOwnProperty('react_conditions') && !this.validateConditions(field.react_conditions, this.props.fields));
-
           this.props.fields[this.props.fields.indexOf(field)].conditionallyDisabled = !enabled;
           if (!enabled && field.type==='letsencrypt') {
             this.props.fields[this.props.fields.indexOf(field)].visible = false;
@@ -195,27 +193,34 @@ class SettingsPage extends Component {
 
     validateConditions(conditions, fields){
         let relation = conditions.relation === 'OR' ? 'OR' : 'AND';
-        let conditionApplies = true;
+        let conditionApplies = relation==='AND' ? true : false;
         for (const key in conditions) {
             if ( conditions.hasOwnProperty(key) ) {
-                let thisConditionApplies = true;
+                let thisConditionApplies = relation==='AND' ? true : false;;
                 let subConditionsArray = conditions[key];
                 if ( subConditionsArray.hasOwnProperty('relation') ) {
                     thisConditionApplies = this.validateConditions(subConditionsArray, fields)
                 } else {
-                    for (let conditionField in subConditionsArray) {
+                    for ( let conditionField in subConditionsArray ) {
                         let invert = conditionField.indexOf('!')===0;
                         if ( subConditionsArray.hasOwnProperty(conditionField) ) {
                             let conditionValue = subConditionsArray[conditionField];
                             conditionField = conditionField.replace('!','');
                             let conditionFields = fields.filter(field => field.id === conditionField);
-                            if (conditionFields.hasOwnProperty(0)){
-                                if (conditionFields[0].type==='checkbox') {
+                            if ( conditionFields.hasOwnProperty(0) ){
+                                if ( conditionFields[0].type==='checkbox' ) {
                                     let actualValue = +conditionFields[0].value;
                                     conditionValue = +conditionValue;
                                     thisConditionApplies = actualValue === conditionValue;
                                 } else {
-                                    thisConditionApplies = conditionFields[0].value.toLowerCase() === conditionValue.toLowerCase();
+                                    if (conditionValue.indexOf('EMPTY')!==-1){
+                                        if (conditionValue.indexOf('NOT ')!==-1) {
+                                            invert=true;
+                                        }
+                                        thisConditionApplies = conditionFields[0].value.length===0;
+                                    } else {
+                                        thisConditionApplies = conditionFields[0].value.toLowerCase() === conditionValue.toLowerCase();
+                                    }
                                 }
                             }
                         }
@@ -223,7 +228,6 @@ class SettingsPage extends Component {
                         if ( invert ){
                             thisConditionApplies = !thisConditionApplies;
                         }
-
                     }
 
                 }
@@ -269,6 +273,7 @@ class SettingsPage extends Component {
                     getPreviousAndNextMenuItems={this.props.getPreviousAndNextMenuItems}
                 />
                 <Settings
+                    updateFields={this.props.updateFields}
                     dropItemFromModal={this.props.dropItemFromModal}
                     selectMenu={this.props.selectMenu}
                     nextButtonDisabled={nextButtonDisabled}

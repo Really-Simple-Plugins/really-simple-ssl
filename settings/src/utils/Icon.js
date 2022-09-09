@@ -1,6 +1,5 @@
 const Icon = (props) => {
   const {name, color, size} = props;
-  console.log(name, color, size);
   // set defaults if not se
 
   const iconName = name || 'bullet';

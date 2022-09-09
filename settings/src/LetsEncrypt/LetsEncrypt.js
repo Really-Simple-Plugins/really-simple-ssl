@@ -132,11 +132,9 @@ const LetsEncrypt = (props) => {
             }
             //move to next action, but not if we're already on the max
             if ( maxIndex > currentActionIndex ) {
-                console.log("go to next step, increase to "+(currentActionIndex+1));
                 setActionIndex(currentActionIndex+1);
                 runTest(currentActionIndex+1);
             } else {
-                console.log("stopping, increase to "+maxIndex);
                 setActionIndex(maxIndex);
                 props.handleNextButtonDisabled(false);
                 clearInterval(rsssl_interval);
@@ -163,15 +161,12 @@ const LetsEncrypt = (props) => {
         const startTime = new Date();
         let action = getAction(currentActionIndex);
         let test = action.action;
-        console.log("run test "+test);
         maxAttempts = action.attempts;
         rsssl_api.runLetsEncryptTest(test, props.field.id ).then( ( response ) => {
                 const endTime = new Date();
                 let timeDiff = endTime - startTime; //in ms
                 const elapsedTime = Math.round(timeDiff);
                 let action = getAction(currentActionIndex);
-                console.log("action response");
-                console.log(action);
                 action.status = response.data.status;
                 action.description = response.data.message;
                 action.do = response.data.action;
