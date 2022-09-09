@@ -122,10 +122,10 @@ class Field extends Component {
                   <ToggleControl
                       disabled = {disabled}
                       checked= { field.value==1 }
-                      help={ field.comment }
                       label={ field.label }
                       onChange={ ( fieldValue ) => this.onChangeHandler(fieldValue) }
                   />
+                  {field.comment && <div dangerouslySetInnerHTML={{__html:field.comment}}></div>}
                 </div>
             );
         }
@@ -173,14 +173,14 @@ class Field extends Component {
 
         if ( field.type==='password' ){
             return (
-                <PanelBody className={ this.highLightClass}>
+                <div className={ this.highLightClass}>
                     <Password
                         index={ this.props.index }
                         field={ field }
                         fields={ this.props.fields }
                         saveChangedFields={this.props.saveChangedFields}
                     />
-                </PanelBody>
+                </div>
             );
         }
 
