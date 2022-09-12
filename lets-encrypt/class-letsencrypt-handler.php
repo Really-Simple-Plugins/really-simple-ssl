@@ -145,7 +145,6 @@ class rsssl_letsencrypt_handler {
 	public function before_save_wizard_option(
 		$fieldname, $fieldvalue, $prev_value, $type
 	) {
-		error_log("add domain as progress");
 		rsssl_progress_add('domain');
 		//only run when changes have been made
 		if ( $fieldvalue === $prev_value ) {
@@ -159,7 +158,9 @@ class rsssl_letsencrypt_handler {
 				rsssl_progress_add('dns-verification');
 			}
 		}
-
+		if ($type === 'password' ) {
+			$fieldvalue = RSSSL_LE()->letsencrypt_handler->encode($fieldvalue);
+		}
 		if ( $fieldname==='email' ){
 		    if ( !is_email($fieldvalue) ) {
 		        rsssl_progress_remove('domain');

@@ -215,8 +215,10 @@ function rsssl_rest_api_fields_set($request){
 			unset($fields[$index]);
 			continue;
 		}
-		$value = rsssl_sanitize_field( $field['value'] , rsssl_sanitize_field_type($field['type']), $field['id'] );
-		$value = apply_filters("rsssl_fieldvalue", $value, sanitize_text_field($field['id']));
+        $type = rsssl_sanitize_field_type($field['type']);
+        $field_id = sanitize_text_field($field['id']);
+		$value = rsssl_sanitize_field( $field['value'] , $type,  $field_id);
+		$value = apply_filters("rsssl_fieldvalue", $value, $field_id, $type);
 
         //if an endpoint is defined, we use that endpoint instead
         if ( isset($config_field['data_endpoint'])){
@@ -315,8 +317,9 @@ function rsssl_update_option( $name, $value ) {
 	}
     if ( !is_array($options) ) $options = [];
     $name = sanitize_text_field($name);
-	$value = rsssl_sanitize_field( $value, rsssl_sanitize_field_type($config_field['type']), $name );
-	$value = apply_filters("rsssl_fieldvalue", $value, sanitize_text_field($name));
+	$type = rsssl_sanitize_field_type($config_field['type']);
+	$value = rsssl_sanitize_field( $value, $type, $name );
+	$value = apply_filters("rsssl_fieldvalue", $value, sanitize_text_field($name), $type);
 	$options[$name] = $value;
 	if ( is_multisite() && rsssl_is_networkwide_active() ) {
 		update_site_option( 'rsssl_options', $options );
