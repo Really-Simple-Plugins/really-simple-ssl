@@ -175,8 +175,6 @@ if ( ! class_exists( "rsssl_le_restapi" ) ) {
             rsssl_update_option('verification_type', 'dir' );
             delete_option('rsssl_skip_dns_check' );
             delete_option('rsssl_skip_challenge_directory_request' );
-            delete_option('rsssl_force_plesk' );
-            delete_option('rsssl_force_cpanel' );
             delete_option('rsssl_create_folders_in_root');
             delete_option('rsssl_hosting_dashboard');
             RSSSL_LE()->letsencrypt_handler->clear_keys_directory();
@@ -304,6 +302,8 @@ if ( ! class_exists( "rsssl_le_restapi" ) ) {
 			    if ( isset(RSSSL_LE()->hosts->hosts[$field_value]) ){
 			        $dashboard = RSSSL_LE()->hosts->hosts[$field_value]['hosting_dashboard'];
 			        update_option('rsssl_hosting_dashboard', $dashboard, false);
+                } else {
+				    update_option('rsssl_hosting_dashboard', false, false);
                 }
             }
 

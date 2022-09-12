@@ -251,6 +251,8 @@ function rsssl_rest_api_fields_set($request){
 
 	//build a new options array
     foreach ( $fields as $field ) {
+	    error_log(print_r("updating field ", true));
+        error_log(print_r($field, true));
         $prev_value = isset( $options[ $field['id'] ] ) ? $options[ $field['id'] ] : false;
         do_action( "rsssl_before_save_option", $field['id'], $field['value'], $prev_value, $field['type'] );
         $options[ $field['id'] ] = $field['value'];
@@ -311,7 +313,7 @@ function rsssl_update_option( $name, $value ) {
 	} else {
 		$options = get_option( 'rsssl_options', [] );
 	}
-
+    if ( !is_array($options) ) $options = [];
     $name = sanitize_text_field($name);
 	$value = rsssl_sanitize_field( $value, rsssl_sanitize_field_type($config_field['type']), $name );
 	$value = apply_filters("rsssl_fieldvalue", $value, sanitize_text_field($name));

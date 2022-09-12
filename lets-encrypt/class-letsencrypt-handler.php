@@ -33,7 +33,6 @@ class rsssl_letsencrypt_handler {
 		//loading of these hooks is stricter. The class can be used in the notices, which are needed on the generic dashboard
 		//These functionality is not needed on the dashboard, so should only be loaded in strict circumstances
 		if ( rsssl_letsencrypt_generation_allowed( true ) ) {
-			error_log("add after save fields action");
 			add_action( 'rsssl_after_save_field', array( $this, 'before_save_wizard_option' ), 10, 4 );
 			add_action( 'admin_init', array( $this, 'maybe_add_htaccess_exclude'));
 			add_action( 'admin_init', array( $this, 'maybe_create_htaccess_directories'));
@@ -175,7 +174,7 @@ class rsssl_letsencrypt_handler {
     public function check_domain(){
 	    $details = parse_url(site_url());
 	    $path = isset($details['path']) ? $details['path'] : '';
-        if ( strpos(site_url(), 'localhost')==false ) {
+        if ( strpos(site_url(), 'localhost')!==false ) {
 	        rsssl_progress_remove( 'system-status' );
 	        $action  = 'stop';
 	        $status  = 'error';
@@ -1036,12 +1035,8 @@ class rsssl_letsencrypt_handler {
 
 	public function not_completed_steps_message($step){
 		$not_completed_steps = rsssl_get_not_completed_steps($step);
-		x_log("not_completed_steps");
-		x_log($not_completed_steps);
 		$nice_names = array();
 		$steps = rsssl_le_steps();
-		x_log("steps");
-		x_log($steps);
 		foreach ($not_completed_steps as $not_completed_step ) {
 			$index = array_search($not_completed_step, array_column( $steps, 'id'));
 			$nice_names[] = $steps[$index+1]['title'];
@@ -1716,7 +1711,7 @@ class rsssl_letsencrypt_handler {
 			return '';
 		}
 
-		if (strpos( $string , 'rsssl_') !== FALSE ) {
+		if ( strpos( $string , 'rsssl_') !== FALSE ) {
 			$key = get_site_option( 'rsssl_key' );
 			$string = str_replace('rsssl_', '', $string);
 

@@ -18,7 +18,9 @@ class rsssl_cPanel
     public function __construct()
     {
 	    $username = rsssl_get_option('cpanel_username');
+	    error_log("username $username");
 	    $password = RSSSL_LE()->letsencrypt_handler->decode( rsssl_get_option('cpanel_password') );
+		error_log("pw $password");
 	    $host = rsssl_get_option('cpanel_host');
 	    $this->host =  str_replace( array('http://', 'https://', ':2083',':'), '', $host );
         $this->username = $username;

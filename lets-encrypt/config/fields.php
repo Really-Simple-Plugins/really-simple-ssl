@@ -557,7 +557,7 @@ function rsssl_le_add_fields($fields) {
 		];
 		$current_tests   = $fields[ $index ]['actions'];
 		$current_tests[] = $new_test;
-		$fields[ $index ]['actions'] = $current_tests;;
+		$fields[ $index ]['actions'] = $current_tests;
 	}
 
 	return $fields;

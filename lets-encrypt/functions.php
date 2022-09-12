@@ -49,14 +49,10 @@ function rsssl_dns_verification_required(){
 	 */
 
 	if ( !rsssl_do_local_lets_encrypt_generation() ) {
-		error_log("not do local le generation");
 		return false;
 	}
 
-	error_log("Verification type ".rsssl_get_option('verification_type'));
 	if ( rsssl_get_option('verification_type')==='dns' ) {
-		error_log("verification type DNS");
-
 		return true;
 	}
 
@@ -74,10 +70,6 @@ if ( !function_exists('rsssl_is_cpanel')) {
 	 * @return bool
 	 */
 	function rsssl_is_cpanel() {
-		if (get_option('rsssl_force_cpanel')) {
-			return true;
-		}
-
 		$open_basedir = ini_get("open_basedir");
 		if ( empty($open_basedir) && file_exists( "/usr/local/cpanel" ) ) {
 			return true;
@@ -157,9 +149,6 @@ if ( !function_exists('rsssl_is_plesk')) {
 	 * @return false
 	 */
 	function rsssl_is_plesk() {
-		if (get_option('rsssl_force_plesk')) {
-			return true;
-		}
 
 		if ( get_option('rsssl_hosting_dashboard')==='plesk' ){
 			return true;
@@ -252,7 +241,6 @@ if ( !function_exists('rsssl_progress_add')) {
 	 * @param string $item
 	 */
 	function rsssl_progress_add( $item ) {
-		error_log("progress add $item");
 		$progress = get_option( "rsssl_le_installation_progress", array() );
 		if ( ! in_array( $item, $progress ) ) {
 			$progress[] = $item;
@@ -304,8 +292,6 @@ if ( !function_exists('rsssl_is_ready_for')) {
 	$sequence = array_slice($sequence, 0, $index, true);
 	$not_completed = array();
 	$finished = get_option("rsssl_le_installation_progress", array());
-	x_log("completed stepls");
-	x_log($finished);
 	foreach ($sequence as $status ) {
 		if (!in_array($status, $finished)) {
 			$not_completed[] = $status;
@@ -320,8 +306,6 @@ if ( !function_exists('rsssl_progress_remove')) {
 	 * @param string $item
 	 */
 	function rsssl_progress_remove( $item ) {
-		error_log("progress remove $item");
-
 		$progress = get_option( "rsssl_le_installation_progress", array() );
 		if ( in_array( $item, $progress ) ) {
 			$index = array_search( $item, $progress );
@@ -362,10 +346,8 @@ if ( !function_exists('rsssl_do_local_lets_encrypt_generation')) {
 		$not_local_cert_hosts = RSSSL_LE()->hosts->not_local_certificate_hosts;
 		$current_host         = rsssl_get_other_host();
 		if ( in_array( $current_host, $not_local_cert_hosts ) ) {
-			error_log("not local cert hosts");
 			return false;
 		}
-		error_log("do local le generation");
 		return true;
 	}
 }
