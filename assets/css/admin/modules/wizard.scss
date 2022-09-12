@@ -2,7 +2,6 @@
   div[class^="rsssl-wizard-"] { // starts with selector
     .rsssl-helplink {
       color: var(--rsp-text-color);
-      z-index: 2;
     }
 
     .rsssl-grid-item {
@@ -30,16 +29,16 @@
 
       .rsssl-locked-overlay {
         z-index: 1;
-        top: calc(100% - 95px);
+        top: calc(100% - 115px);
         position: relative;
         display: flex;
         align-items: center;
         gap: var(--rsp-spacing-s);
         background-color: var(--rsp-white);
-        padding: var(--rsp-spacing-m) var(--rsp-spacing-l);
+        @include rsssl-block-padding;
         border-radius: var(--rsp-border-radius-input);
         margin: var(--rsp-spacing-s);
-        box-shadow: var(--rsp-box-shadow-dark);
+        box-shadow: var(--rsp-box-shadow);
 
         .rsssl-open {
           float: left;
@@ -53,15 +52,9 @@
       }
     }
 
-    .rsssl-disabled {
-      .rsssl-grid-item-header, .rsssl-grid-item-content {
-        filter: blur(1px);
-      }
-    }
-
     .rsssl-grid-item-footer {
       justify-content: flex-end;
-      padding-top: var(--rsp-spacing-xxs);
+      padding: 0;
       display: flex;
       flex-wrap: wrap;
       align-items: center;

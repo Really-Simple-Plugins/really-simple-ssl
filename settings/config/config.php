@@ -270,7 +270,7 @@ function rsssl_fields( $load_values = true ){
 			'label'       => __( "Mixed content fixer - init hook", 'really-simple-ssl' ),
 			'help'        => [
 				'label' => 'default',
-				'title' => __( "Fire mixed content fixer with different method", 'really-simple-ssl' ),
+				'title' => __( "Mixed content fixer - init hook", 'really-simple-ssl' ),
 				'text'  => __( 'If this option is set to true, the mixed content fixer will fire on the init hook instead of the template_redirect hook. Only use this option when you experience problems with the mixed content fixer.', 'really-simple-ssl' ),
 			],
 			'disabled'    => false,
@@ -984,7 +984,7 @@ function rsssl_blocks(){
 		[
 			'id'      => 'ssllabs',
 			'controls' => [
-				'type' => 'html', 'data' => __( "Powered by Qualis SSL Labs", 'really-simple-ssl' ),
+				'type' => 'html', 'data' => __( "Powered by Qualys SSL Labs", 'really-simple-ssl' ),
 			],
 			'title'   => __( "SSL Labs", 'really-simple-ssl' ),
 			'help'    => __( 'A help text', 'really-simple-ssl' ),

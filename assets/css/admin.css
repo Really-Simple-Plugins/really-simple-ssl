@@ -233,7 +233,7 @@
 
 /* Grid */
 .rsssl .rsssl-header, .rsssl .rsssl-content-area {
-    max-width: clamp(300px, calc(100% - var(--rsp-grid-gap) * 2), 1650px);
+    max-width: clamp(300px, calc(100% - var(--rsp-grid-gap) * 2), 1600px);
     margin: 0 auto;
 }
 
@@ -357,6 +357,10 @@
     min-height: calc(100vh - 32px - 80px - 20px - var(--rsp-grid-gap));
 }
 
+.rsssl .rsssl-grid.rsssl-settings {
+    grid-template-columns: 350px 1fr 1fr 1fr;
+}
+
 .rsssl .rsssl-grid-item {
     background: var(--rsp-background-block-color);
     box-shadow: var(--rsp-box-shadow);
@@ -367,7 +371,7 @@
     justify-content: flex-start;
     flex-direction: column;
     flex-basis: 100%;
-    min-height: 100px;
+    min-height: 200px;
     grid-column: span 1;
     grid-row: span 1;
 }
@@ -405,12 +409,12 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: var(--rsp-spacing-m) var(--rsp-spacing-l);
+    padding: var(--rsp-spacing-l) var(--rsp-spacing-xl);
 }
 
 @media screen and (max-width: 1366px) {
     .rsssl .rsssl-grid-item-header {
-        padding: var(--rsp-spacing-s) var(--rsp-spacing-m);
+        padding: var(--rsp-spacing-m) var(--rsp-spacing-l);
     }
 }
 
@@ -443,26 +447,25 @@
 .rsssl .rsssl-grid-item-content {
     width: 100%;
     box-sizing: border-box;
-    padding: var(--rsp-spacing-m) var(--rsp-spacing-l);
-    padding-block: 0;
+    padding-inline: var(--rsp-spacing-xl);
     flex-grow: 100;
 }
 
 @media screen and (max-width: 1366px) {
     .rsssl .rsssl-grid-item-content {
-        padding: var(--rsp-spacing-s) var(--rsp-spacing-m);
+        padding-inline: var(--rsp-spacing-l);
     }
 }
 
 @media screen and (max-width: 1280px) {
     .rsssl .rsssl-grid-item-content {
-        padding: var(--rsp-spacing-xs) var(--rsp-spacing-s);
+        padding-inline: var(--rsp-spacing-m);
     }
 }
 
 @media screen and (max-width: 1080px) {
     .rsssl .rsssl-grid-item-content {
-        padding: var(--rsp-spacing-xxs) var(--rsp-spacing-xs);
+        padding-inline: var(--rsp-spacing-s);
     }
 }
 
@@ -479,13 +482,13 @@
     width: 100%;
     min-height: calc(30px + var(--rsp-spacing-s) * 2);
     box-sizing: border-box;
-    padding: var(--rsp-spacing-m) var(--rsp-spacing-l);
+    padding: var(--rsp-spacing-l) var(--rsp-spacing-xl);
     align-self: flex-end;
 }
 
 @media screen and (max-width: 1366px) {
     .rsssl .rsssl-grid-item-footer {
-        padding: var(--rsp-spacing-s) var(--rsp-spacing-m);
+        padding: var(--rsp-spacing-m) var(--rsp-spacing-l);
     }
 }
 
@@ -546,7 +549,7 @@
 }
 
 .rsssl-modal .rsssl-modal-header {
-    padding: var(--rsp-spacing-m) var(--rsp-spacing-l);
+    padding: var(--rsp-spacing-l) var(--rsp-spacing-xl);
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -555,7 +558,7 @@
 
 @media screen and (max-width: 1366px) {
     .rsssl-modal .rsssl-modal-header {
-        padding: var(--rsp-spacing-s) var(--rsp-spacing-m);
+        padding: var(--rsp-spacing-m) var(--rsp-spacing-l);
     }
 }
 
@@ -592,12 +595,12 @@
     position: relative;
     font-size: var(--rsp-fs-400);
     line-height: 1.5;
-    padding: var(--rsp-spacing-m) var(--rsp-spacing-l);
+    padding: var(--rsp-spacing-l) var(--rsp-spacing-xl);
 }
 
 @media screen and (max-width: 1366px) {
     .rsssl-modal .rsssl-modal-content {
-        padding: var(--rsp-spacing-s) var(--rsp-spacing-m);
+        padding: var(--rsp-spacing-m) var(--rsp-spacing-l);
     }
 }
 
@@ -629,13 +632,13 @@
 .rsssl-modal .rsssl-modal-footer {
     display: flex;
     flex-direction: row;
-    padding: var(--rsp-spacing-m) var(--rsp-spacing-l);
+    padding: var(--rsp-spacing-l) var(--rsp-spacing-xl);
     gap: 10px;
 }
 
 @media screen and (max-width: 1366px) {
     .rsssl-modal .rsssl-modal-footer {
-        padding: var(--rsp-spacing-s) var(--rsp-spacing-m);
+        padding: var(--rsp-spacing-m) var(--rsp-spacing-l);
     }
 }
 
@@ -893,12 +896,12 @@
 }
 
 .rsssl-grid-item.rsssl-progress .rsssl-placeholder {
-    padding: var(--rsp-spacing-m) var(--rsp-spacing-l);
+    padding: var(--rsp-spacing-l) var(--rsp-spacing-xl);
 }
 
 @media screen and (max-width: 1366px) {
     .rsssl-grid-item.rsssl-progress .rsssl-placeholder {
-        padding: var(--rsp-spacing-s) var(--rsp-spacing-m);
+        padding: var(--rsp-spacing-m) var(--rsp-spacing-l);
     }
 }
 
@@ -931,13 +934,13 @@
 }
 
 .rsssl-progress-block .rsssl-progress-bar {
-    padding: var(--rsp-spacing-m) var(--rsp-spacing-l);
+    padding: var(--rsp-spacing-l) var(--rsp-spacing-xl);
     padding-block: 0;
 }
 
 @media screen and (max-width: 1366px) {
     .rsssl-progress-block .rsssl-progress-bar {
-        padding: var(--rsp-spacing-s) var(--rsp-spacing-m);
+        padding: var(--rsp-spacing-m) var(--rsp-spacing-l);
     }
 }
 
@@ -956,7 +959,7 @@
 .rsssl-progress-block .rsssl-progress-text {
     display: flex;
     align-items: center;
-    padding: var(--rsp-spacing-m) var(--rsp-spacing-l);
+    padding: var(--rsp-spacing-l) var(--rsp-spacing-xl);
     padding-block: var(--rsp-spacing-s);
     justify-content: flex-start;
     gap: var(--rsp-spacing-m);
@@ -964,7 +967,7 @@
 
 @media screen and (max-width: 1366px) {
     .rsssl-progress-block .rsssl-progress-text {
-        padding: var(--rsp-spacing-s) var(--rsp-spacing-m);
+        padding: var(--rsp-spacing-m) var(--rsp-spacing-l);
     }
 }
 
@@ -1078,7 +1081,7 @@
 }
 
 .rsssl-scroll-container {
-    padding: var(--rsp-spacing-m) var(--rsp-spacing-l);
+    padding: var(--rsp-spacing-l) var(--rsp-spacing-xl);
     --rsp-scroll-bg-clr: var(--rsp-white);
     height: 230px;
     overflow-y: auto;
@@ -1095,7 +1098,7 @@
 
 @media screen and (max-width: 1366px) {
     .rsssl-scroll-container {
-        padding: var(--rsp-spacing-s) var(--rsp-spacing-m);
+        padding: var(--rsp-spacing-m) var(--rsp-spacing-l);
     }
 }
 
@@ -1205,12 +1208,12 @@
 }
 
 .rsssl-ssllabs .rsssl-placeholder {
-    padding: var(--rsp-spacing-m) var(--rsp-spacing-l);
+    padding: var(--rsp-spacing-l) var(--rsp-spacing-xl);
 }
 
 @media screen and (max-width: 1366px) {
     .rsssl-ssllabs .rsssl-placeholder {
-        padding: var(--rsp-spacing-s) var(--rsp-spacing-m);
+        padding: var(--rsp-spacing-m) var(--rsp-spacing-l);
     }
 }
 
@@ -1244,12 +1247,12 @@
     align-items: center;
     justify-content: space-between;
     background: var(--rsp-dark-blue-faded);
-    padding: var(--rsp-spacing-m) var(--rsp-spacing-l);
+    padding: var(--rsp-spacing-l) var(--rsp-spacing-xl);
 }
 
 @media screen and (max-width: 1366px) {
     .rsssl-ssl-test {
-        padding: var(--rsp-spacing-s) var(--rsp-spacing-m);
+        padding: var(--rsp-spacing-m) var(--rsp-spacing-l);
     }
 }
 
@@ -1273,13 +1276,13 @@
 
 .rsssl-detailed-report {
     text-align: center;
-    padding: var(--rsp-spacing-m) var(--rsp-spacing-l);
+    padding: var(--rsp-spacing-l) var(--rsp-spacing-xl);
     padding-block: var(--rsp-spacing-xs);
 }
 
 @media screen and (max-width: 1366px) {
     .rsssl-detailed-report {
-        padding: var(--rsp-spacing-s) var(--rsp-spacing-m);
+        padding: var(--rsp-spacing-m) var(--rsp-spacing-l);
     }
 }
 
@@ -1297,13 +1300,13 @@
 
 .rsssl-disclaimer {
     font-size: var(--rsp-fs-100);
-    padding: var(--rsp-spacing-m) var(--rsp-spacing-l);
+    padding: var(--rsp-spacing-l) var(--rsp-spacing-xl);
     padding-block: var(--rsp-spacing-xs);
 }
 
 @media screen and (max-width: 1366px) {
     .rsssl-disclaimer {
-        padding: var(--rsp-spacing-s) var(--rsp-spacing-m);
+        padding: var(--rsp-spacing-m) var(--rsp-spacing-l);
     }
 }
 
@@ -1349,83 +1352,83 @@
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(1) {
-    width: 67%;
+    width: 97%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(2) {
-    width: 98%;
+    width: 65%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(3) {
-    width: 89%;
+    width: 77%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(4) {
-    width: 92%;
-}
-
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(5) {
     width: 82%;
 }
 
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(6) {
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(5) {
     width: 91%;
 }
 
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(6) {
+    width: 96%;
+}
+
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(7) {
-    width: 85%;
+    width: 89%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(8) {
-    width: 63%;
+    width: 78%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(9) {
-    width: 81%;
-}
-
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(10) {
-    width: 93%;
-}
-
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(11) {
-    width: 66%;
-}
-
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(12) {
-    width: 93%;
-}
-
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(13) {
-    width: 79%;
-}
-
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(14) {
-    width: 61%;
-}
-
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(15) {
-    width: 61%;
-}
-
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(16) {
-    width: 95%;
-}
-
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(17) {
-    width: 66%;
-}
-
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(18) {
     width: 100%;
 }
 
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(10) {
+    width: 90%;
+}
+
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(11) {
+    width: 61%;
+}
+
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(12) {
+    width: 72%;
+}
+
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(13) {
+    width: 66%;
+}
+
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(14) {
+    width: 86%;
+}
+
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(15) {
+    width: 62%;
+}
+
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(16) {
+    width: 86%;
+}
+
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(17) {
+    width: 97%;
+}
+
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(18) {
+    width: 65%;
+}
+
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(19) {
-    width: 98%;
+    width: 84%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(20) {
-    width: 92%;
+    width: 89%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line ~ .rsssl-placeholder-line {
@@ -1591,7 +1594,6 @@
 
 .rsssl div[class^="rsssl-wizard-"] .rsssl-helplink {
     color: var(--rsp-text-color);
-    z-index: 2;
 }
 
 .rsssl div[class^="rsssl-wizard-"] .rsssl-grid-item {
@@ -1627,16 +1629,34 @@
 
 .rsssl div[class^="rsssl-wizard-"] .rsssl-locked .rsssl-locked-overlay {
     z-index: 1;
-    top: calc(100% - 95px);
+    top: calc(100% - 115px);
     position: relative;
     display: flex;
     align-items: center;
     gap: var(--rsp-spacing-s);
     background-color: var(--rsp-white);
-    padding: var(--rsp-spacing-m) var(--rsp-spacing-l);
+    padding: var(--rsp-spacing-l) var(--rsp-spacing-xl);
     border-radius: var(--rsp-border-radius-input);
     margin: var(--rsp-spacing-s);
-    box-shadow: var(--rsp-box-shadow-dark);
+    box-shadow: var(--rsp-box-shadow);
+}
+
+@media screen and (max-width: 1366px) {
+    .rsssl div[class^="rsssl-wizard-"] .rsssl-locked .rsssl-locked-overlay {
+        padding: var(--rsp-spacing-m) var(--rsp-spacing-l);
+    }
+}
+
+@media screen and (max-width: 1280px) {
+    .rsssl div[class^="rsssl-wizard-"] .rsssl-locked .rsssl-locked-overlay {
+        padding: var(--rsp-spacing-xs) var(--rsp-spacing-s);
+    }
+}
+
+@media screen and (max-width: 1080px) {
+    .rsssl div[class^="rsssl-wizard-"] .rsssl-locked .rsssl-locked-overlay {
+        padding: var(--rsp-spacing-xxs) var(--rsp-spacing-xs);
+    }
 }
 
 .rsssl div[class^="rsssl-wizard-"] .rsssl-locked .rsssl-locked-overlay .rsssl-open {
@@ -1649,13 +1669,9 @@
     margin-right: 20px;
 }
 
-.rsssl div[class^="rsssl-wizard-"] .rsssl-disabled .rsssl-grid-item-header, .rsssl div[class^="rsssl-wizard-"] .rsssl-disabled .rsssl-grid-item-content {
-    filter: blur(1px);
-}
-
 .rsssl div[class^="rsssl-wizard-"] .rsssl-grid-item-footer {
     justify-content: flex-end;
-    padding-top: var(--rsp-spacing-xxs);
+    padding: 0;
     display: flex;
     flex-wrap: wrap;
     align-items: center;
@@ -1762,9 +1778,28 @@
     color: var(--rsp-text-color);
     font-size: var(--rsp-fs-400);
     font-weight: 600;
-    padding: var(--rsp-spacing-s) var(--rsp-spacing-l);
+    padding-block: var(--rsp-spacing-s);
+    padding-inline: var(--rsp-spacing-xl);
     transition: all 0.2s ease-in-out;
-    width: 100%;
+    border-left: 4px solid transparent;
+}
+
+@media screen and (max-width: 1366px) {
+    .rsssl-wizard-menu-items .rsssl-menu-item a {
+        padding-inline: var(--rsp-spacing-l);
+    }
+}
+
+@media screen and (max-width: 1280px) {
+    .rsssl-wizard-menu-items .rsssl-menu-item a {
+        padding-inline: var(--rsp-spacing-m);
+    }
+}
+
+@media screen and (max-width: 1080px) {
+    .rsssl-wizard-menu-items .rsssl-menu-item a {
+        padding-inline: var(--rsp-spacing-s);
+    }
 }
 
 .rsssl-wizard-menu-items .rsssl-menu-item.rsssl-active > a {
@@ -1817,12 +1852,35 @@
 }
 
 .rsssl div[class^="rsssl-wizard-"] .rsssl-field-wrap, .rsssl div[class^="rsssl-wizard-"] .rsssl-settings-block-intro {
-    padding: var(--rsp-spacing-xs) var(--rsp-spacing-l);
+    padding-block: var(--rsp-spacing-s);
+    padding-inline: var(--rsp-spacing-xl);
     overflow: hidden;
+}
+
+@media screen and (max-width: 1366px) {
+    .rsssl div[class^="rsssl-wizard-"] .rsssl-field-wrap, .rsssl div[class^="rsssl-wizard-"] .rsssl-settings-block-intro {
+        padding-inline: var(--rsp-spacing-l);
+    }
+}
+
+@media screen and (max-width: 1280px) {
+    .rsssl div[class^="rsssl-wizard-"] .rsssl-field-wrap, .rsssl div[class^="rsssl-wizard-"] .rsssl-settings-block-intro {
+        padding-inline: var(--rsp-spacing-m);
+    }
+}
+
+@media screen and (max-width: 1080px) {
+    .rsssl div[class^="rsssl-wizard-"] .rsssl-field-wrap, .rsssl div[class^="rsssl-wizard-"] .rsssl-settings-block-intro {
+        padding-inline: var(--rsp-spacing-s);
+    }
 }
 
 .rsssl div[class^="rsssl-wizard-"] .rsssl-field-wrap > .rsssl-field-wrap, .rsssl div[class^="rsssl-wizard-"] .rsssl-settings-block-intro > .rsssl-field-wrap {
     padding: 0;
+}
+
+.rsssl div[class^="rsssl-wizard-"] .rsssl-field-wrap:nth-of-type(odd) {
+    background-color: var(--rsp-dark-blue-faded);
 }
 
 .rsssl div[class^="rsssl-wizard-"] .rsssl-field-button {

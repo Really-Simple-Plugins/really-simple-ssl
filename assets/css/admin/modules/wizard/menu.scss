@@ -15,9 +15,10 @@
       color: var(--rsp-text-color);
       font-size: var(--rsp-fs-400);
       font-weight: 600;
-      padding: var(--rsp-spacing-s) var(--rsp-spacing-l);
+      padding-block: var(--rsp-spacing-s);
+      @include rsssl-inline-block-padding;
       transition: all 0.2s ease-in-out;
-      width: 100%;
+      border-left: 4px solid transparent;
     }
     &.rsssl-active{
       > a{

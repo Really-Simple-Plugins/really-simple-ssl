@@ -124,10 +124,10 @@ $rsp-break-xxl: 1599px;
 }
 
 @mixin rsssl-block-padding {
-  padding: var(--rsp-spacing-m) var(--rsp-spacing-l);
+  padding: var(--rsp-spacing-l) var(--rsp-spacing-xl);
 
   @media screen and (max-width: $rsp-break-l) {
-    padding: var(--rsp-spacing-s) var(--rsp-spacing-m);
+    padding: var(--rsp-spacing-m) var(--rsp-spacing-l);
   }
   @media screen and (max-width: $rsp-break-m) {
     padding: var(--rsp-spacing-xs) var(--rsp-spacing-s);
@@ -139,6 +139,34 @@ $rsp-break-xxl: 1599px;
   //@media screen and (max-width: $rsp-break-xs) {
   //  padding: var(--rsp-spacing-xs) var(--rsp-spacing-s);
   //}
+}
+
+@mixin rsssl-block-block-padding {
+  padding-block: var(--rsp-spacing-l);
+
+  @media screen and (max-width: $rsp-break-l) {
+    padding-block: var(--rsp-spacing-m);
+  }
+  @media screen and (max-width: $rsp-break-m) {
+    padding-block: var(--rsp-spacing-xs);
+  }
+  @media screen and (max-width: $rsp-break-s) {
+    padding-block: var(--rsp-spacing-xxs);
+  }
+}
+
+@mixin rsssl-inline-block-padding {
+  padding-inline: var(--rsp-spacing-xl);
+
+  @media screen and (max-width: $rsp-break-l) {
+    padding-inline: var(--rsp-spacing-l);
+  }
+  @media screen and (max-width: $rsp-break-m) {
+    padding-inline: var(--rsp-spacing-m);
+  }
+  @media screen and (max-width: $rsp-break-s) {
+    padding-inline: var(--rsp-spacing-s);
+  }
 }
 
 @mixin rsssl-fade-in {

@@ -32,11 +32,15 @@
       }
     }
     .rsssl-field-wrap, .rsssl-settings-block-intro{
-      padding: var(--rsp-spacing-xs) var(--rsp-spacing-l);
+      padding-block: var(--rsp-spacing-s);
+      @include rsssl-inline-block-padding;
       overflow: hidden;
       & > .rsssl-field-wrap{
         padding: 0;
       }
+    }
+    .rsssl-field-wrap:nth-of-type(odd){
+      background-color: var(--rsp-dark-blue-faded);
     }
     .rsssl-field-button{
       display: flex;

@@ -13,7 +13,7 @@
     $items = [
         [
             'class' => RSSSL()->really_simple_ssl->ssl_enabled ? "rsssl-bullet-success" : "rsssl-bullet-error",
-            'text'  => RSSSL()->really_simple_ssl->ssl_enabled ? __( "SSL Activated", "really-simple-ssl" ) : __( "SSL Not activated", "really-simple-ssl" ),
+            'text'  => RSSSL()->really_simple_ssl->ssl_enabled ? __( "SSL Activated", "really-simple-ssl" ) : __( "SSL not activated", "really-simple-ssl" ),
         ],
         [
             'class' => RSSSL()->really_simple_ssl->has_301_redirect() ? "rsssl-bullet-success" : "rsssl-bullet-error",

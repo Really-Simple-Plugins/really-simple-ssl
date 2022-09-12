@@ -1,7 +1,7 @@
 /* Grid */
 .rsssl {
   .rsssl-header, .rsssl-content-area {
-    max-width: clamp(300px, calc(100% - var(--rsp-grid-gap) * 2), 1650px);
+    max-width: clamp(300px, calc(100% - var(--rsp-grid-gap) * 2), 1600px);
     margin: 0 auto;
     @media(max-width: $rsp-break-xxl) {
       --rsp-grid-gap: var(--rsp-spacing-m);
@@ -106,10 +106,13 @@
 
   .rsssl-grid {
     display: grid;
-    grid-template-columns: repeat(4, 1fr); // We use calc because of the grid gap
+    grid-template-columns: repeat(4, 1fr);
     grid-auto-rows: max-content;
     gap: var(--rsp-grid-gap);
     min-height: calc(100vh - 32px - 80px - 20px - var(--rsp-grid-gap)); //32px = wordpress bar, 80px = cmplz bar, 20px = margin-top, 20px is grid gap
+    &.rsssl-settings{
+      grid-template-columns: 350px 1fr 1fr 1fr;
+    }
   }
 
   .rsssl-grid-item {
@@ -120,7 +123,7 @@
     justify-content: flex-start;
     flex-direction: column;
     flex-basis: 100%;
-    min-height: 100px;
+    min-height: 200px;
     grid-column: span 1;
     grid-row: span 1;
 
@@ -172,8 +175,7 @@
     &-content {
       width: 100%;
       box-sizing: border-box;
-      @include rsssl-block-padding;
-      padding-block: 0;
+      @include rsssl-inline-block-padding;
       flex-grow: 100;
 
       &:empty {
