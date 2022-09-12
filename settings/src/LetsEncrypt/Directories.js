@@ -86,7 +86,7 @@ const Directories = (props) => {
                      <><p>
                         <Hyperlink target="_blank" text={__("If you also want to secure subdomains like mail.domain.com, cpanel.domain.com, you have to use the %sDNS%s challenge.","really-simple-ssl")}
                         url="https://really-simple-ssl.com/lets-encrypt-authorization-with-dns"/>
-                        {__("Please note that auto-renewal with a DNS challenge might not be possible.","really-simple-ssl")}
+                        &nbsp;{__("Please note that auto-renewal with a DNS challenge might not be possible.","really-simple-ssl")}
                     </p>
                      <Button
                          variant="secondary"
