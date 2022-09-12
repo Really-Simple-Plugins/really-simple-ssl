@@ -1,7 +1,7 @@
 import {
     Component,
 } from '@wordpress/element';
-
+import { __ } from '@wordpress/i18n';
 class MenuItem extends Component {
     constructor() {
         super( ...arguments );
@@ -45,7 +45,7 @@ class MenuItem extends Component {
             this.props.menuItem.visible && <div className={"rsssl-menu-item" + activeClass + featuredClass}>
                 <a href={href} onClick={() => this.handleClick()}>
                     <span>{this.props.menuItem.title}</span>
-                    {this.props.menuItem.featured && <p className="rsssl-menu-item-featured">{this.props.menuItem.featured}</p>}
+                    {this.props.menuItem.featured && <><span className='rsssl-menu-item-featured-pill'>{__('New', 'burst-statistics')}</span><p className="rsssl-menu-item-featured">{this.props.menuItem.featured}</p></>}
                 </a>
                 { (this.props.menuItem.menu_items && menuIsSelected) && <div className="rsssl-submenu-item">
                     {this.props.menuItem.menu_items.map(

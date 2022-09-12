@@ -2,7 +2,7 @@
   height: fit-content;
   .rsssl-grid-item-content{
     padding: 0;
-    padding-bottom: var(--rsp-spacing-xs);
+    padding-bottom: var(--rsp-spacing-l);
   }
 }
 .rsssl-wizard-menu-items {
@@ -14,8 +14,7 @@
       text-decoration: none;
       color: var(--rsp-text-color);
       font-size: var(--rsp-fs-400);
-      font-weight: 600;
-      padding-block: var(--rsp-spacing-s);
+      padding-block: var(--rsp-spacing-xs);
       @include rsssl-inline-block-padding;
       transition: all 0.2s ease-in-out;
       border-left: 4px solid transparent;
@@ -23,15 +22,28 @@
     &.rsssl-active{
       > a{
         //text-decoration: underline;
-        //color: var(--rsp-blue);
-        border-left: 4px solid var(--rsp-yellow);
-        background-color: #f2e6c966;
+        color: var(--rsp-dark-blue);
+        font-weight: 600;
+        border-left: 4px solid var(--rsp-dark-blue);
+        //background-color: #f2e6c966;
       }
     }
     &.rsssl-featured{
       a{
+        padding-block: var(--rsp-spacing-m);
         background: var(--rsp-dark-blue-faded);
+        font-weight: 600;
         flex-wrap: wrap;
+        .rsssl-menu-item-featured-pill{
+            background: var(--rsp-dark-blue);
+            color: var(--rsp-text-color-white);
+            padding: 2px 9px;
+            border-radius: var(--rsp-border-radius);
+            font-size: var(--rsp-fs-100);
+        }
+      }
+      p{
+        font-size: var(--rsp-fs-200);
       }
     }
   }

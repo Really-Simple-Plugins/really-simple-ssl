@@ -22,7 +22,7 @@ class SecurityFeatureBullet extends Component {
         return (
             <div className="rsssl-new-feature">
                 <Icon name={icon.name} color={icon.color} />
-                <div className="rssl-new-feature-label">
+                <div className="rsssl-new-feature-label">
                     { field.value==1 && field.new_features_block.active}
                     { field.value!=1 && field.new_features_block.readmore.length>0 && <Hyperlink target="_blank" text={field.new_features_block.inactive + ' - ' + __("%sRead more%s","really-simple-ssl")} url={field.new_features_block.readmore}/> }
                 </div>
