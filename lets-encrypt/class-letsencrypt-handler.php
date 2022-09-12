@@ -1697,7 +1697,25 @@ class rsssl_letsencrypt_handler {
 	 */
 
 	public function encode( $string ) {
+		if ( strlen(trim($string)) === 0 ) {
+			return $string;
+		}
 
+		if (strpos( $string , 'rsssl_') !== FALSE ) {
+			return $string;
+		}
+
+		$key = $this->get_key();
+		if ( !$key ) {
+			$key = $this->set_key();
+		}
+
+		$ivlength = openssl_cipher_iv_length('aes-256-cbc');
+		$iv = openssl_random_pseudo_bytes($ivlength);
+		$ciphertext_raw = openssl_encrypt($string, 'aes-256-cbc', $key, 0, $iv);
+		$key = base64_encode( $iv.$ciphertext_raw );
+
+		return 'rsssl_'.$key;
 	}
 
 	/**
