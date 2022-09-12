@@ -52,7 +52,7 @@
     @include rsssl-block-padding;
     .rsssl-modal-subtitle {
       font-weight: 600;
-      margin-bottom: var(--rsp-spacing-m);
+      margin-bottom: var(--rsp-spacing-xs);
     }
     .rsssl-modal-description {
       overflow-wrap: anywhere;

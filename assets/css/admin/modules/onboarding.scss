@@ -13,7 +13,7 @@
     }
   }
   .rsssl-modal-content{
-    padding-top: 0;
+    padding-top: var(--rsp-spacing-xs);
     ul{
       margin-bottom: var(--rsp-spacing-m);
     }
