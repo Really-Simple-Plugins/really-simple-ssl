@@ -2,6 +2,7 @@
   margin:30px;
   .rsssl-progress-bar {
     padding-block: 0;
+    margin-bottom:20px;
     .rsssl-progress {
       overflow: hidden;
       height: 20px;
@@ -103,6 +104,12 @@
     }
     .rsssl-certificate-data {
       display:none;
+    }
+    .rsssl-dns-text-records {
+      display:flex;
+      .rsssl-dns-label, .rsssl-dns-field {
+        margin-right:20px;
+      }
     }
   }
 }

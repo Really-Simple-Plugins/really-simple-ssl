@@ -177,6 +177,7 @@ function rsssl_sanitize_field_type($type){
         'license',
         'database',
         'checkbox',
+        'password',
         'radio',
         'text',
         'textarea',
@@ -208,6 +209,7 @@ function rsssl_rest_api_fields_set($request){
     $config_fields = rsssl_fields(false);
     $config_ids = array_column($config_fields, 'id');
 	foreach ( $fields as $index => $field ) {
+
         $config_field_index = array_search($field['id'], $config_ids);
         $config_field = $config_fields[$config_field_index];
 		if ( !$config_field_index ){
@@ -218,7 +220,16 @@ function rsssl_rest_api_fields_set($request){
         $type = rsssl_sanitize_field_type($field['type']);
         $field_id = sanitize_text_field($field['id']);
 		$value = rsssl_sanitize_field( $field['value'] , $type,  $field_id);
-		$value = apply_filters("rsssl_fieldvalue", $value, $field_id, $type);
+		error_log("update option");
+		if ($type==='password') {
+			error_log($field_id);
+			error_log($value);
+		}
+		$value = rsssl_sanitize_field( $value, $type, $field_id );
+		if ($type==='password') {
+			error_log("after sanitize");
+			error_log($value);
+		}
 
         //if an endpoint is defined, we use that endpoint instead
         if ( isset($config_field['data_endpoint'])){
@@ -253,8 +264,6 @@ function rsssl_rest_api_fields_set($request){
 
 	//build a new options array
     foreach ( $fields as $field ) {
-	    error_log(print_r("updating field ", true));
-        error_log(print_r($field, true));
         $prev_value = isset( $options[ $field['id'] ] ) ? $options[ $field['id'] ] : false;
         do_action( "rsssl_before_save_option", $field['id'], $field['value'], $prev_value, $field['type'] );
         $options[ $field['id'] ] = $field['value'];
@@ -318,7 +327,16 @@ function rsssl_update_option( $name, $value ) {
     if ( !is_array($options) ) $options = [];
     $name = sanitize_text_field($name);
 	$type = rsssl_sanitize_field_type($config_field['type']);
+    error_log("update option");
+    if ($type==='password') {
+        error_log($name);
+        error_log($value);
+    }
 	$value = rsssl_sanitize_field( $value, $type, $name );
+	if ($type==='password') {
+		error_log("after sanitize");
+		error_log($value);
+	}
 	$value = apply_filters("rsssl_fieldvalue", $value, sanitize_text_field($name), $type);
 	$options[$name] = $value;
 	if ( is_multisite() && rsssl_is_networkwide_active() ) {
@@ -486,7 +504,6 @@ function rsssl_encode_password($password) {
 	}
 
     $password = sanitize_text_field($password);
-
 	if (strpos( $password , 'rsssl_') !== FALSE ) {
 		return $password;
 	}

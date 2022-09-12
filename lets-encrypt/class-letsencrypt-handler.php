@@ -33,7 +33,7 @@ class rsssl_letsencrypt_handler {
 		//loading of these hooks is stricter. The class can be used in the notices, which are needed on the generic dashboard
 		//These functionality is not needed on the dashboard, so should only be loaded in strict circumstances
 		if ( rsssl_letsencrypt_generation_allowed( true ) ) {
-			add_action( 'rsssl_after_save_field', array( $this, 'before_save_wizard_option' ), 10, 4 );
+			add_action( 'rsssl_after_save_field', array( $this, 'after_save_field' ), 10, 4 );
 			add_action( 'admin_init', array( $this, 'maybe_add_htaccess_exclude'));
 			add_action( 'admin_init', array( $this, 'maybe_create_htaccess_directories'));
 
@@ -142,7 +142,16 @@ class rsssl_letsencrypt_handler {
 		}
 	}
 
-	public function before_save_wizard_option(
+	/**
+	 * some custom actions after a field has been saved
+	 * @param string $fieldname
+	 * @param mixed $fieldvalue
+	 * @param mixed $prev_value
+	 * @param string $type
+	 *
+	 * @return void
+	 */
+	public function after_save_field(
 		$fieldname, $fieldvalue, $prev_value, $type
 	) {
 		rsssl_progress_add('domain');
@@ -158,9 +167,7 @@ class rsssl_letsencrypt_handler {
 				rsssl_progress_add('dns-verification');
 			}
 		}
-		if ($type === 'password' ) {
-			$fieldvalue = RSSSL_LE()->letsencrypt_handler->encode($fieldvalue);
-		}
+
 		if ( $fieldname==='email' ){
 		    if ( !is_email($fieldvalue) ) {
 		        rsssl_progress_remove('domain');
@@ -384,12 +391,14 @@ class rsssl_letsencrypt_handler {
 	    if ( rsssl_is_ready_for('dns-verification') ) {
 		    $use_dns        = rsssl_dns_verification_required();
 		    $challenge_type = $use_dns ? Order::CHALLENGE_TYPE_DNS : Order::CHALLENGE_TYPE_HTTP;
+			error_log("challenge_type");
+			error_log($challenge_type);
 		    if ( $use_dns ) {
 			    try {
 				    $this->get_account();
 				    $dnsWriter = new class extends AbstractDNSWriter {
 					    public function write( Order $order, string $identifier, string $digest ): bool {
-						    $tokens                = get_option( 'rsssl_le_dns_tokens', array() );
+						    $tokens                = get_option( 'rsssl_le_dns_tokens', [] );
 						    $tokens[ $identifier ] = $digest;
 						    update_option( "rsssl_le_dns_tokens", $tokens, false );
 						    rsssl_progress_add( 'dns-verification' );
@@ -410,7 +419,7 @@ class rsssl_letsencrypt_handler {
 								    'success',
 								    'continue',
 								    __( "Token successfully retrieved.", 'really-simple-ssl' ),
-								    json_encode( get_option( 'rsssl_le_dns_tokens' ) )
+								    $this->get_dns_tokens()
 							    );
 						    } else {
 							    if ( get_option( 'rsssl_le_dns_tokens' ) ) {
@@ -418,7 +427,7 @@ class rsssl_letsencrypt_handler {
 									    'success',
 									    'continue',
 									    __( "Token successfully retrieved.", 'really-simple-ssl' ),
-									    json_encode( get_option( 'rsssl_le_dns_tokens' ) )
+									    $this->get_dns_tokens()
 								    );
 							    } else {
 								    $response = new RSSSL_RESPONSE(
@@ -430,9 +439,14 @@ class rsssl_letsencrypt_handler {
 
 						    }
 					    } catch ( Exception $e ) {
+							error_log("challenge error #2");
 						    error_log( print_r( $e, true ) );
 						    $error = $this->get_error( $e );
-						    if (strpos($error, 'Order has status "invalid"')!==false) {
+						    if ( strpos( $error, 'No challenge found with given type')!==false ) {
+							    error_log("CLEAR ORDER AFTER CHALLENGE FAILURE");
+							    //Maybe it was first set to HTTP challenge. retry after clearing the order.
+							    $order->clear();
+						    } else if (strpos($error, 'Order has status "invalid"')!==false) {
 							    $order->clear();
 							    $error = __("The order is invalid, possibly due to too many failed authorization attempts. Please start at the previous step.","really-simple-ssl");
 						    } else
@@ -450,16 +464,16 @@ class rsssl_letsencrypt_handler {
 						    );
 					    }
 				    }
-
 			    } catch ( Exception $e ) {
 				    rsssl_progress_remove( 'dns-verification' );
+					error_log("exception 1 error");
+					error_log(print_r($e,true));
 				    $response = $this->get_error( $e );
-				    error_log( print_r( $e, true ) );
-				    $response = new RSSSL_RESPONSE(
-					    'error',
-					    'retry',
-					    $response
-				    );
+					$response = new RSSSL_RESPONSE(
+						'error',
+						'retry',
+						$response
+					);
 			    }
 		    } else {
 			    $response = new RSSSL_RESPONSE(
@@ -478,6 +492,21 @@ class rsssl_letsencrypt_handler {
 	    }
 	    return $response;
     }
+
+	/**
+	 * @return array
+	 */
+	public function get_dns_tokens(){
+		$tokens = get_option( 'rsssl_le_dns_tokens', [] );
+		$output = [];
+		foreach ($tokens as $domain => $token ) {
+			$output[] = [
+				'domain' => $domain,
+				'token' => $token,
+			];
+		}
+		return $output;
+	}
 
 	/**
 	 * Check DNS txt records.
@@ -1690,34 +1719,6 @@ class rsssl_letsencrypt_handler {
 			'Error creating new order ::',
 		), '', $msg);
     }
-
-	/**
-	 * Encode a string
-	 * @param string $string
-	 * @return string
-	 */
-
-	public function encode( $string ) {
-		if ( strlen(trim($string)) === 0 ) {
-			return $string;
-		}
-
-		if (strpos( $string , 'rsssl_') !== FALSE ) {
-			return $string;
-		}
-
-		$key = $this->get_key();
-		if ( !$key ) {
-			$key = $this->set_key();
-		}
-
-		$ivlength = openssl_cipher_iv_length('aes-256-cbc');
-		$iv = openssl_random_pseudo_bytes($ivlength);
-		$ciphertext_raw = openssl_encrypt($string, 'aes-256-cbc', $key, 0, $iv);
-		$key = base64_encode( $iv.$ciphertext_raw );
-
-		return 'rsssl_'.$key;
-	}
 
 	/**
 	 * Decode a string

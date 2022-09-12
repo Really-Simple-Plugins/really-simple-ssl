@@ -18,7 +18,7 @@ class Hyperlink extends Component {
         }
         let className = this.props.className ? this.props.className : 'rsssl-link';
         return (
-            <p>{ label_pre } <a className={className} target={this.props.target} href={this.props.url}>{link_text}</a>{label_post}</p>
+            <>{ label_pre } <a className={className} target={this.props.target} href={this.props.url}>{link_text}</a>{label_post}</>
         )
     }
 }

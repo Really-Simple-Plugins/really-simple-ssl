@@ -168,6 +168,7 @@ const LetsEncrypt = (props) => {
                 const elapsedTime = Math.round(timeDiff);
                 let action = getAction(currentActionIndex);
                 action.status = response.data.status;
+                action.hide = false;
                 action.description = response.data.message;
                 action.do = response.data.action;
                 action.output = response.data.output ? response.data.output : false;
@@ -191,25 +192,31 @@ const LetsEncrypt = (props) => {
     if (!props.field.actions) {
         return (<></>);
     }
+    // keep current action, before it is filtered. The actionindex doesn't match anymore after filtering
+    let currentAction = props.field.actions[actionIndex];
+    //filter out skipped actions
+    let actions = props.field.actions.filter(action => action.hide !== true);
     return (
         <>
             <div className="rsssl-lets-encrypt-tests">
                 <div className="rsssl-progress-bar"><div className="rsssl-progress"><div className={'rsssl-bar ' + progressBarColor} style={getStyles()}></div></div></div>
                 <div className="rsssl_letsencrypt_container rsssl-progress-container field-group">
                     <ul>
-`                       {props.field.actions.map((action, i) =>
-                            <li key={i} className={"rsssl_action_"+action.action+" rsssl-"+action.status} >
-                                {action.do==='retry' && action.attemptCount >=1 && <>{__("Attempt %s.", "really-simple-ssl").replace('%s', action.attemptCount)} </>}
-                                <span dangerouslySetInnerHTML={{__html:action.description}}></span>
-                            </li>)
+                       {actions.map((action, i) =>
+                              <li key={i} className={"rsssl_action_"+action.action+" rsssl-"+action.status} >
+                                        {action.do==='retry' && action.attemptCount >=1 && <>{__("Attempt %s.", "really-simple-ssl").replace('%s', action.attemptCount)} </>}
+                                        <span dangerouslySetInnerHTML={{__html:action.description}}></span>
+                                    </li>
+
+                            )
                         }
                     </ul>
                 </div>
-                {props.field.id === 'directories' && <Directories save={props.save} selectMenu={props.selectMenu} field={props.field} updateField={props.updateField} addHelp={props.addHelp} progress={progress} action={props.field.actions[actionIndex]}/> }
-                {props.field.id === 'dns-verification' && <DnsVerification save={props.save} selectMenu={props.selectMenu} field={props.field} updateField={props.updateField} addHelp={props.addHelp} progress={progress} action={props.field.actions[actionIndex]}/> }
-                {props.field.id === 'generation' && <Generation restartTests={restartTests} save={props.save} selectMenu={props.selectMenu} field={props.field} updateField={props.updateField} addHelp={props.addHelp} progress={progress} action={props.field.actions[actionIndex]}/> }
-                {props.field.id === 'installation' && <Installation restartTests={restartTests} save={props.save} selectMenu={props.selectMenu} field={props.field} updateField={props.updateField} addHelp={props.addHelp} progress={progress} action={props.field.actions[actionIndex]}/> }
-                {props.field.id === 'activate' && <Activate restartTests={restartTests} save={props.save} selectMenu={props.selectMenu} field={props.field} updateField={props.updateField} addHelp={props.addHelp} progress={progress} action={props.field.actions[actionIndex]}/> }
+                {props.field.id === 'directories' && <Directories save={props.save} selectMenu={props.selectMenu} field={props.field} updateField={props.updateField} addHelp={props.addHelp} progress={progress} action={currentAction}/> }
+                {props.field.id === 'dns-verification' && <DnsVerification save={props.save} selectMenu={props.selectMenu} field={props.field} updateField={props.updateField} addHelp={props.addHelp} progress={progress} action={currentAction}/> }
+                {props.field.id === 'generation' && <Generation restartTests={restartTests} save={props.save} selectMenu={props.selectMenu} field={props.field} updateField={props.updateField} addHelp={props.addHelp} progress={progress} action={currentAction}/> }
+                {props.field.id === 'installation' && <Installation restartTests={restartTests} save={props.save} selectMenu={props.selectMenu} field={props.field} updateField={props.updateField} addHelp={props.addHelp} progress={progress} action={currentAction}/> }
+                {props.field.id === 'activate' && <Activate restartTests={restartTests} save={props.save} selectMenu={props.selectMenu} field={props.field} updateField={props.updateField} addHelp={props.addHelp} progress={progress} action={currentAction}/> }
             </div>
         </>
     )

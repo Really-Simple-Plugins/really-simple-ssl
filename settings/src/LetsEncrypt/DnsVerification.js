@@ -13,6 +13,7 @@ import {
 
 const DnsVerification = (props) => {
     const action = props.action;
+    const [tokens, setTokens] = useState(false);
      useUpdateEffect(()=> {
 
         if (action && action.action==='challenge_directory_reachable' && action.status==='error') {
@@ -22,8 +23,13 @@ const DnsVerification = (props) => {
                 __("The challenge directory is used to verify the domain ownership.", "really-simple-ssl"),
             );
         }
-
-
+         let newTokens = action ? action.output : false;
+         if ( typeof (newTokens) === "undefined" || newTokens.length === 0 ) {
+             newTokens = false;
+         }
+         if ( newTokens ) {
+             setTokens(newTokens);
+         }
      });
 
     const handleSwitchToDir = () => {
@@ -45,27 +51,24 @@ const DnsVerification = (props) => {
         });
     }
 
-    let tokens = action ? action.output : false;
-
     return (
         <>
-           {action && action.status === 'success' && tokens &&
+           { tokens && tokens.length>0 &&
                 <div className="rsssl-test-results">
                     <h4>{__("Next step", "really-simple-ssl")}</h4>
                     <p>{__("Add the following token as text record to your DNS records. We recommend to use a short TTL during installation, in case you need to change it.", "really-simple-ssl")}
                         <Hyperlink target="_blank" text={__("Read more", "really-simple-ssl")}
                                    url="https://really-simple-ssl.com/how-to-add-a-txt-record-to-dns"/>
                     </p>
-                    <div id="rsssl-dns-text-records">
-                        {tokens.map((token, i) =>
-                            <>
+                    <div>
+                        { tokens.map((tokenData, i) =>
+                            <div key={i} className="rsssl-dns-text-records">
                                 <div className="rsssl-dns-label">@/{__("domain", "really-simple-ssl")}</div>
-                                <div className="rsssl-dns-field rsssl-selectable">_acme-challenge{i}</div>
+                                <div className="rsssl-dns-field rsssl-selectable">_acme-challenge{tokenData.domain}</div>
                                 <div className="rsssl-dns-label">{__("Value", "really-simple-ssl")}</div>
-                                <div className="rsssl-dns-field rsssl-selectable">{token}</div>
-                            </>
+                                <div className="rsssl-dns-field rsssl-selectable">{tokenData.token}</div>
+                            </div>
                         )}
-
                     </div>
                 </div>
             }

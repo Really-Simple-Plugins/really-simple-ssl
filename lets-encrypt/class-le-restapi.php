@@ -238,12 +238,20 @@ if ( ! class_exists( "rsssl_le_restapi" ) ) {
 		        case 'terms_accepted':
 		        case 'create_bundle_or_renew':
 		        case 'search_ssl_installation_url':
+		        case 'rsssl_install_cpanel_autossl':
+		        case 'rsssl_cpanel_set_txt_record':
+		        case 'rsssl_install_cpanel_default':
+		        case 'rsssl_cloudways_server_data':
+		        case 'rsssl_cloudways_install_ssl':
+		        case 'rsssl_cloudways_auto_renew':
+		        case 'rsssl_install_directadmin':
+		        case 'rsssl_plesk_install':
                     return $this->get_installation_progress($data, $test, $request);
                 default:
                     return new RSSSL_RESPONSE(
 	                    'error',
 	                    'stop',
-	                    __( "Test not found.", 'really-simple-ssl' )
+	                    sprintf(__( "Test %s not found.", 'really-simple-ssl' ), $test),
                     );
             }
         }

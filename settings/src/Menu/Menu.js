@@ -11,18 +11,8 @@ import {
 class Menu extends Component {
     constructor() {
         super( ...arguments );
-        this.state = {
-            menu:this.props.menu,
-            selectedMainMenuItem:this.props.selectedMainMenuItem,
-        };
-    }
 
-    componentDidUpdate(){
-        this.state = {
-            selectedMainMenuItem:this.props.selectedMainMenuItem,
-        };
     }
-
     render() {
         if ( ! this.props.isAPILoaded ) {
             return (
