@@ -130,7 +130,7 @@ const OnboardingModal = (props) => {
             let { title, current_action, action, status, help, button, id, type, percentage } = item
             const statuses = {
                 'inactive': {
-                    'icon': 'circle-times',
+                    'icon': 'bullet',
                     'color': 'grey',
                 },
                 'warning': {

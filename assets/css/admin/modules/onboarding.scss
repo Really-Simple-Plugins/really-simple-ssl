@@ -1,17 +1,22 @@
 .rsssl-modal.rsssl-onboarding {
-  max-width:100%;
-  width: 75vw;
+  width: clamp(300px, 100ch, 100vw );
   .rsssl-logo {
-    width:200px;
+    height: 28px;
   }
   #rsssl-message li {
-    display: flex; //to get the loader nicely behind the items in the onboarding modal
-    .rsssl-icon {
-        margin-right: 7px;
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: var(--rsp-spacing-xs);
+    gap: var(--rsp-spacing-xxs);
+    .rsssl-icon{
+      margin-top: 4px;
     }
   }
   .rsssl-modal-content{
     padding-top: 0;
+    ul{
+      margin-bottom: var(--rsp-spacing-m);
+    }
   }
   .rsssl-modal-content-step-footer {
     display:flex;
@@ -20,6 +25,11 @@
     gap: var(--rsp-spacing-m);
     .components-toggle-control .components-base-control__field{
       margin:0;
+    }
+    button, a, label{
+        font-size: var(--rsp-fs-400);
+        font-weight: 500;
+        line-height: 1.5;
     }
   }
 }

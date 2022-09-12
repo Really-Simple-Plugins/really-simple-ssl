@@ -11,7 +11,7 @@
 }
 
 .rsssl-modal {
-  width: #{"min(100%, 600px)"};
+  width:  clamp(300px, 75ch, calc(100vw - 50px) );
   position: fixed;
   z-index: 3;
   border-radius: 12px;
@@ -19,7 +19,7 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  margin: 25px;
+  margin: 25px auto;
 
   .rsssl-modal-header {
     @include rsssl-block-padding;
@@ -47,6 +47,8 @@
 
   .rsssl-modal-content {
     position: relative;
+    font-size: var(--rsp-fs-400);
+    line-height: 1.5;
     @include rsssl-block-padding;
     .rsssl-modal-subtitle {
       font-weight: 600;
@@ -56,7 +58,6 @@
       overflow-wrap: anywhere;
       margin-top: 0;
       font-weight: 500;
-      font-size: var(--rsp-fs-400);
       line-height: 1.5;
       margin-bottom: var(--rsp-spacing-s);
     }
