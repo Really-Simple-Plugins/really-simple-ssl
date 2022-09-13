@@ -584,15 +584,14 @@ if ( !function_exists('rsssl_wildcard_certificate_required') ) {
 	}
 }
 
-$installation_index = array_search( 'installation', array_column( $fields, 'id' ) );
-$fields[ $installation_index ]['actions'][] = [
-	'description' => __( "Attempting to install certificate using AutoSSL...", "really-simple-ssl" ),
-	'action'      => 'rsssl_install_cpanel_autossl',
-	'attempts'    => 1,
-];
-
-
 if ( !function_exists('rsssl_can_install_shell_addon') ) {
+
+	/**
+	 * check if this environment has shell capability
+	 *
+	 * @return bool
+	 */
+
 	function rsssl_can_install_shell_addon(){
 		//if not cpanel
 		if ( !rsssl_is_cpanel() ) {
