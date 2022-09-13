@@ -27,6 +27,7 @@ function rsssl_plugin_admin_scripts() {
         'rsssl_settings',
         apply_filters('rsssl_localize_script',[
             'site_url' => get_rest_url(),
+            'dashboard_url' => add_query_arg(['page' => 'really-simple-security'],admin_url('options-general.php') ),
             'plugin_url' => rsssl_url,
             'network_link' => network_site_url('plugins.php'),
             'blocks' => rsssl_blocks(),
@@ -220,16 +221,7 @@ function rsssl_rest_api_fields_set($request){
         $type = rsssl_sanitize_field_type($field['type']);
         $field_id = sanitize_text_field($field['id']);
 		$value = rsssl_sanitize_field( $field['value'] , $type,  $field_id);
-		error_log("update option");
-		if ($type==='password') {
-			error_log($field_id);
-			error_log($value);
-		}
 		$value = rsssl_sanitize_field( $value, $type, $field_id );
-		if ($type==='password') {
-			error_log("after sanitize");
-			error_log($value);
-		}
 
         //if an endpoint is defined, we use that endpoint instead
         if ( isset($config_field['data_endpoint'])){
@@ -327,16 +319,7 @@ function rsssl_update_option( $name, $value ) {
     if ( !is_array($options) ) $options = [];
     $name = sanitize_text_field($name);
 	$type = rsssl_sanitize_field_type($config_field['type']);
-    error_log("update option");
-    if ($type==='password') {
-        error_log($name);
-        error_log($value);
-    }
 	$value = rsssl_sanitize_field( $value, $type, $name );
-	if ($type==='password') {
-		error_log("after sanitize");
-		error_log($value);
-	}
 	$value = apply_filters("rsssl_fieldvalue", $value, sanitize_text_field($name), $type);
 	$options[$name] = $value;
 	if ( is_multisite() && rsssl_is_networkwide_active() ) {

@@ -128,6 +128,7 @@ if ( ! class_exists( "rsssl_le_restapi" ) ) {
 				'certificate_is_valid' => $certificate_is_valid,
 				'ssl_enabled' => $ssl_enabled,
 			];
+
 			return new RSSSL_RESPONSE(
 				'success',
 				'continue',
@@ -319,69 +320,6 @@ if ( ! class_exists( "rsssl_le_restapi" ) ) {
 				RSSSL_LE()->letsencrypt_handler->update_account($field_value);
 			}
 
-		}
-
-		/**
-         * @deprecated
-		 * @return string
-		 */
-		public function get_support_url()
-		{
-            $user_info = get_userdata(get_current_user_id());
-            $email = urlencode($user_info->user_email);
-            $name = urlencode($user_info->display_name);
-			$verification_type = rsssl_get_option('verification_type') === 'dns' ? 'dns' : 'dir';
-			$skip_dns_check = get_option('rsssl_skip_dns_check' ) ? 'Skip DNS check' : 'Do DNS check';
-			$skip_directory_check = get_option('rsssl_skip_challenge_directory_request' ) ? 'Skip directory check' : 'Do directory check';
-			$hosting_company = rsssl_get_other_host();
-			$dashboard = 'unknown';
-			if (rsssl_is_cpanel()){
-			    $dashboard = 'cpanel';
-			} else if(rsssl_is_plesk()){
-			    $dashboard = 'plesk';
-			} else if (rsssl_is_directadmin()){
-			    $dashboard = 'directadmin';
-			}
-
-            $debug_log_contents = 'dashboard '.$dashboard.'--br--';
-            $debug_log_contents .= 'skip dns check '.$skip_dns_check.'--br--';
-            $debug_log_contents .= 'skip directory check '.$skip_directory_check.'--br--';
-            $debug_log_contents .= 'verification type '.$verification_type.'--br--';
-            $debug_log_contents = urlencode(strip_tags( $debug_log_contents ) );
-
-            //Retrieve the domain
-            $domain = site_url();
-
-            $url = "https://really-simple-ssl.com/letsencrypt-support/?email=$email&customername=$name&domain=$domain&hosting_company=$hosting_company&debuglog=$debug_log_contents";
-
-            return $url;
-		}
-
-
-		public function activate_ssl_buttons(){
-		    ob_start();
-		    wp_nonce_field('rsssl_le_nonce', 'rsssl_le_nonce'); ?>
-            <?php
-                $response = RSSSL_LE()->letsencrypt_handler->certificate_status();
-                $certificate_is_valid = $response->status === 'error';
-                $already_enabled = RSSSL()->really_simple_ssl->ssl_enabled;
-    			if ($certificate_is_valid && $already_enabled){ ?>
-                    <a class="button button-default" href="<?php echo esc_url(add_query_arg(array("page"=>"really-simple-security"),admin_url("options-general.php") ) );?>"><?php _e("Go to dashboard", "really-simple-ssl"); ?></a>
-                <?php } else if ( $certificate_is_valid ) {?>
-                    <input type="submit" class='button button-primary'
-                           value="<?php _e("Go ahead, activate SSL!", "really-simple-ssl"); ?>" id="rsssl_do_activate_ssl"
-                           name="rsssl_do_activate_ssl">
-                <?php } else { ?>
-                    <input type="submit" class='button button-default'
-                           value="<?php _e("Retry", "really-simple-ssl"); ?>" id="rsssl_recheck_ssl"
-                           name="rsssl_recheck_ssl">
-                <?php }?>
-
-                <?php if (!defined("rsssl_pro_version") ) { ?>
-                    <a class="button button-default" href="<?php echo RSSSL()->really_simple_ssl->pro_url ?>" target="_blank"><?php _e("Get ready with PRO!", "really-simple-ssl"); ?></a>
-                <?php } ?>
-            <?php
-            return ob_get_clean();
 		}
 
 	}

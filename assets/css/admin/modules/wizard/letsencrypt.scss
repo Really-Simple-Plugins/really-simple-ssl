@@ -1,5 +1,5 @@
 .rsssl-lets-encrypt-tests {
-  margin:30px;
+  margin:10px 30px;
   .rsssl-progress-bar {
     padding-block: 0;
     margin-bottom:20px;
@@ -48,33 +48,10 @@
   }
 
   ul {
-    margin-left: 50px;
-
     li {
-      padding-right: 10px;
-
-      &:before {
-        background-color: var(--rsp-grey-400);
-        color: #fff;
-        height: 10px;
-        width: 10px;
-        border-radius: 50%;
-        content: '';
-        position: absolute;
-        margin-top: 5px;
-        margin-left: -30px;
-      }
-
-      &.rsssl-warning:before {
-        background-color: var(--rsp-yellow);
-      }
-
-      &.rsssl-error:before {
-        background-color: var(--rsp-red);
-      }
-
-      &.rsssl-success:before {
-        background-color: var(--rsp-green);
+      display:flex;
+      .rsssl-icon {
+        margin-right:7px;
       }
 
       /*Nested li */
@@ -117,6 +94,11 @@
       }
 
     }
+  }
+
+  .rsssl-activation-buttons {
+    display: flex;
+    flex-flow: row-reverse;
   }
 }
 

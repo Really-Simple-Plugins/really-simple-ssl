@@ -310,8 +310,7 @@ class rsssl_admin
 	 * @return void
 	 */
     public function recheck_certificate(){
-	    if (!rsssl_user_can_manage()) return;
-
+	    if ( !rsssl_user_can_manage()) return;
         if (isset($_POST['rsssl_recheck_certificate']) || isset($_GET['rsssl_recheck_certificate'])) {
 	        delete_transient('rsssl_certinfo');
         }
@@ -2750,7 +2749,6 @@ class rsssl_admin
 	            ),
             ),
         );
-
         //on multisite, don't show the notice on subsites.
         if ( is_multisite() && !is_network_admin() ) {
             unset($notices['secure_cookies_set']);

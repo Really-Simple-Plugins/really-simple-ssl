@@ -37,19 +37,19 @@ function rsssl_cloudways_add_condition_actions($fields){
 			'description' => __("Retrieving Cloudways server data...", "really-simple-ssl"),
 			'action'=> 'rsssl_cloudways_server_data',
 			'attempts' => 5,
-			'speed' => 'normal',
+			'status'      => 'inactive',
 		),
 		array(
 			'description' => __("Installing SSL certificate...", "really-simple-ssl"),
 			'action'=> 'rsssl_cloudways_install_ssl',
 			'attempts' => 5,
-			'speed' => 'normal',
+			'status'      => 'inactive',
 		),
 		array(
 			'description' => __("Enabling auto renew...", "really-simple-ssl"),
 			'action'=> 'rsssl_cloudways_auto_renew',
 			'attempts' => 5,
-			'speed' => 'normal',
+			'status'      => 'inactive',
 		),
 	);
 

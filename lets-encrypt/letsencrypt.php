@@ -31,13 +31,10 @@ if (!function_exists('rsssl_letsencrypt_generation_allowed')) {
 			return true;
 		}
 
-		if ( isset($_GET['action']) && $_GET['action'] === 'rsssl_installation_progress' ){
+		if ( !$strict && rsssl_is_logged_in_rest() ) {
 			return true;
 		}
 
-		if ( isset($_POST['rsssl_le_nonce']) && wp_verify_nonce( $_POST['rsssl_le_nonce'], 'rsssl_save' )){
-			return true;
-		}
 		return false;
 	}
 }

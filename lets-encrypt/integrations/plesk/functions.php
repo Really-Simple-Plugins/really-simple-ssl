@@ -33,7 +33,7 @@ function rsssl_plesk_add_installation_step($fields){
 				'description' => __("Installing SSL certificate using PLESK API...", "really-simple-ssl"),
 				'action'=> 'rsssl_plesk_install',
 				'attempts' => 1,
-				'speed' => 'normal',
+				'status'      => 'inactive',
 			)
 		) , $fields[ $index ]['actions'] );
 	}

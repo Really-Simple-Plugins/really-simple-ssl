@@ -8,6 +8,7 @@ import Activate from "./Activate";
 import Installation from "./Installation";
 import { __ } from '@wordpress/i18n';
 import {useUpdateEffect} from 'react-use';
+import Icon from "../utils/Icon";
 
 const LetsEncrypt = (props) => {
     const [actionIndex, setActionIndex] = useState(0);
@@ -17,7 +18,7 @@ const LetsEncrypt = (props) => {
     const [previousActionIndex, setPreviousActionIndex] = useState(-1);
     const [previousProgress, setPreviousProgress] = useState(0);
 
-    let sleep=100;
+    let sleep=500;
     let maxAttempts=1;
     let rsssl_interval;
 
@@ -31,7 +32,7 @@ const LetsEncrypt = (props) => {
         //clear statuses to ensure the bullets are grey
         let actions = props.field.actions;
         for ( const action of actions) {
-            action.status='';
+            action.status='inactive';
         }
         props.field.actions = actions;
 
@@ -119,10 +120,16 @@ const LetsEncrypt = (props) => {
         document.dispatchEvent(event);
         //if all tests are finished with success
 
+        //finalize happens when halfway through our tests it's finished. We can skip all others.
         if ( action.do === 'finalize' ) {
-            //finalize
+            clearInterval(rsssl_interval);
+            props.field.actions.forEach(function(action,i){
+                if (i>currentActionIndex) {
+                    action.hide=true;
+                }
+            });
             setActionIndex(maxIndex);
-
+            props.handleNextButtonDisabled(false);
         } else if (action.do === 'continue' || action.do === 'skip' ) {
             //new action, so reset the attempts count
             action.attemptCount=1;
@@ -167,14 +174,15 @@ const LetsEncrypt = (props) => {
                 let timeDiff = endTime - startTime; //in ms
                 const elapsedTime = Math.round(timeDiff);
                 let action = getAction(currentActionIndex);
-                action.status = response.data.status;
+                console.log(response.data.status);
+                action.status = response.data.status ? response.data.status : 'inactive';
                 action.hide = false;
                 action.description = response.data.message;
                 action.do = response.data.action;
                 action.output = response.data.output ? response.data.output : false;
-                sleep = 100;
+                sleep = 500;
                 if (elapsedTime<1000) {
-                   // sleep = 1000-elapsedTime;
+                   sleep = 1000-elapsedTime;
                 }
             }).then(sleeper(sleep)).then(() => {
               processTestResult(currentActionIndex);
@@ -196,6 +204,25 @@ const LetsEncrypt = (props) => {
     let currentAction = props.field.actions[actionIndex];
     //filter out skipped actions
     let actions = props.field.actions.filter(action => action.hide !== true);
+    const statuses = {
+        'inactive': {
+            'icon': 'circle-times',
+            'color': 'grey',
+        },
+        'warning': {
+            'icon': 'circle-times',
+            'color': 'orange',
+        },
+        'error': {
+            'icon': 'circle-times',
+            'color': 'red',
+        },
+        'success': {
+            'icon': 'circle-check',
+            'color': 'green',
+        },
+    };
+
     return (
         <>
             <div className="rsssl-lets-encrypt-tests">
@@ -203,7 +230,8 @@ const LetsEncrypt = (props) => {
                 <div className="rsssl_letsencrypt_container rsssl-progress-container field-group">
                     <ul>
                        {actions.map((action, i) =>
-                              <li key={i} className={"rsssl_action_"+action.action+" rsssl-"+action.status} >
+                              <li key={i}>
+                                  <Icon name = {statuses[action.status].icon} color = {statuses[action.status].color} />
                                         {action.do==='retry' && action.attemptCount >=1 && <>{__("Attempt %s.", "really-simple-ssl").replace('%s', action.attemptCount)} </>}
                                         <span dangerouslySetInnerHTML={{__html:action.description}}></span>
                                     </li>

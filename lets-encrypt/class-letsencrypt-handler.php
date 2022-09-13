@@ -443,7 +443,6 @@ class rsssl_letsencrypt_handler {
 						    error_log( print_r( $e, true ) );
 						    $error = $this->get_error( $e );
 						    if ( strpos( $error, 'No challenge found with given type')!==false ) {
-							    error_log("CLEAR ORDER AFTER CHALLENGE FAILURE");
 							    //Maybe it was first set to HTTP challenge. retry after clearing the order.
 							    $order->clear();
 						    } else if (strpos($error, 'Order has status "invalid"')!==false) {
@@ -466,7 +465,6 @@ class rsssl_letsencrypt_handler {
 				    }
 			    } catch ( Exception $e ) {
 				    rsssl_progress_remove( 'dns-verification' );
-					error_log("exception 1 error");
 					error_log(print_r($e,true));
 				    $response = $this->get_error( $e );
 					$response = new RSSSL_RESPONSE(

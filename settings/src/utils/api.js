@@ -66,13 +66,13 @@ export const runLetsEncryptTest = (test, id ) => {
 	return axios.get(rsssl_settings.site_url+'reallysimplessl/v1/tests/'+test+'?letsencrypt=1&id='+id, config);
 };
 
-export const getOnboarding = () => {
+export const getOnboarding = (forceRefresh) => {
 	let config = {
 		headers: {
 			'X-WP-Nonce': rsssl_settings.nonce,
 		}
 	}
-	return axios.get(rsssl_settings.site_url+'reallysimplessl/v1/onboarding', config);
+	return axios.get(rsssl_settings.site_url+'reallysimplessl/v1/onboarding?forceRefresh='+forceRefresh, config);
 }
 
 export const overrideSSLDetection = (data) => {

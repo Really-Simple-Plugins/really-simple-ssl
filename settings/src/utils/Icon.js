@@ -5,11 +5,11 @@ const Icon = (props) => {
   const iconName = name || 'bullet';
   const iconColor = color || 'black';
   const iconSize = size || 15;
-
   const iconColors = {
     'black': 'var(--rsp-black)',
     'green': 'var(--rsp-green)',
     'yellow': 'var(--rsp-yellow)',
+    'orange': 'var(--rsp-yellow)',
     'red': 'var(--rsp-red)',
     'grey': 'var(--rsp-grey-400)',
   };

@@ -35,7 +35,7 @@ function rsssl_directadmin_add_condition_actions($fields){
 			'description' => __( "Attempting to install certificate...", "really-simple-ssl" ),
 			'action'      => 'rsssl_install_directadmin',
 			'attempts'    => 1,
-			'speed' => 'normal',
+			'status'      => 'inactive',
 		);
 	}
 

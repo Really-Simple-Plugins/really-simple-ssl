@@ -10,6 +10,7 @@ const OnboardingModal = (props) => {
     const [show, setShow] = useState(false);
     const [steps, setSteps] = useState([]);
     const [overrideSSL, setOverrideSSL] = useState(false);
+    const [certificateValid, setCertificateValid] = useState(false);
     const [sslActivated, setsslActivated] = useState(false);
     const [activateSSLDisabled, setActivateSSLDisabled] = useState(true);
     const [stepsChanged, setStepsChanged] = useState('');
@@ -28,21 +29,48 @@ const OnboardingModal = (props) => {
                     }
                 }
             });
-
         }
     })
+
     useEffect(() => {
-        rsssl_api.getOnboarding().then( ( response ) => {
+        updateOnBoardingData(false);
+    }, [])
+
+    const updateOnBoardingData = (forceRefresh) => {
+        rsssl_api.getOnboarding(forceRefresh).then( ( response ) => {
             let steps = response.data.steps;
-            setNetworkwide(response.data.networkwide)
+            setNetworkwide(response.data.networkwide);
+            setOverrideSSL(response.data.ssl_detection_overridden);
+            setActivateSSLDisabled(!response.data.ssl_detection_overridden);
+            setCertificateValid(response.data.certificate_valid);
             steps[0].visible = true;
             setsslActivated(response.data.ssl_enabled);
             setNetworkActivationStatus(response.data.network_activation_status);
             setSteps(steps);
             setStepsChanged('initial');
-            setShow(!response.data.dismissed);
+            setShow(!response.data.dismissed );
         });
-    }, [])
+    }
+
+    const refreshSSLStatus = (e) => {
+        e.preventDefault();
+        steps.forEach(function(step, i) {
+            if (step.id==='activate_ssl') {
+                step.items.forEach(function(item, j){
+                    if (item.status==='error') {
+                        steps[i].items[j].status = 'processing';
+                        steps[i].items[j].title = __("Re-checking SSL certificate, please wait...","really-simple-ssl");
+                    }
+                });
+            }
+        });
+
+        setSteps(steps);
+        setStepsChanged(true);
+        setTimeout(function(){
+            updateOnBoardingData(true)
+        }, 1000)
+    }
 
     const dismissModal = () => {
         let data={};
@@ -126,6 +154,7 @@ const OnboardingModal = (props) => {
 
     const parseStepItems = (items) => {
         return items.map((item, index) => {
+
             let { title, current_action, action, status, help, button, id, type, percentage } = item
             const statuses = {
                 'inactive': {
@@ -158,6 +187,7 @@ const OnboardingModal = (props) => {
                 'error': __('Failed',"really-simple-ssl"),
                 'completed': __('Finished',"really-simple-ssl"),
             };
+
 
             let buttonTitle = '';
             if ( button ) {
@@ -221,8 +251,10 @@ const OnboardingModal = (props) => {
                     disabled={disabled}
                     checked={overrideSSL}
                     onChange={(value) => {
-                        setOverrideSSL(value)
-                        rsssl_api.overrideSSLDetection(value).then((response) => {
+                        setOverrideSSL(value);
+                        let data = {};
+                        data.overrideSSL = value;
+                        rsssl_api.overrideSSLDetection(data).then((response) => {
                             setActivateSSLDisabled(!value)
                         });
                     }}
@@ -247,7 +279,14 @@ const OnboardingModal = (props) => {
                                 <ul>
                                     { parseStepItems(items) }
                                 </ul>
-                                { infoText && <div className="rsssl-modal-description" dangerouslySetInnerHTML={{__html: infoText}} /> }
+                                { certificateValid && infoText && <div className="rsssl-modal-description" dangerouslySetInnerHTML={{__html: infoText}} /> }
+                                { !certificateValid &&
+                                    <div className="rsssl-modal-description">
+                                       <a href="#" onClick={ (e) => refreshSSLStatus(e)}>
+                                           { __("Refresh SSL status", "really-simple-ssl")}
+                                       </a>&nbsp;{__("The SSL detection method is not 100% accurate.", "really-simple-ssl")}.&nbsp;
+                                       {__("If you’re certain an SSL certificate is present, and refresh SSL status does not work, please check “Override SSL detection” to continue activating SSL.", "really-simple-ssl")}
+                                    </div> }
                                 <div className="rsssl-modal-content-step-footer">
                                     {parseStepButtons(buttons)}
                                 </div>

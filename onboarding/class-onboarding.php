@@ -144,12 +144,17 @@ class rsssl_onboarding {
 	 * Update SSL detection overridden option
 	 */
 
-	public function override_ssl_detection() {
+	public function override_ssl_detection($request) {
 		if ( ! rsssl_user_can_manage() ) {
 			return;
 		}
-
-		update_option('rsssl_ssl_detection_overridden', true, false );
+		$data = $request->get_json_params();
+		$override_ssl = $data['overrideSSL']===true;
+		if ($override_ssl) {
+			update_option('rsssl_ssl_detection_overridden', true, false );
+		} else {
+			delete_option('rsssl_ssl_detection_overridden' );
+		}
 		exit;
 	}
 

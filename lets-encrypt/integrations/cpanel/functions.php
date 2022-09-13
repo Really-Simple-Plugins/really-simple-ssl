@@ -87,6 +87,7 @@ function rsssl_cpanel_add_condition_actions($fields){
 				'description' => __( "Attempting to install certificate using AutoSSL...", "really-simple-ssl" ),
 				'action'      => 'rsssl_install_cpanel_autossl',
 				'attempts'    => 1,
+				'status'      => 'inactive',
 			];
 		}
 
@@ -95,12 +96,14 @@ function rsssl_cpanel_add_condition_actions($fields){
 				'description' => __( "Attempting to set DNS txt record...", "really-simple-ssl" ),
 				'action'      => 'rsssl_cpanel_set_txt_record',
 				'attempts'    => 1,
+				'status'      => 'inactive',
 			];
 
 			$fields[ $installation_index ]['actions'][] = [
 				'description' => __( "Attempting to install certificate...", "really-simple-ssl" ),
 				'action'      => 'rsssl_install_cpanel_default',
 				'attempts'    => 1,
+				'status'      => 'inactive',
 			];
 		}
 	}

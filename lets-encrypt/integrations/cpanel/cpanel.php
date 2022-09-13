@@ -94,9 +94,17 @@ class rsssl_cPanel
             'cabundle' => file_get_contents($cabundle_file),
         ];
 
-        $response = $this->connectUapi($request_uri, $payload);
+	    $response_raw = $this->connectUapi($request_uri, $payload);
+	    $isIpBlock = $this->isIpBlock($response_raw);
+	    $response = json_decode($response_raw);
         //Validate $response
-        if (empty($response)) {
+	    if ($isIpBlock) {
+		    update_option('rsssl_installation_error', 'cpanel:autossl', false);
+		    error_log('The website\'s ip address is blocked by CPanel. Add to allow list');
+		    $status = 'error';
+		    $action = 'stop';
+		    $message = __("Your website's ip address is blocked. Please add your domain's ip address to the security policy in CPanel","really-simple-ssl");
+	    } else if (empty($response)) {
             error_log('Not able to login');
 	        update_option('rsssl_installation_error', 'cpanel:default', false);
 	        $status = 'warning';
@@ -120,7 +128,25 @@ class rsssl_cPanel
 		return new RSSSL_RESPONSE($status, $action, $message);
     }
 
-
+	/**
+	 * Based on the known output of an ip block html page, check if the user should whitelist their own website ip.
+	 * @param $raw
+	 *
+	 * @return bool
+	 */
+	public function isIpBlock($raw){
+		$triggers = [
+			'security_policy',
+			'You appear to be logging in from an unknown location',
+			'unrecognized IP address',
+		];
+		foreach($triggers as $key => $trigger ) {
+			if (strpos($raw,$trigger)!==false) {
+				return true;
+			}
+		}
+		return false;
+	}
 	/**
 	 * @param $domains
 	 *
@@ -133,10 +159,17 @@ class rsssl_cPanel
 		    'domains' => $domains,
 	    ];
 
-	    $response = $this->connectUapi($request_uri, $payload);
-
+	    $response_raw = $this->connectUapi($request_uri, $payload);
+		$isIpBlock = $this->isIpBlock($response_raw);
+		$response = json_decode($response_raw);
 	    //Validate $response
-	    if (empty($response)) {
+	    if ($isIpBlock) {
+		    update_option('rsssl_installation_error', 'cpanel:autossl', false);
+		    error_log('The website\'s ip address is blocked by CPanel. Add to allow list');
+		    $status = 'error';
+		    $action = 'stop';
+		    $message = __("Your website's ip address is blocked. Please add your domain's ip address to the security policy in CPanel","really-simple-ssl");
+	    } else if (empty($response)) {
 	    	update_option('rsssl_installation_error', 'cpanel:autossl', false);
 		    error_log('The install_ssl cURL call did not return valid JSON');
 		    $status = 'error';
@@ -190,8 +223,8 @@ class rsssl_cPanel
         error_log(print_r($curl_response, true));
         curl_close($ch);
 
-        // Decode and return output.
-        return json_decode($curl_response);
+        //return output.
+        return $curl_response;
     }
 
 	/**
