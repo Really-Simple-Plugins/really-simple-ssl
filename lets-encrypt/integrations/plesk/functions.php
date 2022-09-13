@@ -20,25 +20,24 @@ function rsssl_plesk_install(){
 
 /**
  * Add the step to install SSL using Plesk
- * @param $steps
+ * @param array $fields
  *
- * @return mixed
+ * @return array
  */
-function rsssl_plesk_add_installation_step($steps){
+function rsssl_plesk_add_installation_step($fields){
 	$plesk = new rsssl_plesk();
 	if ( $plesk->credentials_available() ) {
-		$index = array_search( 'installation', array_column( $steps['lets-encrypt'], 'id' ) );
-		$index ++;
-		$steps['lets-encrypt'][ $index ]['actions'] = array_merge(array(
+		$index = array_search( 'installation', array_column( $fields, 'id' ) );
+		$fields[ $index ]['actions'] = array_merge(array(
 			array(
 				'description' => __("Installing SSL certificate using PLESK API...", "really-simple-ssl"),
 				'action'=> 'rsssl_plesk_install',
 				'attempts' => 1,
 				'speed' => 'normal',
 			)
-		) , $steps['lets-encrypt'][ $index ]['actions'] );
+		) , $fields[ $index ]['actions'] );
 	}
 
-	return $steps;
+	return $fields;
 }
-add_filter( 'rsssl_steps', 'rsssl_plesk_add_installation_step' );
+add_filter( 'rsssl_fields', 'rsssl_plesk_add_installation_step' );

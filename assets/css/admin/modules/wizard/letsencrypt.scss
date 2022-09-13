@@ -106,10 +106,16 @@
       display:none;
     }
     .rsssl-dns-text-records {
-      display:flex;
-      .rsssl-dns-label, .rsssl-dns-field {
-        margin-right:20px;
+
+      div {
+        display:flex;
+        flex-direction: row;
+        .rsssl-dns-domain, .rsssl-dns-field {
+          margin-right:20px;
+          width: 50%;
+        }
       }
+
     }
   }
 }

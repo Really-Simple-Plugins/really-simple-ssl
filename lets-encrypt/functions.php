@@ -584,23 +584,13 @@ if ( !function_exists('rsssl_wildcard_certificate_required') ) {
 	}
 }
 
-if ( !function_exists('rsssl_maybe_drop_subdomain_test') ) {
-	function rsssl_maybe_drop_subdomain_test( $steps ) {
-		if ( is_multisite() ) {
-			$index = array_search( 'system-status', array_column( $steps['lets-encrypt'], 'id' ) );
-			$index ++;
-			$actions = $steps['lets-encrypt'][ $index ]['actions'];
-			//get the is_subdomain_setup
-			$sub_index = array_search( 'is_subdomain_setup', array_column( $actions, 'action' ) );
-			unset( $actions[ $sub_index ] );
-			$steps['lets-encrypt'][ $index ]['actions'] = $actions;
-		}
+$installation_index = array_search( 'installation', array_column( $fields, 'id' ) );
+$fields[ $installation_index ]['actions'][] = [
+	'description' => __( "Attempting to install certificate using AutoSSL...", "really-simple-ssl" ),
+	'action'      => 'rsssl_install_cpanel_autossl',
+	'attempts'    => 1,
+];
 
-		return $steps;
-	}
-
-	add_filter( 'rsssl_steps', 'rsssl_maybe_drop_subdomain_test', 20 );
-}
 
 if ( !function_exists('rsssl_can_install_shell_addon') ) {
 	function rsssl_can_install_shell_addon(){

@@ -18,14 +18,19 @@ function rsssl_install_directadmin(){
 	}
 }
 
-function rsssl_directadmin_add_condition_actions($steps){
+/**
+ * Add actions for direct admin
+ * @param array $fields
+ *
+ * @return array
+ */
+function rsssl_directadmin_add_condition_actions($fields){
 	$directadmin = new rsssl_directadmin();
 	if ( $directadmin->credentials_available() ) {
-		$index = array_search( 'installation', array_column( $steps['lets-encrypt'], 'id' ) );
-		$index ++;
+		$index = array_search( 'installation', array_column( $fields, 'id' ) );
 		//clear existing array
-		$steps['lets-encrypt'][ $index ]['actions'] = array();
-		$steps['lets-encrypt'][ $index ]['actions'][]
+		$fields[ $index ]['actions'] = [];
+		$fields[ $index ]['actions'][]
 			= array(
 			'description' => __( "Attempting to install certificate...", "really-simple-ssl" ),
 			'action'      => 'rsssl_install_directadmin',
@@ -34,7 +39,8 @@ function rsssl_directadmin_add_condition_actions($steps){
 		);
 	}
 
-	return $steps;
+	return $fields;
 }
+add_filter( 'rsssl_fields', 'rsssl_directadmin_add_condition_actions' );
 
-add_filter( 'rsssl_steps', 'rsssl_directadmin_add_condition_actions' );
+

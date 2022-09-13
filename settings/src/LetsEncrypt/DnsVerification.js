@@ -60,12 +60,14 @@ const DnsVerification = (props) => {
                         <Hyperlink target="_blank" text={__("Read more", "really-simple-ssl")}
                                    url="https://really-simple-ssl.com/how-to-add-a-txt-record-to-dns"/>
                     </p>
-                    <div>
+                    <div  className="rsssl-dns-text-records">
+                        <div key={0}>
+                            <div className="rsssl-dns-domain">@/{__("domain", "really-simple-ssl")}</div>
+                            <div className="rsssl-dns-field">{__("Value", "really-simple-ssl")}</div>
+                        </div>
                         { tokens.map((tokenData, i) =>
-                            <div key={i} className="rsssl-dns-text-records">
-                                <div className="rsssl-dns-label">@/{__("domain", "really-simple-ssl")}</div>
-                                <div className="rsssl-dns-field rsssl-selectable">_acme-challenge{tokenData.domain}</div>
-                                <div className="rsssl-dns-label">{__("Value", "really-simple-ssl")}</div>
+                            <div key={i+1}>
+                                <div className="rsssl-dns-">_acme-challenge.{tokenData.domain}</div>
                                 <div className="rsssl-dns-field rsssl-selectable">{tokenData.token}</div>
                             </div>
                         )}

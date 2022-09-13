@@ -64,8 +64,12 @@ function rsssl_cpanel_set_txt_record(){
 }
 
 
-
-
+/**
+ * Add actions for cpanel
+ * @param array $fields
+ *
+ * @return array
+ */
 function rsssl_cpanel_add_condition_actions($fields){
 	$cpanel = new rsssl_cPanel();
 	if ( $cpanel->credentials_available() ) {

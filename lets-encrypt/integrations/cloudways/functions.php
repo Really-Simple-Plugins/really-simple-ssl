@@ -30,11 +30,9 @@ function rsssl_cloudways_auto_renew(){
 	return $cloudways->enableAutoRenew();
 }
 
-function rsssl_cloudways_add_condition_actions($steps){
-	$index = array_search('installation',array_column($steps['lets-encrypt'],'id'));
-	$index++;
-
-	$steps['lets-encrypt'][$index]['actions'] = array(
+function rsssl_cloudways_add_condition_actions($fields){
+	$index = array_search('installation',array_column($fields,'id'));
+	$fields[$index]['actions'] = array(
 		array(
 			'description' => __("Retrieving Cloudways server data...", "really-simple-ssl"),
 			'action'=> 'rsssl_cloudways_server_data',
@@ -55,20 +53,10 @@ function rsssl_cloudways_add_condition_actions($steps){
 		),
 	);
 
-	return $steps;
-}
-add_filter( 'rsssl_steps', 'rsssl_cloudways_add_condition_actions' );
-
-/**
- * Drop store credentials field
- * @param $fields
- *
- * @return mixed
- */
-function rsssl_cloudways_fields($fields){
-	unset($fields['store_credentials']);
-
+	//drop store credentials field
+	$creds_index = array_search('store_credentials',array_column($fields,'id'));
+	unset($fields[$creds_index]);
 	return $fields;
 }
-add_filter( 'rsssl_fields_load_types', 'rsssl_cloudways_fields' );
+add_filter( 'rsssl_fields', 'rsssl_cloudways_add_condition_actions' );
 
