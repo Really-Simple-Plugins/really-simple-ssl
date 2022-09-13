@@ -944,7 +944,7 @@ class rsssl_letsencrypt_handler {
 	 */
 	public function account_email(){
 	    //don't use the default value: we want users to explicitly enter a value
-	    return rsssl_get_option('email_address', false);
+	    return rsssl_get_option('email_address' );
     }
 	/**
      * Get terms accepted

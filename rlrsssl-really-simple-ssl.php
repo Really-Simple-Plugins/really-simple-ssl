@@ -240,11 +240,11 @@ if ( ! function_exists('rsssl_add_manage_security_capability')){
 }
 
 if ( ! function_exists( 'rsssl_user_can_manage' ) ) {
+	/**
+     * Check if user has required capability
+	 * @return bool
+	 */
 	function rsssl_user_can_manage() {
-		if ( ! is_user_logged_in() ) {
-			return false;
-		}
-
 		if ( ! current_user_can('manage_security') ) {
 			return false;
 		}

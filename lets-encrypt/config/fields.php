@@ -41,11 +41,6 @@ function rsssl_le_add_fields($fields) {
 
 	$fields =  array_merge($fields,  [
 			[
-				'id' => 'verification_type',
-				'menu_id' => 'le-system-status',
-				'type' =>  'hidden',
-			],
-			[
 				'id'      => 'system-status',
 				'menu_id' => 'le-system-status',
 				"intro"   => __( "Detected status of your setup.", "really-simple-ssl" ),
@@ -85,6 +80,11 @@ function rsssl_le_add_fields($fields) {
 				],
 			],
 			[
+				'id' => 'verification_type',
+				'menu_id' => 'le-general',
+				'type' =>  'hidden',
+			],
+			[
 				'id'       => 'email_address',
 				'menu_id'  => 'le-general',
 				'type'     => 'email',
@@ -95,7 +95,7 @@ function rsssl_le_add_fields($fields) {
 					'text'  => __( "This email address will used to create a Let's Encrypt account. This is also where you will receive renewal notifications.", 'really-simple-ssl' ),
 				],
 				'disabled' => ! rsssl_get_option( 'ssl_enabled' ),
-				'default'  => get_option( 'admin_email' ),
+				'default'  => '',
 				'required' => true,
 			],
 			[
@@ -111,6 +111,7 @@ function rsssl_le_add_fields($fields) {
 			[
 				'id'      => 'disable_ocsp',
 				'menu_id' => 'le-general',
+				'required'=> false,
 				'type'    => 'checkbox',
 				'default' => true,
 				'help'    => [
@@ -169,7 +170,7 @@ function rsssl_le_add_fields($fields) {
 				],
 				'default'  => false,
 				'label'    => __( "Hosting provider", 'really-simple-ssl' ),
-				'required' => true,
+				'required' => false,
 				'disabled' => false,
 			],
 			[

@@ -36,13 +36,10 @@ class Field extends Component {
     }
 
     componentDidMount() {
-        //set default to enabled
-        this.props.handleNextButtonDisabled(false);
         this.onChangeHandlerDataTable = this.onChangeHandlerDataTable.bind(this);
     }
 
     onChangeHandler(fieldValue) {
-
         let fields = this.props.fields;
         let field = this.props.field;
         fields[this.props.index]['value'] = fieldValue;
