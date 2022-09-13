@@ -26,8 +26,6 @@ class PermissionsPolicy extends Component {
     }
 
     togglePermissionsPolicyStatus(e, enforce){
-        console.log("enforce");
-        console.log(enforce);
         let fields = this.props.fields;
         //look up permissions policy enable field //enable_permissions_policy
         let field = fields.filter(field => field.id === 'enable_permissions_policy')[0];
@@ -38,7 +36,7 @@ class PermissionsPolicy extends Component {
         });
         let saveFields = [];
         saveFields.push(field);
-        this.props.updateField(field);
+        this.props.updateField(field.id, field.value);
         rsssl_api.setFields(saveFields).then(( response ) => {
             //this.props.showSavedSettingsNotice();
         });

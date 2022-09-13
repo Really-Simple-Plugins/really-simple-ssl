@@ -28,6 +28,7 @@ if ( ! class_exists( 'rsssl_certificate' ) ) {
 
         public function is_valid()
         {
+
             $domain = $this->get_domain();
             if ( !$domain || !function_exists('stream_context_get_params') ) {
 				set_transient('rsssl_certinfo', 'no-response', DAY_IN_SECONDS);

@@ -23,6 +23,7 @@ class Help extends Component {
                 { notice.title && !notice.text &&
                     <div className={"rsssl-wizard-help-notice  rsssl-" + notice.label.toLowerCase()}><p>{notice.title}</p></div>
                 }
+
             </Fragment>
 
         );

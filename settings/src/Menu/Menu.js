@@ -11,28 +11,14 @@ import {
 class Menu extends Component {
     constructor() {
         super( ...arguments );
-        this.state = {
-            fields:this.props.fields,
-            menu: this.props.menu,
-            menuItems: this.props.menuItems,
-            isAPILoaded: this.props.isAPILoaded,
-        };
+
     }
-
     render() {
-        const {
-            fields,
-            menu,
-            menuItems,
-            isAPILoaded,
-        } = this.state;
-
-        if ( ! isAPILoaded ) {
+        if ( ! this.props.isAPILoaded ) {
             return (
                 <Placeholder></Placeholder>
             );
         }
-
         return (
                 <div className="rsssl-wizard-menu rsssl-grid-item">
                     <div className="rsssl-grid-item-header">
@@ -41,14 +27,15 @@ class Menu extends Component {
                     <div className="rsssl-grid-item-content">
                         <div className="rsssl-wizard-menu-items">
                             {
-                                menuItems.map((menuItem, i) =>
+                                this.props.menu.menu_items.map((menuItem, i) =>
                                     <MenuItem
                                         key={i}
-                                        isAPILoaded={isAPILoaded}
+                                        isAPILoaded={this.props.isAPILoaded}
                                         menuItem={menuItem}
                                         selectMenu={this.props.selectMenu}
                                         selectStep={this.props.selectStep}
                                         selectedMenuItem={this.props.selectedMenuItem}
+                                        selectedMainMenuItem={this.props.selectedMainMenuItem}
                                         getPreviousAndNextMenuItems={this.props.getPreviousAndNextMenuItems}
                                     />
                                 )

@@ -18,12 +18,12 @@ class SettingsPage extends Component {
     constructor() {
         super( ...arguments );
         this.state = {
+            refreshTests:false,
             fields:'',
-            menu:'',
-            menuItems:'',
             isAPILoaded: false,
             changedFields:'',
-            progress:''
+            progress:'',
+            nextButtonDisabled: false,
         };
     }
 
@@ -36,54 +36,90 @@ class SettingsPage extends Component {
         this.updateFieldsListWithConditions = this.updateFieldsListWithConditions.bind(this);
         this.filterMenuItems = this.filterMenuItems.bind(this);
         this.showSavedSettingsNotice = this.showSavedSettingsNotice.bind(this);
-
-        this.props.menu.menu_items = this.addVisibleToMenuItems(this.props.menu.menu_items);
-        this.updateFieldsListWithConditions();
-        let menu = this.props.menu;
+        this.resetRefreshTests = this.resetRefreshTests.bind(this);
+        this.handleNextButtonDisabled = this.handleNextButtonDisabled.bind(this);
+        this.checkRequiredFields = this.checkRequiredFields.bind(this);
         let fields = this.props.fields;
         let progress = this.props.progress;
         //if count >1, it's a wizard
-        let menuItems = menu.menu_items;
         let changedFields = [];
         let selectedMenuItem = this.props.selectedMenuItem;
-        this.menu = menu;
-        this.menuItems = menuItems;
-        this.fields = fields;
         this.selectedMenuItem = selectedMenuItem;
         this.changedFields = changedFields;
         this.setState({
             isAPILoaded: true,
             fields: this.props.fields,
-            menu: this.props.menu,
             progress: this.props.progress,
-            menuItems:menuItems,
             changedFields: changedFields,
+            selectedMainMenuItem: this.props.selectedMainMenuItem,
         });
+    }
+
+    componentDidChange(){
     }
 
     addVisibleToMenuItems(menuItems) {
         const newMenuItems = menuItems;
-        for (const [index, value] of menuItems.entries()) {
-            newMenuItems[index].visible = true;
-            if(value.hasOwnProperty('menu_items')) {
-                newMenuItems[index].menu_items = this.addVisibleToMenuItems(value.menu_items);
+        for (const [index, menuItem] of menuItems.entries()) {
+            menuItem.visible = true;
+            if( menuItem.hasOwnProperty('menu_items') ) {
+                menuItem.menu_items = this.addVisibleToMenuItems(menuItem.menu_items);
+            }
+            newMenuItems[index] = menuItem;
+        }
+
+        return newMenuItems;
+    }
+    /*
+    * Set next button to disabled from the fields
+    */
+    handleNextButtonDisabled(disable) {
+
+        const {
+            nextButtonDisabled,
+        } = this.state;
+        if (nextButtonDisabled !== disable ) {
+                this.setState({
+                    nextButtonDisabled:disable,
+                });
+        }
+
+    }
+
+    //check if all required fields have been enabled. If so, enable save/continue button
+    checkRequiredFields(){
+        let fieldsOnPage = [];
+        //get all fields with group_id this.props.group_id
+        for (const field of this.props.fields){
+            if (field.menu_id === this.props.selectedMenuItem ){
+                fieldsOnPage.push(field);
             }
         }
-        return newMenuItems;
+        //if the only field on this page has actions, this is a tests page, the nextButtonDisabled should be handled by the LE componenent
+        let isTestPage = fieldsOnPage.length==1 && fieldsOnPage[0].actions && fieldsOnPage[0].actions.length>0;
+        if ( !isTestPage ) {
+            let requiredFields = fieldsOnPage.filter(field => field.required && (field.value.length==0 || !field.value) );
+            if ( requiredFields.length>0) {
+                this.handleNextButtonDisabled(true);
+            } else {
+                this.handleNextButtonDisabled(false);
+            }
+        }
+
     }
 
     filterMenuItems(menuItems) {
         const newMenuItems = menuItems;
-        for (const [index, value] of menuItems.entries()) {
+        for (const [index, menuItem] of menuItems.entries()) {
             const searchResult = this.props.fields.filter((field) => {
-                return (field.menu_id === value.id && field.visible)
+                return (field.menu_id === menuItem.id && field.visible)
             });
             if(searchResult.length === 0) {
-                value.visible = false;
+                newMenuItems[index].visible = false;
             } else {
-                value.visible = true;
-                if(value.hasOwnProperty('menu_items')) {
-                    newMenuItems[index].menu_items = this.filterMenuItems(value.menu_items);
+                newMenuItems[index].visible = true;
+                if(menuItem.hasOwnProperty('menu_items')) {
+                    newMenuItems[index].menu_items = this.filterMenuItems(menuItem.menu_items);
                 }
             }
         }
@@ -92,18 +128,13 @@ class SettingsPage extends Component {
 
     updateFieldsListWithConditions(){
         for (const field of this.props.fields){
-         console.log(field.id);
-         if (field.hasOwnProperty('react_conditions')) {
-            console.log("has react conditions");
-                     if (this.validateConditions(field.react_conditions, this.props.fields)) {
-                         console.log(field.react_conditions);
-                         console.log("react conditinos validated");
-                     }
-         }
-
-
           let enabled = !(field.hasOwnProperty('react_conditions') && !this.validateConditions(field.react_conditions, this.props.fields));
           this.props.fields[this.props.fields.indexOf(field)].conditionallyDisabled = !enabled;
+          if (!enabled && field.type==='letsencrypt') {
+            this.props.fields[this.props.fields.indexOf(field)].visible = false;
+          } else {
+            this.props.fields[this.props.fields.indexOf(field)].visible = true;
+          }
         }
         this.filterMenuItems(this.props.menu.menu_items)
     }
@@ -149,10 +180,17 @@ class SettingsPage extends Component {
         rsssl_api.setFields(saveFields).then(( response ) => {
             this.changedFields = [];
             this.setState({
+                refreshTests:true,
                 changedFields :[],
                 progress: response.data.progress,
             });
             this.showSavedSettingsNotice();
+        });
+    }
+
+    resetRefreshTests(){
+        this.setState({
+            refreshTests:false,
         });
     }
 
@@ -168,34 +206,43 @@ class SettingsPage extends Component {
 
     validateConditions(conditions, fields){
         let relation = conditions.relation === 'OR' ? 'OR' : 'AND';
-        delete conditions['relation'];
-        let conditionApplies = true;
+        let conditionApplies = relation==='AND' ? true : false;
         for (const key in conditions) {
             if ( conditions.hasOwnProperty(key) ) {
-                let invert = key.indexOf('!')===0;
-                let thisConditionApplies = true;
+                let thisConditionApplies = relation==='AND' ? true : false;;
                 let subConditionsArray = conditions[key];
                 if ( subConditionsArray.hasOwnProperty('relation') ) {
                     thisConditionApplies = this.validateConditions(subConditionsArray, fields)
                 } else {
-                    for (const conditionField in subConditionsArray) {
+                    for ( let conditionField in subConditionsArray ) {
+                        let invert = conditionField.indexOf('!')===0;
                         if ( subConditionsArray.hasOwnProperty(conditionField) ) {
                             let conditionValue = subConditionsArray[conditionField];
+                            conditionField = conditionField.replace('!','');
                             let conditionFields = fields.filter(field => field.id === conditionField);
-                            if (conditionFields.hasOwnProperty(0)){
-                                if (conditionFields[0].type==='checkbox') {
+                            if ( conditionFields.hasOwnProperty(0) ){
+                                if ( conditionFields[0].type==='checkbox' ) {
                                     let actualValue = +conditionFields[0].value;
                                     conditionValue = +conditionValue;
                                     thisConditionApplies = actualValue === conditionValue;
                                 } else {
-                                    thisConditionApplies = conditionFields[0].value === conditionValue;
+                                    if (conditionValue.indexOf('EMPTY')!==-1){
+                                        if (conditionValue.indexOf('NOT ')!==-1) {
+                                            invert=true;
+                                        }
+                                        thisConditionApplies = conditionFields[0].value.length===0;
+                                    } else {
+                                        thisConditionApplies = conditionFields[0].value.toLowerCase() === conditionValue.toLowerCase();
+                                    }
                                 }
                             }
                         }
+
+                        if ( invert ){
+                            thisConditionApplies = !thisConditionApplies;
+                        }
                     }
-                    if ( invert ){
-                        thisConditionApplies = !thisConditionApplies;
-                    }
+
                 }
                 if ( relation === 'AND' ) {
                     conditionApplies = conditionApplies && thisConditionApplies;
@@ -209,52 +256,65 @@ class SettingsPage extends Component {
 
     render() {
         const {
-            menu,
             progress,
             selectedStep,
             isAPILoaded,
+            refreshTests,
             changedFields,
+            nextButtonDisabled,
         } = this.state;
+
 
         if ( ! isAPILoaded ) {
             return (
                 <Placeholder></Placeholder>
             );
         }
+        this.props.menu.menu_items = this.addVisibleToMenuItems(this.props.menu.menu_items);
+        this.checkRequiredFields();
+        this.updateFieldsListWithConditions();
 
         let fieldsUpdateComplete = changedFields.length === 0;
-
         return (
             <Fragment>
                 <Menu
                     isAPILoaded={isAPILoaded}
-                    menuItems={this.state.menu.menu_items}
-                    menu={this.menu}
+                    menu={this.props.menu}
                     selectMenu={this.props.selectMenu}
                     selectStep={this.props.selectStep}
                     selectedStep={this.props.selectedStep}
                     selectedMenuItem={this.props.selectedMenuItem}
+                    selectedMainMenuItem={this.props.selectedMainMenuItem}
                     getPreviousAndNextMenuItems={this.props.getPreviousAndNextMenuItems}
                 />
                 <Settings
+                    updateFields={this.props.updateFields}
                     dropItemFromModal={this.props.dropItemFromModal}
                     selectMenu={this.props.selectMenu}
+                    nextButtonDisabled={nextButtonDisabled}
+                    handleNextButtonDisabled={this.handleNextButtonDisabled}
+                    getDefaultMenuItem={this.props.getDefaultMenuItem}
                     handleModal={this.props.handleModal}
                     showSavedSettingsNotice={this.showSavedSettingsNotice}
                     updateField={this.props.updateField}
+                    getFieldValue={this.props.getFieldValue}
+                    resetRefreshTests={this.resetRefreshTests}
+                    refreshTests={refreshTests}
+                    addHelp={this.props.addHelp}
                     pageProps={this.props.pageProps}
                     setPageProps={this.props.setPageProps}
                     fieldsUpdateComplete = {fieldsUpdateComplete}
                     highLightField={this.props.highLightField}
                     highLightedField={this.props.highLightedField}
                     isAPILoaded={isAPILoaded}
-                    fields={this.fields}
+                    fields={this.props.fields}
                     progress={progress}
                     saveChangedFields={this.saveChangedFields}
-                    menu={menu}
+                    menu={this.props.menu}
                     save={this.save}
                     saveAndContinue={this.saveAndContinue}
                     selectedMenuItem={this.props.selectedMenuItem}
+                    selectedMainMenuItem={this.props.selectedMainMenuItem}
                     selectedStep={this.props.selectedStep}
                     previousStep = {this.wizardNextPrevious}
                     nextMenuItem = {this.props.nextMenuItem}

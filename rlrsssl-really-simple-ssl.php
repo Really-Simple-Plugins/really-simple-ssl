@@ -30,31 +30,20 @@ if (!function_exists('rsssl_activation_check')) {
 	 */
 	function rsssl_activation_check()
 	{
-		if (version_compare(PHP_VERSION, '5.6', '<')) {
+		if (version_compare(PHP_VERSION, '7.2', '<')) {
 			deactivate_plugins(plugin_basename(__FILE__));
-			wp_die(__('Really Simple SSL cannot be activated. The plugin requires PHP 5.6 or higher', 'really-simple-ssl'));
+			wp_die(__('Really Simple SSL cannot be activated. The plugin requires PHP 7.2 or higher', 'really-simple-ssl'));
 		}
 
 		global $wp_version;
-		if (version_compare($wp_version, '4.8', '<')) {
+		if (version_compare($wp_version, '4.9', '<')) {
 			deactivate_plugins(plugin_basename(__FILE__));
-			wp_die(__('Really Simple SSL cannot be activated. The plugin requires WordPress 4.8 or higher', 'really-simple-ssl'));
+			wp_die(__('Really Simple SSL cannot be activated. The plugin requires WordPress 4.9 or higher', 'really-simple-ssl'));
 		}
         update_option('rsssl_show_onboarding', true);
         set_transient('rsssl_redirect_to_settings_page', true, HOUR_IN_SECONDS );
     }
 	register_activation_hook( __FILE__, 'rsssl_activation_check' );
-}
-
-if (!function_exists('rsssl_le_activation_check')) {
-	/**
-	 * Checks if the plugin can safely be activated, at least php 5.6 and wp 4.8
-	 */
-	function rsssl_le_activation_check()
-	{
-		update_option("rsssl_activated_plugin", true, false);
-	}
-	register_activation_hook( __FILE__, 'rsssl_le_activation_check' );
 }
 
 class REALLY_SIMPLE_SSL
@@ -160,10 +149,8 @@ class REALLY_SIMPLE_SSL
 			}
 		}
 
-		if ( is_admin() || wp_doing_cron() ) {
-			if (!defined('rsssl_beta_addon')) {
-				require_once( rsssl_path . 'lets-encrypt/letsencrypt.php' );
-			}
+		if ( rsssl_is_logged_in_rest() || is_admin() || wp_doing_cron() ) {
+            require_once( rsssl_path . 'lets-encrypt/letsencrypt.php' );
         }
 
 		if (version_compare(PHP_VERSION, rsssl_le_php_version, '>=')) {
@@ -253,11 +240,11 @@ if ( ! function_exists('rsssl_add_manage_security_capability')){
 }
 
 if ( ! function_exists( 'rsssl_user_can_manage' ) ) {
+	/**
+     * Check if user has required capability
+	 * @return bool
+	 */
 	function rsssl_user_can_manage() {
-		if ( ! is_user_logged_in() ) {
-			return false;
-		}
-
 		if ( ! current_user_can('manage_security') ) {
 			return false;
 		}

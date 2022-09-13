@@ -3,15 +3,18 @@
  * Two possibilities:
  * - a new install: show activation notice, and process onboarding
  * - an upgrade to 6. Only show new features.
+ * @param WP_REST_Request $request
  * @return array
  */
-function rsssl_rest_api_onboarding() {
+
+function rsssl_rest_api_onboarding($request) {
 	$is_upgrade = get_option('rsssl_show_onboarding');
 	// "warning", // yellow dot
 	// "error", // red dot
 	// "active" // green dot
 	$steps = [];
 	$info = "";
+	$refresh = isset($_GET['forceRefresh']) && $_GET['forceRefresh']===true;
 	if( !defined('rsssl_pro_version')) {
 		$info = __('You can also let the automatic scan of the pro version handle this for you, and get premium support, increased security with HSTS and more!', 'really-simple-ssl'). " " . sprintf('<a target="_blank" href="%s">%s</a>', RSSSL()->really_simple_ssl->pro_url, __("Check out Really Simple SSL Pro", "really-simple-ssl"));;
 	}
@@ -21,9 +24,9 @@ function rsssl_rest_api_onboarding() {
 			"id" => 'activate_ssl',
 			"title" => __( "Almost ready to migrate to SSL!", 'really-simple-ssl' ),
 			"subtitle" => __("Before you migrate, please check for:", "really-simple-ssl"),
-			"items" => get_items_for_first_step(),
+			"items" => rsssl_get_items_for_first_step(),
 			"info_text" => $info,
-			"buttons" => get_buttons(),
+			"buttons" => rsssl_get_buttons(),
 			"visible" => false
 		];
 	}
@@ -32,7 +35,7 @@ function rsssl_rest_api_onboarding() {
 		"id" => 'onboarding',
 		"title" => $is_upgrade ? __( "Thanks for updating!", 'really-simple-ssl' ) : __( "Congratulations!", 'really-simple-ssl' ),
 		"subtitle" => __("Now have a look at our new features", "really-simple-ssl"),
-		"items" => get_items_for_second_step(),
+		"items" => rsssl_get_items_for_second_step(),
 		"info_text" => __("Want to know more about our features and plugins?", "really-simple-ssl").' '.sprintf(__("Please read this %sarticle%s.", 'really-simple-ssl'), '<a target="_blank" href="https://really-simple-ssl.com">', '</a>'),
 		"buttons" => [
 			[
@@ -55,10 +58,15 @@ function rsssl_rest_api_onboarding() {
 
 //	delete_option('rsssl_network_activation_status');
 //	delete_option("rsssl_onboarding_dismissed");
-
+	//if the user called with a refresh action, clear the cache
+	if ($refresh) {
+		delete_transient('rsssl_certinfo');
+	}
 	return [
 		"steps" => $steps,
 		"ssl_enabled" => rsssl_get_option("ssl_enabled"),
+		"ssl_detection_overridden" => get_option('rsssl_ssl_detection_overridden'),
+		'certificate_valid' => RSSSL()->rsssl_certificate->is_valid(),
 		"networkwide" => is_multisite() && rsssl_is_networkwide_active(),
 		"network_activation_status" => get_site_option('rsssl_network_activation_status'),
 		"dismissed" => get_option("rsssl_onboarding_dismissed") || !RSSSL()->onboarding->show_onboarding_modal(),
@@ -69,7 +77,7 @@ function rsssl_rest_api_onboarding() {
  * Returns onboarding items if user upgraded plugin to 6.0 or SSL is detected
  * @return array
  */
-function get_items_for_second_step () {
+function rsssl_get_items_for_second_step () {
 	$plugins_to_install = [
 		[
 			"slug" => "burst-statistics",
@@ -182,7 +190,7 @@ function get_items_for_second_step () {
  * @param $ssl_detected
  * @return array[]
  */
-function get_buttons () {
+function rsssl_get_buttons () {
 	$has_valid_cert = RSSSL()->rsssl_certificate->is_valid();
 	$buttons = [];
 	$buttons[] = [
@@ -229,7 +237,7 @@ function get_buttons () {
  * @param $ssl_detected
  * @return array[]
  */
-function get_items_for_first_step () {
+function rsssl_get_items_for_first_step () {
 	$items = [
 		[
 			"title" => __("Http references in your .css and .js files: change any http:// into https://", "really-simple-ssl"),
@@ -245,7 +253,7 @@ function get_items_for_first_step () {
 		],
 	];
 
-	if (RSSSL()->rsssl_certificate->is_valid()) {
+	if ( RSSSL()->rsssl_certificate->is_valid() ) {
 		$items[] = [
 			"title" => __("An SSL certificate has been detected", "really-simple-ssl"),
 			"status" => "success"
@@ -258,7 +266,7 @@ function get_items_for_first_step () {
 		];
 	} else {
 		$items[] = [
-			"title" => __("No SSL certificate has been detected.", "really-simple-ssl") . " " . sprintf(__("Please %srefresh detection%s if a certificate has been installed recently.", "really-simple-ssl"), '<a href="'.add_query_arg(array('page'=>'really-simple-security', 'rsssl_recheck_certificate'=>1), admin_url('options-general.php')).'">', '</a>'),
+			"title" => __("No SSL certificate has been detected.", "really-simple-ssl") . " " . __("Please refresh the SSL status if a certificate has been installed recently.", "really-simple-ssl"),
 			"help" => __("This detection method is not 100% accurate.", "really-simple-ssl")." ".__("If you’re certain an SSL certificate is present, please check “Override SSL detection” to continue activating SSL.", "really-simple-ssl"),
 			"status" => "error"
 		];

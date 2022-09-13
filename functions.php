@@ -46,7 +46,7 @@ function rsssl_conditions_apply( $conditions ){
 					$var = $matches[3];
 					$this_condition_applies = $base()->{$class}->_get($var) === $condition_value ;
 				} else {
-					$this_condition_applies = $var === $condition_value;
+					$this_condition_applies = rsssl_get_option($var) === $condition_value;
 				}
 			}
 

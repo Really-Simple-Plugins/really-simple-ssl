@@ -118,9 +118,7 @@ class LearningMode extends Component {
         field.action = 'delete';
         let saveFields = [];
         saveFields.push(field);
-        console.log("update field");
-        console.log(field);
-        this.props.updateField(field);
+        this.props.updateField(field.id, field.value);
         rsssl_api.setFields(saveFields).then(( response ) => {});
     }
 

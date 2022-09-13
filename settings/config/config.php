@@ -1,19 +1,24 @@
 <?php
 defined('ABSPATH') or die();
 
-function rsssl_menu( $group_id = 'settings' ){
+function rsssl_menu(){
 	$menu_items = [
+		[
+			"id"    => "dashboard",
+			"title" => __( "Dashboard", 'really-simple-ssl' ),
+			'default_hidden' => false,
+			'menu_items' => [],
+		],
 		[
 			"id"    => "settings",
 			"title" => __( "Settings", 'really-simple-ssl' ),
-			"is_wizard" => false,
+			'default_hidden' => false,
 			'menu_items' => [
 				[
 					'id' => 'general',
 					'group_id' => 'general',
 					'title' => __('General', 'really-simple-ssl'),
 					'helpLink'  => 'https://really-simple-ssl.com',
-					'step' => 1,
 					'groups' => [
 						[
 							'id' => 'general',
@@ -35,7 +40,7 @@ function rsssl_menu( $group_id = 'settings' ){
 					'id' => 'mixed_content_scan',
 					'title' => __('Mixed Content Scan', 'really-simple-ssl'),
 					'premium' => true,
-					'premium_text' => __("Learn more about the %Mixed Content Scan Pro%s", 'really-simple-ssl'),
+					'premium_text' => __("Learn more about the %sMixed Content Scan Pro%s", 'really-simple-ssl'),
 					'groups' => [
 						[
 							'id' => 'mixedcontentscan',
@@ -59,11 +64,10 @@ function rsssl_menu( $group_id = 'settings' ){
 				[
 					'id' => 'recommended_security_headers',
 					'title' => __('Recommended Security Headers', 'really-simple-ssl'),
-					'step' => 1,
 					'groups' => [
 						[
 							'id' => 'recommended_security_headers',
-							'networkwide' => true,
+							'networkwide_required' => true,
 							'premium' => true,
 							'premium_text' => __("Get recommended security headers and more, with %sReally Simple SSL Pro%s", 'really-simple-ssl'),
 							'upgrade' => 'https://really-simple-ssl.com/pro',
@@ -80,7 +84,7 @@ function rsssl_menu( $group_id = 'settings' ){
 						[
 							'id' => 'hsts',
 							'premium' => true,
-							'networkwide' => true,
+							'networkwide_required' => true,
 							'premium_text' => __("Learn more about %sHSTS%s", 'really-simple-ssl'),
 							'upgrade' => 'https://really-simple-ssl.com/pro',
 							'title' => __('HSTS ', 'really-simple-ssl'),
@@ -92,11 +96,10 @@ function rsssl_menu( $group_id = 'settings' ){
 					'id' => 'permissions_policy',
 					'title' => __('Permissions Policy', 'really-simple-ssl'),
 					'intro' => __("Permissions Policy", "really-simple-ssl"),
-					'step' => 1,
 					'groups' => [
 						[
 							'id' => 'permissions_policy',
-							'networkwide' => true,
+							'networkwide_required' => true,
 							'premium' => true,
 							'title' => __('Permissions Policy', 'really-simple-ssl'),
 						],
@@ -106,25 +109,24 @@ function rsssl_menu( $group_id = 'settings' ){
 					'id' => 'content_security_policy',
 					'title' => __('Content Security Policy', 'really-simple-ssl'),
 					'intro' => __("Content Security Policy intro", "really-simple-ssl"),
-					'step' => 1,
 					'groups' => [
 						[
 							'id' => 'upgrade_insecure_requests',
-							'networkwide' => true,
+							'networkwide_required' => true,
 							'premium' => true,
 							'helpLink'  => 'https://really-simple-ssl.com',
 							'title' => __('Upgrade Insecure Requests', 'really-simple-ssl'),
 						],
 						[
 							'id' => 'frame_ancestors',
-							'networkwide' => true,
+							'networkwide_required' => true,
 							'premium' => true,
 							'helpLink'  => 'https://really-simple-ssl.com',
 							'title' => __('Frame Ancestors', 'really-simple-ssl'),
 						],
 						[
 							'id' => 'content_security_policy',
-							'networkwide' => true,
+							'networkwide_required' => true,
 							'helpLink'  => 'https://really-simple-ssl.com',
 							'premium' => true,
 							'title' => __('Source Directives', 'really-simple-ssl'),
@@ -133,7 +135,7 @@ function rsssl_menu( $group_id = 'settings' ){
 				],
 				[
 					'id' => 'cross_origin_policy',
-					'networkwide' => true,
+					'networkwide_required' => true,
 					'premium' => true,
 					'premium_text' => __('Get Cross Origin Policy Headers and more, with %sReally Simple SSL pro%s', 'really-simple-ssl'),
 					'title' => __('Cross Origin Policy', 'really-simple-ssl'),
@@ -168,27 +170,63 @@ function rsssl_menu( $group_id = 'settings' ){
 		],
 		[
 			"id"    => "letsencrypt",
-			"title" => __( "lets encrypt menu", 'really-simple-ssl' ),
+			'default_hidden' => true,
+			"title" => __( "Let's Encrypt", 'really-simple-ssl' ),
+			'intro' => sprintf(__('We have tried to make our Wizard as simple and fast as possible. Although these questions are all necessary, if there’s any way you think we can improve the plugin, please let us %sknow%s!', 'really-simple-ssl'),'<a target="_blank" href="https://really-simple-ssl.com/contact">', '</a>').
+			           sprintf(__(' Please note that you can always save and finish the wizard later, use our %sdocumentation%s for additional information or log a %ssupport ticket%s if you need our assistance.', 'really-simple-ssl'),'<a target="_blank" href="https://really-simple-ssl.com/knowledge-base/generate-your-free-ssl-certificate/">', '</a>','<a target="_blank" href="https://wordpress.org/support/plugin/really-simple-ssl/">', '</a>'),
+
 			'menu_items' => [
 				[
-					'id' => 'system-check',
-					'title' => __('system check', 'really-simple-ssl'),
+					'id' => 'le-system-status',
+					'title' => __('System Status', 'really-simple-ssl'),
+					'intro' => __( 'Letʼs Encrypt is a free, automated and open certificate authority brought to you by the nonprofit Internet Security Research Group (ISRG).', 'really-simple-ssl' ),
+					'helpLink'  => 'https://really-simple-ssl.com/about-lets-encrypt/',
+					'tests_only' => true,
 				],
 				[
-					'id' => 'general',
-					'title' => __('General', 'really-simple-ssl'),
+					'id' => 'le-general',
+					'title' => __('General Settings', 'really-simple-ssl'),
+				],
+				[
+					'id' => 'le-hosting',
+					'title' => __( 'Hosting', 'really-simple-ssl' ),
+					'intro' => __( 'Below you will find the instructions for different hosting environments and configurations. If you start the process with the necessary instructions and credentials the next view steps will be done in no time.', 'really-simple-ssl'),
+				],
+				[
+					'id' => 'le-directories',
+					'title' => __( 'Directories', 'really-simple-ssl' ),
+//					'intro' => __( 'Below you will find the instructions for different hosting environments and configurations. If you start the process with the necessary instructions and credentials the next view steps will be done in no time.', 'really-simple-ssl'),
+					'tests_only' => true,
+				],
+				[
+					'id' => 'le-dns-verification',
+					'title' => __( 'DNS verification', 'really-simple-ssl' ),
+//					'intro' => __( 'Below you will find the instructions for different hosting environments and configurations. If you start the process with the necessary instructions and credentials the next view steps will be done in no time.', 'really-simple-ssl'),
+					'tests_only' => true,
+				],
+				[
+					'id' => 'le-generation',
+					'title' => __( 'Generation', 'really-simple-ssl' ),
+//					'intro' => __( 'Below you will find the instructions for different hosting environments and configurations. If you start the process with the necessary instructions and credentials the next view steps will be done in no time.', 'really-simple-ssl'),
+					'tests_only' => true,
+				],
+				[
+					'id' => 'le-installation',
+					'title' => __( 'Installation', 'really-simple-ssl' ),
+//					'intro' => __( 'Below you will find the instructions for different hosting environments and configurations. If you start the process with the necessary instructions and credentials the next view steps will be done in no time.', 'really-simple-ssl'),
+					'tests_only' => true,
+				],
+				[
+					'id' => 'le-activate_ssl',
+					'title' => __( 'Activate', 'really-simple-ssl' ),
+//					'intro' => __( 'Below you will find the instructions for different hosting environments and configurations. If you start the process with the necessary instructions and credentials the next view steps will be done in no time.', 'really-simple-ssl'),
+					'tests_only' => true,
+
 				],
 			],
 		],
 	];
-
-	$menu_items = apply_filters('rsssl_menu', $menu_items);
-	foreach ($menu_items as $index => $menu_item ) {
-		if ($menu_item['id']===$group_id) {
-			return $menu_item;
-		}
-	}
-	return array();
+	return $menu_items;
 }
 
 function rsssl_migrate_settings($prev_version) {
@@ -196,13 +234,15 @@ function rsssl_migrate_settings($prev_version) {
 
 }
 add_action('rsssl_upgrade', 'rsssl_migrate_settings', 10, 1);
+add_action('plugins_loaded', 'rsssl_test');
+function rsssl_test(){
+
+}
 
 function rsssl_fields( $load_values = true ){
-
 	if ( !rsssl_user_can_manage() ) {
 		return [];
 	}
-
 	$fields = [
         [
             'id'          => 'ssl_enabled',
@@ -274,6 +314,7 @@ function rsssl_fields( $load_values = true ){
 				'text'  => __( 'If this option is set to true, the mixed content fixer will fire on the init hook instead of the template_redirect hook. Only use this option when you experience problems with the mixed content fixer.', 'really-simple-ssl' ),
 			],
 			'disabled'    => false,
+			'required'    => true,
 			'default'     => false,
 			'react_conditions' => [
 				'relation' => 'AND',
@@ -332,7 +373,7 @@ function rsssl_fields( $load_values = true ){
             'disabled'    => false,
             'default'     => false,
             //on multisite this setting can only be set networkwide
-            'networkwide' => true,
+            'networkwide_required' => true,
             'server_conditions' => [
                 'relation' => 'AND',
                 [
@@ -949,7 +990,7 @@ function rsssl_fields( $load_values = true ){
 
 	$fields = apply_filters('rsssl_fields', $fields);
 	foreach ( $fields as $key => $field ) {
-		$field = wp_parse_args($field, ['id'=>false, 'visible'=> true, 'disabled'=>false, 'new_features_block' => false ]);
+		$field = wp_parse_args($field, ['default'=>'', 'id'=>false, 'visible'=> true, 'disabled'=>false, 'new_features_block' => false ]);
 		//handle server side conditions
 		if (isset($field['server_conditions'])) {
 			if ( !rsssl_conditions_apply($field['server_conditions']) ){

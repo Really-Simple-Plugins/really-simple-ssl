@@ -9,7 +9,11 @@ import {
 import { __ } from '@wordpress/i18n';
 import * as rsssl_api from "../utils/api";
 import License from "./License";
+import Password from "./Password";
+import Host from "./Host";
 import Hyperlink from "../utils/Hyperlink";
+import LetsEncrypt from "../LetsEncrypt/LetsEncrypt";
+import Activate from "../LetsEncrypt/Activate";
 import MixedContentScan from "./MixedContentScan";
 import PermissionsPolicy from "./PermissionsPolicy";
 import Support from "./Support";
@@ -32,7 +36,6 @@ class Field extends Component {
     }
 
     componentDidMount() {
-        this.props.highLightField('');
         this.onChangeHandlerDataTable = this.onChangeHandlerDataTable.bind(this);
     }
 
@@ -43,6 +46,8 @@ class Field extends Component {
         this.props.saveChangedFields( field.id )
         this.setState( { fields } )
     }
+
+
 
     /*
      * Handle data update for a datatable
@@ -68,7 +73,7 @@ class Field extends Component {
         field.updateItemId = clickedItem.id;
         let saveFields = [];
         saveFields.push(field);
-        this.props.updateField(field);
+        this.props.updateField(field.id, field.value);
         rsssl_api.setFields(saveFields).then(( response ) => {
             //this.props.showSavedSettingsNotice();
         });
@@ -76,6 +81,7 @@ class Field extends Component {
     onCloseTaskHandler(){
 
     }
+
 
     render(){
 
@@ -96,7 +102,7 @@ class Field extends Component {
         }
 
         //if a feature can only be used on networkwide or single site setups, pass that info here.
-        if ( !rsssl_settings.networkwide_active && field.networkwide ) {
+        if ( !rsssl_settings.networkwide_active && field.networkwide_required ) {
             disabled = true;
             field.comment = <>{__("This feature is only available networkwide.","really-simple-ssl")}<Hyperlink target="_blank" text={__("Network settings","really-simple-ssl")} url={rsssl_settings.network_link}/></>
         }
@@ -117,10 +123,10 @@ class Field extends Component {
                   <ToggleControl
                       disabled = {disabled}
                       checked= { field.value==1 }
-                      help={ field.comment }
                       label={ field.label }
                       onChange={ ( fieldValue ) => this.onChangeHandler(fieldValue) }
                   />
+                  {field.comment && <div dangerouslySetInnerHTML={{__html:field.comment}}></div>}
                 </div>
             );
         }
@@ -143,7 +149,8 @@ class Field extends Component {
                 </div>
             );
         }
-        if ( field.type==='text' ){
+
+        if ( field.type==='text' || field.type==='email' ){
             return (
                 <div className={this.highLightClass}>
                   <TextControl
@@ -165,6 +172,19 @@ class Field extends Component {
             );
         }
 
+        if ( field.type==='password' ){
+            return (
+                <div className={ this.highLightClass}>
+                    <Password
+                        index={ this.props.index }
+                        field={ field }
+                        fields={ this.props.fields }
+                        saveChangedFields={this.props.saveChangedFields}
+                    />
+                </div>
+            );
+        }
+
         if ( field.type==='textarea' ){
             return (
                 <div className={this.highLightClass}>
@@ -179,9 +199,7 @@ class Field extends Component {
         }
 
         if ( field.type==='license' ){
-            /*
-             * There is no "PasswordControl" in WordPress react yet, so we create our own license field.
-             */
+            //There is no "PasswordControl" in WordPress react yet, so we create our own license field.
             let field = this.props.field;
             let fieldValue = field.value;
             let fields = this.props.fields;
@@ -189,6 +207,7 @@ class Field extends Component {
                 <div className={this.highLightClass}>
                   <License setPageProps={this.props.setPageProps} fieldsUpdateComplete = {this.props.fieldsUpdateComplete} index={this.props.index} fields={fields} field={field} fieldValue={fieldValue} saveChangedFields={this.props.saveChangedFields} highLightField={this.props.highLightField} highLightedField={this.props.highLightedField}/>
                 </div>
+
             );
         }
         if ( field.type==='number' ){
@@ -214,6 +233,21 @@ class Field extends Component {
                   />
                 </div>
             );
+        }
+
+        if ( field.type==='host') {
+            return (
+                <div className={this.highLightClass}>
+                  <Host
+                       index={this.props.index}
+                       saveChangedFields={this.props.saveChangedFields}
+                       handleNextButtonDisabled={this.props.handleNextButtonDisabled}
+                       updateFields={this.props.updateFields}
+                      fields={this.props.fields}
+                      field={this.props.field}
+                  />
+                </div>
+            )
         }
 
         if ( field.type==='select') {
@@ -261,6 +295,18 @@ class Field extends Component {
                   <MixedContentScan dropItemFromModal={this.props.dropItemFromModal} handleModal={this.props.handleModal} field={this.props.field} fields={this.props.selectedFields}/>
                 </div>
             )
+        }
+
+        if ( field.type === 'letsencrypt' ) {
+                return (
+                   <LetsEncrypt key={field.id} resetRefreshTests={this.props.resetRefreshTests} refreshTests={this.props.refreshTests} getFieldValue={this.props.getFieldValue} save={this.props.save} selectMenu={this.props.selectMenu} addHelp={this.props.addHelp} updateField={this.props.updateField} fields={this.props.fields} field={field} handleNextButtonDisabled={this.props.handleNextButtonDisabled}/>
+                )
+        }
+
+        if ( field.type === 'activate' ) {
+                return (
+                   <Activate key={field.id} resetRefreshTests={this.props.resetRefreshTests} refreshTests={this.props.refreshTests} getFieldValue={this.props.getFieldValue} save={this.props.save} selectMenu={this.props.selectMenu} addHelp={this.props.addHelp} updateField={this.props.updateField} fields={this.props.fields} field={field} handleNextButtonDisabled={this.props.handleNextButtonDisabled}/>
+                )
         }
 
         return (

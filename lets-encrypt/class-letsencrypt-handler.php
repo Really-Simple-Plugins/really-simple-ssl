@@ -33,9 +33,7 @@ class rsssl_letsencrypt_handler {
 		//loading of these hooks is stricter. The class can be used in the notices, which are needed on the generic dashboard
 		//These functionality is not needed on the dashboard, so should only be loaded in strict circumstances
 		if ( rsssl_letsencrypt_generation_allowed( true ) ) {
-			add_action( 'rsssl_before_save_lets-encrypt_option', array( $this, 'before_save_wizard_option' ), 10, 4 );
-			add_action( 'rsssl_le_activation', array( $this, 'cleanup_on_ssl_activation'));
-			add_action( 'rsssl_le_activation', array( $this, 'plugin_activation_actions'));
+			add_action( 'rsssl_after_save_field', array( $this, 'after_save_field' ), 10, 4 );
 			add_action( 'admin_init', array( $this, 'maybe_add_htaccess_exclude'));
 			add_action( 'admin_init', array( $this, 'maybe_create_htaccess_directories'));
 
@@ -53,10 +51,10 @@ class rsssl_letsencrypt_handler {
 			}
 
 			// General configs
-			Connector::getInstance()->useStagingServer( false );
+			Connector::getInstance()->useStagingServer( true );
 			Logger::getInstance()->setDesiredLevel( Logger::LEVEL_DISABLED );
 
-			if ( !rsssl_get_value( 'disable_ocsp' ) ) {
+			if ( !rsssl_get_option( 'disable_ocsp' ) ) {
 				Certificate::enableFeatureOCSPMustStaple();
 			}
 
@@ -123,34 +121,37 @@ class rsssl_letsencrypt_handler {
 		return $installation_active && $installation_failed;
 	}
 
-	public function plugin_activation_actions(){
-		if (get_option('rsssl_activated_plugin')) {
-			//do some actions
-
-			delete_option('rsssl_activated_plugin');
-		}
-	}
-
 	/**
 	 * Cleanup. If user did not consent to storage, all password fields should be removed on activation, unless they're needed for renewals
 	 */
 	public function cleanup_on_ssl_activation(){
-		if (!rsssl_user_can_manage()) return;
-		$delete_credentials = !rsssl_get_value('store_credentials');
+		if ( !current_user_can('manage_security') ) {
+			return;
+		}
+		$delete_credentials = true;//!rsssl_get_option('store_credentials');
+		$le_fields = rsssl_le_add_fields([]);
 		if ( !$this->certificate_automatic_install_possible() || !$this->certificate_install_required() || $delete_credentials ) {
-			$fields = RSSSL_LE()->config->fields;
-			$fields = array_filter($fields, function($i){
+			$le_fields = array_filter($le_fields, function($i){
 				return isset( $i['type'] ) && $i['type'] === 'password';
 			});
-			$options = get_option( 'rsssl_options_lets-encrypt' );
-			foreach ($fields as $fieldname => $field ) {
-				unset($options[$fieldname]);
+			$options = get_option( 'rsssl_options' );
+			foreach ($le_fields as $index => $field ) {
+				unset($options[$field['id']]);
 			}
-			update_option( 'rsssl_options_lets-encrypt', $options, false );
+			update_option( 'rsssl_options', $options, false );
 		}
 	}
 
-	public function before_save_wizard_option(
+	/**
+	 * some custom actions after a field has been saved
+	 * @param string $fieldname
+	 * @param mixed $fieldvalue
+	 * @param mixed $prev_value
+	 * @param string $type
+	 *
+	 * @return void
+	 */
+	public function after_save_field(
 		$fieldname, $fieldvalue, $prev_value, $type
 	) {
 		rsssl_progress_add('domain');
@@ -159,7 +160,7 @@ class rsssl_letsencrypt_handler {
 			return;
 		}
 
-		if ($fieldname==='other_host_type'){
+		if ( $fieldname==='other_host_type' ){
 			if ( !rsssl_do_local_lets_encrypt_generation() ) {
 				rsssl_progress_add('directories');
 				rsssl_progress_add('generation');
@@ -234,7 +235,7 @@ class rsssl_letsencrypt_handler {
 
 	    $hosting_company = rsssl_get_other_host();
 	    if ( $hosting_company && $hosting_company !== 'none' ) {
-		    $hosting_specific_link = RSSSL_LE()->config->hosts[$hosting_company]['ssl_installation_link'];
+		    $hosting_specific_link = RSSSL_LE()->hosts->hosts[$hosting_company]['ssl_installation_link'];
 		    if ($hosting_specific_link) {
 			    $site = trailingslashit( str_replace(array('https://','http://', 'www.'),'', site_url()) );
 			    if ( strpos($hosting_specific_link,'{host}') !==false && empty($host) ) {
@@ -387,15 +388,17 @@ class rsssl_letsencrypt_handler {
 	 * @return RSSSL_RESPONSE
 	 */
     public function get_dns_token(){
-	    if (rsssl_is_ready_for('dns-verification')) {
+	    if ( rsssl_is_ready_for('dns-verification') ) {
 		    $use_dns        = rsssl_dns_verification_required();
 		    $challenge_type = $use_dns ? Order::CHALLENGE_TYPE_DNS : Order::CHALLENGE_TYPE_HTTP;
+			error_log("challenge_type");
+			error_log($challenge_type);
 		    if ( $use_dns ) {
 			    try {
 				    $this->get_account();
 				    $dnsWriter = new class extends AbstractDNSWriter {
 					    public function write( Order $order, string $identifier, string $digest ): bool {
-						    $tokens                = get_option( 'rsssl_le_dns_tokens', array() );
+						    $tokens                = get_option( 'rsssl_le_dns_tokens', [] );
 						    $tokens[ $identifier ] = $digest;
 						    update_option( "rsssl_le_dns_tokens", $tokens, false );
 						    rsssl_progress_add( 'dns-verification' );
@@ -416,7 +419,7 @@ class rsssl_letsencrypt_handler {
 								    'success',
 								    'continue',
 								    __( "Token successfully retrieved.", 'really-simple-ssl' ),
-								    json_encode( get_option( 'rsssl_le_dns_tokens' ) )
+								    $this->get_dns_tokens()
 							    );
 						    } else {
 							    if ( get_option( 'rsssl_le_dns_tokens' ) ) {
@@ -424,7 +427,7 @@ class rsssl_letsencrypt_handler {
 									    'success',
 									    'continue',
 									    __( "Token successfully retrieved.", 'really-simple-ssl' ),
-									    json_encode( get_option( 'rsssl_le_dns_tokens' ) )
+									    $this->get_dns_tokens()
 								    );
 							    } else {
 								    $response = new RSSSL_RESPONSE(
@@ -436,9 +439,13 @@ class rsssl_letsencrypt_handler {
 
 						    }
 					    } catch ( Exception $e ) {
+							error_log("challenge error #2");
 						    error_log( print_r( $e, true ) );
 						    $error = $this->get_error( $e );
-						    if (strpos($error, 'Order has status "invalid"')!==false) {
+						    if ( strpos( $error, 'No challenge found with given type')!==false ) {
+							    //Maybe it was first set to HTTP challenge. retry after clearing the order.
+							    $order->clear();
+						    } else if (strpos($error, 'Order has status "invalid"')!==false) {
 							    $order->clear();
 							    $error = __("The order is invalid, possibly due to too many failed authorization attempts. Please start at the previous step.","really-simple-ssl");
 						    } else
@@ -456,16 +463,15 @@ class rsssl_letsencrypt_handler {
 						    );
 					    }
 				    }
-
 			    } catch ( Exception $e ) {
 				    rsssl_progress_remove( 'dns-verification' );
+					error_log(print_r($e,true));
 				    $response = $this->get_error( $e );
-				    error_log( print_r( $e, true ) );
-				    $response = new RSSSL_RESPONSE(
-					    'error',
-					    'retry',
-					    $response
-				    );
+					$response = new RSSSL_RESPONSE(
+						'error',
+						'retry',
+						$response
+					);
 			    }
 		    } else {
 			    $response = new RSSSL_RESPONSE(
@@ -484,6 +490,21 @@ class rsssl_letsencrypt_handler {
 	    }
 	    return $response;
     }
+
+	/**
+	 * @return array
+	 */
+	public function get_dns_tokens(){
+		$tokens = get_option( 'rsssl_le_dns_tokens', [] );
+		$output = [];
+		foreach ($tokens as $domain => $token ) {
+			$output[] = [
+				'domain' => $domain,
+				'token' => $token,
+			];
+		}
+		return $output;
+	}
 
 	/**
 	 * Check DNS txt records.
@@ -665,7 +686,7 @@ class rsssl_letsencrypt_handler {
 					        }
 					    } else {
 					    	//if OCSP is not disabled yet, and the order status is not invalid, we disable ocsp, and try again.
-					    	if ( !rsssl_get_value( 'disable_ocsp' ) ) {
+					    	if ( !rsssl_get_option( 'disable_ocsp' ) ) {
 							    RSSSL_LE()->field->save_field('disable_ocsp', true);
 							    $response->action = 'retry';
 							    $response->status = 'warning';
@@ -810,7 +831,7 @@ class rsssl_letsencrypt_handler {
 	 * @return bool
 	 */
     public function ssl_generation_can_auto_renew(){
-	    if ( get_option('rsssl_verification_type')==='DNS' && !get_option('rsssl_le_dns_configured_by_rsssl') ) {
+	    if ( rsssl_get_option('verification_type')==='dns' && !get_option('rsssl_le_dns_configured_by_rsssl') ) {
 		    return false;
 	    } else {
 		    return true;
@@ -884,7 +905,7 @@ class rsssl_letsencrypt_handler {
     public function certificate_install_required(){
 	    $install_method = get_option('rsssl_le_certificate_installed_by_rsssl');
 	    $hosting_company = rsssl_get_other_host();
-	    if ( in_array($install_method, RSSSL_LE()->config->no_installation_renewal_needed) || in_array($hosting_company, RSSSL_LE()->config->no_installation_renewal_needed)) {
+	    if ( in_array($install_method, RSSSL_LE()->hosts->no_installation_renewal_needed) || in_array($hosting_company, RSSSL_LE()->hosts->no_installation_renewal_needed)) {
 		    return false;
 	    }
 
@@ -921,7 +942,7 @@ class rsssl_letsencrypt_handler {
 	 */
 	public function account_email(){
 	    //don't use the default value: we want users to explicitly enter a value
-	    return rsssl_get_value('email_address', false);
+	    return rsssl_get_option('email_address' );
     }
 	/**
      * Get terms accepted
@@ -930,7 +951,7 @@ class rsssl_letsencrypt_handler {
 
 	public function terms_accepted(){
 	    //don't use the default value: we want users to explicitly enter a value
-	    $accepted =  rsssl_get_value('accept_le_terms', false);
+	    $accepted =  rsssl_get_option('accept_le_terms', false);
 		if ( $accepted ) {
 			$status = 'success';
 			$action = 'continue';
@@ -973,7 +994,7 @@ class rsssl_letsencrypt_handler {
 		$subjects[] = $domain;
 		//don't offer aliasses for subdomains
 		if ( !rsssl_is_subdomain() ) {
-			if (rsssl_get_value( 'include_alias' )) {
+			if (rsssl_get_option( 'include_alias' )) {
 				//main is www.
 				if ( strpos( $domain, 'www.' ) !== false ) {
 					$alias_domain = $root;
@@ -1043,9 +1064,10 @@ class rsssl_letsencrypt_handler {
 	public function not_completed_steps_message($step){
 		$not_completed_steps = rsssl_get_not_completed_steps($step);
 		$nice_names = array();
+		$steps = rsssl_le_steps();
 		foreach ($not_completed_steps as $not_completed_step ) {
-			$index = array_search($not_completed_step, array_column( RSSSL_LE()->config->steps['lets-encrypt'], 'id'));
-			$nice_names[] = RSSSL_LE()->config->steps['lets-encrypt'][$index+1]['title'];
+			$index = array_search($not_completed_step, array_column( $steps, 'id'));
+			$nice_names[] = $steps[$index+1]['title'];
 		}
 		return sprintf(__('Please complete the following step(s) first: %s', "really-simple-ssl"), implode(", ", $nice_names) );
 	}
@@ -1072,6 +1094,7 @@ class rsssl_letsencrypt_handler {
 			$status = 'success';
 			$message = __("The required directories have the necessary writing permissions.", "really-simple-ssl" );
 		}
+
 		return new RSSSL_RESPONSE($status, $action, $message);
 	}
 
@@ -1084,15 +1107,15 @@ class rsssl_letsencrypt_handler {
 		$message = __("We have not detected any known hosting limitations.", "really-simple-ssl" );
 		$host = rsssl_get_other_host();
 		if ( $host === 'none' ) $host = false;
-		if ( isset(RSSSL_LE()->config->hosts[$host]) ){
-			if ( RSSSL_LE()->config->hosts[$host]['free_ssl_available'] === 'paid_only' ) {
+		if ( isset(RSSSL_LE()->hosts->hosts[$host]) ){
+			if ( RSSSL_LE()->hosts->hosts[$host]['free_ssl_available'] === 'paid_only' ) {
 				$action = 'stop';
 				$status = 'error';
 				$message = sprintf(__("According to our information, your hosting provider does not allow any kind of SSL installation, other then their own paid certificate. For an alternative hosting provider with SSL, see this %sarticle%s.","really-simple-ssl"), '<a target="_blank" href="https://really-simple-ssl.com/hosting-providers-with-free-ssl">', '</a>');
 			}
 
-			if ( RSSSL_LE()->config->hosts[$host]['free_ssl_available'] === 'activated_by_default' ) {
-				$url = RSSSL_LE()->config->hosts[$host]['ssl_installation_link'];
+			if ( RSSSL_LE()->hosts->hosts[$host]['free_ssl_available'] === 'activated_by_default' ) {
+				$url = RSSSL_LE()->hosts->hosts[$host]['ssl_installation_link'];
 				$action = 'continue';
 				$status = 'error';
 				$message = sprintf(__("According to our information, your hosting provider supplies your account with an SSL certificate by default. Please contact your %shosting support%s if this is not the case.","really-simple-ssl"), '<a target="_blank" href="'.$url.'">', '</a>').'&nbsp'.
@@ -1250,8 +1273,6 @@ class rsssl_letsencrypt_handler {
 				$message = $error_message.' '.sprintf( __( "Error code %s.", "really-simple-ssl" ), $status_code );
 				rsssl_progress_remove('directories');
 			}
-
-
 		} else {
 			if ( ! is_wp_error( $response ) && ( strpos( $file_content, $test_string ) !== false ) ) {
 				$status  = 'success';
@@ -1265,6 +1286,7 @@ class rsssl_letsencrypt_handler {
 				rsssl_progress_remove('directories');
 			}
 		}
+
 		return new RSSSL_RESPONSE($status, $action, $message);
 	}
 
@@ -1697,34 +1719,6 @@ class rsssl_letsencrypt_handler {
     }
 
 	/**
-	 * Encode a string
-	 * @param string $string
-	 * @return string
-	 */
-
-	public function encode( $string ) {
-		if ( strlen(trim($string)) === 0 ) {
-			return $string;
-		}
-
-		if (strpos( $string , 'rsssl_') !== FALSE ) {
-			return $string;
-		}
-
-		$key = $this->get_key();
-		if ( !$key ) {
-			$key = $this->set_key();
-		}
-
-		$ivlength = openssl_cipher_iv_length('aes-256-cbc');
-		$iv = openssl_random_pseudo_bytes($ivlength);
-		$ciphertext_raw = openssl_encrypt($string, 'aes-256-cbc', $key, 0, $iv);
-		$key = base64_encode( $iv.$ciphertext_raw );
-
-		return 'rsssl_'.$key;
-	}
-
-	/**
 	 * Decode a string
 	 * @param $string
 	 *
@@ -1735,8 +1729,8 @@ class rsssl_letsencrypt_handler {
 			return '';
 		}
 
-		if (strpos( $string , 'rsssl_') !== FALSE ) {
-			$key = $this->get_key();
+		if ( strpos( $string , 'rsssl_') !== FALSE ) {
+			$key = get_site_option( 'rsssl_key' );
 			$string = str_replace('rsssl_', '', $string);
 
 			// To decrypt, split the encrypted data from our IV
@@ -1751,25 +1745,5 @@ class rsssl_letsencrypt_handler {
 		//not encoded, return
 		return $string;
 	}
-
-	/**
-	 * Set a new key
-	 * @return string
-	 */
-
-	private function set_key(){
-		update_site_option( 'rsssl_key' , time() );
-		return get_site_option('rsssl_key');
-	}
-
-	/**
-	 * Get a decode/encode key
-	 * @return false|string
-	 */
-
-	private function get_key() {
-		return get_site_option( 'rsssl_key' );
-	}
-
 
 }

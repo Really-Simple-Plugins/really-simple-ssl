@@ -38,6 +38,12 @@ class Settings extends Component {
                 groups.push(selectedField.group_id);
             }
         }
+        let btnSaveText = __('Save', 'really-simple-ssl');
+        for (const menuItem of menuItems ) {
+            if (menuItem.id===selectedMenuItem && menuItem.tests_only ) {
+                btnSaveText = __('Refresh', 'really-simple-ssl');
+            }
+        }
 
         //convert progress notices to an array useful for the help blocks
         let notices = [];
@@ -66,28 +72,23 @@ class Settings extends Component {
             notices.push(notice.help);
         }
         notices = notices.filter(notice => notice.label.toLowerCase()!=='completed');
-
-        let selectedMenuItemObject;
-        for (const item of menu.menu_items){
-            if (item.id === selectedMenuItem ) {
-                selectedMenuItemObject = item;
-            } else if (item.menu_items) {
-                selectedMenuItemObject = item.menu_items.filter(menuItem => menuItem.id === selectedMenuItem)[0];
-            }
-            if ( selectedMenuItemObject ) {
-                break;
-            }
-        }
         return (
             <Fragment>
                 <div className="rsssl-wizard-settings rsssl-column-2">
                     { groups.map((group, i) =>
                         <SettingsGroup
+                            updateFields={this.props.updateFields}
                             dropItemFromModal={this.props.dropItemFromModal}
                             selectMenu={this.props.selectMenu}
+                            handleNextButtonDisabled={this.props.handleNextButtonDisabled}
+                            menu={this.props.menu}
                             handleModal={this.props.handleModal}
                             showSavedSettingsNotice={this.props.showSavedSettingsNotice}
                             updateField={this.props.updateField}
+                            getFieldValue={this.props.getFieldValue}
+                            refreshTests={this.props.refreshTests}
+                            resetRefreshTests={this.props.resetRefreshTests}
+                            addHelp={this.props.addHelp}
                             pageProps={this.props.pageProps}
                             setPageProps={this.props.setPageProps}
                             fieldsUpdateComplete = {this.props.fieldsUpdateComplete}
@@ -95,7 +96,7 @@ class Settings extends Component {
                             index={i}
                             highLightField={this.props.highLightField}
                             highLightedField={this.props.highLightedField}
-                            selectedMenuItem={selectedMenuItemObject}
+                            selectedMenuItem={selectedMenuItem}
                             saveChangedFields={this.props.saveChangedFields}
                             group={group}
                             fields={selectedFields}/>)
@@ -103,7 +104,7 @@ class Settings extends Component {
                     <div className="rsssl-grid-item-footer">
                         {/*This will be shown only if current step is not the first one*/}
                         { this.props.selectedMenuItem !== menuItems[0].id &&
-                            <a className="button button-secondary" href={`#settings/${this.props.previousMenuItem}`} onClick={ () => this.props.previousStep(true) }>
+                            <a className="button button-secondary" href={`#${this.props.selectedMainMenuItem}/${this.props.previousMenuItem}`} onClick={ () => this.props.previousStep(true) }>
                                 { __('Previous', 'really-simple-ssl') }
                             </a>
                         }
@@ -112,23 +113,14 @@ class Settings extends Component {
                         { this.props.selectedMenuItem !== menuItems[menuItems.length-1].id &&
                             <>
                                 <button
-                                    className="button button-secondary"
+                                    className="button button-primary"
                                     onClick={ this.props.save }>
-                                    { __( 'Save', 'really-simple-ssl' ) }
+                                    { btnSaveText }
                                 </button>
-                                <a className="button button-primary" href={`#settings/${this.props.nextMenuItem}`} onClick={ this.props.saveAndContinue }>
+                                <a disabled={this.props.nextButtonDisabled} className="button button-primary" href={`#${this.props.selectedMainMenuItem}/${this.props.nextMenuItem}`} onClick={ this.props.saveAndContinue }>
                                     { __( 'Save and Continue', 'really-simple-ssl' ) }
                                 </a>
                             </>
-
-                        }
-
-                        { this.props.selectedMenuItem === menuItems[menuItems.length-1].id &&
-                            <button
-                                className="button button-primary"
-                                onClick={ this.props.save }>
-                                { __( 'Save', 'really-simple-ssl' ) }
-                            </button>
                         }
                     </div>
                 </div>

@@ -1,4 +1,4 @@
-/**
+/*
  * helper function to delay after a promise
  * @param ms
  * @returns {function(*): Promise<unknown>}

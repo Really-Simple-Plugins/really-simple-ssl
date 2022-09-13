@@ -5,7 +5,7 @@ function rsssl_general_security_notices( $notices ) {
 	$code = '<br><code style="white-space: pre-line">' . esc_html($code) . '</code><br>';
 
 	$notices['application-passwords'] = array(
-		'callback' => 'wp_is_application_passwords_available',
+		'callback' => 'rsssl_wp_is_application_passwords_available',
 		'score' => 5,
 		'output' => array(
 			'true' => array(

@@ -1,0 +1,104 @@
+.rsssl-lets-encrypt-tests {
+  margin:10px 30px;
+  .rsssl-progress-bar {
+    padding-block: 0;
+    margin-bottom:20px;
+    .rsssl-progress {
+      overflow: hidden;
+      height: 20px;
+      border-radius: 5px;
+      background-color: #f7f7f7;
+
+      .rsssl-bar {
+        height: 100%;
+        background-color: var(--rsp-color-success);
+
+        &.rsssl-orange {
+          background-color: var(--rsp-color-warning);
+        }
+      }
+    }
+  }
+
+  p {
+    margin-bottom:20px;
+  }
+
+  .rsssl-progress-text {
+    display: flex;
+    align-items: center;
+    @include rsssl-block-padding;
+    padding-block: 0;
+    padding-top: 10px;
+
+    .rsssl-progress-percentage {
+      font-size: 32px;
+      font-weight: 700;
+    }
+
+    .rsssl-progress-text-span {
+      margin-left: 35px;
+      font-size: 18px;
+      font-weight: 600;
+
+      a {
+        margin-left: 3px;
+      }
+    }
+  }
+
+  ul {
+    li {
+      display:flex;
+      .rsssl-icon {
+        margin-right:7px;
+      }
+
+      /*Nested li */
+      ul li:before {
+        background-color: var(--rsp-grey-500);
+        color: #fff;
+        height: 6px;
+        width: 6px;
+        border-radius: 50%;
+        content: '';
+        position: absolute;
+        margin-top: 7px;
+        margin-left: -19px;
+      }
+    }
+  }
+
+  .rsssl-test-results {
+    h4 {
+      margin:20px 0;
+    }
+    a+button {
+      margin-left:20px;
+    }
+    button {
+      //margin: 20px 0 0 0;
+    }
+    .rsssl-certificate-data {
+      display:none;
+    }
+    .rsssl-dns-text-records {
+
+      div {
+        display:flex;
+        flex-direction: row;
+        .rsssl-dns-domain, .rsssl-dns-field {
+          margin-right:20px;
+          width: 50%;
+        }
+      }
+
+    }
+  }
+
+  .rsssl-activation-buttons {
+    display: flex;
+    flex-flow: row-reverse;
+  }
+}
+

@@ -22,32 +22,20 @@ function rsssl_plugin_admin_scripts() {
 	);
 	wp_set_script_translations( 'rsssl-wizard-plugin-block-editor', 'really-simple-ssl' );
 
-	$menu = apply_filters("rsssl_grid_tabs",
-		[
-			[
-                'id' => 'dashboard',
-                'label'=> __("Dashboard", "really-simple-ssl"),
-            ],
-			[
-				'id' => 'settings',
-				'label'=> __("Settings", "really-simple-ssl"),
-			]
-		]
-	);
 	wp_localize_script(
         'rsssl-settings',
         'rsssl_settings',
-        apply_filters('rsssl_localize_script',array(
+        apply_filters('rsssl_localize_script',[
             'site_url' => get_rest_url(),
+            'dashboard_url' => add_query_arg(['page' => 'really-simple-security'],admin_url('options-general.php') ),
             'plugin_url' => rsssl_url,
             'network_link' => network_site_url('plugins.php'),
             'blocks' => rsssl_blocks(),
             'pro_plugin_active' => defined('rsssl_pro_version'),
             'networkwide_active' => !is_multisite() || rsssl_is_networkwide_active(),//true for single sites and network wide activated
-            'menu' => $menu,
             'nonce' => wp_create_nonce( 'wp_rest' ),//to authenticate the logged in user
             'rsssl_nonce' => wp_create_nonce( 'rsssl_save' ),
-        ))
+        ])
 	);
 }
 
@@ -169,21 +157,6 @@ function rsssl_run_test($request){
         case 'dismiss_task':
 	        $data = RSSSL()->progress->dismiss_task($state);
             break;
-        case 'fileEditingAllowed':
-	        require_once( rsssl_path . 'security/dashboard/file-editing.php' );
-	        $progress = new rsssl_progress($state);
-            $data = $progress->get();
-            break;
-        case 'userRegisgrationAllowed':
-	        require_once( rsssl_path . 'security/dashboard/user-registration.php' );
-	        $progress = new rsssl_progress($state);
-            $data = $progress->get();
-            break;
-        case 'debuggingEnabled':
-	        require_once( rsssl_path . 'security/dashboard/debugging-enabled.php' );
-	        $progress = new rsssl_progress($state);
-            $data = $progress->get();
-            break;
         default:
 	        $data = apply_filters("rsssl_run_test", [], $test, $request);
 	}
@@ -205,17 +178,18 @@ function rsssl_sanitize_field_type($type){
         'license',
         'database',
         'checkbox',
+        'password',
         'radio',
         'text',
         'textarea',
         'number',
         'email',
         'select',
+        'host',
         'permissionspolicy',
         'learningmode',
-        'xmlrpc',
         'mixedcontentscan',
-        'xmlrpc',
+        'LetsEncrypt',
     ];
     if ( in_array($type, $types) ){
         return $type;
@@ -236,6 +210,7 @@ function rsssl_rest_api_fields_set($request){
     $config_fields = rsssl_fields(false);
     $config_ids = array_column($config_fields, 'id');
 	foreach ( $fields as $index => $field ) {
+
         $config_field_index = array_search($field['id'], $config_ids);
         $config_field = $config_fields[$config_field_index];
 		if ( !$config_field_index ){
@@ -243,8 +218,10 @@ function rsssl_rest_api_fields_set($request){
 			unset($fields[$index]);
 			continue;
 		}
-		$value = rsssl_sanitize_field( $field['value'] , rsssl_sanitize_field_type($field['type']), $field['id'] );
-		$value = apply_filters("rsssl_fieldvalue", $value, sanitize_text_field($field['id']));
+        $type = rsssl_sanitize_field_type($field['type']);
+        $field_id = sanitize_text_field($field['id']);
+		$value = rsssl_sanitize_field( $field['value'] , $type,  $field_id);
+		$value = rsssl_sanitize_field( $value, $type, $field_id );
 
         //if an endpoint is defined, we use that endpoint instead
         if ( isset($config_field['data_endpoint'])){
@@ -298,7 +275,8 @@ function rsssl_rest_api_fields_set($request){
 	do_action('rsssl_after_saved_fields', $fields );
 	$output   = [
             'success' => true,
-            'progress' => RSSSL()->progress->get()
+            'progress' => RSSSL()->progress->get(),
+            'fields' => rsssl_fields(true),
     ];
 	$response = json_encode( $output );
 	header( "Content-Type: application/json" );
@@ -338,10 +316,11 @@ function rsssl_update_option( $name, $value ) {
 	} else {
 		$options = get_option( 'rsssl_options', [] );
 	}
-
+    if ( !is_array($options) ) $options = [];
     $name = sanitize_text_field($name);
-	$value = rsssl_sanitize_field( $value, rsssl_sanitize_field_type($config_field['type']), $name );
-	$value = apply_filters("rsssl_fieldvalue", $value, sanitize_text_field($name));
+	$type = rsssl_sanitize_field_type($config_field['type']);
+	$value = rsssl_sanitize_field( $value, $type, $name );
+	$value = apply_filters("rsssl_fieldvalue", $value, sanitize_text_field($name), $type);
 	$options[$name] = $value;
 	if ( is_multisite() && rsssl_is_networkwide_active() ) {
 		update_site_option( 'rsssl_options', $options );
@@ -362,8 +341,7 @@ function rsssl_rest_api_fields_get(){
 
 	$output = array();
 	$fields = rsssl_fields();
-
-	$menu_items = rsssl_menu('settings');
+	$menu = rsssl_menu();
 	foreach ( $fields as $index => $field ) {
 		/**
 		 * Load data from source
@@ -387,10 +365,14 @@ function rsssl_rest_api_fields_get(){
 		$fields[$index] = $field;
 	}
 
-    $updated_menu_items = rsssl_filter_menu_items($menu_items['menu_items'], $fields);
-    $menu_items['menu_items'] = $updated_menu_items;
+    //remove empty menu items
+    foreach ($menu as $key => $menu_group ){
+	    $menu_group['menu_items'] = rsssl_drop_empty_menu_items($menu_group['menu_items'], $fields);
+	    $menu[$key] = $menu_group;
+    }
+
 	$output['fields'] = $fields;
-	$output['menu'] = $menu_items;
+	$output['menu'] = $menu;
 	$output['progress'] = RSSSL()->progress->get();
     $output = apply_filters('rsssl_rest_api_fields_get', $output);
 	$response = json_encode( $output );
@@ -405,20 +387,21 @@ function rsssl_rest_api_fields_get(){
  * @param $fields
  * @return array
  */
-function rsssl_filter_menu_items( $menu_items, $fields) {
+function rsssl_drop_empty_menu_items( $menu_items, $fields) {
     $new_menu_items = $menu_items;
     foreach($menu_items as $key => $menu_item) {
         $searchResult = array_search($menu_item['id'], array_column($fields, 'menu_id'));
         if($searchResult === false) {
             unset($new_menu_items[$key]);
+            //reset array keys to prevent issues with react
+	        $new_menu_items = array_values($new_menu_items);
         } else {
             if(isset($menu_item['menu_items'])){
-                $updatedValue = rsssl_filter_menu_items($menu_item['menu_items'], $fields);
+                $updatedValue = rsssl_drop_empty_menu_items($menu_item['menu_items'], $fields);
                 $new_menu_items[$key]['menu_items'] = $updatedValue;
             }
         }
     }
-
     return $new_menu_items;
 }
 
@@ -460,6 +443,7 @@ function rsssl_sanitize_field( $value, $type, $id ) {
 		case 'database':
 			return sanitize_title($value);
 		case 'select':
+		case 'host':
 		case 'text':
 		    return sanitize_text_field( $value );
         case 'textarea':
@@ -471,6 +455,8 @@ function rsssl_sanitize_field( $value, $type, $id ) {
 				$value = array( $value );
 			}
 			return array_map( 'sanitize_text_field', $value );
+		case 'password':
+			return rsssl_encode_password($value);
 		case 'email':
 			return sanitize_email( $value );
 		case 'url':
@@ -486,6 +472,37 @@ function rsssl_sanitize_field( $value, $type, $id ) {
 		default:
 			return sanitize_text_field( $value );
 	}
+}
+
+/**
+ * Sanitize and encode a password
+ *
+ * @param $password
+ *
+ * @return mixed|string
+ */
+function rsssl_encode_password($password) {
+	if ( strlen(trim($password)) === 0 ) {
+		return $password;
+	}
+
+    $password = sanitize_text_field($password);
+	if (strpos( $password , 'rsssl_') !== FALSE ) {
+		return $password;
+	}
+
+	$key = get_site_option('rsssl_key');
+	if ( !$key ) {
+		update_site_option( 'rsssl_key' , time() );
+		$key = get_site_option('rsssl_key');
+	}
+
+	$ivlength = openssl_cipher_iv_length('aes-256-cbc');
+	$iv = openssl_random_pseudo_bytes($ivlength);
+	$ciphertext_raw = openssl_encrypt($password, 'aes-256-cbc', $key, 0, $iv);
+	$key = base64_encode( $iv.$ciphertext_raw );
+
+	return 'rsssl_'.$key;
 }
 
 /**

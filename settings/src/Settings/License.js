@@ -16,7 +16,6 @@ class License extends Component {
             noticesLoaded: false,
             notices: [],
         };
-        this.highLightClass = this.props.highLightedField===this.props.field.id ? 'rsssl-highlight' : '';
     }
 
     getLicenseNotices(){
@@ -79,7 +78,6 @@ class License extends Component {
          * There is no "PasswordControl" in WordPress react yet, so we create our own license field.
          */
         return (
-            <div className={ this.highLightClass}>
                 <div className="components-base-control">
                  <div className="components-base-control__field">
                      <label
@@ -95,7 +93,6 @@ class License extends Component {
                     {!noticesLoaded && <Placeholder></Placeholder>}
                     {noticesLoaded && notices.map((notice, i) => <TaskElement key={i} index={i} notice={notice} onCloseTaskHandler={this.onCloseTaskHandler} highLightField=""/>)}
                 </div>
-            </div>
         );
 
     }

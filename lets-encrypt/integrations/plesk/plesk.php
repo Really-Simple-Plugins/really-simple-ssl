@@ -41,10 +41,10 @@ class rsssl_plesk
 	 */
 	public function __construct()
 	{
-		$password = RSSSL_LE()->letsencrypt_handler->decode( rsssl_get_value('plesk_password') );
-		$host = rsssl_get_value('plesk_host');
+		$password = RSSSL_LE()->letsencrypt_handler->decode( rsssl_get_option('plesk_password') );
+		$host = rsssl_get_option('plesk_host');
 		$this->host =  str_replace(array('http://', 'https://', ':8443'), '', $host);
-		$this->login = rsssl_get_value('plesk_username');
+		$this->login = rsssl_get_option('plesk_username');
 		$this->password = $password;
 		$this->ssl_installation_url = 'https://'.$this->host.":8443/smb/ssl-certificate/list/id/21";
 	}
