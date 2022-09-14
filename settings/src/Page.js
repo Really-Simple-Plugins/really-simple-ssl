@@ -123,10 +123,16 @@ class Page extends Component {
      * @param value
      */
     setPageProps(key, value){
-        this.pageProps[key] = value;
-        this.setState({
-            pageProps: this.pageProps,
-        })
+        const {
+            pageProps,
+        } = this.state;
+        //if (pageProps[key] !== value ) {
+            this.pageProps[key] = value;
+            this.setState({
+                pageProps: this.pageProps,
+            })
+        //}
+
     }
 
     /*

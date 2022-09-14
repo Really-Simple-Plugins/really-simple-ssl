@@ -20,27 +20,23 @@ const OnboardingModal = (props) => {
         useUpdateEffect(()=> {
             console.log(props.showOnBoardingModal);
             if (props.showOnBoardingModal===true) {
-                rsssl_api.runTest('dismiss_modal', 'refresh', false).then(( response ) => {
+                let data={};
+                data.dismiss = false;
+                rsssl_api.runTest('dismiss_modal', 'refresh', data).then(( response ) => {
                     setShow(true);
                 });
             }
         });
 
     const dismissModal = () => {
-        props.setShowOnBoardingModal(false);
-        rsssl_api.runTest('dismiss_modal', 'refresh', true).then(( response ) => {
-            setShow(false);});
+        let data={};
+        data.dismiss = true;
+        rsssl_api.runTest('dismiss_modal', 'refresh', data).then(( response ) => {
+            setShow(false);
+            props.setShowOnBoardingModal(false);
+        });
     }
 
-
-//     rsssl_api.runTest('get_modal_status' ).then( ( response ) => {
-//         setShow(!response.data.dismissed );
-//     });
-//     console.log(props.pageProps);
-//     if (props.pageProps.showModal===true) {
-//         rsssl_api.runTest('dismiss_modal', 'refresh', true).then(( response ) => {setShow(false);});
-//         setShow(true);
-//     }
     return (
         <>
             { (show) && <>

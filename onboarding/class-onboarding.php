@@ -52,9 +52,17 @@ class rsssl_onboarding {
 		return $data;
 	}
 
+	/**
+	 * Toggle modal status
+	 *
+	 * @param $request
+	 *
+	 * @return void
+	 */
 	public function dismiss_modal($request){
 		if (!rsssl_user_can_manage()) return;
-		$dismiss = boolval($request->get_json_params());
+		$data = json_decode($request['data']);
+		$dismiss = boolval($data->dismiss);
 		update_option("rsssl_onboarding_dismissed", $dismiss, false);
 	}
 
