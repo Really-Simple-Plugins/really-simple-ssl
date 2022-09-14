@@ -1,5 +1,5 @@
 .rsssl-lets-encrypt-tests {
-  margin:10px 30px;
+  margin:10px 40px;
   .rsssl-progress-bar {
     padding-block: 0;
     margin-bottom:20px;
@@ -92,13 +92,30 @@
           width: 50%;
         }
       }
-
     }
   }
 
-  .rsssl-activation-buttons {
-    display: flex;
-    flex-flow: row-reverse;
+  .rsssl-modal-content-step-footer {
+    display:flex;
+    align-items: center;
+    margin-top: var(--rsp-spacing-l);
+    gap: var(--rsp-spacing-m);
+    .components-toggle-control .components-base-control__field{
+      margin:0;
+      flex-direction: initial;
+      .components-toggle-control__label {
+        margin-right:12px;
+      }
+    }
+    button, a, label{
+      font-size: var(--rsp-fs-400);
+      font-weight: 500;
+      line-height: 1.5;
+    }
+  }
+
+  .rsssl-modal-subtitle {
+    display:none;
   }
 }
 

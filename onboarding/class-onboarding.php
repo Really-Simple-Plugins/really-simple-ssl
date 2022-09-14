@@ -21,11 +21,43 @@ class rsssl_onboarding {
 		self::$_this = $this;
 		add_action( 'rest_api_init', array($this, 'onboarding_rest_route'), 10 );
 		add_action( 'admin_init', array( $this, 'maybe_redirect_to_settings_page'), 40);
+		add_filter("rsssl_run_test", array($this, 'handle_onboarding_request'), 10, 3);
+
 	}
 
 	static function this() {
 		return self::$_this;
 	}
+
+	public function handle_onboarding_request($data, $test, $request){
+		if ( ! current_user_can('manage_security') ) {
+			return false;
+		}
+//		delete_option('rsssl_network_activation_status');
+//		delete_option("rsssl_onboarding_dismissed");
+		switch( $test ){
+			case 'override_ssl_detection':
+				return $this->override_ssl_detection($request);
+			case 'activate_ssl':
+				return RSSSL()->really_simple_ssl->activate_ssl($request);
+			case 'activate_ssl_networkwide':
+				return RSSSL()->rsssl_multisite->process_ssl_activation_step();
+			case 'get_modal_status':
+				return  ["dismissed" => get_option("rsssl_onboarding_dismissed") || !$this->show_onboarding_modal()];
+			case 'dismiss_modal':
+				$this->dismiss_modal($request);
+				return ['success'=>true];
+		}
+
+		return $data;
+	}
+
+	public function dismiss_modal($request){
+		if (!rsssl_user_can_manage()) return;
+		$dismiss = boolval($request->get_json_params());
+		update_option("rsssl_onboarding_dismissed", $dismiss, false);
+	}
+
 
 	public function maybe_redirect_to_settings_page() {
 		if ( get_transient('rsssl_redirect_to_settings_page' ) ) {
@@ -63,28 +95,7 @@ class rsssl_onboarding {
 				return rsssl_user_can_manage();
 			}
 		) );
-		register_rest_route( 'reallysimplessl/v1', 'activate_ssl', array(
-			'methods'  => 'POST',
-			'callback' => array( RSSSL()->really_simple_ssl, 'activate_ssl' ),
-			'permission_callback' => function () {
-				return rsssl_user_can_manage();
-			}
-		) );
 
-		register_rest_route( 'reallysimplessl/v1', 'activate_ssl_networkwide', array(
-			'methods'  => 'POST',
-			'callback' => array( RSSSL()->rsssl_multisite, 'process_ssl_activation_step' ),
-			'permission_callback' => function () {
-				return rsssl_user_can_manage();
-			}
-		) );
-		register_rest_route( 'reallysimplessl/v1', 'override_ssl_detection', array(
-			'methods'  => 'POST',
-			'callback' => array( $this, 'override_ssl_detection' ),
-			'permission_callback' => function () {
-				return rsssl_user_can_manage();
-			}
-		) );
 		register_rest_route( 'reallysimplessl/v1', 'onboarding_actions', array(
 			'methods'  => 'POST',
 			'callback' => array( $this, 'onboarding_actions' ),
@@ -126,8 +137,6 @@ class rsssl_onboarding {
 				}
 				$next_action = 'completed';
 			}
-		} else if ( $data['id'] ==='dismiss_onboarding_modal'){
-			update_option("rsssl_onboarding_dismissed", true, false);
 		}
 		$output = [
 			'next_action' => $next_action,
@@ -146,7 +155,7 @@ class rsssl_onboarding {
 
 	public function override_ssl_detection($request) {
 		if ( ! rsssl_user_can_manage() ) {
-			return;
+			return false;
 		}
 		$data = $request->get_json_params();
 		$override_ssl = $data['overrideSSL']===true;
@@ -155,7 +164,7 @@ class rsssl_onboarding {
 		} else {
 			delete_option('rsssl_ssl_detection_overridden' );
 		}
-		exit;
+		return ['success'=>true];
 	}
 
 	/**
@@ -163,6 +172,11 @@ class rsssl_onboarding {
 	 */
 
 	function show_onboarding_modal() {
+		//for multisite environments, we check if the activation process was started but not completed.
+		if ( is_multisite() && RSSSL()->rsssl_multisite->ssl_activation_started_but_not_completed() ){
+			return true;
+		}
+
 		$is_upgrade = get_option('rsssl_show_onboarding');
 		if ( rsssl_get_option('ssl_enabled') && !$is_upgrade ) {
 			return false;

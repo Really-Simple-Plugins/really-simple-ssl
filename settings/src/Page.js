@@ -5,7 +5,7 @@ import DashboardPage from "./DashBoard/DashboardPage";
 import SettingsPage from "./Settings/SettingsPage";
 import Modal from "./Modal/Modal";
 import PagePlaceholder from './Placeholder/PagePlaceholder';
-import OnboardingModal from "./OnboardingModal";
+import OnboardingModal from "./Onboarding/OnboardingModal";
 import getAnchor from "./utils/getAnchor";
 
 class Page extends Component {
@@ -26,8 +26,10 @@ class Page extends Component {
         this.selectMainMenu = this.selectMainMenu.bind(this);
         this.setPageProps = this.setPageProps.bind(this);
         this.getPreviousAndNextMenuItems = this.getPreviousAndNextMenuItems.bind(this);
+        this.setShowOnBoardingModal = this.setShowOnBoardingModal.bind(this);
         this.state = {
             selectedMainMenuItem: '',
+            showOnBoardingModal: false,
             selectedMenuItem: '',
             selectedStep: 1,
             highLightedField:'',
@@ -63,6 +65,17 @@ class Page extends Component {
         });
     }
 
+    setShowOnBoardingModal(status){
+        const {
+            showOnBoardingModal,
+        } = this.state;
+        if (status !== showOnBoardingModal ) {
+            this.setState({
+                showOnBoardingModal: status,
+            });
+        }
+
+    }
 
     updateFields(fields){
         this.fields = fields;
@@ -269,6 +282,7 @@ class Page extends Component {
     render() {
         const {
             selectedMainMenuItem,
+            showOnBoardingModal,
             selectedMenuItem,
             fields,
             menu,
@@ -280,7 +294,7 @@ class Page extends Component {
         } = this.state;
         return (
             <div className="rsssl-wrapper">
-                <OnboardingModal setPageProps={this.setPageProps} />
+                <OnboardingModal setShowOnBoardingModal={this.setShowOnBoardingModal} showOnBoardingModal={showOnBoardingModal} pageProps={this.pageProps} />
                 {!isAPILoaded && <PagePlaceholder></PagePlaceholder>}
                 {showModal && <Modal handleModal={this.handleModal} data={modalData}/>}
                 {isAPILoaded &&
@@ -319,7 +333,7 @@ class Page extends Component {
                                         previousMenuItem={this.state.previousMenuItem} />
                                 }
                                 { selectedMainMenuItem === 'dashboard' &&
-                                    <DashboardPage isAPILoaded={isAPILoaded} fields={fields} selectMainMenu={this.selectMainMenu} highLightField={this.highLightField} pageProps={this.pageProps}/>
+                                    <DashboardPage setShowOnBoardingModal={this.setShowOnBoardingModal} isAPILoaded={isAPILoaded} fields={fields} selectMainMenu={this.selectMainMenu} highLightField={this.highLightField} pageProps={this.pageProps}/>
                                 }
                             </div>
                         </>

@@ -75,34 +75,6 @@ export const getOnboarding = (forceRefresh) => {
 	return axios.get(rsssl_settings.site_url+'reallysimplessl/v1/onboarding?forceRefresh='+forceRefresh, config);
 }
 
-export const overrideSSLDetection = (data) => {
-	let config = {
-		headers: {
-			'X-WP-Nonce': rsssl_settings.nonce,
-		}
-	}
-	return axios.post(rsssl_settings.site_url+'reallysimplessl/v1/override_ssl_detection', data, config );
-};
-
-export const activateSSL = (data) => {
-	let config = {
-		headers: {
-			'X-WP-Nonce': rsssl_settings.nonce,
-		}
-	}
-
-	return axios.post(rsssl_settings.site_url+'reallysimplessl/v1/activate_ssl', data, config );
-}
-
-export const activateSSLNetworkwide = (data) => {
-	let config = {
-		headers: {
-			'X-WP-Nonce': rsssl_settings.nonce,
-		}
-	}
-	return axios.post(rsssl_settings.site_url+'reallysimplessl/v1/activate_ssl_networkwide', data, config );
-}
-
 export const onboardingActions = (data) => {
 	let config = {
 		headers: {

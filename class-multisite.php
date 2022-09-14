@@ -112,6 +112,20 @@ if (!class_exists('rsssl_multisite')) {
 		        ),
 	        );
 
+	        $notices['activation_not_completed'] = array(
+		        'callback' => 'RSSSL()->rsssl_multisite->ssl_activation_started_but_not_completed',
+		        'score' => 30,
+		        'output' => array(
+			        'true' => array(
+				        'msg' => __('A networkwide SSL activation process has been started, but has not been completed. Please go to the SSL settings page to copmlete the process.', 'really-simple-ssl').'&nbsp;'.
+				                 '<a href="'.add_query_arg(['page'=>'really-simple-security'],admin_url('options-general.php')).'">'.__('View settings page','really-simple-ssl').'</a>',
+				        'icon' => 'warning',
+				        'plusone' => true,
+				        'admin_notice' => true,
+			        ),
+		        ),
+	        );
+
 	        $notices['subdomains_no_wildcard'] = array(
 		        'callback' => 'RSSSL()->rsssl_multisite->subdomains_no_wildcard',
 		        'score' => 30,
@@ -271,7 +285,7 @@ if (!class_exists('rsssl_multisite')) {
 	    /**
 	     * @param WP_REST_Request $request
 	     *
-	     * @return void
+	     * @return array
 	     */
 		public function process_ssl_activation_step(){
 			if ( !$this->ssl_process_active() ) {
@@ -279,14 +293,10 @@ if (!class_exists('rsssl_multisite')) {
 			}
 			$this->run_ssl_process();
 			$progress = $this->get_process_completed_percentage();
-			$output = [
+			return [
 				'progress' => $progress,
 				'success' => true
 			];
-			$response = json_encode( $output );
-			header( "Content-Type: application/json" );
-			echo $response;
-			exit;
 		}
 
 	    /**
@@ -304,6 +314,17 @@ if (!class_exists('rsssl_multisite')) {
             }
 
             return intval($percentage);
+        }
+
+	    /**
+	     * Check if website has started activation, but didn't completed
+	     * @return bool
+	     */
+		public function ssl_activation_started_but_not_completed(){
+			if ( !get_option('rsssl_network_activation_status') ) {
+				return false;
+			}
+			return get_option('rsssl_network_activation_status')!=='completed';
         }
 
 	    /**

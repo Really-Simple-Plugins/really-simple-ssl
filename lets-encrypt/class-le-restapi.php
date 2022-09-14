@@ -106,38 +106,6 @@ if ( ! class_exists( "rsssl_le_restapi" ) ) {
         }
 
 		/**
-		 * Get activation data
-		 * @return RSSSL_RESPONSE
-		 */
-		public function activation_data(){
-			if ( !rsssl_user_can_manage() ) {
-				return new RSSSL_RESPONSE(
-					'error',
-					'stop',
-					''
-				);
-			}
-
-			$response = RSSSL_LE()->letsencrypt_handler->certificate_status();
-			$certificate_is_valid = $response->status === 'error'; //seems weird, but is correct.
-			$ssl_enabled = RSSSL()->really_simple_ssl->ssl_enabled;
-            //clean up stored pw, if requested
-			RSSSL_LE()->letsencrypt_handler->cleanup_on_ssl_activation();
-
-			$data = [
-				'certificate_is_valid' => $certificate_is_valid,
-				'ssl_enabled' => $ssl_enabled,
-			];
-
-			return new RSSSL_RESPONSE(
-				'success',
-				'continue',
-				'',
-				$data
-			);
-		}
-
-		/**
          * Challenge directory request
          *
 		 * @return RSSSL_RESPONSE
@@ -187,7 +155,10 @@ if ( ! class_exists( "rsssl_le_restapi" ) ) {
 			);
 		}
 
-
+		public function clean_up(){
+			//clean up stored pw, if requested
+			RSSSL_LE()->letsencrypt_handler->cleanup_on_ssl_activation();
+		}
 
 		/**
          * Process a Let's Encrypt test request
@@ -196,7 +167,7 @@ if ( ! class_exists( "rsssl_le_restapi" ) ) {
 		 * @param string $test
 		 * @param WP_REST_Request $request
 		 *
-		 * @return RSSSL_RESPONSE
+		 * @return RSSSL_RESPONSE|array
 		 */
         public function handle_lets_encrypt_request($data, $test, $request){
 	        if ( ! current_user_can('manage_security') ) {
@@ -218,8 +189,6 @@ if ( ! class_exists( "rsssl_le_restapi" ) ) {
 			        return $this->skip_challenge_directory_request();
 		        case 'installation_data':
 			        return $this->installation_data();
-                case 'activation_data':
-			        return $this->activation_data();
 		        case 'is_subdomain_setup':
 		        case 'verify_dns':
 		        case 'rsssl_php_requirement_met':
@@ -247,13 +216,10 @@ if ( ! class_exists( "rsssl_le_restapi" ) ) {
 		        case 'rsssl_cloudways_auto_renew':
 		        case 'rsssl_install_directadmin':
 		        case 'rsssl_plesk_install':
+		        case 'cleanup_on_ssl_activation':
                     return $this->get_installation_progress($data, $test, $request);
                 default:
-                    return new RSSSL_RESPONSE(
-	                    'error',
-	                    'stop',
-	                    sprintf(__( "Test %s not found.", 'really-simple-ssl' ), $test),
-                    );
+                    return $data;
             }
         }
 

@@ -63,13 +63,13 @@ function rsssl_cpanel_set_txt_record(){
 	}
 }
 
-
 /**
  * Add actions for cpanel
  * @param array $fields
  *
  * @return array
  */
+
 function rsssl_cpanel_add_condition_actions($fields){
 	$cpanel = new rsssl_cPanel();
 	if ( $cpanel->credentials_available() ) {
@@ -81,7 +81,9 @@ function rsssl_cpanel_add_condition_actions($fields){
 		$dns_index = array_search( 'dns-verification', array_column( $fields, 'id' ) );
 
 		//clear existing array
-		if ( $auto_ssl || $default_ssl ) $fields[ $installation_index ]['actions'] = array();
+		if ( $auto_ssl || $default_ssl ) {
+			$fields[ $installation_index ]['actions'] = array();
+		}
 		if ( $auto_ssl ) {
 			$fields[ $installation_index ]['actions'][] = [
 				'description' => __( "Attempting to install certificate using AutoSSL...", "really-simple-ssl" ),

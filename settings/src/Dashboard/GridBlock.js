@@ -6,6 +6,7 @@ import {
 import * as rsssl_api from "../utils/api";
 import ProgressBlock from "./ProgressBlock";
 import ProgressHeader from "./ProgressBlockHeader";
+import ProgressFooter from "./ProgressFooter";
 import SecurityFeaturesBlock from './SecurityFeaturesBlock/SecurityFeaturesBlock';
 import SecurityFeaturesFooter from './SecurityFeaturesBlock/SecurityFeaturesFooter';
 import Placeholder from '../Placeholder/Placeholder';
@@ -28,7 +29,7 @@ class GridButton extends Component {
     }
 }
 
-/**
+/*
  * Mapping of components, for use in the config array
  * @type {{SslLabs: JSX.Element}}
  */
@@ -37,6 +38,7 @@ var dynamicComponents = {
     "SecurityFeaturesFooter": SecurityFeaturesFooter,
     "ProgressBlock": ProgressBlock,
     "ProgressHeader": ProgressHeader,
+    "ProgressFooter": ProgressFooter,
 };
 
 class GridBlock extends Component {
@@ -63,7 +65,7 @@ class GridBlock extends Component {
         }
     }
 
-    /**
+    /*
      * Get block data for this grid block, in object format, as defined in settings/config/config.php
      * @param state
      * @returns {Promise<AxiosResponse<any>>}
@@ -115,7 +117,7 @@ class GridBlock extends Component {
         }
     }
 
-    /**
+    /*
      * Allow child blocks to set data on the gridblock
      * @param key
      * @param value
@@ -151,7 +153,7 @@ class GridBlock extends Component {
             }, blockData.content.interval );
         }
 
-        let DynamicBlockProps = { saveChangedFields: this.props.saveChangedFields, setBlockProps: this.setBlockProps, BlockProps: this.BlockProps, runTest: this.runTest, fields: this.props.fields, isApiLoaded: this.props.isApiLoaded, highLightField: this.highLightField, selectMainMenu: this.props.selectMainMenu };
+        let DynamicBlockProps = { saveChangedFields: this.props.saveChangedFields, setShowOnBoardingModal:this.props.setShowOnBoardingModal, setBlockProps: this.setBlockProps, BlockProps: this.BlockProps, runTest: this.runTest, fields: this.props.fields, isApiLoaded: this.props.isApiLoaded, highLightField: this.highLightField, selectMainMenu: this.props.selectMainMenu };
         return (
             <div className={className}>
                 <div className="rsssl-grid-item-header">

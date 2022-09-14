@@ -56,8 +56,6 @@ function rsssl_rest_api_onboarding($request) {
 		"visible" => false
 	];
 
-//	delete_option('rsssl_network_activation_status');
-//	delete_option("rsssl_onboarding_dismissed");
 	//if the user called with a refresh action, clear the cache
 	if ($refresh) {
 		delete_transient('rsssl_certinfo');
@@ -69,7 +67,6 @@ function rsssl_rest_api_onboarding($request) {
 		'certificate_valid' => RSSSL()->rsssl_certificate->is_valid(),
 		"networkwide" => is_multisite() && rsssl_is_networkwide_active(),
 		"network_activation_status" => get_site_option('rsssl_network_activation_status'),
-		"dismissed" => get_option("rsssl_onboarding_dismissed") || !RSSSL()->onboarding->show_onboarding_modal(),
 	];
 }
 

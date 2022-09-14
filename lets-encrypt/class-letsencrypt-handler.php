@@ -123,12 +123,15 @@ class rsssl_letsencrypt_handler {
 
 	/**
 	 * Cleanup. If user did not consent to storage, all password fields should be removed on activation, unless they're needed for renewals
+	 *
+	 * @return bool
 	 */
 	public function cleanup_on_ssl_activation(){
 		if ( !current_user_can('manage_security') ) {
-			return;
+			return false;
 		}
-		$delete_credentials = true;//!rsssl_get_option('store_credentials');
+		error_log("should clean up" );
+		$delete_credentials = !rsssl_get_option('store_credentials');
 		$le_fields = rsssl_le_add_fields([]);
 		if ( !$this->certificate_automatic_install_possible() || !$this->certificate_install_required() || $delete_credentials ) {
 			$le_fields = array_filter($le_fields, function($i){
@@ -140,6 +143,7 @@ class rsssl_letsencrypt_handler {
 			}
 			update_option( 'rsssl_options', $options, false );
 		}
+		return true;
 	}
 
 	/**

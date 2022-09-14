@@ -372,14 +372,10 @@ class rsssl_admin
         }
 
         if ( $is_rest_request ) {
-	        $output = [
+	        return [
                     'success' => !$error,
                     'site_url_changed' => $site_url_changed,
             ];
-	        $response = json_encode( $output );
-	        header( "Content-Type: application/json" );
-	        echo $response;
-	        exit;
         }
     }
 

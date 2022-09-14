@@ -1019,7 +1019,7 @@ function rsssl_blocks(){
 				'type' => 'react', 'data' => 'ProgressHeader'
 			],
 			'content' => ['type'=>'react', 'data' => 'ProgressBlock'],
-			'footer'  => ['type'=>'template', 'data' => 'progress-footer.php'],
+			'footer'  => ['type'=>'react', 'data' => 'ProgressFooter'],
 			'class'    => ' rsssl-column-2',
 		],
 		[

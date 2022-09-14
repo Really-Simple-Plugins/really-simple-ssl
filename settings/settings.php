@@ -146,6 +146,9 @@ function rsssl_run_test($request){
     $state = $request->get_param('state');
     $state =  $state !== 'undefined' ? $state : false;
 	switch($test){
+        case 'ssl_status_data':
+            $data = rsssl_ssl_status_data();
+            break;
         case 'ssltest':
 	        require_once( rsssl_path . 'ssllabs/class-ssllabs.php' );
 	        $test = new rsssl_ssllabs();
@@ -164,6 +167,24 @@ function rsssl_run_test($request){
 	header( "Content-Type: application/json" );
 	echo $response;
 	exit;
+}
+
+/**
+ * Get activation data
+ * @return array
+ */
+function rsssl_ssl_status_data(){
+	if ( !rsssl_user_can_manage() ) {
+		return [];
+	}
+
+	$response = RSSSL_LE()->letsencrypt_handler->certificate_status();
+	$certificate_is_valid = $response->status === 'error'; //seems weird, but is correct.
+	$ssl_enabled = RSSSL()->really_simple_ssl->ssl_enabled;
+	return [
+		'certificate_is_valid' => true,// $certificate_is_valid || ( defined( 'RSSSL_FORCE_ACTIVATE' ) && RSSSL_FORCE_ACTIVATE ),
+		'ssl_enabled' => false,//$ssl_enabled,
+	];
 }
 
 /**

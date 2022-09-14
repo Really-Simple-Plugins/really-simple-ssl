@@ -1,13 +1,13 @@
 import {useState, useEffect} from "@wordpress/element";
 import { Button, ToggleControl } from '@wordpress/components';
-import * as rsssl_api from "./utils/api";
+import * as rsssl_api from "../utils/api";
 import { __ } from '@wordpress/i18n';
 import update from 'immutability-helper';
 import {useUpdateEffect} from 'react-use';
-import Icon from "./utils/Icon";
+import Icon from "../utils/Icon";
+import Placeholder from '../Placeholder/Placeholder';
 
-const OnboardingModal = (props) => {
-    const [show, setShow] = useState(false);
+const Onboarding = (props) => {
     const [steps, setSteps] = useState([]);
     const [overrideSSL, setOverrideSSL] = useState(false);
     const [certificateValid, setCertificateValid] = useState(false);
@@ -21,7 +21,7 @@ const OnboardingModal = (props) => {
     useUpdateEffect(()=> {
         // do componentDidUpdate logic
         if ( networkProgress<100 && networkwide && networkActivationStatus==='main_site_activated' ){
-            rsssl_api.activateSSLNetworkwide().then((response) => {
+            rsssl_api.runTest('activate_ssl_networkwide' ).then( ( response ) => {
                if (response.data.success) {
                     setNetworkProgress(response.data.progress);
                     if (response.data.progress>=100) {
@@ -30,6 +30,7 @@ const OnboardingModal = (props) => {
                 }
             });
         }
+
     })
 
     useEffect(() => {
@@ -48,7 +49,6 @@ const OnboardingModal = (props) => {
             setNetworkActivationStatus(response.data.network_activation_status);
             setSteps(steps);
             setStepsChanged('initial');
-            setShow(!response.data.dismissed );
         });
     }
 
@@ -72,20 +72,9 @@ const OnboardingModal = (props) => {
         }, 1000)
     }
 
-    const dismissModal = () => {
-        let data={};
-        data.id='dismiss_onboarding_modal';
-        data.action='dismiss';
-        data.type='';
-        setShow(false)
-        rsssl_api.onboardingActions(data).then(( response ) => {
-
-        });
-    }
-
     const activateSSL = () => {
         let sslUrl = window.location.href.replace("http://", "https://");
-        rsssl_api.activateSSL().then((response) => {
+        rsssl_api.runTest('activate_ssl' ).then( ( response ) => {
             steps[0].visible = false;
             steps[1].visible = true;
             //change url to https, after final check
@@ -120,7 +109,6 @@ const OnboardingModal = (props) => {
     }
 
     const itemButtonHandler = (id, type, action) => {
-
         let data={};
         data.action = action;
         data.id = id;
@@ -237,7 +225,7 @@ const OnboardingModal = (props) => {
                     disabled={disabled && activateSSLDisabled}
                     onClick={() => {
                         if(action === "dismiss") {
-                            dismissModal();
+                            props.dismissModal();
                         }
                         if(action === "activate_ssl") {
                             activateSSL();
@@ -254,10 +242,10 @@ const OnboardingModal = (props) => {
                         setOverrideSSL(value);
                         let data = {};
                         data.overrideSSL = value;
-                        rsssl_api.overrideSSLDetection(data).then((response) => {
+                        rsssl_api.runTest('override_ssl_detection' ).then( ( response ) => {
                             setActivateSSLDisabled(!value)
                         });
-                    }}
+                       }}
                 />
             };
 
@@ -269,6 +257,7 @@ const OnboardingModal = (props) => {
 
         return (
             <>
+                {!stepsChanged && <Placeholder lines="10"></Placeholder>}
                 {
                     stepsChanged && steps.map((step, index) => {
                         const {title, subtitle, items, info_text: infoText, buttons, visible} = step;
@@ -301,29 +290,9 @@ const OnboardingModal = (props) => {
 
     return (
         <>
-            { (show) && <>
-                <div className="rsssl-modal-backdrop">&nbsp;</div>
-                <div className="rsssl-modal rsssl-onboarding">
-                    <div className="rsssl-modal-header">
-                      <img className="rsssl-logo"
-                           src={rsssl_settings.plugin_url + 'assets/img/really-simple-ssl-logo.svg'}
-                           alt="Really Simple SSL logo"/>
-                        <button type="button" className="rsssl-modal-close" data-dismiss="modal" aria-label="Close" onClick={ dismissModal }>
-                            <svg aria-hidden="true" focusable="false" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512" height="24" >
-                                <path fill="#000000" d="M310.6 361.4c12.5 12.5 12.5 32.75 0 45.25C304.4 412.9 296.2 416 288 416s-16.38-3.125-22.62-9.375L160 301.3L54.63 406.6C48.38 412.9 40.19 416 32 416S15.63 412.9 9.375 406.6c-12.5-12.5-12.5-32.75 0-45.25l105.4-105.4L9.375 150.6c-12.5-12.5-12.5-32.75 0-45.25s32.75-12.5 45.25 0L160 210.8l105.4-105.4c12.5-12.5 32.75-12.5 45.25 0s12.5 32.75 0 45.25l-105.4 105.4L310.6 361.4z"/>
-                            </svg>
-                        </button>
-                    </div>
-
-                    <div className="rsssl-modal-content" id="rsssl-message">
-                        {renderSteps()}
-                    </div>
-
-                    <div className="rssl-modal-footer"/>
-                </div>
-            </> }
+           {renderSteps()}
         </>
     )
 }
 
-export default OnboardingModal;
+export default Onboarding;
