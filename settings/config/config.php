@@ -37,6 +37,30 @@ function rsssl_menu(){
 					],
 				],
 				[
+					'id' => 'hardening',
+					'title' => __('Hardening', 'really-simple-ssl'),
+					'featured' => true,
+					'groups' => [
+						[
+							'id' => 'hardening_basic',
+							'helpLink'  => 'https://really-simple-ssl.com',
+							'title' => __('Hardening features', 'really-simple-ssl'),
+						],
+						[
+							'id' => 'hardening_extended',
+							'premium' => true,
+							'helpLink'  => 'https://really-simple-ssl.com',
+							'title' => __('Advanced hardening features', 'really-simple-ssl'),
+						],
+						[
+							'id' => 'hardening_xml',
+							'premium' => true,
+							'helpLink'  => 'https://really-simple-ssl.com',
+							'title' => __('XML RPC', 'really-simple-ssl'),
+						],
+					],
+				],
+				[
 					'id' => 'mixed_content_scan',
 					'title' => __('Mixed Content Scan', 'really-simple-ssl'),
 					'premium' => true,
@@ -64,6 +88,7 @@ function rsssl_menu(){
 				[
 					'id' => 'recommended_security_headers',
 					'title' => __('Recommended Security Headers', 'really-simple-ssl'),
+					'premium' => true,
 					'groups' => [
 						[
 							'id' => 'recommended_security_headers',
@@ -80,6 +105,7 @@ function rsssl_menu(){
 					'id' => 'hsts',
 					'title' => __('HTTP Strict Transport Security', 'really-simple-ssl'),
 					'intro' => __("Intro HSTS", "really-simple-ssl"),
+					'premium' => true,
 					'groups' => [
 						[
 							'id' => 'hsts',
@@ -96,6 +122,7 @@ function rsssl_menu(){
 					'id' => 'permissions_policy',
 					'title' => __('Permissions Policy', 'really-simple-ssl'),
 					'intro' => __("Permissions Policy", "really-simple-ssl"),
+					'premium' => true,
 					'groups' => [
 						[
 							'id' => 'permissions_policy',
@@ -109,6 +136,7 @@ function rsssl_menu(){
 					'id' => 'content_security_policy',
 					'title' => __('Content Security Policy', 'really-simple-ssl'),
 					'intro' => __("Content Security Policy intro", "really-simple-ssl"),
+					'premium' => true,
 					'groups' => [
 						[
 							'id' => 'upgrade_insecure_requests',
@@ -141,30 +169,6 @@ function rsssl_menu(){
 					'title' => __('Cross Origin Policy', 'really-simple-ssl'),
 					'helpLink'  => 'https://really-simple-ssl.com',
 
-				],
-				[
-					'id' => 'hardening',
-					'title' => __('Hardening', 'really-simple-ssl'),
-					'featured' => __('Improve your security with the most popular security features for Wordpress', 'really-simple-ssl'),
-					'groups' => [
-						[
-							'id' => 'hardening_basic',
-							'helpLink'  => 'https://really-simple-ssl.com',
-							'title' => __('Hardening features', 'really-simple-ssl'),
-						],
-						[
-							'id' => 'hardening_extended',
-							'premium' => true,
-							'helpLink'  => 'https://really-simple-ssl.com',
-							'title' => __('Advanced hardening features', 'really-simple-ssl'),
-						],
-						[
-							'id' => 'hardening_xml',
-							'premium' => true,
-							'helpLink'  => 'https://really-simple-ssl.com',
-							'title' => __('XML RPC', 'really-simple-ssl'),
-						],
-					],
 				],
 			],
 		],

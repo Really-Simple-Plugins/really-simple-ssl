@@ -253,44 +253,36 @@ const Onboarding = (props) => {
         })
     }
 
-    const renderSteps = () => {
-
-        return (
-            <>
-                {!stepsChanged && <Placeholder lines="10"></Placeholder>}
-                {
-                    stepsChanged && steps.map((step, index) => {
-                        const {title, subtitle, items, info_text: infoText, buttons, visible} = step;
-                        return (
-                            <div className="rsssl-modal-content-step" key={index} style={{ display: visible ? 'block' : 'none' }}>
-                                {title && <h2 className="rsssl-modal-subtitle">{title}</h2>}
-                                {subtitle && <div className="rsssl-modal-description">{subtitle}</div>}
-                                <ul>
-                                    { parseStepItems(items) }
-                                </ul>
-                                { certificateValid && infoText && <div className="rsssl-modal-description" dangerouslySetInnerHTML={{__html: infoText}} /> }
-                                { !certificateValid &&
-                                    <div className="rsssl-modal-description">
-                                       <a href="#" onClick={ (e) => refreshSSLStatus(e)}>
-                                           { __("Refresh SSL status", "really-simple-ssl")}
-                                       </a>&nbsp;{__("The SSL detection method is not 100% accurate.", "really-simple-ssl")}.&nbsp;
-                                       {__("If you’re certain an SSL certificate is present, and refresh SSL status does not work, please check “Override SSL detection” to continue activating SSL.", "really-simple-ssl")}
-                                    </div> }
-                                <div className="rsssl-modal-content-step-footer">
-                                    {parseStepButtons(buttons)}
-                                </div>
-
-                            </div>
-                        )
-                    })
-                }
-            </>
-        )
-    }
 
     return (
         <>
-           {renderSteps()}
+            {!stepsChanged && <Placeholder lines="12"></Placeholder>}
+            {
+                stepsChanged && steps.map((step, index) => {
+                    const {title, subtitle, items, info_text: infoText, buttons, visible} = step;
+                    return (
+                        <div className="rsssl-modal-content-step" key={index} style={{ display: visible ? 'block' : 'none' }}>
+                            {title && <h2 className="rsssl-modal-subtitle">{title}</h2>}
+                            {subtitle && <div className="rsssl-modal-description">{subtitle}</div>}
+                            <ul>
+                                { parseStepItems(items) }
+                            </ul>
+                            { certificateValid && infoText && <div className="rsssl-modal-description" dangerouslySetInnerHTML={{__html: infoText}} /> }
+                            { !certificateValid &&
+                                <div className="rsssl-modal-description">
+                                   <a href="#" onClick={ (e) => refreshSSLStatus(e)}>
+                                       { __("Refresh SSL status", "really-simple-ssl")}
+                                   </a>&nbsp;{__("The SSL detection method is not 100% accurate.", "really-simple-ssl")}.&nbsp;
+                                   {__("If you’re certain an SSL certificate is present, and refresh SSL status does not work, please check “Override SSL detection” to continue activating SSL.", "really-simple-ssl")}
+                                </div> }
+                            <div className="rsssl-modal-content-step-footer">
+                                {parseStepButtons(buttons)}
+                            </div>
+
+                        </div>
+                    )
+                })
+            }
         </>
     )
 }

@@ -4,17 +4,14 @@ import Onboarding from "./Onboarding";
 import update from 'immutability-helper';
 import {useUpdateEffect} from 'react-use';
 const OnboardingModal = (props) => {
-    const [show, setShow] = useState(false);
     const [modalLoaded, setModalLoaded] = useState(false);
     useEffect(() => {
         if ( !modalLoaded ) {
             rsssl_api.runTest('get_modal_status' ).then( ( response ) => {
-                setShow(!response.data.dismissed );
                 setModalLoaded(true);
+                props.setShowOnBoardingModal(!response.data.dismissed);
             });
-
         }
-
     });
 
         useUpdateEffect(()=> {
@@ -22,9 +19,7 @@ const OnboardingModal = (props) => {
             if (props.showOnBoardingModal===true) {
                 let data={};
                 data.dismiss = false;
-                rsssl_api.runTest('dismiss_modal', 'refresh', data).then(( response ) => {
-                    setShow(true);
-                });
+                rsssl_api.runTest('dismiss_modal', 'refresh', data).then(( response ) => {});
             }
         });
 
@@ -32,14 +27,13 @@ const OnboardingModal = (props) => {
         let data={};
         data.dismiss = true;
         rsssl_api.runTest('dismiss_modal', 'refresh', data).then(( response ) => {
-            setShow(false);
             props.setShowOnBoardingModal(false);
         });
     }
 
     return (
         <>
-            { (show) && <>
+            { (props.showOnBoardingModal) && <>
                 <div className="rsssl-modal-backdrop">&nbsp;</div>
                 <div className="rsssl-modal rsssl-onboarding">
                     <div className="rsssl-modal-header">

@@ -43,7 +43,7 @@ class Header extends Component {
                                target="_blank">{__("Support", "really-simple-ssl")}</a>
                         }
                         {!rsssl_settings.pro_active &&
-                            <a href="https://really-simple-ssl.com/pro"
+                            <a href={rsssl_settings.upgrade_link}
                                className="button button-black"
                                target="_blank">{__("Get Pro", "really-simple-ssl")}</a>
                         }

@@ -2408,7 +2408,7 @@ class rsssl_admin
 	            'score' => 5,
 	            'output' => array(
 		            'true' => array(
-			            'url' => 'https://really-simple-ssl.com/pro/',
+			            'url' => $this->pro_url,
 			            'msg' => __( "Really Simple SSL pro is not up to date. Update Really Simple SSL pro to ensure compatibility.", "really-simple-ssl"),
 			            'icon' => 'open',
 			            'dismissible' => false,
@@ -2682,7 +2682,7 @@ class rsssl_admin
 	            'output' => array(
 		            'true' => array(
 			            'msg' => __("Improve security with Really Simple SSL Pro.", "really-simple-ssl"),
-			            'url' => 'https://really-simple-ssl.com/pro',
+			            'url' => $this->pro_url,
 			            'icon' => 'premium',
 			            'dismissible' => false,
 		            ),
@@ -2738,7 +2738,7 @@ class rsssl_admin
 		            'true' => array(
 			            'msg' => __( "Black Friday sale! Get 40% Off Really Simple SSL Pro", 'really-simple-ssl' ) ,
 			            'icon' => 'premium',
-			            'url' => 'https://really-simple-ssl.com/pro/',
+			            'url' => $this->pro_url,
 			            'dismissible' => true,
 			            'plusone' => true,
 		            ),
@@ -3214,7 +3214,7 @@ class rsssl_admin
 	    array_unshift($links, $support);
 
 	    if ( ! defined( 'rsssl_pro_version' ) ) {
-	        $upgrade_link = '<a style="color:#2271b1;font-weight:bold" target="_blank" href="https://really-simple-ssl.com/pro">'
+	        $upgrade_link = '<a style="color:#2271b1;font-weight:bold" target="_blank" href="'.$this->pro_url.'">'
 		      . __( 'Improve security - Upgrade to Pro', 'really-simple-ssl' ) . '</a>';
 	        array_unshift( $links, $upgrade_link );
 	    }

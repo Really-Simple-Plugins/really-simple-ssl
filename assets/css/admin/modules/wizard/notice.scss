@@ -11,6 +11,7 @@
       justify-content: space-between;
       font-size: var(--rsp-fs-400);
       font-weight: 600;
+      cursor:pointer;
       &::-webkit-details-marker {
         display:none;
       }

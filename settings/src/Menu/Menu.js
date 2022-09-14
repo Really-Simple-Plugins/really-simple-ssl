@@ -1,5 +1,6 @@
 import Placeholder from '../Placeholder/Placeholder';
 import MenuItem from './MenuItem';
+import { __ } from '@wordpress/i18n';
 
 import {
     Component,
@@ -40,6 +41,7 @@ class Menu extends Component {
                                     />
                                 )
                             }
+                            <div className="rsssl-premium-menu-item"><div><a target="_blank" href={rsssl_settings.upgrade_link} className='button button-primary'>{__('Go Pro', 'really-simple-ssl')}</a></div></div>
                         </div>
                     </div>
                     <div className="rsssl-grid-item-footer">
