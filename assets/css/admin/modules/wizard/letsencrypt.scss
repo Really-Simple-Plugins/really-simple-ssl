@@ -1,13 +1,13 @@
 .rsssl-lets-encrypt-tests {
-  margin:10px 40px;
+  margin:var(--rsp-spacing-xs) var(--rsp-spacing-xl);
   .rsssl-progress-bar {
     padding-block: 0;
-    margin-bottom:20px;
+    margin-bottom:var(--rsp-spacing-m);
     .rsssl-progress {
       overflow: hidden;
-      height: 20px;
+      height: var(--rsp-spacing-m);
       border-radius: 5px;
-      background-color: #f7f7f7;
+      background-color: var(--rsp-grey-200);
 
       .rsssl-bar {
         height: 100%;
@@ -21,7 +21,7 @@
   }
 
   p {
-    margin-bottom:20px;
+    margin-bottom:var(--rsp-spacing-m);
   }
 
   .rsssl-progress-text {
@@ -29,7 +29,7 @@
     align-items: center;
     @include rsssl-block-padding;
     padding-block: 0;
-    padding-top: 10px;
+    padding-top: var(--rsp-spacing-xs);
 
     .rsssl-progress-percentage {
       font-size: 32px;
@@ -40,7 +40,6 @@
       margin-left: 35px;
       font-size: 18px;
       font-weight: 600;
-
       a {
         margin-left: 3px;
       }
@@ -71,13 +70,10 @@
 
   .rsssl-test-results {
     h4 {
-      margin:20px 0;
+      margin:var(--rsp-spacing-m) 0;
     }
     a+button {
-      margin-left:20px;
-    }
-    button {
-      //margin: 20px 0 0 0;
+      margin-left:var(--rsp-spacing-m);
     }
     .rsssl-certificate-data {
       display:none;
@@ -88,7 +84,7 @@
         display:flex;
         flex-direction: row;
         .rsssl-dns-domain, .rsssl-dns-field {
-          margin-right:20px;
+          margin-right:var(--rsp-spacing-m);
           width: 50%;
         }
       }

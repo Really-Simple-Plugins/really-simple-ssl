@@ -1174,64 +1174,64 @@
   margin-bottom: 24px;
 }
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(1) {
-  width: 80%;
-}
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(2) {
-  width: 67%;
-}
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(3) {
-  width: 73%;
-}
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(4) {
-  width: 65%;
-}
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(5) {
-  width: 76%;
-}
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(6) {
-  width: 66%;
-}
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(7) {
-  width: 99%;
-}
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(8) {
-  width: 98%;
-}
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(9) {
-  width: 68%;
-}
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(10) {
-  width: 88%;
-}
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(11) {
-  width: 61%;
-}
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(12) {
   width: 91%;
 }
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(13) {
-  width: 92%;
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(2) {
+  width: 83%;
 }
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(14) {
-  width: 81%;
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(3) {
+  width: 65%;
 }
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(15) {
-  width: 77%;
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(4) {
+  width: 69%;
 }
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(16) {
-  width: 90%;
-}
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(17) {
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(5) {
   width: 96%;
 }
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(6) {
+  width: 64%;
+}
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(7) {
+  width: 95%;
+}
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(8) {
+  width: 61%;
+}
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(9) {
+  width: 61%;
+}
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(10) {
+  width: 96%;
+}
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(11) {
+  width: 92%;
+}
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(12) {
+  width: 98%;
+}
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(13) {
+  width: 69%;
+}
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(14) {
+  width: 79%;
+}
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(15) {
+  width: 78%;
+}
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(16) {
+  width: 71%;
+}
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(17) {
+  width: 84%;
+}
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(18) {
-  width: 77%;
+  width: 100%;
 }
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(19) {
-  width: 82%;
+  width: 94%;
 }
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(20) {
-  width: 71%;
+  width: 63%;
 }
 .rsssl-placeholder .rsssl-placeholder-line ~ .rsssl-placeholder-line {
   background-color: #ddd;
@@ -1741,17 +1741,17 @@
 }
 
 .rsssl-lets-encrypt-tests {
-  margin: 10px 40px;
+  margin: var(--rsp-spacing-xs) var(--rsp-spacing-xl);
 }
 .rsssl-lets-encrypt-tests .rsssl-progress-bar {
   padding-block: 0;
-  margin-bottom: 20px;
+  margin-bottom: var(--rsp-spacing-m);
 }
 .rsssl-lets-encrypt-tests .rsssl-progress-bar .rsssl-progress {
   overflow: hidden;
-  height: 20px;
+  height: var(--rsp-spacing-m);
   border-radius: 5px;
-  background-color: #f7f7f7;
+  background-color: var(--rsp-grey-200);
 }
 .rsssl-lets-encrypt-tests .rsssl-progress-bar .rsssl-progress .rsssl-bar {
   height: 100%;
@@ -1761,14 +1761,14 @@
   background-color: var(--rsp-color-warning);
 }
 .rsssl-lets-encrypt-tests p {
-  margin-bottom: 20px;
+  margin-bottom: var(--rsp-spacing-m);
 }
 .rsssl-lets-encrypt-tests .rsssl-progress-text {
   display: flex;
   align-items: center;
   padding: var(--rsp-spacing-l) var(--rsp-spacing-xl);
   padding-block: 0;
-  padding-top: 10px;
+  padding-top: var(--rsp-spacing-xs);
 }
 @media screen and (max-width: 1366px) {
   .rsssl-lets-encrypt-tests .rsssl-progress-text {
@@ -1816,10 +1816,10 @@
   margin-left: -19px;
 }
 .rsssl-lets-encrypt-tests .rsssl-test-results h4 {
-  margin: 20px 0;
+  margin: var(--rsp-spacing-m) 0;
 }
 .rsssl-lets-encrypt-tests .rsssl-test-results a + button {
-  margin-left: 20px;
+  margin-left: var(--rsp-spacing-m);
 }
 .rsssl-lets-encrypt-tests .rsssl-test-results .rsssl-certificate-data {
   display: none;
@@ -1829,7 +1829,7 @@
   flex-direction: row;
 }
 .rsssl-lets-encrypt-tests .rsssl-test-results .rsssl-dns-text-records div .rsssl-dns-domain, .rsssl-lets-encrypt-tests .rsssl-test-results .rsssl-dns-text-records div .rsssl-dns-field {
-  margin-right: 20px;
+  margin-right: var(--rsp-spacing-m);
   width: 50%;
 }
 .rsssl-lets-encrypt-tests .rsssl-modal-content-step-footer {
