@@ -323,14 +323,17 @@ class rsssl_admin
     public function activate_ssl($request)
     {
 	    if ( !rsssl_user_can_manage() ) {
-		    return;
-	    }
+		    return [
+			    'success' => false,
+			    'site_url_changed' => false,
+		    ];
+        }
 	    $safe_mode = defined('RSSSL_SAFE_MODE') && RSSSL_SAFE_MODE;
         $error = false;
 	    $is_rest_request =  $request instanceof WP_REST_Request;
 	    $site_url_changed = false;
 
-        if ( $this->site_has_ssl || get_option('rsssl_ssl_detection_overridden') ){
+        if ( $this->site_has_ssl  ){
 
 	        //in a configuration reverse proxy without a set server variable https, add code to wpconfig
 	        if ( $this->do_wpconfig_loadbalancer_fix ) {
@@ -373,8 +376,8 @@ class rsssl_admin
 
         if ( $is_rest_request ) {
 	        return [
-                    'success' => !$error,
-                    'site_url_changed' => $site_url_changed,
+                'success' => !$error,
+                'site_url_changed' => $site_url_changed,
             ];
         }
     }
@@ -1492,7 +1495,6 @@ class rsssl_admin
 			$this->save_options();
 		} else {
 			$this->errors['HTACCESS_NOT_WRITABLE'] = TRUE;
-			$this->trace_log("could not remove rules from htaccess, file not writable");
 		}
 
 	}
@@ -1581,16 +1583,6 @@ class rsssl_admin
         }
 
         return false;
-    }
-
-    /**
-     * @deprecated since 6.0
-     *
-     */
-
-    public function contains_hsts()
-    {
-        return true;
     }
 
 	/**
@@ -1753,29 +1745,19 @@ class rsssl_admin
 
 		if (!rsssl_user_can_manage()) return;
 
-		$this->trace_log("checking if .htaccess can or should be edited...");
-
 		//does it exist?
 		if (!file_exists($this->htaccess_file()) ) {
-			$this->trace_log(".htaccess not found.");
 			return;
 		}
 
 		//check if editing is blocked.
-		if ($this->do_not_edit_htaccess) {
-			$this->trace_log("Edit of .htaccess blocked by setting or define 'do not edit htaccess' in Really Simple SSL.");
+		if (rsssl_get_option('do_not_edit_htaccess')) {
 			return;
 		}
 
 		if ( !is_writable($this->htaccess_file()) ) {
-			//set the wp redirect as fallback, because .htaccess couldn't be edited.
-			if ($this->clicked_activate_ssl()) $this->wp_redirect = true;
-			if (is_multisite()) {
-				RSSSL()->rsssl_multisite->wp_redirect = true;
-				RSSSL()->rsssl_multisite->save_options();
-			}
-			$this->save_options();
-			$this->trace_log(".htaccess not writable.");
+			//set the wp redirect as fallback, if .htaccess couldn't be edited.
+            rsssl_update_option('redirect','wp_redirect');
 			return;
 		}
 

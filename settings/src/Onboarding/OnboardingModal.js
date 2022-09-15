@@ -48,7 +48,7 @@ const OnboardingModal = (props) => {
                     </div>
 
                     <div className="rsssl-modal-content" id="rsssl-message">
-                        <Onboarding dismissModal={dismissModal}/>
+                        <Onboarding selectMainMenu={props.selectMainMenu} isModal={true} dismissModal={dismissModal}/>
                     </div>
 
                     <div className="rssl-modal-footer"/>

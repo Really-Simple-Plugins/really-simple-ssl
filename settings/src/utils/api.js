@@ -64,7 +64,16 @@ export const runLetsEncryptTest = (test, id ) => {
 		}
 	}
 	return axios.get(rsssl_settings.site_url+'reallysimplessl/v1/tests/'+test+'?letsencrypt=1&id='+id, config);
-};
+}
+
+export const doAction = (action, data) => {
+	let config = {
+		headers: {
+			'X-WP-Nonce': rsssl_settings.nonce,
+		}
+	}
+	return axios.post(rsssl_settings.site_url+'reallysimplessl/v1/do_action/'+action, data, config );
+}
 
 export const getOnboarding = (forceRefresh) => {
 	let config = {

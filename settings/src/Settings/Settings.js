@@ -80,6 +80,7 @@ class Settings extends Component {
                             updateFields={this.props.updateFields}
                             dropItemFromModal={this.props.dropItemFromModal}
                             selectMenu={this.props.selectMenu}
+                            selectMainMenu={this.props.selectMainMenu}
                             handleNextButtonDisabled={this.props.handleNextButtonDisabled}
                             menu={this.props.menu}
                             handleModal={this.props.handleModal}

@@ -300,7 +300,7 @@ class Page extends Component {
         } = this.state;
         return (
             <div className="rsssl-wrapper">
-                <OnboardingModal setShowOnBoardingModal={this.setShowOnBoardingModal} showOnBoardingModal={showOnBoardingModal} pageProps={this.pageProps} />
+                <OnboardingModal selectMenu={this.selectMenu} selectMainMenu={this.selectMainMenu} setShowOnBoardingModal={this.setShowOnBoardingModal} showOnBoardingModal={showOnBoardingModal} pageProps={this.pageProps} />
                 {!isAPILoaded && <PagePlaceholder></PagePlaceholder>}
                 {showModal && <Modal handleModal={this.handleModal} data={modalData}/>}
                 {isAPILoaded &&
@@ -330,6 +330,7 @@ class Page extends Component {
                                         highLightedField={this.highLightedField}
                                         selectedMenuItem={selectedMenuItem}
                                         selectedMainMenuItem={selectedMainMenuItem}
+                                        selectMainMenu={this.selectMainMenu}
                                         isAPILoaded={isAPILoaded}
                                         fields={fields}
                                         menu={menu}

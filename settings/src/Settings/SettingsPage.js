@@ -291,6 +291,7 @@ class SettingsPage extends Component {
                     updateFields={this.props.updateFields}
                     dropItemFromModal={this.props.dropItemFromModal}
                     selectMenu={this.props.selectMenu}
+                    selectMainMenu={this.props.selectMainMenu}
                     nextButtonDisabled={nextButtonDisabled}
                     handleNextButtonDisabled={this.handleNextButtonDisabled}
                     getDefaultMenuItem={this.props.getDefaultMenuItem}

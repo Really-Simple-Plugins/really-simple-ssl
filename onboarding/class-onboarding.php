@@ -22,6 +22,7 @@ class rsssl_onboarding {
 		add_action( 'rest_api_init', array($this, 'onboarding_rest_route'), 10 );
 		add_action( 'admin_init', array( $this, 'maybe_redirect_to_settings_page'), 40);
 		add_filter("rsssl_run_test", array($this, 'handle_onboarding_request'), 10, 3);
+		add_filter("rsssl_do_action", array($this, 'handle_onboarding_action'), 10, 3);
 
 	}
 
@@ -47,6 +48,20 @@ class rsssl_onboarding {
 			case 'dismiss_modal':
 				$this->dismiss_modal($request);
 				return ['success'=>true];
+		}
+
+		return $data;
+	}
+
+
+	public function handle_onboarding_action($data, $action, $request){
+		if ( ! current_user_can('manage_security') ) {
+			return false;
+		}
+
+		switch( $action ){
+			case 'override_ssl_detection':
+				return $this->override_ssl_detection($request);
 		}
 
 		return $data;
@@ -154,7 +169,6 @@ class rsssl_onboarding {
 		header( "Content-Type: application/json" );
 		echo $response;
 		exit;
-
 	}
 
 	/**
@@ -165,8 +179,8 @@ class rsssl_onboarding {
 		if ( ! rsssl_user_can_manage() ) {
 			return false;
 		}
-		$data = $request->get_json_params();
-		$override_ssl = $data['overrideSSL']===true;
+		$data = $request->get_params();
+		$override_ssl = isset($data['overrideSSL']) ? $data['overrideSSL']===true : false;
 		if ($override_ssl) {
 			update_option('rsssl_ssl_detection_overridden', true, false );
 		} else {

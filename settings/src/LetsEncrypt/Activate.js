@@ -12,7 +12,7 @@ import {
 const Activate = (props) => {
     return (
         <div className="rsssl-lets-encrypt-tests">
-            <Onboarding />
+            <Onboarding selectMainMenu={props.selectMainMenu}/>
          </div>
     )
 }
