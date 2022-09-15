@@ -1033,8 +1033,8 @@ function rsssl_blocks(){
 			],
 			'title'   => __( "SSL Labs", 'really-simple-ssl' ),
 			'help'    => __( 'A help text', 'really-simple-ssl' ),
-			'content' => [ 'type' => 'test', 'data' => 'ssltest', 'interval'=>1000 ],
-			'footer'  => ['type'=>'html', 'data' => '','button' => [ 'text' => __("Check SSL Health","really-simple-ssl"), 'disabled' => false ]],
+			'content' => [ 'type' => 'react', 'data' => 'SslLabs' ],
+			'footer'  => ['type'=>'react', 'data' => 'SslLabsFooter'],
 			'class'    => '',
 		],
 		[

@@ -5,13 +5,25 @@ class rsssl_ssllabs {
 
 	}
 
-	public function get( $state ){
+	public function get(){
+//		x_log("retrieve ssl labs data");
+//		x_log(get_option('rsssl_ssl_labs_data'));
+		return get_option('rsssl_ssl_labs_data');
+	}
+
+	public function update($data) {
+//		x_log($data);
+		error_log("update action");
+		update_option('rsssl_ssl_labs_data', $data, false);
+	}
+
+	public function get_old( $state ){
 		$ip = get_option( 'rsssl_ssltest_endpoint_ip' );
 		$message = '';
 		$footer_html = '';
 		$disabled = false;
 		$domain = $this->get_host();
-//		$domain = 'really-simple-ssl.com';
+		$domain = 'really-simple-ssl.com';
 		if (strpos($domain, 'localhost')!==false){
 			return ['footerHtml'=>$footer_html,'disabled'=>true, 'html' => '<div class="rsssl-ssl-test"><div class="rsssl-ssl-test-element">'.__("SSL Test is not possible on localhost","really-simple-ssl").'</div></div>', 'progress' => 100];
 		}
@@ -91,20 +103,8 @@ class rsssl_ssllabs {
 			$html_arr[] = '<a href="#">' . __('More information', 'really-simple-ssl').'</a>';
 		}
 		$grade = isset($body->endpoints[0]->grade) ? $body->endpoints[0]->grade : '?';
-		$html = '<div class="rsssl-gridblock-progress-container ' . $class . '">
-					<div class="rsssl-gridblock-progress" style="width:' . $total_progress . '%"></div>
-				</div>';
-		$html .= '<div class="rsssl-ssl-test ' . $class . '">
-					<div class="rsssl-ssl-test-information">
-						<p>' . implode( '</p>
-						<p>', $html_arr ) . '...</p>
-					</div>
-					<div class="rsssl-ssl-test-grade rsssl-h0 rsssl-garde-' . $grade . '">
-						<span>' . $grade . '</span>
-					</div>
-				</div>';
-		$html .= '<div class="rsssl-detailed-report '.$class.'"><a href="'.$url.'" target="_blank">'.__("View detailed report on Qualys SSL Labs", "really-simple-ssl").'</a></div>';
-		return ['footerHtml'=>$footer_html,'disabled'=>$disabled, 'html' => $html, 'progress' => $total_progress ];
+
+
 	}
 
 	/**
@@ -116,23 +116,7 @@ class rsssl_ssllabs {
 		return $endpoint_body && $endpoint_body->details->hstsPolicy->status === 'present';
 	}
 
-	/**
-	 * Check if insecure versions are supported
-	 * @return bool
-	 */
-	private function supports_only_secure_tls(){
-		$endpoint_body = get_option( 'rsssl_ssltest_endpoint');
-		if ( !isset($endpoint_body->details->protocols) ) {
-			return true;
-		}
-		$protocols = $endpoint_body->details->protocols;
-		foreach ( $protocols as $protocol ) {
-			if ($protocol->name==='TLS' && version_compare($protocol->version,'1.2','<')) {
-				return false;
-			}
-		}
-		return true;
-	}
+
 
 	/**
 	 * Get activate test
@@ -178,39 +162,14 @@ class rsssl_ssllabs {
 	 * @return int
 	 */
 	private function get_progress(){
-		//calculate progress
-		$total_progress = 0;
-		$body = get_option('rsssl_ssltest_base_request');
-		$endpoint_body = get_option( 'rsssl_ssltest_endpoint');
 
-		if ($body && isset($body->endpoints) && is_array($body->endpoints) ) {
-			$endpoints = $body->endpoints;
-			$total = count($endpoints);
-			$progress = 0;
-			foreach ($endpoints as $endpoint){
-				$new_progress = isset($endpoint->progress) ? $endpoint->progress :  0;
-				$progress += $new_progress;
-			}
-			$total_progress = $progress/$total;
-		}
-
-		//make sure the last endpoint gets retrieved. We add 5% for that step
-		if ( $total_progress>5 ){
-			$total_progress -= 5;
-			if ( $endpoint_body ) {
-				$total_progress += 5;
-			}
-		}
-
-		$total_progress =  $total_progress==0 ? 1 : $total_progress;
-		return ROUND($total_progress,0);
 	}
 
 	/**
 	 * Get host of this site
 	 * @return false|string
 	 */
-	private function get_host(){
+	public function get_host(){
 		$parse = parse_url(site_url());
 		return isset($parse['host']) ? $parse['host'] : false;
 	}

@@ -7,6 +7,8 @@ import * as rsssl_api from "../utils/api";
 import ProgressBlock from "./ProgressBlock";
 import ProgressHeader from "./ProgressBlockHeader";
 import ProgressFooter from "./ProgressFooter";
+import SslLabs from "./SslLabs";
+import SslLabsFooter from "./SslLabsFooter";
 import SecurityFeaturesBlock from './SecurityFeaturesBlock/SecurityFeaturesBlock';
 import SecurityFeaturesFooter from './SecurityFeaturesBlock/SecurityFeaturesFooter';
 import Placeholder from '../Placeholder/Placeholder';
@@ -39,13 +41,17 @@ var dynamicComponents = {
     "ProgressBlock": ProgressBlock,
     "ProgressHeader": ProgressHeader,
     "ProgressFooter": ProgressFooter,
+    "SslLabs": SslLabs,
+    "SslLabsFooter": SslLabsFooter,
 };
 
 class GridBlock extends Component {
     constructor() {
         super( ...arguments );
         this.footerHtml = this.props.block.footer.data;
-        this.BlockProps=[];
+        this.getBlockData = this.getBlockData.bind(this);
+        this.highLightField = this.highLightField.bind(this);
+        this.setBlockProps = this.setBlockProps.bind(this);
         this.state = {
             isAPILoaded: false,
             content:'',
@@ -53,7 +59,7 @@ class GridBlock extends Component {
             footerHtml:this.props.block.footer.html,
             progress:0,
             testRunning:false,
-            BlockProps:null,
+            BlockProps:[],
         };
         this.dynamicComponents = {
             "getBlockData": this.getBlockData,
@@ -94,9 +100,7 @@ class GridBlock extends Component {
     }
 
     componentDidMount() {
-        this.getBlockData = this.getBlockData.bind(this);
-        this.highLightField = this.highLightField.bind(this);
-        this.setBlockProps = this.setBlockProps.bind(this);
+
         if ( this.props.block.content.type==='html' || this.props.block.content.type==='react' ) {
             let content = this.props.block.content.data;
             this.content = content;
@@ -123,10 +127,17 @@ class GridBlock extends Component {
      * @param value
      */
     setBlockProps(key, value){
-        this.BlockProps[key] = value;
-        this.setState({
-            BlockProps: this.BlockProps,
-        })
+        let {
+                BlockProps,
+            } = this.state;
+
+        if (!BlockProps.hasOwnProperty(key) || BlockProps[key]!==value) {
+            BlockProps[key] = value;
+            this.setState({
+                BlockProps: BlockProps,
+            })
+        }
+
     }
 
     highLightField(fieldId){
@@ -137,7 +148,8 @@ class GridBlock extends Component {
         let {
             isAPILoaded,
             content,
-            footer
+            footer,
+            BlockProps,
         } = this.state;
         let blockData = this.props.block;
         let className = "rsssl-grid-item "+blockData.class+" rsssl-"+blockData.id;
@@ -153,7 +165,7 @@ class GridBlock extends Component {
             }, blockData.content.interval );
         }
 
-        let DynamicBlockProps = { saveChangedFields: this.props.saveChangedFields, setShowOnBoardingModal:this.props.setShowOnBoardingModal, setBlockProps: this.setBlockProps, BlockProps: this.BlockProps, runTest: this.runTest, fields: this.props.fields, isApiLoaded: this.props.isApiLoaded, highLightField: this.highLightField, selectMainMenu: this.props.selectMainMenu };
+        let DynamicBlockProps = { saveChangedFields: this.props.saveChangedFields, setShowOnBoardingModal:this.props.setShowOnBoardingModal, setBlockProps: this.setBlockProps, BlockProps: BlockProps, runTest: this.runTest, fields: this.props.fields, isApiLoaded: this.props.isApiLoaded, highLightField: this.highLightField, selectMainMenu: this.props.selectMainMenu };
         return (
             <div className={className}>
                 <div className="rsssl-grid-item-header">

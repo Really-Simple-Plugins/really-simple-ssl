@@ -5,20 +5,64 @@
   .rsssl-placeholder{
     @include rsssl-block-padding;
   }
+
+  .rsssl-ssl-test {
+    .rsssl-ssl-test-information {
+      div {
+        padding:var(--rsp-spacing-xxs);
+        &.rsssl-test-processing {
+          background-color:var(--rsp-color-warning);
+          color:#fff;
+        }
+        &.rsssl-test-success {
+          background-color:var(--rsp-color-success);
+          color:#fff;
+        }
+        &.rsssl-test-error {
+          background-color:var(--rsp-color-warning);
+          color:#fff;
+        }
+      }
+
+    }
+
+  }
+
+  .rsssl-details {
+    margin:var( --rsp-spacing-m );
+    .rsssl-detail-icon {
+      width:30px;
+    }
+    display:flex;
+  }
+  .rsssl-details +.rsssl-details{
+    margin-top:0;
+  }
+
+
 }
 
-.rsssl-gridblock-progress-container.rsssl-incomplete {
-  height: 4px;
-  width: 100%;
-  display: flex;
-  background: var(--rsp-grey-300);
 
-  .rsssl-gridblock-progress {
-    transition: width 1s ease-in-out;
-    background: var(--rsp-green);
+
+
+.rsssl-gridblock-progress-container{
+    &.rsssl-error {
+      .rsssl-gridblock-progress {
+        background: var(--rsp-color-warning);
+      }
+    }
+    &.rsssl-incomplete, &.rsssl-complete {
+    height: 4px;
+    width: 100%;
+    display: flex;
+    background: var(--rsp-grey-300);
+
+    .rsssl-gridblock-progress {
+      transition: width 1s ease-in-out;
+      background: var(--rsp-green);
+    }
   }
 }
-
 .rsssl-ssl-test {
   display: flex;
   flex: 0 1 auto;
@@ -35,14 +79,5 @@
     }
   }
 }
-.rsssl-detailed-report{
-  text-align: center;
-  @include rsssl-block-padding;
-  padding-block: var(--rsp-spacing-xs);
-}
-.rsssl-disclaimer{
-  font-size: var(--rsp-fs-100);
-  @include rsssl-block-padding;
-  padding-block: var(--rsp-spacing-xs);
-}
+
 
