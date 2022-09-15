@@ -26,7 +26,6 @@ function rsssl_rest_api_onboarding($request) {
 			"subtitle" => __("Before you migrate, please check for:", "really-simple-ssl"),
 			"items" => rsssl_get_items_for_first_step(),
 			"info_text" => $info,
-			"buttons" => rsssl_get_buttons(),
 			"visible" => false
 		];
 	}
@@ -37,22 +36,6 @@ function rsssl_rest_api_onboarding($request) {
 		"subtitle" => __("Now have a look at our new features", "really-simple-ssl"),
 		"items" => rsssl_get_items_for_second_step(),
 		"info_text" => __("Want to know more about our features and plugins?", "really-simple-ssl").' '.sprintf(__("Please read this %sarticle%s.", 'really-simple-ssl'), '<a target="_blank" href="https://really-simple-ssl.com">', '</a>'),
-		"buttons" => [
-			[
-				"title" => __('Go to Dashboard', 'really-simple-ssl'),
-				"variant" => "primary",
-				"disabled" => false,
-				"type" => "button",
-				"action" => "dismiss",
-			],
-			[
-				"title" => __('Dismiss', 'really-simple-ssl'),
-				"variant" => "secondary",
-				"disabled" => false,
-				"type" => "button",
-				"action" => "dismiss",
-			]
-		],
 		"visible" => false
 	];
 
@@ -62,7 +45,7 @@ function rsssl_rest_api_onboarding($request) {
 	}
 	return [
 		"steps" => $steps,
-		"ssl_enabled" => rsssl_get_option("ssl_enabled"),
+		"ssl_enabled" => true,//rsssl_get_option("ssl_enabled"),
 		"ssl_detection_overridden" => get_option('rsssl_ssl_detection_overridden'),
 		'certificate_valid' => RSSSL()->rsssl_certificate->is_valid(),
 		"networkwide" => is_multisite() && rsssl_is_networkwide_active(),
@@ -181,52 +164,6 @@ function rsssl_get_items_for_second_step () {
 	}
 
 	return $items;
-}
-/**
- * Return onboarding items for fresh installs
- * @param $ssl_detected
- * @return array[]
- */
-function rsssl_get_buttons () {
-	$has_valid_cert = RSSSL()->rsssl_certificate->is_valid();
-	$buttons = [];
-	$buttons[] = [
-		"title" => is_multisite() && rsssl_is_networkwide_active() ? __("Activate SSL networkwide", "really-simple-ssl") : __("Activate SSL", "really-simple-ssl"),
-		"variant" => "primary",
-		"disabled" => !$has_valid_cert,
-		"type" => "button",
-		"action" => "activate_ssl",
-	];
-
-	if( $has_valid_cert && !defined('rsssl_pro_version') ) {
-		$buttons[] = [
-			"title" => __("Improve Security with PRO", "really-simple-ssl"),
-			"variant" => "secondary",
-			"disabled" => false,
-			"type" => "link",
-			"target" => "_blank",
-			"href" => RSSSL()->really_simple_ssl->pro_url
-		];
-	}
-
-	if ( !$has_valid_cert ) {
-		$buttons[] = [
-			"title" => __("Install SSL", "really-simple-ssl"),
-			"variant" => "secondary",
-			"disabled" => false,
-			"type" => "link",
-			"target" => "_self",
-			"href" => rsssl_letsencrypt_wizard_url()
-		];
-
-		$buttons[] = [
-			"title" => __("Override SSL Detection", "really-simple-ssl"),
-			"disabled" => false,
-			"type" => "checkbox",
-		];
-	}
-
-	return $buttons;
 }
 
 /**

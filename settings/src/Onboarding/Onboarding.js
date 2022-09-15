@@ -30,7 +30,6 @@ const Onboarding = (props) => {
                 }
             });
         }
-
     })
 
     useEffect(() => {
@@ -44,8 +43,13 @@ const Onboarding = (props) => {
             setOverrideSSL(response.data.ssl_detection_overridden);
             setActivateSSLDisabled(!response.data.ssl_detection_overridden);
             setCertificateValid(response.data.certificate_valid);
-            steps[0].visible = true;
             setsslActivated(response.data.ssl_enabled);
+            steps[0].visible = true;
+            if (response.data.ssl_enabled) {
+                steps[0].visible = false;
+                steps[1].visible = true;
+                console.log()
+            }
             setNetworkActivationStatus(response.data.network_activation_status);
             setSteps(steps);
             setStepsChanged('initial');
@@ -75,10 +79,11 @@ const Onboarding = (props) => {
     const activateSSL = () => {
         let sslUrl = window.location.href.replace("http://", "https://");
         rsssl_api.runTest('activate_ssl' ).then( ( response ) => {
+            console.log(steps);
             steps[0].visible = false;
             steps[1].visible = true;
             //change url to https, after final check
-            if ( response.data.success ) {
+            //if ( response.data.success ) {
                 setSteps(steps);
                 setsslActivated(response.data.success);
                 if (response.data.site_url_changed) {
@@ -86,7 +91,7 @@ const Onboarding = (props) => {
                 } else if (networkwide) {
                     setNetworkActivationStatus('main_site_activated');
                 }
-            }
+            //}
         });
     }
 
@@ -216,41 +221,49 @@ const Onboarding = (props) => {
         })
     }
 
-    const parseStepButtons = (buttons) => {
-        return buttons.map((button) => {
-            const {title, variant, disabled, type, href, target, action} = button;
-            const buttonTypes = {
-                'button': <Button
-                    variant={variant}
-                    disabled={disabled && activateSSLDisabled}
-                    onClick={() => {
-                        if(action === "dismiss") {
-                            props.dismissModal();
-                        }
-                        if(action === "activate_ssl") {
-                            activateSSL();
-                        }
-                    }}>
-                    {title}
-                </Button>,
-                'link': <Button variant={variant} href={href} disabled={disabled} isLink={true} target={target}>{title}</Button>,
-                'checkbox': <ToggleControl
-                    label={title}
-                    disabled={disabled}
+    const goToDashboard = () => {
+        if (props.isModal) props.dismissModal();
+        props.selectMainMenu('dashboard');
+    }
+
+    const goToLetsEncrypt = () => {
+         if (props.isModal) props.dismissModal();
+        window.location.href=rsssl_settings.letsencrypt_url;
+    }
+
+    const controlButtons = () => {
+        let ActivateSSLText = networkwide ? __("Activate SSL networkwide", "really-simple-ssl") : __("Activate SSL", "really-simple-ssl");
+        if (steps[0].visible) {
+           return (
+                <>
+                <button disabled={!certificateValid && !overrideSSL} className="button button-primary" onClick={() => {activateSSL()}}>{ActivateSSLText}</button>
+                {certificateValid && !rsssl_settings.pro_active && <a target="_blank" href={rsssl_settings.upgrade_link} className="button button-default" >{__("Improve Security with PRO", "really-simple-ssl")}</a>}
+                {!certificateValid && <button className="button button-default" onClick={() => {goToLetsEncrypt()}}>{__("Install SSL", "really-simple-ssl")}</button>}
+                {!certificateValid && <ToggleControl
+                    label={__("Override SSL detection","really-simple-ssl")}
                     checked={overrideSSL}
                     onChange={(value) => {
                         setOverrideSSL(value);
                         let data = {};
                         data.overrideSSL = value;
-                        rsssl_api.runTest('override_ssl_detection' ).then( ( response ) => {
+                        rsssl_api.doAction('override_ssl_detection',data ).then( ( response ) => {
                             setActivateSSLDisabled(!value)
                         });
                        }}
-                />
-            };
+                />}
+                </>
+            );
+        }
 
-            return buttonTypes[type];
-        })
+        if (steps[1].visible){
+            return (
+                <>
+                <button className="button button-primary" onClick={() => {goToDashboard()}}>{__('Go to Dashboard', 'really-simple-ssl')}</button>
+                <button className="button button-default" onClick={() => {props.dismissModal()}}>{__('Dismiss', 'really-simple-ssl')}</button>
+                </>
+            );
+
+        }
     }
 
 
@@ -259,7 +272,7 @@ const Onboarding = (props) => {
             {!stepsChanged && <Placeholder lines="12"></Placeholder>}
             {
                 stepsChanged && steps.map((step, index) => {
-                    const {title, subtitle, items, info_text: infoText, buttons, visible} = step;
+                    const {title, subtitle, items, info_text: infoText, visible} = step;
                     return (
                         <div className="rsssl-modal-content-step" key={index} style={{ display: visible ? 'block' : 'none' }}>
                             {title && <h2 className="rsssl-modal-subtitle">{title}</h2>}
@@ -276,7 +289,7 @@ const Onboarding = (props) => {
                                    {__("If you’re certain an SSL certificate is present, and refresh SSL status does not work, please check “Override SSL detection” to continue activating SSL.", "really-simple-ssl")}
                                 </div> }
                             <div className="rsssl-modal-content-step-footer">
-                                {parseStepButtons(buttons)}
+                                {controlButtons()}
                             </div>
 
                         </div>

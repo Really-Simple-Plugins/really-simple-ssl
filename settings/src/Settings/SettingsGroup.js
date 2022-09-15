@@ -113,6 +113,7 @@ class SettingsGroup extends Component {
                         <Field key={i} index={i}
                             updateFields={this.props.updateFields}
                             selectMenu={this.props.selectMenu}
+                            selectMainMenu={this.props.selectMainMenu}
                             dropItemFromModal={this.props.dropItemFromModal}
                             handleNextButtonDisabled={this.props.handleNextButtonDisabled}
                             handleModal={this.props.handleModal}

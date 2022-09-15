@@ -28,6 +28,7 @@ function rsssl_plugin_admin_scripts() {
         apply_filters('rsssl_localize_script',[
             'site_url' => get_rest_url(),
             'dashboard_url' => add_query_arg(['page' => 'really-simple-security'],admin_url('options-general.php') ),
+            'letsencrypt_url' => rsssl_letsencrypt_wizard_url(),
             'upgrade_link' => is_multisite() ? 'https://really-simple-ssl.com/pro-multisite' : 'https://really-simple-ssl.com/pro',
             'plugin_url' => rsssl_url,
             'network_link' => network_site_url('plugins.php'),
@@ -139,6 +140,14 @@ function rsssl_settings_rest_route() {
 			return rsssl_user_can_manage();
 		}
 	) );
+
+	register_rest_route( 'reallysimplessl/v1', 'do_action/(?P<action>[a-z\_\-]+)', array(
+		'methods'  => 'POST',
+		'callback' => 'rsssl_do_action',
+		'permission_callback' => function () {
+			return rsssl_user_can_manage();
+		}
+	) );
 }
 
 /**
@@ -156,6 +165,29 @@ function rsssl_store_ssl_labs($request){
     $test->update($data);
 }
 
+/**
+ * @param WP_REST_Request $request
+ *
+ * @return void
+ */
+function rsssl_do_action($request){
+	if (!rsssl_user_can_manage()) {
+		return;
+	}
+
+	$action = sanitize_title($request->get_param('action'));
+	switch($action){
+		case 'ssl_status_data':
+			$data = rsssl_ssl_status_data();
+			break;
+		default:
+			$data = apply_filters("rsssl_do_action", [], $action, $request);
+	}
+	$response = json_encode( $data );
+	header( "Content-Type: application/json" );
+	echo $response;
+	exit;
+}
 /**
  * @param WP_REST_Request $request
  *
