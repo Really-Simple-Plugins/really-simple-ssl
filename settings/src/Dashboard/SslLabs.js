@@ -34,19 +34,13 @@ const SslLabs = (props) => {
         }
 
         let scanCompleted = (sslData && sslData.status === 'READY') && status!=='active'
-        console.log("scanCompleted");
-        console.log(scanCompleted);
         if (clearCache) scanCompleted = false;
 
         let startScan = !sslData.errors && !scanCompleted;
         if ( !requestActive && startScan ) {
-            console.log("sslData.status");
-            console.log(sslData.status);
             setRequestActive(true);
             setTimeout(function(){
                 getSslLabsData().then((sslData)=>{
-                    console.log("new data");
-                    console.log(sslData);
                     if ( sslData.endpoints && sslData.endpoints.filter((endpoint) => endpoint.statusMessage === 'Ready').length>0 ) {
                         let completedEndpoints = sslData.endpoints.filter((endpoint) => endpoint.statusMessage === 'Ready');
                         console.log("complete endpoints");
@@ -195,6 +189,23 @@ const SslLabs = (props) => {
         )
     }
 
+    const certificateStatus = () => {
+        let status = 'processing';
+        if ( endpointData.length>0 ) {
+            let failedData = endpointData.filter(function (endpoint) {
+                return endpoint.grade.indexOf('A')===-1;
+            });
+            status = failedData.length>0 ? 'error' : 'success';
+        }
+        return (
+            <>
+            {status==='processing' && <div className="rsssl-test-processing">{__("certificate...","really-simple-ssl")}</div>}
+            {status==='error' && <div className="rsssl-test-error">{__("certificate issue","really-simple-ssl")}</div>}
+            {status==='success' && <div className="rsssl-test-success">{__("valid certificate","really-simple-ssl")}</div>}
+            </>
+        )
+    }
+
     const supportsTlS11 = () => {
         let status = 'processing';
         if ( endpointData && endpointData.length>0 ) {
@@ -204,7 +215,6 @@ const SslLabs = (props) => {
                    if (protocol.version==='1.1') status = 'error';
                });
            });
-
         }
         return (
             <>
@@ -254,6 +264,7 @@ const SslLabs = (props) => {
                         }
                        {supportsTlS11()}
                        {hasHSTS()}
+                       {certificateStatus()}
                     </div>
                     <div className={"rsssl-ssl-test-grade rsssl-h0 rsssl-grade-"+grade}>
                         <span>{grade}</span>
