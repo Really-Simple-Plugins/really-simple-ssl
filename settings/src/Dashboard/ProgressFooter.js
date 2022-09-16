@@ -27,12 +27,15 @@ const ProgressFooter = (props) => {
         <></>);
     }
     let redirectValue = props.fields.filter( field => field.id==='redirect' )[0].value;
+    let hasMixedContentFixer = props.fields.filter( field => field.id==='mixed_content_fixer' )[0].value;
     let hasRedirect = redirectValue=== 'wp_redirect' || redirectValue=== 'htaccess';
     let sslStatusText = sslEnabled ? __( "SSL Activated", "really-simple-ssl" ) : __( "SSL not activated", "really-simple-ssl" );
     let sslStatusIcon = sslEnabled ? 'circle-check' : 'circle-times';
     let sslStatusColor = sslEnabled ? 'green' : 'red';
     let redirectIcon = hasRedirect ? 'circle-check' : 'circle-times';
     let redirectColor = hasRedirect ? 'green' : 'red';
+    let mixedContentIcon = hasMixedContentFixer ? 'circle-check' : 'circle-times';
+    let mixedContentColor = hasMixedContentFixer ? 'green' : 'red';
     return (
         <>
             { !sslEnabled && certificateIsValid && <button onClick={() => startModal()} className="button button-primary">{__( "Activate SSL", "really-simple-ssl" ) }</button>}
@@ -42,6 +45,8 @@ const ProgressFooter = (props) => {
             <div class="rsssl-legend">
                 <Icon name = {sslStatusIcon} color = {sslStatusColor} />
                 <div>{sslStatusText}</div>
+                <Icon name = {mixedContentIcon} color = {mixedContentColor} />
+                <div>{__( "Mixed content", "really-simple-ssl" )}</div>
                 <Icon name = {redirectIcon} color = {redirectColor} />
                 <div>{__( "301 Redirect", "really-simple-ssl" )}</div>
             </div>

@@ -42,8 +42,11 @@
 		color: var(--rsp-text-color-light);
 		align-items: center;
 		min-width: 0;
-		gap: var(--rsp-spacing-xs);
+		gap: var(--rsp-spacing-xxs);
 		text-decoration: none;
+		.rsssl-icon {
+			margin-right:5px;
+		}
 	}
 
   @keyframes gradient {
