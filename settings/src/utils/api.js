@@ -84,6 +84,15 @@ export const getOnboarding = (forceRefresh) => {
 	return axios.get(rsssl_settings.site_url+'reallysimplessl/v1/onboarding?forceRefresh='+forceRefresh, config);
 }
 
+export const updateSslLabs = (data) => {
+	let config = {
+		headers: {
+			'X-WP-Nonce': rsssl_settings.nonce,
+		}
+	}
+	return axios.post(rsssl_settings.site_url+'reallysimplessl/v1/store_ssl_labs', data, config );
+}
+
 export const onboardingActions = (data) => {
 	let config = {
 		headers: {

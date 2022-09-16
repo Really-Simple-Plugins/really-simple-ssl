@@ -133,7 +133,15 @@ function rsssl_settings_rest_route() {
 		}
 	) );
 
-    register_rest_route( 'reallysimplessl/v1', 'do_action/(?P<action>[a-z\_\-]+)', array(
+    register_rest_route( 'reallysimplessl/v1', 'store_ssl_labs', array(
+		'methods'  => 'POST',
+		'callback' => 'rsssl_store_ssl_labs',
+		'permission_callback' => function () {
+			return rsssl_user_can_manage();
+		}
+	) );
+
+	register_rest_route( 'reallysimplessl/v1', 'do_action/(?P<action>[a-z\_\-]+)', array(
 		'methods'  => 'POST',
 		'callback' => 'rsssl_do_action',
 		'permission_callback' => function () {
@@ -141,6 +149,22 @@ function rsssl_settings_rest_route() {
 		}
 	) );
 }
+
+/**
+ * Store SSL Labs result
+ * @param $request
+ *
+ * @return void
+ */
+function rsssl_store_ssl_labs($request){
+	$error = false;
+	$data = $request->get_json_params();
+	$next_action = 'none';
+    require_once( rsssl_path . 'ssllabs/class-ssllabs.php' );
+    $test = new rsssl_ssllabs();
+    $test->update($data);
+}
+
 /**
  * @param WP_REST_Request $request
  *
@@ -181,10 +205,10 @@ function rsssl_run_test($request){
         case 'ssl_status_data':
             $data = rsssl_ssl_status_data();
             break;
-        case 'ssltest':
+        case 'ssltest_get':
 	        require_once( rsssl_path . 'ssllabs/class-ssllabs.php' );
 	        $test = new rsssl_ssllabs();
-	        $data = $test->get($state);
+	        $data = $test->get();
             break;
         case 'progressdata':
             $data = RSSSL()->progress->get();
@@ -214,8 +238,8 @@ function rsssl_ssl_status_data(){
 	$certificate_is_valid = $response->status === 'error'; //seems weird, but is correct.
 	$ssl_enabled = RSSSL()->really_simple_ssl->ssl_enabled;
 	return [
-		'certificate_is_valid' => true,// $certificate_is_valid || ( defined( 'RSSSL_FORCE_ACTIVATE' ) && RSSSL_FORCE_ACTIVATE ),
-		'ssl_enabled' => false,//$ssl_enabled,
+		'certificate_is_valid' => $certificate_is_valid || ( defined( 'RSSSL_FORCE_ACTIVATE' ) && RSSSL_FORCE_ACTIVATE ),
+		'ssl_enabled' => $ssl_enabled,
 	];
 }
 
