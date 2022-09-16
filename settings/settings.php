@@ -157,12 +157,8 @@ function rsssl_settings_rest_route() {
  * @return void
  */
 function rsssl_store_ssl_labs($request){
-	$error = false;
 	$data = $request->get_json_params();
-	$next_action = 'none';
-    require_once( rsssl_path . 'ssllabs/class-ssllabs.php' );
-    $test = new rsssl_ssllabs();
-    $test->update($data);
+	update_option('rsssl_ssl_labs_data', $data, false);
 }
 
 /**
@@ -206,9 +202,7 @@ function rsssl_run_test($request){
             $data = rsssl_ssl_status_data();
             break;
         case 'ssltest_get':
-	        require_once( rsssl_path . 'ssllabs/class-ssllabs.php' );
-	        $test = new rsssl_ssllabs();
-	        $data = $test->get();
+	        $data = get_option('rsssl_ssl_labs_data');
             break;
         case 'progressdata':
             $data = RSSSL()->progress->get();
