@@ -48,7 +48,6 @@ const Onboarding = (props) => {
             if (response.data.ssl_enabled) {
                 steps[0].visible = false;
                 steps[1].visible = true;
-                console.log()
             }
             setNetworkActivationStatus(response.data.network_activation_status);
             setSteps(steps);
@@ -79,7 +78,6 @@ const Onboarding = (props) => {
     const activateSSL = () => {
         let sslUrl = window.location.href.replace("http://", "https://");
         rsssl_api.runTest('activate_ssl' ).then( ( response ) => {
-            console.log(steps);
             steps[0].visible = false;
             steps[1].visible = true;
             //change url to https, after final check
@@ -120,16 +118,12 @@ const Onboarding = (props) => {
         data.type = type;
         updateActionForItem(id, action, false);
         rsssl_api.onboardingActions(data).then( ( response ) => {
-            console.log(response);
             if ( response.data.success ){
-                console.log("is success step");
                 let nextAction = response.data.next_action;
-                console.log(nextAction);
                 if (nextAction!=='none') {
                     data.action = nextAction;
                     updateActionForItem(id, nextAction, false);
                     rsssl_api.onboardingActions(data).then( ( response ) => {
-                        console.log(response);
                         if ( response.data.success ){
                             updateActionForItem(id, 'completed', 'success' );
                         } else {

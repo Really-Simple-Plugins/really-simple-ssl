@@ -174,7 +174,6 @@ const LetsEncrypt = (props) => {
                 let timeDiff = endTime - startTime; //in ms
                 const elapsedTime = Math.round(timeDiff);
                 let action = getAction(currentActionIndex);
-                console.log(response.data.status);
                 action.status = response.data.status ? response.data.status : 'inactive';
                 action.hide = false;
                 action.description = response.data.message;

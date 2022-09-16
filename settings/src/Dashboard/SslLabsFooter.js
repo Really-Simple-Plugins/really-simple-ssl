@@ -1,19 +1,12 @@
 import {useState, useEffect} from "@wordpress/element";
 import { __ } from '@wordpress/i18n';
-import update from 'immutability-helper';
-import {useUpdateEffect} from 'react-use';
 
 const SslLabsFooter = (props) => {
-    useUpdateEffect(()=> {})
-
-    useEffect(() => {
-
-    }, [])
     const startScan = () => {
         props.setBlockProps('sslScan', 'active');
     }
     let status = props.BlockProps && props.BlockProps.hasOwnProperty('sslScan') ? props.BlockProps['sslScan'] : false;
-    let disabled = status === 'active';
+    let disabled = status === 'active' || window.location.host.indexOf('localhost')!==-1;
 
     return (
         <>

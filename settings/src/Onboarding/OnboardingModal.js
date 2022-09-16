@@ -15,7 +15,6 @@ const OnboardingModal = (props) => {
     });
 
         useUpdateEffect(()=> {
-            console.log(props.showOnBoardingModal);
             if (props.showOnBoardingModal===true) {
                 let data={};
                 data.dismiss = false;
