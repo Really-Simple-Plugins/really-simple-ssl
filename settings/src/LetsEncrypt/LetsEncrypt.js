@@ -97,7 +97,6 @@ const LetsEncrypt = (props) => {
                 newAction.attempts = 4;
                 actions.push(newAction);
             }
-
         }
 
         return actions;
@@ -169,7 +168,9 @@ const LetsEncrypt = (props) => {
         let action = getAction(currentActionIndex);
         let test = action.action;
         maxAttempts = action.attempts;
+        console.log("run test "+test);
         rsssl_api.runLetsEncryptTest(test, props.field.id ).then( ( response ) => {
+                console.log(response.data);
                 const endTime = new Date();
                 let timeDiff = endTime - startTime; //in ms
                 const elapsedTime = Math.round(timeDiff);

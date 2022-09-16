@@ -51,7 +51,7 @@ class rsssl_letsencrypt_handler {
 			}
 
 			// General configs
-			Connector::getInstance()->useStagingServer( true );
+			Connector::getInstance()->useStagingServer( false );
 			Logger::getInstance()->setDesiredLevel( Logger::LEVEL_DISABLED );
 
 			if ( !rsssl_get_option( 'disable_ocsp' ) ) {
@@ -130,7 +130,6 @@ class rsssl_letsencrypt_handler {
 		if ( !current_user_can('manage_security') ) {
 			return false;
 		}
-		error_log("should clean up" );
 		$delete_credentials = !rsssl_get_option('store_credentials');
 		$le_fields = rsssl_le_add_fields([]);
 		if ( !$this->certificate_automatic_install_possible() || !$this->certificate_install_required() || $delete_credentials ) {
