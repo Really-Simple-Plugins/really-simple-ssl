@@ -197,7 +197,7 @@ const SslLabs = (props) => {
 
     const supportsTlS11 = () => {
         let status = 'processing';
-        if ( endpointData.length>0 ) {
+        if ( endpointData && endpointData.length>0 ) {
             status = 'success';
             endpointData.forEach(function(endpoint, i){
                 endpoint.details.protocols.forEach(function(protocol, j){
