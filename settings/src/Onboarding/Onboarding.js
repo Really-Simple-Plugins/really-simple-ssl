@@ -120,12 +120,16 @@ const Onboarding = (props) => {
         data.type = type;
         updateActionForItem(id, action, false);
         rsssl_api.onboardingActions(data).then( ( response ) => {
+            console.log(response);
             if ( response.data.success ){
+                console.log("is success step");
                 let nextAction = response.data.next_action;
+                console.log(nextAction);
                 if (nextAction!=='none') {
                     data.action = nextAction;
                     updateActionForItem(id, nextAction, false);
                     rsssl_api.onboardingActions(data).then( ( response ) => {
+                        console.log(response);
                         if ( response.data.success ){
                             updateActionForItem(id, 'completed', 'success' );
                         } else {
