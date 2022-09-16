@@ -83,7 +83,6 @@ if ( !class_exists('rsssl_installer') ){
             if ( !rsssl_user_can_manage() ) {
 				return false;
             }
-
 	        if ( get_transient("rsssl_plugin_download_active")!==$this->slug ) {
                 set_transient("rsssl_plugin_download_active", $this->slug,MINUTE_IN_SECONDS );
                 $info          = $this->get_plugin_info();
@@ -94,6 +93,7 @@ if ( !class_exists('rsssl_installer') ){
                 $skin     = new WP_Ajax_Upgrader_Skin();
 	            $upgrader = new Plugin_Upgrader( $skin );
 	            $result = $upgrader->install( $download_link );
+
 		        if (is_wp_error($result)){
 			        return false;
 		        }

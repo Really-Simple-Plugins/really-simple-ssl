@@ -749,7 +749,7 @@
   gap: var(--rsp-spacing-xxs);
 }
 .rsssl-modal.rsssl-onboarding #rsssl-message li .rsssl-icon {
-  margin-top: 4px;
+  margin-top: 2px;
 }
 .rsssl-modal.rsssl-onboarding .rsssl-modal-content {
   padding-top: var(--rsp-spacing-xs);
@@ -1168,64 +1168,64 @@
   margin-bottom: 24px;
 }
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(1) {
-  width: 95%;
+  width: 83%;
 }
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(2) {
-  width: 68%;
+  width: 84%;
 }
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(3) {
-  width: 67%;
+  width: 96%;
 }
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(4) {
-  width: 63%;
+  width: 91%;
 }
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(5) {
-  width: 64%;
+  width: 96%;
 }
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(6) {
-  width: 69%;
+  width: 83%;
 }
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(7) {
-  width: 81%;
+  width: 94%;
 }
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(8) {
   width: 67%;
 }
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(9) {
-  width: 98%;
+  width: 64%;
 }
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(10) {
-  width: 71%;
+  width: 70%;
 }
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(11) {
-  width: 63%;
+  width: 86%;
 }
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(12) {
-  width: 94%;
+  width: 70%;
 }
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(13) {
-  width: 61%;
+  width: 93%;
 }
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(14) {
-  width: 75%;
+  width: 78%;
 }
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(15) {
-  width: 87%;
+  width: 80%;
 }
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(16) {
-  width: 98%;
+  width: 91%;
 }
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(17) {
   width: 86%;
 }
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(18) {
-  width: 81%;
+  width: 69%;
 }
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(19) {
-  width: 84%;
+  width: 66%;
 }
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(20) {
-  width: 69%;
+  width: 86%;
 }
 .rsssl-placeholder .rsssl-placeholder-line ~ .rsssl-placeholder-line {
   background-color: #ddd;
@@ -1838,11 +1838,6 @@
 }
 .rsssl-lets-encrypt-tests .rsssl-modal-content-step-footer .components-toggle-control .components-base-control__field .components-toggle-control__label {
   margin-right: 12px;
-}
-.rsssl-lets-encrypt-tests .rsssl-modal-content-step-footer button, .rsssl-lets-encrypt-tests .rsssl-modal-content-step-footer a, .rsssl-lets-encrypt-tests .rsssl-modal-content-step-footer label {
-  font-size: var(--rsp-fs-400);
-  font-weight: 500;
-  line-height: 1.5;
 }
 .rsssl-lets-encrypt-tests .rsssl-modal-subtitle {
   display: none;

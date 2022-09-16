@@ -45,7 +45,7 @@ function rsssl_rest_api_onboarding($request) {
 	}
 	return [
 		"steps" => $steps,
-		"ssl_enabled" => true,//rsssl_get_option("ssl_enabled"),
+		"ssl_enabled" => rsssl_get_option("ssl_enabled"),
 		"ssl_detection_overridden" => get_option('rsssl_ssl_detection_overridden'),
 		'certificate_valid' => RSSSL()->rsssl_certificate->is_valid(),
 		"networkwide" => is_multisite() && rsssl_is_networkwide_active(),

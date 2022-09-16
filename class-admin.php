@@ -333,8 +333,7 @@ class rsssl_admin
 	    $is_rest_request =  $request instanceof WP_REST_Request;
 	    $site_url_changed = false;
 
-        if ( $this->site_has_ssl  ){
-
+	    if ( $this->site_has_ssl || get_option('rsssl_ssl_detection_overridden') ){
 	        //in a configuration reverse proxy without a set server variable https, add code to wpconfig
 	        if ( $this->do_wpconfig_loadbalancer_fix ) {
 		        $this->wpconfig_loadbalancer_fix();
