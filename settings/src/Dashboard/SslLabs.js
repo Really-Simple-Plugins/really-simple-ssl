@@ -210,7 +210,7 @@ const SslLabs = (props) => {
             <>
             {status==='processing' && <div className="rsssl-test-processing">{__("Protocolsupport...","really-simple-ssl")}</div>}
             {status==='error' && <div className="rsssl-test-error">{__("Supports TLS 1.1","really-simple-ssl")}</div>}
-            {status==='success' && <div className="rsssl-test-success">{__("Does not support TLS 1.1","really-simple-ssl")}</div>}
+            {status==='success' && <div className="rsssl-test-success">{__("No TLS 1.1","really-simple-ssl")}</div>}
             </>
         )
     }
@@ -244,18 +244,20 @@ const SslLabs = (props) => {
             <div className={"rsssl-gridblock-progress-container "+sslClass}>
                 <div className="rsssl-gridblock-progress" style={getStyles()}></div>
             </div>
-            <div className="rsssl-ssl-test ">
-                <div className="rsssl-ssl-test-information">
-                    { statusMessage && <>
-                        <p>{ipAddress}</p>
-                        <p>{statusMessage}</p>
-                    </>
-                    }
-                   {supportsTlS11()}
-                   {hasHSTS()}
-                </div>
-                <div className={"rsssl-ssl-test-grade rsssl-h0 rsssl-grade-"+grade}>
-                    <span>{grade}</span>
+            <div className="rsssl-ssl-test-container">
+                <div className="rsssl-ssl-test ">
+                    <div className="rsssl-ssl-test-information">
+                        { statusMessage && <>
+                            <p>{ipAddress}</p>
+                            <p>{statusMessage}</p>
+                        </>
+                        }
+                       {supportsTlS11()}
+                       {hasHSTS()}
+                    </div>
+                    <div className={"rsssl-ssl-test-grade rsssl-h0 rsssl-grade-"+grade}>
+                        <span>{grade}</span>
+                    </div>
                 </div>
             </div>
             <div className="rsssl-details">

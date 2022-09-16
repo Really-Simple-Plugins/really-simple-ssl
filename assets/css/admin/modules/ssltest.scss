@@ -5,11 +5,33 @@
   .rsssl-placeholder{
     @include rsssl-block-padding;
   }
+  .rsssl-ssl-test-container {
+    background: var(--rsp-dark-blue-faded);
+    padding:20px;
+    .rsssl-ssl-test {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      //@include rsssl-block-padding;
+      > div {
+        width:40%;
+        background-color:#fff;
+      }
+      .rsssl-ssl-test-grade {
+        text-align: center;
+      }
+      .rsssl-ssl-test-information {
+        p{
+          font-size: var(--rsp-fs-100);
+          letter-spacing: 0.01ch;
+          line-height: 2;
+        }
 
-  .rsssl-ssl-test {
-    .rsssl-ssl-test-information {
       div {
-        padding:var(--rsp-spacing-xxs);
+        padding: 0 8px;
+        font-size: 10px;
+        margin: 10px 5px;
+        border-radius: 3px;
         &.rsssl-test-processing {
           background-color:var(--rsp-color-warning);
           color:#fff;
@@ -26,6 +48,7 @@
 
     }
 
+  }
   }
 
   .rsssl-details {
@@ -63,21 +86,6 @@
     }
   }
 }
-.rsssl-ssl-test {
-  display: flex;
-  flex: 0 1 auto;
-  align-items: center;
-  justify-content: space-between;
-  background: var(--rsp-dark-blue-faded);
-  @include rsssl-block-padding;
 
-  .rsssl-ssl-test-information{
-    p{
-      font-size: var(--rsp-fs-100);
-      letter-spacing: 0.01ch;
-      line-height: 2;
-    }
-  }
-}
 
 
