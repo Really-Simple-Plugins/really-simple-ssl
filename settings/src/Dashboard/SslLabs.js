@@ -31,7 +31,6 @@ const SslLabs = (props) => {
     }
 
     const isLocalHost = () => {
-        return false;
          return window.location.host.indexOf('localhost')!==-1;
     }
 
@@ -51,12 +50,10 @@ const SslLabs = (props) => {
             props.setBlockProps('sslScan', 'active');
             requestActive.current = true;
             if ( !hasRunOnce.current ) {
-                console.log("run test once");
                 runSslTest();
                 intervalId.current = setInterval(function(){
-                    console.log("run interval test");
                     runSslTest();
-                }, 4000)
+                }, 3000)
                 hasRunOnce.current  = true;
             }
         } else if ( sslData.status === 'READY' ) {
@@ -314,12 +311,11 @@ const SslLabs = (props) => {
     let startTimeNice='';
     if (startTime) {
         let newDate = new Date();
-        newDate.setTime(startTime*1000);
-        startTimeNice = newDate.toUTCString();
+        newDate.setTime(startTime);
+        startTimeNice = newDate.toLocaleString();
     } else {
         startTimeNice = __("No test started yet","really-simple-ssl")
     }
-
 
     let statusMessage = sslData ? sslData.summary.statusMessage : false;
     let grade = sslData ? sslData.summary.grade : '?';
@@ -353,7 +349,7 @@ const SslLabs = (props) => {
                             {scoreSnippet("rsssl-test-processing", statusMessage)}
                         </>
                         }
-                        {isLocalHost() && <>{scoreSnippet("rsssl-test-processing", __("not available on localhost","really-simple-ssl"))}</>}
+                        {isLocalHost() && <>{scoreSnippet("rsssl-test-processing", __("Not available on localhost","really-simple-ssl"))}</>}
                        {supportsTlS11()}
                        {hasHSTS()}
                        {certificateStatus()}

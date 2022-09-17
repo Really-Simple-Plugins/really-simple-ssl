@@ -84,6 +84,9 @@
     margin: var(--rsp-spacing-m);
     .rsssl-detail-icon {
       width: 30px;
+      .rsssl-icon {
+        margin-top:2px;
+      }
     }
 
     display: flex;
