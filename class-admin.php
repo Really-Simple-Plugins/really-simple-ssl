@@ -1129,8 +1129,6 @@ class rsssl_admin
 		    update_option('siteurl', str_replace("http://", "https://", $site_url ));
 		    update_option('home', str_replace("http://", "https://", $home_url ));
 		    $site_url_changed = true;
-        } else {
-            error_log("no url change needed");
         }
 
         //RSSSL has it's own, more extensive mixed content fixer.
@@ -2164,7 +2162,6 @@ class rsssl_admin
 
         //don't show admin notices on our own settings page: we have the warnings there
         if ( $this->is_settings_page() ) return;
-
 	    $notices = $this->get_notices_list( array('admin_notices'=>true) );
         foreach ( $notices as $id => $notice ){
             $notice = $notice['output'];
@@ -2309,7 +2306,12 @@ class rsssl_admin
 	    }
 	    if ( $cache_admin_notices) {
 		    $cached_notices = get_transient('rsssl_admin_notices');
-		    if ( $cached_notices ) return $cached_notices;
+            if ( $cached_notices === 'empty') {
+                return [];
+            }
+		    if ( $cached_notices ) {
+                return $cached_notices;
+		    }
 	    }
 
 	    $htaccess_file = $this->uses_htaccess_conf() ? "htaccess.conf (/conf/htaccess.conf/)" : $htaccess_file = ".htaccess";
@@ -2803,7 +2805,9 @@ class rsssl_admin
 	                unset( $notices[$id]);
                 }
             }
-		    set_transient('rsssl_admin_notices', $notices, DAY_IN_SECONDS );
+            //ensure an empty list is also cached
+		    $cache_notices = empty($notices) ? 'empty' : $notices;
+		    set_transient('rsssl_admin_notices', $cache_notices, DAY_IN_SECONDS );
         }
 
 	    //sort so warnings are on top
@@ -2833,15 +2837,6 @@ class rsssl_admin
         }
 
 	    return $notices;
-    }
-
-	/**
-     * Count number of premium notices we have in the list.
-	 * @return int
-	 */
-    public function get_lowest_possible_task_count() {
-        $premium_notices = $this->get_notices_list(array('premium_only'=>true));
-        return count($premium_notices) ;
     }
 
 	/**
@@ -2920,20 +2915,6 @@ class rsssl_admin
 		}
 		return $count;
 	}
-
-	/**
-     * Get count of all tasks
-	 * @return int
-	 */
-    public function get_all_task_count() {
-        if ( ! rsssl_user_can_manage() ) {
-            return 0;
-        }
-
-        return count($this->get_notices_list(
-            array( 'status' => 'all' )
-        ));
-    }
 
     /**
      * Get status link for plugin, depending on installed, or premium availability

@@ -169,7 +169,7 @@ if (!class_exists('rsssl_admin_mixed_content_fixer')) {
         }
 
         /**
-         * Helper function to maintain PHP 5.2 compatibility. Yes. 5.2.. It's still used...
+         * Helper function
          *
          * */
 

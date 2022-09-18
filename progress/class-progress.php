@@ -77,7 +77,7 @@ class rsssl_progress {
 		if (!rsssl_user_can_manage()) return '';
 		ob_start();
 
-		$lowest_possible_task_count = RSSSL()->really_simple_ssl->get_lowest_possible_task_count();
+		$lowest_possible_task_count = $this->get_lowest_possible_task_count();
 		$open_task_count = count( RSSSL()->really_simple_ssl->get_notices_list( array( 'status' => 'open' ) ));
 		if (RSSSL()->really_simple_ssl->ssl_enabled) {
 			$doing_well = __( "SSL is activated on your site.",  'really-simple-ssl' ) . ' ' . sprintf( _n( "You still have %s task open.", "You still have %s tasks open.", $open_task_count, 'really-simple-ssl' ), $open_task_count );
@@ -97,6 +97,15 @@ class rsssl_progress {
 		}
 		do_action('rsssl_progress_feedback');
 		return ob_get_clean();
+	}
+
+	/**
+	 * Count number of premium notices we have in the list.
+	 * @return int
+	 */
+	public function get_lowest_possible_task_count() {
+		$premium_notices = RSSSL()->really_simple_ssl->get_notices_list(array('premium_only'=>true));
+		return count($premium_notices) ;
 	}
 
 	/**
