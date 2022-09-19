@@ -66,7 +66,7 @@ function rsssl_get_items_for_second_step () {
 		],
 		[
 			"slug" => "complianz-gdpr",
-			"title" => __("Complianz - The Privacy Suite for Wordpress", "really-simple-ssl"),
+			"title" => __("Complianz - The Privacy Suite for WordPress", "really-simple-ssl"),
 			"description" => __("Manage privacy compliance with Complianz", "really-simple-ssl"),
 		]
 	];
