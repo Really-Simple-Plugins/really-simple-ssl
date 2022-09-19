@@ -51,6 +51,7 @@
     line-height: 1.5;
     @include rsssl-block-padding;
     .rsssl-modal-subtitle {
+      font-size: var(--rsp-fs-600);
       font-weight: 600;
       margin-bottom: var(--rsp-spacing-xs);
     }

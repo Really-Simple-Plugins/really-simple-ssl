@@ -2,7 +2,6 @@
   a.button, button.button, input.button, span.button {
     font-size: var(--rsp-fs-300);
     font-weight: 300;
-    letter-spacing: 0.5px;
     transition: all 0.3s ease;
     min-height: 10px;
 
@@ -11,7 +10,7 @@
     }
 
     &.button-black {
-      border: 0 solid transparent;
+      border: 1px solid var(--rsp-black);
       background: var(--rsp-black);
       color: var(--rsp-text-color-white);
 

@@ -500,7 +500,7 @@ msgid "Install"
 msgstr ""
 
 #: class-admin.php:3767
-msgid "Upgrade to pro"
+msgid "Upgrade"
 msgstr ""
 
 #: class-admin.php:3769
@@ -713,7 +713,7 @@ msgid "Premium Support"
 msgstr ""
 
 #: class-admin.php:4591 class-multisite.php:237
-msgid "Improve security - Upgrade to Pro"
+msgid "Improve security - Upgrade"
 msgstr ""
 
 #: class-multisite.php:91

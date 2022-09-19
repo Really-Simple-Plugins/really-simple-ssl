@@ -92,7 +92,7 @@ function rsssl_get_items_for_second_step () {
 	} else {
 		$items[] = [
 			"id" => 'ssl_enabled',
-			"title" => __("SSL has been activated with Really Simple SSL", "really-simple-ssl"),
+			"title" => __("SSL has been activated", "really-simple-ssl"),
 			"action" => "none",
 			"status" => "success",
 		];

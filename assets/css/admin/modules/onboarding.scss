@@ -7,13 +7,14 @@
     display: flex;
     align-items: flex-start;
     margin-bottom: var(--rsp-spacing-xs);
-    gap: var(--rsp-spacing-xxs);
+    gap: var(--rsp-spacing-xs);
     .rsssl-icon{
       margin-top: 2px;
     }
   }
   .rsssl-modal-content{
     padding-top: var(--rsp-spacing-xs);
+    line-height: 2.2;
     ul{
       margin-bottom: var(--rsp-spacing-m);
     }

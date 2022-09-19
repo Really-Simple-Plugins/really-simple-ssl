@@ -163,43 +163,36 @@
 .rsssl .rsssl-h0 {
     font-size: var(--rsp-fs-900);
     font-weight: 700;
-    letter-spacing: 0.025rem;
 }
 
 .rsssl h1, .rsssl .rsssl-h1 {
     font-size: var(--rsp-fs-800);
     line-height: 1.5;
     font-weight: 500;
-    letter-spacing: 0.025rem;
 }
 
 .rsssl h2, .rsssl .rsssl-h2 {
     font-size: var(--rsp-fs-700);
     font-weight: 700;
-    letter-spacing: 0.025rem;
 }
 
 .rsssl h3, .rsssl .rsssl-h3 {
     font-size: var(--rsp-fs-600);
     font-weight: 600;
-    letter-spacing: 0.0125rem;
 }
 
 .rsssl h4, .rsssl .rsssl-h4 {
     font-size: var(--rsp-fs-600);
     font-weight: 600;
-    letter-spacing: 0.0125rem;
 }
 
 .rsssl h5, .rsssl .rsssl-h5 {
     font-size: var(--rsp-fs-400);
     font-weight: 400;
-    letter-spacing: 0.1px;
 }
 
 .rsssl h6, .rsssl .rsssl-h6 {
     font-size: var(--rsp-fs-300);
-    letter-spacing: 0.1px;
 }
 
 .rsssl p {
@@ -213,10 +206,6 @@
     font-size: var(--rsp-fs-200);
     line-height: 1.5;
     color: var(--rsp-text-color-light);
-}
-
-.rsssl a {
-    font-size: 1em;
 }
 
 .rsssl .rsssl-link {
@@ -433,7 +422,7 @@
 }
 
 .rsssl .rsssl-grid-item-controls {
-    font-size: var(--rsp-fs-300);
+    font-size: var(--rsp-fs-200);
     display: flex;
     gap: var(--rsp-spacing-s);
 }
@@ -587,6 +576,7 @@
 }
 
 .rsssl-modal .rsssl-modal-content .rsssl-modal-subtitle {
+    font-size: var(--rsp-fs-600);
     font-weight: 600;
     margin-bottom: var(--rsp-spacing-xs);
 }
@@ -691,7 +681,6 @@
 .rsssl a.button, .rsssl button.button, .rsssl input.button, .rsssl span.button {
     font-size: var(--rsp-fs-300);
     font-weight: 300;
-    letter-spacing: 0.5px;
     transition: all 0.3s ease;
     min-height: 10px;
 }
@@ -701,7 +690,7 @@
 }
 
 .rsssl a.button.button-black, .rsssl button.button.button-black, .rsssl input.button.button-black, .rsssl span.button.button-black {
-    border: 0 solid transparent;
+    border: 1px solid var(--rsp-black);
     background: var(--rsp-black);
     color: var(--rsp-text-color-white);
 }
@@ -827,7 +816,7 @@
     display: flex;
     align-items: flex-start;
     margin-bottom: var(--rsp-spacing-xs);
-    gap: var(--rsp-spacing-xxs);
+    gap: var(--rsp-spacing-xs);
 }
 
 .rsssl-modal.rsssl-onboarding #rsssl-message li .rsssl-icon {
@@ -836,6 +825,7 @@
 
 .rsssl-modal.rsssl-onboarding .rsssl-modal-content {
     padding-top: var(--rsp-spacing-xs);
+    line-height: 2.2;
 }
 
 .rsssl-modal.rsssl-onboarding .rsssl-modal-content ul {
@@ -1069,7 +1059,7 @@
 
 .rsssl-task-status {
     display: block;
-    min-width: 96px;
+    min-width: 80px;
     text-align: center;
     border-radius: 15px;
     padding: 4px 8px;
@@ -1183,7 +1173,6 @@
     padding: 30px 0;
     font-size: var(--rsp-fs-900);
     font-weight: 700;
-    letter-spacing: 0.025rem;
     border-radius: 10px;
 }
 
@@ -1298,79 +1287,79 @@
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(1) {
-    width: 73%;
+    width: 64%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(2) {
-    width: 89%;
+    width: 91%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(3) {
-    width: 71%;
+    width: 98%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(4) {
-    width: 68%;
+    width: 62%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(5) {
-    width: 80%;
+    width: 89%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(6) {
-    width: 96%;
-}
-
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(7) {
-    width: 73%;
-}
-
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(8) {
-    width: 68%;
-}
-
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(9) {
-    width: 93%;
-}
-
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(10) {
-    width: 84%;
-}
-
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(11) {
-    width: 99%;
-}
-
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(12) {
-    width: 65%;
-}
-
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(13) {
-    width: 95%;
-}
-
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(14) {
-    width: 67%;
-}
-
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(15) {
-    width: 95%;
-}
-
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(16) {
-    width: 83%;
-}
-
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(17) {
     width: 77%;
 }
 
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(18) {
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(7) {
+    width: 68%;
+}
+
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(8) {
+    width: 74%;
+}
+
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(9) {
+    width: 73%;
+}
+
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(10) {
+    width: 70%;
+}
+
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(11) {
+    width: 75%;
+}
+
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(12) {
     width: 85%;
 }
 
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(13) {
+    width: 100%;
+}
+
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(14) {
+    width: 76%;
+}
+
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(15) {
+    width: 99%;
+}
+
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(16) {
+    width: 92%;
+}
+
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(17) {
+    width: 100%;
+}
+
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(18) {
+    width: 98%;
+}
+
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(19) {
-    width: 82%;
+    width: 70%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(20) {

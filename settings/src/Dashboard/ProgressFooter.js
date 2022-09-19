@@ -40,7 +40,7 @@ const ProgressFooter = (props) => {
         <>
             { !sslEnabled && certificateIsValid && <button onClick={() => startModal()} className="button button-primary">{__( "Activate SSL", "really-simple-ssl" ) }</button>}
             { rsssl_settings.pro_plugin_active && <span className="rsssl-footer-left">Really Simple SSL pro {rsssl_settings.pro_version}</span>}
-            { !rsssl_settings.pro_plugin_active && <a href={rsssl_settings.upgrade_link} target="_blank" className="button button-default">{ __( "Go PRO!", "really-simple-ssl" ) }</a>}
+            { !rsssl_settings.pro_plugin_active && <a href={rsssl_settings.upgrade_link} target="_blank" className="button button-default">{ __( "Go Pro", "really-simple-ssl" ) }</a>}
 
             <div className="rsssl-legend">
                 <Icon name = {sslStatusIcon} color = {sslStatusColor} />

@@ -35,8 +35,9 @@ class SecurityFeaturesBlock extends Component {
 
                 </div>
                 <div className="rsssl-new-feature-desc">
-                    <p>{__("Upgrade your security in a few clicks!","realy-simple-ssl")}</p>
-                    <Hyperlink target="_blank" text={__("Check out the %sdocumentation%s","really-simple-ssl")} url="https://really-simple-ssl.com/hardening"/>
+                    <p>{__("Keep WordPress fortified and safe by tackling its weaknesses.")}</p>
+                    Check our (link)documentation or use the WordPress (link)forum.
+                    <Hyperlink target="_blank" text={__("Check our %sdocumentation%s or use the %sWordPress forum%s.","really-simple-ssl")} url="https://really-simple-ssl.com/hardening"/>
                 </div>
             </>
         );

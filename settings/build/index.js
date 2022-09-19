@@ -3452,7 +3452,7 @@ const ProgressFooter = props => {
     href: rsssl_settings.upgrade_link,
     target: "_blank",
     className: "button button-default"
-  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Go PRO!", "really-simple-ssl")), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Go Pro", "really-simple-ssl")), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "rsssl-legend"
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_utils_Icon__WEBPACK_IMPORTED_MODULE_4__["default"], {
     name: sslStatusIcon,
@@ -3580,9 +3580,9 @@ class SecurityFeaturesBlock extends _wordpress_element__WEBPACK_IMPORTED_MODULE_
       fields: fields
     }))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
       className: "rsssl-new-feature-desc"
-    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_5__.__)("Upgrade your security in a few clicks!", "realy-simple-ssl")), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_utils_Hyperlink__WEBPACK_IMPORTED_MODULE_4__["default"], {
+    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_5__.__)("Keep WordPress fortified and safe by tackling its weaknesses.")), "Check our (link)documentation or use the WordPress (link)forum.", (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_utils_Hyperlink__WEBPACK_IMPORTED_MODULE_4__["default"], {
       target: "_blank",
-      text: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_5__.__)("Check out the %sdocumentation%s", "really-simple-ssl"),
+      text: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_5__.__)("Check our %sdocumentation%s or use the %sWordPress forum%s.", "really-simple-ssl"),
       url: "https://really-simple-ssl.com/hardening"
     })));
   }
@@ -4236,7 +4236,7 @@ class Header extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Component {
       href: rsssl_settings.upgrade_link,
       className: "button button-black",
       target: "_blank"
-    }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Get Pro", "really-simple-ssl")))));
+    }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Go Pro", "really-simple-ssl")))));
   }
 
 }
@@ -8222,7 +8222,7 @@ class SettingsGroup extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Comp
       className: "rsssl-locked-overlay"
     }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
       className: "rsssl-task-status rsssl-premium"
-    }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_4__.__)("Upgrade to Pro", "really-simple-ssl")), rsssl_settings.pro_plugin_active && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", null, msg, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
+    }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_4__.__)("Upgrade", "really-simple-ssl")), rsssl_settings.pro_plugin_active && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", null, msg, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
       className: "rsssl-locked-link",
       href: "#",
       onClick: () => this.handleMenuLink('license')

@@ -6,7 +6,7 @@ $plugins = array(
 		'website' => 'https://burst-statistics.com/?src=rsssl-plugin',
 		'search' => 'burst+statistics+really+simple+plugins+self-hosted',
 		'url' => 'https://wordpress.org/plugins/burst-statistics/',
-		'title' => 'Burst Statistics - '. __("Self-hosted, Privacy-friendly analytics tool.", "really-simple-ssl"),
+		'title' => 'Burst Statistics - '. __("Self-hosted, Privacy-Friendly Analytics for WordPress.", "really-simple-ssl"),
 	),
     'COMPLIANZ' => array(
         'constant_free' => 'cmplz_plugin',
@@ -14,7 +14,7 @@ $plugins = array(
         'url' => 'https://wordpress.org/plugins/complianz-gdpr/',
         'website' => 'https://complianz.io/pricing?src=rsssl-plugin',
         'search' => 'complianz',
-        'title' => __("Complianz Privacy Suite - Cookie Consent Management as it should be ", "really-simple-ssl" ),
+        'title' => 'Complianz - ' . __("The Privacy Suite for WordPress, consent as it should be", "really-simple-ssl" ),
     ),
 	'COMPLIANZTC' => array(
 		'constant_free' => 'cmplz_tc_version',
@@ -22,7 +22,7 @@ $plugins = array(
 		'url' => 'https://wordpress.org/plugins/complianz-terms-conditions/',
 		'website' => 'https://complianz.io?src=rsssl-plugin',
 		'search' => 'complianz+terms+conditions+stand-alone',
-		'title' => 'Complianz - '. __("Terms and Conditions", "really-simple-ssl"),
+		'title' => 'Complianz - '. __("Terms & Conditions", "really-simple-ssl"),
 
 	),
 );
