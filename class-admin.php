@@ -63,7 +63,7 @@ class rsssl_admin
 
     public function add_privacy_info()
     {
-        if (!function_exists('wp_add_privacy_policy_content')) {
+        if ( !function_exists('wp_add_privacy_policy_content') ) {
             return;
         }
 
