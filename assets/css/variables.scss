@@ -13,8 +13,8 @@ $rsp-break-xxl: 1599px;
   --rsp-spacing-xs: 10px;
   --rsp-spacing-s: 15px;
   --rsp-spacing-m: 20px;
-  --rsp-spacing-l: 30px;
-  --rsp-spacing-xl: 40px;
+  --rsp-spacing-l: 25px;
+  --rsp-spacing-xl: 30px;
 
   // Grid settings
   --rsp-grid-margin: var(--rsp-spacing-s);
@@ -124,11 +124,8 @@ $rsp-break-xxl: 1599px;
 }
 
 @mixin rsssl-block-padding {
-  padding: var(--rsp-spacing-l) var(--rsp-spacing-xl);
+  padding: var(--rsp-spacing-m) var(--rsp-spacing-l);
 
-  @media screen and (max-width: $rsp-break-l) {
-    padding: var(--rsp-spacing-m) var(--rsp-spacing-l);
-  }
   @media screen and (max-width: $rsp-break-m) {
     padding: var(--rsp-spacing-xs) var(--rsp-spacing-s);
   }
@@ -142,11 +139,8 @@ $rsp-break-xxl: 1599px;
 }
 
 @mixin rsssl-block-block-padding {
-  padding-block: var(--rsp-spacing-l);
+  padding-block: var(--rsp-spacing-m);
 
-  @media screen and (max-width: $rsp-break-l) {
-    padding-block: var(--rsp-spacing-m);
-  }
   @media screen and (max-width: $rsp-break-m) {
     padding-block: var(--rsp-spacing-xs);
   }
@@ -156,11 +150,8 @@ $rsp-break-xxl: 1599px;
 }
 
 @mixin rsssl-inline-block-padding {
-  padding-inline: var(--rsp-spacing-xl);
+  padding-inline: var(--rsp-spacing-l);
 
-  @media screen and (max-width: $rsp-break-l) {
-    padding-inline: var(--rsp-spacing-l);
-  }
   @media screen and (max-width: $rsp-break-m) {
     padding-inline: var(--rsp-spacing-m);
   }

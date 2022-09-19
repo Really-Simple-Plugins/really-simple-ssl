@@ -30,8 +30,8 @@
     --rsp-spacing-xs: 10px;
     --rsp-spacing-s: 15px;
     --rsp-spacing-m: 20px;
-    --rsp-spacing-l: 30px;
-    --rsp-spacing-xl: 40px;
+    --rsp-spacing-l: 25px;
+    --rsp-spacing-xl: 30px;
     --rsp-grid-margin: var(--rsp-spacing-s);
     --rsp-grid-gap: var(--rsp-spacing-m);
     --rsp-border-radius: 12px;
@@ -186,7 +186,7 @@
 }
 
 .rsssl h4, .rsssl .rsssl-h4 {
-    font-size: var(--rsp-fs-500);
+    font-size: var(--rsp-fs-600);
     font-weight: 600;
     letter-spacing: 0.0125rem;
 }
@@ -409,13 +409,7 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: var(--rsp-spacing-l) var(--rsp-spacing-xl);
-}
-
-@media screen and (max-width: 1366px) {
-    .rsssl .rsssl-grid-item-header {
-        padding: var(--rsp-spacing-m) var(--rsp-spacing-l);
-    }
+    padding: var(--rsp-spacing-m) var(--rsp-spacing-l);
 }
 
 @media screen and (max-width: 1280px) {
@@ -447,14 +441,8 @@
 .rsssl .rsssl-grid-item-content {
     width: 100%;
     box-sizing: border-box;
-    padding-inline: var(--rsp-spacing-xl);
+    padding-inline: var(--rsp-spacing-l);
     flex-grow: 100;
-}
-
-@media screen and (max-width: 1366px) {
-    .rsssl .rsssl-grid-item-content {
-        padding-inline: var(--rsp-spacing-l);
-    }
 }
 
 @media screen and (max-width: 1280px) {
@@ -482,14 +470,8 @@
     width: 100%;
     min-height: calc(30px + var(--rsp-spacing-s) * 2);
     box-sizing: border-box;
-    padding: var(--rsp-spacing-l) var(--rsp-spacing-xl);
+    padding: var(--rsp-spacing-m) var(--rsp-spacing-l);
     align-self: flex-end;
-}
-
-@media screen and (max-width: 1366px) {
-    .rsssl .rsssl-grid-item-footer {
-        padding: var(--rsp-spacing-m) var(--rsp-spacing-l);
-    }
 }
 
 @media screen and (max-width: 1280px) {
@@ -549,17 +531,11 @@
 }
 
 .rsssl-modal .rsssl-modal-header {
-    padding: var(--rsp-spacing-l) var(--rsp-spacing-xl);
+    padding: var(--rsp-spacing-m) var(--rsp-spacing-l);
     display: flex;
     justify-content: space-between;
     align-items: center;
     border-radius: 12px;
-}
-
-@media screen and (max-width: 1366px) {
-    .rsssl-modal .rsssl-modal-header {
-        padding: var(--rsp-spacing-m) var(--rsp-spacing-l);
-    }
 }
 
 @media screen and (max-width: 1280px) {
@@ -595,13 +571,7 @@
     position: relative;
     font-size: var(--rsp-fs-400);
     line-height: 1.5;
-    padding: var(--rsp-spacing-l) var(--rsp-spacing-xl);
-}
-
-@media screen and (max-width: 1366px) {
-    .rsssl-modal .rsssl-modal-content {
-        padding: var(--rsp-spacing-m) var(--rsp-spacing-l);
-    }
+    padding: var(--rsp-spacing-m) var(--rsp-spacing-l);
 }
 
 @media screen and (max-width: 1280px) {
@@ -632,14 +602,8 @@
 .rsssl-modal .rsssl-modal-footer {
     display: flex;
     flex-direction: row;
-    padding: var(--rsp-spacing-l) var(--rsp-spacing-xl);
+    padding: var(--rsp-spacing-m) var(--rsp-spacing-l);
     gap: 10px;
-}
-
-@media screen and (max-width: 1366px) {
-    .rsssl-modal .rsssl-modal-footer {
-        padding: var(--rsp-spacing-m) var(--rsp-spacing-l);
-    }
 }
 
 @media screen and (max-width: 1280px) {
@@ -682,7 +646,7 @@
 
 .rsssl-header-container .rsssl-header img {
     margin: auto 0;
-    height: 28px;
+    height: 26px;
 }
 
 .rsssl-header-container .rsssl-header .rsssl-header-menu {
@@ -856,7 +820,7 @@
 }
 
 .rsssl-modal.rsssl-onboarding .rsssl-logo {
-    height: 28px;
+    height: 26px;
 }
 
 .rsssl-modal.rsssl-onboarding #rsssl-message li {
@@ -894,13 +858,7 @@
 }
 
 .rsssl-grid-item.rsssl-progress .rsssl-placeholder {
-    padding: var(--rsp-spacing-l) var(--rsp-spacing-xl);
-}
-
-@media screen and (max-width: 1366px) {
-    .rsssl-grid-item.rsssl-progress .rsssl-placeholder {
-        padding: var(--rsp-spacing-m) var(--rsp-spacing-l);
-    }
+    padding: var(--rsp-spacing-m) var(--rsp-spacing-l);
 }
 
 @media screen and (max-width: 1280px) {
@@ -932,14 +890,8 @@
 }
 
 .rsssl-progress-block .rsssl-progress-bar {
-    padding: var(--rsp-spacing-l) var(--rsp-spacing-xl);
+    padding: var(--rsp-spacing-m) var(--rsp-spacing-l);
     padding-block: 0;
-}
-
-@media screen and (max-width: 1366px) {
-    .rsssl-progress-block .rsssl-progress-bar {
-        padding: var(--rsp-spacing-m) var(--rsp-spacing-l);
-    }
 }
 
 @media screen and (max-width: 1280px) {
@@ -957,16 +909,10 @@
 .rsssl-progress-block .rsssl-progress-text {
     display: flex;
     align-items: center;
-    padding: var(--rsp-spacing-l) var(--rsp-spacing-xl);
+    padding: var(--rsp-spacing-m) var(--rsp-spacing-l);
     padding-block: var(--rsp-spacing-s);
     justify-content: flex-start;
     gap: var(--rsp-spacing-m);
-}
-
-@media screen and (max-width: 1366px) {
-    .rsssl-progress-block .rsssl-progress-text {
-        padding: var(--rsp-spacing-m) var(--rsp-spacing-l);
-    }
 }
 
 @media screen and (max-width: 1280px) {
@@ -988,6 +934,7 @@
 
 .rsssl-progress-block .rsssl-progress-text .rsssl-progress-text-span {
     font-weight: 500;
+    font-size: var(--rsp-fs-600);
 }
 
 .rsssl-progress-block .rsssl-progress-text .rsssl-progress-text-span a {
@@ -1079,18 +1026,12 @@
 }
 
 .rsssl-scroll-container {
-    padding: var(--rsp-spacing-l) var(--rsp-spacing-xl);
+    padding: var(--rsp-spacing-m) var(--rsp-spacing-l);
     height: 230px;
     overflow-y: auto;
     padding-block: 0;
     padding-top: var(--rsp-spacing-s);
     border-radius: 0;
-}
-
-@media screen and (max-width: 1366px) {
-    .rsssl-scroll-container {
-        padding: var(--rsp-spacing-m) var(--rsp-spacing-l);
-    }
 }
 
 @media screen and (max-width: 1280px) {
@@ -1199,13 +1140,7 @@
 }
 
 .rsssl-ssllabs .rsssl-placeholder {
-    padding: var(--rsp-spacing-l) var(--rsp-spacing-xl);
-}
-
-@media screen and (max-width: 1366px) {
-    .rsssl-ssllabs .rsssl-placeholder {
-        padding: var(--rsp-spacing-m) var(--rsp-spacing-l);
-    }
+    padding: var(--rsp-spacing-m) var(--rsp-spacing-l);
 }
 
 @media screen and (max-width: 1280px) {
@@ -1363,59 +1298,59 @@
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(1) {
-    width: 85%;
-}
-
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(2) {
-    width: 86%;
-}
-
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(3) {
-    width: 88%;
-}
-
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(4) {
-    width: 89%;
-}
-
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(5) {
-    width: 89%;
-}
-
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(6) {
-    width: 99%;
-}
-
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(7) {
-    width: 100%;
-}
-
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(8) {
-    width: 89%;
-}
-
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(9) {
-    width: 88%;
-}
-
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(10) {
-    width: 82%;
-}
-
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(11) {
     width: 73%;
 }
 
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(2) {
+    width: 89%;
+}
+
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(3) {
+    width: 71%;
+}
+
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(4) {
+    width: 68%;
+}
+
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(5) {
+    width: 80%;
+}
+
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(6) {
+    width: 96%;
+}
+
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(7) {
+    width: 73%;
+}
+
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(8) {
+    width: 68%;
+}
+
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(9) {
+    width: 93%;
+}
+
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(10) {
+    width: 84%;
+}
+
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(11) {
+    width: 99%;
+}
+
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(12) {
-    width: 98%;
+    width: 65%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(13) {
-    width: 85%;
+    width: 95%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(14) {
-    width: 91%;
+    width: 67%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(15) {
@@ -1423,23 +1358,23 @@
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(16) {
-    width: 98%;
+    width: 83%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(17) {
-    width: 61%;
+    width: 77%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(18) {
-    width: 72%;
+    width: 85%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(19) {
-    width: 84%;
+    width: 82%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(20) {
-    width: 81%;
+    width: 90%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line ~ .rsssl-placeholder-line {
@@ -1494,8 +1429,12 @@
     --rsp-other-plugins-color: var(--rsp-green);
 }
 
-.rsssl .rsssl-other-plugins-container .rsssl-other-plugins-element.rsssl-complianz, .rsssl .rsssl-other-plugins-container .rsssl-other-plugins-element.rsssl-complianztc {
+.rsssl .rsssl-other-plugins-container .rsssl-other-plugins-element.rsssl-complianz {
     --rsp-other-plugins-color: var(--rsp-blue);
+}
+
+.rsssl .rsssl-other-plugins-container .rsssl-other-plugins-element.rsssl-complianztc {
+    --rsp-other-plugins-color: #333;
 }
 
 .rsssl .rsssl-other-plugins-container .rsssl-other-plugins-element.rsssl-rsssl {
@@ -1584,8 +1523,8 @@
     text-decoration: underline;
 }
 
-.rsssl-tips-tricks-container .rsssl-tips-tricks-element a:hover .rsssl-bullet {
-    background-color: var(--rsp-brand-primary);
+.rsssl-tips-tricks-container .rsssl-tips-tricks-element a:hover svg path {
+    fill: var(--rsp-brand-primary);
 }
 
 .rsssl-tips-tricks-container .rsssl-tips-tricks-element a:hover .rsssl-tips-tricks-content {
@@ -1647,16 +1586,10 @@
     align-items: center;
     gap: var(--rsp-spacing-s);
     background-color: var(--rsp-white);
-    padding: var(--rsp-spacing-l) var(--rsp-spacing-xl);
+    padding: var(--rsp-spacing-m) var(--rsp-spacing-l);
     border-radius: var(--rsp-border-radius-input);
     margin: var(--rsp-spacing-s);
     box-shadow: var(--rsp-box-shadow);
-}
-
-@media screen and (max-width: 1366px) {
-    .rsssl div[class^="rsssl-wizard-"] .rsssl-locked .rsssl-locked-overlay {
-        padding: var(--rsp-spacing-m) var(--rsp-spacing-l);
-    }
 }
 
 @media screen and (max-width: 1280px) {
@@ -1791,15 +1724,9 @@
     color: var(--rsp-text-color);
     font-size: var(--rsp-fs-400);
     padding-block: var(--rsp-spacing-xs);
-    padding-inline: var(--rsp-spacing-xl);
+    padding-inline: var(--rsp-spacing-l);
     transition: all 0.2s ease-in-out;
     border-left: 4px solid transparent;
-}
-
-@media screen and (max-width: 1366px) {
-    .rsssl-wizard-menu-items .rsssl-menu-item a {
-        padding-inline: var(--rsp-spacing-l);
-    }
 }
 
 @media screen and (max-width: 1280px) {
@@ -1858,15 +1785,9 @@
     color: var(--rsp-text-color);
     font-size: var(--rsp-fs-400);
     padding-block: var(--rsp-spacing-xs);
-    padding-inline: var(--rsp-spacing-xl);
+    padding-inline: var(--rsp-spacing-l);
     transition: all 0.2s ease-in-out;
     border-left: 4px solid transparent;
-}
-
-@media screen and (max-width: 1366px) {
-    .rsssl-wizard-menu-items .rsssl-premium-menu-item div {
-        padding-inline: var(--rsp-spacing-l);
-    }
 }
 
 @media screen and (max-width: 1280px) {
@@ -1922,14 +1843,8 @@
 
 .rsssl div[class^="rsssl-wizard-"] .rsssl-field-wrap, .rsssl div[class^="rsssl-wizard-"] .rsssl-settings-block-intro {
     padding-block: var(--rsp-spacing-s);
-    padding-inline: var(--rsp-spacing-xl);
+    padding-inline: var(--rsp-spacing-l);
     overflow: hidden;
-}
-
-@media screen and (max-width: 1366px) {
-    .rsssl div[class^="rsssl-wizard-"] .rsssl-field-wrap, .rsssl div[class^="rsssl-wizard-"] .rsssl-settings-block-intro {
-        padding-inline: var(--rsp-spacing-l);
-    }
 }
 
 @media screen and (max-width: 1280px) {
@@ -2074,15 +1989,9 @@
 .rsssl-lets-encrypt-tests .rsssl-progress-text {
     display: flex;
     align-items: center;
-    padding: var(--rsp-spacing-l) var(--rsp-spacing-xl);
+    padding: var(--rsp-spacing-m) var(--rsp-spacing-l);
     padding-block: 0;
     padding-top: var(--rsp-spacing-xs);
-}
-
-@media screen and (max-width: 1366px) {
-    .rsssl-lets-encrypt-tests .rsssl-progress-text {
-        padding: var(--rsp-spacing-m) var(--rsp-spacing-l);
-    }
 }
 
 @media screen and (max-width: 1280px) {

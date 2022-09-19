@@ -30,8 +30,8 @@
 		color: var(--rsp-brand-primary);
 		text-decoration: underline;
 
-		.rsssl-bullet {
-		  background-color: var(--rsp-brand-primary);
+		svg path{
+		  fill: var(--rsp-brand-primary);
 		}
 
 		.rsssl-tips-tricks-content {
