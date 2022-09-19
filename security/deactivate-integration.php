@@ -1,4 +1,5 @@
 <?php
+defined('ABSPATH') or die();
 /**
  * If a plugin is deactivated, add to deactivated list.
  * @param string $field_id

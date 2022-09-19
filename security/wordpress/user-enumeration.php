@@ -1,4 +1,5 @@
 <?php
+defined('ABSPATH') or die();
 /**
  * Action to disable user registration
  * @param bool $value

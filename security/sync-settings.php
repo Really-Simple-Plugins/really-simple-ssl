@@ -1,5 +1,5 @@
 <?php
-
+defined('ABSPATH') or die();
 /**
  * Conditionally we can decide to disable fields, add comments, and manipulate the value here
  * @param array $field

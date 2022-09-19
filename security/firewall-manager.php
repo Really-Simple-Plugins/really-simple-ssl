@@ -1,4 +1,5 @@
 <?php
+defined('ABSPATH') or die();
 class rsssl_firewall_manager {
 	private static $_this;
 
