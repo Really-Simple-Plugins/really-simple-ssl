@@ -179,6 +179,9 @@ function rsssl_do_action($request){
 		case 'ssl_status_data':
 			$data = rsssl_ssl_status_data();
 			break;
+		case 'ssltest_run':
+			$data = rsssl_ssltest_run($request);
+			break;
 		default:
 			$data = apply_filters("rsssl_do_action", [], $action, $request);
 	}
@@ -186,6 +189,12 @@ function rsssl_do_action($request){
 	header( "Content-Type: application/json" );
 	echo $response;
 	exit;
+}
+
+function rsssl_ssltest_run($request) {
+    $url = $request->get_params();
+
+
 }
 /**
  * @param WP_REST_Request $request

@@ -15,7 +15,7 @@ const SslLabs = (props) => {
     const intervalId = useRef(false);
     useEffect(()=>{
         if (!dataLoaded) {
-                rsssl_api.runTest('ssltest_get' ).then( ( response ) => {
+                rsssl_api.runTest('ssltest_get').then( ( response ) => {
                     if (response.data.hasOwnProperty('host') )  {
                         let data = processSslData(response.data);
                         setSslData(data);
@@ -146,11 +146,10 @@ const SslLabs = (props) => {
         return new Promise((resolve, reject) => {
             const host = window.location.host;
             const url = 'https://api.ssllabs.com/api/v3/getEndpointData?host='+host+'&s='+ipAddress;
-            var xmlHttp = new XMLHttpRequest();
-            xmlHttp.open( "GET", url, false ); // false for synchronous request
-            xmlHttp.send( null );
-
-            resolve(JSON.parse(xmlHttp.responseText));
+            rsssl_api.doAction('ssltest_run', url).then( ( response ) => {
+                console.log(response.data);
+                resolve(JSON.parse(response.data));
+            })
         });
     }
 
@@ -163,10 +162,11 @@ const SslLabs = (props) => {
             }
             const host = window.location.host;
             const url = "https://api.ssllabs.com/api/v3/analyze?host="+host+clearCacheUrl;
-            var xmlHttp = new XMLHttpRequest();
-            xmlHttp.open( "GET", url, false ); // false for synchronous request
-            xmlHttp.send( null );
-            resolve(JSON.parse(xmlHttp.responseText));
+            rsssl_api.doAction('ssltest_run', url).then( ( response ) => {
+                console.log(response.data);
+                resolve(JSON.parse(response.data));
+            })
+
         });
     }
 
