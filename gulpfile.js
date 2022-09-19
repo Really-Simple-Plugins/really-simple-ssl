@@ -36,9 +36,16 @@ exports.js = jsTask
 
 function defaultTask(cb) {
   gulp.watch('./assets/css/**/*.scss', { ignoreInitial: false }, scssTask);
-  gulp.watch('./assets/js/**/*.js', { ignoreInitial: false }, jsTask);
+//   gulp.watch('./assets/js/**/*.js', { ignoreInitial: false }, jsTask);
   spawn('npm', ['start'], { cwd: 'settings', stdio: 'inherit' })
   cb();
 }
 exports.default = defaultTask
 
+// function buildTask(cb) {
+//   gulp.task(scssTask);
+//   spawn('npm', ['build'], { cwd: 'settings', stdio: 'inherit' })
+//   run('npm run build').exec()
+//   cb();
+// }
+// exports.build = buildTask
