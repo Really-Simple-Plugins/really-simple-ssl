@@ -1038,9 +1038,9 @@ function rsssl_blocks(){
 			'class'    => '',
 		],
 		[
-			'id'      => 'security-features',
+			'id'      => 'new-features-block',
 			'controls'  => false,
-			'title'   => __( "New: Security features", 'really-simple-ssl' ),
+			'title'   => __( "New: Hardening", 'really-simple-ssl' ),
 			'help'    => __( 'A help text', 'really-simple-ssl' ),
 			'content' => ['type'=>'react', 'data' => 'SecurityFeaturesBlock'],
 			'footer' => ['type'=>'react', 'data' => 'SecurityFeaturesFooter'],

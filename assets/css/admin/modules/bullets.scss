@@ -35,8 +35,6 @@
   }
 	.rsssl-legend{
 		display: flex;
-		flex-direction:row-reverse;
-		flex-grow:1;
 
 		width: max-content;
 		color: var(--rsp-text-color-light);
@@ -44,8 +42,8 @@
 		min-width: 0;
 		gap: var(--rsp-spacing-xxs);
 		text-decoration: none;
-		.rsssl-icon {
-			margin-right:5px;
+		&:first-of-type{
+			margin-left: auto;
 		}
 	}
 

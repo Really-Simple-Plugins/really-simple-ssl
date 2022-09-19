@@ -28,7 +28,7 @@
       .rsssl-ssl-test-grade {
         text-align:center;
         padding: 30px 0;
-        font-size:55px;
+        font-size: var(--rsp-fs-900);
         font-weight: 700;
         letter-spacing: 0.025rem;
         border-radius:10px;
@@ -51,7 +51,7 @@
           .rsssl-score-snippet {
             white-space: nowrap;
             padding: 0 8px;
-            font-size: 10px;
+            font-size: var(--rsp-fs-200);
             margin: 5px 10px;
             border-radius: 3px;
 

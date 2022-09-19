@@ -42,11 +42,15 @@ const ProgressFooter = (props) => {
             { rsssl_settings.pro_plugin_active && <span className="rsssl-footer-left">Really Simple SSL pro {rsssl_settings.pro_version}</span>}
             { !rsssl_settings.pro_plugin_active && <a href={rsssl_settings.upgrade_link} target="_blank" className="button button-default">{ __( "Go PRO!", "really-simple-ssl" ) }</a>}
 
-            <div class="rsssl-legend">
+            <div className="rsssl-legend">
                 <Icon name = {sslStatusIcon} color = {sslStatusColor} />
                 <div>{sslStatusText}</div>
+            </div>
+            <div className="rsssl-legend">
                 <Icon name = {mixedContentIcon} color = {mixedContentColor} />
                 <div>{__( "Mixed content", "really-simple-ssl" )}</div>
+            </div>
+            <div className="rsssl-legend">
                 <Icon name = {redirectIcon} color = {redirectColor} />
                 <div>{__( "301 Redirect", "really-simple-ssl" )}</div>
             </div>
