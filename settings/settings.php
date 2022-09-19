@@ -191,6 +191,13 @@ function rsssl_do_action($request){
 	exit;
 }
 
+/**
+ * Run a request to SSL Labs
+ * 
+ * @param $request
+ *
+ * @return string
+ */
 function rsssl_ssltest_run($request) {
     $data = $request->get_params();
     $url = $data['url'];
