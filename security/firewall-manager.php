@@ -58,13 +58,13 @@ class rsssl_firewall_manager {
 		$wpconfig_path = RSSSL()->really_simple_ssl->find_wp_config_path();
 		$wpconfig      = file_get_contents( $wpconfig_path );
 
-		$dir  = ABSPATH . 'wp-content';
-		$file = $dir . '/advanced-headers.php';
+		$wpcontent_dir  = ABSPATH . 'wp-content';
+		$advanced_headers_file = $wpcontent_dir . '/advanced-headers.php';
 		$rules    = apply_filters('rsssl_firewall_rules', '');
 		//no rules? remove the file
 		if ( empty(trim($rules) ) ) {
-			if ( file_exists($file) ) {
-				unlink($file);
+			if ( file_exists($advanced_headers_file) ) {
+				unlink($advanced_headers_file);
 			}
 			return;
 		}
@@ -79,24 +79,24 @@ class rsssl_firewall_manager {
 		$contents .= "//RULES START\n".$rules;
 
 		//save errors
-		if ( is_writable( $dir ) && (is_writable( $wpconfig_path ) || strpos( $wpconfig, 'advanced-headers.php' ) !== false ) ) {
+		if ( is_writable( $wpcontent_dir ) && (is_writable( $wpconfig_path ) || strpos( $wpconfig, 'advanced-headers.php' ) !== false ) ) {
 			update_option('rsssl_firewall_error', false, false );
 		} else {
 			if ( !is_writable( $wpconfig_path ) ) {
 				update_option('rsssl_firewall_error', 'wpconfig-notwritable', false );
-			} else if ( !is_writable( $dir )) {
+			} else if ( !is_writable( $wpcontent_dir )) {
 				update_option('rsssl_firewall_error', 'advanced-headers-notwritable', false );
 			}
 		}
 
 		// write to advanced-header.php file
-		if ( is_writable( $dir ) ) {
-			file_put_contents( $file, $contents );
+		if ( is_writable( ABSPATH . 'wp-content' ) ) {
+			file_put_contents( ABSPATH . "wp-content/advanced-headers.php", $contents );
 		}
 
 		if ( is_writable( $wpconfig_path ) && strpos( $wpconfig, 'advanced-headers.php' ) === false ) {
-			$rule    = "if ( file_exists('" . $file . "') ) { " . "\n";
-			$rule    .= "\t" . "require_once '$file';" . "\n" . "}";
+			$rule = 'if ( file_exists(ABSPATH . "wp-content/advanced-headers.php") ) { ' . "\n";
+			$rule .= "\t" . 'require_once ABSPATH . "wp-content/advanced-headers.php";' . "\n" . "}";
 			$updated = preg_replace( '/' . '<\?php' . '/', '<?php' . "\n" . $rule . "\n", $wpconfig, 1 );
 			file_put_contents( $wpconfig_path, $updated );
 		}
