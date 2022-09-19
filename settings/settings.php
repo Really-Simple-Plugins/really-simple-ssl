@@ -157,6 +157,9 @@ function rsssl_settings_rest_route() {
  * @return void
  */
 function rsssl_store_ssl_labs($request){
+	if (!rsssl_user_can_manage()) {
+		return;
+	}
 	$data = $request->get_json_params();
 	update_option('rsssl_ssl_labs_data', $data, false);
 }
@@ -553,6 +556,9 @@ function rsssl_sanitize_field( $value, $type, $id ) {
  * @return mixed|string
  */
 function rsssl_encode_password($password) {
+	if (!rsssl_user_can_manage()) {
+		return $password;
+	}
 	if ( strlen(trim($password)) === 0 ) {
 		return $password;
 	}

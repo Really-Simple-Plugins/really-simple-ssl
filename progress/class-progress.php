@@ -125,11 +125,22 @@ class rsssl_progress {
 			delete_transient( 'rsssl_plusone_count' );
 
 			// count should be updated, therefore clear cache
-			RSSSL()->really_simple_ssl->clear_transients();
+			$this->clear_transients();
 		}
 
 		return [
 			'percentage' => $this->percentage(),
 		];
+	}
+
+	/**
+	 * Clear some transients
+	 */
+
+	public function clear_transients(){
+		delete_transient('rsssl_mixed_content_fixer_detected');
+		delete_transient('rsssl_plusone_count');
+		delete_transient( 'rsssl_can_use_curl_headers_check' );
+		delete_transient( 'rsssl_admin_notices' );
 	}
 }

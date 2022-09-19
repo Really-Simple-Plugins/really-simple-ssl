@@ -12,7 +12,7 @@ defined('ABSPATH') or die("you do not have access to this page!");
  * @return bool
  */
 
-function rsssl_conditions_apply( $conditions ){
+function rsssl_conditions_apply( array $conditions ){
 	$defaults = ['relation' => 'AND'];
 	$conditions = wp_parse_args($conditions, $defaults);
 	$relation = $conditions['relation'] === 'AND' ? 'AND' : 'OR';
@@ -70,12 +70,12 @@ function rsssl_conditions_apply( $conditions ){
  * Get a Really Simple SSL option by name
  *
  * @param string $name
- * @param mixed $default
+ * @param mixed  $default
  *
  * @return mixed
  */
 
-function rsssl_get_option( $name, $default=false ) {
+function rsssl_get_option( string $name, $default=false ) {
 	$name = sanitize_title($name);
 	if ( is_multisite() && rsssl_is_networkwide_active() ) {
 		$options = get_site_option( 'rsssl_options', [] );

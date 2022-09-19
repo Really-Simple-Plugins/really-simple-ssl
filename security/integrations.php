@@ -73,7 +73,7 @@ $rsssl_integrations_list = apply_filters( 'rsssl_integrations', array(
 		'risk'                 => 'medium',
 		'option_id'            => 'block_registration_when_display_name_is_login_name',
 	),
-    'disable_xmlrpc' => array(
+    'disable-xmlrpc' => array(
 	    'label'                => 'XMLRPC',
 	    'folder'               => 'wordpress',
 	    'impact'               => 'medium',
@@ -117,8 +117,6 @@ function rsssl_is_integration_enabled( $plugin, $details ) {
 
 function rsssl_integrations() {
 	global $rsssl_integrations_list;
-	$stored_integrations_count = get_option('rsssl_active_integrations', 0 );
-	$actual_integrations_count = 0;
 	foreach ( $rsssl_integrations_list as $plugin => $details ) {
 
 		$details = wp_parse_args($details,
@@ -130,7 +128,6 @@ function rsssl_integrations() {
 		);
 
 		if ( rsssl_is_integration_enabled( $plugin, $details ) ) {
-			$actual_integrations_count++;
 			$path = apply_filters('rsssl_integrations_path', rsssl_path, $plugin);
 			$file = $path . 'security/' . $details['folder'] . "/" . $plugin . '.php';
 
@@ -143,19 +140,16 @@ function rsssl_integrations() {
 
 			// Apply fix automatically on high risk, low impact
 			//check if already executed
-			if ( $risk === 'high' && $impact === 'low' && is_admin() ) {
+			if ( $risk === 'high' && $impact === 'low' && rsssl_user_can_manage() ) {
 				$fix = isset($details['actions']['fix']) ? $details['actions']['fix']: false;
 //				rsssl_do_fix($fix);
 			}
 		}
 	}
-
-	if ( $stored_integrations_count != $actual_integrations_count) {
-		update_option('rsssl_active_integrations',  $actual_integrations_count, false);
-		update_option('rsssl_integrations_changed', true, false );
-	}
-
 }
+add_action( 'plugins_loaded', 'rsssl_integrations', 10 );
+//also run when fields are saved.
+add_action( 'rsssl_after_saved_fields', 'rsssl_integrations', 20 );
 
 /**
  * Complete a fix for an issue, either user triggered, or automatic
@@ -180,6 +174,13 @@ function rsssl_do_fix($fix){
 
 }
 
+/**
+ * Check if this has been fixed already
+ *
+ * @param $fix
+ *
+ * @return bool
+ */
 function rsssl_has_fix($fix){
 	$completed = get_option('rsssl_completed_fixes', []);
 	if ( !in_array($fix, $completed)) {
@@ -187,11 +188,6 @@ function rsssl_has_fix($fix){
 	}
 	return true;
 }
-
-
-add_action( 'plugins_loaded', 'rsssl_integrations', 10 );
-//also run when fields are saved.
-add_action( 'rsssl_after_saved_fields', 'rsssl_integrations', 20 );
 
 /**
  * If the corresponding setting has been changed, clear the test cache and re-run it.
@@ -214,5 +210,10 @@ function rsssl_maybe_clear_transients($field_id, $field_value, $prev_value, $fie
 		delete_transient('rsssl_code_execution_allowed_status');
 		rsssl_code_execution_allowed();
 	}
+	if ( $field_id==='hide_wordpress_version' ){
+		delete_transient('rsssl_wp_version_detected');
+		rsssl_src_contains_wp_version();
+	}
+
 }
 add_action( "rsssl_after_save_field", 'rsssl_maybe_clear_transients', 100, 4 );
