@@ -143,31 +143,30 @@ const SslLabs = (props) => {
     }
 
     const getEndpointData = (ipAddress) => {
-        return new Promise((resolve, reject) => {
-            const host = window.location.host;
-            const url = 'https://api.ssllabs.com/api/v3/getEndpointData?host='+host+'&s='+ipAddress;
-            rsssl_api.doAction('ssltest_run', url).then( ( response ) => {
-                console.log(response.data);
-                resolve(JSON.parse(response.data));
-            })
-        });
+        const host = window.location.host;
+        const url = 'https://api.ssllabs.com/api/v3/getEndpointData?host='+host+'&s='+ipAddress;
+        let data = {};
+        data.url = url;
+        return rsssl_api.doAction('ssltest_run', data).then( ( response ) => {
+            console.log(response.data);
+            return JSON.parse(response.data);
+        })
     }
 
     const getSslLabsData = (e) => {
-        return new Promise((resolve, reject) => {
-            let clearCacheUrl = '';
-            if (clearCache){
-                clearCache = false;
-                clearCacheUrl = '&startNew=on';
-            }
-            const host = window.location.host;
-            const url = "https://api.ssllabs.com/api/v3/analyze?host="+host+clearCacheUrl;
-            rsssl_api.doAction('ssltest_run', url).then( ( response ) => {
-                console.log(response.data);
-                resolve(JSON.parse(response.data));
-            })
-
-        });
+        let clearCacheUrl = '';
+        if (clearCache){
+            clearCache = false;
+            clearCacheUrl = '&startNew=on';
+        }
+        const host = window.location.host;
+        const url = "https://api.ssllabs.com/api/v3/analyze?host="+host+clearCacheUrl;
+        let data = {};
+        data.url = url;
+        return rsssl_api.doAction('ssltest_run', data).then( ( response ) => {
+            console.log(response.data);
+            return JSON.parse(response.data);
+        })
     }
 
     const getStyles = () => {

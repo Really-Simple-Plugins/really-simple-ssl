@@ -192,10 +192,14 @@ function rsssl_do_action($request){
 }
 
 function rsssl_ssltest_run($request) {
-    $url = $request->get_params();
-
-
+    $data = $request->get_params();
+    $url = $data['url'];
+	$response = wp_remote_get( $url );
+//	$status   = wp_remote_retrieve_response_code( $response );
+	$data     = wp_remote_retrieve_body( $response );
+	return $data;
 }
+
 /**
  * @param WP_REST_Request $request
  *
