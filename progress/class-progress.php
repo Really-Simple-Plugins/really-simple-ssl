@@ -125,7 +125,7 @@ class rsssl_progress {
 			delete_transient( 'rsssl_plusone_count' );
 
 			// count should be updated, therefore clear cache
-			$this->clear_transients();
+			RSSSL()->really_simple_ssl->clear_transients();
 		}
 
 		return [
@@ -133,14 +133,5 @@ class rsssl_progress {
 		];
 	}
 
-	/**
-	 * Clear some transients
-	 */
 
-	public function clear_transients(){
-		delete_transient('rsssl_mixed_content_fixer_detected');
-		delete_transient('rsssl_plusone_count');
-		delete_transient( 'rsssl_can_use_curl_headers_check' );
-		delete_transient( 'rsssl_admin_notices' );
-	}
 }

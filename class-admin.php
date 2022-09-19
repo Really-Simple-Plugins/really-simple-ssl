@@ -79,6 +79,17 @@ class rsssl_admin
     }
 
 	/**
+	 * Clear some transients
+	 */
+
+	public function clear_transients(){
+		delete_transient('rsssl_mixed_content_fixer_detected');
+		delete_transient('rsssl_plusone_count');
+		delete_transient( 'rsssl_can_use_curl_headers_check' );
+		delete_transient( 'rsssl_admin_notices' );
+	}
+
+	/**
      * Check if current day falls within required date range.
      *
 	 * @return bool
