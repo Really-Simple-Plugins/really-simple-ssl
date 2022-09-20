@@ -1050,7 +1050,7 @@ function rsssl_blocks(){
 			'controls'  => false,
 			'title'   => __( "Other Plugins", 'really-simple-ssl' ),
 			'help'    => __( 'A help text', 'really-simple-ssl' ),
-			'content' => ['type'=>'template', 'data' => 'other-plugins.php'],
+			'content' => ['type'=>'react', 'data' => 'OtherPlugins'],
 			'footer'  => ['type'=>'html', 'data' => ''],
 			'class'    => ' rsssl-column-2 no-border no-background',
 		],

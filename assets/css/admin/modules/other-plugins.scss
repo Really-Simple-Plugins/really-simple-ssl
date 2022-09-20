@@ -25,19 +25,19 @@
 	  gap: 10px;
 	  --rsp-other-plugins-color: var(---rsp-brand-primary);
 
-	  &.rsssl-zip {
+	  &.rsssl-zip-recipes {
 		--rsp-other-plugins-color: var(--rsp-pink);
 	  }
 
-	  &.rsssl-burst {
+	  &.rsssl-burst-statistics {
 		--rsp-other-plugins-color: var(--rsp-green);
 	  }
 
-	  &.rsssl-complianz, &.rsssl-complianztc {
+	  &.rsssl-complianz-gdpr, &.rsssl-complianz-terms-conditions {
 		--rsp-other-plugins-color: var(--rsp-blue);
 	  }
 
-	  &.rsssl-rsssl {
+	  &.rsssl-really-simple-ssl {
 		--rsp-other-plugins-color: var(--rsp-yellow);
 	  }
 

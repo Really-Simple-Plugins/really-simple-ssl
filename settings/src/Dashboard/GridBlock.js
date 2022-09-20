@@ -9,6 +9,7 @@ import ProgressHeader from "./ProgressBlockHeader";
 import ProgressFooter from "./ProgressFooter";
 import SslLabs from "./SslLabs";
 import SslLabsFooter from "./SslLabsFooter";
+import OtherPlugins from "./OtherPlugins";
 import SecurityFeaturesBlock from './SecurityFeaturesBlock/SecurityFeaturesBlock';
 import SecurityFeaturesFooter from './SecurityFeaturesBlock/SecurityFeaturesFooter';
 import Placeholder from '../Placeholder/Placeholder';
@@ -43,6 +44,7 @@ var dynamicComponents = {
     "ProgressFooter": ProgressFooter,
     "SslLabs": SslLabs,
     "SslLabsFooter": SslLabsFooter,
+    "OtherPlugins": OtherPlugins,
 };
 
 class GridBlock extends Component {

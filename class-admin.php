@@ -2915,33 +2915,6 @@ class rsssl_admin
 		return $count;
 	}
 
-    /**
-     * Get status link for plugin, depending on installed, or premium availability
-     * @param $item
-     *
-     * @return string
-     */
-
-    public function get_status_link($item){
-        if (!defined($item['constant_free']) && !defined($item['constant_premium'])) {
-            $args = array(
-                "s" => $item['search'],
-                "tab" => "search",
-                "type" => "term"
-            );
-            $admin_url= is_multisite() ? network_admin_url('plugin-install.php') : admin_url('plugin-install.php');
-	        $link = add_query_arg( $args, $admin_url );
-	        $status = '<a href="'.esc_url_raw($link).'">'.__('Install', 'really-simple-ssl').'</a>';
-        } elseif (isset($item['constant_premium']) && !defined($item['constant_premium'])) {
-	        $link = $item['website'];
-	        $status = '<a href="'.esc_url_raw($link).'">'.__('Upgrade to pro', 'really-simple-ssl').'</a>';
-        } else {
-	        $status = __( "Installed", "really-simple-ssl" );
-        }
-        return $status;
-    }
-
-
 	/**
      * Render grid item based on template
 	 * @param array $grid_item
