@@ -51,6 +51,8 @@ class Page extends Component {
             this.menu = this.getSelectedMenu(this.superMenu, selectedMainMenuItem);
             this.fields = response.fields;
             this.progress = response.progress;
+            console.log(response.fields);
+            console.log(this.menu);
             this.setState({
                 isAPILoaded: true,
                 selectedMainMenuItem: selectedMainMenuItem,

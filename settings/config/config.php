@@ -230,7 +230,7 @@ function rsssl_menu(){
 			],
 		],
 	];
-	return $menu_items;
+	return apply_filters('rsssl_menu', $menu_items);
 }
 
 function rsssl_fields( $load_values = true ){

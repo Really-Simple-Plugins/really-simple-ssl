@@ -199,7 +199,6 @@ class Field extends Component {
         }
 
         if ( field.type==='license' ){
-            //There is no "PasswordControl" in WordPress react yet, so we create our own license field.
             let field = this.props.field;
             let fieldValue = field.value;
             let fields = this.props.fields;
