@@ -18,20 +18,20 @@ function rsssl_menu(){
 					'id' => 'general',
 					'group_id' => 'general',
 					'title' => __('General', 'really-simple-ssl'),
-					'helpLink'  => 'https://really-simple-ssl.com',
+					'helpLink'  => 'https://really-simple-ssl.com/instructions/about-our-general-settings/',
 					'groups' => [
 						[
 							'id' => 'general',
 							'title' => __('General', 'really-simple-ssl'),
-							'helpLink'  => 'https://really-simple-ssl.com',
+							'helpLink'  => 'https://really-simple-ssl.com/instructions/about-our-general-settings/',
 						],
 						[
 							'id' => 'support',
-							'title' => __('Premium support', 'really-simple-ssl'),
-							'intro' => __('When you send this form, we will attach the following information: license key, scan results, your domain,.htaccess file, debug log and a list of active plugins.', 'really-simple-ssl'),
+							'title' => __('Premium Support', 'really-simple-ssl'),
+							'intro' => __('When you send this form, we will attach the following information: license key, scan results, your domain, .htaccess file, debug log and a list of active plugins.', 'really-simple-ssl'),
 							'premium' => true,
-							'premium_text' => __("Get Premium support, and more with %sReally Simple SSL pro%s", 'really-simple-ssl'),
-							'helpLink'  => 'https://really-simple-ssl.com',
+							'premium_text' => __("Get Premium Support and more, with %sReally Simple SSL Pro%s", 'really-simple-ssl'),
+							'helpLink'  => 'https://really-simple-ssl.com/pro/',
 							'helpLink_text'  => __('Debugging with Really Simple SSL',"really-simple-ssl"),
 						],
 					],
@@ -43,19 +43,19 @@ function rsssl_menu(){
 					'groups' => [
 						[
 							'id' => 'hardening_basic',
-							'helpLink'  => 'https://really-simple-ssl.com',
-							'title' => __('Hardening features', 'really-simple-ssl'),
+							'helpLink'  => 'https://really-simple-ssl.com/instructions/about-hardening-features/',
+							'title' => __('Hardening', 'really-simple-ssl'),
 						],
 						[
 							'id' => 'hardening_extended',
 							'premium' => true,
-							'helpLink'  => 'https://really-simple-ssl.com',
-							'title' => __('Advanced hardening features', 'really-simple-ssl'),
+							'helpLink'  => 'https://really-simple-ssl.com/instructions/about-hardening-features/',
+							'title' => __('Advanced Hardening', 'really-simple-ssl'),
 						],
 						[
 							'id' => 'hardening_xml',
 							'premium' => true,
-							'helpLink'  => 'https://really-simple-ssl.com',
+							'helpLink'  => 'https://really-simple-ssl.com/instructions/about-hardening-features/',
 							'title' => __('XML RPC', 'really-simple-ssl'),
 						],
 					],
@@ -64,13 +64,15 @@ function rsssl_menu(){
 					'id' => 'mixed_content_scan',
 					'title' => __('Mixed Content Scan', 'really-simple-ssl'),
 					'premium' => true,
-					'premium_text' => __("Learn more about the %sMixed Content Scan Pro%s", 'really-simple-ssl'),
+					'helpLink'  => 'https://really-simple-ssl.com',
+					'premium_text' => __("Get the Mixed Content Scan and more, with %sReally Simple SSL Pro%s", 'really-simple-ssl'),
 					'groups' => [
 						[
 							'id' => 'mixedcontentscan',
 							'title' => __('Mixed Content Scan', 'really-simple-ssl'),
+							'helpLink'  => 'https://really-simple-ssl.com',
 							'premium' => true,
-							'premium_text' => __("Learn more about %sHSTS%s", 'really-simple-ssl'),
+							'premium_text' => __("Get the Mixed Content Scan and more, with %sReally Simple SSL Pro%s", 'really-simple-ssl'),
 						],
 					],
 					//example of submenu
@@ -278,6 +280,7 @@ function rsssl_fields( $load_values = true ){
 			],
 			'help'        => [
 				'label' => 'default',
+				'title' => __( "Redirect method", 'really-simple-ssl' ),
 				'text' => __( 'Redirects all requests over HTTP to HTTPS using a PHP 301 redirect. Enable if the .htaccess redirect cannot be used, for example on NGINX servers.', 'really-simple-ssl' ),
 			],
 			'disabled'    => !rsssl_get_option('ssl_enabled'),
@@ -289,13 +292,14 @@ function rsssl_fields( $load_values = true ){
 			'group_id'    => 'general',
 			'type'        => 'checkbox',
 			'label'       => __( "Mixed content fixer", 'really-simple-ssl' ),
-			'help'        => [
-				'label' => 'default',
-				'text' => __( 'In most cases you need to leave this enabled, to prevent mixed content issues on your site.', 'really-simple-ssl' ),
-			],
+			// 'help'        => [
+			// 	'label' => 'default',
+			// 	'text' => __( 'In most cases you need to leave this enabled, to prevent mixed content issues on your site.', 'really-simple-ssl' ),
+			// ],
 			'disabled'    => false,
 			'default'     => true,
 		],
+
 		[
 			'id'          => 'switch_mixed_content_fixer_hook',
 			'menu_id'     => 'general',
@@ -332,10 +336,10 @@ function rsssl_fields( $load_values = true ){
 			'group_id'    => 'general',
 			'type'        => 'checkbox',
 			'label'       => __( "Dismiss all notices", 'really-simple-ssl' ),
-			'help'        => [
-				'label' => 'default',
-				'text' => __( "Enable this option to permanently dismiss all +1 notices in the 'Your progress' tab'", 'really-simple-ssl' ),
-			],
+			// 'help'        => [
+			// 	'label' => 'default',
+			// 	'text' => __( "Enable this option to permanently dismiss all +1 notices in the 'Your progress' tab'", 'really-simple-ssl' ),
+			// ],
 			'disabled'    => false,
 			'default'     => false,
 		],
@@ -347,10 +351,10 @@ function rsssl_fields( $load_values = true ){
 			'url'         => trailingslashit(rsssl_url).'system-status.php?download',
 			'button_text' => __("System Status", "really-simple-ssl"),
 			'label'       => __( "Download system status", 'really-simple-ssl' ),
-			'help'        => [
-				'label' => 'default',
-				'text' => __( "Enable this option to permanently dismiss all +1 notices in the 'Your progress' tab'", 'really-simple-ssl' ),
-			],
+			// 'help'        => [
+			// 	'label' => 'default',
+			// 	'text' => __( "Enable this option to permanently dismiss all +1 notices in the 'Your progress' tab'", 'really-simple-ssl' ),
+			// ],
 			'disabled'    => false,
 			'default'     => false,
 		],
@@ -360,10 +364,10 @@ function rsssl_fields( $load_values = true ){
             'group_id'    => 'general',
             'type'        => 'checkbox',
             'label'       => __( "Stop editing the .htaccess file", 'really-simple-ssl' ),
-            'help'        => [
-                'label' => 'default',
-                'text' => __( 'If you want to customize the Really Simple SSL .htaccess, you need to prevent Really Simple SSL from rewriting it. Enabling this option will do that.', 'really-simple-ssl' ),
-            ],
+            // 'help'        => [
+            //     'label' => 'default',
+            //     'text' => __( 'If you want to customize the Really Simple SSL .htaccess, you need to prevent Really Simple SSL from rewriting it. Enabling this option will do that.', 'really-simple-ssl' ),
+            // ],
             'disabled'    => false,
             'default'     => false,
             //on multisite this setting can only be set networkwide
@@ -1030,7 +1034,7 @@ function rsssl_blocks(){
 		[
 			'id'      => 'new-features-block',
 			'controls'  => false,
-			'title'   => __( "New: Hardening", 'really-simple-ssl' ),
+			'title'   => __( "Hardening", 'really-simple-ssl' ),
 			'help'    => __( 'A help text', 'really-simple-ssl' ),
 			'content' => ['type'=>'react', 'data' => 'SecurityFeaturesBlock'],
 			'footer' => ['type'=>'react', 'data' => 'SecurityFeaturesFooter'],
@@ -1094,5 +1098,3 @@ function rsssl_get_template($template) {
 
     return $html;
 }
-
-
