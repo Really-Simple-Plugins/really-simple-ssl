@@ -2337,7 +2337,6 @@ class rsssl_admin
 	    $certinfo = get_transient('rsssl_certinfo');
 	    $end_date = isset($certinfo['validTo_time_t']) ? $certinfo['validTo_time_t'] : false;
 	    $expiry_date = !empty($end_date) ? date( get_option('date_format'), $end_date ) : __("(Unknown)", "really-simple-ssl");
-	    $test_url = 'https://www.ssllabs.com/ssltest/analyze.html?d='.home_url();
 
         $notices = array(
             'deactivation_file_detected' => array(
@@ -2434,7 +2433,7 @@ class rsssl_admin
             ),
 
             'ssl_detected' => array(
-	            'condition' => array('NOT rsssl_ssl_detection_overridden'),
+	            //'condition' => array('NOT rsssl_ssl_detection_overridden'),
 	            'callback' => 'rsssl_ssl_detected',
 	            'score' => 30,
 	            'output' => array(
@@ -2455,8 +2454,8 @@ class rsssl_admin
 		            'no-response' => array(
 			            'title' => __("Could not test certificate", "really-simple-ssl"),
 			            'msg' => __("Automatic certificate detection is not possible on your server.", "really-simple-ssl").
-			                     '<form class="rsssl-task-form" action="" method="POST"><a href="'.add_query_arg(array("page" => "really-simple-security", "letsencrypt"=>1),admin_url("options-general.php")) .'#letsencrypt" type="submit" class="button button-default  rsssl-button-small">'.__("Install SSL certificate", "really-simple-ssl").'</a>'.
-			                     '<a target="_blank" href="'.$test_url.'" class="button button-default  rsssl-button-small">'.__("Check manually", "really-simple-ssl").'</a></form>',
+			                     '<a href="'.add_query_arg(array("page" => "really-simple-security", "letsencrypt"=>1),admin_url("options-general.php")) .'#letsencrypt" type="submit" class="button button-default  rsssl-button-small">'.__("Install SSL certificate", "really-simple-ssl").'</a>'.
+			                     '<button class="button button-default rsssl-button-small" id="ssl-labs-check-button">'.__("Check manually", "really-simple-ssl").'</button>',
 			            'icon' => 'warning',
 			            'admin_notice' => false,
 			            'dismissible' => true,
@@ -3432,6 +3431,7 @@ if (!function_exists('rsssl_ssl_enabled')) {
 
 if (!function_exists('rsssl_ssl_detected')) {
 	function rsssl_ssl_detected() {
+        return 'no-response';
 		if ( ! RSSSL()->really_simple_ssl->wpconfig_ok() ) {
 			return apply_filters('rsssl_ssl_detected', 'fail');
 		}
