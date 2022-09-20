@@ -1,4 +1,5 @@
 <?php
+defined('ABSPATH') or die();
 /**
  * If a plugin is deactivated, add to deactivated list.
  * @param string $field_id
@@ -9,6 +10,9 @@
  * @return void
  */
 function rsssl_handle_integration_deactivation($field_id, $new_value, $prev_value, $type){
+	if (!rsssl_user_can_manage()) {
+		return;
+	}
 	if ($new_value !== $prev_value && $new_value === 0 ){
 		//check if this field id exists in the list of plugins
 		global $rsssl_integrations_list;
@@ -38,6 +42,9 @@ add_action( "rsssl_after_save_field", "rsssl_handle_integration_deactivation", 1
  * @return void
  */
 function rsssl_remove_from_deactivation_list($plugin){
+	if (!rsssl_user_can_manage()) {
+		return;
+	}
 	$deactivate_list = get_option('rsssl_deactivate_list', []);
 	if ( in_array($plugin, $deactivate_list )) {
 		$index = array_search($plugin, $deactivate_list);

@@ -1,4 +1,5 @@
 <?php
+defined('ABSPATH') or die();
 /**
  * Action to disable user registration
  * @param bool $value
@@ -18,7 +19,7 @@ add_filter( "option_users_disable_user_enumeration", 'rsssl_disable_user_enumera
  */
 function check_user_enumeration() {
 	if ( ! is_user_logged_in() && isset( $_REQUEST['author'] ) ) {
-		if ( rsssl_contains_numbers( $_REQUEST['author'] ) ) {
+		if ( preg_match( '/\\d/', $_REQUEST['author'] ) > 0 ) {
 			wp_die( esc_html__( 'forbidden - number in author name not allowed = ', 'really-simple-ssl' ) . esc_html( $_REQUEST['author'] ) );
 		}
 	}
@@ -34,20 +35,24 @@ function remove_author_from_yoast_sitemap( $users ) {
 }
 add_filter('wpseo_sitemap_exclude_author', 'remove_author_from_yoast_sitemap', 10, 1 );
 
-function rsssl_disable_rss() {
-	wp_die( __('RSS Feeds disabled by user', 'really-simple-ssl') );
-}
-
 // Rss actions
-if ( rsssl_get_option('disable_rss_feeds' ) ) {
-	add_action( 'do_feed', 'rsssl_disable_rss', 1 );
-	add_action( 'do_feed_rdf', 'rsssl_disable_rss', 1 );
-	add_action( 'do_feed_rss', 'rsssl_disable_rss', 1 );
-	add_action( 'do_feed_rss2', 'rsssl_disable_rss', 1 );
-	add_action( 'do_feed_atom', 'rsssl_disable_rss', 1 );
-	add_action( 'do_feed_rss2_comments', 'rsssl_disable_rss', 1 );
-	add_action( 'do_feed_atom_comments', 'rsssl_disable_rss', 1 );
-}
+//if ( rsssl_get_option('disable_rss_feeds' ) ) {
+//	add_action( 'do_feed', 'rsssl_disable_rss', 1 );
+//	add_action( 'do_feed_rdf', 'rsssl_disable_rss', 1 );
+//	add_action( 'do_feed_rss', 'rsssl_disable_rss', 1 );
+//	add_action( 'do_feed_rss2', 'rsssl_disable_rss', 1 );
+//	add_action( 'do_feed_atom', 'rsssl_disable_rss', 1 );
+//	add_action( 'do_feed_rss2_comments', 'rsssl_disable_rss', 1 );
+//	add_action( 'do_feed_atom_comments', 'rsssl_disable_rss', 1 );
+//
+//	/**
+//	 * Disable RSS
+//	 * @return void
+//	 */
+//	function rsssl_disable_rss() {
+//		wp_die( __('RSS Feeds disabled by user', 'really-simple-ssl') );
+//	}
+//}
 
 //PREVENT WP JSON API User Enumeration
 add_filter( 'rest_endpoints', function( $endpoints ) {
@@ -59,12 +64,3 @@ add_filter( 'rest_endpoints', function( $endpoints ) {
 	}
 	return $endpoints;
 });
-
-/**
- * Check if string contains numbers
- */
-if ( ! function_exists('rsssl_contains_numbers' ) ) {
-	function rsssl_contains_numbers( $string ) {
-		return preg_match( '/\\d/', $string ) > 0;
-	}
-}

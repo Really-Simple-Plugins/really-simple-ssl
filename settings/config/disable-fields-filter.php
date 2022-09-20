@@ -1,8 +1,6 @@
 <?php
 defined('ABSPATH') or die();
 
-
-
 /**
  * @param $fields
  *

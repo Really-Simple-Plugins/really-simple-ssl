@@ -1,5 +1,5 @@
 <?php
-defined( 'ABSPATH' ) or die( "you do not have access to this page!" );
+defined('ABSPATH') or die();
 class rsssl_progress {
 	private static $_this;
 
@@ -132,4 +132,6 @@ class rsssl_progress {
 			'percentage' => $this->percentage(),
 		];
 	}
+
+
 }

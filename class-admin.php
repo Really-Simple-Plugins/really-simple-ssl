@@ -58,24 +58,12 @@ class rsssl_admin
     }
 
 	/**
-	 * Clear some transients
-	 */
-
-    public function clear_transients(){
-	    delete_transient('rsssl_mixed_content_fixer_detected');
-	    delete_transient('rsssl_plusone_count');
-	    delete_transient('rsssl_remaining_task_count');
-	    delete_transient( 'rsssl_can_use_curl_headers_check' );
-	    delete_transient( 'rsssl_admin_notices' );
-    }
-
-	/**
 	 * Add some privacy info, telling our users we aren't tracking them
 	 */
 
     public function add_privacy_info()
     {
-        if (!function_exists('wp_add_privacy_policy_content')) {
+        if ( !function_exists('wp_add_privacy_policy_content') ) {
             return;
         }
 
@@ -89,6 +77,17 @@ class rsssl_admin
             wp_kses_post(wpautop($content, false))
         );
     }
+
+	/**
+	 * Clear some transients
+	 */
+
+	public function clear_transients(){
+		delete_transient('rsssl_mixed_content_fixer_detected');
+		delete_transient('rsssl_plusone_count');
+		delete_transient( 'rsssl_can_use_curl_headers_check' );
+		delete_transient( 'rsssl_admin_notices' );
+	}
 
 	/**
      * Check if current day falls within required date range.

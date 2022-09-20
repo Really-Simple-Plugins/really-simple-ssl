@@ -233,16 +233,6 @@ function rsssl_menu(){
 	return $menu_items;
 }
 
-function rsssl_migrate_settings($prev_version) {
-
-
-}
-add_action('rsssl_upgrade', 'rsssl_migrate_settings', 10, 1);
-add_action('plugins_loaded', 'rsssl_test');
-function rsssl_test(){
-
-}
-
 function rsssl_fields( $load_values = true ){
 	if ( !rsssl_user_can_manage() ) {
 		return [];

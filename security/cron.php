@@ -1,6 +1,5 @@
 <?php
-defined( 'ABSPATH' ) or die( "you do not have access to this page!" );
-
+defined('ABSPATH') or die();
 /**
 	Schedule cron jobs if useCron is true
 	Else start the functions for testing

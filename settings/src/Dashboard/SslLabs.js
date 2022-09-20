@@ -15,7 +15,7 @@ const SslLabs = (props) => {
     const intervalId = useRef(false);
     useEffect(()=>{
         if (!dataLoaded) {
-                rsssl_api.runTest('ssltest_get' ).then( ( response ) => {
+                rsssl_api.runTest('ssltest_get').then( ( response ) => {
                     if (response.data.hasOwnProperty('host') )  {
                         let data = processSslData(response.data);
                         setSslData(data);
@@ -64,6 +64,7 @@ const SslLabs = (props) => {
 
     const runSslTest = () => {
         getSslLabsData().then((sslData)=>{
+            console.log("ssl labs data response resolved");
             console.log(sslData);
 
             if ( sslData.endpoints && sslData.endpoints.filter((endpoint) => endpoint.statusMessage === 'Ready').length>0 ) {
@@ -143,31 +144,35 @@ const SslLabs = (props) => {
     }
 
     const getEndpointData = (ipAddress) => {
-        return new Promise((resolve, reject) => {
-            const host = window.location.host;
-            const url = 'https://api.ssllabs.com/api/v3/getEndpointData?host='+host+'&s='+ipAddress;
-            var xmlHttp = new XMLHttpRequest();
-            xmlHttp.open( "GET", url, false ); // false for synchronous request
-            xmlHttp.send( null );
-
-            resolve(JSON.parse(xmlHttp.responseText));
-        });
+        const host = window.location.host;
+//         const host = "really-simple-ssl.com";
+        const url = 'https://api.ssllabs.com/api/v3/getEndpointData?host='+host+'&s='+ipAddress;
+        let data = {};
+        data.url = url;
+        return rsssl_api.doAction('ssltest_run', data).then( ( response ) => {
+            console.log(response.data);
+            return JSON.parse(response.data);
+        })
     }
 
     const getSslLabsData = (e) => {
-        return new Promise((resolve, reject) => {
-            let clearCacheUrl = '';
-            if (clearCache){
-                clearCache = false;
-                clearCacheUrl = '&startNew=on';
-            }
-            const host = window.location.host;
-            const url = "https://api.ssllabs.com/api/v3/analyze?host="+host+clearCacheUrl;
-            var xmlHttp = new XMLHttpRequest();
-            xmlHttp.open( "GET", url, false ); // false for synchronous request
-            xmlHttp.send( null );
-            resolve(JSON.parse(xmlHttp.responseText));
-        });
+        let clearCacheUrl = '';
+        if (clearCache){
+            clearCache = false;
+            clearCacheUrl = '&startNew=on';
+            setSslData(false);
+        }
+        const host = window.location.host;
+//         const host = "really-simple-ssl.com";
+
+        const url = "https://api.ssllabs.com/api/v3/analyze?host="+host+clearCacheUrl;
+        let data = {};
+        data.url = url;
+
+        return rsssl_api.doAction('ssltest_run', data).then( ( response ) => {
+
+            return JSON.parse(response.data);
+        })
     }
 
     const getStyles = () => {
@@ -305,7 +310,6 @@ const SslLabs = (props) => {
     }
 
     let sslClass = 'rsssl-inactive';
-    let sslStatusColor = 'black';
     let progress = sslData ? sslData.summary.progress : 0;
     let startTime = sslData ? sslData.summary.startTime : false;
     let startTimeNice='';
@@ -335,6 +339,23 @@ const SslLabs = (props) => {
     let gradeClass = neverScannedYet() ? 'inactive' : grade;
     let host = window.location.protocol + "//" + window.location.host;
     let url = 'https://www.ssllabs.com/analyze.html?d='+encodeURIComponent(host);
+    let hasErrors = false;
+    let errorMessage='';
+    let sslStatusColor = 'black';
+
+    if ( isLocalHost() ) {
+        hasErrors = true;
+        sslStatusColor = 'red';
+        errorMessage = __("Not available on localhost","really-simple-ssl");
+    } else if (sslData && sslData.errors) {
+        hasErrors = true;
+        sslStatusColor = 'red';
+        errorMessage = statusMessage;
+    } else if (sslData && progress<100 ) {
+        hasErrors = true;
+        sslStatusColor = 'orange';
+        errorMessage = statusMessage;
+    }
 
     return (
         <div className={sslClass}>
@@ -344,12 +365,6 @@ const SslLabs = (props) => {
             <div className={"rsssl-ssl-test-container "+sslClass}>
                 <div className="rsssl-ssl-test ">
                     <div className="rsssl-ssl-test-information">
-                        { statusMessage && <>
-                            {scoreSnippet("rsssl-test-processing", ipAddress)}
-                            {scoreSnippet("rsssl-test-processing", statusMessage)}
-                        </>
-                        }
-                        {isLocalHost() && <>{scoreSnippet("rsssl-test-processing", __("Not available on localhost","really-simple-ssl"))}</>}
                        {supportsTlS11()}
                        {hasHSTS()}
                        {certificateStatus()}
@@ -363,18 +378,19 @@ const SslLabs = (props) => {
             </div>
             <div className="rsssl-details">
                 <div className="rsssl-detail-icon"><Icon name = "info" color = {sslStatusColor} /></div>
-                <div className="rsssl-detail">
-                    {__("What does my score mean?", "really-simple-ssl")}&nbsp;<a href={url} target="_blank">{__("Read more", "really-simple-ssl")}</a>
+                <div className={"rsssl-detail rsssl-status-"+sslStatusColor}>
+                { hasErrors && <>{errorMessage}</>}
+                { !hasErrors && <> {__("What does my score mean?", "really-simple-ssl")}&nbsp;<a href={url} target="_blank">{__("Read more", "really-simple-ssl")}</a>}</>}
                 </div>
             </div>
             <div className="rsssl-details">
-                <div className="rsssl-detail-icon"><Icon name = "list" color = {sslStatusColor} /></div>
+                <div className="rsssl-detail-icon"><Icon name = "list" color = 'black' /></div>
                 <div className="rsssl-detail">
                     {__("Last check:", "really-simple-ssl")}&nbsp;{startTimeNice}
                 </div>
             </div>
             <div className="rsssl-details">
-                <div className="rsssl-detail-icon"><Icon name = "external-link" color = {sslStatusColor} /></div>
+                <div className="rsssl-detail-icon"><Icon name = "external-link" color = 'black' /></div>
                 <div className="rsssl-detail">
                     <a href={url} target="_blank">{__("View detailed report on Qualys SSL Labs", "really-simple-ssl")}</a>
                 </div>

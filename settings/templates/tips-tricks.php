@@ -1,4 +1,4 @@
-<?php defined( 'ABSPATH' ) or die( "you do not have access to this page!" );
+<?php defined( 'ABSPATH' ) or die();
 $items = array(
 	1 => array(
 		'content' => "Improve security: Add Cross-Site Protection Headers to prevent malicious attacks",

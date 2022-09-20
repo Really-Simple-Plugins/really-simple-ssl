@@ -1,7 +1,6 @@
 <?php
 defined( 'ABSPATH' ) or die();
 if ( rsssl_is_in_deactivation_list('disable-indexing') ){
-	rsssl_clear_transients();
 	rsssl_remove_from_deactivation_list('disable-indexing');
 }
 

@@ -1,5 +1,6 @@
 <?php
 defined('ABSPATH') or die();
+error_log("load settings.php");
 
 /**
  * Enqueue Gutenberg block assets for backend editor.
@@ -157,6 +158,9 @@ function rsssl_settings_rest_route() {
  * @return void
  */
 function rsssl_store_ssl_labs($request){
+	if (!rsssl_user_can_manage()) {
+		return;
+	}
 	$data = $request->get_json_params();
 	update_option('rsssl_ssl_labs_data', $data, false);
 }
@@ -176,6 +180,9 @@ function rsssl_do_action($request){
 		case 'ssl_status_data':
 			$data = rsssl_ssl_status_data();
 			break;
+		case 'ssltest_run':
+			$data = rsssl_ssltest_run($request);
+			break;
 		default:
 			$data = apply_filters("rsssl_do_action", [], $action, $request);
 	}
@@ -184,6 +191,23 @@ function rsssl_do_action($request){
 	echo $response;
 	exit;
 }
+
+/**
+ * Run a request to SSL Labs
+ * 
+ * @param $request
+ *
+ * @return string
+ */
+function rsssl_ssltest_run($request) {
+    $data = $request->get_params();
+    $url = $data['url'];
+	$response = wp_remote_get( $url );
+//	$status   = wp_remote_retrieve_response_code( $response );
+	$data     = wp_remote_retrieve_body( $response );
+	return $data;
+}
+
 /**
  * @param WP_REST_Request $request
  *
@@ -553,6 +577,9 @@ function rsssl_sanitize_field( $value, $type, $id ) {
  * @return mixed|string
  */
 function rsssl_encode_password($password) {
+	if (!rsssl_user_can_manage()) {
+		return $password;
+	}
 	if ( strlen(trim($password)) === 0 ) {
 		return $password;
 	}
@@ -734,4 +761,67 @@ function rsssl_sanitize_datatable( $value, $type, $field_name ){
         }
     }
     return $value;
+}
+
+
+/**
+ * Check if the server side conditions apply
+ *
+ * @param array $conditions
+ *
+ * @return bool
+ */
+
+function rsssl_conditions_apply( array $conditions ){
+	$defaults = ['relation' => 'AND'];
+	$conditions = wp_parse_args($conditions, $defaults);
+	$relation = $conditions['relation'] === 'AND' ? 'AND' : 'OR';
+	unset($conditions['relation']);
+	$condition_applies = true;
+	foreach ( $conditions as $condition => $condition_value ) {
+		$invert = substr($condition, 1)==='!';
+		$condition = ltrim($condition, '!');
+
+		if ( is_array($condition_value)) {
+			$this_condition_applies = rsssl_conditions_apply($condition_value);
+		} else {
+			//check if it's a function
+			if (substr($condition, -2) === '()'){
+				$func = $condition;
+				if ( preg_match( '/(.*)\(\)\-\>(.*)->(.*)/i', $func, $matches)) {
+					$base = $matches[1];
+					$class = $matches[2];
+					$func = $matches[3];
+					$func = str_replace('()', '', $func);
+					$this_condition_applies = call_user_func( array( $base()->{$class}, $func ) ) === $condition_value ;
+				} else {
+					$func = str_replace('()', '', $func);
+					$this_condition_applies = $func() === $condition_value;
+				}
+			} else {
+				$var = $condition;
+				if ( preg_match( '/(.*)\(\)\-\>(.*)->(.*)/i', $var, $matches)) {
+					$base = $matches[1];
+					$class = $matches[2];
+					$var = $matches[3];
+					$this_condition_applies = $base()->{$class}->_get($var) === $condition_value ;
+				} else {
+					$this_condition_applies = rsssl_get_option($var) === $condition_value;
+				}
+			}
+
+			if ( $invert ){
+				$this_condition_applies = !$this_condition_applies;
+			}
+
+		}
+
+		if ($relation === 'AND') {
+			$condition_applies = $condition_applies && $this_condition_applies;
+		} else {
+			$condition_applies = $condition_applies || $this_condition_applies;
+		}
+	}
+
+	return $condition_applies;
 }

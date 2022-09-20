@@ -7,7 +7,7 @@ defined( 'ABSPATH' ) or die();
  */
 function rsssl_remove_wp_version() {
 	// remove <meta name="generator" content="WordPress VERSION" />
-	add_filter( 'the_generator', 'rsssl_remove_wp_version_head' );
+	add_filter( 'the_generator', function() { return '';} );
 	// remove WP ?ver=5.X.X from css/js
 	add_filter( 'style_loader_src', 'rsssl_remove_css_js_version', 9999 );
 	add_filter( 'script_loader_src', 'rsssl_remove_css_js_version', 9999 );
@@ -17,14 +17,6 @@ function rsssl_remove_wp_version() {
 	remove_action('wp_head', 'wp_shortlink_wp_head', 10 ); // Remove shortlink
 }
 add_action('init', 'rsssl_remove_wp_version');
-
-/**
- * @return string
- * Remove WordPress version from head
- */
-function rsssl_remove_wp_version_head() {
-	return '';
-}
 
 /**
  * @param $src

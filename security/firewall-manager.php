@@ -1,7 +1,7 @@
 <?php
+defined('ABSPATH') or die();
 class rsssl_firewall_manager {
 	private static $_this;
-	public $cors_headers;
 
 	function __construct() {
 		if ( isset( self::$_this ) ) {
@@ -24,6 +24,7 @@ class rsssl_firewall_manager {
 	 */
 	public function is_settings_page()
 	{
+
 		if ( rsssl_is_logged_in_rest() ){
 			return true;
 		}
@@ -41,7 +42,7 @@ class rsssl_firewall_manager {
 	 */
 	public function get_headers_nonce(){
 		if ( !get_site_option("rsssl_header_detection_nonce")) {
-			update_site_option("rsssl_header_detection_nonce", rand(1000, 999999999) , false);
+			update_site_option("rsssl_header_detection_nonce", rand(1000, 999999999) );
 		}
 		return get_site_option("rsssl_header_detection_nonce");
 	}
