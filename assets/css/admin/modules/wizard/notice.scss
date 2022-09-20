@@ -39,6 +39,21 @@
   }
 }
 
+.rsssl-wizard-help {
+  .rsssl-help-header {
+    width:100%;
+    display:flex;
+    .rsssl-help-title{
+      font-size:18px;
+    }
+    .rsssl-help-control {
+      margin-left:auto;
+      cursor:pointer;
+    }
+
+  }
+}
+
 .rsssl-wizard-help-notice {
   width: 100%;
   @include rsssl-block;
