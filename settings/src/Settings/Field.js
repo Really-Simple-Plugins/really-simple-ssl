@@ -271,7 +271,6 @@ class Field extends Component {
                 </div>
             )
         }
-
         if ( field.type==='permissionspolicy' ) {
             return (
                 <div className={this.highLightClass}>

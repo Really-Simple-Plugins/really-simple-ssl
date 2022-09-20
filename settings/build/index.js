@@ -6033,8 +6033,6 @@ class Page extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Component {
       this.menu = this.getSelectedMenu(this.superMenu, selectedMainMenuItem);
       this.fields = response.fields;
       this.progress = response.progress;
-      console.log(response.fields);
-      console.log(this.menu);
       this.setState({
         isAPILoaded: true,
         selectedMainMenuItem: selectedMainMenuItem,
@@ -7895,7 +7893,7 @@ class PermissionsPolicy extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.
   constructor() {
     super(...arguments);
     this.state = {
-      filterValue: 0,
+      filterValue: -1,
       enable_permissions_policy: 0
     };
   }
@@ -7974,6 +7972,8 @@ class PermissionsPolicy extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.
     if (filterValue != -1) {
       data = data.filter(item => item.status == filterValue);
     }
+
+    console.log(data);
 
     for (const item of data) {
       let disabled = false;
