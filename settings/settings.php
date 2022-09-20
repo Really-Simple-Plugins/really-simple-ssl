@@ -704,10 +704,6 @@ function rsssl_sanitize_permissions_policy( $value, $type, $field_name ){
 		'title' =>'string',
 		'status' => 'boolean',
 	]);
-    x_log("sanitize PP");
-    x_log($value);
-    x_log($type);
-
 	// Datatable array will look something like this, whith 0 the row index, and id, title the col indexes.
 	// [0] => Array
 	//	(
