@@ -2903,9 +2903,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _ProgressFooter__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./ProgressFooter */ "./src/DashBoard/ProgressFooter.js");
 /* harmony import */ var _SslLabs__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./SslLabs */ "./src/DashBoard/SslLabs.js");
 /* harmony import */ var _SslLabsFooter__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./SslLabsFooter */ "./src/DashBoard/SslLabsFooter.js");
-/* harmony import */ var _SecurityFeaturesBlock_SecurityFeaturesBlock__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./SecurityFeaturesBlock/SecurityFeaturesBlock */ "./src/DashBoard/SecurityFeaturesBlock/SecurityFeaturesBlock.js");
-/* harmony import */ var _SecurityFeaturesBlock_SecurityFeaturesFooter__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./SecurityFeaturesBlock/SecurityFeaturesFooter */ "./src/DashBoard/SecurityFeaturesBlock/SecurityFeaturesFooter.js");
-/* harmony import */ var _Placeholder_Placeholder__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ../Placeholder/Placeholder */ "./src/Placeholder/Placeholder.js");
+/* harmony import */ var _OtherPlugins__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./OtherPlugins */ "./src/DashBoard/OtherPlugins.js");
+/* harmony import */ var _SecurityFeaturesBlock_SecurityFeaturesBlock__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./SecurityFeaturesBlock/SecurityFeaturesBlock */ "./src/DashBoard/SecurityFeaturesBlock/SecurityFeaturesBlock.js");
+/* harmony import */ var _SecurityFeaturesBlock_SecurityFeaturesFooter__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./SecurityFeaturesBlock/SecurityFeaturesFooter */ "./src/DashBoard/SecurityFeaturesBlock/SecurityFeaturesFooter.js");
+/* harmony import */ var _Placeholder_Placeholder__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ../Placeholder/Placeholder */ "./src/Placeholder/Placeholder.js");
+
 
 
 
@@ -2946,13 +2948,14 @@ class GridButton extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Compone
 
 
 var dynamicComponents = {
-  "SecurityFeaturesBlock": _SecurityFeaturesBlock_SecurityFeaturesBlock__WEBPACK_IMPORTED_MODULE_8__["default"],
-  "SecurityFeaturesFooter": _SecurityFeaturesBlock_SecurityFeaturesFooter__WEBPACK_IMPORTED_MODULE_9__["default"],
+  "SecurityFeaturesBlock": _SecurityFeaturesBlock_SecurityFeaturesBlock__WEBPACK_IMPORTED_MODULE_9__["default"],
+  "SecurityFeaturesFooter": _SecurityFeaturesBlock_SecurityFeaturesFooter__WEBPACK_IMPORTED_MODULE_10__["default"],
   "ProgressBlock": _ProgressBlock__WEBPACK_IMPORTED_MODULE_3__["default"],
   "ProgressHeader": _ProgressBlockHeader__WEBPACK_IMPORTED_MODULE_4__["default"],
   "ProgressFooter": _ProgressFooter__WEBPACK_IMPORTED_MODULE_5__["default"],
   "SslLabs": _SslLabs__WEBPACK_IMPORTED_MODULE_6__["default"],
-  "SslLabsFooter": _SslLabsFooter__WEBPACK_IMPORTED_MODULE_7__["default"]
+  "SslLabsFooter": _SslLabsFooter__WEBPACK_IMPORTED_MODULE_7__["default"],
+  "OtherPlugins": _OtherPlugins__WEBPACK_IMPORTED_MODULE_8__["default"]
 };
 
 class GridBlock extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Component {
@@ -3108,7 +3111,7 @@ class GridBlock extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Componen
       dangerouslySetInnerHTML: {
         __html: blockData.controls.data
       }
-    }), blockData.controls && blockData.controls.type === 'react' && wp.element.createElement(dynamicComponents[blockData.controls.data], DynamicBlockProps))), !isAPILoaded && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_Placeholder_Placeholder__WEBPACK_IMPORTED_MODULE_10__["default"], {
+    }), blockData.controls && blockData.controls.type === 'react' && wp.element.createElement(dynamicComponents[blockData.controls.data], DynamicBlockProps))), !isAPILoaded && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_Placeholder_Placeholder__WEBPACK_IMPORTED_MODULE_11__["default"], {
       lines: "4"
     }), blockData.content.type !== 'react' && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
       className: "rsssl-grid-item-content",
@@ -3136,6 +3139,133 @@ class GridBlock extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Componen
 }
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (GridBlock);
+
+/***/ }),
+
+/***/ "./src/DashBoard/OtherPlugins.js":
+/*!***************************************!*\
+  !*** ./src/DashBoard/OtherPlugins.js ***!
+  \***************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _utils_api__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../utils/api */ "./src/utils/api.js");
+
+
+
+
+
+const OtherPlugins = props => {
+  const [dataLoaded, setDataLoaded] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)(false);
+  const [dataUpdated, setDataUpdated] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)(false);
+  const [pluginData, setPluginData] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)(false);
+  (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
+    if (!dataLoaded) {
+      _utils_api__WEBPACK_IMPORTED_MODULE_2__.runTest('otherpluginsdata').then(response => {
+        response.data.forEach(function (pluginItem, i) {
+          response.data[i].pluginActionNice = pluginActionNice(pluginItem.pluginAction);
+        });
+        setPluginData(response.data);
+        setDataLoaded(true);
+      });
+    }
+  });
+
+  const PluginActions = (slug, pluginAction, e) => {
+    e.preventDefault();
+    let data = {};
+    data.slug = slug;
+    data.pluginAction = pluginAction;
+    let pluginItem = getPluginData(slug);
+    pluginItem.pluginAction = pluginAction === 'download' ? "downloading" : 'activating';
+    pluginItem.pluginActionNice = pluginActionNice(pluginItem.pluginAction);
+    updatePluginData(slug, pluginItem);
+    _utils_api__WEBPACK_IMPORTED_MODULE_2__.doAction('plugin_actions', data).then(response => {
+      pluginItem = response.data;
+
+      if (pluginAction === 'download') {
+        pluginItem.pluginAction = 'activating';
+        updatePluginData(slug, pluginItem);
+        data.pluginAction = 'activate';
+        _utils_api__WEBPACK_IMPORTED_MODULE_2__.doAction('plugin_actions', data).then(response => {
+          pluginItem = response.data;
+          pluginItem.pluginAction = 'installed';
+          updatePluginData(slug, pluginItem);
+        });
+      } else {
+        pluginItem.pluginAction = 'installed';
+        updatePluginData(slug, pluginItem);
+      }
+    });
+  };
+
+  const getPluginData = slug => {
+    return pluginData.filter(pluginItem => {
+      return pluginItem.slug === slug;
+    })[0];
+  };
+
+  const updatePluginData = (slug, newPluginItem) => {
+    setDataUpdated(false);
+    pluginData.forEach(function (pluginItem, i) {
+      if (pluginItem.slug === slug) {
+        pluginData[i] = newPluginItem;
+      }
+    });
+    setPluginData(pluginData);
+    setDataUpdated(true);
+  };
+
+  const pluginActionNice = pluginAction => {
+    const statuses = {
+      'download': (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Install", "really-simple-ssl"),
+      'activate': (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Activate", "really-simple-ssl"),
+      'activating': (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("activating...", "really-simple-ssl"),
+      'downloading': (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("downloading...", "really-simple-ssl")
+    };
+    return statuses[pluginAction];
+  };
+
+  const otherPluginElement = plugin => {
+    return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+      className: "rsssl-other-plugins-element rsssl-" + plugin.slug
+    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
+      href: plugin.wordpress_url,
+      target: "_blank",
+      title: plugin.title
+    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+      className: "rsssl-bullet"
+    }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+      className: "rsssl-other-plugins-content"
+    }, plugin.title)), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+      className: "rsssl-other-plugin-status"
+    }, plugin.pluginAction === 'upgrade-to-premium' && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
+      target: "_blank",
+      href: plugin.upgrade_url
+    }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Upgrade", "really-simple-ssl"))), plugin.pluginAction !== 'upgrade-to-premium' && plugin.pluginAction !== 'installed' && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
+      href: "#",
+      onClick: e => PluginActions(plugin.slug, plugin.pluginAction, e)
+    }, plugin.pluginActionNice)), plugin.pluginAction === 'installed' && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Installed", "really-simple-ssl"))));
+  };
+
+  if (!dataLoaded) {
+    return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null);
+  }
+
+  return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "rsssl-other-plugins-container"
+  }, pluginData.map((plugin, i) => otherPluginElement(plugin, i))));
+};
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (OtherPlugins);
 
 /***/ }),
 
@@ -3706,12 +3836,19 @@ const SslLabs = props => {
 
     if (status === 'active' && sslData.summary && sslData.summary.progress >= 100) {
       clearCache = true;
+      setSslData(false);
+    }
+
+    if (status === 'active' && sslData.status === 'ERROR') {
+      clearCache = true;
+      setSslData(false);
     }
 
     let scanInComplete = sslData && sslData.status !== 'READY';
     let userClickedStartScan = status === 'active';
     if (clearCache) scanInComplete = true;
-    let startScan = !sslData.errors && (scanInComplete || userClickedStartScan);
+    let hasErrors = sslData.errors || sslData.status === 'ERROR';
+    let startScan = !hasErrors && (scanInComplete || userClickedStartScan);
 
     if (!requestActive.current && startScan) {
       props.setBlockProps('sslScan', 'active');
@@ -3732,9 +3869,6 @@ const SslLabs = props => {
 
   const runSslTest = () => {
     getSslLabsData().then(sslData => {
-      console.log("ssl labs data response resolved");
-      console.log(sslData);
-
       if (sslData.endpoints && sslData.endpoints.filter(endpoint => endpoint.statusMessage === 'Ready').length > 0) {
         let completedEndpoints = sslData.endpoints.filter(endpoint => endpoint.statusMessage === 'Ready');
         let lastCompletedEndpointIndex = completedEndpoints.length - 1;
@@ -9346,14 +9480,6 @@ const doAction = (action, data) => {
   };
   return axios__WEBPACK_IMPORTED_MODULE_0___default().post(rsssl_settings.site_url + 'reallysimplessl/v1/do_action/' + action, data, config);
 };
-const getOnboarding = forceRefresh => {
-  let config = {
-    headers: {
-      'X-WP-Nonce': rsssl_settings.nonce
-    }
-  };
-  return axios__WEBPACK_IMPORTED_MODULE_0___default().get(rsssl_settings.site_url + 'reallysimplessl/v1/onboarding?forceRefresh=' + forceRefresh, config);
-};
 const updateSslLabs = data => {
   let config = {
     headers: {
@@ -9369,6 +9495,14 @@ const onboardingActions = data => {
     }
   };
   return axios__WEBPACK_IMPORTED_MODULE_0___default().post(rsssl_settings.site_url + 'reallysimplessl/v1/onboarding_actions', data, config);
+};
+const getOnboarding = forceRefresh => {
+  let config = {
+    headers: {
+      'X-WP-Nonce': rsssl_settings.nonce
+    }
+  };
+  return axios__WEBPACK_IMPORTED_MODULE_0___default().get(rsssl_settings.site_url + 'reallysimplessl/v1/onboarding?forceRefresh=' + forceRefresh, config);
 };
 
 /***/ }),

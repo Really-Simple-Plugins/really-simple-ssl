@@ -2286,7 +2286,7 @@ class rsssl_admin
 		    'success' => __("Completed", "really-simple-ssl"),
 		    'warning' => __("Warning", "really-simple-ssl"),
 		    'open' => __("Open", "really-simple-ssl"),
-		    'premium' => __("Upgrade", "really-simple-ssl"),
+		    'premium' => __("Upgrade to Pro", "really-simple-ssl"),
 	    ];
 
         $defaults = array(
@@ -2915,33 +2915,6 @@ class rsssl_admin
 		return $count;
 	}
 
-    /**
-     * Get status link for plugin, depending on installed, or premium availability
-     * @param $item
-     *
-     * @return string
-     */
-
-    public function get_status_link($item){
-        if (!defined($item['constant_free']) && !defined($item['constant_premium'])) {
-            $args = array(
-                "s" => $item['search'],
-                "tab" => "search",
-                "type" => "term"
-            );
-            $admin_url= is_multisite() ? network_admin_url('plugin-install.php') : admin_url('plugin-install.php');
-	        $link = add_query_arg( $args, $admin_url );
-	        $status = '<a href="'.esc_url_raw($link).'">'.__('Install', 'really-simple-ssl').'</a>';
-        } elseif (isset($item['constant_premium']) && !defined($item['constant_premium'])) {
-	        $link = $item['website'];
-	        $status = '<a href="'.esc_url_raw($link).'">'.__('Upgrade', 'really-simple-ssl').'</a>';
-        } else {
-	        $status = __( "Installed", "really-simple-ssl" );
-        }
-        return $status;
-    }
-
-
 	/**
      * Render grid item based on template
 	 * @param array $grid_item
@@ -3176,7 +3149,7 @@ class rsssl_admin
 
 	    if ( ! defined( 'rsssl_pro_version' ) ) {
 	        $upgrade_link = '<a style="color:#2271b1;font-weight:bold" target="_blank" href="'.$this->pro_url.'">'
-		      . __( 'Improve security - Upgrade', 'really-simple-ssl' ) . '</a>';
+		      . __( 'Improve security - Upgrade to Pro', 'really-simple-ssl' ) . '</a>';
 	        array_unshift( $links, $upgrade_link );
 	    }
 

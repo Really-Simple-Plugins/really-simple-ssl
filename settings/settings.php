@@ -1,6 +1,6 @@
 <?php
 defined('ABSPATH') or die();
-error_log("load settings.php");
+//error_log("load settings.php");
 
 /**
  * Enqueue Gutenberg block assets for backend editor.
@@ -174,7 +174,6 @@ function rsssl_do_action($request){
 	if (!rsssl_user_can_manage()) {
 		return;
 	}
-
 	$action = sanitize_title($request->get_param('action'));
 	switch($action){
 		case 'ssl_status_data':
@@ -183,6 +182,9 @@ function rsssl_do_action($request){
 		case 'ssltest_run':
 			$data = rsssl_ssltest_run($request);
 			break;
+        case 'plugin_actions':
+			$data = rsssl_plugin_actions($request);
+			break;
 		default:
 			$data = apply_filters("rsssl_do_action", [], $action, $request);
 	}
@@ -190,6 +192,30 @@ function rsssl_do_action($request){
 	header( "Content-Type: application/json" );
 	echo $response;
 	exit;
+}
+
+/**
+ * Process plugin installation or activation actions
+ *
+ * @param WP_REST_Request $request
+ *
+ * @return array
+ */
+
+function rsssl_plugin_actions($request){
+	if ( !rsssl_user_can_manage() ) {
+		return [];
+	}
+    $data = $request->get_params($request);
+    $slug = sanitize_title($data['slug']);
+    $action = sanitize_title($data['pluginAction']);
+	$installer = new rsssl_installer($slug);
+    if ($action==='download') {
+	    $installer->download_plugin();
+    } else if ( $action === 'activate' ) {
+        $installer->activate_plugin();
+    }
+    return rsssl_other_plugins_data($slug);
 }
 
 /**
@@ -203,7 +229,6 @@ function rsssl_ssltest_run($request) {
     $data = $request->get_params();
     $url = $data['url'];
 	$response = wp_remote_get( $url );
-//	$status   = wp_remote_retrieve_response_code( $response );
 	$data     = wp_remote_retrieve_body( $response );
 	return $data;
 }
@@ -231,6 +256,9 @@ function rsssl_run_test($request){
         case 'progressdata':
             $data = RSSSL()->progress->get();
             break;
+        case 'otherpluginsdata':
+            $data = rsssl_other_plugins_data();
+            break;
         case 'dismiss_task':
 	        $data = RSSSL()->progress->dismiss_task($state);
             break;
@@ -241,6 +269,64 @@ function rsssl_run_test($request){
 	header( "Content-Type: application/json" );
 	echo $response;
 	exit;
+}
+
+/**
+ * Get plugin data for other plugin section
+ * @param string $slug
+ * @return array
+ */
+function rsssl_other_plugins_data($slug=false){
+	if ( !rsssl_user_can_manage() ) {
+		return [];
+	}
+	$plugins = array(
+		[
+			'slug' => 'burst-statistics',
+			'constant_free' => 'burst_version',
+			'constant_premium' => 'burst_version',
+			'wordpress_url' => 'https://wordpress.org/plugins/burst-statistics/',
+			'upgrade_url' => 'https://burst-statistics.com/?src=rsssl-plugin',
+			'title' => 'Burst Statistics - '. __("Self-hosted, Privacy-friendly analytics tool.", "really-simple-ssl"),
+		],
+		[
+			'slug' => 'complianz-gdpr',
+			'constant_free' => 'cmplz_plugin',
+			'constant_premium' => 'cmplz_premium',
+			'wordpress_url' => 'https://wordpress.org/plugins/complianz-gdpr/',
+			'upgrade_url' => 'https://complianz.io/pricing?src=rsssl-plugin',
+			'title' => __("Complianz Privacy Suite - Cookie Consent Management as it should be ", "really-simple-ssl" ),
+		],
+		[
+			'slug' => 'complianz-terms-conditions',
+			'constant_free' => 'cmplz_tc_version',
+			'constant_premium' => 'cmplz_tc_version',
+			'wordpress_url' => 'https://wordpress.org/plugins/complianz-terms-conditions/',
+			'upgrade_url' => 'https://complianz.io?src=rsssl-plugin',
+			'title' => 'Complianz - '. __("Terms and Conditions", "really-simple-ssl"),
+		],
+	);
+
+    foreach ($plugins as $index => $plugin ){
+	    $installer = new rsssl_installer($plugin['slug']);
+        if ( !$installer->plugin_is_downloaded() && !$installer->plugin_is_activated() ) {
+	        $plugins[$index]['pluginAction'] = 'download';
+        } else if ( $installer->plugin_is_downloaded() && !$installer->plugin_is_activated() ) {
+	        $plugins[ $index ]['pluginAction'] = 'activate';
+        } else if ( $installer->plugin_is_activated() && isset($plugin['constant_premium']) && !defined($plugin['constant_premium'])) {
+		    $plugins[$index]['pluginAction'] = 'upgrade-to-premium';
+	    } else {
+		    $plugins[$index]['pluginAction'] = 'installed';
+	    }
+    }
+
+    if ( $slug ) {
+        foreach ($plugins as $key=> $plugin) {
+            if ($plugin['slug']===$slug) return $plugin;
+        }
+    }
+    return $plugins;
+
 }
 
 /**

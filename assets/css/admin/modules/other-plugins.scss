@@ -25,25 +25,25 @@
       gap: 10px;
       --rsp-other-plugins-color: var(---rsp-brand-primary);
 
-      &.rsssl-zip {
-        --rsp-other-plugins-color: var(--rsp-pink);
+	  &.rsssl-zip-recipes {
+		--rsp-other-plugins-color: var(--rsp-pink);
+	  }
+
+	  &.rsssl-burst-statistics {
+		--rsp-other-plugins-color: var(--rsp-green);
+	  }
+
+	  &.rsssl-complianz-gdpr {
+		--rsp-other-plugins-color: var(--rsp-blue);
+	  }
+
+      &.rsssl-complianz-terms-conditions {
+        --rsp-other-plugins-color: var(--rsp-black);
       }
 
-      &.rsssl-burst {
-        --rsp-other-plugins-color: var(--rsp-green);
-      }
-
-      &.rsssl-complianz {
-        --rsp-other-plugins-color: var(--rsp-blue);
-      }
-
-      &.rsssl-complianztc {
-        --rsp-other-plugins-color: #333;
-      }
-
-      &.rsssl-rsssl {
-        --rsp-other-plugins-color: var(--rsp-yellow);
-      }
+	  &.rsssl-really-simple-ssl {
+		--rsp-other-plugins-color: var(--rsp-yellow);
+	  }
 
       a {
         width: max-content;

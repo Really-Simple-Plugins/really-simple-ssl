@@ -38,14 +38,21 @@ const SslLabs = (props) => {
         if (isLocalHost()) return;
 
         let status = props.BlockProps.hasOwnProperty('sslScan') ? props.BlockProps['sslScan'] : false;
-        if (status==='active' && sslData.summary && sslData.summary.progress>=100) {
+        if (status==='active' && sslData.summary && sslData.summary.progress>=100 ) {
             clearCache = true;
+            setSslData(false);
+        }
+
+        if (status==='active' && sslData.status === 'ERROR' ) {
+            clearCache = true;
+            setSslData(false);
         }
 
         let scanInComplete = (sslData && sslData.status !== 'READY');
         let userClickedStartScan = status==='active';
         if (clearCache) scanInComplete = true;
-        let startScan = !sslData.errors && (scanInComplete || userClickedStartScan);
+        let hasErrors = sslData.errors || sslData.status === 'ERROR';
+        let startScan = !hasErrors && (scanInComplete || userClickedStartScan);
         if ( !requestActive.current && startScan ) {
             props.setBlockProps('sslScan', 'active');
             requestActive.current = true;
@@ -64,9 +71,6 @@ const SslLabs = (props) => {
 
     const runSslTest = () => {
         getSslLabsData().then((sslData)=>{
-            console.log("ssl labs data response resolved");
-            console.log(sslData);
-
             if ( sslData.endpoints && sslData.endpoints.filter((endpoint) => endpoint.statusMessage === 'Ready').length>0 ) {
                 let completedEndpoints = sslData.endpoints.filter((endpoint) => endpoint.statusMessage === 'Ready');
                 let lastCompletedEndpointIndex = completedEndpoints.length-1;

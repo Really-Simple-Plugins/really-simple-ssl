@@ -75,15 +75,6 @@ export const doAction = (action, data) => {
 	return axios.post(rsssl_settings.site_url+'reallysimplessl/v1/do_action/'+action, data, config );
 }
 
-export const getOnboarding = (forceRefresh) => {
-	let config = {
-		headers: {
-			'X-WP-Nonce': rsssl_settings.nonce,
-		}
-	}
-	return axios.get(rsssl_settings.site_url+'reallysimplessl/v1/onboarding?forceRefresh='+forceRefresh, config);
-}
-
 export const updateSslLabs = (data) => {
 	let config = {
 		headers: {
@@ -100,4 +91,13 @@ export const onboardingActions = (data) => {
 		}
 	}
 	return axios.post(rsssl_settings.site_url+'reallysimplessl/v1/onboarding_actions', data, config );
+}
+
+export const getOnboarding = (forceRefresh) => {
+	let config = {
+		headers: {
+			'X-WP-Nonce': rsssl_settings.nonce,
+		}
+	}
+	return axios.get(rsssl_settings.site_url+'reallysimplessl/v1/onboarding?forceRefresh='+forceRefresh, config);
 }

@@ -1050,7 +1050,7 @@ function rsssl_blocks(){
 			'controls'  => ['type' => 'html', 'data' => '<a class="rsp-logo" href="https://really-simple-plugins.com/"><img src="'.rsssl_url.'assets/img/really-simple-plugins.svg" alt="Really Simple Plugins" /></a>'],
 			'title'   => __( "Other Plugins", 'really-simple-ssl' ),
 			'help'    => __( 'A help text', 'really-simple-ssl' ),
-			'content' => ['type'=>'template', 'data' => 'other-plugins.php'],
+			'content' => ['type'=>'react', 'data' => 'OtherPlugins'],
 			'footer'  => ['type'=>'html', 'data' => ''],
 			'class'    => ' rsssl-column-2 no-border no-background',
 		],

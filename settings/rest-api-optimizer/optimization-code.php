@@ -12,6 +12,13 @@ if ( ! function_exists( 'rsssl_exclude_plugins_for_rest_api' ) ) {
 		// if not an rsp request return all plugins
 		if ( isset($_SERVER['REQUEST_URI']) && strpos($_SERVER['REQUEST_URI'], 'wp-json/reallysimplessl/v') === false ) {
 			return $plugins;
+		//we need to be able to detect active and not active status for these requests, for other plugins installation purposes, like burst, complianz.
+		} else if (isset($_SERVER['REQUEST_URI']) && strpos($_SERVER['REQUEST_URI'], 'otherpluginsdata') !==false) {
+			return $plugins;
+		} else if (isset($_SERVER['REQUEST_URI']) && strpos($_SERVER['REQUEST_URI'], 'plugin_actions') !==false) {
+			return $plugins;
+		} else if (isset($_SERVER['REQUEST_URI']) && strpos($_SERVER['REQUEST_URI'], 'onboarding') !==false) {
+			return $plugins;
 		}
 
 		//Only leave RSSSL and premium add ons active for this request

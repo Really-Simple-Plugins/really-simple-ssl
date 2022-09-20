@@ -56,7 +56,8 @@ if ( !class_exists('rsssl_installer') ){
         public function get_activation_slug(){
             $slugs = [
                 'burst-statistics' => 'burst-statistics/burst.php',
-                'complianz-gdpr' => 'complianz-gdpr/complianz-gpdr.php'
+                'complianz-gdpr' => 'complianz-gdpr/complianz-gpdr.php',
+                'complianz-terms-conditions' => 'complianz-terms-conditions/complianz-terms-conditions.php',
             ];
             return $slugs[$this->slug];
         }
@@ -69,10 +70,12 @@ if ( !class_exists('rsssl_installer') ){
             $prefixes = [
                 'burst-statistics' => 'burst',
                 'complianz-gdpr' => 'cmplz',
+                'complianz-terms-conditions' => 'cmplz_tc',
             ];
             $prefix = $prefixes[$this->slug];
             update_site_option( $prefix.'_tour_started', false );
             update_site_option( $prefix.'_tour_shown_once', true );
+	        delete_transient($prefix.'_redirect_to_settings');
         }
 
         /**
@@ -93,7 +96,6 @@ if ( !class_exists('rsssl_installer') ){
                 $skin     = new WP_Ajax_Upgrader_Skin();
 	            $upgrader = new Plugin_Upgrader( $skin );
 	            $result = $upgrader->install( $download_link );
-
 		        if (is_wp_error($result)){
 			        return false;
 		        }

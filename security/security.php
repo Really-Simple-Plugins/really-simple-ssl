@@ -1,6 +1,6 @@
 <?php
 defined('ABSPATH') or die();
-error_log("load security.php");
+//error_log("load security.php");
 class REALLY_SIMPLE_SECURITY
 {
 	private static $instance;
