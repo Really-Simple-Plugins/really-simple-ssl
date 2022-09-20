@@ -222,7 +222,7 @@
 
 /* Grid */
 .rsssl .rsssl-header, .rsssl .rsssl-content-area {
-    max-width: clamp(300px, calc(100% - var(--rsp-grid-gap) * 2), 1600px);
+    max-width: clamp(300px, 100% - var(--rsp-grid-gap) * 2, 1600px);
     margin: 0 auto;
 }
 
@@ -508,7 +508,7 @@
 }
 
 .rsssl-modal {
-    width: clamp(300px, 75ch, calc(100vw - 50px));
+    width: clamp(300px, 75ch, 100vw - 50px);
     position: fixed;
     z-index: 3;
     border-radius: 12px;
@@ -761,7 +761,7 @@
 
 .rsssl .rsssl-bullet.rsp-blue-yellow {
     background: var(--rsp-blue);
-    background: linear-gradient(77deg, #29b6f6 0%, #29b6f6 30%, #f4bf3e 70%, #f4bf3e 100%);
+    background: linear-gradient(77deg, rgb(41, 182, 246) 0%, rgb(41, 182, 246) 30%, rgb(244, 191, 62) 70%, rgb(244, 191, 62) 100%);
     animation: gradient 2s ease infinite;
     background-size: 200% 200%;
 }
@@ -1075,12 +1075,12 @@
 
 @media (max-width: 1080px) {
     .rsssl-task-status {
-        aspect-ratio: 1 / 1;
+        aspect-ratio: 1/1;
         min-width: 10px;
         height: 16px;
         border-radius: 100%;
         text-indent: -9999px;
-      /* sends the text off-screen */
+ /* sends the text off-screen */
         white-space: nowrap;
     }
 }
@@ -1237,6 +1237,10 @@
     margin-top: 2px;
 }
 
+.rsssl-ssllabs .rsssl-details .rsssl-status-red {
+    color: var(--rsp-red);
+}
+
 .rsssl-ssllabs .rsssl-details + .rsssl-details {
     margin-top: 0;
 }
@@ -1287,83 +1291,83 @@
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(1) {
-    width: 90%;
+    width: 91%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(2) {
-    width: 74%;
+    width: 77%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(3) {
-    width: 69%;
+    width: 67%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(4) {
-    width: 90%;
+    width: 82%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(5) {
-    width: 66%;
+    width: 82%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(6) {
-    width: 72%;
+    width: 74%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(7) {
-    width: 80%;
+    width: 100%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(8) {
-    width: 68%;
+    width: 88%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(9) {
-    width: 99%;
+    width: 89%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(10) {
-    width: 90%;
+    width: 86%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(11) {
-    width: 76%;
+    width: 61%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(12) {
-    width: 69%;
+    width: 62%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(13) {
-    width: 65%;
+    width: 96%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(14) {
-    width: 72%;
+    width: 91%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(15) {
-    width: 75%;
+    width: 70%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(16) {
-    width: 76%;
+    width: 90%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(17) {
-    width: 73%;
+    width: 67%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(18) {
-    width: 92%;
+    width: 83%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(19) {
-    width: 85%;
+    width: 96%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(20) {
-    width: 66%;
+    width: 96%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line ~ .rsssl-placeholder-line {
@@ -1503,7 +1507,7 @@
     align-items: center;
     gap: var(--rsp-spacing-xs);
     min-width: 0;
-      /* or some value */
+ /* or some value */
     text-decoration: none;
 }
 
@@ -1531,32 +1535,32 @@
     text-overflow: ellipsis;
 }
 
-.rsssl div[class^="rsssl-wizard-"] .rsssl-helplink {
+.rsssl div[class^=rsssl-wizard-] .rsssl-helplink {
     color: var(--rsp-text-color);
 }
 
-.rsssl div[class^="rsssl-wizard-"] .rsssl-grid-item {
+.rsssl div[class^=rsssl-wizard-] .rsssl-grid-item {
     position: relative;
     margin-bottom: var(--rsp-grid-gap);
 }
 
 @media (max-width: 1080px) {
-    .rsssl div[class^="rsssl-wizard-"] .rsssl-grid-item {
+    .rsssl div[class^=rsssl-wizard-] .rsssl-grid-item {
         grid-column: span 4;
     }
 }
 
-.rsssl div[class^="rsssl-wizard-"].rsssl-column-2 {
+.rsssl div[class^=rsssl-wizard-].rsssl-column-2 {
     grid-column: span 2;
 }
 
 @media (max-width: 1080px) {
-    .rsssl div[class^="rsssl-wizard-"].rsssl-column-2 {
+    .rsssl div[class^=rsssl-wizard-].rsssl-column-2 {
         grid-column: span 4;
     }
 }
 
-.rsssl div[class^="rsssl-wizard-"] .rsssl-locked {
+.rsssl div[class^=rsssl-wizard-] .rsssl-locked {
     position: absolute;
     z-index: 10;
     top: 0;
@@ -1567,7 +1571,7 @@
     border-radius: var(--rsp-border-radius);
 }
 
-.rsssl div[class^="rsssl-wizard-"] .rsssl-locked .rsssl-locked-overlay {
+.rsssl div[class^=rsssl-wizard-] .rsssl-locked .rsssl-locked-overlay {
     z-index: 1;
     top: calc(100% - 115px);
     position: relative;
@@ -1582,28 +1586,28 @@
 }
 
 @media screen and (max-width: 1280px) {
-    .rsssl div[class^="rsssl-wizard-"] .rsssl-locked .rsssl-locked-overlay {
+    .rsssl div[class^=rsssl-wizard-] .rsssl-locked .rsssl-locked-overlay {
         padding: var(--rsp-spacing-xs) var(--rsp-spacing-s);
     }
 }
 
 @media screen and (max-width: 1080px) {
-    .rsssl div[class^="rsssl-wizard-"] .rsssl-locked .rsssl-locked-overlay {
+    .rsssl div[class^=rsssl-wizard-] .rsssl-locked .rsssl-locked-overlay {
         padding: var(--rsp-spacing-xxs) var(--rsp-spacing-xs);
     }
 }
 
-.rsssl div[class^="rsssl-wizard-"] .rsssl-locked .rsssl-locked-overlay .rsssl-open {
+.rsssl div[class^=rsssl-wizard-] .rsssl-locked .rsssl-locked-overlay .rsssl-open {
     float: left;
     margin-right: 12px;
 }
 
-.rsssl div[class^="rsssl-wizard-"] .rsssl-locked .rsssl-locked-overlay .rsssl-progress-status {
+.rsssl div[class^=rsssl-wizard-] .rsssl-locked .rsssl-locked-overlay .rsssl-progress-status {
     float: left;
     margin-right: 20px;
 }
 
-.rsssl div[class^="rsssl-wizard-"] .rsssl-grid-item-footer {
+.rsssl div[class^=rsssl-wizard-] .rsssl-grid-item-footer {
     justify-content: flex-end;
     padding: 0;
     display: flex;
@@ -1616,15 +1620,15 @@
     align-self: flex-end;
 }
 
-.rsssl div[class^="rsssl-wizard-"] .rsssl-grid-item-footer .rsssl-legend {
+.rsssl div[class^=rsssl-wizard-] .rsssl-grid-item-footer .rsssl-legend {
     display: flex;
 }
 
-.rsssl div[class^="rsssl-wizard-"] .rsssl-grid-item-footer .rsssl-legend span {
+.rsssl div[class^=rsssl-wizard-] .rsssl-grid-item-footer .rsssl-legend span {
     padding-left: 5px;
 }
 
-.rsssl div[class^="rsssl-wizard-"] .rsssl-grid-item-footer:empty {
+.rsssl div[class^=rsssl-wizard-] .rsssl-grid-item-footer:empty {
     display: none;
 }
 
@@ -1657,7 +1661,7 @@
 }
 
 .rsssl-wizard-help details summary .rsssl-icon {
-    transition: all .3s ease-in-out;
+    transition: all 0.3s ease-in-out;
     transform: rotate(0deg);
 }
 
@@ -1796,63 +1800,63 @@
     font-size: var(--rsp-fs-300);
 }
 
-.rsssl div[class^="rsssl-wizard-"] .components-flex {
+.rsssl div[class^=rsssl-wizard-] .components-flex {
     display: flex;
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
 }
 
-.rsssl div[class^="rsssl-wizard-"] .components-flex .components-flex-item label {
+.rsssl div[class^=rsssl-wizard-] .components-flex .components-flex-item label {
     margin: 0;
 }
 
-.rsssl div[class^="rsssl-wizard-"] .components-flex .components-input-control__container {
+.rsssl div[class^=rsssl-wizard-] .components-flex .components-input-control__container {
     max-width: max-content;
 }
 
-.rsssl div[class^="rsssl-wizard-"] .components-base-control__field {
+.rsssl div[class^=rsssl-wizard-] .components-base-control__field {
     margin-bottom: 0;
 }
 
-.rsssl div[class^="rsssl-wizard-"] .components-toggle-control .components-base-control__field {
+.rsssl div[class^=rsssl-wizard-] .components-toggle-control .components-base-control__field {
     display: flex;
     flex-direction: row-reverse;
     align-items: center;
     justify-content: space-between;
 }
 
-.rsssl div[class^="rsssl-wizard-"] .components-toggle-control .components-base-control__field .components-form-toggle {
+.rsssl div[class^=rsssl-wizard-] .components-toggle-control .components-base-control__field .components-form-toggle {
     margin-right: 0;
 }
 
-.rsssl div[class^="rsssl-wizard-"] .rsssl-grid-item .rsssl-grid-item-content {
+.rsssl div[class^=rsssl-wizard-] .rsssl-grid-item .rsssl-grid-item-content {
     padding: var(--rsp-spacing-xs) 0;
 }
 
-.rsssl div[class^="rsssl-wizard-"] .rsssl-field-wrap, .rsssl div[class^="rsssl-wizard-"] .rsssl-settings-block-intro {
+.rsssl div[class^=rsssl-wizard-] .rsssl-field-wrap, .rsssl div[class^=rsssl-wizard-] .rsssl-settings-block-intro {
     padding-block: var(--rsp-spacing-s);
     padding-inline: var(--rsp-spacing-l);
     overflow: hidden;
 }
 
 @media screen and (max-width: 1280px) {
-    .rsssl div[class^="rsssl-wizard-"] .rsssl-field-wrap, .rsssl div[class^="rsssl-wizard-"] .rsssl-settings-block-intro {
+    .rsssl div[class^=rsssl-wizard-] .rsssl-field-wrap, .rsssl div[class^=rsssl-wizard-] .rsssl-settings-block-intro {
         padding-inline: var(--rsp-spacing-m);
     }
 }
 
 @media screen and (max-width: 1080px) {
-    .rsssl div[class^="rsssl-wizard-"] .rsssl-field-wrap, .rsssl div[class^="rsssl-wizard-"] .rsssl-settings-block-intro {
+    .rsssl div[class^=rsssl-wizard-] .rsssl-field-wrap, .rsssl div[class^=rsssl-wizard-] .rsssl-settings-block-intro {
         padding-inline: var(--rsp-spacing-s);
     }
 }
 
-.rsssl div[class^="rsssl-wizard-"] .rsssl-field-wrap > .rsssl-field-wrap, .rsssl div[class^="rsssl-wizard-"] .rsssl-settings-block-intro > .rsssl-field-wrap {
+.rsssl div[class^=rsssl-wizard-] .rsssl-field-wrap > .rsssl-field-wrap, .rsssl div[class^=rsssl-wizard-] .rsssl-settings-block-intro > .rsssl-field-wrap {
     padding: 0;
 }
 
-.rsssl div[class^="rsssl-wizard-"] .rsssl-field-button {
+.rsssl div[class^=rsssl-wizard-] .rsssl-field-button {
     display: flex;
     justify-content: space-between;
     flex-wrap: wrap;
@@ -2012,7 +2016,7 @@
 
 .rsssl-lets-encrypt-tests ul li {
     display: flex;
-    /*Nested li */
+  /*Nested li */
 }
 
 .rsssl-lets-encrypt-tests ul li .rsssl-icon {
@@ -2025,7 +2029,7 @@
     height: 6px;
     width: 6px;
     border-radius: 50%;
-    content: '';
+    content: "";
     position: absolute;
     margin-top: 7px;
     margin-left: -19px;
@@ -2178,7 +2182,8 @@ Admin notice
   z-index: 1001;
   border: 6px solid transparent;
   background: transparent;
-  content: ""; }
+  content: "";
+}
 
 /* Base styles for the rsssl-tooltip's content area */
 .rsssl-tooltip:after,
@@ -2187,7 +2192,7 @@ Admin notice
     padding: 8px;
     width: 220px;
     background-color: #000;
-    background-color: rgba(51, 51, 51, 0.9);
+    background-color: hsla(0deg, 0%, 20%, 0.9);
     color: #fff;
     content: attr(data-rsssl-tooltip);
     font-size: 14px;
@@ -2216,7 +2221,7 @@ Admin notice
     margin-left: -6px;
     margin-bottom: -12px;
     border-top-color: #000;
-    border-top-color: rgba(51, 51, 51, 0.9);
+    border-top-color: hsla(0deg, 0%, 20%, 0.9);
 }
 
 /* Horizontally align top/bottom rsssl-tooltips */
@@ -2257,7 +2262,7 @@ Admin notice
     margin-bottom: 0;
     border-top-color: transparent;
     border-left-color: #000;
-    border-left-color: rgba(51, 51, 51, 0.9);
+    border-left-color: hsla(0deg, 0%, 20%, 0.9);
 }
 
 .rsssl-tooltip-left:hover:before,
@@ -2282,7 +2287,7 @@ Admin notice
     margin-bottom: 0;
     border-top-color: transparent;
     border-bottom-color: #000;
-    border-bottom-color: rgba(51, 51, 51, 0.9);
+    border-bottom-color: hsla(0deg, 0%, 20%, 0.9);
 }
 
 .rsssl-tooltip-bottom:hover:before,
@@ -2306,7 +2311,7 @@ Admin notice
     margin-left: -12px;
     border-top-color: transparent;
     border-right-color: #000;
-    border-right-color: rgba(51, 51, 51, 0.9);
+    border-right-color: hsla(0deg, 0%, 20%, 0.9);
 }
 
 .rsssl-tooltip-right:hover:before,
@@ -2341,7 +2346,7 @@ Admin notice
     margin-bottom: 25px;
     width: 100%;
     height: 235px;
-    /* change height to see repeat-y behavior */
+ /* change height to see repeat-y behavior */
     background-image: linear-gradient(100deg, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.5) 70%, rgba(255, 255, 255, 0.5) 15%), linear-gradient(#f2f2f2 38px, transparent 0), linear-gradient(#f2f2f2 38px, transparent 0), linear-gradient(#f2f2f2 38px, transparent 0), linear-gradient(#f2f2f2 38px, transparent 0);
     background-repeat: repeat-y;
     background-size: 50px 200px, 100% 117px, 100% 117px, 100% 117px, 100% 117px;
@@ -2385,8 +2390,8 @@ Admin notice
 }
 
 .rsssl .rsssl-loader .rect3 {
-    -webkit-animation-delay: -1.0s;
-    animation-delay: -1.0s;
+    -webkit-animation-delay: -1s;
+    animation-delay: -1s;
 }
 
 .rsssl .rsssl-loader .rect4 {
