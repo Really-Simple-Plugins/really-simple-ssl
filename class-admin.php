@@ -2286,7 +2286,7 @@ class rsssl_admin
 		    'success' => __("Completed", "really-simple-ssl"),
 		    'warning' => __("Warning", "really-simple-ssl"),
 		    'open' => __("Open", "really-simple-ssl"),
-		    'premium' => __("Upgrade to Pro", "really-simple-ssl"),
+		    'premium' => __("Upgrade", "really-simple-ssl"),
 	    ];
 
         $defaults = array(
@@ -3149,7 +3149,7 @@ class rsssl_admin
 
 	    if ( ! defined( 'rsssl_pro_version' ) ) {
 	        $upgrade_link = '<a style="color:#2271b1;font-weight:bold" target="_blank" href="'.$this->pro_url.'">'
-		      . __( 'Improve security - Upgrade to Pro', 'really-simple-ssl' ) . '</a>';
+		      . __( 'Improve security - Upgrade', 'really-simple-ssl' ) . '</a>';
 	        array_unshift( $links, $upgrade_link );
 	    }
 
