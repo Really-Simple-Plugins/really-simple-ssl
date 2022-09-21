@@ -7,77 +7,98 @@
     @include rsssl-block-padding;
   }
 
+  .rsssl-inactive {
+    .rsssl-score-snippet {
+      color: var(--rsp-color-disabled)
+    }
+    .rsssl-ssl-test > div {
+        background: var(--rsp-grey-300);
+      }
+    .rsssl-details {
+      &:last-of-type {
+        opacity: 0.2;
+      }
+    }
+  }
+
   .rsssl-ssl-test-container {
-    background: var(--rsp-color-disabled);
+    background: var(--rsp-grey-100);
     padding: 20px 25px;
+
     &.rsssl-error {
       background: var(--rsp-red-faded);
     }
+
     &.rsssl-success {
       background: var(--rsp-green-faded);
     }
-    .rsssl-ssl-test {
+  }
+
+  .rsssl-ssl-test {
+    display: flex;
+    gap: 15px;
+
+    > div {
+      flex: 1;
+      background-color: #fff;
+    }
+
+    &-grade {
+      text-align: center;
       display: flex;
-      gap: 15px;
+      align-items: center;
+      justify-content: center;
 
-      > div {
-        flex: 1;
-        background-color: #fff;
-      }
+      font-size: var(--rsp-fs-900);
+      font-weight: 700;
+      border-radius: var(--rsp-border-radius);
 
-      .rsssl-ssl-test-grade {
-        text-align:center;
+      &.rsssl-grade-inactive {
         display: flex;
-        align-items: center;
-        justify-content: center;
 
-        font-size: var(--rsp-fs-900);
-        font-weight: 700;
-        border-radius: var(--rsp-border-radius);
-        &.rsssl-grade-inactive {
-          display: flex;
-          div {
-            width: 20px;
-            height: 8px;
-            margin: auto auto;
-            background-color: var(--rsp-black);
-            border-radius: 50px;
-          }
+        div {
+          width: 20px;
+          height: 8px;
+          margin: auto auto;
+          background-color: var(--rsp-black);
+          border-radius: 50px;
         }
       }
+    }
 
-      .rsssl-ssl-test-information {
-        padding:10px 0;
-        max-width: 50%;
-        border-radius: var(--rsp-border-radius);
-        .rsssl-score-container {
-           display:flex;
-          .rsssl-score-snippet {
-            white-space: nowrap;
-            padding: 0 8px;
-            font-size: var(--rsp-fs-100);
-            margin: 5px 10px;
-            border-radius: 3px;
+    &-information {
+      padding: 10px 0;
+      max-width: 50%;
+      border-radius: var(--rsp-border-radius);
 
-            &.rsssl-test-inactive {
-              background-color: var(--rsp-color-disabled);
-              color: var(--rsp-text-color);
-            }
+      .rsssl-score-container {
+        display: flex;
 
-            &.rsssl-test-processing {
-              background-color: var(--rsp-orange);
-              color: var(--rsp-text-color-white);
-            }
+        .rsssl-score-snippet {
+          white-space: nowrap;
+          padding: 0 8px;
+          font-size: var(--rsp-fs-100);
+          margin: 5px 10px;
+          border-radius: 3px;
 
-            &.rsssl-test-success {
-              background-color: var(--rsp-color-success);
-              color: var(--rsp-text-color-white);
-            }
+          &.rsssl-test-inactive {
+            background-color: var(--rsp-grey-200);
+            color: var(--rsp-color-disabled);
+          }
 
-            &.rsssl-test-error {
-              background-color: var(--rsp-color-warning);
-              color: var(--rsp-text-color-white);
-            }
+          &.rsssl-test-processing {
+            background-color: var(--rsp-orange);
+            color: var(--rsp-text-color-white);
+          }
+
+          &.rsssl-test-success {
+            background-color: var(--rsp-color-success);
+            color: var(--rsp-text-color-white);
+          }
+
+          &.rsssl-test-error {
+            background-color: var(--rsp-color-warning);
+            color: var(--rsp-text-color-white);
           }
         }
       }
@@ -86,17 +107,16 @@
 
   .rsssl-details {
     margin: var(--rsp-spacing-m);
+    display: flex;
     .rsssl-detail-icon {
       width: 30px;
       .rsssl-icon {
-        margin-top:2px;
+        margin-top: 2px;
       }
     }
     .rsssl-status-red {
-      color:var(--rsp-red);
+      color: var(--rsp-red);
     }
-
-    display: flex;
   }
 
   .rsssl-details + .rsssl-details {
