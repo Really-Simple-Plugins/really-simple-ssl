@@ -11,12 +11,13 @@ function rsssl_general_security_notices( $notices ) {
 			'true' => array(
 				'msg' => __("Application passwords enabled.", "really-simple-ssl"),
 				'icon' => 'open',
+				'url' => 'https://really-simple-ssl.com/what-are-application-passwords/',
 				'dismissible' => true,
 			),
 		),
-		'show_with_options' => [
-			'disable_application_passwords',
-		]
+		// 'show_with_options' => [
+		// 	'disable_application_passwords',
+		// ]
 	);
 
 	$notices['htaccess_status'] = array(
@@ -25,19 +26,18 @@ function rsssl_general_security_notices( $notices ) {
 		'output' => array(
 			'not-writable' => array(
 				'title' => __(".htaccess not writable", "really-simple-ssl"),
-				'msg' => __("An option was enabled which requires the .htaccess to get written, but the .htaccess is not writable.", "really-simple-ssl").' '.__("Please add the following lines to your .htaccess, or set it to writable:", "really-simple-ssl").$code,
-				'icon' => 'warning',
+				'msg' => __("An option that requires the .htaccess file is enabled, but the file is not writable.", "really-simple-ssl").' '.__("Please add the following lines to your .htaccess, or set it to writable:", "really-simple-ssl").$code,
+				'icon' => 'open',
 				'dismissible' => true,
 				'url' => 'https://really-simple-ssl.com/manually-editing-htaccess',
 			),
 			'not-exists' => array(
 				'title' => __(".htaccess does not exist", "really-simple-ssl"),
-				'msg' => __("An option was enabled which requires the .htaccess to get written, but the .htaccess does not exist.", "really-simple-ssl").' '.__("Please add the following lines to your .htaccess, or set it to writable:", "really-simple-ssl").$code,
-				'icon' => 'warning',
+				'msg' => __("An option that requires the .htaccess file is enabled, but the file does not exist.", "really-simple-ssl").' '.__("Please add the following lines to your .htaccess, or set it to writable:", "really-simple-ssl").$code,
+				'icon' => 'open',
 				'dismissible' => true,
 				'url' => 'https://really-simple-ssl.com/manually-editing-htaccess',
 			),
-
 			'not-writable-uploads' => array(
 				'title' => __(".htaccess in uploads directory not writable", "really-simple-ssl"),
 				'msg' => __("An option was enabled which requires the .htaccess in the uploads directory to get written, but the .htaccess or directory is not writable.", "really-simple-ssl").' '.__("Please add the following lines to your .htaccess, or set it to writable:", "really-simple-ssl").$code,
@@ -59,16 +59,16 @@ function rsssl_general_security_notices( $notices ) {
 		'output' => array(
 			'true' => array(
 				'highlight_field_id' => 'block_registration_when_display_name_is_login_name',
-				'msg' => __("Really Simple SSL detected users with administrator role where login and display name are the same. This makes it easy for attackers to find valid login names. We recommend to change. You can disable this for future users in Really Simple SSL.", "really-simple-ssl") . " " . rsssl_list_users_where_display_name_is_login_name(),
-				'url' => 'https://really-simple-ssl.com/',
+				'msg' => __("There are administrator roles where the login and display names on the front-end are the same. This makes it easy for attackers to find valid login names for:", "really-simple-ssl") . "&nbsp;<b>" . rsssl_list_users_where_display_name_is_login_name() . "</b>",
 				'icon' => 'open',
 				'dismissible' => true,
 			),
 		),
-		'show_with_options' => [
-			'block_registration_when_display_name_is_login_name',
-		]
+		// 'show_with_options' => [
+		// 	'block_registration_when_display_name_is_login_name',
+		// ]
 	);
+
 	$notices['debug_log'] = array(
 		'condition' => ['rsssl_debug_log_file_exists_in_default_location'],
 		'callback' => 'rsssl_is_debugging_enabled',
@@ -76,7 +76,7 @@ function rsssl_general_security_notices( $notices ) {
 		'output' => array(
 			'true' => array(
 				'highlight_field_id' => 'change_debug_log_location',
-				'msg' => __("Your site is set to log errors to a potentially public file.", "really-simple-ssl"),
+				'msg' => __("Your site logs information to a public debugging file.", "really-simple-ssl"),
 				'icon' => 'open',
 				'dismissible' => true,
 			),
@@ -85,14 +85,17 @@ function rsssl_general_security_notices( $notices ) {
 			'change_debug_log_location',
 		],
 	);
+
 	$notices['user_id_one'] = array(
 		'condition' => ['rsssl_id_one_no_enumeration'],
 		'callback' => '_true_',
 		'score' => 5,
 		'output' => array(
 			'true' => array(
-				'msg' => __("Your site seems vulnerable for User enumeration attacks.", "really-simple-ssl"),
-				'icon' => 'open',
+				'msg' => __("Your site is vulnerable to user enumeration attacks.", "really-simple-ssl"). rsssl_read_more('https://really-simple-ssl.com/what-are-user-enumeration-attacks/'),
+				'icon' => 'warning',
+				'title' => 'Disable user enumeration',
+				'url' => 'https://really-simple-ssl.com/what-are-user-enumeration-attacks/',
 				'dismissible' => true,
 				'highlight_field_id' => 'disable_user_enumeration',
 			),
@@ -101,6 +104,7 @@ function rsssl_general_security_notices( $notices ) {
 			'disable_user_enumeration',
 		],
 	);
+
 	$notices['admin_user_renamed_user_enumeration_enabled'] = array(
 		'condition' => ['check_admin_user_renamed_and_enumeration_disabled'],
 		'callback' => '_true_',
@@ -108,15 +112,17 @@ function rsssl_general_security_notices( $notices ) {
 		'output' => array(
 			'true' => array(
 				'highlight_field_id' => 'disable_user_enumeration',
-				'msg' => __("To prevent attackers from identifying the renamed administrator user you should activate the 'Disable User Enumeration' setting.", "really-simple-ssl"),
+				'msg' => __("To prevent attackers from identifying the renamed administrator, activate the 'Disable User Enumeration' setting.", "really-simple-ssl"),
+				'url' => 'https://really-simple-ssl.com/what-are-user-enumeration-attacks/',
 				'icon' => 'open',
 				'dismissible' => true,
 			),
 		),
-		'show_with_options' => [
-			'disable_user_enumeration',
-		],
+		// 'show_with_options' => [
+		// 	'disable_user_enumeration',
+		// ],
 	);
+
 	$notices['username_admin_exists'] = array(
 		'condition' => ['rsssl_has_admin_user'],
 		'callback' => '_true_',
@@ -124,8 +130,8 @@ function rsssl_general_security_notices( $notices ) {
 		'output' => array(
 			'true' => array(
 				'highlight_field_id' => 'rename_admin_user',
-				'msg' => __("Your site contains a user named 'admin', which makes it easier for hackers to gain access to your site.", "really-simple-ssl"),
-				'icon' => 'open',
+				'msg' => __("Your site has a registered user with the name 'admin'.", "really-simple-ssl"),
+				'icon' => 'warning',
 				'dismissible' => true,
 			),
 		),
@@ -139,7 +145,7 @@ function rsssl_general_security_notices( $notices ) {
 		'output' => array(
 			'true' => array(
 				'highlight_field_id' => 'block_code_execution_uploads',
-				'msg' => __("Code execution allowed in uploads folder.", "really-simple-ssl"),
+				'msg' => __("Code execution is allowed in the public 'Uploads' folder", "really-simple-ssl"),
 				'icon' => 'open',
 				'dismissible' => true,
 			),
@@ -153,20 +159,20 @@ function rsssl_general_security_notices( $notices ) {
 		'score' => 5,
 		'output' => array(
 			'false' => array(
-				'msg' => __("Database prefix is not default. Awesome!", "really-simple-ssl"),
+				'msg' => __("Your database prefix is randomized. Awesome!", "really-simple-ssl"),
 				'icon' => 'success',
 				'dismissible' => true,
 			),
 			'true' => array(
 				'highlight_field_id' => 'rename_db_prefix',
-				'msg' => __("Database prefix set to default wp_", "really-simple-ssl"),
+				'msg' => __("Your database prefix is set to the default 'wp_'.", "really-simple-ssl"),
 				'icon' => 'open',
 				'dismissible' => true,
 			),
 		),
-		'show_with_options' => [
-			'rename_db_prefix',
-		],
+		// 'show_with_options' => [
+		// 	'rename_db_prefix',
+		// ],
 	);
 
 //	$notices['xmlrpc'] = array(
@@ -191,15 +197,15 @@ function rsssl_general_security_notices( $notices ) {
 		'output' => array(
 			'true' => array(
 				'highlight_field_id' => 'disable_file_editing',
-				'msg' => __("File editing is allowed.", "really-simple-ssl"),
+				'msg' => __("The built-in file editors are accessible to others.", "really-simple-ssl"),
 //					'url' => 'https://wordpress.org/support/article/editing-wp-config-php/#disable-the-plugin-and-theme-editor',
 				'icon' => 'open',
 				'dismissible' => true,
 			),
 		),
-		'show_with_options' => [
-			'disable_file_editing',
-		],
+		// 'show_with_options' => [
+		// 	'disable_file_editing',
+		// ],
 	);
 
 	$notices['registration'] = array(
@@ -208,14 +214,14 @@ function rsssl_general_security_notices( $notices ) {
 		'output' => array(
 			'true' => array(
 				'highlight_field_id' => 'disable_anyone_can_register',
-				'msg' => __("Anyone can register on your site. Consider disabling the 'Anyone can register' option in the Wordpress general settings.", "really-simple-ssl"),
-				'icon' => 'warning',
-				'plusone' => true,
+				'msg' => __("Anyone can register an account on your site. Consider disabling this option in the WordPress general settings.", "really-simple-ssl"),
+				'icon' => 'open',
+				'plusone' => false,
 			),
 		),
-		'show_with_options' => [
-			'disable_anyone_can_register',
-		],
+		// 'show_with_options' => [
+		// 	'disable_anyone_can_register',
+		// ],
 	);
 
 	$notices['hide-wp-version'] = array(
@@ -224,17 +230,16 @@ function rsssl_general_security_notices( $notices ) {
 		'output' => array(
 			'true' => array(
 				'highlight_field_id' => 'hide_wordpress_version',
-				'msg' => __("Your WordPress version is visible.", "really-simple-ssl"),
+				'msg' => __("Your WordPress version is visible to others.", "really-simple-ssl"),
 				'icon' => 'open',
 				'dismissible' => true,
 			),
 		),
-		'show_with_options' => [
-			'hide_wordpress_version',
-		],
+		// 'show_with_options' => [
+		// 	'hide_wordpress_version',
+		// ],
 	);
 
 	return $notices;
 }
 add_filter('rsssl_notices', 'rsssl_general_security_notices');
-
