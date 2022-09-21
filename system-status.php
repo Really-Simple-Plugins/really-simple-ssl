@@ -18,7 +18,6 @@ require_once( BASE_PATH . 'wp-admin/includes/plugin.php');
 
 //by deleting these we make sure these functions run again
 delete_transient('rsssl_testpage');
-delete_transient('rsssl_domain_list');
 function rsssl_get_system_status(){
 	$output = '';
 	if ( defined( 'RSSSL_SAFE_MODE' ) && RSSSL_SAFE_MODE ) {
@@ -71,6 +70,12 @@ function rsssl_get_system_status(){
 
 	if ( is_multisite() ) {
 		$output .=  "MULTISITE\n";
+	}
+
+	if ( rsssl_is_networkwide_active() ) {
+		$output .=  "Really Simple SSL network wide activated\n";
+	} else if ( is_multisite() ){
+		$output .=  "Really Simple SSL per site activated\n";
 	}
 
 	$output .=  "<br>" . "<b>" . "SSL Configuration" . "</b>";

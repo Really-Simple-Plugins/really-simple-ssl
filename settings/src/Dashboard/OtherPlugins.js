@@ -82,10 +82,10 @@ const OtherPlugins = (props) => {
         return statuses[pluginAction];
     }
 
-    const otherPluginElement = (plugin) => {
+    const otherPluginElement = (plugin, i) => {
 
         return (
-           <div className={"rsssl-other-plugins-element rsssl-"+plugin.slug}>
+           <div key={i} className={"rsssl-other-plugins-element rsssl-"+plugin.slug}>
                <a href={plugin.wordpress_url} target="_blank" title={plugin.title}>
                    <div className="rsssl-bullet"></div>
                    <div className="rsssl-other-plugins-content">{plugin.title}</div>

@@ -172,7 +172,7 @@ class REALLY_SIMPLE_SSL
 		}
 
 		add_action('wp_loaded', array(self::$instance->rsssl_front_end, 'force_ssl'), 20);
-		if (is_admin() || is_multisite()) {
+		if ( is_admin() || is_multisite() ) {
 			add_action('plugins_loaded', array(self::$instance->really_simple_ssl, 'init'), 10);
 		}
 	}

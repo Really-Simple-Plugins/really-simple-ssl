@@ -220,7 +220,7 @@ const Onboarding = (props) => {
     }
 
     const goToDashboard = () => {
-        if (props.isModal) props.dismissModal();
+        if ( props.isModal ) props.dismissModal();
         props.selectMainMenu('dashboard');
     }
 
@@ -235,7 +235,7 @@ const Onboarding = (props) => {
            return (
                 <>
                 <button disabled={!certificateValid && !overrideSSL} className="button button-primary" onClick={() => {activateSSL()}}>{ActivateSSLText}</button>
-                {certificateValid && !rsssl_settings.pro_plugin_active && <a target="_blank" href={rsssl_settings.upgrade_link} className="button button-default" >{__("Improve Security with PRO", "really-simple-ssl")}</a>}
+                { certificateValid && !rsssl_settings.pro_plugin_active && <a target="_blank" href={rsssl_settings.upgrade_link} className="button button-default" >{__("Improve Security with PRO", "really-simple-ssl")}</a>}
                 {!certificateValid && <button className="button button-default" onClick={() => {goToLetsEncrypt()}}>{__("Install SSL", "really-simple-ssl")}</button>}
                 {!certificateValid && <ToggleControl
                     label={__("Override SSL detection","really-simple-ssl")}

@@ -57,6 +57,7 @@ add_filter('rsssl_notices', 'rsssl_code_execution_errors_notice');
 function rsssl_disable_code_execution_rules($rules)
 {
 	if ( !rsssl_get_option('block_code_execution_uploads')) {
+		x_log("exit");
 		return $rules;
 	}
 	$rule = "\n" ."<Files *.php>";

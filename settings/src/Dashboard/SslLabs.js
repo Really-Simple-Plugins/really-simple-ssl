@@ -15,14 +15,14 @@ const SslLabs = (props) => {
     const intervalId = useRef(false);
     useEffect(()=>{
         if (!dataLoaded) {
-                rsssl_api.runTest('ssltest_get').then( ( response ) => {
-                    if (response.data.hasOwnProperty('host') )  {
-                        let data = processSslData(response.data);
-                        setSslData(data);
-                        setEndpointData(data.endpointData);
-                        setDataLoaded(true);
-                    }
-                })
+            rsssl_api.runTest('ssltest_get').then( ( response ) => {
+                if (response.data.hasOwnProperty('host') )  {
+                    let data = processSslData(response.data);
+                    setSslData(data);
+                    setEndpointData(data.endpointData);
+                    setDataLoaded(true);
+                }
+            })
         }
     })
 
@@ -154,7 +154,6 @@ const SslLabs = (props) => {
         let data = {};
         data.url = url;
         return rsssl_api.doAction('ssltest_run', data).then( ( response ) => {
-            console.log(response.data);
             return JSON.parse(response.data);
         })
     }

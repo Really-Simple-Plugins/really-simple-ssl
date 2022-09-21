@@ -394,8 +394,6 @@ class rsssl_letsencrypt_handler {
 	    if ( rsssl_is_ready_for('dns-verification') ) {
 		    $use_dns        = rsssl_dns_verification_required();
 		    $challenge_type = $use_dns ? Order::CHALLENGE_TYPE_DNS : Order::CHALLENGE_TYPE_HTTP;
-			error_log("challenge_type");
-			error_log($challenge_type);
 		    if ( $use_dns ) {
 			    try {
 				    $this->get_account();
@@ -442,7 +440,6 @@ class rsssl_letsencrypt_handler {
 
 						    }
 					    } catch ( Exception $e ) {
-							error_log("challenge error #2");
 						    error_log( print_r( $e, true ) );
 						    $error = $this->get_error( $e );
 						    if ( strpos( $error, 'No challenge found with given type')!==false ) {
@@ -1619,7 +1616,6 @@ class rsssl_letsencrypt_handler {
 		if (method_exists($e, 'getRawResponse') && isset($e->getRawResponse()->body['detail'])) {
 	    	$is_raw_response = true;
 		    $error = $e->getRawResponse()->body['detail'];
-			error_log($error);
 		    //check for subproblems
 		    if (isset($e->getRawResponse()->body['subproblems'])){
 			    $error .= '<ul>';

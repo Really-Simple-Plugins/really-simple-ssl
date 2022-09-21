@@ -29,7 +29,7 @@ if ( !class_exists("rsssl_site_health") ) {
 					'test'  => array($this, "health_test"),
 				);
 
-				if ( RSSSL()->really_simple_ssl->ssl_enabled ) {
+				if ( rsssl_get_option('ssl_enabled') ) {
 					$tests['direct']['rsssl-headers'] = array(
 						'label' => __( 'Security Headers Test' , 'really-simple-ssl' ),
 						'test'  => array($this, "headers_test"),
@@ -105,7 +105,7 @@ if ( !class_exists("rsssl_site_health") ) {
 				'test'        => 'health_test',
 			);
 
-			if ( !RSSSL()->really_simple_ssl->ssl_enabled ) {
+			if ( !rsssl_get_option('ssl_enabled') ) {
 				if ( RSSSL()->really_simple_ssl->site_has_ssl ) {
 					$result['status']      = 'critical';
 					$result['label']       = __( 'SSL is not enabled.', 'really-simple-ssl' );

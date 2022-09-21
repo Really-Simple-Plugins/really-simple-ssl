@@ -183,14 +183,13 @@ if (!class_exists('rsssl_multisite')) {
 
 	    public function plugin_settings_link($links)
 	    {
-		    $settings_link = '<a href="' . admin_url("network/settings.php?page=really-simple-security") . '">' . __("Settings", "really-simple-ssl") . '</a>';
+		    $url = add_query_arg(array('page' => 'really-simple-security'), network_admin_url('settings.php') );
+		    $settings_link = '<a href="' . $url . '">' . __("Settings", "really-simple-ssl") . '</a>';
 		    array_unshift($links, $settings_link);
-		    if ( apply_filters('rsssl_settings_link', 'free') === 'free' ) {
-			    $support = '<a target="_blank" href="https://wordpress.org/support/plugin/really-simple-ssl/">' . __('Support', 'really-simple-ssl') . '</a>';
-		    } else {
-			    $support = '<a target="_blank" href="https://really-simple-ssl.com/support">' . __('Premium Support', 'really-simple-ssl') . '</a>';
-		    }
+
+		    $support = apply_filters('rsssl_support_link', '<a target="_blank" href="https://wordpress.org/support/plugin/really-simple-ssl/">' . __('Support', 'really-simple-ssl') . '</a>');
 		    array_unshift($links, $support);
+
 		    if ( ! defined( 'rsssl_pro_version' ) ) {
 			    $upgrade_link = '<a style="color:#2271b1;font-weight:bold" target="_blank" href="https://really-simple-ssl.com/pro#multisite">' . __( 'Improve security - Upgrade', 'really-simple-ssl' ) . '</a>';
 			    array_unshift( $links, $upgrade_link );

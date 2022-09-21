@@ -103,7 +103,6 @@ class rsssl_Cloudways {
 	 */
 
 	private function getAccessToken() {
-		error_log("try retrieving access token");
 		$accessToken = get_transient('rsssl_cw_t');
 		if (!$accessToken) {
 			error_log("not found, get new");
@@ -228,12 +227,10 @@ class rsssl_Cloudways {
 		if ($response->status === 'success') {
 			$serverList = $response->output;
 			$servers = $serverList->servers;
-			error_log(print_r($servers, true));
 			foreach ($servers as $server ){
 				$apps = $server->apps;
 				foreach ($apps as $app ){
 					$app_domain = $app->cname;
-					error_log("app domain ".$app_domain);
 					$this_site_domain = str_replace(array('https://', 'http://', 'www.'), '',site_url());
 					if (strpos($app_domain, $this_site_domain) !== false ) {
 						$success = true;

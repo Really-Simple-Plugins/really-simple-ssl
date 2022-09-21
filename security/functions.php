@@ -70,6 +70,10 @@ if ( ! function_exists('rsssl_wrap_htaccess' ) ) {
 			return;
 		}
 
+		if ( rsssl_get_option('do_not_edit_htaccess') ) {
+			return;
+		}
+
 		if ( !RSSSL()->really_simple_ssl->is_settings_page() && !rsssl_is_logged_in_rest() ) {
 			return;
 		}
@@ -151,6 +155,8 @@ if ( ! function_exists('rsssl_wrap_htaccess' ) ) {
 					update_site_option('rsssl_htaccess_error', 'not-writable');
 					update_site_option('rsssl_htaccess_rules', get_site_option('rsssl_htaccess_rules').$rules_result);
 				} else {
+					delete_site_option('rsssl_htaccess_error');
+					delete_site_option('rsssl_htaccess_rules');
 					//get current rules with regex
 					if ( strpos( $content_htaccess, $start ) !== false ) {
 						$new_htaccess = preg_replace($pattern, $start.$rules_result.$end, $content_htaccess);
@@ -159,6 +165,7 @@ if ( ! function_exists('rsssl_wrap_htaccess' ) ) {
 						$new_htaccess = $content_htaccess . $start . $rules_result . $end;
 					}
 					file_put_contents($htaccess_file, $new_htaccess);
+
 				}
 			}
 		}

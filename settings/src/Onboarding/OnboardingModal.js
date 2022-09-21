@@ -25,9 +25,8 @@ const OnboardingModal = (props) => {
     const dismissModal = () => {
         let data={};
         data.dismiss = true;
-        rsssl_api.runTest('dismiss_modal', 'refresh', data).then(( response ) => {
-            props.setShowOnBoardingModal(false);
-        });
+        props.setShowOnBoardingModal(false)
+        rsssl_api.runTest('dismiss_modal', 'refresh', data).then(( response ) => { });
     }
 
     return (
