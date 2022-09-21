@@ -49,7 +49,7 @@ function rsssl_menu(){
 						[
 							'id' => 'hardening_extended',
 							'premium' => true,
-							'helpLink'  => 'https://really-simple-ssl.com/instructions/about-hardening-features/',
+							'helpLink'  => 'https://really-simple-ssl.com/instructions/about-hardening-features#advanced',
 							'title' => __('Advanced Hardening', 'really-simple-ssl'),
 							'premium' => true,
 							'premium_text' => __("Get Advanced Hardening with %sReally Simple SSL Pro%s", 'really-simple-ssl'),
@@ -57,10 +57,10 @@ function rsssl_menu(){
 						[
 							'id' => 'hardening_xml',
 							'premium' => true,
-							'helpLink'  => 'https://really-simple-ssl.com/instructions/about-hardening-features/',
-							'title' => __('XML RPC', 'really-simple-ssl'),
+							'helpLink'  => 'https://really-simple-ssl.com/instructions/about-hardening-features#xml-rpc',
+							'title' => __('XML-RPC', 'really-simple-ssl'),
 							'premium' => true,
-							'premium_text' => __("Get XML RPC with %sReally Simple SSL Pro%s", 'really-simple-ssl'),
+							'premium_text' => __("Get XML-RPC with %sReally Simple SSL Pro%s", 'really-simple-ssl'),
 						],
 					],
 				],
@@ -68,13 +68,13 @@ function rsssl_menu(){
 					'id' => 'mixed_content_scan',
 					'title' => __('Mixed Content Scan', 'really-simple-ssl'),
 					'premium' => true,
-					'helpLink'  => 'https://really-simple-ssl.com',
+					'helpLink'  => 'https://really-simple-ssl.com/pro/',
 					'premium_text' => __("Get the Mixed Content Scan with %sReally Simple SSL Pro%s", 'really-simple-ssl'),
 					'groups' => [
 						[
 							'id' => 'mixedcontentscan',
 							'title' => __('Mixed Content Scan', 'really-simple-ssl'),
-							'helpLink'  => 'https://really-simple-ssl.com',
+							'helpLink'  => 'https://really-simple-ssl.com/pro/',
 							'premium' => true,
 							'premium_text' => __("Get the Mixed Content Scan with %sReally Simple SSL Pro%s", 'really-simple-ssl'),
 						],
@@ -101,9 +101,9 @@ function rsssl_menu(){
 							'networkwide_required' => true,
 							'premium' => true,
 							'premium_text' => __("Get Recommended Security Headers with %sReally Simple SSL Pro%s", 'really-simple-ssl'),
-							'upgrade' => 'https://really-simple-ssl.com/pro',
+							'upgrade' => 'https://really-simple-ssl.com/pro/',
 							'title' => __('Recommended Security Headers ', 'really-simple-ssl'),
-							'helpLink'  => 'https://really-simple-ssl.com',
+							'helpLink'  => 'https://really-simple-ssl.com/instructions/about-recommended-security-headers/',
 						],
 					],
 				],
@@ -117,10 +117,10 @@ function rsssl_menu(){
 							'id' => 'hsts',
 							'premium' => true,
 							'networkwide_required' => true,
-							'premium_text' => __("Learn more about %sHSTS%s", 'really-simple-ssl'),
-							'upgrade' => 'https://really-simple-ssl.com/pro',
-							'title' => __('HSTS ', 'really-simple-ssl'),
-							'helpLink'  => 'https://really-simple-ssl.com',
+							'premium_text' => __("Get HTTP Strict Transport Security with %sReally Simple SSL Pro%s", 'really-simple-ssl'),
+							'upgrade' => 'https://really-simple-ssl.com/pro/',
+							'title' => __('HTTP Strict Transport Security', 'really-simple-ssl'),
+							'helpLink'  => 'https://really-simple-ssl.com/instructions/about-hsts/',
 						],
 					],
 				],
@@ -132,6 +132,10 @@ function rsssl_menu(){
 					'groups' => [
 						[
 							'id' => 'permissions_policy',
+							'premium_text' => __("Get the Permissions Policy with %sReally Simple SSL Pro%s", 'really-simple-ssl'),
+							'upgrade' => 'https://really-simple-ssl.com/pro/',
+							'title' => __('HSTS ', 'really-simple-ssl'),
+							'helpLink'  => 'https://really-simple-ssl.com/instructions/about-permissions-policy/',
 							'networkwide_required' => true,
 							'premium' => true,
 							'title' => __('Permissions Policy', 'really-simple-ssl'),
@@ -148,21 +152,27 @@ function rsssl_menu(){
 							'id' => 'upgrade_insecure_requests',
 							'networkwide_required' => true,
 							'premium' => true,
-							'helpLink'  => 'https://really-simple-ssl.com',
+							'premium_text' => __("Get Upgrade Insecure Requests with %sReally Simple SSL Pro%s", 'really-simple-ssl'),
+							'upgrade' => 'https://really-simple-ssl.com/pro/',
+							'helpLink'  => 'https://really-simple-ssl.com/instructions/upgrade-insecure-requests/',
 							'title' => __('Upgrade Insecure Requests', 'really-simple-ssl'),
 						],
 						[
 							'id' => 'frame_ancestors',
 							'networkwide_required' => true,
 							'premium' => true,
-							'helpLink'  => 'https://really-simple-ssl.com',
+							'premium_text' => __("Get Frame Ancestors with %sReally Simple SSL Pro%s", 'really-simple-ssl'),
+							'upgrade' => 'https://really-simple-ssl.com/pro/',
+							'helpLink'  => 'https://really-simple-ssl.com/instructions/frame-ancestors',
 							'title' => __('Frame Ancestors', 'really-simple-ssl'),
 						],
 						[
 							'id' => 'content_security_policy',
 							'networkwide_required' => true,
-							'helpLink'  => 'https://really-simple-ssl.com',
+							'helpLink'  => 'https://really-simple-ssl.com/instructions/source-directives/',
 							'premium' => true,
+							'premium_text' => __("Get Source Directives with %sReally Simple SSL Pro%s", 'really-simple-ssl'),
+							'upgrade' => 'https://really-simple-ssl.com/pro/',
 							'title' => __('Source Directives', 'really-simple-ssl'),
 						]
 					],
@@ -171,9 +181,10 @@ function rsssl_menu(){
 					'id' => 'cross_origin_policy',
 					'networkwide_required' => true,
 					'premium' => true,
-					'premium_text' => __('Get Cross Origin Policy Headers with %sReally Simple SSL pro%s', 'really-simple-ssl'),
+					'premium_text' => __('Get Cross Origin Policy Headers with %sReally Simple SSL Pro%s', 'really-simple-ssl'),
+					'upgrade' => 'https://really-simple-ssl.com/pro/',
 					'title' => __('Cross Origin Policy', 'really-simple-ssl'),
-					'helpLink'  => 'https://really-simple-ssl.com',
+					'helpLink'  => 'https://really-simple-ssl.com/instructions/cross-origin-policies/',
 
 				],
 			],
@@ -407,7 +418,7 @@ function rsssl_fields( $load_values = true ){
 						'help'        => [
 							'label' => 'default',
 							'title' => __( "About Hardening", 'really-simple-ssl' ),
-							'text' => __( 'About Hardening', 'really-simple-ssl' ). rsssl_read_more(''),
+							'text' => __( 'Hardening features limit the possibility of potential weaknesses and vulnerabilities which can be misused.', 'really-simple-ssl' ). rsssl_read_more('https://really-simple-ssl.com/definition/what-are-hardening-features/'),
 						],
             'new_features_block' => [
 	            'active' => __("User registration is restricted", 'really-simple-ssl'),
@@ -508,7 +519,7 @@ function rsssl_fields( $load_values = true ){
 			'menu_id'     => 'hardening',
 			'group_id'    => 'hardening_basic',
 			'type'        => 'checkbox',
-			'label'       => __( "Disable XML RPC", 'really-simple-ssl' ),
+			'label'       => __( "Disable XML-RPC", 'really-simple-ssl' ),
 			'disabled'    => false,
 			'default'     => false,
 		],
@@ -627,7 +638,7 @@ function rsssl_fields( $load_values = true ){
 			'help'        => [
 				'label' => 'default',
 				'title' => __( "About Recommended Security Headers", 'really-simple-ssl' ),
-				'text' =>  __( 'About Recommended Security Headers', 'really-simple-ssl' ). rsssl_read_more(''),
+				'text' =>  __( 'These security headers are the fundamental security measures to protect your website visitors while visiting your website.', 'really-simple-ssl' ). rsssl_read_more('https://really-simple-ssl.com/definition/about-recommended-security-headers/'),
 			],
 		],
 		[
@@ -683,8 +694,8 @@ function rsssl_fields( $load_values = true ){
 			'default'     => false,
 			'help'        => [
 				'label' => 'default',
-				'title' => __( "About HSTS", 'really-simple-ssl' ),
-				'text' => __( 'About HSTS', 'really-simple-ssl' ). rsssl_read_more(''),
+				'title' => __( "About HTTP Strict Transport Security", 'really-simple-ssl' ),
+				'text' => __( 'Leveraging your SSL certificate with HSTS is a staple for every website. Force your website over SSL, mitigating risks of malicious counterfeit websites in your name.', 'really-simple-ssl' ). rsssl_read_more('https://really-simple-ssl.com/definition/what-is-hsts/'),
 			],
 		],
 		[
@@ -752,7 +763,7 @@ function rsssl_fields( $load_values = true ){
 			'help'        => [
 				'label' => 'default',
 				'title' => __( "About Cross Origin Policies", 'really-simple-ssl' ),
-				'text' => __( 'About Cross Origin Policies', 'really-simple-ssl' ). rsssl_read_more(''),
+				'text' => __( 'One of the most powerful features, and therefore the most complex are the Cross-Origin headers that can isolate your website so any data leaks are minimized.', 'really-simple-ssl' ). rsssl_read_more('https://really-simple-ssl.com/definition/what-is-a-cross-origin-policy/'),
 			],
 			'label'       => __("Cross Origin Opener Policy", "really-simple-ssl-pro"),
 			'disabled'    => false,
@@ -797,7 +808,7 @@ function rsssl_fields( $load_values = true ){
 			'help'        => [
 				'label' => 'default',
 				'title' => __( "About the Mixed Content Scan", 'really-simple-ssl' ),
-				'text' => __( 'About the Mixed Content Scan', 'really-simple-ssl' ). rsssl_read_more(''),
+				'text' => __( 'The extensive mixed content scan will list all current and future issues and provide a fix, or instructions to fix manually.', 'really-simple-ssl' ). rsssl_read_more('https://really-simple-ssl.com/definition/what-is-a-mixed-content-scan/'),
 			],
 			'columns'     => [
 				[
@@ -847,7 +858,7 @@ function rsssl_fields( $load_values = true ){
 			'help'        => [
 				'label' => 'default',
 				'title' => __( "About the Permission Policy", 'really-simple-ssl' ),
-				'text' => __( 'About the Permission Policy', 'really-simple-ssl' ). rsssl_read_more(''),
+				'text' => __( 'Browser features are plentiful, but most are not needed on your website. But they might be misused if you don’t actively tell the browser to disable these features.', 'really-simple-ssl' ). rsssl_read_more('https://really-simple-ssl.com/definition/what-is-a-permissions-policy/'),
 			],
 			'columns'     => [
 				[
@@ -949,7 +960,7 @@ function rsssl_fields( $load_values = true ){
 						'help'        => [
 							'label' => 'default',
 							'title' => __( "About the Content Security Policy", 'really-simple-ssl' ),
-							'text' => __( 'About the Content Security Policy', 'really-simple-ssl' ). rsssl_read_more(''),
+							'text' => __( 'The content security policy has many options, so we always recommend starting in ‘report-mode’ to see what’s going on your website, and which files and scripts are loaded. By then, you know what should stay and what is unnecessary or can be misused.', 'really-simple-ssl' ). rsssl_read_more('https://really-simple-ssl.com/definition/what-is-a-content-security-policy/'),
 						],
         ],
 		[
