@@ -284,7 +284,7 @@ function rsssl_other_plugins_data($slug=false){
 		[
 			'slug' => 'burst-statistics',
 			'constant_free' => 'burst_version',
-			'constant_premium' => 'burst_version',
+			'constant_premium' => false,
 			'wordpress_url' => 'https://wordpress.org/plugins/burst-statistics/',
 			'upgrade_url' => 'https://burst-statistics.com/?src=rsssl-plugin',
 			'title' => 'Burst Statistics - '. __("Self-hosted, Privacy-friendly analytics tool.", "really-simple-ssl"),
@@ -300,7 +300,7 @@ function rsssl_other_plugins_data($slug=false){
 		[
 			'slug' => 'complianz-terms-conditions',
 			'constant_free' => 'cmplz_tc_version',
-			'constant_premium' => 'cmplz_tc_version',
+			'constant_premium' => false,
 			'wordpress_url' => 'https://wordpress.org/plugins/complianz-terms-conditions/',
 			'upgrade_url' => 'https://complianz.io?src=rsssl-plugin',
 			'title' => 'Complianz - '. __("Terms and Conditions", "really-simple-ssl"),
@@ -313,7 +313,7 @@ function rsssl_other_plugins_data($slug=false){
 	        $plugins[$index]['pluginAction'] = 'download';
         } else if ( $installer->plugin_is_downloaded() && !$installer->plugin_is_activated() ) {
 	        $plugins[ $index ]['pluginAction'] = 'activate';
-        } else if ( $installer->plugin_is_activated() && isset($plugin['constant_premium']) && !defined($plugin['constant_premium'])) {
+        } else if ( $installer->plugin_is_activated() && $plugin['constant_premium'] && !defined($plugin['constant_premium'])) {
 		    $plugins[$index]['pluginAction'] = 'upgrade-to-premium';
 	    } else {
 		    $plugins[$index]['pluginAction'] = 'installed';
@@ -322,7 +322,9 @@ function rsssl_other_plugins_data($slug=false){
 
     if ( $slug ) {
         foreach ($plugins as $key=> $plugin) {
-            if ($plugin['slug']===$slug) return $plugin;
+            if ($plugin['slug']===$slug){
+                return $plugin;
+            }
         }
     }
     return $plugins;
@@ -704,7 +706,6 @@ function rsssl_sanitize_permissions_policy( $value, $type, $field_name ){
 		'title' =>'string',
 		'status' => 'boolean',
 	]);
-
 	// Datatable array will look something like this, whith 0 the row index, and id, title the col indexes.
 	// [0] => Array
 	//	(

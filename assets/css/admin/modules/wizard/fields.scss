@@ -74,3 +74,11 @@
     100% { background-color: inherit; }
   }
 }
+
+//switch padding to top, to prevent tasks from getting stuck to text field
+.rsssl-license {
+  .rsssl-task-element {
+    padding-top: var(--rsp-spacing-s);
+    padding-bottom: 0;
+  }
+}

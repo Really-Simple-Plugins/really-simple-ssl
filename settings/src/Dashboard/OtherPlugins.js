@@ -1,10 +1,11 @@
 import {useState, useEffect, useRef} from "@wordpress/element";
 import { __ } from '@wordpress/i18n';
 import * as rsssl_api from "../utils/api";
+import Placeholder from '../Placeholder/Placeholder';
 
 const OtherPlugins = (props) => {
     const [dataLoaded, setDataLoaded] = useState(false);
-    const [dataUpdated, setDataUpdated] = useState(false);
+    const [dataUpdated, setDataUpdated] = useState('');
     const [pluginData, setPluginData] = useState(false);
 
     useEffect(()=>{
@@ -12,7 +13,6 @@ const OtherPlugins = (props) => {
                rsssl_api.runTest('otherpluginsdata').then( ( response ) => {
                 response.data.forEach(function(pluginItem, i) {
                     response.data[i].pluginActionNice = pluginActionNice(pluginItem.pluginAction);
-
                 });
 
                 setPluginData(response.data);
@@ -22,31 +22,34 @@ const OtherPlugins = (props) => {
     })
 
     const PluginActions = (slug, pluginAction, e) => {
-        e.preventDefault();
+        if (e) e.preventDefault();
         let data = {};
         data.slug = slug;
         data.pluginAction = pluginAction;
-
         let pluginItem = getPluginData(slug);
-        pluginItem.pluginAction = pluginAction==='download' ? "downloading" : 'activating';
+        if ( pluginAction==='download' ) {
+            pluginItem.pluginAction = "downloading";
+        } else if (pluginAction==='activate') {
+            pluginItem.pluginAction = "activating";
+        }
         pluginItem.pluginActionNice = pluginActionNice(pluginItem.pluginAction);
         updatePluginData(slug, pluginItem);
 
+        console.log("start func plugin actions");
+        console.log(slug);
+        console.log("dataUpdated");
+        console.log(dataUpdated);
+        console.log(pluginItem);
+        if (pluginAction==='installed' || pluginAction === 'upgrade-to-premium') {
+            console.log("exit");
+            return;
+        }
         rsssl_api.doAction('plugin_actions', data).then( ( response ) => {
+            console.log("response from server");
+            console.log(response.data);
             pluginItem = response.data;
-            if ( pluginAction==='download' ) {
-                pluginItem.pluginAction = 'activating';
-                updatePluginData(slug, pluginItem);
-                data.pluginAction = 'activate';
-                rsssl_api.doAction('plugin_actions', data).then( ( response ) => {
-                    pluginItem = response.data;
-                    pluginItem.pluginAction = 'installed';
-                    updatePluginData(slug, pluginItem);
-                })
-            } else {
-                pluginItem.pluginAction = 'installed';
-                updatePluginData(slug, pluginItem);
-            }
+            updatePluginData(slug, pluginItem);
+            PluginActions(slug, pluginItem.pluginAction);
         })
     }
 
@@ -54,19 +57,18 @@ const OtherPlugins = (props) => {
         return pluginData.filter((pluginItem) => {
             return (pluginItem.slug===slug)
         })[0];
-
     }
 
     const updatePluginData = (slug, newPluginItem) => {
-        setDataUpdated(false);
+
         pluginData.forEach(function(pluginItem, i) {
             if (pluginItem.slug===slug) {
                 pluginData[i] = newPluginItem;
             }
         });
-
         setPluginData(pluginData);
-        setDataUpdated(true);
+        setDataUpdated(slug+newPluginItem.pluginAction);
+
     }
 
     const pluginActionNice = (pluginAction) => {
@@ -75,6 +77,7 @@ const OtherPlugins = (props) => {
             'activate': __("Activate", "really-simple-ssl"),
             'activating': __("activating...", "really-simple-ssl"),
             'downloading': __("downloading...", "really-simple-ssl"),
+            'upgrade-to-premium': __("downloading...", "really-simple-ssl"),
         };
         return statuses[pluginAction];
     }
@@ -98,9 +101,11 @@ const OtherPlugins = (props) => {
     }
 
     if ( !dataLoaded ) {
-        return (<></>)
+        return (<Placeholder lines="3"></Placeholder>)
     }
+
     return (
+
         <>
            <div className="rsssl-other-plugins-container">
                { pluginData.map((plugin, i) => otherPluginElement(plugin, i)) }

@@ -1,3 +1,36 @@
+.rsssl-ssllabs {
+  &.rsssl-block-highlight {
+    border: 0;
+    -o-animation: fadeItBlock 3s ease-in-out;
+    animation: fadeItBlock 3s ease-in-out;
+  }
+
+  @-o-keyframes fadeItBlock {
+    0% {
+      border: 0;
+    }
+    30% {
+      border: 2px solid var(--rsp-green);
+    }
+    100% {
+      border: 0;
+    }
+  }
+
+  @keyframes fadeItBlock {
+    0%   {
+      border: 0;
+
+    }
+    30%  {
+      border: 2px solid var(--rsp-green);
+    }
+    100% {
+      border: 0;
+    }
+  }
+}
+
 .rsssl-grid-item.rsssl-progress {
   .rsssl-grid-item-content {
     padding: 0;

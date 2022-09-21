@@ -15,6 +15,19 @@ import { __ } from '@wordpress/i18n';
 class Settings extends Component {
     constructor() {
         super( ...arguments );
+        this.state = {
+            noticesExpanded:true,
+        };
+    }
+
+    toggleNotices(){
+        const {
+            noticesExpanded,
+        } = this.state;
+
+        this.setState({
+            noticesExpanded:!noticesExpanded,
+        });
     }
 
     render() {
@@ -25,6 +38,9 @@ class Settings extends Component {
         let selectedStep = this.props.selectedStep;
         let menu = this.props.menu;
         const { menu_items: menuItems } = menu;
+        const {
+            noticesExpanded,
+        } = this.state;
 
         if ( ! isAPILoaded ) {
             return (
@@ -126,7 +142,16 @@ class Settings extends Component {
                     </div>
                 </div>
                 <div className="rsssl-wizard-help">
-                    {notices.map((field, i) => <Help key={i} index={i} help={field} fieldId={field.id}/>)}
+                    <div className="rsssl-help-header">
+                        <div className="rsssl-help-title">
+                            {__("Notifications", "really-simple-ssl")}
+                        </div>
+                        <div className="rsssl-help-control" onClick={ () => this.toggleNotices() }>
+                            {!noticesExpanded && __("Expand all","really-simple-ssl")}
+                            {noticesExpanded && __("Collapse all","really-simple-ssl")}
+                        </div>
+                    </div>
+                    {notices.map((field, i) => <Help key={i} noticesExpanded={noticesExpanded} index={i} help={field} fieldId={field.id}/>)}
                 </div>
             </Fragment>
         )

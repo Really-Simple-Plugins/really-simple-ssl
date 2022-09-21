@@ -10,11 +10,12 @@ class Help extends Component {
             notice.title = notice.text;
             notice.text = false;
         }
+        let openStatus = this.props.noticesExpanded ? 'open' : '';
         //we can use notice.linked_field to create a visual link to the field.
         return (
             <Fragment>
                 { notice.title && notice.text &&
-                    <details className={"rsssl-wizard-help-notice rsssl-" + notice.label.toLowerCase()}>
+                    <details className={"rsssl-wizard-help-notice rsssl-" + notice.label.toLowerCase()} open={openStatus}>
                         <summary>{notice.title} <Icon name='chevron-down' /></summary>
                         {/*some notices contain html, like for the htaccess notices. A title is required for those options, otherwise the text becomes the title. */}
                         <div dangerouslySetInnerHTML={{__html:notice.text}}></div>

@@ -13,7 +13,7 @@ class PermissionsPolicy extends Component {
     constructor() {
         super( ...arguments );
         this.state = {
-            filterValue:0,
+            filterValue:-1,
             enable_permissions_policy: 0,
         };
     }
@@ -52,6 +52,7 @@ class PermissionsPolicy extends Component {
         let field = this.props.field;
         let fieldValue = field.value;
         let options = this.props.options;
+
         const {
             enable_permissions_policy,
             filterValue,
@@ -87,6 +88,7 @@ class PermissionsPolicy extends Component {
         if (filterValue!=-1) {
             data = data.filter(item => item.status==filterValue);
         }
+        console.log(data);
         for (const item of data){
             let disabled = false;
             if (item.status!=1) {

@@ -271,7 +271,7 @@ function check_admin_user_renamed_and_enumeration_disabled() {
 function rsssl_list_users_where_display_name_is_login_name() {
 	$users = rsssl_get_users_where_display_name_is_login( true );
 	if ( is_array( $users ) ) {
-		$ext  = count($users)>=10 ? $ext = '...' : '';
+		$ext  = count($users)>=10 ? '...' : '';
 		$users = array_slice($users, 0, 10);
 		return implode( ', ', $users ).$ext;
 	}

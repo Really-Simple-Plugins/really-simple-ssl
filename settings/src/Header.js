@@ -37,12 +37,12 @@ class Header extends Component {
                     </div>
                     <div className="rsssl-header-right">
                         <a className="rsssl-knowledge-base-link" href="https://really-simple-ssl.com/knowledge-base" target="_blank">{__("Documentation", "really-simple-ssl")}</a>
-                        {rsssl_settings.pro_active &&
+                        {rsssl_settings.pro_plugin_active &&
                             <a href="https://wordpress.org/support/plugin/really-simple-ssl/"
                                className="button button-black"
                                target="_blank">{__("Support", "really-simple-ssl")}</a>
                         }
-                        {!rsssl_settings.pro_active &&
+                        {!rsssl_settings.pro_plugin_active &&
                             <a href={rsssl_settings.upgrade_link}
                                className="button button-black"
                                target="_blank">{__("Go Pro", "really-simple-ssl")}</a>

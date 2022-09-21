@@ -717,6 +717,10 @@
     min-height: auto;
 }
 
+.rsssl .rsssl-button-small + .rsssl-button-small {
+    margin-left: 10px;
+}
+
 /* Documents overview */
 .rsssl-shortcode {
     right: 10000px;
@@ -820,7 +824,7 @@
 }
 
 .rsssl-modal.rsssl-onboarding #rsssl-message li .rsssl-icon {
-    margin-top: 2px;
+    margin-top: 5px;
 }
 
 .rsssl-modal.rsssl-onboarding .rsssl-modal-content {
@@ -841,6 +845,40 @@
 
 .rsssl-modal.rsssl-onboarding .rsssl-modal-content-step-footer .components-toggle-control .components-base-control__field {
     margin: 0;
+}
+
+.rsssl-ssllabs.rsssl-block-highlight {
+    border: 0;
+    -o-animation: fadeItBlock 3s ease-in-out;
+    animation: fadeItBlock 3s ease-in-out;
+}
+
+@-o-keyframes fadeItBlock {
+    0% {
+        border: 0;
+    }
+
+    30% {
+        border: 2px solid var(--rsp-green);
+    }
+
+    100% {
+        border: 0;
+    }
+}
+
+@keyframes fadeItBlock {
+    0% {
+        border: 0;
+    }
+
+    30% {
+        border: 2px solid var(--rsp-green);
+    }
+
+    100% {
+        border: 0;
+    }
 }
 
 .rsssl-grid-item.rsssl-progress .rsssl-grid-item-content {
@@ -1058,7 +1096,7 @@
     margin-right: 40px;
 }
 
-.rsssl-task-status {
+.rsssl-task-status, .rsssl-locked-overlay .rsssl-progress-status {
     display: block;
     min-width: 80px;
     text-align: center;
@@ -1069,13 +1107,13 @@
 }
 
 @media (max-width: 1280px) {
-    .rsssl-task-status {
+    .rsssl-task-status, .rsssl-locked-overlay .rsssl-progress-status {
         min-width: 80px;
     }
 }
 
 @media (max-width: 1080px) {
-    .rsssl-task-status {
+    .rsssl-task-status, .rsssl-locked-overlay .rsssl-progress-status {
         aspect-ratio: 1/1;
         min-width: 10px;
         height: 16px;
@@ -1086,21 +1124,21 @@
     }
 }
 
-.rsssl-task-status.rsssl-completed, .rsssl-task-status.rsssl-success {
+.rsssl-task-status.rsssl-completed, .rsssl-locked-overlay .rsssl-completed.rsssl-progress-status, .rsssl-task-status.rsssl-success, .rsssl-locked-overlay .rsssl-success.rsssl-progress-status {
     background-color: var(--rsp-color-success);
     color: var(--rsp-text-color-white);
 }
 
-.rsssl-task-status.rsssl-open {
+.rsssl-task-status.rsssl-open, .rsssl-locked-overlay .rsssl-open.rsssl-progress-status {
     background-color: var(--rsp-color-open);
 }
 
-.rsssl-task-status.rsssl-warning {
+.rsssl-task-status.rsssl-warning, .rsssl-locked-overlay .rsssl-warning.rsssl-progress-status {
     background-color: var(--rsp-color-error);
     color: var(--rsp-text-color-white);
 }
 
-.rsssl-task-status.rsssl-premium {
+.rsssl-task-status.rsssl-premium, .rsssl-locked-overlay .rsssl-premium.rsssl-progress-status {
     background-color: var(--rsp-blue);
     color: var(--rsp-text-color-white);
 }
@@ -1287,35 +1325,35 @@
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(1) {
-    width: 99%;
+    width: 87%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(2) {
-    width: 65%;
+    width: 98%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(3) {
-    width: 67%;
+    width: 94%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(4) {
-    width: 67%;
+    width: 86%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(5) {
-    width: 92%;
+    width: 98%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(6) {
-    width: 73%;
+    width: 92%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(7) {
-    width: 97%;
+    width: 74%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(8) {
-    width: 95%;
+    width: 66%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(9) {
@@ -1323,47 +1361,47 @@
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(10) {
-    width: 93%;
+    width: 67%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(11) {
-    width: 82%;
-}
-
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(12) {
     width: 64%;
 }
 
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(12) {
+    width: 99%;
+}
+
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(13) {
-    width: 72%;
+    width: 67%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(14) {
-    width: 100%;
-}
-
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(15) {
     width: 98%;
 }
 
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(15) {
+    width: 96%;
+}
+
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(16) {
-    width: 94%;
+    width: 97%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(17) {
-    width: 94%;
+    width: 99%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(18) {
-    width: 93%;
+    width: 78%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(19) {
-    width: 92%;
+    width: 89%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(20) {
-    width: 99%;
+    width: 77%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line ~ .rsssl-placeholder-line {
@@ -1380,8 +1418,12 @@
     }
 }
 
+.rsssl .rsssl-other-plugins .rsssl-placeholder {
+    background-color: transparent;
+}
+
 .rsssl .rsssl-other-plugins .rsp-logo img {
-    height: 34px;
+    height: 20px;
 }
 
 .rsssl .rsssl-other-plugins-container {
@@ -1682,6 +1724,20 @@
     transform: rotate(180deg);
 }
 
+.rsssl-wizard-help .rsssl-help-header {
+    width: 100%;
+    display: flex;
+}
+
+.rsssl-wizard-help .rsssl-help-header .rsssl-help-title {
+    font-size: 18px;
+}
+
+.rsssl-wizard-help .rsssl-help-header .rsssl-help-control {
+    margin-left: auto;
+    cursor: pointer;
+}
+
 .rsssl-wizard-help-notice {
     width: 100%;
     background: var(--rsp-background-block-color);
@@ -1903,6 +1959,11 @@
     }
 }
 
+.rsssl-license .rsssl-task-element {
+    padding-top: var(--rsp-spacing-s);
+    padding-bottom: 0;
+}
+
 .rsssl .components-snackbar-list.edit-site-notices {
     width: max-content;
     position: fixed;
@@ -1926,11 +1987,11 @@
     background-color: var(--rsp-green);
 }
 
-.rsssl-mixedcontentscan .rsssl-task-status {
+.rsssl-mixedcontentscan .rsssl-task-status, .rsssl-mixedcontentscan .rsssl-locked-overlay .rsssl-progress-status, .rsssl-locked-overlay .rsssl-mixedcontentscan .rsssl-progress-status {
     min-width: min-content;
 }
 
-.rsssl-mixedcontentscan .rsssl-task-status.rsssl-warning {
+.rsssl-mixedcontentscan .rsssl-task-status.rsssl-warning, .rsssl-mixedcontentscan .rsssl-locked-overlay .rsssl-warning.rsssl-progress-status, .rsssl-locked-overlay .rsssl-mixedcontentscan .rsssl-warning.rsssl-progress-status {
     background-color: var(--rsp-yellow);
     color: var(--rsp-text-color);
 }
@@ -1951,6 +2012,33 @@
     border: none;
     font-size: 1.5em;
     font-weight: 700;
+}
+
+.rsssl-locked-overlay .rsssl-open {
+    float: left;
+    margin-right: 12px;
+}
+
+.rsssl-locked-overlay .rsssl-progress-status.rsssl-learning-mode-completed {
+    background-color: var(--rsp-color-success);
+    color: #fff;
+}
+
+.rsssl-locked-overlay .rsssl-progress-status.rsssl-learning-mode {
+    background-color: var(--rsp-color-open);
+}
+
+.rsssl-locked-overlay .rsssl-progress-status.rsssl-learning-mode-disabled {
+    background-color: var(--rsp-color-disabled);
+}
+
+.rsssl-learningmode-toggle {
+    display: flex;
+    align-items: center;
+}
+
+.rsssl-learningmode-toggle button.button {
+    margin-right: 20px;
 }
 
 .rsssl-lets-encrypt-tests {
@@ -2083,21 +2171,6 @@
 /**
 Admin notice
  */
-.cmplz-admin-notice .cmplz-admin-notice-container {
-    display: flex;
-    padding: 12px;
-    align-items: center;
-}
-
-.cmplz-admin-notice .cmplz-admin-notice-container .cmplz-logo img {
-    margin-top: 0.5em;
-}
-
-.cmplz-admin-notice .cmplz-admin-notice-container .dashicons {
-    margin-left: 10px;
-    margin-right: 5px;
-}
-
 .rsssl-status-allowed {
     background-color: red;
 }

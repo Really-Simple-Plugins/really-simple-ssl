@@ -181,10 +181,7 @@ function rsssl_get_system_status(){
 }
 
 if ( rsssl_user_can_manage() && isset($_GET['download']) ) {
-
-	ob_start();
 	$content = rsssl_get_system_status();
-	$content = ob_get_clean();
 	$fsize = function_exists( 'mb_strlen' ) ? mb_strlen( $content, '8bit' ) : strlen( $content );
 	$file_name = 'really-simple-ssl-system-status.txt';
 

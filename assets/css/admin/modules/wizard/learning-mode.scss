@@ -5,3 +5,32 @@
   font-size: 1.5em;
   font-weight: 700;
 }
+.rsssl-locked-overlay {
+  .rsssl-open {
+    float: left;
+    margin-right: 12px;
+  }
+
+  .rsssl-progress-status {
+    @extend .rsssl-task-status;
+    &.rsssl-learning-mode-completed {
+      background-color: var(--rsp-color-success);
+      color:#fff;
+    }
+    &.rsssl-learning-mode {
+      background-color: var(--rsp-color-open);
+
+    }
+    &.rsssl-learning-mode-disabled {
+      background-color: var(--rsp-color-disabled);
+    }
+  }
+}
+
+.rsssl-learningmode-toggle {
+  display:flex;
+  align-items: center;
+  button.button {
+    margin-right:20px;
+  }
+}

@@ -1,6 +1,11 @@
 .rsssl {
-  .rsssl-other-plugins .rsp-logo img {
-    height: 34px;
+  .rsssl-other-plugins {
+    .rsssl-placeholder {
+      background-color:transparent;
+    }
+    .rsp-logo img {
+      height: 20px;
+    }
   }
 
   .rsssl-other-plugins-container {

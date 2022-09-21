@@ -331,7 +331,7 @@ class rsssl_admin
         $error = false;
 	    $is_rest_request =  $request instanceof WP_REST_Request;
 	    $site_url_changed = false;
-
+	    delete_option('rsssl_ssl_detection_overridden');
 	    if ( $this->site_has_ssl || get_option('rsssl_ssl_detection_overridden') ){
 	        //in a configuration reverse proxy without a set server variable https, add code to wpconfig
 	        if ( $this->do_wpconfig_loadbalancer_fix ) {
@@ -387,9 +387,9 @@ class rsssl_admin
     public function deactivate_ssl()
     {
         //only revert if SSL was enabled first.
-        if ($this->ssl_enabled) {
+        if ( rsssl_get_option('ssl_enabled') ) {
 	        rsssl_update_option('redirect', 'none');
-	        $this->ssl_enabled = false;
+	        rsssl_update_option('ssl_enabled', false);
 	        $this->remove_ssl_from_siteurl();
 	        $this->save_options();
         }
@@ -1168,9 +1168,9 @@ class rsssl_admin
 	        $this->remove_ssl_from_siteurl_in_wpconfig();
 	        $this->remove_secure_cookie_settings();
 
-	        $this->site_has_ssl = FALSE;
-	        $this->review_notice_shown = FALSE;
-	        $this->ssl_enabled = FALSE;
+	        $this->site_has_ssl = false;
+	        $this->review_notice_shown = false;
+	        $this->ssl_enabled = false;
 	        $this->save_options();
 
 	        rsssl_update_option('dismiss_all_notices', false);
@@ -2286,7 +2286,7 @@ class rsssl_admin
 		    'success' => __("Completed", "really-simple-ssl"),
 		    'warning' => __("Warning", "really-simple-ssl"),
 		    'open' => __("Open", "really-simple-ssl"),
-		    'premium' => __("Upgrade to Pro", "really-simple-ssl"),
+		    'premium' => __("Upgrade", "really-simple-ssl"),
 	    ];
 
         $defaults = array(
@@ -2337,7 +2337,6 @@ class rsssl_admin
 	    $certinfo = get_transient('rsssl_certinfo');
 	    $end_date = isset($certinfo['validTo_time_t']) ? $certinfo['validTo_time_t'] : false;
 	    $expiry_date = !empty($end_date) ? date( get_option('date_format'), $end_date ) : __("(Unknown)", "really-simple-ssl");
-	    $test_url = 'https://www.ssllabs.com/ssltest/analyze.html?d='.home_url();
 
         $notices = array(
             'deactivation_file_detected' => array(
@@ -2454,9 +2453,9 @@ class rsssl_admin
 		            ),
 		            'no-response' => array(
 			            'title' => __("Could not test certificate", "really-simple-ssl"),
-			            'msg' => __("Automatic certificate detection is not possible on your server.", "really-simple-ssl").
-			                     '<form class="rsssl-task-form" action="" method="POST"><a href="'.add_query_arg(array("page" => "really-simple-security", "letsencrypt"=>1),admin_url("options-general.php")) .'#letsencrypt" type="submit" class="button button-default  rsssl-button-small">'.__("Install SSL certificate", "really-simple-ssl").'</a>'.
-			                     '<a target="_blank" href="'.$test_url.'" class="button button-default  rsssl-button-small">'.__("Check manually", "really-simple-ssl").'</a></form>',
+			            'msg' => __("Automatic certificate detection is not possible on your server.", "really-simple-ssl").'<br>'.
+			                     '<a href="'.add_query_arg(array("page" => "really-simple-security", "letsencrypt"=>1),admin_url("options-general.php")) .'#letsencrypt" type="submit" class="button button-default  rsssl-button-small">'.__("Install SSL certificate", "really-simple-ssl").'</a>'.
+			                     '<button class="button button-default rsssl-button-small" id="ssl-labs-check-button">'.__("Check manually", "really-simple-ssl").'</button>',
 			            'icon' => 'warning',
 			            'admin_notice' => false,
 			            'dismissible' => true,
@@ -3149,7 +3148,7 @@ class rsssl_admin
 
 	    if ( ! defined( 'rsssl_pro_version' ) ) {
 	        $upgrade_link = '<a style="color:#2271b1;font-weight:bold" target="_blank" href="'.$this->pro_url.'">'
-		      . __( 'Improve security - Upgrade to Pro', 'really-simple-ssl' ) . '</a>';
+		      . __( 'Improve security - Upgrade', 'really-simple-ssl' ) . '</a>';
 	        array_unshift( $links, $upgrade_link );
 	    }
 
@@ -3432,6 +3431,7 @@ if (!function_exists('rsssl_ssl_enabled')) {
 
 if (!function_exists('rsssl_ssl_detected')) {
 	function rsssl_ssl_detected() {
+//        return 'no-response';
 		if ( ! RSSSL()->really_simple_ssl->wpconfig_ok() ) {
 			return apply_filters('rsssl_ssl_detected', 'fail');
 		}
