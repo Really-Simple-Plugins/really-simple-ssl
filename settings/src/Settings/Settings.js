@@ -16,17 +16,17 @@ class Settings extends Component {
     constructor() {
         super( ...arguments );
         this.state = {
-            noticesShown:true,
+            noticesExpanded:true,
         };
     }
 
     toggleNotices(){
         const {
-            noticesShown,
+            noticesExpanded,
         } = this.state;
 
         this.setState({
-            noticesShown:!noticesShown,
+            noticesExpanded:!noticesExpanded,
         });
     }
 
@@ -39,7 +39,7 @@ class Settings extends Component {
         let menu = this.props.menu;
         const { menu_items: menuItems } = menu;
         const {
-            noticesShown,
+            noticesExpanded,
         } = this.state;
 
         if ( ! isAPILoaded ) {
@@ -146,9 +146,12 @@ class Settings extends Component {
                         <div className="rsssl-help-title">
                             {__("Notifications", "really-simple-ssl")}
                         </div>
-                        <div className="rsssl-help-control" onClick={ () => this.toggleNotices() }>{__("Toggle/hide all","really-simple-ssl")}</div>
+                        <div className="rsssl-help-control" onClick={ () => this.toggleNotices() }>
+                            {!noticesExpanded && __("Expand all","really-simple-ssl")}
+                            {noticesExpanded && __("Collapse all","really-simple-ssl")}
+                        </div>
                     </div>
-                    {notices.map((field, i) => <Help key={i} noticesShown={noticesShown} index={i} help={field} fieldId={field.id}/>)}
+                    {notices.map((field, i) => <Help key={i} noticesExpanded={noticesExpanded} index={i} help={field} fieldId={field.id}/>)}
                 </div>
             </Fragment>
         )

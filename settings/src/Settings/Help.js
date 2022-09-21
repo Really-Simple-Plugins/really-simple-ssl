@@ -10,7 +10,7 @@ class Help extends Component {
             notice.title = notice.text;
             notice.text = false;
         }
-        let openStatus = this.props.noticesShown ? 'open' : '';
+        let openStatus = this.props.noticesExpanded ? 'open' : '';
         //we can use notice.linked_field to create a visual link to the field.
         return (
             <Fragment>

@@ -39,6 +39,10 @@
     font-weight: 300;
     min-height: auto;
   }
+  //on the dashboard, keep a minimum distance between two buttons
+  .rsssl-button-small + .rsssl-button-small{
+    margin-left:10px;
+  }
 }
 /* Documents overview */
 .rsssl-shortcode {

@@ -14,7 +14,10 @@ class Menu extends Component {
         super( ...arguments );
 
     }
+
     render() {
+        console.log("pro active");
+        console.log(rsssl_settings.pro_plugin_active);
         if ( ! this.props.isAPILoaded ) {
             return (
                 <Placeholder></Placeholder>
@@ -41,7 +44,9 @@ class Menu extends Component {
                                     />
                                 )
                             }
-                            <div className="rsssl-premium-menu-item"><div><a target="_blank" href={rsssl_settings.upgrade_link} className='button button-primary'>{__('Go Pro', 'really-simple-ssl')}</a></div></div>
+                            { !rsssl_settings.pro_plugin_active &&
+                                <div className="rsssl-premium-menu-item"><div><a target="_blank" href={rsssl_settings.upgrade_link} className='button button-primary'>{__('Go Pro', 'really-simple-ssl')}</a></div></div>
+                            }
                         </div>
                     </div>
                     <div className="rsssl-grid-item-footer">
