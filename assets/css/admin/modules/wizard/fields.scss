@@ -26,6 +26,9 @@
         }
       }
     }
+    .components-form-toggle.is-checked .components-form-toggle__track{
+      background-color: var(--rsp-green);
+    }
     .rsssl-grid-item{
       .rsssl-grid-item-content{
         padding: var(--rsp-spacing-xs) 0;
