@@ -323,7 +323,6 @@ function rsssl_other_plugins_data($slug=false){
     if ( $slug ) {
         foreach ($plugins as $key=> $plugin) {
             if ($plugin['slug']===$slug){
-                x_log($plugin);
                 return $plugin;
             }
         }
