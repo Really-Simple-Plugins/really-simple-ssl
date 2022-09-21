@@ -202,7 +202,7 @@ const Onboarding = (props) => {
                         {networkProgress>=100 && __("completed", "really-simple-ssl") }
                         </>}
                     {button && <>&nbsp;-&nbsp;
-                    {isLink && <Button isLink={true} onClick={() => itemButtonHandler(id, type, action)}>{buttonTitle}</Button>}
+                    {isLink && <Button className={"button button-secondary"} isLink={true} onClick={() => itemButtonHandler(id, type, action)}>{buttonTitle}</Button>}
                     {!isLink && <>{buttonTitle}</>}
                     {current_action==='activate' || current_action==='install_plugin' &&
                         <div className="rsssl-loader">

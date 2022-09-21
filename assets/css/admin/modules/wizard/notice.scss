@@ -57,6 +57,7 @@
 .rsssl-wizard-help-notice {
   width: 100%;
   @include rsssl-block;
+  border-radius: var(--rsp-border-radius-s);
   height: fit-content;
   background-color: var(--rsp-dark-blue-faded);
   &.rsssl-warning {

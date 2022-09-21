@@ -14,7 +14,7 @@
   width:  clamp(300px, 75ch, calc(100vw - 50px) );
   position: fixed;
   z-index: 3;
-  border-radius: 12px;
+  border-radius: var(--rsp-border-radius);
   background-color: var(--rsp-white);
   top: 50%;
   left: 50%;
@@ -26,7 +26,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    border-radius: 12px;
+    border-radius: var(--rsp-border-radius);
     .modal-title {
       margin: 0;
       background-color: white;
