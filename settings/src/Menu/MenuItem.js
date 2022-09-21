@@ -30,7 +30,7 @@ class MenuItem extends Component {
 
         let menuClass = menuIsSelected ? ' rsssl-active' : '';
         menuClass += this.props.menuItem.featured ? ' rsssl-featured' : '';
-        menuClass += this.props.menuItem.premium ? ' rsssl-premium' : '';
+        menuClass += this.props.menuItem.premium && !rsssl_settings.pro_plugin_active ? ' rsssl-premium' : '';
         let href = '#'+this.props.selectedMainMenuItem+'/'+this.props.menuItem.id;
         return (
             <>
