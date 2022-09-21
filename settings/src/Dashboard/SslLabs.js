@@ -55,12 +55,8 @@ const SslLabs = (props) => {
         let scanInComplete = (sslData && sslData.status !== 'READY');
         let userClickedStartScan = status==='active';
         if (clearCache.current) scanInComplete = true;
-        console.log("scanInComplete")
-        console.log(scanInComplete)
         let hasErrors = sslData.errors || sslData.status === 'ERROR';
         let startScan = !hasErrors && (scanInComplete || userClickedStartScan);
-                console.log("startScan")
-                console.log(startScan)
         if ( !requestActive.current && startScan ) {
             props.setBlockProps('sslScan', 'active');
 
@@ -80,7 +76,7 @@ const SslLabs = (props) => {
 
     const runSslTest = () => {
         getSslLabsData().then((sslData)=>{
-        console.log(sslData);
+            console.log(sslData);
             if ( sslData.endpoints && sslData.endpoints.filter((endpoint) => endpoint.statusMessage === 'Ready').length>0 ) {
                 let completedEndpoints = sslData.endpoints.filter((endpoint) => endpoint.statusMessage === 'Ready');
                 let lastCompletedEndpointIndex = completedEndpoints.length-1;
@@ -158,8 +154,8 @@ const SslLabs = (props) => {
     }
 
     const getEndpointData = (ipAddress) => {
-//         const host = window.location.host;
-        const host = "ziprecipes.net";
+        const host = window.location.host;
+//         const host = "ziprecipes.net";
         const url = 'https://api.ssllabs.com/api/v3/getEndpointData?host='+host+'&s='+ipAddress;
         let data = {};
         data.url = url;
@@ -175,11 +171,10 @@ const SslLabs = (props) => {
             clearCacheUrl = '&startNew=on';
             setSslData(false);
         }
-//         const host = window.location.host;
-        const host = "ziprecipes.net";
+        const host = window.location.host;
+//         const host = "ziprecipes.net";
 
         const url = "https://api.ssllabs.com/api/v3/analyze?host="+host+clearCacheUrl;
-        console.log(url);
         let data = {};
         data.url = url;
 
@@ -397,7 +392,7 @@ const SslLabs = (props) => {
                 <div className="rsssl-detail-icon"><Icon name = "info" color = {sslStatusColor} /></div>
                 <div className={"rsssl-detail rsssl-status-"+sslStatusColor}>
                 { hasErrors && <>{errorMessage}</>}
-                { !hasErrors && <> {__("What does my score mean?", "really-simple-ssl")}&nbsp;<a href={url} target="_blank">{__("Read more", "really-simple-ssl")}</a></>}
+                { !hasErrors && <> {__("What does my score mean?", "really-simple-ssl") }&nbsp;<a href={url} target="_blank">{__("Read more", "really-simple-ssl")}</a></>}
                 </div>
             </div>
             <div className="rsssl-details">

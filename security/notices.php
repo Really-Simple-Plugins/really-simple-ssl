@@ -10,7 +10,7 @@ function rsssl_general_security_notices( $notices ) {
 		'output' => array(
 			'true' => array(
 				'msg' => __("Application passwords enabled.", "really-simple-ssl"),
-				'icon' => 'open',
+				'icon' => 'premium',
 				'url' => 'https://really-simple-ssl.com/what-are-application-passwords/',
 				'dismissible' => true,
 			),
@@ -77,7 +77,7 @@ function rsssl_general_security_notices( $notices ) {
 			'true' => array(
 				'highlight_field_id' => 'change_debug_log_location',
 				'msg' => __("Your site logs information to a public debugging file.", "really-simple-ssl"),
-				'icon' => 'open',
+				'icon' => 'premium',
 				'dismissible' => true,
 			),
 		),
@@ -160,13 +160,13 @@ function rsssl_general_security_notices( $notices ) {
 		'output' => array(
 			'false' => array(
 				'msg' => __("Your database prefix is randomized. Awesome!", "really-simple-ssl"),
-				'icon' => 'success',
+				'icon' => 'premium',
 				'dismissible' => true,
 			),
 			'true' => array(
 				'highlight_field_id' => 'rename_db_prefix',
 				'msg' => __("Your database prefix is set to the default 'wp_'.", "really-simple-ssl"),
-				'icon' => 'open',
+				'icon' => 'premium',
 				'dismissible' => true,
 			),
 		),
