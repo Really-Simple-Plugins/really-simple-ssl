@@ -9,8 +9,8 @@ const SslLabs = (props) => {
     const [sslData, setSslData] = useState(false);
     const [endpointData, setEndpointData] = useState([]);
     const [dataLoaded, setDataLoaded] = useState(false);
-    let clearCache = false;
     const hasRunOnce = useRef(false);
+    const clearCache = useRef(false);
     const requestActive = useRef(false);
     const intervalId = useRef(false);
     useEffect(()=>{
@@ -31,6 +31,7 @@ const SslLabs = (props) => {
     }
 
     const isLocalHost = () => {
+    return false;
          return window.location.host.indexOf('localhost')!==-1;
     }
 
@@ -39,22 +40,30 @@ const SslLabs = (props) => {
 
         let status = props.BlockProps.hasOwnProperty('sslScan') ? props.BlockProps['sslScan'] : false;
         if (status==='active' && sslData.summary && sslData.summary.progress>=100 ) {
-            clearCache = true;
+            clearCache.current = true;
+            hasRunOnce.current = false;
             setSslData(false);
+            setEndpointData(false);
         }
 
         if (status==='active' && sslData.status === 'ERROR' ) {
-            clearCache = true;
+            clearCache.current = true;
             setSslData(false);
+            setEndpointData(false);
         }
 
         let scanInComplete = (sslData && sslData.status !== 'READY');
         let userClickedStartScan = status==='active';
-        if (clearCache) scanInComplete = true;
+        if (clearCache.current) scanInComplete = true;
+        console.log("scanInComplete")
+        console.log(scanInComplete)
         let hasErrors = sslData.errors || sslData.status === 'ERROR';
         let startScan = !hasErrors && (scanInComplete || userClickedStartScan);
+                console.log("startScan")
+                console.log(startScan)
         if ( !requestActive.current && startScan ) {
             props.setBlockProps('sslScan', 'active');
+
             requestActive.current = true;
             if ( !hasRunOnce.current ) {
                 runSslTest();
@@ -71,6 +80,7 @@ const SslLabs = (props) => {
 
     const runSslTest = () => {
         getSslLabsData().then((sslData)=>{
+        console.log(sslData);
             if ( sslData.endpoints && sslData.endpoints.filter((endpoint) => endpoint.statusMessage === 'Ready').length>0 ) {
                 let completedEndpoints = sslData.endpoints.filter((endpoint) => endpoint.statusMessage === 'Ready');
                 let lastCompletedEndpointIndex = completedEndpoints.length-1;
@@ -148,8 +158,8 @@ const SslLabs = (props) => {
     }
 
     const getEndpointData = (ipAddress) => {
-        const host = window.location.host;
-//         const host = "really-simple-ssl.com";
+//         const host = window.location.host;
+        const host = "ziprecipes.net";
         const url = 'https://api.ssllabs.com/api/v3/getEndpointData?host='+host+'&s='+ipAddress;
         let data = {};
         data.url = url;
@@ -160,15 +170,16 @@ const SslLabs = (props) => {
 
     const getSslLabsData = (e) => {
         let clearCacheUrl = '';
-        if (clearCache){
-            clearCache = false;
+        if (clearCache.current){
+            clearCache.current = false;
             clearCacheUrl = '&startNew=on';
             setSslData(false);
         }
-        const host = window.location.host;
-//         const host = "really-simple-ssl.com";
+//         const host = window.location.host;
+        const host = "ziprecipes.net";
 
         const url = "https://api.ssllabs.com/api/v3/analyze?host="+host+clearCacheUrl;
+        console.log(url);
         let data = {};
         data.url = url;
 
@@ -182,7 +193,10 @@ const SslLabs = (props) => {
         let progress = 0;
         if (sslData && sslData.summary.progress) {
             progress = sslData.summary.progress;
+        } else if (progress==0 && props.BlockProps['sslScan'] ==='active') {
+           progress=5;
         }
+
         return Object.assign(
             {},
             {width: progress+"%"},
