@@ -57,14 +57,15 @@ function rsssl_general_security_notices( $notices ) {
 		'output' => array(
 			'true' => array(
 				'highlight_field_id' => 'block_registration_when_display_name_is_login_name',
+
 				'msg' => __("There are administrator roles where the login and display names on the front-end are the same. This makes it easy for attackers to find valid login names for:", "really-simple-ssl") . "&nbsp;<b>" . rsssl_list_users_where_display_name_is_login_name() . "</b>",
 				'icon' => 'open',
 				'dismissible' => true,
 			),
 		),
-		'show_with_options' => [
-			'block_registration_when_display_name_is_login_name',
-		]
+		// 'show_with_options' => [
+		// 	'block_registration_when_display_name_is_login_name',
+		// ]
 	);
 
 	$notices['debug_log'] = array(
@@ -92,7 +93,7 @@ function rsssl_general_security_notices( $notices ) {
 			'true' => array(
 				'msg' => __("Your site is vulnerable to user enumeration attacks.", "really-simple-ssl"),
 				'icon' => 'warning',
-				'title' => 'Title',
+				'title' => 'Disable user enumeration',
 				'url' => 'https://really-simple-ssl.com/what-are-user-enumeration-attacks/',
 				'dismissible' => true,
 				'highlight_field_id' => 'disable_user_enumeration',
@@ -236,23 +237,6 @@ function rsssl_general_security_notices( $notices ) {
 		// 'show_with_options' => [
 		// 	'hide_wordpress_version',
 		// ],
-	);
-
-	$notices['mixedcontentscan'] = array(
-		'callback' => 'rsssl_src_contains_wp_version',
-		'score' => 5,
-		'output' => array(
-			'true' => array(
-				'highlight_field_id' => 'hide_wordpress_version',
-				'title' => 'About the Mixed Content Scan',
-				'msg' => __("Your WordPress version is visible to others.", "really-simple-ssl"),
-				'icon' => 'open',
-				'dismissible' => true,
-			),
-		),
-		'show_with_options' => [
-			'mixedcontentscan',
-		],
 	);
 
 	return $notices;

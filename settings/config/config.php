@@ -389,10 +389,10 @@ function rsssl_fields( $load_values = true ){
 			'group_id'    => 'support',
 			'type'        => 'support',
 			'label'       => __( "Premium support", 'really-simple-ssl' ),
-			'help'        => [
-				'label' => 'default',
-				'placeholder' => __( "If enabled, all the Really Simple SSL pages within the WordPress admin will be in high contrast", 'really-simple-ssl' ),
-			],
+			// 'help'        => [
+			// 	'label' => 'default',
+			// 	'placeholder' => __( "If enabled, all the Really Simple SSL pages within the WordPress admin will be in high contrast", 'really-simple-ssl' ),
+			// ],
 			'disabled'    => false,
 			'default'     => false,
 		],
@@ -774,6 +774,11 @@ function rsssl_fields( $load_values = true ){
 			'type'        => 'mixedcontentscan',
 			'label'       => __("Mixed content scan", "really-simple-ssl-pro"),
 			'data_source' => ['RSSSL', 'placeholder', 'mixed_content_data'],
+			'help'        => [
+				'label' => 'default',
+				'title' => __( "About the Mixed Content Scan", 'really-simple-ssl' ),
+				'text' => __( 'About the Mixed Content Scan', 'really-simple-ssl' ). rsssl_read_more(''),
+			],
 			'columns'     => [
 				[
 					'name' => __('Type', 'really-simple-ssl'),
@@ -1027,10 +1032,10 @@ function rsssl_blocks(){
 		[
 			'id'      => 'ssllabs',
 			'controls' => [
-				'type' => 'html', 'data' => __( "Powered by Qualys SSL Labs", 'really-simple-ssl' ),
+				'type' => 'html', 'data' => __( "Powered by Qualys", 'really-simple-ssl' ),
 			],
-			'title'   => __( "SSL Labs", 'really-simple-ssl' ),
-			'help'    => __( 'A help text', 'really-simple-ssl' ),
+			'title'   => __( "Status", 'really-simple-ssl' ),
+			// 'help'    => __( 'A help text', 'really-simple-ssl' ),
 			'content' => [ 'type' => 'react', 'data' => 'SslLabs' ],
 			'footer'  => ['type'=>'react', 'data' => 'SslLabsFooter'],
 			'class'    => '',
