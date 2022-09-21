@@ -31,7 +31,7 @@ function rsssl_menu(){
 							'intro' => __('When you send this form, we will attach the following information: license key, scan results, your domain, .htaccess file, debug log and a list of active plugins.', 'really-simple-ssl'),
 							'premium' => true,
 							'premium_text' => __("Get Premium Support with %sReally Simple SSL Pro%s", 'really-simple-ssl'),
-							'helpLink'  => 'https://really-simple-ssl.com/pro/',
+							'helpLink'  => 'https://really-simple-ssl.com/debugging/',
 							'helpLink_text'  => __('Debugging with Really Simple SSL',"really-simple-ssl"),
 						],
 					],
@@ -404,6 +404,11 @@ function rsssl_fields( $load_values = true ){
             'label'       => __( "Disable \"anyone can register\"", 'really-simple-ssl' ),
             'disabled'    => false,
             'default'     => false,
+						'help'        => [
+							'label' => 'default',
+							'title' => __( "About Hardening", 'really-simple-ssl' ),
+							'text' => __( 'About Hardening', 'really-simple-ssl' ). rsssl_read_more(''),
+						],
             'new_features_block' => [
 	            'active' => __("User registration is restricted", 'really-simple-ssl'),
 	            'inactive' => __("User registration is not restricted", 'really-simple-ssl'),
@@ -619,6 +624,11 @@ function rsssl_fields( $load_values = true ){
 			'label'       => __("X XSS protection", "really-simple-ssl-pro"),
 			'disabled'    => false,
 			'default'     => false,
+			'help'        => [
+				'label' => 'default',
+				'title' => __( "About Recommended Security Headers", 'really-simple-ssl' ),
+				'text' =>  __( 'About Recommended Security Headers', 'really-simple-ssl' ). rsssl_read_more(''),
+			],
 		],
 		[
 			'id'          => 'x_content_type_options',
@@ -668,9 +678,14 @@ function rsssl_fields( $load_values = true ){
 			'menu_id'     => 'hsts',
 			'group_id'    => 'hsts',
 			'type'        => 'checkbox',
-			'label'       => __("HSTS", "really-simple-ssl-pro"),
+			'label'       => __("HTTP Strict Transport Security", "really-simple-ssl-pro"),
 			'disabled'    => false,
 			'default'     => false,
+			'help'        => [
+				'label' => 'default',
+				'title' => __( "About HSTS", 'really-simple-ssl' ),
+				'text' => __( 'About HSTS', 'really-simple-ssl' ). rsssl_read_more(''),
+			],
 		],
 		[
 			'id'          => 'hsts_subdomains',
@@ -733,6 +748,11 @@ function rsssl_fields( $load_values = true ){
 				'unsafe-none' => 'unsafe-none',
 				'same-origin-allow-popups' => 'same-origin-allow-popups',
 				'same-origin' => 'same-origin',
+			],
+			'help'        => [
+				'label' => 'default',
+				'title' => __( "About Cross Origin Policies", 'really-simple-ssl' ),
+				'text' => __( 'About Cross Origin Policies', 'really-simple-ssl' ). rsssl_read_more(''),
 			],
 			'label'       => __("Cross Origin Opener Policy", "really-simple-ssl-pro"),
 			'disabled'    => false,
@@ -824,6 +844,11 @@ function rsssl_fields( $load_values = true ){
 			'options'     => ['*' => __("Allow", "really-simple-ssl"), '()' => __("Deny", "really-simple-ssl"), 'self' => __("Own domain only", "really-simple-ssl")],
 			'label'       => __( "Permissions Policy", 'really-simple-ssl' ),
 			'disabled'    => false,
+			'help'        => [
+				'label' => 'default',
+				'title' => __( "About the Permission Policy", 'really-simple-ssl' ),
+				'text' => __( 'About the Permission Policy', 'really-simple-ssl' ). rsssl_read_more(''),
+			],
 			'columns'     => [
 				[
 					'name' => __('Feature', 'really-simple-ssl'),
@@ -921,6 +946,11 @@ function rsssl_fields( $load_values = true ){
             'label'       => __( "Encrypted and authenticated response", 'really-simple-ssl' ),
             'disabled'    => false,
             'default'     => false,
+						'help'        => [
+							'label' => 'default',
+							'title' => __( "About the Content Security Policy", 'really-simple-ssl' ),
+							'text' => __( 'About the Content Security Policy', 'really-simple-ssl' ). rsssl_read_more(''),
+						],
         ],
 		[
 			'id'          => 'csp_frame_ancestors',
