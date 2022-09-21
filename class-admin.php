@@ -387,9 +387,9 @@ class rsssl_admin
     public function deactivate_ssl()
     {
         //only revert if SSL was enabled first.
-        if ($this->ssl_enabled) {
+        if ( rsssl_get_option('ssl_enabled') ) {
 	        rsssl_update_option('redirect', 'none');
-	        $this->ssl_enabled = false;
+	        rsssl_update_option('ssl_enabled', false);
 	        $this->remove_ssl_from_siteurl();
 	        $this->save_options();
         }
@@ -1168,9 +1168,9 @@ class rsssl_admin
 	        $this->remove_ssl_from_siteurl_in_wpconfig();
 	        $this->remove_secure_cookie_settings();
 
-	        $this->site_has_ssl = FALSE;
-	        $this->review_notice_shown = FALSE;
-	        $this->ssl_enabled = FALSE;
+	        $this->site_has_ssl = false;
+	        $this->review_notice_shown = false;
+	        $this->ssl_enabled = false;
 	        $this->save_options();
 
 	        rsssl_update_option('dismiss_all_notices', false);
