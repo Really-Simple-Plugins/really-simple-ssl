@@ -86,38 +86,10 @@
     --rsp-fs-600: 1.125rem;
     --rsp-fs-700: 1.25rem;
     --rsp-fs-800: 1.5rem;
-    --rsp-fs-900: 2.5rem;
+    --rsp-fs-900: 3.5rem;
     --rsp-brand-primary: var(--rsp-blue);
     --rsp-brand-secondary: var(--rsp-yellow);
     --rsp-brand-primary-faded: var(--rsp-blue-faded);
-}
-
-@media screen and (max-width: 1440px) {
-    :root {
-        --rsp-fs-100: 0.625rem;
-        --rsp-fs-200: 0.75rem;
-        --rsp-fs-300: 0.8125rem;
-        --rsp-fs-400: 0.875rem;
-        --rsp-fs-500: 1rem;
-        --rsp-fs-600: 1.125rem;
-        --rsp-fs-700: 1.25rem;
-        --rsp-fs-800: 1.5rem;
-        --rsp-fs-900: 2.5rem;
-    }
-}
-
-@media screen and (max-width: 1366px) {
-    :root {
-        --rsp-fs-100: 0.625rem;
-        --rsp-fs-200: 0.675rem;
-        --rsp-fs-300: 0.75rem;
-        --rsp-fs-400: 0.8125rem;
-        --rsp-fs-500: 0.875rem;
-        --rsp-fs-600: 1;
-        --rsp-fs-700: 1.125rem;
-        --rsp-fs-800: 1.25rem;
-        --rsp-fs-900: 1.5rem;
-    }
 }
 
 @keyframes fade-in {
@@ -1204,10 +1176,12 @@
 
 .rsssl-ssllabs .rsssl-ssl-test-container .rsssl-ssl-test .rsssl-ssl-test-grade {
     text-align: center;
-    padding: 30px 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     font-size: var(--rsp-fs-900);
     font-weight: 700;
-    border-radius: 10px;
+    border-radius: var(--rsp-border-radius);
 }
 
 .rsssl-ssllabs .rsssl-ssl-test-container .rsssl-ssl-test .rsssl-ssl-test-grade.rsssl-grade-inactive {
@@ -1219,11 +1193,13 @@
     height: 8px;
     margin: auto auto;
     background-color: var(--rsp-black);
+    border-radius: 50px;
 }
 
 .rsssl-ssllabs .rsssl-ssl-test-container .rsssl-ssl-test .rsssl-ssl-test-information {
     padding: 10px 0;
     max-width: 50%;
+    border-radius: var(--rsp-border-radius);
 }
 
 .rsssl-ssllabs .rsssl-ssl-test-container .rsssl-ssl-test .rsssl-ssl-test-information .rsssl-score-container {
@@ -1233,29 +1209,29 @@
 .rsssl-ssllabs .rsssl-ssl-test-container .rsssl-ssl-test .rsssl-ssl-test-information .rsssl-score-container .rsssl-score-snippet {
     white-space: nowrap;
     padding: 0 8px;
-    font-size: var(--rsp-fs-200);
+    font-size: var(--rsp-fs-100);
     margin: 5px 10px;
     border-radius: 3px;
 }
 
 .rsssl-ssllabs .rsssl-ssl-test-container .rsssl-ssl-test .rsssl-ssl-test-information .rsssl-score-container .rsssl-score-snippet.rsssl-test-inactive {
     background-color: var(--rsp-color-disabled);
-    color: var(--rsp-black);
+    color: var(--rsp-text-color);
 }
 
 .rsssl-ssllabs .rsssl-ssl-test-container .rsssl-ssl-test .rsssl-ssl-test-information .rsssl-score-container .rsssl-score-snippet.rsssl-test-processing {
-    background-color: var(--rsp-color-warning);
-    color: var(--rsp-black);
+    background-color: var(--rsp-orange);
+    color: var(--rsp-text-color-white);
 }
 
 .rsssl-ssllabs .rsssl-ssl-test-container .rsssl-ssl-test .rsssl-ssl-test-information .rsssl-score-container .rsssl-score-snippet.rsssl-test-success {
     background-color: var(--rsp-color-success);
-    color: #fff;
+    color: var(--rsp-text-color-white);
 }
 
 .rsssl-ssllabs .rsssl-ssl-test-container .rsssl-ssl-test .rsssl-ssl-test-information .rsssl-score-container .rsssl-score-snippet.rsssl-test-error {
     background-color: var(--rsp-color-warning);
-    color: #fff;
+    color: var(--rsp-text-color-white);
 }
 
 .rsssl-ssllabs .rsssl-details {
@@ -1325,83 +1301,83 @@
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(1) {
-    width: 87%;
+    width: 63%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(2) {
-    width: 98%;
-}
-
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(3) {
     width: 94%;
 }
 
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(3) {
+    width: 88%;
+}
+
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(4) {
-    width: 86%;
+    width: 90%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(5) {
-    width: 98%;
+    width: 68%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(6) {
-    width: 92%;
+    width: 67%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(7) {
-    width: 74%;
-}
-
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(8) {
-    width: 66%;
-}
-
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(9) {
-    width: 78%;
-}
-
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(10) {
-    width: 67%;
-}
-
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(11) {
-    width: 64%;
-}
-
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(12) {
-    width: 99%;
-}
-
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(13) {
-    width: 67%;
-}
-
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(14) {
-    width: 98%;
-}
-
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(15) {
     width: 96%;
 }
 
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(8) {
+    width: 94%;
+}
+
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(9) {
+    width: 81%;
+}
+
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(10) {
+    width: 82%;
+}
+
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(11) {
+    width: 86%;
+}
+
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(12) {
+    width: 98%;
+}
+
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(13) {
+    width: 68%;
+}
+
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(14) {
+    width: 96%;
+}
+
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(15) {
+    width: 88%;
+}
+
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(16) {
-    width: 97%;
+    width: 85%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(17) {
-    width: 99%;
+    width: 72%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(18) {
-    width: 78%;
+    width: 91%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(19) {
-    width: 89%;
+    width: 82%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(20) {
-    width: 77%;
+    width: 94%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line ~ .rsssl-placeholder-line {

@@ -27,10 +27,13 @@
 
       .rsssl-ssl-test-grade {
         text-align:center;
-        padding: 30px 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
         font-size: var(--rsp-fs-900);
         font-weight: 700;
-        border-radius:10px;
+        border-radius: var(--rsp-border-radius);
         &.rsssl-grade-inactive {
           display: flex;
           div {
@@ -38,6 +41,7 @@
             height: 8px;
             margin: auto auto;
             background-color: var(--rsp-black);
+            border-radius: 50px;
           }
         }
       }
@@ -45,33 +49,34 @@
       .rsssl-ssl-test-information {
         padding:10px 0;
         max-width: 50%;
+        border-radius: var(--rsp-border-radius);
         .rsssl-score-container {
            display:flex;
           .rsssl-score-snippet {
             white-space: nowrap;
             padding: 0 8px;
-            font-size: var(--rsp-fs-200);
+            font-size: var(--rsp-fs-100);
             margin: 5px 10px;
             border-radius: 3px;
 
             &.rsssl-test-inactive {
               background-color: var(--rsp-color-disabled);
-              color: var(--rsp-black);
+              color: var(--rsp-text-color);
             }
 
             &.rsssl-test-processing {
-              background-color: var(--rsp-color-warning);
-              color: var(--rsp-black);
+              background-color: var(--rsp-orange);
+              color: var(--rsp-text-color-white);
             }
 
             &.rsssl-test-success {
               background-color: var(--rsp-color-success);
-              color: #fff;
+              color: var(--rsp-text-color-white);
             }
 
             &.rsssl-test-error {
               background-color: var(--rsp-color-warning);
-              color: #fff;
+              color: var(--rsp-text-color-white);
             }
           }
         }

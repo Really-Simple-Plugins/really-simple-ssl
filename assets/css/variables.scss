@@ -86,30 +86,7 @@ $rsp-break-xxl: 1599px;
   --rsp-fs-600: 1.125rem;         // 18px
   --rsp-fs-700: 1.25rem;          // 20px
   --rsp-fs-800: 1.5rem;           // 24px
-  --rsp-fs-900: 2.5rem;           // 40px
-
-  @media screen and (max-width: $rsp-break-xl) {
---rsp-fs-100: 0.625rem;        // 10px
-    --rsp-fs-200: 0.75rem;         // 12px
-    --rsp-fs-300: 0.8125rem;       // 13px
-    --rsp-fs-400: 0.875rem;        // 14px
-    --rsp-fs-500: 1rem;            // 16px
-    --rsp-fs-600: 1.125rem;        // 18px
-    --rsp-fs-700: 1.25rem;         // 20px
-    --rsp-fs-800: 1.5rem;          // 24px
-    --rsp-fs-900: 2.5rem;          // 40px
-  }
-  @media screen and (max-width: $rsp-break-l) {
-    --rsp-fs-100: 0.625rem;        // 10px
-    --rsp-fs-200: 0.675rem;         // 12px
-    --rsp-fs-300: 0.75rem;       // 13px
-    --rsp-fs-400: 0.8125rem;        // 14px
-    --rsp-fs-500: 0.875rem;
-    --rsp-fs-600: 1;        // 18px
-    --rsp-fs-700: 1.125rem;         // 20px
-    --rsp-fs-800: 1.25rem;          // 24px
-    --rsp-fs-900: 1.5rem;          // 40px
-  }
+  --rsp-fs-900: 3.5rem;           // 40px
 
   // Plugin specific variables down here please
   --rsp-brand-primary: var(--rsp-blue);

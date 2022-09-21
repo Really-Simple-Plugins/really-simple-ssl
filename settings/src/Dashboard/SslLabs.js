@@ -240,13 +240,13 @@ const SslLabs = (props) => {
 
         return (
             <>
-            {scoreSnippet(ratingClass, __("cipher strength","really-simple-ssl")+' '+rating+'%')}
+            {scoreSnippet(ratingClass, __("Cipher strength","really-simple-ssl")+' '+rating+'%')}
             </>
         )
     }
 
     /*
-    * https://github.com/ssllabs/research/wiki/SSL-Server-Rating-Guide#cipher-strength
+    * https://github.com/ssllabs/research/wiki/SSL-Server-Rating-Guide#Certificate-strength
     */
     const getCypherRating = (strength) => {
         let score = 0;
@@ -275,10 +275,10 @@ const SslLabs = (props) => {
         }
         return (
             <>
-            {(status==='inactive') && scoreSnippet("rsssl-test-inactive", __("certificate","really-simple-ssl"))}
-            {status==='processing' && scoreSnippet("rsssl-test-processing", __("certificate...","really-simple-ssl"))}
-            {status==='error' && scoreSnippet("rsssl-test-error", __("certificate issue","really-simple-ssl"))}
-            {status==='success' && scoreSnippet("rsssl-test-success", __("valid certificate","really-simple-ssl"))}
+            {(status==='inactive') && scoreSnippet("rsssl-test-inactive", __("Certificate","really-simple-ssl"))}
+            {status==='processing' && scoreSnippet("rsssl-test-processing", __("Certificate...","really-simple-ssl"))}
+            {status==='error' && scoreSnippet("rsssl-test-error", __("Certificate issue","really-simple-ssl"))}
+            {status==='success' && scoreSnippet("rsssl-test-success", __("Valid certificate","really-simple-ssl"))}
             </>
         )
     }
@@ -384,7 +384,7 @@ const SslLabs = (props) => {
                 <div className="rsssl-detail-icon"><Icon name = "info" color = {sslStatusColor} /></div>
                 <div className={"rsssl-detail rsssl-status-"+sslStatusColor}>
                 { hasErrors && <>{errorMessage}</>}
-                { !hasErrors && <> {__("What does my score mean?", "really-simple-ssl")}&nbsp;<a href={url} target="_blank">{__("Read more", "really-simple-ssl")}</a>}</>}
+                { !hasErrors && <> {__("What does my score mean?", "really-simple-ssl")}&nbsp;<a href={url} target="_blank">{__("Read more", "really-simple-ssl")}</a></>}
                 </div>
             </div>
             <div className="rsssl-details">
