@@ -16,8 +16,6 @@ class Menu extends Component {
     }
 
     render() {
-        console.log("pro active");
-        console.log(rsssl_settings.pro_plugin_active);
         if ( ! this.props.isAPILoaded ) {
             return (
                 <Placeholder></Placeholder>

@@ -34,19 +34,10 @@ const OtherPlugins = (props) => {
         }
         pluginItem.pluginActionNice = pluginActionNice(pluginItem.pluginAction);
         updatePluginData(slug, pluginItem);
-
-        console.log("start func plugin actions");
-        console.log(slug);
-        console.log("dataUpdated");
-        console.log(dataUpdated);
-        console.log(pluginItem);
         if (pluginAction==='installed' || pluginAction === 'upgrade-to-premium') {
-            console.log("exit");
             return;
         }
         rsssl_api.doAction('plugin_actions', data).then( ( response ) => {
-            console.log("response from server");
-            console.log(response.data);
             pluginItem = response.data;
             updatePluginData(slug, pluginItem);
             PluginActions(slug, pluginItem.pluginAction);

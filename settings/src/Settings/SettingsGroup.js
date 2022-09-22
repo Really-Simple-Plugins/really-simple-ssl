@@ -136,7 +136,7 @@ class SettingsGroup extends Component {
                     <div className="rsssl-locked-overlay">
                         <span className="rsssl-task-status rsssl-premium">{__("Upgrade","really-simple-ssl")}</span>
                         <span>
-                            { rsssl_settings.pro_plugin_active && <span>{msg}<a className="rsssl-locked-link" href="#" onClick={ () => this.handleMenuLink('license') }>{__("Check license", "really-simple-ssl")}</a></span>}
+                            { rsssl_settings.pro_plugin_active && <span>{msg}&nbsp;<a className="rsssl-locked-link" href="#" onClick={ () => this.handleMenuLink('license') }>{__("Check license", "really-simple-ssl")}</a></span>}
                             { !rsssl_settings.pro_plugin_active && <Hyperlink target="_blank" text={msg} url={this.upgrade}/> }
                         </span>
                     </div>

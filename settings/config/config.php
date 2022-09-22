@@ -377,12 +377,8 @@ function rsssl_fields( $load_values = true ){
             'id'          => 'do_not_edit_htaccess',
             'menu_id'     => 'general',
             'group_id'    => 'general',
-            'type'        => 'checkbox',
+            'type'        => 'hidden',
             'label'       => __( "Stop editing the .htaccess file", 'really-simple-ssl' ),
-            // 'help'        => [
-            //     'label' => 'default',
-            //     'text' => __( 'If you want to customize the Really Simple SSL .htaccess, you need to prevent Really Simple SSL from rewriting it. Enabling this option will do that.', 'really-simple-ssl' ),
-            // ],
             'disabled'    => false,
             'default'     => false,
             //on multisite this setting can only be set networkwide
