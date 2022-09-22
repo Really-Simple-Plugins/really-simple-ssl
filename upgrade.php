@@ -56,7 +56,8 @@ function rsssl_upgrade() {
 		$options = get_option( 'rlrsssl_options' );
 		$autoreplace_insecure_links = isset( $options['autoreplace_insecure_links'] ) ? $options['autoreplace_insecure_links'] : true;
 		rsssl_update_option('mixed_content_fixer', $autoreplace_insecure_links);
-
+		$ssl_enabled            = isset( $options['ssl_enabled'] ) ? $options['ssl_enabled'] : false;
+		rsssl_update_option('ssl_enabled', $ssl_enabled);
 		$wp_redirect  = isset( $options['wp_redirect'] ) ? $options['wp_redirect'] : false;
 		$htaccess_redirect = isset( $options['htaccess_redirect'] ) ? $options['htaccess_redirect'] : false;
 		$redirect = 'none;';
@@ -66,8 +67,10 @@ function rsssl_upgrade() {
 			$redirect = 'wp_redirect';
 		}
 		rsssl_update_option('redirect', $redirect);
+
 		$do_not_edit_htaccess            = isset( $options['do_not_edit_htaccess'] ) ? $options['do_not_edit_htaccess'] : false;
 		rsssl_update_option('do_not_edit_htaccess', $do_not_edit_htaccess);
+
 		$dismiss_all_notices             = isset( $options['dismiss_all_notices'] ) ? $options['dismiss_all_notices'] : false;
 		rsssl_update_option('dismiss_all_notices', $dismiss_all_notices);
 

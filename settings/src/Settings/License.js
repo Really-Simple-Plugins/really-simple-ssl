@@ -4,6 +4,8 @@ import {
 import TaskElement from "../DashBoard/TaskElement";
 import Placeholder from '../Placeholder/Placeholder';
 import * as rsssl_api from "../utils/api";
+import { __ } from '@wordpress/i18n';
+
 
 class License extends Component {
     constructor() {
@@ -11,6 +13,7 @@ class License extends Component {
         this.noticesLoaded = false;
         this.fieldsUpdateComplete = false;
         this.licenseStatus = 'invalid';
+
         this.state = {
             licenseStatus: 'invalid',
             noticesLoaded: false,
@@ -64,6 +67,20 @@ class License extends Component {
     onCloseTaskHandler(){
 
     }
+
+    toggleActivation(){
+            const {
+                licenseStatus,
+            } = this.state;
+        if (licenseStatus==='valid') {
+            console.log("deactivate");
+            //deactivate
+        } else {
+            //activate
+            console.log("activate");
+        }
+
+    }
     render(){
         const {
             noticesLoaded,
@@ -83,12 +100,18 @@ class License extends Component {
                      <label
                          className="components-base-control__label"
                          htmlFor={field.id}>{field.label}</label>
-                     <input className="components-text-control__input"
-                            type="password"
-                            id={field.id}
-                            value={fieldValue}
-                            onChange={ ( e ) => this.onChangeHandler(e.target.value) }
-                     />
+                      <div className="rsssl-license-field">
+                         <input className="components-text-control__input"
+                                type="password"
+                                id={field.id}
+                                value={fieldValue}
+                                onChange={ ( e ) => this.onChangeHandler(e.target.value) }
+                         />
+                         <button className="button button-default" onClick={ () => this.toggleActivation() }>
+                         {licenseStatus==='valid' && <>{__("Deactivate","really-simple-ssl")}</>}
+                         {licenseStatus!=='valid' && <>{__("Activate","really-simple-ssl")}</>}
+                         </button>
+                     </div>
                  </div>
                     {!noticesLoaded && <Placeholder></Placeholder>}
                     {noticesLoaded && notices.map((notice, i) => <TaskElement key={i} index={i} notice={notice} onCloseTaskHandler={this.onCloseTaskHandler} highLightField=""/>)}
