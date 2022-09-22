@@ -123,7 +123,7 @@
     justify-content: flex-start;
     flex-direction: column;
     flex-basis: 100%;
-    min-height: 200px;
+    //min-height: 200px;//seems odd for blocks with only one item: lots of white space
     grid-column: span 1;
     grid-row: span 1;
 

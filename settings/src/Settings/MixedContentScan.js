@@ -6,6 +6,7 @@ import {
 import { __ } from '@wordpress/i18n';
 import * as rsssl_api from "../utils/api";
 import ModalControl from "../Modal/ModalControl";
+import Placeholder from "../Placeholder/Placeholder";
 
 class subHeaderComponentMemo extends Component {
     constructor() {
@@ -26,6 +27,7 @@ class MixedContentScan extends Component {
         super( ...arguments );
         this.nonce='';
         this.state = {
+//             scanStatus:scanStatus,
             data:[],
             progress:0,
             action:'',
@@ -36,11 +38,20 @@ class MixedContentScan extends Component {
         };
     }
 
+    getScanStatus(){
+        return rsssl_api.runTest('scan_status', 'refresh').then( ( response ) => {
+            return response.data;
+        });
+    }
+
     componentDidMount() {
         let data = [];
         let progress = 0;
         let action = '';
         let state = 'stop';
+        let completedStatus = 'never';
+//         this.getScanData = this.getScanData.bind(this);
+
         if (this.props.field.value.data ){
             data = this.props.field.value.data;
         }
@@ -53,10 +64,15 @@ class MixedContentScan extends Component {
         if (this.props.field.value.state ){
             state = this.props.field.value.state;
         }
+        if (this.props.field.value.state ){
+            completedStatus = this.props.field.value.completed_status;
+        }
+        console.log(state);
         if (this.props.field.value.nonce ){
             this.nonce = this.props.field.value.nonce;
         }
         this.setState({
+            completedStatus:completedStatus,
             data:data,
             progress:progress,
             action:action,
@@ -93,6 +109,7 @@ class MixedContentScan extends Component {
         }
         rsssl_api.runTest('mixed_content_scan', 'running' ).then( ( response ) => {
             this.setState({
+                completedStatus:response.data.completed_status,
                 data:response.data.data,
                 progress:response.data.progress,
                 action:response.data.action,
@@ -123,6 +140,7 @@ class MixedContentScan extends Component {
         });
         rsssl_api.runTest('mixed_content_scan', 'stop' ).then( ( response ) => {
             this.setState({
+                completedStatus:response.data.completed_status,
                 data:response.data.data,
                 progress:response.data.progress,
                 action:response.data.action,
@@ -145,6 +163,7 @@ class MixedContentScan extends Component {
 
     render(){
         let {
+            completedStatus,
             data,
             action,
             progress,
@@ -157,8 +176,8 @@ class MixedContentScan extends Component {
         let fields = this.props.fields;
         if (!rsssl_settings.pro_plugin_active) progress=80;
         columns = [];
-        field.columns.forEach(function(item, i) {
 
+        field.columns.forEach(function(item, i) {
             let newItem = {
                 name: item.name,
                 sortable: item.sortable,
@@ -175,6 +194,8 @@ class MixedContentScan extends Component {
         if (!Array.isArray(data) ) {
             data = [];
         }
+        completedStatus = completedStatus ? completedStatus.toLowerCase() : 'never';
+        console.log(state);
         let dropItem = this.props.dropItemFromModal;
         for (const item of data) {
             item.warningControl = <span className="rsssl-task-status rsssl-warning">{__("Warning", "really-simple-ssl")}</span>
@@ -260,8 +281,17 @@ class MixedContentScan extends Component {
                 <div className="rsssl-progress-container">
                     <div className="rsssl-progress-bar" style={{width: progress}} ></div>
                 </div>
-                <span className="rsssl-current-scan-action">{state==='running' && action}</span>
-                    <DataTable
+                {state==='running' && <div className="rsssl-current-scan-action">{action}</div>}
+                    {data.length==0 && <>
+                        <div className="rsssl-mixed-content-description">
+                            {state!=='running' && completedStatus==='never' && __("No scan completed yet. Check for mixed content by running a scan.","really-simple-ssl")}
+                            {state!=='running' && completedStatus==='completed' && __("No mixed content found!","really-simple-ssl")}
+                        </div>
+                        <div className="rsssl-mixed-content-placeholder">
+                            <div></div><div></div><div></div><div></div>
+                        </div>
+                        </>}
+                    { data.length>0 && <DataTable
                         columns={columns}
                         data={data}
                         dense
@@ -270,9 +300,10 @@ class MixedContentScan extends Component {
                         noDataComponent={__("No results", "really-simple-ssl")} //or your component
                         theme="really-simple-plugins"
                         customStyles={customStyles}
+
                         // subHeader
                         // subHeaderComponent=<subHeaderComponentMemo/>
-                    />
+                    /> }
                 <div className="rsssl-grid-item-content-footer">
                     <button className="button" disabled={startDisabled} onClick={ (e) => this.start(e) }>{__("Start scan","really-simple-ssl-pro")}</button>
                     <button className="button" disabled={stopDisabled} onClick={ (e) => this.stop(e) }>{__("Pause","really-simple-ssl-pro")}</button>
