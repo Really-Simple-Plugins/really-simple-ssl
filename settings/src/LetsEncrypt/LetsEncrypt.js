@@ -168,7 +168,6 @@ const LetsEncrypt = (props) => {
         let action = getAction(currentActionIndex);
         let test = action.action;
         maxAttempts = action.attempts;
-        console.log("run test "+test);
         rsssl_api.runLetsEncryptTest(test, props.field.id ).then( ( response ) => {
                 console.log(response.data);
                 const endTime = new Date();

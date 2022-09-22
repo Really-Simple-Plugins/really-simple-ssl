@@ -74,10 +74,32 @@ class License extends Component {
             } = this.state;
         if (licenseStatus==='valid') {
             console.log("deactivate");
-            //deactivate
+            rsssl_api.runTest('deactivate_license').then( ( response ) => {
+                this.props.setPageProps('licenseStatus', response.data.licenseStatus);
+                this.notices = response.data.notices;
+                this.licenseStatus = response.data.licenseStatus;
+                this.noticesLoaded = true;
+                this.setState({
+                    noticesLoaded: this.noticesLoaded,
+                    licenseStatus: this.licenseStatus,
+                    notices: this.notices,
+                });
+            });
         } else {
             //activate
             console.log("activate");
+            let data = {};
+            data.license = this.props.field.value;
+            rsssl_api.doAction('activate_license', data).then( ( response ) => {
+                this.props.setPageProps('licenseStatus', response.data.licenseStatus);
+                this.notices = response.data.notices;
+                this.licenseStatus = response.data.licenseStatus;
+                this.noticesLoaded = true;
+                this.setState({
+                    noticesLoaded: this.noticesLoaded,
+                    licenseStatus: this.licenseStatus,
+                    notices: this.notices,
+                });            });
         }
 
     }

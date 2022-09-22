@@ -171,7 +171,7 @@ function rsssl_store_ssl_labs($request){
  * @return void
  */
 function rsssl_do_action($request){
-	if (!rsssl_user_can_manage()) {
+	if ( !rsssl_user_can_manage() ) {
 		return;
 	}
 	$action = sanitize_title($request->get_param('action'));
