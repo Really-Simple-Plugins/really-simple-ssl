@@ -72,6 +72,7 @@ function rsssl_rename_admin_user() {
 		wp_insert_user( $new_userdata );
 
 		// Delete old user and attribute posts to new user ID
+		require_once(ABSPATH.'wp-admin/includes/user.php');
 		$new_user = get_user_by('login',$new_user_login);
 		wp_delete_user( $admin_user_id, $new_user->data->ID);
 
