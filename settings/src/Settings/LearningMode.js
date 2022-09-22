@@ -235,7 +235,7 @@ class LearningMode extends Component {
                         <div className="rsssl-locked-overlay">
                             <span className="rsssl-progress-status rsssl-learning-mode">{__("Learning Mode","really-simple-ssl")}</span>
                             {configuringString}&nbsp;
-                            <a className="rsssl-learning-mode-link" href="#" onClick={ (e) => this.toggleLearningMode(e) }>{__("Disable learning mode and configure manually", "really-simple-ssl") }</a>
+                            <a className="rsssl-learning-mode-link" href="#" onClick={ (e) => this.toggleLearningMode(e) }>{__("Disable learning mode", "really-simple-ssl") }</a>
                         </div>
                     </div>}
                     {learning_mode_completed==1 && <div className="rsssl-locked">

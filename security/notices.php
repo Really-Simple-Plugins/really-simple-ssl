@@ -95,7 +95,7 @@ function rsssl_general_security_notices( $notices ) {
 				'msg' => __("Your site is vulnerable to user enumeration attacks.", "really-simple-ssl"). rsssl_read_more('https://really-simple-ssl.com/what-are-user-enumeration-attacks/'),
 				'icon' => 'warning',
 				'title' => 'Disable user enumeration',
-				'url' => 'https://really-simple-ssl.com/what-are-user-enumeration-attacks/',
+				// 'url' => 'https://really-simple-ssl.com/what-are-user-enumeration-attacks/',
 				'dismissible' => true,
 				'highlight_field_id' => 'disable_user_enumeration',
 			),
