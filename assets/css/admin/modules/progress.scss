@@ -61,6 +61,7 @@
   .rsssl-progress-bar {
     @include rsssl-block-padding;
     padding-block: 0;
+    border-radius:5px;
   }
 
   .rsssl-progress-text {

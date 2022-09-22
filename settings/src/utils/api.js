@@ -11,7 +11,6 @@ import getAnchor from "./getAnchor";
 
 export const getFields = () => {
     //we pass the anchor, so we know when LE is loaded
-    console.log(rsssl_settings.site_url);
     let anchor = getAnchor('main');
 	let config = {
 		headers: {

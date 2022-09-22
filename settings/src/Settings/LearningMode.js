@@ -213,10 +213,10 @@ class LearningMode extends Component {
                             persistTableHead
                             theme="really-simple-plugins"
                             customStyles={customStyles}
-                            subHeader
-                            subHeaderComponent={<Filter />}
                             conditionalRowStyles={conditionalRowStyles}
                         />
+                      <div className="rsssl-learning-mode-footer">
+
                         <div className="rsssl-learningmode-toggle">
                             { enforce!=1 && <button className="button" onClick={ (e) => this.toggleEnforce(e, true ) }>{__("Enforce","really-simple-ssl")}</button> }
                             { enforce==1 && <button className="button" onClick={ (e) => this.toggleEnforce(e, false ) }>{__("Disable","really-simple-ssl")}</button> }
@@ -230,27 +230,30 @@ class LearningMode extends Component {
                                 {__("Enable Learning Mode","really-simple-ssl")}
                             </label>
                         </div>
+
+                        {learning_mode==1 && <div className="rsssl-locked">
+                            <div className="rsssl-locked-overlay">
+                                <span className="rsssl-progress-status rsssl-learning-mode">{__("Learning Mode","really-simple-ssl")}</span>
+                                {configuringString}&nbsp;
+                                <a className="rsssl-learning-mode-link" href="#" onClick={ (e) => this.toggleLearningMode(e) }>{__("Disable learning mode and configure manually", "really-simple-ssl") }</a>
+                            </div>
+                        </div>}
+                        {learning_mode_completed==1 && <div className="rsssl-locked">
+                            <div className="rsssl-locked-overlay">
+                                <span className="rsssl-progress-status rsssl-learning-mode-completed">{__("Learning Mode","really-simple-ssl")}</span>
+                                {__("We finished the configuration.", "really-simple-ssl")}&nbsp;
+                                <a className="rsssl-learning-mode-link" href="#" onClick={ (e) => this.toggleLearningMode(e) }>{__("Review the settings and enforce the policy", "really-simple-ssl") }</a>
+                            </div>
+                        </div>}
+                        { rsssl_settings.pro_plugin_active && field.disabled && <div className="rsssl-locked">
+                            <div className="rsssl-locked-overlay">
+                                <span className="rsssl-progress-status rsssl-disabled">{__("disabled ","really-simple-ssl")}</span>
+                                {disabledString}
+                            </div>
+                        </div>}
+                        <Filter />
                     </div>
-                    {learning_mode==1 && <div className="rsssl-locked">
-                        <div className="rsssl-locked-overlay">
-                            <span className="rsssl-progress-status rsssl-learning-mode">{__("Learning Mode","really-simple-ssl")}</span>
-                            {configuringString}&nbsp;
-                            <a className="rsssl-learning-mode-link" href="#" onClick={ (e) => this.toggleLearningMode(e) }>{__("Disable learning mode and configure manually", "really-simple-ssl") }</a>
-                        </div>
-                    </div>}
-                    {learning_mode_completed==1 && <div className="rsssl-locked">
-                        <div className="rsssl-locked-overlay">
-                            <span className="rsssl-progress-status rsssl-learning-mode-completed">{__("Learning Mode","really-simple-ssl")}</span>
-                            {__("We finished the configuration.", "really-simple-ssl")}&nbsp;
-                            <a className="rsssl-learning-mode-link" href="#" onClick={ (e) => this.toggleLearningMode(e) }>{__("Review the settings and enforce the policy", "really-simple-ssl") }</a>
-                        </div>
-                    </div>}
-                    { rsssl_settings.pro_plugin_active && field.disabled && <div className="rsssl-locked">
-                        <div className="rsssl-locked-overlay">
-                            <span className="rsssl-progress-status rsssl-disabled">{__("disabled ","really-simple-ssl")}</span>
-                            {disabledString}
-                        </div>
-                    </div>}
+                    </div>
                 </>
             )
     }

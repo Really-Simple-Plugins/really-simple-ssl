@@ -55,7 +55,9 @@ function rsssl_disable_fields($field, $field_id){
 	}
 
 	if ( $field_id==='disable_anyone_can_register' ){
-		if ( !get_option('users_can_register') && !$field['value'] ) {
+		global $wpdb;
+		$can_register = $wpdb->get_var("select option_value from {$wpdb->prefix}options where option_name='users_can_register'");
+		if ( !$can_register && !$field['value'] ) {
 			$field['value'] = true;
 			$field['disabled'] = true;
 			// $field['help'] = [

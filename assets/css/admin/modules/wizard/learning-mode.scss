@@ -1,3 +1,4 @@
+
 .rsssl-learning-mode-delete {
   cursor: pointer;
   background: none;
@@ -32,5 +33,12 @@
   align-items: center;
   button.button {
     margin-right:20px;
+  }
+}
+
+.rsssl-learning-mode-footer {
+  display:flex;
+  select {
+    margin-left:auto;
   }
 }

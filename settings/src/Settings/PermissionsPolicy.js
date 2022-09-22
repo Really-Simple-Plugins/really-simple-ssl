@@ -19,7 +19,10 @@ class PermissionsPolicy extends Component {
     }
 
     componentDidMount() {
+        this.doFilter = this.doFilter.bind(this);
+        this.togglePermissionsPolicyStatus = this.togglePermissionsPolicyStatus.bind(this);
         let field = this.props.fields.filter(field => field.id === 'enable_permissions_policy')[0];
+        this.togglePermissionsPolicyStatus(null, field.value);
         this.setState({
             enable_permissions_policy :field.value
         });
@@ -88,7 +91,6 @@ class PermissionsPolicy extends Component {
         if (filterValue!=-1) {
             data = data.filter(item => item.status==filterValue);
         }
-        console.log(data);
         for (const item of data){
             let disabled = false;
             if (item.status!=1) {
@@ -101,7 +103,7 @@ class PermissionsPolicy extends Component {
                 disabled={disabled}
                 options={options}
                 label=''
-                onChange={ ( fieldValue ) => this.onChangeHandlerDataTable( fieldValue, item, 'value' ) }
+                onChange={ ( fieldValue ) => this.props.onChangeHandlerDataTable( fieldValue, item, 'value' ) }
 
             />
             item.statusControl = <ChangeStatus item={item} onChangeHandlerDataTable={this.props.onChangeHandlerDataTable}
@@ -135,9 +137,7 @@ class PermissionsPolicy extends Component {
                         columns={columns}
                         data={data}
                         dense
-                        pagination
-                        subHeader
-                        subHeaderComponent={<Filter />}
+                        pagination='no'
                         customStyles={customStyles}
                         theme="really-simple-plugins"
                     />

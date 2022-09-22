@@ -142,7 +142,7 @@ class Settings extends Component {
                 </div>
                 <div className="rsssl-wizard-help">
                     <div className="rsssl-help-header">
-                        <div className="rsssl-help-title">
+                        <div className="rsssl-help-title rsssl-h4">
                             {__("Notifications", "really-simple-ssl")}
                         </div>
                         <div className="rsssl-help-control" onClick={ () => this.toggleNotices() }>

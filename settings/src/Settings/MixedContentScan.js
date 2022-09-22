@@ -155,7 +155,7 @@ class MixedContentScan extends Component {
         let field = this.props.field;
         let fieldValue = field.value;
         let fields = this.props.fields;
-
+        if (!rsssl_settings.pro_plugin_active) progress=80;
         columns = [];
         field.columns.forEach(function(item, i) {
 

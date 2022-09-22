@@ -73,7 +73,6 @@ class License extends Component {
                 licenseStatus,
             } = this.state;
         if (licenseStatus==='valid') {
-            console.log("deactivate");
             rsssl_api.runTest('deactivate_license').then( ( response ) => {
                 this.props.setPageProps('licenseStatus', response.data.licenseStatus);
                 this.notices = response.data.notices;
@@ -86,8 +85,6 @@ class License extends Component {
                 });
             });
         } else {
-            //activate
-            console.log("activate");
             let data = {};
             data.license = this.props.field.value;
             rsssl_api.doAction('activate_license', data).then( ( response ) => {
@@ -99,7 +96,8 @@ class License extends Component {
                     noticesLoaded: this.noticesLoaded,
                     licenseStatus: this.licenseStatus,
                     notices: this.notices,
-                });            });
+                });
+            });
         }
 
     }

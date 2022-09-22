@@ -37,6 +37,8 @@ class Field extends Component {
 
     componentDidMount() {
         this.onChangeHandlerDataTable = this.onChangeHandlerDataTable.bind(this);
+        this.field = this.props.field;
+        this.updateField = this.props.updateField;
     }
 
     onChangeHandler(fieldValue) {
@@ -56,7 +58,12 @@ class Field extends Component {
      * @param type
      */
     onChangeHandlerDataTable(enabled, clickedItem, type ) {
-        let field=this.props.field;
+            console.log("onchange handler datatable");
+            console.log(enabled);
+            console.log(clickedItem);
+            console.log(type);
+            console.log(this.field);
+        let field=this.field;
         if (typeof field.value === 'object') {
             field.value = Object.values(field.value);
         }

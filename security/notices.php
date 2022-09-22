@@ -160,7 +160,7 @@ function rsssl_general_security_notices( $notices ) {
 		'output' => array(
 			'false' => array(
 				'msg' => __("Your database prefix is randomized. Awesome!", "really-simple-ssl"),
-				'icon' => 'premium',
+				'icon' => 'success',
 				'dismissible' => true,
 			),
 			'true' => array(
