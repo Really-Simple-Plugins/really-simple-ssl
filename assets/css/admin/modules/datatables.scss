@@ -1,4 +1,7 @@
 .rsssl-field-wrap {
+  .rdt_TableCol, .rdt_TableCell {
+    min-width:50px;
+  }
   .rdt_TableHeadRow {
     .rdt_TableCol:last-child {
       flex-grow:0;
@@ -17,6 +20,38 @@
     .rsssl-status-allowed, .rsssl-status-revoked{
       min-width:110px;
       margin-right:20px;
+    }
+  }
+
+  .rsssl-csp-revoked >div:nth-child(-n+3) {
+    opacity:0.3;
+  }
+}
+
+
+.rsssl-content_security_policy .rsssl-field-wrap {
+  .rdt_TableHeadRow {
+    .rdt_TableCol:last-child {
+      flex-grow:0;
+      min-width:initial;
+    }
+    .rdt_TableCol:nth-last-child(2) {
+      flex-direction: row-reverse;
+    }
+  }
+
+
+  .rdt_TableRow {
+    .rsssl-status-allowed, .rsssl-status-revoked, .rsssl-learning-mode-delete{
+      //margin-right:0;
+    }
+    .rdt_TableCell:last-child {
+      flex-grow:0;
+      min-width:initial;
+    }
+    .rdt_TableCell:nth-last-child(2) {
+      flex-direction: row-reverse;
+      margin-right:10px;
     }
   }
 

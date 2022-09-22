@@ -1019,12 +1019,12 @@ function rsssl_fields( $load_values = true ){
 					'column' =>'blockeduri',
 				],
 				[
-					'name' => __('Allow/revoke', 'really-simple-ssl'),
+					'name' => '',//__('Allow/revoke', 'really-simple-ssl'),
 					'sortable' => false,
 					'column' =>'statusControl',
 				],
 				[
-					'name' => __('Delete', 'really-simple-ssl'),
+					'name' => '',//__('Delete', 'really-simple-ssl'),
 					'sortable' => false,
 					'column' =>'deleteControl',
 				],

@@ -22,7 +22,8 @@ class PermissionsPolicy extends Component {
         this.doFilter = this.doFilter.bind(this);
         this.togglePermissionsPolicyStatus = this.togglePermissionsPolicyStatus.bind(this);
         let field = this.props.fields.filter(field => field.id === 'enable_permissions_policy')[0];
-        this.togglePermissionsPolicyStatus(null, field.value);
+        //we somehow need this to initialize the field. Otherwise it doesn't work on load. need to figure that out.
+        this.props.updateField(field.id, field.value);
         this.setState({
             enable_permissions_policy :field.value
         });
@@ -137,11 +138,11 @@ class PermissionsPolicy extends Component {
                         columns={columns}
                         data={data}
                         dense
-                        pagination='no'
+                        pagination={false}
                         customStyles={customStyles}
                         theme="really-simple-plugins"
                     />
-                    { enable_permissions_policy!=1 && <button className="button" onClick={ (e) => this.togglePermissionsPolicyStatus(e, true ) }>{__("Enforce","really-simple-ssl")}</button> }
+                    { enable_permissions_policy!=1 && <button className="button button-primary" onClick={ (e) => this.togglePermissionsPolicyStatus(e, true ) }>{__("Enforce","really-simple-ssl")}</button> }
                     { enable_permissions_policy==1 && <button className="button" onClick={ (e) => this.togglePermissionsPolicyStatus(e, false ) }>{__("Disable","really-simple-ssl")}</button> }
             </div>
         )
