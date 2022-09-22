@@ -125,15 +125,14 @@ class Settings extends Component {
                                 { __('Previous', 'really-simple-ssl') }
                             </a>
                         }
-
+                        <button
+                            className="button button-primary"
+                            onClick={ this.props.save }>
+                            { btnSaveText }
+                        </button>
                         {/*This will be shown only if current step is not the last one*/}
                         { this.props.selectedMenuItem !== menuItems[menuItems.length-1].id &&
                             <>
-                                <button
-                                    className="button button-primary"
-                                    onClick={ this.props.save }>
-                                    { btnSaveText }
-                                </button>
                                 <a disabled={this.props.nextButtonDisabled} className="button button-primary" href={`#${this.props.selectedMainMenuItem}/${this.props.nextMenuItem}`} onClick={ this.props.saveAndContinue }>
                                     { __( 'Save and Continue', 'really-simple-ssl' ) }
                                 </a>
