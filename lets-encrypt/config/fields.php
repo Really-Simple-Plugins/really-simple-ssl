@@ -97,8 +97,8 @@ function rsssl_le_add_fields($fields) {
 				'label'    => __( "Email address", 'really-simple-ssl' ),
 				'help'     => [
 					'label' => 'default',
-					'title' => __( "Let's Encrypt email address", "really-simple-ssl" ),
-					'text'  => __( "This email address will used to create a Let's Encrypt account. This is also where you will receive renewal notifications.", 'really-simple-ssl' ),
+					'title' => __( "Email address", "really-simple-ssl" ),
+					'text'  => __( "This email address is used to create a Let's Encrypt account. This is also where you will receive renewal notifications.", 'really-simple-ssl' ),
 				],
 				'disabled' => ! rsssl_get_option( 'ssl_enabled' ),
 				'default'  => '',
@@ -110,8 +110,8 @@ function rsssl_le_add_fields($fields) {
 				'type'     => 'checkbox',
 				'default'  => false,
 				'required' => true,
-				'label'    => __( 'Terms & Conditions', "really-simple-ssl" ),
-				'comment'  => sprintf( __( "I agree to the Let's Encrypt %sTerms & Conditions%s", 'really-simple-ssl' ),
+				'label'    => __( 'I agree to the Terms & Conditions', "really-simple-ssl" ),
+				'comment'  => sprintf( __( "from Let's Encrypt. available %shere%s", 'really-simple-ssl' ),
 					'<a target="_blank" href="https://letsencrypt.org/documents/LE-SA-v1.2-November-15-2017.pdf">', '</a>' ),
 			],
 			[
@@ -119,11 +119,11 @@ function rsssl_le_add_fields($fields) {
 				'menu_id' => 'le-general',
 				'required'=> false,
 				'type'    => 'checkbox',
-				'default' => true,
+				'default' => false,
 				'help'    => [
 					'label' => 'default',
-					'title' => __( "OCSP stapling", "really-simple-ssl" ),
-					'text'  => __( "OCSP stapling should be enabled by default. You can disable if this is not supported by your hosting provider.", "really-simple-ssl" )
+					'title' => __( "Disable OCSP stapling", "really-simple-ssl" ),
+					'text'  => __( "OCSP stapling is configured as enabled by default. You can disable this option if this is not supported by your hosting provider.", "really-simple-ssl" )
 					           . rsssl_read_more( 'https://really-simple-ssl.com/ocsp-stapling' ),
 				],
 				'label'   => __( "Disable OCSP Stapling", 'really-simple-ssl' ),
@@ -134,11 +134,7 @@ function rsssl_le_add_fields($fields) {
 				'type'     => 'text',
 				'default'  => rsssl_get_domain(),
 				'label'    => __( "Domain", 'really-simple-ssl' ),
-				'help'     => [
-					'label' => 'default',
-					'title' => __( "Domain", "really-simple-ssl" ),
-					'text'  => __( "This field is prefilled based on your configuration", 'really-simple-ssl' ),
-				],
+
 				'required' => false,
 				'disabled' => true,
 			],
@@ -147,6 +143,7 @@ function rsssl_le_add_fields($fields) {
 				'menu_id'           => 'le-general',
 				'type'              => 'checkbox',
 				'default'           => '',
+				'label'    => __( "Include alias", 'really-simple-ssl' ),
 				'help'              => [
 					'label' => 'default',
 					'title' => __( "Include alias", "really-simple-ssl" ),
@@ -406,6 +403,7 @@ function rsssl_le_add_fields($fields) {
 				'label'             => __( "Do you want to store these credentials for renewal purposes?", 'really-simple-ssl' ),
 				'help'              => [
 					'label' => 'default',
+					'title' => 'Storing credentials',
 					'text'  => __( "Store for renewal purposes. If not stored, renewal may need to be done manually.", 'really-simple-ssl' ),
 				],
 				'required'          => false,
