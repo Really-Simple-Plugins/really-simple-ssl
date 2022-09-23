@@ -2639,6 +2639,7 @@ class rsssl_admin
 			    }
 		    }
         }
+        x_log($notices);
 
 	    return $notices;
     }

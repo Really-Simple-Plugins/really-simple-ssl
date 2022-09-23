@@ -3341,6 +3341,7 @@ class ProgressBlock extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Comp
       this.filter = response.data.filter;
       this.percentageCompleted = response.data.percentage;
       this.notices = response.data.notices;
+      console.log(response.data.notices);
       this.progressLoaded = true;
       this.setState({
         progressLoaded: this.progressLoaded,
@@ -3349,6 +3350,7 @@ class ProgressBlock extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Comp
         notices: this.notices,
         percentageCompleted: this.percentageCompleted
       });
+      this.props.setBlockProps('notices', this.notices);
     });
   }
 
@@ -3377,6 +3379,7 @@ class ProgressBlock extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Comp
     this.setState({
       notices: this.notices
     });
+    this.props.setBlockProps('notices', this.notices);
     return _utils_api__WEBPACK_IMPORTED_MODULE_1__.runTest('dismiss_task', notice_id).then(response => {
       this.percentageCompleted = response.data.percentage;
       this.setState({
@@ -3387,7 +3390,6 @@ class ProgressBlock extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Comp
 
   render() {
     const {
-      ssl_enabled,
       notices,
       progressLoaded,
       progressText,
@@ -3431,7 +3433,7 @@ class ProgressBlock extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Comp
       className: "rsssl-progress-percentage"
     }, this.percentageCompleted, "%"), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("h5", {
       className: "rsssl-progress-text-span"
-    }, "SSL enabled \"", ssl_enabled, "\"+", this.progressText)), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    }, this.progressText)), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
       className: "rsssl-scroll-container"
     }, notices.map((notice, i) => (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_TaskElement__WEBPACK_IMPORTED_MODULE_2__["default"], {
       key: i,

@@ -14,7 +14,6 @@ class rsssl_progress {
 	}
 
 	public function get() {
-		error_log("re running get progress");
 		return [
 			'text' => $this->get_text(),
 			'percentage' => $this->percentage(),

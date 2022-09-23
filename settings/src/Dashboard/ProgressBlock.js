@@ -54,7 +54,9 @@ class ProgressBlock extends Component {
             this.filter = response.data.filter;
             this.percentageCompleted = response.data.percentage;
             this.notices = response.data.notices;
+            console.log(response.data.notices);
             this.progressLoaded = true;
+
             this.setState({
                 progressLoaded: this.progressLoaded,
                 progressText: this.progressText,
@@ -62,8 +64,10 @@ class ProgressBlock extends Component {
                 notices: this.notices,
                 percentageCompleted: this.percentageCompleted,
             });
+            this.props.setBlockProps('notices',this.notices);
         });
     }
+
     onCloseTaskHandler(e){
         let button = e.target.closest('button');
         let notice_id = button.getAttribute('data-id');
@@ -84,7 +88,7 @@ class ProgressBlock extends Component {
             return notice.id !== notice_id;
         });
         this.setState({notices: this.notices});
-
+        this.props.setBlockProps('notices', this.notices);
         return rsssl_api.runTest('dismiss_task', notice_id).then(( response ) => {
             this.percentageCompleted = response.data.percentage;
             this.setState({
@@ -94,7 +98,6 @@ class ProgressBlock extends Component {
     }
     render(){
         const {
-            ssl_enabled,
             notices,
             progressLoaded,
             progressText,
@@ -133,7 +136,7 @@ class ProgressBlock extends Component {
                         {this.percentageCompleted}%
                     </h1>
                     <h5 className="rsssl-progress-text-span">
-                        SSL enabled "{ssl_enabled}"+{this.progressText}
+                        {this.progressText}
                     </h5>
                 </div>
 
