@@ -50,7 +50,6 @@ class ProgressBlock extends Component {
             this.filter = response.data.filter;
             this.percentageCompleted = response.data.percentage;
             this.notices = response.data.notices;
-            console.log(response.data.notices);
             this.progressLoaded = true;
 
             this.setState({

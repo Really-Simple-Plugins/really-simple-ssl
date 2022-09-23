@@ -284,7 +284,6 @@ function rsssl_other_plugins_data($slug=false){
 		[
 			'slug' => 'burst-statistics',
 			'constant_free' => 'burst_version',
-			'constant_premium' => false,
 			'wordpress_url' => 'https://wordpress.org/plugins/burst-statistics/',
 			'upgrade_url' => 'https://burst-statistics.com/?src=rsssl-plugin',
 			'title' => 'Burst Statistics - '. __("Self-hosted, Privacy-friendly analytics tool.", "really-simple-ssl"),
@@ -309,14 +308,18 @@ function rsssl_other_plugins_data($slug=false){
 
     foreach ($plugins as $index => $plugin ){
 	    $installer = new rsssl_installer($plugin['slug']);
-        if ( $plugin['constant_premium'] && defined($plugin['constant_premium']) ) {
-	        $plugins[$index]['pluginAction'] = 'installed';
+        if ( isset($plugin['constant_premium']) && defined($plugin['constant_premium']) ) {
+	        $plugins[ $index ]['pluginAction'] = 'installed';
         } else if ( !$installer->plugin_is_downloaded() && !$installer->plugin_is_activated() ) {
 	        $plugins[$index]['pluginAction'] = 'download';
         } else if ( $installer->plugin_is_downloaded() && !$installer->plugin_is_activated() ) {
 	        $plugins[ $index ]['pluginAction'] = 'activate';
         } else {
-		    $plugins[$index]['pluginAction'] = 'upgrade-to-premium';
+	        if (isset($plugin['constant_premium']) ) {
+		        $plugins[$index]['pluginAction'] = 'upgrade-to-premium';
+	        } else {
+		        $plugins[ $index ]['pluginAction'] = 'installed';
+	        }
 	    }
     }
 
