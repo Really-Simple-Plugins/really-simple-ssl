@@ -136,6 +136,22 @@ if (!class_exists('rsssl_multisite')) {
 			        ),
 		        ),
 	        );
+	        $notices['6_multisite_networkwide'] = array(
+		        'callback' => 'RSSSL()->rsssl_multisite->ssl_activation_status',
+		        'score'     => 0,
+		        'output'    => array(
+			        'ssl-per-site' => array(
+                        'title'       => __( "End of Per Site Management support.", "really-simple-ssl"  ),
+				        'msg'         => __( "Important: Really Simple SSL 6.0 drops per site SSL management. Upgrading will upgrade all subsites to SSL.", "really-simple-ssl" ),
+				        'icon'        => 'warning',
+				        'url'         => 'https://really-simple-ssl.com/how-to-set-security-headers-on-apache-and-nginx/',
+				        'dismissible' => true,
+				        'plusone' => true,
+				        'admin_notice' => true,
+			        ),
+		        ),
+	        );
+
 
 	        $notices['multisite_server_variable_warning'] = array(
 		        'callback' => 'RSSSL()->rsssl_multisite->multisite_server_variable_warning',
