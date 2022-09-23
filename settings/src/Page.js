@@ -15,6 +15,7 @@ class Page extends Component {
         this.pageProps['licenseStatus'] = rsssl_settings.licenseStatus;
 
         this.updateFields = this.updateFields.bind(this);
+        this.getFields = this.getFields.bind(this);
         this.selectMenu = this.selectMenu.bind(this);
         this.getSelectedMenu = this.getSelectedMenu.bind(this);
         this.selectStep = this.selectStep.bind(this);
@@ -45,24 +46,7 @@ class Page extends Component {
             previousMenuItem: ''
         };
 
-        this.getFields().then(( response ) => {
-            this.superMenu = response.menu;
-            let selectedMainMenuItem =  getAnchor('main') || 'dashboard';
-            this.menu = this.getSelectedMenu(this.superMenu, selectedMainMenuItem);
-            this.fields = response.fields;
-            this.progress = response.progress;
-            this.setState({
-                isAPILoaded: true,
-                selectedMainMenuItem: selectedMainMenuItem,
-                selectedMenuItem: this.getDefaultMenuItem(),
-                fields: this.fields,
-                menu: this.menu,
-                progress: this.progress,
-            }, () => {
-                this.getPreviousAndNextMenuItems();
-
-            });
-        });
+        this.getFields();
     }
 
     setShowOnBoardingModal(status){
@@ -113,8 +97,23 @@ class Page extends Component {
     }
 
     getFields(){
-        return rsssl_api.getFields().then( ( response ) => {
-            return response.data;
+        rsssl_api.getFields().then( ( response ) => {
+           this.superMenu = response.data.menu;
+            let selectedMainMenuItem =  getAnchor('main') || 'dashboard';
+            this.menu = this.getSelectedMenu(this.superMenu, selectedMainMenuItem);
+
+            this.fields = response.data.fields;
+            this.progress = response.data.progress;
+            this.setState({
+                isAPILoaded: true,
+                fields: this.fields,
+                progress: this.progress,
+                menu: this.menu,
+                selectedMenuItem: this.getDefaultMenuItem(),
+                selectedMainMenuItem: selectedMainMenuItem,
+            }, () => {
+                this.getPreviousAndNextMenuItems();
+            });
         });
     }
     /*
@@ -300,7 +299,7 @@ class Page extends Component {
         } = this.state;
         return (
             <div className="rsssl-wrapper">
-                <OnboardingModal selectMenu={this.selectMenu} selectMainMenu={this.selectMainMenu} getFields={this.getFields} setShowOnBoardingModal={this.setShowOnBoardingModal} showOnBoardingModal={showOnBoardingModal} pageProps={this.pageProps} />
+                <OnboardingModal selectMenu={this.selectMenu} selectMainMenu={this.selectMainMenu} getFields={this.getFields} updateField={this.updateField} setShowOnBoardingModal={this.setShowOnBoardingModal} showOnBoardingModal={showOnBoardingModal} pageProps={this.pageProps} />
                 {!isAPILoaded && <PagePlaceholder></PagePlaceholder>}
                 {showModal && <Modal handleModal={this.handleModal} data={modalData}/>}
                 {isAPILoaded &&
@@ -340,7 +339,13 @@ class Page extends Component {
                                         previousMenuItem={this.state.previousMenuItem} />
                                 }
                                 { selectedMainMenuItem === 'dashboard' &&
-                                    <DashboardPage setShowOnBoardingModal={this.setShowOnBoardingModal} isAPILoaded={isAPILoaded} fields={fields} selectMainMenu={this.selectMainMenu} highLightField={this.highLightField} pageProps={this.pageProps}/>
+                                    <DashboardPage
+                                        setShowOnBoardingModal={this.setShowOnBoardingModal}
+                                        isAPILoaded={isAPILoaded}
+                                        fields={fields}
+                                        selectMainMenu={this.selectMainMenu}
+                                        highLightField={this.highLightField}
+                                        pageProps={this.pageProps}/>
                                 }
                             </div>
                         </>

@@ -1359,24 +1359,31 @@ class rsssl_letsencrypt_handler {
 
 	public function key_directory(){
 		$directory = $this->get_directory_path();
-		if ( ! file_exists( $directory . 'ssl' ) && is_writable($directory) ) {
-			mkdir( $directory . 'ssl', 0755 );
-		}
+		try {
+			if ( ! file_exists( $directory . 'ssl' ) && is_writable( $directory ) ) {
+				mkdir( $directory . 'ssl', 0755 );
+			}
 
-		if ( ! file_exists( $directory . 'ssl/keys' ) && is_writable($directory.'ssl') ) {
-			mkdir( $directory . 'ssl/keys', 0755 );
-		}
+			if ( ! file_exists( $directory . 'ssl/keys' ) && is_writable( $directory . 'ssl' ) ) {
+				mkdir( $directory . 'ssl/keys', 0755 );
+			}
 
-		if ( file_exists( $directory . 'ssl/keys' ) ){
-			return $directory . 'ssl/keys';
-		} else {
-			//if creating the folder has failed, we're on apache, and can write to these folders, we create a root directory.
-		    $challenge_dir = $this->challenge_directory;
-		    $has_writing_permissions = $this->directory_has_writing_permissions( $challenge_dir );
-		    //we're guessing that if the challenge dir has writing permissions, the new dir will also have it.
-		    if ( RSSSL()->rsssl_server->uses_htaccess() && $has_writing_permissions ) {
-			    update_option('rsssl_create_folders_in_root', true, false);
-		    }
+			if ( file_exists( $directory . 'ssl/keys' ) ) {
+				return $directory . 'ssl/keys';
+			} else {
+				//if creating the folder has failed, we're on apache, and can write to these folders, we create a root directory.
+				$challenge_dir           = $this->challenge_directory;
+				$has_writing_permissions = $this->directory_has_writing_permissions( $challenge_dir );
+				//we're guessing that if the challenge dir has writing permissions, the new dir will also have it.
+				if ( RSSSL()->rsssl_server->uses_htaccess() && $has_writing_permissions ) {
+					update_option( 'rsssl_create_folders_in_root', true, false );
+				}
+
+				return false;
+			}
+		} catch ( Exception $e ) {
+			error_log("error during folder creation");
+			error_log( print_r( $e, true ) );
 			return false;
 		}
 	}

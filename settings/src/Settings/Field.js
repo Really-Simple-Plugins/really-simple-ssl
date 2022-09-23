@@ -49,8 +49,6 @@ class Field extends Component {
         this.setState( { fields } )
     }
 
-
-
     /*
      * Handle data update for a datatable
      * @param enabled

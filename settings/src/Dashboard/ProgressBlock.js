@@ -14,19 +14,46 @@ class ProgressBlock extends Component {
         this.filter = 'all';
         this.notices = null;
         this.progressLoaded = false;
+        this.ssl_enabled = false;
+        this.fields = this.props.fields;
+
         this.state = {
             progressText:'',
             filter:'all',
             notices:null,
             percentageCompleted:0,
             progressLoaded: false,
+            ssl_enabled:true,
         };
+    }
+    componentDidMount() {
+        this.getProgressData = this.getProgressData.bind(this);
+        this.onCloseTaskHandler = this.onCloseTaskHandler.bind(this);
+        this.getProgressData();
+    }
 
-        this.getProgressData().then(( response ) => {
-            this.progressText = response.text;
-            this.filter = response.filter;
-            this.percentageCompleted = response.percentage;
-            this.notices = response.notices;
+    componentDidUpdate() {
+        //if a field has changed, we update the progress data as well.
+        if (this.fields !== this.props.fields) {
+            this.fields = this.props.fields;
+            this.getProgressData();
+        }
+
+    }
+
+    getStyles() {
+        return Object.assign(
+            {},
+            {width: this.percentageCompleted+"%"},
+        );
+    }
+
+    getProgressData(){
+        rsssl_api.runTest('progressData', 'refresh').then( ( response ) => {
+            this.progressText = response.data.text;
+            this.filter = response.data.filter;
+            this.percentageCompleted = response.data.percentage;
+            this.notices = response.data.notices;
             this.progressLoaded = true;
             this.setState({
                 progressLoaded: this.progressLoaded,
@@ -35,27 +62,11 @@ class ProgressBlock extends Component {
                 notices: this.notices,
                 percentageCompleted: this.percentageCompleted,
             });
-            this.props.setBlockProps('notices', this.notices);
-        });
-    }
-    componentDidMount() {
-        this.getProgressData = this.getProgressData.bind(this);
-        this.onCloseTaskHandler = this.onCloseTaskHandler.bind(this);
-    }
-    getStyles() {
-        return Object.assign(
-            {},
-            {width: this.percentageCompleted+"%"},
-        );
-    }
-    getProgressData(){
-        return rsssl_api.runTest('progressData', 'refresh').then( ( response ) => {
-            return response.data;
         });
     }
     onCloseTaskHandler(e){
         let button = e.target.closest('button');
-        let type = button.getAttribute('data-id');
+        let notice_id = button.getAttribute('data-id');
         let container = button.closest('.rsssl-task-element');
         container.animate({
             marginLeft: ["0px", "-1000px"]
@@ -68,13 +79,13 @@ class ProgressBlock extends Component {
             container.parentElement.removeChild(container);
         }
 
-        let notices = this.props.BlockProps.notices;
-        notices = notices.filter(function (notice) {
-            return notice.id !== type;
+        const {notices} = this.state;
+        this.notices = notices.filter(function (notice) {
+            return notice.id !== notice_id;
         });
+        this.setState({notices: this.notices});
 
-        this.props.setBlockProps('notices', notices);
-        return rsssl_api.runTest('dismiss_task', type).then(( response ) => {
+        return rsssl_api.runTest('dismiss_task', notice_id).then(( response ) => {
             this.percentageCompleted = response.data.percentage;
             this.setState({
                 percentageCompleted:this.percentageCompleted
@@ -82,7 +93,16 @@ class ProgressBlock extends Component {
         });
     }
     render(){
+        const {
+            ssl_enabled,
+            notices,
+            progressLoaded,
+            progressText,
+            filter,
+            percentageCompleted,
+        } = this.state;
         let progressBarColor = '';
+
         if ( this.percentageCompleted<80 ) {
             progressBarColor += 'rsssl-orange';
         }
@@ -91,11 +111,9 @@ class ProgressBlock extends Component {
                 <Placeholder lines='9'></Placeholder>
             );
         }
-        let filter = 'all';
         if ( this.props.BlockProps && this.props.BlockProps.filterStatus ) {
             filter = this.props.BlockProps.filterStatus;
         }
-        let notices = this.notices;
         if ( filter==='remaining' ) {
             notices = notices.filter(function (notice) {
                 return notice.output.status==='open';
@@ -115,7 +133,7 @@ class ProgressBlock extends Component {
                         {this.percentageCompleted}%
                     </h1>
                     <h5 className="rsssl-progress-text-span">
-                        {this.progressText}
+                        SSL enabled "{ssl_enabled}"+{this.progressText}
                     </h5>
                 </div>
 

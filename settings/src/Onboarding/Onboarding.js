@@ -206,15 +206,6 @@ const Onboarding = (props) => {
                     {button && <>&nbsp;-&nbsp;
                     {showLink && <Button className={"button button-secondary"} isLink={true} onClick={() => itemButtonHandler(id, action)}>{buttonTitle}</Button>}
                     {!showLink && <>{buttonTitle}</>}
-                    {current_action==='activate' || current_action==='install_plugin' &&
-                        <div className="rsssl-loader">
-                            <div className="rect1" key="1"></div>
-                            <div className="rect2" key="2"></div>
-                            <div className="rect3" key="3"></div>
-                            <div className="rect4" key="4"></div>
-                            <div className="rect5" key="5"></div>
-                        </div>
-                    }
                     </>}
                 </li>
             )
