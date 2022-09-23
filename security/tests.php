@@ -357,9 +357,13 @@ function rsssl_file_editing_allowed()
 	$edit_files = map_meta_cap('edit_files', get_current_user_id() );
 	$edit_files = reset($edit_files);
 	$edit_plugins = map_meta_cap('edit_plugins', get_current_user_id() );
+	$edit_plugins = reset($edit_plugins);
 	$edit_themes = map_meta_cap('edit_themes', get_current_user_id() );
-	x_log($edit_files);
-	if ( $edit_files)
+	$edit_themes = reset($edit_themes);
+
+	if ( $edit_files==='do_not_allow' && $edit_plugins === 'do_not_allow' && $edit_themes === 'do_not_allow') {
+		return false;
+	}
 	return !defined('DISALLOW_FILE_EDIT' ) || !DISALLOW_FILE_EDIT;
 }
 

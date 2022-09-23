@@ -164,10 +164,10 @@ function rsssl_general_security_notices( $notices ) {
 				'dismissible' => true,
 			),
 			'true' => array(
-				'highlight_field_id' => 'rename_db_prefix',
 				'msg' => __("Your database prefix is set to the default 'wp_'.", "really-simple-ssl"),
 				'icon' => 'premium',
 				'dismissible' => true,
+				'url' => 'https://really-simple-ssl.com'
 			),
 		),
 		// 'show_with_options' => [
