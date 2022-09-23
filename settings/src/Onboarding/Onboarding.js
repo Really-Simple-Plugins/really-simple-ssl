@@ -170,8 +170,8 @@ const Onboarding = (props) => {
             };
             const statusIcon = statuses[status].icon;
             const statusColor = statuses[status].color;
-
             const currentActions = {
+                'activate_setting': __('Activating...',"really-simple-ssl"),
                 'activate': __('Activating...',"really-simple-ssl"),
                 'install_plugin': __('Installing...',"really-simple-ssl"),
                 'error': __('Failed',"really-simple-ssl"),

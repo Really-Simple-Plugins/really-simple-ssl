@@ -27,14 +27,14 @@ function rsssl_general_security_notices( $notices ) {
 			'not-writable' => array(
 				'title' => __(".htaccess not writable", "really-simple-ssl"),
 				'msg' => __("An option that requires the .htaccess file is enabled, but the file is not writable.", "really-simple-ssl").' '.__("Please add the following lines to your .htaccess, or set it to writable:", "really-simple-ssl").$code,
-				'icon' => 'open',
+				'icon' => 'warning',
 				'dismissible' => true,
 				'url' => 'https://really-simple-ssl.com/manually-editing-htaccess',
 			),
 			'not-exists' => array(
 				'title' => __(".htaccess does not exist", "really-simple-ssl"),
 				'msg' => __("An option that requires the .htaccess file is enabled, but the file does not exist.", "really-simple-ssl").' '.__("Please add the following lines to your .htaccess, or set it to writable:", "really-simple-ssl").$code,
-				'icon' => 'open',
+				'icon' => 'warning',
 				'dismissible' => true,
 				'url' => 'https://really-simple-ssl.com/manually-editing-htaccess',
 			),
