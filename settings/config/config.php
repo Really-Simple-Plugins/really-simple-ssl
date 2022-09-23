@@ -134,7 +134,6 @@ function rsssl_menu(){
 							'id' => 'permissions_policy',
 							'premium_text' => __("Get the Permissions Policy with %sReally Simple SSL Pro%s", 'really-simple-ssl'),
 							'upgrade' => 'https://really-simple-ssl.com/pro/',
-							'title' => __('HSTS ', 'really-simple-ssl'),
 							'helpLink'  => 'https://really-simple-ssl.com/instructions/about-permissions-policy/',
 							'networkwide_required' => true,
 							'premium' => true,
@@ -242,7 +241,6 @@ function rsssl_menu(){
 					'title' => __( 'Activate', 'really-simple-ssl' ),
 //					'intro' => __( 'Below you will find the instructions for different hosting environments and configurations. If you start the process with the necessary instructions and credentials the next view steps will be done in no time.', 'really-simple-ssl'),
 					'tests_only' => true,
-
 				],
 			],
 		],
