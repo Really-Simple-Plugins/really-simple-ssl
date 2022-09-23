@@ -14,17 +14,15 @@ class ProgressBlock extends Component {
         this.filter = 'all';
         this.notices = null;
         this.progressLoaded = false;
-        this.ssl_enabled = false;
         this.fields = this.props.fields;
-
         this.state = {
             progressText:'',
             filter:'all',
             notices:null,
             percentageCompleted:0,
             progressLoaded: false,
-            ssl_enabled:true,
         };
+
     }
     componentDidMount() {
         this.getProgressData = this.getProgressData.bind(this);
@@ -38,9 +36,7 @@ class ProgressBlock extends Component {
             this.fields = this.props.fields;
             this.getProgressData();
         }
-
     }
-
     getStyles() {
         return Object.assign(
             {},
@@ -83,12 +79,12 @@ class ProgressBlock extends Component {
             container.parentElement.removeChild(container);
         }
 
-        const {notices} = this.state;
-        this.notices = notices.filter(function (notice) {
+        let notices = this.props.BlockProps.notices;
+        notices = notices.filter(function (notice) {
             return notice.id !== notice_id;
         });
-        this.setState({notices: this.notices});
-        this.props.setBlockProps('notices', this.notices);
+
+        this.props.setBlockProps('notices', notices);
         return rsssl_api.runTest('dismiss_task', notice_id).then(( response ) => {
             this.percentageCompleted = response.data.percentage;
             this.setState({
@@ -96,16 +92,9 @@ class ProgressBlock extends Component {
             })
         });
     }
-    render(){
-        const {
-            notices,
-            progressLoaded,
-            progressText,
-            filter,
-            percentageCompleted,
-        } = this.state;
-        let progressBarColor = '';
 
+    render(){
+        let progressBarColor = '';
         if ( this.percentageCompleted<80 ) {
             progressBarColor += 'rsssl-orange';
         }
@@ -114,9 +103,11 @@ class ProgressBlock extends Component {
                 <Placeholder lines='9'></Placeholder>
             );
         }
+        let filter = 'all';
         if ( this.props.BlockProps && this.props.BlockProps.filterStatus ) {
             filter = this.props.BlockProps.filterStatus;
         }
+        let notices = this.notices;
         if ( filter==='remaining' ) {
             notices = notices.filter(function (notice) {
                 return notice.output.status==='open';
