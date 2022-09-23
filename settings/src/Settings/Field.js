@@ -255,7 +255,7 @@ class Field extends Component {
             return (
                 <div className={this.highLightClass}>
                   <SelectControl
-                      // multiple
+                      disabled={ field.disabled }
                       help={ field.comment }
                       label={ field.label }
                       onChange={ ( fieldValue ) => this.onChangeHandler(fieldValue) }
