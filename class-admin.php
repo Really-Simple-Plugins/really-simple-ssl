@@ -2243,6 +2243,7 @@ class rsssl_admin
                     ),
                     'false' => array(
                         'msg' => __('SSL is not enabled yet.', 'really-simple-ssl'),
+                        'title' => 'SSL',
                         'icon' => 'warning',
                         'plusone' => true,
                     ),
