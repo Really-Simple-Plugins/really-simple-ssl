@@ -61,11 +61,13 @@ function rsssl_get_items_for_second_step () {
 	$plugins_to_install = [
 		[
 			"slug" => "burst-statistics",
+			'constant_premium' => false,
 			"title" => __("Burst Statistics", "really-simple-ssl"),
 			"description" => __("Gather privacy-friendly statistics with Burst Statistics", "really-simple-ssl"),
 		],
 		[
 			"slug" => "complianz-gdpr",
+			'constant_premium' => 'cmplz_premium',
 			"title" => __("Complianz - The Privacy Suite for WordPress", "really-simple-ssl"),
 			"description" => __("Manage privacy compliance with Complianz", "really-simple-ssl"),
 		]
@@ -103,18 +105,14 @@ function rsssl_get_items_for_second_step () {
 		$items[] = [
 			"title" => __("Enable recommended hardening features in Really Simple SSL", "really-simple-ssl"),
 			"id" => "hardening",
-			"action" => "activate",
+			"action" => "activate_setting",
 			"current_action" => "none",
 			"status" => "warning",
-			"type" => "setting",
-			"button" => [
-				"title" => __("Enable", "really-simple-ssl"),
-			]
+			"button" => __("Enable", "really-simple-ssl"),
 		];
 	} else {
 		$items[] = [
 			"title" => __("Hardening features are enabled!", "really-simple-ssl"),
-			"type" => "setting",
 			"action" => "none",
 			"current_action" => "none",
 			"status" => "success",
@@ -125,42 +123,36 @@ function rsssl_get_items_for_second_step () {
 	foreach ($plugins_to_install as $plugin_info) {
 		require_once(rsssl_path . 'class-installer.php');
 		$plugin = new rsssl_installer($plugin_info["slug"]);
-		if(!$plugin->plugin_is_downloaded() && !$plugin->plugin_is_activated()){
-			$items[] = [
-				"title" => $plugin_info["description"],
-				"action" => "install_plugin",
-				"current_action" => "none",
-				"status" => "warning",
-				"type" => "plugin",
-				"id" => $plugin_info['slug'],
-				"button" => [
-					"title" => __("Install", "really-simple-ssl"),
-				]
-			];
-		}
-
-		if ($plugin->plugin_is_downloaded() && !$plugin->plugin_is_activated() ) {
-			$items[] = [
-				"title" => sprintf(__("Activate our plugin %s", "really-simple-ssl"), $plugin_info["title"]),
-				"action" => "activate",
-				"current_action" => "none",
-				"status" => "warning",
-				"type" => "plugin",
-				"id" => $plugin_info['slug'],
-				"button" => [
-					"title" => __("Activate", "really-simple-ssl"),
-				]
-			];
-		}
-
-		if($plugin->plugin_is_downloaded() && $plugin->plugin_is_activated()) {
+		$premium_active = $plugin_info['constant_premium'] && defined($plugin_info['constant_premium']);
+		$free_active = $plugin->plugin_is_downloaded() && $plugin->plugin_is_activated();
+		if( $premium_active || $free_active ) {
 			$items[] = [
 				"title" => sprintf(__("%s has been installed!", "really-simple-ssl"), $plugin_info["title"]),
 				"action" => "none",
 				"current_action" => "none",
 				"status" => "success",
 			];
+		} else if( !$plugin->plugin_is_downloaded() && !$plugin->plugin_is_activated() ){
+			$items[] = [
+				"title" => $plugin_info["description"],
+				"action" => "install_plugin",
+				"current_action" => "none",
+				"status" => "warning",
+				"id" => $plugin_info['slug'],
+				"button" => __("Install", "really-simple-ssl"),
+			];
+		} else if ( $plugin->plugin_is_downloaded() && !$plugin->plugin_is_activated() ) {
+			$items[] = [
+				"title" => sprintf(__("Activate our plugin %s", "really-simple-ssl"), $plugin_info["title"]),
+				"action" => "activate",
+				"current_action" => "none",
+				"status" => "warning",
+				"id" => $plugin_info['slug'],
+				"button" => __("Activate", "really-simple-ssl"),
+			];
 		}
+
+
 	}
 
 	return $items;
@@ -195,13 +187,11 @@ function rsssl_get_items_for_first_step () {
 	} else if ( RSSSL()->rsssl_certificate->detection_failed() ) {
 		$items[] = [
 			"title" => __("Could not test certificate.", "really-simple-ssl") . " " . __("Automatic certificate detection is not possible on your server.", "really-simple-ssl"),
-			"help" => __("If you’re certain an SSL certificate is present, please check “Override SSL detection” to continue activating SSL.", "really-simple-ssl"),
 			"status" => "error"
 		];
 	} else {
 		$items[] = [
 			"title" => __("No SSL certificate has been detected.", "really-simple-ssl") . " " . __("Please refresh the SSL status if a certificate has been installed recently.", "really-simple-ssl"),
-			"help" => __("This detection method is not 100% accurate.", "really-simple-ssl")." ".__("If you’re certain an SSL certificate is present, please check “Override SSL detection” to continue activating SSL.", "really-simple-ssl"),
 			"status" => "error"
 		];
 	}

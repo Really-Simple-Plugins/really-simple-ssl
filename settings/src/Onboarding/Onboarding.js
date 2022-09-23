@@ -111,11 +111,10 @@ const Onboarding = (props) => {
         setStepsChanged(findItem+newAction+newStatus);
     }
 
-    const itemButtonHandler = (id, type, action) => {
+    const itemButtonHandler = (id, action) => {
         let data={};
         data.action = action;
         data.id = id;
-        data.type = type;
         updateActionForItem(id, action, false);
         rsssl_api.onboardingActions(data).then( ( response ) => {
             if ( response.data.success ){
@@ -146,7 +145,7 @@ const Onboarding = (props) => {
     const parseStepItems = (items) => {
         return items.map((item, index) => {
 
-            let { title, current_action, action, status, help, button, id, type, percentage } = item
+            let { title, current_action, action, status, button, id, percentage } = item
             const statuses = {
                 'inactive': {
                     'icon': 'bullet',
@@ -179,10 +178,9 @@ const Onboarding = (props) => {
                 'completed': __('Finished',"really-simple-ssl"),
             };
 
-
             let buttonTitle = '';
             if ( button ) {
-                buttonTitle = button.title;
+                buttonTitle = button;
                 if ( current_action!=='none' ) {
                     buttonTitle = currentActions[current_action];
                     if (current_action==='failed') {
@@ -190,8 +188,7 @@ const Onboarding = (props) => {
                     }
                 }
             }
-            let isLink = (button && button.title===buttonTitle);
-
+            let showLink = (button && button===buttonTitle);
             return (
                 <li key={index} >
                     <Icon name = {statusIcon} color = {statusColor} />
@@ -202,8 +199,8 @@ const Onboarding = (props) => {
                         {networkProgress>=100 && __("completed", "really-simple-ssl") }
                         </>}
                     {button && <>&nbsp;-&nbsp;
-                    {isLink && <Button className={"button button-secondary"} isLink={true} onClick={() => itemButtonHandler(id, type, action)}>{buttonTitle}</Button>}
-                    {!isLink && <>{buttonTitle}</>}
+                    {showLink && <Button className={"button button-secondary"} isLink={true} onClick={() => itemButtonHandler(id, action)}>{buttonTitle}</Button>}
+                    {!showLink && <>{buttonTitle}</>}
                     {current_action==='activate' || current_action==='install_plugin' &&
                         <div className="rsssl-loader">
                             <div className="rect1" key="1"></div>
@@ -283,7 +280,7 @@ const Onboarding = (props) => {
                                 <div className="rsssl-modal-description">
                                    <a href="#" onClick={ (e) => refreshSSLStatus(e)}>
                                        { __("Refresh SSL status", "really-simple-ssl")}
-                                   </a>&nbsp;{__("The SSL detection method is not 100% accurate.", "really-simple-ssl")}.&nbsp;
+                                   </a>&nbsp;{__("The SSL detection method is not 100% accurate.", "really-simple-ssl")}&nbsp;
                                    {__("If you’re certain an SSL certificate is present, and refresh SSL status does not work, please check “Override SSL detection” to continue activating SSL.", "really-simple-ssl")}
                                 </div> }
                             <div className="rsssl-modal-content-step-footer">

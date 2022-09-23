@@ -116,6 +116,8 @@ if ( !class_exists('rsssl_installer') ){
 			$slug = $this->get_activation_slug();
 	        $networkwide = is_multisite() && rsssl_is_networkwide_active();
             $result = activate_plugin( $slug, '', $networkwide );
+			x_log("activate");
+			x_log($result);
 			if (is_wp_error($result)){
 				return false;
 			}

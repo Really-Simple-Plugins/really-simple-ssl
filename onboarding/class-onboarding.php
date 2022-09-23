@@ -140,27 +140,35 @@ class rsssl_onboarding {
 		$error = false;
 		$data = $request->get_json_params();
 		$next_action = 'none';
+		x_log($data);
+		switch(sanitize_title($data['action'])) {
+			case 'install_plugin':
+				x_log("install");
 
-		if ( $data['type']==='plugin') {
-			require_once(rsssl_path . 'class-installer.php');
-			$plugin = new rsssl_installer($data['id']);
-			if ( $data['action']==='install_plugin') {
+				require_once(rsssl_path . 'class-installer.php');
+				$plugin = new rsssl_installer($data['id']);
 				$success = $plugin->download_plugin();
 				$error = !$success;
 				$next_action = 'activate';
-			} else {
+				break;
+			case 'activate':
+				x_log("activate");
+
+				require_once(rsssl_path . 'class-installer.php');
+				$plugin = new rsssl_installer($data['id']);
 				$success = $plugin->activate_plugin();
 				$error = !$success;
 				$next_action = 'completed';
-			}
-		} else if ($data['type']==='setting') {
-			if ( $data['id'] ==='hardening' ) {
+				break;
+			case 'activate_setting':
+				x_log("setting");
 				foreach ($this->hardening as $h ){
 					rsssl_update_option($h, true);
 				}
 				$next_action = 'completed';
-			}
+				break;
 		}
+
 		$output = [
 			'next_action' => $next_action,
 			'success' => !$error

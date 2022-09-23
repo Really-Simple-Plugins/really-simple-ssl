@@ -9,7 +9,10 @@
     }
     .components-snackbar{
       @include rsssl-block;
-      color: var(--rsp-text-color);
+      color: var(--rsp-color-success);
+      background-color: #fff;
+      font-weight:700;
+      font-size:14px;
     }
   }
 }

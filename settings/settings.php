@@ -309,14 +309,14 @@ function rsssl_other_plugins_data($slug=false){
 
     foreach ($plugins as $index => $plugin ){
 	    $installer = new rsssl_installer($plugin['slug']);
-        if ( !$installer->plugin_is_downloaded() && !$installer->plugin_is_activated() ) {
+        if ( $plugin['constant_premium'] && defined($plugin['constant_premium']) ) {
+	        $plugins[$index]['pluginAction'] = 'installed';
+        } else if ( !$installer->plugin_is_downloaded() && !$installer->plugin_is_activated() ) {
 	        $plugins[$index]['pluginAction'] = 'download';
         } else if ( $installer->plugin_is_downloaded() && !$installer->plugin_is_activated() ) {
 	        $plugins[ $index ]['pluginAction'] = 'activate';
-        } else if ( $installer->plugin_is_activated() && $plugin['constant_premium'] && !defined($plugin['constant_premium'])) {
+        } else {
 		    $plugins[$index]['pluginAction'] = 'upgrade-to-premium';
-	    } else {
-		    $plugins[$index]['pluginAction'] = 'installed';
 	    }
     }
 
