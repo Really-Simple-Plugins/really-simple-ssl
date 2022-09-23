@@ -235,7 +235,7 @@ class rsssl_admin
 			$this->detect_configuration();
 			$rule = $this->get_redirect_rules();
             if ( !empty($rule) )  {
-	            $rules[] = ['rules' => "\n#test" . $rule, 'identifier' => 'RewriteRule ^(.*)$ https://%{HTTP_HOST}/$1'];
+	            $rules[] = ['rules' => $rule, 'identifier' => 'RewriteRule ^(.*)$ https://%{HTTP_HOST}/$1'];
             }
         }
 
@@ -1449,18 +1449,16 @@ class rsssl_admin
 
     public function contains_rsssl_rules()
     {
-        if (!file_exists($this->htaccess_file())) {
+        if ( !file_exists($this->htaccess_file()) ) {
             return false;
         }
 
         $htaccess = file_get_contents($this->htaccess_file());
-
-        $check = null;
-
-        preg_match("/BEGIN rlrssslReallySimpleSSL/", $htaccess, $check);
-	    preg_match("/BEGIN Really Simple SSL Redirect/", $htaccess, $check);
-
-        if (count($check) === 0) {
+	    if (
+            preg_match( "/BEGIN rlrssslReallySimpleSSL/", $htaccess, $matches ) ||
+            preg_match( "/BEGIN Really Simple SSL Redirect/", $htaccess, $matches ) ||
+            preg_match( "/Begin Really Simple Security/", $htaccess, $matches )
+        ) {
             return false;
         } else {
             return true;
@@ -1725,7 +1723,7 @@ class rsssl_admin
         $rule = "";
         //if the htaccess test was successfull, and we know the redirectype, edit
         if ( rsssl_get_option('ssl_enabled') && rsssl_get_option('redirect')==='htaccess' && ($manual || $this->htaccess_test_success) && $this->ssl_type != "NA") {
-            $rule .= "<IfModule mod_rewrite.c>" . "\n";
+            $rule .= "\n" . "<IfModule mod_rewrite.c>" . "\n";
             $rule .= "RewriteEngine on" . "\n";
             if ($this->ssl_type == "SERVER-HTTPS-ON") {
                 $rule .= "RewriteCond %{HTTPS} !=on [NC]" . "\n";
@@ -1763,13 +1761,8 @@ class rsssl_admin
             $rule .= "</IfModule>" . "\n";
         }
 
-        if (strlen($rule) > 0) {
-            $rule = "\n" . "# BEGIN Really Simple SSL Redirect" . rsssl_version . "\n" . $rule . "# END Really Simple SSL Redirect" . "\n";
-        }
-
         $rule = apply_filters("rsssl_htaccess_output", $rule);
-        $rule = preg_replace("/\n+/", "\n", $rule);
-        return $rule;
+        return preg_replace("/\n+/", "\n", $rule);
     }
 
     /**

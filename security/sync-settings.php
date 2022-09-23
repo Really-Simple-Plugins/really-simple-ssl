@@ -29,16 +29,14 @@ function rsssl_disable_fields($field, $field_id){
 					$field['value'] = true;
 					$field['disabled'] = true;
 				}
+				//if not the defaul location
+				if ( rsssl_get_debug_log_value()!=='true' ) {
+					$field['help'] = [
+						'label' => 'default',
+						'text' => __( "Changed debug.log location:", 'really-simple-ssl' ).strstr( rsssl_get_debug_log_value(), 'wp-content' ),
+					];
+				}
 			}
-
-			//if not the defaul location
-			if ( !rsssl_get_debug_log_value() ) {
-				$field['help'] = [
-					'label' => 'default',
-					'text' => __( "Changed debug.log location:", 'really-simple-ssl' ).strstr( rsssl_get_debug_log_value(), 'wp-content' ),
-				];
-			}
-
 		}
 
 	}

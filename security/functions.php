@@ -171,7 +171,7 @@ if ( ! function_exists('rsssl_wrap_htaccess' ) ) {
 								$new_htaccess = preg_replace( $pattern, $start . $rules_result . $end, $content_htaccess );
 							} else {
 								//add rules as new block
-								$new_htaccess = $content_htaccess . $start . $rules_result . $end;
+								$new_htaccess = $start . $rules_result . $end . $content_htaccess;
 							}
 							file_put_contents( $htaccess_file, $new_htaccess );
 

@@ -206,6 +206,7 @@ function rsssl_is_debugging_enabled() {
 	return ( defined('WP_DEBUG') && WP_DEBUG && defined('WP_DEBUG_LOG') && WP_DEBUG_LOG );
 }
 
+
 /**
  * Get value of debug_log constant
  *
@@ -213,6 +214,9 @@ function rsssl_is_debugging_enabled() {
  */
 
 function rsssl_get_debug_log_value(){
+	if ( !defined('WP_DEBUG_LOG')) {
+		return false;
+	}
 	$wpconfig_path = rsssl_find_wp_config_path();
 	if ( !$wpconfig_path ) {
 		return false;

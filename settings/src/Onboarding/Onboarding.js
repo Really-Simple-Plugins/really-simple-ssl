@@ -76,20 +76,25 @@ const Onboarding = (props) => {
     }
 
     const activateSSL = () => {
+        setStepsChanged(false);
         let sslUrl = window.location.href.replace("http://", "https://");
         rsssl_api.runTest('activate_ssl' ).then( ( response ) => {
             steps[0].visible = false;
             steps[1].visible = true;
             //change url to https, after final check
-            //if ( response.data.success ) {
+            if ( response.data.success ) {
                 setSteps(steps);
+                setStepsChanged(true);
                 setsslActivated(response.data.success);
                 if (response.data.site_url_changed) {
                     window.location.reload();
-                } else if (networkwide) {
-                    setNetworkActivationStatus('main_site_activated');
+                } else {
+                    props.getFields();
+                    if ( networkwide ) {
+                        setNetworkActivationStatus('main_site_activated');
+                    }
                 }
-            //}
+            }
         });
     }
 
@@ -264,7 +269,7 @@ const Onboarding = (props) => {
 
     return (
         <>
-            {!stepsChanged && <Placeholder lines="12"></Placeholder>}
+            { !stepsChanged && <Placeholder lines="12"></Placeholder>}
             {
                 stepsChanged && steps.map((step, index) => {
                     const {title, subtitle, items, info_text: infoText, visible} = step;
