@@ -35,7 +35,8 @@ function rsssl_disable_fields($field, $field_id){
 			if ( !rsssl_get_debug_log_value() ) {
 				$field['help'] = [
 					'label' => 'default',
-					// 'text' => __( "Changed debug.log location:", 'really-simple-ssl' ).strstr( rsssl_get_debug_log_value(), 'wp-content' ),
+					'title' => __( "Debugging", 'really-simple-ssl' ),
+					'text' => __( "Changed debug.log location to:", 'really-simple-ssl' ).strstr( rsssl_get_debug_log_value(), 'wp-content' ),
 				];
 			}
 

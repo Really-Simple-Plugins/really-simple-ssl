@@ -26,6 +26,7 @@ function rsssl_le_get_notices_list($notices) {
 		'score'     => 10,
 		'output'    => array(
 			'false'  => array(
+				'title' => 	 __( "Domain", 'really-simple-ssl' ),
 				'msg'         => $text,
 				'icon'        => 'open',
 				'plusone'     => true,
@@ -172,5 +173,3 @@ function rsssl_le_progress_footer_renew_ssl($button){
 	return $button;
 }
 add_filter("rsssl_progress_footer_right", "rsssl_le_progress_footer_renew_ssl", 30);
-
-

@@ -124,12 +124,14 @@ class rsssl_firewall_manager {
 			'score' => 5,
 			'output' => array(
 				'wpconfig-notwritable' => array(
+					'title' => __("Firewall", "really-simple-ssl"),
 					'msg' => __("A firewall rule was enabled, but the wp-config.php is not writable.", "really-simple-ssl").' '.__("Please set the wp-config.php to writable until the rule has been written.", "really-simple-ssl"),
 					'icon' => 'open',
 					'dismissible' => true,
 				),
 				'advanced-headers-notwritable' => array(
-					'msg' => __("A firewall rule was enabled, but the wp-content/ folder is not writable.", "really-simple-ssl").' '.__("Please set the wp-content folder to writable:", "really-simple-ssl"),
+						'title' => __("Firewall", "really-simple-ssl"),
+						'msg' => __("A firewall rule was enabled, but /the wp-content/ folder is not writable.", "really-simple-ssl").' '.__("Please set the wp-content folder to writable:", "really-simple-ssl"),
 					'icon' => 'open',
 					'dismissible' => true,
 				),
