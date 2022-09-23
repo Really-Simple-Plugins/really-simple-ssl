@@ -140,11 +140,8 @@ class rsssl_onboarding {
 		$error = false;
 		$data = $request->get_json_params();
 		$next_action = 'none';
-		x_log($data);
 		switch(sanitize_title($data['action'])) {
 			case 'install_plugin':
-				x_log("install");
-
 				require_once(rsssl_path . 'class-installer.php');
 				$plugin = new rsssl_installer($data['id']);
 				$success = $plugin->download_plugin();
@@ -152,8 +149,6 @@ class rsssl_onboarding {
 				$next_action = 'activate';
 				break;
 			case 'activate':
-				x_log("activate");
-
 				require_once(rsssl_path . 'class-installer.php');
 				$plugin = new rsssl_installer($data['id']);
 				$success = $plugin->activate_plugin();
@@ -161,7 +156,6 @@ class rsssl_onboarding {
 				$next_action = 'completed';
 				break;
 			case 'activate_setting':
-				x_log("setting");
 				foreach ($this->hardening as $h ){
 					rsssl_update_option($h, true);
 				}
