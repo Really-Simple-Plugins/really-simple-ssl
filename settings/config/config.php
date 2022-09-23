@@ -325,7 +325,7 @@ function rsssl_fields( $load_values = true ){
 				'text'  => __( 'If this option is set to true, the mixed content fixer will fire on the init hook instead of the template_redirect hook. Only use this option when you experience problems with the mixed content fixer.', 'really-simple-ssl' ),
 			],
 			'disabled'    => false,
-			'required'    => true,
+			'required'    => false,
 			'default'     => false,
 			'react_conditions' => [
 				'relation' => 'AND',

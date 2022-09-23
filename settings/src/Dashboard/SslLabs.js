@@ -88,12 +88,8 @@ const SslLabs = (props) => {
                         //if the endpoint already is stored, replace it.
                         let foundEndpoint = false;
                         endpointData.forEach(function(endpoint, i) {
-                            console.log(response.ipAddress);
-                            console.log(endpoint.ipAddress);
 
                             if ( endpoint.ipAddress === response.ipAddress ) {
-                                console.log("found on "+i);
-
                                 endpointData[i] = response;
                                 foundEndpoint = true;
                             }
@@ -299,8 +295,6 @@ const SslLabs = (props) => {
             });
             status = failedData.length>0 ? 'error' : 'success';
         }
-        console.log("certificate status");
-        console.log(endpointData);
         return (
             <>
             {(status==='inactive') && scoreSnippet("rsssl-test-inactive", __("Certificate","really-simple-ssl"))}

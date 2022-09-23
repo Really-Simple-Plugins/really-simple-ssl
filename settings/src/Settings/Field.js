@@ -58,11 +58,6 @@ class Field extends Component {
      * @param type
      */
     onChangeHandlerDataTable(enabled, clickedItem, type ) {
-            console.log("onchange handler datatable");
-            console.log(enabled);
-            console.log(clickedItem);
-            console.log(type);
-            console.log(this.field);
         let field=this.field;
         if (typeof field.value === 'object') {
             field.value = Object.values(field.value);

@@ -79,9 +79,9 @@ class SettingsPage extends Component {
             nextButtonDisabled,
         } = this.state;
         if (nextButtonDisabled !== disable ) {
-                this.setState({
-                    nextButtonDisabled:disable,
-                });
+            this.setState({
+                nextButtonDisabled:disable,
+            });
         }
 
     }

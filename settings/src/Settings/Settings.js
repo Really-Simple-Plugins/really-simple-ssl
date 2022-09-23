@@ -20,6 +20,11 @@ class Settings extends Component {
         };
     }
 
+    componentDidMount(){
+        this.toggleNotices = this.toggleNotices.bind(this);
+        this.saveAndContinue = this.saveAndContinue.bind(this);
+    }
+
     toggleNotices(){
         const {
             noticesExpanded,
@@ -28,6 +33,13 @@ class Settings extends Component {
         this.setState({
             noticesExpanded:!noticesExpanded,
         });
+    }
+
+    saveAndContinue(){
+        if (!this.props.nextButtonDisabled) {
+            this.props.saveAndContinue();
+        }
+
     }
 
     render() {
@@ -88,6 +100,7 @@ class Settings extends Component {
             notices.push(notice.help);
         }
         notices = notices.filter(notice => notice.label.toLowerCase()!=='completed');
+        let continueLink = this.props.nextButtonDisabled ? `#${this.props.selectedMainMenuItem}/${this.props.selectedMenuItem}` : `#${this.props.selectedMainMenuItem}/${this.props.nextMenuItem}`;
         return (
             <Fragment>
                 <div className="rsssl-wizard-settings rsssl-column-2">
@@ -133,7 +146,7 @@ class Settings extends Component {
                         {/*This will be shown only if current step is not the last one*/}
                         { this.props.selectedMenuItem !== menuItems[menuItems.length-1].id &&
                             <>
-                                <a disabled={this.props.nextButtonDisabled} className="button button-primary" href={`#${this.props.selectedMainMenuItem}/${this.props.nextMenuItem}`} onClick={ this.props.saveAndContinue }>
+                                <a disabled={this.props.nextButtonDisabled} className="button button-primary" href={continueLink} onClick={ this.saveAndContinue }>
                                     { __( 'Save and Continue', 'really-simple-ssl' ) }
                                 </a>
                             </>

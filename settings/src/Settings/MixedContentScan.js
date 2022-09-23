@@ -67,7 +67,6 @@ class MixedContentScan extends Component {
         if (this.props.field.value.state ){
             completedStatus = this.props.field.value.completed_status;
         }
-        console.log(state);
         if (this.props.field.value.nonce ){
             this.nonce = this.props.field.value.nonce;
         }
@@ -195,7 +194,6 @@ class MixedContentScan extends Component {
             data = [];
         }
         completedStatus = completedStatus ? completedStatus.toLowerCase() : 'never';
-        console.log(state);
         let dropItem = this.props.dropItemFromModal;
         for (const item of data) {
             item.warningControl = <span className="rsssl-task-status rsssl-warning">{__("Warning", "really-simple-ssl")}</span>

@@ -50,7 +50,6 @@ class Page extends Component {
             let selectedMainMenuItem =  getAnchor('main') || 'dashboard';
             this.menu = this.getSelectedMenu(this.superMenu, selectedMainMenuItem);
             this.fields = response.fields;
-            console.log(this.fields);
             this.progress = response.progress;
             this.setState({
                 isAPILoaded: true,
@@ -241,10 +240,7 @@ class Page extends Component {
         this.selectMainMenu('settings');
         //get menu item based on fieldId
         let selectedField = null;
-        console.log(this.fields);
         let fields = this.fields.filter(field => field.id === fieldId);
-        console.log("highlist "+fieldId);
-        console.log(fields);
         if (fields.length) {
             selectedField = fields[0];
             this.selectMenu(selectedField.menu_id);
