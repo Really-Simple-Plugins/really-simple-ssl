@@ -204,6 +204,7 @@ class SettingsPage extends Component {
         this.save()
     }
 
+
     validateConditions(conditions, fields){
         let relation = conditions.relation === 'OR' ? 'OR' : 'AND';
         let conditionApplies = relation==='AND' ? true : false;
@@ -226,6 +227,7 @@ class SettingsPage extends Component {
                                     conditionValue = +conditionValue;
                                     thisConditionApplies = actualValue === conditionValue;
                                 } else {
+                                    console.log(conditionValue);
                                     if (conditionValue.indexOf('EMPTY')!==-1){
                                         if (conditionValue.indexOf('NOT ')!==-1) {
                                             invert=true;

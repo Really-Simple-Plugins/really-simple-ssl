@@ -299,28 +299,6 @@ if ( !function_exists('rsssl_progress_remove')) {
 	}
 }
 
-if ( !function_exists('rsssl_php_requirement_met')) {
-	/**
-	 * Get PHP version status for tests
-	 *
-	 * @return RSSSL_RESPONSE
-	 */
-	function rsssl_php_requirement_met() {
-		if ( version_compare( PHP_VERSION, rsssl_le_php_version, '<' ) ) {
-			rsssl_progress_remove( 'system-status' );
-			$action  = 'stop';
-			$status  = 'error';
-			$message = sprintf( __( "The minimum requirements for the PHP version have not been met. Please upgrade to %s", "really-simple-ssl" ), rsssl_le_php_version );
-		} else {
-			$action  = 'continue';
-			$status  = 'success';
-			$message = __( "You have the required PHP version to continue.", "really-simple-ssl" );
-		}
-
-		return new RSSSL_RESPONSE( $status, $action, $message );
-	}
-}
-
 if ( !function_exists('rsssl_do_local_lets_encrypt_generation')) {
 	/**
 	 * Check if the setup requires local certificate generation

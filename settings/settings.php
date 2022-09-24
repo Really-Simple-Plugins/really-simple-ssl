@@ -57,7 +57,7 @@ function rsssl_add_option_menu() {
         return;
 	}
 
-	$count = RSSSL()->really_simple_ssl->count_plusones();
+	$count = RSSSL()->admin->count_plusones();
 	$update_count = $count > 0 ? "<span class='update-plugins rsssl-update-count'><span class='update-count'>$count</span></span>" : "";
 	$page_hook_suffix = add_options_page(
 		__("SSL settings", "really-simple-ssl"),
@@ -625,7 +625,6 @@ function rsssl_sanitize_field( $value, $type, $id ) {
 		case 'checkbox':
 			return intval($value);
 		case 'hidden':
-		case 'database':
 			return sanitize_title($value);
 		case 'select':
 		case 'host':

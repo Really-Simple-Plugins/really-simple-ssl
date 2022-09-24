@@ -48,12 +48,6 @@ function rsssl_le_add_fields($fields) {
 				'default' => false,
 				'actions' => [
 					[
-						'description' => __( "Checking PHP version...", "really-simple-ssl" ),
-						'action'      => 'rsssl_php_requirement_met',
-						'attempts'    => 1,
-						'status'      => 'inactive',
-					],
-					[
 						'description' => __( "Checking SSL certificate...", "really-simple-ssl" ),
 						'action'      => 'certificate_status',
 						'attempts'    => 1,

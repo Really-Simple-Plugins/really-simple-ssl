@@ -39,6 +39,15 @@ class rsssl_admin
 	    add_action( 'admin_init', array($this, 'insert_secure_cookie_settings'), 70 );
         add_action( 'admin_init', array($this, 'recheck_certificate') );
 
+	    /**
+	     * Htaccess redirect handling
+	     */
+        error_log("add filter htaccess");
+	    add_filter( 'rsssl_htaccess_security_rules', array($this, 'add_htaccess_redirect') );
+	    add_action( 'rocket_activation', array($this, 'removeHtaccessEdit' ) );
+	    add_filter( 'before_rocket_htaccess_rules', array($this, 'add_htaccess_redirect_before_wp_rocket' ) );
+	    add_action( 'rsssl_after_save_field', array($this, 'maybe_flush_wprocket_htaccess' ),100, 4 );
+
         // Saved fields hook fired through REST settings save
 	    add_action( "rsssl_after_saved_fields", array( $this, "clear_transients" ), 10, 3 );
 
@@ -137,19 +146,13 @@ class rsssl_admin
 
     public function init()
     {
-        if (!rsssl_user_can_manage()) return;
+        if ( !rsssl_user_can_manage() ) {
+            return;
+        }
         $is_on_settings_page = $this->is_settings_page();
         if (defined("RSSSL_FORCE_ACTIVATE") && RSSSL_FORCE_ACTIVATE) {
             rsssl_update_option( 'ssl_enabled', true );
         }
-
-	    /**
-	     * Htaccess redirect handling
-	     */
-	    add_filter( 'rsssl_htaccess_security_rules', array($this, 'add_htaccess_redirect') );
-	    add_action( 'rocket_activation', array($this, 'removeHtaccessEdit' ) );
-	    add_filter( 'before_rocket_htaccess_rules', array($this, 'add_htaccess_redirect_before_wp_rocket' ) );
-	    add_filter( 'rsssl_after_save_field', array($this, 'maybe_flush_wprocket_htaccess' ),100, 4 );
 
         /*
          * check if we're one minute past the activation. Then flush rewrite rules
@@ -170,7 +173,7 @@ class rsssl_admin
 	    $less_than_5_minutes_ago = get_option('rsssl_flush_caches') > strtotime("-5 minute");
 	    if (get_option('rsssl_flush_caches') && $more_than_2_minute_ago && $less_than_5_minutes_ago){
 		    delete_option('rsssl_flush_caches');
-		    add_action('shutdown', array( RSSSL()->rsssl_cache, 'flush' )  );
+		    add_action('shutdown', array( RSSSL()->cache, 'flush' )  );
 	    }
 
         // Set default progress toggle to remaining tasks if it hasn't been set
@@ -193,7 +196,7 @@ class rsssl_admin
                 $this->save_options();
             } else {
 	            //when one of the used server variables was found, test if the redirect works
-	            if (RSSSL()->rsssl_server->uses_htaccess() && $this->ssl_type != "NA") {
+	            if ( RSSSL()->server->uses_htaccess() && $this->ssl_type != "NA" ) {
 		            $this->test_htaccess_redirect();
 	            }
             }
@@ -363,15 +366,13 @@ class rsssl_admin
 		        $this->wpconfig_server_variable_fix();
 	        }
 
-	        if ( !$safe_mode ) {
-		        rsssl_wrap_htaccess();
-	        }
-
 	        if ( !$safe_mode && $this->wpconfig_siteurl_not_fixed ){
 		        $this->fix_siteurl_defines_in_wpconfig();
 	        }
 
 	        if ( !$safe_mode ) {
+		        rsssl_update_option('redirect', 'wp_redirect');
+
 		        //flush caches when just activated ssl
 		        //flush the permalinks
 		        update_option('rsssl_activation_timestamp', time(), false );
@@ -379,7 +380,6 @@ class rsssl_admin
 			        update_option('rsssl_flush_rewrite_rules', time(), false );
 		        }
 		        update_option('rsssl_flush_caches', time(), false );
-		        rsssl_update_option('redirect', 'wp_redirect');
 	        }
 	        rsssl_update_option('ssl_enabled', true);
 	        $site_url_changed = $this->set_siteurl_to_ssl();
@@ -1106,7 +1106,7 @@ class rsssl_admin
 
 	        //when on multisite, per site activation, recreate domain list for htaccess and wpconfig rewrite actions
 	        if ( is_multisite() ) {
-		        RSSSL()->rsssl_multisite->deactivate();
+		        RSSSL()->multisite->deactivate();
 	        }
 	        do_action("rsssl_deactivate");
 
@@ -1195,7 +1195,7 @@ class rsssl_admin
             $this->site_has_ssl = TRUE;
         } else {
             //if certificate is valid
-            $this->site_has_ssl = RSSSL()->rsssl_certificate->is_valid();
+            $this->site_has_ssl = RSSSL()->certificate->is_valid();
         }
 
         if ( $this->site_has_ssl ) {
@@ -1251,7 +1251,6 @@ class rsssl_admin
         $this->save_options();
     }
 
-
     /**
      * Test if the htaccess redirect will work
      * This way, no redirect loops should occur.
@@ -1264,8 +1263,6 @@ class rsssl_admin
 
     public function test_htaccess_redirect()
     {
-        if (!rsssl_user_can_manage()) return;
-
         $this->htaccess_test_success = get_transient('rsssl_htaccess_test_success');
         if (!$this->htaccess_test_success) {
             $filecontents = "";
@@ -1362,7 +1359,7 @@ class rsssl_admin
         }
 
         //for subdomains or domain mapping situations, we have to convert the plugin_url from main site to the subdomain url.
-        if (is_multisite() && (!is_main_site(get_current_blog_id())) && (!RSSSL()->rsssl_multisite->is_multisite_subfolder_install())) {
+        if (is_multisite() && (!is_main_site(get_current_blog_id())) && (!RSSSL()->multisite->is_multisite_subfolder_install())) {
             $mainsiteurl = trailingslashit(str_replace("http://", "https://", network_site_url()));
 
             $home = trailingslashit($https_home_url);
@@ -1415,7 +1412,7 @@ class rsssl_admin
     {
         if ( is_multisite() && !$this->can_apply_networkwide() ) {
             return false;
-        } if (RSSSL()->rsssl_server->uses_htaccess()) {
+        } if (RSSSL()->server->uses_htaccess()) {
             return true;
         } else {
             return false;
@@ -1475,11 +1472,11 @@ class rsssl_admin
 
     public function has_301_redirect()
     {
-        if ( rsssl_get_option('redirect') === 'wp_redirect' ) {
+        if ( rsssl_get_option('redirect') !== 'none' ) {
             return true;
         }
 
-        if ( RSSSL()->rsssl_server->uses_htaccess() && $this->htaccess_contains_redirect_rules()) {
+        if ( RSSSL()->server->uses_htaccess() && $this->htaccess_contains_redirect_rules()) {
             return true;
         }
 
@@ -1599,7 +1596,7 @@ class rsssl_admin
         }
 
         if ( $curl_check_done === 'no' ) {
-	        if (RSSSL()->rsssl_server->uses_htaccess() && file_exists($this->htaccess_file())) {
+	        if (RSSSL()->server->uses_htaccess() && file_exists($this->htaccess_file())) {
 		        $htaccess = file_get_contents($this->htaccess_file());
 		        foreach ($check_headers as $check_header){
 			        if ( !preg_match("/".$check_header['pattern']."/", $htaccess, $check) ) {
@@ -1721,8 +1718,13 @@ class rsssl_admin
     {
         //only add the redirect rules when a known type of SSL was detected. Otherwise, we use https.
         $rule = "";
+	    $this->test_htaccess_redirect();
         //if the htaccess test was successfull, and we know the redirectype, edit
-        if ( rsssl_get_option('ssl_enabled') && rsssl_get_option('redirect')==='htaccess' && ($manual || $this->htaccess_test_success) && $this->ssl_type != "NA") {
+        if (
+                rsssl_get_option('ssl_enabled') &&
+                rsssl_get_option('redirect')==='htaccess' &&
+                ($manual || $this->htaccess_test_success) && $this->ssl_type != "NA"
+        ) {
             $rule .= "\n" . "<IfModule mod_rewrite.c>" . "\n";
             $rule .= "RewriteEngine on" . "\n";
             if ($this->ssl_type == "SERVER-HTTPS-ON") {
@@ -2115,7 +2117,7 @@ class rsssl_admin
         $notices = array(
 	        'load_balancer_fix' => array(
 		        'condition' => ['NOT rsssl_ssl_enabled'],
-		        'callback' => 'RSSSL()->really_simple_ssl->do_wpconfig_loadbalancer_fix',
+		        'callback' => 'RSSSL()->admin->do_wpconfig_loadbalancer_fix',
 		        'score' => 30,
 		        'output' => array(
 			        'true' => array(
@@ -2137,7 +2139,7 @@ class rsssl_admin
 	        ),
               'site_url_in_wpconfig' => array(
                 'condition' => ['NOT rsssl_ssl_enabled'],
-                'callback' => 'RSSSL()->really_simple_ssl->wpconfig_siteurl_not_fixed',
+                'callback' => 'RSSSL()->admin->wpconfig_siteurl_not_fixed',
                 'score' => 30,
                 'output' => array(
                     'true' => array(
@@ -2152,7 +2154,7 @@ class rsssl_admin
             ),
 
             'deactivation_file_detected' => array(
-                'callback' => 'RSSSL()->really_simple_ssl->check_for_uninstall_file',
+                'callback' => 'RSSSL()->admin->check_for_uninstall_file',
                 'score' => 30,
                 'output' => array(
                     'true' => array(
@@ -2167,7 +2169,7 @@ class rsssl_admin
             ),
 
             'non_default_plugin_folder' => array(
-                'callback' => 'RSSSL()->really_simple_ssl->uses_default_folder_name',
+                'callback' => 'RSSSL()->admin->uses_default_folder_name',
                 'score' => 30,
                 'output' => array(
                     'false' => array(
@@ -2291,7 +2293,7 @@ class rsssl_admin
 
             'mixed_content_fixer_detected' => array(
                 'condition' => array('rsssl_ssl_enabled'),
-                'callback' => 'RSSSL()->really_simple_ssl->mixed_content_fixer_detected',
+                'callback' => 'RSSSL()->admin->mixed_content_fixer_detected',
                 'score' => 10,
                 'output' => array(
                     'found' => array(
@@ -2332,8 +2334,8 @@ class rsssl_admin
             ),
 
             'wordpress_redirect' => array(
-	            'condition' => array('rsssl_ssl_enabled', 'NOT RSSSL()->really_simple_ssl->htaccess_redirect_allowed'),
-	            'callback' => 'RSSSL()->really_simple_ssl->has_301_redirect',
+	            'condition' => array('rsssl_ssl_enabled', 'NOT RSSSL()->admin->htaccess_redirect_allowed'),
+	            'callback' => 'RSSSL()->admin->has_301_redirect',
                 'score' => 10,
                 'output' => array(
                      'true' => array(
@@ -2348,8 +2350,8 @@ class rsssl_admin
             ),
 
             'check_redirect' => array(
-	            'condition' => array('rsssl_ssl_enabled' , 'RSSSL()->really_simple_ssl->htaccess_redirect_allowed', 'NOT is_multisite'),
-	            'callback' => 'RSSSL()->really_simple_ssl->redirect_status',
+	            'condition' => array('rsssl_ssl_enabled' , 'RSSSL()->admin->htaccess_redirect_allowed', 'NOT is_multisite'),
+	            'callback' => 'RSSSL()->admin->redirect_status',
                 'score' => 10,
 	            'output' => array(
                     'htaccess-redirect-set' => array(
@@ -2357,14 +2359,15 @@ class rsssl_admin
                         'icon' => 'success'
                     ),
                     'wp-redirect-to-htaccess' => array(
-                        'highlight_field_id' => 'wp-redirect-to-htaccess',
+                        'highlight_field_id' => 'redirect',
                         'msg' => __('WordPress 301 redirect enabled. We recommend to enable a 301 .htaccess redirect.', 'really-simple-ssl'),
                         'icon' => 'open',
-                        'plusone' => RSSSL()->rsssl_server->uses_htaccess(),
+                        'plusone' => RSSSL()->server->uses_htaccess(),
                         'dismissible' => true,
                     ),
                     'no-redirect-set' => array(
-                        'msg' => __('Enable a .htaccess redirect or PHP redirect in the settings to create a 301 redirect.', 'really-simple-ssl') ,
+	                    'highlight_field_id' => 'redirect',
+	                    'msg' => __('Enable a .htaccess redirect or PHP redirect in the settings to create a 301 redirect.', 'really-simple-ssl') ,
                         'icon' => 'open',
                         'dismissible' => false
                     ),
@@ -2409,9 +2412,9 @@ class rsssl_admin
             'secure_cookies_set' => array(
 	            'condition' => array(
 	                    'rsssl_ssl_enabled',
-                        'RSSSL()->really_simple_ssl->can_apply_networkwide',
+                        'RSSSL()->admin->can_apply_networkwide',
                 ),
-	            'callback' => 'RSSSL()->really_simple_ssl->secure_cookie_settings_status',
+	            'callback' => 'RSSSL()->admin->secure_cookie_settings_status',
                 'score' => 5,
                 'output' => array(
                     'set' => array(
@@ -2445,7 +2448,7 @@ class rsssl_admin
             ),
 
 	        'recommended_security_headers_not_set' => array(
-		        'callback' => 'RSSSL()->really_simple_ssl->recommended_headers_enabled',
+		        'callback' => 'RSSSL()->admin->recommended_headers_enabled',
 		        'condition' => array('rsssl_ssl_enabled'),
 		        'score' => 5,
 		        'output' => array(
@@ -2517,7 +2520,7 @@ class rsssl_admin
 
             'bf_notice' => array(
 	            'condition'  => array(
-                        'RSSSL()->really_simple_ssl->is_bf'
+                        'RSSSL()->admin->is_bf'
                 ),
 	            'callback' => '_true_',
 	            'plus_one' => true,
@@ -3017,13 +3020,13 @@ class rsssl_admin
 		}
 
 		//if multisite, only on network wide activated setups
-		if ( is_multisite() && rsssl_is_networkwide_active() ) {
+		if ( is_multisite() && !rsssl_is_networkwide_active() ) {
             return;
 		}
 
 		//only if cookie settings were not inserted yet
 		if ( $this->secure_cookie_settings_status() !== 'set' ) {
-			$wpconfig_path = RSSSL()->really_simple_ssl->find_wp_config_path();
+			$wpconfig_path = RSSSL()->admin->find_wp_config_path();
 			$wpconfig = file_get_contents($wpconfig_path);
 			if ((strlen($wpconfig)!=0) && is_writable($wpconfig_path)) {
 				$rule  = "\n"."//Begin Really Simple SSL session cookie settings"."\n";
@@ -3216,24 +3219,24 @@ class rsssl_admin
 	 * @return string
 	 */
 	public function redirect_status() {
-		if ( ! RSSSL()->really_simple_ssl->has_301_redirect() ) {
+		if ( ! RSSSL()->admin->has_301_redirect() ) {
 			return 'no-redirect-set';
 		}
 
-		if ( RSSSL()->really_simple_ssl->has_301_redirect() && RSSSL()->rsssl_server->uses_htaccess() && RSSSL()->really_simple_ssl->htaccess_contains_redirect_rules() ) {
+		if ( RSSSL()->admin->has_301_redirect() && RSSSL()->server->uses_htaccess() && RSSSL()->admin->htaccess_contains_redirect_rules() ) {
 			return 'htaccess-redirect-set';
 		}
 
         //not writable is handled in the dedicated notice about htaccess permissions
-		if ( RSSSL()->rsssl_server->uses_htaccess() && ! is_writable( RSSSL()->really_simple_ssl->htaccess_file()) && $this->can_apply_networkwide() ) {
+		if ( RSSSL()->server->uses_htaccess() && ! is_writable( RSSSL()->admin->htaccess_file()) && $this->can_apply_networkwide() ) {
 			return 'no-redirect-set';
 		}
 
-		if ( rsssl_get_option('redirect') ==='htaccess' && !RSSSL()->really_simple_ssl->htaccess_test_success && $this->can_apply_networkwide()) {
+		if ( rsssl_get_option('redirect') ==='htaccess' && !RSSSL()->admin->htaccess_test_success && $this->can_apply_networkwide()) {
 			return 'htaccess-rules-test-failed';
 		}
 
-		if ( RSSSL()->really_simple_ssl->has_301_redirect() && rsssl_get_option('redirect')==='wp_redirect' && RSSSL()->rsssl_server->uses_htaccess() && rsssl_get_option('redirect') !== 'htaccess' && $this->can_apply_networkwide() ) {
+		if ( RSSSL()->admin->has_301_redirect() && rsssl_get_option('redirect')==='wp_redirect' && RSSSL()->server->uses_htaccess() && rsssl_get_option('redirect') !== 'htaccess' && $this->can_apply_networkwide() ) {
 			return 'wp-redirect-to-htaccess';
 		}
 
@@ -3249,19 +3252,19 @@ if (!function_exists('rsssl_ssl_enabled')) {
 
 if (!function_exists('rsssl_ssl_detected')) {
 	function rsssl_ssl_detected() {
-		if ( ! RSSSL()->really_simple_ssl->wpconfig_ok() ) {
+		if ( ! RSSSL()->admin->wpconfig_ok() ) {
 			return apply_filters('rsssl_ssl_detected', 'fail');
 		}
 
-		$valid = RSSSL()->rsssl_certificate->is_valid();
+		$valid = RSSSL()->certificate->is_valid();
 		if ( !$valid ) {
-		    if ( ! function_exists( 'stream_context_get_params' ) || RSSSL()->rsssl_certificate->detection_failed() ) {
+		    if ( ! function_exists( 'stream_context_get_params' ) || RSSSL()->certificate->detection_failed() ) {
 			    return apply_filters('rsssl_ssl_detected', 'no-response');
 		    } else {
 			    return apply_filters('rsssl_ssl_detected', 'no-ssl-detected');
 		    }
 		} else {
-		    $about_to_expire = RSSSL()->rsssl_certificate->about_to_expire();
+		    $about_to_expire = RSSSL()->certificate->about_to_expire();
 			if ( !$about_to_expire ) {
 				return apply_filters('rsssl_ssl_detected', 'ssl-detected');
 			} else {

@@ -111,7 +111,7 @@ class Field extends Component {
             disabled = true;
         }
 
-        if ( !field.visible || field.type==='database' ) {
+        if ( !field.visible ) {
             return (
                 <></>
             );
@@ -253,7 +253,7 @@ class Field extends Component {
             return (
                 <div className={this.highLightClass}>
                   <SelectControl
-                      disabled={ field.disabled }
+                      disabled={ disabled }
                       help={ field.comment }
                       label={ field.label }
                       onChange={ ( fieldValue ) => this.onChangeHandler(fieldValue) }

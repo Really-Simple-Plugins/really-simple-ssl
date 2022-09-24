@@ -223,7 +223,7 @@ if ( ! class_exists( 'rsssl_certificate' ) ) {
 				return false;
 	        }
 
-	        if (!$certinfo || RSSSL()->really_simple_ssl->is_settings_page()) {
+	        if (!$certinfo || RSSSL()->admin->is_settings_page()) {
 	            $url = 'https://'.str_replace(array('https://', 'http://'), '', $url);
                 $original_parse = parse_url($url, PHP_URL_HOST);
                 if ($original_parse) {

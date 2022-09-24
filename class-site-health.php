@@ -23,7 +23,7 @@ if ( !class_exists("rsssl_site_health") ) {
 		 */
 		public function health_check( $tests ) {
 			unset($tests['async']['https_status']);
-			if ( !RSSSL()->really_simple_ssl->dismiss_all_notices || is_multisite() && !rsssl_multisite::this()->dismiss_all_notices ) {
+			if ( !RSSSL()->admin->dismiss_all_notices || is_multisite() && !rsssl_multisite::this()->dismiss_all_notices ) {
 				$tests['direct']['rsssl-health'] = array(
 					'label' => __( 'SSL Status Test' , 'really-simple-ssl'),
 					'test'  => array($this, "health_test"),
@@ -62,7 +62,7 @@ if ( !class_exists("rsssl_site_health") ) {
 			);
 
 			//returns empty for sites without .htaccess, or if all headers are already in use
-			$recommended_headers = RSSSL()->really_simple_ssl->get_recommended_security_headers();
+			$recommended_headers = RSSSL()->admin->get_recommended_security_headers();
 			if (!empty($recommended_headers)) {
 				$style = '<style>.rsssl-sec-headers-list li {list-style-type:disc;margin-left:20px;}</style>';
 				$list = '<ul class="rsssl-sec-headers-list"><li>'.implode('</li><li>', $recommended_headers ).'</li></ul>';
@@ -106,7 +106,7 @@ if ( !class_exists("rsssl_site_health") ) {
 			);
 
 			if ( !rsssl_get_option('ssl_enabled') ) {
-				if ( RSSSL()->really_simple_ssl->site_has_ssl ) {
+				if ( RSSSL()->admin->site_has_ssl ) {
 					$result['status']      = 'critical';
 					$result['label']       = __( 'SSL is not enabled.', 'really-simple-ssl' );
 					$result['description'] = sprintf(
@@ -128,7 +128,7 @@ if ( !class_exists("rsssl_site_health") ) {
 					);
 				}
 			} else {
-				if ( !RSSSL()->really_simple_ssl->has_301_redirect() ) {
+				if ( !RSSSL()->admin->has_301_redirect() ) {
 					$result['status']      = 'recommended';
 					$result['label']       = __( 'No 301 redirect to SSL enabled.' , 'really-simple-ssl' );
 					$result['description'] = sprintf(
@@ -140,7 +140,7 @@ if ( !class_exists("rsssl_site_health") ) {
 						$url,
 						__( 'Enable 301 redirect', 'really-simple-ssl' )
 					);
-				} else if ( !is_multisite() && RSSSL()->rsssl_server->uses_htaccess() && !RSSSL()->really_simple_ssl->htaccess_redirect) {
+				} else if ( !is_multisite() && RSSSL()->server->uses_htaccess() && !RSSSL()->admin->htaccess_redirect) {
 					$result['status']      = 'recommended';
 					$result['label']       = __( '301 .htaccess redirect is not enabled.' , 'really-simple-ssl' );
 					$result['description'] = sprintf(

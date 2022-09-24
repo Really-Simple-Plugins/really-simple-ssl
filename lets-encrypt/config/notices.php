@@ -8,7 +8,7 @@
  */
 function rsssl_le_get_notices_list($notices) {
 	//expiration date requests are cached.
-	$valid    = RSSSL()->rsssl_certificate->is_valid();
+	$valid    = RSSSL()->certificate->is_valid();
 	$certinfo = get_transient( 'rsssl_certinfo' );
 	$end_date = isset( $certinfo['validTo_time_t'] ) ? $certinfo['validTo_time_t'] : false;
 	//if the certificate expires within the grace period, allow renewal
@@ -41,7 +41,7 @@ function rsssl_le_get_notices_list($notices) {
 		if ( $expiry_date ) {
 			$notices['ssl_detected'] = array(
 				'condition' => array( 'rsssl_ssl_enabled' ),
-				'callback'  => 'RSSSL()->rsssl_certificate->about_to_expire',
+				'callback'  => 'RSSSL()->certificate->about_to_expire',
 				'score'     => 10,
 				'output'    => array(
 					'false' => array(
@@ -59,7 +59,7 @@ function rsssl_le_get_notices_list($notices) {
 		}
 
 		$notices['certificate_installation'] = array(
-			'condition' => array( 'rsssl_ssl_enabled', 'RSSSL()->rsssl_certificate->about_to_expire' ),
+			'condition' => array( 'rsssl_ssl_enabled', 'RSSSL()->certificate->about_to_expire' ),
 			'callback'  => 'RSSSL_LE()->letsencrypt_handler->certificate_renewal_status_notice',
 			'score'     => 10,
 			'output'    => array(
@@ -95,7 +95,7 @@ function rsssl_le_get_notices_list($notices) {
 	}
 
 	$notices['can_use_shell'] = array(
-		'condition' => array('rsssl_can_install_shell_addon' , 'RSSSL()->rsssl_certificate->about_to_expire'),
+		'condition' => array('rsssl_can_install_shell_addon' , 'RSSSL()->certificate->about_to_expire'),
 		'callback' => '_true_',
 		'score'     => 10,
 		'output'    => array(
@@ -152,7 +152,7 @@ add_filter( 'rsssl_notices', 'rsssl_le_get_notices_list', 30, 1 );
  * Replace the go pro or scan button with a renew SSL button when the cert should be renewed.
  */
 function rsssl_le_progress_footer_renew_ssl($button){
-	if ( rsssl_ssl_enabled() && RSSSL()->rsssl_certificate->about_to_expire() ){
+	if ( rsssl_ssl_enabled() && RSSSL()->certificate->about_to_expire() ){
 		$status = RSSSL_LE()->letsencrypt_handler->certificate_renewal_status_notice;
 		switch ($status){
 			case 'manual-installation':

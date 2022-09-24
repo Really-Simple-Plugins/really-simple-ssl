@@ -39,12 +39,12 @@ $step = 1;
 echo "<h1>Force deactivation of Really Simple SSL</h1>";
 echo $step . ". Resetting options" . "<br>";
 $networkwide = is_multisite();
-RSSSL()->really_simple_ssl->deactivate( $networkwide );
+RSSSL()->admin->deactivate( $networkwide );
 $step ++;
 
 echo $step . ". Deactivating plugin" . "<br>";
-rl_deactivate_plugin( RSSSL()->really_simple_ssl->plugin_dir . "/"
-                      . RSSSL()->really_simple_ssl->plugin_filename );
+rl_deactivate_plugin( RSSSL()->admin->plugin_dir . "/"
+                      . RSSSL()->admin->plugin_filename );
 
 $step ++;
 echo $step . ". Completed<b>";

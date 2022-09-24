@@ -12,14 +12,14 @@ defined('ABSPATH') or die("you do not have access to this page!");
 
         public function activate_ssl()
         {
-            RSSSL()->really_simple_ssl->activate_ssl(false);
+            RSSSL()->admin->activate_ssl(false);
             WP_CLI::success( 'SSL activated' );
 
         }
 
         public function deactivate_ssl()
         {
-            RSSSL()->really_simple_ssl->deactivate_ssl();
+            RSSSL()->admin->deactivate_ssl();
             WP_CLI::success( 'SSL deactivated' );
         }
 

@@ -40,9 +40,9 @@ class rsssl_onboarding {
 			case 'override_ssl_detection':
 				return $this->override_ssl_detection($request);
 			case 'activate_ssl':
-				return RSSSL()->really_simple_ssl->activate_ssl($request);
+				return RSSSL()->admin->activate_ssl($request);
 			case 'activate_ssl_networkwide':
-				return RSSSL()->rsssl_multisite->process_ssl_activation_step();
+				return RSSSL()->multisite->process_ssl_activation_step();
 			case 'get_modal_status':
 				return  ["dismissed" => get_option("rsssl_onboarding_dismissed") || !$this->show_onboarding_modal()];
 			case 'dismiss_modal':
@@ -85,7 +85,7 @@ class rsssl_onboarding {
 	public function maybe_redirect_to_settings_page() {
 		if ( get_transient('rsssl_redirect_to_settings_page' ) ) {
 			delete_transient('rsssl_redirect_to_settings_page' );
-			if ( !RSSSL()->really_simple_ssl->is_settings_page() ) {
+			if ( !RSSSL()->admin->is_settings_page() ) {
 				if ( is_multisite() && is_super_admin() && rsssl_is_networkwide_active() ) {
 					wp_redirect( add_query_arg(array('page' => 'really-simple-security'), network_admin_url('settings.php') )  );
 					exit;
@@ -197,7 +197,7 @@ class rsssl_onboarding {
 
 	function show_onboarding_modal() {
 		//for multisite environments, we check if the activation process was started but not completed.
-		if ( is_multisite() && RSSSL()->rsssl_multisite->ssl_activation_started_but_not_completed() ){
+		if ( is_multisite() && RSSSL()->multisite->ssl_activation_started_but_not_completed() ){
 			return true;
 		}
 
@@ -215,7 +215,7 @@ class rsssl_onboarding {
 			return false;
 		}
 
-		if ( ! RSSSL()->really_simple_ssl->wpconfig_ok() ) {
+		if ( ! RSSSL()->admin->wpconfig_ok() ) {
 			return false;
 		}
 

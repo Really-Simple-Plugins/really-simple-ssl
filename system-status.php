@@ -31,12 +31,12 @@ function rsssl_get_system_status(){
 	$output .=  "Plugin version: " . rsssl_version . "\n";
 	$output .=  "WordPress version: " . $wp_version . "\n";
 
-	if ( RSSSL()->rsssl_certificate->is_valid() ) {
+	if ( RSSSL()->certificate->is_valid() ) {
 		$output .=  "SSL certificate is valid\n";
 	} else {
 		if ( !function_exists('stream_context_get_params') ) {
 			$output .=  "stream_context_get_params not available\n";
-		} else if ( RSSSL()->rsssl_certificate->detection_failed() ) {
+		} else if ( RSSSL()->certificate->detection_failed() ) {
 			$output .=  "Not able to detect certificate\n";
 		} else {
 			$output .=  "Invalid SSL certificate\n";
@@ -61,8 +61,8 @@ function rsssl_get_system_status(){
 	$output .=  "\n";
 
 	$output .=  "Server information\n";
-	$output .=  "Server: " . RSSSL()->rsssl_server->get_server() . "\n";
-	$output .=  "SSL Type: " . RSSSL()->really_simple_ssl->ssl_type . "\n";
+	$output .=  "Server: " . RSSSL()->server->get_server() . "\n";
+	$output .=  "SSL Type: " . RSSSL()->admin->ssl_type . "\n";
 
 	if ( function_exists('phpversion')) {
 		$output .=  "PHP Version: " . phpversion() . "\n";
@@ -79,18 +79,18 @@ function rsssl_get_system_status(){
 	}
 
 	$output .=  "<br>" . "<b>" . "SSL Configuration" . "</b>";
-	$domain = RSSSL()->rsssl_certificate->get_domain();
-	$certinfo = RSSSL()->rsssl_certificate->get_certinfo($domain);
+	$domain = RSSSL()->certificate->get_domain();
+	$certinfo = RSSSL()->certificate->get_certinfo($domain);
 	if ( !$certinfo ) {
 		$output .=  "SSL certificate not valid<br>";
 	}
 
-	$domain_valid = RSSSL()->rsssl_certificate->is_domain_valid($certinfo, $domain);
+	$domain_valid = RSSSL()->certificate->is_domain_valid($certinfo, $domain);
 	if ( !$domain_valid ) {
 		$output .=  "Domain on certificate does not match website's domain<br>";
 	}
 
-	$date_valid = RSSSL()->rsssl_certificate->is_date_valid($certinfo);
+	$date_valid = RSSSL()->certificate->is_date_valid($certinfo);
 	if ( !$date_valid ) {
 		$output .=  "Date on certificate expired or not valid<br>";
 	}
@@ -100,20 +100,20 @@ function rsssl_get_system_status(){
 	} else {
 		$output .=  "Could not open testpage<br>";
 	}
-	if ( RSSSL()->really_simple_ssl->wpconfig_siteurl_not_fixed ) {
+	if ( RSSSL()->admin->wpconfig_siteurl_not_fixed ) {
 		$output .=  "siteurl or home url defines found in wpconfig<br>";
 	}
-	if ( RSSSL()->really_simple_ssl->wpconfig_siteurl_not_fixed ) {
+	if ( RSSSL()->admin->wpconfig_siteurl_not_fixed ) {
 		$output .=  "not able to fix wpconfig siteurl/homeurl.<br>";
 	}
 
-	if ( !is_writable(RSSSL()->really_simple_ssl->find_wp_config_path()) ) {
+	if ( !is_writable(RSSSL()->admin->find_wp_config_path()) ) {
 		$output .=  "wp-config.php not writable<br>";
 	}
-	$output .=  "Detected SSL setup: ".RSSSL()->really_simple_ssl->ssl_type."<br>";
-	if ( file_exists(RSSSL()->really_simple_ssl->htaccess_file()) ){
+	$output .=  "Detected SSL setup: ".RSSSL()->admin->ssl_type."<br>";
+	if ( file_exists(RSSSL()->admin->htaccess_file()) ){
 		$output .=  "htaccess file exists.<br>";
-		if ( !is_writable(RSSSL()->really_simple_ssl->htaccess_file()) ) {
+		if ( !is_writable(RSSSL()->admin->htaccess_file()) ) {
 			$output .=  "htaccess file not writable.<br>";
 		}
 	} else {
@@ -147,7 +147,7 @@ function rsssl_get_system_status(){
 	if ($mixed_content_fixer_detected === 'not-enabled') {
 		$output .=  "Mixed content fixer not enabled<br>";
 	}
-	if ( !RSSSL()->really_simple_ssl->htaccess_contains_redirect_rules() ) {
+	if ( !RSSSL()->admin->htaccess_contains_redirect_rules() ) {
 		$output .=  ".htaccess does not contain default Really Simple SSL redirect.<br>";
 	}
 

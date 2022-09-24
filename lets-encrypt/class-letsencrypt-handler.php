@@ -79,11 +79,11 @@ class rsssl_letsencrypt_handler {
 			return;
 		}
 
-		if ( !RSSSL()->rsssl_server->uses_htaccess() ) {
+		if ( !RSSSL()->server->uses_htaccess() ) {
 			return;
 		}
 
-		$htaccess_file = RSSSL()->really_simple_ssl->htaccess_file();
+		$htaccess_file = RSSSL()->admin->htaccess_file();
 		if ( !file_exists($htaccess_file) ) {
 			return;
 		}
@@ -262,7 +262,7 @@ class rsssl_letsencrypt_handler {
 	 */
     public function certificate_status(){
 	    delete_transient('rsssl_certinfo');
-	    if ( RSSSL()->rsssl_certificate->is_valid() ) {
+	    if ( RSSSL()->certificate->is_valid() ) {
 	    	//we have now renewed the cert info transient
 		    $certinfo = get_transient('rsssl_certinfo');
 		    $end_date = isset($certinfo['validTo_time_t']) ? $certinfo['validTo_time_t'] : false;
@@ -295,7 +295,7 @@ class rsssl_letsencrypt_handler {
 	 */
 
 	public function certificate_about_to_expire(){
-		$about_to_expire = RSSSL()->rsssl_certificate->about_to_expire();
+		$about_to_expire = RSSSL()->certificate->about_to_expire();
 		if ( !$about_to_expire ) {
 			//if the certificate is valid, stop any attempt to renew.
 			delete_option('rsssl_le_start_renewal');
@@ -1375,7 +1375,7 @@ class rsssl_letsencrypt_handler {
 				$challenge_dir           = $this->challenge_directory;
 				$has_writing_permissions = $this->directory_has_writing_permissions( $challenge_dir );
 				//we're guessing that if the challenge dir has writing permissions, the new dir will also have it.
-				if ( RSSSL()->rsssl_server->uses_htaccess() && $has_writing_permissions ) {
+				if ( RSSSL()->server->uses_htaccess() && $has_writing_permissions ) {
 					update_option( 'rsssl_create_folders_in_root', true, false );
 				}
 
@@ -1429,7 +1429,7 @@ class rsssl_letsencrypt_handler {
 			return;
 		}
 
-		if ( !RSSSL()->rsssl_server->uses_htaccess() ) {
+		if ( !RSSSL()->server->uses_htaccess() ) {
 			return;
 		}
 

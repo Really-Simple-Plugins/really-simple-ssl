@@ -22,7 +22,7 @@ class rsssl_progress {
 	}
 
 	public function notices(){
-		$notices = RSSSL()->really_simple_ssl->get_notices_list(array( 'status' => 'all' ));
+		$notices = RSSSL()->admin->get_notices_list(array( 'status' => 'all' ));
 		$out = [];
 		foreach ($notices as $id => $notice ) {
 			$notice['id'] = $id;
@@ -48,7 +48,7 @@ class rsssl_progress {
 
 		$max_score    = 0;
 		$actual_score = 0;
-		$notices = RSSSL()->really_simple_ssl->get_notices_list(array(
+		$notices = RSSSL()->admin->get_notices_list(array(
 			'status' => 'all',
 		));
 		foreach ( $notices as $id => $notice ) {
@@ -78,7 +78,7 @@ class rsssl_progress {
 		ob_start();
 
 		$lowest_possible_task_count = $this->get_lowest_possible_task_count();
-		$open_task_count = count( RSSSL()->really_simple_ssl->get_notices_list( array( 'status' => 'open' ) ));
+		$open_task_count = count( RSSSL()->admin->get_notices_list( array( 'status' => 'open' ) ));
 		if ( rsssl_get_option('ssl_enabled') ) {
 			$doing_well = __( "SSL is activated on your site.",  'really-simple-ssl' ) . ' ' . sprintf( _n( "You still have %s task open.", "You still have %s tasks open.", $open_task_count, 'really-simple-ssl' ), $open_task_count );
 			if ( $open_task_count === 0 ) {
@@ -87,7 +87,7 @@ class rsssl_progress {
 				if ( $open_task_count >= $lowest_possible_task_count) {
 					echo $doing_well;
 				} else {
-					printf(__("Basic SSL configuration finished! Improve your score with %sReally Simple SSL Pro%s.", "really-simple-ssl"), '<a target="_blank" href="' . RSSSL()->really_simple_ssl->pro_url . '">', '</a>');
+					printf(__("Basic SSL configuration finished! Improve your score with %sReally Simple SSL Pro%s.", "really-simple-ssl"), '<a target="_blank" href="' . RSSSL()->admin->pro_url . '">', '</a>');
 				}
 			} else {
 				echo $doing_well;
@@ -104,7 +104,7 @@ class rsssl_progress {
 	 * @return int
 	 */
 	public function get_lowest_possible_task_count() {
-		$premium_notices = RSSSL()->really_simple_ssl->get_notices_list(array('premium_only'=>true));
+		$premium_notices = RSSSL()->admin->get_notices_list(array('premium_only'=>true));
 		return count($premium_notices) ;
 	}
 
@@ -125,7 +125,7 @@ class rsssl_progress {
 			delete_transient( 'rsssl_plusone_count' );
 
 			// count should be updated, therefore clear cache
-			RSSSL()->really_simple_ssl->clear_transients();
+			RSSSL()->admin->clear_transients();
 		}
 
 		return [

@@ -57,7 +57,7 @@ if (!class_exists('rsssl_multisite')) {
 			    return;
 		    }
 
-		    $count = RSSSL()->really_simple_ssl->count_plusones();
+		    $count = RSSSL()->admin->count_plusones();
 			if ( $count > 0 ) {
 				global $menu;
 				foreach( $menu as $index => $menu_item ){
@@ -73,7 +73,13 @@ if (!class_exists('rsssl_multisite')) {
 			}
 	    }
 
-        public function add_multisite_notices($notices) {
+	    /**
+	     * Add notices to the dashboard
+	     * @param array $notices
+	     *
+	     * @return array
+	     */
+        public function add_multisite_notices( array $notices) {
             $unset_array = array(
                 'mixed_content_fixer_detected',
                 'elementor',
@@ -100,7 +106,7 @@ if (!class_exists('rsssl_multisite')) {
 	        );
 
 	        $notices['multisite_server_variable_warning'] = array(
-		        'callback' => 'RSSSL()->rsssl_multisite->multisite_server_variable_warning',
+		        'callback' => 'RSSSL()->multisite->multisite_server_variable_warning',
 		        'score' => 30,
 		        'output' => array(
 			        'no-server-variable' => array(
@@ -113,7 +119,7 @@ if (!class_exists('rsssl_multisite')) {
 	        );
 
 	        $notices['activation_not_completed'] = array(
-		        'callback' => 'RSSSL()->rsssl_multisite->ssl_activation_started_but_not_completed',
+		        'callback' => 'RSSSL()->multisite->ssl_activation_started_but_not_completed',
 		        'score' => 30,
 		        'output' => array(
 			        'true' => array(
@@ -127,7 +133,7 @@ if (!class_exists('rsssl_multisite')) {
 	        );
 
 	        $notices['subdomains_no_wildcard'] = array(
-		        'callback' => 'RSSSL()->rsssl_multisite->subdomains_no_wildcard',
+		        'callback' => 'RSSSL()->multisite->subdomains_no_wildcard',
 		        'score' => 30,
 		        'output' => array(
 			        'subdomains-no-wildcard' => array(
@@ -154,7 +160,7 @@ if (!class_exists('rsssl_multisite')) {
 
 	        if ( is_multisite() && !is_plugin_active_for_network(rsssl_plugin) && $this->is_multisite_subfolder_install() ) {
 		        //with no server variables, the website could get into a redirect loop.
-		        if (RSSSL()->really_simple_ssl->no_server_variable) {
+		        if (RSSSL()->admin->no_server_variable) {
                     return 'no-server-variable';
 		        }
 	        }
@@ -167,7 +173,7 @@ if (!class_exists('rsssl_multisite')) {
 	     */
 
 	    public function subdomains_no_wildcard(){
-		    if ( get_site_option('rsssl_network_activation_status' !== 'completed') && !$this->is_multisite_subfolder_install() && !RSSSL()->rsssl_certificate->is_wildcard() ) {
+		    if ( get_site_option('rsssl_network_activation_status' !== 'completed') && !$this->is_multisite_subfolder_install() && !RSSSL()->certificate->is_wildcard() ) {
                 return 'subdomains-no-wildcard';
 		    }
 		    return 'success';
@@ -213,7 +219,7 @@ if (!class_exists('rsssl_multisite')) {
 	        if ( get_site_option('rsssl_network_activation_status' === 'completed') ) {
                 $site = get_blog_details($blog_id);
 	            switch_to_blog($site->blog_id);
-                RSSSL()->really_simple_ssl->activate_ssl(false);
+                RSSSL()->admin->activate_ssl(false);
                 restore_current_blog();
             }
         }
@@ -229,7 +235,7 @@ if (!class_exists('rsssl_multisite')) {
         {
             if ( get_site_option('rsssl_network_activation_status' === 'completed') ) {
 	            switch_to_blog($site->blog_id);
-                RSSSL()->really_simple_ssl->activate_ssl(false);
+                RSSSL()->admin->activate_ssl(false);
                 restore_current_blog();
             }
         }
@@ -244,7 +250,7 @@ if (!class_exists('rsssl_multisite')) {
             if ( !is_multisite() || !rsssl_is_networkwide_active() ) {
 				return;
             }
-	        $count = RSSSL()->really_simple_ssl->count_plusones();
+	        $count = RSSSL()->admin->count_plusones();
 	        $update_count = $count > 0 ? "<span class='update-plugins rsssl-update-count'><span class='update-count'>$count</span></span>" : "";
 
 	        $page_hook_suffix = add_submenu_page(
@@ -381,7 +387,7 @@ if (!class_exists('rsssl_multisite')) {
                 foreach ($sites as $site) {
 	                switch_to_blog($site->blog_id);
 	                update_site_meta($site->blog_id, 'rsssl_ssl_activated', true );
-                    RSSSL()->really_simple_ssl->activate_ssl(false);
+                    RSSSL()->admin->activate_ssl(false);
                     restore_current_blog(); //switches back to previous blog, not current, so we have to do it each loop
                     update_site_option('rsssl_siteprocessing_progress', $current_offset+$nr_of_sites);
                 }
@@ -411,7 +417,7 @@ if (!class_exists('rsssl_multisite')) {
             foreach ($sites as $site) {
 	            switch_to_blog($site->blog_id);
 	            update_site_meta($site->blog_id, 'rsssl_ssl_activated', false );
-	            RSSSL()->really_simple_ssl->deactivate_ssl();
+	            RSSSL()->admin->deactivate_ssl();
                 restore_current_blog(); //switches back to previous blog, not current, so we have to do it each loop
             }
         }
@@ -549,11 +555,11 @@ if (!class_exists('rsssl_multisite')) {
 	        if ( $screen->base === 'post' ) return;
 
 	        if ( !$this->is_settings_page() ) {
-		        $notices = RSSSL()->really_simple_ssl->get_notices_list( array('admin_notices'=>true) );
+		        $notices = RSSSL()->admin->get_notices_list( array('admin_notices'=>true) );
 		        foreach ( $notices as $id => $notice ){
 			        $notice = $notice['output'];
 			        $class = ( $notice['status'] !== 'completed' ) ? 'error' : 'updated';
-			        echo RSSSL()->really_simple_ssl->notice_html( $class.' '.$id, $notice['title'], $notice['msg'] );
+			        echo RSSSL()->admin->notice_html( $class.' '.$id, $notice['title'], $notice['msg'] );
 		        }
             }
         }

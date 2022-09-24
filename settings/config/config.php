@@ -257,8 +257,8 @@ function rsssl_fields( $load_values = true ){
             'id'          => 'ssl_enabled',
             'menu_id'     => 'general',
             'group_id'    => 'general',
-            'type'        => 'database',
-            'label'       => '',
+            'type'        => 'hidden',
+            'label'       => 'ssl_enabled',
             'disabled'    => false,
             'default'     => false,
         ],
@@ -266,7 +266,7 @@ function rsssl_fields( $load_values = true ){
 			'id'          => 'site_has_ssl',
 			'menu_id'     => 'general',
 			'group_id'    => 'general',
-			'type'        => 'database',
+			'type'        => 'hidden',
 			'label'       => '',
 			'disabled'    => false,
 			'default'     => false,
@@ -275,7 +275,7 @@ function rsssl_fields( $load_values = true ){
 			'id'          => 'review_notice_shown',
 			'menu_id'     => 'general',
 			'group_id'    => 'general',
-			'type'        => 'database',
+			'type'        => 'hidden',
 			'label'       => '',
 			'disabled'    => false,
 			'default'     => false,
@@ -296,7 +296,12 @@ function rsssl_fields( $load_values = true ){
 				'title' => __( "Redirect method", 'really-simple-ssl' ),
 				'text' => __( 'Redirects all requests over HTTP to HTTPS using a PHP 301 redirect. Enable if the .htaccess redirect cannot be used, for example on NGINX servers.', 'really-simple-ssl' ),
 			],
-			'disabled'    => !rsssl_get_option('ssl_enabled'),
+			'react_conditions' => [
+				'relation' => 'AND',
+				[
+					'ssl_enabled' => '1',
+				]
+			],
 			'default'     => false,
 		],
 		[
@@ -384,7 +389,7 @@ function rsssl_fields( $load_values = true ){
             'server_conditions' => [
                 'relation' => 'AND',
                 [
-                    'RSSSL()->rsssl_server->uses_htaccess()' => true,
+                    'RSSSL()->server->uses_htaccess()' => true,
                 ]
             ],
         ],

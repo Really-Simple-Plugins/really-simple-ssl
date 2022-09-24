@@ -7,7 +7,7 @@ function rsssl_upgrade() {
 
 	//dismiss notices that should be dismissed on plugin upgrade
 	if ( $prev_version && version_compare( $prev_version, rsssl_version, '!=' )) {
-		$dismiss_options = RSSSL()->really_simple_ssl->get_notices_list( array(
+		$dismiss_options = RSSSL()->admin->get_notices_list( array(
 			'dismiss_on_upgrade' => true,
 		) );
 		foreach ($dismiss_options as $dismiss_option ) {
@@ -23,7 +23,7 @@ function rsssl_upgrade() {
 	if ( $prev_version && version_compare( $prev_version, '4.0.10', '<=' ) ) {
 		if (function_exists('is_wpe') && is_wpe()) {
 			rsssl_update_option('redirect', 'wp_redirect');
-			RSSSL()->really_simple_ssl->save_options();
+			RSSSL()->admin->save_options();
 		}
 	}
 	if ( $prev_version && version_compare( $prev_version, '5.1.3', '<=' ) ) {
@@ -36,15 +36,15 @@ function rsssl_upgrade() {
 	}
 
 	if ( $prev_version && version_compare( $prev_version, '5.3.0', '<=' ) ) {
-		if ( file_exists(RSSSL()->really_simple_ssl->htaccess_file() ) && is_writable(RSSSL()->really_simple_ssl->htaccess_file() ) ) {
-			$htaccess = file_get_contents( RSSSL()->really_simple_ssl->htaccess_file() );
+		if ( file_exists(RSSSL()->admin->htaccess_file() ) && is_writable(RSSSL()->admin->htaccess_file() ) ) {
+			$htaccess = file_get_contents( RSSSL()->admin->htaccess_file() );
 			$pattern_start = "/rlrssslReallySimpleSSL rsssl_version\[.*.]/";
 			$pattern_end = "/rlrssslReallySimpleSSL/";
 
 			if ( preg_match_all( $pattern_start, $htaccess ) ) {
 				$htaccess = preg_replace( $pattern_start, "Really Simple SSL Redirect " . rsssl_version, $htaccess );
 				$htaccess = preg_replace( $pattern_end, "Really Simple SSL Redirect", $htaccess );
-				file_put_contents( RSSSL()->really_simple_ssl->htaccess_file(), $htaccess );
+				file_put_contents( RSSSL()->admin->htaccess_file(), $htaccess );
 			}
 		}
 	}
@@ -89,7 +89,7 @@ function rsssl_upgrade() {
 				update_site_option('rsssl_network_activation_status', 'completed');
 			} else {
 				//convert entire site to SSL
-				RSSSL()->rsssl_multisite->start_ssl_activation();
+				RSSSL()->multisite->start_ssl_activation();
 			}
 			//ensure this doesn't run again
 			$network_options["ssl_enabled_networkwide"] = false;

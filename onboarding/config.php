@@ -16,7 +16,7 @@ function rsssl_rest_api_onboarding($request) {
 	$info = "";
 	$refresh = isset($_GET['forceRefresh']) && $_GET['forceRefresh']===true;
 	if( !defined('rsssl_pro_version')) {
-		$info = __('You can also let the automatic scan of the pro version handle this for you, and get premium support, increased security with HSTS and more!', 'really-simple-ssl'). " " . sprintf('<a target="_blank" href="%s">%s</a>', RSSSL()->really_simple_ssl->pro_url, __("Check out Really Simple SSL Pro", "really-simple-ssl"));;
+		$info = __('You can also let the automatic scan of the pro version handle this for you, and get premium support, increased security with HSTS and more!', 'really-simple-ssl'). " " . sprintf('<a target="_blank" href="%s">%s</a>', RSSSL()->admin->pro_url, __("Check out Really Simple SSL Pro", "really-simple-ssl"));;
 	}
 
 	if ( !rsssl_get_option('ssl_enabled') || get_site_option('rsssl_network_activation_status')!=='completed' ) {
@@ -47,7 +47,7 @@ function rsssl_rest_api_onboarding($request) {
 		"steps" => $steps,
 		"ssl_enabled" => rsssl_get_option("ssl_enabled"),
 		"ssl_detection_overridden" => get_option('rsssl_ssl_detection_overridden'),
-		'certificate_valid' => RSSSL()->rsssl_certificate->is_valid(),
+		'certificate_valid' => RSSSL()->certificate->is_valid(),
 		"networkwide" => is_multisite() && rsssl_is_networkwide_active(),
 		"network_activation_status" => get_site_option('rsssl_network_activation_status'),
 	];
@@ -179,12 +179,12 @@ function rsssl_get_items_for_first_step () {
 		],
 	];
 
-	if ( RSSSL()->rsssl_certificate->is_valid() ) {
+	if ( RSSSL()->certificate->is_valid() ) {
 		$items[] = [
 			"title" => __("An SSL certificate has been detected", "really-simple-ssl"),
 			"status" => "success"
 		];
-	} else if ( RSSSL()->rsssl_certificate->detection_failed() ) {
+	} else if ( RSSSL()->certificate->detection_failed() ) {
 		$items[] = [
 			"title" => __("Could not test certificate.", "really-simple-ssl") . " " . __("Automatic certificate detection is not possible on your server.", "really-simple-ssl"),
 			"status" => "error"

@@ -10,7 +10,7 @@ if ( ! function_exists( 'rsssl_exclude_plugins_for_rest_api' ) ) {
 	 */
 	function rsssl_exclude_plugins_for_rest_api( $plugins ) {
 		// if not an rsp request return all plugins
-		//we need to be able to detect active and not active status for these requests, for other plugins installation purposes, like burst, complianz.
+		// but for some requests, we need to load other plugins, to ensure we can detect them.
 		if ( isset($_SERVER['REQUEST_URI']) && (
 				strpos($_SERVER['REQUEST_URI'], 'wp-json/reallysimplessl/v') === false ||
 				strpos($_SERVER['REQUEST_URI'], 'otherpluginsdata') !==false  ||

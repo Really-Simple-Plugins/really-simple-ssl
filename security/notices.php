@@ -2,6 +2,9 @@
 
 function rsssl_general_security_notices( $notices ) {
 	$code = get_site_option('rsssl_htaccess_rules');
+	if (strpos($code, "\n")===0) {
+		$code = 	preg_replace('/\n/', '', $code, 1);
+	}
 	$code = '<br><code style="white-space: pre-line">' . esc_html($code) . '</code><br>';
 
 	$notices['application-passwords'] = array(

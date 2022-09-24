@@ -54,7 +54,7 @@ function rsssl_multisite_schedule_cron()
 	} else {
 		wp_clear_scheduled_hook('rsssl_ssl_process_hook');
 	}
-	add_action( 'rsssl_ssl_process_hook', array( RSSSL()->rsssl_multisite, 'run_ssl_process' ) );
+	add_action( 'rsssl_ssl_process_hook', array( RSSSL()->multisite, 'run_ssl_process' ) );
 }
 
 

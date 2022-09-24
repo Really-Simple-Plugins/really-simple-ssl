@@ -1,7 +1,7 @@
 <?php
 defined( 'ABSPATH' ) or die( "" );
-if ( ! class_exists( 'RSSSL_PLACEHOLDER' ) ) {
-	class RSSSL_PLACEHOLDER {
+if ( ! class_exists( 'rsssl_placeholder' ) ) {
+	class rsssl_placeholder {
 		function __construct() {
 
 		}

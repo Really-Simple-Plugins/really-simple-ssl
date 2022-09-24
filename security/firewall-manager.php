@@ -56,7 +56,7 @@ class rsssl_firewall_manager {
 		if ( wp_doing_ajax() ) {
 			return;
 		}
-		$wpconfig_path = RSSSL()->really_simple_ssl->find_wp_config_path();
+		$wpconfig_path = RSSSL()->admin->find_wp_config_path();
 		$wpconfig      = file_get_contents( $wpconfig_path );
 
 		$wpcontent_dir  = ABSPATH . 'wp-content';

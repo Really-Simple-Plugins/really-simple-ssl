@@ -191,7 +191,6 @@ if ( ! class_exists( "rsssl_le_restapi" ) ) {
 			        return $this->installation_data();
 		        case 'is_subdomain_setup':
 		        case 'verify_dns':
-		        case 'rsssl_php_requirement_met':
 		        case 'certificate_status':
 		        case 'curl_exists':
 		        case 'server_software':
