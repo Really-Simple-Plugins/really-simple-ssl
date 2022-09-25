@@ -42,7 +42,6 @@ class rsssl_admin
 	    /**
 	     * Htaccess redirect handling
 	     */
-        error_log("add filter htaccess");
 	    add_filter( 'rsssl_htaccess_security_rules', array($this, 'add_htaccess_redirect') );
 	    add_action( 'rocket_activation', array($this, 'removeHtaccessEdit' ) );
 	    add_filter( 'before_rocket_htaccess_rules', array($this, 'add_htaccess_redirect_before_wp_rocket' ) );

@@ -259,3 +259,16 @@ if ( !function_exists('rsssl_is_logged_in_rest')){
 		return $is_settings_page_request && isset($_SERVER['HTTP_X_WP_NONCE']) && wp_verify_nonce($_SERVER['HTTP_X_WP_NONCE'], 'wp_rest');
 	}
 }
+
+function rsssl_prevent_admin_user( WP_Error $errors, string $sanitized_user_login, string $user_email ) {
+
+	error_log($sanitized_user_login);
+	x_log($errors);
+	if ( $sanitized_user_login === 'admin' ) {
+		$errors->add( 'admin_username_error', '<strong>ERROR</strong>: the user of admin as username is not allowed.' );
+	}
+	return $errors;
+}
+error_log("add register errors filter");
+
+add_filter( 'registration_errors', 'rsssl_prevent_admin_user', 10, 3 );

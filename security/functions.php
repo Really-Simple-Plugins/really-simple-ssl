@@ -183,8 +183,6 @@ if ( ! function_exists('rsssl_wrap_htaccess' ) ) {
 			}
 		}
 	}
-	error_log("load  function htaccess");
-
 	add_action('admin_init', 'rsssl_wrap_htaccess' );
 	add_action('rsssl_after_saved_fields', 'rsssl_wrap_htaccess', 30);
 }

@@ -21,6 +21,19 @@ function rsssl_admin_username_changed( $notices ) {
 add_filter('rsssl_notices', 'rsssl_admin_username_changed');
 
 /**
+ * Add admin as not allowed username
+ * @param array $illegal_user_logins
+ *
+ * @return array
+ */
+function rsssl_prevent_admin_user_add(array $illegal_user_logins){
+	$illegal_user_logins[] = 'admin';
+	$illegal_user_logins[] = 'administrator';
+	return $illegal_user_logins;
+}
+add_filter( 'illegal_user_logins', 'rsssl_prevent_admin_user_add' );
+
+/**
  * Rename admin user
  * @return bool
  */
