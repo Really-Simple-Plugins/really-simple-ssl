@@ -55,21 +55,32 @@ function rsssl_general_security_notices( $notices ) {
 		]
 	);
 
-	$notices['display_name_is_login'] = array(
+	$notices['display_name_is_login_prevent'] = array(
 		'condition' => ['rsssl_get_users_where_display_name_is_login'],
 		'callback' => '_true_',
 		'score' => 5,
 		'output' => array(
 			'true' => array(
 				'highlight_field_id' => 'block_registration_when_display_name_is_login_name',
-				'msg' => __("There are administrator roles where the login and display names on the front-end are the same. This makes it easy for attackers to find valid login names for:", "really-simple-ssl") . "&nbsp;<b>" . rsssl_list_users_where_display_name_is_login_name() . "</b>",
+				'msg' => __("It is currently possible to create an administrator user with the same login and display name.", "really-simple-ssl"),
 				'icon' => 'open',
 				'dismissible' => true,
 			),
 		),
-		// 'show_with_options' => [
-		// 	'block_registration_when_display_name_is_login_name',
-		// ]
+	);
+
+	$notices['display_name_is_login_exists'] = array(
+		'condition' => ['rsssl_get_users_where_display_name_is_login'],
+		'callback' => '_true_',
+		'score' => 5,
+		'output' => array(
+			'true' => array(
+				'url' =>admin_url('users.php?role=administrator'),
+				'msg' => __("We have detected administrator roles where the login and display names are the same.", "really-simple-ssl") . "&nbsp;<b>" . rsssl_list_users_where_display_name_is_login_name() . "</b>",
+				'icon' => 'open',
+				'dismissible' => true,
+			),
+		),
 	);
 
 	$notices['debug_log'] = array(

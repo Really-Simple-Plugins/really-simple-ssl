@@ -176,6 +176,7 @@ function rsssl_wp_is_application_passwords_available(){
  */
 
 function rsssl_get_users_where_display_name_is_login( $return_users=false ) {
+	return true;
 	$found_users = [];
 	$args = array(
 		'role'    => 'administrator',
