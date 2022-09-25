@@ -23,5 +23,10 @@
     .rsssl-icon{
       margin-top: 2px;
     }
+    .rsssl-new-feature-desc {
+      p {
+        font-size:var(--rsp-fs-300);
+      }
+    }
   }
 }

@@ -6,10 +6,11 @@
   details{
     font-size: var(--rsp-fs-200);
     summary{
+
       display: grid;
       grid-template-columns: 1fr auto;
       justify-content: space-between;
-      font-size: var(--rsp-fs-400);
+      font-size: var(--rsp-fs-300);
       font-weight: 600;
       cursor:pointer;
       &::-webkit-details-marker {

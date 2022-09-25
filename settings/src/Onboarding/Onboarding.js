@@ -153,7 +153,7 @@ const Onboarding = (props) => {
             let { title, current_action, action, status, button, id, percentage } = item
             const statuses = {
                 'inactive': {
-                    'icon': 'bullet',
+                    'icon': 'info',
                     'color': 'grey',
                 },
                 'warning': {

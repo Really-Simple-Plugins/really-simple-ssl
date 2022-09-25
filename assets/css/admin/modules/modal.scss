@@ -47,7 +47,7 @@
 
   .rsssl-modal-content {
     position: relative;
-    font-size: var(--rsp-fs-400);
+    font-size: var(--rsp-fs-300);
     line-height: 1.5;
     @include rsssl-block-padding;
     .rsssl-modal-subtitle {
@@ -58,7 +58,7 @@
     .rsssl-modal-description {
       overflow-wrap: anywhere;
       margin-top: 0;
-      font-weight: 500;
+      font-weight: 400;
       line-height: 1.5;
       margin-bottom: var(--rsp-spacing-s);
     }

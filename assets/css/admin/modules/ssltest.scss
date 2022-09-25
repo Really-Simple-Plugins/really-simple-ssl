@@ -48,10 +48,9 @@
       display: flex;
       align-items: center;
       justify-content: center;
-
       font-size: var(--rsp-fs-900);
       font-weight: 700;
-      border-radius: var(--rsp-border-radius);
+      border-radius: 8px;
 
       &.rsssl-grade-inactive {
         display: flex;
@@ -79,7 +78,8 @@
           padding: 0 8px;
           font-size: var(--rsp-fs-100);
           margin: 5px 10px;
-          border-radius: 3px;
+          border-radius: 8px;
+          color: var(--rsp-text-color);
 
           &.rsssl-test-inactive {
             background-color: var(--rsp-grey-200);
@@ -97,8 +97,8 @@
           }
 
           &.rsssl-test-error {
-            background-color: var(--rsp-color-warning);
-            color: var(--rsp-text-color-white);
+            background-color: var(--rsp-brand-primary);
+            color: var(--rsp-black);
           }
         }
       }
