@@ -37,14 +37,13 @@ add_filter( 'illegal_user_logins', 'rsssl_prevent_admin_user_add' );
  * Rename admin user
  * @return bool
  */
-function rsssl_rename_admin_user() {
-	if ( !rsssl_user_can_manage() ) {
+function rsssl_rename_admin_user($fields=[]) {
+	if ( !rsssl_user_can_manage() || wp_doing_cron() ) {
 		return false;
 	}
 
     // Get user data for login admin
 	$admin_user = get_user_by('login','admin');
-
 	if ( $admin_user ) {
 		$admin_user_id  = $admin_user->data->ID;
 		$admin_userdata = get_userdata( $admin_user_id );
@@ -97,7 +96,7 @@ function rsssl_rename_admin_user() {
 			$wpdb->query("UPDATE `wp_sitemeta` SET `meta_value` = $site_admins WHERE `meta_key` = 'site_admins'");
 		}
 
-		set_site_transient('rsssl_username_admin_changed', $new_user_login, WEEK_IN_SECONDS );
+		set_site_transient('rsssl_username_admin_changed', $new_user_login, DAY_IN_SECONDS );
 		return true;
 	}
 	return true;
@@ -121,5 +120,4 @@ function rsssl_username_admin_changed() {
 
 	return false;
 }
-
 
