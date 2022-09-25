@@ -59,7 +59,6 @@ if ( !function_exists('rsssl_remove_htaccess_security_edits') ) {
 
 if ( ! function_exists('rsssl_wrap_htaccess' ) ) {
 	function rsssl_wrap_htaccess() {
-		error_log("test function #1");
 		if ( ! rsssl_user_can_manage()  ) {
 			return;
 		}
@@ -67,18 +66,14 @@ if ( ! function_exists('rsssl_wrap_htaccess' ) ) {
 		if ( !rsssl_uses_htaccess() ) {
 			return;
 		}
-		error_log("test function #2");
 
 		if ( rsssl_get_option('do_not_edit_htaccess') ) {
 			return;
 		}
-		error_log("test function #2.4");
 
 		if ( !RSSSL()->admin->is_settings_page() && !rsssl_is_logged_in_rest() ) {
 			return;
 		}
-		error_log("test function #3");
-
 		delete_site_option( 'rsssl_htaccess_error' );
 		delete_site_option( 'rsssl_htaccess_rules' );
 
@@ -94,9 +89,13 @@ if ( ! function_exists('rsssl_wrap_htaccess' ) ) {
 		$htaccess_file_uploads = trailingslashit( $upload_dir['basedir']).'.htaccess';
 		if ( count($rules_uploads)>0 ) {
 			if ( ! file_exists( $htaccess_file_uploads ) ) {
-				update_site_option( 'rsssl_htaccess_error', 'not-exists' );
-				$rules_uploads_result = implode( '', array_column( $rules_uploads, 'rules' ) );
-				update_site_option( 'rsssl_htaccess_rules', $rules_uploads_result );
+				if ( is_writable(trailingslashit( $upload_dir['basedir'])) ) {
+					file_put_contents($htaccess_file_uploads, '');
+				} else {
+					update_site_option( 'rsssl_htaccess_error', 'not-writable-uploads' );
+					$rules_uploads_result = implode( '', array_column( $rules_uploads, 'rules' ) );
+					update_site_option( 'rsssl_htaccess_rules', $rules_uploads_result );
+				}
 			}
 
 			if ( file_exists( $htaccess_file_uploads ) ) {
@@ -143,7 +142,6 @@ if ( ! function_exists('rsssl_wrap_htaccess' ) ) {
 		$htaccess_file = RSSSL()->admin->htaccess_file();
 		if ( count($rules)>0 ) {
 			if ( !file_exists( $htaccess_file ) ) {
-				error_log("not writable");
 				update_site_option('rsssl_htaccess_error', 'not-exists');
 				$rules_result = implode('',array_column($rules, 'rules'));
 				update_site_option('rsssl_htaccess_rules', $rules_result);
