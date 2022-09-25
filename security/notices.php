@@ -55,13 +55,13 @@ function rsssl_general_security_notices( $notices ) {
 		]
 	);
 
-	$notices['display_name_is_login_prevent'] = array(
-		'condition' => ['rsssl_get_users_where_display_name_is_login'],
+	$notices['block_display_is_login_enabled'] = array(
+		'condition' => ['NOT option_block_display_is_login'],
 		'callback' => '_true_',
 		'score' => 5,
 		'output' => array(
 			'true' => array(
-				'highlight_field_id' => 'block_registration_when_display_name_is_login_name',
+				'highlight_field_id' => 'block_display_is_login',
 				'msg' => __("It is currently possible to create an administrator user with the same login and display name.", "really-simple-ssl"),
 				'icon' => 'open',
 				'dismissible' => true,

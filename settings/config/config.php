@@ -523,11 +523,11 @@ function rsssl_fields( $load_values = true ){
 			'default'     => false,
 		],
 		[
-			'id'          => 'block_registration_when_display_name_is_login_name',
+			'id'          => 'block_display_is_login',
 			'menu_id'     => 'hardening',
 			'group_id'    => 'hardening_basic',
 			'type'        => 'checkbox',
-			'label'       => __( "Block user registrations when login, and display name are the same.", 'really-simple-ssl' ),
+			'label'       => __( "Block user registrations when login and display name are the same.", 'really-simple-ssl' ),
 			'disabled'    => false,
 			'default'     => false,
 		],

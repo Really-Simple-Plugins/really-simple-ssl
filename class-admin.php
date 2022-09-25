@@ -2659,7 +2659,9 @@ class rsssl_admin
 		    $invert = true;
 	    }
 
-	    if ( $func === '_true_') {
+	    if ( strpos($func, 'option_')!==false ){
+		    $output = rsssl_get_option(str_replace('option_', '', $func))==1;
+	    } else if ( $func === '_true_') {
 	        $output = true;
         } else if ( $func === '_false_' ) {
 		    $output = false;
@@ -2672,11 +2674,11 @@ class rsssl_admin
 		    } else {
 			    $output = $func();
 		    }
-
-		    if ( $invert ) {
-			    $output = !$output;
-		    }
         }
+
+	    if ( $invert ) {
+		    $output = !$output;
+	    }
 
 	    //stringyfy booleans
         if (!$is_condition) {
