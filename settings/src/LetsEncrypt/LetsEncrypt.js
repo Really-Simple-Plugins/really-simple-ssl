@@ -1,4 +1,4 @@
-import {useState, useEffect} from "@wordpress/element";
+import {useState, useEffect, useRef} from "@wordpress/element";
 import * as rsssl_api from "../utils/api";
 import sleeper from "../utils/sleeper";
 import Directories from "./Directories";
@@ -11,58 +11,55 @@ import {useUpdateEffect} from 'react-use';
 import Icon from "../utils/Icon";
 
 const LetsEncrypt = (props) => {
-    const [actionIndex, setActionIndex] = useState(0);
     const [id, setId] = useState(props.field.id);
-    const [lastActionStatus, setLastActionStatus] = useState('');
+    const [actionUpdated, setActionUpdated] = useState(false);
     const [progress, setProgress] = useState(0);
-    const [previousActionIndex, setPreviousActionIndex] = useState(-1);
-    const [previousProgress, setPreviousProgress] = useState(0);
-
-    let sleep=500;
-    let maxAttempts=1;
-    let rsssl_interval;
+    const actionIndex = useRef(0);
+    const sleep = useRef(1500);
+    const maxAttempts = useRef(1);
+    const intervalId = useRef(false);
+    const lastActionStatus = useRef('');
+    // const previousProgress = useRef(0);
+    const previousActionIndex = useRef(-1);
 
     useEffect(() => {
         props.handleNextButtonDisabled(true);
         runTest(0);
-        rsssl_interval = setInterval(() => setProgress((progress) => progress + 0.2), 100);
+        intervalId.current = setInterval(() => setProgress((progress) => progress + 0.2), 100);
        }, [])
 
     const restartTests = () => {
         //clear statuses to ensure the bullets are grey
         let actions = props.field.actions;
-        for ( const action of actions) {
+        for ( const action of actions ) {
             action.status='inactive';
         }
         props.field.actions = actions;
-
-        runTest(0);
-        setActionIndex(0);
-        setPreviousActionIndex(-1);
-        setLastActionStatus('');
-        setPreviousProgress(0);
+        actionIndex.current = 0;
+        previousActionIndex.current =-1;
+        lastActionStatus.current = '';
         setProgress(0);
+        runTest(0);
      }
 
-    const getAction = (actionIndex) => {
+    const getAction = () => {
         let newActions = props.field.actions;
-        return newActions[actionIndex];
+        return newActions[actionIndex.current];
     }
 
     useUpdateEffect(()=> {
         let maxIndex = props.field.actions.length-1;
-        if (actionIndex>previousActionIndex) {
-            setPreviousActionIndex(actionIndex);
-            setProgress( ( 100 / maxIndex ) * actionIndex );
+        if (actionIndex.current>previousActionIndex.current) {
+            previousActionIndex.current = actionIndex.current;
+            setProgress( ( 100 / maxIndex ) * actionIndex.current);
         }
-        setPreviousProgress(progress);
 
         //ensure that progress does not get to 100 when retries are still running
-        let currentAction = getAction(actionIndex);
+        let currentAction = getAction();
         if ( currentAction && currentAction.do==='retry' && currentAction.attemptCount>1 ){
             setProgress(90);
         }
-        if (props.refreshTests){
+        if ( props.refreshTests ){
             props.resetRefreshTests();
             restartTests();
         }
@@ -102,9 +99,8 @@ const LetsEncrypt = (props) => {
         return actions;
     }
 
-    const processTestResult = (currentActionIndex) => {
-         let action = getAction(currentActionIndex);
-        setLastActionStatus(action.status);
+    const processTestResult = (action) => {
+        lastActionStatus.current = action.status;
         let maxIndex = props.field.actions.length-1;
         if (action.status==='success') {
             action.attemptCount = 0;
@@ -114,6 +110,8 @@ const LetsEncrypt = (props) => {
             }
             action.attemptCount +=1;
         }
+        setActionUpdated(true);
+
         //used for dns verification actions
         var event = new CustomEvent('rsssl_le_response', { detail: action });
         document.dispatchEvent(event);
@@ -121,13 +119,13 @@ const LetsEncrypt = (props) => {
 
         //finalize happens when halfway through our tests it's finished. We can skip all others.
         if ( action.do === 'finalize' ) {
-            clearInterval(rsssl_interval);
+            clearInterval(intervalId.current);
             props.field.actions.forEach(function(action,i){
-                if (i>currentActionIndex) {
+                if (i>actionIndex.current) {
                     action.hide=true;
                 }
             });
-            setActionIndex(maxIndex);
+            actionIndex.current = maxIndex;
             props.handleNextButtonDisabled(false);
         } else if (action.do === 'continue' || action.do === 'skip' ) {
             //new action, so reset the attempts count
@@ -137,53 +135,56 @@ const LetsEncrypt = (props) => {
                 action.hide = true;
             }
             //move to next action, but not if we're already on the max
-            if ( maxIndex > currentActionIndex ) {
-                setActionIndex(currentActionIndex+1);
-                runTest(currentActionIndex+1);
+            if ( maxIndex > actionIndex.current ) {
+                actionIndex.current = actionIndex.current+1;
+                runTest(actionIndex.current);
             } else {
-                setActionIndex(maxIndex);
+                actionIndex.current = maxIndex;
                 props.handleNextButtonDisabled(false);
-                clearInterval(rsssl_interval);
+                clearInterval(intervalId.current);
             }
         } else if (action.do === 'retry' ) {
-            if ( action.attemptCount >= maxAttempts ) {
-                setActionIndex(maxIndex);
-                clearInterval(rsssl_interval);
+            if ( action.attemptCount >= maxAttempts.current ) {
+                actionIndex.current = maxIndex;
+                clearInterval(intervalId.current);
             } else {
-                // clearInterval(rsssl_interval);
-                runTest(currentActionIndex);
+                // clearInterval(intervalId.current);
+                runTest(actionIndex.current);
             }
         } else if ( action.do === 'stop' ){
-            clearInterval(rsssl_interval);
+            clearInterval(intervalId.current);
         }
+
 
     }
 
-    const runTest = (currentActionIndex ) => {
-
-        if (props.field.id==='generation') {
+    const runTest = () => {
+        setActionUpdated(false);
+        if ( props.field.id==='generation' ) {
             props.field.actions = adjustActionsForDNS(props.field.actions);
         }
         const startTime = new Date();
-        let action = getAction(currentActionIndex);
+        let action = getAction();
         let test = action.action;
-        maxAttempts = action.attempts;
+        maxAttempts.current = action.attempts;
+
         rsssl_api.runLetsEncryptTest(test, props.field.id ).then( ( response ) => {
                 const endTime = new Date();
                 let timeDiff = endTime - startTime; //in ms
                 const elapsedTime = Math.round(timeDiff);
-                let action = getAction(currentActionIndex);
+                let action = getAction();
                 action.status = response.data.status ? response.data.status : 'inactive';
                 action.hide = false;
                 action.description = response.data.message;
                 action.do = response.data.action;
                 action.output = response.data.output ? response.data.output : false;
-                sleep = 500;
-                if (elapsedTime<1000) {
-                   sleep = 1000-elapsedTime;
+
+                sleep.current = 500;
+                if (elapsedTime<1500) {
+                   sleep.current = 1500-elapsedTime;
                 }
-            }).then(sleeper(sleep)).then(() => {
-              processTestResult(currentActionIndex);
+            }).then(sleeper(sleep.current)).then(() => {
+                processTestResult(action);
           });
     }
 
@@ -194,12 +195,12 @@ const LetsEncrypt = (props) => {
         );
     }
 
-    let progressBarColor = lastActionStatus==='error' ? 'rsssl-orange' : '';
-    if (!props.field.actions) {
+    let progressBarColor = lastActionStatus.current ==='error' ? 'rsssl-orange' : '';
+    if ( !props.field.actions ) {
         return (<></>);
     }
     // keep current action, before it is filtered. The actionindex doesn't match anymore after filtering
-    let currentAction = props.field.actions[actionIndex];
+    let currentAction = props.field.actions[actionIndex.current];
     //filter out skipped actions
     let actions = props.field.actions.filter(action => action.hide !== true);
     const statuses = {

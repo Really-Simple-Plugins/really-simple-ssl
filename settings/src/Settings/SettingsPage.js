@@ -166,7 +166,9 @@ class SettingsPage extends Component {
         });
     }
 
-    save(){
+    save(skipRefreshTests){
+        //skipRefreshTests is default false, but when called from next/previous, it is true
+        //this prevents the LE test from restarting on next/previous.
         const {
             fields,
         } = this.state;
@@ -180,10 +182,14 @@ class SettingsPage extends Component {
         rsssl_api.setFields(saveFields).then(( response ) => {
             this.changedFields = [];
             this.setState({
-                refreshTests:true,
                 changedFields :[],
                 progress: response.data.progress,
             });
+            if ( !skipRefreshTests ) {
+                this.setState({
+                    refreshTests:true,
+                });
+            }
             this.showSavedSettingsNotice();
         });
     }
@@ -201,9 +207,8 @@ class SettingsPage extends Component {
 
     saveAndContinue() {
         this.wizardNextPrevious(false);
-        this.save()
+        this.save(true);
     }
-
 
     validateConditions(conditions, fields){
         let relation = conditions.relation === 'OR' ? 'OR' : 'AND';

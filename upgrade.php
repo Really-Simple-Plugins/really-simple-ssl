@@ -4,6 +4,10 @@ defined('ABSPATH') or die();
 add_action('plugins_loaded', 'rsssl_upgrade', 20);
 function rsssl_upgrade() {
 	$prev_version = get_option( 'rsssl_current_version', false );
+	//not version change, skip upgrade.
+	if ($prev_version && version_compare( $prev_version, rsssl_version, '==' )){
+		return;
+	}
 
 	//dismiss notices that should be dismissed on plugin upgrade
 	if ( $prev_version && version_compare( $prev_version, rsssl_version, '!=' )) {
@@ -126,7 +130,6 @@ function rsssl_upgrade() {
 	//delete_option( 'rlrsssl_options' );
 	//delete_site_option( 'rlrsssl_network_options' );
 	//delete_option( 'rsssl_options_lets-encrypt' );
-
 
 	do_action("rsssl_upgrade", $prev_version);
 	update_option( 'rsssl_current_version', rsssl_version );
