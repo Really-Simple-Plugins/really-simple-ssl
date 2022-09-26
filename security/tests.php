@@ -253,23 +253,6 @@ function rsssl_debug_log_file_exists_in_default_location(){
 }
 
 /**
- * Check if debug location is not default, and if that is done by RSSSL>
- * @return bool
-*/
-function rsssl_enabled_by_rsssl($option_name, $test){
-	$test_result = false;
-	if ( function_exists($test) ) {
-		$test_result = $test();
-	}
-
-	if ( $test_result && !rsssl_get_value($option_name) ) {
-		return false;
-	} else {
-		return true;
-	}
-}
-
-/**
  * @return string
  * Test if code execution is allowed in /uploads folder
  */
@@ -354,16 +337,7 @@ function rsssl_directory_indexing_allowed() {
  */
 function rsssl_file_editing_allowed()
 {
-	$edit_files = map_meta_cap('edit_files', get_current_user_id() );
-	$edit_files = reset($edit_files);
-	$edit_plugins = map_meta_cap('edit_plugins', get_current_user_id() );
-	$edit_plugins = reset($edit_plugins);
-	$edit_themes = map_meta_cap('edit_themes', get_current_user_id() );
-	$edit_themes = reset($edit_themes);
-//x_log($edit_files);
-//x_log($edit_plugins);
-//x_log($edit_themes);
-	if ( $edit_files==='do_not_allow' && $edit_plugins === 'do_not_allow' && $edit_themes === 'do_not_allow') {
+	if (wp_is_block_theme()) {
 		return false;
 	}
 	return !defined('DISALLOW_FILE_EDIT' ) || !DISALLOW_FILE_EDIT;
