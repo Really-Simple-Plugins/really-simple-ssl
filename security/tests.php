@@ -159,7 +159,7 @@ function rsssl_id_one_no_enumeration() {
  * @return bool
  */
 function rsssl_wp_is_application_passwords_available(){
-	if (function_exists('wp_is_application_passwords_available')) {
+	if ( function_exists('wp_is_application_passwords_available') ) {
 		return wp_is_application_passwords_available();
 	} else {
 		return false;
@@ -360,7 +360,9 @@ function rsssl_file_editing_allowed()
 	$edit_plugins = reset($edit_plugins);
 	$edit_themes = map_meta_cap('edit_themes', get_current_user_id() );
 	$edit_themes = reset($edit_themes);
-
+//x_log($edit_files);
+//x_log($edit_plugins);
+//x_log($edit_themes);
 	if ( $edit_files==='do_not_allow' && $edit_plugins === 'do_not_allow' && $edit_themes === 'do_not_allow') {
 		return false;
 	}

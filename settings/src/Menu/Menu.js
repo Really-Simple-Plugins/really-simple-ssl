@@ -16,6 +16,10 @@ class Menu extends Component {
     }
 
     render() {
+    console.log(this.props.menu.menu_items);
+        let hasPremiumItems =  this.props.menu.menu_items.filter((item) => {
+                return (item.premium===true)
+            }).length>0;
         if ( ! this.props.isAPILoaded ) {
             return (
                 <Placeholder></Placeholder>
@@ -42,7 +46,7 @@ class Menu extends Component {
                                     />
                                 )
                             }
-                            { !rsssl_settings.pro_plugin_active &&
+                            { hasPremiumItems && !rsssl_settings.pro_plugin_active &&
                                 <div className="rsssl-premium-menu-item"><div><a target="_blank" href={rsssl_settings.upgrade_link} className='button button-black'>{__('Go Pro', 'really-simple-ssl')}</a></div></div>
                             }
                         </div>
