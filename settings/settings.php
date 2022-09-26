@@ -77,7 +77,9 @@ add_action( 'admin_menu', 'rsssl_add_option_menu' );
 
  function rsssl_settings_page()
 {
-	if (!rsssl_user_can_manage()) return;
+	if (!rsssl_user_can_manage()) {
+        return;
+	}
 
 	if ( !get_option('permalink_structure') ){
         $permalinks_url = admin_url('options-permalink.php');
@@ -226,6 +228,9 @@ function rsssl_plugin_actions($request){
  * @return string
  */
 function rsssl_ssltest_run($request) {
+	if ( !rsssl_user_can_manage() ) {
+		return '';
+	}
     $data = $request->get_params();
     $url = $data['url'];
 	$response = wp_remote_get( $url );
@@ -573,6 +578,9 @@ function rsssl_rest_api_fields_get(){
  * @return array
  */
 function rsssl_drop_empty_menu_items( $menu_items, $fields) {
+	if ( !rsssl_user_can_manage() ) {
+		return $menu_items;
+	}
     $new_menu_items = $menu_items;
     foreach($menu_items as $key => $menu_item) {
         $searchResult = array_search($menu_item['id'], array_column($fields, 'menu_id'));
@@ -610,17 +618,14 @@ function rsssl_rest_api_block_get($request){
 
 /**
  * Sanitize a field
- * @param mixed $value
+ *
+ * @param mixed  $value
  * @param string $type
  * @oaram string $id
  *
  * @return array|bool|int|string|void
  */
-function rsssl_sanitize_field( $value, $type, $id ) {
-	if ( ! rsssl_user_can_manage() ) {
-		return false;
-	}
-
+function rsssl_sanitize_field( $value, string $type, string $id ) {
 	switch ( $type ) {
 		case 'checkbox':
 			return intval($value);
@@ -861,6 +866,7 @@ function rsssl_sanitize_datatable( $value, $type, $field_name ){
  */
 
 function rsssl_conditions_apply( array $conditions ){
+
 	$defaults = ['relation' => 'AND'];
 	$conditions = wp_parse_args($conditions, $defaults);
 	$relation = $conditions['relation'] === 'AND' ? 'AND' : 'OR';

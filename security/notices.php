@@ -18,9 +18,6 @@ function rsssl_general_security_notices( $notices ) {
 				'dismissible' => true,
 			),
 		),
-		// 'show_with_options' => [
-		// 	'disable_application_passwords',
-		// ]
 	);
 
 	$notices['htaccess_status'] = array(

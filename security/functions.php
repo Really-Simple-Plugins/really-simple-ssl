@@ -213,6 +213,9 @@ function rsssl_htaccess_status(){
  */
 function rsssl_find_wp_config_path()
 {
+	if ( !rsssl_user_can_manage() ) {
+		return null;
+	}
     //limit nr of iterations to 5
     $i = 0;
     $dir = dirname(__FILE__);
@@ -289,6 +292,9 @@ function check_admin_user_renamed_and_enumeration_disabled() {
  * Get users as string to display
  */
 function rsssl_list_users_where_display_name_is_login_name() {
+	if ( !rsssl_user_can_manage() ) {
+		return '';
+	}
 	$users = rsssl_get_users_where_display_name_is_login( true );
 	if ( is_array( $users ) ) {
 		$ext  = count($users)>=10 ? '...' : '';

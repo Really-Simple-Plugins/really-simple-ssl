@@ -140,7 +140,7 @@ if ( !class_exists("rsssl_site_health") ) {
 						$url,
 						__( 'Enable 301 redirect', 'really-simple-ssl' )
 					);
-				} else if ( !is_multisite() && RSSSL()->server->uses_htaccess() && !RSSSL()->admin->htaccess_redirect) {
+				} else if ( RSSSL()->server->uses_htaccess() && rsssl_get_option('redirect')!=='htaccess') {
 					$result['status']      = 'recommended';
 					$result['label']       = __( '301 .htaccess redirect is not enabled.' , 'really-simple-ssl' );
 					$result['description'] = sprintf(

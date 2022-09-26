@@ -130,6 +130,9 @@ function rsssl_xmlrpc_enabled(){
  */
 
 function rsssl_has_admin_user() {
+	if ( !rsssl_user_can_manage() ) {
+		return false;
+	}
 	global $wpdb;
 	$prepared = $wpdb->prepare("SELECT COUNT(*) FROM {$wpdb->prefix}users WHERE user_login = %s LIMIT 1", 'admin');
 	$count = $wpdb->get_var( $prepared );

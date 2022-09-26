@@ -2,6 +2,9 @@
 defined('ABSPATH') or die();
 
 function rsssl_menu(){
+	if ( !rsssl_user_can_manage() ) {
+		return [];
+	}
 	$menu_items = [
 		[
 			"id"    => "dashboard",
@@ -1057,6 +1060,9 @@ function rsssl_fields( $load_values = true ){
 }
 
 function rsssl_blocks(){
+	if ( !rsssl_user_can_manage() ) {
+		return [];
+	}
 	$blocks = [
 		[
 			'id'      => 'progress',

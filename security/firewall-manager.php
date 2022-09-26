@@ -41,6 +41,9 @@ class rsssl_firewall_manager {
 	 * @return int
 	 */
 	public function get_headers_nonce(){
+		if ( !rsssl_user_can_manage() ) {
+			return false;
+		}
 		if ( !get_site_option("rsssl_header_detection_nonce")) {
 			update_site_option("rsssl_header_detection_nonce", rand(1000, 999999999) );
 		}
@@ -52,7 +55,9 @@ class rsssl_firewall_manager {
 	 *
 	 */
 	public function insert_advanced_header_file() {
-
+		if ( !rsssl_user_can_manage() ) {
+			return;
+		}
 		if ( wp_doing_ajax() ) {
 			return;
 		}
