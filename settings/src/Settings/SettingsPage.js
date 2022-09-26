@@ -227,7 +227,6 @@ class SettingsPage extends Component {
                                     conditionValue = +conditionValue;
                                     thisConditionApplies = actualValue === conditionValue;
                                 } else {
-                                    console.log(conditionValue);
                                     if (conditionValue.indexOf('EMPTY')!==-1){
                                         if (conditionValue.indexOf('NOT ')!==-1) {
                                             invert=true;

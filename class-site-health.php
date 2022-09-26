@@ -23,7 +23,7 @@ if ( !class_exists("rsssl_site_health") ) {
 		 */
 		public function health_check( $tests ) {
 			unset($tests['async']['https_status']);
-			if ( !RSSSL()->admin->dismiss_all_notices || is_multisite() && !rsssl_multisite::this()->dismiss_all_notices ) {
+			if ( !rsssl_get_option('dismiss_all_notices') ) {
 				$tests['direct']['rsssl-health'] = array(
 					'label' => __( 'SSL Status Test' , 'really-simple-ssl'),
 					'test'  => array($this, "health_test"),

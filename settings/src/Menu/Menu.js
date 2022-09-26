@@ -16,7 +16,6 @@ class Menu extends Component {
     }
 
     render() {
-    console.log(this.props.menu.menu_items);
         let hasPremiumItems =  this.props.menu.menu_items.filter((item) => {
                 return (item.premium===true)
             }).length>0;

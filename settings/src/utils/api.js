@@ -17,6 +17,7 @@ export const getFields = () => {
 			'X-WP-Nonce': rsssl_settings.nonce,
 		}
 	}
+	console.log("get fields");
     return axios.get(rsssl_settings.site_url+'reallysimplessl/v1/fields/get?'+anchor, config);
 };
 
@@ -63,6 +64,7 @@ export const runLetsEncryptTest = (test, id ) => {
 			'X-WP-Nonce': rsssl_settings.nonce,
 		}
 	}
+
 	return axios.get(rsssl_settings.site_url+'reallysimplessl/v1/tests/'+test+'?letsencrypt=1&id='+id, config);
 }
 
@@ -90,6 +92,7 @@ export const onboardingActions = (data) => {
 			'X-WP-Nonce': rsssl_settings.nonce,
 		}
 	}
+
 	return axios.post(rsssl_settings.site_url+'reallysimplessl/v1/onboarding_actions', data, config );
 }
 

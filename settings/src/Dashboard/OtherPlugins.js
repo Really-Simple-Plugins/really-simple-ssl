@@ -38,7 +38,6 @@ const OtherPlugins = (props) => {
             return;
         }
         rsssl_api.doAction('plugin_actions', data).then( ( response ) => {
-            console.log(response);
             pluginItem = response.data;
             updatePluginData(slug, pluginItem);
             PluginActions(slug, pluginItem.pluginAction);
