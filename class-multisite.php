@@ -142,9 +142,9 @@ if (!class_exists('rsssl_multisite')) {
 		        'output'    => array(
 			        'ssl-per-site' => array(
                         'title'       => __( "End of Per Site Management support.", "really-simple-ssl"  ),
-				        'msg'         => __( "Important: Really Simple SSL 6.0 drops per site SSL management. Upgrading will upgrade all subsites to SSL.", "really-simple-ssl" ),
+				        'msg'         => __( "Really Simple SSL 6.0 drops SSL activation per website. Upgrading to 6.0 will upgrade all subsites to SSL.", "really-simple-ssl" ),
 				        'icon'        => 'warning',
-				        'url'         => 'https://really-simple-ssl.com/how-to-set-security-headers-on-apache-and-nginx/',
+				        'url'         => 'https://really-simple-ssl.com/ssl-per-website-deprecated/',
 				        'dismissible' => true,
 				        'plusone' => true,
 				        'admin_notice' => true,
