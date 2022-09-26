@@ -212,7 +212,7 @@ function rsssl_is_debugging_enabled() {
 
 /**
  * Get value of debug_log constant
- *
+ * Please note that for a value 'true', you should check for the string value === 'true'
  * @return bool|string
  */
 
@@ -224,7 +224,6 @@ function rsssl_get_debug_log_value(){
 	if ( !$wpconfig_path ) {
 		return false;
 	}
-
 	$wpconfig      = file_get_contents( $wpconfig_path );
 
 	// Get WP_DEBUG_LOG declaration
