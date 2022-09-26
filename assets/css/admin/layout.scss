@@ -34,6 +34,9 @@
   .rsssl-header-left {
     display: flex;
     font-size: var(--rsp-fs-400);
+    @media(max-width: $rsp-break-xxs) {
+      display:none;
+    }
     @media(max-width: $rsp-break-s) {
       justify-content: center;
       margin: var(--rsp-spacing-xs) 0;
@@ -87,7 +90,9 @@
     select {
       max-width: 60ch;
     }
-
+    @media(max-width: $rsp-break-xxs) {
+      display:none;
+    }
     @media(max-width: $rsp-break-xs) {
       .button {
         display: none;

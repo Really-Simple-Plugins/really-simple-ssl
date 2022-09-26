@@ -2759,19 +2759,12 @@ class rsssl_admin
 
     public function enqueue_assets($hook)
     {
-        if ( $hook !== 'settings_page_really-simple-ssl' && $hook !== 'settings_page_really-simple-security') {
+        if ( $hook !== 'settings_page_really-simple-security') {
             return;
         }
-	    $minified_css = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? '.css?debug='.time() : '.min.css';
-        $rtl = is_rtl() ? '-rtl' : '';
-        $css_file = "admin$rtl$minified_css";
-	    wp_enqueue_style('rsssl-css', trailingslashit(rsssl_url) . "assets/css/$css_file", ['wp-components'], rsssl_version);
-        wp_localize_script('rsssl', 'rsssl',
-            array(
-                'ajaxurl' => admin_url( 'admin-ajax.php' ),
-                'token'   => wp_create_nonce( 'rsssl_nonce'),
-            )
-        );
+	    $min = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? '' : '.min';
+        $rtl = is_rtl() ? 'rtl/' : '';
+	    wp_enqueue_style('rsssl-css', trailingslashit(rsssl_url) . "assets/css/{$rtl}admin{$min}.css", ['wp-components'], rsssl_version);
     }
 
     /**

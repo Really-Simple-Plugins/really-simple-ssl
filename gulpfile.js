@@ -1,4 +1,5 @@
 const gulp = require('gulp');
+const rtlcss = require('gulp-rtlcss');
 const concat = require('gulp-concat');
 const cssbeautify = require('gulp-cssbeautify');
 const cssuglify = require('gulp-uglifycss');
@@ -14,14 +15,18 @@ function scssTask(cb) {
   .pipe(gulp.dest('./assets/css'))
   .pipe(cssuglify())
   .pipe(concat('admin.min.css'))
-  .pipe(gulp.dest('./assets/css'));
+  .pipe(gulp.dest('./assets/css'))
+  .pipe(rtlcss())
+  .pipe(gulp.dest('./assets/css/rtl'));
 
    cb();
 }
 exports.scss = scssTask
 
+gulp.task('default', function () {
+	return
+});
 function jsTask(cb) {
-  // @todo @rogier even overleggen over wat hier in moet?
   // compile js and minify
   // gulp.src('js/src/burst.js')
   // .pipe(concat('burst.js'))
