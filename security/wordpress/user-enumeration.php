@@ -35,25 +35,6 @@ function remove_author_from_yoast_sitemap( $users ) {
 }
 add_filter('wpseo_sitemap_exclude_author', 'remove_author_from_yoast_sitemap', 10, 1 );
 
-// Rss actions
-//if ( rsssl_get_option('disable_rss_feeds' ) ) {
-//	add_action( 'do_feed', 'rsssl_disable_rss', 1 );
-//	add_action( 'do_feed_rdf', 'rsssl_disable_rss', 1 );
-//	add_action( 'do_feed_rss', 'rsssl_disable_rss', 1 );
-//	add_action( 'do_feed_rss2', 'rsssl_disable_rss', 1 );
-//	add_action( 'do_feed_atom', 'rsssl_disable_rss', 1 );
-//	add_action( 'do_feed_rss2_comments', 'rsssl_disable_rss', 1 );
-//	add_action( 'do_feed_atom_comments', 'rsssl_disable_rss', 1 );
-//
-//	/**
-//	 * Disable RSS
-//	 * @return void
-//	 */
-//	function rsssl_disable_rss() {
-//		wp_die( __('RSS Feeds disabled by user', 'really-simple-ssl') );
-//	}
-//}
-
 //PREVENT WP JSON API User Enumeration
 add_filter( 'rest_endpoints', function( $endpoints ) {
 	if ( isset( $endpoints['/wp/v2/users'] ) ) {
