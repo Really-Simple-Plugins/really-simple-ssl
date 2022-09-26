@@ -52,7 +52,7 @@ const ProgressFooter = (props) => {
             </div>
             <div className="rsssl-legend">
                 <Icon name = {redirectIcon} color = {redirectColor} />
-                <div>{__( "301 Redirect", "really-simple-ssl" )}</div>
+                <div>{__( "301 redirect", "really-simple-ssl" )}</div>
             </div>
         </>
         );

@@ -3229,9 +3229,9 @@ const OtherPlugins = props => {
     const statuses = {
       'download': (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Install", "really-simple-ssl"),
       'activate': (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Activate", "really-simple-ssl"),
-      'activating': (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("activating...", "really-simple-ssl"),
-      'downloading': (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("downloading...", "really-simple-ssl"),
-      'upgrade-to-premium': (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("downloading...", "really-simple-ssl")
+      'activating': (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Activating...", "really-simple-ssl"),
+      'downloading': (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Downloading...", "really-simple-ssl"),
+      'upgrade-to-premium': (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Downloading...", "really-simple-ssl")
     };
     return statuses[pluginAction];
   };
@@ -3609,7 +3609,7 @@ const ProgressFooter = props => {
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_utils_Icon__WEBPACK_IMPORTED_MODULE_4__["default"], {
     name: redirectIcon,
     color: redirectColor
-  }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("301 Redirect", "really-simple-ssl"))));
+  }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("301 redirect", "really-simple-ssl"))));
 };
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (ProgressFooter);

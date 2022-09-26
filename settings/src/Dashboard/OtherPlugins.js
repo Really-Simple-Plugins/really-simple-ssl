@@ -67,9 +67,9 @@ const OtherPlugins = (props) => {
         const statuses = {
             'download': __("Install", "really-simple-ssl"),
             'activate': __("Activate", "really-simple-ssl"),
-            'activating': __("activating...", "really-simple-ssl"),
-            'downloading': __("downloading...", "really-simple-ssl"),
-            'upgrade-to-premium': __("downloading...", "really-simple-ssl"),
+            'activating': __("Activating...", "really-simple-ssl"),
+            'downloading': __("Downloading...", "really-simple-ssl"),
+            'upgrade-to-premium': __("Downloading...", "really-simple-ssl"),
         };
         return statuses[pluginAction];
     }

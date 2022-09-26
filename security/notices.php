@@ -42,7 +42,7 @@ function rsssl_general_security_notices( $notices ) {
 				'url' => 'https://really-simple-ssl.com/manually-editing-htaccess',
 			),
 			'not-writable-uploads' => array(
-				'title' => __(".htaccess in uploads directory not writable", "really-simple-ssl"),
+				'title' => __(".htaccess not writable", "really-simple-ssl"),
 				'msg' => __("An option was enabled which requires the .htaccess in the uploads directory to get written, but the .htaccess or directory is not writable.", "really-simple-ssl").' '.__("Please add the following lines to your .htaccess, or set it to writable:", "really-simple-ssl").$code,
 				'icon' => 'warning',
 				'dismissible' => true,
@@ -90,6 +90,8 @@ function rsssl_general_security_notices( $notices ) {
 		'output' => array(
 			'true' => array(
 				'highlight_field_id' => 'change_debug_log_location',
+				'title' => __("Debugging", "really-simple-ssl"),
+				'icon' => 'warning',
 				'msg' => __("Your site logs information to a public debugging file.", "really-simple-ssl"),
 				'icon' => 'premium',
 				'dismissible' => true,
@@ -108,8 +110,8 @@ function rsssl_general_security_notices( $notices ) {
 			'true' => array(
 				'msg' => __("Your site is vulnerable to user enumeration attacks.", "really-simple-ssl"). rsssl_read_more('https://really-simple-ssl.com/what-are-user-enumeration-attacks/'),
 				'icon' => 'warning',
-				'title' => 'Disable user enumeration',
-				'url' => 'https://really-simple-ssl.com/what-are-user-enumeration-attacks/',
+				'title' => 'Prevent user enumeration',
+				// 'url' => 'https://really-simple-ssl.com/what-are-user-enumeration-attacks/',
 				'dismissible' => true,
 				'highlight_field_id' => 'disable_user_enumeration',
 			),
@@ -144,7 +146,8 @@ function rsssl_general_security_notices( $notices ) {
 		'output' => array(
 			'true' => array(
 				'highlight_field_id' => 'rename_admin_user',
-				'msg' => __("Your site has a registered user with the name 'admin'.", "really-simple-ssl"),
+				'title' => __("Username'.", "really-simple-ssl"),
+				'msg' => __("Your site registered a user with the name 'admin'.", "really-simple-ssl"),
 				'icon' => 'warning',
 				'dismissible' => true,
 			),
@@ -164,16 +167,16 @@ function rsssl_general_security_notices( $notices ) {
 				'dismissible' => true,
 			),
 		),
-		'show_with_options' => [
-			'block_code_execution_uploads',
-		],
+		// 'show_with_options' => [
+		// 	'block_code_execution_uploads',
+		// ],
 	);
 	$notices['db-prefix-notice'] = array(
 		'callback' => 'rsssl_is_default_wp_prefix',
 		'score' => 5,
 		'output' => array(
 			'false' => array(
-				'msg' => __("Your database prefix is randomized. Awesome!", "really-simple-ssl"),
+				'msg' => __("Your database prefix is renamed and randomized. Awesome!", "really-simple-ssl"),
 				'icon' => 'success',
 				'dismissible' => true,
 			),
