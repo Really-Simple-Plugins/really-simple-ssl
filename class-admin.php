@@ -2755,7 +2755,8 @@ class rsssl_admin extends rsssl_front_end
         foreach ( $notices as $id => $notice ){
             $notice = $notice['output'];
             $class = ( $notice['status'] !== 'completed' ) ? 'error' : 'updated';
-	        echo $this->notice_html( $class.' '.$id, $notice['title'], $notice['msg'] );
+            $footer = isset($notice['url']) ? '<a class="button" target="_blank" href="' . esc_url_raw($notice['url']) . '">'.__("More info", "really-simple-ssl").'</a>' : '';
+	        echo $this->notice_html( $class.' '.$id, $notice['title'], $notice['msg'], $footer);
         }
     }
 
