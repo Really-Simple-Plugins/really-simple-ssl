@@ -1918,7 +1918,8 @@ class rsssl_admin
         foreach ( $notices as $id => $notice ){
             $notice = $notice['output'];
             $class = ( $notice['status'] !== 'completed' ) ? 'error' : 'updated';
-	        echo $this->notice_html( $class.' '.$id, $notice['title'], $notice['msg'] );
+	        $footer = isset($notice['url']) ? '<a class="button" target="_blank" href="' . esc_url_raw($notice['url']) . '">'.__("More info", "really-simple-ssl").'</a>' : '';
+	        echo $this->notice_html( $class.' '.$id, $notice['title'], $notice['msg'], $footer);
         }
     }
 
@@ -2175,7 +2176,6 @@ class rsssl_admin
 	                    'msg' => sprintf(__("The Really Simple SSL plugin folder in the /wp-content/plugins/ directory has been renamed to %s. This might cause issues when deactivating, or with premium add-ons. To fix this you can rename the Really Simple SSL folder back to the default %s.", "really-simple-ssl"),"<b>" . $current_plugin_folder . "</b>" , "<b>really-simple-ssl</b>"),
 	                    'url' => 'https://really-simple-ssl.com/knowledge-base/why-you-should-use-the-default-plugin-folder-name-for-really-simple-ssl/',
                         'icon' => 'warning',
-                        'admin_notice' => false,
                     ),
                 ),
             ),
@@ -2262,7 +2262,6 @@ class rsssl_admin
 			                     '<form class="rsssl-task-form"  action="" method="POST"><a href="'.add_query_arg(array("page" => "really-simple-security", "letsencrypt" => "1"),admin_url("options-general.php")) .'#letsencrypt" type="submit" class="button button-default  rsssl-button-small">'.__("Install SSL certificate", "really-simple-ssl").'</a>'.
 			                     '<input type="submit" class="button button-default rsssl-button-small" value="'.__("Retry", "really-simple-ssl").'" id="rsssl_recheck_certificate" name="rsssl_recheck_certificate"></form>',
 			            'icon' => 'warning',
-			            'admin_notice' => false,
 			            'dismissible' => rsssl_get_option('ssl_enabled')
 		            ),
 		            'no-response' => array(
@@ -2271,7 +2270,6 @@ class rsssl_admin
 			                     '<a href="'.add_query_arg(array("page" => "really-simple-security", "letsencrypt"=>1),admin_url("options-general.php")) .'#letsencrypt" type="submit" class="button button-default  rsssl-button-small">'.__("Install SSL certificate", "really-simple-ssl").'</a>'.
 			                     '<button class="button button-default rsssl-button-small" id="ssl-labs-check-button">'.__("Check manually", "really-simple-ssl").'</button>',
 			            'icon' => 'warning',
-			            'admin_notice' => false,
 			            'dismissible' => true,
 		            ),
 		            'ssl-detected' => array(
@@ -2286,7 +2284,6 @@ class rsssl_admin
 			                     '<br><br><form action="" method="POST"><a href="'.add_query_arg(array("page" => "really-simple-security", "letsencrypt"=>1),admin_url("options-general.php")) .'#letsencrypt" type="submit" class="button button-default">'.__("Install SSL certificate", "really-simple-ssl").'</a>'.
 			                     '&nbsp;<input type="submit" class="button button-default" value="'.__("Re-check", "really-simple-ssl").'" id="rsssl_recheck_certificate" name="rsssl_recheck_certificate"></form>',
 			            'icon' => 'warning',
-			            'admin_notice' => false,
 		            ),
 	            ),
             ),
