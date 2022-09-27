@@ -77,9 +77,9 @@ class Settings extends Component {
         let notices = [];
         for (const notice of progress.notices){
             let noticeField = false;
-            //notices that are linked to a field.
+            //notices that are linked to a field. Only in case of warnings.
             if ( notice.show_with_options ) {
-                noticeField = selectedFields.filter(field => notice.show_with_options && notice.show_with_options.includes(field.id) );
+                noticeField = selectedFields.filter(field => notice.show_with_options && notice.show_with_options.includes(field.id) && notice.output.icon === 'warning');
                 if (noticeField.length===0) noticeField = false;
             }
             //notices that are linked to a menu id.
@@ -99,6 +99,7 @@ class Settings extends Component {
             help.id = notice.id;
             notices.push(notice.help);
         }
+        console.log(notices);
         notices = notices.filter(notice => notice.label.toLowerCase()!=='completed');
         let continueLink = this.props.nextButtonDisabled ? `#${this.props.selectedMainMenuItem}/${this.props.selectedMenuItem}` : `#${this.props.selectedMainMenuItem}/${this.props.nextMenuItem}`;
         return (

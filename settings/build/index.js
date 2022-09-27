@@ -5910,7 +5910,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _Onboarding__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Onboarding */ "./src/Onboarding/Onboarding.js");
 /* harmony import */ var immutability_helper__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! immutability-helper */ "./node_modules/immutability-helper/index.js");
 /* harmony import */ var immutability_helper__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(immutability_helper__WEBPACK_IMPORTED_MODULE_3__);
-/* harmony import */ var react_use__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! react-use */ "./node_modules/react-use/esm/useUpdateEffect.js");
+/* harmony import */ var react_use__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! react-use */ "./node_modules/react-use/esm/useUpdateEffect.js");
+/* harmony import */ var _Placeholder_Placeholder__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../Placeholder/Placeholder */ "./src/Placeholder/Placeholder.js");
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_5__);
+/* harmony import */ var _utils_Icon__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../utils/Icon */ "./src/utils/Icon.js");
+
+
+
 
 
 
@@ -5928,7 +5935,7 @@ const OnboardingModal = props => {
       });
     }
   });
-  (0,react_use__WEBPACK_IMPORTED_MODULE_4__["default"])(() => {
+  (0,react_use__WEBPACK_IMPORTED_MODULE_7__["default"])(() => {
     if (props.showOnBoardingModal === true) {
       let data = {};
       data.dismiss = false;
@@ -5972,7 +5979,12 @@ const OnboardingModal = props => {
   })))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "rsssl-modal-content",
     id: "rsssl-message"
-  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_Onboarding__WEBPACK_IMPORTED_MODULE_2__["default"], {
+  }, !props.isAPILoaded && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("ul", null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("li", null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_utils_Icon__WEBPACK_IMPORTED_MODULE_6__["default"], {
+    name: "file-download",
+    color: "orange"
+  }), (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_5__.__)("Please wait while we detect your setup", "really-simple-ssl"))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_Placeholder_Placeholder__WEBPACK_IMPORTED_MODULE_4__["default"], {
+    lines: "10"
+  })), props.isAPILoaded && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_Onboarding__WEBPACK_IMPORTED_MODULE_2__["default"], {
     getFields: props.getFields,
     updateField: props.updateField,
     selectMainMenu: props.selectMainMenu,
@@ -6325,6 +6337,7 @@ class Page extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Component {
     return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
       className: "rsssl-wrapper"
     }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_Onboarding_OnboardingModal__WEBPACK_IMPORTED_MODULE_7__["default"], {
+      isAPILoaded: isAPILoaded,
       selectMenu: this.selectMenu,
       selectMainMenu: this.selectMainMenu,
       getFields: this.getFields,
@@ -6568,12 +6581,8 @@ class Field extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Component {
   constructor() {
     super(...arguments);
     this.highLightClass = this.props.highLightedField === this.props.field.id ? 'rsssl-field-wrap rsssl-highlight' : 'rsssl-field-wrap';
-  }
-
-  componentDidMount() {
     this.onChangeHandlerDataTable = this.onChangeHandlerDataTable.bind(this);
-    this.field = this.props.field;
-    this.updateField = this.props.updateField;
+    this.onChangeHandler = this.onChangeHandler.bind(this);
   }
 
   onChangeHandler(fieldValue) {
@@ -6581,9 +6590,6 @@ class Field extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Component {
     let field = this.props.field;
     fields[this.props.index]['value'] = fieldValue;
     this.props.saveChangedFields(field.id);
-    this.setState({
-      fields
-    });
   }
   /*
    * Handle data update for a datatable
@@ -6594,7 +6600,7 @@ class Field extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Component {
 
 
   onChangeHandlerDataTable(enabled, clickedItem, type) {
-    let field = this.field;
+    let field = this.props.field;
 
     if (typeof field.value === 'object') {
       field.value = Object.values(field.value);
@@ -6615,6 +6621,7 @@ class Field extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Component {
     field.updateItemId = clickedItem.id;
     let saveFields = [];
     saveFields.push(field);
+    console.log(this);
     this.props.updateField(field.id, field.value);
     _utils_api__WEBPACK_IMPORTED_MODULE_3__.setFields(saveFields).then(response => {//this.props.showSavedSettingsNotice();
     });
@@ -7356,6 +7363,7 @@ class License extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Component 
     this.noticesLoaded = false;
     this.fieldsUpdateComplete = false;
     this.licenseStatus = 'invalid';
+    this.getLicenseNotices = this.getLicenseNotices.bind(this);
     this.state = {
       licenseStatus: 'invalid',
       noticesLoaded: false,
@@ -7371,7 +7379,6 @@ class License extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Component 
 
   componentDidMount() {
     this.props.highLightField('');
-    this.getLicenseNotices = this.getLicenseNotices.bind(this);
     this.setState({
       noticesLoaded: this.noticesLoaded,
       licenseStatus: this.licenseStatus,
@@ -7410,6 +7417,7 @@ class License extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Component 
   onCloseTaskHandler() {}
 
   toggleActivation() {
+    console.log("toggle activaiton");
     const {
       licenseStatus
     } = this.state;
@@ -7986,17 +7994,13 @@ class PermissionsPolicy extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.
   constructor() {
     super(...arguments);
     this.state = {
-      filterValue: -1,
       enable_permissions_policy: 0
     };
   }
 
   componentDidMount() {
-    this.doFilter = this.doFilter.bind(this);
     this.togglePermissionsPolicyStatus = this.togglePermissionsPolicyStatus.bind(this);
-    let field = this.props.fields.filter(field => field.id === 'enable_permissions_policy')[0]; //we somehow need this to initialize the field. Otherwise it doesn't work on load. need to figure that out.
-
-    this.props.updateField(field.id, field.value);
+    let field = this.props.fields.filter(field => field.id === 'enable_permissions_policy')[0];
     this.setState({
       enable_permissions_policy: field.value
     });
@@ -8018,34 +8022,13 @@ class PermissionsPolicy extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.
     });
   }
 
-  doFilter(e) {
-    this.setState({
-      filterValue: e.target.value
-    });
-  }
-
   render() {
     let field = this.props.field;
     let fieldValue = field.value;
     let options = this.props.options;
     const {
-      enable_permissions_policy,
-      filterValue
+      enable_permissions_policy
     } = this.state;
-
-    const Filter = () => (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("select", {
-      onChange: e => this.doFilter(e)
-    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("option", {
-      value: "-1",
-      selected: filterValue == -1
-    }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("All", "really-simple-ssl")), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("option", {
-      value: "1",
-      selected: filterValue == 1
-    }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Allowed", "really-simple-ssl")), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("option", {
-      value: "0",
-      selected: filterValue == 0
-    }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Blocked", "really-simple-ssl"))));
-
     columns = [];
     field.columns.forEach(function (item, i) {
       let newItem = {
@@ -8066,18 +8049,9 @@ class PermissionsPolicy extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.
       data = [];
     }
 
-    if (filterValue != -1) {
-      data = data.filter(item => item.status == filterValue);
-    }
+    let disabled = false;
 
     for (const item of data) {
-      let disabled = false;
-
-      if (item.status != 1) {
-        item.value = '()';
-        disabled = true;
-      }
-
       item.valueControl = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.SelectControl, {
         help: "",
         value: item.value,
@@ -8085,10 +8059,6 @@ class PermissionsPolicy extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.
         options: options,
         label: "",
         onChange: fieldValue => this.props.onChangeHandlerDataTable(fieldValue, item, 'value')
-      });
-      item.statusControl = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_ChangeStatus__WEBPACK_IMPORTED_MODULE_3__["default"], {
-        item: item,
-        onChangeHandlerDataTable: this.props.onChangeHandlerDataTable
       });
     }
 
@@ -8238,10 +8208,10 @@ class Settings extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Component
     let notices = [];
 
     for (const notice of progress.notices) {
-      let noticeField = false; //notices that are linked to a field.
+      let noticeField = false; //notices that are linked to a field. Only in case of warnings.
 
       if (notice.show_with_options) {
-        noticeField = selectedFields.filter(field => notice.show_with_options && notice.show_with_options.includes(field.id));
+        noticeField = selectedFields.filter(field => notice.show_with_options && notice.show_with_options.includes(field.id) && notice.output.icon === 'warning');
         if (noticeField.length === 0) noticeField = false;
       } //notices that are linked to a menu id.
 
@@ -8263,6 +8233,7 @@ class Settings extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Component
       notices.push(notice.help);
     }
 
+    console.log(notices);
     notices = notices.filter(notice => notice.label.toLowerCase() !== 'completed');
     let continueLink = this.props.nextButtonDisabled ? `#${this.props.selectedMainMenuItem}/${this.props.selectedMenuItem}` : `#${this.props.selectedMainMenuItem}/${this.props.nextMenuItem}`;
     return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {

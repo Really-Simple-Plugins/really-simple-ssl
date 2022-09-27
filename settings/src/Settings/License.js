@@ -13,6 +13,7 @@ class License extends Component {
         this.noticesLoaded = false;
         this.fieldsUpdateComplete = false;
         this.licenseStatus = 'invalid';
+        this.getLicenseNotices = this.getLicenseNotices.bind(this);
 
         this.state = {
             licenseStatus: 'invalid',
@@ -29,7 +30,6 @@ class License extends Component {
 
     componentDidMount() {
         this.props.highLightField('');
-        this.getLicenseNotices = this.getLicenseNotices.bind(this);
         this.setState({
             noticesLoaded: this.noticesLoaded,
             licenseStatus: this.licenseStatus,
@@ -69,6 +69,7 @@ class License extends Component {
     }
 
     toggleActivation(){
+        console.log("toggle activaiton");
             const {
                 licenseStatus,
             } = this.state;

@@ -54,7 +54,6 @@ function rsssl_menu(){
 							'premium' => true,
 							'helpLink'  => 'https://really-simple-ssl.com/instructions/about-hardening-features#advanced',
 							'title' => __('Advanced Hardening', 'really-simple-ssl'),
-							'premium' => true,
 							'premium_text' => __("Get Advanced Hardening with %sReally Simple SSL Pro%s", 'really-simple-ssl'),
 						],
 						[
@@ -62,7 +61,6 @@ function rsssl_menu(){
 							'premium' => true,
 							'helpLink'  => 'https://really-simple-ssl.com/instructions/about-hardening-features#xml-rpc',
 							'title' => __('XML-RPC', 'really-simple-ssl'),
-							'premium' => true,
 							'premium_text' => __("Get XML-RPC with %sReally Simple SSL Pro%s", 'really-simple-ssl'),
 						],
 					],
@@ -872,11 +870,6 @@ function rsssl_fields( $load_values = true ){
 					'name' => __('Options', 'really-simple-ssl'),
 					'sortable' => false,
 					'column' =>'valueControl',
-				],
-				[
-					'name' => __('Action', 'really-simple-ssl'),
-					'sortable' => false,
-					'column' =>'statusControl',
 				],
 			],
 			'default' => [

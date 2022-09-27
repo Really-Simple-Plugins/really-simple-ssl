@@ -184,9 +184,6 @@ function rsssl_general_security_notices( $notices ) {
 				'url' => 'https://really-simple-ssl.com'
 			),
 		),
-		// 'show_with_options' => [
-		// 	'rename_db_prefix',
-		// ],
 	);
 
 //	$notices['xmlrpc'] = array(

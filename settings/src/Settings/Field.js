@@ -33,12 +33,8 @@ class Field extends Component {
     constructor() {
         super( ...arguments );
         this.highLightClass = this.props.highLightedField===this.props.field.id ? 'rsssl-field-wrap rsssl-highlight' : 'rsssl-field-wrap';
-    }
-
-    componentDidMount() {
         this.onChangeHandlerDataTable = this.onChangeHandlerDataTable.bind(this);
-        this.field = this.props.field;
-        this.updateField = this.props.updateField;
+        this.onChangeHandler = this.onChangeHandler.bind(this);
     }
 
     onChangeHandler(fieldValue) {
@@ -46,7 +42,6 @@ class Field extends Component {
         let field = this.props.field;
         fields[this.props.index]['value'] = fieldValue;
         this.props.saveChangedFields( field.id )
-        this.setState( { fields } )
     }
 
     /*
@@ -56,7 +51,7 @@ class Field extends Component {
      * @param type
      */
     onChangeHandlerDataTable(enabled, clickedItem, type ) {
-        let field=this.field;
+        let field=this.props.field;
         if (typeof field.value === 'object') {
             field.value = Object.values(field.value);
         }
@@ -73,6 +68,7 @@ class Field extends Component {
         field.updateItemId = clickedItem.id;
         let saveFields = [];
         saveFields.push(field);
+        console.log(this);
         this.props.updateField(field.id, field.value);
         rsssl_api.setFields(saveFields).then(( response ) => {
             //this.props.showSavedSettingsNotice();

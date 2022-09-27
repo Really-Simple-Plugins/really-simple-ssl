@@ -3,6 +3,9 @@ import * as rsssl_api from "../utils/api";
 import Onboarding from "./Onboarding";
 import update from 'immutability-helper';
 import {useUpdateEffect} from 'react-use';
+import Placeholder from '../Placeholder/Placeholder';
+import { __ } from '@wordpress/i18n';
+import Icon from "../utils/Icon";
 const OnboardingModal = (props) => {
     const [modalLoaded, setModalLoaded] = useState(false);
     useEffect(() => {
@@ -14,13 +17,13 @@ const OnboardingModal = (props) => {
         }
     });
 
-        useUpdateEffect(()=> {
-            if (props.showOnBoardingModal===true) {
-                let data={};
-                data.dismiss = false;
-                rsssl_api.runTest('dismiss_modal', 'refresh', data).then(( response ) => {});
-            }
-        });
+    useUpdateEffect(()=> {
+        if (props.showOnBoardingModal===true) {
+            let data={};
+            data.dismiss = false;
+            rsssl_api.runTest('dismiss_modal', 'refresh', data).then(( response ) => {});
+        }
+    });
 
     const dismissModal = () => {
         let data={};
@@ -28,7 +31,6 @@ const OnboardingModal = (props) => {
         props.setShowOnBoardingModal(false)
         rsssl_api.runTest('dismiss_modal', 'refresh', data).then(( response ) => { });
     }
-
     return (
         <>
             { (props.showOnBoardingModal) && <>
@@ -46,7 +48,22 @@ const OnboardingModal = (props) => {
                     </div>
 
                     <div className="rsssl-modal-content" id="rsssl-message">
-                        <Onboarding getFields={props.getFields} updateField={props.updateField}  selectMainMenu={props.selectMainMenu} isModal={true} dismissModal={dismissModal}/>
+                        { !props.isAPILoaded &&
+                             <>
+                                <ul>
+                                    <li><Icon name = "file-download" color = 'orange' />{__("Please wait while we detect your setup", "really-simple-ssl")}</li>
+                                </ul>
+                                <Placeholder lines="10"></Placeholder>
+                            </>
+                         }
+                        { props.isAPILoaded &&
+                            <Onboarding
+                                getFields={props.getFields}
+                                updateField={props.updateField}
+                                selectMainMenu={props.selectMainMenu}
+                                isModal={true}
+                                dismissModal={dismissModal}/>
+                                }
                     </div>
 
                     <div className="rssl-modal-footer"/>

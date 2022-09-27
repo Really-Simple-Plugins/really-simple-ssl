@@ -144,7 +144,7 @@ function rsssl_get_system_status(){
 	if ($mixed_content_fixer_detected === 'found'){
 		$output .=  "Mixed content fixer successfully detected<br>";
 	}
-	if ($mixed_content_fixer_detected === 'not-enabled') {
+	if ( !rsssl_get_option('mixed_content_fixer') ) {
 		$output .=  "Mixed content fixer not enabled<br>";
 	}
 	if ( !RSSSL()->admin->htaccess_contains_redirect_rules() ) {

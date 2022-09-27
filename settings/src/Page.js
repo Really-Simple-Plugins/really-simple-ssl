@@ -299,7 +299,7 @@ class Page extends Component {
         } = this.state;
         return (
             <div className="rsssl-wrapper">
-                <OnboardingModal selectMenu={this.selectMenu} selectMainMenu={this.selectMainMenu} getFields={this.getFields} updateField={this.updateField} setShowOnBoardingModal={this.setShowOnBoardingModal} showOnBoardingModal={showOnBoardingModal} pageProps={this.pageProps} />
+                <OnboardingModal isAPILoaded={isAPILoaded} selectMenu={this.selectMenu} selectMainMenu={this.selectMainMenu} getFields={this.getFields} updateField={this.updateField} setShowOnBoardingModal={this.setShowOnBoardingModal} showOnBoardingModal={showOnBoardingModal} pageProps={this.pageProps} />
                 {!isAPILoaded && <PagePlaceholder></PagePlaceholder>}
                 {showModal && <Modal handleModal={this.handleModal} data={modalData}/>}
                 {isAPILoaded &&

@@ -721,7 +721,6 @@ function rsssl_sanitize_permissions_policy( $value, $type, $field_name ){
 	//      [status] => 1/0
 	//   )
 	//)
-
 	$config_fields = rsssl_fields(false);
 	//check if there is a default available
 	$default = false;

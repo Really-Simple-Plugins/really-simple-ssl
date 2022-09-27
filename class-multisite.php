@@ -123,7 +123,8 @@ if (!class_exists('rsssl_multisite')) {
 		        'score' => 30,
 		        'output' => array(
 			        'true' => array(
-				        'msg' => __('A networkwide SSL activation process has been started, but has not been completed. Please go to the SSL settings page to copmlete the process.', 'really-simple-ssl').'&nbsp;'.
+				        'title' => __("SSL activation in progress", "really-simple-ssl"),
+				        'msg' => __('A networkwide SSL activation process has been started, but has not been completed. Please go to the SSL settings page to complete the process.', 'really-simple-ssl').'&nbsp;'.
 				                 '<a href="'.add_query_arg(['page'=>'really-simple-security'],admin_url('options-general.php')).'">'.__('View settings page','really-simple-ssl').'</a>',
 				        'icon' => 'warning',
 				        'plusone' => true,

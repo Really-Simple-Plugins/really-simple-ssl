@@ -4,23 +4,17 @@ defined('ABSPATH') or die();
 class rsssl_admin
 {
     private static $_this;
-    public $wpconfig_siteurl_not_fixed = FALSE;
-    public $no_server_variable = FALSE;
-    public $do_wpconfig_loadbalancer_fix = FALSE;
-    public $site_has_ssl = FALSE;
-    public $ssl_enabled = FALSE;
-    public $redirect = FALSE;
-    //multisite variables
-    public $sites = array(); //for multisite, list of all activated sites.
-
-    //general settings
-    public $htaccess_test_success = FALSE;
+    public $wpconfig_siteurl_not_fixed = false;
+    public $no_server_variable = false;
+    public $do_wpconfig_loadbalancer_fix = false;
+    public $site_has_ssl = false;
     public $plugin_dir = "really-simple-ssl";
     public $plugin_filename = "rlrsssl-really-simple-ssl.php";
     public $abs_path;
-    public $review_notice_shown = FALSE;
+    public $review_notice_shown = false;
     public $ssl_type = "NA";
 	public $pro_url;
+    public $configuration_loaded = false;
 
     function __construct()
     {
@@ -43,17 +37,39 @@ class rsssl_admin
 	     * Htaccess redirect handling
 	     */
 	    add_filter( 'rsssl_htaccess_security_rules', array($this, 'add_htaccess_redirect') );
-	    add_action( 'rocket_activation', array($this, 'removeHtaccessEdit' ) );
+	    add_action( 'rocket_activation', array($this, 'remove_htaccess_edit' ) );
 	    add_filter( 'before_rocket_htaccess_rules', array($this, 'add_htaccess_redirect_before_wp_rocket' ) );
 	    add_action( 'rsssl_after_save_field', array($this, 'maybe_flush_wprocket_htaccess' ),100, 4 );
 
         // Saved fields hook fired through REST settings save
 	    add_action( "rsssl_after_saved_fields", array( $this, "clear_transients" ), 10, 3 );
 
+	    //add the settings page for the plugin
+	    add_action('admin_enqueue_scripts', array($this, 'enqueue_assets'));
+	    add_action('admin_init', array($this, 'listen_for_deactivation'), 40);
+
+	    $plugin = rsssl_plugin;
+	    add_filter("plugin_action_links_$plugin", array($this, 'plugin_settings_link'));
+
+	    //Add update notification to Settings admin menu
+	    add_action('admin_menu', array($this, 'add_plus_ones') );
 	    // Only show deactivate popup when SSL has been enabled.
 	    if ( rsssl_get_option('ssl_enabled') ) {
             add_action('admin_footer', array($this, 'deactivate_popup'), 40);
         }
+
+
+	    //callbacks for the ajax dismiss buttons
+	    add_action('wp_ajax_rsssl_dismiss_review_notice', array($this, 'dismiss_review_notice_callback'));
+	    add_action('wp_ajax_rsssl_redirect_to_le_wizard', array($this, 'rsssl_redirect_to_le_wizard'));
+
+	    //handle notices
+	    add_action('admin_notices', array($this, 'show_notices'));
+	    //show review notice, only to free users
+	    if ( !defined("rsssl_pro_version") && (!defined("rsssl_pp_version")) && (!defined("rsssl_soc_version")) && !is_multisite() ) {
+		    add_action('admin_notices', array($this, 'show_leave_review_notice'));
+	    }
+
     }
 
     static function this()
@@ -91,7 +107,6 @@ class rsssl_admin
 	 */
 
 	public function clear_transients(){
-		delete_transient('rsssl_mixed_content_fixer_detected');
 		delete_transient('rsssl_plusone_count');
 		delete_transient( 'rsssl_can_use_curl_headers_check' );
 		delete_transient( 'rsssl_admin_notices' );
@@ -123,17 +138,6 @@ class rsssl_admin
         }
     }
 
-	/**
-	 * Dismiss review notice of dismissed by the user
-	 */
-
-    public function maybe_dismiss_review_notice() {
-	    if (isset($_GET['rsssl_dismiss_review_notice'])){
-		    $this->review_notice_shown = true;
-		    $this->save_options();
-	    }
-    }
-
     /**
      * Initializes the admin class
      *
@@ -149,7 +153,7 @@ class rsssl_admin
             return;
         }
         $is_on_settings_page = $this->is_settings_page();
-        if (defined("RSSSL_FORCE_ACTIVATE") && RSSSL_FORCE_ACTIVATE) {
+        if ( defined("RSSSL_FORCE_ACTIVATE") && RSSSL_FORCE_ACTIVATE ) {
             rsssl_update_option( 'ssl_enabled', true );
         }
 
@@ -188,40 +192,21 @@ class rsssl_admin
         */
 
         //when configuration should run again
+
         if ( !rsssl_get_option('ssl_enabled') || !$this->site_has_ssl || $is_on_settings_page || is_network_admin() || defined('RSSSL_DOING_SYSTEM_STATUS') ) {
+            error_log("detect configuration");
             $this->detect_configuration();
-            if (!$this->wpconfig_ok()) {
+            if ( !$this->wpconfig_ok() ) {
 	            rsssl_update_option('ssl_enabled', false);
                 $this->save_options();
             } else {
 	            //when one of the used server variables was found, test if the redirect works
 	            if ( RSSSL()->server->uses_htaccess() && $this->ssl_type != "NA" ) {
-		            $this->test_htaccess_redirect();
+		            $this->htaccess_test_success();
 	            }
             }
-        }
-
-        add_action('rsssl_activation_notice_footer', array($this, 'show_enable_ssl_button'), 50);
-
-        //add the settings page for the plugin
-        add_action('admin_enqueue_scripts', array($this, 'enqueue_assets'));
-        add_action('admin_init', array($this, 'listen_for_deactivation'), 40);
-
-        $plugin = rsssl_plugin;
-        add_filter("plugin_action_links_$plugin", array($this, 'plugin_settings_link'));
-
-        //Add update notification to Settings admin menu
-        add_action('admin_menu', array($this, 'add_plus_ones') );
-
-        //callbacks for the ajax dismiss buttons
-        add_action('wp_ajax_rsssl_dismiss_review_notice', array($this, 'dismiss_review_notice_callback'));
-        add_action('wp_ajax_rsssl_redirect_to_le_wizard', array($this, 'rsssl_redirect_to_le_wizard'));
-
-        //handle notices
-        add_action('admin_notices', array($this, 'show_notices'));
-        //show review notice, only to free users
-        if (!defined("rsssl_pro_version") && (!defined("rsssl_pp_version")) && (!defined("rsssl_soc_version")) && (!class_exists('RSSSL_PRO')) && (!is_multisite())) {
-            add_action('admin_notices', array($this, 'show_leave_review_notice'));
+        } else {
+            error_log("test");
         }
     }
 
@@ -234,7 +219,7 @@ class rsssl_admin
 
 	public function add_htaccess_redirect( $rules ) {
 		if ( ! function_exists('rocket_clean_domain') ) {
-			$this->detect_configuration();
+            error_log("detect config in htaccess redirect");
 			$rule = $this->get_redirect_rules();
             if ( !empty($rule) )  {
 	            $rules[] = ['rules' => $rule, 'identifier' => 'RewriteRule ^(.*)$ https://%{HTTP_HOST}/$1'];
@@ -371,6 +356,7 @@ class rsssl_admin
 
 	        if ( !$safe_mode ) {
 		        rsssl_update_option('redirect', 'wp_redirect');
+		        rsssl_update_option('mixed_content_fixer', true);
 
 		        //flush caches when just activated ssl
 		        //flush the permalinks
@@ -705,7 +691,6 @@ class rsssl_admin
 	public function save_options()
 	{
 		rsssl_update_option('site_has_ssl', $this->site_has_ssl);
-		rsssl_update_option('review_notice_shown', $this->review_notice_shown);
 	}
 
     /**
@@ -719,7 +704,6 @@ class rsssl_admin
 
     public function get_options()
     {
-        $this->review_notice_shown = rsssl_get_option('review_notice_shown');
         $this->site_has_ssl = rsssl_get_option('site_has_ssl');
     }
 
@@ -1096,7 +1080,7 @@ class rsssl_admin
 	        $this->remove_ssl_from_siteurl_in_wpconfig();
 	        $this->remove_secure_cookie_settings();
 	        $this->site_has_ssl = false;
-	        $this->review_notice_shown = false;
+	        rsssl_update_option('review_notice_shown', false);
 	        $this->save_options();
 	        rsssl_update_option('ssl_enabled',false);
 	        rsssl_update_option('dismiss_all_notices', false);
@@ -1110,7 +1094,7 @@ class rsssl_admin
 	        do_action("rsssl_deactivate");
 
 	        $this->remove_wpconfig_edit();
-	        $this->removeHtaccessEdit();
+	        $this->remove_htaccess_edit();
             rsssl_remove_htaccess_security_edits();
         }
     }
@@ -1189,6 +1173,7 @@ class rsssl_admin
 
     public function detect_configuration()
     {
+	    $this->configuration_loaded = true;
         //if current page is on SSL, we can assume SSL is available, even when an errormsg was returned
         if ($this->is_ssl_extended()) {
             $this->site_has_ssl = TRUE;
@@ -1234,7 +1219,7 @@ class rsssl_admin
             }
 
             //check for is_ssl()
-            if ((!$this->is_ssl_extended() &&
+            if ( (!$this->is_ssl_extended() &&
                     (strpos($filecontents, "#SERVER-HTTPS-ON#") === false) &&
                     (strpos($filecontents, "#SERVER-HTTPS-1#") === false) &&
                     (strpos($filecontents, "#SERVERPORT443#") === false)) || (!is_ssl() && $this->is_ssl_extended())) {
@@ -1246,8 +1231,8 @@ class rsssl_admin
 
         }
         $this->check_for_siteurl_in_wpconfig();
-
         $this->save_options();
+
     }
 
     /**
@@ -1260,13 +1245,13 @@ class rsssl_admin
      *
      */
 
-    public function test_htaccess_redirect()
+    public function htaccess_test_success()
     {
-        $this->htaccess_test_success = get_transient('rsssl_htaccess_test_success');
-        if (!$this->htaccess_test_success) {
+	    $test = get_transient('rsssl_htaccess_test_success');
+        if ( !$test ) {
             $filecontents = "";
             $testpage_url = trailingslashit($this->test_url()) . "testssl/";
-            switch ($this->ssl_type) {
+            switch ( $this->ssl_type ) {
                 case "CLOUDFRONT":
                     $testpage_url .= "cloudfront";
                     break;
@@ -1307,29 +1292,23 @@ class rsssl_admin
                 $filecontents = wp_remote_retrieve_body($response);
             }
 
-            if (!is_wp_error($response) && (strpos($filecontents, "#SSL TEST PAGE#") !== false)) {
-                $htaccess_test_success = 'success';
+            if ( !is_wp_error($response) && (strpos($filecontents, "#SSL TEST PAGE#") !== false) ) {
+                $test = 'success';
             } else {
                 //.htaccess rewrite rule seems to be giving problems.
-                $htaccess_test_success = 'error';
+                $test = 'error';
             }
-            if (empty($filecontents)) {
-                $htaccess_test_success = 'no-response';
+            if ( empty($filecontents) ) {
+                $test = 'no-response';
             }
-            set_transient('rsssl_htaccess_test_success', $this->htaccess_test_success, 600);
+            set_transient('rsssl_htaccess_test_success', $test, 600);
         }
 
-
-        if ($htaccess_test_success == 'no-response'){
-            $this->htaccess_test_success = FALSE;
+        if ( $test === 'no-response' || $test === 'error' ){
+            return false;
+        } else if ( $test === 'success' ){
+            return true;
         }
-        if ($htaccess_test_success == 'success'){
-            $this->htaccess_test_success = true;
-        }
-        if ($htaccess_test_success == 'error'){
-            $this->htaccess_test_success = FALSE;
-        }
-
     }
 
 
@@ -1381,7 +1360,7 @@ class rsssl_admin
      *
      */
 
-	public function removeHtaccessEdit()
+	public function remove_htaccess_edit()
 	{
 		if (file_exists($this->htaccess_file()) && is_writable($this->htaccess_file())) {
 			$htaccess = file_get_contents($this->htaccess_file());
@@ -1471,7 +1450,7 @@ class rsssl_admin
 
     public function has_301_redirect()
     {
-        if ( rsssl_get_option('redirect') !== 'none' ) {
+        if ( rsssl_get_option('redirect') === 'htaccess' || rsssl_get_option('redirect') === 'wp_redirect') {
             return true;
         }
 
@@ -1645,23 +1624,29 @@ class rsssl_admin
 	 * @return string
 	 */
 	public function add_htaccess_redirect_before_wp_rocket() {
-		$this->detect_configuration();
+		error_log("detect config before wp rocket");
 		return $this->get_redirect_rules();
 	}
 
     /**
-     *
-     * @since 2.2
      * Check if the mixed content fixer is functioning on the front end, by scanning the source of the homepage for the fixer comment.
+     * @since 2.2
      * @access public
-     * @return string $mixed_content_fixer_detected
+     * @return string
      */
 
     public function mixed_content_fixer_detected()
     {
-        $status = 0;
-        $mixed_content_fixer_detected = get_transient('rsssl_mixed_content_fixer_detected');
-        if (!$mixed_content_fixer_detected) {
+
+	    //no need to check for the mixed content fixer if it's not enabled yet.
+        if ( !rsssl_get_option( 'mixed_content_fixer' ) ) {
+		    return 'not-enabled';
+	    }
+
+        //it's enabled, so check if we can find it on the front-end.
+	    $status = 0;
+	    $result = get_transient('rsssl_mixed_content_fixer_detected');
+        if (!$result) {
             $web_source = "";
             //check if the mixed content fixer is active
             $response = wp_remote_get(home_url());
@@ -1673,33 +1658,28 @@ class rsssl_admin
 
 	            if ( $status != 200 ) {
 		            //Could not connect to website
-		            $mixed_content_fixer_detected = 'no-response';
+		            $result = 'no-response';
 	            } elseif ( strpos( $web_source, "data-rsssl=" ) === false ) {
 		            //Mixed content fixer marker not found in the websource
-		            $mixed_content_fixer_detected = 'not-found';
+		            $result = 'not-found';
 	            } else {
-		            $mixed_content_fixer_detected = 'found';
+		            $result = 'found';
 	            }
             }
 
             if ( is_wp_error($response) ) {
-	            //Fallback since most errors should be cURL errors, Error encountered while retrieving the webpage.
-                $mixed_content_fixer_detected = 'error';
+	            //Fallback since most errors will be cURL errors, Error encountered while retrieving the webpage.
+                $result = 'error';
                 $error = $response->get_error_message();
                 set_transient('rsssl_curl_error' , $error, 600);
                 if ( !empty($error) && (strpos($error, "cURL error") !== false ) ) {
-                    $mixed_content_fixer_detected = 'curl-error';
+                    $result = 'curl-error';
                 }
             }
-
-            if ( !rsssl_get_option( 'mixed_content_fixer' ) ) {
-                $mixed_content_fixer_detected = 'not-enabled';
-            }
-            set_transient('rsssl_mixed_content_fixer_detected', $mixed_content_fixer_detected, 600);
+            set_transient('rsssl_mixed_content_fixer_detected', $result, 600);
         }
 
-	    $this->mixed_content_fixer_detected = $mixed_content_fixer_detected === 'found';
-        return $mixed_content_fixer_detected;
+        return $result === 'found';
     }
 
 	/**
@@ -1715,14 +1695,17 @@ class rsssl_admin
 
     public function get_redirect_rules($manual = false)
     {
+        if ( !$this->configuration_loaded ) {
+	        $this->detect_configuration();
+        }
         //only add the redirect rules when a known type of SSL was detected. Otherwise, we use https.
         $rule = "";
-	    $this->test_htaccess_redirect();
-        //if the htaccess test was successfull, and we know the redirectype, edit
+        //if the htaccess test was successfull, and we know the redirect type, edit
         if (
                 rsssl_get_option('ssl_enabled') &&
                 rsssl_get_option('redirect')==='htaccess' &&
-                ($manual || $this->htaccess_test_success) && $this->ssl_type != "NA"
+                ($manual || $this->htaccess_test_success() ) &&
+                $this->ssl_type != "NA"
         ) {
             $rule .= "\n" . "<IfModule mod_rewrite.c>" . "\n";
             $rule .= "RewriteEngine on" . "\n";
@@ -1831,7 +1814,7 @@ class rsssl_admin
 	        update_option('rsssl_before_review_notice_user', true, false );
         }
 
-        if (!$this->review_notice_shown && get_option('rsssl_activation_timestamp') && get_option('rsssl_activation_timestamp') < strtotime("-1 month")) {
+        if ( !rsssl_get_option('review_notice_shown') && get_option('rsssl_activation_timestamp') && get_option('rsssl_activation_timestamp') < strtotime("-1 month")) {
             add_action('admin_print_footer_scripts', array($this, 'insert_dismiss_review'));
             ?>
             <?php if ( is_rtl() ) { ?>
@@ -1965,6 +1948,16 @@ class rsssl_admin
         <?php
     }
 
+	/**
+	 * Dismiss review notice of dismissed by the user
+	 */
+
+	public function maybe_dismiss_review_notice() {
+		if (isset($_GET['rsssl_dismiss_review_notice'])){
+			rsssl_update_option('review_notice_shown',true);
+		}
+	}
+
     /**
      * Process the ajax dismissal of the htaccess message.
      *
@@ -1979,7 +1972,7 @@ class rsssl_admin
         $type = isset($_POST['type']) ? $_POST['type'] : false;
 
         if ($type === 'dismiss'){
-            $this->review_notice_shown = TRUE;
+	        rsssl_update_option('review_notice_shown', true);
         }
         if ($type === 'later') {
             //Reset activation timestamp, notice will show again in one month.
@@ -2080,6 +2073,7 @@ class rsssl_admin
 	    if ( rsssl_get_option('ssl_enabled') || $this->is_settings_page() || isset($_GET['ssl_reload_https']) ) {
 	        delete_transient('rsssl_admin_notices');
 	    }
+
 	    if ( $cache_admin_notices) {
 		    $cached_notices = get_transient('rsssl_admin_notices');
             if ( $cached_notices === 'empty') {
@@ -2090,8 +2084,8 @@ class rsssl_admin
 		    }
 	    }
 
+	    $rules            = $this->get_redirect_rules( true );
         if ( $this->ssl_type != "NA" ) {
-            $rules            = $this->get_redirect_rules( true );
             $arr_search       = array( "<", ">", "\n" );
             $arr_replace      = array( "&lt", "&gt", "<br>" );
             $rules            = str_replace( $arr_search, $arr_replace, $rules );
@@ -2347,12 +2341,15 @@ class rsssl_admin
             ),
 
             'check_redirect' => array(
-	            'condition' => array('rsssl_ssl_enabled' , 'RSSSL()->admin->htaccess_redirect_allowed', 'NOT is_multisite'),
+	            'condition' => array( 'NOT rsssl_ssl_enabled' , 'RSSSL()->admin->htaccess_redirect_allowed'),
 	            'callback' => 'RSSSL()->admin->redirect_status',
                 'score' => 10,
+	            'show_with_options' => [
+		            'redirect',
+	            ],
 	            'output' => array(
                     'htaccess-redirect-set' => array(
-                        'msg' =>__('301 redirect to https set: .htaccess redirect.', 'really-simple-ssl') ,
+                        'msg' =>__('301 redirect to https set: .htaccess redirect.', 'really-simple-ssl'),
                         'icon' => 'success'
                     ),
                     'wp-redirect-to-htaccess' => array(
@@ -2369,6 +2366,7 @@ class rsssl_admin
                         'dismissible' => false
                     ),
                     'htaccess-rules-test-failed' => array(
+	                    'title' => __('.htaccess redirect.', 'really-simple-ssl'),
 	                    'url' => 'https://really-simple-ssl.com/knowledge-base/manually-insert-htaccess-redirect-http-to-https/',
 	                    'msg' => __('The .htaccess redirect rules selected by this plugin failed in the test. Set manually or dismiss to leave on PHP redirect.', 'really-simple-ssl') . $rules,
                         'icon' => 'warning',
@@ -3211,7 +3209,8 @@ class rsssl_admin
 	 * @return string
 	 */
 	public function redirect_status() {
-		if ( ! RSSSL()->admin->has_301_redirect() ) {
+        return 'htaccess-rules-test-failed';
+		if ( !RSSSL()->admin->has_301_redirect() ) {
 			return 'no-redirect-set';
 		}
 
@@ -3219,17 +3218,12 @@ class rsssl_admin
 			return 'htaccess-redirect-set';
 		}
 
-        //not writable is handled in the dedicated notice about htaccess permissions
-		if ( RSSSL()->server->uses_htaccess() && ! is_writable( RSSSL()->admin->htaccess_file()) && $this->can_apply_networkwide() ) {
-			return 'no-redirect-set';
-		}
-
-		if ( rsssl_get_option('redirect') ==='htaccess' && !RSSSL()->admin->htaccess_test_success && $this->can_apply_networkwide()) {
-			return 'htaccess-rules-test-failed';
-		}
-
-		if ( RSSSL()->admin->has_301_redirect() && rsssl_get_option('redirect')==='wp_redirect' && RSSSL()->server->uses_htaccess() && rsssl_get_option('redirect') !== 'htaccess' && $this->can_apply_networkwide() ) {
+		if ( $this->can_apply_networkwide() && !RSSSL()->admin->htaccess_contains_redirect_rules() && rsssl_get_option('redirect')==='wp_redirect' ) {
 			return 'wp-redirect-to-htaccess';
+		}
+
+		if ( rsssl_get_option('redirect') ==='htaccess' && !RSSSL()->admin->htaccess_test_success() && $this->can_apply_networkwide()) {
+			return 'htaccess-rules-test-failed';
 		}
 
 		return 'default';
