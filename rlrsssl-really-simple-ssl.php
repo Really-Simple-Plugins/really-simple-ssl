@@ -124,26 +124,26 @@ class REALLY_SIMPLE_SSL
 		require_once(rsssl_path . 'class-mixed-content-fixer.php');
 		$wpcli = defined( 'WP_CLI' ) && WP_CLI;
 		if ( $wpcli ) {
-			require_once(rsssl_path . 'class-wp-cli.php');
+			require_once( rsssl_path . 'class-wp-cli.php');
 		}
 		if ( is_multisite() ) {
-			require_once(rsssl_path . 'class-multisite.php');
+			require_once( rsssl_path . 'class-multisite.php');
 		}
 		if ( rsssl_is_logged_in_rest() || is_admin() || wp_doing_cron() || $wpcli || defined('RSSSL_DOING_SYSTEM_STATUS') || defined('RSSSL_LEARNING_MODE') ) {
-			require_once(rsssl_path . 'upgrade.php');
+			require_once( rsssl_path . 'upgrade.php');
 			require_once( rsssl_path . 'settings/settings.php' );
             require_once( rsssl_path . 'onboarding/config.php' );
             require_once( rsssl_path . 'onboarding/class-onboarding.php' );
             require_once( rsssl_path . 'placeholders/class-placeholder.php' );
-            require_once(rsssl_path . 'class-admin.php');
-			require_once(rsssl_path . 'class-cache.php');
-			require_once(rsssl_path . 'class-server.php');
-            require_once(rsssl_path . 'progress/class-progress.php');
-			require_once(rsssl_path . 'class-certificate.php');
-			require_once(rsssl_path . 'class-site-health.php');
+            require_once( rsssl_path . 'class-admin.php');
+			require_once( rsssl_path . 'class-cache.php');
+			require_once( rsssl_path . 'class-server.php');
+            require_once( rsssl_path . 'progress/class-progress.php');
+			require_once( rsssl_path . 'class-certificate.php');
+			require_once( rsssl_path . 'class-site-health.php');
 
 			if ( isset($_GET['install_pro'])) {
-				require_once(rsssl_path . 'upgrade/upgrade-to-pro.php');
+				require_once( rsssl_path . 'upgrade/upgrade-to-pro.php');
 			}
 		}
 
@@ -152,7 +152,7 @@ class REALLY_SIMPLE_SSL
         }
 
         require_once( rsssl_path . 'lets-encrypt/cron.php' );
-		require_once(rsssl_path . '/security/security.php');
+		require_once( rsssl_path . '/security/security.php');
 	}
 
 	private function hooks()

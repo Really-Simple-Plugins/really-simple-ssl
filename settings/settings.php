@@ -1,6 +1,5 @@
 <?php
 defined('ABSPATH') or die();
-//error_log("load settings.php");
 
 /**
  * Enqueue Gutenberg block assets for backend editor.

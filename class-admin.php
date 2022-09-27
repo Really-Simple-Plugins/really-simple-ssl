@@ -194,7 +194,6 @@ class rsssl_admin
         //when configuration should run again
 
         if ( !rsssl_get_option('ssl_enabled') || !$this->site_has_ssl || $is_on_settings_page || is_network_admin() || defined('RSSSL_DOING_SYSTEM_STATUS') ) {
-            error_log("detect configuration");
             $this->detect_configuration();
             if ( !$this->wpconfig_ok() ) {
 	            rsssl_update_option('ssl_enabled', false);
@@ -205,8 +204,6 @@ class rsssl_admin
 		            $this->htaccess_test_success();
 	            }
             }
-        } else {
-            error_log("test");
         }
     }
 
@@ -219,7 +216,6 @@ class rsssl_admin
 
 	public function add_htaccess_redirect( $rules ) {
 		if ( ! function_exists('rocket_clean_domain') ) {
-            error_log("detect config in htaccess redirect");
 			$rule = $this->get_redirect_rules();
             if ( !empty($rule) )  {
 	            $rules[] = ['rules' => $rule, 'identifier' => 'RewriteRule ^(.*)$ https://%{HTTP_HOST}/$1'];
@@ -1342,9 +1338,6 @@ class rsssl_admin
 
             $home = trailingslashit($https_home_url);
             $plugin_url = str_replace($mainsiteurl, $home, $plugin_url);
-
-            //return http link if original url is http.
-            //if (strpos(home_url(), "https://")===FALSE) $plugin_url = str_replace("https://","http://",$plugin_url);
         }
 
         return $plugin_url;
@@ -1624,7 +1617,6 @@ class rsssl_admin
 	 * @return string
 	 */
 	public function add_htaccess_redirect_before_wp_rocket() {
-		error_log("detect config before wp rocket");
 		return $this->get_redirect_rules();
 	}
 
