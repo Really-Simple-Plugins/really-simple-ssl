@@ -43,9 +43,6 @@ class SettingsGroup extends Component {
         });
     }
 
-    handleMenuLink(id){
-        this.props.selectMenu(id);
-    }
     render(){
         let selectedMenuItem = this.props.selectedMenuItem;
         let selectedFields = [];
@@ -94,7 +91,6 @@ class SettingsGroup extends Component {
         let networkwide_error = !rsssl_settings.networkwide_active && activeGroup.networkwide_required;
         this.upgrade = activeGroup.upgrade ? activeGroup.upgrade : this.upgrade;
         let helplinkText = activeGroup.helpLink_text ? activeGroup.helpLink_text : __("Instructions manual","really-simple-ssl");
-
         let anchor = getAnchor('main');
         let disabledClass = disabled || networkwide_error ? 'rsssl-disabled' : '';
 
@@ -136,7 +132,7 @@ class SettingsGroup extends Component {
                     <div className="rsssl-locked-overlay">
                         <span className="rsssl-task-status rsssl-premium">{__("Upgrade","really-simple-ssl")}</span>
                         <span>
-                            { rsssl_settings.pro_plugin_active && <span>{msg}&nbsp;<a className="rsssl-locked-link" href="#" onClick={ () => this.handleMenuLink('license') }>{__("Check license", "really-simple-ssl")}</a></span>}
+                            { rsssl_settings.pro_plugin_active && <span>{msg}&nbsp;<a className="rsssl-locked-link" href="#settings/license">{__("Check license", "really-simple-ssl")}</a></span>}
                             { !rsssl_settings.pro_plugin_active && <Hyperlink target="_blank" text={msg} url={this.upgrade}/> }
                         </span>
                     </div>

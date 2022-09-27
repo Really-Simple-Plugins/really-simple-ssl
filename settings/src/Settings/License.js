@@ -69,11 +69,14 @@ class License extends Component {
     }
 
     toggleActivation(){
-        console.log("toggle activaiton");
-            const {
-                licenseStatus,
-            } = this.state;
-        if (licenseStatus==='valid') {
+         this.setState({
+            noticesLoaded: false,
+        });
+
+        const {
+            licenseStatus,
+        } = this.state;
+        if ( licenseStatus==='valid' ) {
             rsssl_api.runTest('deactivate_license').then( ( response ) => {
                 this.props.setPageProps('licenseStatus', response.data.licenseStatus);
                 this.notices = response.data.notices;

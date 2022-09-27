@@ -17,7 +17,6 @@ export const getFields = () => {
 			'X-WP-Nonce': rsssl_settings.nonce,
 		}
 	}
-	console.log("get fields");
     return axios.get(rsssl_settings.site_url+'reallysimplessl/v1/fields/get?'+anchor, config);
 };
 

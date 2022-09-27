@@ -6621,7 +6621,6 @@ class Field extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Component {
     field.updateItemId = clickedItem.id;
     let saveFields = [];
     saveFields.push(field);
-    console.log(this);
     this.props.updateField(field.id, field.value);
     _utils_api__WEBPACK_IMPORTED_MODULE_3__.setFields(saveFields).then(response => {//this.props.showSavedSettingsNotice();
     });
@@ -7417,7 +7416,9 @@ class License extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Component 
   onCloseTaskHandler() {}
 
   toggleActivation() {
-    console.log("toggle activaiton");
+    this.setState({
+      noticesLoaded: false
+    });
     const {
       licenseStatus
     } = this.state;
@@ -8233,7 +8234,6 @@ class Settings extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Component
       notices.push(notice.help);
     }
 
-    console.log(notices);
     notices = notices.filter(notice => notice.label.toLowerCase() !== 'completed');
     let continueLink = this.props.nextButtonDisabled ? `#${this.props.selectedMainMenuItem}/${this.props.selectedMenuItem}` : `#${this.props.selectedMainMenuItem}/${this.props.nextMenuItem}`;
     return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
@@ -8368,10 +8368,6 @@ class SettingsGroup extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Comp
     });
   }
 
-  handleMenuLink(id) {
-    this.props.selectMenu(id);
-  }
-
   render() {
     let selectedMenuItem = this.props.selectedMenuItem;
     let selectedFields = []; //get all fields with group_id this.props.group_id
@@ -8480,8 +8476,7 @@ class SettingsGroup extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Comp
       className: "rsssl-task-status rsssl-premium"
     }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_4__.__)("Upgrade", "really-simple-ssl")), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", null, rsssl_settings.pro_plugin_active && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", null, msg, "\xA0", (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
       className: "rsssl-locked-link",
-      href: "#",
-      onClick: () => this.handleMenuLink('license')
+      href: "#settings/license"
     }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_4__.__)("Check license", "really-simple-ssl"))), !rsssl_settings.pro_plugin_active && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_utils_Hyperlink__WEBPACK_IMPORTED_MODULE_2__["default"], {
       target: "_blank",
       text: msg,
@@ -9533,7 +9528,6 @@ const getFields = () => {
       'X-WP-Nonce': rsssl_settings.nonce
     }
   };
-  console.log("get fields");
   return axios__WEBPACK_IMPORTED_MODULE_0___default().get(rsssl_settings.site_url + 'reallysimplessl/v1/fields/get?' + anchor, config);
 };
 /*

@@ -68,7 +68,6 @@ class Field extends Component {
         field.updateItemId = clickedItem.id;
         let saveFields = [];
         saveFields.push(field);
-        console.log(this);
         this.props.updateField(field.id, field.value);
         rsssl_api.setFields(saveFields).then(( response ) => {
             //this.props.showSavedSettingsNotice();

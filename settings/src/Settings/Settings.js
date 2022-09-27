@@ -99,7 +99,6 @@ class Settings extends Component {
             help.id = notice.id;
             notices.push(notice.help);
         }
-        console.log(notices);
         notices = notices.filter(notice => notice.label.toLowerCase()!=='completed');
         let continueLink = this.props.nextButtonDisabled ? `#${this.props.selectedMainMenuItem}/${this.props.selectedMenuItem}` : `#${this.props.selectedMainMenuItem}/${this.props.nextMenuItem}`;
         return (
