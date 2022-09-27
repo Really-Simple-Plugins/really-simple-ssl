@@ -560,7 +560,9 @@ if (!class_exists('rsssl_multisite')) {
 		        foreach ( $notices as $id => $notice ){
 			        $notice = $notice['output'];
 			        $class = ( $notice['status'] !== 'completed' ) ? 'error' : 'updated';
-			        echo RSSSL()->admin->notice_html( $class.' '.$id, $notice['title'], $notice['msg'] );
+			        $footer = isset($notice['url']) ? '<a class="button" target="_blank" href="' . esc_url_raw($notice['url']) . '">'.__("More info", "really-simple-ssl").'</a>' : '';
+
+			        echo RSSSL()->admin->notice_html( $class.' '.$id, $notice['title'], $notice['msg'] ,$footer);
 		        }
             }
         }
