@@ -2341,7 +2341,7 @@ class rsssl_admin
             ),
 
             'check_redirect' => array(
-	            'condition' => array( 'NOT rsssl_ssl_enabled' , 'RSSSL()->admin->htaccess_redirect_allowed'),
+	            'condition' => array( 'rsssl_ssl_enabled' , 'RSSSL()->admin->htaccess_redirect_allowed'),
 	            'callback' => 'RSSSL()->admin->redirect_status',
                 'score' => 10,
 	            'show_with_options' => [
@@ -3209,7 +3209,6 @@ class rsssl_admin
 	 * @return string
 	 */
 	public function redirect_status() {
-        return 'htaccess-rules-test-failed';
 		if ( !RSSSL()->admin->has_301_redirect() ) {
 			return 'no-redirect-set';
 		}
