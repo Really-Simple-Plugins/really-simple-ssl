@@ -204,6 +204,7 @@ function rsssl_uses_htaccess() {
  * @return string | bool
  */
 function rsssl_htaccess_status(){
+	return 'not-writable';
 	return get_site_option('rsssl_htaccess_error');
 }
 

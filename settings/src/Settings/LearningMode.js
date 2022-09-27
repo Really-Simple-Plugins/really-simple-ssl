@@ -139,10 +139,10 @@ class LearningMode extends Component {
 
             const Filter = () => (
               <>
-                <select onChange={ ( e ) => this.doFilter(e) }>
-                    <option value="-1" selected={filterValue==-1}>{__("All", "really-simple-ssl")}</option>
-                    <option value="1" selected={filterValue==1}>{__("Allowed", "really-simple-ssl")}</option>
-                    <option value="0" selected={filterValue==0}>{__("Blocked", "really-simple-ssl")}</option>
+                <select onChange={ ( e ) => this.doFilter(e) } value={filterValue}>
+                    <option value="-1" >{__("All", "really-simple-ssl")}</option>
+                    <option value="1" >{__("Allowed", "really-simple-ssl")}</option>
+                    <option value="0" >{__("Blocked", "really-simple-ssl")}</option>
                 </select>
               </>
             );

@@ -75,31 +75,42 @@ class Settings extends Component {
 
         //convert progress notices to an array useful for the help blocks
         let notices = [];
+        console.log("selectedFields");
+        console.log(selectedFields);
+        console.log("progress.notices");
+        console.log(progress.notices);
         for (const notice of progress.notices){
             let noticeField = false;
             //notices that are linked to a field. Only in case of warnings.
-            if ( notice.show_with_options ) {
-                noticeField = selectedFields.filter(field => notice.show_with_options && notice.show_with_options.includes(field.id) && notice.output.icon === 'warning');
+            if ( notice.show_with_options && notice.output.icon === 'warning') {
+                noticeField = selectedFields.filter(field => notice.show_with_options && notice.show_with_options.includes(field.id));
                 if (noticeField.length===0) noticeField = false;
             }
             //notices that are linked to a menu id.
             if ( noticeField || notice.menu_id === selectedMenuItem ) {
+                console.log("add notice");
+                console.log(notice);
                 let help = {};
                 help.title = notice.output.title ? notice.output.title : false;
                 help.label = notice.output.label;
-                help.id = notice.field_id;
+                help.id = notice.id;
                 help.text = notice.output.msg;
                 help.linked_field = notice.show_with_option;
                 notices.push(help);
             }
         }
+        console.log("notices #1");
+        console.log(notices);
 
         for (const notice of selectedFields.filter(field => field.help)){
             let help = notice.help;
             help.id = notice.id;
             notices.push(notice.help);
         }
+                console.log("notices #2");
+                console.log(notices);
         notices = notices.filter(notice => notice.label.toLowerCase()!=='completed');
+
         let continueLink = this.props.nextButtonDisabled ? `#${this.props.selectedMainMenuItem}/${this.props.selectedMenuItem}` : `#${this.props.selectedMainMenuItem}/${this.props.nextMenuItem}`;
         return (
             <Fragment>

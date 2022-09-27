@@ -88,7 +88,6 @@ function rsssl_general_security_notices( $notices ) {
 			'true' => array(
 				'highlight_field_id' => 'change_debug_log_location',
 				'title' => __("Debugging", "really-simple-ssl"),
-				'icon' => 'warning',
 				'msg' => __("Your site logs information to a public debugging file.", "really-simple-ssl"),
 				'icon' => 'premium',
 				'dismissible' => true,
@@ -164,9 +163,6 @@ function rsssl_general_security_notices( $notices ) {
 				'dismissible' => true,
 			),
 		),
-		// 'show_with_options' => [
-		// 	'block_code_execution_uploads',
-		// ],
 	);
 	$notices['db-prefix-notice'] = array(
 		'callback' => 'rsssl_is_default_wp_prefix',
@@ -214,9 +210,6 @@ function rsssl_general_security_notices( $notices ) {
 				'dismissible' => true,
 			),
 		),
-		// 'show_with_options' => [
-		// 	'disable_file_editing',
-		// ],
 	);
 
 	$notices['registration'] = array(
@@ -230,9 +223,6 @@ function rsssl_general_security_notices( $notices ) {
 				'plusone' => false,
 			),
 		),
-		// 'show_with_options' => [
-		// 	'disable_anyone_can_register',
-		// ],
 	);
 
 	$notices['hide-wp-version'] = array(
@@ -246,9 +236,6 @@ function rsssl_general_security_notices( $notices ) {
 				'dismissible' => true,
 			),
 		),
-		// 'show_with_options' => [
-		// 	'hide_wordpress_version',
-		// ],
 	);
 
 	return $notices;
