@@ -48,7 +48,8 @@ function rsssl_general_security_notices( $notices ) {
 		),
 		'show_with_options' => [
 			'block_code_execution_uploads',
-			'disable_indexing,'
+			'disable_indexing,',
+			'redirect,'
 		]
 	);
 
