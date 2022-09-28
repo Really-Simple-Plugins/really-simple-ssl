@@ -75,6 +75,8 @@ class Settings extends Component {
 
         //convert progress notices to an array useful for the help blocks
         let notices = [];
+        console.log("progress.notices");
+        console.log(progress.notices);
         for (const notice of progress.notices){
             let noticeIsLinkedToField = false;
 
@@ -90,6 +92,7 @@ class Settings extends Component {
                 help.label = notice.output.label;
                 help.id = notice.id;
                 help.text = notice.output.msg;
+                help.url = notice.output.url;
                 help.linked_field = notice.show_with_option;
                 notices.push(help);
             }

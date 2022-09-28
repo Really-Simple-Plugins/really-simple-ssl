@@ -22,7 +22,6 @@ class SettingsPage extends Component {
             fields:'',
             isAPILoaded: false,
             changedFields:'',
-            progress:'',
             nextButtonDisabled: false,
         };
     }
@@ -40,7 +39,6 @@ class SettingsPage extends Component {
         this.handleNextButtonDisabled = this.handleNextButtonDisabled.bind(this);
         this.checkRequiredFields = this.checkRequiredFields.bind(this);
         let fields = this.props.fields;
-        let progress = this.props.progress;
         //if count >1, it's a wizard
         let changedFields = [];
         let selectedMenuItem = this.props.selectedMenuItem;
@@ -49,7 +47,6 @@ class SettingsPage extends Component {
         this.setState({
             isAPILoaded: true,
             fields: this.props.fields,
-            progress: this.props.progress,
             changedFields: changedFields,
             selectedMainMenuItem: this.props.selectedMainMenuItem,
         });
@@ -181,9 +178,9 @@ class SettingsPage extends Component {
 
         rsssl_api.setFields(saveFields).then(( response ) => {
             this.changedFields = [];
+            this.props.updateProgress(response.data.progress);
             this.setState({
                 changedFields :[],
-                progress: response.data.progress,
             });
             if ( !skipRefreshTests ) {
                 this.setState({
@@ -262,14 +259,12 @@ class SettingsPage extends Component {
 
     render() {
         const {
-            progress,
             selectedStep,
             isAPILoaded,
             refreshTests,
             changedFields,
             nextButtonDisabled,
         } = this.state;
-
 
         if ( ! isAPILoaded ) {
             return (
@@ -315,7 +310,7 @@ class SettingsPage extends Component {
                     highLightedField={this.props.highLightedField}
                     isAPILoaded={isAPILoaded}
                     fields={this.props.fields}
-                    progress={progress}
+                    progress={this.props.progress}
                     saveChangedFields={this.saveChangedFields}
                     menu={this.props.menu}
                     save={this.save}

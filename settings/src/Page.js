@@ -15,6 +15,7 @@ class Page extends Component {
         this.pageProps['licenseStatus'] = rsssl_settings.licenseStatus;
 
         this.updateFields = this.updateFields.bind(this);
+        this.updateProgress = this.updateProgress.bind(this);
         this.getFields = this.getFields.bind(this);
         this.selectMenu = this.selectMenu.bind(this);
         this.getSelectedMenu = this.getSelectedMenu.bind(this);
@@ -58,13 +59,19 @@ class Page extends Component {
                 showOnBoardingModal: status,
             });
         }
-
     }
 
     updateFields(fields){
         this.fields = fields;
         this.setState({
             fields: fields,
+        });
+    }
+
+    updateProgress(progress){
+        this.progress = progress;
+        this.setState({
+            progress: progress,
         });
     }
 
@@ -315,6 +322,7 @@ class Page extends Component {
                                     <SettingsPage
                                         dropItemFromModal={dropItemFromModal}
                                         updateFields={this.updateFields}
+                                        updateProgress={this.updateProgress}
                                         pageProps={this.pageProps}
                                         handleModal={this.handleModal}
                                         getDefaultMenuItem={this.getDefaultMenuItem}

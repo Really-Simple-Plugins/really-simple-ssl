@@ -5,6 +5,11 @@
   gap: var(--rsp-spacing-xs);
   details{
     font-size: var(--rsp-fs-200);
+    .rsssl-help-more-info {
+        display: flex;
+        flex-direction: row-reverse;
+        margin-top: 12px;
+    }
     summary{
 
       display: grid;

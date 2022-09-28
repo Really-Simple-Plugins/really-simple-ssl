@@ -304,23 +304,3 @@ function rsssl_list_users_where_display_name_is_login_name() {
 
 	return '';
 }
-
-/**
- * Create a generic read more text with link for help texts.
- *
- * @param string $url
- * @param bool   $add_space
- *
- * @return string
- */
-
-function rsssl_read_more( $url, $add_character = ' ' ) {
-	$html = sprintf( __( "For more information, please read this %sarticle%s",
-		'really-simple-ssl' ), '<a target="_blank" href="' . $url . '">',
-		'</a>' );
-	if ( is_string($add_character) ) {
-		$html = $add_character . $html;
-	}
-
-	return $html;
-}
