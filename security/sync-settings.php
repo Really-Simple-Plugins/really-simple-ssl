@@ -20,10 +20,6 @@ function rsssl_disable_fields($field, $field_id){
 					$field['value'] = true;
 					$field['disabled'] = true;
 				}
-				$field['help'] = [
-					'label' => 'default',
-					'text' => __( "Debugging is disabled", 'really-simple-ssl' ),
-				];
 			} else {
 				if ( !$field['value'] ) {
 					$field['value'] = true;
