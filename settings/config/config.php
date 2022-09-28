@@ -364,10 +364,6 @@ function rsssl_fields( $load_values = true ) {
 			'group_id' => 'general',
 			'type'     => 'checkbox',
 			'label'    => __( "Dismiss all notices", 'really-simple-ssl' ),
-			// 'help'        => [
-			// 	'label' => 'default',
-			// 	'text' => __( "Enable this option to permanently dismiss all +1 notices in the 'Your progress' tab'", 'really-simple-ssl' ),
-			// ],
 			'disabled' => false,
 			'default'  => false,
 		],
@@ -379,12 +375,16 @@ function rsssl_fields( $load_values = true ) {
 			'url'         => trailingslashit( rsssl_url ) . 'system-status.php?download',
 			'button_text' => __( "Download", "really-simple-ssl" ),
 			'label'       => __( "System status", 'really-simple-ssl' ),
-			// 'help'        => [
-			// 	'label' => 'default',
-			// 	'text' => __( "Enable this option to permanently dismiss all +1 notices in the 'Your progress' tab'", 'really-simple-ssl' ),
-			// ],
 			'disabled'    => false,
 			'default'     => false,
+		],
+		[
+			'id'               => 'delete_data_on_uninstall',
+			'menu_id'          => 'general',
+			'group_id'         => 'general',
+			'type'             => 'checkbox',
+			'label'            => __( "Delete all data on plugin deletion", 'really-simple-ssl' ),
+			'default'          => false,
 		],
 		[
 			'id'                   => 'do_not_edit_htaccess',
