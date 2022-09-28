@@ -162,11 +162,10 @@ class REALLY_SIMPLE_SSL
 		 */
 		if ( is_admin() ) {
 			add_action('admin_notices', array( $this, 'admin_notices'));
-			do_action('rsssl_admin_init' );
 		}
 
 		add_action('wp_loaded', array(self::$instance->front_end, 'force_ssl'), 20);
-		if ( is_admin() || is_multisite() ) {
+		if ( is_admin() ) {
 			add_action('plugins_loaded', array(self::$instance->admin, 'init'), 10);
 		}
 	}
@@ -175,7 +174,7 @@ class REALLY_SIMPLE_SSL
 	 * Notice about possible compatibility issues with add ons
 	 */
 	public static function admin_notices() {
-		//prevent showing the review on edit screen, as gutenberg removes the class which makes it editable.
+		//prevent showing on edit screen, as gutenberg removes the class which makes it editable.
 		$screen = get_current_screen();
 		if ( $screen->base === 'post' ) return;
 

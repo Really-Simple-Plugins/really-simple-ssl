@@ -46,11 +46,16 @@ const [networkProgress, setNetworkProgress] = useState(0);
             setCertificateValid(response.data.certificate_valid);
             setsslActivated(response.data.ssl_enabled);
             steps[0].visible = true;
-            if (response.data.ssl_enabled) {
+            //if ssl is already enabled, the server will send only one step. In that case we can skip the below.
+            //it's only needed when SSL is activated just now, client side.
+            if ( response.data.ssl_enabled && steps.length > 1 ) {
                 steps[0].visible = false;
                 steps[1].visible = true;
             }
             setNetworkActivationStatus(response.data.network_activation_status);
+            if (response.data.network_activation_status==='completed') {
+                setNetworkProgress(100);
+            }
             setSteps(steps);
             setStepsChanged('initial');
         });
@@ -204,8 +209,6 @@ const [networkProgress, setNetworkProgress] = useState(0);
                 }
             }
             let showLink = (button && button===buttonTitle);
-            console.log("title");
-            console.log(title);
 
             return (
                 <li key={index} >

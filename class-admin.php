@@ -54,7 +54,7 @@ class rsssl_admin
 	    //handle notices
 	    add_action('admin_notices', array($this, 'show_notices'));
 	    //show review notice, only to free users
-	    if ( !defined("rsssl_pro_version") && (!defined("rsssl_pp_version")) && (!defined("rsssl_soc_version")) && !is_multisite() ) {
+	    if ( !defined("rsssl_pro_version") && !is_multisite() ) {
 		    add_action('admin_notices', array($this, 'show_leave_review_notice'));
 	    }
 
@@ -249,9 +249,9 @@ class rsssl_admin
             $plugin = $this->plugin_dir . "/" . $this->plugin_filename;
             $plugin = plugin_basename(trim($plugin));
 
-            if (is_multisite()) {
+            if ( is_multisite() ) {
                 $network_current = get_site_option('active_sitewide_plugins', array());
-                if (is_plugin_active_for_network($plugin)) {
+                if ( is_plugin_active_for_network($plugin) ) {
                     unset($network_current[$plugin]);
                 }
                 update_site_option('active_sitewide_plugins', $network_current);
@@ -1342,9 +1342,8 @@ class rsssl_admin
         }
 
         //for subdomains or domain mapping situations, we have to convert the plugin_url from main site to the subdomain url.
-        if (is_multisite() && (!is_main_site(get_current_blog_id())) && (!RSSSL()->multisite->is_multisite_subfolder_install())) {
+        if ( is_multisite() && !is_main_site(get_current_blog_id()) && !RSSSL()->multisite->is_multisite_subfolder_install() ) {
             $mainsiteurl = trailingslashit(str_replace("http://", "https://", network_site_url()));
-
             $home = trailingslashit($https_home_url);
             $plugin_url = str_replace($mainsiteurl, $home, $plugin_url);
         }
@@ -3333,7 +3332,7 @@ if ( !function_exists('rsssl_letsencrypt_wizard_url') ) {
         if ( !empty($page) ) {
 	        $page = '/'.$page;
         }
-		if (is_multisite() && !is_main_site()) {
+		if ( is_multisite() && !is_main_site() ) {
 			return add_query_arg(array('page' => 'really-simple-security', 'letsencrypt'=>1), get_admin_url(get_main_site_id(),'options-general.php') )."#letsencrypt$page";
 		} else {
 			return add_query_arg(array('page' => 'really-simple-security', 'letsencrypt'=>1), admin_url('options-general.php') )."#letsencrypt$page";
