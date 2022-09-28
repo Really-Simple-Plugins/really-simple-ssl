@@ -74,31 +74,13 @@ function rsssl_get_items_for_second_step () {
 	];
 
 	$items = [];
-	if ( is_multisite() && rsssl_is_networkwide_active() ) {
-		if ( get_site_option('rsssl_network_activation_status')==='completed') {
-			$items[] = [
-				"id" => 'ssl_enabled',
-				"title"  => __( "SSL has been activated network wide with Really Simple SSL", "really-simple-ssl" ),
-				"action" => "none",
-				"status" => "success",
-			];
-		} else {
-			$items[] = [
-				"id" => 'ssl_enabled',
-				"title"  => __( "Processing activation of subsites networkwide", "really-simple-ssl" ),
-				"action" => "none",
-				"status" => "processing",
-				"percentage" => true,
-			];
-		}
-	} else {
-		$items[] = [
-			"id" => 'ssl_enabled',
-			"title" => __("SSL has been activated", "really-simple-ssl"),
-			"action" => "none",
-			"status" => "success",
-		];
-	}
+	$items[] = [
+		"id" => 'ssl_enabled',
+		"title" => __("SSL has been activated", "really-simple-ssl"),
+		"action" => "none",
+		"status" => "success",
+	];
+
 
 	$all_enabled = RSSSL()->onboarding->all_recommended_hardening_features_enabled();
 	if( !$all_enabled ) {

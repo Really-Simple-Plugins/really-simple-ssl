@@ -8,18 +8,19 @@ import Icon from "../utils/Icon";
 import Placeholder from '../Placeholder/Placeholder';
 
 const Onboarding = (props) => {
-    const [steps, setSteps] = useState([]);
-    const [overrideSSL, setOverrideSSL] = useState(false);
-    const [certificateValid, setCertificateValid] = useState(false);
-    const [sslActivated, setsslActivated] = useState(false);
-    const [activateSSLDisabled, setActivateSSLDisabled] = useState(true);
-    const [stepsChanged, setStepsChanged] = useState('');
-    const [networkwide, setNetworkwide] = useState(false);
-    const [networkActivationStatus, setNetworkActivationStatus] = useState(false);
-    const [networkProgress, setNetworkProgress] = useState(0);
+const [steps, setSteps] = useState([]);
+const [overrideSSL, setOverrideSSL] = useState(false);
+const [certificateValid, setCertificateValid] = useState(false);
+const [sslActivated, setsslActivated] = useState(false);
+const [activateSSLDisabled, setActivateSSLDisabled] = useState(true);
+const [stepsChanged, setStepsChanged] = useState('');
+const [networkwide, setNetworkwide] = useState(false);
+const [networkActivationStatus, setNetworkActivationStatus] = useState(false);
+const [networkProgress, setNetworkProgress] = useState(0);
 
     useUpdateEffect(()=> {
-        // do componentDidUpdate logic
+        console.log("networkProgress");
+        console.log(networkProgress);
         if ( networkProgress<100 && networkwide && networkActivationStatus==='main_site_activated' ){
             rsssl_api.runTest('activate_ssl_networkwide' ).then( ( response ) => {
                if (response.data.success) {
@@ -72,7 +73,7 @@ const Onboarding = (props) => {
         setStepsChanged(true);
         setTimeout(function(){
             updateOnBoardingData(true)
-        }, 1000)
+        }, 1000) //add a delay, otherwise it's so fast the user may not trust it.
     }
 
     const activateSSL = () => {
@@ -149,8 +150,17 @@ const Onboarding = (props) => {
 
     const parseStepItems = (items) => {
         return items.map((item, index) => {
-
-            let { title, current_action, action, status, button, id, percentage } = item
+            console.log(item);
+            let { title, current_action, action, status, button, id } = item
+            if (id==='ssl_enabled' && networkwide ) {
+                if ( networkProgress>=100) {
+                    status = 'success';
+                    title = __( "SSL has been activated network wide", "really-simple-ssl" );
+                } else {
+                    status = 'processing';
+                    title = __( "Processing activation of subsites networkwide", "really-simple-ssl" );
+                }
+            }
             const statuses = {
                 'inactive': {
                     'icon': 'info',
@@ -194,11 +204,14 @@ const Onboarding = (props) => {
                 }
             }
             let showLink = (button && button===buttonTitle);
+            console.log("title");
+            console.log(title);
+
             return (
                 <li key={index} >
                     <Icon name = {statusIcon} color = {statusColor} />
                     {title}
-                    {percentage && networkActivationStatus==='main_site_activated' && <>
+                    {id==='ssl_enabled' && networkwide && networkActivationStatus==='main_site_activated' && <>
                         &nbsp;-&nbsp;
                         {networkProgress<100 && <>{__("working", "really-simple-ssl")}&nbsp;{networkProgress}%</>}
                         {networkProgress>=100 && __("completed", "really-simple-ssl") }

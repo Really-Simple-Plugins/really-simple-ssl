@@ -30,19 +30,7 @@ class rsssl_admin
         register_deactivation_hook(dirname(__FILE__) . "/" . $this->plugin_filename, array($this, 'deactivate'));
 	    add_action( 'admin_init', array($this, 'add_privacy_info') );
 	    add_action( 'admin_init', array($this, 'maybe_dismiss_review_notice') );
-	    add_action( 'admin_init', array($this, 'insert_secure_cookie_settings'), 70 );
-        add_action( 'admin_init', array($this, 'recheck_certificate') );
 
-	    /**
-	     * Htaccess redirect handling
-	     */
-	    add_filter( 'rsssl_htaccess_security_rules', array($this, 'add_htaccess_redirect') );
-	    add_action( 'rocket_activation', array($this, 'remove_htaccess_edit' ) );
-	    add_filter( 'before_rocket_htaccess_rules', array($this, 'add_htaccess_redirect_before_wp_rocket' ) );
-	    add_action( 'rsssl_after_save_field', array($this, 'maybe_flush_wprocket_htaccess' ),100, 4 );
-
-        // Saved fields hook fired through REST settings save
-	    add_action( "rsssl_after_saved_fields", array( $this, "clear_transients" ), 10, 3 );
 
 	    //add the settings page for the plugin
 	    add_action('admin_enqueue_scripts', array($this, 'enqueue_assets'));
@@ -70,6 +58,22 @@ class rsssl_admin
 		    add_action('admin_notices', array($this, 'show_leave_review_notice'));
 	    }
 
+        //hooks only needed on settings page
+        if ( $this->is_settings_page() ) {
+	        /**
+	         * Htaccess redirect handling
+	         */
+	        add_filter( 'rsssl_htaccess_security_rules', array($this, 'add_htaccess_redirect') );
+	        add_action( 'rocket_activation', array($this, 'remove_htaccess_edit' ) );
+	        add_filter( 'before_rocket_htaccess_rules', array($this, 'add_htaccess_redirect_before_wp_rocket' ) );
+	        add_action( 'rsssl_after_save_field', array($this, 'maybe_flush_wprocket_htaccess' ),100, 4 );
+
+	        add_action( 'admin_init', array($this, 'insert_secure_cookie_settings'), 70 );
+            add_action( 'admin_init', array($this, 'recheck_certificate') );
+
+	        // Saved fields hook fired through REST settings save
+	        add_action( "rsssl_after_saved_fields", array( $this, "clear_transients" ), 10, 3 );
+        }
     }
 
     static function this()
@@ -152,7 +156,7 @@ class rsssl_admin
         if ( !rsssl_user_can_manage() ) {
             return;
         }
-        $is_on_settings_page = $this->is_settings_page();
+
         if ( defined("RSSSL_FORCE_ACTIVATE") && RSSSL_FORCE_ACTIVATE ) {
             rsssl_update_option( 'ssl_enabled', true );
         }
@@ -193,14 +197,14 @@ class rsssl_admin
 
         //when configuration should run again
 
-        if ( !rsssl_get_option('ssl_enabled') || !$this->site_has_ssl || $is_on_settings_page || is_network_admin() || defined('RSSSL_DOING_SYSTEM_STATUS') ) {
+        if ( !rsssl_get_option('ssl_enabled') || !$this->site_has_ssl || $this->is_settings_page() || is_network_admin() || defined('RSSSL_DOING_SYSTEM_STATUS') ) {
             $this->detect_configuration();
             if ( !$this->wpconfig_ok() ) {
 	            rsssl_update_option('ssl_enabled', false);
                 $this->save_options();
             } else {
 	            //when one of the used server variables was found, test if the redirect works
-	            if ( RSSSL()->server->uses_htaccess() && $this->ssl_type != "NA" ) {
+	            if ( RSSSL()->server->uses_htaccess() && $this->ssl_type !== "NA" ) {
 		            $this->htaccess_test_success();
 	            }
             }
@@ -310,6 +314,7 @@ class rsssl_admin
 
 	/**
      * If the user has clicked "recheck certificate, clear the cache for the certificate check.
+     * Used in a form in the dashboard notices.
 	 * @return void
 	 */
     public function recheck_certificate(){
@@ -335,38 +340,38 @@ class rsssl_admin
         $error = false;
 	    $is_rest_request =  $request instanceof WP_REST_Request;
 	    $site_url_changed = false;
-	    delete_option('rsssl_ssl_detection_overridden');
-	    if ( $this->site_has_ssl || get_option('rsssl_ssl_detection_overridden') ){
-	        //in a configuration reverse proxy without a set server variable https, add code to wpconfig
-	        if ( $this->do_wpconfig_loadbalancer_fix ) {
-		        $this->wpconfig_loadbalancer_fix();
-	        }
 
-	        if ( $this->no_server_variable ){
-		        $this->wpconfig_server_variable_fix();
-	        }
-
-	        if ( !$safe_mode && $this->wpconfig_siteurl_not_fixed ){
-		        $this->fix_siteurl_defines_in_wpconfig();
-	        }
-
-	        if ( !$safe_mode ) {
-		        rsssl_update_option('redirect', 'wp_redirect');
-		        rsssl_update_option('mixed_content_fixer', true);
-
-		        //flush caches when just activated ssl
-		        //flush the permalinks
-		        update_option('rsssl_activation_timestamp', time(), false );
-		        if (!defined('RSSSL_NO_FLUSH') || !RSSSL_NO_FLUSH) {
-			        update_option('rsssl_flush_rewrite_rules', time(), false );
-		        }
-		        update_option('rsssl_flush_caches', time(), false );
-	        }
-	        rsssl_update_option('ssl_enabled', true);
-	        $site_url_changed = $this->set_siteurl_to_ssl();
-        } else {
-	        $error = true;
-        }
+//	    if ( $this->site_has_ssl || get_option('rsssl_ssl_detection_overridden') ){
+//	        //in a configuration reverse proxy without a set server variable https, add code to wpconfig
+//	        if ( $this->do_wpconfig_loadbalancer_fix ) {
+//		        $this->wpconfig_loadbalancer_fix();
+//	        }
+//
+//	        if ( $this->no_server_variable ){
+//		        $this->wpconfig_server_variable_fix();
+//	        }
+//
+//	        if ( !$safe_mode && $this->wpconfig_siteurl_not_fixed ){
+//		        $this->fix_siteurl_defines_in_wpconfig();
+//	        }
+//
+//	        if ( !$safe_mode ) {
+//		        rsssl_update_option('redirect', 'wp_redirect');
+//		        rsssl_update_option('mixed_content_fixer', true);
+//
+//		        //flush caches when just activated ssl
+//		        //flush the permalinks
+//		        update_option('rsssl_activation_timestamp', time(), false );
+//		        if (!defined('RSSSL_NO_FLUSH') || !RSSSL_NO_FLUSH) {
+//			        update_option('rsssl_flush_rewrite_rules', time(), false );
+//		        }
+//		        update_option('rsssl_flush_caches', time(), false );
+//	        }
+//	        rsssl_update_option('ssl_enabled', true);
+//	        $site_url_changed = $this->set_siteurl_to_ssl();
+//        } else {
+//	        $error = true;
+//        }
 
         //if this is true, this is a request from the network admin. We save an option to ensure we know that this part is completed
         if ( is_multisite() && rsssl_is_networkwide_active() ) {
@@ -714,6 +719,10 @@ class rsssl_admin
 
     public function is_settings_page()
     {
+        if ( rsssl_is_logged_in_rest() ) {
+            return true;
+        }
+
 	    if ( !isset($_SERVER['QUERY_STRING']) ) {
             return false;
         }
@@ -1687,6 +1696,7 @@ class rsssl_admin
 
     public function get_redirect_rules($manual = false)
     {
+        //ensure the configuration check has run always.
         if ( !$this->configuration_loaded ) {
 	        $this->detect_configuration();
         }
