@@ -19,8 +19,6 @@ const [networkActivationStatus, setNetworkActivationStatus] = useState(false);
 const [networkProgress, setNetworkProgress] = useState(0);
 
     useUpdateEffect(()=> {
-        console.log("networkProgress");
-        console.log(networkProgress);
         if ( networkProgress<100 && networkwide && networkActivationStatus==='main_site_activated' ){
             rsssl_api.runTest('activate_ssl_networkwide' ).then( ( response ) => {
                if (response.data.success) {
@@ -155,7 +153,6 @@ const [networkProgress, setNetworkProgress] = useState(0);
 
     const parseStepItems = (items) => {
         return items.map((item, index) => {
-            console.log(item);
             let { title, current_action, action, status, button, id } = item
             if (id==='ssl_enabled' && networkwide ) {
                 if ( networkProgress>=100) {

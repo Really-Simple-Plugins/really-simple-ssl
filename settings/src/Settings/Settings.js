@@ -75,8 +75,6 @@ class Settings extends Component {
 
         //convert progress notices to an array useful for the help blocks
         let notices = [];
-        console.log("progress.notices");
-        console.log(progress.notices);
         for (const notice of progress.notices){
             let noticeIsLinkedToField = false;
 
