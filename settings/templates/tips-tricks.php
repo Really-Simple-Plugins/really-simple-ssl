@@ -1,28 +1,28 @@
 <?php defined( 'ABSPATH' ) or die();
 $items = array(
 	1 => array(
-		'content' => "Improve security: Add Cross-Site Protection Headers to prevent malicious attacks",
-		'link'    => 'https://really-simple-ssl.com/cross-origin-security-headers/',
+		'content' => "Definition: What is a Content Security Policy?",
+		'link'    => 'https://really-simple-ssl.com/definition/What-is-a-Content-Security-Policy/',
 	),
 	2 => array(
-		'content' => "Improve security: Enable HTTP Strict Transport Security (HSTS)",
-		'link'    => 'https://really-simple-ssl.com/hsts-http-strict-transport-security-good/',
+		'content' => "Definition: What is Cross-site Scripting",
+		'link'    => 'https://really-simple-ssl.com/definition/what-is-cross-site-scripting/',
 	),
 	3 => array(
-		'content' => "Improve security: Add security headers",
-		'link'    => 'https://really-simple-ssl.com/everything-you-need-to-know-about-security-headers/',
+		'content' => "Improve Security: (HSTS) HTTP Strict Transport Security",
+		'link'    => 'https://really-simple-ssl.com/instructions/about-hsts/',
 	),
 	4 => array(
-		'content' => "Adding a Content Security Policy (CSP)",
-		'link'    => 'https://really-simple-ssl.com/knowledge-base/how-to-use-the-content-security-policy-generator/',
+		'content' => "Improve Security: Advanced Hardening",
+		'link'    => 'https://really-simple-ssl.com/instructions/about-hardening-features#advanced',
 	),
 	5 => array(
-		'content' => "Adding a Permission Policy",
-		'link'    => 'https://really-simple-ssl.com/knowledge-base/how-to-use-the-permissions-policy-header/',
+		'content' => "Instructions: Debugging with Really Simple SSL",
+		'link'    => 'https://really-simple-ssl.com/instructions/debugging/',
 	),
 	6 => array(
-		'content' => "Information about landing page redirects",
-		'link'    => 'https://really-simple-ssl.com/knowledge-base/avoid-landing-page-redirects/',
+		'content' => "Instructions: Configuring Hardening Features",
+		'link'    => 'https://really-simple-ssl.com/instructions/about-hardening-features/',
 	),
 );
 
