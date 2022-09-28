@@ -192,7 +192,7 @@ if ( !class_exists("rsssl_site_health") ) {
 			);
 
 			if ( !rsssl_get_option('ssl_enabled') ) {
-				if ( RSSSL()->admin->site_has_ssl ) {
+				if ( rsssl_get_option('site_has_ssl') ) {
 					$result['status']      = 'critical';
 					$result['label']       = __( 'SSL is not enabled.', 'really-simple-ssl' );
 					$result['description'] = sprintf(

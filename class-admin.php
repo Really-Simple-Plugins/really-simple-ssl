@@ -7,7 +7,6 @@ class rsssl_admin
     public $wpconfig_siteurl_not_fixed = false;
     public $no_server_variable = false;
     public $do_wpconfig_loadbalancer_fix = false;
-    public $site_has_ssl = false;
     public $plugin_dir = "really-simple-ssl";
     public $plugin_filename = "rlrsssl-really-simple-ssl.php";
     public $abs_path;
@@ -22,8 +21,6 @@ class rsssl_admin
 
         self::$_this = $this;
         $this->abs_path = $this->getabs_path();
-        $this->get_options();
-
 	    $this->pro_url = is_multisite() ? 'https://really-simple-ssl.com/pro-multisite' : 'https://really-simple-ssl.com/pro';
 
         register_deactivation_hook(dirname(__FILE__) . "/" . $this->plugin_filename, array($this, 'deactivate'));
@@ -65,7 +62,6 @@ class rsssl_admin
 	        add_action( 'rocket_activation', array($this, 'remove_htaccess_edit' ) );
 	        add_filter( 'before_rocket_htaccess_rules', array($this, 'add_htaccess_redirect_before_wp_rocket' ) );
 	        add_action( 'rsssl_after_save_field', array($this, 'maybe_flush_wprocket_htaccess' ),100, 4 );
-
 	        add_action( 'admin_init', array($this, 'insert_secure_cookie_settings'), 70 );
             add_action( 'admin_init', array($this, 'recheck_certificate') );
         }
@@ -174,19 +170,16 @@ class rsssl_admin
         }
 
         /*
-        Detect configuration when:
-        - SSL activation just confirmed.
+          Detect configuration when:
         - on settings page
-        - No SSL detected
+        - SSL not enabled
         */
 
-        //when configuration should run again
-
-        if ( !rsssl_get_option('ssl_enabled') || !$this->site_has_ssl || $this->is_settings_page() || is_network_admin() || defined('RSSSL_DOING_SYSTEM_STATUS') ) {
+        //when configuration detection should run again
+        if ( !rsssl_get_option('ssl_enabled') || $this->is_settings_page() || defined('RSSSL_DOING_SYSTEM_STATUS') ) {
             $this->detect_configuration();
             if ( !$this->wpconfig_ok() ) {
 	            rsssl_update_option('ssl_enabled', false);
-                $this->save_options();
             } else {
 	            //when one of the used server variables was found, test if the redirect works
 	            if ( RSSSL()->server->uses_htaccess() && $this->ssl_type !== "NA" ) {
@@ -277,24 +270,19 @@ class rsssl_admin
     }
 
     /**
-     * @Since 3.1
-     *
      * Check if site uses an htaccess.conf file, used in bitnami installations
      *
+     * @Since 3.1
      */
 
     public function uses_htaccess_conf() {
         $htaccess_conf_file = dirname(ABSPATH) . "/conf/htaccess.conf";
         //conf/htaccess.conf can be outside of open basedir, return false if so
         $open_basedir = ini_get("open_basedir");
-
-        if (!empty($open_basedir)) return false;
-
-        if (is_file($htaccess_conf_file) ) {
-            return true;
-        } else {
+        if ( !empty($open_basedir) ) {
             return false;
         }
+        return is_file($htaccess_conf_file);
     }
 
 	/**
@@ -303,7 +291,9 @@ class rsssl_admin
 	 * @return void
 	 */
     public function recheck_certificate(){
-	    if ( !rsssl_user_can_manage()) return;
+	    if ( !rsssl_user_can_manage()) {
+            return;
+	    }
         if (isset($_POST['rsssl_recheck_certificate']) || isset($_GET['rsssl_recheck_certificate'])) {
 	        delete_transient('rsssl_certinfo');
         }
@@ -326,7 +316,7 @@ class rsssl_admin
 	    $is_rest_request =  $request instanceof WP_REST_Request;
 	    $site_url_changed = false;
 
-	    if ( $this->site_has_ssl || get_option('rsssl_ssl_detection_overridden') ){
+	    if ( rsssl_get_option('site_has_ssl') || get_option('rsssl_ssl_detection_overridden') ){
 	        //in a configuration reverse proxy without a set server variable https, add code to wpconfig
 	        if ( $this->do_wpconfig_loadbalancer_fix ) {
 		        $this->wpconfig_loadbalancer_fix();
@@ -354,6 +344,7 @@ class rsssl_admin
 	        }
 	        rsssl_update_option('ssl_enabled', true);
 	        $site_url_changed = $this->set_siteurl_to_ssl();
+		    delete_transient('rsssl_admin_notices');
         } else {
 	        $error = true;
         }
@@ -382,7 +373,6 @@ class rsssl_admin
 	        rsssl_update_option('redirect', 'none');
 	        rsssl_update_option('ssl_enabled', false);
 	        $this->remove_ssl_from_siteurl();
-	        $this->save_options();
         }
     }
 
@@ -495,34 +485,6 @@ class rsssl_admin
             return 'fail';
         }
         return 'success';
-    }
-
-	/**
-	 * Save the plugin options (not settings)
-	 *
-	 * @since  2.0
-	 *
-	 * @access public
-	 *
-	 */
-
-	public function save_options()
-	{
-		rsssl_update_option('site_has_ssl', $this->site_has_ssl);
-	}
-
-    /**
-     * Get the options for this plugin
-     *
-     * @since  2.0
-     *
-     * @access public
-     *
-     */
-
-    public function get_options()
-    {
-        $this->site_has_ssl = rsssl_get_option('site_has_ssl');
     }
 
     /**
@@ -752,8 +714,6 @@ class rsssl_admin
                 $this->wpconfig_loadbalancer_fix_failed = TRUE;
             }
         }
-        $this->save_options();
-
     }
 
 
@@ -795,7 +755,6 @@ class rsssl_admin
             $wpconfig = substr_replace($wpconfig, $rule, $pos + 1 + strlen($insert_after), 0);
         }
         file_put_contents($wpconfig_path, $wpconfig);
-        $this->save_options();
     }
 
 
@@ -901,9 +860,7 @@ class rsssl_admin
 	        $this->remove_ssl_from_siteurl();
 	        $this->remove_ssl_from_siteurl_in_wpconfig();
 	        $this->remove_secure_cookie_settings();
-	        $this->site_has_ssl = false;
 	        rsssl_update_option('review_notice_shown', false);
-	        $this->save_options();
 	        rsssl_update_option('ssl_enabled',false);
 	        rsssl_update_option('dismiss_all_notices', false);
 	        rsssl_update_option('redirect', 'none');
@@ -998,13 +955,13 @@ class rsssl_admin
 	    $this->configuration_loaded = true;
         //if current page is on SSL, we can assume SSL is available, even when an errormsg was returned
         if ($this->is_ssl_extended()) {
-            $this->site_has_ssl = TRUE;
+            $site_has_ssl = true;
         } else {
             //if certificate is valid
-            $this->site_has_ssl = RSSSL()->certificate->is_valid();
+            $site_has_ssl = RSSSL()->certificate->is_valid();
         }
 
-        if ( $this->site_has_ssl ) {
+        if ( $site_has_ssl ) {
             $filecontents = $this->get_test_page_contents();
             //get filecontents to check .htaccess redirection method and wpconfig fix
             //check the type of SSL, either by parsing the returned string, or by reading the server vars.
@@ -1032,7 +989,7 @@ class rsssl_admin
                 //if we are here, SSL was detected, but without any known server variables set.
                 //So we can use this info to set a server variable ourselves.
                 if (!$this->wpconfig_has_fixes()) {
-                    $this->no_server_variable = TRUE;
+                    $this->no_server_variable = true;
                 }
                 $this->ssl_type = "NA";
             } else {
@@ -1047,14 +1004,12 @@ class rsssl_admin
                     (strpos($filecontents, "#SERVERPORT443#") === false)) || (!is_ssl() && $this->is_ssl_extended())) {
                 //when is_ssl would return false, we should add some code to wp-config.php
                 if (!$this->wpconfig_has_fixes()) {
-                    $this->do_wpconfig_loadbalancer_fix = TRUE;
+                    $this->do_wpconfig_loadbalancer_fix = true;
                 }
             }
-
         }
         $this->check_for_siteurl_in_wpconfig();
-        $this->save_options();
-
+	    rsssl_update_option('site_has_ssl', $site_has_ssl);
     }
 
     /**
@@ -1707,9 +1662,6 @@ class rsssl_admin
 	 * @since  3.0
 	 *
 	 * @access public
-	 *
-	 * type: dismiss, later
-	 *
 	 */
 
 	public function insert_dismiss_review()
@@ -1749,6 +1701,9 @@ class rsssl_admin
 
     public function show_notices()
     {
+        if ( !rsssl_user_can_manage() ){
+            return;
+        }
 	    //prevent showing the review on edit screen, as gutenberg removes the class which makes it editable.
 	    $screen = get_current_screen();
 	    if ( $screen->base === 'post' ) return;
@@ -1849,8 +1804,8 @@ class rsssl_admin
         $args = wp_parse_args($args, $defaults);
 	    $cache_admin_notices = !$this->is_settings_page() && $args['admin_notices'];
 
-	    //if we're on the settings page, we need to clear the admin notices transient, because this list won't get refreshed
-	    if ( rsssl_get_option('ssl_enabled') || $this->is_settings_page() ) {
+	    //if we're on the settings page, we need to clear the admin notices transient, because this list won't get refreshed otherwise
+	    if ( $this->is_settings_page() ) {
 		    error_log("clear transients because on settings page ");
 		    delete_transient('rsssl_admin_notices');
 	    }
@@ -2902,7 +2857,7 @@ class rsssl_admin
             if ( empty($filecontents) ) {
                 $filecontents = 'not-valid';
             }
-            set_transient('rsssl_testpage', $filecontents, 600);
+            set_transient('rsssl_testpage', $filecontents, DAY_IN_SECONDS);
         }
         return $filecontents;
     }
