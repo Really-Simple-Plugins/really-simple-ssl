@@ -27,13 +27,16 @@ if (!function_exists('rsssl_letsencrypt_generation_allowed')) {
 			return true;
 		}
 
-		if ( !$strict && isset($_GET['page']) && ( $_GET['page'] === 'really-simple-security' )) {
-			return true;
-		}
+//		if ( !$strict && isset($_GET['page']) && ( $_GET['page'] === 'really-simple-security' )) {
+//			error_log("not strict, on settings page ");
+//			return true;
+//		}
 
-		if ( !$strict && rsssl_is_logged_in_rest() ) {
-			return true;
-		}
+//		if ( !$strict && rsssl_is_logged_in_rest() ) {
+//			error_log("is logged in reset ");
+//
+//			return true;
+//		}
 
 		return false;
 	}

@@ -347,10 +347,8 @@ function rsssl_ssl_status_data(){
 		return [];
 	}
 
-	$response = RSSSL_LE()->letsencrypt_handler->certificate_status();
-	$certificate_is_valid = $response->status === 'error'; //seems weird, but is correct.
 	return [
-		'certificate_is_valid' => $certificate_is_valid || ( defined( 'RSSSL_FORCE_ACTIVATE' ) && RSSSL_FORCE_ACTIVATE ),
+		'certificate_is_valid' => RSSSL()->certificate->is_valid() || ( defined( 'RSSSL_FORCE_ACTIVATE' ) && RSSSL_FORCE_ACTIVATE ),
 		'ssl_enabled' => rsssl_get_option('ssl_enabled'),
 	];
 }
@@ -522,7 +520,6 @@ function rsssl_update_option( $name, $value ) {
  * Get the rest api fields
  * @return void
  */
-error_log("loading settings. php ");
 function rsssl_rest_api_fields_get(){
 	if ( !rsssl_user_can_manage() ) {
 		return;

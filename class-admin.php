@@ -1631,7 +1631,8 @@ class rsssl_admin
 	    if ( rsssl_get_option('dismiss_all_notices') ) {
             return;
         }
-
+//	    update_option('rsssl_activation_timestamp', strtotime('-2 month'), false );
+//	    rsssl_update_option('review_notice_shown', false);
         //prevent showing the review on edit screen, as gutenberg removes the class which makes it editable.
         $screen = get_current_screen();
 	    if ( $screen->base === 'post' ) {
@@ -1659,6 +1660,9 @@ class rsssl_admin
             ?>
 
             <style>
+                .rsssl-review {
+                    border-left:4px solid #333
+                }
                 .rsssl-review .rsssl-container {
                     display: flex;
                     padding:12px;
@@ -1682,11 +1686,14 @@ class rsssl_admin
                         margin-left:5px;
                         margin-right:15px;
                     }
+                    .rsssl-review {
+                        border-right:4px solid #333
+                    }
                 </style>
             <?php }  ?>
-            <div id="message" class="updated fade notice is-dismissible rsssl-review really-simple-plugins" style="border-left:4px solid #333">
+            <div id="message" class="updated fade notice is-dismissible rsssl-review really-simple-plugins">
                 <div class="rsssl-container">
-                    <div class="rsssl-review-image"><img width=80px" src="<?php echo rsssl_url?>/assets/img/icon-128x128.png" alt="review-logo"></div>
+                    <div class="rsssl-review-image"><img width=80px" src="<?php echo rsssl_url?>/assets/img/icon.png" alt="review-logo"></div>
                     <div style="margin-left:30px">
                         <?php if ( get_option("rsssl_before_review_notice_user") ){?>
                             <p><?php printf(__('Hi, Really Simple SSL has kept your site secure for some time now, awesome! If you have a moment, please consider leaving a review on WordPress.org to spread the word. We greatly appreciate it! If you have any questions or feedback, leave us a %smessage%s.', 'really-simple-ssl'),'<a href="https://really-simple-ssl.com/contact" target="_blank">','</a>'); ?></p>
@@ -1698,8 +1705,8 @@ class rsssl_admin
                         <div class="rsssl-buttons-row">
                             <a class="button button-primary" target="_blank"
                                href="https://wordpress.org/support/plugin/really-simple-ssl/reviews/#new-post"><?php _e('Leave a review', 'really-simple-ssl'); ?></a>
-                            <div class="dashicons dashicons-calendar"></div><a href="<?php echo esc_url(add_query_arg(array("page"=>"really-simple-security", "rsssl_review_notice"=>'later'),admin_url("options-general.php") ) );?>#settings"><?php _e('Maybe later', 'really-simple-ssl'); ?></a>
-                            <div class="dashicons dashicons-no-alt"></div><a href="<?php echo esc_url(add_query_arg(array("page"=>"really-simple-security", "rsssl_review_notice"=>'dismiss'),admin_url("options-general.php") ) );?>#settings"><?php _e('Don\'t show again', 'really-simple-ssl'); ?></a>
+                            <div class="dashicons dashicons-calendar"></div><a href="<?php echo esc_url(add_query_arg(array("page"=>"really-simple-security", "rsssl_review_notice"=>'later'),admin_url("options-general.php") ) );?>"><?php _e('Maybe later', 'really-simple-ssl'); ?></a>
+                            <div class="dashicons dashicons-no-alt"></div><a href="<?php echo esc_url(add_query_arg(array("page"=>"really-simple-security", "rsssl_review_notice"=>'dismiss'),admin_url("options-general.php") ) );?>"><?php _e('Don\'t show again', 'really-simple-ssl'); ?></a>
                         </div>
                     </div>
                 </div>
@@ -1723,8 +1730,8 @@ class rsssl_admin
 	{ ?>
         <script>
             document.addEventListener('click', e => {
-                if ( e.target.closest('.rsssl-review.notice.is-dismissible') ) {
-                    window.location.href='<?php echo esc_url_raw(add_query_arg( array( "page" => "really-simple-security", "rsssl_review_notice" => 'dismiss' ), admin_url( "options-general.php" ) ).'#settings')?>';
+                if ( e.target.closest('.rsssl-review.notice.is-dismissible .notice-dismiss') ) {
+                    window.location.href='<?php echo esc_url_raw(add_query_arg( array( "page" => "really-simple-security", "rsssl_review_notice" => 'dismiss' ), admin_url( "options-general.php" ) ))?>';
                 }
             });
         </script>
