@@ -122,7 +122,6 @@ function rsssl_upgrade() {
 					rsssl_update_option($fieldname, $value);
 				}
 			}
-
 		}
 	}
 
