@@ -68,9 +68,6 @@ class rsssl_admin
 
 	        add_action( 'admin_init', array($this, 'insert_secure_cookie_settings'), 70 );
             add_action( 'admin_init', array($this, 'recheck_certificate') );
-
-	        // Saved fields hook fired through REST settings save
-	        add_action( "rsssl_after_saved_fields", array( $this, "clear_transients" ), 10, 3 );
         }
     }
 
@@ -103,17 +100,6 @@ class rsssl_admin
             wp_kses_post(wpautop($content, false))
         );
     }
-
-	/**
-	 * Clear some transients
-	 */
-
-	public function clear_transients(){
-        error_log("clear transients");
-		delete_transient('rsssl_plusone_count');
-		delete_transient( 'rsssl_can_use_curl_headers_check' );
-		delete_transient( 'rsssl_admin_notices' );
-	}
 
 	/**
      * Check if current day falls within required date range.
@@ -2404,7 +2390,7 @@ class rsssl_admin
             }
             //ensure an empty list is also cached
 		    $cache_notices = empty($notices) ? 'empty' : $notices;
-		    set_transient('rsssl_admin_notices', $cache_notices, DAY_IN_SECONDS );
+		    set_transient('rsssl_admin_notices', $cache_notices, WEEK_IN_SECONDS );
         }
 
 	    //sort so warnings are on top
@@ -2509,7 +2495,14 @@ class rsssl_admin
                     $count++;
                 }
 			}
+            if ( $count==0) {
+                $count = 'empty';
+            }
 			set_transient( 'rsssl_plusone_count', $count, WEEK_IN_SECONDS );
+		}
+
+		if ( $count==='empty' ) {
+			return 0;
 		}
 		return $count;
 	}

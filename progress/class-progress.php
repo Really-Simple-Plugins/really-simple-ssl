@@ -122,10 +122,17 @@ class rsssl_progress {
 		if ( !empty($id) ) {
 			$id = sanitize_title( $id );
 			update_option( "rsssl_".$id."_dismissed", true, false );
-			delete_transient( 'rsssl_plusone_count' );
-
-			// count should be updated, therefore clear cache
-			RSSSL()->admin->clear_transients();
+			$count = get_transient( 'rsssl_plusone_count' );
+			if (is_numeric($count) && $count>0) {
+				$count--;
+			}
+			set_transient('rsssl_plusone_count', $count, WEEK_IN_SECONDS);
+			//remove this notice from the admin notices list
+			$notices = get_transient( 'rsssl_admin_notices' );
+			if (isset($notices[$id])) {
+				unset($notices[$id]);
+			}
+			set_transient('rsssl_admin_notices', $notices, DAY_IN_SECONDS);
 		}
 
 		return [
