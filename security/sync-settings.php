@@ -22,22 +22,24 @@ function rsssl_disable_fields($field, $field_id){
 				}
 				$field['help'] = [
 					'label' => 'default',
-					'text' => __( "Debugging is disabled", 'really-simple-ssl' ),
+					// 'text' => __( "Debugging is disabled", 'really-simple-ssl' ),
 				];
 			} else {
 				if ( !$field['value'] ) {
 					$field['value'] = true;
 					$field['disabled'] = true;
 				}
-				//if not the defaul location
-				if ( rsssl_get_debug_log_value()!=='true' ) {
-					$field['help'] = [
-						'label' => 'default',
-						'title' => __( "Debugging", 'really-simple-ssl' ),
-						'text' => __( "Changed debug.log location:", 'really-simple-ssl' ).strstr( rsssl_get_debug_log_value(), 'wp-content' ),
-					];
-				}
 			}
+
+			//if not the defaul location
+			if ( !rsssl_get_debug_log_value() ) {
+				$field['help'] = [
+					'label' => 'default',
+					'title' => __( "Debugging", 'really-simple-ssl' ),
+					'text' => __( "Changed debug.log location to:", 'really-simple-ssl' ).strstr( rsssl_get_debug_log_value(), 'wp-content' ),
+				];
+			}
+
 		}
 
 	}
@@ -54,9 +56,7 @@ function rsssl_disable_fields($field, $field_id){
 	}
 
 	if ( $field_id==='disable_anyone_can_register' ){
-		global $wpdb;
-		$can_register = $wpdb->get_var("select option_value from {$wpdb->prefix}options where option_name='users_can_register'");
-		if ( !$can_register && !$field['value'] ) {
+		if ( !get_option('users_can_register') && !$field['value'] ) {
 			$field['value'] = true;
 			$field['disabled'] = true;
 			// $field['help'] = [

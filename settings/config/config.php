@@ -34,7 +34,7 @@ function rsssl_menu(){
 							'intro' => __('When you send this form, we will attach the following information: license key, scan results, your domain, .htaccess file, debug log and a list of active plugins.', 'really-simple-ssl'),
 							'premium' => true,
 							'premium_text' => __("Get Premium Support with %sReally Simple SSL Pro%s", 'really-simple-ssl'),
-							'helpLink'  => 'https://really-simple-ssl.com/debugging/',
+							'helpLink'  => 'https://really-simple-ssl.com/instructions/debugging/',
 							'helpLink_text'  => __('Debugging with Really Simple SSL',"really-simple-ssl"),
 						],
 					],
@@ -808,7 +808,7 @@ function rsssl_fields( $load_values = true ){
 			'help'        => [
 				'label' => 'default',
 				'title' => __( "About the Mixed Content Scan", 'really-simple-ssl' ),
-				'text' => __( 'The extensive mixed content scan will list all current and future issues and provide a fix, or instructions to fix manually.', 'really-simple-ssl' ). rsssl_read_more('https://really-simple-ssl.com/definition/what-is-a-mixed-content-scan/'),
+				'text' => __( 'The extensive mixed content scan will list all current and future issues and provide a fix, or instructions to fix manually.', 'really-simple-ssl' ). rsssl_read_more('https://really-simple-ssl.com/definition/what-is-mixed-content/'),
 			],
 			'columns'     => [
 				[

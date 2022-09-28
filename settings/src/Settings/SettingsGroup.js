@@ -16,7 +16,7 @@ class SettingsGroup extends Component {
             fields:this.props.fields,
             isAPILoaded: this.props.isAPILoaded,
         };
-        this.upgrade='https://really-simple-ssl.com/pro';
+        this.upgrade='https://really-simple-ssl.com/pro/';
         this.fields = this.props.fields;
     }
 
@@ -90,7 +90,7 @@ class SettingsGroup extends Component {
         //if a feature can only be used on networkwide or single site setups, pass that info here.
         let networkwide_error = !rsssl_settings.networkwide_active && activeGroup.networkwide_required;
         this.upgrade = activeGroup.upgrade ? activeGroup.upgrade : this.upgrade;
-        let helplinkText = activeGroup.helpLink_text ? activeGroup.helpLink_text : __("Instructions manual","really-simple-ssl");
+        let helplinkText = activeGroup.helpLink_text ? activeGroup.helpLink_text : __("Instructions","really-simple-ssl");
         let anchor = getAnchor('main');
         let disabledClass = disabled || networkwide_error ? 'rsssl-disabled' : '';
 

@@ -2458,7 +2458,7 @@ class rsssl_admin
 	            'score' => 5,
 	            'output' => array(
 		            'true' => array(
-			            'msg' => __("Improve security with Really Simple SSL Pro.", "really-simple-ssl"),
+			            'msg' => __("Improve security with Really Simple SSL Pro", "really-simple-ssl"),
 			            'url' => $this->pro_url,
 			            'icon' => 'premium',
 			            'dismissible' => false,
