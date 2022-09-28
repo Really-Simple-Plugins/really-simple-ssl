@@ -7,38 +7,57 @@
  * @return array
  */
 function rsssl_le_get_notices_list($notices) {
-	//expiration date requests are cached.
-	$valid    = RSSSL()->certificate->is_valid();
-	$certinfo = get_transient( 'rsssl_certinfo' );
-	$end_date = isset( $certinfo['validTo_time_t'] ) ? $certinfo['validTo_time_t'] : false;
-	//if the certificate expires within the grace period, allow renewal
-	//e.g. expiry date 30 may, now = 10 may => grace period 9 june.
-	$expiry_date = ! empty( $end_date ) ? date( get_option( 'date_format' ), $end_date ) : false;
-
-	if ( strpos(site_url(), 'www.') !== false ) {
-		$text = __( "The non-www version of your site does not point to this website. This is recommended, as it will allow you to add it to the certificate as well.", 'really-simple-ssl' );
-	} else {
-		$text = __( "The www version of your site does not point to this website. This is recommended, as it will allow you to add it to the certificate as well.", 'really-simple-ssl' );
-	}
-	$notices['alias_domain_notice'] = array(
-		'condition' => array( 'NOT rsssl_is_subdomain' ),
-		'callback'  => 'RSSSL_LE()->letsencrypt_handler->alias_domain_available',
-		'score'     => 10,
-		'output'    => array(
-			'false'  => array(
-				'title' => 	 __( "Domain", 'really-simple-ssl' ),
-				'msg'         => $text,
-				'icon'        => 'open',
-				'plusone'     => true,
-				'dismissible' => true,
-			),
-		),
-		'show_with_options' => [
-			'domain',
-		]
-	);
-
 	if ( rsssl_generated_by_rsssl() ) {
+		//expiration date requests are cached.
+		$valid    = RSSSL()->certificate->is_valid();
+		$certinfo = get_transient( 'rsssl_certinfo' );
+		$end_date = isset( $certinfo['validTo_time_t'] ) ? $certinfo['validTo_time_t'] : false;
+		//if the certificate expires within the grace period, allow renewal
+		//e.g. expiry date 30 may, now = 10 may => grace period 9 june.
+		$expiry_date = ! empty( $end_date ) ? date( get_option( 'date_format' ), $end_date ) : false;
+
+		if ( get_option( 'rsssl_create_folders_in_root' ) ) {
+			if ( ! get_option( 'rsssl_htaccess_file_set_key' ) || ! get_option( 'rsssl_htaccess_file_set_certs' ) || ! get_option( 'rsssl_htaccess_file_set_ssl' ) ) {
+				$notices['root_files_not_protected'] = array(
+					'condition' => array( 'rsssl_ssl_enabled' ),
+					'callback'  => '_true_',
+					'score'     => 10,
+					'output'    => array(
+						'true' => array(
+							'msg'         => __( "Your Key and Certificate directories are not properly protected.", "really-simple-ssl" ),
+							'url'         => "https://really-simple-ssl.com/protect-ssl-generation-directories",
+							'icon'        => 'warning',
+							'plusone'     => true,
+							'dismissible' => true,
+						),
+					),
+				);
+			}
+		}
+
+		if ( strpos(site_url(), 'www.') !== false ) {
+			$text = __( "The non-www version of your site does not point to this website. This is recommended, as it will allow you to add it to the certificate as well.", 'really-simple-ssl' );
+		} else {
+			$text = __( "The www version of your site does not point to this website. This is recommended, as it will allow you to add it to the certificate as well.", 'really-simple-ssl' );
+		}
+		$notices['alias_domain_notice'] = array(
+			'condition' => array( 'NOT rsssl_is_subdomain' ),
+			'callback'  => 'RSSSL_LE()->letsencrypt_handler->alias_domain_available',
+			'score'     => 10,
+			'output'    => array(
+				'false'  => array(
+					'title' => 	 __( "Domain", 'really-simple-ssl' ),
+					'msg'         => $text,
+					'icon'        => 'open',
+					'plusone'     => true,
+					'dismissible' => true,
+				),
+			),
+			'show_with_options' => [
+				'domain',
+			]
+		);
+
 		if ( $expiry_date ) {
 			$notices['ssl_detected'] = array(
 				'condition' => array( 'rsssl_ssl_enabled' ),
@@ -110,26 +129,8 @@ function rsssl_le_get_notices_list($notices) {
 		),
 	);
 
-	//show notice if the shell exec add on is not up to date
-	if ( get_option( 'rsssl_create_folders_in_root' ) ) {
-		if ( ! get_option( 'rsssl_htaccess_file_set_key' ) || ! get_option( 'rsssl_htaccess_file_set_certs' ) || ! get_option( 'rsssl_htaccess_file_set_ssl' ) ) {
-			$notices['root_files_not_protected'] = array(
-				'condition' => array( 'rsssl_ssl_enabled' ),
-				'callback'  => '_true_',
-				'score'     => 10,
-				'output'    => array(
-					'true' => array(
-						'msg'         => __( "Your Key and Certificate directories are not properly protected.", "really-simple-ssl" ),
-						'url'         => "https://really-simple-ssl.com/protect-ssl-generation-directories",
-						'icon'        => 'warning',
-						'plusone'     => true,
-						'dismissible' => true,
-					),
-				),
-			);
-		}
-	}
 
+	//show notice if the shell exec add on is not up to date
 	if (function_exists('rsssl_le_load_shell_addon') && defined('rsssl_shell_version') && version_compare(rsssl_shell_version,'1.3','<')){
 		$notices['old_shell_exec_plugin'] = array(
 			'callback'  => '_true_',

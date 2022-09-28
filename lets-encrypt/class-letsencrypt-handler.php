@@ -1594,7 +1594,7 @@ class rsssl_letsencrypt_handler {
 				if ( ! is_wp_error( $response ) && ( strpos( $file_content, $test_string ) !== false ) ) {
 					//make sure we only set this value once, during first setup.
 					if ( !get_option('rsssl_initial_alias_domain_value_set') ) {
-						RSSSL_LE()->field->save_field('rsssl_include_alias', true);
+						rsssl_update_option('include_alias', true);
 						update_option('rsssl_initial_alias_domain_value_set', true, false);
 					}
 					$status  = 'success';

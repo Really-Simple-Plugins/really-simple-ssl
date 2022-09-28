@@ -11,7 +11,6 @@ class rsssl_admin
     public $plugin_dir = "really-simple-ssl";
     public $plugin_filename = "rlrsssl-really-simple-ssl.php";
     public $abs_path;
-    public $review_notice_shown = false;
     public $ssl_type = "NA";
 	public $pro_url;
     public $configuration_loaded = false;
@@ -49,7 +48,6 @@ class rsssl_admin
 
 	    //callbacks for the ajax dismiss buttons
 	    add_action('wp_ajax_rsssl_dismiss_review_notice', array($this, 'dismiss_review_notice_callback'));
-	    add_action('wp_ajax_rsssl_redirect_to_le_wizard', array($this, 'rsssl_redirect_to_le_wizard'));
 
 	    //handle notices
 	    add_action('admin_notices', array($this, 'show_notices'));
@@ -111,6 +109,7 @@ class rsssl_admin
 	 */
 
 	public function clear_transients(){
+        error_log("clear transients");
 		delete_transient('rsssl_plusone_count');
 		delete_transient( 'rsssl_can_use_curl_headers_check' );
 		delete_transient( 'rsssl_admin_notices' );
@@ -428,225 +427,57 @@ class rsssl_admin
 	 *
 	 */
 
-	public function notice_html($class, $title, $content, $footer=false) {
-	    $class .= ' notice ';
-		ob_start();
-		?>
-        <?php if ( is_rtl() ) { ?>
+	public function notice_html( $class, $content, $more_info=false ) {
+		$class .= ' notice ';
+		ob_start();?>
             <style>
-                #rsssl-message .error{
-                    border-right-color:#d7263d;
-                }
-                .activate-ssl {
-                    border-right: 4px solid #F8BE2E;
-                }
-                .activate-ssl .button {
-                    margin-bottom: 5px;
-                }
-
-                #rsssl-message .button-primary {
-                    margin-left: 10px;
-                }
-
-                .rsssl-notice-header {
-                    height: 60px;
-                    border-bottom: 1px solid #dedede;
-                    display: flex;
-                    flex-direction: row;
-                    justify-content: space-between;
-                    align-items: center;
-                    padding-right: 25px;
-                }
-                .rsssl-notice-header h1 {
-                    font-weight: bold;
-                }
-
-                .rsssl-notice-content {
-                    margin-top: 20px;
-                    padding-bottom: 20px;
-                    padding-right: 25px;
-                }
-
-                .rsssl-notice-footer {
-                    border-top: 1px solid #dedede;
-                    height: 35px;
-                    display: flex;
-                    align-items: center;
-                    padding-top: 10px;
-                    padding-bottom: 10px;
-                    margin-right: 25px;
-                    margin-left: 25px;
-                }
-
-                #rsssl-message {
-                    padding: 0;
-                    border-right-color: #333;
-                }
-
-                #rsssl-message .rsssl-notice-li::before {
-                    vertical-align: middle;
-                    margin-left: 25px;
-                    color: lightgrey;
-                    content: "\f345";
-                    font: 400 21px/1 dashicons;
-                }
-
-                #rsssl-message ul {
-                    list-style: none;
-                    list-style-position: inside;
-                }
-                #rsssl-message li {
-                    margin-right:30px;
-                    margin-bottom:10px;
-                }
-                #rsssl-message li:before {
-                    background-color: #f8be2e;
-                    color: #fff;
-                    height: 10px;
-                    width: 10px;
-                    border-radius:50%;
-                    content: '';
-                    position: absolute;
-                    margin-top: 5px;
-                    margin-right:-30px;
-                }
-                .rsssl-notice-footer input[type="checkbox"] {
-                    margin-top:7px;
-                }
-                .rsssl-notice-footer label span {
-                    top:5px;
-                    position:relative;
-                }
-                #rsssl-message li.rsssl-error:before {
-                    background-color: #D7263D;
-                }
-                #rsssl-message li.rsssl-success:before {
-                    background-color: #61ce70;
-                }
-
-                .settings_page_really-simple-security #wpcontent #rsssl-message, .settings_page_really-simple-ssl #wpcontent #rsssl-message {
-                    margin: 20px;
-                }
-            </style>
-        <?php } else { ?>
-            <style>
-                #rsssl-message .error{
-                    border-left-color:#d7263d;
-                }
-                .activate-ssl {
-                    border-left: 4px solid #F8BE2E;
-                }
-                .activate-ssl .button {
-                    margin-bottom: 5px;
-                }
-
-                #rsssl-message .button-primary, #rsssl-message .button-default {
-                    margin-right: 10px;
-                }
-
-                .rsssl-notice-header {
-                    height: 60px;
-                    border-bottom: 1px solid #dedede;
-                    display: flex;
-                    flex-direction: row;
-                    justify-content: space-between;
-                    align-items: center;
-                    padding-left: 25px;
-                }
-                .rsssl-notice-header h1 {
-                    font-weight: bold;
-                }
-
-                .rsssl-notice-content {
-                    margin-top: 20px;
-                    padding-bottom: 20px;
-                    padding-left: 25px;
-                }
-
-                .rsssl-notice-footer {
-                    border-top: 1px solid #dedede;
-                    height: 35px;
-                    display: flex;
-                    align-items: center;
-                    padding-top: 10px;
-                    padding-bottom: 10px;
-                    margin-left: 25px;
-                    margin-right: 25px;
-                }
-                .rsssl-notice-footer input[type="checkbox"] {
-                    margin-top:7px;
-                }
-                .rsssl-notice-footer label span {
-                    top:5px;
-                    position:relative;
-                }
-
                 #rsssl-message {
                     padding: 0;
                     border-left-color: #333;
                 }
-
-                #rsssl-message .rsssl-notice-li::before {
-                    vertical-align: middle;
-                    margin-right: 25px;
-                    color: lightgrey;
-                    content: "\f345";
-                    font: 400 21px/1 dashicons;
+                #rsssl-message.error{
+                    border-left-color:#d7263d;
                 }
-
-                #rsssl-message ul {
-                    list-style: none;
-                    list-style-position: inside;
+                .rsssl-notice {
+                    display:flex;
+                    margin:15px;
                 }
-                #rsssl-message li {
-                    margin-left:30px;
-                    margin-bottom:10px;
+                .rsssl-notice-content {
+                    padding-top: 5px;
                 }
-                #rsssl-message li:before {
-                    background-color: #f8be2e;
-                    color: #fff;
-                    height: 10px;
-                    width: 10px;
-                    border-radius:50%;
-                    content: '';
-                    position: absolute;
-                    margin-top: 5px;
-                    margin-left:-30px;
+                .rsssl-admin-notice-more-info {
+                    margin:0 10px 0 auto;
                 }
-                #rsssl-message li.rsssl-error:before {
-                    background-color: #D7263D;
-                }
-                #rsssl-message li.rsssl-success:before {
-                    background-color: #61ce70;
-                }
-
                 .settings_page_really-simple-security #wpcontent #rsssl-message, .settings_page_really-simple-ssl #wpcontent #rsssl-message {
                     margin: 20px;
                 }
             </style>
-        <?php } ?>
+            <?php if ( is_rtl() ) { ?>
+                <style>
+                    #rsssl-message {
+                        border-right-color: #333;
+                    }
+                    #rsssl-message.error{
+                        border-right-color:#d7263d;
+                    }
+                    .rsssl-admin-notice-more-info {
+                        margin:0 auto 0 10px;
+                    }
+                </style>
+            <?php }?>
         <div id="rsssl-message" class="<?php echo $class?> really-simple-plugins">
             <div class="rsssl-notice">
-                <?php if (!empty($title)) {?>
-                    <div class="rsssl-notice-header">
-                        <h1><?php echo $title ?></h1>
-                    </div>
-                <?php }?>
                 <div class="rsssl-notice-content">
 					<?php echo $content ?>
                 </div>
-				<?php
-				if ($footer ) { ?>
-                    <div class="rsssl-notice-footer">
-						<?php echo $footer;?>
-                    </div>
-				<?php } ?>
+                <?php if ($more_info ) { ?>
+                    <div class="rsssl-admin-notice-more-info"><a class="button" target="_blank" href="<?php echo esc_url_raw($more_info)?>"><?php _e("More info", "really-simple-ssl")?></a></div>
+                <?php } ?>
             </div>
         </div>
 		<?php
 
-		$content = ob_get_clean();
-		return $content;
+		return ob_get_clean();
 	}
 
     /**
@@ -1797,7 +1628,7 @@ class rsssl_admin
 
     public function show_leave_review_notice()
     {
-        if ( rsssl_get_option('dismiss_all_notices') ) {
+	    if ( rsssl_get_option('dismiss_all_notices') ) {
             return;
         }
 
@@ -1816,52 +1647,48 @@ class rsssl_admin
         }
 
         if ( !rsssl_get_option('review_notice_shown') && get_option('rsssl_activation_timestamp') && get_option('rsssl_activation_timestamp') < strtotime("-1 month")) {
+
+            //checking legacy options, just in case.
+	        $options = get_option('rlrsssl_options');
+	        if ( is_array($options) && isset( $options['review_notice_shown'] ) && $options['review_notice_shown']) {
+		        rsssl_update_option('review_notice_shown', true);
+                return;
+	        }
+
             add_action('admin_print_footer_scripts', array($this, 'insert_dismiss_review'));
             ?>
+
+            <style>
+                .rsssl-review .rsssl-container {
+                    display: flex;
+                    padding:12px;
+                }
+                .rsssl-review .rsssl-container .dashicons {
+                    margin-right:5px;
+                    margin-left:15px;
+                }
+                .rsssl-review .rsssl-review-image img{
+                    margin-top:0.5em;
+                }
+                .rsssl-review .rsssl-buttons-row {
+                    margin-top:10px;
+                    display: flex;
+                    align-items: center;
+                }
+            </style>
             <?php if ( is_rtl() ) { ?>
                 <style>
-                    .rlrsssl-review .rsssl-container {
-                        display: flex;
-                        padding:12px;
-                    }
-                    .rlrsssl-review .rsssl-container .dashicons {
-                        margin-left:10px;
-                        margin-right:5px;
-                    }
-                    .rlrsssl-review .rsssl-review-image img{
-                        margin-top:0.5em;
-                    }
-                    .rlrsssl-review .rsssl-buttons-row {
-                        margin-top:10px;
-                        display: flex;
-                        align-items: center;
-                    }
-                </style>
-            <?php } else { ?>
-                <style>
-                    .rlrsssl-review .rsssl-container {
-                        display: flex;
-                        padding:12px;
-                    }
-                    .rlrsssl-review .rsssl-container .dashicons {
-                        margin-right:10px;
+                    .rsssl-review .rsssl-container .dashicons {
                         margin-left:5px;
-                    }
-                    .rlrsssl-review .rsssl-review-image img{
-                        margin-top:0.5em;
-                    }
-                    .rlrsssl-review .rsssl-buttons-row {
-                        margin-top:10px;
-                        display: flex;
-                        align-items: center;
+                        margin-right:15px;
                     }
                 </style>
-            <?php } ?>
-            <div id="message" class="updated fade notice is-dismissible rlrsssl-review really-simple-plugins" style="border-left:4px solid #333">
+            <?php }  ?>
+            <div id="message" class="updated fade notice is-dismissible rsssl-review really-simple-plugins" style="border-left:4px solid #333">
                 <div class="rsssl-container">
                     <div class="rsssl-review-image"><img width=80px" src="<?php echo rsssl_url?>/assets/img/icon-128x128.png" alt="review-logo"></div>
                     <div style="margin-left:30px">
-                        <?php if (get_option("rsssl_before_review_notice_user")){?>
+                        <?php if ( get_option("rsssl_before_review_notice_user") ){?>
                             <p><?php printf(__('Hi, Really Simple SSL has kept your site secure for some time now, awesome! If you have a moment, please consider leaving a review on WordPress.org to spread the word. We greatly appreciate it! If you have any questions or feedback, leave us a %smessage%s.', 'really-simple-ssl'),'<a href="https://really-simple-ssl.com/contact" target="_blank">','</a>'); ?></p>
                         <?php } else {?>
                             <p><?php printf(__('Hi, Really Simple SSL has kept your site secure for a month now, awesome! If you have a moment, please consider leaving a review on WordPress.org to spread the word. We greatly appreciate it! If you have any questions or feedback, leave us a %smessage%s.', 'really-simple-ssl'),'<a href="https://really-simple-ssl.com/contact" target="_blank">','</a>'); ?></p>
@@ -1871,8 +1698,8 @@ class rsssl_admin
                         <div class="rsssl-buttons-row">
                             <a class="button button-primary" target="_blank"
                                href="https://wordpress.org/support/plugin/really-simple-ssl/reviews/#new-post"><?php _e('Leave a review', 'really-simple-ssl'); ?></a>
-                            <div class="dashicons dashicons-calendar"></div><a href="#" id="maybe-later"><?php _e('Maybe later', 'really-simple-ssl'); ?></a>
-                            <div class="dashicons dashicons-no-alt"></div><a href="<?php echo esc_url(add_query_arg(array("page"=>"really-simple-security", "rsssl_dismiss_review_notice"=>1),admin_url("options-general.php") ) );?>#settings"><?php _e('Don\'t show again', 'really-simple-ssl'); ?></a>
+                            <div class="dashicons dashicons-calendar"></div><a href="<?php echo esc_url(add_query_arg(array("page"=>"really-simple-security", "rsssl_review_notice"=>'later'),admin_url("options-general.php") ) );?>#settings"><?php _e('Maybe later', 'really-simple-ssl'); ?></a>
+                            <div class="dashicons dashicons-no-alt"></div><a href="<?php echo esc_url(add_query_arg(array("page"=>"really-simple-security", "rsssl_review_notice"=>'dismiss'),admin_url("options-general.php") ) );?>#settings"><?php _e('Don\'t show again', 'really-simple-ssl'); ?></a>
                         </div>
                     </div>
                 </div>
@@ -1880,6 +1707,43 @@ class rsssl_admin
             <?php
         }
     }
+
+	/**
+	 * Insert some ajax script to dismiss the review notice, and stop nagging about it
+	 *
+	 * @since  3.0
+	 *
+	 * @access public
+	 *
+	 * type: dismiss, later
+	 *
+	 */
+
+	public function insert_dismiss_review()
+	{ ?>
+        <script>
+            document.addEventListener('click', e => {
+                if ( e.target.closest('.rsssl-review.notice.is-dismissible') ) {
+                    window.location.href='<?php echo esc_url_raw(add_query_arg( array( "page" => "really-simple-security", "rsssl_review_notice" => 'dismiss' ), admin_url( "options-general.php" ) ).'#settings')?>';
+                }
+            });
+        </script>
+		<?php
+	}
+
+	/**
+	 * Dismiss review notice of dismissed by the user
+	 */
+
+	public function maybe_dismiss_review_notice() {
+		if ( isset($_GET['rsssl_review_notice']) && $_GET['rsssl_review_notice'] === 'dismiss' ){
+			rsssl_update_option('review_notice_shown',true);
+		}
+		if ( isset($_GET['rsssl_review_notice']) && $_GET['rsssl_review_notice'] === 'dismiss' ){
+			//Reset activation timestamp, notice will show again in one month.
+			update_option('rsssl_activation_timestamp', time(), false );
+        }
+	}
 
     /**
      * Show notices
@@ -1902,95 +1766,17 @@ class rsssl_admin
         foreach ( $notices as $id => $notice ){
             $notice = $notice['output'];
             $class = ( $notice['status'] !== 'completed' ) ? 'error' : 'updated';
-	        $footer = isset($notice['url']) ? '<a class="button" target="_blank" href="' . esc_url_raw($notice['url']) . '">'.__("More info", "really-simple-ssl").'</a>' : '';
-	        echo $this->notice_html( $class.' '.$id, $notice['title'], $notice['msg'], $footer);
+	        $more_info = isset($notice['url']) ? $notice['url'] : false;
+	        echo $this->notice_html( $class.' '.$id, $notice['msg'], $more_info);
         }
     }
 
     /**
-     * Insert some ajax script to dismiss the review notice, and stop nagging about it
      *
-     * @since  3.0
-     *
-     * @access public
-     *
-     * type: dismiss, later
-     *
-     */
-
-    public function insert_dismiss_review()
-    {
-        $ajax_nonce = wp_create_nonce("really-simple-ssl");
-        ?>
-        <script type='text/javascript'>
-            jQuery(document).ready(function ($) {
-                $(".rlrsssl-review.notice.is-dismissible").on("click", ".notice-dismiss", function (event) {
-                    rsssl_dismiss_review('dismiss');
-                });
-                $(".rlrsssl-review.notice.is-dismissible").on("click", "#maybe-later", function (event) {
-                    rsssl_dismiss_review('later');
-                    $(this).closest('.rlrsssl-review').remove();
-                });
-                $(".rlrsssl-review.notice.is-dismissible").on("click", ".review-dismiss", function (event) {
-                    rsssl_dismiss_review('dismiss');
-                    $(this).closest('.rlrsssl-review').remove();
-                });
-
-                function rsssl_dismiss_review(type){
-                    var data = {
-                        'action': 'rsssl_dismiss_review_notice',
-                        'type' : type,
-                        'security': '<?php echo $ajax_nonce; ?>'
-                    };
-                    $.post(ajaxurl, data, function (response) {});
-                }
-            });
-        </script>
-        <?php
-    }
-
-	/**
-	 * Dismiss review notice of dismissed by the user
-	 */
-
-	public function maybe_dismiss_review_notice() {
-		if (isset($_GET['rsssl_dismiss_review_notice'])){
-			rsssl_update_option('review_notice_shown',true);
-		}
-	}
-
-    /**
-     * Process the ajax dismissal of the htaccess message.
-     *
-     * @since  2.1
-     *
-     * @access public
-     *
-     */
-
-    public function dismiss_review_notice_callback()
-    {
-        $type = isset($_POST['type']) ? $_POST['type'] : false;
-
-        if ($type === 'dismiss'){
-	        rsssl_update_option('review_notice_shown', true);
-        }
-        if ($type === 'later') {
-            //Reset activation timestamp, notice will show again in one month.
-            update_option('rsssl_activation_timestamp', time(), false );
-        }
-
-        $this->save_options();
-        wp_die(); // this is required to terminate immediately and return a proper response
-    }
-
-    /**
-     *
-     * @since 3.1.6
      *
      * Add an update count to the WordPress admin Settings menu item
      * Doesn't work when the Admin Menu Editor plugin is active
-     *
+     * @since 3.1.6
      */
 
     public function add_plus_ones()
@@ -2070,9 +1856,10 @@ class rsssl_admin
         $args = wp_parse_args($args, $defaults);
 	    $cache_admin_notices = !$this->is_settings_page() && $args['admin_notices'];
 
-	    //if we're on the settings page, we need to clear the admin notices transient, because this list never gets requested on the settings page, and won'd get cleared otherwise
-	    if ( rsssl_get_option('ssl_enabled') || $this->is_settings_page() || isset($_GET['ssl_reload_https']) ) {
-	        delete_transient('rsssl_admin_notices');
+	    //if we're on the settings page, we need to clear the admin notices transient, because this list won't get refreshed
+	    if ( rsssl_get_option('ssl_enabled') || $this->is_settings_page() ) {
+		    error_log("clear transients because on settings page ");
+		    delete_transient('rsssl_admin_notices');
 	    }
 
 	    if ( $cache_admin_notices) {

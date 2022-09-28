@@ -522,9 +522,9 @@ function rsssl_update_option( $name, $value ) {
  * Get the rest api fields
  * @return void
  */
-
+error_log("loading settings. php ");
 function rsssl_rest_api_fields_get(){
-	if (!rsssl_user_can_manage()) {
+	if ( !rsssl_user_can_manage() ) {
 		return;
 	}
 

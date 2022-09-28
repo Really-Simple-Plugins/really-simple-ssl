@@ -274,9 +274,11 @@ function rsssl_code_execution_allowed()
 	if ( !$code_execution_allowed ) {
 		$upload_dir = wp_get_upload_dir();
 		$test_file = $upload_dir['basedir'] . '/' . 'code-execution.php';
-		if ( is_writable($upload_dir['basedir'] )  ) {
-			if ( ! file_exists( $test_file ) ) {
+		if ( is_writable($upload_dir['basedir'] ) && ! file_exists( $test_file ) ) {
+			try {
 				copy( rsssl_path . 'security/tests/code-execution.php', $test_file );
+			} catch (Exception $e) {
+				$code_execution_allowed = 'not-allowed';
 			}
 		}
 
@@ -286,13 +288,15 @@ function rsssl_code_execution_allowed()
 			$response = wp_remote_get($upload_url);
 			$filecontents = is_array($response) ? wp_remote_retrieve_body($response) : '';
 			if ( !is_wp_error($response) && (strpos($filecontents, "RSSSL CODE EXECUTION MARKER") !== false) ) {
-				$code_execution_allowed = true;
+				$code_execution_allowed = 'allowed';
+			} else {
+				$code_execution_allowed = 'not-allowed';
 			}
 		}
 		set_transient('rsssl_code_execution_allowed_status', $code_execution_allowed, DAY_IN_SECONDS);
 	}
 
-	return $code_execution_allowed;
+	return $code_execution_allowed === 'allowed';
 }
 
 /**
