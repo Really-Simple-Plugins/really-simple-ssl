@@ -10,6 +10,7 @@ class rsssl_firewall_manager {
 		self::$_this = $this;
 		add_action( 'rsssl_update_rules', array($this, 'insert_advanced_header_file'), 10 );
 		add_action( 'rsssl_after_saved_fields', array($this, 'insert_advanced_header_file'), 100 );
+		add_action( 'rsssl_deactivate', array($this, 'remove_advanced_headers'), 20 );
 		add_filter('rsssl_notices', array($this, 'notices') );
 	}
 
@@ -24,12 +25,11 @@ class rsssl_firewall_manager {
 	 */
 	public function is_settings_page()
 	{
-
 		if ( rsssl_is_logged_in_rest() ){
 			return true;
 		}
 
-		if (isset($_GET["page"]) && ($_GET["page"] == "really-simple-security" || $_GET["page"] == "really-simple-ssl") ) {
+		if ( isset($_GET["page"]) && $_GET["page"] === "really-simple-security" ) {
 			return true;
 		}
 
@@ -146,5 +146,27 @@ class rsssl_firewall_manager {
 			]
 		);
 		return $notices;
+	}
+
+	/**
+	 * Clear the headers
+	 * @return void
+	 */
+	public function remove_advanced_headers() {
+		$file = ABSPATH . 'wp-content/advanced-headers.php';
+		$wpconfig_path = RSSSL()->admin->find_wp_config_path();
+		if ( is_writable( $wpconfig_path ) ) {
+			$wpconfig = file_get_contents( $wpconfig_path );
+			$rule = "if ( file_exists('" . $file . "') ) { " . "\n";
+			$rule .= "\t" . "require_once '$file';" . "\n" . "}";
+			if ( strpos( $wpconfig, $rule ) !== false ) {
+				$updated_wpconfig = str_replace( $rule, '', $wpconfig );
+				file_put_contents( $wpconfig_path, $updated_wpconfig );
+			}
+		}
+
+		if ( file_exists( $file ) ) {
+			unlink( $file );
+		}
 	}
 }

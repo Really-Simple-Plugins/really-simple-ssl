@@ -215,13 +215,14 @@ class rsssl_admin
 
     public function listen_for_deactivation()
     {
-        //check user role
-        if (!rsssl_user_can_manage()) return;
+        if ( !rsssl_user_can_manage() ) {
+            return;
+        }
 
-        //check nonce
-        if (!isset($_GET['token']) || (!wp_verify_nonce($_GET['token'], 'rsssl_deactivate_plugin'))) return;
+        if ( !isset($_GET['token']) || (!wp_verify_nonce($_GET['token'], 'rsssl_deactivate_plugin')) ) {
+            return;
+        }
 
-        //check for action
         if (isset($_GET["action"]) && $_GET["action"] == 'uninstall_keep_ssl') {
             //deactivate plugin, but don't revert to http.
             $plugin = $this->plugin_dir . "/" . $this->plugin_filename;
@@ -233,16 +234,13 @@ class rsssl_admin
                     unset($network_current[$plugin]);
                 }
                 update_site_option('active_sitewide_plugins', $network_current);
-
                 //remove plugin one by one on each site
                 $sites = get_sites();
                 foreach ($sites as $site) {
 	                switch_to_blog($site->blog_id);
-
                     $current = get_option('active_plugins', array());
                     $current = $this->remove_plugin_from_array($plugin, $current);
                     update_option('active_plugins', $current);
-
                     restore_current_blog(); //switches back to previous blog, not current, so we have to do it each loop
                 }
             } else {
@@ -250,7 +248,8 @@ class rsssl_admin
                 $current = $this->remove_plugin_from_array($plugin, $current);
                 update_option('active_plugins', $current);
             }
-            wp_redirect(admin_url('plugins.php'));
+	        do_action("rsssl_deactivate");
+	        wp_redirect(admin_url('plugins.php'));
             exit;
         }
     }
@@ -330,6 +329,8 @@ class rsssl_admin
 		        $this->fix_siteurl_defines_in_wpconfig();
 	        }
 
+            $this->insert_secure_cookie_settings();
+
 	        if ( !$safe_mode ) {
 		        rsssl_update_option('redirect', 'wp_redirect');
 		        rsssl_update_option('mixed_content_fixer', true);
@@ -359,20 +360,6 @@ class rsssl_admin
                 'success' => !$error,
                 'site_url_changed' => $site_url_changed,
             ];
-        }
-    }
-
-	/**
-	 * Deactivate SSL for this site
-	 */
-
-    public function deactivate_ssl()
-    {
-        //only revert if SSL was enabled first.
-        if ( rsssl_get_option('ssl_enabled') ) {
-	        rsssl_update_option('redirect', 'none');
-	        rsssl_update_option('ssl_enabled', false);
-	        $this->remove_ssl_from_siteurl();
         }
     }
 
@@ -854,28 +841,45 @@ class rsssl_admin
      *
      */
 
-    public function deactivate($networkwide)
+    public function deactivate()
     {
-        if ( rsssl_get_option('ssl_enabled') ) {
-	        $this->remove_ssl_from_siteurl();
-	        $this->remove_ssl_from_siteurl_in_wpconfig();
-	        $this->remove_secure_cookie_settings();
-	        rsssl_update_option('review_notice_shown', false);
-	        rsssl_update_option('ssl_enabled',false);
-	        rsssl_update_option('dismiss_all_notices', false);
-	        rsssl_update_option('redirect', 'none');
-	        rsssl_update_option('mixed_content_fixer', false);
-
-	        //when on multisite, per site activation, recreate domain list for htaccess and wpconfig rewrite actions
-	        if ( is_multisite() ) {
-		        RSSSL()->multisite->deactivate();
-	        }
-	        do_action("rsssl_deactivate");
-
-	        $this->remove_wpconfig_edit();
-	        $this->remove_htaccess_edit();
-            rsssl_remove_htaccess_security_edits();
+	    if ( !rsssl_user_can_manage() ) {
+		    return;
+	    }
+	    if ( is_multisite() ) {
+		    RSSSL()->multisite->deactivate();
+	    } else {
+            $ssl_was_enabled = rsssl_get_option('ssl_enabled');
+		    $this->deactivate_site($ssl_was_enabled);
         }
+    }
+
+	/**]
+     * Deactivate SSL for the currently loaded site
+     *
+	 * @param bool $ssl_was_enabled
+	 *
+	 * @return void
+	 */
+    public function deactivate_site( bool $ssl_was_enabled){
+
+	    if ( !rsssl_user_can_manage() ) {
+		    return;
+	    }
+
+	    $this->remove_secure_cookie_settings();
+	    if ($ssl_was_enabled) {
+		    $this->remove_ssl_from_siteurl();
+		    if ( !is_multisite() || is_main_site() ) {
+			    $this->remove_ssl_from_siteurl_in_wpconfig();
+			    $this->remove_wpconfig_edit();
+			    $this->remove_htaccess_edit();
+			    rsssl_remove_htaccess_security_edits();
+		    }
+	    }
+
+	    do_action("rsssl_deactivate");
+	    delete_option('rsssl_options');
     }
 
 	/**
@@ -889,9 +893,13 @@ class rsssl_admin
 
 	public function remove_secure_cookie_settings() {
 
-		if ( wp_doing_ajax() || !current_user_can("activate_plugins")) {
+		if ( !rsssl_user_can_manage() ) {
             return;
 		}
+
+        if ( !$this->is_settings_page()) {
+            return;
+        }
 
 		if ( $this->secure_cookie_settings_status() !== 'set') {
             return;
@@ -2742,14 +2750,8 @@ class rsssl_admin
             return;
 		}
 
-		if ( wp_doing_ajax() || !$this->is_settings_page() ) {
+		if ( !$this->is_settings_page() ) {
             return;
-		}
-
-		//only if this site has SSL activated, otherwise, remove cookie settings and exit.
-		if ( !rsssl_get_option('ssl_enabled') ) {
-			$this->remove_secure_cookie_settings();
-			return;
 		}
 
 		//if multisite, only on network wide activated setups

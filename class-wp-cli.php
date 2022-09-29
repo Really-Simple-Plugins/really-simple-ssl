@@ -19,7 +19,7 @@ defined('ABSPATH') or die("you do not have access to this page!");
 
         public function deactivate_ssl()
         {
-            RSSSL()->admin->deactivate_ssl();
+            RSSSL()->admin->deactivate();
             WP_CLI::success( 'SSL deactivated' );
         }
 

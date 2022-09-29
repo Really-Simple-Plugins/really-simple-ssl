@@ -38,8 +38,7 @@ if ( ! is_plugin_active( $core_plugin ) ) {
 $step = 1;
 echo "<h1>Force deactivation of Really Simple SSL</h1>";
 echo $step . ". Resetting options" . "<br>";
-$networkwide = is_multisite();
-RSSSL()->admin->deactivate( $networkwide );
+RSSSL()->admin->deactivate();
 $step ++;
 
 echo $step . ". Deactivating plugin" . "<br>";

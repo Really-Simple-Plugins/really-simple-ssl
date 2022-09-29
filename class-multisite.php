@@ -400,14 +400,18 @@ if (!class_exists('rsssl_multisite')) {
 	     *
 	     * @return void
 	     */
+
         public function deactivate()
         {
-			rsssl_update_option('redirect', 'none');
-			rsssl_update_option('mixed_content_fixer', false );
-			rsssl_update_option('mixed_content_admin', false );
-			rsssl_update_option('cert_expiration_warning', false );
-			rsssl_update_option('dismiss_all_notices', false );
+			$ssl_was_enabled = rsssl_get_option('ssl_enabled');
 	        delete_site_option('rsssl_network_activation_status');
+	        delete_site_option('rsssl_options');
+
+			//main site first
+	        $site_id = get_main_site_id();
+			switch_to_blog($site_id);
+			RSSSL()->admin->deactivate_site($ssl_was_enabled);
+	        restore_current_blog();
 
 	        //because the deactivation should be a one click procedure, chunking this would cause difficulties
 	        $args = array(
@@ -418,11 +422,13 @@ if (!class_exists('rsssl_multisite')) {
             foreach ($sites as $site) {
 	            switch_to_blog($site->blog_id);
 	            update_site_meta($site->blog_id, 'rsssl_ssl_activated', false );
-	            RSSSL()->admin->deactivate_ssl();
-                restore_current_blog(); //switches back to previous blog, not current, so we have to do it each loop
+				//we already did the main site
+				if ( !is_main_site() ) {
+					RSSSL()->admin->deactivate_site($ssl_was_enabled);
+				}
+                restore_current_blog();
             }
         }
-
 
         /**
          * filters the get_admin_url function to correct the false https urls wordpress returns for non SSL websites.
