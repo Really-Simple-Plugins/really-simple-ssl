@@ -12,9 +12,9 @@ function rsssl_general_security_notices( $notices ) {
 		'score' => 5,
 		'output' => array(
 			'true' => array(
-				'msg' => __("Application passwords enabled.", "really-simple-ssl"),
+				'msg' => __("Disable application passwords", "really-simple-ssl"),
 				'icon' => 'premium',
-				'url' => 'https://really-simple-ssl.com/what-are-application-passwords/',
+				'url' => 'https://really-simple-ssl.com/definition/what-are-application-passwords/',
 				'dismissible' => true,
 			),
 		),
@@ -29,21 +29,21 @@ function rsssl_general_security_notices( $notices ) {
 				'msg' => __("An option that requires the .htaccess file is enabled, but the file is not writable.", "really-simple-ssl").' '.__("Please add the following lines to your .htaccess, or set it to writable:", "really-simple-ssl").$code,
 				'icon' => 'warning',
 				'dismissible' => true,
-				'url' => 'https://really-simple-ssl.com/manually-editing-htaccess',
+				'url' => 'https://really-simple-ssl.com/manual/editing-htaccess/',
 			),
 			'not-exists' => array(
 				'title' => __(".htaccess does not exist", "really-simple-ssl"),
 				'msg' => __("An option that requires the .htaccess file is enabled, but the file does not exist.", "really-simple-ssl").' '.__("Please add the following lines to your .htaccess, or set it to writable:", "really-simple-ssl").$code,
 				'icon' => 'warning',
 				'dismissible' => true,
-				'url' => 'https://really-simple-ssl.com/manually-editing-htaccess',
+				'url' => 'https://really-simple-ssl.com/manual/editing-htaccess/',
 			),
 			'not-writable-uploads' => array(
 				'title' => __(".htaccess not writable", "really-simple-ssl"),
 				'msg' => __("An option was enabled which requires the .htaccess in the uploads directory to get written, but the .htaccess or directory is not writable.", "really-simple-ssl").' '.__("Please add the following lines to your .htaccess, or set it to writable:", "really-simple-ssl").$code,
 				'icon' => 'warning',
 				'dismissible' => true,
-				'url' => 'https://really-simple-ssl.com/manually-editing-htaccess',
+				'url' => 'https://really-simple-ssl.com/manual/editing-htaccess/',
 			),
 		),
 		'show_with_options' => [
@@ -178,7 +178,7 @@ function rsssl_general_security_notices( $notices ) {
 				'msg' => __("Your database prefix is set to the default 'wp_'.", "really-simple-ssl"),
 				'icon' => 'premium',
 				'dismissible' => true,
-				'url' => 'https://really-simple-ssl.com'
+				'url' => 'https://really-simple-ssl.com/instructions/about-hardening-features/'
 			),
 		),
 	);

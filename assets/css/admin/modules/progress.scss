@@ -81,9 +81,11 @@
     .rsssl-progress-text-span {
       font-weight: 500;
       font-size: var(--rsp-fs-600);
-
       a {
         margin-left: 3px;
+      }
+      @media only screen and (max-width: $rsp-break-l) and (min-width: $rsp-break-m)  {
+        font-size: var(--rsp-fs-500);
       }
     }
   }
@@ -272,5 +274,11 @@
   background-color: #d63638;
   color: #fff;
   text-align: center;
+}
+
+@media only screen and (max-width: $rsp-break-l)  {
+  .rsssl-footer-left {
+    display:none;
+  }
 }
 

@@ -2196,7 +2196,7 @@ class rsssl_admin
 				                 ."<br><code style='padding: 0;'>". implode('<br>', $this->get_recommended_security_headers() ) . "</code>",
 				        'icon' => 'premium',
 				        'dismissible' => false,
-				        'url' => 'https://really-simple-ssl.com/secure-cookies-with-httponly-secure-and-use_only_cookies/',
+				        'url' => 'https://really-simple-ssl.com/instructions/configuring-recommended-security-headers',
 			        ),
 			        'true' => array(
 				        'msg' => __("Recommended security headers enabled.", "really-simple-ssl"),
@@ -2210,7 +2210,7 @@ class rsssl_admin
 	            'score' => 5,
 	            'output' => array(
 		            'true' => array(
-			            'msg' => __("Improve security with Really Simple SSL Pro.", "really-simple-ssl"),
+			            'msg' => __("Improve security with Really Simple SSL Pro", "really-simple-ssl"),
 			            'url' => $this->pro_url,
 			            'icon' => 'premium',
 			            'dismissible' => false,

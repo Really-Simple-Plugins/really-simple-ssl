@@ -3724,7 +3724,7 @@ class SecurityFeaturesBlock extends _wordpress_element__WEBPACK_IMPORTED_MODULE_
     }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_5__.__)("Keep WordPress fortified and safe by tackling its weaknesses."), "\xA0", (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_utils_Hyperlink__WEBPACK_IMPORTED_MODULE_4__["default"], {
       target: "_blank",
       text: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_5__.__)("Check our %sdocumentation%s", "really-simple-ssl"),
-      url: "https://really-simple-ssl.com/hardening"
+      url: "https://really-simple-ssl.com/instructions/about-hardening-features"
     }), "\xA0", (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_utils_Hyperlink__WEBPACK_IMPORTED_MODULE_4__["default"], {
       target: "_blank",
       text: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_5__.__)("or use the %sWordPress forum%s.", "really-simple-ssl"),
@@ -4211,7 +4211,7 @@ const SslLabs = props => {
   })), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "rsssl-detail rsssl-status-" + sslStatusColor
   }, hasErrors && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, errorMessage), !hasErrors && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, " ", (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("What does my score mean?", "really-simple-ssl"), "\xA0", (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
-    href: url,
+    href: "https://really-simple-ssl.com/instructions/about-ssl-labs/",
     target: "_blank"
   }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Read more", "really-simple-ssl"))))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "rsssl-details"
@@ -7852,7 +7852,7 @@ class MixedContentScan extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.C
       className: "rsssl-current-scan-action"
     }, action), data.length == 0 && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
       className: "rsssl-mixed-content-description"
-    }, state !== 'running' && completedStatus === 'never' && (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)("No scan completed yet. Check for mixed content by running a scan.", "really-simple-ssl"), state !== 'running' && completedStatus === 'completed' && (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)("No mixed content found!", "really-simple-ssl")), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    }, state !== 'running' && completedStatus === 'never' && (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)("No records. Start your first scan", "really-simple-ssl"), state !== 'running' && completedStatus === 'completed' && (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)("Everything is now served over SSL", "really-simple-ssl")), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
       className: "rsssl-mixed-content-placeholder"
     }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null))), data.length > 0 && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_data_table_component__WEBPACK_IMPORTED_MODULE_1__["default"], {
       columns: columns,
@@ -8370,7 +8370,7 @@ class SettingsGroup extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Comp
       fields: this.props.fields,
       isAPILoaded: this.props.isAPILoaded
     };
-    this.upgrade = 'https://really-simple-ssl.com/pro';
+    this.upgrade = 'https://really-simple-ssl.com/pro/';
     this.fields = this.props.fields;
   }
 
@@ -8452,7 +8452,7 @@ class SettingsGroup extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Comp
 
     let networkwide_error = !rsssl_settings.networkwide_active && activeGroup.networkwide_required;
     this.upgrade = activeGroup.upgrade ? activeGroup.upgrade : this.upgrade;
-    let helplinkText = activeGroup.helpLink_text ? activeGroup.helpLink_text : (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_4__.__)("Instructions manual", "really-simple-ssl");
+    let helplinkText = activeGroup.helpLink_text ? activeGroup.helpLink_text : (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_4__.__)("Instructions", "really-simple-ssl");
     let anchor = (0,_utils_getAnchor__WEBPACK_IMPORTED_MODULE_3__["default"])('main');
     let disabledClass = disabled || networkwide_error ? 'rsssl-disabled' : '';
     return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
