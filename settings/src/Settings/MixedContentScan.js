@@ -282,8 +282,8 @@ class MixedContentScan extends Component {
                 {state==='running' && <div className="rsssl-current-scan-action">{action}</div>}
                     {data.length==0 && <>
                         <div className="rsssl-mixed-content-description">
-                            {state!=='running' && completedStatus==='never' && __("No scan completed yet. Check for mixed content by running a scan.","really-simple-ssl")}
-                            {state!=='running' && completedStatus==='completed' && __("No mixed content found!","really-simple-ssl")}
+                            {state!=='running' && completedStatus==='never' && __("No records. Start your first scan","really-simple-ssl")}
+                            {state!=='running' && completedStatus==='completed' && __("Everything is now served over SSL","really-simple-ssl")}
                         </div>
                         <div className="rsssl-mixed-content-placeholder">
                             <div></div><div></div><div></div><div></div>
