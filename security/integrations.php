@@ -195,6 +195,7 @@ function rsssl_has_fix($fix){
  */
 function rsssl_maybe_clear_transients($field_id, $field_value, $prev_value, $field_type ){
 
+
 	if ( $field_id===' mixed_content_fixer' && $field_value ){
 		delete_transient( 'rsssl_can_use_curl_headers_check' );
 		delete_transient('rsssl_mixed_content_fixer_detected');
