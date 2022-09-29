@@ -20,7 +20,9 @@ if (!class_exists('rsssl_multisite')) {
             add_filter('home_url', array($this, 'check_site_protocol'), 20, 4);
             add_filter('site_url', array($this, 'check_site_protocol'), 20, 4);
             add_action('network_admin_menu', array(&$this, 'add_multisite_menu'));
-            if ( is_network_admin() ) {
+	        add_action('plugins_loaded', array($this, 'maybe_redirect_old_settings_url'), 10);
+
+	        if ( is_network_admin() ) {
                 add_action('network_admin_notices', array($this, 'show_notices'), 10);
             }
 
@@ -41,6 +43,21 @@ if (!class_exists('rsssl_multisite')) {
         {
             return self::$_this;
         }
+
+	    /**
+	     * Redirect to the new settings page
+	     *
+	     * @return void
+	     */
+	    public function maybe_redirect_old_settings_url(){
+		    if ( !rsssl_user_can_manage() || !is_network_admin() ) {
+			    return;
+		    }
+		    if ( isset($_GET['page']) && $_GET['page'] === 'rlrsssl_really_simple_ssl' ){
+			    wp_redirect(add_query_arg(['page' => 'really-simple-security'], network_admin_url('settings.php') ) );
+			    exit;
+		    }
+	    }
 
 	    /**
 	     *
@@ -79,7 +96,7 @@ if (!class_exists('rsssl_multisite')) {
 	     *
 	     * @return array
 	     */
-        public function add_multisite_notices( array $notices) {
+        public function add_multisite_notices( array $notices): array {
             $unset_array = array(
                 'mixed_content_fixer_detected',
                 'elementor',
@@ -125,7 +142,7 @@ if (!class_exists('rsssl_multisite')) {
 			        'true' => array(
 				        'title' => __("SSL activation in progress", "really-simple-ssl"),
 				        'msg' => __('A networkwide SSL activation process has been started, but has not been completed. Please go to the SSL settings page to complete the process.', 'really-simple-ssl').'&nbsp;'.
-				                 '<a href="'.add_query_arg(['page'=>'really-simple-security'],admin_url('options-general.php')).'">'.__('View settings page','really-simple-ssl').'</a>',
+				                 '<a href="'.add_query_arg(['page'=>'really-simple-security'], network_admin_url('settings.php') ).'">'.__('View settings page','really-simple-ssl').'</a>',
 				        'icon' => 'warning',
 				        'plusone' => true,
 				        'admin_notice' => true,
@@ -182,14 +199,15 @@ if (!class_exists('rsssl_multisite')) {
 
 	    /**
          * Add settings link on plugins overview page
+	     *
 	     * @param array $links
-         * @since  2.0
+         *
+         * @return array
+	     * @since  2.0
 	     * @access public
-	     * @return array
 	     */
 
-	    public function plugin_settings_link($links)
-	    {
+	    public function plugin_settings_link(array $links): array {
 		    $url = add_query_arg(array('page' => 'really-simple-security'), network_admin_url('settings.php') );
 		    $settings_link = '<a href="' . $url . '">' . __("Settings", "really-simple-ssl") . '</a>';
 		    array_unshift($links, $settings_link);
@@ -207,7 +225,7 @@ if (!class_exists('rsssl_multisite')) {
 	    /**
          * When a new site is added, maybe activate SSL as well.
          *
-	     * @param int $blog_id
+	     * @param int  $blog_id
 	     * @param bool $user_id
 	     * @param bool $domain
 	     * @param bool $path
@@ -215,7 +233,7 @@ if (!class_exists('rsssl_multisite')) {
 	     * @param bool $meta
 	     */
 
-        public function maybe_activate_ssl_in_new_blog_deprecated($blog_id, $user_id=false, $domain=false, $path=false, $site_id=false, $meta=false)
+        public function maybe_activate_ssl_in_new_blog_deprecated( int $blog_id, $user_id=false, $domain=false, $path=false, $site_id=false, $meta=false)
         {
 	        if ( get_site_option('rsssl_network_activation_status' === 'completed') ) {
                 $site = get_blog_details($blog_id);
@@ -566,7 +584,8 @@ if (!class_exists('rsssl_multisite')) {
 			        $notice = $notice['output'];
 			        $class = ( $notice['status'] !== 'completed' ) ? 'error' : 'updated';
 			        $more_info = isset($notice['url']) ? $notice['url'] : false;
-			        echo RSSSL()->admin->notice_html( $class.' '.$id, $notice['title'], $notice['msg'] ,$more_info);
+			        $dismiss_id = isset($notice['dismissible']) && $notice['dismissible'] ? $id : false;
+			        echo RSSSL()->admin->notice_html( $class.' '.$id, $notice['title'], $notice['msg'] ,$more_info, $dismiss_id);
 		        }
             }
         }

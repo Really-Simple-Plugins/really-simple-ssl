@@ -4,6 +4,16 @@ defined( 'ABSPATH' ) or die( );
  * Back-end available only
  */
 
+if ( !function_exists('rsssl_admin_url')) {
+	/**
+	 * Get admin url, adjusted for multisite
+	 * @return string|null
+	 */
+	function rsssl_admin_url(){
+		return is_multisite() && is_network_admin() ? network_admin_url('settings.php') : admin_url("options-general.php");
+	}
+}
+
 if ( !function_exists('rsssl_remove_htaccess_security_edits') ) {
 	/**
 	 * Clean up on deactivation

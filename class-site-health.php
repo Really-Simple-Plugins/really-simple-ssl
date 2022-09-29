@@ -85,7 +85,7 @@ if ( !class_exists("rsssl_site_health") ) {
 				'actions'     => sprintf(
 					'<p><a href="%s" target="_blank" rel="noopener">%s <span class="screen-reader-text">%s</span><span aria-hidden="true" class="dashicons dashicons-external"></span></a></p>',
 					/* translators: Documentation explaining debugging in WordPress. */
-					esc_url( __( add_query_arg(array('page'=>'really-simple-security#settings/hardening'), admin_url('options-general.php') ) ) ),
+					esc_url( __( add_query_arg(array('page'=>'really-simple-security#settings/hardening'), rsssl_admin_url() ) ) ),
 					__( 'Remove from public location with Really Simple SSL', 'really-simple-ssl' ),
 					/* translators: Accessibility text. */
 					__( '(opens in a new tab)' )
@@ -170,11 +170,7 @@ if ( !class_exists("rsssl_site_health") ) {
 		 * @return array
 		 */
 		public function health_test() {
-			if ( is_multisite() && is_super_admin() ){
-				$url = add_query_arg(array('page' => 'really-simple-ssl'), network_admin_url('settings.php'));
-			} else {
-				$url = add_query_arg(array('page' => 'really-simple-security'), admin_url("options-general.php") );
-			}
+			$url = add_query_arg(array('page' => 'really-simple-security'), rsssl_admin_url() );
 
 			$result = array(
 				'label'       => __( '301 SSL redirect enabled', 'really-simple-ssl' ),

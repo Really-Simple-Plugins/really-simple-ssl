@@ -27,7 +27,7 @@ function rsssl_plugin_admin_scripts() {
         'rsssl_settings',
         apply_filters('rsssl_localize_script',[
             'site_url' => get_rest_url(),
-            'dashboard_url' => add_query_arg(['page' => 'really-simple-security'],admin_url('options-general.php') ),
+            'dashboard_url' => add_query_arg(['page' => 'really-simple-security'], rsssl_admin_url() ),
             'letsencrypt_url' => rsssl_letsencrypt_wizard_url(),
             'upgrade_link' => is_multisite() ? 'https://really-simple-ssl.com/pro-multisite' : 'https://really-simple-ssl.com/pro',
             'plugin_url' => rsssl_url,

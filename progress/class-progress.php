@@ -108,6 +108,17 @@ class rsssl_progress {
 		return count($premium_notices) ;
 	}
 
+	public function dismiss_from_admin_notice(){
+		if ( !rsssl_user_can_manage() ) {
+			return;
+		}
+
+		if (isset($_GET['dismiss_notice'])) {
+			$id = sanitize_title($_GET['dismiss_notice']);
+			$this->dismiss_task($id);
+		}
+	}
+
 	/**
 	 * Process the react dismissal of a task
 	 *

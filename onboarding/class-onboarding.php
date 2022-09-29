@@ -86,13 +86,8 @@ class rsssl_onboarding {
 		if ( get_transient('rsssl_redirect_to_settings_page' ) ) {
 			delete_transient('rsssl_redirect_to_settings_page' );
 			if ( !RSSSL()->admin->is_settings_page() ) {
-				if ( is_multisite() && is_super_admin() && rsssl_is_networkwide_active() ) {
-					wp_redirect( add_query_arg(array('page' => 'really-simple-security'), network_admin_url('settings.php') )  );
-					exit;
-				} else {
-					wp_redirect( add_query_arg(array('page'=>'really-simple-security#dashboard'), admin_url('options-general.php') ) );
-					exit;
-				}
+				wp_redirect( add_query_arg(array('page' => 'really-simple-security'), rsssl_admin_url() ) );
+				exit;
 			}
 		}
 	}

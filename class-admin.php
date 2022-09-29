@@ -31,6 +31,7 @@ class rsssl_admin
 	    //add the settings page for the plugin
 	    add_action('admin_enqueue_scripts', array($this, 'enqueue_assets'));
 	    add_action('admin_init', array($this, 'listen_for_deactivation'), 40);
+	    add_action('plugins_loaded', array($this, 'maybe_redirect_old_settings_url'), 10);
 
 	    $plugin = rsssl_plugin;
 	    add_filter("plugin_action_links_$plugin", array($this, 'plugin_settings_link'));
@@ -70,6 +71,21 @@ class rsssl_admin
     static function this()
     {
         return self::$_this;
+    }
+
+	/**
+     * Redirect to the new settings page
+     *
+	 * @return void
+	 */
+    public function maybe_redirect_old_settings_url(){
+        if ( !rsssl_user_can_manage() || is_multisite() ) {
+            return;
+        }
+        if ( isset($_GET['page']) && $_GET['page'] === 'rlrsssl_really_simple_ssl' ){
+            wp_redirect(add_query_arg(['page' => 'really-simple-security'], rsssl_admin_url() ));
+            exit;
+        }
     }
 
     public function _get($var){
@@ -379,10 +395,11 @@ class rsssl_admin
     }
 
 	/**
-	 * @param string $class
-	 * @param string $title
-	 * @param string $content
-	 * @param string|bool $footer
+	 * @param string      $class
+	 * @param string      $content
+	 * @param string|bool $more_info
+	 * @param string|bool $dismiss_id
+	 *
 	 * @return false|string
 	 *
 	 * @since 4.0
@@ -390,8 +407,9 @@ class rsssl_admin
 	 *
 	 */
 
-	public function notice_html( $class, $content, $more_info=false ) {
+	public function notice_html( string $class, string $content, $more_info=false, $dismiss_id=false ) {
 		$class .= ' notice ';
+        $target = strpos($more_info, 'really-simple-ssl.com')!==false ? 'target="_blank"' : '';
 		ob_start();?>
             <style>
                 #rsssl-message {
@@ -434,7 +452,9 @@ class rsssl_admin
 					<?php echo $content ?>
                 </div>
                 <?php if ($more_info ) { ?>
-                    <div class="rsssl-admin-notice-more-info"><a class="button" target="_blank" href="<?php echo esc_url_raw($more_info)?>"><?php _e("More info", "really-simple-ssl")?></a></div>
+                    <div class="rsssl-admin-notice-more-info">
+                        <a class="button" href="<?php echo add_query_arg(['page'=>'really-simple-security', 'dismiss_notice'=>$dismiss_id], rsssl_admin_url() )?>"><?php _e("Dismiss", "really-simple-ssl")?></a>
+                        <a class="button" <?php echo $target?> href="<?php echo esc_url_raw($more_info)?>"><?php _e("More info", "really-simple-ssl")?></a></div>
                 <?php } ?>
             </div>
         </div>
@@ -1654,8 +1674,8 @@ class rsssl_admin
                         <div class="rsssl-buttons-row">
                             <a class="button button-primary" target="_blank"
                                href="https://wordpress.org/support/plugin/really-simple-ssl/reviews/#new-post"><?php _e('Leave a review', 'really-simple-ssl'); ?></a>
-                            <div class="dashicons dashicons-calendar"></div><a href="<?php echo esc_url(add_query_arg(array("page"=>"really-simple-security", "rsssl_review_notice"=>'later'),admin_url("options-general.php") ) );?>"><?php _e('Maybe later', 'really-simple-ssl'); ?></a>
-                            <div class="dashicons dashicons-no-alt"></div><a href="<?php echo esc_url(add_query_arg(array("page"=>"really-simple-security", "rsssl_review_notice"=>'dismiss'),admin_url("options-general.php") ) );?>"><?php _e('Don\'t show again', 'really-simple-ssl'); ?></a>
+                            <div class="dashicons dashicons-calendar"></div><a href="<?php echo esc_url(add_query_arg(array("page"=>"really-simple-security", "rsssl_review_notice"=>'later'), rsssl_admin_url() ) );?>"><?php _e('Maybe later', 'really-simple-ssl'); ?></a>
+                            <div class="dashicons dashicons-no-alt"></div><a href="<?php echo esc_url(add_query_arg(array("page"=>"really-simple-security", "rsssl_review_notice"=>'dismiss'), rsssl_admin_url() ) );?>"><?php _e('Don\'t show again', 'really-simple-ssl'); ?></a>
                         </div>
                     </div>
                 </div>
@@ -1677,7 +1697,7 @@ class rsssl_admin
         <script>
             document.addEventListener('click', e => {
                 if ( e.target.closest('.rsssl-review.notice.is-dismissible .notice-dismiss') ) {
-                    window.location.href='<?php echo esc_url_raw(add_query_arg( array( "page" => "really-simple-security", "rsssl_review_notice" => 'dismiss' ), admin_url( "options-general.php" ) ))?>';
+                    window.location.href='<?php echo esc_url_raw(add_query_arg( array( "page" => "really-simple-security", "rsssl_review_notice" => 'dismiss' ), rsssl_admin_url() ))?>';
                 }
             });
         </script>
@@ -1723,9 +1743,12 @@ class rsssl_admin
             $notice = $notice['output'];
             $class = ( $notice['status'] !== 'completed' ) ? 'error' : 'updated';
 	        $more_info = isset($notice['url']) ? $notice['url'] : false;
-	        echo $this->notice_html( $class.' '.$id, $notice['msg'], $more_info);
+	        $dismiss_id = isset($notice['dismissible']) && $notice['dismissible'] ? $id : false;
+	        echo $this->notice_html( $class.' '.$id, $notice['msg'], $more_info, $dismiss_id);
         }
     }
+
+
 
     /**
      *
@@ -1814,7 +1837,9 @@ class rsssl_admin
 
 	    //if we're on the settings page, we need to clear the admin notices transient, because this list won't get refreshed otherwise
 	    if ( $this->is_settings_page() ) {
-		    error_log("clear transients because on settings page ");
+            if ( !get_option('rsssl_6_notice_dismissed') ) {
+	            update_option('rsssl_6_notice_dismissed', true, false );
+            }
 		    delete_transient('rsssl_admin_notices');
 	    }
 
@@ -1898,7 +1923,7 @@ class rsssl_admin
                     'true' => array(
                         'title' => __("Major security issue!", "really-simple-ssl"),
                         'msg' => __("The 'force-deactivate.php' file has to be renamed to .txt. Otherwise your ssl can be deactivated by anyone on the internet.", "really-simple-ssl") .' '.
-                                 '<a href="'.add_query_arg(array('page'=>'really-simple-security'), admin_url('options-general.php')).'">'.__("Check again", "really-simple-ssl").'</a>',
+                                 '<a href="'.add_query_arg(array('page'=>'really-simple-security'), rsssl_admin_url() ).'">'.__("Check again", "really-simple-ssl").'</a>',
                         'icon' => 'warning',
                         'admin_notice' => true,
                         'plusone' => true,
@@ -1997,7 +2022,7 @@ class rsssl_admin
 		            'no-ssl-detected' => array(
 			            'title' => __("No SSL detected", "really-simple-ssl"),
 			            'msg' => __("No SSL detected. Use the retry button to check again.", "really-simple-ssl").
-			                     '<form class="rsssl-task-form"  action="" method="POST"><a href="'.add_query_arg(array("page" => "really-simple-security", "letsencrypt" => "1"),admin_url("options-general.php")) .'#letsencrypt" type="submit" class="button button-default  rsssl-button-small">'.__("Install SSL certificate", "really-simple-ssl").'</a>'.
+			                     '<form class="rsssl-task-form"  action="" method="POST"><a href="'.add_query_arg(array("page" => "really-simple-security", "letsencrypt" => "1"), rsssl_admin_url() ) .'#letsencrypt" type="submit" class="button button-default  rsssl-button-small">'.__("Install SSL certificate", "really-simple-ssl").'</a>'.
 			                     '<input type="submit" class="button button-default rsssl-button-small" value="'.__("Retry", "really-simple-ssl").'" id="rsssl_recheck_certificate" name="rsssl_recheck_certificate"></form>',
 			            'icon' => 'warning',
 			            'dismissible' => rsssl_get_option('ssl_enabled')
@@ -2005,7 +2030,7 @@ class rsssl_admin
 		            'no-response' => array(
 			            'title' => __("Could not test certificate", "really-simple-ssl"),
 			            'msg' => __("Automatic certificate detection is not possible on your server.", "really-simple-ssl").'<br>'.
-			                     '<a href="'.add_query_arg(array("page" => "really-simple-security", "letsencrypt"=>1),admin_url("options-general.php")) .'#letsencrypt" type="submit" class="button button-default  rsssl-button-small">'.__("Install SSL certificate", "really-simple-ssl").'</a>'.
+			                     '<a href="'.add_query_arg(array("page" => "really-simple-security", "letsencrypt"=>1), rsssl_admin_url()) .'#letsencrypt" type="submit" class="button button-default  rsssl-button-small">'.__("Install SSL certificate", "really-simple-ssl").'</a>'.
 			                     '<button class="button button-default rsssl-button-small" id="ssl-labs-check-button">'.__("Check manually", "really-simple-ssl").'</button>',
 			            'icon' => 'warning',
 			            'dismissible' => true,
@@ -2019,7 +2044,7 @@ class rsssl_admin
 			            'title' => __("Your SSL certificate will expire soon.", "really-simple-ssl"),
 			            'msg' => sprintf(__("SSL certificate will expire on %s.","really-simple-ssl"), $expiry_date).'&nbsp;'.__("If your hosting provider auto-renews your certificate, no action is required. Alternatively, you have the option to generate an SSL certificate with Really Simple SSL.","really-simple-ssl").'&nbsp;'.
                                  sprintf(__("Depending on your hosting provider, %smanual installation%s may be required.", "really-simple-ssl"),'<a target="_blank" href="https://really-simple-ssl.com/install-ssl-certificate">','</a>').
-			                     '<br><br><form action="" method="POST"><a href="'.add_query_arg(array("page" => "really-simple-security", "letsencrypt"=>1),admin_url("options-general.php")) .'#letsencrypt" type="submit" class="button button-default">'.__("Install SSL certificate", "really-simple-ssl").'</a>'.
+			                     '<br><br><form action="" method="POST"><a href="'.add_query_arg(array("page" => "really-simple-security", "letsencrypt"=>1), rsssl_admin_url() ) .'#letsencrypt" type="submit" class="button button-default">'.__("Install SSL certificate", "really-simple-ssl").'</a>'.
 			                     '&nbsp;<input type="submit" class="button button-default" value="'.__("Re-check", "really-simple-ssl").'" id="rsssl_recheck_certificate" name="rsssl_recheck_certificate"></form>',
 			            'icon' => 'warning',
 		            ),
@@ -2246,7 +2271,6 @@ class rsssl_admin
             'duplicate-ssl-plugins' => array(
 	            'condition'  => array('rsssl_detected_duplicate_ssl_plugin'),
 	            'callback' => '_true_',
-	            'plus_one' => true,
 	            'output' => array(
 		            'true' => array(
 			            'msg' => sprintf(__( 'We have detected the %s plugin on your website.', 'really-simple-ssl' ),rsssl_detected_duplicate_ssl_plugin(true)).'&nbsp;'.__( 'As Really Simple SSL handles all the functionality this plugin provides, we recommend to disable this plugin to prevent unexpected behaviour.', 'really-simple-ssl' ),
@@ -2262,12 +2286,28 @@ class rsssl_admin
                         'RSSSL()->admin->is_bf'
                 ),
 	            'callback' => '_true_',
-	            'plus_one' => true,
 	            'output' => array(
 		            'true' => array(
 			            'msg' => __( "Black Friday sale! Get 40% Off Really Simple SSL Pro", 'really-simple-ssl' ) ,
 			            'icon' => 'premium',
 			            'url' => $this->pro_url,
+			            'dismissible' => true,
+			            'plusone' => true,
+		            ),
+	            ),
+            ),
+
+            'upgraded_to_6' => array(
+	            'condition'  => array(
+                        'RSSSL()->admin->is_upgraded_to_6'
+                ),
+	            'callback' => '_true_',
+	            'output' => array(
+		            'true' => array(
+			            'msg' => __( "Thanks for updating to Really Simple SSL 6.0! Check out our new features on the settings page.", 'really-simple-ssl' ),
+			            'icon' => 'warning',
+			            'admin_notice' => true,
+			            'url' => add_query_arg(['page'=>'really-simple-security'], rsssl_admin_url() ),
 			            'dismissible' => true,
 			            'plusone' => true,
 		            ),
@@ -2382,6 +2422,10 @@ class rsssl_admin
 		    }
         }
 	    return $notices;
+    }
+
+    private function is_upgraded_to_6(){
+        return get_option('rsssl_show_onboarding') && !get_option('rsssl_6_notice_dismissed');
     }
 
 	/**
@@ -2664,7 +2708,7 @@ class rsssl_admin
 
                 <?php
                 $token = wp_create_nonce('rsssl_deactivate_plugin');
-                $deactivate_keep_ssl_link = admin_url("options-general.php?page=really-simple-security&action=uninstall_keep_ssl&token=" . $token);
+                $deactivate_keep_ssl_link = add_query_arg(['page'=>'really-simple-security', 'action'=>'uninstall_keep_ssl', 'token'=>$token], rsssl_admin_url() );
                 ?>
                 <div class="rsssl-deactivate-notice-footer">
                     <a class="button button-default" href="#" id="rsssl_close_tb_window"><?php _e("Cancel", "really-simple-ssl") ?></a>
@@ -2677,7 +2721,9 @@ class rsssl_admin
 
     /**
      * Add settings link on plugins overview page
+     *
      * @param array $links
+     *
      * @return array $links
      * @since  2.0
      *
@@ -2685,17 +2731,12 @@ class rsssl_admin
      *
      */
 
-    public function plugin_settings_link( $links )
-    {
-        if ( !rsssl_user_can_manage() ) {
+    public function plugin_settings_link( array $links ): array {
+        if ( !rsssl_user_can_manage() || ( is_multisite() && !is_network_admin() ) ) {
             return $links;
         }
 
-	    $url = admin_url("options-general.php?page=really-simple-security");
-	    if ( rsssl_is_networkwide_active() ) {
-		    $url = add_query_arg(array('page' => 'really-simple-security'), network_admin_url('settings.php') );
-	    }
-
+	    $url = add_query_arg(array('page' => 'really-simple-security'), rsssl_admin_url() );
 	    //settings only on network wide activated, or no multisite at all.
         if ( is_multisite() && rsssl_is_networkwide_active() && is_super_admin() ) {
 	        $settings_link = '<a href="' . $url . '">' . __("Settings", "really-simple-ssl") . '</a>';
