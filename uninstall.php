@@ -57,4 +57,29 @@ if (isset($settings['delete_data_on_uninstall']) && $settings['delete_data_on_un
 		delete_option( $option_name );
 		delete_site_option( $option_name );
 	}
+	$transients = [
+		"rsssl_xmlrpc_allowed",
+		"rsssl_http_methods_allowed",
+		"rsssl_code_execution_allowed_status",
+		"rsssl_directory_indexing_status",
+		"rsssl_wp_version_detected",
+		"rsssl_htaccess_test_success",
+		"rsssl_can_use_curl_headers_check",
+		"rsssl_curl_error",
+		"rsssl_mixed_content_fixer_detected",
+		"rsssl_admin_notices",
+		"rsssl_plusone_count",
+		"rsssl_testpage",
+		"rsssl_plugin_download_active",
+		"rsssl_le_generate_attempt_count",
+		"rsssl_alias_domain_available",
+		"rsssl_le_install_attempt_count",
+		"rsssl_cw_t",
+		"rsssl_cw_server_id",
+		"rsssl_redirect_to_settings_page",
+	];
+	foreach($transients as $transient) {
+		delete_transient( $transient );
+		delete_site_transient( $transient );
+	}
 }

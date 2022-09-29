@@ -1451,7 +1451,7 @@ class rsssl_admin
 	            //Fallback since most errors will be cURL errors, Error encountered while retrieving the webpage.
                 $result = 'error';
                 $error = $response->get_error_message();
-                set_transient('rsssl_curl_error' , $error, 600);
+                set_transient('rsssl_curl_error' , $error, DAY_IN_SECONDS );
                 if ( !empty($error) && (strpos($error, "cURL error") !== false ) ) {
                     $result = 'curl-error';
                 }
