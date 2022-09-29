@@ -36,6 +36,7 @@ function rsssl_get_option( string $name, $default=false ) {
  *
  * @return bool
  */
+
 function rsssl_is_networkwide_active(){
 	if ( !is_multisite() ) {
 		return false;
