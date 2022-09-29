@@ -118,10 +118,17 @@
     &.rsssl-settings{
       grid-template-columns: 350px 1fr 1fr 1fr;
     }
+    @media only screen and (max-width: $rsp-break-m)  {
+      grid-template-columns: repeat(2,1fr);
+      max-width:790px;
+    }
   }
 
   .rsssl-grid-item {
     @include rsssl-block;
+    &.rsssl-disabled {
+      min-height:200px;//add min height on disabled so the settings is visible behind the locked div.
+    }
     transition: all 1s ease;
     display: flex;
     flex-wrap: wrap;

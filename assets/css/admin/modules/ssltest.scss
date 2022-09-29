@@ -32,6 +32,9 @@
     &.rsssl-success {
       background: var(--rsp-green-faded);
     }
+    @media only screen and (max-width: $rsp-break-xxl) and (min-width: $rsp-break-m)  {
+      padding: 5px;
+    }
   }
 
   .rsssl-ssl-test {
@@ -41,6 +44,9 @@
     > div {
       flex: 1;
       background-color: #fff;
+      @media only screen and (max-width: $rsp-break-xxl) and (min-width: $rsp-break-m)  {
+        background-color:transparent
+      }
     }
 
     &-grade {
@@ -108,6 +114,7 @@
   .rsssl-details {
     margin: var(--rsp-spacing-m);
     display: flex;
+
     .rsssl-detail-icon {
       width: 30px;
       .rsssl-icon {
@@ -116,6 +123,9 @@
     }
     .rsssl-status-red {
       color: var(--rsp-red);
+    }
+    @media only screen and (max-width: $rsp-break-xxl) and (min-width: $rsp-break-m)  {
+      margin: var(--rsp-spacing-s);
     }
   }
 

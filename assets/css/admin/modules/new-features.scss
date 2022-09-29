@@ -11,6 +11,9 @@
     flex-direction: row;
     flex-wrap: wrap;
     gap: var(--rsp-spacing-xs);
+    @media only screen and (max-width: $rsp-break-xxl) and (min-width: $rsp-break-m)  {
+      gap: var(--rsp-spacing-xxs);
+    }
   }
   .rsssl-new-feature{
     width: 100%;
