@@ -405,8 +405,7 @@ if (!class_exists('rsssl_multisite')) {
         {
 			$ssl_was_enabled = rsssl_get_option('ssl_enabled');
 	        delete_site_option('rsssl_network_activation_status');
-	        delete_site_option('rsssl_options');
-
+	        update_option('ssl_enabled', false);
 			//main site first
 	        $site_id = get_main_site_id();
 			switch_to_blog($site_id);

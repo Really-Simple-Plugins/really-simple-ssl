@@ -4,8 +4,8 @@ defined('ABSPATH') or die();
 add_action('plugins_loaded', 'rsssl_upgrade', 20);
 function rsssl_upgrade() {
 	$prev_version = get_option( 'rsssl_current_version', false );
-	//not version change, skip upgrade.
-	if ($prev_version && version_compare( $prev_version, rsssl_version, '==' )){
+	//no version change, skip upgrade.
+	if ( get_option('rsssl_6_upgrade_completed') && ($prev_version && version_compare( $prev_version, rsssl_version, '==' )) ){
 		return;
 	}
 
@@ -53,15 +53,20 @@ function rsssl_upgrade() {
 		}
 	}
 
-	if ( $prev_version && version_compare( $prev_version, '6.0.0', '<' ) ) {
+	if (
+		!get_option('rsssl_6_upgrade_completed') ||
+		$prev_version && version_compare( $prev_version, '6.0.0', '<' )
+	) {
 		update_option('rsssl_show_onboarding', true, false);
 
 		//upgrade both site and network settings
 		$options = get_option( 'rlrsssl_options' );
-		$autoreplace_insecure_links = isset( $options['autoreplace_insecure_links'] ) ? $options['autoreplace_insecure_links'] : true;
-		rsssl_update_option('mixed_content_fixer', $autoreplace_insecure_links);
 		$ssl_enabled            = isset( $options['ssl_enabled'] ) ? $options['ssl_enabled'] : false;
 		rsssl_update_option('ssl_enabled', $ssl_enabled);
+
+		$autoreplace_insecure_links = isset( $options['autoreplace_insecure_links'] ) ? $options['autoreplace_insecure_links'] : true;
+		rsssl_update_option('mixed_content_fixer', $autoreplace_insecure_links);
+
 		$wp_redirect  = isset( $options['wp_redirect'] ) ? $options['wp_redirect'] : false;
 		$htaccess_redirect = isset( $options['htaccess_redirect'] ) ? $options['htaccess_redirect'] : false;
 		$redirect = 'none;';
@@ -123,6 +128,7 @@ function rsssl_upgrade() {
 				}
 			}
 		}
+		update_option('rsssl_6_upgrade_completed', true, false);
 	}
 
 	//delete in future upgrade. We want to check the review notice dismissed as fallback still.
