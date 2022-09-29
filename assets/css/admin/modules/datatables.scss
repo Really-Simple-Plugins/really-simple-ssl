@@ -60,6 +60,10 @@
   }
 }
 
+//wp-core also adds an svg for the select dropdown, so we hide the one from the react datatables component
+nav.rdt_Pagination>div>svg {
+  display:none !important;
+}
 
 .rsssl-content_security_policy, .rsssl-xml_rpc {
   .rsssl-field-wrap >div >div {

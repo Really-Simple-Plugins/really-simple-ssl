@@ -111,8 +111,7 @@ class REALLY_SIMPLE_SSL
         if (!defined('rsssl_file') ){
             define('rsssl_file', __FILE__);
         }
-		$debug = defined('RSSSL_DEBUG') && RSSSL_DEBUG ? time() : '';
-		define('rsssl_version', '6.0.0'.$debug);
+		define('rsssl_version', '6.0.0');
 		define('rsssl_le_cron_generation_renewal_check', 20);
 		define('rsssl_le_manual_generation_renewal_check', 15);
 	}

@@ -2511,7 +2511,9 @@ class rsssl_admin
         }
 	    $min = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? '' : '.min';
         $rtl = is_rtl() ? 'rtl/' : '';
-	    wp_enqueue_style('rsssl-css', trailingslashit(rsssl_url) . "assets/css/{$rtl}admin{$min}.css", ['wp-components'], rsssl_version);
+        $url = trailingslashit(rsssl_url) . "assets/css/{$rtl}admin{$min}.css";
+        $path = trailingslashit(rsssl_path) . "assets/css/{$rtl}admin{$min}.css";
+	    wp_enqueue_style('rsssl-css', $url, ['wp-components'], filemtime($path));
     }
 
     /**
