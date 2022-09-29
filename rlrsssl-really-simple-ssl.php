@@ -176,16 +176,13 @@ class REALLY_SIMPLE_SSL
 		//prevent showing on edit screen, as gutenberg removes the class which makes it editable.
 		$screen = get_current_screen();
 		if ( $screen->base === 'post' ) return;
-
 		if ( self::has_old_addon('really-simple-ssl-pro/really-simple-ssl-pro.php') ||
-		     self::has_old_addon('really-simple-ssl-pro-multisite/really-simple-ssl-pro-multisite.php' ) ||
-		     self::has_old_addon('really-simple-ssl-social/really-simple-social.php' )
+		     self::has_old_addon('really-simple-ssl-pro-multisite/really-simple-ssl-pro-multisite.php' )
 		) {
 			?>
 			<div id="message" class="error notice really-simple-plugins">
-				<h1><?php echo __("Plugin dependency error","really-simple-ssl");?></h1>
-				<p><?php echo __("You have a premium add-on with a version that is not compatible with the >6.0 release of Really Simple SSL.","really-simple-ssl");?></p>
-                <p><?php echo sprintf(__("Please %supgrade%s to the latest version to be able use the full functionality of the plugin.","really-simple-ssl"),'<a href="https://really-simple-ssl.com/pro" target="_blank">','</a>');?></p>
+				<p><?php echo __("Really Simple SSL Pro needs to be updated to the latest version to be compatible.","really-simple-ssl");?></p>
+                <p><?php echo sprintf(__("Visit the plugins overview or %srenew your license%s.","really-simple-ssl"),'<a href="https://really-simple-ssl.com/pro" target="_blank">','</a>');?></p>
 			</div>
 			<?php
 		}
