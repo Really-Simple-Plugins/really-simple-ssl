@@ -5,7 +5,8 @@
   .rdt_TableHeadRow {
     .rdt_TableCol:last-child {
       flex-grow:0;
-      min-width:110px;
+      flex-direction: row-reverse;
+      //margin-right: 20px;
     }
   }
   .rdt_TableRow {
@@ -15,7 +16,6 @@
     padding:var(--rsp-spacing-xs) 0;
     .rdt_TableCell:last-child {
       flex-grow:0;
-      min-width:110px;
     }
     .rsssl-status-allowed, .rsssl-status-revoked{
       min-width:110px;
@@ -36,7 +36,7 @@
       min-width:initial;
     }
     .rdt_TableCol:nth-last-child(2) {
-      flex-direction: row-reverse;
+      //flex-direction: row-reverse;
     }
   }
 
@@ -50,8 +50,8 @@
       min-width:initial;
     }
     .rdt_TableCell:nth-last-child(2) {
-      flex-direction: row-reverse;
-      margin-right:10px;
+      //flex-direction: row-reverse;
+      //margin-right:10px;
     }
   }
 
@@ -69,5 +69,16 @@ nav.rdt_Pagination>div>svg {
   .rsssl-field-wrap >div >div {
     overflow-x:inherit;
     overflow-y:inherit;
+  }
+}
+
+.rsssl-permissions_policy {
+  .rdt_TableRow {
+    .rdt_TableCell:last-child {
+      min-width:150px;
+      .components-input-control__container {
+        min-width: 150px;
+      }
+    }
   }
 }

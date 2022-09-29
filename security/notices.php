@@ -29,6 +29,7 @@ function rsssl_general_security_notices( $notices ) {
 				'msg' => __("An option that requires the .htaccess file is enabled, but the file is not writable.", "really-simple-ssl").' '.__("Please add the following lines to your .htaccess, or set it to writable:", "really-simple-ssl").$code,
 				'icon' => 'warning',
 				'dismissible' => true,
+				'plusone' => true,
 				'url' => 'https://really-simple-ssl.com/manual/editing-htaccess/',
 			),
 			'not-exists' => array(
@@ -36,6 +37,7 @@ function rsssl_general_security_notices( $notices ) {
 				'msg' => __("An option that requires the .htaccess file is enabled, but the file does not exist.", "really-simple-ssl").' '.__("Please add the following lines to your .htaccess, or set it to writable:", "really-simple-ssl").$code,
 				'icon' => 'warning',
 				'dismissible' => true,
+				'plusone' => true,
 				'url' => 'https://really-simple-ssl.com/manual/editing-htaccess/',
 			),
 			'not-writable-uploads' => array(
@@ -43,6 +45,7 @@ function rsssl_general_security_notices( $notices ) {
 				'msg' => __("An option was enabled which requires the .htaccess in the uploads directory to get written, but the .htaccess or directory is not writable.", "really-simple-ssl").' '.__("Please add the following lines to your .htaccess, or set it to writable:", "really-simple-ssl").$code,
 				'icon' => 'warning',
 				'dismissible' => true,
+				'plusone' => true,
 				'url' => 'https://really-simple-ssl.com/manual/editing-htaccess/',
 			),
 		),

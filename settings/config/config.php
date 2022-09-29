@@ -1030,7 +1030,6 @@ function rsssl_fields( $load_values = true ) {
 			'disabled'      => false,
 			'default'       => false,
 			'data_source'   => [ 'RSSSL', 'placeholder', 'csp_data' ],
-			'data_endpoint' => [ "RSSSL_PRO", "rsssl_csp_backend", "update" ],
 			'columns'       => [
 				[
 					'name'     => __( 'Location', 'really-simple-ssl' ),

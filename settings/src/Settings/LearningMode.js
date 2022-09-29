@@ -30,7 +30,6 @@ class LearningMode extends Component {
             learning_mode_completed :0,
             filterValue: 0,
         };
-
     }
 
     componentDidMount() {
@@ -105,20 +104,26 @@ class LearningMode extends Component {
         if (typeof field.value === 'object') {
             field.value = Object.values(field.value);
         }
-        //find this item in the field list
+
+        //find this item in the field list and remove it.
         field.value.forEach(function(item, i) {
-            delete item.valueControl;
-            delete item.statusControl;
-            delete item.deleteControl;
             if (item.id === clickedItem.id) {
                 field.value.splice(i, 1);
             }
         });
 
+        //remove objects from values
+        for (const item of field.value){
+            delete item.valueControl;
+            delete item.statusControl;
+            delete item.deleteControl;
+        }
+
         //the updateItemId allows us to update one specific item in a field set.
         field.updateItemId = clickedItem.id;
         field.action = 'delete';
         let saveFields = [];
+
         saveFields.push(field);
         this.props.updateField(field.id, field.value);
         rsssl_api.setFields(saveFields).then(( response ) => {});
@@ -160,12 +165,13 @@ class LearningMode extends Component {
             });
             let data = field.value;
 
-            if (typeof data === 'object') {
+            if ( typeof data === 'object' ) {
                 data = Object.values(data);
             }
             if (!Array.isArray(data) ) {
                 data = [];
             }
+            data = data.filter(item => item.status<2);
             if (filterValue!=-1) {
                 data = data.filter(item => item.status==filterValue);
             }
@@ -173,7 +179,6 @@ class LearningMode extends Component {
                 item.login_statusControl = item.login_status == 1 ? __("success", "really-simple-ssl") : __("failed", "really-simple-ssl");
                 item.statusControl = <ChangeStatus item={item} onChangeHandlerDataTable={this.props.onChangeHandlerDataTable} />;
                 item.deleteControl = <Delete item={item} onDeleteHandler={this.onDeleteHandler} />;
-
             }
             const conditionalRowStyles = [
               {

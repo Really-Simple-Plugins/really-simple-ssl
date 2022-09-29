@@ -123,6 +123,7 @@ if (!class_exists('rsssl_multisite')) {
 	        );
 
 	        $notices['multisite_server_variable_warning'] = array(
+		        'condition' => array('rsssl_ssl_enabled'),
 		        'callback' => 'RSSSL()->multisite->multisite_server_variable_warning',
 		        'score' => 30,
 		        'output' => array(
@@ -130,7 +131,8 @@ if (!class_exists('rsssl_multisite')) {
 				        'msg' => __('You run a Multisite installation with subfolders, which prevents this plugin from fixing your missing server variable in the wp-config.php.', 'really-simple-ssl') . " "
                                 .__('Because the $_SERVER["HTTPS"] variable is not set, your website may experience redirect loops.', 'really-simple-ssl') . " "
                                 .__('Activate networkwide to fix this.', 'really-simple-ssl'),
-				        'icon' => 'warning'
+				        'icon' => 'warning',
+				        'plusone' => true,
 			        ),
 		        ),
 	        );
@@ -151,6 +153,7 @@ if (!class_exists('rsssl_multisite')) {
 	        );
 
 	        $notices['subdomains_no_wildcard'] = array(
+		        'condition' => array('rsssl_ssl_enabled'),
 		        'callback' => 'RSSSL()->multisite->subdomains_no_wildcard',
 		        'score' => 30,
 		        'output' => array(
@@ -160,6 +163,7 @@ if (!class_exists('rsssl_multisite')) {
 				                 . __("Activate SSL per site or install a wildcard certificate to fix this.", 'really-simple-ssl'),
 				        'icon' => 'warning',
 				        'dismissible' => true,
+				        'plusone' => true,
 			        ),
 		        ),
 	        );
