@@ -3,6 +3,50 @@ defined( 'ABSPATH' ) or die( );
 /**
  * Back-end available only
  */
+if ( !function_exists('rsssl_do_fix')) {
+
+	/**
+	 * Complete a fix for an issue, either user triggered, or automatic
+	 *
+	 * @param $fix
+	 *
+	 * @return void
+	 */
+	function rsssl_do_fix( $fix ) {
+		if ( ! rsssl_user_can_manage() ) {
+			return;
+		}
+
+		if ( ! rsssl_has_fix( $fix ) && function_exists( $fix ) ) {
+			$completed[] = $fix;
+			$fix();
+			$completed   = get_option( 'rsssl_completed_fixes', [] );
+			$completed[] = $fix;
+			update_option( 'rsssl_completed_fixes', $completed );
+		} elseif ( $fix && ! function_exists( $fix ) ) {
+			error_log( "Really Simple SSL: fix function $fix not found" );
+		}
+
+	}
+}
+if ( !function_exists('rsssl_has_fix')) {
+
+	/**
+	 * Check if this has been fixed already
+	 *
+	 * @param $fix
+	 *
+	 * @return bool
+	 */
+	function rsssl_has_fix( $fix ) {
+		$completed = get_option( 'rsssl_completed_fixes', [] );
+		if ( ! in_array( $fix, $completed ) ) {
+			return false;
+		}
+
+		return true;
+	}
+}
 
 if ( !function_exists('rsssl_admin_url')) {
 	/**
@@ -12,6 +56,44 @@ if ( !function_exists('rsssl_admin_url')) {
 	function rsssl_admin_url(){
 		return is_multisite() && is_network_admin() ? network_admin_url('settings.php') : admin_url("options-general.php");
 	}
+}
+
+if ( !function_exists('rsssl_maybe_clear_transients')) {
+	/**
+	 * If the corresponding setting has been changed, clear the test cache and re-run it.
+	 *
+	 * @return void
+	 */
+	function rsssl_maybe_clear_transients( $field_id, $field_value, $prev_value, $field_type ) {
+		if ( $field_id === ' mixed_content_fixer' && $field_value ) {
+			delete_transient( 'rsssl_can_use_curl_headers_check' );
+			delete_transient( 'rsssl_mixed_content_fixer_detected' );
+			RSSSL()->admin->mixed_content_fixer_detected();
+		}
+		if ( $field_id === 'disable_http_methods' ) {
+			delete_transient( 'rsssl_http_methods_allowed' );
+			rsssl_http_methods_allowed();
+		}
+		if ( $field_id === 'xmlrpc' ) {
+			delete_transient( 'rsssl_xmlrpc_allowed' );
+			rsssl_xmlrpc_allowed();
+		}
+		if ( $field_id === 'disable_indexing' ) {
+			delete_transient( 'rsssl_directory_indexing_status' );
+			rsssl_directory_indexing_allowed();
+		}
+		if ( $field_id === 'block_code_execution_uploads' ) {
+			delete_transient( 'rsssl_code_execution_allowed_status' );
+			rsssl_code_execution_allowed();
+		}
+		if ( $field_id === 'hide_wordpress_version' ) {
+			delete_transient( 'rsssl_wp_version_detected' );
+			rsssl_src_contains_wp_version();
+		}
+
+	}
+
+	add_action( "rsssl_after_save_field", 'rsssl_maybe_clear_transients', 100, 4 );
 }
 
 if ( !function_exists('rsssl_remove_htaccess_security_edits') ) {

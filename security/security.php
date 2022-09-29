@@ -27,15 +27,15 @@ class REALLY_SIMPLE_SECURITY
 	private function includes()
 	{
 		$path = rsssl_path.'security/';
-		require_once( $path . 'functions.php' );
 		require_once( $path . 'cron.php' );
-		require_once( $path . 'deactivate-integration.php' );
-		require_once( $path . 'integrations.php');
+		require_once( $path . 'integrations.php' );
 
 		/**
 		 * Load only on back-end
 		 */
 		if ( rsssl_is_logged_in_rest() || is_admin() || wp_doing_cron() || defined('RSSSL_LEARNING_MODE')  ) {
+			require_once( $path . 'functions.php' );
+			require_once( $path . 'deactivate-integration.php' );
 			require_once( $path . 'firewall-manager.php' );
 			require_once( $path . 'tests.php' );
 			require_once( $path . 'notices.php' );

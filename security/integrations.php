@@ -100,6 +100,7 @@ function rsssl_is_integration_enabled( $plugin, $details ) {
 	}
 
 	//if an integration was just enabled, we keep it enabled until it removes itself from the list.
+	//only for admin users
 	if ( rsssl_is_in_deactivation_list($plugin) ) {
 		return true;
 	}
@@ -152,75 +153,19 @@ add_action( 'plugins_loaded', 'rsssl_integrations', 10 );
 add_action( 'rsssl_after_saved_fields', 'rsssl_integrations', 20 );
 
 /**
- * Complete a fix for an issue, either user triggered, or automatic
- * @param $fix
+ * Check if a plugin is on the deactivation list
  *
- * @return void
- */
-function rsssl_do_fix($fix){
-	if ( !rsssl_user_can_manage()) {
-		return;
-	}
-
-	if ( !rsssl_has_fix($fix) && function_exists($fix)) {
-		$completed[]=$fix;
-		$fix();
-		$completed = get_option('rsssl_completed_fixes', []);
-		$completed[] = $fix;
-		update_option('rsssl_completed_fixes', $completed );
-	} elseif ($fix && !function_exists($fix) ) {
-		error_log("Really Simple SSL: fix function $fix not found");
-	}
-
-}
-
-/**
- * Check if this has been fixed already
- *
- * @param $fix
+ * @param string $plugin
  *
  * @return bool
  */
-function rsssl_has_fix($fix){
-	$completed = get_option('rsssl_completed_fixes', []);
-	if ( !in_array($fix, $completed)) {
+function rsssl_is_in_deactivation_list( string $plugin ): bool {
+	if ( !is_admin() || !is_user_logged_in() ) {
 		return false;
 	}
-	return true;
+
+	if ( !is_array(get_option('rsssl_deactivate_list',[]))){
+		delete_option('rsssl_deactivate_list');
+	}
+	return in_array($plugin, get_option('rsssl_deactivate_list',[]) );
 }
-
-/**
- * If the corresponding setting has been changed, clear the test cache and re-run it.
- * @return void
- */
-function rsssl_maybe_clear_transients($field_id, $field_value, $prev_value, $field_type ){
-
-
-	if ( $field_id===' mixed_content_fixer' && $field_value ){
-		delete_transient( 'rsssl_can_use_curl_headers_check' );
-		delete_transient('rsssl_mixed_content_fixer_detected');
-		RSSSL()->admin->mixed_content_fixer_detected();
-	}
-	if ( $field_id==='disable_http_methods' ){
-		delete_transient('rsssl_http_methods_allowed');
-		rsssl_http_methods_allowed();
-	}
-	if ( $field_id==='xmlrpc' ){
-		delete_transient('rsssl_xmlrpc_allowed');
-		rsssl_xmlrpc_allowed();
-	}
-	if ( $field_id==='disable_indexing' ){
-		delete_transient('rsssl_directory_indexing_status');
-		rsssl_directory_indexing_allowed();
-	}
-	if ( $field_id==='block_code_execution_uploads' ){
-		delete_transient('rsssl_code_execution_allowed_status');
-		rsssl_code_execution_allowed();
-	}
-	if ( $field_id==='hide_wordpress_version' ){
-		delete_transient('rsssl_wp_version_detected');
-		rsssl_src_contains_wp_version();
-	}
-
-}
-add_action( "rsssl_after_save_field", 'rsssl_maybe_clear_transients', 100, 4 );
