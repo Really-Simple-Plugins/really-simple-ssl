@@ -89,7 +89,8 @@ function rsssl_general_security_notices( $notices ) {
 			'true' => array(
 				'highlight_field_id' => 'change_debug_log_location',
 				'title' => __("Debugging", "really-simple-ssl"),
-				'msg' => __("Your site logs information to a public debugging file.", "really-simple-ssl"),
+				'msg' => __("Your site logs information to a public debugging file", "really-simple-ssl"),
+				'url' => 'https://really-simple-ssl.com/instructions/about-hardening-features/',
 				'icon' => 'premium',
 				'dismissible' => true,
 			),
