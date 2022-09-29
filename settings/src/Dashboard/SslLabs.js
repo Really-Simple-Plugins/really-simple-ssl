@@ -406,7 +406,7 @@ const SslLabs = (props) => {
                 <div className="rsssl-detail-icon"><Icon name = "info" color = {sslStatusColor} /></div>
                 <div className={"rsssl-detail rsssl-status-"+sslStatusColor}>
                 { hasErrors && <>{errorMessage}</>}
-                { !hasErrors && <> {__("What does my score mean?", "really-simple-ssl") }&nbsp;<a href={url} target="_blank">{__("Read more", "really-simple-ssl")}</a></>}
+                { !hasErrors && <> {__("What does my score mean?", "really-simple-ssl") }&nbsp;<a href="https://really-simple-ssl.com/instructions/about-ssl-labs/" target="_blank">{__("Read more", "really-simple-ssl")}</a></>}
                 </div>
             </div>
             <div className="rsssl-details">

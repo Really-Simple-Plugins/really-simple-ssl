@@ -37,6 +37,6 @@
   }
   .rsssl-current-scan-action, .rsssl-mixed-content-description {
     margin:10px 5px;
-    font-size:16px;
+    font-size: var(--rsp-fs-300);
   }
 }
