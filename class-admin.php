@@ -2305,7 +2305,7 @@ class rsssl_admin
 	            'output' => array(
 		            'true' => array(
 			            'msg' => __( "Thanks for updating to Really Simple SSL 6.0! Check out our new features on the settings page.", 'really-simple-ssl' ),
-			            'icon' => 'warning',
+			            'icon' => 'open',
 			            'admin_notice' => true,
 			            'url' => add_query_arg(['page'=>'really-simple-security'], rsssl_admin_url() ),
 			            'dismissible' => true,
