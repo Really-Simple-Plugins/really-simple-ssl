@@ -20,15 +20,14 @@ function rsssl_disable_fields($field, $field_id){
 					$field['value'] = true;
 					$field['disabled'] = true;
 				}
-			} else {
+			} else if ( !rsssl_debug_log_value_is_default() ) {
 				if ( !$field['value'] ) {
 					$field['value'] = true;
 					$field['disabled'] = true;
 				}
 			}
-
 			//if not the defaul location
-			if ( !rsssl_get_debug_log_value() ) {
+			if ( rsssl_is_debugging_enabled() && !rsssl_debug_log_value_is_default() ) {
 				$field['help'] = [
 					'label' => 'default',
 					'title' => __( "Debugging", 'really-simple-ssl' ),
@@ -44,10 +43,6 @@ function rsssl_disable_fields($field, $field_id){
 		if ( !rsssl_directory_indexing_allowed() && !$field['value']) {
 			$field['value'] = true;
 			$field['disabled'] = true;
-			// $field['help'] = [
-			// 	'label' => 'default',
-			// 	'text' => __( "Directory browsing is already disabled.", 'really-simple-ssl' ),
-			// ];
 		}
 	}
 

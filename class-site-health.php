@@ -51,7 +51,7 @@ if ( !class_exists("rsssl_site_health") ) {
 		public function add_rsssl_debug_log_notice( $tests ) {
 
 			unset( $tests['direct']['debug_enabled'] );
-			if ( rsssl_is_debugging_enabled() && rsssl_get_debug_log_value()==='true' ) {
+			if ( rsssl_is_debugging_enabled() && rsssl_debug_log_value_is_default() ) {
 				$tests['direct']['rsssl_debug_log'] = array(
 					'test' => array( $this, "rsssl_site_health_debug_log_test" ),
 				);

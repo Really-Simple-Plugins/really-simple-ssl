@@ -219,6 +219,15 @@ function rsssl_is_debugging_enabled() {
 	return ( defined('WP_DEBUG') && WP_DEBUG && defined('WP_DEBUG_LOG') && WP_DEBUG_LOG );
 }
 
+function rsssl_debug_log_value_is_default(){
+	$value = rsssl_get_debug_log_value();
+	if ( $value === 'true') {
+		return true;
+	} else {
+		//'false' or a location. both not default.
+		return false;
+	}
+}
 
 /**
  * Get value of debug_log constant

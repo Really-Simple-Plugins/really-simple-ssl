@@ -7,10 +7,10 @@
     font-size: var(--rsp-fs-200);
     .rsssl-help-more-info {
         display: flex;
-        flex-direction: row-reverse;
+        flex-direction: row;
         margin-top: 12px;
     }
-    summary{
+    summary {
 
       display: grid;
       grid-template-columns: 1fr auto;
