@@ -309,7 +309,7 @@ class rsssl_admin
 	    if ( !rsssl_user_can_manage()) {
             return;
 	    }
-        if (isset($_POST['rsssl_recheck_certificate']) || isset($_GET['rsssl_recheck_certificate'])) {
+        if ( isset($_POST['rsssl_recheck_certificate']) ) {
 	        delete_transient('rsssl_certinfo');
         }
     }

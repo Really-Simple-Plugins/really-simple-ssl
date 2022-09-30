@@ -206,7 +206,7 @@ class rsssl_onboarding {
 		}
 
 		//don't show in our Let's Encrypt wizard
-		if ( isset( $_GET['tab'] ) && $_GET['tab'] === 'letsencrypt' ) {
+		if ( isset( $_GET['letsencrypt'] ) ) {
 			return false;
 		}
 
