@@ -3325,6 +3325,19 @@ class rsssl_admin extends rsssl_front_end
 	            ),
             ),
 
+            'unsupported_addons_soc' => array(
+	            'callback' => 'RSSSL()->really_simple_ssl->unsupported_addons',
+	            'score' => 5,
+	            'output' => array(
+		            'true' => array(
+			            'url' => 'https://really-simple-ssl.com/meet-really-simple-ssl-6/',
+			            'msg' => __("You are using Really Simple SSL social, which is no longer supported as of version 6.0. If you want to keep using it, please do not update to 6.0", "really-simple-ssl"),
+			            'icon' => 'warning',
+			            'dismissible' => true
+		            ),
+	            ),
+            ),
+
             'divi' => array(
 	            'condition' => array( 'rsssl_ssl_activation_time_no_longer_then_3_days_ago'),
 	            'callback' => 'rsssl_uses_divi',
@@ -3660,6 +3673,10 @@ class rsssl_admin extends rsssl_front_end
 	        }
         }
 	    return sanitize_text_field($output);
+    }
+
+    public function unsupported_addons(){
+        return defined('rsssl_soc_version');
     }
 
     /**
