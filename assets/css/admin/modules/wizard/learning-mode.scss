@@ -1,3 +1,11 @@
+.rsssl-learningmode-placeholder {
+  height:150px;
+  div {
+    background-color:var(--rsp-grey-200);
+    margin:10px 0;
+    height:20px;
+  }
+}
 
 .rsssl-learning-mode-delete {
   cursor: pointer;

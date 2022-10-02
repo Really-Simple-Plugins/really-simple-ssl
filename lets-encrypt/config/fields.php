@@ -403,10 +403,10 @@ function rsssl_le_add_fields($fields) {
 				'react_conditions' => [
 					'relation' => 'OR',
 					[
-						'plesk_password' => 'NOT EMPTY',
-						'cloudways_api_key' => 'NOT EMPTY',
-						'directadmin_password' => 'NOT EMPTY',
-						'cpanel_password' => 'NOT EMPTY',
+						'!plesk_password' => 'EMPTY',
+						'!cloudways_api_key' => 'EMPTY',
+						'!directadmin_password' => 'EMPTY',
+						'!cpanel_password' => 'EMPTY',
 					]
 				],
 				'server_conditions' => [

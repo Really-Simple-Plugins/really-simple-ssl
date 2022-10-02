@@ -211,17 +211,24 @@ class LearningMode extends Component {
              return (
                 <>
                     <div className={ this.highLightClass}>
-                        <DataTable
-                            columns={columns}
-                            data={data}
-                            dense
-                            pagination
-                            noDataComponent={__("No results", "really-simple-ssl")}
-                            persistTableHead
-                            theme="really-simple-plugins"
-                            customStyles={customStyles}
-                            conditionalRowStyles={conditionalRowStyles}
-                        />
+                        {data.length==0 && <>
+                            <div className="rsssl-learningmode-placeholder">
+                                <div></div><div></div><div></div><div></div>
+                            </div>
+                        </>}
+                        {data.length>0 && <>
+                            <DataTable
+                                columns={columns}
+                                data={data}
+                                dense
+                                pagination
+                                noDataComponent={__("No results", "really-simple-ssl")}
+                                persistTableHead
+                                theme="really-simple-plugins"
+                                customStyles={customStyles}
+                                conditionalRowStyles={conditionalRowStyles}
+                            /></>
+                        }
                       <div className="rsssl-learning-mode-footer">
 
                         <div className="rsssl-learningmode-toggle">
@@ -252,7 +259,7 @@ class LearningMode extends Component {
                                 <a className="rsssl-learning-mode-link" href="#" onClick={ (e) => this.toggleLearningMode(e) }>{__("Review the settings and enforce the policy", "really-simple-ssl") }</a>
                             </div>
                         </div>}
-                        { rsssl_settings.pro_plugin_active && field.disabled && <div className="rsssl-locked">
+                        { rsssl_settings.pro_plugin_active && this.props.disabled && <div className="rsssl-locked">
                             <div className="rsssl-locked-overlay">
                                 <span className="rsssl-progress-status rsssl-disabled">{__("disabled ","really-simple-ssl")}</span>
                                 {disabledString}

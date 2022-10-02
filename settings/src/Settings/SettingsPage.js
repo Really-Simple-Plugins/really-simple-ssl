@@ -230,9 +230,6 @@ class SettingsPage extends Component {
                                     thisConditionApplies = actualValue === conditionValue;
                                 } else {
                                     if (conditionValue.indexOf('EMPTY')!==-1){
-                                        if (conditionValue.indexOf('NOT ')!==-1) {
-                                            invert=true;
-                                        }
                                         thisConditionApplies = conditionFields[0].value.length===0;
                                     } else {
                                         thisConditionApplies = conditionFields[0].value.toLowerCase() === conditionValue.toLowerCase();

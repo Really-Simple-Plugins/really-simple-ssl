@@ -270,7 +270,7 @@ class Field extends Component {
         if ( field.type==='permissionspolicy' ) {
             return (
                 <div className={this.highLightClass}>
-                  <PermissionsPolicy onChangeHandlerDataTable={this.onChangeHandlerDataTable} updateField={this.props.updateField} field={this.props.field} options={options} highLightClass={this.highLightClass} fields={fields}/>
+                  <PermissionsPolicy disabled={disabled} onChangeHandlerDataTable={this.onChangeHandlerDataTable} updateField={this.props.updateField} field={this.props.field} options={options} highLightClass={this.highLightClass} fields={fields}/>
                 </div>
             )
         }
@@ -278,7 +278,7 @@ class Field extends Component {
         if ( field.type==='learningmode' ) {
             return(
                 <div className={this.highLightClass}>
-                  <LearningMode onChangeHandlerDataTable={this.onChangeHandlerDataTable} updateField={this.props.updateField} field={this.props.field} options={options} highLightClass={this.highLightClass} fields={fields}/>
+                  <LearningMode disabled={disabled} onChangeHandlerDataTable={this.onChangeHandlerDataTable} updateField={this.props.updateField} field={this.props.field} options={options} highLightClass={this.highLightClass} fields={fields}/>
                 </div>
             )
         }
