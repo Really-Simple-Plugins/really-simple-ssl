@@ -23,6 +23,7 @@ class Settings extends Component {
     componentDidMount(){
         this.toggleNotices = this.toggleNotices.bind(this);
         this.saveAndContinue = this.saveAndContinue.bind(this);
+        this.save = this.save.bind(this);
     }
 
     toggleNotices(){
@@ -33,6 +34,10 @@ class Settings extends Component {
         this.setState({
             noticesExpanded:!noticesExpanded,
         });
+    }
+
+    save(){
+        this.props.save();
     }
 
     saveAndContinue(){
@@ -143,7 +148,7 @@ class Settings extends Component {
                         }
                         <button
                             className="button button-primary"
-                            onClick={ this.props.save }>
+                            onClick={ this.save }>
                             { btnSaveText }
                         </button>
                         {/*This will be shown only if current step is not the last one*/}

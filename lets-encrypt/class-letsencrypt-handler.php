@@ -1391,6 +1391,13 @@ class rsssl_letsencrypt_handler {
 		}
 	}
 
+	/**
+	 * Check for openbasedir restrictions
+	 *
+	 * @param string $path
+	 *
+	 * @return bool
+	 */
 	private function openbasedir_restriction($path){
 
 		// Default error handler is required
