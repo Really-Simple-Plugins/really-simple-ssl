@@ -16,7 +16,7 @@ if ( ! class_exists( 'rsssl_front_end' ) ) {
 
             self::$_this = $this;
 	        $this->ssl_enabled = rsssl_get_option('ssl_enabled');
-	        $this->wp_redirect = rsssl_get_option('redirect') === 'wp_redirect';
+	        $this->wp_redirect = rsssl_get_option('redirect', 'redirect') === 'wp_redirect';
 			add_action('rest_api_init', array($this, 'wp_rest_api_force_ssl'), ~PHP_INT_MAX);
         }
 
