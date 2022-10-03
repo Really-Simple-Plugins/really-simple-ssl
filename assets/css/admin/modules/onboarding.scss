@@ -3,20 +3,20 @@
   .rsssl-logo {
     height: 26px;
   }
-  #rsssl-message li {
-    display: flex;
-    align-items: flex-start;
-    margin-bottom: var(--rsp-spacing-xs);
-    .rsssl-icon{
-      margin-top: 7px;
-      margin-right:7px;
-    }
-  }
   .rsssl-modal-content{
     padding-top: var(--rsp-spacing-xs);
     line-height: 2.2;
     ul{
       margin-bottom: var(--rsp-spacing-m);
+      li {
+        display: flex;
+        align-items: flex-start;
+        margin-bottom: var(--rsp-spacing-xs);
+        .rsssl-icon{
+          margin-top: 7px;
+          margin-right:7px;
+        }
+      }
     }
   }
   .rsssl-modal-content-step-footer {

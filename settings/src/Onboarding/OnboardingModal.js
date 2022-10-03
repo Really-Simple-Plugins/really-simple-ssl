@@ -47,7 +47,7 @@ const OnboardingModal = (props) => {
                         </button>
                     </div>
 
-                    <div className="rsssl-modal-content" id="rsssl-message">
+                    <div className="rsssl-modal-content">
                         { !props.isAPILoaded &&
                              <>
                                 <ul>
