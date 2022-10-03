@@ -30,13 +30,15 @@
       height: 100%;
     }
   }
-
-  .rsssl-header-left {
-    display: flex;
-    font-size: var(--rsp-fs-400);
+  .rsssl-logo {
     @media(max-width: $rsp-break-xxs) {
       display:none;
     }
+  }
+  .rsssl-header-left {
+    display: flex;
+    font-size: var(--rsp-fs-400);
+
     @media(max-width: $rsp-break-s) {
       justify-content: center;
       margin: var(--rsp-spacing-xs) 0;

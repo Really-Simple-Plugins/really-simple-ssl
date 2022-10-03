@@ -229,15 +229,15 @@
     }
 }
 
+@media (max-width: 576px) {
+    .rsssl .rsssl-logo {
+        display: none;
+    }
+}
+
 .rsssl .rsssl-header-left {
     display: flex;
     font-size: var(--rsp-fs-400);
-}
-
-@media (max-width: 576px) {
-    .rsssl .rsssl-header-left {
-        display: none;
-    }
 }
 
 @media (max-width: 1080px) {
@@ -1365,27 +1365,27 @@
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(1) {
-    width: 95%;
+    width: 64%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(2) {
-    width: 95%;
+    width: 92%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(3) {
-    width: 73%;
-}
-
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(4) {
     width: 86%;
 }
 
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(4) {
+    width: 81%;
+}
+
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(5) {
-    width: 61%;
+    width: 82%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(6) {
-    width: 89%;
+    width: 79%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(7) {
@@ -1393,55 +1393,55 @@
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(8) {
-    width: 65%;
+    width: 69%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(9) {
-    width: 74%;
+    width: 84%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(10) {
-    width: 96%;
+    width: 69%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(11) {
-    width: 85%;
+    width: 95%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(12) {
-    width: 79%;
+    width: 66%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(13) {
-    width: 88%;
-}
-
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(14) {
-    width: 65%;
-}
-
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(15) {
-    width: 93%;
-}
-
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(16) {
-    width: 91%;
-}
-
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(17) {
-    width: 97%;
-}
-
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(18) {
-    width: 98%;
-}
-
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(19) {
     width: 99%;
 }
 
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(14) {
+    width: 88%;
+}
+
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(15) {
+    width: 64%;
+}
+
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(16) {
+    width: 84%;
+}
+
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(17) {
+    width: 99%;
+}
+
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(18) {
+    width: 64%;
+}
+
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(19) {
+    width: 88%;
+}
+
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(20) {
-    width: 78%;
+    width: 85%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line ~ .rsssl-placeholder-line {

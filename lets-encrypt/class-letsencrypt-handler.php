@@ -1360,15 +1360,18 @@ class rsssl_letsencrypt_handler {
 	public function key_directory(){
 		$directory = $this->get_directory_path();
 		try {
-			if ( ! file_exists( $directory . 'ssl' ) && is_writable( $directory ) ) {
-				mkdir( $directory . 'ssl', 0755 );
+			$openbasedir_restriction = $this->openbasedir_restriction($directory);
+			if ( !$openbasedir_restriction ) {
+				if ( ! file_exists( $directory . 'ssl' ) && is_writable( $directory ) ) {
+					mkdir( $directory . 'ssl', 0755 );
+				}
+
+				if ( ! file_exists( $directory . 'ssl/keys' ) && is_writable( $directory . 'ssl' ) ) {
+					mkdir( $directory . 'ssl/keys', 0755 );
+				}
 			}
 
-			if ( ! file_exists( $directory . 'ssl/keys' ) && is_writable( $directory . 'ssl' ) ) {
-				mkdir( $directory . 'ssl/keys', 0755 );
-			}
-
-			if ( file_exists( $directory . 'ssl/keys' ) ) {
+			if ( !$openbasedir_restriction && file_exists( $directory . 'ssl/keys' ) ) {
 				return $directory . 'ssl/keys';
 			} else {
 				//if creating the folder has failed, we're on apache, and can write to these folders, we create a root directory.
@@ -1387,6 +1390,25 @@ class rsssl_letsencrypt_handler {
 			return false;
 		}
 	}
+
+	private function openbasedir_restriction($path){
+
+		// Default error handler is required
+		set_error_handler(null);
+
+		// Clean last error info. You can do it using error_clean_last in PHP 7.
+		@trigger_error('__clean_error_info');
+
+		// Testing...
+		@file_exists($path);
+
+		// Restore previous error handler
+		restore_error_handler();
+
+		// Return `true` if error has occured
+		return ($error = error_get_last()) && $error['message'] !== '__clean_error_info';
+	}
+
 
 	/**
 	 * Clear the keys directory, used in reset function
