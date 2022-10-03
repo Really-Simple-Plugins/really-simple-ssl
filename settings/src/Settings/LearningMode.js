@@ -177,7 +177,7 @@ class LearningMode extends Component {
             }
             for (const item of data){
                 item.login_statusControl = item.login_status == 1 ? __("success", "really-simple-ssl") : __("failed", "really-simple-ssl");
-                item.statusControl = <ChangeStatus item={item} onChangeHandlerDataTable={this.props.onChangeHandlerDataTable} />;
+                item.statusControl = <ChangeStatus item={item} onChangeHandlerDataTableStatus={this.props.onChangeHandlerDataTableStatus} />;
                 item.deleteControl = <Delete item={item} onDeleteHandler={this.onDeleteHandler} />;
             }
             const conditionalRowStyles = [

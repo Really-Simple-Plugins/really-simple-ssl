@@ -33,7 +33,7 @@ class Field extends Component {
     constructor() {
         super( ...arguments );
         this.highLightClass = this.props.highLightedField===this.props.field.id ? 'rsssl-field-wrap rsssl-highlight' : 'rsssl-field-wrap';
-        this.onChangeHandlerDataTable = this.onChangeHandlerDataTable.bind(this);
+        this.onChangeHandlerDataTableStatus = this.onChangeHandlerDataTableStatus.bind(this);
         this.onChangeHandler = this.onChangeHandler.bind(this);
     }
 
@@ -45,12 +45,13 @@ class Field extends Component {
     }
 
     /*
-     * Handle data update for a datatable
+     * Handle data update for a datatable, for the status only (true/false)
      * @param enabled
      * @param clickedItem
      * @param type
      */
-    onChangeHandlerDataTable(enabled, clickedItem, type ) {
+    onChangeHandlerDataTableStatus(enabled, clickedItem, type ) {
+
         let field=this.props.field;
         enabled = enabled==1 ? 0 : 1;
         if (typeof field.value === 'object') {
@@ -77,7 +78,6 @@ class Field extends Component {
     onCloseTaskHandler(){
 
     }
-
 
     render(){
 
@@ -270,7 +270,7 @@ class Field extends Component {
         if ( field.type==='permissionspolicy' ) {
             return (
                 <div className={this.highLightClass}>
-                  <PermissionsPolicy disabled={disabled} onChangeHandlerDataTable={this.onChangeHandlerDataTable} updateField={this.props.updateField} field={this.props.field} options={options} highLightClass={this.highLightClass} fields={fields}/>
+                  <PermissionsPolicy disabled={disabled} updateField={this.props.updateField} field={this.props.field} options={options} highLightClass={this.highLightClass} fields={fields}/>
                 </div>
             )
         }
@@ -278,7 +278,7 @@ class Field extends Component {
         if ( field.type==='learningmode' ) {
             return(
                 <div className={this.highLightClass}>
-                  <LearningMode disabled={disabled} onChangeHandlerDataTable={this.onChangeHandlerDataTable} updateField={this.props.updateField} field={this.props.field} options={options} highLightClass={this.highLightClass} fields={fields}/>
+                  <LearningMode disabled={disabled} onChangeHandlerDataTableStatus={this.onChangeHandlerDataTableStatus} updateField={this.props.updateField} field={this.props.field} options={options} highLightClass={this.highLightClass} fields={fields}/>
                 </div>
             )
         }

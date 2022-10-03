@@ -10,7 +10,7 @@ class ChangeStatus extends Component {
         let statusClass = this.props.item.status==1 ? 'button button-primary rsssl-status-allowed' : 'button button-default rsssl-status-revoked';
         let label = this.props.item.status==1 ? __("Revoke", "really-simple-ssl") : __("Allow", "really-simple-ssl");
         return (
-            <button onClick={ () => this.props.onChangeHandlerDataTable( this.props.item.status, this.props.item, 'status' ) } className={statusClass}>{label}</button>
+            <button onClick={ () => this.props.onChangeHandlerDataTableStatus( this.props.item.status, this.props.item, 'status' ) } className={statusClass}>{label}</button>
         )
     }
 }

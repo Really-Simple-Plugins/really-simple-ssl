@@ -19,9 +19,34 @@ class PermissionsPolicy extends Component {
 
     componentDidMount() {
         this.togglePermissionsPolicyStatus = this.togglePermissionsPolicyStatus.bind(this);
+        this.onChangeHandler = this.onChangeHandler.bind(this);
         let field = this.props.fields.filter(field => field.id === 'enable_permissions_policy')[0];
         this.setState({
             enable_permissions_policy :field.value
+        });
+    }
+
+    onChangeHandler(value, clickedItem ) {
+        let field=this.props.field;
+        if (typeof field.value === 'object') {
+            field.value = Object.values(field.value);
+        }
+        //find this item in the field list
+        for (const item of field.value){
+            if (item.id === clickedItem.id) {
+                item['value'] = value;
+            }
+            delete item.valueControl;
+            delete item.statusControl;
+            delete item.deleteControl;
+        }
+        //the updateItemId allows us to update one specific item in a field set.
+        field.updateItemId = clickedItem.id;
+        let saveFields = [];
+        saveFields.push(field);
+        this.props.updateField(field.id, field.value);
+        rsssl_api.setFields(saveFields).then(( response ) => {
+            //this.props.showSavedSettingsNotice();
         });
     }
 
@@ -61,7 +86,6 @@ class PermissionsPolicy extends Component {
             columns.push(newItem);
         });
         let data = field.value;
-
         if (typeof data === 'object') {
             data = Object.values(data);
         }
@@ -76,7 +100,7 @@ class PermissionsPolicy extends Component {
                 disabled={disabled}
                 options={options}
                 label=''
-                onChange={ ( fieldValue ) => this.props.onChangeHandlerDataTable( fieldValue, item, 'value' ) }
+                onChange={ ( fieldValue ) => this.onChangeHandler( fieldValue, item, 'value' ) }
             />
         }
 
