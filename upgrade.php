@@ -8,7 +8,6 @@ function rsssl_upgrade() {
 	if ( get_option('rsssl_6_upgrade_completed') && ($prev_version && version_compare( $prev_version, rsssl_version, '==' )) ){
 		return;
 	}
-
 	//dismiss notices that should be dismissed on plugin upgrade
 	if ( $prev_version && version_compare( $prev_version, rsssl_version, '!=' )) {
 		$dismiss_options = RSSSL()->admin->get_notices_list( array(
@@ -24,12 +23,6 @@ function rsssl_upgrade() {
 		update_option('rsssl_remaining_tasks', true, false );
 	}
 
-	if ( $prev_version && version_compare( $prev_version, '4.0.10', '<=' ) ) {
-		if (function_exists('is_wpe') && is_wpe()) {
-			rsssl_update_option('redirect', 'wp_redirect');
-			RSSSL()->admin->save_options();
-		}
-	}
 	if ( $prev_version && version_compare( $prev_version, '5.1.3', '<=' ) ) {
 		if ( get_option( 'rsssl_disable_ocsp' ) ) {
 			$options = get_option( 'rsssl_options_lets-encrypt' );
@@ -58,14 +51,15 @@ function rsssl_upgrade() {
 		$prev_version && version_compare( $prev_version, '6.0.0', '<' )
 	) {
 		update_option('rsssl_show_onboarding', true, false);
-
+		error_log("run 6.0 upgrade");
 		//upgrade both site and network settings
 		$options = get_option( 'rlrsssl_options' );
+		$new_options = get_option('rsssl_options', []);
 		$ssl_enabled            = isset( $options['ssl_enabled'] ) ? $options['ssl_enabled'] : false;
-		rsssl_update_option('ssl_enabled', $ssl_enabled);
+		$new_options['ssl_enabled'] = boolval($ssl_enabled);
 
 		$autoreplace_insecure_links = isset( $options['autoreplace_insecure_links'] ) ? $options['autoreplace_insecure_links'] : true;
-		rsssl_update_option('mixed_content_fixer', $autoreplace_insecure_links);
+		$new_options['mixed_content_fixer'] = boolval($autoreplace_insecure_links);
 
 		$wp_redirect  = isset( $options['wp_redirect'] ) ? $options['wp_redirect'] : false;
 		$htaccess_redirect = isset( $options['htaccess_redirect'] ) ? $options['htaccess_redirect'] : false;
@@ -75,16 +69,16 @@ function rsssl_upgrade() {
 		} else if ( $wp_redirect ) {
 			$redirect = 'wp_redirect';
 		}
-		rsssl_update_option('redirect', $redirect);
+		$new_options['redirect'] = sanitize_title($redirect);
 
 		$do_not_edit_htaccess            = isset( $options['do_not_edit_htaccess'] ) ? $options['do_not_edit_htaccess'] : false;
-		rsssl_update_option('do_not_edit_htaccess', $do_not_edit_htaccess);
+		$new_options['do_not_edit_htaccess'] = boolval($do_not_edit_htaccess);
 
 		$dismiss_all_notices             = isset( $options['dismiss_all_notices'] ) ? $options['dismiss_all_notices'] : false;
-		rsssl_update_option('dismiss_all_notices', $dismiss_all_notices);
+		$new_options['dismiss_all_notices'] = boolval($dismiss_all_notices);
 
 		$switch_mixed_content_fixer_hook = isset( $options['switch_mixed_content_fixer_hook'] ) ? $options['switch_mixed_content_fixer_hook'] : false;
-		rsssl_update_option('switch_mixed_content_fixer_hook', $switch_mixed_content_fixer_hook);
+		$new_options['switch_mixed_content_fixer_hook'] = boolval($switch_mixed_content_fixer_hook);
 
 		delete_option( "rsssl_upgraded_to_four" );
 
@@ -105,28 +99,37 @@ function rsssl_upgrade() {
 			update_site_option('rlrsssl_network_options', $network_options);
 
 			$dismiss_all_notices = isset($network_options["dismiss_all_notices"]) ? $network_options["dismiss_all_notices"] : false;
-			rsssl_update_option('dismiss_all_notices', $dismiss_all_notices);
+			$new_options['dismiss_all_notices'] = boolval($dismiss_all_notices);
 
 			$wp_redirect = isset($network_options["wp_redirect"]) ? $network_options["wp_redirect"] : false;
-			if ($wp_redirect) rsssl_update_option('redirect', 'wp_redirect');
+			if ($wp_redirect) $redirect = 'wp_redirect';
 			$htaccess_redirect = isset($network_options["htaccess_redirect"]) ? $network_options["htaccess_redirect"] : false;
-			if ($htaccess_redirect) rsssl_update_option('redirect', 'htaccess');
+			if ($htaccess_redirect) $redirect = 'htaccess';
+			$new_options['redirect'] = sanitize_title($redirect);
+
 			$do_not_edit_htaccess = isset($network_options["do_not_edit_htaccess"]) ? $network_options["do_not_edit_htaccess"] : false;
-			rsssl_update_option('do_not_edit_htaccess', $do_not_edit_htaccess);
+			$new_options['do_not_edit_htaccess'] = boolval($do_not_edit_htaccess);
+
 			$autoreplace_mixed_content = isset($network_options["autoreplace_mixed_content"]) ? $network_options["autoreplace_mixed_content"] : false;
-			rsssl_update_option('mixed_content_fixer', $autoreplace_mixed_content);
+			$new_options['mixed_content_fixer'] = boolval($autoreplace_mixed_content);
 
 			//upgrade lets encrypt options
 			$le_options = get_option( 'rsssl_options_lets-encrypt' );
 			$verification_type = get_option('rsssl_verification_type');
 			if ($verification_type) {
-				rsssl_update_option('verification_type', strtolower($verification_type));
+				$new_options['verification_type'] = strtolower(sanitize_title($verification_type));
 			}
 			if (!empty($le_options)) {
 				foreach ($options as $fieldname => $value ) {
-					rsssl_update_option($fieldname, $value);
+					$new_options[$fieldname] = sanitize_text_field($value);
 				}
 			}
+		}
+
+		if ( is_multisite() && rsssl_is_networkwide_active() ) {
+			update_site_option( 'rsssl_options', $new_options );
+		} else {
+			update_option( 'rsssl_options', $new_options );
 		}
 		update_option('rsssl_6_upgrade_completed', true, false);
 	}
