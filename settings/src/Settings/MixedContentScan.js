@@ -286,7 +286,8 @@ class MixedContentScan extends Component {
                             {state!=='running' && completedStatus==='completed' && __("Everything is now served over SSL","really-simple-ssl")}
                         </div>
                         <div className="rsssl-mixed-content-placeholder">
-                            <div></div><div></div><div></div><div></div>
+{/*                                <img src={rsssl_settings.pro_url+'/assets/img/mixed_content_scan.svg'} /> */}
+                                 <div></div><div></div><div></div><div></div>
                         </div>
                         </>}
                     { data.length>0 && <DataTable

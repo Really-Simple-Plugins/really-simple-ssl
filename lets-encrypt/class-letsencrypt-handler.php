@@ -1398,13 +1398,13 @@ class rsssl_letsencrypt_handler {
 	 *
 	 * @return bool
 	 */
-	private function openbasedir_restriction($path){
+	private function openbasedir_restriction( string $path): bool {
 
 		// Default error handler is required
 		set_error_handler(null);
 
-		// Clean last error info. You can do it using error_clean_last in PHP 7.
-		@trigger_error('__clean_error_info');
+		// Clean last error info.
+		error_clear_last();
 
 		// Testing...
 		@file_exists($path);
@@ -1412,7 +1412,7 @@ class rsssl_letsencrypt_handler {
 		// Restore previous error handler
 		restore_error_handler();
 
-		// Return `true` if error has occured
+		// Return `true` if error has occurred
 		return ($error = error_get_last()) && $error['message'] !== '__clean_error_info';
 	}
 

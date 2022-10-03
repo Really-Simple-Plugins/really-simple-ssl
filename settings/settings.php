@@ -234,7 +234,10 @@ function rsssl_ssltest_run($request) {
     $url = $data['url'];
 	$response = wp_remote_get( $url );
 	$data     = wp_remote_retrieve_body( $response );
-	return $data;
+    if ( empty($data) ) {
+	    $data = json_encode(['errors' => 'Request failed, please try again.']);
+    }
+    return $data;
 }
 
 /**

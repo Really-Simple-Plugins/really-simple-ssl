@@ -398,7 +398,7 @@ function rsssl_src_contains_wp_version() {
 
 			if ( $status != 200 ) {
 				$result = 'no-response';
-			} elseif ( strpos( $web_source, $wp_version ) === false ) {
+			} elseif ( strpos( $web_source, 'ver='.$wp_version ) === false ) {
 				$result = 'not-found';
 			} else {
 				$result = 'found';
