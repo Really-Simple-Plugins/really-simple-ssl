@@ -24,12 +24,12 @@ function rsssl_get_option( string $name, $default=false ) {
 
 	//fallback, will be removed after 6.2
 	//because we only check if the option is not saved in the new style, this if should normally never get executed.
-	if (
-		!isset($options[$name]) &&
-		($name === 'ssl_enabled' || $name === 'redirect' || $name === "mixed_content_fixer")
-	) {
-		$options = rsssl_get_legacy_option($options, $name);
-	}
+//	if (
+//		!isset($options[$name]) &&
+//		($name === 'ssl_enabled' || $name === 'redirect' || $name === "mixed_content_fixer")
+//	) {
+//		$options = rsssl_get_legacy_option($options, $name);
+//	}
 
 	$value = $options[ $name ] ?? false;
 	if ( $value===false && $default!==false ) {
