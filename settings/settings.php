@@ -306,7 +306,6 @@ function rsssl_other_plugins_data($slug=false){
 		[
 			'slug' => 'complianz-terms-conditions',
 			'constant_free' => 'cmplz_tc_version',
-			'constant_premium' => false,
 			'wordpress_url' => 'https://wordpress.org/plugins/complianz-terms-conditions/',
 			'upgrade_url' => 'https://complianz.io?src=rsssl-plugin',
 			'title' => 'Complianz - '. __("Terms and Conditions", "really-simple-ssl"),
