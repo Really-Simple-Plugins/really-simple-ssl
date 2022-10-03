@@ -899,7 +899,7 @@ class rsssl_admin
 	    }
 
 	    do_action("rsssl_deactivate");
-	    update_option('ssl_enabled', false);
+	    rsssl_update_option('ssl_enabled', false);
     }
 
 	/**

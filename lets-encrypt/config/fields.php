@@ -104,7 +104,8 @@ function rsssl_le_add_fields($fields) {
 				'type'     => 'checkbox',
 				'default'  => false,
 				'required' => true,
-				'label'    => __( 'I agree to the Terms & Conditions from Let\'s Encrypt.','really-simple-ssl').' '.sprintf(__('Available %shere%s.', "really-simple-ssl" ),'<a target="_blank" href="https://letsencrypt.org/documents/LE-SA-v1.2-November-15-2017.pdf">', '</a>' ),
+				'label'    => __( 'I agree to the Terms & Conditions from Let\'s Encrypt.','really-simple-ssl'),
+				'comment'    => '<a target="_blank" href="https://letsencrypt.org/documents/LE-SA-v1.2-November-15-2017.pdf">'.__('Terms & Conditions.', "really-simple-ssl" ).'</a>',
 			],
 			[
 				'id'      => 'disable_ocsp',
