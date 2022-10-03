@@ -519,7 +519,7 @@ function rsssl_fields( $load_values = true ) {
 			'default'            => false,
 			'new_features_block' => [
 				'active'   => __( "Username 'Admin' is not allowed", 'really-simple-ssl' ),
-				'inactive' => __( "Username 'Admin' is present", 'really-simple-ssl' ),
+				'inactive' => __( "Username 'Admin' is allowed", 'really-simple-ssl' ),
 				'readmore' => 'https://really-simple-ssl.com/instructions/about-hardening-features/#admin-usernames',
 			],
 		],
