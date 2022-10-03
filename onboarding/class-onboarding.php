@@ -154,8 +154,6 @@ class rsssl_onboarding {
 				foreach ($this->hardening as $h ){
 					rsssl_update_option($h, true);
 				}
-				$next_action = 'completed';
-				break;
 		}
 
 		$output = [

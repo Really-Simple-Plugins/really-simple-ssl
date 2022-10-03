@@ -18,6 +18,12 @@ function rsssl_remove_wp_version() {
 }
 add_action('init', 'rsssl_remove_wp_version');
 
+function rsssl_replace_wp_version($html){
+	$wp_version = get_bloginfo( 'version' );
+	$new_version = hash('md5', get_bloginfo( 'version' ) );
+	return str_replace('?ver='.$wp_version, '?ver='.$new_version, $html);
+}
+add_filter('rsssl_fixer_output', 'rsssl_replace_wp_version');
 /**
  * @param $src
  * @return mixed|string
@@ -25,8 +31,9 @@ add_action('init', 'rsssl_remove_wp_version');
  */
 function rsssl_remove_css_js_version( $src ) {
 	if ( strpos( $src, '?ver=' ) && strpos( $src, 'wp-includes') ) {
-		$src = remove_query_arg( 'ver', $src );
-		$src = add_query_arg('cache', hash('md5', get_bloginfo( 'version' ) ), $src );
+		$wp_version = get_bloginfo( 'version' );
+		$new_version = hash('md5', get_bloginfo( 'version' ) );
+		$src = str_replace('?ver='.$wp_version, '?ver='.$new_version, $src);
 	}
 
 	return $src;

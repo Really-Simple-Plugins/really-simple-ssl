@@ -504,6 +504,7 @@ function rsssl_update_option( $name, $value ) {
 		$options = get_option( 'rsssl_options', [] );
 	}
     if ( !is_array($options) ) $options = [];
+	$prev_value = $options[ $name ] ?? false;
     $name = sanitize_text_field($name);
 	$type = rsssl_sanitize_field_type($config_field['type']);
 	$value = rsssl_sanitize_field( $value, $type, $name );
@@ -514,6 +515,7 @@ function rsssl_update_option( $name, $value ) {
 	} else {
 		update_option( 'rsssl_options', $options );
 	}
+	do_action( "rsssl_after_save_field", $name, $value, $prev_value, $type );
 }
 
 /**

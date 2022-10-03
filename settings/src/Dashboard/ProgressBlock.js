@@ -32,9 +32,12 @@ class ProgressBlock extends Component {
 
     componentDidUpdate() {
         //if a field has changed, we update the progress data as well.
-        if (this.fields !== this.props.fields) {
+        if ( this.fields !== this.props.fields ) {
+            console.log("fields changed, reload progress");
             this.fields = this.props.fields;
             this.getProgressData();
+        } else {
+            console.log("no changes");
         }
     }
     getStyles() {
@@ -46,6 +49,8 @@ class ProgressBlock extends Component {
 
     getProgressData(){
         rsssl_api.runTest('progressData', 'refresh').then( ( response ) => {
+            console.log("reload progress data from back-end");
+            console.log(response);
             this.progressText = response.data.text;
             this.filter = response.data.filter;
             this.percentageCompleted = response.data.percentage;

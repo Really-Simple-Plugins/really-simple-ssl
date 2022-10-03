@@ -90,6 +90,8 @@ const [networkProgress, setNetworkProgress] = useState(0);
                 setSteps(steps);
                 setStepsChanged(true);
                 setsslActivated(response.data.success);
+                console.log("set ssl enabled in fields list");
+                props.updateField('ssl_enabled', true);
                 if (response.data.site_url_changed) {
                     window.location.reload();
                 } else {
@@ -127,6 +129,11 @@ const [networkProgress, setNetworkProgress] = useState(0);
         updateActionForItem(id, action, false);
         rsssl_api.onboardingActions(data).then( ( response ) => {
             if ( response.data.success ){
+                console.log(action);
+                if (action==='activate_setting'){
+                    //ensure all fields are updated, and progress is retrieved again
+                    props.getFields();
+                }
                 let nextAction = response.data.next_action;
                 if (nextAction!=='none') {
                     data.action = nextAction;
@@ -269,7 +276,6 @@ const [networkProgress, setNetworkProgress] = useState(0);
 
         }
     }
-
 
     return (
         <>

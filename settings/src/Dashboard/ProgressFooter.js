@@ -6,13 +6,11 @@ import {useUpdateEffect} from 'react-use';
 import Icon from "../utils/Icon";
 
 const ProgressFooter = (props) => {
-    const [sslEnabled, setSslEnabled] = useState(false);
     const [certificateIsValid, setCertificateIsValid] = useState(false);
     const [sslDataLoaded, SetSslDataLoaded] = useState(false);
 
     useEffect(() => {
         rsssl_api.runTest('ssl_status_data' ).then( ( response ) => {
-            setSslEnabled(response.data.ssl_enabled);
             setCertificateIsValid(response.data.certificate_is_valid);
             SetSslDataLoaded(true);
         });
@@ -27,6 +25,7 @@ const ProgressFooter = (props) => {
         <></>);
     }
     let redirectValue = props.fields.filter( field => field.id==='redirect' )[0].value;
+    let sslEnabled = props.fields.filter( field => field.id==='ssl_enabled' )[0].value;
     let hasMixedContentFixer = props.fields.filter( field => field.id==='mixed_content_fixer' )[0].value;
     let hasRedirect = redirectValue=== 'wp_redirect' || redirectValue=== 'htaccess';
     let sslStatusText = sslEnabled ? __( "SSL Activated", "really-simple-ssl" ) : __( "SSL not activated", "really-simple-ssl" );
