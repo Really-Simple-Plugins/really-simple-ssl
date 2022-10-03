@@ -26,7 +26,7 @@ function rsssl_get_option( string $name, $default=false ) {
 	//because we only check if the option is not saved in the new style, this if should normally never get executed.
 	if (
 		!isset($options[$name]) &&
-		($name === 'ssl_enabled' || $name === 'redirect' || $name === "mixed_content_fixer")
+		($name === 'ssl_enabled' || $name === 'redirect' || $name === "mixed_content_fixer" || $name === 'dismiss_all_notices' )
 	) {
 		$options = rsssl_get_legacy_option($options, $name);
 	}
@@ -62,7 +62,7 @@ function rsssl_is_networkwide_active(){
 
 /**
  * if the option is does not exist in our new array, check if it's available in the old option. If so, use that one
- * @deprecated to be used until 6.2, as fallback for failed upgrades
+ * @deprecated to be used until 6.2, as fallback for failed upgrades in some specific edge case situations
  * @param array  $options
  * @param string $name
  *
@@ -72,14 +72,13 @@ function rsssl_get_legacy_option( array $options, string $name): array {
 	$old_options = is_multisite() ? get_site_option('rlrsssl_network_options') : get_option( 'rlrsssl_options' );
 	if ( $old_options ) {
 		if ( $name === 'ssl_enabled' && isset( $old_options['ssl_enabled']) ) {
-			$val                    = $old_options['ssl_enabled'];
-			$options['ssl_enabled'] = $val;
+			$options['ssl_enabled'] = $old_options['ssl_enabled'];
 		} else if ( $name === 'dismiss_all_notices' && isset( $old_options['dismiss_all_notices']) ) {
-			$val = $old_options['dismiss_all_notices'];
-			$options['dismiss_all_notices'] = $val;
+			$options['dismiss_all_notices'] = $old_options['dismiss_all_notices'];
+		} else if ( $name === 'dismiss_all_notices' && isset( $old_options['dismiss_all_notices']) ) {
+			$options['dismiss_all_notices'] = $old_options['dismiss_all_notices'];
 		} else if ( $name === 'mixed_content_fixer' && isset($old_options['autoreplace_insecure_links']) ) {
-			$val = $old_options['autoreplace_insecure_links'];
-			$options['mixed_content_fixer'] = $val;
+			$options['mixed_content_fixer'] = $old_options['autoreplace_insecure_links'];
 		} else if ( $name === 'redirect' ){
 			if ( isset($old_options['htaccess_redirect']) && $old_options['htaccess_redirect'] ) {
 				$options['redirect'] = 'htaccess';
