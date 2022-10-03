@@ -90,6 +90,10 @@ if ( !function_exists('rsssl_maybe_clear_transients')) {
 			delete_transient( 'rsssl_wp_version_detected' );
 			rsssl_src_contains_wp_version();
 		}
+		if ( $field_id === 'rename_admin_user' ) {
+			wp_cache_delete('rsssl_admin_user_count');
+			rsssl_has_admin_user();
+		}
 
 	}
 

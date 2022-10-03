@@ -136,8 +136,7 @@ function rsssl_has_admin_user() {
 	$count = wp_cache_get('rsssl_admin_user_count', 'really-simple-ssl');
 	if ( $count === false ){
 		global $wpdb;
-		$prepared = $wpdb->prepare("SELECT COUNT(*) FROM {$wpdb->prefix}users WHERE user_login = %s LIMIT 1", 'admin');
-		$count = $wpdb->get_var( $prepared );
+		$count = $wpdb->get_var( "SELECT COUNT(*) FROM {$wpdb->prefix}users WHERE user_login = 'admin'" );
 		wp_cache_set('rsssl_admin_user_count', $count, 'really-simple-ssl', HOUR_IN_SECONDS);
 	}
 
