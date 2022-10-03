@@ -50,10 +50,6 @@ function rsssl_disable_fields($field, $field_id){
 		if ( !get_option('users_can_register') && !$field['value'] ) {
 			$field['value'] = true;
 			$field['disabled'] = true;
-			// $field['help'] = [
-			// 	'label' => 'default',
-			// 	'text' => __( "User registration is already disabled.", 'really-simple-ssl' ),
-			// ];
 		}
 	}
 
@@ -61,10 +57,6 @@ function rsssl_disable_fields($field, $field_id){
 		if ( !rsssl_http_methods_allowed() && !$field['value'] ) {
 			$field['value'] = true;
 			$field['disabled'] = true;
-			// $field['help'] = [
-			// 	'label' => 'default',
-			// 	'text' => __( "HTTP methods are already disabled.", 'really-simple-ssl' ),
-			// ];
 		}
 	}
 
