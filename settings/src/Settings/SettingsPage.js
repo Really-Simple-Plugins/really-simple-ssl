@@ -126,7 +126,21 @@ class SettingsPage extends Component {
     updateFieldsListWithConditions(){
         for (const field of this.props.fields){
           let enabled = !(field.hasOwnProperty('react_conditions') && !this.validateConditions(field.react_conditions, this.props.fields));
+
+          //we want to update the changed fields if this field has just become visible. Otherwise the new field won't get saved.
+          let previouslyDisabled = this.props.fields[this.props.fields.indexOf(field)].conditionallyDisabled;
           this.props.fields[this.props.fields.indexOf(field)].conditionallyDisabled = !enabled;
+          if ( previouslyDisabled && enabled ) {
+              let changedFields = this.changedFields;
+              if (!in_array(field.id, changedFields)) {
+                  changedFields.push(field.id);
+              }
+              this.changedFields = changedFields;
+              this.setState({
+                  changedFields:changedFields,
+              });
+          }
+
           if (!enabled && field.type==='letsencrypt') {
             this.props.fields[this.props.fields.indexOf(field)].visible = false;
           } else {
@@ -175,7 +189,7 @@ class SettingsPage extends Component {
                 saveFields.push(field);
             }
         }
-
+        console.log(this.changedFields);
         rsssl_api.setFields(saveFields).then(( response ) => {
             this.changedFields = [];
             this.props.updateProgress(response.data.progress);

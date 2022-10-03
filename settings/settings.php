@@ -410,8 +410,6 @@ function rsssl_rest_api_fields_set($request){
         $type = rsssl_sanitize_field_type($field['type']);
         $field_id = sanitize_text_field($field['id']);
 		$value = rsssl_sanitize_field( $field['value'] , $type,  $field_id);
-		$value = rsssl_sanitize_field( $value, $type, $field_id );
-
         //if an endpoint is defined, we use that endpoint instead
         if ( isset($config_field['data_endpoint'])){
 	        //the updateItemId allows us to update one specific item in a field set.
