@@ -189,7 +189,6 @@ class SettingsPage extends Component {
                 saveFields.push(field);
             }
         }
-        console.log(this.changedFields);
         rsssl_api.setFields(saveFields).then(( response ) => {
             this.changedFields = [];
             this.props.updateProgress(response.data.progress);

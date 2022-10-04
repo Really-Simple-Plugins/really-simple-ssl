@@ -103,7 +103,6 @@ class License extends Component {
                 });
             });
         }
-
     }
     render(){
         const {

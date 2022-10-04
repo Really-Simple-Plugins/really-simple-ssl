@@ -202,8 +202,6 @@ class Page extends Component {
                 fieldItem.value = value;
             }
         }
-        console.log("field "+id+" updated");
-        console.log(fields);
         this.fields = fields;
         this.setState({
             fields :fields
