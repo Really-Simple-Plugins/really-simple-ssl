@@ -200,9 +200,6 @@ if ( ! function_exists('rsssl_wrap_htaccess' ) ) {
 				if ( ( ! empty( $matches[1] ) && empty( $rules_uploads ) ) || ! empty( $rules_uploads ) ) {
 					$rules_uploads_result = '';
 					foreach ( $rules_uploads as $rule_uploads ) {
-						if ( strpos( $content_htaccess_uploads, $rule_uploads['identifier'] ) !== false ) {
-							continue;
-						}
 						$rules_uploads_result .= $rule_uploads['rules'];
 					}
 					//should replace if rules is not empty, OR if rules is empty and htaccess is not.
@@ -249,9 +246,6 @@ if ( ! function_exists('rsssl_wrap_htaccess' ) ) {
 				if ( ( ! empty( $matches[1] ) && empty( $rules ) ) || ! empty( $rules ) ) {
 					$rules_result = '';
 					foreach ( $rules as $rule ) {
-						if ( strpos( $content_htaccess, $rule['identifier'] ) !== false ) {
-							continue;
-						}
 						$rules_result .= $rule['rules'];
 					}
 
