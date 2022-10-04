@@ -281,6 +281,8 @@ function rsssl_code_execution_allowed()
 	$code_execution_allowed = get_transient('rsssl_code_execution_allowed_status');
 	if ( !$code_execution_allowed ) {
 		$upload_dir = wp_get_upload_dir();
+		//set a default
+		$code_execution_allowed = 'not-allowed';
 		$test_file = $upload_dir['basedir'] . '/' . 'code-execution.php';
 		if ( is_writable($upload_dir['basedir'] ) && ! file_exists( $test_file ) ) {
 			try {
@@ -294,9 +296,21 @@ function rsssl_code_execution_allowed()
 			$uploads    = wp_upload_dir();
 			$upload_url = trailingslashit($uploads['baseurl']).'code-execution.php';
 			$response = wp_remote_get($upload_url);
-			$filecontents = is_array($response) ? wp_remote_retrieve_body($response) : '';
-			if ( !is_wp_error($response) && (strpos($filecontents, "RSSSL CODE EXECUTION MARKER") !== false) ) {
-				$code_execution_allowed = 'allowed';
+			if ( !is_wp_error($response) ) {
+				if ( is_array( $response ) ) {
+					$status = wp_remote_retrieve_response_code( $response );
+					$web_source = wp_remote_retrieve_body( $response );
+				}
+
+				if ( $status != 200 ) {
+					//Could not connect to website
+					$code_execution_allowed = 'not-allowed';
+				} elseif ( strpos( $web_source, "RSSSL CODE EXECUTION MARKER" ) === false ) {
+					//Mixed content fixer marker not found in the websource
+					$code_execution_allowed = 'not-allowed';
+				} else {
+					$code_execution_allowed = 'allowed';
+				}
 			} else {
 				$code_execution_allowed = 'not-allowed';
 			}
