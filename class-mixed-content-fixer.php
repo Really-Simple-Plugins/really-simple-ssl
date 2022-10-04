@@ -13,7 +13,7 @@ if (!class_exists('rsssl_admin_mixed_content_fixer')) {
                 wp_die(sprintf(__('%s is a singleton class and you cannot create a second instance.', 'really-simple-ssl'), get_class($this)));
 
             self::$_this = $this;
-            if ( !is_admin() && is_ssl() && rsssl_get_option('mixed_content_fixer', true ) ||  rsssl_get_option('hide_wordpress_version' )) {
+            if ( !is_admin() && is_ssl() && (rsssl_get_option('mixed_content_fixer', true ) ||  rsssl_get_option('hide_wordpress_version' ) )) {
                 $this->fix_mixed_content();
             } else if (is_admin() && is_ssl() && rsssl_get_option("admin_mixed_content_fixer") ) {
 	            $this->fix_mixed_content();
