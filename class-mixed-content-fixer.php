@@ -6,17 +6,21 @@ if (!class_exists('rsssl_admin_mixed_content_fixer')) {
     {
         private static $_this;
         public $http_urls = array();
+        public $mixed_content_fixer = false;
+        public $hide_wordpress_version = false;
 
         function __construct()
         {
-            if (isset(self::$_this))
-                wp_die(sprintf(__('%s is a singleton class and you cannot create a second instance.', 'really-simple-ssl'), get_class($this)));
+            if (isset(self::$_this)) wp_die();
 
             self::$_this = $this;
-            if ( !is_admin() && is_ssl() && (rsssl_get_option('mixed_content_fixer', true ) ||  rsssl_get_option('hide_wordpress_version' ) )) {
-                $this->fix_mixed_content();
-            } else if (is_admin() && is_ssl() && rsssl_get_option("admin_mixed_content_fixer") ) {
-	            $this->fix_mixed_content();
+			$this->mixed_content_fixer = is_ssl() && rsssl_get_option('mixed_content_fixer', true );
+			$this->hide_wordpress_version = rsssl_get_option('hide_wordpress_version' );
+            if ( !is_admin() && ($this->mixed_content_fixer || $this->hide_wordpress_version )) {
+                $this->handle_output_buffer();
+            } else if ( is_admin() && is_ssl() && rsssl_get_option("admin_mixed_content_fixer") ) {
+	            $this->mixed_content_fixer = true;
+	            $this->handle_output_buffer();
             }
         }
 
@@ -35,7 +39,7 @@ if (!class_exists('rsssl_admin_mixed_content_fixer')) {
          *
          */
 
-        public function fix_mixed_content()
+        public function handle_output_buffer()
         {
             /* Do not fix mixed content when call is coming from wp_api or from xmlrpc */
             if (defined('JSON_REQUEST') && JSON_REQUEST) return;
@@ -69,7 +73,10 @@ if (!class_exists('rsssl_admin_mixed_content_fixer')) {
 
         public function filter_buffer($buffer)
         {
-            return $this->replace_insecure_links($buffer);
+			if ( $this->mixed_content_fixer ) {
+				$buffer = $this->replace_insecure_links($buffer);
+			}
+            return apply_filters("rsssl_fixer_output", $buffer );
         }
 
         /**
@@ -111,16 +118,15 @@ if (!class_exists('rsssl_admin_mixed_content_fixer')) {
 
         public function build_url_list()
         {
-            $home = str_replace("https://", "http://", get_option('home'));
-            $home_no_www = str_replace("://www.", "://", $home);
-            $home_yes_www = str_replace("://", "://www.", $home_no_www);
+            $home = str_replace("https://", "http://", get_option('home') );
+            $root = str_replace("://www.", "://", $home);
+            $www = str_replace("://", "://www.", $root);
 
             //for the escaped version, we only replace the home_url, not it's www or non www counterpart, as it is most likely not used
             $escaped_home = str_replace("/", "\/", $home);
-
             $this->http_urls = array(
-                $home_yes_www,
-                $home_no_www,
+                $www,
+                $root,
                 $escaped_home,
                 "src='http://",
                 'src="http://',
@@ -160,11 +166,7 @@ if (!class_exists('rsssl_admin_mixed_content_fixer')) {
 
             /* handle multiple images in srcset */
             $str = preg_replace_callback('/<img[^\>]*[^\>\S]+srcset=[\'"]\K((?:[^"\'\s,]+\s*(?:\s+\d+[wx])(?:,\s*)?)+)["\']/', array($this, 'replace_src_set'), $str);
-
-            $str = str_replace("<body", '<body data-rsssl=1', $str);
-
-            return apply_filters("rsssl_fixer_output", $str);
-
+            return str_replace("<body", '<body data-rsssl=1', $str);
         }
 
         /**
