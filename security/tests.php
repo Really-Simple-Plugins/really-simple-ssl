@@ -375,7 +375,7 @@ function rsssl_directory_indexing_allowed() {
  */
 function rsssl_file_editing_allowed()
 {
-	if (wp_is_block_theme()) {
+	if ( function_exists('wp_is_block_theme') && wp_is_block_theme() ) {
 		return false;
 	}
 	return !defined('DISALLOW_FILE_EDIT' ) || !DISALLOW_FILE_EDIT;
