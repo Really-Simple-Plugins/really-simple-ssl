@@ -31,7 +31,7 @@ const SslLabs = (props) => {
     }
 
     const isLocalHost = () => {
-//     return false;
+    return false;
          return window.location.host.indexOf('localhost')!==-1;
     }
 
@@ -167,8 +167,8 @@ const SslLabs = (props) => {
     }
 
     const getEndpointData = (ipAddress) => {
-        const host = window.location.host;
-//         const host = "rssslletsencrypt.nl";
+//         const host = window.location.host;
+        const host = "rssslletsencrypt.nl";
         const url = 'https://api.ssllabs.com/api/v3/getEndpointData?host='+host+'&s='+ipAddress;
         let data = {};
         data.url = url;
@@ -184,8 +184,8 @@ const SslLabs = (props) => {
             clearCacheUrl = '&startNew=on';
             setSslData(false);
         }
-        const host = window.location.host;
-//         const host = "rssslletsencrypt.nl";
+//         const host = window.location.host;
+        const host = "rssslletsencrypt.nl";
 
         const url = "https://api.ssllabs.com/api/v3/analyze?host="+host+clearCacheUrl;
         let data = {};

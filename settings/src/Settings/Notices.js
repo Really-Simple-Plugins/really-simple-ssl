@@ -7,7 +7,6 @@ import {
     useSelect,
 } from '@wordpress/data';
 
-
 import { store as noticesStore } from '@wordpress/notices';
 
 const Notices = () => {

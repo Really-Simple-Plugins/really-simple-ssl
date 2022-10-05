@@ -18,7 +18,6 @@ class TaskElement extends Component {
     }
 
     render(){
-
         let notice = this.props.notice;
         //treat links to rsssl.com and internal links different.
         let urlIsExternal = notice.output.url && notice.output.url.indexOf('really-simple-ssl.com') !== -1;
