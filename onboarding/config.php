@@ -35,7 +35,7 @@ function rsssl_rest_api_onboarding($request) {
 		"title" => $is_upgrade ? __( "Thanks for updating!", 'really-simple-ssl' ) : __( "Congratulations!", 'really-simple-ssl' ),
 		"subtitle" => __("Now have a look at our new features", "really-simple-ssl"),
 		"items" => rsssl_get_items_for_second_step(),
-		"info_text" => __("Want to know more about our features and plugins?", "really-simple-ssl").' '.sprintf(__("Please read this %sarticle%s.", 'really-simple-ssl'), '<a target="_blank" href="https://really-simple-ssl.com">', '</a>'),
+		"info_text" => __("Want to know more about our features and plugins?", "really-simple-ssl").' '.sprintf(__("Please read this %sarticle%s.", 'really-simple-ssl'), '<a target="_blank" href="https://really-simple-ssl.com/meet-really-simple-ssl-6/">', '</a>'),
 		"visible" => false
 	];
 
@@ -69,7 +69,7 @@ function rsssl_get_items_for_second_step () {
 			"slug" => "complianz-gdpr",
 			'constant_premium' => 'cmplz_premium',
 			"title" => __("Complianz - The Privacy Suite for WordPress", "really-simple-ssl"),
-			"description" => __("Manage privacy compliance with Complianz", "really-simple-ssl"),
+			"description" => __("Cookie Consent as it should be", "really-simple-ssl"),
 		]
 	];
 
