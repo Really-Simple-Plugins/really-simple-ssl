@@ -49,7 +49,6 @@ class RSSSL_LETSENCRYPT {
 			self::$instance->includes();
 			self::$instance->hosts = new rsssl_le_hosts();
 			if (rsssl_letsencrypt_generation_allowed() ) {
-				error_log("load LE handler");
 				self::$instance->letsencrypt_handler = new rsssl_letsencrypt_handler();
 				self::$instance->le_restapi = new rsssl_le_restapi();
 			}
