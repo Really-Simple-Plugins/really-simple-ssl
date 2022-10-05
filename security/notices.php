@@ -73,7 +73,7 @@ function rsssl_general_security_notices( $notices ) {
 		'score' => 5,
 		'output' => array(
 			'true' => array(
-				'url' =>admin_url('users.php?role=administrator'),
+				'url' => 'https://really-simple-ssl.com/manual/login-and-display-names-should-be-different-for-wordpress/',
 				'msg' => __("We have detected administrator roles where the login and display names are the same.", "really-simple-ssl") . "&nbsp;<b>" . rsssl_list_users_where_display_name_is_login_name() . "</b>",
 				'icon' => 'open',
 				'dismissible' => true,

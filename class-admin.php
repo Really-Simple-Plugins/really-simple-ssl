@@ -2440,11 +2440,10 @@ class rsssl_admin
 		        'score' => 5,
 		        'output' => array(
 			        'false' => array(
-				        'msg' => __("The following recommended security headers are not detected:", "really-simple-ssl")
-				                 ."<br><code style='padding: 0;'>". implode('<br>', $this->get_recommended_security_headers() ) . "</code>",
-				        'icon' => 'premium',
+				        'msg' => __("See which recommended security headers are not present on your website", "really-simple-ssl"),
+                'icon' => 'premium',
 				        'dismissible' => false,
-				        'url' => 'https://really-simple-ssl.com/instructions/configuring-recommended-security-headers',
+				        'url' => 'https://scan.really-simple-ssl.com/',
 			        ),
 			        'true' => array(
 				        'msg' => __("Recommended security headers enabled.", "really-simple-ssl"),
