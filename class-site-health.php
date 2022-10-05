@@ -32,12 +32,11 @@ if ( !class_exists("rsssl_site_health") ) {
 					'test'  => array($this, "health_test"),
 				);
 
-				if ( rsssl_get_option('ssl_enabled') ) {
-					$tests['direct']['rsssl-headers'] = array(
-						'label' => __( 'Security Headers Test' , 'really-simple-ssl' ),
-						'test'  => array($this, "headers_test"),
-					);
-				}
+				$tests['direct']['rsssl-headers'] = array(
+					'label' => __( 'Security Headers Test' , 'really-simple-ssl' ),
+					'test'  => array($this, "headers_test"),
+				);
+
 			}
 
 			return $tests;

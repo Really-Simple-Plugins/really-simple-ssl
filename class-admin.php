@@ -1375,7 +1375,7 @@ class rsssl_admin
         }
 
         if ( $curl_check_done === 'no' ) {
-	        if (RSSSL()->server->uses_htaccess() && file_exists($this->htaccess_file())) {
+	        if ( RSSSL()->server->uses_htaccess() && file_exists($this->htaccess_file()) ) {
 		        $htaccess = file_get_contents($this->htaccess_file());
 		        foreach ($check_headers as $check_header){
 			        if ( !preg_match("/".$check_header['pattern']."/", $htaccess, $check) ) {
@@ -2213,7 +2213,6 @@ class rsssl_admin
 
 	        'recommended_security_headers_not_set' => array(
 		        'callback' => 'RSSSL()->admin->recommended_headers_enabled',
-		        'condition' => array('rsssl_ssl_enabled'),
 		        'score' => 5,
 		        'output' => array(
 			        'false' => array(
