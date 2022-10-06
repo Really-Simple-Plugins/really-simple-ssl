@@ -121,7 +121,7 @@ if ( !function_exists('rsssl_remove_htaccess_security_edits') ) {
 		}
 
 		$start = "\n" . '#Begin Really Simple Security';
-		$end   = "\n" . '#End Really Simple Security' . "\n";
+		$end   =  '#End Really Simple Security' . "\n";
 		$pattern = '/'.$start.'(.*?)'.$end.'/is';
 
 		/**
@@ -175,99 +175,122 @@ if ( ! function_exists('rsssl_wrap_htaccess' ) ) {
 
 		$start = "\n" . '#Begin Really Simple Security';
 		$end   = "\n" . '#End Really Simple Security' . "\n";
-		$pattern = '/'.$start.'(.*?)'.$end.'/is';
+		$pattern_content = '/'.$start.'(.*?)'.$end.'/is';
 
+		$pattern = '/'.$start.'.*?'.$end.'/is';
 		/**
 		 * htaccess in uploads dir
 		 */
 		$rules_uploads = apply_filters( 'rsssl_htaccess_security_rules_uploads', []);
 		$upload_dir = wp_get_upload_dir();
 		$htaccess_file_uploads = trailingslashit( $upload_dir['basedir']).'.htaccess';
-		if ( count($rules_uploads)>0 ) {
-			if ( ! file_exists( $htaccess_file_uploads ) ) {
-				if ( is_writable(trailingslashit( $upload_dir['basedir'])) ) {
-					file_put_contents($htaccess_file_uploads, '');
-				} else {
-					update_site_option( 'rsssl_htaccess_error', 'not-writable-uploads' );
-					$rules_uploads_result = implode( '', array_column( $rules_uploads, 'rules' ) );
-					update_site_option( 'rsssl_htaccess_rules', $rules_uploads_result );
-				}
+
+		if ( ! file_exists( $htaccess_file_uploads ) ) {
+			if ( is_writable(trailingslashit( $upload_dir['basedir'])) ) {
+				file_put_contents($htaccess_file_uploads, '');
+			} else {
+				update_site_option( 'rsssl_htaccess_error', 'not-writable-uploads' );
+				$rules_uploads_result = implode( '', array_column( $rules_uploads, 'rules' ) );
+				update_site_option( 'rsssl_htaccess_rules', $rules_uploads_result );
 			}
+		}
 
-			if ( file_exists( $htaccess_file_uploads ) ) {
-				$content_htaccess_uploads = file_exists( $htaccess_file_uploads ) ? file_get_contents( $htaccess_file_uploads ) : '';
-				preg_match( $pattern, $content_htaccess_uploads, $matches );
-				if ( ( ! empty( $matches[1] ) && empty( $rules_uploads ) ) || ! empty( $rules_uploads ) ) {
-					$rules_uploads_result = '';
-					foreach ( $rules_uploads as $rule_uploads ) {
-						$rules_uploads_result .= $rule_uploads['rules'];
+		if ( file_exists( $htaccess_file_uploads ) ) {
+			$content_htaccess_uploads = file_exists( $htaccess_file_uploads ) ? file_get_contents( $htaccess_file_uploads ) : '';
+			preg_match( $pattern_content, $content_htaccess_uploads, $matches );
+			if ( ( ! empty( $matches[1] ) && empty( $rules_uploads ) ) || ! empty( $rules_uploads ) ) {
+				$rules_uploads_result = '';
+				foreach ( $rules_uploads as $rule_uploads ) {
+					//check if the rule exists outside RSSSL, but not within
+					if ( strpos($content_htaccess_uploads, $rule_uploads['identifier'])!==false && !preg_match('/#Begin Really Simple Security.*?('.preg_quote($rule_uploads['identifier'],'/').').*?#End Really Simple Security/is', $content_htaccess_uploads, $matches) ) {
+						continue;
 					}
-					//should replace if rules is not empty, OR if rules is empty and htaccess is not.
-					$htaccess_has_rsssl_rules = ! preg_match( "/#Begin Really Simple Security[ \n\t]+#End Really Simple Security/", $content_htaccess_uploads );
-					if ( ! empty( $rules_uploads_result ) || $htaccess_has_rsssl_rules ) {
-						if ( ! file_exists( $htaccess_file_uploads ) ) {
-							file_put_contents( $htaccess_file_uploads, '' );
-						}
+					$rules_uploads_result .= $rule_uploads['rules'];
+				}
+				//We differ between missing rules, and a complete set. As we don't want the replace all rules with just the missing set.
 
-						if ( ! is_writable( $htaccess_file_uploads ) ) {
-							update_site_option( 'rsssl_htaccess_error', 'not-writable-uploads' );
-							update_site_option( 'rsssl_htaccess_rules', $rules_uploads_result );
+				//should replace if rules is not empty, OR if rules is empty and htaccess is not.
+				$htaccess_has_rsssl_rules = preg_match( '/#Begin Really Simple Security(.*?)#End Really Simple Security/is', $content_htaccess_uploads, $matches);
+				error_log("has htaccess rules ".$htaccess_has_rsssl_rules);
+				if ( ! empty( $rules_uploads_result ) || $htaccess_has_rsssl_rules ) {
+					if ( ! file_exists( $htaccess_file_uploads ) ) {
+						file_put_contents( $htaccess_file_uploads, '' );
+					}
+
+					$new_rules = empty($rules_result) ? '' : $start . $rules_uploads_result . $end;
+					if ( ! is_writable( $htaccess_file_uploads ) ) {
+						update_site_option( 'rsssl_htaccess_error', 'not-writable-uploads' );
+						update_site_option( 'rsssl_htaccess_rules', $rules_uploads_result );
+					} else {
+						delete_site_option( 'rsssl_htaccess_error' );
+						delete_site_option( 'rsssl_htaccess_rules' );
+						//get current rules with regex
+						if ( strpos( $content_htaccess_uploads, $start ) !== false ) {
+							$new_htaccess = preg_replace( $pattern, $new_rules, $content_htaccess_uploads );
 						} else {
-							delete_site_option( 'rsssl_htaccess_error' );
-							delete_site_option( 'rsssl_htaccess_rules' );
-							//get current rules with regex
-							if ( strpos( $content_htaccess_uploads, $start ) !== false ) {
-								$new_htaccess = preg_replace( $pattern, $start . $rules_uploads_result . $end, $content_htaccess_uploads );
-							} else {
-								//add rules as new block
-								$new_htaccess = $content_htaccess_uploads . $start . $rules_uploads_result . $end;
-							}
-							file_put_contents( $htaccess_file_uploads, $new_htaccess );
+							//add rules as new block
+							$new_htaccess = $content_htaccess_uploads . $new_rules;
 						}
+						file_put_contents( $htaccess_file_uploads, $new_htaccess );
 					}
 				}
 			}
+
 		}
 		/**
 		 * htaccess in root dir
 		 */
 		$rules = apply_filters( 'rsssl_htaccess_security_rules', [] );
 		$htaccess_file = RSSSL()->admin->htaccess_file();
-		if ( count($rules)>0 ) {
-			if ( !file_exists( $htaccess_file ) ) {
-				update_site_option('rsssl_htaccess_error', 'not-exists');
-				$rules_result = implode('',array_column($rules, 'rules'));
-				update_site_option('rsssl_htaccess_rules', $rules_result);
-			}
 
-			if ( file_exists( $htaccess_file ) ) {
-				$content_htaccess = file_get_contents( $htaccess_file );
-				preg_match( $pattern, $content_htaccess, $matches );
-				if ( ( ! empty( $matches[1] ) && empty( $rules ) ) || ! empty( $rules ) ) {
-					$rules_result = '';
-					foreach ( $rules as $rule ) {
-						$rules_result .= $rule['rules'];
+		if ( !file_exists( $htaccess_file ) ) {
+			update_site_option('rsssl_htaccess_error', 'not-exists');
+			$rules_result = implode('',array_column($rules, 'rules'));
+			update_site_option('rsssl_htaccess_rules', $rules_result);
+		}
+
+		if ( file_exists( $htaccess_file ) ) {
+			$content_htaccess = file_get_contents( $htaccess_file );
+			preg_match( $pattern_content, $content_htaccess, $matches );
+			if ( ( ! empty( $matches[1] ) && empty( $rules ) ) || ! empty( $rules ) ) {
+				$rules_result = '';
+				foreach ( $rules as $rule ) {
+					//check if the rule exists outside RSSSL, but not within
+					if ( strpos($content_htaccess, $rule['identifier'])!==false && !preg_match('/#Begin Really Simple Security.*?('.preg_quote($rule['identifier'],'/').').*?#End Really Simple Security/is', $content_htaccess, $matches) ) {
+						continue;
 					}
+					$rules_result .= $rule['rules'];
+				}
 
-					//should replace if rules is not empty, OR if rules is empty and htaccess is not.
-					$htaccess_has_rsssl_rules = ! preg_match( "/#Begin Really Simple Security[ \n\t]+#End Really Simple Security/", $content_htaccess );
-					if ( ! empty( $rules_result ) || $htaccess_has_rsssl_rules ) {
-						if ( ! is_writable( $htaccess_file ) ) {
-							update_site_option( 'rsssl_htaccess_error', 'not-writable' );
-							update_site_option( 'rsssl_htaccess_rules', get_site_option( 'rsssl_htaccess_rules' ) . $rules_result );
+				//should replace if rules is not empty, OR if rules is empty and htaccess is not.
+				$htaccess_has_rsssl_rules = preg_match( '/#Begin Really Simple Security(.*?)#End Really Simple Security/is', $content_htaccess, $matches );
+				if ( ! empty( $rules_result ) || $htaccess_has_rsssl_rules ) {
+					if ( ! is_writable( $htaccess_file ) ) {
+						update_site_option( 'rsssl_htaccess_error', 'not-writable' );
+						update_site_option( 'rsssl_htaccess_rules', get_site_option( 'rsssl_htaccess_rules' ) . $rules_result );
+					} else {
+						delete_site_option( 'rsssl_htaccess_error' );
+						delete_site_option( 'rsssl_htaccess_rules' );
+
+						//remove old style rules
+						$pattern_1 = "/#\s?BEGIN\s?rlrssslReallySimpleSSL.*?#\s?END\s?rlrssslReallySimpleSSL/s";
+						$pattern_2 = "/#\s?BEGIN\s?Really Simple SSL Redirect.*?#\s?END\s?Really Simple SSL Redirect/s";
+						$content_htaccess = preg_replace([$pattern_1, $pattern_2], "", $content_htaccess);
+
+						$new_rules = empty($rules_result) ? '' : $start . $rules_result . $end;
+
+						//get current rules with regex
+						if ( strpos( $content_htaccess, $start ) !== false ) {
+							$new_htaccess = preg_replace( $pattern, $new_rules, $content_htaccess );
 						} else {
-							delete_site_option( 'rsssl_htaccess_error' );
-							delete_site_option( 'rsssl_htaccess_rules' );
-							//get current rules with regex
-							if ( strpos( $content_htaccess, $start ) !== false ) {
-								$new_htaccess = preg_replace( $pattern, $start . $rules_result . $end, $content_htaccess );
+							//add rules as new block
+							if (strpos($content_htaccess, '# BEGIN WordPress')!==false) {
+								$new_htaccess = str_replace('# BEGIN WordPress', $new_rules.'# BEGIN WordPress', $content_htaccess);
 							} else {
-								//add rules as new block
-								$new_htaccess = $start . $rules_result . $end . $content_htaccess;
+								$new_htaccess = $new_rules . $content_htaccess;
 							}
-							file_put_contents( $htaccess_file, $new_htaccess );
-
 						}
+						file_put_contents( $htaccess_file, $new_htaccess );
 					}
 				}
 			}
