@@ -255,7 +255,16 @@ if ( ! function_exists('rsssl_wrap_htaccess' ) ) {
 
 		if ( file_exists( $htaccess_file ) ) {
 			$content_htaccess = file_get_contents( $htaccess_file );
+
+			//remove old style rules
+			//we do this beforehand, so we don't accidentally assume redirects are already in place
+			$content_htaccess = preg_replace(
+				[
+					"/#\s?BEGIN\s?rlrssslReallySimpleSSL.*?#\s?END\s?rlrssslReallySimpleSSL/s",
+					"/#\s?BEGIN\s?Really Simple SSL Redirect.*?#\s?END\s?Really Simple SSL Redirect/s"
+				], "", $content_htaccess);
 			preg_match( $pattern_content, $content_htaccess, $matches );
+
 			if ( ( ! empty( $matches[1] ) && empty( $rules ) ) || ! empty( $rules ) ) {
 				$rules_result = '';
 				foreach ( $rules as $rule ) {
@@ -265,10 +274,14 @@ if ( ! function_exists('rsssl_wrap_htaccess' ) ) {
 					}
 					$rules_result .= $rule['rules'];
 				}
-
+				error_log("rules result");
+				error_log(print_r($rules_result,true));
 				//should replace if rules is not empty, OR if rules is empty and htaccess is not.
 				$htaccess_has_rsssl_rules = preg_match( '/#Begin Really Simple Security(.*?)#End Really Simple Security/is', $content_htaccess, $matches );
+				$htaccess_has_rsssl_rules = $htaccess_has_rsssl_rules || preg_match( "/#\s?BEGIN\s?rlrssslReallySimpleSSL(.*?)#\s?END\s?rlrssslReallySimpleSSL/s", $content_htaccess, $matches );
+				$htaccess_has_rsssl_rules = $htaccess_has_rsssl_rules || preg_match( "/#\s?BEGIN\s?Really Simple SSL Redirect(.*?)#\s?END\s?Really Simple SSL Redirect/s", $content_htaccess, $matches );
 				if ( ! empty( $rules_result ) || $htaccess_has_rsssl_rules ) {
+					error_log("should update file");
 					if ( ! is_writable( $htaccess_file ) ) {
 						update_site_option( 'rsssl_htaccess_error', 'not-writable' );
 						update_site_option( 'rsssl_htaccess_rules', get_site_option( 'rsssl_htaccess_rules' ) . $rules_result );
@@ -276,11 +289,8 @@ if ( ! function_exists('rsssl_wrap_htaccess' ) ) {
 						delete_site_option( 'rsssl_htaccess_error' );
 						delete_site_option( 'rsssl_htaccess_rules' );
 
-						//remove old style rules
-						$pattern_1 = "/#\s?BEGIN\s?rlrssslReallySimpleSSL.*?#\s?END\s?rlrssslReallySimpleSSL/s";
-						$pattern_2 = "/#\s?BEGIN\s?Really Simple SSL Redirect.*?#\s?END\s?Really Simple SSL Redirect/s";
-						$content_htaccess = preg_replace([$pattern_1, $pattern_2], "", $content_htaccess);
 
+						error_log("remove old variants");
 						$new_rules = empty($rules_result) ? '' : $start . $rules_result . $end;
 
 						//get current rules with regex

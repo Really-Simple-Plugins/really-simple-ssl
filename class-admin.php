@@ -1505,12 +1505,12 @@ class rsssl_admin
             }
 
             //fastest cache compatibility
-            if (class_exists('WpFastestCache')) {
+            if ( class_exists('WpFastestCache') ) {
                 $rule .= "RewriteCond %{REQUEST_URI} !wp-content\/cache\/(all|wpfc-mobile-cache)" . "\n";
             }
 
             //Exclude .well-known/acme-challenge for Let's Encrypt validation
-            if ($this->has_acme_challenge_directory() && !$this->has_well_known_needle()) {
+            if ( $this->has_acme_challenge_directory() ) {
                 $rule .= "RewriteCond %{REQUEST_URI} !^/\.well-known/acme-challenge/" . "\n";
             }
 
