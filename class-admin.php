@@ -1165,13 +1165,12 @@ class rsssl_admin
 	{
 		if (file_exists($this->htaccess_file()) && is_writable($this->htaccess_file())) {
 			$htaccess = file_get_contents($this->htaccess_file());
-
-            // remove everything
-            $pattern_old = "/#\s?BEGIN\s?rlrssslReallySimpleSSL.*?#\s?END\s?rlrssslReallySimpleSSL/s";
-            $pattern_new = "/#\s?BEGIN\s?Really Simple SSL Redirect.*?#\s?END\s?Really Simple SSL Redirect/s";
-            //only remove if the pattern is there at all
-            if (preg_match($pattern_old, $htaccess)) $htaccess = preg_replace($pattern_old, "", $htaccess);
-            if (preg_match($pattern_new, $htaccess)) $htaccess = preg_replace($pattern_new, "", $htaccess);
+            $htaccess = preg_replace(
+                    [
+                    "/#\s?BEGIN\s?rlrssslReallySimpleSSL.*?#\s?END\s?rlrssslReallySimpleSSL/s",
+                    "/#\s?BEGIN\s?Really Simple SSL Redirect.*?#\s?END\s?Really Simple SSL Redirect/s",
+                    "/#\s?BEGIN\s?Really Simple Security.*?#\s?END\s?Really Simple SSL Security/s",
+                    ], "", $htaccess);
 
 			$htaccess = preg_replace("/\n+/", "\n", $htaccess);
 			file_put_contents($this->htaccess_file(), $htaccess);
