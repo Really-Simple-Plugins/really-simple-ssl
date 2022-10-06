@@ -60,7 +60,7 @@ class rsssl_admin
 	         * Htaccess redirect handling
 	         */
 	        add_filter( 'rsssl_htaccess_security_rules', array($this, 'add_htaccess_redirect') );
-	        add_action( 'rocket_activation', array($this, 'remove_htaccess_edit' ) );
+	        add_action( 'rocket_activation', 'rsssl_wrap_htaccess' );
 	        add_filter( 'before_rocket_htaccess_rules', array($this, 'add_htaccess_redirect_before_wp_rocket' ) );
 	        add_action( 'rsssl_after_save_field', array($this, 'maybe_flush_wprocket_htaccess' ),100, 4 );
 	        add_action( 'admin_init', array($this, 'insert_secure_cookie_settings'), 70 );
@@ -893,7 +893,6 @@ class rsssl_admin
 		    if ( !is_multisite() || is_main_site() ) {
 			    $this->remove_ssl_from_siteurl_in_wpconfig();
 			    $this->remove_wpconfig_edit();
-			    $this->remove_htaccess_edit();
 			    rsssl_remove_htaccess_security_edits();
 		    }
 	    }
@@ -1150,32 +1149,6 @@ class rsssl_admin
 
         return $plugin_url;
     }
-
-
-    /**
-     * removes the added redirect to https rules to the .htaccess file.
-     *
-     * @since  2.0
-     *
-     * @access public
-     *
-     */
-
-	public function remove_htaccess_edit()
-	{
-		if (file_exists($this->htaccess_file()) && is_writable($this->htaccess_file())) {
-			$htaccess = file_get_contents($this->htaccess_file());
-            $htaccess = preg_replace(
-                    [
-                    "/#\s?BEGIN\s?rlrssslReallySimpleSSL.*?#\s?END\s?rlrssslReallySimpleSSL/s",
-                    "/#\s?BEGIN\s?Really Simple SSL Redirect.*?#\s?END\s?Really Simple SSL Redirect/s",
-                    "/#\s?BEGIN\s?Really Simple Security.*?#\s?END\s?Really Simple SSL Security/s",
-                    ], "", $htaccess);
-
-			$htaccess = preg_replace("/\n+/", "\n", $htaccess);
-			file_put_contents($this->htaccess_file(), $htaccess);
-		}
-	}
 
 	/**
 	 * @return bool

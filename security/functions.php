@@ -141,6 +141,10 @@ if ( !function_exists('rsssl_remove_htaccess_security_edits') ) {
 
 		$htaccess_file = RSSSL()->admin->htaccess_file();
 		$content_htaccess = file_get_contents($htaccess_file);
+		//remove old style rules
+		$pattern_1 = "/#\s?BEGIN\s?rlrssslReallySimpleSSL.*?#\s?END\s?rlrssslReallySimpleSSL/s";
+		$pattern_2 = "/#\s?BEGIN\s?Really Simple SSL Redirect.*?#\s?END\s?Really Simple SSL Redirect/s";
+		$content_htaccess = preg_replace([$pattern_1, $pattern_2], "", $content_htaccess);
 		if (preg_match($pattern, $content_htaccess) && is_writable( $htaccess_file ) ) {
 			$content_htaccess = preg_replace($pattern, "", $content_htaccess);
 			file_put_contents( $htaccess_file, $content_htaccess );
