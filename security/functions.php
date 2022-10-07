@@ -215,7 +215,6 @@ if ( ! function_exists('rsssl_wrap_htaccess' ) ) {
 
 				//should replace if rules is not empty, OR if rules is empty and htaccess is not.
 				$htaccess_has_rsssl_rules = preg_match( '/#Begin Really Simple Security(.*?)#End Really Simple Security/is', $content_htaccess_uploads, $matches);
-				error_log("has htaccess rules ".$htaccess_has_rsssl_rules);
 				if ( ! empty( $rules_uploads_result ) || $htaccess_has_rsssl_rules ) {
 					if ( ! file_exists( $htaccess_file_uploads ) ) {
 						file_put_contents( $htaccess_file_uploads, '' );
@@ -274,23 +273,17 @@ if ( ! function_exists('rsssl_wrap_htaccess' ) ) {
 					}
 					$rules_result .= $rule['rules'];
 				}
-				error_log("rules result");
-				error_log(print_r($rules_result,true));
 				//should replace if rules is not empty, OR if rules is empty and htaccess is not.
 				$htaccess_has_rsssl_rules = preg_match( '/#Begin Really Simple Security(.*?)#End Really Simple Security/is', $content_htaccess, $matches );
 				$htaccess_has_rsssl_rules = $htaccess_has_rsssl_rules || preg_match( "/#\s?BEGIN\s?rlrssslReallySimpleSSL(.*?)#\s?END\s?rlrssslReallySimpleSSL/s", $content_htaccess, $matches );
 				$htaccess_has_rsssl_rules = $htaccess_has_rsssl_rules || preg_match( "/#\s?BEGIN\s?Really Simple SSL Redirect(.*?)#\s?END\s?Really Simple SSL Redirect/s", $content_htaccess, $matches );
 				if ( ! empty( $rules_result ) || $htaccess_has_rsssl_rules ) {
-					error_log("should update file");
 					if ( ! is_writable( $htaccess_file ) ) {
 						update_site_option( 'rsssl_htaccess_error', 'not-writable' );
 						update_site_option( 'rsssl_htaccess_rules', get_site_option( 'rsssl_htaccess_rules' ) . $rules_result );
 					} else {
 						delete_site_option( 'rsssl_htaccess_error' );
 						delete_site_option( 'rsssl_htaccess_rules' );
-
-
-						error_log("remove old variants");
 						$new_rules = empty($rules_result) ? '' : $start . $rules_result . $end;
 
 						//get current rules with regex

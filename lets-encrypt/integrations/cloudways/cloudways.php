@@ -106,10 +106,7 @@ class rsssl_Cloudways {
 		$accessToken = get_transient('rsssl_cw_t');
 		if (!$accessToken) {
 			error_log("not found, get new");
-
 			$response = $this->callCloudwaysAPI( 'POST', '/oauth/access_token', null, [ 'email' => $this->email, 'api_key' => $this->api_key ] );
-			error_log("api call output");
-			error_log(print_r($response, true));
 			if ($response->status === 'success' ) {
 				$accessToken   = $response->output->access_token;
 				set_transient('rsssl_cw_t', $accessToken, 1800);
