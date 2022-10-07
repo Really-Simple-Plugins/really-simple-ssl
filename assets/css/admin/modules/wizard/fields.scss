@@ -12,6 +12,19 @@
         max-width: max-content;
       }
     }
+    .rsssl-grid-item-content label{
+      font-size: var(--rsp-fs-300);
+      font-weight: 400;
+      line-height: 1.5;
+      text-transform: unset;
+      box-sizing: border-box;
+      display: inherit;
+      max-width: 100%;
+      z-index: 1;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
     .components-base-control__field{
       margin-bottom: 0;
     }
