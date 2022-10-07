@@ -61,7 +61,7 @@ function rsssl_add_option_menu() {
 	$page_hook_suffix = add_options_page(
 		__("SSL settings", "really-simple-ssl"),
 		__("SSL", "really-simple-ssl") . $update_count,
-		'activate_plugins',
+		'manage_security',
 		'really-simple-security',
 		'rsssl_settings_page'
     );
