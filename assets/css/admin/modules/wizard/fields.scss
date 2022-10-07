@@ -16,7 +16,7 @@
       margin-bottom: 0;
     }
     .components-toggle-control{
-      .components-base-control__field{
+      .components-base-control__field, .components-flex{
         display: flex;
         flex-direction: row-reverse;
         align-items: center;
