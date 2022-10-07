@@ -31,7 +31,7 @@ const SslLabs = (props) => {
     }
 
     const isLocalHost = () => {
-    return false;
+//         return false;
          return window.location.host.indexOf('localhost')!==-1;
     }
 
@@ -77,12 +77,13 @@ const SslLabs = (props) => {
     const runSslTest = () => {
         getSslLabsData().then((sslData)=>{
             if ( sslData.status === 'ERROR' ){
-                console.log("stopping");
+                sslData = processSslData(sslData);
                 setSslData(sslData);
                 props.setBlockProps('sslScan', 'completed');
                 clearInterval(intervalId.current);
-            } else if ( sslData.endpoints && sslData.endpoints.filter((endpoint) => endpoint.statusMessage === 'Ready').length>0 ) {
-                console.log("has endpoits");
+            } else
+            if ( sslData.endpoints && sslData.endpoints.filter((endpoint) => endpoint.statusMessage === 'Ready').length>0 ) {
+                console.log("found ready endpoint");
                 let completedEndpoints = sslData.endpoints.filter((endpoint) => endpoint.statusMessage === 'Ready');
                 let lastCompletedEndpointIndex = completedEndpoints.length-1;
                 let lastCompletedEndpoint = completedEndpoints[ lastCompletedEndpointIndex];
@@ -116,14 +117,16 @@ const SslLabs = (props) => {
                     requestActive.current = false;
                 });
             } else {
-                if ( !sslData.errors ) {
-                    rsssl_api.updateSslLabs(sslData ).then( ( response ) => {});
-                }
+                console.log("no ready endpoint");
                 //if there are no errors, this is the first request. We reset the endpoint data we have.
                 setEndpointData([]);
                 sslData.endpointData = endpointData;
                 sslData = processSslData(sslData);
                 setSslData(sslData);
+                if ( !sslData.errors ) {
+                    rsssl_api.updateSslLabs(sslData ).then( ( response ) => {});
+                }
+
                 requestActive.current = false;
             }
 
@@ -139,6 +142,7 @@ const SslLabs = (props) => {
         let grade = sslData.grade ? sslData.grade : '?';
         let ipAddress='';
         if ( sslData.endpoints ) {
+            console.log(sslData.endpoints);
             totalProgress = sslData.endpoints.length * 100;
             let completedEndpoints = sslData.endpoints.filter((endpoint) => endpoint.statusMessage === 'Ready');
             let completedEndpointsLength = completedEndpoints.length;
@@ -173,8 +177,8 @@ const SslLabs = (props) => {
     }
 
     const getEndpointData = (ipAddress) => {
-//         const host = window.location.host;
-        const host = "ziprecipes.net";
+        const host = window.location.host;
+//         const host = "ziprecipes.net";
         const url = 'https://api.ssllabs.com/api/v3/getEndpointData?host='+host+'&s='+ipAddress;
         let data = {};
         data.url = url;
@@ -190,15 +194,13 @@ const SslLabs = (props) => {
             clearCacheUrl = '&startNew=on';
             setSslData(false);
         }
-//         const host = window.location.host;
-        const host = "ziprecipes.net";
-
+        const host = window.location.host;
+//         const host = "ziprecipes.net";
         const url = "https://api.ssllabs.com/api/v3/analyze?host="+host+clearCacheUrl;
         let data = {};
         data.url = url;
 
         return rsssl_api.doAction('ssltest_run', data).then( ( response ) => {
-
             return JSON.parse(response.data);
         })
     }
@@ -321,7 +323,6 @@ const SslLabs = (props) => {
         if ( neverScannedYet() ){
             status = 'inactive';
         }
-
         if ( endpointData && endpointData.length>0 ) {
             status = 'success';
             endpointData.forEach(function(endpoint, i){
@@ -378,7 +379,7 @@ const SslLabs = (props) => {
         hasErrors = true;
         sslStatusColor = 'red';
         errorMessage = __("Not available on localhost","really-simple-ssl");
-    } else if (sslData && sslData.errors) {
+    } else if (sslData && (sslData.errors || sslData.status === 'ERROR') ) {
         hasErrors = true;
         sslStatusColor = 'red';
         errorMessage = statusMessage;
