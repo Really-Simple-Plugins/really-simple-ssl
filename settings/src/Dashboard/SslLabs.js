@@ -31,7 +31,7 @@ const SslLabs = (props) => {
     }
 
     const isLocalHost = () => {
-//     return false;
+    return false;
          return window.location.host.indexOf('localhost')!==-1;
     }
 
@@ -76,7 +76,13 @@ const SslLabs = (props) => {
 
     const runSslTest = () => {
         getSslLabsData().then((sslData)=>{
-            if ( sslData.endpoints && sslData.endpoints.filter((endpoint) => endpoint.statusMessage === 'Ready').length>0 ) {
+            if ( sslData.status === 'ERROR' ){
+                console.log("stopping");
+                setSslData(sslData);
+                props.setBlockProps('sslScan', 'completed');
+                clearInterval(intervalId.current);
+            } else if ( sslData.endpoints && sslData.endpoints.filter((endpoint) => endpoint.statusMessage === 'Ready').length>0 ) {
+                console.log("has endpoits");
                 let completedEndpoints = sslData.endpoints.filter((endpoint) => endpoint.statusMessage === 'Ready');
                 let lastCompletedEndpointIndex = completedEndpoints.length-1;
                 let lastCompletedEndpoint = completedEndpoints[ lastCompletedEndpointIndex];
@@ -167,8 +173,8 @@ const SslLabs = (props) => {
     }
 
     const getEndpointData = (ipAddress) => {
-        const host = window.location.host;
-//         const host = "rssslletsencrypt.nl";
+//         const host = window.location.host;
+        const host = "ziprecipes.net";
         const url = 'https://api.ssllabs.com/api/v3/getEndpointData?host='+host+'&s='+ipAddress;
         let data = {};
         data.url = url;
@@ -184,8 +190,8 @@ const SslLabs = (props) => {
             clearCacheUrl = '&startNew=on';
             setSslData(false);
         }
-        const host = window.location.host;
-//         const host = "rssslletsencrypt.nl";
+//         const host = window.location.host;
+        const host = "ziprecipes.net";
 
         const url = "https://api.ssllabs.com/api/v3/analyze?host="+host+clearCacheUrl;
         let data = {};

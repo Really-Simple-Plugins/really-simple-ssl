@@ -6,7 +6,7 @@ const SslLabsFooter = (props) => {
         props.setBlockProps('sslScan', 'active');
     }
     let status = props.BlockProps && props.BlockProps.hasOwnProperty('sslScan') ? props.BlockProps['sslScan'] : false;
-    let disabled = status === 'active' || window.location.host.indexOf('localhost')!==-1;
+    let disabled = false;//status === 'active' || window.location.host.indexOf('localhost')!==-1;
 
     return (
         <>
