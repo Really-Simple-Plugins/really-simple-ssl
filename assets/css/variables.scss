@@ -85,11 +85,6 @@ $rsp-break-xxl: 1599px;
   --rsp-fs-700: 1.25rem;          // 20px
   --rsp-fs-800: 1.5rem;           // 24px
   --rsp-fs-900: 3.5rem;           // 40px
-
-  // Plugin specific variables down here please
-  --rsp-brand-primary: var(--rsp-blue);
-  --rsp-brand-secondary: var(--rsp-yellow);
-  --rsp-brand-primary-faded: var(--rsp-blue-faded);
 }
 
 @mixin rsssl-block {
