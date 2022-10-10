@@ -60,12 +60,14 @@ class rsssl_admin
 	         * Htaccess redirect handling
 	         */
 	        add_filter( 'rsssl_htaccess_security_rules', array($this, 'add_htaccess_redirect') );
-	        add_action( 'rocket_activation', 'rsssl_wrap_htaccess' );
-	        add_filter( 'before_rocket_htaccess_rules', array($this, 'add_htaccess_redirect_before_wp_rocket' ) );
 	        add_action( 'rsssl_after_save_field', array($this, 'maybe_flush_wprocket_htaccess' ),100, 4 );
 	        add_action( 'admin_init', array($this, 'insert_secure_cookie_settings'), 70 );
             add_action( 'admin_init', array($this, 'recheck_certificate') );
         }
+
+	    add_filter( 'before_rocket_htaccess_rules', array($this, 'add_htaccess_redirect_before_wp_rocket' ) );
+	    add_action( 'rocket_activation', 'rsssl_wrap_htaccess' );
+	    add_action( 'rocket_deactivation' , 'rsssl_wrap_htaccess' );
     }
 
     static function this()
