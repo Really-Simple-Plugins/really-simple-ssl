@@ -14,14 +14,14 @@ require_once( rsssl_path . 'settings/rest-api-optimizer/rest-api-optimizer.php' 
 /**
  * Fix for WPML issue where WPML breaks the rest api by adding a language locale in the url
  *
- * @param string $url
- * @param string $path
- * @param int    $blog_id
- * @param string $scheme
+ * @param $url
+ * @param $path
+ * @param $blog_id
+ * @param $scheme
  *
  * @return string
  */
-function rsssl_fix_rest_url_for_wpml( string $url, string $path, int $blog_id, string $scheme) : string {
+function rsssl_fix_rest_url_for_wpml( $url, $path, $blog_id, $scheme)  {
 	if ( function_exists( 'icl_register_string' ) ) {
 		$current_language = apply_filters( 'wpml_current_language', null );
         if ( strpos($url, '/'.$current_language.'/wp-json/') ) {
