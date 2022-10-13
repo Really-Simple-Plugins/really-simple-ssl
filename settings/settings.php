@@ -31,7 +31,7 @@ function rsssl_fix_rest_url_for_wpml( string $url, string $path, int $blog_id, s
 	}
     return $url;
 }
-add_filter( 'rest_url', 'rsssl_fix_rest_url_for_wpml' );
+add_filter( 'rest_url', 'rsssl_fix_rest_url_for_wpml', 10, 4 );
 
 
 function rsssl_plugin_admin_scripts() {
