@@ -103,7 +103,14 @@ class rsssl_firewall_manager {
 		if ( is_writable( $wpconfig_path ) && strpos( $wpconfig, 'advanced-headers.php' ) === false ) {
 			$rule = 'if ( file_exists(ABSPATH . "wp-content/advanced-headers.php") ) { ' . "\n";
 			$rule .= "\t" . 'require_once ABSPATH . "wp-content/advanced-headers.php";' . "\n" . "}";
-			$updated = preg_replace( '/' . '<\?php' . '/', '<?php' . "\n" . $rule . "\n", $wpconfig, 1 );
+			//if RSSSL comment is found, insert after
+			$rsssl_comment = '//END Really Simple SSL';
+			if ( strpos($wpconfig, $rsssl_comment)!==false ) {
+				$pos = strrpos($wpconfig, $rsssl_comment);
+				$updated = substr_replace($wpconfig, $rsssl_comment."\n" . $rule . "\n", $pos, strlen($rsssl_comment));
+			} else {
+				$updated = preg_replace( '/' . '<\?php' . '/', '<?php' . "\n" . $rule . "\n", $wpconfig, 1 );
+			}
 			file_put_contents( $wpconfig_path, $updated );
 		}
 	}
