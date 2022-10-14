@@ -181,7 +181,7 @@ class REALLY_SIMPLE_SSL
 		) {
 			?>
 			<div id="message" class="error notice really-simple-plugins">
-				<p><?php echo __("Really Simple SSL Pro needs to be updated to the latest version to be compatible.","really-simple-ssl");?></p>
+				<p><?php echo __("Update Really Simple SSL Pro: the plugin needs to be updated to the latest version to be compatible.","really-simple-ssl");?></p>
                 <p><?php echo sprintf(__("Visit the plugins overview or %srenew your license%s.","really-simple-ssl"),'<a href="https://really-simple-ssl.com/pro" target="_blank">','</a>');?></p>
 			</div>
 			<?php
