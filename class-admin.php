@@ -1571,6 +1571,10 @@ class rsssl_admin
 
     public function show_leave_review_notice()
     {
+        if (defined('rsssl_pro_version')) {
+            return;
+        }
+
 	    if ( rsssl_get_option('dismiss_all_notices') ) {
             return;
         }
