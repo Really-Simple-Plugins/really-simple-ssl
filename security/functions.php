@@ -70,6 +70,12 @@ if ( !function_exists('rsssl_maybe_clear_transients')) {
 			delete_transient( 'rsssl_mixed_content_fixer_detected' );
 			RSSSL()->admin->mixed_content_fixer_detected();
 		}
+
+		//no change
+		if ( $field_value === $prev_value ) {
+			return;
+		}
+
 		if ( $field_id === 'disable_http_methods' ) {
 			delete_transient( 'rsssl_http_methods_allowed' );
 			rsssl_http_methods_allowed();
