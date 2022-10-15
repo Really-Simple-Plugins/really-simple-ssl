@@ -15,6 +15,10 @@ function rsssl_rest_api_onboarding($request) {
 	$steps = [];
 	$info = "";
 	$refresh = isset($_GET['forceRefresh']) && $_GET['forceRefresh']===true;
+	$nonce = $_GET['nonce'] ?? false;
+	if ( !wp_verify_nonce($nonce, 'rsssl_nonce') ) {
+		return [];
+	}
 	if( !defined('rsssl_pro_version')) {
 		$info = __('You can also let the automatic scan of the pro version handle this for you, and get premium support, increased security with HSTS and more!', 'really-simple-ssl'). " " . sprintf('<a target="_blank" href="%s">%s</a>', RSSSL()->admin->pro_url, __("Check out Really Simple SSL Pro", "really-simple-ssl"));;
 	}

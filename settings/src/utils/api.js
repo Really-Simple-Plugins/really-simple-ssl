@@ -17,7 +17,7 @@ export const getFields = () => {
 			'X-WP-Nonce': rsssl_settings.nonce,
 		}
 	}
-    return axios.get(rsssl_settings.site_url+'reallysimplessl/v1/fields/get?'+anchor, config);
+    return axios.get(rsssl_settings.site_url+'reallysimplessl/v1/fields/get?'+anchor+'&nonce='+rsssl_settings.rsssl_nonce, config);
 };
 
 /*
@@ -31,8 +31,11 @@ export const setFields = (data) => {
 	let config = {
 		headers: {
 			'X-WP-Nonce': rsssl_settings.nonce,
+			'rsssl-nonce': rsssl_settings.nonce,
 		}
 	}
+	let nonce = {'nonce':rsssl_settings.rsssl_nonce};
+	data.push(nonce);
 	return axios.post(rsssl_settings.site_url+'reallysimplessl/v1/fields/set?'+anchor, data, config );
 };
 
@@ -42,7 +45,7 @@ export const getBlock = (block) => {
 			'X-WP-Nonce': rsssl_settings.nonce,
 		}
 	}
-	return axios.get(rsssl_settings.site_url+'reallysimplessl/v1/block/'+block, config);
+	return axios.get(rsssl_settings.site_url+'reallysimplessl/v1/block/'+block+'?nonce='+rsssl_settings.rsssl_nonce, config);
 };
 
 export const runTest = (test, state, data ) => {
@@ -54,7 +57,7 @@ export const runTest = (test, state, data ) => {
 	if (data) {
 		data = encodeURIComponent(JSON.stringify(data));
 	}
-	return axios.get(rsssl_settings.site_url+'reallysimplessl/v1/tests/'+test+'?state='+state+'&data='+data, config);
+	return axios.get(rsssl_settings.site_url+'reallysimplessl/v1/tests/'+test+'?state='+state+'&nonce='+rsssl_settings.rsssl_nonce+'&data='+data, config);
 };
 
 export const runLetsEncryptTest = (test, id ) => {
@@ -64,7 +67,7 @@ export const runLetsEncryptTest = (test, id ) => {
 		}
 	}
 
-	return axios.get(rsssl_settings.site_url+'reallysimplessl/v1/tests/'+test+'?letsencrypt=1&id='+id, config);
+	return axios.get(rsssl_settings.site_url+'reallysimplessl/v1/tests/'+test+'?letsencrypt=1&id='+id+'&nonce='+rsssl_settings.rsssl_nonce, config);
 }
 
 export const doAction = (action, data) => {
@@ -73,26 +76,8 @@ export const doAction = (action, data) => {
 			'X-WP-Nonce': rsssl_settings.nonce,
 		}
 	}
+    data.nonce = rsssl_settings.rsssl_nonce;
 	return axios.post(rsssl_settings.site_url+'reallysimplessl/v1/do_action/'+action, data, config );
-}
-
-export const updateSslLabs = (data) => {
-	let config = {
-		headers: {
-			'X-WP-Nonce': rsssl_settings.nonce,
-		}
-	}
-	return axios.post(rsssl_settings.site_url+'reallysimplessl/v1/store_ssl_labs', data, config );
-}
-
-export const onboardingActions = (data) => {
-	let config = {
-		headers: {
-			'X-WP-Nonce': rsssl_settings.nonce,
-		}
-	}
-
-	return axios.post(rsssl_settings.site_url+'reallysimplessl/v1/onboarding_actions', data, config );
 }
 
 export const getOnboarding = (forceRefresh) => {
@@ -101,5 +86,5 @@ export const getOnboarding = (forceRefresh) => {
 			'X-WP-Nonce': rsssl_settings.nonce,
 		}
 	}
-	return axios.get(rsssl_settings.site_url+'reallysimplessl/v1/onboarding?forceRefresh='+forceRefresh, config);
+	return axios.get(rsssl_settings.site_url+'reallysimplessl/v1/onboarding?forceRefresh='+forceRefresh+'&nonce='+rsssl_settings.rsssl_nonce, config);
 }

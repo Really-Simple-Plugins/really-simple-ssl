@@ -221,31 +221,26 @@ function rsssl_menu() {
 				[
 					'id'         => 'le-directories',
 					'title'      => __( 'Directories', 'really-simple-ssl' ),
-//					'intro' => __( 'Below you will find the instructions for different hosting environments and configurations. If you start the process with the necessary instructions and credentials the next view steps will be done in no time.', 'really-simple-ssl'),
 					'tests_only' => true,
 				],
 				[
 					'id'         => 'le-dns-verification',
 					'title'      => __( 'DNS verification', 'really-simple-ssl' ),
-//					'intro' => __( 'Below you will find the instructions for different hosting environments and configurations. If you start the process with the necessary instructions and credentials the next view steps will be done in no time.', 'really-simple-ssl'),
 					'tests_only' => true,
 				],
 				[
 					'id'         => 'le-generation',
 					'title'      => __( 'Generation', 'really-simple-ssl' ),
-//					'intro' => __( 'Below you will find the instructions for different hosting environments and configurations. If you start the process with the necessary instructions and credentials the next view steps will be done in no time.', 'really-simple-ssl'),
 					'tests_only' => true,
 				],
 				[
 					'id'         => 'le-installation',
 					'title'      => __( 'Installation', 'really-simple-ssl' ),
-//					'intro' => __( 'Below you will find the instructions for different hosting environments and configurations. If you start the process with the necessary instructions and credentials the next view steps will be done in no time.', 'really-simple-ssl'),
 					'tests_only' => true,
 				],
 				[
 					'id'         => 'le-activate_ssl',
 					'title'      => __( 'Activate', 'really-simple-ssl' ),
-//					'intro' => __( 'Below you will find the instructions for different hosting environments and configurations. If you start the process with the necessary instructions and credentials the next view steps will be done in no time.', 'really-simple-ssl'),
 					'tests_only' => true,
 				],
 			],
@@ -1090,7 +1085,6 @@ function rsssl_blocks() {
 		[
 			'id'       => 'progress',
 			'title'    => __( "Progress", 'really-simple-ssl' ),
-			'help'     => __( 'A help text', 'really-simple-ssl' ),
 			'controls' => [
 				'type' => 'react',
 				'data' => 'ProgressHeader'
@@ -1106,7 +1100,6 @@ function rsssl_blocks() {
 				'data' => __( "Powered by Qualys", 'really-simple-ssl' ),
 			],
 			'title'    => __( "Status", 'really-simple-ssl' ),
-			// 'help'    => __( 'A help text', 'really-simple-ssl' ),
 			'content'  => [ 'type' => 'react', 'data' => 'SslLabs' ],
 			'footer'   => [ 'type' => 'react', 'data' => 'SslLabsFooter' ],
 			'class'    => '',
@@ -1115,7 +1108,6 @@ function rsssl_blocks() {
 			'id'       => 'new-features-block',
 			'controls' => false,
 			'title'    => __( "Hardening", 'really-simple-ssl' ),
-			'help'     => __( 'A help text', 'really-simple-ssl' ),
 			'content'  => [ 'type' => 'react', 'data' => 'SecurityFeaturesBlock' ],
 			'footer'   => [ 'type' => 'react', 'data' => 'SecurityFeaturesFooter' ],
 			'class'    => '',
@@ -1124,7 +1116,6 @@ function rsssl_blocks() {
 			'id'       => 'tips_tricks',
 			'controls' => false,
 			'title'    => __( "Tips & Tricks", 'really-simple-ssl' ),
-			'help'     => __( 'A help text', 'really-simple-ssl' ),
 			'content'  => [ 'type' => 'template', 'data' => 'tips-tricks.php' ],
 			'footer'   => [ 'type' => 'template', 'data' => 'tips-tricks-footer.php' ],
 			'class'    => ' rsssl-column-2',
@@ -1136,7 +1127,6 @@ function rsssl_blocks() {
 			                          . 'assets/img/really-simple-plugins.svg" alt="Really Simple Plugins" /></a>'
 			],
 			'title'    => __( "Other Plugins", 'really-simple-ssl' ),
-			'help'     => __( 'A help text', 'really-simple-ssl' ),
 			'content'  => [ 'type' => 'react', 'data' => 'OtherPlugins' ],
 			'footer'   => [ 'type' => 'html', 'data' => '' ],
 			'class'    => ' rsssl-column-2 no-border no-background',

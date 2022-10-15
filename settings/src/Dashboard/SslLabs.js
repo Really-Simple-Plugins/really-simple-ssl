@@ -83,7 +83,6 @@ const SslLabs = (props) => {
                 clearInterval(intervalId.current);
             } else
             if ( sslData.endpoints && sslData.endpoints.filter((endpoint) => endpoint.statusMessage === 'Ready').length>0 ) {
-                console.log("found ready endpoint");
                 let completedEndpoints = sslData.endpoints.filter((endpoint) => endpoint.statusMessage === 'Ready');
                 let lastCompletedEndpointIndex = completedEndpoints.length-1;
                 let lastCompletedEndpoint = completedEndpoints[ lastCompletedEndpointIndex];
@@ -110,21 +109,20 @@ const SslLabs = (props) => {
                     }
 
                     if ( !sslData.errors ) {
-                        rsssl_api.updateSslLabs(sslData ).then( ( response ) => {});
+                        rsssl_api.doAction('store_ssl_labs', sslData ).then( ( response ) => {});
                     }
                     sslData = processSslData(sslData);
                     setSslData(sslData);
                     requestActive.current = false;
                 });
             } else {
-                console.log("no ready endpoint");
                 //if there are no errors, this is the first request. We reset the endpoint data we have.
                 setEndpointData([]);
                 sslData.endpointData = endpointData;
                 sslData = processSslData(sslData);
                 setSslData(sslData);
                 if ( !sslData.errors ) {
-                    rsssl_api.updateSslLabs(sslData ).then( ( response ) => {});
+                    rsssl_api.doAction('store_ssl_labs', sslData ).then( ( response ) => {});
                 }
 
                 requestActive.current = false;
@@ -142,7 +140,6 @@ const SslLabs = (props) => {
         let grade = sslData.grade ? sslData.grade : '?';
         let ipAddress='';
         if ( sslData.endpoints ) {
-            console.log(sslData.endpoints);
             totalProgress = sslData.endpoints.length * 100;
             let completedEndpoints = sslData.endpoints.filter((endpoint) => endpoint.statusMessage === 'Ready');
             let completedEndpointsLength = completedEndpoints.length;

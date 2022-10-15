@@ -220,7 +220,6 @@ class rsssl_cPanel
 
         // Make the call, and then terminate the cURL caller object.
         $curl_response = curl_exec($ch);
-        error_log(print_r($curl_response, true));
         curl_close($ch);
 
         //return output.
@@ -305,7 +304,6 @@ class rsssl_cPanel
 			$action = 'continue';
 			$message = __("Successfully added TXT record.","really-simple-ssl");
 		} else {
-			error_log(print_r($response_array, true));
 			$status = 'warning';
 			$action = 'continue';
 			$message = __("Could not automatically add TXT record. Please proceed manually, following the steps below.","really-simple-ssl");

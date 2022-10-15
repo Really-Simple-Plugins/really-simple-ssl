@@ -24,7 +24,6 @@ if ( !function_exists('rsssl_do_fix')) {
 			$completed[] = $fix;
 			update_option( 'rsssl_completed_fixes', $completed );
 		} elseif ( $fix && ! function_exists( $fix ) ) {
-			error_log( "Really Simple SSL: fix function $fix not found" );
 		}
 
 	}

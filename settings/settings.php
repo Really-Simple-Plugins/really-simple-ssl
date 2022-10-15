@@ -59,7 +59,7 @@ function rsssl_plugin_admin_scripts() {
             'pro_plugin_active' => defined('rsssl_pro_version'),
             'networkwide_active' => !is_multisite() || rsssl_is_networkwide_active(),//true for single sites and network wide activated
             'nonce' => wp_create_nonce( 'wp_rest' ),//to authenticate the logged in user
-            'rsssl_nonce' => wp_create_nonce( 'rsssl_save' ),
+            'rsssl_nonce' => wp_create_nonce( 'rsssl_nonce' ),
         ])
 	);
 }
@@ -158,14 +158,6 @@ function rsssl_settings_rest_route() {
 		}
 	) );
 
-    register_rest_route( 'reallysimplessl/v1', 'store_ssl_labs', array(
-		'methods'  => 'POST',
-		'callback' => 'rsssl_store_ssl_labs',
-		'permission_callback' => function () {
-			return rsssl_user_can_manage();
-		}
-	) );
-
 	register_rest_route( 'reallysimplessl/v1', 'do_action/(?P<action>[a-z\_\-]+)', array(
 		'methods'  => 'POST',
 		'callback' => 'rsssl_do_action',
@@ -177,16 +169,17 @@ function rsssl_settings_rest_route() {
 
 /**
  * Store SSL Labs result
- * @param $request
+ * @param WP_REST_Request $request
  *
- * @return void
+ * @return array
  */
 function rsssl_store_ssl_labs($request){
 	if (!rsssl_user_can_manage()) {
-		return;
+		return [];
 	}
 	$data = $request->get_json_params();
 	update_option('rsssl_ssl_labs_data', $data, false);
+    return [];
 }
 
 /**
@@ -198,13 +191,23 @@ function rsssl_do_action($request){
 	if ( !rsssl_user_can_manage() ) {
 		return;
 	}
+
 	$action = sanitize_title($request->get_param('action'));
+	$data = $request->get_params();
+	$nonce = $data['nonce'];
+	if ( !wp_verify_nonce($nonce, 'rsssl_nonce') ) {
+		return;
+	}
+
 	switch($action){
 		case 'ssl_status_data':
 			$data = rsssl_ssl_status_data();
 			break;
 		case 'ssltest_run':
 			$data = rsssl_ssltest_run($request);
+			break;
+        case 'store_ssl_labs':
+			$data = rsssl_store_ssl_labs($request);
 			break;
         case 'plugin_actions':
 			$data = rsssl_plugin_actions($request);
@@ -230,7 +233,7 @@ function rsssl_plugin_actions($request){
 	if ( !rsssl_user_can_manage() ) {
 		return [];
 	}
-    $data = $request->get_params($request);
+    $data = $request->get_params();
     $slug = sanitize_title($data['slug']);
     $action = sanitize_title($data['pluginAction']);
 	$installer = new rsssl_installer($slug);
@@ -419,6 +422,19 @@ function rsssl_rest_api_fields_set($request){
         return;
     }
 	$fields = $request->get_json_params();
+	//get the nonce
+	$nonce = false;
+	foreach ( $fields as $index => $field ){
+		if ( isset($field['nonce']) ) {
+			$nonce = $field['nonce'];
+			unset($fields[$index]);
+		}
+	}
+
+    if ( !wp_verify_nonce($nonce, 'rsssl_nonce') ) {
+        return;
+    }
+
     $config_fields = rsssl_fields(false);
     $config_ids = array_column($config_fields, 'id');
 	foreach ( $fields as $index => $field ) {

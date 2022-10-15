@@ -123,20 +123,18 @@ const [networkProgress, setNetworkProgress] = useState(0);
 
     const itemButtonHandler = (id, action) => {
         let data={};
-        data.action = action;
         data.id = id;
         updateActionForItem(id, action, false);
-        rsssl_api.onboardingActions(data).then( ( response ) => {
+        rsssl_api.doAction(action, data).then( ( response ) => {
             if ( response.data.success ){
                 if (action==='activate_setting'){
                     //ensure all fields are updated, and progress is retrieved again
                     props.getFields();
                 }
                 let nextAction = response.data.next_action;
-                if (nextAction!=='none') {
-                    data.action = nextAction;
+                if ( nextAction!=='none' && nextAction!=='completed') {
                     updateActionForItem(id, nextAction, false);
-                    rsssl_api.onboardingActions(data).then( ( response ) => {
+                    rsssl_api.doAction(nextAction, data).then( ( response ) => {
                         if ( response.data.success ){
                             updateActionForItem(id, 'completed', 'success' );
                         } else {
