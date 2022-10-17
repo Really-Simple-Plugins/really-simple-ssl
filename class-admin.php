@@ -914,8 +914,9 @@ class rsssl_admin
     public function detect_configuration()
     {
 	    $this->configuration_loaded = true;
+	    $this->do_wpconfig_loadbalancer_fix = true;
         //if current page is on SSL, we can assume SSL is available, even when an errormsg was returned
-        if ($this->is_ssl_extended()) {
+        if ( $this->is_ssl_extended() ) {
             $site_has_ssl = true;
         } else {
             //if certificate is valid
@@ -959,10 +960,12 @@ class rsssl_admin
             }
 
             //check for is_ssl()
-            if ( (!$this->is_ssl_extended() &&
+            if ( ( !$this->is_ssl_extended() &&
                     (strpos($filecontents, "#SERVER-HTTPS-ON#") === false) &&
                     (strpos($filecontents, "#SERVER-HTTPS-1#") === false) &&
-                    (strpos($filecontents, "#SERVERPORT443#") === false)) || (!is_ssl() && $this->is_ssl_extended())) {
+                    (strpos($filecontents, "#SERVERPORT443#") === false)
+                 ) ||
+                 ( !is_ssl() && $this->is_ssl_extended() )) {
                 //when is_ssl would return false, we should add some code to wp-config.php
                 if ( !$this->wpconfig_has_fixes() ) {
                     $this->do_wpconfig_loadbalancer_fix = true;
@@ -1794,13 +1797,12 @@ class rsssl_admin
 	    $expiry_date = !empty($end_date) ? date( get_option('date_format'), $end_date ) : __("(Unknown)", "really-simple-ssl");
 
         $notices = array(
-	        'load_balancer_fix' => array(
+	        'load_balancer_fiqx' => array(
 		        'condition' => ['NOT rsssl_ssl_enabled'],
 		        'callback' => 'RSSSL()->admin->do_wpconfig_loadbalancer_fix',
 		        'score' => 30,
 		        'output' => array(
 			        'true' => array(
-				        'title' => __("System detection encountered issues!", "really-simple-ssl"),
 				        'msg' => __("Your wp-config.php has to be edited, but is not writable.", "really-simple-ssl").' '.
                                  __("Set your wp-config.php to writable and reload this page.", "really-simple-ssl").' '.
 				                 __("To safely enable SSL on your server configuration, you should add the following line of code to your wp-config.php.", "really-simple-ssl").
@@ -1822,7 +1824,6 @@ class rsssl_admin
                 'score' => 30,
                 'output' => array(
                     'true' => array(
-                        'title' => __("System detection encountered issues!", "really-simple-ssl"),
                         'msg' => __("A definition of a site url or home url was detected in your wp-config.php, but the file is not writable.", "really-simple-ssl").' '.__("Set your wp-config.php to writable and reload this page.", "really-simple-ssl"),
                         'icon' => 'warning',
                         'admin_notice' => true,
@@ -1837,7 +1838,6 @@ class rsssl_admin
                 'score' => 30,
                 'output' => array(
                     'true' => array(
-                        'title' => __("Major security issue!", "really-simple-ssl"),
                         'msg' => __("The 'force-deactivate.php' file has to be renamed to .txt. Otherwise your ssl can be deactivated by anyone on the internet.", "really-simple-ssl") .' '.
                                  '<a href="'.add_query_arg(array('page'=>'really-simple-security'), rsssl_admin_url() ).'">'.__("Check again", "really-simple-ssl").'</a>',
                         'icon' => 'warning',
