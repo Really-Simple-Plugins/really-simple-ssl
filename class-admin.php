@@ -914,7 +914,6 @@ class rsssl_admin
     public function detect_configuration()
     {
 	    $this->configuration_loaded = true;
-	    $this->do_wpconfig_loadbalancer_fix = true;
         //if current page is on SSL, we can assume SSL is available, even when an errormsg was returned
         if ( $this->is_ssl_extended() ) {
             $site_has_ssl = true;

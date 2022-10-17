@@ -619,20 +619,22 @@ function rsssl_drop_empty_menu_items( $menu_items, $fields) {
 	if ( !rsssl_user_can_manage() ) {
 		return $menu_items;
 	}
-    $new_menu_items = $menu_items;
-    foreach($menu_items as $key => $menu_item) {
-        $searchResult = array_search($menu_item['id'], array_column($fields, 'menu_id'));
-        if($searchResult === false) {
-            unset($new_menu_items[$key]);
-            //reset array keys to prevent issues with react
-	        $new_menu_items = array_values($new_menu_items);
-        } else {
-            if(isset($menu_item['menu_items'])){
-                $updatedValue = rsssl_drop_empty_menu_items($menu_item['menu_items'], $fields);
-                $new_menu_items[$key]['menu_items'] = $updatedValue;
-            }
-        }
-    }
+	$new_menu_items = $menu_items;
+	foreach($menu_items as $key => $menu_item) {
+		//if menu has submenu items, show anyway
+		$has_submenu = isset($menu_item['menu_items']);
+		$has_fields = array_search($menu_item['id'], array_column($fields, 'menu_id'));
+		if( $has_fields === false && !$has_submenu) {
+			unset($new_menu_items[$key]);
+			//reset array keys to prevent issues with react
+			$new_menu_items = array_values($new_menu_items);
+		} else {
+			if( $has_submenu ){
+				$updatedValue = rsssl_drop_empty_menu_items($menu_item['menu_items'], $fields);
+				$new_menu_items[$key]['menu_items'] = $updatedValue;
+			}
+		}
+	}
     return $new_menu_items;
 }
 

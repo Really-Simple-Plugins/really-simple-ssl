@@ -108,14 +108,14 @@ class SettingsPage extends Component {
     filterMenuItems(menuItems) {
         const newMenuItems = menuItems;
         for (const [index, menuItem] of menuItems.entries()) {
-            const searchResult = this.props.fields.filter((field) => {
+            const menuItemFields = this.props.fields.filter((field) => {
                 return (field.menu_id === menuItem.id && field.visible)
             });
-            if(searchResult.length === 0) {
+            if( menuItemFields.length === 0 && !menuItem.hasOwnProperty('menu_items') )  {
                 newMenuItems[index].visible = false;
             } else {
                 newMenuItems[index].visible = true;
-                if(menuItem.hasOwnProperty('menu_items')) {
+                if( menuItem.hasOwnProperty('menu_items') ) {
                     newMenuItems[index].menu_items = this.filterMenuItems(menuItem.menu_items);
                 }
             }
