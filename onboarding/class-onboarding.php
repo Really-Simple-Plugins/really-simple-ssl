@@ -155,8 +155,6 @@ class rsssl_onboarding {
 		) );
 	}
 
-
-
 	/**
 	 * Update SSL detection overridden option
 	 */
@@ -180,6 +178,9 @@ class rsssl_onboarding {
 	 */
 
 	function show_onboarding_modal() {
+		if ( RSSSL()->admin->do_wpconfig_loadbalancer_fix() && !RSSSL()->admin->wpconfig_has_fixes() ) {
+			return false;
+		}
 		//for multisite environments, we check if the activation process was started but not completed.
 		if ( is_multisite() && RSSSL()->multisite->ssl_activation_started_but_not_completed() ){
 			return true;
