@@ -111,7 +111,6 @@ function rsssl_menu() {
 				[
 					'id'      => 'hsts',
 					'title'   => __( 'HTTP Strict Transport Security', 'really-simple-ssl' ),
-					'intro'   => __( "Intro HSTS", "really-simple-ssl" ),
 					'premium' => true,
 					'groups'  => [
 						[
