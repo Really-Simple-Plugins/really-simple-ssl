@@ -1802,8 +1802,8 @@ class rsssl_admin
 			        'true' => array(
 				        'title' => __("System detection encountered issues!", "really-simple-ssl"),
 				        'msg' => __("Your wp-config.php has to be edited, but is not writable.", "really-simple-ssl").' '.
-                                 __("Set your wp-config.php to writable and reload this page.", "really-simple-ssl").
-				                 __("Because your site is behind a loadbalancer and is_ssl() returns false, you should add the following line of code to your wp-config.php.", "really-simple-ssl").
+                                 __("Set your wp-config.php to writable and reload this page.", "really-simple-ssl").' '.
+				                 __("To safely enable SSL on your server configuration, you should add the following line of code to your wp-config.php.", "really-simple-ssl").
                                 '<br><code>
                                 //Begin Really Simple SSL Server variable fix<br>
                                 &nbsp;&nbsp; $_SERVER["HTTPS"] = "on";<br>
