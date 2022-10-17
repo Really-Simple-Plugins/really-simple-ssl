@@ -915,7 +915,7 @@ class rsssl_admin
     {
 	    $this->configuration_loaded = true;
         //if current page is on SSL, we can assume SSL is available, even when an errormsg was returned
-        if ($this->is_ssl_extended()) {
+        if ( $this->is_ssl_extended() ) {
             $site_has_ssl = true;
         } else {
             //if certificate is valid
@@ -957,12 +957,14 @@ class rsssl_admin
                 //no valid response, so set to NA
                 $this->ssl_type = "NA";
             }
-
+	        $this->do_wpconfig_loadbalancer_fix = true;
             //check for is_ssl()
-            if ( (!$this->is_ssl_extended() &&
+            if ( ( !$this->is_ssl_extended() &&
                     (strpos($filecontents, "#SERVER-HTTPS-ON#") === false) &&
                     (strpos($filecontents, "#SERVER-HTTPS-1#") === false) &&
-                    (strpos($filecontents, "#SERVERPORT443#") === false)) || (!is_ssl() && $this->is_ssl_extended())) {
+                    (strpos($filecontents, "#SERVERPORT443#") === false)
+                 ) ||
+                 ( !is_ssl() && $this->is_ssl_extended() )) {
                 //when is_ssl would return false, we should add some code to wp-config.php
                 if ( !$this->wpconfig_has_fixes() ) {
                     $this->do_wpconfig_loadbalancer_fix = true;
