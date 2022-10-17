@@ -31,7 +31,7 @@ class rsssl_onboarding {
 	}
 
 	public function handle_onboarding_request($data, $test, $request){
-		if ( ! current_user_can('manage_security') ) {
+		if ( ! rsssl_user_can_manage() ) {
 			return false;
 		}
 //		delete_option('rsssl_network_activation_status');
@@ -66,7 +66,7 @@ class rsssl_onboarding {
 	 * @return array|bool[]|false|mixed
 	 */
 	public function handle_onboarding_action($data, $action, $request){
-		if ( ! current_user_can('manage_security') ) {
+		if ( ! rsssl_user_can_manage() ) {
 			return false;
 		}
 		$error = false;
