@@ -335,12 +335,8 @@ class rsssl_admin
 
 	    if ( rsssl_get_option('site_has_ssl') || get_option('rsssl_ssl_detection_overridden') ){
 	        //in a configuration reverse proxy without a set server variable https, add code to wpconfig
-	        if ( $this->do_wpconfig_loadbalancer_fix ) {
+	        if ( $this->do_wpconfig_loadbalancer_fix || $this->no_server_variable ) {
 		        $this->wpconfig_loadbalancer_fix();
-	        }
-
-	        if ( $this->no_server_variable ){
-		        $this->wpconfig_server_variable_fix();
 	        }
 
 	        if ( !$safe_mode && $this->wpconfig_siteurl_not_fixed ){
@@ -388,6 +384,7 @@ class rsssl_admin
 	 */
     public function wpconfig_ok()
     {
+        //return false;
         if (($this->do_wpconfig_loadbalancer_fix || $this->no_server_variable || $this->wpconfig_siteurl_not_fixed) && !$this->wpconfig_is_writable()) {
             $result = false;
         } else {
@@ -695,84 +692,28 @@ class rsssl_admin
         $wpconfig_path = $this->find_wp_config_path();
         if (empty($wpconfig_path)) return;
         $wpconfig = file_get_contents($wpconfig_path);
-        $this->wpconfig_loadbalancer_fix_failed = FALSE;
-        //only if loadbalancer AND NOT SERVER-HTTPS-ON should the following be added. (is_ssl = false)
-        if (strpos($wpconfig, "//Begin Really Simple SSL Load balancing fix") === FALSE) {
-            if (is_writable($wpconfig_path)) {
-                $rule = "\n" . "//Begin Really Simple SSL Load balancing fix" . "\n";
-                $rule .= '$_SERVER["HTTPS"] = "on";' . "\n";
-                $rule .= "//END Really Simple SSL" . "\n";
-
-                $insert_after = "<?php";
-                $pos = strpos($wpconfig, $insert_after);
-                if ($pos !== false) {
-                    $wpconfig = substr_replace($wpconfig, $rule, $pos + 1 + strlen($insert_after), 0);
-                }
-
-                file_put_contents($wpconfig_path, $wpconfig);
-            } else {
-                $this->wpconfig_loadbalancer_fix_failed = TRUE;
-            }
-        }
-    }
-
-
-    /**
-     * Getting WordPress to recognize setup as being SSL when no https server variable is available
-     *
-     * @since  2.1
-     *
-     * @access public
-     *
-     */
-
-    public function wpconfig_server_variable_fix()
-    {
-        if ( !rsssl_user_can_manage() ) {
-            return;
-        }
-
-        $wpconfig_path = $this->find_wp_config_path();
-        if ( empty($wpconfig_path) ) {
-            return;
-        }
-
-	    //check permissions
-	    if ( !is_writable($wpconfig_path) ) {
+	    if ( strpos($wpconfig, "//Begin Really Simple SSL Server variable fix") !== false ) {
 		    return;
 	    }
 
-        //check if the fix is already there
-	    $wpconfig = file_get_contents($wpconfig_path);
-        if (strpos($wpconfig, "//Begin Really Simple SSL Server variable fix") !== FALSE) {
+	    if ( strpos($wpconfig, "//Begin Really Simple SSL Load balancing fix") !== false ) {
             return;
         }
 
-        $rule = $this->get_server_variable_fix_code();
-        $insert_after = "<?php";
-        $pos = strpos($wpconfig, $insert_after);
-        if ($pos !== false) {
-            $wpconfig = substr_replace($wpconfig, $rule, $pos + 1 + strlen($insert_after), 0);
+        if (is_writable($wpconfig_path)) {
+            $rule = "\n" . "//Begin Really Simple SSL Server variable fix" . "\n";
+            $rule .= '$_SERVER["HTTPS"] = "on";' . "\n";
+            $rule .= "//END Really Simple SSL Server variable fix" . "\n";
+
+            $insert_after = "<?php";
+            $pos = strpos($wpconfig, $insert_after);
+            if ($pos !== false) {
+                $wpconfig = substr_replace($wpconfig, $rule, $pos + 1 + strlen($insert_after), 0);
+            }
+
+            file_put_contents($wpconfig_path, $wpconfig);
         }
-        file_put_contents($wpconfig_path, $wpconfig);
-    }
 
-
-    /**
-     * @return string
-     *
-     * Get code for server variable fix
-     *
-     * @access protected
-     *
-     */
-
-    protected function get_server_variable_fix_code()
-    {
-        $rule = "\n" . "//Begin Really Simple SSL Server variable fix" . "\n";
-        $rule .= '$_SERVER["HTTPS"] = "on";' . "\n";
-        $rule .= "//END Really Simple SSL" . "\n";
-        return $rule;
     }
 
     /**
@@ -1008,7 +949,7 @@ class rsssl_admin
             } elseif ((strpos($filecontents, "#NO KNOWN SSL CONFIGURATION DETECTED#") !== false)) {
                 //if we are here, SSL was detected, but without any known server variables set.
                 //So we can use this info to set a server variable ourselves.
-                if (!$this->wpconfig_has_fixes()) {
+                if ( !$this->wpconfig_has_fixes() ) {
                     $this->no_server_variable = true;
                 }
                 $this->ssl_type = "NA";
@@ -1023,7 +964,7 @@ class rsssl_admin
                     (strpos($filecontents, "#SERVER-HTTPS-1#") === false) &&
                     (strpos($filecontents, "#SERVERPORT443#") === false)) || (!is_ssl() && $this->is_ssl_extended())) {
                 //when is_ssl would return false, we should add some code to wp-config.php
-                if (!$this->wpconfig_has_fixes()) {
+                if ( !$this->wpconfig_has_fixes() ) {
                     $this->do_wpconfig_loadbalancer_fix = true;
                 }
             }
@@ -1756,6 +1697,8 @@ class rsssl_admin
 
 	/**
 	 * Helper function to check if the wpconfig needs fixing
+     * Used in notices
+     *
 	 * @return bool
 	 */
     public function wpconfig_siteurl_not_fixed(){
@@ -1764,7 +1707,9 @@ class rsssl_admin
 
     /**
      * Helper function to check if the wpconfig needs fixing
-	 * @return bool
+     * Used in notices
+     *
+     * @return bool
 	 */
     public function no_server_variable(){
         return $this->no_server_variable;
@@ -1772,6 +1717,8 @@ class rsssl_admin
 
     /**
      * Helper function to check if a site url has to be fixed
+     * Used in notices
+     *
 	 * @return bool
 	 */
     public function do_wpconfig_loadbalancer_fix(){
@@ -1858,7 +1805,7 @@ class rsssl_admin
                                  __("Set your wp-config.php to writable and reload this page.", "really-simple-ssl").
 				                 __("Because your site is behind a loadbalancer and is_ssl() returns false, you should add the following line of code to your wp-config.php.", "really-simple-ssl").
                                 '<br><code>
-                                //Begin Really Simple SSL Load balancing fix<br>
+                                //Begin Really Simple SSL Server variable fix<br>
                                 &nbsp;&nbsp; $_SERVER["HTTPS"] = "on";<br>
                                 //END Really Simple SSL
                             </code><br>',
