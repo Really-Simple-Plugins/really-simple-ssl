@@ -30,6 +30,10 @@
       }
     }
   }
+  code{
+    white-space: pre-line;
+    display: block;
+  }
   summary, p {
     font-size: var(--rsp-fs-200);
   }
