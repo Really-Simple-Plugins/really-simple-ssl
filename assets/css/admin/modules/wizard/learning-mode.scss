@@ -36,17 +36,19 @@
   }
 }
 
-.rsssl-learningmode-toggle {
-  display:flex;
-  align-items: center;
-  button.button {
-    margin-right:20px;
-  }
-}
-
 .rsssl-learning-mode-footer {
   display:flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: var(--rsp-spacing-s);
   select {
     margin-left:auto;
+  }
+  label {
+    display: flex;
+    align-items: center;
+    input{
+      margin-top: 0;
+    }
   }
 }

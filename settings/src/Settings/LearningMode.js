@@ -230,20 +230,17 @@ class LearningMode extends Component {
                             /></>
                         }
                       <div className="rsssl-learning-mode-footer">
-
-                        <div className="rsssl-learningmode-toggle">
-                            { enforce!=1 && <button className="button button-primary" onClick={ (e) => this.toggleEnforce(e, true ) }>{__("Enforce","really-simple-ssl")}</button> }
-                            { enforce==1 && <button className="button" onClick={ (e) => this.toggleEnforce(e, false ) }>{__("Disable","really-simple-ssl")}</button> }
-                            <label >
-                                <input type="checkbox"
-                                    disabled = {enforce}
-                                    checked ={learning_mode==1}
-                                    value = {learning_mode}
-                                    onChange={ ( e ) => this.toggleLearningMode(e) }
-                                />
-                                {__("Enable Learning Mode","really-simple-ssl")}
-                            </label>
-                        </div>
+                          { enforce!=1 && <button className="button button-primary" onClick={ (e) => this.toggleEnforce(e, true ) }>{__("Enforce","really-simple-ssl")}</button> }
+                          { enforce==1 && <button className="button" onClick={ (e) => this.toggleEnforce(e, false ) }>{__("Disable","really-simple-ssl")}</button> }
+                          <label>
+                              <input type="checkbox"
+                                  disabled = {enforce}
+                                  checked ={learning_mode==1}
+                                  value = {learning_mode}
+                                  onChange={ ( e ) => this.toggleLearningMode(e) }
+                              />
+                              {__("Enable Learning Mode","really-simple-ssl")}
+                          </label>
 
                         {learning_mode==1 && <div className="rsssl-locked">
                             <div className="rsssl-locked-overlay">
