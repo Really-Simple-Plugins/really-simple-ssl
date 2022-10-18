@@ -5,7 +5,7 @@ function rsssl_general_security_notices( $notices ) {
 	if (strpos($code, "\n")===0) {
 		$code = 	preg_replace('/\n/', '', $code, 1);
 	}
-	$code = '<br><code style="white-space: pre-line: display: block;">' . esc_html($code) . '</code><br>';
+	$code = '<br><code>' . esc_html($code) . '</code><br>';
 
 	$notices['application-passwords'] = array(
 		'callback' => 'rsssl_wp_is_application_passwords_available',
