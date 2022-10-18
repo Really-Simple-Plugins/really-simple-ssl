@@ -7,6 +7,12 @@ function rsssl_general_security_notices( $notices ) {
 	}
 	$code = '<br><code>' . esc_html($code) . '</code><br>';
 
+	$uploads_code = get_site_option('rsssl_uploads_htaccess_rules');
+	if (strpos($uploads_code, "\n")===0) {
+		$uploads_code = 	preg_replace('/\n/', '', $uploads_code, 1);
+	}
+	$uploads_code = '<br><code>' . esc_html($uploads_code) . '</code><br>';
+
 	$notices['application-passwords'] = array(
 		'callback' => 'rsssl_wp_is_application_passwords_available',
 		'score' => 5,
@@ -41,9 +47,20 @@ function rsssl_general_security_notices( $notices ) {
 				'plusone' => true,
 				'url' => 'https://really-simple-ssl.com/manual/editing-htaccess/',
 			),
-			'not-writable-uploads' => array(
-				'title' => __(".htaccess not writable", "really-simple-ssl"),
-				'msg' => __("An option was enabled which requires the .htaccess in the uploads directory to get written, but the .htaccess or directory is not writable.", "really-simple-ssl").' '.__("Please add the following lines to your .htaccess, or set it to writable:", "really-simple-ssl").$code,
+		),
+		'show_with_options' => [
+			'disable_indexing',
+			'redirect'
+		]
+	);
+
+	$notices['htaccess_status_uploads'] = array(
+		'callback' => 'rsssl_uploads_htaccess_status',
+		'score' => 5,
+		'output' => array(
+			'not-writable' => array(
+				'title' => __(".htaccess in uploads not writable", "really-simple-ssl"),
+				'msg' => __("An option that requires the .htaccess file in the uploads directory is enabled, but the file is not writable.", "really-simple-ssl").' '.__("Please add the following lines to your .htaccess, or set it to writable:", "really-simple-ssl").$uploads_code,
 				'icon' => 'warning',
 				'dismissible' => true,
 				'plusone' => true,
@@ -52,8 +69,6 @@ function rsssl_general_security_notices( $notices ) {
 		),
 		'show_with_options' => [
 			'block_code_execution_uploads',
-			'disable_indexing',
-			'redirect'
 		]
 	);
 
