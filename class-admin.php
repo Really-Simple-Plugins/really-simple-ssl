@@ -2131,7 +2131,7 @@ class rsssl_admin
 		        'score' => 5,
 		        'output' => array(
 			        'false' => array(
-				        'msg' => __("See which recommended security headers are not present on your website", "really-simple-ssl"),
+				        'msg' => __("See which recommended security headers are not present on your website.", "really-simple-ssl"),
                 'icon' => 'premium',
 				        'dismissible' => false,
 				        'url' => 'https://scan.really-simple-ssl.com/',
@@ -2148,7 +2148,7 @@ class rsssl_admin
 	            'score' => 5,
 	            'output' => array(
 		            'true' => array(
-			            'msg' => __("Improve security with Really Simple SSL Pro", "really-simple-ssl"),
+			            'msg' => __("Improve security with Really Simple SSL Pro.", "really-simple-ssl"),
 			            'url' => $this->pro_url,
 			            'icon' => 'premium',
 			            'dismissible' => false,

@@ -12,7 +12,7 @@ function rsssl_general_security_notices( $notices ) {
 		'score' => 5,
 		'output' => array(
 			'true' => array(
-				'msg' => __("Disable application passwords", "really-simple-ssl"),
+				'msg' => __("Disable application passwords.", "really-simple-ssl"),
 				'icon' => 'premium',
 				'url' => 'https://really-simple-ssl.com/definition/what-are-application-passwords/',
 				'dismissible' => true,
@@ -93,7 +93,7 @@ function rsssl_general_security_notices( $notices ) {
 			'true' => array(
 				'highlight_field_id' => 'change_debug_log_location',
 				'title' => __("Debugging", "really-simple-ssl"),
-				'msg' => __("Your site logs information to a public debugging file", "really-simple-ssl"),
+				'msg' => __("Your site logs information to a public debugging file.", "really-simple-ssl"),
 				'url' => 'https://really-simple-ssl.com/instructions/about-hardening-features/',
 				'icon' => 'premium',
 				'dismissible' => true,
@@ -112,7 +112,7 @@ function rsssl_general_security_notices( $notices ) {
 			'true' => array(
 				'msg' => __("Your site is vulnerable to user enumeration attacks.", "really-simple-ssl"),
 				'icon' => 'warning',
-				'title' => 'Prevent user enumeration',
+				'title' => __('Prevent user enumeration','really-simple-ssl'),
 				'url' => 'https://really-simple-ssl.com/what-are-user-enumeration-attacks/',
 				'dismissible' => true,
 				'highlight_field_id' => 'disable_user_enumeration',
@@ -136,9 +136,6 @@ function rsssl_general_security_notices( $notices ) {
 				'dismissible' => true,
 			),
 		),
-		// 'show_with_options' => [
-		// 	'disable_user_enumeration',
-		// ],
 	);
 
 	$notices['username_admin_exists'] = array(
@@ -148,7 +145,7 @@ function rsssl_general_security_notices( $notices ) {
 		'output' => array(
 			'true' => array(
 				'highlight_field_id' => 'rename_admin_user',
-				'title' => __("Username'.", "really-simple-ssl"),
+				'title' => __("Username", "really-simple-ssl"),
 				'msg' => __("Your site registered a user with the name 'admin'.", "really-simple-ssl"),
 				'icon' => 'warning',
 				'dismissible' => true,
@@ -164,7 +161,7 @@ function rsssl_general_security_notices( $notices ) {
 		'output' => array(
 			'true' => array(
 				'highlight_field_id' => 'block_code_execution_uploads',
-				'msg' => __("Code execution is allowed in the public 'Uploads' folder", "really-simple-ssl"),
+				'msg' => __("Code execution is allowed in the public 'Uploads' folder.", "really-simple-ssl"),
 				'icon' => 'open',
 				'dismissible' => true,
 			),
