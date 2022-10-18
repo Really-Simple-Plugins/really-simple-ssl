@@ -495,11 +495,11 @@ function rsssl_rest_api_fields_set($request){
 	        update_option( 'rsssl_options', $options );
         }
     }
-
+	do_action('rsssl_after_saved_fields', $fields );
 	foreach ( $fields as $field ) {
         do_action( "rsssl_after_save_field", $field['id'], $field['value'], $prev_value, $field['type'] );
     }
-	do_action('rsssl_after_saved_fields', $fields );
+
 	$output   = [
             'success' => true,
             'progress' => RSSSL()->progress->get(),

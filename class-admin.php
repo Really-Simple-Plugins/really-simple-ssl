@@ -1796,7 +1796,7 @@ class rsssl_admin
 	    $expiry_date = !empty($end_date) ? date( get_option('date_format'), $end_date ) : __("(Unknown)", "really-simple-ssl");
 
         $notices = array(
-	        'load_balancer_fiqx' => array(
+	        'load_balancer_fix' => array(
 		        'condition' => ['NOT rsssl_ssl_enabled'],
 		        'callback' => 'RSSSL()->admin->do_wpconfig_loadbalancer_fix',
 		        'score' => 30,
@@ -1813,6 +1813,7 @@ class rsssl_admin
 				        'icon' => 'warning',
 				        'admin_notice' => true,
 				        'plusone' => true,
+				        'dismissible' => false,
 				        'url' => 'https://really-simple-ssl.com/knowledge-base/htaccess-wp-config-files-not-writable/',
 			        ),
 		        ),
@@ -1827,6 +1828,7 @@ class rsssl_admin
                         'icon' => 'warning',
                         'admin_notice' => true,
                         'plusone' => true,
+                        'dismissible' => false,
                         'url' => 'https://really-simple-ssl.com/knowledge-base/htaccess-wp-config-files-not-writable/',
                     ),
                 ),
@@ -1842,6 +1844,7 @@ class rsssl_admin
                         'icon' => 'warning',
                         'admin_notice' => true,
                         'plusone' => true,
+                        'dismissible' => false,
                     ),
                 ),
             ),

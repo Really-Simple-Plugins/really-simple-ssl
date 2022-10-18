@@ -230,7 +230,7 @@ if ( ! function_exists('rsssl_wrap_htaccess' ) ) {
 						file_put_contents( $htaccess_file_uploads, '' );
 					}
 
-					$new_rules = empty($rules_result) ? '' : $start . $rules_uploads_result . $end;
+					$new_rules = empty($rules_uploads_result) ? '' : $start . $rules_uploads_result . $end;
 					if ( ! is_writable( $htaccess_file_uploads ) ) {
 						update_site_option( 'rsssl_htaccess_error', 'not-writable-uploads' );
 						update_site_option( 'rsssl_htaccess_rules', $rules_uploads_result );
@@ -248,7 +248,6 @@ if ( ! function_exists('rsssl_wrap_htaccess' ) ) {
 					}
 				}
 			}
-
 		}
 		/**
 		 * htaccess in root dir
