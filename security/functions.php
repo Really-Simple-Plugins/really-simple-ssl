@@ -176,7 +176,12 @@ if ( ! function_exists('rsssl_wrap_htaccess' ) ) {
 			return;
 		}
 
-		if ( !RSSSL()->admin->is_settings_page() && !rsssl_is_logged_in_rest() && current_filter() != 'rocket_activation' && current_filter() != 'rocket_deactivation' ) {
+		if (
+			!RSSSL()->admin->is_settings_page() &&
+		     !rsssl_is_logged_in_rest() &&
+		     current_filter() !== 'rocket_activation' &&
+		     current_filter() !== 'rocket_deactivation'
+		) {
 			return;
 		}
 		delete_site_option( 'rsssl_htaccess_error' );
