@@ -2727,7 +2727,7 @@ class rsssl_admin
 				$rule .= "@ini_set('session.cookie_httponly', true);"."\n";
 				$rule .= "@ini_set('session.cookie_secure', true);"."\n";
 				$rule .= "@ini_set('session.use_only_cookies', true);"."\n";
-				$rule .= "//END Really Simple SSL"."\n";
+				$rule .= "//END Really Simple SSL cookie settings"."\n";
 
 				$insert_after = "<?php";
 				$pos = strpos($wpconfig, $insert_after);
