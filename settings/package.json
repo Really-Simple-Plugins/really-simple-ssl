@@ -4,7 +4,7 @@
   "main": "build/index.js",
   "scripts": {
     "start": "wp-scripts start",
-    "build": "wp-scripts build"
+    "build": "set \"INLINE_RUNTIME_CHUNK=false\" && wp-scripts build"
   },
   "author": "Really Simple Plugins",
   "license": "GPL-2.0-only",
