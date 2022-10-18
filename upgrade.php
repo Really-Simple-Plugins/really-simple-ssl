@@ -51,7 +51,6 @@ function rsssl_upgrade() {
 		$prev_version && version_compare( $prev_version, '6.0.0', '<' )
 	) {
 		update_option('rsssl_show_onboarding', true, false);
-		error_log("run 6.0 upgrade");
 		//upgrade both site and network settings
 		$options = get_option( 'rlrsssl_options' );
 		$new_options = get_option('rsssl_options', []);

@@ -59,12 +59,12 @@ class rsssl_admin
 	        /**
 	         * Htaccess redirect handling
 	         */
-	        add_filter( 'rsssl_htaccess_security_rules', array($this, 'add_htaccess_redirect') );
 	        add_action( 'rsssl_after_save_field', array($this, 'maybe_flush_wprocket_htaccess' ),100, 4 );
 	        add_action( 'admin_init', array($this, 'insert_secure_cookie_settings'), 70 );
             add_action( 'admin_init', array($this, 'recheck_certificate') );
         }
 
+	    add_filter( 'rsssl_htaccess_security_rules', array($this, 'add_htaccess_redirect') );
 	    add_filter( 'before_rocket_htaccess_rules', array($this, 'add_htaccess_redirect_before_wp_rocket' ) );
 	    add_action( 'rocket_activation', 'rsssl_wrap_htaccess' );
 	    add_action( 'rocket_deactivation' , 'rsssl_wrap_htaccess' );
@@ -215,7 +215,9 @@ class rsssl_admin
 	 */
 
 	public function add_htaccess_redirect( $rules ) {
-		if ( ! function_exists('rocket_clean_domain') ) {
+        //we don't want these rules added by rsssl if wp rocket active.
+        //if it's deactivating, start adding them again.
+		if ( $this->is_deactivating_wprocket() || !function_exists('rocket_clean_domain') ) {
 			$rule = $this->get_redirect_rules();
             if ( !empty($rule) )  {
 	            $rules[] = ['rules' => $rule, 'identifier' => 'RewriteRule ^(.*)$ https://%{HTTP_HOST}/$1'];
@@ -224,6 +226,15 @@ class rsssl_admin
 
 		return $rules;
 	}
+
+	/**
+     * Check if we're in the middle of wp rocket deactivation
+     *
+	 * @return bool
+	 */
+    public function is_deactivating_wprocket(){
+	    return isset($_GET['action']) && $_GET['action']==='deactivate' && isset($_GET['plugin']) && strpos($_GET['plugin'], 'wp-rocket.php')!==false;
+    }
 
     /**
      * Deactivate the plugin while keeping SSL
@@ -1333,7 +1344,13 @@ class rsssl_admin
 	 * @return string
 	 */
 	public function add_htaccess_redirect_before_wp_rocket() {
-		return $this->get_redirect_rules();
+        $rules = $this->get_redirect_rules();
+        if ( !empty($rules) ) {
+	        $start = "\n" . '#Begin Really Simple SSL Redirect';
+	        $end   = "\n" . '#End Really Simple SSL Redirect' . "\n";
+	        $rules = $start.$rules.$end;
+        }
+		return $rules;
 	}
 
     /**
@@ -1403,7 +1420,7 @@ class rsssl_admin
 
     public function get_redirect_rules($manual = false)
     {
-        //ensure the configuration check has run always.
+	    //ensure the configuration check has run always.
         if ( !$this->configuration_loaded ) {
 	        $this->detect_configuration();
         }

@@ -443,7 +443,6 @@ function rsssl_rest_api_fields_set($request){
         $config_field_index = array_search($field['id'], $config_ids);
         $config_field = $config_fields[$config_field_index];
 		if ( !$config_field_index ){
-            error_log("unsetting ".$field['id']." as not existing field in RSSSL ");
 			unset($fields[$index]);
 			continue;
 		}

@@ -184,10 +184,15 @@ if ( ! function_exists('rsssl_wrap_htaccess' ) ) {
 		) {
 			return;
 		}
-		delete_site_option( 'rsssl_htaccess_error' );
-		delete_site_option( 'rsssl_htaccess_rules' );
-		delete_site_option( 'rsssl_uploads_htaccess_error' );
-		delete_site_option( 'rsssl_uploads_htaccess_rules' );
+		if ( get_site_option('rsssl_htaccess_error') ) {
+			delete_site_option( 'rsssl_htaccess_error' );
+			delete_site_option( 'rsssl_htaccess_rules' );
+		}
+
+		if ( get_site_option('rsssl_uploads_htaccess_error') ) {
+			delete_site_option( 'rsssl_uploads_htaccess_error' );
+			delete_site_option( 'rsssl_uploads_htaccess_rules' );
+		}
 
 		$start = "\n" . '#Begin Really Simple Security';
 		$end   = "\n" . '#End Really Simple Security' . "\n";
@@ -212,7 +217,6 @@ if ( ! function_exists('rsssl_wrap_htaccess' ) ) {
 		}
 
 		if ( file_exists( $htaccess_file_uploads ) ) {
-			error_log("file exists");
 			$content_htaccess_uploads = file_exists( $htaccess_file_uploads ) ? file_get_contents( $htaccess_file_uploads ) : '';
 			preg_match( $pattern_content, $content_htaccess_uploads, $matches );
 			if ( ( ! empty( $matches[1] ) && empty( $rules_uploads ) ) || ! empty( $rules_uploads ) ) {
