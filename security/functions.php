@@ -194,7 +194,7 @@ if ( ! function_exists('rsssl_wrap_htaccess' ) ) {
 		$upload_dir = wp_get_upload_dir();
 		$htaccess_file_uploads = trailingslashit( $upload_dir['basedir']).'.htaccess';
 
-		if ( ! file_exists( $htaccess_file_uploads ) ) {
+		if ( ! file_exists( $htaccess_file_uploads ) && count($rules_uploads)>0 ) {
 			if ( is_writable(trailingslashit( $upload_dir['basedir'])) ) {
 				file_put_contents($htaccess_file_uploads, '');
 			} else {
@@ -251,7 +251,7 @@ if ( ! function_exists('rsssl_wrap_htaccess' ) ) {
 		$rules = apply_filters( 'rsssl_htaccess_security_rules', [] );
 		$htaccess_file = RSSSL()->admin->htaccess_file();
 
-		if ( !file_exists( $htaccess_file ) ) {
+		if ( !file_exists( $htaccess_file ) && count($rules)>0 ) {
 			update_site_option('rsssl_htaccess_error', 'not-exists');
 			$rules_result = implode('',array_column($rules, 'rules'));
 			update_site_option('rsssl_htaccess_rules', $rules_result);
