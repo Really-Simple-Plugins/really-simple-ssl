@@ -220,7 +220,6 @@ if ( ! function_exists('rsssl_wrap_htaccess' ) ) {
 				foreach ( $rules_uploads as $rule_uploads ) {
 					//check if the rule exists outside RSSSL, but not within
 					if ( strpos($content_htaccess_uploads, $rule_uploads['identifier'])!==false && !preg_match('/#Begin Really Simple Security.*?('.preg_quote($rule_uploads['identifier'],'/').').*?#End Really Simple Security/is', $content_htaccess_uploads, $matches) ) {
-						x_log("continue");
 						continue;
 					}
 					$rules_uploads_result .= $rule_uploads['rules'];
@@ -236,7 +235,6 @@ if ( ! function_exists('rsssl_wrap_htaccess' ) ) {
 
 					$new_rules = empty($rules_uploads_result) ? '' : $start . $rules_uploads_result . $end;
 					if ( ! is_writable( $htaccess_file_uploads ) ) {
-						x_log("not writable");
 						update_site_option( 'rsssl_uploads_htaccess_error', 'not-writable' );
 						update_site_option( 'rsssl_uploads_htaccess_rules', $rules_uploads_result );
 					} else {
@@ -244,12 +242,9 @@ if ( ! function_exists('rsssl_wrap_htaccess' ) ) {
 						delete_site_option( 'rsssl_uploads_htaccess_rules' );
 						//get current rules with regex
 						if ( strpos( $content_htaccess_uploads, $start ) !== false ) {
-							x_log("replace ".$new_rules);
-
 							$new_htaccess = preg_replace( $pattern, $new_rules, $content_htaccess_uploads );
 						} else {
 							//add rules as new block
-							x_log("add ".$new_rules);
 							$new_htaccess = $content_htaccess_uploads . $new_rules;
 						}
 						file_put_contents( $htaccess_file_uploads, $new_htaccess );
