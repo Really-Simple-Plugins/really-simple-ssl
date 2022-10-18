@@ -47,7 +47,7 @@ class rsssl_onboarding {
 				$data = RSSSL()->multisite->process_ssl_activation_step();
 				break;
 			case 'get_modal_status':
-				$data =  ["dismissed" => get_option("rsssl_onboarding_dismissed") || !$this->show_onboarding_modal()];
+				$data =  ["dismissed" => !$this->show_onboarding_modal()];
 				break;
 			case 'dismiss_modal':
 				$this->dismiss_modal($request);
@@ -178,9 +178,19 @@ class rsssl_onboarding {
 	 */
 
 	function show_onboarding_modal() {
+		if ( get_option("rsssl_onboarding_dismissed") ) {
+			return false;
+		}
+
+		//ensure the checks have been run
+		if ( !RSSSL()->admin->configuration_loaded ) {
+			RSSSL()->admin->detect_configuration();
+		}
+
 		if ( RSSSL()->admin->do_wpconfig_loadbalancer_fix() && !RSSSL()->admin->wpconfig_has_fixes() ) {
 			return false;
 		}
+
 		//for multisite environments, we check if the activation process was started but not completed.
 		if ( is_multisite() && RSSSL()->multisite->ssl_activation_started_but_not_completed() ){
 			return true;
