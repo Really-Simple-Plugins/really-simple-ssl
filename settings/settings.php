@@ -484,7 +484,7 @@ function rsssl_rest_api_fields_set($request){
     foreach ( $fields as $field ) {
         $prev_value = isset( $options[ $field['id'] ] ) ? $options[ $field['id'] ] : false;
         do_action( "rsssl_before_save_option", $field['id'], $field['value'], $prev_value, $field['type'] );
-        $options[ $field['id'] ] = $field['value'];
+        $options[ $field['id'] ] = 	apply_filters("rsssl_fieldvalue",  $field['value'], $field['id'], $field['type']);
     }
 
     if ( ! empty( $options ) ) {
