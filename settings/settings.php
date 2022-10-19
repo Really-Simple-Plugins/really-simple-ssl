@@ -671,11 +671,9 @@ function rsssl_sanitize_field( $value, string $type, string $id ) {
 		case 'select':
 		case 'host':
 		case 'text':
-		    return sanitize_text_field( $value );
         case 'textarea':
-		    return sanitize_text_field( $value );
 		case 'license':
-		    return $value;
+		    return sanitize_text_field( $value );
 		case 'multicheckbox':
 			if ( ! is_array( $value ) ) {
 				$value = array( $value );

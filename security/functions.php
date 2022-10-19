@@ -194,7 +194,7 @@ if ( ! function_exists('rsssl_wrap_htaccess' ) ) {
 			delete_site_option( 'rsssl_uploads_htaccess_rules' );
 		}
 
-		$start = "\n" . '#Begin Really Simple Security';
+		$start = '#Begin Really Simple Security';
 		$end   = "\n" . '#End Really Simple Security' . "\n";
 		$pattern_content = '/'.$start.'(.*?)'.$end.'/is';
 
@@ -249,7 +249,7 @@ if ( ! function_exists('rsssl_wrap_htaccess' ) ) {
 							$new_htaccess = preg_replace( $pattern, $new_rules, $content_htaccess_uploads );
 						} else {
 							//add rules as new block
-							$new_htaccess = $content_htaccess_uploads . $new_rules;
+							$new_htaccess = $content_htaccess_uploads . "\n" . $new_rules;
 						}
 						file_put_contents( $htaccess_file_uploads, $new_htaccess );
 					}
@@ -307,10 +307,10 @@ if ( ! function_exists('rsssl_wrap_htaccess' ) ) {
 							$new_htaccess = preg_replace( $pattern, $new_rules, $content_htaccess );
 						} else {
 							//add rules as new block
-							if (strpos($content_htaccess, '# BEGIN WordPress')!==false) {
-								$new_htaccess = str_replace('# BEGIN WordPress', $new_rules.'# BEGIN WordPress', $content_htaccess);
+							if ( strpos($content_htaccess, '# BEGIN WordPress')!==false ) {
+								$new_htaccess = str_replace('# BEGIN WordPress', "\n" . $new_rules.'# BEGIN WordPress', $content_htaccess);
 							} else {
-								$new_htaccess = $new_rules . $content_htaccess;
+								$new_htaccess = "\n" . $new_rules . $content_htaccess;
 							}
 						}
 						file_put_contents( $htaccess_file, $new_htaccess );

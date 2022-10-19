@@ -233,7 +233,11 @@ class rsssl_admin
 	 * @return bool
 	 */
     public function is_deactivating_wprocket(){
-	    return isset($_GET['action']) && $_GET['action']==='deactivate' && isset($_GET['plugin']) && strpos($_GET['plugin'], 'wp-rocket.php')!==false;
+        //default deactivating
+	    $is_deactivating =  isset($_GET['action']) && $_GET['action']==='deactivate' && isset($_GET['plugin']) && strpos($_GET['plugin'], 'wp-rocket.php')!==false;
+	    //deactivating with modal
+        $is_deactivating = $is_deactivating || isset($_GET['action']) && $_GET['action']==='rocket_deactivation';
+        return $is_deactivating;
     }
 
     /**
