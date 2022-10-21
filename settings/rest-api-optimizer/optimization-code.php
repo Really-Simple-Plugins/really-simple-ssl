@@ -21,11 +21,6 @@ if ( ! function_exists( 'rsssl_exclude_plugins_for_rest_api' ) ) {
 			return $plugins;
 		}
 
-		//if not authenticated, return all plugins
-		if ( !isset($_SERVER['HTTP_X_WP_NONCE']) || !wp_verify_nonce($_SERVER['HTTP_X_WP_NONCE'], 'wp_rest') ) {
-			return $plugins;
-		}
-
 		//Only leave RSSSL and premium add ons active for this request
 		foreach ( $plugins as $key => $plugin ) {
 			if ( strpos($plugin, 'really-simple-ssl') !== false ){
