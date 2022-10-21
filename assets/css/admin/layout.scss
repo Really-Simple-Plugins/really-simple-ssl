@@ -120,8 +120,11 @@
     &.rsssl-settings{
       grid-template-columns: 350px 1fr 1fr 1fr;
     }
-    @media only screen and (max-width: $rsp-break-m)  {
+    @media only screen and ( max-width: $rsp-break-m)  {
       grid-template-columns: repeat(2,1fr);
+    }
+
+    @media only screen and ( max-width: $rsp-break-s)  {
       max-width:790px;
     }
   }
