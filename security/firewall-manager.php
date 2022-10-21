@@ -104,7 +104,7 @@ class rsssl_firewall_manager {
 			$rule = 'if ( file_exists(ABSPATH . "wp-content/advanced-headers.php") ) { ' . "\n";
 			$rule .= "\t" . 'require_once ABSPATH . "wp-content/advanced-headers.php";' . "\n" . "}";
 			//if RSSSL comment is found, insert after
-			$rsssl_comment = '//END Really Simple SSL';
+			$rsssl_comment = '//END Really Simple SSL Server variable fix';
 			if ( strpos($wpconfig, $rsssl_comment)!==false ) {
 				$pos = strrpos($wpconfig, $rsssl_comment);
 				$updated = substr_replace($wpconfig, $rsssl_comment."\n" . $rule . "\n", $pos, strlen($rsssl_comment));
