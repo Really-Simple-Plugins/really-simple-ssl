@@ -665,7 +665,8 @@ function rsssl_rest_api_block_get($request){
 function rsssl_sanitize_field( $value, string $type, string $id ) {
 	switch ( $type ) {
 		case 'checkbox':
-			return intval($value);
+		case 'number':
+			return intval( $value );
 		case 'hidden':
 			return sanitize_title($value);
 		case 'select':
@@ -685,8 +686,6 @@ function rsssl_sanitize_field( $value, string $type, string $id ) {
 			return sanitize_email( $value );
 		case 'url':
 			return esc_url_raw( $value );
-		case 'number':
-			return intval( $value );
         case 'permissionspolicy':
 	        return rsssl_sanitize_permissions_policy($value, $type, $id);
 		case 'learningmode':
