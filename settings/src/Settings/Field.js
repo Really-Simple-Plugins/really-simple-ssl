@@ -32,9 +32,12 @@ import DataTable from "react-data-table-component";
 class Field extends Component {
     constructor() {
         super( ...arguments );
-        this.highLightClass = this.props.highLightedField===this.props.field.id ? 'rsssl-field-wrap rsssl-highlight' : 'rsssl-field-wrap';
         this.onChangeHandlerDataTableStatus = this.onChangeHandlerDataTableStatus.bind(this);
         this.onChangeHandler = this.onChangeHandler.bind(this);
+    }
+
+    componentDidMount(){
+
     }
 
     onChangeHandler(fieldValue) {
@@ -85,6 +88,8 @@ class Field extends Component {
         let fieldValue = field.value;
         let fields = this.props.fields;
         let disabled = field.disabled;
+        this.highLightClass = this.props.highLightedField===this.props.field.id ? 'rsssl-field-wrap rsssl-highlight' : 'rsssl-field-wrap';
+
         let options = [];
         if ( field.options ) {
             for (var key in field.options) {

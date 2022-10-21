@@ -31,7 +31,7 @@ function rsssl_menu() {
 						[
 							'id' => 'support',
 							'title' => __('Premium Support', 'really-simple-ssl'),
-							'intro' => __('When you send this form, we will attach the following information: license key, scan results, your domain, .htaccess file, debug log and a list of active plugins.', 'really-simple-ssl'),
+							'intro' => __('The following information is attached when you send this form: license key, scan results, your domain, .htaccess file, debug log and a list of active plugins.', 'really-simple-ssl'),
 							'premium' => true,
 							'premium_text' => __("Get Premium Support with %sReally Simple SSL Pro%s", 'really-simple-ssl'),
 							'helpLink'  => 'https://really-simple-ssl.com/instructions/debugging/',
@@ -875,8 +875,7 @@ function rsssl_fields( $load_values = true ) {
 				'label' => 'default',
 				'url'   => 'https://really-simple-ssl.com/definition/what-is-a-permissions-policy/',
 				'title' => __( "About the Permission Policy", 'really-simple-ssl' ),
-				'text'  => __( 'Browser features are plentiful, but most are not needed on your website. But they might be misused if you don’t actively tell the browser to disable these features.',
-					'really-simple-ssl' ),
+				'text'  => __( 'Browser features are plentiful, but most are not needed on your website.', 'really-simple-ssl' ).' '.__('They might be misused if you don’t actively tell the browser to disable these features.', 'really-simple-ssl' ),
 			],
 			'columns'  => [
 				[

@@ -305,7 +305,7 @@ class MixedContentScan extends Component {
                     /> }
                 <div className="rsssl-grid-item-content-footer">
                     <button className="button" disabled={startDisabled} onClick={ (e) => this.start(e) }>{__("Start scan","really-simple-ssl-pro")}</button>
-                    <button className="button" disabled={stopDisabled} onClick={ (e) => this.stop(e) }>{__("Pause","really-simple-ssl-pro")}</button>
+                    <button className="button" disabled={stopDisabled} onClick={ (e) => this.stop(e) }>{__("Stop","really-simple-ssl-pro")}</button>
                     <ToggleControl
                         checked= { showIgnoredUrls==1 }
                         onChange={ (e) => this.toggleIgnoredUrls(e) }

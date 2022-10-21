@@ -1,17 +1,22 @@
 <?php defined( 'ABSPATH' ) or die();
-
-function rsssl_general_security_notices( $notices ) {
-	$code = get_site_option('rsssl_htaccess_rules');
-	if (strpos($code, "\n")===0) {
+/**
+ * Convert htaccess rules to html friendly layout
+ *
+ * @param string $code
+ *
+ * @return string
+ */
+function rsssl_parse_htaccess_to_html( string $code): string {
+	if ( strpos($code, "\n")===0 ) {
 		$code = 	preg_replace('/\n/', '', $code, 1);
 	}
-	$code = '<br><code>' . esc_html($code) . '</code><br>';
+	$code = 	preg_replace('/\n/', '<br>', $code, 1);
+	return '<br><code>' . $code . '</code><br>';
+}
 
-	$uploads_code = get_site_option('rsssl_uploads_htaccess_rules');
-	if (strpos($uploads_code, "\n")===0) {
-		$uploads_code = 	preg_replace('/\n/', '', $uploads_code, 1);
-	}
-	$uploads_code = '<br><code>' . esc_html($uploads_code) . '</code><br>';
+function rsssl_general_security_notices( $notices ) {
+	$code = rsssl_parse_htaccess_to_html( get_site_option('rsssl_htaccess_rules','') );
+	$uploads_code = rsssl_parse_htaccess_to_html( get_site_option('rsssl_uploads_htaccess_rules','') );
 
 	$notices['application-passwords'] = array(
 		'callback' => 'rsssl_wp_is_application_passwords_available',
