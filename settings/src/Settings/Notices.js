@@ -17,6 +17,9 @@ const Notices = () => {
                 .filter( ( notice ) => notice.type === 'snackbar' ),
         []
     );
+    if ( typeof notices === 'undefined' ) {
+        return (<></>)
+    }
     const { removeNotice } = useDispatch( noticesStore );
     return (
         <SnackbarList
