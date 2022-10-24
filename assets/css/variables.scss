@@ -1,6 +1,6 @@
 // Break points
 $rsp-break-xxs: 576px;
-$rsp-break-xs: 768px;
+$rsp-break-xs: 782px; // wp breakpoint
 $rsp-break-s: 1080px;
 $rsp-break-m: 1280px;
 $rsp-break-l: 1366px;
@@ -100,7 +100,7 @@ $rsp-break-xxl: 1599px;
     padding: var(--rsp-spacing-xs) var(--rsp-spacing-s);
   }
   @media screen and (max-width: $rsp-break-s) {
-    padding: var(--rsp-spacing-xxs) var(--rsp-spacing-xs);
+    padding: var(--rsp-spacing-xs) var(--rsp-spacing-s);
   }
 
   //@media screen and (max-width: $rsp-break-xs) {
