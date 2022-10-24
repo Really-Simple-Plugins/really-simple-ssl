@@ -221,16 +221,19 @@ class SettingsPage extends Component {
     }
 
     validateConditions(conditions, fields){
+
         let relation = conditions.relation === 'OR' ? 'OR' : 'AND';
         let conditionApplies = relation==='AND' ? true : false;
+
         for (const key in conditions) {
             if ( conditions.hasOwnProperty(key) ) {
-                let thisConditionApplies = relation==='AND' ? true : false;;
+                let thisConditionApplies = relation==='AND' ? true : false;
                 let subConditionsArray = conditions[key];
                 if ( subConditionsArray.hasOwnProperty('relation') ) {
                     thisConditionApplies = this.validateConditions(subConditionsArray, fields)
                 } else {
                     for ( let conditionField in subConditionsArray ) {
+
                         let invert = conditionField.indexOf('!')===0;
                         if ( subConditionsArray.hasOwnProperty(conditionField) ) {
                             let conditionValue = subConditionsArray[conditionField];
@@ -249,18 +252,16 @@ class SettingsPage extends Component {
                                     }
                                 }
                             }
-                        }
-
-                        if ( invert ){
-                            thisConditionApplies = !thisConditionApplies;
+                            if ( invert ){
+                                thisConditionApplies = !thisConditionApplies;
+                            }
+                            if ( relation === 'AND' ) {
+                                conditionApplies = conditionApplies && thisConditionApplies;
+                            } else {
+                                conditionApplies = conditionApplies || thisConditionApplies;
+                            }
                         }
                     }
-
-                }
-                if ( relation === 'AND' ) {
-                    conditionApplies = conditionApplies && thisConditionApplies;
-                } else {
-                    conditionApplies = conditionApplies || thisConditionApplies;
                 }
             }
         }

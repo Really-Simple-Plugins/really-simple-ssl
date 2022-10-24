@@ -1,6 +1,8 @@
 <?php
 defined('ABSPATH') or die();
-
+/**
+ * File to prevent fatal errors when used with older pro versions
+ */
 if ( is_admin() ) {
 	class really_simple_ssl_legacy{
 		public $site_has_ssl;

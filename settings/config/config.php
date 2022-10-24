@@ -704,12 +704,12 @@ function rsssl_fields( $load_values = true ) {
 				'text'  => __( 'Leveraging your SSL certificate with HSTS is a staple for every website. Force your website over SSL, mitigating risks of malicious counterfeit websites in your name.',
 					'really-simple-ssl' ),
 			],
-			'react_conditions' => [
-				'relation' => 'AND',
-				[
-					'ssl_enabled' => '1',
-				]
-			],
+//			'react_conditions' => [
+//				'relation' => 'AND',
+//				[
+//					'ssl_enabled' => '1',
+//				]
+//			],
 		],
 		[
 			'id'               => 'hsts_subdomains',
