@@ -11,7 +11,7 @@ if ( rsssl_is_in_deactivation_list('disable-indexing') ){
  */
 
 function rsssl_disable_indexing_rules( $rules ) {
-	$rules[] = ['rules' => "\n" . '#testOptions -Indexes', 'identifier' => 'Options -Indexes'];
+	$rules[] = ['rules' => "\n" . 'Options -Indexes', 'identifier' => 'Options -Indexes'];
 
 	$rules[] = ['rules' => "\n" . 'Options -Indexes', 'identifier' => 'Options -Indexes'];
 	return $rules;
