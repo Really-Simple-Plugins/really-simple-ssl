@@ -2,7 +2,7 @@
 Contributors: RogierLankhorst, markwolters, hesseldejong, vicocotea
 Donate link: https://www.paypal.me/reallysimplessl
 Tags: SSL, https, force SSL, mixed content, insecure content, secure website, website security, TLS, security, secure socket layers, HSTS
-Requires at least: 4.9
+Requires at least: 5.7
 License: GPL2
 Tested up to: 5.9
 Requires PHP: 7.2
