@@ -5,6 +5,7 @@ import {
 import ChangeStatus from "./ChangeStatus";
 import DataTable, {createTheme} from 'react-data-table-component';
 import * as rsssl_api from "../utils/api";
+import Icon from "../utils/Icon";
 
 class Delete extends Component {
     constructor() {
@@ -243,6 +244,9 @@ class LearningMode extends Component {
                           </label>
 
                         {learning_mode==1 && <div className="rsssl-locked">
+                            <div className="rsssl-shield-overlay">
+                                  <Icon name = "shield"  size="80px"/>
+                            </div>
                             <div className="rsssl-locked-overlay">
                                 <span className="rsssl-progress-status rsssl-learning-mode">{__("Learning Mode","really-simple-ssl")}</span>
                                 {configuringString}&nbsp;
@@ -250,6 +254,9 @@ class LearningMode extends Component {
                             </div>
                         </div>}
                         {learning_mode_completed==1 && <div className="rsssl-locked">
+                           <div className="rsssl-shield-overlay">
+                                  <Icon name = "shield"  size="80px"/>
+                            </div>
                             <div className="rsssl-locked-overlay">
                                 <span className="rsssl-progress-status rsssl-learning-mode-completed">{__("Learning Mode","really-simple-ssl")}</span>
                                 {__("We finished the configuration.", "really-simple-ssl")}&nbsp;

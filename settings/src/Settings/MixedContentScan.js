@@ -7,6 +7,7 @@ import { __ } from '@wordpress/i18n';
 import * as rsssl_api from "../utils/api";
 import ModalControl from "../Modal/ModalControl";
 import Placeholder from "../Placeholder/Placeholder";
+import Icon from "../utils/Icon";
 
 class subHeaderComponentMemo extends Component {
     constructor() {
@@ -285,10 +286,13 @@ class MixedContentScan extends Component {
                             {state!=='running' && completedStatus==='never' && __("No records. Start your first scan","really-simple-ssl")}
                             {state!=='running' && completedStatus==='completed' && __("Everything is now served over SSL","really-simple-ssl")}
                         </div>
-                        <div className="rsssl-mixed-content-placeholder">
-{/*                                <img src={rsssl_settings.pro_url+'/assets/img/mixed_content_scan.svg'} /> */}
-                                 <div></div><div></div><div></div><div></div>
+                        { (state ==='running' || completedStatus!=='completed') && <div className="rsssl-mixed-content-placeholder">
+                                 <div></div><div></div><div></div>
                         </div>
+                        }
+                        { state!=='running' && completedStatus==='completed' && <div className="rsssl-shield-overlay">
+                              <Icon name = "shield"  size="80px"/>
+                        </div> }
                         </>}
                     { data.length>0 && <DataTable
                         columns={columns}
