@@ -4,7 +4,6 @@ defined( 'ABSPATH' ) or die( );
  * Back-end available only
  */
 if ( !function_exists('rsssl_do_fix')) {
-
 	/**
 	 * Complete a fix for an issue, either user triggered, or automatic
 	 *

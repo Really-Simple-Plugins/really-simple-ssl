@@ -10,7 +10,12 @@ function rsssl_parse_htaccess_to_html( string $code): string {
 	if ( strpos($code, "\n")===0 ) {
 		$code = 	preg_replace('/\n/', '', $code, 1);
 	}
-	$code = 	preg_replace('/\n/', '<br>', $code, 1);
+	//split into linebreak separated array, so we can run esc_html on the result
+	$code = 	preg_replace('/\n/', '--br--', $code, 1);
+	$code = 	preg_replace('/<br>/', '--br--', $code, 1);
+	$code = explode('--br--', $code);
+	$code = array_map('esc_html', $code);
+	$code = implode('<br>', $code);
 	return '<br><code>' . $code . '</code><br>';
 }
 

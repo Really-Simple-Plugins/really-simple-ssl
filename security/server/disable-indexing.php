@@ -12,8 +12,6 @@ if ( rsssl_is_in_deactivation_list('disable-indexing') ){
 
 function rsssl_disable_indexing_rules( $rules ) {
 	$rules[] = ['rules' => "\n" . 'Options -Indexes', 'identifier' => 'Options -Indexes'];
-
-	$rules[] = ['rules' => "\n" . 'Options -Indexes', 'identifier' => 'Options -Indexes'];
 	return $rules;
 }
 add_filter('rsssl_htaccess_security_rules', 'rsssl_disable_indexing_rules');
