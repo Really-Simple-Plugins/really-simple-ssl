@@ -704,12 +704,35 @@ function rsssl_fields( $load_values = true ) {
 				'text'  => __( 'Leveraging your SSL certificate with HSTS is a staple for every website. Force your website over SSL, mitigating risks of malicious counterfeit websites in your name.',
 					'really-simple-ssl' ),
 			],
-//			'react_conditions' => [
-//				'relation' => 'AND',
-//				[
-//					'ssl_enabled' => '1',
-//				]
-//			],
+			'react_conditions' => [
+				'relation' => 'AND',
+				[
+					'ssl_enabled' => '1',
+				]
+			],
+		],
+		[
+			'id'               => 'hsts_preload',
+			'menu_id'          => 'hsts',
+			'group_id'         => 'hsts',
+			'type'             => 'checkbox',
+			'label'            => __( "Include preload", "really-simple-ssl-pro" ),
+			'comment'          => sprintf(__( "After enabling this feature, you can submit your site to %shstspreload.org%s", "really-simple-ssl-pro" ),'<a target="_blank" href="https://hstspreload.org?domain='.site_url().'">',"</a>"),
+			'react_conditions' => [
+				'relation' => 'AND',
+				[
+					'hsts' => 1,
+				]
+			],
+			'configure_on_activation' => [
+				'condition' => 1,
+				[
+					'hsts_subdomains' => 1,
+					'hsts_max_age' => 63072000,
+				]
+			],
+			'disabled'         => false,
+			'default'          => false,
 		],
 		[
 			'id'               => 'hsts_subdomains',
@@ -745,22 +768,6 @@ function rsssl_fields( $load_values = true ) {
 			],
 			'disabled'         => false,
 			'default'          => '63072000',
-		],
-		[
-			'id'               => 'hsts_preload',
-			'menu_id'          => 'hsts',
-			'group_id'         => 'hsts',
-			'type'             => 'checkbox',
-			'label'            => __( "Include preload", "really-simple-ssl-pro" ),
-			'react_conditions' => [
-				'relation' => 'AND',
-				[
-					'hsts_max_age'    => '63072000',
-					'hsts_subdomains' => 1,
-				]
-			],
-			'disabled'         => false,
-			'default'          => false,
 		],
 		[
 			'id'       => 'cross_origin_opener_policy',

@@ -44,6 +44,20 @@ class Field extends Component {
         let fields = this.props.fields;
         let field = this.props.field;
         fields[this.props.index]['value'] = fieldValue;
+
+        //we can configure other fields if a field is enabled, or set to a certain value.
+        let configureFieldCondition = false;
+        if (field.configure_on_activation) {
+            if ( field.configure_on_activation.hasOwnProperty('condition') && this.props.field.value==field.configure_on_activation.condition ) {
+                configureFieldCondition = true;
+            }
+            let configureField = field.configure_on_activation[0];
+            for (let fieldId in configureField ) {
+                if ( configureFieldCondition && configureField.hasOwnProperty(fieldId) ) {
+                    this.props.updateField(fieldId, configureField[fieldId] );
+                }
+            }
+        }
         this.props.saveChangedFields( field.id )
     }
 
