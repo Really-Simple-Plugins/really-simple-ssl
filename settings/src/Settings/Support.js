@@ -41,6 +41,7 @@ class Support extends Component {
             let url = 'https://really-simple-ssl.com/support'
             +'?customername=' + encodeURIComponent(response.data.customer_name)
             + '&email=' + response.data.email
+            + '&domain=' + response.data.domain
             + '&scanresults=' + encodeURIComponent(response.data.scan_results)
             + '&licensekey=' + encodeURIComponent(response.data.license_key)
             + '&supportrequest=' + encodeURIComponent(encodedMessage)
