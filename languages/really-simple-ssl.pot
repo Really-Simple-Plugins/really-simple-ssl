@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2022-10-24T08:47:16+00:00\n"
+"POT-Creation-Date: 2022-10-24T09:17:14+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.6.0\n"
 "X-Domain: really-simple-ssl\n"
@@ -50,19 +50,15 @@ msgid "Really Simple SSL and Really Simple SSL add-ons do not process any person
 msgstr ""
 
 #: class-admin.php:470
-#: settings/build/index.js:5694
+#: settings/build/index.js:382
 #: settings/src/Onboarding/Onboarding.js:269
-#: settings/build/index.js:4880
 msgid "Dismiss"
 msgstr ""
 
 #: class-admin.php:471
-#: settings/build/index.js:4190
-#: settings/build/index.js:6780
+#: settings/build/index.js:382
 #: settings/src/Dashboard/TaskElement.js:29
 #: settings/src/Settings/Help.js:26
-#: settings/build/index.js:3599
-#: settings/build/index.js:5780
 msgid "More info"
 msgstr ""
 
@@ -91,9 +87,8 @@ msgid "Completed"
 msgstr ""
 
 #: class-admin.php:1763
-#: settings/build/index.js:7563
+#: settings/build/index.js:382
 #: settings/src/Settings/MixedContentScan.js:199
-#: settings/build/index.js:6476
 msgid "Warning"
 msgstr ""
 
@@ -102,12 +97,9 @@ msgid "Open"
 msgstr ""
 
 #: class-admin.php:1765
-#: settings/build/index.js:3138
-#: settings/build/index.js:8331
+#: settings/build/index.js:382
 #: settings/src/Dashboard/OtherPlugins.js:85
 #: settings/src/Settings/SettingsGroup.js:133
-#: settings/build/index.js:2726
-#: settings/build/index.js:7135
 msgid "Upgrade"
 msgstr ""
 
@@ -396,17 +388,15 @@ msgstr ""
 #: class-admin.php:2682
 #: class-multisite.php:216
 #: settings/config/config.php:17
-#: settings/build/index.js:3639
+#: settings/build/index.js:382
 #: settings/src/Dashboard/SecurityFeaturesBlock/SecurityFeaturesFooter.js:14
-#: settings/build/index.js:3112
 msgid "Settings"
 msgstr ""
 
 #: class-admin.php:2687
 #: class-multisite.php:219
-#: settings/build/index.js:4282
+#: settings/build/index.js:382
 #: settings/src/Header.js:43
-#: settings/build/index.js:3658
 msgid "Support"
 msgstr ""
 
@@ -524,12 +514,9 @@ msgid "Really Simple SSL detected an SSL certificate, but has not been configure
 msgstr ""
 
 #: class-site-health.php:201
-#: settings/build/index.js:3466
-#: settings/build/index.js:5651
+#: settings/build/index.js:382
 #: settings/src/Dashboard/ProgressFooter.js:42
 #: settings/src/Onboarding/Onboarding.js:242
-#: settings/build/index.js:2997
-#: settings/build/index.js:4853
 msgid "Activate SSL"
 msgstr ""
 
@@ -1142,9 +1129,8 @@ msgid "Checking if Terms & Conditions are accepted..."
 msgstr ""
 
 #: lets-encrypt/config/fields.php:522
-#: settings/build/index.js:4865
+#: settings/build/index.js:382
 #: settings/src/LetsEncrypt/LetsEncrypt.js:93
-#: settings/build/index.js:4230
 msgid "Generating SSL certificate..."
 msgstr ""
 
@@ -1219,12 +1205,9 @@ msgstr ""
 
 #: lets-encrypt/functions.php:330
 #: lets-encrypt/functions.php:331
-#: settings/build/index.js:3003
-#: settings/build/index.js:8277
+#: settings/build/index.js:382
 #: settings/src/Dashboard/GridBlock.js:93
 #: settings/src/Settings/SettingsGroup.js:93
-#: settings/build/index.js:2626
-#: settings/build/index.js:7095
 msgid "Instructions"
 msgstr ""
 
@@ -1446,9 +1429,8 @@ msgstr ""
 #: upgrade/upgrade-to-pro.php:137
 #: upgrade/upgrade-to-pro.php:150
 #: upgrade/upgrade-to-pro.php:167
-#: settings/build/index.js:3112
+#: settings/build/index.js:382
 #: settings/src/Dashboard/OtherPlugins.js:67
-#: settings/build/index.js:2708
 msgid "Install"
 msgstr ""
 
@@ -1458,12 +1440,9 @@ msgstr ""
 
 #: onboarding/config.php:137
 #: settings/config/config.php:243
-#: settings/build/index.js:3113
-#: settings/build/index.js:7324
+#: settings/build/index.js:382
 #: settings/src/Dashboard/OtherPlugins.js:68
 #: settings/src/Settings/License.js:134
-#: settings/build/index.js:2709
-#: settings/build/index.js:6265
 msgid "Activate"
 msgstr ""
 
@@ -1506,9 +1485,8 @@ msgstr ""
 #: placeholders/class-placeholder.php:185
 #: placeholders/class-placeholder.php:210
 #: settings/config/config.php:850
-#: settings/build/index.js:7600
+#: settings/build/index.js:382
 #: settings/src/Settings/MixedContentScan.js:228
-#: settings/build/index.js:6505
 msgid "Details"
 msgstr ""
 
@@ -1973,15 +1951,10 @@ msgid "Dismiss all notices"
 msgstr ""
 
 #: settings/config/config.php:370
-#: settings/build/index.js:4717
-#: settings/build/index.js:4727
-#: settings/build/index.js:4737
+#: settings/build/index.js:382
 #: settings/src/LetsEncrypt/Installation.js:103
 #: settings/src/LetsEncrypt/Installation.js:108
 #: settings/src/LetsEncrypt/Installation.js:112
-#: settings/build/index.js:4120
-#: settings/build/index.js:4125
-#: settings/build/index.js:4129
 msgid "Download"
 msgstr ""
 
@@ -2212,36 +2185,25 @@ msgid "Location"
 msgstr ""
 
 #: settings/config/config.php:856
-#: settings/build/index.js:4193
-#: settings/build/index.js:4196
-#: settings/build/index.js:5328
-#: settings/build/index.js:7609
+#: settings/build/index.js:382
 #: settings/src/Dashboard/TaskElement.js:30
 #: settings/src/Dashboard/TaskElement.js:31
 #: settings/src/Modal/Modal.js:76
 #: settings/src/Settings/MixedContentScan.js:234
-#: settings/build/index.js:3600
-#: settings/build/index.js:3601
-#: settings/build/index.js:4582
-#: settings/build/index.js:6511
 msgid "Fix"
 msgstr ""
 
 #: settings/config/config.php:871
-#: settings/build/index.js:6352
+#: settings/build/index.js:382
 #: settings/src/Settings/ChangeStatus.js:11
-#: settings/build/index.js:5431
 msgid "Allow"
 msgstr ""
 
 #: settings/config/config.php:871
 #: settings/config/config.php:991
-#: settings/build/index.js:7134
-#: settings/build/index.js:7956
+#: settings/build/index.js:382
 #: settings/src/Settings/LearningMode.js:234
 #: settings/src/Settings/PermissionsPolicy.js:139
-#: settings/build/index.js:6091
-#: settings/build/index.js:6815
 msgid "Disable"
 msgstr ""
 
@@ -2354,9 +2316,8 @@ msgid "Terms and Conditions"
 msgstr ""
 
 #: settings/templates/tips-tricks-footer.php:3
-#: settings/build/index.js:4278
+#: settings/build/index.js:382
 #: settings/src/Header.js:39
-#: settings/build/index.js:3654
 msgid "Documentation"
 msgstr ""
 
@@ -2445,9 +2406,8 @@ msgid "Really Simple SSL automatically detects your settings and configures your
 msgstr ""
 
 #: upgrade/upgrade-to-pro.php:180
-#: settings/build/index.js:3141
+#: settings/build/index.js:382
 #: settings/src/Dashboard/OtherPlugins.js:88
-#: settings/build/index.js:2729
 msgid "Installed"
 msgstr ""
 
@@ -2517,910 +2477,717 @@ msgstr ""
 msgid "Your license key has reached its activation limit."
 msgstr ""
 
-#: settings/build/index.js:3114
-#: settings/build/index.js:5606
-#: settings/build/index.js:5607
-#: settings/src/Dashboard/OtherPlugins.js:69
-#: settings/src/Onboarding/Onboarding.js:194
-#: settings/src/Onboarding/Onboarding.js:195
-#: settings/build/index.js:2710
-#: settings/build/index.js:4805
-#: settings/build/index.js:4806
-msgid "Activating..."
-msgstr ""
-
-#: settings/build/index.js:3115
-#: settings/build/index.js:3116
-#: settings/src/Dashboard/OtherPlugins.js:70
-#: settings/src/Dashboard/OtherPlugins.js:71
-#: settings/build/index.js:2711
-#: settings/build/index.js:2712
-msgid "Downloading..."
-msgstr ""
-
-#: settings/build/index.js:3389
-#: settings/src/Dashboard/ProgressBlockHeader.js:51
-#: settings/build/index.js:2943
-msgid "All tasks"
-msgstr ""
-
-#: settings/build/index.js:3396
-#: settings/src/Dashboard/ProgressBlockHeader.js:55
-#: settings/build/index.js:2947
-msgid "Remaining tasks"
-msgstr ""
-
-#: settings/build/index.js:3454
-#: settings/src/Dashboard/ProgressFooter.js:32
-#: settings/build/index.js:2987
-msgid "SSL Activated"
-msgstr ""
-
-#: settings/build/index.js:3454
-#: settings/src/Dashboard/ProgressFooter.js:32
-#: settings/build/index.js:2987
-msgid "SSL not activated"
-msgstr ""
-
-#: settings/build/index.js:3472
-#: settings/build/index.js:4286
-#: settings/build/index.js:5134
+#: settings/build/index.js:382
 #: settings/src/Dashboard/ProgressFooter.js:44
 #: settings/src/Header.js:48
 #: settings/src/Menu/Menu.js:49
-#: settings/build/index.js:2999
-#: settings/build/index.js:3663
-#: settings/build/index.js:4438
 msgid "Go Pro"
 msgstr ""
 
-#: settings/build/index.js:3482
-#: settings/src/Dashboard/ProgressFooter.js:52
-#: settings/build/index.js:3007
-msgid "Mixed content"
+#: settings/build/index.js:382
+#: settings/src/Dashboard/ProgressBlockHeader.js:51
+msgid "All tasks"
 msgstr ""
 
-#: settings/build/index.js:3487
-#: settings/src/Dashboard/ProgressFooter.js:56
-#: settings/build/index.js:3011
-msgid "301 redirect"
+#: settings/build/index.js:382
+#: settings/src/Dashboard/ProgressBlockHeader.js:55
+msgid "Remaining tasks"
 msgstr ""
 
-#: settings/build/index.js:3535
+#: settings/build/index.js:382
 #: settings/src/Dashboard/SecurityFeaturesBlock/SecurityFeatureBullet.js:27
-#: settings/build/index.js:3045
 msgid "%sRead more%s"
 msgstr ""
 
-#: settings/build/index.js:3596
+#: settings/build/index.js:382
 #: settings/src/Dashboard/SecurityFeaturesBlock/SecurityFeaturesBlock.js:39
-#: settings/build/index.js:3090
 msgid "Check our %sdocumentation%s"
 msgstr ""
 
-#: settings/build/index.js:3600
+#: settings/build/index.js:382
 #: settings/src/Dashboard/SecurityFeaturesBlock/SecurityFeaturesBlock.js:40
-#: settings/build/index.js:3091
 msgid "or use the %sWordPress forum%s."
 msgstr ""
 
-#: settings/build/index.js:3905
-#: settings/src/Dashboard/SslLabs.js:233
-#: settings/build/index.js:3349
-msgid "HSTS"
+#: settings/build/index.js:382
+#: settings/src/Dashboard/ProgressFooter.js:32
+msgid "SSL Activated"
 msgstr ""
 
-#: settings/build/index.js:3905
-#: settings/src/Dashboard/SslLabs.js:234
-#: settings/build/index.js:3350
-msgid "HSTS..."
+#: settings/build/index.js:382
+#: settings/src/Dashboard/ProgressFooter.js:32
+msgid "SSL not activated"
 msgstr ""
 
-#: settings/build/index.js:3905
-#: settings/src/Dashboard/SslLabs.js:235
-#: settings/build/index.js:3351
-msgid "No HSTS header"
+#: settings/build/index.js:382
+#: settings/src/Dashboard/ProgressFooter.js:52
+msgid "Mixed content"
 msgstr ""
 
-#: settings/build/index.js:3905
-#: settings/src/Dashboard/SslLabs.js:236
-#: settings/build/index.js:3352
-msgid "HSTS header detected"
+#: settings/build/index.js:382
+#: settings/src/Dashboard/ProgressFooter.js:56
+msgid "301 redirect"
 msgstr ""
 
-#: settings/build/index.js:3936
-#: settings/src/Dashboard/SslLabs.js:269
-#: settings/build/index.js:3385
-msgid "Cipher strength"
-msgstr ""
-
-#: settings/build/index.js:3973
-#: settings/src/Dashboard/SslLabs.js:304
-#: settings/build/index.js:3420
-msgid "Certificate"
-msgstr ""
-
-#: settings/build/index.js:3973
-#: settings/src/Dashboard/SslLabs.js:305
-#: settings/build/index.js:3421
-msgid "Certificate..."
-msgstr ""
-
-#: settings/build/index.js:3973
-#: settings/src/Dashboard/SslLabs.js:306
-#: settings/build/index.js:3422
-msgid "Certificate issue"
-msgstr ""
-
-#: settings/build/index.js:3973
-#: settings/src/Dashboard/SslLabs.js:307
-#: settings/build/index.js:3423
-msgid "Valid certificate"
-msgstr ""
-
-#: settings/build/index.js:4000
-#: settings/src/Dashboard/SslLabs.js:333
-#: settings/build/index.js:3449
-msgid "Protocol support"
-msgstr ""
-
-#: settings/build/index.js:4000
-#: settings/src/Dashboard/SslLabs.js:334
-#: settings/build/index.js:3450
-msgid "Protocol support..."
-msgstr ""
-
-#: settings/build/index.js:4000
-#: settings/src/Dashboard/SslLabs.js:335
-#: settings/build/index.js:3451
-msgid "Supports TLS 1.1"
-msgstr ""
-
-#: settings/build/index.js:4000
-#: settings/src/Dashboard/SslLabs.js:336
-#: settings/build/index.js:3452
-msgid "No TLS 1.1"
-msgstr ""
-
-#: settings/build/index.js:4013
+#: settings/build/index.js:382
 #: settings/src/Dashboard/SslLabs.js:350
-#: settings/build/index.js:3466
 msgid "No test started yet"
 msgstr ""
 
-#: settings/build/index.js:4042
+#: settings/build/index.js:382
 #: settings/src/Dashboard/SslLabs.js:378
-#: settings/build/index.js:3494
 msgid "Not available on localhost"
 msgstr ""
 
-#: settings/build/index.js:4077
+#: settings/build/index.js:382
+#: settings/src/Dashboard/SslLabs.js:333
+msgid "Protocol support"
+msgstr ""
+
+#: settings/build/index.js:382
+#: settings/src/Dashboard/SslLabs.js:334
+msgid "Protocol support..."
+msgstr ""
+
+#: settings/build/index.js:382
+#: settings/src/Dashboard/SslLabs.js:335
+msgid "Supports TLS 1.1"
+msgstr ""
+
+#: settings/build/index.js:382
+#: settings/src/Dashboard/SslLabs.js:336
+msgid "No TLS 1.1"
+msgstr ""
+
+#: settings/build/index.js:382
+#: settings/src/Dashboard/SslLabs.js:233
+msgid "HSTS"
+msgstr ""
+
+#: settings/build/index.js:382
+#: settings/src/Dashboard/SslLabs.js:234
+msgid "HSTS..."
+msgstr ""
+
+#: settings/build/index.js:382
+#: settings/src/Dashboard/SslLabs.js:235
+msgid "No HSTS header"
+msgstr ""
+
+#: settings/build/index.js:382
+#: settings/src/Dashboard/SslLabs.js:236
+msgid "HSTS header detected"
+msgstr ""
+
+#: settings/build/index.js:382
+#: settings/src/Dashboard/SslLabs.js:304
+msgid "Certificate"
+msgstr ""
+
+#: settings/build/index.js:382
+#: settings/src/Dashboard/SslLabs.js:305
+msgid "Certificate..."
+msgstr ""
+
+#: settings/build/index.js:382
+#: settings/src/Dashboard/SslLabs.js:306
+msgid "Certificate issue"
+msgstr ""
+
+#: settings/build/index.js:382
+#: settings/src/Dashboard/SslLabs.js:307
+msgid "Valid certificate"
+msgstr ""
+
+#: settings/build/index.js:382
+#: settings/src/Dashboard/SslLabs.js:269
+msgid "Cipher strength"
+msgstr ""
+
+#: settings/build/index.js:382
 #: settings/src/Dashboard/SslLabs.js:412
-#: settings/build/index.js:3528
 msgid "What does my score mean?"
 msgstr ""
 
-#: settings/build/index.js:4080
-#: settings/build/index.js:4519
+#: settings/build/index.js:382
 #: settings/src/Dashboard/SslLabs.js:412
 #: settings/src/LetsEncrypt/DnsVerification.js:60
-#: settings/build/index.js:3528
-#: settings/build/index.js:3926
 msgid "Read more"
 msgstr ""
 
-#: settings/build/index.js:4089
+#: settings/build/index.js:382
 #: settings/src/Dashboard/SslLabs.js:418
-#: settings/build/index.js:3534
 msgid "Last check:"
 msgstr ""
 
-#: settings/build/index.js:4101
+#: settings/build/index.js:382
 #: settings/src/Dashboard/SslLabs.js:424
-#: settings/build/index.js:3540
 msgid "View detailed report on Qualys SSL Labs"
 msgstr ""
 
-#: settings/build/index.js:4135
+#: settings/build/index.js:382
 #: settings/src/Dashboard/SslLabsFooter.js:14
-#: settings/build/index.js:3563
 msgid "Continue SSL Health check"
 msgstr ""
 
-#: settings/build/index.js:4135
+#: settings/build/index.js:382
 #: settings/src/Dashboard/SslLabsFooter.js:15
-#: settings/build/index.js:3564
 msgid "Check SSL Health"
 msgstr ""
 
-#: settings/build/index.js:4375
-#: settings/build/index.js:4486
-#: settings/src/LetsEncrypt/Directories.js:22
-#: settings/src/LetsEncrypt/DnsVerification.js:23
-#: settings/build/index.js:3713
-#: settings/build/index.js:3889
-msgid "The challenge directory is used to verify the domain ownership."
+#: settings/build/index.js:382
+#: settings/src/Dashboard/OtherPlugins.js:69
+#: settings/src/Onboarding/Onboarding.js:194
+#: settings/src/Onboarding/Onboarding.js:195
+msgid "Activating..."
 msgstr ""
 
-#: settings/build/index.js:4379
-#: settings/src/LetsEncrypt/Directories.js:30
-#: settings/build/index.js:3721
-msgid "The key directory is needed to store the generated keys."
+#: settings/build/index.js:382
+#: settings/src/Dashboard/OtherPlugins.js:70
+#: settings/src/Dashboard/OtherPlugins.js:71
+msgid "Downloading..."
 msgstr ""
 
-#: settings/build/index.js:4379
-#: settings/build/index.js:4383
-#: settings/src/LetsEncrypt/Directories.js:30
-#: settings/src/LetsEncrypt/Directories.js:38
-#: settings/build/index.js:3721
-#: settings/build/index.js:3729
-msgid "By placing it outside the root folder, it is not accessible over the internet."
-msgstr ""
-
-#: settings/build/index.js:4383
-#: settings/src/LetsEncrypt/Directories.js:38
-#: settings/build/index.js:3729
-msgid "The certificate will get stored in this directory."
-msgstr ""
-
-#: settings/build/index.js:4395
-#: settings/src/LetsEncrypt/Directories.js:55
-#: settings/build/index.js:3746
-msgid "Switched to DNS"
-msgstr ""
-
-#: settings/build/index.js:4408
-#: settings/build/index.js:4517
-#: settings/build/index.js:4709
-#: settings/src/LetsEncrypt/Directories.js:70
-#: settings/src/LetsEncrypt/DnsVerification.js:58
-#: settings/src/LetsEncrypt/Installation.js:99
-#: settings/build/index.js:3761
-#: settings/build/index.js:3924
-#: settings/build/index.js:4116
-msgid "Next step"
-msgstr ""
-
-#: settings/build/index.js:4408
-#: settings/src/LetsEncrypt/Directories.js:75
-#: settings/build/index.js:3766
-msgid "If the challenge directory cannot be created, or is not reachable, you can either remove the server limitation, or change to DNS verification."
-msgstr ""
-
-#: settings/build/index.js:4411
-#: settings/build/index.js:4418
-#: settings/build/index.js:4427
-#: settings/src/LetsEncrypt/Directories.js:81
-#: settings/src/LetsEncrypt/Directories.js:94
-#: settings/src/LetsEncrypt/Directories.js:123
-#: settings/build/index.js:3772
-#: settings/build/index.js:3785
-#: settings/build/index.js:3814
-msgid "Switch to DNS verification"
-msgstr ""
-
-#: settings/build/index.js:4413
-#: settings/src/LetsEncrypt/Directories.js:87
-#: settings/build/index.js:3778
-msgid "If you also want to secure subdomains like mail.domain.com, cpanel.domain.com, you have to use the %sDNS%s challenge."
-msgstr ""
-
-#: settings/build/index.js:4415
-#: settings/src/LetsEncrypt/Directories.js:89
-#: settings/build/index.js:3780
-msgid "Please note that auto-renewal with a DNS challenge might not be possible."
-msgstr ""
-
-#: settings/build/index.js:4418
-#: settings/src/LetsEncrypt/Directories.js:99
-#: settings/build/index.js:3790
-msgid "Create a challenge directory"
-msgstr ""
-
-#: settings/build/index.js:4418
-#: settings/src/LetsEncrypt/Directories.js:102
-#: settings/build/index.js:3793
-msgid "Navigate in FTP or File Manager to the root of your WordPress installation:"
-msgstr ""
-
-#: settings/build/index.js:4420
-#: settings/src/LetsEncrypt/Directories.js:106
-#: settings/build/index.js:3797
-msgid "Create a folder called “.well-known”"
-msgstr ""
-
-#: settings/build/index.js:4422
-#: settings/src/LetsEncrypt/Directories.js:109
-#: settings/build/index.js:3800
-msgid "Inside the folder called “.well-known” create a new folder called “acme-challenge”, with 644 writing permissions."
-msgstr ""
-
-#: settings/build/index.js:4424
-#: settings/build/index.js:4433
-#: settings/build/index.js:4439
-#: settings/src/LetsEncrypt/Directories.js:112
-#: settings/src/LetsEncrypt/Directories.js:144
-#: settings/src/LetsEncrypt/Directories.js:166
-#: settings/build/index.js:3803
-#: settings/build/index.js:3835
-#: settings/build/index.js:3857
-msgid "Click the refresh button."
-msgstr ""
-
-#: settings/build/index.js:4424
-#: settings/src/LetsEncrypt/Directories.js:116
-#: settings/build/index.js:3807
-msgid "Or you can switch to DNS verification"
-msgstr ""
-
-#: settings/build/index.js:4424
-#: settings/src/LetsEncrypt/Directories.js:118
-#: settings/build/index.js:3809
-msgid "If the challenge directory cannot be created, you can either remove the server limitation, or change to DNS verification."
-msgstr ""
-
-#: settings/build/index.js:4427
-#: settings/src/LetsEncrypt/Directories.js:131
-#: settings/build/index.js:3822
-msgid "Create a key directory"
-msgstr ""
-
-#: settings/build/index.js:4427
-#: settings/build/index.js:4433
-#: settings/src/LetsEncrypt/Directories.js:134
-#: settings/src/LetsEncrypt/Directories.js:156
-#: settings/build/index.js:3825
-#: settings/build/index.js:3847
-msgid "Navigate in FTP or File Manager to one level above the root of your WordPress installation:"
-msgstr ""
-
-#: settings/build/index.js:4429
-#: settings/build/index.js:4435
-#: settings/src/LetsEncrypt/Directories.js:138
-#: settings/src/LetsEncrypt/Directories.js:160
-#: settings/build/index.js:3829
-#: settings/build/index.js:3851
-msgid "Create a folder called “ssl”"
-msgstr ""
-
-#: settings/build/index.js:4431
-#: settings/src/LetsEncrypt/Directories.js:141
-#: settings/build/index.js:3832
-msgid "Inside the folder called “ssl” create a new folder called “keys”, with 644 writing permissions."
-msgstr ""
-
-#: settings/build/index.js:4433
-#: settings/src/LetsEncrypt/Directories.js:153
-#: settings/build/index.js:3844
-msgid "Create a certs directory"
-msgstr ""
-
-#: settings/build/index.js:4437
-#: settings/src/LetsEncrypt/Directories.js:163
-#: settings/build/index.js:3854
-msgid "Inside the folder called “ssl” create a new folder called “certs”, with 644 writing permissions."
-msgstr ""
-
-#: settings/build/index.js:4504
-#: settings/src/LetsEncrypt/DnsVerification.js:41
-#: settings/build/index.js:3907
-msgid "Switched to directory"
-msgstr ""
-
-#: settings/build/index.js:4517
-#: settings/src/LetsEncrypt/DnsVerification.js:59
-#: settings/build/index.js:3925
-msgid "Add the following token as text record to your DNS records. We recommend to use a short TTL during installation, in case you need to change it."
-msgstr ""
-
-#: settings/build/index.js:4527
-#: settings/src/LetsEncrypt/DnsVerification.js:65
-#: settings/build/index.js:3931
-msgid "domain"
-msgstr ""
-
-#: settings/build/index.js:4529
-#: settings/src/LetsEncrypt/DnsVerification.js:66
-#: settings/build/index.js:3932
-msgid "Value"
-msgstr ""
-
-#: settings/build/index.js:4537
-#: settings/src/LetsEncrypt/DnsVerification.js:79
-#: settings/build/index.js:3945
-msgid "DNS verification active. You can switch back to directory verification here."
-msgstr ""
-
-#: settings/build/index.js:4540
-#: settings/src/LetsEncrypt/DnsVerification.js:83
-#: settings/build/index.js:3949
-msgid "Switch to directory verification"
-msgstr ""
-
-#: settings/build/index.js:4591
-#: settings/src/LetsEncrypt/Generation.js:27
-#: settings/build/index.js:3983
-msgid "Skip DNS verification "
-msgstr ""
-
-#: settings/build/index.js:4604
-#: settings/src/LetsEncrypt/Generation.js:44
-#: settings/build/index.js:4000
-msgid "We could not check the DNS records. If you just added the record, please check in a few minutes."
-msgstr ""
-
-#: settings/build/index.js:4606
-#: settings/src/LetsEncrypt/Generation.js:45
-#: settings/build/index.js:4001
-msgid "You can manually check the DNS records in an %sonline tool%s."
-msgstr ""
-
-#: settings/build/index.js:4608
-#: settings/src/LetsEncrypt/Generation.js:47
-#: settings/build/index.js:4003
-msgid "If you're sure it's set correctly, you can click the button to skip the DNS check."
-msgstr ""
-
-#: settings/build/index.js:4611
-#: settings/src/LetsEncrypt/Generation.js:53
-#: settings/build/index.js:4009
-msgid "Skip DNS check"
-msgstr ""
-
-#: settings/build/index.js:4658
-#: settings/src/LetsEncrypt/Installation.js:24
-#: settings/build/index.js:4041
-msgid "This is the certificate, which you need to install in your hosting dashboard."
-msgstr ""
-
-#: settings/build/index.js:4658
-#: settings/build/index.js:4711
-#: settings/src/LetsEncrypt/Installation.js:25
-#: settings/src/LetsEncrypt/Installation.js:101
-#: settings/build/index.js:4042
-#: settings/build/index.js:4118
-msgid "Certificate (CRT)"
-msgstr ""
-
-#: settings/build/index.js:4659
-#: settings/src/LetsEncrypt/Installation.js:31
-#: settings/build/index.js:4048
-msgid "The private key can be uploaded or pasted in the appropriate field on your hosting dashboard."
-msgstr ""
-
-#: settings/build/index.js:4659
-#: settings/build/index.js:4721
-#: settings/src/LetsEncrypt/Installation.js:32
-#: settings/src/LetsEncrypt/Installation.js:106
-#: settings/build/index.js:4049
-#: settings/build/index.js:4123
-msgid "Private Key (KEY)"
-msgstr ""
-
-#: settings/build/index.js:4660
-#: settings/src/LetsEncrypt/Installation.js:38
-#: settings/build/index.js:4055
-msgid "The CA Bundle will sometimes be automatically detected. If not, you can use this file."
-msgstr ""
-
-#: settings/build/index.js:4660
-#: settings/build/index.js:4731
-#: settings/src/LetsEncrypt/Installation.js:39
-#: settings/src/LetsEncrypt/Installation.js:110
-#: settings/build/index.js:4056
-#: settings/build/index.js:4127
-msgid "Certificate Authority Bundle (CABUNDLE)"
-msgstr ""
-
-#: settings/build/index.js:4689
-#: settings/src/LetsEncrypt/Installation.js:73
-#: settings/build/index.js:4090
-msgid "Copied!"
-msgstr ""
-
-#: settings/build/index.js:4709
-#: settings/src/LetsEncrypt/Installation.js:95
-#: settings/build/index.js:4112
-msgid "The certificate is not generated by Really Simple SSL, so there are no installation files here"
-msgstr ""
-
-#: settings/build/index.js:4711
-#: settings/src/LetsEncrypt/Installation.js:100
-#: settings/build/index.js:4117
-msgid "Install your certificate."
-msgstr ""
-
-#: settings/build/index.js:4721
-#: settings/build/index.js:4731
-#: settings/build/index.js:4741
-#: settings/src/LetsEncrypt/Installation.js:104
-#: settings/src/LetsEncrypt/Installation.js:109
-#: settings/src/LetsEncrypt/Installation.js:113
-#: settings/build/index.js:4121
-#: settings/build/index.js:4126
-#: settings/build/index.js:4130
-msgid "Copy content"
-msgstr ""
-
-#: settings/build/index.js:4859
-#: settings/src/LetsEncrypt/LetsEncrypt.js:86
-#: settings/build/index.js:4223
-msgid "Verifying DNS records..."
-msgstr ""
-
-#: settings/build/index.js:5017
-#: settings/src/LetsEncrypt/LetsEncrypt.js:234
-#: settings/build/index.js:4371
-msgid "Attempt %s."
-msgstr ""
-
-#: settings/build/index.js:5199
+#: settings/build/index.js:382
 #: settings/src/Menu/MenuItem.js:40
-#: settings/build/index.js:4490
 msgid "New"
 msgstr ""
 
-#: settings/build/index.js:5316
-#: settings/src/Modal/Modal.js:73
-#: settings/build/index.js:4579
-msgid "Edit"
-msgstr ""
-
-#: settings/build/index.js:5320
-#: settings/src/Modal/Modal.js:74
-#: settings/build/index.js:4580
-msgid "Help"
-msgstr ""
-
-#: settings/build/index.js:5324
-#: settings/src/Modal/Modal.js:75
-#: settings/build/index.js:4581
-msgid "Ignore"
-msgstr ""
-
-#: settings/build/index.js:5467
-#: settings/src/Onboarding/Onboarding.js:69
-#: settings/build/index.js:4680
-msgid "Re-checking SSL certificate, please wait..."
-msgstr ""
-
-#: settings/build/index.js:5574
-#: settings/src/Onboarding/Onboarding.js:163
-#: settings/build/index.js:4774
-msgid "SSL has been activated network wide"
-msgstr ""
-
-#: settings/build/index.js:5577
-#: settings/src/Onboarding/Onboarding.js:166
-#: settings/build/index.js:4777
-msgid "Processing activation of subsites networkwide"
-msgstr ""
-
-#: settings/build/index.js:5608
-#: settings/src/Onboarding/Onboarding.js:196
-#: settings/build/index.js:4807
-msgid "Installing..."
-msgstr ""
-
-#: settings/build/index.js:5609
-#: settings/src/Onboarding/Onboarding.js:197
-#: settings/build/index.js:4808
-msgid "Failed"
-msgstr ""
-
-#: settings/build/index.js:5610
-#: settings/src/Onboarding/Onboarding.js:198
-#: settings/build/index.js:4809
-msgid "Finished"
-msgstr ""
-
-#: settings/build/index.js:5632
-#: settings/src/Onboarding/Onboarding.js:219
-#: settings/build/index.js:4830
-msgid "working"
-msgstr ""
-
-#: settings/build/index.js:5632
-#: settings/src/Onboarding/Onboarding.js:220
-#: settings/build/index.js:4831
-msgid "completed"
-msgstr ""
-
-#: settings/build/index.js:5651
-#: settings/src/Onboarding/Onboarding.js:242
-#: settings/build/index.js:4853
-msgid "Activate SSL networkwide"
-msgstr ""
-
-#: settings/build/index.js:5664
-#: settings/src/Onboarding/Onboarding.js:247
-#: settings/build/index.js:4858
-msgid "Improve Security with PRO"
-msgstr ""
-
-#: settings/build/index.js:5669
-#: settings/src/Onboarding/Onboarding.js:248
-#: settings/build/index.js:4859
-msgid "Install SSL"
-msgstr ""
-
-#: settings/build/index.js:5670
-#: settings/src/Onboarding/Onboarding.js:250
-#: settings/build/index.js:4861
-msgid "Override SSL detection"
-msgstr ""
-
-#: settings/build/index.js:5689
-#: settings/src/Onboarding/Onboarding.js:268
-#: settings/build/index.js:4879
-msgid "Go to Dashboard"
-msgstr ""
-
-#: settings/build/index.js:5728
-#: settings/src/Onboarding/Onboarding.js:293
-#: settings/build/index.js:4904
-msgid "Refresh SSL status"
-msgstr ""
-
-#: settings/build/index.js:5728
-#: settings/src/Onboarding/Onboarding.js:294
-#: settings/build/index.js:4905
-msgid "The SSL detection method is not 100% accurate."
-msgstr ""
-
-#: settings/build/index.js:5728
-#: settings/src/Onboarding/Onboarding.js:295
-#: settings/build/index.js:4906
-msgid "If you’re certain an SSL certificate is present, and refresh SSL status does not work, please check “Override SSL detection” to continue activating SSL."
-msgstr ""
-
-#: settings/build/index.js:5823
-#: settings/src/Onboarding/OnboardingModal.js:54
-#: settings/build/index.js:4974
-msgid "Please wait while we detect your setup"
-msgstr ""
-
-#: settings/build/index.js:6352
-#: settings/src/Settings/ChangeStatus.js:11
-#: settings/build/index.js:5431
-msgid "Revoke"
-msgstr ""
-
-#: settings/build/index.js:6489
-#: settings/build/index.js:8344
-#: settings/src/Settings/Field.js:108
-#: settings/src/Settings/SettingsGroup.js:143
-#: settings/build/index.js:5545
-#: settings/build/index.js:7145
-msgid "This feature is only available networkwide."
-msgstr ""
-
-#: settings/build/index.js:6491
-#: settings/build/index.js:8346
-#: settings/src/Settings/Field.js:108
-#: settings/src/Settings/SettingsGroup.js:143
-#: settings/build/index.js:5545
-#: settings/build/index.js:7145
-msgid "Network settings"
-msgstr ""
-
-#: settings/build/index.js:7026
-#: settings/src/Settings/LearningMode.js:136
-#: settings/build/index.js:5993
-msgid "We're configuring your %s"
-msgstr ""
-
-#: settings/build/index.js:7028
-#: settings/src/Settings/LearningMode.js:137
-#: settings/build/index.js:5994
-msgid "%s has been disabled."
-msgstr ""
-
-#: settings/build/index.js:7042
-#: settings/src/Settings/LearningMode.js:148
-#: settings/build/index.js:6005
-msgid "All"
-msgstr ""
-
-#: settings/build/index.js:7044
-#: settings/src/Settings/LearningMode.js:149
-#: settings/build/index.js:6006
-msgid "Allowed"
-msgstr ""
-
-#: settings/build/index.js:7046
-#: settings/src/Settings/LearningMode.js:150
-#: settings/build/index.js:6007
-msgid "Blocked"
-msgstr ""
-
-#: settings/build/index.js:7076
-#: settings/src/Settings/LearningMode.js:179
-#: settings/build/index.js:6036
-msgid "success"
-msgstr ""
-
-#: settings/build/index.js:7076
-#: settings/src/Settings/LearningMode.js:179
-#: settings/build/index.js:6036
-msgid "failed"
-msgstr ""
-
-#: settings/build/index.js:7121
-#: settings/build/index.js:7668
-#: settings/src/Settings/LearningMode.js:225
-#: settings/src/Settings/MixedContentScan.js:299
-#: settings/build/index.js:6082
-#: settings/build/index.js:6576
-msgid "No results"
-msgstr ""
-
-#: settings/build/index.js:7131
-#: settings/build/index.js:7953
-#: settings/src/Settings/LearningMode.js:233
-#: settings/src/Settings/PermissionsPolicy.js:138
-#: settings/build/index.js:6090
-#: settings/build/index.js:6814
-msgid "Enforce"
-msgstr ""
-
-#: settings/build/index.js:7140
-#: settings/src/Settings/LearningMode.js:242
-#: settings/build/index.js:6099
-msgid "Enable Learning Mode"
-msgstr ""
-
-#: settings/build/index.js:7146
-#: settings/build/index.js:7156
-#: settings/src/Settings/LearningMode.js:247
-#: settings/src/Settings/LearningMode.js:254
-#: settings/build/index.js:6104
-#: settings/build/index.js:6111
-msgid "Learning Mode"
-msgstr ""
-
-#: settings/build/index.js:7150
-#: settings/src/Settings/LearningMode.js:249
-#: settings/build/index.js:6106
-msgid "Disable learning mode and configure manually"
-msgstr ""
-
-#: settings/build/index.js:7156
-#: settings/src/Settings/LearningMode.js:255
-#: settings/build/index.js:6112
-msgid "We finished the configuration."
-msgstr ""
-
-#: settings/build/index.js:7160
-#: settings/src/Settings/LearningMode.js:256
-#: settings/build/index.js:6113
-msgid "Review the settings and enforce the policy"
-msgstr ""
-
-#: settings/build/index.js:7166
-#: settings/src/Settings/LearningMode.js:261
-#: settings/build/index.js:6118
-msgid "disabled "
-msgstr ""
-
-#: settings/build/index.js:7324
+#: settings/build/index.js:382
 #: settings/src/Settings/License.js:133
-#: settings/build/index.js:6264
 msgid "Deactivate"
 msgstr ""
 
-#: settings/build/index.js:7372
-#: settings/src/Settings/MixedContentScan.js:18
-#: settings/src/Settings/MixedContentScan.js:20
-#: settings/build/index.js:6295
-#: settings/build/index.js:6297
-msgid "All results"
+#: settings/build/index.js:382
+#: settings/src/LetsEncrypt/Directories.js:22
+#: settings/src/LetsEncrypt/DnsVerification.js:23
+msgid "The challenge directory is used to verify the domain ownership."
 msgstr ""
 
-#: settings/build/index.js:7372
-#: settings/src/Settings/MixedContentScan.js:19
-#: settings/build/index.js:6296
-msgid "Show"
+#: settings/build/index.js:382
+#: settings/src/LetsEncrypt/Directories.js:30
+msgid "The key directory is needed to store the generated keys."
 msgstr ""
 
-#: settings/build/index.js:7590
+#: settings/build/index.js:382
+#: settings/src/LetsEncrypt/Directories.js:30
+#: settings/src/LetsEncrypt/Directories.js:38
+msgid "By placing it outside the root folder, it is not accessible over the internet."
+msgstr ""
+
+#: settings/build/index.js:382
+#: settings/src/LetsEncrypt/Directories.js:38
+msgid "The certificate will get stored in this directory."
+msgstr ""
+
+#: settings/build/index.js:382
+#: settings/src/LetsEncrypt/Directories.js:55
+msgid "Switched to DNS"
+msgstr ""
+
+#: settings/build/index.js:382
+#: settings/src/LetsEncrypt/Directories.js:70
+#: settings/src/LetsEncrypt/DnsVerification.js:58
+#: settings/src/LetsEncrypt/Installation.js:99
+msgid "Next step"
+msgstr ""
+
+#: settings/build/index.js:382
+#: settings/src/LetsEncrypt/Directories.js:75
+msgid "If the challenge directory cannot be created, or is not reachable, you can either remove the server limitation, or change to DNS verification."
+msgstr ""
+
+#: settings/build/index.js:382
+#: settings/src/LetsEncrypt/Directories.js:81
+#: settings/src/LetsEncrypt/Directories.js:94
+#: settings/src/LetsEncrypt/Directories.js:123
+msgid "Switch to DNS verification"
+msgstr ""
+
+#: settings/build/index.js:382
+#: settings/src/LetsEncrypt/Directories.js:87
+msgid "If you also want to secure subdomains like mail.domain.com, cpanel.domain.com, you have to use the %sDNS%s challenge."
+msgstr ""
+
+#: settings/build/index.js:382
+#: settings/src/LetsEncrypt/Directories.js:89
+msgid "Please note that auto-renewal with a DNS challenge might not be possible."
+msgstr ""
+
+#: settings/build/index.js:382
+#: settings/src/LetsEncrypt/Directories.js:99
+msgid "Create a challenge directory"
+msgstr ""
+
+#: settings/build/index.js:382
+#: settings/src/LetsEncrypt/Directories.js:102
+msgid "Navigate in FTP or File Manager to the root of your WordPress installation:"
+msgstr ""
+
+#: settings/build/index.js:382
+#: settings/src/LetsEncrypt/Directories.js:106
+msgid "Create a folder called “.well-known”"
+msgstr ""
+
+#: settings/build/index.js:382
+#: settings/src/LetsEncrypt/Directories.js:109
+msgid "Inside the folder called “.well-known” create a new folder called “acme-challenge”, with 644 writing permissions."
+msgstr ""
+
+#: settings/build/index.js:382
+#: settings/src/LetsEncrypt/Directories.js:112
+#: settings/src/LetsEncrypt/Directories.js:144
+#: settings/src/LetsEncrypt/Directories.js:166
+msgid "Click the refresh button."
+msgstr ""
+
+#: settings/build/index.js:382
+#: settings/src/LetsEncrypt/Directories.js:116
+msgid "Or you can switch to DNS verification"
+msgstr ""
+
+#: settings/build/index.js:382
+#: settings/src/LetsEncrypt/Directories.js:118
+msgid "If the challenge directory cannot be created, you can either remove the server limitation, or change to DNS verification."
+msgstr ""
+
+#: settings/build/index.js:382
+#: settings/src/LetsEncrypt/Directories.js:131
+msgid "Create a key directory"
+msgstr ""
+
+#: settings/build/index.js:382
+#: settings/src/LetsEncrypt/Directories.js:134
+#: settings/src/LetsEncrypt/Directories.js:156
+msgid "Navigate in FTP or File Manager to one level above the root of your WordPress installation:"
+msgstr ""
+
+#: settings/build/index.js:382
+#: settings/src/LetsEncrypt/Directories.js:138
+#: settings/src/LetsEncrypt/Directories.js:160
+msgid "Create a folder called “ssl”"
+msgstr ""
+
+#: settings/build/index.js:382
+#: settings/src/LetsEncrypt/Directories.js:141
+msgid "Inside the folder called “ssl” create a new folder called “keys”, with 644 writing permissions."
+msgstr ""
+
+#: settings/build/index.js:382
+#: settings/src/LetsEncrypt/Directories.js:153
+msgid "Create a certs directory"
+msgstr ""
+
+#: settings/build/index.js:382
+#: settings/src/LetsEncrypt/Directories.js:163
+msgid "Inside the folder called “ssl” create a new folder called “certs”, with 644 writing permissions."
+msgstr ""
+
+#: settings/build/index.js:382
+#: settings/src/LetsEncrypt/DnsVerification.js:59
+msgid "Add the following token as text record to your DNS records. We recommend to use a short TTL during installation, in case you need to change it."
+msgstr ""
+
+#: settings/build/index.js:382
+#: settings/src/LetsEncrypt/DnsVerification.js:65
+msgid "domain"
+msgstr ""
+
+#: settings/build/index.js:382
+#: settings/src/LetsEncrypt/DnsVerification.js:66
+msgid "Value"
+msgstr ""
+
+#: settings/build/index.js:382
+#: settings/src/LetsEncrypt/DnsVerification.js:79
+msgid "DNS verification active. You can switch back to directory verification here."
+msgstr ""
+
+#: settings/build/index.js:382
+#: settings/src/LetsEncrypt/DnsVerification.js:41
+msgid "Switched to directory"
+msgstr ""
+
+#: settings/build/index.js:382
+#: settings/src/LetsEncrypt/DnsVerification.js:83
+msgid "Switch to directory verification"
+msgstr ""
+
+#: settings/build/index.js:382
+#: settings/src/LetsEncrypt/Generation.js:44
+msgid "We could not check the DNS records. If you just added the record, please check in a few minutes."
+msgstr ""
+
+#: settings/build/index.js:382
+#: settings/src/LetsEncrypt/Generation.js:45
+msgid "You can manually check the DNS records in an %sonline tool%s."
+msgstr ""
+
+#: settings/build/index.js:382
+#: settings/src/LetsEncrypt/Generation.js:47
+msgid "If you're sure it's set correctly, you can click the button to skip the DNS check."
+msgstr ""
+
+#: settings/build/index.js:382
+#: settings/src/LetsEncrypt/Generation.js:27
+msgid "Skip DNS verification "
+msgstr ""
+
+#: settings/build/index.js:382
+#: settings/src/LetsEncrypt/Generation.js:53
+msgid "Skip DNS check"
+msgstr ""
+
+#: settings/build/index.js:382
+#: settings/src/Onboarding/Onboarding.js:163
+msgid "SSL has been activated network wide"
+msgstr ""
+
+#: settings/build/index.js:382
+#: settings/src/Onboarding/Onboarding.js:166
+msgid "Processing activation of subsites networkwide"
+msgstr ""
+
+#: settings/build/index.js:382
+#: settings/src/Onboarding/Onboarding.js:196
+msgid "Installing..."
+msgstr ""
+
+#: settings/build/index.js:382
+#: settings/src/Onboarding/Onboarding.js:197
+msgid "Failed"
+msgstr ""
+
+#: settings/build/index.js:382
+#: settings/src/Onboarding/Onboarding.js:198
+msgid "Finished"
+msgstr ""
+
+#: settings/build/index.js:382
+#: settings/src/Onboarding/Onboarding.js:219
+msgid "working"
+msgstr ""
+
+#: settings/build/index.js:382
+#: settings/src/Onboarding/Onboarding.js:220
+msgid "completed"
+msgstr ""
+
+#: settings/build/index.js:382
+#: settings/src/Onboarding/Onboarding.js:69
+msgid "Re-checking SSL certificate, please wait..."
+msgstr ""
+
+#: settings/build/index.js:382
+#: settings/src/Onboarding/Onboarding.js:293
+msgid "Refresh SSL status"
+msgstr ""
+
+#: settings/build/index.js:382
+#: settings/src/Onboarding/Onboarding.js:294
+msgid "The SSL detection method is not 100% accurate."
+msgstr ""
+
+#: settings/build/index.js:382
+#: settings/src/Onboarding/Onboarding.js:295
+msgid "If you’re certain an SSL certificate is present, and refresh SSL status does not work, please check “Override SSL detection” to continue activating SSL."
+msgstr ""
+
+#: settings/build/index.js:382
+#: settings/src/Onboarding/Onboarding.js:242
+msgid "Activate SSL networkwide"
+msgstr ""
+
+#: settings/build/index.js:382
+#: settings/src/Onboarding/Onboarding.js:247
+msgid "Improve Security with PRO"
+msgstr ""
+
+#: settings/build/index.js:382
+#: settings/src/Onboarding/Onboarding.js:248
+msgid "Install SSL"
+msgstr ""
+
+#: settings/build/index.js:382
+#: settings/src/Onboarding/Onboarding.js:250
+msgid "Override SSL detection"
+msgstr ""
+
+#: settings/build/index.js:382
+#: settings/src/Onboarding/Onboarding.js:268
+msgid "Go to Dashboard"
+msgstr ""
+
+#: settings/build/index.js:382
+#: settings/src/LetsEncrypt/Installation.js:24
+msgid "This is the certificate, which you need to install in your hosting dashboard."
+msgstr ""
+
+#: settings/build/index.js:382
+#: settings/src/LetsEncrypt/Installation.js:25
+#: settings/src/LetsEncrypt/Installation.js:101
+msgid "Certificate (CRT)"
+msgstr ""
+
+#: settings/build/index.js:382
+#: settings/src/LetsEncrypt/Installation.js:31
+msgid "The private key can be uploaded or pasted in the appropriate field on your hosting dashboard."
+msgstr ""
+
+#: settings/build/index.js:382
+#: settings/src/LetsEncrypt/Installation.js:32
+#: settings/src/LetsEncrypt/Installation.js:106
+msgid "Private Key (KEY)"
+msgstr ""
+
+#: settings/build/index.js:382
+#: settings/src/LetsEncrypt/Installation.js:38
+msgid "The CA Bundle will sometimes be automatically detected. If not, you can use this file."
+msgstr ""
+
+#: settings/build/index.js:382
+#: settings/src/LetsEncrypt/Installation.js:39
+#: settings/src/LetsEncrypt/Installation.js:110
+msgid "Certificate Authority Bundle (CABUNDLE)"
+msgstr ""
+
+#: settings/build/index.js:382
+#: settings/src/LetsEncrypt/Installation.js:73
+msgid "Copied!"
+msgstr ""
+
+#: settings/build/index.js:382
+#: settings/src/LetsEncrypt/Installation.js:95
+msgid "The certificate is not generated by Really Simple SSL, so there are no installation files here"
+msgstr ""
+
+#: settings/build/index.js:382
+#: settings/src/LetsEncrypt/Installation.js:100
+msgid "Install your certificate."
+msgstr ""
+
+#: settings/build/index.js:382
+#: settings/src/LetsEncrypt/Installation.js:104
+#: settings/src/LetsEncrypt/Installation.js:109
+#: settings/src/LetsEncrypt/Installation.js:113
+msgid "Copy content"
+msgstr ""
+
+#: settings/build/index.js:382
+#: settings/src/LetsEncrypt/LetsEncrypt.js:86
+msgid "Verifying DNS records..."
+msgstr ""
+
+#: settings/build/index.js:382
+#: settings/src/LetsEncrypt/LetsEncrypt.js:234
+msgid "Attempt %s."
+msgstr ""
+
+#: settings/build/index.js:382
 #: settings/src/Settings/MixedContentScan.js:221
-#: settings/build/index.js:6498
 msgid "View"
 msgstr ""
 
-#: settings/build/index.js:7659
+#: settings/build/index.js:382
 #: settings/src/Settings/MixedContentScan.js:285
-#: settings/build/index.js:6562
 msgid "No records. Start your first scan"
 msgstr ""
 
-#: settings/build/index.js:7659
+#: settings/build/index.js:382
 #: settings/src/Settings/MixedContentScan.js:286
-#: settings/build/index.js:6563
 msgid "Everything is now served over SSL"
 msgstr ""
 
-#: settings/build/index.js:8056
-#: settings/src/Settings/Settings.js:74
-#: settings/build/index.js:6896
-msgid "Save"
+#: settings/build/index.js:382
+#: settings/src/Settings/LearningMode.js:225
+#: settings/src/Settings/MixedContentScan.js:299
+msgid "No results"
 msgstr ""
 
-#: settings/build/index.js:8060
-#: settings/src/Settings/Settings.js:77
-#: settings/build/index.js:6899
-msgid "Refresh"
+#: settings/build/index.js:382
+#: settings/src/Settings/ChangeStatus.js:11
+msgid "Revoke"
 msgstr ""
 
-#: settings/build/index.js:8129
-#: settings/src/Settings/Settings.js:146
-#: settings/build/index.js:6968
-msgid "Previous"
+#: settings/build/index.js:382
+#: settings/src/Settings/LearningMode.js:233
+#: settings/src/Settings/PermissionsPolicy.js:138
+msgid "Enforce"
 msgstr ""
 
-#: settings/build/index.js:8137
-#: settings/src/Settings/Settings.js:158
-#: settings/build/index.js:6980
-msgid "Save and Continue"
-msgstr ""
-
-#: settings/build/index.js:8143
-#: settings/src/Settings/Settings.js:167
-#: settings/build/index.js:6989
-msgid "Notifications"
-msgstr ""
-
-#: settings/build/index.js:8146
-#: settings/src/Settings/Settings.js:170
-#: settings/build/index.js:6992
-msgid "Expand all"
-msgstr ""
-
-#: settings/build/index.js:8146
-#: settings/src/Settings/Settings.js:171
-#: settings/build/index.js:6993
-msgid "Collapse all"
-msgstr ""
-
-#: settings/build/index.js:8261
-#: settings/src/Settings/SettingsGroup.js:80
-#: settings/build/index.js:7082
-msgid "Learn more about %sPremium%s"
-msgstr ""
-
-#: settings/build/index.js:8299
-#: settings/src/Settings/SettingsGroup.js:103
-#: settings/build/index.js:7105
-msgid "Reset Let's Encrypt"
-msgstr ""
-
-#: settings/build/index.js:8334
-#: settings/src/Settings/SettingsGroup.js:135
-#: settings/build/index.js:7137
-msgid "Check license"
-msgstr ""
-
-#: settings/build/index.js:8344
-#: settings/src/Settings/SettingsGroup.js:142
-#: settings/build/index.js:7144
-msgid "Network feature"
-msgstr ""
-
-#: settings/build/index.js:8557
-#: settings/src/Settings/SettingsPage.js:168
-#: settings/build/index.js:7323
-msgid "Settings Saved"
-msgstr ""
-
-#: settings/build/index.js:8813
+#: settings/build/index.js:382
 #: settings/src/Settings/Support.js:64
-#: settings/build/index.js:7566
 msgid "Type your question here"
 msgstr ""
 
-#: settings/build/index.js:8819
+#: settings/build/index.js:382
 #: settings/src/Settings/Support.js:71
-#: settings/build/index.js:7573
 msgid "Send"
+msgstr ""
+
+#: settings/build/index.js:382
+#: settings/src/Settings/LearningMode.js:136
+msgid "We're configuring your %s"
+msgstr ""
+
+#: settings/build/index.js:382
+#: settings/src/Settings/LearningMode.js:137
+msgid "%s has been disabled."
+msgstr ""
+
+#: settings/build/index.js:382
+#: settings/src/Settings/LearningMode.js:179
+msgid "success"
+msgstr ""
+
+#: settings/build/index.js:382
+#: settings/src/Settings/LearningMode.js:179
+msgid "failed"
+msgstr ""
+
+#: settings/build/index.js:382
+#: settings/src/Settings/LearningMode.js:242
+msgid "Enable Learning Mode"
+msgstr ""
+
+#: settings/build/index.js:382
+#: settings/src/Settings/LearningMode.js:247
+#: settings/src/Settings/LearningMode.js:254
+msgid "Learning Mode"
+msgstr ""
+
+#: settings/build/index.js:382
+#: settings/src/Settings/LearningMode.js:249
+msgid "Disable learning mode and configure manually"
+msgstr ""
+
+#: settings/build/index.js:382
+#: settings/src/Settings/LearningMode.js:255
+msgid "We finished the configuration."
+msgstr ""
+
+#: settings/build/index.js:382
+#: settings/src/Settings/LearningMode.js:256
+msgid "Review the settings and enforce the policy"
+msgstr ""
+
+#: settings/build/index.js:382
+#: settings/src/Settings/LearningMode.js:261
+msgid "disabled "
+msgstr ""
+
+#: settings/build/index.js:382
+#: settings/src/Settings/LearningMode.js:148
+msgid "All"
+msgstr ""
+
+#: settings/build/index.js:382
+#: settings/src/Settings/LearningMode.js:149
+msgid "Allowed"
+msgstr ""
+
+#: settings/build/index.js:382
+#: settings/src/Settings/LearningMode.js:150
+msgid "Blocked"
+msgstr ""
+
+#: settings/build/index.js:382
+#: settings/src/Settings/Field.js:108
+#: settings/src/Settings/SettingsGroup.js:143
+msgid "This feature is only available networkwide."
+msgstr ""
+
+#: settings/build/index.js:382
+#: settings/src/Settings/Field.js:108
+#: settings/src/Settings/SettingsGroup.js:143
+msgid "Network settings"
+msgstr ""
+
+#: settings/build/index.js:382
+#: settings/src/Settings/SettingsGroup.js:80
+msgid "Learn more about %sPremium%s"
+msgstr ""
+
+#: settings/build/index.js:382
+#: settings/src/Settings/SettingsGroup.js:103
+msgid "Reset Let's Encrypt"
+msgstr ""
+
+#: settings/build/index.js:382
+#: settings/src/Settings/SettingsGroup.js:135
+msgid "Check license"
+msgstr ""
+
+#: settings/build/index.js:382
+#: settings/src/Settings/SettingsGroup.js:142
+msgid "Network feature"
+msgstr ""
+
+#: settings/build/index.js:382
+#: settings/src/Settings/Settings.js:74
+msgid "Save"
+msgstr ""
+
+#: settings/build/index.js:382
+#: settings/src/Settings/Settings.js:77
+msgid "Refresh"
+msgstr ""
+
+#: settings/build/index.js:382
+#: settings/src/Settings/Settings.js:146
+msgid "Previous"
+msgstr ""
+
+#: settings/build/index.js:382
+#: settings/src/Settings/Settings.js:158
+msgid "Save and Continue"
+msgstr ""
+
+#: settings/build/index.js:382
+#: settings/src/Settings/Settings.js:167
+msgid "Notifications"
+msgstr ""
+
+#: settings/build/index.js:382
+#: settings/src/Settings/Settings.js:170
+msgid "Expand all"
+msgstr ""
+
+#: settings/build/index.js:382
+#: settings/src/Settings/Settings.js:171
+msgid "Collapse all"
+msgstr ""
+
+#: settings/build/index.js:382
+#: settings/src/Settings/SettingsPage.js:168
+msgid "Settings Saved"
+msgstr ""
+
+#: settings/build/index.js:382
+#: settings/src/Modal/Modal.js:73
+msgid "Edit"
+msgstr ""
+
+#: settings/build/index.js:382
+#: settings/src/Modal/Modal.js:74
+msgid "Help"
+msgstr ""
+
+#: settings/build/index.js:382
+#: settings/src/Modal/Modal.js:75
+msgid "Ignore"
+msgstr ""
+
+#: settings/build/index.js:382
+#: settings/src/Onboarding/OnboardingModal.js:54
+msgid "Please wait while we detect your setup"
+msgstr ""
+
+#: settings/src/Settings/MixedContentScan.js:18
+#: settings/src/Settings/MixedContentScan.js:20
+msgid "All results"
+msgstr ""
+
+#: settings/src/Settings/MixedContentScan.js:19
+msgid "Show"
 msgstr ""
