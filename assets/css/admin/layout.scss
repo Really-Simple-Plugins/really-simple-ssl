@@ -88,6 +88,7 @@
     align-items: center;
     margin-left: auto;
     gap: var(--rsp-spacing-s);
+    min-height: 52px;
 
     select {
       max-width: 60ch;
@@ -126,6 +127,7 @@
 
     @media only screen and ( max-width: $rsp-break-s)  {
       max-width:790px;
+      width: calc(100% - var(--rsp-grid-gap) * 2)
     }
   }
 
@@ -172,6 +174,7 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
+      min-height: calc(30px + var(--rsp-spacing-s) * 2);
       @include rsssl-block-padding;
 
       &:empty {
