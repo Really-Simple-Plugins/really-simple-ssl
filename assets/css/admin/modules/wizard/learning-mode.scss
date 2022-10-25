@@ -22,7 +22,7 @@
 
   .rsssl-progress-status {
     @extend .rsssl-task-status;
-    &.rsssl-learning-mode-completed {
+    &.rsssl-learning-mode-completed, &.rsssl-learning-mode-enforced {
       background-color: var(--rsp-color-success);
       color:#fff;
     }
@@ -33,6 +33,7 @@
     &.rsssl-learning-mode-disabled {
       background-color: var(--rsp-color-disabled);
     }
+
   }
 }
 
