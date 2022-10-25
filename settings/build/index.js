@@ -8021,13 +8021,12 @@ class Settings extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Component
     this.state = {
       noticesExpanded: true
     };
-  }
-
-  componentDidMount() {
     this.toggleNotices = this.toggleNotices.bind(this);
     this.saveAndContinue = this.saveAndContinue.bind(this);
     this.save = this.save.bind(this);
   }
+
+  componentDidMount() {}
 
   toggleNotices() {
     const {
@@ -8039,6 +8038,7 @@ class Settings extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Component
   }
 
   save() {
+    console.log(this.props);
     this.props.save();
   }
 

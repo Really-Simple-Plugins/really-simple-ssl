@@ -18,12 +18,13 @@ class Settings extends Component {
         this.state = {
             noticesExpanded:true,
         };
-    }
-
-    componentDidMount(){
         this.toggleNotices = this.toggleNotices.bind(this);
         this.saveAndContinue = this.saveAndContinue.bind(this);
         this.save = this.save.bind(this);
+    }
+
+    componentDidMount(){
+
     }
 
     toggleNotices(){
@@ -37,6 +38,7 @@ class Settings extends Component {
     }
 
     save(){
+        console.log(this.props);
         this.props.save();
     }
 

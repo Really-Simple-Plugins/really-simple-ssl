@@ -41,21 +41,33 @@ function rsssl_rename_admin_user($fields=[]) {
 	if ( !rsssl_user_can_manage() || wp_doing_cron() ) {
 		return false;
 	}
+	//to be able to update the admin user email, we need to disable this filter temporarily
+	remove_filter( 'illegal_user_logins', 'rsssl_prevent_admin_user_add' );
 
-    // Get user data for login admin
+	// Get user data for login admin
 	$admin_user = get_user_by('login','admin');
 	if ( $admin_user ) {
 		$admin_user_id  = $admin_user->data->ID;
 		$admin_userdata = get_userdata( $admin_user_id );
 		$admin_email    = $admin_userdata->data->user_email;
-		// update e-mail for existing user. Cannot have two accounts connected to the same e-mail address
-		wp_update_user( array(
-			'ID'         => $admin_user_id,
-			'user_email' => 'temp@example.com',
-		) );
-
 		// Generate new user login. Do it here so we can get the ID for this user later in the function
 		$new_user_login = rsssl_generate_random_string( 12 );
+
+		//create temp email address
+		$domain = site_url();
+		$parse = parse_url($domain);
+		$host = $parse['host'] ?? 'example.com';
+		$email = "$new_user_login@$host";
+
+		// update e-mail for existing user. Cannot have two accounts connected to the same e-mail address
+		$success = wp_update_user( array(
+			'ID'         => $admin_user_id,
+			'user_email' => $email,
+		) );
+
+		if ( !$success ) {
+			return false;
+		}
 
 		// Populate the new user data. Use current 'admin' userdata wherever available
 		$new_userdata = array(
@@ -81,19 +93,27 @@ function rsssl_rename_admin_user($fields=[]) {
 		);
 
 		// Create new admin user
-		wp_insert_user( $new_userdata );
-
-		// Delete old user and attribute posts to new user ID
+		$new_user_id = wp_insert_user( $new_userdata );
+		if ( !$new_user_id ) {
+			return false;
+		}
 		require_once(ABSPATH.'wp-admin/includes/user.php');
-		$new_user = get_user_by('login',$new_user_login);
-		wp_delete_user( $admin_user_id, $new_user->data->ID);
+		wp_delete_user( $admin_user_id, $new_user_id);
 
 		// On multisite we have to update the $wpdb->prefix . sitemeta -> meta_key -> site_admins -> meta_value to the new username
 		if ( is_multisite() ) {
 			global $wpdb;
-			$site_admins = $wpdb->query("SELECT 'meta_value' FROM `wp_sitemeta` WHERE `meta_key` = 'site_admins'");
-			$site_admins = str_replace('admin', $new_user_login, $site_admins);
-			$wpdb->query("UPDATE `wp_sitemeta` SET `meta_value` = $site_admins WHERE `meta_key` = 'site_admins'");
+			$site_admins = $wpdb->get_var("SELECT meta_value FROM {$wpdb->base_prefix}sitemeta WHERE meta_key = 'site_admins'");
+			if ( is_serialized($site_admins) ) {
+				$unserialized = unserialize($site_admins);
+				foreach ($unserialized as $index => $site_admin){
+					if ( $site_admin==='admin' ) {
+						$unserialized[$index] = $new_user_login;
+					}
+				}
+				$site_admins = serialize($unserialized);
+			}
+			$wpdb->query($wpdb->prepare("UPDATE {$wpdb->base_prefix}sitemeta SET meta_value = %s WHERE meta_key = 'site_admins'", $site_admins));
 		}
 
 		set_site_transient('rsssl_username_admin_changed', $new_user_login, DAY_IN_SECONDS );
