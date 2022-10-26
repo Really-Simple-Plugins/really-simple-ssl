@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2022-10-24T12:40:33+00:00\n"
+"POT-Creation-Date: 2022-10-25T13:01:11+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.6.0\n"
 "X-Domain: really-simple-ssl\n"
@@ -1484,7 +1484,7 @@ msgstr ""
 #: placeholders/class-placeholder.php:159
 #: placeholders/class-placeholder.php:185
 #: placeholders/class-placeholder.php:210
-#: settings/config/config.php:850
+#: settings/config/config.php:857
 #: settings/build/index.js:382
 #: settings/src/Settings/MixedContentScan.js:228
 msgid "Details"
@@ -1773,7 +1773,7 @@ msgstr ""
 
 #: settings/config/config.php:44
 #: settings/config/config.php:50
-#: settings/config/config.php:1109
+#: settings/config/config.php:1116
 msgid "Hardening"
 msgstr ""
 
@@ -1832,7 +1832,7 @@ msgstr ""
 #: settings/config/config.php:130
 #: settings/config/config.php:131
 #: settings/config/config.php:141
-#: settings/config/config.php:872
+#: settings/config/config.php:879
 msgid "Permissions Policy"
 msgstr ""
 
@@ -2107,7 +2107,7 @@ msgid "Count"
 msgstr ""
 
 #: settings/config/config.php:623
-#: settings/config/config.php:1044
+#: settings/config/config.php:1051
 msgid "Action"
 msgstr ""
 
@@ -2125,9 +2125,9 @@ msgstr ""
 
 #: settings/config/config.php:664
 #: settings/config/config.php:678
-#: settings/config/config.php:771
-#: settings/config/config.php:793
-#: settings/config/config.php:808
+#: settings/config/config.php:778
+#: settings/config/config.php:800
+#: settings/config/config.php:815
 msgid "Off"
 msgstr ""
 
@@ -2143,48 +2143,48 @@ msgstr ""
 msgid "Leveraging your SSL certificate with HSTS is a staple for every website. Force your website over SSL, mitigating risks of malicious counterfeit websites in your name."
 msgstr ""
 
-#: settings/config/config.php:735
+#: settings/config/config.php:758
 msgid "One day (for testing only)"
 msgstr ""
 
-#: settings/config/config.php:736
+#: settings/config/config.php:759
 msgid "One year"
 msgstr ""
 
-#: settings/config/config.php:737
+#: settings/config/config.php:760
 msgid "Two years (required for preload)"
 msgstr ""
 
-#: settings/config/config.php:779
+#: settings/config/config.php:786
 msgid "About Cross Origin Policies"
 msgstr ""
 
-#: settings/config/config.php:780
+#: settings/config/config.php:787
 msgid "One of the most powerful features, and therefore the most complex are the Cross-Origin headers that can isolate your website so any data leaks are minimized."
 msgstr ""
 
-#: settings/config/config.php:826
+#: settings/config/config.php:833
 msgid "About the Mixed Content Scan"
 msgstr ""
 
-#: settings/config/config.php:827
+#: settings/config/config.php:834
 msgid "The extensive mixed content scan will list all current and future issues and provide a fix, or instructions to fix manually."
 msgstr ""
 
-#: settings/config/config.php:831
+#: settings/config/config.php:838
 msgid "Type"
 msgstr ""
 
-#: settings/config/config.php:837
+#: settings/config/config.php:844
 msgid "Description"
 msgstr ""
 
-#: settings/config/config.php:843
-#: settings/config/config.php:1029
+#: settings/config/config.php:850
+#: settings/config/config.php:1036
 msgid "Location"
 msgstr ""
 
-#: settings/config/config.php:856
+#: settings/config/config.php:863
 #: settings/build/index.js:382
 #: settings/src/Dashboard/TaskElement.js:30
 #: settings/src/Dashboard/TaskElement.js:31
@@ -2193,93 +2193,93 @@ msgstr ""
 msgid "Fix"
 msgstr ""
 
-#: settings/config/config.php:871
+#: settings/config/config.php:878
 #: settings/build/index.js:382
 #: settings/src/Settings/ChangeStatus.js:11
 msgid "Allow"
 msgstr ""
 
-#: settings/config/config.php:871
-#: settings/config/config.php:991
+#: settings/config/config.php:878
+#: settings/config/config.php:998
 #: settings/build/index.js:382
 #: settings/src/Settings/LearningMode.js:234
 #: settings/src/Settings/PermissionsPolicy.js:139
 msgid "Disable"
 msgstr ""
 
-#: settings/config/config.php:871
+#: settings/config/config.php:878
 msgid "Self (Default)"
 msgstr ""
 
-#: settings/config/config.php:877
+#: settings/config/config.php:884
 msgid "About the Permission Policy"
 msgstr ""
 
-#: settings/config/config.php:878
+#: settings/config/config.php:885
 msgid "Browser features are plentiful, but most are not needed on your website."
 msgstr ""
 
-#: settings/config/config.php:878
+#: settings/config/config.php:885
 msgid "They might be misused if you don’t actively tell the browser to disable these features."
 msgstr ""
 
-#: settings/config/config.php:882
+#: settings/config/config.php:889
 msgid "Feature"
 msgstr ""
 
-#: settings/config/config.php:887
+#: settings/config/config.php:894
 msgid "Options"
 msgstr ""
 
-#: settings/config/config.php:960
+#: settings/config/config.php:967
 msgid "Enable Permissions Policy"
 msgstr ""
 
-#: settings/config/config.php:969
+#: settings/config/config.php:976
 msgid "Serve encrypted and authenticated responses"
 msgstr ""
 
-#: settings/config/config.php:975
+#: settings/config/config.php:982
 msgid "About the Content Security Policy"
 msgstr ""
 
-#: settings/config/config.php:976
+#: settings/config/config.php:983
 msgid "The content security policy has many options, so we always recommend starting in ‘learning mode’ to see what files and scripts are loaded."
 msgstr ""
 
-#: settings/config/config.php:995
+#: settings/config/config.php:1002
 msgid "Allow your domain to be embedded"
 msgstr ""
 
-#: settings/config/config.php:1004
+#: settings/config/config.php:1011
 msgid "Add additional domains which can embed your website, if needed. Comma seperated."
 msgstr ""
 
-#: settings/config/config.php:1034
+#: settings/config/config.php:1041
 msgid "Directive"
 msgstr ""
 
-#: settings/config/config.php:1039
+#: settings/config/config.php:1046
 msgid "Source"
 msgstr ""
 
-#: settings/config/config.php:1086
+#: settings/config/config.php:1093
 msgid "Progress"
 msgstr ""
 
-#: settings/config/config.php:1099
+#: settings/config/config.php:1106
 msgid "Powered by Qualys"
 msgstr ""
 
-#: settings/config/config.php:1101
+#: settings/config/config.php:1108
 msgid "Status"
 msgstr ""
 
-#: settings/config/config.php:1117
+#: settings/config/config.php:1124
 msgid "Tips & Tricks"
 msgstr ""
 
-#: settings/config/config.php:1128
+#: settings/config/config.php:1135
 msgid "Other Plugins"
 msgstr ""
 
@@ -3092,13 +3092,13 @@ msgid "Blocked"
 msgstr ""
 
 #: settings/build/index.js:382
-#: settings/src/Settings/Field.js:108
+#: settings/src/Settings/Field.js:122
 #: settings/src/Settings/SettingsGroup.js:143
 msgid "This feature is only available networkwide."
 msgstr ""
 
 #: settings/build/index.js:382
-#: settings/src/Settings/Field.js:108
+#: settings/src/Settings/Field.js:122
 #: settings/src/Settings/SettingsGroup.js:143
 msgid "Network settings"
 msgstr ""
@@ -3124,37 +3124,37 @@ msgid "Network feature"
 msgstr ""
 
 #: settings/build/index.js:382
-#: settings/src/Settings/Settings.js:74
+#: settings/src/Settings/Settings.js:76
 msgid "Save"
 msgstr ""
 
 #: settings/build/index.js:382
-#: settings/src/Settings/Settings.js:77
+#: settings/src/Settings/Settings.js:79
 msgid "Refresh"
 msgstr ""
 
 #: settings/build/index.js:382
-#: settings/src/Settings/Settings.js:146
+#: settings/src/Settings/Settings.js:148
 msgid "Previous"
 msgstr ""
 
 #: settings/build/index.js:382
-#: settings/src/Settings/Settings.js:158
+#: settings/src/Settings/Settings.js:160
 msgid "Save and Continue"
 msgstr ""
 
 #: settings/build/index.js:382
-#: settings/src/Settings/Settings.js:167
+#: settings/src/Settings/Settings.js:169
 msgid "Notifications"
 msgstr ""
 
 #: settings/build/index.js:382
-#: settings/src/Settings/Settings.js:170
+#: settings/src/Settings/Settings.js:172
 msgid "Expand all"
 msgstr ""
 
 #: settings/build/index.js:382
-#: settings/src/Settings/Settings.js:171
+#: settings/src/Settings/Settings.js:173
 msgid "Collapse all"
 msgstr ""
 

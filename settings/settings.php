@@ -27,7 +27,6 @@ function rsssl_fix_rest_url_for_wpml( $url, $path, $blog_id, $scheme)  {
         if ( strpos($url, '/'.$current_language.'/wp-json/') ) {
 	        $url = str_replace( '/'.$current_language.'/wp-json/', '/wp-json/', $url);
         }
-
 	}
     return $url;
 }
