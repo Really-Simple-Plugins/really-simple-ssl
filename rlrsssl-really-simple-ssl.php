@@ -36,9 +36,9 @@ if (!function_exists('rsssl_activation_check')) {
 		}
 
 		global $wp_version;
-		if (version_compare($wp_version, '4.9', '<')) {
+		if (version_compare($wp_version, '5.7', '<')) {
 			deactivate_plugins(plugin_basename(__FILE__));
-			wp_die(__('Really Simple SSL cannot be activated. The plugin requires WordPress 4.9 or higher', 'really-simple-ssl'));
+			wp_die(__('Really Simple SSL cannot be activated. The plugin requires WordPress 5.7 or higher', 'really-simple-ssl'));
 		}
         update_option('rsssl_show_onboarding', true);
         set_transient('rsssl_redirect_to_settings_page', true, HOUR_IN_SECONDS );
