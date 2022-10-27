@@ -5,6 +5,7 @@ import {
 import ChangeStatus from "./ChangeStatus";
 import DataTable, {createTheme} from 'react-data-table-component';
 import * as rsssl_api from "../utils/api";
+import Icon from "../utils/Icon";
 
 class Delete extends Component {
     constructor() {
@@ -135,6 +136,7 @@ class LearningMode extends Component {
             let options = this.props.options;
             let configuringString = __("We're configuring your %s", "really-simple-ssl").replace('%s', field.label);
             let disabledString = __("%s has been disabled.", "really-simple-ssl").replace('%s', field.label);
+            let enforcedString = __("%s is enforced.", "really-simple-ssl").replace('%s', field.label);
             const {
                 filterValue,
                 enforce,
@@ -241,7 +243,16 @@ class LearningMode extends Component {
                               />
                               {__("Enable Learning Mode","really-simple-ssl")}
                           </label>
-
+                        {enforce==1 && <div className="rsssl-locked">
+                            <div className="rsssl-shield-overlay">
+                                  <Icon name = "shield"  size="80px"/>
+                            </div>
+                            <div className="rsssl-locked-overlay">
+                                <span className="rsssl-progress-status rsssl-learning-mode-enforced">{__("Enforced","really-simple-ssl")}</span>
+                                {enforcedString}&nbsp;
+                                <a className="rsssl-learning-mode-link" href="#" onClick={ (e) => this.toggleEnforce(e) }>{__("Disable to configure", "really-simple-ssl") }</a>
+                            </div>
+                        </div>}
                         {learning_mode==1 && <div className="rsssl-locked">
                             <div className="rsssl-locked-overlay">
                                 <span className="rsssl-progress-status rsssl-learning-mode">{__("Learning Mode","really-simple-ssl")}</span>

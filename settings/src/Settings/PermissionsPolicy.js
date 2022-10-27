@@ -8,6 +8,7 @@ import {
 import ChangeStatus from "./ChangeStatus";
 import DataTable, {createTheme} from 'react-data-table-component';
 import * as rsssl_api from "../utils/api";
+import Icon from "../utils/Icon";
 
 class PermissionsPolicy extends Component {
     constructor() {
@@ -51,6 +52,7 @@ class PermissionsPolicy extends Component {
     }
 
     togglePermissionsPolicyStatus(e, enforce){
+         e.preventDefault();
         let fields = this.props.fields;
         //look up permissions policy enable field //enable_permissions_policy
         let field = fields.filter(field => field.id === 'enable_permissions_policy')[0];
@@ -136,7 +138,16 @@ class PermissionsPolicy extends Component {
                         theme="really-simple-plugins"
                     />
                     { enable_permissions_policy!=1 && <button className="button button-primary" onClick={ (e) => this.togglePermissionsPolicyStatus(e, true ) }>{__("Enforce","really-simple-ssl")}</button> }
-                    { enable_permissions_policy==1 && <button className="button" onClick={ (e) => this.togglePermissionsPolicyStatus(e, false ) }>{__("Disable","really-simple-ssl")}</button> }
+                    { enable_permissions_policy==1 && <div className="rsssl-locked">
+                        <div className="rsssl-shield-overlay">
+                              <Icon name = "shield"  size="80px"/>
+                        </div>
+                        <div className="rsssl-locked-overlay">
+                            <span className="rsssl-progress-status rsssl-learning-mode-enforced">{__("Enforced","really-simple-ssl")}</span>
+                            {__("Permissions Policy is enforced.", "really-simple-ssl")}&nbsp;
+                            <a className="rsssl-learning-mode-link" href="#" onClick={ (e) => this.togglePermissionsPolicyStatus(e, false) }>{__("Disable", "really-simple-ssl") }</a>
+                        </div>
+                    </div>}
             </div>
         )
     }
