@@ -22,7 +22,7 @@ if ( !function_exists('rsssl_do_fix')) {
 			$completed   = get_option( 'rsssl_completed_fixes', [] );
 			$completed[] = $fix;
 			update_option( 'rsssl_completed_fixes', $completed );
-		} elseif ( $fix && ! function_exists( $fix ) ) {
+		} else if ( $fix && ! function_exists( $fix ) ) {
 		}
 
 	}
@@ -339,10 +339,21 @@ function rsssl_uses_htaccess() {
  * @return string | bool
  */
 function rsssl_htaccess_status(){
+	if ( empty(get_site_option('rsssl_htaccess_rules','')) ) {
+		return false;
+	}
 	return get_site_option('rsssl_htaccess_error');
 }
 
+/**
+ * Get htaccess status
+ * @return string | bool
+ */
+
 function rsssl_uploads_htaccess_status(){
+	if ( empty(get_site_option('rsssl_uploads_htaccess_rules','')) ) {
+		return false;
+	}
 	return get_site_option('rsssl_uploads_htaccess_error');
 }
 

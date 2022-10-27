@@ -1905,7 +1905,7 @@ class rsssl_admin
 	            'output' => array(
 		            'true' => array(
 			            'url' => $this->pro_url,
-			            'msg' => __( "Really Simple SSL pro is not up to date. Update Really Simple SSL pro to ensure compatibility.", "really-simple-ssl"),
+			            'msg' => __( "Really Simple SSL Pro is not up to date. Update Really Simple SSL Pro to ensure compatibility.", "really-simple-ssl"),
 			            'icon' => 'open',
 			            'dismissible' => false,
 			            'plusone' => true,
@@ -2521,7 +2521,7 @@ class rsssl_admin
                     text-align: center !important;
                 }
                 #TB_window.rsssl-deactivation-popup {
-                    height:390px!important;
+                    height:370px!important;
                     margin-top:initial!important;
                     margin-left:initial!important;
                     display:flex;
@@ -2530,7 +2530,7 @@ class rsssl_admin
                     left: 50%;
                     transform: translate(-50%, -50%);
                     width:576px!important;
-                    border-radius:12px!important;
+                    border-radius:13px!important;
                 }
                 .rsssl-deactivation-popup #TB_title{
                     padding-bottom: 20px;
@@ -2541,8 +2541,9 @@ class rsssl_admin
                 .rsssl-deactivation-popup #TB_ajaxWindowTitle {
                     font-weight:bold;
                     font-size:20px;
-                    padding: 20px;
+                    padding: 20px 0 0 20px;
                     background:#fff !important;
+                    border-radius:13px!important;
                 }
 
                 .rsssl-deactivation-popup .tb-close-icon {
@@ -2600,16 +2601,6 @@ class rsssl_admin
                 .rsssl-deactivation-popup ul {
                     list-style: disc;
                     padding-left: 20px;
-                }
-                .rsssl-deactivate-notice-footer .button {
-                    padding: 10px;
-                    min-width: 120px;
-                    white-space: nowrap;
-                    border-radius: var(--cmplz_button_border_radius);
-                    cursor: pointer;
-                    text-decoration: none;
-                    text-align: center;
-
                 }
             </style>
         <?php } ?>

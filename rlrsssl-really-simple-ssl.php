@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Really Simple SSL
  * Plugin URI: https://really-simple-ssl.com
- * Description: Lightweight plugin without any setup to make your site SSL proof
+ * Description: Lightweight SSL & Hardening Plugin
  * Version: 6.0.0
  * Author: Really Simple Plugins
  * Author URI: https://really-simple-plugins.com
