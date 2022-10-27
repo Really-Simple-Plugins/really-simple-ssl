@@ -580,7 +580,7 @@ if (!class_exists('rsssl_multisite')) {
         {
             //prevent showing the review on edit screen, as gutenberg removes the class which makes it editable.
             $screen = get_current_screen();
-	        if ( $screen->base === 'post' ) return;
+	        if ( $screen && $screen->base === 'post' ) return;
 
 	        if ( !$this->is_settings_page() ) {
 		        $notices = RSSSL()->admin->get_notices_list( array('admin_notices'=>true) );
@@ -589,7 +589,7 @@ if (!class_exists('rsssl_multisite')) {
 			        $class = ( $notice['status'] !== 'completed' ) ? 'error' : 'updated';
 			        $more_info = isset($notice['url']) ? $notice['url'] : false;
 			        $dismiss_id = isset($notice['dismissible']) && $notice['dismissible'] ? $id : false;
-			        echo RSSSL()->admin->notice_html( $class.' '.$id, $notice['msg'] ,$more_info, $dismiss_id);
+			        echo RSSSL()->admin->notice_html( $class.' '.$id, $notice['msg'], $more_info, $dismiss_id);
 		        }
             }
         }

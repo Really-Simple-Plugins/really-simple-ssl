@@ -70,7 +70,7 @@ class rsssl_onboarding {
 			return false;
 		}
 		$error = false;
-		$data = $request->get_json_params();
+		$request_data = $request->get_json_params();
 		$next_action = 'none';
 		switch( $action ){
 			case 'override_ssl_detection':
@@ -78,7 +78,7 @@ class rsssl_onboarding {
 				break;
 			case 'install_plugin':
 				require_once(rsssl_path . 'class-installer.php');
-				$plugin = new rsssl_installer(sanitize_title($data['id']));
+				$plugin = new rsssl_installer(sanitize_title($request_data['id']));
 				$success = $plugin->download_plugin();
 				$data = [
 					'next_action' => 'activate',
@@ -87,7 +87,7 @@ class rsssl_onboarding {
 				break;
 			case 'activate':
 				require_once(rsssl_path . 'class-installer.php');
-				$plugin = new rsssl_installer(sanitize_title($data['id']));
+				$plugin = new rsssl_installer(sanitize_title($request_data['id']));
 				$success = $plugin->activate_plugin();
 				$data = [
 					'next_action' => 'completed',
