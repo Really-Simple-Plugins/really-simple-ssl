@@ -129,8 +129,8 @@ class REALLY_SIMPLE_SSL
 			require_once( rsssl_path . 'class-multisite.php');
 		}
 		if ( rsssl_is_logged_in_rest() || is_admin() || wp_doing_cron() || $wpcli || defined('RSSSL_DOING_SYSTEM_STATUS') || defined('RSSSL_LEARNING_MODE') ) {
-            require_once( rsssl_path . 'compatibility.php');
-			require_once( rsssl_path . 'upgrade.php');
+			require_once( rsssl_path . 'compatibility.php');
+            require_once( rsssl_path . 'upgrade.php');
 			require_once( rsssl_path . 'settings/settings.php' );
             require_once( rsssl_path . 'onboarding/config.php' );
             require_once( rsssl_path . 'onboarding/class-onboarding.php' );
