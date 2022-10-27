@@ -589,7 +589,7 @@ if (!class_exists('rsssl_multisite')) {
 			        $class = ( $notice['status'] !== 'completed' ) ? 'error' : 'updated';
 			        $more_info = isset($notice['url']) ? $notice['url'] : false;
 			        $dismiss_id = isset($notice['dismissible']) && $notice['dismissible'] ? $id : false;
-			        echo RSSSL()->admin->notice_html( $class.' '.$id, $notice['title'], $notice['msg'] ,$more_info, $dismiss_id);
+			        echo RSSSL()->admin->notice_html( $class.' '.$id, $notice['msg'] ,$more_info, $dismiss_id);
 		        }
             }
         }
