@@ -52,6 +52,7 @@ class PermissionsPolicy extends Component {
     }
 
     togglePermissionsPolicyStatus(e, enforce){
+         e.preventDefault();
         let fields = this.props.fields;
         //look up permissions policy enable field //enable_permissions_policy
         let field = fields.filter(field => field.id === 'enable_permissions_policy')[0];

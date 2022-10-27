@@ -7912,6 +7912,7 @@ class PermissionsPolicy extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.
   }
 
   togglePermissionsPolicyStatus(e, enforce) {
+    e.preventDefault();
     let fields = this.props.fields; //look up permissions policy enable field //enable_permissions_policy
 
     let field = fields.filter(field => field.id === 'enable_permissions_policy')[0]; //enforce this setting
