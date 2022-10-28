@@ -81,7 +81,7 @@ class rsssl_firewall_manager {
 		$contents .= '*/' . "\n\n";
 		$contents .= "defined('ABSPATH') or die();" . "\n\n";
 		//allow disabling of headers for detection purposes
-		$contents .= 'if ( isset($_GET["rsssl_header_test"]) && intval($_GET["rsssl_header_test"]) ===  ' . $this->get_headers_nonce() . ' ) return;' . "\n\n";
+		$contents .= 'if ( isset($_GET["rsssl_header_test"]) && (int) $_GET["rsssl_header_test"] ===  ' . $this->get_headers_nonce() . ' ) return;' . "\n\n";
 		$contents .= "//RULES START\n".$rules;
 
 		//save errors
