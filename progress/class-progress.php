@@ -54,18 +54,16 @@ class rsssl_progress {
 		foreach ( $notices as $id => $notice ) {
 			if (isset( $notice['score'] )) {
 				// Only items matching condition will show in the dashboard. Only use these to determine max count.
-				$max_score = $max_score + intval( $notice['score'] );
-				$success = ( isset( $notice['output']['icon'] )
-				             && ( $notice['output']['icon']
-				                  === 'success' ) ) ? true : false;
+				$max_score += (int) $notice['score'];
+				$success   = isset( $notice['output']['icon'] ) && ( $notice['output']['icon'] === 'success' );
 				if ( $success ) {
 					// If the output is success, task is completed. Add to actual count.
-					$actual_score = $actual_score + intval( $notice['score'] );
+					$actual_score += (int) $notice['score'];
 				}
 			}
 		}
 		$score = $max_score>0 ? $actual_score / $max_score :0;
-		return intval( round( $score * 100 ) );
+		return (int) round( $score * 100 );
 	}
 
 	/**

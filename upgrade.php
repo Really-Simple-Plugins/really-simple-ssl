@@ -47,6 +47,7 @@ function rsssl_upgrade() {
 	if (
 		!get_option('rsssl_6_upgrade_completed') || ( $prev_version && version_compare( $prev_version, '6.0.0', '<' ) )
 	) {
+		delete_transient('rsssl_admin_notices');
 		update_option('rsssl_show_onboarding', true, false);
 		//upgrade both site and network settings
 		$options = get_option( 'rlrsssl_options' );
