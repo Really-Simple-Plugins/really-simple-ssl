@@ -67,7 +67,7 @@ class Modal extends Component {
                     </div>
                     <div className="rsssl-modal-content">
                         {data.subtitle && <div className="rsssl-modal-subtitle">{data.subtitle}</div>}
-                        { Array.isArray(description) && description.map(s=><div className="rsssl-modal-description">{s}</div>) }
+                        { Array.isArray(description) && description.map((s, i) => <div key={i} className="rsssl-modal-description">{s}</div>) }
                     </div>
                     <div className="rsssl-modal-footer">
                         { data.edit && <a href={data.edit} target="_blank" className="button button-secondary">{__("Edit", "really-simple-ssl")}</a>}
