@@ -276,7 +276,7 @@ class MixedContentScan extends Component {
 
 
         return (
-            <div>
+            <>
                 <div className="rsssl-progress-container">
                     <div className="rsssl-progress-bar" style={{width: progress}} ></div>
                 </div>
@@ -294,7 +294,7 @@ class MixedContentScan extends Component {
                               <Icon name = "shield"  size="80px"/>
                         </div> }
                         </>}
-                    { data.length>0 && <DataTable
+                    { data.length>0 && <div className={'rsssl-mixed-content-datatable'}><DataTable
                         columns={columns}
                         data={data}
                         dense
@@ -306,7 +306,7 @@ class MixedContentScan extends Component {
 
                         // subHeader
                         // subHeaderComponent=<subHeaderComponentMemo/>
-                    /> }
+                    /></div>  }
                 <div className="rsssl-grid-item-content-footer">
                     <button className="button" disabled={startDisabled} onClick={ (e) => this.start(e) }>{__("Start scan","really-simple-ssl-pro")}</button>
                     <button className="button" disabled={stopDisabled} onClick={ (e) => this.stop(e) }>{__("Stop","really-simple-ssl-pro")}</button>
@@ -317,7 +317,7 @@ class MixedContentScan extends Component {
                     <label>{__('Show ignored URLs', 'burst-statistics')}</label>
                 </div>
 
-            </div>
+            </>
         )
     }
 }

@@ -235,14 +235,6 @@
   @media(max-width: $rsp-break-m) {
     min-width: 80px;
   }
-  @media(max-width: $rsp-break-s) {
-    aspect-ratio: 1 / 1;
-    min-width: 10px;
-    height: 16px;
-    border-radius: 100%;
-    text-indent: -9999px; /* sends the text off-screen */
-    white-space: nowrap;
-  }
 
   &.rsssl-completed, &.rsssl-success {
     background-color: var(--rsp-color-success);
@@ -261,6 +253,16 @@
   &.rsssl-premium {
     background-color: var(--rsp-blue);
     color: var(--rsp-text-color-white);
+  }
+}
+.rsssl-scroll-container .rsssl-task-status{
+  @media(max-width: $rsp-break-s) {
+    aspect-ratio: 1 / 1;
+    min-width: 10px;
+    height: 16px;
+    border-radius: 100%;
+    text-indent: -9999px; /* sends the text off-screen */
+    white-space: nowrap;
   }
 }
 .rsssl-plusone {
