@@ -1126,18 +1126,6 @@
     }
 }
 
-@media (max-width: 1080px) {
-    .rsssl-task-status, .rsssl-locked-overlay .rsssl-progress-status {
-        aspect-ratio: 1/1;
-        min-width: 10px;
-        height: 16px;
-        border-radius: 100%;
-        text-indent: -9999px;
- /* sends the text off-screen */
-        white-space: nowrap;
-    }
-}
-
 .rsssl-task-status.rsssl-completed, .rsssl-locked-overlay .rsssl-completed.rsssl-progress-status, .rsssl-task-status.rsssl-success, .rsssl-locked-overlay .rsssl-success.rsssl-progress-status {
     background-color: var(--rsp-color-success);
     color: var(--rsp-text-color-white);
@@ -1155,6 +1143,18 @@
 .rsssl-task-status.rsssl-premium, .rsssl-locked-overlay .rsssl-premium.rsssl-progress-status {
     background-color: var(--rsp-blue);
     color: var(--rsp-text-color-white);
+}
+
+@media (max-width: 1080px) {
+    .rsssl-scroll-container .rsssl-task-status, .rsssl-scroll-container .rsssl-locked-overlay .rsssl-progress-status, .rsssl-locked-overlay .rsssl-scroll-container .rsssl-progress-status {
+        aspect-ratio: 1/1;
+        min-width: 10px;
+        height: 16px;
+        border-radius: 100%;
+        text-indent: -9999px;
+ /* sends the text off-screen */
+        white-space: nowrap;
+    }
 }
 
 .rsssl-plusone {
@@ -1380,83 +1380,83 @@
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(1) {
-    width: 97%;
+    width: 71%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(2) {
-    width: 92%;
-}
-
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(3) {
-    width: 87%;
-}
-
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(4) {
-    width: 86%;
-}
-
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(5) {
-    width: 64%;
-}
-
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(6) {
-    width: 98%;
-}
-
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(7) {
-    width: 96%;
-}
-
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(8) {
-    width: 85%;
-}
-
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(9) {
-    width: 99%;
-}
-
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(10) {
-    width: 97%;
-}
-
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(11) {
-    width: 80%;
-}
-
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(12) {
-    width: 63%;
-}
-
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(13) {
-    width: 93%;
-}
-
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(14) {
-    width: 62%;
-}
-
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(15) {
-    width: 76%;
-}
-
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(16) {
-    width: 66%;
-}
-
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(17) {
     width: 73%;
 }
 
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(18) {
-    width: 99%;
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(3) {
+    width: 96%;
 }
 
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(19) {
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(4) {
+    width: 64%;
+}
+
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(5) {
+    width: 88%;
+}
+
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(6) {
+    width: 73%;
+}
+
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(7) {
+    width: 95%;
+}
+
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(8) {
+    width: 62%;
+}
+
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(9) {
+    width: 67%;
+}
+
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(10) {
+    width: 86%;
+}
+
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(11) {
+    width: 68%;
+}
+
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(12) {
+    width: 69%;
+}
+
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(13) {
+    width: 83%;
+}
+
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(14) {
+    width: 66%;
+}
+
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(15) {
+    width: 72%;
+}
+
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(16) {
+    width: 61%;
+}
+
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(17) {
     width: 70%;
 }
 
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(18) {
+    width: 64%;
+}
+
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(19) {
+    width: 84%;
+}
+
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(20) {
-    width: 87%;
+    width: 79%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line ~ .rsssl-placeholder-line {
@@ -2098,7 +2098,7 @@
 }
 
 .rsssl-mixedcontentscan .rsssl-field-wrap .rdt_TableCol, .rsssl-mixedcontentscan .rsssl-field-wrap .rdt_TableCell {
-    min-width: 100px;
+    min-width: 80px;
 }
 
 .rsssl-mixedcontentscan .rsssl-progress-container .rsssl-progress-bar {
@@ -2385,6 +2385,10 @@ nav.rdt_Pagination > div > svg {
 
 .rsssl-permissions_policy .rdt_TableRow .rdt_TableCell:last-child .components-input-control__container {
     min-width: 150px;
+}
+
+.rsssl-mixed-content-datatable > div > div {
+    display: flex;
 }
 
 .rsssl .rsssl-new-features-block .rsssl-grid-item-content {

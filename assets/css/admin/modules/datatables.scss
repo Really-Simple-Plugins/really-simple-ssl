@@ -82,3 +82,8 @@ nav.rdt_Pagination>div>svg {
     }
   }
 }
+.rsssl-mixed-content-datatable{
+  & > div > div {
+    display: flex;
+  }
+}
