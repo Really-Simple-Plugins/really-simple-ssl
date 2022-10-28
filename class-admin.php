@@ -23,7 +23,7 @@ class rsssl_admin
         $this->abs_path = $this->getabs_path();
 	    $this->pro_url = is_multisite() ? 'https://really-simple-ssl.com/pro-multisite' : 'https://really-simple-ssl.com/pro';
 
-        register_deactivation_hook(dirname(__FILE__) . "/" . $this->plugin_filename, array($this, 'deactivate'));
+        register_deactivation_hook( __DIR__ . "/" . $this->plugin_filename, array($this, 'deactivate'));
 	    add_action( 'admin_init', array($this, 'add_privacy_info') );
 	    add_action( 'admin_init', array($this, 'maybe_dismiss_review_notice') );
 
@@ -1116,9 +1116,9 @@ class rsssl_admin
             return false;
         } if (RSSSL()->server->uses_htaccess()) {
             return true;
-        } else {
-            return false;
         }
+
+	    return false;
     }
 
 	/**
@@ -1159,9 +1159,9 @@ class rsssl_admin
             preg_match( "/Begin Really Simple Security/", $htaccess, $matches )
         ) {
             return false;
-        } else {
-            return true;
         }
+
+	    return true;
     }
 
 	/**
@@ -1709,7 +1709,7 @@ class rsssl_admin
 		        if ($menu_item[2]==='options-general.php'){
 			        $pattern = '/<span.*>([1-9])<\/span><\/span>/i';
 			        if (preg_match($pattern, $menu_item[0], $matches)){
-				        if (isset($matches[1])) $count = intval($count) + intval($matches[1]);
+				        if (isset($matches[1])) $count = (int) $count + (int) $matches[1];
 			        }
 			        $menu[$index][0] = __('Settings') . "<span class='update-plugins rsssl-update-count'><span class='update-count'>$count</span></span>";
 		        }
@@ -1793,7 +1793,7 @@ class rsssl_admin
 	    }
 
 	    $rules            = $this->get_redirect_rules( true );
-        if ( $this->ssl_type != "NA" ) {
+        if ( $this->ssl_type !== "NA" ) {
             $arr_search       = array( "<", ">", "\n" );
             $arr_replace      = array( "&lt", "&gt", "<br>" );
             $rules            = str_replace( $arr_search, $arr_replace, $rules );
