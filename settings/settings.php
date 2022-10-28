@@ -527,13 +527,11 @@ function rsssl_update_option( $name, $value ) {
 	$config_field_index = array_search($name, $config_ids);
 	$config_field = $config_fields[$config_field_index];
 	if ( $config_field_index === false ){
-		error_log("exiting ".$name." as not existing field in RSSSL ");
 		return;
 	}
 
-	$type = isset( $config_field['type'] ) ? $config_field['type'] : false;
+	$type = $config_field['type'] ?? false;
     if ( !$type ) {
-	    error_log("exiting ".$name." has not existing type ");
 	    return;
     }
 	if ( is_multisite() && rsssl_is_networkwide_active() ) {

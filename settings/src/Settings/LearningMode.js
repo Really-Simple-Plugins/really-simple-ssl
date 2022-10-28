@@ -29,7 +29,7 @@ class LearningMode extends Component {
             enforce :0,
             learning_mode :0,
             learning_mode_completed :0,
-            filterValue: 0,
+            filterValue: -1,
         };
     }
 
@@ -166,11 +166,10 @@ class LearningMode extends Component {
                 columns.push(newItem);
             });
             let data = field.value;
-
             if ( typeof data === 'object' ) {
                 data = Object.values(data);
             }
-            if (!Array.isArray(data) ) {
+            if ( !Array.isArray(data) ) {
                 data = [];
             }
             data = data.filter(item => item.status<2);
@@ -178,7 +177,7 @@ class LearningMode extends Component {
                 data = data.filter(item => item.status==filterValue);
             }
             for (const item of data){
-                item.login_statusControl = item.login_status == 1 ? __("success", "really-simple-ssl") : __("failed", "really-simple-ssl");
+                if (item.login_status) item.login_statusControl = item.login_status == 1 ? __("success", "really-simple-ssl") : __("failed", "really-simple-ssl");
                 item.statusControl = <ChangeStatus item={item} onChangeHandlerDataTableStatus={this.props.onChangeHandlerDataTableStatus} />;
                 item.deleteControl = <Delete item={item} onDeleteHandler={this.onDeleteHandler} />;
             }
@@ -209,7 +208,6 @@ class LearningMode extends Component {
                 default: 'transparent',
               },
             }, 'light');
-
              return (
                 <>
                     <div className={ this.highLightClass}>
