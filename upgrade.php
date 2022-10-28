@@ -90,7 +90,7 @@ function rsssl_upgrade() {
 		if ( is_multisite() && rsssl_is_networkwide_active() ) {
 			$network_options = get_site_option('rlrsssl_network_options');
 			$enabled_network_wide = isset($network_options["ssl_enabled_networkwide"]) ? $network_options["ssl_enabled_networkwide"] : false;
-			if ( $enabled_network_wide ) {
+			if ( $ssl_enabled && $enabled_network_wide ) {
 				update_site_option('rsssl_network_activation_status', 'completed');
 			} else {
 				//convert entire site to SSL
