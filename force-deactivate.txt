@@ -27,26 +27,28 @@ if (!defined('RSSSL_DOING_SYSTEM_STATUS')) define( 'RSSSL_DOING_SYSTEM_STATUS' ,
 # Load WordPress Core
 require_once( BASE_PATH . 'wp-load.php' );
 require_once( ABSPATH . 'wp-admin/includes/plugin.php' );
-$core_plugin = 'really-simple-ssl/rlrsssl-really-simple-ssl.php';
 
-if ( ! is_plugin_active( $core_plugin ) ) {
-	echo "<h1>Really Simple SSL is already deactivated!</h1>";
-	exit;
+add_action('admin_init', 'rsssl_run_force_deactivate');
+function rsssl_run_force_deactivate() {
+	$core_plugin = 'really-simple-ssl/rlrsssl-really-simple-ssl.php';
+	if ( ! is_plugin_active( $core_plugin ) ) {
+		echo "<h1>Really Simple SSL is already deactivated!</h1>";
+		exit;
+	}
+
+	$step = 1;
+	echo "<h1>Force deactivation of Really Simple SSL</h1>";
+	echo $step . ". Resetting options" . "<br>";
+	RSSSL()->admin->deactivate();
+	$step ++;
+
+	echo $step . ". Deactivating plugin" . "<br>";
+	rl_deactivate_plugin( RSSSL()->admin->plugin_dir . "/"
+	                      . RSSSL()->admin->plugin_filename );
+
+	$step ++;
+	echo $step . ". Completed<b>";
 }
-
-
-$step = 1;
-echo "<h1>Force deactivation of Really Simple SSL</h1>";
-echo $step . ". Resetting options" . "<br>";
-RSSSL()->admin->deactivate();
-$step ++;
-
-echo $step . ". Deactivating plugin" . "<br>";
-rl_deactivate_plugin( RSSSL()->admin->plugin_dir . "/"
-                      . RSSSL()->admin->plugin_filename );
-
-$step ++;
-echo $step . ". Completed<b>";
 
 function rl_remove_plugin_from_array( $plugin, $current ) {
 	$key = array_search( $plugin, $current );
