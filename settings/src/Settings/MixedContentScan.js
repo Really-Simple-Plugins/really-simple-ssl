@@ -28,7 +28,6 @@ class MixedContentScan extends Component {
         super( ...arguments );
         this.nonce='';
         this.state = {
-//             scanStatus:scanStatus,
             data:[],
             progress:0,
             action:'',
@@ -51,7 +50,6 @@ class MixedContentScan extends Component {
         let action = '';
         let state = 'stop';
         let completedStatus = 'never';
-//         this.getScanData = this.getScanData.bind(this);
 
         if (this.props.field.value.data ){
             data = this.props.field.value.data;
@@ -65,7 +63,7 @@ class MixedContentScan extends Component {
         if (this.props.field.value.state ){
             state = this.props.field.value.state;
         }
-        if (this.props.field.value.state ){
+        if (this.props.field.value.completed_status ){
             completedStatus = this.props.field.value.completed_status;
         }
         if (this.props.field.value.nonce ){

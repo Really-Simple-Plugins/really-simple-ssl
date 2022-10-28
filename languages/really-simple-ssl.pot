@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2022-10-28T06:52:33+00:00\n"
+"POT-Creation-Date: 2022-10-28T10:56:40+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.6.0\n"
 "X-Domain: really-simple-ssl\n"
@@ -91,9 +91,9 @@ msgid "Completed"
 msgstr ""
 
 #: class-admin.php:1763
-#: settings/build/index.js:7601
-#: settings/src/Settings/MixedContentScan.js:200
-#: settings/build/index.js:6501
+#: settings/build/index.js:7606
+#: settings/src/Settings/MixedContentScan.js:204
+#: settings/build/index.js:6505
 msgid "Warning"
 msgstr ""
 
@@ -103,11 +103,11 @@ msgstr ""
 
 #: class-admin.php:1765
 #: settings/build/index.js:3138
-#: settings/build/index.js:8394
+#: settings/build/index.js:8399
 #: settings/src/Dashboard/OtherPlugins.js:85
 #: settings/src/Settings/SettingsGroup.js:133
 #: settings/build/index.js:2726
-#: settings/build/index.js:7179
+#: settings/build/index.js:7183
 msgid "Upgrade"
 msgstr ""
 
@@ -1220,11 +1220,11 @@ msgstr ""
 #: lets-encrypt/functions.php:330
 #: lets-encrypt/functions.php:331
 #: settings/build/index.js:3003
-#: settings/build/index.js:8340
+#: settings/build/index.js:8345
 #: settings/src/Dashboard/GridBlock.js:93
 #: settings/src/Settings/SettingsGroup.js:93
 #: settings/build/index.js:2626
-#: settings/build/index.js:7139
+#: settings/build/index.js:7143
 msgid "Instructions"
 msgstr ""
 
@@ -1506,9 +1506,9 @@ msgstr ""
 #: placeholders/class-placeholder.php:185
 #: placeholders/class-placeholder.php:210
 #: settings/config/config.php:857
-#: settings/build/index.js:7638
-#: settings/src/Settings/MixedContentScan.js:229
-#: settings/build/index.js:6530
+#: settings/build/index.js:7643
+#: settings/src/Settings/MixedContentScan.js:233
+#: settings/build/index.js:6534
 msgid "Details"
 msgstr ""
 
@@ -1550,25 +1550,25 @@ msgstr ""
 msgid "Widget with mixed content"
 msgstr ""
 
-#: progress/class-progress.php:83
+#: progress/class-progress.php:81
 msgid "SSL is activated on your site."
 msgstr ""
 
-#: progress/class-progress.php:83
+#: progress/class-progress.php:81
 msgid "You still have %s task open."
 msgid_plural "You still have %s tasks open."
 msgstr[0] ""
 msgstr[1] ""
 
-#: progress/class-progress.php:85
+#: progress/class-progress.php:83
 msgid "SSL configuration finished!"
 msgstr ""
 
-#: progress/class-progress.php:90
+#: progress/class-progress.php:88
 msgid "Basic SSL configuration finished! Improve your score with %sReally Simple SSL Pro%s."
 msgstr ""
 
-#: progress/class-progress.php:96
+#: progress/class-progress.php:94
 msgid "SSL is not yet enabled on this site."
 msgstr ""
 
@@ -2215,15 +2215,15 @@ msgstr ""
 #: settings/build/index.js:4193
 #: settings/build/index.js:4196
 #: settings/build/index.js:5328
-#: settings/build/index.js:7647
+#: settings/build/index.js:7652
 #: settings/src/Dashboard/TaskElement.js:30
 #: settings/src/Dashboard/TaskElement.js:31
 #: settings/src/Modal/Modal.js:76
-#: settings/src/Settings/MixedContentScan.js:235
+#: settings/src/Settings/MixedContentScan.js:239
 #: settings/build/index.js:3600
 #: settings/build/index.js:3601
 #: settings/build/index.js:4582
-#: settings/build/index.js:6536
+#: settings/build/index.js:6540
 msgid "Fix"
 msgstr ""
 
@@ -2237,11 +2237,11 @@ msgstr ""
 #: settings/config/config.php:878
 #: settings/config/config.php:998
 #: settings/build/index.js:7155
-#: settings/build/index.js:8019
+#: settings/build/index.js:8024
 #: settings/src/Settings/LearningMode.js:236
 #: settings/src/Settings/PermissionsPolicy.js:148
 #: settings/build/index.js:6106
-#: settings/build/index.js:6855
+#: settings/build/index.js:6859
 msgid "Disable"
 msgstr ""
 
@@ -3187,20 +3187,20 @@ msgid "Revoke"
 msgstr ""
 
 #: settings/build/index.js:6506
-#: settings/build/index.js:8407
+#: settings/build/index.js:8412
 #: settings/src/Settings/Field.js:122
 #: settings/src/Settings/SettingsGroup.js:143
 #: settings/build/index.js:5558
-#: settings/build/index.js:7189
+#: settings/build/index.js:7193
 msgid "This feature is only available networkwide."
 msgstr ""
 
 #: settings/build/index.js:6508
-#: settings/build/index.js:8409
+#: settings/build/index.js:8414
 #: settings/src/Settings/Field.js:122
 #: settings/src/Settings/SettingsGroup.js:143
 #: settings/build/index.js:5558
-#: settings/build/index.js:7189
+#: settings/build/index.js:7193
 msgid "Network settings"
 msgstr ""
 
@@ -3253,20 +3253,20 @@ msgid "failed"
 msgstr ""
 
 #: settings/build/index.js:7142
-#: settings/build/index.js:7711
+#: settings/build/index.js:7716
 #: settings/src/Settings/LearningMode.js:227
-#: settings/src/Settings/MixedContentScan.js:303
+#: settings/src/Settings/MixedContentScan.js:307
 #: settings/build/index.js:6097
-#: settings/build/index.js:6604
+#: settings/build/index.js:6608
 msgid "No results"
 msgstr ""
 
 #: settings/build/index.js:7152
-#: settings/build/index.js:8004
+#: settings/build/index.js:8009
 #: settings/src/Settings/LearningMode.js:235
 #: settings/src/Settings/PermissionsPolicy.js:140
 #: settings/build/index.js:6105
-#: settings/build/index.js:6847
+#: settings/build/index.js:6851
 msgid "Enforce"
 msgstr ""
 
@@ -3277,11 +3277,11 @@ msgid "Enable Learning Mode"
 msgstr ""
 
 #: settings/build/index.js:7172
-#: settings/build/index.js:8015
+#: settings/build/index.js:8020
 #: settings/src/Settings/LearningMode.js:251
 #: settings/src/Settings/PermissionsPolicy.js:146
 #: settings/build/index.js:6121
-#: settings/build/index.js:6853
+#: settings/build/index.js:6857
 msgid "Enforced"
 msgstr ""
 
@@ -3344,110 +3344,110 @@ msgstr ""
 msgid "Show"
 msgstr ""
 
-#: settings/build/index.js:7628
-#: settings/src/Settings/MixedContentScan.js:222
-#: settings/build/index.js:6523
+#: settings/build/index.js:7633
+#: settings/src/Settings/MixedContentScan.js:226
+#: settings/build/index.js:6527
 msgid "View"
 msgstr ""
 
-#: settings/build/index.js:7697
-#: settings/src/Settings/MixedContentScan.js:286
-#: settings/build/index.js:6587
-msgid "No records. Start your first scan"
+#: settings/build/index.js:7702
+#: settings/src/Settings/MixedContentScan.js:290
+#: settings/build/index.js:6591
+msgid "No results. Start your first scan"
 msgstr ""
 
-#: settings/build/index.js:7697
-#: settings/src/Settings/MixedContentScan.js:287
-#: settings/build/index.js:6588
+#: settings/build/index.js:7702
+#: settings/src/Settings/MixedContentScan.js:291
+#: settings/build/index.js:6592
 msgid "Everything is now served over SSL"
 msgstr ""
 
-#: settings/build/index.js:8015
+#: settings/build/index.js:8020
 #: settings/src/Settings/PermissionsPolicy.js:147
-#: settings/build/index.js:6854
+#: settings/build/index.js:6858
 msgid "Permissions Policy is enforced."
 msgstr ""
 
-#: settings/build/index.js:8119
+#: settings/build/index.js:8124
 #: settings/src/Settings/Settings.js:76
-#: settings/build/index.js:6940
+#: settings/build/index.js:6944
 msgid "Save"
 msgstr ""
 
-#: settings/build/index.js:8123
+#: settings/build/index.js:8128
 #: settings/src/Settings/Settings.js:79
-#: settings/build/index.js:6943
+#: settings/build/index.js:6947
 msgid "Refresh"
 msgstr ""
 
-#: settings/build/index.js:8192
+#: settings/build/index.js:8197
 #: settings/src/Settings/Settings.js:148
-#: settings/build/index.js:7012
+#: settings/build/index.js:7016
 msgid "Previous"
 msgstr ""
 
-#: settings/build/index.js:8200
+#: settings/build/index.js:8205
 #: settings/src/Settings/Settings.js:160
-#: settings/build/index.js:7024
+#: settings/build/index.js:7028
 msgid "Save and Continue"
 msgstr ""
 
-#: settings/build/index.js:8206
+#: settings/build/index.js:8211
 #: settings/src/Settings/Settings.js:169
-#: settings/build/index.js:7033
+#: settings/build/index.js:7037
 msgid "Notifications"
 msgstr ""
 
-#: settings/build/index.js:8209
+#: settings/build/index.js:8214
 #: settings/src/Settings/Settings.js:172
-#: settings/build/index.js:7036
+#: settings/build/index.js:7040
 msgid "Expand all"
 msgstr ""
 
-#: settings/build/index.js:8209
+#: settings/build/index.js:8214
 #: settings/src/Settings/Settings.js:173
-#: settings/build/index.js:7037
+#: settings/build/index.js:7041
 msgid "Collapse all"
 msgstr ""
 
-#: settings/build/index.js:8324
+#: settings/build/index.js:8329
 #: settings/src/Settings/SettingsGroup.js:80
-#: settings/build/index.js:7126
+#: settings/build/index.js:7130
 msgid "Learn more about %sPremium%s"
 msgstr ""
 
-#: settings/build/index.js:8362
+#: settings/build/index.js:8367
 #: settings/src/Settings/SettingsGroup.js:103
-#: settings/build/index.js:7149
+#: settings/build/index.js:7153
 msgid "Reset Let's Encrypt"
 msgstr ""
 
-#: settings/build/index.js:8397
+#: settings/build/index.js:8402
 #: settings/src/Settings/SettingsGroup.js:135
-#: settings/build/index.js:7181
+#: settings/build/index.js:7185
 msgid "Check license"
 msgstr ""
 
-#: settings/build/index.js:8407
+#: settings/build/index.js:8412
 #: settings/src/Settings/SettingsGroup.js:142
-#: settings/build/index.js:7188
+#: settings/build/index.js:7192
 msgid "Network feature"
 msgstr ""
 
-#: settings/build/index.js:8620
+#: settings/build/index.js:8625
 #: settings/src/Settings/SettingsPage.js:168
-#: settings/build/index.js:7367
+#: settings/build/index.js:7371
 msgid "Settings Saved"
 msgstr ""
 
-#: settings/build/index.js:8868
+#: settings/build/index.js:8873
 #: settings/src/Settings/Support.js:65
-#: settings/build/index.js:7604
+#: settings/build/index.js:7608
 msgid "Type your question here"
 msgstr ""
 
-#: settings/build/index.js:8874
+#: settings/build/index.js:8879
 #: settings/src/Settings/Support.js:72
-#: settings/build/index.js:7611
+#: settings/build/index.js:7615
 msgid "Send"
 msgstr ""

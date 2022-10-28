@@ -379,7 +379,6 @@ class rsssl_letsencrypt_handler {
 		        $message = $response;
 	        }
         } else {
-            error_log("no email set");
 	        $status = 'error';
 	        $action = 'stop';
 	        $message = __("The email address was not set. Please set the email address",'really-simple-ssl');
