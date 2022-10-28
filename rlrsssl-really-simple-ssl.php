@@ -175,7 +175,7 @@ class REALLY_SIMPLE_SSL
 	public static function admin_notices() {
 		//prevent showing on edit screen, as gutenberg removes the class which makes it editable.
 		$screen = get_current_screen();
-		if ( $screen->base === 'post' ) return;
+		if ( $screen && $screen->base === 'post' ) return;
 		if ( self::has_old_addon('really-simple-ssl-pro/really-simple-ssl-pro.php') ||
 		     self::has_old_addon('really-simple-ssl-pro-multisite/really-simple-ssl-pro-multisite.php' )
 		) {
@@ -219,7 +219,7 @@ if ( ! function_exists('rsssl_add_manage_security_capability')){
 		$roles = apply_filters('rsssl_add_manage_security_capability', array('administrator') );
 		foreach( $roles as $role ){
 			$role = get_role( $role );
-			if( ! $role->has_cap( $capability ) ){
+			if( $role && !$role->has_cap( $capability ) ){
 				$role->add_cap( $capability );
 			}
 		}
