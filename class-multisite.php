@@ -13,7 +13,7 @@ if (!class_exists('rsssl_multisite')) {
 
             self::$_this = $this;
 
-            register_activation_hook(dirname(__FILE__) . "/" . rsssl_plugin, array($this, 'activate'));
+            register_activation_hook( __DIR__ . "/" . rsssl_plugin, array($this, 'activate'));
 	        add_action('network_admin_menu', array($this, 'add_plus_ones') );
             /*filters to make sure WordPress returns the correct protocol */
             add_filter("admin_url", array($this, "check_admin_protocol"), 20, 3);
@@ -82,7 +82,7 @@ if (!class_exists('rsssl_multisite')) {
 					if ( $menu_item[2]==='settings.php' ){
 						$pattern = '/<span.*>([1-9])<\/span><\/span>/i';
 						if (preg_match($pattern, $menu_item[0], $matches)){
-							if (isset($matches[1])) $count = intval($count) + intval($matches[1]);
+							if (isset($matches[1])) $count = (int) $count + (int) $matches[1];
 						}
 						$menu[$index][0] = __('Settings') .  "<span class='update-plugins rsssl-update-count'><span class='update-count'>$count</span></span>";
 					}
@@ -239,6 +239,7 @@ if (!class_exists('rsssl_multisite')) {
 
         public function maybe_activate_ssl_in_new_blog_deprecated( int $blog_id, $user_id=false, $domain=false, $path=false, $site_id=false, $meta=false)
         {
+
 	        if ( get_site_option('rsssl_network_activation_status' === 'completed') ) {
                 $site = get_blog_details($blog_id);
 	            switch_to_blog($site->blog_id);
@@ -361,6 +362,9 @@ if (!class_exists('rsssl_multisite')) {
 	     * @return void
 	     */
         public function start_ssl_activation(){
+	        if (!rsssl_user_can_manage()) {
+		        return;
+	        }
             update_site_option('rsssl_siteprocessing_progress', 0);
             update_site_option('rsssl_ssl_activation_active', true);
         }
@@ -371,6 +375,9 @@ if (!class_exists('rsssl_multisite')) {
 	     * @return void
 	     */
         public function end_ssl_activation(){
+	        if (!rsssl_user_can_manage()) {
+		        return;
+	        }
             update_site_option('rsssl_ssl_activation_active', false);
         }
 
@@ -380,6 +387,9 @@ if (!class_exists('rsssl_multisite')) {
 
         public function activate_ssl_networkwide()
         {
+	        if (!rsssl_user_can_manage()) {
+		        return;
+	        }
             //run chunked
             $nr_of_sites = 200;
             $current_offset = get_site_option('rsssl_siteprocessing_progress');
@@ -425,6 +435,9 @@ if (!class_exists('rsssl_multisite')) {
 
         public function deactivate()
         {
+	        if (!rsssl_user_can_manage()) {
+		        return;
+	        }
 			$ssl_was_enabled = rsssl_get_option('ssl_enabled');
 	        delete_site_option('rsssl_network_activation_status');
 	        update_option('ssl_enabled', false);
@@ -601,6 +614,9 @@ if (!class_exists('rsssl_multisite')) {
 
         public function is_settings_page()
         {
+	        if (!rsssl_user_can_manage()) {
+		        return false;
+	        }
             return (isset($_GET['page']) && $_GET['page'] === 'really-simple-security');
         }
 
