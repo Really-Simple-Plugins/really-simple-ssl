@@ -366,7 +366,6 @@ class rsssl_letsencrypt_handler {
 		        $action = 'continue';
 		        $message = __("Successfully retrieved account", "really-simple-ssl");
 	        } catch(Exception $e) {
-		        error_log(print_r($e, true));
 		        $response = $this->get_error($e);
 		        $status = 'error';
 		        $action = 'retry';
@@ -439,7 +438,6 @@ class rsssl_letsencrypt_handler {
 
 						    }
 					    } catch ( Exception $e ) {
-						    error_log( print_r( $e, true ) );
 						    $error = $this->get_error( $e );
 						    if ( strpos( $error, 'No challenge found with given type')!==false ) {
 							    //Maybe it was first set to HTTP challenge. retry after clearing the order.
@@ -464,7 +462,6 @@ class rsssl_letsencrypt_handler {
 				    }
 			    } catch ( Exception $e ) {
 				    rsssl_progress_remove( 'dns-verification' );
-					error_log(print_r($e,true));
 				    $response = $this->get_error( $e );
 					$response = new RSSSL_RESPONSE(
 						'error',
@@ -640,7 +637,6 @@ class rsssl_letsencrypt_handler {
 					    );
 					    $bundle_completed = true;
 				    } catch ( Exception $e ) {
-					    error_log( print_r( $e, true ) );
 					    $response = new RSSSL_RESPONSE(
 						    'error',
 						    'retry',
@@ -669,7 +665,6 @@ class rsssl_letsencrypt_handler {
 
 					    $this->count_attempt();
 					    $message = $this->get_error( $e );
-					    error_log( print_r( $e, true ) );
 					    $response = new RSSSL_RESPONSE(
 						    'error',
 						    'stop',
@@ -697,7 +692,6 @@ class rsssl_letsencrypt_handler {
 					if ($finalized) {
 					    try {
 						    if ( $order->isCertificateBundleAvailable() ) {
-							    error_log( "cert bundle available" );
 							    $bundle_completed   = true;
 							    $success_cert       = $success_intermediate = $success_private = false;
 							    $bundle             = $order->getCertificateBundle();
@@ -745,7 +739,6 @@ class rsssl_letsencrypt_handler {
 							    );
 						    }
 					    } catch ( Exception $e ) {
-						    error_log( print_r( $e, true ) );
 						    $response = new RSSSL_RESPONSE(
 							    'error',
 							    'retry',
@@ -790,7 +783,6 @@ class rsssl_letsencrypt_handler {
 			    $response->output = Order::create( $this->account, $this->subjects );
 
 		    } catch(Exception $e) {
-			    error_log(print_r($e, true));
 			    $response = new RSSSL_RESPONSE(
 				    'error',
 				    'retry',
@@ -977,8 +969,7 @@ class rsssl_letsencrypt_handler {
 	    try {
 	        $this->account->update($new_email);
         } catch (Exception $e) {
-            error_log("Lets encrypt email update failed");
-            error_log(print_r($e, true));
+            //error_log(print_r($e, true));
         }
     }
 
@@ -1384,8 +1375,6 @@ class rsssl_letsencrypt_handler {
 				return false;
 			}
 		} catch ( Exception $e ) {
-			error_log("error during folder creation");
-			error_log( print_r( $e, true ) );
 			return false;
 		}
 	}
@@ -1724,7 +1713,6 @@ class rsssl_letsencrypt_handler {
 					$message = __("Not recognized server.", "really-simple-ssl");
 				}
 			} catch (Exception $e) {
-				error_log(print_r($e, true));
 				$status = 'error';
 				$action = 'stop';
 				$message = __("Installation failed.", "really-simple-ssl");

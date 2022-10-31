@@ -134,7 +134,7 @@ class LearningMode extends Component {
             let field = this.props.field;
             let fieldValue = field.value;
             let options = this.props.options;
-            let configuringString = __("It might take up to 7 days to find all directives. Exit learning mode to edit directives and enforce this policy.", "really-simple-ssl");
+            let configuringString = __("We're configuring your %s. Exit to edit and enforce.", "really-simple-ssl").replace('%s', field.label);
             let disabledString = __("%s has been disabled.", "really-simple-ssl").replace('%s', field.label);
             let enforcedString = __("%s is enforced.", "really-simple-ssl").replace('%s', field.label);
             const {
@@ -143,7 +143,7 @@ class LearningMode extends Component {
                 learning_mode,
                 learning_mode_completed,
             } = this.state;
-
+            let enforceDisabled = learning_mode_completed!=1;
             const Filter = () => (
               <>
                 <select onChange={ ( e ) => this.doFilter(e) } value={filterValue}>
@@ -203,6 +203,7 @@ class LearningMode extends Component {
               },
             };
 
+
             createTheme('really-simple-plugins', {
               divider: {
                 default: 'transparent',
@@ -230,7 +231,7 @@ class LearningMode extends Component {
                             /></>
                         }
                       <div className="rsssl-learning-mode-footer">
-                          { enforce!=1 && <button className="button button-primary" onClick={ (e) => this.toggleEnforce(e, true ) }>{__("Enforce","really-simple-ssl")}</button> }
+                          { enforce!=1 && <button disabled={enforceDisabled} className="button button-primary" onClick={ (e) => this.toggleEnforce(e, true ) }>{__("Enforce","really-simple-ssl")}</button> }
                           { enforce==1 && <button className="button" onClick={ (e) => this.toggleEnforce(e, false ) }>{__("Disable","really-simple-ssl")}</button> }
                           <label>
                               <input type="checkbox"

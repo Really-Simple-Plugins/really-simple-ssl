@@ -90,10 +90,6 @@ class rsssl_admin
         }
     }
 
-    public function _get($var){
-        return $this->{$var};
-    }
-
 	/**
 	 * Add some privacy info, telling our users we aren't tracking them
 	 */
@@ -136,9 +132,9 @@ class rsssl_admin
              $current_day <= $end_day
         ) {
             return true;
-        } else {
-            return false;
         }
+
+	    return false;
     }
 
     /**
@@ -236,7 +232,7 @@ class rsssl_admin
         //default deactivating
 	    $is_deactivating =  isset($_GET['action']) && $_GET['action']==='deactivate' && isset($_GET['plugin']) && strpos($_GET['plugin'], 'wp-rocket.php')!==false;
 	    //deactivating with modal
-        $is_deactivating = $is_deactivating || isset($_GET['action']) && $_GET['action']==='rocket_deactivation';
+        $is_deactivating = $is_deactivating || ( isset( $_GET['action'] ) && $_GET['action'] === 'rocket_deactivation' );
         return $is_deactivating;
     }
 
@@ -256,7 +252,7 @@ class rsssl_admin
             return;
         }
 
-        if (isset($_GET["action"]) && $_GET["action"] == 'uninstall_keep_ssl') {
+        if (isset($_GET["action"]) && $_GET["action"] === 'uninstall_keep_ssl') {
             //deactivate plugin, but don't revert to http.
             $plugin = $this->plugin_dir . "/" . $this->plugin_filename;
             $plugin = plugin_basename(trim($plugin));
@@ -488,10 +484,11 @@ class rsssl_admin
     public function wpconfig_is_writable()
     {
         $wpconfig_path = $this->find_wp_config_path();
-        if (is_writable($wpconfig_path))
-            return true;
-        else
-            return false;
+        if ( is_writable($wpconfig_path) ) {
+	        return true;
+        }
+
+	    return false;
     }
 
 	/**
@@ -502,7 +499,7 @@ class rsssl_admin
 
     public function check_for_uninstall_file()
     {
-        if (file_exists(dirname(__FILE__) . '/force-deactivate.php')) {
+        if ( file_exists( __DIR__ . '/force-deactivate.php') ) {
             return 'fail';
         }
         return 'success';
@@ -528,11 +525,7 @@ class rsssl_admin
         }
 
         parse_str($_SERVER['QUERY_STRING'], $params);
-        if ( array_key_exists("page", $params) && ($params["page"] == "really-simple-security") ) {
-            return true;
-        }
-
-	    return false;
+	    return array_key_exists( "page", $params ) && ( $params["page"] === "really-simple-security" );
     }
 
     /**
@@ -550,7 +543,7 @@ class rsssl_admin
         //limit nr of iterations to 20
         $i = 0;
         $maxiterations = 20;
-        $dir = dirname(__FILE__);
+        $dir = __DIR__;
         do {
             $i++;
             if (file_exists($dir . "/wp-config.php")) {
@@ -742,6 +735,10 @@ class rsssl_admin
 
     public function remove_wpconfig_edit()
     {
+	    if ( !rsssl_user_can_manage() ){
+		    return;
+	    }
+
         $wpconfig_path = $this->find_wp_config_path();
         if (empty($wpconfig_path)) {
             return;
@@ -795,6 +792,9 @@ class rsssl_admin
 
     public function remove_ssl_from_siteurl()
     {
+	    if ( !rsssl_user_can_manage() ){
+		    return;
+	    }
         $siteurl_no_ssl = str_replace("https://", "http://", get_option('siteurl'));
         $homeurl_no_ssl = str_replace("https://", "http://", get_option('home'));
         update_option('siteurl', $siteurl_no_ssl);
@@ -899,7 +899,7 @@ class rsssl_admin
     public function is_ssl_extended()
     {
         $server_var = FALSE;
-        if ((isset($_ENV['HTTPS']) && ('on' == $_ENV['HTTPS']))
+        if ((isset($_ENV['HTTPS']) && ('on' === $_ENV['HTTPS']))
             || (isset($_SERVER['HTTP_X_FORWARDED_SSL']) && (strpos($_SERVER['HTTP_X_FORWARDED_SSL'], '1') !== false))
             || (isset($_SERVER['HTTP_X_FORWARDED_SSL']) && (strpos($_SERVER['HTTP_X_FORWARDED_SSL'], 'on') !== false))
             || (isset($_SERVER['HTTP_CF_VISITOR']) && (strpos($_SERVER['HTTP_CF_VISITOR'], 'https') !== false))
@@ -910,11 +910,7 @@ class rsssl_admin
             $server_var = TRUE;
         }
 
-        if (is_ssl() || $server_var) {
-            return true;
-        } else {
-            return false;
-        }
+	    return is_ssl() || $server_var;
     }
 
     /**
@@ -1061,7 +1057,9 @@ class rsssl_admin
 
         if ( $test === 'no-response' || $test === 'error' ){
             return false;
-        } else if ( $test === 'success' ){
+        }
+
+	    if ( $test === 'success' ){
             return true;
         }
     }
@@ -1439,25 +1437,25 @@ class rsssl_admin
         ) {
             $rule .= "\n" . "<IfModule mod_rewrite.c>" . "\n";
             $rule .= "RewriteEngine on" . "\n";
-            if ($this->ssl_type == "SERVER-HTTPS-ON") {
+            if ($this->ssl_type === "SERVER-HTTPS-ON") {
                 $rule .= "RewriteCond %{HTTPS} !=on [NC]" . "\n";
-            } elseif ($this->ssl_type == "SERVER-HTTPS-1") {
+            } elseif ($this->ssl_type === "SERVER-HTTPS-1") {
                 $rule .= "RewriteCond %{HTTPS} !=1" . "\n";
-            } elseif ($this->ssl_type == "LOADBALANCER") {
+            } elseif ($this->ssl_type === "LOADBALANCER") {
                 $rule .= "RewriteCond %{HTTP:X-Forwarded-Proto} !https" . "\n";
-            } elseif ($this->ssl_type == "HTTP_X_PROTO") {
+            } elseif ($this->ssl_type === "HTTP_X_PROTO") {
                 $rule .= "RewriteCond %{HTTP:X-Proto} !SSL" . "\n";
-            } elseif ($this->ssl_type == "CLOUDFLARE") {
+            } elseif ($this->ssl_type === "CLOUDFLARE") {
                 $rule .= "RewriteCond %{HTTP:CF-Visitor} '" . '"scheme":"http"' . "'" . "\n";//some concatenation to get the quotes right.
-            } elseif ($this->ssl_type == "SERVERPORT443") {
+            } elseif ($this->ssl_type === "SERVERPORT443") {
                 $rule .= "RewriteCond %{SERVER_PORT} !443" . "\n";
-            } elseif ($this->ssl_type == "CLOUDFRONT") {
+            } elseif ($this->ssl_type === "CLOUDFRONT") {
                 $rule .= "RewriteCond %{HTTP:CloudFront-Forwarded-Proto} !https" . "\n";
-            } elseif ($this->ssl_type == "HTTP_X_FORWARDED_SSL_ON") {
+            } elseif ($this->ssl_type === "HTTP_X_FORWARDED_SSL_ON") {
                 $rule .= "RewriteCond %{HTTP:X-Forwarded-SSL} !on" . "\n";
-            } elseif ($this->ssl_type == "HTTP_X_FORWARDED_SSL_1") {
+            } elseif ($this->ssl_type === "HTTP_X_FORWARDED_SSL_1") {
                 $rule .= "RewriteCond %{HTTP:X-Forwarded-SSL} !=1" . "\n";
-            } elseif ($this->ssl_type == "ENVHTTPS") {
+            } elseif ($this->ssl_type === "ENVHTTPS") {
                 $rule .= "RewriteCond %{ENV:HTTPS} !=on" . "\n";
             }
 
@@ -1667,7 +1665,7 @@ class rsssl_admin
         }
 	    //prevent showing the review on edit screen, as gutenberg removes the class which makes it editable.
 	    $screen = get_current_screen();
-	    if ( $screen->base === 'post' ) return;
+	    if ( $screen && $screen->base === 'post' ) return;
 
         //don't show admin notices on our own settings page: we have the warnings there
         if ( $this->is_settings_page() ) return;
@@ -1758,6 +1756,10 @@ class rsssl_admin
 
     public function get_notices_list( $args = array() )
     {
+	    if ( !rsssl_user_can_manage() ){
+		    return [];
+	    }
+
 	    $icon_labels = [
 		    'success' => __("Completed", "really-simple-ssl"),
 		    'warning' => __("Warning", "really-simple-ssl"),
@@ -2373,6 +2375,10 @@ class rsssl_admin
 	 */
 
     private function validate_function($func, $is_condition = false ){
+	    if ( !rsssl_user_can_manage() ){
+		    return false;
+	    }
+
 	    $invert = false;
 	    if (strpos($func, 'NOT ') !== FALSE ) {
 		    $func = str_replace('NOT ', '', $func);
@@ -2449,31 +2455,6 @@ class rsssl_admin
 			return 0;
 		}
 		return $count;
-	}
-
-	/**
-     * Render grid item based on template
-	 * @param array $grid_item
-	 * @param string $key
-     * @oaram string $index
-	 *
-	 * @return string
-	 */
-
-	public function get_template_part($grid_item, $key, $index) {
-	    if ( !isset($grid_item[$key]) || !$grid_item[$key] ) {
-		    $template_part = '';
-	    } else {
-		    if ( strpos( $grid_item[ $key ], '.php' ) !== false && file_exists($grid_item[ $key ])  ) {
-		        ob_start();
-			    require $grid_item[ $key ];
-			    $template_part = ob_get_clean();
-		    } else {
-			    $template_part = '';
-            }
-	    }
-
-		return apply_filters("rsssl_template_part_".$key.'_'.$index, $template_part, $grid_item);
 	}
 
     /**
@@ -2785,12 +2766,15 @@ class rsssl_admin
 	 * @return bool
 	 */
     public function can_apply_networkwide(){
-        if ( !is_multisite() ) {
-            return true;
-        } elseif ( is_multisite() && rsssl_is_networkwide_active() ) {
+	    if ( !is_multisite() ) {
             return true;
         }
-        return false;
+
+	    if ( is_multisite() && rsssl_is_networkwide_active() ) {
+            return true;
+        }
+
+	    return false;
     }
 
     /**
@@ -2804,10 +2788,7 @@ class rsssl_admin
 
     protected function is_subdirectory_install()
     {
-        if ( strlen(site_url()) > strlen(home_url()) ) {
-            return true;
-        }
-        return false;
+	    return strlen( site_url() ) > strlen( home_url() );
     }
 
 	/**
@@ -2861,12 +2842,8 @@ class rsssl_admin
 
 	public function uses_default_folder_name() {
 		$current_plugin_path = $this->get_current_rsssl_free_dirname();
-		if ( $this->plugin_dir === $current_plugin_path ) {
-			return true;
-		} else {
-			return false;
-		}
-	}
+		return $this->plugin_dir === $current_plugin_path;
+    }
 
     /**
      * Determine the htaccess file. This can be either the regular .htaccess file, or an htaccess.conf file on bitnami installations.
@@ -2884,40 +2861,6 @@ class rsssl_admin
         }
         return $htaccess_file;
     }
-
-	/**
-     * Get template
-	 * @param string $file
-	 * @param string $path
-	 * @param array  $args
-	 *
-	 * @return string
-	 */
-	public function get_template($file, $path = rsssl_path, $args = array())
-	{
-		$file = trailingslashit($path) . 'templates/' . $file;
-		$theme_file = trailingslashit(get_stylesheet_directory()) . dirname(rsssl_path) . $file;
-
-		if (file_exists($theme_file)) {
-			$file = $theme_file;
-		}
-
-		if (strpos($file, '.php') !== false) {
-			ob_start();
-			require $file;
-			$contents = ob_get_clean();
-		} else {
-			$contents = file_get_contents($file);
-		}
-
-        if ( !empty($args) && is_array($args) ) {
-            foreach($args as $fieldname => $value ) {
-                $contents = str_replace( '{'.$fieldname.'}', $value, $contents );
-            }
-        }
-
-		return $contents;
-	}
 
 	/**
      * Check the current redirect status
@@ -2945,7 +2888,7 @@ class rsssl_admin
 	}
 } //class closure
 
-if (!function_exists('rsssl_ssl_enabled')) {
+if ( !function_exists('rsssl_ssl_enabled') ) {
     function rsssl_ssl_enabled() {
         return rsssl_get_option('ssl_enabled');
     }
@@ -3099,9 +3042,6 @@ if ( !function_exists('rsssl_detected_duplicate_ssl_plugin')) {
 
 if ( !function_exists('rsssl_ssl_detection_overridden' ) ) {
 	function rsssl_ssl_detection_overridden() {
-        if ( get_option('rsssl_ssl_detection_overridden') !== false ) {
-			return true;
-		}
-		return false;
+		return get_option( 'rsssl_ssl_detection_overridden' ) !== false;
 	}
 }

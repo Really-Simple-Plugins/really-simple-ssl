@@ -127,7 +127,6 @@ class rsssl_directadmin {
 
 
 		} catch ( Exception $e ) {
-			error_log( print_r( $e, true ) );
 			update_option( 'rsssl_installation_error', 'directadmin', false );
 			$status  = 'warning';
 			$action  = 'continue';
