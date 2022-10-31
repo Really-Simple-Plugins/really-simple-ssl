@@ -113,7 +113,7 @@ class Settings extends Component {
         let continueLink = this.props.nextButtonDisabled ? `#${this.props.selectedMainMenuItem}/${this.props.selectedMenuItem}` : `#${this.props.selectedMainMenuItem}/${this.props.nextMenuItem}`;
         return (
             <Fragment>
-                <div className="rsssl-wizard-settings rsssl-column-2">
+                <div className="rsssl-wizard-settings">
                     { groups.map((group, i) =>
                         <SettingsGroup
                             updateFields={this.props.updateFields}
