@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2022-10-31T10:27:10+00:00\n"
+"POT-Creation-Date: 2022-10-31T13:29:43+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.6.0\n"
 "X-Domain: really-simple-ssl\n"
@@ -88,7 +88,7 @@ msgstr ""
 
 #: class-admin.php:1763
 #: settings/build/index.js:382
-#: settings/src/Settings/MixedContentScan.js:198
+#: settings/src/Settings/MixedContentScan.js:199
 msgid "Warning"
 msgstr ""
 
@@ -1484,9 +1484,9 @@ msgstr ""
 #: placeholders/class-placeholder.php:159
 #: placeholders/class-placeholder.php:185
 #: placeholders/class-placeholder.php:210
-#: settings/config/config.php:857
+#: settings/config/config.php:856
 #: settings/build/index.js:382
-#: settings/src/Settings/MixedContentScan.js:227
+#: settings/src/Settings/MixedContentScan.js:228
 msgid "Details"
 msgstr ""
 
@@ -1773,7 +1773,7 @@ msgstr ""
 
 #: settings/config/config.php:44
 #: settings/config/config.php:50
-#: settings/config/config.php:1116
+#: settings/config/config.php:1115
 msgid "Hardening"
 msgstr ""
 
@@ -1832,7 +1832,7 @@ msgstr ""
 #: settings/config/config.php:130
 #: settings/config/config.php:131
 #: settings/config/config.php:141
-#: settings/config/config.php:879
+#: settings/config/config.php:878
 msgid "Permissions Policy"
 msgstr ""
 
@@ -2094,192 +2094,192 @@ msgstr ""
 msgid "Disable application passwords"
 msgstr ""
 
-#: settings/config/config.php:608
+#: settings/config/config.php:607
 msgid "Method"
 msgstr ""
 
-#: settings/config/config.php:613
+#: settings/config/config.php:612
 msgid "Login status"
 msgstr ""
 
-#: settings/config/config.php:618
+#: settings/config/config.php:617
 msgid "Count"
 msgstr ""
 
-#: settings/config/config.php:623
-#: settings/config/config.php:1051
+#: settings/config/config.php:622
+#: settings/config/config.php:1050
 msgid "Action"
 msgstr ""
 
-#: settings/config/config.php:628
+#: settings/config/config.php:627
 msgid "Delete"
 msgstr ""
 
-#: settings/config/config.php:645
+#: settings/config/config.php:644
 msgid "About Recommended Security Headers"
 msgstr ""
 
-#: settings/config/config.php:646
+#: settings/config/config.php:645
 msgid "These security headers are the fundamental security measures to protect your website visitors while visiting your website."
 msgstr ""
 
-#: settings/config/config.php:664
-#: settings/config/config.php:678
-#: settings/config/config.php:778
-#: settings/config/config.php:800
-#: settings/config/config.php:815
+#: settings/config/config.php:663
+#: settings/config/config.php:677
+#: settings/config/config.php:777
+#: settings/config/config.php:799
+#: settings/config/config.php:814
 msgid "Off"
 msgstr ""
 
-#: settings/config/config.php:679
+#: settings/config/config.php:678
 msgid "recommended"
 msgstr ""
 
-#: settings/config/config.php:703
+#: settings/config/config.php:702
 msgid "About HTTP Strict Transport Security"
 msgstr ""
 
-#: settings/config/config.php:704
+#: settings/config/config.php:703
 msgid "Leveraging your SSL certificate with HSTS is a staple for every website. Force your website over SSL, mitigating risks of malicious counterfeit websites in your name."
 msgstr ""
 
-#: settings/config/config.php:758
+#: settings/config/config.php:757
 msgid "One day (for testing only)"
 msgstr ""
 
-#: settings/config/config.php:759
+#: settings/config/config.php:758
 msgid "One year"
 msgstr ""
 
-#: settings/config/config.php:760
+#: settings/config/config.php:759
 msgid "Two years (required for preload)"
 msgstr ""
 
-#: settings/config/config.php:786
+#: settings/config/config.php:785
 msgid "About Cross Origin Policies"
 msgstr ""
 
-#: settings/config/config.php:787
+#: settings/config/config.php:786
 msgid "One of the most powerful features, and therefore the most complex are the Cross-Origin headers that can isolate your website so any data leaks are minimized."
 msgstr ""
 
-#: settings/config/config.php:833
+#: settings/config/config.php:832
 msgid "About the Mixed Content Scan"
 msgstr ""
 
-#: settings/config/config.php:834
+#: settings/config/config.php:833
 msgid "The extensive mixed content scan will list all current and future issues and provide a fix, or instructions to fix manually."
 msgstr ""
 
-#: settings/config/config.php:838
+#: settings/config/config.php:837
 msgid "Type"
 msgstr ""
 
-#: settings/config/config.php:844
+#: settings/config/config.php:843
 msgid "Description"
 msgstr ""
 
-#: settings/config/config.php:850
-#: settings/config/config.php:1036
+#: settings/config/config.php:849
+#: settings/config/config.php:1035
 msgid "Location"
 msgstr ""
 
-#: settings/config/config.php:863
+#: settings/config/config.php:862
 #: settings/build/index.js:382
 #: settings/src/Dashboard/TaskElement.js:30
 #: settings/src/Dashboard/TaskElement.js:31
 #: settings/src/Modal/Modal.js:80
-#: settings/src/Settings/MixedContentScan.js:233
+#: settings/src/Settings/MixedContentScan.js:234
 msgid "Fix"
 msgstr ""
 
-#: settings/config/config.php:878
+#: settings/config/config.php:877
 #: settings/build/index.js:382
 #: settings/src/Settings/ChangeStatus.js:11
 msgid "Allow"
 msgstr ""
 
-#: settings/config/config.php:878
-#: settings/config/config.php:998
+#: settings/config/config.php:877
+#: settings/config/config.php:997
 #: settings/build/index.js:382
 #: settings/src/Settings/LearningMode.js:234
 #: settings/src/Settings/PermissionsPolicy.js:148
 msgid "Disable"
 msgstr ""
 
-#: settings/config/config.php:878
+#: settings/config/config.php:877
 msgid "Self (Default)"
 msgstr ""
 
-#: settings/config/config.php:884
+#: settings/config/config.php:883
 msgid "About the Permission Policy"
 msgstr ""
 
-#: settings/config/config.php:885
+#: settings/config/config.php:884
 msgid "Browser features are plentiful, but most are not needed on your website."
 msgstr ""
 
-#: settings/config/config.php:885
+#: settings/config/config.php:884
 msgid "They might be misused if you don’t actively tell the browser to disable these features."
 msgstr ""
 
-#: settings/config/config.php:889
+#: settings/config/config.php:888
 msgid "Feature"
 msgstr ""
 
-#: settings/config/config.php:894
+#: settings/config/config.php:893
 msgid "Options"
 msgstr ""
 
-#: settings/config/config.php:967
+#: settings/config/config.php:966
 msgid "Enable Permissions Policy"
 msgstr ""
 
-#: settings/config/config.php:976
+#: settings/config/config.php:975
 msgid "Serve encrypted and authenticated responses"
 msgstr ""
 
-#: settings/config/config.php:982
+#: settings/config/config.php:981
 msgid "About the Content Security Policy"
 msgstr ""
 
-#: settings/config/config.php:983
+#: settings/config/config.php:982
 msgid "The content security policy has many options, so we always recommend starting in ‘learning mode’ to see what files and scripts are loaded."
 msgstr ""
 
-#: settings/config/config.php:1002
+#: settings/config/config.php:1001
 msgid "Allow your domain to be embedded"
 msgstr ""
 
-#: settings/config/config.php:1011
+#: settings/config/config.php:1010
 msgid "Add additional domains which can embed your website, if needed. Comma seperated."
 msgstr ""
 
-#: settings/config/config.php:1041
+#: settings/config/config.php:1040
 msgid "Directive"
 msgstr ""
 
-#: settings/config/config.php:1046
+#: settings/config/config.php:1045
 msgid "Source"
 msgstr ""
 
-#: settings/config/config.php:1093
+#: settings/config/config.php:1092
 msgid "Progress"
 msgstr ""
 
-#: settings/config/config.php:1106
+#: settings/config/config.php:1105
 msgid "Powered by Qualys"
 msgstr ""
 
-#: settings/config/config.php:1108
+#: settings/config/config.php:1107
 msgid "Status"
 msgstr ""
 
-#: settings/config/config.php:1124
+#: settings/config/config.php:1123
 msgid "Tips & Tricks"
 msgstr ""
 
-#: settings/config/config.php:1135
+#: settings/config/config.php:1134
 msgid "Other Plugins"
 msgstr ""
 
@@ -2497,6 +2497,11 @@ msgstr ""
 #: settings/build/index.js:382
 #: settings/src/Dashboard/SecurityFeaturesBlock/SecurityFeatureBullet.js:27
 msgid "%sRead more%s"
+msgstr ""
+
+#: settings/build/index.js:382
+#: settings/src/Dashboard/SecurityFeaturesBlock/SecurityFeaturesBlock.js:38
+msgid "Improve WordPress security."
 msgstr ""
 
 #: settings/build/index.js:382
@@ -2984,23 +2989,23 @@ msgid "Attempt %s."
 msgstr ""
 
 #: settings/build/index.js:382
-#: settings/src/Settings/MixedContentScan.js:220
+#: settings/src/Settings/MixedContentScan.js:221
 msgid "View"
 msgstr ""
 
 #: settings/build/index.js:382
-#: settings/src/Settings/MixedContentScan.js:284
+#: settings/src/Settings/MixedContentScan.js:285
 msgid "No results. Start your first scan"
 msgstr ""
 
 #: settings/build/index.js:382
-#: settings/src/Settings/MixedContentScan.js:285
+#: settings/src/Settings/MixedContentScan.js:286
 msgid "Everything is now served over SSL"
 msgstr ""
 
 #: settings/build/index.js:382
 #: settings/src/Settings/LearningMode.js:225
-#: settings/src/Settings/MixedContentScan.js:301
+#: settings/src/Settings/MixedContentScan.js:302
 msgid "No results"
 msgstr ""
 

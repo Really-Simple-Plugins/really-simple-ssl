@@ -134,7 +134,7 @@ class LearningMode extends Component {
             let field = this.props.field;
             let fieldValue = field.value;
             let options = this.props.options;
-            let configuringString = __("We're configuring your %s", "really-simple-ssl").replace('%s', field.label);
+            let configuringString = __("It might take up to 7 days to find all directives. Exit learning mode to edit directives and enforce this policy.", "really-simple-ssl");
             let disabledString = __("%s has been disabled.", "really-simple-ssl").replace('%s', field.label);
             let enforcedString = __("%s is enforced.", "really-simple-ssl").replace('%s', field.label);
             const {
@@ -255,7 +255,7 @@ class LearningMode extends Component {
                             <div className="rsssl-locked-overlay">
                                 <span className="rsssl-progress-status rsssl-learning-mode">{__("Learning Mode","really-simple-ssl")}</span>
                                 {configuringString}&nbsp;
-                                <a className="rsssl-learning-mode-link" href="#" onClick={ (e) => this.toggleLearningMode(e) }>{__("Disable learning mode and configure manually", "really-simple-ssl") }</a>
+                                <a className="rsssl-learning-mode-link" href="#" onClick={ (e) => this.toggleLearningMode(e) }>{__("Exit learning mode", "really-simple-ssl") }</a>
                             </div>
                         </div>}
                         {learning_mode_completed==1 && <div className="rsssl-locked">
