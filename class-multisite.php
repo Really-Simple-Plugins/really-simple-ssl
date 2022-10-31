@@ -281,7 +281,7 @@ if (!class_exists('rsssl_multisite')) {
 				'settings.php',
 				"SSL",
 				"SSL".$update_count,
-				'manage_options',
+				'manage_security',
 				"really-simple-security",
 				'rsssl_settings_page'
 	        );
