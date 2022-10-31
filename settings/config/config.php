@@ -596,7 +596,6 @@ function rsssl_fields( $load_values = true ) {
 			'disabled'         => false,
 			'default'          => false,
 			'data_source'      => [ 'RSSSL', 'placeholder', 'xml_data' ],
-			'data_endpoint'    => "rsssl_xml_update_allowlist",
 			'react_conditions' => [
 				'relation' => 'AND',
 				[

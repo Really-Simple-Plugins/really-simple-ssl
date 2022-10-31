@@ -577,8 +577,8 @@ function rsssl_rest_api_fields_get(){
 				$class = $data_source[1];
 				$function = $data_source[2];
 				$field['value'] = [];
-                if (function_exists($main)){
-	                $field['value'] = $main()->$class->$function();
+                if ( function_exists($main) ){
+                    $field['value'] = $main()->$class->$function();
                 }
 			} else if ( function_exists($field['data_source'])) {
                 $func = $field['data_source'];
