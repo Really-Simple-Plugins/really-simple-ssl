@@ -9,6 +9,7 @@ class Modal extends Component {
         this.state = {
             data:[],
             buttonsDisabled:false,
+
         };
     }
 
@@ -29,7 +30,7 @@ class Modal extends Component {
             buttonsDisabled:true
         });
         rsssl_api.runTest(action, 'refresh', this.props.data ).then( ( response ) => {
-            this.props.data
+
             let {
                 data,
             } = this.state;
@@ -52,6 +53,9 @@ class Modal extends Component {
         } = this.state;
         let disabled = buttonsDisabled ? 'disabled' : '';
         let description = data.description;
+        if ( !Array.isArray(description) ) {
+            description = [description];
+        }
 
         return (
             <div>
@@ -66,7 +70,7 @@ class Modal extends Component {
                         </button>
                     </div>
                     <div className="rsssl-modal-content">
-                        {data.subtitle && <div className="rsssl-modal-subtitle">{data.subtitle}</div>}
+                        { data.subtitle && <div className="rsssl-modal-subtitle">{data.subtitle}</div>}
                         { Array.isArray(description) && description.map((s, i) => <div key={i} className="rsssl-modal-description">{s}</div>) }
                     </div>
                     <div className="rsssl-modal-footer">

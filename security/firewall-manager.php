@@ -8,6 +8,7 @@ class rsssl_firewall_manager {
 			wp_die( sprintf( __( '%s is a singleton class and you cannot create a second instance.', 'really-simple-ssl' ), get_class( $this ) ) );
 		}
 		self::$_this = $this;
+		//trigger this action to force rules update
 		add_action( 'rsssl_update_rules', array($this, 'insert_advanced_header_file'), 10 );
 		add_action( 'rsssl_after_saved_fields', array($this, 'insert_advanced_header_file'), 100 );
 		add_action( 'rsssl_deactivate', array($this, 'remove_advanced_headers'), 20 );
