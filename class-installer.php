@@ -11,7 +11,7 @@ if ( !class_exists('rsssl_installer') ){
     class rsssl_installer {
         private $slug = '';
         public function __construct($slug) {
-            if ( !rsssl_user_can_manage() ) return;
+            if ( !current_user_can('install_plugins') ) return;
 
             $this->slug = $slug;
         }
@@ -39,7 +39,7 @@ if ( !class_exists('rsssl_installer') ){
          * @return void
          */
         public function install($step){
-            if ( !rsssl_user_can_manage() ) return;
+            if ( !current_user_can('install_plugins') ) return;
 
             if ( $step === 'download' ) {
                 $this->download_plugin();
@@ -83,7 +83,7 @@ if ( !class_exists('rsssl_installer') ){
          * @return bool
          */
         public function download_plugin() {
-            if ( !rsssl_user_can_manage() ) {
+            if ( !current_user_can('install_plugins') ) {
 				return false;
             }
 	        if ( get_transient("rsssl_plugin_download_active")!==$this->slug ) {
@@ -110,7 +110,7 @@ if ( !class_exists('rsssl_installer') ){
          * @return bool
          */
         public function activate_plugin() {
-            if ( !rsssl_user_can_manage()) {
+            if ( !current_user_can('install_plugins')) {
 				return false;
             }
 			$slug = $this->get_activation_slug();
