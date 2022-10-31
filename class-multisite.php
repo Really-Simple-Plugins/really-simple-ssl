@@ -337,7 +337,9 @@ if (!class_exists('rsssl_multisite')) {
 				return 100;
 			}
             $complete_count = get_site_option('rsssl_siteprocessing_progress');
-            $percentage = round(($complete_count/$this->get_total_blog_count())*100,0);
+			$blog_count = $this->get_total_blog_count();
+	        $blog_count = $blog_count !== 0 ? $blog_count : 1; //prevent division by zero
+            $percentage = round(( $complete_count/$blog_count )*100,0);
             if ( $percentage > 99 ) {
 				$percentage = 100;
             }

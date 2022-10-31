@@ -8,6 +8,7 @@ class rsssl_firewall_manager {
 			wp_die( sprintf( __( '%s is a singleton class and you cannot create a second instance.', 'really-simple-ssl' ), get_class( $this ) ) );
 		}
 		self::$_this = $this;
+		//trigger this action to force rules update
 		add_action( 'rsssl_update_rules', array($this, 'insert_advanced_header_file'), 10 );
 		add_action( 'rsssl_after_saved_fields', array($this, 'insert_advanced_header_file'), 100 );
 		add_action( 'rsssl_deactivate', array($this, 'remove_advanced_headers'), 20 );
@@ -41,7 +42,7 @@ class rsssl_firewall_manager {
 	 * @return int
 	 */
 	public function get_headers_nonce(){
-		if ( !rsssl_user_can_manage() ) {
+		if ( !rsssl_user_can_manage() && !defined( 'RSSSL_LEARNING_MODE' ) ) {
 			return false;
 		}
 		if ( !get_site_option("rsssl_header_detection_nonce")) {
@@ -55,9 +56,10 @@ class rsssl_firewall_manager {
 	 *
 	 */
 	public function insert_advanced_header_file() {
-		if ( !rsssl_user_can_manage() ) {
+		if ( !rsssl_user_can_manage() && !defined( 'RSSSL_LEARNING_MODE' ) ) {
 			return;
 		}
+
 		if ( wp_doing_ajax() ) {
 			return;
 		}
@@ -160,7 +162,10 @@ class rsssl_firewall_manager {
 	 * @return void
 	 */
 	public function remove_advanced_headers() {
-		$file = ABSPATH . 'wp-content/advanced-headers.php';
+		if ( !rsssl_user_can_manage() && !defined( 'RSSSL_LEARNING_MODE' ) ) {
+			return;
+		}
+			$file = ABSPATH . 'wp-content/advanced-headers.php';
 		$wpconfig_path = RSSSL()->admin->find_wp_config_path();
 		if ( is_writable( $wpconfig_path ) ) {
 			$wpconfig = file_get_contents( $wpconfig_path );

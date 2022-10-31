@@ -3624,7 +3624,7 @@ class SecurityFeaturesBlock extends _wordpress_element__WEBPACK_IMPORTED_MODULE_
       fields: fields
     }))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
       className: "rsssl-new-feature-desc"
-    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_5__.__)("Improve WordPress security"), "\xA0", (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_utils_Hyperlink__WEBPACK_IMPORTED_MODULE_4__["default"], {
+    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_5__.__)("Improve WordPress security.", "really-simple-ssl"), "\xA0", (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_utils_Hyperlink__WEBPACK_IMPORTED_MODULE_4__["default"], {
       target: "_blank",
       text: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_5__.__)("Check our %sdocumentation%s", "really-simple-ssl"),
       url: "https://really-simple-ssl.com/instructions/about-hardening-features"
@@ -5334,7 +5334,6 @@ class Modal extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Component {
       buttonsDisabled: true
     });
     _utils_api__WEBPACK_IMPORTED_MODULE_2__.runTest(action, 'refresh', this.props.data).then(response => {
-      this.props.data;
       let {
         data
       } = this.state;
@@ -5358,6 +5357,11 @@ class Modal extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Component {
     } = this.state;
     let disabled = buttonsDisabled ? 'disabled' : '';
     let description = data.description;
+
+    if (!Array.isArray(description)) {
+      description = [description];
+    }
+
     return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
       className: "rsssl-modal-backdrop",
       onClick: e => this.dismissModal(e)
@@ -5380,7 +5384,8 @@ class Modal extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Component {
       className: "rsssl-modal-content"
     }, data.subtitle && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
       className: "rsssl-modal-subtitle"
-    }, data.subtitle), Array.isArray(description) && description.map(s => (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    }, data.subtitle), Array.isArray(description) && description.map((s, i) => (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+      key: i,
       className: "rsssl-modal-description"
     }, s))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
       className: "rsssl-modal-footer"
@@ -7044,7 +7049,7 @@ class LearningMode extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Compo
       enforce: 0,
       learning_mode: 0,
       learning_mode_completed: 0,
-      filterValue: 0
+      filterValue: -1
     };
   }
 
@@ -7150,7 +7155,7 @@ class LearningMode extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Compo
     let fieldValue = field.value;
     let options = this.props.options;
 
-    let configuringString = (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("We're configuring your %s", "really-simple-ssl").replace('%s', field.label);
+    let configuringString = (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("It might take up to 7 days to find all directives. Exit learning mode to edit directives and enforce this policy.", "really-simple-ssl");
 
     let disabledString = (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("%s has been disabled.", "really-simple-ssl").replace('%s', field.label);
 
@@ -7202,7 +7207,7 @@ class LearningMode extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Compo
     }
 
     for (const item of data) {
-      item.login_statusControl = item.login_status == 1 ? (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("success", "really-simple-ssl") : (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("failed", "really-simple-ssl");
+      if (item.login_status) item.login_statusControl = item.login_status == 1 ? (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("success", "really-simple-ssl") : (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("failed", "really-simple-ssl");
       item.statusControl = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_ChangeStatus__WEBPACK_IMPORTED_MODULE_2__["default"], {
         item: item,
         onChangeHandlerDataTableStatus: this.props.onChangeHandlerDataTableStatus
@@ -7291,7 +7296,7 @@ class LearningMode extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Compo
       className: "rsssl-learning-mode-link",
       href: "#",
       onClick: e => this.toggleLearningMode(e)
-    }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Disable learning mode and configure manually", "really-simple-ssl")))), learning_mode_completed == 1 && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Exit learning mode", "really-simple-ssl")))), learning_mode_completed == 1 && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
       className: "rsssl-locked"
     }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
       className: "rsssl-locked-overlay"
@@ -7650,6 +7655,7 @@ class MixedContentScan extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.C
       paused: true
     });
     _utils_api__WEBPACK_IMPORTED_MODULE_4__.runTest('mixed_content_scan', 'stop').then(response => {
+      console.log(response);
       this.setState({
         completedStatus: response.data.completed_status,
         data: response.data.data,
@@ -9546,7 +9552,7 @@ const Icon = props => {
         fill: "#f9c23e",
         d: "M280.8,62.4L140.5,0,0,62.2V213.3c0,10.7,1.6,21.3,4.9,31.5,9.5,29.9,28.2,52.8,54.4,69.5,26,16.6,52.4,32.4,78.6,48.6,2,1.2,3.4,.9,5.1-.2,19.9-12.3,39.8-24.5,59.6-36.8,12.6-7.8,25.5-15.1,36.5-25.1,26.4-24.2,41.4-53.6,41.5-89.9V62.4h.2Z"
       }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("g", null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("g", null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("rect", {
-        class: "uuid-57af18f1-eed9-4dfe-9c3e-67e3c55f9bf4",
+        className: "uuid-57af18f1-eed9-4dfe-9c3e-67e3c55f9bf4",
         x: "155",
         y: "266.8",
         width: "77.6",
@@ -9558,7 +9564,7 @@ const Icon = props => {
         fill: "#1d2327",
         d: "M125.2,192.3c-.5-2.9-.5-5.8-1-8.6-.5-2.4-2.6-4-4.8-3.9-2.3,0-4.2,1.9-4.7,4.3-.2,1,0,1.9,0,2.9,.8,14.6,7.2,26.3,18.2,35.7,2.2,1.9,4.5,3.5,6.9,4.8v-11.8c-7.4-5.8-12.9-14.1-14.6-23.3v-.1Z"
       }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("path", {
-        class: "uuid-57af18f1-eed9-4dfe-9c3e-67e3c55f9bf4",
+        className: "uuid-57af18f1-eed9-4dfe-9c3e-67e3c55f9bf4",
         d: "M96.4,236.1c-13-15-20-32.3-19.5-52.3,.3-13.1,6.1-23.6,16.6-31.2,11.5-8.5,24.5-10.9,38.3-7.1,12.7,3.5,22,10.7,27.4,22,2.1-2.7,4.5-5.2,7.2-7.4-4-7-9.7-12.9-17-17.4-17-10.4-34.9-11.7-52.9-3.1-19,9.1-28.7,24.7-29.3,45.8,0,5.2,.5,10.2,1.4,15.2,3.4,19.4,13.4,35.2,27.2,48.9,1.1,1.1,2.5,1.6,4.1,1.4,1.8-.2,3.2-1.3,3.8-3,.6-1.8,.4-3.6-1-5.1-2.1-2.2-4.2-4.4-6.2-6.7h-.1Z"
       }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("path", {
         class: "uuid-57af18f1-eed9-4dfe-9c3e-67e3c55f9bf4",

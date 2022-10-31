@@ -29,7 +29,7 @@ class LearningMode extends Component {
             enforce :0,
             learning_mode :0,
             learning_mode_completed :0,
-            filterValue: 0,
+            filterValue: -1,
         };
     }
 
@@ -134,7 +134,7 @@ class LearningMode extends Component {
             let field = this.props.field;
             let fieldValue = field.value;
             let options = this.props.options;
-            let configuringString = __("We're configuring your %s", "really-simple-ssl").replace('%s', field.label);
+            let configuringString = __("It might take up to 7 days to find all directives. Exit learning mode to edit directives and enforce this policy.", "really-simple-ssl");
             let disabledString = __("%s has been disabled.", "really-simple-ssl").replace('%s', field.label);
             let enforcedString = __("%s is enforced.", "really-simple-ssl").replace('%s', field.label);
             const {
@@ -166,11 +166,10 @@ class LearningMode extends Component {
                 columns.push(newItem);
             });
             let data = field.value;
-
             if ( typeof data === 'object' ) {
                 data = Object.values(data);
             }
-            if (!Array.isArray(data) ) {
+            if ( !Array.isArray(data) ) {
                 data = [];
             }
             data = data.filter(item => item.status<2);
@@ -178,7 +177,7 @@ class LearningMode extends Component {
                 data = data.filter(item => item.status==filterValue);
             }
             for (const item of data){
-                item.login_statusControl = item.login_status == 1 ? __("success", "really-simple-ssl") : __("failed", "really-simple-ssl");
+                if (item.login_status) item.login_statusControl = item.login_status == 1 ? __("success", "really-simple-ssl") : __("failed", "really-simple-ssl");
                 item.statusControl = <ChangeStatus item={item} onChangeHandlerDataTableStatus={this.props.onChangeHandlerDataTableStatus} />;
                 item.deleteControl = <Delete item={item} onDeleteHandler={this.onDeleteHandler} />;
             }
@@ -209,7 +208,6 @@ class LearningMode extends Component {
                 default: 'transparent',
               },
             }, 'light');
-
              return (
                 <>
                     <div className={ this.highLightClass}>
@@ -257,7 +255,7 @@ class LearningMode extends Component {
                             <div className="rsssl-locked-overlay">
                                 <span className="rsssl-progress-status rsssl-learning-mode">{__("Learning Mode","really-simple-ssl")}</span>
                                 {configuringString}&nbsp;
-                                <a className="rsssl-learning-mode-link" href="#" onClick={ (e) => this.toggleLearningMode(e) }>{__("Disable learning mode and configure manually", "really-simple-ssl") }</a>
+                                <a className="rsssl-learning-mode-link" href="#" onClick={ (e) => this.toggleLearningMode(e) }>{__("Exit learning mode", "really-simple-ssl") }</a>
                             </div>
                         </div>}
                         {learning_mode_completed==1 && <div className="rsssl-locked">
