@@ -327,11 +327,7 @@ if ( ! function_exists('rsssl_wrap_htaccess' ) ) {
  * @return bool
  */
 function rsssl_uses_htaccess() {
-	if ( rsssl_get_server() === 'apache' || rsssl_get_server() === 'litespeed' ) {
-		return true;
-	}
-
-	return false;
+	return rsssl_get_server() === 'apache' || rsssl_get_server() === 'litespeed';
 }
 
 /**
@@ -368,7 +364,7 @@ function rsssl_find_wp_config_path()
 	}
     //limit nr of iterations to 5
     $i = 0;
-    $dir = dirname(__FILE__);
+    $dir = __DIR__;
     do {
         $i++;
         if (file_exists($dir . "/wp-config.php")) {

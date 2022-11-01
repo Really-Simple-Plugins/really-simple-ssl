@@ -1009,7 +1009,7 @@ function rsssl_fields( $load_values = true ) {
 			],
 			'label'    => __( "Allow your domain to be embedded", "really-simple-ssl" ),
 			'disabled' => false,
-			'default'  => 'self',
+			'default'  => 'none',
 		],
 		[
 			'id'       => 'csp_frame_ancestors_urls',

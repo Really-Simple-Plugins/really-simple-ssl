@@ -37,7 +37,7 @@ add_filter( 'illegal_user_logins', 'rsssl_prevent_admin_user_add' );
  * Rename admin user
  * @return bool
  */
-function rsssl_rename_admin_user($fields=[]) {
+function rsssl_rename_admin_user() {
 	if ( !rsssl_user_can_manage() || wp_doing_cron() ) {
 		return false;
 	}

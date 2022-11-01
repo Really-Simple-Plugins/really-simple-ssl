@@ -65,10 +65,6 @@ function rsssl_disable_fields($field, $field_id){
 		if ( defined('DISALLOW_FILE_EDIT') && DISALLOW_FILE_EDIT && !$field['value'] ) {
 			$field['value'] = true;
 			$field['disabled'] = true;
-			// $field['help'] = [
-			// 	'label' => 'default',
-			// 	'text' => __( "File editing is already disabled.", 'really-simple-ssl' ),
-			// ];
 		}
 	}
 
@@ -76,10 +72,6 @@ function rsssl_disable_fields($field, $field_id){
 		if ( !rsssl_code_execution_allowed() && !$field['value'] ) {
 			$field['value'] = true;
 			$field['disabled'] = true;
-			// $field['help'] = [
-			// 	'label' => 'default',
-			// 	'text' => __( "Code execution is already disabled.", 'really-simple-ssl' ),
-			// ];
 		}
 	}
 
@@ -87,10 +79,6 @@ function rsssl_disable_fields($field, $field_id){
 		if ( !rsssl_xmlrpc_enabled() && !$field['value'] ) {
 			$field['value'] = true;
 			$field['disabled'] = true;
-			// $field['help'] = [
-			// 	'label' => 'default',
-			// 	'text' => __( "XMLRPC is already disabled.", 'really-simple-ssl' ),
-			// ];
 		}
 	}
 
@@ -98,10 +86,6 @@ function rsssl_disable_fields($field, $field_id){
 		if ( !rsssl_is_default_wp_prefix() && !$field['value'] ) {
 			$field['value'] = true;
 			$field['disabled'] = true;
-			// $field['help'] = [
-			// 	'label' => 'default',
-			// 	'text' => __( "Database prefix is already changed.", 'really-simple-ssl' ),
-			// ];
 		}
 	}
 

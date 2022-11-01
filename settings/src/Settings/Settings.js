@@ -38,7 +38,6 @@ class Settings extends Component {
     }
 
     save(){
-        console.log(this.props);
         this.props.save();
     }
 

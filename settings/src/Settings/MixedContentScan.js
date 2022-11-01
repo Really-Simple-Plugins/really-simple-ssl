@@ -137,7 +137,6 @@ class MixedContentScan extends Component {
             paused: true,
         });
         rsssl_api.runTest('mixed_content_scan', 'stop' ).then( ( response ) => {
-        console.log(response);
             this.setState({
                 completedStatus:response.data.completed_status,
                 data:response.data.data,
