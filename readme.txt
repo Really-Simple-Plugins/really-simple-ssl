@@ -785,5 +785,5 @@ Always back up before any upgrade. Especially .htaccess, wp-config.php and the p
 
 == Screenshots ==
 1. Your Really Simple SSL dashboard - For optimal configuration.
-2. The Server Health Check - An in-depth look at your server.
+2. The Server Health Check - An in-depth look of your server.
 3. New Hardening Features - Fortify your website by minimizing weaknesses.
