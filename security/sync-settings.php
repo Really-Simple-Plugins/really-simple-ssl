@@ -27,11 +27,12 @@ function rsssl_disable_fields($field, $field_id){
 				}
 			}
 			//if not the defaul location
-			if ( rsssl_is_debugging_enabled() && !rsssl_debug_log_value_is_default() ) {
+			$location = strstr( rsssl_get_debug_log_value(), 'wp-content' );
+			if (!empty($location) &&  rsssl_is_debugging_enabled() && !rsssl_debug_log_value_is_default() ) {
 				$field['help'] = [
 					'label' => 'default',
 					'title' => __( "Debugging", 'really-simple-ssl' ),
-					'text' => __( "Changed debug.log location to:", 'really-simple-ssl' ).strstr( rsssl_get_debug_log_value(), 'wp-content' ),
+					'text' => __( "Changed debug.log location to:", 'really-simple-ssl' ).$location,
 				];
 			}
 

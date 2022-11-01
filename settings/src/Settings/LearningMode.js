@@ -28,6 +28,7 @@ class LearningMode extends Component {
         this.state = {
             enforce :0,
             learning_mode :0,
+            lm_enabled_once :0,
             learning_mode_completed :0,
             filterValue: -1,
         };
@@ -37,14 +38,20 @@ class LearningMode extends Component {
         this.doFilter = this.doFilter.bind(this);
         this.onDeleteHandler = this.onDeleteHandler.bind(this);
         let field = this.props.fields.filter(field => field.id === this.props.field.control_field )[0];
-        let enforce = field.value==='enforce';
-        let learning_mode = field.value==='learning_mode';
+        let enforce = field.value === 'enforce';
+        let learning_mode = field.value === 'learning_mode';
         let learning_mode_completed = field.value==='completed';
+
+        let lm_enabled_once_field_name = this.props.field.control_field+'_lm_enabled_once';
+        let lm_enabled_once_field = this.props.fields.filter(field => field.id === lm_enabled_once_field_name)[0];
+        let lm_enabled_once = lm_enabled_once_field.value;
+
         //we somehow need this to initialize the field. Otherwise it doesn't work on load. need to figure that out.
         this.props.updateField(field.id, field.value);
         this.setState({
             enforce :enforce,
             learning_mode :learning_mode,
+            lm_enabled_once :lm_enabled_once,
             learning_mode_completed :learning_mode_completed,
         });
     }
@@ -75,11 +82,19 @@ class LearningMode extends Component {
          e.preventDefault();
         let fields = this.props.fields;
         let field = fields.filter(field => field.id === this.props.field.control_field )[0];
+        let lm_enabled_once_field_name = this.props.field.control_field+'_lm_enabled_once';
+        let lm_enabled_once_field = fields.filter(field => field.id === lm_enabled_once_field_name)[0];
+        let lm_enabled_once = lm_enabled_once_field.value;
         let learning_mode = field.value === 'learning_mode' ? 1 : 0;
         let learning_mode_completed = field.value === 'completed' ? 1 : 0;
+        console.log('lm_enabled_once_field');
+        console.log(lm_enabled_once_field);
+        if (learning_mode) {
+            lm_enabled_once_field.value = 1;
+        }
 
         field.value = learning_mode || learning_mode_completed ? 'disabled' : 'learning_mode';
-        if (learning_mode || learning_mode_completed) {
+        if ( learning_mode || learning_mode_completed ) {
             learning_mode = 0;
         } else {
             learning_mode = 1;
@@ -87,10 +102,13 @@ class LearningMode extends Component {
         learning_mode_completed = 0;
         this.setState({
             learning_mode : learning_mode,
+            lm_enabled_once : lm_enabled_once,
             learning_mode_completed : learning_mode_completed,
         });
+
         let saveFields = [];
         saveFields.push(field);
+        saveFields.push(lm_enabled_once_field);
         rsssl_api.setFields(saveFields).then(( response ) => {});
     }
 
@@ -141,9 +159,10 @@ class LearningMode extends Component {
                 filterValue,
                 enforce,
                 learning_mode,
+                lm_enabled_once,
                 learning_mode_completed,
             } = this.state;
-            let enforceDisabled = learning_mode_completed!=1;
+            let enforceDisabled = !lm_enabled_once;
             const Filter = () => (
               <>
                 <select onChange={ ( e ) => this.doFilter(e) } value={filterValue}>

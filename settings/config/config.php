@@ -587,6 +587,15 @@ function rsssl_fields( $load_values = true ) {
 			'default'  => false,
 		],
 		[
+			'id'       => 'xmlrpc_status_lm_enabled_once',
+			'menu_id'  => 'hardening',
+			'group_id' => 'hardening_xml',
+			'type'     => 'hidden',
+			'label'    => '',
+			'disabled' => false,
+			'default'  => false,
+		],
+		[
 			'id'               => 'xmlrpc_allow_list',
 			'control_field'    => 'xmlrpc_status',
 			'menu_id'          => 'hardening',
@@ -1013,6 +1022,15 @@ function rsssl_fields( $load_values = true ) {
 		],
 		[
 			'id'       => 'csp_status',
+			'menu_id'  => 'content_security_policy',
+			'group_id' => 'content_security_policy',
+			'type'     => 'hidden',
+			'label'    => '',
+			'disabled' => false,
+			'default'  => false,
+		],
+		[
+			'id'       => 'csp_status_lm_enabled_once',
 			'menu_id'  => 'content_security_policy',
 			'group_id' => 'content_security_policy',
 			'type'     => 'hidden',
