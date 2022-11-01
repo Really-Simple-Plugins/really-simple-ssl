@@ -422,6 +422,8 @@ function rsssl_rest_api_fields_set($request){
         return;
     }
 	$fields = $request->get_json_params();
+    x_log("fields update");
+    x_log($fields);
 	//get the nonce
 	$nonce = false;
 	foreach ( $fields as $index => $field ){

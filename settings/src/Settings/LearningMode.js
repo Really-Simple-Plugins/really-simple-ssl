@@ -84,12 +84,10 @@ class LearningMode extends Component {
         let field = fields.filter(field => field.id === this.props.field.control_field )[0];
         let lm_enabled_once_field_name = this.props.field.control_field+'_lm_enabled_once';
         let lm_enabled_once_field = fields.filter(field => field.id === lm_enabled_once_field_name)[0];
-        let lm_enabled_once = lm_enabled_once_field.value;
         let learning_mode = field.value === 'learning_mode' ? 1 : 0;
         let learning_mode_completed = field.value === 'completed' ? 1 : 0;
-        console.log('lm_enabled_once_field');
-        console.log(lm_enabled_once_field);
-        if (learning_mode) {
+
+        if ( learning_mode ) {
             lm_enabled_once_field.value = 1;
         }
 
@@ -102,14 +100,16 @@ class LearningMode extends Component {
         learning_mode_completed = 0;
         this.setState({
             learning_mode : learning_mode,
-            lm_enabled_once : lm_enabled_once,
+            lm_enabled_once : lm_enabled_once_field.value,
             learning_mode_completed : learning_mode_completed,
         });
 
         let saveFields = [];
         saveFields.push(field);
         saveFields.push(lm_enabled_once_field);
-        rsssl_api.setFields(saveFields).then(( response ) => {});
+        rsssl_api.setFields(saveFields).then(( response ) => {
+
+        });
     }
 
     /*
