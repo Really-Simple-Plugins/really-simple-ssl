@@ -1,0 +1,100 @@
+.rsssl{
+  div[class^="rsssl-wizard-"]{ // starts with selector
+    .components-flex{
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+      .components-flex-item label{
+        margin: 0;
+      }
+      .components-input-control__container {
+        max-width: max-content;
+      }
+    }
+    .rsssl-grid-item-content label{
+      font-size: var(--rsp-fs-300);
+      font-weight: 400;
+      line-height: 1.5;
+      text-transform: unset;
+      box-sizing: border-box;
+      display: inherit;
+      max-width: 100%;
+      z-index: 1;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .components-base-control__field{
+      margin-bottom: 0;
+    }
+    .components-toggle-control{
+      .components-base-control__field, .components-flex{
+        display: flex;
+        flex-direction: row-reverse;
+        align-items: center;
+        justify-content: space-between;
+        .components-form-toggle{
+            margin-right: 0;
+        }
+      }
+    }
+    .components-form-toggle.is-checked .components-form-toggle__track{
+      background-color: var(--rsp-green);
+    }
+    .rsssl-grid-item{
+      .rsssl-grid-item-content{
+        padding: var(--rsp-spacing-xs) 0;
+      }
+    }
+    .rsssl-field-wrap, .rsssl-settings-block-intro{
+      padding-block: var(--rsp-spacing-s);
+      @include rsssl-inline-block-padding;
+      overflow: hidden;
+      & > .rsssl-field-wrap{
+        padding: 0;
+      }
+    }
+    .rsssl-field-button{
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+  }
+
+  .rsssl-highlight {
+    background-color: transparent;
+    border-left: 4px solid var(--rsp-green);
+    -o-animation: fadeIt 3s ease-in-out;
+    animation: fadeIt 3s ease-in-out;
+  }
+
+  @-o-keyframes fadeIt {
+    0%   { background-color: transparent; }
+    30%  { background-color: var(--rsp-green-faded); }
+    100% {
+      border-right: 0;
+      background-color: inherit;
+    }
+  }
+  @keyframes fadeIt {
+    0%   {
+      background-color: transparent;
+      border-right: 0;
+    }
+    30%  { background-color: var(--rsp-green-faded); }
+    100% { background-color: inherit; }
+  }
+}
+
+//switch padding to top, to prevent tasks from getting stuck to text field
+.rsssl-license {
+  .rsssl-task-element {
+    padding-top: var(--rsp-spacing-s);
+    padding-bottom: 0;
+  }
+  .rsssl-license-field{
+    display:flex;
+  }
+}

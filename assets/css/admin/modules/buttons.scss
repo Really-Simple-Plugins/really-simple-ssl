@@ -1,0 +1,58 @@
+.rsssl {
+  a.button, button.button, input.button, span.button {
+    font-size: var(--rsp-fs-300);
+    font-weight: 400;
+    transition: all 0.3s ease;
+    min-height: 10px;
+
+    &.button-secondary, &.button-default{
+      background: transparent;
+    }
+
+    &.button-black {
+      border: 1px solid var(--rsp-black);
+      background: var(--rsp-black);
+      color: var(--rsp-text-color-white);
+
+      &:hover, &:focus, &:active {
+        box-shadow: 0 0 0 1px #fff, 0 0 0 3px var(--rsp-black);
+      }
+    }
+
+    &.button-tertiary, &.button-red {
+      border: 0 solid transparent;
+      background: var(--rsp-red);
+      color: var(--rsp-text-color-white);
+
+      &:hover, &:focus, &:active {
+        box-shadow: 0 0 0 1px #fff, 0 0 0 3px var(--rsp-red);
+        background: var(--rsp-red);
+        color: var(--rsp-text-color-white);
+      }
+    }
+  }
+}
+
+.rsssl {
+  a.rsssl-button-small, button.rsssl-button-small, input.rsssl-button-small {
+    font-size: var(--rsp-fs-100);
+    font-weight: 300;
+    min-height: auto;
+  }
+  //on the dashboard, keep a minimum distance between two buttons
+  .rsssl-button-small + .rsssl-button-small{
+    margin-left:10px;
+  }
+}
+/* Documents overview */
+.rsssl-shortcode {
+  right: 10000px;
+  position: absolute;
+  background-color: #fff;
+  padding: 0;
+  white-space: nowrap;
+}
+
+.shortcode {
+  cursor: pointer;
+}

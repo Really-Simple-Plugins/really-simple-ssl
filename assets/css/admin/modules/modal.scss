@@ -1,0 +1,94 @@
+.rsssl-modal-backdrop {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background-color: rgba(0, 0, 0, 0.6);
+  width: 100%;
+  height: 100%;
+  z-index: 2;
+}
+
+.rsssl-modal {
+  width:  clamp(300px, 75ch, calc(100vw - 50px) );
+  position: fixed;
+  z-index: 3;
+  border-radius: var(--rsp-border-radius);
+  background-color: var(--rsp-white);
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  margin: 25px auto;
+
+  .rsssl-modal-header {
+    @include rsssl-block-padding;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-radius: var(--rsp-border-radius);
+    .modal-title {
+      margin: 0;
+      background-color: white;
+    }
+    .rsssl-modal-close {
+      cursor: pointer;
+      background: none;
+      border: none;
+      font-weight: 700;
+    }
+    button {
+      img {
+        height: 16px;
+        width: 16px;
+      }
+    }
+  }
+
+  .rsssl-modal-content {
+    position: relative;
+    font-size: var(--rsp-fs-300);
+    line-height: 1.5;
+    @include rsssl-block-padding;
+    .rsssl-modal-subtitle {
+      font-size: var(--rsp-fs-600);
+      font-weight: 600;
+      margin-bottom: var(--rsp-spacing-xs);
+    }
+    .rsssl-modal-description {
+      overflow-wrap: anywhere;
+      margin-top: 0;
+      font-weight: 400;
+      line-height: 1.5;
+      margin-bottom: var(--rsp-spacing-s);
+    }
+  }
+  .rsssl-modal-footer {
+    display: flex;
+    flex-direction: row;
+    @include rsssl-block-padding;
+    gap:10px;
+    // text-align: right;
+    .button {
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      min-width: 105px;
+
+      //height: 45px;
+      //width: 100%;
+      text-align: center;
+      // margin-right: 20px;
+      border-radius: 6px;
+    }
+
+    .rsssl-button-help {
+      background-color: #D7263D;
+      color: white;
+      border-color: #D7263D;
+      &:hover {
+        opacity: 0.9;
+      }
+    }
+  }
+}

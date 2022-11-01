@@ -1,5 +1,0 @@
-<?php
-
-/*
-for backward compatibility
-*/

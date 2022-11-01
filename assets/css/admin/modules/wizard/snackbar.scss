@@ -1,0 +1,18 @@
+.rsssl{
+  .components-snackbar-list.edit-site-notices{
+    width: max-content;
+    position: fixed;
+    bottom: var(--rsp-spacing-m);
+    right: var(--rsp-spacing-l);
+    & > div{
+      margin-left: auto;
+    }
+    .components-snackbar{
+      @include rsssl-block;
+      color: var(--rsp-color-success);
+      background-color: #fff;
+      font-weight:700;
+      font-size:14px;
+    }
+  }
+}

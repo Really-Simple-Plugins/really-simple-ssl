@@ -1,0 +1,55 @@
+.rsssl-learningmode-placeholder {
+  height:150px;
+  div {
+    background-color:var(--rsp-grey-200);
+    margin:10px 0;
+    height:20px;
+  }
+}
+
+.rsssl-learning-mode-delete {
+  cursor: pointer;
+  background: none;
+  border: none;
+  font-size: 1.5em;
+  font-weight: 700;
+}
+.rsssl-locked-overlay {
+  .rsssl-open {
+    float: left;
+    margin-right: 12px;
+  }
+
+  .rsssl-progress-status {
+    @extend .rsssl-task-status;
+    &.rsssl-learning-mode-completed, &.rsssl-learning-mode-enforced {
+      background-color: var(--rsp-color-success);
+      color:#fff;
+    }
+    &.rsssl-learning-mode {
+      background-color: var(--rsp-color-open);
+
+    }
+    &.rsssl-learning-mode-disabled {
+      background-color: var(--rsp-color-disabled);
+    }
+
+  }
+}
+
+.rsssl-learning-mode-footer {
+  display:flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: var(--rsp-spacing-s);
+  select {
+    margin-left:auto;
+  }
+  label {
+    display: flex;
+    align-items: center;
+    input{
+      margin-top: 0;
+    }
+  }
+}

@@ -1,0 +1,67 @@
+/**
+*
+* Prefix everything
+* Name descriptively
+* Structure radically
+*
+* CSS Structure
+*	css/
+*	├─ admin/
+*	│  ├─ base.scss
+*	│  ├─ layout.scss
+*	│  ├─ modules/
+*	│  │  ├─ modal.scss
+*	│  │  ├─ button.scss
+*	│  │  ├─ modal.scss
+*	│  │  ├─ notices.scss
+*	│  │  ├─ tips-and-tricks.scss
+*	│  │  ├─ etc.....
+*	│  ├─ states.scss
+*	│  ├─ theme.scss
+*	├─ admin.scss
+*	├─ admin.min.css
+*	├─ admin.css
+*	├─ variables.scss
+*
+*/
+
+@import 'variables.scss';
+@import 'admin/base.scss';
+@import 'admin/layout.scss';
+  @import 'admin/modules/modal.scss';
+  @import 'admin/modules/header.scss';
+  @import 'admin/modules/buttons.scss';
+  @import 'admin/modules/bullets.scss';
+  @import 'admin/modules/icons.scss';
+
+  @import 'admin/modules/onboarding.scss';
+  @import 'admin/modules/progress.scss';
+  @import 'admin/modules/ssltest.scss';
+  @import "admin/modules/placeholder.scss";
+  @import 'admin/modules/other-plugins.scss';
+  @import 'admin/modules/tips-tricks.scss';
+  @import 'admin/modules/wizard.scss';
+    @import 'admin/modules/wizard/notice.scss';
+    @import 'admin/modules/wizard/menu.scss';
+    @import 'admin/modules/wizard/fields.scss';
+    @import 'admin/modules/wizard/snackbar.scss';
+    @import 'admin/modules/wizard/mixed-content-scan.scss';
+    @import 'admin/modules/wizard/learning-mode.scss';
+    @import 'admin/modules/wizard/letsencrypt.scss';
+    @import 'admin/modules/wizard/permissions-policy.scss';
+  @import 'admin/modules/notices.scss';
+  @import 'admin/modules/datatables.scss';
+  @import 'admin/modules/new-features.scss';
+
+  //@import 'admin/modules/dark-mode.scss';
+  //@import 'admin/modules/icons.scss';
+
+
+  @import 'admin/modules/animations.scss';
+  @import 'admin/modules/tooltip.scss';
+  //@import 'admin/modules/icons.scss';
+
+  //@import 'admin/modules/suggested-plugins.scss';
+
+@import 'admin/states.scss';
+@import 'admin/theme.scss';

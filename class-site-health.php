@@ -1,19 +1,15 @@
-<?php
-defined('ABSPATH') or die("you do not have access to this page!");
+<?php defined('ABSPATH') or die();
 
-if (!class_exists("rsssl_site_health")) {
+if ( !class_exists("rsssl_site_health") ) {
 	class rsssl_site_health {
-
 		private static $_this;
-
 		function __construct() {
-
 			if ( isset( self::$_this ) ) {
 				wp_die( sprintf( __( '%s is a singleton class and you cannot create a second instance.', 'really-simple-ssl' ), get_class( $this ) ) );
 			}
 
-
-			add_filter( 'site_status_tests', array($this, 'rsssl_health_check' ) );
+			add_filter( 'site_status_tests', array($this, 'health_check' ), 1, 10 );
+			add_filter( 'site_status_tests', array( $this, 'add_rsssl_debug_log_notice' ), 1, 20 );
 
 			self::$_this = $this;
 		}
@@ -22,27 +18,111 @@ if (!class_exists("rsssl_site_health")) {
 			return self::$_this;
 		}
 
-		public function rsssl_health_check( $tests ) {
-
+		/**
+		 * Add SSL dedicated health check
+		 * @param array $tests
+		 *
+		 * @return array
+		 */
+		public function health_check( $tests ) {
 			unset($tests['async']['https_status']);
-
-			if ( !RSSSL()->really_simple_ssl->dismiss_all_notices || is_multisite() && !rsssl_multisite::this()->dismiss_all_notices ) {
-
+			if ( !rsssl_get_option('dismiss_all_notices') ) {
 				$tests['direct']['rsssl-health'] = array(
 					'label' => __( 'SSL Status Test' , 'really-simple-ssl'),
 					'test'  => array($this, "health_test"),
 				);
 
-				if ( RSSSL()->really_simple_ssl->ssl_enabled ) {
-					$tests['direct']['rsssl-headers'] = array(
-						'label' => __( 'Security Headers Test' , 'really-simple-ssl' ),
-						'test'  => array($this, "headers_test"),
-					);
-				}
+				$tests['direct']['rsssl-headers'] = array(
+					'label' => __( 'Security Headers Test' , 'really-simple-ssl' ),
+					'test'  => array($this, "headers_test"),
+				);
 
 			}
 
 			return $tests;
+		}
+
+
+		/**
+		 * Add our own WP_DEBUG_LOG notice
+		 * @return array
+		 */
+		public function add_rsssl_debug_log_notice( $tests ) {
+
+			unset( $tests['direct']['debug_enabled'] );
+			if ( rsssl_is_debugging_enabled() && rsssl_debug_log_value_is_default() ) {
+				$tests['direct']['rsssl_debug_log'] = array(
+					'test' => array( $this, "rsssl_site_health_debug_log_test" ),
+				);
+			}
+
+			if ( defined('WP_DEBUG_DISPLAY') && WP_DEBUG_DISPLAY ) {
+				$tests['direct']['rsssl_debug_display'] = array(
+					'test' => array( $this, "rsssl_site_health_debug_display_test" ),
+				);
+			}
+
+			return $tests;
+		}
+
+		/**
+		 * Generate the WP_DEBUG notice
+		 *
+		 */
+		public function rsssl_site_health_debug_log_test() {
+			$result = array(
+				'label'       => __( 'Your site is set to log errors to a potentially public file' ),
+				'status'      => 'critical',
+				'badge'       => array(
+					'label' => __( 'Security' ),
+					'color' => 'blue',
+				),
+				'description' => sprintf(
+					'<p>%s</p>',
+					__( 'The value, WP_DEBUG_LOG, has been added to this website’s configuration file. This means any errors on the site will be written to a file which is potentially available to all users.' ,'really-simple-ssl' )
+				),
+				'actions'     => sprintf(
+					'<p><a href="%s" target="_blank" rel="noopener">%s <span class="screen-reader-text">%s</span><span aria-hidden="true" class="dashicons dashicons-external"></span></a></p>',
+					/* translators: Documentation explaining debugging in WordPress. */
+					esc_url( __( add_query_arg(array('page'=>'really-simple-security#settings/hardening'), rsssl_admin_url() ) ) ),
+					__( 'Remove from public location with Really Simple SSL', 'really-simple-ssl' ),
+					/* translators: Accessibility text. */
+					__( '(opens in a new tab)' )
+				),
+				'test' => '',
+			);
+
+			return $result;
+		}
+
+		/**
+		 * Explain users about risks of debug display
+		 *
+		 */
+		public function rsssl_site_health_debug_display_test() {
+			$result = array(
+				'label'       => __( 'Your site is set to display errors on your website', 'really-simple-ssl' ),
+				'status'      => 'critical',
+				'badge'       => array(
+					'label' => __( 'Security' ),
+					'color' => 'blue',
+				),
+				'description' => sprintf(
+					'<p>%s</p>',
+					__( 'The value, WP_DEBUG_DISPLAY, has either been enabled by WP_DEBUG or added to your configuration file. This will make errors display on the front end of your site.' ,'really-simple-ssl' )
+				),
+				'actions'     => sprintf(
+					'<p><a href="%s" target="_blank" rel="noopener">%s <span class="screen-reader-text">%s</span><span aria-hidden="true" class="dashicons dashicons-external"></span></a></p>',
+					/* translators: Documentation explaining debugging in WordPress. */
+					esc_url( 'https://really-simple-ssl.com/security/debug-display-enabled' ),
+					__( 'Read more about security concerns with debug display enabled', 'really-simple-ssl' ),
+					/* translators: Accessibility text. */
+					__( '(opens in a new tab)' )
+				),
+				'test' => '',
+			);
+
+			return $result;
 		}
 
 		/**
@@ -67,7 +147,7 @@ if (!class_exists("rsssl_site_health")) {
 			);
 
 			//returns empty for sites without .htaccess, or if all headers are already in use
-			$recommended_headers = RSSSL()->really_simple_ssl->get_recommended_security_headers();
+			$recommended_headers = RSSSL()->admin->get_recommended_security_headers();
 			if (!empty($recommended_headers)) {
 				$style = '<style>.rsssl-sec-headers-list li {list-style-type:disc;margin-left:20px;}</style>';
 				$list = '<ul class="rsssl-sec-headers-list"><li>'.implode('</li><li>', $recommended_headers ).'</li></ul>';
@@ -85,15 +165,11 @@ if (!class_exists("rsssl_site_health")) {
 		}
 
 		/**
-		 * Some basic health checks
+		 * Some basic SSL health checks
 		 * @return array
 		 */
 		public function health_test() {
-			if (is_multisite() && is_super_admin() ){
-				$url = add_query_arg(array('page' => 'really-simple-ssl'), network_admin_url('settings.php'));
-			} else {
-				$url = add_query_arg(array('page' => 'rlrsssl_really_simple_ssl'), admin_url("options-general.php") );
-			}
+			$url = add_query_arg(array('page' => 'really-simple-security'), rsssl_admin_url() );
 
 			$result = array(
 				'label'       => __( '301 SSL redirect enabled', 'really-simple-ssl' ),
@@ -110,8 +186,8 @@ if (!class_exists("rsssl_site_health")) {
 				'test'        => 'health_test',
 			);
 
-			if (!RSSSL()->really_simple_ssl->ssl_enabled) {
-				if ( RSSSL()->really_simple_ssl->site_has_ssl ) {
+			if ( !rsssl_get_option('ssl_enabled') ) {
+				if ( rsssl_get_option('site_has_ssl') ) {
 					$result['status']      = 'critical';
 					$result['label']       = __( 'SSL is not enabled.', 'really-simple-ssl' );
 					$result['description'] = sprintf(
@@ -133,7 +209,7 @@ if (!class_exists("rsssl_site_health")) {
 					);
 				}
 			} else {
-				if ( !RSSSL()->really_simple_ssl->has_301_redirect() ) {
+				if ( !RSSSL()->admin->has_301_redirect() ) {
 					$result['status']      = 'recommended';
 					$result['label']       = __( 'No 301 redirect to SSL enabled.' , 'really-simple-ssl' );
 					$result['description'] = sprintf(
@@ -145,7 +221,7 @@ if (!class_exists("rsssl_site_health")) {
 						$url,
 						__( 'Enable 301 redirect', 'really-simple-ssl' )
 					);
-				} else if ( !is_multisite() && RSSSL()->rsssl_server->uses_htaccess() && !RSSSL()->really_simple_ssl->htaccess_redirect) {
+				} else if ( RSSSL()->server->uses_htaccess() && rsssl_get_option('redirect')!=='htaccess') {
 					$result['status']      = 'recommended';
 					$result['label']       = __( '301 .htaccess redirect is not enabled.' , 'really-simple-ssl' );
 					$result['description'] = sprintf(

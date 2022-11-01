@@ -1,0 +1,63 @@
+.rsssl{
+  // Plugin specific variables down here please
+  --rsp-brand-primary: var(--rsp-yellow);
+  --rsp-brand-secondary: var(--rsp-blue);
+  --rsp-brand-primary-faded: var(--rsp-yellow-faded);
+}
+//@media (prefers-color-scheme: dark) {
+//  :root {
+//    // Borders and stuff;
+//    --rsp-border: 1px solid var(--rsp-border-color);
+//    --rsp-box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 6px -1px, rgba(0, 0, 0, 0.06) 0px 2px 4px -1px;
+//    --rsp-box-shadow-dark: rgba(0, 0, 0, 0.2) 0px 4px 6px -1px, rgba(0, 0, 0, 0.12) 1px 0px 4px 1px;
+//    --rsp-border-color: #dfdfdf;
+//
+//    // RSP Brand Colors
+//    --rsp-black: #333;
+//    --rsp-white: #fff;
+//    --rsp-yellow: #f4bf3e;
+//    --rsp-blue: #29b6f6;
+//    --rsp-dark-blue: #1E73BE;
+//    --rsp-green: #2e8a37;
+//    --rsp-red: #D7263D;
+//    --rsp-pink: #E35899;
+//    --rsp-wp-blue: #007cba;
+//
+//    --rsp-yellow-faded: #f2e6c9;
+//    --rsp-blue-faded: #ecf8fe;
+//    --rsp-dark-blue-faded: #ebf2f9;
+//    --rsp-green-faded: #ecf4ed;
+//    --rsp-red-faded: #fbebed;
+//    --rsp-pink-faded: #fceff5;
+//    --rsp-wp-blue-faded: #c6e0ef;
+//
+//    --rsp-background-block-color: var(--rsp-black);
+//    --rsp-background-color: var(--rsp-grey-600);
+//
+//    //Input colors
+//    --rsp-input-background-color: #fff;
+//    --rsp-input-text-color: var(--rsp-text-color);
+//    --rsp-input-border-color: var(--rsp-grey-400);
+//
+//    --rsp-text-color: rgba(255, 255, 255, 0.95);
+//    --rsp-text-color-invert: rgba(26, 26, 26, 0.95);
+//    --rsp-text-color-white: rgba(255, 255, 255, 0.95);
+//    --rsp-text-color-light: rgba(69, 69, 82, 0.95);
+//
+//    --rsp-grey-100: #fafafa;
+//    --rsp-grey-200: #f9f9f9;
+//    --rsp-grey-300: #ededed;
+//    --rsp-grey-400: #c6c6c6;
+//    --rsp-grey-500: #737373;
+//    --rsp-grey-600: #696969;
+//
+//    // Notification colors
+//    --rsp-color-success: var(--rsp-green);
+//    --rsp-color-error: var(--rsp-red);
+//    --rsp-color-open: var(--rsp-yellow);
+//    --rsp-color-disabled: var(--rsp-grey-300);
+//  }
+//  .rsssl-header .rsssl-logo{
+//    filter: brightness(0) invert(1);
+//  }
+//}

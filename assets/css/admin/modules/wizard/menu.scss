@@ -1,0 +1,85 @@
+.rsssl-wizard-menu{
+  height: fit-content;
+  .rsssl-grid-item-content{
+    padding: 0;
+    padding-bottom: var(--rsp-spacing-l);
+  }
+}
+.rsssl-wizard-menu-items {
+  .rsssl-menu-item{
+    a{
+      display: flex;
+      align-items: center;
+      gap: var(--rsp-spacing-xs);
+      text-decoration: none;
+      color: var(--rsp-text-color);
+      font-size: var(--rsp-fs-400);
+      padding-block: var(--rsp-spacing-xs);
+      @include rsssl-inline-block-padding;
+      transition: all 0.2s ease-in-out;
+      border-left: 4px solid transparent;
+    }
+    &.rsssl-active{
+      > a{
+        //text-decoration: underline;
+        color: var(--rsp-dark-blue);
+        font-weight: 600;
+        border-left: 4px solid var(--rsp-dark-blue);
+        //background-color: #f2e6c966;
+      }
+    }
+    &.rsssl-featured{
+      a{
+        //padding-block: var(--rsp-spacing-m);
+        //background: var(--rsp-dark-blue-faded);
+        font-weight: 600;
+        flex-wrap: wrap;
+        .rsssl-menu-item-featured-pill{
+            background: var(--rsp-green);
+            color: var(--rsp-text-color-white);
+            padding: 2px 9px;
+            border-radius: var(--rsp-border-radius);
+            font-size: var(--rsp-fs-100);
+        }
+      }
+    }
+
+
+    &.rsssl-premium{
+      a{
+        background: var(--rsp-dark-blue-faded);
+        flex-wrap: wrap;
+        .rsssl-menu-item-featured-pill{
+          background: var(--rsp-dark-blue);
+          color: var(--rsp-text-color-white);
+          padding: 2px 9px;
+          border-radius: var(--rsp-border-radius);
+          font-size: var(--rsp-fs-100);
+        }
+      }
+    }
+  }
+
+  .rsssl-premium-menu-item {
+    background: var(--rsp-dark-blue-faded);
+    div {
+      display: flex;
+      align-items: center;
+      gap: var(--rsp-spacing-xs);
+      text-decoration: none;
+      color: var(--rsp-text-color);
+      font-size: var(--rsp-fs-400);
+      padding-block: var(--rsp-spacing-xs);
+      @include rsssl-inline-block-padding;
+      transition: all 0.2s ease-in-out;
+      border-left: 4px solid transparent;
+    }
+  }
+
+  .rsssl-submenu-item{
+    a{
+      padding-left: calc(var(--rsp-spacing-l) + var(--rsp-spacing-m));
+      font-size: var(--rsp-fs-300);
+    }
+  }
+}

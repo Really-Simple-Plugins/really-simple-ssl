@@ -28,7 +28,7 @@ if ( ! class_exists( 'rsssl_server' ) ) {
 				return false;
 			}
 
-			if ( $this->get_server() == "apache" || $this->get_server() == "litespeed" ) {
+			if ( $this->get_server() === "apache" || $this->get_server() === "litespeed" ) {
 				return true;
 			}
 

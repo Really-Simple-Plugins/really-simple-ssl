@@ -35,8 +35,8 @@ class rsssl_Cloudways {
 	 */
 
 	public function __construct( ) {
-		$this->email             = rsssl_get_value('cloudways_user_email');
-		$this->api_key = RSSSL_LE()->letsencrypt_handler->decode( rsssl_get_value('cloudways_api_key') );
+		$this->email             = rsssl_get_option('cloudways_user_email');
+		$this->api_key = RSSSL_LE()->letsencrypt_handler->decode( rsssl_get_option('cloudways_api_key') );
 		$this->ssl_installation_url = "";
 	}
 
@@ -86,13 +86,11 @@ class rsssl_Cloudways {
 				return new RSSSL_RESPONSE( 'error', 'stop', $output->message );
 			} else if ( $httpcode != '200' ) {
 				$message = $httpcode . ' output: ' . substr( $output, 0, 10000 );
-				error_log(print_r($message, true));
 				return new RSSSL_RESPONSE( 'error', 'stop', $message );
 			}
 			curl_close( $ch );
 			return new RSSSL_RESPONSE( 'success', 'continue', '', json_decode( $output ) );
 		} catch(Exception $e) {
-			error_log(print_r($e,true));
 			return new RSSSL_RESPONSE( 'error', 'stop', $e->getMessage() );
 		}
 	}
@@ -104,14 +102,9 @@ class rsssl_Cloudways {
 	 */
 
 	private function getAccessToken() {
-		error_log("try retrieving access token");
 		$accessToken = get_transient('rsssl_cw_t');
 		if (!$accessToken) {
-			error_log("not found, get new");
-
 			$response = $this->callCloudwaysAPI( 'POST', '/oauth/access_token', null, [ 'email' => $this->email, 'api_key' => $this->api_key ] );
-			error_log("api call output");
-			error_log(print_r($response, true));
 			if ($response->status === 'success' ) {
 				$accessToken   = $response->output->access_token;
 				set_transient('rsssl_cw_t', $accessToken, 1800);
@@ -129,8 +122,6 @@ class rsssl_Cloudways {
 	 */
 
 	public function installSSL($domains){
-		error_log("starting installation");
-
 		$response = $this->getAccessToken();
 		if ( $response->status !== 'success' ) {
 			return new RSSSL_RESPONSE('error','stop',$response->message);
@@ -229,12 +220,10 @@ class rsssl_Cloudways {
 		if ($response->status === 'success') {
 			$serverList = $response->output;
 			$servers = $serverList->servers;
-			error_log(print_r($servers, true));
 			foreach ($servers as $server ){
 				$apps = $server->apps;
 				foreach ($apps as $app ){
 					$app_domain = $app->cname;
-					error_log("app domain ".$app_domain);
 					$this_site_domain = str_replace(array('https://', 'http://', 'www.'), '',site_url());
 					if (strpos($app_domain, $this_site_domain) !== false ) {
 						$success = true;

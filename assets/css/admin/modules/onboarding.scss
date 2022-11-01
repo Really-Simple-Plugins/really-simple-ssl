@@ -1,0 +1,36 @@
+.rsssl-modal.rsssl-onboarding {
+  width: clamp(300px, 100ch, 100vw );
+  .rsssl-logo {
+    height: 26px;
+  }
+  .rsssl-modal-content{
+    padding-top: var(--rsp-spacing-xs);
+    line-height: 2.2;
+    ul{
+      margin-bottom: var(--rsp-spacing-m);
+      li {
+        display: flex;
+        align-items: flex-start;
+        margin-bottom: var(--rsp-spacing-xxs);
+        .rsssl-icon{
+          margin-top: 7px;
+          margin-right:7px;
+        }
+      }
+    }
+  }
+  .rsssl-modal-content-step-footer {
+    display:flex;
+    align-items: center;
+    margin-top: var(--rsp-spacing-l);
+    gap: var(--rsp-spacing-m);
+    .components-toggle-control .components-base-control__field{
+      margin:0;
+    }
+    button, a, label{
+        //font-size: var(--rsp-fs-400);
+        //font-weight: 500;
+        //line-height: 1.5;
+    }
+  }
+}

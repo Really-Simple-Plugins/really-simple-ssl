@@ -1,0 +1,60 @@
+.rsssl-tips_tricks{
+	.rsssl-grid-item-header{
+		.rsssl-grid-item-controls{
+			height: 28px;
+		}
+	}
+}
+.rsssl-tips-tricks-container {
+  display: flex !important;
+  flex-direction: row;
+  flex-wrap: wrap;
+  margin-bottom: 10px;
+  font-size: var(--rsp-fs-300);
+  line-height: 1.7;
+  gap: var(--rsp-spacing-xxs);
+
+  @media screen and (max-width: 992px) {
+	flex-direction: row;
+	overflow: hidden;
+  }
+
+  .rsssl-tips-tricks-element {
+	width: calc(50% - var(--rsp-spacing-xxs));
+	@media( max-width: $rsp-break-xs ){
+	  width: 100%;
+	}
+	a {
+	  color: var(--rsp-text-color-light);
+	  transition: color 0.3s ease;
+	  display: flex;
+	  align-items: center;
+	  gap: var(--rsp-spacing-xs);
+	  min-width: 0; /* or some value */
+	  text-decoration: none;
+
+	  &:hover {
+		color: var(--rsp-brand-primary);
+		text-decoration: underline;
+
+		svg path{
+		  fill: var(--rsp-brand-primary);
+		}
+
+		.rsssl-tips-tricks-content {
+		  text-decoration: underline;
+		}
+	  }
+	}
+
+	.rsssl-bullet {
+	  transition: background-color 0.3s ease;
+	  background-color: var(--rsp-grey-300);
+	}
+	.rsssl-tips-tricks-content {
+	  white-space: nowrap;
+	  overflow: hidden;
+	  text-overflow: ellipsis;
+	}
+  }
+}

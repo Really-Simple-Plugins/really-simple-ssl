@@ -41,10 +41,10 @@ class rsssl_plesk
 	 */
 	public function __construct()
 	{
-		$password = RSSSL_LE()->letsencrypt_handler->decode( rsssl_get_value('plesk_password') );
-		$host = rsssl_get_value('plesk_host');
+		$password = RSSSL_LE()->letsencrypt_handler->decode( rsssl_get_option('plesk_password') );
+		$host = rsssl_get_option('plesk_host');
 		$this->host =  str_replace(array('http://', 'https://', ':8443'), '', $host);
-		$this->login = rsssl_get_value('plesk_username');
+		$this->login = rsssl_get_option('plesk_username');
 		$this->password = $password;
 		$this->ssl_installation_url = 'https://'.$this->host.":8443/smb/ssl-certificate/list/id/21";
 	}
@@ -80,15 +80,13 @@ class rsssl_plesk
 				'cert' => file_get_contents($cert_file),
 				'ca' => file_get_contents($cabundle_file),
 			]);
-			error_log(print_r($response,true));
-			update_option('rsssl_le_certificate_installed_by_rsssl', 'plesk');
+			update_option('rsssl_le_certificate_installed_by_rsssl', 'plesk', false);
 			delete_option('rsssl_installation_error' );
 			$status = 'success';
 			$action = 'continue';
 			$message = __('Successfully installed SSL',"really-simple-ssl");
 		} catch(Exception $e) {
-			error_log(print_r($e,true));
-			update_option('rsssl_installation_error', 'plesk');
+			update_option('rsssl_installation_error', 'plesk', false);
 			$status = 'warning';
 			$action = 'continue';
 			$message = $e->getMessage();

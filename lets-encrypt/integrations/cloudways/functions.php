@@ -13,7 +13,7 @@ function rsssl_cloudways_install_ssl(){
 		$cloudways = new rsssl_Cloudways();
 		$response =  $cloudways->installSSL($domains);
 		if ($response->status === 'success') {
-			update_option('rsssl_le_certificate_installed_by_rsssl', 'cloudways');
+			update_option('rsssl_le_certificate_installed_by_rsssl', 'cloudways', false);
 		}
 		return $response;
 	} else {
@@ -30,45 +30,33 @@ function rsssl_cloudways_auto_renew(){
 	return $cloudways->enableAutoRenew();
 }
 
-function rsssl_cloudways_add_condition_actions($steps){
-	$index = array_search('installation',array_column($steps['lets-encrypt'],'id'));
-	$index++;
-
-	$steps['lets-encrypt'][$index]['actions'] = array(
+function rsssl_cloudways_add_condition_actions($fields){
+	$index = array_search('installation',array_column($fields,'id'));
+	$fields[$index]['actions'] = array(
 		array(
 			'description' => __("Retrieving Cloudways server data...", "really-simple-ssl"),
 			'action'=> 'rsssl_cloudways_server_data',
 			'attempts' => 5,
-			'speed' => 'normal',
+			'status'      => 'inactive',
 		),
 		array(
 			'description' => __("Installing SSL certificate...", "really-simple-ssl"),
 			'action'=> 'rsssl_cloudways_install_ssl',
 			'attempts' => 5,
-			'speed' => 'normal',
+			'status'      => 'inactive',
 		),
 		array(
 			'description' => __("Enabling auto renew...", "really-simple-ssl"),
 			'action'=> 'rsssl_cloudways_auto_renew',
 			'attempts' => 5,
-			'speed' => 'normal',
+			'status'      => 'inactive',
 		),
 	);
 
-	return $steps;
-}
-add_filter( 'rsssl_steps', 'rsssl_cloudways_add_condition_actions' );
-
-/**
- * Drop store credentials field
- * @param $fields
- *
- * @return mixed
- */
-function rsssl_cloudways_fields($fields){
-	unset($fields['store_credentials']);
-
+	//drop store credentials field
+	$creds_index = array_search('store_credentials',array_column($fields,'id'));
+	unset($fields[$creds_index]);
 	return $fields;
 }
-add_filter( 'rsssl_fields_load_types', 'rsssl_cloudways_fields' );
+add_filter( 'rsssl_fields', 'rsssl_cloudways_add_condition_actions' );
 

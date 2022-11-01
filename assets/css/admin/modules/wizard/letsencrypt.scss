@@ -1,0 +1,123 @@
+.rsssl-lets-encrypt-tests {
+  margin:var(--rsp-spacing-xs) var(--rsp-spacing-xl);
+  .rsssl-progress-bar {
+    padding-block: 0;
+    margin-bottom:var(--rsp-spacing-m);
+    .rsssl-progress {
+      overflow: hidden;
+      height: var(--rsp-spacing-m);
+      border-radius: 5px;
+      background-color: var(--rsp-grey-200);
+
+      .rsssl-bar {
+        height: 100%;
+        background-color: var(--rsp-color-success);
+
+        &.rsssl-orange {
+          background-color: var(--rsp-color-warning);
+        }
+      }
+    }
+  }
+
+  p {
+    margin-bottom:var(--rsp-spacing-m);
+  }
+
+  .rsssl-progress-text {
+    display: flex;
+    align-items: center;
+    @include rsssl-block-padding;
+    padding-block: 0;
+    padding-top: var(--rsp-spacing-xs);
+
+    .rsssl-progress-percentage {
+      font-size: 32px;
+      font-weight: 700;
+    }
+
+    .rsssl-progress-text-span {
+      margin-left: 35px;
+      font-size: 18px;
+      font-weight: 600;
+      a {
+        margin-left: 3px;
+      }
+    }
+  }
+
+  ul {
+    li {
+      display:flex;
+      margin-bottom:15px;
+      .rsssl-icon {
+        margin-right:7px;
+      }
+
+      /*Nested li */
+      ul li:before {
+        background-color: var(--rsp-grey-500);
+        color: #fff;
+        height: 6px;
+        width: 6px;
+        border-radius: 50%;
+        content: '';
+        position: absolute;
+        margin-top: 7px;
+        margin-left: -19px;
+      }
+    }
+  }
+
+  .rsssl-test-results {
+    ul {
+      li {
+        display:block;
+      }
+    }
+    h4 {
+      margin:var(--rsp-spacing-m) 0;
+    }
+    a+button {
+      margin-left:var(--rsp-spacing-m);
+    }
+    .rsssl-certificate-data {
+      display:none;
+    }
+    .rsssl-dns-text-records {
+
+      div {
+        display:flex;
+        flex-direction: row;
+        .rsssl-dns-domain, .rsssl-dns-field {
+          margin-right:var(--rsp-spacing-m);
+          width: 50%;
+        }
+      }
+    }
+  }
+
+  .rsssl-modal-content-step-footer {
+    display:flex;
+    align-items: center;
+    margin-top: var(--rsp-spacing-l);
+    gap: var(--rsp-spacing-m);
+    .components-toggle-control .components-base-control__field{
+      margin:0;
+      flex-direction: initial;
+      .components-toggle-control__label {
+        margin-right:12px;
+      }
+    }
+    //button, a, label{
+    //  font-size: var(--rsp-fs-400);
+    //  font-weight: 500;
+    //  line-height: 1.5;
+    //}
+  }
+
+  .rsssl-modal-subtitle {
+    display:none;
+  }
+}
+

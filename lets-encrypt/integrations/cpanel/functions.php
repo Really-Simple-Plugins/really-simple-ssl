@@ -2,12 +2,12 @@
 defined( 'ABSPATH' ) or die();
 
 function rsssl_install_cpanel_autossl(){
-	if (rsssl_is_ready_for('installation')) {
+	if ( rsssl_is_ready_for('installation') ) {
 		$cpanel = new rsssl_cPanel();
 		$domains = RSSSL_LE()->letsencrypt_handler->get_subjects();
 		$response = $cpanel->enableAutoSSL($domains);
 		if ( $response->status === 'success' ) {
-			update_option('rsssl_le_certificate_installed_by_rsssl', 'cpanel:autossl');
+			update_option('rsssl_le_certificate_installed_by_rsssl', 'cpanel:autossl', false);
 		}
 		return $response;
 	} else {
@@ -24,7 +24,7 @@ function rsssl_install_cpanel_default(){
 		$domains = RSSSL_LE()->letsencrypt_handler->get_subjects();
 		$response = $cpanel->installSSL($domains);
 		if ( $response->status === 'success' ) {
-			update_option('rsssl_le_certificate_installed_by_rsssl', 'cpanel:default');
+			update_option('rsssl_le_certificate_installed_by_rsssl', 'cpanel:default', false);
 		}
 		return $response;
 	} else {
@@ -52,7 +52,7 @@ function rsssl_cpanel_set_txt_record(){
 		}
 
 		if ( $response->status === 'success' ) {
-			update_option('rsssl_le_dns_configured_by_rsssl', true);
+			update_option('rsssl_le_dns_configured_by_rsssl', true, false);
 		}
 		return $response;
 	} else {
@@ -63,50 +63,53 @@ function rsssl_cpanel_set_txt_record(){
 	}
 }
 
+/**
+ * Add actions for cpanel
+ * @param array $fields
+ *
+ * @return array
+ */
 
-
-
-function rsssl_cpanel_add_condition_actions($steps){
+function rsssl_cpanel_add_condition_actions($fields){
 	$cpanel = new rsssl_cPanel();
 	if ( $cpanel->credentials_available() ) {
 		//this defaults to true, if not known.
-		$auto_ssl    = RSSSL_LE()->config->host_api_supported( 'cpanel:autossl' );
-		$default_ssl = RSSSL_LE()->config->host_api_supported( 'cpanel:default' );
+		$auto_ssl    = RSSSL_LE()->hosts->host_api_supported( 'cpanel:autossl' );
+		$default_ssl = RSSSL_LE()->hosts->host_api_supported( 'cpanel:default' );
 
-		$installation_index = array_search( 'installation', array_column( $steps['lets-encrypt'], 'id' ) );
-		$dns_index = array_search( 'dns-verification', array_column( $steps['lets-encrypt'], 'id' ) );
-		$installation_index ++;
-		$dns_index ++;
+		$installation_index = array_search( 'installation', array_column( $fields, 'id' ) );
+		$dns_index = array_search( 'dns-verification', array_column( $fields, 'id' ) );
 
 		//clear existing array
-		if ($auto_ssl || $default_ssl ) $steps['lets-encrypt'][ $installation_index ]['actions'] = array();
+		if ( $auto_ssl || $default_ssl ) {
+			$fields[ $installation_index ]['actions'] = array();
+		}
 		if ( $auto_ssl ) {
-			$steps['lets-encrypt'][ $installation_index ]['actions'][]
-				= array(
+			$fields[ $installation_index ]['actions'][] = [
 				'description' => __( "Attempting to install certificate using AutoSSL...", "really-simple-ssl" ),
 				'action'      => 'rsssl_install_cpanel_autossl',
 				'attempts'    => 1,
-			);
+				'status'      => 'inactive',
+			];
 		}
 
 		if ( $default_ssl ) {
-			$steps['lets-encrypt'][ $dns_index ]['actions'][]
-				= array(
+			$fields[ $dns_index ]['actions'][] = [
 				'description' => __( "Attempting to set DNS txt record...", "really-simple-ssl" ),
 				'action'      => 'rsssl_cpanel_set_txt_record',
 				'attempts'    => 1,
-			);
+				'status'      => 'inactive',
+			];
 
-			$steps['lets-encrypt'][ $installation_index ]['actions'][]
-				= array(
+			$fields[ $installation_index ]['actions'][] = [
 				'description' => __( "Attempting to install certificate...", "really-simple-ssl" ),
 				'action'      => 'rsssl_install_cpanel_default',
 				'attempts'    => 1,
-			);
+				'status'      => 'inactive',
+			];
 		}
 	}
 
-	return $steps;
+	return $fields;
 }
-
-add_filter( 'rsssl_steps', 'rsssl_cpanel_add_condition_actions' );
+add_filter("rsssl_fields", "rsssl_cpanel_add_condition_actions");

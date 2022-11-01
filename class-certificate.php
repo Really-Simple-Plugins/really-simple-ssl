@@ -1,20 +1,14 @@
-<?php
-
-defined('ABSPATH') or die("you do not have access to this page!");
+<?php defined('ABSPATH') or die();
 
 if ( ! class_exists( 'rsssl_certificate' ) ) {
     class rsssl_certificate
     {
         private static $_this;
-
         function __construct()
         {
-
             if (isset(self::$_this))
                 wp_die(sprintf(__('%s is a singleton class and you cannot create a second instance.', 'really-simple-ssl'), get_class($this)));
-
             self::$_this = $this;
-
         }
 
         static function this()
@@ -34,38 +28,35 @@ if ( ! class_exists( 'rsssl_certificate' ) ) {
 
         public function is_valid()
         {
-            //Get current domain
-            $domain = site_url();
-            //Parse to strip off any /subfolder/
-            $parse = parse_url($domain);
-            if ( !isset($parse['host']) || !function_exists('stream_context_get_params') ) {
+
+            $domain = $this->get_domain();
+            if ( !$domain || !function_exists('stream_context_get_params') ) {
 				set_transient('rsssl_certinfo', 'no-response', DAY_IN_SECONDS);
             } else {
-	            $domain = $parse['host'];
                 $certinfo = $this->get_certinfo($domain);
-
                 if ( !$certinfo ) {
-                	RSSSL()->really_simple_ssl->trace_log("- SSL certificate not valid");
                 	return false;
                 }
 
-                //Check if domain is valid
                 $domain_valid = $this->is_domain_valid($certinfo, $domain);
-                if ( !$domain_valid ) {
-	                RSSSL()->really_simple_ssl->trace_log("- Domain on certificate does not match website's domain");
-                }
-                //Check if date is valid
                 $date_valid = $this->is_date_valid($certinfo);
-	            if ( !$date_valid ) {
-		            RSSSL()->really_simple_ssl->trace_log("- Date on certificate expired or not valid");
-	            }
-                //Domain and date valid? Return true
                 if ( $domain_valid && $date_valid ) {
                     return true;
                 }
             }
             return false;
         }
+
+	    /**
+	     * get domain
+	     * @return string
+	     */
+		public function get_domain(){
+			$domain = site_url();
+			//Parse to strip off any /subfolder/
+			$parse = parse_url($domain);
+			return isset($parse['host']) ? $parse['host'] : false;
+		}
 
        /**
         *
@@ -232,7 +223,7 @@ if ( ! class_exists( 'rsssl_certificate' ) ) {
 				return false;
 	        }
 
-	        if (!$certinfo || RSSSL()->really_simple_ssl->is_settings_page()) {
+	        if (!$certinfo || RSSSL()->admin->is_settings_page()) {
 	            $url = 'https://'.str_replace(array('https://', 'http://'), '', $url);
                 $original_parse = parse_url($url, PHP_URL_HOST);
                 if ($original_parse) {

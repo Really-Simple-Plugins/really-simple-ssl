@@ -1,0 +1,87 @@
+.rsssl {
+  div[class^="rsssl-wizard-"] { // starts with selector
+    .rsssl-helplink {
+      color: var(--rsp-text-color);
+    }
+
+    .rsssl-grid-item {
+      position: relative; //to ensure the rsssl-lock stays within the div
+      margin-bottom: var(--rsp-grid-gap);
+      @media(max-width: $rsp-break-s) {
+        grid-column: span 4;
+      }
+    }
+    &.rsssl-column-2{
+      grid-column: span 2;
+      @media(max-width: $rsp-break-s) {
+        grid-column: span 4;
+      }
+    }
+
+    .rsssl-locked {
+      position: absolute;
+      z-index: 10;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      right: 0;
+      background: rgba(255, 255, 255, 0.8);
+      border-radius: var(--rsp-border-radius);
+      .rsssl-shield-overlay {
+        height: 0;
+        top: calc(100% - 190px);
+        position: relative;
+        align-items: center;
+        justify-content: center;
+        display: flex;
+      }
+      .rsssl-locked-overlay {
+        z-index: 1;
+        top: calc(100% - 95px);
+        position: relative;
+        display: flex;
+        align-items: center;
+        gap: var(--rsp-spacing-s);
+        background-color: var(--rsp-white);
+        @include rsssl-block-padding;
+        border-radius: var(--rsp-border-radius-input);
+        margin: var(--rsp-spacing-s);
+        box-shadow: var(--rsp-box-shadow);
+
+        .rsssl-open {
+          float: left;
+          margin-right: 12px;
+        }
+
+        .rsssl-progress-status {
+          float: left;
+          margin-right: 20px;
+        }
+      }
+    }
+
+    .rsssl-grid-item-footer {
+      justify-content: flex-end;
+      padding: 0;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: var(--rsp-grid-margin);
+      width: 100%;
+      min-height: 20px;
+      box-sizing: border-box;
+      align-self: flex-end;
+
+      .rsssl-legend {
+        display: flex;
+        span {
+          padding-left: 5px;
+        }
+      }
+
+      &:empty {
+        display: none;
+      }
+    }
+  }
+}

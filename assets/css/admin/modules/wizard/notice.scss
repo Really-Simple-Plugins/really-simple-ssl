@@ -1,0 +1,81 @@
+.rsssl-wizard-help {
+  display: flex;
+  flex-wrap: wrap;
+  align-content: flex-start;
+  gap: var(--rsp-spacing-xs);
+  details{
+    font-size: var(--rsp-fs-200);
+    .rsssl-help-more-info {
+        display: flex;
+        flex-direction: row;
+        margin-top: 12px;
+    }
+    summary {
+
+      display: grid;
+      grid-template-columns: 1fr auto;
+      justify-content: space-between;
+      font-size: var(--rsp-fs-300);
+      font-weight: 600;
+      cursor:pointer;
+      &::-webkit-details-marker {
+        display:none;
+      }
+      &:first-of-type {
+        list-style-type: none;
+      }
+      .rsssl-icon{
+        transition: all .3s ease-in-out;
+        transform: rotate(0deg);
+      }
+    }
+  }
+  code{
+    white-space: pre-line;
+    display: block;
+  }
+  summary, p {
+    font-size: var(--rsp-fs-200);
+  }
+  details[open]{
+    padding: var(--rsp-spacing-s) var(--rsp-spacing-m);
+    summary{
+      padding: 0;
+      padding-bottom: var(--rsp-spacing-xs);
+      .rsssl-icon{
+        transform: rotate(180deg);
+      }
+    }
+  }
+}
+
+.rsssl-wizard-help {
+  .rsssl-help-header {
+    width:100%;
+    display:flex;
+    padding:10px;
+    .rsssl-help-title{
+      font-size:18px;
+    }
+    .rsssl-help-control {
+      margin-left:auto;
+      cursor:pointer;
+    }
+
+  }
+}
+
+.rsssl-wizard-help-notice {
+  width: 100%;
+  @include rsssl-block;
+  border-radius: var(--rsp-border-radius-s);
+  height: fit-content;
+  background-color: var(--rsp-dark-blue-faded);
+  &.rsssl-warning {
+    background-color: var(--rsp-yellow-faded);
+  }
+  summary, p{
+    padding: var(--rsp-spacing-s) var(--rsp-spacing-m);
+  }
+}
+

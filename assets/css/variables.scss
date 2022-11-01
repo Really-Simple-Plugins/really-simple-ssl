@@ -1,0 +1,143 @@
+// Break points
+$rsp-break-xxs: 576px;
+$rsp-break-xs: 782px; // wp breakpoint
+$rsp-break-s: 1080px;
+$rsp-break-m: 1280px;
+$rsp-break-l: 1366px;
+$rsp-break-xl: 1440px; // common 13 inch macbook pro width is 1425px
+$rsp-break-xxl: 1599px;
+
+:root {
+  // Margins, Paddings and Border Radius
+  --rsp-spacing-xxs: 5px;
+  --rsp-spacing-xs: 10px;
+  --rsp-spacing-s: 15px;
+  --rsp-spacing-m: 20px;
+  --rsp-spacing-l: 25px;
+  --rsp-spacing-xl: 30px;
+
+  // Grid settings
+  --rsp-grid-margin: var(--rsp-spacing-s);
+  --rsp-grid-gap: var(--rsp-spacing-m);
+
+  // Borders and stuff
+  --rsp-border-radius: 12px;
+  --rsp-border-radius-s: 8px;
+  --rsp-border: 1px solid var(--rsp-border-color);
+  --rsp-box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 6px -1px, rgba(0, 0, 0, 0.06) 0px 2px 4px -1px;
+  --rsp-box-shadow-dark: rgba(0, 0, 0, 0.2) 0px 4px 6px -1px, rgba(0, 0, 0, 0.12) 1px 0px 4px 1px;
+  --rsp-border-color: #dfdfdf;
+
+  // RSP Brand Colors
+  --rsp-black: #333;
+  --rsp-white: #fff;
+  --rsp-yellow: #f4bf3e;
+  --rsp-blue: #29b6f6;
+  --rsp-dark-blue: #1E73BE;
+  --rsp-green: #2e8a37;
+  --rsp-red: #D7263D;
+  --rsp-pink: #E35899;
+  --rsp-wp-blue: #007cba;
+
+  --rsp-yellow-faded: #f2e6c9;
+  --rsp-blue-faded: #ecf8fe;
+  --rsp-dark-blue-faded: #ebf2f9;
+  --rsp-green-faded: #ecf4ed;
+  --rsp-red-faded: #fbebed;
+  --rsp-pink-faded: #fceff5;
+  --rsp-wp-blue-faded: #c6e0ef;
+
+  --rsp-background-block-color: var(--rsp-white);
+  --rsp-background-color: #f0f0f1; //#f0f0f1 is the default wordpress bg color
+
+  //Input colors
+  --rsp-input-background-color: #fff;
+  --rsp-input-text-color: var(--rsp-text-color);
+  --rsp-input-border-color: var(--rsp-grey-400);
+
+  --rsp-text-color: rgba(26, 26, 26, 0.95);
+  --rsp-text-color-invert: rgba(255, 255, 255, 0.95);
+  --rsp-text-color-white: rgba(255, 255, 255, 0.95);
+  --rsp-text-color-light: rgba(69, 69, 82, 0.95);
+
+  --rsp-grey-100: #fafafa;
+  --rsp-grey-200: #f9f9f9;
+  --rsp-grey-300: #ededed;
+  --rsp-grey-400: #c6c6c6;
+  --rsp-grey-500: #737373;
+  --rsp-grey-600: #696969;
+
+  // Notification colors
+  --rsp-color-success: var(--rsp-green);
+  --rsp-color-error: var(--rsp-red);
+  --rsp-color-warning: var(--rsp-yellow);
+  --rsp-color-open: var(--rsp-yellow);
+  --rsp-color-disabled: var(--rsp-grey-300);
+
+  // Font sizes
+  // If browser font-size is 16px:
+  --rsp-fs-100: 0.6875rem;        // 11px
+  --rsp-fs-200: 0.8rem;          // 12px
+  --rsp-fs-300: 0.8125rem;        // 13px
+  --rsp-fs-400: 0.875rem;         // 14px
+  --rsp-fs-500: 1rem;             // 16px
+  --rsp-fs-600: 1.125rem;         // 18px
+  --rsp-fs-700: 1.25rem;          // 20px
+  --rsp-fs-800: 1.5rem;           // 24px
+  --rsp-fs-900: 3.5rem;           // 40px
+}
+
+@mixin rsssl-block {
+  background: var(--rsp-background-block-color);
+  box-shadow: var(--rsp-box-shadow);
+  border-radius: var(--rsp-border-radius);
+}
+
+@mixin rsssl-block-padding {
+  padding: var(--rsp-spacing-m) var(--rsp-spacing-l);
+
+  @media screen and (max-width: $rsp-break-m) {
+    padding: var(--rsp-spacing-xs) var(--rsp-spacing-s);
+  }
+  @media screen and (max-width: $rsp-break-s) {
+    padding: var(--rsp-spacing-xs) var(--rsp-spacing-s);
+  }
+
+  //@media screen and (max-width: $rsp-break-xs) {
+  //  padding: var(--rsp-spacing-xs) var(--rsp-spacing-s);
+  //}
+}
+
+@mixin rsssl-block-block-padding {
+  padding-block: var(--rsp-spacing-m);
+
+  @media screen and (max-width: $rsp-break-m) {
+    padding-block: var(--rsp-spacing-xs);
+  }
+  @media screen and (max-width: $rsp-break-s) {
+    padding-block: var(--rsp-spacing-xxs);
+  }
+}
+
+@mixin rsssl-inline-block-padding {
+  padding-inline: var(--rsp-spacing-l);
+
+  @media screen and (max-width: $rsp-break-m) {
+    padding-inline: var(--rsp-spacing-m);
+  }
+  @media screen and (max-width: $rsp-break-s) {
+    padding-inline: var(--rsp-spacing-s);
+  }
+}
+
+@mixin rsssl-fade-in {
+  animation-name: fade-in;
+  animation-duration: 0.4s;
+  animation-timing-function: ease-in;
+}
+
+@keyframes fade-in{
+  0%   { opacity: 0 }
+  100% { opacity: 1; }
+}
+

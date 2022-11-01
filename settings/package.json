@@ -1,0 +1,23 @@
+{
+  "name": "really-simple-ssl",
+  "version": "1.0.0",
+  "main": "build/index.js",
+  "scripts": {
+    "start": "wp-scripts start",
+    "build": "set \"INLINE_RUNTIME_CHUNK=false\" && wp-scripts build"
+  },
+  "author": "Really Simple Plugins",
+  "license": "GPL-2.0-only",
+  "devDependencies": {
+    "@wordpress/scripts": "^23.4.0"
+  },
+  "dependencies": {
+    "@wordpress/components": "^19.16.0",
+    "immutability-helper": "^3.1.1",
+    "react-data-table-component": "^7.5.2",
+    "react-transition-group": "^4.4.2",
+    "react-use": "^17.4.0",
+    "styled-components": "^5.3.5"
+  },
+  "description": "Really Simple SSL settings module"
+}

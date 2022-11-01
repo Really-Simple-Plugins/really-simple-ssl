@@ -25,10 +25,10 @@ class rsssl_directadmin {
 	 *
 	 */
 	public function __construct() {
-		$password                   = RSSSL_LE()->letsencrypt_handler->decode( rsssl_get_value( 'directadmin_password' ) );
-		$host                       = rsssl_get_value( 'directadmin_host' );
+		$password                   = RSSSL_LE()->letsencrypt_handler->decode( rsssl_get_option( 'directadmin_password' ) );
+		$host                       = rsssl_get_option( 'directadmin_host' );
 		$this->host                 = str_replace( array( 'http://', 'https://', ':2222' ), '', $host );
-		$this->login                = rsssl_get_value( 'directadmin_username' );
+		$this->login                = rsssl_get_option( 'directadmin_username' );
 		$this->password             = $password;
 		$this->ssl_installation_url = 'https://' . $this->host . "";
 	}
@@ -98,7 +98,6 @@ class rsssl_directadmin {
 					'certificate' => file_get_contents( $key_file ) . file_get_contents( $cert_file )
 				));
 			$response = $sock->fetch_parsed_body();
-			error_log( print_r( $response, true ) );
 
 			//set a default error response
 			$status = 'warning';
@@ -117,20 +116,18 @@ class rsssl_directadmin {
 						'cacert' => file_get_contents( $cabundle_file )
 					));
 				$response = $sock->fetch_parsed_body();
-				error_log( print_r( $response, true ) );
 				if ( empty($response['details']) && stripos($response[0], 'Error' ) ) {
 					$status = 'success';
 					$action = 'finalize';
 					$message = sprintf(__("SSL successfully installed on %s","really-simple-ssl"), $domain);
-					update_option( 'rsssl_le_certificate_installed_by_rsssl', 'directadmin' );
+					update_option( 'rsssl_le_certificate_installed_by_rsssl', 'directadmin', false );
 					delete_option( 'rsssl_installation_error' );
 				}
 			}
 
 
 		} catch ( Exception $e ) {
-			error_log( print_r( $e, true ) );
-			update_option( 'rsssl_installation_error', 'directadmin' );
+			update_option( 'rsssl_installation_error', 'directadmin', false );
 			$status  = 'warning';
 			$action  = 'continue';
 			$message = $e->getMessage();

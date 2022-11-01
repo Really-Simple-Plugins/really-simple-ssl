@@ -1,0 +1,45 @@
+.rsssl-header-container .rsssl-header {
+  display: flex;
+  justify-content: space-between;
+  height: 70px;
+  box-sizing: border-box;
+
+  img {
+	margin: auto 0;
+	height: 26px;
+  }
+  .rsssl-header-menu {
+    display: flex;
+    align-items: center;
+    height: 100%;
+    padding: 0 20px;
+    box-sizing: border-box;
+    .rsssl-header-menu-item {
+      display: flex;
+      align-items: center;
+      height: 100%;
+      padding: 0 20px;
+      box-sizing: border-box;
+      &:first-child {
+        margin-left: 0;
+      }
+      &:last-child {
+        margin-right: 0;
+      }
+      &.rsssl-header-menu-item-active {
+        background-color: #f5f5f5;
+      }
+    }
+  }
+  .rsssl-header-actions {
+	display: flex;
+	align-items: center;
+	margin-left: auto;
+	gap: var(--rsp-spacing-s);
+
+	select {
+	  max-width: 60ch;
+	}
+  }
+
+}

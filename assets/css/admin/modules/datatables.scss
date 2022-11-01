@@ -1,0 +1,89 @@
+.rsssl-field-wrap {
+  .rdt_TableCol, .rdt_TableCell {
+    min-width:50px;
+  }
+  .rdt_TableHeadRow {
+    .rdt_TableCol:last-child {
+      flex-grow:0;
+      flex-direction: row-reverse;
+      //margin-right: 20px;
+    }
+  }
+  .rdt_TableRow {
+    &:nth-child(odd){
+      background-color:var(--rsp-grey-200)
+    }
+    padding:var(--rsp-spacing-xs) 0;
+    .rdt_TableCell:last-child {
+      flex-grow:0;
+    }
+    .rsssl-status-allowed, .rsssl-status-revoked{
+      min-width:110px;
+      margin-right:20px;
+    }
+  }
+
+  .rsssl-csp-revoked >div:nth-child(-n+3) {
+    opacity:0.3;
+  }
+}
+
+
+.rsssl-content_security_policy .rsssl-field-wrap {
+  .rdt_TableHeadRow {
+    .rdt_TableCol:last-child {
+      flex-grow:0;
+      min-width:initial;
+    }
+    .rdt_TableCol:nth-last-child(2) {
+      //flex-direction: row-reverse;
+    }
+  }
+
+
+  .rdt_TableRow {
+    .rsssl-status-allowed, .rsssl-status-revoked, .rsssl-learning-mode-delete{
+      //margin-right:0;
+    }
+    .rdt_TableCell:last-child {
+      flex-grow:0;
+      min-width:initial;
+    }
+    .rdt_TableCell:nth-last-child(2) {
+      //flex-direction: row-reverse;
+      //margin-right:10px;
+    }
+  }
+
+  .rsssl-csp-revoked >div:nth-child(-n+3) {
+    opacity:0.3;
+  }
+}
+
+//wp-core also adds an svg for the select dropdown, so we hide the one from the react datatables component
+nav.rdt_Pagination>div>svg {
+  display:none !important;
+}
+
+.rsssl-content_security_policy, .rsssl-xml_rpc {
+  .rsssl-field-wrap >div >div {
+    overflow-x:inherit;
+    overflow-y:inherit;
+  }
+}
+
+.rsssl-permissions_policy {
+  .rdt_TableRow {
+    .rdt_TableCell:last-child {
+      min-width: fit-content;
+      .components-input-control__container {
+        min-width: fit-content;
+      }
+    }
+  }
+}
+.rsssl-mixed-content-datatable{
+  & > div > div {
+    display: flex;
+  }
+}

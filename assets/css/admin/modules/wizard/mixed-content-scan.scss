@@ -1,0 +1,49 @@
+.rsssl-mixedcontentscan {
+  .rsssl-mixed-content-placeholder {
+    height:250px;
+    div {
+      background-color:var(--rsp-grey-200);
+      margin:10px 0;
+      height:20px;
+    }
+  }
+  .rsssl-shield-overlay {
+    height:250px;
+    align-items: center;
+    justify-content: center;
+    display:flex;
+  }
+
+  .rsssl-field-wrap {
+    .rdt_TableCol, .rdt_TableCell {
+      min-width: 80px;
+    }
+  }
+
+  .rsssl-progress-container {
+    .rsssl-progress-bar {
+      border-radius:5px;
+      height:20px;
+      background-color:var(--rsp-green);
+    }
+  }
+  .rsssl-task-status{
+    min-width: min-content;
+    &.rsssl-warning {
+      background-color: var(--rsp-yellow);
+      color: var(--rsp-text-color);
+    }
+  }
+  button.button{
+    line-height: 1.5;
+    min-height: 10px;
+  }
+  .rsssl-grid-item-content-footer{
+    display: flex;
+    gap: var(--rsp-spacing-s);
+  }
+  .rsssl-current-scan-action, .rsssl-mixed-content-description {
+    margin:10px 5px;
+    font-size: var(--rsp-fs-300);
+  }
+}

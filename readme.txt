@@ -2,11 +2,11 @@
 Contributors: RogierLankhorst, markwolters, hesseldejong, vicocotea
 Donate link: https://www.paypal.me/reallysimplessl
 Tags: SSL, https, force SSL, mixed content, insecure content, secure website, website security, TLS, security, secure socket layers, HSTS
-Requires at least: 4.9
+Requires at least: 5.7
 License: GPL2
-Tested up to: 6.0
+Tested up to: 6.1
 Requires PHP: 7.2
-Stable tag: 5.3.5
+Stable tag: 6.0.0
 
 No setup required! You only need an SSL certificate, and this plugin will do the rest.
 
@@ -90,27 +90,20 @@ The plugin checks your certificate before enabling, but if, for example, you mig
 If you can't deactivate, do not just remove the plugin folder to uninstall! Follow these [instructions](https://really-simple-ssl.com/knowledge-base/uninstall-websitebackend-not-accessible/) instead.
 
 == Changelog ==
-= 5.3.4 =
-* Prepare for 6.0 release with upgrade notice, disabling auto updates for 6.0, and code preparation to prevent conflicts between major versions
-
-= 5.3.4 =
-* Bumped required PHP version to 7.2
-* Fix: type in Let's Encrypt wizard
-* Improvement: SSL redirect icw WP Rocket included in WP Rocket htaccess rules
-* Improvement: defaults for created directories
-* Improvement: fallback in case of missing administrator role, props @msigloo
-
-= 5.3.3 =
-* Added manage_security capability, props @madtownlems
-
-= 5.3.2 =
-* Fix: remove obsolete domain list generation function, preventing issues on large multisite installations
-* Fix: Non-network admins can alter network settings props @madtownlems
-* Improvement: drop Expect-CT from recommended headers
-
-= 5.3.1 =
-* Improvement: updated other plugins section
-* Improvement: added space in .htaccess comment for redirects
+= 6.0.0 =
+* Disable File editing feature
+* Disable user registration feature
+* Rename Database prefix feature
+* Hide WP version
+* Disable login info leakage
+* Prevent User Enumeration
+* Rename admin user
+* Disable application passwords
+* Disable code execution
+* Prevent indexing of directories
+* Warning when display name is the same as login name
+* Disable HTTP methods
+* New React SSL activation notice
 
 = 5.3.0 =
 * Improvement: added PHP 8.1 compatibility
