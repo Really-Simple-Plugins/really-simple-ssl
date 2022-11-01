@@ -8,34 +8,31 @@ Tested up to: 6.1
 Requires PHP: 7.2
 Stable tag: 6.0.0
 
-No setup required! You only need an SSL certificate, and this plugin will do the rest.
+The easiest way to improve security! Leverage your SSL certificate and protect your website visitors.
 
 == Description ==
-Really Simple SSL automatically detects your settings and configures your website to run over HTTPS. To keep it lightweight, we kept the options to a minimum. Your website will move to SSL with one click.
+Really Simple SSL will automatically configure your website to use SSL to its fullest potential. Use extra hardening features to secure your website, and use our server health check to keep up-to-date.
 
-= Three simple steps for setup: =
+== Features ==
+* Easy SSL Migration: Takes your website to HTTPS in just one-click. 
+* Server Health Check (New): Your server configuration is every bit as important for your website security.
+* WordPress Hardening (New): Tweak your configuration and keep WordPress fortified and safe by tackling its weaknesses.
 
-* Activate Really Simple SSL
-* Activate SSL in your hosting environment, or generate a free Let's Encrypt certificate in [Really Simple SSL](https://really-simple-ssl.com/install-ssl-certificate/). **(new)**
-* Enable SSL with One Click
+== Improve Security with Really Simple SSL Pro ==
+* The Mixed Content Scan & Fixer. Detect files that are requested over HTTP and fix it. Both Front- and Back-end.
+= Security Headers =
+These features mitigates the risk of clickjacking, cross-site-fogery attacks, stealing login credentials and malware among others.
+* Independent of your Server Configuration, works on Apache, LiteSpeed, NGINX etc.
+* Protect your website visitors with X-XSS Protection, X-Content-Type-Options, X-Frame-Options and Referrer Policy.
+* Enable HTTP Strict Transport Security and configure your site for the HSTS Preload list.
+= Advanced Security =
+Isolate your website from unnecessary file loading and exchanges with third-parties. Fully control your website and minimize risk of manipulation.
+* Specifically designed for WordPress.
+* Control third-parties with the Content Security Policy - including Learning Mode.
+* Control browser features with the Permissions Policy e.g. geolocation, camera's and microphones.
+* Isolate information exchange between other websites. Fully control in- and outbound of data.
 
-https://www.youtube.com/watch?v=BVx3ZrSsPrU
-
-= Love Really Simple SSL? =
-Hopefully, this plugin saves you some hours of work. If you want to support the continuing development of this plugin, please consider buying [Really Simple SSL Pro](https://www.really-simple-ssl.com/pro/), which includes some excellent security features and premium support.
-
-= Improve Security with Really Simple SSL Pro =
-
-* The Mixed Content Scan & Fixer. Know which files are still requested over HTTP and how to fix it.
-* Enable HTTP Strict Transport Security
-* Configure your site for the HSTS preload list
-* Advanced Security Headers to Improve Security, e.g., Content Security Policy, Permissions Policy, and more.
-* Mixed Content Fixer for your Admin Area
-* Detailed Feedback and Active Support on your Security Dashboard
-* Premium Support
-
-= How does Really Simple SSL work? =
-
+== How does Really Simple SSL's HTTPS migration work? ==
 * It will first check for an existing SSL certificate. If you don't have one, you can generate one in the plugin. Depending on your hosting provider, the plugin can also install it for you or assist with instructions.
 * The plugin handles most issues WordPress has with SSL. For example, a reverse proxy/load balancer or when no headers are passed to detect SSL.
 * All incoming requests are redirected to HTTPS. Default with an internal WordPress redirect, but you can also opt for a .htaccess redirect.
@@ -43,8 +40,19 @@ Hopefully, this plugin saves you some hours of work. If you want to support the 
 * Your insecure content is fixed by replacing all http:// URLs with https://, except hyperlinks to other domains. This happens dynamically, so no database changes are made (except for the site URL and home URL).
 * Cookies set with PHP are set securely by setting them with the httpOnly flag.
 
-= About Really Simple SSL =
-Check out other plugins developed by Really Simple Plugins as well: [Complianz](https://wordpress.org/plugins/complianz-gdpr/) and [Zip Recipes](https://wordpress.org/plugins/zip-recipes/).
+== Useful Links ==
+* [Documentation](https://really-simple-ssl.com/knowledge-base-overview/)
+* [SSL Definitions](https://really-simple-ssl.com/definitions/)
+* [Translate Really Simple SSL](https://translate.wordpress.org/projects/wp-plugins/really-simple-ssl)
+* [Issues & pull requests](https://github.com/Really-Simple-Plugins/really-simple-ssl/issues)
+* [Feature requests](https://really-simple-ssl.com/feature-requests/)
+
+
+== Love Really Simple SSL? ==
+Hopefully, this plugin saves you some hours of work. If you want to support the continuing development of this plugin, please consider buying [Really Simple SSL Pro](https://www.really-simple-ssl.com/pro/), which includes some excellent security features and premium support.
+
+== About Really Simple Plugins ==
+Check out other plugins developed by Really Simple Plugins as well: [Complianz](https://wordpress.org/plugins/complianz-gdpr/) and [Burst Statistics](https://wordpress.org/plugins/burst-statistics/).
 
 [contact](https://www.really-simple-ssl.com/contact/) us if you have any questions, issues, or suggestions. Really Simple SSL is developed by [Really Simple Plugins](https://www.really-simple-plugins.com).
 
@@ -52,7 +60,7 @@ For free SSL certificate generation, Really Simple SSL uses the [le acme2 PHP](h
 
 Any code suggestions? We're on [GitHub](https://github.com/really-simple-plugins/really-simple-ssl) as well!
 
-= Really Simple SSL in your language? =
+== Really Simple SSL in your language? ==
 Translations can be added very easily [here](https://translate.wordpress.org/projects/wp-plugins/really-simple-ssl). 
 
 == Installation ==
@@ -67,7 +75,6 @@ To install this plugin:
 7. You will now see a notice asking you to enable SSL. Click it and log in again, if needed.
 
 == Frequently Asked Questions ==
-
 = Knowledge Base =
 For more detailed explanations and documentation on redirect loops, Let's Encrypt, mixed content, errors, and so on, please search the [documentation](https://www.really-simple-ssl.com/knowledge-base/)
 
