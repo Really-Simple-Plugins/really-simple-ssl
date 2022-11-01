@@ -131,8 +131,9 @@ class SettingsPage extends Component {
           let previouslyDisabled = this.props.fields[this.props.fields.indexOf(field)].conditionallyDisabled;
           this.props.fields[this.props.fields.indexOf(field)].conditionallyDisabled = !enabled;
           if ( previouslyDisabled && enabled ) {
+                //if this is a learning mode field, do not add it to the changed fields list
               let changedFields = this.changedFields;
-              if (!in_array(field.id, changedFields)) {
+              if (field.type!=='learningmode' && !in_array(field.id, changedFields)) {
                   changedFields.push(field.id);
               }
               this.changedFields = changedFields;
@@ -189,6 +190,7 @@ class SettingsPage extends Component {
                 saveFields.push(field);
             }
         }
+
         rsssl_api.setFields(saveFields).then(( response ) => {
             this.changedFields = [];
             this.props.updateProgress(response.data.progress);

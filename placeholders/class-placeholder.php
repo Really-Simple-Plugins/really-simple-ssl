@@ -58,11 +58,11 @@ if ( ! class_exists( 'rsssl_placeholder' ) ) {
 		public function xml_data(){
 			$data = [
 				[
-				'id'      => 1,
-				'method'  => 'wp.deletePost',
-				'login_status' => 1,
-				'count' => 63,
-				'status'  => 1,
+					'id'      => 1,
+					'method'  => 'wp.deletePost',
+					'login_status' => 1,
+					'count' => 63,
+					'status'  => 1,
 				],
 				[
 					'id'      => 2,

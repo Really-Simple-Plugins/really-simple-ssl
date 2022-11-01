@@ -63,8 +63,6 @@ class rsssl_firewall_manager {
 		if ( wp_doing_ajax() ) {
 			return;
 		}
-		$wpconfig_path = RSSSL()->admin->find_wp_config_path();
-		$wpconfig      = file_get_contents( $wpconfig_path );
 
 		$wpcontent_dir  = ABSPATH . 'wp-content';
 		$advanced_headers_file = $wpcontent_dir . '/advanced-headers.php';
@@ -86,22 +84,13 @@ class rsssl_firewall_manager {
 		$contents .= 'if ( isset($_GET["rsssl_header_test"]) && (int) $_GET["rsssl_header_test"] ===  ' . $this->get_headers_nonce() . ' ) return;' . "\n\n";
 		$contents .= "//RULES START\n".$rules;
 
-		//save errors
-		if ( is_writable( $wpcontent_dir ) && (is_writable( $wpconfig_path ) || strpos( $wpconfig, 'advanced-headers.php' ) !== false ) ) {
-			update_option('rsssl_firewall_error', false, false );
-		} else {
-			if ( !is_writable( $wpconfig_path ) ) {
-				update_option('rsssl_firewall_error', 'wpconfig-notwritable', false );
-			} else if ( !is_writable( $wpcontent_dir )) {
-				update_option('rsssl_firewall_error', 'advanced-headers-notwritable', false );
-			}
-		}
-
 		// write to advanced-header.php file
 		if ( is_writable( ABSPATH . 'wp-content' ) ) {
 			file_put_contents( ABSPATH . "wp-content/advanced-headers.php", $contents );
 		}
 
+		$wpconfig_path = $this->find_wp_config_path();
+		$wpconfig      = file_get_contents( $wpconfig_path );
 		if ( is_writable( $wpconfig_path ) && strpos( $wpconfig, 'advanced-headers.php' ) === false ) {
 			$rule = 'if ( file_exists(ABSPATH . "wp-content/advanced-headers.php") ) { ' . "\n";
 			$rule .= "\t" . 'require_once ABSPATH . "wp-content/advanced-headers.php";' . "\n" . "}";
@@ -114,6 +103,17 @@ class rsssl_firewall_manager {
 				$updated = preg_replace( '/' . '<\?php' . '/', '<?php' . "\n" . $rule . "\n", $wpconfig, 1 );
 			}
 			file_put_contents( $wpconfig_path, $updated );
+		}
+
+		//save errors
+		if ( is_writable( $wpcontent_dir ) && (is_writable( $wpconfig_path ) || strpos( $wpconfig, 'advanced-headers.php' ) !== false ) ) {
+			update_option('rsssl_firewall_error', false, false );
+		} else {
+			if ( !is_writable( $wpconfig_path ) ) {
+				update_option('rsssl_firewall_error', 'wpconfig-notwritable', false );
+			} else if ( !is_writable( $wpcontent_dir )) {
+				update_option('rsssl_firewall_error', 'advanced-headers-notwritable', false );
+			}
 		}
 	}
 
@@ -158,6 +158,25 @@ class rsssl_firewall_manager {
 	}
 
 	/**
+	 * Admin is not always loaded here, so we define our own function
+	 * @return string|null
+	 */
+	public function find_wp_config_path()
+	{
+		//limit nr of iterations to 5
+		$i = 0;
+		$maxiterations = 5;
+		$dir = ABSPATH;
+		do {
+			$i++;
+			if (file_exists($dir . "/wp-config.php")) {
+				return $dir . "/wp-config.php";
+			}
+		} while (($dir = realpath("$dir/..")) && ($i < $maxiterations));
+		return null;
+	}
+
+	/**
 	 * Clear the headers
 	 * @return void
 	 */
@@ -165,8 +184,8 @@ class rsssl_firewall_manager {
 		if ( !rsssl_user_can_manage() && !defined( 'RSSSL_LEARNING_MODE' ) ) {
 			return;
 		}
-			$file = ABSPATH . 'wp-content/advanced-headers.php';
-		$wpconfig_path = RSSSL()->admin->find_wp_config_path();
+		$file = ABSPATH . 'wp-content/advanced-headers.php';
+		$wpconfig_path = $this->find_wp_config_path();
 		if ( is_writable( $wpconfig_path ) ) {
 			$wpconfig = file_get_contents( $wpconfig_path );
 			$rule = "if ( file_exists('" . $file . "') ) { " . "\n";

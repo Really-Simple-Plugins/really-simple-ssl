@@ -83,7 +83,6 @@ class REALLY_SIMPLE_SSL
 				self::$instance->multisite = new rsssl_multisite();
 			}
 			if ( rsssl_is_logged_in_rest() || is_admin() || wp_doing_cron() || $wpcli || defined('RSSSL_DOING_SYSTEM_STATUS') || defined('RSSSL_LEARNING_MODE') ) {
-
 				self::$instance->cache = new rsssl_cache();
 				self::$instance->placeholder = new rsssl_placeholder();
 				self::$instance->server = new rsssl_server();
