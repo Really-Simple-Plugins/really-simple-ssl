@@ -93,7 +93,6 @@ If you can't deactivate, do not just remove the plugin folder to uninstall! Foll
 
 == Changelog ==
 = 6.0.0 =
-
 * Tested up to WordPress 6.1.0
 * Improvement: User Interface
 * New: Server Health Check - powered by SSLLabs
