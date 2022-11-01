@@ -220,24 +220,6 @@ function rsssl_is_debugging_enabled() {
 
 function rsssl_debug_log_value_is_default(){
 	$value = rsssl_get_debug_log_value();
-	x_log("debug log value");
-	x_log($value);
-
-	if ($value === 'true'){
-		x_log("is default");
-	}
-
-	if (is_string($value)) {
-		x_log("is string ");
-	}
-
-	if ($value === true ){
-		x_log("is true default");
-	}
-
-	if ($value === true ){
-		x_log("is true default");
-	}
 
 	if ( $value === 'true') {
 		return true;
