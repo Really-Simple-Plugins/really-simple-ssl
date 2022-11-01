@@ -784,6 +784,6 @@ On settings page load, the .htaccess file is no rewritten. If you have made .hta
 Always back up before any upgrade. Especially .htaccess, wp-config.php and the plugin folder. This way you can easily roll back.
 
 == Screenshots ==
-1. Easily migrate your website to SSL with One Click
-2. Generate a Free Let's Encrypt SSL Certificate, if needed!
-3. Improve security with Really Simple SSL. Fully guided and documented
+1. Your Really Simple SSL dashboard - For optimal configuration.
+2. The Server Health Check - An in-depth look at your server.
+3. New Hardening Features - Fortify your website by minimizing weaknesses.
