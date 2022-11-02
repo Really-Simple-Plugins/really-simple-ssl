@@ -11,6 +11,7 @@ if ( is_admin() && rsssl_user_can_manage() ) {
 		public function generate_enable_link(){}
 		public function find_wp_config_path(){return '-';}
 		public function contains_hsts(){}
+		public function get_recommended_security_headers(){}
 		public function notice_html(){}
 	}
 	class rsssl_help_legacy {
