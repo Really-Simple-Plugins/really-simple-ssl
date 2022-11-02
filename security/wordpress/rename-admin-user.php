@@ -33,19 +33,6 @@ function rsssl_prevent_admin_user_add(array $illegal_user_logins){
 }
 add_filter( 'illegal_user_logins', 'rsssl_prevent_admin_user_add' );
 
-
-add_action( "rsssl_after_save_field", "rsssl_rename_admin_user_on_save", 10, 4 );
-
-
-function rsssl_rename_admin_user_on_save($field_id, $new_value, $prev_value, $type) {
-	if ( !rsssl_user_can_manage() && !rsssl_is_logged_in_rest() ) {
-		return;
-	}
-
-	if ( $field_id==='rename_admin_user' && $new_value==1 ) {
-		rsssl_rename_admin_user();
-	}
-}
 /**
  * Rename admin user
  * @return bool
