@@ -4,13 +4,12 @@ defined('ABSPATH') or die();
  * File to prevent fatal errors when used with older pro versions
  * @deprecated
  */
-if ( is_admin() ) {
-
+if ( is_admin() && rsssl_user_can_manage() ) {
 	class really_simple_ssl_legacy{
 		public $site_has_ssl;
 		public $ssl_enabled;
 		public function generate_enable_link(){}
-		public function find_wp_config_path(){}
+		public function find_wp_config_path(){return '-';}
 		public function contains_hsts(){}
 		public function notice_html(){}
 	}
