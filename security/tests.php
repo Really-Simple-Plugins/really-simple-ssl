@@ -221,12 +221,7 @@ function rsssl_is_debugging_enabled() {
 function rsssl_debug_log_value_is_default(){
 	$value = rsssl_get_debug_log_value();
 
-	if ( $value === 'true') {
-		return true;
-	} else {
-		//'false' or a location. both not default.
-		return false;
-	}
+	return (string) $value === 'true';
 }
 
 /**
@@ -240,6 +235,7 @@ function rsssl_get_debug_log_value(){
 		return false;
 	}
 	$wpconfig_path = rsssl_find_wp_config_path();
+
 	if ( !$wpconfig_path ) {
 		return false;
 	}
@@ -249,10 +245,10 @@ function rsssl_get_debug_log_value(){
 	$regex = "/^\s*define\([ ]{0,2}[\'|\"]WP_DEBUG_LOG[\'|\"][ ]{0,2},[ ]{0,2}(.*)[ ]{0,2}\);/m";
 	preg_match( $regex, $wpconfig, $matches );
 	if ($matches && isset($matches[1]) ){
-		return $matches[1];
-	} else {
-		return false;
+		return trim($matches[1]);
 	}
+
+	return false;
 }
 
 /**
