@@ -21,7 +21,7 @@ Really Simple SSL will automatically configure your website to use SSL to its fu
 == Improve Security with Really Simple SSL Pro ==
 * The Mixed Content Scan & Fixer. Detect files that are requested over HTTP and fix it. Both Front- and Back-end.
 = Security Headers =
-These features mitigates the risk of clickjacking, cross-site-fogery attacks, stealing login credentials and malware among others.
+These features mitigate the risk of clickjacking, cross-site-forgery attacks, stealing login credentials and malware among others.
 * Independent of your Server Configuration, works on Apache, LiteSpeed, NGINX etc.
 * Protect your website visitors with X-XSS Protection, X-Content-Type-Options, X-Frame-Options and Referrer Policy.
 * Enable HTTP Strict Transport Security and configure your site for the HSTS Preload list.
@@ -35,7 +35,7 @@ Isolate your website from unnecessary file loading and exchanges with third-part
 == How does Really Simple SSL's HTTPS migration work? ==
 * The plugin will check for an existing SSL certificate. If you don't have one, you can generate one in the plugin. Depending on your hosting provider, the plugin can also install it for you or assist with instructions.
 * If needed,  It will handle known issues WordPress has with SSL. An example might be that your website uses a loadbalancer, proxy or headers are not passed to detect a certificate.
-* All incoming requests are redirected to HTTPS by default 301 WordPress redirect. You can also choose a .htacess redirect.
+* All incoming requests are redirected to HTTPS with a default 301 WordPress redirect. You can also choose a .htaccess redirect.
 * The Site URL and Home URL are changed to HTTPS.
 * Your insecure content is fixed by replacing all HTTP:// URLs with HTTPS://, except external hyperlinks, dynamically.
 * Cookies with PHP are set securely by setting them with the HTTPOnly flag.
