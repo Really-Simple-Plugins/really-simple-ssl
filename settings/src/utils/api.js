@@ -17,7 +17,8 @@ export const getFields = () => {
 			'X-WP-Nonce': rsssl_settings.nonce,
 		}
 	}
-    return axios.get(rsssl_settings.site_url+'reallysimplessl/v1/fields/get?'+anchor+'&nonce='+rsssl_settings.rsssl_nonce, config);
+	let glue = rsssl_settings.site_url.indexOf('?')!==-1 ? '&' : '?';
+    return axios.get(rsssl_settings.site_url+'reallysimplessl/v1/fields/get'+glue+anchor+'&nonce='+rsssl_settings.rsssl_nonce, config);
 };
 
 /*
@@ -36,7 +37,8 @@ export const setFields = (data) => {
 	}
 	let nonce = {'nonce':rsssl_settings.rsssl_nonce};
 	data.push(nonce);
-	return axios.post(rsssl_settings.site_url+'reallysimplessl/v1/fields/set?'+anchor, data, config );
+    let glue = rsssl_settings.site_url.indexOf('?')!==-1 ? '&' : '?';
+	return axios.post(rsssl_settings.site_url+'reallysimplessl/v1/fields/set'+glue+anchor, data, config );
 };
 
 export const getBlock = (block) => {
@@ -45,7 +47,8 @@ export const getBlock = (block) => {
 			'X-WP-Nonce': rsssl_settings.nonce,
 		}
 	}
-	return axios.get(rsssl_settings.site_url+'reallysimplessl/v1/block/'+block+'?nonce='+rsssl_settings.rsssl_nonce, config);
+    let glue = rsssl_settings.site_url.indexOf('?')!==-1 ? '&' : '?';
+	return axios.get(rsssl_settings.site_url+'reallysimplessl/v1/block/'+block+glue+'nonce='+rsssl_settings.rsssl_nonce, config);
 };
 
 export const runTest = (test, state, data ) => {
@@ -57,7 +60,8 @@ export const runTest = (test, state, data ) => {
 	if (data) {
 		data = encodeURIComponent(JSON.stringify(data));
 	}
-	return axios.get(rsssl_settings.site_url+'reallysimplessl/v1/tests/'+test+'?state='+state+'&nonce='+rsssl_settings.rsssl_nonce+'&data='+data, config);
+    let glue = rsssl_settings.site_url.indexOf('?')!==-1 ? '&' : '?';
+	return axios.get(rsssl_settings.site_url+'reallysimplessl/v1/tests/'+test+glue+'state='+state+'&nonce='+rsssl_settings.rsssl_nonce+'&data='+data, config);
 };
 
 export const runLetsEncryptTest = (test, id ) => {
@@ -66,8 +70,8 @@ export const runLetsEncryptTest = (test, id ) => {
 			'X-WP-Nonce': rsssl_settings.nonce,
 		}
 	}
-
-	return axios.get(rsssl_settings.site_url+'reallysimplessl/v1/tests/'+test+'?letsencrypt=1&id='+id+'&nonce='+rsssl_settings.rsssl_nonce, config);
+    let glue = rsssl_settings.site_url.indexOf('?')!==-1 ? '&' : '?';
+	return axios.get(rsssl_settings.site_url+'reallysimplessl/v1/tests/'+test+glue+'letsencrypt=1&id='+id+'&nonce='+rsssl_settings.rsssl_nonce, config);
 }
 
 export const doAction = (action, data) => {
@@ -86,5 +90,6 @@ export const getOnboarding = (forceRefresh) => {
 			'X-WP-Nonce': rsssl_settings.nonce,
 		}
 	}
-	return axios.get(rsssl_settings.site_url+'reallysimplessl/v1/onboarding?forceRefresh='+forceRefresh+'&nonce='+rsssl_settings.rsssl_nonce, config);
+    let glue = rsssl_settings.site_url.indexOf('?')!==-1 ? '&' : '?';
+	return axios.get(rsssl_settings.site_url+'reallysimplessl/v1/onboarding'+glue+'forceRefresh='+forceRefresh+'&nonce='+rsssl_settings.rsssl_nonce, config);
 }
