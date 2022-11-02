@@ -26,9 +26,9 @@ function rsssl_disable_fields($field, $field_id){
 					$field['disabled'] = true;
 				}
 			}
-			//if not the defaul location
+			//if not the default location
 			$location = strstr( rsssl_get_debug_log_value(), 'wp-content' );
-			if (!empty($location) &&  rsssl_is_debugging_enabled() && !rsssl_debug_log_value_is_default() ) {
+			if (rsssl_is_debugging_enabled() && !rsssl_debug_log_value_is_default() ) {
 				$field['help'] = [
 					'label' => 'default',
 					'title' => __( "Debugging", 'really-simple-ssl' ),
