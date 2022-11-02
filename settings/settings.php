@@ -654,7 +654,7 @@ function rsssl_sanitize_field( $value, string $type, string $id ) {
 	switch ( $type ) {
 		case 'checkbox':
 		case 'number':
-			return intval( $value );
+			return (int) $value;
 		case 'hidden':
 			return sanitize_title($value);
 		case 'select':

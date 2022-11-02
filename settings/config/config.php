@@ -1003,9 +1003,9 @@ function rsssl_fields( $load_values = true ) {
 			'group_id' => 'frame_ancestors',
 			'type'     => 'select',
 			'options'  => [
-				'disabled' => __( "Disable", "really-simple-ssl" ),
+				'disabled' => __( "Disable (Default)", "really-simple-ssl" ),
 				'none'     => "None",
-				'self'     => "Self (Default)",
+				'self'     => "Self",
 			],
 			'label'    => __( "Allow your domain to be embedded", "really-simple-ssl" ),
 			'disabled' => false,
