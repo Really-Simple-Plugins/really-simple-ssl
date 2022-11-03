@@ -162,11 +162,7 @@ if ( !function_exists('rsssl_remove_htaccess_security_edits') ) {
  */
 
 if ( ! function_exists('rsssl_wrap_htaccess' ) ) {
-	function rsssl_wrap_htaccess() {
-		if ( ! rsssl_user_can_manage()  ) {
-			return;
-		}
-
+	function rsssl_wrap_htaccess($force=false) {
 		if ( ! rsssl_uses_htaccess() ) {
 			return;
 		}
@@ -176,8 +172,9 @@ if ( ! function_exists('rsssl_wrap_htaccess' ) ) {
 		}
 
 		if (
+			!$force &&
 			!RSSSL()->admin->is_settings_page() &&
-		     !rsssl_is_logged_in_rest() &&
+		     !rsssl_user_can_manage() &&
 		     current_filter() !== 'rocket_activation' &&
 		     current_filter() !== 'rocket_deactivation'
 		) {

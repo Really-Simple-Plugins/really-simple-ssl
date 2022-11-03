@@ -143,6 +143,11 @@ function rsssl_upgrade() {
 		}
 	}
 
+	#fix htaccess redirect.
+	if ( $prev_version && version_compare( $prev_version, '6.0.0', '>0' ) && version_compare( $prev_version, '6.0.4', '<' ) ) {
+		rsssl_wrap_htaccess(true);
+	}
+
 	//delete in future upgrade. We want to check the review notice dismissed as fallback still.
 	//delete_option( 'rlrsssl_options' );
 	//delete_site_option( 'rlrsssl_network_options' );
