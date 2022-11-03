@@ -12,7 +12,7 @@ class rsssl_firewall_manager {
 		add_action( 'rsssl_update_rules', array($this, 'insert_advanced_header_file'), 10 );
 		add_action( 'rsssl_after_saved_fields', array($this, 'insert_advanced_header_file'), 100 );
 		add_action( 'rsssl_deactivate', array($this, 'remove_advanced_headers'), 20 );
-		add_filter('rsssl_notices', array($this, 'notices') );
+		add_filter( 'rsssl_notices', array($this, 'notices') );
 	}
 
 	static function this() {
@@ -181,7 +181,7 @@ class rsssl_firewall_manager {
 	 * @return void
 	 */
 	public function remove_advanced_headers() {
-		if ( !rsssl_user_can_manage() && !defined( 'RSSSL_LEARNING_MODE' ) ) {
+		if ( !rsssl_user_can_manage() ) {
 			return;
 		}
 		$file = ABSPATH . 'wp-content/advanced-headers.php';

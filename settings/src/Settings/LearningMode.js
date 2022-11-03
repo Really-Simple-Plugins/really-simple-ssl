@@ -287,7 +287,7 @@ class LearningMode extends Component {
                         </div>}
                         { rsssl_settings.pro_plugin_active && this.props.disabled && <div className="rsssl-locked">
                             <div className="rsssl-locked-overlay">
-                                <span className="rsssl-progress-status rsssl-disabled">{__("disabled ","really-simple-ssl")}</span>
+                                <span className="rsssl-progress-status rsssl-disabled">{__("Disabled ","really-simple-ssl")}</span>
                                 {disabledString}
                             </div>
                         </div>}
