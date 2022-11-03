@@ -42,7 +42,7 @@ function rsssl_plugin_admin_scripts() {
 		$script_asset['dependencies'],
 		$script_asset['version']
 	);
-	wp_set_script_translations( 'rsssl-wizard-plugin-block-editor', 'really-simple-ssl' );
+	wp_set_script_translations( 'rsssl-settings', 'really-simple-ssl' );
 
 	wp_localize_script(
         'rsssl-settings',
