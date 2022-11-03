@@ -6,7 +6,7 @@ Requires at least: 5.7
 License: GPL2
 Tested up to: 6.1
 Requires PHP: 7.2
-Stable tag: 6.0.1
+Stable tag: 6.0.2
 
 The easiest way to improve security! Leverage your SSL certificate and protect your website visitors.
 
@@ -94,6 +94,8 @@ If you can't deactivate, do not just remove the plugin folder to uninstall! Foll
 == Changelog ==
 = 6.0.2 =
 * Fix: do not show WP_DEBUG_DISPLAY notice if WP_DEBUG is false, props @janv01
+* Fix: empty cron schedule, props @gilvansilvabr
+* Improvement: several typo's
 
 = 6.0.1 =
 * Fix translations not loading for scripts
