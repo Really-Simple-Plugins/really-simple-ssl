@@ -27,7 +27,7 @@ const Directories = (props) => {
             props.addHelp(
              props.field.id,
               'default',
-             __("The key directory is needed to store the generated keys.","really-simple-ssl")+' '+__("By placing it outside the root folder, it is not accessible over the internet.", "really-simple-ssl"),
+             __("The key directory is needed to store the generated keys.","really-simple-ssl")+' '+__("By placing it outside the root folder, it is not publicly accessible.", "really-simple-ssl"),
             );
         }
 
@@ -35,7 +35,7 @@ const Directories = (props) => {
             props.addHelp(
              props.field.id,
               'default',
-             __("The certificate will get stored in this directory.", "really-simple-ssl")+' '+__("By placing it outside the root folder, it is not accessible over the internet.", "really-simple-ssl"),
+             __("The certificate will get stored in this directory.", "really-simple-ssl")+' '+__("By placing it outside the root folder, it is not publicly accessible.", "really-simple-ssl"),
             );
         }
      });
