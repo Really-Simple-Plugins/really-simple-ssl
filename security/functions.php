@@ -247,7 +247,10 @@ if ( ! function_exists('rsssl_wrap_htaccess' ) ) {
 						$content_htaccess_uploads = preg_replace( $pattern, '', $content_htaccess_uploads );
 						//add rules as new block
 						$new_htaccess = $content_htaccess_uploads . "\n" . $new_rules;
-
+						#clean up
+						if (strpos($new_htaccess, "\n" ."\n" . "\n" )!==false) {
+							$new_htaccess = str_replace("\n" . "\n" . "\n", "\n" ."\n", $new_htaccess);
+						}
 						file_put_contents( $htaccess_file_uploads, $new_htaccess );
 					}
 				}
