@@ -137,8 +137,10 @@ function rsssl_upgrade() {
 	}
 
 	#clean up old rest api optimizer on upgrade
-	if ( $prev_version && version_compare( $prev_version, '6.0.2', '<' ) ) {
-		unlink( trailingslashit( WPMU_PLUGIN_DIR ) . 'rsssl_rest_api_optimizer.php' );
+	if ( $prev_version && version_compare( $prev_version, '6.0.3', '<' ) ) {
+		if ( file_exists(trailingslashit( WPMU_PLUGIN_DIR ) . 'rsssl_rest_api_optimizer.php') ) {
+			unlink( trailingslashit( WPMU_PLUGIN_DIR ) . 'rsssl_rest_api_optimizer.php' );
+		}
 	}
 
 	//delete in future upgrade. We want to check the review notice dismissed as fallback still.
