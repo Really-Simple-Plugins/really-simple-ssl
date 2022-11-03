@@ -261,12 +261,9 @@ function rsssl_debug_log_file_exists_in_default_location(){
 	if ( !file_exists($default_file) ) {
 		return false;
 	}
-
-	$content = file_get_contents($default_file);
-	if (trim($content) === 'Access denied'){
-		return false;
-	}
-	return true;
+	//limit max length of string to 500
+	$content = file_get_contents($default_file, false, null, 0, 500 );
+	return trim( $content ) !== 'Access denied';
 }
 
 /**
