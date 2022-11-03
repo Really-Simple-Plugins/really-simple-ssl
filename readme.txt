@@ -92,6 +92,9 @@ The plugin checks your certificate before enabling, but if, for example, you mig
 If you can't deactivate, do not just remove the plugin folder to uninstall! Follow these [instructions](https://really-simple-ssl.com/knowledge-base/uninstall-websitebackend-not-accessible/) instead.
 
 == Changelog ==
+= 6.0.2 =
+* Fix: do not show WP_DEBUG_DISPLAY notice if WP_DEBUG is false, props @janv01
+
 = 6.0.1 =
 * Fix translations not loading for scripts
 
