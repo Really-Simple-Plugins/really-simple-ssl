@@ -67,13 +67,13 @@ function rsssl_get_items_for_second_step () {
 			"slug" => "burst-statistics",
 			'constant_premium' => false,
 			"title" => "Burst Statistics",
-			"description" => __("Self-hosted, Privacy-friendly analytics tool", "really-simple-ssl"),
+			"description" => __("Burst Statistics - Self-hosted, Privacy-friendly analytics tool", "really-simple-ssl"),
 		],
 		[
 			"slug" => "complianz-gdpr",
 			'constant_premium' => 'cmplz_premium',
 			"title" => "Complianz",
-			"description" => __("Cookie Consent Management as it should be", "really-simple-ssl"),
+			"description" => __("Complianz - Cookie Consent Management as it should be", "really-simple-ssl"),
 		]
 	];
 
@@ -120,7 +120,7 @@ function rsssl_get_items_for_second_step () {
 			];
 		} else if( !$plugin->plugin_is_downloaded() && !$plugin->plugin_is_activated() ){
 			$items[] = [
-				"title" => $plugin_info["title"]." - ".$plugin_info["description"],
+				"title" => $plugin_info["description"],
 				"action" => "install_plugin",
 				"current_action" => "none",
 				"status" => "warning",

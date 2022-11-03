@@ -309,7 +309,7 @@ function rsssl_other_plugins_data($slug=false){
 			'constant_free' => 'burst_version',
 			'wordpress_url' => 'https://wordpress.org/plugins/burst-statistics/',
 			'upgrade_url' => 'https://burst-statistics.com/?src=rsssl-plugin',
-			'title' => 'Burst Statistics - '. __("Self-hosted, Privacy-friendly analytics tool.", "really-simple-ssl"),
+			'title' => 'Burst Statistics - '. __("Self-hosted, Privacy-friendly analytics tool", "really-simple-ssl"),
 		],
 		[
 			'slug' => 'complianz-gdpr',
@@ -317,7 +317,7 @@ function rsssl_other_plugins_data($slug=false){
 			'constant_premium' => 'cmplz_premium',
 			'wordpress_url' => 'https://wordpress.org/plugins/complianz-gdpr/',
 			'upgrade_url' => 'https://complianz.io/pricing?src=rsssl-plugin',
-			'title' => __("Complianz - Cookie Consent Management as it should be.", "really-simple-ssl" ),
+			'title' => __("Complianz - Cookie Consent Management as it should be", "really-simple-ssl" ),
 		],
 		[
 			'slug' => 'complianz-terms-conditions',

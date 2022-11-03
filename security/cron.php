@@ -14,6 +14,14 @@ if ( RSSSL_USE_CRON ) {
 	}
 }
 
+/**
+ * Ensure the hook as a function attached to it.
+ */
+add_action( 'rsssl_every_day_hook', 'rsssl_daily_cron' );
+function rsssl_daily_cron(){
+	do_action('rsssl_daily_cron');
+}
+
 if ( !RSSSL_USE_CRON ) {
 	add_action( 'admin_init', 'rsssl_schedule_non_cron' );
 	function rsssl_schedule_non_cron(){
