@@ -243,13 +243,11 @@ if ( ! function_exists('rsssl_wrap_htaccess' ) ) {
 					} else {
 						delete_site_option( 'rsssl_uploads_htaccess_error' );
 						delete_site_option( 'rsssl_uploads_htaccess_rules' );
-						//get current rules with regex
-						if ( strpos( $content_htaccess_uploads, $start ) !== false ) {
-							$new_htaccess = preg_replace( $pattern, $new_rules, $content_htaccess_uploads );
-						} else {
-							//add rules as new block
-							$new_htaccess = $content_htaccess_uploads . "\n" . $new_rules;
-						}
+						//remove current rules
+						$content_htaccess_uploads = preg_replace( $pattern, '', $content_htaccess_uploads );
+						//add rules as new block
+						$new_htaccess = $content_htaccess_uploads . "\n" . $new_rules;
+
 						file_put_contents( $htaccess_file_uploads, $new_htaccess );
 					}
 				}
@@ -301,17 +299,21 @@ if ( ! function_exists('rsssl_wrap_htaccess' ) ) {
 						delete_site_option( 'rsssl_htaccess_rules' );
 						$new_rules = empty($rules_result) ? '' : $start . $rules_result . $end;
 
-						//get current rules with regex
-						if ( strpos( $content_htaccess, $start ) !== false ) {
-							$new_htaccess = preg_replace( $pattern, $new_rules, $content_htaccess );
+						//remove current rules
+						$content_htaccess = preg_replace( $pattern, '', $content_htaccess );
+
+						//add rules as new block
+						if ( strpos($content_htaccess, '# BEGIN WordPress')!==false ) {
+							$new_htaccess = str_replace('# BEGIN WordPress', "\n" . $new_rules.'# BEGIN WordPress', $content_htaccess);
 						} else {
-							//add rules as new block
-							if ( strpos($content_htaccess, '# BEGIN WordPress')!==false ) {
-								$new_htaccess = str_replace('# BEGIN WordPress', "\n" . $new_rules.'# BEGIN WordPress', $content_htaccess);
-							} else {
-								$new_htaccess = "\n" . $new_rules . $content_htaccess;
-							}
+							$new_htaccess = "\n" . $new_rules . $content_htaccess;
 						}
+						
+						//keep linebreaks limited
+						if (strpos($new_htaccess, "\n" . "\n" .$start)!==false) {
+							$new_htaccess = str_replace("\n" . "\n" .$start, "\n" .$start, $new_htaccess);
+						}
+
 						file_put_contents( $htaccess_file, $new_htaccess );
 					}
 				}
