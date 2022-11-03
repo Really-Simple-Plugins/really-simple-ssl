@@ -100,6 +100,8 @@ If you can't deactivate, do not just remove the plugin folder to uninstall! Foll
 * Fix: do not show WP_DEBUG_DISPLAY notice if WP_DEBUG is false, props @janv01
 * Fix: empty cron schedule, props @gilvansilvabr
 * Improvement: several typo's and string improvements
+* Fix: auto installer used function not defined yet
+* Fix: rest api optimizer causing an error in some cases @giorgos93
 
 = 6.0.1 =
 * Fix translations not loading for scripts
