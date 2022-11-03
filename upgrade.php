@@ -144,7 +144,7 @@ function rsssl_upgrade() {
 	}
 
 	#fix htaccess redirect.
-	if ( $prev_version && version_compare( $prev_version, '6.0.0', '>0' ) && version_compare( $prev_version, '6.0.4', '<' ) ) {
+	if ( $prev_version && version_compare( $prev_version, '6.0.0', '>=' ) && version_compare( $prev_version, '6.0.4', '<' ) ) {
 		rsssl_wrap_htaccess(true);
 	}
 
