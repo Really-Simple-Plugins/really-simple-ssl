@@ -67,13 +67,13 @@ function rsssl_get_items_for_second_step () {
 			"slug" => "burst-statistics",
 			'constant_premium' => false,
 			"title" => __("Burst Statistics", "really-simple-ssl"),
-			"description" => __("Gather privacy-friendly statistics with Burst Statistics", "really-simple-ssl"),
+			"description" => __("Self-hosted, Privacy-friendly analytics tool.", "really-simple-ssl"),
 		],
 		[
 			"slug" => "complianz-gdpr",
 			'constant_premium' => 'cmplz_premium',
 			"title" => __("Complianz - The Privacy Suite for WordPress", "really-simple-ssl"),
-			"description" => __("Cookie Consent as it should be", "really-simple-ssl"),
+			"description" => __("Cookie Consent Management as it should be.", "really-simple-ssl"),
 		]
 	];
 

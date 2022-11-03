@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2022-11-02T16:46:12+00:00\n"
+"POT-Creation-Date: 2022-11-03T07:14:09+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.6.0\n"
 "X-Domain: really-simple-ssl\n"
@@ -1411,7 +1411,8 @@ msgid "Burst Statistics"
 msgstr ""
 
 #: onboarding/config.php:70
-msgid "Gather privacy-friendly statistics with Burst Statistics"
+#: settings/settings.php:312
+msgid "Self-hosted, Privacy-friendly analytics tool."
 msgstr ""
 
 #: onboarding/config.php:75
@@ -1419,7 +1420,7 @@ msgid "Complianz - The Privacy Suite for WordPress"
 msgstr ""
 
 #: onboarding/config.php:76
-msgid "Cookie Consent as it should be"
+msgid "Cookie Consent Management as it should be."
 msgstr ""
 
 #: onboarding/config.php:83
@@ -2332,12 +2333,8 @@ msgstr ""
 msgid "SSL"
 msgstr ""
 
-#: settings/settings.php:312
-msgid "Self-hosted, Privacy-friendly analytics tool."
-msgstr ""
-
 #: settings/settings.php:320
-msgid "Complianz - Cookie Consent Management as it should be "
+msgid "Complianz - Cookie Consent Management as it should be."
 msgstr ""
 
 #: settings/settings.php:327
