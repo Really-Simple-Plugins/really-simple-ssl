@@ -381,10 +381,10 @@ function rsssl_fields( $load_values = true ) {
 			'default'          => false,
 		],
 		[
-			'id'                   => 'do_not_edit_htaccess',
+			'id'                   => 'do_not_edit_htaccess', //field is removed if not enabled
 			'menu_id'              => 'general',
 			'group_id'             => 'general',
-			'type'                 => 'hidden',
+			'type'                 => 'checkbox',
 			'label'                => __( "Stop editing the .htaccess file", 'really-simple-ssl' ),
 			'disabled'             => false,
 			'default'              => false,
