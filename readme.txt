@@ -20,13 +20,17 @@ Really Simple SSL will automatically configure your website to use SSL to its fu
 
 == Improve Security with Really Simple SSL Pro ==
 * The Mixed Content Scan & Fixer. Detect files that are requested over HTTP and fix it. Both Front- and Back-end.
-= Security Headers =
+
+== Security Headers ==
 These features mitigate the risk of clickjacking, cross-site-forgery attacks, stealing login credentials and malware among others.
+
 * Independent of your Server Configuration, works on Apache, LiteSpeed, NGINX etc.
 * Protect your website visitors with X-XSS Protection, X-Content-Type-Options, X-Frame-Options and Referrer Policy.
 * Enable HTTP Strict Transport Security and configure your site for the HSTS Preload list.
-= Advanced Security =
+
+== Advanced Security ==
 Isolate your website from unnecessary file loading and exchanges with third-parties. Fully control your website and minimize risk of manipulation.
+
 * Specifically designed for WordPress.
 * Control third-parties with the Content Security Policy - including Learning Mode.
 * Control browser features with the Permissions Policy e.g. geolocation, camera's and microphones.
