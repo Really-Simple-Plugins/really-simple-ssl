@@ -35,6 +35,7 @@ if ( !class_exists('rsp_upgrade_to_pro') ){
 				$this->item_id = sanitize_title($_GET['item_id']);
 			}
 
+            $admin_url = is_multisite() && is_network_admin() ? network_admin_url('settings.php') : admin_url("options-general.php");
 			if ( isset($_GET['plugin']) ) {
 				$plugin = sanitize_title($_GET['plugin']);
 				switch ($plugin) {
@@ -44,7 +45,7 @@ if ( !class_exists('rsp_upgrade_to_pro') ){
 						$this->plugin_constant = "rsssl_pro";
 						$this->prefix = "rsssl_";
 						$this->api_url = "https://really-simple-ssl.com";
-						$this->dashboard_url = add_query_arg(["page" => "really-simple-security"], rsssl_admin_url() );
+						$this->dashboard_url = add_query_arg(["page" => "really-simple-security"], $admin_url );
 						break;
 					case "brst_pro":
 						$this->slug = "burst";

@@ -136,6 +136,11 @@ function rsssl_upgrade() {
 		update_option('rsssl_6_upgrade_completed', true, false);
 	}
 
+	#clean up old rest api optimizer on upgrade
+	if ( $prev_version && version_compare( $prev_version, '6.0.2', '<' ) ) {
+		unlink( trailingslashit( WPMU_PLUGIN_DIR ) . 'rsssl_rest_api_optimizer.php' );
+	}
+
 	//delete in future upgrade. We want to check the review notice dismissed as fallback still.
 	//delete_option( 'rlrsssl_options' );
 	//delete_site_option( 'rlrsssl_network_options' );
