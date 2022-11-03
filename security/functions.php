@@ -308,7 +308,7 @@ if ( ! function_exists('rsssl_wrap_htaccess' ) ) {
 						} else {
 							$new_htaccess = "\n" . $new_rules . $content_htaccess;
 						}
-						
+
 						//keep linebreaks limited
 						if (strpos($new_htaccess, "\n" . "\n" .$start)!==false) {
 							$new_htaccess = str_replace("\n" . "\n" .$start, "\n" .$start, $new_htaccess);
