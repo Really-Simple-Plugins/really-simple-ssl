@@ -751,7 +751,7 @@ class rsssl_admin
         }
 
         //remove edits
-        $wpconfig = preg_replace("/\/\/Begin\s?Really\s?Simple\s?SSL.*?\/\/END\s?Really\s?Simple\s?SSL/s", "", $wpconfig);
+        $wpconfig = preg_replace("/\/\/Begin\s?Really\s?Simple\s?SSL\s?Server\s?variable\s?fix.*?\/\/END\s?Really\s?Simple\s?SSL\s?Server\s?variable\s?fix/s", "", $wpconfig);
         $wpconfig = preg_replace("/\n+/", "\n", $wpconfig);
         file_put_contents($wpconfig_path, $wpconfig);
     }
@@ -835,7 +835,6 @@ class rsssl_admin
 	    if ( !rsssl_user_can_manage() ) {
 		    return;
 	    }
-
 	    $this->remove_secure_cookie_settings();
 	    if ($ssl_was_enabled) {
 		    $this->remove_ssl_from_siteurl();
@@ -865,10 +864,6 @@ class rsssl_admin
             return;
 		}
 
-        if ( !$this->is_settings_page()) {
-            return;
-        }
-
 		if ( $this->secure_cookie_settings_status() !== 'set') {
             return;
 		}
@@ -880,7 +875,7 @@ class rsssl_admin
 
 		if (!empty($wpconfig_path)) {
 			$wpconfig = file_get_contents($wpconfig_path);
-			$wpconfig = preg_replace("/\/\/Begin\s?Really\s?Simple\s?SSL\s?session\s?cookie\s?settings.*?\/\/END\s?Really\s?Simple\s?SSL/s", "", $wpconfig);
+			$wpconfig = preg_replace("/\/\/Begin\s?Really\s?Simple\s?SSL\s?session\s?cookie\s?settings.*?\/\/END\s?Really\s?Simple\s?SSL\s?cookie\s?settings/s", "", $wpconfig);
 			$wpconfig = preg_replace("/\n+/","\n", $wpconfig);
 			file_put_contents($wpconfig_path, $wpconfig);
 		}
