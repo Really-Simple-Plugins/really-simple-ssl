@@ -308,10 +308,10 @@ if ( ! function_exists('rsssl_wrap_htaccess' ) ) {
 						} else {
 							$new_htaccess = "\n" . $new_rules . $content_htaccess;
 						}
-						
-						//keep linebreaks limited
-						if (strpos($new_htaccess, "\n" . "\n" .$start)!==false) {
-							$new_htaccess = str_replace("\n" . "\n" .$start, "\n" .$start, $new_htaccess);
+
+						#clean up
+						if (strpos($new_htaccess, "\n" ."\n" . "\n" )!==false) {
+							$new_htaccess = str_replace("\n" . "\n" . "\n", "\n" ."\n", $new_htaccess);
 						}
 
 						file_put_contents( $htaccess_file, $new_htaccess );
