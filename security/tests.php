@@ -147,6 +147,15 @@ function rsssl_has_admin_user() {
 }
 
 /**
+ * Chheck if username is empty
+ * @return bool
+ */
+function rsssl_new_username_empty(): bool {
+	$new_user_login = rsssl_get_option('new_admin_user_login');
+	return is_string($new_user_login) && strlen($new_user_login)<3;
+}
+
+/**
  * @return bool
  *
  * Check if user ID 1 exists end if user enumeration has been disabled

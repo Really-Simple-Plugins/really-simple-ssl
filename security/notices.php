@@ -180,6 +180,23 @@ function rsssl_general_security_notices( $notices ) {
 			'rename_admin_user',
 		],
 	);
+	$notices['new_username_empty'] = array(
+		'condition' => ['rsssl_has_admin_user', 'option_rename_admin_user', 'rsssl_new_username_empty'],
+		'callback' => '_true_',
+		'score' => 5,
+		'output' => array(
+			'true' => array(
+				'highlight_field_id' => 'rename_admin_user',
+				'title' => __("Username", "really-simple-ssl"),
+				'msg' => __("Rename admin user enabled: Please choose a new username of at least 4 characters.", "really-simple-ssl"),
+				'icon' => 'warning',
+				'dismissible' => true,
+			),
+		),
+		'show_with_options' => [
+			'new_admin_user_login',
+		],
+	);
 	$notices['code-execution-uploads-allowed'] = array(
 		'callback' => 'rsssl_code_execution_allowed',
 		'score' => 5,

@@ -142,7 +142,7 @@ class SettingsPage extends Component {
               });
           }
 
-          if (!enabled && field.type==='letsencrypt') {
+          if (!enabled && (field.type==='letsencrypt' || field.condition_action==='hide') ) {
             this.props.fields[this.props.fields.indexOf(field)].visible = false;
           } else {
             this.props.fields[this.props.fields.indexOf(field)].visible = true;
