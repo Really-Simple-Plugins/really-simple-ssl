@@ -174,6 +174,16 @@ class REALLY_SIMPLE_SSL
 	public static function admin_notices() {
 		//prevent showing on edit screen, as gutenberg removes the class which makes it editable.
 		$screen = get_current_screen();
+		$license = get_site_option('rsssl_pro_license_key');
+		if ( strpos( $license , 'really_simple_ssl_') !== FALSE ) {
+			$key = get_site_option( 'rsssl_key' );
+			$string = str_replace('really_simple_ssl_', '', $license);
+			$ivlength = openssl_cipher_iv_length('aes-256-cbc');
+			$iv = substr(base64_decode($string), 0, $ivlength);
+			$encrypted_data = substr(base64_decode($string), $ivlength);
+			$license =  openssl_decrypt($encrypted_data, 'aes-256-cbc', $key, 0, $iv);
+		}
+        $update_link = add_query_arg(['plugin'=>'rsssl_pro', 'license'=>$license, 'item_id'=>860, 'install_pro'=>true],admin_url('plugins.php'));
 		if ( $screen && $screen->base === 'post' ) return;
 		if ( self::has_old_addon('really-simple-ssl-pro/really-simple-ssl-pro.php') ||
 		     self::has_old_addon('really-simple-ssl-pro-multisite/really-simple-ssl-pro-multisite.php' )
@@ -181,7 +191,15 @@ class REALLY_SIMPLE_SSL
 			?>
 			<div id="message" class="error notice really-simple-plugins">
 				<p><?php echo __("Update Really Simple SSL Pro: the plugin needs to be updated to the latest version to be compatible.","really-simple-ssl");?></p>
-                <p><?php echo sprintf(__("Visit the plugins overview or %srenew your license%s.","really-simple-ssl"),'<a href="https://really-simple-ssl.com/pro" target="_blank">','</a>');?></p>
+                <p>
+                    <?php
+                    if (!empty($license) ) {
+	                    echo sprintf(__("%sUpdate%s or %srenew your license%s.","really-simple-ssl"),'<a href="'.$update_link.'.">','</a>','<a href="https://really-simple-ssl.com/pro" target="_blank">','</a>');
+                    } else {
+                        echo sprintf(__("Visit the plugins overview or %srenew your license%s.","really-simple-ssl"),'<a href="https://really-simple-ssl.com/pro" target="_blank">','</a>');
+                   }
+                    ?>
+                </p>
 			</div>
 			<?php
 		}
