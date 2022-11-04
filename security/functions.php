@@ -163,6 +163,8 @@ if ( !function_exists('rsssl_remove_htaccess_security_edits') ) {
 
 if ( ! function_exists('rsssl_wrap_htaccess' ) ) {
 	function rsssl_wrap_htaccess($force=false) {
+		if ( get_transient('rsssl_updating_htaccess')) return;
+		set_transient('rsssl_updating_htaccess', true, 5 * MINUTE_IN_SECONDS);
 		if ( ! rsssl_uses_htaccess() ) {
 			return;
 		}
@@ -253,6 +255,7 @@ if ( ! function_exists('rsssl_wrap_htaccess' ) ) {
 				}
 			}
 		}
+
 		/**
 		 * htaccess in root dir
 		 */
@@ -288,8 +291,6 @@ if ( ! function_exists('rsssl_wrap_htaccess' ) ) {
 				}
 				//should replace if rules is not empty, OR if rules is empty and htaccess is not.
 				$htaccess_has_rsssl_rules = preg_match( '/#Begin Really Simple Security(.*?)#End Really Simple Security/is', $content_htaccess, $matches );
-				$htaccess_has_rsssl_rules = $htaccess_has_rsssl_rules || preg_match( "/#\s?BEGIN\s?rlrssslReallySimpleSSL(.*?)#\s?END\s?rlrssslReallySimpleSSL/s", $content_htaccess, $matches );
-				$htaccess_has_rsssl_rules = $htaccess_has_rsssl_rules || preg_match( "/#\s?BEGIN\s?Really Simple SSL Redirect(.*?)#\s?END\s?Really Simple SSL Redirect/s", $content_htaccess, $matches );
 				if ( ! empty( $rules_result ) || $htaccess_has_rsssl_rules ) {
 					if ( ! is_writable( $htaccess_file ) ) {
 						update_site_option( 'rsssl_htaccess_error', 'not-writable' );
@@ -319,6 +320,7 @@ if ( ! function_exists('rsssl_wrap_htaccess' ) ) {
 				}
 			}
 		}
+		delete_transient('rsssl_updating_htaccess');
 	}
 	add_action('admin_init', 'rsssl_wrap_htaccess' );
 	add_action('rsssl_after_saved_fields', 'rsssl_wrap_htaccess', 30);
