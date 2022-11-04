@@ -47,12 +47,13 @@ function rsssl_rename_admin_user() {
 	// Get user data for login admin
 	$admin_user = get_user_by('login','admin');
 	if ( $admin_user ) {
-		$admin_user_id  = $admin_user->data->ID;
-		$admin_userdata = get_userdata( $admin_user_id );
-		$admin_email    = $admin_userdata->data->user_email;
-		// Generate new user login. Do it here so we can get the ID for this user later in the function
+		// Get the new user login
 		$new_user_login = rsssl_get_option('new_admin_user_login');
-		if ( strlen($new_user_login)>=4 ) {
+		if ( rsssl_new_username_valid() ) {
+			$admin_user_id  = $admin_user->data->ID;
+			$admin_userdata = get_userdata( $admin_user_id );
+			$admin_email    = $admin_userdata->data->user_email;
+
 			//create temp email address
 			$domain = site_url();
 			$parse  = parse_url( $domain );

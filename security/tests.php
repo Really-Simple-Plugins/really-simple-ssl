@@ -147,12 +147,17 @@ function rsssl_has_admin_user() {
 }
 
 /**
- * Chheck if username is empty
+ * Chheck if username is valid for use
  * @return bool
  */
-function rsssl_new_username_empty(): bool {
+function rsssl_new_username_valid(): bool {
+
 	$new_user_login = rsssl_get_option('new_admin_user_login');
-	return is_string($new_user_login) && strlen($new_user_login)<3;
+	if ( $new_user_login === 'admin' ) {
+		return false;
+	}
+
+	return is_string($new_user_login) && strlen($new_user_login)>3;
 }
 
 /**

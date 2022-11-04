@@ -181,7 +181,7 @@ function rsssl_general_security_notices( $notices ) {
 		],
 	);
 	$notices['new_username_empty'] = array(
-		'condition' => ['rsssl_has_admin_user', 'option_rename_admin_user', 'rsssl_new_username_empty'],
+		'condition' => ['rsssl_has_admin_user', 'option_rename_admin_user', 'NOT rsssl_new_username_valid'],
 		'callback' => '_true_',
 		'score' => 5,
 		'output' => array(
