@@ -163,8 +163,7 @@ if ( !function_exists('rsssl_remove_htaccess_security_edits') ) {
 
 if ( ! function_exists('rsssl_wrap_htaccess' ) ) {
 	function rsssl_wrap_htaccess($force=false) {
-		if ( get_transient('rsssl_updating_htaccess')) return;
-		set_transient('rsssl_updating_htaccess', true, 5 * MINUTE_IN_SECONDS);
+
 		if ( ! rsssl_uses_htaccess() ) {
 			return;
 		}
@@ -182,6 +181,7 @@ if ( ! function_exists('rsssl_wrap_htaccess' ) ) {
 		) {
 			return;
 		}
+		
 		if ( get_site_option('rsssl_htaccess_error') ) {
 			delete_site_option( 'rsssl_htaccess_error' );
 			delete_site_option( 'rsssl_htaccess_rules' );
@@ -191,6 +191,12 @@ if ( ! function_exists('rsssl_wrap_htaccess' ) ) {
 			delete_site_option( 'rsssl_uploads_htaccess_error' );
 			delete_site_option( 'rsssl_uploads_htaccess_rules' );
 		}
+
+		if ( get_transient('rsssl_updating_htaccess')) {
+			return;
+		}
+
+		set_transient('rsssl_updating_htaccess', true, 5 * MINUTE_IN_SECONDS);
 
 		$start = '#Begin Really Simple Security';
 		$end   = "\n" . '#End Really Simple Security' . "\n";
