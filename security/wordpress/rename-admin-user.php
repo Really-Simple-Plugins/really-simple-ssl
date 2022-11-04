@@ -145,11 +145,6 @@ function rsssl_rename_admin_user() {
 add_action('rsssl_after_saved_fields','rsssl_rename_admin_user', 30);
 
 /**
- * Run check once a day
- */
-add_action( 'rsssl_every_day_hook', 'rsssl_rename_admin_user' );
-
-/**
  * @return bool
  *
  * Notice condition
