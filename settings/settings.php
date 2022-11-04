@@ -9,7 +9,7 @@ defined('ABSPATH') or die();
 
 require_once( rsssl_path . 'settings/config/config.php' );
 require_once( rsssl_path . 'settings/config/disable-fields-filter.php' );
-require_once( rsssl_path . 'settings/rest-api-optimizer/rest-api-optimizer.php' );
+//require_once( rsssl_path . 'settings/rest-api-optimizer/rest-api-optimizer.php' );
 
 /**
  * Fix for WPML issue where WPML breaks the rest api by adding a language locale in the url
