@@ -2233,7 +2233,7 @@ class rsssl_admin
 
             'upgraded_to_6' => array(
 	            'condition'  => array(
-                        'RSSSL()->admin->is_upgraded_to_6'
+                        'RSSSL()->admin->is_upgraded_to_6',
                 ),
 	            'callback' => '_true_',
 	            'output' => array(
@@ -2251,6 +2251,7 @@ class rsssl_admin
         //on multisite, don't show the notice on subsites.
         if ( is_multisite() && !is_network_admin() ) {
             unset($notices['secure_cookies_set']);
+            unset($notices['upgraded_to_6']);
         }
 
         $notices = apply_filters('rsssl_notices', $notices);
