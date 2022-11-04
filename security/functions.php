@@ -181,7 +181,7 @@ if ( ! function_exists('rsssl_wrap_htaccess' ) ) {
 		) {
 			return;
 		}
-		
+
 		if ( get_site_option('rsssl_htaccess_error') ) {
 			delete_site_option( 'rsssl_htaccess_error' );
 			delete_site_option( 'rsssl_htaccess_rules' );
@@ -192,11 +192,11 @@ if ( ! function_exists('rsssl_wrap_htaccess' ) ) {
 			delete_site_option( 'rsssl_uploads_htaccess_rules' );
 		}
 
-		if ( get_transient('rsssl_updating_htaccess')) {
+		if ( get_option('rsssl_updating_htaccess') ) {
 			return;
 		}
 
-		set_transient('rsssl_updating_htaccess', true, 5 * MINUTE_IN_SECONDS);
+		update_option('rsssl_updating_htaccess', true);
 
 		$start = '#Begin Really Simple Security';
 		$end   = "\n" . '#End Really Simple Security' . "\n";
@@ -326,7 +326,7 @@ if ( ! function_exists('rsssl_wrap_htaccess' ) ) {
 				}
 			}
 		}
-		delete_transient('rsssl_updating_htaccess');
+		delete_option('rsssl_updating_htaccess');
 	}
 	add_action('admin_init', 'rsssl_wrap_htaccess' );
 	add_action('rsssl_after_saved_fields', 'rsssl_wrap_htaccess', 30);
