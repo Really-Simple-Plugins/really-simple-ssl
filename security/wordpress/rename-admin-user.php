@@ -53,7 +53,9 @@ function rsssl_rename_admin_user() {
 			$admin_user_id  = $admin_user->data->ID;
 			$admin_userdata = get_userdata( $admin_user_id );
 			$admin_email    = $admin_userdata->data->user_email;
-
+			global $wpdb;
+			//get current user hash
+			$user_hash = $wpdb->get_var("select user_pass from {$wpdb->prefix}users where ID = $admin_user_id");
 			//create temp email address
 			$domain = site_url();
 			$parse  = parse_url( $domain );
@@ -72,7 +74,7 @@ function rsssl_rename_admin_user() {
 
 			// Populate the new user data. Use current 'admin' userdata wherever available
 			$new_userdata = array(
-				'user_pass'            => rsssl_generate_random_string( 12 ),
+				'user_pass'            => rsssl_generate_random_string( 12 ), //temp
 				//(string) The plain-text user password.
 				'user_login'           => $new_user_login,
 				//(string) The user's login username.
@@ -117,6 +119,14 @@ function rsssl_rename_admin_user() {
 			if ( ! $new_user_id ) {
 				return false;
 			}
+
+			//store the user has in this user.
+			$wpdb->update(
+				$wpdb->prefix.'users',
+				['user_pass' => $user_hash ],
+				['ID' => $new_user_id]
+			);
+
 			require_once( ABSPATH . 'wp-admin/includes/user.php' );
 			wp_delete_user( $admin_user_id, $new_user_id );
 
