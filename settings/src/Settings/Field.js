@@ -169,6 +169,8 @@ class Field extends Component {
             return (
                 <div className={this.highLightClass}>
                   <TextControl
+                      required={ field.required }
+                      disabled={ disabled }
                       help={ field.comment }
                       label={ field.label }
                       onChange={ ( fieldValue ) => this.onChangeHandler(fieldValue) }
