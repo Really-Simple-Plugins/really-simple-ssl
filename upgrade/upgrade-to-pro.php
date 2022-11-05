@@ -35,12 +35,12 @@ if ( !class_exists('rsp_upgrade_to_pro') ){
 				$this->item_id = sanitize_title($_GET['item_id']);
 			}
 
-            $admin_url = is_multisite() && is_network_admin() ? network_admin_url('settings.php') : admin_url("options-general.php");
+            $admin_url = is_multisite() ? network_admin_url('settings.php') : admin_url("options-general.php");
 			if ( isset($_GET['plugin']) ) {
 				$plugin = sanitize_title($_GET['plugin']);
 				switch ($plugin) {
 					case "rsssl_pro":
-						$this->slug = "really-simple-ssl-pro/really-simple-ssl-pro.php";
+						$this->slug = is_multisite() ? "really-simple-ssl-pro-multisite/really-simple-ssl-pro-multisite.php" :  "really-simple-ssl-pro/really-simple-ssl-pro.php";
 						$this->plugin_name = "Really Simple SSL Pro";
 						$this->plugin_constant = "rsssl_pro";
 						$this->prefix = "rsssl_";
@@ -691,8 +691,8 @@ if ( !class_exists('rsp_upgrade_to_pro') ){
 			}
 
 			if ( isset($_GET['token']) && wp_verify_nonce($_GET['token'], 'upgrade_to_pro_nonce') && isset($_GET['plugin']) ) {
-
-				$result = activate_plugin( $this->slug );
+				$networkwide = is_multisite() && rsssl_is_networkwide_active();
+				$result = activate_plugin( $this->slug, '', $networkwide  );
 				if ( !is_wp_error($result) ) {
 					$response = [
 						'success' => true,
