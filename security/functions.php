@@ -162,7 +162,10 @@ if ( !function_exists('rsssl_remove_htaccess_security_edits') ) {
  */
 
 if ( ! function_exists('rsssl_wrap_htaccess' ) ) {
-	function rsssl_wrap_htaccess($force=false) {
+	function rsssl_wrap_htaccess() {
+		if ( !rsssl_user_can_manage() ) {
+			return;
+		}
 
 		if ( ! rsssl_uses_htaccess() ) {
 			return;
@@ -173,9 +176,8 @@ if ( ! function_exists('rsssl_wrap_htaccess' ) ) {
 		}
 
 		if (
-			!$force &&
+			!rsssl_is_logged_in_rest() &&
 			!RSSSL()->admin->is_settings_page() &&
-		     !rsssl_user_can_manage() &&
 		     current_filter() !== 'rocket_activation' &&
 		     current_filter() !== 'rocket_deactivation'
 		) {
@@ -196,7 +198,7 @@ if ( ! function_exists('rsssl_wrap_htaccess' ) ) {
 			return;
 		}
 
-		update_option('rsssl_updating_htaccess', true);
+		update_option('rsssl_updating_htaccess', true, false );
 
 		$start = '#Begin Really Simple Security';
 		$end   = "\n" . '#End Really Simple Security' . "\n";
