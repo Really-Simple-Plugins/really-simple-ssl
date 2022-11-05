@@ -96,6 +96,9 @@ The plugin checks your certificate before enabling, but if, for example, you mig
 If you can't deactivate, do not just remove the plugin folder to uninstall! Follow these [instructions](https://really-simple-ssl.com/knowledge-base/uninstall-websitebackend-not-accessible/) instead.
 
 == Changelog ==
+= 6.0.8 =
+* Improvement: Lets Encrypt wizard CSS styling
+
 = 6.0.7 =
 * Fix: restrict conditions in which htaccess rewrite runs, preventing conflicts with other rewriting plugins
 
