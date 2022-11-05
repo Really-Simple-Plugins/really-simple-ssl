@@ -99,6 +99,7 @@ If you can't deactivate, do not just remove the plugin folder to uninstall! Foll
 = 6.0.8 =
 * Improvement: Lets Encrypt wizard CSS styling
 * Improvement: re-add link to article about Let's Encrypt so users can easily find the URL
+* Improvement: let user choose a new username when selecting "rename admin user"
 
 = 6.0.7 =
 * Fix: restrict conditions in which htaccess rewrite runs, preventing conflicts with other rewriting plugins
