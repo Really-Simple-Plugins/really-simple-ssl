@@ -414,11 +414,22 @@ if ( !class_exists('rsp_upgrade_to_pro') ){
 				$error = true;
 			}
 
-			if (defined($this->plugin_constant)) {
+			if ( defined($this->plugin_constant) ) {
+				deactivate_plugins( $this->slug );
+            }
+
+            $file = trailingslashit(WP_CONTENT_DIR).'plugins/'.$this->slug;
+			if ( file_exists($file ) ) {
+                $dir = dirname($file);
+                $new_dir = $dir.'_'.time();
+                rename($dir, $new_dir);
+			}
+
+			if ( file_exists($file ) ) {
 				$error = true;
 				$response = [
 					'success' => false,
-					'message' => __("Plugin already installed!", "really-simple-ssl"),
+					'message' => __("Could not rename folder!", "really-simple-ssl"),
 				];
 			}
 
@@ -682,7 +693,6 @@ if ( !class_exists('rsp_upgrade_to_pro') ){
 			if ( isset($_GET['token']) && wp_verify_nonce($_GET['token'], 'upgrade_to_pro_nonce') && isset($_GET['plugin']) ) {
 
 				$result = activate_plugin( $this->slug );
-
 				if ( !is_wp_error($result) ) {
 					$response = [
 						'success' => true,
