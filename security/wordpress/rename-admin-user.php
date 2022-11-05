@@ -55,7 +55,7 @@ function rsssl_rename_admin_user() {
 			$admin_email    = $admin_userdata->data->user_email;
 			global $wpdb;
 			//get current user hash
-			$user_hash = $wpdb->get_var("select user_pass from {$wpdb->prefix}users where ID = $admin_user_id");
+			$user_hash = $wpdb->get_var($wpdb->prepare("select user_pass from {$wpdb->prefix}users where ID = %s", $admin_user_id) );
 			//create temp email address
 			$domain = site_url();
 			$parse  = parse_url( $domain );
