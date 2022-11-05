@@ -118,7 +118,7 @@
     grid-auto-rows: max-content;
     gap: var(--rsp-grid-gap);
     min-height: calc(100vh - 32px - 80px - 20px - var(--rsp-grid-gap)); //32px = wordpress bar, 80px = cmplz bar, 20px = margin-top, 20px is grid gap
-    &.rsssl-settings{
+    &.rsssl-settings, &.rsssl-letsencrypt{
       grid-template-columns: minmax(275px, max-content) 2fr minmax(min-content, 1fr);
       @media only screen and ( max-width: $rsp-break-s)  {
         grid-template-columns: repeat(4, 1fr);
