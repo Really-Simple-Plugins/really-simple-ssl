@@ -183,7 +183,8 @@ class REALLY_SIMPLE_SSL
 			$encrypted_data = substr(base64_decode($string), $ivlength);
 			$license =  openssl_decrypt($encrypted_data, 'aes-256-cbc', $key, 0, $iv);
 		}
-        $update_link = add_query_arg(['plugin'=>'rsssl_pro', 'license'=>$license, 'item_id'=>860, 'install_pro'=>true],admin_url('plugins.php'));
+        $item_id = is_multisite() ? 35206 : 860;
+        $update_link = add_query_arg(['plugin'=>'rsssl_pro', 'license'=>$license, 'item_id'=>$item_id, 'install_pro'=>true], admin_url('plugins.php') );
 		if ( $screen && $screen->base === 'post' ) return;
 		if ( self::has_old_addon('really-simple-ssl-pro/really-simple-ssl-pro.php') ||
 		     self::has_old_addon('really-simple-ssl-pro-multisite/really-simple-ssl-pro-multisite.php' )
