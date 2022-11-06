@@ -141,7 +141,7 @@ class Field extends Component {
                       label={ field.label }
                       onChange={ ( fieldValue ) => this.onChangeHandler(fieldValue) }
                   />
-                  {field.comment && <div dangerouslySetInnerHTML={{__html:field.comment}}></div>}
+                  {field.comment && <div className="rsssl-comment" dangerouslySetInnerHTML={{__html:field.comment}}></div>}
                 </div>
             );
         }

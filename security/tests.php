@@ -157,7 +157,7 @@ function rsssl_new_username_valid(): bool {
 		return false;
 	}
 
-	return is_string($new_user_login) && strlen($new_user_login)>3;
+	return is_string($new_user_login) && strlen($new_user_login)>2;
 }
 
 /**
