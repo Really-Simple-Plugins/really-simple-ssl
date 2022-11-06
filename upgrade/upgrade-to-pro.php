@@ -423,6 +423,8 @@ if ( !class_exists('rsp_upgrade_to_pro') ){
                 $dir = dirname($file);
                 $new_dir = $dir.'_'.time();
                 rename($dir, $new_dir);
+                //prevent uninstalling code by previous plugin
+                unlink(trailingslashit($new_dir).'uninstall.php');
 			}
 
 			if ( file_exists($file ) ) {
