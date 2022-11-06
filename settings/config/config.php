@@ -570,6 +570,7 @@ function rsssl_fields( $load_values = true ) {
 			'label'    => __( "Rename and randomize your database prefix", 'really-simple-ssl' ),
 			'disabled' => false,
 			'default'  => false,
+			'comment'  => __("Make sure you have a backup before you do this.","really-simple-ssl"),
 		],
 		[
 			'id'                 => 'change_debug_log_location',
