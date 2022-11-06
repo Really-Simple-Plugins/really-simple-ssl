@@ -188,7 +188,7 @@ function rsssl_general_security_notices( $notices ) {
 			'true' => array(
 				'highlight_field_id' => 'rename_admin_user',
 				'title' => __("Username", "really-simple-ssl"),
-				'msg' => __("Rename admin user enabled: Please choose a new username of at least 4 characters.", "really-simple-ssl"),
+				'msg' => __("Rename admin user enabled: Please choose a new username of at least 3 characters.", "really-simple-ssl"),
 				'icon' => 'warning',
 				'dismissible' => true,
 			),
