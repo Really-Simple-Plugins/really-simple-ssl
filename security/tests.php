@@ -147,7 +147,7 @@ function rsssl_has_admin_user() {
 }
 
 /**
- * Chheck if username is valid for use
+ * Check if username is valid for use
  * @return bool
  */
 function rsssl_new_username_valid(): bool {
