@@ -35,17 +35,17 @@ if ( !class_exists('rsp_upgrade_to_pro') ){
 				$this->item_id = sanitize_title($_GET['item_id']);
 			}
 
-            $admin_url = is_multisite() ? network_admin_url('settings.php') : admin_url("options-general.php");
 			if ( isset($_GET['plugin']) ) {
 				$plugin = sanitize_title($_GET['plugin']);
 				switch ($plugin) {
 					case "rsssl_pro":
+						$rsssl_admin_url = is_multisite() ? network_admin_url('settings.php') : admin_url("options-general.php");
 						$this->slug = is_multisite() ? "really-simple-ssl-pro-multisite/really-simple-ssl-pro-multisite.php" :  "really-simple-ssl-pro/really-simple-ssl-pro.php";
 						$this->plugin_name = "Really Simple SSL Pro";
 						$this->plugin_constant = "rsssl_pro";
 						$this->prefix = "rsssl_";
 						$this->api_url = "https://really-simple-ssl.com";
-						$this->dashboard_url = add_query_arg(["page" => "really-simple-security"], $admin_url );
+						$this->dashboard_url = add_query_arg(["page" => "really-simple-security"], $rsssl_admin_url );
 						break;
 					case "brst_pro":
 						$this->slug = "burst";
@@ -57,12 +57,12 @@ if ( !class_exists('rsp_upgrade_to_pro') ){
 						break;
 					case "cmplz_pro":
 					default:
-						$this->slug = "complianz-gdpr-premium/complianz-gpdr-premium.php";
+                        $this->slug = is_multisite() ? "complianz-gdpr-premium-multisite/complianz-gpdr-premium.php" : "complianz-gdpr-premium/complianz-gpdr-premium.php";
 						$this->plugin_name = "Complianz";
 						$this->plugin_constant = "cmplz_premium";
 						$this->prefix = "cmplz_";
 						$this->api_url = "https://complianz.io";
-						$this->dashboard_url = add_query_arg(["page" => "complianz"], admin_url( "admin.php" ));
+						$this->dashboard_url = add_query_arg(["page" => "complianz"], admin_url("admin.php") );
 						break;
 				}
 			}
