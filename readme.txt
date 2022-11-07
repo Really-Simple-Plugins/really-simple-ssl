@@ -96,6 +96,9 @@ The plugin checks your certificate before enabling, but if, for example, you mig
 If you can't deactivate, do not just remove the plugin folder to uninstall! Follow these [instructions](https://really-simple-ssl.com/knowledge-base/uninstall-websitebackend-not-accessible/) instead.
 
 == Changelog ==
+= 6.0.9 =
+* Fix: incorrectly disabled email field in Let's Encrypt wizard, props @cburgess
+
 = 6.0.8 =
 * Improvement: Lets Encrypt wizard CSS styling
 * Improvement: re-add link to article about Let's Encrypt so users can easily find the URL
