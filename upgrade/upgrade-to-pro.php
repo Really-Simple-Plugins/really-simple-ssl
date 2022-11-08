@@ -422,7 +422,10 @@ if ( !class_exists('rsp_upgrade_to_pro') ){
 			if ( file_exists($file ) ) {
                 $dir = dirname($file);
                 $new_dir = $dir.'_'.time();
+                set_transient('rsssl_upgrade_dir', $new_dir, WEEK_IN_SECONDS);
                 rename($dir, $new_dir);
+                //prevent uninstalling code by previous plugin
+                unlink(trailingslashit($new_dir).'uninstall.php');
 			}
 
 			if ( file_exists($file ) ) {
@@ -564,6 +567,17 @@ if ( !class_exists('rsp_upgrade_to_pro') ){
 							$message = __( 'An error occurred, please try again.', "really-simple-ssl" );
 							break;
 					}
+                    //in case of failure, rename back to default
+					$new_dir = get_transient('rsssl_upgrade_dir');
+                    if ( $new_dir ) {
+	                    if ( file_exists($new_dir ) ) {
+		                    $default_file = trailingslashit(WP_CONTENT_DIR).'plugins/'.$this->slug;
+		                    $default_dir = dirname($default_file);
+		                    rename($new_dir, $default_dir);
+	                    }
+                    }
+
+
 				} else {
 					$success = $license_data->license === 'valid';
 				}

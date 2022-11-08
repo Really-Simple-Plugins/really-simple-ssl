@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2022-11-06T08:44:32+00:00\n"
+"POT-Creation-Date: 2022-11-06T12:15:46+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.6.0\n"
 "X-Domain: really-simple-ssl\n"
@@ -1689,7 +1689,7 @@ msgid "Your site registered a user with the name 'admin'."
 msgstr ""
 
 #: security/notices.php:191
-msgid "Rename admin user enabled: Please choose a new username of at least 4 characters."
+msgid "Rename admin user enabled: Please choose a new username of at least 3 characters."
 msgstr ""
 
 #: security/notices.php:206
@@ -2437,40 +2437,40 @@ msgstr ""
 msgid "Check your %slicense%s."
 msgstr ""
 
-#: upgrade/upgrade-to-pro.php:432
+#: upgrade/upgrade-to-pro.php:433
 msgid "Could not rename folder!"
 msgstr ""
 
-#: upgrade/upgrade-to-pro.php:532
-#: upgrade/upgrade-to-pro.php:564
+#: upgrade/upgrade-to-pro.php:533
+#: upgrade/upgrade-to-pro.php:565
 msgid "An error occurred, please try again."
 msgstr ""
 
-#: upgrade/upgrade-to-pro.php:540
+#: upgrade/upgrade-to-pro.php:541
 msgid "Your license key expired on %s."
 msgstr ""
 
-#: upgrade/upgrade-to-pro.php:546
+#: upgrade/upgrade-to-pro.php:547
 msgid "Your license key has been disabled."
 msgstr ""
 
-#: upgrade/upgrade-to-pro.php:549
+#: upgrade/upgrade-to-pro.php:550
 msgid "Missing license."
 msgstr ""
 
-#: upgrade/upgrade-to-pro.php:552
+#: upgrade/upgrade-to-pro.php:553
 msgid "Invalid license."
 msgstr ""
 
-#: upgrade/upgrade-to-pro.php:555
+#: upgrade/upgrade-to-pro.php:556
 msgid "Your license is not active for this URL."
 msgstr ""
 
-#: upgrade/upgrade-to-pro.php:558
+#: upgrade/upgrade-to-pro.php:559
 msgid "This appears to be an invalid license key for this plugin."
 msgstr ""
 
-#: upgrade/upgrade-to-pro.php:561
+#: upgrade/upgrade-to-pro.php:562
 msgid "Your license key has reached its activation limit."
 msgstr ""
 
