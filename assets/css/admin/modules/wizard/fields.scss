@@ -12,6 +12,7 @@
         max-width: max-content;
       }
     }
+
     .rsssl-grid-item-content label{
       font-size: var(--rsp-fs-300);
       font-weight: 400;
@@ -45,6 +46,12 @@
     .rsssl-grid-item{
       .rsssl-grid-item-content{
         padding: var(--rsp-spacing-xs) 0;
+      }
+    }
+
+    .rsssl-field-wrap {
+      .rsssl-comment {
+        font-style:italic;
       }
     }
     .rsssl-field-wrap, .rsssl-settings-block-intro{

@@ -6,7 +6,7 @@ Requires at least: 5.7
 License: GPL2
 Tested up to: 6.1
 Requires PHP: 7.2
-Stable tag: 6.0.5
+Stable tag: 6.0.8
 
 The easiest way to improve security! Leverage your SSL certificate and protect your website visitors.
 
@@ -96,6 +96,17 @@ The plugin checks your certificate before enabling, but if, for example, you mig
 If you can't deactivate, do not just remove the plugin folder to uninstall! Follow these [instructions](https://really-simple-ssl.com/knowledge-base/uninstall-websitebackend-not-accessible/) instead.
 
 == Changelog ==
+= 6.0.8 =
+* Improvement: Lets Encrypt wizard CSS styling
+* Improvement: re-add link to article about Let's Encrypt so users can easily find the URL
+* Improvement: let user choose a new username when selecting "rename admin user"
+
+= 6.0.7 =
+* Fix: restrict conditions in which htaccess rewrite runs, preventing conflicts with other rewriting plugins
+
+= 6.0.6 =
+* Fix: drop upgrade of .htaccess file in upgrade script
+
 = 6.0.5 =
 * Fix: race condition in .htaccess update script, where multiple updates simultaneously caused issues with the .htaccess file
 

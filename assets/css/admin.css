@@ -332,16 +332,16 @@
     min-height: calc(100vh - 32px - 80px - 20px - var(--rsp-grid-gap));
 }
 
-.rsssl .rsssl-grid.rsssl-settings {
+.rsssl .rsssl-grid.rsssl-settings, .rsssl .rsssl-grid.rsssl-letsencrypt {
     grid-template-columns: minmax(275px, max-content) 2fr minmax(min-content, 1fr);
 }
 
 @media only screen and (max-width: 1080px) {
-    .rsssl .rsssl-grid.rsssl-settings {
+    .rsssl .rsssl-grid.rsssl-settings, .rsssl .rsssl-grid.rsssl-letsencrypt {
         grid-template-columns: repeat(4, 1fr);
     }
 
-    .rsssl .rsssl-grid.rsssl-settings .rsssl-wizard-menu, .rsssl .rsssl-grid.rsssl-settings .rsssl-wizard-settings, .rsssl .rsssl-grid.rsssl-settings .rsssl-wizard-help {
+    .rsssl .rsssl-grid.rsssl-settings .rsssl-wizard-menu, .rsssl .rsssl-grid.rsssl-settings .rsssl-wizard-settings, .rsssl .rsssl-grid.rsssl-settings .rsssl-wizard-help, .rsssl .rsssl-grid.rsssl-letsencrypt .rsssl-wizard-menu, .rsssl .rsssl-grid.rsssl-letsencrypt .rsssl-wizard-settings, .rsssl .rsssl-grid.rsssl-letsencrypt .rsssl-wizard-help {
         grid-column: 1/-1;
     }
 }
@@ -1390,83 +1390,83 @@
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(1) {
-    width: 69%;
-}
-
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(2) {
-    width: 73%;
-}
-
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(3) {
     width: 87%;
 }
 
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(4) {
-    width: 61%;
-}
-
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(5) {
-    width: 97%;
-}
-
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(6) {
-    width: 89%;
-}
-
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(7) {
-    width: 84%;
-}
-
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(8) {
-    width: 69%;
-}
-
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(9) {
-    width: 86%;
-}
-
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(10) {
-    width: 84%;
-}
-
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(11) {
-    width: 69%;
-}
-
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(12) {
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(2) {
     width: 70%;
 }
 
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(13) {
-    width: 92%;
-}
-
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(14) {
-    width: 98%;
-}
-
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(15) {
-    width: 98%;
-}
-
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(16) {
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(3) {
     width: 93%;
 }
 
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(17) {
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(4) {
+    width: 96%;
+}
+
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(5) {
+    width: 95%;
+}
+
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(6) {
+    width: 96%;
+}
+
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(7) {
+    width: 97%;
+}
+
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(8) {
+    width: 79%;
+}
+
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(9) {
+    width: 84%;
+}
+
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(10) {
+    width: 68%;
+}
+
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(11) {
+    width: 86%;
+}
+
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(12) {
     width: 75%;
 }
 
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(18) {
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(13) {
+    width: 89%;
+}
+
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(14) {
     width: 99%;
 }
 
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(15) {
+    width: 72%;
+}
+
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(16) {
+    width: 80%;
+}
+
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(17) {
+    width: 82%;
+}
+
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(18) {
+    width: 63%;
+}
+
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(19) {
-    width: 64%;
+    width: 99%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(20) {
-    width: 100%;
+    width: 97%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line ~ .rsssl-placeholder-line {
@@ -1992,6 +1992,10 @@
 
 .rsssl div[class^=rsssl-wizard-] .rsssl-grid-item .rsssl-grid-item-content {
     padding: var(--rsp-spacing-xs) 0;
+}
+
+.rsssl div[class^=rsssl-wizard-] .rsssl-field-wrap .rsssl-comment {
+    font-style: italic;
 }
 
 .rsssl div[class^=rsssl-wizard-] .rsssl-field-wrap, .rsssl div[class^=rsssl-wizard-] .rsssl-settings-block-intro {

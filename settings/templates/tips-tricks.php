@@ -5,8 +5,8 @@ $items = array(
 		'link'    => 'https://really-simple-ssl.com/definition/What-is-a-Content-Security-Policy/',
 	),
 	2 => array(
-		'content' => "Definition: What is Cross-site Scripting",
-		'link'    => 'https://really-simple-ssl.com/definition/what-is-cross-site-scripting/',
+		'content' => "Installing a Let's Encrypt certificate",
+		'link'    => 'https://really-simple-ssl.com/install-ssl-certificate/',
 	),
 	3 => array(
 		'content' => "Improve Security: (HSTS) HTTP Strict Transport Security",
