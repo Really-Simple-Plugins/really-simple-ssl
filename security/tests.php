@@ -147,6 +147,20 @@ function rsssl_has_admin_user() {
 }
 
 /**
+ * Check if username is valid for use
+ * @return bool
+ */
+function rsssl_new_username_valid(): bool {
+
+	$new_user_login = rsssl_get_option('new_admin_user_login');
+	if ( $new_user_login === 'admin' ) {
+		return false;
+	}
+
+	return is_string($new_user_login) && strlen($new_user_login)>2;
+}
+
+/**
  * @return bool
  *
  * Check if user ID 1 exists end if user enumeration has been disabled

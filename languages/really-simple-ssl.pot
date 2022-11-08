@@ -2,14 +2,14 @@
 # This file is distributed under the GPL2.
 msgid ""
 msgstr ""
-"Project-Id-Version: Really Simple SSL 6.0.4\n"
+"Project-Id-Version: Really Simple SSL 6.0.8\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/really-simple-ssl\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2022-11-03T21:36:16+00:00\n"
+"POT-Creation-Date: 2022-11-06T12:15:46+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.6.0\n"
 "X-Domain: really-simple-ssl\n"
@@ -1477,7 +1477,7 @@ msgstr ""
 #: placeholders/class-placeholder.php:159
 #: placeholders/class-placeholder.php:185
 #: placeholders/class-placeholder.php:210
-#: settings/config/config.php:865
+#: settings/config/config.php:883
 #: settings/build/index.js:382
 #: settings/src/Settings/MixedContentScan.js:227
 msgid "Details"
@@ -1551,11 +1551,15 @@ msgstr ""
 msgid "Really Simple SSL cannot be activated. The plugin requires WordPress 5.7 or higher"
 msgstr ""
 
-#: rlrsssl-really-simple-ssl.php:183
+#: rlrsssl-really-simple-ssl.php:194
 msgid "Update Really Simple SSL Pro: the plugin needs to be updated to the latest version to be compatible."
 msgstr ""
 
-#: rlrsssl-really-simple-ssl.php:184
+#: rlrsssl-really-simple-ssl.php:198
+msgid "%sUpdate%s or %srenew your license%s."
+msgstr ""
+
+#: rlrsssl-really-simple-ssl.php:200
 msgid "Visit the plugins overview or %srenew your license%s."
 msgstr ""
 
@@ -1676,6 +1680,7 @@ msgid "To prevent attackers from identifying the renamed administrator, activate
 msgstr ""
 
 #: security/notices.php:173
+#: security/notices.php:190
 msgid "Username"
 msgstr ""
 
@@ -1683,27 +1688,31 @@ msgstr ""
 msgid "Your site registered a user with the name 'admin'."
 msgstr ""
 
-#: security/notices.php:189
+#: security/notices.php:191
+msgid "Rename admin user enabled: Please choose a new username of at least 3 characters."
+msgstr ""
+
+#: security/notices.php:206
 msgid "Code execution is allowed in the public 'Uploads' folder."
 msgstr ""
 
-#: security/notices.php:200
+#: security/notices.php:217
 msgid "Your database prefix is renamed and randomized. Awesome!"
 msgstr ""
 
-#: security/notices.php:205
+#: security/notices.php:222
 msgid "Your database prefix is set to the default 'wp_'."
 msgstr ""
 
-#: security/notices.php:235
+#: security/notices.php:252
 msgid "The built-in file editors are accessible to others."
 msgstr ""
 
-#: security/notices.php:249
+#: security/notices.php:266
 msgid "Anyone can register an account on your site. Consider disabling this option in the WordPress general settings."
 msgstr ""
 
-#: security/notices.php:262
+#: security/notices.php:279
 msgid "Your WordPress version is visible to others."
 msgstr ""
 
@@ -1766,7 +1775,7 @@ msgstr ""
 
 #: settings/config/config.php:44
 #: settings/config/config.php:50
-#: settings/config/config.php:1133
+#: settings/config/config.php:1151
 msgid "Hardening"
 msgstr ""
 
@@ -1779,7 +1788,7 @@ msgid "Get Advanced Hardening with %sReally Simple SSL Pro%s"
 msgstr ""
 
 #: settings/config/config.php:63
-#: settings/config/config.php:604
+#: settings/config/config.php:622
 msgid "XML-RPC"
 msgstr ""
 
@@ -1825,7 +1834,7 @@ msgstr ""
 #: settings/config/config.php:130
 #: settings/config/config.php:131
 #: settings/config/config.php:141
-#: settings/config/config.php:887
+#: settings/config/config.php:905
 msgid "Permissions Policy"
 msgstr ""
 
@@ -2044,7 +2053,7 @@ msgid "User enumeration is possible"
 msgstr ""
 
 #: settings/config/config.php:512
-msgid "Rename 'admin' users - Make sure you can log in by email"
+msgid "Rename current 'admin' username"
 msgstr ""
 
 #: settings/config/config.php:516
@@ -2056,128 +2065,136 @@ msgid "Username 'Admin' is allowed"
 msgstr ""
 
 #: settings/config/config.php:526
+msgid "Choose new username to replace 'admin'"
+msgstr ""
+
+#: settings/config/config.php:543
 msgid "Disable XML-RPC"
 msgstr ""
 
-#: settings/config/config.php:535
+#: settings/config/config.php:552
 msgid "Block user registrations when login and display name are the same"
 msgstr ""
 
-#: settings/config/config.php:544
+#: settings/config/config.php:561
 msgid "Disable HTTP methods"
 msgstr ""
 
-#: settings/config/config.php:553
+#: settings/config/config.php:570
 msgid "Rename and randomize your database prefix"
 msgstr ""
 
-#: settings/config/config.php:562
+#: settings/config/config.php:573
+msgid "Make sure you have a backup before you do this."
+msgstr ""
+
+#: settings/config/config.php:580
 msgid "Change debug.log file location"
 msgstr ""
 
-#: settings/config/config.php:566
+#: settings/config/config.php:584
 msgid "Debug log not publicly accessible"
 msgstr ""
 
-#: settings/config/config.php:567
+#: settings/config/config.php:585
 msgid "Debug log is now public"
 msgstr ""
 
-#: settings/config/config.php:576
+#: settings/config/config.php:594
 msgid "Disable application passwords"
 msgstr ""
 
-#: settings/config/config.php:616
+#: settings/config/config.php:634
 msgid "Method"
 msgstr ""
 
-#: settings/config/config.php:621
+#: settings/config/config.php:639
 msgid "Login status"
 msgstr ""
 
-#: settings/config/config.php:626
+#: settings/config/config.php:644
 msgid "Count"
 msgstr ""
 
-#: settings/config/config.php:631
-#: settings/config/config.php:1068
+#: settings/config/config.php:649
+#: settings/config/config.php:1086
 msgid "Action"
 msgstr ""
 
-#: settings/config/config.php:636
+#: settings/config/config.php:654
 msgid "Delete"
 msgstr ""
 
-#: settings/config/config.php:653
+#: settings/config/config.php:671
 msgid "About Recommended Security Headers"
 msgstr ""
 
-#: settings/config/config.php:654
+#: settings/config/config.php:672
 msgid "These security headers are the fundamental security measures to protect your website visitors while visiting your website."
 msgstr ""
 
-#: settings/config/config.php:672
-#: settings/config/config.php:686
-#: settings/config/config.php:786
-#: settings/config/config.php:808
-#: settings/config/config.php:823
+#: settings/config/config.php:690
+#: settings/config/config.php:704
+#: settings/config/config.php:804
+#: settings/config/config.php:826
+#: settings/config/config.php:841
 msgid "Off"
 msgstr ""
 
-#: settings/config/config.php:687
+#: settings/config/config.php:705
 msgid "recommended"
 msgstr ""
 
-#: settings/config/config.php:711
+#: settings/config/config.php:729
 msgid "About HTTP Strict Transport Security"
 msgstr ""
 
-#: settings/config/config.php:712
+#: settings/config/config.php:730
 msgid "Leveraging your SSL certificate with HSTS is a staple for every website. Force your website over SSL, mitigating risks of malicious counterfeit websites in your name."
 msgstr ""
 
-#: settings/config/config.php:766
+#: settings/config/config.php:784
 msgid "One day (for testing only)"
 msgstr ""
 
-#: settings/config/config.php:767
+#: settings/config/config.php:785
 msgid "One year"
 msgstr ""
 
-#: settings/config/config.php:768
+#: settings/config/config.php:786
 msgid "Two years (required for preload)"
 msgstr ""
 
-#: settings/config/config.php:794
+#: settings/config/config.php:812
 msgid "About Cross Origin Policies"
 msgstr ""
 
-#: settings/config/config.php:795
+#: settings/config/config.php:813
 msgid "One of the most powerful features, and therefore the most complex are the Cross-Origin headers that can isolate your website so any data leaks are minimized."
 msgstr ""
 
-#: settings/config/config.php:841
+#: settings/config/config.php:859
 msgid "About the Mixed Content Scan"
 msgstr ""
 
-#: settings/config/config.php:842
+#: settings/config/config.php:860
 msgid "The extensive mixed content scan will list all current and future issues and provide a fix, or instructions to fix manually."
 msgstr ""
 
-#: settings/config/config.php:846
+#: settings/config/config.php:864
 msgid "Type"
 msgstr ""
 
-#: settings/config/config.php:852
+#: settings/config/config.php:870
 msgid "Description"
 msgstr ""
 
-#: settings/config/config.php:858
-#: settings/config/config.php:1053
+#: settings/config/config.php:876
+#: settings/config/config.php:1071
 msgid "Location"
 msgstr ""
 
-#: settings/config/config.php:871
+#: settings/config/config.php:889
 #: settings/build/index.js:382
 #: settings/src/Dashboard/TaskElement.js:30
 #: settings/src/Dashboard/TaskElement.js:31
@@ -2186,96 +2203,96 @@ msgstr ""
 msgid "Fix"
 msgstr ""
 
-#: settings/config/config.php:886
+#: settings/config/config.php:904
 #: settings/build/index.js:382
 #: settings/src/Settings/ChangeStatus.js:11
 msgid "Allow"
 msgstr ""
 
-#: settings/config/config.php:886
+#: settings/config/config.php:904
 #: settings/build/index.js:382
 #: settings/src/Settings/LearningMode.js:254
 #: settings/src/Settings/PermissionsPolicy.js:148
 msgid "Disable"
 msgstr ""
 
-#: settings/config/config.php:886
+#: settings/config/config.php:904
 msgid "Self (Default)"
 msgstr ""
 
-#: settings/config/config.php:892
+#: settings/config/config.php:910
 msgid "About the Permission Policy"
 msgstr ""
 
-#: settings/config/config.php:893
+#: settings/config/config.php:911
 msgid "Browser features are plentiful, but most are not needed on your website."
 msgstr ""
 
-#: settings/config/config.php:893
+#: settings/config/config.php:911
 msgid "They might be misused if you don’t actively tell the browser to disable these features."
 msgstr ""
 
-#: settings/config/config.php:897
+#: settings/config/config.php:915
 msgid "Feature"
 msgstr ""
 
-#: settings/config/config.php:902
+#: settings/config/config.php:920
 msgid "Options"
 msgstr ""
 
-#: settings/config/config.php:975
+#: settings/config/config.php:993
 msgid "Enable Permissions Policy"
 msgstr ""
 
-#: settings/config/config.php:984
+#: settings/config/config.php:1002
 msgid "Serve encrypted and authenticated responses"
 msgstr ""
 
-#: settings/config/config.php:990
+#: settings/config/config.php:1008
 msgid "About the Content Security Policy"
 msgstr ""
 
-#: settings/config/config.php:991
+#: settings/config/config.php:1009
 msgid "The content security policy has many options, so we always recommend starting in ‘learning mode’ to see what files and scripts are loaded."
 msgstr ""
 
-#: settings/config/config.php:1006
+#: settings/config/config.php:1024
 msgid "Disable (Default)"
 msgstr ""
 
-#: settings/config/config.php:1010
+#: settings/config/config.php:1028
 msgid "Allow your domain to be embedded"
 msgstr ""
 
-#: settings/config/config.php:1019
+#: settings/config/config.php:1037
 msgid "Add additional domains which can embed your website, if needed. Comma seperated."
 msgstr ""
 
-#: settings/config/config.php:1058
+#: settings/config/config.php:1076
 msgid "Directive"
 msgstr ""
 
-#: settings/config/config.php:1063
+#: settings/config/config.php:1081
 msgid "Source"
 msgstr ""
 
-#: settings/config/config.php:1110
+#: settings/config/config.php:1128
 msgid "Progress"
 msgstr ""
 
-#: settings/config/config.php:1123
+#: settings/config/config.php:1141
 msgid "Powered by Qualys"
 msgstr ""
 
-#: settings/config/config.php:1125
+#: settings/config/config.php:1143
 msgid "Status"
 msgstr ""
 
-#: settings/config/config.php:1141
+#: settings/config/config.php:1159
 msgid "Tips & Tricks"
 msgstr ""
 
-#: settings/config/config.php:1152
+#: settings/config/config.php:1170
 msgid "Other Plugins"
 msgstr ""
 
@@ -2420,40 +2437,40 @@ msgstr ""
 msgid "Check your %slicense%s."
 msgstr ""
 
-#: upgrade/upgrade-to-pro.php:421
-msgid "Plugin already installed!"
+#: upgrade/upgrade-to-pro.php:433
+msgid "Could not rename folder!"
 msgstr ""
 
-#: upgrade/upgrade-to-pro.php:521
-#: upgrade/upgrade-to-pro.php:553
+#: upgrade/upgrade-to-pro.php:533
+#: upgrade/upgrade-to-pro.php:565
 msgid "An error occurred, please try again."
 msgstr ""
 
-#: upgrade/upgrade-to-pro.php:529
+#: upgrade/upgrade-to-pro.php:541
 msgid "Your license key expired on %s."
 msgstr ""
 
-#: upgrade/upgrade-to-pro.php:535
+#: upgrade/upgrade-to-pro.php:547
 msgid "Your license key has been disabled."
 msgstr ""
 
-#: upgrade/upgrade-to-pro.php:538
+#: upgrade/upgrade-to-pro.php:550
 msgid "Missing license."
 msgstr ""
 
-#: upgrade/upgrade-to-pro.php:541
+#: upgrade/upgrade-to-pro.php:553
 msgid "Invalid license."
 msgstr ""
 
-#: upgrade/upgrade-to-pro.php:544
+#: upgrade/upgrade-to-pro.php:556
 msgid "Your license is not active for this URL."
 msgstr ""
 
-#: upgrade/upgrade-to-pro.php:547
+#: upgrade/upgrade-to-pro.php:559
 msgid "This appears to be an invalid license key for this plugin."
 msgstr ""
 
-#: upgrade/upgrade-to-pro.php:550
+#: upgrade/upgrade-to-pro.php:562
 msgid "Your license key has reached its activation limit."
 msgstr ""
 

@@ -35,12 +35,12 @@ if ( !class_exists('rsp_upgrade_to_pro') ){
 				$this->item_id = sanitize_title($_GET['item_id']);
 			}
 
-            $admin_url = is_multisite() && is_network_admin() ? network_admin_url('settings.php') : admin_url("options-general.php");
+            $admin_url = is_multisite() ? network_admin_url('settings.php') : admin_url("options-general.php");
 			if ( isset($_GET['plugin']) ) {
 				$plugin = sanitize_title($_GET['plugin']);
 				switch ($plugin) {
 					case "rsssl_pro":
-						$this->slug = "really-simple-ssl-pro/really-simple-ssl-pro.php";
+						$this->slug = is_multisite() ? "really-simple-ssl-pro-multisite/really-simple-ssl-pro-multisite.php" :  "really-simple-ssl-pro/really-simple-ssl-pro.php";
 						$this->plugin_name = "Really Simple SSL Pro";
 						$this->plugin_constant = "rsssl_pro";
 						$this->prefix = "rsssl_";
@@ -414,11 +414,25 @@ if ( !class_exists('rsp_upgrade_to_pro') ){
 				$error = true;
 			}
 
-			if (defined($this->plugin_constant)) {
+			if ( defined($this->plugin_constant) ) {
+				deactivate_plugins( $this->slug );
+            }
+
+            $file = trailingslashit(WP_CONTENT_DIR).'plugins/'.$this->slug;
+			if ( file_exists($file ) ) {
+                $dir = dirname($file);
+                $new_dir = $dir.'_'.time();
+                set_transient('rsssl_upgrade_dir', $new_dir, WEEK_IN_SECONDS);
+                rename($dir, $new_dir);
+                //prevent uninstalling code by previous plugin
+                unlink(trailingslashit($new_dir).'uninstall.php');
+			}
+
+			if ( file_exists($file ) ) {
 				$error = true;
 				$response = [
 					'success' => false,
-					'message' => __("Plugin already installed!", "really-simple-ssl"),
+					'message' => __("Could not rename folder!", "really-simple-ssl"),
 				];
 			}
 
@@ -553,6 +567,17 @@ if ( !class_exists('rsp_upgrade_to_pro') ){
 							$message = __( 'An error occurred, please try again.', "really-simple-ssl" );
 							break;
 					}
+                    //in case of failure, rename back to default
+					$new_dir = get_transient('rsssl_upgrade_dir');
+                    if ( $new_dir ) {
+	                    if ( file_exists($new_dir ) ) {
+		                    $default_file = trailingslashit(WP_CONTENT_DIR).'plugins/'.$this->slug;
+		                    $default_dir = dirname($default_file);
+		                    rename($new_dir, $default_dir);
+	                    }
+                    }
+
+
 				} else {
 					$success = $license_data->license === 'valid';
 				}
@@ -680,9 +705,8 @@ if ( !class_exists('rsp_upgrade_to_pro') ){
 			}
 
 			if ( isset($_GET['token']) && wp_verify_nonce($_GET['token'], 'upgrade_to_pro_nonce') && isset($_GET['plugin']) ) {
-
-				$result = activate_plugin( $this->slug );
-
+				$networkwide = is_multisite() && rsssl_is_networkwide_active();
+				$result = activate_plugin( $this->slug, '', $networkwide  );
 				if ( !is_wp_error($result) ) {
 					$response = [
 						'success' => true,

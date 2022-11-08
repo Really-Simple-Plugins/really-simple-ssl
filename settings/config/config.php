@@ -509,13 +509,30 @@ function rsssl_fields( $load_values = true ) {
 			'menu_id'            => 'hardening',
 			'group_id'           => 'hardening_basic',
 			'type'               => 'checkbox',
-			'label'              => __( "Rename 'admin' users - Make sure you can log in by email", 'really-simple-ssl' ),
+			'label'              => __( "Rename current 'admin' username", 'really-simple-ssl' ),
 			'disabled'           => false,
 			'default'            => false,
 			'new_features_block' => [
 				'active'   => __( "Username 'Admin' is not allowed", 'really-simple-ssl' ),
 				'inactive' => __( "Username 'Admin' is allowed", 'really-simple-ssl' ),
 				'readmore' => 'https://really-simple-ssl.com/instructions/about-hardening-features/#admin-usernames',
+			],
+		],
+		[
+			'id'                 => 'new_admin_user_login',
+			'menu_id'            => 'hardening',
+			'group_id'           => 'hardening_basic',
+			'type'               => 'text',
+			'label'              => __( "Choose new username to replace 'admin'", 'really-simple-ssl' ),
+			'disabled'           => false,
+			'default'            => '',
+			'required'           => true,
+			'condition_action'   => 'hide',
+			'react_conditions' => [
+				'relation' => 'AND',
+				[
+					'rename_admin_user' => 1,
+				]
 			],
 		],
 		[
@@ -553,6 +570,7 @@ function rsssl_fields( $load_values = true ) {
 			'label'    => __( "Rename and randomize your database prefix", 'really-simple-ssl' ),
 			'disabled' => false,
 			'default'  => false,
+			'comment'  => __("Make sure you have a backup before you do this.","really-simple-ssl"),
 		],
 		[
 			'id'                 => 'change_debug_log_location',

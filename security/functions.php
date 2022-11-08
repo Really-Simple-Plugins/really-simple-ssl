@@ -162,9 +162,11 @@ if ( !function_exists('rsssl_remove_htaccess_security_edits') ) {
  */
 
 if ( ! function_exists('rsssl_wrap_htaccess' ) ) {
-	function rsssl_wrap_htaccess($force=false) {
-		if ( get_transient('rsssl_updating_htaccess')) return;
-		set_transient('rsssl_updating_htaccess', true, 5 * MINUTE_IN_SECONDS);
+	function rsssl_wrap_htaccess() {
+		if ( !rsssl_user_can_manage() ) {
+			return;
+		}
+
 		if ( ! rsssl_uses_htaccess() ) {
 			return;
 		}
@@ -174,14 +176,14 @@ if ( ! function_exists('rsssl_wrap_htaccess' ) ) {
 		}
 
 		if (
-			!$force &&
+			!rsssl_is_logged_in_rest() &&
 			!RSSSL()->admin->is_settings_page() &&
-		     !rsssl_user_can_manage() &&
 		     current_filter() !== 'rocket_activation' &&
 		     current_filter() !== 'rocket_deactivation'
 		) {
 			return;
 		}
+
 		if ( get_site_option('rsssl_htaccess_error') ) {
 			delete_site_option( 'rsssl_htaccess_error' );
 			delete_site_option( 'rsssl_htaccess_rules' );
@@ -191,6 +193,12 @@ if ( ! function_exists('rsssl_wrap_htaccess' ) ) {
 			delete_site_option( 'rsssl_uploads_htaccess_error' );
 			delete_site_option( 'rsssl_uploads_htaccess_rules' );
 		}
+
+		if ( get_option('rsssl_updating_htaccess') ) {
+			return;
+		}
+
+		update_option('rsssl_updating_htaccess', true, false );
 
 		$start = '#Begin Really Simple Security';
 		$end   = "\n" . '#End Really Simple Security' . "\n";
@@ -320,7 +328,7 @@ if ( ! function_exists('rsssl_wrap_htaccess' ) ) {
 				}
 			}
 		}
-		delete_transient('rsssl_updating_htaccess');
+		delete_option('rsssl_updating_htaccess');
 	}
 	add_action('admin_init', 'rsssl_wrap_htaccess' );
 	add_action('rsssl_after_saved_fields', 'rsssl_wrap_htaccess', 30);
