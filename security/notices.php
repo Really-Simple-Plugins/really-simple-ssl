@@ -266,6 +266,7 @@ function rsssl_general_security_notices( $notices ) {
 				'msg' => __("Anyone can register an account on your site. Consider disabling this option in the WordPress general settings.", "really-simple-ssl"),
 				'icon' => 'open',
 				'plusone' => false,
+				'dismissible' => true,
 			),
 		),
 	);
