@@ -151,7 +151,7 @@ function rsssl_has_admin_user() {
  * @return bool
  */
 function rsssl_new_username_valid(): bool {
-	$new_user_login = sanitize_user(rsssl_get_option('new_admin_user_login'));
+	$new_user_login = trim(sanitize_user(rsssl_get_option('new_admin_user_login')));
 	if ( $new_user_login === 'admin' ) {
 		return false;
 	}
