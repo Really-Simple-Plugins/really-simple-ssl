@@ -97,6 +97,7 @@ If you can't deactivate, do not just remove the plugin folder to uninstall! Foll
 
 == Changelog ==
 * Fix: text domain
+* Improvement: catch openBaseDir restriction in cpanel detection function
 
 = 6.0.8 =
 * Improvement: Lets Encrypt wizard CSS styling
