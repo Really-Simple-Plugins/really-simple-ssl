@@ -143,6 +143,13 @@ function rsssl_upgrade() {
 		}
 	}
 
+	#clear notices cache for multisite on upgrade, for the subsite notice
+	if ( $prev_version && version_compare( $prev_version, '6.0.9', '<' ) ) {
+		if ( is_multisite() ) {
+			delete_transient('rsssl_admin_notices' );
+		}
+	}
+
 	//delete in future upgrade. We want to check the review notice dismissed as fallback still.
 	//delete_option( 'rlrsssl_options' );
 	//delete_site_option( 'rlrsssl_network_options' );
