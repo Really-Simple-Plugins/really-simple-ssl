@@ -48,7 +48,7 @@ function rsssl_rename_admin_user() {
 	$admin_user = get_user_by('login','admin');
 	if ( $admin_user ) {
 		// Get the new user login
-		$new_user_login = rsssl_get_option('new_admin_user_login');
+		$new_user_login = sanitize_user(rsssl_get_option('new_admin_user_login'));
 		if ( rsssl_new_username_valid() ) {
 			$admin_user_id  = $admin_user->data->ID;
 			$admin_userdata = get_userdata( $admin_user_id );
