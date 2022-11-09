@@ -175,7 +175,8 @@ if ( !class_exists('rsp_upgrade_to_pro') ){
 				}
 			}
 
-			$suggestion['install_url'] = admin_url('plugin-install.php?s=').$suggestion['install_url'];
+			$admin_url = is_multisite() && is_network_admin() ? network_admin_url('plugin-install.php?s=') : admin_url('plugin-install.php?s=');
+			$suggestion['install_url'] = $admin_url.$suggestion['install_url'];
 			if (defined($suggestion['constant'])){
 				$suggestion['install_url'] = '#';
 				$suggestion['button_text'] = __("Installed", "really-simple-ssl");
