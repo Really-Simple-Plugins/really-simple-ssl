@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2022-11-06T12:15:46+00:00\n"
+"POT-Creation-Date: 2022-11-08T18:01:03+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.6.0\n"
 "X-Domain: really-simple-ssl\n"
@@ -335,57 +335,57 @@ msgstr ""
 msgid "Thanks for updating to Really Simple SSL 6.0! Check out our new features on the settings page."
 msgstr ""
 
-#: class-admin.php:2588
+#: class-admin.php:2589
 msgid "Are you sure?"
 msgstr ""
 
-#: class-admin.php:2599
+#: class-admin.php:2600
 msgid "To deactivate the plugin correctly, please select if you want to:"
 msgstr ""
 
-#: class-admin.php:2601
+#: class-admin.php:2602
 msgid "Deactivate, but stay on SSL."
 msgstr ""
 
-#: class-admin.php:2602
+#: class-admin.php:2603
 msgid "Deactivate, and revert to http. This will remove all changes by the plugin."
 msgstr ""
 
-#: class-admin.php:2604
+#: class-admin.php:2605
 msgid "Deactivating the plugin while keeping SSL will do the following:"
 msgstr ""
 
-#: class-admin.php:2606
+#: class-admin.php:2607
 msgid "The mixed content fixer will stop working"
 msgstr ""
 
-#: class-admin.php:2607
+#: class-admin.php:2608
 msgid "The WordPress 301 redirect will stop working"
 msgstr ""
 
-#: class-admin.php:2608
+#: class-admin.php:2609
 msgid "Your site address will remain https://"
 msgstr ""
 
-#: class-admin.php:2609
+#: class-admin.php:2610
 msgid "The .htaccess redirect will remain active"
 msgstr ""
 
-#: class-admin.php:2618
+#: class-admin.php:2619
 #: upgrade/upgrade-to-pro.php:361
 msgid "Cancel"
 msgstr ""
 
-#: class-admin.php:2619
+#: class-admin.php:2620
 msgid "Deactivate, keep https"
 msgstr ""
 
-#: class-admin.php:2620
+#: class-admin.php:2621
 msgid "Deactivate, revert to http"
 msgstr ""
 
-#: class-admin.php:2646
-#: class-admin.php:2649
+#: class-admin.php:2647
+#: class-admin.php:2650
 #: class-multisite.php:216
 #: settings/config/config.php:17
 #: settings/build/index.js:382
@@ -393,14 +393,14 @@ msgstr ""
 msgid "Settings"
 msgstr ""
 
-#: class-admin.php:2654
+#: class-admin.php:2655
 #: class-multisite.php:219
 #: settings/build/index.js:382
 #: settings/src/Header.js:43
 msgid "Support"
 msgstr ""
 
-#: class-admin.php:2659
+#: class-admin.php:2660
 #: class-multisite.php:223
 msgid "Improve security - Upgrade"
 msgstr ""
@@ -1563,24 +1563,24 @@ msgstr ""
 msgid "Visit the plugins overview or %srenew your license%s."
 msgstr ""
 
-#: security/firewall-manager.php:141
-#: security/firewall-manager.php:147
+#: security/firewall-manager.php:138
+#: security/firewall-manager.php:144
 msgid "Firewall"
 msgstr ""
 
-#: security/firewall-manager.php:142
+#: security/firewall-manager.php:139
 msgid "A firewall rule was enabled, but the wp-config.php is not writable."
 msgstr ""
 
-#: security/firewall-manager.php:142
+#: security/firewall-manager.php:139
 msgid "Please set the wp-config.php to writable until the rule has been written."
 msgstr ""
 
-#: security/firewall-manager.php:148
+#: security/firewall-manager.php:145
 msgid "A firewall rule was enabled, but /the wp-content/ folder is not writable."
 msgstr ""
 
-#: security/firewall-manager.php:148
+#: security/firewall-manager.php:145
 msgid "Please set the wp-content folder to writable:"
 msgstr ""
 
@@ -1712,7 +1712,7 @@ msgstr ""
 msgid "Anyone can register an account on your site. Consider disabling this option in the WordPress general settings."
 msgstr ""
 
-#: security/notices.php:279
+#: security/notices.php:280
 msgid "Your WordPress version is visible to others."
 msgstr ""
 
@@ -2437,40 +2437,40 @@ msgstr ""
 msgid "Check your %slicense%s."
 msgstr ""
 
-#: upgrade/upgrade-to-pro.php:433
+#: upgrade/upgrade-to-pro.php:435
 msgid "Could not rename folder!"
 msgstr ""
 
-#: upgrade/upgrade-to-pro.php:533
-#: upgrade/upgrade-to-pro.php:565
+#: upgrade/upgrade-to-pro.php:535
+#: upgrade/upgrade-to-pro.php:567
 msgid "An error occurred, please try again."
 msgstr ""
 
-#: upgrade/upgrade-to-pro.php:541
+#: upgrade/upgrade-to-pro.php:543
 msgid "Your license key expired on %s."
 msgstr ""
 
-#: upgrade/upgrade-to-pro.php:547
+#: upgrade/upgrade-to-pro.php:549
 msgid "Your license key has been disabled."
 msgstr ""
 
-#: upgrade/upgrade-to-pro.php:550
+#: upgrade/upgrade-to-pro.php:552
 msgid "Missing license."
 msgstr ""
 
-#: upgrade/upgrade-to-pro.php:553
+#: upgrade/upgrade-to-pro.php:555
 msgid "Invalid license."
 msgstr ""
 
-#: upgrade/upgrade-to-pro.php:556
+#: upgrade/upgrade-to-pro.php:558
 msgid "Your license is not active for this URL."
 msgstr ""
 
-#: upgrade/upgrade-to-pro.php:559
+#: upgrade/upgrade-to-pro.php:561
 msgid "This appears to be an invalid license key for this plugin."
 msgstr ""
 
-#: upgrade/upgrade-to-pro.php:562
+#: upgrade/upgrade-to-pro.php:564
 msgid "Your license key has reached its activation limit."
 msgstr ""
 

@@ -348,7 +348,7 @@ function rsssl_fields( $load_values = true ) {
 			'menu_id'  => 'general',
 			'group_id' => 'general',
 			'type'     => 'checkbox',
-			'label'    => __( "Mixed content fixer - back-end", "really-simple-ssl-pro" ),
+			'label'    => __( "Mixed content fixer - back-end", "really-simple-ssl" ),
 			'disabled' => false,
 			'default'  => false,
 		],

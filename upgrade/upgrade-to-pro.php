@@ -35,17 +35,17 @@ if ( !class_exists('rsp_upgrade_to_pro') ){
 				$this->item_id = sanitize_title($_GET['item_id']);
 			}
 
-            $admin_url = is_multisite() ? network_admin_url('settings.php') : admin_url("options-general.php");
 			if ( isset($_GET['plugin']) ) {
 				$plugin = sanitize_title($_GET['plugin']);
 				switch ($plugin) {
 					case "rsssl_pro":
+						$rsssl_admin_url = is_multisite() ? network_admin_url('settings.php') : admin_url("options-general.php");
 						$this->slug = is_multisite() ? "really-simple-ssl-pro-multisite/really-simple-ssl-pro-multisite.php" :  "really-simple-ssl-pro/really-simple-ssl-pro.php";
 						$this->plugin_name = "Really Simple SSL Pro";
 						$this->plugin_constant = "rsssl_pro";
 						$this->prefix = "rsssl_";
 						$this->api_url = "https://really-simple-ssl.com";
-						$this->dashboard_url = add_query_arg(["page" => "really-simple-security"], $admin_url );
+						$this->dashboard_url = add_query_arg(["page" => "really-simple-security"], $rsssl_admin_url );
 						break;
 					case "brst_pro":
 						$this->slug = "burst";
@@ -57,12 +57,12 @@ if ( !class_exists('rsp_upgrade_to_pro') ){
 						break;
 					case "cmplz_pro":
 					default:
-						$this->slug = "complianz-gdpr-premium/complianz-gpdr-premium.php";
+                        $this->slug = is_multisite() ? "complianz-gdpr-premium-multisite/complianz-gpdr-premium.php" : "complianz-gdpr-premium/complianz-gpdr-premium.php";
 						$this->plugin_name = "Complianz";
 						$this->plugin_constant = "cmplz_premium";
 						$this->prefix = "cmplz_";
 						$this->api_url = "https://complianz.io";
-						$this->dashboard_url = add_query_arg(["page" => "complianz"], admin_url( "admin.php" ));
+						$this->dashboard_url = add_query_arg(["page" => "complianz"], admin_url("admin.php") );
 						break;
 				}
 			}
@@ -110,7 +110,7 @@ if ( !class_exists('rsp_upgrade_to_pro') ){
 		}
 
 		private function get_suggested_plugin($attr){
-			$plugin_to_be_installed = false;
+			$plugin_to_be_installed = $current_plugin = false;
 			if (isset($_GET['plugin']) && $_GET['plugin']==='cmplz_pro' ) {
 				$plugin_to_be_installed = 'complianz-gdpr';
 			} else if (isset($_GET['plugin']) && $_GET['plugin']==='rsssl_pro' ) {
@@ -170,12 +170,13 @@ if ( !class_exists('rsp_upgrade_to_pro') ){
 					'description' => __('Really Simple SSL automatically detects your settings and configures your website to run over HTTPS. To keep it lightweight, we kept the options to a minimum. Your website will move to SSL with one click.', "really-simple-ssl"),
 					'install_url' => 'ssl%20really%20simple%20plugins%20complianz+HSTS&tab=search&type=term',
 				];
-				if ($current_plugin==='really-simple-ssl') {
+				if ( $current_plugin==='really-simple-ssl' ) {
 					$suggestion = $fallback_suggestion;
 				}
 			}
 
-			$suggestion['install_url'] = admin_url('plugin-install.php?s=').$suggestion['install_url'];
+			$admin_url = is_multisite() ? network_admin_url('plugin-install.php?s=') : admin_url('plugin-install.php?s=');
+			$suggestion['install_url'] = $admin_url.$suggestion['install_url'];
 			if (defined($suggestion['constant'])){
 				$suggestion['install_url'] = '#';
 				$suggestion['button_text'] = __("Installed", "really-simple-ssl");
@@ -479,7 +480,7 @@ if ( !class_exists('rsp_upgrade_to_pro') ){
 
 			if (!$error && isset($_GET['token']) && wp_verify_nonce($_GET['token'], 'upgrade_to_pro_nonce') && isset($_GET['license']) && isset($_GET['item_id']) ) {
 				$license  = sanitize_title($_GET['license']);
-				$item_id = intval($_GET['item_id']);
+				$item_id = (int) $_GET['item_id'];
 				$response = $this->validate($license, $item_id);
 				update_site_option($this->prefix.'auto_installed_license', $license);
 			}
@@ -505,7 +506,7 @@ if ( !class_exists('rsp_upgrade_to_pro') ){
 		 * @return array [license status, response message]
 		 */
 
-		private function validate( $license, $item_id ) {
+		private function validate( $license, $item_id ): array {
 			$message = "";
 			$success = false;
 
@@ -583,13 +584,11 @@ if ( !class_exists('rsp_upgrade_to_pro') ){
 				}
 			}
 
-			$response = [
+			return [
 				'success' => $success,
 				'message' => $message,
 			];
-
-			return $response;
-		}
+        }
 
 
 		/**
@@ -701,7 +700,7 @@ if ( !class_exists('rsp_upgrade_to_pro') ){
 		public function process_ajax_activate_plugin()
 		{
 			if ( !rsssl_user_can_manage() ) {
-				return false;
+				return;
 			}
 
 			if ( isset($_GET['token']) && wp_verify_nonce($_GET['token'], 'upgrade_to_pro_nonce') && isset($_GET['plugin']) ) {
