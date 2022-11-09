@@ -6,7 +6,7 @@ Requires at least: 5.7
 License: GPL2
 Tested up to: 6.1
 Requires PHP: 7.2
-Stable tag: 6.0.8
+Stable tag: 6.0.9
 
 The easiest way to improve security! Leverage your SSL certificate and protect your website visitors.
 
@@ -96,6 +96,11 @@ The plugin checks your certificate before enabling, but if, for example, you mig
 If you can't deactivate, do not just remove the plugin folder to uninstall! Follow these [instructions](https://really-simple-ssl.com/knowledge-base/uninstall-websitebackend-not-accessible/) instead.
 
 == Changelog ==
+* Fix: text domain
+* Improvement: on rename admin user, catch existing username, and strange characters
+* Improvement: catch openBaseDir restriction in cpanel detection function, props @alofnur
+* Improvement: remove 6.0 update notices on subsites in a multisite network, props @wpcoderca, (@collizo4sky
+
 = 6.0.8 =
 * Improvement: Lets Encrypt wizard CSS styling
 * Improvement: re-add link to article about Let's Encrypt so users can easily find the URL

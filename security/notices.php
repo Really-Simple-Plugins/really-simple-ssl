@@ -188,7 +188,7 @@ function rsssl_general_security_notices( $notices ) {
 			'true' => array(
 				'highlight_field_id' => 'rename_admin_user',
 				'title' => __("Username", "really-simple-ssl"),
-				'msg' => __("Rename admin user enabled: Please choose a new username of at least 3 characters.", "really-simple-ssl"),
+				'msg' => __("Rename admin user enabled: Please choose a new username of at least 3 characters, which is not in use yet.", "really-simple-ssl"),
 				'icon' => 'warning',
 				'dismissible' => true,
 			),
@@ -266,6 +266,7 @@ function rsssl_general_security_notices( $notices ) {
 				'msg' => __("Anyone can register an account on your site. Consider disabling this option in the WordPress general settings.", "really-simple-ssl"),
 				'icon' => 'open',
 				'plusone' => false,
+				'dismissible' => true,
 			),
 		),
 	);

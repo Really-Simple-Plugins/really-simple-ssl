@@ -38,7 +38,7 @@ add_filter( 'illegal_user_logins', 'rsssl_prevent_admin_user_add' );
  * @return bool
  */
 function rsssl_rename_admin_user() {
-	if ( !rsssl_user_can_manage() || wp_doing_cron() ) {
+	if ( !rsssl_user_can_manage() ) {
 		return false;
 	}
 	//to be able to update the admin user email, we need to disable this filter temporarily
@@ -48,7 +48,7 @@ function rsssl_rename_admin_user() {
 	$admin_user = get_user_by('login','admin');
 	if ( $admin_user ) {
 		// Get the new user login
-		$new_user_login = rsssl_get_option('new_admin_user_login');
+		$new_user_login = trim(sanitize_user(rsssl_get_option('new_admin_user_login')));
 		if ( rsssl_new_username_valid() ) {
 			$admin_user_id  = $admin_user->data->ID;
 			$admin_userdata = get_userdata( $admin_user_id );
@@ -116,7 +116,7 @@ function rsssl_rename_admin_user() {
 
 			// Create new admin user
 			$new_user_id = wp_insert_user( $new_userdata );
-			if ( ! $new_user_id ) {
+			if ( ! $new_user_id || is_wp_error($new_user_id) ) {
 				return false;
 			}
 
