@@ -72,7 +72,11 @@ if (!function_exists('rsssl_cpanel_api_supported')) {
 	 * @return bool
 	 */
 	function rsssl_cpanel_api_supported() {
-		return rsssl_is_cpanel() && file_exists( "/usr/local/cpanel/php/cpanel.php" );
+		if ( rsssl_is_cpanel() ) {
+			return true;
+		}
+
+		return !rsssl_openbasedir_restriction("/usr/local/cpanel/php/cpanel.php") && file_exists( "/usr/local/cpanel/php/cpanel.php" );
 	}
 }
 
@@ -90,6 +94,26 @@ if (!function_exists('rsssl_activated_by_default')) {
 			$activated_by_default =  true;
 		}
 		return $activated_by_default;
+	}
+}
+
+if ( !function_exists('rsssl_openbasedir_restriction')) {
+	function rsssl_openbasedir_restriction( string $path): bool {
+
+		// Default error handler is required
+		set_error_handler(null);
+
+		// Clean last error info.
+		error_clear_last();
+
+		// Testing...
+		@file_exists($path);
+
+		// Restore previous error handler
+		restore_error_handler();
+
+		// Return `true` if error has occurred
+		return ($error = error_get_last()) && $error['message'] !== '__clean_error_info';
 	}
 }
 
