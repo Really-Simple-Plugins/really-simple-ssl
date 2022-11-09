@@ -98,7 +98,8 @@ If you can't deactivate, do not just remove the plugin folder to uninstall! Foll
 == Changelog ==
 * Fix: text domain
 * Improvement: on rename admin user, catch existing username, and strange characters
-* Improvement: catch openBaseDir restriction in cpanel detection function
+* Improvement: catch openBaseDir restriction in cpanel detection function, props @alofnur
+* Improvement: remove 6.0 update notices on subsites in a multisite network, props @wpcoderca, (@collizo4sky
 
 = 6.0.8 =
 * Improvement: Lets Encrypt wizard CSS styling
