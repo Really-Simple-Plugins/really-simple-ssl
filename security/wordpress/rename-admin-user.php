@@ -38,7 +38,7 @@ add_filter( 'illegal_user_logins', 'rsssl_prevent_admin_user_add' );
  * @return bool
  */
 function rsssl_rename_admin_user() {
-	if ( !rsssl_user_can_manage() || wp_doing_cron() ) {
+	if ( !rsssl_user_can_manage() ) {
 		return false;
 	}
 	//to be able to update the admin user email, we need to disable this filter temporarily
