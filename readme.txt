@@ -98,7 +98,6 @@ If you can't deactivate, do not just remove the plugin folder to uninstall! Foll
 == Changelog ==
 = 6.0.9 =
 * Fix: incorrectly disabled email field in Let's Encrypt wizard, props @cburgess
-* Fix: text domain
 * Improvement: on rename admin user, catch existing username, and strange characters
 * Improvement: catch openBaseDir restriction in cpanel detection function, props @alofnur
 * Improvement: remove 6.0 update notices on subsites in a multisite network, props @wpcoderca, (@collizo4sky
