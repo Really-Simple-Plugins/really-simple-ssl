@@ -116,7 +116,7 @@ function rsssl_rename_admin_user() {
 
 			// Create new admin user
 			$new_user_id = wp_insert_user( $new_userdata );
-			if ( ! $new_user_id ) {
+			if ( ! $new_user_id || is_wp_error($new_user_id) ) {
 				return false;
 			}
 
