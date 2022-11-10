@@ -20,6 +20,7 @@ if ( is_admin() && rsssl_user_can_manage() ) {
 	class rsssl_multisite_legacy {
 		public $ssl_enabled_networkwide;
 		public $mixed_content_admin;
+		public $cert_expiration_warning;
 		public $selected_networkwide_or_per_site;
 		public function plugin_network_wide_active(){
 			return false;

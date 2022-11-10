@@ -160,6 +160,9 @@ class REALLY_SIMPLE_SSL
 		 */
 		if ( is_admin() ) {
 			add_action('admin_notices', array( $this, 'admin_notices'));
+            if ( is_multisite() ) {
+	            add_action('network_admin_notices', array( $this, 'admin_notices'));
+            }
 		}
 
 		add_action('wp_loaded', array(self::$instance->front_end, 'force_ssl'), 20);
@@ -216,7 +219,7 @@ class REALLY_SIMPLE_SSL
 	public static function has_old_addon($file) {
 		require_once(ABSPATH.'wp-admin/includes/plugin.php');
 		$data = false;
-		if (is_plugin_active($file)) $data = get_plugin_data( trailingslashit(WP_PLUGIN_DIR) . $file, false, false );
+		if ( is_plugin_active($file)) $data = get_plugin_data( trailingslashit(WP_PLUGIN_DIR) . $file, false, false );
 		if ($data && version_compare($data['Version'], '6.0.0', '<')) {
 			return true;
 		}
