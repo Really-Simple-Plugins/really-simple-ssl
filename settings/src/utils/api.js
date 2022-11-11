@@ -9,6 +9,11 @@ import getAnchor from "./getAnchor";
  * @returns {AxiosPromise<any>}
  */
 
+
+export const getRandomToken = () => {
+	return '&token='+Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, 5);
+};
+
 export const getFields = () => {
     //we pass the anchor, so we know when LE is loaded
     let anchor = getAnchor('main');
@@ -18,7 +23,7 @@ export const getFields = () => {
 		}
 	}
 	let glue = rsssl_settings.site_url.indexOf('?')!==-1 ? '&' : '?';
-    return axios.get(rsssl_settings.site_url+'reallysimplessl/v1/fields/get'+glue+anchor+'&nonce='+rsssl_settings.rsssl_nonce, config);
+    return axios.get(rsssl_settings.site_url+'reallysimplessl/v1/fields/get'+glue+anchor+'&nonce='+rsssl_settings.rsssl_nonce+getRandomToken(), config);
 };
 
 /*
@@ -48,7 +53,7 @@ export const getBlock = (block) => {
 		}
 	}
     let glue = rsssl_settings.site_url.indexOf('?')!==-1 ? '&' : '?';
-	return axios.get(rsssl_settings.site_url+'reallysimplessl/v1/block/'+block+glue+'nonce='+rsssl_settings.rsssl_nonce, config);
+	return axios.get(rsssl_settings.site_url+'reallysimplessl/v1/block/'+block+glue+'nonce='+rsssl_settings.rsssl_nonce+getRandomToken(), config);
 };
 
 export const runTest = (test, state, data ) => {
@@ -61,7 +66,7 @@ export const runTest = (test, state, data ) => {
 		data = encodeURIComponent(JSON.stringify(data));
 	}
     let glue = rsssl_settings.site_url.indexOf('?')!==-1 ? '&' : '?';
-	return axios.get(rsssl_settings.site_url+'reallysimplessl/v1/tests/'+test+glue+'state='+state+'&nonce='+rsssl_settings.rsssl_nonce+'&data='+data, config);
+	return axios.get(rsssl_settings.site_url+'reallysimplessl/v1/tests/'+test+glue+'state='+state+'&nonce='+rsssl_settings.rsssl_nonce+getRandomToken()+'&data='+data, config);
 };
 
 export const runLetsEncryptTest = (test, id ) => {
@@ -71,7 +76,7 @@ export const runLetsEncryptTest = (test, id ) => {
 		}
 	}
     let glue = rsssl_settings.site_url.indexOf('?')!==-1 ? '&' : '?';
-	return axios.get(rsssl_settings.site_url+'reallysimplessl/v1/tests/'+test+glue+'letsencrypt=1&id='+id+'&nonce='+rsssl_settings.rsssl_nonce, config);
+	return axios.get(rsssl_settings.site_url+'reallysimplessl/v1/tests/'+test+glue+'letsencrypt=1&id='+id+'&nonce='+rsssl_settings.rsssl_nonce+getRandomToken(), config);
 }
 
 export const doAction = (action, data) => {
@@ -91,5 +96,5 @@ export const getOnboarding = (forceRefresh) => {
 		}
 	}
     let glue = rsssl_settings.site_url.indexOf('?')!==-1 ? '&' : '?';
-	return axios.get(rsssl_settings.site_url+'reallysimplessl/v1/onboarding'+glue+'forceRefresh='+forceRefresh+'&nonce='+rsssl_settings.rsssl_nonce, config);
+	return axios.get(rsssl_settings.site_url+'reallysimplessl/v1/onboarding'+glue+'forceRefresh='+forceRefresh+'&nonce='+rsssl_settings.rsssl_nonce+getRandomToken(), config);
 }
