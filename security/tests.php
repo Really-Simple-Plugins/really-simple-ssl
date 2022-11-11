@@ -161,25 +161,6 @@ function rsssl_new_username_valid(): bool {
 }
 
 /**
- * @return bool
- *
- * Check if user ID 1 exists end if user enumeration has been disabled
- */
-
-function rsssl_vulnerable_to_enumeration() {
-	if ( rsssl_get_option( 'disable_user_enumeration' ) ) {
-		return false;
-	}
-
-	$user_id_one = get_user_by( 'id', 1 );
-	if ( $user_id_one ) {
-		return true;
-	}
-
-	return false;
-}
-
-/**
  * For backward compatibility we need to wrap this function, as older versions do not have this function (<5.6)
  * @return bool
  */
