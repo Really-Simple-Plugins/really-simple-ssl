@@ -1530,7 +1530,7 @@ class rsssl_admin
 //	    rsssl_update_option('review_notice_shown', false);
         //prevent showing the review on edit screen, as gutenberg removes the class which makes it editable.
         $screen = get_current_screen();
-	    if ( $screen->base === 'post' ) {
+	    if ( $screen && $screen->base === 'post' ) {
             return;
 	    }
 
