@@ -150,6 +150,11 @@ function rsssl_upgrade() {
 		}
 	}
 
+	#ensure administrators have the manage_security capability
+	if ( $prev_version && version_compare( $prev_version, '6.0.10', '<' ) ) {
+		rsssl_add_manage_security_capability();
+	}
+
 	//delete in future upgrade. We want to check the review notice dismissed as fallback still.
 	//delete_option( 'rlrsssl_options' );
 	//delete_site_option( 'rlrsssl_network_options' );
