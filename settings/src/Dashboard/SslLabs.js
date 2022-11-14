@@ -31,7 +31,7 @@ const SslLabs = (props) => {
     }
 
     const isLocalHost = () => {
-//         return false;
+        return false;
          return window.location.host.indexOf('localhost')!==-1;
     }
 
@@ -68,7 +68,7 @@ const SslLabs = (props) => {
                 }, 3000)
                 hasRunOnce.current  = true;
             }
-        } else if ( sslData.status === 'READY' ) {
+        } else if ( sslData && sslData.status === 'READY' ) {
             props.setBlockProps('sslScan', 'completed');
             clearInterval(intervalId.current);
         }
@@ -76,7 +76,7 @@ const SslLabs = (props) => {
 
     const runSslTest = () => {
         getSslLabsData().then((sslData)=>{
-            if ( sslData.status === 'ERROR' ){
+            if ( sslData && sslData.status === 'ERROR' ){
                 sslData = processSslData(sslData);
                 setSslData(sslData);
                 props.setBlockProps('sslScan', 'completed');
@@ -174,8 +174,8 @@ const SslLabs = (props) => {
     }
 
     const getEndpointData = (ipAddress) => {
-        const host = window.location.host;
-//         const host = "ziprecipes.net";
+//         const host = window.location.host;
+        const host = "ziprecipes.net";
         const url = 'https://api.ssllabs.com/api/v3/getEndpointData?host='+host+'&s='+ipAddress;
         let data = {};
         data.url = url;
@@ -191,8 +191,8 @@ const SslLabs = (props) => {
             clearCacheUrl = '&startNew=on';
             setSslData(false);
         }
-        const host = window.location.host;
-//         const host = "ziprecipes.net";
+//         const host = window.location.host;
+        const host = "ziprecipes.net";
         const url = "https://api.ssllabs.com/api/v3/analyze?host="+host+clearCacheUrl;
         let data = {};
         data.url = url;
@@ -342,7 +342,7 @@ const SslLabs = (props) => {
     let progress = sslData ? sslData.summary.progress : 0;
     let startTime = sslData ? sslData.summary.startTime : false;
     let startTimeNice='';
-    if (startTime) {
+    if ( startTime ) {
         let newDate = new Date();
         newDate.setTime(startTime);
         startTimeNice = newDate.toLocaleString();
@@ -353,7 +353,7 @@ const SslLabs = (props) => {
     let statusMessage = sslData ? sslData.summary.statusMessage : false;
     let grade = sslData ? sslData.summary.grade : '?';
     let ipAddress = sslData ? sslData.summary.ipAddress : '';
-    if (sslData.status === 'READY' ) {
+    if ( sslData && sslData.status === 'READY' ) {
         if ( grade.indexOf('A')!==-1 ){
             sslClass = "rsssl-success";
         } else {
