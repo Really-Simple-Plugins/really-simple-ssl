@@ -72,6 +72,15 @@ const LetsEncrypt = (props) => {
 
 
         if ( verification_type==='dns' ) {
+            //check if dns verification already is added
+            let dnsVerificationAdded = false;
+            actions.forEach(function(action, i) {
+                if (action.action==="verify_dns"){
+                    console.log("dns verification added");
+                    dnsVerificationAdded = true;
+                }
+            });
+
             //find bundle index
             let create_bundle_index = -1;
             actions.forEach(function(action, i) {
@@ -79,7 +88,9 @@ const LetsEncrypt = (props) => {
                     create_bundle_index = i;
                 }
             });
-            if (create_bundle_index>0) {
+
+            if (!dnsVerificationAdded && create_bundle_index>0) {
+
                 //overwrite create bundle action
                 let newAction = {};
                 newAction.action = 'verify_dns';
@@ -89,7 +100,7 @@ const LetsEncrypt = (props) => {
 
                 //add create bundle at end
                 newAction = {};
-                newAction.action = '"create_bundle_or_renew"';
+                newAction.action = 'create_bundle_or_renew';
                 newAction.description = __("Generating SSL certificate...", "really-simple-ssl");
                 newAction.attempts = 4;
                 actions.push(newAction);
@@ -163,6 +174,8 @@ const LetsEncrypt = (props) => {
         if ( props.field.id==='generation' ) {
             props.field.actions = adjustActionsForDNS(props.field.actions);
         }
+        console.log("updated actions");
+        console.log(props.field.actions);
         const startTime = new Date();
         let action = getAction();
         let test = action.action;
@@ -194,6 +207,19 @@ const LetsEncrypt = (props) => {
             {width: progress+"%"},
         );
     }
+    const getStatusIcon = (action) => {
+        if (!statuses.hasOwnProperty(action.status)) {
+            return statuses['inactive'].icon;
+        }
+        return statuses[action.status].icon
+    }
+
+    const getStatusColor = (action) => {
+        if (!statuses.hasOwnProperty(action.status)) {
+            return statuses['inactive'].color;
+        }
+        return statuses[action.status].color;
+    }
 
     let progressBarColor = lastActionStatus.current ==='error' ? 'rsssl-orange' : '';
     if ( !props.field.actions ) {
@@ -221,7 +247,8 @@ const LetsEncrypt = (props) => {
             'color': 'green',
         },
     };
-
+    console.log("actions");
+    console.log(actions);
     return (
         <>
             <div className="rsssl-lets-encrypt-tests">
@@ -230,7 +257,7 @@ const LetsEncrypt = (props) => {
                     <ul>
                        {actions.map((action, i) =>
                               <li key={i}>
-                                  <Icon name = {statuses[action.status].icon} color = {statuses[action.status].color} />
+                                  <Icon name = {getStatusIcon(action)} color = {getStatusColor(action)} />
                                         {action.do==='retry' && action.attemptCount >=1 && <>{__("Attempt %s.", "really-simple-ssl").replace('%s', action.attemptCount)} </>}
                                         <span dangerouslySetInnerHTML={{__html:action.description}}></span>
                                     </li>
