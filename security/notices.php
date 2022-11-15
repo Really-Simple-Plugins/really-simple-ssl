@@ -130,7 +130,7 @@ function rsssl_general_security_notices( $notices ) {
 	);
 
 	$notices['user_id_one'] = array(
-		'condition' => ['rsssl_id_one_no_enumeration'],
+		'condition' => ['NOT option_disable_user_enumeration'],
 		'callback' => '_true_',
 		'score' => 5,
 		'output' => array(
