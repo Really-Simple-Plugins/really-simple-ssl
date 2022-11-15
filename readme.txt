@@ -100,6 +100,7 @@ If you can't deactivate, do not just remove the plugin folder to uninstall! Foll
 * Fix: Apache 2.4 support for the block code execution in the uploads directory hardening feature, props @overlake
 * Fix: When used with Varnish cache, Rest API get requests were cached, causing the settings page not to update. 
 * Fix: Ensure manage_security capability for users upgraded from versions before introduction of this capability
+* Improvement: Simplify user enumeration test
 
 = 6.0.9 =
 * Fix: incorrectly disabled email field in Let's Encrypt wizard, props @cburgess
