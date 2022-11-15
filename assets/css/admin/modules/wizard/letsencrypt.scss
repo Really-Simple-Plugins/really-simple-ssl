@@ -89,6 +89,7 @@
       div {
         display:flex;
         flex-direction: row;
+        margin-right:20px;
         .rsssl-dns-domain, .rsssl-dns-field {
           margin-right:var(--rsp-spacing-m);
           width: 50%;

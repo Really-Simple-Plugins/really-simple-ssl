@@ -444,7 +444,7 @@ class rsssl_letsencrypt_handler {
 							    $order->clear();
 						    } else if (strpos($error, 'Order has status "invalid"')!==false) {
 							    $order->clear();
-							    $error = __("The order is invalid, possibly due to too many failed authorization attempts. Please start at the previous step.","really-simple-ssl");
+							    $error = __("1The order is invalid, possibly due to too many failed authorization attempts. Please start at the previous step.","really-simple-ssl");
 						    } else
 						    //fixing a plesk bug
 						    if ( strpos($error, 'No order for ID ') !== FALSE){
@@ -508,7 +508,7 @@ class rsssl_letsencrypt_handler {
 	 */
 
 	public function verify_dns(){
-		if (rsssl_is_ready_for('generation')) {
+		if ( rsssl_is_ready_for('generation') ) {
 			update_option('rsssl_le_dns_records_verified', false, false );
 
 			$tokens = get_option('rsssl_le_dns_tokens');
@@ -518,11 +518,13 @@ class rsssl_letsencrypt_handler {
 				$message = __('Token not generated. Please complete the previous step.',"really-simple-ssl");
 				return new RSSSL_RESPONSE($status, $action, $message);
 			}
-
 			foreach ($tokens as $identifier => $token){
 				if (strpos($identifier, '*') !== false) continue;
 				set_error_handler(array($this, 'custom_error_handling'));
+
 				$response = dns_get_record( "_acme-challenge.$identifier", DNS_TXT );
+				error_log("DNS verification response");
+				error_log(print_r($response, true));
 				restore_error_handler();
 				if ( isset($response[0]['txt']) ){
 					if ($response[0]['txt'] === $token) {
@@ -533,9 +535,10 @@ class rsssl_letsencrypt_handler {
 						);
 						update_option('rsssl_le_dns_records_verified', true, false );
 					} else {
+						$action = get_option('rsssl_skip_dns_check') ? 'continue' : 'stop';
 						$response = new RSSSL_RESPONSE(
 							'error',
-							'stop',
+							$action,
 							sprintf(__('The DNS response for %s was %s, while it should be %s.', "really-simple-ssl"), "_acme-challenge.$identifier", $response[0]['txt'], $token )
 						);
 						break;
@@ -583,7 +586,7 @@ class rsssl_letsencrypt_handler {
     public function create_bundle_or_renew(){
 	    $bundle_completed = false;
     	$use_dns = rsssl_dns_verification_required();
-	    $attempt_count = intval(get_transient('rsssl_le_generate_attempt_count'));
+	    $attempt_count = (int) get_transient( 'rsssl_le_generate_attempt_count' );
 	    if ( $attempt_count>5 ){
 		    delete_option("rsssl_le_start_renewal");
 		    $message = __("The certificate generation was rate limited for 10 minutes because the authorization failed.",'really-simple-ssl');
@@ -628,6 +631,7 @@ class rsssl_letsencrypt_handler {
 
 		    if ( $order ) {
 			    if ( $order->isCertificateBundleAvailable() ) {
+
 				    try {
 					    $order->enableAutoRenewal();
 					    $response = new RSSSL_RESPONSE(
@@ -645,7 +649,7 @@ class rsssl_letsencrypt_handler {
 					    $bundle_completed = false;
 				    }
 			    } else {
-			    	$finalized = false;
+				    $finalized = false;
 			    	$challenge_type = $use_dns ? Order::CHALLENGE_TYPE_DNS : Order::CHALLENGE_TYPE_HTTP;
 				    try {
 					    if ( $order->authorize( $challenge_type ) ) {
@@ -673,7 +677,7 @@ class rsssl_letsencrypt_handler {
 
 					    if (strpos($message, 'Order has status "invalid"')!==false) {
 					    	$order->clear();
-						    $response->message = __("The order is invalid, possibly due to too many failed authorization attempts. Please start at the previous step.","really-simple-ssl");
+						    $response->message = __("2The order is invalid, possibly due to too many failed authorization attempts. Please start at the previous step.","really-simple-ssl");
 					        if ($use_dns) {
 					        	rsssl_progress_remove('dns-verification');
 						        $response->message .= '&nbsp;'.__("As your order will be regenerated, you'll need to update your DNS text records.","really-simple-ssl");
@@ -681,7 +685,7 @@ class rsssl_letsencrypt_handler {
 					    } else {
 					    	//if OCSP is not disabled yet, and the order status is not invalid, we disable ocsp, and try again.
 					    	if ( !rsssl_get_option( 'disable_ocsp' ) ) {
-							    RSSSL_LE()->field->save_field('disable_ocsp', true);
+							    rsssl_update_option( 'disable_ocsp', true );
 							    $response->action = 'retry';
 							    $response->status = 'warning';
 							    $response->message = __("OCSP not supported, the certificate will be generated without OCSP.","really-simple-ssl");
@@ -942,7 +946,7 @@ class rsssl_letsencrypt_handler {
 
 	public function terms_accepted(){
 	    //don't use the default value: we want users to explicitly enter a value
-	    $accepted =  rsssl_get_option('accept_le_terms', false);
+	    $accepted =  rsssl_get_option('accept_le_terms');
 		if ( $accepted ) {
 			$status = 'success';
 			$action = 'continue';
