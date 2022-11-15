@@ -14,7 +14,7 @@
   width: clamp(300px, 75ch, 100vw - 50px);
   height: max-content;
   position: absolute;
-  z-index: 3;
+  z-index: 9999;//ensure the modal is over the WP menu in the sidebar.
   border-radius: var(--rsp-border-radius);
   background-color: var(--rsp-white);
   top: 25vh;

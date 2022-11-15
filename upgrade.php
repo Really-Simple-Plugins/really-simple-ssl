@@ -144,10 +144,15 @@ function rsssl_upgrade() {
 	}
 
 	#clear notices cache for multisite on upgrade, for the subsite notice
-	if ( $prev_version && version_compare( $prev_version, '6.0.9', '<' ) ) {
+	if ( version_compare( $prev_version, '6.0.9', '<' ) ) {
 		if ( is_multisite() ) {
 			delete_transient('rsssl_admin_notices' );
 		}
+	}
+
+	#ensure administrators have the manage_security capability
+	if ( version_compare( $prev_version, '6.0.10', '<' ) ) {
+		rsssl_add_manage_security_capability();
 	}
 
 	//delete in future upgrade. We want to check the review notice dismissed as fallback still.

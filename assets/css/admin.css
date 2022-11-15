@@ -524,7 +524,7 @@
     width: clamp(300px, 75ch, 100vw - 50px);
     height: max-content;
     position: absolute;
-    z-index: 3;
+    z-index: 9999;
     border-radius: var(--rsp-border-radius);
     background-color: var(--rsp-white);
     top: 25vh;
@@ -859,8 +859,16 @@
     gap: var(--rsp-spacing-m);
 }
 
-.rsssl-modal.rsssl-onboarding .rsssl-modal-content-step-footer .components-toggle-control .components-base-control__field {
-    margin: 0;
+.rsssl-modal.rsssl-onboarding .rsssl-modal-content-step-footer .components-toggle-control {
+    margin-top: 8px;
+}
+
+.rsssl-modal.rsssl-onboarding .rsssl-modal-content-step-footer .components-toggle-control .components-form-toggle {
+    margin-top: 12px;
+}
+
+.rsssl-modal-content-step-footer .components-toggle-control {
+    margin-top: 8px;
 }
 
 .rsssl-ssllabs.rsssl-block-highlight {
@@ -1393,83 +1401,83 @@
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(1) {
-    width: 74%;
+    width: 65%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(2) {
-    width: 76%;
+    width: 65%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(3) {
-    width: 63%;
+    width: 71%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(4) {
-    width: 90%;
+    width: 65%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(5) {
-    width: 70%;
+    width: 83%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(6) {
-    width: 84%;
+    width: 69%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(7) {
-    width: 94%;
+    width: 83%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(8) {
-    width: 63%;
-}
-
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(9) {
-    width: 61%;
-}
-
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(10) {
-    width: 99%;
-}
-
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(11) {
-    width: 94%;
-}
-
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(12) {
-    width: 78%;
-}
-
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(13) {
-    width: 67%;
-}
-
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(14) {
-    width: 73%;
-}
-
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(15) {
     width: 93%;
 }
 
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(9) {
+    width: 74%;
+}
+
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(10) {
+    width: 77%;
+}
+
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(11) {
+    width: 79%;
+}
+
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(12) {
+    width: 88%;
+}
+
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(13) {
+    width: 92%;
+}
+
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(14) {
+    width: 79%;
+}
+
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(15) {
+    width: 83%;
+}
+
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(16) {
-    width: 91%;
+    width: 85%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(17) {
-    width: 94%;
+    width: 83%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(18) {
-    width: 70%;
+    width: 62%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(19) {
-    width: 96%;
+    width: 82%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(20) {
-    width: 95%;
+    width: 62%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line ~ .rsssl-placeholder-line {
@@ -2309,6 +2317,7 @@
 .rsssl-lets-encrypt-tests .rsssl-test-results .rsssl-dns-text-records div {
     display: flex;
     flex-direction: row;
+    margin-right: 20px;
 }
 
 .rsssl-lets-encrypt-tests .rsssl-test-results .rsssl-dns-text-records div .rsssl-dns-domain, .rsssl-lets-encrypt-tests .rsssl-test-results .rsssl-dns-text-records div .rsssl-dns-field {

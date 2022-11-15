@@ -60,5 +60,18 @@ if ( ! class_exists( 'rsssl_server' ) ) {
 				return false;
 			}
 		}
+
+		/**
+		 * Check if the apache version is at least 2.4
+		 * @return bool
+		 */
+		public function apache_version_min_24(){
+			$version = $_SERVER['SERVER_SOFTWARE'] ?? false;
+			//check if version is higher then 2.4.
+			if ( preg_match('/Apache\/(2\.[4-9])/', $version, $matches) ){
+				return true;
+			}
+			return false;
+		}
 	} //class closure
 }

@@ -2,14 +2,14 @@
 # This file is distributed under the GPL2.
 msgid ""
 msgstr ""
-"Project-Id-Version: Really Simple SSL 6.0.8\n"
+"Project-Id-Version: Really Simple SSL 6.0.10\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/really-simple-ssl\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2022-11-08T18:01:03+00:00\n"
+"POT-Creation-Date: 2022-11-15T13:11:32+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.6.0\n"
 "X-Domain: really-simple-ssl\n"
@@ -335,57 +335,57 @@ msgstr ""
 msgid "Thanks for updating to Really Simple SSL 6.0! Check out our new features on the settings page."
 msgstr ""
 
-#: class-admin.php:2589
+#: class-admin.php:2591
 msgid "Are you sure?"
 msgstr ""
 
-#: class-admin.php:2600
+#: class-admin.php:2602
 msgid "To deactivate the plugin correctly, please select if you want to:"
 msgstr ""
 
-#: class-admin.php:2602
+#: class-admin.php:2604
 msgid "Deactivate, but stay on SSL."
 msgstr ""
 
-#: class-admin.php:2603
+#: class-admin.php:2605
 msgid "Deactivate, and revert to http. This will remove all changes by the plugin."
 msgstr ""
 
-#: class-admin.php:2605
+#: class-admin.php:2607
 msgid "Deactivating the plugin while keeping SSL will do the following:"
 msgstr ""
 
-#: class-admin.php:2607
+#: class-admin.php:2609
 msgid "The mixed content fixer will stop working"
 msgstr ""
 
-#: class-admin.php:2608
+#: class-admin.php:2610
 msgid "The WordPress 301 redirect will stop working"
 msgstr ""
 
-#: class-admin.php:2609
+#: class-admin.php:2611
 msgid "Your site address will remain https://"
 msgstr ""
 
-#: class-admin.php:2610
+#: class-admin.php:2612
 msgid "The .htaccess redirect will remain active"
 msgstr ""
 
-#: class-admin.php:2619
-#: upgrade/upgrade-to-pro.php:361
+#: class-admin.php:2621
+#: upgrade/upgrade-to-pro.php:362
 msgid "Cancel"
 msgstr ""
 
-#: class-admin.php:2620
+#: class-admin.php:2622
 msgid "Deactivate, keep https"
 msgstr ""
 
-#: class-admin.php:2621
+#: class-admin.php:2623
 msgid "Deactivate, revert to http"
 msgstr ""
 
-#: class-admin.php:2647
-#: class-admin.php:2650
+#: class-admin.php:2649
+#: class-admin.php:2652
 #: class-multisite.php:216
 #: settings/config/config.php:17
 #: settings/build/index.js:382
@@ -393,14 +393,14 @@ msgstr ""
 msgid "Settings"
 msgstr ""
 
-#: class-admin.php:2655
+#: class-admin.php:2657
 #: class-multisite.php:219
 #: settings/build/index.js:382
 #: settings/src/Header.js:43
 msgid "Support"
 msgstr ""
 
-#: class-admin.php:2660
+#: class-admin.php:2662
 #: class-multisite.php:223
 msgid "Improve security - Upgrade"
 msgstr ""
@@ -757,12 +757,12 @@ msgid "We have not detected any known hosting limitations."
 msgstr ""
 
 #: lets-encrypt/class-letsencrypt-handler.php:1104
-#: lets-encrypt/functions.php:355
+#: lets-encrypt/functions.php:379
 msgid "According to our information, your hosting provider does not allow any kind of SSL installation, other then their own paid certificate. For an alternative hosting provider with SSL, see this %sarticle%s."
 msgstr ""
 
 #: lets-encrypt/class-letsencrypt-handler.php:1111
-#: lets-encrypt/functions.php:345
+#: lets-encrypt/functions.php:369
 msgid "According to our information, your hosting provider supplies your account with an SSL certificate by default. Please contact your %shosting support%s if this is not the case."
 msgstr ""
 
@@ -948,197 +948,197 @@ msgstr ""
 msgid "This email address is used to create a Let's Encrypt account. This is also where you will receive renewal notifications."
 msgstr ""
 
-#: lets-encrypt/config/fields.php:107
+#: lets-encrypt/config/fields.php:106
 msgid "I agree to the Terms & Conditions from Let's Encrypt."
 msgstr ""
 
-#: lets-encrypt/config/fields.php:108
+#: lets-encrypt/config/fields.php:107
 msgid "Terms & Conditions."
 msgstr ""
 
-#: lets-encrypt/config/fields.php:119
+#: lets-encrypt/config/fields.php:118
 msgid "Disable OCSP stapling"
 msgstr ""
 
-#: lets-encrypt/config/fields.php:120
+#: lets-encrypt/config/fields.php:119
 msgid "OCSP stapling is configured as enabled by default. You can disable this option if this is not supported by your hosting provider."
 msgstr ""
 
-#: lets-encrypt/config/fields.php:122
+#: lets-encrypt/config/fields.php:121
 msgid "Disable OCSP Stapling"
 msgstr ""
 
-#: lets-encrypt/config/fields.php:129
+#: lets-encrypt/config/fields.php:128
 #: lets-encrypt/config/notices.php:49
 msgid "Domain"
 msgstr ""
 
-#: lets-encrypt/config/fields.php:139
-#: lets-encrypt/config/fields.php:142
+#: lets-encrypt/config/fields.php:138
+#: lets-encrypt/config/fields.php:141
 msgid "Include alias"
 msgstr ""
 
-#: lets-encrypt/config/fields.php:143
+#: lets-encrypt/config/fields.php:142
 msgid "This will include both the www. and non-www. version of your domain."
 msgstr ""
 
-#: lets-encrypt/config/fields.php:144
+#: lets-encrypt/config/fields.php:143
 msgid "You should have the www domain pointed to the same website as the non-www domain."
 msgstr ""
 
-#: lets-encrypt/config/fields.php:161
+#: lets-encrypt/config/fields.php:160
 msgid "Hosting Provider"
 msgstr ""
 
-#: lets-encrypt/config/fields.php:162
+#: lets-encrypt/config/fields.php:161
 msgid "By selecting your hosting provider we can tell you if your hosting provider already supports free SSL, and/or where you can activate it."
 msgstr ""
 
-#: lets-encrypt/config/fields.php:164
+#: lets-encrypt/config/fields.php:163
 msgid "If your hosting provider is not listed, and there's an SSL activation/installation link, please let us %sknow%s."
 msgstr ""
 
-#: lets-encrypt/config/fields.php:168
+#: lets-encrypt/config/fields.php:167
 msgid "Hosting provider"
 msgstr ""
 
-#: lets-encrypt/config/fields.php:177
-#: lets-encrypt/config/fields.php:180
+#: lets-encrypt/config/fields.php:176
+#: lets-encrypt/config/fields.php:179
 msgid "CPanel host"
 msgstr ""
 
-#: lets-encrypt/config/fields.php:181
+#: lets-encrypt/config/fields.php:180
 msgid "The URL you use to access your cPanel dashboard. Ends on :2083."
 msgstr ""
 
-#: lets-encrypt/config/fields.php:200
+#: lets-encrypt/config/fields.php:199
 msgid "CPanel username"
 msgstr ""
 
-#: lets-encrypt/config/fields.php:218
+#: lets-encrypt/config/fields.php:217
 msgid "CPanel password"
 msgstr ""
 
-#: lets-encrypt/config/fields.php:236
+#: lets-encrypt/config/fields.php:235
 msgid "DirectAdmin host"
 msgstr ""
 
-#: lets-encrypt/config/fields.php:239
+#: lets-encrypt/config/fields.php:238
 msgid "Direct Admin URL"
 msgstr ""
 
-#: lets-encrypt/config/fields.php:240
+#: lets-encrypt/config/fields.php:239
 msgid "The URL you use to access your DirectAdmin dashboard. Ends on :2222."
 msgstr ""
 
-#: lets-encrypt/config/fields.php:259
+#: lets-encrypt/config/fields.php:258
 msgid "DirectAdmin username"
 msgstr ""
 
-#: lets-encrypt/config/fields.php:277
+#: lets-encrypt/config/fields.php:276
 msgid "DirectAdmin password"
 msgstr ""
 
-#: lets-encrypt/config/fields.php:296
+#: lets-encrypt/config/fields.php:295
 msgid "CloudWays user email"
 msgstr ""
 
-#: lets-encrypt/config/fields.php:311
+#: lets-encrypt/config/fields.php:310
 msgid "CloudWays api key"
 msgstr ""
 
-#: lets-encrypt/config/fields.php:316
+#: lets-encrypt/config/fields.php:315
 msgid "CloudWays API key"
 msgstr ""
 
-#: lets-encrypt/config/fields.php:317
+#: lets-encrypt/config/fields.php:316
 msgid "You can find your api key %shere%s (make sure you're logged in with your main account)."
 msgstr ""
 
-#: lets-encrypt/config/fields.php:332
+#: lets-encrypt/config/fields.php:331
 msgid "Plesk host"
 msgstr ""
 
-#: lets-encrypt/config/fields.php:335
+#: lets-encrypt/config/fields.php:334
 msgid "Plesk admin URL"
 msgstr ""
 
-#: lets-encrypt/config/fields.php:336
+#: lets-encrypt/config/fields.php:335
 msgid "The URL you use to access your Plesk dashboard. Ends on :8443."
 msgstr ""
 
-#: lets-encrypt/config/fields.php:355
+#: lets-encrypt/config/fields.php:354
 msgid "Plesk username"
 msgstr ""
 
-#: lets-encrypt/config/fields.php:358
+#: lets-encrypt/config/fields.php:357
 msgid "Plesk username and password"
 msgstr ""
 
-#: lets-encrypt/config/fields.php:359
+#: lets-encrypt/config/fields.php:358
 msgid "You can find your Plesk username and password in %s"
 msgstr ""
 
-#: lets-encrypt/config/fields.php:378
+#: lets-encrypt/config/fields.php:377
 msgid "Plesk password"
 msgstr ""
 
-#: lets-encrypt/config/fields.php:396
+#: lets-encrypt/config/fields.php:395
 msgid "Do you want to store these credentials for renewal purposes?"
 msgstr ""
 
-#: lets-encrypt/config/fields.php:400
+#: lets-encrypt/config/fields.php:399
 msgid "Store for renewal purposes. If not stored, renewal may need to be done manually."
 msgstr ""
 
-#: lets-encrypt/config/fields.php:429
+#: lets-encrypt/config/fields.php:428
 msgid "Checking host..."
 msgstr ""
 
-#: lets-encrypt/config/fields.php:435
+#: lets-encrypt/config/fields.php:434
 msgid "Checking challenge directory..."
 msgstr ""
 
-#: lets-encrypt/config/fields.php:441
+#: lets-encrypt/config/fields.php:440
 msgid "Checking key directory..."
 msgstr ""
 
-#: lets-encrypt/config/fields.php:447
+#: lets-encrypt/config/fields.php:446
 msgid "Checking certs directory..."
 msgstr ""
 
-#: lets-encrypt/config/fields.php:453
+#: lets-encrypt/config/fields.php:452
 msgid "Checking permissions..."
 msgstr ""
 
-#: lets-encrypt/config/fields.php:460
+#: lets-encrypt/config/fields.php:459
 msgid "Checking challenge directory reachable over http..."
 msgstr ""
 
-#: lets-encrypt/config/fields.php:479
-#: lets-encrypt/config/fields.php:516
+#: lets-encrypt/config/fields.php:478
+#: lets-encrypt/config/fields.php:515
 msgid "Creating account..."
 msgstr ""
 
-#: lets-encrypt/config/fields.php:485
+#: lets-encrypt/config/fields.php:484
 msgid "Retrieving DNS verification token..."
 msgstr ""
 
-#: lets-encrypt/config/fields.php:510
+#: lets-encrypt/config/fields.php:509
 msgid "Checking if Terms & Conditions are accepted..."
 msgstr ""
 
-#: lets-encrypt/config/fields.php:522
+#: lets-encrypt/config/fields.php:521
 #: settings/build/index.js:382
 #: settings/src/LetsEncrypt/LetsEncrypt.js:93
 msgid "Generating SSL certificate..."
 msgstr ""
 
-#: lets-encrypt/config/fields.php:535
+#: lets-encrypt/config/fields.php:534
 msgid "Searching for link to SSL installation page on your server..."
 msgstr ""
 
-#: lets-encrypt/config/fields.php:552
+#: lets-encrypt/config/fields.php:551
 msgid "Checking for subdomain setup..."
 msgstr ""
 
@@ -1203,53 +1203,53 @@ msgstr ""
 msgid "For more information, please read this %sarticle%s"
 msgstr ""
 
-#: lets-encrypt/functions.php:330
-#: lets-encrypt/functions.php:331
+#: lets-encrypt/functions.php:354
+#: lets-encrypt/functions.php:355
 #: settings/build/index.js:382
 #: settings/src/Dashboard/GridBlock.js:93
 #: settings/src/Settings/SettingsGroup.js:93
 msgid "Instructions"
 msgstr ""
 
-#: lets-encrypt/functions.php:334
+#: lets-encrypt/functions.php:358
 msgid "Please complete manually in your hosting dashboard."
 msgstr ""
 
-#: lets-encrypt/functions.php:335
+#: lets-encrypt/functions.php:359
 msgid "Please activate it manually on your hosting dashboard."
 msgstr ""
 
-#: lets-encrypt/functions.php:337
+#: lets-encrypt/functions.php:361
 msgid "Please complete %smanually%s"
 msgstr ""
 
-#: lets-encrypt/functions.php:338
+#: lets-encrypt/functions.php:362
 msgid "Please activate it on your dashboard %smanually%s"
 msgstr ""
 
-#: lets-encrypt/functions.php:339
+#: lets-encrypt/functions.php:363
 msgid "Go to activation"
 msgstr ""
 
-#: lets-encrypt/functions.php:340
+#: lets-encrypt/functions.php:364
 msgid "Go to installation"
 msgstr ""
 
-#: lets-encrypt/functions.php:347
-#: lets-encrypt/functions.php:351
-#: lets-encrypt/functions.php:361
+#: lets-encrypt/functions.php:371
+#: lets-encrypt/functions.php:375
+#: lets-encrypt/functions.php:385
 msgid "After completing the installation, you can continue to the next step to complete your configuration."
 msgstr ""
 
-#: lets-encrypt/functions.php:349
+#: lets-encrypt/functions.php:373
 msgid "You already have free SSL on your hosting environment."
 msgstr ""
 
-#: lets-encrypt/functions.php:358
+#: lets-encrypt/functions.php:382
 msgid "Your hosting environment does not allow automatic SSL installation."
 msgstr ""
 
-#: lets-encrypt/functions.php:360
+#: lets-encrypt/functions.php:384
 msgid "You can follow these %sinstructions%s."
 msgstr ""
 
@@ -1551,15 +1551,15 @@ msgstr ""
 msgid "Really Simple SSL cannot be activated. The plugin requires WordPress 5.7 or higher"
 msgstr ""
 
-#: rlrsssl-really-simple-ssl.php:194
+#: rlrsssl-really-simple-ssl.php:197
 msgid "Update Really Simple SSL Pro: the plugin needs to be updated to the latest version to be compatible."
 msgstr ""
 
-#: rlrsssl-really-simple-ssl.php:198
+#: rlrsssl-really-simple-ssl.php:201
 msgid "%sUpdate%s or %srenew your license%s."
 msgstr ""
 
-#: rlrsssl-really-simple-ssl.php:200
+#: rlrsssl-really-simple-ssl.php:203
 msgid "Visit the plugins overview or %srenew your license%s."
 msgstr ""
 
@@ -1689,7 +1689,7 @@ msgid "Your site registered a user with the name 'admin'."
 msgstr ""
 
 #: security/notices.php:191
-msgid "Rename admin user enabled: Please choose a new username of at least 3 characters."
+msgid "Rename admin user enabled: Please choose a new username of at least 3 characters, which is not in use yet."
 msgstr ""
 
 #: security/notices.php:206
@@ -1946,6 +1946,10 @@ msgstr ""
 
 #: settings/config/config.php:333
 msgid "If this option is set to true, the mixed content fixer will fire on the init hook instead of the template_redirect hook. Only use this option when you experience problems with the mixed content fixer."
+msgstr ""
+
+#: settings/config/config.php:351
+msgid "Mixed content fixer - back-end"
 msgstr ""
 
 #: settings/config/config.php:360
@@ -2402,75 +2406,75 @@ msgstr ""
 msgid "Really Simple SSL automatically detects your settings and configures your website to run over HTTPS. To keep it lightweight, we kept the options to a minimum. Your website will move to SSL with one click."
 msgstr ""
 
-#: upgrade/upgrade-to-pro.php:181
+#: upgrade/upgrade-to-pro.php:182
 #: settings/build/index.js:382
 #: settings/src/Dashboard/OtherPlugins.js:88
 msgid "Installed"
 msgstr ""
 
-#: upgrade/upgrade-to-pro.php:224
+#: upgrade/upgrade-to-pro.php:225
 msgid "Installation finished"
 msgstr ""
 
-#: upgrade/upgrade-to-pro.php:322
+#: upgrade/upgrade-to-pro.php:323
 msgid "Recommended by Really Simple Plugins"
 msgstr ""
 
-#: upgrade/upgrade-to-pro.php:347
+#: upgrade/upgrade-to-pro.php:348
 msgid "Installing"
 msgstr ""
 
-#: upgrade/upgrade-to-pro.php:358
+#: upgrade/upgrade-to-pro.php:359
 msgid "Visit Dashboard"
 msgstr ""
 
-#: upgrade/upgrade-to-pro.php:363
 #: upgrade/upgrade-to-pro.php:364
+#: upgrade/upgrade-to-pro.php:365
 msgid "An Error Occurred:"
 msgstr ""
 
-#: upgrade/upgrade-to-pro.php:363
+#: upgrade/upgrade-to-pro.php:364
 msgid "Install %sManually%s."
 msgstr ""
 
-#: upgrade/upgrade-to-pro.php:364
+#: upgrade/upgrade-to-pro.php:365
 msgid "Check your %slicense%s."
 msgstr ""
 
-#: upgrade/upgrade-to-pro.php:435
+#: upgrade/upgrade-to-pro.php:436
 msgid "Could not rename folder!"
 msgstr ""
 
-#: upgrade/upgrade-to-pro.php:535
-#: upgrade/upgrade-to-pro.php:567
+#: upgrade/upgrade-to-pro.php:536
+#: upgrade/upgrade-to-pro.php:568
 msgid "An error occurred, please try again."
 msgstr ""
 
-#: upgrade/upgrade-to-pro.php:543
+#: upgrade/upgrade-to-pro.php:544
 msgid "Your license key expired on %s."
 msgstr ""
 
-#: upgrade/upgrade-to-pro.php:549
+#: upgrade/upgrade-to-pro.php:550
 msgid "Your license key has been disabled."
 msgstr ""
 
-#: upgrade/upgrade-to-pro.php:552
+#: upgrade/upgrade-to-pro.php:553
 msgid "Missing license."
 msgstr ""
 
-#: upgrade/upgrade-to-pro.php:555
+#: upgrade/upgrade-to-pro.php:556
 msgid "Invalid license."
 msgstr ""
 
-#: upgrade/upgrade-to-pro.php:558
+#: upgrade/upgrade-to-pro.php:559
 msgid "Your license is not active for this URL."
 msgstr ""
 
-#: upgrade/upgrade-to-pro.php:561
+#: upgrade/upgrade-to-pro.php:562
 msgid "This appears to be an invalid license key for this plugin."
 msgstr ""
 
-#: upgrade/upgrade-to-pro.php:564
+#: upgrade/upgrade-to-pro.php:565
 msgid "Your license key has reached its activation limit."
 msgstr ""
 
