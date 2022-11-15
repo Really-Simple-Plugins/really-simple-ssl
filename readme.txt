@@ -103,6 +103,7 @@ If you can't deactivate, do not just remove the plugin folder to uninstall! Foll
 * Fix: allow for custom rest api prefixes, props @coderevolution
 * Improvement: Simplify user enumeration test
 * Improvement: catch unexpected response in SSL Labs object
+* Improvement: z-index on on boarding modal on smaller screen sizes, props @rtpHarry
 
 = 6.0.9 =
 * Fix: incorrectly disabled email field in Let's Encrypt wizard, props @cburgess
