@@ -101,6 +101,7 @@ If you can't deactivate, do not just remove the plugin folder to uninstall! Foll
 * Fix: When used with Varnish cache, Rest API get requests were cached, causing the settings page not to update. 
 * Fix: Ensure manage_security capability for users upgraded from versions before introduction of this capability
 * Fix: allow for custom rest api prefixes, props @coderevolution
+* Fix: bug in Let's Encrypt generation: saving of 'disable_ocsp' setting, create_bundle_or_renew action with quotes
 * Improvement: Simplify user enumeration test
 * Improvement: catch unexpected response in SSL Labs object
 * Improvement: z-index on on boarding modal on smaller screen sizes, props @rtpHarry
