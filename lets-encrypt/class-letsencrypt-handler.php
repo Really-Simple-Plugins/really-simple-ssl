@@ -399,6 +399,8 @@ class rsssl_letsencrypt_handler {
 					    public function write( Order $order, string $identifier, string $digest ): bool {
 						    $tokens                = get_option( 'rsssl_le_dns_tokens', [] );
 						    $tokens[ $identifier ] = $digest;
+							error_log("new tokens for DNS");
+							error_log(print_r($tokens, true));
 						    update_option( "rsssl_le_dns_tokens", $tokens, false );
 						    rsssl_progress_add( 'dns-verification' );
 
@@ -508,7 +510,7 @@ class rsssl_letsencrypt_handler {
 	 */
 
 	public function verify_dns(){
-		if (rsssl_is_ready_for('generation')) {
+		if ( rsssl_is_ready_for('generation') ) {
 			update_option('rsssl_le_dns_records_verified', false, false );
 
 			$tokens = get_option('rsssl_le_dns_tokens');
@@ -518,12 +520,14 @@ class rsssl_letsencrypt_handler {
 				$message = __('Token not generated. Please complete the previous step.',"really-simple-ssl");
 				return new RSSSL_RESPONSE($status, $action, $message);
 			}
-
+			error_log("Do DNS verification");
 			foreach ($tokens as $identifier => $token){
 				if (strpos($identifier, '*') !== false) continue;
 				set_error_handler(array($this, 'custom_error_handling'));
 
 				$response = dns_get_record( "_acme-challenge.$identifier", DNS_TXT );
+				error_log("Verify DNS tokens");
+				error_log(print_r($response, true));
 				restore_error_handler();
 				if ( isset($response[0]['txt']) ){
 					if ($response[0]['txt'] === $token) {
@@ -944,7 +948,7 @@ class rsssl_letsencrypt_handler {
 
 	public function terms_accepted(){
 	    //don't use the default value: we want users to explicitly enter a value
-	    $accepted =  rsssl_get_option('accept_le_terms', false);
+	    $accepted =  rsssl_get_option('accept_le_terms');
 		if ( $accepted ) {
 			$status = 'success';
 			$action = 'continue';

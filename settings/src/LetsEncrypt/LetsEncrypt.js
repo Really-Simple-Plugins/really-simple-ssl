@@ -69,7 +69,8 @@ const LetsEncrypt = (props) => {
         //find verification_type
         let verification_type = props.getFieldValue('verification_type');
         if ( !verification_type ) verification_type = 'dir';
-
+        console.log("origin");
+        console.log(actions);
 
         if ( verification_type==='dns' ) {
             //check if dns verification already is added
@@ -106,7 +107,8 @@ const LetsEncrypt = (props) => {
                 actions.push(newAction);
             }
         }
-
+        console.log("result");
+        console.log(actions);
         return actions;
     }
 
@@ -182,6 +184,8 @@ const LetsEncrypt = (props) => {
         maxAttempts.current = action.attempts;
 
         rsssl_api.runLetsEncryptTest(test, props.field.id ).then( ( response ) => {
+                console.log("test response");
+                console.log(response);
                 const endTime = new Date();
                 let timeDiff = endTime - startTime; //in ms
                 const elapsedTime = Math.round(timeDiff);
