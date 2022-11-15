@@ -537,7 +537,7 @@ function rsssl_fields( $load_values = true ) {
 			'server_conditions' => [
 				'relation' => 'AND',
 				[
-					'rsssl_has_admin_user' => 1,
+					'rsssl_has_admin_user()' => true,
 				]
 			],
 
