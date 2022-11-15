@@ -148,6 +148,12 @@ class PermissionsPolicy extends Component {
                             <a className="rsssl-learning-mode-link" href="#" onClick={ (e) => this.togglePermissionsPolicyStatus(e, false) }>{__("Disable", "really-simple-ssl") }</a>
                         </div>
                     </div>}
+                    { this.props.disabled && <div className="rsssl-locked">
+                        <div className="rsssl-locked-overlay">
+                            <span className="rsssl-progress-status rsssl-disabled">{__("Disabled ","really-simple-ssl")}</span>
+                            {__("The Permissions Policy has been disabled.", "really-simple-ssl")}
+                        </div>
+                    </div>}
             </div>
         )
     }

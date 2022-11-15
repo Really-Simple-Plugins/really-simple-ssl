@@ -145,7 +145,6 @@ function rsssl_menu() {
 				[
 					'id'      => 'content_security_policy',
 					'title'   => __( 'Content Security Policy', 'really-simple-ssl' ),
-					'intro'   => __( "Content Security Policy intro", "really-simple-ssl" ),
 					'premium' => true,
 					'groups'  => [
 						[
