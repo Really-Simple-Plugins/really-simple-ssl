@@ -399,8 +399,6 @@ class rsssl_letsencrypt_handler {
 					    public function write( Order $order, string $identifier, string $digest ): bool {
 						    $tokens                = get_option( 'rsssl_le_dns_tokens', [] );
 						    $tokens[ $identifier ] = $digest;
-							error_log("new tokens for DNS");
-							error_log(print_r($tokens, true));
 						    update_option( "rsssl_le_dns_tokens", $tokens, false );
 						    rsssl_progress_add( 'dns-verification' );
 
@@ -440,7 +438,6 @@ class rsssl_letsencrypt_handler {
 
 						    }
 					    } catch ( Exception $e ) {
-							error_log(print_r($e, true));
 						    $error = $this->get_error( $e );
 						    if ( strpos( $error, 'No challenge found with given type')!==false ) {
 							    //Maybe it was first set to HTTP challenge. retry after clearing the order.
@@ -521,14 +518,11 @@ class rsssl_letsencrypt_handler {
 				$message = __('Token not generated. Please complete the previous step.',"really-simple-ssl");
 				return new RSSSL_RESPONSE($status, $action, $message);
 			}
-			error_log("Do DNS verification");
 			foreach ($tokens as $identifier => $token){
 				if (strpos($identifier, '*') !== false) continue;
 				set_error_handler(array($this, 'custom_error_handling'));
 
 				$response = dns_get_record( "_acme-challenge.$identifier", DNS_TXT );
-				error_log("Verify DNS tokens");
-				error_log(print_r($response, true));
 				restore_error_handler();
 				if ( isset($response[0]['txt']) ){
 					if ($response[0]['txt'] === $token) {
@@ -588,8 +582,6 @@ class rsssl_letsencrypt_handler {
 	 */
 
     public function create_bundle_or_renew(){
-	    error_log("create bundle or renew");
-
 	    $bundle_completed = false;
     	$use_dns = rsssl_dns_verification_required();
 	    $attempt_count = (int) get_transient( 'rsssl_le_generate_attempt_count' );
@@ -636,9 +628,7 @@ class rsssl_letsencrypt_handler {
 		    $response->output = false;
 
 		    if ( $order ) {
-				error_log("has order");
 			    if ( $order->isCertificateBundleAvailable() ) {
-				    error_log("renewal");
 
 				    try {
 					    $order->enableAutoRenewal();
@@ -657,7 +647,6 @@ class rsssl_letsencrypt_handler {
 					    $bundle_completed = false;
 				    }
 			    } else {
-				    error_log("new cert");
 				    $finalized = false;
 			    	$challenge_type = $use_dns ? Order::CHALLENGE_TYPE_DNS : Order::CHALLENGE_TYPE_HTTP;
 				    try {
@@ -675,7 +664,6 @@ class rsssl_letsencrypt_handler {
 						    $bundle_completed = false;
 					    }
 				    } catch ( Exception $e ) {
-					    error_log(print_r($e, true));
 
 					    $this->count_attempt();
 					    $message = $this->get_error( $e );
