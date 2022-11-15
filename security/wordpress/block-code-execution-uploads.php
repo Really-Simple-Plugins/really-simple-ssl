@@ -59,9 +59,16 @@ function rsssl_disable_code_execution_rules($rules)
 	if ( !rsssl_get_option('block_code_execution_uploads')) {
 		return $rules;
 	}
-	$rule = "\n" ."<Files *.php>";
-	$rule .= "\n" . "deny from all";
-	$rule .= "\n" . "</Files>";
+
+	if ( RSSSL()->server->apache_version_min_24() ) {
+		$rule = "\n" ."<Files *.php>";
+		$rule .= "\n" . "Require all denied";
+		$rule .= "\n" . "</Files>";
+	} else {
+		$rule = "\n" ."<Files *.php>";
+		$rule .= "\n" . "deny from all";
+		$rule .= "\n" . "</Files>";
+	}
 
 	$rules[] = ['rules' => $rule, 'identifier' => 'deny from all'];
 	return $rules;
