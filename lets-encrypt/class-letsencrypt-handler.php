@@ -523,8 +523,6 @@ class rsssl_letsencrypt_handler {
 				set_error_handler(array($this, 'custom_error_handling'));
 
 				$response = dns_get_record( "_acme-challenge.$identifier", DNS_TXT );
-				error_log("DNS verification response");
-				error_log(print_r($response, true));
 				restore_error_handler();
 				if ( isset($response[0]['txt']) ){
 					if ($response[0]['txt'] === $token) {
