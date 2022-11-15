@@ -440,13 +440,14 @@ class rsssl_letsencrypt_handler {
 
 						    }
 					    } catch ( Exception $e ) {
+							error_log(print_r($e, true));
 						    $error = $this->get_error( $e );
 						    if ( strpos( $error, 'No challenge found with given type')!==false ) {
 							    //Maybe it was first set to HTTP challenge. retry after clearing the order.
 							    $order->clear();
 						    } else if (strpos($error, 'Order has status "invalid"')!==false) {
 							    $order->clear();
-							    $error = __("The order is invalid, possibly due to too many failed authorization attempts. Please start at the previous step.","really-simple-ssl");
+							    $error = __("1The order is invalid, possibly due to too many failed authorization attempts. Please start at the previous step.","really-simple-ssl");
 						    } else
 						    //fixing a plesk bug
 						    if ( strpos($error, 'No order for ID ') !== FALSE){
@@ -587,9 +588,11 @@ class rsssl_letsencrypt_handler {
 	 */
 
     public function create_bundle_or_renew(){
+	    error_log("create bundle or renew");
+
 	    $bundle_completed = false;
     	$use_dns = rsssl_dns_verification_required();
-	    $attempt_count = intval(get_transient('rsssl_le_generate_attempt_count'));
+	    $attempt_count = (int) get_transient( 'rsssl_le_generate_attempt_count' );
 	    if ( $attempt_count>5 ){
 		    delete_option("rsssl_le_start_renewal");
 		    $message = __("The certificate generation was rate limited for 10 minutes because the authorization failed.",'really-simple-ssl');
@@ -633,7 +636,10 @@ class rsssl_letsencrypt_handler {
 		    $response->output = false;
 
 		    if ( $order ) {
+				error_log("has order");
 			    if ( $order->isCertificateBundleAvailable() ) {
+				    error_log("renewal");
+
 				    try {
 					    $order->enableAutoRenewal();
 					    $response = new RSSSL_RESPONSE(
@@ -651,7 +657,8 @@ class rsssl_letsencrypt_handler {
 					    $bundle_completed = false;
 				    }
 			    } else {
-			    	$finalized = false;
+				    error_log("new cert");
+				    $finalized = false;
 			    	$challenge_type = $use_dns ? Order::CHALLENGE_TYPE_DNS : Order::CHALLENGE_TYPE_HTTP;
 				    try {
 					    if ( $order->authorize( $challenge_type ) ) {
@@ -668,6 +675,7 @@ class rsssl_letsencrypt_handler {
 						    $bundle_completed = false;
 					    }
 				    } catch ( Exception $e ) {
+					    error_log(print_r($e, true));
 
 					    $this->count_attempt();
 					    $message = $this->get_error( $e );
@@ -679,7 +687,7 @@ class rsssl_letsencrypt_handler {
 
 					    if (strpos($message, 'Order has status "invalid"')!==false) {
 					    	$order->clear();
-						    $response->message = __("The order is invalid, possibly due to too many failed authorization attempts. Please start at the previous step.","really-simple-ssl");
+						    $response->message = __("2The order is invalid, possibly due to too many failed authorization attempts. Please start at the previous step.","really-simple-ssl");
 					        if ($use_dns) {
 					        	rsssl_progress_remove('dns-verification');
 						        $response->message .= '&nbsp;'.__("As your order will be regenerated, you'll need to update your DNS text records.","really-simple-ssl");

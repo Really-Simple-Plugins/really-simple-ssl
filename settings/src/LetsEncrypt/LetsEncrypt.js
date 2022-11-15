@@ -91,20 +91,15 @@ const LetsEncrypt = (props) => {
             });
 
             if (!dnsVerificationAdded && create_bundle_index>0) {
-
+                //store create bundle action
+                let createBundleAction = actions[create_bundle_index];
                 //overwrite create bundle action
                 let newAction = {};
                 newAction.action = 'verify_dns';
                 newAction.description = __("Verifying DNS records...", "really-simple-ssl");
                 newAction.attempts = 2;
                 actions[create_bundle_index] = newAction;
-
-                //add create bundle at end
-                newAction = {};
-                newAction.action = 'create_bundle_or_renew';
-                newAction.description = __("Generating SSL certificate...", "really-simple-ssl");
-                newAction.attempts = 4;
-                actions.push(newAction);
+                actions.push(createBundleAction);
             }
         }
         console.log("result");
@@ -182,7 +177,6 @@ const LetsEncrypt = (props) => {
         let action = getAction();
         let test = action.action;
         maxAttempts.current = action.attempts;
-
         rsssl_api.runLetsEncryptTest(test, props.field.id ).then( ( response ) => {
                 console.log("test response");
                 console.log(response);
@@ -251,8 +245,7 @@ const LetsEncrypt = (props) => {
             'color': 'green',
         },
     };
-    console.log("actions");
-    console.log(actions);
+
     return (
         <>
             <div className="rsssl-lets-encrypt-tests">

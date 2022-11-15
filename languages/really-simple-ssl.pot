@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2022-11-15T10:40:28+00:00\n"
+"POT-Creation-Date: 2022-11-15T12:02:38+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.6.0\n"
 "X-Domain: really-simple-ssl\n"
@@ -50,19 +50,19 @@ msgid "Really Simple SSL and Really Simple SSL add-ons do not process any person
 msgstr ""
 
 #: class-admin.php:466
-#: settings/build/index.js:5468
+#: settings/build/index.js:5462
 #: settings/src/Onboarding/Onboarding.js:269
-#: settings/build/index.js:4914
+#: settings/build/index.js:4907
 msgid "Dismiss"
 msgstr ""
 
 #: class-admin.php:467
 #: settings/build/index.js:4048
-#: settings/build/index.js:6490
+#: settings/build/index.js:6484
 #: settings/src/Dashboard/TaskElement.js:29
 #: settings/src/Settings/Help.js:26
 #: settings/build/index.js:3598
-#: settings/build/index.js:5830
+#: settings/build/index.js:5823
 msgid "More info"
 msgstr ""
 
@@ -91,9 +91,9 @@ msgid "Completed"
 msgstr ""
 
 #: class-admin.php:1760
-#: settings/build/index.js:7238
+#: settings/build/index.js:7232
 #: settings/src/Settings/MixedContentScan.js:198
-#: settings/build/index.js:6554
+#: settings/build/index.js:6547
 msgid "Warning"
 msgstr ""
 
@@ -103,11 +103,11 @@ msgstr ""
 
 #: class-admin.php:1762
 #: settings/build/index.js:3114
-#: settings/build/index.js:7973
+#: settings/build/index.js:7967
 #: settings/src/Dashboard/OtherPlugins.js:85
 #: settings/src/Settings/SettingsGroup.js:133
 #: settings/build/index.js:2726
-#: settings/build/index.js:7231
+#: settings/build/index.js:7224
 msgid "Upgrade"
 msgstr ""
 
@@ -525,11 +525,11 @@ msgstr ""
 
 #: class-site-health.php:201
 #: settings/build/index.js:3407
-#: settings/build/index.js:5427
+#: settings/build/index.js:5421
 #: settings/src/Dashboard/ProgressFooter.js:42
 #: settings/src/Onboarding/Onboarding.js:242
 #: settings/build/index.js:2997
-#: settings/build/index.js:4887
+#: settings/build/index.js:4880
 msgid "Activate SSL"
 msgstr ""
 
@@ -659,235 +659,238 @@ msgstr ""
 msgid "Token not received yet."
 msgstr ""
 
-#: lets-encrypt/class-letsencrypt-handler.php:449
-#: lets-encrypt/class-letsencrypt-handler.php:682
-msgid "The order is invalid, possibly due to too many failed authorization attempts. Please start at the previous step."
+#: lets-encrypt/class-letsencrypt-handler.php:450
+msgid "1The order is invalid, possibly due to too many failed authorization attempts. Please start at the previous step."
 msgstr ""
 
-#: lets-encrypt/class-letsencrypt-handler.php:453
+#: lets-encrypt/class-letsencrypt-handler.php:454
 msgid "Order ID mismatch, regenerate order."
 msgstr ""
 
-#: lets-encrypt/class-letsencrypt-handler.php:456
+#: lets-encrypt/class-letsencrypt-handler.php:457
 msgid "If you entered your DNS records before, they need to be changed."
 msgstr ""
 
-#: lets-encrypt/class-letsencrypt-handler.php:478
+#: lets-encrypt/class-letsencrypt-handler.php:479
 msgid "Configured for HTTP challenge"
 msgstr ""
 
-#: lets-encrypt/class-letsencrypt-handler.php:520
+#: lets-encrypt/class-letsencrypt-handler.php:521
 #: lets-encrypt/integrations/cpanel/functions.php:45
 msgid "Token not generated. Please complete the previous step."
 msgstr ""
 
-#: lets-encrypt/class-letsencrypt-handler.php:537
+#: lets-encrypt/class-letsencrypt-handler.php:538
 msgid "Successfully verified DNS records"
 msgstr ""
 
-#: lets-encrypt/class-letsencrypt-handler.php:545
+#: lets-encrypt/class-letsencrypt-handler.php:546
 msgid "The DNS response for %s was %s, while it should be %s."
 msgstr ""
 
-#: lets-encrypt/class-letsencrypt-handler.php:554
+#: lets-encrypt/class-letsencrypt-handler.php:555
 msgid "Could not verify TXT record for domain %s"
 msgstr ""
 
-#: lets-encrypt/class-letsencrypt-handler.php:595
+#: lets-encrypt/class-letsencrypt-handler.php:596
 msgid "The certificate generation was rate limited for 10 minutes because the authorization failed."
 msgstr ""
 
-#: lets-encrypt/class-letsencrypt-handler.php:597
+#: lets-encrypt/class-letsencrypt-handler.php:598
 msgid "Please double check your DNS txt record."
 msgstr ""
 
-#: lets-encrypt/class-letsencrypt-handler.php:611
+#: lets-encrypt/class-letsencrypt-handler.php:612
 msgid "DNS records were not verified yet. Please complete the previous step."
 msgstr ""
 
-#: lets-encrypt/class-letsencrypt-handler.php:642
+#: lets-encrypt/class-letsencrypt-handler.php:643
 msgid "Certificate already generated. It was renewed if required."
 msgstr ""
 
-#: lets-encrypt/class-letsencrypt-handler.php:666
+#: lets-encrypt/class-letsencrypt-handler.php:667
 msgid "Authorization not completed yet."
 msgstr ""
 
-#: lets-encrypt/class-letsencrypt-handler.php:685
+#: lets-encrypt/class-letsencrypt-handler.php:684
+msgid "2The order is invalid, possibly due to too many failed authorization attempts. Please start at the previous step."
+msgstr ""
+
+#: lets-encrypt/class-letsencrypt-handler.php:687
 msgid "As your order will be regenerated, you'll need to update your DNS text records."
 msgstr ""
 
-#: lets-encrypt/class-letsencrypt-handler.php:693
+#: lets-encrypt/class-letsencrypt-handler.php:695
 msgid "OCSP not supported, the certificate will be generated without OCSP."
 msgstr ""
 
-#: lets-encrypt/class-letsencrypt-handler.php:730
+#: lets-encrypt/class-letsencrypt-handler.php:732
 msgid "Successfully generated certificate."
 msgstr ""
 
-#: lets-encrypt/class-letsencrypt-handler.php:736
+#: lets-encrypt/class-letsencrypt-handler.php:738
 msgid "Files not created yet..."
 msgstr ""
 
-#: lets-encrypt/class-letsencrypt-handler.php:744
+#: lets-encrypt/class-letsencrypt-handler.php:746
 msgid "Bundle not available yet..."
 msgstr ""
 
-#: lets-encrypt/class-letsencrypt-handler.php:787
+#: lets-encrypt/class-letsencrypt-handler.php:789
 msgid "Order successfully created."
 msgstr ""
 
-#: lets-encrypt/class-letsencrypt-handler.php:803
+#: lets-encrypt/class-letsencrypt-handler.php:805
 msgid "Order successfully retrieved."
 msgstr ""
 
-#: lets-encrypt/class-letsencrypt-handler.php:955
+#: lets-encrypt/class-letsencrypt-handler.php:957
 msgid "Terms & Conditions are accepted."
 msgstr ""
 
-#: lets-encrypt/class-letsencrypt-handler.php:959
+#: lets-encrypt/class-letsencrypt-handler.php:961
 msgid "The Terms & Conditions were not accepted. Please accept in the general settings."
 msgstr ""
 
-#: lets-encrypt/class-letsencrypt-handler.php:1068
+#: lets-encrypt/class-letsencrypt-handler.php:1070
 msgid "Please complete the following step(s) first: %s"
 msgstr ""
 
-#: lets-encrypt/class-letsencrypt-handler.php:1084
+#: lets-encrypt/class-letsencrypt-handler.php:1086
 msgid "The following directories do not have the necessary writing permissions."
 msgstr ""
 
-#: lets-encrypt/class-letsencrypt-handler.php:1084
+#: lets-encrypt/class-letsencrypt-handler.php:1086
 msgid "Set permissions to 644 to enable SSL generation."
 msgstr ""
 
-#: lets-encrypt/class-letsencrypt-handler.php:1091
+#: lets-encrypt/class-letsencrypt-handler.php:1093
 msgid "The required directories have the necessary writing permissions."
 msgstr ""
 
-#: lets-encrypt/class-letsencrypt-handler.php:1103
+#: lets-encrypt/class-letsencrypt-handler.php:1105
 msgid "We have not detected any known hosting limitations."
 msgstr ""
 
-#: lets-encrypt/class-letsencrypt-handler.php:1110
+#: lets-encrypt/class-letsencrypt-handler.php:1112
 #: lets-encrypt/functions.php:379
 msgid "According to our information, your hosting provider does not allow any kind of SSL installation, other then their own paid certificate. For an alternative hosting provider with SSL, see this %sarticle%s."
 msgstr ""
 
-#: lets-encrypt/class-letsencrypt-handler.php:1117
+#: lets-encrypt/class-letsencrypt-handler.php:1119
 #: lets-encrypt/functions.php:369
 msgid "According to our information, your hosting provider supplies your account with an SSL certificate by default. Please contact your %shosting support%s if this is not the case."
 msgstr ""
 
-#: lets-encrypt/class-letsencrypt-handler.php:1118
+#: lets-encrypt/class-letsencrypt-handler.php:1120
 msgid "After completing the installation, you can let Really Simple SSL automatically configure your site for SSL by using the 'Activate SSL' button."
 msgstr ""
 
-#: lets-encrypt/class-letsencrypt-handler.php:1134
+#: lets-encrypt/class-letsencrypt-handler.php:1136
 msgid "The challenge directory is not created yet."
 msgstr ""
 
-#: lets-encrypt/class-letsencrypt-handler.php:1138
+#: lets-encrypt/class-letsencrypt-handler.php:1140
 msgid "The challenge directory was successfully created."
 msgstr ""
 
-#: lets-encrypt/class-letsencrypt-handler.php:1151
+#: lets-encrypt/class-letsencrypt-handler.php:1153
 msgid "The key directory is not created yet."
 msgstr ""
 
-#: lets-encrypt/class-letsencrypt-handler.php:1155
+#: lets-encrypt/class-letsencrypt-handler.php:1157
 msgid "Trying to create directory in root of website."
 msgstr ""
 
-#: lets-encrypt/class-letsencrypt-handler.php:1163
+#: lets-encrypt/class-letsencrypt-handler.php:1165
 msgid "The key directory was successfully created."
 msgstr ""
 
-#: lets-encrypt/class-letsencrypt-handler.php:1178
+#: lets-encrypt/class-letsencrypt-handler.php:1180
 msgid "The certs directory is not created yet."
 msgstr ""
 
-#: lets-encrypt/class-letsencrypt-handler.php:1182
+#: lets-encrypt/class-letsencrypt-handler.php:1184
 msgid "The certs directory was successfully created."
 msgstr ""
 
-#: lets-encrypt/class-letsencrypt-handler.php:1241
-#: lets-encrypt/class-letsencrypt-handler.php:1551
+#: lets-encrypt/class-letsencrypt-handler.php:1243
+#: lets-encrypt/class-letsencrypt-handler.php:1553
 msgid "no response"
 msgstr ""
 
-#: lets-encrypt/class-letsencrypt-handler.php:1245
+#: lets-encrypt/class-letsencrypt-handler.php:1247
 msgid "Could not reach challenge directory over %s."
 msgstr ""
 
-#: lets-encrypt/class-letsencrypt-handler.php:1251
+#: lets-encrypt/class-letsencrypt-handler.php:1253
 msgid "Challenge directory not writable."
 msgstr ""
 
-#: lets-encrypt/class-letsencrypt-handler.php:1265
-#: lets-encrypt/class-letsencrypt-handler.php:1269
+#: lets-encrypt/class-letsencrypt-handler.php:1267
+#: lets-encrypt/class-letsencrypt-handler.php:1271
 msgid "Error code %s."
 msgstr ""
 
-#: lets-encrypt/class-letsencrypt-handler.php:1276
-#: lets-encrypt/class-letsencrypt-handler.php:1574
-#: lets-encrypt/class-letsencrypt-handler.php:1625
+#: lets-encrypt/class-letsencrypt-handler.php:1278
+#: lets-encrypt/class-letsencrypt-handler.php:1576
+#: lets-encrypt/class-letsencrypt-handler.php:1627
 msgid "Successfully verified alias domain."
 msgstr ""
 
-#: lets-encrypt/class-letsencrypt-handler.php:1509
+#: lets-encrypt/class-letsencrypt-handler.php:1511
 msgid "This is a multisite configuration with subdomains, which requires a wildcard certificate. Wildcard certificates are part of the %spremium%s plan."
 msgstr ""
 
-#: lets-encrypt/class-letsencrypt-handler.php:1514
+#: lets-encrypt/class-letsencrypt-handler.php:1516
 msgid "No subdomain setup detected."
 msgstr ""
 
-#: lets-encrypt/class-letsencrypt-handler.php:1544
+#: lets-encrypt/class-letsencrypt-handler.php:1546
 msgid "Alias domain check is not relevant for a subdomain"
 msgstr ""
 
-#: lets-encrypt/class-letsencrypt-handler.php:1563
+#: lets-encrypt/class-letsencrypt-handler.php:1565
 msgid "Please check if the non www version of your site also points to this website."
 msgstr ""
 
-#: lets-encrypt/class-letsencrypt-handler.php:1565
+#: lets-encrypt/class-letsencrypt-handler.php:1567
 msgid "Please check if the www version of your site also points to this website."
 msgstr ""
 
-#: lets-encrypt/class-letsencrypt-handler.php:1567
+#: lets-encrypt/class-letsencrypt-handler.php:1569
 msgid "Could not verify alias domain."
 msgstr ""
 
-#: lets-encrypt/class-letsencrypt-handler.php:1567
+#: lets-encrypt/class-letsencrypt-handler.php:1569
 msgid "If this is not the case, don't add this alias to your certificate."
 msgstr ""
 
-#: lets-encrypt/class-letsencrypt-handler.php:1596
+#: lets-encrypt/class-letsencrypt-handler.php:1598
 msgid "Could not create test folder and file."
 msgstr ""
 
-#: lets-encrypt/class-letsencrypt-handler.php:1597
+#: lets-encrypt/class-letsencrypt-handler.php:1599
 msgid "Please create a folder 'rsssl' in the uploads directory, with 644 permissions."
 msgstr ""
 
-#: lets-encrypt/class-letsencrypt-handler.php:1614
+#: lets-encrypt/class-letsencrypt-handler.php:1616
 msgid "Error code %s"
 msgstr ""
 
-#: lets-encrypt/class-letsencrypt-handler.php:1693
+#: lets-encrypt/class-letsencrypt-handler.php:1695
 msgid "The certificate installation was rate limited. Please try again later."
 msgstr ""
 
-#: lets-encrypt/class-letsencrypt-handler.php:1719
+#: lets-encrypt/class-letsencrypt-handler.php:1721
 msgid "Not recognized server."
 msgstr ""
 
-#: lets-encrypt/class-letsencrypt-handler.php:1724
+#: lets-encrypt/class-letsencrypt-handler.php:1726
 msgid "Installation failed."
 msgstr ""
 
-#: lets-encrypt/class-letsencrypt-handler.php:1729
+#: lets-encrypt/class-letsencrypt-handler.php:1731
 #: lets-encrypt/integrations/cloudways/functions.php:22
 #: lets-encrypt/integrations/cpanel/functions.php:16
 #: lets-encrypt/integrations/cpanel/functions.php:33
@@ -1142,9 +1145,6 @@ msgid "Checking if Terms & Conditions are accepted..."
 msgstr ""
 
 #: lets-encrypt/config/fields.php:521
-#: settings/build/index.js:4684
-#: settings/src/LetsEncrypt/LetsEncrypt.js:105
-#: settings/build/index.js:4241
 msgid "Generating SSL certificate..."
 msgstr ""
 
@@ -1220,11 +1220,11 @@ msgstr ""
 #: lets-encrypt/functions.php:354
 #: lets-encrypt/functions.php:355
 #: settings/build/index.js:2991
-#: settings/build/index.js:7919
+#: settings/build/index.js:7913
 #: settings/src/Dashboard/GridBlock.js:93
 #: settings/src/Settings/SettingsGroup.js:93
 #: settings/build/index.js:2626
-#: settings/build/index.js:7191
+#: settings/build/index.js:7184
 msgid "Instructions"
 msgstr ""
 
@@ -1452,11 +1452,11 @@ msgstr ""
 #: onboarding/config.php:137
 #: settings/config/config.php:243
 #: settings/build/index.js:3090
-#: settings/build/index.js:7027
+#: settings/build/index.js:7021
 #: settings/src/Dashboard/OtherPlugins.js:68
 #: settings/src/Settings/License.js:134
 #: settings/build/index.js:2709
-#: settings/build/index.js:6344
+#: settings/build/index.js:6337
 msgid "Activate"
 msgstr ""
 
@@ -1499,9 +1499,9 @@ msgstr ""
 #: placeholders/class-placeholder.php:185
 #: placeholders/class-placeholder.php:210
 #: settings/config/config.php:883
-#: settings/build/index.js:7271
+#: settings/build/index.js:7265
 #: settings/src/Settings/MixedContentScan.js:227
-#: settings/build/index.js:6583
+#: settings/build/index.js:6576
 msgid "Details"
 msgstr ""
 
@@ -2228,33 +2228,33 @@ msgstr ""
 #: settings/config/config.php:889
 #: settings/build/index.js:4051
 #: settings/build/index.js:4054
-#: settings/build/index.js:5137
-#: settings/build/index.js:7280
+#: settings/build/index.js:5131
+#: settings/build/index.js:7274
 #: settings/src/Dashboard/TaskElement.js:30
 #: settings/src/Dashboard/TaskElement.js:31
 #: settings/src/Modal/Modal.js:80
 #: settings/src/Settings/MixedContentScan.js:233
 #: settings/build/index.js:3599
 #: settings/build/index.js:3600
-#: settings/build/index.js:4616
-#: settings/build/index.js:6589
+#: settings/build/index.js:4609
+#: settings/build/index.js:6582
 msgid "Fix"
 msgstr ""
 
 #: settings/config/config.php:904
-#: settings/build/index.js:6081
+#: settings/build/index.js:6075
 #: settings/src/Settings/ChangeStatus.js:11
-#: settings/build/index.js:5465
+#: settings/build/index.js:5458
 msgid "Allow"
 msgstr ""
 
 #: settings/config/config.php:904
-#: settings/build/index.js:6834
-#: settings/build/index.js:7628
+#: settings/build/index.js:6828
+#: settings/build/index.js:7622
 #: settings/src/Settings/LearningMode.js:254
 #: settings/src/Settings/PermissionsPolicy.js:148
-#: settings/build/index.js:6161
-#: settings/build/index.js:6908
+#: settings/build/index.js:6154
+#: settings/build/index.js:6901
 msgid "Disable"
 msgstr ""
 
@@ -2519,14 +2519,14 @@ msgid "Your license key has reached its activation limit."
 msgstr ""
 
 #: settings/build/index.js:3091
-#: settings/build/index.js:5389
-#: settings/build/index.js:5390
+#: settings/build/index.js:5383
+#: settings/build/index.js:5384
 #: settings/src/Dashboard/OtherPlugins.js:69
 #: settings/src/Onboarding/Onboarding.js:194
 #: settings/src/Onboarding/Onboarding.js:195
 #: settings/build/index.js:2710
-#: settings/build/index.js:4839
-#: settings/build/index.js:4840
+#: settings/build/index.js:4832
+#: settings/build/index.js:4833
 msgid "Activating..."
 msgstr ""
 
@@ -2565,13 +2565,13 @@ msgstr ""
 
 #: settings/build/index.js:3413
 #: settings/build/index.js:4138
-#: settings/build/index.js:4956
+#: settings/build/index.js:4950
 #: settings/src/Dashboard/ProgressFooter.js:44
 #: settings/src/Header.js:48
 #: settings/src/Menu/Menu.js:49
 #: settings/build/index.js:2999
 #: settings/build/index.js:3662
-#: settings/build/index.js:4468
+#: settings/build/index.js:4461
 msgid "Go Pro"
 msgstr ""
 
@@ -2977,412 +2977,412 @@ msgstr ""
 msgid "Copy content"
 msgstr ""
 
-#: settings/build/index.js:4677
-#: settings/src/LetsEncrypt/LetsEncrypt.js:98
-#: settings/build/index.js:4234
+#: settings/build/index.js:4679
+#: settings/src/LetsEncrypt/LetsEncrypt.js:99
+#: settings/build/index.js:4235
 msgid "Verifying DNS records..."
 msgstr ""
 
-#: settings/build/index.js:4843
-#: settings/src/LetsEncrypt/LetsEncrypt.js:265
-#: settings/build/index.js:4401
+#: settings/build/index.js:4837
+#: settings/src/LetsEncrypt/LetsEncrypt.js:258
+#: settings/build/index.js:4394
 msgid "Attempt %s."
 msgstr ""
 
-#: settings/build/index.js:5013
+#: settings/build/index.js:5007
 #: settings/src/Menu/MenuItem.js:40
-#: settings/build/index.js:4520
+#: settings/build/index.js:4513
 msgid "New"
 msgstr ""
 
-#: settings/build/index.js:5125
+#: settings/build/index.js:5119
 #: settings/src/Modal/Modal.js:77
-#: settings/build/index.js:4613
+#: settings/build/index.js:4606
 msgid "Edit"
 msgstr ""
 
-#: settings/build/index.js:5129
+#: settings/build/index.js:5123
 #: settings/src/Modal/Modal.js:78
-#: settings/build/index.js:4614
+#: settings/build/index.js:4607
 msgid "Help"
 msgstr ""
 
-#: settings/build/index.js:5133
+#: settings/build/index.js:5127
 #: settings/src/Modal/Modal.js:79
-#: settings/build/index.js:4615
+#: settings/build/index.js:4608
 msgid "Ignore"
 msgstr ""
 
-#: settings/build/index.js:5261
+#: settings/build/index.js:5255
 #: settings/src/Onboarding/Onboarding.js:69
-#: settings/build/index.js:4714
+#: settings/build/index.js:4707
 msgid "Re-checking SSL certificate, please wait..."
 msgstr ""
 
-#: settings/build/index.js:5358
+#: settings/build/index.js:5352
 #: settings/src/Onboarding/Onboarding.js:163
-#: settings/build/index.js:4808
+#: settings/build/index.js:4801
 msgid "SSL has been activated network wide"
 msgstr ""
 
-#: settings/build/index.js:5361
+#: settings/build/index.js:5355
 #: settings/src/Onboarding/Onboarding.js:166
-#: settings/build/index.js:4811
+#: settings/build/index.js:4804
 msgid "Processing activation of subsites networkwide"
 msgstr ""
 
-#: settings/build/index.js:5391
+#: settings/build/index.js:5385
 #: settings/src/Onboarding/Onboarding.js:196
-#: settings/build/index.js:4841
+#: settings/build/index.js:4834
 msgid "Installing..."
 msgstr ""
 
-#: settings/build/index.js:5392
+#: settings/build/index.js:5386
 #: settings/src/Onboarding/Onboarding.js:197
-#: settings/build/index.js:4842
+#: settings/build/index.js:4835
 msgid "Failed"
 msgstr ""
 
-#: settings/build/index.js:5393
+#: settings/build/index.js:5387
 #: settings/src/Onboarding/Onboarding.js:198
-#: settings/build/index.js:4843
+#: settings/build/index.js:4836
 msgid "Finished"
 msgstr ""
 
-#: settings/build/index.js:5411
+#: settings/build/index.js:5405
 #: settings/src/Onboarding/Onboarding.js:219
-#: settings/build/index.js:4864
+#: settings/build/index.js:4857
 msgid "working"
 msgstr ""
 
-#: settings/build/index.js:5411
+#: settings/build/index.js:5405
 #: settings/src/Onboarding/Onboarding.js:220
-#: settings/build/index.js:4865
+#: settings/build/index.js:4858
 msgid "completed"
 msgstr ""
 
-#: settings/build/index.js:5427
+#: settings/build/index.js:5421
 #: settings/src/Onboarding/Onboarding.js:242
-#: settings/build/index.js:4887
+#: settings/build/index.js:4880
 msgid "Activate SSL networkwide"
 msgstr ""
 
-#: settings/build/index.js:5439
+#: settings/build/index.js:5433
 #: settings/src/Onboarding/Onboarding.js:247
-#: settings/build/index.js:4892
+#: settings/build/index.js:4885
 msgid "Improve Security with PRO"
 msgstr ""
 
-#: settings/build/index.js:5444
+#: settings/build/index.js:5438
 #: settings/src/Onboarding/Onboarding.js:248
-#: settings/build/index.js:4893
+#: settings/build/index.js:4886
 msgid "Install SSL"
 msgstr ""
 
-#: settings/build/index.js:5445
+#: settings/build/index.js:5439
 #: settings/src/Onboarding/Onboarding.js:250
-#: settings/build/index.js:4895
+#: settings/build/index.js:4888
 msgid "Override SSL detection"
 msgstr ""
 
-#: settings/build/index.js:5463
+#: settings/build/index.js:5457
 #: settings/src/Onboarding/Onboarding.js:268
-#: settings/build/index.js:4913
+#: settings/build/index.js:4906
 msgid "Go to Dashboard"
 msgstr ""
 
-#: settings/build/index.js:5501
+#: settings/build/index.js:5495
 #: settings/src/Onboarding/Onboarding.js:292
-#: settings/build/index.js:4937
+#: settings/build/index.js:4930
 msgid "Refresh SSL status"
 msgstr ""
 
-#: settings/build/index.js:5501
+#: settings/build/index.js:5495
 #: settings/src/Onboarding/Onboarding.js:293
-#: settings/build/index.js:4938
+#: settings/build/index.js:4931
 msgid "The SSL detection method is not 100% accurate."
 msgstr ""
 
-#: settings/build/index.js:5501
+#: settings/build/index.js:5495
 #: settings/src/Onboarding/Onboarding.js:294
-#: settings/build/index.js:4939
+#: settings/build/index.js:4932
 msgid "If you’re certain an SSL certificate is present, and refresh SSL status does not work, please check “Override SSL detection” to continue activating SSL."
 msgstr ""
 
-#: settings/build/index.js:5592
+#: settings/build/index.js:5586
 #: settings/src/Onboarding/OnboardingModal.js:54
-#: settings/build/index.js:5007
+#: settings/build/index.js:5000
 msgid "Please wait while we detect your setup"
 msgstr ""
 
-#: settings/build/index.js:6081
+#: settings/build/index.js:6075
 #: settings/src/Settings/ChangeStatus.js:11
-#: settings/build/index.js:5465
+#: settings/build/index.js:5458
 msgid "Revoke"
 msgstr ""
 
-#: settings/build/index.js:6220
-#: settings/build/index.js:7986
+#: settings/build/index.js:6214
+#: settings/build/index.js:7980
 #: settings/src/Settings/Field.js:122
 #: settings/src/Settings/SettingsGroup.js:143
-#: settings/build/index.js:5593
-#: settings/build/index.js:7241
+#: settings/build/index.js:5586
+#: settings/build/index.js:7234
 msgid "This feature is only available networkwide."
 msgstr ""
 
-#: settings/build/index.js:6222
-#: settings/build/index.js:7988
+#: settings/build/index.js:6216
+#: settings/build/index.js:7982
 #: settings/src/Settings/Field.js:122
 #: settings/src/Settings/SettingsGroup.js:143
-#: settings/build/index.js:5593
-#: settings/build/index.js:7241
+#: settings/build/index.js:5586
+#: settings/build/index.js:7234
 msgid "Network settings"
 msgstr ""
 
-#: settings/build/index.js:6731
+#: settings/build/index.js:6725
 #: settings/src/Settings/LearningMode.js:155
-#: settings/build/index.js:6062
+#: settings/build/index.js:6055
 msgid "We're configuring your %s. Exit to edit and enforce."
 msgstr ""
 
-#: settings/build/index.js:6732
+#: settings/build/index.js:6726
 #: settings/src/Settings/LearningMode.js:156
-#: settings/build/index.js:6063
+#: settings/build/index.js:6056
 msgid "%s has been disabled."
 msgstr ""
 
-#: settings/build/index.js:6733
+#: settings/build/index.js:6727
 #: settings/src/Settings/LearningMode.js:157
-#: settings/build/index.js:6064
+#: settings/build/index.js:6057
 msgid "%s is enforced."
 msgstr ""
 
-#: settings/build/index.js:6747
+#: settings/build/index.js:6741
 #: settings/src/Settings/LearningMode.js:169
-#: settings/build/index.js:6076
+#: settings/build/index.js:6069
 msgid "All"
 msgstr ""
 
-#: settings/build/index.js:6749
+#: settings/build/index.js:6743
 #: settings/src/Settings/LearningMode.js:170
-#: settings/build/index.js:6077
+#: settings/build/index.js:6070
 msgid "Allowed"
 msgstr ""
 
-#: settings/build/index.js:6751
+#: settings/build/index.js:6745
 #: settings/src/Settings/LearningMode.js:171
-#: settings/build/index.js:6078
+#: settings/build/index.js:6071
 msgid "Blocked"
 msgstr ""
 
-#: settings/build/index.js:6776
+#: settings/build/index.js:6770
 #: settings/src/Settings/LearningMode.js:199
-#: settings/build/index.js:6106
+#: settings/build/index.js:6099
 msgid "success"
 msgstr ""
 
-#: settings/build/index.js:6776
+#: settings/build/index.js:6770
 #: settings/src/Settings/LearningMode.js:199
-#: settings/build/index.js:6106
+#: settings/build/index.js:6099
 msgid "failed"
 msgstr ""
 
-#: settings/build/index.js:6820
-#: settings/build/index.js:7343
+#: settings/build/index.js:6814
+#: settings/build/index.js:7337
 #: settings/src/Settings/LearningMode.js:245
 #: settings/src/Settings/MixedContentScan.js:301
-#: settings/build/index.js:6152
-#: settings/build/index.js:6657
+#: settings/build/index.js:6145
+#: settings/build/index.js:6650
 msgid "No results"
 msgstr ""
 
-#: settings/build/index.js:6831
-#: settings/build/index.js:7613
+#: settings/build/index.js:6825
+#: settings/build/index.js:7607
 #: settings/src/Settings/LearningMode.js:253
 #: settings/src/Settings/PermissionsPolicy.js:140
-#: settings/build/index.js:6160
-#: settings/build/index.js:6900
+#: settings/build/index.js:6153
+#: settings/build/index.js:6893
 msgid "Enforce"
 msgstr ""
 
-#: settings/build/index.js:6840
+#: settings/build/index.js:6834
 #: settings/src/Settings/LearningMode.js:262
-#: settings/build/index.js:6169
+#: settings/build/index.js:6162
 msgid "Enable Learning Mode"
 msgstr ""
 
-#: settings/build/index.js:6851
-#: settings/build/index.js:7624
+#: settings/build/index.js:6845
+#: settings/build/index.js:7618
 #: settings/src/Settings/LearningMode.js:269
 #: settings/src/Settings/PermissionsPolicy.js:146
-#: settings/build/index.js:6176
-#: settings/build/index.js:6906
+#: settings/build/index.js:6169
+#: settings/build/index.js:6899
 msgid "Enforced"
 msgstr ""
 
-#: settings/build/index.js:6855
+#: settings/build/index.js:6849
 #: settings/src/Settings/LearningMode.js:271
-#: settings/build/index.js:6178
+#: settings/build/index.js:6171
 msgid "Disable to configure"
 msgstr ""
 
-#: settings/build/index.js:6861
-#: settings/build/index.js:6871
+#: settings/build/index.js:6855
+#: settings/build/index.js:6865
 #: settings/src/Settings/LearningMode.js:276
 #: settings/src/Settings/LearningMode.js:283
+#: settings/build/index.js:6176
 #: settings/build/index.js:6183
-#: settings/build/index.js:6190
 msgid "Learning Mode"
 msgstr ""
 
-#: settings/build/index.js:6865
+#: settings/build/index.js:6859
 #: settings/src/Settings/LearningMode.js:278
-#: settings/build/index.js:6185
+#: settings/build/index.js:6178
 msgid "Exit learning mode"
 msgstr ""
 
-#: settings/build/index.js:6871
+#: settings/build/index.js:6865
 #: settings/src/Settings/LearningMode.js:284
-#: settings/build/index.js:6191
+#: settings/build/index.js:6184
 msgid "We finished the configuration."
 msgstr ""
 
-#: settings/build/index.js:6875
+#: settings/build/index.js:6869
 #: settings/src/Settings/LearningMode.js:285
-#: settings/build/index.js:6192
+#: settings/build/index.js:6185
 msgid "Review the settings and enforce the policy"
 msgstr ""
 
-#: settings/build/index.js:6881
+#: settings/build/index.js:6875
 #: settings/src/Settings/LearningMode.js:290
-#: settings/build/index.js:6197
+#: settings/build/index.js:6190
 msgid "Disabled "
 msgstr ""
 
-#: settings/build/index.js:7027
+#: settings/build/index.js:7021
 #: settings/src/Settings/License.js:133
-#: settings/build/index.js:6343
+#: settings/build/index.js:6336
 msgid "Deactivate"
 msgstr ""
 
-#: settings/build/index.js:7073
+#: settings/build/index.js:7067
 #: settings/src/Settings/MixedContentScan.js:19
 #: settings/src/Settings/MixedContentScan.js:21
-#: settings/build/index.js:6375
-#: settings/build/index.js:6377
+#: settings/build/index.js:6368
+#: settings/build/index.js:6370
 msgid "All results"
 msgstr ""
 
-#: settings/build/index.js:7073
+#: settings/build/index.js:7067
 #: settings/src/Settings/MixedContentScan.js:20
-#: settings/build/index.js:6376
+#: settings/build/index.js:6369
 msgid "Show"
 msgstr ""
 
-#: settings/build/index.js:7262
+#: settings/build/index.js:7256
 #: settings/src/Settings/MixedContentScan.js:220
-#: settings/build/index.js:6576
+#: settings/build/index.js:6569
 msgid "View"
 msgstr ""
 
-#: settings/build/index.js:7327
+#: settings/build/index.js:7321
 #: settings/src/Settings/MixedContentScan.js:284
-#: settings/build/index.js:6640
+#: settings/build/index.js:6633
 msgid "No results. Start your first scan"
 msgstr ""
 
-#: settings/build/index.js:7327
+#: settings/build/index.js:7321
 #: settings/src/Settings/MixedContentScan.js:285
-#: settings/build/index.js:6641
+#: settings/build/index.js:6634
 msgid "Everything is now served over SSL"
 msgstr ""
 
-#: settings/build/index.js:7624
+#: settings/build/index.js:7618
 #: settings/src/Settings/PermissionsPolicy.js:147
-#: settings/build/index.js:6907
+#: settings/build/index.js:6900
 msgid "Permissions Policy is enforced."
 msgstr ""
 
-#: settings/build/index.js:7716
+#: settings/build/index.js:7710
 #: settings/src/Settings/Settings.js:75
-#: settings/build/index.js:6992
+#: settings/build/index.js:6985
 msgid "Save"
 msgstr ""
 
-#: settings/build/index.js:7719
+#: settings/build/index.js:7713
 #: settings/src/Settings/Settings.js:78
-#: settings/build/index.js:6995
+#: settings/build/index.js:6988
 msgid "Refresh"
 msgstr ""
 
-#: settings/build/index.js:7785
+#: settings/build/index.js:7779
 #: settings/src/Settings/Settings.js:147
-#: settings/build/index.js:7064
+#: settings/build/index.js:7057
 msgid "Previous"
 msgstr ""
 
-#: settings/build/index.js:7793
+#: settings/build/index.js:7787
 #: settings/src/Settings/Settings.js:159
-#: settings/build/index.js:7076
+#: settings/build/index.js:7069
 msgid "Save and Continue"
 msgstr ""
 
-#: settings/build/index.js:7799
+#: settings/build/index.js:7793
 #: settings/src/Settings/Settings.js:168
-#: settings/build/index.js:7085
+#: settings/build/index.js:7078
 msgid "Notifications"
 msgstr ""
 
-#: settings/build/index.js:7802
+#: settings/build/index.js:7796
 #: settings/src/Settings/Settings.js:171
-#: settings/build/index.js:7088
+#: settings/build/index.js:7081
 msgid "Expand all"
 msgstr ""
 
-#: settings/build/index.js:7802
+#: settings/build/index.js:7796
 #: settings/src/Settings/Settings.js:172
-#: settings/build/index.js:7089
+#: settings/build/index.js:7082
 msgid "Collapse all"
 msgstr ""
 
-#: settings/build/index.js:7906
+#: settings/build/index.js:7900
 #: settings/src/Settings/SettingsGroup.js:80
-#: settings/build/index.js:7178
+#: settings/build/index.js:7171
 msgid "Learn more about %sPremium%s"
 msgstr ""
 
-#: settings/build/index.js:7941
+#: settings/build/index.js:7935
 #: settings/src/Settings/SettingsGroup.js:103
-#: settings/build/index.js:7201
+#: settings/build/index.js:7194
 msgid "Reset Let's Encrypt"
 msgstr ""
 
-#: settings/build/index.js:7976
+#: settings/build/index.js:7970
 #: settings/src/Settings/SettingsGroup.js:135
-#: settings/build/index.js:7233
+#: settings/build/index.js:7226
 msgid "Check license"
 msgstr ""
 
-#: settings/build/index.js:7986
+#: settings/build/index.js:7980
 #: settings/src/Settings/SettingsGroup.js:142
-#: settings/build/index.js:7240
+#: settings/build/index.js:7233
 msgid "Network feature"
 msgstr ""
 
-#: settings/build/index.js:8172
+#: settings/build/index.js:8166
 #: settings/src/Settings/SettingsPage.js:169
-#: settings/build/index.js:7420
+#: settings/build/index.js:7413
 msgid "Settings Saved"
 msgstr ""
 
-#: settings/build/index.js:8394
+#: settings/build/index.js:8388
 #: settings/src/Settings/Support.js:65
-#: settings/build/index.js:7658
+#: settings/build/index.js:7651
 msgid "Type your question here"
 msgstr ""
 
-#: settings/build/index.js:8400
+#: settings/build/index.js:8394
 #: settings/src/Settings/Support.js:72
-#: settings/build/index.js:7665
+#: settings/build/index.js:7658
 msgid "Send"
 msgstr ""
