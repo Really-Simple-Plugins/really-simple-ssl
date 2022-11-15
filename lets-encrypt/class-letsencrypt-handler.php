@@ -695,7 +695,7 @@ class rsssl_letsencrypt_handler {
 					    } else {
 					    	//if OCSP is not disabled yet, and the order status is not invalid, we disable ocsp, and try again.
 					    	if ( !rsssl_get_option( 'disable_ocsp' ) ) {
-							    RSSSL_LE()->field->save_field('disable_ocsp', true);
+							    rsssl_update_option( 'disable_ocsp', true );
 							    $response->action = 'retry';
 							    $response->status = 'warning';
 							    $response->message = __("OCSP not supported, the certificate will be generated without OCSP.","really-simple-ssl");
