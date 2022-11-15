@@ -93,7 +93,6 @@ const SslLabs = (props) => {
                         //if the endpoint already is stored, replace it.
                         let foundEndpoint = false;
                         endpointData.forEach(function(endpoint, i) {
-
                             if ( endpoint.ipAddress === response.ipAddress ) {
                                 endpointData[i] = response;
                                 foundEndpoint = true;
@@ -230,10 +229,10 @@ const SslLabs = (props) => {
         }
         return (
             <>
-                {(status==='inactive') && scoreSnippet("rsssl-test-inactive", __("HSTS","really-simple-ssl"))}
-                {status==='processing' && scoreSnippet("rsssl-test-processing", __("HSTS...","really-simple-ssl"))}
-                {status==='error' && scoreSnippet("rsssl-test-error", __("No HSTS header","really-simple-ssl"))}
-                {status==='success' && scoreSnippet("rsssl-test-success", __("HSTS header detected","really-simple-ssl"))}
+                {(status==='inactive') && scoreSnippet("rsssl-test-inactive", "HSTS")}
+                {status==='processing' && scoreSnippet("rsssl-test-processing", "HSTS...")}
+                {status==='error' && scoreSnippet("rsssl-test-error", "No HSTS header")}
+                {status==='success' && scoreSnippet("rsssl-test-success", "HSTS header detected")}
             </>
         )
     }
@@ -301,10 +300,10 @@ const SslLabs = (props) => {
         }
         return (
             <>
-            {(status==='inactive') && scoreSnippet("rsssl-test-inactive", __("Certificate","really-simple-ssl"))}
-            {status==='processing' && scoreSnippet("rsssl-test-processing", __("Certificate...","really-simple-ssl"))}
-            {status==='error' && !hasErrors && scoreSnippet("rsssl-test-error", __("Certificate issue","really-simple-ssl"))}
-            {status==='success' && scoreSnippet("rsssl-test-success", __("Valid certificate","really-simple-ssl"))}
+            {(status==='inactive') && scoreSnippet("rsssl-test-inactive", "Certificate")}
+            {status==='processing' && scoreSnippet("rsssl-test-processing", "Certificate...")}
+            {status==='error' && !hasErrors && scoreSnippet("rsssl-test-error", "Certificate issue")}
+            {status==='success' && scoreSnippet("rsssl-test-success", "Valid certificate")}
             </>
         )
     }
@@ -330,10 +329,10 @@ const SslLabs = (props) => {
         }
         return (
             <>
-            {(status==='inactive') && scoreSnippet("rsssl-test-inactive", __("Protocol support","really-simple-ssl"))}
-            {(status==='processing') && scoreSnippet("rsssl-test-processing", __("Protocol support...","really-simple-ssl"))}
-            {status==='error' && scoreSnippet("rsssl-test-error", __("Supports TLS 1.1","really-simple-ssl"))}
-            {status==='success' && scoreSnippet("rsssl-test-success", __("No TLS 1.1","really-simple-ssl"))}
+            {(status==='inactive') && scoreSnippet("rsssl-test-inactive", "Protocol support")}
+            {(status==='processing') && scoreSnippet("rsssl-test-processing", "Protocol support...")}
+            {status==='error' && scoreSnippet("rsssl-test-error", "Supports TLS 1.1")}
+            {status==='success' && scoreSnippet("rsssl-test-success", "No TLS 1.1")}
             </>
         )
     }
