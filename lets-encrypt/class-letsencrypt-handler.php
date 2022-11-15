@@ -522,6 +522,7 @@ class rsssl_letsencrypt_handler {
 			foreach ($tokens as $identifier => $token){
 				if (strpos($identifier, '*') !== false) continue;
 				set_error_handler(array($this, 'custom_error_handling'));
+
 				$response = dns_get_record( "_acme-challenge.$identifier", DNS_TXT );
 				restore_error_handler();
 				if ( isset($response[0]['txt']) ){
@@ -533,9 +534,10 @@ class rsssl_letsencrypt_handler {
 						);
 						update_option('rsssl_le_dns_records_verified', true, false );
 					} else {
+						$action = get_option('rsssl_skip_dns_check') ? 'continue' : 'stop';
 						$response = new RSSSL_RESPONSE(
 							'error',
-							'stop',
+							$action,
 							sprintf(__('The DNS response for %s was %s, while it should be %s.', "really-simple-ssl"), "_acme-challenge.$identifier", $response[0]['txt'], $token )
 						);
 						break;
