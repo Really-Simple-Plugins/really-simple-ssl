@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2022-11-16T07:36:56+00:00\n"
+"POT-Creation-Date: 2022-11-16T08:58:24+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.6.0\n"
 "X-Domain: really-simple-ssl\n"
@@ -660,7 +660,8 @@ msgid "Token not received yet."
 msgstr ""
 
 #: lets-encrypt/class-letsencrypt-handler.php:447
-msgid "1The order is invalid, possibly due to too many failed authorization attempts. Please start at the previous step."
+#: lets-encrypt/class-letsencrypt-handler.php:678
+msgid "The order is invalid, possibly due to too many failed authorization attempts. Please start at the previous step."
 msgstr ""
 
 #: lets-encrypt/class-letsencrypt-handler.php:451
@@ -710,10 +711,6 @@ msgstr ""
 
 #: lets-encrypt/class-letsencrypt-handler.php:662
 msgid "Authorization not completed yet."
-msgstr ""
-
-#: lets-encrypt/class-letsencrypt-handler.php:678
-msgid "2The order is invalid, possibly due to too many failed authorization attempts. Please start at the previous step."
 msgstr ""
 
 #: lets-encrypt/class-letsencrypt-handler.php:681

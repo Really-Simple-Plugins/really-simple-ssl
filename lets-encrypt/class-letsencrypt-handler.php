@@ -444,7 +444,7 @@ class rsssl_letsencrypt_handler {
 							    $order->clear();
 						    } else if (strpos($error, 'Order has status "invalid"')!==false) {
 							    $order->clear();
-							    $error = __("1The order is invalid, possibly due to too many failed authorization attempts. Please start at the previous step.","really-simple-ssl");
+							    $error = __("The order is invalid, possibly due to too many failed authorization attempts. Please start at the previous step.","really-simple-ssl");
 						    } else
 						    //fixing a plesk bug
 						    if ( strpos($error, 'No order for ID ') !== FALSE){
@@ -664,7 +664,6 @@ class rsssl_letsencrypt_handler {
 						    $bundle_completed = false;
 					    }
 				    } catch ( Exception $e ) {
-
 					    $this->count_attempt();
 					    $message = $this->get_error( $e );
 					    $response = new RSSSL_RESPONSE(
@@ -675,7 +674,7 @@ class rsssl_letsencrypt_handler {
 
 					    if (strpos($message, 'Order has status "invalid"')!==false) {
 					    	$order->clear();
-						    $response->message = __("2The order is invalid, possibly due to too many failed authorization attempts. Please start at the previous step.","really-simple-ssl");
+						    $response->message = __("The order is invalid, possibly due to too many failed authorization attempts. Please start at the previous step.","really-simple-ssl");
 					        if ($use_dns) {
 					        	rsssl_progress_remove('dns-verification');
 						        $response->message .= '&nbsp;'.__("As your order will be regenerated, you'll need to update your DNS text records.","really-simple-ssl");
