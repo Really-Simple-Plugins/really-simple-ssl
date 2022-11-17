@@ -275,6 +275,18 @@ add_action('plugins_loaded', 'RSSSL', 8);
 if ( !function_exists('rsssl_is_logged_in_rest')){
 	function rsssl_is_logged_in_rest(){
 		$valid_request = isset($_SERVER['REQUEST_URI']) && strpos($_SERVER['REQUEST_URI'], '/reallysimplessl/v1/')!==false;
-		return $valid_request && isset($_SERVER['HTTP_X_WP_NONCE']) && wp_verify_nonce($_SERVER['HTTP_X_WP_NONCE'], 'wp_rest');
+        if ( !$valid_request ) {
+            return false;
+        }
+        return is_user_logged_in();
+
+		$nonce_valid = false;
+        if (isset($_SERVER['HTTP_X_WP_NONCE'])) {
+	        $nonce_valid =  wp_verify_nonce($_SERVER['HTTP_X_WP_NONCE'], 'wp_rest');
+        }
+		if (isset($_REQUEST['nonce'])) {
+			$nonce_valid =  wp_verify_nonce($_REQUEST['nonce'], 'rsssl_nonce');
+		}
+		return $nonce_valid;
 	}
 }
