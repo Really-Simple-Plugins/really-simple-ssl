@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2022-11-16T08:58:24+00:00\n"
+"POT-Creation-Date: 2022-11-17T16:24:34+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.6.0\n"
 "X-Domain: really-simple-ssl\n"
@@ -660,7 +660,7 @@ msgid "Token not received yet."
 msgstr ""
 
 #: lets-encrypt/class-letsencrypt-handler.php:447
-#: lets-encrypt/class-letsencrypt-handler.php:678
+#: lets-encrypt/class-letsencrypt-handler.php:677
 msgid "The order is invalid, possibly due to too many failed authorization attempts. Please start at the previous step."
 msgstr ""
 
@@ -713,181 +713,181 @@ msgstr ""
 msgid "Authorization not completed yet."
 msgstr ""
 
-#: lets-encrypt/class-letsencrypt-handler.php:681
+#: lets-encrypt/class-letsencrypt-handler.php:680
 msgid "As your order will be regenerated, you'll need to update your DNS text records."
 msgstr ""
 
-#: lets-encrypt/class-letsencrypt-handler.php:689
+#: lets-encrypt/class-letsencrypt-handler.php:688
 msgid "OCSP not supported, the certificate will be generated without OCSP."
 msgstr ""
 
-#: lets-encrypt/class-letsencrypt-handler.php:726
+#: lets-encrypt/class-letsencrypt-handler.php:725
 msgid "Successfully generated certificate."
 msgstr ""
 
-#: lets-encrypt/class-letsencrypt-handler.php:732
+#: lets-encrypt/class-letsencrypt-handler.php:731
 msgid "Files not created yet..."
 msgstr ""
 
-#: lets-encrypt/class-letsencrypt-handler.php:740
+#: lets-encrypt/class-letsencrypt-handler.php:739
 msgid "Bundle not available yet..."
 msgstr ""
 
-#: lets-encrypt/class-letsencrypt-handler.php:783
+#: lets-encrypt/class-letsencrypt-handler.php:782
 msgid "Order successfully created."
 msgstr ""
 
-#: lets-encrypt/class-letsencrypt-handler.php:799
+#: lets-encrypt/class-letsencrypt-handler.php:798
 msgid "Order successfully retrieved."
 msgstr ""
 
-#: lets-encrypt/class-letsencrypt-handler.php:951
+#: lets-encrypt/class-letsencrypt-handler.php:950
 msgid "Terms & Conditions are accepted."
 msgstr ""
 
-#: lets-encrypt/class-letsencrypt-handler.php:955
+#: lets-encrypt/class-letsencrypt-handler.php:954
 msgid "The Terms & Conditions were not accepted. Please accept in the general settings."
 msgstr ""
 
-#: lets-encrypt/class-letsencrypt-handler.php:1064
+#: lets-encrypt/class-letsencrypt-handler.php:1063
 msgid "Please complete the following step(s) first: %s"
 msgstr ""
 
-#: lets-encrypt/class-letsencrypt-handler.php:1080
+#: lets-encrypt/class-letsencrypt-handler.php:1079
 msgid "The following directories do not have the necessary writing permissions."
 msgstr ""
 
-#: lets-encrypt/class-letsencrypt-handler.php:1080
+#: lets-encrypt/class-letsencrypt-handler.php:1079
 msgid "Set permissions to 644 to enable SSL generation."
 msgstr ""
 
-#: lets-encrypt/class-letsencrypt-handler.php:1087
+#: lets-encrypt/class-letsencrypt-handler.php:1086
 msgid "The required directories have the necessary writing permissions."
 msgstr ""
 
-#: lets-encrypt/class-letsencrypt-handler.php:1099
+#: lets-encrypt/class-letsencrypt-handler.php:1098
 msgid "We have not detected any known hosting limitations."
 msgstr ""
 
-#: lets-encrypt/class-letsencrypt-handler.php:1106
+#: lets-encrypt/class-letsencrypt-handler.php:1105
 #: lets-encrypt/functions.php:379
 msgid "According to our information, your hosting provider does not allow any kind of SSL installation, other then their own paid certificate. For an alternative hosting provider with SSL, see this %sarticle%s."
 msgstr ""
 
-#: lets-encrypt/class-letsencrypt-handler.php:1113
+#: lets-encrypt/class-letsencrypt-handler.php:1112
 #: lets-encrypt/functions.php:369
 msgid "According to our information, your hosting provider supplies your account with an SSL certificate by default. Please contact your %shosting support%s if this is not the case."
 msgstr ""
 
-#: lets-encrypt/class-letsencrypt-handler.php:1114
+#: lets-encrypt/class-letsencrypt-handler.php:1113
 msgid "After completing the installation, you can let Really Simple SSL automatically configure your site for SSL by using the 'Activate SSL' button."
 msgstr ""
 
-#: lets-encrypt/class-letsencrypt-handler.php:1130
+#: lets-encrypt/class-letsencrypt-handler.php:1129
 msgid "The challenge directory is not created yet."
 msgstr ""
 
-#: lets-encrypt/class-letsencrypt-handler.php:1134
+#: lets-encrypt/class-letsencrypt-handler.php:1133
 msgid "The challenge directory was successfully created."
 msgstr ""
 
-#: lets-encrypt/class-letsencrypt-handler.php:1147
+#: lets-encrypt/class-letsencrypt-handler.php:1146
 msgid "The key directory is not created yet."
 msgstr ""
 
-#: lets-encrypt/class-letsencrypt-handler.php:1151
+#: lets-encrypt/class-letsencrypt-handler.php:1150
 msgid "Trying to create directory in root of website."
 msgstr ""
 
-#: lets-encrypt/class-letsencrypt-handler.php:1159
+#: lets-encrypt/class-letsencrypt-handler.php:1158
 msgid "The key directory was successfully created."
 msgstr ""
 
-#: lets-encrypt/class-letsencrypt-handler.php:1174
+#: lets-encrypt/class-letsencrypt-handler.php:1173
 msgid "The certs directory is not created yet."
 msgstr ""
 
-#: lets-encrypt/class-letsencrypt-handler.php:1178
+#: lets-encrypt/class-letsencrypt-handler.php:1177
 msgid "The certs directory was successfully created."
 msgstr ""
 
-#: lets-encrypt/class-letsencrypt-handler.php:1237
-#: lets-encrypt/class-letsencrypt-handler.php:1547
+#: lets-encrypt/class-letsencrypt-handler.php:1236
+#: lets-encrypt/class-letsencrypt-handler.php:1546
 msgid "no response"
 msgstr ""
 
-#: lets-encrypt/class-letsencrypt-handler.php:1241
+#: lets-encrypt/class-letsencrypt-handler.php:1240
 msgid "Could not reach challenge directory over %s."
 msgstr ""
 
-#: lets-encrypt/class-letsencrypt-handler.php:1247
+#: lets-encrypt/class-letsencrypt-handler.php:1246
 msgid "Challenge directory not writable."
 msgstr ""
 
-#: lets-encrypt/class-letsencrypt-handler.php:1261
-#: lets-encrypt/class-letsencrypt-handler.php:1265
+#: lets-encrypt/class-letsencrypt-handler.php:1260
+#: lets-encrypt/class-letsencrypt-handler.php:1264
 msgid "Error code %s."
 msgstr ""
 
-#: lets-encrypt/class-letsencrypt-handler.php:1272
-#: lets-encrypt/class-letsencrypt-handler.php:1570
-#: lets-encrypt/class-letsencrypt-handler.php:1621
+#: lets-encrypt/class-letsencrypt-handler.php:1271
+#: lets-encrypt/class-letsencrypt-handler.php:1569
+#: lets-encrypt/class-letsencrypt-handler.php:1620
 msgid "Successfully verified alias domain."
 msgstr ""
 
-#: lets-encrypt/class-letsencrypt-handler.php:1505
+#: lets-encrypt/class-letsencrypt-handler.php:1504
 msgid "This is a multisite configuration with subdomains, which requires a wildcard certificate. Wildcard certificates are part of the %spremium%s plan."
 msgstr ""
 
-#: lets-encrypt/class-letsencrypt-handler.php:1510
+#: lets-encrypt/class-letsencrypt-handler.php:1509
 msgid "No subdomain setup detected."
 msgstr ""
 
-#: lets-encrypt/class-letsencrypt-handler.php:1540
+#: lets-encrypt/class-letsencrypt-handler.php:1539
 msgid "Alias domain check is not relevant for a subdomain"
 msgstr ""
 
-#: lets-encrypt/class-letsencrypt-handler.php:1559
+#: lets-encrypt/class-letsencrypt-handler.php:1558
 msgid "Please check if the non www version of your site also points to this website."
 msgstr ""
 
-#: lets-encrypt/class-letsencrypt-handler.php:1561
+#: lets-encrypt/class-letsencrypt-handler.php:1560
 msgid "Please check if the www version of your site also points to this website."
 msgstr ""
 
-#: lets-encrypt/class-letsencrypt-handler.php:1563
+#: lets-encrypt/class-letsencrypt-handler.php:1562
 msgid "Could not verify alias domain."
 msgstr ""
 
-#: lets-encrypt/class-letsencrypt-handler.php:1563
+#: lets-encrypt/class-letsencrypt-handler.php:1562
 msgid "If this is not the case, don't add this alias to your certificate."
 msgstr ""
 
-#: lets-encrypt/class-letsencrypt-handler.php:1592
+#: lets-encrypt/class-letsencrypt-handler.php:1591
 msgid "Could not create test folder and file."
 msgstr ""
 
-#: lets-encrypt/class-letsencrypt-handler.php:1593
+#: lets-encrypt/class-letsencrypt-handler.php:1592
 msgid "Please create a folder 'rsssl' in the uploads directory, with 644 permissions."
 msgstr ""
 
-#: lets-encrypt/class-letsencrypt-handler.php:1610
+#: lets-encrypt/class-letsencrypt-handler.php:1609
 msgid "Error code %s"
 msgstr ""
 
-#: lets-encrypt/class-letsencrypt-handler.php:1689
+#: lets-encrypt/class-letsencrypt-handler.php:1688
 msgid "The certificate installation was rate limited. Please try again later."
 msgstr ""
 
-#: lets-encrypt/class-letsencrypt-handler.php:1715
+#: lets-encrypt/class-letsencrypt-handler.php:1714
 msgid "Not recognized server."
 msgstr ""
 
-#: lets-encrypt/class-letsencrypt-handler.php:1720
+#: lets-encrypt/class-letsencrypt-handler.php:1719
 msgid "Installation failed."
 msgstr ""
 
-#: lets-encrypt/class-letsencrypt-handler.php:1725
+#: lets-encrypt/class-letsencrypt-handler.php:1724
 #: lets-encrypt/integrations/cloudways/functions.php:22
 #: lets-encrypt/integrations/cpanel/functions.php:16
 #: lets-encrypt/integrations/cpanel/functions.php:33
