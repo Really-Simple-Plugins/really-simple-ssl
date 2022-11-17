@@ -279,14 +279,5 @@ if ( !function_exists('rsssl_is_logged_in_rest')){
             return false;
         }
         return is_user_logged_in();
-
-		$nonce_valid = false;
-        if (isset($_SERVER['HTTP_X_WP_NONCE'])) {
-	        $nonce_valid =  wp_verify_nonce($_SERVER['HTTP_X_WP_NONCE'], 'wp_rest');
-        }
-		if (isset($_REQUEST['nonce'])) {
-			$nonce_valid =  wp_verify_nonce($_REQUEST['nonce'], 'rsssl_nonce');
-		}
-		return $nonce_valid;
 	}
 }
