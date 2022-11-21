@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2022-11-17T16:30:42+00:00\n"
+"POT-Creation-Date: 2022-11-21T13:09:23+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.6.0\n"
 "X-Domain: really-simple-ssl\n"
@@ -1540,25 +1540,25 @@ msgstr ""
 msgid "Widget with mixed content"
 msgstr ""
 
-#: progress/class-progress.php:81
+#: progress/class-progress.php:85
 msgid "SSL is activated on your site."
 msgstr ""
 
-#: progress/class-progress.php:81
+#: progress/class-progress.php:85
 msgid "You still have %s task open."
 msgid_plural "You still have %s tasks open."
 msgstr[0] ""
 msgstr[1] ""
 
-#: progress/class-progress.php:83
+#: progress/class-progress.php:87
 msgid "SSL configuration finished!"
 msgstr ""
 
-#: progress/class-progress.php:88
+#: progress/class-progress.php:92
 msgid "Basic SSL configuration finished! Improve your score with %sReally Simple SSL Pro%s."
 msgstr ""
 
-#: progress/class-progress.php:94
+#: progress/class-progress.php:98
 msgid "SSL is not yet enabled on this site."
 msgstr ""
 
