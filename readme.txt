@@ -98,6 +98,7 @@ If you can't deactivate, do not just remove the plugin folder to uninstall! Foll
 == Changelog ==
 = 6.0.11 =
 * Fix: on some environments, the HTTP_X_WP_NONCE is not available in the code, changed logged in check to accomodate such environments
+* Fix: dismiss on admin notices not immediately dismissing, requiring dismiss through dashboard, props @dumel
 
 = 6.0.10 =
 * Fix: Apache 2.4 support for the block code execution in the uploads directory hardening feature, props @overlake
