@@ -669,10 +669,10 @@ function rsssl_fields( $load_values = true ) {
 			'group_id' => 'recommended_security_headers',
 			'type'     => 'select',
 			'label'    => __( "X-XSS-Protection", "really-simple-ssl-pro" ),
-			'options'          => [
-				'zero'                => __( "0 (default)", "really-simple-ssl" ),
-				'one'                => __( "1", "really-simple-ssl" ),
-				'mode_block'    => __( "1; mode=block", "really-simple-ssl" ),
+			'options' => [
+				'zero'       =>  "0 ".__("(default)", "really-simple-ssl" ),
+				'one'        => "1",
+				'mode_block' => "1; mode=block",
 			],
 			'disabled' => false,
 			'default'  => 'zero',
