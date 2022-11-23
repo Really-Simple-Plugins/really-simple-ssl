@@ -667,10 +667,15 @@ function rsssl_fields( $load_values = true ) {
 			'id'       => 'x_xss_protection',
 			'menu_id'  => 'recommended_security_headers',
 			'group_id' => 'recommended_security_headers',
-			'type'     => 'checkbox',
+			'type'     => 'select',
 			'label'    => __( "X-XSS-Protection", "really-simple-ssl-pro" ),
+			'options'          => [
+				'zero'                => __( "0 (default)", "really-simple-ssl" ),
+				'one'                => __( "1", "really-simple-ssl" ),
+				'mode_block'    => __( "1; mode=block", "really-simple-ssl" ),
+			],
 			'disabled' => false,
-			'default'  => false,
+			'default'  => 'zero',
 			'help'     => [
 				'label' => 'default',
 				'url'   => 'https://really-simple-ssl.com/definition/about-recommended-security-headers/',
