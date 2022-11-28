@@ -420,6 +420,9 @@ class rsssl_admin
 	public function notice_html( string $class, string $content, $more_info=false, $dismiss_id=false ) {
 		$class .= ' notice ';
         $target = strpos($more_info, 'really-simple-ssl.com')!==false ? 'target="_blank"' : '';
+        $url = is_ssl() ? "https://" : "http://";
+		$url .= $_SERVER["HTTP_HOST"].$_SERVER["REQUEST_URI"];
+        $url = esc_url_raw($url);
 		ob_start();?>
             <style>
                 #rsssl-message {
@@ -455,7 +458,7 @@ class rsssl_admin
                         margin:0 auto 0 10px;
                     }
                 </style>
-            <?php }?>
+            <?php } ?>
         <div id="rsssl-message" class="<?php echo $class?> really-simple-plugins">
             <div class="rsssl-notice">
                 <div class="rsssl-notice-content">
@@ -463,7 +466,9 @@ class rsssl_admin
                 </div>
                 <?php if ($more_info ) { ?>
                     <div class="rsssl-admin-notice-more-info">
-                        <a class="button" href="<?php echo add_query_arg(['page'=>'really-simple-security', 'dismiss_notice'=>$dismiss_id], rsssl_admin_url() )?>"><?php _e("Dismiss", "really-simple-ssl")?></a>
+                        <?php if ($dismiss_id) { ?>
+                            <a class="button" href="<?php echo add_query_arg(['dismiss_notice'=>$dismiss_id], $url )?>"><?php _e("Dismiss", "really-simple-ssl")?></a>
+                        <?php } ?>
                         <a class="button" <?php echo $target?> href="<?php echo esc_url_raw($more_info)?>"><?php _e("More info", "really-simple-ssl")?></a></div>
                 <?php } ?>
             </div>
