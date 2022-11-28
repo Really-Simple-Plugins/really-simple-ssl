@@ -96,6 +96,9 @@ The plugin checks your certificate before enabling, but if, for example, you mig
 If you can't deactivate, do not just remove the plugin folder to uninstall! Follow these [instructions](https://really-simple-ssl.com/knowledge-base/uninstall-websitebackend-not-accessible/) instead.
 
 == Changelog ==
+= 6.0.12 =
+* Improvement: allow submenu in back-end react application
+
 = 6.0.11 =
 * Fix: on some environments, the HTTP_X_WP_NONCE is not available in the code, changed logged in check to accomodate such environments
 * Fix: dismiss on admin notices not immediately dismissing, requiring dismiss through dashboard, props @dumel
