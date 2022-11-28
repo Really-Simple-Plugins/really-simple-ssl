@@ -23,30 +23,33 @@ if ( !file_exists(BASE_PATH . 'wp-load.php') ) {
 }
 //make sure the files are loaded
 if (!defined('RSSSL_DOING_SYSTEM_STATUS')) define( 'RSSSL_DOING_SYSTEM_STATUS' , true);
-
+define('RSSSL_LEARNING_MODE', true);
 # Load WordPress Core
 require_once( BASE_PATH . 'wp-load.php' );
 require_once( ABSPATH . 'wp-admin/includes/plugin.php' );
-$core_plugin = 'really-simple-ssl/rlrsssl-really-simple-ssl.php';
 
-if ( ! is_plugin_active( $core_plugin ) ) {
-	echo "<h1>Really Simple SSL is already deactivated!</h1>";
-	exit;
+rsssl_run_force_deactivate();
+function rsssl_run_force_deactivate() {
+	$core_plugin = 'really-simple-ssl/rlrsssl-really-simple-ssl.php';
+	if ( ! is_plugin_active( $core_plugin ) ) {
+		echo "<h1>Really Simple SSL is already deactivated!</h1>";
+		exit;
+	}
+
+	$step = 1;
+	echo "<h1>Force deactivation of Really Simple SSL</h1>";
+	echo $step . ". Resetting options" . "<br>";
+	RSSSL()->admin->deactivate();
+	$step ++;
+
+	echo $step . ". Deactivating plugin" . "<br>";
+	rl_deactivate_plugin( RSSSL()->admin->plugin_dir . "/"
+	                      . RSSSL()->admin->plugin_filename );
+
+	$step ++;
+	echo $step . ". Completed<b>";
+	rename('force-deactivate.php' , 'force-deactivate.txt');
 }
-
-
-$step = 1;
-echo "<h1>Force deactivation of Really Simple SSL</h1>";
-echo $step . ". Resetting options" . "<br>";
-RSSSL()->admin->deactivate();
-$step ++;
-
-echo $step . ". Deactivating plugin" . "<br>";
-rl_deactivate_plugin( RSSSL()->admin->plugin_dir . "/"
-                      . RSSSL()->admin->plugin_filename );
-
-$step ++;
-echo $step . ". Completed<b>";
 
 function rl_remove_plugin_from_array( $plugin, $current ) {
 	$key = array_search( $plugin, $current );
@@ -94,7 +97,7 @@ function rl_deactivate_plugin( $plugin ) {
  */
 function find_wordpress_base_path()
 {
-	$path = dirname(__FILE__);
+	$path = __DIR__;
 
 	do {
 		if (file_exists($path . "/wp-config.php")) {
@@ -124,7 +127,7 @@ function find_wordpress_base_path()
 	return false;
 }
 
-rename('force-deactivate.php' , 'force-deactivate.txt');
+
 
 ?>
 </body>

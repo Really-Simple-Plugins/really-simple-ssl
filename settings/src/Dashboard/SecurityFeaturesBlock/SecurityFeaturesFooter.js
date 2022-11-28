@@ -9,13 +9,9 @@ class SecurityFeaturesFooter extends Component {
     super( ...arguments);
   }
 
-  redirectToSettingsMenu(){
-    this.props.selectMainMenu('settings');
-  }
-
   render(){
     return (
-        <Button variant="secondary" onClick={ (e) => this.redirectToSettingsMenu(e)}>{ __( 'Settings', 'really-simple-ssl' ) }</Button>
+            <a className="button button-default" href="#settings">{ __( 'Settings', 'really-simple-ssl' ) }</a>
     );
   }
 }

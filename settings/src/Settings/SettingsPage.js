@@ -144,8 +144,9 @@ class SettingsPage extends Component {
           let previouslyDisabled = this.props.fields[this.props.fields.indexOf(field)].conditionallyDisabled;
           this.props.fields[this.props.fields.indexOf(field)].conditionallyDisabled = !enabled;
           if ( previouslyDisabled && enabled ) {
+                //if this is a learning mode field, do not add it to the changed fields list
               let changedFields = this.changedFields;
-              if (!in_array(field.id, changedFields)) {
+              if (field.type!=='learningmode' && !in_array(field.id, changedFields)) {
                   changedFields.push(field.id);
               }
               this.changedFields = changedFields;
@@ -154,7 +155,7 @@ class SettingsPage extends Component {
               });
           }
 
-          if (!enabled && field.type==='letsencrypt') {
+          if (!enabled && (field.type==='letsencrypt' || field.condition_action==='hide') ) {
             this.props.fields[this.props.fields.indexOf(field)].visible = false;
           } else {
             this.props.fields[this.props.fields.indexOf(field)].visible = true;
@@ -202,6 +203,7 @@ class SettingsPage extends Component {
                 saveFields.push(field);
             }
         }
+
         rsssl_api.setFields(saveFields).then(( response ) => {
             this.changedFields = [];
             this.props.updateProgress(response.data.progress);
@@ -234,16 +236,19 @@ class SettingsPage extends Component {
     }
 
     validateConditions(conditions, fields){
+
         let relation = conditions.relation === 'OR' ? 'OR' : 'AND';
         let conditionApplies = relation==='AND' ? true : false;
+
         for (const key in conditions) {
             if ( conditions.hasOwnProperty(key) ) {
-                let thisConditionApplies = relation==='AND' ? true : false;;
+                let thisConditionApplies = relation==='AND' ? true : false;
                 let subConditionsArray = conditions[key];
                 if ( subConditionsArray.hasOwnProperty('relation') ) {
                     thisConditionApplies = this.validateConditions(subConditionsArray, fields)
                 } else {
                     for ( let conditionField in subConditionsArray ) {
+
                         let invert = conditionField.indexOf('!')===0;
                         if ( subConditionsArray.hasOwnProperty(conditionField) ) {
                             let conditionValue = subConditionsArray[conditionField];
@@ -262,18 +267,16 @@ class SettingsPage extends Component {
                                     }
                                 }
                             }
-                        }
-
-                        if ( invert ){
-                            thisConditionApplies = !thisConditionApplies;
+                            if ( invert ){
+                                thisConditionApplies = !thisConditionApplies;
+                            }
+                            if ( relation === 'AND' ) {
+                                conditionApplies = conditionApplies && thisConditionApplies;
+                            } else {
+                                conditionApplies = conditionApplies || thisConditionApplies;
+                            }
                         }
                     }
-
-                }
-                if ( relation === 'AND' ) {
-                    conditionApplies = conditionApplies && thisConditionApplies;
-                } else {
-                    conditionApplies = conditionApplies || thisConditionApplies;
                 }
             }
         }

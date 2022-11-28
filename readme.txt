@@ -2,64 +2,72 @@
 Contributors: RogierLankhorst, markwolters, hesseldejong, vicocotea
 Donate link: https://www.paypal.me/reallysimplessl
 Tags: SSL, https, force SSL, mixed content, insecure content, secure website, website security, TLS, security, secure socket layers, HSTS
-Requires at least: 4.9
+Requires at least: 5.7
 License: GPL2
-Tested up to: 5.9
+Tested up to: 6.1
 Requires PHP: 7.2
-Stable tag: 6.0.0
+Stable tag: 6.0.11
 
-No setup required! You only need an SSL certificate, and this plugin will do the rest.
+The easiest way to improve security! Leverage your SSL certificate and protect your website visitors.
 
 == Description ==
-Really Simple SSL automatically detects your settings and configures your website to run over HTTPS. To keep it lightweight, we kept the options to a minimum. Your website will move to SSL with one click.
+Really Simple SSL will automatically configure your website to use SSL to its fullest potential. Use extra hardening features to secure your website, and use our server health check to keep up-to-date.
 
-= Three simple steps for setup: =
+== Features ==
+* Easy SSL Migration: Takes your website to HTTPS in just one-click. 
+* Server Health Check (New): Your server configuration is every bit as important for your website security.
+* WordPress Hardening (New): Tweak your configuration and keep WordPress fortified and safe by tackling its weaknesses.
 
-* Activate Really Simple SSL
-* Activate SSL in your hosting environment, or generate a free Let's Encrypt certificate in [Really Simple SSL](https://really-simple-ssl.com/install-ssl-certificate/). **(new)**
-* Enable SSL with One Click
+== Improve Security with Really Simple SSL Pro ==
+* The Mixed Content Scan & Fixer. Detect files that are requested over HTTP and fix it. Both Front- and Back-end.
 
-https://www.youtube.com/watch?v=BVx3ZrSsPrU
+== Security Headers ==
+These features mitigate the risk of clickjacking, cross-site-forgery attacks, stealing login credentials and malware among others.
 
-= Love Really Simple SSL? =
-Hopefully, this plugin saves you some hours of work. If you want to support the continuing development of this plugin, please consider buying [Really Simple SSL Pro](https://www.really-simple-ssl.com/pro/), which includes some excellent security features and premium support.
+* Independent of your Server Configuration, works on Apache, LiteSpeed, NGINX etc.
+* Protect your website visitors with X-XSS Protection, X-Content-Type-Options, X-Frame-Options and Referrer Policy.
+* Enable HTTP Strict Transport Security and configure your site for the HSTS Preload list.
 
-= Improve Security with Really Simple SSL Pro =
+== Advanced Security ==
+Isolate your website from unnecessary file loading and exchanges with third-parties. Fully control your website and minimize risk of manipulation.
 
-* The Mixed Content Scan & Fixer. Know which files are still requested over HTTP and how to fix it.
-* Enable HTTP Strict Transport Security
-* Configure your site for the HSTS preload list
-* Advanced Security Headers to Improve Security, e.g., Content Security Policy, Permissions Policy, and more.
-* Mixed Content Fixer for your Admin Area
-* Detailed Feedback and Active Support on your Security Dashboard
-* Premium Support
+* Specifically designed for WordPress.
+* Control third-parties with the Content Security Policy - including Learning Mode.
+* Control browser features with the Permissions Policy e.g. geolocation, camera's and microphones.
+* Isolate information exchange between other websites. Fully control in- and outbound of data.
 
-= How does Really Simple SSL work? =
+== How does Really Simple SSL's HTTPS migration work? ==
+* The plugin will check for an existing SSL certificate. If you don't have one, you can generate one in the plugin. Depending on your hosting provider, the plugin can also install it for you or assist with instructions.
+* If needed,  It will handle known issues WordPress has with SSL. An example might be that your website uses a loadbalancer, proxy or headers are not passed to detect a certificate.
+* All incoming requests are redirected to HTTPS with a default 301 WordPress redirect. You can also choose a .htaccess redirect.
+* The Site URL and Home URL are changed to HTTPS.
+* Your insecure content is fixed by replacing all HTTP:// URLs with HTTPS://, except external hyperlinks, dynamically.
+* Cookies with PHP are set securely by setting them with the HTTPOnly flag.
 
-* It will first check for an existing SSL certificate. If you don't have one, you can generate one in the plugin. Depending on your hosting provider, the plugin can also install it for you or assist with instructions.
-* The plugin handles most issues WordPress has with SSL. For example, a reverse proxy/load balancer or when no headers are passed to detect SSL.
-* All incoming requests are redirected to HTTPS. Default with an internal WordPress redirect, but you can also opt for a .htaccess redirect.
-* The site URL and home URL are changed to HTTPS.
-* Your insecure content is fixed by replacing all http:// URLs with https://, except hyperlinks to other domains. This happens dynamically, so no database changes are made (except for the site URL and home URL).
-* Cookies set with PHP are set securely by setting them with the httpOnly flag.
+== Useful Links ==
+* [Documentation](https://really-simple-ssl.com/knowledge-base-overview/)
+* [SSL Definitions](https://really-simple-ssl.com/definitions/)
+* [Translate Really Simple SSL](https://translate.wordpress.org/projects/wp-plugins/really-simple-ssl)
+* [Issues & pull requests](https://github.com/Really-Simple-Plugins/really-simple-ssl/issues)
+* [Feature requests](https://really-simple-ssl.com/feature-requests/)
 
-= About Really Simple SSL =
-Check out other plugins developed by Really Simple Plugins as well: [Complianz](https://wordpress.org/plugins/complianz-gdpr/) and [Zip Recipes](https://wordpress.org/plugins/zip-recipes/).
+== Love Really Simple SSL? ==
+Hopefully, this plugin saves you some time. If you want to support the continuing development of this plugin, please consider buying [Really Simple SSL Pro](https://www.really-simple-ssl.com/pro/), which includes some excellent security features and premium support.
 
-[contact](https://www.really-simple-ssl.com/contact/) us if you have any questions, issues, or suggestions. Really Simple SSL is developed by [Really Simple Plugins](https://www.really-simple-plugins.com).
+== About Really Simple Plugins ==
+Other plugins developed by Really Simple Plugins are: [Complianz](https://wordpress.org/plugins/complianz-gdpr/) and [Burst Statistics](https://wordpress.org/plugins/burst-statistics/).
 
-For free SSL certificate generation, Really Simple SSL uses the [le acme2 PHP](https://github.com/fbett/le-acme2-php/) Let's Encrypt client library, thanks to 'fbett' for providing it.
+[Contact](https://www.really-simple-ssl.com/contact/) us if you have any questions, issues, or suggestions. Really Simple SSL is developed by [Really Simple Plugins](https://www.really-simple-plugins.com).
 
-Any code suggestions? We're on [GitHub](https://github.com/really-simple-plugins/really-simple-ssl) as well!
+For generating SSL certificates, Really Simple SSL uses the [le acme2 PHP](https://github.com/fbett/le-acme2-php/) Let's Encrypt client library, thanks to 'fbett' for providing it.
 
-= Really Simple SSL in your language? =
-Translations can be added very easily [here](https://translate.wordpress.org/projects/wp-plugins/really-simple-ssl). 
+Want to join as a collaborator? We're on [GitHub](https://github.com/really-simple-plugins/really-simple-ssl) as well!
 
 == Installation ==
 To install this plugin:
 
 1. Make a backup! See [our recommendations](https://really-simple-ssl.com/knowledge-base/backing-up-your-site/).
-2. Install your SSL certificate or generate one with Really Simple SSL (after activating the plugin).
+2. Install your SSL certificate or generate one with Really Simple SSL.
 3. Download the plugin.
 4. Upload the plugin to the /wp-content/plugins/ directory.
 5. You may need to log in again, so keep your credentials ready.
@@ -67,13 +75,11 @@ To install this plugin:
 7. You will now see a notice asking you to enable SSL. Click it and log in again, if needed.
 
 == Frequently Asked Questions ==
-
 = Knowledge Base =
 For more detailed explanations and documentation on redirect loops, Let's Encrypt, mixed content, errors, and so on, please search the [documentation](https://www.really-simple-ssl.com/knowledge-base/)
 
 = Mixed Content issues =
-Most mixed content issues are caused by URLs in CSS or JS files.
-For detailed instructions on how to find mixed content read this [article](https://really-simple-ssl.com/knowledge-base/how-to-track-down-mixed-content-or-insecure-content/).
+Most mixed content issues are caused by URLs in CSS or JS files. For detailed instructions on how to find mixed content read this [article](https://really-simple-ssl.com/knowledge-base/how-to-track-down-mixed-content-or-insecure-content/).
 
 = Generating a Let's Encrypt SSL Certificate =
 We recently added the possibility to generate a Free SSL Certificate with Let's Encrypt in our Really Simple SSL Wizard. We have an updated list available for all possible integrations [here](https://really-simple-ssl.com/install-ssl-certificate/). Please leave feedback about another integration, incorrect information, or you need help.
@@ -82,7 +88,7 @@ We recently added the possibility to generate a Free SSL Certificate with Let's 
 If you are experiencing redirect loops on your site, try these [instructions](https://really-simple-ssl.com/knowledge-base/my-website-is-in-a-redirect-loop/).
 
 = Is the plugin multisite compatible? =
-Yes. There is a dedicated network settings page where you can switch between network-activated SSL and per page SSL. In Really Simple SSL Pro for Multisite, you can override all site settings for SSL on the network level and activate or deactivate SSL in the network menu for each site.
+Yes. There is a dedicated network settings page where you can control settings for your entire network, at once.
 
 = Uninstalling Really Simple SSL =
 The plugin checks your certificate before enabling, but if, for example, you migrated the site to a non-SSL environment, you might get locked out of the back-end.
@@ -90,20 +96,64 @@ The plugin checks your certificate before enabling, but if, for example, you mig
 If you can't deactivate, do not just remove the plugin folder to uninstall! Follow these [instructions](https://really-simple-ssl.com/knowledge-base/uninstall-websitebackend-not-accessible/) instead.
 
 == Changelog ==
+= 6.0.11 =
+* Fix: on some environments, the HTTP_X_WP_NONCE is not available in the code, changed logged in check to accomodate such environments
+* Fix: dismiss on admin notices not immediately dismissing, requiring dismiss through dashboard, props @dumel
+
+= 6.0.10 =
+* Fix: Apache 2.4 support for the block code execution in the uploads directory hardening feature, props @overlake
+* Fix: When used with Varnish cache, Rest API get requests were cached, causing the settings page not to update. 
+* Fix: Ensure manage_security capability for users upgraded from versions before introduction of this capability
+* Fix: allow for custom rest api prefixes, props @coderevolution
+* Fix: bug in Let's Encrypt generation with DNS verification: saving of 'disable_ocsp' setting, create_bundle_or_renew action with quotes
+* Fix: change REST API response method to prevent script errors on environments with PHP warnings and errors, causing blank settings page
+* Improvement: Simplify user enumeration test
+* Improvement: catch unexpected response in SSL Labs object
+* Improvement: z-index on on boarding modal on smaller screen sizes, props @rtpHarry
+* Improvement: hide username field if no admin username is present, props @rtpHarry
+
+= 6.0.9 =
+* Fix: incorrectly disabled email field in Let's Encrypt wizard, props @cburgess
+* Improvement: on rename admin user, catch existing username, and strange characters
+* Improvement: catch openBaseDir restriction in cpanel detection function, props @alofnur
+* Improvement: remove 6.0 update notices on subsites in a multisite network, props @wpcoderca, (@collizo4sky
+
+= 6.0.8 =
+* Improvement: Lets Encrypt wizard CSS styling
+* Improvement: re-add link to article about Let's Encrypt so users can easily find the URL
+* Improvement: let user choose a new username when selecting "rename admin user"
+
+= 6.0.7 =
+* Fix: restrict conditions in which htaccess rewrite runs, preventing conflicts with other rewriting plugins
+
+= 6.0.6 =
+* Fix: drop upgrade of .htaccess file in upgrade script
+
+= 6.0.5 =
+* Fix: race condition in .htaccess update script, where multiple updates simultaneously caused issues with the .htaccess file
+
+= 6.0.4 =
+* Fix: using the .htaccess redirect in combination with the block code execution in uploads causes an issue in the .htaccess redirect
+* Fix: deactivating Really Simple SSL does not completely remove the wp-config.php fixes, causing errors, props @minalukic812
+
+= 6.0.3 =
+* Fix: Rest Optimizer causing other plugins to deactivate when recommended plugins were activated, props @sardelich
+
+= 6.0.2 =
+* Fix: do not show WP_DEBUG_DISPLAY notice if WP_DEBUG is false, props @janv01
+* Fix: empty cron schedule, props @gilvansilvabr
+* Improvement: several typo's and string improvements
+* Fix: auto installer used function not defined yet
+* Fix: rest api optimizer causing an error in some cases @giorgos93
+
+= 6.0.1 =
+* Fix translations not loading for scripts
+
 = 6.0.0 =
-* Disable File editing feature
-* Disable user registration feature
-* Rename Database prefix feature
-* Hide WP version
-* Disable login info leakage
-* Prevent User Enumeration
-* Rename admin user
-* Disable application passwords
-* Disable code execution
-* Prevent indexing of directories
-* Warning when display name is the same as login name
-* Disable HTTP methods
-* New React SSL activation notice
+* Tested up to WordPress 6.1.0
+* Improvement: User Interface
+* New: Server Health Check - powered by SSLLabs
+* New: WordPress Hardening Features
 
 = 5.3.0 =
 * Improvement: added PHP 8.1 compatibility
@@ -791,6 +841,6 @@ On settings page load, the .htaccess file is no rewritten. If you have made .hta
 Always back up before any upgrade. Especially .htaccess, wp-config.php and the plugin folder. This way you can easily roll back.
 
 == Screenshots ==
-1. Easily migrate your website to SSL with One Click
-2. Generate a Free Let's Encrypt SSL Certificate, if needed!
-3. Improve security with Really Simple SSL. Fully guided and documented
+1. Your Really Simple SSL dashboard - For optimal configuration.
+2. The Server Health Check - An in-depth look at your server.
+3. New Hardening Features - Fortify your website by minimizing weaknesses.

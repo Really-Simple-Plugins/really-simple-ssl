@@ -366,7 +366,6 @@ class rsssl_letsencrypt_handler {
 		        $action = 'continue';
 		        $message = __("Successfully retrieved account", "really-simple-ssl");
 	        } catch(Exception $e) {
-		        error_log(print_r($e, true));
 		        $response = $this->get_error($e);
 		        $status = 'error';
 		        $action = 'retry';
@@ -379,7 +378,6 @@ class rsssl_letsencrypt_handler {
 		        $message = $response;
 	        }
         } else {
-            error_log("no email set");
 	        $status = 'error';
 	        $action = 'stop';
 	        $message = __("The email address was not set. Please set the email address",'really-simple-ssl');
@@ -440,7 +438,6 @@ class rsssl_letsencrypt_handler {
 
 						    }
 					    } catch ( Exception $e ) {
-						    error_log( print_r( $e, true ) );
 						    $error = $this->get_error( $e );
 						    if ( strpos( $error, 'No challenge found with given type')!==false ) {
 							    //Maybe it was first set to HTTP challenge. retry after clearing the order.
@@ -465,7 +462,6 @@ class rsssl_letsencrypt_handler {
 				    }
 			    } catch ( Exception $e ) {
 				    rsssl_progress_remove( 'dns-verification' );
-					error_log(print_r($e,true));
 				    $response = $this->get_error( $e );
 					$response = new RSSSL_RESPONSE(
 						'error',
@@ -512,7 +508,7 @@ class rsssl_letsencrypt_handler {
 	 */
 
 	public function verify_dns(){
-		if (rsssl_is_ready_for('generation')) {
+		if ( rsssl_is_ready_for('generation') ) {
 			update_option('rsssl_le_dns_records_verified', false, false );
 
 			$tokens = get_option('rsssl_le_dns_tokens');
@@ -522,10 +518,10 @@ class rsssl_letsencrypt_handler {
 				$message = __('Token not generated. Please complete the previous step.',"really-simple-ssl");
 				return new RSSSL_RESPONSE($status, $action, $message);
 			}
-
 			foreach ($tokens as $identifier => $token){
 				if (strpos($identifier, '*') !== false) continue;
 				set_error_handler(array($this, 'custom_error_handling'));
+
 				$response = dns_get_record( "_acme-challenge.$identifier", DNS_TXT );
 				restore_error_handler();
 				if ( isset($response[0]['txt']) ){
@@ -537,9 +533,10 @@ class rsssl_letsencrypt_handler {
 						);
 						update_option('rsssl_le_dns_records_verified', true, false );
 					} else {
+						$action = get_option('rsssl_skip_dns_check') ? 'continue' : 'stop';
 						$response = new RSSSL_RESPONSE(
 							'error',
-							'stop',
+							$action,
 							sprintf(__('The DNS response for %s was %s, while it should be %s.', "really-simple-ssl"), "_acme-challenge.$identifier", $response[0]['txt'], $token )
 						);
 						break;
@@ -587,7 +584,7 @@ class rsssl_letsencrypt_handler {
     public function create_bundle_or_renew(){
 	    $bundle_completed = false;
     	$use_dns = rsssl_dns_verification_required();
-	    $attempt_count = intval(get_transient('rsssl_le_generate_attempt_count'));
+	    $attempt_count = (int) get_transient( 'rsssl_le_generate_attempt_count' );
 	    if ( $attempt_count>5 ){
 		    delete_option("rsssl_le_start_renewal");
 		    $message = __("The certificate generation was rate limited for 10 minutes because the authorization failed.",'really-simple-ssl');
@@ -632,6 +629,7 @@ class rsssl_letsencrypt_handler {
 
 		    if ( $order ) {
 			    if ( $order->isCertificateBundleAvailable() ) {
+
 				    try {
 					    $order->enableAutoRenewal();
 					    $response = new RSSSL_RESPONSE(
@@ -641,7 +639,6 @@ class rsssl_letsencrypt_handler {
 					    );
 					    $bundle_completed = true;
 				    } catch ( Exception $e ) {
-					    error_log( print_r( $e, true ) );
 					    $response = new RSSSL_RESPONSE(
 						    'error',
 						    'retry',
@@ -650,7 +647,7 @@ class rsssl_letsencrypt_handler {
 					    $bundle_completed = false;
 				    }
 			    } else {
-			    	$finalized = false;
+				    $finalized = false;
 			    	$challenge_type = $use_dns ? Order::CHALLENGE_TYPE_DNS : Order::CHALLENGE_TYPE_HTTP;
 				    try {
 					    if ( $order->authorize( $challenge_type ) ) {
@@ -667,10 +664,8 @@ class rsssl_letsencrypt_handler {
 						    $bundle_completed = false;
 					    }
 				    } catch ( Exception $e ) {
-
 					    $this->count_attempt();
 					    $message = $this->get_error( $e );
-					    error_log( print_r( $e, true ) );
 					    $response = new RSSSL_RESPONSE(
 						    'error',
 						    'stop',
@@ -687,7 +682,7 @@ class rsssl_letsencrypt_handler {
 					    } else {
 					    	//if OCSP is not disabled yet, and the order status is not invalid, we disable ocsp, and try again.
 					    	if ( !rsssl_get_option( 'disable_ocsp' ) ) {
-							    RSSSL_LE()->field->save_field('disable_ocsp', true);
+							    rsssl_update_option( 'disable_ocsp', true );
 							    $response->action = 'retry';
 							    $response->status = 'warning';
 							    $response->message = __("OCSP not supported, the certificate will be generated without OCSP.","really-simple-ssl");
@@ -698,7 +693,6 @@ class rsssl_letsencrypt_handler {
 					if ($finalized) {
 					    try {
 						    if ( $order->isCertificateBundleAvailable() ) {
-							    error_log( "cert bundle available" );
 							    $bundle_completed   = true;
 							    $success_cert       = $success_intermediate = $success_private = false;
 							    $bundle             = $order->getCertificateBundle();
@@ -746,7 +740,6 @@ class rsssl_letsencrypt_handler {
 							    );
 						    }
 					    } catch ( Exception $e ) {
-						    error_log( print_r( $e, true ) );
 						    $response = new RSSSL_RESPONSE(
 							    'error',
 							    'retry',
@@ -791,7 +784,6 @@ class rsssl_letsencrypt_handler {
 			    $response->output = Order::create( $this->account, $this->subjects );
 
 		    } catch(Exception $e) {
-			    error_log(print_r($e, true));
 			    $response = new RSSSL_RESPONSE(
 				    'error',
 				    'retry',
@@ -951,7 +943,7 @@ class rsssl_letsencrypt_handler {
 
 	public function terms_accepted(){
 	    //don't use the default value: we want users to explicitly enter a value
-	    $accepted =  rsssl_get_option('accept_le_terms', false);
+	    $accepted =  rsssl_get_option('accept_le_terms');
 		if ( $accepted ) {
 			$status = 'success';
 			$action = 'continue';
@@ -978,8 +970,7 @@ class rsssl_letsencrypt_handler {
 	    try {
 	        $this->account->update($new_email);
         } catch (Exception $e) {
-            error_log("Lets encrypt email update failed");
-            error_log(print_r($e, true));
+            //error_log(print_r($e, true));
         }
     }
 
@@ -1385,8 +1376,6 @@ class rsssl_letsencrypt_handler {
 				return false;
 			}
 		} catch ( Exception $e ) {
-			error_log("error during folder creation");
-			error_log( print_r( $e, true ) );
 			return false;
 		}
 	}
@@ -1725,7 +1714,6 @@ class rsssl_letsencrypt_handler {
 					$message = __("Not recognized server.", "really-simple-ssl");
 				}
 			} catch (Exception $e) {
-				error_log(print_r($e, true));
 				$status = 'error';
 				$action = 'stop';
 				$message = __("Installation failed.", "really-simple-ssl");

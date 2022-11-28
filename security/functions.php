@@ -4,7 +4,6 @@ defined( 'ABSPATH' ) or die( );
  * Back-end available only
  */
 if ( !function_exists('rsssl_do_fix')) {
-
 	/**
 	 * Complete a fix for an issue, either user triggered, or automatic
 	 *
@@ -23,7 +22,7 @@ if ( !function_exists('rsssl_do_fix')) {
 			$completed   = get_option( 'rsssl_completed_fixes', [] );
 			$completed[] = $fix;
 			update_option( 'rsssl_completed_fixes', $completed );
-		} elseif ( $fix && ! function_exists( $fix ) ) {
+		} else if ( $fix && ! function_exists( $fix ) ) {
 		}
 
 	}
@@ -164,7 +163,7 @@ if ( !function_exists('rsssl_remove_htaccess_security_edits') ) {
 
 if ( ! function_exists('rsssl_wrap_htaccess' ) ) {
 	function rsssl_wrap_htaccess() {
-		if ( ! rsssl_user_can_manage()  ) {
+		if ( !rsssl_user_can_manage() ) {
 			return;
 		}
 
@@ -176,13 +175,32 @@ if ( ! function_exists('rsssl_wrap_htaccess' ) ) {
 			return;
 		}
 
-		if ( !RSSSL()->admin->is_settings_page() && !rsssl_is_logged_in_rest() && current_filter() != 'rocket_activation' && current_filter() != 'rocket_deactivation' ) {
+		if (
+			!rsssl_is_logged_in_rest() &&
+			!RSSSL()->admin->is_settings_page() &&
+		     current_filter() !== 'rocket_activation' &&
+		     current_filter() !== 'rocket_deactivation'
+		) {
 			return;
 		}
-		delete_site_option( 'rsssl_htaccess_error' );
-		delete_site_option( 'rsssl_htaccess_rules' );
 
-		$start = "\n" . '#Begin Really Simple Security';
+		if ( get_site_option('rsssl_htaccess_error') ) {
+			delete_site_option( 'rsssl_htaccess_error' );
+			delete_site_option( 'rsssl_htaccess_rules' );
+		}
+
+		if ( get_site_option('rsssl_uploads_htaccess_error') ) {
+			delete_site_option( 'rsssl_uploads_htaccess_error' );
+			delete_site_option( 'rsssl_uploads_htaccess_rules' );
+		}
+
+		if ( get_option('rsssl_updating_htaccess') ) {
+			return;
+		}
+
+		update_option('rsssl_updating_htaccess', true, false );
+
+		$start = '#Begin Really Simple Security';
 		$end   = "\n" . '#End Really Simple Security' . "\n";
 		$pattern_content = '/'.$start.'(.*?)'.$end.'/is';
 
@@ -194,13 +212,13 @@ if ( ! function_exists('rsssl_wrap_htaccess' ) ) {
 		$upload_dir = wp_get_upload_dir();
 		$htaccess_file_uploads = trailingslashit( $upload_dir['basedir']).'.htaccess';
 
-		if ( ! file_exists( $htaccess_file_uploads ) ) {
+		if ( ! file_exists( $htaccess_file_uploads ) && count($rules_uploads)>0 ) {
 			if ( is_writable(trailingslashit( $upload_dir['basedir'])) ) {
 				file_put_contents($htaccess_file_uploads, '');
 			} else {
-				update_site_option( 'rsssl_htaccess_error', 'not-writable-uploads' );
+				update_site_option( 'rsssl_uploads_htaccess_error', 'not-writable' );
 				$rules_uploads_result = implode( '', array_column( $rules_uploads, 'rules' ) );
-				update_site_option( 'rsssl_htaccess_rules', $rules_uploads_result );
+				update_site_option( 'rsssl_uploads_htaccess_rules', $rules_uploads_result );
 			}
 		}
 
@@ -225,33 +243,34 @@ if ( ! function_exists('rsssl_wrap_htaccess' ) ) {
 						file_put_contents( $htaccess_file_uploads, '' );
 					}
 
-					$new_rules = empty($rules_result) ? '' : $start . $rules_uploads_result . $end;
+					$new_rules = empty($rules_uploads_result) ? '' : $start . $rules_uploads_result . $end;
 					if ( ! is_writable( $htaccess_file_uploads ) ) {
-						update_site_option( 'rsssl_htaccess_error', 'not-writable-uploads' );
-						update_site_option( 'rsssl_htaccess_rules', $rules_uploads_result );
+						update_site_option( 'rsssl_uploads_htaccess_error', 'not-writable' );
+						update_site_option( 'rsssl_uploads_htaccess_rules', $rules_uploads_result );
 					} else {
-						delete_site_option( 'rsssl_htaccess_error' );
-						delete_site_option( 'rsssl_htaccess_rules' );
-						//get current rules with regex
-						if ( strpos( $content_htaccess_uploads, $start ) !== false ) {
-							$new_htaccess = preg_replace( $pattern, $new_rules, $content_htaccess_uploads );
-						} else {
-							//add rules as new block
-							$new_htaccess = $content_htaccess_uploads . $new_rules;
+						delete_site_option( 'rsssl_uploads_htaccess_error' );
+						delete_site_option( 'rsssl_uploads_htaccess_rules' );
+						//remove current rules
+						$content_htaccess_uploads = preg_replace( $pattern, '', $content_htaccess_uploads );
+						//add rules as new block
+						$new_htaccess = $content_htaccess_uploads . "\n" . $new_rules;
+						#clean up
+						if (strpos($new_htaccess, "\n" ."\n" . "\n" )!==false) {
+							$new_htaccess = str_replace("\n" . "\n" . "\n", "\n" ."\n", $new_htaccess);
 						}
 						file_put_contents( $htaccess_file_uploads, $new_htaccess );
 					}
 				}
 			}
-
 		}
+
 		/**
 		 * htaccess in root dir
 		 */
 		$rules = apply_filters( 'rsssl_htaccess_security_rules', [] );
 		$htaccess_file = RSSSL()->admin->htaccess_file();
 
-		if ( !file_exists( $htaccess_file ) ) {
+		if ( !file_exists( $htaccess_file ) && count($rules)>0 ) {
 			update_site_option('rsssl_htaccess_error', 'not-exists');
 			$rules_result = implode('',array_column($rules, 'rules'));
 			update_site_option('rsssl_htaccess_rules', $rules_result);
@@ -280,8 +299,6 @@ if ( ! function_exists('rsssl_wrap_htaccess' ) ) {
 				}
 				//should replace if rules is not empty, OR if rules is empty and htaccess is not.
 				$htaccess_has_rsssl_rules = preg_match( '/#Begin Really Simple Security(.*?)#End Really Simple Security/is', $content_htaccess, $matches );
-				$htaccess_has_rsssl_rules = $htaccess_has_rsssl_rules || preg_match( "/#\s?BEGIN\s?rlrssslReallySimpleSSL(.*?)#\s?END\s?rlrssslReallySimpleSSL/s", $content_htaccess, $matches );
-				$htaccess_has_rsssl_rules = $htaccess_has_rsssl_rules || preg_match( "/#\s?BEGIN\s?Really Simple SSL Redirect(.*?)#\s?END\s?Really Simple SSL Redirect/s", $content_htaccess, $matches );
 				if ( ! empty( $rules_result ) || $htaccess_has_rsssl_rules ) {
 					if ( ! is_writable( $htaccess_file ) ) {
 						update_site_option( 'rsssl_htaccess_error', 'not-writable' );
@@ -291,22 +308,27 @@ if ( ! function_exists('rsssl_wrap_htaccess' ) ) {
 						delete_site_option( 'rsssl_htaccess_rules' );
 						$new_rules = empty($rules_result) ? '' : $start . $rules_result . $end;
 
-						//get current rules with regex
-						if ( strpos( $content_htaccess, $start ) !== false ) {
-							$new_htaccess = preg_replace( $pattern, $new_rules, $content_htaccess );
+						//remove current rules
+						$content_htaccess = preg_replace( $pattern, '', $content_htaccess );
+
+						//add rules as new block
+						if ( strpos($content_htaccess, '# BEGIN WordPress')!==false ) {
+							$new_htaccess = str_replace('# BEGIN WordPress', "\n" . $new_rules.'# BEGIN WordPress', $content_htaccess);
 						} else {
-							//add rules as new block
-							if (strpos($content_htaccess, '# BEGIN WordPress')!==false) {
-								$new_htaccess = str_replace('# BEGIN WordPress', $new_rules.'# BEGIN WordPress', $content_htaccess);
-							} else {
-								$new_htaccess = $new_rules . $content_htaccess;
-							}
+							$new_htaccess = "\n" . $new_rules . $content_htaccess;
 						}
+
+						#clean up
+						if (strpos($new_htaccess, "\n" ."\n" . "\n" )!==false) {
+							$new_htaccess = str_replace("\n" . "\n" . "\n", "\n" ."\n", $new_htaccess);
+						}
+
 						file_put_contents( $htaccess_file, $new_htaccess );
 					}
 				}
 			}
 		}
+		delete_option('rsssl_updating_htaccess');
 	}
 	add_action('admin_init', 'rsssl_wrap_htaccess' );
 	add_action('rsssl_after_saved_fields', 'rsssl_wrap_htaccess', 30);
@@ -317,11 +339,7 @@ if ( ! function_exists('rsssl_wrap_htaccess' ) ) {
  * @return bool
  */
 function rsssl_uses_htaccess() {
-	if ( rsssl_get_server() === 'apache' || rsssl_get_server() === 'litespeed' ) {
-		return true;
-	}
-
-	return false;
+	return rsssl_get_server() === 'apache' || rsssl_get_server() === 'litespeed';
 }
 
 /**
@@ -329,7 +347,22 @@ function rsssl_uses_htaccess() {
  * @return string | bool
  */
 function rsssl_htaccess_status(){
+	if ( empty(get_site_option('rsssl_htaccess_rules','')) ) {
+		return false;
+	}
 	return get_site_option('rsssl_htaccess_error');
+}
+
+/**
+ * Get htaccess status
+ * @return string | bool
+ */
+
+function rsssl_uploads_htaccess_status(){
+	if ( empty(get_site_option('rsssl_uploads_htaccess_rules','')) ) {
+		return false;
+	}
+	return get_site_option('rsssl_uploads_htaccess_error');
 }
 
 /**
@@ -343,7 +376,7 @@ function rsssl_find_wp_config_path()
 	}
     //limit nr of iterations to 5
     $i = 0;
-    $dir = dirname(__FILE__);
+    $dir = __DIR__;
     do {
         $i++;
         if (file_exists($dir . "/wp-config.php")) {

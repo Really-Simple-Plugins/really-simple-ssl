@@ -147,18 +147,20 @@ function rsssl_has_admin_user() {
 }
 
 /**
+ * Check if username is valid for use
  * @return bool
- *
- * Check if user ID 1 exists end if user enumeration has been disabled
  */
-
-function rsssl_id_one_no_enumeration() {
-	$user_id_one = get_user_by( 'id', 1 );
-	if ( $user_id_one && ! rsssl_get_option( 'disable_user_enumeration' ) ) {
-		return true;
+function rsssl_new_username_valid(): bool {
+	$new_user_login = trim(sanitize_user(rsssl_get_option('new_admin_user_login')));
+	if ( $new_user_login === 'admin' ) {
+		return false;
+	}
+	$user_exists = get_user_by('login', $new_user_login);
+	if ( $user_exists ) {
+		return false;
 	}
 
-	return false;
+	return is_string($new_user_login) && strlen($new_user_login)>2;
 }
 
 /**
@@ -220,12 +222,8 @@ function rsssl_is_debugging_enabled() {
 
 function rsssl_debug_log_value_is_default(){
 	$value = rsssl_get_debug_log_value();
-	if ( $value === 'true') {
-		return true;
-	} else {
-		//'false' or a location. both not default.
-		return false;
-	}
+
+	return (string) $value === 'true';
 }
 
 /**
@@ -239,6 +237,7 @@ function rsssl_get_debug_log_value(){
 		return false;
 	}
 	$wpconfig_path = rsssl_find_wp_config_path();
+
 	if ( !$wpconfig_path ) {
 		return false;
 	}
@@ -248,10 +247,10 @@ function rsssl_get_debug_log_value(){
 	$regex = "/^\s*define\([ ]{0,2}[\'|\"]WP_DEBUG_LOG[\'|\"][ ]{0,2},[ ]{0,2}(.*)[ ]{0,2}\);/m";
 	preg_match( $regex, $wpconfig, $matches );
 	if ($matches && isset($matches[1]) ){
-		return $matches[1];
-	} else {
-		return false;
+		return trim($matches[1]);
 	}
+
+	return false;
 }
 
 /**
@@ -264,12 +263,9 @@ function rsssl_debug_log_file_exists_in_default_location(){
 	if ( !file_exists($default_file) ) {
 		return false;
 	}
-
-	$content = file_get_contents($default_file);
-	if (trim($content) === 'Access denied'){
-		return false;
-	}
-	return true;
+	//limit max length of string to 500
+	$content = file_get_contents($default_file, false, null, 0, 500 );
+	return trim( $content ) !== 'Access denied';
 }
 
 /**

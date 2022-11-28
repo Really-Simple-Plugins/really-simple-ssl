@@ -31,7 +31,7 @@ class rsssl_onboarding {
 	}
 
 	public function handle_onboarding_request($data, $test, $request){
-		if ( ! current_user_can('manage_security') ) {
+		if ( ! rsssl_user_can_manage() ) {
 			return false;
 		}
 //		delete_option('rsssl_network_activation_status');
@@ -47,7 +47,7 @@ class rsssl_onboarding {
 				$data = RSSSL()->multisite->process_ssl_activation_step();
 				break;
 			case 'get_modal_status':
-				$data =  ["dismissed" => get_option("rsssl_onboarding_dismissed") || !$this->show_onboarding_modal()];
+				$data =  ["dismissed" => !$this->show_onboarding_modal()];
 				break;
 			case 'dismiss_modal':
 				$this->dismiss_modal($request);
@@ -66,11 +66,11 @@ class rsssl_onboarding {
 	 * @return array|bool[]|false|mixed
 	 */
 	public function handle_onboarding_action($data, $action, $request){
-		if ( ! current_user_can('manage_security') ) {
+		if ( ! rsssl_user_can_manage() ) {
 			return false;
 		}
 		$error = false;
-		$data = $request->get_json_params();
+		$request_data = $request->get_json_params();
 		$next_action = 'none';
 		switch( $action ){
 			case 'override_ssl_detection':
@@ -78,7 +78,7 @@ class rsssl_onboarding {
 				break;
 			case 'install_plugin':
 				require_once(rsssl_path . 'class-installer.php');
-				$plugin = new rsssl_installer(sanitize_title($data['id']));
+				$plugin = new rsssl_installer(sanitize_title($request_data['id']));
 				$success = $plugin->download_plugin();
 				$data = [
 					'next_action' => 'activate',
@@ -87,7 +87,7 @@ class rsssl_onboarding {
 				break;
 			case 'activate':
 				require_once(rsssl_path . 'class-installer.php');
-				$plugin = new rsssl_installer(sanitize_title($data['id']));
+				$plugin = new rsssl_installer(sanitize_title($request_data['id']));
 				$success = $plugin->activate_plugin();
 				$data = [
 					'next_action' => 'completed',
@@ -178,9 +178,19 @@ class rsssl_onboarding {
 	 */
 
 	function show_onboarding_modal() {
+		if ( get_option("rsssl_onboarding_dismissed") ) {
+			return false;
+		}
+
+		//ensure the checks have been run
+		if ( !RSSSL()->admin->configuration_loaded ) {
+			RSSSL()->admin->detect_configuration();
+		}
+
 		if ( RSSSL()->admin->do_wpconfig_loadbalancer_fix() && !RSSSL()->admin->wpconfig_has_fixes() ) {
 			return false;
 		}
+
 		//for multisite environments, we check if the activation process was started but not completed.
 		if ( is_multisite() && RSSSL()->multisite->ssl_activation_started_but_not_completed() ){
 			return true;

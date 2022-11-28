@@ -32,15 +32,32 @@ import DataTable from "react-data-table-component";
 class Field extends Component {
     constructor() {
         super( ...arguments );
-        this.highLightClass = this.props.highLightedField===this.props.field.id ? 'rsssl-field-wrap rsssl-highlight' : 'rsssl-field-wrap';
         this.onChangeHandlerDataTableStatus = this.onChangeHandlerDataTableStatus.bind(this);
         this.onChangeHandler = this.onChangeHandler.bind(this);
+    }
+
+    componentDidMount(){
+
     }
 
     onChangeHandler(fieldValue) {
         let fields = this.props.fields;
         let field = this.props.field;
         fields[this.props.index]['value'] = fieldValue;
+
+        //we can configure other fields if a field is enabled, or set to a certain value.
+        let configureFieldCondition = false;
+        if (field.configure_on_activation) {
+            if ( field.configure_on_activation.hasOwnProperty('condition') && this.props.field.value==field.configure_on_activation.condition ) {
+                configureFieldCondition = true;
+            }
+            let configureField = field.configure_on_activation[0];
+            for (let fieldId in configureField ) {
+                if ( configureFieldCondition && configureField.hasOwnProperty(fieldId) ) {
+                    this.props.updateField(fieldId, configureField[fieldId] );
+                }
+            }
+        }
         this.props.saveChangedFields( field.id )
     }
 
@@ -85,6 +102,8 @@ class Field extends Component {
         let fieldValue = field.value;
         let fields = this.props.fields;
         let disabled = field.disabled;
+        this.highLightClass = this.props.highLightedField===this.props.field.id ? 'rsssl-field-wrap rsssl-highlight' : 'rsssl-field-wrap';
+
         let options = [];
         if ( field.options ) {
             for (var key in field.options) {
@@ -122,7 +141,7 @@ class Field extends Component {
                       label={ field.label }
                       onChange={ ( fieldValue ) => this.onChangeHandler(fieldValue) }
                   />
-                  {field.comment && <div dangerouslySetInnerHTML={{__html:field.comment}}></div>}
+                  {field.comment && <div className="rsssl-comment" dangerouslySetInnerHTML={{__html:field.comment}}></div>}
                 </div>
             );
         }
@@ -150,6 +169,8 @@ class Field extends Component {
             return (
                 <div className={this.highLightClass}>
                   <TextControl
+                      required={ field.required }
+                      disabled={ disabled }
                       help={ field.comment }
                       label={ field.label }
                       onChange={ ( fieldValue ) => this.onChangeHandler(fieldValue) }

@@ -86,7 +86,6 @@ class rsssl_plesk
 			$action = 'continue';
 			$message = __('Successfully installed SSL',"really-simple-ssl");
 		} catch(Exception $e) {
-			error_log(print_r($e,true));
 			update_option('rsssl_installation_error', 'plesk', false);
 			$status = 'warning';
 			$action = 'continue';

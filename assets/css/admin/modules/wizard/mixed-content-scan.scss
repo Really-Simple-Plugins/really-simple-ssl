@@ -1,15 +1,22 @@
 .rsssl-mixedcontentscan {
   .rsssl-mixed-content-placeholder {
-    height:200px;
+    height:250px;
     div {
       background-color:var(--rsp-grey-200);
       margin:10px 0;
       height:20px;
     }
   }
+  .rsssl-shield-overlay {
+    height:250px;
+    align-items: center;
+    justify-content: center;
+    display:flex;
+  }
+
   .rsssl-field-wrap {
     .rdt_TableCol, .rdt_TableCell {
-      min-width: 100px;
+      min-width: 80px;
     }
   }
 

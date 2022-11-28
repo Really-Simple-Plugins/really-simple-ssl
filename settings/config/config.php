@@ -31,7 +31,7 @@ function rsssl_menu() {
 						[
 							'id' => 'support',
 							'title' => __('Premium Support', 'really-simple-ssl'),
-							'intro' => __('When you send this form, we will attach the following information: license key, scan results, your domain, .htaccess file, debug log and a list of active plugins.', 'really-simple-ssl'),
+							'intro' => __('The following information is attached when you send this form: license key, scan results, your domain, .htaccess file, debug log and a list of active plugins.', 'really-simple-ssl'),
 							'premium' => true,
 							'premium_text' => __("Get Premium Support with %sReally Simple SSL Pro%s", 'really-simple-ssl'),
 							'helpLink'  => 'https://really-simple-ssl.com/instructions/debugging/',
@@ -347,7 +347,7 @@ function rsssl_fields( $load_values = true ) {
 			'menu_id'  => 'general',
 			'group_id' => 'general',
 			'type'     => 'checkbox',
-			'label'    => __( "Mixed content fixer - back-end", "really-simple-ssl-pro" ),
+			'label'    => __( "Mixed content fixer - back-end", "really-simple-ssl" ),
 			'disabled' => false,
 			'default'  => false,
 		],
@@ -380,10 +380,10 @@ function rsssl_fields( $load_values = true ) {
 			'default'          => false,
 		],
 		[
-			'id'                   => 'do_not_edit_htaccess',
+			'id'                   => 'do_not_edit_htaccess', //field is removed if not enabled
 			'menu_id'              => 'general',
 			'group_id'             => 'general',
-			'type'                 => 'hidden',
+			'type'                 => 'checkbox',
 			'label'                => __( "Stop editing the .htaccess file", 'really-simple-ssl' ),
 			'disabled'             => false,
 			'default'              => false,
@@ -508,7 +508,7 @@ function rsssl_fields( $load_values = true ) {
 			'menu_id'            => 'hardening',
 			'group_id'           => 'hardening_basic',
 			'type'               => 'checkbox',
-			'label'              => __( "Rename 'admin' usernames", 'really-simple-ssl' ),
+			'label'              => __( "Rename current 'admin' username", 'really-simple-ssl' ),
 			'disabled'           => false,
 			'default'            => false,
 			'new_features_block' => [
@@ -516,6 +516,30 @@ function rsssl_fields( $load_values = true ) {
 				'inactive' => __( "Username 'Admin' is allowed", 'really-simple-ssl' ),
 				'readmore' => 'https://really-simple-ssl.com/instructions/about-hardening-features/#admin-usernames',
 			],
+		],
+		[
+			'id'                 => 'new_admin_user_login',
+			'menu_id'            => 'hardening',
+			'group_id'           => 'hardening_basic',
+			'type'               => 'text',
+			'label'              => __( "Choose new username to replace 'admin'", 'really-simple-ssl' ),
+			'disabled'           => false,
+			'default'            => '',
+			'required'           => true,
+			'condition_action'   => 'hide',
+			'react_conditions' => [
+				'relation' => 'AND',
+				[
+					'rename_admin_user' => 1,
+				]
+			],
+			'server_conditions' => [
+				'relation' => 'AND',
+				[
+					'rsssl_has_admin_user()' => true,
+				]
+			],
+
 		],
 		[
 			'id'       => 'disable_xmlrpc',
@@ -531,7 +555,7 @@ function rsssl_fields( $load_values = true ) {
 			'menu_id'  => 'hardening',
 			'group_id' => 'hardening_basic',
 			'type'     => 'checkbox',
-			'label'    => __( "Block user registrations when login and display name are the same.", 'really-simple-ssl' ),
+			'label'    => __( "Block user registrations when login and display name are the same", 'really-simple-ssl' ),
 			'disabled' => false,
 			'default'  => false,
 		],
@@ -552,6 +576,7 @@ function rsssl_fields( $load_values = true ) {
 			'label'    => __( "Rename and randomize your database prefix", 'really-simple-ssl' ),
 			'disabled' => false,
 			'default'  => false,
+			'comment'  => __("Make sure you have a backup before you do this.","really-simple-ssl"),
 		],
 		[
 			'id'                 => 'change_debug_log_location',
@@ -586,6 +611,15 @@ function rsssl_fields( $load_values = true ) {
 			'default'  => false,
 		],
 		[
+			'id'       => 'xmlrpc_status_lm_enabled_once',
+			'menu_id'  => 'hardening',
+			'group_id' => 'hardening_xml',
+			'type'     => 'hidden',
+			'label'    => '',
+			'disabled' => false,
+			'default'  => false,
+		],
+		[
 			'id'               => 'xmlrpc_allow_list',
 			'control_field'    => 'xmlrpc_status',
 			'menu_id'          => 'hardening',
@@ -595,7 +629,6 @@ function rsssl_fields( $load_values = true ) {
 			'disabled'         => false,
 			'default'          => false,
 			'data_source'      => [ 'RSSSL', 'placeholder', 'xml_data' ],
-			'data_endpoint'    => "rsssl_xml_update_allowlist",
 			'react_conditions' => [
 				'relation' => 'AND',
 				[
@@ -711,6 +744,29 @@ function rsssl_fields( $load_values = true ) {
 			],
 		],
 		[
+			'id'               => 'hsts_preload',
+			'menu_id'          => 'hsts',
+			'group_id'         => 'hsts',
+			'type'             => 'checkbox',
+			'label'            => __( "Include preload", "really-simple-ssl-pro" ),
+			'comment'          => sprintf(__( "After enabling this feature, you can submit your site to %shstspreload.org%s", "really-simple-ssl-pro" ),'<a target="_blank" href="https://hstspreload.org?domain='.site_url().'">',"</a>"),
+			'react_conditions' => [
+				'relation' => 'AND',
+				[
+					'hsts' => 1,
+				]
+			],
+			'configure_on_activation' => [
+				'condition' => 1,
+				[
+					'hsts_subdomains' => 1,
+					'hsts_max_age' => 63072000,
+				]
+			],
+			'disabled'         => false,
+			'default'          => false,
+		],
+		[
 			'id'               => 'hsts_subdomains',
 			'menu_id'          => 'hsts',
 			'group_id'         => 'hsts',
@@ -744,22 +800,6 @@ function rsssl_fields( $load_values = true ) {
 			],
 			'disabled'         => false,
 			'default'          => '63072000',
-		],
-		[
-			'id'               => 'hsts_preload',
-			'menu_id'          => 'hsts',
-			'group_id'         => 'hsts',
-			'type'             => 'checkbox',
-			'label'            => __( "Include preload", "really-simple-ssl-pro" ),
-			'react_conditions' => [
-				'relation' => 'AND',
-				[
-					'hsts_max_age'    => '63072000',
-					'hsts_subdomains' => 1,
-				]
-			],
-			'disabled'         => false,
-			'default'          => false,
 		],
 		[
 			'id'       => 'cross_origin_opener_policy',
@@ -874,8 +914,7 @@ function rsssl_fields( $load_values = true ) {
 				'label' => 'default',
 				'url'   => 'https://really-simple-ssl.com/definition/what-is-a-permissions-policy/',
 				'title' => __( "About the Permission Policy", 'really-simple-ssl' ),
-				'text'  => __( 'Browser features are plentiful, but most are not needed on your website. But they might be misused if you don’t actively tell the browser to disable these features.',
-					'really-simple-ssl' ),
+				'text'  => __( 'Browser features are plentiful, but most are not needed on your website.', 'really-simple-ssl' ).' '.__('They might be misused if you don’t actively tell the browser to disable these features.', 'really-simple-ssl' ),
 			],
 			'columns'  => [
 				[
@@ -988,13 +1027,13 @@ function rsssl_fields( $load_values = true ) {
 			'group_id' => 'frame_ancestors',
 			'type'     => 'select',
 			'options'  => [
-				'disabled' => __( "Disable", "really-simple-ssl" ),
+				'disabled' => __( "Disable (Default)", "really-simple-ssl" ),
 				'none'     => "None",
-				'self'     => "Self (Default)",
+				'self'     => "Self",
 			],
 			'label'    => __( "Allow your domain to be embedded", "really-simple-ssl" ),
 			'disabled' => false,
-			'default'  => 'self',
+			'default'  => 'disabled',
 		],
 		[
 			'id'       => 'csp_frame_ancestors_urls',
@@ -1007,6 +1046,15 @@ function rsssl_fields( $load_values = true ) {
 		],
 		[
 			'id'       => 'csp_status',
+			'menu_id'  => 'content_security_policy',
+			'group_id' => 'content_security_policy',
+			'type'     => 'hidden',
+			'label'    => '',
+			'disabled' => false,
+			'default'  => false,
+		],
+		[
+			'id'       => 'csp_status_lm_enabled_once',
 			'menu_id'  => 'content_security_policy',
 			'group_id' => 'content_security_policy',
 			'type'     => 'hidden',

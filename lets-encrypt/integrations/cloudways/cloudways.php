@@ -91,7 +91,6 @@ class rsssl_Cloudways {
 			curl_close( $ch );
 			return new RSSSL_RESPONSE( 'success', 'continue', '', json_decode( $output ) );
 		} catch(Exception $e) {
-			error_log(print_r($e,true));
 			return new RSSSL_RESPONSE( 'error', 'stop', $e->getMessage() );
 		}
 	}
@@ -105,7 +104,6 @@ class rsssl_Cloudways {
 	private function getAccessToken() {
 		$accessToken = get_transient('rsssl_cw_t');
 		if (!$accessToken) {
-			error_log("not found, get new");
 			$response = $this->callCloudwaysAPI( 'POST', '/oauth/access_token', null, [ 'email' => $this->email, 'api_key' => $this->api_key ] );
 			if ($response->status === 'success' ) {
 				$accessToken   = $response->output->access_token;
@@ -124,8 +122,6 @@ class rsssl_Cloudways {
 	 */
 
 	public function installSSL($domains){
-		error_log("starting installation");
-
 		$response = $this->getAccessToken();
 		if ( $response->status !== 'success' ) {
 			return new RSSSL_RESPONSE('error','stop',$response->message);

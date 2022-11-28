@@ -11,14 +11,17 @@
 }
 
 .rsssl-modal {
-  width:  clamp(300px, 75ch, calc(100vw - 50px) );
-  position: fixed;
-  z-index: 3;
+  width: clamp(300px, 75ch, 100vw - 50px);
+  height: max-content;
+  position: absolute;
+  z-index: 9999;//ensure the modal is over the WP menu in the sidebar.
   border-radius: var(--rsp-border-radius);
   background-color: var(--rsp-white);
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+  top: 25vh;
+  left: -20px;
+  right: 0;
+  bottom: 0;
+  /* transform: translate(-50%, -50%); */
   margin: 25px auto;
 
   .rsssl-modal-header {

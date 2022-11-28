@@ -2,8 +2,8 @@
 /**
  * Plugin Name: Really Simple SSL
  * Plugin URI: https://really-simple-ssl.com
- * Description: Lightweight plugin without any setup to make your site SSL proof
- * Version: 6.0.0
+ * Description: Lightweight SSL & Hardening Plugin
+ * Version: 6.0.11
  * Author: Really Simple Plugins
  * Author URI: https://really-simple-plugins.com
  * License: GPL2
@@ -36,9 +36,9 @@ if (!function_exists('rsssl_activation_check')) {
 		}
 
 		global $wp_version;
-		if (version_compare($wp_version, '4.9', '<')) {
+		if (version_compare($wp_version, '5.7', '<')) {
 			deactivate_plugins(plugin_basename(__FILE__));
-			wp_die(__('Really Simple SSL cannot be activated. The plugin requires WordPress 4.9 or higher', 'really-simple-ssl'));
+			wp_die(__('Really Simple SSL cannot be activated. The plugin requires WordPress 5.7 or higher', 'really-simple-ssl'));
 		}
         update_option('rsssl_show_onboarding', true);
         set_transient('rsssl_redirect_to_settings_page', true, HOUR_IN_SECONDS );
@@ -83,7 +83,6 @@ class REALLY_SIMPLE_SSL
 				self::$instance->multisite = new rsssl_multisite();
 			}
 			if ( rsssl_is_logged_in_rest() || is_admin() || wp_doing_cron() || $wpcli || defined('RSSSL_DOING_SYSTEM_STATUS') || defined('RSSSL_LEARNING_MODE') ) {
-
 				self::$instance->cache = new rsssl_cache();
 				self::$instance->placeholder = new rsssl_placeholder();
 				self::$instance->server = new rsssl_server();
@@ -111,7 +110,7 @@ class REALLY_SIMPLE_SSL
         if (!defined('rsssl_file') ){
             define('rsssl_file', __FILE__);
         }
-		define('rsssl_version', '6.0.0');
+		define('rsssl_version', '6.0.11');
 		define('rsssl_le_cron_generation_renewal_check', 20);
 		define('rsssl_le_manual_generation_renewal_check', 15);
 	}
@@ -129,8 +128,8 @@ class REALLY_SIMPLE_SSL
 			require_once( rsssl_path . 'class-multisite.php');
 		}
 		if ( rsssl_is_logged_in_rest() || is_admin() || wp_doing_cron() || $wpcli || defined('RSSSL_DOING_SYSTEM_STATUS') || defined('RSSSL_LEARNING_MODE') ) {
-            require_once( rsssl_path . 'compatibility.php');
-			require_once( rsssl_path . 'upgrade.php');
+			require_once( rsssl_path . 'compatibility.php');
+            require_once( rsssl_path . 'upgrade.php');
 			require_once( rsssl_path . 'settings/settings.php' );
             require_once( rsssl_path . 'onboarding/config.php' );
             require_once( rsssl_path . 'onboarding/class-onboarding.php' );
@@ -161,6 +160,9 @@ class REALLY_SIMPLE_SSL
 		 */
 		if ( is_admin() ) {
 			add_action('admin_notices', array( $this, 'admin_notices'));
+            if ( is_multisite() ) {
+	            add_action('network_admin_notices', array( $this, 'admin_notices'));
+            }
 		}
 
 		add_action('wp_loaded', array(self::$instance->front_end, 'force_ssl'), 20);
@@ -175,14 +177,33 @@ class REALLY_SIMPLE_SSL
 	public static function admin_notices() {
 		//prevent showing on edit screen, as gutenberg removes the class which makes it editable.
 		$screen = get_current_screen();
-		if ( $screen->base === 'post' ) return;
+		$license = get_site_option('rsssl_pro_license_key');
+		if ( strpos( $license , 'really_simple_ssl_') !== FALSE ) {
+			$key = get_site_option( 'rsssl_key' );
+			$string = str_replace('really_simple_ssl_', '', $license);
+			$ivlength = openssl_cipher_iv_length('aes-256-cbc');
+			$iv = substr(base64_decode($string), 0, $ivlength);
+			$encrypted_data = substr(base64_decode($string), $ivlength);
+			$license =  openssl_decrypt($encrypted_data, 'aes-256-cbc', $key, 0, $iv);
+		}
+        $item_id = is_multisite() ? 35206 : 860;
+        $update_link = add_query_arg(['plugin'=>'rsssl_pro', 'license'=>$license, 'item_id'=>$item_id, 'install_pro'=>true], admin_url('plugins.php') );
+		if ( $screen && $screen->base === 'post' ) return;
 		if ( self::has_old_addon('really-simple-ssl-pro/really-simple-ssl-pro.php') ||
 		     self::has_old_addon('really-simple-ssl-pro-multisite/really-simple-ssl-pro-multisite.php' )
 		) {
 			?>
 			<div id="message" class="error notice really-simple-plugins">
 				<p><?php echo __("Update Really Simple SSL Pro: the plugin needs to be updated to the latest version to be compatible.","really-simple-ssl");?></p>
-                <p><?php echo sprintf(__("Visit the plugins overview or %srenew your license%s.","really-simple-ssl"),'<a href="https://really-simple-ssl.com/pro" target="_blank">','</a>');?></p>
+                <p>
+                    <?php
+                    if (!empty($license) ) {
+	                    echo sprintf(__("%sUpdate%s or %srenew your license%s.","really-simple-ssl"),'<a href="'.$update_link.'.">','</a>','<a href="https://really-simple-ssl.com/pro" target="_blank">','</a>');
+                    } else {
+                        echo sprintf(__("Visit the plugins overview or %srenew your license%s.","really-simple-ssl"),'<a href="https://really-simple-ssl.com/pro" target="_blank">','</a>');
+                   }
+                    ?>
+                </p>
 			</div>
 			<?php
 		}
@@ -198,7 +219,7 @@ class REALLY_SIMPLE_SSL
 	public static function has_old_addon($file) {
 		require_once(ABSPATH.'wp-admin/includes/plugin.php');
 		$data = false;
-		if (is_plugin_active($file)) $data = get_plugin_data( trailingslashit(WP_PLUGIN_DIR) . $file, false, false );
+		if ( is_plugin_active($file)) $data = get_plugin_data( trailingslashit(WP_PLUGIN_DIR) . $file, false, false );
 		if ($data && version_compare($data['Version'], '6.0.0', '<')) {
 			return true;
 		}
@@ -219,7 +240,7 @@ if ( ! function_exists('rsssl_add_manage_security_capability')){
 		$roles = apply_filters('rsssl_add_manage_security_capability', array('administrator') );
 		foreach( $roles as $role ){
 			$role = get_role( $role );
-			if( ! $role->has_cap( $capability ) ){
+			if( $role && !$role->has_cap( $capability ) ){
 				$role->add_cap( $capability );
 			}
 		}
@@ -245,7 +266,7 @@ if ( ! function_exists( 'rsssl_user_can_manage' ) ) {
 function RSSSL()
 {
 	global $wp_version;
-	if ( version_compare($wp_version, '4.9', '>=') && version_compare(PHP_VERSION, '7.2', '>=')) {
+	if ( version_compare($wp_version, '5.7', '>=') && version_compare(PHP_VERSION, '7.2', '>=')) {
 		return REALLY_SIMPLE_SSL::instance();
 	}
 }
@@ -253,7 +274,10 @@ add_action('plugins_loaded', 'RSSSL', 8);
 
 if ( !function_exists('rsssl_is_logged_in_rest')){
 	function rsssl_is_logged_in_rest(){
-		$is_settings_page_request = isset($_SERVER['REQUEST_URI']) && strpos($_SERVER['REQUEST_URI'], 'wp-json/reallysimplessl/v1/')!==false ;
-		return $is_settings_page_request && isset($_SERVER['HTTP_X_WP_NONCE']) && wp_verify_nonce($_SERVER['HTTP_X_WP_NONCE'], 'wp_rest');
+		$valid_request = isset($_SERVER['REQUEST_URI']) && strpos($_SERVER['REQUEST_URI'], '/reallysimplessl/v1/')!==false;
+        if ( !$valid_request ) {
+            return false;
+        }
+        return is_user_logged_in();
 	}
 }

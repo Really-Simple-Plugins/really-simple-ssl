@@ -73,6 +73,7 @@ $rsssl_integrations_list = apply_filters( 'rsssl_integrations', array(
 		'risk'                 => 'medium',
 		'option_id'            => 'block_display_is_login',
 	),
+
     'disable-xmlrpc' => array(
 	    'label'                => 'XMLRPC',
 	    'folder'               => 'wordpress',

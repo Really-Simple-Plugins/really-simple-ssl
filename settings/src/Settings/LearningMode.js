@@ -5,6 +5,7 @@ import {
 import ChangeStatus from "./ChangeStatus";
 import DataTable, {createTheme} from 'react-data-table-component';
 import * as rsssl_api from "../utils/api";
+import Icon from "../utils/Icon";
 
 class Delete extends Component {
     constructor() {
@@ -27,8 +28,9 @@ class LearningMode extends Component {
         this.state = {
             enforce :0,
             learning_mode :0,
+            lm_enabled_once :0,
             learning_mode_completed :0,
-            filterValue: 0,
+            filterValue: -1,
         };
     }
 
@@ -36,14 +38,20 @@ class LearningMode extends Component {
         this.doFilter = this.doFilter.bind(this);
         this.onDeleteHandler = this.onDeleteHandler.bind(this);
         let field = this.props.fields.filter(field => field.id === this.props.field.control_field )[0];
-        let enforce = field.value==='enforce';
-        let learning_mode = field.value==='learning_mode';
+        let enforce = field.value === 'enforce';
+        let learning_mode = field.value === 'learning_mode';
         let learning_mode_completed = field.value==='completed';
+
+        let lm_enabled_once_field_name = this.props.field.control_field+'_lm_enabled_once';
+        let lm_enabled_once_field = this.props.fields.filter(field => field.id === lm_enabled_once_field_name)[0];
+        let lm_enabled_once = lm_enabled_once_field.value;
+
         //we somehow need this to initialize the field. Otherwise it doesn't work on load. need to figure that out.
         this.props.updateField(field.id, field.value);
         this.setState({
             enforce :enforce,
             learning_mode :learning_mode,
+            lm_enabled_once :lm_enabled_once,
             learning_mode_completed :learning_mode_completed,
         });
     }
@@ -74,11 +82,17 @@ class LearningMode extends Component {
          e.preventDefault();
         let fields = this.props.fields;
         let field = fields.filter(field => field.id === this.props.field.control_field )[0];
+        let lm_enabled_once_field_name = this.props.field.control_field+'_lm_enabled_once';
+        let lm_enabled_once_field = fields.filter(field => field.id === lm_enabled_once_field_name)[0];
         let learning_mode = field.value === 'learning_mode' ? 1 : 0;
         let learning_mode_completed = field.value === 'completed' ? 1 : 0;
 
+        if ( learning_mode ) {
+            lm_enabled_once_field.value = 1;
+        }
+
         field.value = learning_mode || learning_mode_completed ? 'disabled' : 'learning_mode';
-        if (learning_mode || learning_mode_completed) {
+        if ( learning_mode || learning_mode_completed ) {
             learning_mode = 0;
         } else {
             learning_mode = 1;
@@ -86,11 +100,16 @@ class LearningMode extends Component {
         learning_mode_completed = 0;
         this.setState({
             learning_mode : learning_mode,
+            lm_enabled_once : lm_enabled_once_field.value,
             learning_mode_completed : learning_mode_completed,
         });
+
         let saveFields = [];
         saveFields.push(field);
-        rsssl_api.setFields(saveFields).then(( response ) => {});
+        saveFields.push(lm_enabled_once_field);
+        rsssl_api.setFields(saveFields).then(( response ) => {
+
+        });
     }
 
     /*
@@ -133,15 +152,17 @@ class LearningMode extends Component {
             let field = this.props.field;
             let fieldValue = field.value;
             let options = this.props.options;
-            let configuringString = __("We're configuring your %s", "really-simple-ssl").replace('%s', field.label);
+            let configuringString = __("We're configuring your %s. Exit to edit and enforce.", "really-simple-ssl").replace('%s', field.label);
             let disabledString = __("%s has been disabled.", "really-simple-ssl").replace('%s', field.label);
+            let enforcedString = __("%s is enforced.", "really-simple-ssl").replace('%s', field.label);
             const {
                 filterValue,
                 enforce,
                 learning_mode,
+                lm_enabled_once,
                 learning_mode_completed,
             } = this.state;
-
+            let enforceDisabled = !lm_enabled_once;
             const Filter = () => (
               <>
                 <select onChange={ ( e ) => this.doFilter(e) } value={filterValue}>
@@ -164,11 +185,10 @@ class LearningMode extends Component {
                 columns.push(newItem);
             });
             let data = field.value;
-
             if ( typeof data === 'object' ) {
                 data = Object.values(data);
             }
-            if (!Array.isArray(data) ) {
+            if ( !Array.isArray(data) ) {
                 data = [];
             }
             data = data.filter(item => item.status<2);
@@ -176,7 +196,7 @@ class LearningMode extends Component {
                 data = data.filter(item => item.status==filterValue);
             }
             for (const item of data){
-                item.login_statusControl = item.login_status == 1 ? __("success", "really-simple-ssl") : __("failed", "really-simple-ssl");
+                if (item.login_status) item.login_statusControl = item.login_status == 1 ? __("success", "really-simple-ssl") : __("failed", "really-simple-ssl");
                 item.statusControl = <ChangeStatus item={item} onChangeHandlerDataTableStatus={this.props.onChangeHandlerDataTableStatus} />;
                 item.deleteControl = <Delete item={item} onDeleteHandler={this.onDeleteHandler} />;
             }
@@ -202,12 +222,12 @@ class LearningMode extends Component {
               },
             };
 
+
             createTheme('really-simple-plugins', {
               divider: {
                 default: 'transparent',
               },
             }, 'light');
-
              return (
                 <>
                     <div className={ this.highLightClass}>
@@ -230,26 +250,32 @@ class LearningMode extends Component {
                             /></>
                         }
                       <div className="rsssl-learning-mode-footer">
-
-                        <div className="rsssl-learningmode-toggle">
-                            { enforce!=1 && <button className="button button-primary" onClick={ (e) => this.toggleEnforce(e, true ) }>{__("Enforce","really-simple-ssl")}</button> }
-                            { enforce==1 && <button className="button" onClick={ (e) => this.toggleEnforce(e, false ) }>{__("Disable","really-simple-ssl")}</button> }
-                            <label >
-                                <input type="checkbox"
-                                    disabled = {enforce}
-                                    checked ={learning_mode==1}
-                                    value = {learning_mode}
-                                    onChange={ ( e ) => this.toggleLearningMode(e) }
-                                />
-                                {__("Enable Learning Mode","really-simple-ssl")}
-                            </label>
-                        </div>
-
+                          { enforce!=1 && <button disabled={enforceDisabled} className="button button-primary" onClick={ (e) => this.toggleEnforce(e, true ) }>{__("Enforce","really-simple-ssl")}</button> }
+                          { enforce==1 && <button className="button" onClick={ (e) => this.toggleEnforce(e, false ) }>{__("Disable","really-simple-ssl")}</button> }
+                          <label>
+                              <input type="checkbox"
+                                  disabled = {enforce}
+                                  checked ={learning_mode==1}
+                                  value = {learning_mode}
+                                  onChange={ ( e ) => this.toggleLearningMode(e) }
+                              />
+                              {__("Enable Learning Mode","really-simple-ssl")}
+                          </label>
+                        {enforce==1 && <div className="rsssl-locked">
+                            <div className="rsssl-shield-overlay">
+                                  <Icon name = "shield"  size="80px"/>
+                            </div>
+                            <div className="rsssl-locked-overlay">
+                                <span className="rsssl-progress-status rsssl-learning-mode-enforced">{__("Enforced","really-simple-ssl")}</span>
+                                {enforcedString}&nbsp;
+                                <a className="rsssl-learning-mode-link" href="#" onClick={ (e) => this.toggleEnforce(e) }>{__("Disable to configure", "really-simple-ssl") }</a>
+                            </div>
+                        </div>}
                         {learning_mode==1 && <div className="rsssl-locked">
                             <div className="rsssl-locked-overlay">
                                 <span className="rsssl-progress-status rsssl-learning-mode">{__("Learning Mode","really-simple-ssl")}</span>
                                 {configuringString}&nbsp;
-                                <a className="rsssl-learning-mode-link" href="#" onClick={ (e) => this.toggleLearningMode(e) }>{__("Disable learning mode and configure manually", "really-simple-ssl") }</a>
+                                <a className="rsssl-learning-mode-link" href="#" onClick={ (e) => this.toggleLearningMode(e) }>{__("Exit learning mode", "really-simple-ssl") }</a>
                             </div>
                         </div>}
                         {learning_mode_completed==1 && <div className="rsssl-locked">
@@ -261,7 +287,7 @@ class LearningMode extends Component {
                         </div>}
                         { rsssl_settings.pro_plugin_active && this.props.disabled && <div className="rsssl-locked">
                             <div className="rsssl-locked-overlay">
-                                <span className="rsssl-progress-status rsssl-disabled">{__("disabled ","really-simple-ssl")}</span>
+                                <span className="rsssl-progress-status rsssl-disabled">{__("Disabled ","really-simple-ssl")}</span>
                                 {disabledString}
                             </div>
                         </div>}
