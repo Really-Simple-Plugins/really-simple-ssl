@@ -21,14 +21,26 @@ require_once( rsssl_path . 'settings/config/disable-fields-filter.php' );
  *
  * @return string
  */
-function rsssl_fix_rest_url_for_wpml( $url, $path, $blog_id, $scheme)  {
+function burst_fix_rest_url_for_wpml( $url, $path, $blog_id, $scheme)  {
+    if ( strpos($url, 'reallysimplessl/v')===false ) {
+        return $url;
+    }
+
+	$current_language = false;
 	if ( function_exists( 'icl_register_string' ) ) {
 		$current_language = apply_filters( 'wpml_current_language', null );
-        if ( strpos($url, '/'.$current_language.'/wp-json/') ) {
-	        $url = str_replace( '/'.$current_language.'/wp-json/', '/wp-json/', $url);
-        }
 	}
-    return $url;
+
+	if ( function_exists('qtranxf_getLanguage') ){
+		$current_language = qtranxf_getLanguage();
+	}
+
+	if ( $current_language ) {
+		if ( strpos($url, '/'.$current_language.'/wp-json/') ) {
+			$url = str_replace( '/'.$current_language.'/wp-json/', '/wp-json/', $url);
+		}
+	}
+	return $url;
 }
 add_filter( 'rest_url', 'rsssl_fix_rest_url_for_wpml', 10, 4 );
 
