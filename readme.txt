@@ -98,6 +98,7 @@ If you can't deactivate, do not just remove the plugin folder to uninstall! Foll
 == Changelog ==
 = 6.0.12 =
 * Improvement: allow submenu in back-end react application
+* Improvement: Skip value update when no change has been made
 
 = 6.0.11 =
 * Fix: on some environments, the HTTP_X_WP_NONCE is not available in the code, changed logged in check to accomodate such environments
