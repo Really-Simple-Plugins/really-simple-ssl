@@ -21,7 +21,7 @@ require_once( rsssl_path . 'settings/config/disable-fields-filter.php' );
  *
  * @return string
  */
-function burst_fix_rest_url_for_wpml( $url, $path, $blog_id, $scheme)  {
+function rsssl_fix_rest_url_for_wpml( $url, $path, $blog_id, $scheme)  {
     if ( strpos($url, 'reallysimplessl/v')===false ) {
         return $url;
     }
