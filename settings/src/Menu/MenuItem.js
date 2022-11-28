@@ -44,7 +44,9 @@ class MenuItem extends Component {
                         (subMenuItem, i) => subMenuItem.visible && <MenuItem key={i}
                                                                              menuItem={subMenuItem}
                                                                              selectMenu={this.props.selectMenu}
-                                                                             selectedMenuItem={this.props.selectedMenuItem}/>
+                                                                             selectedMenuItem={this.props.selectedMenuItem}
+                                                                             selectedMainMenuItem={this.props.selectedMainMenuItem}
+                                                                             />
                     )}
                 </div>}
             </div>}
