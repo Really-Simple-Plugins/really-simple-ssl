@@ -713,7 +713,7 @@ function rsssl_fields( $load_values = true ) {
 			'type'     => 'select',
 			'options'  => [
 				'disabled'                        => __( "Off", "really-simple-ssl" ),
-				'strict-origin-when-cross-origin' => 'strict-origin-when-cross-origin'.' '.__("recommended","really-simple-ssl"),
+				'strict-origin-when-cross-origin' => 'strict-origin-when-cross-origin'.' ('.__("recommended","really-simple-ssl").')',
 				'no-referrer'                     => 'no-referrer',
 				'origin'                          => 'origin',
 				'no-referrer-when-downgrade'      => 'no-referrer-when-downgrade',
@@ -852,6 +852,7 @@ function rsssl_fields( $load_values = true ) {
 				'disabled'     => __( 'Off', 'really-simple-ssl' ),
 				'require-corp' => 'require-corp',
 				'same-origin'  => 'same-origin',
+				'unsafe-none'  => 'unsafe-none',
 			],
 			'label'    => __( "Cross Origin Embedder Policy", "really-simple-ssl-pro" ),
 			'disabled' => false,
