@@ -178,11 +178,6 @@ class rsssl_admin
 		    add_action('shutdown', array( RSSSL()->cache, 'flush' )  );
 	    }
 
-        // Set default progress toggle to remaining tasks if it hasn't been set
-        if (!get_option('rsssl_all_tasks') && !get_option('rsssl_remaining_tasks') ) {
-            update_option('rsssl_remaining_tasks', true, false );
-        }
-
         /*
           Detect configuration when:
         - on settings page
@@ -1759,7 +1754,6 @@ class rsssl_admin
 	    if ( !rsssl_user_can_manage() ){
 		    return [];
 	    }
-
 	    $icon_labels = [
 		    'success' => __("Completed", "really-simple-ssl"),
 		    'warning' => __("Warning", "really-simple-ssl"),

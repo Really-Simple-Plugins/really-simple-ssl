@@ -19,10 +19,6 @@ function rsssl_upgrade() {
 		delete_transient( 'rsssl_plusone_count' );
 	}
 
-	if ( $prev_version && version_compare( $prev_version, '4.0', '<' ) ) {
-		update_option('rsssl_remaining_tasks', true, false );
-	}
-
 	if ( $prev_version && version_compare( $prev_version, '5.1.3', '<=' ) ) {
 		if ( get_option( 'rsssl_disable_ocsp' ) ) {
 			$options = get_option( 'rsssl_options_lets-encrypt' );
