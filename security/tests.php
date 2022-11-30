@@ -183,13 +183,13 @@ function rsssl_wp_is_application_passwords_available(){
 
 function rsssl_get_users_where_display_name_is_login( $return_users=false ) {
 	$found_users = [];
-	$users = wp_cache_get('rsssl_admin_users', 'really-simple-ssl');
+	$users = get_transient('rsssl_admin_users');
 	if ( !$users ){
 		$args = array(
 			'role'    => 'administrator',
 		);
 		$users = get_users( $args );
-		wp_cache_set('rsssl_admin_users', $users, 'really-simple-ssl', HOUR_IN_SECONDS);
+		set_transient('rsssl_admin_users', $users, HOUR_IN_SECONDS);
 	}
 
 	foreach ( $users as $user ) {
@@ -201,7 +201,9 @@ function rsssl_get_users_where_display_name_is_login( $return_users=false ) {
 	// Maybe return users in integration
 	if ( $return_users ) {
 		return $found_users;
-	} else if ( count($found_users)>0 ) {
+	}
+
+	if ( count($found_users) > 0 ) {
 		return true;
 	}
 
