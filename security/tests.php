@@ -133,17 +133,14 @@ function rsssl_has_admin_user() {
 	if ( !rsssl_user_can_manage() ) {
 		return false;
 	}
-	$count = wp_cache_get('rsssl_admin_user_count', 'really-simple-ssl');
+	$count = get_transient('rsssl_admin_user_count');
 	if ( $count === false ){
 		global $wpdb;
 		$count = $wpdb->get_var( "SELECT COUNT(*) FROM {$wpdb->prefix}users WHERE user_login = 'admin'" );
-		wp_cache_set('rsssl_admin_user_count', $count, 'really-simple-ssl', HOUR_IN_SECONDS);
+		set_transient('rsssl_admin_user_count', $count, HOUR_IN_SECONDS);
 	}
 
-	if ( $count > 0 ) {
-		return true;
-	}
-	return false;
+	return $count > 0;
 }
 
 /**

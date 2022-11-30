@@ -64,7 +64,6 @@ if ( !function_exists('rsssl_maybe_clear_transients')) {
 	 */
 	function rsssl_maybe_clear_transients( $field_id, $field_value, $prev_value, $field_type ) {
 		if ( $field_id === ' mixed_content_fixer' && $field_value ) {
-			delete_transient( 'rsssl_can_use_curl_headers_check' );
 			delete_transient( 'rsssl_mixed_content_fixer_detected' );
 			RSSSL()->admin->mixed_content_fixer_detected();
 		}
@@ -95,7 +94,7 @@ if ( !function_exists('rsssl_maybe_clear_transients')) {
 			rsssl_src_contains_wp_version();
 		}
 		if ( $field_id === 'rename_admin_user' ) {
-			wp_cache_delete('rsssl_admin_user_count');
+			delete_transient('rsssl_admin_user_count');
 			rsssl_has_admin_user();
 		}
 

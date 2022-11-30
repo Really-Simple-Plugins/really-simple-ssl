@@ -202,6 +202,9 @@ function rsssl_do_action($request){
         case 'plugin_actions':
 			$data = rsssl_plugin_actions($request);
 			break;
+        case 'clear_cache':
+			$data = rsssl_clear_test_caches();
+			break;
 		default:
 			$data = apply_filters("rsssl_do_action", [], $action, $request);
 	}
@@ -209,6 +212,23 @@ function rsssl_do_action($request){
 	header( "Content-Type: application/json" );
 	echo $response;
 	exit;
+}
+
+function rsssl_clear_test_caches(){
+    if (!rsssl_user_can_manage()) return [];
+	delete_transient('rsssl_admin_notices');
+	delete_transient('rsssl_certinfo');
+	delete_transient( 'rsssl_can_use_curl_headers_check' );
+	delete_transient( 'rsssl_mixed_content_fixer_detected' );
+	delete_transient( 'rsssl_http_methods_allowed' );
+	delete_transient( 'rsssl_xmlrpc_allowed' );
+	delete_transient( 'rsssl_directory_indexing_status' );
+	delete_transient( 'rsssl_code_execution_allowed_status' );
+	delete_transient( 'rsssl_wp_version_detected' );
+	delete_transient( 'rsssl_admin_user_count');
+
+    do_action('rsssl_clear_test_caches');
+    return [];
 }
 
 /**

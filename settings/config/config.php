@@ -128,7 +128,6 @@ function rsssl_menu() {
 				[
 					'id'      => 'permissions_policy',
 					'title'   => __( 'Permissions Policy', 'really-simple-ssl' ),
-					'intro'   => __( "Permissions Policy", "really-simple-ssl" ),
 					'premium' => true,
 					'groups'  => [
 						[

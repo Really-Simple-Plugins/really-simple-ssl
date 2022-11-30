@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2022-11-29T15:50:57+00:00\n"
+"POT-Creation-Date: 2022-11-30T09:51:54+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.6.0\n"
 "X-Domain: really-simple-ssl\n"
@@ -396,7 +396,7 @@ msgstr ""
 #: class-admin.php:2657
 #: class-multisite.php:219
 #: settings/build/index.js:382
-#: settings/src/Header.js:43
+#: settings/src/Header.js:67
 msgid "Support"
 msgstr ""
 
@@ -891,7 +891,7 @@ msgid "I don't know, or not listed, proceed with installation"
 msgstr ""
 
 #: lets-encrypt/config/fields.php:8
-#: settings/config/config.php:204
+#: settings/config/config.php:203
 msgid "System Status"
 msgstr ""
 
@@ -900,7 +900,7 @@ msgid "General settings"
 msgstr ""
 
 #: lets-encrypt/config/fields.php:17
-#: settings/config/config.php:222
+#: settings/config/config.php:221
 msgid "Directories"
 msgstr ""
 
@@ -909,12 +909,12 @@ msgid "DNS Verification"
 msgstr ""
 
 #: lets-encrypt/config/fields.php:25
-#: settings/config/config.php:232
+#: settings/config/config.php:231
 msgid "Generation"
 msgstr ""
 
 #: lets-encrypt/config/fields.php:29
-#: settings/config/config.php:237
+#: settings/config/config.php:236
 msgid "Installation"
 msgstr ""
 
@@ -1433,7 +1433,7 @@ msgid "Activate our plugin %s"
 msgstr ""
 
 #: onboarding/config.php:137
-#: settings/config/config.php:242
+#: settings/config/config.php:241
 #: settings/build/index.js:382
 #: settings/src/Dashboard/OtherPlugins.js:68
 #: settings/src/Settings/License.js:134
@@ -1478,7 +1478,7 @@ msgstr ""
 #: placeholders/class-placeholder.php:159
 #: placeholders/class-placeholder.php:185
 #: placeholders/class-placeholder.php:210
-#: settings/config/config.php:895
+#: settings/config/config.php:894
 #: settings/build/index.js:382
 #: settings/src/Settings/MixedContentScan.js:227
 msgid "Details"
@@ -1776,7 +1776,7 @@ msgstr ""
 
 #: settings/config/config.php:44
 #: settings/config/config.php:50
-#: settings/config/config.php:1163
+#: settings/config/config.php:1162
 msgid "Hardening"
 msgstr ""
 
@@ -1789,7 +1789,7 @@ msgid "Get Advanced Hardening with %sReally Simple SSL Pro%s"
 msgstr ""
 
 #: settings/config/config.php:63
-#: settings/config/config.php:628
+#: settings/config/config.php:627
 msgid "XML-RPC"
 msgstr ""
 
@@ -1833,127 +1833,126 @@ msgid "Get HTTP Strict Transport Security with %sReally Simple SSL Pro%s"
 msgstr ""
 
 #: settings/config/config.php:130
-#: settings/config/config.php:131
-#: settings/config/config.php:141
-#: settings/config/config.php:917
+#: settings/config/config.php:140
+#: settings/config/config.php:916
 msgid "Permissions Policy"
 msgstr ""
 
-#: settings/config/config.php:136
+#: settings/config/config.php:135
 msgid "Get the Permissions Policy with %sReally Simple SSL Pro%s"
 msgstr ""
 
-#: settings/config/config.php:147
+#: settings/config/config.php:146
 msgid "Content Security Policy"
 msgstr ""
 
-#: settings/config/config.php:154
+#: settings/config/config.php:153
 msgid "Get Upgrade Insecure Requests with %sReally Simple SSL Pro%s"
 msgstr ""
 
-#: settings/config/config.php:157
+#: settings/config/config.php:156
 msgid "Upgrade Insecure Requests"
 msgstr ""
 
-#: settings/config/config.php:163
+#: settings/config/config.php:162
 msgid "Get Frame Ancestors with %sReally Simple SSL Pro%s"
 msgstr ""
 
-#: settings/config/config.php:166
+#: settings/config/config.php:165
 msgid "Frame Ancestors"
 msgstr ""
 
-#: settings/config/config.php:173
+#: settings/config/config.php:172
 msgid "Get Source Directives with %sReally Simple SSL Pro%s"
 msgstr ""
 
-#: settings/config/config.php:175
+#: settings/config/config.php:174
 msgid "Source Directives"
 msgstr ""
 
-#: settings/config/config.php:183
+#: settings/config/config.php:182
 msgid "Get Cross Origin Policy Headers with %sReally Simple SSL Pro%s"
 msgstr ""
 
-#: settings/config/config.php:185
+#: settings/config/config.php:184
 msgid "Cross Origin Policy"
 msgstr ""
 
-#: settings/config/config.php:194
+#: settings/config/config.php:193
 msgid "Let's Encrypt"
 msgstr ""
 
-#: settings/config/config.php:195
+#: settings/config/config.php:194
 msgid "We have tried to make our Wizard as simple and fast as possible. Although these questions are all necessary, if there’s any way you think we can improve the plugin, please let us %sknow%s!"
 msgstr ""
 
-#: settings/config/config.php:197
+#: settings/config/config.php:196
 msgid " Please note that you can always save and finish the wizard later, use our %sdocumentation%s for additional information or log a %ssupport ticket%s if you need our assistance."
 msgstr ""
 
-#: settings/config/config.php:205
+#: settings/config/config.php:204
 msgid "Letʼs Encrypt is a free, automated and open certificate authority brought to you by the nonprofit Internet Security Research Group (ISRG)."
 msgstr ""
 
-#: settings/config/config.php:212
+#: settings/config/config.php:211
 msgid "General Settings"
 msgstr ""
 
-#: settings/config/config.php:216
+#: settings/config/config.php:215
 msgid "Hosting"
 msgstr ""
 
-#: settings/config/config.php:217
+#: settings/config/config.php:216
 msgid "Below you will find the instructions for different hosting environments and configurations. If you start the process with the necessary instructions and credentials the next view steps will be done in no time."
 msgstr ""
 
-#: settings/config/config.php:227
+#: settings/config/config.php:226
 msgid "DNS verification"
 msgstr ""
 
-#: settings/config/config.php:289
-#: settings/config/config.php:297
+#: settings/config/config.php:288
+#: settings/config/config.php:296
 msgid "Redirect method"
 msgstr ""
 
-#: settings/config/config.php:291
+#: settings/config/config.php:290
 msgid "No redirect"
 msgstr ""
 
-#: settings/config/config.php:292
+#: settings/config/config.php:291
 msgid "301 PHP redirect"
 msgstr ""
 
-#: settings/config/config.php:293
+#: settings/config/config.php:292
 msgid "301 .htaccess redirect"
 msgstr ""
 
-#: settings/config/config.php:298
+#: settings/config/config.php:297
 msgid "Redirects all requests over HTTP to HTTPS using a PHP 301 redirect. Enable if the .htaccess redirect cannot be used, for example on NGINX servers."
 msgstr ""
 
-#: settings/config/config.php:314
+#: settings/config/config.php:313
 msgid "Mixed content fixer"
 msgstr ""
 
-#: settings/config/config.php:328
-#: settings/config/config.php:331
+#: settings/config/config.php:327
+#: settings/config/config.php:330
 msgid "Mixed content fixer - init hook"
 msgstr ""
 
-#: settings/config/config.php:332
+#: settings/config/config.php:331
 msgid "If this option is set to true, the mixed content fixer will fire on the init hook instead of the template_redirect hook. Only use this option when you experience problems with the mixed content fixer."
 msgstr ""
 
-#: settings/config/config.php:350
+#: settings/config/config.php:349
 msgid "Mixed content fixer - back-end"
 msgstr ""
 
-#: settings/config/config.php:359
+#: settings/config/config.php:358
 msgid "Dismiss all notices"
 msgstr ""
 
-#: settings/config/config.php:369
+#: settings/config/config.php:368
 #: settings/build/index.js:382
 #: settings/src/LetsEncrypt/Installation.js:103
 #: settings/src/LetsEncrypt/Installation.js:108
@@ -1961,245 +1960,245 @@ msgstr ""
 msgid "Download"
 msgstr ""
 
-#: settings/config/config.php:370
+#: settings/config/config.php:369
 msgid "System status"
 msgstr ""
 
-#: settings/config/config.php:379
+#: settings/config/config.php:378
 msgid "Delete all data on plugin deletion"
 msgstr ""
 
-#: settings/config/config.php:387
+#: settings/config/config.php:386
 msgid "Stop editing the .htaccess file"
 msgstr ""
 
-#: settings/config/config.php:404
+#: settings/config/config.php:403
 msgid "Premium support"
 msgstr ""
 
-#: settings/config/config.php:417
+#: settings/config/config.php:416
 msgid "Disable \"anyone can register\""
 msgstr ""
 
-#: settings/config/config.php:423
+#: settings/config/config.php:422
 msgid "About Hardening"
 msgstr ""
 
-#: settings/config/config.php:424
+#: settings/config/config.php:423
 msgid "Hardening features limit the possibility of potential weaknesses and vulnerabilities which can be misused."
 msgstr ""
 
-#: settings/config/config.php:427
+#: settings/config/config.php:426
 msgid "User registration is restricted"
 msgstr ""
 
-#: settings/config/config.php:428
+#: settings/config/config.php:427
 msgid "User registration is not restricted"
 msgstr ""
 
-#: settings/config/config.php:437
+#: settings/config/config.php:436
 msgid "Disable the built-in file editors"
 msgstr ""
 
-#: settings/config/config.php:441
+#: settings/config/config.php:440
 msgid "File editing is disabled"
 msgstr ""
 
-#: settings/config/config.php:442
+#: settings/config/config.php:441
 msgid "File editing is enabled"
 msgstr ""
 
-#: settings/config/config.php:451
+#: settings/config/config.php:450
 msgid "Prevent code execution in the public 'Uploads' folder"
 msgstr ""
 
-#: settings/config/config.php:455
+#: settings/config/config.php:454
 msgid "Code execution is restricted"
 msgstr ""
 
-#: settings/config/config.php:456
+#: settings/config/config.php:455
 msgid "Code execution is not restricted"
 msgstr ""
 
-#: settings/config/config.php:465
+#: settings/config/config.php:464
 msgid "Hide your WordPress version"
 msgstr ""
 
-#: settings/config/config.php:474
+#: settings/config/config.php:473
 msgid "Prevent exposed login feedback"
 msgstr ""
 
-#: settings/config/config.php:483
+#: settings/config/config.php:482
 msgid "Disable directory browsing"
 msgstr ""
 
-#: settings/config/config.php:487
+#: settings/config/config.php:486
 msgid "Browsing directories is blocked"
 msgstr ""
 
-#: settings/config/config.php:488
+#: settings/config/config.php:487
 msgid "Browsing directories is possible"
 msgstr ""
 
-#: settings/config/config.php:497
+#: settings/config/config.php:496
 msgid "Disable user enumeration"
 msgstr ""
 
-#: settings/config/config.php:501
+#: settings/config/config.php:500
 msgid "User enumeration is restricted"
 msgstr ""
 
-#: settings/config/config.php:502
+#: settings/config/config.php:501
 msgid "User enumeration is possible"
 msgstr ""
 
-#: settings/config/config.php:511
+#: settings/config/config.php:510
 msgid "Rename current 'admin' username"
 msgstr ""
 
-#: settings/config/config.php:515
+#: settings/config/config.php:514
 msgid "Username 'Admin' is not allowed"
 msgstr ""
 
-#: settings/config/config.php:516
+#: settings/config/config.php:515
 msgid "Username 'Admin' is allowed"
 msgstr ""
 
-#: settings/config/config.php:525
+#: settings/config/config.php:524
 msgid "Choose new username to replace 'admin'"
 msgstr ""
 
-#: settings/config/config.php:549
+#: settings/config/config.php:548
 msgid "Disable XML-RPC"
 msgstr ""
 
-#: settings/config/config.php:558
+#: settings/config/config.php:557
 msgid "Block user registrations when login and display name are the same"
 msgstr ""
 
-#: settings/config/config.php:567
+#: settings/config/config.php:566
 msgid "Disable HTTP methods"
 msgstr ""
 
-#: settings/config/config.php:576
+#: settings/config/config.php:575
 msgid "Rename and randomize your database prefix"
 msgstr ""
 
-#: settings/config/config.php:579
+#: settings/config/config.php:578
 msgid "Make sure you have a backup before you do this."
 msgstr ""
 
-#: settings/config/config.php:586
+#: settings/config/config.php:585
 msgid "Change debug.log file location"
 msgstr ""
 
-#: settings/config/config.php:590
+#: settings/config/config.php:589
 msgid "Debug log not publicly accessible"
 msgstr ""
 
-#: settings/config/config.php:591
+#: settings/config/config.php:590
 msgid "Debug log is now public"
 msgstr ""
 
-#: settings/config/config.php:600
+#: settings/config/config.php:599
 msgid "Disable application passwords"
 msgstr ""
 
-#: settings/config/config.php:640
+#: settings/config/config.php:639
 msgid "Method"
 msgstr ""
 
-#: settings/config/config.php:645
+#: settings/config/config.php:644
 msgid "Login status"
 msgstr ""
 
-#: settings/config/config.php:650
+#: settings/config/config.php:649
 msgid "Count"
 msgstr ""
 
-#: settings/config/config.php:655
-#: settings/config/config.php:1098
+#: settings/config/config.php:654
+#: settings/config/config.php:1097
 msgid "Action"
 msgstr ""
 
-#: settings/config/config.php:660
+#: settings/config/config.php:659
 msgid "Delete"
 msgstr ""
 
-#: settings/config/config.php:673
+#: settings/config/config.php:672
 msgid "(default)"
 msgstr ""
 
-#: settings/config/config.php:682
+#: settings/config/config.php:681
 msgid "About Recommended Security Headers"
 msgstr ""
 
-#: settings/config/config.php:683
+#: settings/config/config.php:682
 msgid "These security headers are the fundamental security measures to protect your website visitors while visiting your website."
 msgstr ""
 
-#: settings/config/config.php:701
-#: settings/config/config.php:715
-#: settings/config/config.php:815
-#: settings/config/config.php:837
-#: settings/config/config.php:852
+#: settings/config/config.php:700
+#: settings/config/config.php:714
+#: settings/config/config.php:814
+#: settings/config/config.php:836
+#: settings/config/config.php:851
 msgid "Off"
 msgstr ""
 
-#: settings/config/config.php:716
+#: settings/config/config.php:715
 msgid "recommended"
 msgstr ""
 
-#: settings/config/config.php:740
+#: settings/config/config.php:739
 msgid "About HTTP Strict Transport Security"
 msgstr ""
 
-#: settings/config/config.php:741
+#: settings/config/config.php:740
 msgid "Leveraging your SSL certificate with HSTS is a staple for every website. Force your website over SSL, mitigating risks of malicious counterfeit websites in your name."
 msgstr ""
 
-#: settings/config/config.php:795
+#: settings/config/config.php:794
 msgid "One day (for testing only)"
 msgstr ""
 
-#: settings/config/config.php:796
+#: settings/config/config.php:795
 msgid "One year"
 msgstr ""
 
-#: settings/config/config.php:797
+#: settings/config/config.php:796
 msgid "Two years (required for preload)"
 msgstr ""
 
-#: settings/config/config.php:823
+#: settings/config/config.php:822
 msgid "About Cross Origin Policies"
 msgstr ""
 
-#: settings/config/config.php:824
+#: settings/config/config.php:823
 msgid "One of the most powerful features, and therefore the most complex are the Cross-Origin headers that can isolate your website so any data leaks are minimized."
 msgstr ""
 
-#: settings/config/config.php:871
+#: settings/config/config.php:870
 msgid "About the Mixed Content Scan"
 msgstr ""
 
-#: settings/config/config.php:872
+#: settings/config/config.php:871
 msgid "The extensive mixed content scan will list all current and future issues and provide a fix, or instructions to fix manually."
 msgstr ""
 
-#: settings/config/config.php:876
+#: settings/config/config.php:875
 msgid "Type"
 msgstr ""
 
-#: settings/config/config.php:882
+#: settings/config/config.php:881
 msgid "Description"
 msgstr ""
 
-#: settings/config/config.php:888
-#: settings/config/config.php:1083
+#: settings/config/config.php:887
+#: settings/config/config.php:1082
 msgid "Location"
 msgstr ""
 
-#: settings/config/config.php:901
+#: settings/config/config.php:900
 #: settings/build/index.js:382
 #: settings/src/Dashboard/TaskElement.js:30
 #: settings/src/Dashboard/TaskElement.js:31
@@ -2208,96 +2207,96 @@ msgstr ""
 msgid "Fix"
 msgstr ""
 
-#: settings/config/config.php:916
+#: settings/config/config.php:915
 #: settings/build/index.js:382
 #: settings/src/Settings/ChangeStatus.js:11
 msgid "Allow"
 msgstr ""
 
-#: settings/config/config.php:916
+#: settings/config/config.php:915
 #: settings/build/index.js:382
 #: settings/src/Settings/LearningMode.js:260
 #: settings/src/Settings/PermissionsPolicy.js:148
 msgid "Disable"
 msgstr ""
 
-#: settings/config/config.php:916
+#: settings/config/config.php:915
 msgid "Self (Default)"
 msgstr ""
 
-#: settings/config/config.php:922
+#: settings/config/config.php:921
 msgid "About the Permission Policy"
 msgstr ""
 
-#: settings/config/config.php:923
+#: settings/config/config.php:922
 msgid "Browser features are plentiful, but most are not needed on your website."
 msgstr ""
 
-#: settings/config/config.php:923
+#: settings/config/config.php:922
 msgid "They might be misused if you don’t actively tell the browser to disable these features."
 msgstr ""
 
-#: settings/config/config.php:927
+#: settings/config/config.php:926
 msgid "Feature"
 msgstr ""
 
-#: settings/config/config.php:932
+#: settings/config/config.php:931
 msgid "Options"
 msgstr ""
 
-#: settings/config/config.php:1005
+#: settings/config/config.php:1004
 msgid "Enable Permissions Policy"
 msgstr ""
 
-#: settings/config/config.php:1014
+#: settings/config/config.php:1013
 msgid "Serve encrypted and authenticated responses"
 msgstr ""
 
-#: settings/config/config.php:1020
+#: settings/config/config.php:1019
 msgid "About the Content Security Policy"
 msgstr ""
 
-#: settings/config/config.php:1021
+#: settings/config/config.php:1020
 msgid "The content security policy has many options, so we always recommend starting in ‘learning mode’ to see what files and scripts are loaded."
 msgstr ""
 
-#: settings/config/config.php:1036
+#: settings/config/config.php:1035
 msgid "Disable (Default)"
 msgstr ""
 
-#: settings/config/config.php:1040
+#: settings/config/config.php:1039
 msgid "Allow your domain to be embedded"
 msgstr ""
 
-#: settings/config/config.php:1049
+#: settings/config/config.php:1048
 msgid "Add additional domains which can embed your website, if needed. Comma seperated."
 msgstr ""
 
-#: settings/config/config.php:1088
+#: settings/config/config.php:1087
 msgid "Directive"
 msgstr ""
 
-#: settings/config/config.php:1093
+#: settings/config/config.php:1092
 msgid "Source"
 msgstr ""
 
-#: settings/config/config.php:1140
+#: settings/config/config.php:1139
 msgid "Progress"
 msgstr ""
 
-#: settings/config/config.php:1153
+#: settings/config/config.php:1152
 msgid "Powered by Qualys"
 msgstr ""
 
-#: settings/config/config.php:1155
+#: settings/config/config.php:1154
 msgid "Status"
 msgstr ""
 
-#: settings/config/config.php:1171
+#: settings/config/config.php:1170
 msgid "Tips & Tricks"
 msgstr ""
 
-#: settings/config/config.php:1182
+#: settings/config/config.php:1181
 msgid "Other Plugins"
 msgstr ""
 
@@ -2319,7 +2318,7 @@ msgstr ""
 
 #: settings/templates/tips-tricks-footer.php:3
 #: settings/build/index.js:382
-#: settings/src/Header.js:39
+#: settings/src/Header.js:63
 msgid "Documentation"
 msgstr ""
 
@@ -2480,8 +2479,18 @@ msgid "Your license key has reached its activation limit."
 msgstr ""
 
 #: settings/build/index.js:382
+#: settings/src/Header.js:26
+msgid "Cleared all test caches"
+msgstr ""
+
+#: settings/build/index.js:382
+#: settings/src/Header.js:62
+msgid "Clear test caches"
+msgstr ""
+
+#: settings/build/index.js:382
 #: settings/src/Dashboard/ProgressFooter.js:44
-#: settings/src/Header.js:48
+#: settings/src/Header.js:72
 #: settings/src/Menu/Menu.js:49
 msgid "Go Pro"
 msgstr ""
