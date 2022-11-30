@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2022-11-30T09:51:54+00:00\n"
+"POT-Creation-Date: 2022-11-30T10:46:52+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.6.0\n"
 "X-Domain: really-simple-ssl\n"
@@ -1395,7 +1395,7 @@ msgid "Burst Statistics - Self-hosted, Privacy-friendly analytics tool"
 msgstr ""
 
 #: onboarding/config.php:76
-#: settings/settings.php:320
+#: settings/settings.php:340
 msgid "Complianz - Cookie Consent Management as it should be"
 msgstr ""
 
@@ -2216,7 +2216,7 @@ msgstr ""
 #: settings/config/config.php:915
 #: settings/build/index.js:382
 #: settings/src/Settings/LearningMode.js:260
-#: settings/src/Settings/PermissionsPolicy.js:148
+#: settings/src/Settings/PermissionsPolicy.js:149
 msgid "Disable"
 msgstr ""
 
@@ -2308,11 +2308,11 @@ msgstr ""
 msgid "SSL"
 msgstr ""
 
-#: settings/settings.php:312
+#: settings/settings.php:332
 msgid "Self-hosted, Privacy-friendly analytics tool"
 msgstr ""
 
-#: settings/settings.php:327
+#: settings/settings.php:347
 msgid "Terms and Conditions"
 msgstr ""
 
@@ -2979,17 +2979,22 @@ msgstr ""
 
 #: settings/build/index.js:382
 #: settings/src/Settings/PermissionsPolicy.js:147
+msgid "Permissions Policy is set by a third party."
+msgstr ""
+
+#: settings/build/index.js:382
+#: settings/src/Settings/PermissionsPolicy.js:148
 msgid "Permissions Policy is enforced."
 msgstr ""
 
 #: settings/build/index.js:382
 #: settings/src/Settings/LearningMode.js:296
-#: settings/src/Settings/PermissionsPolicy.js:153
+#: settings/src/Settings/PermissionsPolicy.js:154
 msgid "Disabled "
 msgstr ""
 
 #: settings/build/index.js:382
-#: settings/src/Settings/PermissionsPolicy.js:154
+#: settings/src/Settings/PermissionsPolicy.js:155
 msgid "The Permissions Policy has been disabled."
 msgstr ""
 
