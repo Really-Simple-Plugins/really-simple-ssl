@@ -356,11 +356,7 @@ function rsssl_directory_indexing_allowed() {
 		set_transient('rsssl_directory_indexing_status', $status, DAY_IN_SECONDS );
 	}
 
-	if ( $status==='forbidden' ) {
-		return false;
-	} else {
-		return true;
-	}
+	return $status !== 'forbidden';
 }
 
 
@@ -391,9 +387,9 @@ function rsssl_user_registration_allowed()
  */
 
 function rsssl_src_contains_wp_version() {
-	$wp_version = get_bloginfo( 'version' );
 	$result = get_transient('rsssl_wp_version_detected' );
 	if ( !$result ) {
+		$wp_version = get_bloginfo( 'version' );
 		$result = 'found';
 		$web_source = "";
 		//check if the mixed content fixer is active
