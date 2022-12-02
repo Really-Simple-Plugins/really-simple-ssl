@@ -292,22 +292,6 @@ class rsssl_admin
         return $current;
     }
 
-    /**
-     * Check if site uses an htaccess.conf file, used in bitnami installations
-     *
-     * @Since 3.1
-     */
-
-    public function uses_htaccess_conf() {
-        $htaccess_conf_file = dirname(ABSPATH) . "/conf/htaccess.conf";
-        //conf/htaccess.conf can be outside of open basedir, return false if so
-        $open_basedir = ini_get("open_basedir");
-        if ( !empty($open_basedir) ) {
-            return false;
-        }
-        return is_file($htaccess_conf_file);
-    }
-
 	/**
      * If the user has clicked "recheck certificate, clear the cache for the certificate check.
      * Used in a form in the dashboard notices.
@@ -2842,17 +2826,42 @@ class rsssl_admin
 		return $this->plugin_dir === $current_plugin_path;
     }
 
-    /**
-     * Determine the htaccess file. This can be either the regular .htaccess file, or an htaccess.conf file on bitnami installations.
-     *
-     * since 3.1
-     *
-     * @return string
-     */
+
+	/**
+	 * Check if site uses an htaccess.conf file, used in bitnami installations
+	 *
+	 * @Since 3.1
+	 */
+
+	public function uses_htaccess_conf() {
+		//conf/htaccess.conf can be outside of open basedir, return false if so
+		$open_basedir = ini_get("open_basedir");
+		if ( !empty($open_basedir) ) {
+			return false;
+		}
+		if ( is_file(dirname(ABSPATH) . '/htaccess/wordpress-htaccess.conf') ){
+			return '/htaccess/wordpress-htaccess.conf';
+		}
+
+		if ( is_file(dirname(ABSPATH) . "/conf/htaccess.conf")) {
+			return "/conf/htaccess.conf";
+        }
+
+        return false;
+	}
+
+	/**
+	 * Determine the htaccess file. This can be either the regular .htaccess file, or an htaccess.conf file on bitnami installations.
+	 *
+	 * since 3.1
+	 *
+	 * @return string
+	 */
 
     public function htaccess_file() {
-        if ( $this->uses_htaccess_conf() ) {
-            $htaccess_file = realpath(dirname(ABSPATH) . "/conf/htaccess.conf");
+        $conf_file = $this->uses_htaccess_conf();
+        if ( $conf_file ) {
+            $htaccess_file = realpath(dirname(ABSPATH) . $conf_file);
         } else {
             $htaccess_file = $this->abs_path . ".htaccess";
         }
