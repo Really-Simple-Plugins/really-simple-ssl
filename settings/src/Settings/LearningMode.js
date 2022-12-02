@@ -267,7 +267,7 @@ class LearningMode extends Component {
                               />
                               {__("Enable Learning Mode","really-simple-ssl")}
                           </label>
-                        {enforce==1 && <div className="rsssl-locked">
+                        { enforce==1 && <div className="rsssl-locked">
                             <div className="rsssl-shield-overlay">
                                   <Icon name = "shield"  size="80px"/>
                             </div>
@@ -293,7 +293,8 @@ class LearningMode extends Component {
                         </div>}
                         { rsssl_settings.pro_plugin_active && this.props.disabled && <div className="rsssl-locked">
                             <div className="rsssl-locked-overlay">
-                                <span className="rsssl-progress-status rsssl-disabled">{__("Disabled ","really-simple-ssl")}</span>
+                                { !enforced_by_thirdparty && <span className="rsssl-progress-status rsssl-disabled">{__("Disabled ","really-simple-ssl")}</span> }
+                                { enforced_by_thirdparty && <span className="rsssl-progress-status rsssl-learning-mode-enforced">{__("Enforced","really-simple-ssl")}</span> }
                                 {disabledString}
                             </div>
                         </div>}
