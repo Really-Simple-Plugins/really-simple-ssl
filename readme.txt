@@ -97,6 +97,7 @@ If you can't deactivate, do not just remove the plugin folder to uninstall! Foll
 
 == Changelog ==
 = 6.0.12 =
+* Fix: on multisite, the test for users with admin username did not use the correct prefix, $wpdb->base_prefix, props @jg-visual
 * Improvement: allow submenu in back-end react application
 * Improvement: Skip value update when no change has been made
 * Improvement: no redirect on dismiss of admin notice, props @gangesh, @rtpHarry, @dumel
