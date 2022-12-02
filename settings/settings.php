@@ -9,7 +9,6 @@ defined('ABSPATH') or die();
 
 require_once( rsssl_path . 'settings/config/config.php' );
 require_once( rsssl_path . 'settings/config/disable-fields-filter.php' );
-//require_once( rsssl_path . 'settings/rest-api-optimizer/rest-api-optimizer.php' );
 
 /**
  * Fix for WPML issue where WPML breaks the rest api by adding a language locale in the url
@@ -505,11 +504,11 @@ function rsssl_update_option( $name, $value ) {
 	$config_fields = rsssl_fields(false);
 	$config_ids = array_column($config_fields, 'id');
 	$config_field_index = array_search($name, $config_ids);
-	$config_field = $config_fields[$config_field_index];
 	if ( $config_field_index === false ){
 		return;
 	}
 
+	$config_field = $config_fields[$config_field_index];
 	$type = $config_field['type'] ?? false;
     if ( !$type ) {
 	    return;
