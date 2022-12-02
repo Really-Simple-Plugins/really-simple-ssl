@@ -134,10 +134,17 @@ function rsssl_has_admin_user() {
 		return false;
 	}
 
+	//transient is more persistent then wp cache set
 	$count = get_transient('rsssl_admin_user_count');
-	if ( $count === false ){
-		global $wpdb;
-		$count = $wpdb->get_var( "SELECT COUNT(*) FROM {$wpdb->base_prefix}users WHERE user_login = 'admin'" );
+	//get from cache, but not on settings page
+	if ( $count === false || RSSSL()->admin->is_settings_page() ){
+		//use wp_cache_get to prevent duplicate queries in one pageload
+		$count = wp_cache_get('rsssl_admin_user_count', 'really-simple-ssl');
+		if ( $count === false ) {
+			global $wpdb;
+			$count = $wpdb->get_var( "SELECT COUNT(*) FROM {$wpdb->base_prefix}users WHERE user_login = 'admin'" );
+			wp_cache_set('rsssl_admin_user_count', $count, 'really-simple-ssl', HOUR_IN_SECONDS );
+		}
 		set_transient('rsssl_admin_user_count', $count, HOUR_IN_SECONDS);
 	}
 
