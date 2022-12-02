@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2022-11-30T14:11:35+00:00\n"
+"POT-Creation-Date: 2022-12-02T10:44:17+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.6.0\n"
 "X-Domain: really-simple-ssl\n"
@@ -2973,6 +2973,7 @@ msgstr ""
 
 #: settings/build/index.js:382
 #: settings/src/Settings/LearningMode.js:275
+#: settings/src/Settings/LearningMode.js:297
 #: settings/src/Settings/PermissionsPolicy.js:146
 msgid "Enforced"
 msgstr ""

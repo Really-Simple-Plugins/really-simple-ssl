@@ -295,7 +295,7 @@ class LearningMode extends Component {
                             <div className="rsssl-locked-overlay">
                                 { !enforced_by_thirdparty && <span className="rsssl-progress-status rsssl-disabled">{__("Disabled ","really-simple-ssl")}</span> }
                                 { enforced_by_thirdparty && <span className="rsssl-progress-status rsssl-learning-mode-enforced">{__("Enforced","really-simple-ssl")}</span> }
-                                {disabledString}
+                                { disabledString }
                             </div>
                         </div>}
                         <Filter />
