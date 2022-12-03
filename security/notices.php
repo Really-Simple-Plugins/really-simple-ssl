@@ -148,21 +148,6 @@ function rsssl_general_security_notices( $notices ) {
 		],
 	);
 
-	$notices['admin_user_renamed_user_enumeration_enabled'] = array(
-		'condition' => ['check_admin_user_renamed_and_enumeration_disabled'],
-		'callback' => '_true_',
-		'score' => 5,
-		'output' => array(
-			'true' => array(
-				'highlight_field_id' => 'disable_user_enumeration',
-				'msg' => __("To prevent attackers from identifying the renamed administrator, activate the 'Disable User Enumeration' setting.", "really-simple-ssl"),
-				'url' => 'https://really-simple-ssl.com/what-are-user-enumeration-attacks/',
-				'icon' => 'open',
-				'dismissible' => true,
-			),
-		),
-	);
-
 	$notices['username_admin_exists'] = array(
 		'condition' => ['rsssl_has_admin_user'],
 		'callback' => '_true_',
