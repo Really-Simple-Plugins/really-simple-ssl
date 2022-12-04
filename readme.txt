@@ -102,6 +102,7 @@ If you can't deactivate, do not just remove the plugin folder to uninstall! Foll
 * Improvement: Skip value update when no change has been made
 * Improvement: no redirect on dismiss of admin notice, props @gangesh, @rtpHarry, @dumel
 * Improvement: remove obsolete warning
+* Improvement: qtranslate support on settings page
 
 = 6.0.11 =
 * Fix: on some environments, the HTTP_X_WP_NONCE is not available in the code, changed logged in check to accomodate such environments
