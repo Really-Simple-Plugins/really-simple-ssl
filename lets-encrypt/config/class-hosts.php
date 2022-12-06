@@ -93,7 +93,7 @@ if ( ! class_exists( "rsssl_le_hosts" ) ) {
 		            'free_ssl_available' => true,
 		            'hosting_dashboard' => 'cpanel:autossl',
 		            'api' => true,
-		            'ssl_installation_link' => 'https://{host}:2083/frontend/paper_lantern/security/tls_status/',
+		            'ssl_installation_link' => 'https://{host}:2083/frontend/jupiter/security/tls_status/',
 	            ),
 
 	            'ionos' => array(
@@ -410,7 +410,7 @@ if ( ! class_exists( "rsssl_le_hosts" ) ) {
 		            'free_ssl_available' => true,
 		            'hosting_dashboard' => 'cpanel:autossl',
 		            'api' => true,
-		            'ssl_installation_link' => 'https://{host}:2083/frontend/paper_lantern/security/tls_status/',
+		            'ssl_installation_link' => 'https://{host}:2083/frontend/jupiter/security/tls_status/',
 	            ),
 	            'earthlink' => array(
 		            'name' => 'Earthlink',
@@ -455,7 +455,7 @@ if ( ! class_exists( "rsssl_le_hosts" ) ) {
 		            'free_ssl_available' => 'activated_by_default',
 		            'hosting_dashboard' => 'cpanel:autossl',
 		            'api' => false,
-		            'ssl_installation_link' => 'https://{host}:2083/frontend/paper_lantern/security/tls_status/',
+		            'ssl_installation_link' => 'https://{host}:2083/frontend/jupiter/security/tls_status/',
 	            ),
 	            'namescouk' => array(
 		            'name' => 'Names.co.uk',
