@@ -55,7 +55,7 @@ if ( !class_exists('rsssl_mailer') ) {
 				[ wp_kses_post($this->message), $block_html, $this->to, __("Learn more",'really-simple-ssl') ],
 				$template);
 			$success = wp_mail( $this->to, sanitize_text_field($this->subject), $body, array('Content-Type: text/html; charset=UTF-8') );
-			set_transient('rsssl_email_recently_sent', true, 15 * MINUTE_IN_SECONDS );
+			set_transient('rsssl_email_recently_sent', true, 5 * MINUTE_IN_SECONDS );
 			return $success;
 		}
 
