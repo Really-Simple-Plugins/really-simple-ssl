@@ -4123,11 +4123,13 @@ class Header extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Component {
       href: "#" + menu_item.id.toString()
     }, menu_item.title)))))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
       className: "rsssl-header-right"
-    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
+    }, !rsssl_settings.le_generated_by_rsssl && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
       className: "rsssl-knowledge-base-link",
       href: "https://really-simple-ssl.com/knowledge-base",
       target: "_blank"
-    }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Documentation", "really-simple-ssl")), rsssl_settings.pro_plugin_active && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
+    }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Documentation", "really-simple-ssl")), rsssl_settings.le_generated_by_rsssl && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
+      href: rsssl_settings.letsencrypt_url
+    }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Let's Encrypt", "really-simple-ssl")), rsssl_settings.pro_plugin_active && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
       href: "https://wordpress.org/support/plugin/really-simple-ssl/",
       className: "button button-black",
       target: "_blank"
@@ -6712,7 +6714,7 @@ class LearningMode extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Compo
     let field = this.props.field;
     let fieldValue = field.value;
     let options = this.props.options;
-    let configuringString = (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("We're configuring your %s. Exit to edit and enforce.", "really-simple-ssl").replace('%s', field.label);
+    let configuringString = (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)(" The %s is now in report-only mode and will collect directives. This might take a while. Afterwards you can Exit, Edit and Enforce these Directives.", "really-simple-ssl").replace('%s', field.label);
     let disabledString = (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("%s has been disabled.", "really-simple-ssl").replace('%s', field.label);
     let enforcedString = (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("%s is enforced.", "really-simple-ssl").replace('%s', field.label);
     const {
@@ -6846,7 +6848,7 @@ class LearningMode extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Compo
       className: "rsssl-learning-mode-link",
       href: "#",
       onClick: e => this.toggleLearningMode(e)
-    }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Exit learning mode", "really-simple-ssl")))), learning_mode_completed == 1 && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Exit", "really-simple-ssl")))), learning_mode_completed == 1 && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
       className: "rsssl-locked"
     }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
       className: "rsssl-locked-overlay"
