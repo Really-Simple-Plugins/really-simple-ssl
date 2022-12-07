@@ -16,6 +16,7 @@ import LetsEncrypt from "../LetsEncrypt/LetsEncrypt";
 import Activate from "../LetsEncrypt/Activate";
 import MixedContentScan from "./MixedContentScan";
 import PermissionsPolicy from "./PermissionsPolicy";
+import CheckboxControl from "./CheckboxControl";
 import Support from "./Support";
 import LearningMode from "./LearningMode";
 import ChangeStatus from "./ChangeStatus";
@@ -43,6 +44,9 @@ class Field extends Component {
     onChangeHandler(fieldValue) {
         let fields = this.props.fields;
         let field = this.props.field;
+        console.log("field");
+        console.log(field);
+        console.log(fieldValue);
         fields[this.props.index]['value'] = fieldValue;
 
         //we can configure other fields if a field is enabled, or set to a certain value.
@@ -101,7 +105,7 @@ class Field extends Component {
         let field = this.props.field;
         let fieldValue = field.value;
         let fields = this.props.fields;
-        let disabled = field.disabled;
+
         this.highLightClass = this.props.highLightedField===this.props.field.id ? 'rsssl-field-wrap rsssl-highlight' : 'rsssl-field-wrap';
 
         let options = [];
@@ -118,12 +122,12 @@ class Field extends Component {
 
         //if a feature can only be used on networkwide or single site setups, pass that info here.
         if ( !rsssl_settings.networkwide_active && field.networkwide_required ) {
-            disabled = true;
+            field.disabled = true;
             field.comment = <>{__("This feature is only available networkwide.","really-simple-ssl")}<Hyperlink target="_blank" text={__("Network settings","really-simple-ssl")} url={rsssl_settings.network_link}/></>
         }
 
         if ( field.conditionallyDisabled ) {
-            disabled = true;
+            field.disabled = true;
         }
 
         if ( !field.visible ) {
@@ -135,13 +139,12 @@ class Field extends Component {
         if ( field.type==='checkbox' ){
             return (
                 <div className={this.highLightClass}>
-                  <ToggleControl
-                      disabled = {disabled}
-                      checked= { field.value==1 }
-                      label={ field.label }
-                      onChange={ ( fieldValue ) => this.onChangeHandler(fieldValue) }
-                  />
-                  {field.comment && <div className="rsssl-comment" dangerouslySetInnerHTML={{__html:field.comment}}></div>}
+                    <CheckboxControl
+                      field={field}
+                      onChangeHandler={this.onChangeHandler}
+                    />
+
+                    {field.comment && <div className="rsssl-comment" dangerouslySetInnerHTML={{__html:field.comment}}></div>}
                 </div>
             );
         }
@@ -170,7 +173,7 @@ class Field extends Component {
                 <div className={this.highLightClass}>
                   <TextControl
                       required={ field.required }
-                      disabled={ disabled }
+                      disabled={ field.disabled }
                       help={ field.comment }
                       label={ field.label }
                       onChange={ ( fieldValue ) => this.onChangeHandler(fieldValue) }
@@ -270,7 +273,7 @@ class Field extends Component {
             return (
                 <div className={this.highLightClass}>
                   <SelectControl
-                      disabled={ disabled }
+                      disabled={ field.disabled }
                       help={ field.comment }
                       label={ field.label }
                       onChange={ ( fieldValue ) => this.onChangeHandler(fieldValue) }
@@ -291,7 +294,7 @@ class Field extends Component {
         if ( field.type==='permissionspolicy' ) {
             return (
                 <div className={this.highLightClass}>
-                  <PermissionsPolicy disabled={disabled} updateField={this.props.updateField} field={this.props.field} options={options} highLightClass={this.highLightClass} fields={fields}/>
+                  <PermissionsPolicy disabled={field.disabled} updateField={this.props.updateField} field={this.props.field} options={options} highLightClass={this.highLightClass} fields={fields}/>
                 </div>
             )
         }
@@ -299,7 +302,7 @@ class Field extends Component {
         if ( field.type==='learningmode' ) {
             return(
                 <div className={this.highLightClass}>
-                  <LearningMode disabled={disabled} onChangeHandlerDataTableStatus={this.onChangeHandlerDataTableStatus} updateField={this.props.updateField} field={this.props.field} options={options} highLightClass={this.highLightClass} fields={fields}/>
+                  <LearningMode disabled={field.disabled} onChangeHandlerDataTableStatus={this.onChangeHandlerDataTableStatus} updateField={this.props.updateField} field={this.props.field} options={options} highLightClass={this.highLightClass} fields={fields}/>
                 </div>
             )
         }
