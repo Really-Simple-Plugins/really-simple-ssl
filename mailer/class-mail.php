@@ -44,8 +44,8 @@ if ( !class_exists('rsssl_mailer') ) {
 				$block_template = file_get_contents(__DIR__.'/templates/block.html');
 				foreach ($this->warning_blocks as $warning_block){
 					$block_html .= str_replace(
-						['{message}','{url}'],
-						[ wp_kses_post($warning_block['mail']), esc_url_raw($warning_block['url']) ],
+						['{title}','{message}','{url}'],
+						[ sanitize_text_field($warning_block['title']), wp_kses_post($warning_block['message']), esc_url_raw($warning_block['url']) ],
 						$block_template);
 				}
 			}

@@ -346,7 +346,7 @@ function rsssl_gather_warning_blocks_for_mail($changed_fields){
 	}
 
 	$fields = array_filter($changed_fields, static function($field) {
-		return isset( $field['warning']['mail'] ) && $field['value'];
+		return isset( $field['warning']['message'] ) && $field['value'];
 	});
 
 	if (count($fields)===0) {
