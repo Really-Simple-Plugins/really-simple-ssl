@@ -396,6 +396,7 @@ function rsssl_user_registration_allowed()
 function rsssl_src_contains_wp_version() {
 	$result = get_transient('rsssl_wp_version_detected' );
 	if ( !$result ) {
+		set_transient( 'rsssl_wp_version_detected', 'no-response', DAY_IN_SECONDS );
 		$wp_version = get_bloginfo( 'version' );
 		$result = 'found';
 		$web_source = "";

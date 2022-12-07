@@ -333,16 +333,31 @@ if ( ! function_exists('rsssl_wrap_htaccess' ) ) {
 	add_action('rsssl_after_saved_fields', 'rsssl_wrap_htaccess', 30);
 }
 
+function rsssl_maybe_send_mail($changed_fields){
+	if (!rsssl_user_can_manage() ) {
+		return;
+	}
 
-function rsssl_maybe_send_mail(){
-	$fields = rsssl_fields(false);
-	$fields = array_filter($fields, function($field) {
-		return isset( $field['warning']['mail'] );
+	$fields = array_filter($changed_fields, static function($field) {
+		return isset( $field['warning']['mail'] ) && $field['value'];
 	});
-	foreach ($fields as $field) {
-		$mailer = new rsssl_mailer([
 
-		]);
+	if (count($fields)===0) {
+		return;
+	}
+
+	$warning_blocks = [];
+	foreach ($fields as $field) {
+		$warning_blocks[] = $field['warning'];
+	}
+
+	if ( count($warning_blocks)>0 ) {
+		$mailer = new rsssl_mailer();
+		$mailer->to = get_bloginfo('admin_email');
+		$mailer->subject = __("Feature enabled","really-simple-ssl");
+		$mailer->message = __("A security feature has been enabled","really-simple-ssl");
+		$mailer->warning_blocks = $warning_blocks;
+		$mailer->send_mail();
 	}
 }
 add_action('rsssl_after_saved_fields', 'rsssl_maybe_send_mail', 40);
