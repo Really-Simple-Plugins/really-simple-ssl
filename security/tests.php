@@ -11,6 +11,8 @@ function rsssl_xmlrpc_allowed()
 	if ( !$allowed ) {
 		$allowed = 'allowed';
 		if ( function_exists( 'curl_init' ) ) {
+			//set a default, in case of time out
+			set_transient( 'rsssl_xmlrpc_allowed', 'no-response', DAY_IN_SECONDS );
 			$url = site_url() . '/xmlrpc.php';
 			$ch = curl_init($url);
 			// XML-RPC listMethods call
@@ -55,6 +57,8 @@ function rsssl_http_methods_allowed()
 	if ( ! $tested ) {
 		$tested = [];
 		if ( function_exists('curl_init' ) ) {
+			//set a default, in case of timeout
+			set_transient( 'rsssl_http_methods_allowed', 'no-response', DAY_IN_SECONDS );
 			$methods = array(
 				'GET',
 				'POST',
@@ -95,7 +99,7 @@ function rsssl_http_methods_allowed()
 				}
 				curl_close($ch);
 			}
-			set_transient('rsssl_http_methods_allowed', $tested);
+			set_transient('rsssl_http_methods_allowed', $tested, DAY_IN_SECONDS);
 		}
 	}
 
@@ -176,9 +180,9 @@ function rsssl_new_username_valid(): bool {
 function rsssl_wp_is_application_passwords_available(){
 	if ( function_exists('wp_is_application_passwords_available') ) {
 		return wp_is_application_passwords_available();
-	} else {
-		return false;
 	}
+
+	return false;
 }
 
 /**
@@ -283,8 +287,10 @@ function rsssl_code_execution_allowed()
 	$code_execution_allowed = get_transient('rsssl_code_execution_allowed_status');
 	if ( !$code_execution_allowed ) {
 		$upload_dir = wp_get_upload_dir();
-		//set a default
+		//set a default, in case of timeouts
 		$code_execution_allowed = 'not-allowed';
+		set_transient( 'rsssl_code_execution_allowed_status', $code_execution_allowed, DAY_IN_SECONDS );
+
 		$test_file = $upload_dir['basedir'] . '/' . 'code-execution.php';
 		if ( is_writable($upload_dir['basedir'] ) && ! file_exists( $test_file ) ) {
 			try {
@@ -337,6 +343,9 @@ function rsssl_directory_indexing_allowed() {
 			$status = 'forbidden';
 		} else {
 			$status = 'allowed';
+			//set a default, in case of timeouts
+			set_transient( 'rsssl_directory_indexing_status', $status, DAY_IN_SECONDS );
+
 			try {
 				$test_folder = 'indexing-test';
 				$test_dir = trailingslashit(ABSPATH) . $test_folder;
@@ -396,6 +405,7 @@ function rsssl_user_registration_allowed()
 function rsssl_src_contains_wp_version() {
 	$result = get_transient('rsssl_wp_version_detected' );
 	if ( !$result ) {
+		set_transient( 'rsssl_wp_version_detected', 'no-response', DAY_IN_SECONDS );
 		$wp_version = get_bloginfo( 'version' );
 		$result = 'found';
 		$web_source = "";
