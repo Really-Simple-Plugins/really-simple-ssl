@@ -37,11 +37,11 @@ if ( !class_exists('rsssl_mailer') ) {
 				return false;
 			}
 
-			$template = '<div>{message}</div><div>{warnings}</div>';
+			$template = file_get_contents(__DIR__.'/templates/body.html');
 
 			$block_html = '';
 			if (count($this->warning_blocks)>0) {
-				$block_template = '<div>{message}</div><div>{url}</div>';
+				$block_template = file_get_contents(__DIR__.'/templates/block.html');
 				foreach ($this->warning_blocks as $warning_block){
 					$block_html .= str_replace(
 						['{message}','{url}'],
@@ -54,7 +54,6 @@ if ( !class_exists('rsssl_mailer') ) {
 				['{message}','{warnings}'],
 				[ wp_kses_post($this->message), $block_html ],
 				$template);
-
 			$success = wp_mail( $this->to, sanitize_text_field($this->subject), $body, array('Content-Type: text/html; charset=UTF-8') );
 			set_transient('rsssl_email_recently_sent', true, 15 * MINUTE_IN_SECONDS );
 			return $success;

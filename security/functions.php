@@ -333,7 +333,8 @@ if ( ! function_exists('rsssl_wrap_htaccess' ) ) {
 	add_action('rsssl_after_saved_fields', 'rsssl_wrap_htaccess', 30);
 }
 
-function rsssl_maybe_send_mail($changed_fields){
+
+function rsssl_gather_warning_blocks_for_mail($changed_fields){
 	if (!rsssl_user_can_manage() ) {
 		return;
 	}
@@ -345,22 +346,24 @@ function rsssl_maybe_send_mail($changed_fields){
 	if (count($fields)===0) {
 		return;
 	}
-
-	$warning_blocks = [];
-	foreach ($fields as $field) {
-		$warning_blocks[] = $field['warning'];
+	$current_fields = get_option('rsssl_email_warning_fields', []);
+	//if it's empty, we start counting time. 30 mins later we send a mail.
+	if (empty($current_fields)) {
+		update_option('rsssl_email_warning_fields_saved', time(), false );
 	}
-
-	if ( count($warning_blocks)>0 ) {
-		$mailer = new rsssl_mailer();
-		$mailer->to = get_bloginfo('admin_email');
-		$mailer->subject = __("Feature enabled","really-simple-ssl");
-		$mailer->message = __("A security feature has been enabled","really-simple-ssl");
-		$mailer->warning_blocks = $warning_blocks;
-		$mailer->send_mail();
+	$current_ids = array_column($current_fields, 'id');
+	foreach ($fields as $field){
+		if ( !in_array( $field['id'], $current_ids, true ) ) {
+			$current_fields[] = $field;
+		}
 	}
+	error_log("store blocks");
+	x_log($current_fields);
+	update_option('rsssl_email_warning_fields', $current_fields, false);
+
+
 }
-add_action('rsssl_after_saved_fields', 'rsssl_maybe_send_mail', 40);
+add_action('rsssl_after_saved_fields', 'rsssl_gather_warning_blocks_for_mail', 40);
 
 /**
  * Check if server uses .htaccess

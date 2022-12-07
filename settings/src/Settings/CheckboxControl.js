@@ -39,7 +39,7 @@ class CheckboxControl extends Component {
                             {field.tooltip &&
                                 <div className="rsssl-tooltip">
                                     <Tooltip text={field.tooltip}>
-                                        <div><Icon name = "info" color = {tooltipColor} /></div>
+                                        <div><Icon name = "info-open" color = {tooltipColor} /></div>
                                     </Tooltip>
                                     <div></div>
                                 </div>
