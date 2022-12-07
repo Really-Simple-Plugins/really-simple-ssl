@@ -6093,19 +6093,23 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
+/*
+* The tooltip can't be included in the native toggleControl, so we have to build our own.
+*/
+
 class CheckboxControl extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Component {
   constructor() {
     super(...arguments);
     this.onChangeHandler = this.onChangeHandler.bind(this);
   }
   onChangeHandler(e) {
-    let fieldValue = e.target.value;
-    console.log("handler in control");
-    console.log(fieldValue);
+    let fieldValue = !this.props.field.value;
     this.props.onChangeHandler(fieldValue);
   }
   render() {
     let field = this.props.field;
+    let is_checked = field.value ? 'is-checked' : '';
+    let tooltipColor = field.warning ? 'red' : 'black';
     return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
       className: "components-base-control components-toggle-control"
     }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
@@ -6114,23 +6118,28 @@ class CheckboxControl extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Co
       "data-wp-component": "HStack",
       className: "components-flex components-h-stack"
     }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
-      className: "components-form-toggle is-checked"
+      className: "components-form-toggle " + is_checked
     }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("input", {
-      checked: field.value == 1,
-      onChange: e => this.onChangeHandler(e),
+      checked: field.value,
       className: "components-form-toggle__input",
+      onChange: e => this.onChangeHandler(e),
       id: field.id,
       type: "checkbox"
     }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
       className: "components-form-toggle__track"
     }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
       className: "components-form-toggle__thumb"
-    })), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("label", {
+    })), field.tooltip && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+      className: "rsssl-tooltip"
+    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_3__.Tooltip, {
+      text: field.tooltip
+    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_utils_Icon__WEBPACK_IMPORTED_MODULE_1__["default"], {
+      name: "info",
+      color: tooltipColor
+    }))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null)), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("label", {
       for: field.id,
       className: "components-toggle-control__label"
-    }, field.label), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_3__.Tooltip, {
-      text: "More TEST information"
-    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, "i"))))));
+    }, field.label)))));
   }
 }
 /* harmony default export */ __webpack_exports__["default"] = (CheckboxControl);
@@ -6197,9 +6206,6 @@ class Field extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Component {
   onChangeHandler(fieldValue) {
     let fields = this.props.fields;
     let field = this.props.field;
-    console.log("field");
-    console.log(field);
-    console.log(fieldValue);
     fields[this.props.index]['value'] = fieldValue;
 
     //we can configure other fields if a field is enabled, or set to a certain value.

@@ -8,6 +8,9 @@
       .components-flex-item label{
         margin: 0;
       }
+      .rsssl-tooltip {
+        flex-grow:1;
+      }
       .components-input-control__container {
         max-width: max-content;
       }
@@ -35,8 +38,10 @@
         flex-direction: row-reverse;
         align-items: center;
         justify-content: space-between;
+        width:100%;
         .components-form-toggle{
             margin-right: 0;
+
         }
       }
     }

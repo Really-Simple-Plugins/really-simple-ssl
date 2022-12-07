@@ -44,9 +44,6 @@ class Field extends Component {
     onChangeHandler(fieldValue) {
         let fields = this.props.fields;
         let field = this.props.field;
-        console.log("field");
-        console.log(field);
-        console.log(fieldValue);
         fields[this.props.index]['value'] = fieldValue;
 
         //we can configure other fields if a field is enabled, or set to a certain value.
