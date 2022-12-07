@@ -257,7 +257,7 @@ class LearningMode extends Component {
                         }
                       <div className="rsssl-learning-mode-footer">
                           { enforce!=1 && <button disabled={enforceDisabled} className="button button-primary" onClick={ (e) => this.toggleEnforce(e, true ) }>{__("Enforce","really-simple-ssl")}</button> }
-                          { enforce==1 && <button className="button" onClick={ (e) => this.toggleEnforce(e, false ) }>{__("Disable","really-simple-ssl")}</button> }
+                          { !enforced_by_thirdparty && enforce==1 && <button className="button" onClick={ (e) => this.toggleEnforce(e, false ) }>{__("Disable","really-simple-ssl")}</button> }
                           <label>
                               <input type="checkbox"
                                   disabled = {enforce}
