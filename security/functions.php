@@ -333,7 +333,13 @@ if ( ! function_exists('rsssl_wrap_htaccess' ) ) {
 	add_action('rsssl_after_saved_fields', 'rsssl_wrap_htaccess', 30);
 }
 
-
+/**
+ * Store warning blocks for later use in the mailer
+ *
+ * @param array $changed_fields
+ *
+ * @return void
+ */
 function rsssl_gather_warning_blocks_for_mail($changed_fields){
 	if (!rsssl_user_can_manage() ) {
 		return;
@@ -358,7 +364,6 @@ function rsssl_gather_warning_blocks_for_mail($changed_fields){
 		}
 	}
 	error_log("store blocks");
-	x_log($current_fields);
 	update_option('rsssl_email_warning_fields', $current_fields, false);
 
 
