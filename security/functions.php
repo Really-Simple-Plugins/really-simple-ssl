@@ -333,6 +333,20 @@ if ( ! function_exists('rsssl_wrap_htaccess' ) ) {
 	add_action('rsssl_after_saved_fields', 'rsssl_wrap_htaccess', 30);
 }
 
+
+function rsssl_maybe_send_mail(){
+	$fields = rsssl_fields(false);
+	$fields = array_filter($fields, function($field) {
+		return isset( $field['warning']['mail'] );
+	});
+	foreach ($fields as $field) {
+		$mailer = new rsssl_mailer([
+
+		]);
+	}
+}
+add_action('rsssl_after_saved_fields', 'rsssl_maybe_send_mail', 40);
+
 /**
  * Check if server uses .htaccess
  * @return bool

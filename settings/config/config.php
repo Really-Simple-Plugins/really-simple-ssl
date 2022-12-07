@@ -509,7 +509,10 @@ function rsssl_fields( $load_values = true ) {
 			'group_id'           => 'hardening_basic',
 			'type'               => 'checkbox',
 			'label'              => __( "Rename current 'admin' username", 'really-simple-ssl' ),
-			'warning'            => true,
+			'warning'            => [
+				'mail'  => __("If you have trouble logging in, please check our article", 'really-simple-ssl'),
+				'url' => 'https://really-simple-ssl.com/locked-out-after-renaming-admin-user/',
+			],
 			'tooltip'            => __( "If you have users with the admin username, they will get renamed to a username of your choosing. Future user registrations are not allowed the admin username", 'really-simple-ssl' ),
 			'disabled'           => false,
 			'default'            => false,

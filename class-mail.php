@@ -8,14 +8,15 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 if ( !class_exists('rsssl_mailer') ) {
 	class rsssl_mailer {
 
-		private $to;
-		private $headers;
-		private $body;
-		private $subject;
+		public $to;
+		public $headers;
+		public $body;
+		public $subject;
 
 		public function __construct( $args ) {
-
-			if ( ! rsssl_user_can_manage() ) return;
+			if ( ! rsssl_user_can_manage() ) {
+				return;
+			}
 
 			$this->to = $args['to'] ?? '';
 			$this->headers = $args['headers'] ?? '';
@@ -30,13 +31,16 @@ if ( !class_exists('rsssl_mailer') ) {
 		 * @return void
 		 */
 		private function send_mail() {
-
 			// Prevent spam
 			if ( get_transient('rsssl_email_recently_sent') ) {
 				return;
 			}
 
-			wp_mail( $this->to, $this->subject, $this->body, $this->headers );
+			if ( !is_email($this->to) ){
+				return;
+			}
+
+			wp_mail( $this->to, sanitize_text_field($this->subject), wp_kses_post($this->body), $this->headers );
 
 			set_transient('rsssl_email_recently_sent', true, 15 * MINUTE_IN_SECONDS );
 		}
