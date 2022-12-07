@@ -1765,9 +1765,10 @@ class rsssl_admin
             'admin_notices' => false,
             'premium_only' => false,
             'dismiss_on_upgrade' => false,
-            'status' => 'open', //status can be "all" (all tasks, regardless of dismissed or open), "open" (not success/completed) or "completed"
+            'status' => ['open', 'warning'], //status can be "all" (all tasks, regardless of dismissed or open), "open" (not success/completed) or "completed"
         );
         $args = wp_parse_args($args, $defaults);
+        $statuses = $args['status'];
 	    $cache_admin_notices = !$this->is_settings_page() && $args['admin_notices'];
 
 	    //if we're on the settings page, we need to clear the admin notices transient, because this list won't get refreshed otherwise
@@ -1878,22 +1879,6 @@ class rsssl_admin
                 ),
             ),
 
-            'mixed_content_scan' => array(
-                'dismiss_on_upgrade' => true,
-	            'condition' => array('rsssl_ssl_enabled'),
-	            'callback' => '_true_',
-	            'score' => 5,
-	            'output' => array(
-		            'true' => array(
-                        'url' => 'https://really-simple-ssl.com/knowledge-base/how-to-track-down-mixed-content-or-insecure-content/',
-			            'msg' => __("SSL is now activated. Check if your website is secure by following this article.", "really-simple-ssl"),
-			            'icon' => 'open',
-			            'dismissible' => true,
-			            'plusone' => true,
-		            ),
-	            ),
-            ),
-
             'compatiblity_check' => array(
 	            'condition' => array('rsssl_incompatible_premium_version'),
 	            'callback' => '_true_',
@@ -1909,21 +1894,21 @@ class rsssl_admin
 	            ),
             ),
 
-            'google_analytics' => array(
-	            'dismiss_on_upgrade' => true,
-	            'callback' => '_true_',
-                'condition' => array('rsssl_ssl_enabled', 'rsssl_ssl_activation_time_no_longer_then_3_days_ago'),
-                'score' => 5,
-                'output' => array(
-                    'true' => array(
-                        'msg' => __("Remember to change your URLs in external services like Google Analytics, Search Console and others. This should prevent any data loss resulting from the switch to https.", "really-simple-ssl"),
-                        'url' => 'https://really-simple-ssl.com/knowledge-base/how-to-setup-google-analytics-and-google-search-consolewebmaster-tools/',
-                        'icon' => 'open',
-                        'dismissible' => true,
-                        'plusone' => true,
-                    ),
-                ),
-            ),
+	        'mixed_content_scan' => array(
+		        'dismiss_on_upgrade' => true,
+		        'condition' => array('rsssl_ssl_enabled'),
+		        'callback' => '_true_',
+		        'score' => 5,
+		        'output' => array(
+			        'true' => array(
+				        'url' => 'https://really-simple-ssl.com/knowledge-base/steps-after-activating-ssl',
+				        'msg' => __("SSL is now activated. Follow the three steps in this article to check if your website is secure.", "really-simple-ssl"),
+				        'icon' => 'open',
+				        'dismissible' => true,
+				        'plusone' => true,
+			        ),
+		        ),
+	        ),
 
             'ssl_enabled' => array(
                 'callback' => 'rsssl_ssl_enabled',
@@ -2293,12 +2278,12 @@ class rsssl_admin
             if ( !isset($notice['output'][ $output ]) ) {
 	            unset($notices[$id]);
 	            continue;
-            } else {
-                $notices[$id]['output'] = $notice['output'][ $output ];
             }
 
-		    $notices[$id]['output']['status'] = ( $notices[$id]['output']['icon'] !== 'success') ? 'open' : 'completed';
-		    if ( $args['status'] === 'open' && ($notices[$id]['output']['status'] === 'completed' ) ){
+		    $notices[$id]['output'] = $notice['output'][ $output ];
+
+		    $notices[$id]['output']['status'] = ( $notices[$id]['output']['icon'] === 'success') ? 'completed' : $notices[$id]['output']['icon'];
+		    if ( !in_array( $notices[$id]['output']['status'], $statuses ) ){
 			    unset($notices[$id]);
 			    continue;
             }
