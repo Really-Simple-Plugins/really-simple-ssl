@@ -411,7 +411,7 @@ function rsssl_src_contains_wp_version() {
 		$web_source = "";
 		//check if the mixed content fixer is active
 		$response = wp_remote_get( home_url(),[
-			'timeout'     => 10,
+			'timeout'     => 5,
 			'redirection' => 3,
 		] );
 		if ( ! is_wp_error( $response ) ) {
