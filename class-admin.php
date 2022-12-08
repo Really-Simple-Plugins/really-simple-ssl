@@ -1769,16 +1769,15 @@ class rsssl_admin
             'status' => 'open', //status can be "all" (all tasks, regardless of dismissed or open), "open" (not success/completed) or "completed"
         );
         $args = wp_parse_args($args, $defaults);
-
-	    $cache_admin_notices = !$this->is_settings_page() && $args['admin_notices'];
+	    $cache_admin_notices = !$this->is_settings_page();
         error_log("cache admin notices ".$cache_admin_notices);
         if ( !$cache_admin_notices) {
             if ($this->is_settings_page()) {
                 error_log("on SSL settings page");
             }
-            if ($args['admin_notices']){
-                error_log("get admin notice");
-            }
+	        error_log("arg admin_notices: ".$args['admin_notices']);
+        } else {
+            error_log("this is a cached request => should be fast");
         }
 
 
