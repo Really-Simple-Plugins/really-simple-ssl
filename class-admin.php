@@ -1192,6 +1192,7 @@ class rsssl_admin
 
 	public function get_recommended_security_headers()
 	{
+
 		$used_headers = array();
 		$not_used_headers = array();
 		$check_headers = apply_filters( 'rsssl_recommended_security_headers', array(
@@ -1313,6 +1314,7 @@ class rsssl_admin
 	 */
 
 	public function recommended_headers_enabled() {
+
 		$unused_headers = $this->get_recommended_security_headers();
 		if ( empty( $unused_headers ) ) {
 			return true;

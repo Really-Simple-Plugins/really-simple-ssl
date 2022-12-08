@@ -127,7 +127,6 @@ function rsssl_menu() {
 				[
 					'id'      => 'permissions_policy',
 					'title'   => __( 'Permissions Policy', 'really-simple-ssl' ),
-					'intro'   => __( "Permissions Policy", "really-simple-ssl" ),
 					'premium' => true,
 					'groups'  => [
 						[
@@ -144,7 +143,6 @@ function rsssl_menu() {
 				[
 					'id'      => 'content_security_policy',
 					'title'   => __( 'Content Security Policy', 'really-simple-ssl' ),
-					'intro'   => __( "Content Security Policy intro", "really-simple-ssl" ),
 					'premium' => true,
 					'groups'  => [
 						[
@@ -667,10 +665,15 @@ function rsssl_fields( $load_values = true ) {
 			'id'       => 'x_xss_protection',
 			'menu_id'  => 'recommended_security_headers',
 			'group_id' => 'recommended_security_headers',
-			'type'     => 'checkbox',
+			'type'     => 'select',
 			'label'    => __( "X-XSS-Protection", "really-simple-ssl-pro" ),
+			'options' => [
+				'zero'       =>  "0 ".__("(default)", "really-simple-ssl" ),
+				'one'        => "1",
+				'mode_block' => "1; mode=block",
+			],
 			'disabled' => false,
-			'default'  => false,
+			'default'  => 'zero',
 			'help'     => [
 				'label' => 'default',
 				'url'   => 'https://really-simple-ssl.com/definition/about-recommended-security-headers/',
@@ -708,7 +711,7 @@ function rsssl_fields( $load_values = true ) {
 			'type'     => 'select',
 			'options'  => [
 				'disabled'                        => __( "Off", "really-simple-ssl" ),
-				'strict-origin-when-cross-origin' => 'strict-origin-when-cross-origin'.' '.__("recommended","really-simple-ssl"),
+				'strict-origin-when-cross-origin' => 'strict-origin-when-cross-origin'.' ('.__("recommended","really-simple-ssl").')',
 				'no-referrer'                     => 'no-referrer',
 				'origin'                          => 'origin',
 				'no-referrer-when-downgrade'      => 'no-referrer-when-downgrade',
@@ -847,6 +850,7 @@ function rsssl_fields( $load_values = true ) {
 				'disabled'     => __( 'Off', 'really-simple-ssl' ),
 				'require-corp' => 'require-corp',
 				'same-origin'  => 'same-origin',
+				'unsafe-none'  => 'unsafe-none',
 			],
 			'label'    => __( "Cross Origin Embedder Policy", "really-simple-ssl-pro" ),
 			'disabled' => false,

@@ -133,7 +133,6 @@ function rsssl_has_admin_user() {
 	if ( !rsssl_user_can_manage() ) {
 		return false;
 	}
-
 	//transient is more persistent then wp cache set
 	$count = get_transient('rsssl_admin_user_count');
 	//get from cache, but not on settings page
@@ -210,7 +209,9 @@ function rsssl_get_users_where_display_name_is_login( $return_users=false ) {
 	// Maybe return users in integration
 	if ( $return_users ) {
 		return $found_users;
-	} else if ( count($found_users)>0 ) {
+	}
+
+	if ( count($found_users) > 0 ) {
 		return true;
 	}
 

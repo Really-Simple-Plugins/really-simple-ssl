@@ -316,6 +316,7 @@ class Page extends Component {
                                 selectedMainMenuItem={selectedMainMenuItem}
                                 selectMainMenu={this.selectMainMenu}
                                 superMenu = {this.superMenu}
+                                getFields={this.getFields}
                                 fields={fields} />
                             <div className={"rsssl-content-area rsssl-grid rsssl-" + selectedMainMenuItem}>
                                 { selectedMainMenuItem !== 'dashboard' &&

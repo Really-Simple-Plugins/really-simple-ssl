@@ -140,12 +140,19 @@ class PermissionsPolicy extends Component {
                     { enable_permissions_policy!=1 && <button className="button button-primary" onClick={ (e) => this.togglePermissionsPolicyStatus(e, true ) }>{__("Enforce","really-simple-ssl")}</button> }
                     { enable_permissions_policy==1 && <div className="rsssl-locked">
                         <div className="rsssl-shield-overlay">
-                              <Icon name = "shield"  size="80px"/>
+                            <Icon name = "shield"  size="80px"/>
                         </div>
                         <div className="rsssl-locked-overlay">
                             <span className="rsssl-progress-status rsssl-learning-mode-enforced">{__("Enforced","really-simple-ssl")}</span>
-                            {__("Permissions Policy is enforced.", "really-simple-ssl")}&nbsp;
-                            <a className="rsssl-learning-mode-link" href="#" onClick={ (e) => this.togglePermissionsPolicyStatus(e, false) }>{__("Disable", "really-simple-ssl") }</a>
+                            { this.props.disabled && <>{ __("Permissions Policy is set outside Really Simple SSL.", "really-simple-ssl")}&nbsp;</>}
+                            { !this.props.disabled && <>{__("Permissions Policy is enforced.", "really-simple-ssl")}&nbsp;</>}
+                            { !this.props.disabled && <a className="rsssl-learning-mode-link" href="#" onClick={ (e) => this.togglePermissionsPolicyStatus(e, false) }>{__("Disable", "really-simple-ssl") }</a> }
+                        </div>
+                    </div>}
+                    { this.props.disabled && enable_permissions_policy!=1 && <div className="rsssl-locked">
+                        <div className="rsssl-locked-overlay">
+                            <span className="rsssl-progress-status rsssl-disabled">{__("Disabled ","really-simple-ssl")}</span>
+                            {__("The Permissions Policy has been disabled.", "really-simple-ssl")}
                         </div>
                     </div>}
             </div>

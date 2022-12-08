@@ -207,6 +207,7 @@ class Field extends Component {
                 <div className={this.highLightClass}>
                   <TextareaControl
                       label={ field.label }
+                      disabled={ disabled }
                       help={ field.comment }
                       value= { fieldValue }
                       onChange={ ( fieldValue ) => this.onChangeHandler(fieldValue) }
