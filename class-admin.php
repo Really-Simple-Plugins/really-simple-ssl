@@ -1664,6 +1664,7 @@ class rsssl_admin
 
         //don't show admin notices on our own settings page: we have the warnings there
         if ( $this->is_settings_page() ) return;
+        error_log("get notices list for the admin notice");
 	    $notices = $this->get_notices_list( array('admin_notices'=>true) );
         foreach ( $notices as $id => $notice ){
             $notice = $notice['output'];
@@ -1768,7 +1769,18 @@ class rsssl_admin
             'status' => 'open', //status can be "all" (all tasks, regardless of dismissed or open), "open" (not success/completed) or "completed"
         );
         $args = wp_parse_args($args, $defaults);
+
 	    $cache_admin_notices = !$this->is_settings_page() && $args['admin_notices'];
+        error_log("cache admin notices ".$cache_admin_notices);
+        if ( !$cache_admin_notices) {
+            if ($this->is_settings_page()) {
+                error_log("on SSL settings page");
+            }
+            if ($args['admin_notices']){
+                error_log("get admin notice");
+            }
+        }
+
 
 	    //if we're on the settings page, we need to clear the admin notices transient, because this list won't get refreshed otherwise
 	    if ( $this->is_settings_page() ) {
@@ -2430,8 +2442,10 @@ class rsssl_admin
 
 		$cache = $this->is_settings_page() ? false : true;
 		$count = get_transient( 'rsssl_plusone_count' );
+		error_log("plus one count transient: ".$count);
 		if ( !$cache || ($count === false) ) {
 			$count = 0;
+			error_log("get notices for the plus one count.");
 			$notices = $this->get_notices_list();
 			foreach ( $notices as $id => $notice ) {
                 $success = ( isset( $notice['output']['icon'] ) && ( $notice['output']['icon'] === 'success' ) ) ? true : false;

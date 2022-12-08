@@ -598,6 +598,7 @@ if (!class_exists('rsssl_multisite')) {
 	        if ( $screen && $screen->base === 'post' ) return;
 
 	        if ( !$this->is_settings_page() ) {
+		        error_log("show admin notice ");
 		        $notices = RSSSL()->admin->get_notices_list( array('admin_notices'=>true) );
 		        foreach ( $notices as $id => $notice ){
 			        $notice = $notice['output'];

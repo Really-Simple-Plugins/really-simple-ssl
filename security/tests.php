@@ -404,6 +404,7 @@ function rsssl_user_registration_allowed()
 
 function rsssl_src_contains_wp_version() {
 	$result = get_transient('rsssl_wp_version_detected' );
+	error_log("check wp version transient ".$result);
 	if ( !$result ) {
 		$result = 'no-response';
 		set_transient( 'rsssl_wp_version_detected', 'no-response', DAY_IN_SECONDS );

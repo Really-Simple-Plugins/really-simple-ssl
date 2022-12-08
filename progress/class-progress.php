@@ -24,6 +24,7 @@ class rsssl_progress {
 	}
 
 	public function notices(){
+		error_log("get notices for the dashboard  ");
 		$notices = RSSSL()->admin->get_notices_list(array( 'status' => 'all' ));
 		$out = [];
 		foreach ($notices as $id => $notice ) {
@@ -50,6 +51,7 @@ class rsssl_progress {
 
 		$max_score    = 0;
 		$actual_score = 0;
+		error_log("get notices for the percentage ");
 		$notices = RSSSL()->admin->get_notices_list(array(
 			'status' => 'all',
 		));
@@ -78,6 +80,7 @@ class rsssl_progress {
 		ob_start();
 
 		$lowest_possible_task_count = $this->get_lowest_possible_task_count();
+		error_log("get open task count notices ");
 		$open_task_count = count( RSSSL()->admin->get_notices_list( array( 'status' => 'open' ) ));
 		if ( rsssl_get_option('ssl_enabled') ) {
 			$doing_well = __( "SSL is activated on your site.",  'really-simple-ssl' ) . ' ' . sprintf( _n( "You still have %s task open.", "You still have %s tasks open.", $open_task_count, 'really-simple-ssl' ), $open_task_count );
@@ -104,6 +107,7 @@ class rsssl_progress {
 	 * @return int
 	 */
 	public function get_lowest_possible_task_count() {
+		error_log("get lowest possible task count ");
 		$premium_notices = RSSSL()->admin->get_notices_list(array('premium_only'=>true));
 		return count($premium_notices) ;
 	}

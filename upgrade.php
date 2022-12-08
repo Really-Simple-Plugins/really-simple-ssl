@@ -10,6 +10,7 @@ function rsssl_upgrade() {
 	}
 	//dismiss notices that should be dismissed on plugin upgrade
 	if ( $prev_version && version_compare( $prev_version, rsssl_version, '!=' )) {
+		error_log("get notices in upgrade: version changed.");
 		$dismiss_options = RSSSL()->admin->get_notices_list( array(
 			'dismiss_on_upgrade' => true,
 		) );
