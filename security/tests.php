@@ -405,30 +405,36 @@ function rsssl_user_registration_allowed()
 function rsssl_src_contains_wp_version() {
 	$result = get_transient('rsssl_wp_version_detected' );
 	if ( !$result ) {
+		$result = 'no-response';
 		set_transient( 'rsssl_wp_version_detected', 'no-response', DAY_IN_SECONDS );
-		$wp_version = get_bloginfo( 'version' );
-		$result = 'found';
-		$web_source = "";
-		//check if the mixed content fixer is active
-		$response = wp_remote_get( home_url(),[
-			'timeout'     => 5,
-			'redirection' => 3,
-		] );
-		if ( ! is_wp_error( $response ) ) {
-			if ( is_array( $response ) ) {
-				$status     = wp_remote_retrieve_response_code( $response );
-				$web_source = wp_remote_retrieve_body( $response );
-			}
+		//log the transient, for testing purposes
+		$stored_transient = get_transient('rsssl_wp_version_detected' );
+		error_log("RSSSL Stored transient after just being saved: ".$stored_transient);
+		try {
+			$wp_version = get_bloginfo( 'version' );
+			$web_source = "";
+			$response = wp_remote_get( home_url(),[
+				'timeout'     => 5,
+				'redirection' => 3,
+			] );
+			if ( ! is_wp_error( $response ) ) {
+				if ( is_array( $response ) ) {
+					$status     = wp_remote_retrieve_response_code( $response );
+					$web_source = wp_remote_retrieve_body( $response );
+				}
 
-			if ( $status != 200 ) {
-				$result = 'no-response';
-			} elseif ( strpos( $web_source, 'ver='.$wp_version ) === false ) {
-				$result = 'not-found';
-			} else {
-				$result = 'found';
+				if ( $status != 200 ) {
+					$result = 'no-response';
+				} elseif ( strpos( $web_source, 'ver='.$wp_version ) === false ) {
+					$result = 'not-found';
+				} else {
+					$result = 'found';
+				}
 			}
+			set_transient( 'rsssl_wp_version_detected', $result, DAY_IN_SECONDS );
+		} catch(Exception $e) {
+			set_transient( 'rsssl_wp_version_detected', 'no-response', DAY_IN_SECONDS );
 		}
-		set_transient( 'rsssl_wp_version_detected', $result, DAY_IN_SECONDS );
 	}
 	return $result==='found';
 }
