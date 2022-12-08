@@ -510,9 +510,10 @@ function rsssl_fields( $load_values = true ) {
 			'type'               => 'checkbox',
 			'label'              => __( "Rename current 'admin' username", 'really-simple-ssl' ),
 			'warning'            => [
-				'title'  => __("You have changed the admin username", 'really-simple-ssl'),
-				'message'  => __("If you have trouble logging in, please check our article", 'really-simple-ssl'),
-				'url' => 'https://really-simple-ssl.com/locked-out-after-renaming-admin-user/',
+				'title'  	 => __("Admin username renamed", 'really-simple-ssl'),
+				'message'  => __("As a security precaution, your username ‘admin’ has been changed on [URL]. From now on, you can either login with '[Username]' or your email address. The password for this account is unchanged.", 'really-simple-ssl'),
+// hier zit een [URL] en [USERNAME] als variabele
+				'url' 		 => 'https://really-simple-ssl.com/locked-out-after-renaming-admin-user/',
 			],
 			'tooltip'            => __( "If you have users with the admin username, they will get renamed to a username of your choosing. Future user registrations are not allowed the admin username", 'really-simple-ssl' ),
 			'disabled'           => false,
