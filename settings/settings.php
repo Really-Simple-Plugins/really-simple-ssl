@@ -9,7 +9,6 @@ defined('ABSPATH') or die();
 
 require_once( rsssl_path . 'settings/config/config.php' );
 require_once( rsssl_path . 'settings/config/disable-fields-filter.php' );
-//require_once( rsssl_path . 'settings/rest-api-optimizer/rest-api-optimizer.php' );
 
 /**
  * Fix for WPML issue where WPML breaks the rest api by adding a language locale in the url
@@ -22,13 +21,25 @@ require_once( rsssl_path . 'settings/config/disable-fields-filter.php' );
  * @return string
  */
 function rsssl_fix_rest_url_for_wpml( $url, $path, $blog_id, $scheme)  {
+    if ( strpos($url, 'reallysimplessl/v')===false ) {
+        return $url;
+    }
+
+	$current_language = false;
 	if ( function_exists( 'icl_register_string' ) ) {
 		$current_language = apply_filters( 'wpml_current_language', null );
-        if ( strpos($url, '/'.$current_language.'/wp-json/') ) {
-	        $url = str_replace( '/'.$current_language.'/wp-json/', '/wp-json/', $url);
-        }
 	}
-    return $url;
+
+	if ( function_exists('qtranxf_getLanguage') ){
+		$current_language = qtranxf_getLanguage();
+	}
+
+	if ( $current_language ) {
+		if ( strpos($url, '/'.$current_language.'/wp-json/') ) {
+			$url = str_replace( '/'.$current_language.'/wp-json/', '/wp-json/', $url);
+		}
+	}
+	return $url;
 }
 add_filter( 'rest_url', 'rsssl_fix_rest_url_for_wpml', 10, 4 );
 
@@ -208,10 +219,7 @@ function rsssl_do_action($request){
 		default:
 			$data = apply_filters("rsssl_do_action", [], $action, $request);
 	}
-	$response = json_encode( $data );
-	header( "Content-Type: application/json" );
-	echo $response;
-	exit;
+    return $data;
 }
 
 function rsssl_clear_test_caches(){
@@ -262,7 +270,7 @@ function rsssl_ssltest_run($request) {
 	$response = wp_remote_get( $url );
 	$data     = wp_remote_retrieve_body( $response );
     if ( empty($data) ) {
-	    $data = json_encode(['errors' => 'Request failed, please try again.']);
+	    $data = ['errors' => 'Request failed, please try again.'];
     }
     return $data;
 }
@@ -270,11 +278,11 @@ function rsssl_ssltest_run($request) {
 /**
  * @param WP_REST_Request $request
  *
- * @return void
+ * @return array
  */
 function rsssl_run_test($request){
 	if (!rsssl_user_can_manage()) {
-		return;
+		return [];
 	}
 
 	$test = sanitize_title($request->get_param('test'));
@@ -299,10 +307,7 @@ function rsssl_run_test($request){
         default:
 	        $data = apply_filters("rsssl_run_test", [], $test, $request);
 	}
-	$response = json_encode( $data );
-	header( "Content-Type: application/json" );
-	echo $response;
-	exit;
+	return $data;
 }
 
 /**
@@ -416,11 +421,11 @@ function rsssl_sanitize_field_type($type){
 /**
  * @param WP_REST_Request $request
  *
- * @return void
+ * @return array
  */
 function rsssl_rest_api_fields_set($request){
     if ( !rsssl_user_can_manage()) {
-        return;
+        return [];
     }
 	$fields = $request->get_json_params();
 	//get the nonce
@@ -433,7 +438,7 @@ function rsssl_rest_api_fields_set($request){
 	}
 
     if ( !wp_verify_nonce($nonce, 'rsssl_nonce') ) {
-        return;
+        return [];
     }
 
     $config_fields = rsssl_fields(false);
@@ -442,7 +447,7 @@ function rsssl_rest_api_fields_set($request){
 
         $config_field_index = array_search($field['id'], $config_ids);
         $config_field = $config_fields[$config_field_index];
-		if ( !$config_field_index ){
+		if ( $config_field_index===false ){
 			unset($fields[$index]);
 			continue;
 		}
@@ -499,15 +504,11 @@ function rsssl_rest_api_fields_set($request){
         do_action( "rsssl_after_save_field", $field['id'], $field['value'], $prev_value, $field['type'] );
     }
 
-	$output   = [
+	return [
             'success' => true,
             'progress' => RSSSL()->progress->get(),
             'fields' => rsssl_fields(true),
     ];
-	$response = json_encode( $output );
-	header( "Content-Type: application/json" );
-	echo $response;
-	exit;
 }
 
 /**
@@ -526,11 +527,11 @@ function rsssl_update_option( $name, $value ) {
 	$config_fields = rsssl_fields(false);
 	$config_ids = array_column($config_fields, 'id');
 	$config_field_index = array_search($name, $config_ids);
-	$config_field = $config_fields[$config_field_index];
 	if ( $config_field_index === false ){
 		return;
 	}
 
+	$config_field = $config_fields[$config_field_index];
 	$type = $config_field['type'] ?? false;
     if ( !$type ) {
 	    return;
@@ -546,6 +547,11 @@ function rsssl_update_option( $name, $value ) {
 	$type = rsssl_sanitize_field_type($config_field['type']);
 	$value = rsssl_sanitize_field( $value, $type, $name );
 	$value = apply_filters("rsssl_fieldvalue", $value, sanitize_text_field($name), $type);
+
+    #skip if value wasn't changed
+    if ($options[$name]===$value) {
+        return;
+    }
 	$options[$name] = $value;
 	if ( is_multisite() && rsssl_is_networkwide_active() ) {
 		update_site_option( 'rsssl_options', $options );
@@ -558,11 +564,11 @@ function rsssl_update_option( $name, $value ) {
 
 /**
  * Get the rest api fields
- * @return void
+ * @return array
  */
 function rsssl_rest_api_fields_get(){
 	if ( !rsssl_user_can_manage() ) {
-		return;
+		return [];
 	}
 
 	$output = array();
@@ -600,11 +606,8 @@ function rsssl_rest_api_fields_get(){
 	$output['fields'] = $fields;
 	$output['menu'] = $menu;
 	$output['progress'] = RSSSL()->progress->get();
-    $output = apply_filters('rsssl_rest_api_fields_get', $output);
-	$response = json_encode( $output );
-	header( "Content-Type: application/json" );
-	echo $response;
-	exit;
+
+    return apply_filters('rsssl_rest_api_fields_get', $output);
 }
 
 /**
@@ -617,39 +620,36 @@ function rsssl_drop_empty_menu_items( $menu_items, $fields) {
 	if ( !rsssl_user_can_manage() ) {
 		return $menu_items;
 	}
-    $new_menu_items = $menu_items;
-    foreach($menu_items as $key => $menu_item) {
-        $searchResult = array_search($menu_item['id'], array_column($fields, 'menu_id'));
-        if($searchResult === false) {
-            unset($new_menu_items[$key]);
-            //reset array keys to prevent issues with react
-	        $new_menu_items = array_values($new_menu_items);
-        } else {
-            if(isset($menu_item['menu_items'])){
-                $updatedValue = rsssl_drop_empty_menu_items($menu_item['menu_items'], $fields);
-                $new_menu_items[$key]['menu_items'] = $updatedValue;
-            }
-        }
-    }
-    return $new_menu_items;
+	foreach($menu_items as $key => $menu_item) {
+		//if menu has submenu items, show anyway
+		$has_submenu = isset($menu_item['menu_items']);
+		$has_fields = array_search($menu_item['id'], array_column($fields, 'menu_id'));
+		if( $has_fields === false && !$has_submenu) {
+			unset($menu_items[$key]);
+			//reset array keys to prevent issues with react
+			$menu_items = array_values($menu_items);
+		} else {
+			if( $has_submenu ){
+				$updatedValue = rsssl_drop_empty_menu_items($menu_item['menu_items'], $fields);
+				$menu_items[$key]['menu_items'] = $updatedValue;
+			}
+		}
+	}
+    return $menu_items;
 }
 
 /**
  * Get grid block data
  * @param WP_REST_Request $request
- * @return void
+ * @return array
  */
 function rsssl_rest_api_block_get($request){
 	if (!rsssl_user_can_manage()) {
-		return;
+		return [];
 	}
 	$block = $request->get_param('block');
     $blocks = rsssl_blocks();
-	$out = isset($blocks[$block]) ? $blocks[$block] : [];
-	$response = json_encode( $out );
-	header( "Content-Type: application/json" );
-	echo $response;
-	exit;
+	return isset($blocks[$block]) ? $blocks[$block] : [];
 }
 
 /**

@@ -22,7 +22,8 @@ export const getFields = () => {
 			'X-WP-Nonce': rsssl_settings.nonce,
 		}
 	}
-	let glue = rsssl_settings.site_url.indexOf('?')!==-1 ? '&' : '?';
+
+	let glue = rsssl_settings.site_url.indexOf('?') !==-1 ? '&' : '?';
     return axios.get(rsssl_settings.site_url+'reallysimplessl/v1/fields/get'+glue+anchor+'&nonce='+rsssl_settings.rsssl_nonce+getRandomToken(), config);
 };
 

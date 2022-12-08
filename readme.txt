@@ -6,7 +6,7 @@ Requires at least: 5.7
 License: GPL2
 Tested up to: 6.1
 Requires PHP: 7.2
-Stable tag: 6.0.10
+Stable tag: 6.0.13
 
 The easiest way to improve security! Leverage your SSL certificate and protect your website visitors.
 
@@ -96,12 +96,28 @@ The plugin checks your certificate before enabling, but if, for example, you mig
 If you can't deactivate, do not just remove the plugin folder to uninstall! Follow these [instructions](https://really-simple-ssl.com/knowledge-base/uninstall-websitebackend-not-accessible/) instead.
 
 == Changelog ==
+= 6.0.13 =
+* Improvement: improve method of dropping empty menu items in settings dashboard
+
+= 6.0.12 =
+* Fix: on multisite, the test for users with admin username did not use the correct prefix, $wpdb->base_prefix, props @jg-visual
+* Improvement: allow submenu in back-end react application
+* Improvement: Skip value update when no change has been made
+* Improvement: no redirect on dismiss of admin notice, props @gangesh, @rtpHarry, @dumel
+* Improvement: remove obsolete warning
+* Improvement: qtranslate support on settings page
+
+= 6.0.11 =
+* Fix: on some environments, the HTTP_X_WP_NONCE is not available in the code, changed logged in check to accomodate such environments
+* Fix: dismiss on admin notices not immediately dismissing, requiring dismiss through dashboard, props @dumel
+
 = 6.0.10 =
 * Fix: Apache 2.4 support for the block code execution in the uploads directory hardening feature, props @overlake
 * Fix: When used with Varnish cache, Rest API get requests were cached, causing the settings page not to update. 
 * Fix: Ensure manage_security capability for users upgraded from versions before introduction of this capability
 * Fix: allow for custom rest api prefixes, props @coderevolution
 * Fix: bug in Let's Encrypt generation with DNS verification: saving of 'disable_ocsp' setting, create_bundle_or_renew action with quotes
+* Fix: change REST API response method to prevent script errors on environments with PHP warnings and errors, causing blank settings page
 * Improvement: Simplify user enumeration test
 * Improvement: catch unexpected response in SSL Labs object
 * Improvement: z-index on on boarding modal on smaller screen sizes, props @rtpHarry

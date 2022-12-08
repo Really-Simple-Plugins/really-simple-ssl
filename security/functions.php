@@ -67,7 +67,6 @@ if ( !function_exists('rsssl_maybe_clear_transients')) {
 			delete_transient( 'rsssl_mixed_content_fixer_detected' );
 			RSSSL()->admin->mixed_content_fixer_detected();
 		}
-
 		//no change
 		if ( $field_value === $prev_value ) {
 			return;
@@ -426,21 +425,6 @@ function rsssl_generate_random_string($length) {
 	}
 
 	return $randomString;
-}
-
-/**
- * Wrapper for admin user renamed but user enumeration enabled check
- * @return bool
- */
-function check_admin_user_renamed_and_enumeration_disabled() {
-	// Check if rename-admin-user has been loaded, while user-enumeration hasn't been loaded
-	if ( function_exists( 'rsssl_username_admin_changed' ) && ! function_exists( 'rsssl_disable_user_enumeration' ) ) {
-		if ( rsssl_username_admin_changed() !== false ) {
-			return true;
-		}
-	}
-
-	return false;
 }
 
 /**

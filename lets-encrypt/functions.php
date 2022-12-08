@@ -184,10 +184,6 @@ if ( !function_exists('rsssl_is_directadmin')) {
 	 * @return bool
 	 */
 	function rsssl_is_directadmin() {
-		if (get_option('rsssl_force_directadmin')) {
-			return true;
-		}
-
 		if ( get_option('rsssl_hosting_dashboard')==='directadmin' ){
 			return true;
 		}

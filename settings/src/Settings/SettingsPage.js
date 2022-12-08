@@ -44,6 +44,11 @@ class SettingsPage extends Component {
         let selectedMenuItem = this.props.selectedMenuItem;
         this.selectedMenuItem = selectedMenuItem;
         this.changedFields = changedFields;
+
+        this.props.menu.menu_items = this.addVisibleToMenuItems(this.props.menu.menu_items);
+        this.checkRequiredFields();
+        this.updateFieldsListWithConditions();
+
         this.setState({
             isAPILoaded: true,
             fields: this.props.fields,
@@ -108,16 +113,24 @@ class SettingsPage extends Component {
     filterMenuItems(menuItems) {
         const newMenuItems = menuItems;
         for (const [index, menuItem] of menuItems.entries()) {
-            const searchResult = this.props.fields.filter((field) => {
+            const menuItemFields = this.props.fields.filter((field) => {
                 return (field.menu_id === menuItem.id && field.visible)
             });
-            if(searchResult.length === 0) {
+            if( menuItemFields.length === 0 && !menuItem.hasOwnProperty('menu_items') )  {
                 newMenuItems[index].visible = false;
             } else {
                 newMenuItems[index].visible = true;
-                if(menuItem.hasOwnProperty('menu_items')) {
+                if( menuItem.hasOwnProperty('menu_items') ) {
                     newMenuItems[index].menu_items = this.filterMenuItems(menuItem.menu_items);
                 }
+            }
+
+            //if the current selected menu item has no fields, but it has a submenu, select the submenu.
+            if ( menuItem.id === this.props.selectedMenuItem && menuItemFields.length === 0 && menuItem.hasOwnProperty('menu_items')){
+                //get first item of submenu's
+                const firstSubMenuItem = newMenuItems[index].menu_items[0].id;
+                console.log("select "+firstSubMenuItem);
+                this.props.selectMenu(firstSubMenuItem);
             }
         }
         return newMenuItems;
@@ -284,9 +297,6 @@ class SettingsPage extends Component {
                 <Placeholder></Placeholder>
             );
         }
-        this.props.menu.menu_items = this.addVisibleToMenuItems(this.props.menu.menu_items);
-        this.checkRequiredFields();
-        this.updateFieldsListWithConditions();
 
         let fieldsUpdateComplete = changedFields.length === 0;
         return (

@@ -133,10 +133,17 @@ function rsssl_has_admin_user() {
 	if ( !rsssl_user_can_manage() ) {
 		return false;
 	}
+	//transient is more persistent then wp cache set
 	$count = get_transient('rsssl_admin_user_count');
-	if ( $count === false ){
-		global $wpdb;
-		$count = $wpdb->get_var( "SELECT COUNT(*) FROM {$wpdb->prefix}users WHERE user_login = 'admin'" );
+	//get from cache, but not on settings page
+	if ( $count === false || RSSSL()->admin->is_settings_page() ){
+		//use wp_cache_get to prevent duplicate queries in one pageload
+		$count = wp_cache_get('rsssl_admin_user_count', 'really-simple-ssl');
+		if ( $count === false ) {
+			global $wpdb;
+			$count = $wpdb->get_var( "SELECT COUNT(*) FROM {$wpdb->base_prefix}users WHERE user_login = 'admin'" );
+			wp_cache_set('rsssl_admin_user_count', $count, 'really-simple-ssl', HOUR_IN_SECONDS );
+		}
 		set_transient('rsssl_admin_user_count', $count, HOUR_IN_SECONDS);
 	}
 
@@ -148,6 +155,7 @@ function rsssl_has_admin_user() {
  * @return bool
  */
 function rsssl_new_username_valid(): bool {
+
 	$new_user_login = trim(sanitize_user(rsssl_get_option('new_admin_user_login')));
 	if ( $new_user_login === 'admin' ) {
 		return false;
@@ -356,11 +364,7 @@ function rsssl_directory_indexing_allowed() {
 		set_transient('rsssl_directory_indexing_status', $status, DAY_IN_SECONDS );
 	}
 
-	if ( $status==='forbidden' ) {
-		return false;
-	} else {
-		return true;
-	}
+	return $status !== 'forbidden';
 }
 
 
@@ -391,9 +395,9 @@ function rsssl_user_registration_allowed()
  */
 
 function rsssl_src_contains_wp_version() {
-	$wp_version = get_bloginfo( 'version' );
 	$result = get_transient('rsssl_wp_version_detected' );
 	if ( !$result ) {
+		$wp_version = get_bloginfo( 'version' );
 		$result = 'found';
 		$web_source = "";
 		//check if the mixed content fixer is active

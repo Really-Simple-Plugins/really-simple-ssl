@@ -71,7 +71,7 @@ if ($fp) {
 	header("Content-Transfer-Encoding: binary");
 	echo $content;
 } else {
-	echo "Someting went wrong #2";
+	echo "Something went wrong #2";
 }
 fclose($fp);
 

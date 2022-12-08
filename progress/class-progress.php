@@ -7,6 +7,8 @@ class rsssl_progress {
 		if ( isset( self::$_this ) )
 			wp_die( sprintf( '%s is a singleton class and you cannot create a second instance.', get_class( $this ) ) );
 		self::$_this = $this;
+
+		add_action( 'admin_init', array( $this, 'dismiss_from_admin_notice') );
 	}
 
 	static function this() {
@@ -106,11 +108,13 @@ class rsssl_progress {
 		return count($premium_notices) ;
 	}
 
+	/**
+	 * @return void
+	 */
 	public function dismiss_from_admin_notice(){
 		if ( !rsssl_user_can_manage() ) {
 			return;
 		}
-
 		if (isset($_GET['dismiss_notice'])) {
 			$id = sanitize_title($_GET['dismiss_notice']);
 			$this->dismiss_task($id);
