@@ -56,7 +56,7 @@ if ( !class_exists('rsssl_mailer') ) {
 			}
 
 			$body = str_replace(
-				['{title}','{message}','{warnings}','email-address','learn-more'],
+				['{title}','{message}','{warnings}','{email-address}','{learn-more}'],
 				[ sanitize_text_field($this->title), wp_kses_post($this->message), $block_html, $this->to, __("Learn more",'really-simple-ssl') ],
 				$template);
 			$success = wp_mail( $this->to, sanitize_text_field($this->subject), $body, array('Content-Type: text/html; charset=UTF-8') );
