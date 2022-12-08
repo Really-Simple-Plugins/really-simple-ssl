@@ -407,9 +407,6 @@ function rsssl_src_contains_wp_version() {
 	if ( !$result ) {
 		$result = 'no-response';
 		set_transient( 'rsssl_wp_version_detected', 'no-response', DAY_IN_SECONDS );
-		//log the transient, for testing purposes
-		$stored_transient = get_transient('rsssl_wp_version_detected' );
-		error_log("RSSSL Stored transient after just being saved: ".$stored_transient);
 		try {
 			$wp_version = get_bloginfo( 'version' );
 			$web_source = "";
