@@ -560,15 +560,6 @@ function rsssl_fields( $load_values = true ) {
 			'default'  => false,
 		],
 		[
-			'id'       => 'change_login_url',
-			'menu_id'  => 'hardening',
-			'group_id' => 'hardening_basic',
-			'type'     => 'text',
-			'label'    => __( "Change login URL", 'really-simple-ssl' ),
-			'disabled' => false,
-			'default'  => false,
-		],
-		[
 			'id'       => 'disable_http_methods',
 			'menu_id'  => 'hardening',
 			'group_id' => 'hardening_extended',
@@ -609,6 +600,15 @@ function rsssl_fields( $load_values = true ) {
 			'disabled' => false,
 			'default'  => false,
 		],
+        [
+            'id'       => 'change_login_url',
+            'menu_id'  => 'hardening',
+            'group_id' => 'hardening_extended',
+            'type'     => 'text',
+            'label'    => __( "Change login URL", 'really-simple-ssl' ),
+            'disabled' => false,
+            'default'  => false,
+        ],
 		[
 			'id'       => 'xmlrpc_status',
 			'menu_id'  => 'hardening',
