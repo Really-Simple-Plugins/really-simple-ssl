@@ -259,7 +259,7 @@ class LearningMode extends Component {
                                   value = {learning_mode}
                                   onChange={ ( e ) => this.toggleLearningMode(e) }
                               />
-                              {__("Enable Learning Mode","really-simple-ssl")}
+                              {__("Enable Learning Mode to configure automatically","really-simple-ssl")}
                           </label>
                         {enforce==1 && <div className="rsssl-locked">
                             <div className="rsssl-shield-overlay">
