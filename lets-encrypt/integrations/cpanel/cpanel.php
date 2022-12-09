@@ -96,14 +96,20 @@ class rsssl_cPanel
 
 	    $response_raw = $this->connectUapi($request_uri, $payload);
 	    $isIpBlock = $this->isIpBlock($response_raw);
+	    $isLoginError = !$isIpBlock && $this->isLoginError($response_raw);
 	    $response = json_decode($response_raw);
         //Validate $response
 	    if ($isIpBlock) {
+		    update_option( 'rsssl_installation_error', 'cpanel:autossl', false );
+		    $status  = 'error';
+		    $action  = 'stop';
+		    $message = __( "Your website's ip address is blocked. Please add your domain's ip address to the security policy in CPanel", "really-simple-ssl" );
+	    } else if ($isLoginError) {
 		    update_option('rsssl_installation_error', 'cpanel:autossl', false);
 		    $status = 'error';
 		    $action = 'stop';
-		    $message = __("Your website's ip address is blocked. Please add your domain's ip address to the security policy in CPanel","really-simple-ssl");
-	    } else if (empty($response)) {
+		    $message = __("Login credentials incorrect. Please check your login credentials for cPanel.","really-simple-ssl");
+	    } else if ( empty($response) ) {
 	        update_option('rsssl_installation_error', 'cpanel:default', false);
 	        $status = 'warning';
 	        $action = $shell_addon_active ? 'skip' : 'continue';
@@ -142,6 +148,25 @@ class rsssl_cPanel
 		}
 		return false;
 	}
+
+	/**
+	 * Based on the known output of an ip block html page, check if the user has entered incorrect login creds
+	 * @param $raw
+	 *
+	 * @return bool
+	 */
+	public function isLoginError($raw){
+		$triggers = [
+			'input-field-login icon password',
+			'name="pass" id="pass"',
+		];
+		foreach($triggers as $key => $trigger ) {
+			if (strpos($raw,$trigger)!==false) {
+				return true;
+			}
+		}
+		return false;
+	}
 	/**
 	 * @param $domains
 	 *
@@ -155,8 +180,6 @@ class rsssl_cPanel
 	    ];
 
 	    $response_raw = $this->connectUapi($request_uri, $payload);
-		error_log("raw response");
-		error_log(print_r($response_raw, true));
 		$isIpBlock = $this->isIpBlock($response_raw);
 		$response = json_decode($response_raw);
 	    //Validate $response
@@ -214,10 +237,7 @@ class rsssl_cPanel
         $curl_response = curl_exec($ch);
 	    if (curl_errno($ch)) {
 		    $error_msg = curl_error($ch);
-			error_log("CURL ERROR");
-			error_log($error_msg);
 	    }
-		error_log(print_r($curl_response, true));
         curl_close($ch);
 
         //return output.

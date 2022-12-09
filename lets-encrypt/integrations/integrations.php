@@ -10,15 +10,8 @@ if (file_exists( rsssl_le_path . "integrations/$other_host/functions.php" )){
 if ( rsssl_is_cpanel() ) {
 	require_once( rsssl_le_path . 'integrations/cpanel/cpanel.php' );
 } else if ( rsssl_is_plesk() ) {
-	error_log("is plesk");
-
 	require_once( rsssl_le_path . 'integrations/plesk/plesk.php' );
 } else if ( rsssl_is_directadmin() ) {
-	error_log("is directadmin");
-
 	require_once( rsssl_le_path . 'integrations/directadmin/directadmin.php' );
-} else {
-	error_log("is nothing");
-
 }
 

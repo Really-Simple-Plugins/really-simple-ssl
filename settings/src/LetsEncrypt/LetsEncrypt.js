@@ -31,8 +31,6 @@ const LetsEncrypt = (props) => {
     const restartTests = () => {
         //clear statuses to ensure the bullets are grey
         let actions = props.field.actions;
-        console.log("actions");
-        console.log(actions);
         for ( const action of actions ) {
             action.status='inactive';
         }
@@ -105,8 +103,6 @@ const LetsEncrypt = (props) => {
     }
 
     const processTestResult = (action) => {
-        console.log("in process result");
-        console.log(action);
         lastActionStatus.current = action.status;
         let maxIndex = props.field.actions.length-1;
         if (action.status==='success') {
@@ -172,11 +168,9 @@ const LetsEncrypt = (props) => {
         }
         let action = getAction();
         let  test = action.action;
-        console.log("run test "+test);
         const startTime = new Date();
         maxAttempts.current = action.attempts;
         rsssl_api.runLetsEncryptTest(test, props.field.id ).then( ( response ) => {
-            console.log(response);
             const endTime = new Date();
             let timeDiff = endTime - startTime; //in ms
             const elapsedTime = Math.round(timeDiff);
@@ -186,14 +180,11 @@ const LetsEncrypt = (props) => {
             action.description = response.data.message;
             action.do = response.data.action;
             action.output = response.data.output ? response.data.output : false;
-            console.log("new action is "+response.data.action);
             sleep.current = 500;
             if (elapsedTime<1500) {
                sleep.current = 1500-elapsedTime;
             }
         }).then(sleeper(sleep.current)).then(() => {
-            console.log("process");
-            console.log(action);
             processTestResult(action);
       });
     }
