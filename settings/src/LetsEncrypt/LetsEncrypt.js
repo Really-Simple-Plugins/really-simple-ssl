@@ -31,6 +31,8 @@ const LetsEncrypt = (props) => {
     const restartTests = () => {
         //clear statuses to ensure the bullets are grey
         let actions = props.field.actions;
+        console.log("actions");
+        console.log(actions)l;
         for ( const action of actions ) {
             action.status='inactive';
         }
@@ -166,11 +168,13 @@ const LetsEncrypt = (props) => {
         if ( props.field.id==='generation' ) {
             props.field.actions = adjustActionsForDNS(props.field.actions);
         }
-        const startTime = new Date();
         let action = getAction();
-        let test = action.action;
+        let  test = action.action;
+        console.log("run test "+test);
+
         maxAttempts.current = action.attempts;
         rsssl_api.runLetsEncryptTest(test, props.field.id ).then( ( response ) => {
+            console.log(response);
                 const endTime = new Date();
                 let timeDiff = endTime - startTime; //in ms
                 const elapsedTime = Math.round(timeDiff);
