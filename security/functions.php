@@ -363,7 +363,6 @@ function rsssl_gather_warning_blocks_for_mail($changed_fields){
 			$current_fields[] = $field;
 		}
 	}
-	error_log("store blocks");
 	update_option('rsssl_email_warning_fields', $current_fields, false);
 
 
