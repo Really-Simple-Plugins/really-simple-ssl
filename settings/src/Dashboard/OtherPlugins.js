@@ -11,11 +11,11 @@ const OtherPlugins = (props) => {
     useEffect(()=>{
         if ( !dataLoaded ) {
                rsssl_api.runTest('otherpluginsdata').then( ( response ) => {
-                response.data.forEach(function(pluginItem, i) {
-                    response.data[i].pluginActionNice = pluginActionNice(pluginItem.pluginAction);
+                response.forEach(function(pluginItem, i) {
+                    response[i].pluginActionNice = pluginActionNice(pluginItem.pluginAction);
                 });
 
-                setPluginData(response.data);
+                setPluginData(response);
                 setDataLoaded(true);
             })
         }
@@ -38,7 +38,7 @@ const OtherPlugins = (props) => {
             return;
         }
         rsssl_api.doAction('plugin_actions', data).then( ( response ) => {
-            pluginItem = response.data;
+            pluginItem = response;
             updatePluginData(slug, pluginItem);
             PluginActions(slug, pluginItem.pluginAction);
         })

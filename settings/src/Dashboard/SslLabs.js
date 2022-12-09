@@ -16,8 +16,8 @@ const SslLabs = (props) => {
     useEffect(()=>{
         if (!dataLoaded) {
             rsssl_api.runTest('ssltest_get').then( ( response ) => {
-                if (response.data.hasOwnProperty('host') )  {
-                    let data = processSslData(response.data);
+                if (response.hasOwnProperty('host') )  {
+                    let data = processSslData(response);
                     setSslData(data);
                     setEndpointData(data.endpointData);
                     setDataLoaded(true);
@@ -179,7 +179,7 @@ const SslLabs = (props) => {
         let data = {};
         data.url = url;
         return rsssl_api.doAction('ssltest_run', data).then( ( response ) => {
-            return JSON.parse(response.data);
+            return JSON.parse(response);
         })
     }
 
@@ -197,7 +197,7 @@ const SslLabs = (props) => {
         data.url = url;
 
         return rsssl_api.doAction('ssltest_run', data).then( ( response ) => {
-            return JSON.parse(response.data);
+            return JSON.parse(response);
         })
     }
 
