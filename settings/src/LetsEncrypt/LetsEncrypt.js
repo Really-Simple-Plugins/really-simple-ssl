@@ -32,7 +32,7 @@ const LetsEncrypt = (props) => {
         //clear statuses to ensure the bullets are grey
         let actions = props.field.actions;
         console.log("actions");
-        console.log(actions)l;
+        console.log(actions);
         for ( const action of actions ) {
             action.status='inactive';
         }
