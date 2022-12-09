@@ -4714,6 +4714,8 @@ const LetsEncrypt = props => {
     return actions;
   };
   const processTestResult = action => {
+    console.log("in process result");
+    console.log(action);
     lastActionStatus.current = action.status;
     let maxIndex = props.field.actions.length - 1;
     if (action.status === 'success') {
@@ -4791,11 +4793,14 @@ const LetsEncrypt = props => {
       action.description = response.data.message;
       action.do = response.data.action;
       action.output = response.data.output ? response.data.output : false;
+      console.log("new action is " + response.data.action);
       sleep.current = 500;
       if (elapsedTime < 1500) {
         sleep.current = 1500 - elapsedTime;
       }
     }).then((0,_utils_sleeper__WEBPACK_IMPORTED_MODULE_2__["default"])(sleep.current)).then(() => {
+      console.log("process");
+      console.log(action);
       processTestResult(action);
     });
   };

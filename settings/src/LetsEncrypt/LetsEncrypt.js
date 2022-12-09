@@ -105,6 +105,8 @@ const LetsEncrypt = (props) => {
     }
 
     const processTestResult = (action) => {
+        console.log("in process result");
+        console.log(action);
         lastActionStatus.current = action.status;
         let maxIndex = props.field.actions.length-1;
         if (action.status==='success') {
@@ -175,23 +177,25 @@ const LetsEncrypt = (props) => {
         maxAttempts.current = action.attempts;
         rsssl_api.runLetsEncryptTest(test, props.field.id ).then( ( response ) => {
             console.log(response);
-                const endTime = new Date();
-                let timeDiff = endTime - startTime; //in ms
-                const elapsedTime = Math.round(timeDiff);
-                let action = getAction();
-                action.status = response.data.status ? response.data.status : 'inactive';
-                action.hide = false;
-                action.description = response.data.message;
-                action.do = response.data.action;
-                action.output = response.data.output ? response.data.output : false;
-
-                sleep.current = 500;
-                if (elapsedTime<1500) {
-                   sleep.current = 1500-elapsedTime;
-                }
-            }).then(sleeper(sleep.current)).then(() => {
-                processTestResult(action);
-          });
+            const endTime = new Date();
+            let timeDiff = endTime - startTime; //in ms
+            const elapsedTime = Math.round(timeDiff);
+            let action = getAction();
+            action.status = response.data.status ? response.data.status : 'inactive';
+            action.hide = false;
+            action.description = response.data.message;
+            action.do = response.data.action;
+            action.output = response.data.output ? response.data.output : false;
+            console.log("new action is "+response.data.action);
+            sleep.current = 500;
+            if (elapsedTime<1500) {
+               sleep.current = 1500-elapsedTime;
+            }
+        }).then(sleeper(sleep.current)).then(() => {
+            console.log("process");
+            console.log(action);
+            processTestResult(action);
+      });
     }
 
     const getStyles = () => {
