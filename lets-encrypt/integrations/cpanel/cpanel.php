@@ -23,7 +23,7 @@ class rsssl_cPanel
 	    $this->host =  str_replace( array('http://', 'https://', ':2083',':'), '', $host );
         $this->username = $username;
         $this->password = $password;
-        $this->ssl_installation_url = 'https://'.$this->host.":2083/frontend/paper_lantern/ssl/install.html";
+        $this->ssl_installation_url = 'https://'.$this->host.":2083/frontend/jupiter/ssl/install.html";
     }
 	/**
 	 * Check if all creds are available
