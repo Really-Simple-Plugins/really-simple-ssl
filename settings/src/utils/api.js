@@ -102,11 +102,11 @@ export const doAction = (action, data) => {
 		}
 	}
     data.nonce = rsssl_settings.rsssl_nonce;
-        return apiFetch( {
-            path: 'reallysimplessl/v1/do_action/'+action,
-            method: 'POST',
-            data: data,
-        } );
+    return apiFetch( {
+        path: 'reallysimplessl/v1/do_action/'+action,
+        method: 'POST',
+        data: data,
+    } );
 // 	return axios.post(rsssl_settings.site_url+'reallysimplessl/v1/do_action/'+action, data, config );
 }
 
