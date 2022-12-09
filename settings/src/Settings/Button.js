@@ -10,33 +10,19 @@ class Button extends Component {
     constructor() {
         super( ...arguments );
         this.onClickHandler = this.onClickHandler.bind(this);
-        this.state = {
-            success:true,
-            message: '',
-        }
     }
     onClickHandler(action) {
-                this.setState({
-                    success: true,
-                    message: '',
-                });
-        console.log(action);
         let data = {};
         rsssl_api.doAction(action, data).then( ( response ) => {
-            console.log(action);
+            let help = {}
+            help.label = response.data.success ? 'success' : 'warning';
+            help.title = __( "Mail sending test", 'really-simple-ssl' );
+            help.text = response.data.message;
+            this.props.addNotice(this.props.field.id, help);
 
-            this.setState({
-                success: response.data.success,
-                message: response.data.message,
-            });
         });
     }
     render(){
-        const {
-            success,
-            message,
-        } = this.state;
-        let messageClass = success ? 'rsssl-success' : 'rsssl-error';
         let field = this.props.field;
         return (
             <>
@@ -44,9 +30,6 @@ class Button extends Component {
                 { this.props.field.url &&
                     <Hyperlink className="button button-default" text={field.button_text} url={field.url}/>
                 }
-                { field.action && message && <div className={"rsssl-message "+messageClass}>
-                    {message}
-                </div>}
                 { field.action &&
                     <button onClick={ () => this.onClickHandler( field.action ) }  className="button button-default">{field.button_text}</button>
                 }

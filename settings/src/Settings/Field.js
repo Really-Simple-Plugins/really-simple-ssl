@@ -184,7 +184,7 @@ class Field extends Component {
         if ( field.type==='button' ){
             return (
                 <div className={'rsssl-field-button ' + this.highLightClass}>
-                    <Button field={field} />
+                    <Button addNotice={this.props.addNotice} field={field} fields={this.props.fields} />
                 </div>
             );
         }

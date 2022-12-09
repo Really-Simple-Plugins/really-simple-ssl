@@ -5625,6 +5625,7 @@ class Page extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Component {
     this.pageProps = [];
     this.pageProps['licenseStatus'] = rsssl_settings.licenseStatus;
     this.updateFields = this.updateFields.bind(this);
+    this.addNotice = this.addNotice.bind(this);
     this.updateProgress = this.updateProgress.bind(this);
     this.getFields = this.getFields.bind(this);
     this.selectMenu = this.selectMenu.bind(this);
@@ -5805,7 +5806,20 @@ class Page extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Component {
       fields: fields
     });
   }
-
+  /* Add a help notice to the sidebar
+  */
+  addNotice(id, help) {
+    let fields = this.fields;
+    for (const fieldItem of fields) {
+      if (fieldItem.id === id) {
+        fieldItem.help = help;
+      }
+    }
+    this.fields = fields;
+    this.setState({
+      fields: fields
+    });
+  }
   /*
   * Allow children to check a field value from another page (in a page, only visible fields are know)
   */
@@ -5928,6 +5942,7 @@ class Page extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Component {
     }, selectedMainMenuItem !== 'dashboard' && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_Settings_SettingsPage__WEBPACK_IMPORTED_MODULE_4__["default"], {
       dropItemFromModal: dropItemFromModal,
       updateFields: this.updateFields,
+      addNotice: this.addNotice,
       updateProgress: this.updateProgress,
       pageProps: this.pageProps,
       handleModal: this.handleModal,
@@ -6068,40 +6083,24 @@ class Button extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Component {
   constructor() {
     super(...arguments);
     this.onClickHandler = this.onClickHandler.bind(this);
-    this.state = {
-      success: true,
-      message: ''
-    };
   }
   onClickHandler(action) {
-    this.setState({
-      success: true,
-      message: ''
-    });
-    console.log(action);
     let data = {};
     _utils_api__WEBPACK_IMPORTED_MODULE_3__.doAction(action, data).then(response => {
-      console.log(action);
-      this.setState({
-        success: response.data.success,
-        message: response.data.message
-      });
+      let help = {};
+      help.label = response.data.success ? 'success' : 'warning';
+      help.title = (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Mail sending test", 'really-simple-ssl');
+      help.text = response.data.message;
+      this.props.addNotice(this.props.field.id, help);
     });
   }
   render() {
-    const {
-      success,
-      message
-    } = this.state;
-    let messageClass = success ? 'rsssl-success' : 'rsssl-error';
     let field = this.props.field;
     return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("label", null, field.label), this.props.field.url && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_utils_Hyperlink__WEBPACK_IMPORTED_MODULE_2__["default"], {
       className: "button button-default",
       text: field.button_text,
       url: field.url
-    }), field.action && message && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-      className: "rsssl-message " + messageClass
-    }, message), field.action && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
+    }), field.action && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
       onClick: () => this.onClickHandler(field.action),
       className: "button button-default"
     }, field.button_text));
@@ -6404,7 +6403,9 @@ class Field extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Component {
       return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
         className: 'rsssl-field-button ' + this.highLightClass
       }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_Button__WEBPACK_IMPORTED_MODULE_16__["default"], {
-        field: field
+        addNotice: this.props.addNotice,
+        field: field,
+        fields: this.props.fields
       }));
     }
     if (field.type === 'password') {
@@ -7869,6 +7870,7 @@ class Settings extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Component
       className: "rsssl-wizard-settings"
     }, groups.map((group, i) => (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_SettingsGroup__WEBPACK_IMPORTED_MODULE_3__["default"], {
       updateFields: this.props.updateFields,
+      addNotice: this.props.addNotice,
       dropItemFromModal: this.props.dropItemFromModal,
       selectMenu: this.props.selectMenu,
       selectMainMenu: this.props.selectMainMenu,
@@ -8062,6 +8064,7 @@ class SettingsGroup extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Comp
       key: i,
       index: i,
       updateFields: this.props.updateFields,
+      addNotice: this.props.addNotice,
       selectMenu: this.props.selectMenu,
       selectMainMenu: this.props.selectMainMenu,
       dropItemFromModal: this.props.dropItemFromModal,
@@ -8414,6 +8417,7 @@ class SettingsPage extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Compo
       getPreviousAndNextMenuItems: this.props.getPreviousAndNextMenuItems
     }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_Settings__WEBPACK_IMPORTED_MODULE_6__["default"], {
       updateFields: this.props.updateFields,
+      addNotice: this.props.addNotice,
       dropItemFromModal: this.props.dropItemFromModal,
       selectMenu: this.props.selectMenu,
       selectMainMenu: this.props.selectMainMenu,

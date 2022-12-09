@@ -313,6 +313,7 @@ class SettingsPage extends Component {
                 />
                 <Settings
                     updateFields={this.props.updateFields}
+                    addNotice={this.props.addNotice}
                     dropItemFromModal={this.props.dropItemFromModal}
                     selectMenu={this.props.selectMenu}
                     selectMainMenu={this.props.selectMainMenu}

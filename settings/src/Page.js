@@ -15,6 +15,7 @@ class Page extends Component {
         this.pageProps['licenseStatus'] = rsssl_settings.licenseStatus;
 
         this.updateFields = this.updateFields.bind(this);
+        this.addNotice = this.addNotice.bind(this);
         this.updateProgress = this.updateProgress.bind(this);
         this.getFields = this.getFields.bind(this);
         this.selectMenu = this.selectMenu.bind(this);
@@ -206,7 +207,20 @@ class Page extends Component {
             fields :fields
         });
     }
-
+    /* Add a help notice to the sidebar
+    */
+    addNotice(id, help) {
+        let fields = this.fields;
+        for (const fieldItem of fields){
+            if (fieldItem.id === id ){
+                fieldItem.help = help;
+            }
+        }
+        this.fields = fields;
+        this.setState({
+            fields :fields
+        });
+    }
     /*
     * Allow children to check a field value from another page (in a page, only visible fields are know)
     */
@@ -322,6 +336,7 @@ class Page extends Component {
                                     <SettingsPage
                                         dropItemFromModal={dropItemFromModal}
                                         updateFields={this.updateFields}
+                                        addNotice={this.addNotice}
                                         updateProgress={this.updateProgress}
                                         pageProps={this.pageProps}
                                         handleModal={this.handleModal}
