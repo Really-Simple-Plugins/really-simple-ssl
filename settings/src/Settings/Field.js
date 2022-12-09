@@ -20,6 +20,7 @@ import CheckboxControl from "./CheckboxControl";
 import Support from "./Support";
 import LearningMode from "./LearningMode";
 import ChangeStatus from "./ChangeStatus";
+import Button from "./Button";
 import {
     Component,
 } from '@wordpress/element';
@@ -183,8 +184,7 @@ class Field extends Component {
         if ( field.type==='button' ){
             return (
                 <div className={'rsssl-field-button ' + this.highLightClass}>
-                    <label>{field.label}</label>
-                    <Hyperlink className="button button-default" text={field.button_text} url={field.url}/>
+                    <Button field={field} />
                 </div>
             );
         }
@@ -235,18 +235,6 @@ class Field extends Component {
                         label={ field.label }
                         value= { fieldValue }
                     />
-                </div>
-            );
-        }
-        if ( field.type==='email' ){
-            return (
-                <div className={this.highLightClass}>
-                  <TextControl
-                      help={ field.comment }
-                      label={ field.label }
-                      onChange={ ( fieldValue ) => this.onChangeHandler(fieldValue) }
-                      value= { fieldValue }
-                  />
                 </div>
             );
         }

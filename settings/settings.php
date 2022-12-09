@@ -210,6 +210,10 @@ function rsssl_do_action($request){
         case 'store_ssl_labs':
 			$data = rsssl_store_ssl_labs($request);
 			break;
+        case 'send_test_mail':
+            $mailer = new rsssl_mailer();
+	        $data = $mailer->send_test_mail();
+			break;
         case 'plugin_actions':
 			$data = rsssl_plugin_actions($request);
 			break;

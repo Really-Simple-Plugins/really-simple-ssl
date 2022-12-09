@@ -4,7 +4,7 @@ defined('ABSPATH') or die();
 	Schedule cron jobs if useCron is true
 	Else start the functions for testing
  */
-define('RSSSL_USE_CRON', false );
+define('RSSSL_USE_CRON', true );
 if ( RSSSL_USE_CRON ) {
 	add_action( 'plugins_loaded', 'rsssl_schedule_cron' );
 	function rsssl_schedule_cron() {
@@ -27,7 +27,6 @@ function rsssl_daily_cron(){
 }
 add_action( 'rsssl_every_five_minutes_hook', 'rsssl_every_five_minutes_cron' );
 function rsssl_every_five_minutes_cron(){
-	error_log("do cron");
 	do_action('rsssl_five_minutes_cron');
 }
 
