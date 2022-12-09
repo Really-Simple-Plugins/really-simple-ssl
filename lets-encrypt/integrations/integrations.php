@@ -6,12 +6,21 @@ if (file_exists( rsssl_le_path . "integrations/$other_host/$other_host.php" )) {
 if (file_exists( rsssl_le_path . "integrations/$other_host/functions.php" )){
 	require_once( rsssl_le_path . "integrations/$other_host/functions.php" );
 }
-
+error_log("load integrations");
 if ( rsssl_is_cpanel() ) {
+	error_log("is cpanel");
+
 	require_once( rsssl_le_path . 'integrations/cpanel/cpanel.php' );
 } else if ( rsssl_is_plesk() ) {
+	error_log("is plesk");
+
 	require_once( rsssl_le_path . 'integrations/plesk/plesk.php' );
 } else if ( rsssl_is_directadmin() ) {
+	error_log("is directadmin");
+
 	require_once( rsssl_le_path . 'integrations/directadmin/directadmin.php' );
+} else {
+	error_log("is nothing");
+
 }
 
