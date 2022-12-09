@@ -405,10 +405,11 @@ function rsssl_user_registration_allowed()
 function rsssl_src_contains_wp_version() {
 	$result = get_transient('rsssl_wp_version_detected' );
 	error_log("check wp version transient ".$result);
-	if ( !$result ) {
+	if ( $result===false ) {
 		$result = 'no-response';
 		set_transient( 'rsssl_wp_version_detected', 'no-response', DAY_IN_SECONDS );
 		try {
+			error_log("RUN WP VERSION TEST");
 			$wp_version = get_bloginfo( 'version' );
 			$web_source = "";
 			$response = wp_remote_get( home_url(),[

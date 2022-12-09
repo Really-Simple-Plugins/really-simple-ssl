@@ -365,6 +365,7 @@ class rsssl_admin
 	        }
 	        rsssl_update_option('ssl_enabled', true);
 	        $site_url_changed = $this->set_siteurl_to_ssl();
+            error_log("clear transient during activate SSL process");
 		    delete_transient('rsssl_admin_notices');
         } else {
 	        $error = true;
@@ -1780,13 +1781,9 @@ class rsssl_admin
             error_log("this is a cached request => should be fast");
         }
 
-
 	    //if we're on the settings page, we need to clear the admin notices transient, because this list won't get refreshed otherwise
-	    if ( $this->is_settings_page() ) {
-            if ( !get_option('rsssl_6_notice_dismissed') ) {
-	            update_option('rsssl_6_notice_dismissed', true, false );
-            }
-		    delete_transient('rsssl_admin_notices');
+	    if ( $this->is_settings_page() && !get_option('rsssl_6_notice_dismissed')) {
+            update_option('rsssl_6_notice_dismissed', true, false );
 	    }
 
 	    if ( $cache_admin_notices) {
@@ -1794,10 +1791,13 @@ class rsssl_admin
             if ( $cached_notices === 'empty') {
                 return [];
             }
-		    if ( $cached_notices ) {
+		    if ( $cached_notices !== false ) {
                 return $cached_notices;
 		    }
 	    }
+
+        //not cached, set a default here
+	    set_transient('rsssl_admin_notices', 'empty', WEEK_IN_SECONDS);
 
 	    $rules            = $this->get_redirect_rules( true );
         if ( $this->ssl_type !== "NA" ) {
