@@ -4781,6 +4781,7 @@ const LetsEncrypt = props => {
     let action = getAction();
     let test = action.action;
     console.log("run test " + test);
+    const startTime = new Date();
     maxAttempts.current = action.attempts;
     _utils_api__WEBPACK_IMPORTED_MODULE_1__.runLetsEncryptTest(test, props.field.id).then(response => {
       console.log(response);
