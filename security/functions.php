@@ -90,7 +90,6 @@ if ( !function_exists('rsssl_maybe_clear_transients')) {
 			rsssl_code_execution_allowed();
 		}
 		if ( $field_id === 'hide_wordpress_version' ) {
-			error_log("deleting wp version transient");
 			delete_transient( 'rsssl_wp_version_detected' );
 			rsssl_src_contains_wp_version();
 		}

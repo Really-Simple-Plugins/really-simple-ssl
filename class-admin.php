@@ -365,7 +365,6 @@ class rsssl_admin
 	        }
 	        rsssl_update_option('ssl_enabled', true);
 	        $site_url_changed = $this->set_siteurl_to_ssl();
-            error_log("clear transient during activate SSL process");
 		    delete_transient('rsssl_admin_notices');
         } else {
 	        $error = true;
@@ -1665,7 +1664,6 @@ class rsssl_admin
 
         //don't show admin notices on our own settings page: we have the warnings there
         if ( $this->is_settings_page() ) return;
-        error_log("get notices list for the admin notice");
 	    $notices = $this->get_notices_list( array('admin_notices'=>true) );
         foreach ( $notices as $id => $notice ){
             $notice = $notice['output'];
@@ -1772,14 +1770,6 @@ class rsssl_admin
         $args = wp_parse_args($args, $defaults);
 	    $cache_admin_notices = !$this->is_settings_page();
         error_log("cache admin notices ".$cache_admin_notices);
-        if ( !$cache_admin_notices) {
-            if ($this->is_settings_page()) {
-                error_log("on SSL settings page");
-            }
-	        error_log("arg admin_notices: ".$args['admin_notices']);
-        } else {
-            error_log("this is a cached request => should be fast");
-        }
 
 	    //if we're on the settings page, we need to clear the admin notices transient, because this list won't get refreshed otherwise
 	    if ( $this->is_settings_page() && !get_option('rsssl_6_notice_dismissed')) {
@@ -2441,10 +2431,8 @@ class rsssl_admin
 
 		$cache = $this->is_settings_page() ? false : true;
 		$count = get_transient( 'rsssl_plusone_count' );
-		error_log("plus one count transient: ".$count);
 		if ( !$cache || ($count === false) ) {
 			$count = 0;
-			error_log("get notices for the plus one count.");
 			$notices = $this->get_notices_list();
 			foreach ( $notices as $id => $notice ) {
                 $success = ( isset( $notice['output']['icon'] ) && ( $notice['output']['icon'] === 'success' ) ) ? true : false;
