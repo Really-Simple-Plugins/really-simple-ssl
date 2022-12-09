@@ -54,11 +54,27 @@ if ( !class_exists('rsssl_mailer') ) {
 						$block_template);
 				}
 			}
-
+			$username = rsssl_get_option('new_admin_user_login');
 			$body = str_replace(
-				['{title}','{message}','{warnings}','{email-address}','{learn-more}'],
-				[ sanitize_text_field($this->title), wp_kses_post($this->message), $block_html, $this->to, __("Learn more",'really-simple-ssl') ],
-				$template);
+				[
+					'{title}',
+					'{message}',
+					'{warnings}',
+					'{email-address}',
+					'{learn-more}',
+					'{site_url}',
+					'{username}'
+				],
+				[
+					sanitize_text_field( $this->title ),
+					wp_kses_post( $this->message ),
+					$block_html,
+					$this->to,
+					__( "Learn more", 'really-simple-ssl' ),
+					site_url(),
+					$username
+				],
+				$template );
 			$success = wp_mail( $this->to, sanitize_text_field($this->subject), $body, array('Content-Type: text/html; charset=UTF-8') );
 			set_transient('rsssl_email_recently_sent', true, 5 * MINUTE_IN_SECONDS );
 			return $success;
