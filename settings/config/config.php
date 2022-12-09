@@ -352,6 +352,30 @@ function rsssl_fields( $load_values = true ) {
 			'default'  => false,
 		],
 		[
+			'id'       => 'send_notifications_email',
+			'menu_id'  => 'general',
+			'group_id' => 'general',
+			'type'     => 'checkbox',
+			'label'    => __( "Email notifications", 'really-simple-ssl' ),
+			'disabled' => false,
+			'default'  => true,
+		],
+		[
+			'id'       => 'notifications_email',
+			'menu_id'  => 'general',
+			'group_id' => 'general',
+			'type'     => 'email',
+			'label'    => __( "Email notifications", 'really-simple-ssl' ),
+			'disabled' => false,
+			'default'  => get_bloginfo('admin_email'),
+			'react_conditions' => [
+				'relation' => 'AND',
+				[
+					'send_notifications_email' => 1,
+				]
+			],
+		],
+		[
 			'id'       => 'dismiss_all_notices',
 			'menu_id'  => 'general',
 			'group_id' => 'general',
