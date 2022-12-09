@@ -155,6 +155,8 @@ class rsssl_cPanel
 	    ];
 
 	    $response_raw = $this->connectUapi($request_uri, $payload);
+		error_log("raw response");
+		error_log(print_r($response_raw, true));
 		$isIpBlock = $this->isIpBlock($response_raw);
 		$response = json_decode($response_raw);
 	    //Validate $response
@@ -210,6 +212,12 @@ class rsssl_cPanel
 
         // Make the call, and then terminate the cURL caller object.
         $curl_response = curl_exec($ch);
+	    if (curl_errno($ch)) {
+		    $error_msg = curl_error($ch);
+			error_log("CURL ERROR");
+			error_log($error_msg);
+	    }
+		error_log(print_r($curl_response, true));
         curl_close($ch);
 
         //return output.

@@ -3,6 +3,7 @@ defined( 'ABSPATH' ) or die();
 
 function rsssl_install_cpanel_autossl(){
 	if ( rsssl_is_ready_for('installation') ) {
+		error_log("run cpanel auto ssl");
 		$cpanel = new rsssl_cPanel();
 		$domains = RSSSL_LE()->letsencrypt_handler->get_subjects();
 		$response = $cpanel->enableAutoSSL($domains);
