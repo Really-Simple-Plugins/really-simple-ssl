@@ -90,7 +90,7 @@ if ( !function_exists('rsssl_maybe_clear_transients')) {
 			rsssl_code_execution_allowed();
 		}
 		if ( $field_id === 'hide_wordpress_version' ) {
-			delete_transient( 'rsssl_wp_version_detected' );
+			delete_option( 'rsssl_wp_version_detected' );
 			rsssl_src_contains_wp_version();
 		}
 		if ( $field_id === 'rename_admin_user' ) {

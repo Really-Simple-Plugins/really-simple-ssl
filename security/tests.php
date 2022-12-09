@@ -375,7 +375,6 @@ function rsssl_directory_indexing_allowed() {
 	return $status !== 'forbidden';
 }
 
-
 /**
  * Check if file editing is allowed
  * @return bool
@@ -403,19 +402,16 @@ function rsssl_user_registration_allowed()
  */
 
 function rsssl_src_contains_wp_version() {
-	$result = get_transient('rsssl_wp_version_detected' );
-	error_log("check wp version transient ".$result);
+	$result = get_option('rsssl_wp_version_detected' );
+	error_log( "check wp version transient ".$result);
 	if ( $result===false ) {
 		$result = 'no-response';
-		set_transient( 'rsssl_wp_version_detected', 'no-response', DAY_IN_SECONDS );
+		update_option( 'rsssl_wp_version_detected', 'no-response', false );
 		try {
 			error_log("RUN WP VERSION TEST");
 			$wp_version = get_bloginfo( 'version' );
 			$web_source = "";
-			$response = wp_remote_get( home_url(),[
-				'timeout'     => 5,
-				'redirection' => 3,
-			] );
+			$response = wp_remote_get( home_url() );
 			if ( ! is_wp_error( $response ) ) {
 				if ( is_array( $response ) ) {
 					$status     = wp_remote_retrieve_response_code( $response );
@@ -430,9 +426,9 @@ function rsssl_src_contains_wp_version() {
 					$result = 'found';
 				}
 			}
-			set_transient( 'rsssl_wp_version_detected', $result, DAY_IN_SECONDS );
+			update_option( 'rsssl_wp_version_detected', $result, false );
 		} catch(Exception $e) {
-			set_transient( 'rsssl_wp_version_detected', 'no-response', DAY_IN_SECONDS );
+			update_option( 'rsssl_wp_version_detected', 'no-response', false );
 		}
 	}
 	return $result==='found';
