@@ -26,6 +26,7 @@ class rsssl_admin
         register_deactivation_hook( __DIR__ . "/" . $this->plugin_filename, array($this, 'deactivate'));
 	    add_action( 'admin_init', array($this, 'add_privacy_info') );
 	    add_action( 'admin_init', array($this, 'maybe_dismiss_review_notice') );
+	    add_action( 'rsssl_weekly_cron', array($this, 'clear_admin_notices_cache') );
 
 
 	    //add the settings page for the plugin
@@ -365,7 +366,7 @@ class rsssl_admin
 	        }
 	        rsssl_update_option('ssl_enabled', true);
 	        $site_url_changed = $this->set_siteurl_to_ssl();
-		    delete_transient('rsssl_admin_notices');
+		    delete_option('rsssl_admin_notices');
         } else {
 	        $error = true;
         }
@@ -1741,6 +1742,15 @@ class rsssl_admin
         return $this->do_wpconfig_loadbalancer_fix;
     }
 
+	/**
+     * Clear the cached admin notices list
+	 * @return void
+	 */
+    public function clear_admin_notices_cache(){
+	    delete_option('rsssl_admin_notices');
+	    delete_option('rsssl_plusone_count');
+    }
+
     /**
      * Get array of notices
      * - condition: function returning boolean, if notice should be shown or not
@@ -1775,8 +1785,8 @@ class rsssl_admin
             update_option('rsssl_6_notice_dismissed', true, false );
 	    }
 
-	    if ( $cache_admin_notices) {
-		    $cached_notices = get_transient('rsssl_admin_notices');
+	    if ( $cache_admin_notices ) {
+		    $cached_notices = get_option('rsssl_admin_notices');
             if ( $cached_notices === 'empty') {
                 return [];
             }
@@ -1786,7 +1796,7 @@ class rsssl_admin
 	    }
 
         //not cached, set a default here
-	    set_transient('rsssl_admin_notices', 'empty', WEEK_IN_SECONDS);
+	    update_option('rsssl_admin_notices', 'empty');
 
 	    $rules            = $this->get_redirect_rules( true );
         if ( $this->ssl_type !== "NA" ) {
@@ -2329,7 +2339,7 @@ class rsssl_admin
             }
             //ensure an empty list is also cached
 		    $cache_notices = empty($notices) ? 'empty' : $notices;
-		    set_transient('rsssl_admin_notices', $cache_notices, WEEK_IN_SECONDS );
+		    update_option('rsssl_admin_notices', $cache_notices );
         }
 
 	    //sort so warnings are on top
@@ -2429,7 +2439,7 @@ class rsssl_admin
 		}
 
 		$cache = $this->is_settings_page() ? false : true;
-		$count = get_transient( 'rsssl_plusone_count' );
+		$count = get_option( 'rsssl_plusone_count' );
 		if ( !$cache || ($count === false) ) {
 			$count = 0;
 			$notices = $this->get_notices_list();
@@ -2445,7 +2455,7 @@ class rsssl_admin
             if ( $count==0) {
                 $count = 'empty';
             }
-			set_transient( 'rsssl_plusone_count', $count, WEEK_IN_SECONDS );
+			update_option( 'rsssl_plusone_count', $count );
 		}
 
 		if ( $count==='empty' ) {

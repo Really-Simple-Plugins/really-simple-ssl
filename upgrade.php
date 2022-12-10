@@ -151,6 +151,14 @@ function rsssl_upgrade() {
 		rsssl_add_manage_security_capability();
 	}
 
+	#move notices transient to option, for better persistence
+	if ( version_compare( $prev_version, '6.0.13', '<' ) ) {
+		$notices = get_transient('rsssl_admin_notices');
+		$plus_ones = get_transient('rsssl_plusone_count');
+		update_option('rsssl_admin_notices', $notices);
+		update_option('rsssl_plusone_count', $plus_ones);
+	}
+
 	//delete in future upgrade. We want to check the review notice dismissed as fallback still.
 	//delete_option( 'rlrsssl_options' );
 	//delete_site_option( 'rlrsssl_network_options' );

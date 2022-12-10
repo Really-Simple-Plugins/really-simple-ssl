@@ -44,6 +44,8 @@ if (isset($settings['delete_data_on_uninstall']) && $settings['delete_data_on_un
 		"rsssl_network_activation_status",
 		"rsssl_run",
 		"rsssl_wp_version_detected",
+		"rsssl_admin_notices",
+		"rsssl_plusone_count",
 		"rsssl_siteprocessing_progress",
 		"rsssl_ssl_activation_active",
 		"rsssl_network_activation_status",
