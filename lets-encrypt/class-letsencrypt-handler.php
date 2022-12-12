@@ -774,6 +774,21 @@ class rsssl_letsencrypt_handler {
 	 * @return RSSSL_RESPONSE
 	 */
     public function get_order(){
+
+		#if we don't have an account, try to retrieve it
+		if ( !$this->account ) {
+			$this->get_account();
+		}
+
+		#still no account, then exit
+		if ( !$this->account ) {
+			return new RSSSL_RESPONSE(
+				'error',
+				'retry',
+				__( "Failed retrieving account.", 'really-simple-ssl' )
+			);
+		}
+
 	    if ( ! Order::exists( $this->account, $this->subjects ) ) {
 		    try {
 			    $response = new RSSSL_RESPONSE(
