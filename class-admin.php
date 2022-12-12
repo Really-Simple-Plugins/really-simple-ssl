@@ -1661,17 +1661,21 @@ class rsssl_admin
         }
 	    //prevent showing the review on edit screen, as gutenberg removes the class which makes it editable.
 	    $screen = get_current_screen();
-	    if ( $screen && $screen->base === 'post' ) return;
+	    if ( $screen && $screen->base === 'post' ) {
+		    return;
+	    }
 
         //don't show admin notices on our own settings page: we have the warnings there
         if ( $this->is_settings_page() ) return;
 	    $notices = $this->get_notices_list( array('admin_notices'=>true) );
-        foreach ( $notices as $id => $notice ){
-            $notice = $notice['output'];
-            $class = ( $notice['status'] !== 'completed' ) ? 'error' : 'updated';
-	        $more_info = isset($notice['url']) ? $notice['url'] : false;
-	        $dismiss_id = isset($notice['dismissible']) && $notice['dismissible'] ? $id : false;
-	        echo $this->notice_html( $class.' '.$id, $notice['msg'], $more_info, $dismiss_id);
+        if ( is_array($notices) ) {
+	        foreach ( $notices as $id => $notice ){
+		        $notice = $notice['output'];
+		        $class = ( $notice['status'] !== 'completed' ) ? 'error' : 'updated';
+		        $more_info = $notice['url'] ?? false;
+		        $dismiss_id = isset($notice['dismissible']) && $notice['dismissible'] ? $id : false;
+		        echo $this->notice_html( $class.' '.$id, $notice['msg'], $more_info, $dismiss_id);
+	        }
         }
     }
 
