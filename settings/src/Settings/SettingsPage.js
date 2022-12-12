@@ -129,7 +129,6 @@ class SettingsPage extends Component {
             if ( menuItem.id === this.props.selectedMenuItem && menuItemFields.length === 0 && menuItem.hasOwnProperty('menu_items')){
                 //get first item of submenu's
                 const firstSubMenuItem = newMenuItems[index].menu_items[0].id;
-                console.log("select "+firstSubMenuItem);
                 this.props.selectMenu(firstSubMenuItem);
             }
         }

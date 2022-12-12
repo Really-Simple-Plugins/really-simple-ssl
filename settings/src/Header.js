@@ -20,7 +20,6 @@ class Header extends Component {
     handleClearCache(){
         let data = {};
         rsssl_api.doAction('clear_cache', data).then( ( response ) => {
-            console.log(response);
             const notice = dispatch('core/notices').createNotice(
                 'success',
                 __( 'Cleared all test caches', 'really-simple-ssl' ),

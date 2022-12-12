@@ -23,7 +23,7 @@ class rsssl_cPanel
 	    $this->host =  str_replace( array('http://', 'https://', ':2083',':'), '', $host );
         $this->username = $username;
         $this->password = $password;
-        $this->ssl_installation_url = 'https://'.$this->host.":2083/frontend/paper_lantern/ssl/install.html";
+        $this->ssl_installation_url = 'https://'.$this->host.":2083/frontend/jupiter/ssl/install.html";
     }
 	/**
 	 * Check if all creds are available
@@ -96,14 +96,20 @@ class rsssl_cPanel
 
 	    $response_raw = $this->connectUapi($request_uri, $payload);
 	    $isIpBlock = $this->isIpBlock($response_raw);
+	    $isLoginError = !$isIpBlock && $this->isLoginError($response_raw);
 	    $response = json_decode($response_raw);
         //Validate $response
 	    if ($isIpBlock) {
+		    update_option( 'rsssl_installation_error', 'cpanel:autossl', false );
+		    $status  = 'error';
+		    $action  = 'stop';
+		    $message = __( "Your website's ip address is blocked. Please add your domain's ip address to the security policy in CPanel", "really-simple-ssl" );
+	    } else if ($isLoginError) {
 		    update_option('rsssl_installation_error', 'cpanel:autossl', false);
 		    $status = 'error';
 		    $action = 'stop';
-		    $message = __("Your website's ip address is blocked. Please add your domain's ip address to the security policy in CPanel","really-simple-ssl");
-	    } else if (empty($response)) {
+		    $message = __("Login credentials incorrect. Please check your login credentials for cPanel.","really-simple-ssl");
+	    } else if ( empty($response) ) {
 	        update_option('rsssl_installation_error', 'cpanel:default', false);
 	        $status = 'warning';
 	        $action = $shell_addon_active ? 'skip' : 'continue';
@@ -134,6 +140,25 @@ class rsssl_cPanel
 			'security_policy',
 			'You appear to be logging in from an unknown location',
 			'unrecognized IP address',
+		];
+		foreach($triggers as $key => $trigger ) {
+			if (strpos($raw,$trigger)!==false) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * Based on the known output of an ip block html page, check if the user has entered incorrect login creds
+	 * @param $raw
+	 *
+	 * @return bool
+	 */
+	public function isLoginError($raw){
+		$triggers = [
+			'input-field-login icon password',
+			'name="pass" id="pass"',
 		];
 		foreach($triggers as $key => $trigger ) {
 			if (strpos($raw,$trigger)!==false) {
@@ -210,6 +235,9 @@ class rsssl_cPanel
 
         // Make the call, and then terminate the cURL caller object.
         $curl_response = curl_exec($ch);
+	    if (curl_errno($ch)) {
+		    $error_msg = curl_error($ch);
+	    }
         curl_close($ch);
 
         //return output.
