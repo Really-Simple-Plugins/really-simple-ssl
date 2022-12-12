@@ -23,15 +23,22 @@ function rsssl_remove_author_from_yoast_sitemap( $users ) {
 add_filter('wpseo_sitemap_exclude_author', 'rsssl_remove_author_from_yoast_sitemap', 10, 1 );
 
 //PREVENT WP JSON API User Enumeration
-add_filter( 'rest_endpoints', function( $endpoints ) {
-	if ( isset( $endpoints['/wp/v2/users'] ) ) {
-		unset( $endpoints['/wp/v2/users'] );
-	}
-	if ( isset( $endpoints['/wp/v2/users/(?P[\d]+)'] ) ) {
-		unset( $endpoints['/wp/v2/users/(?P[\d]+)'] );
-	}
-	return $endpoints;
-});
+// Do not disable in Gutenberg editor
+require_once(ABSPATH . 'wp-admin/includes/screen.php');
+$current_screen = get_current_screen();
+if ( isset( $current_screen->is_block_editor ) && $current_screen->is_block_editor != '1' ) {
+	add_filter( 'rest_endpoints', function ( $endpoints ) {
+
+		if ( isset( $endpoints['/wp/v2/users'] ) ) {
+			unset( $endpoints['/wp/v2/users'] );
+		}
+		if ( isset( $endpoints['/wp/v2/users/(?P[\d]+)'] ) ) {
+			unset( $endpoints['/wp/v2/users/(?P[\d]+)'] );
+		}
+
+		return $endpoints;
+	} );
+}
 
 //prevent xml site map user enumeration
 add_filter(
