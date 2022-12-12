@@ -17,6 +17,7 @@ class DashboardPage extends Component {
                                             fields={this.props.fields}
                                             highLightField={this.props.highLightField}
                                             selectMainMenu={this.props.selectMainMenu}
+                                            getFields={this.props.getFields}
                                             />)}
             </Fragment>
         );
