@@ -32,13 +32,20 @@ import DataTable from "react-data-table-component";
 class Field extends Component {
     constructor() {
         super( ...arguments );
+        this.scrollAnchor = false;
         this.onChangeHandlerDataTableStatus = this.onChangeHandlerDataTableStatus.bind(this);
         this.onChangeHandler = this.onChangeHandler.bind(this);
-        this.myRef = React.createRef()
+
     }
 
     componentDidMount(){
 
+    }
+
+    componentDidUpdate(){
+        if ( this.props.highLightedField===this.props.field.id && this.scrollAnchor.current ) {
+            this.scrollAnchor.current.scrollIntoView()
+        }
     }
 
     onChangeHandler(fieldValue) {
@@ -98,7 +105,9 @@ class Field extends Component {
     }
 
     render(){
-
+        if ( this.highLightClass ) {
+            this.scrollAnchor = React.createRef();
+        }
         let field = this.props.field;
         let fieldValue = field.value;
         let fields = this.props.fields;
@@ -137,7 +146,7 @@ class Field extends Component {
 
         if ( field.type==='checkbox' ){
             return (
-                <div className={this.highLightClass} ref={this.myRef}>
+                <div className={this.highLightClass} ref={this.scrollAnchor}>
                   <ToggleControl
                       disabled = {disabled}
                       checked= { field.value==1 }
@@ -157,7 +166,7 @@ class Field extends Component {
 
         if ( field.type==='radio' ){
             return (
-                <div className={this.highLightClass} ref={this.myRef}>
+                <div className={this.highLightClass} ref={this.scrollAnchor}>
                   <RadioControl
                       label={ field.label }
                       onChange={ ( fieldValue ) => this.onChangeHandler(fieldValue) }
@@ -170,7 +179,7 @@ class Field extends Component {
 
         if ( field.type==='text' || field.type==='email' ){
             return (
-                <div className={this.highLightClass} ref={this.myRef}>
+                <div className={this.highLightClass} ref={this.scrollAnchor}>
                   <TextControl
                       required={ field.required }
                       disabled={ disabled }
@@ -185,7 +194,7 @@ class Field extends Component {
 
         if ( field.type==='button' ){
             return (
-                <div className={'rsssl-field-button ' + this.highLightClass}>
+                <div className={'rsssl-field-button ' + this.highLightClass} ref={this.scrollAnchor}>
                     <label>{field.label}</label>
                     <Hyperlink className="button button-default" text={field.button_text} url={field.url}/>
                 </div>
@@ -194,7 +203,7 @@ class Field extends Component {
 
         if ( field.type==='password' ){
             return (
-                <div className={ this.highLightClass}>
+                <div className={ this.highLightClass} ref={this.scrollAnchor}>
                     <Password
                         index={ this.props.index }
                         field={ field }
@@ -207,7 +216,7 @@ class Field extends Component {
 
         if ( field.type==='textarea' ){
             return (
-                <div className={this.highLightClass}>
+                <div className={this.highLightClass} ref={this.scrollAnchor}>
                   <TextareaControl
                       label={ field.label }
                       disabled={ disabled }
@@ -224,7 +233,7 @@ class Field extends Component {
             let fieldValue = field.value;
             let fields = this.props.fields;
             return (
-                <div className={this.highLightClass}>
+                <div className={this.highLightClass} ref={this.scrollAnchor}>
                   <License setPageProps={this.props.setPageProps} fieldsUpdateComplete = {this.props.fieldsUpdateComplete} index={this.props.index} fields={fields} field={field} fieldValue={fieldValue} saveChangedFields={this.props.saveChangedFields} highLightField={this.props.highLightField} highLightedField={this.props.highLightedField}/>
                 </div>
 
@@ -232,7 +241,7 @@ class Field extends Component {
         }
         if ( field.type==='number' ){
             return (
-                <div className={this.highLightClass}>
+                <div className={this.highLightClass} ref={this.scrollAnchor}>
                     <NumberControl
                         onChange={ ( fieldValue ) => this.onChangeHandler(fieldValue) }
                         help={ field.comment }
@@ -244,7 +253,7 @@ class Field extends Component {
         }
         if ( field.type==='email' ){
             return (
-                <div className={this.highLightClass}>
+                <div className={this.highLightClass} ref={this.scrollAnchor}>
                   <TextControl
                       help={ field.comment }
                       label={ field.label }
@@ -257,7 +266,7 @@ class Field extends Component {
 
         if ( field.type==='host') {
             return (
-                <div className={this.highLightClass}>
+                <div className={this.highLightClass} ref={this.scrollAnchor}>
                   <Host
                        index={this.props.index}
                        saveChangedFields={this.props.saveChangedFields}
@@ -272,7 +281,7 @@ class Field extends Component {
 
         if ( field.type==='select') {
             return (
-                <div className={this.highLightClass}>
+                <div className={this.highLightClass} ref={this.scrollAnchor}>
                   <SelectControl
                       disabled={ disabled }
                       help={ field.comment }
@@ -287,14 +296,14 @@ class Field extends Component {
 
         if ( field.type==='support' ) {
             return (
-                <div className={this.highLightClass}>
+                <div className={this.highLightClass} ref={this.scrollAnchor}>
                   <Support/>
                 </div>
             )
         }
         if ( field.type==='permissionspolicy' ) {
             return (
-                <div className={this.highLightClass}>
+                <div className={this.highLightClass} ref={this.scrollAnchor}>
                   <PermissionsPolicy disabled={disabled} updateField={this.props.updateField} field={this.props.field} options={options} highLightClass={this.highLightClass} fields={fields}/>
                 </div>
             )
@@ -302,7 +311,7 @@ class Field extends Component {
 
         if ( field.type==='learningmode' ) {
             return(
-                <div className={this.highLightClass}>
+                <div className={this.highLightClass} ref={this.scrollAnchor}>
                   <LearningMode disabled={disabled} onChangeHandlerDataTableStatus={this.onChangeHandlerDataTableStatus} updateField={this.props.updateField} field={this.props.field} options={options} highLightClass={this.highLightClass} fields={fields}/>
                 </div>
             )
@@ -310,7 +319,7 @@ class Field extends Component {
 
         if ( field.type === 'mixedcontentscan' ) {
             return (
-                <div className={this.highLightClass}>
+                <div className={this.highLightClass} ref={this.scrollAnchor}>
                   <MixedContentScan dropItemFromModal={this.props.dropItemFromModal} handleModal={this.props.handleModal} field={this.props.field} fields={this.props.selectedFields}/>
                 </div>
             )
