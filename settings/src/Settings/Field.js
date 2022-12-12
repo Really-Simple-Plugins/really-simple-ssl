@@ -34,6 +34,7 @@ class Field extends Component {
         super( ...arguments );
         this.onChangeHandlerDataTableStatus = this.onChangeHandlerDataTableStatus.bind(this);
         this.onChangeHandler = this.onChangeHandler.bind(this);
+        this.myRef = React.createRef()
     }
 
     componentDidMount(){
@@ -104,6 +105,8 @@ class Field extends Component {
         let disabled = field.disabled;
         this.highLightClass = this.props.highLightedField===this.props.field.id ? 'rsssl-field-wrap rsssl-highlight' : 'rsssl-field-wrap';
 
+        //if an element is highlighted, get that element, and scroll into view
+
         let options = [];
         if ( field.options ) {
             for (var key in field.options) {
@@ -134,7 +137,7 @@ class Field extends Component {
 
         if ( field.type==='checkbox' ){
             return (
-                <div className={this.highLightClass}>
+                <div className={this.highLightClass} ref={this.myRef}>
                   <ToggleControl
                       disabled = {disabled}
                       checked= { field.value==1 }
@@ -154,7 +157,7 @@ class Field extends Component {
 
         if ( field.type==='radio' ){
             return (
-                <div className={this.highLightClass}>
+                <div className={this.highLightClass} ref={this.myRef}>
                   <RadioControl
                       label={ field.label }
                       onChange={ ( fieldValue ) => this.onChangeHandler(fieldValue) }
@@ -167,7 +170,7 @@ class Field extends Component {
 
         if ( field.type==='text' || field.type==='email' ){
             return (
-                <div className={this.highLightClass}>
+                <div className={this.highLightClass} ref={this.myRef}>
                   <TextControl
                       required={ field.required }
                       disabled={ disabled }
