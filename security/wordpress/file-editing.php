@@ -36,9 +36,10 @@ function rsssl_disable_file_editing_notice( $notices ) {
 }
 add_filter('rsssl_notices', 'rsssl_disable_file_editing_notice');
 
+/**
+ * Check if the constant is defined, AND set to false. In that case the plugin cannot override it anymore
+ * @return bool
+ */
 function rsssl_file_editing_defined_but_disabled(){
-	if ( defined('DISALLOW_FILE_EDIT' ) && !DISALLOW_FILE_EDIT) {
-		return true;
-	}
-	return false;
+	return defined( 'DISALLOW_FILE_EDIT' ) && ! DISALLOW_FILE_EDIT;
 }
