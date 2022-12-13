@@ -75,7 +75,7 @@ function rsssl_http_methods_allowed()
 	$tested = get_option( 'rsssl_http_methods_allowed' );
 
 	#if the option was reset, start couting from 0
-	if (!$tested){
+	if ( !$tested ){
 		delete_option('rsssl_last_tested_http_method');
 	}
 	$last_tested = get_option('rsssl_last_tested_http_method', -1);
