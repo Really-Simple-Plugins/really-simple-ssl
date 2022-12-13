@@ -15,7 +15,6 @@ class Header extends Component {
         this.handleClick = this.handleClick.bind(this);
     }
 
-
     render() {
         let plugin_url = rsssl_settings.plugin_url;
         let active_menu_item = this.props.selectedMainMenuItem;
