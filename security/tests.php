@@ -91,8 +91,8 @@ function rsssl_http_methods_allowed()
 		foreach ( $test_methods as $method ) {
 			#set a default, in case a timeout occurs
 			$tested['not-allowed'][] = $method;
-
 			update_option( 'rsssl_http_methods_allowed', $tested, false );
+
 			if ( function_exists( 'curl_init' ) ) {
 
 				$ch = curl_init();
