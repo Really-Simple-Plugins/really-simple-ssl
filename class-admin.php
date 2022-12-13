@@ -1901,7 +1901,7 @@ class rsssl_admin
 		        'score' => 5,
 		        'output' => array(
 			        'true' => array(
-				        'url' => 'https://really-simple-ssl.com/knowledge-base/steps-after-activating-ssl',
+				        'url' => 'https://really-simple-ssl.com/steps-after-activating-ssl',
 				        'msg' => __("SSL is now activated. Follow the three steps in this article to check if your website is secure.", "really-simple-ssl"),
 				        'icon' => 'open',
 				        'dismissible' => true,
