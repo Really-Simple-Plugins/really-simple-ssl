@@ -214,7 +214,7 @@ function rsssl_do_action($request){
 			$data = rsssl_plugin_actions($request);
 			break;
         case 'clear_cache':
-			$data = rsssl_clear_test_caches();
+			$data = rsssl_clear_test_caches($request);
 			break;
 		default:
 			$data = apply_filters("rsssl_do_action", [], $action, $request);
@@ -222,11 +222,25 @@ function rsssl_do_action($request){
     return $data;
 }
 
-function rsssl_clear_test_caches(){
-    if (!rsssl_user_can_manage()) return [];
-	delete_transient( 'rsssl_can_use_curl_headers_check' );
+/**
+ * @param WP_REST_Request $request
+ *
+ * @return array
+ */
+function rsssl_clear_test_caches($request){
+    if (!rsssl_user_can_manage()) {
+        return [];
+    }
 
-    do_action('rsssl_clear_test_caches');
+	$data = $request->get_params();
+	$cache_id = sanitize_title($data['cache_id']);
+
+	if ( $cache_id==='recommended_headers' ) {
+		delete_transient( 'rsssl_can_use_curl_headers_check' );
+        RSSSL()->admin->get_recommended_security_headers();
+	}
+
+    do_action('rsssl_clear_test_caches', $request);
     return [];
 }
 

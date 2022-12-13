@@ -2154,15 +2154,17 @@ class rsssl_admin
 		        'output' => array(
 			        'false' => array(
 				        'msg' => __("See which recommended security headers are not present on your website.", "really-simple-ssl"),
-                'icon' => 'premium',
+                        'icon' => 'premium',
 				        'dismissible' => false,
 				        'url' => 'https://scan.really-simple-ssl.com/',
+				        'clear_cache_id' => 'recommended_headers',
 			        ),
 			        'true' => array(
 				        'msg' => __("Recommended security headers enabled.", "really-simple-ssl"),
 				        'icon' => 'success',
 			        ),
 		        ),
+
 	        ),
 
             'pro_upsell' => array(
