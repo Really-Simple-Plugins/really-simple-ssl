@@ -88,7 +88,7 @@ function rsssl_http_methods_allowed()
 				curl_setopt($ch,CURLOPT_VERBOSE, true);
 				curl_setopt($ch, CURLOPT_TIMEOUT, 3); //timeout in seconds
 				curl_exec($ch);
-				if ( curl_errno( $ch ) == 405 || curl_errno( $ch ) == 403 ) {
+				if ( curl_errno( $ch ) && ( curl_errno( $ch ) === 405 || curl_errno( $ch ) === 403 ) ) {
 					$tested['not-allowed'][] = $method;
 				} else {
 					$tested['allowed'][] = $method;
