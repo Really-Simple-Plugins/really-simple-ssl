@@ -21,8 +21,6 @@ class TaskElement extends Component {
     handleClearCache(cache_id){
         let data = {};
         data.cache_id = cache_id;
-                    console.log("handle cache click");
-
         rsssl_api.doAction('clear_cache', data).then( ( response ) => {
             const notice = dispatch('core/notices').createNotice(
                 'success',

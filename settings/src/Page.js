@@ -108,6 +108,7 @@ class Page extends Component {
            this.superMenu = response.data.menu;
             let selectedMainMenuItem =  getAnchor('main') || 'dashboard';
             this.menu = this.getSelectedMenu(this.superMenu, selectedMainMenuItem);
+
             this.fields = response.data.fields;
             this.progress = response.data.progress;
             this.setState({
