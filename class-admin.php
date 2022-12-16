@@ -381,9 +381,9 @@ class rsssl_admin
                 'success' => !$error,
                 'site_url_changed' => $site_url_changed,
             ];
-        } else {
-            return $error;
         }
+
+	    return $error;
     }
 
 	/**
