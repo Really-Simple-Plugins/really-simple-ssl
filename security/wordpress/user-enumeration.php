@@ -27,7 +27,7 @@ add_filter('wpseo_sitemap_exclude_author', 'rsssl_remove_author_from_yoast_sitem
  * Do not disable in when logged in, preventing issues in the Gutenberg Editor
  */
 
-if ( !is_user_logged_in() ) {
+if ( !is_user_logged_in() || !current_user_can('edit_posts') ) {
 	add_filter( 'rest_endpoints', function ( $endpoints ) {
 		if ( isset( $endpoints['/wp/v2/users'] ) ) {
 			unset( $endpoints['/wp/v2/users'] );
