@@ -318,6 +318,11 @@ function rsssl_code_execution_allowed()
 				$code_execution_allowed = 'not-allowed';
 			}
 		}
+
+		//clean up file again
+		if ( file_exists($test_file) ) {
+			unlink($test_file);
+		}
 		set_transient('rsssl_code_execution_allowed_status', $code_execution_allowed, DAY_IN_SECONDS);
 	}
 
