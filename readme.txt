@@ -110,6 +110,7 @@ If you can't deactivate, do not just remove the plugin folder to uninstall! Foll
 * Fix: Burst Statistics not activating after installation
 * Fix: CSS for blue labels in progress dashboard below 1080px
 * Fix: WPCLI SSL activation not working due to capability checks, props @oolongm
+* Fix: catch invalid account error in Let's Encrypt generation, props @bugsjr
 
 = 6.0.12 =
 * Fix: on multisite, the test for users with admin username did not use the correct prefix, $wpdb->base_prefix, props @jg-visual
