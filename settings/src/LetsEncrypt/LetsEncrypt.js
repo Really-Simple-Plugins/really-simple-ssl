@@ -175,11 +175,11 @@ const LetsEncrypt = (props) => {
             let timeDiff = endTime - startTime; //in ms
             const elapsedTime = Math.round(timeDiff);
             let action = getAction();
-            action.status = response.data.status ? response.data.status : 'inactive';
+            action.status = response.status ? response.status : 'inactive';
             action.hide = false;
-            action.description = response.data.message;
-            action.do = response.data.action;
-            action.output = response.data.output ? response.data.output : false;
+            action.description = response.message;
+            action.do = response.action;
+            action.output = response.output ? response.output : false;
             sleep.current = 500;
             if (elapsedTime<1500) {
                sleep.current = 1500-elapsedTime;
@@ -187,6 +187,7 @@ const LetsEncrypt = (props) => {
         }).then(sleeper(sleep.current)).then(() => {
             processTestResult(action);
       });
+
     }
 
     const getStyles = () => {
