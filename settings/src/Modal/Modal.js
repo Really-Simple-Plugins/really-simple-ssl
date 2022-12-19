@@ -34,13 +34,13 @@ class Modal extends Component {
             let {
                 data,
             } = this.state;
-            data.description = response.data.msg;
+            data.description = response.msg;
             data.subtitle = '';
             this.setState({
                 data: data,
             });
             let item = this.props.data;
-            if (response.data.success) {
+            if (response.success) {
                 this.dismissModal(this.props.data);
             }
         });

@@ -1,7 +1,8 @@
 import {Component} from "@wordpress/element";
 import { __ } from '@wordpress/i18n';
 import getAnchor from "./utils/getAnchor";
-
+import {dispatch,} from '@wordpress/data';
+import Notices from "./Settings/Notices";
 
 class Header extends Component {
     constructor() {
@@ -13,6 +14,7 @@ class Header extends Component {
     componentDidMount() {
         this.handleClick = this.handleClick.bind(this);
     }
+
     render() {
         let plugin_url = rsssl_settings.plugin_url;
         let active_menu_item = this.props.selectedMainMenuItem;
@@ -36,6 +38,7 @@ class Header extends Component {
                         </nav>
                     </div>
                     <div className="rsssl-header-right">
+
                         <a className="rsssl-knowledge-base-link" href="https://really-simple-ssl.com/knowledge-base" target="_blank">{__("Documentation", "really-simple-ssl")}</a>
                         {rsssl_settings.pro_plugin_active &&
                             <a href="https://wordpress.org/support/plugin/really-simple-ssl/"
@@ -49,6 +52,7 @@ class Header extends Component {
                         }
                     </div>
                 </div>
+                <Notices className="rsssl-wizard-notices"/>
             </div>
         );
     }

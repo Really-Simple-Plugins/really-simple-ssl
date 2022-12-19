@@ -17,16 +17,6 @@ import {__} from '@wordpress/i18n';
 class SettingsPage extends Component {
     constructor() {
         super( ...arguments );
-        this.state = {
-            refreshTests:false,
-            fields:'',
-            isAPILoaded: false,
-            changedFields:'',
-            nextButtonDisabled: false,
-        };
-    }
-
-    componentDidMount() {
         this.save = this.save.bind(this);
         this.saveAndContinue = this.saveAndContinue.bind(this);
         this.wizardNextPrevious = this.wizardNextPrevious.bind(this);
@@ -38,26 +28,39 @@ class SettingsPage extends Component {
         this.resetRefreshTests = this.resetRefreshTests.bind(this);
         this.handleNextButtonDisabled = this.handleNextButtonDisabled.bind(this);
         this.checkRequiredFields = this.checkRequiredFields.bind(this);
+
+        this.state = {
+            refreshTests:false,
+            fields:'',
+            isAPILoaded: false,
+            changedFields:'',
+            nextButtonDisabled: false,
+        };
+    }
+
+    componentDidMount() {
+
         let fields = this.props.fields;
         //if count >1, it's a wizard
         let changedFields = [];
         let selectedMenuItem = this.props.selectedMenuItem;
         this.selectedMenuItem = selectedMenuItem;
         this.changedFields = changedFields;
-
-        this.props.menu.menu_items = this.addVisibleToMenuItems(this.props.menu.menu_items);
-        this.checkRequiredFields();
-        this.updateFieldsListWithConditions();
-
         this.setState({
             isAPILoaded: true,
             fields: this.props.fields,
             changedFields: changedFields,
             selectedMainMenuItem: this.props.selectedMainMenuItem,
         });
+
+        this.props.menu.menu_items = this.addVisibleToMenuItems(this.props.menu.menu_items);
+        this.checkRequiredFields();
+        this.updateFieldsListWithConditions();
     }
 
-    componentDidChange(){
+    //if the main menu is switched, only this event fires, not the didmount event.
+    componentDidUpdate(){
+        this.props.menu.menu_items = this.addVisibleToMenuItems(this.props.menu.menu_items);
     }
 
     addVisibleToMenuItems(menuItems) {
@@ -129,7 +132,6 @@ class SettingsPage extends Component {
             if ( menuItem.id === this.props.selectedMenuItem && menuItemFields.length === 0 && menuItem.hasOwnProperty('menu_items')){
                 //get first item of submenu's
                 const firstSubMenuItem = newMenuItems[index].menu_items[0].id;
-                console.log("select "+firstSubMenuItem);
                 this.props.selectMenu(firstSubMenuItem);
             }
         }
@@ -206,7 +208,7 @@ class SettingsPage extends Component {
 
         rsssl_api.setFields(saveFields).then(( response ) => {
             this.changedFields = [];
-            this.props.updateProgress(response.data.progress);
+            this.props.updateProgress(response.progress);
             this.setState({
                 changedFields :[],
             });

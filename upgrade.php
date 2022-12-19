@@ -3,6 +3,11 @@ defined('ABSPATH') or die();
 
 add_action('plugins_loaded', 'rsssl_upgrade', 20);
 function rsssl_upgrade() {
+	#only run upgrade check if cron, or if admin.
+	if ( !is_admin() && !wp_doing_cron() ) {
+		return;
+	}
+
 	$prev_version = get_option( 'rsssl_current_version', false );
 	//no version change, skip upgrade.
 	if ( get_option('rsssl_6_upgrade_completed') && ($prev_version && version_compare( $prev_version, rsssl_version, '==' )) ){
@@ -165,5 +170,5 @@ function rsssl_upgrade() {
 	//delete_option( 'rsssl_options_lets-encrypt' );
 
 	do_action("rsssl_upgrade", $prev_version);
-	update_option( 'rsssl_current_version', rsssl_version );
+	update_option( 'rsssl_current_version', rsssl_version, false );
 }

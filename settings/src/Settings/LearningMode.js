@@ -26,6 +26,7 @@ class LearningMode extends Component {
     constructor() {
         super( ...arguments );
         this.state = {
+            enforced_by_thirdparty :0,
             enforce :0,
             learning_mode :0,
             lm_enabled_once :0,
@@ -38,7 +39,8 @@ class LearningMode extends Component {
         this.doFilter = this.doFilter.bind(this);
         this.onDeleteHandler = this.onDeleteHandler.bind(this);
         let field = this.props.fields.filter(field => field.id === this.props.field.control_field )[0];
-        let enforce = field.value === 'enforce';
+        let enforced_by_thirdparty = field.value === 'enforced-by-thirdparty';
+        let enforce = enforced_by_thirdparty || field.value === 'enforce';
         let learning_mode = field.value === 'learning_mode';
         let learning_mode_completed = field.value==='completed';
 
@@ -49,6 +51,7 @@ class LearningMode extends Component {
         //we somehow need this to initialize the field. Otherwise it doesn't work on load. need to figure that out.
         this.props.updateField(field.id, field.value);
         this.setState({
+            enforced_by_thirdparty :enforced_by_thirdparty,
             enforce :enforce,
             learning_mode :learning_mode,
             lm_enabled_once :lm_enabled_once,
@@ -157,12 +160,15 @@ class LearningMode extends Component {
             let enforcedString = __("%s is enforced.", "really-simple-ssl").replace('%s', field.label);
             const {
                 filterValue,
+                enforced_by_thirdparty,
                 enforce,
                 learning_mode,
                 lm_enabled_once,
                 learning_mode_completed,
             } = this.state;
             let enforceDisabled = !lm_enabled_once;
+            if (enforced_by_thirdparty) disabledString = __("%s is already set outside Really Simple SSL.", "really-simple-ssl").replace('%s', field.label);
+
             const Filter = () => (
               <>
                 <select onChange={ ( e ) => this.doFilter(e) } value={filterValue}>
@@ -251,7 +257,7 @@ class LearningMode extends Component {
                         }
                       <div className="rsssl-learning-mode-footer">
                           { enforce!=1 && <button disabled={enforceDisabled} className="button button-primary" onClick={ (e) => this.toggleEnforce(e, true ) }>{__("Enforce","really-simple-ssl")}</button> }
-                          { enforce==1 && <button className="button" onClick={ (e) => this.toggleEnforce(e, false ) }>{__("Disable","really-simple-ssl")}</button> }
+                          { !enforced_by_thirdparty && enforce==1 && <button className="button" onClick={ (e) => this.toggleEnforce(e, false ) }>{__("Disable","really-simple-ssl")}</button> }
                           <label>
                               <input type="checkbox"
                                   disabled = {enforce}
@@ -261,7 +267,7 @@ class LearningMode extends Component {
                               />
                               {__("Enable Learning Mode","really-simple-ssl")}
                           </label>
-                        {enforce==1 && <div className="rsssl-locked">
+                        { enforce==1 && <div className="rsssl-locked">
                             <div className="rsssl-shield-overlay">
                                   <Icon name = "shield"  size="80px"/>
                             </div>
@@ -287,8 +293,9 @@ class LearningMode extends Component {
                         </div>}
                         { rsssl_settings.pro_plugin_active && this.props.disabled && <div className="rsssl-locked">
                             <div className="rsssl-locked-overlay">
-                                <span className="rsssl-progress-status rsssl-disabled">{__("Disabled ","really-simple-ssl")}</span>
-                                {disabledString}
+                                { !enforced_by_thirdparty && <span className="rsssl-progress-status rsssl-disabled">{__("Disabled ","really-simple-ssl")}</span> }
+                                { enforced_by_thirdparty && <span className="rsssl-progress-status rsssl-learning-mode-enforced">{__("Enforced","really-simple-ssl")}</span> }
+                                { disabledString }
                             </div>
                         </div>}
                         <Filter />

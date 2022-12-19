@@ -166,28 +166,28 @@ const LetsEncrypt = (props) => {
         if ( props.field.id==='generation' ) {
             props.field.actions = adjustActionsForDNS(props.field.actions);
         }
-        const startTime = new Date();
         let action = getAction();
-        let test = action.action;
+        let  test = action.action;
+        const startTime = new Date();
         maxAttempts.current = action.attempts;
         rsssl_api.runLetsEncryptTest(test, props.field.id ).then( ( response ) => {
-                const endTime = new Date();
-                let timeDiff = endTime - startTime; //in ms
-                const elapsedTime = Math.round(timeDiff);
-                let action = getAction();
-                action.status = response.data.status ? response.data.status : 'inactive';
-                action.hide = false;
-                action.description = response.data.message;
-                action.do = response.data.action;
-                action.output = response.data.output ? response.data.output : false;
+            const endTime = new Date();
+            let timeDiff = endTime - startTime; //in ms
+            const elapsedTime = Math.round(timeDiff);
+            let action = getAction();
+            action.status = response.status ? response.status : 'inactive';
+            action.hide = false;
+            action.description = response.message;
+            action.do = response.action;
+            action.output = response.output ? response.output : false;
+            sleep.current = 500;
+            if (elapsedTime<1500) {
+               sleep.current = 1500-elapsedTime;
+            }
+        }).then(sleeper(sleep.current)).then(() => {
+            processTestResult(action);
+      });
 
-                sleep.current = 500;
-                if (elapsedTime<1500) {
-                   sleep.current = 1500-elapsedTime;
-                }
-            }).then(sleeper(sleep.current)).then(() => {
-                processTestResult(action);
-          });
     }
 
     const getStyles = () => {

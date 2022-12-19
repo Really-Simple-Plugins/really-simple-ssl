@@ -84,7 +84,7 @@ class GridBlock extends Component {
             footer = this.props.block.footer.data;
         }
 
-        let DynamicBlockProps = { saveChangedFields: this.props.saveChangedFields, setShowOnBoardingModal:this.props.setShowOnBoardingModal, setBlockProps: this.setBlockProps, BlockProps: BlockProps, runTest: this.runTest, fields: this.props.fields, isApiLoaded: this.props.isApiLoaded, highLightField: this.highLightField, selectMainMenu: this.props.selectMainMenu };
+        let DynamicBlockProps = { getFields:this.props.getFields,saveChangedFields: this.props.saveChangedFields, setShowOnBoardingModal:this.props.setShowOnBoardingModal, setBlockProps: this.setBlockProps, BlockProps: BlockProps, runTest: this.runTest, fields: this.props.fields, isApiLoaded: this.props.isApiLoaded, highLightField: this.highLightField, selectMainMenu: this.props.selectMainMenu };
         return (
             <div className={className}>
                 <div className="rsssl-grid-item-header">

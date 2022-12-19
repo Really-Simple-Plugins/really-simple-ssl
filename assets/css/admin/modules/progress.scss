@@ -229,9 +229,6 @@
   padding: 4px 8px;
   font-size: var(--rsp-fs-100);
   font-weight: 600;
-  &.rsssl-premium {
-    min-width:100px !important;
-  }
   @media(max-width: $rsp-break-m) {
     min-width: 80px;
   }

@@ -1193,6 +1193,7 @@ class rsssl_admin
 
 	public function get_recommended_security_headers()
 	{
+
 		$used_headers = array();
 		$not_used_headers = array();
 		$check_headers = apply_filters( 'rsssl_recommended_security_headers', array(
@@ -1314,6 +1315,7 @@ class rsssl_admin
 	 */
 
 	public function recommended_headers_enabled() {
+
 		$unused_headers = $this->get_recommended_security_headers();
 		if ( empty( $unused_headers ) ) {
 			return true;
@@ -2166,7 +2168,7 @@ class rsssl_admin
 		        'output' => array(
 			        'false' => array(
 				        'msg' => __("See which recommended security headers are not present on your website.", "really-simple-ssl"),
-                'icon' => 'premium',
+                        'icon' => 'premium',
 				        'dismissible' => false,
 				        'url' => 'https://scan.really-simple-ssl.com/',
 			        ),
@@ -2175,6 +2177,7 @@ class rsssl_admin
 				        'icon' => 'success',
 			        ),
 		        ),
+
 	        ),
 
             'pro_upsell' => array(
