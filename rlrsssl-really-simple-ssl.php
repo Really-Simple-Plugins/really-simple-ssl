@@ -82,7 +82,7 @@ class REALLY_SIMPLE_SSL
 			if ( is_multisite() ) {
 				self::$instance->multisite = new rsssl_multisite();
 			}
-			if ( rsssl_is_logged_in_rest() || is_admin() || wp_doing_cron() || $wpcli || defined('RSSSL_DOING_SYSTEM_STATUS') || defined('RSSSL_LEARNING_MODE') ) {
+			if ( is_admin() || rsssl_is_logged_in_rest() || wp_doing_cron() || $wpcli || defined('RSSSL_DOING_SYSTEM_STATUS') || defined('RSSSL_LEARNING_MODE') ) {
 				self::$instance->cache = new rsssl_cache();
 				self::$instance->placeholder = new rsssl_placeholder();
 				self::$instance->server = new rsssl_server();
@@ -127,7 +127,7 @@ class REALLY_SIMPLE_SSL
 		if ( is_multisite() ) {
 			require_once( rsssl_path . 'class-multisite.php');
 		}
-		if ( rsssl_is_logged_in_rest() || is_admin() || wp_doing_cron() || $wpcli || defined('RSSSL_DOING_SYSTEM_STATUS') || defined('RSSSL_LEARNING_MODE') ) {
+		if ( is_admin() || rsssl_is_logged_in_rest() ||  wp_doing_cron() || $wpcli || defined('RSSSL_DOING_SYSTEM_STATUS') || defined('RSSSL_LEARNING_MODE') ) {
 			require_once( rsssl_path . 'compatibility.php');
             require_once( rsssl_path . 'upgrade.php');
 			require_once( rsssl_path . 'settings/settings.php' );
@@ -145,7 +145,7 @@ class REALLY_SIMPLE_SSL
 			}
 		}
 
-		if ( rsssl_is_logged_in_rest() || is_admin() || wp_doing_cron() ) {
+		if ( is_admin() || rsssl_is_logged_in_rest() || wp_doing_cron() ) {
             require_once( rsssl_path . 'lets-encrypt/letsencrypt.php' );
         }
 

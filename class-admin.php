@@ -329,7 +329,7 @@ class rsssl_admin
 
     public function activate_ssl($request)
     {
-	    if ( !rsssl_user_can_manage() ) {
+	    if ( !rsssl_user_can_manage()  ) {
 		    return [
 			    'success' => false,
 			    'site_url_changed' => false,
@@ -382,7 +382,6 @@ class rsssl_admin
                 'site_url_changed' => $site_url_changed,
             ];
         }
-
 	    return !$error;
     }
 
@@ -696,7 +695,7 @@ class rsssl_admin
 
     public function wpconfig_loadbalancer_fix()
     {
-        if (!rsssl_user_can_manage()) {
+        if ( !rsssl_user_can_manage() ) {
             return;
         }
 
