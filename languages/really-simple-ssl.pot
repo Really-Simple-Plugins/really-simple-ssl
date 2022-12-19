@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2022-12-04T11:38:08+00:00\n"
+"POT-Creation-Date: 2022-12-19T08:27:16+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.6.0\n"
 "X-Domain: really-simple-ssl\n"
@@ -396,7 +396,7 @@ msgstr ""
 #: class-admin.php:2656
 #: class-multisite.php:219
 #: settings/build/index.js:382
-#: settings/src/Header.js:43
+#: settings/src/Header.js:46
 msgid "Support"
 msgstr ""
 
@@ -1392,7 +1392,7 @@ msgid "Burst Statistics - Self-hosted, Privacy-friendly analytics tool"
 msgstr ""
 
 #: onboarding/config.php:76
-#: settings/settings.php:313
+#: settings/settings.php:326
 msgid "Complianz - Cookie Consent Management as it should be"
 msgstr ""
 
@@ -1873,6 +1873,8 @@ msgid "Cross Origin Policy"
 msgstr ""
 
 #: settings/config/config.php:194
+#: settings/build/index.js:382
+#: settings/src/Header.js:41
 msgid "Let's Encrypt"
 msgstr ""
 
@@ -2290,19 +2292,19 @@ msgstr ""
 msgid "Other Plugins"
 msgstr ""
 
-#: settings/settings.php:84
+#: settings/settings.php:97
 msgid "SSL settings"
 msgstr ""
 
-#: settings/settings.php:85
+#: settings/settings.php:98
 msgid "SSL"
 msgstr ""
 
-#: settings/settings.php:305
+#: settings/settings.php:318
 msgid "Self-hosted, Privacy-friendly analytics tool"
 msgstr ""
 
-#: settings/settings.php:320
+#: settings/settings.php:333
 msgid "Terms and Conditions"
 msgstr ""
 
@@ -2470,7 +2472,7 @@ msgstr ""
 
 #: settings/build/index.js:382
 #: settings/src/Dashboard/ProgressFooter.js:44
-#: settings/src/Header.js:48
+#: settings/src/Header.js:51
 #: settings/src/Menu/Menu.js:49
 msgid "Go Pro"
 msgstr ""
@@ -2974,7 +2976,7 @@ msgstr ""
 
 #: settings/build/index.js:382
 #: settings/src/Settings/LearningMode.js:155
-msgid "We're configuring your %s. Exit to edit and enforce."
+msgid " The %s is now in report-only mode and will collect directives. This might take a while. Afterwards you can Exit, Edit and Enforce these Directives."
 msgstr ""
 
 #: settings/build/index.js:382
@@ -2999,7 +3001,7 @@ msgstr ""
 
 #: settings/build/index.js:382
 #: settings/src/Settings/LearningMode.js:262
-msgid "Enable Learning Mode"
+msgid "Enable Learning Mode to configure automatically"
 msgstr ""
 
 #: settings/build/index.js:382
@@ -3015,7 +3017,7 @@ msgstr ""
 
 #: settings/build/index.js:382
 #: settings/src/Settings/LearningMode.js:278
-msgid "Exit learning mode"
+msgid "Exit"
 msgstr ""
 
 #: settings/build/index.js:382
