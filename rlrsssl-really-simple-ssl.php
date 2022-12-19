@@ -255,11 +255,16 @@ if ( ! function_exists( 'rsssl_user_can_manage' ) ) {
 	 * @return bool
 	 */
 	function rsssl_user_can_manage() {
-		if ( ! current_user_can('manage_security') ) {
-			return false;
+		if ( current_user_can('manage_security') ) {
+			return true;
 		}
 
-		return true;
+        #allow wp-cli access to activate ssl
+		if ( defined( 'WP_CLI' ) && WP_CLI ){
+            return true;
+        }
+
+		return false;
 	}
 }
 
