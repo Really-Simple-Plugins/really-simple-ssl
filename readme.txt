@@ -103,6 +103,7 @@ If you can't deactivate, do not just remove the plugin folder to uninstall! Foll
 * Improvement: change rest_api method to core wp apiFetch()
 * Improvement: scroll highlighted setting into view after clicking "fix" on a task
 * Improvement: run http method test in batches, and set a default, to prevent possibility of curl timeouts on systems with CURL issues
+* Improvement: clean up code-execution.php file after test, props @spinhead
 * Fix: Burst Statistics not activating after installation
 
 = 6.0.12 =
