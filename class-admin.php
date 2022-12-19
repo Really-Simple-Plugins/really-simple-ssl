@@ -329,8 +329,7 @@ class rsssl_admin
 
     public function activate_ssl($request)
     {
-	    $wpcli = defined( 'WP_CLI' ) && WP_CLI;
-	    if ( !rsssl_user_can_manage() && !$wpcli) {
+	    if ( !rsssl_user_can_manage()  ) {
 		    return [
 			    'success' => false,
 			    'site_url_changed' => false,
@@ -383,8 +382,7 @@ class rsssl_admin
                 'site_url_changed' => $site_url_changed,
             ];
         }
-
-	    return $error;
+	    return !$error;
     }
 
 	/**
@@ -697,7 +695,7 @@ class rsssl_admin
 
     public function wpconfig_loadbalancer_fix()
     {
-        if (!rsssl_user_can_manage()) {
+        if ( !rsssl_user_can_manage() ) {
             return;
         }
 

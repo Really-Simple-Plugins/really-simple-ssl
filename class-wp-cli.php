@@ -1,6 +1,11 @@
 <?php
 defined('ABSPATH') or die();
 
+/**
+ * Usage
+ * rsssl activate_ssl
+ * rsssl deactivate_ssl
+ */
 class rsssl_wp_cli
 {
     public function __construct()
