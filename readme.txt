@@ -107,6 +107,7 @@ If you can't deactivate, do not just remove the plugin folder to uninstall! Foll
 * Improvement: give notification if 'DISABLE_FILE_EDITING' is set to false in the wp-config.php props @joeri1977
 * Improvement: drop some unnecessary translations
 * Fix: Burst Statistics not activating after installation
+* Fix: CSS for blue labels in progress dashboard below 1080px
 
 = 6.0.12 =
 * Fix: on multisite, the test for users with admin username did not use the correct prefix, $wpdb->base_prefix, props @jg-visual
