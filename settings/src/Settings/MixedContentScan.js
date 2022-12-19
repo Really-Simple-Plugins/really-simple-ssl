@@ -40,7 +40,7 @@ class MixedContentScan extends Component {
 
     getScanStatus(){
         return rsssl_api.runTest('scan_status', 'refresh').then( ( response ) => {
-            return response.data;
+            return response;
         });
     }
 
@@ -90,12 +90,12 @@ class MixedContentScan extends Component {
         });
         rsssl_api.runTest('mixed_content_scan', state ).then( ( response ) => {
             this.setState({
-                data:response.data.data,
-                progress:response.data.progress,
-                action:response.data.action,
-                state:response.data.state,
+                data:response.data,
+                progress:response.progress,
+                action:response.action,
+                state:response.state,
             });
-            if ( response.data.state==='running' ){
+            if ( response.state==='running' ){
                 this.run();
             }
         });
@@ -107,16 +107,16 @@ class MixedContentScan extends Component {
         }
         rsssl_api.runTest('mixed_content_scan', 'running' ).then( ( response ) => {
             this.setState({
-                completedStatus:response.data.completed_status,
-                data:response.data.data,
-                progress:response.data.progress,
-                action:response.data.action,
-                state:response.data.state,
+                completedStatus:response.completed_status,
+                data:response.data,
+                progress:response.progress,
+                action:response.action,
+                state:response.state,
             });
             //if scan was stopped while running, set it to stopped now.
             if ( this.state.paused ) {
                 this.stop();
-            } else if ( response.data.state==='running' ) {
+            } else if ( response.state==='running' ) {
                 this.run();
             }
 
@@ -138,10 +138,10 @@ class MixedContentScan extends Component {
         });
         rsssl_api.runTest('mixed_content_scan', 'stop' ).then( ( response ) => {
             this.setState({
-                completedStatus:response.data.completed_status,
-                data:response.data.data,
-                progress:response.data.progress,
-                action:response.data.action,
+                completedStatus:response.completed_status,
+                data:response.data,
+                progress:response.progress,
+                action:response.action,
             });
         });
     }

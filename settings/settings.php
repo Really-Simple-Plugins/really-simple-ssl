@@ -235,11 +235,6 @@ function rsssl_clear_test_caches($request){
 	$data = $request->get_params();
 	$cache_id = sanitize_title($data['cache_id']);
 
-	if ( $cache_id==='recommended_headers' ) {
-		delete_transient( 'rsssl_can_use_curl_headers_check' );
-        RSSSL()->admin->get_recommended_security_headers();
-	}
-
     do_action('rsssl_clear_test_caches', $request);
     return [];
 }

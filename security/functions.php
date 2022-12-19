@@ -73,7 +73,7 @@ if ( !function_exists('rsssl_maybe_clear_transients')) {
 		}
 
 		if ( $field_id === 'disable_http_methods' ) {
-			delete_transient( 'rsssl_http_methods_allowed' );
+			delete_option( 'rsssl_http_methods_allowed' );
 			rsssl_http_methods_allowed();
 		}
 		if ( $field_id === 'xmlrpc' ) {

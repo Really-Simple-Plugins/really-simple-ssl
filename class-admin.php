@@ -2157,7 +2157,6 @@ class rsssl_admin
                         'icon' => 'premium',
 				        'dismissible' => false,
 				        'url' => 'https://scan.really-simple-ssl.com/',
-				        'clear_cache_id' => 'recommended_headers',
 			        ),
 			        'true' => array(
 				        'msg' => __("Recommended security headers enabled.", "really-simple-ssl"),

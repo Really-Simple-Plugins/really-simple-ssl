@@ -100,6 +100,13 @@ If you can't deactivate, do not just remove the plugin folder to uninstall! Foll
 * Improvement: improve method of dropping empty menu items in settings dashboard
 * Improvement: dynamic links in auto installer
 * Improvement: Let's Encrypt Auto installer not working correctly, props @mirkolofio
+* Improvement: change rest_api method to core wp apiFetch()
+* Improvement: scroll highlighted setting into view after clicking "fix" on a task
+* Improvement: run http method test in batches, and set a default, to prevent possibility of curl timeouts on systems with CURL issues
+* Improvement: clean up code-execution.php file after test, props @spinhead
+* Improvement: give notification if 'DISABLE_FILE_EDITING' is set to false in the wp-config.php props @joeri1977
+* Improvement: drop some unnecessary translations
+* Fix: Burst Statistics not activating after installation
 
 = 6.0.12 =
 * Fix: on multisite, the test for users with admin username did not use the correct prefix, $wpdb->base_prefix, props @jg-visual

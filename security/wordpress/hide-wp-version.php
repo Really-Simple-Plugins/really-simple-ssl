@@ -38,3 +38,4 @@ function rsssl_remove_css_js_version( $src ) {
 
 	return $src;
 }
+
