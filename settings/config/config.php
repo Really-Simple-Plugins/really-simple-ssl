@@ -110,7 +110,7 @@ function rsssl_menu() {
 				],
 				[
 					'id'      => 'hsts',
-					'title'   => __( 'HTTP Strict Transport Security', 'really-simple-ssl' ),
+					'title'   => 'HTTP Strict Transport Security',
 					'premium' => true,
 					'groups'  => [
 						[
@@ -126,7 +126,7 @@ function rsssl_menu() {
 				],
 				[
 					'id'      => 'permissions_policy',
-					'title'   => __( 'Permissions Policy', 'really-simple-ssl' ),
+					'title'   => 'Permissions Policy',
 					'premium' => true,
 					'groups'  => [
 						[
@@ -136,13 +136,13 @@ function rsssl_menu() {
 							'helpLink'             => 'https://really-simple-ssl.com/instructions/about-permissions-policy/',
 							'networkwide_required' => true,
 							'premium'              => true,
-							'title'                => __( 'Permissions Policy', 'really-simple-ssl' ),
+							'title'                => 'Permissions Policy',
 						],
 					],
 				],
 				[
 					'id'      => 'content_security_policy',
-					'title'   => __( 'Content Security Policy', 'really-simple-ssl' ),
+					'title'   => 'Content Security Policy',
 					'premium' => true,
 					'groups'  => [
 						[
@@ -152,7 +152,7 @@ function rsssl_menu() {
 							'premium_text'         => __( "Get Upgrade Insecure Requests with %sReally Simple SSL Pro%s", 'really-simple-ssl' ),
 							'upgrade'              => 'https://really-simple-ssl.com/pro/',
 							'helpLink'             => 'https://really-simple-ssl.com/instructions/upgrade-insecure-requests/',
-							'title'                => __( 'Upgrade Insecure Requests', 'really-simple-ssl' ),
+							'title'                => 'Upgrade Insecure Requests',
 						],
 						[
 							'id'                   => 'frame_ancestors',
@@ -161,7 +161,7 @@ function rsssl_menu() {
 							'premium_text'         => __( "Get Frame Ancestors with %sReally Simple SSL Pro%s", 'really-simple-ssl' ),
 							'upgrade'              => 'https://really-simple-ssl.com/pro/',
 							'helpLink'             => 'https://really-simple-ssl.com/instructions/frame-ancestors',
-							'title'                => __( 'Frame Ancestors', 'really-simple-ssl' ),
+							'title'                => 'Frame Ancestors',
 						],
 						[
 							'id'                   => 'content_security_policy',
@@ -170,7 +170,7 @@ function rsssl_menu() {
 							'premium'              => true,
 							'premium_text'         => __( "Get Source Directives with %sReally Simple SSL Pro%s", 'really-simple-ssl' ),
 							'upgrade'              => 'https://really-simple-ssl.com/pro/',
-							'title'                => __( 'Source Directives', 'really-simple-ssl' ),
+							'title'                => 'Source Directives',
 						]
 					],
 				],
@@ -180,7 +180,7 @@ function rsssl_menu() {
 					'premium'              => true,
 					'premium_text'         => __( 'Get Cross Origin Policy Headers with %sReally Simple SSL Pro%s', 'really-simple-ssl' ),
 					'upgrade'              => 'https://really-simple-ssl.com/pro/',
-					'title'                => __( 'Cross Origin Policy', 'really-simple-ssl' ),
+					'title'                => 'Cross Origin Policy',
 					'helpLink'             => 'https://really-simple-ssl.com/instructions/cross-origin-policies/',
 
 				],
@@ -189,7 +189,7 @@ function rsssl_menu() {
 		[
 			"id"             => "letsencrypt",
 			'default_hidden' => true,
-			"title"          => __( "Let's Encrypt", 'really-simple-ssl' ),
+			"title"          => "Let's Encrypt",
 			'intro'          => sprintf( __( 'We have tried to make our Wizard as simple and fast as possible. Although these questions are all necessary, if there’s any way you think we can improve the plugin, please let us %sknow%s!',
 					'really-simple-ssl' ), '<a target="_blank" href="https://really-simple-ssl.com/contact">', '</a>' ) .
 			                    sprintf( __( ' Please note that you can always save and finish the wizard later, use our %sdocumentation%s for additional information or log a %ssupport ticket%s if you need our assistance.',
