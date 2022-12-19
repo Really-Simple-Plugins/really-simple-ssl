@@ -105,12 +105,12 @@ class Page extends Component {
 
     getFields(){
         rsssl_api.getFields().then( ( response ) => {
-           this.superMenu = response.data.menu;
+        console.log(response);
+           this.superMenu = response.menu;
             let selectedMainMenuItem =  getAnchor('main') || 'dashboard';
             this.menu = this.getSelectedMenu(this.superMenu, selectedMainMenuItem);
-
-            this.fields = response.data.fields;
-            this.progress = response.data.progress;
+            this.fields = response.fields;
+            this.progress = response.progress;
             this.setState({
                 isAPILoaded: true,
                 fields: this.fields,
