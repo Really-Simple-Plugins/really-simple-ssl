@@ -51,53 +51,77 @@ function rsssl_http_methods_allowed()
 	if ( ! rsssl_user_can_manage() ) {
 		return false;
 	}
-	$tested = get_transient( 'rsssl_http_methods_allowed' );
-	if ( ! $tested ) {
-		$tested = [];
-		if ( function_exists('curl_init' ) ) {
-			$methods = array(
-				'GET',
-				'POST',
-				'PUT',
-				'DELETE',
-				'HEAD',
-				'OPTIONS',
-				'CONNECT',
-				'TRACE',
-				'TRACK',
-				'PATCH',
-				'COPY',
-				'LINK',
-				'UNLINK',
-				'PURGE',
-				'LOCK',
-				'UNLOCK',
-				'PROPFIND',
-				'VIEW',
-			);
 
-			foreach ( $methods as $method ) {
+	$methods = [
+		'GET',
+		'POST',
+		'PUT',
+		'DELETE',
+		'HEAD',
+		'OPTIONS',
+		'CONNECT',
+		'TRACE',
+		'TRACK',
+		'PATCH',
+		'COPY',
+		'LINK',
+		'UNLINK',
+		'PURGE',
+		'LOCK',
+		'UNLOCK',
+		'PROPFIND',
+		'VIEW',
+	];
+	$tested = get_option( 'rsssl_http_methods_allowed' );
+
+	#if the option was reset, start couting from 0
+	if ( !$tested ){
+		delete_option('rsssl_last_tested_http_method');
+	}
+	$last_tested = get_option('rsssl_last_tested_http_method', -1);
+
+	$nr_of_tests_on_batch = 4;
+	if ( !$tested || ( $last_tested < count($methods)-1 ) ) {
+		$tested = get_option( 'rsssl_http_methods_allowed', [] );
+		$next_test = $last_tested+1;
+
+		$test_methods = array_slice($methods, $next_test, $nr_of_tests_on_batch, true);
+		update_option('rsssl_last_tested_http_method', $last_tested+$nr_of_tests_on_batch, false);
+
+		foreach ( $test_methods as $method ) {
+			#set a default, in case a timeout occurs
+			$tested['not-allowed'][] = $method;
+			update_option( 'rsssl_http_methods_allowed', $tested, false );
+
+			if ( function_exists( 'curl_init' ) ) {
+
 				$ch = curl_init();
 				curl_setopt( $ch, CURLOPT_URL, site_url() );
 				curl_setopt( $ch, CURLOPT_CUSTOMREQUEST, $method );
-				curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-				curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-				curl_setopt($ch,CURLOPT_RETURNTRANSFER, true);
-				curl_setopt($ch, CURLOPT_HEADER, true);
-				curl_setopt($ch,CURLOPT_NOBODY, true);
-				curl_setopt($ch,CURLOPT_VERBOSE, true);
-				curl_setopt($ch, CURLOPT_TIMEOUT, 3); //timeout in seconds
-				curl_exec($ch);
-				if ( curl_errno( $ch ) == 405 || curl_errno( $ch ) == 403 ) {
-					$tested['not-allowed'][] = $method;
-				} else {
+				curl_setopt( $ch, CURLOPT_FOLLOWLOCATION, true );
+				curl_setopt( $ch, CURLOPT_SSL_VERIFYPEER, false );
+				curl_setopt( $ch, CURLOPT_RETURNTRANSFER, true );
+				curl_setopt( $ch, CURLOPT_HEADER, true );
+				curl_setopt( $ch, CURLOPT_NOBODY, true );
+				curl_setopt( $ch, CURLOPT_VERBOSE, true );
+				curl_setopt( $ch, CURLOPT_TIMEOUT, 3 ); //timeout in seconds
+				curl_exec( $ch );
+
+				#if there are no errors, the request is allowed
+				if ( ! curl_errno( $ch ) ) {
+					//remove the not allowed entry
+					$not_allowed_index = array_search( $method, $tested['not-allowed'], true );
+					if ( $not_allowed_index !== false ) {
+						unset( $tested['not-allowed'][ $not_allowed_index ] );
+					}
 					$tested['allowed'][] = $method;
 				}
-				curl_close($ch);
+				curl_close( $ch );
+				update_option( 'rsssl_http_methods_allowed', $tested, false );
 			}
-			set_transient('rsssl_http_methods_allowed', $tested);
 		}
 	}
+
 
 	if ( !empty($tested['allowed'])) {
 		return true;

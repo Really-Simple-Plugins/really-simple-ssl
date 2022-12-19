@@ -34,6 +34,7 @@ if (isset($settings['delete_data_on_uninstall']) && $settings['delete_data_on_un
 		"rsssl_le_dns_configured_by_rsssl",
 		"rsssl_onboarding_dismissed",
 		"rsssl_ssl_detection_overridden",
+		"rsssl_http_methods_allowed",
 		"rsssl_show_onboarding",
 		"rsssl_deactivate_list",
 		"rsssl_firewall_error",
