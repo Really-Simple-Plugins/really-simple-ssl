@@ -103,6 +103,7 @@ If you can't deactivate, do not just remove the plugin folder to uninstall! Foll
 * Improvement: change rest_api method to core wp apiFetch()
 * Improvement: scroll highlighted setting into view after clicking "fix" on a task
 * Improvement: run http method test in batches, and set a default, to prevent possibility of curl timeouts on systems with CURL issues
+* Fix: Burst Statistics not activating after installation
 
 = 6.0.12 =
 * Fix: on multisite, the test for users with admin username did not use the correct prefix, $wpdb->base_prefix, props @jg-visual
