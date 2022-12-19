@@ -11,6 +11,8 @@ function rsssl_xmlrpc_allowed()
 	if ( !$allowed ) {
 		$allowed = 'allowed';
 		if ( function_exists( 'curl_init' ) ) {
+			//set a default, in case of time out
+			set_transient( 'rsssl_xmlrpc_allowed', 'no-response', DAY_IN_SECONDS );
 			$url = site_url() . '/xmlrpc.php';
 			$ch = curl_init($url);
 			// XML-RPC listMethods call
@@ -199,9 +201,9 @@ function rsssl_new_username_valid(): bool {
 function rsssl_wp_is_application_passwords_available(){
 	if ( function_exists('wp_is_application_passwords_available') ) {
 		return wp_is_application_passwords_available();
-	} else {
-		return false;
 	}
+
+	return false;
 }
 
 /**
@@ -308,8 +310,10 @@ function rsssl_code_execution_allowed()
 	$code_execution_allowed = get_transient('rsssl_code_execution_allowed_status');
 	if ( !$code_execution_allowed ) {
 		$upload_dir = wp_get_upload_dir();
-		//set a default
+		//set a default, in case of timeouts
 		$code_execution_allowed = 'not-allowed';
+		set_transient( 'rsssl_code_execution_allowed_status', $code_execution_allowed, DAY_IN_SECONDS );
+
 		$test_file = $upload_dir['basedir'] . '/' . 'code-execution.php';
 		if ( is_writable($upload_dir['basedir'] ) && ! file_exists( $test_file ) ) {
 			try {
@@ -367,6 +371,9 @@ function rsssl_directory_indexing_allowed() {
 			$status = 'forbidden';
 		} else {
 			$status = 'allowed';
+			//set a default, in case of timeouts
+			set_transient( 'rsssl_directory_indexing_status', $status, DAY_IN_SECONDS );
+
 			try {
 				$test_folder = 'indexing-test';
 				$test_dir = trailingslashit(ABSPATH) . $test_folder;
@@ -396,7 +403,6 @@ function rsssl_directory_indexing_allowed() {
 	return $status !== 'forbidden';
 }
 
-
 /**
  * Check if file editing is allowed
  * @return bool
@@ -424,28 +430,32 @@ function rsssl_user_registration_allowed()
  */
 
 function rsssl_src_contains_wp_version() {
-	$result = get_transient('rsssl_wp_version_detected' );
-	if ( !$result ) {
-		$wp_version = get_bloginfo( 'version' );
-		$result = 'found';
-		$web_source = "";
-		//check if the mixed content fixer is active
-		$response = wp_remote_get( home_url() );
-		if ( ! is_wp_error( $response ) ) {
-			if ( is_array( $response ) ) {
-				$status     = wp_remote_retrieve_response_code( $response );
-				$web_source = wp_remote_retrieve_body( $response );
-			}
+	$result = get_option('rsssl_wp_version_detected' );
+	if ( $result===false ) {
+		$result = 'no-response';
+		update_option( 'rsssl_wp_version_detected', 'no-response', false );
+		try {
+			$wp_version = get_bloginfo( 'version' );
+			$web_source = "";
+			$response = wp_remote_get( home_url() );
+			if ( ! is_wp_error( $response ) ) {
+				if ( is_array( $response ) ) {
+					$status     = wp_remote_retrieve_response_code( $response );
+					$web_source = wp_remote_retrieve_body( $response );
+				}
 
-			if ( $status != 200 ) {
-				$result = 'no-response';
-			} elseif ( strpos( $web_source, 'ver='.$wp_version ) === false ) {
-				$result = 'not-found';
-			} else {
-				$result = 'found';
+				if ( $status != 200 ) {
+					$result = 'no-response';
+				} elseif ( strpos( $web_source, 'ver='.$wp_version ) === false ) {
+					$result = 'not-found';
+				} else {
+					$result = 'found';
+				}
 			}
+			update_option( 'rsssl_wp_version_detected', $result, false );
+		} catch(Exception $e) {
+			update_option( 'rsssl_wp_version_detected', 'no-response', false );
 		}
-		set_transient( 'rsssl_wp_version_detected', $result, DAY_IN_SECONDS );
 	}
 	return $result==='found';
 }
