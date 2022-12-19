@@ -106,7 +106,7 @@ If you can't deactivate, do not just remove the plugin folder to uninstall! Foll
 * Improvement: clean up code-execution.php file after test, props @spinhead
 * Improvement: give notification if 'DISABLE_FILE_EDITING' is set to false in the wp-config.php props @joeri1977
 * Improvement: drop some unnecessary translations
-* Improvement: change transients to option for more persistent behavior in wp version test, props @photomaldives
+* Improvement: set better default, and change transients to option for more persistent behavior in wp version test, props @photomaldives
 * Fix: Burst Statistics not activating after installation
 * Fix: CSS for blue labels in progress dashboard below 1080px
 
