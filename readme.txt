@@ -101,6 +101,7 @@ If you can't deactivate, do not just remove the plugin folder to uninstall! Foll
 * Improvement: dynamic links in auto installer
 * Improvement: Let's Encrypt Auto installer not working correctly, props @mirkolofio
 * Improvement: change rest_api method to core wp apiFetch()
+* Improvement: scroll highlighted setting into view after clicking "fix" on a task
 
 = 6.0.12 =
 * Fix: on multisite, the test for users with admin username did not use the correct prefix, $wpdb->base_prefix, props @jg-visual
