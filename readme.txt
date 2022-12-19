@@ -109,6 +109,7 @@ If you can't deactivate, do not just remove the plugin folder to uninstall! Foll
 * Improvement: set better default, and change transients to option for more persistent behavior in wp version test, props @photomaldives
 * Fix: Burst Statistics not activating after installation
 * Fix: CSS for blue labels in progress dashboard below 1080px
+* Fix: WPCLI SSL activation not working due to capability checks, props @oolongm
 
 = 6.0.12 =
 * Fix: on multisite, the test for users with admin username did not use the correct prefix, $wpdb->base_prefix, props @jg-visual
