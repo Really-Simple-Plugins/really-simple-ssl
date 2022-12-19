@@ -103,6 +103,10 @@ class Field extends Component {
         let field = this.props.field;
         let fieldValue = field.value;
         let fields = this.props.fields;
+    if ( field.type==='email' ){
+            console.log("field is disabled");
+            console.log(field);
+            }
 
         this.highLightClass = this.props.highLightedField===this.props.field.id ? 'rsssl-field-wrap rsssl-highlight' : 'rsssl-field-wrap';
 
