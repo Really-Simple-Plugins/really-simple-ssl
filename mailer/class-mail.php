@@ -25,12 +25,8 @@ if ( !class_exists('rsssl_mailer') ) {
 		 * @return array
 		 */
 		public function send_test_mail(){
-			if (!rsssl_user_can_manage()) {
+			if ( !rsssl_user_can_manage() ) {
 				return ['success' => false, 'message' => 'Not allowed'];
-			}
-
-			if (!rsssl_get_option('send_notifications_email')) {
-				return ['success' => false, 'message' => __('Email notifications not enabled yet. Save your settings first.', "really-simple-ssl")];
 			}
 
 			$this->to = rsssl_get_option('notifications_email_address', get_bloginfo('admin_email'));
@@ -44,6 +40,8 @@ if ( !class_exists('rsssl_mailer') ) {
 
 			if (empty($this->error)) {
 				$this->error = __('Error during sending of email.', "really-simple-ssl");
+			} else {
+				$this->error = __('An error occurred:', "really-simple-ssl").'<br>'.$this->error;
 			}
 			return ['success' => false, 'message' => $this->error];
 		}
