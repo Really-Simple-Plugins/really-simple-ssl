@@ -140,6 +140,11 @@ class SettingsPage extends Component {
         for (const field of this.props.fields){
 
           let enabled = !(field.hasOwnProperty('react_conditions') && !this.validateConditions(field.react_conditions, this.props.fields));
+                              if (field.id==='notifications_email_address'){
+                                  console.log("show field");
+                                  console.log(field);
+                                  console.log("enabled "+enabled);
+                              }
           //we want to update the changed fields if this field has just become visible. Otherwise the new field won't get saved.
           let previouslyDisabled = this.props.fields[this.props.fields.indexOf(field)].conditionallyDisabled;
           this.props.fields[this.props.fields.indexOf(field)].conditionallyDisabled = !enabled;

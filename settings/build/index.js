@@ -6330,6 +6330,7 @@ class Field extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Component {
     let field = this.props.field;
     let fieldValue = field.value;
     let fields = this.props.fields;
+    let disabled = field.disabled;
     if (field.type === 'email') {
       console.log("field is disabled");
       console.log(field);
@@ -6349,7 +6350,7 @@ class Field extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Component {
 
     //if a feature can only be used on networkwide or single site setups, pass that info here.
     if (!rsssl_settings.networkwide_active && field.networkwide_required) {
-      field.disabled = true;
+      disabled = true;
       field.comment = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("This feature is only available networkwide.", "really-simple-ssl"), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_utils_Hyperlink__WEBPACK_IMPORTED_MODULE_7__["default"], {
         target: "_blank",
         text: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Network settings", "really-simple-ssl"),
@@ -6357,7 +6358,7 @@ class Field extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Component {
       }));
     }
     if (field.conditionallyDisabled) {
-      field.disabled = true;
+      disabled = true;
     }
     if (!field.visible) {
       return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null);
@@ -6396,7 +6397,7 @@ class Field extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Component {
         className: this.highLightClass
       }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.TextControl, {
         required: field.required,
-        disabled: field.disabled,
+        disabled: disabled,
         help: field.comment,
         label: field.label,
         onChange: fieldValue => this.onChangeHandler(fieldValue),
@@ -6476,7 +6477,7 @@ class Field extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Component {
       return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
         className: this.highLightClass
       }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.SelectControl, {
-        disabled: field.disabled,
+        disabled: disabled,
         help: field.comment,
         label: field.label,
         onChange: fieldValue => this.onChangeHandler(fieldValue),
@@ -6493,7 +6494,7 @@ class Field extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Component {
       return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
         className: this.highLightClass
       }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_PermissionsPolicy__WEBPACK_IMPORTED_MODULE_11__["default"], {
-        disabled: field.disabled,
+        disabled: disabled,
         updateField: this.props.updateField,
         field: this.props.field,
         options: options,
@@ -6505,7 +6506,7 @@ class Field extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Component {
       return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
         className: this.highLightClass
       }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_LearningMode__WEBPACK_IMPORTED_MODULE_14__["default"], {
-        disabled: field.disabled,
+        disabled: disabled,
         onChangeHandlerDataTableStatus: this.onChangeHandlerDataTableStatus,
         updateField: this.props.updateField,
         field: this.props.field,
@@ -8268,6 +8269,11 @@ class SettingsPage extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Compo
   updateFieldsListWithConditions() {
     for (const field of this.props.fields) {
       let enabled = !(field.hasOwnProperty('react_conditions') && !this.validateConditions(field.react_conditions, this.props.fields));
+      if (field.id === 'notifications_email_address') {
+        console.log("show field");
+        console.log(field);
+        console.log("enabled " + enabled);
+      }
       //we want to update the changed fields if this field has just become visible. Otherwise the new field won't get saved.
       let previouslyDisabled = this.props.fields[this.props.fields.indexOf(field)].conditionallyDisabled;
       this.props.fields[this.props.fields.indexOf(field)].conditionallyDisabled = !enabled;

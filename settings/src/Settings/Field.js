@@ -103,10 +103,11 @@ class Field extends Component {
         let field = this.props.field;
         let fieldValue = field.value;
         let fields = this.props.fields;
-    if ( field.type==='email' ){
+        let disabled = field.disabled;
+        if ( field.type==='email' ){
             console.log("field is disabled");
             console.log(field);
-            }
+        }
 
         this.highLightClass = this.props.highLightedField===this.props.field.id ? 'rsssl-field-wrap rsssl-highlight' : 'rsssl-field-wrap';
 
@@ -124,12 +125,12 @@ class Field extends Component {
 
         //if a feature can only be used on networkwide or single site setups, pass that info here.
         if ( !rsssl_settings.networkwide_active && field.networkwide_required ) {
-            field.disabled = true;
+            disabled = true;
             field.comment = <>{__("This feature is only available networkwide.","really-simple-ssl")}<Hyperlink target="_blank" text={__("Network settings","really-simple-ssl")} url={rsssl_settings.network_link}/></>
         }
 
         if ( field.conditionallyDisabled ) {
-            field.disabled = true;
+            disabled = true;
         }
 
         if ( !field.visible ) {
@@ -175,7 +176,7 @@ class Field extends Component {
                 <div className={this.highLightClass}>
                   <TextControl
                       required={ field.required }
-                      disabled={ field.disabled }
+                      disabled={ disabled }
                       help={ field.comment }
                       label={ field.label }
                       onChange={ ( fieldValue ) => this.onChangeHandler(fieldValue) }
@@ -262,7 +263,7 @@ class Field extends Component {
             return (
                 <div className={this.highLightClass}>
                   <SelectControl
-                      disabled={ field.disabled }
+                      disabled={ disabled }
                       help={ field.comment }
                       label={ field.label }
                       onChange={ ( fieldValue ) => this.onChangeHandler(fieldValue) }
@@ -283,7 +284,7 @@ class Field extends Component {
         if ( field.type==='permissionspolicy' ) {
             return (
                 <div className={this.highLightClass}>
-                  <PermissionsPolicy disabled={field.disabled} updateField={this.props.updateField} field={this.props.field} options={options} highLightClass={this.highLightClass} fields={fields}/>
+                  <PermissionsPolicy disabled={disabled} updateField={this.props.updateField} field={this.props.field} options={options} highLightClass={this.highLightClass} fields={fields}/>
                 </div>
             )
         }
@@ -291,7 +292,7 @@ class Field extends Component {
         if ( field.type==='learningmode' ) {
             return(
                 <div className={this.highLightClass}>
-                  <LearningMode disabled={field.disabled} onChangeHandlerDataTableStatus={this.onChangeHandlerDataTableStatus} updateField={this.props.updateField} field={this.props.field} options={options} highLightClass={this.highLightClass} fields={fields}/>
+                  <LearningMode disabled={disabled} onChangeHandlerDataTableStatus={this.onChangeHandlerDataTableStatus} updateField={this.props.updateField} field={this.props.field} options={options} highLightClass={this.highLightClass} fields={fields}/>
                 </div>
             )
         }

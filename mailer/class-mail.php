@@ -30,7 +30,7 @@ if ( !class_exists('rsssl_mailer') ) {
 			}
 
 			if (!rsssl_get_option('send_notifications_email')) {
-				return ['success' => false, 'message' => __('Email notifications not enabled', "really-simple-ssl")];
+				return ['success' => false, 'message' => __('Email notifications not enabled yet. Save your settings first.', "really-simple-ssl")];
 			}
 
 			$this->to = rsssl_get_option('notifications_email_address', get_bloginfo('admin_email'));
