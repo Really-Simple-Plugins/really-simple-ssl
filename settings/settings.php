@@ -561,7 +561,7 @@ function rsssl_update_option( $name, $value ) {
     if ( isset($options[$name]) && $options[$name]===$value ) {
         return;
     }
-    
+
 	$options[$name] = $value;
 	if ( is_multisite() && rsssl_is_networkwide_active() ) {
 		update_site_option( 'rsssl_options', $options );
