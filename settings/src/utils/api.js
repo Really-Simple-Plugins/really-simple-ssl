@@ -9,31 +9,52 @@ import apiFetch from '@wordpress/api-fetch';
  * @returns {AxiosPromise<any>}
  */
 
-export const getRandomToken = () => {
-	return '&token='+Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, 5);
+export const getNonce = () => {
+	return '&nonce='+rsssl_settings.rsssl_nonce+'&token='+Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, 5);
 };
 
 const usesPlainPermalinks = () => {
     return rsssl_settings.site_url.indexOf('?') !==-1;
 };
 
-const config = () => {
-    return {
-        headers: {
-            'X-WP-Nonce': rsssl_settings.nonce,
+const apiGet = (path) => {
+    if ( usesPlainPermalinks() ) {
+        let config = {
+            headers: {
+                'X-WP-Nonce': rsssl_settings.nonce,
+            }
         }
+        return axios.get(rsssl_settings.site_url+path, config ).then( ( response ) => {return response.data;})
+    } else {
+        return apiFetch( { path: path } );
     }
+}
+
+const apiPost = (path, data) => {
+    if ( usesPlainPermalinks() ) {
+        let config = {
+            headers: {
+                'X-WP-Nonce': rsssl_settings.nonce,
+            }
+        }
+    	return axios.post(rsssl_settings.site_url+path, data, config ).then( ( response ) => {return response.data;});
+    } else {
+        return apiFetch( {
+            path: path,
+            method: 'POST',
+            data: data,
+        } );
+    }
+}
+
+const glue = () => {
+    return rsssl_settings.site_url.indexOf('?')!==-1 ? '&' : '?'
 }
 
 export const getFields = () => {
     //we pass the anchor, so we know when LE is loaded
     let anchor = getAnchor('main');
-	let glue = usesPlainPermalinks() ? '&' : '?';
-	if ( usesPlainPermalinks() ) {
-        return axios.get(rsssl_settings.site_url+'reallysimplessl/v1/fields/get'+glue+anchor+'&nonce='+rsssl_settings.rsssl_nonce+getRandomToken() , config() ).then( ( response ) => {return response.data;})
-    } else {
-		return apiFetch( { path: '/reallysimplessl/v1/fields/get'+glue+anchor+'&nonce='+rsssl_settings.rsssl_nonce+getRandomToken() } );
-	}
+    return apiGet('reallysimplessl/v1/fields/get'+glue()+anchor+getNonce(), 'GET');
 };
 
 /*
@@ -46,68 +67,29 @@ export const setFields = (data) => {
     let anchor = getAnchor('main');
 	let nonce = {'nonce':rsssl_settings.rsssl_nonce};
 	data.push(nonce);
-    let glue = rsssl_settings.site_url.indexOf('?')!==-1 ? '&' : '?';
-    if ( usesPlainPermalinks() ) {
-    	return axios.post(rsssl_settings.site_url+'reallysimplessl/v1/fields/set'+glue+anchor, data, config() ).then( ( response ) => {return response.data;});
-    } else {
-        return apiFetch( {
-            path: 'reallysimplessl/v1/fields/set'+glue+anchor,
-            method: 'POST',
-            data: data,
-        } );
-    }
-
+    return apiPost('reallysimplessl/v1/fields/set'+glue()+anchor, data);
 };
 
 export const getBlock = (block) => {
-    let glue = rsssl_settings.site_url.indexOf('?')!==-1 ? '&' : '?';
-    if ( usesPlainPermalinks() ) {
-    	return axios.get(rsssl_settings.site_url+'reallysimplessl/v1/block/'+block+glue+'nonce='+rsssl_settings.rsssl_nonce+getRandomToken(), config()).then( ( response ) => {return response.data;})
-    } else {
-        return apiFetch( { path: 'reallysimplessl/v1/block/'+block+glue+'nonce='+rsssl_settings.rsssl_nonce+getRandomToken() } );
-    }
+    return apiGet('reallysimplessl/v1/block/'+block+glue()+getNonce());
 };
 
 export const runTest = (test, state, data ) => {
-	if (data) {
+	if ( data ) {
 		data = encodeURIComponent(JSON.stringify(data));
 	}
-    let glue = rsssl_settings.site_url.indexOf('?')!==-1 ? '&' : '?';
-    if ( usesPlainPermalinks() ) {
-        return axios.get(rsssl_settings.site_url+'reallysimplessl/v1/tests/'+test+glue+'state='+state+'&nonce='+rsssl_settings.rsssl_nonce+getRandomToken()+'&data='+data, config()).then( ( response ) => {return response.data; })
-    } else {
-        return apiFetch( { path: 'reallysimplessl/v1/tests/'+test+glue+'state='+state+'&nonce='+rsssl_settings.rsssl_nonce+getRandomToken()+'&data='+data } );
-    }
+    return apiGet('reallysimplessl/v1/tests/'+test+glue()+'state='+state+getNonce()+'&data='+data)
 };
 
 export const runLetsEncryptTest = (test, id ) => {
-    let glue = rsssl_settings.site_url.indexOf('?')!==-1 ? '&' : '?';
-    if ( usesPlainPermalinks() ) {
-    	return axios.get(rsssl_settings.site_url+'reallysimplessl/v1/tests/'+test+glue+'letsencrypt=1&id='+id+'&nonce='+rsssl_settings.rsssl_nonce+getRandomToken(), config).then( ( response ) => {return response.data;});
-    } else {
-        return apiFetch( { path: 'reallysimplessl/v1/tests/'+test+glue+'letsencrypt=1&id='+id+'&nonce='+rsssl_settings.rsssl_nonce+getRandomToken() } );
-    }
+    return apiGet('reallysimplessl/v1/tests/'+test+glue()+'letsencrypt=1&id='+id+getNonce());
 }
 
 export const doAction = (action, data) => {
     data.nonce = rsssl_settings.rsssl_nonce;
-    if ( usesPlainPermalinks() ) {
-    	return axios.post(rsssl_settings.site_url+'reallysimplessl/v1/do_action/'+action, data, config ).then( ( response ) => {return response.data;});
-    } else {
-        return apiFetch( {
-            path: 'reallysimplessl/v1/do_action/'+action,
-            method: 'POST',
-            data: data,
-        } );
-    }
-
+    return apiPost('reallysimplessl/v1/do_action/'+action, data);
 }
 
 export const getOnboarding = (forceRefresh) => {
-    let glue = rsssl_settings.site_url.indexOf('?')!==-1 ? '&' : '?';
-    if ( usesPlainPermalinks() ) {
-    	return axios.get(rsssl_settings.site_url+'reallysimplessl/v1/onboarding'+glue+'forceRefresh='+forceRefresh+'&nonce='+rsssl_settings.rsssl_nonce+getRandomToken(), config()).then( ( response ) => {return response.data;})
-    } else {
-        return apiFetch( { path: 'reallysimplessl/v1/onboarding'+glue+'forceRefresh='+forceRefresh+'&nonce='+rsssl_settings.rsssl_nonce+getRandomToken() } );
-    }
+    return apiGet('reallysimplessl/v1/onboarding'+glue()+'forceRefresh='+forceRefresh+getNonce());
 }
