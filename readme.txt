@@ -98,6 +98,7 @@ If you can't deactivate, do not just remove the plugin folder to uninstall! Foll
 == Changelog ==
 = 6.0.14 =
 * Fix: settings page when using plain permalinks, props @mvsitecreator, props @doug2son
+* Fix: debug.log setting not changing on first save
 
 = 6.0.13 =
 * Improvement: improve method of dropping empty menu items in settings dashboard
