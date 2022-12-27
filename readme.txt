@@ -6,7 +6,7 @@ Requires at least: 5.7
 License: GPL2
 Tested up to: 6.1
 Requires PHP: 7.2
-Stable tag: 6.0.13
+Stable tag: 6.0.14
 
 The easiest way to improve security! Leverage your SSL certificate and protect your website visitors.
 
@@ -98,7 +98,6 @@ If you can't deactivate, do not just remove the plugin folder to uninstall! Foll
 == Changelog ==
 = 6.0.14 =
 * Fix: settings page when using plain permalinks, props @mvsitecreator, props @doug2son
-* Fix: debug.log setting not changing on first save
 
 = 6.0.13 =
 * Improvement: improve method of dropping empty menu items in settings dashboard
