@@ -86,6 +86,7 @@ export const runLetsEncryptTest = (test, id ) => {
 }
 
 export const doAction = (action, data) => {
+    if (typeof data === 'undefined') data = {};
     data.nonce = rsssl_settings.rsssl_nonce;
     return apiPost('reallysimplessl/v1/do_action/'+action, data);
 }
