@@ -17,6 +17,9 @@ if ( is_admin() && rsssl_user_can_manage() ) {
 	class rsssl_help_legacy {
 		public function get_help_tip(){}
 	}
+	class rsssl_mixed_content_fixer_legacy {
+		public function fix_mixed_content(){}
+	}
 	class rsssl_multisite_legacy {
 		public $ssl_enabled_networkwide;
 		public $mixed_content_admin;
@@ -45,6 +48,7 @@ if ( is_admin() && rsssl_user_can_manage() ) {
 			$version = $plugin_data['Version'] ?? false;
 			if ( version_compare( $version, '6.0', '<' ) ) {
 				REALLY_SIMPLE_SSL::instance()->really_simple_ssl = new really_simple_ssl_legacy();
+				REALLY_SIMPLE_SSL::instance()->rsssl_mixed_content_fixer = new rsssl_mixed_content_fixer_legacy();
 				REALLY_SIMPLE_SSL::instance()->rsssl_help        = new rsssl_help_legacy();
 				REALLY_SIMPLE_SSL::instance()->rsssl_multisite   = new rsssl_multisite_legacy();
 			}
