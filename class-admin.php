@@ -87,7 +87,7 @@ class rsssl_admin
         }
 
 	    $thirty_minutes_ago = $time_saved < strtotime("-10 minute");
-	    $warning_blocks = array_column($fields, 'warning');
+	    $warning_blocks = array_column($fields, 'email');
 	    if ( $thirty_minutes_ago && count($warning_blocks)>0 ) {
 		    //clear the option
 		    delete_option('rsssl_email_warning_fields', []);
