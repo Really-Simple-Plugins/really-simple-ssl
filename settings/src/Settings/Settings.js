@@ -3,9 +3,6 @@ import Placeholder from "../Placeholder/Placeholder";
 import {in_array} from "../utils/lib";
 import SettingsGroup from "./SettingsGroup";
 import Help from "./Help";
-import {
-    Button,
-} from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
 
 /**
