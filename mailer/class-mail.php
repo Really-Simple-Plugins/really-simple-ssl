@@ -36,7 +36,7 @@ if ( !class_exists('rsssl_mailer') ) {
 			$this->warning_blocks = [
 				[
 					'title' => __("Security Feature","really-simple-ssl"),
-					'description' => __("When you enable a new feature, you will get information about it here.","really-simple-ssl"),
+					'message' => __("When you enable a new feature, you will get information about it here.","really-simple-ssl"),
 					'url' => 'https://really-simple-ssl.com',
 				]
 			];
