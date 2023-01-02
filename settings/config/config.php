@@ -668,7 +668,8 @@ function rsssl_fields( $load_values = true ) {
 			'type'     => 'select',
 			'label'    => __( "X-XSS-Protection", "really-simple-ssl-pro" ),
 			'options' => [
-				'zero'       =>  "0 ".__("(default)", "really-simple-ssl" ),
+				'disabled'       =>  __("disabled", "really-simple-ssl" ),
+				'zero'       =>  "0 ".__("(recommended)", "really-simple-ssl" ),
 				'one'        => "1",
 				'mode_block' => "1; mode=block",
 			],
