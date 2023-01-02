@@ -33,6 +33,13 @@ if ( !class_exists('rsssl_mailer') ) {
 			$this->title = __("Really Simple SSL - Notification Test", "really-simple-ssl");
 			$this->message = __("This e-mail is to confirm that any security notices are likely to reach your inbox.", "really-simple-ssl");
 			$this->subject = __("Notification by Really Simple SSL", "really-simple-ssl");
+			$this->warning_blocks = [
+				[
+					'title' => __("Security Feature","really-simple-ssl"),
+					'description' => __("When you enable a new feature, you will get information about it here.","really-simple-ssl"),
+					'url' => 'https://really-simple-ssl.com',
+				]
+			];
 			$success = $this->send_mail(true);
 			if ($success) {
 				return ['success' => true, 'message' => __('Email successfully sent. Please check your mail', "really-simple-ssl")];
