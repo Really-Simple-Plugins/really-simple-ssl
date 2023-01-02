@@ -11,7 +11,7 @@ const Button = (props) => {
         rsssl_api.doAction(action, data).then( ( response ) => {
             let help = {}
             help.label = response.data.success ? 'success' : 'warning';
-            help.title = __( "Mail sending test", 'really-simple-ssl' );
+            help.title = __( "Test notification by email", 'really-simple-ssl' );
             help.text = response.data.message;
             props.addNotice(props.field.id, help);
         });
@@ -31,6 +31,3 @@ const Button = (props) => {
 }
 
 export default Button
-
-
-

@@ -31,22 +31,22 @@ if ( !class_exists('rsssl_mailer') ) {
 
 			$this->to = rsssl_get_option('notifications_email_address', get_bloginfo('admin_email'));
 			$this->title = __("Really Simple SSL - Notification Test", "really-simple-ssl");
-			$this->message = __("This e-mail is to confirm that any security notices are likely to reach your inbox.", "really-simple-ssl");
+			$this->message = __("This email is confirmation that any security notices are likely to reach your inbox.", "really-simple-ssl");
 			$this->subject = __("Notification by Really Simple SSL", "really-simple-ssl");
 			$this->warning_blocks = [
 				[
-					'title' => __("Security Feature","really-simple-ssl"),
-					'message' => __("When you enable a new feature, you will get information about it here.","really-simple-ssl"),
-					'url' => 'https://really-simple-ssl.com',
+					'title' => __("About notifications","really-simple-ssl"),
+					'message' => __("Email notifications are only sent for important updates, security notices or when certain features are enabled.","really-simple-ssl"),
+					'url' => 'https://really-simple-ssl.com/email-notifications/',
 				]
 			];
 			$success = $this->send_mail(true);
 			if ($success) {
-				return ['success' => true, 'message' => __('Email successfully sent. Please check your mail', "really-simple-ssl")];
+				return ['success' => true, 'message' => __('Email sent! Please check your mail', "really-simple-ssl")];
 			}
 
 			if (empty($this->error)) {
-				$this->error = __('Error during sending of email.', "really-simple-ssl");
+				$this->error = __('Email could not be sent.', "really-simple-ssl");
 			} else {
 				$this->error = __('An error occurred:', "really-simple-ssl").'<br>'.$this->error;
 			}
