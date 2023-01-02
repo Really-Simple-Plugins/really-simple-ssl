@@ -30,9 +30,9 @@ if ( !class_exists('rsssl_mailer') ) {
 			}
 
 			$this->to = rsssl_get_option('notifications_email_address', get_bloginfo('admin_email'));
-			$this->title = __("Test email", "really-simple-ssl");
-			$this->message = __("Successfully sent a test email from Really Simple SSL", "really-simple-ssl");
-			$this->subject = __("Really Simple SSL test email", "really-simple-ssl");
+			$this->title = __("Really Simple SSL - Notification Test", "really-simple-ssl");
+			$this->message = __("This e-mail is to confirm that any security notices are likely to reach your inbox.", "really-simple-ssl");
+			$this->subject = __("Notification by Really Simple SSL", "really-simple-ssl");
 			$success = $this->send_mail(true);
 			if ($success) {
 				return ['success' => true, 'message' => __('Email successfully sent. Please check your mail', "really-simple-ssl")];
