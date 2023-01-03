@@ -10,12 +10,13 @@ function rsssl_install_cpanel_autossl(){
 			update_option('rsssl_le_certificate_installed_by_rsssl', 'cpanel:autossl', false);
 		}
 		return $response;
-	} else {
-		$status = 'error';
-		$action = 'stop';
-		$message = __("The system is not ready for the installation yet. Please run the wizard again.", "really-simple-ssl");
-		return new RSSSL_RESPONSE($status, $action, $message);
 	}
+
+	$status  = 'error';
+	$action  = 'stop';
+	$message = __("The system is not ready for the installation yet. Please run the wizard again.", "really-simple-ssl");
+
+	return new RSSSL_RESPONSE($status, $action, $message);
 }
 
 function rsssl_install_cpanel_default(){
@@ -27,12 +28,13 @@ function rsssl_install_cpanel_default(){
 			update_option('rsssl_le_certificate_installed_by_rsssl', 'cpanel:default', false);
 		}
 		return $response;
-	} else {
-		$status = 'error';
-		$action = 'stop';
-		$message = __("The system is not ready for the installation yet. Please run the wizard again.", "really-simple-ssl");
-		return new RSSSL_RESPONSE($status, $action, $message);
 	}
+
+	$status  = 'error';
+	$action  = 'stop';
+	$message = __("The system is not ready for the installation yet. Please run the wizard again.", "really-simple-ssl");
+
+	return new RSSSL_RESPONSE($status, $action, $message);
 }
 
 function rsssl_cpanel_set_txt_record(){

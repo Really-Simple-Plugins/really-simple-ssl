@@ -1,3 +1,6 @@
+html {
+  scroll-behavior: smooth;
+}
 .rsssl{
   div[class^="rsssl-wizard-"]{ // starts with selector
     .components-flex{
@@ -41,7 +44,7 @@
       }
     }
     .components-form-toggle.is-checked .components-form-toggle__track{
-      background-color: var(--rsp-green);
+      background-color: var(--rsp-dark-blue);
     }
     .rsssl-grid-item{
       .rsssl-grid-item-content{

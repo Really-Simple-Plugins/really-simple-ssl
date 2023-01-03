@@ -11,6 +11,8 @@ function rsssl_xmlrpc_allowed()
 	if ( !$allowed ) {
 		$allowed = 'allowed';
 		if ( function_exists( 'curl_init' ) ) {
+			//set a default, in case of time out
+			set_transient( 'rsssl_xmlrpc_allowed', 'no-response', DAY_IN_SECONDS );
 			$url = site_url() . '/xmlrpc.php';
 			$ch = curl_init($url);
 			// XML-RPC listMethods call
@@ -51,53 +53,77 @@ function rsssl_http_methods_allowed()
 	if ( ! rsssl_user_can_manage() ) {
 		return false;
 	}
-	$tested = get_transient( 'rsssl_http_methods_allowed' );
-	if ( ! $tested ) {
-		$tested = [];
-		if ( function_exists('curl_init' ) ) {
-			$methods = array(
-				'GET',
-				'POST',
-				'PUT',
-				'DELETE',
-				'HEAD',
-				'OPTIONS',
-				'CONNECT',
-				'TRACE',
-				'TRACK',
-				'PATCH',
-				'COPY',
-				'LINK',
-				'UNLINK',
-				'PURGE',
-				'LOCK',
-				'UNLOCK',
-				'PROPFIND',
-				'VIEW',
-			);
 
-			foreach ( $methods as $method ) {
+	$methods = [
+		'GET',
+		'POST',
+		'PUT',
+		'DELETE',
+		'HEAD',
+		'OPTIONS',
+		'CONNECT',
+		'TRACE',
+		'TRACK',
+		'PATCH',
+		'COPY',
+		'LINK',
+		'UNLINK',
+		'PURGE',
+		'LOCK',
+		'UNLOCK',
+		'PROPFIND',
+		'VIEW',
+	];
+	$tested = get_option( 'rsssl_http_methods_allowed' );
+
+	#if the option was reset, start couting from 0
+	if ( !$tested ){
+		delete_option('rsssl_last_tested_http_method');
+	}
+	$last_tested = get_option('rsssl_last_tested_http_method', -1);
+
+	$nr_of_tests_on_batch = 4;
+	if ( !$tested || ( $last_tested < count($methods)-1 ) ) {
+		$tested = get_option( 'rsssl_http_methods_allowed', [] );
+		$next_test = $last_tested+1;
+
+		$test_methods = array_slice($methods, $next_test, $nr_of_tests_on_batch, true);
+		update_option('rsssl_last_tested_http_method', $last_tested+$nr_of_tests_on_batch, false);
+
+		foreach ( $test_methods as $method ) {
+			#set a default, in case a timeout occurs
+			$tested['not-allowed'][] = $method;
+			update_option( 'rsssl_http_methods_allowed', $tested, false );
+
+			if ( function_exists( 'curl_init' ) ) {
+
 				$ch = curl_init();
 				curl_setopt( $ch, CURLOPT_URL, site_url() );
 				curl_setopt( $ch, CURLOPT_CUSTOMREQUEST, $method );
-				curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-				curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-				curl_setopt($ch,CURLOPT_RETURNTRANSFER, true);
-				curl_setopt($ch, CURLOPT_HEADER, true);
-				curl_setopt($ch,CURLOPT_NOBODY, true);
-				curl_setopt($ch,CURLOPT_VERBOSE, true);
-				curl_setopt($ch, CURLOPT_TIMEOUT, 3); //timeout in seconds
-				curl_exec($ch);
-				if ( curl_errno( $ch ) == 405 || curl_errno( $ch ) == 403 ) {
-					$tested['not-allowed'][] = $method;
-				} else {
+				curl_setopt( $ch, CURLOPT_FOLLOWLOCATION, true );
+				curl_setopt( $ch, CURLOPT_SSL_VERIFYPEER, false );
+				curl_setopt( $ch, CURLOPT_RETURNTRANSFER, true );
+				curl_setopt( $ch, CURLOPT_HEADER, true );
+				curl_setopt( $ch, CURLOPT_NOBODY, true );
+				curl_setopt( $ch, CURLOPT_VERBOSE, true );
+				curl_setopt( $ch, CURLOPT_TIMEOUT, 3 ); //timeout in seconds
+				curl_exec( $ch );
+
+				#if there are no errors, the request is allowed
+				if ( ! curl_errno( $ch ) ) {
+					//remove the not allowed entry
+					$not_allowed_index = array_search( $method, $tested['not-allowed'], true );
+					if ( $not_allowed_index !== false ) {
+						unset( $tested['not-allowed'][ $not_allowed_index ] );
+					}
 					$tested['allowed'][] = $method;
 				}
-				curl_close($ch);
+				curl_close( $ch );
+				update_option( 'rsssl_http_methods_allowed', $tested, false );
 			}
-			set_transient('rsssl_http_methods_allowed', $tested);
 		}
 	}
+
 
 	if ( !empty($tested['allowed'])) {
 		return true;
@@ -133,7 +159,6 @@ function rsssl_has_admin_user() {
 	if ( !rsssl_user_can_manage() ) {
 		return false;
 	}
-
 	//transient is more persistent then wp cache set
 	$count = get_transient('rsssl_admin_user_count');
 	//get from cache, but not on settings page
@@ -176,9 +201,9 @@ function rsssl_new_username_valid(): bool {
 function rsssl_wp_is_application_passwords_available(){
 	if ( function_exists('wp_is_application_passwords_available') ) {
 		return wp_is_application_passwords_available();
-	} else {
-		return false;
 	}
+
+	return false;
 }
 
 /**
@@ -210,7 +235,9 @@ function rsssl_get_users_where_display_name_is_login( $return_users=false ) {
 	// Maybe return users in integration
 	if ( $return_users ) {
 		return $found_users;
-	} else if ( count($found_users)>0 ) {
+	}
+
+	if ( count($found_users) > 0 ) {
 		return true;
 	}
 
@@ -283,8 +310,10 @@ function rsssl_code_execution_allowed()
 	$code_execution_allowed = get_transient('rsssl_code_execution_allowed_status');
 	if ( !$code_execution_allowed ) {
 		$upload_dir = wp_get_upload_dir();
-		//set a default
+		//set a default, in case of timeouts
 		$code_execution_allowed = 'not-allowed';
+		set_transient( 'rsssl_code_execution_allowed_status', $code_execution_allowed, DAY_IN_SECONDS );
+
 		$test_file = $upload_dir['basedir'] . '/' . 'code-execution.php';
 		if ( is_writable($upload_dir['basedir'] ) && ! file_exists( $test_file ) ) {
 			try {
@@ -317,6 +346,11 @@ function rsssl_code_execution_allowed()
 				$code_execution_allowed = 'not-allowed';
 			}
 		}
+
+		//clean up file again
+		if ( file_exists($test_file) ) {
+			unlink($test_file);
+		}
 		set_transient('rsssl_code_execution_allowed_status', $code_execution_allowed, DAY_IN_SECONDS);
 	}
 
@@ -337,6 +371,9 @@ function rsssl_directory_indexing_allowed() {
 			$status = 'forbidden';
 		} else {
 			$status = 'allowed';
+			//set a default, in case of timeouts
+			set_transient( 'rsssl_directory_indexing_status', $status, DAY_IN_SECONDS );
+
 			try {
 				$test_folder = 'indexing-test';
 				$test_dir = trailingslashit(ABSPATH) . $test_folder;
@@ -366,7 +403,6 @@ function rsssl_directory_indexing_allowed() {
 	return $status !== 'forbidden';
 }
 
-
 /**
  * Check if file editing is allowed
  * @return bool
@@ -394,28 +430,32 @@ function rsssl_user_registration_allowed()
  */
 
 function rsssl_src_contains_wp_version() {
-	$result = get_transient('rsssl_wp_version_detected' );
-	if ( !$result ) {
-		$wp_version = get_bloginfo( 'version' );
-		$result = 'found';
-		$web_source = "";
-		//check if the mixed content fixer is active
-		$response = wp_remote_get( home_url() );
-		if ( ! is_wp_error( $response ) ) {
-			if ( is_array( $response ) ) {
-				$status     = wp_remote_retrieve_response_code( $response );
-				$web_source = wp_remote_retrieve_body( $response );
-			}
+	$result = get_option('rsssl_wp_version_detected' );
+	if ( $result===false ) {
+		$result = 'no-response';
+		update_option( 'rsssl_wp_version_detected', 'no-response', false );
+		try {
+			$wp_version = get_bloginfo( 'version' );
+			$web_source = "";
+			$response = wp_remote_get( home_url() );
+			if ( ! is_wp_error( $response ) ) {
+				if ( is_array( $response ) ) {
+					$status     = wp_remote_retrieve_response_code( $response );
+					$web_source = wp_remote_retrieve_body( $response );
+				}
 
-			if ( $status != 200 ) {
-				$result = 'no-response';
-			} elseif ( strpos( $web_source, 'ver='.$wp_version ) === false ) {
-				$result = 'not-found';
-			} else {
-				$result = 'found';
+				if ( $status != 200 ) {
+					$result = 'no-response';
+				} elseif ( strpos( $web_source, 'ver='.$wp_version ) === false ) {
+					$result = 'not-found';
+				} else {
+					$result = 'found';
+				}
 			}
+			update_option( 'rsssl_wp_version_detected', $result, false );
+		} catch(Exception $e) {
+			update_option( 'rsssl_wp_version_detected', 'no-response', false );
 		}
-		set_transient( 'rsssl_wp_version_detected', $result, DAY_IN_SECONDS );
 	}
 	return $result==='found';
 }

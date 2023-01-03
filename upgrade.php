@@ -3,6 +3,11 @@ defined('ABSPATH') or die();
 
 add_action('plugins_loaded', 'rsssl_upgrade', 20);
 function rsssl_upgrade() {
+	#only run upgrade check if cron, or if admin.
+	if ( !is_admin() && !wp_doing_cron() ) {
+		return;
+	}
+
 	$prev_version = get_option( 'rsssl_current_version', false );
 	//no version change, skip upgrade.
 	if ( get_option('rsssl_6_upgrade_completed') && ($prev_version && version_compare( $prev_version, rsssl_version, '==' )) ){
@@ -151,11 +156,19 @@ function rsssl_upgrade() {
 		rsssl_add_manage_security_capability();
 	}
 
+	#move notices transient to option, for better persistence
+	if ( version_compare( $prev_version, '6.0.13', '<' ) ) {
+		$notices = get_transient('rsssl_admin_notices');
+		$plus_ones = get_transient('rsssl_plusone_count');
+		update_option('rsssl_admin_notices', $notices);
+		update_option('rsssl_plusone_count', $plus_ones);
+	}
+
 	//delete in future upgrade. We want to check the review notice dismissed as fallback still.
 	//delete_option( 'rlrsssl_options' );
 	//delete_site_option( 'rlrsssl_network_options' );
 	//delete_option( 'rsssl_options_lets-encrypt' );
 
 	do_action("rsssl_upgrade", $prev_version);
-	update_option( 'rsssl_current_version', rsssl_version );
+	update_option( 'rsssl_current_version', rsssl_version, false );
 }

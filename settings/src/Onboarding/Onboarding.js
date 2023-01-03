@@ -21,9 +21,9 @@ const [networkProgress, setNetworkProgress] = useState(0);
     useUpdateEffect(()=> {
         if ( networkProgress<100 && networkwide && networkActivationStatus==='main_site_activated' ){
             rsssl_api.runTest('activate_ssl_networkwide' ).then( ( response ) => {
-               if (response.data.success) {
-                    setNetworkProgress(response.data.progress);
-                    if (response.data.progress>=100) {
+               if (response.success) {
+                    setNetworkProgress(response.progress);
+                    if (response.progress>=100) {
                         updateActionForItem('ssl_enabled', '', 'success');
                     }
                 }
@@ -37,21 +37,21 @@ const [networkProgress, setNetworkProgress] = useState(0);
 
     const updateOnBoardingData = (forceRefresh) => {
         rsssl_api.getOnboarding(forceRefresh).then( ( response ) => {
-            let steps = response.data.steps;
-            setNetworkwide(response.data.networkwide);
-            setOverrideSSL(response.data.ssl_detection_overridden);
-            setActivateSSLDisabled(!response.data.ssl_detection_overridden);
-            setCertificateValid(response.data.certificate_valid);
-            setsslActivated(response.data.ssl_enabled);
+            let steps = response.steps;
+            setNetworkwide(response.networkwide);
+            setOverrideSSL(response.ssl_detection_overridden);
+            setActivateSSLDisabled(!response.ssl_detection_overridden);
+            setCertificateValid(response.certificate_valid);
+            setsslActivated(response.ssl_enabled);
             steps[0].visible = true;
             //if ssl is already enabled, the server will send only one step. In that case we can skip the below.
             //it's only needed when SSL is activated just now, client side.
-            if ( response.data.ssl_enabled && steps.length > 1 ) {
+            if ( response.ssl_enabled && steps.length > 1 ) {
                 steps[0].visible = false;
                 steps[1].visible = true;
             }
-            setNetworkActivationStatus(response.data.network_activation_status);
-            if (response.data.network_activation_status==='completed') {
+            setNetworkActivationStatus(response.network_activation_status);
+            if (response.network_activation_status==='completed') {
                 setNetworkProgress(100);
             }
             setSteps(steps);
@@ -86,12 +86,12 @@ const [networkProgress, setNetworkProgress] = useState(0);
             steps[0].visible = false;
             steps[1].visible = true;
             //change url to https, after final check
-            if ( response.data.success ) {
+            if ( response.success ) {
                 setSteps(steps);
                 setStepsChanged(true);
-                setsslActivated(response.data.success);
+                setsslActivated(response.success);
                 props.updateField('ssl_enabled', true);
-                if (response.data.site_url_changed) {
+                if (response.site_url_changed) {
                     window.location.reload();
                 } else {
                     props.getFields();
@@ -126,16 +126,16 @@ const [networkProgress, setNetworkProgress] = useState(0);
         data.id = id;
         updateActionForItem(id, action, false);
         rsssl_api.doAction(action, data).then( ( response ) => {
-            if ( response.data.success ){
+            if ( response.success ){
                 if (action==='activate_setting'){
                     //ensure all fields are updated, and progress is retrieved again
                     props.getFields();
                 }
-                let nextAction = response.data.next_action;
+                let nextAction = response.next_action;
                 if ( nextAction!=='none' && nextAction!=='completed') {
                     updateActionForItem(id, nextAction, false);
                     rsssl_api.doAction(nextAction, data).then( ( response ) => {
-                        if ( response.data.success ){
+                        if ( response.success ){
                             updateActionForItem(id, 'completed', 'success' );
                         } else {
                             updateActionForItem(id, 'failed', 'error' );

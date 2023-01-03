@@ -39,14 +39,14 @@ class Support extends Component {
             } = this.state;
             let encodedMessage = message.replace(/(?:\r\n|\r|\n)/g, '--br--');
             let url = 'https://really-simple-ssl.com/support'
-            +'?customername=' + encodeURIComponent(response.data.customer_name)
-            + '&email=' + response.data.email
-            + '&domain=' + response.data.domain
-            + '&scanresults=' + encodeURIComponent(response.data.scan_results)
-            + '&licensekey=' + encodeURIComponent(response.data.license_key)
+            +'?customername=' + encodeURIComponent(response.customer_name)
+            + '&email=' + response.email
+            + '&domain=' + response.domain
+            + '&scanresults=' + encodeURIComponent(response.scan_results)
+            + '&licensekey=' + encodeURIComponent(response.license_key)
             + '&supportrequest=' + encodeURIComponent(encodedMessage)
-            + '&htaccesscontents=' + response.data.htaccess_contents
-            + '&debuglog=' + response.data.system_status;
+            + '&htaccesscontents=' + response.htaccess_contents
+            + '&debuglog=' + response.system_status;
             window.location.assign(url);
         });
     }
