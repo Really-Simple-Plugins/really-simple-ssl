@@ -1,3 +1,6 @@
+html {
+  scroll-behavior: smooth;
+}
 .rsssl{
   div[class^="rsssl-wizard-"]{ // starts with selector
     .components-flex{

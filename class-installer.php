@@ -115,6 +115,9 @@ if ( !class_exists('rsssl_installer') ){
             }
 			$slug = $this->get_activation_slug();
 	        $networkwide = is_multisite() && rsssl_is_networkwide_active();
+	        if ( !defined('DOING_CRON') ) {
+		        define( 'DOING_CRON', true);
+	        }
             $result = activate_plugin( $slug, '', $networkwide );
 			if (is_wp_error($result)){
 				return false;

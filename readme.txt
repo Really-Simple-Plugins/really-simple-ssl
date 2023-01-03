@@ -6,7 +6,7 @@ Requires at least: 5.7
 License: GPL2
 Tested up to: 6.1
 Requires PHP: 7.2
-Stable tag: 6.0.12
+Stable tag: 6.0.14
 
 The easiest way to improve security! Leverage your SSL certificate and protect your website visitors.
 
@@ -96,6 +96,26 @@ The plugin checks your certificate before enabling, but if, for example, you mig
 If you can't deactivate, do not just remove the plugin folder to uninstall! Follow these [instructions](https://really-simple-ssl.com/knowledge-base/uninstall-websitebackend-not-accessible/) instead.
 
 == Changelog ==
+= 6.0.14 =
+* Fix: settings page when using plain permalinks, props @mvsitecreator, props @doug2son
+
+= 6.0.13 =
+* Improvement: improve method of dropping empty menu items in settings dashboard
+* Improvement: dynamic links in auto installer
+* Improvement: Let's Encrypt Auto installer not working correctly, props @mirkolofio
+* Improvement: change rest_api method to core wp apiFetch()
+* Improvement: scroll highlighted setting into view after clicking "fix" on a task
+* Improvement: run http method test in batches, and set a default, to prevent possibility of curl timeouts on systems with CURL issues
+* Improvement: clean up code-execution.php file after test, props @spinhead
+* Improvement: give notification if 'DISABLE_FILE_EDITING' is set to false in the wp-config.php props @joeri1977
+* Improvement: drop some unnecessary translations
+* Improvement: set better default, and change transients to option for more persistent behavior in wp version test, props @photomaldives
+* Fix: Burst Statistics not activating after installation
+* Fix: CSS for blue labels in progress dashboard below 1080px
+* Fix: WPCLI SSL activation not working due to capability checks, props @oolongm
+* Fix: catch invalid account error in Let's Encrypt generation, props @bugsjr
+* Fix: do not block user enumeration for gutenberg
+
 = 6.0.12 =
 * Fix: on multisite, the test for users with admin username did not use the correct prefix, $wpdb->base_prefix, props @jg-visual
 * Improvement: allow submenu in back-end react application

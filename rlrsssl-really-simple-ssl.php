@@ -3,7 +3,7 @@
  * Plugin Name: Really Simple SSL
  * Plugin URI: https://really-simple-ssl.com
  * Description: Lightweight SSL & Hardening Plugin
- * Version: 6.0.12
+ * Version: 6.0.14
  * Author: Really Simple Plugins
  * Author URI: https://really-simple-plugins.com
  * License: GPL2
@@ -82,7 +82,7 @@ class REALLY_SIMPLE_SSL
 			if ( is_multisite() ) {
 				self::$instance->multisite = new rsssl_multisite();
 			}
-			if ( rsssl_is_logged_in_rest() || is_admin() || wp_doing_cron() || $wpcli || defined('RSSSL_DOING_SYSTEM_STATUS') || defined('RSSSL_LEARNING_MODE') ) {
+			if ( is_admin() || rsssl_is_logged_in_rest() || wp_doing_cron() || $wpcli || defined('RSSSL_DOING_SYSTEM_STATUS') || defined('RSSSL_LEARNING_MODE') ) {
 				self::$instance->cache = new rsssl_cache();
 				self::$instance->placeholder = new rsssl_placeholder();
 				self::$instance->server = new rsssl_server();
@@ -110,7 +110,7 @@ class REALLY_SIMPLE_SSL
         if (!defined('rsssl_file') ){
             define('rsssl_file', __FILE__);
         }
-		define('rsssl_version', '6.0.12');
+		define('rsssl_version', '6.0.14');
 		define('rsssl_le_cron_generation_renewal_check', 20);
 		define('rsssl_le_manual_generation_renewal_check', 15);
 	}
@@ -127,7 +127,7 @@ class REALLY_SIMPLE_SSL
 		if ( is_multisite() ) {
 			require_once( rsssl_path . 'class-multisite.php');
 		}
-		if ( rsssl_is_logged_in_rest() || is_admin() || wp_doing_cron() || $wpcli || defined('RSSSL_DOING_SYSTEM_STATUS') || defined('RSSSL_LEARNING_MODE') ) {
+		if ( is_admin() || rsssl_is_logged_in_rest() ||  wp_doing_cron() || $wpcli || defined('RSSSL_DOING_SYSTEM_STATUS') || defined('RSSSL_LEARNING_MODE') ) {
 			require_once( rsssl_path . 'compatibility.php');
             require_once( rsssl_path . 'upgrade.php');
 			require_once( rsssl_path . 'settings/settings.php' );
@@ -145,7 +145,7 @@ class REALLY_SIMPLE_SSL
 			}
 		}
 
-		if ( rsssl_is_logged_in_rest() || is_admin() || wp_doing_cron() ) {
+		if ( is_admin() || rsssl_is_logged_in_rest() || wp_doing_cron() ) {
             require_once( rsssl_path . 'lets-encrypt/letsencrypt.php' );
         }
 
@@ -255,11 +255,16 @@ if ( ! function_exists( 'rsssl_user_can_manage' ) ) {
 	 * @return bool
 	 */
 	function rsssl_user_can_manage() {
-		if ( ! current_user_can('manage_security') ) {
-			return false;
+		if ( current_user_can('manage_security') ) {
+			return true;
 		}
 
-		return true;
+        #allow wp-cli access to activate ssl
+		if ( defined( 'WP_CLI' ) && WP_CLI ){
+            return true;
+        }
+
+		return false;
 	}
 }
 

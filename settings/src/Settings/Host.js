@@ -26,7 +26,7 @@ class Host extends Component {
         this.props.handleNextButtonDisabled(true);
         saveFields.push(field);
         rsssl_api.setFields(saveFields).then(( response ) => {
-            this.props.updateFields(response.data.fields);
+            this.props.updateFields(response.fields);
             this.disabled = false;
             this.props.handleNextButtonDisabled(false);
         });

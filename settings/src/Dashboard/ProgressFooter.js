@@ -11,7 +11,7 @@ const ProgressFooter = (props) => {
 
     useEffect(() => {
         rsssl_api.runTest('ssl_status_data' ).then( ( response ) => {
-            setCertificateIsValid(response.data.certificate_is_valid);
+            setCertificateIsValid(response.certificate_is_valid);
             SetSslDataLoaded(true);
         });
     }, [])
