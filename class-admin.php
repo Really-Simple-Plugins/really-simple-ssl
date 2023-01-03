@@ -2915,7 +2915,7 @@ class rsssl_admin
 	            $path_to_validate = '/apache/conf/vhosts/htaccess/wordpress-htaccess.conf';
             }
             // if the file exists, we assume it's a bitnami installation
-	        if ( isset($path_to_validate) && is_file($path_to_validate) ) {
+	        if ( isset($path_to_validate) && is_file( $path . $path_to_validate) ) {
 		        return $path_to_validate;
 	        }
         }
