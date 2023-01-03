@@ -2832,16 +2832,18 @@ class rsssl_admin
 	 *
 	 * @Since 3.1
 	 */
-
 	public function uses_htaccess_conf() {
 		//conf/htaccess.conf can be outside of open basedir, return false if so
-		$open_basedir = ini_get("open_basedir");
+
+ 		$open_basedir = ini_get("open_basedir");
 		if ( !empty($open_basedir) ) {
 			return false;
 		}
-		if ( is_file(dirname(ABSPATH) . '/htaccess/wordpress-htaccess.conf') ){
-			return '/htaccess/wordpress-htaccess.conf';
-		}
+
+        //checking if bitnami
+        if ( $this->determine_if_bitnami( dirname(ABSPATH) ) ) {
+            return $this->determine_if_bitnami( dirname(ABSPATH) );
+        }
 
 		if ( is_file(dirname(ABSPATH) . "/conf/htaccess.conf")) {
 			return "/conf/htaccess.conf";
@@ -2892,6 +2894,34 @@ class rsssl_admin
 
 		return 'default';
 	}
+
+	/**
+	 * Check if the site is using a bitnami configuration and return the path to the htaccess file based on check old vs new bitnami structure
+	 *
+	 * @param string $path
+	 * @return bool|string
+	 *
+	 * @since 3.1
+	 */
+	private function determine_if_bitnami(string $path) {
+
+        if ( $path === '/opt/bitnami' ) {
+            // we now check if the path exists
+            if ( is_dir($path . '/apps') ) {
+                $path_to_validate  = '/apps/wordpress/conf/htaccess.conf';
+            }
+
+            if ( is_dir($path . '/wordpress') ) {
+	            $path_to_validate = '/apache/conf/vhosts/htaccess/wordpress-htaccess.conf';
+            }
+            // if the file exists, we assume it's a bitnami installation
+	        if ( isset($path_to_validate) && is_file($path_to_validate) ) {
+		        return $path_to_validate;
+	        }
+        }
+        return false;
+    }
+
 } //class closure
 
 if ( !function_exists('rsssl_ssl_enabled') ) {

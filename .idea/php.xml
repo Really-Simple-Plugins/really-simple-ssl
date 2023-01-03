@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="PhpIncludePathManager">
+    <include_path>
+      <path value="$PROJECT_DIR$/lets-encrypt/vendor/composer" />
+      <path value="$PROJECT_DIR$/lets-encrypt/vendor/fbett/le_acme2" />
+      <path value="$PROJECT_DIR$/lets-encrypt/vendor/plesk/api-php-lib" />
+    </include_path>
+  </component>
+  <component name="PhpProjectSharedConfiguration" php_language_level="7.1">
+    <option name="suggestChangeDefaultLanguageLevel" value="false" />
+  </component>
+</project>
