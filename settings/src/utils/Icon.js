@@ -1,3 +1,4 @@
+import Tooltip from '@mui/material/Tooltip';
 const Icon = (props) => {
   const {name, color, size} = props;
   // set defaults if not se
@@ -364,9 +365,11 @@ const Icon = (props) => {
   }
 
   return (
-      <div className={'rsssl-icon rsssl-icon-' + iconName}>
-        {renderedIcon.html}
-      </div>
+      <Tooltip arrow title={props.tooltip} enterDelay={200}>
+          <div className={'rsssl-icon rsssl-icon-' + iconName}>
+            {renderedIcon.html}
+          </div>
+      </Tooltip>
   );
 
 };

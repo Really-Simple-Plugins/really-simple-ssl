@@ -19,8 +19,11 @@ import CheckboxControl from "./CheckboxControl";
 import Support from "./Support";
 import LearningMode from "./LearningMode";
 import Button from "./Button";
-
+import Icon from "../utils/Icon";
 const Field = (props) => {
+
+
+
     const onChangeHandler = (fieldValue) => {
         let fields = props.fields;
         let field = props.field;
@@ -73,6 +76,16 @@ const Field = (props) => {
         });
     }
 
+    const labelWrap = (field) => {
+        let tooltipColor = field.warning ? 'red': 'black';
+        return (
+            <>
+                <div className="cmplz-label-text">{field.label}</div>
+                {field.tooltip && <Icon name = "info-open" tooltip={field.tooltip} color = {tooltipColor} />}
+            </>
+        )
+    }
+
     let field = props.field;
     let fieldValue = field.value;
     let fields = props.fields;
@@ -111,6 +124,7 @@ const Field = (props) => {
         return (
             <div className={highLightClass}>
                 <CheckboxControl
+                  label={labelWrap(field)}
                   field={field}
                   onChangeHandler={ ( fieldValue ) => onChangeHandler(fieldValue) }
                 />
@@ -130,7 +144,7 @@ const Field = (props) => {
         return (
             <div className={highLightClass}>
               <RadioControl
-                  label={ field.label }
+                  label={labelWrap(field)}
                   onChange={ ( fieldValue ) => onChangeHandler(fieldValue) }
                   selected={ fieldValue }
                   options={ options }
@@ -146,7 +160,7 @@ const Field = (props) => {
                   required={ field.required }
                   disabled={ disabled }
                   help={ field.comment }
-                  label={ field.label }
+                  label={labelWrap(field)}
                   onChange={ ( fieldValue ) => onChangeHandler(fieldValue) }
                   value= { fieldValue }
               />
@@ -233,7 +247,7 @@ const Field = (props) => {
               <SelectControl
                   disabled={ disabled }
                   help={ field.comment }
-                  label={ field.label }
+                  label={labelWrap(field)}
                   onChange={ ( fieldValue ) => onChangeHandler(fieldValue) }
                   value= { fieldValue }
                   options={ options }

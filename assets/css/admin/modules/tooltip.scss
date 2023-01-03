@@ -1,12 +1,16 @@
-.rsssl-tooltip {
-  margin-left: var(--rsp-spacing-xs);
-  display:flex;
-  cursor:pointer;
-  .components-popover.components-tooltip {
-    max-width:300px;
-  }
-  .rsssl-icon {
-    justify-content: flex-start;
-  }
+.rsssl div[class^=rsssl-wizard-] {
+  .rsssl-field-wrap {
+    label {
+      display: flex;
 
+      .cmplz-label-text {
+        margin-right: 10px;
+      }
+    }
+
+    .rsssl-icon {
+      cursor: pointer;
+
+    }
+  }
 }
