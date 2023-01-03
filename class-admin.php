@@ -2833,23 +2833,36 @@ class rsssl_admin
 	 * @Since 3.1
 	 */
 	public function uses_htaccess_conf() {
-		//conf/htaccess.conf can be outside of open basedir, return false if so
-
- 		$open_basedir = ini_get("open_basedir");
-		if ( !empty($open_basedir) ) {
-			return false;
-		}
-
         //checking if bitnami
         if ( $this->determine_if_bitnami( dirname(ABSPATH) ) ) {
             return $this->determine_if_bitnami( dirname(ABSPATH) );
         }
 
-		if ( is_file(dirname(ABSPATH) . "/conf/htaccess.conf")) {
-			return "/conf/htaccess.conf";
-        }
-
         return false;
+	}
+
+	/**
+     * Check if an open basedir restriction is in effect on the path
+	 * @param string $path
+	 *
+	 * @return bool
+	 */
+	public function openbasedir_restriction( string $path): bool {
+
+		// Default error handler is required
+		set_error_handler(null);
+
+		// Clean last error info.
+		error_clear_last();
+
+		// Testing...
+		@file_exists($path);
+
+		// Restore previous error handler
+		restore_error_handler();
+
+		// Return `true` if error has occurred
+		return ($error = error_get_last()) && $error['message'] !== '__clean_error_info';
 	}
 
 	/**
@@ -2914,6 +2927,12 @@ class rsssl_admin
             if ( is_dir($path . '/wordpress') ) {
 	            $path_to_validate = '/apache/conf/vhosts/htaccess/wordpress-htaccess.conf';
             }
+
+            //check if there's an open basedir restriction in effect
+            if ( isset($path_to_validate) && $this->openbasedir_restriction($path . $path_to_validate) ) {
+                return false;
+            }
+
             // if the file exists, we assume it's a bitnami installation
 	        if ( isset($path_to_validate) && is_file( $path . $path_to_validate) ) {
 		        return $path_to_validate;
