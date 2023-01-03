@@ -155,7 +155,7 @@ class LearningMode extends Component {
             let field = this.props.field;
             let fieldValue = field.value;
             let options = this.props.options;
-            let configuringString = __("We're configuring your %s. Exit to edit and enforce.", "really-simple-ssl").replace('%s', field.label);
+            let configuringString = __(" The %s is now in report-only mode and will collect directives. This might take a while. Afterwards you can Exit, Edit and Enforce these Directives.", "really-simple-ssl").replace('%s', field.label);
             let disabledString = __("%s has been disabled.", "really-simple-ssl").replace('%s', field.label);
             let enforcedString = __("%s is enforced.", "really-simple-ssl").replace('%s', field.label);
             const {
@@ -265,7 +265,7 @@ class LearningMode extends Component {
                                   value = {learning_mode}
                                   onChange={ ( e ) => this.toggleLearningMode(e) }
                               />
-                              {__("Enable Learning Mode","really-simple-ssl")}
+                              {__("Enable Learning Mode to configure automatically","really-simple-ssl")}
                           </label>
                         { enforce==1 && <div className="rsssl-locked">
                             <div className="rsssl-shield-overlay">
@@ -281,16 +281,16 @@ class LearningMode extends Component {
                             <div className="rsssl-locked-overlay">
                                 <span className="rsssl-progress-status rsssl-learning-mode">{__("Learning Mode","really-simple-ssl")}</span>
                                 {configuringString}&nbsp;
-                                <a className="rsssl-learning-mode-link" href="#" onClick={ (e) => this.toggleLearningMode(e) }>{__("Exit learning mode", "really-simple-ssl") }</a>
+                                <a className="rsssl-learning-mode-link" href="#" onClick={ (e) => this.toggleLearningMode(e) }>{__("Exit", "really-simple-ssl") }</a>
                             </div>
                         </div>}
-                        {learning_mode_completed==1 && <div className="rsssl-locked">
+                        { learning_mode_completed==1 && <div className="rsssl-locked">
                             <div className="rsssl-locked-overlay">
                                 <span className="rsssl-progress-status rsssl-learning-mode-completed">{__("Learning Mode","really-simple-ssl")}</span>
                                 {__("We finished the configuration.", "really-simple-ssl")}&nbsp;
                                 <a className="rsssl-learning-mode-link" href="#" onClick={ (e) => this.toggleLearningMode(e) }>{__("Review the settings and enforce the policy", "really-simple-ssl") }</a>
                             </div>
-                        </div>}
+                        </div> }
                         { rsssl_settings.pro_plugin_active && this.props.disabled && <div className="rsssl-locked">
                             <div className="rsssl-locked-overlay">
                                 { !enforced_by_thirdparty && <span className="rsssl-progress-status rsssl-disabled">{__("Disabled ","really-simple-ssl")}</span> }
