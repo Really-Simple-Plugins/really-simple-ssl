@@ -98,6 +98,7 @@ If you can't deactivate, do not just remove the plugin folder to uninstall! Foll
 == Changelog ==
 = 6.1.0 =
 * Improvement: some UX changes
+* Improvement: Limit number of notices in the dashboard
 
 = 6.0.14 =
 * Fix: settings page when using plain permalinks, props @mvsitecreator, props @doug2son
