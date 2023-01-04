@@ -2278,7 +2278,7 @@ class rsssl_admin
 	    /**
 	     * Filter out notice that do not apply, or are dismissed
 	     */
-
+	    $statuses = ['open','premium', 'warning', 'completed'];
 	    foreach ( $notices as $id => $notice ) {
 		    $func   = $notice['callback'];
 		    $output = $this->validate_function($func);
