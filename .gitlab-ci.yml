@@ -1,0 +1,114 @@
+stages:
+- test
+
+# Select what we should cache
+cache:
+  paths:
+    - vendor/
+
+services:
+  - mysql
+
+# before_script will run on ALL PHP versions listed in test
+before_script:
+  # Install git, the php image doesn't have it installed
+  - apt-get update -yqq
+  - apt-get install git -yqq
+  # required for "PHP 7.4+
+  - apt-get install libonig-dev -yqq
+
+  # install the required packages for the running CI tests
+  - apt-get -yqqf install wget zip unzip subversion default-mysql-client libmcrypt-dev default-libmysqlclient-dev default-mysql-server --fix-missing
+
+  # Install mysql driver
+  - docker-php-ext-install mysqli pdo_mysql mbstring
+
+  # Install Xdebug. See https://xdebug.org/docs/compat for which version to install
+  - pecl install xdebug-3.1.6
+  # XDEBUG mode has to be set to coverage
+  - echo xdebug.mode=coverage > /usr/local/etc/php/conf.d/xdebug.ini
+
+  # PHP extensions
+  - docker-php-ext-enable mysqli pdo_mysql mbstring xdebug
+
+  # Install composer
+  - curl -sS https://getcomposer.org/installer | php
+
+  # Install all project dependencies
+  - php composer.phar install --ignore-platform-reqs
+  - php composer.phar update
+  # Set up WP test environment
+  - bash bin/install-wp-tests.sh wordpress_test root mysql mysql $WP_VERSION
+
+  # Install WP-CLI
+  - curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
+  - chmod +x wp-cli.phar
+  - mv wp-cli.phar /usr/local/bin/wp
+  - wp core download --allow-root
+  - wp core config --dbhost=mysql --dbname=wordpress_tests --dbuser=root --dbpass=mysql --allow-root
+  - wp config list --allow-root
+  - wp core install --url=http://localhost --title=Example --admin_user=supervisor --admin_password=strongpassword --admin_email=info@example.com --allow-root
+
+  # Zip current plugin to allow it to be installed using wp-cli
+  - zip -r really-simple-ssl.zip .
+  # Install the new plugin in our WP installation
+  - wp plugin install really-simple-ssl.zip --allow-root --force
+  - wp plugin activate really-simple-ssl --allow-root
+  - wp plugin deactivate really-simple-ssl --allow-root
+  - wp plugin uninstall really-simple-ssl --allow-root
+  # Now test an upgrade
+  - wp plugin install really-simple-ssl --allow-root
+  - wp plugin activate really-simple-ssl --allow-root
+  - wp plugin install really-simple-ssl.zip --allow-root --force
+  - wp plugin deactivate really-simple-ssl --allow-root
+  # WP plugin uninstall because otherwise uninstall.php won't run!
+  - wp plugin uninstall really-simple-ssl --allow-root
+
+variables:
+  # Configure mysql service (https://hub.docker.com/_/mysql/)
+  MYSQL_DATABASE: wordpress_tests
+  MYSQL_ROOT_PASSWORD: mysql
+  WP_VERSION: latest
+  WP_MULTISITE: "0"
+
+# We test PHP 7.4
+test:php7.4:
+  image: php:7.4
+  script:
+    - vendor/bin/phpunit --coverage-text --coverage-clover=coverage.clove --colors=never
+
+# We test PHP7.4 with multisite
+test:php7.4:multisite:
+  variables:
+    WP_MULTISITE: "1"
+  image: php:7.4
+  script:
+    - vendor/bin/phpunit --coverage-text --coverage-clover=coverage.clove --colors=never
+
+# We test PHP8
+test:php8.0:
+  image: php:8.0
+  script:
+    - vendor/bin/phpunit --coverage-text --coverage-clover=coverage.clover --colors=never
+
+# We test PHP8 with multisite
+test:php8.0:multisite:
+  variables:
+    WP_MULTISITE: "1"
+  image: php:8.0
+  script:
+    - vendor/bin/phpunit --coverage-text --coverage-clover=coverage.clove --colors=never
+
+# We test PHP8.1
+test:php8.1:
+  image: php:8.1
+  script:
+    - vendor/bin/phpunit --coverage-text --coverage-clover=coverage.clover --colors=never
+
+# We test PHP8.1 with multisite
+test:php8.1:multisite:
+  variables:
+    WP_MULTISITE: "1"
+  image: php:8.1
+  script:
+    - vendor/bin/phpunit --coverage-text --coverage-clover=coverage.clove --colors=never

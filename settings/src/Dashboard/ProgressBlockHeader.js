@@ -40,7 +40,7 @@ class ProgressHeader extends Component {
             notices = this.props.BlockProps.notices;
             all_task_count = notices.length;
             let openNotices = notices.filter(function (notice) {
-                return notice.output.status==='open';
+                return notice.output.status==='open' || notice.output.status==='warning';
             });
             open_task_count = openNotices.length;
         }
