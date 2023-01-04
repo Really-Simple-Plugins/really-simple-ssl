@@ -51,7 +51,11 @@ before_script:
 
   # Zip current plugin to allow it to be installed using wp-cli
   - zip -r really-simple-ssl.zip .
-  # Install the plugin in our WP installation
+  # Install the new plugin in our WP installation
+  - wp plugin install really-simple-ssl.zip --allow-root --force
+  - wp plugin deactivate really-simple-ssl --allow-root
+  - wp plugin uninstall really-simple-ssl --allow-root
+  # Now test an upgrade
   - wp plugin install really-simple-ssl --allow-root
   - wp plugin activate really-simple-ssl --allow-root
   - wp plugin install really-simple-ssl.zip --allow-root --force
