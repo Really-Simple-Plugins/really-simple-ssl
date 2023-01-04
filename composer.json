@@ -3,7 +3,7 @@
         "phpunit/phpunit": "^9",
         "yoast/phpunit-polyfills": "^1.0",
         "wp-cli/wp-cli-bundle": "^2.7",
-        "php": "^7.4",
+        "php": ">=7.2",
         "composer": "^2.4"
     }
 }
