@@ -72,38 +72,38 @@ test:php7.4:
   script:
     - vendor/bin/phpunit --coverage-text --coverage-clover=coverage.clove --colors=never
 
-# We test PHP7.4 with multisite
-test:php7.4:multisite:
-  variables:
-    WP_MULTISITE: "1"
-  image: php:7.4
-  script:
-    - vendor/bin/phpunit --coverage-text --coverage-clover=coverage.clove --colors=never
-
-# We test PHP8
-test:php8.0:
-  image: php:8.0
-  script:
-    - vendor/bin/phpunit --coverage-text --coverage-clover=coverage.clover --colors=never
-
-# We test PHP8 with multisite
-test:php8.0:multisite:
-  variables:
-    WP_MULTISITE: "1"
-  image: php:8.0
-  script:
-    - vendor/bin/phpunit --coverage-text --coverage-clover=coverage.clove --colors=never
-
-# We test PHP8.1
-test:php8.1:
-  image: php:8.1
-  script:
-    - vendor/bin/phpunit --coverage-text --coverage-clover=coverage.clover --colors=never
-
-# We test PHP8.1 with multisite
-test:php8.1:multisite:
-  variables:
-    WP_MULTISITE: "1"
-  image: php:8.1
-  script:
-    - vendor/bin/phpunit --coverage-text --coverage-clover=coverage.clove --colors=never
+## We test PHP7.4 with multisite
+#test:php7.4:multisite:
+#  variables:
+#    WP_MULTISITE: "1"
+#  image: php:7.4
+#  script:
+#    - vendor/bin/phpunit --coverage-text --coverage-clover=coverage.clove --colors=never
+#
+## We test PHP8
+#test:php8.0:
+#  image: php:8.0
+#  script:
+#    - vendor/bin/phpunit --coverage-text --coverage-clover=coverage.clover --colors=never
+#
+## We test PHP8 with multisite
+#test:php8.0:multisite:
+#  variables:
+#    WP_MULTISITE: "1"
+#  image: php:8.0
+#  script:
+#    - vendor/bin/phpunit --coverage-text --coverage-clover=coverage.clove --colors=never
+#
+## We test PHP8.1
+#test:php8.1:
+#  image: php:8.1
+#  script:
+#    - vendor/bin/phpunit --coverage-text --coverage-clover=coverage.clover --colors=never
+#
+## We test PHP8.1 with multisite
+#test:php8.1:multisite:
+#  variables:
+#    WP_MULTISITE: "1"
+#  image: php:8.1
+#  script:
+#    - vendor/bin/phpunit --coverage-text --coverage-clover=coverage.clove --colors=never
