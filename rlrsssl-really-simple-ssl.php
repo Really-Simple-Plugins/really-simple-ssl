@@ -78,11 +78,10 @@ class REALLY_SIMPLE_SSL
 			self::$instance->front_end = new rsssl_front_end();
 			self::$instance->mixed_content_fixer = new rsssl_mixed_content_fixer();
 
-			$wpcli = defined( 'WP_CLI' ) && WP_CLI;
 			if ( is_multisite() ) {
 				self::$instance->multisite = new rsssl_multisite();
 			}
-			if ( is_admin() || rsssl_is_logged_in_rest() || wp_doing_cron() || $wpcli || defined('RSSSL_DOING_SYSTEM_STATUS') || defined('RSSSL_LEARNING_MODE') ) {
+			if ( rsssl_admin_logged_in() ) {
 				self::$instance->cache = new rsssl_cache();
 				self::$instance->placeholder = new rsssl_placeholder();
 				self::$instance->server = new rsssl_server();
@@ -91,7 +90,7 @@ class REALLY_SIMPLE_SSL
 				self::$instance->progress = new rsssl_progress();
 				self::$instance->certificate = new rsssl_certificate();
 				self::$instance->site_health = new rsssl_site_health();
-                if ( $wpcli ) {
+                if ( defined( 'WP_CLI' ) && WP_CLI ) {
 					self::$instance->wp_cli = new rsssl_wp_cli();
 				}
 			}
@@ -120,14 +119,13 @@ class REALLY_SIMPLE_SSL
 		require_once(rsssl_path . 'class-front-end.php');
 		require_once(rsssl_path . 'functions.php');
 		require_once(rsssl_path . 'class-mixed-content-fixer.php');
-		$wpcli = defined( 'WP_CLI' ) && WP_CLI;
-		if ( $wpcli ) {
+		if ( defined( 'WP_CLI' ) && WP_CLI ) {
 			require_once( rsssl_path . 'class-wp-cli.php');
 		}
 		if ( is_multisite() ) {
 			require_once( rsssl_path . 'class-multisite.php');
 		}
-		if ( is_admin() || rsssl_is_logged_in_rest() ||  wp_doing_cron() || $wpcli || defined('RSSSL_DOING_SYSTEM_STATUS') || defined('RSSSL_LEARNING_MODE') ) {
+		if ( rsssl_admin_logged_in() ) {
 			require_once( rsssl_path . 'compatibility.php');
             require_once( rsssl_path . 'upgrade.php');
 			require_once( rsssl_path . 'settings/settings.php' );
@@ -140,14 +138,11 @@ class REALLY_SIMPLE_SSL
             require_once( rsssl_path . 'progress/class-progress.php');
 			require_once( rsssl_path . 'class-certificate.php');
 			require_once( rsssl_path . 'class-site-health.php');
+			require_once( rsssl_path . 'lets-encrypt/letsencrypt.php' );
 			if ( isset($_GET['install_pro'])) {
 				require_once( rsssl_path . 'upgrade/upgrade-to-pro.php');
 			}
 		}
-
-		if ( is_admin() || rsssl_is_logged_in_rest() || wp_doing_cron() ) {
-            require_once( rsssl_path . 'lets-encrypt/letsencrypt.php' );
-        }
 
         require_once( rsssl_path . 'lets-encrypt/cron.php' );
 		require_once( rsssl_path . '/security/security.php');
@@ -266,6 +261,13 @@ if ( ! function_exists( 'rsssl_user_can_manage' ) ) {
 
 		return false;
 	}
+}
+
+if ( !function_exists('rsssl_admin_logged_in')){
+    function rsssl_admin_logged_in(){
+	    $wpcli = defined( 'WP_CLI' ) && WP_CLI;
+	    return (is_admin() && rsssl_user_can_manage()) || rsssl_is_logged_in_rest() ||  wp_doing_cron() || $wpcli || defined('RSSSL_DOING_SYSTEM_STATUS') || defined('RSSSL_LEARNING_MODE');
+    }
 }
 
 function RSSSL()
