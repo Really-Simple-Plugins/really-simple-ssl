@@ -231,14 +231,10 @@ if ( ! function_exists('rsssl_add_manage_security_capability')){
 	 * Add a user capability to WordPress and add to admin and editor role
 	 */
 	function rsssl_add_manage_security_capability(){
-		$capability = 'manage_security';
-		$roles = apply_filters('rsssl_add_manage_security_capability', array('administrator') );
-		foreach( $roles as $role ){
-			$role = get_role( $role );
-			if( $role && !$role->has_cap( $capability ) ){
-				$role->add_cap( $capability );
-			}
-		}
+        $role = get_role( 'administrator' );
+        if( $role && !$role->has_cap( 'manage_security' ) ){
+            $role->add_cap( 'manage_security' );
+        }
 	}
 
 	register_activation_hook( __FILE__, 'rsssl_add_manage_security_capability' );
