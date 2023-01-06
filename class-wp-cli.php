@@ -1,28 +1,33 @@
 <?php
+defined('ABSPATH') or die();
 
-defined('ABSPATH') or die("you do not have access to this page!");
-
-    class rsssl_wp_cli
+/**
+ * Usage
+ * rsssl activate_ssl
+ * rsssl deactivate_ssl
+ */
+class rsssl_wp_cli
+{
+    public function __construct()
     {
 
-        public function __construct()
-        {
+    }
 
-        }
+    public function activate_ssl()
+    {
+        $success = RSSSL()->admin->activate_ssl(false);
+		if ($success) {
+			WP_CLI::success( 'SSL activated successfully' );
+		} else {
+			WP_CLI::error( 'SSL activation failed' );
+		}
+    }
 
-        public function activate_ssl()
-        {
-            RSSSL()->admin->activate_ssl(false);
-            WP_CLI::success( 'SSL activated' );
+    public function deactivate_ssl()
+    {
+        RSSSL()->admin->deactivate();
+        WP_CLI::success( 'SSL deactivated' );
+    }
+}
 
-        }
-
-        public function deactivate_ssl()
-        {
-            RSSSL()->admin->deactivate();
-            WP_CLI::success( 'SSL deactivated' );
-        }
-
-    }//Class closure
-
-    WP_CLI::add_command( 'rsssl', 'rsssl_wp_cli' );
+WP_CLI::add_command( 'rsssl', 'rsssl_wp_cli' );

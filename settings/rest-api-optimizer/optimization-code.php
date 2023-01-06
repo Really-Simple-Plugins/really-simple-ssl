@@ -15,7 +15,8 @@ if ( ! function_exists( 'rsssl_exclude_plugins_for_rest_api' ) ) {
 				strpos($_SERVER['REQUEST_URI'], 'wp-json/reallysimplessl/v') === false ||
 				strpos($_SERVER['REQUEST_URI'], 'otherpluginsdata') !==false  ||
 				strpos($_SERVER['REQUEST_URI'], 'plugin_actions') !==false  ||
-				strpos($_SERVER['REQUEST_URI'], 'onboarding') !==false
+				strpos($_SERVER['REQUEST_URI'], 'onboarding') !==false ||
+				strpos($_SERVER['REQUEST_URI'], 'do_action/activate') !==false
 			)
 		) {
 			return $plugins;

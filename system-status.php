@@ -206,7 +206,7 @@ if ( rsssl_user_can_manage() && isset($_GET['download']) ) {
 
 function find_wordpress_base_path()
 {
-	$path = dirname(__FILE__);
+	$path = __DIR__;
 
 	do {
 		if (file_exists($path . "/wp-config.php")) {

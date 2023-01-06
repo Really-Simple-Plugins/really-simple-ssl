@@ -7,6 +7,7 @@ import { __ } from '@wordpress/i18n';
 import * as rsssl_api from "../utils/api";
 import ModalControl from "../Modal/ModalControl";
 import Placeholder from "../Placeholder/Placeholder";
+import Icon from "../utils/Icon";
 
 class subHeaderComponentMemo extends Component {
     constructor() {
@@ -27,7 +28,6 @@ class MixedContentScan extends Component {
         super( ...arguments );
         this.nonce='';
         this.state = {
-//             scanStatus:scanStatus,
             data:[],
             progress:0,
             action:'',
@@ -40,7 +40,7 @@ class MixedContentScan extends Component {
 
     getScanStatus(){
         return rsssl_api.runTest('scan_status', 'refresh').then( ( response ) => {
-            return response.data;
+            return response;
         });
     }
 
@@ -50,7 +50,6 @@ class MixedContentScan extends Component {
         let action = '';
         let state = 'stop';
         let completedStatus = 'never';
-//         this.getScanData = this.getScanData.bind(this);
 
         if (this.props.field.value.data ){
             data = this.props.field.value.data;
@@ -64,7 +63,7 @@ class MixedContentScan extends Component {
         if (this.props.field.value.state ){
             state = this.props.field.value.state;
         }
-        if (this.props.field.value.state ){
+        if (this.props.field.value.completed_status ){
             completedStatus = this.props.field.value.completed_status;
         }
         if (this.props.field.value.nonce ){
@@ -91,12 +90,12 @@ class MixedContentScan extends Component {
         });
         rsssl_api.runTest('mixed_content_scan', state ).then( ( response ) => {
             this.setState({
-                data:response.data.data,
-                progress:response.data.progress,
-                action:response.data.action,
-                state:response.data.state,
+                data:response.data,
+                progress:response.progress,
+                action:response.action,
+                state:response.state,
             });
-            if ( response.data.state==='running' ){
+            if ( response.state==='running' ){
                 this.run();
             }
         });
@@ -108,16 +107,16 @@ class MixedContentScan extends Component {
         }
         rsssl_api.runTest('mixed_content_scan', 'running' ).then( ( response ) => {
             this.setState({
-                completedStatus:response.data.completed_status,
-                data:response.data.data,
-                progress:response.data.progress,
-                action:response.data.action,
-                state:response.data.state,
+                completedStatus:response.completed_status,
+                data:response.data,
+                progress:response.progress,
+                action:response.action,
+                state:response.state,
             });
             //if scan was stopped while running, set it to stopped now.
             if ( this.state.paused ) {
                 this.stop();
-            } else if ( response.data.state==='running' ) {
+            } else if ( response.state==='running' ) {
                 this.run();
             }
 
@@ -139,10 +138,10 @@ class MixedContentScan extends Component {
         });
         rsssl_api.runTest('mixed_content_scan', 'stop' ).then( ( response ) => {
             this.setState({
-                completedStatus:response.data.completed_status,
-                data:response.data.data,
-                progress:response.data.progress,
-                action:response.data.action,
+                completedStatus:response.completed_status,
+                data:response.data,
+                progress:response.progress,
+                action:response.action,
             });
         });
     }
@@ -275,22 +274,25 @@ class MixedContentScan extends Component {
 
 
         return (
-            <div>
+            <>
                 <div className="rsssl-progress-container">
                     <div className="rsssl-progress-bar" style={{width: progress}} ></div>
                 </div>
                 {state==='running' && <div className="rsssl-current-scan-action">{action}</div>}
                     {data.length==0 && <>
                         <div className="rsssl-mixed-content-description">
-                            {state!=='running' && completedStatus==='never' && __("No records. Start your first scan","really-simple-ssl")}
+                            {state!=='running' && completedStatus==='never' && __("No results. Start your first scan","really-simple-ssl")}
                             {state!=='running' && completedStatus==='completed' && __("Everything is now served over SSL","really-simple-ssl")}
                         </div>
-                        <div className="rsssl-mixed-content-placeholder">
-{/*                                <img src={rsssl_settings.pro_url+'/assets/img/mixed_content_scan.svg'} /> */}
-                                 <div></div><div></div><div></div><div></div>
+                        { (state ==='running' || completedStatus!=='completed') && <div className="rsssl-mixed-content-placeholder">
+                                 <div></div><div></div><div></div>
                         </div>
+                        }
+                        { state!=='running' && completedStatus==='completed' && <div className="rsssl-shield-overlay">
+                              <Icon name = "shield"  size="80px"/>
+                        </div> }
                         </>}
-                    { data.length>0 && <DataTable
+                    { data.length>0 && <div className={'rsssl-mixed-content-datatable'}><DataTable
                         columns={columns}
                         data={data}
                         dense
@@ -302,10 +304,10 @@ class MixedContentScan extends Component {
 
                         // subHeader
                         // subHeaderComponent=<subHeaderComponentMemo/>
-                    /> }
+                    /></div>  }
                 <div className="rsssl-grid-item-content-footer">
                     <button className="button" disabled={startDisabled} onClick={ (e) => this.start(e) }>{__("Start scan","really-simple-ssl-pro")}</button>
-                    <button className="button" disabled={stopDisabled} onClick={ (e) => this.stop(e) }>{__("Pause","really-simple-ssl-pro")}</button>
+                    <button className="button" disabled={stopDisabled} onClick={ (e) => this.stop(e) }>{__("Stop","really-simple-ssl-pro")}</button>
                     <ToggleControl
                         checked= { showIgnoredUrls==1 }
                         onChange={ (e) => this.toggleIgnoredUrls(e) }
@@ -313,7 +315,7 @@ class MixedContentScan extends Component {
                     <label>{__('Show ignored URLs', 'burst-statistics')}</label>
                 </div>
 
-            </div>
+            </>
         )
     }
 }

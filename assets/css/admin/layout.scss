@@ -88,6 +88,7 @@
     align-items: center;
     margin-left: auto;
     gap: var(--rsp-spacing-s);
+    min-height: 52px;
 
     select {
       max-width: 60ch;
@@ -117,12 +118,22 @@
     grid-auto-rows: max-content;
     gap: var(--rsp-grid-gap);
     min-height: calc(100vh - 32px - 80px - 20px - var(--rsp-grid-gap)); //32px = wordpress bar, 80px = cmplz bar, 20px = margin-top, 20px is grid gap
-    &.rsssl-settings{
-      grid-template-columns: 350px 1fr 1fr 1fr;
+    &.rsssl-settings, &.rsssl-letsencrypt{
+      grid-template-columns: minmax(275px, max-content) 2fr minmax(min-content, 1fr);
+      @media only screen and ( max-width: $rsp-break-s)  {
+        grid-template-columns: repeat(4, 1fr);
+        .rsssl-wizard-menu, .rsssl-wizard-settings, .rsssl-wizard-help {
+            grid-column: 1 / -1;
+        }
+      }
     }
-    @media only screen and (max-width: $rsp-break-m)  {
+    @media only screen and ( max-width: $rsp-break-m)  {
       grid-template-columns: repeat(2,1fr);
+    }
+
+    @media only screen and ( max-width: $rsp-break-s)  {
       max-width:790px;
+      width: calc(100% - var(--rsp-grid-gap) * 2)
     }
   }
 
@@ -169,6 +180,7 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
+      min-height: calc(30px + var(--rsp-spacing-s) * 2);
       @include rsssl-block-padding;
 
       &:empty {

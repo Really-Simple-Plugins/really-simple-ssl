@@ -94,7 +94,6 @@ function rsssl_le_add_fields($fields) {
 					'title' => __( "Email address", "really-simple-ssl" ),
 					'text'  => __( "This email address is used to create a Let's Encrypt account. This is also where you will receive renewal notifications.", 'really-simple-ssl' ),
 				],
-				'disabled' => ! rsssl_get_option( 'ssl_enabled' ),
 				'default'  => '',
 				'required' => true,
 			],

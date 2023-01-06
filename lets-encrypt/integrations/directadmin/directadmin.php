@@ -98,7 +98,6 @@ class rsssl_directadmin {
 					'certificate' => file_get_contents( $key_file ) . file_get_contents( $cert_file )
 				));
 			$response = $sock->fetch_parsed_body();
-			error_log( print_r( $response, true ) );
 
 			//set a default error response
 			$status = 'warning';
@@ -117,7 +116,6 @@ class rsssl_directadmin {
 						'cacert' => file_get_contents( $cabundle_file )
 					));
 				$response = $sock->fetch_parsed_body();
-				error_log( print_r( $response, true ) );
 				if ( empty($response['details']) && stripos($response[0], 'Error' ) ) {
 					$status = 'success';
 					$action = 'finalize';
@@ -129,7 +127,6 @@ class rsssl_directadmin {
 
 
 		} catch ( Exception $e ) {
-			error_log( print_r( $e, true ) );
 			update_option( 'rsssl_installation_error', 'directadmin', false );
 			$status  = 'warning';
 			$action  = 'continue';

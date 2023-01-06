@@ -23,7 +23,7 @@ class rsssl_cPanel
 	    $this->host =  str_replace( array('http://', 'https://', ':2083',':'), '', $host );
         $this->username = $username;
         $this->password = $password;
-        $this->ssl_installation_url = 'https://'.$this->host.":2083/frontend/paper_lantern/ssl/install.html";
+        $this->ssl_installation_url = 'https://'.$this->host.":2083/frontend/jupiter/ssl/install.html";
     }
 	/**
 	 * Check if all creds are available
@@ -96,30 +96,31 @@ class rsssl_cPanel
 
 	    $response_raw = $this->connectUapi($request_uri, $payload);
 	    $isIpBlock = $this->isIpBlock($response_raw);
+	    $isLoginError = !$isIpBlock && $this->isLoginError($response_raw);
 	    $response = json_decode($response_raw);
         //Validate $response
 	    if ($isIpBlock) {
+		    update_option( 'rsssl_installation_error', 'cpanel:autossl', false );
+		    $status  = 'error';
+		    $action  = 'stop';
+		    $message = __( "Your website's ip address is blocked. Please add your domain's ip address to the security policy in CPanel", "really-simple-ssl" );
+	    } else if ($isLoginError) {
 		    update_option('rsssl_installation_error', 'cpanel:autossl', false);
-		    error_log('The website\'s ip address is blocked by CPanel. Add to allow list');
 		    $status = 'error';
 		    $action = 'stop';
-		    $message = __("Your website's ip address is blocked. Please add your domain's ip address to the security policy in CPanel","really-simple-ssl");
-	    } else if (empty($response)) {
-            error_log('Not able to login');
+		    $message = __("Login credentials incorrect. Please check your login credentials for cPanel.","really-simple-ssl");
+	    } else if ( empty($response) ) {
 	        update_option('rsssl_installation_error', 'cpanel:default', false);
 	        $status = 'warning';
 	        $action = $shell_addon_active ? 'skip' : 'continue';
 	        $message = rsssl_get_manual_instructions_text($this->ssl_installation_url);
         } else if ($response->status) {
 	        delete_option('rsssl_installation_error' );
-
-	        error_log('SSL successfully installed on '.$domain.' successfully.');
 	        $status = 'success';
 	        $action = 'continue';
 	        $message = sprintf(__("SSL successfully installed on %s","really-simple-ssl"), $domain);
         } else {
 	        update_option('rsssl_installation_error', 'cpanel:default', false);
-	        error_log($response->errors[0]);
 	        $status = 'error';
 	        $action = $shell_addon_active ? 'skip' : 'continue';
 	        $message = __("Errors were reported during installation","really-simple-ssl").'<br> '.$response->errors[0];
@@ -147,6 +148,25 @@ class rsssl_cPanel
 		}
 		return false;
 	}
+
+	/**
+	 * Based on the known output of an ip block html page, check if the user has entered incorrect login creds
+	 * @param $raw
+	 *
+	 * @return bool
+	 */
+	public function isLoginError($raw){
+		$triggers = [
+			'input-field-login icon password',
+			'name="pass" id="pass"',
+		];
+		foreach($triggers as $key => $trigger ) {
+			if (strpos($raw,$trigger)!==false) {
+				return true;
+			}
+		}
+		return false;
+	}
 	/**
 	 * @param $domains
 	 *
@@ -165,26 +185,21 @@ class rsssl_cPanel
 	    //Validate $response
 	    if ($isIpBlock) {
 		    update_option('rsssl_installation_error', 'cpanel:autossl', false);
-		    error_log('The website\'s ip address is blocked by CPanel. Add to allow list');
 		    $status = 'error';
 		    $action = 'stop';
 		    $message = __("Your website's ip address is blocked. Please add your domain's ip address to the security policy in CPanel","really-simple-ssl");
 	    } else if (empty($response)) {
 	    	update_option('rsssl_installation_error', 'cpanel:autossl', false);
-		    error_log('The install_ssl cURL call did not return valid JSON');
 		    $status = 'error';
 		    $action = 'skip';
 		    $message = rsssl_get_manual_instructions_text($this->ssl_installation_url);
 	    } else if ($response->status) {
 		    delete_option('rsssl_installation_error');
-		    error_log('Congrats! SSL installed on '.$domains.' successfully.');
 		    $status = 'success';
 		    $action = 'finalize';
 		    $message = __("SSL successfully installed on $domains","really-simple-ssl");
 	    } else {
 		    update_option('rsssl_installation_error', 'cpanel:autossl', false);
-		    error_log('The auto SSL cURL call returned valid JSON, but reported errors:');
-		    error_log($response->errors[0]);
 		    $status = 'error';
 		    $action = 'skip';//we try the default next
 		    $message = __("Errors were reported during installation.","really-simple-ssl").'<br> '.$response->errors[0];
@@ -220,7 +235,9 @@ class rsssl_cPanel
 
         // Make the call, and then terminate the cURL caller object.
         $curl_response = curl_exec($ch);
-        error_log(print_r($curl_response, true));
+	    if (curl_errno($ch)) {
+		    $error_msg = curl_error($ch);
+	    }
         curl_close($ch);
 
         //return output.
@@ -305,7 +322,6 @@ class rsssl_cPanel
 			$action = 'continue';
 			$message = __("Successfully added TXT record.","really-simple-ssl");
 		} else {
-			error_log(print_r($response_array, true));
 			$status = 'warning';
 			$action = 'continue';
 			$message = __("Could not automatically add TXT record. Please proceed manually, following the steps below.","really-simple-ssl");

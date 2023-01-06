@@ -15,6 +15,10 @@ function rsssl_rest_api_onboarding($request) {
 	$steps = [];
 	$info = "";
 	$refresh = isset($_GET['forceRefresh']) && $_GET['forceRefresh']===true;
+	$nonce = $_GET['nonce'] ?? false;
+	if ( !wp_verify_nonce($nonce, 'rsssl_nonce') ) {
+		return [];
+	}
 	if( !defined('rsssl_pro_version')) {
 		$info = __('You can also let the automatic scan of the pro version handle this for you, and get premium support, increased security with HSTS and more!', 'really-simple-ssl'). " " . sprintf('<a target="_blank" href="%s">%s</a>', RSSSL()->admin->pro_url, __("Check out Really Simple SSL Pro", "really-simple-ssl"));;
 	}
@@ -33,7 +37,7 @@ function rsssl_rest_api_onboarding($request) {
 	$steps[] = [
 		"id" => 'onboarding',
 		"title" => $is_upgrade ? __( "Thanks for updating!", 'really-simple-ssl' ) : __( "Congratulations!", 'really-simple-ssl' ),
-		"subtitle" => __("Now have a look at our new features", "really-simple-ssl"),
+		"subtitle" => __("Now have a look at our new features.", "really-simple-ssl"),
 		"items" => rsssl_get_items_for_second_step(),
 		"info_text" => __("Want to know more about our features and plugins?", "really-simple-ssl").' '.sprintf(__("Please read this %sarticle%s.", 'really-simple-ssl'), '<a target="_blank" href="https://really-simple-ssl.com/meet-really-simple-ssl-6/">', '</a>'),
 		"visible" => false
@@ -62,14 +66,14 @@ function rsssl_get_items_for_second_step () {
 		[
 			"slug" => "burst-statistics",
 			'constant_premium' => false,
-			"title" => __("Burst Statistics", "really-simple-ssl"),
-			"description" => __("Gather privacy-friendly statistics with Burst Statistics", "really-simple-ssl"),
+			"title" => "Burst Statistics",
+			"description" => __("Burst Statistics - Self-hosted, Privacy-friendly analytics tool", "really-simple-ssl"),
 		],
 		[
 			"slug" => "complianz-gdpr",
 			'constant_premium' => 'cmplz_premium',
-			"title" => __("Complianz - The Privacy Suite for WordPress", "really-simple-ssl"),
-			"description" => __("Cookie Consent as it should be", "really-simple-ssl"),
+			"title" => "Complianz",
+			"description" => __("Complianz - Cookie Consent Management as it should be", "really-simple-ssl"),
 		]
 	];
 

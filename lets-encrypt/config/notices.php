@@ -65,7 +65,7 @@ function rsssl_le_get_notices_list($notices) {
 				'score'     => 10,
 				'output'    => array(
 					'false' => array(
-						'msg'  => sprintf( __( "Your certificate is valid to: %s", "really-simple-ssl" ), $expiry_date ),
+						'msg'  => sprintf( __( "Your certificate is valid until: %s", "really-simple-ssl" ), $expiry_date ),
 						'icon' => 'success'
 					),
 					'true'  => array(

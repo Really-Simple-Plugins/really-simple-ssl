@@ -46,10 +46,10 @@ class ProgressBlock extends Component {
 
     getProgressData(){
         rsssl_api.runTest('progressData', 'refresh').then( ( response ) => {
-            this.progressText = response.data.text;
-            this.filter = response.data.filter;
-            this.percentageCompleted = response.data.percentage;
-            this.notices = response.data.notices;
+            this.progressText = response.text;
+            this.filter = response.filter;
+            this.percentageCompleted = response.percentage;
+            this.notices = response.notices;
             this.progressLoaded = true;
 
             this.setState({
@@ -85,7 +85,7 @@ class ProgressBlock extends Component {
 
         this.props.setBlockProps('notices', notices);
         return rsssl_api.runTest('dismiss_task', notice_id).then(( response ) => {
-            this.percentageCompleted = response.data.percentage;
+            this.percentageCompleted = response.percentage;
             this.setState({
                 percentageCompleted:this.percentageCompleted
             })
@@ -131,7 +131,7 @@ class ProgressBlock extends Component {
                 </div>
 
                 <div className="rsssl-scroll-container">
-                    {notices.map((notice, i) => <TaskElement key={i} index={i} notice={notice} onCloseTaskHandler={this.onCloseTaskHandler} highLightField={this.props.highLightField}/>)}
+                    {notices.map((notice, i) => <TaskElement key={i} index={i} notice={notice} getFields={this.props.getFields} onCloseTaskHandler={this.onCloseTaskHandler} highLightField={this.props.highLightField}/>)}
                 </div>
 
             </div>

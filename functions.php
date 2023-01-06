@@ -50,14 +50,15 @@ function rsssl_is_networkwide_active(){
 	if ( !is_multisite() ) {
 		return false;
 	}
-	if ( !function_exists('is_plugin_active_for_network') )
-		require_once(ABSPATH . '/wp-admin/includes/plugin.php');
+	if ( !function_exists('is_plugin_active_for_network') ) {
+		require_once( ABSPATH . '/wp-admin/includes/plugin.php' );
+	}
 
 	if ( is_plugin_active_for_network(rsssl_plugin) ) {
 		return true;
-	} else {
-		return false;
 	}
+
+	return false;
 }
 
 /**

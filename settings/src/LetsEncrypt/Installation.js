@@ -43,7 +43,7 @@ const Installation = (props) => {
         if ( action && (action.status==='error' || action.status === 'warning') ) {
             rsssl_api.runLetsEncryptTest('installation_data').then( ( response ) => {
                 if (response) {
-                    setInstallationData(response.data.output);
+                    setInstallationData(response.output);
                 }
             });
         }

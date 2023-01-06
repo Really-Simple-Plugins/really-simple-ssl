@@ -1,6 +1,6 @@
-import axios from 'axios';
 import getAnchor from "./getAnchor";
-
+import axios from 'axios';
+import apiFetch from '@wordpress/api-fetch';
 /*
  * Makes a get request to the fields list
  *
@@ -9,15 +9,52 @@ import getAnchor from "./getAnchor";
  * @returns {AxiosPromise<any>}
  */
 
+export const getNonce = () => {
+	return '&nonce='+rsssl_settings.rsssl_nonce+'&token='+Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, 5);
+};
+
+const usesPlainPermalinks = () => {
+    return rsssl_settings.site_url.indexOf('?') !==-1;
+};
+
+const apiGet = (path) => {
+    if ( usesPlainPermalinks() ) {
+        let config = {
+            headers: {
+                'X-WP-Nonce': rsssl_settings.nonce,
+            }
+        }
+        return axios.get(rsssl_settings.site_url+path, config ).then( ( response ) => {return response.data;})
+    } else {
+        return apiFetch( { path: path } );
+    }
+}
+
+const apiPost = (path, data) => {
+    if ( usesPlainPermalinks() ) {
+        let config = {
+            headers: {
+                'X-WP-Nonce': rsssl_settings.nonce,
+            }
+        }
+    	return axios.post(rsssl_settings.site_url+path, data, config ).then( ( response ) => {return response.data;});
+    } else {
+        return apiFetch( {
+            path: path,
+            method: 'POST',
+            data: data,
+        } );
+    }
+}
+
+const glue = () => {
+    return rsssl_settings.site_url.indexOf('?')!==-1 ? '&' : '?'
+}
+
 export const getFields = () => {
     //we pass the anchor, so we know when LE is loaded
     let anchor = getAnchor('main');
-	let config = {
-		headers: {
-			'X-WP-Nonce': rsssl_settings.nonce,
-		}
-	}
-    return axios.get(rsssl_settings.site_url+'reallysimplessl/v1/fields/get?'+anchor, config);
+    return apiGet('reallysimplessl/v1/fields/get'+glue()+anchor+getNonce(), 'GET');
 };
 
 /*
@@ -28,78 +65,32 @@ export const getFields = () => {
 export const setFields = (data) => {
     //we pass the anchor, so we know when LE is loaded
     let anchor = getAnchor('main');
-	let config = {
-		headers: {
-			'X-WP-Nonce': rsssl_settings.nonce,
-		}
-	}
-	return axios.post(rsssl_settings.site_url+'reallysimplessl/v1/fields/set?'+anchor, data, config );
+	let nonce = {'nonce':rsssl_settings.rsssl_nonce};
+	data.push(nonce);
+    return apiPost('reallysimplessl/v1/fields/set'+glue()+anchor, data);
 };
 
 export const getBlock = (block) => {
-	let config = {
-		headers: {
-			'X-WP-Nonce': rsssl_settings.nonce,
-		}
-	}
-	return axios.get(rsssl_settings.site_url+'reallysimplessl/v1/block/'+block, config);
+    return apiGet('reallysimplessl/v1/block/'+block+glue()+getNonce());
 };
 
 export const runTest = (test, state, data ) => {
-	let config = {
-		headers: {
-			'X-WP-Nonce': rsssl_settings.nonce,
-		}
-	}
-	if (data) {
+	if ( data ) {
 		data = encodeURIComponent(JSON.stringify(data));
 	}
-	return axios.get(rsssl_settings.site_url+'reallysimplessl/v1/tests/'+test+'?state='+state+'&data='+data, config);
+    return apiGet('reallysimplessl/v1/tests/'+test+glue()+'state='+state+getNonce()+'&data='+data)
 };
 
 export const runLetsEncryptTest = (test, id ) => {
-	let config = {
-		headers: {
-			'X-WP-Nonce': rsssl_settings.nonce,
-		}
-	}
-
-	return axios.get(rsssl_settings.site_url+'reallysimplessl/v1/tests/'+test+'?letsencrypt=1&id='+id, config);
+    return apiGet('reallysimplessl/v1/tests/'+test+glue()+'letsencrypt=1&id='+id+getNonce());
 }
 
 export const doAction = (action, data) => {
-	let config = {
-		headers: {
-			'X-WP-Nonce': rsssl_settings.nonce,
-		}
-	}
-	return axios.post(rsssl_settings.site_url+'reallysimplessl/v1/do_action/'+action, data, config );
-}
-
-export const updateSslLabs = (data) => {
-	let config = {
-		headers: {
-			'X-WP-Nonce': rsssl_settings.nonce,
-		}
-	}
-	return axios.post(rsssl_settings.site_url+'reallysimplessl/v1/store_ssl_labs', data, config );
-}
-
-export const onboardingActions = (data) => {
-	let config = {
-		headers: {
-			'X-WP-Nonce': rsssl_settings.nonce,
-		}
-	}
-
-	return axios.post(rsssl_settings.site_url+'reallysimplessl/v1/onboarding_actions', data, config );
+    if (typeof data === 'undefined') data = {};
+    data.nonce = rsssl_settings.rsssl_nonce;
+    return apiPost('reallysimplessl/v1/do_action/'+action, data);
 }
 
 export const getOnboarding = (forceRefresh) => {
-	let config = {
-		headers: {
-			'X-WP-Nonce': rsssl_settings.nonce,
-		}
-	}
-	return axios.get(rsssl_settings.site_url+'reallysimplessl/v1/onboarding?forceRefresh='+forceRefresh, config);
+    return apiGet('reallysimplessl/v1/onboarding'+glue()+'forceRefresh='+forceRefresh+getNonce());
 }

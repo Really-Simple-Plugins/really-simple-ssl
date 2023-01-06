@@ -27,7 +27,14 @@
       right: 0;
       background: rgba(255, 255, 255, 0.8);
       border-radius: var(--rsp-border-radius);
-
+      .rsssl-shield-overlay {
+        height: 0;
+        top: calc(100% - 190px);
+        position: relative;
+        align-items: center;
+        justify-content: center;
+        display: flex;
+      }
       .rsssl-locked-overlay {
         z-index: 1;
         top: calc(100% - 95px);

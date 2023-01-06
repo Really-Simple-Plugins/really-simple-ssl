@@ -11,7 +11,7 @@
       li {
         display: flex;
         align-items: flex-start;
-        margin-bottom: var(--rsp-spacing-xs);
+        margin-bottom: var(--rsp-spacing-xxs);
         .rsssl-icon{
           margin-top: 7px;
           margin-right:7px;
@@ -24,13 +24,18 @@
     align-items: center;
     margin-top: var(--rsp-spacing-l);
     gap: var(--rsp-spacing-m);
-    .components-toggle-control .components-base-control__field{
-      margin:0;
+    .components-toggle-control {
+      margin-top:8px;
+      .components-form-toggle{
+        margin-top:12px;
+      }
     }
-    button, a, label{
-        //font-size: var(--rsp-fs-400);
-        //font-weight: 500;
-        //line-height: 1.5;
-    }
+
+  }
+}
+
+.rsssl-modal-content-step-footer {
+  .components-toggle-control {
+    margin-top:8px;
   }
 }

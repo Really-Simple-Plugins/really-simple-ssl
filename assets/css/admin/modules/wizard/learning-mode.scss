@@ -22,7 +22,7 @@
 
   .rsssl-progress-status {
     @extend .rsssl-task-status;
-    &.rsssl-learning-mode-completed {
+    &.rsssl-learning-mode-completed, &.rsssl-learning-mode-enforced {
       background-color: var(--rsp-color-success);
       color:#fff;
     }
@@ -30,23 +30,26 @@
       background-color: var(--rsp-color-open);
 
     }
-    &.rsssl-learning-mode-disabled {
+    &.rsssl-disabled, &.rsssl-learning-mode-disabled {
       background-color: var(--rsp-color-disabled);
     }
-  }
-}
 
-.rsssl-learningmode-toggle {
-  display:flex;
-  align-items: center;
-  button.button {
-    margin-right:20px;
   }
 }
 
 .rsssl-learning-mode-footer {
   display:flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: var(--rsp-spacing-s);
   select {
     margin-left:auto;
+  }
+  label {
+    display: flex;
+    align-items: center;
+    input{
+      margin-top: 0;
+    }
   }
 }

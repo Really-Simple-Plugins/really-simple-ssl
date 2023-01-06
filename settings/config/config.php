@@ -31,7 +31,7 @@ function rsssl_menu() {
 						[
 							'id' => 'support',
 							'title' => __('Premium Support', 'really-simple-ssl'),
-							'intro' => __('When you send this form, we will attach the following information: license key, scan results, your domain, .htaccess file, debug log and a list of active plugins.', 'really-simple-ssl'),
+							'intro' => __('The following information is attached when you send this form: license key, scan results, your domain, .htaccess file, debug log and a list of active plugins.', 'really-simple-ssl'),
 							'premium' => true,
 							'premium_text' => __("Get Premium Support with %sReally Simple SSL Pro%s", 'really-simple-ssl'),
 							'helpLink'  => 'https://really-simple-ssl.com/instructions/debugging/',
@@ -110,8 +110,7 @@ function rsssl_menu() {
 				],
 				[
 					'id'      => 'hsts',
-					'title'   => __( 'HTTP Strict Transport Security', 'really-simple-ssl' ),
-					'intro'   => __( "Intro HSTS", "really-simple-ssl" ),
+					'title'   => 'HTTP Strict Transport Security',
 					'premium' => true,
 					'groups'  => [
 						[
@@ -127,8 +126,7 @@ function rsssl_menu() {
 				],
 				[
 					'id'      => 'permissions_policy',
-					'title'   => __( 'Permissions Policy', 'really-simple-ssl' ),
-					'intro'   => __( "Permissions Policy", "really-simple-ssl" ),
+					'title'   => 'Permissions Policy',
 					'premium' => true,
 					'groups'  => [
 						[
@@ -138,14 +136,13 @@ function rsssl_menu() {
 							'helpLink'             => 'https://really-simple-ssl.com/instructions/about-permissions-policy/',
 							'networkwide_required' => true,
 							'premium'              => true,
-							'title'                => __( 'Permissions Policy', 'really-simple-ssl' ),
+							'title'                => 'Permissions Policy',
 						],
 					],
 				],
 				[
 					'id'      => 'content_security_policy',
-					'title'   => __( 'Content Security Policy', 'really-simple-ssl' ),
-					'intro'   => __( "Content Security Policy intro", "really-simple-ssl" ),
+					'title'   => 'Content Security Policy',
 					'premium' => true,
 					'groups'  => [
 						[
@@ -155,7 +152,7 @@ function rsssl_menu() {
 							'premium_text'         => __( "Get Upgrade Insecure Requests with %sReally Simple SSL Pro%s", 'really-simple-ssl' ),
 							'upgrade'              => 'https://really-simple-ssl.com/pro/',
 							'helpLink'             => 'https://really-simple-ssl.com/instructions/upgrade-insecure-requests/',
-							'title'                => __( 'Upgrade Insecure Requests', 'really-simple-ssl' ),
+							'title'                => 'Upgrade Insecure Requests',
 						],
 						[
 							'id'                   => 'frame_ancestors',
@@ -164,7 +161,7 @@ function rsssl_menu() {
 							'premium_text'         => __( "Get Frame Ancestors with %sReally Simple SSL Pro%s", 'really-simple-ssl' ),
 							'upgrade'              => 'https://really-simple-ssl.com/pro/',
 							'helpLink'             => 'https://really-simple-ssl.com/instructions/frame-ancestors',
-							'title'                => __( 'Frame Ancestors', 'really-simple-ssl' ),
+							'title'                => 'Frame Ancestors',
 						],
 						[
 							'id'                   => 'content_security_policy',
@@ -173,7 +170,7 @@ function rsssl_menu() {
 							'premium'              => true,
 							'premium_text'         => __( "Get Source Directives with %sReally Simple SSL Pro%s", 'really-simple-ssl' ),
 							'upgrade'              => 'https://really-simple-ssl.com/pro/',
-							'title'                => __( 'Source Directives', 'really-simple-ssl' ),
+							'title'                => 'Source Directives',
 						]
 					],
 				],
@@ -183,7 +180,7 @@ function rsssl_menu() {
 					'premium'              => true,
 					'premium_text'         => __( 'Get Cross Origin Policy Headers with %sReally Simple SSL Pro%s', 'really-simple-ssl' ),
 					'upgrade'              => 'https://really-simple-ssl.com/pro/',
-					'title'                => __( 'Cross Origin Policy', 'really-simple-ssl' ),
+					'title'                => 'Cross Origin Policy',
 					'helpLink'             => 'https://really-simple-ssl.com/instructions/cross-origin-policies/',
 
 				],
@@ -192,7 +189,7 @@ function rsssl_menu() {
 		[
 			"id"             => "letsencrypt",
 			'default_hidden' => true,
-			"title"          => __( "Let's Encrypt", 'really-simple-ssl' ),
+			"title"          => "Let's Encrypt",
 			'intro'          => sprintf( __( 'We have tried to make our Wizard as simple and fast as possible. Although these questions are all necessary, if there’s any way you think we can improve the plugin, please let us %sknow%s!',
 					'really-simple-ssl' ), '<a target="_blank" href="https://really-simple-ssl.com/contact">', '</a>' ) .
 			                    sprintf( __( ' Please note that you can always save and finish the wizard later, use our %sdocumentation%s for additional information or log a %ssupport ticket%s if you need our assistance.',
@@ -221,31 +218,26 @@ function rsssl_menu() {
 				[
 					'id'         => 'le-directories',
 					'title'      => __( 'Directories', 'really-simple-ssl' ),
-//					'intro' => __( 'Below you will find the instructions for different hosting environments and configurations. If you start the process with the necessary instructions and credentials the next view steps will be done in no time.', 'really-simple-ssl'),
 					'tests_only' => true,
 				],
 				[
 					'id'         => 'le-dns-verification',
 					'title'      => __( 'DNS verification', 'really-simple-ssl' ),
-//					'intro' => __( 'Below you will find the instructions for different hosting environments and configurations. If you start the process with the necessary instructions and credentials the next view steps will be done in no time.', 'really-simple-ssl'),
 					'tests_only' => true,
 				],
 				[
 					'id'         => 'le-generation',
 					'title'      => __( 'Generation', 'really-simple-ssl' ),
-//					'intro' => __( 'Below you will find the instructions for different hosting environments and configurations. If you start the process with the necessary instructions and credentials the next view steps will be done in no time.', 'really-simple-ssl'),
 					'tests_only' => true,
 				],
 				[
 					'id'         => 'le-installation',
 					'title'      => __( 'Installation', 'really-simple-ssl' ),
-//					'intro' => __( 'Below you will find the instructions for different hosting environments and configurations. If you start the process with the necessary instructions and credentials the next view steps will be done in no time.', 'really-simple-ssl'),
 					'tests_only' => true,
 				],
 				[
 					'id'         => 'le-activate_ssl',
 					'title'      => __( 'Activate', 'really-simple-ssl' ),
-//					'intro' => __( 'Below you will find the instructions for different hosting environments and configurations. If you start the process with the necessary instructions and credentials the next view steps will be done in no time.', 'really-simple-ssl'),
 					'tests_only' => true,
 				],
 			],
@@ -353,7 +345,7 @@ function rsssl_fields( $load_values = true ) {
 			'menu_id'  => 'general',
 			'group_id' => 'general',
 			'type'     => 'checkbox',
-			'label'    => __( "Mixed content fixer - back-end", "really-simple-ssl-pro" ),
+			'label'    => __( "Mixed content fixer - back-end", "really-simple-ssl" ),
 			'disabled' => false,
 			'default'  => false,
 		],
@@ -386,10 +378,10 @@ function rsssl_fields( $load_values = true ) {
 			'default'          => false,
 		],
 		[
-			'id'                   => 'do_not_edit_htaccess',
+			'id'                   => 'do_not_edit_htaccess', //field is removed if not enabled
 			'menu_id'              => 'general',
 			'group_id'             => 'general',
-			'type'                 => 'hidden',
+			'type'                 => 'checkbox',
 			'label'                => __( "Stop editing the .htaccess file", 'really-simple-ssl' ),
 			'disabled'             => false,
 			'default'              => false,
@@ -514,7 +506,7 @@ function rsssl_fields( $load_values = true ) {
 			'menu_id'            => 'hardening',
 			'group_id'           => 'hardening_basic',
 			'type'               => 'checkbox',
-			'label'              => __( "Rename 'admin' usernames", 'really-simple-ssl' ),
+			'label'              => __( "Rename current 'admin' username", 'really-simple-ssl' ),
 			'disabled'           => false,
 			'default'            => false,
 			'new_features_block' => [
@@ -522,6 +514,30 @@ function rsssl_fields( $load_values = true ) {
 				'inactive' => __( "Username 'Admin' is allowed", 'really-simple-ssl' ),
 				'readmore' => 'https://really-simple-ssl.com/instructions/about-hardening-features/#admin-usernames',
 			],
+		],
+		[
+			'id'                 => 'new_admin_user_login',
+			'menu_id'            => 'hardening',
+			'group_id'           => 'hardening_basic',
+			'type'               => 'text',
+			'label'              => __( "Choose new username to replace 'admin'", 'really-simple-ssl' ),
+			'disabled'           => false,
+			'default'            => '',
+			'required'           => true,
+			'condition_action'   => 'hide',
+			'react_conditions' => [
+				'relation' => 'AND',
+				[
+					'rename_admin_user' => 1,
+				]
+			],
+			'server_conditions' => [
+				'relation' => 'AND',
+				[
+					'rsssl_has_admin_user()' => true,
+				]
+			],
+
 		],
 		[
 			'id'       => 'disable_xmlrpc',
@@ -537,7 +553,7 @@ function rsssl_fields( $load_values = true ) {
 			'menu_id'  => 'hardening',
 			'group_id' => 'hardening_basic',
 			'type'     => 'checkbox',
-			'label'    => __( "Block user registrations when login and display name are the same.", 'really-simple-ssl' ),
+			'label'    => __( "Block user registrations when login and display name are the same", 'really-simple-ssl' ),
 			'disabled' => false,
 			'default'  => false,
 		],
@@ -576,6 +592,7 @@ function rsssl_fields( $load_values = true ) {
 			'label'    => __( "Rename and randomize your database prefix", 'really-simple-ssl' ),
 			'disabled' => false,
 			'default'  => false,
+			'comment'  => __("Make sure you have a backup before you do this.","really-simple-ssl"),
 		],
 		[
 			'id'                 => 'change_debug_log_location',
@@ -619,6 +636,15 @@ function rsssl_fields( $load_values = true ) {
 			'default'  => false,
 		],
 		[
+			'id'       => 'xmlrpc_status_lm_enabled_once',
+			'menu_id'  => 'hardening',
+			'group_id' => 'hardening_xml',
+			'type'     => 'hidden',
+			'label'    => '',
+			'disabled' => false,
+			'default'  => false,
+		],
+		[
 			'id'               => 'xmlrpc_allow_list',
 			'control_field'    => 'xmlrpc_status',
 			'menu_id'          => 'hardening',
@@ -628,7 +654,6 @@ function rsssl_fields( $load_values = true ) {
 			'disabled'         => false,
 			'default'          => false,
 			'data_source'      => [ 'RSSSL', 'placeholder', 'xml_data' ],
-			'data_endpoint'    => "rsssl_xml_update_allowlist",
 			'react_conditions' => [
 				'relation' => 'AND',
 				[
@@ -667,10 +692,16 @@ function rsssl_fields( $load_values = true ) {
 			'id'       => 'x_xss_protection',
 			'menu_id'  => 'recommended_security_headers',
 			'group_id' => 'recommended_security_headers',
-			'type'     => 'checkbox',
+			'type'     => 'select',
 			'label'    => __( "X-XSS-Protection", "really-simple-ssl-pro" ),
+			'options' => [
+				'disabled'       =>  __("disabled", "really-simple-ssl" ),
+				'zero'       =>  "0 ".__("(recommended)", "really-simple-ssl" ),
+				'one'        => "1",
+				'mode_block' => "1; mode=block",
+			],
 			'disabled' => false,
-			'default'  => false,
+			'default'  => 'zero',
 			'help'     => [
 				'label' => 'default',
 				'url'   => 'https://really-simple-ssl.com/definition/about-recommended-security-headers/',
@@ -708,7 +739,7 @@ function rsssl_fields( $load_values = true ) {
 			'type'     => 'select',
 			'options'  => [
 				'disabled'                        => __( "Off", "really-simple-ssl" ),
-				'strict-origin-when-cross-origin' => 'strict-origin-when-cross-origin'.' '.__("recommended","really-simple-ssl"),
+				'strict-origin-when-cross-origin' => 'strict-origin-when-cross-origin'.' ('.__("recommended","really-simple-ssl").')',
 				'no-referrer'                     => 'no-referrer',
 				'origin'                          => 'origin',
 				'no-referrer-when-downgrade'      => 'no-referrer-when-downgrade',
@@ -744,6 +775,29 @@ function rsssl_fields( $load_values = true ) {
 			],
 		],
 		[
+			'id'               => 'hsts_preload',
+			'menu_id'          => 'hsts',
+			'group_id'         => 'hsts',
+			'type'             => 'checkbox',
+			'label'            => __( "Include preload", "really-simple-ssl-pro" ),
+			'comment'          => sprintf(__( "After enabling this feature, you can submit your site to %shstspreload.org%s", "really-simple-ssl-pro" ),'<a target="_blank" href="https://hstspreload.org?domain='.site_url().'">',"</a>"),
+			'react_conditions' => [
+				'relation' => 'AND',
+				[
+					'hsts' => 1,
+				]
+			],
+			'configure_on_activation' => [
+				'condition' => 1,
+				[
+					'hsts_subdomains' => 1,
+					'hsts_max_age' => 63072000,
+				]
+			],
+			'disabled'         => false,
+			'default'          => false,
+		],
+		[
 			'id'               => 'hsts_subdomains',
 			'menu_id'          => 'hsts',
 			'group_id'         => 'hsts',
@@ -777,22 +831,6 @@ function rsssl_fields( $load_values = true ) {
 			],
 			'disabled'         => false,
 			'default'          => '63072000',
-		],
-		[
-			'id'               => 'hsts_preload',
-			'menu_id'          => 'hsts',
-			'group_id'         => 'hsts',
-			'type'             => 'checkbox',
-			'label'            => __( "Include preload", "really-simple-ssl-pro" ),
-			'react_conditions' => [
-				'relation' => 'AND',
-				[
-					'hsts_max_age'    => '63072000',
-					'hsts_subdomains' => 1,
-				]
-			],
-			'disabled'         => false,
-			'default'          => false,
 		],
 		[
 			'id'       => 'cross_origin_opener_policy',
@@ -840,6 +878,7 @@ function rsssl_fields( $load_values = true ) {
 				'disabled'     => __( 'Off', 'really-simple-ssl' ),
 				'require-corp' => 'require-corp',
 				'same-origin'  => 'same-origin',
+				'unsafe-none'  => 'unsafe-none',
 			],
 			'label'    => __( "Cross Origin Embedder Policy", "really-simple-ssl-pro" ),
 			'disabled' => false,
@@ -907,8 +946,7 @@ function rsssl_fields( $load_values = true ) {
 				'label' => 'default',
 				'url'   => 'https://really-simple-ssl.com/definition/what-is-a-permissions-policy/',
 				'title' => __( "About the Permission Policy", 'really-simple-ssl' ),
-				'text'  => __( 'Browser features are plentiful, but most are not needed on your website. But they might be misused if you don’t actively tell the browser to disable these features.',
-					'really-simple-ssl' ),
+				'text'  => __( 'Browser features are plentiful, but most are not needed on your website.', 'really-simple-ssl' ).' '.__('They might be misused if you don’t actively tell the browser to disable these features.', 'really-simple-ssl' ),
 			],
 			'columns'  => [
 				[
@@ -1021,13 +1059,13 @@ function rsssl_fields( $load_values = true ) {
 			'group_id' => 'frame_ancestors',
 			'type'     => 'select',
 			'options'  => [
-				'disabled' => __( "Disable", "really-simple-ssl" ),
+				'disabled' => __( "Disable (Default)", "really-simple-ssl" ),
 				'none'     => "None",
-				'self'     => "Self (Default)",
+				'self'     => "Self",
 			],
 			'label'    => __( "Allow your domain to be embedded", "really-simple-ssl" ),
 			'disabled' => false,
-			'default'  => 'self',
+			'default'  => 'disabled',
 		],
 		[
 			'id'       => 'csp_frame_ancestors_urls',
@@ -1040,6 +1078,15 @@ function rsssl_fields( $load_values = true ) {
 		],
 		[
 			'id'       => 'csp_status',
+			'menu_id'  => 'content_security_policy',
+			'group_id' => 'content_security_policy',
+			'type'     => 'hidden',
+			'label'    => '',
+			'disabled' => false,
+			'default'  => false,
+		],
+		[
+			'id'       => 'csp_status_lm_enabled_once',
 			'menu_id'  => 'content_security_policy',
 			'group_id' => 'content_security_policy',
 			'type'     => 'hidden',
@@ -1117,7 +1164,6 @@ function rsssl_blocks() {
 		[
 			'id'       => 'progress',
 			'title'    => __( "Progress", 'really-simple-ssl' ),
-			'help'     => __( 'A help text', 'really-simple-ssl' ),
 			'controls' => [
 				'type' => 'react',
 				'data' => 'ProgressHeader'
@@ -1133,7 +1179,6 @@ function rsssl_blocks() {
 				'data' => __( "Powered by Qualys", 'really-simple-ssl' ),
 			],
 			'title'    => __( "Status", 'really-simple-ssl' ),
-			// 'help'    => __( 'A help text', 'really-simple-ssl' ),
 			'content'  => [ 'type' => 'react', 'data' => 'SslLabs' ],
 			'footer'   => [ 'type' => 'react', 'data' => 'SslLabsFooter' ],
 			'class'    => '',
@@ -1142,7 +1187,6 @@ function rsssl_blocks() {
 			'id'       => 'new-features-block',
 			'controls' => false,
 			'title'    => __( "Hardening", 'really-simple-ssl' ),
-			'help'     => __( 'A help text', 'really-simple-ssl' ),
 			'content'  => [ 'type' => 'react', 'data' => 'SecurityFeaturesBlock' ],
 			'footer'   => [ 'type' => 'react', 'data' => 'SecurityFeaturesFooter' ],
 			'class'    => '',
@@ -1151,7 +1195,6 @@ function rsssl_blocks() {
 			'id'       => 'tips_tricks',
 			'controls' => false,
 			'title'    => __( "Tips & Tricks", 'really-simple-ssl' ),
-			'help'     => __( 'A help text', 'really-simple-ssl' ),
 			'content'  => [ 'type' => 'template', 'data' => 'tips-tricks.php' ],
 			'footer'   => [ 'type' => 'template', 'data' => 'tips-tricks-footer.php' ],
 			'class'    => ' rsssl-column-2',
@@ -1163,7 +1206,6 @@ function rsssl_blocks() {
 			                          . 'assets/img/really-simple-plugins.svg" alt="Really Simple Plugins" /></a>'
 			],
 			'title'    => __( "Other Plugins", 'really-simple-ssl' ),
-			'help'     => __( 'A help text', 'really-simple-ssl' ),
 			'content'  => [ 'type' => 'react', 'data' => 'OtherPlugins' ],
 			'footer'   => [ 'type' => 'html', 'data' => '' ],
 			'class'    => ' rsssl-column-2 no-border no-background',
