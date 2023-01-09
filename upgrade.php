@@ -164,12 +164,6 @@ function rsssl_upgrade() {
 		update_option('rsssl_plusone_count', $plus_ones);
 	}
 
-	#clean up old cron job
-	if ( version_compare( $prev_version, '6.0.15', '<' ) ) {
-		wp_clear_scheduled_hook( 'rsssl_every_week_hook' );
-	}
-
-
 	//delete in future upgrade. We want to check the review notice dismissed as fallback still.
 	//delete_option( 'rlrsssl_options' );
 	//delete_site_option( 'rlrsssl_network_options' );
