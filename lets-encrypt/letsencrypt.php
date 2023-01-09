@@ -68,11 +68,12 @@ class RSSSL_LETSENCRYPT {
 		require_once( rsssl_le_path . 'config/fields.php');
 
 		if ( rsssl_letsencrypt_generation_allowed() ) {
-			require_once( rsssl_le_path . 'config/notices.php' );
 			require_once( rsssl_le_path . 'class-le-restapi.php' );
 			require_once( rsssl_le_path . 'class-letsencrypt-handler.php' );
 			require_once( rsssl_le_path . 'integrations/integrations.php' );
 		}
+		require_once( rsssl_le_path . 'config/notices.php' );
+
 	}
 
 	/**

@@ -7,7 +7,8 @@
  * @return array
  */
 function rsssl_le_get_notices_list($notices) {
-	if ( rsssl_generated_by_rsssl() ) {
+	//these notices are also loaded if Lets Encrypt is not loaded. To prevent errors, notices which require LE functionality are not loaded
+	if ( rsssl_generated_by_rsssl() && rsssl_letsencrypt_generation_allowed() ) {
 		//expiration date requests are cached.
 		$valid    = RSSSL()->certificate->is_valid();
 		$certinfo = get_transient( 'rsssl_certinfo' );
@@ -129,15 +130,14 @@ function rsssl_le_get_notices_list($notices) {
 		),
 	);
 
-
 	//show notice if the shell exec add on is not up to date
-	if (function_exists('rsssl_le_load_shell_addon') && defined('rsssl_shell_version') && version_compare(rsssl_shell_version,'1.3','<')){
+	if (function_exists('rsssl_le_load_shell_addon') && defined('rsssl_shell_version') && version_compare(rsssl_shell_version,'2.0.0','<')){
 		$notices['old_shell_exec_plugin'] = array(
 			'callback'  => '_true_',
 			'score'     => 10,
 			'output'    => array(
 				'true' => array(
-					'msg'         => __( "You are using the Really Simple SSL Shell Exec add on, but of a version not compatible with Really Simple SSL 6.0 and onwards.", "really-simple-ssl" ),
+					'msg'         => __( "You are using the Really Simple SSL Shell Exec add on, but your current version needs to be updated.", "really-simple-ssl" ),
 					'icon'        => 'warning',
 					'url'         => "https://really-simple-ssl.com/installing-ssl-using-shell-functions",
 					'plusone'     => true,
