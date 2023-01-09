@@ -18,6 +18,8 @@ const usesPlainPermalinks = () => {
 };
 
 const apiGet = (path) => {
+    console.log(path);
+
     if ( usesPlainPermalinks() ) {
         let config = {
             headers: {
@@ -31,6 +33,8 @@ const apiGet = (path) => {
 }
 
 const apiPost = (path, data) => {
+    console.log(path);
+
     if ( usesPlainPermalinks() ) {
         let config = {
             headers: {
