@@ -16,6 +16,17 @@ export const getNonce = () => {
 const usesPlainPermalinks = () => {
     return rsssl_settings.site_url.indexOf('?') !==-1;
 };
+/**
+ * if the site is loaded over https, but the site url is not https, force to use https anyway, because otherwise we get mixed content issues.
+ * @returns {*}
+ */
+const siteUrl = () => {
+	if ( window.location.protocol === "https:" && rsssl_settings.site_url.indexOf('https://')===-1 ) {
+		return rsssl_settings.site_url.replace('http://', 'https://');
+	}
+	return  rsssl_settings.site_url;
+
+}
 
 const apiGet = (path) => {
     if ( usesPlainPermalinks() ) {
@@ -24,7 +35,7 @@ const apiGet = (path) => {
                 'X-WP-Nonce': rsssl_settings.nonce,
             }
         }
-        return axios.get(rsssl_settings.site_url+path, config ).then( ( response ) => {return response.data;})
+        return axios.get(siteUrl()+path, config ).then( ( response ) => {return response.data;})
     } else {
         return apiFetch( { path: path } );
     }
@@ -37,7 +48,7 @@ const apiPost = (path, data) => {
                 'X-WP-Nonce': rsssl_settings.nonce,
             }
         }
-    	return axios.post(rsssl_settings.site_url+path, data, config ).then( ( response ) => {return response.data;});
+    	return axios.post(siteUrl()+path, data, config ).then( ( response ) => {return response.data;});
     } else {
         return apiFetch( {
             path: path,
