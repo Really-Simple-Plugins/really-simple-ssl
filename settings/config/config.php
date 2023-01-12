@@ -626,6 +626,15 @@ function rsssl_fields( $load_values = true ) {
             'disabled' => false,
             'default'  => false,
         ],
+        [
+            'id'       => 'change_login_url_failure_url',
+            'menu_id'  => 'hardening',
+            'group_id' => 'hardening_extended',
+            'type'     => 'text',
+            'label'    => __( "Change login URL", 'really-simple-ssl' ),
+            'disabled' => false,
+            'default'  => '404',
+        ],
 		[
 			'id'       => 'xmlrpc_status',
 			'menu_id'  => 'hardening',
