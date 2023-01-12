@@ -631,7 +631,7 @@ function rsssl_fields( $load_values = true ) {
             'menu_id'  => 'hardening',
             'group_id' => 'hardening_extended',
             'type'     => 'text',
-            'label'    => __( "Change login URL", 'really-simple-ssl' ),
+            'label'    => __( "Redirect to this page if someone tries to login via wp-admin while the URL has been changed", 'really-simple-ssl' ),
             'disabled' => false,
             'default'  => '404',
         ],
