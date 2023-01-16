@@ -329,12 +329,16 @@ class rsssl_admin
 
     public function activate_ssl($request)
     {
+        error_log("entry function activate_ssl");
 	    if ( !rsssl_user_can_manage()  ) {
+		    error_log("denied access function activate_ssl");
 		    return [
 			    'success' => false,
 			    'site_url_changed' => false,
 		    ];
         }
+	    error_log("start executing function activate_ssl");
+
 	    $safe_mode = defined('RSSSL_SAFE_MODE') && RSSSL_SAFE_MODE;
         $error = false;
 	    $is_rest_request =  $request instanceof WP_REST_Request;
