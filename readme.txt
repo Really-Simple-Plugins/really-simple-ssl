@@ -96,6 +96,9 @@ The plugin checks your certificate before enabling, but if, for example, you mig
 If you can't deactivate, do not just remove the plugin folder to uninstall! Follow these [instructions](https://really-simple-ssl.com/knowledge-base/uninstall-websitebackend-not-accessible/) instead.
 
 == Changelog ==
+= 6.1.1 =
+* Fix: WP CLI not completing SSL activation because site_has_ssl option is not set when website has not been visited before.
+
 = 6.1.0 =
 * Improvement: some UX changes
 * Improvement: Limit number of notices in the dashboard
