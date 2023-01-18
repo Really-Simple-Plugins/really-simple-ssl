@@ -2,14 +2,14 @@
 # This file is distributed under the GPL2.
 msgid ""
 msgstr ""
-"Project-Id-Version: Really Simple SSL 6.1.0\n"
+"Project-Id-Version: Really Simple SSL 6.1.1\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/really-simple-ssl\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2023-01-11T09:03:50+00:00\n"
+"POT-Creation-Date: 2023-01-18T08:52:42+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.6.0\n"
 "X-Domain: really-simple-ssl\n"
@@ -971,7 +971,7 @@ msgid "Disable OCSP Stapling"
 msgstr ""
 
 #: lets-encrypt/config/fields.php:128
-#: lets-encrypt/config/notices.php:49
+#: lets-encrypt/config/notices.php:50
 msgid "Domain"
 msgstr ""
 
@@ -1142,56 +1142,56 @@ msgstr ""
 msgid "Checking for subdomain setup..."
 msgstr ""
 
-#: lets-encrypt/config/notices.php:27
+#: lets-encrypt/config/notices.php:28
 msgid "Your Key and Certificate directories are not properly protected."
 msgstr ""
 
-#: lets-encrypt/config/notices.php:39
+#: lets-encrypt/config/notices.php:40
 msgid "The non-www version of your site does not point to this website. This is recommended, as it will allow you to add it to the certificate as well."
 msgstr ""
 
-#: lets-encrypt/config/notices.php:41
+#: lets-encrypt/config/notices.php:42
 msgid "The www version of your site does not point to this website. This is recommended, as it will allow you to add it to the certificate as well."
 msgstr ""
 
-#: lets-encrypt/config/notices.php:68
+#: lets-encrypt/config/notices.php:69
 msgid "Your certificate is valid until: %s"
 msgstr ""
 
-#: lets-encrypt/config/notices.php:72
+#: lets-encrypt/config/notices.php:73
 msgid "Your certificate will expire on %s. You can renew it %shere%s."
 msgstr ""
 
-#: lets-encrypt/config/notices.php:87
+#: lets-encrypt/config/notices.php:88
 msgid "The automatic installation of your certificate has failed. Please check your credentials, and retry the %sinstallation%s."
 msgstr ""
 
-#: lets-encrypt/config/notices.php:94
+#: lets-encrypt/config/notices.php:95
 msgid "The SSL certificate has been renewed, and requires manual %sinstallation%s in your hosting dashboard."
 msgstr ""
 
-#: lets-encrypt/config/notices.php:101
+#: lets-encrypt/config/notices.php:102
 msgid "Automatic renewal of your certificate was not possible. The SSL certificate should be %srenewed%s manually."
 msgstr ""
 
-#: lets-encrypt/config/notices.php:108
+#: lets-encrypt/config/notices.php:109
 msgid "Your certificate will be renewed and installed automatically."
 msgstr ""
 
-#: lets-encrypt/config/notices.php:123
+#: lets-encrypt/config/notices.php:126
 msgid "Your server provides shell functionality, which offers additional methods to install SSL. If installing SSL using the default methods is not possible, you can install the shell add on."
 msgstr ""
 
-#: lets-encrypt/config/notices.php:140
-msgid "You are using the Really Simple SSL Shell Exec add on, but of a version not compatible with Really Simple SSL 6.0 and onwards."
-msgstr ""
-
-#: lets-encrypt/config/notices.php:161
-msgid "Renew installation"
+#: lets-encrypt/config/notices.php:142
+msgid "You are using the Really Simple SSL Shell Exec add on, but your current version needs to be updated."
 msgstr ""
 
 #: lets-encrypt/config/notices.php:164
+msgid "Renew installation"
+msgstr ""
+
 #: lets-encrypt/config/notices.php:167
+#: lets-encrypt/config/notices.php:170
 msgid "Renew certificate"
 msgstr ""
 
