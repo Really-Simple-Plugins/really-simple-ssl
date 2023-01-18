@@ -17,7 +17,6 @@ if ( !class_exists('rsssl_mailer') ) {
 		public $error = '';
 
 		public function __construct() {
-			$this->to = rsssl_get_option('notifications_email_address', get_bloginfo('admin_email') );
 			add_action('wp_mail_failed', array($this, 'log_mailer_errors'), 10, 1);
 		}
 
@@ -28,6 +27,10 @@ if ( !class_exists('rsssl_mailer') ) {
 		public function send_test_mail(){
 			if ( !rsssl_user_can_manage() ) {
 				return ['success' => false, 'message' => 'Not allowed'];
+			}
+			$this->to = rsssl_get_option('notifications_email_address', get_bloginfo('admin_email') );
+			if ( !is_email($this->to) ){
+				return ['success' => false, 'message' => __('Email address not valid',"really-simple-ssl")];
 			}
 			$this->title = __("Really Simple SSL - Notification Test", "really-simple-ssl");
 			$this->message = __("This email is confirmation that any security notices are likely to reach your inbox.", "really-simple-ssl");
@@ -65,7 +68,7 @@ if ( !class_exists('rsssl_mailer') ) {
 		 * @return bool
 		 */
 		public function send_mail($override_rate_limit = false) {
-			if (empty($this->to) || empty($this->message) || empty($this->subject) ) {
+			if ( empty($this->message) || empty($this->subject) ) {
 				return false;
 			}
 
@@ -73,6 +76,7 @@ if ( !class_exists('rsssl_mailer') ) {
 				$this->title = __("Learn more about our features!", "really-simple-ssl");
 			}
 
+			$this->to = rsssl_get_option('notifications_email_address', get_bloginfo('admin_email') );
 			if ( !is_email($this->to) ){
 				return false;
 			}
