@@ -29,6 +29,8 @@ const siteUrl = () => {
 }
 
 const apiGet = (path) => {
+    console.log(path);
+
     if ( usesPlainPermalinks() ) {
         let config = {
             headers: {
@@ -42,6 +44,8 @@ const apiGet = (path) => {
 }
 
 const apiPost = (path, data) => {
+    console.log(path);
+
     if ( usesPlainPermalinks() ) {
         let config = {
             headers: {
@@ -86,9 +90,13 @@ export const getBlock = (block) => {
 };
 
 export const runTest = (test, state, data ) => {
-	if ( data ) {
-		data = encodeURIComponent(JSON.stringify(data));
+    if ( !state ){
+        state = false;
+    }
+	if ( !data ) {
+		data = false;
 	}
+    data = encodeURIComponent(JSON.stringify(data));
     return apiGet('reallysimplessl/v1/tests/'+test+glue()+'state='+state+getNonce()+'&data='+data)
 };
 
