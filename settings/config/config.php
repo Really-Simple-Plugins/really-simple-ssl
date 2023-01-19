@@ -556,7 +556,7 @@ function rsssl_fields( $load_values = true ) {
 			'label'              => __( "Block the username 'admin'", 'really-simple-ssl' ),
 			'email'            => [
 				'title'   => __( "Settings update: Username 'admin' renamed", 'really-simple-ssl' ),
-				'message' => __( "As a security precaution, the username ‘admin’ has been changed on %s. From now on, you can login with '%s' or an email address.", 'really-simple-ssl' ), '{site_url}','{username}',
+				'message' => sprintf(__( "As a security precaution, the username ‘admin’ has been changed on %s. From now on, you can login with '%s' or an email address.", 'really-simple-ssl' ), '{site_url}','{username}'),
 				'url'     => 'https://really-simple-ssl.com/instructions/locked-our-after-renaming-the-admin-username/',
 			],
 			'tooltip'            => __( "If the username 'admin' currenlty exists, you can rename it here. Please note that you can no longer use this username, and can use the new username or an email address",
