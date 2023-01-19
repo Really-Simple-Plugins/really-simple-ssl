@@ -78,11 +78,13 @@ if ( !class_exists('rsssl_mailer') ) {
 
 			$this->to = rsssl_get_option('notifications_email_address', get_bloginfo('admin_email') );
 			if ( !is_email($this->to) ){
+				error_log("no valid mail");
 				return false;
 			}
 
 			// Prevent spam
 			if ( !$override_rate_limit && get_transient('rsssl_email_recently_sent') ) {
+				error_log("prevent spam");
 				return false;
 			}
 
@@ -119,6 +121,7 @@ if ( !class_exists('rsssl_mailer') ) {
 					$username
 				],
 				$template );
+			error_log("send mail to ".$this->to);
 			$success = wp_mail( $this->to, sanitize_text_field($this->subject), $body, array('Content-Type: text/html; charset=UTF-8') );
 			set_transient('rsssl_email_recently_sent', true, 5 * MINUTE_IN_SECONDS );
 			return $success;
