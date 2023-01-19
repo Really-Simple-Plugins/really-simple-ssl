@@ -80,6 +80,10 @@ class rsssl_admin
 	 * @return void
 	 */
     public function maybe_send_mail(){
+        if ( !rsssl_get_option('send_notifications_email') ) {
+            return;
+        }
+
 	    $fields = get_option('rsssl_email_warning_fields', []);
         $time_saved = get_option('rsssl_email_warning_fields_saved');
         if ( !$time_saved ) {
