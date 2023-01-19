@@ -459,11 +459,3 @@ function rsssl_src_contains_wp_version() {
 	}
 	return $result==='found';
 }
-
-//function rsssl_new_login_url_working() {
-//	if ( rsssl_get_option('change_login_url') && ! test_new_login_success() ) {
-//			return false;
-//		}
-//
-//	return true;
-//}
