@@ -20,7 +20,7 @@ function rsssl_remove_fields($fields){
 			'url'  => 'https://really-simple-ssl.com/remove-htaccess-redirect-site-lockout/',
 		];
 		$fields[$redirect_index]['email'] = [
-			'title'   => __( "Settings update: .htaccess redirect", 'really-simple-ssl' ),
+			'title'   => __( ".htaccess redirect", 'really-simple-ssl' ),
 			'message' => __( "The .htaccess redirect has been enabled on your site. If the server configuration is non-standard, this might cause issues. Please check if all pages on your site are functioning properly. .", 'really-simple-ssl' ),
 			'url'     => 'https://really-simple-ssl.com/remove-htaccess-redirect-site-lockout/',
 		];
