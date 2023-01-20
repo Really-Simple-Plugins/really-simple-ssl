@@ -127,6 +127,7 @@ class REALLY_SIMPLE_SSL
 		if ( is_multisite() ) {
 			require_once( rsssl_path . 'class-multisite.php');
 		}
+        error_log("#####");
 		if ( is_admin() || rsssl_is_logged_in_rest() ||  wp_doing_cron() || $wpcli || defined('RSSSL_DOING_SYSTEM_STATUS') || defined('RSSSL_LEARNING_MODE') ) {
 			require_once( rsssl_path . 'compatibility.php');
             require_once( rsssl_path . 'upgrade.php');
