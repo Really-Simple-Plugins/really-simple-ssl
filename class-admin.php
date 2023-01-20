@@ -1464,7 +1464,7 @@ class rsssl_admin
                 rsssl_get_option('ssl_enabled') &&
                 rsssl_get_option('redirect')==='htaccess' &&
                 ($manual || $this->htaccess_test_success() ) &&
-                $this->ssl_type != "NA"
+                $this->ssl_type !== "NA"
         ) {
             $rule .= "\n" . "<IfModule mod_rewrite.c>" . "\n";
             $rule .= "RewriteEngine on" . "\n";
