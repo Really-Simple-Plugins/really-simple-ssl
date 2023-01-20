@@ -329,19 +329,24 @@ class rsssl_admin
 
     public function activate_ssl($request)
     {
+        error_log("start activate ssl");
 	    if ( !rsssl_user_can_manage()  ) {
 		    return [
 			    'success' => false,
 			    'site_url_changed' => false,
 		    ];
         }
+	    error_log("run activate ssl");
+
 	    $safe_mode = defined('RSSSL_SAFE_MODE') && RSSSL_SAFE_MODE;
         $error = false;
 	    $is_rest_request =  $request instanceof WP_REST_Request;
 	    $site_url_changed = false;
 	    $wpcli = defined( 'WP_CLI' ) && WP_CLI;
 	    if ( rsssl_get_option('site_has_ssl') || get_option('rsssl_ssl_detection_overridden') || $wpcli ){
-	        //in a configuration reverse proxy without a set server variable https, add code to wpconfig
+		    error_log("has SSL or WP CLI");
+
+		    //in a configuration reverse proxy without a set server variable https, add code to wpconfig
 	        if ( $this->do_wpconfig_loadbalancer_fix || $this->no_server_variable ) {
 		        $this->wpconfig_loadbalancer_fix();
 	        }
@@ -352,6 +357,8 @@ class rsssl_admin
 
             $this->insert_secure_cookie_settings();
 	        if ( !$safe_mode ) {
+		        error_log("Not safe mode");
+
 		        rsssl_update_option('redirect', 'wp_redirect');
 		        rsssl_update_option('mixed_content_fixer', true);
 

@@ -3,8 +3,8 @@ defined('ABSPATH') or die();
 
 /**
  * Usage
- * rsssl activate_ssl
- * rsssl deactivate_ssl
+ * php wp-cli.phar rsssl activate_ssl
+ * php wp-cli.phar rsssl deactivate_ssl
  */
 class rsssl_wp_cli
 {
