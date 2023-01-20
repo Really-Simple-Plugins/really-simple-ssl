@@ -530,12 +530,9 @@ function rsssl_rest_api_fields_set($request){
  */
 
 function rsssl_update_option( $name, $value ) {
-	error_log("start update $name");
-
 	if ( !rsssl_user_can_manage() ) {
 		return;
 	}
-    error_log("DO update $name");
 	$config_fields = rsssl_fields(false);
 	$config_ids = array_column($config_fields, 'id');
 	$config_field_index = array_search($name, $config_ids);
