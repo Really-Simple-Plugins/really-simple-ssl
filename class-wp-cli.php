@@ -5,6 +5,8 @@ defined('ABSPATH') or die();
  * Usage
  * php wp-cli.phar rsssl activate_ssl
  * php wp-cli.phar rsssl deactivate_ssl
+ * php wp-cli.phar rsssl update_option --site_has_ssl=true
+
  */
 class rsssl_wp_cli
 {
@@ -57,23 +59,21 @@ class rsssl_wp_cli
 	 * @return void
 	 * @throws \WP_CLI\ExitException
 	 */
-	public function update_option($args)
+	public function update_option($args, $assoc_args)
 	{
 		if (!$this->wp_cli_active() ) {
 			return;
 		}
 
-		$name = isset($args[0]) && is_string($args[0]) ? sanitize_title($args[0]) : false;
-		if ( !$name ) {
-			WP_CLI::error( 'Invalid option passed' );
-			return;
+		if ( empty($assoc_args) ) {
+			WP_CLI::error( 'No options passed' );
 		}
-		if ( isset($args[1]) ){
-			rsssl_update_option($name, $args[1]);
+
+		foreach ($assoc_args as $name => $value ) {
+			rsssl_update_option(sanitize_title($name), $value);
 			WP_CLI::success( "Option $name updated" );
-		} else {
-			WP_CLI::error( 'Update failed: value argument not passed' );
 		}
+
 	}
 }
 
