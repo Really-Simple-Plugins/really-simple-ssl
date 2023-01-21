@@ -6,6 +6,7 @@ defined('ABSPATH') or die();
  * php wp-cli.phar rsssl activate_ssl
  * php wp-cli.phar rsssl deactivate_ssl
  * php wp-cli.phar rsssl update_option --site_has_ssl=true
+ * php wp-cli.phar rsssl update_option --site_has_ssl=true --x_xss_protection=one
 
  */
 class rsssl_wp_cli
