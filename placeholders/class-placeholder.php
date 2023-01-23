@@ -89,6 +89,43 @@ if ( ! class_exists( 'rsssl_placeholder' ) ) {
 			return $data;
 		}
 
+        public function vulnerable_plugins_data() {
+            $data = [
+                [
+                    'id'      => 1,
+                    'name'  => 'Really Simple SSL',
+                    'description' => 'Really Simple SSL',
+                    'rss_severity' => 'high',
+                    'version' => '3.3.1',
+                    'status'  => 1,
+                ],
+                [
+                    'id'      => 2,
+                    'name'  => 'Really Simple SSL',
+                    'description' => 'Really Simple SSL',
+                    'rss_severity' => 'high',
+                    'version' => '3.3.1',
+                    'status'  => 1,
+                ],
+                [
+                    'id'      => 3,
+                    'name'  => 'Really Simple SSL',
+                    'description' => 'Really Simple SSL',
+                    'rss_severity' => 'high',
+                    'version' => '3.3.1',
+                    'status'  => 1,
+                ],
+                [
+                    'id'      => 4,
+                    'name'  => 'Really Simple SSL',
+                    'description' => 'Really Simple SSL',
+                    'rss_severity' => 'high',
+                    'version' => '3.3.1',
+                    'status'  => 1,
+                ],
+            ];
+        }
+
 		public function mixed_content_data(){
 			$data[] = [
 				'id'               => 1,

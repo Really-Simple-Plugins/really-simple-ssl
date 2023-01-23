@@ -33,6 +33,7 @@ class LearningMode extends Component {
             learning_mode_completed :0,
             filterValue: -1,
         };
+        console.log(this);
     }
 
     componentDidMount() {
