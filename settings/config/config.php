@@ -82,7 +82,7 @@ function rsssl_menu() {
                         ],
                         [
                             'id'           => 'vulnerabilities_measures',
-                            'premium'      => true,
+                            'premium'      => false,
                             'helpLink'     => 'https://really-simple-ssl.com/instructions/about-vulnerabilities#measures',
                             'title'        => __( 'Measures', 'really-simple-ssl' ),
                             'premium_text' => __( "Get Advanced Vulnerabilities with %sReally Simple SSL Pro%s", 'really-simple-ssl' ),
@@ -758,31 +758,35 @@ function rsssl_fields( $load_values = true ) {
         ],
         [
             'id'               => 'vulnerabilities_measures',
-            'control_field'    => 'actions',
+            'control_field'    => 'riskSelection',
             'menu_id'          => 'vulnerabilities',
             'group_id'         => 'vulnerabilities_measures',
             'type'             => 'vulnerablemeasures',
-            'label'            => __( "VUL-RISK", 'really-simple-ssl' ),
+            'options'          => [
+                'low_risk' => __( 'Low risk', 'really-simple-ssl' ),
+                'high_risk' => __( 'High risk', 'really-simple-ssl' ),
+                'critical_risk' => __( 'Critical risk', 'really-simple-ssl' ),
+            ],
             'disabled'         => false,
             'default'          => false,
             'data_source'      => [ 'RSSSL', 'placeholder', 'measures_data' ],
-            'react_conditions' => [
-                'relation' => 'AND',
-                [
-                    'disable_measures_data' => false,
-                ]
-            ],
+//            'react_conditions' => [
+//                'relation' => 'AND',
+//                [
+//                    'disable_measures_data' => false,
+//                ]
+//            ],
             'columns'          => [
                 [
                     'name'     => __( 'Risk', 'really-simple-ssl' ),
                     'sortable' => false,
                     'column'   => 'risk',
                 ],
-//                [
-//                    'name'     => __( 'Action', 'really-simple-ssl' ),
-//                    'sortable' => false,
-//                    'column'   => 'actions',
-//                ],
+                [
+                    'name'     => __( 'Action', 'really-simple-ssl' ),
+                    'sortable' => false,
+                    'column'   => 'riskSelection',
+                ],
                 [
                     'name'     => __( 'Description', 'really-simple-ssl' ),
                     'sortable' => false,

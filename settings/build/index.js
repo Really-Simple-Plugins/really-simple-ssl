@@ -8644,6 +8644,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var react_data_table_component__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react-data-table-component */ "./node_modules/react-data-table-component/dist/index.cjs.js");
 /* harmony import */ var _utils_Icon__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../utils/Icon */ "./src/utils/Icon.js");
+/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @wordpress/components */ "@wordpress/components");
+/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_wordpress_components__WEBPACK_IMPORTED_MODULE_4__);
+
 
 
 
@@ -8696,6 +8699,9 @@ class VulnerableMeasures extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__
   conditionalRowStyles() {
     //TODO: make this work
   }
+  onChangeHandler(fieldValue, clickedItem, field) {
+    alert('fieldValue');
+  }
   render() {
     const {
       measures,
@@ -8703,8 +8709,24 @@ class VulnerableMeasures extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__
       error
     } = this.state;
     let columns = [];
+
+    //we build the columns from the field definition
     this.props.field.columns.forEach(item => {
       columns.push(this.buildColumn(item));
+    });
+
+    //now we get the options for the select control
+    let options = this.props.field.options;
+
+    //and we add the select control to the data
+    measures.forEach(item => {
+      item.riskSelection = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_4__.SelectControl, {
+        help: "",
+        value: item.value,
+        options: options,
+        label: "",
+        onChange: fieldValue => this.onChangeHandler(fieldValue, item, 'value')
+      });
     });
     (0,react_data_table_component__WEBPACK_IMPORTED_MODULE_2__.createTheme)('really-simple-plugins', {
       divider: {
@@ -8712,12 +8734,11 @@ class VulnerableMeasures extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__
       }
     }, 'light');
     return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-      className: "table"
+      className: "rsssl-measures-datatable"
     }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_data_table_component__WEBPACK_IMPORTED_MODULE_2__["default"], {
       columns: columns,
       data: measures,
       dense: true,
-      pagination: true,
       noDataComponent: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("No data found", "really-simple-ssl"),
       theme: "really-simple-plugins",
       customStyles: this.customStyles(),

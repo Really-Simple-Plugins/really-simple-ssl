@@ -2,6 +2,7 @@ import {__} from '@wordpress/i18n';
 import {Component,} from '@wordpress/element';
 import DataTable, {createTheme} from 'react-data-table-component';
 import Icon from "../utils/Icon";
+import {SelectControl} from "@wordpress/components";
 
 class VulnerableMeasures extends Component {
 
@@ -56,25 +57,43 @@ class VulnerableMeasures extends Component {
         //TODO: make this work
     }
 
+    onChangeHandler( fieldValue, clickedItem, field ) {
+        alert('fieldValue');
+    }
+
     render() {
         const {measures, loading, error} = this.state;
         let columns = [];
+
+        //we build the columns from the field definition
         this.props.field.columns.forEach((item) => {
             columns.push(this.buildColumn(item));
         });
 
+        //now we get the options for the select control
+        let options = this.props.field.options;
+
+        //and we add the select control to the data
+        measures.forEach((item) => {
+            item.riskSelection = <SelectControl
+                help=''
+                value={item.value}
+                options={options}
+                label=''
+                onChange={ ( fieldValue ) => this.onChangeHandler( fieldValue, item, 'value' ) }
+            />
+        });
         createTheme('really-simple-plugins', {
             divider: {
                 default: 'transparent',
             },
         }, 'light');
         return (
-            <div className="table">
+            <div className="rsssl-measures-datatable">
                 <DataTable
                     columns={columns}
                     data={measures}
                     dense
-                    pagination
                     noDataComponent={__("No data found", "really-simple-ssl")}
                     theme="really-simple-plugins"
                     customStyles={this.customStyles()}

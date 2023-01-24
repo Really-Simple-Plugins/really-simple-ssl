@@ -89,41 +89,32 @@ if ( ! class_exists( 'rsssl_placeholder' ) ) {
 			return $data;
 		}
 
-        public function vulnerable_plugins_data() {
-            $data = [
-                [
-                    'id'      => 1,
-                    'name'  => 'Really Simple SSL',
-                    'description' => 'Really Simple SSL',
-                    'rss_severity' => 'high',
-                    'version' => '3.3.1',
-                    'status'  => 1,
-                ],
-                [
-                    'id'      => 2,
-                    'name'  => 'Really Simple SSL',
-                    'description' => 'Really Simple SSL',
-                    'rss_severity' => 'high',
-                    'version' => '3.3.1',
-                    'status'  => 1,
-                ],
-                [
-                    'id'      => 3,
-                    'name'  => 'Really Simple SSL',
-                    'description' => 'Really Simple SSL',
-                    'rss_severity' => 'high',
-                    'version' => '3.3.1',
-                    'status'  => 1,
-                ],
-                [
-                    'id'      => 4,
-                    'name'  => 'Really Simple SSL',
-                    'description' => 'Really Simple SSL',
-                    'rss_severity' => 'high',
-                    'version' => '3.3.1',
-                    'status'  => 1,
-                ],
+        public function measures_data() {
+            $data[] = [
+                'id' => 1,
+                'risk' => __('Low-risk', 'really-simple-ssl'),
+                'value' => 'low-risk',
+                'description' => __('Low risk vulnerabilities', 'really-simple-ssl'),
             ];
+            $data[] = [
+                'id' => 2,
+                'risk' => __('Medium-risk', 'really-simple-ssl'),
+                'value' => 'medium-risk',
+                'description' => __('Medium risk vulnerabilities', 'really-simple-ssl'),
+            ];
+            $data[] = [
+                'id' => 3,
+                'risk' => __('High-risk', 'really-simple-ssl'),
+                'value' => 'high-risk',
+                'description' => __('High risk vulnerabilities', 'really-simple-ssl'),
+            ];
+            $data[] = [
+                'id' => 4,
+                'risk' => __('Critical-risk', 'really-simple-ssl'),
+                'value' => 'critical-risk',
+                'description' => __('Critical risk vulnerabilities', 'really-simple-ssl'),
+            ];
+            return $data;
         }
 
 		public function mixed_content_data(){
