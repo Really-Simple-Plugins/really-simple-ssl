@@ -97,7 +97,7 @@ If you can't deactivate, do not just remove the plugin folder to uninstall! Foll
 
 == Changelog ==
 = 6.1.1 =
-* Fix: WP CLI not completing SSL activation because site_has_ssl option is not set when website has not been visited before.
+* Fix: WP CLI not completing SSL when because site_has_ssl option is not set if website has not been visited before, props @oolongm
 * Improvement: prevent 'undefined' status showing up in api calls on settings page
 * Improvement: show notice if users are using an <2.0 Let's Encrypt shell add-on which is not compatible with 6.0
 
