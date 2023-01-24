@@ -33,7 +33,6 @@ class LearningMode extends Component {
             learning_mode_completed :0,
             filterValue: -1,
         };
-        console.log(this);
     }
 
     componentDidMount() {
@@ -44,7 +43,6 @@ class LearningMode extends Component {
         let enforce = enforced_by_thirdparty || field.value === 'enforce';
         let learning_mode = field.value === 'learning_mode';
         let learning_mode_completed = field.value==='completed';
-
         let lm_enabled_once_field_name = this.props.field.control_field+'_lm_enabled_once';
         let lm_enabled_once_field = this.props.fields.filter(field => field.id === lm_enabled_once_field_name)[0];
         let lm_enabled_once = lm_enabled_once_field.value;

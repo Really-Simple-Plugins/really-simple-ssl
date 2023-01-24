@@ -18,6 +18,7 @@ import MixedContentScan from "./MixedContentScan";
 import PermissionsPolicy from "./PermissionsPolicy";
 import Support from "./Support";
 import LearningMode from "./LearningMode";
+import VulnerableMeasures from "./VulnerableMeasures";
 import ChangeStatus from "./ChangeStatus";
 import {
     Component,
@@ -27,6 +28,7 @@ import {
  * https://react-data-table-component.netlify.app
  */
 import DataTable from "react-data-table-component";
+import * as PropTypes from "prop-types";
 
 
 class Field extends Component {
@@ -313,6 +315,14 @@ class Field extends Component {
             return(
                 <div className={this.highLightClass} ref={this.scrollAnchor}>
                   <LearningMode disabled={disabled} onChangeHandlerDataTableStatus={this.onChangeHandlerDataTableStatus} updateField={this.props.updateField} field={this.props.field} options={options} highLightClass={this.highLightClass} fields={fields}/>
+                </div>
+            )
+        }
+
+        if ( field.type==='vulnerablemeasures' ) {
+            return(
+                <div className={this.highLightClass} ref={this.scrollAnchor}>
+                    <VulnerableMeasures disabled={disabled} onChangeHandlerDataTableStatus={this.onChangeHandlerDataTableStatus} updateField={this.props.updateField} field={this.props.field} options={options} highLightClass={this.highLightClass} fields={fields}/>
                 </div>
             )
         }

@@ -1,6 +1,7 @@
 import getAnchor from "./getAnchor";
 import axios from 'axios';
 import apiFetch from '@wordpress/api-fetch';
+
 /*
  * Makes a get request to the fields list
  *
