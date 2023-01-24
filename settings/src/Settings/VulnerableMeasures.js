@@ -1,8 +1,15 @@
-import {__} from '@wordpress/i18n';
-import {Component,} from '@wordpress/element';
+import {
+    SelectControl,
+} from '@wordpress/components';
+import { __ } from '@wordpress/i18n';
+import {
+    Component,
+} from '@wordpress/element';
+import ChangeStatus from "./ChangeStatus";
 import DataTable, {createTheme} from 'react-data-table-component';
+import * as rsssl_api from "../utils/api";
 import Icon from "../utils/Icon";
-import {SelectControl} from "@wordpress/components";
+
 
 class VulnerableMeasures extends Component {
 
@@ -26,7 +33,9 @@ class VulnerableMeasures extends Component {
            name: column.name,
            sortable: column.sortable,
            width: column.width,
+            grow: column.grow,
            selector: row => row[column.column],
+            right: !!column.right,
        };
     }
 
@@ -46,7 +55,7 @@ class VulnerableMeasures extends Component {
             },
             cells: {
                 style: {
-                    paddingLeft: '0',
+                    paddingLeft: '10px',
                     paddingRight: '0',
                 }
             }
@@ -58,7 +67,7 @@ class VulnerableMeasures extends Component {
     }
 
     onChangeHandler( fieldValue, clickedItem, field ) {
-        alert('fieldValue');
+        alert(fieldValue);
     }
 
     render() {
@@ -72,11 +81,13 @@ class VulnerableMeasures extends Component {
 
         //now we get the options for the select control
         let options = this.props.field.options;
-
+        //we divide the key into label and the value into value
+        options = Object.entries(options).map((item) => {
+            return {label: item[1], value: item[0]};
+        });
         //and we add the select control to the data
         measures.forEach((item) => {
             item.riskSelection = <SelectControl
-                help=''
                 value={item.value}
                 options={options}
                 label=''
@@ -89,15 +100,16 @@ class VulnerableMeasures extends Component {
             },
         }, 'light');
         return (
-            <div className="rsssl-measures-datatable">
+            <div className={ this.props.highLightClass}>
                 <DataTable
                     columns={columns}
                     data={measures}
                     dense
+                    striped={true}
+                    highlightOnHover={true}
                     noDataComponent={__("No data found", "really-simple-ssl")}
+                    conditionalRowStyles={this.conditionalRowStyles()}ß
                     theme="really-simple-plugins"
-                    customStyles={this.customStyles()}
-                    conditionalRowStyles={this.conditionalRowStyles()}
                 />
             </div>
         );

@@ -93,25 +93,25 @@ if ( ! class_exists( 'rsssl_placeholder' ) ) {
             $data[] = [
                 'id' => 1,
                 'risk' => __('Low-risk', 'really-simple-ssl'),
-                'value' => 'low-risk',
+                'value' => 'none',
                 'description' => __('Low risk vulnerabilities', 'really-simple-ssl'),
             ];
             $data[] = [
                 'id' => 2,
                 'risk' => __('Medium-risk', 'really-simple-ssl'),
-                'value' => 'medium-risk',
+                'value' => 'notify_admin',
                 'description' => __('Medium risk vulnerabilities', 'really-simple-ssl'),
             ];
             $data[] = [
                 'id' => 3,
                 'risk' => __('High-risk', 'really-simple-ssl'),
-                'value' => 'high-risk',
+                'value' => 'email',
                 'description' => __('High risk vulnerabilities', 'really-simple-ssl'),
             ];
             $data[] = [
                 'id' => 4,
                 'risk' => __('Critical-risk', 'really-simple-ssl'),
-                'value' => 'critical-risk',
+                'value' => 'force_update',
                 'description' => __('Critical risk vulnerabilities', 'really-simple-ssl'),
             ];
             return $data;

@@ -82,7 +82,7 @@ function rsssl_menu() {
                         ],
                         [
                             'id'           => 'vulnerabilities_measures',
-                            'premium'      => false,
+                            'premium'      => true,
                             'helpLink'     => 'https://really-simple-ssl.com/instructions/about-vulnerabilities#measures',
                             'title'        => __( 'Measures', 'really-simple-ssl' ),
                             'premium_text' => __( "Get Advanced Vulnerabilities with %sReally Simple SSL Pro%s", 'really-simple-ssl' ),
@@ -693,6 +693,12 @@ function rsssl_fields( $load_values = true ) {
             'label' => __('Sync with  for wpvulnerabilities.org', 'really-simple-ssl'),
             'disabled' => false,
             'default' => false,
+            'help'               => [
+                'label' => 'default',
+                'url'   => 'https://really-simple-ssl.com/definition/what-are-hardening-features/',
+                'title' => __( "About Vulnerabilities", 'really-simple-ssl' ),
+                'text'  => __( 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec aliquet at nunc sed semper. Aenean ut fermentum ex, non sollicitudin felis. Aliquam orci tellus, aliquam vitae metus quis, vehicula hendrerit metus. Vivamus eu sapien pulvinar, consequat nisl sed, feugiat ipsum. Duis varius ullamcorper porttitor. Fusce turpis mauris, ', 'really-simple-ssl' ),
+            ],
         ],
         [
             'id' => 'vulnerabilities',
@@ -758,42 +764,48 @@ function rsssl_fields( $load_values = true ) {
         ],
         [
             'id'               => 'vulnerabilities_measures',
-            'control_field'    => 'riskSelection',
             'menu_id'          => 'vulnerabilities',
             'group_id'         => 'vulnerabilities_measures',
             'type'             => 'vulnerablemeasures',
             'options'          => [
-                'low_risk' => __( 'Low risk', 'really-simple-ssl' ),
-                'high_risk' => __( 'High risk', 'really-simple-ssl' ),
-                'critical_risk' => __( 'Critical risk', 'really-simple-ssl' ),
+                'none' => __( 'None', 'really-simple-ssl' ),
+                'notify_admin' => __( 'Admin notification', 'really-simple-ssl' ),
+                'email' => __( 'Email', 'really-simple-ssl' ),
+                'force_update' => __( 'Force update', 'really-simple-ssl' ),
             ],
             'disabled'         => false,
             'default'          => false,
             'data_source'      => [ 'RSSSL', 'placeholder', 'measures_data' ],
-//            'react_conditions' => [
-//                'relation' => 'AND',
-//                [
-//                    'disable_measures_data' => false,
-//                ]
-//            ],
+            'react_conditions' => [
+                'vul_action' => 'AND',
+                [
+                    'disable_measures_data' => false,
+                ]
+            ],
             'columns'          => [
                 [
                     'name'     => __( 'Risk', 'really-simple-ssl' ),
                     'sortable' => false,
                     'column'   => 'risk',
+                    'width'    => '20%',
                 ],
                 [
                     'name'     => __( 'Action', 'really-simple-ssl' ),
                     'sortable' => false,
                     'column'   => 'riskSelection',
+                    'width'         => '30%',
                 ],
                 [
                     'name'     => __( 'Description', 'really-simple-ssl' ),
                     'sortable' => false,
                     'column'   => 'description',
+                    'type'   => 'text',
+                    'width'     => '50%',
+                    'minWidth'  => '300px',
                 ],
             ],
         ],
+        /* section x_xss_protection */
 		[
 			'id'       => 'x_xss_protection',
 			'menu_id'  => 'recommended_security_headers',

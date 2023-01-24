@@ -8640,12 +8640,16 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
-/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var react_data_table_component__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react-data-table-component */ "./node_modules/react-data-table-component/dist/index.cjs.js");
-/* harmony import */ var _utils_Icon__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../utils/Icon */ "./src/utils/Icon.js");
-/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @wordpress/components */ "@wordpress/components");
-/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_wordpress_components__WEBPACK_IMPORTED_MODULE_4__);
+/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/components */ "@wordpress/components");
+/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _ChangeStatus__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./ChangeStatus */ "./src/Settings/ChangeStatus.js");
+/* harmony import */ var react_data_table_component__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! react-data-table-component */ "./node_modules/react-data-table-component/dist/index.cjs.js");
+/* harmony import */ var _utils_api__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../utils/api */ "./src/utils/api.js");
+/* harmony import */ var _utils_Icon__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../utils/Icon */ "./src/utils/Icon.js");
+
+
 
 
 
@@ -8671,7 +8675,9 @@ class VulnerableMeasures extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__
       name: column.name,
       sortable: column.sortable,
       width: column.width,
-      selector: row => row[column.column]
+      grow: column.grow,
+      selector: row => row[column.column],
+      right: !!column.right
     };
   }
   customStyles() {
@@ -8690,7 +8696,7 @@ class VulnerableMeasures extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__
       },
       cells: {
         style: {
-          paddingLeft: '0',
+          paddingLeft: '10px',
           paddingRight: '0'
         }
       }
@@ -8700,7 +8706,7 @@ class VulnerableMeasures extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__
     //TODO: make this work
   }
   onChangeHandler(fieldValue, clickedItem, field) {
-    alert('fieldValue');
+    alert(fieldValue);
   }
   render() {
     const {
@@ -8717,32 +8723,39 @@ class VulnerableMeasures extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__
 
     //now we get the options for the select control
     let options = this.props.field.options;
-
+    //we divide the key into label and the value into value
+    options = Object.entries(options).map(item => {
+      return {
+        label: item[1],
+        value: item[0]
+      };
+    });
     //and we add the select control to the data
     measures.forEach(item => {
-      item.riskSelection = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_4__.SelectControl, {
-        help: "",
+      item.riskSelection = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.SelectControl, {
         value: item.value,
         options: options,
         label: "",
         onChange: fieldValue => this.onChangeHandler(fieldValue, item, 'value')
       });
     });
-    (0,react_data_table_component__WEBPACK_IMPORTED_MODULE_2__.createTheme)('really-simple-plugins', {
+    (0,react_data_table_component__WEBPACK_IMPORTED_MODULE_4__.createTheme)('really-simple-plugins', {
       divider: {
         default: 'transparent'
       }
     }, 'light');
     return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-      className: "rsssl-measures-datatable"
-    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_data_table_component__WEBPACK_IMPORTED_MODULE_2__["default"], {
+      className: this.props.highLightClass
+    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_data_table_component__WEBPACK_IMPORTED_MODULE_4__["default"], {
       columns: columns,
       data: measures,
       dense: true,
-      noDataComponent: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("No data found", "really-simple-ssl"),
-      theme: "really-simple-plugins",
-      customStyles: this.customStyles(),
-      conditionalRowStyles: this.conditionalRowStyles()
+      striped: true,
+      highlightOnHover: true,
+      noDataComponent: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("No data found", "really-simple-ssl"),
+      conditionalRowStyles: this.conditionalRowStyles(),
+      ß: true,
+      theme: "really-simple-plugins"
     }));
   }
 }
