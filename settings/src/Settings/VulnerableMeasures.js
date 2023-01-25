@@ -15,7 +15,6 @@ class VulnerableMeasures extends Component {
 
     constructor() {
         super(...arguments);
-        console.log(this.props);
         this.state = {
             measures: [],
             loading: false,

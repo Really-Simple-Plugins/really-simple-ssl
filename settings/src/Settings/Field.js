@@ -18,6 +18,7 @@ import MixedContentScan from "./MixedContentScan";
 import PermissionsPolicy from "./PermissionsPolicy";
 import Support from "./Support";
 import LearningMode from "./LearningMode";
+import RunNotificationTest from "./RunNotificationTest";
 import VulnerableMeasures from "./VulnerableMeasures";
 import ChangeStatus from "./ChangeStatus";
 import {
@@ -29,6 +30,7 @@ import {
  */
 import DataTable from "react-data-table-component";
 import * as PropTypes from "prop-types";
+
 
 
 class Field extends Component {
@@ -325,6 +327,20 @@ class Field extends Component {
                     <VulnerableMeasures disabled={disabled} onChangeHandlerDataTableStatus={this.onChangeHandlerDataTableStatus} updateField={this.props.updateField} field={this.props.field} options={options} highLightClass={this.highLightClass} fields={fields}/>
                 </div>
             )
+        }
+
+        if ( field.type==='RunNotificationTest' ) {
+            return (
+                <div className={this.highLightClass} ref={this.scrollAnchor}>
+                    <RunNotificationTest
+                        disabled={disabled}
+                        field={this.props.field}
+                        fields={fields}
+                        highLightClass={this.highLightClass}
+                        action={this.props.action}
+                        />
+                </div>
+            );
         }
 
         if ( field.type === 'mixedcontentscan' ) {
