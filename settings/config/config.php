@@ -686,7 +686,7 @@ function rsssl_fields( $load_values = true ) {
 			],
 		],
         [
-            'id' => 'vulnerabilities',
+            'id' => 'sync_vulnerabilities',
             'menu_id' => 'vulnerabilities',
             'group_id' => 'vulnerabilities_basic',
             'type' => 'checkbox',

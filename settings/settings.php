@@ -420,6 +420,7 @@ function rsssl_sanitize_field_type($type){
         'permissionspolicy',
         'learningmode',
         'mixedcontentscan',
+        'vulnerablemeasures',
         'LetsEncrypt',
     ];
     if ( in_array($type, $types) ){
