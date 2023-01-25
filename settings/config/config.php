@@ -685,8 +685,9 @@ function rsssl_fields( $load_values = true ) {
 				],
 			],
 		],
+		/* Vulnerability basic Section */
         [
-            'id' => 'vulnerabilities',
+            'id' => 'enable_vulnerability_scanner',
             'menu_id' => 'vulnerabilities',
             'group_id' => 'vulnerabilities_basic',
             'type' => 'checkbox',
@@ -701,7 +702,7 @@ function rsssl_fields( $load_values = true ) {
             ],
         ],
         [
-            'id' => 'vulnerabilities',
+            'id' => 'enable_feedback_in_plugin',
             'menu_id' => 'vulnerabilities',
             'group_id' => 'vulnerabilities_basic',
             'type' => 'checkbox',
@@ -709,8 +710,9 @@ function rsssl_fields( $load_values = true ) {
             'disabled' => false,
             'default' => false,
         ],
+		/* Vulnerability advanced Section */
         [
-            'id' => 'vulnerabilities',
+            'id' => 'vulnerability_notification_dashboard',
             'menu_id' => 'vulnerabilities',
             'group_id' => 'vulnerabilities_notifi',
             'type' => 'select',
@@ -724,7 +726,7 @@ function rsssl_fields( $load_values = true ) {
             'default' => 'low_risk',
         ],
         [
-            'id' => 'vulnerabilities',
+            'id' => 'vulnerability_notification_sitewide',
             'menu_id' => 'vulnerabilities',
             'group_id' => 'vulnerabilities_notifi',
             'type' => 'select',
@@ -738,7 +740,7 @@ function rsssl_fields( $load_values = true ) {
             'default' => 'high_risk',
         ],
         [
-            'id' => 'vulnerabilities',
+            'id' => 'vulnerability_notification_email_admin',
             'menu_id' => 'vulnerabilities',
             'group_id' => 'vulnerabilities_notifi',
             'type' => 'select',
@@ -762,6 +764,7 @@ function rsssl_fields( $load_values = true ) {
             'button_text' => __( "Test notifications", "really-simple-ssl" ),
             'default'     => false,
         ],
+		/* Measures Setting Premium Only */
         [
             'id'               => 'vulnerabilities_measures',
             'menu_id'          => 'vulnerabilities',
