@@ -685,23 +685,24 @@ function rsssl_fields( $load_values = true ) {
 				],
 			],
 		],
+		/* Vulnerability basic Section */
         [
-            'id' => 'sync_vulnerabilities',
+            'id' => 'enable_vulnerability_scanner',
             'menu_id' => 'vulnerabilities',
             'group_id' => 'vulnerabilities_basic',
             'type' => 'checkbox',
-            'label' => __('Sync with  for wpvulnerabilities.org', 'really-simple-ssl'),
+            'label' => __('Enable vulnerability scanning', 'really-simple-ssl'),
             'disabled' => false,
             'default' => false,
             'help'               => [
                 'label' => 'default',
                 'url'   => 'https://really-simple-ssl.com/definition/what-are-hardening-features/',
                 'title' => __( "About Vulnerabilities", 'really-simple-ssl' ),
-                'text'  => __( 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec aliquet at nunc sed semper. Aenean ut fermentum ex, non sollicitudin felis. Aliquam orci tellus, aliquam vitae metus quis, vehicula hendrerit metus. Vivamus eu sapien pulvinar, consequat nisl sed, feugiat ipsum. Duis varius ullamcorper porttitor. Fusce turpis mauris, ', 'really-simple-ssl' ),
+                'text'  => __( 'Really Simple SSL will collect information about vulnerable software components from our central database (Powered by WPVulnerability [link: https:://vulnerability.wpsysadmin.com]) Anonymous information about vulnerable components (that cannot be linked to your website) will be transmitted to Really Simple SSL for the purpose of statistical analysis. For more information read the Privacy Statement.', 'really-simple-ssl' ),
             ],
         ],
         [
-            'id' => 'vulnerabilities',
+            'id' => 'enable_feedback_in_plugin',
             'menu_id' => 'vulnerabilities',
             'group_id' => 'vulnerabilities_basic',
             'type' => 'checkbox',
@@ -709,8 +710,9 @@ function rsssl_fields( $load_values = true ) {
             'disabled' => false,
             'default' => false,
         ],
+		/* Vulnerability advanced Section */
         [
-            'id' => 'vulnerabilities',
+            'id' => 'vulnerability_notification_dashboard',
             'menu_id' => 'vulnerabilities',
             'group_id' => 'vulnerabilities_notifi',
             'type' => 'select',
@@ -724,7 +726,7 @@ function rsssl_fields( $load_values = true ) {
             'default' => 'low_risk',
         ],
         [
-            'id' => 'vulnerabilities',
+            'id' => 'vulnerability_notification_sitewide',
             'menu_id' => 'vulnerabilities',
             'group_id' => 'vulnerabilities_notifi',
             'type' => 'select',
@@ -738,7 +740,7 @@ function rsssl_fields( $load_values = true ) {
             'default' => 'high_risk',
         ],
         [
-            'id' => 'vulnerabilities',
+            'id' => 'vulnerability_notification_email_admin',
             'menu_id' => 'vulnerabilities',
             'group_id' => 'vulnerabilities_notifi',
             'type' => 'select',
@@ -752,16 +754,16 @@ function rsssl_fields( $load_values = true ) {
             'default' => 'critical_risk',
         ],
         [
-            'id' => 'vulnerabilities',
+            'id' => 'vulnerabilities_test',
             'menu_id' => 'vulnerabilities',
             'group_id' => 'vulnerabilities_notifi',
-            'type' => 'button',
+            'type' => 'RunNotificationTest',
             'label' => __('Preview', 'really-simple-ssl'),
             'disabled' => false,
-            'url'         => trailingslashit( rsssl_url ) . 'system-status.php?download',
             'button_text' => __( "Test notifications", "really-simple-ssl" ),
             'default'     => false,
         ],
+		/* Measures Setting Premium Only */
         [
             'id'               => 'vulnerabilities_measures',
             'menu_id'          => 'vulnerabilities',

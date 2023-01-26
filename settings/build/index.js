@@ -6234,9 +6234,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _PermissionsPolicy__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./PermissionsPolicy */ "./src/Settings/PermissionsPolicy.js");
 /* harmony import */ var _Support__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./Support */ "./src/Settings/Support.js");
 /* harmony import */ var _LearningMode__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ./LearningMode */ "./src/Settings/LearningMode.js");
-/* harmony import */ var _VulnerableMeasures__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ./VulnerableMeasures */ "./src/Settings/VulnerableMeasures.js");
-/* harmony import */ var _ChangeStatus__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ./ChangeStatus */ "./src/Settings/ChangeStatus.js");
-/* harmony import */ var react_data_table_component__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! react-data-table-component */ "./node_modules/react-data-table-component/dist/index.cjs.js");
+/* harmony import */ var _RunNotificationTest__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ./RunNotificationTest */ "./src/Settings/RunNotificationTest.js");
+/* harmony import */ var _VulnerableMeasures__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ./VulnerableMeasures */ "./src/Settings/VulnerableMeasures.js");
+/* harmony import */ var _ChangeStatus__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ./ChangeStatus */ "./src/Settings/ChangeStatus.js");
+/* harmony import */ var react_data_table_component__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! react-data-table-component */ "./node_modules/react-data-table-component/dist/index.cjs.js");
+
 
 
 
@@ -6547,7 +6549,7 @@ class Field extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Component {
       return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
         className: this.highLightClass,
         ref: this.scrollAnchor
-      }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_VulnerableMeasures__WEBPACK_IMPORTED_MODULE_14__["default"], {
+      }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_VulnerableMeasures__WEBPACK_IMPORTED_MODULE_15__["default"], {
         disabled: disabled,
         onChangeHandlerDataTableStatus: this.onChangeHandlerDataTableStatus,
         updateField: this.props.updateField,
@@ -6555,6 +6557,18 @@ class Field extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Component {
         options: options,
         highLightClass: this.highLightClass,
         fields: fields
+      }));
+    }
+    if (field.type === 'RunNotificationTest') {
+      return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+        className: this.highLightClass,
+        ref: this.scrollAnchor
+      }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_RunNotificationTest__WEBPACK_IMPORTED_MODULE_14__["default"], {
+        disabled: disabled,
+        field: this.props.field,
+        fields: fields,
+        highLightClass: this.highLightClass,
+        action: this.props.action
       }));
     }
     if (field.type === 'mixedcontentscan') {
@@ -7834,6 +7848,96 @@ class PermissionsPolicy extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.
 
 /***/ }),
 
+/***/ "./src/Settings/RunNotificationTest.js":
+/*!*********************************************!*\
+  !*** ./src/Settings/RunNotificationTest.js ***!
+  \*********************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @wordpress/components */ "@wordpress/components");
+/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _Notices__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./Notices */ "./src/Settings/Notices.js");
+/* harmony import */ var _Help__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./Help */ "./src/Settings/Help.js");
+
+
+
+
+
+
+
+/**
+ * Runs the notification test for vulnerabilities.
+ */
+class RunNotificationTest extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Component {
+  constructor() {
+    super(...arguments);
+    this.state = {
+      notifications: []
+    };
+    // this.addHelp('vulnerabilities', 'Test Notification', 'This will send a test notification to the configured email address.', 'TEster');
+  }
+
+  onClickHandler(action) {
+    let HelpDom = document.getElementsByClassName('rsssl-wizard-help')[0];
+    let field = this.props.field;
+    let fields = this.props.fields;
+    //now we remove the id vulnerabitlities_test from the fields
+    fields = fields.filter(function (field) {
+      if (field.id !== 'vulnerabilities_test') {
+        return field;
+      }
+    });
+    fields.forEach((field, i) => {
+      this.addHelp(field.id, field, field.label, HelpDom);
+    });
+  }
+  addHelp(id, field, fieldName, DOM) {
+    console.log(field, fieldName);
+    let newElement = document.createElement('div');
+    let help = {
+      label: 'default',
+      title: 'default',
+      text: 'default'
+    };
+    ReactDOM.render((0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_Help__WEBPACK_IMPORTED_MODULE_4__["default"], {
+      key: id,
+      noticesExpanded: true,
+      index: id,
+      help: help,
+      fieldId: fieldName
+    }), newElement);
+    DOM.appendChild(newElement);
+  }
+  render() {
+    if (this.highLightClass) {
+      this.scrollAnchor = React.createRef();
+    }
+    let field = this.props.field;
+    field.title = 'test';
+    let fields = this.props.fields;
+    let disabled = this.props.disabled;
+    return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+      className: 'rsssl-field-button ' + this.highLightClass,
+      ref: this.scrollAnchor
+    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("label", null, field.label), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__.Button, {
+      isPrimary: true,
+      onClick: () => this.onClickHandler()
+    }, field.button_text));
+  }
+}
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (RunNotificationTest);
+
+/***/ }),
+
 /***/ "./src/Settings/Settings.js":
 /*!**********************************!*\
   !*** ./src/Settings/Settings.js ***!
@@ -8659,7 +8763,6 @@ __webpack_require__.r(__webpack_exports__);
 class VulnerableMeasures extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Component {
   constructor() {
     super(...arguments);
-    console.log(this.props);
     this.state = {
       measures: [],
       loading: false,
