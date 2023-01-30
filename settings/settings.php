@@ -121,7 +121,7 @@ add_action( 'admin_menu', 'rsssl_add_option_menu' );
 
 }
 
-add_action( 'rest_api_init', 'rsssl_settings_rest_route', 10 );
+//add_action( 'rest_api_init', 'rsssl_settings_rest_route', 10 );
 function rsssl_settings_rest_route() {
 	if (!rsssl_user_can_manage()) {
 		return;
