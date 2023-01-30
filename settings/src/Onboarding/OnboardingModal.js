@@ -12,7 +12,7 @@ const OnboardingModal = (props) => {
         if ( !modalLoaded ) {
             rsssl_api.runTest('get_modal_status' ).then( ( response ) => {
                 setModalLoaded(true);
-                props.setShowOnBoardingModal(!response.data.dismissed);
+                props.setShowOnBoardingModal(!response.dismissed);
             });
         }
     });

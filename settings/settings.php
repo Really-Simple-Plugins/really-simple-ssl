@@ -62,6 +62,7 @@ function rsssl_plugin_admin_scripts() {
             'site_url' => get_rest_url(),
             'dashboard_url' => add_query_arg(['page' => 'really-simple-security'], rsssl_admin_url() ),
             'letsencrypt_url' => rsssl_letsencrypt_wizard_url(),
+            'le_generated_by_rsssl' => rsssl_generated_by_rsssl(),
             'upgrade_link' => is_multisite() ? 'https://really-simple-ssl.com/pro-multisite' : 'https://really-simple-ssl.com/pro',
             'plugin_url' => rsssl_url,
             'network_link' => network_site_url('plugins.php'),
@@ -217,10 +218,30 @@ function rsssl_do_action($request){
         case 'plugin_actions':
 			$data = rsssl_plugin_actions($request);
 			break;
+        case 'clear_cache':
+			$data = rsssl_clear_test_caches($request);
+			break;
 		default:
 			$data = apply_filters("rsssl_do_action", [], $action, $request);
 	}
     return $data;
+}
+
+/**
+ * @param WP_REST_Request $request
+ *
+ * @return array
+ */
+function rsssl_clear_test_caches($request){
+    if (!rsssl_user_can_manage()) {
+        return [];
+    }
+
+	$data = $request->get_params();
+	$cache_id = sanitize_title($data['cache_id']);
+
+    do_action('rsssl_clear_test_caches', $request);
+    return [];
 }
 
 /**
@@ -280,7 +301,7 @@ function rsssl_run_test($request){
 
 	$test = sanitize_title($request->get_param('test'));
     $state = $request->get_param('state');
-    $state =  $state !== 'undefined' ? $state : false;
+	$state =  $state !== 'undefined' && $state !== 'false' ? $state : false;
 	switch($test){
         case 'ssl_status_data':
             $data = rsssl_ssl_status_data();
@@ -516,7 +537,6 @@ function rsssl_update_option( $name, $value ) {
 	if ( !rsssl_user_can_manage() ) {
 		return;
 	}
-
 	$config_fields = rsssl_fields(false);
 	$config_ids = array_column($config_fields, 'id');
 	$config_field_index = array_search($name, $config_ids);
@@ -542,9 +562,10 @@ function rsssl_update_option( $name, $value ) {
 	$value = apply_filters("rsssl_fieldvalue", $value, sanitize_text_field($name), $type);
 
     #skip if value wasn't changed
-    if ($options[$name]===$value) {
+    if ( isset($options[$name]) && $options[$name]===$value ) {
         return;
     }
+
 	$options[$name] = $value;
 	if ( is_multisite() && rsssl_is_networkwide_active() ) {
 		update_site_option( 'rsssl_options', $options );
@@ -614,23 +635,22 @@ function rsssl_drop_empty_menu_items( $menu_items, $fields) {
 	if ( !rsssl_user_can_manage() ) {
 		return $menu_items;
 	}
-	$new_menu_items = $menu_items;
 	foreach($menu_items as $key => $menu_item) {
 		//if menu has submenu items, show anyway
 		$has_submenu = isset($menu_item['menu_items']);
 		$has_fields = array_search($menu_item['id'], array_column($fields, 'menu_id'));
 		if( $has_fields === false && !$has_submenu) {
-			unset($new_menu_items[$key]);
+			unset($menu_items[$key]);
 			//reset array keys to prevent issues with react
-			$new_menu_items = array_values($new_menu_items);
+			$menu_items = array_values($menu_items);
 		} else {
 			if( $has_submenu ){
 				$updatedValue = rsssl_drop_empty_menu_items($menu_item['menu_items'], $fields);
-				$new_menu_items[$key]['menu_items'] = $updatedValue;
+				$menu_items[$key]['menu_items'] = $updatedValue;
 			}
 		}
 	}
-    return $new_menu_items;
+    return $menu_items;
 }
 
 /**

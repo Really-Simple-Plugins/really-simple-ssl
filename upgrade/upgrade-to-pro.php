@@ -20,6 +20,8 @@ if ( !class_exists('rsp_upgrade_to_pro') ){
 		private $steps;
 		private $prefix;
 		private $dashboard_url;
+		private $instructions;
+		private $account_url;
 
 		/**
 		 * Class constructor.
@@ -46,6 +48,8 @@ if ( !class_exists('rsp_upgrade_to_pro') ){
 						$this->prefix = "rsssl_";
 						$this->api_url = "https://really-simple-ssl.com";
 						$this->dashboard_url = add_query_arg(["page" => "really-simple-security"], $rsssl_admin_url );
+						$this->account_url = 'https://really-simple-ssl.com/account';
+						$this->instructions = 'https://really-simple-ssl.com/knowledge-base/install-really-simple-ssl-pro';
 						break;
 					case "brst_pro":
 						$this->slug = "burst";
@@ -54,6 +58,8 @@ if ( !class_exists('rsp_upgrade_to_pro') ){
 						$this->prefix = "burst_";
 						$this->api_url = "https://burst-statistics.com";
 						$this->dashboard_url = add_query_arg(["page" => "burst"], admin_url( "admin.php" ));
+						$this->account_url = 'https://burst-statistics.com/account';
+						$this->instructions = 'https://burst-statistics.com/how-to-install-burst-premium';
 						break;
 					case "cmplz_pro":
 					default:
@@ -63,6 +69,8 @@ if ( !class_exists('rsp_upgrade_to_pro') ){
 						$this->prefix = "cmplz_";
 						$this->api_url = "https://complianz.io";
 						$this->dashboard_url = add_query_arg(["page" => "complianz"], admin_url("admin.php") );
+                        $this->account_url = 'https://complianz.io/account';
+                        $this->instructions = 'https://complianz.io/how-to-install-complianz-gdpr-premium-plugin';
 						break;
 				}
 			}
@@ -361,8 +369,8 @@ if ( !class_exists('rsp_upgrade_to_pro') ){
                             <a href="<?php echo $plugins_url ?>" role="button" class="button-primary rsp-red rsp-hidden rsp-btn rsp-cancel">
 								<?php echo __("Cancel", "really-simple-ssl") ?>
                             </a>
-                            <div class="rsp-error-message rsp-folder rsp-package rsp-install rsp-activate rsp-hidden"><span><?php _e('An Error Occurred:',"really-simple-ssl")?></span>&nbsp;<?php printf(__('Install %sManually%s.',"really-simple-ssl").'&nbsp;', '<a target="_blank" href="https://really-simple-ssl.com/knowledge-base/install-really-simple-ssl-pro/">','</a>')?></div>
-                            <div class="rsp-error-message rsp-license rsp-hidden"><span><?php _e('An Error Occurred:',"really-simple-ssl")?></span>&nbsp;<?php printf(__('Check your %slicense%s.',"really-simple-ssl").'&nbsp;', '<a target="_blank" href="https://really-simple-ssl.com/account/">','</a>')?></div>
+                            <div class="rsp-error-message rsp-folder rsp-package rsp-install rsp-activate rsp-hidden"><span><?php _e('An Error Occurred:',"really-simple-ssl")?></span>&nbsp;<?php printf(__('Install %sManually%s.',"really-simple-ssl").'&nbsp;', '<a target="_blank" href="'.$this->account_url.'">','</a>')?></div>
+                            <div class="rsp-error-message rsp-license rsp-hidden"><span><?php _e('An Error Occurred:',"really-simple-ssl")?></span>&nbsp;<?php printf(__('Check your %slicense%s.',"really-simple-ssl").'&nbsp;', '<a target="_blank" href="'.$this->instructions.'">','</a>')?></div>
                         </div>
                     </div>
                 </div>

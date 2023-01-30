@@ -64,7 +64,6 @@ if ( !function_exists('rsssl_maybe_clear_transients')) {
 	 */
 	function rsssl_maybe_clear_transients( $field_id, $field_value, $prev_value, $field_type ) {
 		if ( $field_id === ' mixed_content_fixer' && $field_value ) {
-			delete_transient( 'rsssl_can_use_curl_headers_check' );
 			delete_transient( 'rsssl_mixed_content_fixer_detected' );
 			RSSSL()->admin->mixed_content_fixer_detected();
 		}
@@ -74,7 +73,7 @@ if ( !function_exists('rsssl_maybe_clear_transients')) {
 		}
 
 		if ( $field_id === 'disable_http_methods' ) {
-			delete_transient( 'rsssl_http_methods_allowed' );
+			delete_option( 'rsssl_http_methods_allowed' );
 			rsssl_http_methods_allowed();
 		}
 		if ( $field_id === 'xmlrpc' ) {
@@ -90,11 +89,11 @@ if ( !function_exists('rsssl_maybe_clear_transients')) {
 			rsssl_code_execution_allowed();
 		}
 		if ( $field_id === 'hide_wordpress_version' ) {
-			delete_transient( 'rsssl_wp_version_detected' );
+			delete_option( 'rsssl_wp_version_detected' );
 			rsssl_src_contains_wp_version();
 		}
 		if ( $field_id === 'rename_admin_user' ) {
-			wp_cache_delete('rsssl_admin_user_count');
+			delete_transient('rsssl_admin_user_count');
 			rsssl_has_admin_user();
 		}
 

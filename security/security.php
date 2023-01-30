@@ -15,8 +15,9 @@ class REALLY_SIMPLE_SECURITY
 		if (!isset(self::$instance) && !(self::$instance instanceof REALLY_SIMPLE_SECURITY)) {
 			self::$instance = new REALLY_SIMPLE_SECURITY;
 			self::$instance->includes();
+			$wpcli = defined( 'WP_CLI' ) && WP_CLI;
 
-			if ( rsssl_is_logged_in_rest() || is_admin() || wp_doing_cron() || defined('RSSSL_LEARNING_MODE') ) {
+			if ( $wpcli || rsssl_is_logged_in_rest() || is_admin() || wp_doing_cron() || defined('RSSSL_LEARNING_MODE') ) {
 				self::$instance->firewall_manager = new rsssl_firewall_manager();
 			}
 			self::$instance->hooks();
@@ -29,11 +30,12 @@ class REALLY_SIMPLE_SECURITY
 		$path = rsssl_path.'security/';
 		require_once( $path . 'cron.php' );
 		require_once( $path . 'integrations.php' );
+		$wpcli = defined( 'WP_CLI' ) && WP_CLI;
 
 		/**
 		 * Load only on back-end
 		 */
-		if ( rsssl_is_logged_in_rest() || is_admin() || wp_doing_cron() || defined('RSSSL_LEARNING_MODE')  ) {
+		if ( $wpcli || rsssl_is_logged_in_rest() || is_admin() || wp_doing_cron() || defined('RSSSL_LEARNING_MODE')  ) {
 			require_once( $path . 'functions.php' );
 			require_once( $path . 'deactivate-integration.php' );
 			require_once( $path . 'firewall-manager.php' );

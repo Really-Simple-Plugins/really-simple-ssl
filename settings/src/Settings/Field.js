@@ -20,10 +20,8 @@ import Support from "./Support";
 import LearningMode from "./LearningMode";
 import Button from "./Button";
 import Icon from "../utils/Icon";
+
 const Field = (props) => {
-
-
-
     const onChangeHandler = (fieldValue) => {
         let fields = props.fields;
         let field = props.field;
@@ -122,7 +120,7 @@ const Field = (props) => {
 
     if ( field.type==='checkbox' ){
         return (
-            <div className={highLightClass}>
+            <div className={highLightClass} ref={scrollAnchor}>
                 <CheckboxControl
                   label={labelWrap(field)}
                   field={field}
@@ -142,7 +140,7 @@ const Field = (props) => {
 
     if ( field.type==='radio' ){
         return (
-            <div className={highLightClass}>
+            <div className={highLightClass} ref={scrollAnchor}>
               <RadioControl
                   label={labelWrap(field)}
                   onChange={ ( fieldValue ) => onChangeHandler(fieldValue) }
@@ -155,7 +153,7 @@ const Field = (props) => {
 
     if ( field.type==='text' || field.type==='email' ){
         return (
-            <div className={highLightClass}>
+            <div className={highLightClass} ref={scrollAnchor}>
               <TextControl
                   required={ field.required }
                   disabled={ disabled }
@@ -170,7 +168,8 @@ const Field = (props) => {
 
     if ( field.type==='button' ){
         return (
-            <div className={'rsssl-field-button ' + highLightClass}>
+            <div className={'rsssl-field-button ' + highLightClass} ref={scrollAnchor}>
+                <label>{field.label}</label>
                 <Button addNotice={props.addNotice} field={field} fields={props.fields} />
             </div>
         );
@@ -178,7 +177,7 @@ const Field = (props) => {
 
     if ( field.type==='password' ){
         return (
-            <div className={ highLightClass}>
+            <div className={ highLightClass} ref={scrollAnchor}>
                 <Password
                     index={ props.index }
                     field={ field }
@@ -191,7 +190,7 @@ const Field = (props) => {
 
     if ( field.type==='textarea' ){
         return (
-            <div className={highLightClass}>
+            <div className={highLightClass} ref={scrollAnchor}>
               <TextareaControl
                   label={ field.label }
                   help={ field.comment }
@@ -207,7 +206,7 @@ const Field = (props) => {
         let fieldValue = field.value;
         let fields = props.fields;
         return (
-            <div className={highLightClass}>
+            <div className={highLightClass} ref={scrollAnchor}>
               <License setPageProps={props.setPageProps} fieldsUpdateComplete = {props.fieldsUpdateComplete} index={props.index} fields={fields} field={field} fieldValue={fieldValue} saveChangedFields={props.saveChangedFields} highLightField={props.highLightField} highLightedField={props.highLightedField}/>
             </div>
 
@@ -215,7 +214,7 @@ const Field = (props) => {
     }
     if ( field.type==='number' ){
         return (
-            <div className={highLightClass}>
+            <div className={highLightClass} ref={scrollAnchor}>
                 <NumberControl
                     onChange={ ( fieldValue ) => onChangeHandler(fieldValue) }
                     help={ field.comment }
@@ -225,10 +224,22 @@ const Field = (props) => {
             </div>
         );
     }
+    if ( field.type==='email' ){
+        return (
+            <div className={this.highLightClass} ref={this.scrollAnchor}>
+                <TextControl
+                    help={ field.comment }
+                    label={ field.label }
+                    onChange={ ( fieldValue ) => this.onChangeHandler(fieldValue) }
+                    value= { fieldValue }
+                />
+            </div>
+        );
+    }
 
     if ( field.type==='host') {
         return (
-            <div className={highLightClass}>
+            <div className={highLightClass} ref={scrollAnchor}>
               <Host
                    index={props.index}
                    saveChangedFields={props.saveChangedFields}
@@ -243,7 +254,7 @@ const Field = (props) => {
 
     if ( field.type==='select') {
         return (
-            <div className={highLightClass}>
+            <div className={highLightClass} ref={scrollAnchor}>
               <SelectControl
                   disabled={ disabled }
                   help={ field.comment }
@@ -258,14 +269,14 @@ const Field = (props) => {
 
     if ( field.type==='support' ) {
         return (
-            <div className={highLightClass}>
+            <div className={highLightClass} ref={scrollAnchor}>
               <Support/>
             </div>
         )
     }
     if ( field.type==='permissionspolicy' ) {
         return (
-            <div className={highLightClass}>
+            <div className={highLightClass} ref={scrollAnchor}>
               <PermissionsPolicy disabled={disabled} updateField={props.updateField} field={props.field} options={options} highLightClass={highLightClass} fields={fields}/>
             </div>
         )
@@ -273,7 +284,7 @@ const Field = (props) => {
 
     if ( field.type==='learningmode' ) {
         return(
-            <div className={highLightClass}>
+            <div className={highLightClass} ref={scrollAnchor}>
               <LearningMode disabled={disabled} onChangeHandlerDataTableStatus={onChangeHandlerDataTableStatus} updateField={props.updateField} field={props.field} options={options} highLightClass={highLightClass} fields={fields}/>
             </div>
         )
@@ -281,7 +292,7 @@ const Field = (props) => {
 
     if ( field.type === 'mixedcontentscan' ) {
         return (
-            <div className={highLightClass}>
+            <div className={highLightClass} ref={scrollAnchor}>
               <MixedContentScan dropItemFromModal={props.dropItemFromModal} handleModal={props.handleModal} field={props.field} fields={props.selectedFields}/>
             </div>
         )
