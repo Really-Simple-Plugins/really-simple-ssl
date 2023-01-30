@@ -3,7 +3,6 @@ import {
     Component,
 } from '@wordpress/element';
 
-import * as rsssl_api from "../utils/api";
 import ProgressBlock from "./ProgressBlock";
 import ProgressHeader from "./ProgressBlockHeader";
 import ProgressFooter from "./ProgressFooter";
@@ -12,7 +11,6 @@ import SslLabsFooter from "./SslLabsFooter";
 import OtherPlugins from "./OtherPlugins";
 import SecurityFeaturesBlock from './SecurityFeaturesBlock/SecurityFeaturesBlock';
 import SecurityFeaturesFooter from './SecurityFeaturesBlock/SecurityFeaturesFooter';
-import Placeholder from '../Placeholder/Placeholder';
 
 /*
  * Mapping of components, for use in the config array
