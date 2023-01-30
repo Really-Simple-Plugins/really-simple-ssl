@@ -23,7 +23,7 @@ import Icon from "../utils/Icon";
 import { useEffect, useRef} from "@wordpress/element";
 
 const Field = (props) => {
-    const scrollAnchor = useRef(false);
+    let scrollAnchor = false;
 
     useEffect( () => {
         if ( props.highLightedField===props.field.id && scrollAnchor.current ) {
@@ -100,6 +100,7 @@ const Field = (props) => {
     let highLightClass = 'rsssl-field-wrap';
     if ( props.highLightedField===props.field.id ) {
         highLightClass = 'rsssl-field-wrap rsssl-highlight';
+        scrollAnchor = React.createRef();
     }
 
     let options = [];
@@ -151,7 +152,7 @@ const Field = (props) => {
     }
 
     if ( field.type==='radio' ){
-        return (
+        return (    
             <div className={highLightClass} ref={scrollAnchor}>
               <RadioControl
                   label={labelWrap(field)}
