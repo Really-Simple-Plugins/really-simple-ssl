@@ -20,8 +20,17 @@ import Support from "./Support";
 import LearningMode from "./LearningMode";
 import Button from "./Button";
 import Icon from "../utils/Icon";
+import { useEffect, useRef} from "@wordpress/element";
 
 const Field = (props) => {
+    const scrollAnchor = useRef(false);
+
+    useEffect( () => {
+        if ( props.highLightedField===props.field.id && scrollAnchor.current ) {
+            scrollAnchor.current.scrollIntoView()
+        }
+    });
+
     const onChangeHandler = (fieldValue) => {
         let fields = props.fields;
         let field = props.field;
@@ -88,11 +97,9 @@ const Field = (props) => {
     let fieldValue = field.value;
     let fields = props.fields;
     let disabled = field.disabled;
-    let scrollAnchor;
     let highLightClass = 'rsssl-field-wrap';
     if ( props.highLightedField===props.field.id ) {
         highLightClass = 'rsssl-field-wrap rsssl-highlight';
-        scrollAnchor = React.createRef();
     }
 
     let options = [];
