@@ -35,9 +35,21 @@ const apiGet = (path) => {
                 'X-WP-Nonce': rsssl_settings.nonce,
             }
         }
-        return axios.get(siteUrl()+path, config ).then( ( response ) => {return response.data;})
+        return axios.get(siteUrl()+path, config ).then(
+            ( response ) => {return response.data;}
+        ).catch((error) => {
+            console.log("error")
+            console.log(error.code);
+            console.log(error.message);
+            console.log(error.data.status);
+        });
     } else {
-        return apiFetch( { path: path } );
+        return apiFetch( { path: path } ).catch((error) => {
+            console.log("error")
+            console.log(error.code);
+            console.log(error.message);
+            console.log(error.data.status);
+        });
     }
 }
 
@@ -48,13 +60,23 @@ const apiPost = (path, data) => {
                 'X-WP-Nonce': rsssl_settings.nonce,
             }
         }
-    	return axios.post(siteUrl()+path, data, config ).then( ( response ) => {return response.data;});
+    	return axios.post(siteUrl()+path, data, config ).then( ( response ) => {return response.data;}).catch((error) => {
+            console.log("error")
+            console.log(error.code);
+            console.log(error.message);
+            console.log(error.data.status);
+        });
     } else {
         return apiFetch( {
             path: path,
             method: 'POST',
             data: data,
-        } );
+        } ).catch((error) => {
+            console.log("error")
+            console.log(error.code);
+            console.log(error.message);
+            console.log(error.data.status);
+        });
     }
 }
 
