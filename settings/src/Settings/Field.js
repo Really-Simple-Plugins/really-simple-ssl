@@ -88,7 +88,12 @@ const Field = (props) => {
     let fieldValue = field.value;
     let fields = props.fields;
     let disabled = field.disabled;
-    let highLightClass = props.highLightedField===props.field.id ? 'rsssl-field-wrap rsssl-highlight' : 'rsssl-field-wrap';
+    let scrollAnchor;
+    let highLightClass = 'rsssl-field-wrap';
+    if ( props.highLightedField===props.field.id ) {
+        highLightClass = 'rsssl-field-wrap rsssl-highlight';
+        scrollAnchor = React.createRef();
+    }
 
     let options = [];
     if ( field.options ) {
