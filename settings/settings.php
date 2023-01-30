@@ -122,7 +122,7 @@ add_action( 'admin_menu', 'rsssl_add_option_menu' );
 
 }
 
-//add_action( 'rest_api_init', 'rsssl_settings_rest_route', 10 );
+add_action( 'rest_api_init', 'rsssl_settings_rest_route', 10 );
 function rsssl_settings_rest_route() {
 	if (!rsssl_user_can_manage()) {
 		return;
@@ -139,14 +139,6 @@ function rsssl_settings_rest_route() {
 	register_rest_route( 'reallysimplessl/v1', 'fields/set', array(
 		'methods'  => 'POST',
 		'callback' => 'rsssl_rest_api_fields_set',
-		'permission_callback' => function () {
-			return rsssl_user_can_manage();
-		}
-	) );
-
-	register_rest_route( 'reallysimplessl/v1', 'block/(?P<block>[a-z\_\-]+)', array(
-		'methods'  => 'GET',
-		'callback' => 'rsssl_rest_api_block_get',
 		'permission_callback' => function () {
 			return rsssl_user_can_manage();
 		}
@@ -321,6 +313,8 @@ function rsssl_run_test($request){
         default:
 	        $data = apply_filters("rsssl_run_test", [], $test, $request);
 	}
+
+	$data['success']=true;
 	return $data;
 }
 
@@ -382,7 +376,7 @@ function rsssl_other_plugins_data($slug=false){
             }
         }
     }
-    return $plugins;
+    return ['success'=>true,'plugins'=>$plugins];
 
 }
 
@@ -620,8 +614,8 @@ function rsssl_rest_api_fields_get(){
 
 	$output['fields'] = $fields;
 	$output['menu'] = $menu;
+	$output['success'] = true;
 	$output['progress'] = RSSSL()->progress->get();
-
     return apply_filters('rsssl_rest_api_fields_get', $output);
 }
 
@@ -651,20 +645,6 @@ function rsssl_drop_empty_menu_items( $menu_items, $fields) {
 		}
 	}
     return $menu_items;
-}
-
-/**
- * Get grid block data
- * @param WP_REST_Request $request
- * @return array
- */
-function rsssl_rest_api_block_get($request){
-	if (!rsssl_user_can_manage()) {
-		return [];
-	}
-	$block = $request->get_param('block');
-    $blocks = rsssl_blocks();
-	return isset($blocks[$block]) ? $blocks[$block] : [];
 }
 
 /**

@@ -47,7 +47,7 @@ class rsssl_onboarding {
 				$data = RSSSL()->multisite->process_ssl_activation_step();
 				break;
 			case 'get_modal_status':
-				$data =  ["dismissed" => !$this->show_onboarding_modal()];
+				$data =  ["success" =>true, "dismissed" => !$this->show_onboarding_modal()];
 				break;
 			case 'dismiss_modal':
 				$this->dismiss_modal($request);

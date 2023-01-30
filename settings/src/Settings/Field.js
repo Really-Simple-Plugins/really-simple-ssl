@@ -23,7 +23,7 @@ import Icon from "../utils/Icon";
 import { useEffect, useRef} from "@wordpress/element";
 
 const Field = (props) => {
-    let scrollAnchor = false;
+    let scrollAnchor = React.createRef();
 
     useEffect( () => {
         if ( props.highLightedField===props.field.id && scrollAnchor.current ) {
@@ -98,9 +98,9 @@ const Field = (props) => {
     let fields = props.fields;
     let disabled = field.disabled;
     let highLightClass = 'rsssl-field-wrap';
+
     if ( props.highLightedField===props.field.id ) {
         highLightClass = 'rsssl-field-wrap rsssl-highlight';
-        scrollAnchor = React.createRef();
     }
 
     let options = [];

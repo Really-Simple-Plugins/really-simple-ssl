@@ -25,7 +25,18 @@ const siteUrl = () => {
 		return rsssl_settings.site_url.replace('http://', 'https://');
 	}
 	return  rsssl_settings.site_url;
+}
 
+const invalidDataError = (apiResponse) => {
+    let response = {}
+    let error = {};
+    let data = {};
+    data.status = 500;
+    error.code = 'invalid_data';
+    error.data = data;
+    error.message = apiResponse;
+    response.error = error;
+    return response;
 }
 
 const apiGet = (path) => {
@@ -36,19 +47,28 @@ const apiGet = (path) => {
             }
         }
         return axios.get(siteUrl()+path, config ).then(
-            ( response ) => {return response.data;}
+            ( response ) => {
+                if (!response.data.success) {
+                    return invalidDataError(response.data)
+                }
+                return response.data;
+            }
         ).catch((error) => {
-            console.log("error")
-            console.log(error.code);
-            console.log(error.message);
-            console.log(error.data.status);
+            let data = {};
+            data.error = error;
+            return data;
         });
     } else {
-        return apiFetch( { path: path } ).catch((error) => {
-            console.log("error")
-            console.log(error.code);
-            console.log(error.message);
-            console.log(error.data.status);
+        return apiFetch( { path: path } ).then((response) => {
+            if ( !response.success ) {
+                console.log(path+" resulted in invalid response because of missing success prop");
+                return invalidDataError(response);
+            }
+            return response;
+        }).catch((error) => {
+            let data = {};
+            data.error = error;
+            return data;
         });
     }
 }
@@ -61,10 +81,9 @@ const apiPost = (path, data) => {
             }
         }
     	return axios.post(siteUrl()+path, data, config ).then( ( response ) => {return response.data;}).catch((error) => {
-            console.log("error")
-            console.log(error.code);
-            console.log(error.message);
-            console.log(error.data.status);
+            let data = {};
+            data.error = error;
+            return data;
         });
     } else {
         return apiFetch( {
@@ -72,10 +91,9 @@ const apiPost = (path, data) => {
             method: 'POST',
             data: data,
         } ).catch((error) => {
-            console.log("error")
-            console.log(error.code);
-            console.log(error.message);
-            console.log(error.data.status);
+            let data = {};
+            data.error = error;
+            return data;
         });
     }
 }
@@ -101,10 +119,6 @@ export const setFields = (data) => {
 	let nonce = {'nonce':rsssl_settings.rsssl_nonce};
 	data.push(nonce);
     return apiPost('reallysimplessl/v1/fields/set'+glue()+anchor, data);
-};
-
-export const getBlock = (block) => {
-    return apiGet('reallysimplessl/v1/block/'+block+glue()+getNonce());
 };
 
 export const runTest = (test, state, data ) => {
