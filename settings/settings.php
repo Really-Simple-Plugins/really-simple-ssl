@@ -126,64 +126,67 @@ add_action( 'admin_menu', 'rsssl_add_option_menu' );
     <div id="really-simple-ssl" class="rsssl"></div>
     <div id="really-simple-ssl-modal"></div>
     <?php
-
 }
 
 add_action( 'wp_ajax_rsssl_rest_api_fallback', 'rsssl_rest_api_fallback' );
 function rsssl_rest_api_fallback(){
-	$response = [];
+	$response = $data = [];
 	$error = $action = $test = $do_action =false;
 
 	if ( ! rsssl_user_can_manage() ) {
-        error_log("no cap");
 		$error = true;
 	}
-    error_log("loading ajax call");
     if ( isset($_GET['rest_action']) ) {
         $action = sanitize_text_field($_GET['rest_action']);
         if (strpos($action, 'reallysimplessl/v1/tests/')!==false){
             $test = strtolower(str_replace('reallysimplessl/v1/tests/', '',$action ));
         }
     }
-
-    if ( isset($_POST[0][0]) && isset($_POST[1]) ) {
-        error_log("post request");
-        x_log($_POST);
-        x_log($_POST[0]);
-        $data = json_decode( $_POST[0][0] );
-        $action = sanitize_text_field( $_POST[1] );
-	    x_log($data);
+	$requestData = json_decode(file_get_contents('php://input'), true);
+    if ( $requestData ) {
+	    $action = $requestData['path'] ?? false;
+        $action = sanitize_text_field( $action );
+        $data = $requestData['data'] ?? false;
 	    if (strpos($action, 'reallysimplessl/v1/do_action/')!==false){
 		    $do_action = strtolower(str_replace('reallysimplessl/v1/do_action/', '',$action ));
 	    }
     }
-
+    x_log($_GET);
 	if (!$error) {
         if ( strpos($action, 'fields/get')!==false) {
 	        $response =  rsssl_rest_api_fields_get();
         } else if (strpos($action, 'fields/set')!==false) {
-            x_log("fields set $action");
 	        $request = new WP_REST_Request();
-	        $request->set_body_params($data);
-	        $response =  rsssl_rest_api_fields_set($request);
+	        $response =  rsssl_rest_api_fields_set($request, $data);
         } else if ($test){
-            $request = new WP_REST_Request();
-            $state = sanitize_title($_GET['state']);
+            x_log("is a test");
+	        x_log($_GET);
+
+	        $request = new WP_REST_Request();
+            $id = isset($_GET['id']) ? sanitize_text_field($_GET['id']) : false;
+            $state = isset($_GET['state']) ? sanitize_title($_GET['state']) : false;
 	        $request->set_param('test', $test);
 	        $request->set_param('state', $state);
-	        $response = rsssl_run_test($request );
-        }else  {
-            error_log("nothign found");
+	        $request->set_param('id', $id);
+            $data = $_GET['data'] ?? false;
+            $data = json_decode(stripcslashes($data));
+	        $data = (array) $data;
+            x_log($data);
+	        $response = rsssl_run_test($request, $data);
+        } else if ($do_action)  {
+	        x_log("is a action");
+
+	        $request = new WP_REST_Request();
+            $request->set_param('action', $do_action);
+	        $response = rsssl_do_action($request, $data );
         }
-//        $request = new WP_REST_Request();
-//        $request->set_param('test' => )
     }
 	header( "Content-Type: application/json" );
 	echo json_encode($response);
 	exit;
 }
 
-add_action( 'rest_api_init', 'rsssl_settings_rest_route', 10 );
+//add_action( 'rest_api_init', 'rsssl_settings_rest_route', 10 );
 function rsssl_settings_rest_route() {
 	if (!rsssl_user_can_manage()) {
 		return;
@@ -224,31 +227,31 @@ function rsssl_settings_rest_route() {
 
 /**
  * Store SSL Labs result
- * @param WP_REST_Request $request
+ * @param array $data
  *
  * @return array
  */
-function rsssl_store_ssl_labs($request){
+function rsssl_store_ssl_labs($data){
 	if (!rsssl_user_can_manage()) {
 		return [];
 	}
-	$data = $request->get_json_params();
 	update_option('rsssl_ssl_labs_data', $data, false);
     return [];
 }
 
 /**
  * @param WP_REST_Request $request
+ * @param array|bool $ajax_data
  *
  * @return void
  */
-function rsssl_do_action($request){
+function rsssl_do_action($request, $ajax_data=false){
 	if ( !rsssl_user_can_manage() ) {
 		return;
 	}
 
 	$action = sanitize_title($request->get_param('action'));
-	$data = $request->get_params();
+	$data = $ajax_data ?? $request->get_params();
 	$nonce = $data['nonce'];
 	if ( !wp_verify_nonce($nonce, 'rsssl_nonce') ) {
 		return;
@@ -256,60 +259,58 @@ function rsssl_do_action($request){
 
 	switch($action){
 		case 'ssl_status_data':
-			$data = rsssl_ssl_status_data();
+			$response = rsssl_ssl_status_data();
 			break;
 		case 'ssltest_run':
-			$data = rsssl_ssltest_run($request);
+			$response = rsssl_ssltest_run($data);
 			break;
         case 'store_ssl_labs':
-			$data = rsssl_store_ssl_labs($request);
+	        $response = rsssl_store_ssl_labs($data);
 			break;
         case 'send_test_mail':
             $mailer = new rsssl_mailer();
-	        $data = $mailer->send_test_mail();
+	        $response = $mailer->send_test_mail();
 			break;
         case 'plugin_actions':
-			$data = rsssl_plugin_actions($request);
+	        $response = rsssl_plugin_actions($data);
 			break;
         case 'clear_cache':
-			$data = rsssl_clear_test_caches($request);
+	        $response = rsssl_clear_test_caches($data);
 			break;
 		default:
-			$data = apply_filters("rsssl_do_action", [], $action, $request);
+			$response = apply_filters("rsssl_do_action", $data, $action, $request);
 	}
-    return $data;
+    return $response;
 }
 
 /**
- * @param WP_REST_Request $request
+ * @param array $data
  *
  * @return array
  */
-function rsssl_clear_test_caches($request){
+function rsssl_clear_test_caches($data){
     if (!rsssl_user_can_manage()) {
         return [];
     }
 
-	$data = $request->get_params();
 	$cache_id = sanitize_title($data['cache_id']);
 
-    do_action('rsssl_clear_test_caches', $request);
+    do_action('rsssl_clear_test_caches', $data);
     return [];
 }
 
 /**
  * Process plugin installation or activation actions
  *
- * @param WP_REST_Request $request
+ * @param array $data
  *
  * @return array
  */
 
-function rsssl_plugin_actions($request){
+function rsssl_plugin_actions($data){
 	if ( !rsssl_user_can_manage() ) {
 		return [];
 	}
-    $data = $request->get_params();
     $slug = sanitize_title($data['slug']);
     $action = sanitize_title($data['pluginAction']);
 	$installer = new rsssl_installer($slug);
@@ -324,15 +325,14 @@ function rsssl_plugin_actions($request){
 /**
  * Run a request to SSL Labs
  *
- * @param $request
+ * @param $data
  *
  * @return string
  */
-function rsssl_ssltest_run($request) {
+function rsssl_ssltest_run($data) {
 	if ( !rsssl_user_can_manage() ) {
 		return '';
 	}
-    $data = $request->get_params();
     $url = $data['url'];
 	$response = wp_remote_get( $url );
 	$data     = wp_remote_retrieve_body( $response );
@@ -344,16 +344,18 @@ function rsssl_ssltest_run($request) {
 
 /**
  * @param WP_REST_Request $request
+ * @param array $ajax_data
  *
  * @return array
  */
-function rsssl_run_test($request, $ajax_test = false, $ajax_state = false ){
+function rsssl_run_test($request, $ajax_data){
 	if (!rsssl_user_can_manage()) {
 		return [];
 	}
 
-	$test = $ajax_test ?: sanitize_title($request->get_param('test'));
-    $state = $ajax_state ?: $request->get_param('state');
+	$test = sanitize_title($request->get_param('test'));
+    $data = $ajax_data ?? $request->get_params();
+    $state = $request->get_param('state');
 	$state =  $state !== 'undefined' && $state !== 'false' ? $state : false;
 	switch($test){
         case 'ssl_status_data':
@@ -364,7 +366,6 @@ function rsssl_run_test($request, $ajax_test = false, $ajax_state = false ){
             break;
         case 'progressdata':
             $data = RSSSL()->progress->get();
-            x_log($data);
             break;
         case 'otherpluginsdata':
             $data = rsssl_other_plugins_data();
@@ -373,10 +374,12 @@ function rsssl_run_test($request, $ajax_test = false, $ajax_state = false ){
 	        $data = RSSSL()->progress->dismiss_task($state);
             break;
         default:
-	        $data = apply_filters("rsssl_run_test", [], $test, $request);
+	        $data = apply_filters("rsssl_run_test", $data, $test, $request);
 	}
 
-	$data['success']=true;
+	if (is_array($data)) {
+        $data['success'] = true;
+	}
 	return $data;
 }
 
@@ -490,14 +493,15 @@ function rsssl_sanitize_field_type($type){
 
 /**
  * @param WP_REST_Request $request
+ * @param array           $ajax_data
  *
  * @return array
  */
-function rsssl_rest_api_fields_set($request){
+function rsssl_rest_api_fields_set( WP_REST_Request $request, $ajax_data = false): array {
     if ( !rsssl_user_can_manage()) {
         return [];
     }
-	$fields = $request->get_json_params();
+	$fields = $ajax_data?: $request->get_json_params();
 	//get the nonce
 	$nonce = false;
 	foreach ( $fields as $index => $field ){

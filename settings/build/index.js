@@ -21648,9 +21648,8 @@ const usesPlainPermalinks = () => {
   return rsssl_settings.site_url.indexOf('?') !== -1;
 };
 const ajaxPost = (path, requestData) => {
-  console.log(requestData);
   return new Promise(function (resolve, reject) {
-    let url = rsssl_settings.admin_ajax_url;
+    let url = siteUrl('ajax');
     let xhr = new XMLHttpRequest();
     xhr.open('POST', url);
     xhr.onload = function () {
@@ -21658,55 +21657,39 @@ const ajaxPost = (path, requestData) => {
       if (xhr.status >= 200 && xhr.status < 300) {
         resolve(response);
       } else {
-        reject({
-          status: xhr.status,
-          statusText: xhr.statusText
-        });
+        resolve(invalidDataError(xhr.response, xhr.status, xhr.statusText));
       }
     };
     xhr.onerror = function () {
-      reject({
-        status: xhr.status,
-        statusText: xhr.statusText
-      });
+      resolve(invalidDataError(xhr.response, xhr.status, xhr.statusText));
     };
-    console.log(requestData);
-    // requestData.push(path);
-    let data = [];
-    data.push(JSON.stringify(requestData));
-    data.push(path);
-    console.log(data);
-    if (data && typeof data === 'object') {
-      data = Object.keys(data).map(function (key) {
-        return encodeURIComponent(key) + '=' + encodeURIComponent(data[key]);
-      }).join('&');
-    }
-    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
+    let data = {};
+    data['path'] = path;
+    data['data'] = requestData;
+    data = JSON.stringify(data);
+    xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
     xhr.send(data);
   });
 };
 const ajaxGet = path => {
   return new Promise(function (resolve, reject) {
-    let url = rsssl_settings.admin_ajax_url;
+    let url = siteUrl('ajax');
     url += '&rest_action=' + path.replace('?', '&');
     let xhr = new XMLHttpRequest();
     xhr.open('GET', url);
     xhr.onload = function () {
       let response = JSON.parse(xhr.response);
       if (xhr.status >= 200 && xhr.status < 300) {
+        if (!response.hasOwnProperty('success') && !response.hasOwnProperty('message')) {
+          resolve(invalidDataError(xhr.response, 500, 'invalid_data'));
+        }
         resolve(response);
       } else {
-        reject({
-          status: xhr.status,
-          statusText: xhr.statusText
-        });
+        resolve(invalidDataError(xhr.response, xhr.status, xhr.statusText));
       }
     };
     xhr.onerror = function () {
-      reject({
-        status: xhr.status,
-        statusText: xhr.statusText
-      });
+      resolve(invalidDataError(xhr.response, xhr.status, xhr.statusText));
     };
     xhr.send();
   });
@@ -21716,25 +21699,30 @@ const ajaxGet = path => {
  * if the site is loaded over https, but the site url is not https, force to use https anyway, because otherwise we get mixed content issues.
  * @returns {*}
  */
-const siteUrl = () => {
-  if (window.location.protocol === "https:" && rsssl_settings.site_url.indexOf('https://') === -1) {
-    return rsssl_settings.site_url.replace('http://', 'https://');
+const siteUrl = type => {
+  let url;
+  if (typeof type === 'undefined') {
+    url = rsssl_settings.site_url;
+  } else {
+    url = rsssl_settings.admin_ajax_url;
   }
-  return rsssl_settings.site_url;
+  if (window.location.protocol === "https:" && url.indexOf('https://') === -1) {
+    return url.replace('http://', 'https://');
+  }
+  return url;
 };
-const invalidDataError = apiResponse => {
+const invalidDataError = (apiResponse, status, code) => {
   let response = {};
   let error = {};
   let data = {};
-  data.status = 500;
-  error.code = 'invalid_data';
+  data.status = status;
+  error.code = code;
   error.data = data;
   error.message = apiResponse;
   response.error = error;
   return response;
 };
 const apiGet = path => {
-  return ajaxGet(path);
   if (usesPlainPermalinks()) {
     let config = {
       headers: {
@@ -21743,32 +21731,27 @@ const apiGet = path => {
     };
     return axios__WEBPACK_IMPORTED_MODULE_1___default().get(siteUrl() + path, config).then(response => {
       if (!response.data.success) {
-        return invalidDataError(response.data);
+        return ajaxGet(path);
       }
       return response.data;
     }).catch(error => {
-      let data = {};
-      data.error = error;
-      return data;
+      //try with admin-ajax
+      return ajaxGet(path);
     });
   } else {
     return _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_2___default()({
       path: path
     }).then(response => {
       if (!response.success) {
-        console.log(path + " resulted in invalid response because of missing success prop");
-        return invalidDataError(response);
+        return ajaxGet(path);
       }
       return response;
     }).catch(error => {
-      let data = {};
-      data.error = error;
-      return data;
+      return ajaxGet(path);
     });
   }
 };
 const apiPost = (path, data) => {
-  return ajaxPost(path, data);
   if (usesPlainPermalinks()) {
     let config = {
       headers: {
@@ -21778,9 +21761,7 @@ const apiPost = (path, data) => {
     return axios__WEBPACK_IMPORTED_MODULE_1___default().post(siteUrl() + path, data, config).then(response => {
       return response.data;
     }).catch(error => {
-      let data = {};
-      data.error = error;
-      return data;
+      return ajaxPost(path, data);
     });
   } else {
     return _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_2___default()({
@@ -21788,9 +21769,7 @@ const apiPost = (path, data) => {
       method: 'POST',
       data: data
     }).catch(error => {
-      let data = {};
-      data.error = error;
-      return data;
+      return ajaxPost(path, data);
     });
   }
 };
