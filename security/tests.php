@@ -443,7 +443,6 @@ function rsssl_src_contains_wp_version() {
 					$status     = wp_remote_retrieve_response_code( $response );
 					$web_source = wp_remote_retrieve_body( $response );
 				}
-
 				if ( $status != 200 ) {
 					$result = 'no-response';
 				} elseif ( strpos( $web_source, 'ver='.$wp_version ) === false ) {

@@ -67,6 +67,7 @@ class rsssl_admin
 
 	    add_filter( 'rsssl_htaccess_security_rules', array($this, 'add_htaccess_redirect') );
 	    add_filter( 'before_rocket_htaccess_rules', array($this, 'add_htaccess_redirect_before_wp_rocket' ) );
+	    add_filter( 'rsssl_five_minutes_cron', array($this, 'maybe_send_mail' ) );
 	    add_action( 'rocket_activation', 'rsssl_wrap_htaccess' );
 	    add_action( 'rocket_deactivation' , 'rsssl_wrap_htaccess' );
     }
@@ -74,6 +75,41 @@ class rsssl_admin
     static function this()
     {
         return self::$_this;
+    }
+
+	/**
+	 * @return void
+	 */
+    public function maybe_send_mail(){
+        error_log("maybe send mail");
+        if ( !rsssl_get_option('send_notifications_email') ) {
+            error_log("no notices");
+            return;
+        }
+
+	    $fields = get_option('rsssl_email_warning_fields', []);
+        $time_saved = get_option('rsssl_email_warning_fields_saved');
+        if ( !$time_saved ) {
+            error_log("no time saved stamp");
+            return;
+        }
+
+        error_log("check send time ".$time_saved);
+	    $thirty_minutes_ago = $time_saved < strtotime("-1 minute");
+	    $warning_blocks = array_column($fields, 'email');
+	    if ( $thirty_minutes_ago && count($warning_blocks)>0 ) {
+		    //clear the option
+		    delete_option('rsssl_email_warning_fields', []);
+		    delete_option('rsssl_email_warning_fields_saved');
+		    $domain = '<a href="'.site_url().'">'.site_url().'</a>';
+		    $mailer = new rsssl_mailer();
+		    $mailer->subject = __("Feature enabled","really-simple-ssl");
+		    $mailer->message = sprintf(__("You have enabled a feature on %s. We think it's important to let you know a little bit more about this feature so you can use it without worries.","really-simple-ssl"), $domain);
+		    $mailer->warning_blocks = $warning_blocks;
+		    $mailer->send_mail();
+	    } else {
+            error_log("nothing changed");
+        }
     }
 
 	/**
@@ -1432,7 +1468,7 @@ class rsssl_admin
                 rsssl_get_option('ssl_enabled') &&
                 rsssl_get_option('redirect')==='htaccess' &&
                 ($manual || $this->htaccess_test_success() ) &&
-                $this->ssl_type != "NA"
+                $this->ssl_type !== "NA"
         ) {
             $rule .= "\n" . "<IfModule mod_rewrite.c>" . "\n";
             $rule .= "RewriteEngine on" . "\n";
