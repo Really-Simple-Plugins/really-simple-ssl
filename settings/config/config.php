@@ -286,7 +286,9 @@ function rsssl_fields( $load_values = true ) {
 			'menu_id'          => 'general',
 			'group_id'         => 'general',
 			'type'             => 'select',
+			'tooltip'  => __( "Get notified of important changes, updates and settings. Recommended when using security features.", 'really-simple-ssl' ),
 			'label'            => __( "Redirect method", 'really-simple-ssl' ),
+			'warning'     			=> true,
 			'options'          => [
 				'none'        => __( "No redirect", "really-simple-ssl" ),
 				'wp_redirect' => __( "301 PHP redirect", "really-simple-ssl" ),
@@ -551,6 +553,7 @@ function rsssl_fields( $load_values = true ) {
 		[
 			'id'                 => 'rename_admin_user',
 			'menu_id'            => 'hardening',
+			'warning'     			=> true,
 			'group_id'           => 'hardening_basic',
 			'type'               => 'checkbox',
 			'label'              => __( "Block the username 'admin'", 'really-simple-ssl' ),
