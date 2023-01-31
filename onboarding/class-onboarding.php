@@ -30,16 +30,13 @@ class rsssl_onboarding {
 		return self::$_this;
 	}
 
-	public function handle_onboarding_request($data, $test, $request){
+	public function handle_onboarding_request($response, $test, $data){
 		if ( ! rsssl_user_can_manage() ) {
 			return false;
 		}
-		delete_option('rsssl_network_activation_status');
-		delete_option("rsssl_onboarding_dismissed");
+//		delete_option('rsssl_network_activation_status');
+//		delete_option("rsssl_onboarding_dismissed");
 		switch( $test ){
-			case 'override_ssl_detection':
-				$response = $this->override_ssl_detection($data);
-				break;
 			case 'activate_ssl':
 				$response = RSSSL()->admin->activate_ssl($data);
 				break;
@@ -50,8 +47,10 @@ class rsssl_onboarding {
 				$response =  ["dismissed" => !$this->show_onboarding_modal()];
 				break;
 			case 'dismiss_modal':
-				x_log("dismiss");
 				$this->dismiss_modal($data);
+				break;
+			default:
+				return [];
 		}
 
 		$response['success'] = true;
@@ -65,12 +64,11 @@ class rsssl_onboarding {
 	 *
 	 * @return array|bool[]|false|mixed
 	 */
-	public function handle_onboarding_action($data, $action, $request){
+	public function handle_onboarding_action($response, $action, $data){
 		if ( ! rsssl_user_can_manage() ) {
 			return false;
 		}
 		$error = false;
-		$response = [];
 		$next_action = 'none';
 		switch( $action ){
 			case 'override_ssl_detection':
@@ -116,9 +114,9 @@ class rsssl_onboarding {
 	 */
 	public function dismiss_modal($data){
 		if (!rsssl_user_can_manage()) return;
+		$dismiss =  $data['dismiss'] ?? false;
 		x_log($data);
-		$dismiss = (bool) $data['dismiss'];
-		update_option("rsssl_onboarding_dismissed", $dismiss, false);
+		update_option("rsssl_onboarding_dismissed", (bool) $dismiss, false);
 	}
 
 
@@ -159,10 +157,11 @@ class rsssl_onboarding {
 	 * Update SSL detection overridden option
 	 */
 
-	public function override_ssl_detection($data) {
+	public function override_ssl_detection($request) {
 		if ( ! rsssl_user_can_manage() ) {
 			return false;
 		}
+		$data = $request->get_params();
 		$override_ssl = isset($data['overrideSSL']) ? $data['overrideSSL']===true : false;
 		if ($override_ssl) {
 			update_option('rsssl_ssl_detection_overridden', true, false );

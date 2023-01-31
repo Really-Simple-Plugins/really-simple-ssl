@@ -156,7 +156,7 @@ function rsssl_rest_api_fallback(){
 	    }
     }
 	if (!$error) {
-        if ( strpos($action, 'fields/get')!==false) {
+		if ( strpos($action, 'fields/get')!==false) {
 	        $response =  rsssl_rest_api_fields_get();
         } else if (strpos($action, 'fields/set')!==false) {
 	        $request = new WP_REST_Request();
@@ -165,12 +165,16 @@ function rsssl_rest_api_fallback(){
 	        $request = new WP_REST_Request();
             $id = isset($_GET['id']) ? sanitize_text_field($_GET['id']) : false;
             $state = isset($_GET['state']) ? sanitize_title($_GET['state']) : false;
-	        $request->set_param('test', $test);
+	        //remove
+            $request->set_param('test', $test);
 	        $request->set_param('state', $state);
 	        $request->set_param('id', $id);
             $data = $_GET['data'] ?? false;
             $data = json_decode(stripcslashes($data));
 	        $data = (array) $data;
+			$data['id'] = $id;
+			$data['state'] = $state;
+			$data['test'] = $test;
 	        $response = rsssl_run_test($request, $data);
         } else if ($do_action)  {
 	        $request = new WP_REST_Request();
@@ -184,7 +188,7 @@ function rsssl_rest_api_fallback(){
 }
 add_action( 'wp_ajax_rsssl_rest_api_fallback', 'rsssl_rest_api_fallback' );
 
-add_action( 'rest_api_init', 'rsssl_settings_rest_route', 10 );
+//add_action( 'rest_api_init', 'rsssl_settings_rest_route', 10 );
 function rsssl_settings_rest_route() {
 	if (!rsssl_user_can_manage()) {
 		return;
@@ -342,7 +346,6 @@ function rsssl_ssltest_run($data) {
 
 /**
  * @param WP_REST_Request $request
- * @param array|bool $ajax_data
  *
  * @return array
  */
@@ -350,40 +353,34 @@ function rsssl_run_test($request, $ajax_data=false){
 	if (!rsssl_user_can_manage()) {
 		return [];
 	}
-
+	$data = $ajax_data ?? $request->get_params();
 	$test = sanitize_title($request->get_param('test'));
-    $data = $ajax_data ?? $request->get_params();
-    if (!is_array($data)) {
-        $data = [];
-    }
-    x_log($data);
-    x_log($request);
     $state = $request->get_param('state');
 	$state =  $state !== 'undefined' && $state !== 'false' ? $state : false;
 	switch($test){
         case 'ssl_status_data':
-            $data = rsssl_ssl_status_data();
+            $response = rsssl_ssl_status_data();
             break;
         case 'ssltest_get':
-	        $data = get_option('rsssl_ssl_labs_data');
+	        $response = get_option('rsssl_ssl_labs_data');
             break;
         case 'progressdata':
-            $data = RSSSL()->progress->get();
+	        $response = RSSSL()->progress->get();
             break;
         case 'otherpluginsdata':
-            $data = rsssl_other_plugins_data();
+	        $response = rsssl_other_plugins_data();
             break;
         case 'dismiss_task':
-	        $data = RSSSL()->progress->dismiss_task($state);
+	        $response = RSSSL()->progress->dismiss_task($state);
             break;
         default:
-	        $data = apply_filters("rsssl_run_test", $data, $test, $request);
+	        $response = apply_filters("rsssl_run_test",[], $test, $data);
 	}
 
-	if (is_array($data)) {
-        $data['success'] = true;
+	if (is_array($response)) {
+		$response['success'] = true;
 	}
-	return $data;
+	return $response;
 }
 
 /**
