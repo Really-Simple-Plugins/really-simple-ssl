@@ -34,28 +34,28 @@ class rsssl_onboarding {
 		if ( ! rsssl_user_can_manage() ) {
 			return false;
 		}
-//		delete_option('rsssl_network_activation_status');
-//		delete_option("rsssl_onboarding_dismissed");
+		delete_option('rsssl_network_activation_status');
+		delete_option("rsssl_onboarding_dismissed");
 		switch( $test ){
 			case 'override_ssl_detection':
-				$data = $this->override_ssl_detection($data);
+				$response = $this->override_ssl_detection($data);
 				break;
 			case 'activate_ssl':
-				$data = RSSSL()->admin->activate_ssl($data);
+				$response = RSSSL()->admin->activate_ssl($data);
 				break;
 			case 'activate_ssl_networkwide':
-				$data = RSSSL()->multisite->process_ssl_activation_step();
+				$response = RSSSL()->multisite->process_ssl_activation_step();
 				break;
 			case 'get_modal_status':
-				$data =  ["success" =>true, "dismissed" => !$this->show_onboarding_modal()];
+				$response =  ["dismissed" => !$this->show_onboarding_modal()];
 				break;
 			case 'dismiss_modal':
+				x_log("dismiss");
 				$this->dismiss_modal($data);
-				$data = ['success'=>true];
-				break;
 		}
 
-		return $data;
+		$response['success'] = true;
+		return $response;
 	}
 
 	/**

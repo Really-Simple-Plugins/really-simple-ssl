@@ -345,12 +345,8 @@ function rsssl_gather_warning_blocks_for_mail( array $changed_fields ){
 	}
 
 	if ( !rsssl_get_option('send_notifications_email') ) {
-		error_log("no notices");
 		return;
-	} else {
-		error_log("set notices");
 	}
-	error_log("set notices");
 	$fields = array_filter($changed_fields, static function($field) {
 		return isset( $field['email']['message'] ) && $field['value'];
 	});

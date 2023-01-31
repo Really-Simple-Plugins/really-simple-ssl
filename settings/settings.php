@@ -128,7 +128,11 @@ add_action( 'admin_menu', 'rsssl_add_option_menu' );
     <?php
 }
 
-add_action( 'wp_ajax_rsssl_rest_api_fallback', 'rsssl_rest_api_fallback' );
+/**
+ * If the rest api is blocked, the code will try an admin ajax call as fall back.
+ *
+ * @return void
+ */
 function rsssl_rest_api_fallback(){
 	$response = $data = [];
 	$error = $action = $test = $do_action =false;
@@ -151,7 +155,6 @@ function rsssl_rest_api_fallback(){
 		    $do_action = strtolower(str_replace('reallysimplessl/v1/do_action/', '',$action ));
 	    }
     }
-    x_log($_GET);
 	if (!$error) {
         if ( strpos($action, 'fields/get')!==false) {
 	        $response =  rsssl_rest_api_fields_get();
@@ -159,9 +162,6 @@ function rsssl_rest_api_fallback(){
 	        $request = new WP_REST_Request();
 	        $response =  rsssl_rest_api_fields_set($request, $data);
         } else if ($test){
-            x_log("is a test");
-	        x_log($_GET);
-
 	        $request = new WP_REST_Request();
             $id = isset($_GET['id']) ? sanitize_text_field($_GET['id']) : false;
             $state = isset($_GET['state']) ? sanitize_title($_GET['state']) : false;
@@ -171,11 +171,8 @@ function rsssl_rest_api_fallback(){
             $data = $_GET['data'] ?? false;
             $data = json_decode(stripcslashes($data));
 	        $data = (array) $data;
-            x_log($data);
 	        $response = rsssl_run_test($request, $data);
         } else if ($do_action)  {
-	        x_log("is a action");
-
 	        $request = new WP_REST_Request();
             $request->set_param('action', $do_action);
 	        $response = rsssl_do_action($request, $data );
@@ -185,8 +182,9 @@ function rsssl_rest_api_fallback(){
 	echo json_encode($response);
 	exit;
 }
+add_action( 'wp_ajax_rsssl_rest_api_fallback', 'rsssl_rest_api_fallback' );
 
-//add_action( 'rest_api_init', 'rsssl_settings_rest_route', 10 );
+add_action( 'rest_api_init', 'rsssl_settings_rest_route', 10 );
 function rsssl_settings_rest_route() {
 	if (!rsssl_user_can_manage()) {
 		return;
@@ -344,17 +342,22 @@ function rsssl_ssltest_run($data) {
 
 /**
  * @param WP_REST_Request $request
- * @param array $ajax_data
+ * @param array|bool $ajax_data
  *
  * @return array
  */
-function rsssl_run_test($request, $ajax_data){
+function rsssl_run_test($request, $ajax_data=false){
 	if (!rsssl_user_can_manage()) {
 		return [];
 	}
 
 	$test = sanitize_title($request->get_param('test'));
     $data = $ajax_data ?? $request->get_params();
+    if (!is_array($data)) {
+        $data = [];
+    }
+    x_log($data);
+    x_log($request);
     $state = $request->get_param('state');
 	$state =  $state !== 'undefined' && $state !== 'false' ? $state : false;
 	switch($test){
