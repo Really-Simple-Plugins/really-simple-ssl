@@ -135,28 +135,36 @@ function rsssl_rest_api_fallback(){
 	$error = $action = $test = false;
 
 	if ( ! rsssl_user_can_manage() ) {
+        error_log("no cap");
 		$error = true;
 	}
     error_log("loading ajax call");
     if (isset($_GET['rest_action'])) {
-        $action = strtolower( sanitize_text_field($_GET['rest_action']) );
+        $action = sanitize_text_field($_GET['rest_action']);
         if (strpos($action, 'reallysimplessl/v1/tests/')!==false){
-            $test = str_replace('reallysimplessl/v1/tests/', '',$action );
+            $test = strtolower(str_replace('reallysimplessl/v1/tests/', '',$action ));
         }
     }
+	x_log($_POST);
 	x_log($_GET);
+
 
 	if (!$error) {
         if ( strpos($action, 'fields/get')!==false) {
 	        $response =  rsssl_rest_api_fields_get();
+        } else if (strpos($action, 'fields/set')!==false) {
+
+	        $request = new WP_REST_Request();
+//	        $state = sanitize_title($_GET['state']);
+//	        $request->set_body_params('test');
+//	        $request->set_param('state', $state);
+	        $response =  rsssl_rest_api_fields_set($request);
+
         } else if ($test){
             $request = new WP_REST_Request();
-
             $state = sanitize_title($_GET['state']);
 	        $request->set_param('test', $test);
 	        $request->set_param('state', $state);
-            x_log($test);
-            x_log($state);
 	        $response = rsssl_run_test($request );
         }else{
             error_log("nothign found");

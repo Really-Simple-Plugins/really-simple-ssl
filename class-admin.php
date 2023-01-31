@@ -562,6 +562,10 @@ class rsssl_admin
             return false;
         }
 
+        if (isset($_GET['action']) && $_GET['action']==='rsssl_rest_api_fallback' ) {
+		    return true;
+	    }
+
         parse_str($_SERVER['QUERY_STRING'], $params);
 	    return array_key_exists( "page", $params ) && ( $params["page"] === "really-simple-security" );
     }

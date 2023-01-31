@@ -17,23 +17,42 @@ const usesPlainPermalinks = () => {
     return rsssl_settings.site_url.indexOf('?') !==-1;
 };
 
-const ajaxPost = (path, method, requestData) => {
-    let request = new XMLHttpRequest();
-    request.open('GET', rsssl_settings.admin_ajax_url, true);
-    let data = [];
-    data.push(path);
-    request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
-    request.send(data);
-}
-
-const ajaxGet = (path, method) => {
+const ajaxPost = (path, requestData) => {
     return new Promise(function (resolve, reject) {
         let url = rsssl_settings.admin_ajax_url;
-        if (method==='GET'){
-            url+='&rest_action='+path.replace('?', '&');
-        }
         let xhr = new XMLHttpRequest();
-        xhr.open(method, url);
+        xhr.open('POST', url);
+        xhr.onload = function () {
+            let response = JSON.parse(xhr.response);
+            if (xhr.status >= 200 && xhr.status < 300) {
+                resolve(response);
+            } else {
+                reject({
+                    status: xhr.status,
+                    statusText: xhr.statusText
+                });
+            }
+        };
+        xhr.onerror = function () {
+            reject({
+                status: xhr.status,
+                statusText: xhr.statusText
+            });
+        };
+        requestData.push(path);
+        xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
+        xhr.send(requestData);
+    });
+
+}
+
+const ajaxGet = (path) => {
+    return new Promise(function (resolve, reject) {
+        let url = rsssl_settings.admin_ajax_url;
+        url+='&rest_action='+path.replace('?', '&');
+
+        let xhr = new XMLHttpRequest();
+        xhr.open('GET', url);
         xhr.onload = function () {
             let response = JSON.parse(xhr.response);
             if (xhr.status >= 200 && xhr.status < 300) {
@@ -81,7 +100,7 @@ const invalidDataError = (apiResponse) => {
 }
 
 const apiGet = (path) => {
-    return ajaxGet(path, 'GET');
+    return ajaxGet(path);
 
     if ( usesPlainPermalinks() ) {
         let config = {
@@ -117,6 +136,8 @@ const apiGet = (path) => {
 }
 
 const apiPost = (path, data) => {
+    return ajaxPost(path, data);
+
     if ( usesPlainPermalinks() ) {
         let config = {
             headers: {
