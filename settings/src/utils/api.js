@@ -18,6 +18,7 @@ const usesPlainPermalinks = () => {
 };
 
 const ajaxPost = (path, requestData) => {
+    console.log(requestData);
     return new Promise(function (resolve, reject) {
         let url = rsssl_settings.admin_ajax_url;
         let xhr = new XMLHttpRequest();
@@ -39,9 +40,19 @@ const ajaxPost = (path, requestData) => {
                 statusText: xhr.statusText
             });
         };
-        requestData.push(path);
+        console.log(requestData);
+        // requestData.push(path);
+        let data = [];
+        data.push(JSON.stringify(requestData) );
+        data.push(path);
+        console.log( data );
+        if (data && typeof data === 'object') {
+            data = Object.keys(data).map(function (key) {
+                return encodeURIComponent(key) + '=' + encodeURIComponent(data[key]);
+            }).join('&');
+        }
         xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
-        xhr.send(requestData);
+        xhr.send(data);
     });
 
 }

@@ -132,41 +132,47 @@ add_action( 'admin_menu', 'rsssl_add_option_menu' );
 add_action( 'wp_ajax_rsssl_rest_api_fallback', 'rsssl_rest_api_fallback' );
 function rsssl_rest_api_fallback(){
 	$response = [];
-	$error = $action = $test = false;
+	$error = $action = $test = $do_action =false;
 
 	if ( ! rsssl_user_can_manage() ) {
         error_log("no cap");
 		$error = true;
 	}
     error_log("loading ajax call");
-    if (isset($_GET['rest_action'])) {
+    if ( isset($_GET['rest_action']) ) {
         $action = sanitize_text_field($_GET['rest_action']);
         if (strpos($action, 'reallysimplessl/v1/tests/')!==false){
             $test = strtolower(str_replace('reallysimplessl/v1/tests/', '',$action ));
         }
     }
-	x_log($_POST);
-	x_log($_GET);
 
+    if ( isset($_POST[0][0]) && isset($_POST[1]) ) {
+        error_log("post request");
+        x_log($_POST);
+        x_log($_POST[0]);
+        $data = json_decode( $_POST[0][0] );
+        $action = sanitize_text_field( $_POST[1] );
+	    x_log($data);
+	    if (strpos($action, 'reallysimplessl/v1/do_action/')!==false){
+		    $do_action = strtolower(str_replace('reallysimplessl/v1/do_action/', '',$action ));
+	    }
+    }
 
 	if (!$error) {
         if ( strpos($action, 'fields/get')!==false) {
 	        $response =  rsssl_rest_api_fields_get();
         } else if (strpos($action, 'fields/set')!==false) {
-
+            x_log("fields set $action");
 	        $request = new WP_REST_Request();
-//	        $state = sanitize_title($_GET['state']);
-//	        $request->set_body_params('test');
-//	        $request->set_param('state', $state);
+	        $request->set_body_params($data);
 	        $response =  rsssl_rest_api_fields_set($request);
-
         } else if ($test){
             $request = new WP_REST_Request();
             $state = sanitize_title($_GET['state']);
 	        $request->set_param('test', $test);
 	        $request->set_param('state', $state);
 	        $response = rsssl_run_test($request );
-        }else{
+        }else  {
             error_log("nothign found");
         }
 //        $request = new WP_REST_Request();
@@ -317,7 +323,7 @@ function rsssl_plugin_actions($request){
 
 /**
  * Run a request to SSL Labs
- * 
+ *
  * @param $request
  *
  * @return string
