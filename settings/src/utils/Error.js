@@ -2,18 +2,6 @@ import {__} from "@wordpress/i18n";
 import Hyperlink from "./Hyperlink";
 
 const Error = (props) => {
-    const isJson = (str) => {
-        try{
-            JSON.parse(str);
-        }catch (e){
-            //Error
-            //JSON is not okay
-            return false;
-        }
-
-        return true;
-    }
-
     if (props.error) {
         console.log("errors detected during the loading of the REST API");
         console.log(props.error);

@@ -81,20 +81,16 @@ class rsssl_admin
 	 * @return void
 	 */
     public function maybe_send_mail(){
-        error_log("maybe send mail");
         if ( !rsssl_get_option('send_notifications_email') ) {
-            error_log("no notices");
             return;
         }
 
 	    $fields = get_option('rsssl_email_warning_fields', []);
         $time_saved = get_option('rsssl_email_warning_fields_saved');
         if ( !$time_saved ) {
-            error_log("no time saved stamp");
             return;
         }
 
-        error_log("check send time ".$time_saved);
 	    $thirty_minutes_ago = $time_saved < strtotime("-1 minute");
 	    $warning_blocks = array_column($fields, 'email');
 	    if ( $thirty_minutes_ago && count($warning_blocks)>0 ) {

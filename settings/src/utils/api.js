@@ -16,6 +16,47 @@ export const getNonce = () => {
 const usesPlainPermalinks = () => {
     return rsssl_settings.site_url.indexOf('?') !==-1;
 };
+
+const ajaxPost = (path, method, requestData) => {
+    let request = new XMLHttpRequest();
+    request.open('GET', rsssl_settings.admin_ajax_url, true);
+    let data = [];
+    data.push(path);
+    request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
+    request.send(data);
+}
+
+const ajaxGet = (path, method) => {
+    return new Promise(function (resolve, reject) {
+        let url = rsssl_settings.admin_ajax_url;
+        if (method==='GET'){
+            url+='&rest_action='+path.replace('?', '&');
+        }
+        let xhr = new XMLHttpRequest();
+        xhr.open(method, url);
+        xhr.onload = function () {
+            let response = JSON.parse(xhr.response);
+            if (xhr.status >= 200 && xhr.status < 300) {
+                resolve(response);
+            } else {
+                reject({
+                    status: xhr.status,
+                    statusText: xhr.statusText
+                });
+            }
+        };
+        xhr.onerror = function () {
+            reject({
+                status: xhr.status,
+                statusText: xhr.statusText
+            });
+        };
+        xhr.send();
+    });
+
+}
+
+
 /**
  * if the site is loaded over https, but the site url is not https, force to use https anyway, because otherwise we get mixed content issues.
  * @returns {*}
@@ -40,6 +81,8 @@ const invalidDataError = (apiResponse) => {
 }
 
 const apiGet = (path) => {
+    return ajaxGet(path, 'GET');
+
     if ( usesPlainPermalinks() ) {
         let config = {
             headers: {
