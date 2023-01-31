@@ -115,7 +115,6 @@ class rsssl_onboarding {
 	public function dismiss_modal($data){
 		if (!rsssl_user_can_manage()) return;
 		$dismiss =  $data['dismiss'] ?? false;
-		x_log($data);
 		update_option("rsssl_onboarding_dismissed", (bool) $dismiss, false);
 	}
 
