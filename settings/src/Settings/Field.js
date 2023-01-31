@@ -22,7 +22,11 @@ import Button from "./Button";
 import Icon from "../utils/Icon";
 const Field = (props) => {
 
-
+    useEffect( () => {
+        if ( props.highLightedField===props.field.id && scrollAnchor.current ) {
+            scrollAnchor.current.scrollIntoView()
+        }
+    });
 
     const onChangeHandler = (fieldValue) => {
         let fields = props.fields;
