@@ -172,6 +172,7 @@ function rsssl_rest_api_fallback(){
 			foreach ($_GET as $key => $value ) {
 				$data[$key] = sanitize_text_field($value);
 			}
+            x_log($data);
 	        $response = rsssl_run_test($request, $data);
         } else if ($do_action)  {
 	        $request = new WP_REST_Request();
@@ -185,7 +186,7 @@ function rsssl_rest_api_fallback(){
 }
 add_action( 'wp_ajax_rsssl_rest_api_fallback', 'rsssl_rest_api_fallback' );
 
-add_action( 'rest_api_init', 'rsssl_settings_rest_route', 10 );
+//add_action( 'rest_api_init', 'rsssl_settings_rest_route', 10 );
 function rsssl_settings_rest_route() {
 	if (!rsssl_user_can_manage()) {
 		return;

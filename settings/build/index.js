@@ -17149,9 +17149,7 @@ const LetsEncrypt = props => {
     let test = action.action;
     const startTime = new Date();
     maxAttempts.current = action.attempts;
-    console.log(props.field.id);
     _utils_api__WEBPACK_IMPORTED_MODULE_1__.runLetsEncryptTest(test, props.field.id).then(response => {
-      console.log(response);
       const endTime = new Date();
       let timeDiff = endTime - startTime; //in ms
       const elapsedTime = Math.round(timeDiff);
@@ -17944,15 +17942,12 @@ const OnboardingModal = props => {
     if (!modalLoaded) {
       _utils_api__WEBPACK_IMPORTED_MODULE_1__.doAction('get_modal_status').then(response => {
         setModalLoaded(true);
-        console.log("get modal status");
-        console.log(response);
         props.setShowOnBoardingModal(!response.dismissed);
       });
     }
   });
   (0,react_use__WEBPACK_IMPORTED_MODULE_7__["default"])(() => {
     if (props.showOnBoardingModal === true) {
-      console.log("show modal and save");
       let data = {};
       data.dismiss = false;
       _utils_api__WEBPACK_IMPORTED_MODULE_1__.doAction('dismiss_modal', data).then(response => {});
@@ -17962,7 +17957,6 @@ const OnboardingModal = props => {
     let data = {};
     data.dismiss = true;
     props.setShowOnBoardingModal(false);
-    console.log("dismiss modal and save");
     _utils_api__WEBPACK_IMPORTED_MODULE_1__.doAction('dismiss_modal', data).then(response => {});
   };
   return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, props.showOnBoardingModal && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
@@ -19496,7 +19490,6 @@ class License extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Component 
   }
   getLicenseNotices() {
     return _utils_api__WEBPACK_IMPORTED_MODULE_3__.doAction('license_notices').then(response => {
-      console.log(response);
       return response;
     });
   }
@@ -21754,8 +21747,6 @@ const apiGet = path => {
     return _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_2___default()({
       path: path
     }).then(response => {
-      console.log(" get response");
-      console.log(response);
       if (!response.request_success) {
         return ajaxGet(path);
       }

@@ -24,8 +24,6 @@ class License extends Component {
 
     getLicenseNotices(){
         return rsssl_api.doAction('license_notices').then( ( response ) => {
-            console.log(response);
-
             return response;
         });
     }

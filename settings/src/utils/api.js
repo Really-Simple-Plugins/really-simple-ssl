@@ -126,8 +126,6 @@ const apiGet = (path) => {
         });
     } else {
         return apiFetch( { path: path } ).then((response) => {
-            console.log(" get response");
-            console.log(response);
             if ( !response.request_success ) {
                 return ajaxGet(path);
             }

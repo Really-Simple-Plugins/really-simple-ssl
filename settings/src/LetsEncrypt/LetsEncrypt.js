@@ -170,9 +170,7 @@ const LetsEncrypt = (props) => {
         let  test = action.action;
         const startTime = new Date();
         maxAttempts.current = action.attempts;
-        console.log(props.field.id);
         rsssl_api.runLetsEncryptTest(test, props.field.id ).then( ( response ) => {
-            console.log(response);
             const endTime = new Date();
             let timeDiff = endTime - startTime; //in ms
             const elapsedTime = Math.round(timeDiff);
