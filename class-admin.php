@@ -357,7 +357,7 @@ class rsssl_admin
 	 *  Activate the SSL for this site
 	 */
 
-    public function activate_ssl($request)
+    public function activate_ssl($data)
     {
 	    if ( !rsssl_user_can_manage()  ) {
 		    return [
@@ -367,7 +367,7 @@ class rsssl_admin
         }
 	    $safe_mode = defined('RSSSL_SAFE_MODE') && RSSSL_SAFE_MODE;
         $error = false;
-	    $is_rest_request =  $request instanceof WP_REST_Request;
+	    $is_rest_request =  isset($data['is_rest_request']);
 	    $site_url_changed = false;
 	    $wpcli = defined( 'WP_CLI' ) && WP_CLI;
 	    if ( $wpcli ) {

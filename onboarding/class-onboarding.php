@@ -37,6 +37,7 @@ class rsssl_onboarding {
 //		delete_option("rsssl_onboarding_dismissed");
 		switch( $test ){
 			case 'activate_ssl':
+				$data['is_rest_request'] = true;
 				$response = RSSSL()->admin->activate_ssl($data);
 				break;
 			case 'activate_ssl_networkwide':
