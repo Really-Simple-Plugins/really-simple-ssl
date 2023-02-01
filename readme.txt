@@ -98,7 +98,8 @@ If you can't deactivate, do not just remove the plugin folder to uninstall! Foll
 == Changelog ==
 = 6.2.0 =
 * New: optional email notifications on advanced settings
-* New: added tooltips
+* Improvement: added tooltips
+* Improvement: added warnings for .htaccess redirect
 
 = 6.1.1 =
 * Fix: WP CLI not completing SSL when because site_has_ssl option is not set if website has not been visited before, props @oolongm
