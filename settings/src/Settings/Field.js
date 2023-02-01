@@ -152,7 +152,7 @@ const Field = (props) => {
     }
 
     if ( field.type==='radio' ){
-        return (    
+        return (
             <div className={highLightClass} ref={scrollAnchor}>
               <RadioControl
                   label={labelWrap(field)}

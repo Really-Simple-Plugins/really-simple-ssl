@@ -1,4 +1,6 @@
 import Tooltip from '@mui/material/Tooltip';
+import { styled } from "@mui/material/styles";
+
 const Icon = (props) => {
   const {name, color, size} = props;
   // set defaults if not se
@@ -364,12 +366,31 @@ const Icon = (props) => {
     };
   }
 
-  return (
-      <Tooltip arrow title={props.tooltip} enterDelay={200}>
-          <div className={'rsssl-icon rsssl-icon-' + iconName}>
-            {renderedIcon.html}
-          </div>
-      </Tooltip>
+    const StyledTooltip = styled(({ className, ...props }) => (
+        <Tooltip {...props} classes={{ popper: className }} />
+    ))(({ theme }) => ({
+        [`& .MuiTooltip-tooltip`]: {
+            padding: "10px 20px",
+            fontWeight: "340",
+            fontSize: "var(--rsp-fs-200)",
+            fontFamily: "unset",
+            backgroundColor: "var(--rsp-black)",
+        }
+    }));
+
+    //https://smartdevpreneur.com/how-to-style-the-material-ui-tooltip/#Resources_and_Related_Posts
+    return (
+        <StyledTooltip
+            arrow
+            enterDelay={200}
+            title={props.tooltip}
+            //leaveDelay={2000000} //set to 100000000  to be able to examine the DOM
+            placement="bottom"
+        >
+            <div className={'rsssl-icon rsssl-icon-' + iconName}>
+                {renderedIcon.html}
+            </div>
+        </StyledTooltip>
   );
 
 };

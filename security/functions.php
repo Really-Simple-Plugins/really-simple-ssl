@@ -347,17 +347,16 @@ function rsssl_gather_warning_blocks_for_mail( array $changed_fields ){
 	if ( !rsssl_get_option('send_notifications_email') ) {
 		return;
 	}
+
 	$fields = array_filter($changed_fields, static function($field) {
 		return isset( $field['email']['message'] ) && $field['value'];
 	});
 
 	if ( count($fields)===0 ) {
-		error_log("NO fields with message found");
 		return;
 	}
 	$current_fields = get_option('rsssl_email_warning_fields', []);
 	//if it's empty, we start counting time. 30 mins later we send a mail.
-	error_log("set email warning time stamp");
 	update_option('rsssl_email_warning_fields_saved', time(), false );
 
 	$current_ids = array_column($current_fields, 'id');
@@ -366,7 +365,6 @@ function rsssl_gather_warning_blocks_for_mail( array $changed_fields ){
 			$current_fields[] = $field;
 		}
 	}
-	error_log(print_r($current_fields, true));
 	update_option('rsssl_email_warning_fields', $current_fields, false);
 }
 add_action('rsssl_after_saved_fields', 'rsssl_gather_warning_blocks_for_mail', 40);
