@@ -177,7 +177,6 @@ if ( ! class_exists( "rsssl_le_restapi" ) ) {
 			        __( "Permission denied.", 'really-simple-ssl' )
 		        );
 	        }
-			x_log("RUN TEST $test");
 	        switch( $test ){
                 case 'reset':
 	                return $this->reset();
