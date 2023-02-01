@@ -31,6 +31,7 @@ class rsssl_wp_cli
 		if (!$this->wp_cli_active() ) {
 			return;
 		}
+	    rsssl_update_option('site_has_ssl', true);
         $success = RSSSL()->admin->activate_ssl(false);
 		if ($success) {
 			WP_CLI::success( 'SSL activated successfully' );

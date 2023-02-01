@@ -370,11 +370,8 @@ class rsssl_admin
 	    $is_rest_request =  $request instanceof WP_REST_Request;
 	    $site_url_changed = false;
 	    $wpcli = defined( 'WP_CLI' ) && WP_CLI;
-	    if ( $wpcli ) {
-            rsssl_update_option('site_has_ssl', true);
-	    }
 
-	    if ( rsssl_get_option('site_has_ssl') || get_option('rsssl_ssl_detection_overridden') ){
+        if ( rsssl_get_option('site_has_ssl') || get_option('rsssl_ssl_detection_overridden') || $wpcli ){
 		    //in a configuration reverse proxy without a set server variable https, add code to wpconfig
 	        if ( $this->do_wpconfig_loadbalancer_fix || $this->no_server_variable ) {
 		        $this->wpconfig_loadbalancer_fix();
