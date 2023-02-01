@@ -53,7 +53,6 @@ class rsssl_onboarding {
 				return [];
 		}
 
-		$response['success'] = true;
 		return $response;
 	}
 

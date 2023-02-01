@@ -97,6 +97,7 @@ class RSSSL_RESPONSE
 	public $action;
 	public $status;
 	public $output;
+	public $request_success;
 
 	public function __construct($status, $action, $message, $output = false )
 	{
@@ -104,6 +105,7 @@ class RSSSL_RESPONSE
 		$this->action = $action;
 		$this->message = $message;
 		$this->output = $output;
+		$this->request_success = true;
 	}
 
 }

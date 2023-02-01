@@ -2288,6 +2288,23 @@ class rsssl_admin
 		            ),
 	            ),
             ),
+
+            'ajax_fallback' => array(
+	            'condition'  => array(
+                        'wp_option_rsssl_ajax_fallback_active',
+                ),
+	            'callback' => '_true_',
+	            'output' => array(
+		            'true' => array(
+			            'msg' => __( "Please check if your Rest API is loading correctly. Your site currently is using the ajax fallback method to load the settings.", 'really-simple-ssl' ),
+			            'icon' => 'warning',
+			            'admin_notice' => false,
+			            'url' => 'https://really-simple-ssl.com/instructions/how-to-debug-a-blank-settings-page-in-really-simple-ssl/',
+			            'dismissible' => true,
+			            'plusone' => true,
+		            ),
+	            ),
+            ),
         );
         //on multisite, don't show the notice on subsites.
         //we can't make different sets for network admin and for subsites (at least not for admin notices), as these notices are cached,
@@ -2424,7 +2441,9 @@ class rsssl_admin
 		    $invert = true;
 	    }
 
-	    if ( strpos($func, 'option_')!==false ){
+	    if ( strpos($func, 'wp_option_')!==false ) {
+		    $output = get_option(str_replace('wp_option_', '', $func) )!==false;
+	    } else if ( strpos($func, 'option_')!==false ){
 		    $output = rsssl_get_option(str_replace('option_', '', $func))==1;
 	    } else if ( $func === '_true_') {
 	        $output = true;

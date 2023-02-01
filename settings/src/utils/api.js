@@ -54,7 +54,7 @@ const ajaxGet = (path) => {
         xhr.onload = function () {
             let response = JSON.parse(xhr.response);
             if (xhr.status >= 200 && xhr.status < 300) {
-                if ( !response.hasOwnProperty('success') && !response.hasOwnProperty('message') ) {
+                if ( !response.hasOwnProperty('request_success') ) {
                     resolve(invalidDataError(xhr.response, 500, 'invalid_data') );
                 }
                 resolve(response);

@@ -26,11 +26,11 @@ if ( !class_exists('rsssl_mailer') ) {
 		 */
 		public function send_test_mail(){
 			if ( !rsssl_user_can_manage() ) {
-				return ['completed' => false, 'message' => 'Not allowed'];
+				return ['success' => false, 'message' => 'Not allowed'];
 			}
 			$this->to = rsssl_get_option('notifications_email_address', get_bloginfo('admin_email') );
 			if ( !is_email($this->to) ){
-				return ['completed' => false, 'message' => __('Email address not valid',"really-simple-ssl")];
+				return ['success' => false, 'message' => __('Email address not valid',"really-simple-ssl")];
 			}
 			$this->title = __("Really Simple SSL - Notification Test", "really-simple-ssl");
 			$this->message = __("This email is confirmation that any security notices are likely to reach your inbox.", "really-simple-ssl");
@@ -44,7 +44,7 @@ if ( !class_exists('rsssl_mailer') ) {
 			];
 			$success = $this->send_mail(true);
 			if ($success) {
-				return ['completed' => true, 'message' => __('Email sent! Please check your mail', "really-simple-ssl")];
+				return ['success' => true, 'message' => __('Email sent! Please check your mail', "really-simple-ssl")];
 			}
 
 			if (empty($this->error)) {
@@ -52,7 +52,7 @@ if ( !class_exists('rsssl_mailer') ) {
 			} else {
 				$this->error = __('An error occurred:', "really-simple-ssl").'<br>'.$this->error;
 			}
-			return ['completed' => false, 'message' => $this->error];
+			return ['success' => false, 'message' => $this->error];
 		}
 
 		public function log_mailer_errors( $wp_error ){

@@ -140,6 +140,8 @@ function rsssl_rest_api_fallback(){
 	if ( ! rsssl_user_can_manage() ) {
 		$error = true;
 	}
+    //if the site is using this fallback, we want to show a notice
+    update_option('rsssl_ajax_fallback_active', time(), false );
     if ( isset($_GET['rest_action']) ) {
         $action = sanitize_text_field($_GET['rest_action']);
         if (strpos($action, 'reallysimplessl/v1/tests/')!==false){
@@ -188,7 +190,7 @@ function rsssl_rest_api_fallback(){
 }
 add_action( 'wp_ajax_rsssl_rest_api_fallback', 'rsssl_rest_api_fallback' );
 
-//add_action( 'rest_api_init', 'rsssl_settings_rest_route', 10 );
+add_action( 'rest_api_init', 'rsssl_settings_rest_route', 10 );
 function rsssl_settings_rest_route() {
 	if (!rsssl_user_can_manage()) {
 		return;
@@ -252,6 +254,11 @@ function rsssl_do_action($request, $ajax_data=false){
 		return;
 	}
 
+    $five_minutes_ago = strtotime('-2 minutes');
+    if ( !$ajax_data  && get_option('rsssl_ajax_fallback_active') < $five_minutes_ago ) {
+	    delete_option('rsssl_ajax_fallback_active' );
+    }
+
 	$action = sanitize_title($request->get_param('action'));
 	$data = $ajax_data ?? $request->get_params();
 	$nonce = $data['nonce'];
@@ -282,6 +289,9 @@ function rsssl_do_action($request, $ajax_data=false){
 		default:
 			$response = apply_filters("rsssl_do_action", $data, $action, $request);
 	}
+    if (is_array($response)) {
+        $response['request_success'] = true;
+    }
     return $response;
 }
 
@@ -378,7 +388,7 @@ function rsssl_run_test($request, $ajax_data=false){
 	}
 
 	if (is_array($response)) {
-		$response['success'] = true;
+		$response['request_success'] = true;
 	}
 	return $response;
 }
@@ -680,7 +690,7 @@ function rsssl_rest_api_fields_get(){
 
 	$output['fields'] = $fields;
 	$output['menu'] = $menu;
-	$output['success'] = true;
+	$output['request_success'] = true;
 	$output['progress'] = RSSSL()->progress->get();
     return apply_filters('rsssl_rest_api_fields_get', $output);
 }
