@@ -1,5 +1,8 @@
 .rsssl div[class^=rsssl-wizard-] {
   .rsssl-field-wrap {
+    .MuiTooltip-popper {
+      background-color:#000;
+    }
     label {
       display: flex;
 
