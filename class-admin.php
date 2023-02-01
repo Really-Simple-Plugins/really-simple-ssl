@@ -2296,7 +2296,7 @@ class rsssl_admin
 	            'callback' => '_true_',
 	            'output' => array(
 		            'true' => array(
-			            'msg' => __( "Please check if your Rest API is loading correctly. Your site currently is using the ajax fallback method to load the settings.", 'really-simple-ssl' ),
+			            'msg' => __( "Please check if your REST API is loading correctly. Your site currently is using the slower Ajax fallback method to load the settings.", 'really-simple-ssl' ),
 			            'icon' => 'warning',
 			            'admin_notice' => false,
 			            'url' => 'https://really-simple-ssl.com/instructions/how-to-debug-a-blank-settings-page-in-really-simple-ssl/',
