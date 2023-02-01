@@ -390,12 +390,9 @@ function rsssl_run_test($request, $ajax_data=false){
 	        $response = apply_filters("rsssl_run_test",[], $test, $data);
 	}
 
-	if (is_array($response)) {
+	if ( is_array($response)) {
 		$response['request_success'] = true;
 	}
-
-	x_log("run test $test response");
-	x_log($response);
 	return $response;
 }
 

@@ -21742,7 +21742,7 @@ const apiGet = path => {
       }
     };
     return axios__WEBPACK_IMPORTED_MODULE_1___default().get(siteUrl() + path, config).then(response => {
-      if (!response.data.success) {
+      if (!response.data.request_success) {
         return ajaxGet(path);
       }
       return response.data;
@@ -21754,7 +21754,9 @@ const apiGet = path => {
     return _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_2___default()({
       path: path
     }).then(response => {
-      if (!response.success) {
+      console.log(" get response");
+      console.log(response);
+      if (!response.request_success) {
         return ajaxGet(path);
       }
       return response;

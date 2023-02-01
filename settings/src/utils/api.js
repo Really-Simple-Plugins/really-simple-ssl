@@ -115,7 +115,7 @@ const apiGet = (path) => {
         }
         return axios.get(siteUrl()+path, config ).then(
             ( response ) => {
-                if (!response.data.success) {
+                if (!response.data.request_success) {
                     return ajaxGet(path);
                 }
                 return response.data;
@@ -126,7 +126,9 @@ const apiGet = (path) => {
         });
     } else {
         return apiFetch( { path: path } ).then((response) => {
-            if ( !response.success ) {
+            console.log(" get response");
+            console.log(response);
+            if ( !response.request_success ) {
                 return ajaxGet(path);
             }
             return response;
