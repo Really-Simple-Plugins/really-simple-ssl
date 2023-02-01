@@ -243,6 +243,12 @@ function rsssl_store_ssl_labs($data){
     return [];
 }
 
+function rsssl_remove_fallback_notice(){
+    if ( get_option('rsssl_ajax_fallback_active') !== false ) {
+	    delete_option('rsssl_ajax_fallback_active' );
+    }
+}
+
 /**
  * @param WP_REST_Request $request
  * @param array|bool $ajax_data
@@ -254,9 +260,8 @@ function rsssl_do_action($request, $ajax_data=false){
 		return;
 	}
 
-    $five_minutes_ago = strtotime('-2 minutes');
-    if ( !$ajax_data  && get_option('rsssl_ajax_fallback_active') < $five_minutes_ago ) {
-	    delete_option('rsssl_ajax_fallback_active' );
+    if ( !$ajax_data  ) {
+	    rsssl_remove_fallback_notice();
     }
 
 	$action = sanitize_title($request->get_param('action'));
@@ -362,6 +367,9 @@ function rsssl_ssltest_run($data) {
 function rsssl_run_test($request, $ajax_data=false){
 	if (!rsssl_user_can_manage()) {
 		return [];
+	}
+	if ( !$ajax_data  ) {
+		rsssl_remove_fallback_notice();
 	}
 	$data = $ajax_data ?? $request->get_params();
 	$test = sanitize_title($request->get_param('test'));
