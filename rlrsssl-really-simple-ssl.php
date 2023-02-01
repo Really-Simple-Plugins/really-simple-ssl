@@ -199,9 +199,9 @@ class REALLY_SIMPLE_SSL
                 <p>
                     <?php
                     if (!empty($license) ) {
-	                    echo sprintf(__("%sUpdate%s or %srenew your license%s.","really-simple-ssl"),'<a href="'.$update_link.'.">','</a>','<a href="https://really-simple-ssl.com/pro" target="_blank">','</a>');
+	                    echo sprintf(__("%sUpdate%s or %srenew your license%s.","really-simple-ssl"),'<a href="'.$update_link.'.">','</a>','<a href="https://really-simple-ssl.com/pro/?mtm_campaign=renew&mtm_source=free&mtm_content=upgrade" target="_blank">','</a>');
                     } else {
-                        echo sprintf(__("Visit the plugins overview or %srenew your license%s.","really-simple-ssl"),'<a href="https://really-simple-ssl.com/pro" target="_blank">','</a>');
+                        echo sprintf(__("Visit the plugins overview or %srenew your license%s.","really-simple-ssl"),'<a href="https://really-simple-ssl.com/pro/?mtm_campaign=renew&mtm_source=free&mtm_content=upgrade" target="_blank">','</a>');
                    }
                     ?>
                 </p>
