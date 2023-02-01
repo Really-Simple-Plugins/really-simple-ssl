@@ -290,13 +290,14 @@ function rsssl_fields( $load_values = true ) {
 			'options'          => [
 				'none'        => __( "No redirect", "really-simple-ssl" ),
 				'wp_redirect' => __( "301 PHP redirect", "really-simple-ssl" ),
-				'htaccess'    => __( "301 .htaccess redirect", "really-simple-ssl" ),
+				'htaccess'    => __( "301 .htaccess redirect (read instructions first)", "really-simple-ssl" ),
 			],
+			'warning' => true,
+			'tooltip' => __('Redirects all requests over HTTP to HTTPS.', 'really-simple-ssl'),
 			'help'             => [
 				'label' => 'default',
 				'title' => __( "Redirect method", 'really-simple-ssl' ),
-				'text'  => __( 'Redirects all requests over HTTP to HTTPS using a PHP 301 redirect. Enable if the .htaccess redirect cannot be used, for example on NGINX servers.',
-					'really-simple-ssl' ),
+				'text'  => __( 'Redirects your site to https with a SEO friendly 301 redirect if it is requested over http.', 'really-simple-ssl' ),
 			],
 			'react_conditions' => [
 				'relation' => 'AND',
