@@ -1,5 +1,10 @@
 <?php defined('ABSPATH') or die();
 
+/**
+ * @package Really Simple SSL
+ * @subpackage RSSSL_VULNERABILITIES
+ * @since 3.0
+ */
 if (!class_exists("rsssl_vulnerabilities")) {
 
     /**
@@ -17,6 +22,15 @@ if (!class_exists("rsssl_vulnerabilities")) {
         {
             add_action('admin_init', array($this, 'check_db_values'));
             add_action('admin_init', array($this, 'download_vulnerabilities'));
+        }
+
+        public static function instance()
+        {
+            static $instance = false;
+            if (!$instance) {
+                $instance = new rsssl_vulnerabilities();
+            }
+            return $instance;
         }
 
         /**
@@ -47,6 +61,7 @@ if (!class_exists("rsssl_vulnerabilities")) {
         private function check_for_core_vulnerabilities()
         {
             $core_vulnerabilities = $this->get_corevulnerabilities();
+            return $core_vulnerabilities;
             $this->save_core_vulnerabilities($core_vulnerabilities);
         }
 
@@ -93,6 +108,7 @@ if (!class_exists("rsssl_vulnerabilities")) {
             global $wp_version;
             //first we download the correct json from 'api.really-simple-security.com'
             $url = 'https://api.really-simple-security.com/downloads/wp-core_' . $wp_version . '.json';
+            die($url);
             $response = wp_remote_get($url);
             if (is_wp_error($response)) {
                 return [];
@@ -166,5 +182,23 @@ if (!class_exists("rsssl_vulnerabilities")) {
                 $wpdb->query("ALTER TABLE " . $table_name . " ADD last_checked datetime DEFAULT '0000-00-00 00:00:00' NOT NULL");
             }
         }
+
+        public function init()
+        {
+            var_dump($this->download_vulnerabilities());
+            die;
+        }
     }
+}
+
+add_action( 'init', 'rsssl_vulnerabilities' );
+
+function rsssl_vulnerabilities()
+{
+    global $rsssl_vulnerabilities;
+    if (!isset($rsssl_vulnerabilities)) {
+        $rsssl_vulnerabilities = new RSSSL_Vulnerabilities();
+        $rsssl_vulnerabilities->init();
+    }
+    return $rsssl_vulnerabilities;
 }
