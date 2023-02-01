@@ -23,7 +23,6 @@ class rsssl_onboarding {
 		add_action( 'admin_init', array( $this, 'maybe_redirect_to_settings_page'), 40);
 		add_filter("rsssl_run_test", array($this, 'handle_onboarding_request'), 10, 3);
 		add_filter("rsssl_do_action", array($this, 'handle_onboarding_action'), 10, 3);
-
 	}
 
 	static function this() {
@@ -42,12 +41,6 @@ class rsssl_onboarding {
 				break;
 			case 'activate_ssl_networkwide':
 				$response = RSSSL()->multisite->process_ssl_activation_step();
-				break;
-			case 'get_modal_status':
-				$response =  ["dismissed" => !$this->show_onboarding_modal()];
-				break;
-			case 'dismiss_modal':
-				$this->dismiss_modal($data);
 				break;
 			default:
 				return [];
@@ -70,6 +63,12 @@ class rsssl_onboarding {
 		$error = false;
 		$next_action = 'none';
 		switch( $action ){
+			case 'get_modal_status':
+				$response =  ["dismissed" => !$this->show_onboarding_modal()];
+				break;
+			case 'dismiss_modal':
+				$this->dismiss_modal($data);
+				break;
 			case 'override_ssl_detection':
 				$response = $this->override_ssl_detection($data);
 				break;
@@ -99,6 +98,9 @@ class rsssl_onboarding {
 					'next_action' => 'none',
 					'success' => true,
 				];
+				break;
+			default:
+				return $response;
 		}
 
 		return $response;
@@ -116,7 +118,6 @@ class rsssl_onboarding {
 		$dismiss =  $data['dismiss'] ?? false;
 		update_option("rsssl_onboarding_dismissed", (bool) $dismiss, false);
 	}
-
 
 	public function maybe_redirect_to_settings_page() {
 		if ( get_transient('rsssl_redirect_to_settings_page' ) ) {

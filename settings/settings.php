@@ -165,18 +165,13 @@ function rsssl_rest_api_fallback(){
 	        $response =  rsssl_rest_api_fields_set($request, $data);
         } else if ($test){
 	        $request = new WP_REST_Request();
-            $id = isset($_GET['id']) ? sanitize_text_field($_GET['id']) : false;
-            $state = isset($_GET['state']) ? sanitize_title($_GET['state']) : false;
-	        //remove
-            $request->set_param('test', $test);
-	        $request->set_param('state', $state);
-	        $request->set_param('id', $id);
             $data = $_GET['data'] ?? false;
             $data = json_decode(stripcslashes($data));
 	        $data = (array) $data;
-			$data['id'] = $id;
-			$data['state'] = $state;
-			$data['test'] = $test;
+			//remove
+			foreach ($_GET as $key => $value ) {
+				$data[$key] = sanitize_text_field($value);
+			}
 	        $response = rsssl_run_test($request, $data);
         } else if ($do_action)  {
 	        $request = new WP_REST_Request();
@@ -263,9 +258,9 @@ function rsssl_do_action($request, $ajax_data=false){
     if ( !$ajax_data  ) {
 	    rsssl_remove_fallback_notice();
     }
-
 	$action = sanitize_title($request->get_param('action'));
-	$data = $ajax_data ?? $request->get_params();
+	$data = $ajax_data!==false ? $ajax_data  : $request->get_params();
+
 	$nonce = $data['nonce'];
 	if ( !wp_verify_nonce($nonce, 'rsssl_nonce') ) {
 		return;
@@ -292,7 +287,7 @@ function rsssl_do_action($request, $ajax_data=false){
 	        $response = rsssl_clear_test_caches($data);
 			break;
 		default:
-			$response = apply_filters("rsssl_do_action", $data, $action, $request);
+			$response = apply_filters("rsssl_do_action", [], $action, $data);
 	}
     if (is_array($response)) {
         $response['request_success'] = true;
@@ -371,7 +366,7 @@ function rsssl_run_test($request, $ajax_data=false){
 	if ( !$ajax_data  ) {
 		rsssl_remove_fallback_notice();
 	}
-	$data = $ajax_data ?? $request->get_params();
+	$data = $ajax_data!==false ? $ajax_data : $request->get_params();
 	$test = sanitize_title($request->get_param('test'));
     $state = $request->get_param('state');
 	$state =  $state !== 'undefined' && $state !== 'false' ? $state : false;
@@ -398,6 +393,9 @@ function rsssl_run_test($request, $ajax_data=false){
 	if (is_array($response)) {
 		$response['request_success'] = true;
 	}
+
+	x_log("run test $test response");
+	x_log($response);
 	return $response;
 }
 
