@@ -6,7 +6,7 @@ Requires at least: 5.7
 License: GPL2
 Tested up to: 6.1
 Requires PHP: 7.2
-Stable tag: 6.1.1
+Stable tag: 6.2.0
 
 The easiest way to improve security! Leverage your SSL certificate and protect your website visitors.
 
@@ -96,6 +96,10 @@ The plugin checks your certificate before enabling, but if, for example, you mig
 If you can't deactivate, do not just remove the plugin folder to uninstall! Follow these [instructions](https://really-simple-ssl.com/knowledge-base/uninstall-websitebackend-not-accessible/) instead.
 
 == Changelog ==
+= 6.2.0 =
+* New: optional email notifications on advanced settings
+* New: added tooltips
+
 = 6.1.1 =
 * Fix: WP CLI not completing SSL when because site_has_ssl option is not set if website has not been visited before, props @oolongm
 * Improvement: prevent 'undefined' status showing up in api calls on settings page
