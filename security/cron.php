@@ -18,7 +18,7 @@ if ( RSSSL_USE_CRON ) {
 }
 
 /**
- * Ensure the hook as a function attached to it.
+ * Ensure the hook has a function attached to it.
  */
 add_action( 'rsssl_every_day_hook', 'rsssl_daily_cron' );
 function rsssl_daily_cron(){
@@ -39,9 +39,9 @@ if ( !RSSSL_USE_CRON ) {
 
 add_filter( 'cron_schedules', 'rsssl_filter_cron_schedules' );
 function rsssl_filter_cron_schedules( $schedules ) {
-	$schedules['rsssl_one_minute'] = array(
-		'interval' => 60, // seconds
-		'display' => __('Once every minute')
+	$schedules['rsssl_five_minutes'] = array(
+		'interval' => 5 * MINUTE_IN_SECONDS, // seconds
+		'display' => __('Once every 5 minutes')
 	);
 	$schedules['rsssl_daily']   = array(
 		'interval' => DAY_IN_SECONDS,

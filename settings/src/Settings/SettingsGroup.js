@@ -108,6 +108,7 @@ class SettingsGroup extends Component {
                     {selectedFields.map((field, i) =>
                         <Field key={i} index={i}
                             updateFields={this.props.updateFields}
+                            addNotice={this.props.addNotice}
                             selectMenu={this.props.selectMenu}
                             selectMainMenu={this.props.selectMainMenu}
                             dropItemFromModal={this.props.dropItemFromModal}

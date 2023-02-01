@@ -3,9 +3,6 @@ import Placeholder from "../Placeholder/Placeholder";
 import {in_array} from "../utils/lib";
 import SettingsGroup from "./SettingsGroup";
 import Help from "./Help";
-import {
-    Button,
-} from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
 
 /**
@@ -116,6 +113,7 @@ class Settings extends Component {
                     { groups.map((group, i) =>
                         <SettingsGroup
                             updateFields={this.props.updateFields}
+                            addNotice={this.props.addNotice}
                             dropItemFromModal={this.props.dropItemFromModal}
                             selectMenu={this.props.selectMenu}
                             selectMainMenu={this.props.selectMainMenu}
