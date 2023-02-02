@@ -1,68 +1,56 @@
 import { __ } from '@wordpress/i18n';
-import {
-    Component,
-} from '@wordpress/element';
+import {useState,} from '@wordpress/element';
 import ChangeStatus from "./ChangeStatus";
 import DataTable, {createTheme} from 'react-data-table-component';
 import * as rsssl_api from "../utils/api";
 import Icon from "../utils/Icon";
+import useFields from "./FieldsData";
+import getAnchor from "../utils/getAnchor";
 
-class Delete extends Component {
-    constructor() {
-        super( ...arguments );
-    }
-    render(){
-       return (
-           <button type="button" className=" rsssl-learning-mode-delete" onClick={ () => this.props.onDeleteHandler( this.props.item ) }>
-               <svg aria-hidden="true" focusable="false" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512" height="16" >
-                   <path fill="#000000" d="M310.6 361.4c12.5 12.5 12.5 32.75 0 45.25C304.4 412.9 296.2 416 288 416s-16.38-3.125-22.62-9.375L160 301.3L54.63 406.6C48.38 412.9 40.19 416 32 416S15.63 412.9 9.375 406.6c-12.5-12.5-12.5-32.75 0-45.25l105.4-105.4L9.375 150.6c-12.5-12.5-12.5-32.75 0-45.25s32.75-12.5 45.25 0L160 210.8l105.4-105.4c12.5-12.5 32.75-12.5 45.25 0s12.5 32.75 0 45.25l-105.4 105.4L310.6 361.4z"/>
-               </svg>
-           </button>
-        )
-    }
+const Delete = () => {
+   return (
+       <button type="button" className=" rsssl-learning-mode-delete" onClick={ () => props.onDeleteHandler( props.item ) }>
+           <svg aria-hidden="true" focusable="false" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512" height="16" >
+               <path fill="#000000" d="M310.6 361.4c12.5 12.5 12.5 32.75 0 45.25C304.4 412.9 296.2 416 288 416s-16.38-3.125-22.62-9.375L160 301.3L54.63 406.6C48.38 412.9 40.19 416 32 416S15.63 412.9 9.375 406.6c-12.5-12.5-12.5-32.75 0-45.25l105.4-105.4L9.375 150.6c-12.5-12.5-12.5-32.75 0-45.25s32.75-12.5 45.25 0L160 210.8l105.4-105.4c12.5-12.5 32.75-12.5 45.25 0s12.5 32.75 0 45.25l-105.4 105.4L310.6 361.4z"/>
+           </svg>
+       </button>
+    )
 }
 
-class LearningMode extends Component {
-    constructor() {
-        super( ...arguments );
-        this.state = {
-            enforced_by_thirdparty :0,
-            enforce :0,
-            learning_mode :0,
-            lm_enabled_once :0,
-            learning_mode_completed :0,
-            filterValue: -1,
-        };
-    }
+const LearningMode = () => {
+    const {fields, updateField, setChangedField, highLightField, saveFields} = useFields();
+    const [enforcedByThirdparty, setEnforcedByThirdparty] = useState(0);
+    const [enforce, setEnforce] = useState(0);
+    const [learningMode, setLearningMode] = useState(0);
+    const [learningModeCompleted, setLearningModeCompleted] = useState(0);
+    const [lmEnabledOnce, setLmEnabledOnce] = useState(0);
+    const [filterValue, setFilterValue] = useState(-1);
 
-    componentDidMount() {
-        this.doFilter = this.doFilter.bind(this);
-        this.onDeleteHandler = this.onDeleteHandler.bind(this);
-        let field = this.props.fields.filter(field => field.id === this.props.field.control_field )[0];
-        let enforced_by_thirdparty = field.value === 'enforced-by-thirdparty';
-        let enforce = enforced_by_thirdparty || field.value === 'enforce';
-        let learning_mode = field.value === 'learning_mode';
-        let learning_mode_completed = field.value==='completed';
+    useEffect(async () => {
+        let controlField = fields.filter(field => field.id === props.field.control_field )[0];
+        let enforced_by_thirdparty = controlField.value === 'enforced-by-thirdparty';
+        let enforce = enforced_by_thirdparty || controlField.value === 'enforce';
+        let learning_mode = controlField.value === 'learning_mode';
+        let learning_mode_completed = controlField.value==='completed';
 
-        let lm_enabled_once_field_name = this.props.field.control_field+'_lm_enabled_once';
+        let lm_enabled_once_field_name = props.field.control_field+'_lm_enabled_once';
         let lm_enabled_once_field = this.props.fields.filter(field => field.id === lm_enabled_once_field_name)[0];
         let lm_enabled_once = lm_enabled_once_field.value;
 
         //we somehow need this to initialize the field. Otherwise it doesn't work on load. need to figure that out.
-        this.props.updateField(field.id, field.value);
+        updateField(controlField.id, controlField.value);
+        setEnforcedByThirdparty(enforced_by_thirdparty);
+        setEnforce(enforce);
         this.setState({
-            enforced_by_thirdparty :enforced_by_thirdparty,
-            enforce :enforce,
             learning_mode :learning_mode,
             lm_enabled_once :lm_enabled_once,
             learning_mode_completed :learning_mode_completed,
         });
-    }
+    }, [] );
 
-    doFilter(e){
-        this.setState({
-            filterValue :e.target.value,
-        });
+
+    const doFilter = (e) => {
+        setFilterValue(e.target.value)
     }
 
     toggleEnforce(e, enforce){

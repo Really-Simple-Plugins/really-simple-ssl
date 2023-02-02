@@ -4,15 +4,19 @@ import { __ } from '@wordpress/i18n';
 import update from 'immutability-helper';
 import {useUpdateEffect} from 'react-use';
 import Icon from "../utils/Icon";
+import useFields from "../Settings/FieldsData";
 
 const ProgressFooter = (props) => {
     const [certificateIsValid, setCertificateIsValid] = useState(false);
     const [sslDataLoaded, SetSslDataLoaded] = useState(false);
+    const {fields} = useFields();
 
     useEffect(() => {
         rsssl_api.runTest('ssl_status_data' ).then( ( response ) => {
-            setCertificateIsValid(response.certificate_is_valid);
-            SetSslDataLoaded(true);
+            if ( !response.error ) {
+                setCertificateIsValid(response.certificate_is_valid);
+                SetSslDataLoaded(true);
+            }
         });
     }, [])
 
@@ -20,14 +24,15 @@ const ProgressFooter = (props) => {
         props.setShowOnBoardingModal(true);
     }
 
+
     if ( !sslDataLoaded) {
         return (
         <></>);
     }
-    let redirectValue = props.fields.filter( field => field.id==='redirect' )[0].value;
-    let sslEnabled = props.fields.filter( field => field.id==='ssl_enabled' )[0].value;
+    let redirectValue = fields.filter( field => field.id==='redirect' )[0].value;
+    let sslEnabled = fields.filter( field => field.id==='ssl_enabled' )[0].value;
     let wpconfigFixRequired = rsssl_settings.wpconfig_fix_required;
-    let hasMixedContentFixer = props.fields.filter( field => field.id==='mixed_content_fixer' )[0].value;
+    let hasMixedContentFixer = fields.filter( field => field.id==='mixed_content_fixer' )[0].value;
     let hasRedirect = redirectValue=== 'wp_redirect' || redirectValue=== 'htaccess';
     let sslStatusText = sslEnabled ? __( "SSL Activated", "really-simple-ssl" ) : __( "SSL not activated", "really-simple-ssl" );
     let sslStatusIcon = sslEnabled ? 'circle-check' : 'circle-times';

@@ -6,7 +6,6 @@ import {
     __experimentalNumberControl as NumberControl
 } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
-import * as rsssl_api from "../utils/api";
 import License from "./License";
 import Password from "./Password";
 import Host from "./Host";
@@ -20,10 +19,13 @@ import Support from "./Support";
 import LearningMode from "./LearningMode";
 import Button from "./Button";
 import Icon from "../utils/Icon";
-import { useEffect, useRef} from "@wordpress/element";
+import { useEffect} from "@wordpress/element";
+import useFields from "./FieldsData";
 
 const Field = (props) => {
     let scrollAnchor = React.createRef();
+    const {fields, updateField, setChangedField, highLightField, saveFields} = useFields();
+
     useEffect( () => {
         if ( props.highLightedField===props.field.id && scrollAnchor.current ) {
             scrollAnchor.current.scrollIntoView()
@@ -31,24 +33,22 @@ const Field = (props) => {
     });
 
     const onChangeHandler = (fieldValue) => {
-        let fields = props.fields;
         let field = props.field;
-        fields[props.index]['value'] = fieldValue;
-
+        updateField(field.id, fieldValue);
         //we can configure other fields if a field is enabled, or set to a certain value.
         let configureFieldCondition = false;
-        if (field.configure_on_activation) {
+        if ( field.configure_on_activation ) {
             if ( field.configure_on_activation.hasOwnProperty('condition') && props.field.value==field.configure_on_activation.condition ) {
                 configureFieldCondition = true;
             }
             let configureField = field.configure_on_activation[0];
             for (let fieldId in configureField ) {
                 if ( configureFieldCondition && configureField.hasOwnProperty(fieldId) ) {
-                    props.updateField(fieldId, configureField[fieldId] );
+                    updateField(fieldId, configureField[fieldId] );
                 }
             }
         }
-        props.saveChangedFields( field.id )
+        setChangedField( field.id, fieldValue );
     }
 
     /*
@@ -74,12 +74,10 @@ const Field = (props) => {
         }
         //the updateItemId allows us to update one specific item in a field set.
         field.updateItemId = clickedItem.id;
-        let saveFields = [];
-        saveFields.push(field);
-        props.updateField(field.id, field.value);
-        rsssl_api.setFields(saveFields).then(( response ) => {
-            //props.showSavedSettingsNotice();
-        });
+
+        setChangedField(field.id, field.value);
+        updateField(field.id, field.value);
+        saveFields(true, false);
     }
 
     const labelWrap = (field) => {
@@ -94,11 +92,9 @@ const Field = (props) => {
 
     let field = props.field;
     let fieldValue = field.value;
-    let fields = props.fields;
     let disabled = field.disabled;
     let highLightClass = 'rsssl-field-wrap';
-
-    if ( props.highLightedField===props.field.id ) {
+    if ( highLightField===props.field.id ) {
         highLightClass = 'rsssl-field-wrap rsssl-highlight';
     }
 
@@ -117,7 +113,10 @@ const Field = (props) => {
     //if a feature can only be used on networkwide or single site setups, pass that info here.
     if ( !rsssl_settings.networkwide_active && field.networkwide_required ) {
         disabled = true;
-        field.comment = <>{__("This feature is only available networkwide.","really-simple-ssl")}<Hyperlink target="_blank" text={__("Network settings","really-simple-ssl")} url={rsssl_settings.network_link}/></>
+        field.comment = <>
+            {__("This feature is only available networkwide.","really-simple-ssl")}
+            <Hyperlink target="_blank" text={__("Network settings","really-simple-ssl")} url={rsssl_settings.network_link}/>
+        </>
     }
 
     if ( field.conditionallyDisabled ) {
@@ -151,7 +150,7 @@ const Field = (props) => {
     }
 
     if ( field.type==='radio' ){
-        return (
+        return (    
             <div className={highLightClass} ref={scrollAnchor}>
               <RadioControl
                   label={labelWrap(field)}
@@ -182,7 +181,7 @@ const Field = (props) => {
         return (
             <div className={'rsssl-field-button ' + highLightClass} ref={scrollAnchor}>
                 <label>{field.label}</label>
-                <Button addNotice={props.addNotice} field={field} fields={props.fields} />
+                <Button field={field}/>
             </div>
         );
     }
@@ -193,8 +192,6 @@ const Field = (props) => {
                 <Password
                     index={ props.index }
                     field={ field }
-                    fields={ props.fields }
-                    saveChangedFields={props.saveChangedFields}
                 />
             </div>
         );
@@ -216,10 +213,9 @@ const Field = (props) => {
     if ( field.type==='license' ){
         let field = props.field;
         let fieldValue = field.value;
-        let fields = props.fields;
         return (
             <div className={highLightClass} ref={scrollAnchor}>
-              <License setPageProps={props.setPageProps} fieldsUpdateComplete = {props.fieldsUpdateComplete} index={props.index} fields={fields} field={field} fieldValue={fieldValue} saveChangedFields={props.saveChangedFields} highLightField={props.highLightField} highLightedField={props.highLightedField}/>
+              <License index={props.index} field={field} fieldValue={fieldValue}/>
             </div>
 
         );
@@ -253,11 +249,7 @@ const Field = (props) => {
         return (
             <div className={highLightClass} ref={scrollAnchor}>
               <Host
-                   index={props.index}
-                   saveChangedFields={props.saveChangedFields}
-                   handleNextButtonDisabled={props.handleNextButtonDisabled}
-                   updateFields={props.updateFields}
-                  fields={props.fields}
+                  index={props.index}
                   field={props.field}
               />
             </div>
@@ -289,7 +281,7 @@ const Field = (props) => {
     if ( field.type==='permissionspolicy' ) {
         return (
             <div className={highLightClass} ref={scrollAnchor}>
-              <PermissionsPolicy disabled={disabled} updateField={props.updateField} field={props.field} options={options} highLightClass={highLightClass} fields={fields}/>
+              <PermissionsPolicy disabled={disabled} field={props.field} options={options}/>
             </div>
         )
     }
@@ -297,7 +289,7 @@ const Field = (props) => {
     if ( field.type==='learningmode' ) {
         return(
             <div className={highLightClass} ref={scrollAnchor}>
-              <LearningMode disabled={disabled} onChangeHandlerDataTableStatus={onChangeHandlerDataTableStatus} updateField={props.updateField} field={props.field} options={options} highLightClass={highLightClass} fields={fields}/>
+              <LearningMode disabled={disabled} onChangeHandlerDataTableStatus={onChangeHandlerDataTableStatus} field={props.field} options={options}/>
             </div>
         )
     }
@@ -305,20 +297,20 @@ const Field = (props) => {
     if ( field.type === 'mixedcontentscan' ) {
         return (
             <div className={highLightClass} ref={scrollAnchor}>
-              <MixedContentScan dropItemFromModal={props.dropItemFromModal} handleModal={props.handleModal} field={props.field} fields={props.selectedFields}/>
+              <MixedContentScan  field={props.field}/>
             </div>
         )
     }
 
     if ( field.type === 'letsencrypt' ) {
             return (
-               <LetsEncrypt key={field.id} resetRefreshTests={props.resetRefreshTests} refreshTests={props.refreshTests} getFieldValue={props.getFieldValue} save={props.save} selectMenu={props.selectMenu} addHelp={props.addHelp} updateField={props.updateField} fields={props.fields} field={field} handleNextButtonDisabled={props.handleNextButtonDisabled}/>
+               <LetsEncrypt key={field.id} field={field} />
             )
     }
 
     if ( field.type === 'activate' ) {
             return (
-               <Activate key={field.id} selectMainMenu={props.selectMainMenu} resetRefreshTests={props.resetRefreshTests} refreshTests={props.refreshTests} getFieldValue={props.getFieldValue} save={props.save} selectMenu={props.selectMenu} addHelp={props.addHelp} updateField={props.updateField} fields={props.fields} field={field} handleNextButtonDisabled={props.handleNextButtonDisabled}/>
+               <Activate key={field.id} field={field}/>
             )
     }
 

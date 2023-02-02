@@ -1,0 +1,292 @@
+import create from 'zustand';
+import produce from 'immer';
+import * as rsssl_api from "../utils/api";
+import sleeper from "../utils/sleeper.js";
+import {__} from '@wordpress/i18n';
+import {dispatch,} from '@wordpress/data';
+
+const fetchFields = () => {
+    return rsssl_api.getFields().then((response) => {
+        let fields = response.fields;
+        let progress = response.progress;
+        let error = response.error;
+        return {fields, progress, error};
+    }).catch((error) => {
+        console.error(error);
+    });
+}
+
+const useFields = create(( set, get ) => ({
+    licenseStatus: rsssl_settings.licenseStatus,
+    fieldsLoaded: false,
+    error:false,
+    fields: [],
+    changedFields:[],
+    progress:[],
+    nextButtonDisabled:false,
+    refreshTests:false,
+    highLightField: '',
+    setLicenseStatus: (licenseStatus) => set(state => ({ licenseStatus })),
+    setHighLightField: (highLightField) => set(state => ({ highLightField })),
+    setRefreshTests: (refreshTests) => set(state => ({ refreshTests })),
+    handleNextButtonDisabled: (nextButtonDisabled) => set(state => ({ nextButtonDisabled })),
+    setChangedField: (id, value) => {
+        set(
+            produce((state) => {
+                //remove current reference
+                const existingFieldIndex = state.changedFields.findIndex(field => {
+                    return field.id===id;
+                });
+
+                if (existingFieldIndex!==-1){
+                    state.changedFields.splice(existingFieldIndex, 1);
+                }
+
+                //add again, with new value
+                let field = {};
+                field.id = id;
+                field.value = value;
+                state.changedFields.push(field);
+            })
+        )
+    },
+    showSavedSettingsNotice : (text) => {
+        handleShowSavedSettingsNotice(text);
+    },
+
+    updateField: (id, value) => {
+        set(
+            produce((state) => {
+                let index = false;
+                state.fields.forEach(function(fieldItem, i) {
+                    if (fieldItem.id === id ){
+                        index = i;
+                    }
+                });
+                state.fields[index].value = value;
+            })
+        )
+    },
+
+    addHelpNotice : (id, label, text, title, url) => {
+        //create help object
+        let help = {};
+        help.label=label;
+        help.text=text;
+        if (url) help.url=url;
+        if (title) help.title=title;
+        let fields = get().fields;
+        let newFields = [];
+        //add to selected field
+        let fieldEdited = false;
+        fields.forEach(function(fieldItem, i) {
+            let newFieldItem = {...fieldItem};
+            if (fieldItem.id === id && !fieldItem.help ){
+                fieldEdited = true;
+                newFieldItem.help = help;
+            }
+            newFields.push(newFieldItem);
+        });
+        if (fieldEdited) {
+            set( {fields: newFields} );
+        }
+    },
+    getFieldValue : (id) => {
+        let fields = get().fields;
+        for (const fieldItem of fields){
+            if (fieldItem.id === id ){
+                return fieldItem.value;
+            }
+        }
+        return false;
+    },
+    saveFields: async (skipRefreshTests, showSavedNotice) => {
+        let refreshTests = typeof skipRefreshTests !=='undefined' ? skipRefreshTests : true;
+        showSavedNotice = typeof showSavedNotice !=='undefined' ? showSavedNotice : true;
+        let fields = get().fields;
+        fields = fields.filter( field => field.data_target !== 'banner');
+        let changedFields = get().changedFields;
+        let progress = get().progress;
+        let saveFields = [];
+        //data_target
+        for ( const field of fields ){
+            let fieldIsIncluded = changedFields.filter( changedField => changedField.id===field.id ).length>0;
+            if ( fieldIsIncluded ){
+                saveFields.push(field);
+            }
+        }
+
+        //if no fields were changed, do nothing.
+        if ( saveFields.length>0 ) {
+            rsssl_api.setFields(saveFields).then(( response ) => {
+                progress = response.progress;
+                fields = response.fields;
+                set(
+                    produce((state) => {
+                        state.changedFields = [];
+                        state.fields = fields;
+                        state.progress = progress;
+                        state.refreshTests = refreshTests;
+                    })
+                )
+            });
+        }
+        console.log('# saveFields');
+        if (showSavedNotice) {
+            handleShowSavedSettingsNotice();
+        }
+
+    },
+
+    updateFieldsData: async (selectedSubMenuItem) => {
+        let fields = get().fields;
+        fields = updateFieldsListWithConditions(fields);
+        const nextButtonDisabled = isNextButtonDisabled(fields, selectedSubMenuItem);
+
+        set(
+            produce((state) => {
+                state.fields = fields;
+                state.nextButtonDisabled = nextButtonDisabled;
+            })
+        )
+    },
+    fetchFieldsData: async ( selectedSubMenuItem ) => {
+        const { fields, progress, error }   = await fetchFields();
+        let conditionallyEnabledFields = updateFieldsListWithConditions(fields);
+        let selectedFields = conditionallyEnabledFields.filter(field => field.menu_id === selectedSubMenuItem);
+        set({fieldsLoaded: true, fields:conditionallyEnabledFields, selectedFields:selectedFields, progress:progress, error: error });
+    }
+}));
+
+export default useFields;
+
+//check if all required fields have been enabled. If so, enable save/continue button
+const isNextButtonDisabled = (fields, selectedMenuItem) => {
+    let fieldsOnPage = [];
+    //get all fields with group_id this.props.group_id
+    for (const field of fields){
+        if (field.menu_id === selectedMenuItem ){
+            fieldsOnPage.push(field);
+        }
+    }
+
+    let requiredFields = fieldsOnPage.filter(field => field.required && !field.conditionallyDisabled && (field.value.length==0 || !field.value) );
+    return requiredFields.length > 0;
+}
+
+
+
+const updateFieldsListWithConditions = (fields) => {
+    let newFields = [];
+    fields.forEach(function(field, i) {
+        let enabled = !( field.hasOwnProperty('react_conditions') && !validateConditions(field.react_conditions, fields, field.id) );
+        //we want to update the changed fields if this field has just become visible. Otherwise the new field won't get saved.
+        const newField = {...field};
+        newField.conditionallyDisabled = !enabled;
+        newFields.push(newField);
+    });
+    return newFields;
+}
+
+const handleShowSavedSettingsNotice = (text) => {
+    console.log("test "+text);
+    if (typeof text === 'undefined') {
+        text = __( 'Settings Saved', 'really-simple-ssl' );
+    }
+    dispatch('core/notices').createNotice(
+        'success',
+        text,
+        {
+            __unstableHTML: true,
+            id: 'rsssl_settings_saved',
+            type: 'snackbar',
+            isDismissible: false,
+        }
+    ).then(sleeper(2000)).then(( response ) => {
+        dispatch('core/notices').removeNotice('rsssl_settings_saved');
+    });
+}
+
+
+
+const validateConditions = (conditions, fields, fieldId) => {
+    let relation = conditions[0].relation === 'OR' ? 'OR' : 'AND';
+    let conditionApplies = relation==='AND';
+    for (const key in conditions) {
+        if ( conditions.hasOwnProperty(key) ) {
+            let thisConditionApplies = relation==='AND';
+            let subConditionsArray = conditions[key];
+            if ( subConditionsArray.hasOwnProperty('relation') ) {
+                thisConditionApplies = validateConditions(subConditionsArray, fields, fieldId)
+            } else {
+                for ( let conditionField in subConditionsArray ) {
+                    let invert = conditionField.indexOf('!')===0;
+                    if ( subConditionsArray.hasOwnProperty(conditionField) ) {
+                        let conditionValue = subConditionsArray[conditionField];
+                        conditionField = conditionField.replace('!','');
+                        let conditionFields = fields.filter(field => field.id === conditionField);
+                        if ( conditionFields.hasOwnProperty(0) ){
+                            let field = conditionFields[0];
+                            let actualValue = field.value;
+                            if ( field.type==='text_checkbox' ) {
+                                thisConditionApplies = actualValue.hasOwnProperty('show') && actualValue['show'] === conditionValue;
+                            } else if ( field.type==='checkbox' ) {
+                                thisConditionApplies = actualValue === conditionValue;
+                            } else if ( field.type==='multicheckbox' ) {
+                                //multicheckbox conditions
+                                //loop through objects
+                                thisConditionApplies = false;
+                                let arrayValue = actualValue;
+                                if ( arrayValue.length===0 ) {
+                                    thisConditionApplies = false;
+                                } else {
+                                    for (const key of Object.keys(arrayValue)) {
+                                        if ( !Array.isArray(conditionValue) ) conditionValue = [conditionValue];
+                                        if ( conditionValue.includes(arrayValue[key])){
+                                            thisConditionApplies = true;
+                                            break;
+                                        }
+                                    }
+                                }
+                            } else if ( field.type==='radio' ) {
+                                //as the regions field can be both radio and multicheckbox, an array is possible for a radio field
+                                if ( Array.isArray(conditionValue) ) {
+                                    thisConditionApplies = conditionValue.includes(actualValue);
+                                } else {
+                                    thisConditionApplies = conditionValue === actualValue;
+                                }
+
+                            } else {
+                                if (conditionValue === true ) {
+                                    thisConditionApplies = actualValue===1 || actualValue === "1" || actualValue === true;
+                                } else if (conditionValue === false ) {
+                                    thisConditionApplies = actualValue === 0 || actualValue === "0" || actualValue === false;
+                                } else if (conditionValue.indexOf('EMPTY')!==-1) {
+                                    thisConditionApplies = actualValue.length === 0;
+                                } else {
+                                    thisConditionApplies = String(actualValue).toLowerCase() === conditionValue.toLowerCase();
+                                }
+                            }
+                        }
+                    }
+                    if ( invert ){
+                        thisConditionApplies = !thisConditionApplies;
+                    }
+                    if ( relation === 'AND' ) {
+                        conditionApplies = conditionApplies && thisConditionApplies;
+                    } else {
+                        conditionApplies = conditionApplies || thisConditionApplies;
+                    }
+                }
+
+                if ( relation === 'AND' ) {
+                    conditionApplies = conditionApplies && thisConditionApplies;
+                } else {
+                    conditionApplies = conditionApplies || thisConditionApplies;
+                }
+            }
+        }
+    }
+
+    return conditionApplies ? 1 : 0;
+}

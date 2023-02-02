@@ -2,20 +2,22 @@ import SecurityFeatureBullet from './SecurityFeatureBullet';
 import Placeholder from '../../Placeholder/Placeholder';
 import Hyperlink from "../../utils/Hyperlink";
 import { __ } from '@wordpress/i18n';
+import useFields from "../../Settings/FieldsData";
 
 const SecurityFeaturesBlock = (props) => {
-    if ( props.fields && props.fields.length==0 ) {
+    const {fields, fieldsLoaded} = useFields();
+
+    if ( !fieldsLoaded ) {
         return (
             <Placeholder></Placeholder>
         );
     }
 
-    let fields = props.fields;
-    fields = fields.filter( field => field.new_features_block );
+    let featuredFields = fields.filter( field => field.new_features_block );
     return (
         <>
             <div className={'rsssl-new-features'}>
-                {fields.map((field, i) => <SecurityFeatureBullet key={i} index={i} field={field} fields={fields}/>)}
+                {featuredFields.map((field, i) => <SecurityFeatureBullet key={i} index={i} field={field}/>)}
 
             </div>
             <div className="rsssl-new-feature-desc">

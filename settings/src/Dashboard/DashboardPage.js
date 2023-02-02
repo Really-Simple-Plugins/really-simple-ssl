@@ -6,12 +6,12 @@ const DashboardPage = (props) => {
         <>
             {blocks.map((block, i) => <GridBlock key={i}
                                                  block={block}
-                                                 setShowOnBoardingModal={this.props.setShowOnBoardingModal}
-                                                 isApiLoaded={this.props.isAPILoaded}
-                                                 fields={this.props.fields}
-                                                 highLightField={this.props.highLightField}
-                                                 selectMainMenu={this.props.selectMainMenu}
-                                                 getFields={this.props.getFields}
+                                                 setShowOnBoardingModal={props.setShowOnBoardingModal}
+                                                 isApiLoaded={props.isAPILoaded}
+                                                 fields={props.fields}
+                                                 highLightField={props.highLightField}
+                                                 selectMainMenu={props.selectMainMenu}
+                                                 getFields={props.getFields}
             />)}
         </>
     );
