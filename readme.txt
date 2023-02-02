@@ -102,6 +102,7 @@ If you can't deactivate, do not just remove the plugin folder to uninstall! Foll
 * Improvement: added warnings for .htaccess redirect
 * Improvement: don't send user email change on renaming admin user, as the email doesn't actually change
 * Improvement: Use BASEPATH only for wp-load.php, so symlinked folders will load based on ABSPATH
+* Improvement: Improved support for environments where Rest API is blocked 
 
 = 6.1.1 =
 * Fix: WP CLI not completing SSL when because site_has_ssl option is not set if website has not been visited before, props @oolongm
