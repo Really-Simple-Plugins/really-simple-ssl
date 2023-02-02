@@ -17,7 +17,6 @@ class rsssl_progress {
 
 	public function get() {
 		return [
-			"success" =>true,
 			'text' => $this->get_text(),
 			'percentage' => $this->percentage(),
 			'notices' => $this->notices(),

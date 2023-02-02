@@ -10,7 +10,7 @@ const OnboardingModal = (props) => {
     const [modalLoaded, setModalLoaded] = useState(false);
     useEffect(() => {
         if ( !modalLoaded ) {
-            rsssl_api.runTest('get_modal_status' ).then( ( response ) => {
+            rsssl_api.doAction('get_modal_status' ).then( ( response ) => {
                 setModalLoaded(true);
                 props.setShowOnBoardingModal(!response.dismissed);
             });
@@ -21,7 +21,7 @@ const OnboardingModal = (props) => {
         if (props.showOnBoardingModal===true) {
             let data={};
             data.dismiss = false;
-            rsssl_api.runTest('dismiss_modal', 'refresh', data).then(( response ) => {});
+            rsssl_api.doAction('dismiss_modal', data).then(( response ) => {});
         }
     });
 
@@ -29,7 +29,7 @@ const OnboardingModal = (props) => {
         let data={};
         data.dismiss = true;
         props.setShowOnBoardingModal(false)
-        rsssl_api.runTest('dismiss_modal', 'refresh', data).then(( response ) => { });
+        rsssl_api.doAction('dismiss_modal', data).then(( response ) => { });
     }
     return (
         <>

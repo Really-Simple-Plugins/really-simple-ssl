@@ -17904,7 +17904,7 @@ const OnboardingModal = props => {
   const [modalLoaded, setModalLoaded] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)(false);
   (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
     if (!modalLoaded) {
-      _utils_api__WEBPACK_IMPORTED_MODULE_1__.runTest('get_modal_status').then(response => {
+      _utils_api__WEBPACK_IMPORTED_MODULE_1__.doAction('get_modal_status').then(response => {
         setModalLoaded(true);
         props.setShowOnBoardingModal(!response.dismissed);
       });
@@ -17914,14 +17914,14 @@ const OnboardingModal = props => {
     if (props.showOnBoardingModal === true) {
       let data = {};
       data.dismiss = false;
-      _utils_api__WEBPACK_IMPORTED_MODULE_1__.runTest('dismiss_modal', 'refresh', data).then(response => {});
+      _utils_api__WEBPACK_IMPORTED_MODULE_1__.doAction('dismiss_modal', data).then(response => {});
     }
   });
   const dismissModal = () => {
     let data = {};
     data.dismiss = true;
     props.setShowOnBoardingModal(false);
-    _utils_api__WEBPACK_IMPORTED_MODULE_1__.runTest('dismiss_modal', 'refresh', data).then(response => {});
+    _utils_api__WEBPACK_IMPORTED_MODULE_1__.doAction('dismiss_modal', data).then(response => {});
   };
   return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, props.showOnBoardingModal && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "rsssl-modal-backdrop"
@@ -18492,7 +18492,7 @@ const Button = props => {
       props.addNotice(props.field.id, help);
     });
   };
-  return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("label", null, props.field.label), props.field.url && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_utils_Hyperlink__WEBPACK_IMPORTED_MODULE_2__["default"], {
+  return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, props.field.url && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_utils_Hyperlink__WEBPACK_IMPORTED_MODULE_2__["default"], {
     className: "button button-default",
     text: props.field.button_text,
     url: props.field.url
@@ -19453,7 +19453,7 @@ class License extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Component 
     };
   }
   getLicenseNotices() {
-    return _utils_api__WEBPACK_IMPORTED_MODULE_3__.runTest('licenseNotices', 'refresh').then(response => {
+    return _utils_api__WEBPACK_IMPORTED_MODULE_3__.doAction('license_notices').then(response => {
       return response;
     });
   }
@@ -19500,7 +19500,7 @@ class License extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Component 
       licenseStatus
     } = this.state;
     if (licenseStatus === 'valid') {
-      _utils_api__WEBPACK_IMPORTED_MODULE_3__.runTest('deactivate_license').then(response => {
+      _utils_api__WEBPACK_IMPORTED_MODULE_3__.doAction('deactivate_license').then(response => {
         this.props.setPageProps('licenseStatus', response.licenseStatus);
         this.notices = response.notices;
         this.licenseStatus = response.licenseStatus;
@@ -20981,16 +20981,6 @@ __webpack_require__.r(__webpack_exports__);
 
 
 const Error = props => {
-  const isJson = str => {
-    try {
-      JSON.parse(str);
-    } catch (e) {
-      //Error
-      //JSON is not okay
-      return false;
-    }
-    return true;
-  };
   if (props.error) {
     console.log("errors detected during the loading of the REST API");
     console.log(props.error);
@@ -21654,22 +21644,81 @@ const getNonce = () => {
 const usesPlainPermalinks = () => {
   return rsssl_settings.site_url.indexOf('?') !== -1;
 };
+const ajaxPost = (path, requestData) => {
+  return new Promise(function (resolve, reject) {
+    let url = siteUrl('ajax');
+    let xhr = new XMLHttpRequest();
+    xhr.open('POST', url);
+    xhr.onload = function () {
+      let response = JSON.parse(xhr.response);
+      if (xhr.status >= 200 && xhr.status < 300) {
+        resolve(response);
+      } else {
+        resolve(invalidDataError(xhr.response, xhr.status, xhr.statusText));
+      }
+    };
+    xhr.onerror = function () {
+      resolve(invalidDataError(xhr.response, xhr.status, xhr.statusText));
+    };
+    let data = {};
+    data['path'] = path;
+    data['data'] = requestData;
+    data = JSON.stringify(data);
+    xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
+    xhr.send(data);
+  });
+};
+const ajaxGet = path => {
+  return new Promise(function (resolve, reject) {
+    let url = siteUrl('ajax');
+    url += '&rest_action=' + path.replace('?', '&');
+    let xhr = new XMLHttpRequest();
+    xhr.open('GET', url);
+    xhr.onload = function () {
+      let response;
+      try {
+        response = JSON.parse(xhr.response);
+      } catch (error) {
+        resolve(invalidDataError(xhr.response, 500, 'invalid_data'));
+      }
+      if (xhr.status >= 200 && xhr.status < 300) {
+        if (!response.hasOwnProperty('request_success')) {
+          resolve(invalidDataError(xhr.response, 500, 'invalid_data'));
+        }
+        resolve(response);
+      } else {
+        resolve(invalidDataError(xhr.response, xhr.status, xhr.statusText));
+      }
+    };
+    xhr.onerror = function () {
+      resolve(invalidDataError(xhr.response, xhr.status, xhr.statusText));
+    };
+    xhr.send();
+  });
+};
+
 /**
  * if the site is loaded over https, but the site url is not https, force to use https anyway, because otherwise we get mixed content issues.
  * @returns {*}
  */
-const siteUrl = () => {
-  if (window.location.protocol === "https:" && rsssl_settings.site_url.indexOf('https://') === -1) {
-    return rsssl_settings.site_url.replace('http://', 'https://');
+const siteUrl = type => {
+  let url;
+  if (typeof type === 'undefined') {
+    url = rsssl_settings.site_url;
+  } else {
+    url = rsssl_settings.admin_ajax_url;
   }
-  return rsssl_settings.site_url;
+  if (window.location.protocol === "https:" && url.indexOf('https://') === -1) {
+    return url.replace('http://', 'https://');
+  }
+  return url;
 };
-const invalidDataError = apiResponse => {
+const invalidDataError = (apiResponse, status, code) => {
   let response = {};
   let error = {};
   let data = {};
-  data.status = 500;
-  error.code = 'invalid_data';
+  data.status = status;
+  error.code = code;
   error.data = data;
   error.message = apiResponse;
   response.error = error;
@@ -21683,28 +21732,24 @@ const apiGet = path => {
       }
     };
     return axios__WEBPACK_IMPORTED_MODULE_1___default().get(siteUrl() + path, config).then(response => {
-      if (!response.data.success) {
-        return invalidDataError(response.data);
+      if (!response.data.request_success) {
+        return ajaxGet(path);
       }
       return response.data;
     }).catch(error => {
-      let data = {};
-      data.error = error;
-      return data;
+      //try with admin-ajax
+      return ajaxGet(path);
     });
   } else {
     return _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_2___default()({
       path: path
     }).then(response => {
-      if (!response.success) {
-        console.log(path + " resulted in invalid response because of missing success prop");
-        return invalidDataError(response);
+      if (!response.request_success) {
+        return ajaxGet(path);
       }
       return response;
     }).catch(error => {
-      let data = {};
-      data.error = error;
-      return data;
+      return ajaxGet(path);
     });
   }
 };
@@ -21718,9 +21763,7 @@ const apiPost = (path, data) => {
     return axios__WEBPACK_IMPORTED_MODULE_1___default().post(siteUrl() + path, data, config).then(response => {
       return response.data;
     }).catch(error => {
-      let data = {};
-      data.error = error;
-      return data;
+      return ajaxPost(path, data);
     });
   } else {
     return _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_2___default()({
@@ -21728,9 +21771,7 @@ const apiPost = (path, data) => {
       method: 'POST',
       data: data
     }).catch(error => {
-      let data = {};
-      data.error = error;
-      return data;
+      return ajaxPost(path, data);
     });
   }
 };
