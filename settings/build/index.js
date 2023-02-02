@@ -15143,12 +15143,12 @@ const DashboardPage = props => {
   return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, blocks.map((block, i) => (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_GridBlock__WEBPACK_IMPORTED_MODULE_1__["default"], {
     key: i,
     block: block,
-    setShowOnBoardingModal: undefined.props.setShowOnBoardingModal,
-    isApiLoaded: undefined.props.isAPILoaded,
-    fields: undefined.props.fields,
-    highLightField: undefined.props.highLightField,
-    selectMainMenu: undefined.props.selectMainMenu,
-    getFields: undefined.props.getFields
+    setShowOnBoardingModal: props.setShowOnBoardingModal,
+    isApiLoaded: props.isAPILoaded,
+    fields: props.fields,
+    highLightField: props.highLightField,
+    selectMainMenu: props.selectMainMenu,
+    getFields: props.getFields
   })));
 };
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (DashboardPage);
@@ -15174,10 +15174,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _ProgressBlockHeader__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./ProgressBlockHeader */ "./src/DashBoard/ProgressBlockHeader.js");
 /* harmony import */ var _ProgressFooter__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./ProgressFooter */ "./src/DashBoard/ProgressFooter.js");
 /* harmony import */ var _SslLabs__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./SslLabs */ "./src/DashBoard/SslLabs.js");
-/* harmony import */ var _SslLabsFooter__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./SslLabsFooter */ "./src/DashBoard/SslLabsFooter.js");
-/* harmony import */ var _OtherPlugins__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./OtherPlugins */ "./src/DashBoard/OtherPlugins.js");
-/* harmony import */ var _SecurityFeaturesBlock_SecurityFeaturesBlock__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./SecurityFeaturesBlock/SecurityFeaturesBlock */ "./src/DashBoard/SecurityFeaturesBlock/SecurityFeaturesBlock.js");
-/* harmony import */ var _SecurityFeaturesBlock_SecurityFeaturesFooter__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./SecurityFeaturesBlock/SecurityFeaturesFooter */ "./src/DashBoard/SecurityFeaturesBlock/SecurityFeaturesFooter.js");
+/* harmony import */ var _Settings_FieldsData__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../Settings/FieldsData */ "./src/Settings/FieldsData.js");
+/* harmony import */ var _SslLabsFooter__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./SslLabsFooter */ "./src/DashBoard/SslLabsFooter.js");
+/* harmony import */ var _OtherPlugins__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./OtherPlugins */ "./src/DashBoard/OtherPlugins.js");
+/* harmony import */ var _SecurityFeaturesBlock_SecurityFeaturesBlock__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./SecurityFeaturesBlock/SecurityFeaturesBlock */ "./src/DashBoard/SecurityFeaturesBlock/SecurityFeaturesBlock.js");
+/* harmony import */ var _SecurityFeaturesBlock_SecurityFeaturesFooter__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./SecurityFeaturesBlock/SecurityFeaturesFooter */ "./src/DashBoard/SecurityFeaturesBlock/SecurityFeaturesFooter.js");
+
 
 
 
@@ -15195,110 +15197,81 @@ __webpack_require__.r(__webpack_exports__);
  * @type {{SslLabs: JSX.Element}}
  */
 var dynamicComponents = {
-  "SecurityFeaturesBlock": _SecurityFeaturesBlock_SecurityFeaturesBlock__WEBPACK_IMPORTED_MODULE_8__["default"],
-  "SecurityFeaturesFooter": _SecurityFeaturesBlock_SecurityFeaturesFooter__WEBPACK_IMPORTED_MODULE_9__["default"],
+  "SecurityFeaturesBlock": _SecurityFeaturesBlock_SecurityFeaturesBlock__WEBPACK_IMPORTED_MODULE_9__["default"],
+  "SecurityFeaturesFooter": _SecurityFeaturesBlock_SecurityFeaturesFooter__WEBPACK_IMPORTED_MODULE_10__["default"],
   "ProgressBlock": _ProgressBlock__WEBPACK_IMPORTED_MODULE_2__["default"],
   "ProgressHeader": _ProgressBlockHeader__WEBPACK_IMPORTED_MODULE_3__["default"],
   "ProgressFooter": _ProgressFooter__WEBPACK_IMPORTED_MODULE_4__["default"],
   "SslLabs": _SslLabs__WEBPACK_IMPORTED_MODULE_5__["default"],
-  "SslLabsFooter": _SslLabsFooter__WEBPACK_IMPORTED_MODULE_6__["default"],
-  "OtherPlugins": _OtherPlugins__WEBPACK_IMPORTED_MODULE_7__["default"]
+  "SslLabsFooter": _SslLabsFooter__WEBPACK_IMPORTED_MODULE_7__["default"],
+  "OtherPlugins": _OtherPlugins__WEBPACK_IMPORTED_MODULE_8__["default"]
 };
-class GridBlock extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Component {
-  constructor() {
-    super(...arguments);
-    this.footerHtml = this.props.block.footer.data;
-    this.highLightField = this.highLightField.bind(this);
-    this.setBlockProps = this.setBlockProps.bind(this);
-    let content = this.props.block.content.data;
-    let footer = this.props.block.footer.data;
-    this.state = {
-      content: '',
-      testDisabled: false,
-      footerHtml: this.props.block.footer.html,
-      BlockProps: [],
-      content: content,
-      footer: footer
-    };
-  }
+const GridBlock = props => {
+  const [footerHtml, setFooterHtml] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)(props.block.footer.data);
+  const [content, setContent] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)(props.block.content.data);
+  const [footer, setFooter] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)(props.block.footer.data);
+  const [testDisabled, setTestDisabled] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)(false);
+  const [blockProps, setBlockProps] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)([]);
+  const [blockData, setBlockData] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)(props.block);
 
   /*
    * Allow child blocks to set data on the gridblock
    * @param key
    * @param value
    */
-  setBlockProps(key, value) {
-    let {
-      BlockProps
-    } = this.state;
-    if (!BlockProps.hasOwnProperty(key) || BlockProps[key] !== value) {
-      BlockProps[key] = value;
-      this.setState({
-        BlockProps: BlockProps
-      });
+  const updateBlockProps = (key, value) => {
+    if (!blockProps.hasOwnProperty(key) || blockProps[key] !== value) {
+      blockProps[key] = value;
+      setBlockProps(blockProps);
     }
-  }
-  highLightField(fieldId) {
-    this.props.highLightField(fieldId);
-  }
-  render() {
-    let {
-      content,
-      footer,
-      BlockProps
-    } = this.state;
-    let blockData = this.props.block;
-    let className = "rsssl-grid-item " + blockData.class + " rsssl-" + blockData.id;
-    if (this.props.block.content.type === 'react') {
-      content = this.props.block.content.data;
+  };
+  const doHighlightField = fieldId => {
+    setHighLightField(fieldId);
+  };
+  let className = "rsssl-grid-item " + blockData.class + " rsssl-" + blockData.id;
+  let DynamicBlockProps = {
+    getFields: props.getFields,
+    saveChangedFields: props.saveChangedFields,
+    setShowOnBoardingModal: props.setShowOnBoardingModal,
+    updateBlockProps: updateBlockProps,
+    blockProps: blockProps,
+    runTest: props.runTest,
+    fields: props.fields,
+    isApiLoaded: props.isApiLoaded,
+    doHighlightField: doHighlightField,
+    selectMainMenu: props.selectMainMenu
+  };
+  return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: className
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "rsssl-grid-item-header"
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("h3", {
+    className: "rsssl-grid-title rsssl-h4"
+  }, blockData.title), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "rsssl-grid-item-controls"
+  }, blockData.controls && blockData.controls.type === 'url' && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
+    href: blockData.controls.data
+  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Instructions", "really-simple-ssl")), blockData.controls && blockData.controls.type === 'html' && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
+    className: "rsssl-header-html",
+    dangerouslySetInnerHTML: {
+      __html: blockData.controls.data
     }
-    if (this.props.block.footer.type === 'react') {
-      footer = this.props.block.footer.data;
+  }), blockData.controls && blockData.controls.type === 'react' && wp.element.createElement(dynamicComponents[blockData.controls.data], DynamicBlockProps))), blockData.content.type !== 'react' && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "rsssl-grid-item-content",
+    dangerouslySetInnerHTML: {
+      __html: content
     }
-    let DynamicBlockProps = {
-      getFields: this.props.getFields,
-      saveChangedFields: this.props.saveChangedFields,
-      setShowOnBoardingModal: this.props.setShowOnBoardingModal,
-      setBlockProps: this.setBlockProps,
-      BlockProps: BlockProps,
-      runTest: this.runTest,
-      fields: this.props.fields,
-      isApiLoaded: this.props.isApiLoaded,
-      highLightField: this.highLightField,
-      selectMainMenu: this.props.selectMainMenu
-    };
-    return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-      className: className
-    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-      className: "rsssl-grid-item-header"
-    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("h3", {
-      className: "rsssl-grid-title rsssl-h4"
-    }, blockData.title), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-      className: "rsssl-grid-item-controls"
-    }, blockData.controls && blockData.controls.type === 'url' && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
-      href: blockData.controls.data
-    }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Instructions", "really-simple-ssl")), blockData.controls && blockData.controls.type === 'html' && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
-      className: "rsssl-header-html",
-      dangerouslySetInnerHTML: {
-        __html: blockData.controls.data
-      }
-    }), blockData.controls && blockData.controls.type === 'react' && wp.element.createElement(dynamicComponents[blockData.controls.data], DynamicBlockProps))), blockData.content.type !== 'react' && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-      className: "rsssl-grid-item-content",
-      dangerouslySetInnerHTML: {
-        __html: content
-      }
-    }), blockData.content.type === 'react' && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-      className: "rsssl-grid-item-content"
-    }, wp.element.createElement(dynamicComponents[content], DynamicBlockProps)), blockData.footer.type === 'html' && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-      className: "rsssl-grid-item-footer",
-      dangerouslySetInnerHTML: {
-        __html: this.footerHtml
-      }
-    }), blockData.footer.type === 'react' && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-      className: "rsssl-grid-item-footer"
-    }, wp.element.createElement(dynamicComponents[footer], DynamicBlockProps)));
-  }
-}
+  }), blockData.content.type === 'react' && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "rsssl-grid-item-content"
+  }, wp.element.createElement(dynamicComponents[content], DynamicBlockProps)), blockData.footer.type === 'html' && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "rsssl-grid-item-footer",
+    dangerouslySetInnerHTML: {
+      __html: footerHtml
+    }
+  }), blockData.footer.type === 'react' && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "rsssl-grid-item-footer"
+  }, wp.element.createElement(dynamicComponents[footer], DynamicBlockProps)));
+};
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (GridBlock);
 
 /***/ }),
@@ -15504,7 +15477,7 @@ class ProgressBlock extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Comp
           notices: this.notices,
           percentageCompleted: this.percentageCompleted
         });
-        this.props.setBlockProps('notices', this.notices);
+        this.props.updateBlockProps('notices', this.notices);
       }
     });
   }
@@ -15522,16 +15495,22 @@ class ProgressBlock extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Comp
     }).onfinish = function () {
       container.parentElement.removeChild(container);
     };
-    let notices = this.props.BlockProps.notices;
+    let notices = this.props.blockProps.notices;
     notices = notices.filter(function (notice) {
       return notice.id !== notice_id;
     });
-    this.props.setBlockProps('notices', notices);
+    this.props.updateBlockProps('notices', notices);
     return _utils_api__WEBPACK_IMPORTED_MODULE_1__.runTest('dismiss_task', notice_id).then(response => {
-      this.percentageCompleted = response.percentage;
-      this.setState({
-        percentageCompleted: this.percentageCompleted
-      });
+      if (response.error) {
+        this.setState({
+          error: response.error
+        });
+      } else {
+        this.percentageCompleted = response.percentage;
+        this.setState({
+          percentageCompleted: this.percentageCompleted
+        });
+      }
     });
   }
   render() {
@@ -15549,8 +15528,8 @@ class ProgressBlock extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Comp
       });
     }
     let filter = 'all';
-    if (this.props.BlockProps && this.props.BlockProps.filterStatus) {
-      filter = this.props.BlockProps.filterStatus;
+    if (this.props.blockProps && this.props.blockProps.filterStatus) {
+      filter = this.props.blockProps.filterStatus;
     }
     let notices = this.notices;
     if (filter === 'remaining') {
@@ -15581,7 +15560,7 @@ class ProgressBlock extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Comp
       notice: notice,
       getFields: this.props.getFields,
       onCloseTaskHandler: this.onCloseTaskHandler,
-      highLightField: this.props.highLightField
+      doHighlightField: this.props.doHighlightField
     }))));
   }
 }
@@ -15625,7 +15604,7 @@ class ProgressHeader extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Com
       this.setState({
         filter: this.filter
       });
-      this.props.setBlockProps('filterStatus', filter);
+      this.props.updateBlockProps('filterStatus', filter);
       sessionStorage.rsssl_task_filter = filter;
     }
   }
@@ -15636,8 +15615,8 @@ class ProgressHeader extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Com
     let all_task_count = 0;
     let open_task_count = 0;
     let notices = [];
-    if (this.props.BlockProps && this.props.BlockProps.notices) {
-      notices = this.props.BlockProps.notices;
+    if (this.props.blockProps && this.props.blockProps.notices) {
+      notices = this.props.blockProps.notices;
       all_task_count = notices.length;
       let openNotices = notices.filter(function (notice) {
         return notice.output.status === 'open' || notice.output.status === 'warning';
@@ -15686,6 +15665,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var immutability_helper__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! immutability-helper */ "./node_modules/immutability-helper/index.js");
 /* harmony import */ var immutability_helper__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(immutability_helper__WEBPACK_IMPORTED_MODULE_3__);
 /* harmony import */ var _utils_Icon__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../utils/Icon */ "./src/utils/Icon.js");
+/* harmony import */ var _Settings_FieldsData__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../Settings/FieldsData */ "./src/Settings/FieldsData.js");
+
 
 
 
@@ -15696,10 +15677,15 @@ __webpack_require__.r(__webpack_exports__);
 const ProgressFooter = props => {
   const [certificateIsValid, setCertificateIsValid] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)(false);
   const [sslDataLoaded, SetSslDataLoaded] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)(false);
+  const {
+    fields
+  } = (0,_Settings_FieldsData__WEBPACK_IMPORTED_MODULE_5__["default"])();
   (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
     _utils_api__WEBPACK_IMPORTED_MODULE_1__.runTest('ssl_status_data').then(response => {
-      setCertificateIsValid(response.certificate_is_valid);
-      SetSslDataLoaded(true);
+      if (!response.error) {
+        setCertificateIsValid(response.certificate_is_valid);
+        SetSslDataLoaded(true);
+      }
     });
   }, []);
   const startModal = () => {
@@ -15708,10 +15694,10 @@ const ProgressFooter = props => {
   if (!sslDataLoaded) {
     return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null);
   }
-  let redirectValue = props.fields.filter(field => field.id === 'redirect')[0].value;
-  let sslEnabled = props.fields.filter(field => field.id === 'ssl_enabled')[0].value;
+  let redirectValue = fields.filter(field => field.id === 'redirect')[0].value;
+  let sslEnabled = fields.filter(field => field.id === 'ssl_enabled')[0].value;
   let wpconfigFixRequired = rsssl_settings.wpconfig_fix_required;
-  let hasMixedContentFixer = props.fields.filter(field => field.id === 'mixed_content_fixer')[0].value;
+  let hasMixedContentFixer = fields.filter(field => field.id === 'mixed_content_fixer')[0].value;
   let hasRedirect = redirectValue === 'wp_redirect' || redirectValue === 'htaccess';
   let sslStatusText = sslEnabled ? (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("SSL Activated", "really-simple-ssl") : (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("SSL not activated", "really-simple-ssl");
   let sslStatusIcon = sslEnabled ? 'circle-check' : 'circle-times';
@@ -15813,24 +15799,28 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _utils_Hyperlink__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../utils/Hyperlink */ "./src/utils/Hyperlink.js");
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_4__);
+/* harmony import */ var _Settings_FieldsData__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../Settings/FieldsData */ "./src/Settings/FieldsData.js");
+
 
 
 
 
 
 const SecurityFeaturesBlock = props => {
-  if (props.fields && props.fields.length == 0) {
+  const {
+    fields,
+    fieldsLoaded
+  } = (0,_Settings_FieldsData__WEBPACK_IMPORTED_MODULE_5__["default"])();
+  if (!fieldsLoaded) {
     return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_Placeholder_Placeholder__WEBPACK_IMPORTED_MODULE_2__["default"], null);
   }
-  let fields = props.fields;
-  fields = fields.filter(field => field.new_features_block);
+  let featuredFields = fields.filter(field => field.new_features_block);
   return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: 'rsssl-new-features'
-  }, fields.map((field, i) => (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_SecurityFeatureBullet__WEBPACK_IMPORTED_MODULE_1__["default"], {
+  }, featuredFields.map((field, i) => (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_SecurityFeatureBullet__WEBPACK_IMPORTED_MODULE_1__["default"], {
     key: i,
     index: i,
-    field: field,
-    fields: fields
+    field: field
   }))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "rsssl-new-feature-desc"
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_4__.__)("Improve WordPress security.", "really-simple-ssl"), "\xA0", (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_utils_Hyperlink__WEBPACK_IMPORTED_MODULE_3__["default"], {
@@ -16295,9 +16285,9 @@ __webpack_require__.r(__webpack_exports__);
 
 const SslLabsFooter = props => {
   const startScan = () => {
-    props.setBlockProps('sslScan', 'active');
+    props.updateBlockProps('sslScan', 'active');
   };
-  let status = props.BlockProps && props.BlockProps.hasOwnProperty('sslScan') ? props.BlockProps['sslScan'] : false;
+  let status = props.blockProps && props.blockProps.hasOwnProperty('sslScan') ? props.blockProps['sslScan'] : false;
   let disabled = status === 'active' || window.location.host.indexOf('localhost') !== -1;
   return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
     disabled: disabled,
@@ -16327,9 +16317,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _utils_Icon__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../utils/Icon */ "./src/utils/Icon.js");
 /* harmony import */ var _wordpress_data__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @wordpress/data */ "@wordpress/data");
 /* harmony import */ var _wordpress_data__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_wordpress_data__WEBPACK_IMPORTED_MODULE_3__);
-/* harmony import */ var _Settings_Notices__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../Settings/Notices */ "./src/Settings/Notices.js");
-/* harmony import */ var _utils_api__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../utils/api */ "./src/utils/api.js");
-/* harmony import */ var _utils_sleeper__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../utils/sleeper */ "./src/utils/sleeper.js");
+/* harmony import */ var _utils_api__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../utils/api */ "./src/utils/api.js");
+/* harmony import */ var _utils_sleeper__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../utils/sleeper */ "./src/utils/sleeper.js");
+/* harmony import */ var _Settings_FieldsData__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../Settings/FieldsData */ "./src/Settings/FieldsData.js");
 
 
 
@@ -16337,71 +16327,66 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-
-class TaskElement extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Component {
-  constructor() {
-    super(...arguments);
-  }
-  handleClick() {
-    this.props.highLightField(this.props.notice.output.highlight_field_id);
-  }
-  handleClearCache(cache_id) {
+const TaskElement = props => {
+  const {
+    setHighLightField,
+    updateFieldsData
+  } = (0,_Settings_FieldsData__WEBPACK_IMPORTED_MODULE_6__["default"])();
+  const handleClick = () => {
+    setHighLightField(props.notice.output.highlight_field_id);
+  };
+  const handleClearCache = cache_id => {
     let data = {};
     data.cache_id = cache_id;
-    _utils_api__WEBPACK_IMPORTED_MODULE_5__.doAction('clear_cache', data).then(response => {
+    _utils_api__WEBPACK_IMPORTED_MODULE_4__.doAction('clear_cache', data).then(response => {
       const notice = (0,_wordpress_data__WEBPACK_IMPORTED_MODULE_3__.dispatch)('core/notices').createNotice('success', (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Re-started test', 'really-simple-ssl'), {
         __unstableHTML: true,
         id: 'rsssl_clear_cache',
         type: 'snackbar',
         isDismissible: true
-      }).then((0,_utils_sleeper__WEBPACK_IMPORTED_MODULE_6__["default"])(3000)).then(response => {
+      }).then((0,_utils_sleeper__WEBPACK_IMPORTED_MODULE_5__["default"])(3000)).then(response => {
         (0,_wordpress_data__WEBPACK_IMPORTED_MODULE_3__.dispatch)('core/notices').removeNotice('rsssl_clear_cache');
       });
-      this.props.getFields();
+      updateFieldsData();
     });
-  }
-  componentDidMount() {
-    this.handleClick = this.handleClick.bind(this);
-  }
-  render() {
-    let notice = this.props.notice;
-    let premium = notice.output.icon === 'premium';
-    //treat links to rsssl.com and internal links different.
-    let urlIsExternal = notice.output.url && notice.output.url.indexOf('really-simple-ssl.com') !== -1;
-    return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-      className: "rsssl-task-element"
-    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
-      className: 'rsssl-task-status rsssl-' + notice.output.icon
-    }, notice.output.label), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", {
-      className: "rsssl-task-message",
-      dangerouslySetInnerHTML: {
-        __html: notice.output.msg
-      }
-    }), urlIsExternal && notice.output.url && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
-      target: "_blank",
-      href: notice.output.url
-    }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("More info", "really-simple-ssl")), notice.output.clear_cache_id && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
-      className: "rsssl-task-enable button button-secondary",
-      onClick: () => this.handleClearCache(notice.output.clear_cache_id)
-    }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Re-check", "really-simple-ssl")), !premium && !urlIsExternal && notice.output.url && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
-      className: "rsssl-task-enable button button-secondary",
-      href: notice.output.url
-    }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Fix", "really-simple-ssl")), !premium && notice.output.highlight_field_id && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
-      className: "rsssl-task-enable button button-secondary",
-      onClick: this.handleClick
-    }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Fix", "really-simple-ssl")), notice.output.plusone && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
-      className: "rsssl-plusone"
-    }, "1"), notice.output.dismissible && notice.output.status !== 'completed' && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-      className: "rsssl-task-dismiss"
-    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
-      type: "button",
-      "data-id": notice.id,
-      onClick: this.props.onCloseTaskHandler
-    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_utils_Icon__WEBPACK_IMPORTED_MODULE_2__["default"], {
-      name: "times"
-    }))));
-  }
-}
+  };
+  let notice = props.notice;
+  let premium = notice.output.icon === 'premium';
+  //treat links to rsssl.com and internal links different.
+  let urlIsExternal = notice.output.url && notice.output.url.indexOf('really-simple-ssl.com') !== -1;
+  return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "rsssl-task-element"
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
+    className: 'rsssl-task-status rsssl-' + notice.output.icon
+  }, notice.output.label), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", {
+    className: "rsssl-task-message",
+    dangerouslySetInnerHTML: {
+      __html: notice.output.msg
+    }
+  }), urlIsExternal && notice.output.url && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
+    target: "_blank",
+    href: notice.output.url
+  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("More info", "really-simple-ssl")), notice.output.clear_cache_id && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
+    className: "rsssl-task-enable button button-secondary",
+    onClick: () => handleClearCache(notice.output.clear_cache_id)
+  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Re-check", "really-simple-ssl")), !premium && !urlIsExternal && notice.output.url && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
+    className: "rsssl-task-enable button button-secondary",
+    href: notice.output.url
+  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Fix", "really-simple-ssl")), !premium && notice.output.highlight_field_id && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
+    className: "rsssl-task-enable button button-secondary",
+    onClick: handleClick
+  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Fix", "really-simple-ssl")), notice.output.plusone && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
+    className: "rsssl-plusone"
+  }, "1"), notice.output.dismissible && notice.output.status !== 'completed' && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "rsssl-task-dismiss"
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
+    type: "button",
+    "data-id": notice.id,
+    onClick: props.onCloseTaskHandler
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_utils_Icon__WEBPACK_IMPORTED_MODULE_2__["default"], {
+    name: "times"
+  }))));
+};
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (TaskElement);
 
 /***/ }),
@@ -16421,70 +16406,64 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _utils_getAnchor__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./utils/getAnchor */ "./src/utils/getAnchor.js");
-/* harmony import */ var _Settings_Notices__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./Settings/Notices */ "./src/Settings/Notices.js");
+/* harmony import */ var _Settings_Notices__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Settings/Notices */ "./src/Settings/Notices.js");
+/* harmony import */ var _Menu_MenuData__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./Menu/MenuData */ "./src/Menu/MenuData.js");
 
 
 
 
 
-class Header extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Component {
-  constructor() {
-    super(...arguments);
-  }
-  handleClick(menuId) {
-    this.props.selectMainMenu(menuId);
-  }
-  componentDidMount() {
-    this.handleClick = this.handleClick.bind(this);
-  }
-  render() {
-    let plugin_url = rsssl_settings.plugin_url;
-    let active_menu_item = this.props.selectedMainMenuItem;
-    var menu = Object.values(this.props.superMenu);
-    menu = menu.filter(item => item !== null);
-    //filter out hidden menus if not in the anchor
-    let anchor = (0,_utils_getAnchor__WEBPACK_IMPORTED_MODULE_2__["default"])('main');
-    menu = menu.filter(item => !item.default_hidden || anchor === item.id);
-    return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-      className: "rsssl-header-container"
-    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-      className: "rsssl-header"
-    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("img", {
-      className: "rsssl-logo",
-      src: plugin_url + "assets/img/really-simple-ssl-logo.svg",
-      alt: "Really Simple SSL logo"
-    }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-      className: "rsssl-header-left"
-    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("nav", {
-      className: "rsssl-header-menu"
-    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("ul", null, menu.map((menu_item, i) => (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("li", {
-      key: i
-    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
-      className: active_menu_item === menu_item.id ? 'active' : '',
-      onClick: () => this.handleClick(menu_item.id),
-      href: "#" + menu_item.id.toString()
-    }, menu_item.title)))))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-      className: "rsssl-header-right"
-    }, !rsssl_settings.le_generated_by_rsssl && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
-      className: "rsssl-knowledge-base-link",
-      href: "https://really-simple-ssl.com/knowledge-base",
-      target: "_blank"
-    }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Documentation", "really-simple-ssl")), rsssl_settings.le_generated_by_rsssl && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
-      href: rsssl_settings.letsencrypt_url
-    }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Let's Encrypt", "really-simple-ssl")), rsssl_settings.pro_plugin_active && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
-      href: "https://wordpress.org/support/plugin/really-simple-ssl/",
-      className: "button button-black",
-      target: "_blank"
-    }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Support", "really-simple-ssl")), !rsssl_settings.pro_plugin_active && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
-      href: rsssl_settings.upgrade_link,
-      className: "button button-black",
-      target: "_blank"
-    }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Go Pro", "really-simple-ssl")))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_Settings_Notices__WEBPACK_IMPORTED_MODULE_3__["default"], {
-      className: "rsssl-wizard-notices"
-    }));
-  }
-}
+const Header = props => {
+  const {
+    menu,
+    selectedMainMenuItem,
+    fetchMenuData
+  } = (0,_Menu_MenuData__WEBPACK_IMPORTED_MODULE_3__["default"])();
+  let plugin_url = rsssl_settings.plugin_url;
+  (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useEffect)(async () => {
+    fetchMenuData();
+  }, []);
+  console.log(menu);
+  let menuItems = Object.values(menu);
+  console.log(menuItems);
+  menuItems = menuItems.filter(item => item !== null);
+  return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "rsssl-header-container"
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "rsssl-header"
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("img", {
+    className: "rsssl-logo",
+    src: plugin_url + "assets/img/really-simple-ssl-logo.svg",
+    alt: "Really Simple SSL logo"
+  }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "rsssl-header-left"
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("nav", {
+    className: "rsssl-header-menu"
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("ul", null, menuItems.map((menu_item, i) => (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("li", {
+    key: i
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
+    className: selectedMainMenuItem === menu_item.id ? 'active' : '',
+    href: "#" + menu_item.id.toString()
+  }, menu_item.title)))))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "rsssl-header-right"
+  }, !rsssl_settings.le_generated_by_rsssl && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
+    className: "rsssl-knowledge-base-link",
+    href: "https://really-simple-ssl.com/knowledge-base",
+    target: "_blank"
+  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Documentation", "really-simple-ssl")), rsssl_settings.le_generated_by_rsssl && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
+    href: rsssl_settings.letsencrypt_url
+  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Let's Encrypt", "really-simple-ssl")), rsssl_settings.pro_plugin_active && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
+    href: "https://wordpress.org/support/plugin/really-simple-ssl/",
+    className: "button button-black",
+    target: "_blank"
+  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Support", "really-simple-ssl")), !rsssl_settings.pro_plugin_active && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
+    href: rsssl_settings.upgrade_link,
+    className: "button button-black",
+    target: "_blank"
+  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Go Pro", "really-simple-ssl")))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_Settings_Notices__WEBPACK_IMPORTED_MODULE_2__["default"], {
+    className: "rsssl-wizard-notices"
+  }));
+};
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Header);
 
 /***/ }),
@@ -17261,19 +17240,33 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _MenuItem__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./MenuItem */ "./src/Menu/MenuItem.js");
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var _MenuData__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./MenuData */ "./src/Menu/MenuData.js");
+
 
 
 
 
 /**
- * Menu block, rendering th entire menu
+ * Menu block, rendering the entire menu
  */
 const Menu = props => {
-  let hasPremiumItems = props.menu.menu_items.filter(item => {
-    return item.premium === true;
-  }).length > 0;
-  if (!props.isAPILoaded) {
-    return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_Placeholder_Placeholder__WEBPACK_IMPORTED_MODULE_1__["default"], null);
+  const {
+    subMenu,
+    hasPremiumItems,
+    subMenuLoaded
+  } = (0,_MenuData__WEBPACK_IMPORTED_MODULE_4__["default"])();
+  if (!subMenuLoaded) {
+    return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+      className: "rsssl-wizard-menu rsssl-grid-item"
+    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+      className: "rsssl-grid-item-header"
+    }, "...", (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("h1", {
+      className: "rsssl-h4"
+    })), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+      className: "rsssl-grid-item-content"
+    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_Placeholder_Placeholder__WEBPACK_IMPORTED_MODULE_1__["default"], {
+      lines: "3"
+    })));
   }
   return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "rsssl-wizard-menu rsssl-grid-item"
@@ -17281,20 +17274,14 @@ const Menu = props => {
     className: "rsssl-grid-item-header"
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("h1", {
     className: "rsssl-h4"
-  }, props.menu.title)), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+  }, subMenu.title)), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "rsssl-grid-item-content"
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "rsssl-wizard-menu-items"
-  }, props.menu.menu_items.map((menuItem, i) => (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_MenuItem__WEBPACK_IMPORTED_MODULE_2__["default"], {
+  }, subMenu.menu_items.map((menuItem, i) => (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_MenuItem__WEBPACK_IMPORTED_MODULE_2__["default"], {
     key: i,
-    isAPILoaded: props.isAPILoaded,
-    menuItem: menuItem,
-    selectMenu: props.selectMenu,
-    selectStep: props.selectStep,
-    selectedMenuItem: props.selectedMenuItem,
-    selectedMainMenuItem: props.selectedMainMenuItem,
-    getPreviousAndNextMenuItems: props.getPreviousAndNextMenuItems
-  })), hasPremiumItems && !rsssl_settings.pro_plugin_active && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    menuItem: menuItem
+  })), hasPremiumItems && !rsssl_settings.is_premium && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "rsssl-premium-menu-item"
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
     target: "_blank",
@@ -17305,6 +17292,211 @@ const Menu = props => {
   }));
 };
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Menu);
+
+/***/ }),
+
+/***/ "./src/Menu/MenuData.js":
+/*!******************************!*\
+  !*** ./src/Menu/MenuData.js ***!
+  \******************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var zustand__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! zustand */ "./node_modules/zustand/esm/index.mjs");
+/* harmony import */ var _utils_getAnchor__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../utils/getAnchor */ "./src/utils/getAnchor.js");
+
+
+
+// Parses menu items and nested items in single array
+const menuItemParser = (parsedMenuItems, menuItems) => {
+  menuItems.forEach(menuItem => {
+    if (menuItem.visible) {
+      parsedMenuItems.push(menuItem.id);
+      if (menuItem.hasOwnProperty('menu_items')) {
+        menuItemParser(parsedMenuItems, menuItem.menu_items);
+      }
+    }
+  });
+  return parsedMenuItems;
+};
+const getPreviousAndNextMenuItems = (menu, selectedSubMenuItem) => {
+  let previousMenuItem;
+  let nextMenuItem;
+  const parsedMenuItems = [];
+  menuItemParser(parsedMenuItems, menu);
+  // Finds current menu item index
+  const currentMenuItemIndex = parsedMenuItems.findIndex(menuItem => menuItem === selectedSubMenuItem);
+  if (currentMenuItemIndex !== -1) {
+    previousMenuItem = parsedMenuItems[currentMenuItemIndex === 0 ? '' : currentMenuItemIndex - 1];
+    //if the previous menu item has a submenu, we should move one more back, because it will select the current sub otherwise.
+    const previousMenuHasSubMenu = getMenuItemByName(previousMenuItem, menu).hasOwnProperty('menu_items');
+    if (previousMenuHasSubMenu) {
+      previousMenuItem = parsedMenuItems[currentMenuItemIndex === 0 ? '' : currentMenuItemIndex - 2];
+    }
+    nextMenuItem = parsedMenuItems[currentMenuItemIndex === parsedMenuItems.length - 1 ? '' : currentMenuItemIndex + 1];
+    previousMenuItem = previousMenuItem ? previousMenuItem : parsedMenuItems[0];
+    nextMenuItem = nextMenuItem ? nextMenuItem : parsedMenuItems[parsedMenuItems.length - 1];
+  }
+  return {
+    nextMenuItem,
+    previousMenuItem
+  };
+};
+const dropEmptyMenuItems = (menuItems, fields, selectedSubMenuItem) => {
+  const newMenuItems = menuItems;
+  for (const [index, menuItem] of menuItems.entries()) {
+    const menuItemFields = fields.filter(field => {
+      return field.menu_id === menuItem.id && field.visible && !field.conditionallyDisabled;
+    });
+    if (menuItemFields.length === 0 && !menuItem.hasOwnProperty('menu_items')) {
+      newMenuItems[index].visible = false;
+    } else {
+      newMenuItems[index].visible = true;
+      if (menuItem.hasOwnProperty('menu_items')) {
+        newMenuItems[index].menu_items = dropEmptyMenuItems(menuItem.menu_items, fields, selectedSubMenuItem);
+      }
+    }
+  }
+  return newMenuItems;
+};
+
+/*
+* filter sidebar menu from complete menu structure
+*/
+const getSubMenu = (menu, selectedMainMenuItem) => {
+  let subMenu = [];
+  for (const key in menu) {
+    if (menu.hasOwnProperty(key) && menu[key].id === selectedMainMenuItem) {
+      subMenu = menu[key];
+    }
+  }
+  subMenu = addVisibleToMenuItems(subMenu);
+  return subMenu;
+};
+
+/**
+ * Get the current selected menu item based on the hash, selecting subitems if the main one is empty.
+ */
+const getSelectedSubMenuItem = (subMenu, fields) => {
+  let fallBackMenuItem = subMenu && subMenu.menu_items.hasOwnProperty(0) ? subMenu.menu_items[0].id : 'general';
+  let foundAnchorInMenu;
+
+  //get flat array of menu items
+  let parsedMenuItems = menuItemParser([], subMenu.menu_items);
+  let anchor = (0,_utils_getAnchor__WEBPACK_IMPORTED_MODULE_0__["default"])('menu');
+  //check if this anchor actually exists in our current submenu. If not, clear it
+  foundAnchorInMenu = parsedMenuItems.filter(menu_item => menu_item === anchor);
+  if (!foundAnchorInMenu) {
+    anchor = false;
+  }
+  let selectedMenuItem = anchor ? anchor : fallBackMenuItem;
+  //check if menu item has fields. If not, try a subitem
+  let fieldsInMenu = fields.filter(field => field.menu_id === selectedMenuItem);
+  if (fieldsInMenu.length === 0) {
+    //look up the current menu item
+    let menuItem = getMenuItemByName(selectedMenuItem, subMenu.menu_items);
+    if (menuItem && menuItem.menu_items && menuItem.menu_items.hasOwnProperty(0)) {
+      selectedMenuItem = menuItem.menu_items[0].id;
+    }
+  }
+  return selectedMenuItem;
+};
+
+//Get a menu item by name from the menu array
+const getMenuItemByName = (name, menuItems) => {
+  for (const key in menuItems) {
+    let menuItem = menuItems[key];
+    if (menuItem.id === name) {
+      return menuItem;
+    }
+    if (menuItem.menu_items) {
+      let found = getMenuItemByName(name, menuItem.menu_items);
+      if (found) return found;
+    }
+  }
+  return false;
+};
+const useMenu = (0,zustand__WEBPACK_IMPORTED_MODULE_1__["default"])((set, get) => ({
+  menu: [],
+  subMenuLoaded: false,
+  previousMenuItem: false,
+  nextMenuItem: false,
+  selectedMainMenuItem: false,
+  selectedSubMenuItem: false,
+  hasPremiumItems: false,
+  subMenu: {
+    title: ' ',
+    menu_items: []
+  },
+  setSelectedSubMenuItem: selectedSubMenuItem => set(state => ({
+    selectedSubMenuItem
+  })),
+  setSelectedMainMenuItem: selectedMainMenuItem => set(state => ({
+    selectedMainMenuItem
+  })),
+  //we need to get the main menu item directly from the anchor, otherwise we have to wait for the menu to load in page.js
+  fetchSelectedMainMenuItem: () => {
+    let selectedMainMenuItem = (0,_utils_getAnchor__WEBPACK_IMPORTED_MODULE_0__["default"])('main') || 'dashboard';
+    set(state => ({
+      selectedMainMenuItem: selectedMainMenuItem
+    }));
+  },
+  fetchSelectedSubMenuItem: async () => {
+    let selectedSubMenuItem = (0,_utils_getAnchor__WEBPACK_IMPORTED_MODULE_0__["default"])('menu') || 'general';
+    set(state => ({
+      selectedSubMenuItem: selectedSubMenuItem
+    }));
+  },
+  fetchMenuData: fields => {
+    let menu = rsssl_settings.menu;
+    const selectedMainMenuItem = (0,_utils_getAnchor__WEBPACK_IMPORTED_MODULE_0__["default"])('main') || 'dashboard';
+    if (typeof fields !== 'undefined') {
+      let subMenu = getSubMenu(menu, selectedMainMenuItem);
+      const selectedSubMenuItem = getSelectedSubMenuItem(subMenu, fields);
+      const {
+        nextMenuItem,
+        previousMenuItem
+      } = getPreviousAndNextMenuItems(menu, selectedSubMenuItem);
+      subMenu.menu_items = dropEmptyMenuItems(subMenu.menu_items, fields, selectedSubMenuItem);
+      const hasPremiumItems = subMenu.menu_items.filter(item => {
+        return item.premium === true;
+      }).length > 0;
+      set(state => ({
+        subMenuLoaded: true,
+        menu: menu,
+        nextMenuItem: nextMenuItem,
+        previousMenuItem: previousMenuItem,
+        selectedMainMenuItem: selectedMainMenuItem,
+        selectedSubMenuItem: selectedSubMenuItem,
+        subMenu: subMenu,
+        hasPremiumItems: hasPremiumItems
+      }));
+    } else {
+      set(state => ({
+        menu: menu,
+        selectedMainMenuItem: selectedMainMenuItem
+      }));
+    }
+  }
+}));
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (useMenu);
+const addVisibleToMenuItems = menu => {
+  let newMenuItems = menu.menu_items;
+  for (let [index, menuItem] of menu.menu_items.entries()) {
+    menuItem.visible = true;
+    if (menuItem.hasOwnProperty('menu_items')) {
+      menuItem = addVisibleToMenuItems(menuItem);
+    }
+    newMenuItems[index] = menuItem;
+  }
+  menu.menu_items = newMenuItems;
+  menu.visible = true;
+  return menu;
+};
 
 /***/ }),
 
@@ -17323,9 +17515,16 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _MenuData__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./MenuData */ "./src/Menu/MenuData.js");
+
 
 
 const MenuItem = props => {
+  const {
+    selectedSubMenuItem,
+    selectedMainMenuItem,
+    subMenu
+  } = (0,_MenuData__WEBPACK_IMPORTED_MODULE_2__["default"])();
   const handleClick = () => {
     props.selectMenu(props.menuItem.id);
   };
@@ -17333,10 +17532,10 @@ const MenuItem = props => {
   /*
    * Menu is selected if the item is the same, or if it is a child.
    */
-  let menuIsSelected = props.selectedMenuItem === props.menuItem.id;
+  let menuIsSelected = selectedSubMenuItem === props.menuItem.id;
   if (props.menuItem.menu_items) {
     for (const item of props.menuItem.menu_items) {
-      if (item.id === props.selectedMenuItem) {
+      if (item.id === selectedSubMenuItem) {
         menuIsSelected = true;
       }
     }
@@ -17344,7 +17543,7 @@ const MenuItem = props => {
   let menuClass = menuIsSelected ? ' rsssl-active' : '';
   menuClass += props.menuItem.featured ? ' rsssl-featured' : '';
   menuClass += props.menuItem.premium && !rsssl_settings.pro_plugin_active ? ' rsssl-premium' : '';
-  let href = '#' + props.selectedMainMenuItem + '/' + props.menuItem.id;
+  let href = '#' + selectedMainMenuItem + '/' + props.menuItem.id;
   return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, props.menuItem.visible && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "rsssl-menu-item" + menuClass
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
@@ -17356,10 +17555,7 @@ const MenuItem = props => {
     className: "rsssl-submenu-item"
   }, props.menuItem.menu_items.map((subMenuItem, i) => subMenuItem.visible && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(MenuItem, {
     key: i,
-    menuItem: subMenuItem,
-    selectMenu: props.selectMenu,
-    selectedMenuItem: props.selectedMenuItem,
-    selectedMainMenuItem: props.selectedMainMenuItem
+    menuItem: subMenuItem
   })))));
 };
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (MenuItem);
@@ -17519,6 +17715,58 @@ class ModalControl extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Compo
   }
 }
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (ModalControl);
+
+/***/ }),
+
+/***/ "./src/Modal/ModalData.js":
+/*!********************************!*\
+  !*** ./src/Modal/ModalData.js ***!
+  \********************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var zustand__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! zustand */ "./node_modules/zustand/esm/index.mjs");
+/* harmony import */ var _utils_api__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../utils/api */ "./src/utils/api.js");
+/* harmony import */ var _utils_sleeper_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../utils/sleeper.js */ "./src/utils/sleeper.js");
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _wordpress_data__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @wordpress/data */ "@wordpress/data");
+/* harmony import */ var _wordpress_data__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_wordpress_data__WEBPACK_IMPORTED_MODULE_3__);
+
+
+
+
+
+
+const useModalData = (0,zustand__WEBPACK_IMPORTED_MODULE_4__["default"])((set, get) => ({
+  modalData: [],
+  buttonsDisabled: false,
+  showModal: false,
+  dropItemFromModal: false,
+  /*
+   * Handle instantiation of a modal window
+   * @param showModal
+   * @param data
+   * @param dropItem
+   */
+  handleModal: (showModal, modalData, dropItemFromModal) => {
+    set({
+      showModal: showModal,
+      modalData: modalData,
+      dropItemFromModal: dropItemFromModal
+    });
+  },
+  setModalData: data => {
+    set({
+      modalData: modalData
+    });
+  }
+}));
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (useModalData);
 
 /***/ }),
 
@@ -17983,14 +18231,17 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _utils_api__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./utils/api */ "./src/utils/api.js");
-/* harmony import */ var _Header__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Header */ "./src/Header.js");
-/* harmony import */ var _DashBoard_DashboardPage__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./DashBoard/DashboardPage */ "./src/DashBoard/DashboardPage.js");
-/* harmony import */ var _Settings_SettingsPage__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./Settings/SettingsPage */ "./src/Settings/SettingsPage.js");
-/* harmony import */ var _Modal_Modal__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./Modal/Modal */ "./src/Modal/Modal.js");
-/* harmony import */ var _Placeholder_PagePlaceholder__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./Placeholder/PagePlaceholder */ "./src/Placeholder/PagePlaceholder.js");
-/* harmony import */ var _Onboarding_OnboardingModal__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./Onboarding/OnboardingModal */ "./src/Onboarding/OnboardingModal.js");
-/* harmony import */ var _utils_getAnchor__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./utils/getAnchor */ "./src/utils/getAnchor.js");
+/* harmony import */ var _Header__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Header */ "./src/Header.js");
+/* harmony import */ var _DashBoard_DashboardPage__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./DashBoard/DashboardPage */ "./src/DashBoard/DashboardPage.js");
+/* harmony import */ var _Menu_Menu__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./Menu/Menu */ "./src/Menu/Menu.js");
+/* harmony import */ var _Settings_Settings__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./Settings/Settings */ "./src/Settings/Settings.js");
+/* harmony import */ var _Settings_Notices__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./Settings/Notices */ "./src/Settings/Notices.js");
+/* harmony import */ var _Modal_Modal__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./Modal/Modal */ "./src/Modal/Modal.js");
+/* harmony import */ var _Placeholder_PagePlaceholder__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./Placeholder/PagePlaceholder */ "./src/Placeholder/PagePlaceholder.js");
+/* harmony import */ var _Onboarding_OnboardingModal__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./Onboarding/OnboardingModal */ "./src/Onboarding/OnboardingModal.js");
+/* harmony import */ var _utils_getAnchor__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./utils/getAnchor */ "./src/utils/getAnchor.js");
+/* harmony import */ var _Settings_FieldsData__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./Settings/FieldsData */ "./src/Settings/FieldsData.js");
+/* harmony import */ var _Menu_MenuData__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./Menu/MenuData */ "./src/Menu/MenuData.js");
 
 
 
@@ -18001,377 +18252,51 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-class Page extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Component {
-  constructor() {
-    super(...arguments);
-    this.pageProps = [];
-    this.pageProps['licenseStatus'] = rsssl_settings.licenseStatus;
-    this.updateFields = this.updateFields.bind(this);
-    this.addNotice = this.addNotice.bind(this);
-    this.updateProgress = this.updateProgress.bind(this);
-    this.getFields = this.getFields.bind(this);
-    this.selectMenu = this.selectMenu.bind(this);
-    this.getSelectedMenu = this.getSelectedMenu.bind(this);
-    this.selectStep = this.selectStep.bind(this);
-    this.handleModal = this.handleModal.bind(this);
-    this.highLightField = this.highLightField.bind(this);
-    this.updateField = this.updateField.bind(this);
-    this.getFieldValue = this.getFieldValue.bind(this);
-    this.addHelp = this.addHelp.bind(this);
-    this.selectMainMenu = this.selectMainMenu.bind(this);
-    this.setPageProps = this.setPageProps.bind(this);
-    this.getPreviousAndNextMenuItems = this.getPreviousAndNextMenuItems.bind(this);
-    this.setShowOnBoardingModal = this.setShowOnBoardingModal.bind(this);
-    this.state = {
-      error: false,
-      selectedMainMenuItem: '',
-      showOnBoardingModal: false,
-      selectedMenuItem: '',
-      selectedStep: 1,
-      highLightedField: '',
-      fields: '',
-      menu: [],
-      progress: '',
-      isAPILoaded: false,
-      pageProps: this.pageProps,
-      showModal: false,
-      modalData: [],
-      dropItemFromModal: false,
-      nextMenuItem: '',
-      previousMenuItem: ''
-    };
-    this.getFields();
-  }
-  setShowOnBoardingModal(status) {
-    const {
-      showOnBoardingModal
-    } = this.state;
-    if (status !== showOnBoardingModal) {
-      this.setState({
-        showOnBoardingModal: status
-      });
+
+
+
+const Page = props => {
+  const {
+    error,
+    fields,
+    changedFields,
+    fetchFieldsData,
+    updateFieldsData,
+    fieldsLoaded
+  } = (0,_Settings_FieldsData__WEBPACK_IMPORTED_MODULE_10__["default"])();
+  const {
+    selectedMainMenuItem,
+    fetchMenuData
+  } = (0,_Menu_MenuData__WEBPACK_IMPORTED_MODULE_11__["default"])();
+  (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useEffect)(async () => {
+    if (fieldsLoaded) {
+      fetchMenuData(fields);
     }
-  }
-  updateFields(fields) {
-    this.fields = fields;
-    this.setState({
-      fields: fields
-    });
-  }
-  updateProgress(progress) {
-    this.progress = progress;
-    this.setState({
-      progress: progress
-    });
-  }
-  componentDidMount() {
     window.addEventListener('hashchange', () => {
-      let selectedMainMenuItem = (0,_utils_getAnchor__WEBPACK_IMPORTED_MODULE_8__["default"])('main') || 'dashboard';
-      this.menu = this.getSelectedMenu(this.superMenu, selectedMainMenuItem);
-      this.setState({
-        selectedMainMenuItem: selectedMainMenuItem,
-        selectedMenuItem: this.getDefaultMenuItem(),
-        menu: this.menu
-      }, () => {
-        this.getPreviousAndNextMenuItems();
-      });
+      fetchMenuData(fields);
     });
+  }, [fields]);
+  (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useEffect)(async () => {
+    let subMenuItem = (0,_utils_getAnchor__WEBPACK_IMPORTED_MODULE_9__["default"])('menu');
+    await updateFieldsData(subMenuItem);
+  }, [changedFields]);
+  (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useEffect)(async () => {
+    let subMenuItem = (0,_utils_getAnchor__WEBPACK_IMPORTED_MODULE_9__["default"])('menu');
+    await fetchFieldsData(subMenuItem);
+  }, []);
+  if (error) {
+    return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_Placeholder_PagePlaceholder__WEBPACK_IMPORTED_MODULE_7__["default"], {
+      error: error
+    }));
   }
-
-  /*
-  * filter sidebar menu from complete menu structure
-  */
-
-  getSelectedMenu(superMenu, selectedMainMenuItem) {
-    for (const key in superMenu) {
-      if (superMenu.hasOwnProperty(key)) {
-        if (superMenu[key] && superMenu[key].id === selectedMainMenuItem) {
-          return superMenu[key];
-        }
-      }
-    }
-  }
-  getFields() {
-    _utils_api__WEBPACK_IMPORTED_MODULE_1__.getFields().then(response => {
-      if (response.error) {
-        this.setState({
-          error: response.error
-        });
-      } else {
-        this.superMenu = response.menu;
-        let selectedMainMenuItem = (0,_utils_getAnchor__WEBPACK_IMPORTED_MODULE_8__["default"])('main') || 'dashboard';
-        this.menu = this.getSelectedMenu(this.superMenu, selectedMainMenuItem);
-        this.fields = response.fields;
-        this.progress = response.progress;
-        this.setState({
-          isAPILoaded: true,
-          fields: this.fields,
-          progress: this.progress,
-          menu: this.menu,
-          selectedMenuItem: this.getDefaultMenuItem(),
-          selectedMainMenuItem: selectedMainMenuItem
-        }, () => {
-          this.getPreviousAndNextMenuItems();
-        });
-      }
-    });
-  }
-  /*
-   * Allow child blocks to set data on the gridblock
-   * @param key
-   * @param value
-   */
-  setPageProps(key, value) {
-    const {
-      pageProps
-    } = this.state;
-    //if (pageProps[key] !== value ) {
-    this.pageProps[key] = value;
-    this.setState({
-      pageProps: this.pageProps
-    });
-    //}
-  }
-
-  /*
-   * Handle instantiation of a modal window
-   * @param showModal
-   * @param data
-   * @param dropItem
-   */
-  handleModal(showModal, data, dropItem) {
-    this.setState({
-      showModal: showModal,
-      modalData: data,
-      dropItemFromModal: dropItem
-    });
-  }
-  selectMenu(selectedMenuItem) {
-    this.setState({
-      selectedMenuItem: selectedMenuItem
-    });
-  }
-  selectStep(selectedStep) {
-    this.setState({
-      selectedStep: selectedStep
-    });
-  }
-  getDefaultMenuItem() {
-    let fallBackMenuItem = this.menu && this.menu.menu_items.hasOwnProperty(0) ? this.menu.menu_items[0].id : 'general';
-    let anchor = (0,_utils_getAnchor__WEBPACK_IMPORTED_MODULE_8__["default"])('menu');
-    let foundAnchorInMenu = false;
-    //check if this anchor actually exists in our current submenu. If not, clear it
-    for (const key in this.menu.menu_items) {
-      if (this.menu.menu_items.hasOwnProperty(key) && this.menu.menu_items[key].id === anchor) {
-        foundAnchorInMenu = true;
-      }
-    }
-    if (!foundAnchorInMenu) anchor = false;
-    return anchor ? anchor : fallBackMenuItem;
-  }
-  selectMainMenu(selectedMainMenuItem) {
-    this.menu = this.getSelectedMenu(this.superMenu, selectedMainMenuItem);
-    let selectedMenuItem = this.getDefaultMenuItem();
-    this.setState({
-      menu: this.menu,
-      selectedMainMenuItem: selectedMainMenuItem,
-      selectedMenuItem: selectedMenuItem
-    });
-  }
-
-  /*
-   * Update a field
-   * @param field
-   */
-  updateField(id, value) {
-    let fields = this.fields;
-    for (const fieldItem of fields) {
-      if (fieldItem.id === id) {
-        fieldItem.value = value;
-      }
-    }
-    this.fields = fields;
-    this.setState({
-      fields: fields
-    });
-  }
-  /* Add a help notice to the sidebar
-  */
-  addNotice(id, help) {
-    let fields = this.fields;
-    for (const fieldItem of fields) {
-      if (fieldItem.id === id) {
-        fieldItem.help = help;
-      }
-    }
-    this.fields = fields;
-    this.setState({
-      fields: fields
-    });
-  }
-  /*
-  * Allow children to check a field value from another page (in a page, only visible fields are know)
-  */
-  getFieldValue(id) {
-    let fields = this.fields;
-    for (const fieldItem of fields) {
-      if (fieldItem.id === id) {
-        return fieldItem.value;
-      }
-    }
-    return false;
-  }
-  addHelp(id, label, text, title) {
-    //create help object
-    let help = {};
-    help.label = label;
-    help.text = text;
-    if (title) help.title = title;
-    let fields = this.fields;
-
-    //add to selected field
-    for (const fieldItem of fields) {
-      if (fieldItem.id === id && !fieldItem.help) {
-        fieldItem.help = help;
-        this.fields = fields;
-        this.setState({
-          fields: fields
-        });
-      }
-    }
-  }
-  highLightField(fieldId) {
-    //switch to settings page
-    this.selectMainMenu('settings');
-    //get menu item based on fieldId
-    let selectedField = null;
-    let fields = this.fields.filter(field => field.id === fieldId);
-    if (fields.length) {
-      selectedField = fields[0];
-      this.selectMenu(selectedField.menu_id);
-    }
-    this.highLightedField = fieldId;
-  }
-  /*
-   * Get anchor from URL
-   * @returns {string|boolean}
-   */
-
-  // Parses menu items and nested items in single array
-  menuItemParser(parsedMenuItems, menuItems) {
-    menuItems.forEach(menuItem => {
-      if (menuItem.visible) {
-        parsedMenuItems.push(menuItem.id);
-        if (menuItem.hasOwnProperty('menu_items')) {
-          this.menuItemParser(parsedMenuItems, menuItem.menu_items);
-        }
-      }
-    });
-    return parsedMenuItems;
-  }
-  getPreviousAndNextMenuItems() {
-    let previousMenuItem;
-    let nextMenuItem;
-    const {
-      menu_items: menuItems
-    } = this.state.menu;
-    const parsedMenuItems = [];
-    this.menuItemParser(parsedMenuItems, menuItems);
-    // Finds current menu item index
-    const currentMenuItemIndex = parsedMenuItems.findIndex(menuItem => menuItem === this.state.selectedMenuItem);
-    if (currentMenuItemIndex !== -1) {
-      previousMenuItem = parsedMenuItems[currentMenuItemIndex === 0 ? '' : currentMenuItemIndex - 1];
-      nextMenuItem = parsedMenuItems[currentMenuItemIndex === parsedMenuItems.length - 1 ? '' : currentMenuItemIndex + 1];
-      this.setState({
-        previousMenuItem: previousMenuItem ? previousMenuItem : parsedMenuItems[0],
-        nextMenuItem: nextMenuItem ? nextMenuItem : parsedMenuItems[parsedMenuItems.length - 1]
-      });
-    }
-    return {
-      nextMenuItem,
-      previousMenuItem
-    };
-  }
-  render() {
-    const {
-      error,
-      pageProps,
-      selectedMainMenuItem,
-      showOnBoardingModal,
-      selectedMenuItem,
-      fields,
-      menu,
-      progress,
-      isAPILoaded,
-      showModal,
-      modalData,
-      dropItemFromModal
-    } = this.state;
-    if (error) {
-      return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_Placeholder_PagePlaceholder__WEBPACK_IMPORTED_MODULE_6__["default"], {
-        error: error
-      }));
-    }
-    return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-      className: "rsssl-wrapper"
-    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_Onboarding_OnboardingModal__WEBPACK_IMPORTED_MODULE_7__["default"], {
-      isAPILoaded: isAPILoaded,
-      selectMenu: this.selectMenu,
-      selectMainMenu: this.selectMainMenu,
-      getFields: this.getFields,
-      updateField: this.updateField,
-      setShowOnBoardingModal: this.setShowOnBoardingModal,
-      showOnBoardingModal: showOnBoardingModal,
-      pageProps: this.pageProps,
-      setPageProps: this.setPageProps
-    }), !isAPILoaded && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_Placeholder_PagePlaceholder__WEBPACK_IMPORTED_MODULE_6__["default"], null), showModal && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_Modal_Modal__WEBPACK_IMPORTED_MODULE_5__["default"], {
-      handleModal: this.handleModal,
-      data: modalData
-    }), isAPILoaded && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_Header__WEBPACK_IMPORTED_MODULE_2__["default"], {
-      selectedMainMenuItem: selectedMainMenuItem,
-      selectMainMenu: this.selectMainMenu,
-      superMenu: this.superMenu,
-      fields: fields
-    }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-      className: "rsssl-content-area rsssl-grid rsssl-" + selectedMainMenuItem
-    }, selectedMainMenuItem !== 'dashboard' && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_Settings_SettingsPage__WEBPACK_IMPORTED_MODULE_4__["default"], {
-      dropItemFromModal: dropItemFromModal,
-      updateFields: this.updateFields,
-      addNotice: this.addNotice,
-      updateProgress: this.updateProgress,
-      pageProps: this.pageProps,
-      handleModal: this.handleModal,
-      getDefaultMenuItem: this.getDefaultMenuItem,
-      updateField: this.updateField,
-      getFieldValue: this.getFieldValue,
-      addHelp: this.addHelp,
-      setPageProps: this.setPageProps,
-      selectMenu: this.selectMenu,
-      selectStep: this.selectStep,
-      selectedStep: this.state.selectedStep,
-      highLightField: this.highLightField,
-      highLightedField: this.highLightedField,
-      selectedMenuItem: selectedMenuItem,
-      selectedMainMenuItem: selectedMainMenuItem,
-      selectMainMenu: this.selectMainMenu,
-      isAPILoaded: isAPILoaded,
-      fields: fields,
-      menu: menu,
-      progress: progress,
-      getPreviousAndNextMenuItems: this.getPreviousAndNextMenuItems,
-      nextMenuItem: this.state.nextMenuItem,
-      previousMenuItem: this.state.previousMenuItem
-    }), selectedMainMenuItem === 'dashboard' && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_DashBoard_DashboardPage__WEBPACK_IMPORTED_MODULE_3__["default"], {
-      setShowOnBoardingModal: this.setShowOnBoardingModal,
-      isAPILoaded: isAPILoaded,
-      fields: fields,
-      selectMainMenu: this.selectMainMenu,
-      highLightField: this.highLightField,
-      getFields: this.getFields,
-      pageProps: pageProps
-    }))));
-  }
-}
+  return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "rsssl-wrapper"
+  }, !fieldsLoaded && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_Placeholder_PagePlaceholder__WEBPACK_IMPORTED_MODULE_7__["default"], null), fieldsLoaded && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_Header__WEBPACK_IMPORTED_MODULE_1__["default"], null), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "rsssl-content-area rsssl-grid rsssl-" + selectedMainMenuItem
+  }, selectedMainMenuItem !== 'dashboard' && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_Menu_Menu__WEBPACK_IMPORTED_MODULE_3__["default"], null), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_Settings_Settings__WEBPACK_IMPORTED_MODULE_4__["default"], null), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_Settings_Notices__WEBPACK_IMPORTED_MODULE_5__["default"], {
+    className: "rsssl-wizard-notices"
+  })), selectedMainMenuItem === 'dashboard' && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_DashBoard_DashboardPage__WEBPACK_IMPORTED_MODULE_2__["default"], null))));
+};
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Page);
 
 /***/ }),
@@ -18520,13 +18445,45 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _FieldsData__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./FieldsData */ "./src/Settings/FieldsData.js");
+
 
 
 const ChangeStatus = props => {
+  const {
+    fields,
+    updateField,
+    getFieldValue,
+    getField,
+    setChangedField,
+    highLightField,
+    saveFields
+  } = (0,_FieldsData__WEBPACK_IMPORTED_MODULE_2__["default"])();
+  const onChangeHandler = (enabled, clickedItem, type) => {
+    let field = props.field;
+    enabled = enabled == 1 ? 0 : 1;
+    if (typeof field.value === 'object') {
+      field.value = Object.values(field.value);
+    }
+    //find this item in the field list
+    for (const item of field.value) {
+      if (item.id === clickedItem.id) {
+        item[type] = enabled;
+      }
+      delete item.valueControl;
+      delete item.statusControl;
+      delete item.deleteControl;
+    }
+    //the updateItemId allows us to update one specific item in a field set.
+    field.updateItemId = clickedItem.id;
+    setChangedField(field.id, field.value);
+    updateField(field.id, field.value);
+    saveFields(true, false);
+  };
   let statusClass = props.item.status == 1 ? 'button button-primary rsssl-status-allowed' : 'button button-default rsssl-status-revoked';
   let label = props.item.status == 1 ? (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Revoke", "really-simple-ssl") : (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Allow", "really-simple-ssl");
   return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
-    onClick: () => props.onChangeHandlerDataTableStatus(props.item.status, props.item, 'status'),
+    onClick: () => onChangeHandler(props.item.status, props.item, 'status'),
     className: statusClass
   }, label);
 };
@@ -18607,20 +18564,20 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var _utils_api__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../utils/api */ "./src/utils/api.js");
-/* harmony import */ var _License__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./License */ "./src/Settings/License.js");
-/* harmony import */ var _Password__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./Password */ "./src/Settings/Password.js");
-/* harmony import */ var _Host__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./Host */ "./src/Settings/Host.js");
-/* harmony import */ var _utils_Hyperlink__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../utils/Hyperlink */ "./src/utils/Hyperlink.js");
-/* harmony import */ var _LetsEncrypt_LetsEncrypt__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../LetsEncrypt/LetsEncrypt */ "./src/LetsEncrypt/LetsEncrypt.js");
-/* harmony import */ var _LetsEncrypt_Activate__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../LetsEncrypt/Activate */ "./src/LetsEncrypt/Activate.js");
-/* harmony import */ var _MixedContentScan__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./MixedContentScan */ "./src/Settings/MixedContentScan.js");
-/* harmony import */ var _PermissionsPolicy__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./PermissionsPolicy */ "./src/Settings/PermissionsPolicy.js");
-/* harmony import */ var _CheckboxControl__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./CheckboxControl */ "./src/Settings/CheckboxControl.js");
-/* harmony import */ var _Support__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ./Support */ "./src/Settings/Support.js");
-/* harmony import */ var _LearningMode__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ./LearningMode */ "./src/Settings/LearningMode.js");
-/* harmony import */ var _Button__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ./Button */ "./src/Settings/Button.js");
-/* harmony import */ var _utils_Icon__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ../utils/Icon */ "./src/utils/Icon.js");
+/* harmony import */ var _License__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./License */ "./src/Settings/License.js");
+/* harmony import */ var _Password__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./Password */ "./src/Settings/Password.js");
+/* harmony import */ var _Host__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./Host */ "./src/Settings/Host.js");
+/* harmony import */ var _utils_Hyperlink__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../utils/Hyperlink */ "./src/utils/Hyperlink.js");
+/* harmony import */ var _LetsEncrypt_LetsEncrypt__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../LetsEncrypt/LetsEncrypt */ "./src/LetsEncrypt/LetsEncrypt.js");
+/* harmony import */ var _LetsEncrypt_Activate__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../LetsEncrypt/Activate */ "./src/LetsEncrypt/Activate.js");
+/* harmony import */ var _MixedContentScan__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./MixedContentScan */ "./src/Settings/MixedContentScan.js");
+/* harmony import */ var _PermissionsPolicy__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./PermissionsPolicy */ "./src/Settings/PermissionsPolicy.js");
+/* harmony import */ var _CheckboxControl__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./CheckboxControl */ "./src/Settings/CheckboxControl.js");
+/* harmony import */ var _Support__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./Support */ "./src/Settings/Support.js");
+/* harmony import */ var _LearningMode__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ./LearningMode */ "./src/Settings/LearningMode.js");
+/* harmony import */ var _Button__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ./Button */ "./src/Settings/Button.js");
+/* harmony import */ var _utils_Icon__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ../utils/Icon */ "./src/utils/Icon.js");
+/* harmony import */ var _FieldsData__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ./FieldsData */ "./src/Settings/FieldsData.js");
 
 
 
@@ -18641,16 +18598,21 @@ __webpack_require__.r(__webpack_exports__);
 
 const Field = props => {
   let scrollAnchor = React.createRef();
+  const {
+    fields,
+    updateField,
+    setChangedField,
+    highLightField,
+    saveFields
+  } = (0,_FieldsData__WEBPACK_IMPORTED_MODULE_16__["default"])();
   (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
     if (props.highLightedField === props.field.id && scrollAnchor.current) {
       scrollAnchor.current.scrollIntoView();
     }
   });
   const onChangeHandler = fieldValue => {
-    let fields = props.fields;
     let field = props.field;
-    fields[props.index]['value'] = fieldValue;
-
+    updateField(field.id, fieldValue);
     //we can configure other fields if a field is enabled, or set to a certain value.
     let configureFieldCondition = false;
     if (field.configure_on_activation) {
@@ -18660,48 +18622,17 @@ const Field = props => {
       let configureField = field.configure_on_activation[0];
       for (let fieldId in configureField) {
         if (configureFieldCondition && configureField.hasOwnProperty(fieldId)) {
-          props.updateField(fieldId, configureField[fieldId]);
+          updateField(fieldId, configureField[fieldId]);
         }
       }
     }
-    props.saveChangedFields(field.id);
-  };
-
-  /*
-   * Handle data update for a datatable, for the status only (true/false)
-   * @param enabled
-   * @param clickedItem
-   * @param type
-   */
-  const onChangeHandlerDataTableStatus = (enabled, clickedItem, type) => {
-    let field = props.field;
-    enabled = enabled == 1 ? 0 : 1;
-    if (typeof field.value === 'object') {
-      field.value = Object.values(field.value);
-    }
-    //find this item in the field list
-    for (const item of field.value) {
-      if (item.id === clickedItem.id) {
-        item[type] = enabled;
-      }
-      delete item.valueControl;
-      delete item.statusControl;
-      delete item.deleteControl;
-    }
-    //the updateItemId allows us to update one specific item in a field set.
-    field.updateItemId = clickedItem.id;
-    let saveFields = [];
-    saveFields.push(field);
-    props.updateField(field.id, field.value);
-    _utils_api__WEBPACK_IMPORTED_MODULE_3__.setFields(saveFields).then(response => {
-      //props.showSavedSettingsNotice();
-    });
+    setChangedField(field.id, fieldValue);
   };
   const labelWrap = field => {
     let tooltipColor = field.warning ? 'red' : 'black';
     return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
       className: "cmplz-label-text"
-    }, field.label), field.tooltip && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_utils_Icon__WEBPACK_IMPORTED_MODULE_16__["default"], {
+    }, field.label), field.tooltip && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_utils_Icon__WEBPACK_IMPORTED_MODULE_15__["default"], {
       name: "info-open",
       tooltip: field.tooltip,
       color: tooltipColor
@@ -18709,10 +18640,9 @@ const Field = props => {
   };
   let field = props.field;
   let fieldValue = field.value;
-  let fields = props.fields;
   let disabled = field.disabled;
   let highLightClass = 'rsssl-field-wrap';
-  if (props.highLightedField === props.field.id) {
+  if (highLightField === props.field.id) {
     highLightClass = 'rsssl-field-wrap rsssl-highlight';
   }
   let options = [];
@@ -18730,7 +18660,7 @@ const Field = props => {
   //if a feature can only be used on networkwide or single site setups, pass that info here.
   if (!rsssl_settings.networkwide_active && field.networkwide_required) {
     disabled = true;
-    field.comment = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("This feature is only available networkwide.", "really-simple-ssl"), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_utils_Hyperlink__WEBPACK_IMPORTED_MODULE_7__["default"], {
+    field.comment = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("This feature is only available networkwide.", "really-simple-ssl"), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_utils_Hyperlink__WEBPACK_IMPORTED_MODULE_6__["default"], {
       target: "_blank",
       text: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Network settings", "really-simple-ssl"),
       url: rsssl_settings.network_link
@@ -18746,7 +18676,7 @@ const Field = props => {
     return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
       className: highLightClass,
       ref: scrollAnchor
-    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_CheckboxControl__WEBPACK_IMPORTED_MODULE_12__["default"], {
+    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_CheckboxControl__WEBPACK_IMPORTED_MODULE_11__["default"], {
       label: labelWrap(field),
       field: field,
       onChangeHandler: fieldValue => onChangeHandler(fieldValue)
@@ -18791,21 +18721,17 @@ const Field = props => {
     return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
       className: 'rsssl-field-button ' + highLightClass,
       ref: scrollAnchor
-    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("label", null, field.label), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_Button__WEBPACK_IMPORTED_MODULE_15__["default"], {
-      addNotice: props.addNotice,
-      field: field,
-      fields: props.fields
+    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("label", null, field.label), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_Button__WEBPACK_IMPORTED_MODULE_14__["default"], {
+      field: field
     }));
   }
   if (field.type === 'password') {
     return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
       className: highLightClass,
       ref: scrollAnchor
-    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_Password__WEBPACK_IMPORTED_MODULE_5__["default"], {
+    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_Password__WEBPACK_IMPORTED_MODULE_4__["default"], {
       index: props.index,
-      field: field,
-      fields: props.fields,
-      saveChangedFields: props.saveChangedFields
+      field: field
     }));
   }
   if (field.type === 'textarea') {
@@ -18822,20 +18748,13 @@ const Field = props => {
   if (field.type === 'license') {
     let field = props.field;
     let fieldValue = field.value;
-    let fields = props.fields;
     return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
       className: highLightClass,
       ref: scrollAnchor
-    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_License__WEBPACK_IMPORTED_MODULE_4__["default"], {
-      setPageProps: props.setPageProps,
-      fieldsUpdateComplete: props.fieldsUpdateComplete,
+    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_License__WEBPACK_IMPORTED_MODULE_3__["default"], {
       index: props.index,
-      fields: fields,
       field: field,
-      fieldValue: fieldValue,
-      saveChangedFields: props.saveChangedFields,
-      highLightField: props.highLightField,
-      highLightedField: props.highLightedField
+      fieldValue: fieldValue
     }));
   }
   if (field.type === 'number') {
@@ -18864,12 +18783,8 @@ const Field = props => {
     return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
       className: highLightClass,
       ref: scrollAnchor
-    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_Host__WEBPACK_IMPORTED_MODULE_6__["default"], {
+    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_Host__WEBPACK_IMPORTED_MODULE_5__["default"], {
       index: props.index,
-      saveChangedFields: props.saveChangedFields,
-      handleNextButtonDisabled: props.handleNextButtonDisabled,
-      updateFields: props.updateFields,
-      fields: props.fields,
       field: props.field
     }));
   }
@@ -18890,80 +18805,367 @@ const Field = props => {
     return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
       className: highLightClass,
       ref: scrollAnchor
-    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_Support__WEBPACK_IMPORTED_MODULE_13__["default"], null));
+    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_Support__WEBPACK_IMPORTED_MODULE_12__["default"], null));
   }
   if (field.type === 'permissionspolicy') {
     return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
       className: highLightClass,
       ref: scrollAnchor
-    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_PermissionsPolicy__WEBPACK_IMPORTED_MODULE_11__["default"], {
+    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_PermissionsPolicy__WEBPACK_IMPORTED_MODULE_10__["default"], {
       disabled: disabled,
-      updateField: props.updateField,
       field: props.field,
-      options: options,
-      highLightClass: highLightClass,
-      fields: fields
+      options: options
     }));
   }
   if (field.type === 'learningmode') {
     return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
       className: highLightClass,
       ref: scrollAnchor
-    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_LearningMode__WEBPACK_IMPORTED_MODULE_14__["default"], {
+    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_LearningMode__WEBPACK_IMPORTED_MODULE_13__["default"], {
       disabled: disabled,
-      onChangeHandlerDataTableStatus: onChangeHandlerDataTableStatus,
-      updateField: props.updateField,
-      field: props.field,
-      options: options,
-      highLightClass: highLightClass,
-      fields: fields
+      field: props.field
     }));
   }
   if (field.type === 'mixedcontentscan') {
     return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
       className: highLightClass,
       ref: scrollAnchor
-    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_MixedContentScan__WEBPACK_IMPORTED_MODULE_10__["default"], {
-      dropItemFromModal: props.dropItemFromModal,
-      handleModal: props.handleModal,
-      field: props.field,
-      fields: props.selectedFields
+    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_MixedContentScan__WEBPACK_IMPORTED_MODULE_9__["default"], {
+      field: props.field
     }));
   }
   if (field.type === 'letsencrypt') {
-    return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_LetsEncrypt_LetsEncrypt__WEBPACK_IMPORTED_MODULE_8__["default"], {
+    return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_LetsEncrypt_LetsEncrypt__WEBPACK_IMPORTED_MODULE_7__["default"], {
       key: field.id,
-      resetRefreshTests: props.resetRefreshTests,
-      refreshTests: props.refreshTests,
-      getFieldValue: props.getFieldValue,
-      save: props.save,
-      selectMenu: props.selectMenu,
-      addHelp: props.addHelp,
-      updateField: props.updateField,
-      fields: props.fields,
-      field: field,
-      handleNextButtonDisabled: props.handleNextButtonDisabled
+      field: field
     });
   }
   if (field.type === 'activate') {
-    return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_LetsEncrypt_Activate__WEBPACK_IMPORTED_MODULE_9__["default"], {
+    return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_LetsEncrypt_Activate__WEBPACK_IMPORTED_MODULE_8__["default"], {
       key: field.id,
-      selectMainMenu: props.selectMainMenu,
-      resetRefreshTests: props.resetRefreshTests,
-      refreshTests: props.refreshTests,
-      getFieldValue: props.getFieldValue,
-      save: props.save,
-      selectMenu: props.selectMenu,
-      addHelp: props.addHelp,
-      updateField: props.updateField,
-      fields: props.fields,
-      field: field,
-      handleNextButtonDisabled: props.handleNextButtonDisabled
+      field: field
     });
   }
   return 'not found field type ' + field.type;
 };
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Field);
+
+/***/ }),
+
+/***/ "./src/Settings/FieldsData.js":
+/*!************************************!*\
+  !*** ./src/Settings/FieldsData.js ***!
+  \************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var zustand__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! zustand */ "./node_modules/zustand/esm/index.mjs");
+/* harmony import */ var immer__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! immer */ "./node_modules/immer/dist/immer.esm.mjs");
+/* harmony import */ var _utils_api__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../utils/api */ "./src/utils/api.js");
+/* harmony import */ var _utils_sleeper_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../utils/sleeper.js */ "./src/utils/sleeper.js");
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _wordpress_data__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @wordpress/data */ "@wordpress/data");
+/* harmony import */ var _wordpress_data__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_wordpress_data__WEBPACK_IMPORTED_MODULE_3__);
+
+
+
+
+
+
+const fetchFields = () => {
+  return _utils_api__WEBPACK_IMPORTED_MODULE_0__.getFields().then(response => {
+    let fields = response.fields;
+    let progress = response.progress;
+    let error = response.error;
+    return {
+      fields,
+      progress,
+      error
+    };
+  }).catch(error => {
+    console.error(error);
+  });
+};
+const useFields = (0,zustand__WEBPACK_IMPORTED_MODULE_4__["default"])((set, get) => ({
+  licenseStatus: rsssl_settings.licenseStatus,
+  fieldsLoaded: false,
+  error: false,
+  fields: [],
+  changedFields: [],
+  progress: [],
+  nextButtonDisabled: false,
+  refreshTests: false,
+  highLightField: '',
+  setLicenseStatus: licenseStatus => set(state => ({
+    licenseStatus
+  })),
+  setHighLightField: highLightField => set(state => ({
+    highLightField
+  })),
+  setRefreshTests: refreshTests => set(state => ({
+    refreshTests
+  })),
+  handleNextButtonDisabled: nextButtonDisabled => set(state => ({
+    nextButtonDisabled
+  })),
+  setChangedField: (id, value) => {
+    set((0,immer__WEBPACK_IMPORTED_MODULE_5__["default"])(state => {
+      //remove current reference
+      const existingFieldIndex = state.changedFields.findIndex(field => {
+        return field.id === id;
+      });
+      if (existingFieldIndex !== -1) {
+        state.changedFields.splice(existingFieldIndex, 1);
+      }
+
+      //add again, with new value
+      let field = {};
+      field.id = id;
+      field.value = value;
+      state.changedFields.push(field);
+    }));
+  },
+  showSavedSettingsNotice: text => {
+    handleShowSavedSettingsNotice(text);
+  },
+  updateField: (id, value) => {
+    set((0,immer__WEBPACK_IMPORTED_MODULE_5__["default"])(state => {
+      let index = false;
+      state.fields.forEach(function (fieldItem, i) {
+        if (fieldItem.id === id) {
+          index = i;
+        }
+      });
+      state.fields[index].value = value;
+    }));
+  },
+  addHelpNotice: (id, label, text, title, url) => {
+    //create help object
+    let help = {};
+    help.label = label;
+    help.text = text;
+    if (url) help.url = url;
+    if (title) help.title = title;
+    let fields = get().fields;
+    let newFields = [];
+    //add to selected field
+    let fieldEdited = false;
+    fields.forEach(function (fieldItem, i) {
+      let newFieldItem = {
+        ...fieldItem
+      };
+      if (fieldItem.id === id && !fieldItem.help) {
+        fieldEdited = true;
+        newFieldItem.help = help;
+      }
+      newFields.push(newFieldItem);
+    });
+    if (fieldEdited) {
+      set({
+        fields: newFields
+      });
+    }
+  },
+  getFieldValue: id => {
+    let fields = get().fields;
+    let fieldItem = fields.filter(field => field.id === id)[0];
+    if (fieldItem) {
+      return fieldItem.value;
+    }
+    return false;
+  },
+  getField: id => {
+    let fields = get().fields;
+    let fieldItem = fields.filter(field => field.id === id)[0];
+    if (fieldItem) {
+      return fieldItem;
+    }
+    return false;
+  },
+  saveFields: async (skipRefreshTests, showSavedNotice) => {
+    let refreshTests = typeof skipRefreshTests !== 'undefined' ? skipRefreshTests : true;
+    showSavedNotice = typeof showSavedNotice !== 'undefined' ? showSavedNotice : true;
+    let fields = get().fields;
+    fields = fields.filter(field => field.data_target !== 'banner');
+    let changedFields = get().changedFields;
+    let progress = get().progress;
+    let saveFields = [];
+    //data_target
+    for (const field of fields) {
+      let fieldIsIncluded = changedFields.filter(changedField => changedField.id === field.id).length > 0;
+      if (fieldIsIncluded) {
+        saveFields.push(field);
+      }
+    }
+
+    //if no fields were changed, do nothing.
+    if (saveFields.length > 0) {
+      _utils_api__WEBPACK_IMPORTED_MODULE_0__.setFields(saveFields).then(response => {
+        progress = response.progress;
+        fields = response.fields;
+        set((0,immer__WEBPACK_IMPORTED_MODULE_5__["default"])(state => {
+          state.changedFields = [];
+          state.fields = fields;
+          state.progress = progress;
+          state.refreshTests = refreshTests;
+        }));
+      });
+    }
+    console.log('# saveFields');
+    if (showSavedNotice) {
+      handleShowSavedSettingsNotice();
+    }
+  },
+  updateFieldsData: async selectedSubMenuItem => {
+    let fields = get().fields;
+    fields = updateFieldsListWithConditions(fields);
+    const nextButtonDisabled = isNextButtonDisabled(fields, selectedSubMenuItem);
+    set((0,immer__WEBPACK_IMPORTED_MODULE_5__["default"])(state => {
+      state.fields = fields;
+      state.nextButtonDisabled = nextButtonDisabled;
+    }));
+  },
+  fetchFieldsData: async selectedSubMenuItem => {
+    const {
+      fields,
+      progress,
+      error
+    } = await fetchFields();
+    let conditionallyEnabledFields = updateFieldsListWithConditions(fields);
+    let selectedFields = conditionallyEnabledFields.filter(field => field.menu_id === selectedSubMenuItem);
+    set({
+      fieldsLoaded: true,
+      fields: conditionallyEnabledFields,
+      selectedFields: selectedFields,
+      progress: progress,
+      error: error
+    });
+  }
+}));
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (useFields);
+
+//check if all required fields have been enabled. If so, enable save/continue button
+const isNextButtonDisabled = (fields, selectedMenuItem) => {
+  let fieldsOnPage = [];
+  //get all fields with group_id this.props.group_id
+  for (const field of fields) {
+    if (field.menu_id === selectedMenuItem) {
+      fieldsOnPage.push(field);
+    }
+  }
+  let requiredFields = fieldsOnPage.filter(field => field.required && !field.conditionallyDisabled && (field.value.length == 0 || !field.value));
+  return requiredFields.length > 0;
+};
+const updateFieldsListWithConditions = fields => {
+  let newFields = [];
+  fields.forEach(function (field, i) {
+    let enabled = !(field.hasOwnProperty('react_conditions') && !validateConditions(field.react_conditions, fields, field.id));
+    //we want to update the changed fields if this field has just become visible. Otherwise the new field won't get saved.
+    const newField = {
+      ...field
+    };
+    newField.conditionallyDisabled = !enabled;
+    newFields.push(newField);
+  });
+  return newFields;
+};
+const handleShowSavedSettingsNotice = text => {
+  console.log("test " + text);
+  if (typeof text === 'undefined') {
+    text = (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Settings Saved', 'really-simple-ssl');
+  }
+  (0,_wordpress_data__WEBPACK_IMPORTED_MODULE_3__.dispatch)('core/notices').createNotice('success', text, {
+    __unstableHTML: true,
+    id: 'rsssl_settings_saved',
+    type: 'snackbar',
+    isDismissible: false
+  }).then((0,_utils_sleeper_js__WEBPACK_IMPORTED_MODULE_1__["default"])(2000)).then(response => {
+    (0,_wordpress_data__WEBPACK_IMPORTED_MODULE_3__.dispatch)('core/notices').removeNotice('rsssl_settings_saved');
+  });
+};
+const validateConditions = (conditions, fields, fieldId) => {
+  let relation = conditions[0].relation === 'OR' ? 'OR' : 'AND';
+  let conditionApplies = relation === 'AND';
+  for (const key in conditions) {
+    if (conditions.hasOwnProperty(key)) {
+      let thisConditionApplies = relation === 'AND';
+      let subConditionsArray = conditions[key];
+      if (subConditionsArray.hasOwnProperty('relation')) {
+        thisConditionApplies = validateConditions(subConditionsArray, fields, fieldId);
+      } else {
+        for (let conditionField in subConditionsArray) {
+          let invert = conditionField.indexOf('!') === 0;
+          if (subConditionsArray.hasOwnProperty(conditionField)) {
+            let conditionValue = subConditionsArray[conditionField];
+            conditionField = conditionField.replace('!', '');
+            let conditionFields = fields.filter(field => field.id === conditionField);
+            if (conditionFields.hasOwnProperty(0)) {
+              let field = conditionFields[0];
+              let actualValue = field.value;
+              if (field.type === 'text_checkbox') {
+                thisConditionApplies = actualValue.hasOwnProperty('show') && actualValue['show'] === conditionValue;
+              } else if (field.type === 'checkbox') {
+                thisConditionApplies = actualValue === conditionValue;
+              } else if (field.type === 'multicheckbox') {
+                //multicheckbox conditions
+                //loop through objects
+                thisConditionApplies = false;
+                let arrayValue = actualValue;
+                if (arrayValue.length === 0) {
+                  thisConditionApplies = false;
+                } else {
+                  for (const key of Object.keys(arrayValue)) {
+                    if (!Array.isArray(conditionValue)) conditionValue = [conditionValue];
+                    if (conditionValue.includes(arrayValue[key])) {
+                      thisConditionApplies = true;
+                      break;
+                    }
+                  }
+                }
+              } else if (field.type === 'radio') {
+                //as the regions field can be both radio and multicheckbox, an array is possible for a radio field
+                if (Array.isArray(conditionValue)) {
+                  thisConditionApplies = conditionValue.includes(actualValue);
+                } else {
+                  thisConditionApplies = conditionValue === actualValue;
+                }
+              } else {
+                if (conditionValue === true) {
+                  thisConditionApplies = actualValue === 1 || actualValue === "1" || actualValue === true;
+                } else if (conditionValue === false) {
+                  thisConditionApplies = actualValue === 0 || actualValue === "0" || actualValue === false;
+                } else if (conditionValue.indexOf('EMPTY') !== -1) {
+                  thisConditionApplies = actualValue.length === 0;
+                } else {
+                  thisConditionApplies = String(actualValue).toLowerCase() === conditionValue.toLowerCase();
+                }
+              }
+            }
+          }
+          if (invert) {
+            thisConditionApplies = !thisConditionApplies;
+          }
+          if (relation === 'AND') {
+            conditionApplies = conditionApplies && thisConditionApplies;
+          } else {
+            conditionApplies = conditionApplies || thisConditionApplies;
+          }
+        }
+        if (relation === 'AND') {
+          conditionApplies = conditionApplies && thisConditionApplies;
+        } else {
+          conditionApplies = conditionApplies || thisConditionApplies;
+        }
+      }
+    }
+  }
+  return conditionApplies ? 1 : 0;
+};
 
 /***/ }),
 
@@ -19102,8 +19304,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _ChangeStatus__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./ChangeStatus */ "./src/Settings/ChangeStatus.js");
 /* harmony import */ var react_data_table_component__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! react-data-table-component */ "./node_modules/react-data-table-component/dist/index.cjs.js");
-/* harmony import */ var _utils_api__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../utils/api */ "./src/utils/api.js");
-/* harmony import */ var _utils_Icon__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../utils/Icon */ "./src/utils/Icon.js");
+/* harmony import */ var _utils_Icon__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../utils/Icon */ "./src/utils/Icon.js");
+/* harmony import */ var _FieldsData__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./FieldsData */ "./src/Settings/FieldsData.js");
 
 
 
@@ -19111,110 +19313,94 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-class Delete extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Component {
-  constructor() {
-    super(...arguments);
-  }
-  render() {
-    return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
-      type: "button",
-      className: " rsssl-learning-mode-delete",
-      onClick: () => this.props.onDeleteHandler(this.props.item)
-    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("svg", {
-      "aria-hidden": "true",
-      focusable: "false",
-      role: "img",
-      xmlns: "http://www.w3.org/2000/svg",
-      viewBox: "0 0 320 512",
-      height: "16"
-    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("path", {
-      fill: "#000000",
-      d: "M310.6 361.4c12.5 12.5 12.5 32.75 0 45.25C304.4 412.9 296.2 416 288 416s-16.38-3.125-22.62-9.375L160 301.3L54.63 406.6C48.38 412.9 40.19 416 32 416S15.63 412.9 9.375 406.6c-12.5-12.5-12.5-32.75 0-45.25l105.4-105.4L9.375 150.6c-12.5-12.5-12.5-32.75 0-45.25s32.75-12.5 45.25 0L160 210.8l105.4-105.4c12.5-12.5 32.75-12.5 45.25 0s12.5 32.75 0 45.25l-105.4 105.4L310.6 361.4z"
-    })));
-  }
-}
-class LearningMode extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Component {
-  constructor() {
-    super(...arguments);
-    this.state = {
-      enforced_by_thirdparty: 0,
-      enforce: 0,
-      learning_mode: 0,
-      lm_enabled_once: 0,
-      learning_mode_completed: 0,
-      filterValue: -1
-    };
-  }
-  componentDidMount() {
-    this.doFilter = this.doFilter.bind(this);
-    this.onDeleteHandler = this.onDeleteHandler.bind(this);
-    let field = this.props.fields.filter(field => field.id === this.props.field.control_field)[0];
-    let enforced_by_thirdparty = field.value === 'enforced-by-thirdparty';
-    let enforce = enforced_by_thirdparty || field.value === 'enforce';
-    let learning_mode = field.value === 'learning_mode';
-    let learning_mode_completed = field.value === 'completed';
-    let lm_enabled_once_field_name = this.props.field.control_field + '_lm_enabled_once';
-    let lm_enabled_once_field = this.props.fields.filter(field => field.id === lm_enabled_once_field_name)[0];
-    let lm_enabled_once = lm_enabled_once_field.value;
+const Delete = () => {
+  return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
+    type: "button",
+    className: " rsssl-learning-mode-delete",
+    onClick: () => props.onDeleteHandler(props.item)
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("svg", {
+    "aria-hidden": "true",
+    focusable: "false",
+    role: "img",
+    xmlns: "http://www.w3.org/2000/svg",
+    viewBox: "0 0 320 512",
+    height: "16"
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("path", {
+    fill: "#000000",
+    d: "M310.6 361.4c12.5 12.5 12.5 32.75 0 45.25C304.4 412.9 296.2 416 288 416s-16.38-3.125-22.62-9.375L160 301.3L54.63 406.6C48.38 412.9 40.19 416 32 416S15.63 412.9 9.375 406.6c-12.5-12.5-12.5-32.75 0-45.25l105.4-105.4L9.375 150.6c-12.5-12.5-12.5-32.75 0-45.25s32.75-12.5 45.25 0L160 210.8l105.4-105.4c12.5-12.5 32.75-12.5 45.25 0s12.5 32.75 0 45.25l-105.4 105.4L310.6 361.4z"
+  })));
+};
+const LearningMode = () => {
+  const {
+    fields,
+    updateField,
+    getFieldValue,
+    getField,
+    setChangedField,
+    highLightField,
+    saveFields
+  } = (0,_FieldsData__WEBPACK_IMPORTED_MODULE_5__["default"])();
+  const [enforcedByThirdparty, setEnforcedByThirdparty] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)(0);
+  const [enforce, setEnforce] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)(0);
+  const [learningMode, setLearningMode] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)(0);
+  const [learningModeCompleted, setLearningModeCompleted] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)(0);
+  const [lmEnabledOnce, setLmEnabledOnce] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)(0);
+  const [filterValue, setFilterValue] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)(-1);
+  const [controlField, setControlField] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)(false);
+  (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useEffect)(async () => {
+    let controlField = getField(props.field.control_field);
+    let enforced_by_thirdparty = controlField.value === 'enforced-by-thirdparty';
+    let enforce = enforced_by_thirdparty || controlField.value === 'enforce';
 
     //we somehow need this to initialize the field. Otherwise it doesn't work on load. need to figure that out.
-    this.props.updateField(field.id, field.value);
-    this.setState({
-      enforced_by_thirdparty: enforced_by_thirdparty,
-      enforce: enforce,
-      learning_mode: learning_mode,
-      lm_enabled_once: lm_enabled_once,
-      learning_mode_completed: learning_mode_completed
-    });
-  }
-  doFilter(e) {
-    this.setState({
-      filterValue: e.target.value
-    });
-  }
-  toggleEnforce(e, enforce) {
+    updateField(controlField.id, controlField.value);
+    setControlField(controlField);
+    setEnforcedByThirdparty(enforced_by_thirdparty);
+    setLearningModeCompleted(controlField.value === 'completed');
+    setLmEnabledOnce(getFieldValue(props.field.control_field + '_lm_enabled_once'));
+    setEnforce(enforce);
+    setLearningMode(controlField.value === 'learning_mode');
+  }, []);
+  const doFilter = e => {
+    setFilterValue(e.target.value);
+  };
+  const toggleEnforce = (e, enforce) => {
     e.preventDefault();
-    let fields = this.props.fields;
-    let field = fields.filter(field => field.id === this.props.field.control_field)[0];
-
     //enforce this setting
-    field.value = enforce == 1 ? 'enforce' : 'disabled';
-    this.setState({
-      enforce: enforce,
-      learning_mode_completed: 0
-    });
-    let saveFields = [];
-    saveFields.push(field);
-    _utils_api__WEBPACK_IMPORTED_MODULE_4__.setFields(saveFields).then(response => {});
-  }
-  toggleLearningMode(e) {
+    controlField.value = enforce == 1 ? 'enforce' : 'disabled';
+    setEnforce(enforce);
+    setLearningModeCompleted(0);
+    setChangedField(controlField);
+    updateField(controlField);
+    saveFields(true, false);
+  };
+  const toggleLearningMode = e => {
     e.preventDefault();
-    let fields = this.props.fields;
-    let field = fields.filter(field => field.id === this.props.field.control_field)[0];
-    let lm_enabled_once_field_name = this.props.field.control_field + '_lm_enabled_once';
-    let lm_enabled_once_field = fields.filter(field => field.id === lm_enabled_once_field_name)[0];
-    let learning_mode = field.value === 'learning_mode' ? 1 : 0;
-    let learning_mode_completed = field.value === 'completed' ? 1 : 0;
-    if (learning_mode) {
-      lm_enabled_once_field.value = 1;
+    let lmEnabledOnceField = getField(props.field.control_field + '_lm_enabled_once')[0];
+    let copyControlfield = {
+      ...controlField
+    };
+    let copyLmEnabledOnceField = {
+      ...lmEnabledOnceField
+    };
+    if (learningMode) {
+      copyLmEnabledOnceField.value = 1;
+      setLmEnabledOnce(1);
     }
-    field.value = learning_mode || learning_mode_completed ? 'disabled' : 'learning_mode';
-    if (learning_mode || learning_mode_completed) {
-      learning_mode = 0;
+    if (learningMode || learningModeCompleted) {
+      setLearningMode(0);
+      copyControlfield.value = 'disabled';
     } else {
-      learning_mode = 1;
+      setLearningMode(1);
+      copyControlfield.value = 'learning_mode';
     }
-    learning_mode_completed = 0;
-    this.setState({
-      learning_mode: learning_mode,
-      lm_enabled_once: lm_enabled_once_field.value,
-      learning_mode_completed: learning_mode_completed
-    });
-    let saveFields = [];
-    saveFields.push(field);
-    saveFields.push(lm_enabled_once_field);
-    _utils_api__WEBPACK_IMPORTED_MODULE_4__.setFields(saveFields).then(response => {});
-  }
+    setLearningModeCompleted(0);
+    setChangedField(copyControlfield);
+    updateField(copyControlfield);
+    setChangedField(copyLmEnabledOnceField);
+    updateField(copyLmEnabledOnceField);
+    saveFields(true, false);
+  };
 
   /*
    * Handle data delete
@@ -19222,8 +19408,8 @@ class LearningMode extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Compo
    * @param clickedItem
    * @param type
    */
-  onDeleteHandler(clickedItem) {
-    let field = this.props.field;
+  const onDeleteHandler = clickedItem => {
+    let field = props.field;
     if (typeof field.value === 'object') {
       field.value = Object.values(field.value);
     }
@@ -19245,172 +19431,162 @@ class LearningMode extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Compo
     //the updateItemId allows us to update one specific item in a field set.
     field.updateItemId = clickedItem.id;
     field.action = 'delete';
-    let saveFields = [];
-    saveFields.push(field);
-    this.props.updateField(field.id, field.value);
-    _utils_api__WEBPACK_IMPORTED_MODULE_4__.setFields(saveFields).then(response => {});
+    setChangedField(field.id, field.value);
+    updateField(field.id, field.value);
+    saveFields(true, false);
+  };
+  const Filter = () => (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("select", {
+    onChange: e => doFilter(e),
+    value: filterValue
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("option", {
+    value: "-1"
+  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("All", "really-simple-ssl")), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("option", {
+    value: "1"
+  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Allowed", "really-simple-ssl")), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("option", {
+    value: "0"
+  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Blocked", "really-simple-ssl"))));
+  let field = props.field;
+  let configuringString = (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)(" The %s is now in report-only mode and will collect directives. This might take a while. Afterwards you can Exit, Edit and Enforce these Directives.", "really-simple-ssl").replace('%s', field.label);
+  let disabledString = (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("%s has been disabled.", "really-simple-ssl").replace('%s', field.label);
+  let enforcedString = (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("%s is enforced.", "really-simple-ssl").replace('%s', field.label);
+  let enforceDisabled = !lmEnabledOnce;
+  if (enforcedByThirdparty) disabledString = (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("%s is already set outside Really Simple SSL.", "really-simple-ssl").replace('%s', field.label);
+  let highLightClass = 'rsssl-field-wrap';
+  if (highLightField === props.field.id) {
+    highLightClass = 'rsssl-field-wrap rsssl-highlight';
   }
-  render() {
-    let field = this.props.field;
-    let fieldValue = field.value;
-    let options = this.props.options;
-    let configuringString = (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)(" The %s is now in report-only mode and will collect directives. This might take a while. Afterwards you can Exit, Edit and Enforce these Directives.", "really-simple-ssl").replace('%s', field.label);
-    let disabledString = (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("%s has been disabled.", "really-simple-ssl").replace('%s', field.label);
-    let enforcedString = (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("%s is enforced.", "really-simple-ssl").replace('%s', field.label);
-    const {
-      filterValue,
-      enforced_by_thirdparty,
-      enforce,
-      learning_mode,
-      lm_enabled_once,
-      learning_mode_completed
-    } = this.state;
-    let enforceDisabled = !lm_enabled_once;
-    if (enforced_by_thirdparty) disabledString = (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("%s is already set outside Really Simple SSL.", "really-simple-ssl").replace('%s', field.label);
-    const Filter = () => (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("select", {
-      onChange: e => this.doFilter(e),
-      value: filterValue
-    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("option", {
-      value: "-1"
-    }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("All", "really-simple-ssl")), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("option", {
-      value: "1"
-    }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Allowed", "really-simple-ssl")), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("option", {
-      value: "0"
-    }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Blocked", "really-simple-ssl"))));
-
-    //build our header
-    columns = [];
-    field.columns.forEach(function (item, i) {
-      let newItem = {
-        name: item.name,
-        sortable: item.sortable,
-        width: item.width,
-        selector: row => row[item.column]
-      };
-      columns.push(newItem);
-    });
-    let data = field.value;
-    if (typeof data === 'object') {
-      data = Object.values(data);
-    }
-    if (!Array.isArray(data)) {
-      data = [];
-    }
-    data = data.filter(item => item.status < 2);
-    if (filterValue != -1) {
-      data = data.filter(item => item.status == filterValue);
-    }
-    for (const item of data) {
-      if (item.login_status) item.login_statusControl = item.login_status == 1 ? (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("success", "really-simple-ssl") : (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("failed", "really-simple-ssl");
-      item.statusControl = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_ChangeStatus__WEBPACK_IMPORTED_MODULE_2__["default"], {
-        item: item,
-        onChangeHandlerDataTableStatus: this.props.onChangeHandlerDataTableStatus
-      });
-      item.deleteControl = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(Delete, {
-        item: item,
-        onDeleteHandler: this.onDeleteHandler
-      });
-    }
-    const conditionalRowStyles = [{
-      when: row => row.status == 0,
-      classNames: ['rsssl-datatables-revoked']
-    }];
-    const customStyles = {
-      headCells: {
-        style: {
-          paddingLeft: '0',
-          // override the cell padding for head cells
-          paddingRight: '0'
-        }
-      },
-      cells: {
-        style: {
-          paddingLeft: '0',
-          // override the cell padding for data cells
-          paddingRight: '0'
-        }
-      }
+  //build our header
+  let columns = [];
+  field.columns.forEach(function (item, i) {
+    let newItem = {
+      name: item.name,
+      sortable: item.sortable,
+      width: item.width,
+      selector: row => row[item.column]
     };
-    (0,react_data_table_component__WEBPACK_IMPORTED_MODULE_3__.createTheme)('really-simple-plugins', {
-      divider: {
-        default: 'transparent'
-      }
-    }, 'light');
-    return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-      className: this.highLightClass
-    }, data.length == 0 && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-      className: "rsssl-learningmode-placeholder"
-    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null))), data.length > 0 && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_data_table_component__WEBPACK_IMPORTED_MODULE_3__["default"], {
-      columns: columns,
-      data: data,
-      dense: true,
-      pagination: true,
-      noDataComponent: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("No results", "really-simple-ssl"),
-      persistTableHead: true,
-      theme: "really-simple-plugins",
-      customStyles: customStyles,
-      conditionalRowStyles: conditionalRowStyles
-    })), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-      className: "rsssl-learning-mode-footer"
-    }, enforce != 1 && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
-      disabled: enforceDisabled,
-      className: "button button-primary",
-      onClick: e => this.toggleEnforce(e, true)
-    }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Enforce", "really-simple-ssl")), !enforced_by_thirdparty && enforce == 1 && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
-      className: "button",
-      onClick: e => this.toggleEnforce(e, false)
-    }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Disable", "really-simple-ssl")), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("label", null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("input", {
-      type: "checkbox",
-      disabled: enforce,
-      checked: learning_mode == 1,
-      value: learning_mode,
-      onChange: e => this.toggleLearningMode(e)
-    }), (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Enable Learning Mode to configure automatically", "really-simple-ssl")), enforce == 1 && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-      className: "rsssl-locked"
-    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-      className: "rsssl-shield-overlay"
-    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_utils_Icon__WEBPACK_IMPORTED_MODULE_5__["default"], {
-      name: "shield",
-      size: "80px"
-    })), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-      className: "rsssl-locked-overlay"
-    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
-      className: "rsssl-progress-status rsssl-learning-mode-enforced"
-    }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Enforced", "really-simple-ssl")), enforcedString, "\xA0", (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
-      className: "rsssl-learning-mode-link",
-      href: "#",
-      onClick: e => this.toggleEnforce(e)
-    }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Disable to configure", "really-simple-ssl")))), learning_mode == 1 && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-      className: "rsssl-locked"
-    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-      className: "rsssl-locked-overlay"
-    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
-      className: "rsssl-progress-status rsssl-learning-mode"
-    }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Learning Mode", "really-simple-ssl")), configuringString, "\xA0", (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
-      className: "rsssl-learning-mode-link",
-      href: "#",
-      onClick: e => this.toggleLearningMode(e)
-    }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Exit", "really-simple-ssl")))), learning_mode_completed == 1 && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-      className: "rsssl-locked"
-    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-      className: "rsssl-locked-overlay"
-    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
-      className: "rsssl-progress-status rsssl-learning-mode-completed"
-    }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Learning Mode", "really-simple-ssl")), (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("We finished the configuration.", "really-simple-ssl"), "\xA0", (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
-      className: "rsssl-learning-mode-link",
-      href: "#",
-      onClick: e => this.toggleLearningMode(e)
-    }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Review the settings and enforce the policy", "really-simple-ssl")))), rsssl_settings.pro_plugin_active && this.props.disabled && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-      className: "rsssl-locked"
-    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-      className: "rsssl-locked-overlay"
-    }, !enforced_by_thirdparty && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
-      className: "rsssl-progress-status rsssl-disabled"
-    }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Disabled ", "really-simple-ssl")), enforced_by_thirdparty && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
-      className: "rsssl-progress-status rsssl-learning-mode-enforced"
-    }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Enforced", "really-simple-ssl")), disabledString)), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(Filter, null))));
+    columns.push(newItem);
+  });
+  let data = field.value;
+  if (typeof data === 'object') {
+    data = Object.values(data);
   }
-}
+  if (!Array.isArray(data)) {
+    data = [];
+  }
+  data = data.filter(item => item.status < 2);
+  if (filterValue != -1) {
+    data = data.filter(item => item.status == filterValue);
+  }
+  for (const item of data) {
+    if (item.login_status) item.login_statusControl = item.login_status == 1 ? (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("success", "really-simple-ssl") : (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("failed", "really-simple-ssl");
+    item.statusControl = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_ChangeStatus__WEBPACK_IMPORTED_MODULE_2__["default"], {
+      item: item,
+      field: props.field
+    });
+    item.deleteControl = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(Delete, {
+      item: item,
+      onDeleteHandler: () => onDeleteHandler()
+    });
+  }
+  const conditionalRowStyles = [{
+    when: row => row.status == 0,
+    classNames: ['rsssl-datatables-revoked']
+  }];
+  const customStyles = {
+    headCells: {
+      style: {
+        paddingLeft: '0',
+        // override the cell padding for head cells
+        paddingRight: '0'
+      }
+    },
+    cells: {
+      style: {
+        paddingLeft: '0',
+        // override the cell padding for data cells
+        paddingRight: '0'
+      }
+    }
+  };
+  (0,react_data_table_component__WEBPACK_IMPORTED_MODULE_3__.createTheme)('really-simple-plugins', {
+    divider: {
+      default: 'transparent'
+    }
+  }, 'light');
+  return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: highLightClass
+  }, data.length == 0 && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "rsssl-learningmode-placeholder"
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null))), data.length > 0 && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_data_table_component__WEBPACK_IMPORTED_MODULE_3__["default"], {
+    columns: columns,
+    data: data,
+    dense: true,
+    pagination: true,
+    noDataComponent: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("No results", "really-simple-ssl"),
+    persistTableHead: true,
+    theme: "really-simple-plugins",
+    customStyles: customStyles,
+    conditionalRowStyles: conditionalRowStyles
+  })), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "rsssl-learning-mode-footer"
+  }, enforce != 1 && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
+    disabled: enforceDisabled,
+    className: "button button-primary",
+    onClick: e => toggleEnforce(e, true)
+  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Enforce", "really-simple-ssl")), !enforced_by_thirdparty && enforce == 1 && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
+    className: "button",
+    onClick: e => toggleEnforce(e, false)
+  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Disable", "really-simple-ssl")), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("label", null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("input", {
+    type: "checkbox",
+    disabled: enforce,
+    checked: learning_mode == 1,
+    value: learning_mode,
+    onChange: e => toggleLearningMode(e)
+  }), (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Enable Learning Mode to configure automatically", "really-simple-ssl")), enforce == 1 && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "rsssl-locked"
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "rsssl-shield-overlay"
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_utils_Icon__WEBPACK_IMPORTED_MODULE_4__["default"], {
+    name: "shield",
+    size: "80px"
+  })), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "rsssl-locked-overlay"
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
+    className: "rsssl-progress-status rsssl-learning-mode-enforced"
+  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Enforced", "really-simple-ssl")), enforcedString, "\xA0", (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
+    className: "rsssl-learning-mode-link",
+    href: "#",
+    onClick: e => toggleEnforce(e)
+  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Disable to configure", "really-simple-ssl")))), learning_mode == 1 && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "rsssl-locked"
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "rsssl-locked-overlay"
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
+    className: "rsssl-progress-status rsssl-learning-mode"
+  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Learning Mode", "really-simple-ssl")), configuringString, "\xA0", (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
+    className: "rsssl-learning-mode-link",
+    href: "#",
+    onClick: e => toggleLearningMode(e)
+  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Exit", "really-simple-ssl")))), learning_mode_completed == 1 && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "rsssl-locked"
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "rsssl-locked-overlay"
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
+    className: "rsssl-progress-status rsssl-learning-mode-completed"
+  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Learning Mode", "really-simple-ssl")), (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("We finished the configuration.", "really-simple-ssl"), "\xA0", (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
+    className: "rsssl-learning-mode-link",
+    href: "#",
+    onClick: e => toggleLearningMode(e)
+  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Review the settings and enforce the policy", "really-simple-ssl")))), rsssl_settings.pro_plugin_active && props.disabled && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "rsssl-locked"
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "rsssl-locked-overlay"
+  }, !enforced_by_thirdparty && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
+    className: "rsssl-progress-status rsssl-disabled"
+  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Disabled ", "really-simple-ssl")), enforced_by_thirdparty && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
+    className: "rsssl-progress-status rsssl-learning-mode-enforced"
+  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Enforced", "really-simple-ssl")), disabledString)), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(Filter, null))));
+};
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (LearningMode);
 
 /***/ }),
@@ -19433,139 +19609,91 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _utils_api__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../utils/api */ "./src/utils/api.js");
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_4__);
+/* harmony import */ var _FieldsData__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./FieldsData */ "./src/Settings/FieldsData.js");
 
 
 
 
 
 
-class License extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Component {
-  constructor() {
-    super(...arguments);
-    this.noticesLoaded = false;
-    this.fieldsUpdateComplete = false;
-    this.licenseStatus = 'invalid';
-    this.getLicenseNotices = this.getLicenseNotices.bind(this);
-    this.state = {
-      licenseStatus: 'invalid',
-      noticesLoaded: false,
-      notices: []
-    };
-  }
-  getLicenseNotices() {
-    return _utils_api__WEBPACK_IMPORTED_MODULE_3__.doAction('license_notices').then(response => {
+
+const License = props => {
+  const {
+    fields,
+    licenseStatus,
+    setLicenseStatus,
+    fieldsLoaded,
+    setChangedField,
+    changedFields,
+    updateField
+  } = (0,_FieldsData__WEBPACK_IMPORTED_MODULE_5__["default"])();
+  const [noticesLoaded, setNoticesLoaded] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)(false);
+  const [fieldsUpdateComplete, setFieldsUpdateComplete] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)(false);
+  const [notices, setNotices] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)(false);
+  const getLicenseNotices = () => {
+    return _utils_api__WEBPACK_IMPORTED_MODULE_3__.runTest('licenseNotices', 'refresh').then(response => {
       return response;
     });
-  }
-  componentDidMount() {
-    this.props.highLightField('');
-    this.setState({
-      noticesLoaded: this.noticesLoaded,
-      licenseStatus: this.licenseStatus,
-      notices: this.notices
+  };
+  (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useEffect)(async () => {
+    getLicenseNotices().then(response => {
+      setLicenseStatus(response.licenseStatus);
+      setNotices(response.notices);
+      setNoticesLoaded(true);
     });
-  }
-  componentDidUpdate(prevProps) {
-    if (!this.fieldsUpdateComplete && this.props.fieldsUpdateComplete) {
-      this.getLicenseNotices().then(response => {
-        this.fieldsUpdateComplete = this.props.fieldsUpdateComplete;
-        this.props.setPageProps('licenseStatus', response.licenseStatus);
-        this.notices = response.notices;
-        this.licenseStatus = response.licenseStatus;
-        this.noticesLoaded = true;
-        this.setState({
-          noticesLoaded: this.noticesLoaded,
-          licenseStatus: this.licenseStatus,
-          notices: this.notices
-        });
-      });
-    }
-  }
-  onChangeHandler(fieldValue) {
-    this.fieldsUpdateComplete = false;
-    let fields = this.props.fields;
-    let field = this.props.field;
-    fields[this.props.index]['value'] = fieldValue;
-    this.props.saveChangedFields(field.id);
-    this.setState({
-      fields: fields
-    });
-  }
-  onCloseTaskHandler() {}
-  toggleActivation() {
-    this.setState({
-      noticesLoaded: false
-    });
-    const {
-      licenseStatus
-    } = this.state;
+  }, [fields]);
+  const onChangeHandler = fieldValue => {
+    setChangedField(field.id, fieldValue);
+    updateField(field.id, fieldValue);
+  };
+  const toggleActivation = () => {
+    setNoticesLoaded(false);
     if (licenseStatus === 'valid') {
-      _utils_api__WEBPACK_IMPORTED_MODULE_3__.doAction('deactivate_license').then(response => {
-        this.props.setPageProps('licenseStatus', response.licenseStatus);
-        this.notices = response.notices;
-        this.licenseStatus = response.licenseStatus;
-        this.noticesLoaded = true;
-        this.setState({
-          noticesLoaded: this.noticesLoaded,
-          licenseStatus: this.licenseStatus,
-          notices: this.notices
-        });
+      _utils_api__WEBPACK_IMPORTED_MODULE_3__.runTest('deactivate_license').then(response => {
+        setLicenseStatus(response.licenseStatus);
+        setNotices(response.notices);
+        setNoticesLoaded(true);
       });
     } else {
       let data = {};
-      data.license = this.props.field.value;
+      data.license = props.field.value;
       _utils_api__WEBPACK_IMPORTED_MODULE_3__.doAction('activate_license', data).then(response => {
-        this.props.setPageProps('licenseStatus', response.licenseStatus);
-        this.notices = response.notices;
-        this.licenseStatus = response.licenseStatus;
-        this.noticesLoaded = true;
-        this.setState({
-          noticesLoaded: this.noticesLoaded,
-          licenseStatus: this.licenseStatus,
-          notices: this.notices
-        });
+        setLicenseStatus(response.licenseStatus);
+        setNotices(response.notices);
+        setNoticesLoaded(true);
       });
     }
-  }
-  render() {
-    const {
-      noticesLoaded,
-      notices,
-      licenseStatus
-    } = this.state;
-    let field = this.props.field;
-    let fieldValue = field.value;
-    let fields = this.props.fields;
-    /**
-     * There is no "PasswordControl" in WordPress react yet, so we create our own license field.
-     */
-    return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-      className: "components-base-control"
-    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-      className: "components-base-control__field"
-    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("label", {
-      className: "components-base-control__label",
-      htmlFor: field.id
-    }, field.label), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-      className: "rsssl-license-field"
-    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("input", {
-      className: "components-text-control__input",
-      type: "password",
-      id: field.id,
-      value: fieldValue,
-      onChange: e => this.onChangeHandler(e.target.value)
-    }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
-      className: "button button-default",
-      onClick: () => this.toggleActivation()
-    }, licenseStatus === 'valid' && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_4__.__)("Deactivate", "really-simple-ssl")), licenseStatus !== 'valid' && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_4__.__)("Activate", "really-simple-ssl"))))), !noticesLoaded && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_Placeholder_Placeholder__WEBPACK_IMPORTED_MODULE_2__["default"], null), noticesLoaded && notices.map((notice, i) => (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_DashBoard_TaskElement__WEBPACK_IMPORTED_MODULE_1__["default"], {
-      key: i,
-      index: i,
-      notice: notice,
-      onCloseTaskHandler: this.onCloseTaskHandler,
-      highLightField: ""
-    })));
-  }
-}
+  };
+  let field = props.field;
+  /**
+   * There is no "PasswordControl" in WordPress react yet, so we create our own license field.
+   */
+  return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "components-base-control"
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "components-base-control__field"
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("label", {
+    className: "components-base-control__label",
+    htmlFor: field.id
+  }, field.label), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "rsssl-license-field"
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("input", {
+    className: "components-text-control__input",
+    type: "password",
+    id: field.id,
+    value: field.value,
+    onChange: e => onChangeHandler(e.target.value)
+  }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
+    className: "button button-default",
+    onClick: () => toggleActivation()
+  }, licenseStatus === 'valid' && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_4__.__)("Deactivate", "really-simple-ssl")), licenseStatus !== 'valid' && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_4__.__)("Activate", "really-simple-ssl"))))), !noticesLoaded && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_Placeholder_Placeholder__WEBPACK_IMPORTED_MODULE_2__["default"], null), noticesLoaded && notices.map((notice, i) => (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_DashBoard_TaskElement__WEBPACK_IMPORTED_MODULE_1__["default"], {
+    key: i,
+    index: i,
+    notice: notice,
+    onCloseTaskHandler: onCloseTaskHandler,
+    highLightField: ""
+  })));
+};
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (License);
 
 /***/ }),
@@ -19590,8 +19718,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__);
 /* harmony import */ var _utils_api__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../utils/api */ "./src/utils/api.js");
 /* harmony import */ var _Modal_ModalControl__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../Modal/ModalControl */ "./src/Modal/ModalControl.js");
-/* harmony import */ var _Placeholder_Placeholder__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../Placeholder/Placeholder */ "./src/Placeholder/Placeholder.js");
-/* harmony import */ var _utils_Icon__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../utils/Icon */ "./src/utils/Icon.js");
+/* harmony import */ var _utils_Icon__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../utils/Icon */ "./src/utils/Icon.js");
+/* harmony import */ var _Modal_ModalData__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../Modal/ModalData */ "./src/Modal/ModalData.js");
 
 
 
@@ -19601,304 +19729,244 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-class subHeaderComponentMemo extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Component {
-  constructor() {
-    super(...arguments);
-  }
-  render() {
-    return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("select", null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("option", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)("All results", "really-simple-ssl")), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("option", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)("Show", "really-simple-ssl")), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("option", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)("All results", "really-simple-ssl")));
-  }
-}
-class MixedContentScan extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Component {
-  constructor() {
-    super(...arguments);
-    this.nonce = '';
-    this.state = {
-      data: [],
-      progress: 0,
-      action: '',
-      state: 'stop',
-      paused: false,
-      showIgnoredUrls: false,
-      resetPaginationToggle: false
-    };
-  }
-  getScanStatus() {
+const MixedContentScan = props => {
+  const {
+    dropItemFromModal
+  } = _Modal_ModalData__WEBPACK_IMPORTED_MODULE_7__["default"];
+  const [data, setData] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)(false);
+  const [progress, setProgress] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)(0);
+  const [action, setAction] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)('');
+  const [state, setState] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)('stop');
+  const [paused, setPaused] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)(false);
+  const [showIgnoredUrls, setShowIgnoredUrls] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)(false);
+  const [resetPaginationToggle, setResetPaginationToggle] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)(false);
+  const [completedStatus, setCompletedStatus] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)(false);
+  const [nonce, setNonce] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)('');
+  const getScanStatus = () => {
     return _utils_api__WEBPACK_IMPORTED_MODULE_4__.runTest('scan_status', 'refresh').then(response => {
       return response;
     });
-  }
-  componentDidMount() {
-    let data = [];
-    let progress = 0;
-    let action = '';
-    let state = 'stop';
-    let completedStatus = 'never';
-    if (this.props.field.value.data) {
-      data = this.props.field.value.data;
-    }
-    if (this.props.field.value.progress) {
-      progress = this.props.field.value.progress;
-    }
-    if (this.props.field.value.action) {
-      action = this.props.field.value.action;
-    }
-    if (this.props.field.value.state) {
-      state = this.props.field.value.state;
-    }
-    if (this.props.field.value.completed_status) {
-      completedStatus = this.props.field.value.completed_status;
-    }
-    if (this.props.field.value.nonce) {
-      this.nonce = this.props.field.value.nonce;
-    }
-    this.setState({
-      completedStatus: completedStatus,
-      data: data,
-      progress: progress,
-      action: action,
-      state: state
-    });
-  }
-  start(e) {
+  };
+  useEffect(async () => {
+    let data = props.field.value.data ? props.field.value.data : [];
+    let progress = props.field.value.progress ? props.field.value.progress : 0;
+    if (!rsssl_settings.pro_plugin_active) progress = 80;
+    let action = props.field.value.action ? props.field.value.action : '';
+    let nonce = props.field.value.nonce ? props.field.value.nonce : '';
+    let state = props.field.value.state ? props.field.value.state : 'stop';
+    let completedStatus = props.field.value.completed_status ? props.field.value.completed_status.toLowerCase() : 'never';
+    setData(data);
+    setProgress(progress);
+    setAction(action);
+    setNonce(nonce);
+    setState(state);
+    setCompletedStatus(completedStatus);
+  }, []);
+  const start = e => {
     //add start_full option
     let state = 'start';
-    if (this.state.paused) {
+    if (paused) {
       state = 'running';
     }
-    this.setState({
-      state: 'running',
-      paused: false
-    });
+    setState('running');
+    setPaused(false);
     _utils_api__WEBPACK_IMPORTED_MODULE_4__.runTest('mixed_content_scan', state).then(response => {
-      this.setState({
-        data: response.data,
-        progress: response.progress,
-        action: response.action,
-        state: response.state
-      });
+      setData(response.data);
+      setProgress(response.progress);
+      setState(response.state);
       if (response.state === 'running') {
-        this.run();
+        run();
       }
     });
-  }
-  run(e) {
-    if (this.state.paused) {
+  };
+  const run = e => {
+    if (paused) {
       return;
     }
     _utils_api__WEBPACK_IMPORTED_MODULE_4__.runTest('mixed_content_scan', 'running').then(response => {
-      this.setState({
-        completedStatus: response.completed_status,
-        data: response.data,
-        progress: response.progress,
-        action: response.action,
-        state: response.state
-      });
+      setCompletedStatus(response.completed_status);
+      setData(response.data);
+      setProgress(response.progress);
+      setAction(response.action);
+      setState(response.state);
       //if scan was stopped while running, set it to stopped now.
-      if (this.state.paused) {
-        this.stop();
+      if (paused) {
+        stop();
       } else if (response.state === 'running') {
-        this.run();
+        run();
       }
     });
-  }
-  toggleIgnoredUrls(e) {
-    let {
-      showIgnoredUrls
-    } = this.state;
-    this.setState({
-      showIgnoredUrls: !showIgnoredUrls
-    });
-  }
-  stop(e) {
-    this.setState({
-      state: 'stop',
-      paused: true
-    });
+  };
+  const toggleIgnoredUrls = e => {
+    setShowIgnoredUrls(!showIgnoredUrls);
+  };
+  const stop = e => {
+    setState('stop');
+    setPaused(true);
     _utils_api__WEBPACK_IMPORTED_MODULE_4__.runTest('mixed_content_scan', 'stop').then(response => {
-      this.setState({
-        completedStatus: response.completed_status,
-        data: response.data,
-        progress: response.progress,
-        action: response.action
-      });
+      setCompletedStatus(response.completed_status);
+      setData(response.data);
+      setProgress(response.progress);
+      setAction(response.action);
     });
-  }
+  };
 
   /**
    * After an update, remove an item from the data array
    * @param removeItem
    */
-  removeDataItem(removeItem) {
-    const updatedData = this.state.data.filter(item => item.id === removeItem.id);
-    this.setState({
-      data: updatedData
-    });
-  }
-  render() {
-    let {
-      completedStatus,
-      data,
-      action,
-      progress,
-      state,
-      showIgnoredUrls,
-      resetPaginationToggle
-    } = this.state;
-    let field = this.props.field;
-    let fieldValue = field.value;
-    let fields = this.props.fields;
-    if (!rsssl_settings.pro_plugin_active) progress = 80;
-    columns = [];
-    field.columns.forEach(function (item, i) {
-      let newItem = {
-        name: item.name,
-        sortable: item.sortable,
-        grow: item.grow,
-        selector: row => row[item.column],
-        right: !!item.right
-      };
-      columns.push(newItem);
-    });
-    if (typeof data === 'object') {
-      data = Object.values(data);
-    }
-    if (!Array.isArray(data)) {
-      data = [];
-    }
-    completedStatus = completedStatus ? completedStatus.toLowerCase() : 'never';
-    let dropItem = this.props.dropItemFromModal;
-    for (const item of data) {
-      item.warningControl = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
-        className: "rsssl-task-status rsssl-warning"
-      }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)("Warning", "really-simple-ssl"));
-      //@todo check action for correct filter or drop action.
-      if (dropItem && dropItem.url === item.blocked_url) {
-        if (dropItem.action === 'ignore_url') {
-          item.ignored = true;
-        } else {
-          item.fixed = true;
-        }
-      }
-      //give fix and details the url as prop
-      if (item.fix) {
-        item.fix.url = item.blocked_url;
-        item.fix.nonce = this.nonce;
-      }
-      if (item.details) {
-        item.details.url = item.blocked_url;
-        item.details.nonce = this.nonce;
-        item.details.ignored = item.ignored;
-      }
-      if (item.location.length > 0) {
-        if (item.location.indexOf('http://') !== -1 || item.location.indexOf('https://') !== -1) {
-          item.locationControl = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
-            href: item.location,
-            target: "_blank"
-          }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)("View", "really-simple-ssl"));
-        } else {
-          item.locationControl = item.location;
-        }
-      }
-      item.detailsControl = item.details && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_Modal_ModalControl__WEBPACK_IMPORTED_MODULE_5__["default"], {
-        removeDataItem: this.removeDataItem,
-        handleModal: this.props.handleModal,
-        item: item,
-        btnText: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)("Details", "really-simple-ssl"),
-        btnStyle: "secondary",
-        modalData: item.details
-      });
-      item.fixControl = item.fix && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_Modal_ModalControl__WEBPACK_IMPORTED_MODULE_5__["default"], {
-        className: "button button-primary",
-        removeDataItem: this.removeDataItem,
-        handleModal: this.props.handleModal,
-        item: item,
-        btnText: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)("Fix", "really-simple-ssl"),
-        btnStyle: "primary",
-        modalData: item.fix
-      });
-    }
-    if (!showIgnoredUrls) {
-      data = data.filter(item => !item.ignored);
-    }
-
-    //filter also recently fixed items
-    data = data.filter(item => !item.fixed);
-    progress += '%';
-    let startDisabled = state === 'running';
-    let stopDisabled = state !== 'running';
-    let label = (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)("Show ignored URLs", 'burst-statistics');
-    const customStyles = {
-      headCells: {
-        style: {
-          paddingLeft: '0',
-          // override the cell padding for head cells
-          paddingRight: '0'
-        }
-      },
-      cells: {
-        style: {
-          paddingLeft: '0',
-          // override the cell padding for data cells
-          paddingRight: '0'
-        }
-      }
+  const removeDataItem = removeItem => {
+    const updatedData = data.filter(item => item.id === removeItem.id);
+    setData(updatedData);
+  };
+  let field = props.field;
+  let fieldValue = field.value;
+  let fields = props.fields;
+  columns = [];
+  field.columns.forEach(function (item, i) {
+    let newItem = {
+      name: item.name,
+      sortable: item.sortable,
+      grow: item.grow,
+      selector: row => row[item.column],
+      right: !!item.right
     };
-    (0,react_data_table_component__WEBPACK_IMPORTED_MODULE_1__.createTheme)('really-simple-plugins', {
-      divider: {
-        default: 'transparent'
-      }
-    }, 'light');
-    return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-      className: "rsssl-progress-container"
-    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-      className: "rsssl-progress-bar",
-      style: {
-        width: progress
-      }
-    })), state === 'running' && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-      className: "rsssl-current-scan-action"
-    }, action), data.length == 0 && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-      className: "rsssl-mixed-content-description"
-    }, state !== 'running' && completedStatus === 'never' && (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)("No results. Start your first scan", "really-simple-ssl"), state !== 'running' && completedStatus === 'completed' && (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)("Everything is now served over SSL", "really-simple-ssl")), (state === 'running' || completedStatus !== 'completed') && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-      className: "rsssl-mixed-content-placeholder"
-    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null)), state !== 'running' && completedStatus === 'completed' && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-      className: "rsssl-shield-overlay"
-    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_utils_Icon__WEBPACK_IMPORTED_MODULE_7__["default"], {
-      name: "shield",
-      size: "80px"
-    }))), data.length > 0 && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-      className: 'rsssl-mixed-content-datatable'
-    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_data_table_component__WEBPACK_IMPORTED_MODULE_1__["default"], {
-      columns: columns,
-      data: data,
-      dense: true,
-      pagination: true,
-      paginationResetDefaultPage: resetPaginationToggle // optionally, a hook to reset pagination to page 1
-      ,
-      noDataComponent: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)("No results", "really-simple-ssl") //or your component
-      ,
-      theme: "really-simple-plugins",
-      customStyles: customStyles
-
-      // subHeader
-      // subHeaderComponent=<subHeaderComponentMemo/>
-    })), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-      className: "rsssl-grid-item-content-footer"
-    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
-      className: "button",
-      disabled: startDisabled,
-      onClick: e => this.start(e)
-    }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)("Start scan", "really-simple-ssl-pro")), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
-      className: "button",
-      disabled: stopDisabled,
-      onClick: e => this.stop(e)
-    }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)("Stop", "really-simple-ssl-pro")), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__.ToggleControl, {
-      checked: showIgnoredUrls == 1,
-      onChange: e => this.toggleIgnoredUrls(e)
-    }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("label", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)('Show ignored URLs', 'burst-statistics'))));
+    columns.push(newItem);
+  });
+  let dataTable = data;
+  if (typeof dataTable === 'object') {
+    dataTable = Object.values(dataTable);
   }
-}
+  if (!Array.isArray(dataTable)) {
+    dataTable = [];
+  }
+  let dropItem = dropItemFromModal;
+  for (const item of dataTable) {
+    item.warningControl = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
+      className: "rsssl-task-status rsssl-warning"
+    }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)("Warning", "really-simple-ssl"));
+    //@todo check action for correct filter or drop action.
+    if (dropItem && dropItem.url === item.blocked_url) {
+      if (dropItem.action === 'ignore_url') {
+        item.ignored = true;
+      } else {
+        item.fixed = true;
+      }
+    }
+    //give fix and details the url as prop
+    if (item.fix) {
+      item.fix.url = item.blocked_url;
+      item.fix.nonce = nonce;
+    }
+    if (item.details) {
+      item.details.url = item.blocked_url;
+      item.details.nonce = nonce;
+      item.details.ignored = item.ignored;
+    }
+    if (item.location.length > 0) {
+      if (item.location.indexOf('http://') !== -1 || item.location.indexOf('https://') !== -1) {
+        item.locationControl = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
+          href: item.location,
+          target: "_blank"
+        }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)("View", "really-simple-ssl"));
+      } else {
+        item.locationControl = item.location;
+      }
+    }
+    item.detailsControl = item.details && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_Modal_ModalControl__WEBPACK_IMPORTED_MODULE_5__["default"], {
+      removeDataItem: removeDataItem,
+      handleModal: props.handleModal,
+      item: item,
+      btnText: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)("Details", "really-simple-ssl"),
+      btnStyle: "secondary",
+      modalData: item.details
+    });
+    item.fixControl = item.fix && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_Modal_ModalControl__WEBPACK_IMPORTED_MODULE_5__["default"], {
+      className: "button button-primary",
+      removeDataItem: removeDataItem,
+      handleModal: props.handleModal,
+      item: item,
+      btnText: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)("Fix", "really-simple-ssl"),
+      btnStyle: "primary",
+      modalData: item.fix
+    });
+  }
+  if (!showIgnoredUrls) {
+    dataTable = data.filter(item => !item.ignored);
+  }
+
+  //filter also recently fixed items
+  dataTable = dataTable.filter(item => !item.fixed);
+  let progressOutput = progress + '%';
+  let startDisabled = state === 'running';
+  let stopDisabled = state !== 'running';
+  const customStyles = {
+    headCells: {
+      style: {
+        paddingLeft: '0',
+        // override the cell padding for head cells
+        paddingRight: '0'
+      }
+    },
+    cells: {
+      style: {
+        paddingLeft: '0',
+        // override the cell padding for data cells
+        paddingRight: '0'
+      }
+    }
+  };
+  (0,react_data_table_component__WEBPACK_IMPORTED_MODULE_1__.createTheme)('really-simple-plugins', {
+    divider: {
+      default: 'transparent'
+    }
+  }, 'light');
+  return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "rsssl-progress-container"
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "rsssl-progress-bar",
+    style: {
+      width: progressOutput
+    }
+  })), state === 'running' && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "rsssl-current-scan-action"
+  }, action), dataTable.length === 0 && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "rsssl-mixed-content-description"
+  }, state !== 'running' && completedStatus === 'never' && (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)("No results. Start your first scan", "really-simple-ssl"), state !== 'running' && completedStatus === 'completed' && (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)("Everything is now served over SSL", "really-simple-ssl")), (state === 'running' || completedStatus !== 'completed') && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "rsssl-mixed-content-placeholder"
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null)), state !== 'running' && completedStatus === 'completed' && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "rsssl-shield-overlay"
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_utils_Icon__WEBPACK_IMPORTED_MODULE_6__["default"], {
+    name: "shield",
+    size: "80px"
+  }))), dataTable.length > 0 && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: 'rsssl-mixed-content-datatable'
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_data_table_component__WEBPACK_IMPORTED_MODULE_1__["default"], {
+    columns: columns,
+    data: dataTable,
+    dense: true,
+    pagination: true,
+    paginationResetDefaultPage: resetPaginationToggle // optionally, a hook to reset pagination to page 1
+    ,
+    noDataComponent: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)("No results", "really-simple-ssl") //or your component
+    ,
+    theme: "really-simple-plugins",
+    customStyles: customStyles
+  })), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "rsssl-grid-item-content-footer"
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
+    className: "button",
+    disabled: startDisabled,
+    onClick: e => start(e)
+  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)("Start scan", "really-simple-ssl")), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
+    className: "button",
+    disabled: stopDisabled,
+    onClick: e => stop(e)
+  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)("Stop", "really-simple-ssl")), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__.ToggleControl, {
+    checked: showIgnoredUrls == 1,
+    onChange: e => toggleIgnoredUrls(e)
+  }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("label", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)('Show ignored URLs', 'really-simple-ssl'))));
+};
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (MixedContentScan);
 
 /***/ }),
@@ -20186,8 +20254,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _utils_lib__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../utils/lib */ "./src/utils/lib.js");
 /* harmony import */ var _SettingsGroup__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./SettingsGroup */ "./src/Settings/SettingsGroup.js");
 /* harmony import */ var _Help__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./Help */ "./src/Settings/Help.js");
-/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
-/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_5__);
+/* harmony import */ var _FieldsData__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./FieldsData */ "./src/Settings/FieldsData.js");
+/* harmony import */ var _Menu_MenuData__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../Menu/MenuData */ "./src/Menu/MenuData.js");
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_7__);
+
+
 
 
 
@@ -20200,152 +20272,134 @@ __webpack_require__.r(__webpack_exports__);
  * Renders the selected settings
  *
  */
-class Settings extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Component {
-  constructor() {
-    super(...arguments);
-    this.state = {
-      noticesExpanded: true
-    };
-    this.toggleNotices = this.toggleNotices.bind(this);
-    this.saveAndContinue = this.saveAndContinue.bind(this);
-    this.save = this.save.bind(this);
+const Settings = () => {
+  const [noticesExpanded, setNoticesExpanded] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)(true);
+  const {
+    progress,
+    fieldsLoaded,
+    saveFields,
+    fields,
+    nextButtonDisabled
+  } = (0,_FieldsData__WEBPACK_IMPORTED_MODULE_5__["default"])();
+  const {
+    subMenuLoaded,
+    subMenu,
+    selectedSubMenuItem,
+    selectedMainMenuItem,
+    nextMenuItem,
+    previousMenuItem
+  } = (0,_Menu_MenuData__WEBPACK_IMPORTED_MODULE_6__["default"])();
+  const toggleNotices = () => {
+    setNoticesExpanded(!noticesExpanded);
+  };
+  const saveData = async () => {
+    await saveFields();
+    if (menuDataLoaded) await saveDocumentsMenu();
+  };
+  const {
+    menu_items: menuItems
+  } = subMenu;
+  if (!subMenuLoaded || !fieldsLoaded || menuItems.length === 0) {
+    return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+      className: "cmplz-wizard-settings cmplz-column-2"
+    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+      className: "cmplz-grid-item"
+    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+      className: "cmplz-grid-item-content"
+    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+      className: "cmplz-settings-block-intro"
+    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_Placeholder_Placeholder__WEBPACK_IMPORTED_MODULE_1__["default"], {
+      lines: "3"
+    })))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+      className: "cmplz-grid-item-footer"
+    }));
   }
-  componentDidMount() {}
-  toggleNotices() {
-    const {
-      noticesExpanded
-    } = this.state;
-    this.setState({
-      noticesExpanded: !noticesExpanded
-    });
-  }
-  save() {
-    this.props.save();
-  }
-  saveAndContinue() {
-    if (!this.props.nextButtonDisabled) {
-      this.props.saveAndContinue();
+  let selectedFields = fields.filter(field => field.menu_id === selectedSubMenuItem);
+  let groups = [];
+  for (const selectedField of selectedFields) {
+    if (!(0,_utils_lib__WEBPACK_IMPORTED_MODULE_2__.in_array)(selectedField.group_id, groups)) {
+      groups.push(selectedField.group_id);
     }
   }
-  render() {
-    let isAPILoaded = this.props.isAPILoaded;
-    let progress = this.props.progress;
-    let selectedMenuItem = this.props.selectedMenuItem;
-    let fields = this.props.fields;
-    let selectedStep = this.props.selectedStep;
-    let menu = this.props.menu;
-    const {
-      menu_items: menuItems
-    } = menu;
-    const {
-      noticesExpanded
-    } = this.state;
-    if (!isAPILoaded) {
-      return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_Placeholder_Placeholder__WEBPACK_IMPORTED_MODULE_1__["default"], null);
-    }
-    let selectedFields = fields.filter(field => field.menu_id === selectedMenuItem);
-    let groups = [];
-    for (const selectedField of selectedFields) {
-      if (!(0,_utils_lib__WEBPACK_IMPORTED_MODULE_2__.in_array)(selectedField.group_id, groups)) {
-        groups.push(selectedField.group_id);
-      }
-    }
-    let btnSaveText = (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_5__.__)('Save', 'really-simple-ssl');
-    for (const menuItem of menuItems) {
-      if (menuItem.id === selectedMenuItem && menuItem.tests_only) {
-        btnSaveText = (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_5__.__)('Refresh', 'really-simple-ssl');
-      }
-    }
 
-    //convert progress notices to an array useful for the help blocks
-    let notices = [];
-    for (const notice of progress.notices) {
-      let noticeIsLinkedToField = false;
+  //convert progress notices to an array useful for the help blocks
+  let notices = [];
+  for (const notice of progress.notices) {
+    let noticeIsLinkedToField = false;
 
-      //notices that are linked to a field. Only in case of warnings.
-      if (notice.show_with_options && notice.output.icon === 'warning') {
-        let noticeFields = selectedFields.filter(field => notice.show_with_options.includes(field.id));
-        noticeIsLinkedToField = noticeFields.length > 0;
-      }
-      //notices that are linked to a menu id.
-      if (noticeIsLinkedToField || notice.menu_id === selectedMenuItem) {
-        let help = {};
-        help.title = notice.output.title ? notice.output.title : false;
-        help.label = notice.output.label;
-        help.id = notice.id;
-        help.text = notice.output.msg;
-        help.url = notice.output.url;
-        help.linked_field = notice.show_with_option;
-        notices.push(help);
-      }
+    //notices that are linked to a field. Only in case of warnings.
+    if (notice.show_with_options && notice.output.icon === 'warning') {
+      let noticeFields = selectedFields.filter(field => notice.show_with_options.includes(field.id));
+      noticeIsLinkedToField = noticeFields.length > 0;
     }
-    for (const notice of selectedFields.filter(field => field.help)) {
-      let help = notice.help;
+    //notices that are linked to a menu id.
+    if (noticeIsLinkedToField || notice.menu_id === selectedSubMenuItem) {
+      let help = {};
+      help.title = notice.output.title ? notice.output.title : false;
+      help.label = notice.output.label;
       help.id = notice.id;
+      help.text = notice.output.msg;
+      help.url = notice.output.url;
+      help.linked_field = notice.show_with_option;
+      notices.push(help);
+    }
+  }
+
+  //help items belonging to a field
+  //if field is hidden, hide the notice as well
+  for (const notice of selectedFields.filter(field => field.help && !field.conditionallyDisabled)) {
+    let help = notice.help;
+    //check if the notices array already includes this help item
+    let existingNotices = notices.filter(noticeItem => noticeItem.id && noticeItem.id === help.id);
+    if (existingNotices.length === 0) {
+      // if (!help.id ) help['id'] = notice.id;
       notices.push(notice.help);
     }
-    notices = notices.filter(notice => notice.label.toLowerCase() !== 'completed');
-    let continueLink = this.props.nextButtonDisabled ? `#${this.props.selectedMainMenuItem}/${this.props.selectedMenuItem}` : `#${this.props.selectedMainMenuItem}/${this.props.nextMenuItem}`;
-    return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-      className: "rsssl-wizard-settings"
-    }, groups.map((group, i) => (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_SettingsGroup__WEBPACK_IMPORTED_MODULE_3__["default"], {
-      updateFields: this.props.updateFields,
-      addNotice: this.props.addNotice,
-      dropItemFromModal: this.props.dropItemFromModal,
-      selectMenu: this.props.selectMenu,
-      selectMainMenu: this.props.selectMainMenu,
-      handleNextButtonDisabled: this.props.handleNextButtonDisabled,
-      menu: this.props.menu,
-      handleModal: this.props.handleModal,
-      showSavedSettingsNotice: this.props.showSavedSettingsNotice,
-      updateField: this.props.updateField,
-      getFieldValue: this.props.getFieldValue,
-      refreshTests: this.props.refreshTests,
-      resetRefreshTests: this.props.resetRefreshTests,
-      addHelp: this.props.addHelp,
-      pageProps: this.props.pageProps,
-      setPageProps: this.props.setPageProps,
-      fieldsUpdateComplete: this.props.fieldsUpdateComplete,
-      key: i,
-      index: i,
-      highLightField: this.props.highLightField,
-      highLightedField: this.props.highLightedField,
-      selectedMenuItem: selectedMenuItem,
-      saveChangedFields: this.props.saveChangedFields,
-      group: group,
-      fields: selectedFields
-    })), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-      className: "rsssl-grid-item-footer"
-    }, this.props.selectedMenuItem !== menuItems[0].id && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
-      className: "button button-secondary",
-      href: `#${this.props.selectedMainMenuItem}/${this.props.previousMenuItem}`,
-      onClick: () => this.props.previousStep(true)
-    }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_5__.__)('Previous', 'really-simple-ssl')), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
-      className: "button button-primary",
-      onClick: this.save
-    }, btnSaveText), this.props.selectedMenuItem !== menuItems[menuItems.length - 1].id && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
-      disabled: this.props.nextButtonDisabled,
-      className: "button button-primary",
-      href: continueLink,
-      onClick: this.saveAndContinue
-    }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_5__.__)('Save and Continue', 'really-simple-ssl'))))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-      className: "rsssl-wizard-help"
-    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-      className: "rsssl-help-header"
-    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-      className: "rsssl-help-title rsssl-h4"
-    }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_5__.__)("Notifications", "really-simple-ssl")), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-      className: "rsssl-help-control",
-      onClick: () => this.toggleNotices()
-    }, !noticesExpanded && (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_5__.__)("Expand all", "really-simple-ssl"), noticesExpanded && (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_5__.__)("Collapse all", "really-simple-ssl"))), notices.map((field, i) => (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_Help__WEBPACK_IMPORTED_MODULE_4__["default"], {
-      key: i,
-      noticesExpanded: noticesExpanded,
-      index: i,
-      help: field,
-      fieldId: field.id
-    }))));
   }
-}
+  let continueLink = nextButtonDisabled ? `#${selectedMainMenuItem}/${selectedSubMenuItem}` : `#${selectedMainMenuItem}/${nextMenuItem}`;
+  let btnSaveText = (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_7__.__)('Save', 'really-simple-ssl');
+  for (const menuItem of menuItems) {
+    if (menuItem.id === selectedSubMenuItem && menuItem.tests_only) {
+      btnSaveText = (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_7__.__)('Refresh', 'really-simple-ssl');
+    }
+  }
+  return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "rsssl-wizard-settings"
+  }, groups.map((group, i) => (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_SettingsGroup__WEBPACK_IMPORTED_MODULE_3__["default"], {
+    key: i,
+    index: i,
+    group: group,
+    fields: selectedFields
+  })), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "rsssl-grid-item-footer"
+  }, selectedSubMenuItem !== menuItems[0].id && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
+    className: "button button-secondary",
+    href: `#${selectedMainMenuItem}/${previousMenuItem}`
+  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_7__.__)('Previous', 'complianz-gdpr')), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
+    className: "button button-primary",
+    onClick: e => saveData(e)
+  }, btnSaveText), selectedSubMenuItem !== menuItems[menuItems.length - 1].id && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
+    disabled: nextButtonDisabled,
+    className: "button button-primary",
+    href: continueLink,
+    onClick: e => saveData()
+  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_7__.__)('Save and Continue', 'complianz-gdpr'))))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "rsssl-wizard-help"
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "rsssl-help-header"
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "rsssl-help-title rsssl-h4"
+  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_7__.__)("Notifications", "really-simple-ssl")), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "rsssl-help-control",
+    onClick: () => toggleNotices()
+  }, !noticesExpanded && (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_7__.__)("Expand all", "really-simple-ssl"), noticesExpanded && (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_7__.__)("Collapse all", "really-simple-ssl"))), notices.map((field, i) => (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_Help__WEBPACK_IMPORTED_MODULE_4__["default"], {
+    key: i,
+    noticesExpanded: noticesExpanded,
+    index: i,
+    help: field,
+    fieldId: field.id
+  }))));
+};
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Settings);
 
 /***/ }),
@@ -20369,6 +20423,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_4__);
 /* harmony import */ var _utils_api__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../utils/api */ "./src/utils/api.js");
+/* harmony import */ var _Settings_FieldsData__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../Settings/FieldsData */ "./src/Settings/FieldsData.js");
+/* harmony import */ var _Menu_MenuData__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../Menu/MenuData */ "./src/Menu/MenuData.js");
+
 
 
 
@@ -20380,507 +20437,129 @@ __webpack_require__.r(__webpack_exports__);
 /**
  * Render a grouped block of settings
  */
-class SettingsGroup extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Component {
-  constructor() {
-    super(...arguments);
-    this.state = {
-      fields: this.props.fields,
-      isAPILoaded: this.props.isAPILoaded
-    };
-    this.upgrade = 'https://really-simple-ssl.com/pro/';
-    this.fields = this.props.fields;
-  }
-  componentDidMount() {
-    this.getLicenseStatus = this.getLicenseStatus.bind(this);
-    this.handleLetsEncryptReset = this.handleLetsEncryptReset.bind(this);
-  }
-  getLicenseStatus() {
-    if (this.props.pageProps.hasOwnProperty('licenseStatus')) {
-      return this.props.pageProps['licenseStatus'];
-    }
-    return 'invalid';
-  }
+const SettingsGroup = props => {
+  const {
+    fields,
+    licenseStatus,
+    fieldsLoaded
+  } = (0,_Settings_FieldsData__WEBPACK_IMPORTED_MODULE_6__["default"])();
+  const {
+    selectedSubMenuItem,
+    subMenu
+  } = (0,_Menu_MenuData__WEBPACK_IMPORTED_MODULE_7__["default"])();
+  let upgrade = 'https://really-simple-ssl.com/pro/';
 
   /*
   * On reset of LE, send this info to the back-end, and redirect to the first step.
   * reload to ensure that.
   */
-  handleLetsEncryptReset(e) {
+  const handleLetsEncryptReset = e => {
     e.preventDefault();
     _utils_api__WEBPACK_IMPORTED_MODULE_5__.runLetsEncryptTest('reset').then(response => {
-      let url = window.location.href.replace(/#letsencrypt.*/, '&r=' + +new Date() + '#letsencrypt/le-system-status');
-      window.location.href = url;
+      window.location.href = window.location.href.replace(/#letsencrypt.*/, '&r=' + +new Date() + '#letsencrypt/le-system-status');
     });
+  };
+  let selectedFields = [];
+  //get all fields with group_id props.group_id
+  for (const selectedField of fields) {
+    if (selectedField.group_id === props.group) {
+      selectedFields.push(selectedField);
+    }
   }
-  render() {
-    let selectedMenuItem = this.props.selectedMenuItem;
-    let selectedFields = [];
-    //get all fields with group_id this.props.group_id
-    for (const selectedField of this.props.fields) {
-      if (selectedField.group_id === this.props.group) {
-        selectedFields.push(selectedField);
-      }
+  let activeGroup;
+  //first, set the selected menu item as activate group, so we have a default in case there are no groups
+  for (const item of subMenu.menu_items) {
+    if (item.id === selectedSubMenuItem) {
+      activeGroup = item;
+    } else if (item.menu_items) {
+      activeGroup = item.menu_items.filter(menuItem => menuItem.id === selectedSubMenuItem)[0];
     }
-    let activeGroup;
-    //first, set the selected menu item as activate group, so we have a default in case there are no groups
-    for (const item of this.props.menu.menu_items) {
-      if (item.id === selectedMenuItem) {
-        activeGroup = item;
-      } else if (item.menu_items) {
-        activeGroup = item.menu_items.filter(menuItem => menuItem.id === selectedMenuItem)[0];
-      }
-      if (activeGroup) {
-        break;
-      }
+    if (activeGroup) {
+      break;
     }
+  }
 
-    //now check if we have actual groups
-    for (const item of this.props.menu.menu_items) {
-      if (item.id === selectedMenuItem && item.hasOwnProperty('groups')) {
-        let currentGroup = item.groups.filter(group => group.id === this.props.group);
-        if (currentGroup.length > 0) {
-          activeGroup = currentGroup[0];
-        }
+  //now check if we have actual groups
+  for (const item of subMenu.menu_items) {
+    if (item.id === selectedSubMenuItem && item.hasOwnProperty('groups')) {
+      let currentGroup = item.groups.filter(group => group.id === props.group);
+      if (currentGroup.length > 0) {
+        activeGroup = currentGroup[0];
       }
     }
-    let status = 'invalid';
-    let msg = activeGroup.premium_text ? activeGroup.premium_text : (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_4__.__)("Learn more about %sPremium%s", "really-simple-ssl");
-    if (rsssl_settings.pro_plugin_active) {
-      status = this.getLicenseStatus();
-      if (status === 'empty' || status === 'deactivated') {
-        msg = rsssl_settings.messageInactive;
-      } else {
-        msg = rsssl_settings.messageInvalid;
-      }
-    }
-    let disabled = status !== 'valid' && activeGroup.premium;
-    //if a feature can only be used on networkwide or single site setups, pass that info here.
-    let networkwide_error = !rsssl_settings.networkwide_active && activeGroup.networkwide_required;
-    this.upgrade = activeGroup.upgrade ? activeGroup.upgrade : this.upgrade;
-    let helplinkText = activeGroup.helpLink_text ? activeGroup.helpLink_text : (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_4__.__)("Instructions", "really-simple-ssl");
-    let anchor = (0,_utils_getAnchor__WEBPACK_IMPORTED_MODULE_3__["default"])('main');
-    let disabledClass = disabled || networkwide_error ? 'rsssl-disabled' : '';
-    return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-      className: "rsssl-grid-item rsssl-" + activeGroup.id + ' ' + disabledClass
-    }, activeGroup.title && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-      className: "rsssl-grid-item-header"
-    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("h3", {
-      className: "rsssl-h4"
-    }, activeGroup.title), activeGroup.helpLink && anchor !== 'letsencrypt' && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-      className: "rsssl-grid-item-controls"
-    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_utils_Hyperlink__WEBPACK_IMPORTED_MODULE_2__["default"], {
-      target: "_blank",
-      className: "rsssl-helplink",
-      text: helplinkText,
-      url: activeGroup.helpLink
-    })), anchor === 'letsencrypt' && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-      className: "rsssl-grid-item-controls"
-    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
-      href: "#",
-      className: "rsssl-helplink",
-      onClick: e => this.handleLetsEncryptReset(e)
-    }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_4__.__)("Reset Let's Encrypt", "really-simple-ssl")))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-      className: "rsssl-grid-item-content"
-    }, activeGroup.intro && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-      className: "rsssl-settings-block-intro"
-    }, activeGroup.intro), selectedFields.map((field, i) => (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_Field__WEBPACK_IMPORTED_MODULE_1__["default"], {
-      key: i,
-      index: i,
-      updateFields: this.props.updateFields,
-      addNotice: this.props.addNotice,
-      selectMenu: this.props.selectMenu,
-      selectMainMenu: this.props.selectMainMenu,
-      dropItemFromModal: this.props.dropItemFromModal,
-      handleNextButtonDisabled: this.props.handleNextButtonDisabled,
-      handleModal: this.props.handleModal,
-      showSavedSettingsNotice: this.props.showSavedSettingsNotice,
-      updateField: this.props.updateField,
-      getFieldValue: this.props.getFieldValue,
-      refreshTests: this.props.refreshTests,
-      resetRefreshTests: this.props.resetRefreshTests,
-      addHelp: this.props.addHelp,
-      setPageProps: this.props.setPageProps,
-      fieldsUpdateComplete: this.props.fieldsUpdateComplete,
-      highLightField: this.props.highLightField,
-      highLightedField: this.props.highLightedField,
-      saveChangedFields: this.props.saveChangedFields,
-      field: field,
-      fields: selectedFields
-    }))), disabled && !networkwide_error && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-      className: "rsssl-locked"
-    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-      className: "rsssl-locked-overlay"
-    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
-      className: "rsssl-task-status rsssl-premium"
-    }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_4__.__)("Upgrade", "really-simple-ssl")), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", null, rsssl_settings.pro_plugin_active && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", null, msg, "\xA0", (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
-      className: "rsssl-locked-link",
-      href: "#settings/license"
-    }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_4__.__)("Check license", "really-simple-ssl"))), !rsssl_settings.pro_plugin_active && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_utils_Hyperlink__WEBPACK_IMPORTED_MODULE_2__["default"], {
-      target: "_blank",
-      text: msg,
-      url: this.upgrade
-    })))), networkwide_error && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-      className: "rsssl-locked"
-    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-      className: "rsssl-locked-overlay"
-    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
-      className: "rsssl-task-status rsssl-warning"
-    }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_4__.__)("Network feature", "really-simple-ssl")), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_4__.__)("This feature is only available networkwide.", "really-simple-ssl"), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_utils_Hyperlink__WEBPACK_IMPORTED_MODULE_2__["default"], {
-      target: "_blank",
-      text: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_4__.__)("Network settings", "really-simple-ssl"),
-      url: rsssl_settings.network_link
-    })))));
   }
-}
+  if (!activeGroup) {
+    return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null);
+  }
+  let msg = activeGroup.premium_text ? activeGroup.premium_text : (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_4__.__)("Learn more about %sPremium%s", "really-simple-ssl");
+  if (rsssl_settings.pro_plugin_active) {
+    if (licenseStatus === 'empty' || licenseStatus === 'deactivated') {
+      msg = rsssl_settings.messageInactive;
+    } else {
+      msg = rsssl_settings.messageInvalid;
+    }
+  }
+  let disabled = licenseStatus !== 'valid' && activeGroup.premium;
+  //if a feature can only be used on networkwide or single site setups, pass that info here.
+  let networkwide_error = !rsssl_settings.networkwide_active && activeGroup.networkwide_required;
+  upgrade = activeGroup.upgrade ? activeGroup.upgrade : upgrade;
+  let helplinkText = activeGroup.helpLink_text ? activeGroup.helpLink_text : (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_4__.__)("Instructions", "really-simple-ssl");
+  let anchor = (0,_utils_getAnchor__WEBPACK_IMPORTED_MODULE_3__["default"])('main');
+  let disabledClass = disabled || networkwide_error ? 'rsssl-disabled' : '';
+  return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "rsssl-grid-item rsssl-" + activeGroup.id + ' ' + disabledClass
+  }, activeGroup.title && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "rsssl-grid-item-header"
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("h3", {
+    className: "rsssl-h4"
+  }, activeGroup.title), activeGroup.helpLink && anchor !== 'letsencrypt' && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "rsssl-grid-item-controls"
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_utils_Hyperlink__WEBPACK_IMPORTED_MODULE_2__["default"], {
+    target: "_blank",
+    className: "rsssl-helplink",
+    text: helplinkText,
+    url: activeGroup.helpLink
+  })), anchor === 'letsencrypt' && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "rsssl-grid-item-controls"
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
+    href: "#",
+    className: "rsssl-helplink",
+    onClick: e => handleLetsEncryptReset(e)
+  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_4__.__)("Reset Let's Encrypt", "really-simple-ssl")))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "rsssl-grid-item-content"
+  }, activeGroup.intro && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "rsssl-settings-block-intro"
+  }, activeGroup.intro), selectedFields.map((field, i) => (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_Field__WEBPACK_IMPORTED_MODULE_1__["default"], {
+    key: i,
+    index: i,
+    field: field,
+    fields: selectedFields
+  }))), disabled && !networkwide_error && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "rsssl-locked"
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "rsssl-locked-overlay"
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
+    className: "rsssl-task-status rsssl-premium"
+  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_4__.__)("Upgrade", "really-simple-ssl")), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", null, rsssl_settings.pro_plugin_active && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", null, msg, "\xA0", (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
+    className: "rsssl-locked-link",
+    href: "#settings/license"
+  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_4__.__)("Check license", "really-simple-ssl"))), !rsssl_settings.pro_plugin_active && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_utils_Hyperlink__WEBPACK_IMPORTED_MODULE_2__["default"], {
+    target: "_blank",
+    text: msg,
+    url: upgrade
+  })))), networkwide_error && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "rsssl-locked"
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "rsssl-locked-overlay"
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
+    className: "rsssl-task-status rsssl-warning"
+  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_4__.__)("Network feature", "really-simple-ssl")), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_4__.__)("This feature is only available networkwide.", "really-simple-ssl"), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_utils_Hyperlink__WEBPACK_IMPORTED_MODULE_2__["default"], {
+    target: "_blank",
+    text: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_4__.__)("Network settings", "really-simple-ssl"),
+    url: rsssl_settings.network_link
+  })))));
+};
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (SettingsGroup);
-
-/***/ }),
-
-/***/ "./src/Settings/SettingsPage.js":
-/*!**************************************!*\
-  !*** ./src/Settings/SettingsPage.js ***!
-  \**************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
-/* harmony export */ });
-/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
-/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _utils_lib__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../utils/lib */ "./src/utils/lib.js");
-/* harmony import */ var _utils_api__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../utils/api */ "./src/utils/api.js");
-/* harmony import */ var _Placeholder_Placeholder__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../Placeholder/Placeholder */ "./src/Placeholder/Placeholder.js");
-/* harmony import */ var _Menu_Menu__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../Menu/Menu */ "./src/Menu/Menu.js");
-/* harmony import */ var _Notices__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./Notices */ "./src/Settings/Notices.js");
-/* harmony import */ var _Settings__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./Settings */ "./src/Settings/Settings.js");
-/* harmony import */ var _utils_sleeper_js__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../utils/sleeper.js */ "./src/utils/sleeper.js");
-/* harmony import */ var _wordpress_data__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! @wordpress/data */ "@wordpress/data");
-/* harmony import */ var _wordpress_data__WEBPACK_IMPORTED_MODULE_8___default = /*#__PURE__*/__webpack_require__.n(_wordpress_data__WEBPACK_IMPORTED_MODULE_8__);
-/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
-/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_9___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_9__);
-
-
-
-
-
-
-
-
-
-
-
-
-/*
- * Renders the settings page with Menu and currently selected settings
- *
- */
-
-class SettingsPage extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Component {
-  constructor() {
-    super(...arguments);
-    this.save = this.save.bind(this);
-    this.saveAndContinue = this.saveAndContinue.bind(this);
-    this.wizardNextPrevious = this.wizardNextPrevious.bind(this);
-    this.saveChangedFields = this.saveChangedFields.bind(this);
-    this.addVisibleToMenuItems = this.addVisibleToMenuItems.bind(this);
-    this.updateFieldsListWithConditions = this.updateFieldsListWithConditions.bind(this);
-    this.filterMenuItems = this.filterMenuItems.bind(this);
-    this.showSavedSettingsNotice = this.showSavedSettingsNotice.bind(this);
-    this.resetRefreshTests = this.resetRefreshTests.bind(this);
-    this.handleNextButtonDisabled = this.handleNextButtonDisabled.bind(this);
-    this.checkRequiredFields = this.checkRequiredFields.bind(this);
-    this.state = {
-      refreshTests: false,
-      fields: '',
-      isAPILoaded: false,
-      changedFields: '',
-      nextButtonDisabled: false
-    };
-  }
-  componentDidMount() {
-    //if count >1, it's a wizard
-    this.selectedMenuItem = this.props.selectedMenuItem;
-    this.changedFields = [];
-    this.setState({
-      isAPILoaded: true,
-      fields: this.props.fields,
-      changedFields: this.changedFields,
-      selectedMainMenuItem: this.props.selectedMainMenuItem
-    });
-    this.props.menu.menu_items = this.addVisibleToMenuItems(this.props.menu.menu_items);
-    this.checkRequiredFields();
-    this.updateFieldsListWithConditions();
-  }
-
-  //if the main menu is switched, only this event fires, not the didmount event.
-  componentDidUpdate() {
-    this.props.menu.menu_items = this.addVisibleToMenuItems(this.props.menu.menu_items);
-    this.updateFieldsListWithConditions();
-  }
-  addVisibleToMenuItems(menuItems) {
-    const newMenuItems = menuItems;
-    for (const [index, menuItem] of menuItems.entries()) {
-      menuItem.visible = true;
-      if (menuItem.hasOwnProperty('menu_items')) {
-        menuItem.menu_items = this.addVisibleToMenuItems(menuItem.menu_items);
-      }
-      newMenuItems[index] = menuItem;
-    }
-    return newMenuItems;
-  }
-  /*
-  * Set next button to disabled from the fields
-  */
-  handleNextButtonDisabled(disable) {
-    const {
-      nextButtonDisabled
-    } = this.state;
-    if (nextButtonDisabled !== disable) {
-      this.setState({
-        nextButtonDisabled: disable
-      });
-    }
-  }
-
-  //check if all required fields have been enabled. If so, enable save/continue button
-  checkRequiredFields() {
-    let fieldsOnPage = [];
-    //get all fields with group_id this.props.group_id
-    for (const field of this.props.fields) {
-      if (field.menu_id === this.props.selectedMenuItem) {
-        fieldsOnPage.push(field);
-      }
-    }
-    //if the only field on this page has actions, this is a tests page, the nextButtonDisabled should be handled by the LE componenent
-    let isTestPage = fieldsOnPage.length == 1 && fieldsOnPage[0].actions && fieldsOnPage[0].actions.length > 0;
-    if (!isTestPage) {
-      let requiredFields = fieldsOnPage.filter(field => field.required && (field.value.length == 0 || !field.value));
-      if (requiredFields.length > 0) {
-        this.handleNextButtonDisabled(true);
-      } else {
-        this.handleNextButtonDisabled(false);
-      }
-    }
-  }
-  filterMenuItems(menuItems) {
-    const newMenuItems = menuItems;
-    for (const [index, menuItem] of menuItems.entries()) {
-      const menuItemFields = this.props.fields.filter(field => {
-        return field.menu_id === menuItem.id && field.visible && !field.conditionallyDisabled;
-      });
-      if (menuItemFields.length === 0 && !menuItem.hasOwnProperty('menu_items')) {
-        newMenuItems[index].visible = false;
-      } else {
-        newMenuItems[index].visible = true;
-        if (menuItem.hasOwnProperty('menu_items')) {
-          newMenuItems[index].menu_items = this.filterMenuItems(menuItem.menu_items);
-        }
-      }
-
-      //if the current selected menu item has no fields, but it has a submenu, select the submenu.
-      if (menuItem.id === this.props.selectedMenuItem && menuItemFields.length === 0 && menuItem.hasOwnProperty('menu_items')) {
-        //get first item of submenu's
-        const firstSubMenuItem = newMenuItems[index].menu_items[0].id;
-        this.props.selectMenu(firstSubMenuItem);
-      }
-    }
-    return newMenuItems;
-  }
-  updateFieldsListWithConditions() {
-    for (const field of this.props.fields) {
-      let enabled = !(field.hasOwnProperty('react_conditions') && !this.validateConditions(field.react_conditions, this.props.fields));
-      //we want to update the changed fields if this field has just become visible. Otherwise the new field won't get saved.
-      let previouslyDisabled = this.props.fields[this.props.fields.indexOf(field)].conditionallyDisabled;
-      this.props.fields[this.props.fields.indexOf(field)].conditionallyDisabled = !enabled;
-      if (previouslyDisabled && enabled) {
-        //if this is a learning mode field, do not add it to the changed fields list
-        let changedFields = this.changedFields;
-        if (field.type !== 'learningmode' && !(0,_utils_lib__WEBPACK_IMPORTED_MODULE_1__.in_array)(field.id, changedFields)) {
-          changedFields.push(field.id);
-        }
-        this.changedFields = changedFields;
-        this.setState({
-          changedFields: changedFields
-        });
-      }
-      if (!enabled && (field.type === 'letsencrypt' || field.condition_action === 'hide')) {
-        this.props.fields[this.props.fields.indexOf(field)].visible = false;
-      } else {
-        this.props.fields[this.props.fields.indexOf(field)].visible = true;
-      }
-    }
-    this.props.menu.menu_items = this.filterMenuItems(this.props.menu.menu_items);
-  }
-  saveChangedFields(changedField) {
-    this.updateFieldsListWithConditions();
-    let changedFields = this.changedFields;
-    if (!(0,_utils_lib__WEBPACK_IMPORTED_MODULE_1__.in_array)(changedField, changedFields)) {
-      changedFields.push(changedField);
-    }
-    this.changedFields = changedFields;
-    this.setState({
-      changedFields: changedFields
-    });
-  }
-  showSavedSettingsNotice() {
-    const notice = (0,_wordpress_data__WEBPACK_IMPORTED_MODULE_8__.dispatch)('core/notices').createNotice('success', (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_9__.__)('Settings Saved', 'really-simple-ssl'), {
-      __unstableHTML: true,
-      id: 'rsssl_settings_saved',
-      type: 'snackbar',
-      isDismissible: true
-    }).then((0,_utils_sleeper_js__WEBPACK_IMPORTED_MODULE_7__["default"])(2000)).then(response => {
-      (0,_wordpress_data__WEBPACK_IMPORTED_MODULE_8__.dispatch)('core/notices').removeNotice('rsssl_settings_saved');
-    });
-  }
-  save(skipRefreshTests) {
-    //skipRefreshTests is default false, but when called from next/previous, it is true
-    //this prevents the LE test from restarting on next/previous.
-    const {
-      fields
-    } = this.state;
-    let saveFields = [];
-    for (const field of fields) {
-      if ((0,_utils_lib__WEBPACK_IMPORTED_MODULE_1__.in_array)(field.id, this.changedFields)) {
-        saveFields.push(field);
-      }
-    }
-    _utils_api__WEBPACK_IMPORTED_MODULE_2__.setFields(saveFields).then(response => {
-      this.changedFields = [];
-      this.props.updateProgress(response.progress);
-      this.setState({
-        changedFields: []
-      });
-      if (!skipRefreshTests) {
-        this.setState({
-          refreshTests: true
-        });
-      }
-      this.showSavedSettingsNotice();
-    });
-  }
-  resetRefreshTests() {
-    this.setState({
-      refreshTests: false
-    });
-  }
-  wizardNextPrevious(isPrevious) {
-    const {
-      nextMenuItem,
-      previousMenuItem
-    } = this.props.getPreviousAndNextMenuItems();
-    this.props.selectMenu(isPrevious ? previousMenuItem : nextMenuItem);
-  }
-  saveAndContinue() {
-    this.wizardNextPrevious(false);
-    this.save(true);
-  }
-  validateConditions(conditions, fields) {
-    let relation = conditions.relation === 'OR' ? 'OR' : 'AND';
-    let conditionApplies = relation === 'AND' ? true : false;
-    for (const key in conditions) {
-      if (conditions.hasOwnProperty(key)) {
-        let thisConditionApplies = relation === 'AND' ? true : false;
-        let subConditionsArray = conditions[key];
-        if (subConditionsArray.hasOwnProperty('relation')) {
-          thisConditionApplies = this.validateConditions(subConditionsArray, fields);
-        } else {
-          for (let conditionField in subConditionsArray) {
-            let invert = conditionField.indexOf('!') === 0;
-            if (subConditionsArray.hasOwnProperty(conditionField)) {
-              let conditionValue = subConditionsArray[conditionField];
-              conditionField = conditionField.replace('!', '');
-              let conditionFields = fields.filter(field => field.id === conditionField);
-              if (conditionFields.hasOwnProperty(0)) {
-                if (conditionFields[0].type === 'checkbox') {
-                  let actualValue = +conditionFields[0].value;
-                  conditionValue = +conditionValue;
-                  thisConditionApplies = actualValue === conditionValue;
-                } else {
-                  if (conditionValue.indexOf('EMPTY') !== -1) {
-                    thisConditionApplies = conditionFields[0].value.length === 0;
-                  } else {
-                    thisConditionApplies = conditionFields[0].value.toLowerCase() === conditionValue.toLowerCase();
-                  }
-                }
-              }
-              if (invert) {
-                thisConditionApplies = !thisConditionApplies;
-              }
-              if (relation === 'AND') {
-                conditionApplies = conditionApplies && thisConditionApplies;
-              } else {
-                conditionApplies = conditionApplies || thisConditionApplies;
-              }
-            }
-          }
-        }
-      }
-    }
-    return conditionApplies ? 1 : 0;
-  }
-  render() {
-    const {
-      selectedStep,
-      isAPILoaded,
-      refreshTests,
-      changedFields,
-      nextButtonDisabled
-    } = this.state;
-    if (!isAPILoaded) {
-      return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_Placeholder_Placeholder__WEBPACK_IMPORTED_MODULE_3__["default"], null);
-    }
-    let fieldsUpdateComplete = changedFields.length === 0;
-    return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_Menu_Menu__WEBPACK_IMPORTED_MODULE_4__["default"], {
-      isAPILoaded: isAPILoaded,
-      menu: this.props.menu,
-      selectMenu: this.props.selectMenu,
-      selectStep: this.props.selectStep,
-      selectedStep: this.props.selectedStep,
-      selectedMenuItem: this.props.selectedMenuItem,
-      selectedMainMenuItem: this.props.selectedMainMenuItem,
-      getPreviousAndNextMenuItems: this.props.getPreviousAndNextMenuItems
-    }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_Settings__WEBPACK_IMPORTED_MODULE_6__["default"], {
-      updateFields: this.props.updateFields,
-      addNotice: this.props.addNotice,
-      dropItemFromModal: this.props.dropItemFromModal,
-      selectMenu: this.props.selectMenu,
-      selectMainMenu: this.props.selectMainMenu,
-      nextButtonDisabled: nextButtonDisabled,
-      handleNextButtonDisabled: this.handleNextButtonDisabled,
-      getDefaultMenuItem: this.props.getDefaultMenuItem,
-      handleModal: this.props.handleModal,
-      showSavedSettingsNotice: this.showSavedSettingsNotice,
-      updateField: this.props.updateField,
-      getFieldValue: this.props.getFieldValue,
-      resetRefreshTests: this.resetRefreshTests,
-      refreshTests: refreshTests,
-      addHelp: this.props.addHelp,
-      pageProps: this.props.pageProps,
-      setPageProps: this.props.setPageProps,
-      fieldsUpdateComplete: fieldsUpdateComplete,
-      highLightField: this.props.highLightField,
-      highLightedField: this.props.highLightedField,
-      isAPILoaded: isAPILoaded,
-      fields: this.props.fields,
-      progress: this.props.progress,
-      saveChangedFields: this.saveChangedFields,
-      menu: this.props.menu,
-      save: this.save,
-      saveAndContinue: this.saveAndContinue,
-      selectedMenuItem: this.props.selectedMenuItem,
-      selectedMainMenuItem: this.props.selectedMainMenuItem,
-      selectedStep: this.props.selectedStep,
-      previousStep: this.wizardNextPrevious,
-      nextMenuItem: this.props.nextMenuItem,
-      previousMenuItem: this.props.previousMenuItem
-    }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_Notices__WEBPACK_IMPORTED_MODULE_5__["default"], {
-      className: "rsssl-wizard-notices"
-    }));
-  }
-}
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (SettingsPage);
 
 /***/ }),
 
@@ -26498,6 +26177,464 @@ var unitlessKeys = {
 
 /***/ }),
 
+/***/ "./node_modules/use-sync-external-store/cjs/use-sync-external-store-shim.development.js":
+/*!**********************************************************************************************!*\
+  !*** ./node_modules/use-sync-external-store/cjs/use-sync-external-store-shim.development.js ***!
+  \**********************************************************************************************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+/**
+ * @license React
+ * use-sync-external-store-shim.development.js
+ *
+ * Copyright (c) Facebook, Inc. and its affiliates.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
+
+
+if (true) {
+  (function() {
+
+          'use strict';
+
+/* global __REACT_DEVTOOLS_GLOBAL_HOOK__ */
+if (
+  typeof __REACT_DEVTOOLS_GLOBAL_HOOK__ !== 'undefined' &&
+  typeof __REACT_DEVTOOLS_GLOBAL_HOOK__.registerInternalModuleStart ===
+    'function'
+) {
+  __REACT_DEVTOOLS_GLOBAL_HOOK__.registerInternalModuleStart(new Error());
+}
+          var React = __webpack_require__(/*! react */ "react");
+
+var ReactSharedInternals = React.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED;
+
+function error(format) {
+  {
+    {
+      for (var _len2 = arguments.length, args = new Array(_len2 > 1 ? _len2 - 1 : 0), _key2 = 1; _key2 < _len2; _key2++) {
+        args[_key2 - 1] = arguments[_key2];
+      }
+
+      printWarning('error', format, args);
+    }
+  }
+}
+
+function printWarning(level, format, args) {
+  // When changing this logic, you might want to also
+  // update consoleWithStackDev.www.js as well.
+  {
+    var ReactDebugCurrentFrame = ReactSharedInternals.ReactDebugCurrentFrame;
+    var stack = ReactDebugCurrentFrame.getStackAddendum();
+
+    if (stack !== '') {
+      format += '%s';
+      args = args.concat([stack]);
+    } // eslint-disable-next-line react-internal/safe-string-coercion
+
+
+    var argsWithFormat = args.map(function (item) {
+      return String(item);
+    }); // Careful: RN currently depends on this prefix
+
+    argsWithFormat.unshift('Warning: ' + format); // We intentionally don't use spread (or .apply) directly because it
+    // breaks IE9: https://github.com/facebook/react/issues/13610
+    // eslint-disable-next-line react-internal/no-production-logging
+
+    Function.prototype.apply.call(console[level], console, argsWithFormat);
+  }
+}
+
+/**
+ * inlined Object.is polyfill to avoid requiring consumers ship their own
+ * https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/is
+ */
+function is(x, y) {
+  return x === y && (x !== 0 || 1 / x === 1 / y) || x !== x && y !== y // eslint-disable-line no-self-compare
+  ;
+}
+
+var objectIs = typeof Object.is === 'function' ? Object.is : is;
+
+// dispatch for CommonJS interop named imports.
+
+var useState = React.useState,
+    useEffect = React.useEffect,
+    useLayoutEffect = React.useLayoutEffect,
+    useDebugValue = React.useDebugValue;
+var didWarnOld18Alpha = false;
+var didWarnUncachedGetSnapshot = false; // Disclaimer: This shim breaks many of the rules of React, and only works
+// because of a very particular set of implementation details and assumptions
+// -- change any one of them and it will break. The most important assumption
+// is that updates are always synchronous, because concurrent rendering is
+// only available in versions of React that also have a built-in
+// useSyncExternalStore API. And we only use this shim when the built-in API
+// does not exist.
+//
+// Do not assume that the clever hacks used by this hook also work in general.
+// The point of this shim is to replace the need for hacks by other libraries.
+
+function useSyncExternalStore(subscribe, getSnapshot, // Note: The shim does not use getServerSnapshot, because pre-18 versions of
+// React do not expose a way to check if we're hydrating. So users of the shim
+// will need to track that themselves and return the correct value
+// from `getSnapshot`.
+getServerSnapshot) {
+  {
+    if (!didWarnOld18Alpha) {
+      if (React.startTransition !== undefined) {
+        didWarnOld18Alpha = true;
+
+        error('You are using an outdated, pre-release alpha of React 18 that ' + 'does not support useSyncExternalStore. The ' + 'use-sync-external-store shim will not work correctly. Upgrade ' + 'to a newer pre-release.');
+      }
+    }
+  } // Read the current snapshot from the store on every render. Again, this
+  // breaks the rules of React, and only works here because of specific
+  // implementation details, most importantly that updates are
+  // always synchronous.
+
+
+  var value = getSnapshot();
+
+  {
+    if (!didWarnUncachedGetSnapshot) {
+      var cachedValue = getSnapshot();
+
+      if (!objectIs(value, cachedValue)) {
+        error('The result of getSnapshot should be cached to avoid an infinite loop');
+
+        didWarnUncachedGetSnapshot = true;
+      }
+    }
+  } // Because updates are synchronous, we don't queue them. Instead we force a
+  // re-render whenever the subscribed state changes by updating an some
+  // arbitrary useState hook. Then, during render, we call getSnapshot to read
+  // the current value.
+  //
+  // Because we don't actually use the state returned by the useState hook, we
+  // can save a bit of memory by storing other stuff in that slot.
+  //
+  // To implement the early bailout, we need to track some things on a mutable
+  // object. Usually, we would put that in a useRef hook, but we can stash it in
+  // our useState hook instead.
+  //
+  // To force a re-render, we call forceUpdate({inst}). That works because the
+  // new object always fails an equality check.
+
+
+  var _useState = useState({
+    inst: {
+      value: value,
+      getSnapshot: getSnapshot
+    }
+  }),
+      inst = _useState[0].inst,
+      forceUpdate = _useState[1]; // Track the latest getSnapshot function with a ref. This needs to be updated
+  // in the layout phase so we can access it during the tearing check that
+  // happens on subscribe.
+
+
+  useLayoutEffect(function () {
+    inst.value = value;
+    inst.getSnapshot = getSnapshot; // Whenever getSnapshot or subscribe changes, we need to check in the
+    // commit phase if there was an interleaved mutation. In concurrent mode
+    // this can happen all the time, but even in synchronous mode, an earlier
+    // effect may have mutated the store.
+
+    if (checkIfSnapshotChanged(inst)) {
+      // Force a re-render.
+      forceUpdate({
+        inst: inst
+      });
+    }
+  }, [subscribe, value, getSnapshot]);
+  useEffect(function () {
+    // Check for changes right before subscribing. Subsequent changes will be
+    // detected in the subscription handler.
+    if (checkIfSnapshotChanged(inst)) {
+      // Force a re-render.
+      forceUpdate({
+        inst: inst
+      });
+    }
+
+    var handleStoreChange = function () {
+      // TODO: Because there is no cross-renderer API for batching updates, it's
+      // up to the consumer of this library to wrap their subscription event
+      // with unstable_batchedUpdates. Should we try to detect when this isn't
+      // the case and print a warning in development?
+      // The store changed. Check if the snapshot changed since the last time we
+      // read from the store.
+      if (checkIfSnapshotChanged(inst)) {
+        // Force a re-render.
+        forceUpdate({
+          inst: inst
+        });
+      }
+    }; // Subscribe to the store and return a clean-up function.
+
+
+    return subscribe(handleStoreChange);
+  }, [subscribe]);
+  useDebugValue(value);
+  return value;
+}
+
+function checkIfSnapshotChanged(inst) {
+  var latestGetSnapshot = inst.getSnapshot;
+  var prevValue = inst.value;
+
+  try {
+    var nextValue = latestGetSnapshot();
+    return !objectIs(prevValue, nextValue);
+  } catch (error) {
+    return true;
+  }
+}
+
+function useSyncExternalStore$1(subscribe, getSnapshot, getServerSnapshot) {
+  // Note: The shim does not use getServerSnapshot, because pre-18 versions of
+  // React do not expose a way to check if we're hydrating. So users of the shim
+  // will need to track that themselves and return the correct value
+  // from `getSnapshot`.
+  return getSnapshot();
+}
+
+var canUseDOM = !!(typeof window !== 'undefined' && typeof window.document !== 'undefined' && typeof window.document.createElement !== 'undefined');
+
+var isServerEnvironment = !canUseDOM;
+
+var shim = isServerEnvironment ? useSyncExternalStore$1 : useSyncExternalStore;
+var useSyncExternalStore$2 = React.useSyncExternalStore !== undefined ? React.useSyncExternalStore : shim;
+
+exports.useSyncExternalStore = useSyncExternalStore$2;
+          /* global __REACT_DEVTOOLS_GLOBAL_HOOK__ */
+if (
+  typeof __REACT_DEVTOOLS_GLOBAL_HOOK__ !== 'undefined' &&
+  typeof __REACT_DEVTOOLS_GLOBAL_HOOK__.registerInternalModuleStop ===
+    'function'
+) {
+  __REACT_DEVTOOLS_GLOBAL_HOOK__.registerInternalModuleStop(new Error());
+}
+        
+  })();
+}
+
+
+/***/ }),
+
+/***/ "./node_modules/use-sync-external-store/cjs/use-sync-external-store-shim/with-selector.development.js":
+/*!************************************************************************************************************!*\
+  !*** ./node_modules/use-sync-external-store/cjs/use-sync-external-store-shim/with-selector.development.js ***!
+  \************************************************************************************************************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+/**
+ * @license React
+ * use-sync-external-store-shim/with-selector.development.js
+ *
+ * Copyright (c) Facebook, Inc. and its affiliates.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
+
+
+if (true) {
+  (function() {
+
+          'use strict';
+
+/* global __REACT_DEVTOOLS_GLOBAL_HOOK__ */
+if (
+  typeof __REACT_DEVTOOLS_GLOBAL_HOOK__ !== 'undefined' &&
+  typeof __REACT_DEVTOOLS_GLOBAL_HOOK__.registerInternalModuleStart ===
+    'function'
+) {
+  __REACT_DEVTOOLS_GLOBAL_HOOK__.registerInternalModuleStart(new Error());
+}
+          var React = __webpack_require__(/*! react */ "react");
+var shim = __webpack_require__(/*! use-sync-external-store/shim */ "./node_modules/use-sync-external-store/shim/index.js");
+
+/**
+ * inlined Object.is polyfill to avoid requiring consumers ship their own
+ * https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/is
+ */
+function is(x, y) {
+  return x === y && (x !== 0 || 1 / x === 1 / y) || x !== x && y !== y // eslint-disable-line no-self-compare
+  ;
+}
+
+var objectIs = typeof Object.is === 'function' ? Object.is : is;
+
+var useSyncExternalStore = shim.useSyncExternalStore;
+
+// for CommonJS interop.
+
+var useRef = React.useRef,
+    useEffect = React.useEffect,
+    useMemo = React.useMemo,
+    useDebugValue = React.useDebugValue; // Same as useSyncExternalStore, but supports selector and isEqual arguments.
+
+function useSyncExternalStoreWithSelector(subscribe, getSnapshot, getServerSnapshot, selector, isEqual) {
+  // Use this to track the rendered snapshot.
+  var instRef = useRef(null);
+  var inst;
+
+  if (instRef.current === null) {
+    inst = {
+      hasValue: false,
+      value: null
+    };
+    instRef.current = inst;
+  } else {
+    inst = instRef.current;
+  }
+
+  var _useMemo = useMemo(function () {
+    // Track the memoized state using closure variables that are local to this
+    // memoized instance of a getSnapshot function. Intentionally not using a
+    // useRef hook, because that state would be shared across all concurrent
+    // copies of the hook/component.
+    var hasMemo = false;
+    var memoizedSnapshot;
+    var memoizedSelection;
+
+    var memoizedSelector = function (nextSnapshot) {
+      if (!hasMemo) {
+        // The first time the hook is called, there is no memoized result.
+        hasMemo = true;
+        memoizedSnapshot = nextSnapshot;
+
+        var _nextSelection = selector(nextSnapshot);
+
+        if (isEqual !== undefined) {
+          // Even if the selector has changed, the currently rendered selection
+          // may be equal to the new selection. We should attempt to reuse the
+          // current value if possible, to preserve downstream memoizations.
+          if (inst.hasValue) {
+            var currentSelection = inst.value;
+
+            if (isEqual(currentSelection, _nextSelection)) {
+              memoizedSelection = currentSelection;
+              return currentSelection;
+            }
+          }
+        }
+
+        memoizedSelection = _nextSelection;
+        return _nextSelection;
+      } // We may be able to reuse the previous invocation's result.
+
+
+      // We may be able to reuse the previous invocation's result.
+      var prevSnapshot = memoizedSnapshot;
+      var prevSelection = memoizedSelection;
+
+      if (objectIs(prevSnapshot, nextSnapshot)) {
+        // The snapshot is the same as last time. Reuse the previous selection.
+        return prevSelection;
+      } // The snapshot has changed, so we need to compute a new selection.
+
+
+      // The snapshot has changed, so we need to compute a new selection.
+      var nextSelection = selector(nextSnapshot); // If a custom isEqual function is provided, use that to check if the data
+      // has changed. If it hasn't, return the previous selection. That signals
+      // to React that the selections are conceptually equal, and we can bail
+      // out of rendering.
+
+      // If a custom isEqual function is provided, use that to check if the data
+      // has changed. If it hasn't, return the previous selection. That signals
+      // to React that the selections are conceptually equal, and we can bail
+      // out of rendering.
+      if (isEqual !== undefined && isEqual(prevSelection, nextSelection)) {
+        return prevSelection;
+      }
+
+      memoizedSnapshot = nextSnapshot;
+      memoizedSelection = nextSelection;
+      return nextSelection;
+    }; // Assigning this to a constant so that Flow knows it can't change.
+
+
+    // Assigning this to a constant so that Flow knows it can't change.
+    var maybeGetServerSnapshot = getServerSnapshot === undefined ? null : getServerSnapshot;
+
+    var getSnapshotWithSelector = function () {
+      return memoizedSelector(getSnapshot());
+    };
+
+    var getServerSnapshotWithSelector = maybeGetServerSnapshot === null ? undefined : function () {
+      return memoizedSelector(maybeGetServerSnapshot());
+    };
+    return [getSnapshotWithSelector, getServerSnapshotWithSelector];
+  }, [getSnapshot, getServerSnapshot, selector, isEqual]),
+      getSelection = _useMemo[0],
+      getServerSelection = _useMemo[1];
+
+  var value = useSyncExternalStore(subscribe, getSelection, getServerSelection);
+  useEffect(function () {
+    inst.hasValue = true;
+    inst.value = value;
+  }, [value]);
+  useDebugValue(value);
+  return value;
+}
+
+exports.useSyncExternalStoreWithSelector = useSyncExternalStoreWithSelector;
+          /* global __REACT_DEVTOOLS_GLOBAL_HOOK__ */
+if (
+  typeof __REACT_DEVTOOLS_GLOBAL_HOOK__ !== 'undefined' &&
+  typeof __REACT_DEVTOOLS_GLOBAL_HOOK__.registerInternalModuleStop ===
+    'function'
+) {
+  __REACT_DEVTOOLS_GLOBAL_HOOK__.registerInternalModuleStop(new Error());
+}
+        
+  })();
+}
+
+
+/***/ }),
+
+/***/ "./node_modules/use-sync-external-store/shim/index.js":
+/*!************************************************************!*\
+  !*** ./node_modules/use-sync-external-store/shim/index.js ***!
+  \************************************************************/
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+"use strict";
+
+
+if (false) {} else {
+  module.exports = __webpack_require__(/*! ../cjs/use-sync-external-store-shim.development.js */ "./node_modules/use-sync-external-store/cjs/use-sync-external-store-shim.development.js");
+}
+
+
+/***/ }),
+
+/***/ "./node_modules/use-sync-external-store/shim/with-selector.js":
+/*!********************************************************************!*\
+  !*** ./node_modules/use-sync-external-store/shim/with-selector.js ***!
+  \********************************************************************/
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+"use strict";
+
+
+if (false) {} else {
+  module.exports = __webpack_require__(/*! ../cjs/use-sync-external-store-shim/with-selector.development.js */ "./node_modules/use-sync-external-store/cjs/use-sync-external-store-shim/with-selector.development.js");
+}
+
+
+/***/ }),
+
 /***/ "react":
 /*!************************!*\
   !*** external "React" ***!
@@ -26679,6 +26816,44 @@ function _setPrototypeOf(o, p) {
   };
   return _setPrototypeOf(o, p);
 }
+
+/***/ }),
+
+/***/ "./node_modules/immer/dist/immer.esm.mjs":
+/*!***********************************************!*\
+  !*** ./node_modules/immer/dist/immer.esm.mjs ***!
+  \***********************************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "Immer": () => (/* binding */ un),
+/* harmony export */   "applyPatches": () => (/* binding */ pn),
+/* harmony export */   "castDraft": () => (/* binding */ K),
+/* harmony export */   "castImmutable": () => (/* binding */ $),
+/* harmony export */   "createDraft": () => (/* binding */ ln),
+/* harmony export */   "current": () => (/* binding */ R),
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__),
+/* harmony export */   "enableAllPlugins": () => (/* binding */ J),
+/* harmony export */   "enableES5": () => (/* binding */ F),
+/* harmony export */   "enableMapSet": () => (/* binding */ C),
+/* harmony export */   "enablePatches": () => (/* binding */ T),
+/* harmony export */   "finishDraft": () => (/* binding */ dn),
+/* harmony export */   "freeze": () => (/* binding */ d),
+/* harmony export */   "immerable": () => (/* binding */ L),
+/* harmony export */   "isDraft": () => (/* binding */ r),
+/* harmony export */   "isDraftable": () => (/* binding */ t),
+/* harmony export */   "nothing": () => (/* binding */ H),
+/* harmony export */   "original": () => (/* binding */ e),
+/* harmony export */   "produce": () => (/* binding */ fn),
+/* harmony export */   "produceWithPatches": () => (/* binding */ cn),
+/* harmony export */   "setAutoFreeze": () => (/* binding */ sn),
+/* harmony export */   "setUseProxies": () => (/* binding */ vn)
+/* harmony export */ });
+function n(n){for(var r=arguments.length,t=Array(r>1?r-1:0),e=1;e<r;e++)t[e-1]=arguments[e];if(true){var i=Y[n],o=i?"function"==typeof i?i.apply(null,t):i:"unknown error nr: "+n;throw Error("[Immer] "+o)}throw Error("[Immer] minified error nr: "+n+(t.length?" "+t.map((function(n){return"'"+n+"'"})).join(","):"")+". Find the full error at: https://bit.ly/3cXEKWf")}function r(n){return!!n&&!!n[Q]}function t(n){var r;return!!n&&(function(n){if(!n||"object"!=typeof n)return!1;var r=Object.getPrototypeOf(n);if(null===r)return!0;var t=Object.hasOwnProperty.call(r,"constructor")&&r.constructor;return t===Object||"function"==typeof t&&Function.toString.call(t)===Z}(n)||Array.isArray(n)||!!n[L]||!!(null===(r=n.constructor)||void 0===r?void 0:r[L])||s(n)||v(n))}function e(t){return r(t)||n(23,t),t[Q].t}function i(n,r,t){void 0===t&&(t=!1),0===o(n)?(t?Object.keys:nn)(n).forEach((function(e){t&&"symbol"==typeof e||r(e,n[e],n)})):n.forEach((function(t,e){return r(e,t,n)}))}function o(n){var r=n[Q];return r?r.i>3?r.i-4:r.i:Array.isArray(n)?1:s(n)?2:v(n)?3:0}function u(n,r){return 2===o(n)?n.has(r):Object.prototype.hasOwnProperty.call(n,r)}function a(n,r){return 2===o(n)?n.get(r):n[r]}function f(n,r,t){var e=o(n);2===e?n.set(r,t):3===e?n.add(t):n[r]=t}function c(n,r){return n===r?0!==n||1/n==1/r:n!=n&&r!=r}function s(n){return X&&n instanceof Map}function v(n){return q&&n instanceof Set}function p(n){return n.o||n.t}function l(n){if(Array.isArray(n))return Array.prototype.slice.call(n);var r=rn(n);delete r[Q];for(var t=nn(r),e=0;e<t.length;e++){var i=t[e],o=r[i];!1===o.writable&&(o.writable=!0,o.configurable=!0),(o.get||o.set)&&(r[i]={configurable:!0,writable:!0,enumerable:o.enumerable,value:n[i]})}return Object.create(Object.getPrototypeOf(n),r)}function d(n,e){return void 0===e&&(e=!1),y(n)||r(n)||!t(n)||(o(n)>1&&(n.set=n.add=n.clear=n.delete=h),Object.freeze(n),e&&i(n,(function(n,r){return d(r,!0)}),!0)),n}function h(){n(2)}function y(n){return null==n||"object"!=typeof n||Object.isFrozen(n)}function b(r){var t=tn[r];return t||n(18,r),t}function m(n,r){tn[n]||(tn[n]=r)}function _(){return false||U||n(0),U}function j(n,r){r&&(b("Patches"),n.u=[],n.s=[],n.v=r)}function O(n){g(n),n.p.forEach(S),n.p=null}function g(n){n===U&&(U=n.l)}function w(n){return U={p:[],l:U,h:n,m:!0,_:0}}function S(n){var r=n[Q];0===r.i||1===r.i?r.j():r.O=!0}function P(r,e){e._=e.p.length;var i=e.p[0],o=void 0!==r&&r!==i;return e.h.g||b("ES5").S(e,r,o),o?(i[Q].P&&(O(e),n(4)),t(r)&&(r=M(e,r),e.l||x(e,r)),e.u&&b("Patches").M(i[Q].t,r,e.u,e.s)):r=M(e,i,[]),O(e),e.u&&e.v(e.u,e.s),r!==H?r:void 0}function M(n,r,t){if(y(r))return r;var e=r[Q];if(!e)return i(r,(function(i,o){return A(n,e,r,i,o,t)}),!0),r;if(e.A!==n)return r;if(!e.P)return x(n,e.t,!0),e.t;if(!e.I){e.I=!0,e.A._--;var o=4===e.i||5===e.i?e.o=l(e.k):e.o,u=o,a=!1;3===e.i&&(u=new Set(o),o.clear(),a=!0),i(u,(function(r,i){return A(n,e,o,r,i,t,a)})),x(n,o,!1),t&&n.u&&b("Patches").N(e,t,n.u,n.s)}return e.o}function A(e,i,o,a,c,s,v){if( true&&c===o&&n(5),r(c)){var p=M(e,c,s&&i&&3!==i.i&&!u(i.R,a)?s.concat(a):void 0);if(f(o,a,p),!r(p))return;e.m=!1}else v&&o.add(c);if(t(c)&&!y(c)){if(!e.h.D&&e._<1)return;M(e,c),i&&i.A.l||x(e,c)}}function x(n,r,t){void 0===t&&(t=!1),!n.l&&n.h.D&&n.m&&d(r,t)}function z(n,r){var t=n[Q];return(t?p(t):n)[r]}function I(n,r){if(r in n)for(var t=Object.getPrototypeOf(n);t;){var e=Object.getOwnPropertyDescriptor(t,r);if(e)return e;t=Object.getPrototypeOf(t)}}function k(n){n.P||(n.P=!0,n.l&&k(n.l))}function E(n){n.o||(n.o=l(n.t))}function N(n,r,t){var e=s(r)?b("MapSet").F(r,t):v(r)?b("MapSet").T(r,t):n.g?function(n,r){var t=Array.isArray(n),e={i:t?1:0,A:r?r.A:_(),P:!1,I:!1,R:{},l:r,t:n,k:null,o:null,j:null,C:!1},i=e,o=en;t&&(i=[e],o=on);var u=Proxy.revocable(i,o),a=u.revoke,f=u.proxy;return e.k=f,e.j=a,f}(r,t):b("ES5").J(r,t);return(t?t.A:_()).p.push(e),e}function R(e){return r(e)||n(22,e),function n(r){if(!t(r))return r;var e,u=r[Q],c=o(r);if(u){if(!u.P&&(u.i<4||!b("ES5").K(u)))return u.t;u.I=!0,e=D(r,c),u.I=!1}else e=D(r,c);return i(e,(function(r,t){u&&a(u.t,r)===t||f(e,r,n(t))})),3===c?new Set(e):e}(e)}function D(n,r){switch(r){case 2:return new Map(n);case 3:return Array.from(n)}return l(n)}function F(){function t(n,r){var t=s[n];return t?t.enumerable=r:s[n]=t={configurable:!0,enumerable:r,get:function(){var r=this[Q];return true&&f(r),en.get(r,n)},set:function(r){var t=this[Q]; true&&f(t),en.set(t,n,r)}},t}function e(n){for(var r=n.length-1;r>=0;r--){var t=n[r][Q];if(!t.P)switch(t.i){case 5:a(t)&&k(t);break;case 4:o(t)&&k(t)}}}function o(n){for(var r=n.t,t=n.k,e=nn(t),i=e.length-1;i>=0;i--){var o=e[i];if(o!==Q){var a=r[o];if(void 0===a&&!u(r,o))return!0;var f=t[o],s=f&&f[Q];if(s?s.t!==a:!c(f,a))return!0}}var v=!!r[Q];return e.length!==nn(r).length+(v?0:1)}function a(n){var r=n.k;if(r.length!==n.t.length)return!0;var t=Object.getOwnPropertyDescriptor(r,r.length-1);if(t&&!t.get)return!0;for(var e=0;e<r.length;e++)if(!r.hasOwnProperty(e))return!0;return!1}function f(r){r.O&&n(3,JSON.stringify(p(r)))}var s={};m("ES5",{J:function(n,r){var e=Array.isArray(n),i=function(n,r){if(n){for(var e=Array(r.length),i=0;i<r.length;i++)Object.defineProperty(e,""+i,t(i,!0));return e}var o=rn(r);delete o[Q];for(var u=nn(o),a=0;a<u.length;a++){var f=u[a];o[f]=t(f,n||!!o[f].enumerable)}return Object.create(Object.getPrototypeOf(r),o)}(e,n),o={i:e?5:4,A:r?r.A:_(),P:!1,I:!1,R:{},l:r,t:n,k:i,o:null,O:!1,C:!1};return Object.defineProperty(i,Q,{value:o,writable:!0}),i},S:function(n,t,o){o?r(t)&&t[Q].A===n&&e(n.p):(n.u&&function n(r){if(r&&"object"==typeof r){var t=r[Q];if(t){var e=t.t,o=t.k,f=t.R,c=t.i;if(4===c)i(o,(function(r){r!==Q&&(void 0!==e[r]||u(e,r)?f[r]||n(o[r]):(f[r]=!0,k(t)))})),i(e,(function(n){void 0!==o[n]||u(o,n)||(f[n]=!1,k(t))}));else if(5===c){if(a(t)&&(k(t),f.length=!0),o.length<e.length)for(var s=o.length;s<e.length;s++)f[s]=!1;else for(var v=e.length;v<o.length;v++)f[v]=!0;for(var p=Math.min(o.length,e.length),l=0;l<p;l++)o.hasOwnProperty(l)||(f[l]=!0),void 0===f[l]&&n(o[l])}}}}(n.p[0]),e(n.p))},K:function(n){return 4===n.i?o(n):a(n)}})}function T(){function e(n){if(!t(n))return n;if(Array.isArray(n))return n.map(e);if(s(n))return new Map(Array.from(n.entries()).map((function(n){return[n[0],e(n[1])]})));if(v(n))return new Set(Array.from(n).map(e));var r=Object.create(Object.getPrototypeOf(n));for(var i in n)r[i]=e(n[i]);return u(n,L)&&(r[L]=n[L]),r}function f(n){return r(n)?e(n):n}var c="add";m("Patches",{$:function(r,t){return t.forEach((function(t){for(var i=t.path,u=t.op,f=r,s=0;s<i.length-1;s++){var v=o(f),p=""+i[s];0!==v&&1!==v||"__proto__"!==p&&"constructor"!==p||n(24),"function"==typeof f&&"prototype"===p&&n(24),"object"!=typeof(f=a(f,p))&&n(15,i.join("/"))}var l=o(f),d=e(t.value),h=i[i.length-1];switch(u){case"replace":switch(l){case 2:return f.set(h,d);case 3:n(16);default:return f[h]=d}case c:switch(l){case 1:return"-"===h?f.push(d):f.splice(h,0,d);case 2:return f.set(h,d);case 3:return f.add(d);default:return f[h]=d}case"remove":switch(l){case 1:return f.splice(h,1);case 2:return f.delete(h);case 3:return f.delete(t.value);default:return delete f[h]}default:n(17,u)}})),r},N:function(n,r,t,e){switch(n.i){case 0:case 4:case 2:return function(n,r,t,e){var o=n.t,s=n.o;i(n.R,(function(n,i){var v=a(o,n),p=a(s,n),l=i?u(o,n)?"replace":c:"remove";if(v!==p||"replace"!==l){var d=r.concat(n);t.push("remove"===l?{op:l,path:d}:{op:l,path:d,value:p}),e.push(l===c?{op:"remove",path:d}:"remove"===l?{op:c,path:d,value:f(v)}:{op:"replace",path:d,value:f(v)})}}))}(n,r,t,e);case 5:case 1:return function(n,r,t,e){var i=n.t,o=n.R,u=n.o;if(u.length<i.length){var a=[u,i];i=a[0],u=a[1];var s=[e,t];t=s[0],e=s[1]}for(var v=0;v<i.length;v++)if(o[v]&&u[v]!==i[v]){var p=r.concat([v]);t.push({op:"replace",path:p,value:f(u[v])}),e.push({op:"replace",path:p,value:f(i[v])})}for(var l=i.length;l<u.length;l++){var d=r.concat([l]);t.push({op:c,path:d,value:f(u[l])})}i.length<u.length&&e.push({op:"replace",path:r.concat(["length"]),value:i.length})}(n,r,t,e);case 3:return function(n,r,t,e){var i=n.t,o=n.o,u=0;i.forEach((function(n){if(!o.has(n)){var i=r.concat([u]);t.push({op:"remove",path:i,value:n}),e.unshift({op:c,path:i,value:n})}u++})),u=0,o.forEach((function(n){if(!i.has(n)){var o=r.concat([u]);t.push({op:c,path:o,value:n}),e.unshift({op:"remove",path:o,value:n})}u++}))}(n,r,t,e)}},M:function(n,r,t,e){t.push({op:"replace",path:[],value:r===H?void 0:r}),e.push({op:"replace",path:[],value:n})}})}function C(){function r(n,r){function t(){this.constructor=n}a(n,r),n.prototype=(t.prototype=r.prototype,new t)}function e(n){n.o||(n.R=new Map,n.o=new Map(n.t))}function o(n){n.o||(n.o=new Set,n.t.forEach((function(r){if(t(r)){var e=N(n.A.h,r,n);n.p.set(r,e),n.o.add(e)}else n.o.add(r)})))}function u(r){r.O&&n(3,JSON.stringify(p(r)))}var a=function(n,r){return(a=Object.setPrototypeOf||{__proto__:[]}instanceof Array&&function(n,r){n.__proto__=r}||function(n,r){for(var t in r)r.hasOwnProperty(t)&&(n[t]=r[t])})(n,r)},f=function(){function n(n,r){return this[Q]={i:2,l:r,A:r?r.A:_(),P:!1,I:!1,o:void 0,R:void 0,t:n,k:this,C:!1,O:!1},this}r(n,Map);var o=n.prototype;return Object.defineProperty(o,"size",{get:function(){return p(this[Q]).size}}),o.has=function(n){return p(this[Q]).has(n)},o.set=function(n,r){var t=this[Q];return u(t),p(t).has(n)&&p(t).get(n)===r||(e(t),k(t),t.R.set(n,!0),t.o.set(n,r),t.R.set(n,!0)),this},o.delete=function(n){if(!this.has(n))return!1;var r=this[Q];return u(r),e(r),k(r),r.t.has(n)?r.R.set(n,!1):r.R.delete(n),r.o.delete(n),!0},o.clear=function(){var n=this[Q];u(n),p(n).size&&(e(n),k(n),n.R=new Map,i(n.t,(function(r){n.R.set(r,!1)})),n.o.clear())},o.forEach=function(n,r){var t=this;p(this[Q]).forEach((function(e,i){n.call(r,t.get(i),i,t)}))},o.get=function(n){var r=this[Q];u(r);var i=p(r).get(n);if(r.I||!t(i))return i;if(i!==r.t.get(n))return i;var o=N(r.A.h,i,r);return e(r),r.o.set(n,o),o},o.keys=function(){return p(this[Q]).keys()},o.values=function(){var n,r=this,t=this.keys();return(n={})[V]=function(){return r.values()},n.next=function(){var n=t.next();return n.done?n:{done:!1,value:r.get(n.value)}},n},o.entries=function(){var n,r=this,t=this.keys();return(n={})[V]=function(){return r.entries()},n.next=function(){var n=t.next();if(n.done)return n;var e=r.get(n.value);return{done:!1,value:[n.value,e]}},n},o[V]=function(){return this.entries()},n}(),c=function(){function n(n,r){return this[Q]={i:3,l:r,A:r?r.A:_(),P:!1,I:!1,o:void 0,t:n,k:this,p:new Map,O:!1,C:!1},this}r(n,Set);var t=n.prototype;return Object.defineProperty(t,"size",{get:function(){return p(this[Q]).size}}),t.has=function(n){var r=this[Q];return u(r),r.o?!!r.o.has(n)||!(!r.p.has(n)||!r.o.has(r.p.get(n))):r.t.has(n)},t.add=function(n){var r=this[Q];return u(r),this.has(n)||(o(r),k(r),r.o.add(n)),this},t.delete=function(n){if(!this.has(n))return!1;var r=this[Q];return u(r),o(r),k(r),r.o.delete(n)||!!r.p.has(n)&&r.o.delete(r.p.get(n))},t.clear=function(){var n=this[Q];u(n),p(n).size&&(o(n),k(n),n.o.clear())},t.values=function(){var n=this[Q];return u(n),o(n),n.o.values()},t.entries=function(){var n=this[Q];return u(n),o(n),n.o.entries()},t.keys=function(){return this.values()},t[V]=function(){return this.values()},t.forEach=function(n,r){for(var t=this.values(),e=t.next();!e.done;)n.call(r,e.value,e.value,this),e=t.next()},n}();m("MapSet",{F:function(n,r){return new f(n,r)},T:function(n,r){return new c(n,r)}})}function J(){F(),C(),T()}function K(n){return n}function $(n){return n}var G,U,W="undefined"!=typeof Symbol&&"symbol"==typeof Symbol("x"),X="undefined"!=typeof Map,q="undefined"!=typeof Set,B="undefined"!=typeof Proxy&&void 0!==Proxy.revocable&&"undefined"!=typeof Reflect,H=W?Symbol.for("immer-nothing"):((G={})["immer-nothing"]=!0,G),L=W?Symbol.for("immer-draftable"):"__$immer_draftable",Q=W?Symbol.for("immer-state"):"__$immer_state",V="undefined"!=typeof Symbol&&Symbol.iterator||"@@iterator",Y={0:"Illegal state",1:"Immer drafts cannot have computed properties",2:"This object has been frozen and should not be mutated",3:function(n){return"Cannot use a proxy that has been revoked. Did you pass an object from inside an immer function to an async process? "+n},4:"An immer producer returned a new value *and* modified its draft. Either return a new value *or* modify the draft.",5:"Immer forbids circular references",6:"The first or second argument to `produce` must be a function",7:"The third argument to `produce` must be a function or undefined",8:"First argument to `createDraft` must be a plain object, an array, or an immerable object",9:"First argument to `finishDraft` must be a draft returned by `createDraft`",10:"The given draft is already finalized",11:"Object.defineProperty() cannot be used on an Immer draft",12:"Object.setPrototypeOf() cannot be used on an Immer draft",13:"Immer only supports deleting array indices",14:"Immer only supports setting array indices and the 'length' property",15:function(n){return"Cannot apply patch, path doesn't resolve: "+n},16:'Sets cannot have "replace" patches.',17:function(n){return"Unsupported patch operation: "+n},18:function(n){return"The plugin for '"+n+"' has not been loaded into Immer. To enable the plugin, import and call `enable"+n+"()` when initializing your application."},20:"Cannot use proxies if Proxy, Proxy.revocable or Reflect are not available",21:function(n){return"produce can only be called on things that are draftable: plain objects, arrays, Map, Set or classes that are marked with '[immerable]: true'. Got '"+n+"'"},22:function(n){return"'current' expects a draft, got: "+n},23:function(n){return"'original' expects a draft, got: "+n},24:"Patching reserved attributes like __proto__, prototype and constructor is not allowed"},Z=""+Object.prototype.constructor,nn="undefined"!=typeof Reflect&&Reflect.ownKeys?Reflect.ownKeys:void 0!==Object.getOwnPropertySymbols?function(n){return Object.getOwnPropertyNames(n).concat(Object.getOwnPropertySymbols(n))}:Object.getOwnPropertyNames,rn=Object.getOwnPropertyDescriptors||function(n){var r={};return nn(n).forEach((function(t){r[t]=Object.getOwnPropertyDescriptor(n,t)})),r},tn={},en={get:function(n,r){if(r===Q)return n;var e=p(n);if(!u(e,r))return function(n,r,t){var e,i=I(r,t);return i?"value"in i?i.value:null===(e=i.get)||void 0===e?void 0:e.call(n.k):void 0}(n,e,r);var i=e[r];return n.I||!t(i)?i:i===z(n.t,r)?(E(n),n.o[r]=N(n.A.h,i,n)):i},has:function(n,r){return r in p(n)},ownKeys:function(n){return Reflect.ownKeys(p(n))},set:function(n,r,t){var e=I(p(n),r);if(null==e?void 0:e.set)return e.set.call(n.k,t),!0;if(!n.P){var i=z(p(n),r),o=null==i?void 0:i[Q];if(o&&o.t===t)return n.o[r]=t,n.R[r]=!1,!0;if(c(t,i)&&(void 0!==t||u(n.t,r)))return!0;E(n),k(n)}return n.o[r]===t&&(void 0!==t||r in n.o)||Number.isNaN(t)&&Number.isNaN(n.o[r])||(n.o[r]=t,n.R[r]=!0),!0},deleteProperty:function(n,r){return void 0!==z(n.t,r)||r in n.t?(n.R[r]=!1,E(n),k(n)):delete n.R[r],n.o&&delete n.o[r],!0},getOwnPropertyDescriptor:function(n,r){var t=p(n),e=Reflect.getOwnPropertyDescriptor(t,r);return e?{writable:!0,configurable:1!==n.i||"length"!==r,enumerable:e.enumerable,value:t[r]}:e},defineProperty:function(){n(11)},getPrototypeOf:function(n){return Object.getPrototypeOf(n.t)},setPrototypeOf:function(){n(12)}},on={};i(en,(function(n,r){on[n]=function(){return arguments[0]=arguments[0][0],r.apply(this,arguments)}})),on.deleteProperty=function(r,t){return true&&isNaN(parseInt(t))&&n(13),on.set.call(this,r,t,void 0)},on.set=function(r,t,e){return true&&"length"!==t&&isNaN(parseInt(t))&&n(14),en.set.call(this,r[0],t,e,r[0])};var un=function(){function e(r){var e=this;this.g=B,this.D=!0,this.produce=function(r,i,o){if("function"==typeof r&&"function"!=typeof i){var u=i;i=r;var a=e;return function(n){var r=this;void 0===n&&(n=u);for(var t=arguments.length,e=Array(t>1?t-1:0),o=1;o<t;o++)e[o-1]=arguments[o];return a.produce(n,(function(n){var t;return(t=i).call.apply(t,[r,n].concat(e))}))}}var f;if("function"!=typeof i&&n(6),void 0!==o&&"function"!=typeof o&&n(7),t(r)){var c=w(e),s=N(e,r,void 0),v=!0;try{f=i(s),v=!1}finally{v?O(c):g(c)}return"undefined"!=typeof Promise&&f instanceof Promise?f.then((function(n){return j(c,o),P(n,c)}),(function(n){throw O(c),n})):(j(c,o),P(f,c))}if(!r||"object"!=typeof r){if(void 0===(f=i(r))&&(f=r),f===H&&(f=void 0),e.D&&d(f,!0),o){var p=[],l=[];b("Patches").M(r,f,p,l),o(p,l)}return f}n(21,r)},this.produceWithPatches=function(n,r){if("function"==typeof n)return function(r){for(var t=arguments.length,i=Array(t>1?t-1:0),o=1;o<t;o++)i[o-1]=arguments[o];return e.produceWithPatches(r,(function(r){return n.apply(void 0,[r].concat(i))}))};var t,i,o=e.produce(n,r,(function(n,r){t=n,i=r}));return"undefined"!=typeof Promise&&o instanceof Promise?o.then((function(n){return[n,t,i]})):[o,t,i]},"boolean"==typeof(null==r?void 0:r.useProxies)&&this.setUseProxies(r.useProxies),"boolean"==typeof(null==r?void 0:r.autoFreeze)&&this.setAutoFreeze(r.autoFreeze)}var i=e.prototype;return i.createDraft=function(e){t(e)||n(8),r(e)&&(e=R(e));var i=w(this),o=N(this,e,void 0);return o[Q].C=!0,g(i),o},i.finishDraft=function(r,t){var e=r&&r[Q]; true&&(e&&e.C||n(9),e.I&&n(10));var i=e.A;return j(i,t),P(void 0,i)},i.setAutoFreeze=function(n){this.D=n},i.setUseProxies=function(r){r&&!B&&n(20),this.g=r},i.applyPatches=function(n,t){var e;for(e=t.length-1;e>=0;e--){var i=t[e];if(0===i.path.length&&"replace"===i.op){n=i.value;break}}e>-1&&(t=t.slice(e+1));var o=b("Patches").$;return r(n)?o(n,t):this.produce(n,(function(n){return o(n,t)}))},e}(),an=new un,fn=an.produce,cn=an.produceWithPatches.bind(an),sn=an.setAutoFreeze.bind(an),vn=an.setUseProxies.bind(an),pn=an.applyPatches.bind(an),ln=an.createDraft.bind(an),dn=an.finishDraft.bind(an);/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (fn);
+//# sourceMappingURL=immer.esm.js.map
+
 
 /***/ }),
 
@@ -27718,6 +27893,121 @@ function append (value, array) {
 function combine (array, callback) {
 	return array.map(callback).join('')
 }
+
+
+/***/ }),
+
+/***/ "./node_modules/zustand/esm/index.mjs":
+/*!********************************************!*\
+  !*** ./node_modules/zustand/esm/index.mjs ***!
+  \********************************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "create": () => (/* binding */ create),
+/* harmony export */   "createStore": () => (/* reexport safe */ zustand_vanilla__WEBPACK_IMPORTED_MODULE_0__.createStore),
+/* harmony export */   "default": () => (/* binding */ react),
+/* harmony export */   "useStore": () => (/* binding */ useStore)
+/* harmony export */ });
+/* harmony import */ var zustand_vanilla__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! zustand/vanilla */ "./node_modules/zustand/esm/vanilla.mjs");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var use_sync_external_store_shim_with_selector_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! use-sync-external-store/shim/with-selector.js */ "./node_modules/use-sync-external-store/shim/with-selector.js");
+
+
+
+
+
+const { useSyncExternalStoreWithSelector } = use_sync_external_store_shim_with_selector_js__WEBPACK_IMPORTED_MODULE_2__;
+function useStore(api, selector = api.getState, equalityFn) {
+  const slice = useSyncExternalStoreWithSelector(
+    api.subscribe,
+    api.getState,
+    api.getServerState || api.getState,
+    selector,
+    equalityFn
+  );
+  (0,react__WEBPACK_IMPORTED_MODULE_1__.useDebugValue)(slice);
+  return slice;
+}
+const createImpl = (createState) => {
+  if ( true && typeof createState !== "function") {
+    console.warn(
+      '[DEPRECATED] Passing a vanilla store will be unsupported in the future version. Please use `import { useStore } from "zustand"` to use the vanilla store in React.'
+    );
+  }
+  const api = typeof createState === "function" ? (0,zustand_vanilla__WEBPACK_IMPORTED_MODULE_0__.createStore)(createState) : createState;
+  const useBoundStore = (selector, equalityFn) => useStore(api, selector, equalityFn);
+  Object.assign(useBoundStore, api);
+  return useBoundStore;
+};
+const create = (createState) => createState ? createImpl(createState) : createImpl;
+var react = (createState) => {
+  if (true) {
+    console.warn(
+      "[DEPRECATED] default export is deprecated, instead import { create } from'zustand'"
+    );
+  }
+  return create(createState);
+};
+
+
+
+
+/***/ }),
+
+/***/ "./node_modules/zustand/esm/vanilla.mjs":
+/*!**********************************************!*\
+  !*** ./node_modules/zustand/esm/vanilla.mjs ***!
+  \**********************************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "createStore": () => (/* binding */ createStore),
+/* harmony export */   "default": () => (/* binding */ vanilla)
+/* harmony export */ });
+const createStoreImpl = (createState) => {
+  let state;
+  const listeners = /* @__PURE__ */ new Set();
+  const setState = (partial, replace) => {
+    const nextState = typeof partial === "function" ? partial(state) : partial;
+    if (!Object.is(nextState, state)) {
+      const previousState = state;
+      state = (replace != null ? replace : typeof nextState !== "object") ? nextState : Object.assign({}, state, nextState);
+      listeners.forEach((listener) => listener(state, previousState));
+    }
+  };
+  const getState = () => state;
+  const subscribe = (listener) => {
+    listeners.add(listener);
+    return () => listeners.delete(listener);
+  };
+  const destroy = () => {
+    if (true) {
+      console.warn(
+        "[DEPRECATED] The destroy method will be unsupported in the future version. You should use unsubscribe function returned by subscribe. Everything will be garbage collected if store is garbage collected."
+      );
+    }
+    listeners.clear();
+  };
+  const api = { setState, getState, subscribe, destroy };
+  state = createState(setState, getState, api);
+  return api;
+};
+const createStore = (createState) => createState ? createStoreImpl(createState) : createStoreImpl;
+var vanilla = (createState) => {
+  if (true) {
+    console.warn(
+      "[DEPRECATED] default export is deprecated, instead import { createStore } ..."
+    );
+  }
+  return createStore(createState);
+};
+
+
 
 
 /***/ })

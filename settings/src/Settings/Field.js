@@ -51,35 +51,6 @@ const Field = (props) => {
         setChangedField( field.id, fieldValue );
     }
 
-    /*
-     * Handle data update for a datatable, for the status only (true/false)
-     * @param enabled
-     * @param clickedItem
-     * @param type
-     */
-    const onChangeHandlerDataTableStatus = (enabled, clickedItem, type ) => {
-        let field=props.field;
-        enabled = enabled==1 ? 0 : 1;
-        if (typeof field.value === 'object') {
-            field.value = Object.values(field.value);
-        }
-        //find this item in the field list
-        for (const item of field.value){
-            if (item.id === clickedItem.id) {
-                item[type] = enabled;
-            }
-            delete item.valueControl;
-            delete item.statusControl;
-            delete item.deleteControl;
-        }
-        //the updateItemId allows us to update one specific item in a field set.
-        field.updateItemId = clickedItem.id;
-
-        setChangedField(field.id, field.value);
-        updateField(field.id, field.value);
-        saveFields(true, false);
-    }
-
     const labelWrap = (field) => {
         let tooltipColor = field.warning ? 'red': 'black';
         return (
@@ -289,7 +260,7 @@ const Field = (props) => {
     if ( field.type==='learningmode' ) {
         return(
             <div className={highLightClass} ref={scrollAnchor}>
-              <LearningMode disabled={disabled} onChangeHandlerDataTableStatus={onChangeHandlerDataTableStatus} field={props.field} options={options}/>
+              <LearningMode disabled={disabled} field={props.field}/>
             </div>
         )
     }

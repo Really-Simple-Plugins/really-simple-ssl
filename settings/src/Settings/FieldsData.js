@@ -93,10 +93,17 @@ const useFields = create(( set, get ) => ({
     },
     getFieldValue : (id) => {
         let fields = get().fields;
-        for (const fieldItem of fields){
-            if (fieldItem.id === id ){
-                return fieldItem.value;
-            }
+        let fieldItem = fields.filter(field => field.id === id )[0];
+        if (fieldItem){
+            return fieldItem.value;
+        }
+        return false;
+    },
+    getField : (id) => {
+        let fields = get().fields;
+        let fieldItem = fields.filter(field => field.id === id )[0];
+        if (fieldItem){
+            return fieldItem;
         }
         return false;
     },
