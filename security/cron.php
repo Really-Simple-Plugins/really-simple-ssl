@@ -41,11 +41,6 @@ function rsssl_week_cron(){
 	do_action('rsssl_weekly_cron');
 }
 
-add_action( 'rsssl_every_five_minutes_hook', 'rsssl_every_five_minutes_cron' );
-function rsssl_every_five_minutes_cron(){
-	do_action('rsssl_five_minutes_cron');
-}
-
 if ( !RSSSL_USE_CRON ) {
 	add_action( 'admin_init', 'rsssl_schedule_non_cron' );
 	function rsssl_schedule_non_cron(){
