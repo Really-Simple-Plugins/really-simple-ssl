@@ -357,7 +357,7 @@ class rsssl_admin
 	 *  Activate the SSL for this site
 	 */
 
-    public function activate_ssl($request)
+    public function activate_ssl($data)
     {
 	    if ( !rsssl_user_can_manage()  ) {
 		    return [
@@ -367,7 +367,7 @@ class rsssl_admin
         }
 	    $safe_mode = defined('RSSSL_SAFE_MODE') && RSSSL_SAFE_MODE;
         $error = false;
-	    $is_rest_request =  $request instanceof WP_REST_Request;
+	    $is_rest_request =  isset($data['is_rest_request']);
 	    $site_url_changed = false;
 	    $wpcli = defined( 'WP_CLI' ) && WP_CLI;
 	    if ( $wpcli ) {
@@ -559,6 +559,10 @@ class rsssl_admin
 	    if ( !isset($_SERVER['QUERY_STRING']) ) {
             return false;
         }
+
+        if (isset($_GET['action']) && $_GET['action']==='rsssl_rest_api_fallback' ) {
+		    return true;
+	    }
 
         parse_str($_SERVER['QUERY_STRING'], $params);
 	    return array_key_exists( "page", $params ) && ( $params["page"] === "really-simple-security" );
@@ -2282,6 +2286,23 @@ class rsssl_admin
 		            ),
 	            ),
             ),
+
+            'ajax_fallback' => array(
+	            'condition'  => array(
+                        'wp_option_rsssl_ajax_fallback_active',
+                ),
+	            'callback' => '_true_',
+	            'output' => array(
+		            'true' => array(
+			            'msg' => __( "Please check if your REST API is loading correctly. Your site currently is using the slower Ajax fallback method to load the settings.", 'really-simple-ssl' ),
+			            'icon' => 'warning',
+			            'admin_notice' => false,
+			            'url' => 'https://really-simple-ssl.com/instructions/how-to-debug-a-blank-settings-page-in-really-simple-ssl/',
+			            'dismissible' => true,
+			            'plusone' => true,
+		            ),
+	            ),
+            ),
         );
         //on multisite, don't show the notice on subsites.
         //we can't make different sets for network admin and for subsites (at least not for admin notices), as these notices are cached,
@@ -2418,7 +2439,9 @@ class rsssl_admin
 		    $invert = true;
 	    }
 
-	    if ( strpos($func, 'option_')!==false ){
+	    if ( strpos($func, 'wp_option_')!==false ) {
+		    $output = get_option(str_replace('wp_option_', '', $func) )!==false;
+	    } else if ( strpos($func, 'option_')!==false ){
 		    $output = rsssl_get_option(str_replace('option_', '', $func))==1;
 	    } else if ( $func === '_true_') {
 	        $output = true;

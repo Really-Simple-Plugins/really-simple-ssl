@@ -11,11 +11,11 @@ if ( RSSSL_USE_CRON ) {
 		if ( ! wp_next_scheduled( 'rsssl_every_day_hook' ) ) {
 			wp_schedule_event( time(), 'rsssl_daily', 'rsssl_every_day_hook' );
 		}
-		if ( ! wp_next_scheduled( 'rsssl_every_week_hook' ) ) {
-			wp_schedule_event( time(), 'rsssl_weekly', 'rsssl_every_week_hook' );
-		}
 		if ( ! wp_next_scheduled( 'rsssl_every_five_minutes_hook' ) ) {
 			wp_schedule_event( time(), 'rsssl_five_minutes', 'rsssl_every_five_minutes_hook' );
+		}
+		if ( ! wp_next_scheduled( 'rsssl_every_week_hook' ) ) {
+			wp_schedule_event( time(), 'rsssl_weekly', 'rsssl_every_week_hook' );
 		}
 	}
 }
@@ -28,22 +28,22 @@ function rsssl_daily_cron(){
 	do_action('rsssl_daily_cron');
 }
 
+add_action( 'rsssl_every_five_minutes_hook', 'rsssl_every_five_minutes_cron' );
+function rsssl_every_five_minutes_cron() {
+	do_action( 'rsssl_five_minutes_cron' );
+}
+
 add_action( 'rsssl_every_week_hook', 'rsssl_week_cron' );
 function rsssl_week_cron() {
 	do_action( 'rsssl_weekly_cron' );
-}
-
-add_action( 'rsssl_every_five_minutes_hook', 'rsssl_every_five_minutes_cron' );
-function rsssl_every_five_minutes_cron(){
-	do_action('rsssl_five_minutes_cron');
 }
 
 if ( !RSSSL_USE_CRON ) {
 	add_action( 'admin_init', 'rsssl_schedule_non_cron' );
 	function rsssl_schedule_non_cron(){
 		do_action( 'rsssl_every_day_hook' );
-		do_action('rsssl_every_week_hook');
 		do_action( 'rsssl_every_five_minutes_hook' );
+		do_action('rsssl_every_week_hook');
 	}
 }
 
