@@ -24,7 +24,6 @@ import { useEffect, useRef} from "@wordpress/element";
 
 const Field = (props) => {
     let scrollAnchor = React.createRef();
-
     useEffect( () => {
         if ( props.highLightedField===props.field.id && scrollAnchor.current ) {
             scrollAnchor.current.scrollIntoView()
@@ -152,7 +151,7 @@ const Field = (props) => {
     }
 
     if ( field.type==='radio' ){
-        return (    
+        return (
             <div className={highLightClass} ref={scrollAnchor}>
               <RadioControl
                   label={labelWrap(field)}

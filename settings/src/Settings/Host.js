@@ -19,7 +19,7 @@ const Host = (props) => {
         props.handleNextButtonDisabled(true);
         saveFields.push(field);
         rsssl_api.setFields(saveFields).then(( response ) => {
-            props.updateFields(response.data.fields);
+            props.updateFields(response.fields);
             disabled.current = false;
             props.handleNextButtonDisabled(false);
         });

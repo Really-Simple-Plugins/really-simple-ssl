@@ -9,8 +9,8 @@ if ( !file_exists(BASE_PATH . 'wp-load.php') ) {
 	die("WordPress not installed here");
 }
 require_once( BASE_PATH.'wp-load.php' );
-require_once( BASE_PATH.'wp-includes/class-phpass.php' );
-require_once( BASE_PATH . 'wp-admin/includes/image.php' );
+require_once( ABSPATH.'wp-includes/class-phpass.php' );
+require_once( ABSPATH . 'wp-admin/includes/image.php' );
 
 if ( !rsssl_user_can_manage() ) {
 	die();

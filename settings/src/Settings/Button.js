@@ -10,9 +10,9 @@ const Button = (props) => {
         let data = {};
         rsssl_api.doAction(action, data).then( ( response ) => {
             let help = {}
-            help.label = response.data.success ? 'success' : 'warning';
+            help.label = response.success ? 'success' : 'warning';
             help.title = __( "Test notification by email", 'really-simple-ssl' );
-            help.text = response.data.message;
+            help.text = response.message;
             props.addNotice(props.field.id, help);
         });
     }
