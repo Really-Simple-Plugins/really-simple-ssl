@@ -46,7 +46,7 @@ const Page = (props) => {
         <div className="rsssl-wrapper">
             {/*<OnboardingModal />*/}
             {!fieldsLoaded && <PagePlaceholder></PagePlaceholder>}
-            {/*<Modal/>*/}
+            <Modal/>
             {fieldsLoaded &&
                 (
                     <>

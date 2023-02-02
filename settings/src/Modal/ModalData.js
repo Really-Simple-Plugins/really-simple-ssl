@@ -4,6 +4,7 @@ import * as rsssl_api from "../utils/api";
 import sleeper from "../utils/sleeper.js";
 import {__} from '@wordpress/i18n';
 import {dispatch,} from '@wordpress/data';
+
 const useModalData = create(( set, get ) => ({
     modalData: [],
     buttonsDisabled: false,
@@ -19,7 +20,7 @@ const useModalData = create(( set, get ) => ({
     handleModal: (showModal, modalData, dropItemFromModal) => {
         set({showModal: showModal, modalData:modalData, dropItemFromModal:dropItemFromModal });
     },
-    setModalData: (data) => {
+    setModalData: (modalData) => {
         set({modalData:modalData });
     }
 }));

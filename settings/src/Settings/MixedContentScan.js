@@ -18,12 +18,6 @@ const MixedContentScan = (props) => {
     const [completedStatus, setCompletedStatus] = useState(false);
     const [nonce, setNonce] = useState('');
 
-    const getScanStatus = () => {
-        return rsssl_api.runTest('scan_status', 'refresh').then( ( response ) => {
-            return response;
-        });
-    }
-
     useEffect(async () => {
         let data = props.field.value.data ? props.field.value.data : [];
         let progress = props.field.value.progress ? props.field.value.progress : 0;
@@ -108,10 +102,7 @@ const MixedContentScan = (props) => {
     }
 
     let field = props.field;
-    let fieldValue = field.value;
-    let fields = props.fields;
-    columns = [];
-
+    let columns = [];
     field.columns.forEach(function(item, i) {
         let newItem = {
             name: item.name,
@@ -160,13 +151,15 @@ const MixedContentScan = (props) => {
             }
         }
         item.detailsControl = item.details && <ModalControl removeDataItem={removeDataItem}
-                                                            handleModal={props.handleModal} item={item}
+                                                            handleModal={props.handleModal}
+                                                            item={item}
                                                             btnText={__("Details", "really-simple-ssl")}
                                                             btnStyle={"secondary"}
                                                             modalData={item.details}/>;
         item.fixControl = item.fix && <ModalControl className={"button button-primary"}
                                                     removeDataItem={removeDataItem}
-                                                    handleModal={props.handleModal} item={item}
+                                                    handleModal={props.handleModal}
+                                                    item={item}
                                                     btnText={__("Fix", "really-simple-ssl")}
                                                     btnStyle={"primary"}
                                                     modalData={item.fix}/>;
