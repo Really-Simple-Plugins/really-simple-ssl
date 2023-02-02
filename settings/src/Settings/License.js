@@ -23,7 +23,7 @@ class License extends Component {
     }
 
     getLicenseNotices(){
-        return rsssl_api.runTest('licenseNotices', 'refresh').then( ( response ) => {
+        return rsssl_api.doAction('license_notices').then( ( response ) => {
             return response;
         });
     }
@@ -77,7 +77,7 @@ class License extends Component {
             licenseStatus,
         } = this.state;
         if ( licenseStatus==='valid' ) {
-            rsssl_api.runTest('deactivate_license').then( ( response ) => {
+            rsssl_api.doAction('deactivate_license').then( ( response ) => {
                 this.props.setPageProps('licenseStatus', response.licenseStatus);
                 this.notices = response.notices;
                 this.licenseStatus = response.licenseStatus;

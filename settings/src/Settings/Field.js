@@ -1,4 +1,3 @@
-import {useEffect} from "@wordpress/element";
 import {
     TextControl,
     RadioControl,
@@ -21,8 +20,11 @@ import Support from "./Support";
 import LearningMode from "./LearningMode";
 import Button from "./Button";
 import Icon from "../utils/Icon";
+import { useEffect, useRef} from "@wordpress/element";
+
 const Field = (props) => {
     let scrollAnchor = React.createRef();
+
     useEffect( () => {
         if ( props.highLightedField===props.field.id && scrollAnchor.current ) {
             scrollAnchor.current.scrollIntoView()
@@ -67,10 +69,13 @@ const Field = (props) => {
             if (item.id === clickedItem.id) {
                 item[type] = enabled;
             }
-            delete item.valueControl;
-            delete item.statusControl;
-            delete item.deleteControl;
         }
+
+        //All data elements with 'Control' in the name are dropped, to prevent:
+        field.value = field.value.map(item => {
+            const { deleteControl, statusControl, valueControl, ...rest } = item;
+            return rest;
+        });
         //the updateItemId allows us to update one specific item in a field set.
         field.updateItemId = clickedItem.id;
         let saveFields = [];
@@ -95,7 +100,11 @@ const Field = (props) => {
     let fieldValue = field.value;
     let fields = props.fields;
     let disabled = field.disabled;
-    let highLightClass = props.highLightedField===props.field.id ? 'rsssl-field-wrap rsssl-highlight' : 'rsssl-field-wrap';
+    let highLightClass = 'rsssl-field-wrap';
+
+    if ( props.highLightedField===props.field.id ) {
+        highLightClass = 'rsssl-field-wrap rsssl-highlight';
+    }
 
     let options = [];
     if ( field.options ) {
@@ -175,7 +184,8 @@ const Field = (props) => {
 
     if ( field.type==='button' ){
         return (
-            <div className={'rsssl-field-button ' + highLightClass}>
+            <div className={'rsssl-field-button ' + highLightClass} ref={scrollAnchor}>
+                <label>{field.label}</label>
                 <Button addNotice={props.addNotice} field={field} fields={props.fields} />
             </div>
         );
@@ -183,7 +193,7 @@ const Field = (props) => {
 
     if ( field.type==='password' ){
         return (
-            <div className={ highLightClass}>
+            <div className={ highLightClass} ref={scrollAnchor}>
                 <Password
                     index={ props.index }
                     field={ field }
@@ -225,6 +235,18 @@ const Field = (props) => {
                     onChange={ ( fieldValue ) => onChangeHandler(fieldValue) }
                     help={ field.comment }
                     label={ field.label }
+                    value= { fieldValue }
+                />
+            </div>
+        );
+    }
+    if ( field.type==='email' ){
+        return (
+            <div className={this.highLightClass} ref={this.scrollAnchor}>
+                <TextControl
+                    help={ field.comment }
+                    label={ field.label }
+                    onChange={ ( fieldValue ) => this.onChangeHandler(fieldValue) }
                     value= { fieldValue }
                 />
             </div>
