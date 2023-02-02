@@ -1,8 +1,6 @@
-import {useState} from "@wordpress/element";
+import {useState, useEffect} from "@wordpress/element";
 import DataTable, { createTheme }  from "react-data-table-component";
-import {
-    ToggleControl,
-} from '@wordpress/components';
+import {ToggleControl} from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
 import * as rsssl_api from "../utils/api";
 import ModalControl from "../Modal/ModalControl";
@@ -20,7 +18,6 @@ const MixedContentScan = (props) => {
     const [completedStatus, setCompletedStatus] = useState(false);
     const [nonce, setNonce] = useState('');
 
-
     const getScanStatus = () => {
         return rsssl_api.runTest('scan_status', 'refresh').then( ( response ) => {
             return response;
@@ -33,7 +30,6 @@ const MixedContentScan = (props) => {
         if (!rsssl_settings.pro_plugin_active) progress=80;
 
         let action = props.field.value.action ? props.field.value.action : '';
-
         let nonce = props.field.value.nonce ? props.field.value.nonce : '';
         let state = props.field.value.state ? props.field.value.state : 'stop';
         let completedStatus = props.field.value.completed_status ? props.field.value.completed_status.toLowerCase() : 'never';
@@ -177,7 +173,7 @@ const MixedContentScan = (props) => {
     }
 
     if ( !showIgnoredUrls ) {
-        dataTable = data.filter(
+        dataTable = dataTable.filter(
             item => !item.ignored,
         );
     }

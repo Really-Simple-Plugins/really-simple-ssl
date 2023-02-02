@@ -15173,9 +15173,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _ProgressBlock__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./ProgressBlock */ "./src/DashBoard/ProgressBlock.js");
 /* harmony import */ var _ProgressBlockHeader__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./ProgressBlockHeader */ "./src/DashBoard/ProgressBlockHeader.js");
 /* harmony import */ var _ProgressFooter__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./ProgressFooter */ "./src/DashBoard/ProgressFooter.js");
-/* harmony import */ var _SslLabs__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./SslLabs */ "./src/DashBoard/SslLabs.js");
-/* harmony import */ var _Settings_FieldsData__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../Settings/FieldsData */ "./src/Settings/FieldsData.js");
-/* harmony import */ var _SslLabsFooter__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./SslLabsFooter */ "./src/DashBoard/SslLabsFooter.js");
+/* harmony import */ var _SslLabs_SslLabs__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./SslLabs/SslLabs */ "./src/DashBoard/SslLabs/SslLabs.js");
+/* harmony import */ var _SslLabs_SslLabsFooter__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./SslLabs/SslLabsFooter */ "./src/DashBoard/SslLabs/SslLabsFooter.js");
+/* harmony import */ var _Settings_FieldsData__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../Settings/FieldsData */ "./src/Settings/FieldsData.js");
 /* harmony import */ var _OtherPlugins__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./OtherPlugins */ "./src/DashBoard/OtherPlugins.js");
 /* harmony import */ var _SecurityFeaturesBlock_SecurityFeaturesBlock__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./SecurityFeaturesBlock/SecurityFeaturesBlock */ "./src/DashBoard/SecurityFeaturesBlock/SecurityFeaturesBlock.js");
 /* harmony import */ var _SecurityFeaturesBlock_SecurityFeaturesFooter__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./SecurityFeaturesBlock/SecurityFeaturesFooter */ "./src/DashBoard/SecurityFeaturesBlock/SecurityFeaturesFooter.js");
@@ -15202,8 +15202,8 @@ var dynamicComponents = {
   "ProgressBlock": _ProgressBlock__WEBPACK_IMPORTED_MODULE_2__["default"],
   "ProgressHeader": _ProgressBlockHeader__WEBPACK_IMPORTED_MODULE_3__["default"],
   "ProgressFooter": _ProgressFooter__WEBPACK_IMPORTED_MODULE_4__["default"],
-  "SslLabs": _SslLabs__WEBPACK_IMPORTED_MODULE_5__["default"],
-  "SslLabsFooter": _SslLabsFooter__WEBPACK_IMPORTED_MODULE_7__["default"],
+  "SslLabs": _SslLabs_SslLabs__WEBPACK_IMPORTED_MODULE_5__["default"],
+  "SslLabsFooter": _SslLabs_SslLabsFooter__WEBPACK_IMPORTED_MODULE_6__["default"],
   "OtherPlugins": _OtherPlugins__WEBPACK_IMPORTED_MODULE_8__["default"]
 };
 const GridBlock = props => {
@@ -15864,10 +15864,10 @@ const SecurityFeaturesFooter = () => {
 
 /***/ }),
 
-/***/ "./src/DashBoard/SslLabs.js":
-/*!**********************************!*\
-  !*** ./src/DashBoard/SslLabs.js ***!
-  \**********************************/
+/***/ "./src/DashBoard/SslLabs/SslLabs.js":
+/*!******************************************!*\
+  !*** ./src/DashBoard/SslLabs/SslLabs.js ***!
+  \******************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -15877,16 +15877,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _utils_api__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../utils/api */ "./src/utils/api.js");
+/* harmony import */ var _utils_api__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../utils/api */ "./src/utils/api.js");
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var immutability_helper__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! immutability-helper */ "./node_modules/immutability-helper/index.js");
-/* harmony import */ var immutability_helper__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(immutability_helper__WEBPACK_IMPORTED_MODULE_3__);
-/* harmony import */ var react_use__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! react-use */ "./node_modules/react-use/esm/useUpdateEffect.js");
-/* harmony import */ var _utils_Icon__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../utils/Icon */ "./src/utils/Icon.js");
-/* harmony import */ var _Placeholder_Placeholder__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../Placeholder/Placeholder */ "./src/Placeholder/Placeholder.js");
-
-
+/* harmony import */ var _utils_Icon__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../utils/Icon */ "./src/utils/Icon.js");
+/* harmony import */ var _SslLabsData__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./SslLabsData */ "./src/DashBoard/SslLabs/SslLabsData.js");
 
 
 
@@ -15894,6 +15889,12 @@ __webpack_require__.r(__webpack_exports__);
 
 
 const SslLabs = props => {
+  const {
+    sslScanStatus,
+    setSslScanStatus,
+    isLocalHost,
+    host
+  } = (0,_SslLabsData__WEBPACK_IMPORTED_MODULE_4__["default"])();
   const [sslData, setSslData] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)(false);
   const [endpointData, setEndpointData] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)([]);
   const [dataLoaded, setDataLoaded] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)(false);
@@ -15903,7 +15904,7 @@ const SslLabs = props => {
   const intervalId = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useRef)(false);
   (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
     if (!dataLoaded) {
-      _utils_api__WEBPACK_IMPORTED_MODULE_1__.runTest('ssltest_get').then(response => {
+      _utils_api__WEBPACK_IMPORTED_MODULE_1__.doAction('ssltest_get').then(response => {
         if (response.hasOwnProperty('host')) {
           let data = processSslData(response);
           setSslData(data);
@@ -15916,31 +15917,28 @@ const SslLabs = props => {
   const neverScannedYet = () => {
     return !sslData;
   };
-  const isLocalHost = () => {
-    //         return false;
-    return window.location.host.indexOf('localhost') !== -1;
-  };
-  (0,react_use__WEBPACK_IMPORTED_MODULE_6__["default"])(() => {
-    if (isLocalHost()) return;
-    let status = props.BlockProps.hasOwnProperty('sslScan') ? props.BlockProps['sslScan'] : false;
-    if (status === 'active' && sslData.summary && sslData.summary.progress >= 100) {
+  (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
+    if (isLocalHost()) {
+      return;
+    }
+    if (sslScanStatus === 'active' && sslData.summary && sslData.summary.progress >= 100) {
       clearCache.current = true;
       hasRunOnce.current = false;
       setSslData(false);
       setEndpointData(false);
     }
-    if (status === 'active' && sslData.status === 'ERROR') {
+    if (sslScanStatus === 'active' && sslData.status === 'ERROR') {
       clearCache.current = true;
       setSslData(false);
       setEndpointData(false);
     }
     let scanInComplete = sslData && sslData.status !== 'READY';
-    let userClickedStartScan = status === 'active';
+    let userClickedStartScan = sslScanStatus === 'active';
     if (clearCache.current) scanInComplete = true;
     let hasErrors = sslData.errors || sslData.status === 'ERROR';
     let startScan = !hasErrors && (scanInComplete || userClickedStartScan);
     if (!requestActive.current && startScan) {
-      props.setBlockProps('sslScan', 'active');
+      setSslScanStatus('active');
       requestActive.current = true;
       if (!hasRunOnce.current) {
         runSslTest();
@@ -15950,16 +15948,16 @@ const SslLabs = props => {
         hasRunOnce.current = true;
       }
     } else if (sslData && sslData.status === 'READY') {
-      props.setBlockProps('sslScan', 'completed');
+      setSslScanStatus('completed');
       clearInterval(intervalId.current);
     }
-  });
+  }, [sslScanStatus]);
   const runSslTest = () => {
     getSslLabsData().then(sslData => {
       if (sslData && sslData.status === 'ERROR') {
         sslData = processSslData(sslData);
         setSslData(sslData);
-        props.setBlockProps('sslScan', 'completed');
+        setSslScanStatus('completed');
         clearInterval(intervalId.current);
       } else if (sslData.endpoints && sslData.endpoints.filter(endpoint => endpoint.statusMessage === 'Ready').length > 0) {
         let completedEndpoints = sslData.endpoints.filter(endpoint => endpoint.statusMessage === 'Ready');
@@ -16003,7 +16001,6 @@ const SslLabs = props => {
     });
   };
   const processSslData = sslData => {
-    let totalProgress = 100;
     let progress = sslData.progress ? sslData.progress : 0;
     let startTime = sslData.startTime ? sslData.startTime : '';
     let statusMessage = sslData.statusMessage ? sslData.statusMessage : '';
@@ -16030,7 +16027,7 @@ const SslLabs = props => {
     }
     let summary = {};
     if (progress >= 100) {
-      props.setBlockProps('sslScan', 'completed');
+      setSslScanStatus('completed');
     }
     summary.grade = grade;
     summary.startTime = startTime;
@@ -16041,9 +16038,7 @@ const SslLabs = props => {
     return sslData;
   };
   const getEndpointData = ipAddress => {
-    const host = window.location.host;
-    //         const host = "ziprecipes.net";
-    const url = 'https://api.ssllabs.com/api/v3/getEndpointData?host=' + host + '&s=' + ipAddress;
+    const url = 'https://api.ssllabs.com/api/v3/getEndpointData?host=' + host() + '&s=' + ipAddress;
     let data = {};
     data.url = url;
     return _utils_api__WEBPACK_IMPORTED_MODULE_1__.doAction('ssltest_run', data).then(response => {
@@ -16057,26 +16052,35 @@ const SslLabs = props => {
       clearCacheUrl = '&startNew=on';
       setSslData(false);
     }
-    const host = window.location.host;
-    //         const host = "ziprecipes.net";
-    const url = "https://api.ssllabs.com/api/v3/analyze?host=" + host + clearCacheUrl;
+    const url = "https://api.ssllabs.com/api/v3/analyze?host=" + host() + clearCacheUrl;
     let data = {};
     data.url = url;
     return _utils_api__WEBPACK_IMPORTED_MODULE_1__.doAction('ssltest_run', data).then(response => {
       return JSON.parse(response);
     });
   };
+
+  /**
+   * Get some styles for the progress bar
+   * @returns {{width: string}}
+   */
   const getStyles = () => {
     let progress = 0;
     if (sslData && sslData.summary.progress) {
       progress = sslData.summary.progress;
-    } else if (progress == 0 && props.BlockProps['sslScan'] === 'active') {
+    } else if (progress == 0 && sslScanStatus === 'active') {
       progress = 5;
     }
     return Object.assign({}, {
       width: progress + "%"
     });
   };
+
+  /**
+   * Retrieve information from SSL labs if HSTS is detected
+   *
+   * @returns {JSX.Element}
+   */
   const hasHSTS = () => {
     let status = 'processing';
     if (neverScannedYet()) {
@@ -16090,10 +16094,15 @@ const SslLabs = props => {
     }
     return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, status === 'inactive' && scoreSnippet("rsssl-test-inactive", "HSTS"), status === 'processing' && scoreSnippet("rsssl-test-processing", "HSTS..."), status === 'error' && scoreSnippet("rsssl-test-error", "No HSTS header"), status === 'success' && scoreSnippet("rsssl-test-success", "HSTS header detected"));
   };
+
+  /**
+   * Calculate cipher strength
+   * @returns {JSX.Element}
+   */
   const cipherStrength = () => {
-    //         Start with the score of the strongest cipher.
-    //         Add the score of the weakest cipher.
-    //         Divide the total by 2.
+    // Start with the score of the strongest cipher.
+    // Add the score of the weakest cipher.
+    // Divide the total by 2.
     let rating = 0;
     let ratingClass = 'rsssl-test-processing';
     if (neverScannedYet()) {
@@ -16117,7 +16126,7 @@ const SslLabs = props => {
     return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, scoreSnippet(ratingClass, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Cipher strength", "really-simple-ssl") + ' ' + rating + '%'));
   };
 
-  /*
+  /**
   * https://github.com/ssllabs/research/wiki/SSL-Server-Rating-Guide#Certificate-strength
   */
   const getCypherRating = strength => {
@@ -16193,8 +16202,7 @@ const SslLabs = props => {
     sslClass = "rsssl-inactive";
   }
   let gradeClass = neverScannedYet() ? 'inactive' : grade;
-  let host = window.location.protocol + "//" + window.location.host;
-  let url = 'https://www.ssllabs.com/analyze.html?d=' + encodeURIComponent(host);
+  let url = 'https://www.ssllabs.com/analyze.html?d=' + encodeURIComponent(window.location.protocol + "//" + window.location.host);
   let hasErrors = false;
   let errorMessage = '';
   let sslStatusColor = 'black';
@@ -16230,7 +16238,7 @@ const SslLabs = props => {
     className: "rsssl-details"
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "rsssl-detail-icon"
-  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_utils_Icon__WEBPACK_IMPORTED_MODULE_4__["default"], {
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_utils_Icon__WEBPACK_IMPORTED_MODULE_3__["default"], {
     name: "info",
     color: sslStatusColor
   })), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
@@ -16242,7 +16250,7 @@ const SslLabs = props => {
     className: "rsssl-details"
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "rsssl-detail-icon"
-  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_utils_Icon__WEBPACK_IMPORTED_MODULE_4__["default"], {
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_utils_Icon__WEBPACK_IMPORTED_MODULE_3__["default"], {
     name: "list",
     color: "black"
   })), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
@@ -16251,7 +16259,7 @@ const SslLabs = props => {
     className: "rsssl-details"
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "rsssl-detail-icon"
-  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_utils_Icon__WEBPACK_IMPORTED_MODULE_4__["default"], {
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_utils_Icon__WEBPACK_IMPORTED_MODULE_3__["default"], {
     name: "external-link",
     color: "black"
   })), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
@@ -16265,10 +16273,43 @@ const SslLabs = props => {
 
 /***/ }),
 
-/***/ "./src/DashBoard/SslLabsFooter.js":
-/*!****************************************!*\
-  !*** ./src/DashBoard/SslLabsFooter.js ***!
-  \****************************************/
+/***/ "./src/DashBoard/SslLabs/SslLabsData.js":
+/*!**********************************************!*\
+  !*** ./src/DashBoard/SslLabs/SslLabsData.js ***!
+  \**********************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var zustand__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! zustand */ "./node_modules/zustand/esm/index.mjs");
+
+const useSslLabs = (0,zustand__WEBPACK_IMPORTED_MODULE_0__.create)((set, get) => ({
+  debug: false,
+  //set to true for localhost testing, with wordpress.org as domain
+  sslScanStatus: false,
+  setSslScanStatus: sslScanStatus => set({
+    sslScanStatus
+  }),
+  isLocalHost: () => {
+    let debug = get().debug;
+    return debug ? false : window.location.host.indexOf('localhost') !== -1;
+  },
+  host: () => {
+    let debug = get().debug;
+    return debug ? "wordpress.org" : window.location.host;
+  }
+}));
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (useSslLabs);
+
+/***/ }),
+
+/***/ "./src/DashBoard/SslLabs/SslLabsFooter.js":
+/*!************************************************!*\
+  !*** ./src/DashBoard/SslLabs/SslLabsFooter.js ***!
+  \************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -16280,20 +16321,25 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _SslLabsData__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./SslLabsData */ "./src/DashBoard/SslLabs/SslLabsData.js");
 
 
 
-const SslLabsFooter = props => {
+const SslLabsFooter = () => {
+  const {
+    sslScanStatus,
+    setSslScanStatus,
+    isLocalHost
+  } = (0,_SslLabsData__WEBPACK_IMPORTED_MODULE_2__["default"])();
   const startScan = () => {
-    props.updateBlockProps('sslScan', 'active');
+    setSslScanStatus('active');
   };
-  let status = props.blockProps && props.blockProps.hasOwnProperty('sslScan') ? props.blockProps['sslScan'] : false;
-  let disabled = status === 'active' || window.location.host.indexOf('localhost') !== -1;
+  let disabled = sslScanStatus === 'active' || isLocalHost();
   return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
     disabled: disabled,
     onClick: e => startScan(e),
     className: "button button-default"
-  }, status === 'paused' && (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Continue SSL Health check", "really-simple-ssl"), status !== 'paused' && (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Check SSL Health", "really-simple-ssl")));
+  }, sslScanStatus === 'paused' && (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Continue SSL Health check", "really-simple-ssl"), sslScanStatus !== 'paused' && (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Check SSL Health", "really-simple-ssl")));
 };
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (SslLabsFooter);
 
@@ -16423,10 +16469,7 @@ const Header = props => {
   (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useEffect)(async () => {
     fetchMenuData();
   }, []);
-  console.log(menu);
-  let menuItems = Object.values(menu);
-  console.log(menuItems);
-  menuItems = menuItems.filter(item => item !== null);
+  let menuItems = menu.filter(item => item !== null);
   return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "rsssl-header-container"
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
@@ -17310,6 +17353,71 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _utils_getAnchor__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../utils/getAnchor */ "./src/utils/getAnchor.js");
 
 
+const useMenu = (0,zustand__WEBPACK_IMPORTED_MODULE_1__.create)((set, get) => ({
+  menu: [],
+  subMenuLoaded: false,
+  previousMenuItem: false,
+  nextMenuItem: false,
+  selectedMainMenuItem: false,
+  selectedSubMenuItem: false,
+  hasPremiumItems: false,
+  subMenu: {
+    title: ' ',
+    menu_items: []
+  },
+  setSelectedSubMenuItem: selectedSubMenuItem => set(state => ({
+    selectedSubMenuItem
+  })),
+  setSelectedMainMenuItem: selectedMainMenuItem => set(state => ({
+    selectedMainMenuItem
+  })),
+  //we need to get the main menu item directly from the anchor, otherwise we have to wait for the menu to load in page.js
+  fetchSelectedMainMenuItem: () => {
+    let selectedMainMenuItem = (0,_utils_getAnchor__WEBPACK_IMPORTED_MODULE_0__["default"])('main') || 'dashboard';
+    set(state => ({
+      selectedMainMenuItem: selectedMainMenuItem
+    }));
+  },
+  fetchSelectedSubMenuItem: async () => {
+    let selectedSubMenuItem = (0,_utils_getAnchor__WEBPACK_IMPORTED_MODULE_0__["default"])('menu') || 'general';
+    set(state => ({
+      selectedSubMenuItem: selectedSubMenuItem
+    }));
+  },
+  fetchMenuData: fields => {
+    let menu = rsssl_settings.menu;
+    menu = Object.values(menu);
+    const selectedMainMenuItem = (0,_utils_getAnchor__WEBPACK_IMPORTED_MODULE_0__["default"])('main') || 'dashboard';
+    if (typeof fields !== 'undefined') {
+      let subMenu = getSubMenu(menu, selectedMainMenuItem);
+      const selectedSubMenuItem = getSelectedSubMenuItem(subMenu, fields);
+      const {
+        nextMenuItem,
+        previousMenuItem
+      } = getPreviousAndNextMenuItems(menu, selectedSubMenuItem);
+      subMenu.menu_items = dropEmptyMenuItems(subMenu.menu_items, fields, selectedSubMenuItem);
+      const hasPremiumItems = subMenu.menu_items.filter(item => {
+        return item.premium === true;
+      }).length > 0;
+      set(state => ({
+        subMenuLoaded: true,
+        menu: menu,
+        nextMenuItem: nextMenuItem,
+        previousMenuItem: previousMenuItem,
+        selectedMainMenuItem: selectedMainMenuItem,
+        selectedSubMenuItem: selectedSubMenuItem,
+        subMenu: subMenu,
+        hasPremiumItems: hasPremiumItems
+      }));
+    } else {
+      set(state => ({
+        menu: menu,
+        selectedMainMenuItem: selectedMainMenuItem
+      }));
+    }
+  }
+}));
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (useMenu);
 
 // Parses menu items and nested items in single array
 const menuItemParser = (parsedMenuItems, menuItems) => {
@@ -17420,70 +17528,6 @@ const getMenuItemByName = (name, menuItems) => {
   }
   return false;
 };
-const useMenu = (0,zustand__WEBPACK_IMPORTED_MODULE_1__["default"])((set, get) => ({
-  menu: [],
-  subMenuLoaded: false,
-  previousMenuItem: false,
-  nextMenuItem: false,
-  selectedMainMenuItem: false,
-  selectedSubMenuItem: false,
-  hasPremiumItems: false,
-  subMenu: {
-    title: ' ',
-    menu_items: []
-  },
-  setSelectedSubMenuItem: selectedSubMenuItem => set(state => ({
-    selectedSubMenuItem
-  })),
-  setSelectedMainMenuItem: selectedMainMenuItem => set(state => ({
-    selectedMainMenuItem
-  })),
-  //we need to get the main menu item directly from the anchor, otherwise we have to wait for the menu to load in page.js
-  fetchSelectedMainMenuItem: () => {
-    let selectedMainMenuItem = (0,_utils_getAnchor__WEBPACK_IMPORTED_MODULE_0__["default"])('main') || 'dashboard';
-    set(state => ({
-      selectedMainMenuItem: selectedMainMenuItem
-    }));
-  },
-  fetchSelectedSubMenuItem: async () => {
-    let selectedSubMenuItem = (0,_utils_getAnchor__WEBPACK_IMPORTED_MODULE_0__["default"])('menu') || 'general';
-    set(state => ({
-      selectedSubMenuItem: selectedSubMenuItem
-    }));
-  },
-  fetchMenuData: fields => {
-    let menu = rsssl_settings.menu;
-    const selectedMainMenuItem = (0,_utils_getAnchor__WEBPACK_IMPORTED_MODULE_0__["default"])('main') || 'dashboard';
-    if (typeof fields !== 'undefined') {
-      let subMenu = getSubMenu(menu, selectedMainMenuItem);
-      const selectedSubMenuItem = getSelectedSubMenuItem(subMenu, fields);
-      const {
-        nextMenuItem,
-        previousMenuItem
-      } = getPreviousAndNextMenuItems(menu, selectedSubMenuItem);
-      subMenu.menu_items = dropEmptyMenuItems(subMenu.menu_items, fields, selectedSubMenuItem);
-      const hasPremiumItems = subMenu.menu_items.filter(item => {
-        return item.premium === true;
-      }).length > 0;
-      set(state => ({
-        subMenuLoaded: true,
-        menu: menu,
-        nextMenuItem: nextMenuItem,
-        previousMenuItem: previousMenuItem,
-        selectedMainMenuItem: selectedMainMenuItem,
-        selectedSubMenuItem: selectedSubMenuItem,
-        subMenu: subMenu,
-        hasPremiumItems: hasPremiumItems
-      }));
-    } else {
-      set(state => ({
-        menu: menu,
-        selectedMainMenuItem: selectedMainMenuItem
-      }));
-    }
-  }
-}));
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (useMenu);
 const addVisibleToMenuItems = menu => {
   let newMenuItems = menu.menu_items;
   for (let [index, menuItem] of menu.menu_items.entries()) {
@@ -17523,11 +17567,9 @@ const MenuItem = props => {
   const {
     selectedSubMenuItem,
     selectedMainMenuItem,
-    subMenu
+    subMenu,
+    menu
   } = (0,_MenuData__WEBPACK_IMPORTED_MODULE_2__["default"])();
-  const handleClick = () => {
-    props.selectMenu(props.menuItem.id);
-  };
 
   /*
    * Menu is selected if the item is the same, or if it is a child.
@@ -17547,8 +17589,7 @@ const MenuItem = props => {
   return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, props.menuItem.visible && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "rsssl-menu-item" + menuClass
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
-    href: href,
-    onClick: () => handleClick()
+    href: href
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", null, props.menuItem.title), props.menuItem.featured && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
     className: "rsssl-menu-item-featured-pill"
   }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('New', 'really-simple-ssl')))), props.menuItem.menu_items && menuIsSelected && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
@@ -17742,7 +17783,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-const useModalData = (0,zustand__WEBPACK_IMPORTED_MODULE_4__["default"])((set, get) => ({
+const useModalData = (0,zustand__WEBPACK_IMPORTED_MODULE_4__.create)((set, get) => ({
   modalData: [],
   buttonsDisabled: false,
   showModal: false,
@@ -18891,7 +18932,7 @@ const fetchFields = () => {
     console.error(error);
   });
 };
-const useFields = (0,zustand__WEBPACK_IMPORTED_MODULE_4__["default"])((set, get) => ({
+const useFields = (0,zustand__WEBPACK_IMPORTED_MODULE_4__.create)((set, get) => ({
   licenseStatus: rsssl_settings.licenseStatus,
   fieldsLoaded: false,
   error: false,
@@ -18914,7 +18955,7 @@ const useFields = (0,zustand__WEBPACK_IMPORTED_MODULE_4__["default"])((set, get)
     nextButtonDisabled
   })),
   setChangedField: (id, value) => {
-    set((0,immer__WEBPACK_IMPORTED_MODULE_5__["default"])(state => {
+    set((0,immer__WEBPACK_IMPORTED_MODULE_5__.produce)(state => {
       //remove current reference
       const existingFieldIndex = state.changedFields.findIndex(field => {
         return field.id === id;
@@ -18934,7 +18975,7 @@ const useFields = (0,zustand__WEBPACK_IMPORTED_MODULE_4__["default"])((set, get)
     handleShowSavedSettingsNotice(text);
   },
   updateField: (id, value) => {
-    set((0,immer__WEBPACK_IMPORTED_MODULE_5__["default"])(state => {
+    set((0,immer__WEBPACK_IMPORTED_MODULE_5__.produce)(state => {
       let index = false;
       state.fields.forEach(function (fieldItem, i) {
         if (fieldItem.id === id) {
@@ -19008,7 +19049,7 @@ const useFields = (0,zustand__WEBPACK_IMPORTED_MODULE_4__["default"])((set, get)
       _utils_api__WEBPACK_IMPORTED_MODULE_0__.setFields(saveFields).then(response => {
         progress = response.progress;
         fields = response.fields;
-        set((0,immer__WEBPACK_IMPORTED_MODULE_5__["default"])(state => {
+        set((0,immer__WEBPACK_IMPORTED_MODULE_5__.produce)(state => {
           state.changedFields = [];
           state.fields = fields;
           state.progress = progress;
@@ -19016,7 +19057,6 @@ const useFields = (0,zustand__WEBPACK_IMPORTED_MODULE_4__["default"])((set, get)
         }));
       });
     }
-    console.log('# saveFields');
     if (showSavedNotice) {
       handleShowSavedSettingsNotice();
     }
@@ -19025,7 +19065,7 @@ const useFields = (0,zustand__WEBPACK_IMPORTED_MODULE_4__["default"])((set, get)
     let fields = get().fields;
     fields = updateFieldsListWithConditions(fields);
     const nextButtonDisabled = isNextButtonDisabled(fields, selectedSubMenuItem);
-    set((0,immer__WEBPACK_IMPORTED_MODULE_5__["default"])(state => {
+    set((0,immer__WEBPACK_IMPORTED_MODULE_5__.produce)(state => {
       state.fields = fields;
       state.nextButtonDisabled = nextButtonDisabled;
     }));
@@ -19075,7 +19115,6 @@ const updateFieldsListWithConditions = fields => {
   return newFields;
 };
 const handleShowSavedSettingsNotice = text => {
-  console.log("test " + text);
   if (typeof text === 'undefined') {
     text = (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Settings Saved', 'really-simple-ssl');
   }
@@ -19747,7 +19786,7 @@ const MixedContentScan = props => {
       return response;
     });
   };
-  useEffect(async () => {
+  (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useEffect)(async () => {
     let data = props.field.value.data ? props.field.value.data : [];
     let progress = props.field.value.progress ? props.field.value.progress : 0;
     if (!rsssl_settings.pro_plugin_active) progress = 80;
@@ -19892,7 +19931,7 @@ const MixedContentScan = props => {
     });
   }
   if (!showIgnoredUrls) {
-    dataTable = data.filter(item => !item.ignored);
+    dataTable = dataTable.filter(item => !item.ignored);
   }
 
   //filter also recently fixed items

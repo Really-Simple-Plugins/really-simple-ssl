@@ -59,6 +59,7 @@ function rsssl_plugin_admin_scripts() {
         'rsssl-settings',
         'rsssl_settings',
         apply_filters('rsssl_localize_script',[
+            'menu' => rsssl_menu(),
             'site_url' => get_rest_url(),
             'admin_ajax_url' => add_query_arg(
                 array(
@@ -275,6 +276,9 @@ function rsssl_do_action($request, $ajax_data=false){
 		case 'ssl_status_data':
 			$response = rsssl_ssl_status_data();
 			break;
+		case 'ssltest_get':
+			$response = get_option('rsssl_ssl_labs_data');
+			break;
 		case 'ssltest_run':
 			$response = rsssl_ssltest_run($data);
 			break;
@@ -378,9 +382,6 @@ function rsssl_run_test($request, $ajax_data=false){
 	switch($test){
         case 'ssl_status_data':
             $response = rsssl_ssl_status_data();
-            break;
-        case 'ssltest_get':
-	        $response = get_option('rsssl_ssl_labs_data');
             break;
         case 'progressdata':
 	        $response = RSSSL()->progress->get();
@@ -666,7 +667,6 @@ function rsssl_rest_api_fields_get(){
 
 	$output = array();
 	$fields = rsssl_fields();
-	$menu = rsssl_menu();
 	foreach ( $fields as $index => $field ) {
 		/**
 		 * Load data from source
@@ -690,45 +690,11 @@ function rsssl_rest_api_fields_get(){
 		$fields[$index] = $field;
 	}
 
-    //remove empty menu items
-    foreach ($menu as $key => $menu_group ){
-	    $menu_group['menu_items'] = rsssl_drop_empty_menu_items($menu_group['menu_items'], $fields);
-	    $menu[$key] = $menu_group;
-    }
-
 	$output['fields'] = $fields;
 	$output['menu'] = $menu;
 	$output['request_success'] = true;
 	$output['progress'] = RSSSL()->progress->get();
     return apply_filters('rsssl_rest_api_fields_get', $output);
-}
-
-/**
- * Checks if there are field linked to menu_item if not removes menu_item from menu_item array
- * @param $menu_items
- * @param $fields
- * @return array
- */
-function rsssl_drop_empty_menu_items( $menu_items, $fields) {
-	if ( !rsssl_user_can_manage() ) {
-		return $menu_items;
-	}
-	foreach($menu_items as $key => $menu_item) {
-		//if menu has submenu items, show anyway
-		$has_submenu = isset($menu_item['menu_items']);
-		$has_fields = array_search($menu_item['id'], array_column($fields, 'menu_id'));
-		if( $has_fields === false && !$has_submenu) {
-			unset($menu_items[$key]);
-			//reset array keys to prevent issues with react
-			$menu_items = array_values($menu_items);
-		} else {
-			if( $has_submenu ){
-				$updatedValue = rsssl_drop_empty_menu_items($menu_item['menu_items'], $fields);
-				$menu_items[$key]['menu_items'] = $updatedValue;
-			}
-		}
-	}
-    return $menu_items;
 }
 
 /**

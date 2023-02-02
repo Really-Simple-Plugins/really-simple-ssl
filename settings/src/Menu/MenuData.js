@@ -1,5 +1,46 @@
-import create from 'zustand';
+import {create} from 'zustand';
 import getAnchor from "../utils/getAnchor";
+
+const useMenu = create(( set, get ) => ({
+    menu: [],
+    subMenuLoaded:false,
+    previousMenuItem:false,
+    nextMenuItem:false,
+    selectedMainMenuItem:false,
+    selectedSubMenuItem:false,
+    hasPremiumItems:false,
+    subMenu:{title:' ',menu_items:[]},
+    setSelectedSubMenuItem: (selectedSubMenuItem) => set(state => ({ selectedSubMenuItem })),
+    setSelectedMainMenuItem: (selectedMainMenuItem) => set(state => ({ selectedMainMenuItem })),
+    //we need to get the main menu item directly from the anchor, otherwise we have to wait for the menu to load in page.js
+    fetchSelectedMainMenuItem: () => {
+        let selectedMainMenuItem = getAnchor('main') || 'dashboard';
+        set((state) => ({selectedMainMenuItem: selectedMainMenuItem}));
+    },
+    fetchSelectedSubMenuItem: async () => {
+        let selectedSubMenuItem = getAnchor('menu') || 'general';
+        set((state) => ({selectedSubMenuItem: selectedSubMenuItem}));
+    },
+    fetchMenuData: (fields) => {
+        let menu = rsssl_settings.menu;
+        menu =Object.values(menu);
+        const selectedMainMenuItem = getAnchor('main') || 'dashboard';
+        if (typeof fields !== 'undefined' ) {
+            let subMenu = getSubMenu(menu, selectedMainMenuItem);
+            const selectedSubMenuItem = getSelectedSubMenuItem(subMenu, fields);
+            const { nextMenuItem, previousMenuItem }  = getPreviousAndNextMenuItems(menu, selectedSubMenuItem);
+            subMenu.menu_items = dropEmptyMenuItems(subMenu.menu_items, fields, selectedSubMenuItem);
+            const hasPremiumItems =  subMenu.menu_items.filter((item) => {return (item.premium===true)}).length>0;
+            set((state) => ({subMenuLoaded:true, menu: menu, nextMenuItem:nextMenuItem, previousMenuItem:previousMenuItem, selectedMainMenuItem: selectedMainMenuItem, selectedSubMenuItem:selectedSubMenuItem, subMenu: subMenu, hasPremiumItems: hasPremiumItems}));
+
+        } else {
+            set((state) => ({menu: menu, selectedMainMenuItem: selectedMainMenuItem}));
+
+        }
+    }
+}));
+export default useMenu;
+
 
 // Parses menu items and nested items in single array
 const menuItemParser = (parsedMenuItems, menuItems) => {
@@ -109,46 +150,6 @@ const getMenuItemByName = (name, menuItems) => {
     }
     return false;
 }
-
-const useMenu = create(( set, get ) => ({
-    menu: [],
-    subMenuLoaded:false,
-    previousMenuItem:false,
-    nextMenuItem:false,
-    selectedMainMenuItem:false,
-    selectedSubMenuItem:false,
-    hasPremiumItems:false,
-    subMenu:{title:' ',menu_items:[]},
-    setSelectedSubMenuItem: (selectedSubMenuItem) => set(state => ({ selectedSubMenuItem })),
-    setSelectedMainMenuItem: (selectedMainMenuItem) => set(state => ({ selectedMainMenuItem })),
-    //we need to get the main menu item directly from the anchor, otherwise we have to wait for the menu to load in page.js
-    fetchSelectedMainMenuItem: () => {
-        let selectedMainMenuItem = getAnchor('main') || 'dashboard';
-        set((state) => ({selectedMainMenuItem: selectedMainMenuItem}));
-    },
-    fetchSelectedSubMenuItem: async () => {
-        let selectedSubMenuItem = getAnchor('menu') || 'general';
-        set((state) => ({selectedSubMenuItem: selectedSubMenuItem}));
-    },
-    fetchMenuData: (fields) => {
-        let menu = rsssl_settings.menu;
-        const selectedMainMenuItem = getAnchor('main') || 'dashboard';
-
-        if (typeof fields !== 'undefined' ) {
-            let subMenu = getSubMenu(menu, selectedMainMenuItem);
-            const selectedSubMenuItem = getSelectedSubMenuItem(subMenu, fields);
-            const { nextMenuItem, previousMenuItem }  = getPreviousAndNextMenuItems(menu, selectedSubMenuItem);
-            subMenu.menu_items = dropEmptyMenuItems(subMenu.menu_items, fields, selectedSubMenuItem);
-            const hasPremiumItems =  subMenu.menu_items.filter((item) => {return (item.premium===true)}).length>0;
-            set((state) => ({subMenuLoaded:true, menu: menu, nextMenuItem:nextMenuItem, previousMenuItem:previousMenuItem, selectedMainMenuItem: selectedMainMenuItem, selectedSubMenuItem:selectedSubMenuItem, subMenu: subMenu, hasPremiumItems: hasPremiumItems}));
-
-        } else {
-            set((state) => ({menu: menu, selectedMainMenuItem: selectedMainMenuItem}));
-
-        }
-    }
-}));
-export default useMenu;
 
 const addVisibleToMenuItems = (menu) => {
     let newMenuItems = menu.menu_items;

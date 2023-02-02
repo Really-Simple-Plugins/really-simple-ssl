@@ -1,5 +1,5 @@
-import create from 'zustand';
-import produce from 'immer';
+import {create} from 'zustand';
+import {produce} from 'immer';
 import * as rsssl_api from "../utils/api";
 import sleeper from "../utils/sleeper.js";
 import {__} from '@wordpress/i18n';
@@ -138,7 +138,6 @@ const useFields = create(( set, get ) => ({
                 )
             });
         }
-        console.log('# saveFields');
         if (showSavedNotice) {
             handleShowSavedSettingsNotice();
         }
@@ -196,7 +195,6 @@ const updateFieldsListWithConditions = (fields) => {
 }
 
 const handleShowSavedSettingsNotice = (text) => {
-    console.log("test "+text);
     if (typeof text === 'undefined') {
         text = __( 'Settings Saved', 'really-simple-ssl' );
     }

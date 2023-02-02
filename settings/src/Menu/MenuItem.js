@@ -2,11 +2,7 @@ import { __ } from '@wordpress/i18n';
 import useMenu from "./MenuData";
 
 const MenuItem = (props) => {
-    const {selectedSubMenuItem, selectedMainMenuItem, subMenu} = useMenu();
-
-    const handleClick = () => {
-        props.selectMenu(props.menuItem.id);
-    }
+    const {selectedSubMenuItem, selectedMainMenuItem, subMenu, menu} = useMenu();
 
     /*
      * Menu is selected if the item is the same, or if it is a child.
@@ -27,7 +23,7 @@ const MenuItem = (props) => {
     return (
         <>
         {props.menuItem.visible && <div className={"rsssl-menu-item" + menuClass}>
-            <a href={href} onClick={() => handleClick()}>
+            <a href={href} >
                 <span>{props.menuItem.title}</span>
                 {props.menuItem.featured && <><span className='rsssl-menu-item-featured-pill'>{__('New', 'really-simple-ssl')}</span></>}
             </a>

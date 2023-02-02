@@ -1,4 +1,4 @@
-import create from 'zustand';
+import {create} from 'zustand';
 import produce from 'immer';
 import * as rsssl_api from "../utils/api";
 import sleeper from "../utils/sleeper.js";

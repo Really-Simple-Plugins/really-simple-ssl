@@ -11,12 +11,8 @@ const Header = (props) => {
         fetchMenuData();
     }, [] );
 
-    console.log(menu);
 
-    let menuItems =Object.values(menu);
-    console.log(menuItems);
-    menuItems = menuItems.filter( item => item!==null );
-
+    let menuItems = menu.filter( item => item!==null );
     return (
         <div className="rsssl-header-container">
             <div className="rsssl-header">

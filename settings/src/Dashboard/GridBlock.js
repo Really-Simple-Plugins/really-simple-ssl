@@ -2,9 +2,10 @@ import { __ } from '@wordpress/i18n';
 import ProgressBlock from "./ProgressBlock";
 import ProgressHeader from "./ProgressBlockHeader";
 import ProgressFooter from "./ProgressFooter";
-import SslLabs from "./SslLabs";
+import SslLabs from "./SslLabs/SslLabs";
+import SslLabsFooter from "./SslLabs/SslLabsFooter";
+
 import UseFields from "../Settings/FieldsData";
-import SslLabsFooter from "./SslLabsFooter";
 import OtherPlugins from "./OtherPlugins";
 import SecurityFeaturesBlock from './SecurityFeaturesBlock/SecurityFeaturesBlock';
 import SecurityFeaturesFooter from './SecurityFeaturesBlock/SecurityFeaturesFooter';
