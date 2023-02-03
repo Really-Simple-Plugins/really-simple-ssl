@@ -1709,8 +1709,8 @@ class rsssl_letsencrypt_handler {
 				if ( $server === 'cpanel' ) {
 					if ($type==='default') {
 						$response = rsssl_install_cpanel_default();
-					} else if ( function_exists('rsssl_install_cpanel_shell') ) {
-						$response = rsssl_install_cpanel_shell();
+					} else if ( function_exists('rsssl_shell_installSSL') ) {
+						$response = rsssl_shell_installSSL();
 					} else {
 						//in case of auto ssl.
 						$response = new RSSSL_RESPONSE('error', 'stop', '');
