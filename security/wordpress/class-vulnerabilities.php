@@ -113,8 +113,10 @@ if (!class_exists("rsssl_vulnerabilities")) {
                 $url = 'https://api.really-simple-security.com/storage/downloads/plugin/'.$plugin.'.json';
                 $data = $this->download($url);
                 if ($data !== null)
-                $vulnerabilities[] = $data;//json_decode(json_encode($data), true);
+                $vulnerabilities[] = $data;
             }
+
+            $vulnerabilities = $this->filter_active_components($vulnerabilities, $installed_plugins);
 
             $this->store_file($vulnerabilities);
         }
@@ -157,8 +159,8 @@ if (!class_exists("rsssl_vulnerabilities")) {
         private function filter_active_components($components, array $active_plugins): array
         {
             $active_components = [];
-            foreach ($components as $component) foreach ($active_plugins as $active_plugin) if ($component->slug === $active_plugin['slug']) {
-                $component->version = $active_plugin['version'];
+            foreach ($components as $component) foreach ($active_plugins as $active_plugin) if ($component->slug === $active_plugin['TextDomain']) {
+                $component->version = $active_plugin['Version'];
                 //now we loop through the vulnerabilities of the component
                 foreach ($component->vulnerabilities as $index => $vulnerability) {
                     //if the max_version is not set, we remove the vulnerability from the array
@@ -169,7 +171,7 @@ if (!class_exists("rsssl_vulnerabilities")) {
                     if (!isset($vulnerability->max_version)) {
                         continue;
                     }//if the max_version is higher or equal to the version of the plugin, we remove the vulnerability from the array
-                    if (version_compare($active_plugin['version'], $vulnerability->max_version, '>=')) {
+                    if (version_compare($active_plugin['Version'], $vulnerability->max_version, '>=')) {
                         unset($component->vulnerabilities[$index]);
                     }
                 }
@@ -220,13 +222,13 @@ if (!class_exists("rsssl_vulnerabilities")) {
          *
          * @param $data
          * @param bool $isCore
-         * @return array
+         * @return void
          */
-        private function store_file($data, bool $isCore = false): ?array
+        private function store_file($data, bool $isCore = false): void
         {
             //if the data is empty, we return null
             if (empty($data)) {
-                return null;
+                return;
             }
             //we get the upload directory
             $upload_dir = wp_upload_dir();
@@ -246,8 +248,6 @@ if (!class_exists("rsssl_vulnerabilities")) {
             }
 
             file_put_contents($file, json_encode($data));
-            //we return the data
-            return $data;
         }
     }
 }
