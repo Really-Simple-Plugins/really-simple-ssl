@@ -9,20 +9,12 @@ const useModalData = create(( set, get ) => ({
     modalData: [],
     buttonsDisabled: false,
     showModal:false,
-    dropItemFromModal: false,
-
-    /*
-     * Handle instantiation of a modal window
-     * @param showModal
-     * @param data
-     * @param dropItem
-     */
-    handleModal: (showModal, modalData, dropItemFromModal) => {
-        set({showModal: showModal, modalData:modalData, dropItemFromModal:dropItemFromModal });
+    handleModal: (showModal, modalData) => {
+        set({showModal: showModal, modalData:modalData });
     },
     setModalData: (modalData) => {
         set({modalData:modalData });
-    }
+    },
 }));
 
 export default useModalData;

@@ -4,7 +4,7 @@ const ModalControl = (props) => {
     const {handleModal} = useModal();
 
     const onClickHandler = () => {
-        handleModal(true, props.modalData, props.item );
+        handleModal(true, props.modalData );
     }
 
     return (

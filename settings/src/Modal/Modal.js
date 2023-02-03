@@ -8,8 +8,8 @@ const Modal = (props) => {
     const {handleModal, modalData, setModalData, showModal} = useModal();
     const [buttonsDisabled, setButtonsDisabled] = useState(false);
 
-    const dismissModal = (dropItem) => {
-        handleModal(false, null, dropItem);
+    const dismissModal = () => {
+        handleModal(false, null, null);
     }
 
     const handleFix = (e) => {
@@ -22,7 +22,7 @@ const Modal = (props) => {
             data.subtitle = '';
             setModalData(data);
             if (response.success) {
-                dismissModal(modalData);
+                handleModal(false, null);
             }
         });
     }

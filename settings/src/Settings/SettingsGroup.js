@@ -57,6 +57,7 @@ const SettingsGroup = (props) => {
         }
     }
 
+    let status = 'invalid';
     if ( !activeGroup ) {
         return (<></>);
     }
@@ -69,6 +70,7 @@ const SettingsGroup = (props) => {
             msg = rsssl_settings.messageInvalid;
         }
     }
+
     let disabled = licenseStatus !=='valid' && activeGroup.premium;
     //if a feature can only be used on networkwide or single site setups, pass that info here.
     let networkwide_error = !rsssl_settings.networkwide_active && activeGroup.networkwide_required;

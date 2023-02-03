@@ -12,7 +12,7 @@ import Host from "./Host";
 import Hyperlink from "../utils/Hyperlink";
 import LetsEncrypt from "../LetsEncrypt/LetsEncrypt";
 import Activate from "../LetsEncrypt/Activate";
-import MixedContentScan from "./MixedContentScan";
+import MixedContentScan from "./MixedContentScan/MixedContentScan";
 import PermissionsPolicy from "./PermissionsPolicy";
 import CheckboxControl from "./CheckboxControl";
 import Support from "./Support";

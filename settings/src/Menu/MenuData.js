@@ -23,9 +23,9 @@ const useMenu = create(( set, get ) => ({
     },
     fetchMenuData: (fields) => {
         let menu = rsssl_settings.menu;
-        menu =Object.values(menu);
+        menu = Object.values(menu);
         const selectedMainMenuItem = getAnchor('main') || 'dashboard';
-        if (typeof fields !== 'undefined' ) {
+        if ( typeof fields !== 'undefined' ) {
             let subMenu = getSubMenu(menu, selectedMainMenuItem);
             const selectedSubMenuItem = getSelectedSubMenuItem(subMenu, fields);
             const { nextMenuItem, previousMenuItem }  = getPreviousAndNextMenuItems(menu, selectedSubMenuItem);
