@@ -19735,13 +19735,13 @@ const UseMixedContent = (0,zustand__WEBPACK_IMPORTED_MODULE_1__.create)((set, ge
   action: '',
   nonce: '',
   completedStatus: 'never',
-  paused: false,
   progress: 0,
+  scanStatus: false,
   fetchMixedContentData: async () => {
     set({
-      state: 'running',
-      paused: false
+      scanStatus: 'running'
     });
+    console.log("fetch initial data with scanStatus false ");
     const {
       data,
       progress,
@@ -19751,7 +19751,7 @@ const UseMixedContent = (0,zustand__WEBPACK_IMPORTED_MODULE_1__.create)((set, ge
       completed_status
     } = await getScanIteration(false);
     set({
-      state: state,
+      scanStatus: state,
       mixedContentData: data,
       progress: progress,
       action: action,
@@ -19760,9 +19760,32 @@ const UseMixedContent = (0,zustand__WEBPACK_IMPORTED_MODULE_1__.create)((set, ge
       dataLoaded: true
     });
   },
-  run: async start => {
-    let currentState = get().state;
-    currentState = typeof start !== 'undefined' ? currentState : console.log("state " + currentState);
+  start: async () => {
+    const {
+      data,
+      progress,
+      state,
+      action,
+      nonce,
+      completed_status
+    } = await getScanIteration('start');
+    console.log("response state " + state);
+    set({
+      scanStatus: state,
+      mixedContentData: data,
+      progress: progress,
+      action: action,
+      nonce: nonce,
+      completedStatus: completed_status,
+      dataLoaded: true
+    });
+  },
+  runScanIteration: async () => {
+    let currentState = get().scanStatus;
+    if (currentState === 'stop') {
+      return;
+    }
+    console.log("in run function state " + currentState);
     const {
       data,
       progress,
@@ -19771,19 +19794,22 @@ const UseMixedContent = (0,zustand__WEBPACK_IMPORTED_MODULE_1__.create)((set, ge
       nonce,
       completed_status
     } = await getScanIteration(currentState);
-    set({
-      state: state,
-      mixedContentData: data,
-      progress: progress,
-      action: action,
-      nonce: nonce,
-      completedStatus: completed_status
-    });
+    console.log("response state " + state);
+    if (get().scanStatus !== 'stop') {
+      set({
+        scanStatus: state,
+        mixedContentData: data,
+        progress: progress,
+        action: action,
+        nonce: nonce,
+        completedStatus: completed_status,
+        dataLoaded: true
+      });
+    }
   },
   stop: async () => {
     set({
-      state: 'stop',
-      paused: true
+      scanStatus: 'stop'
     });
     const {
       data,
@@ -19794,7 +19820,7 @@ const UseMixedContent = (0,zustand__WEBPACK_IMPORTED_MODULE_1__.create)((set, ge
       completed_status
     } = await getScanIteration('stop');
     set({
-      state: state,
+      scanStatus: 'stop',
       mixedContentData: data,
       progress: progress,
       action: action,
@@ -19830,6 +19856,7 @@ const UseMixedContent = (0,zustand__WEBPACK_IMPORTED_MODULE_1__.create)((set, ge
 }));
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (UseMixedContent);
 const getScanIteration = async state => {
+  console.log("state in get iterations " + state);
   return await _utils_api__WEBPACK_IMPORTED_MODULE_0__.runTest('mixed_content_scan', state).then(response => {
     let data = response.data;
     console.log("iteration");
@@ -19841,6 +19868,10 @@ const getScanIteration = async state => {
       data = [];
     }
     response.data = data;
+    if (state === 'stop') {
+      console.log("current state in get iteration is stop");
+      response.state = 'stop';
+    }
     return response;
   });
 };
@@ -19882,11 +19913,12 @@ const MixedContentScan = props => {
   const {
     fetchMixedContentData,
     mixedContentData,
-    run,
+    runScanIteration,
+    start,
     stop,
     dataLoaded,
     action,
-    state,
+    scanStatus,
     progress,
     completedStatus,
     nonce,
@@ -19896,8 +19928,15 @@ const MixedContentScan = props => {
   const [showIgnoredUrls, setShowIgnoredUrls] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)(false);
   const [resetPaginationToggle, setResetPaginationToggle] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)(false);
   (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
+    console.log("fetch inital data");
     fetchMixedContentData();
   }, []);
+  (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
+    if (scanStatus === 'running') {
+      console.log("status is running, fetch new ");
+      runScanIteration();
+    }
+  }, [progress, scanStatus]);
   const toggleIgnoredUrls = e => {
     setShowIgnoredUrls(!showIgnoredUrls);
   };
@@ -19966,8 +20005,8 @@ const MixedContentScan = props => {
   //filter also recently fixed items
   dataTable = dataTable.filter(item => !item.fixed);
   let progressOutput = progress + '%';
-  let startDisabled = state === 'running';
-  let stopDisabled = state !== 'running';
+  let startDisabled = scanStatus === 'running';
+  let stopDisabled = scanStatus !== 'running';
   const customStyles = {
     headCells: {
       style: {
@@ -19996,13 +20035,13 @@ const MixedContentScan = props => {
     style: {
       width: progressOutput
     }
-  })), state === 'running' && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+  })), scanStatus === 'running' && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "rsssl-current-scan-action"
   }, action), dataTable.length === 0 && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "rsssl-mixed-content-description"
-  }, state !== 'running' && completedStatus === 'never' && (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)("No results. Start your first scan", "really-simple-ssl"), state !== 'running' && completedStatus === 'completed' && (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)("Everything is now served over SSL", "really-simple-ssl")), (state === 'running' || completedStatus !== 'completed') && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+  }, scanStatus !== 'running' && completedStatus === 'never' && (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)("No results. Start your first scan", "really-simple-ssl"), scanStatus !== 'running' && completedStatus === 'completed' && (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)("Everything is now served over SSL", "really-simple-ssl")), (scanStatus === 'running' || completedStatus !== 'completed') && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "rsssl-mixed-content-placeholder"
-  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null)), state !== 'running' && completedStatus === 'completed' && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null)), scanStatus !== 'running' && completedStatus === 'completed' && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "rsssl-shield-overlay"
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_utils_Icon__WEBPACK_IMPORTED_MODULE_6__["default"], {
     name: "shield",
@@ -20025,7 +20064,7 @@ const MixedContentScan = props => {
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
     className: "button",
     disabled: startDisabled,
-    onClick: () => run(true)
+    onClick: () => start()
   }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)("Start scan", "really-simple-ssl")), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
     className: "button",
     disabled: stopDisabled,

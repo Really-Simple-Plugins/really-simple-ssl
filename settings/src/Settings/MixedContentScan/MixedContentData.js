@@ -8,41 +8,65 @@ const UseMixedContent = create(( set, get ) => ({
     action:'',
     nonce:'',
     completedStatus:'never',
-    paused:false,
     progress:0,
+    scanStatus:false,
     fetchMixedContentData: async () => {
-        set({ state: 'running', paused: false } );
+        set({ scanStatus: 'running' } );
+        console.log("fetch initial data with scanStatus false ");
         const {data, progress, state, action, nonce, completed_status } = await getScanIteration(false);
         set({
-            state: state,
+            scanStatus: state,
             mixedContentData: data,
             progress: progress,
             action: action,
             nonce: nonce,
             completedStatus: completed_status,
-            dataLoaded: true
+            dataLoaded: true,
         });
     },
-    run: async (start) => {
-        let currentState = get().state;
-        currentState = typeof start !=='undefined' ? currentState:
-        console.log("state "+currentState);
+    start: async () => {
+
+        const {data, progress, state, action, nonce, completed_status } = await getScanIteration('start');
+        console.log("response state "+state);
+        set({
+            scanStatus: state,
+            mixedContentData: data,
+            progress: progress,
+            action: action,
+            nonce: nonce,
+            completedStatus: completed_status,
+            dataLoaded:true,
+        });
+    },
+    runScanIteration: async () => {
+        let currentState = get().scanStatus;
+        if ( currentState==='stop' ) {
+            return;
+        }
+
+        console.log("in run function state "+currentState);
 
         const {data, progress, state, action, nonce, completed_status } = await getScanIteration(currentState);
-        set({
-            state: state,
-            mixedContentData: data,
-            progress: progress,
-            action: action,
-            nonce: nonce,
-            completedStatus: completed_status,
-        });
+        console.log("response state "+state);
+        if ( get().scanStatus !== 'stop' ) {
+            set({
+                scanStatus: state,
+                mixedContentData: data,
+                progress: progress,
+                action: action,
+                nonce: nonce,
+                completedStatus: completed_status,
+                dataLoaded:true,
+            });
+        }
+
+
     },
     stop: async () => {
-        set({ state: 'stop', paused: true } );
+        set({ scanStatus: 'stop' } );
         const {data, progress, state, action, nonce, completed_status } = await getScanIteration('stop');
         set({
-            state: state,
+            scanStatus: 'stop',
             mixedContentData: data,
             progress: progress,
             action: action,
@@ -78,6 +102,8 @@ const UseMixedContent = create(( set, get ) => ({
 export default UseMixedContent;
 
 const getScanIteration = async (state) => {
+    console.log("state in get iterations "+state);
+
     return await rsssl_api.runTest('mixed_content_scan', state).then((response) => {
         let data = response.data;
         console.log("iteration");
@@ -89,6 +115,10 @@ const getScanIteration = async (state) => {
             data = [];
         }
         response.data = data;
+        if ( state==='stop' ) {
+            console.log("current state in get iteration is stop")
+            response.state = 'stop';
+        }
 
         return response;
     })

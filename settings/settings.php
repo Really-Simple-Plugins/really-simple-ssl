@@ -691,7 +691,6 @@ function rsssl_rest_api_fields_get(){
 	}
 
 	$output['fields'] = $fields;
-	$output['menu'] = $menu;
 	$output['request_success'] = true;
 	$output['progress'] = RSSSL()->progress->get();
     return apply_filters('rsssl_rest_api_fields_get', $output);

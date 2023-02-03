@@ -8,13 +8,21 @@ import Icon from "../../utils/Icon";
 import UseMixedContent from "./MixedContentData";
 
 const MixedContentScan = (props) => {
-    const {fetchMixedContentData, mixedContentData, run, stop, dataLoaded, action, state, progress, completedStatus, nonce, removeDataItem, ignoreDataItem} = UseMixedContent();
+    const {fetchMixedContentData, mixedContentData, runScanIteration, start, stop, dataLoaded, action, scanStatus, progress, completedStatus, nonce, removeDataItem, ignoreDataItem} = UseMixedContent();
     const [showIgnoredUrls, setShowIgnoredUrls] = useState(false);
     const [resetPaginationToggle, setResetPaginationToggle] = useState(false);
 
     useEffect( () => {
+        console.log("fetch inital data");
         fetchMixedContentData();
     }, [] );
+
+    useEffect( () => {
+        if (scanStatus==='running') {
+            console.log("status is running, fetch new ");
+            runScanIteration()
+        }
+    }, [progress, scanStatus] );
 
     const toggleIgnoredUrls = (e) => {
         setShowIgnoredUrls(!showIgnoredUrls);
@@ -87,8 +95,8 @@ const MixedContentScan = (props) => {
     );
 
     let progressOutput =progress+'%';
-    let startDisabled = state === 'running';
-    let stopDisabled = state !== 'running';
+    let startDisabled = scanStatus === 'running';
+    let stopDisabled = scanStatus !== 'running';
 
     const customStyles = {
         headCells: {
@@ -117,17 +125,17 @@ const MixedContentScan = (props) => {
             <div className="rsssl-progress-container">
                 <div className="rsssl-progress-bar" style={{width: progressOutput}} ></div>
             </div>
-            {state==='running' && <div className="rsssl-current-scan-action">{action}</div>}
+            {scanStatus==='running' && <div className="rsssl-current-scan-action">{action}</div>}
                 {dataTable.length===0 && <>
                     <div className="rsssl-mixed-content-description">
-                        {state!=='running' && completedStatus==='never' && __("No results. Start your first scan","really-simple-ssl")}
-                        {state!=='running' && completedStatus==='completed' && __("Everything is now served over SSL","really-simple-ssl")}
+                        {scanStatus!=='running' && completedStatus==='never' && __("No results. Start your first scan","really-simple-ssl")}
+                        {scanStatus!=='running' && completedStatus==='completed' && __("Everything is now served over SSL","really-simple-ssl")}
                     </div>
-                    { (state ==='running' || completedStatus!=='completed') && <div className="rsssl-mixed-content-placeholder">
+                    { (scanStatus ==='running' || completedStatus!=='completed') && <div className="rsssl-mixed-content-placeholder">
                              <div></div><div></div><div></div>
                     </div>
                     }
-                    { state!=='running' && completedStatus==='completed' && <div className="rsssl-shield-overlay">
+                    { scanStatus!=='running' && completedStatus==='completed' && <div className="rsssl-shield-overlay">
                           <Icon name = "shield"  size="80px"/>
                     </div> }
                     </>}
@@ -142,7 +150,7 @@ const MixedContentScan = (props) => {
                     customStyles={customStyles}
                 /></div>  }
             <div className="rsssl-grid-item-content-footer">
-                <button className="button" disabled={startDisabled} onClick={ () => run(true) }>{__("Start scan","really-simple-ssl")}</button>
+                <button className="button" disabled={startDisabled} onClick={ () => start() }>{__("Start scan","really-simple-ssl")}</button>
                 <button className="button" disabled={stopDisabled} onClick={ () => stop() }>{__("Stop","really-simple-ssl")}</button>
                 <ToggleControl
                     checked= { showIgnoredUrls==1 }
