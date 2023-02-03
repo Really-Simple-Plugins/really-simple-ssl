@@ -3,12 +3,12 @@ import Hyperlink from "./Hyperlink";
 
 const Error = (props) => {
     if (props.error) {
-        console.log("errors detected during the loading of the REST API");
+        console.log("errors detected during the loading of the settings page");
         console.log(props.error);
     }
     let description = false;
     let url = 'https://really-simple-ssl.com/instructions/how-to-debug-a-blank-settings-page-in-really-simple-ssl/';
-    let generic_rest_blocked_message = __("Please check if security settings on the server or a plugin is blocking the Rest API", "really-simple-ssl");
+    let generic_rest_blocked_message = __("Please check if security settings on the server or a plugin is blocking the requests from Really Simple SSL.", "really-simple-ssl");
     let message = false;
     if (props.error) {
         message = props.error.message;
@@ -37,7 +37,7 @@ const Error = (props) => {
                 }
 
                 <div>
-                    <p>{__("The Rest Api returned the following errors:", "really-simple-ssl")}</p>
+                    <p>{__("The request returned the following errors:", "really-simple-ssl")}</p>
                     <ul>
                         {props.error.code && <li>{__("Response code: ", "really-simple-ssl")}{props.error.code}</li>}
                         {props.error.data.status && <li>{__("Status code: ", "really-simple-ssl")}{props.error.data.status}</li>}
