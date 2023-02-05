@@ -67,6 +67,37 @@ const useFields = create(( set, get ) => ({
             })
         )
     },
+    updateSubField: (id, subItemId, value) => {
+        set(
+            produce((state) => {
+                let index = false;
+                let subIndex = false;
+                state.fields.forEach(function(fieldItem, i) {
+                    if (fieldItem.id === id ){
+                        index = i;
+                        let itemValue = fieldItem.value;
+                        if ( !Array.isArray(itemValue) ) {
+                            itemValue = [];
+                        }
+
+                        itemValue.forEach(function(subItem, j) {
+                            if (subItem.id === subItemId ){
+                                subIndex = j;
+                            }
+                        });
+                    }
+                });
+
+                state.fields[index].updateItemId = subItemId;
+                state.fields[index].value[subIndex]['value'] = value;
+
+                state.fields[index].value = state.fields[index].value.map(item => {
+                    const { deleteControl, valueControl, statusControl, ...rest } = item;
+                    return rest;
+                });
+            })
+        )
+    },
 
     addHelpNotice : (id, label, text, title, url) => {
         //create help object

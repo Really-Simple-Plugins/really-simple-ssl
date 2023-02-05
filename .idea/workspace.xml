@@ -1,13 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="0f0d1ec8-2b48-488d-aa69-e5f1005f7b78" name="Changes" comment="" />
+    <list default="true" id="0f0d1ec8-2b48-488d-aa69-e5f1005f7b78" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/settings/build/index.asset.php" beforeDir="false" afterPath="$PROJECT_DIR$/settings/build/index.asset.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/settings/build/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/settings/build/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/settings/build/index.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/settings/build/index.js.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/settings/src/Settings/FieldsData.js" beforeDir="false" afterPath="$PROJECT_DIR$/settings/src/Settings/FieldsData.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/settings/src/Settings/PermissionsPolicy.js" beforeDir="false" afterPath="$PROJECT_DIR$/settings/src/Settings/PermissionsPolicy.js" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
-  <component name="ComposerSettings" synchronizationState="SYNCHRONIZE">
+  <component name="ComposerSettings" doNotAsk="true" synchronizationState="SYNCHRONIZE">
     <pharConfigPath>$PROJECT_DIR$/composer.json</pharConfigPath>
     <execution />
   </component>
@@ -24,14 +30,14 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "WebServerToolWindowFactoryState": "false",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RunManager">
     <configuration name="phpunit.xml.dist" type="PHPUnitRunConfigurationType" factoryName="PHPUnit">
       <TestRunner scope="XML" />
@@ -47,7 +53,11 @@
       <option name="presentableId" value="Default" />
       <updated>1675249582035</updated>
       <workItem from="1675249583308" duration="3000" />
+      <workItem from="1675614024536" duration="11000" />
     </task>
     <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
   </component>
 </project>

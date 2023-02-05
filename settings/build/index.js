@@ -18991,6 +18991,37 @@ const useFields = (0,zustand__WEBPACK_IMPORTED_MODULE_4__.create)((set, get) => 
       state.fields[index].value = value;
     }));
   },
+  updateSubField: (id, subItemId, value) => {
+    set((0,immer__WEBPACK_IMPORTED_MODULE_5__.produce)(state => {
+      let index = false;
+      let subIndex = false;
+      state.fields.forEach(function (fieldItem, i) {
+        if (fieldItem.id === id) {
+          index = i;
+          let itemValue = fieldItem.value;
+          if (!Array.isArray(itemValue)) {
+            itemValue = [];
+          }
+          itemValue.forEach(function (subItem, j) {
+            if (subItem.id === subItemId) {
+              subIndex = j;
+            }
+          });
+        }
+      });
+      state.fields[index].updateItemId = subItemId;
+      state.fields[index].value[subIndex]['value'] = value;
+      state.fields[index].value = state.fields[index].value.map(item => {
+        const {
+          deleteControl,
+          valueControl,
+          statusControl,
+          ...rest
+        } = item;
+        return rest;
+      });
+    }));
+  },
   addHelpNotice: (id, label, text, title, url) => {
     //create help object
     let help = {};
@@ -20214,10 +20245,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var _ChangeStatus__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./ChangeStatus */ "./src/Settings/ChangeStatus.js");
-/* harmony import */ var react_data_table_component__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! react-data-table-component */ "./node_modules/react-data-table-component/dist/index.cjs.js");
-/* harmony import */ var _utils_api__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../utils/api */ "./src/utils/api.js");
-/* harmony import */ var _utils_Icon__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../utils/Icon */ "./src/utils/Icon.js");
+/* harmony import */ var react_data_table_component__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! react-data-table-component */ "./node_modules/react-data-table-component/dist/index.cjs.js");
+/* harmony import */ var _utils_Icon__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../utils/Icon */ "./src/utils/Icon.js");
+/* harmony import */ var _FieldsData__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./FieldsData */ "./src/Settings/FieldsData.js");
 
 
 
@@ -20225,154 +20255,132 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-
-class PermissionsPolicy extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Component {
-  constructor() {
-    super(...arguments);
-    this.state = {
-      enable_permissions_policy: 0
-    };
-  }
-  componentDidMount() {
-    this.togglePermissionsPolicyStatus = this.togglePermissionsPolicyStatus.bind(this);
-    this.onChangeHandler = this.onChangeHandler.bind(this);
-    let field = this.props.fields.filter(field => field.id === 'enable_permissions_policy')[0];
-    this.setState({
-      enable_permissions_policy: field.value
-    });
-  }
-  onChangeHandler(value, clickedItem) {
-    let field = this.props.field;
+const PermissionsPolicy = props => {
+  const {
+    fields,
+    updateField,
+    updateSubField,
+    setChangedField,
+    saveFields
+  } = (0,_FieldsData__WEBPACK_IMPORTED_MODULE_5__["default"])();
+  const [enablePermissionsPolicy, setEnablePermissionsPolicy] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)(0);
+  (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useEffect)(async () => {
+    let field = fields.filter(field => field.id === 'enable_permissions_policy')[0];
+    setEnablePermissionsPolicy(field.value);
+  }, []);
+  const onChangeHandler = (value, clickedItem) => {
+    let field = props.field;
     if (typeof field.value === 'object') {
-      field.value = Object.values(field.value);
+      updateField(field.id, Object.values(field.value));
     }
-    //find this item in the field list
-    for (const item of field.value) {
-      if (item.id === clickedItem.id) {
-        item['value'] = value;
-      }
-      delete item.valueControl;
-      delete item.statusControl;
-      delete item.deleteControl;
-    }
+
     //the updateItemId allows us to update one specific item in a field set.
-    field.updateItemId = clickedItem.id;
-    let saveFields = [];
-    saveFields.push(field);
-    this.props.updateField(field.id, field.value);
-    _utils_api__WEBPACK_IMPORTED_MODULE_5__.setFields(saveFields).then(response => {
-      //this.props.showSavedSettingsNotice();
-    });
-  }
-  togglePermissionsPolicyStatus(e, enforce) {
+    updateSubField(field.id, clickedItem.id, value);
+    setChangedField(field.id, value);
+    saveFields(true, false);
+  };
+  const togglePermissionsPolicyStatus = (e, enforce) => {
     e.preventDefault();
-    let fields = this.props.fields;
     //look up permissions policy enable field //enable_permissions_policy
     let field = fields.filter(field => field.id === 'enable_permissions_policy')[0];
-    //enforce this setting
-    field.value = enforce;
-    this.setState({
-      enable_permissions_policy: enforce
-    });
-    let saveFields = [];
-    saveFields.push(field);
-    this.props.updateField(field.id, field.value);
-    _utils_api__WEBPACK_IMPORTED_MODULE_5__.setFields(saveFields).then(response => {
-      //this.props.showSavedSettingsNotice();
-    });
-  }
-  render() {
-    let field = this.props.field;
-    let fieldValue = field.value;
-    let options = this.props.options;
-    const {
-      enable_permissions_policy
-    } = this.state;
-    columns = [];
-    field.columns.forEach(function (item, i) {
-      let newItem = {
-        name: item.name,
-        sortable: item.sortable,
-        width: item.width,
-        selector: row => row[item.column]
-      };
-      columns.push(newItem);
-    });
-    let data = field.value;
-    if (typeof data === 'object') {
-      data = Object.values(data);
-    }
-    if (!Array.isArray(data)) {
-      data = [];
-    }
-    let disabled = false;
-    for (const item of data) {
-      item.valueControl = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.SelectControl, {
-        help: "",
-        value: item.value,
-        disabled: disabled,
-        options: options,
-        label: "",
-        onChange: fieldValue => this.onChangeHandler(fieldValue, item, 'value')
-      });
-    }
-    const customStyles = {
-      headCells: {
-        style: {
-          paddingLeft: '0',
-          // override the cell padding for head cells
-          paddingRight: '0'
-        }
-      },
-      cells: {
-        style: {
-          paddingLeft: '0',
-          // override the cell padding for data cells
-          paddingRight: '0'
-        }
-      }
+    //enforce setting
+    setEnablePermissionsPolicy(enforce);
+    updateField(field.id, enforce);
+    setChangedField(field.id, field.value);
+    saveFields(true, false);
+  };
+  let field = props.field;
+  let fieldValue = field.value;
+  let options = props.options;
+  columns = [];
+  field.columns.forEach(function (item, i) {
+    let newItem = {
+      name: item.name,
+      sortable: item.sortable,
+      width: item.width,
+      selector: row => row[item.column]
     };
-    (0,react_data_table_component__WEBPACK_IMPORTED_MODULE_4__.createTheme)('really-simple-plugins', {
-      divider: {
-        default: 'transparent'
-      }
-    }, 'light');
-    return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-      className: this.props.highLightClass
-    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_data_table_component__WEBPACK_IMPORTED_MODULE_4__["default"], {
-      columns: columns,
-      data: data,
-      dense: true,
-      pagination: false,
-      customStyles: customStyles,
-      theme: "really-simple-plugins"
-    }), enable_permissions_policy != 1 && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
-      className: "button button-primary",
-      onClick: e => this.togglePermissionsPolicyStatus(e, true)
-    }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Enforce", "really-simple-ssl")), enable_permissions_policy == 1 && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-      className: "rsssl-locked"
-    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-      className: "rsssl-shield-overlay"
-    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_utils_Icon__WEBPACK_IMPORTED_MODULE_6__["default"], {
-      name: "shield",
-      size: "80px"
-    })), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-      className: "rsssl-locked-overlay"
-    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
-      className: "rsssl-progress-status rsssl-learning-mode-enforced"
-    }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Enforced", "really-simple-ssl")), this.props.disabled && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Permissions Policy is set outside Really Simple SSL.", "really-simple-ssl"), "\xA0"), !this.props.disabled && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Permissions Policy is enforced.", "really-simple-ssl"), "\xA0"), !this.props.disabled && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
-      className: "rsssl-learning-mode-link",
-      href: "#",
-      onClick: e => this.togglePermissionsPolicyStatus(e, false)
-    }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Disable", "really-simple-ssl")))), this.props.disabled && enable_permissions_policy != 1 && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-      className: "rsssl-locked"
-    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-      className: "rsssl-locked-overlay"
-    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
-      className: "rsssl-progress-status rsssl-disabled"
-    }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Disabled ", "really-simple-ssl")), (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("The Permissions Policy has been disabled.", "really-simple-ssl"))));
+    columns.push(newItem);
+  });
+  let data = field.value;
+  if (typeof data === 'object') {
+    data = Object.values(data);
   }
-}
+  if (!Array.isArray(data)) {
+    data = [];
+  }
+  let disabled = false;
+  let outputData = [];
+  for (const item of data) {
+    let itemCopy = {
+      ...item
+    };
+    itemCopy.valueControl = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.SelectControl, {
+      help: "",
+      value: item.value,
+      disabled: disabled,
+      options: options,
+      label: "",
+      onChange: fieldValue => onChangeHandler(fieldValue, item, 'value')
+    });
+    outputData.push(itemCopy);
+  }
+  const customStyles = {
+    headCells: {
+      style: {
+        paddingLeft: '0',
+        // override the cell padding for head cells
+        paddingRight: '0'
+      }
+    },
+    cells: {
+      style: {
+        paddingLeft: '0',
+        // override the cell padding for data cells
+        paddingRight: '0'
+      }
+    }
+  };
+  (0,react_data_table_component__WEBPACK_IMPORTED_MODULE_3__.createTheme)('really-simple-plugins', {
+    divider: {
+      default: 'transparent'
+    }
+  }, 'light');
+  return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: props.highLightClass
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_data_table_component__WEBPACK_IMPORTED_MODULE_3__["default"], {
+    columns: columns,
+    data: outputData,
+    dense: true,
+    pagination: false,
+    customStyles: customStyles,
+    theme: "really-simple-plugins"
+  }), enablePermissionsPolicy != 1 && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
+    className: "button button-primary",
+    onClick: e => togglePermissionsPolicyStatus(e, true)
+  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Enforce", "really-simple-ssl")), enablePermissionsPolicy == 1 && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "rsssl-locked"
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "rsssl-shield-overlay"
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_utils_Icon__WEBPACK_IMPORTED_MODULE_4__["default"], {
+    name: "shield",
+    size: "80px"
+  })), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "rsssl-locked-overlay"
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
+    className: "rsssl-progress-status rsssl-learning-mode-enforced"
+  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Enforced", "really-simple-ssl")), props.disabled && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Permissions Policy is set outside Really Simple SSL.", "really-simple-ssl"), "\xA0"), !props.disabled && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Permissions Policy is enforced.", "really-simple-ssl"), "\xA0"), !props.disabled && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
+    className: "rsssl-learning-mode-link",
+    href: "#",
+    onClick: e => togglePermissionsPolicyStatus(e, false)
+  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Disable", "really-simple-ssl")))), props.disabled && enablePermissionsPolicy != 1 && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "rsssl-locked"
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "rsssl-locked-overlay"
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
+    className: "rsssl-progress-status rsssl-disabled"
+  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Disabled ", "really-simple-ssl")), (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("The Permissions Policy has been disabled.", "really-simple-ssl"))));
+};
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (PermissionsPolicy);
 
 /***/ }),
