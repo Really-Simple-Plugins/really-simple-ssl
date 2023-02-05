@@ -6,20 +6,20 @@ import * as rsssl_api from "../../utils/api";
 import ModalControl from "../../Modal/ModalControl";
 import Icon from "../../utils/Icon";
 import UseMixedContent from "./MixedContentData";
+import useModal from "../../Modal/ModalData";
 
 const MixedContentScan = (props) => {
+    const {fixedItems, ignoredItems} = useModal();
     const {fetchMixedContentData, mixedContentData, runScanIteration, start, stop, dataLoaded, action, scanStatus, progress, completedStatus, nonce, removeDataItem, ignoreDataItem} = UseMixedContent();
     const [showIgnoredUrls, setShowIgnoredUrls] = useState(false);
     const [resetPaginationToggle, setResetPaginationToggle] = useState(false);
 
     useEffect( () => {
-        console.log("fetch inital data");
         fetchMixedContentData();
     }, [] );
 
     useEffect( () => {
         if (scanStatus==='running') {
-            console.log("status is running, fetch new ");
             runScanIteration()
         }
     }, [progress, scanStatus] );
@@ -42,12 +42,17 @@ const MixedContentScan = (props) => {
     });
 
     let dataTable = dataLoaded ? mixedContentData : [];
-    console.log("datatable contents");
-    console.log(dataTable);
 
     for (const item of dataTable) {
         item.warningControl = <span className="rsssl-task-status rsssl-warning">{__("Warning", "really-simple-ssl")}</span>
 
+        //check if an item was recently fixed or ignored, and update the table
+        if (fixedItems.includes(item.id)) {
+            item.fixed = true;
+        }
+        if (ignoredItems.includes(item.id)) {
+            item.ignored = true;
+        }
         //give fix and details the url as prop
         if ( item.fix ) {
             item.fix.url = item.blocked_url;
@@ -67,18 +72,19 @@ const MixedContentScan = (props) => {
             }
         }
         item.detailsControl = item.details &&
-            <ModalControl removeDataItem={removeDataItem}
+            <ModalControl
                             handleModal={props.handleModal}
                             item={item}
+                            id={item.id}
                             btnText={__("Details", "really-simple-ssl")}
                             btnStyle={"secondary"}
                             modalData={item.details}/>;
         item.fixControl = item.fix &&
             <ModalControl className={"button button-primary"}
-                            removeDataItem={removeDataItem}
                             handleModal={props.handleModal}
                             item={item}
-                            btnText={__("Fix", "really-simple-ssl")}
+                          id={item.id}
+                          btnText={__("Fix", "really-simple-ssl")}
                             btnStyle={"primary"}
                             modalData={item.fix}/>;
     }

@@ -2,9 +2,33 @@
 defined( 'ABSPATH' ) or die( "" );
 if ( ! class_exists( 'rsssl_placeholder' ) ) {
 	class rsssl_placeholder {
-		function __construct() {
+		private static $_this;
+
+		public function __construct() {
+			if ( isset( self::$_this ) ) {
+				wp_die();
+			}
+
+			add_filter("rsssl_run_test", array($this, 'mixed_content_scan'), 9, 3 );
+			self::$_this = $this;
 
 		}
+
+	/**
+	 * Catch rest api request
+	 * @param $response
+	 * @param $test
+	 * @param $data
+	 *
+	 * @return mixed
+	 */
+
+	public function mixed_content_scan($response, $test, $data ){
+		if ( $test === 'mixed_content_scan' ){
+			$response =  $this->mixed_content_data();
+		}
+		return $response;
+	}
 
 		/**
 		 * Set some placeholder data for CSP
@@ -223,7 +247,7 @@ if ( ! class_exists( 'rsssl_placeholder' ) ) {
 				]
 			];
 
-			return ['data' => $data, 'progress' => 0,'state' => 'stop', 'action'=>'','nonce' => wp_create_nonce( 'fix_mixed_content' ) ];
+			return ['data' => $data, 'progress' => 80,'state' => 'stop', 'action'=>'','nonce' => wp_create_nonce( 'fix_mixed_content' ) ];
 		}
 
 

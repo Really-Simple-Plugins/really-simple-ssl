@@ -1,8 +1,7 @@
 import { __ } from '@wordpress/i18n';
 import useFields from "./FieldsData";
 const ChangeStatus = (props) => {
-    const {fields, updateField, getFieldValue, getField, setChangedField, highLightField, saveFields} = useFields();
-
+    const {updateField, setChangedField, saveFields} = useFields();
     const onChangeHandler = (enabled, clickedItem, type ) => {
         let field=props.field;
         enabled = enabled==1 ? 0 : 1;

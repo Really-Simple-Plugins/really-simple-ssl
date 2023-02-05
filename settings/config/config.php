@@ -313,10 +313,6 @@ function rsssl_fields( $load_values = true ) {
 			'group_id' => 'general',
 			'type'     => 'checkbox',
 			'label'    => __( "Mixed content fixer", 'really-simple-ssl' ),
-			// 'help'        => [
-			// 	'label' => 'default',
-			// 	'text' => __( 'In most cases you need to leave this enabled, to prevent mixed content issues on your site.', 'really-simple-ssl' ),
-			// ],
 			'disabled' => false,
 			'default'  => true,
 		],
@@ -932,7 +928,6 @@ function rsssl_fields( $load_values = true ) {
 			'group_id'    => 'mixedcontentscan',
 			'type'        => 'mixedcontentscan',
 			'label'       => __( "Mixed content scan", "really-simple-ssl-pro" ),
-			'data_source' => [ 'RSSSL', 'placeholder', 'mixed_content_data' ],
 			'help'        => [
 				'label' => 'default',
 				'url' => 'https://really-simple-ssl.com/definition/what-is-mixed-content/?mtm_campaign=definition&mtm_source=free',

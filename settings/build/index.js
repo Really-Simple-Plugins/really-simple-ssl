@@ -17632,13 +17632,16 @@ const Modal = props => {
     handleModal,
     modalData,
     setModalData,
-    showModal
+    showModal,
+    setIgnoredItemId,
+    setFixedItemId,
+    item
   } = (0,_ModalData__WEBPACK_IMPORTED_MODULE_4__["default"])();
   const [buttonsDisabled, setButtonsDisabled] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)(false);
   const dismissModal = () => {
     handleModal(false, null, null);
   };
-  const handleFix = e => {
+  const handleFix = (e, type) => {
     //set to disabled
     let action = modalData.action;
     setButtonsDisabled(true);
@@ -17649,7 +17652,13 @@ const Modal = props => {
       data.description = response.msg;
       data.subtitle = '';
       setModalData(data);
+      setButtonsDisabled(false);
       if (response.success) {
+        if (type === 'ignore' && item !== false) {
+          setIgnoredItemId(item.id);
+        } else {
+          setFixedItemId(item.id);
+        }
         handleModal(false, null);
       }
     });
@@ -17700,11 +17709,11 @@ const Modal = props => {
   }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Help", "really-simple-ssl")), !modalData.ignored && modalData.action === 'ignore_url' && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
     disabled: disabled,
     className: "button button-primary",
-    onClick: e => handleFix(e)
+    onClick: e => handleFix(e, 'ignore')
   }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Ignore", "really-simple-ssl")), modalData.action !== 'ignore_url' && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
     disabled: disabled,
     className: "button button-primary",
-    onClick: e => handleFix(e)
+    onClick: e => handleFix(e, 'fix')
   }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Fix", "really-simple-ssl")))));
 };
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Modal);
@@ -17727,12 +17736,19 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _ModalData__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ModalData */ "./src/Modal/ModalData.js");
 
 
+
+/**
+ * Button to open the modal
+ * @param props
+ * @returns {JSX.Element}
+ * @constructor
+ */
 const ModalControl = props => {
   const {
     handleModal
   } = (0,_ModalData__WEBPACK_IMPORTED_MODULE_1__["default"])();
   const onClickHandler = () => {
-    handleModal(true, props.modalData);
+    handleModal(true, props.modalData, props.item);
   };
   return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
     className: "button button-" + props.btnStyle,
@@ -17771,10 +17787,28 @@ const useModalData = (0,zustand__WEBPACK_IMPORTED_MODULE_4__.create)((set, get) 
   modalData: [],
   buttonsDisabled: false,
   showModal: false,
-  handleModal: (showModal, modalData) => {
+  ignoredItems: [],
+  fixedItems: [],
+  item: false,
+  setIgnoredItemId: ignoredItemId => {
+    let ignoredItems = get().ignoredItems;
+    ignoredItems.push(ignoredItemId);
+    set({
+      ignoredItems: ignoredItems
+    });
+  },
+  setFixedItemId: fixedItemId => {
+    let fixedItems = get().fixedItems;
+    fixedItems.push(fixedItemId);
+    set({
+      fixedItems: fixedItems
+    });
+  },
+  handleModal: (showModal, modalData, item) => {
     set({
       showModal: showModal,
-      modalData: modalData
+      modalData: modalData,
+      item: item
     });
   },
   setModalData: modalData => {
@@ -18468,12 +18502,8 @@ __webpack_require__.r(__webpack_exports__);
 
 const ChangeStatus = props => {
   const {
-    fields,
     updateField,
-    getFieldValue,
-    getField,
     setChangedField,
-    highLightField,
     saveFields
   } = (0,_FieldsData__WEBPACK_IMPORTED_MODULE_2__["default"])();
   const onChangeHandler = (enabled, clickedItem, type) => {
@@ -19750,6 +19780,7 @@ const UseMixedContent = (0,zustand__WEBPACK_IMPORTED_MODULE_1__.create)((set, ge
       nonce,
       completed_status
     } = await getScanIteration(false);
+    console.log(data);
     set({
       scanStatus: state,
       mixedContentData: data,
@@ -19769,7 +19800,6 @@ const UseMixedContent = (0,zustand__WEBPACK_IMPORTED_MODULE_1__.create)((set, ge
       nonce,
       completed_status
     } = await getScanIteration('start');
-    console.log("response state " + state);
     set({
       scanStatus: state,
       mixedContentData: data,
@@ -19828,9 +19858,6 @@ const UseMixedContent = (0,zustand__WEBPACK_IMPORTED_MODULE_1__.create)((set, ge
       completedStatus: completed_status
     });
   },
-  setFixedItemId: fixedItemId => set({
-    fixedItemId
-  }),
   removeDataItem: removeItem => {
     let data = get().mixedContentData;
     for (const item of data) {
@@ -19856,11 +19883,8 @@ const UseMixedContent = (0,zustand__WEBPACK_IMPORTED_MODULE_1__.create)((set, ge
 }));
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (UseMixedContent);
 const getScanIteration = async state => {
-  console.log("state in get iterations " + state);
   return await _utils_api__WEBPACK_IMPORTED_MODULE_0__.runTest('mixed_content_scan', state).then(response => {
     let data = response.data;
-    console.log("iteration");
-    console.log(response);
     if (typeof data === 'object') {
       data = Object.values(data);
     }
@@ -19900,6 +19924,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _Modal_ModalControl__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../Modal/ModalControl */ "./src/Modal/ModalControl.js");
 /* harmony import */ var _utils_Icon__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../utils/Icon */ "./src/utils/Icon.js");
 /* harmony import */ var _MixedContentData__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./MixedContentData */ "./src/Settings/MixedContentScan/MixedContentData.js");
+/* harmony import */ var _Modal_ModalData__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../../Modal/ModalData */ "./src/Modal/ModalData.js");
+
 
 
 
@@ -19910,6 +19936,10 @@ __webpack_require__.r(__webpack_exports__);
 
 
 const MixedContentScan = props => {
+  const {
+    fixedItems,
+    ignoredItems
+  } = (0,_Modal_ModalData__WEBPACK_IMPORTED_MODULE_8__["default"])();
   const {
     fetchMixedContentData,
     mixedContentData,
@@ -19928,12 +19958,10 @@ const MixedContentScan = props => {
   const [showIgnoredUrls, setShowIgnoredUrls] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)(false);
   const [resetPaginationToggle, setResetPaginationToggle] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)(false);
   (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
-    console.log("fetch inital data");
     fetchMixedContentData();
   }, []);
   (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
     if (scanStatus === 'running') {
-      console.log("status is running, fetch new ");
       runScanIteration();
     }
   }, [progress, scanStatus]);
@@ -19953,13 +19981,18 @@ const MixedContentScan = props => {
     columns.push(newItem);
   });
   let dataTable = dataLoaded ? mixedContentData : [];
-  console.log("datatable contents");
-  console.log(dataTable);
   for (const item of dataTable) {
     item.warningControl = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
       className: "rsssl-task-status rsssl-warning"
     }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)("Warning", "really-simple-ssl"));
 
+    //check if an item was recently fixed or ignored, and update the table
+    if (fixedItems.includes(item.id)) {
+      item.fixed = true;
+    }
+    if (ignoredItems.includes(item.id)) {
+      item.ignored = true;
+    }
     //give fix and details the url as prop
     if (item.fix) {
       item.fix.url = item.blocked_url;
@@ -19981,18 +20014,18 @@ const MixedContentScan = props => {
       }
     }
     item.detailsControl = item.details && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_Modal_ModalControl__WEBPACK_IMPORTED_MODULE_5__["default"], {
-      removeDataItem: removeDataItem,
       handleModal: props.handleModal,
       item: item,
+      id: item.id,
       btnText: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)("Details", "really-simple-ssl"),
       btnStyle: "secondary",
       modalData: item.details
     });
     item.fixControl = item.fix && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_Modal_ModalControl__WEBPACK_IMPORTED_MODULE_5__["default"], {
       className: "button button-primary",
-      removeDataItem: removeDataItem,
       handleModal: props.handleModal,
       item: item,
+      id: item.id,
       btnText: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)("Fix", "really-simple-ssl"),
       btnStyle: "primary",
       modalData: item.fix

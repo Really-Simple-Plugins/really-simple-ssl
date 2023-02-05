@@ -14,6 +14,7 @@ const UseMixedContent = create(( set, get ) => ({
         set({ scanStatus: 'running' } );
         console.log("fetch initial data with scanStatus false ");
         const {data, progress, state, action, nonce, completed_status } = await getScanIteration(false);
+        console.log(data);
         set({
             scanStatus: state,
             mixedContentData: data,
@@ -25,9 +26,7 @@ const UseMixedContent = create(( set, get ) => ({
         });
     },
     start: async () => {
-
         const {data, progress, state, action, nonce, completed_status } = await getScanIteration('start');
-        console.log("response state "+state);
         set({
             scanStatus: state,
             mixedContentData: data,
@@ -74,7 +73,6 @@ const UseMixedContent = create(( set, get ) => ({
             completedStatus: completed_status,
         });
     },
-    setFixedItemId: (fixedItemId) => set({ fixedItemId } ),
     removeDataItem: (removeItem) => {
         let data = get().mixedContentData;
         for (const item of data) {
@@ -97,17 +95,15 @@ const UseMixedContent = create(( set, get ) => ({
             mixedContentData: data,
         });
     }
+
+
 }));
 
 export default UseMixedContent;
 
 const getScanIteration = async (state) => {
-    console.log("state in get iterations "+state);
-
     return await rsssl_api.runTest('mixed_content_scan', state).then((response) => {
         let data = response.data;
-        console.log("iteration");
-        console.log(response);
         if (typeof data === 'object') {
             data = Object.values(data);
         }

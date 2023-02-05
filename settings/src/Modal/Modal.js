@@ -5,14 +5,14 @@ import useModal from "./ModalData";
 import {useState} from '@wordpress/element';
 
 const Modal = (props) => {
-    const {handleModal, modalData, setModalData, showModal} = useModal();
+    const {handleModal, modalData, setModalData, showModal, setIgnoredItemId, setFixedItemId, item} = useModal();
     const [buttonsDisabled, setButtonsDisabled] = useState(false);
 
     const dismissModal = () => {
         handleModal(false, null, null);
     }
 
-    const handleFix = (e) => {
+    const handleFix = (e, type) => {
         //set to disabled
         let action = modalData.action;
         setButtonsDisabled(true);
@@ -21,7 +21,13 @@ const Modal = (props) => {
             data.description = response.msg;
             data.subtitle = '';
             setModalData(data);
+            setButtonsDisabled(false);
             if (response.success) {
+                if (type==='ignore' && item !==false ) {
+                    setIgnoredItemId(item.id);
+                } else {
+                    setFixedItemId(item.id);
+                }
                 handleModal(false, null);
             }
         });
@@ -56,8 +62,8 @@ const Modal = (props) => {
                 <div className="rsssl-modal-footer">
                     { modalData.edit && <a href={modalData.edit} target="_blank" className="button button-secondary">{__("Edit", "really-simple-ssl")}</a>}
                     { modalData.help && <a href={modalData.help} target="_blank"  className="button rsssl-button-help">{__("Help", "really-simple-ssl")}</a>}
-                    { (!modalData.ignored && modalData.action==='ignore_url') && <button disabled={disabled} className="button button-primary" onClick={ (e) => handleFix(e) }>{ __("Ignore", "really-simple-ssl")}</button>}
-                    { modalData.action!=='ignore_url' &&  <button disabled={disabled} className="button button-primary" onClick={ (e) => handleFix(e) }>{__("Fix", "really-simple-ssl")}</button> }
+                    { (!modalData.ignored && modalData.action==='ignore_url') && <button disabled={disabled} className="button button-primary" onClick={ (e) => handleFix(e, 'ignore') }>{ __("Ignore", "really-simple-ssl")}</button>}
+                    { modalData.action!=='ignore_url' &&  <button disabled={disabled} className="button button-primary" onClick={ (e) => handleFix(e, 'fix') }>{__("Fix", "really-simple-ssl")}</button> }
                 </div>
             </div>
         </div>
