@@ -2,22 +2,28 @@ import {useState, useEffect} from "@wordpress/element";
 import { Button, ToggleControl } from '@wordpress/components';
 import * as rsssl_api from "../utils/api";
 import { __ } from '@wordpress/i18n';
-import update from 'immutability-helper';
 import {useUpdateEffect} from 'react-use';
 import Icon from "../utils/Icon";
 import Placeholder from '../Placeholder/Placeholder';
+import useOnboardingData from "./OnboardingData";
+import useMenu from "../Menu/MenuData";
+import useFields from "../Settings/FieldsData";
 
 const Onboarding = (props) => {
-const [steps, setSteps] = useState([]);
-const [error, setError] = useState(false);
-const [overrideSSL, setOverrideSSL] = useState(false);
-const [certificateValid, setCertificateValid] = useState(false);
-const [sslActivated, setsslActivated] = useState(false);
-const [activateSSLDisabled, setActivateSSLDisabled] = useState(true);
-const [stepsChanged, setStepsChanged] = useState('');
-const [networkwide, setNetworkwide] = useState(false);
-const [networkActivationStatus, setNetworkActivationStatus] = useState(false);
-const [networkProgress, setNetworkProgress] = useState(0);
+    const {showOnboardingModal, setShowOnBoardingModal, dismissModal} = useOnboardingData();
+    const { fields, changedFields, fetchFieldsData, updateField, saveFields, setChangedFields} = useFields();
+
+    const {setSelectedMainMenuItem} = useMenu();
+    const [steps, setSteps] = useState([]);
+    const [error, setError] = useState(false);
+    const [overrideSSL, setOverrideSSL] = useState(false);
+    const [certificateValid, setCertificateValid] = useState(false);
+    const [sslActivated, setsslActivated] = useState(false);
+    const [activateSSLDisabled, setActivateSSLDisabled] = useState(true);
+    const [stepsChanged, setStepsChanged] = useState('');
+    const [networkwide, setNetworkwide] = useState(false);
+    const [networkActivationStatus, setNetworkActivationStatus] = useState(false);
+    const [networkProgress, setNetworkProgress] = useState(0);
 
     useUpdateEffect(()=> {
         if ( networkProgress<100 && networkwide && networkActivationStatus==='main_site_activated' ){
@@ -96,11 +102,12 @@ const [networkProgress, setNetworkProgress] = useState(0);
                 setSteps(steps);
                 setStepsChanged(true);
                 setsslActivated(response.success);
-                props.updateField('ssl_enabled', true);
+                updateField('ssl_enabled', true);
+                setChangedFields('ssl_enabled', true);
+                saveFields(true, false);
                 if (response.site_url_changed) {
                     window.location.reload();
                 } else {
-                    props.getFields();
                     if ( networkwide ) {
                         setNetworkActivationStatus('main_site_activated');
                     }
@@ -135,7 +142,7 @@ const [networkProgress, setNetworkProgress] = useState(0);
             if ( response.success ){
                 if (action==='activate_setting'){
                     //ensure all fields are updated, and progress is retrieved again
-                    props.getFields();
+                    fetchFieldsData();
                 }
                 let nextAction = response.next_action;
                 if ( nextAction!=='none' && nextAction!=='completed') {
@@ -235,12 +242,12 @@ const [networkProgress, setNetworkProgress] = useState(0);
     }
 
     const goToDashboard = () => {
-        if ( props.isModal ) props.dismissModal();
-        props.selectMainMenu('dashboard');
+        if ( props.isModal ) dismissModal();
+        setSelectedMainMenuItem('dashboard');
     }
 
     const goToLetsEncrypt = () => {
-         if (props.isModal) props.dismissModal();
+         if (props.isModal) dismissModal();
         window.location.href=rsssl_settings.letsencrypt_url;
     }
 
@@ -272,7 +279,7 @@ const [networkProgress, setNetworkProgress] = useState(0);
             return (
                 <>
                 <button className="button button-primary" onClick={() => {goToDashboard()}}>{__('Go to Dashboard', 'really-simple-ssl')}</button>
-                <button className="button button-default" onClick={() => {props.dismissModal()}}>{__('Dismiss', 'really-simple-ssl')}</button>
+                <button className="button button-default" onClick={() => dismissModal()}>{__('Dismiss', 'really-simple-ssl')}</button>
                 </>
             );
         }

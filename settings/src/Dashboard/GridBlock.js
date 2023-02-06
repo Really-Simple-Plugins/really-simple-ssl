@@ -10,6 +10,7 @@ import OtherPlugins from "./OtherPlugins";
 import SecurityFeaturesBlock from './SecurityFeaturesBlock/SecurityFeaturesBlock';
 import SecurityFeaturesFooter from './SecurityFeaturesBlock/SecurityFeaturesFooter';
 import {useState, useEffect} from "@wordpress/element";
+import useOnboardingData from "../Onboarding/OnboardingData";
 
 /*
  * Mapping of components, for use in the config array
@@ -52,7 +53,7 @@ const GridBlock = (props) => {
     }
 
     let className = "rsssl-grid-item "+blockData.class+" rsssl-"+blockData.id;
-    let DynamicBlockProps = { getFields:props.getFields,saveChangedFields: props.saveChangedFields, setShowOnBoardingModal:props.setShowOnBoardingModal, updateBlockProps: updateBlockProps, blockProps: blockProps, runTest: props.runTest, fields: props.fields, isApiLoaded: props.isApiLoaded, doHighlightField: doHighlightField, selectMainMenu: props.selectMainMenu };
+    let DynamicBlockProps = { updateBlockProps: updateBlockProps, blockProps: blockProps, runTest: props.runTest };
     return (
         <div className={className}>
             <div className="rsssl-grid-item-header">

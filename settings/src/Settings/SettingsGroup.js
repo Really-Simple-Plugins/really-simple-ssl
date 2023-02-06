@@ -5,13 +5,16 @@ import {__} from '@wordpress/i18n';
 import * as rsssl_api from "../utils/api";
 import useFields from "../Settings/FieldsData";
 import useMenu from "../Menu/MenuData";
+import useLicense from "./License/LicenseData";
 
 
 /**
  * Render a grouped block of settings
  */
 const SettingsGroup = (props) => {
-    const {fields, licenseStatus, fieldsLoaded} = useFields();
+    const {fields} = useFields();
+    const {licenseStatus} = useLicense();
+
     const {selectedSubMenuItem, subMenu} = useMenu();
     let upgrade='https://really-simple-ssl.com/pro/';
 

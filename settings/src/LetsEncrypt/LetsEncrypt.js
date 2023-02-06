@@ -258,7 +258,7 @@ const LetsEncrypt = (props) => {
                 {props.field.id === 'dns-verification' && <DnsVerification save={props.save} selectMenu={props.selectMenu} field={props.field} updateField={props.updateField} addHelp={props.addHelp} progress={progress} action={currentAction}/> }
                 {props.field.id === 'generation' && <Generation restartTests={restartTests} save={props.save} selectMenu={props.selectMenu} field={props.field} updateField={props.updateField} addHelp={props.addHelp} progress={progress} action={currentAction}/> }
                 {props.field.id === 'installation' && <Installation restartTests={restartTests} save={props.save} selectMenu={props.selectMenu} field={props.field} updateField={props.updateField} addHelp={props.addHelp} progress={progress} action={currentAction}/> }
-                {props.field.id === 'activate' && <Activate restartTests={restartTests} save={props.save} selectMainMenu={props.selectMainMenu} selectMenu={props.selectMenu} field={props.field} updateField={props.updateField} addHelp={props.addHelp} progress={progress} action={currentAction}/> }
+                {props.field.id === 'activate' && <Activate restartTests={restartTests} save={props.save}  selectMenu={props.selectMenu} field={props.field} updateField={props.updateField} addHelp={props.addHelp} progress={progress} action={currentAction}/> }
             </div>
         </>
     )

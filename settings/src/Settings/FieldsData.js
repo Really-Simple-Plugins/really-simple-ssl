@@ -17,7 +17,6 @@ const fetchFields = () => {
 }
 
 const useFields = create(( set, get ) => ({
-    licenseStatus: rsssl_settings.licenseStatus,
     fieldsLoaded: false,
     error:false,
     fields: [],
@@ -26,7 +25,6 @@ const useFields = create(( set, get ) => ({
     nextButtonDisabled:false,
     refreshTests:false,
     highLightField: '',
-    setLicenseStatus: (licenseStatus) => set(state => ({ licenseStatus })),
     setHighLightField: (highLightField) => set(state => ({ highLightField })),
     setRefreshTests: (refreshTests) => set(state => ({ refreshTests })),
     handleNextButtonDisabled: (nextButtonDisabled) => set(state => ({ nextButtonDisabled })),
@@ -57,44 +55,31 @@ const useFields = create(( set, get ) => ({
     updateField: (id, value) => {
         set(
             produce((state) => {
-                let index = false;
-                state.fields.forEach(function(fieldItem, i) {
-                    if (fieldItem.id === id ){
-                        index = i;
-                    }
-                });
-                state.fields[index].value = value;
+                let index = state.fields.findIndex(fieldItem => fieldItem.id === id);
+                if (index !== -1) {
+                    state.fields[index].value = value;
+                }
             })
         )
     },
     updateSubField: (id, subItemId, value) => {
         set(
             produce((state) => {
-                let index = false;
-                let subIndex = false;
-                state.fields.forEach(function(fieldItem, i) {
-                    if (fieldItem.id === id ){
-                        index = i;
-                        let itemValue = fieldItem.value;
-                        if ( !Array.isArray(itemValue) ) {
-                            itemValue = [];
-                        }
+                let index = state.fields.findIndex(fieldItem => fieldItem.id === id);
+                let itemValue = state.fields[index].value;
+                if (!Array.isArray(itemValue)) {
+                    itemValue = [];
+                }
 
-                        itemValue.forEach(function(subItem, j) {
-                            if (subItem.id === subItemId ){
-                                subIndex = j;
-                            }
-                        });
-                    }
-                });
-
-                state.fields[index].updateItemId = subItemId;
-                state.fields[index].value[subIndex]['value'] = value;
-
-                state.fields[index].value = state.fields[index].value.map(item => {
-                    const { deleteControl, valueControl, statusControl, ...rest } = item;
-                    return rest;
-                });
+                let subIndex = itemValue.findIndex(subItem => subItem.id === subItemId);
+                if (subIndex !== -1) {
+                    state.fields[index].updateItemId = subItemId;
+                    state.fields[index].value[subIndex]['value'] = value;
+                    state.fields[index].value = itemValue.map(item => {
+                        const { deleteControl, valueControl, statusControl, ...rest } = item;
+                        return rest;
+                    });
+                }
             })
         )
     },

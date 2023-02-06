@@ -6,7 +6,7 @@ import {
     __experimentalNumberControl as NumberControl
 } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
-import License from "./License";
+import License from "./License/License";
 import Password from "./Password";
 import Host from "./Host";
 import Hyperlink from "../utils/Hyperlink";
@@ -16,7 +16,7 @@ import MixedContentScan from "./MixedContentScan/MixedContentScan";
 import PermissionsPolicy from "./PermissionsPolicy";
 import CheckboxControl from "./CheckboxControl";
 import Support from "./Support";
-import LearningMode from "./LearningMode";
+import LearningMode from "./LearningMode/LearningMode";
 import Button from "./Button";
 import Icon from "../utils/Icon";
 import { useEffect} from "@wordpress/element";

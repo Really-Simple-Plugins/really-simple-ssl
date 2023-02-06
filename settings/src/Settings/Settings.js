@@ -22,7 +22,6 @@ const Settings = () => {
 
     const saveData = async () => {
         await saveFields();
-        if ( menuDataLoaded ) await saveDocumentsMenu();
     }
 
     const { menu_items: menuItems } = subMenu;

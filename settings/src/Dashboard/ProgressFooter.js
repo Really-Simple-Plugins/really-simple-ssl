@@ -5,8 +5,10 @@ import update from 'immutability-helper';
 import {useUpdateEffect} from 'react-use';
 import Icon from "../utils/Icon";
 import useFields from "../Settings/FieldsData";
+import useOnboardingData from "../Onboarding/OnboardingData";
 
 const ProgressFooter = (props) => {
+    const {setShowOnBoardingModal} = useOnboardingData();
     const [certificateIsValid, setCertificateIsValid] = useState(false);
     const [sslDataLoaded, SetSslDataLoaded] = useState(false);
     const {fields} = useFields();
@@ -19,10 +21,6 @@ const ProgressFooter = (props) => {
             }
         });
     }, [])
-
-    const startModal = () => {
-        props.setShowOnBoardingModal(true);
-    }
 
 
     if ( !sslDataLoaded) {
@@ -44,7 +42,7 @@ const ProgressFooter = (props) => {
     let disabled = wpconfigFixRequired ? 'disabled' : '';
     return (
         <>
-            { !sslEnabled && <button disabled={disabled} onClick={() => startModal()} className="button button-primary">{__( "Activate SSL", "really-simple-ssl" ) }</button>}
+            { !sslEnabled && <button disabled={disabled} onClick={() => setShowOnBoardingModal(true)} className="button button-primary">{__( "Activate SSL", "really-simple-ssl" ) }</button>}
             { rsssl_settings.pro_plugin_active && <span className="rsssl-footer-left">Really Simple SSL Pro {rsssl_settings.pro_version}</span>}
             { !rsssl_settings.pro_plugin_active && <a href={rsssl_settings.upgrade_link} target="_blank" className="button button-default">{ __( "Go Pro", "really-simple-ssl" ) }</a>}
 

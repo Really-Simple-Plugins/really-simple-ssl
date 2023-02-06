@@ -1,37 +1,72 @@
 import { __ } from '@wordpress/i18n';
 import {useState,useEffect} from '@wordpress/element';
 import ChangeStatus from "./ChangeStatus";
+import Delete from "./Delete";
 import DataTable, {createTheme} from 'react-data-table-component';
-import Icon from "../utils/Icon";
-import useFields from "./FieldsData";
+import Icon from "../../utils/Icon";
+import useFields from "./../FieldsData";
+import useLearningMode from "./LearningModeData";
 
-const Delete = () => {
-   return (
-       <button type="button" className=" rsssl-learning-mode-delete" onClick={ () => props.onDeleteHandler( props.item ) }>
-           <svg aria-hidden="true" focusable="false" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512" height="16" >
-               <path fill="#000000" d="M310.6 361.4c12.5 12.5 12.5 32.75 0 45.25C304.4 412.9 296.2 416 288 416s-16.38-3.125-22.62-9.375L160 301.3L54.63 406.6C48.38 412.9 40.19 416 32 416S15.63 412.9 9.375 406.6c-12.5-12.5-12.5-32.75 0-45.25l105.4-105.4L9.375 150.6c-12.5-12.5-12.5-32.75 0-45.25s32.75-12.5 45.25 0L160 210.8l105.4-105.4c12.5-12.5 32.75-12.5 45.25 0s12.5 32.75 0 45.25l-105.4 105.4L310.6 361.4z"/>
-           </svg>
-       </button>
-    )
-}
-
-const LearningMode = () => {
-    const {fields, updateField, getFieldValue, getField, setChangedField, highLightField, saveFields} = useFields();
+const LearningMode = (props) => {
+    const {updateField, getFieldValue, getField, setChangedField, highLightField, saveFields} = useFields();
+    const {fetchLearningModeData, learningModeData, dataLoaded} = useLearningMode();
+    //used to show if a feature is already enforced by a third party
     const [enforcedByThirdparty, setEnforcedByThirdparty] = useState(0);
+    //toggle from enforced to not enforced
     const [enforce, setEnforce] = useState(0);
+    //toggle from learning mode to not learning mode
     const [learningMode, setLearningMode] = useState(0);
+    //set learning mode to completed
     const [learningModeCompleted, setLearningModeCompleted] = useState(0);
+    //check if learningmode has been enabled at least once
     const [lmEnabledOnce, setLmEnabledOnce] = useState(0);
+    //filter the data
     const [filterValue, setFilterValue] = useState(-1);
+    //the value that is used to enable or disable this feature. On or of.
     const [controlField, setControlField] = useState(false);
 
+    /**
+     * Styling
+     */
+    const conditionalRowStyles = [
+        {
+            when: row => row.status ==0,
+            classNames: ['rsssl-datatables-revoked'],
+        },
+    ];
+
+    const customStyles = {
+        headCells: {
+            style: {
+                paddingLeft: '0', // override the cell padding for head cells
+                paddingRight: '0',
+            },
+        },
+        cells: {
+            style: {
+                paddingLeft: '0', // override the cell padding for data cells
+                paddingRight: '0',
+            },
+        },
+    };
+
+
+    createTheme('really-simple-plugins', {
+        divider: {
+            default: 'transparent',
+        },
+    }, 'light');
+
+    /**
+     * Initialize
+     */
     useEffect(async () => {
+        await fetchLearningModeData(props.field.id);
+
         let controlField = getField(props.field.control_field );
         let enforced_by_thirdparty = controlField.value === 'enforced-by-thirdparty';
         let enforce = enforced_by_thirdparty || controlField.value === 'enforce';
 
-        //we somehow need this to initialize the field. Otherwise it doesn't work on load. need to figure that out.
-        updateField(controlField.id, controlField.value);
         setControlField(controlField);
         setEnforcedByThirdparty(enforced_by_thirdparty);
         setLearningModeCompleted(controlField.value==='completed');
@@ -40,86 +75,44 @@ const LearningMode = () => {
         setLearningMode(controlField.value === 'learning_mode');
     }, [] );
 
-    const doFilter = (e) => {
-        setFilterValue(e.target.value)
-    }
-
     const toggleEnforce = (e, enforce) => {
         e.preventDefault();
         //enforce this setting
-        controlField.value = enforce==1 ? 'enforce' : 'disabled';
+        let controlFieldValue = enforce==1 ? 'enforce' : 'disabled';
         setEnforce(enforce);
         setLearningModeCompleted(0);
-        setChangedField(controlField);
-        updateField(controlField);
+        setChangedField(controlField.id, controlFieldValue);
+        updateField(controlField.id, controlFieldValue);
         saveFields(true, false);
     }
 
-    const toggleLearningMode = (e) => {
+    const toggleLearningMode = async (e) => {
          e.preventDefault();
-        let lmEnabledOnceField = getField(props.field.control_field+'_lm_enabled_once')[0];
-        let copyControlfield = {...controlField};
-        let copyLmEnabledOnceField = {...lmEnabledOnceField};
+        let lmEnabledOnceField = getField(props.field.control_field+'_lm_enabled_once');
         if ( learningMode ) {
-            copyLmEnabledOnceField.value = 1;
             setLmEnabledOnce(1);
+            updateField(lmEnabledOnceField.id, 1);
         }
 
+        let controlFieldValue;
         if ( learningMode || learningModeCompleted ) {
             setLearningMode(0);
-            copyControlfield.value = 'disabled';
+            controlFieldValue = 'disabled';
         } else {
             setLearningMode(1);
-            copyControlfield.value = 'learning_mode';
+            controlFieldValue = 'learning_mode';
         }
-
         setLearningModeCompleted(0);
-        setChangedField(copyControlfield);
-        updateField(copyControlfield);
-
-        setChangedField(copyLmEnabledOnceField);
-        updateField(copyLmEnabledOnceField);
-
-        saveFields(true, false);
-    }
-
-    /*
-     * Handle data delete
-     * @param enabled
-     * @param clickedItem
-     * @param type
-     */
-    const onDeleteHandler = ( clickedItem ) => {
-        let field = props.field;
-        if (typeof field.value === 'object') {
-            field.value = Object.values(field.value);
-        }
-
-        //find this item in the field list and remove it.
-        field.value.forEach(function(item, i) {
-            if (item.id === clickedItem.id) {
-                field.value.splice(i, 1);
-            }
-        });
-
-        //remove objects from values
-        for (const item of field.value){
-            delete item.valueControl;
-            delete item.statusControl;
-            delete item.deleteControl;
-        }
-
-        //the updateItemId allows us to update one specific item in a field set.
-        field.updateItemId = clickedItem.id;
-        field.action = 'delete';
-        setChangedField(field.id, field.value);
-        updateField(field.id, field.value);
-        saveFields(true, false);
+        setChangedField(controlField.id, controlFieldValue);
+        updateField(controlField.id, controlFieldValue);
+        setChangedField(lmEnabledOnceField.id, lmEnabledOnceField.value);
+        updateField(lmEnabledOnceField, lmEnabledOnceField.value);
+        await saveFields(true, false);
     }
 
     const Filter = () => (
         <>
-            <select onChange={ ( e ) => doFilter(e) } value={filterValue}>
+            <select onChange={ ( e ) => setFilterValue(e.target.value) } value={filterValue}>
                 <option value="-1" >{__("All", "really-simple-ssl")}</option>
                 <option value="1" >{__("Allowed", "really-simple-ssl")}</option>
                 <option value="0" >{__("Blocked", "really-simple-ssl")}</option>
@@ -149,13 +142,7 @@ const LearningMode = () => {
         columns.push(newItem);
     });
 
-    let data = field.value;
-    if ( typeof data === 'object' ) {
-        data = Object.values(data);
-    }
-    if ( !Array.isArray(data) ) {
-        data = [];
-    }
+    let data = learningModeData;
     data = data.filter(item => item.status<2);
     if (filterValue!=-1) {
         data = data.filter(item => item.status==filterValue);
@@ -163,40 +150,13 @@ const LearningMode = () => {
     for (const item of data){
         if (item.login_status) item.login_statusControl = item.login_status == 1 ? __("success", "really-simple-ssl") : __("failed", "really-simple-ssl");
         item.statusControl = <ChangeStatus item={item} field={props.field} />;
-        item.deleteControl = <Delete item={item} onDeleteHandler={() => onDeleteHandler() } />;
+        item.deleteControl = <Delete item={item} field={props.field}/>;
     }
-    const conditionalRowStyles = [
-      {
-        when: row => row.status ==0,
-        classNames: ['rsssl-datatables-revoked'],
-      },
-    ];
 
-    const customStyles = {
-      headCells: {
-        style: {
-          paddingLeft: '0', // override the cell padding for head cells
-          paddingRight: '0',
-        },
-      },
-      cells: {
-        style: {
-          paddingLeft: '0', // override the cell padding for data cells
-          paddingRight: '0',
-        },
-      },
-    };
-
-
-    createTheme('really-simple-plugins', {
-      divider: {
-        default: 'transparent',
-      },
-    }, 'light');
      return (
         <>
             <div className={ highLightClass}>
-                {data.length==0 && <>
+                {!dataLoaded || data.length==0 && <>
                     <div className="rsssl-learningmode-placeholder">
                         <div></div><div></div><div></div><div></div>
                     </div>
@@ -216,12 +176,12 @@ const LearningMode = () => {
                 }
               <div className="rsssl-learning-mode-footer">
                   { enforce!=1 && <button disabled={enforceDisabled} className="button button-primary" onClick={ (e) => toggleEnforce(e, true ) }>{__("Enforce","really-simple-ssl")}</button> }
-                  { !enforced_by_thirdparty && enforce==1 && <button className="button" onClick={ (e) => toggleEnforce(e, false ) }>{__("Disable","really-simple-ssl")}</button> }
+                  { !enforcedByThirdparty && enforce==1 && <button className="button" onClick={ (e) => toggleEnforce(e, false ) }>{__("Disable","really-simple-ssl")}</button> }
                   <label>
                       <input type="checkbox"
                           disabled = {enforce}
-                          checked ={learning_mode==1}
-                          value = {learning_mode}
+                          checked ={learningMode==1}
+                          value = {learningMode}
                           onChange={ ( e ) => toggleLearningMode(e) }
                       />
                       {__("Enable Learning Mode to configure automatically","really-simple-ssl")}
@@ -236,14 +196,14 @@ const LearningMode = () => {
                         <a className="rsssl-learning-mode-link" href="#" onClick={ (e) => toggleEnforce(e) }>{__("Disable to configure", "really-simple-ssl") }</a>
                     </div>
                 </div>}
-                {learning_mode==1 && <div className="rsssl-locked">
+                {learningMode==1 && <div className="rsssl-locked">
                     <div className="rsssl-locked-overlay">
                         <span className="rsssl-progress-status rsssl-learning-mode">{__("Learning Mode","really-simple-ssl")}</span>
                         {configuringString}&nbsp;
                         <a className="rsssl-learning-mode-link" href="#" onClick={ (e) => toggleLearningMode(e) }>{__("Exit", "really-simple-ssl") }</a>
                     </div>
                 </div>}
-                { learning_mode_completed==1 && <div className="rsssl-locked">
+                { learningModeCompleted==1 && <div className="rsssl-locked">
                     <div className="rsssl-locked-overlay">
                         <span className="rsssl-progress-status rsssl-learning-mode-completed">{__("Learning Mode","really-simple-ssl")}</span>
                         {__("We finished the configuration.", "really-simple-ssl")}&nbsp;
@@ -252,8 +212,8 @@ const LearningMode = () => {
                 </div> }
                 { rsssl_settings.pro_plugin_active && props.disabled && <div className="rsssl-locked">
                     <div className="rsssl-locked-overlay">
-                        { !enforced_by_thirdparty && <span className="rsssl-progress-status rsssl-disabled">{__("Disabled ","really-simple-ssl")}</span> }
-                        { enforced_by_thirdparty && <span className="rsssl-progress-status rsssl-learning-mode-enforced">{__("Enforced","really-simple-ssl")}</span> }
+                        { !enforcedByThirdparty && <span className="rsssl-progress-status rsssl-disabled">{__("Disabled ","really-simple-ssl")}</span> }
+                        { enforcedByThirdparty && <span className="rsssl-progress-status rsssl-learning-mode-enforced">{__("Enforced","really-simple-ssl")}</span> }
                         { disabledString }
                     </div>
                 </div>}

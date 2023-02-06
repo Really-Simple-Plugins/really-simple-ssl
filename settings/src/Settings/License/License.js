@@ -1,12 +1,14 @@
-import TaskElement from "../DashBoard/TaskElement";
-import Placeholder from '../Placeholder/Placeholder';
-import * as rsssl_api from "../utils/api";
+import TaskElement from "../../DashBoard/TaskElement";
+import Placeholder from '../../Placeholder/Placeholder';
+import * as rsssl_api from "../../utils/api";
 import { __ } from '@wordpress/i18n';
-import useFields from "./FieldsData";
+import useFields from "./../FieldsData";
+import useLicense from "./LicenseData";
 import {useState, useEffect} from "@wordpress/element";
 
 const License = (props) => {
-    const {fields, licenseStatus, setLicenseStatus, fieldsLoaded, setChangedField, changedFields, updateField} = useFields();
+    const {fields, setChangedField, updateField} = useFields();
+    const {licenseStatus, setLicenseStatus} = useLicense();
     const [noticesLoaded, setNoticesLoaded] = useState(false);
     const [fieldsUpdateComplete, setFieldsUpdateComplete] = useState(false);
     const [notices, setNotices] = useState(false);
@@ -73,10 +75,9 @@ const License = (props) => {
                  </div>
              </div>
                 {!noticesLoaded && <Placeholder></Placeholder>}
-                {noticesLoaded && notices.map((notice, i) => <TaskElement key={i} index={i} notice={notice} onCloseTaskHandler={onCloseTaskHandler} highLightField=""/>)}
+                {noticesLoaded && notices.map((notice, i) => <TaskElement key={i} index={i} notice={notice} highLightField=""/>)}
             </div>
     );
-
 }
 
 export default License;
