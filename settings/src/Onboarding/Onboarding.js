@@ -25,6 +25,7 @@ const Onboarding = (props) => {
     const [networkActivationStatus, setNetworkActivationStatus] = useState(false);
     const [networkProgress, setNetworkProgress] = useState(0);
 
+
     useUpdateEffect(()=> {
         if ( networkProgress<100 && networkwide && networkActivationStatus==='main_site_activated' ){
             rsssl_api.runTest('activate_ssl_networkwide' ).then( ( response ) => {

@@ -37,11 +37,28 @@ const ajaxPost = (path, requestData) => {
         let data = {};
         data['path'] = path;
         data['data'] = requestData;
-        data = JSON.stringify(data);
+        data = JSON.stringify(data, stripControls);
         xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
         xhr.send(data);
     });
+}
 
+/**
+ * All data elements with 'Control' in the name are dropped, to prevent:
+ * TypeError: Converting circular structure to JSON
+ * @param key
+ * @param value
+ * @returns {any|undefined}
+ */
+const stripControls = (key, value) => {
+    if (!key){return value}
+    if (key && key.includes("Control")) {
+        return undefined;
+    }
+    if (typeof value === "object") {
+        return JSON.parse(JSON.stringify(value, stripControls));
+    }
+    return value;
 }
 
 const ajaxGet = (path) => {

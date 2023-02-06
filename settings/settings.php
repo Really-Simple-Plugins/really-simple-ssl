@@ -276,9 +276,6 @@ function rsssl_do_action($request, $ajax_data=false){
 		case 'ssl_status_data':
 			$response = rsssl_ssl_status_data();
 			break;
-		case 'ssltest_get':
-			$response = get_option('rsssl_ssl_labs_data');
-			break;
 		case 'ssltest_run':
 			$response = rsssl_ssltest_run($data);
 			break;
@@ -382,6 +379,9 @@ function rsssl_run_test($request, $ajax_data=false){
 	switch($test){
         case 'ssl_status_data':
             $response = rsssl_ssl_status_data();
+            break;
+        case 'ssltest_get':
+	        $response = get_option('rsssl_ssl_labs_data');
             break;
         case 'progressdata':
 	        $response = RSSSL()->progress->get();
@@ -552,8 +552,8 @@ function rsssl_rest_api_fields_set( WP_REST_Request $request, $ajax_data = false
 	        //the updateItemId allows us to update one specific item in a field set.
 	        $update_item_id = isset($field['updateItemId']) ? $field['updateItemId'] : false;
 	        $action = isset($field['action']) && $field['action']==='delete' ? 'delete' : 'update';
-            $endpoint = $config_field['data_endpoint'];
-            if (is_array($endpoint) ) {
+	        $endpoint = $config_field['data_endpoint'];
+	        if (is_array($endpoint) ) {
                 $main = $endpoint[0];
                 $class = $endpoint[1];
                 $function = $endpoint[2];

@@ -65,7 +65,7 @@ class ProgressBlock extends Component {
                     notices: this.notices,
                     percentageCompleted: this.percentageCompleted,
                 });
-                this.props.updateBlockProps('notices', this.notices);
+                this.props.setBlockProps('notices', this.notices);
             }
         });
     }
