@@ -16367,15 +16367,12 @@ const TaskElement = props => {
     fetchFieldsData
   } = (0,_Settings_FieldsData__WEBPACK_IMPORTED_MODULE_6__["default"])();
   const {
-    setSelectedMainMenuItem,
     setSelectedSubMenuItem
   } = (0,_Menu_MenuData__WEBPACK_IMPORTED_MODULE_8__["default"])();
   const handleClick = async () => {
     setHighLightField(props.notice.output.highlight_field_id);
-    setSelectedMainMenuItem('settings');
     let highlightField = getField(props.notice.output.highlight_field_id);
-    console.log(highlightField.menu_id);
-    await setSelectedSubMenuItem(highlightField.menu_id, fields);
+    await setSelectedSubMenuItem(highlightField.menu_id);
   };
   const onCloseTaskHandler = async e => {
     let button = e.target.closest('button');

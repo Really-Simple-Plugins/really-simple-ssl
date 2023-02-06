@@ -10,14 +10,12 @@ import useMenu from "../Menu/MenuData";
 const TaskElement = (props) => {
     const {dismissNotice} = useProgress();
     const {getField, fields, setHighLightField, fetchFieldsData} = useFields();
-    const {setSelectedMainMenuItem, setSelectedSubMenuItem} = useMenu();
+    const {setSelectedSubMenuItem} = useMenu();
 
     const handleClick = async () => {
         setHighLightField(props.notice.output.highlight_field_id);
-        setSelectedMainMenuItem('settings');
         let highlightField = getField(props.notice.output.highlight_field_id);
-        console.log(highlightField.menu_id);
-        await setSelectedSubMenuItem(highlightField.menu_id, fields);
+        await setSelectedSubMenuItem(highlightField.menu_id);
     }
 
     const onCloseTaskHandler = async (e) => {

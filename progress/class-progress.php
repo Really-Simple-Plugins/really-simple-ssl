@@ -117,8 +117,7 @@ class rsssl_progress {
 		}
 		if (isset($_GET['dismiss_notice'])) {
 			$id = sanitize_title($_GET['dismiss_notice']);
-			x_log("dismiss ".$id);
-//			$this->dismiss_task($id);
+			$this->dismiss_task($id);
 		}
 	}
 
