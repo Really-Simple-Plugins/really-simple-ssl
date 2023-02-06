@@ -1,33 +1,20 @@
 import {
-    Component,
+    useState,
 } from '@wordpress/element';
 
 import * as rsssl_api from "../../utils/api";
 import TaskElement from "./../TaskElement";
 import Placeholder from '../../Placeholder/Placeholder';
+import useProgress from "./ProgressData";
+import useFields from "../../Settings/FieldsData";
 
-class ProgressBlock extends Component {
-    constructor() {
-        super( ...arguments);
-        this.percentageCompleted = 0;
-        this.progressText = '';
-        this.filter = 'all';
-        this.notices = null;
-        this.progressLoaded = false;
-        this.fields = this.props.fields;
-        this.state = {
-            progressText:'',
-            filter:'all',
-            notices:null,
-            percentageCompleted:0,
-            progressLoaded: false,
-            error:false,
-        };
+const ProgressBlock = (props) => {
+    const {setFilter, filter, fetchFilter, notices, progressLoaded, getProgressData, error} = useProgress();
+    const {fields} = useFields();
+    const [percentageCompleted, setPercentageCompleted] = useState(0);
+    const [progressText, setProgressText] = useState('');
 
-    }
     componentDidMount() {
-        this.getProgressData = this.getProgressData.bind(this);
-        this.onCloseTaskHandler = this.onCloseTaskHandler.bind(this);
         this.getProgressData();
     }
 
@@ -43,31 +30,6 @@ class ProgressBlock extends Component {
             {},
             {width: this.percentageCompleted+"%"},
         );
-    }
-
-    getProgressData(){
-        rsssl_api.runTest('progressData', 'refresh').then( ( response ) => {
-            if ( response.error ) {
-                this.setState({
-                    error: response.error,
-                });
-            } else {
-                this.progressText = response.text;
-                this.filter = response.filter;
-                this.percentageCompleted = response.percentage;
-                this.notices = response.notices;
-                this.progressLoaded = true;
-
-                this.setState({
-                    progressLoaded: this.progressLoaded,
-                    progressText: this.progressText,
-                    filter: this.filter,
-                    notices: this.notices,
-                    percentageCompleted: this.percentageCompleted,
-                });
-                this.props.updateBlockProps('notices', this.notices);
-            }
-        });
     }
 
     onCloseTaskHandler(e){
