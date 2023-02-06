@@ -1,4 +1,4 @@
 prepros.config
 settings/node_modules/*
 node_modules/*
-.idea/*
+.idea
