@@ -5,89 +5,24 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="0f0d1ec8-2b48-488d-aa69-e5f1005f7b78" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/encodings.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/php.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/phpunit.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/really-simple-ssl.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/mailer/class-mail.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/mailer/index.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/mailer/templates/block.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/mailer/templates/email.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/mailer/templates/index.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/settings/config/mails.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/settings/src/Settings/Button.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/settings/src/Settings/CheckboxControl.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/settings/src/utils/Error.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/css/admin.css" beforeDir="false" afterPath="$PROJECT_DIR$/assets/css/admin.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/css/admin.min.css" beforeDir="false" afterPath="$PROJECT_DIR$/assets/css/admin.min.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/css/admin/modules/placeholder.scss" beforeDir="false" afterPath="$PROJECT_DIR$/assets/css/admin/modules/placeholder.scss" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/css/admin/modules/tooltip.scss" beforeDir="false" afterPath="$PROJECT_DIR$/assets/css/admin/modules/tooltip.scss" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/css/admin/modules/wizard/fields.scss" beforeDir="false" afterPath="$PROJECT_DIR$/assets/css/admin/modules/wizard/fields.scss" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/css/rtl/admin.min.css" beforeDir="false" afterPath="$PROJECT_DIR$/assets/css/rtl/admin.min.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/class-admin.php" beforeDir="false" afterPath="$PROJECT_DIR$/class-admin.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/class-multisite.php" beforeDir="false" afterPath="$PROJECT_DIR$/class-multisite.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/functions.php" beforeDir="false" afterPath="$PROJECT_DIR$/functions.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lets-encrypt/class-le-restapi.php" beforeDir="false" afterPath="$PROJECT_DIR$/lets-encrypt/class-le-restapi.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lets-encrypt/class-letsencrypt-handler.php" beforeDir="false" afterPath="$PROJECT_DIR$/lets-encrypt/class-letsencrypt-handler.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lets-encrypt/download.php" beforeDir="false" afterPath="$PROJECT_DIR$/lets-encrypt/download.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lets-encrypt/letsencrypt.php" beforeDir="false" afterPath="$PROJECT_DIR$/lets-encrypt/letsencrypt.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/.package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/.package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/onboarding/class-onboarding.php" beforeDir="false" afterPath="$PROJECT_DIR$/onboarding/class-onboarding.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/onboarding/config.php" beforeDir="false" afterPath="$PROJECT_DIR$/onboarding/config.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/readme.txt" beforeDir="false" afterPath="$PROJECT_DIR$/readme.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rlrsssl-really-simple-ssl.php" beforeDir="false" afterPath="$PROJECT_DIR$/rlrsssl-really-simple-ssl.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/security/cron.php" beforeDir="false" afterPath="$PROJECT_DIR$/security/cron.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/security/functions.php" beforeDir="false" afterPath="$PROJECT_DIR$/security/functions.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/php.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/php.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/security/wordpress/class-vulnerabilities.php" beforeDir="false" afterPath="$PROJECT_DIR$/security/wordpress/class-vulnerabilities.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/security/wordpress/rename-admin-user.php" beforeDir="false" afterPath="$PROJECT_DIR$/security/wordpress/rename-admin-user.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/settings/build/index.asset.php" beforeDir="false" afterPath="$PROJECT_DIR$/settings/build/index.asset.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/settings/build/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/settings/build/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/settings/config/config.php" beforeDir="false" afterPath="$PROJECT_DIR$/settings/config/config.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/settings/config/disable-fields-filter.php" beforeDir="false" afterPath="$PROJECT_DIR$/settings/config/disable-fields-filter.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/settings/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/settings/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/settings/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/settings/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/settings/settings.php" beforeDir="false" afterPath="$PROJECT_DIR$/settings/settings.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/settings/src/Dashboard/OtherPlugins.js" beforeDir="false" afterPath="$PROJECT_DIR$/settings/src/Dashboard/OtherPlugins.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/settings/src/Dashboard/ProgressBlock.js" beforeDir="false" afterPath="$PROJECT_DIR$/settings/src/Dashboard/ProgressBlock.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/settings/src/Dashboard/SslLabs.js" beforeDir="false" afterPath="$PROJECT_DIR$/settings/src/Dashboard/SslLabs.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/settings/src/Menu/Menu.js" beforeDir="false" afterPath="$PROJECT_DIR$/settings/src/Menu/Menu.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/settings/src/Menu/MenuItem.js" beforeDir="false" afterPath="$PROJECT_DIR$/settings/src/Menu/MenuItem.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/settings/src/Onboarding/Onboarding.js" beforeDir="false" afterPath="$PROJECT_DIR$/settings/src/Onboarding/Onboarding.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/settings/src/Onboarding/OnboardingModal.js" beforeDir="false" afterPath="$PROJECT_DIR$/settings/src/Onboarding/OnboardingModal.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/settings/src/Page.js" beforeDir="false" afterPath="$PROJECT_DIR$/settings/src/Page.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/settings/src/Placeholder/PagePlaceholder.js" beforeDir="false" afterPath="$PROJECT_DIR$/settings/src/Placeholder/PagePlaceholder.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/settings/src/Placeholder/Placeholder.js" beforeDir="false" afterPath="$PROJECT_DIR$/settings/src/Placeholder/Placeholder.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/settings/src/Settings/ChangeStatus.js" beforeDir="false" afterPath="$PROJECT_DIR$/settings/src/Settings/ChangeStatus.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/settings/src/Settings/Field.js" beforeDir="false" afterPath="$PROJECT_DIR$/settings/src/Settings/Field.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/settings/src/Settings/Help.js" beforeDir="false" afterPath="$PROJECT_DIR$/settings/src/Settings/Help.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/settings/src/Settings/Host.js" beforeDir="false" afterPath="$PROJECT_DIR$/settings/src/Settings/Host.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/settings/src/Settings/License.js" beforeDir="false" afterPath="$PROJECT_DIR$/settings/src/Settings/License.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/settings/src/Settings/Password.js" beforeDir="false" afterPath="$PROJECT_DIR$/settings/src/Settings/Password.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/settings/src/Settings/Settings.js" beforeDir="false" afterPath="$PROJECT_DIR$/settings/src/Settings/Settings.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/settings/src/Settings/SettingsGroup.js" beforeDir="false" afterPath="$PROJECT_DIR$/settings/src/Settings/SettingsGroup.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/settings/src/Settings/SettingsPage.js" beforeDir="false" afterPath="$PROJECT_DIR$/settings/src/Settings/SettingsPage.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/settings/src/utils/Icon.js" beforeDir="false" afterPath="$PROJECT_DIR$/settings/src/utils/Icon.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/settings/src/utils/api.js" beforeDir="false" afterPath="$PROJECT_DIR$/settings/src/utils/api.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/settings/src/utils/lib.js" beforeDir="false" afterPath="$PROJECT_DIR$/settings/src/utils/lib.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/system-status.php" beforeDir="false" afterPath="$PROJECT_DIR$/system-status.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/upgrade.php" beforeDir="false" afterPath="$PROJECT_DIR$/upgrade.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
-  <component name="ComposerSettings" synchronizationState="SYNCHRONIZE">
+  <component name="ComposerSettings" doNotAsk="true" synchronizationState="SYNCHRONIZE">
     <pharConfigPath>$PROJECT_DIR$/composer.json</pharConfigPath>
     <execution />
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
   </component>
   <component name="PhpWorkspaceProjectConfiguration">
     <include_path>
@@ -98,15 +33,20 @@
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
+    <option name="showMembers" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "node.js.detected.package.eslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "settings.editor.selected.configurable": "web-ide.project.structure",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="RunManager">
     <configuration name="phpunit.xml.dist" type="PHPUnitRunConfigurationType" factoryName="PHPUnit">
       <TestRunner scope="XML" />
@@ -122,7 +62,14 @@
       <option name="presentableId" value="Default" />
       <updated>1675249582035</updated>
       <workItem from="1675249583308" duration="3000" />
+      <workItem from="1675681179278" duration="13587000" />
     </task>
     <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="WordPressConfiguration" enabled="true">
+    <wordpressPath>$PROJECT_DIR$/../../..</wordpressPath>
   </component>
 </project>
