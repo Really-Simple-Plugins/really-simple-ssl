@@ -10,25 +10,15 @@ const useMenu = create(( set, get ) => ({
     selectedSubMenuItem:false,
     hasPremiumItems:false,
     subMenu:{title:' ',menu_items:[]},
-    setSelectedSubMenuItem: async (selectedSubMenuItem, fields) => {
-        let subMenuLoaded = get().subMenuLoaded;
-        if (!subMenuLoaded){
-            await get().fetchMenuData(fields);
-        }
-        let subMenu = get().subMenu;
-        let fallBackMenuItem = subMenuLoaded && subMenu.hasOwnProperty(0) ? subMenu[0].id : 'general';
-        let found = false;
-        //check if this anchor actually exists in our current submenu. If not, clear it
-        for (const key in subMenu) {
-            if ( subMenu.hasOwnProperty(key) &&  subMenu[key].id === selectedSubMenuItem ){
-                found=true;
-            }
-        }
-        if ( !found ) selectedSubMenuItem = false;
-        selectedSubMenuItem = selectedSubMenuItem ? selectedSubMenuItem : fallBackMenuItem;
-        set(state => ({ selectedSubMenuItem }))
+    setSelectedSubMenuItem: async (selectedSubMenuItem) => {
+        let selectedMainMenuItem = getMainMenuForSubMenu(selectedSubMenuItem);
+        set(state => ({ selectedSubMenuItem,selectedMainMenuItem }))
+        window.location.href=rsssl_settings.dashboard_url+'#'+selectedMainMenuItem+'/'+selectedSubMenuItem;
     },
-    setSelectedMainMenuItem: (selectedMainMenuItem) => set(state => ({ selectedMainMenuItem })),
+    setSelectedMainMenuItem: (selectedMainMenuItem) => {
+        set(state => ({ selectedMainMenuItem }))
+        window.location.href=rsssl_settings.dashboard_url+'#'+selectedMainMenuItem;
+    },
     //we need to get the main menu item directly from the anchor, otherwise we have to wait for the menu to load in page.js
     fetchSelectedMainMenuItem: () => {
         let selectedMainMenuItem = getAnchor('main') || 'dashboard';
@@ -143,6 +133,36 @@ const getSubMenu = (menu, selectedMainMenuItem) => {
     }
     subMenu = addVisibleToMenuItems(subMenu);
     return subMenu;
+}
+
+/*
+* Get the main menu item for a submenu item
+*/
+const getMainMenuForSubMenu = (findMenuItem) => {
+    let menu = rsssl_settings.menu;
+    for (const mainKey in menu) {
+        let mainMenuItem = menu[mainKey];
+        if (mainMenuItem.id===findMenuItem) {
+            return mainMenuItem.id;
+        }
+        if (mainMenuItem.menu_items){
+            for (const subKey in mainMenuItem.menu_items) {
+                let subMenuItem = mainMenuItem.menu_items[subKey];
+                if (subMenuItem.id===findMenuItem) {
+                    return mainMenuItem.id;
+                }
+                if (subMenuItem.menu_items){
+                    for (const sub2Key in subMenuItem.menu_items) {
+                        let sub2MenuItem = subMenuItem.menu_items[sub2Key];
+                        if (sub2MenuItem.id===findMenuItem) {
+                            return mainMenuItem.id;
+                        }
+                    }
+                }
+            }
+        }
+    }
+    return false;
 }
 
 /**

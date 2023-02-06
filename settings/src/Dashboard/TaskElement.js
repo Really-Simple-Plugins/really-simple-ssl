@@ -12,12 +12,12 @@ const TaskElement = (props) => {
     const {getField, fields, setHighLightField, fetchFieldsData} = useFields();
     const {setSelectedMainMenuItem, setSelectedSubMenuItem} = useMenu();
 
-    const handleClick = () => {
+    const handleClick = async () => {
         setHighLightField(props.notice.output.highlight_field_id);
         setSelectedMainMenuItem('settings');
         let highlightField = getField(props.notice.output.highlight_field_id);
         console.log(highlightField.menu_id);
-        setSelectedSubMenuItem(highlightField.menu_id, fields);
+        await setSelectedSubMenuItem(highlightField.menu_id, fields);
     }
 
     const onCloseTaskHandler = async (e) => {

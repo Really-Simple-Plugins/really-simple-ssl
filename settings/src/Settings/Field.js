@@ -24,10 +24,10 @@ import useFields from "./FieldsData";
 
 const Field = (props) => {
     let scrollAnchor = React.createRef();
-    const {fields, updateField, setChangedField, highLightField, saveFields} = useFields();
+    const {updateField, setChangedField, highLightField} = useFields();
 
     useEffect( () => {
-        if ( props.highLightedField===props.field.id && scrollAnchor.current ) {
+        if ( highLightField===props.field.id && scrollAnchor.current ) {
             scrollAnchor.current.scrollIntoView()
         }
     });
@@ -65,6 +65,7 @@ const Field = (props) => {
     let fieldValue = field.value;
     let disabled = field.disabled;
     let highLightClass = 'rsssl-field-wrap';
+    console.log(highLightField);
     if ( highLightField===props.field.id ) {
         highLightClass = 'rsssl-field-wrap rsssl-highlight';
     }
