@@ -10,7 +10,24 @@ const useMenu = create(( set, get ) => ({
     selectedSubMenuItem:false,
     hasPremiumItems:false,
     subMenu:{title:' ',menu_items:[]},
-    setSelectedSubMenuItem: (selectedSubMenuItem) => set(state => ({ selectedSubMenuItem })),
+    setSelectedSubMenuItem: async (selectedSubMenuItem, fields) => {
+        let subMenuLoaded = get().subMenuLoaded;
+        if (!subMenuLoaded){
+            await get().fetchMenuData(fields);
+        }
+        let subMenu = get().subMenu;
+        let fallBackMenuItem = subMenuLoaded && subMenu.hasOwnProperty(0) ? subMenu[0].id : 'general';
+        let found = false;
+        //check if this anchor actually exists in our current submenu. If not, clear it
+        for (const key in subMenu) {
+            if ( subMenu.hasOwnProperty(key) &&  subMenu[key].id === selectedSubMenuItem ){
+                found=true;
+            }
+        }
+        if ( !found ) selectedSubMenuItem = false;
+        selectedSubMenuItem = selectedSubMenuItem ? selectedSubMenuItem : fallBackMenuItem;
+        set(state => ({ selectedSubMenuItem }))
+    },
     setSelectedMainMenuItem: (selectedMainMenuItem) => set(state => ({ selectedMainMenuItem })),
     //we need to get the main menu item directly from the anchor, otherwise we have to wait for the menu to load in page.js
     fetchSelectedMainMenuItem: () => {
@@ -37,6 +54,24 @@ const useMenu = create(( set, get ) => ({
             set((state) => ({menu: menu, selectedMainMenuItem: selectedMainMenuItem}));
 
         }
+    },
+    getDefaultSubMenuItem: async (fields) => {
+        let subMenuLoaded = get().subMenuLoaded;
+        if (!subMenuLoaded){
+            await get().fetchMenuData(fields);
+        }
+        let subMenu = get().subMenu;
+        let fallBackMenuItem = subMenuLoaded && subMenu.hasOwnProperty(0) ? subMenu[0].id : 'general';
+        let anchor = getAnchor('menu');
+        let foundAnchorInMenu = false;
+        //check if this anchor actually exists in our current submenu. If not, clear it
+        for (const key in this.menu.menu_items) {
+            if ( subMenu.hasOwnProperty(key) &&  subMenu[key].id === anchor ){
+                foundAnchorInMenu=true;
+            }
+        }
+        if ( !foundAnchorInMenu ) anchor = false;
+        return anchor ? anchor : fallBackMenuItem;
     }
 }));
 export default useMenu;
@@ -54,6 +89,8 @@ const menuItemParser = (parsedMenuItems, menuItems) => {
     });
     return parsedMenuItems;
 }
+
+
 
 const getPreviousAndNextMenuItems = (menu, selectedSubMenuItem) => {
     let previousMenuItem;

@@ -9,7 +9,7 @@ import useMenu from "../Menu/MenuData";
 
 const TaskElement = (props) => {
     const {dismissNotice} = useProgress();
-    const {getField, setHighLightField, fetchFieldsData} = useFields();
+    const {getField, fields, setHighLightField, fetchFieldsData} = useFields();
     const {setSelectedMainMenuItem, setSelectedSubMenuItem} = useMenu();
 
     const handleClick = () => {
@@ -17,7 +17,7 @@ const TaskElement = (props) => {
         setSelectedMainMenuItem('settings');
         let highlightField = getField(props.notice.output.highlight_field_id);
         console.log(highlightField.menu_id);
-        setSelectedSubMenuItem(highlightField.menu_id);
+        setSelectedSubMenuItem(highlightField.menu_id, fields);
     }
 
     const onCloseTaskHandler = async (e) => {
