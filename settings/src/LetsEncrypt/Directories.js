@@ -1,9 +1,6 @@
-import {useState, useEffect} from "@wordpress/element";
 import { __ } from '@wordpress/i18n';
 import * as rsssl_api from "../utils/api";
 import {dispatch,} from '@wordpress/data';
-import Notices from "../Settings/Notices";
-import update from 'immutability-helper';
 import {useUpdateEffect} from 'react-use';
 import sleeper from "../utils/sleeper";
 import Hyperlink from "../utils/Hyperlink";
@@ -11,12 +8,16 @@ import Hyperlink from "../utils/Hyperlink";
 import {
     Button,
 } from '@wordpress/components';
+import useLetsEncryptData from "./letsEncryptData";
+import useFields from "../Settings/FieldsData";
 
 const Directories = (props) => {
-    const action = props.action;
+    const {action} = useLetsEncryptData();
+    const {addHelpNotice} = useFields();
+
      useUpdateEffect(()=> {
         if ((action.action==='challenge_directory_reachable' && action.status==='error')) {
-            props.addHelp(
+            addHelpNotice(
                 props.field.id,
                  'default',
                 __("The challenge directory is used to verify the domain ownership.", "really-simple-ssl"),
@@ -24,7 +25,7 @@ const Directories = (props) => {
         }
 
         if ((action.action==='check_key_directory' && action.status==='error')) {
-            props.addHelp(
+            addHelpNotice(
              props.field.id,
               'default',
              __("The key directory is needed to store the generated keys.","really-simple-ssl")+' '+__("By placing it outside the root folder, it is not publicly accessible.", "really-simple-ssl"),
@@ -32,14 +33,13 @@ const Directories = (props) => {
         }
 
         if ((action.action==='check_certs_directory' && action.status==='error')) {
-            props.addHelp(
+            addHelpNotice(
              props.field.id,
               'default',
              __("The certificate will get stored in this directory.", "really-simple-ssl")+' '+__("By placing it outside the root folder, it is not publicly accessible.", "really-simple-ssl"),
             );
         }
      });
-
 
 
     if (!action) {

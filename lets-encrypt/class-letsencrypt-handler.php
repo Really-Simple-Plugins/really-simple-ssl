@@ -187,7 +187,7 @@ class rsssl_letsencrypt_handler {
 	    $path = isset($details['path']) ? $details['path'] : '';
         if ( strpos(site_url(), 'localhost')!==false ) {
 	        rsssl_progress_remove( 'system-status' );
-	        $action  = 'stop';
+	        $action  = 'continue';
 	        $status  = 'error';
 	        $message = __( "It is not possible to install Let's Encrypt on a localhost environment.", "really-simple-ssl" );
         } else if (is_multisite() && get_current_blog_id() !== get_main_site_id() ) {

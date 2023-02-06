@@ -6,14 +6,12 @@ import Notices from "../Settings/Notices";
 import update from 'immutability-helper';
 import {useUpdateEffect} from 'react-use';
 import sleeper from "../utils/sleeper";
-import Hyperlink from "../utils/Hyperlink";
-
-import {
-    Button,
-} from '@wordpress/components';
+import useLetsEncryptData from "./letsEncryptData";
+import useFields from "../Settings/FieldsData";
 
 const Installation = (props) => {
-    const action = props.action;
+    const {action} = useLetsEncryptData();
+    const {addHelpNotice} = useFields();
     const [installationData, setInstallationData] = useState(false);
 
      useUpdateEffect(()=> {

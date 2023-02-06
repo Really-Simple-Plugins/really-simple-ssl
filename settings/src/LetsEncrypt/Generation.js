@@ -11,9 +11,12 @@ import Hyperlink from "../utils/Hyperlink";
 import {
     Button,
 } from '@wordpress/components';
+import useLetsEncryptData from "./letsEncryptData";
+import useFields from "../Settings/FieldsData";
 
 const Generation = (props) => {
-    const action = props.action;
+    const {action} = useLetsEncryptData();
+    const {addHelpNotice} = useFields();
 
     if (!action) {
         return (<></>);

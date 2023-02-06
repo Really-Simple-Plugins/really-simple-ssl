@@ -88,7 +88,6 @@ const Settings = () => {
             btnSaveText = __('Refresh', 'really-simple-ssl');
         }
     }
-
     return (
         <>
             <div className="rsssl-wizard-settings">

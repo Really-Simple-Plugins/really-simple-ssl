@@ -1,23 +1,25 @@
-import {useState, useEffect} from "@wordpress/element";
+import {useState} from "@wordpress/element";
 import { __ } from '@wordpress/i18n';
 import * as rsssl_api from "../utils/api";
 import {dispatch,} from '@wordpress/data';
-import Notices from "../Settings/Notices";
-import update from 'immutability-helper';
 import Hyperlink from "../utils/Hyperlink";
 import {useUpdateEffect} from 'react-use';
 import sleeper from "../utils/sleeper";
 import {
     Button,
 } from '@wordpress/components';
+import useLetsEncryptData from "./letsEncryptData";
+import useFields from "../Settings/FieldsData";
 
 const DnsVerification = (props) => {
-    const action = props.action;
+    const {action} = useLetsEncryptData();
+    const {addHelpNotice} = useFields();
+
     const [tokens, setTokens] = useState(false);
      useUpdateEffect(()=> {
 
         if (action && action.action==='challenge_directory_reachable' && action.status==='error') {
-            props.addHelp(
+            addHelpNotice(
                 props.field.id,
                  'default',
                 __("The challenge directory is used to verify the domain ownership.", "really-simple-ssl"),

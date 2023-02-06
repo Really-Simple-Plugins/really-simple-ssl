@@ -65,7 +65,6 @@ const Field = (props) => {
     let fieldValue = field.value;
     let disabled = field.disabled;
     let highLightClass = 'rsssl-field-wrap';
-    console.log(highLightField);
     if ( highLightField===props.field.id ) {
         highLightClass = 'rsssl-field-wrap rsssl-highlight';
     }

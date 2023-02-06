@@ -17,8 +17,6 @@ const UseLearningMode = create(( set, get ) => ({
         if ( !Array.isArray(learningModeData) ) {
             learningModeData = [];
         }
-        console.log("response state ");
-        console.log(learningModeData);
         set({
             learningModeData: learningModeData,
             dataLoaded:true,
@@ -50,8 +48,6 @@ const UseLearningMode = create(( set, get ) => ({
         if ( !Array.isArray(learningModeData) ) {
             learningModeData = [];
         }
-        console.log("response state ");
-        console.log(learningModeData);
         set({
             learningModeData: learningModeData,
             dataLoaded:true,
@@ -82,8 +78,6 @@ const UseLearningMode = create(( set, get ) => ({
         if ( !Array.isArray(learningModeData) ) {
             learningModeData = [];
         }
-        console.log("response state ");
-        console.log(learningModeData);
         set({
             learningModeData: learningModeData,
             dataLoaded:true,
