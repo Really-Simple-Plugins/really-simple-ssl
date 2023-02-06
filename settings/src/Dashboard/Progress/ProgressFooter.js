@@ -1,5 +1,5 @@
 import {useState, useEffect} from "@wordpress/element";
-import * as rsssl_api from "../utils/api";
+import * as rsssl_api from "../../utils/api";
 import { __ } from '@wordpress/i18n';
 import Icon from "../../utils/Icon";
 import useFields from "../../Settings/FieldsData";

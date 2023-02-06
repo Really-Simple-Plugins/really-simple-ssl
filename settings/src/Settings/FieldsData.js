@@ -25,7 +25,9 @@ const useFields = create(( set, get ) => ({
     nextButtonDisabled:false,
     refreshTests:false,
     highLightField: '',
-    setHighLightField: (highLightField) => set(state => ({ highLightField })),
+    setHighLightField: (highLightField) => {
+        set(state => ({ highLightField }))
+    },
     setRefreshTests: (refreshTests) => set(state => ({ refreshTests })),
     handleNextButtonDisabled: (nextButtonDisabled) => set(state => ({ nextButtonDisabled })),
     setChangedField: (id, value) => {

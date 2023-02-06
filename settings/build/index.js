@@ -15165,7 +15165,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _Progress_ProgressBlock__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Progress/ProgressBlock */ "./src/DashBoard/Progress/ProgressBlock.js");
-/* harmony import */ var _Progress_ProgressBlock__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_Progress_ProgressBlock__WEBPACK_IMPORTED_MODULE_2__);
 /* harmony import */ var _Progress_ProgressBlockHeader__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./Progress/ProgressBlockHeader */ "./src/DashBoard/Progress/ProgressBlockHeader.js");
 /* harmony import */ var _Progress_ProgressFooter__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./Progress/ProgressFooter */ "./src/DashBoard/Progress/ProgressFooter.js");
 /* harmony import */ var _SslLabs_SslLabs__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./SslLabs/SslLabs */ "./src/DashBoard/SslLabs/SslLabs.js");
@@ -15196,7 +15195,7 @@ __webpack_require__.r(__webpack_exports__);
 var dynamicComponents = {
   "SecurityFeaturesBlock": _SecurityFeaturesBlock_SecurityFeaturesBlock__WEBPACK_IMPORTED_MODULE_9__["default"],
   "SecurityFeaturesFooter": _SecurityFeaturesBlock_SecurityFeaturesFooter__WEBPACK_IMPORTED_MODULE_10__["default"],
-  "ProgressBlock": (_Progress_ProgressBlock__WEBPACK_IMPORTED_MODULE_2___default()),
+  "ProgressBlock": _Progress_ProgressBlock__WEBPACK_IMPORTED_MODULE_2__["default"],
   "ProgressHeader": _Progress_ProgressBlockHeader__WEBPACK_IMPORTED_MODULE_3__["default"],
   "ProgressFooter": _Progress_ProgressFooter__WEBPACK_IMPORTED_MODULE_4__["default"],
   "SslLabs": _SslLabs_SslLabs__WEBPACK_IMPORTED_MODULE_5__["default"],
@@ -15396,9 +15395,84 @@ const OtherPlugins = props => {
 /*!*************************************************!*\
   !*** ./src/DashBoard/Progress/ProgressBlock.js ***!
   \*************************************************/
-/***/ (() => {
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
-throw new Error("Module build failed (from ./node_modules/babel-loader/lib/index.js):\nSyntaxError: /Users/rlankhorst/Sites/localhost/reallysimplessl/wp-content/plugins/really-simple-ssl/settings/src/DashBoard/Progress/ProgressBlock.js: Missing semicolon. (17:23)\n\n\u001b[0m \u001b[90m 15 |\u001b[39m     \u001b[36mconst\u001b[39m [progressText\u001b[33m,\u001b[39m setProgressText] \u001b[33m=\u001b[39m useState(\u001b[32m''\u001b[39m)\u001b[33m;\u001b[39m\u001b[0m\n\u001b[0m \u001b[90m 16 |\u001b[39m\u001b[0m\n\u001b[0m\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 17 |\u001b[39m     componentDidMount() {\u001b[0m\n\u001b[0m \u001b[90m    |\u001b[39m                        \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\u001b[0m\n\u001b[0m \u001b[90m 18 |\u001b[39m         \u001b[36mthis\u001b[39m\u001b[33m.\u001b[39mgetProgressData()\u001b[33m;\u001b[39m\u001b[0m\n\u001b[0m \u001b[90m 19 |\u001b[39m     }\u001b[0m\n\u001b[0m \u001b[90m 20 |\u001b[39m\u001b[0m\n    at instantiate (/Users/rlankhorst/Sites/localhost/reallysimplessl/wp-content/plugins/really-simple-ssl/settings/node_modules/@babel/parser/lib/index.js:64:32)\n    at constructor (/Users/rlankhorst/Sites/localhost/reallysimplessl/wp-content/plugins/really-simple-ssl/settings/node_modules/@babel/parser/lib/index.js:361:12)\n    at JSXParserMixin.raise (/Users/rlankhorst/Sites/localhost/reallysimplessl/wp-content/plugins/really-simple-ssl/settings/node_modules/@babel/parser/lib/index.js:3251:19)\n    at JSXParserMixin.semicolon (/Users/rlankhorst/Sites/localhost/reallysimplessl/wp-content/plugins/really-simple-ssl/settings/node_modules/@babel/parser/lib/index.js:3622:10)\n    at JSXParserMixin.parseExpressionStatement (/Users/rlankhorst/Sites/localhost/reallysimplessl/wp-content/plugins/really-simple-ssl/settings/node_modules/@babel/parser/lib/index.js:13075:10)\n    at JSXParserMixin.parseStatementContent (/Users/rlankhorst/Sites/localhost/reallysimplessl/wp-content/plugins/really-simple-ssl/settings/node_modules/@babel/parser/lib/index.js:12679:19)\n    at JSXParserMixin.parseStatementLike (/Users/rlankhorst/Sites/localhost/reallysimplessl/wp-content/plugins/really-simple-ssl/settings/node_modules/@babel/parser/lib/index.js:12535:17)\n    at JSXParserMixin.parseStatementListItem (/Users/rlankhorst/Sites/localhost/reallysimplessl/wp-content/plugins/really-simple-ssl/settings/node_modules/@babel/parser/lib/index.js:12522:17)\n    at JSXParserMixin.parseBlockOrModuleBlockBody (/Users/rlankhorst/Sites/localhost/reallysimplessl/wp-content/plugins/really-simple-ssl/settings/node_modules/@babel/parser/lib/index.js:13106:61)\n    at JSXParserMixin.parseBlockBody (/Users/rlankhorst/Sites/localhost/reallysimplessl/wp-content/plugins/really-simple-ssl/settings/node_modules/@babel/parser/lib/index.js:13099:10)\n    at JSXParserMixin.parseBlock (/Users/rlankhorst/Sites/localhost/reallysimplessl/wp-content/plugins/really-simple-ssl/settings/node_modules/@babel/parser/lib/index.js:13087:10)\n    at JSXParserMixin.parseFunctionBody (/Users/rlankhorst/Sites/localhost/reallysimplessl/wp-content/plugins/really-simple-ssl/settings/node_modules/@babel/parser/lib/index.js:11905:24)\n    at JSXParserMixin.parseArrowExpression (/Users/rlankhorst/Sites/localhost/reallysimplessl/wp-content/plugins/really-simple-ssl/settings/node_modules/@babel/parser/lib/index.js:11880:10)\n    at JSXParserMixin.parseParenAndDistinguishExpression (/Users/rlankhorst/Sites/localhost/reallysimplessl/wp-content/plugins/really-simple-ssl/settings/node_modules/@babel/parser/lib/index.js:11474:12)\n    at JSXParserMixin.parseExprAtom (/Users/rlankhorst/Sites/localhost/reallysimplessl/wp-content/plugins/really-simple-ssl/settings/node_modules/@babel/parser/lib/index.js:11113:23)\n    at JSXParserMixin.parseExprAtom (/Users/rlankhorst/Sites/localhost/reallysimplessl/wp-content/plugins/really-simple-ssl/settings/node_modules/@babel/parser/lib/index.js:6993:20)\n    at JSXParserMixin.parseExprSubscripts (/Users/rlankhorst/Sites/localhost/reallysimplessl/wp-content/plugins/really-simple-ssl/settings/node_modules/@babel/parser/lib/index.js:10849:23)\n    at JSXParserMixin.parseUpdate (/Users/rlankhorst/Sites/localhost/reallysimplessl/wp-content/plugins/really-simple-ssl/settings/node_modules/@babel/parser/lib/index.js:10832:21)\n    at JSXParserMixin.parseMaybeUnary (/Users/rlankhorst/Sites/localhost/reallysimplessl/wp-content/plugins/really-simple-ssl/settings/node_modules/@babel/parser/lib/index.js:10808:23)\n    at JSXParserMixin.parseMaybeUnaryOrPrivate (/Users/rlankhorst/Sites/localhost/reallysimplessl/wp-content/plugins/really-simple-ssl/settings/node_modules/@babel/parser/lib/index.js:10646:61)\n    at JSXParserMixin.parseExprOps (/Users/rlankhorst/Sites/localhost/reallysimplessl/wp-content/plugins/really-simple-ssl/settings/node_modules/@babel/parser/lib/index.js:10651:23)\n    at JSXParserMixin.parseMaybeConditional (/Users/rlankhorst/Sites/localhost/reallysimplessl/wp-content/plugins/really-simple-ssl/settings/node_modules/@babel/parser/lib/index.js:10628:23)\n    at JSXParserMixin.parseMaybeAssign (/Users/rlankhorst/Sites/localhost/reallysimplessl/wp-content/plugins/really-simple-ssl/settings/node_modules/@babel/parser/lib/index.js:10589:21)\n    at /Users/rlankhorst/Sites/localhost/reallysimplessl/wp-content/plugins/really-simple-ssl/settings/node_modules/@babel/parser/lib/index.js:10559:39\n    at JSXParserMixin.allowInAnd (/Users/rlankhorst/Sites/localhost/reallysimplessl/wp-content/plugins/really-simple-ssl/settings/node_modules/@babel/parser/lib/index.js:12233:16)\n    at JSXParserMixin.parseMaybeAssignAllowIn (/Users/rlankhorst/Sites/localhost/reallysimplessl/wp-content/plugins/really-simple-ssl/settings/node_modules/@babel/parser/lib/index.js:10559:17)\n    at JSXParserMixin.parseVar (/Users/rlankhorst/Sites/localhost/reallysimplessl/wp-content/plugins/really-simple-ssl/settings/node_modules/@babel/parser/lib/index.js:13178:91)\n    at JSXParserMixin.parseVarStatement (/Users/rlankhorst/Sites/localhost/reallysimplessl/wp-content/plugins/really-simple-ssl/settings/node_modules/@babel/parser/lib/index.js:13017:10)\n    at JSXParserMixin.parseStatementContent (/Users/rlankhorst/Sites/localhost/reallysimplessl/wp-content/plugins/really-simple-ssl/settings/node_modules/@babel/parser/lib/index.js:12621:23)\n    at JSXParserMixin.parseStatementLike (/Users/rlankhorst/Sites/localhost/reallysimplessl/wp-content/plugins/really-simple-ssl/settings/node_modules/@babel/parser/lib/index.js:12535:17)\n    at JSXParserMixin.parseModuleItem (/Users/rlankhorst/Sites/localhost/reallysimplessl/wp-content/plugins/really-simple-ssl/settings/node_modules/@babel/parser/lib/index.js:12519:17)\n    at JSXParserMixin.parseBlockOrModuleBlockBody (/Users/rlankhorst/Sites/localhost/reallysimplessl/wp-content/plugins/really-simple-ssl/settings/node_modules/@babel/parser/lib/index.js:13106:36)\n    at JSXParserMixin.parseBlockBody (/Users/rlankhorst/Sites/localhost/reallysimplessl/wp-content/plugins/really-simple-ssl/settings/node_modules/@babel/parser/lib/index.js:13099:10)\n    at JSXParserMixin.parseProgram (/Users/rlankhorst/Sites/localhost/reallysimplessl/wp-content/plugins/really-simple-ssl/settings/node_modules/@babel/parser/lib/index.js:12433:10)\n    at JSXParserMixin.parseTopLevel (/Users/rlankhorst/Sites/localhost/reallysimplessl/wp-content/plugins/really-simple-ssl/settings/node_modules/@babel/parser/lib/index.js:12423:25)\n    at JSXParserMixin.parse (/Users/rlankhorst/Sites/localhost/reallysimplessl/wp-content/plugins/really-simple-ssl/settings/node_modules/@babel/parser/lib/index.js:14226:10)\n    at parse (/Users/rlankhorst/Sites/localhost/reallysimplessl/wp-content/plugins/really-simple-ssl/settings/node_modules/@babel/parser/lib/index.js:14268:38)\n    at parser (/Users/rlankhorst/Sites/localhost/reallysimplessl/wp-content/plugins/really-simple-ssl/settings/node_modules/@babel/core/lib/parser/index.js:41:34)\n    at parser.next (<anonymous>)\n    at normalizeFile (/Users/rlankhorst/Sites/localhost/reallysimplessl/wp-content/plugins/really-simple-ssl/settings/node_modules/@babel/core/lib/transformation/normalize-file.js:65:38)\n    at normalizeFile.next (<anonymous>)\n    at run (/Users/rlankhorst/Sites/localhost/reallysimplessl/wp-content/plugins/really-simple-ssl/settings/node_modules/@babel/core/lib/transformation/index.js:21:50)\n    at run.next (<anonymous>)\n    at transform (/Users/rlankhorst/Sites/localhost/reallysimplessl/wp-content/plugins/really-simple-ssl/settings/node_modules/@babel/core/lib/transform.js:22:41)\n    at transform.next (<anonymous>)\n    at step (/Users/rlankhorst/Sites/localhost/reallysimplessl/wp-content/plugins/really-simple-ssl/settings/node_modules/gensync/index.js:261:32)\n    at /Users/rlankhorst/Sites/localhost/reallysimplessl/wp-content/plugins/really-simple-ssl/settings/node_modules/gensync/index.js:273:13\n    at async.call.result.err.err (/Users/rlankhorst/Sites/localhost/reallysimplessl/wp-content/plugins/really-simple-ssl/settings/node_modules/gensync/index.js:223:11)");
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _utils_api__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../utils/api */ "./src/utils/api.js");
+/* harmony import */ var _TaskElement__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./../TaskElement */ "./src/DashBoard/TaskElement.js");
+/* harmony import */ var _Placeholder_Placeholder__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../Placeholder/Placeholder */ "./src/Placeholder/Placeholder.js");
+/* harmony import */ var _ProgressData__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./ProgressData */ "./src/DashBoard/Progress/ProgressData.js");
+/* harmony import */ var _Settings_FieldsData__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../Settings/FieldsData */ "./src/Settings/FieldsData.js");
+
+
+
+
+
+
+
+const ProgressBlock = props => {
+  const {
+    percentageCompleted,
+    progressText,
+    filter,
+    notices,
+    progressLoaded,
+    getProgressData,
+    error
+  } = (0,_ProgressData__WEBPACK_IMPORTED_MODULE_4__["default"])();
+  (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useEffect)(async () => {
+    getProgressData();
+  }, []);
+  const getStyles = () => {
+    return Object.assign({}, {
+      width: percentageCompleted + "%"
+    });
+  };
+  let progressBarColor = '';
+  if (percentageCompleted < 80) {
+    progressBarColor += 'rsssl-orange';
+  }
+  if (!progressLoaded || error) {
+    return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_Placeholder_Placeholder__WEBPACK_IMPORTED_MODULE_3__["default"], {
+      lines: "9",
+      error: error
+    });
+  }
+  let noticesOutput = notices;
+  if (filter === 'remaining') {
+    noticesOutput = noticesOutput.filter(function (notice) {
+      return notice.output.status === 'open';
+    });
+  }
+  return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "rsssl-progress-block"
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "rsssl-progress-bar"
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "rsssl-progress"
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: 'rsssl-bar ' + progressBarColor,
+    style: getStyles()
+  }))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "rsssl-progress-text"
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("h1", {
+    className: "rsssl-progress-percentage"
+  }, percentageCompleted, "%"), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("h5", {
+    className: "rsssl-progress-text-span"
+  }, progressText)), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "rsssl-scroll-container"
+  }, noticesOutput.map((notice, i) => (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_TaskElement__WEBPACK_IMPORTED_MODULE_2__["default"], {
+    key: i,
+    notice: notice
+  }))));
+};
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (ProgressBlock);
 
 /***/ }),
 
@@ -15506,9 +15580,8 @@ const useProgress = (0,zustand__WEBPACK_IMPORTED_MODULE_1__.create)((set, get) =
   getProgressData: async () => {
     const {
       error,
-      percentageCompleted,
+      percentage,
       progressText,
-      filter,
       notices
     } = await _utils_api__WEBPACK_IMPORTED_MODULE_0__.runTest('progressData', 'refresh').then(response => {
       return response;
@@ -15519,27 +15592,11 @@ const useProgress = (0,zustand__WEBPACK_IMPORTED_MODULE_1__.create)((set, get) =
       }));
     } else {
       set(state => ({
+        notices: notices,
         percentageCompleted: percentage,
         progressText: progressText,
-        filter: filter,
         progressLoaded: true
       }));
-    }
-    if (response.error) {
-      undefined.setState({
-        error: response.error
-      });
-    } else {
-      undefined.percentageCompleted = response.percentage;
-      undefined.notices = response.notices;
-      undefined.setState({
-        progressLoaded: undefined.progressLoaded,
-        progressText: undefined.progressText,
-        filter: undefined.filter,
-        notices: undefined.notices,
-        percentageCompleted: undefined.percentageCompleted
-      });
-      undefined.props.updateBlockProps('notices', undefined.notices);
     }
   },
   dismissNotice: async noticeId => {
@@ -15583,7 +15640,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__);
-Object(function webpackMissingModule() { var e = new Error("Cannot find module '../utils/api'"); e.code = 'MODULE_NOT_FOUND'; throw e; }());
+/* harmony import */ var _utils_api__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../utils/api */ "./src/utils/api.js");
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__);
 /* harmony import */ var _utils_Icon__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../utils/Icon */ "./src/utils/Icon.js");
@@ -15606,7 +15663,7 @@ const ProgressFooter = props => {
     fields
   } = (0,_Settings_FieldsData__WEBPACK_IMPORTED_MODULE_4__["default"])();
   (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
-    Object(function webpackMissingModule() { var e = new Error("Cannot find module '../utils/api'"); e.code = 'MODULE_NOT_FOUND'; throw e; }())('ssl_status_data').then(response => {
+    _utils_api__WEBPACK_IMPORTED_MODULE_1__.runTest('ssl_status_data').then(response => {
       if (!response.error) {
         setCertificateIsValid(response.certificate_is_valid);
         SetSslDataLoaded(true);
@@ -16289,6 +16346,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _utils_sleeper__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../utils/sleeper */ "./src/utils/sleeper.js");
 /* harmony import */ var _Settings_FieldsData__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../Settings/FieldsData */ "./src/Settings/FieldsData.js");
 /* harmony import */ var _Progress_ProgressData__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./Progress/ProgressData */ "./src/DashBoard/Progress/ProgressData.js");
+/* harmony import */ var _Menu_MenuData__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../Menu/MenuData */ "./src/Menu/MenuData.js");
+
 
 
 
@@ -16299,20 +16358,25 @@ __webpack_require__.r(__webpack_exports__);
 
 const TaskElement = props => {
   const {
-    setFilter,
-    filter,
-    fetchFilter,
-    notices,
     dismissNotice
   } = (0,_Progress_ProgressData__WEBPACK_IMPORTED_MODULE_7__["default"])();
   const {
+    getField,
     setHighLightField,
-    updateFieldsData
+    fetchFieldsData
   } = (0,_Settings_FieldsData__WEBPACK_IMPORTED_MODULE_6__["default"])();
+  const {
+    setSelectedMainMenuItem,
+    setSelectedSubMenuItem
+  } = (0,_Menu_MenuData__WEBPACK_IMPORTED_MODULE_8__["default"])();
   const handleClick = () => {
     setHighLightField(props.notice.output.highlight_field_id);
+    setSelectedMainMenuItem('settings');
+    let highlightField = getField(props.notice.output.highlight_field_id);
+    console.log(highlightField.menu_id);
+    setSelectedSubMenuItem(highlightField.menu_id);
   };
-  const onCloseTaskHandler = e => {
+  const onCloseTaskHandler = async e => {
     let button = e.target.closest('button');
     let notice_id = button.getAttribute('data-id');
     let container = button.closest('.rsssl-task-element');
@@ -16326,7 +16390,7 @@ const TaskElement = props => {
     }).onfinish = function () {
       container.parentElement.removeChild(container);
     };
-    dismissNotice(notice_id);
+    await dismissNotice(notice_id);
   };
   const handleClearCache = cache_id => {
     let data = {};
@@ -16340,7 +16404,7 @@ const TaskElement = props => {
       }).then((0,_utils_sleeper__WEBPACK_IMPORTED_MODULE_5__["default"])(3000)).then(response => {
         (0,_wordpress_data__WEBPACK_IMPORTED_MODULE_3__.dispatch)('core/notices').removeNotice('rsssl_clear_cache');
       });
-      updateFieldsData();
+      fetchFieldsData();
     });
   };
   let notice = props.notice;
@@ -16367,7 +16431,7 @@ const TaskElement = props => {
     href: notice.output.url
   }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Fix", "really-simple-ssl")), !premium && notice.output.highlight_field_id && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
     className: "rsssl-task-enable button button-secondary",
-    onClick: handleClick
+    onClick: () => handleClick()
   }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Fix", "really-simple-ssl")), notice.output.plusone && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
     className: "rsssl-plusone"
   }, "1"), notice.output.dismissible && notice.output.status !== 'completed' && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
@@ -18871,9 +18935,11 @@ const useFields = (0,zustand__WEBPACK_IMPORTED_MODULE_4__.create)((set, get) => 
   nextButtonDisabled: false,
   refreshTests: false,
   highLightField: '',
-  setHighLightField: highLightField => set(state => ({
-    highLightField
-  })),
+  setHighLightField: highLightField => {
+    set(state => ({
+      highLightField
+    }));
+  },
   setRefreshTests: refreshTests => set(state => ({
     refreshTests
   })),
