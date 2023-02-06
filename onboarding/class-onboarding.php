@@ -44,7 +44,7 @@ class rsssl_onboarding {
 				$response = RSSSL()->multisite->process_ssl_activation_step();
 				break;
 			default:
-				return [];
+				return $response;
 		}
 
 		return $response;
