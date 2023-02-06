@@ -16,7 +16,7 @@ const SettingsGroup = (props) => {
     const {licenseStatus} = useLicense();
 
     const {selectedSubMenuItem, subMenu} = useMenu();
-    let upgrade='https://really-simple-ssl.com/pro/';
+    let upgrade='https://really-simple-ssl.com/pro/?mtm_campaign=fallback&mtm_source=free&mtm_content=upgrade';
 
     /*
     * On reset of LE, send this info to the back-end, and redirect to the first step.
