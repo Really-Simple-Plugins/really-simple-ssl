@@ -15164,16 +15164,16 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _ProgressBlock__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./ProgressBlock */ "./src/DashBoard/ProgressBlock.js");
-/* harmony import */ var _ProgressBlockHeader__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./ProgressBlockHeader */ "./src/DashBoard/ProgressBlockHeader.js");
-/* harmony import */ var _ProgressFooter__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./ProgressFooter */ "./src/DashBoard/ProgressFooter.js");
-/* harmony import */ var _SslLabs_SslLabs__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./SslLabs/SslLabs */ "./src/DashBoard/SslLabs/SslLabs.js");
-/* harmony import */ var _SslLabs_SslLabsFooter__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./SslLabs/SslLabsFooter */ "./src/DashBoard/SslLabs/SslLabsFooter.js");
-/* harmony import */ var _Settings_FieldsData__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../Settings/FieldsData */ "./src/Settings/FieldsData.js");
-/* harmony import */ var _OtherPlugins__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./OtherPlugins */ "./src/DashBoard/OtherPlugins.js");
-/* harmony import */ var _SecurityFeaturesBlock_SecurityFeaturesBlock__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./SecurityFeaturesBlock/SecurityFeaturesBlock */ "./src/DashBoard/SecurityFeaturesBlock/SecurityFeaturesBlock.js");
-/* harmony import */ var _SecurityFeaturesBlock_SecurityFeaturesFooter__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./SecurityFeaturesBlock/SecurityFeaturesFooter */ "./src/DashBoard/SecurityFeaturesBlock/SecurityFeaturesFooter.js");
-/* harmony import */ var _Onboarding_OnboardingData__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ../Onboarding/OnboardingData */ "./src/Onboarding/OnboardingData.js");
+Object(function webpackMissingModule() { var e = new Error("Cannot find module './ProgressBlock'"); e.code = 'MODULE_NOT_FOUND'; throw e; }());
+Object(function webpackMissingModule() { var e = new Error("Cannot find module './ProgressBlockHeader'"); e.code = 'MODULE_NOT_FOUND'; throw e; }());
+Object(function webpackMissingModule() { var e = new Error("Cannot find module './ProgressFooter'"); e.code = 'MODULE_NOT_FOUND'; throw e; }());
+/* harmony import */ var _SslLabs_SslLabs__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./SslLabs/SslLabs */ "./src/DashBoard/SslLabs/SslLabs.js");
+/* harmony import */ var _SslLabs_SslLabsFooter__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./SslLabs/SslLabsFooter */ "./src/DashBoard/SslLabs/SslLabsFooter.js");
+/* harmony import */ var _Settings_FieldsData__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../Settings/FieldsData */ "./src/Settings/FieldsData.js");
+/* harmony import */ var _OtherPlugins__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./OtherPlugins */ "./src/DashBoard/OtherPlugins.js");
+/* harmony import */ var _SecurityFeaturesBlock_SecurityFeaturesBlock__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./SecurityFeaturesBlock/SecurityFeaturesBlock */ "./src/DashBoard/SecurityFeaturesBlock/SecurityFeaturesBlock.js");
+/* harmony import */ var _SecurityFeaturesBlock_SecurityFeaturesFooter__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./SecurityFeaturesBlock/SecurityFeaturesFooter */ "./src/DashBoard/SecurityFeaturesBlock/SecurityFeaturesFooter.js");
+/* harmony import */ var _Onboarding_OnboardingData__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../Onboarding/OnboardingData */ "./src/Onboarding/OnboardingData.js");
 
 
 
@@ -15193,14 +15193,14 @@ __webpack_require__.r(__webpack_exports__);
  * @type {{SslLabs: JSX.Element}}
  */
 var dynamicComponents = {
-  "SecurityFeaturesBlock": _SecurityFeaturesBlock_SecurityFeaturesBlock__WEBPACK_IMPORTED_MODULE_9__["default"],
-  "SecurityFeaturesFooter": _SecurityFeaturesBlock_SecurityFeaturesFooter__WEBPACK_IMPORTED_MODULE_10__["default"],
-  "ProgressBlock": _ProgressBlock__WEBPACK_IMPORTED_MODULE_2__["default"],
-  "ProgressHeader": _ProgressBlockHeader__WEBPACK_IMPORTED_MODULE_3__["default"],
-  "ProgressFooter": _ProgressFooter__WEBPACK_IMPORTED_MODULE_4__["default"],
-  "SslLabs": _SslLabs_SslLabs__WEBPACK_IMPORTED_MODULE_5__["default"],
-  "SslLabsFooter": _SslLabs_SslLabsFooter__WEBPACK_IMPORTED_MODULE_6__["default"],
-  "OtherPlugins": _OtherPlugins__WEBPACK_IMPORTED_MODULE_8__["default"]
+  "SecurityFeaturesBlock": _SecurityFeaturesBlock_SecurityFeaturesBlock__WEBPACK_IMPORTED_MODULE_7__["default"],
+  "SecurityFeaturesFooter": _SecurityFeaturesBlock_SecurityFeaturesFooter__WEBPACK_IMPORTED_MODULE_8__["default"],
+  "ProgressBlock": Object(function webpackMissingModule() { var e = new Error("Cannot find module './ProgressBlock'"); e.code = 'MODULE_NOT_FOUND'; throw e; }()),
+  "ProgressHeader": Object(function webpackMissingModule() { var e = new Error("Cannot find module './ProgressBlockHeader'"); e.code = 'MODULE_NOT_FOUND'; throw e; }()),
+  "ProgressFooter": Object(function webpackMissingModule() { var e = new Error("Cannot find module './ProgressFooter'"); e.code = 'MODULE_NOT_FOUND'; throw e; }()),
+  "SslLabs": _SslLabs_SslLabs__WEBPACK_IMPORTED_MODULE_3__["default"],
+  "SslLabsFooter": _SslLabs_SslLabsFooter__WEBPACK_IMPORTED_MODULE_4__["default"],
+  "OtherPlugins": _OtherPlugins__WEBPACK_IMPORTED_MODULE_6__["default"]
 };
 const GridBlock = props => {
   const [footerHtml, setFooterHtml] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)(props.block.footer.data);
@@ -15388,344 +15388,6 @@ const OtherPlugins = props => {
   }, pluginData.map((plugin, i) => otherPluginElement(plugin, i))));
 };
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (OtherPlugins);
-
-/***/ }),
-
-/***/ "./src/DashBoard/ProgressBlock.js":
-/*!****************************************!*\
-  !*** ./src/DashBoard/ProgressBlock.js ***!
-  \****************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
-/* harmony export */ });
-/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
-/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _utils_api__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../utils/api */ "./src/utils/api.js");
-/* harmony import */ var _TaskElement__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./TaskElement */ "./src/DashBoard/TaskElement.js");
-/* harmony import */ var _Placeholder_Placeholder__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../Placeholder/Placeholder */ "./src/Placeholder/Placeholder.js");
-
-
-
-
-
-class ProgressBlock extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Component {
-  constructor() {
-    super(...arguments);
-    this.percentageCompleted = 0;
-    this.progressText = '';
-    this.filter = 'all';
-    this.notices = null;
-    this.progressLoaded = false;
-    this.fields = this.props.fields;
-    this.state = {
-      progressText: '',
-      filter: 'all',
-      notices: null,
-      percentageCompleted: 0,
-      progressLoaded: false,
-      error: false
-    };
-  }
-  componentDidMount() {
-    this.getProgressData = this.getProgressData.bind(this);
-    this.onCloseTaskHandler = this.onCloseTaskHandler.bind(this);
-    this.getProgressData();
-  }
-  componentDidUpdate() {
-    //if a field has changed, we update the progress data as well.
-    if (this.fields !== this.props.fields) {
-      this.fields = this.props.fields;
-      this.getProgressData();
-    }
-  }
-  getStyles() {
-    return Object.assign({}, {
-      width: this.percentageCompleted + "%"
-    });
-  }
-  getProgressData() {
-    _utils_api__WEBPACK_IMPORTED_MODULE_1__.runTest('progressData', 'refresh').then(response => {
-      if (response.error) {
-        this.setState({
-          error: response.error
-        });
-      } else {
-        this.progressText = response.text;
-        this.filter = response.filter;
-        this.percentageCompleted = response.percentage;
-        this.notices = response.notices;
-        this.progressLoaded = true;
-        this.setState({
-          progressLoaded: this.progressLoaded,
-          progressText: this.progressText,
-          filter: this.filter,
-          notices: this.notices,
-          percentageCompleted: this.percentageCompleted
-        });
-        this.props.updateBlockProps('notices', this.notices);
-      }
-    });
-  }
-  onCloseTaskHandler(e) {
-    let button = e.target.closest('button');
-    let notice_id = button.getAttribute('data-id');
-    let container = button.closest('.rsssl-task-element');
-    container.animate({
-      marginLeft: ["0px", "-1000px"]
-    }, {
-      duration: 500,
-      easing: "linear",
-      iterations: 1,
-      fill: "both"
-    }).onfinish = function () {
-      container.parentElement.removeChild(container);
-    };
-    let notices = this.props.blockProps.notices;
-    notices = notices.filter(function (notice) {
-      return notice.id !== notice_id;
-    });
-    this.props.updateBlockProps('notices', notices);
-    return _utils_api__WEBPACK_IMPORTED_MODULE_1__.runTest('dismiss_task', notice_id).then(response => {
-      if (response.error) {
-        this.setState({
-          error: response.error
-        });
-      } else {
-        this.percentageCompleted = response.percentage;
-        this.setState({
-          percentageCompleted: this.percentageCompleted
-        });
-      }
-    });
-  }
-  render() {
-    const {
-      error
-    } = this.state;
-    let progressBarColor = '';
-    if (this.percentageCompleted < 80) {
-      progressBarColor += 'rsssl-orange';
-    }
-    if (!this.progressLoaded || error) {
-      return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_Placeholder_Placeholder__WEBPACK_IMPORTED_MODULE_3__["default"], {
-        lines: "9",
-        error: error
-      });
-    }
-    let filter = 'all';
-    if (this.props.blockProps && this.props.blockProps.filterStatus) {
-      filter = this.props.blockProps.filterStatus;
-    }
-    let notices = this.notices;
-    if (filter === 'remaining') {
-      notices = notices.filter(function (notice) {
-        return notice.output.status === 'open';
-      });
-    }
-    return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-      className: "rsssl-progress-block"
-    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-      className: "rsssl-progress-bar"
-    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-      className: "rsssl-progress"
-    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-      className: 'rsssl-bar ' + progressBarColor,
-      style: this.getStyles()
-    }))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-      className: "rsssl-progress-text"
-    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("h1", {
-      className: "rsssl-progress-percentage"
-    }, this.percentageCompleted, "%"), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("h5", {
-      className: "rsssl-progress-text-span"
-    }, this.progressText)), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-      className: "rsssl-scroll-container"
-    }, notices.map((notice, i) => (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_TaskElement__WEBPACK_IMPORTED_MODULE_2__["default"], {
-      key: i,
-      index: i,
-      notice: notice,
-      getFields: this.props.getFields,
-      onCloseTaskHandler: this.onCloseTaskHandler,
-      doHighlightField: this.props.doHighlightField
-    }))));
-  }
-}
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (ProgressBlock);
-
-/***/ }),
-
-/***/ "./src/DashBoard/ProgressBlockHeader.js":
-/*!**********************************************!*\
-  !*** ./src/DashBoard/ProgressBlockHeader.js ***!
-  \**********************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
-/* harmony export */ });
-/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
-/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
-/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__);
-
-
-
-class ProgressHeader extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Component {
-  constructor() {
-    super(...arguments);
-    this.filter = 'all';
-  }
-  componentDidMount() {
-    this.onClickHandler = this.onClickHandler.bind(this);
-    this.setState({
-      filter: this.filter
-    });
-  }
-  onClickHandler(e) {
-    let filter = e.target.getAttribute('data-filter');
-    if (filter === 'all' || filter === 'remaining') {
-      this.filter = filter;
-      this.setState({
-        filter: this.filter
-      });
-      this.props.updateBlockProps('filterStatus', filter);
-      sessionStorage.rsssl_task_filter = filter;
-    }
-  }
-  render() {
-    if (typeof Storage !== "undefined" && sessionStorage.rsssl_task_filter) {
-      this.filter = sessionStorage.rsssl_task_filter;
-    }
-    let all_task_count = 0;
-    let open_task_count = 0;
-    let notices = [];
-    if (this.props.blockProps && this.props.blockProps.notices) {
-      notices = this.props.blockProps.notices;
-      all_task_count = notices.length;
-      let openNotices = notices.filter(function (notice) {
-        return notice.output.status === 'open' || notice.output.status === 'warning';
-      });
-      open_task_count = openNotices.length;
-    }
-    return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-      className: "rsssl-task-switcher-container rsssl-active-filter-" + this.filter
-    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
-      className: "rsssl-task-switcher rsssl-all-tasks",
-      onClick: this.onClickHandler,
-      htmlFor: "rsssl-all-tasks",
-      "data-filter": "all"
-    }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("All tasks", "really-simple-ssl"), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
-      className: "rsssl_task_count"
-    }, "(", all_task_count, ")")), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
-      className: "rsssl-task-switcher rsssl-remaining-tasks",
-      onClick: this.onClickHandler,
-      htmlFor: "rsssl-remaining-tasks",
-      "data-filter": "remaining"
-    }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Remaining tasks", "really-simple-ssl"), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
-      className: "rsssl_task_count"
-    }, "(", open_task_count, ")")));
-  }
-}
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (ProgressHeader);
-
-/***/ }),
-
-/***/ "./src/DashBoard/ProgressFooter.js":
-/*!*****************************************!*\
-  !*** ./src/DashBoard/ProgressFooter.js ***!
-  \*****************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
-/* harmony export */ });
-/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
-/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _utils_api__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../utils/api */ "./src/utils/api.js");
-/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
-/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var immutability_helper__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! immutability-helper */ "./node_modules/immutability-helper/index.js");
-/* harmony import */ var immutability_helper__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(immutability_helper__WEBPACK_IMPORTED_MODULE_3__);
-/* harmony import */ var _utils_Icon__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../utils/Icon */ "./src/utils/Icon.js");
-/* harmony import */ var _Settings_FieldsData__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../Settings/FieldsData */ "./src/Settings/FieldsData.js");
-/* harmony import */ var _Onboarding_OnboardingData__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../Onboarding/OnboardingData */ "./src/Onboarding/OnboardingData.js");
-
-
-
-
-
-
-
-
-
-const ProgressFooter = props => {
-  const {
-    setShowOnBoardingModal
-  } = (0,_Onboarding_OnboardingData__WEBPACK_IMPORTED_MODULE_6__["default"])();
-  const [certificateIsValid, setCertificateIsValid] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)(false);
-  const [sslDataLoaded, SetSslDataLoaded] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)(false);
-  const {
-    fields
-  } = (0,_Settings_FieldsData__WEBPACK_IMPORTED_MODULE_5__["default"])();
-  (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
-    _utils_api__WEBPACK_IMPORTED_MODULE_1__.runTest('ssl_status_data').then(response => {
-      if (!response.error) {
-        setCertificateIsValid(response.certificate_is_valid);
-        SetSslDataLoaded(true);
-      }
-    });
-  }, []);
-  if (!sslDataLoaded) {
-    return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null);
-  }
-  let redirectValue = fields.filter(field => field.id === 'redirect')[0].value;
-  let sslEnabled = fields.filter(field => field.id === 'ssl_enabled')[0].value;
-  let wpconfigFixRequired = rsssl_settings.wpconfig_fix_required;
-  let hasMixedContentFixer = fields.filter(field => field.id === 'mixed_content_fixer')[0].value;
-  let hasRedirect = redirectValue === 'wp_redirect' || redirectValue === 'htaccess';
-  let sslStatusText = sslEnabled ? (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("SSL Activated", "really-simple-ssl") : (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("SSL not activated", "really-simple-ssl");
-  let sslStatusIcon = sslEnabled ? 'circle-check' : 'circle-times';
-  let sslStatusColor = sslEnabled ? 'green' : 'red';
-  let redirectIcon = hasRedirect ? 'circle-check' : 'circle-times';
-  let redirectColor = hasRedirect ? 'green' : 'red';
-  let mixedContentIcon = hasMixedContentFixer ? 'circle-check' : 'circle-times';
-  let mixedContentColor = hasMixedContentFixer ? 'green' : 'red';
-  let disabled = wpconfigFixRequired ? 'disabled' : '';
-  return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, !sslEnabled && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
-    disabled: disabled,
-    onClick: () => setShowOnBoardingModal(true),
-    className: "button button-primary"
-  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Activate SSL", "really-simple-ssl")), rsssl_settings.pro_plugin_active && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
-    className: "rsssl-footer-left"
-  }, "Really Simple SSL Pro ", rsssl_settings.pro_version), !rsssl_settings.pro_plugin_active && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
-    href: rsssl_settings.upgrade_link,
-    target: "_blank",
-    className: "button button-default"
-  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Go Pro", "really-simple-ssl")), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "rsssl-legend"
-  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_utils_Icon__WEBPACK_IMPORTED_MODULE_4__["default"], {
-    name: sslStatusIcon,
-    color: sslStatusColor
-  }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, sslStatusText)), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "rsssl-legend"
-  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_utils_Icon__WEBPACK_IMPORTED_MODULE_4__["default"], {
-    name: mixedContentIcon,
-    color: mixedContentColor
-  }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Mixed content", "really-simple-ssl"))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "rsssl-legend"
-  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_utils_Icon__WEBPACK_IMPORTED_MODULE_4__["default"], {
-    name: redirectIcon,
-    color: redirectColor
-  }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("301 redirect", "really-simple-ssl"))));
-};
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (ProgressFooter);
 
 /***/ }),
 
@@ -18522,9 +18184,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _utils_Icon__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../utils/Icon */ "./src/utils/Icon.js");
-
-
 
 /*
 * The tooltip can't be included in the native toggleControl, so we have to build our own.

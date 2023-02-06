@@ -1,11 +1,9 @@
 import {useState, useEffect} from "@wordpress/element";
 import * as rsssl_api from "../utils/api";
 import { __ } from '@wordpress/i18n';
-import update from 'immutability-helper';
-import {useUpdateEffect} from 'react-use';
-import Icon from "../utils/Icon";
-import useFields from "../Settings/FieldsData";
-import useOnboardingData from "../Onboarding/OnboardingData";
+import Icon from "../../utils/Icon";
+import useFields from "../../Settings/FieldsData";
+import useOnboardingData from "../../Onboarding/OnboardingData";
 
 const ProgressFooter = (props) => {
     const {setShowOnBoardingModal} = useOnboardingData();

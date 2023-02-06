@@ -1,5 +1,3 @@
-import Icon from "../utils/Icon";
-
 /*
 * The tooltip can't be included in the native toggleControl, so we have to build our own.
 */
