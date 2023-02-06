@@ -1,7 +1,7 @@
 import { __ } from '@wordpress/i18n';
-import ProgressBlock from "./ProgressBlock";
-import ProgressHeader from "./ProgressBlockHeader";
-import ProgressFooter from "./ProgressFooter";
+import ProgressBlock from "./Progress/ProgressBlock";
+import ProgressHeader from "./Progress/ProgressBlockHeader";
+import ProgressFooter from "./Progress/ProgressFooter";
 import SslLabs from "./SslLabs/SslLabs";
 import SslLabsFooter from "./SslLabs/SslLabsFooter";
 

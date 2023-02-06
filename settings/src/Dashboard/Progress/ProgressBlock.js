@@ -1,5 +1,5 @@
 import {
-    useState,
+    useState, useEffect
 } from '@wordpress/element';
 
 import * as rsssl_api from "../../utils/api";
@@ -14,58 +14,18 @@ const ProgressBlock = (props) => {
     const [percentageCompleted, setPercentageCompleted] = useState(0);
     const [progressText, setProgressText] = useState('');
 
-    componentDidMount() {
-        this.getProgressData();
-    }
+    useEffect(async () => {
+        getProgressData();
+    }, [] );
 
-    componentDidUpdate() {
-        //if a field has changed, we update the progress data as well.
-        if ( this.fields !== this.props.fields ) {
-            this.fields = this.props.fields;
-            this.getProgressData();
-        }
-    }
-    getStyles() {
+    const getStyles = () => {
         return Object.assign(
             {},
             {width: this.percentageCompleted+"%"},
         );
     }
 
-    onCloseTaskHandler(e){
-        let button = e.target.closest('button');
-        let notice_id = button.getAttribute('data-id');
-        let container = button.closest('.rsssl-task-element');
-        container.animate({
-            marginLeft: ["0px", "-1000px"]
-        }, {
-            duration: 500,
-            easing: "linear",
-            iterations: 1,
-            fill: "both"
-        }).onfinish = function() {
-            container.parentElement.removeChild(container);
-        }
 
-        let notices = this.props.blockProps.notices;
-        notices = notices.filter(function (notice) {
-            return notice.id !== notice_id;
-        });
-
-        this.props.updateBlockProps('notices', notices);
-        return rsssl_api.runTest('dismiss_task', notice_id).then(( response ) => {
-            if ( response.error ) {
-                this.setState({
-                    error: response.error,
-                });
-            } else {
-                this.percentageCompleted = response.percentage;
-                this.setState({
-                    percentageCompleted: this.percentageCompleted
-                })
-            }
-        });
-    }
 
     render(){
         const {

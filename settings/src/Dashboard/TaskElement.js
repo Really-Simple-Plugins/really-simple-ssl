@@ -4,12 +4,34 @@ import {dispatch,} from '@wordpress/data';
 import * as rsssl_api from "../utils/api";
 import sleeper from "../utils/sleeper";
 import useFields from "../Settings/FieldsData";
+import useProgress from "./Progress/ProgressData";
 
 const TaskElement = (props) => {
+    const {setFilter, filter, fetchFilter, notices, dismissNotice} = useProgress();
+
     const {setHighLightField, updateFieldsData} = useFields();
 
     const handleClick = () => {
         setHighLightField(props.notice.output.highlight_field_id);
+    }
+
+    const onCloseTaskHandler = (e) => {
+        let button = e.target.closest('button');
+        let notice_id = button.getAttribute('data-id');
+        let container = button.closest('.rsssl-task-element');
+        container.animate({
+            marginLeft: ["0px", "-1000px"]
+        }, {
+            duration: 500,
+            easing: "linear",
+            iterations: 1,
+            fill: "both"
+        }).onfinish = function() {
+            container.parentElement.removeChild(container);
+        }
+        dismissNotice(notice_id);
+
+
     }
 
     const handleClearCache = (cache_id) => {
@@ -47,7 +69,7 @@ const TaskElement = (props) => {
             {notice.output.plusone && <span className='rsssl-plusone'>1</span>}
             {notice.output.dismissible && notice.output.status!=='completed' &&
                 <div className="rsssl-task-dismiss">
-                  <button type='button' data-id={notice.id} onClick={props.onCloseTaskHandler}>
+                  <button type='button' data-id={notice.id} onClick={(e) => onCloseTaskHandler(e) }>
                          <Icon name='times' />
                   </button>
                 </div>

@@ -1140,7 +1140,6 @@ function rsssl_fields( $load_values = true ) {
 			'label'         => "Content Security Policy",
 			'disabled'      => false,
 			'default'       => false,
-			'data_source'   => [ 'RSSSL', 'placeholder', 'csp_data' ],
 			'columns'       => [
 				[
 					'name'     => __( 'Location', 'really-simple-ssl' ),
