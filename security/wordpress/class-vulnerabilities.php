@@ -11,17 +11,18 @@ if (!class_exists("rsssl_vulnerabilities")) {
      * Class rsssl_vulnerabilities
      * Checks for vulnerabilities in the core, plugins and themes.
      *
+     * @property $notices
      * @author Really Simple SSL
      * this class handles database, import of vulnerabilities, and checking for vulnerabilities.
      *
      */
     class rsssl_vulnerabilities
     {
-
         function __construct()
         {
             add_action('admin_init', array($this, 'download_vulnerabilities'));
         }
+
 
         /**
          * Initiate the class
@@ -31,7 +32,14 @@ if (!class_exists("rsssl_vulnerabilities")) {
         public function init()
         {
             //downloads vulnerabilities
-            $this->download_vulnerabilities();
+            //  $this->download_vulnerabilities();
+            //we check the rsssl options if the enable_feedback_in_plugin is set to true
+            if (rsssl_get_option('enable_feedback_in_plugin')) {
+                $this->show_feedback_in_plugin();
+            }
+
+            //display all notices in dashboard
+            add_action('rsssl_admin_notices', $this->notices);
         }
 
         public static function instance()
@@ -99,7 +107,7 @@ if (!class_exists("rsssl_vulnerabilities")) {
             //we convert the data to an array
             $data = json_decode(json_encode($data), true);
 
-             //first we store this as a json file in the uploads folder
+            //first we store this as a json file in the uploads folder
             $this->store_file($data, true);
         }
 
@@ -108,12 +116,12 @@ if (!class_exists("rsssl_vulnerabilities")) {
             //we get all the installed plugins
             $installed_plugins = get_plugins();
             $vulnerabilities = [];
-            foreach($installed_plugins as $plugin) {
+            foreach ($installed_plugins as $plugin) {
                 $plugin = $plugin['TextDomain'];
-                $url = 'https://api.really-simple-security.com/storage/downloads/plugin/'.$plugin.'.json';
+                $url = 'https://api.really-simple-security.com/storage/downloads/plugin/' . $plugin . '.json';
                 $data = $this->download($url);
                 if ($data !== null)
-                $vulnerabilities[] = $data;
+                    $vulnerabilities[] = $data;
             }
 
             $vulnerabilities = $this->filter_active_components($vulnerabilities, $installed_plugins);
@@ -154,7 +162,6 @@ if (!class_exists("rsssl_vulnerabilities")) {
             }
             return $plugins;
         }
-
 
         private function filter_active_components($components, array $active_plugins): array
         {
@@ -248,6 +255,97 @@ if (!class_exists("rsssl_vulnerabilities")) {
             }
 
             file_put_contents($file, json_encode($data));
+        }
+
+        /**
+         * This function shows the feedback in the plugin
+         *
+         * @return void
+         */
+        private function show_feedback_in_plugin()
+        {
+            //first we get all installed plugins
+            $installed_plugins = get_plugins();
+            //now we get the components from the file
+            $components = $this->get_components();
+            //if there are no components, we return
+            if (empty($components)) {
+                return;
+            }
+
+            //We loop through plugins and check if they are in the components array
+            foreach ($installed_plugins as $plugin) {
+                //we walk through the components array
+                foreach ($components as $component) {
+                    //if the plugin is in the components array, we check if the version is higher than the max_version
+                    if ($plugin['TextDomain'] === $component->slug) {
+                        //if the version is higher than the max_version, we show a notice in the rsssl dashboard
+                        $this->display_notification_rsss_admin($plugin, $component);
+                    }
+                }
+            }
+        }
+
+        /**
+         * This function shows the feedback in the plugin
+         *
+         * @return void
+         */
+        private function display_notification_rsss_admin($plugin, $component)
+        {
+            //we check if the plugin is active
+            if (!is_plugin_active($plugin)) {
+                // we add an info notice to the dashboard
+
+                $message = sprintf(__("The plugin %s has a vulnerability. Please update the plugin to a higher version.", "really-simple-ssl"), $plugin['Name']);
+                //we add the notice to the dashboard
+                $this->add_notice($message, 'info');
+                return;
+            }
+            //TODO: make it an warning in the dashboard
+            $message = sprintf(__("The plugin %s has a vulnerability. Please update the plugin to a higher version.", "really-simple-ssl"), $plugin['Name']);
+            //we add the notice to the dashboard
+            $this->add_notice($message, 'warning');
+        }
+
+
+        private function get_components()
+        {
+            $upload_dir = wp_upload_dir();
+            $upload_dir = $upload_dir['basedir'];
+            $upload_dir = $upload_dir . '/rsssl';
+            $file = $upload_dir . '/components.json';
+            if (!file_exists($file)) {
+                return null;
+            }
+            $json = file_get_contents($file);
+            return json_decode($json);
+        }
+
+        /**
+         * This function adds a notice to the dashboard
+         *
+         * @param string $message
+         * @param string $string
+         * @return void
+         */
+        private function add_notice(string $message, string $string)
+        {
+            $this->notices['vulnerability-found'] = [
+                'callback' => [$this, 'update_plugin'],
+                'score' => 10,
+                'output' => [
+                    'msg' => $message,
+                    'url' => 'https://really-simple-ssl.com/knowledge-base/vulnerabilities-in-plugins/',
+                    'dismissible' => false,
+                ]
+            ];
+
+        }
+
+        public function update_plugin()
+        {
+            $this->notices['vulnerability-found']['output']['msg'] = __("The plugin has a vulnerability. Please update the plugin to a higher version.", "really-simple-ssl");
         }
     }
 }

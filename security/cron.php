@@ -11,6 +11,9 @@ if ( RSSSL_USE_CRON ) {
 		if ( ! wp_next_scheduled( 'rsssl_every_day_hook' ) ) {
 			wp_schedule_event( time(), 'rsssl_daily', 'rsssl_every_day_hook' );
 		}
+		if ( ! wp_next_scheduled( 'rsssl_every_five_minutes_hook' ) ) {
+			wp_schedule_event( time(), 'rsssl_five_minutes', 'rsssl_every_five_minutes_hook' );
+		}
 		if ( ! wp_next_scheduled( 'rsssl_every_week_hook' ) ) {
 			wp_schedule_event( time(), 'rsssl_weekly', 'rsssl_every_week_hook' );
 		}
@@ -18,30 +21,37 @@ if ( RSSSL_USE_CRON ) {
 }
 
 /**
- * Ensure the hook as a function attached to it.
+ * Ensure the hook has a function attached to it.
  */
 add_action( 'rsssl_every_day_hook', 'rsssl_daily_cron' );
 function rsssl_daily_cron(){
 	do_action('rsssl_daily_cron');
 }
+
+add_action( 'rsssl_every_five_minutes_hook', 'rsssl_every_five_minutes_cron' );
+function rsssl_every_five_minutes_cron() {
+	do_action( 'rsssl_five_minutes_cron' );
+}
+
 add_action( 'rsssl_every_week_hook', 'rsssl_week_cron' );
-function rsssl_week_cron(){
-	do_action('rsssl_weekly_cron');
+function rsssl_week_cron() {
+	do_action( 'rsssl_weekly_cron' );
 }
 
 if ( !RSSSL_USE_CRON ) {
 	add_action( 'admin_init', 'rsssl_schedule_non_cron' );
 	function rsssl_schedule_non_cron(){
 		do_action( 'rsssl_every_day_hook' );
+		do_action( 'rsssl_every_five_minutes_hook' );
 		do_action('rsssl_every_week_hook');
 	}
 }
 
 add_filter( 'cron_schedules', 'rsssl_filter_cron_schedules' );
 function rsssl_filter_cron_schedules( $schedules ) {
-	$schedules['rsssl_one_minute'] = array(
-		'interval' => 60, // seconds
-		'display' => __('Once every minute')
+	$schedules['rsssl_five_minutes'] = array(
+		'interval' => 5 * MINUTE_IN_SECONDS, // seconds
+		'display' => __('Once every 5 minutes')
 	);
 	$schedules['rsssl_daily']   = array(
 		'interval' => DAY_IN_SECONDS,
@@ -58,6 +68,7 @@ register_deactivation_hook( rsssl_file, 'rsssl_clear_scheduled_hooks' );
 function rsssl_clear_scheduled_hooks() {
 	wp_clear_scheduled_hook( 'rsssl_every_day_hook' );
 	wp_clear_scheduled_hook( 'rsssl_every_week_hook' );
+	wp_clear_scheduled_hook( 'rsssl_every_five_minutes_hook' );
 	wp_clear_scheduled_hook( 'rsssl_ssl_process_hook' );
 }
 

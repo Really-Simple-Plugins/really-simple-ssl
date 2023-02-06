@@ -134,8 +134,11 @@ function rsssl_upgrade() {
 		} else {
 			update_option( 'rsssl_options', $new_options );
 		}
+		update_option('rsssl_flush_rewrite_rules', time() );
 		update_option('rsssl_6_upgrade_completed', true, false);
 	}
+
+
 
 	#clean up old rest api optimizer on upgrade
 	if ( $prev_version && version_compare( $prev_version, '6.0.5', '<' ) ) {

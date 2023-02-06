@@ -1,64 +1,52 @@
 import {
     SelectControl,
 } from '@wordpress/components';
-import { __ } from '@wordpress/i18n';
 import * as rsssl_api from "../utils/api";
-import {
-    Component,
-} from '@wordpress/element';
+import {useRef} from "@wordpress/element";
 
+const Host = (props) => {
+    const disabled = useRef(false);
 
-class Host extends Component {
-    constructor() {
-        super( ...arguments );
-        this.disabled = false
-    }
-
-    onChangeHandler(fieldValue) {
-        let fields = this.props.fields;
-        let field = this.props.field;
+    const onChangeHandler = (fieldValue) => {
+        let fields = props.fields;
+        let field = props.field;
         field.value = fieldValue;
-        fields[this.props.index]['value'] = fieldValue;
+        fields[props.index]['value'] = fieldValue;
 
         //force update, and get new fields.
-        this.disabled = true;
+        disabled.current = true;
         let saveFields = [];
-        this.props.handleNextButtonDisabled(true);
+        props.handleNextButtonDisabled(true);
         saveFields.push(field);
         rsssl_api.setFields(saveFields).then(( response ) => {
-            this.props.updateFields(response.fields);
-            this.disabled = false;
-            this.props.handleNextButtonDisabled(false);
+            props.updateFields(response.fields);
+            disabled.current = false;
+            props.handleNextButtonDisabled(false);
         });
     }
 
-
-    render(){
-        let fieldValue = this.props.field.value;
-        let field = this.props.field;
-        let options = [];
-        if ( field.options ) {
-            for (var key in field.options) {
-                if (field.options.hasOwnProperty(key)) {
-                    let item = {};
-                    item.label = field.options[key];
-                    item.value = key;
-                    options.push(item);
-                }
+    let fieldValue = props.field.value;
+    let field = props.field;
+    let options = [];
+    if ( field.options ) {
+        for (var key in field.options) {
+            if (field.options.hasOwnProperty(key)) {
+                let item = {};
+                item.label = field.options[key];
+                item.value = key;
+                options.push(item);
             }
         }
-        return (
-              <SelectControl
-                  label={ field.label }
-                  onChange={ ( fieldValue ) => this.onChangeHandler(fieldValue) }
-                  value= { fieldValue }
-                  options={ options }
-                  disabled={this.disabled}
-              />
-        )
-
-
     }
-}
 
+    return (
+          <SelectControl
+              label={ field.label }
+              onChange={ ( fieldValue ) => onChangeHandler(fieldValue) }
+              value= { fieldValue }
+              options={ options }
+              disabled={disabled.current}
+          />
+    )
+}
 export default Host;

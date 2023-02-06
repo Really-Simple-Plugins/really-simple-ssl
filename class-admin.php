@@ -21,7 +21,7 @@ class rsssl_admin
 
         self::$_this = $this;
         $this->abs_path = $this->getabs_path();
-	    $this->pro_url = is_multisite() ? 'https://really-simple-ssl.com/pro-multisite' : 'https://really-simple-ssl.com/pro';
+	    $this->pro_url = is_multisite() ? 'https://really-simple-ssl.com/pro/?mtm_campaign=notification&mtm_kwd=multisite&mtm_source=free&mtm_medium=settings&mtm_content=upgrade' : 'https://really-simple-ssl.com/pro/?mtm_campaign=notification&mtm_source=free&mtm_medium=settings&mtm_content=upgrade';
 
         register_deactivation_hook( __DIR__ . "/" . $this->plugin_filename, array($this, 'deactivate'));
 	    add_action( 'admin_init', array($this, 'add_privacy_info') );
@@ -67,6 +67,7 @@ class rsssl_admin
 
 	    add_filter( 'rsssl_htaccess_security_rules', array($this, 'add_htaccess_redirect') );
 	    add_filter( 'before_rocket_htaccess_rules', array($this, 'add_htaccess_redirect_before_wp_rocket' ) );
+	    add_filter( 'rsssl_five_minutes_cron', array($this, 'maybe_send_mail' ) );
 	    add_action( 'rocket_activation', 'rsssl_wrap_htaccess' );
 	    add_action( 'rocket_deactivation' , 'rsssl_wrap_htaccess' );
     }
@@ -74,6 +75,35 @@ class rsssl_admin
     static function this()
     {
         return self::$_this;
+    }
+
+	/**
+	 * @return void
+	 */
+    public function maybe_send_mail(){
+        if ( !rsssl_get_option('send_notifications_email') ) {
+            return;
+        }
+
+	    $fields = get_option('rsssl_email_warning_fields', []);
+        $time_saved = get_option('rsssl_email_warning_fields_saved');
+        if ( !$time_saved ) {
+            return;
+        }
+
+	    $thirty_minutes_ago = $time_saved < strtotime("-10 minute");
+	    $warning_blocks = array_column($fields, 'email');
+	    if ( $thirty_minutes_ago && count($warning_blocks)>0 ) {
+		    //clear the option
+		    delete_option('rsssl_email_warning_fields', []);
+		    delete_option('rsssl_email_warning_fields_saved');
+		    $domain = '<a href="'.site_url().'">'.site_url().'</a>';
+		    $mailer = new rsssl_mailer();
+		    $mailer->subject = __("Feature enabled","really-simple-ssl");
+		    $mailer->message = sprintf(__("You have enabled a feature on %s. We think it's important to let you know a little bit more about this feature so you can use it without worries.","really-simple-ssl"), $domain);
+		    $mailer->warning_blocks = $warning_blocks;
+		    $mailer->send_mail();
+	    }
     }
 
 	/**
@@ -327,7 +357,7 @@ class rsssl_admin
 	 *  Activate the SSL for this site
 	 */
 
-    public function activate_ssl($request)
+    public function activate_ssl($data)
     {
 	    if ( !rsssl_user_can_manage()  ) {
 		    return [
@@ -337,7 +367,7 @@ class rsssl_admin
         }
 	    $safe_mode = defined('RSSSL_SAFE_MODE') && RSSSL_SAFE_MODE;
         $error = false;
-	    $is_rest_request =  $request instanceof WP_REST_Request;
+	    $is_rest_request =  isset($data['is_rest_request']);
 	    $site_url_changed = false;
 	    $wpcli = defined( 'WP_CLI' ) && WP_CLI;
 	    if ( $wpcli ) {
@@ -529,6 +559,10 @@ class rsssl_admin
 	    if ( !isset($_SERVER['QUERY_STRING']) ) {
             return false;
         }
+
+        if (isset($_GET['action']) && $_GET['action']==='rsssl_rest_api_fallback' ) {
+		    return true;
+	    }
 
         parse_str($_SERVER['QUERY_STRING'], $params);
 	    return array_key_exists( "page", $params ) && ( $params["page"] === "really-simple-security" );
@@ -1436,7 +1470,7 @@ class rsssl_admin
                 rsssl_get_option('ssl_enabled') &&
                 rsssl_get_option('redirect')==='htaccess' &&
                 ($manual || $this->htaccess_test_success() ) &&
-                $this->ssl_type != "NA"
+                $this->ssl_type !== "NA"
         ) {
             $rule .= "\n" . "<IfModule mod_rewrite.c>" . "\n";
             $rule .= "RewriteEngine on" . "\n";
@@ -2252,6 +2286,23 @@ class rsssl_admin
 		            ),
 	            ),
             ),
+
+            'ajax_fallback' => array(
+	            'condition'  => array(
+                        'wp_option_rsssl_ajax_fallback_active',
+                ),
+	            'callback' => '_true_',
+	            'output' => array(
+		            'true' => array(
+			            'msg' => __( "Please check if your REST API is loading correctly. Your site currently is using the slower Ajax fallback method to load the settings.", 'really-simple-ssl' ),
+			            'icon' => 'warning',
+			            'admin_notice' => false,
+			            'url' => 'https://really-simple-ssl.com/instructions/how-to-debug-a-blank-settings-page-in-really-simple-ssl/',
+			            'dismissible' => true,
+			            'plusone' => true,
+		            ),
+	            ),
+            ),
         );
         //on multisite, don't show the notice on subsites.
         //we can't make different sets for network admin and for subsites (at least not for admin notices), as these notices are cached,
@@ -2388,7 +2439,9 @@ class rsssl_admin
 		    $invert = true;
 	    }
 
-	    if ( strpos($func, 'option_')!==false ){
+	    if ( strpos($func, 'wp_option_')!==false ) {
+		    $output = get_option(str_replace('wp_option_', '', $func) )!==false;
+	    } else if ( strpos($func, 'option_')!==false ){
 		    $output = rsssl_get_option(str_replace('option_', '', $func))==1;
 	    } else if ( $func === '_true_') {
 	        $output = true;

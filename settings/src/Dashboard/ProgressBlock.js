@@ -21,6 +21,7 @@ class ProgressBlock extends Component {
             notices:null,
             percentageCompleted:0,
             progressLoaded: false,
+            error:false,
         };
 
     }
@@ -46,20 +47,26 @@ class ProgressBlock extends Component {
 
     getProgressData(){
         rsssl_api.runTest('progressData', 'refresh').then( ( response ) => {
-            this.progressText = response.text;
-            this.filter = response.filter;
-            this.percentageCompleted = response.percentage;
-            this.notices = response.notices;
-            this.progressLoaded = true;
+            if ( response.error ) {
+                this.setState({
+                    error: response.error,
+                });
+            } else {
+                this.progressText = response.text;
+                this.filter = response.filter;
+                this.percentageCompleted = response.percentage;
+                this.notices = response.notices;
+                this.progressLoaded = true;
 
-            this.setState({
-                progressLoaded: this.progressLoaded,
-                progressText: this.progressText,
-                filter: this.filter,
-                notices: this.notices,
-                percentageCompleted: this.percentageCompleted,
-            });
-            this.props.setBlockProps('notices',this.notices);
+                this.setState({
+                    progressLoaded: this.progressLoaded,
+                    progressText: this.progressText,
+                    filter: this.filter,
+                    notices: this.notices,
+                    percentageCompleted: this.percentageCompleted,
+                });
+                this.props.setBlockProps('notices', this.notices);
+            }
         });
     }
 
@@ -92,14 +99,19 @@ class ProgressBlock extends Component {
         });
     }
 
+
+
     render(){
+        const {
+            error,
+        } = this.state;
         let progressBarColor = '';
         if ( this.percentageCompleted<80 ) {
             progressBarColor += 'rsssl-orange';
         }
-        if ( !this.progressLoaded ) {
+        if ( !this.progressLoaded || error ) {
             return (
-                <Placeholder lines='9'></Placeholder>
+                <Placeholder lines='9' error={error}></Placeholder>
             );
         }
         let filter = 'all';

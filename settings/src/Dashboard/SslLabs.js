@@ -139,7 +139,6 @@ const SslLabs = (props) => {
         let grade = sslData.grade ? sslData.grade : '?';
         let ipAddress='';
         if ( sslData.endpoints ) {
-            totalProgress = sslData.endpoints.length * 100;
             let completedEndpoints = sslData.endpoints.filter((endpoint) => endpoint.statusMessage === 'Ready');
             let completedEndpointsLength = completedEndpoints.length;
             let lastCompletedEndpoint = completedEndpoints[ completedEndpointsLength-1];
@@ -247,7 +246,6 @@ const SslLabs = (props) => {
             ratingClass = 'rsssl-test-inactive';
         }
         if ( endpointData && endpointData.length>0 ) {
-            status = 'success';
             let weakest = 256;
             let strongest = 128;
             endpointData.forEach(function(endpoint, i){
