@@ -7,24 +7,8 @@ import useOnboardingData from "../../Onboarding/OnboardingData";
 
 const ProgressFooter = (props) => {
     const {setShowOnBoardingModal} = useOnboardingData();
-    const [certificateIsValid, setCertificateIsValid] = useState(false);
-    const [sslDataLoaded, SetSslDataLoaded] = useState(false);
     const {fields} = useFields();
 
-    useEffect(() => {
-        rsssl_api.runTest('ssl_status_data' ).then( ( response ) => {
-            if ( !response.error ) {
-                setCertificateIsValid(response.certificate_is_valid);
-                SetSslDataLoaded(true);
-            }
-        });
-    }, [])
-
-
-    if ( !sslDataLoaded) {
-        return (
-        <></>);
-    }
     let redirectValue = fields.filter( field => field.id==='redirect' )[0].value;
     let sslEnabled = fields.filter( field => field.id==='ssl_enabled' )[0].value;
     let wpconfigFixRequired = rsssl_settings.wpconfig_fix_required;
@@ -37,10 +21,9 @@ const ProgressFooter = (props) => {
     let redirectColor = hasRedirect ? 'green' : 'red';
     let mixedContentIcon = hasMixedContentFixer ? 'circle-check' : 'circle-times';
     let mixedContentColor = hasMixedContentFixer ? 'green' : 'red';
-    let disabled = wpconfigFixRequired ? 'disabled' : '';
     return (
         <>
-            { !sslEnabled && <button disabled={disabled} onClick={() => setShowOnBoardingModal(true)} className="button button-primary">{__( "Activate SSL", "really-simple-ssl" ) }</button>}
+            { !sslEnabled && <button disabled={wpconfigFixRequired} onClick={() => setShowOnBoardingModal(true)} className="button button-primary">{__( "Activate SSL", "really-simple-ssl" ) }</button>}
             { rsssl_settings.pro_plugin_active && <span className="rsssl-footer-left">Really Simple SSL Pro {rsssl_settings.pro_version}</span>}
             { !rsssl_settings.pro_plugin_active && <a href={rsssl_settings.upgrade_link} target="_blank" className="button button-default">{ __( "Go Pro", "really-simple-ssl" ) }</a>}
 

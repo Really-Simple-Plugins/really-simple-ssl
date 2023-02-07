@@ -32,7 +32,6 @@ const useProgress = create(( set, get ) => ({
                 progressText:progressText,
                 progressLoaded:true,
             }))
-
         }
     },
     dismissNotice: async (noticeId) => {
@@ -51,8 +50,6 @@ const useProgress = create(( set, get ) => ({
             }
         });
     }
-
-
 }));
 
 export default useProgress;

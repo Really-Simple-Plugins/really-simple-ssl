@@ -12,7 +12,7 @@ const ProgressBlock = (props) => {
     const {percentageCompleted, progressText, filter, notices, progressLoaded, getProgressData, error} = useProgress();
 
     useEffect(async () => {
-        getProgressData();
+        await getProgressData();
     }, [] );
 
     const getStyles = () => {

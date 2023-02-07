@@ -3,7 +3,6 @@ import Placeholder from '../../Placeholder/Placeholder';
 import Hyperlink from "../../utils/Hyperlink";
 import { __ } from '@wordpress/i18n';
 import useFields from "../../Settings/FieldsData";
-
 const SecurityFeaturesBlock = (props) => {
     const {fields, fieldsLoaded} = useFields();
 

@@ -23,6 +23,7 @@ const LetsEncrypt = (props) => {
     const startedTests = useRef([]);
     const actionsList = useRef([]);
     const maxIndex = useRef(1);
+    const refProgress = useRef(0);
 
     useEffect(() => {
         reset();
@@ -53,10 +54,8 @@ const LetsEncrypt = (props) => {
 
     useEffect(() => {
         action.current = actionsList.current[actionIndex.current];
-        console.log("set interval ")
         intervalId.current = setInterval(() => {
-            console.log("update progress");
-            setProgress((progress) => progress + 0.2)
+            setProgress(refProgress.current + 0.2);
         }, 100);
     }, [actionIndex.current])
 
@@ -82,7 +81,7 @@ const LetsEncrypt = (props) => {
         }
     }, [refreshTests ])
 
-
+    refProgress.current = progress;
     const statuses = {
         'inactive': {
             'icon': 'circle-times',
@@ -108,6 +107,7 @@ const LetsEncrypt = (props) => {
         actionsList.current.forEach(function(action,i){
             updateActionProperty(i, 'status', 'inactive');
         });
+        refProgress.current = 0;
         startedTests.current = [];
         actionIndex.current = 0;
         action.current = false;
@@ -154,8 +154,6 @@ const LetsEncrypt = (props) => {
     }
 
     const processTestResult = (action) => {
-        console.log( "process test result" );
-        console.log( action );
         lastActionStatus.current = action.status;
         if ( action.status==='success' ) {
             setAttemptCount(0);
@@ -179,7 +177,6 @@ const LetsEncrypt = (props) => {
                     updateActionProperty(i, 'hide', true);
                 }
             });
-            console.log("finalize, set index to max index +1 "+maxIndex.current);
 
             actionIndex.current = maxIndex.current+1;
             handleNextButtonDisabled(false);
@@ -193,21 +190,15 @@ const LetsEncrypt = (props) => {
             //move to next action, but not if we're already on the max
             if ( maxIndex.current-1 > actionIndex.current) {
                 let next =actionIndex.current+1;
-                console.log("next, set index to "+ next);
                 actionIndex.current = actionIndex.current+1;
                 runTest();
             } else {
-                console.log("max index "+maxIndex.current+" < or = "+actionIndex.current);
-                console.log("set index to max index "+maxIndex.current);
-                console.log("set button disabled to false ");
                 handleNextButtonDisabled(false);
                 actionIndex.current = actionIndex.current+1;
-
                 clearInterval(intervalId.current);
             }
         } else if (action.do === 'retry' ) {
             if ( attemptCount >= maxAttempts ) {
-                console.log("to many attempts, set index "+maxIndex.current);
                 actionIndex.current = maxIndex.current;
                 clearInterval(intervalId.current);
             } else {
@@ -215,15 +206,15 @@ const LetsEncrypt = (props) => {
                 runTest();
             }
         } else if ( action.do === 'stop' ){
-            console.log("stop, set index to max index  "+maxIndex.current);
-
             actionIndex.current = maxIndex.current;
             clearInterval(intervalId.current);
         }
     }
 
     const runTest = () => {
-
+        if (refProgress.current>=100) {
+            return;
+        }
         let currentAction = {...actionsList.current[actionIndex.current]};
         if (!currentAction) return;
         let  test = currentAction.action;
