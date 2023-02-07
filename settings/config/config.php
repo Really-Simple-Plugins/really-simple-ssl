@@ -691,7 +691,6 @@ function rsssl_fields( $load_values = true ) {
 			'label'            => __( "XML-RPC", 'really-simple-ssl' ),
 			'disabled'         => false,
 			'default'          => false,
-			'data_source'      => [ 'RSSSL', 'placeholder', 'xml_data' ],
 			'react_conditions' => [
 				'relation' => 'AND',
 				[

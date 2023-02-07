@@ -5,13 +5,11 @@ import { __ } from '@wordpress/i18n';
 import {useUpdateEffect} from 'react-use';
 import Icon from "../utils/Icon";
 import Placeholder from '../Placeholder/Placeholder';
-import useOnboardingData from "./OnboardingData";
 import useMenu from "../Menu/MenuData";
 import useFields from "../Settings/FieldsData";
 
 const Onboarding = (props) => {
-    const {showOnboardingModal, setShowOnBoardingModal, dismissModal} = useOnboardingData();
-    const { fields, changedFields, fetchFieldsData, updateField, saveFields, setChangedFields} = useFields();
+    const { fetchFieldsData, updateField, saveFields, setChangedFields} = useFields();
 
     const {setSelectedMainMenuItem} = useMenu();
     const [steps, setSteps] = useState([]);
