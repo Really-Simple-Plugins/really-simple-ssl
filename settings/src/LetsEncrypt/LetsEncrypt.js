@@ -49,7 +49,7 @@ const LetsEncrypt = (props) => {
         }
 
         intervalId.current = setInterval(() => setProgress((progress) => progress + 0.2), 100);
-    }, [action])
+    }, [actionIndex])
 
     useEffect(() => {
         if (actionIndex>previousActionIndex.current) {
