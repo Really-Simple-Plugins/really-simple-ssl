@@ -7,6 +7,7 @@
 if (!class_exists("rsssl_vulnerabilities")) {
 
     /**
+     *
      * Class rsssl_vulnerabilities
      * Checks for vulnerabilities in the core, plugins and themes.
      *
@@ -44,27 +45,60 @@ if (!class_exists("rsssl_vulnerabilities")) {
                 if (rsssl_get_option('enable_feedback_in_plugin')) {
                     $this->enable_feedback_in_plugin();
                 }
+                //also when a plugin is installed or updated we check for vulnerabilities
+                add_action('upgrader_process_complete', array($this, 'reload_files_on_update'), 10, 2);
+                add_action('activate_plugin', array($this, 'reload_files_on_update'), 10, 2);
             }
         }
 
+        /**
+         * Callback for the manage_plugins_columns hook to add the vulnerability column
+         *
+         * @param $columns
+         */
         public function add_vulnerability_column($columns)
         {
             $columns['vulnerability'] = __('Notifications', 'really-simple-ssl');
             return $columns;
         }
 
+        /**
+         * Callback for the manage_plugins_custom_column hook to add the vulnerability field
+         *
+         * @param $column_name
+         * @param $plugin_file
+         */
         public function add_vulnerability_field($column_name, $plugin_file)
         {
 
             if ($column_name === 'vulnerability') {
                 if ($this->check_vulnerability($plugin_file)) {
-                    echo '<a href="#" class="btn-vulnerable critical">' . __('Critical', 'really-simple-ssl') . '</a>';
+                    switch ($this->check_severity($plugin_file)) {
+                        case 'c':
+                            echo '<a class="btn-vulnerable critical">' . __('Critical-Risk', 'really-simple-ssl') . '</a>';
+                            break;
+                        case 'h':
+                            echo '<a class="btn-vulnerable high">' . __('High-Risk', 'really-simple-ssl') . '</a>';
+                            break;
+                        case 'm':
+                            echo '<a class="btn-vulnerable medium-risk">' . __('Medium-Risk', 'really-simple-ssl') . '</a>';
+                            break;
+                        case 'l':
+                            echo '<a class="btn-vulnerable">' . __('Low-Risk', 'really-simple-ssl') . '</a>';
+                            break;
+                    }
                 } else {
                    echo 'Coming soon some nice info';
                 }
             }
         }
 
+        /**
+         * Callback for the admin_enqueue_scripts hook to add the vulnerability styles
+         *
+         * @param $hook
+         * @return void
+         */
         public function add_vulnerability_styles( $hook )
         {
             if ( 'plugins.php' !== $hook ) {
@@ -80,7 +114,19 @@ if (!class_exists("rsssl_vulnerabilities")) {
             }
         }
 
-        public static function instance()
+        public function reload_files_on_update()
+        {
+            $this->download_core_vulnerabilities();
+            $this->download_plugin_vulnerabilities();
+            $this->cache_installed_plugins();
+        }
+
+        /**
+         * Instantiates the class
+         *
+         * @return self
+         */
+        public static function instance(): self
         {
             static $instance = false;
             if (!$instance) {
@@ -194,19 +240,26 @@ if (!class_exists("rsssl_vulnerabilities")) {
         {
             $active_components = [];
             foreach ($components as $component) foreach ($active_plugins as $active_plugin) if ($component->slug === $active_plugin['TextDomain']) {
-                $component->version = $active_plugin['Version'];
+                //if the vulnerabilities are empty, we skip this component
+                if (count($component->vulnerabilities) === 0) {
+                    continue;
+                }
                 //now we loop through the vulnerabilities of the component
                 foreach ($component->vulnerabilities as $index => $vulnerability) {
-                    //if the max_version is not set, we remove the vulnerability from the array
-                    if (!isset($vulnerability->max_version) && !isset($vulnerability->min_version)) {
+                    //if the max_version is null, we skip this vulnerability
+                    if ($vulnerability->max_version === null) {
                         unset($component->vulnerabilities[$index]);
                     }
-                    //if the max_version is set, we check if it is higher than the version of the plugin
-                    if (!isset($vulnerability->max_version)) {
-                        continue;
-                    }//if the max_version is higher or equal to the version of the plugin, we remove the vulnerability from the array
-                    if (version_compare($active_plugin['Version'], $vulnerability->max_version, '>=')) {
+                    //if the max_version is lower than the current version, we skip this vulnerability
+                    if (version_compare($vulnerability->max_version, $active_plugin['Version'], '<')) {
                         unset($component->vulnerabilities[$index]);
+                    }
+                    //if the min_version is not null we check the following
+                    if ($vulnerability->min_version !== null) {
+                        //if the min_version is higher than the current version, we skip this vulnerability
+                        if (version_compare($vulnerability->min_version, $active_plugin['Version'], '>')) {
+                            unset($component->vulnerabilities[$index]);
+                        }
                     }
                 }
                 $active_components[] = $component;
@@ -267,9 +320,14 @@ if (!class_exists("rsssl_vulnerabilities")) {
                 $plugin['vulnerable'] = false;
                 //we walk through the components array
                 foreach ($components as $component) {
-                    //if the plugin is in the components array, we check if the version is higher than the max_version
                     if ($plugin['TextDomain'] === $component->slug) {
-                        $plugin['vulnerable'] = true;
+                        if (!empty($component->vulnerabilities)) {
+                            $plugin['vulnerable'] = true;
+                        }
+                    }
+                    //if the plugin is vulnerable, we get the highest vulnerability
+                    if ($plugin['vulnerable']) {
+                        $plugin['risk_level'] = $this->get_highest_vulnerability($component->vulnerabilities);
                     }
                 }
                 $installed_plugins[$key] = $plugin;
@@ -303,7 +361,40 @@ if (!class_exists("rsssl_vulnerabilities")) {
 
         private function check_vulnerability($plugin_file)
         {
+            echo "<pre>";
+            var_dump($this->workable_plugins[$plugin_file]);
+
             return $this->workable_plugins[$plugin_file]['vulnerable'];
+        }
+
+        private function check_severity($plugin_file)
+        {
+            return $this->workable_plugins[$plugin_file]['risk_level'];
+        }
+
+        private function get_highest_vulnerability($vulnerabilities)
+        {
+            //first we scale our risk levels
+            $risk_levels = array(
+                'l' => 1,
+                'm' => 2,
+                'h' => 3,
+                'c' => 4
+            );
+            //we loop through the vulnerabilities and get the highest risk level
+            $highest_risk_level = 0;
+            foreach ($vulnerabilities as $vulnerability) {
+                if ($vulnerability->rss_severity === null) {
+                    continue;
+                }
+                if ($risk_levels[$vulnerability->rss_severity] > $highest_risk_level) {
+                    $highest_risk_level = $risk_levels[$vulnerability->rss_severity];
+                }
+            }
+
+            return array_key_first(array_filter($risk_levels, function ($value) use ($highest_risk_level) {
+                return $value === $highest_risk_level;
+            }, ARRAY_FILTER_USE_BOTH));
         }
     }
 }

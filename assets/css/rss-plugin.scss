@@ -4,9 +4,9 @@
 @import "variables.scss";
 
 .btn-vulnerable {
-  background-color: var(--rsp-blue);
-  color: var(--rsp-white);
-  border-color: var(--rsp-blue);
+  //background-color: var(--rsp-blue);
+  //color: var(--rsp-white);
+  //border-color: var(--rsp-blue);
   display: inline-block;
   text-decoration: none;
   font-size: 13px;
@@ -32,6 +32,7 @@
     background-color: var(--rsp-red);
     color: var(--rsp-white);
     border-color: var(--rsp-red);
+
     &:hover {
       background-color: var(--rsp-dark-red);
       border-color: var(--rsp-dark-red);
@@ -39,15 +40,28 @@
     }
   }
 
-    &.warning {
-        background-color: var(--rsp-yellow);
-        color: var(--rsp-white);
-        border-color: var(--rsp-yellow);
-        &:hover {
-        background-color: var(--rsp-dark-yellow);
-        border-color: var(--rsp-dark-yellow);
-        color: var(--rsp-white);
-        }
+  &.high {
+    background-color: var(--rsp-orange);
+    color: var(--rsp-white);
+    border-color: var(--rsp-orange);
+
+    &:hover {
+      background-color: var(--rsp-dark-orange);
+      border-color: var(--rsp-dark-orange);
+      color: var(--rsp-white);
     }
+  }
+
+  &.medium-risk {
+    background-color: var(--rsp-yellow);
+    color: var(--rsp-white);
+    border-color: var(--rsp-yellow);
+
+    &:hover {
+      background-color: var(--rsp-dark-yellow);
+      border-color: var(--rsp-dark-yellow);
+      color: var(--rsp-white);
+    }
+  }
 }
 

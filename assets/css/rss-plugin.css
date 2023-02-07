@@ -20,6 +20,8 @@
     --rsp-white: #fff;
     --rsp-yellow: #f4bf3e;
     --rsp-dark-yellow: #e6a800;
+    --rsp-orange: #f78e1e;
+    --rsp-dark-orange: #e67e00;
     --rsp-blue: #29b6f6;
     --rsp-dark-blue: #1E73BE;
     --rsp-green: #2e8a37;
@@ -76,9 +78,6 @@
 }
 
 .btn-vulnerable {
-    background-color: var(--rsp-blue);
-    color: var(--rsp-white);
-    border-color: var(--rsp-blue);
     display: inline-block;
     text-decoration: none;
     font-size: 13px;
@@ -113,13 +112,25 @@
     color: var(--rsp-white);
 }
 
-.btn-vulnerable.warning {
+.btn-vulnerable.high {
+    background-color: var(--rsp-orange);
+    color: var(--rsp-white);
+    border-color: var(--rsp-orange);
+}
+
+.btn-vulnerable.high:hover {
+    background-color: var(--rsp-dark-orange);
+    border-color: var(--rsp-dark-orange);
+    color: var(--rsp-white);
+}
+
+.btn-vulnerable.medium-risk {
     background-color: var(--rsp-yellow);
     color: var(--rsp-white);
     border-color: var(--rsp-yellow);
 }
 
-.btn-vulnerable.warning:hover {
+.btn-vulnerable.medium-risk:hover {
     background-color: var(--rsp-dark-yellow);
     border-color: var(--rsp-dark-yellow);
     color: var(--rsp-white);
