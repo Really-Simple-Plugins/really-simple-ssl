@@ -10,9 +10,9 @@ import useLetsEncryptData from "./letsEncryptData";
 import useFields from "../Settings/FieldsData";
 
 const Installation = (props) => {
-    const {action} = useLetsEncryptData();
     const {addHelpNotice} = useFields();
     const [installationData, setInstallationData] = useState(false);
+    let action = props.action;
 
      useUpdateEffect(()=> {
         if ((action && action.status==='warning' && installationData && installationData.generated_by_rsssl )) {

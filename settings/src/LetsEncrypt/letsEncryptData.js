@@ -11,16 +11,27 @@ const useLetsEncryptData = create(( set, get ) => ({
     setAttemptCount: (attemptCount) => {set(state => ({ attemptCount }))},
     setProgress: (progress) => {set(state => ({ progress }))},
     setActions: (actions) => {
-        let maxIndex = actions.length
+        let maxIndex = actions.length;
+        console.log("update actions in data obj");
+        console.log(actions)
         set(state => ({ actions, maxIndex }))
     },
     setRefreshTests: (refreshTests) => {set(state => ({ refreshTests }))},
     setActionIndex: (actionIndex) => {set(state => ({ actionIndex }))},
     setMaxAttempts: (maxAttempts) => {set(state => ({ maxAttempts }))},
+    updateAction: (index, action) => {
+        set(
+            produce((state) => {
+                state.actions[index] = action;
+            })
+        )
+    },
     updateActionProperty: (index, property, value) =>{
         set(
             produce((state) => {
-                state.actions[index][property] = value;
+                if (state.actions.hasOwnProperty(index) && state.actions[index].hasOwnProperty(property)) {
+                    state.actions[index][property] = value;
+                }
             })
         )
     },

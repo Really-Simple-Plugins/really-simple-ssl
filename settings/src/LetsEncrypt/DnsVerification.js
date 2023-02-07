@@ -12,10 +12,11 @@ import useLetsEncryptData from "./letsEncryptData";
 import useFields from "../Settings/FieldsData";
 
 const DnsVerification = (props) => {
-    const {action} = useLetsEncryptData();
     const {addHelpNotice} = useFields();
 
     const [tokens, setTokens] = useState(false);
+    let action = props.action;
+
      useUpdateEffect(()=> {
 
         if (action && action.action==='challenge_directory_reachable' && action.status==='error') {

@@ -15,8 +15,8 @@ import useLetsEncryptData from "./letsEncryptData";
 import useFields from "../Settings/FieldsData";
 
 const Generation = (props) => {
-    const {action} = useLetsEncryptData();
     const {addHelpNotice} = useFields();
+    let action = props.action;
 
     if (!action) {
         return (<></>);

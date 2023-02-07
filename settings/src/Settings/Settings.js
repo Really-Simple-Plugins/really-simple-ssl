@@ -32,12 +32,11 @@ const Settings = () => {
        return false;
     }
 
-    const saveData = async () => {
-        if ( isTestsOnlyMenu() ) {
+    const saveData = async (isSaveAndContinueButton) => {
+        if ( !isSaveAndContinueButton && isTestsOnlyMenu() ) {
             console.log("is tests only menu, refresh tests only");
             setRefreshTests(true);
         } else {
-            console.log("is tests only menu, refresh tests only");
             await saveFields();
         }
     }
@@ -128,7 +127,7 @@ const Settings = () => {
                     {/*This will be shown only if current step is not the last one*/}
                     { selectedSubMenuItem !== menuItems[menuItems.length-1].id &&
                         <>
-                            <a disabled={nextButtonDisabled} className="button button-primary" href={continueLink} onClick={ ( e ) => saveData() }>
+                            <a disabled={nextButtonDisabled} className="button button-primary" href={continueLink} onClick={ ( e ) => saveData(true) }>
                                 { __( 'Save and Continue', 'complianz-gdpr' ) }
                             </a>
                         </>
