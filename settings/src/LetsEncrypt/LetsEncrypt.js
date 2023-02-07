@@ -53,8 +53,12 @@ const LetsEncrypt = (props) => {
 
     useEffect(() => {
         action.current = actionsList.current[actionIndex.current];
-        intervalId.current = setInterval(() => setProgress((progress) => progress + 0.2), 100);
-    }, [actionIndex.current, action.current])
+        console.log("set interval ")
+        intervalId.current = setInterval(() => {
+            console.log("update progress");
+            setProgress((progress) => progress + 0.2)
+        }, 100);
+    }, [actionIndex.current])
 
     useEffect(() => {
         if ( actionIndex.current>previousActionIndex.current ) {
