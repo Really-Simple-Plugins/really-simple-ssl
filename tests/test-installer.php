@@ -1,5 +1,5 @@
 <?php
-require('../class-installer.php');
+require('class-installer.php');
 class RSSSLInstallerTest extends WP_UnitTestCase {
 
 
