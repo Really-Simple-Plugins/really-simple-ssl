@@ -6,6 +6,7 @@ import Help from "./Help";
 import useFields from "./FieldsData";
 import useMenu from "../Menu/MenuData";
 import { __ } from '@wordpress/i18n';
+import useLetsEncryptData from "../LetsEncrypt/letsEncryptData";
 
 /**
  * Renders the selected settings
@@ -15,13 +16,30 @@ const Settings = () => {
     const [noticesExpanded, setNoticesExpanded] = useState(true);
     const {progress, fieldsLoaded, saveFields, fields, nextButtonDisabled} = useFields();
     const {subMenuLoaded, subMenu, selectedSubMenuItem, selectedMainMenuItem, nextMenuItem, previousMenuItem} = useMenu();
+    const {setRefreshTests} = useLetsEncryptData();
 
     const toggleNotices = () => {
         setNoticesExpanded(!noticesExpanded);
     }
 
+    const isTestsOnlyMenu = () => {
+        const { menu_items: menuItems } = subMenu;
+        for (const menuItem of menuItems ) {
+            if (menuItem.id===selectedSubMenuItem && menuItem.tests_only ) {
+               return true;
+            }
+        }
+       return false;
+    }
+
     const saveData = async () => {
-        await saveFields();
+        if ( isTestsOnlyMenu() ) {
+            console.log("is tests only menu, refresh tests only");
+            setRefreshTests(true);
+        } else {
+            console.log("is tests only menu, refresh tests only");
+            await saveFields();
+        }
     }
 
     const { menu_items: menuItems } = subMenu;
@@ -82,6 +100,7 @@ const Settings = () => {
         }
     }
     let continueLink = nextButtonDisabled ? `#${selectedMainMenuItem}/${selectedSubMenuItem}` : `#${selectedMainMenuItem}/${nextMenuItem}`;
+    // let btnSaveText = isTestsOnlyMenu() ? __('Refresh', 'really-simple-ssl') : __('Save', 'really-simple-ssl');
     let btnSaveText = __('Save', 'really-simple-ssl');
     for (const menuItem of menuItems ) {
         if (menuItem.id===selectedSubMenuItem && menuItem.tests_only ) {

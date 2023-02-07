@@ -8,20 +8,12 @@ const useLetsEncryptData = create(( set, get ) => ({
     maxAttempts:1,
     refreshTests:false,
     actions:[],
-    action:false,
     setAttemptCount: (attemptCount) => {set(state => ({ attemptCount }))},
     setProgress: (progress) => {set(state => ({ progress }))},
     setActions: (actions) => {
-        console.log("set actions");
-        console.log(actions);
-        let action = get().action;
-        if (!action){
-            set(state => ({ action:actions[0] }))
-        }
-        let maxIndex = actions.length-1
+        let maxIndex = actions.length
         set(state => ({ actions, maxIndex }))
     },
-    setAction: (action) => {set(state => ({ action }))},
     setRefreshTests: (refreshTests) => {set(state => ({ refreshTests }))},
     setActionIndex: (actionIndex) => {set(state => ({ actionIndex }))},
     setMaxAttempts: (maxAttempts) => {set(state => ({ maxAttempts }))},
@@ -31,7 +23,7 @@ const useLetsEncryptData = create(( set, get ) => ({
                 state.actions[index][property] = value;
             })
         )
-    }
+    },
 }));
 export default useLetsEncryptData;
 

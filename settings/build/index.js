@@ -17000,7 +17000,6 @@ __webpack_require__.r(__webpack_exports__);
 
 const LetsEncrypt = props => {
   const {
-    fields,
     handleNextButtonDisabled,
     getFieldValue
   } = (0,_Settings_FieldsData__WEBPACK_IMPORTED_MODULE_10__["default"])();
@@ -17008,14 +17007,10 @@ const LetsEncrypt = props => {
     maxIndex,
     attemptCount,
     setAttemptCount,
-    actionIndex,
-    setActionIndex,
     progress,
     setProgress,
     maxAttempts,
     setMaxAttempts,
-    action,
-    setAction,
     actions,
     setActions,
     refreshTests,
@@ -17025,66 +17020,103 @@ const LetsEncrypt = props => {
   const sleep = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useRef)(1500);
   const intervalId = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useRef)(false);
   const lastActionStatus = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useRef)('');
+  const actionIndex = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useRef)(0);
+  const action = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useRef)(false);
   const previousActionIndex = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useRef)(-1);
+  const testRunning = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useRef)('');
   (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
     handleNextButtonDisabled(true);
-    setActions(props.field.actions);
-    if (props.field.id === 'generation') {
-      setActions(adjustActionsForDNS(actions));
-    }
+    setActions(getActions());
   }, []);
+  const getActions = () => {
+    let propActions = props.field.actions;
+    if (props.field.id === 'generation') {
+      propActions = adjustActionsForDNS(propActions);
+    }
+    return propActions;
+  };
   (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
-    if (!action && actions.length > 0) {
+    if (!action.current && actions.length > 0) {
       console.log("no action, set first");
       console.log(actions);
-      setAction(actions[0]);
-      setActionIndex(0);
+      action.current = actions[0];
+      console.log(action.current);
+      console.log("set action index to 0");
+      actionIndex.current = 0;
     }
   }, [actions]);
   (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
-    console.log("action update triggered");
-    console.log(action);
+    console.log("action.current update triggered");
+    console.log(action.current);
     console.log("actionIndex");
-    console.log(actionIndex);
+    console.log(actionIndex.current);
     console.log("maxIndex");
     console.log(maxIndex);
-    if (actionIndex < actions.length - 1) {
-      console.log("run test as it");
+    if (actionIndex.current === 0) {
+      console.log("Action index 0, run first");
+      console.log(action.current);
       runTest();
     }
-    intervalId.current = setInterval(() => setProgress(progress => progress + 0.2), 100);
-  }, [action]);
+  }, [action.current]);
   (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
-    if (actionIndex > previousActionIndex.current) {
-      previousActionIndex.current = actionIndex;
-      setProgress(100 / maxIndex * actionIndex);
+    action.current = actions[actionIndex.current];
+    intervalId.current = setInterval(() => setProgress(progress => progress + 0.2), 100);
+  }, [actionIndex.current, action.current]);
+  (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
+    if (actionIndex.current > previousActionIndex.current) {
+      previousActionIndex.current = actionIndex.current;
+      console.log("set progress to ");
+      console.log("maxIndex " + maxIndex);
+      console.log("actionIndex " + actionIndex.current);
+      console.log(100 / maxIndex * (actionIndex.current - 1));
+      setProgress(100 / maxIndex * (actionIndex.current - 1));
     }
 
     //ensure that progress does not get to 100 when retries are still running
-    setAction(actions[actionIndex + 1]);
-    if (action && action.do === 'retry' && attemptCount > 1) {
+    action.current = actions[actionIndex.current];
+    if (action.current && action.current.do === 'retry' && attemptCount > 1) {
       setProgress(90);
     }
-  }, [actionIndex, refreshTests]);
-
-  // useEffect(() => {
-  //     if ( refreshTests ){
-  //         setRefreshTests(false);
-  //         restartTests();
-  //     }
-  // }, [refreshTests ])
-
+  }, [actionIndex.current, refreshTests]);
+  (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
+    console.log("refresh tests update");
+    if (refreshTests) {
+      console.log("is true, restart");
+      setRefreshTests(false);
+      restartTests();
+    }
+  }, [refreshTests]);
+  const statuses = {
+    'inactive': {
+      'icon': 'circle-times',
+      'color': 'grey'
+    },
+    'warning': {
+      'icon': 'circle-times',
+      'color': 'orange'
+    },
+    'error': {
+      'icon': 'circle-times',
+      'color': 'red'
+    },
+    'success': {
+      'icon': 'circle-check',
+      'color': 'green'
+    }
+  };
   const restartTests = () => {
-    // //clear statuses to ensure the bullets are grey
-    // // actions.forEach(function (action, i) {
-    // //     updateActionProperty(i, 'status', 'inactive');
-    // // });
-    // setActions(props.field.actions);
-    // setActionIndex(0);
-    // previousActionIndex.current =-1;
-    // lastActionStatus.current = '';
-    // setProgress(0);
-    // runTest();
+    //clear statuses to ensure the bullets are grey
+    // actions.forEach(function (action, i) {
+    //     updateActionProperty(i, 'status', 'inactive');
+    // });
+    setActions(getActions());
+    actions.forEach(function (action, i) {
+      updateActionProperty(i, 'status', 'inactive');
+    });
+    actionIndex.current = 0;
+    previousActionIndex.current = -1;
+    lastActionStatus.current = '';
+    setProgress(0);
   };
   const adjustActionsForDNS = actions => {
     //find verification_type
@@ -17121,6 +17153,8 @@ const LetsEncrypt = props => {
     return actions;
   };
   const processTestResult = action => {
+    console.log("process test result");
+    console.log(action);
     lastActionStatus.current = action.status;
     if (action.status === 'success') {
       setAttemptCount(0);
@@ -17132,7 +17166,7 @@ const LetsEncrypt = props => {
     }
 
     //used for dns verification actions
-    var event = new CustomEvent('rsssl_le_response', {
+    let event = new CustomEvent('rsssl_le_response', {
       detail: action
     });
     document.dispatchEvent(event);
@@ -17142,35 +17176,37 @@ const LetsEncrypt = props => {
     if (action.do === 'finalize') {
       clearInterval(intervalId.current);
       actions.forEach(function (action, i) {
-        if (i > actionIndex) {
+        if (i > actionIndex.current) {
           updateActionProperty(i, 'hide', true);
         }
       });
-      console.log("finalize, set index to " + maxIndex);
-      setActionIndex(maxIndex);
+      console.log("finalize, set index to max index +1 " + maxIndex);
+      actionIndex.current = maxIndex + 1;
       handleNextButtonDisabled(false);
     } else if (action.do === 'continue' || action.do === 'skip') {
       //new action, so reset the attempts count
       setAttemptCount(1);
       //skip:  drop previous completely, skip to next.
       if (action.do === 'skip') {
-        updateActionProperty(actionIndex, 'hide', true);
+        updateActionProperty(actionIndex.current, 'hide', true);
       }
       //move to next action, but not if we're already on the max
-      if (maxIndex > actionIndex) {
-        console.log("next, set index to " + maxIndex);
-        setActionIndex(actionIndex + 1);
+      if (maxIndex > actionIndex.current) {
+        let next = actionIndex.current + 1;
+        console.log("next, set index to " + next);
+        actionIndex.current = actionIndex.current + 1;
         runTest();
       } else {
-        console.log("set index to " + maxIndex);
-        setActionIndex(maxIndex);
+        console.log("max index " + maxIndex + " < or = " + actionIndex.current);
+        console.log("set index to max index " + maxIndex);
+        actionIndex.current = maxIndex;
         handleNextButtonDisabled(false);
         clearInterval(intervalId.current);
       }
     } else if (action.do === 'retry') {
       if (attemptCount >= maxAttempts) {
         console.log("to many attempts, set index " + maxIndex);
-        setActionIndex(maxIndex);
+        actionIndex.current = maxIndex;
         clearInterval(intervalId.current);
       } else {
         // clearInterval(intervalId.current);
@@ -17182,47 +17218,36 @@ const LetsEncrypt = props => {
         runTest();
       }
     } else if (action.do === 'stop') {
+      console.log("stop, set index to max index  " + maxIndex);
+      actionIndex.current = maxIndex;
       clearInterval(intervalId.current);
     }
   };
-  const statuses = {
-    'inactive': {
-      'icon': 'circle-times',
-      'color': 'grey'
-    },
-    'warning': {
-      'icon': 'circle-times',
-      'color': 'orange'
-    },
-    'error': {
-      'icon': 'circle-times',
-      'color': 'red'
-    },
-    'success': {
-      'icon': 'circle-check',
-      'color': 'green'
-    }
-  };
   const runTest = () => {
-    if (!action) return;
-    let test = action.action;
+    let currentAction = action.current;
+    if (!currentAction) return;
+    console.log("running test " + currentAction.action);
+    let test = currentAction.action;
     const startTime = new Date();
-    setMaxAttempts(action.attempts);
+    setMaxAttempts(currentAction.attempts);
     _utils_api__WEBPACK_IMPORTED_MODULE_1__.runLetsEncryptTest(test, props.field.id).then(response => {
+      console.log("test response");
+      console.log(response);
       const endTime = new Date();
       let timeDiff = endTime - startTime; //in ms
       const elapsedTime = Math.round(timeDiff);
-      action.status = response.status ? response.status : 'inactive';
-      action.hide = false;
-      action.description = response.message;
-      action.do = response.action;
-      action.output = response.output ? response.output : false;
+      currentAction.status = response.status ? response.status : 'inactive';
+      currentAction.hide = false;
+      currentAction.description = response.message;
+      currentAction.do = response.action;
+      currentAction.output = response.output ? response.output : false;
       sleep.current = 500;
       if (elapsedTime < 1500) {
         sleep.current = 1500 - elapsedTime;
       }
+      action.current = currentAction;
     }).then((0,_utils_sleeper__WEBPACK_IMPORTED_MODULE_2__["default"])(sleep.current)).then(() => {
-      processTestResult(action);
+      processTestResult(currentAction);
     });
   };
   const getStyles = () => {
@@ -17308,7 +17333,6 @@ const useLetsEncryptData = (0,zustand__WEBPACK_IMPORTED_MODULE_0__.create)((set,
   maxAttempts: 1,
   refreshTests: false,
   actions: [],
-  action: false,
   setAttemptCount: attemptCount => {
     set(state => ({
       attemptCount
@@ -17320,23 +17344,10 @@ const useLetsEncryptData = (0,zustand__WEBPACK_IMPORTED_MODULE_0__.create)((set,
     }));
   },
   setActions: actions => {
-    console.log("set actions");
-    console.log(actions);
-    let action = get().action;
-    if (!action) {
-      set(state => ({
-        action: actions[0]
-      }));
-    }
-    let maxIndex = actions.length - 1;
+    let maxIndex = actions.length;
     set(state => ({
       actions,
       maxIndex
-    }));
-  },
-  setAction: action => {
-    set(state => ({
-      action
     }));
   },
   setRefreshTests: refreshTests => {
@@ -20690,6 +20701,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _Menu_MenuData__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../Menu/MenuData */ "./src/Menu/MenuData.js");
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_7__);
+/* harmony import */ var _LetsEncrypt_letsEncryptData__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../LetsEncrypt/letsEncryptData */ "./src/LetsEncrypt/letsEncryptData.js");
+
 
 
 
@@ -20721,11 +20734,31 @@ const Settings = () => {
     nextMenuItem,
     previousMenuItem
   } = (0,_Menu_MenuData__WEBPACK_IMPORTED_MODULE_6__["default"])();
+  const {
+    setRefreshTests
+  } = (0,_LetsEncrypt_letsEncryptData__WEBPACK_IMPORTED_MODULE_8__["default"])();
   const toggleNotices = () => {
     setNoticesExpanded(!noticesExpanded);
   };
+  const isTestsOnlyMenu = () => {
+    const {
+      menu_items: menuItems
+    } = subMenu;
+    for (const menuItem of menuItems) {
+      if (menuItem.id === selectedSubMenuItem && menuItem.tests_only) {
+        return true;
+      }
+    }
+    return false;
+  };
   const saveData = async () => {
-    await saveFields();
+    if (isTestsOnlyMenu()) {
+      console.log("is tests only menu, refresh tests only");
+      setRefreshTests(true);
+    } else {
+      console.log("is tests only menu, refresh tests only");
+      await saveFields();
+    }
   };
   const {
     menu_items: menuItems
@@ -20788,6 +20821,7 @@ const Settings = () => {
     }
   }
   let continueLink = nextButtonDisabled ? `#${selectedMainMenuItem}/${selectedSubMenuItem}` : `#${selectedMainMenuItem}/${nextMenuItem}`;
+  // let btnSaveText = isTestsOnlyMenu() ? __('Refresh', 'really-simple-ssl') : __('Save', 'really-simple-ssl');
   let btnSaveText = (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_7__.__)('Save', 'really-simple-ssl');
   for (const menuItem of menuItems) {
     if (menuItem.id === selectedSubMenuItem && menuItem.tests_only) {
