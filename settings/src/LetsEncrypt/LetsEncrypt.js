@@ -17,7 +17,6 @@ const LetsEncrypt = (props) => {
     const sleep = useRef(1500);
     const intervalId = useRef(false);
     const lastActionStatus = useRef('');
-    // const previousProgress = useRef(0);
     const previousActionIndex = useRef(-1);
 
     useEffect(() => {
@@ -26,21 +25,26 @@ const LetsEncrypt = (props) => {
         if ( props.field.id==='generation' ) {
             setActions(adjustActionsForDNS(actions));
         }
-        console.log("single action, first")
-        console.log(props.field.actions[0]);
-        if ( !action ){
-            setAction(actions[0]);
-        }
-   }, [fields])
+   }, [])
 
     useEffect(() => {
-        console.log("action");
+        if ( !action && actions.length>0){
+            console.log("no action, set first")
+            console.log(actions);
+            setAction(actions[0]);
+            setActionIndex(0);
+        }
+    }, [actions])
+
+    useEffect(() => {
+        console.log("action update triggered");
         console.log(action);
         console.log("actionIndex");
         console.log(actionIndex);
         console.log("maxIndex");
         console.log(maxIndex);
-        if (actionIndex<maxIndex) {
+        if ( actionIndex<actions.length-1 ) {
+            console.log("run test as it")
             runTest();
         }
 
@@ -61,12 +65,12 @@ const LetsEncrypt = (props) => {
 
        }, [actionIndex, refreshTests ])
 
-    useEffect(() => {
-        if ( refreshTests ){
-            setRefreshTests(false);
-            restartTests();
-        }
-    }, [refreshTests ])
+    // useEffect(() => {
+    //     if ( refreshTests ){
+    //         setRefreshTests(false);
+    //         restartTests();
+    //     }
+    // }, [refreshTests ])
 
     const restartTests = () => {
         // //clear statuses to ensure the bullets are grey
@@ -147,7 +151,7 @@ const LetsEncrypt = (props) => {
 
             setActionIndex(maxIndex);
             handleNextButtonDisabled(false);
-        } else if (action.do === 'continue' || action.do === 'skip' ) {
+        } else if ( action.do === 'continue' || action.do === 'skip' ) {
             //new action, so reset the attempts count
             setAttemptCount(1);
             //skip:  drop previous completely, skip to next.
@@ -168,11 +172,16 @@ const LetsEncrypt = (props) => {
             }
         } else if (action.do === 'retry' ) {
             if ( attemptCount >= maxAttempts ) {
-                console.log("set index to retry "+maxIndex);
+                console.log("to many attempts, set index "+maxIndex);
                 setActionIndex(maxIndex);
                 clearInterval(intervalId.current);
             } else {
                 // clearInterval(intervalId.current);
+                console.log("still attempts left, try again ");
+                console.log("attemptCount")
+                console.log(attemptCount)
+                console.log("maxIndex")
+                console.log(maxIndex)
                 runTest();
             }
         } else if ( action.do === 'stop' ){

@@ -17025,7 +17025,6 @@ const LetsEncrypt = props => {
   const sleep = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useRef)(1500);
   const intervalId = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useRef)(false);
   const lastActionStatus = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useRef)('');
-  // const previousProgress = useRef(0);
   const previousActionIndex = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useRef)(-1);
   (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
     handleNextButtonDisabled(true);
@@ -17033,22 +17032,24 @@ const LetsEncrypt = props => {
     if (props.field.id === 'generation') {
       setActions(adjustActionsForDNS(actions));
     }
-    console.log("single action, first");
-    console.log(props.field.actions[0]);
-  }, [fields]);
+  }, []);
   (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
-    if (!action) {
+    if (!action && actions.length > 0) {
+      console.log("no action, set first");
+      console.log(actions);
       setAction(actions[0]);
+      setActionIndex(0);
     }
   }, [actions]);
   (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
-    console.log("action");
+    console.log("action update triggered");
     console.log(action);
     console.log("actionIndex");
     console.log(actionIndex);
     console.log("maxIndex");
     console.log(maxIndex);
-    if (actionIndex < maxIndex) {
+    if (actionIndex < actions.length - 1) {
+      console.log("run test as it");
       runTest();
     }
     intervalId.current = setInterval(() => setProgress(progress => progress + 0.2), 100);
@@ -17065,12 +17066,14 @@ const LetsEncrypt = props => {
       setProgress(90);
     }
   }, [actionIndex, refreshTests]);
-  (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
-    if (refreshTests) {
-      setRefreshTests(false);
-      restartTests();
-    }
-  }, [refreshTests]);
+
+  // useEffect(() => {
+  //     if ( refreshTests ){
+  //         setRefreshTests(false);
+  //         restartTests();
+  //     }
+  // }, [refreshTests ])
+
   const restartTests = () => {
     // //clear statuses to ensure the bullets are grey
     // // actions.forEach(function (action, i) {
@@ -17166,11 +17169,16 @@ const LetsEncrypt = props => {
       }
     } else if (action.do === 'retry') {
       if (attemptCount >= maxAttempts) {
-        console.log("set index to retry " + maxIndex);
+        console.log("to many attempts, set index " + maxIndex);
         setActionIndex(maxIndex);
         clearInterval(intervalId.current);
       } else {
         // clearInterval(intervalId.current);
+        console.log("still attempts left, try again ");
+        console.log("attemptCount");
+        console.log(attemptCount);
+        console.log("maxIndex");
+        console.log(maxIndex);
         runTest();
       }
     } else if (action.do === 'stop') {
@@ -17293,7 +17301,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 const useLetsEncryptData = (0,zustand__WEBPACK_IMPORTED_MODULE_0__.create)((set, get) => ({
-  actionIndex: 0,
+  actionIndex: false,
   progress: 0,
   maxIndex: 1,
   attemptCount: 0,

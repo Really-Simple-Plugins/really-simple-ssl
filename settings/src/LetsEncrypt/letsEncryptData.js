@@ -1,7 +1,7 @@
 import {create} from 'zustand';
 import {produce} from "immer";
 const useLetsEncryptData = create(( set, get ) => ({
-    actionIndex:0,
+    actionIndex:false,
     progress:0,
     maxIndex:1,
     attemptCount:0,
