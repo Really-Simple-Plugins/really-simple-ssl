@@ -3,7 +3,6 @@
 /**
  * @package Really Simple SSL
  * @subpackage RSSSL_VULNERABILITIES
- * @since 3.0
  */
 if (!class_exists("rsssl_vulnerabilities")) {
 
@@ -18,6 +17,7 @@ if (!class_exists("rsssl_vulnerabilities")) {
      */
     class rsssl_vulnerabilities
     {
+        const RSS_SECURITY_API = 'https://api.really-simple-security.com/storage/downloads/';
         public $workable_plugins;
 
         /**
@@ -33,15 +33,12 @@ if (!class_exists("rsssl_vulnerabilities")) {
                 if (!wp_next_scheduled('rsssl_vulnerability_check')) {
                     wp_schedule_event(time(), 'daily', 'force_download_vulnerabilities');
                 }
-                //if this is the first time we download the files, we force download
-                if (!get_option('rsssl_vulnerability_files_downloaded')) {
-                    $this->force_download_vulnerabilities();
-                    update_option('rsssl_vulnerability_files_downloaded', true);
-                }
+
+                //we check the files on age and download if needed TODO: if premium this will be 4 hours
+                $this->check_files();
+
                 //we cache the plugins in the class.
                 $this->cache_installed_plugins();
-
-
 
                 //we check the rsssl options if the enable_feedback_in_plugin is set to true
                 if (rsssl_get_option('enable_feedback_in_plugin')) {
@@ -56,11 +53,11 @@ if (!class_exists("rsssl_vulnerabilities")) {
             return $columns;
         }
 
-        public function add_vulnerability_field($column_name, $plugin_file, $plugin_data)
+        public function add_vulnerability_field($column_name, $plugin_file)
         {
 
             if ($column_name === 'vulnerability') {
-                if ($this->check_vulnerability($plugin_file, $plugin_data)) {
+                if ($this->check_vulnerability($plugin_file)) {
                     echo '<a href="#" class="btn-vulnerable critical">' . __('Critical', 'really-simple-ssl') . '</a>';
                 } else {
                    echo 'Coming soon some nice info';
@@ -76,8 +73,8 @@ if (!class_exists("rsssl_vulnerabilities")) {
             //only on settings page
             $min = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? '' : '.min';
             $rtl = is_rtl() ? 'rtl/' : '';
-            $url = trailingslashit(rsssl_url) . "assets/css/{$rtl}plugin{$min}.css";
-            $path = trailingslashit(rsssl_path) . "assets/css/{$rtl}plugin{$min}.css";
+            $url = trailingslashit(rsssl_url) . "assets/css/{$rtl}plugin$min.css";
+            $path = trailingslashit(rsssl_path) . "assets/css/{$rtl}plugin$min.css";
             if ( file_exists( $path ) ) {
                 wp_enqueue_style( 'rsssl-plugin', $url, array(), rsssl_version );
             }
@@ -93,26 +90,10 @@ if (!class_exists("rsssl_vulnerabilities")) {
         }
 
         /**
-         * Checks for vulnerabilities in the core, plugins and themes.
+         * Checks the files on age and downloads if needed.
          *
          * @return void
          */
-        public function download_vulnerabilities()
-        {
-
-
-        }
-
-        /**
-         * Does a force download of the files
-         *
-         */
-        public function force_download_vulnerabilities()
-        {
-            $this->download_core_vulnerabilities();
-            $this->download_plugin_vulnerabilities();
-        }
-
         public function check_files()
         {
             //We check the core vulnerabilities and validate age and existence
@@ -163,7 +144,7 @@ if (!class_exists("rsssl_vulnerabilities")) {
         {
             global $wp_version;
             $wp_version = '6.0.1';
-            $url = 'https://api.really-simple-security.com/storage/downloads/core/wp-core_' . $wp_version . '.json';
+            $url = self::RSS_SECURITY_API . 'core/wp-core_' . $wp_version . '.json';
             $data = $this->download($url);
 
             //we convert the data to an array
@@ -180,7 +161,7 @@ if (!class_exists("rsssl_vulnerabilities")) {
             $vulnerabilities = [];
             foreach ($installed_plugins as $plugin) {
                 $plugin = $plugin['TextDomain'];
-                $url = 'https://api.really-simple-security.com/storage/downloads/plugin/' . $plugin . '.json';
+                $url = self::RSS_SECURITY_API .'plugin/' . $plugin . '.json';
                 $data = $this->download($url);
                 if ($data !== null)
                     $vulnerabilities[] = $data;
@@ -201,28 +182,12 @@ if (!class_exists("rsssl_vulnerabilities")) {
                 return json_decode($json);
             }
             $this->log_error('Could not download file from ' . $url);
+            return null;
         }
 
         private function log_error(string $string)
         {
             error_log($string);
-        }
-
-        /**
-         * Fetches the active plugins and returns them as an array.
-         *
-         * @return array
-         */
-        private function get_active_plugins(): array
-        {
-            $active_plugins = get_option('active_plugins');
-            $plugins = [];
-            foreach ($active_plugins as $plugin) {
-                //we return only the slug and version of the plugin
-                $found = get_plugin_data(WP_PLUGIN_DIR . '/' . $plugin);
-                $plugins[] = $found;
-            }
-            return $plugins;
         }
 
         private function filter_active_components($components, array $active_plugins): array
@@ -244,46 +209,9 @@ if (!class_exists("rsssl_vulnerabilities")) {
                         unset($component->vulnerabilities[$index]);
                     }
                 }
-                //now we get all values from the rss-severity property from the vulnerabilities
-
-                $component = $this->count_severities($component);
                 $active_components[] = $component;
             }
             return $active_components;
-        }
-
-        private function count_severities($component)
-        {
-            $severities = wp_list_pluck($component->vulnerabilities, 'rss_severity');
-            // we add all the properties to the component
-            $component->severity_critical = 0;
-            $component->severity_high = 0;
-            $component->severity_medium = 0;
-            $component->severity_low = 0;
-            $component->severity_unknown = 0;
-            //we loop through the severities and add them to the component
-            foreach ($severities as $severity) {
-                switch ($severity) {
-                    case 'c':
-                        $component->severity_critical++;
-                        break;
-                    case 'h':
-                        $component->severity_high++;
-                        break;
-                    case 'm':
-                        $component->severity_medium++;
-                        break;
-                    case 'l':
-                        $component->severity_low++;
-                        break;
-                    default:
-                        $component->severity_unknown++;
-                        break;
-                }
-            }
-            //we now no longer need the vulnerabilities property, so we remove it
-            unset($component->vulnerabilities);
-            return $component;
         }
 
         /**
@@ -326,7 +254,6 @@ if (!class_exists("rsssl_vulnerabilities")) {
          */
         private function cache_installed_plugins()
         {
-
             //first we get all installed plugins
             $installed_plugins = get_plugins();
             //now we get the components from the file
@@ -335,7 +262,6 @@ if (!class_exists("rsssl_vulnerabilities")) {
             if (empty($components)) {
                 return;
             }
-
             //We loop through plugins and check if they are in the components array
             foreach ($installed_plugins as $key => $plugin) {
                 $plugin['vulnerable'] = false;
@@ -350,7 +276,6 @@ if (!class_exists("rsssl_vulnerabilities")) {
             }
             //we now cache the installed plugins
             $this->workable_plugins = $installed_plugins;
-
         }
 
         private function get_components()
@@ -376,7 +301,7 @@ if (!class_exists("rsssl_vulnerabilities")) {
             add_action('manage_plugins_custom_column', array($this, 'add_vulnerability_field'), 10, 3);
         }
 
-        private function check_vulnerability($plugin_file, $plugin_data)
+        private function check_vulnerability($plugin_file)
         {
             return $this->workable_plugins[$plugin_file]['vulnerable'];
         }
