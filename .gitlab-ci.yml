@@ -19,6 +19,8 @@ before_script:
 
   # install the required packages for the running CI tests
   - apt-get -yqqf install wget zip unzip subversion default-mysql-client libmcrypt-dev default-libmysqlclient-dev default-mysql-server --fix-missing
+  # Zip current branch to allow it to be installed using wp-cli
+  - zip -r really-simple-ssl.zip .
 
   # Install mysql driver
   - docker-php-ext-install mysqli pdo_mysql mbstring
@@ -49,8 +51,6 @@ before_script:
   - wp config list --allow-root
   - wp core install --url=http://localhost --title=Example --admin_user=$ADMIN_USER --admin_password=$ADMIN_PASSWORD --admin_email=$ADMIN_EMAIL --allow-root
 
-  # Zip current branch to allow it to be installed using wp-cli
-  - zip -r really-simple-ssl.zip .
   # Install, activate, deactivate and uninstall the current branch in our WordPress installation
   - wp plugin install really-simple-ssl.zip --allow-root --force
   - wp plugin activate really-simple-ssl --allow-root
@@ -63,6 +63,7 @@ before_script:
   - wp plugin install really-simple-ssl.zip --allow-root --force
   - wp plugin deactivate really-simple-ssl --allow-root
   - wp plugin uninstall really-simple-ssl --allow-root
+  - pwd
   - ls -la
 
 variables:
