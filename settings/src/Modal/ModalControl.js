@@ -1,21 +1,19 @@
-import {Component} from "@wordpress/element";
+import useModal from "./ModalData";
 
-class ModalControl extends Component{
-    constructor() {
-        super( ...arguments );
-    }
-    componentDidMount() {
-        this.onClickHandler = this.onClickHandler.bind(this);
+/**
+ * Button to open the modal
+ * @param props
+ * @returns {JSX.Element}
+ * @constructor
+ */
+const ModalControl = (props) => {
+    const {handleModal} = useModal();
+    const onClickHandler = () => {
+        handleModal(true, props.modalData, props.item );
     }
 
-    onClickHandler(){
-        this.props.handleModal(true, this.props.modalData );
-    }
-
-    render(){
-        return (
-            <button className={"button button-" + this.props.btnStyle} onClick={ (e) => this.onClickHandler(e) }>{this.props.btnText}</button>
-        )
-    }
+    return (
+        <button className={"button button-" + props.btnStyle} onClick={ (e) => onClickHandler(e) }>{props.btnText}</button>
+    )
 }
 export default ModalControl

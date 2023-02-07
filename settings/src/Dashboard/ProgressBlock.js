@@ -65,7 +65,7 @@ class ProgressBlock extends Component {
                     notices: this.notices,
                     percentageCompleted: this.percentageCompleted,
                 });
-                this.props.setBlockProps('notices', this.notices);
+                this.props.updateBlockProps('notices', this.notices);
             }
         });
     }
@@ -85,21 +85,25 @@ class ProgressBlock extends Component {
             container.parentElement.removeChild(container);
         }
 
-        let notices = this.props.BlockProps.notices;
+        let notices = this.props.blockProps.notices;
         notices = notices.filter(function (notice) {
             return notice.id !== notice_id;
         });
 
-        this.props.setBlockProps('notices', notices);
+        this.props.updateBlockProps('notices', notices);
         return rsssl_api.runTest('dismiss_task', notice_id).then(( response ) => {
-            this.percentageCompleted = response.percentage;
-            this.setState({
-                percentageCompleted:this.percentageCompleted
-            })
+            if ( response.error ) {
+                this.setState({
+                    error: response.error,
+                });
+            } else {
+                this.percentageCompleted = response.percentage;
+                this.setState({
+                    percentageCompleted: this.percentageCompleted
+                })
+            }
         });
     }
-
-
 
     render(){
         const {
@@ -115,8 +119,8 @@ class ProgressBlock extends Component {
             );
         }
         let filter = 'all';
-        if ( this.props.BlockProps && this.props.BlockProps.filterStatus ) {
-            filter = this.props.BlockProps.filterStatus;
+        if ( this.props.blockProps && this.props.blockProps.filterStatus ) {
+            filter = this.props.blockProps.filterStatus;
         }
         let notices = this.notices;
         if ( filter==='remaining' ) {
@@ -143,7 +147,7 @@ class ProgressBlock extends Component {
                 </div>
 
                 <div className="rsssl-scroll-container">
-                    {notices.map((notice, i) => <TaskElement key={i} index={i} notice={notice} getFields={this.props.getFields} onCloseTaskHandler={this.onCloseTaskHandler} highLightField={this.props.highLightField}/>)}
+                    {notices.map((notice, i) => <TaskElement key={i} index={i} notice={notice} getFields={this.props.getFields} onCloseTaskHandler={this.onCloseTaskHandler} doHighlightField={this.props.doHighlightField}/>)}
                 </div>
 
             </div>

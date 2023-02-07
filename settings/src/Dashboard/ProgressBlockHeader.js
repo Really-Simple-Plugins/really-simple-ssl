@@ -24,7 +24,7 @@ class ProgressHeader extends Component {
             this.setState({
                 filter: this.filter,
             })
-            this.props.setBlockProps('filterStatus', filter);
+            this.props.updateBlockProps('filterStatus', filter);
             sessionStorage.rsssl_task_filter = filter;
         }
     }
@@ -36,8 +36,8 @@ class ProgressHeader extends Component {
         let all_task_count = 0;
         let open_task_count = 0;
         let notices =[];
-        if ( this.props.BlockProps && this.props.BlockProps.notices ){
-            notices = this.props.BlockProps.notices;
+        if ( this.props.blockProps && this.props.blockProps.notices ){
+            notices = this.props.blockProps.notices;
             all_task_count = notices.length;
             let openNotices = notices.filter(function (notice) {
                 return notice.output.status==='open' || notice.output.status==='warning';

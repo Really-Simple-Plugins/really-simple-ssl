@@ -8,6 +8,7 @@ const Error = (props) => {
     }
     let description = false;
     let url = 'https://really-simple-ssl.com/instructions/how-to-debug-a-blank-settings-page-in-really-simple-ssl/';
+
     let generic_rest_blocked_message = __("Please check if security settings on the server or a plugin is blocking the requests from Really Simple SSL.", "really-simple-ssl");
     let message = false;
     if (props.error) {
