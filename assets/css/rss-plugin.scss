@@ -1,0 +1,53 @@
+/*
+  This was created for styling the plugin overview page for vulnerable plugins.
+ */
+@import "variables.scss";
+
+.btn-vulnerable {
+  background-color: var(--rsp-blue);
+  color: var(--rsp-white);
+  border-color: var(--rsp-blue);
+  display: inline-block;
+  text-decoration: none;
+  font-size: 13px;
+  line-height: 2.15384615;
+  min-height: 30px;
+  margin: 0;
+  padding: 0 10px;
+  cursor: pointer;
+  border-width: 1px;
+  border-style: solid;
+  -webkit-appearance: none;
+  border-radius: 3px;
+  white-space: nowrap;
+  box-sizing: border-box;
+
+  &:hover {
+    background-color: var(--rsp-dark-blue);
+    border-color: var(--rsp-dark-blue);
+    color: var(--rsp-white);
+  }
+
+  &.critical {
+    background-color: var(--rsp-red);
+    color: var(--rsp-white);
+    border-color: var(--rsp-red);
+    &:hover {
+      background-color: var(--rsp-dark-red);
+      border-color: var(--rsp-dark-red);
+      color: var(--rsp-white);
+    }
+  }
+
+    &.warning {
+        background-color: var(--rsp-yellow);
+        color: var(--rsp-white);
+        border-color: var(--rsp-yellow);
+        &:hover {
+        background-color: var(--rsp-dark-yellow);
+        border-color: var(--rsp-dark-yellow);
+        color: var(--rsp-white);
+        }
+    }
+}
+

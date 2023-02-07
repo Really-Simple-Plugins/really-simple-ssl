@@ -61,10 +61,25 @@ if (!class_exists("rsssl_vulnerabilities")) {
 
             if ($column_name === 'vulnerability') {
                 if ($this->check_vulnerability($plugin_file, $plugin_data)) {
-                    echo '<span class="button">' . __('Vulnerability found', 'really-simple-ssl') . '</span>';
+                    echo '<a href="#" class="btn-vulnerable critical">' . __('Critical', 'really-simple-ssl') . '</a>';
                 } else {
                    echo 'Coming soon some nice info';
                 }
+            }
+        }
+
+        public function add_vulnerability_styles( $hook )
+        {
+            if ( 'plugins.php' !== $hook ) {
+                return;
+            }
+            //only on settings page
+            $min = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? '' : '.min';
+            $rtl = is_rtl() ? 'rtl/' : '';
+            $url = trailingslashit(rsssl_url) . "assets/css/{$rtl}plugin{$min}.css";
+            $path = trailingslashit(rsssl_path) . "assets/css/{$rtl}plugin{$min}.css";
+            if ( file_exists( $path ) ) {
+                wp_enqueue_style( 'rsssl-plugin', $url, array(), rsssl_version );
             }
         }
 
@@ -353,6 +368,8 @@ if (!class_exists("rsssl_vulnerabilities")) {
 
         private function enable_feedback_in_plugin()
         {
+            //we add some styling to this page
+            add_action('admin_enqueue_scripts', array($this, 'add_vulnerability_styles'));
             //we add an extra column to the plugins page
             add_filter('manage_plugins_columns', array($this, 'add_vulnerability_column'));
             //now we add the field to the plugins page

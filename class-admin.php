@@ -2527,6 +2527,7 @@ class rsssl_admin
         if ( $hook !== 'settings_page_really-simple-security') {
             return;
         }
+        //only on settings page
 	    $min = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? '' : '.min';
         $rtl = is_rtl() ? 'rtl/' : '';
         $url = trailingslashit(rsssl_url) . "assets/css/{$rtl}admin{$min}.css";
