@@ -28,14 +28,10 @@ const LetsEncrypt = (props) => {
         }
         console.log("single action, first")
         console.log(props.field.actions[0]);
-   }, [fields])
-
-    useEffect(() => {
-        if (!action){
+        if ( !action ){
             setAction(actions[0]);
         }
-
-    }, [ actions])
+   }, [fields])
 
     useEffect(() => {
         console.log("action");
