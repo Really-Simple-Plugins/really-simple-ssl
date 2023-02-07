@@ -1,5 +1,8 @@
 <?php
-class RSSSLInstallerTest extends \WP_UnitTestCase {
+require('../class-installer.php');
+class RSSSLInstallerTest extends WP_UnitTestCase {
+
+
     private $rsssl_installer;
 
     public function setUp(): void {
