@@ -16664,7 +16664,6 @@ const DnsVerification = props => {
   // useEffect(() => {
   //
   // }, [fields])
-  console.log(fields);
   (0,react_use__WEBPACK_IMPORTED_MODULE_6__["default"])(() => {
     if (action && action.action === 'challenge_directory_reachable' && action.status === 'error') {
       addHelpNotice(props.field.id, 'default', (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("The challenge directory is used to verify the domain ownership.", "really-simple-ssl"));
@@ -17209,7 +17208,7 @@ const LetsEncrypt = props => {
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_utils_Icon__WEBPACK_IMPORTED_MODULE_9__["default"], {
     name: getStatusIcon(action),
     color: getStatusColor(action)
-  }), action.do === 'retry' && attemptCount >= 1 && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_8__.__)("Attempt %s.", "really-simple-ssl").replace('%s', attemptCount), " "), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
+  }), action.do === 'retry' && attemptCount >= 1 && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_8__.__)("Attempt %s.", "really-simple-ssl").replace('%s', attemptCount), " "), "\xA0", (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
     dangerouslySetInnerHTML: {
       __html: action.description
     }
@@ -17267,8 +17266,6 @@ const useLetsEncryptData = (0,zustand__WEBPACK_IMPORTED_MODULE_0__.create)((set,
   },
   setActions: actions => {
     let maxIndex = actions.length;
-    console.log("update actions in data obj");
-    console.log(actions);
     set(state => ({
       actions,
       maxIndex
@@ -17429,6 +17426,7 @@ const useMenu = (0,zustand__WEBPACK_IMPORTED_MODULE_1__.create)((set, get) => ({
     let menu = rsssl_settings.menu;
     menu = Object.values(menu);
     const selectedMainMenuItem = (0,_utils_getAnchor__WEBPACK_IMPORTED_MODULE_0__["default"])('main') || 'dashboard';
+    menu = menu.filter(item => !item.default_hidden || selectedMainMenuItem === item.id);
     if (typeof fields !== 'undefined') {
       let subMenu = getSubMenu(menu, selectedMainMenuItem);
       const selectedSubMenuItem = getSelectedSubMenuItem(subMenu, fields);
@@ -17931,11 +17929,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _utils_api__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../utils/api */ "./src/utils/api.js");
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__);
-/* harmony import */ var react_use__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! react-use */ "./node_modules/react-use/esm/useUpdateEffect.js");
+/* harmony import */ var react_use__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! react-use */ "./node_modules/react-use/esm/useUpdateEffect.js");
 /* harmony import */ var _utils_Icon__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../utils/Icon */ "./src/utils/Icon.js");
 /* harmony import */ var _Placeholder_Placeholder__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../Placeholder/Placeholder */ "./src/Placeholder/Placeholder.js");
 /* harmony import */ var _Menu_MenuData__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../Menu/MenuData */ "./src/Menu/MenuData.js");
 /* harmony import */ var _Settings_FieldsData__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../Settings/FieldsData */ "./src/Settings/FieldsData.js");
+/* harmony import */ var _OnboardingData__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./OnboardingData */ "./src/Onboarding/OnboardingData.js");
+
 
 
 
@@ -17954,6 +17954,9 @@ const Onboarding = props => {
     setChangedFields
   } = (0,_Settings_FieldsData__WEBPACK_IMPORTED_MODULE_7__["default"])();
   const {
+    dismissModal
+  } = (0,_OnboardingData__WEBPACK_IMPORTED_MODULE_8__["default"])();
+  const {
     setSelectedMainMenuItem
   } = (0,_Menu_MenuData__WEBPACK_IMPORTED_MODULE_6__["default"])();
   const [steps, setSteps] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)([]);
@@ -17966,7 +17969,7 @@ const Onboarding = props => {
   const [networkwide, setNetworkwide] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)(false);
   const [networkActivationStatus, setNetworkActivationStatus] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)(false);
   const [networkProgress, setNetworkProgress] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)(0);
-  (0,react_use__WEBPACK_IMPORTED_MODULE_8__["default"])(() => {
+  (0,react_use__WEBPACK_IMPORTED_MODULE_9__["default"])(() => {
     if (networkProgress < 100 && networkwide && networkActivationStatus === 'main_site_activated') {
       _utils_api__WEBPACK_IMPORTED_MODULE_2__.runTest('activate_ssl_networkwide').then(response => {
         if (response.success) {
@@ -18795,7 +18798,6 @@ const Field = props => {
   if (field.conditionallyDisabled) {
     disabled = true;
   }
-  console.log(field);
   if (!field.visible) {
     return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null);
   }
@@ -19795,7 +19797,6 @@ const UseLearningMode = (0,zustand__WEBPACK_IMPORTED_MODULE_1__.create)((set, ge
     let data = {};
     data.type = type;
     data.lm_action = 'get';
-    console.log("fetch data for " + type);
     let learningModeData = await _utils_api__WEBPACK_IMPORTED_MODULE_0__.doAction('learning_mode_data', data).then(response => {
       return response;
     });

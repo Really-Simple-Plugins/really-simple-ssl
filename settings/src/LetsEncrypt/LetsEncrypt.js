@@ -295,6 +295,7 @@ const LetsEncrypt = (props) => {
                               <li key={i}>
                                   <Icon name = {getStatusIcon(action)} color = {getStatusColor(action)} />
                                         {action.do==='retry' && attemptCount >=1 && <>{__("Attempt %s.", "really-simple-ssl").replace('%s', attemptCount)} </>}
+                                        &nbsp;
                                         <span dangerouslySetInnerHTML={{__html:action.description}}></span>
                                     </li>
 

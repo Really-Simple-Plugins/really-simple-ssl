@@ -93,7 +93,6 @@ const Field = (props) => {
     if ( field.conditionallyDisabled ) {
         disabled = true;
     }
-    console.log(field);
     if ( !field.visible ) {
         return (
             <></>

@@ -32,6 +32,8 @@ const useMenu = create(( set, get ) => ({
         let menu = rsssl_settings.menu;
         menu = Object.values(menu);
         const selectedMainMenuItem = getAnchor('main') || 'dashboard';
+        menu = menu.filter( item => !item.default_hidden || selectedMainMenuItem===item.id);
+
         if ( typeof fields !== 'undefined' ) {
             let subMenu = getSubMenu(menu, selectedMainMenuItem);
             const selectedSubMenuItem = getSelectedSubMenuItem(subMenu, fields);
@@ -121,6 +123,8 @@ const dropEmptyMenuItems = (menuItems, fields, selectedSubMenuItem) => {
                 newMenuItems[index].menu_items = dropEmptyMenuItems(menuItem.menu_items, fields, selectedSubMenuItem);
             }
         }
+
+
     }
     return newMenuItems;
 }

@@ -7,9 +7,11 @@ import Icon from "../utils/Icon";
 import Placeholder from '../Placeholder/Placeholder';
 import useMenu from "../Menu/MenuData";
 import useFields from "../Settings/FieldsData";
+import useOnboardingData from "./OnboardingData";
 
 const Onboarding = (props) => {
     const { fetchFieldsData, updateField, saveFields, setChangedFields} = useFields();
+    const {dismissModal} = useOnboardingData();
 
     const {setSelectedMainMenuItem} = useMenu();
     const [steps, setSteps] = useState([]);
@@ -247,7 +249,7 @@ const Onboarding = (props) => {
 
     const goToLetsEncrypt = () => {
          if (props.isModal) dismissModal();
-        window.location.href=rsssl_settings.letsencrypt_url;
+          window.location.href=rsssl_settings.letsencrypt_url;
     }
 
     const controlButtons = () => {

@@ -11,8 +11,6 @@ const useLetsEncryptData = create(( set, get ) => ({
     setProgress: (progress) => {set(state => ({ progress }))},
     setActions: (actions) => {
         let maxIndex = actions.length;
-        console.log("update actions in data obj");
-        console.log(actions)
         set(state => ({ actions, maxIndex }))
     },
     setRefreshTests: (refreshTests) => {set(state => ({ refreshTests }))},

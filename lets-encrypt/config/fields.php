@@ -443,6 +443,7 @@ function rsssl_le_add_fields($fields) {
 				'id'                 => 'directories',
 				'menu_id'            => 'le-directories',
 				'group_id'            => 'le-directories',
+				'condition_action'   => 'hide',
 				'type'               => 'letsencrypt',
 				'actions'            => [
 					[
@@ -495,6 +496,7 @@ function rsssl_le_add_fields($fields) {
 				'menu_id'  => 'le-dns-verification',
 				'group_id' => 'le-dns-verification',
 				'type'     => 'letsencrypt',
+				'condition_action'   => 'hide',
 				'actions' => [
 					[
 						'description' => __("Creating account...", "really-simple-ssl"),

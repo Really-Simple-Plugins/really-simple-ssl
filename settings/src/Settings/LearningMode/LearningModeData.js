@@ -8,7 +8,6 @@ const UseLearningMode = create(( set, get ) => ({
         let data = {};
         data.type = type;
         data.lm_action = 'get';
-        console.log("fetch data for "+type)
         let learningModeData = await rsssl_api.doAction('learning_mode_data', data).then((response) => {
             return response;
         })
