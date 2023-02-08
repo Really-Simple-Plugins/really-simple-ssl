@@ -106,10 +106,14 @@ const getPreviousAndNextMenuItems = (menu, selectedSubMenuItem) => {
 const dropEmptyMenuItems = (menuItems, fields, selectedSubMenuItem) => {
     const newMenuItems = menuItems;
     for (const [index, menuItem] of menuItems.entries()) {
-        const menuItemFields = fields.filter((field) => {
-            return (field.menu_id === menuItem.id && field.visible && !field.conditionallyDisabled )
+        let menuItemFields = fields.filter((field) => {
+            return (field.menu_id === menuItem.id && (field.visible && !field.conditionallyDisabled) )
         });
-        if( menuItemFields.length === 0 && !menuItem.hasOwnProperty('menu_items') )  {
+
+        // menuItemFields = menuItemFields.filter((field) => {
+        //     return (field.menu_id === menuItem.id && (field.conditionallyDisabled && field.condition_action !== 'hide') )
+        // });
+        if ( menuItemFields.length === 0 && !menuItem.hasOwnProperty('menu_items') )  {
             newMenuItems[index].visible = false;
         } else {
             newMenuItems[index].visible = true;

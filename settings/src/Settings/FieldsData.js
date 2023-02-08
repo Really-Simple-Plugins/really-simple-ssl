@@ -4,6 +4,7 @@ import * as rsssl_api from "../utils/api";
 import sleeper from "../utils/sleeper.js";
 import {__} from '@wordpress/i18n';
 import {dispatch} from '@wordpress/data';
+import {in_array} from "../utils/lib";
 
 const fetchFields = () => {
     return rsssl_api.getFields().then((response) => {
@@ -199,16 +200,21 @@ const isNextButtonDisabled = (fields, selectedMenuItem) => {
     return requiredFields.length > 0;
 }
 
-
-
 const updateFieldsListWithConditions = (fields) => {
     let newFields = [];
     fields.forEach(function(field, i) {
         let enabled = !( field.hasOwnProperty('react_conditions') && !validateConditions(field.react_conditions, fields, field.id) );
+        let previouslyEnabled = enabled;
         //we want to update the changed fields if this field has just become visible. Otherwise the new field won't get saved.
         const newField = {...field};
+        newField.visible = !(!enabled && (field.type === 'letsencrypt' || field.condition_action === 'hide'));
         newField.conditionallyDisabled = !enabled;
         newFields.push(newField);
+
+        //if this is a learning mode field, do not add it to the changed fields list
+        if ( !previouslyEnabled && newField.enabled && field.type!=='learningmode') {
+            set().setChangedField(field.id, field.value);
+        }
     });
     return newFields;
 }

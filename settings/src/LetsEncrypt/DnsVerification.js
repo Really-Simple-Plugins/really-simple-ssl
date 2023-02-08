@@ -17,7 +17,7 @@ const DnsVerification = (props) => {
     // useEffect(() => {
     //
     // }, [fields])
-    console.log(fields);
+     console.log(fields);
      useUpdateEffect(()=> {
 
         if (action && action.action==='challenge_directory_reachable' && action.status==='error') {

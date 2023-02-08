@@ -17516,9 +17516,13 @@ const getPreviousAndNextMenuItems = (menu, selectedSubMenuItem) => {
 const dropEmptyMenuItems = (menuItems, fields, selectedSubMenuItem) => {
   const newMenuItems = menuItems;
   for (const [index, menuItem] of menuItems.entries()) {
-    const menuItemFields = fields.filter(field => {
+    let menuItemFields = fields.filter(field => {
       return field.menu_id === menuItem.id && field.visible && !field.conditionallyDisabled;
     });
+
+    // menuItemFields = menuItemFields.filter((field) => {
+    //     return (field.menu_id === menuItem.id && (field.conditionallyDisabled && field.condition_action !== 'hide') )
+    // });
     if (menuItemFields.length === 0 && !menuItem.hasOwnProperty('menu_items')) {
       newMenuItems[index].visible = false;
     } else {
@@ -18985,14 +18989,16 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var zustand__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! zustand */ "./node_modules/zustand/esm/index.mjs");
-/* harmony import */ var immer__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! immer */ "./node_modules/immer/dist/immer.esm.mjs");
+/* harmony import */ var zustand__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! zustand */ "./node_modules/zustand/esm/index.mjs");
+/* harmony import */ var immer__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! immer */ "./node_modules/immer/dist/immer.esm.mjs");
 /* harmony import */ var _utils_api__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../utils/api */ "./src/utils/api.js");
 /* harmony import */ var _utils_sleeper_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../utils/sleeper.js */ "./src/utils/sleeper.js");
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__);
 /* harmony import */ var _wordpress_data__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @wordpress/data */ "@wordpress/data");
 /* harmony import */ var _wordpress_data__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_wordpress_data__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var _utils_lib__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../utils/lib */ "./src/utils/lib.js");
+
 
 
 
@@ -19013,7 +19019,7 @@ const fetchFields = () => {
     console.error(error);
   });
 };
-const useFields = (0,zustand__WEBPACK_IMPORTED_MODULE_4__.create)((set, get) => ({
+const useFields = (0,zustand__WEBPACK_IMPORTED_MODULE_5__.create)((set, get) => ({
   fieldsLoaded: false,
   error: false,
   fields: [],
@@ -19034,7 +19040,7 @@ const useFields = (0,zustand__WEBPACK_IMPORTED_MODULE_4__.create)((set, get) => 
     nextButtonDisabled
   })),
   setChangedField: (id, value) => {
-    set((0,immer__WEBPACK_IMPORTED_MODULE_5__.produce)(state => {
+    set((0,immer__WEBPACK_IMPORTED_MODULE_6__.produce)(state => {
       //remove current reference
       const existingFieldIndex = state.changedFields.findIndex(field => {
         return field.id === id;
@@ -19054,7 +19060,7 @@ const useFields = (0,zustand__WEBPACK_IMPORTED_MODULE_4__.create)((set, get) => 
     handleShowSavedSettingsNotice(text);
   },
   updateField: (id, value) => {
-    set((0,immer__WEBPACK_IMPORTED_MODULE_5__.produce)(state => {
+    set((0,immer__WEBPACK_IMPORTED_MODULE_6__.produce)(state => {
       let index = state.fields.findIndex(fieldItem => fieldItem.id === id);
       if (index !== -1) {
         state.fields[index].value = value;
@@ -19062,7 +19068,7 @@ const useFields = (0,zustand__WEBPACK_IMPORTED_MODULE_4__.create)((set, get) => 
     }));
   },
   updateSubField: (id, subItemId, value) => {
-    set((0,immer__WEBPACK_IMPORTED_MODULE_5__.produce)(state => {
+    set((0,immer__WEBPACK_IMPORTED_MODULE_6__.produce)(state => {
       let index = state.fields.findIndex(fieldItem => fieldItem.id === id);
       let itemValue = state.fields[index].value;
       if (!Array.isArray(itemValue)) {
@@ -19148,7 +19154,7 @@ const useFields = (0,zustand__WEBPACK_IMPORTED_MODULE_4__.create)((set, get) => 
       _utils_api__WEBPACK_IMPORTED_MODULE_0__.setFields(saveFields).then(response => {
         progress = response.progress;
         fields = response.fields;
-        set((0,immer__WEBPACK_IMPORTED_MODULE_5__.produce)(state => {
+        set((0,immer__WEBPACK_IMPORTED_MODULE_6__.produce)(state => {
           state.changedFields = [];
           state.fields = fields;
           state.progress = progress;
@@ -19164,7 +19170,7 @@ const useFields = (0,zustand__WEBPACK_IMPORTED_MODULE_4__.create)((set, get) => 
     let fields = get().fields;
     fields = updateFieldsListWithConditions(fields);
     const nextButtonDisabled = isNextButtonDisabled(fields, selectedSubMenuItem);
-    set((0,immer__WEBPACK_IMPORTED_MODULE_5__.produce)(state => {
+    set((0,immer__WEBPACK_IMPORTED_MODULE_6__.produce)(state => {
       state.fields = fields;
       state.nextButtonDisabled = nextButtonDisabled;
     }));
@@ -19204,12 +19210,19 @@ const updateFieldsListWithConditions = fields => {
   let newFields = [];
   fields.forEach(function (field, i) {
     let enabled = !(field.hasOwnProperty('react_conditions') && !validateConditions(field.react_conditions, fields, field.id));
+    let previouslyEnabled = enabled;
     //we want to update the changed fields if this field has just become visible. Otherwise the new field won't get saved.
     const newField = {
       ...field
     };
+    newField.visible = !(!enabled && (field.type === 'letsencrypt' || field.condition_action === 'hide'));
     newField.conditionallyDisabled = !enabled;
     newFields.push(newField);
+
+    //if this is a learning mode field, do not add it to the changed fields list
+    if (!previouslyEnabled && newField.enabled && field.type !== 'learningmode') {
+      set().setChangedField(field.id, field.value);
+    }
   });
   return newFields;
 };
