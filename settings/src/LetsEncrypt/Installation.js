@@ -2,15 +2,10 @@ import {useState, useEffect} from "@wordpress/element";
 import { __ } from '@wordpress/i18n';
 import * as rsssl_api from "../utils/api";
 import {dispatch,} from '@wordpress/data';
-import Notices from "../Settings/Notices";
-import update from 'immutability-helper';
 import {useUpdateEffect} from 'react-use';
 import sleeper from "../utils/sleeper";
-import useLetsEncryptData from "./letsEncryptData";
-import useFields from "../Settings/FieldsData";
 
 const Installation = (props) => {
-    const {addHelpNotice} = useFields();
     const [installationData, setInstallationData] = useState(false);
     let action = props.action;
 

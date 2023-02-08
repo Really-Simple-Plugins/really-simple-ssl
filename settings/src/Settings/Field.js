@@ -28,7 +28,8 @@ const Field = (props) => {
 
     useEffect( () => {
         if ( highLightField===props.field.id && scrollAnchor.current ) {
-            scrollAnchor.current.scrollIntoView()
+            scrollAnchor.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
         }
     });
 

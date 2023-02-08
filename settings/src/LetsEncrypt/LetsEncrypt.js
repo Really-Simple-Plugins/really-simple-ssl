@@ -13,7 +13,7 @@ import useLetsEncryptData from "./letsEncryptData";
 
 const LetsEncrypt = (props) => {
     const {handleNextButtonDisabled, getFieldValue} = useFields();
-    const {attemptCount, setAttemptCount, progress, setProgress, maxAttempts, setMaxAttempts, updateAction, refreshTests, setRefreshTests, updateActionProperty} = useLetsEncryptData();
+    const {attemptCount, setAttemptCount, progress, setProgress, maxAttempts, setMaxAttempts, refreshTests, setRefreshTests} = useLetsEncryptData();
     const sleep = useRef(1500);
     const intervalId = useRef(false);
     const lastActionStatus = useRef('');
@@ -50,7 +50,7 @@ const LetsEncrypt = (props) => {
         if ( actionIndex.current===0 ) {
             runTest();
         }
-    }, [action.current])
+    }, [actionIndex.current])
 
     useEffect(() => {
         action.current = actionsList.current[actionIndex.current];
@@ -78,10 +78,21 @@ const LetsEncrypt = (props) => {
         if ( refreshTests ){
             setRefreshTests(false);
             reset();
+            actionsList.current.forEach(function(action,i){
+                actionsList.current[i]['status'] = 'inactive';
+            });
         }
     }, [refreshTests ])
 
-    refProgress.current = progress;
+    const updateActionProperty = (index, property, value) => {
+        let currentActions = actionsList.current;
+        if (currentActions.hasOwnProperty(index) && currentActions[index].hasOwnProperty(property)) {
+            currentActions[index][property] = value;
+        }
+        actionsList.current = currentActions;
+    }
+
+
     const statuses = {
         'inactive': {
             'icon': 'circle-times',
@@ -104,16 +115,14 @@ const LetsEncrypt = (props) => {
     const reset = () => {
         handleNextButtonDisabled(true);
         actionsList.current = getActions();
-        actionsList.current.forEach(function(action,i){
-            updateActionProperty(i, 'status', 'inactive');
-        });
+        setProgress(0);
         refProgress.current = 0;
         startedTests.current = [];
         actionIndex.current = 0;
         action.current = false;
         previousActionIndex.current = -1;
         lastActionStatus.current = '';
-        setProgress(0);
+
      }
 
     const adjustActionsForDNS = (actions) => {
@@ -154,6 +163,7 @@ const LetsEncrypt = (props) => {
     }
 
     const processTestResult = (action) => {
+        clearInterval(intervalId.current);
         lastActionStatus.current = action.status;
         if ( action.status==='success' ) {
             setAttemptCount(0);
@@ -171,7 +181,6 @@ const LetsEncrypt = (props) => {
 
         //finalize happens when halfway through our tests it's finished. We can skip all others.
         if ( action.do === 'finalize' ) {
-            clearInterval(intervalId.current);
             actionsList.current.forEach(function(action,i){
                 if (i>actionIndex.current) {
                     updateActionProperty(i, 'hide', true);
@@ -195,19 +204,15 @@ const LetsEncrypt = (props) => {
             } else {
                 handleNextButtonDisabled(false);
                 actionIndex.current = actionIndex.current+1;
-                clearInterval(intervalId.current);
             }
         } else if (action.do === 'retry' ) {
             if ( attemptCount >= maxAttempts ) {
                 actionIndex.current = maxIndex.current;
-                clearInterval(intervalId.current);
             } else {
-                // clearInterval(intervalId.current);
                 runTest();
             }
         } else if ( action.do === 'stop' ){
             actionIndex.current = maxIndex.current;
-            clearInterval(intervalId.current);
         }
     }
 
@@ -276,7 +281,10 @@ const LetsEncrypt = (props) => {
 
     //filter out skipped actions
     let actionsOutput = actionsList.current.filter(action => action.hide !== true);
-
+    refProgress.current = progress;
+    if (maxIndex.current === actionIndex.current+1 ){
+        refProgress.current = 100;
+    }
     return (
         <>
             <div className="rsssl-lets-encrypt-tests">

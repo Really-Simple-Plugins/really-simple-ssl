@@ -288,7 +288,13 @@ const validateConditions = (conditions, fields, fieldId) => {
                                 } else if (conditionValue.indexOf('EMPTY')!==-1) {
                                     thisConditionApplies = actualValue.length === 0;
                                 } else {
+                                    console.log("compare for other types");
+                                    console.log("actualValue")
+                                    console.log(actualValue)
+                                    console.log("conditionValue")
+                                    console.log(conditionValue)
                                     thisConditionApplies = String(actualValue).toLowerCase() === conditionValue.toLowerCase();
+                                    console.log(thisConditionApplies);
                                 }
                             }
                         }

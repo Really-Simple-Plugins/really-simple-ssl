@@ -43,7 +43,7 @@ const Directories = (props) => {
     });
 
 
-    if (!action) {
+    if ( !action ) {
         return (<></>);
     }
 

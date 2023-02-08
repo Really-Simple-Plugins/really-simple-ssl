@@ -1,5 +1,4 @@
 import {create} from 'zustand';
-import {produce} from "immer";
 const useLetsEncryptData = create(( set, get ) => ({
     actionIndex:false,
     progress:0,
@@ -19,22 +18,6 @@ const useLetsEncryptData = create(( set, get ) => ({
     setRefreshTests: (refreshTests) => {set(state => ({ refreshTests }))},
     setActionIndex: (actionIndex) => {set(state => ({ actionIndex }))},
     setMaxAttempts: (maxAttempts) => {set(state => ({ maxAttempts }))},
-    updateAction: (index, action) => {
-        set(
-            produce((state) => {
-                state.actions[index] = action;
-            })
-        )
-    },
-    updateActionProperty: (index, property, value) =>{
-        set(
-            produce((state) => {
-                if (state.actions.hasOwnProperty(index) && state.actions[index].hasOwnProperty(property)) {
-                    state.actions[index][property] = value;
-                }
-            })
-        )
-    },
 }));
 export default useLetsEncryptData;
 

@@ -83,6 +83,8 @@ html {
     border-left: 4px solid var(--rsp-green);
     -o-animation: fadeIt 3s ease-in-out;
     animation: fadeIt 3s ease-in-out;
+    scroll-margin-top: 100px;
+    scroll-padding-top:100px;
   }
 
   @-o-keyframes fadeIt {

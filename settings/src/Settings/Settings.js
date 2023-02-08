@@ -34,10 +34,9 @@ const Settings = () => {
 
     const saveData = async (isSaveAndContinueButton) => {
         if ( !isSaveAndContinueButton && isTestsOnlyMenu() ) {
-            console.log("is tests only menu, refresh tests only");
             setRefreshTests(true);
         } else {
-            await saveFields();
+            await saveFields(true, true);
         }
     }
 
@@ -121,7 +120,7 @@ const Settings = () => {
                     }
                     <button
                         className="button button-primary"
-                        onClick={ ( e ) => saveData(e) }>
+                        onClick={ ( e ) => saveData(false) }>
                         { btnSaveText }
                     </button>
                     {/*This will be shown only if current step is not the last one*/}

@@ -9,30 +9,13 @@ import useMenu from "../Menu/MenuData";
 
 const TaskElement = (props) => {
     const {dismissNotice} = useProgress();
-    const {getField, fields, setHighLightField, fetchFieldsData} = useFields();
+    const {getField, setHighLightField, fetchFieldsData} = useFields();
     const {setSelectedSubMenuItem} = useMenu();
 
     const handleClick = async () => {
         setHighLightField(props.notice.output.highlight_field_id);
         let highlightField = getField(props.notice.output.highlight_field_id);
         await setSelectedSubMenuItem(highlightField.menu_id);
-    }
-
-    const onCloseTaskHandler = async (e) => {
-        let button = e.target.closest('button');
-        let notice_id = button.getAttribute('data-id');
-        let container = button.closest('.rsssl-task-element');
-        container.animate({
-            marginLeft: ["0px", "-1000px"]
-        }, {
-            duration: 500,
-            easing: "linear",
-            iterations: 1,
-            fill: "both"
-        }).onfinish = function() {
-            container.parentElement.removeChild(container);
-        }
-        await dismissNotice(notice_id);
     }
 
     const handleClearCache = (cache_id) => {
@@ -70,7 +53,7 @@ const TaskElement = (props) => {
             {notice.output.plusone && <span className='rsssl-plusone'>1</span>}
             {notice.output.dismissible && notice.output.status!=='completed' &&
                 <div className="rsssl-task-dismiss">
-                  <button type='button' data-id={notice.id} onClick={(e) => onCloseTaskHandler(e) }>
+                  <button type='button' onClick={(e) => dismissNotice(notice.id) }>
                          <Icon name='times' />
                   </button>
                 </div>

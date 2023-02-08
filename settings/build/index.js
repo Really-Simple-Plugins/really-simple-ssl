@@ -16344,7 +16344,6 @@ const TaskElement = props => {
   } = (0,_Progress_ProgressData__WEBPACK_IMPORTED_MODULE_7__["default"])();
   const {
     getField,
-    fields,
     setHighLightField,
     fetchFieldsData
   } = (0,_Settings_FieldsData__WEBPACK_IMPORTED_MODULE_6__["default"])();
@@ -16355,22 +16354,6 @@ const TaskElement = props => {
     setHighLightField(props.notice.output.highlight_field_id);
     let highlightField = getField(props.notice.output.highlight_field_id);
     await setSelectedSubMenuItem(highlightField.menu_id);
-  };
-  const onCloseTaskHandler = async e => {
-    let button = e.target.closest('button');
-    let notice_id = button.getAttribute('data-id');
-    let container = button.closest('.rsssl-task-element');
-    container.animate({
-      marginLeft: ["0px", "-1000px"]
-    }, {
-      duration: 500,
-      easing: "linear",
-      iterations: 1,
-      fill: "both"
-    }).onfinish = function () {
-      container.parentElement.removeChild(container);
-    };
-    await dismissNotice(notice_id);
   };
   const handleClearCache = cache_id => {
     let data = {};
@@ -16418,8 +16401,7 @@ const TaskElement = props => {
     className: "rsssl-task-dismiss"
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
     type: "button",
-    "data-id": notice.id,
-    onClick: e => onCloseTaskHandler(e)
+    onClick: e => dismissNotice(notice.id)
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_utils_Icon__WEBPACK_IMPORTED_MODULE_2__["default"], {
     name: "times"
   }))));
@@ -16649,19 +16631,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _utils_api__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../utils/api */ "./src/utils/api.js");
-/* harmony import */ var _wordpress_data__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @wordpress/data */ "@wordpress/data");
-/* harmony import */ var _wordpress_data__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_wordpress_data__WEBPACK_IMPORTED_MODULE_3__);
-/* harmony import */ var _utils_Hyperlink__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../utils/Hyperlink */ "./src/utils/Hyperlink.js");
-/* harmony import */ var react_use__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! react-use */ "./node_modules/react-use/esm/useUpdateEffect.js");
-/* harmony import */ var _utils_sleeper__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../utils/sleeper */ "./src/utils/sleeper.js");
-/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @wordpress/components */ "@wordpress/components");
-/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(_wordpress_components__WEBPACK_IMPORTED_MODULE_6__);
-/* harmony import */ var _letsEncryptData__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./letsEncryptData */ "./src/LetsEncrypt/letsEncryptData.js");
-/* harmony import */ var _Settings_FieldsData__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../Settings/FieldsData */ "./src/Settings/FieldsData.js");
-
-
-
+/* harmony import */ var _utils_Hyperlink__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../utils/Hyperlink */ "./src/utils/Hyperlink.js");
+/* harmony import */ var react_use__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! react-use */ "./node_modules/react-use/esm/useUpdateEffect.js");
+/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @wordpress/components */ "@wordpress/components");
+/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_wordpress_components__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var _Settings_FieldsData__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../Settings/FieldsData */ "./src/Settings/FieldsData.js");
+/* harmony import */ var _Menu_MenuData__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../Menu/MenuData */ "./src/Menu/MenuData.js");
 
 
 
@@ -16672,11 +16647,25 @@ __webpack_require__.r(__webpack_exports__);
 
 const DnsVerification = props => {
   const {
-    addHelpNotice
-  } = (0,_Settings_FieldsData__WEBPACK_IMPORTED_MODULE_8__["default"])();
+    fields,
+    addHelpNotice,
+    updateField,
+    setChangedField,
+    saveFields,
+    fetchFieldsData,
+    getFieldValue
+  } = (0,_Settings_FieldsData__WEBPACK_IMPORTED_MODULE_4__["default"])();
+  const {
+    selectedSubMenuItem
+  } = (0,_Menu_MenuData__WEBPACK_IMPORTED_MODULE_5__["default"])();
   const [tokens, setTokens] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)(false);
   let action = props.action;
-  (0,react_use__WEBPACK_IMPORTED_MODULE_9__["default"])(() => {
+
+  // useEffect(() => {
+  //
+  // }, [fields])
+  console.log(fields);
+  (0,react_use__WEBPACK_IMPORTED_MODULE_6__["default"])(() => {
     if (action && action.action === 'challenge_directory_reachable' && action.status === 'error') {
       addHelpNotice(props.field.id, 'default', (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("The challenge directory is used to verify the domain ownership.", "really-simple-ssl"));
     }
@@ -16688,23 +16677,19 @@ const DnsVerification = props => {
       setTokens(newTokens);
     }
   });
-  const handleSwitchToDir = () => {
-    props.updateField('verification_type', 'dir');
-    return _utils_api__WEBPACK_IMPORTED_MODULE_2__.runLetsEncryptTest('update_verification_type', 'dir').then(response => {
-      props.selectMenu('le-directories');
-      const notice = (0,_wordpress_data__WEBPACK_IMPORTED_MODULE_3__.dispatch)('core/notices').createNotice('success', (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Switched to directory', 'really-simple-ssl'), {
-        __unstableHTML: true,
-        id: 'rsssl_switched_to_dns',
-        type: 'snackbar',
-        isDismissible: true
-      }).then((0,_utils_sleeper__WEBPACK_IMPORTED_MODULE_5__["default"])(3000)).then(response => {
-        (0,_wordpress_data__WEBPACK_IMPORTED_MODULE_3__.dispatch)('core/notices').removeNotice('rsssl_switched_to_dns');
-      });
-    });
+  const handleSwitchToDir = async () => {
+    updateField('verification_type', 'dir');
+    setChangedField('verification_type', 'dir');
+    await saveFields(true, true);
+    await fetchFieldsData(selectedSubMenuItem);
   };
+  let verificationType = getFieldValue('verification_type');
+  if (verificationType === 'dir') {
+    return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null);
+  }
   return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, tokens && tokens.length > 0 && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "rsssl-test-results"
-  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("h4", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Next step", "really-simple-ssl")), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Add the following token as text record to your DNS records. We recommend to use a short TTL during installation, in case you need to change it.", "really-simple-ssl"), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_utils_Hyperlink__WEBPACK_IMPORTED_MODULE_4__["default"], {
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("h4", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Next step", "really-simple-ssl")), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Add the following token as text record to your DNS records. We recommend to use a short TTL during installation, in case you need to change it.", "really-simple-ssl"), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_utils_Hyperlink__WEBPACK_IMPORTED_MODULE_2__["default"], {
     target: "_blank",
     text: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Read more", "really-simple-ssl"),
     url: "https://really-simple-ssl.com/how-to-add-a-txt-record-to-dns"
@@ -16724,7 +16709,7 @@ const DnsVerification = props => {
     className: "rsssl-dns-field rsssl-selectable"
   }, tokenData.token))))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "rsssl-test-results"
-  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("DNS verification active. You can switch back to directory verification here.", "really-simple-ssl")), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_6__.Button, {
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("DNS verification active. You can switch back to directory verification here.", "really-simple-ssl")), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_3__.Button, {
     variant: "secondary",
     onClick: () => handleSwitchToDir()
   }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Switch to directory verification', 'really-simple-ssl'))));
@@ -16751,20 +16736,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _utils_api__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../utils/api */ "./src/utils/api.js");
 /* harmony import */ var _wordpress_data__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @wordpress/data */ "@wordpress/data");
 /* harmony import */ var _wordpress_data__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_wordpress_data__WEBPACK_IMPORTED_MODULE_3__);
-/* harmony import */ var _Settings_Notices__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../Settings/Notices */ "./src/Settings/Notices.js");
-/* harmony import */ var immutability_helper__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! immutability-helper */ "./node_modules/immutability-helper/index.js");
-/* harmony import */ var immutability_helper__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(immutability_helper__WEBPACK_IMPORTED_MODULE_5__);
-/* harmony import */ var _utils_sleeper__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../utils/sleeper */ "./src/utils/sleeper.js");
-/* harmony import */ var _utils_Hyperlink__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../utils/Hyperlink */ "./src/utils/Hyperlink.js");
-/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! @wordpress/components */ "@wordpress/components");
-/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_8___default = /*#__PURE__*/__webpack_require__.n(_wordpress_components__WEBPACK_IMPORTED_MODULE_8__);
-/* harmony import */ var _letsEncryptData__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./letsEncryptData */ "./src/LetsEncrypt/letsEncryptData.js");
-/* harmony import */ var _Settings_FieldsData__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ../Settings/FieldsData */ "./src/Settings/FieldsData.js");
-
-
-
-
-
+/* harmony import */ var _utils_sleeper__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../utils/sleeper */ "./src/utils/sleeper.js");
+/* harmony import */ var _utils_Hyperlink__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../utils/Hyperlink */ "./src/utils/Hyperlink.js");
+/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @wordpress/components */ "@wordpress/components");
+/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(_wordpress_components__WEBPACK_IMPORTED_MODULE_6__);
+/* harmony import */ var _Settings_FieldsData__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../Settings/FieldsData */ "./src/Settings/FieldsData.js");
 
 
 
@@ -16774,9 +16750,6 @@ __webpack_require__.r(__webpack_exports__);
 
 
 const Generation = props => {
-  const {
-    addHelpNotice
-  } = (0,_Settings_FieldsData__WEBPACK_IMPORTED_MODULE_10__["default"])();
   let action = props.action;
   if (!action) {
     return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null);
@@ -16789,18 +16762,18 @@ const Generation = props => {
         id: 'rsssl_skip_dns',
         type: 'snackbar',
         isDismissible: true
-      }).then((0,_utils_sleeper__WEBPACK_IMPORTED_MODULE_6__["default"])(3000)).then(response => {
+      }).then((0,_utils_sleeper__WEBPACK_IMPORTED_MODULE_4__["default"])(3000)).then(response => {
         (0,_wordpress_data__WEBPACK_IMPORTED_MODULE_3__.dispatch)('core/notices').removeNotice('rsssl_skip_dns');
       });
     });
   };
   return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "rsssl-test-results"
-  }, action.status === 'error' && action.action === 'verify_dns' && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("We could not check the DNS records. If you just added the record, please check in a few minutes.", "really-simple-ssl"), "\xA0", (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_utils_Hyperlink__WEBPACK_IMPORTED_MODULE_7__["default"], {
+  }, action.status === 'error' && action.action === 'verify_dns' && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("We could not check the DNS records. If you just added the record, please check in a few minutes.", "really-simple-ssl"), "\xA0", (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_utils_Hyperlink__WEBPACK_IMPORTED_MODULE_5__["default"], {
     target: "_blank",
     text: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("You can manually check the DNS records in an %sonline tool%s.", "really-simple-ssl"),
     url: "https://mxtoolbox.com/SuperTool.aspx"
-  }), (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("If you're sure it's set correctly, you can click the button to skip the DNS check.", "really-simple-ssl"), "\xA0"), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_8__.Button, {
+  }), (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("If you're sure it's set correctly, you can click the button to skip the DNS check.", "really-simple-ssl"), "\xA0"), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_6__.Button, {
     variant: "secondary",
     onClick: () => handleSkipDNS()
   }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Skip DNS check', 'really-simple-ssl'))));
@@ -16827,17 +16800,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _utils_api__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../utils/api */ "./src/utils/api.js");
 /* harmony import */ var _wordpress_data__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @wordpress/data */ "@wordpress/data");
 /* harmony import */ var _wordpress_data__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_wordpress_data__WEBPACK_IMPORTED_MODULE_3__);
-/* harmony import */ var _Settings_Notices__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../Settings/Notices */ "./src/Settings/Notices.js");
-/* harmony import */ var immutability_helper__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! immutability-helper */ "./node_modules/immutability-helper/index.js");
-/* harmony import */ var immutability_helper__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(immutability_helper__WEBPACK_IMPORTED_MODULE_5__);
-/* harmony import */ var react_use__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! react-use */ "./node_modules/react-use/esm/useUpdateEffect.js");
-/* harmony import */ var _utils_sleeper__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../utils/sleeper */ "./src/utils/sleeper.js");
-/* harmony import */ var _letsEncryptData__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./letsEncryptData */ "./src/LetsEncrypt/letsEncryptData.js");
-/* harmony import */ var _Settings_FieldsData__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../Settings/FieldsData */ "./src/Settings/FieldsData.js");
-
-
-
-
+/* harmony import */ var react_use__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! react-use */ "./node_modules/react-use/esm/useUpdateEffect.js");
+/* harmony import */ var _utils_sleeper__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../utils/sleeper */ "./src/utils/sleeper.js");
 
 
 
@@ -16846,12 +16810,9 @@ __webpack_require__.r(__webpack_exports__);
 
 
 const Installation = props => {
-  const {
-    addHelpNotice
-  } = (0,_Settings_FieldsData__WEBPACK_IMPORTED_MODULE_8__["default"])();
   const [installationData, setInstallationData] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)(false);
   let action = props.action;
-  (0,react_use__WEBPACK_IMPORTED_MODULE_9__["default"])(() => {
+  (0,react_use__WEBPACK_IMPORTED_MODULE_5__["default"])(() => {
     if (action && action.status === 'warning' && installationData && installationData.generated_by_rsssl) {
       props.addHelp(props.field.id, 'default', (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("This is the certificate, which you need to install in your hosting dashboard.", "really-simple-ssl"), (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Certificate (CRT)", "really-simple-ssl"));
       props.addHelp(props.field.id, 'default', (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("The private key can be uploaded or pasted in the appropriate field on your hosting dashboard.", "really-simple-ssl"), (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Private Key (KEY)", "really-simple-ssl"));
@@ -16884,7 +16845,7 @@ const Installation = props => {
       id: 'rsssl_copied_data',
       type: 'snackbar',
       isDismissible: true
-    }).then((0,_utils_sleeper__WEBPACK_IMPORTED_MODULE_6__["default"])(3000)).then(response => {
+    }).then((0,_utils_sleeper__WEBPACK_IMPORTED_MODULE_4__["default"])(3000)).then(response => {
       (0,_wordpress_data__WEBPACK_IMPORTED_MODULE_3__.dispatch)('core/notices').removeNotice('rsssl_copied_data');
     });
   };
@@ -16984,10 +16945,8 @@ const LetsEncrypt = props => {
     setProgress,
     maxAttempts,
     setMaxAttempts,
-    updateAction,
     refreshTests,
-    setRefreshTests,
-    updateActionProperty
+    setRefreshTests
   } = (0,_letsEncryptData__WEBPACK_IMPORTED_MODULE_11__["default"])();
   const sleep = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useRef)(1500);
   const intervalId = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useRef)(false);
@@ -17020,7 +16979,7 @@ const LetsEncrypt = props => {
     if (actionIndex.current === 0) {
       runTest();
     }
-  }, [action.current]);
+  }, [actionIndex.current]);
   (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
     action.current = actionsList.current[actionIndex.current];
     intervalId.current = setInterval(() => {
@@ -17043,9 +17002,18 @@ const LetsEncrypt = props => {
     if (refreshTests) {
       setRefreshTests(false);
       reset();
+      actionsList.current.forEach(function (action, i) {
+        actionsList.current[i]['status'] = 'inactive';
+      });
     }
   }, [refreshTests]);
-  refProgress.current = progress;
+  const updateActionProperty = (index, property, value) => {
+    let currentActions = actionsList.current;
+    if (currentActions.hasOwnProperty(index) && currentActions[index].hasOwnProperty(property)) {
+      currentActions[index][property] = value;
+    }
+    actionsList.current = currentActions;
+  };
   const statuses = {
     'inactive': {
       'icon': 'circle-times',
@@ -17067,16 +17035,13 @@ const LetsEncrypt = props => {
   const reset = () => {
     handleNextButtonDisabled(true);
     actionsList.current = getActions();
-    actionsList.current.forEach(function (action, i) {
-      updateActionProperty(i, 'status', 'inactive');
-    });
+    setProgress(0);
     refProgress.current = 0;
     startedTests.current = [];
     actionIndex.current = 0;
     action.current = false;
     previousActionIndex.current = -1;
     lastActionStatus.current = '';
-    setProgress(0);
   };
   const adjustActionsForDNS = actions => {
     //find verification_type
@@ -17113,6 +17078,7 @@ const LetsEncrypt = props => {
     return actions;
   };
   const processTestResult = action => {
+    clearInterval(intervalId.current);
     lastActionStatus.current = action.status;
     if (action.status === 'success') {
       setAttemptCount(0);
@@ -17132,7 +17098,6 @@ const LetsEncrypt = props => {
 
     //finalize happens when halfway through our tests it's finished. We can skip all others.
     if (action.do === 'finalize') {
-      clearInterval(intervalId.current);
       actionsList.current.forEach(function (action, i) {
         if (i > actionIndex.current) {
           updateActionProperty(i, 'hide', true);
@@ -17155,19 +17120,15 @@ const LetsEncrypt = props => {
       } else {
         handleNextButtonDisabled(false);
         actionIndex.current = actionIndex.current + 1;
-        clearInterval(intervalId.current);
       }
     } else if (action.do === 'retry') {
       if (attemptCount >= maxAttempts) {
         actionIndex.current = maxIndex.current;
-        clearInterval(intervalId.current);
       } else {
-        // clearInterval(intervalId.current);
         runTest();
       }
     } else if (action.do === 'stop') {
       actionIndex.current = maxIndex.current;
-      clearInterval(intervalId.current);
     }
   };
   const runTest = () => {
@@ -17228,6 +17189,10 @@ const LetsEncrypt = props => {
 
   //filter out skipped actions
   let actionsOutput = actionsList.current.filter(action => action.hide !== true);
+  refProgress.current = progress;
+  if (maxIndex.current === actionIndex.current + 1) {
+    refProgress.current = 100;
+  }
   return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "rsssl-lets-encrypt-tests"
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
@@ -17281,8 +17246,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
 /* harmony import */ var zustand__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! zustand */ "./node_modules/zustand/esm/index.mjs");
-/* harmony import */ var immer__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! immer */ "./node_modules/immer/dist/immer.esm.mjs");
-
 
 const useLetsEncryptData = (0,zustand__WEBPACK_IMPORTED_MODULE_0__.create)((set, get) => ({
   actionIndex: false,
@@ -17324,18 +17287,6 @@ const useLetsEncryptData = (0,zustand__WEBPACK_IMPORTED_MODULE_0__.create)((set,
   setMaxAttempts: maxAttempts => {
     set(state => ({
       maxAttempts
-    }));
-  },
-  updateAction: (index, action) => {
-    set((0,immer__WEBPACK_IMPORTED_MODULE_1__.produce)(state => {
-      state.actions[index] = action;
-    }));
-  },
-  updateActionProperty: (index, property, value) => {
-    set((0,immer__WEBPACK_IMPORTED_MODULE_1__.produce)(state => {
-      if (state.actions.hasOwnProperty(index) && state.actions[index].hasOwnProperty(property)) {
-        state.actions[index][property] = value;
-      }
     }));
   }
 }));
@@ -18775,7 +18726,10 @@ const Field = props => {
   } = (0,_FieldsData__WEBPACK_IMPORTED_MODULE_16__["default"])();
   (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
     if (highLightField === props.field.id && scrollAnchor.current) {
-      scrollAnchor.current.scrollIntoView();
+      scrollAnchor.current.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start'
+      });
     }
   });
   const onChangeHandler = fieldValue => {
@@ -19326,7 +19280,13 @@ const validateConditions = (conditions, fields, fieldId) => {
                 } else if (conditionValue.indexOf('EMPTY') !== -1) {
                   thisConditionApplies = actualValue.length === 0;
                 } else {
+                  console.log("compare for other types");
+                  console.log("actualValue");
+                  console.log(actualValue);
+                  console.log("conditionValue");
+                  console.log(conditionValue);
                   thisConditionApplies = String(actualValue).toLowerCase() === conditionValue.toLowerCase();
+                  console.log(thisConditionApplies);
                 }
               }
             }
@@ -20717,10 +20677,9 @@ const Settings = () => {
   };
   const saveData = async isSaveAndContinueButton => {
     if (!isSaveAndContinueButton && isTestsOnlyMenu()) {
-      console.log("is tests only menu, refresh tests only");
       setRefreshTests(true);
     } else {
-      await saveFields();
+      await saveFields(true, true);
     }
   };
   const {
@@ -20805,7 +20764,7 @@ const Settings = () => {
     href: `#${selectedMainMenuItem}/${previousMenuItem}`
   }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_7__.__)('Previous', 'complianz-gdpr')), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
     className: "button button-primary",
-    onClick: e => saveData(e)
+    onClick: e => saveData(false)
   }, btnSaveText), selectedSubMenuItem !== menuItems[menuItems.length - 1].id && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
     disabled: nextButtonDisabled,
     className: "button button-primary",
@@ -22364,267 +22323,6 @@ exports.typeOf = typeOf;
 
 if (false) {} else {
   module.exports = __webpack_require__(/*! ./cjs/react-is.development.js */ "./node_modules/hoist-non-react-statics/node_modules/react-is/cjs/react-is.development.js");
-}
-
-
-/***/ }),
-
-/***/ "./node_modules/immutability-helper/index.js":
-/*!***************************************************!*\
-  !*** ./node_modules/immutability-helper/index.js ***!
-  \***************************************************/
-/***/ ((module, exports) => {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-function stringifiable(obj) {
-    // Safely stringify Object.create(null)
-    /* istanbul ignore next */
-    return typeof obj === 'object' && !('toString' in obj) ?
-        Object.prototype.toString.call(obj).slice(8, -1) :
-        obj;
-}
-var isProduction = typeof process === 'object' && "development" === 'production';
-function invariant(condition, message) {
-    if (!condition) {
-        /* istanbul ignore next */
-        if (isProduction) {
-            throw new Error('Invariant failed');
-        }
-        throw new Error(message());
-    }
-}
-exports.invariant = invariant;
-var hasOwnProperty = Object.prototype.hasOwnProperty;
-var splice = Array.prototype.splice;
-var toString = Object.prototype.toString;
-function type(obj) {
-    return toString.call(obj).slice(8, -1);
-}
-var assign = Object.assign || /* istanbul ignore next */ (function (target, source) {
-    getAllKeys(source).forEach(function (key) {
-        if (hasOwnProperty.call(source, key)) {
-            target[key] = source[key];
-        }
-    });
-    return target;
-});
-var getAllKeys = typeof Object.getOwnPropertySymbols === 'function'
-    ? function (obj) { return Object.keys(obj).concat(Object.getOwnPropertySymbols(obj)); }
-    /* istanbul ignore next */
-    : function (obj) { return Object.keys(obj); };
-function copy(object) {
-    return Array.isArray(object)
-        ? assign(object.constructor(object.length), object)
-        : (type(object) === 'Map')
-            ? new Map(object)
-            : (type(object) === 'Set')
-                ? new Set(object)
-                : (object && typeof object === 'object')
-                    ? assign(Object.create(Object.getPrototypeOf(object)), object)
-                    /* istanbul ignore next */
-                    : object;
-}
-var Context = /** @class */ (function () {
-    function Context() {
-        this.commands = assign({}, defaultCommands);
-        this.update = this.update.bind(this);
-        // Deprecated: update.extend, update.isEquals and update.newContext
-        this.update.extend = this.extend = this.extend.bind(this);
-        this.update.isEquals = function (x, y) { return x === y; };
-        this.update.newContext = function () { return new Context().update; };
-    }
-    Object.defineProperty(Context.prototype, "isEquals", {
-        get: function () {
-            return this.update.isEquals;
-        },
-        set: function (value) {
-            this.update.isEquals = value;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Context.prototype.extend = function (directive, fn) {
-        this.commands[directive] = fn;
-    };
-    Context.prototype.update = function (object, $spec) {
-        var _this = this;
-        var spec = (typeof $spec === 'function') ? { $apply: $spec } : $spec;
-        if (!(Array.isArray(object) && Array.isArray(spec))) {
-            invariant(!Array.isArray(spec), function () { return "update(): You provided an invalid spec to update(). The spec may " +
-                "not contain an array except as the value of $set, $push, $unshift, " +
-                "$splice or any custom command allowing an array value."; });
-        }
-        invariant(typeof spec === 'object' && spec !== null, function () { return "update(): You provided an invalid spec to update(). The spec and " +
-            "every included key path must be plain objects containing one of the " +
-            ("following commands: " + Object.keys(_this.commands).join(', ') + "."); });
-        var nextObject = object;
-        getAllKeys(spec).forEach(function (key) {
-            if (hasOwnProperty.call(_this.commands, key)) {
-                var objectWasNextObject = object === nextObject;
-                nextObject = _this.commands[key](spec[key], nextObject, spec, object);
-                if (objectWasNextObject && _this.isEquals(nextObject, object)) {
-                    nextObject = object;
-                }
-            }
-            else {
-                var nextValueForKey = type(object) === 'Map'
-                    ? _this.update(object.get(key), spec[key])
-                    : _this.update(object[key], spec[key]);
-                var nextObjectValue = type(nextObject) === 'Map'
-                    ? nextObject.get(key)
-                    : nextObject[key];
-                if (!_this.isEquals(nextValueForKey, nextObjectValue)
-                    || typeof nextValueForKey === 'undefined'
-                        && !hasOwnProperty.call(object, key)) {
-                    if (nextObject === object) {
-                        nextObject = copy(object);
-                    }
-                    if (type(nextObject) === 'Map') {
-                        nextObject.set(key, nextValueForKey);
-                    }
-                    else {
-                        nextObject[key] = nextValueForKey;
-                    }
-                }
-            }
-        });
-        return nextObject;
-    };
-    return Context;
-}());
-exports.Context = Context;
-var defaultCommands = {
-    $push: function (value, nextObject, spec) {
-        invariantPushAndUnshift(nextObject, spec, '$push');
-        return value.length ? nextObject.concat(value) : nextObject;
-    },
-    $unshift: function (value, nextObject, spec) {
-        invariantPushAndUnshift(nextObject, spec, '$unshift');
-        return value.length ? value.concat(nextObject) : nextObject;
-    },
-    $splice: function (value, nextObject, spec, originalObject) {
-        invariantSplices(nextObject, spec);
-        value.forEach(function (args) {
-            invariantSplice(args);
-            if (nextObject === originalObject && args.length) {
-                nextObject = copy(originalObject);
-            }
-            splice.apply(nextObject, args);
-        });
-        return nextObject;
-    },
-    $set: function (value, _nextObject, spec) {
-        invariantSet(spec);
-        return value;
-    },
-    $toggle: function (targets, nextObject) {
-        invariantSpecArray(targets, '$toggle');
-        var nextObjectCopy = targets.length ? copy(nextObject) : nextObject;
-        targets.forEach(function (target) {
-            nextObjectCopy[target] = !nextObject[target];
-        });
-        return nextObjectCopy;
-    },
-    $unset: function (value, nextObject, _spec, originalObject) {
-        invariantSpecArray(value, '$unset');
-        value.forEach(function (key) {
-            if (Object.hasOwnProperty.call(nextObject, key)) {
-                if (nextObject === originalObject) {
-                    nextObject = copy(originalObject);
-                }
-                delete nextObject[key];
-            }
-        });
-        return nextObject;
-    },
-    $add: function (values, nextObject, _spec, originalObject) {
-        invariantMapOrSet(nextObject, '$add');
-        invariantSpecArray(values, '$add');
-        if (type(nextObject) === 'Map') {
-            values.forEach(function (_a) {
-                var key = _a[0], value = _a[1];
-                if (nextObject === originalObject && nextObject.get(key) !== value) {
-                    nextObject = copy(originalObject);
-                }
-                nextObject.set(key, value);
-            });
-        }
-        else {
-            values.forEach(function (value) {
-                if (nextObject === originalObject && !nextObject.has(value)) {
-                    nextObject = copy(originalObject);
-                }
-                nextObject.add(value);
-            });
-        }
-        return nextObject;
-    },
-    $remove: function (value, nextObject, _spec, originalObject) {
-        invariantMapOrSet(nextObject, '$remove');
-        invariantSpecArray(value, '$remove');
-        value.forEach(function (key) {
-            if (nextObject === originalObject && nextObject.has(key)) {
-                nextObject = copy(originalObject);
-            }
-            nextObject.delete(key);
-        });
-        return nextObject;
-    },
-    $merge: function (value, nextObject, _spec, originalObject) {
-        invariantMerge(nextObject, value);
-        getAllKeys(value).forEach(function (key) {
-            if (value[key] !== nextObject[key]) {
-                if (nextObject === originalObject) {
-                    nextObject = copy(originalObject);
-                }
-                nextObject[key] = value[key];
-            }
-        });
-        return nextObject;
-    },
-    $apply: function (value, original) {
-        invariantApply(value);
-        return value(original);
-    },
-};
-var defaultContext = new Context();
-exports.isEquals = defaultContext.update.isEquals;
-exports.extend = defaultContext.extend;
-exports["default"] = defaultContext.update;
-// @ts-ignore
-exports["default"]["default"] = module.exports = assign(exports.default, exports);
-// invariants
-function invariantPushAndUnshift(value, spec, command) {
-    invariant(Array.isArray(value), function () { return "update(): expected target of " + stringifiable(command) + " to be an array; got " + stringifiable(value) + "."; });
-    invariantSpecArray(spec[command], command);
-}
-function invariantSpecArray(spec, command) {
-    invariant(Array.isArray(spec), function () { return "update(): expected spec of " + stringifiable(command) + " to be an array; got " + stringifiable(spec) + ". " +
-        "Did you forget to wrap your parameter in an array?"; });
-}
-function invariantSplices(value, spec) {
-    invariant(Array.isArray(value), function () { return "Expected $splice target to be an array; got " + stringifiable(value); });
-    invariantSplice(spec.$splice);
-}
-function invariantSplice(value) {
-    invariant(Array.isArray(value), function () { return "update(): expected spec of $splice to be an array of arrays; got " + stringifiable(value) + ". " +
-        "Did you forget to wrap your parameters in an array?"; });
-}
-function invariantApply(fn) {
-    invariant(typeof fn === 'function', function () { return "update(): expected spec of $apply to be a function; got " + stringifiable(fn) + "."; });
-}
-function invariantSet(spec) {
-    invariant(Object.keys(spec).length === 1, function () { return "Cannot have more than one key in an object with $set"; });
-}
-function invariantMerge(target, specValue) {
-    invariant(specValue && typeof specValue === 'object', function () { return "update(): $merge expects a spec of type 'object'; got " + stringifiable(specValue); });
-    invariant(target && typeof target === 'object', function () { return "update(): $merge expects a target of type 'object'; got " + stringifiable(target); });
-}
-function invariantMapOrSet(target, command) {
-    var typeOfTarget = type(target);
-    invariant(typeOfTarget === 'Map' || typeOfTarget === 'Set', function () { return "update(): " + stringifiable(command) + " expects a target of type Set or Map; got " + stringifiable(typeOfTarget); });
 }
 
 

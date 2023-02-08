@@ -491,10 +491,10 @@ function rsssl_le_add_fields($fields) {
 				],
 			],
 			[
-				'id'                 => 'dns-verification',
-				'menu_id'            => 'le-dns-verification',
-				'group_id'            => 'le-dns-verification',
-				'type'               => 'letsencrypt',
+				'id'       => 'dns-verification',
+				'menu_id'  => 'le-dns-verification',
+				'group_id' => 'le-dns-verification',
+				'type'     => 'letsencrypt',
 				'actions' => [
 					[
 						'description' => __("Creating account...", "really-simple-ssl"),
