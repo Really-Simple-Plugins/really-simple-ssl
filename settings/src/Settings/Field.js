@@ -29,7 +29,6 @@ const Field = (props) => {
     useEffect( () => {
         if ( highLightField===props.field.id && scrollAnchor.current ) {
             scrollAnchor.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
-
         }
     });
 
@@ -92,9 +91,9 @@ const Field = (props) => {
     }
 
     if ( field.conditionallyDisabled ) {
-
         disabled = true;
     }
+    console.log(field);
     if ( !field.visible ) {
         return (
             <></>

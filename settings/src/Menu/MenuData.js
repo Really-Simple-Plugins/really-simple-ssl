@@ -111,12 +111,8 @@ const dropEmptyMenuItems = (menuItems, fields, selectedSubMenuItem) => {
         });
 
         menuItemFields = menuItemFields.filter((field) => {
-            console.log(field);
-            return ( !field.visible || field.condition_action!=='hide' )
+            return ( field.visible )
         });
-        // menuItemFields = menuItemFields.filter((field) => {
-        //     return (field.menu_id === menuItem.id && (field.conditionallyDisabled && field.condition_action !== 'hide') )
-        // });
         if ( menuItemFields.length === 0 && !menuItem.hasOwnProperty('menu_items') )  {
             newMenuItems[index].visible = false;
         } else {

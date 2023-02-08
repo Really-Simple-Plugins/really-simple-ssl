@@ -204,13 +204,13 @@ const updateFieldsListWithConditions = (fields) => {
     let newFields = [];
     fields.forEach(function(field, i) {
         let enabled = !( field.hasOwnProperty('react_conditions') && !validateConditions(field.react_conditions, fields, field.id) );
-        let previouslyEnabled = enabled;
+        let previouslyEnabled = !field.conditionallyDisabled;
         //we want to update the changed fields if this field has just become visible. Otherwise the new field won't get saved.
         const newField = {...field};
-        newField.visible = !(!enabled && (field.type === 'letsencrypt' || field.condition_action === 'hide'));
         newField.conditionallyDisabled = !enabled;
+        newField.visible = !(!enabled && (newField.type === 'letsencrypt' || newField.condition_action === 'hide'));
+
         newFields.push(newField);
-        newField.visible = true;
         //if this is a learning mode field, do not add it to the changed fields list
         if ( !previouslyEnabled && newField.enabled && field.type!=='learningmode') {
             set().setChangedField(field.id, field.value);
