@@ -10,8 +10,7 @@ if ( ! class_exists( 'rsssl_placeholder' ) ) {
 			}
 
 			add_filter( "rsssl_run_test", array( $this, 'mixed_content_scan' ), 9, 3 );
-			add_filter( 'rsssl_do_action', array( $this, 'csp_table_data' ), 10, 3 );
-
+			add_filter( 'rsssl_do_action', array( $this, 'learningmode_table_data' ), 10, 3 );
 			self::$_this = $this;
 
 		}
@@ -41,15 +40,19 @@ if ( ! class_exists( 'rsssl_placeholder' ) ) {
 		 *
 		 * @return array
 		 */
-		public function csp_table_data( array $response, string $action, $data ): array {
+		public function learningmode_table_data( array $response, string $action, $data ): array {
 			if ( ! rsssl_user_can_manage() ) {
 				return $response;
 			}
 
-			if ( $action === 'learning_mode_data' && isset( $data['type'] ) && $data['type'] === 'content_security_policy' ) {
-				return $this->csp_data();
+			if ( $action === 'learning_mode_data' ) {
+				if ( isset( $data['type'] ) && $data['type'] === 'content_security_policy') {
+					return $this->csp_data();
+				}
+				if ( isset( $data['type'] ) && $data['type'] === 'xmlrpc_allow_list') {
+					return $this->xml_data();
+				}
 			}
-
 			return $response;
 		}
 

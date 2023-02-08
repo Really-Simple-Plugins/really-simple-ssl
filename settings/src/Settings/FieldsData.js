@@ -253,9 +253,9 @@ const validateConditions = (conditions, fields, fieldId) => {
                             let field = conditionFields[0];
                             let actualValue = field.value;
                             if ( field.type==='text_checkbox' ) {
-                                thisConditionApplies = actualValue.hasOwnProperty('show') && actualValue['show'] === conditionValue;
+                                thisConditionApplies = actualValue.hasOwnProperty('show') && actualValue['show'] == conditionValue;//can be 1/true or 0/false
                             } else if ( field.type==='checkbox' ) {
-                                thisConditionApplies = actualValue === conditionValue;
+                                thisConditionApplies = actualValue == conditionValue;//can be 1/true or 0/false
                             } else if ( field.type==='multicheckbox' ) {
                                 //multicheckbox conditions
                                 //loop through objects
