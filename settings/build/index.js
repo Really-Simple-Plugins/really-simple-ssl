@@ -17957,7 +17957,7 @@ const Onboarding = props => {
     fetchFieldsData,
     updateField,
     saveFields,
-    setChangedFields
+    setChangedField
   } = (0,_Settings_FieldsData__WEBPACK_IMPORTED_MODULE_7__["default"])();
   const {
     dismissModal
@@ -18042,7 +18042,7 @@ const Onboarding = props => {
         setSteps(steps);
         setStepsChanged(true);
         updateField('ssl_enabled', true);
-        setChangedFields('ssl_enabled', true);
+        setChangedField('ssl_enabled', true);
         await saveFields(true, false);
         if (response.site_url_changed) {
           window.location.reload();
