@@ -16970,6 +16970,7 @@ const LetsEncrypt = props => {
   };
   (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
     if (!action.current && actionsList.length > 0) {
+      console.log("set index to 0");
       // action.current = actions[0];
       actionIndex.current = 0;
     }
@@ -19797,6 +19798,7 @@ const UseLearningMode = (0,zustand__WEBPACK_IMPORTED_MODULE_1__.create)((set, ge
     let data = {};
     data.type = type;
     data.lm_action = 'get';
+    console.log("fetch data for " + type);
     let learningModeData = await _utils_api__WEBPACK_IMPORTED_MODULE_0__.doAction('learning_mode_data', data).then(response => {
       return response;
     });

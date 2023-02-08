@@ -41,6 +41,7 @@ const LetsEncrypt = (props) => {
 
     useEffect(() => {
         if ( !action.current && actionsList.length>0){
+            console.log("set index to 0")
             // action.current = actions[0];
             actionIndex.current = 0;
         }
