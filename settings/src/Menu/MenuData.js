@@ -37,8 +37,9 @@ const useMenu = create(( set, get ) => ({
         if ( typeof fields !== 'undefined' ) {
             let subMenu = getSubMenu(menu, selectedMainMenuItem);
             const selectedSubMenuItem = getSelectedSubMenuItem(subMenu, fields);
-            const { nextMenuItem, previousMenuItem }  = getPreviousAndNextMenuItems(menu, selectedSubMenuItem);
             subMenu.menu_items = dropEmptyMenuItems(subMenu.menu_items, fields, selectedSubMenuItem);
+
+            const { nextMenuItem, previousMenuItem }  = getPreviousAndNextMenuItems(menu, selectedSubMenuItem, fields);
             const hasPremiumItems =  subMenu.menu_items.filter((item) => {return (item.premium===true)}).length>0;
             set((state) => ({subMenuLoaded:true, menu: menu, nextMenuItem:nextMenuItem, previousMenuItem:previousMenuItem, selectedMainMenuItem: selectedMainMenuItem, selectedSubMenuItem:selectedSubMenuItem, subMenu: subMenu, hasPremiumItems: hasPremiumItems}));
 
@@ -70,12 +71,13 @@ export default useMenu;
 
 
 // Parses menu items and nested items in single array
-const menuItemParser = (parsedMenuItems, menuItems) => {
+const menuItemParser = (parsedMenuItems, menuItems, fields) => {
     menuItems.forEach((menuItem) => {
         if( menuItem.visible ) {
             parsedMenuItems.push(menuItem.id);
             if( menuItem.hasOwnProperty('menu_items') ) {
-                menuItemParser(parsedMenuItems, menuItem.menu_items);
+                menuItem.menu_items = dropEmptyMenuItems(menuItem.menu_items, fields );
+                menuItemParser(parsedMenuItems, menuItem.menu_items, fields);
             }
         }
     });
@@ -84,11 +86,11 @@ const menuItemParser = (parsedMenuItems, menuItems) => {
 
 
 
-const getPreviousAndNextMenuItems = (menu, selectedSubMenuItem) => {
+const getPreviousAndNextMenuItems = (menu, selectedSubMenuItem, fields) => {
     let previousMenuItem;
     let nextMenuItem;
     const parsedMenuItems = [];
-    menuItemParser(parsedMenuItems, menu);
+    menuItemParser(parsedMenuItems, menu, fields);
     // Finds current menu item index
     const currentMenuItemIndex = parsedMenuItems.findIndex((menuItem) => menuItem === selectedSubMenuItem);
     if( currentMenuItemIndex !== -1 ) {
@@ -105,7 +107,7 @@ const getPreviousAndNextMenuItems = (menu, selectedSubMenuItem) => {
     return { nextMenuItem, previousMenuItem };
 }
 
-const dropEmptyMenuItems = (menuItems, fields, selectedSubMenuItem) => {
+const dropEmptyMenuItems = (menuItems, fields) => {
     const newMenuItems = menuItems;
     for (const [index, menuItem] of menuItems.entries()) {
         let menuItemFields = fields.filter((field) => {
@@ -113,7 +115,6 @@ const dropEmptyMenuItems = (menuItems, fields, selectedSubMenuItem) => {
         });
 
         menuItemFields = menuItemFields.filter((field) => {
-            console.log(field);
             return ( field.visible )
         });
         if ( menuItemFields.length === 0 && !menuItem.hasOwnProperty('menu_items') )  {
@@ -121,7 +122,7 @@ const dropEmptyMenuItems = (menuItems, fields, selectedSubMenuItem) => {
         } else {
             newMenuItems[index].visible = true;
             if( menuItem.hasOwnProperty('menu_items') ) {
-                newMenuItems[index].menu_items = dropEmptyMenuItems(menuItem.menu_items, fields, selectedSubMenuItem);
+                newMenuItems[index].menu_items = dropEmptyMenuItems(menuItem.menu_items, fields);
             }
         }
 

@@ -4,28 +4,31 @@ import * as rsssl_api from "../utils/api";
 import {dispatch,} from '@wordpress/data';
 import {useUpdateEffect} from 'react-use';
 import sleeper from "../utils/sleeper";
+import useFields from "../Settings/FieldsData";
 
 const Installation = (props) => {
+    const {addHelpNotice} = useFields();
+
     const [installationData, setInstallationData] = useState(false);
     let action = props.action;
 
      useUpdateEffect(()=> {
         if ((action && action.status==='warning' && installationData && installationData.generated_by_rsssl )) {
-            props.addHelp(
+            addHelpNotice(
                 props.field.id,
                  'default',
                  __("This is the certificate, which you need to install in your hosting dashboard.", "really-simple-ssl"),
                  __("Certificate (CRT)", "really-simple-ssl")
               );
 
-              props.addHelp(
+              addHelpNotice(
                 props.field.id,
                  'default',
                  __("The private key can be uploaded or pasted in the appropriate field on your hosting dashboard.", "really-simple-ssl"),
                  __("Private Key (KEY)", "really-simple-ssl")
               );
 
-              props.addHelp(
+              addHelpNotice(
                 props.field.id,
                  'default',
                  __("The CA Bundle will sometimes be automatically detected. If not, you can use this file.", "really-simple-ssl"),
@@ -43,9 +46,6 @@ const Installation = (props) => {
 
      });
 
-     useEffect(()=> {
-
-    });
 
     const handleCopyAction = (type) => {
         let success;

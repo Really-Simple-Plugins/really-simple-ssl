@@ -234,7 +234,7 @@ const Onboarding = (props) => {
                         {networkProgress>=100 && __("completed", "really-simple-ssl") }
                         </>}
                     {button && <>&nbsp;-&nbsp;
-                    {showLink && <Button className={"button button-secondary"} isLink={true} onClick={() => itemButtonHandler(id, action)}>{buttonTitle}</Button>}
+                    {showLink && <Button isLink={true} onClick={() => itemButtonHandler(id, action)}>{buttonTitle}</Button>}
                     {!showLink && <>{buttonTitle}</>}
                     </>}
                 </li>
