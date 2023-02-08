@@ -10,7 +10,7 @@ import useFields from "../Settings/FieldsData";
 import useOnboardingData from "./OnboardingData";
 
 const Onboarding = (props) => {
-    const { fetchFieldsData, updateField, saveFields, setChangedFields} = useFields();
+    const { fetchFieldsData, updateField, saveFields, setChangedField} = useFields();
     const {dismissModal} = useOnboardingData();
     const {setSelectedMainMenuItem} = useMenu();
     const [steps, setSteps] = useState([]);
@@ -96,7 +96,7 @@ const Onboarding = (props) => {
                 setSteps(steps);
                 setStepsChanged(true);
                 updateField('ssl_enabled', true);
-                setChangedFields('ssl_enabled', true);
+                setChangedField('ssl_enabled', true);
                 saveFields(true, false);
                 if (response.site_url_changed) {
                     window.location.reload();
