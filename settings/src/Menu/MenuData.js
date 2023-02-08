@@ -113,6 +113,7 @@ const dropEmptyMenuItems = (menuItems, fields, selectedSubMenuItem) => {
         });
 
         menuItemFields = menuItemFields.filter((field) => {
+            console.log(field);
             return ( field.visible )
         });
         if ( menuItemFields.length === 0 && !menuItem.hasOwnProperty('menu_items') )  {
