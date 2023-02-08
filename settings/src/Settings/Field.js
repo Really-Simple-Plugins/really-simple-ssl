@@ -92,9 +92,9 @@ const Field = (props) => {
     }
 
     if ( field.conditionallyDisabled ) {
+
         disabled = true;
     }
-
     if ( !field.visible ) {
         return (
             <></>
@@ -107,6 +107,7 @@ const Field = (props) => {
                 <CheckboxControl
                   label={labelWrap(field)}
                   field={field}
+                  disabled={disabled}
                   onChangeHandler={ ( fieldValue ) => onChangeHandler(fieldValue) }
                 />
 

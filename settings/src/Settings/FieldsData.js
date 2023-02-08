@@ -210,7 +210,7 @@ const updateFieldsListWithConditions = (fields) => {
         newField.visible = !(!enabled && (field.type === 'letsencrypt' || field.condition_action === 'hide'));
         newField.conditionallyDisabled = !enabled;
         newFields.push(newField);
-
+        newField.visible = true;
         //if this is a learning mode field, do not add it to the changed fields list
         if ( !previouslyEnabled && newField.enabled && field.type!=='learningmode') {
             set().setChangedField(field.id, field.value);
@@ -294,13 +294,7 @@ const validateConditions = (conditions, fields, fieldId) => {
                                 } else if (conditionValue.indexOf('EMPTY')!==-1) {
                                     thisConditionApplies = actualValue.length === 0;
                                 } else {
-                                    console.log("compare for other types");
-                                    console.log("actualValue")
-                                    console.log(actualValue)
-                                    console.log("conditionValue")
-                                    console.log(conditionValue)
                                     thisConditionApplies = String(actualValue).toLowerCase() === conditionValue.toLowerCase();
-                                    console.log(thisConditionApplies);
                                 }
                             }
                         }

@@ -17517,9 +17517,12 @@ const dropEmptyMenuItems = (menuItems, fields, selectedSubMenuItem) => {
   const newMenuItems = menuItems;
   for (const [index, menuItem] of menuItems.entries()) {
     let menuItemFields = fields.filter(field => {
-      return field.menu_id === menuItem.id && field.visible && !field.conditionallyDisabled;
+      return field.menu_id === menuItem.id;
     });
-
+    menuItemFields = menuItemFields.filter(field => {
+      console.log(field);
+      return !field.visible || field.condition_action !== 'hide';
+    });
     // menuItemFields = menuItemFields.filter((field) => {
     //     return (field.menu_id === menuItem.id && (field.conditionallyDisabled && field.condition_action !== 'hide') )
     // });
@@ -18658,7 +18661,8 @@ const CheckboxControl = props => {
     className: "components-form-toggle__input",
     onChange: e => onChangeHandler(e),
     id: field.id,
-    type: "checkbox"
+    type: "checkbox",
+    disabled: props.disabled
   }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
     className: "components-form-toggle__track"
   }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
@@ -18805,6 +18809,7 @@ const Field = props => {
     }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_CheckboxControl__WEBPACK_IMPORTED_MODULE_11__["default"], {
       label: labelWrap(field),
       field: field,
+      disabled: disabled,
       onChangeHandler: fieldValue => onChangeHandler(fieldValue)
     }), field.comment && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
       className: "rsssl-comment",
@@ -19218,7 +19223,7 @@ const updateFieldsListWithConditions = fields => {
     newField.visible = !(!enabled && (field.type === 'letsencrypt' || field.condition_action === 'hide'));
     newField.conditionallyDisabled = !enabled;
     newFields.push(newField);
-
+    newField.visible = true;
     //if this is a learning mode field, do not add it to the changed fields list
     if (!previouslyEnabled && newField.enabled && field.type !== 'learningmode') {
       set().setChangedField(field.id, field.value);
@@ -19293,13 +19298,7 @@ const validateConditions = (conditions, fields, fieldId) => {
                 } else if (conditionValue.indexOf('EMPTY') !== -1) {
                   thisConditionApplies = actualValue.length === 0;
                 } else {
-                  console.log("compare for other types");
-                  console.log("actualValue");
-                  console.log(actualValue);
-                  console.log("conditionValue");
-                  console.log(conditionValue);
                   thisConditionApplies = String(actualValue).toLowerCase() === conditionValue.toLowerCase();
-                  console.log(thisConditionApplies);
                 }
               }
             }

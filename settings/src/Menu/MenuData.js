@@ -107,9 +107,13 @@ const dropEmptyMenuItems = (menuItems, fields, selectedSubMenuItem) => {
     const newMenuItems = menuItems;
     for (const [index, menuItem] of menuItems.entries()) {
         let menuItemFields = fields.filter((field) => {
-            return (field.menu_id === menuItem.id && (field.visible && !field.conditionallyDisabled) )
+            return (field.menu_id === menuItem.id )
         });
 
+        menuItemFields = menuItemFields.filter((field) => {
+            console.log(field);
+            return ( !field.visible || field.condition_action!=='hide' )
+        });
         // menuItemFields = menuItemFields.filter((field) => {
         //     return (field.menu_id === menuItem.id && (field.conditionallyDisabled && field.condition_action !== 'hide') )
         // });
