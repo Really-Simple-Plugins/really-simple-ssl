@@ -6,6 +6,7 @@
   .rsssl-modal-content{
     padding-top: var(--rsp-spacing-xs);
     line-height: 2.2;
+    min-height:375px;
     ul{
       margin-bottom: var(--rsp-spacing-m);
       li {
@@ -15,6 +16,9 @@
         .rsssl-icon{
           margin-top: 7px;
           margin-right:7px;
+        }
+        .components-button.is-link {
+          padding:5px 0;
         }
       }
     }

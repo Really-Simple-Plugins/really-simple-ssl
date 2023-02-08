@@ -51,7 +51,7 @@ const OnboardingModal = (props) => {
                                 <ul>
                                     <li><Icon name = "file-download" color = 'orange' />{__("Please wait while we detect your setup", "really-simple-ssl")}</li>
                                 </ul>
-                                <Placeholder lines="10"></Placeholder>
+                                <Placeholder lines="3"></Placeholder>
                             </>
                          }
                         { fieldsLoaded && <Onboarding isModal={true} /> }
