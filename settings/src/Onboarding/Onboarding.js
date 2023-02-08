@@ -12,19 +12,15 @@ import useOnboardingData from "./OnboardingData";
 const Onboarding = (props) => {
     const { fetchFieldsData, updateField, saveFields, setChangedFields} = useFields();
     const {dismissModal} = useOnboardingData();
-
     const {setSelectedMainMenuItem} = useMenu();
     const [steps, setSteps] = useState([]);
     const [error, setError] = useState(false);
     const [overrideSSL, setOverrideSSL] = useState(false);
     const [certificateValid, setCertificateValid] = useState(false);
-    const [sslActivated, setsslActivated] = useState(false);
-    const [activateSSLDisabled, setActivateSSLDisabled] = useState(true);
     const [stepsChanged, setStepsChanged] = useState('');
     const [networkwide, setNetworkwide] = useState(false);
     const [networkActivationStatus, setNetworkActivationStatus] = useState(false);
     const [networkProgress, setNetworkProgress] = useState(0);
-
 
     useUpdateEffect(()=> {
         if ( networkProgress<100 && networkwide && networkActivationStatus==='main_site_activated' ){
@@ -51,9 +47,7 @@ const Onboarding = (props) => {
                 let steps = response.steps;
                 setNetworkwide(response.networkwide);
                 setOverrideSSL(response.ssl_detection_overridden);
-                setActivateSSLDisabled(!response.ssl_detection_overridden);
                 setCertificateValid(response.certificate_valid);
-                setsslActivated(response.ssl_enabled);
                 steps[0].visible = true;
                 //if ssl is already enabled, the server will send only one step. In that case we can skip the below.
                 //it's only needed when SSL is activated just now, client side.
@@ -94,7 +88,6 @@ const Onboarding = (props) => {
 
     const activateSSL = () => {
         setStepsChanged(false);
-        let sslUrl = window.location.href.replace("http://", "https://");
         rsssl_api.runTest('activate_ssl' ).then( ( response ) => {
             steps[0].visible = false;
             steps[1].visible = true;
@@ -102,7 +95,6 @@ const Onboarding = (props) => {
             if ( response.success ) {
                 setSteps(steps);
                 setStepsChanged(true);
-                setsslActivated(response.success);
                 updateField('ssl_enabled', true);
                 setChangedFields('ssl_enabled', true);
                 saveFields(true, false);
@@ -139,11 +131,11 @@ const Onboarding = (props) => {
         let data={};
         data.id = id;
         updateActionForItem(id, action, false);
-        rsssl_api.doAction(action, data).then( ( response ) => {
+        rsssl_api.doAction(action, data).then( async ( response ) => {
             if ( response.success ){
                 if (action==='activate_setting'){
                     //ensure all fields are updated, and progress is retrieved again
-                    fetchFieldsData();
+                    await fetchFieldsData('general');
                 }
                 let nextAction = response.next_action;
                 if ( nextAction!=='none' && nextAction!=='completed') {
@@ -267,10 +259,8 @@ const Onboarding = (props) => {
                         setOverrideSSL(value);
                         let data = {};
                         data.overrideSSL = value;
-                        rsssl_api.doAction('override_ssl_detection',data ).then( ( response ) => {
-                            setActivateSSLDisabled(!value)
-                        });
-                       }}
+                        rsssl_api.doAction('override_ssl_detection',data );
+                   }}
                 />}
                 </>
             );
