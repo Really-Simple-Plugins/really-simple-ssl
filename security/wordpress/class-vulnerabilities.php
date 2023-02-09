@@ -28,28 +28,26 @@ if (!class_exists("rsssl_vulnerabilities")) {
          */
         public function init()
         {
-            if (rsssl_get_option('enable_vulnerability_scanner')) {
-                //we also enable the wp cron to force download every day
-                add_action('rsssl_vulnerability_check', array($this, 'check_files'));
-                if (!wp_next_scheduled('rsssl_vulnerability_check')) {
-                    wp_schedule_event(time(), 'daily', 'force_download_vulnerabilities');
-                }
-
-                //we check the files on age and download if needed TODO: if premium this will be 4 hours
-                $this->check_files();
-
-                //we cache the plugins in the class.
-                $this->cache_installed_plugins();
-
-                //we check the rsssl options if the enable_feedback_in_plugin is set to true
-                if (rsssl_get_option('enable_feedback_in_plugin')) {
-                    $this->enable_feedback_in_plugin();
-                }
+            if ( rsssl_get_option('enable_vulnerability_scanner') ) {
+	            add_action( 'rsssl_daily_cron', array($this, 'daily_cron') );
                 //also when a plugin is installed or updated we check for vulnerabilities
                 add_action('upgrader_process_complete', array($this, 'reload_files_on_update'), 10, 2);
                 add_action('activate_plugin', array($this, 'reload_files_on_update'), 10, 2);
             }
         }
+
+		public function daily_cron() {
+			//we check the files on age and download if needed TODO: if premium this will be 4 hours
+			$this->check_files();
+
+			//we cache the plugins in the class.
+			$this->cache_installed_plugins();
+
+			//we check the rsssl options if the enable_feedback_in_plugin is set to true
+			if (rsssl_get_option('enable_feedback_in_plugin')) {
+				$this->enable_feedback_in_plugin();
+			}
+		}
 
         /**
          * Callback for the manage_plugins_columns hook to add the vulnerability column
