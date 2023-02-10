@@ -62,7 +62,6 @@ const Onboarding = (props) => {
                 setSteps(steps);
                 setStepsChanged('initial');
             }
-
         });
     }
 
@@ -88,7 +87,7 @@ const Onboarding = (props) => {
 
     const activateSSL = () => {
         setStepsChanged(false);
-        rsssl_api.runTest('activate_ssl' ).then( ( response ) => {
+        rsssl_api.runTest('activate_ssl' ).then( async ( response ) => {
             steps[0].visible = false;
             steps[1].visible = true;
             //change url to https, after final check
@@ -97,7 +96,7 @@ const Onboarding = (props) => {
                 setStepsChanged(true);
                 updateField('ssl_enabled', true);
                 setChangedField('ssl_enabled', true);
-                saveFields(true, false);
+                await saveFields(true, false);
                 if (response.site_url_changed) {
                     window.location.reload();
                 } else {
@@ -175,7 +174,7 @@ const Onboarding = (props) => {
             const statuses = {
                 'inactive': {
                     'icon': 'info',
-                    'color': 'grey',
+                    'color': 'orange',
                 },
                 'warning': {
                     'icon': 'circle-times',
@@ -269,8 +268,8 @@ const Onboarding = (props) => {
         if ( ( steps.length>1 && steps[1].visible ) || steps[0].visible){
             return (
                 <>
-                <button className="button button-primary" onClick={() => {goToDashboard()}}>{__('Go to Dashboard', 'really-simple-ssl')}</button>
-                <button className="button button-default" onClick={() => dismissModal()}>{__('Dismiss', 'really-simple-ssl')}</button>
+                    <button className="button button-primary" onClick={() => {goToDashboard()}}>{__('Go to Dashboard', 'really-simple-ssl')}</button>
+                    <button className="button button-default" onClick={() => dismissModal()}>{__('Dismiss', 'really-simple-ssl')}</button>
                 </>
             );
         }
@@ -278,12 +277,17 @@ const Onboarding = (props) => {
 
     if (error){
         return (
-            <Placeholder lines="12" error={error}></Placeholder>
+            <Placeholder lines="3" error={error}></Placeholder>
         )
     }
     return (
         <>
-            { !stepsChanged && <Placeholder lines="12"></Placeholder>}
+            { !stepsChanged && <>
+                <ul>
+                    <li><Icon name = "file-download" color = 'grey' />{__("Fetching next step...", "really-simple-ssl")}</li>
+                </ul>
+                <Placeholder lines="3" ></Placeholder></>}
+
             {
                 stepsChanged && steps.map((step, index) => {
                     const {title, subtitle, items, info_text: infoText, visible} = step;
