@@ -268,8 +268,8 @@ const Onboarding = (props) => {
         if ( ( steps.length>1 && steps[1].visible ) || steps[0].visible){
             return (
                 <>
-                <button className="button button-primary" onClick={() => {goToDashboard()}}>{__('Go to Dashboard', 'really-simple-ssl')}</button>
-                <button className="button button-default" onClick={() => dismissModal()}>{__('Dismiss', 'really-simple-ssl')}</button>
+                    <button className="button button-primary" onClick={() => {goToDashboard()}}>{__('Go to Dashboard', 'really-simple-ssl')}</button>
+                    <button className="button button-default" onClick={() => dismissModal()}>{__('Dismiss', 'really-simple-ssl')}</button>
                 </>
             );
         }
@@ -287,6 +287,7 @@ const Onboarding = (props) => {
                     <li><Icon name = "file-download" color = 'grey' />{__("Fetching next step...", "really-simple-ssl")}</li>
                 </ul>
                 <Placeholder lines="3" ></Placeholder></>}
+
             {
                 stepsChanged && steps.map((step, index) => {
                     const {title, subtitle, items, info_text: infoText, visible} = step;
