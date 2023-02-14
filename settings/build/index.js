@@ -20687,11 +20687,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_4__);
 /* harmony import */ var _utils_api__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../utils/api */ "./src/utils/api.js");
-/* harmony import */ var _Settings_FieldsData__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../Settings/FieldsData */ "./src/Settings/FieldsData.js");
-/* harmony import */ var _Menu_MenuData__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../Menu/MenuData */ "./src/Menu/MenuData.js");
-/* harmony import */ var _License_LicenseData__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./License/LicenseData */ "./src/Settings/License/LicenseData.js");
-
-
 
 
 
@@ -20703,130 +20698,158 @@ __webpack_require__.r(__webpack_exports__);
 /**
  * Render a grouped block of settings
  */
-const SettingsGroup = props => {
-  const {
-    fields
-  } = (0,_Settings_FieldsData__WEBPACK_IMPORTED_MODULE_6__["default"])();
-  const {
-    licenseStatus
-  } = (0,_License_LicenseData__WEBPACK_IMPORTED_MODULE_8__["default"])();
-  const {
-    selectedSubMenuItem,
-    subMenu
-  } = (0,_Menu_MenuData__WEBPACK_IMPORTED_MODULE_7__["default"])();
-  let upgrade = 'https://really-simple-ssl.com/pro/';
+class SettingsGroup extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Component {
+  constructor() {
+    super(...arguments);
+    this.state = {
+      fields: this.props.fields,
+      isAPILoaded: this.props.isAPILoaded
+    };
+    this.upgrade = 'https://really-simple-ssl.com/pro/?mtm_campaign=fallback&mtm_source=free&mtm_content=upgrade';
+    this.fields = this.props.fields;
+  }
+  componentDidMount() {
+    this.getLicenseStatus = this.getLicenseStatus.bind(this);
+    this.handleLetsEncryptReset = this.handleLetsEncryptReset.bind(this);
+  }
+  getLicenseStatus() {
+    if (this.props.pageProps.hasOwnProperty('licenseStatus')) {
+      return this.props.pageProps['licenseStatus'];
+    }
+    return 'invalid';
+  }
 
   /*
   * On reset of LE, send this info to the back-end, and redirect to the first step.
   * reload to ensure that.
   */
-  const handleLetsEncryptReset = e => {
+  handleLetsEncryptReset(e) {
     e.preventDefault();
     _utils_api__WEBPACK_IMPORTED_MODULE_5__.runLetsEncryptTest('reset').then(response => {
-      window.location.href = window.location.href.replace(/#letsencrypt.*/, '&r=' + +new Date() + '#letsencrypt/le-system-status');
+      let url = window.location.href.replace(/#letsencrypt.*/, '&r=' + +new Date() + '#letsencrypt/le-system-status');
+      window.location.href = url;
     });
-  };
-  let selectedFields = [];
-  //get all fields with group_id props.group_id
-  for (const selectedField of fields) {
-    if (selectedField.group_id === props.group) {
-      selectedFields.push(selectedField);
-    }
   }
-  let activeGroup;
-  //first, set the selected menu item as activate group, so we have a default in case there are no groups
-  for (const item of subMenu.menu_items) {
-    if (item.id === selectedSubMenuItem) {
-      activeGroup = item;
-    } else if (item.menu_items) {
-      activeGroup = item.menu_items.filter(menuItem => menuItem.id === selectedSubMenuItem)[0];
-    }
-    if (activeGroup) {
-      break;
-    }
-  }
-
-  //now check if we have actual groups
-  for (const item of subMenu.menu_items) {
-    if (item.id === selectedSubMenuItem && item.hasOwnProperty('groups')) {
-      let currentGroup = item.groups.filter(group => group.id === props.group);
-      if (currentGroup.length > 0) {
-        activeGroup = currentGroup[0];
+  render() {
+    let selectedMenuItem = this.props.selectedMenuItem;
+    let selectedFields = [];
+    //get all fields with group_id this.props.group_id
+    for (const selectedField of this.props.fields) {
+      if (selectedField.group_id === this.props.group) {
+        selectedFields.push(selectedField);
       }
     }
-  }
-  let status = 'invalid';
-  if (!activeGroup) {
-    return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null);
-  }
-  let msg = activeGroup.premium_text ? activeGroup.premium_text : (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_4__.__)("Learn more about %sPremium%s", "really-simple-ssl");
-  if (rsssl_settings.pro_plugin_active) {
-    if (licenseStatus === 'empty' || licenseStatus === 'deactivated') {
-      msg = rsssl_settings.messageInactive;
-    } else {
-      msg = rsssl_settings.messageInvalid;
+    let activeGroup;
+    //first, set the selected menu item as activate group, so we have a default in case there are no groups
+    for (const item of this.props.menu.menu_items) {
+      if (item.id === selectedMenuItem) {
+        activeGroup = item;
+      } else if (item.menu_items) {
+        activeGroup = item.menu_items.filter(menuItem => menuItem.id === selectedMenuItem)[0];
+      }
+      if (activeGroup) {
+        break;
+      }
     }
+
+    //now check if we have actual groups
+    for (const item of this.props.menu.menu_items) {
+      if (item.id === selectedMenuItem && item.hasOwnProperty('groups')) {
+        let currentGroup = item.groups.filter(group => group.id === this.props.group);
+        if (currentGroup.length > 0) {
+          activeGroup = currentGroup[0];
+        }
+      }
+    }
+    let status = 'invalid';
+    let msg = activeGroup.premium_text ? activeGroup.premium_text : (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_4__.__)("Learn more about %sPremium%s", "really-simple-ssl");
+    if (rsssl_settings.pro_plugin_active) {
+      status = this.getLicenseStatus();
+      if (status === 'empty' || status === 'deactivated') {
+        msg = rsssl_settings.messageInactive;
+      } else {
+        msg = rsssl_settings.messageInvalid;
+      }
+    }
+    let disabled = status !== 'valid' && activeGroup.premium;
+    //if a feature can only be used on networkwide or single site setups, pass that info here.
+    let networkwide_error = !rsssl_settings.networkwide_active && activeGroup.networkwide_required;
+    this.upgrade = activeGroup.upgrade ? activeGroup.upgrade : this.upgrade;
+    let helplinkText = activeGroup.helpLink_text ? activeGroup.helpLink_text : (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_4__.__)("Instructions", "really-simple-ssl");
+    let anchor = (0,_utils_getAnchor__WEBPACK_IMPORTED_MODULE_3__["default"])('main');
+    let disabledClass = disabled || networkwide_error ? 'rsssl-disabled' : '';
+    return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+      className: "rsssl-grid-item rsssl-" + activeGroup.id + ' ' + disabledClass
+    }, activeGroup.title && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+      className: "rsssl-grid-item-header"
+    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("h3", {
+      className: "rsssl-h4"
+    }, activeGroup.title), activeGroup.helpLink && anchor !== 'letsencrypt' && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+      className: "rsssl-grid-item-controls"
+    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_utils_Hyperlink__WEBPACK_IMPORTED_MODULE_2__["default"], {
+      target: "_blank",
+      className: "rsssl-helplink",
+      text: helplinkText,
+      url: activeGroup.helpLink
+    })), anchor === 'letsencrypt' && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+      className: "rsssl-grid-item-controls"
+    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
+      href: "#",
+      className: "rsssl-helplink",
+      onClick: e => this.handleLetsEncryptReset(e)
+    }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_4__.__)("Reset Let's Encrypt", "really-simple-ssl")))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+      className: "rsssl-grid-item-content"
+    }, activeGroup.intro && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+      className: "rsssl-settings-block-intro"
+    }, activeGroup.intro), selectedFields.map((field, i) => (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_Field__WEBPACK_IMPORTED_MODULE_1__["default"], {
+      key: i,
+      index: i,
+      updateFields: this.props.updateFields,
+      addNotice: this.props.addNotice,
+      selectMenu: this.props.selectMenu,
+      selectMainMenu: this.props.selectMainMenu,
+      dropItemFromModal: this.props.dropItemFromModal,
+      handleNextButtonDisabled: this.props.handleNextButtonDisabled,
+      handleModal: this.props.handleModal,
+      showSavedSettingsNotice: this.props.showSavedSettingsNotice,
+      updateField: this.props.updateField,
+      getFieldValue: this.props.getFieldValue,
+      refreshTests: this.props.refreshTests,
+      resetRefreshTests: this.props.resetRefreshTests,
+      addHelp: this.props.addHelp,
+      setPageProps: this.props.setPageProps,
+      fieldsUpdateComplete: this.props.fieldsUpdateComplete,
+      highLightField: this.props.highLightField,
+      highLightedField: this.props.highLightedField,
+      saveChangedFields: this.props.saveChangedFields,
+      field: field,
+      fields: selectedFields
+    }))), disabled && !networkwide_error && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+      className: "rsssl-locked"
+    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+      className: "rsssl-locked-overlay"
+    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
+      className: "rsssl-task-status rsssl-premium"
+    }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_4__.__)("Upgrade", "really-simple-ssl")), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", null, rsssl_settings.pro_plugin_active && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", null, msg, "\xA0", (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
+      className: "rsssl-locked-link",
+      href: "#settings/license"
+    }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_4__.__)("Check license", "really-simple-ssl"))), !rsssl_settings.pro_plugin_active && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_utils_Hyperlink__WEBPACK_IMPORTED_MODULE_2__["default"], {
+      target: "_blank",
+      text: msg,
+      url: this.upgrade
+    })))), networkwide_error && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+      className: "rsssl-locked"
+    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+      className: "rsssl-locked-overlay"
+    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
+      className: "rsssl-task-status rsssl-warning"
+    }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_4__.__)("Network feature", "really-simple-ssl")), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_4__.__)("This feature is only available networkwide.", "really-simple-ssl"), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_utils_Hyperlink__WEBPACK_IMPORTED_MODULE_2__["default"], {
+      target: "_blank",
+      text: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_4__.__)("Network settings", "really-simple-ssl"),
+      url: rsssl_settings.network_link
+    })))));
   }
-  let disabled = licenseStatus !== 'valid' && activeGroup.premium;
-  //if a feature can only be used on networkwide or single site setups, pass that info here.
-  let networkwide_error = !rsssl_settings.networkwide_active && activeGroup.networkwide_required;
-  upgrade = activeGroup.upgrade ? activeGroup.upgrade : upgrade;
-  let helplinkText = activeGroup.helpLink_text ? activeGroup.helpLink_text : (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_4__.__)("Instructions", "really-simple-ssl");
-  let anchor = (0,_utils_getAnchor__WEBPACK_IMPORTED_MODULE_3__["default"])('main');
-  let disabledClass = disabled || networkwide_error ? 'rsssl-disabled' : '';
-  return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "rsssl-grid-item rsssl-" + activeGroup.id + ' ' + disabledClass
-  }, activeGroup.title && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "rsssl-grid-item-header"
-  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("h3", {
-    className: "rsssl-h4"
-  }, activeGroup.title), activeGroup.helpLink && anchor !== 'letsencrypt' && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "rsssl-grid-item-controls"
-  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_utils_Hyperlink__WEBPACK_IMPORTED_MODULE_2__["default"], {
-    target: "_blank",
-    className: "rsssl-helplink",
-    text: helplinkText,
-    url: activeGroup.helpLink
-  })), anchor === 'letsencrypt' && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "rsssl-grid-item-controls"
-  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
-    href: "#",
-    className: "rsssl-helplink",
-    onClick: e => handleLetsEncryptReset(e)
-  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_4__.__)("Reset Let's Encrypt", "really-simple-ssl")))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "rsssl-grid-item-content"
-  }, activeGroup.intro && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "rsssl-settings-block-intro"
-  }, activeGroup.intro), selectedFields.map((field, i) => (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_Field__WEBPACK_IMPORTED_MODULE_1__["default"], {
-    key: i,
-    index: i,
-    field: field,
-    fields: selectedFields
-  }))), disabled && !networkwide_error && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "rsssl-locked"
-  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "rsssl-locked-overlay"
-  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
-    className: "rsssl-task-status rsssl-premium"
-  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_4__.__)("Upgrade", "really-simple-ssl")), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", null, rsssl_settings.pro_plugin_active && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", null, msg, "\xA0", (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
-    className: "rsssl-locked-link",
-    href: "#settings/license"
-  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_4__.__)("Check license", "really-simple-ssl"))), !rsssl_settings.pro_plugin_active && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_utils_Hyperlink__WEBPACK_IMPORTED_MODULE_2__["default"], {
-    target: "_blank",
-    text: msg,
-    url: upgrade
-  })))), networkwide_error && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "rsssl-locked"
-  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "rsssl-locked-overlay"
-  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
-    className: "rsssl-task-status rsssl-warning"
-  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_4__.__)("Network feature", "really-simple-ssl")), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_4__.__)("This feature is only available networkwide.", "really-simple-ssl"), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_utils_Hyperlink__WEBPACK_IMPORTED_MODULE_2__["default"], {
-    target: "_blank",
-    text: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_4__.__)("Network settings", "really-simple-ssl"),
-    url: rsssl_settings.network_link
-  })))));
-};
+}
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (SettingsGroup);
 
 /***/ }),
