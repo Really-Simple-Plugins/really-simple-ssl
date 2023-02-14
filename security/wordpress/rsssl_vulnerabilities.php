@@ -1,4 +1,6 @@
-<?php defined('ABSPATH') or die();
+<?php
+
+defined('ABSPATH') or die();
 
 /**
  * @package Really Simple SSL
@@ -33,6 +35,13 @@ if (!class_exists("rsssl_vulnerabilities")) {
                 //also when a plugin is installed or updated we check for vulnerabilities
                 add_action('upgrader_process_complete', array($this, 'reload_files_on_update'), 10, 2);
                 add_action('activate_plugin', array($this, 'reload_files_on_update'), 10, 2);
+
+                //we cache the plugins in the class.
+                $this->cache_installed_plugins();
+                //we check the rsssl options if the enable_feedback_in_plugin is set to true
+                if (rsssl_get_option('enable_feedback_in_plugin')) {
+                    $this->enable_feedback_in_plugin();
+                }
             }
         }
 
@@ -40,13 +49,8 @@ if (!class_exists("rsssl_vulnerabilities")) {
 			//we check the files on age and download if needed TODO: if premium this will be 4 hours
 			$this->check_files();
 
-			//we cache the plugins in the class.
-			$this->cache_installed_plugins();
 
-			//we check the rsssl options if the enable_feedback_in_plugin is set to true
-			if (rsssl_get_option('enable_feedback_in_plugin')) {
-				$this->enable_feedback_in_plugin();
-			}
+
 		}
 
         /**
@@ -81,12 +85,33 @@ if (!class_exists("rsssl_vulnerabilities")) {
                         case 'm':
                             echo '<a class="btn-vulnerable medium-risk">' . __('Medium-Risk', 'really-simple-ssl') . '</a>';
                             break;
-                        case 'l':
+                        default:
                             echo '<a class="btn-vulnerable">' . __('Low-Risk', 'really-simple-ssl') . '</a>';
                             break;
                     }
                 } else {
-                   echo 'Coming soon some nice info';
+                    include_once ABSPATH . 'wp-admin/includes/plugin-install.php';
+                    //now we get the correct slug for the plugin
+                    $plugin_data = get_plugin_data(WP_PLUGIN_DIR . '/' . $plugin_file);
+                    $plugin_slug = $plugin_data['TextDomain'];
+
+                   //we fetch the data from plugins api
+                    $plugin_data = plugins_api('plugin_information', array('slug' => $plugin_slug)); //TODO: replace with security_api last_updated
+                    if (!is_wp_error($plugin_data)) {
+                        if (property_exists($plugin_data, 'last_updated') && $plugin_data->last_updated !== '') {
+                            //we calculate the time difference between now and the last update
+                            $time_diff = time() - strtotime($plugin_data->last_updated);
+                            echo '<a>' . sprintf(__('Last update: %s days ago', 'really-simple-ssl'), round($time_diff / 86400)) . '</a>';
+                        } else {
+                            //we show how long the plugin has been installed
+                            $time_diff = time() - filemtime(WP_PLUGIN_DIR . '/' . $plugin_file);
+                            echo '<a>' . sprintf(__('installed %s days ago', 'really-simple-ssl'), round($time_diff / 86400)) . '</a>';
+                        }
+                    } else {
+                        //we show how long the plugin has been installed
+                        $time_diff = time() - filemtime(WP_PLUGIN_DIR . '/' . $plugin_file);
+                        echo '<a>' . sprintf(__('installed %s days ago', 'really-simple-ssl'), round($time_diff / 86400)) . '</a>';
+                    }
                 }
             }
         }
@@ -321,17 +346,13 @@ if (!class_exists("rsssl_vulnerabilities")) {
                     if ($plugin['TextDomain'] === $component->slug) {
                         if (!empty($component->vulnerabilities)) {
                             $plugin['vulnerable'] = true;
+                            $plugin['risk_level'] = $this->get_highest_vulnerability($component->vulnerabilities);
+                            $plugin['closed'] = $component->closed;
                         }
                     }
-                    //if the plugin is vulnerable, we get the highest vulnerability
-                    if ($plugin['vulnerable']) {
-                        $plugin['risk_level'] = $this->get_highest_vulnerability($component->vulnerabilities);
-                    }
                 }
-                $installed_plugins[$key] = $plugin;
+                $this->workable_plugins[$key] = $plugin;
             }
-            //we now cache the installed plugins
-            $this->workable_plugins = $installed_plugins;
         }
 
         private function get_components()
@@ -359,9 +380,6 @@ if (!class_exists("rsssl_vulnerabilities")) {
 
         private function check_vulnerability($plugin_file)
         {
-            echo "<pre>";
-            var_dump($this->workable_plugins[$plugin_file]);
-
             return $this->workable_plugins[$plugin_file]['vulnerable'];
         }
 
@@ -389,10 +407,29 @@ if (!class_exists("rsssl_vulnerabilities")) {
                     $highest_risk_level = $risk_levels[$vulnerability->rss_severity];
                 }
             }
+            //we now loop through the risk levels and return the highest one
+            foreach ($risk_levels as $key => $value) {
+                if ($value === $highest_risk_level) {
+                    return $key;
+                }
+            }
+        }
 
-            return array_key_first(array_filter($risk_levels, function ($value) use ($highest_risk_level) {
-                return $value === $highest_risk_level;
-            }, ARRAY_FILTER_USE_BOTH));
+        public function test_vulnerability_notification()
+        {
+            //we add the notification to the dashboard
+            add_action('admin_notices', array($this, 'show_vulnerability_notification'));
+            //Mistakes were made
+            return [
+                'success' => false,
+                'message' => __('Something is not right.', "really-simple-ssl")
+            ];
+
+            //Everything went according to plan
+            return [
+                'success' => true,
+                'message' => __('Please validate your settings.', "really-simple-ssl")
+            ];
         }
     }
 }
@@ -405,6 +442,7 @@ function rsssl_vulnerabilities()
     if (!isset($rsssl_vulnerabilities)) {
         $rsssl_vulnerabilities = new RSSSL_Vulnerabilities();
     }
+
     $rsssl_vulnerabilities->init();
     return $rsssl_vulnerabilities;
 }

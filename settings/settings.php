@@ -1,4 +1,5 @@
 <?php
+
 defined('ABSPATH') or die();
 
 /**
@@ -292,6 +293,11 @@ function rsssl_do_action($request, $ajax_data=false){
         case 'clear_cache':
 	        $response = rsssl_clear_test_caches($data);
 			break;
+        case 'test_vulnerability_notification':
+            require_once( rsssl_path . 'security/wordpress/rsssl_vulnerabilities.php' );
+            $rsssl_vulnerabilities = new rsssl_vulnerabilities();
+            $response = $rsssl_vulnerabilities->test_vulnerability_notification($data);
+            break;
 		default:
 			$response = apply_filters("rsssl_do_action", [], $action, $data);
 	}

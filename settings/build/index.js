@@ -18704,9 +18704,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _CheckboxControl__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./CheckboxControl */ "./src/Settings/CheckboxControl.js");
 /* harmony import */ var _Support__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./Support */ "./src/Settings/Support.js");
 /* harmony import */ var _LearningMode_LearningMode__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ./LearningMode/LearningMode */ "./src/Settings/LearningMode/LearningMode.js");
-/* harmony import */ var _Button__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ./Button */ "./src/Settings/Button.js");
-/* harmony import */ var _utils_Icon__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ../utils/Icon */ "./src/utils/Icon.js");
-/* harmony import */ var _FieldsData__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ./FieldsData */ "./src/Settings/FieldsData.js");
+/* harmony import */ var _VulnerableMeasures_VulnerableMeasures__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ./VulnerableMeasures/VulnerableMeasures */ "./src/Settings/VulnerableMeasures/VulnerableMeasures.js");
+/* harmony import */ var _VulnerableMeasures_VulnerableMeasuresTest__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ./VulnerableMeasures/VulnerableMeasuresTest */ "./src/Settings/VulnerableMeasures/VulnerableMeasuresTest.js");
+/* harmony import */ var _Button__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ./Button */ "./src/Settings/Button.js");
+/* harmony import */ var _utils_Icon__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! ../utils/Icon */ "./src/utils/Icon.js");
+/* harmony import */ var _FieldsData__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! ./FieldsData */ "./src/Settings/FieldsData.js");
+
+
 
 
 
@@ -18731,7 +18735,7 @@ const Field = props => {
     updateField,
     setChangedField,
     highLightField
-  } = (0,_FieldsData__WEBPACK_IMPORTED_MODULE_16__["default"])();
+  } = (0,_FieldsData__WEBPACK_IMPORTED_MODULE_18__["default"])();
   (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
     if (highLightField === props.field.id && scrollAnchor.current) {
       scrollAnchor.current.scrollIntoView({
@@ -18762,7 +18766,7 @@ const Field = props => {
     let tooltipColor = field.warning ? 'red' : 'black';
     return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
       className: "cmplz-label-text"
-    }, field.label), field.tooltip && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_utils_Icon__WEBPACK_IMPORTED_MODULE_15__["default"], {
+    }, field.label), field.tooltip && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_utils_Icon__WEBPACK_IMPORTED_MODULE_17__["default"], {
       name: "info-open",
       tooltip: field.tooltip,
       color: tooltipColor
@@ -18852,7 +18856,7 @@ const Field = props => {
     return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
       className: 'rsssl-field-button ' + highLightClass,
       ref: scrollAnchor
-    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("label", null, field.label), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_Button__WEBPACK_IMPORTED_MODULE_14__["default"], {
+    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("label", null, field.label), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_Button__WEBPACK_IMPORTED_MODULE_16__["default"], {
       field: field
     }));
   }
@@ -18953,6 +18957,15 @@ const Field = props => {
       className: highLightClass,
       ref: scrollAnchor
     }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_LearningMode_LearningMode__WEBPACK_IMPORTED_MODULE_13__["default"], {
+      disabled: disabled,
+      field: props.field
+    }));
+  }
+  if (field.type === 'vulnerablemeasurestest') {
+    return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+      className: highLightClass,
+      ref: scrollAnchor
+    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_VulnerableMeasures_VulnerableMeasuresTest__WEBPACK_IMPORTED_MODULE_15__["default"], {
       disabled: disabled,
       field: props.field
     }));
@@ -21013,6 +21026,63 @@ const Support = () => {
   }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Send', 'really-simple-ssl')));
 };
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Support);
+
+/***/ }),
+
+/***/ "./src/Settings/VulnerableMeasures/VulnerableMeasures.js":
+/*!***************************************************************!*\
+  !*** ./src/Settings/VulnerableMeasures/VulnerableMeasures.js ***!
+  \***************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+const VulnerableMeasures = props => {};
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (VulnerableMeasures);
+
+/***/ }),
+
+/***/ "./src/Settings/VulnerableMeasures/VulnerableMeasuresTest.js":
+/*!*******************************************************************!*\
+  !*** ./src/Settings/VulnerableMeasures/VulnerableMeasuresTest.js ***!
+  \*******************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/components */ "@wordpress/components");
+/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__);
+
+/*
+    * This file is part of Really Simple SSL.
+    * Really Simple SSL
+    *
+    * @package Really Simple SSL
+    * @author Marcel Santing
+    *
+    * @link https://really-simple-ssl.com/
+    * This function is a test button to test if the notifications is working.
+ */
+
+const VulnerableMeasuresTest = props => {
+  //when run it tests the notification
+  const testNotification = () => {};
+  return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "textright"
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("label", null, props.field.label), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Button, {
+    isSecondary: true,
+    onClick: e => testNotification(e)
+  }, props.field.button_text));
+};
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (VulnerableMeasuresTest);
 
 /***/ }),
 
