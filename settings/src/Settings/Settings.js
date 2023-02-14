@@ -6,6 +6,7 @@ import Help from "./Help";
 import useFields from "./FieldsData";
 import useMenu from "../Menu/MenuData";
 import { __ } from '@wordpress/i18n';
+import useLetsEncryptData from "../LetsEncrypt/letsEncryptData";
 
 /**
  * Renders the selected settings
@@ -15,13 +16,28 @@ const Settings = () => {
     const [noticesExpanded, setNoticesExpanded] = useState(true);
     const {progress, fieldsLoaded, saveFields, fields, nextButtonDisabled} = useFields();
     const {subMenuLoaded, subMenu, selectedSubMenuItem, selectedMainMenuItem, nextMenuItem, previousMenuItem} = useMenu();
+    const {setRefreshTests} = useLetsEncryptData();
 
     const toggleNotices = () => {
         setNoticesExpanded(!noticesExpanded);
     }
 
-    const saveData = async () => {
-        await saveFields();
+    const isTestsOnlyMenu = () => {
+        const { menu_items: menuItems } = subMenu;
+        for (const menuItem of menuItems ) {
+            if (menuItem.id===selectedSubMenuItem && menuItem.tests_only ) {
+               return true;
+            }
+        }
+       return false;
+    }
+
+    const saveData = async (isSaveAndContinueButton) => {
+        if ( !isSaveAndContinueButton && isTestsOnlyMenu() ) {
+            setRefreshTests(true);
+        } else {
+            await saveFields(true, true);
+        }
     }
 
     const { menu_items: menuItems } = subMenu;
@@ -82,13 +98,13 @@ const Settings = () => {
         }
     }
     let continueLink = nextButtonDisabled ? `#${selectedMainMenuItem}/${selectedSubMenuItem}` : `#${selectedMainMenuItem}/${nextMenuItem}`;
+    // let btnSaveText = isTestsOnlyMenu() ? __('Refresh', 'really-simple-ssl') : __('Save', 'really-simple-ssl');
     let btnSaveText = __('Save', 'really-simple-ssl');
     for (const menuItem of menuItems ) {
         if (menuItem.id===selectedSubMenuItem && menuItem.tests_only ) {
             btnSaveText = __('Refresh', 'really-simple-ssl');
         }
     }
-
     return (
         <>
             <div className="rsssl-wizard-settings">
@@ -104,13 +120,13 @@ const Settings = () => {
                     }
                     <button
                         className="button button-primary"
-                        onClick={ ( e ) => saveData(e) }>
+                        onClick={ ( e ) => saveData(false) }>
                         { btnSaveText }
                     </button>
                     {/*This will be shown only if current step is not the last one*/}
                     { selectedSubMenuItem !== menuItems[menuItems.length-1].id &&
                         <>
-                            <a disabled={nextButtonDisabled} className="button button-primary" href={continueLink} onClick={ ( e ) => saveData() }>
+                            <a disabled={nextButtonDisabled} className="button button-primary" href={continueLink} onClick={ ( e ) => saveData(true) }>
                                 { __( 'Save and Continue', 'complianz-gdpr' ) }
                             </a>
                         </>

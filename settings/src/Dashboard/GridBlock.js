@@ -1,7 +1,7 @@
 import { __ } from '@wordpress/i18n';
-import ProgressBlock from "./ProgressBlock";
-import ProgressHeader from "./ProgressBlockHeader";
-import ProgressFooter from "./ProgressFooter";
+import ProgressBlock from "./Progress/ProgressBlock";
+import ProgressHeader from "./Progress/ProgressBlockHeader";
+import ProgressFooter from "./Progress/ProgressFooter";
 import SslLabs from "./SslLabs/SslLabs";
 import SslLabsFooter from "./SslLabs/SslLabsFooter";
 
@@ -32,7 +32,6 @@ const GridBlock = (props) => {
     const [footerHtml, setFooterHtml] = useState(props.block.footer.data);
     const [content, setContent] = useState(props.block.content.data);
     const [footer, setFooter] = useState(props.block.footer.data);
-    const [testDisabled, setTestDisabled] = useState(false);
     const [blockProps, setBlockProps] = useState([]);
     const [blockData, setBlockData] = useState(props.block);
 
@@ -46,10 +45,6 @@ const GridBlock = (props) => {
             blockProps[key] = value;
             setBlockProps(blockProps);
         }
-    }
-
-    const doHighlightField = (fieldId) => {
-        setHighLightField(fieldId);
     }
 
     let className = "rsssl-grid-item "+blockData.class+" rsssl-"+blockData.id;

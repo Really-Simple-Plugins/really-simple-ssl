@@ -10,8 +10,15 @@ const useMenu = create(( set, get ) => ({
     selectedSubMenuItem:false,
     hasPremiumItems:false,
     subMenu:{title:' ',menu_items:[]},
-    setSelectedSubMenuItem: (selectedSubMenuItem) => set(state => ({ selectedSubMenuItem })),
-    setSelectedMainMenuItem: (selectedMainMenuItem) => set(state => ({ selectedMainMenuItem })),
+    setSelectedSubMenuItem: async (selectedSubMenuItem) => {
+        let selectedMainMenuItem = getMainMenuForSubMenu(selectedSubMenuItem);
+        set(state => ({ selectedSubMenuItem,selectedMainMenuItem }))
+        window.location.href=rsssl_settings.dashboard_url+'#'+selectedMainMenuItem+'/'+selectedSubMenuItem;
+    },
+    setSelectedMainMenuItem: (selectedMainMenuItem) => {
+        set(state => ({ selectedMainMenuItem }))
+        window.location.href=rsssl_settings.dashboard_url+'#'+selectedMainMenuItem;
+    },
     //we need to get the main menu item directly from the anchor, otherwise we have to wait for the menu to load in page.js
     fetchSelectedMainMenuItem: () => {
         let selectedMainMenuItem = getAnchor('main') || 'dashboard';
@@ -25,11 +32,14 @@ const useMenu = create(( set, get ) => ({
         let menu = rsssl_settings.menu;
         menu = Object.values(menu);
         const selectedMainMenuItem = getAnchor('main') || 'dashboard';
+        menu = menu.filter( item => !item.default_hidden || selectedMainMenuItem===item.id);
+
         if ( typeof fields !== 'undefined' ) {
             let subMenu = getSubMenu(menu, selectedMainMenuItem);
             const selectedSubMenuItem = getSelectedSubMenuItem(subMenu, fields);
-            const { nextMenuItem, previousMenuItem }  = getPreviousAndNextMenuItems(menu, selectedSubMenuItem);
             subMenu.menu_items = dropEmptyMenuItems(subMenu.menu_items, fields, selectedSubMenuItem);
+
+            const { nextMenuItem, previousMenuItem }  = getPreviousAndNextMenuItems(menu, selectedSubMenuItem, fields);
             const hasPremiumItems =  subMenu.menu_items.filter((item) => {return (item.premium===true)}).length>0;
             set((state) => ({subMenuLoaded:true, menu: menu, nextMenuItem:nextMenuItem, previousMenuItem:previousMenuItem, selectedMainMenuItem: selectedMainMenuItem, selectedSubMenuItem:selectedSubMenuItem, subMenu: subMenu, hasPremiumItems: hasPremiumItems}));
 
@@ -37,29 +47,50 @@ const useMenu = create(( set, get ) => ({
             set((state) => ({menu: menu, selectedMainMenuItem: selectedMainMenuItem}));
 
         }
+    },
+    getDefaultSubMenuItem: async (fields) => {
+        let subMenuLoaded = get().subMenuLoaded;
+        if (!subMenuLoaded){
+            await get().fetchMenuData(fields);
+        }
+        let subMenu = get().subMenu;
+        let fallBackMenuItem = subMenuLoaded && subMenu.hasOwnProperty(0) ? subMenu[0].id : 'general';
+        let anchor = getAnchor('menu');
+        let foundAnchorInMenu = false;
+        //check if this anchor actually exists in our current submenu. If not, clear it
+        for (const key in this.menu.menu_items) {
+            if ( subMenu.hasOwnProperty(key) &&  subMenu[key].id === anchor ){
+                foundAnchorInMenu=true;
+            }
+        }
+        if ( !foundAnchorInMenu ) anchor = false;
+        return anchor ? anchor : fallBackMenuItem;
     }
 }));
 export default useMenu;
 
 
 // Parses menu items and nested items in single array
-const menuItemParser = (parsedMenuItems, menuItems) => {
+const menuItemParser = (parsedMenuItems, menuItems, fields) => {
     menuItems.forEach((menuItem) => {
         if( menuItem.visible ) {
             parsedMenuItems.push(menuItem.id);
             if( menuItem.hasOwnProperty('menu_items') ) {
-                menuItemParser(parsedMenuItems, menuItem.menu_items);
+                menuItem.menu_items = dropEmptyMenuItems(menuItem.menu_items, fields );
+                menuItemParser(parsedMenuItems, menuItem.menu_items, fields);
             }
         }
     });
     return parsedMenuItems;
 }
 
-const getPreviousAndNextMenuItems = (menu, selectedSubMenuItem) => {
+
+
+const getPreviousAndNextMenuItems = (menu, selectedSubMenuItem, fields) => {
     let previousMenuItem;
     let nextMenuItem;
     const parsedMenuItems = [];
-    menuItemParser(parsedMenuItems, menu);
+    menuItemParser(parsedMenuItems, menu, fields);
     // Finds current menu item index
     const currentMenuItemIndex = parsedMenuItems.findIndex((menuItem) => menuItem === selectedSubMenuItem);
     if( currentMenuItemIndex !== -1 ) {
@@ -76,20 +107,26 @@ const getPreviousAndNextMenuItems = (menu, selectedSubMenuItem) => {
     return { nextMenuItem, previousMenuItem };
 }
 
-const dropEmptyMenuItems = (menuItems, fields, selectedSubMenuItem) => {
+const dropEmptyMenuItems = (menuItems, fields) => {
     const newMenuItems = menuItems;
     for (const [index, menuItem] of menuItems.entries()) {
-        const menuItemFields = fields.filter((field) => {
-            return (field.menu_id === menuItem.id && field.visible && !field.conditionallyDisabled )
+        let menuItemFields = fields.filter((field) => {
+            return (field.menu_id === menuItem.id )
         });
-        if( menuItemFields.length === 0 && !menuItem.hasOwnProperty('menu_items') )  {
+
+        menuItemFields = menuItemFields.filter((field) => {
+            return ( field.visible )
+        });
+        if ( menuItemFields.length === 0 && !menuItem.hasOwnProperty('menu_items') )  {
             newMenuItems[index].visible = false;
         } else {
             newMenuItems[index].visible = true;
             if( menuItem.hasOwnProperty('menu_items') ) {
-                newMenuItems[index].menu_items = dropEmptyMenuItems(menuItem.menu_items, fields, selectedSubMenuItem);
+                newMenuItems[index].menu_items = dropEmptyMenuItems(menuItem.menu_items, fields);
             }
         }
+
+
     }
     return newMenuItems;
 }
@@ -106,6 +143,36 @@ const getSubMenu = (menu, selectedMainMenuItem) => {
     }
     subMenu = addVisibleToMenuItems(subMenu);
     return subMenu;
+}
+
+/*
+* Get the main menu item for a submenu item
+*/
+const getMainMenuForSubMenu = (findMenuItem) => {
+    let menu = rsssl_settings.menu;
+    for (const mainKey in menu) {
+        let mainMenuItem = menu[mainKey];
+        if (mainMenuItem.id===findMenuItem) {
+            return mainMenuItem.id;
+        }
+        if (mainMenuItem.menu_items){
+            for (const subKey in mainMenuItem.menu_items) {
+                let subMenuItem = mainMenuItem.menu_items[subKey];
+                if (subMenuItem.id===findMenuItem) {
+                    return mainMenuItem.id;
+                }
+                if (subMenuItem.menu_items){
+                    for (const sub2Key in subMenuItem.menu_items) {
+                        let sub2MenuItem = subMenuItem.menu_items[sub2Key];
+                        if (sub2MenuItem.id===findMenuItem) {
+                            return mainMenuItem.id;
+                        }
+                    }
+                }
+            }
+        }
+    }
+    return false;
 }
 
 /**

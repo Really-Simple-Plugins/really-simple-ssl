@@ -51,6 +51,10 @@ html {
     .components-form-toggle.is-checked .components-form-toggle__track{
       background-color: var(--rsp-dark-blue);
     }
+    input.components-form-toggle__input[type=checkbox]:disabled, {
+      background: var(--rsp-grey-100);
+      opacity:0.7
+    }
     .rsssl-grid-item{
       .rsssl-grid-item-content{
         padding: var(--rsp-spacing-xs) 0;
@@ -83,6 +87,8 @@ html {
     border-left: 4px solid var(--rsp-green);
     -o-animation: fadeIt 3s ease-in-out;
     animation: fadeIt 3s ease-in-out;
+    scroll-margin-top: 100px;
+    scroll-padding-top:100px;
   }
 
   @-o-keyframes fadeIt {

@@ -12,9 +12,7 @@ const UseMixedContent = create(( set, get ) => ({
     scanStatus:false,
     fetchMixedContentData: async () => {
         set({ scanStatus: 'running' } );
-        console.log("fetch initial data with scanStatus false ");
         const {data, progress, state, action, nonce, completed_status } = await getScanIteration(false);
-        console.log(data);
         set({
             scanStatus: state,
             mixedContentData: data,
@@ -43,10 +41,7 @@ const UseMixedContent = create(( set, get ) => ({
             return;
         }
 
-        console.log("in run function state "+currentState);
-
         const {data, progress, state, action, nonce, completed_status } = await getScanIteration(currentState);
-        console.log("response state "+state);
         if ( get().scanStatus !== 'stop' ) {
             set({
                 scanStatus: state,
@@ -112,7 +107,6 @@ const getScanIteration = async (state) => {
         }
         response.data = data;
         if ( state==='stop' ) {
-            console.log("current state in get iteration is stop")
             response.state = 'stop';
         }
 

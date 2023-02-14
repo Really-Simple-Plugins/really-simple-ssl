@@ -1,4 +1,4 @@
-import {useState, useEffect, useRef} from "@wordpress/element";
+import {useState, useEffect} from "@wordpress/element";
 import { __ } from '@wordpress/i18n';
 import * as rsssl_api from "../utils/api";
 import Placeholder from '../Placeholder/Placeholder';
@@ -102,7 +102,6 @@ const OtherPlugins = (props) => {
     }
 
     return (
-
         <>
            <div className="rsssl-other-plugins-container">
                { pluginData.map((plugin, i) => otherPluginElement(plugin, i)) }

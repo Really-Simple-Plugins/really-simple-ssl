@@ -1,5 +1,3 @@
-import Icon from "../utils/Icon";
-
 /*
 * The tooltip can't be included in the native toggleControl, so we have to build our own.
 */
@@ -12,7 +10,6 @@ const CheckboxControl = (props) => {
 
     let field = props.field;
     let is_checked = field.value ? 'is-checked' : '';
-
     return (
         <>
             <div className="components-base-control components-toggle-control">
@@ -25,6 +22,7 @@ const CheckboxControl = (props) => {
                             onChange={ ( e ) => onChangeHandler(e) }
                             id={field.id}
                             type="checkbox"
+                            disabled={props.disabled}
                         />
                         <span className="components-form-toggle__track"></span>
                         <span className="components-form-toggle__thumb"></span>

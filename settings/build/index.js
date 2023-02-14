@@ -15164,9 +15164,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _ProgressBlock__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./ProgressBlock */ "./src/DashBoard/ProgressBlock.js");
-/* harmony import */ var _ProgressBlockHeader__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./ProgressBlockHeader */ "./src/DashBoard/ProgressBlockHeader.js");
-/* harmony import */ var _ProgressFooter__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./ProgressFooter */ "./src/DashBoard/ProgressFooter.js");
+/* harmony import */ var _Progress_ProgressBlock__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Progress/ProgressBlock */ "./src/DashBoard/Progress/ProgressBlock.js");
+/* harmony import */ var _Progress_ProgressBlockHeader__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./Progress/ProgressBlockHeader */ "./src/DashBoard/Progress/ProgressBlockHeader.js");
+/* harmony import */ var _Progress_ProgressFooter__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./Progress/ProgressFooter */ "./src/DashBoard/Progress/ProgressFooter.js");
 /* harmony import */ var _SslLabs_SslLabs__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./SslLabs/SslLabs */ "./src/DashBoard/SslLabs/SslLabs.js");
 /* harmony import */ var _SslLabs_SslLabsFooter__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./SslLabs/SslLabsFooter */ "./src/DashBoard/SslLabs/SslLabsFooter.js");
 /* harmony import */ var _Settings_FieldsData__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../Settings/FieldsData */ "./src/Settings/FieldsData.js");
@@ -15195,9 +15195,9 @@ __webpack_require__.r(__webpack_exports__);
 var dynamicComponents = {
   "SecurityFeaturesBlock": _SecurityFeaturesBlock_SecurityFeaturesBlock__WEBPACK_IMPORTED_MODULE_9__["default"],
   "SecurityFeaturesFooter": _SecurityFeaturesBlock_SecurityFeaturesFooter__WEBPACK_IMPORTED_MODULE_10__["default"],
-  "ProgressBlock": _ProgressBlock__WEBPACK_IMPORTED_MODULE_2__["default"],
-  "ProgressHeader": _ProgressBlockHeader__WEBPACK_IMPORTED_MODULE_3__["default"],
-  "ProgressFooter": _ProgressFooter__WEBPACK_IMPORTED_MODULE_4__["default"],
+  "ProgressBlock": _Progress_ProgressBlock__WEBPACK_IMPORTED_MODULE_2__["default"],
+  "ProgressHeader": _Progress_ProgressBlockHeader__WEBPACK_IMPORTED_MODULE_3__["default"],
+  "ProgressFooter": _Progress_ProgressFooter__WEBPACK_IMPORTED_MODULE_4__["default"],
   "SslLabs": _SslLabs_SslLabs__WEBPACK_IMPORTED_MODULE_5__["default"],
   "SslLabsFooter": _SslLabs_SslLabsFooter__WEBPACK_IMPORTED_MODULE_6__["default"],
   "OtherPlugins": _OtherPlugins__WEBPACK_IMPORTED_MODULE_8__["default"]
@@ -15206,7 +15206,6 @@ const GridBlock = props => {
   const [footerHtml, setFooterHtml] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)(props.block.footer.data);
   const [content, setContent] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)(props.block.content.data);
   const [footer, setFooter] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)(props.block.footer.data);
-  const [testDisabled, setTestDisabled] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)(false);
   const [blockProps, setBlockProps] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)([]);
   const [blockData, setBlockData] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)(props.block);
 
@@ -15220,9 +15219,6 @@ const GridBlock = props => {
       blockProps[key] = value;
       setBlockProps(blockProps);
     }
-  };
-  const doHighlightField = fieldId => {
-    setHighLightField(fieldId);
   };
   let className = "rsssl-grid-item " + blockData.class + " rsssl-" + blockData.id;
   let DynamicBlockProps = {
@@ -15391,10 +15387,10 @@ const OtherPlugins = props => {
 
 /***/ }),
 
-/***/ "./src/DashBoard/ProgressBlock.js":
-/*!****************************************!*\
-  !*** ./src/DashBoard/ProgressBlock.js ***!
-  \****************************************/
+/***/ "./src/DashBoard/Progress/ProgressBlock.js":
+/*!*************************************************!*\
+  !*** ./src/DashBoard/Progress/ProgressBlock.js ***!
+  \*************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -15404,163 +15400,82 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _utils_api__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../utils/api */ "./src/utils/api.js");
-/* harmony import */ var _TaskElement__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./TaskElement */ "./src/DashBoard/TaskElement.js");
-/* harmony import */ var _Placeholder_Placeholder__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../Placeholder/Placeholder */ "./src/Placeholder/Placeholder.js");
+/* harmony import */ var _utils_api__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../utils/api */ "./src/utils/api.js");
+/* harmony import */ var _TaskElement__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./../TaskElement */ "./src/DashBoard/TaskElement.js");
+/* harmony import */ var _Placeholder_Placeholder__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../Placeholder/Placeholder */ "./src/Placeholder/Placeholder.js");
+/* harmony import */ var _ProgressData__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./ProgressData */ "./src/DashBoard/Progress/ProgressData.js");
+/* harmony import */ var _Settings_FieldsData__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../Settings/FieldsData */ "./src/Settings/FieldsData.js");
 
 
 
 
 
-class ProgressBlock extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Component {
-  constructor() {
-    super(...arguments);
-    this.percentageCompleted = 0;
-    this.progressText = '';
-    this.filter = 'all';
-    this.notices = null;
-    this.progressLoaded = false;
-    this.fields = this.props.fields;
-    this.state = {
-      progressText: '',
-      filter: 'all',
-      notices: null,
-      percentageCompleted: 0,
-      progressLoaded: false,
-      error: false
-    };
-  }
-  componentDidMount() {
-    this.getProgressData = this.getProgressData.bind(this);
-    this.onCloseTaskHandler = this.onCloseTaskHandler.bind(this);
-    this.getProgressData();
-  }
-  componentDidUpdate() {
-    //if a field has changed, we update the progress data as well.
-    if (this.fields !== this.props.fields) {
-      this.fields = this.props.fields;
-      this.getProgressData();
-    }
-  }
-  getStyles() {
+
+
+const ProgressBlock = props => {
+  const {
+    percentageCompleted,
+    progressText,
+    filter,
+    notices,
+    progressLoaded,
+    getProgressData,
+    error
+  } = (0,_ProgressData__WEBPACK_IMPORTED_MODULE_4__["default"])();
+  (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useEffect)(async () => {
+    await getProgressData();
+  }, []);
+  const getStyles = () => {
     return Object.assign({}, {
-      width: this.percentageCompleted + "%"
+      width: percentageCompleted + "%"
+    });
+  };
+  let progressBarColor = '';
+  if (percentageCompleted < 80) {
+    progressBarColor += 'rsssl-orange';
+  }
+  if (!progressLoaded || error) {
+    return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_Placeholder_Placeholder__WEBPACK_IMPORTED_MODULE_3__["default"], {
+      lines: "9",
+      error: error
     });
   }
-  getProgressData() {
-    _utils_api__WEBPACK_IMPORTED_MODULE_1__.runTest('progressData', 'refresh').then(response => {
-      if (response.error) {
-        this.setState({
-          error: response.error
-        });
-      } else {
-        this.progressText = response.text;
-        this.filter = response.filter;
-        this.percentageCompleted = response.percentage;
-        this.notices = response.notices;
-        this.progressLoaded = true;
-        this.setState({
-          progressLoaded: this.progressLoaded,
-          progressText: this.progressText,
-          filter: this.filter,
-          notices: this.notices,
-          percentageCompleted: this.percentageCompleted
-        });
-        this.props.updateBlockProps('notices', this.notices);
-      }
+  let noticesOutput = notices;
+  if (filter === 'remaining') {
+    noticesOutput = noticesOutput.filter(function (notice) {
+      return notice.output.status === 'open';
     });
   }
-  onCloseTaskHandler(e) {
-    let button = e.target.closest('button');
-    let notice_id = button.getAttribute('data-id');
-    let container = button.closest('.rsssl-task-element');
-    container.animate({
-      marginLeft: ["0px", "-1000px"]
-    }, {
-      duration: 500,
-      easing: "linear",
-      iterations: 1,
-      fill: "both"
-    }).onfinish = function () {
-      container.parentElement.removeChild(container);
-    };
-    let notices = this.props.blockProps.notices;
-    notices = notices.filter(function (notice) {
-      return notice.id !== notice_id;
-    });
-    this.props.updateBlockProps('notices', notices);
-    return _utils_api__WEBPACK_IMPORTED_MODULE_1__.runTest('dismiss_task', notice_id).then(response => {
-      if (response.error) {
-        this.setState({
-          error: response.error
-        });
-      } else {
-        this.percentageCompleted = response.percentage;
-        this.setState({
-          percentageCompleted: this.percentageCompleted
-        });
-      }
-    });
-  }
-  render() {
-    const {
-      error
-    } = this.state;
-    let progressBarColor = '';
-    if (this.percentageCompleted < 80) {
-      progressBarColor += 'rsssl-orange';
-    }
-    if (!this.progressLoaded || error) {
-      return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_Placeholder_Placeholder__WEBPACK_IMPORTED_MODULE_3__["default"], {
-        lines: "9",
-        error: error
-      });
-    }
-    let filter = 'all';
-    if (this.props.blockProps && this.props.blockProps.filterStatus) {
-      filter = this.props.blockProps.filterStatus;
-    }
-    let notices = this.notices;
-    if (filter === 'remaining') {
-      notices = notices.filter(function (notice) {
-        return notice.output.status === 'open';
-      });
-    }
-    return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-      className: "rsssl-progress-block"
-    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-      className: "rsssl-progress-bar"
-    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-      className: "rsssl-progress"
-    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-      className: 'rsssl-bar ' + progressBarColor,
-      style: this.getStyles()
-    }))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-      className: "rsssl-progress-text"
-    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("h1", {
-      className: "rsssl-progress-percentage"
-    }, this.percentageCompleted, "%"), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("h5", {
-      className: "rsssl-progress-text-span"
-    }, this.progressText)), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-      className: "rsssl-scroll-container"
-    }, notices.map((notice, i) => (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_TaskElement__WEBPACK_IMPORTED_MODULE_2__["default"], {
-      key: i,
-      index: i,
-      notice: notice,
-      getFields: this.props.getFields,
-      onCloseTaskHandler: this.onCloseTaskHandler,
-      doHighlightField: this.props.doHighlightField
-    }))));
-  }
-}
+  return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "rsssl-progress-block"
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "rsssl-progress-bar"
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "rsssl-progress"
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: 'rsssl-bar ' + progressBarColor,
+    style: getStyles()
+  }))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "rsssl-progress-text"
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("h1", {
+    className: "rsssl-progress-percentage"
+  }, percentageCompleted, "%"), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("h5", {
+    className: "rsssl-progress-text-span"
+  }, progressText)), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "rsssl-scroll-container"
+  }, noticesOutput.map((notice, i) => (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_TaskElement__WEBPACK_IMPORTED_MODULE_2__["default"], {
+    key: i,
+    notice: notice
+  }))));
+};
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (ProgressBlock);
 
 /***/ }),
 
-/***/ "./src/DashBoard/ProgressBlockHeader.js":
-/*!**********************************************!*\
-  !*** ./src/DashBoard/ProgressBlockHeader.js ***!
-  \**********************************************/
+/***/ "./src/DashBoard/Progress/ProgressBlockHeader.js":
+/*!*******************************************************!*\
+  !*** ./src/DashBoard/Progress/ProgressBlockHeader.js ***!
+  \*******************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -15572,73 +15487,146 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _ProgressData__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./ProgressData */ "./src/DashBoard/Progress/ProgressData.js");
 
 
 
-class ProgressHeader extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Component {
-  constructor() {
-    super(...arguments);
-    this.filter = 'all';
-  }
-  componentDidMount() {
-    this.onClickHandler = this.onClickHandler.bind(this);
-    this.setState({
-      filter: this.filter
-    });
-  }
-  onClickHandler(e) {
+
+const ProgressHeader = props => {
+  const {
+    setFilter,
+    filter,
+    fetchFilter,
+    notices
+  } = (0,_ProgressData__WEBPACK_IMPORTED_MODULE_2__["default"])();
+  (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
+    fetchFilter();
+  }, []);
+  const onClickHandler = e => {
     let filter = e.target.getAttribute('data-filter');
     if (filter === 'all' || filter === 'remaining') {
-      this.filter = filter;
-      this.setState({
-        filter: this.filter
-      });
-      this.props.updateBlockProps('filterStatus', filter);
-      sessionStorage.rsssl_task_filter = filter;
+      setFilter(filter);
     }
-  }
-  render() {
-    if (typeof Storage !== "undefined" && sessionStorage.rsssl_task_filter) {
-      this.filter = sessionStorage.rsssl_task_filter;
-    }
-    let all_task_count = 0;
-    let open_task_count = 0;
-    let notices = [];
-    if (this.props.blockProps && this.props.blockProps.notices) {
-      notices = this.props.blockProps.notices;
-      all_task_count = notices.length;
-      let openNotices = notices.filter(function (notice) {
-        return notice.output.status === 'open' || notice.output.status === 'warning';
-      });
-      open_task_count = openNotices.length;
-    }
-    return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-      className: "rsssl-task-switcher-container rsssl-active-filter-" + this.filter
-    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
-      className: "rsssl-task-switcher rsssl-all-tasks",
-      onClick: this.onClickHandler,
-      htmlFor: "rsssl-all-tasks",
-      "data-filter": "all"
-    }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("All tasks", "really-simple-ssl"), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
-      className: "rsssl_task_count"
-    }, "(", all_task_count, ")")), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
-      className: "rsssl-task-switcher rsssl-remaining-tasks",
-      onClick: this.onClickHandler,
-      htmlFor: "rsssl-remaining-tasks",
-      "data-filter": "remaining"
-    }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Remaining tasks", "really-simple-ssl"), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
-      className: "rsssl_task_count"
-    }, "(", open_task_count, ")")));
-  }
-}
+  };
+  let all_task_count = 0;
+  let open_task_count = 0;
+  all_task_count = notices.length;
+  let openNotices = notices.filter(function (notice) {
+    return notice.output.status === 'open' || notice.output.status === 'warning';
+  });
+  open_task_count = openNotices.length;
+  return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "rsssl-task-switcher-container rsssl-active-filter-" + filter
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
+    className: "rsssl-task-switcher rsssl-all-tasks",
+    onClick: onClickHandler,
+    htmlFor: "rsssl-all-tasks",
+    "data-filter": "all"
+  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("All tasks", "really-simple-ssl"), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
+    className: "rsssl_task_count"
+  }, "(", all_task_count, ")")), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
+    className: "rsssl-task-switcher rsssl-remaining-tasks",
+    onClick: onClickHandler,
+    htmlFor: "rsssl-remaining-tasks",
+    "data-filter": "remaining"
+  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Remaining tasks", "really-simple-ssl"), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
+    className: "rsssl_task_count"
+  }, "(", open_task_count, ")")));
+};
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (ProgressHeader);
 
 /***/ }),
 
-/***/ "./src/DashBoard/ProgressFooter.js":
-/*!*****************************************!*\
-  !*** ./src/DashBoard/ProgressFooter.js ***!
-  \*****************************************/
+/***/ "./src/DashBoard/Progress/ProgressData.js":
+/*!************************************************!*\
+  !*** ./src/DashBoard/Progress/ProgressData.js ***!
+  \************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var zustand__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! zustand */ "./node_modules/zustand/esm/index.mjs");
+/* harmony import */ var _utils_api__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../utils/api */ "./src/utils/api.js");
+
+
+const useProgress = (0,zustand__WEBPACK_IMPORTED_MODULE_1__.create)((set, get) => ({
+  filter: 'all',
+  progressText: '',
+  notices: [],
+  error: false,
+  percentageCompleted: 0,
+  progressLoaded: false,
+  setFilter: filter => {
+    sessionStorage.rsssl_task_filter = filter;
+    set(state => ({
+      filter
+    }));
+  },
+  fetchFilter: () => {
+    if (typeof Storage !== "undefined" && sessionStorage.rsssl_task_filter) {
+      let filter = sessionStorage.rsssl_task_filter;
+      set(state => ({
+        filter: filter
+      }));
+    }
+  },
+  getProgressData: async () => {
+    const {
+      error,
+      percentage,
+      progressText,
+      notices
+    } = await _utils_api__WEBPACK_IMPORTED_MODULE_0__.runTest('progressData', 'refresh').then(response => {
+      return response;
+    });
+    if (error) {
+      set(state => ({
+        error: error
+      }));
+    } else {
+      set(state => ({
+        notices: notices,
+        percentageCompleted: percentage,
+        progressText: progressText,
+        progressLoaded: true
+      }));
+    }
+  },
+  dismissNotice: async noticeId => {
+    let notices = get().notices;
+    notices = notices.filter(function (notice) {
+      return notice.id !== noticeId;
+    });
+    set(state => ({
+      notices: notices
+    }));
+    const {
+      error,
+      percentageCompleted
+    } = await _utils_api__WEBPACK_IMPORTED_MODULE_0__.runTest('dismiss_task', noticeId).then(response => {
+      if (error) {
+        set(state => ({
+          error: error
+        }));
+      } else {
+        set(state => ({
+          percentage: percentageCompleted
+        }));
+      }
+    });
+  }
+}));
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (useProgress);
+
+/***/ }),
+
+/***/ "./src/DashBoard/Progress/ProgressFooter.js":
+/*!**************************************************!*\
+  !*** ./src/DashBoard/Progress/ProgressFooter.js ***!
+  \**************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -15648,16 +15636,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _utils_api__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../utils/api */ "./src/utils/api.js");
+/* harmony import */ var _utils_api__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../utils/api */ "./src/utils/api.js");
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var immutability_helper__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! immutability-helper */ "./node_modules/immutability-helper/index.js");
-/* harmony import */ var immutability_helper__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(immutability_helper__WEBPACK_IMPORTED_MODULE_3__);
-/* harmony import */ var _utils_Icon__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../utils/Icon */ "./src/utils/Icon.js");
-/* harmony import */ var _Settings_FieldsData__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../Settings/FieldsData */ "./src/Settings/FieldsData.js");
-/* harmony import */ var _Onboarding_OnboardingData__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../Onboarding/OnboardingData */ "./src/Onboarding/OnboardingData.js");
-
-
+/* harmony import */ var _utils_Icon__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../utils/Icon */ "./src/utils/Icon.js");
+/* harmony import */ var _Settings_FieldsData__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../Settings/FieldsData */ "./src/Settings/FieldsData.js");
+/* harmony import */ var _Onboarding_OnboardingData__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../Onboarding/OnboardingData */ "./src/Onboarding/OnboardingData.js");
 
 
 
@@ -15668,23 +15652,10 @@ __webpack_require__.r(__webpack_exports__);
 const ProgressFooter = props => {
   const {
     setShowOnBoardingModal
-  } = (0,_Onboarding_OnboardingData__WEBPACK_IMPORTED_MODULE_6__["default"])();
-  const [certificateIsValid, setCertificateIsValid] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)(false);
-  const [sslDataLoaded, SetSslDataLoaded] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)(false);
+  } = (0,_Onboarding_OnboardingData__WEBPACK_IMPORTED_MODULE_5__["default"])();
   const {
     fields
-  } = (0,_Settings_FieldsData__WEBPACK_IMPORTED_MODULE_5__["default"])();
-  (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
-    _utils_api__WEBPACK_IMPORTED_MODULE_1__.runTest('ssl_status_data').then(response => {
-      if (!response.error) {
-        setCertificateIsValid(response.certificate_is_valid);
-        SetSslDataLoaded(true);
-      }
-    });
-  }, []);
-  if (!sslDataLoaded) {
-    return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null);
-  }
+  } = (0,_Settings_FieldsData__WEBPACK_IMPORTED_MODULE_4__["default"])();
   let redirectValue = fields.filter(field => field.id === 'redirect')[0].value;
   let sslEnabled = fields.filter(field => field.id === 'ssl_enabled')[0].value;
   let wpconfigFixRequired = rsssl_settings.wpconfig_fix_required;
@@ -15697,9 +15668,8 @@ const ProgressFooter = props => {
   let redirectColor = hasRedirect ? 'green' : 'red';
   let mixedContentIcon = hasMixedContentFixer ? 'circle-check' : 'circle-times';
   let mixedContentColor = hasMixedContentFixer ? 'green' : 'red';
-  let disabled = wpconfigFixRequired ? 'disabled' : '';
   return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, !sslEnabled && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
-    disabled: disabled,
+    disabled: wpconfigFixRequired,
     onClick: () => setShowOnBoardingModal(true),
     className: "button button-primary"
   }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Activate SSL", "really-simple-ssl")), rsssl_settings.pro_plugin_active && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
@@ -15710,17 +15680,17 @@ const ProgressFooter = props => {
     className: "button button-default"
   }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Go Pro", "really-simple-ssl")), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "rsssl-legend"
-  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_utils_Icon__WEBPACK_IMPORTED_MODULE_4__["default"], {
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_utils_Icon__WEBPACK_IMPORTED_MODULE_3__["default"], {
     name: sslStatusIcon,
     color: sslStatusColor
   }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, sslStatusText)), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "rsssl-legend"
-  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_utils_Icon__WEBPACK_IMPORTED_MODULE_4__["default"], {
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_utils_Icon__WEBPACK_IMPORTED_MODULE_3__["default"], {
     name: mixedContentIcon,
     color: mixedContentColor
   }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Mixed content", "really-simple-ssl"))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "rsssl-legend"
-  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_utils_Icon__WEBPACK_IMPORTED_MODULE_4__["default"], {
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_utils_Icon__WEBPACK_IMPORTED_MODULE_3__["default"], {
     name: redirectIcon,
     color: redirectColor
   }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("301 redirect", "really-simple-ssl"))));
@@ -16357,6 +16327,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _utils_api__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../utils/api */ "./src/utils/api.js");
 /* harmony import */ var _utils_sleeper__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../utils/sleeper */ "./src/utils/sleeper.js");
 /* harmony import */ var _Settings_FieldsData__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../Settings/FieldsData */ "./src/Settings/FieldsData.js");
+/* harmony import */ var _Progress_ProgressData__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./Progress/ProgressData */ "./src/DashBoard/Progress/ProgressData.js");
+/* harmony import */ var _Menu_MenuData__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../Menu/MenuData */ "./src/Menu/MenuData.js");
+
+
 
 
 
@@ -16366,11 +16340,20 @@ __webpack_require__.r(__webpack_exports__);
 
 const TaskElement = props => {
   const {
+    dismissNotice
+  } = (0,_Progress_ProgressData__WEBPACK_IMPORTED_MODULE_7__["default"])();
+  const {
+    getField,
     setHighLightField,
-    updateFieldsData
+    fetchFieldsData
   } = (0,_Settings_FieldsData__WEBPACK_IMPORTED_MODULE_6__["default"])();
-  const handleClick = () => {
+  const {
+    setSelectedSubMenuItem
+  } = (0,_Menu_MenuData__WEBPACK_IMPORTED_MODULE_8__["default"])();
+  const handleClick = async () => {
     setHighLightField(props.notice.output.highlight_field_id);
+    let highlightField = getField(props.notice.output.highlight_field_id);
+    await setSelectedSubMenuItem(highlightField.menu_id);
   };
   const handleClearCache = cache_id => {
     let data = {};
@@ -16384,7 +16367,7 @@ const TaskElement = props => {
       }).then((0,_utils_sleeper__WEBPACK_IMPORTED_MODULE_5__["default"])(3000)).then(response => {
         (0,_wordpress_data__WEBPACK_IMPORTED_MODULE_3__.dispatch)('core/notices').removeNotice('rsssl_clear_cache');
       });
-      updateFieldsData();
+      fetchFieldsData();
     });
   };
   let notice = props.notice;
@@ -16411,15 +16394,14 @@ const TaskElement = props => {
     href: notice.output.url
   }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Fix", "really-simple-ssl")), !premium && notice.output.highlight_field_id && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
     className: "rsssl-task-enable button button-secondary",
-    onClick: handleClick
+    onClick: () => handleClick()
   }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Fix", "really-simple-ssl")), notice.output.plusone && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
     className: "rsssl-plusone"
   }, "1"), notice.output.dismissible && notice.output.status !== 'completed' && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "rsssl-task-dismiss"
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
     type: "button",
-    "data-id": notice.id,
-    onClick: props.onCloseTaskHandler
+    onClick: e => dismissNotice(notice.id)
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_utils_Icon__WEBPACK_IMPORTED_MODULE_2__["default"], {
     name: "times"
   }))));
@@ -16545,15 +16527,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _utils_api__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../utils/api */ "./src/utils/api.js");
 /* harmony import */ var _wordpress_data__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @wordpress/data */ "@wordpress/data");
 /* harmony import */ var _wordpress_data__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_wordpress_data__WEBPACK_IMPORTED_MODULE_3__);
-/* harmony import */ var _Settings_Notices__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../Settings/Notices */ "./src/Settings/Notices.js");
-/* harmony import */ var immutability_helper__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! immutability-helper */ "./node_modules/immutability-helper/index.js");
-/* harmony import */ var immutability_helper__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(immutability_helper__WEBPACK_IMPORTED_MODULE_5__);
 /* harmony import */ var react_use__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! react-use */ "./node_modules/react-use/esm/useUpdateEffect.js");
-/* harmony import */ var _utils_sleeper__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../utils/sleeper */ "./src/utils/sleeper.js");
-/* harmony import */ var _utils_Hyperlink__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../utils/Hyperlink */ "./src/utils/Hyperlink.js");
-/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! @wordpress/components */ "@wordpress/components");
-/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_8___default = /*#__PURE__*/__webpack_require__.n(_wordpress_components__WEBPACK_IMPORTED_MODULE_8__);
-
+/* harmony import */ var _utils_sleeper__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../utils/sleeper */ "./src/utils/sleeper.js");
+/* harmony import */ var _utils_Hyperlink__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../utils/Hyperlink */ "./src/utils/Hyperlink.js");
+/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @wordpress/components */ "@wordpress/components");
+/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(_wordpress_components__WEBPACK_IMPORTED_MODULE_6__);
+/* harmony import */ var _letsEncryptData__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./letsEncryptData */ "./src/LetsEncrypt/letsEncryptData.js");
+/* harmony import */ var _Settings_FieldsData__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../Settings/FieldsData */ "./src/Settings/FieldsData.js");
 
 
 
@@ -16565,16 +16545,19 @@ __webpack_require__.r(__webpack_exports__);
 
 
 const Directories = props => {
-  const action = props.action;
+  const {
+    addHelpNotice
+  } = (0,_Settings_FieldsData__WEBPACK_IMPORTED_MODULE_8__["default"])();
+  let action = props.action;
   (0,react_use__WEBPACK_IMPORTED_MODULE_9__["default"])(() => {
-    if (action.action === 'challenge_directory_reachable' && action.status === 'error') {
-      props.addHelp(props.field.id, 'default', (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("The challenge directory is used to verify the domain ownership.", "really-simple-ssl"));
+    if (action && action.action === 'challenge_directory_reachable' && action.status === 'error') {
+      addHelpNotice(props.field.id, 'default', (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("The challenge directory is used to verify the domain ownership.", "really-simple-ssl"));
     }
-    if (action.action === 'check_key_directory' && action.status === 'error') {
-      props.addHelp(props.field.id, 'default', (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("The key directory is needed to store the generated keys.", "really-simple-ssl") + ' ' + (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("By placing it outside the root folder, it is not publicly accessible.", "really-simple-ssl"));
+    if (action && action.action === 'check_key_directory' && action.status === 'error') {
+      addHelpNotice(props.field.id, 'default', (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("The key directory is needed to store the generated keys.", "really-simple-ssl") + ' ' + (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("By placing it outside the root folder, it is not publicly accessible.", "really-simple-ssl"));
     }
-    if (action.action === 'check_certs_directory' && action.status === 'error') {
-      props.addHelp(props.field.id, 'default', (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("The certificate will get stored in this directory.", "really-simple-ssl") + ' ' + (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("By placing it outside the root folder, it is not publicly accessible.", "really-simple-ssl"));
+    if (action && action.action === 'check_certs_directory' && action.status === 'error') {
+      addHelpNotice(props.field.id, 'default', (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("The certificate will get stored in this directory.", "really-simple-ssl") + ' ' + (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("By placing it outside the root folder, it is not publicly accessible.", "really-simple-ssl"));
     }
   });
   if (!action) {
@@ -16589,21 +16572,21 @@ const Directories = props => {
         id: 'rsssl_switched_to_dns',
         type: 'snackbar',
         isDismissible: true
-      }).then((0,_utils_sleeper__WEBPACK_IMPORTED_MODULE_6__["default"])(3000)).then(response => {
+      }).then((0,_utils_sleeper__WEBPACK_IMPORTED_MODULE_4__["default"])(3000)).then(response => {
         (0,_wordpress_data__WEBPACK_IMPORTED_MODULE_3__.dispatch)('core/notices').removeNotice('rsssl_switched_to_dns');
       });
     });
   };
   return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "rsssl-test-results"
-  }, action.status === 'error' && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("h4", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Next step", "really-simple-ssl")), action.status === 'error' && action.action === 'challenge_directory_reachable' && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("If the challenge directory cannot be created, or is not reachable, you can either remove the server limitation, or change to DNS verification.", "really-simple-ssl")), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_8__.Button, {
+  }, action.status === 'error' && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("h4", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Next step", "really-simple-ssl")), action.status === 'error' && action.action === 'challenge_directory_reachable' && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("If the challenge directory cannot be created, or is not reachable, you can either remove the server limitation, or change to DNS verification.", "really-simple-ssl")), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_6__.Button, {
     variant: "secondary",
     onClick: () => handleSwitchToDNS()
-  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Switch to DNS verification', 'really-simple-ssl'))), action.status !== 'error' && rsssl_settings.hosting_dashboard === 'cpanel' && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_utils_Hyperlink__WEBPACK_IMPORTED_MODULE_7__["default"], {
+  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Switch to DNS verification', 'really-simple-ssl'))), action.status !== 'error' && rsssl_settings.hosting_dashboard === 'cpanel' && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_utils_Hyperlink__WEBPACK_IMPORTED_MODULE_5__["default"], {
     target: "_blank",
     text: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("If you also want to secure subdomains like mail.domain.com, cpanel.domain.com, you have to use the %sDNS%s challenge.", "really-simple-ssl"),
     url: "https://really-simple-ssl.com/lets-encrypt-authorization-with-dns"
-  }), "\xA0", (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Please note that auto-renewal with a DNS challenge might not be possible.", "really-simple-ssl")), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_8__.Button, {
+  }), "\xA0", (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Please note that auto-renewal with a DNS challenge might not be possible.", "really-simple-ssl")), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_6__.Button, {
     variant: "secondary",
     onClick: () => handleSwitchToDNS()
   }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Switch to DNS verification', 'really-simple-ssl'))), action.status === 'error' && action.action === 'check_challenge_directory' && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("h4", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Create a challenge directory", "really-simple-ssl")), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Navigate in FTP or File Manager to the root of your WordPress installation:", "really-simple-ssl")), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("ul", null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("li", {
@@ -16612,7 +16595,7 @@ const Directories = props => {
     className: "rsssl-tooltip-icon dashicons-before rsssl-icon arrow-right-alt2 dashicons-arrow-right-alt2"
   }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Inside the folder called “.well-known” create a new folder called “acme-challenge”, with 644 writing permissions.', 'really-simple-ssl')), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("li", {
     className: "rsssl-tooltip-icon dashicons-before rsssl-icon arrow-right-alt2 dashicons-arrow-right-alt2"
-  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Click the refresh button.', 'really-simple-ssl'))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("h4", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Or you can switch to DNS verification", "really-simple-ssl")), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("If the challenge directory cannot be created, you can either remove the server limitation, or change to DNS verification.", "really-simple-ssl")), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_8__.Button, {
+  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Click the refresh button.', 'really-simple-ssl'))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("h4", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Or you can switch to DNS verification", "really-simple-ssl")), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("If the challenge directory cannot be created, you can either remove the server limitation, or change to DNS verification.", "really-simple-ssl")), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_6__.Button, {
     variant: "secondary",
     onClick: () => handleSwitchToDNS()
   }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Switch to DNS verification', 'really-simple-ssl'))), action.status === 'error' && action.action === 'check_key_directory' && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("h4", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Create a key directory", "really-simple-ssl")), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Navigate in FTP or File Manager to one level above the root of your WordPress installation:", "really-simple-ssl")), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("ul", null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("li", {
@@ -16648,20 +16631,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _utils_api__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../utils/api */ "./src/utils/api.js");
-/* harmony import */ var _wordpress_data__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @wordpress/data */ "@wordpress/data");
-/* harmony import */ var _wordpress_data__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_wordpress_data__WEBPACK_IMPORTED_MODULE_3__);
-/* harmony import */ var _Settings_Notices__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../Settings/Notices */ "./src/Settings/Notices.js");
-/* harmony import */ var immutability_helper__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! immutability-helper */ "./node_modules/immutability-helper/index.js");
-/* harmony import */ var immutability_helper__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(immutability_helper__WEBPACK_IMPORTED_MODULE_5__);
-/* harmony import */ var _utils_Hyperlink__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../utils/Hyperlink */ "./src/utils/Hyperlink.js");
-/* harmony import */ var react_use__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! react-use */ "./node_modules/react-use/esm/useUpdateEffect.js");
-/* harmony import */ var _utils_sleeper__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../utils/sleeper */ "./src/utils/sleeper.js");
-/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! @wordpress/components */ "@wordpress/components");
-/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_8___default = /*#__PURE__*/__webpack_require__.n(_wordpress_components__WEBPACK_IMPORTED_MODULE_8__);
-
-
-
+/* harmony import */ var _utils_Hyperlink__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../utils/Hyperlink */ "./src/utils/Hyperlink.js");
+/* harmony import */ var react_use__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! react-use */ "./node_modules/react-use/esm/useUpdateEffect.js");
+/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @wordpress/components */ "@wordpress/components");
+/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_wordpress_components__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var _Settings_FieldsData__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../Settings/FieldsData */ "./src/Settings/FieldsData.js");
+/* harmony import */ var _Menu_MenuData__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../Menu/MenuData */ "./src/Menu/MenuData.js");
 
 
 
@@ -16671,11 +16646,27 @@ __webpack_require__.r(__webpack_exports__);
 
 
 const DnsVerification = props => {
-  const action = props.action;
+  const {
+    fields,
+    addHelpNotice,
+    updateField,
+    setChangedField,
+    saveFields,
+    fetchFieldsData,
+    getFieldValue
+  } = (0,_Settings_FieldsData__WEBPACK_IMPORTED_MODULE_4__["default"])();
+  const {
+    selectedSubMenuItem
+  } = (0,_Menu_MenuData__WEBPACK_IMPORTED_MODULE_5__["default"])();
   const [tokens, setTokens] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)(false);
-  (0,react_use__WEBPACK_IMPORTED_MODULE_9__["default"])(() => {
+  let action = props.action;
+
+  // useEffect(() => {
+  //
+  // }, [fields])
+  (0,react_use__WEBPACK_IMPORTED_MODULE_6__["default"])(() => {
     if (action && action.action === 'challenge_directory_reachable' && action.status === 'error') {
-      props.addHelp(props.field.id, 'default', (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("The challenge directory is used to verify the domain ownership.", "really-simple-ssl"));
+      addHelpNotice(props.field.id, 'default', (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("The challenge directory is used to verify the domain ownership.", "really-simple-ssl"));
     }
     let newTokens = action ? action.output : false;
     if (typeof newTokens === "undefined" || newTokens.length === 0) {
@@ -16685,23 +16676,19 @@ const DnsVerification = props => {
       setTokens(newTokens);
     }
   });
-  const handleSwitchToDir = () => {
-    props.updateField('verification_type', 'dir');
-    return _utils_api__WEBPACK_IMPORTED_MODULE_2__.runLetsEncryptTest('update_verification_type', 'dir').then(response => {
-      props.selectMenu('le-directories');
-      const notice = (0,_wordpress_data__WEBPACK_IMPORTED_MODULE_3__.dispatch)('core/notices').createNotice('success', (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Switched to directory', 'really-simple-ssl'), {
-        __unstableHTML: true,
-        id: 'rsssl_switched_to_dns',
-        type: 'snackbar',
-        isDismissible: true
-      }).then((0,_utils_sleeper__WEBPACK_IMPORTED_MODULE_7__["default"])(3000)).then(response => {
-        (0,_wordpress_data__WEBPACK_IMPORTED_MODULE_3__.dispatch)('core/notices').removeNotice('rsssl_switched_to_dns');
-      });
-    });
+  const handleSwitchToDir = async () => {
+    updateField('verification_type', 'dir');
+    setChangedField('verification_type', 'dir');
+    await saveFields(true, true);
+    await fetchFieldsData(selectedSubMenuItem);
   };
+  let verificationType = getFieldValue('verification_type');
+  if (verificationType === 'dir') {
+    return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null);
+  }
   return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, tokens && tokens.length > 0 && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "rsssl-test-results"
-  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("h4", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Next step", "really-simple-ssl")), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Add the following token as text record to your DNS records. We recommend to use a short TTL during installation, in case you need to change it.", "really-simple-ssl"), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_utils_Hyperlink__WEBPACK_IMPORTED_MODULE_6__["default"], {
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("h4", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Next step", "really-simple-ssl")), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Add the following token as text record to your DNS records. We recommend to use a short TTL during installation, in case you need to change it.", "really-simple-ssl"), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_utils_Hyperlink__WEBPACK_IMPORTED_MODULE_2__["default"], {
     target: "_blank",
     text: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Read more", "really-simple-ssl"),
     url: "https://really-simple-ssl.com/how-to-add-a-txt-record-to-dns"
@@ -16721,7 +16708,7 @@ const DnsVerification = props => {
     className: "rsssl-dns-field rsssl-selectable"
   }, tokenData.token))))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "rsssl-test-results"
-  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("DNS verification active. You can switch back to directory verification here.", "really-simple-ssl")), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_8__.Button, {
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("DNS verification active. You can switch back to directory verification here.", "really-simple-ssl")), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_3__.Button, {
     variant: "secondary",
     onClick: () => handleSwitchToDir()
   }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Switch to directory verification', 'really-simple-ssl'))));
@@ -16748,16 +16735,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _utils_api__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../utils/api */ "./src/utils/api.js");
 /* harmony import */ var _wordpress_data__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @wordpress/data */ "@wordpress/data");
 /* harmony import */ var _wordpress_data__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_wordpress_data__WEBPACK_IMPORTED_MODULE_3__);
-/* harmony import */ var _Settings_Notices__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../Settings/Notices */ "./src/Settings/Notices.js");
-/* harmony import */ var immutability_helper__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! immutability-helper */ "./node_modules/immutability-helper/index.js");
-/* harmony import */ var immutability_helper__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(immutability_helper__WEBPACK_IMPORTED_MODULE_5__);
-/* harmony import */ var _utils_sleeper__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../utils/sleeper */ "./src/utils/sleeper.js");
-/* harmony import */ var _utils_Hyperlink__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../utils/Hyperlink */ "./src/utils/Hyperlink.js");
-/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! @wordpress/components */ "@wordpress/components");
-/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_8___default = /*#__PURE__*/__webpack_require__.n(_wordpress_components__WEBPACK_IMPORTED_MODULE_8__);
-
-
-
+/* harmony import */ var _utils_sleeper__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../utils/sleeper */ "./src/utils/sleeper.js");
+/* harmony import */ var _utils_Hyperlink__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../utils/Hyperlink */ "./src/utils/Hyperlink.js");
+/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @wordpress/components */ "@wordpress/components");
+/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(_wordpress_components__WEBPACK_IMPORTED_MODULE_6__);
+/* harmony import */ var _Settings_FieldsData__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../Settings/FieldsData */ "./src/Settings/FieldsData.js");
 
 
 
@@ -16767,7 +16749,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 const Generation = props => {
-  const action = props.action;
+  let action = props.action;
   if (!action) {
     return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null);
   }
@@ -16779,18 +16761,18 @@ const Generation = props => {
         id: 'rsssl_skip_dns',
         type: 'snackbar',
         isDismissible: true
-      }).then((0,_utils_sleeper__WEBPACK_IMPORTED_MODULE_6__["default"])(3000)).then(response => {
+      }).then((0,_utils_sleeper__WEBPACK_IMPORTED_MODULE_4__["default"])(3000)).then(response => {
         (0,_wordpress_data__WEBPACK_IMPORTED_MODULE_3__.dispatch)('core/notices').removeNotice('rsssl_skip_dns');
       });
     });
   };
   return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "rsssl-test-results"
-  }, action.status === 'error' && action.action === 'verify_dns' && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("We could not check the DNS records. If you just added the record, please check in a few minutes.", "really-simple-ssl"), "\xA0", (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_utils_Hyperlink__WEBPACK_IMPORTED_MODULE_7__["default"], {
+  }, action.status === 'error' && action.action === 'verify_dns' && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("We could not check the DNS records. If you just added the record, please check in a few minutes.", "really-simple-ssl"), "\xA0", (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_utils_Hyperlink__WEBPACK_IMPORTED_MODULE_5__["default"], {
     target: "_blank",
     text: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("You can manually check the DNS records in an %sonline tool%s.", "really-simple-ssl"),
     url: "https://mxtoolbox.com/SuperTool.aspx"
-  }), (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("If you're sure it's set correctly, you can click the button to skip the DNS check.", "really-simple-ssl"), "\xA0"), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_8__.Button, {
+  }), (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("If you're sure it's set correctly, you can click the button to skip the DNS check.", "really-simple-ssl"), "\xA0"), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_6__.Button, {
     variant: "secondary",
     onClick: () => handleSkipDNS()
   }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Skip DNS check', 'really-simple-ssl'))));
@@ -16817,17 +16799,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _utils_api__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../utils/api */ "./src/utils/api.js");
 /* harmony import */ var _wordpress_data__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @wordpress/data */ "@wordpress/data");
 /* harmony import */ var _wordpress_data__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_wordpress_data__WEBPACK_IMPORTED_MODULE_3__);
-/* harmony import */ var _Settings_Notices__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../Settings/Notices */ "./src/Settings/Notices.js");
-/* harmony import */ var immutability_helper__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! immutability-helper */ "./node_modules/immutability-helper/index.js");
-/* harmony import */ var immutability_helper__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(immutability_helper__WEBPACK_IMPORTED_MODULE_5__);
-/* harmony import */ var react_use__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! react-use */ "./node_modules/react-use/esm/useUpdateEffect.js");
-/* harmony import */ var _utils_sleeper__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../utils/sleeper */ "./src/utils/sleeper.js");
-/* harmony import */ var _utils_Hyperlink__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../utils/Hyperlink */ "./src/utils/Hyperlink.js");
-/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! @wordpress/components */ "@wordpress/components");
-/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_8___default = /*#__PURE__*/__webpack_require__.n(_wordpress_components__WEBPACK_IMPORTED_MODULE_8__);
-
-
-
+/* harmony import */ var react_use__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! react-use */ "./node_modules/react-use/esm/useUpdateEffect.js");
+/* harmony import */ var _utils_sleeper__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../utils/sleeper */ "./src/utils/sleeper.js");
+/* harmony import */ var _Settings_FieldsData__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../Settings/FieldsData */ "./src/Settings/FieldsData.js");
 
 
 
@@ -16837,13 +16811,16 @@ __webpack_require__.r(__webpack_exports__);
 
 
 const Installation = props => {
-  const action = props.action;
+  const {
+    addHelpNotice
+  } = (0,_Settings_FieldsData__WEBPACK_IMPORTED_MODULE_5__["default"])();
   const [installationData, setInstallationData] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)(false);
-  (0,react_use__WEBPACK_IMPORTED_MODULE_9__["default"])(() => {
+  let action = props.action;
+  (0,react_use__WEBPACK_IMPORTED_MODULE_6__["default"])(() => {
     if (action && action.status === 'warning' && installationData && installationData.generated_by_rsssl) {
-      props.addHelp(props.field.id, 'default', (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("This is the certificate, which you need to install in your hosting dashboard.", "really-simple-ssl"), (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Certificate (CRT)", "really-simple-ssl"));
-      props.addHelp(props.field.id, 'default', (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("The private key can be uploaded or pasted in the appropriate field on your hosting dashboard.", "really-simple-ssl"), (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Private Key (KEY)", "really-simple-ssl"));
-      props.addHelp(props.field.id, 'default', (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("The CA Bundle will sometimes be automatically detected. If not, you can use this file.", "really-simple-ssl"), (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Certificate Authority Bundle (CABUNDLE)", "really-simple-ssl"));
+      addHelpNotice(props.field.id, 'default', (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("This is the certificate, which you need to install in your hosting dashboard.", "really-simple-ssl"), (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Certificate (CRT)", "really-simple-ssl"));
+      addHelpNotice(props.field.id, 'default', (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("The private key can be uploaded or pasted in the appropriate field on your hosting dashboard.", "really-simple-ssl"), (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Private Key (KEY)", "really-simple-ssl"));
+      addHelpNotice(props.field.id, 'default', (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("The CA Bundle will sometimes be automatically detected. If not, you can use this file.", "really-simple-ssl"), (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Certificate Authority Bundle (CABUNDLE)", "really-simple-ssl"));
     }
     if (action && (action.status === 'error' || action.status === 'warning')) {
       _utils_api__WEBPACK_IMPORTED_MODULE_2__.runLetsEncryptTest('installation_data').then(response => {
@@ -16853,7 +16830,6 @@ const Installation = props => {
       });
     }
   });
-  (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {});
   const handleCopyAction = type => {
     let success;
     let data = document.querySelector('.rsssl-' + type).innerText;
@@ -16872,7 +16848,7 @@ const Installation = props => {
       id: 'rsssl_copied_data',
       type: 'snackbar',
       isDismissible: true
-    }).then((0,_utils_sleeper__WEBPACK_IMPORTED_MODULE_6__["default"])(3000)).then(response => {
+    }).then((0,_utils_sleeper__WEBPACK_IMPORTED_MODULE_4__["default"])(3000)).then(response => {
       (0,_wordpress_data__WEBPACK_IMPORTED_MODULE_3__.dispatch)('core/notices').removeNotice('rsssl_copied_data');
     });
   };
@@ -16944,8 +16920,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _Installation__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./Installation */ "./src/LetsEncrypt/Installation.js");
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_8___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_8__);
-/* harmony import */ var react_use__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! react-use */ "./node_modules/react-use/esm/useUpdateEffect.js");
 /* harmony import */ var _utils_Icon__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../utils/Icon */ "./src/utils/Icon.js");
+/* harmony import */ var _Settings_FieldsData__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ../Settings/FieldsData */ "./src/Settings/FieldsData.js");
+/* harmony import */ var _letsEncryptData__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./letsEncryptData */ "./src/LetsEncrypt/letsEncryptData.js");
+
 
 
 
@@ -16959,58 +16937,119 @@ __webpack_require__.r(__webpack_exports__);
 
 
 const LetsEncrypt = props => {
-  const [id, setId] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)(props.field.id);
-  const [actionUpdated, setActionUpdated] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)(false);
-  const [progress, setProgress] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)(0);
-  const actionIndex = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useRef)(0);
+  const {
+    handleNextButtonDisabled,
+    getFieldValue
+  } = (0,_Settings_FieldsData__WEBPACK_IMPORTED_MODULE_10__["default"])();
+  const {
+    attemptCount,
+    setAttemptCount,
+    progress,
+    setProgress,
+    maxAttempts,
+    setMaxAttempts,
+    refreshTests,
+    setRefreshTests
+  } = (0,_letsEncryptData__WEBPACK_IMPORTED_MODULE_11__["default"])();
   const sleep = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useRef)(1500);
-  const maxAttempts = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useRef)(1);
   const intervalId = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useRef)(false);
   const lastActionStatus = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useRef)('');
-  // const previousProgress = useRef(0);
+  const actionIndex = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useRef)(0);
+  const action = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useRef)(false);
   const previousActionIndex = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useRef)(-1);
+  const startedTests = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useRef)([]);
+  const actionsList = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useRef)([]);
+  const maxIndex = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useRef)(1);
+  const refProgress = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useRef)(0);
   (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
-    props.handleNextButtonDisabled(true);
-    runTest(0);
-    intervalId.current = setInterval(() => setProgress(progress => progress + 0.2), 100);
-  }, []);
-  const restartTests = () => {
-    //clear statuses to ensure the bullets are grey
-    let actions = props.field.actions;
-    for (const action of actions) {
-      action.status = 'inactive';
+    reset();
+  }, [props.field]);
+  const getActions = () => {
+    let propActions = props.field.actions;
+    if (props.field.id === 'generation') {
+      propActions = adjustActionsForDNS(propActions);
     }
-    props.field.actions = actions;
-    actionIndex.current = 0;
-    previousActionIndex.current = -1;
-    lastActionStatus.current = '';
-    setProgress(0);
-    runTest(0);
+    maxIndex.current = propActions.length;
+    return propActions;
   };
-  const getAction = () => {
-    let newActions = props.field.actions;
-    return newActions[actionIndex.current];
-  };
-  (0,react_use__WEBPACK_IMPORTED_MODULE_10__["default"])(() => {
-    let maxIndex = props.field.actions.length - 1;
+  (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
+    if (!action.current && actionsList.length > 0) {
+      console.log("set index to 0");
+      // action.current = actions[0];
+      actionIndex.current = 0;
+    }
+  }, [actionsList.current]);
+  (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
+    if (actionIndex.current === 0) {
+      runTest();
+    }
+  }, [actionIndex.current]);
+  (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
+    action.current = actionsList.current[actionIndex.current];
+    intervalId.current = setInterval(() => {
+      setProgress(refProgress.current + 0.2);
+    }, 100);
+  }, [actionIndex.current]);
+  (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
     if (actionIndex.current > previousActionIndex.current) {
       previousActionIndex.current = actionIndex.current;
-      setProgress(100 / maxIndex * actionIndex.current);
+      setProgress(100 / maxIndex.current * actionIndex.current);
     }
 
     //ensure that progress does not get to 100 when retries are still running
-    let currentAction = getAction();
-    if (currentAction && currentAction.do === 'retry' && currentAction.attemptCount > 1) {
+    action.current = actionsList.current[actionIndex.current];
+    if (action.current && action.current.do === 'retry' && attemptCount > 1) {
       setProgress(90);
     }
-    if (props.refreshTests) {
-      props.resetRefreshTests();
-      restartTests();
+  }, [actionIndex.current, refreshTests]);
+  (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
+    if (refreshTests) {
+      setRefreshTests(false);
+      reset();
+      actionsList.current.forEach(function (action, i) {
+        actionsList.current[i]['status'] = 'inactive';
+      });
     }
-  });
+  }, [refreshTests]);
+  const updateActionProperty = (index, property, value) => {
+    let currentActions = actionsList.current;
+    if (currentActions.hasOwnProperty(index) && currentActions[index].hasOwnProperty(property)) {
+      currentActions[index][property] = value;
+    }
+    actionsList.current = currentActions;
+  };
+  const statuses = {
+    'inactive': {
+      'icon': 'circle-times',
+      'color': 'grey'
+    },
+    'warning': {
+      'icon': 'circle-times',
+      'color': 'orange'
+    },
+    'error': {
+      'icon': 'circle-times',
+      'color': 'red'
+    },
+    'success': {
+      'icon': 'circle-check',
+      'color': 'green'
+    }
+  };
+  const reset = () => {
+    handleNextButtonDisabled(true);
+    actionsList.current = getActions();
+    setProgress(0);
+    refProgress.current = 0;
+    startedTests.current = [];
+    actionIndex.current = 0;
+    action.current = false;
+    previousActionIndex.current = -1;
+    lastActionStatus.current = '';
+  };
   const adjustActionsForDNS = actions => {
     //find verification_type
-    let verification_type = props.getFieldValue('verification_type');
+    let verification_type = getFieldValue('verification_type');
     if (!verification_type) verification_type = 'dir';
     if (verification_type === 'dns') {
       //check if dns verification already is added
@@ -17043,20 +17082,19 @@ const LetsEncrypt = props => {
     return actions;
   };
   const processTestResult = action => {
+    clearInterval(intervalId.current);
     lastActionStatus.current = action.status;
-    let maxIndex = props.field.actions.length - 1;
     if (action.status === 'success') {
-      action.attemptCount = 0;
+      setAttemptCount(0);
     } else {
       if (!Number.isInteger(action.attemptCount)) {
-        action.attemptCount = 0;
+        setAttemptCount(0);
       }
-      action.attemptCount += 1;
+      setAttemptCount(attemptCount + 1);
     }
-    setActionUpdated(true);
 
     //used for dns verification actions
-    var event = new CustomEvent('rsssl_le_response', {
+    let event = new CustomEvent('rsssl_le_response', {
       detail: action
     });
     document.dispatchEvent(event);
@@ -17064,67 +17102,71 @@ const LetsEncrypt = props => {
 
     //finalize happens when halfway through our tests it's finished. We can skip all others.
     if (action.do === 'finalize') {
-      clearInterval(intervalId.current);
-      props.field.actions.forEach(function (action, i) {
+      actionsList.current.forEach(function (action, i) {
         if (i > actionIndex.current) {
-          action.hide = true;
+          updateActionProperty(i, 'hide', true);
         }
       });
-      actionIndex.current = maxIndex;
-      props.handleNextButtonDisabled(false);
+      actionIndex.current = maxIndex.current + 1;
+      handleNextButtonDisabled(false);
     } else if (action.do === 'continue' || action.do === 'skip') {
       //new action, so reset the attempts count
-      action.attemptCount = 1;
+      setAttemptCount(1);
       //skip:  drop previous completely, skip to next.
       if (action.do === 'skip') {
-        action.hide = true;
+        actionsList.current[actionIndex.current]['hide'] = true;
       }
       //move to next action, but not if we're already on the max
-      if (maxIndex > actionIndex.current) {
+      if (maxIndex.current - 1 > actionIndex.current) {
+        let next = actionIndex.current + 1;
         actionIndex.current = actionIndex.current + 1;
-        runTest(actionIndex.current);
+        runTest();
       } else {
-        actionIndex.current = maxIndex;
-        props.handleNextButtonDisabled(false);
-        clearInterval(intervalId.current);
+        handleNextButtonDisabled(false);
+        actionIndex.current = actionIndex.current + 1;
       }
     } else if (action.do === 'retry') {
-      if (action.attemptCount >= maxAttempts.current) {
-        actionIndex.current = maxIndex;
-        clearInterval(intervalId.current);
+      if (attemptCount >= maxAttempts) {
+        actionIndex.current = maxIndex.current;
       } else {
-        // clearInterval(intervalId.current);
-        runTest(actionIndex.current);
+        runTest();
       }
     } else if (action.do === 'stop') {
-      clearInterval(intervalId.current);
+      actionIndex.current = maxIndex.current;
     }
   };
   const runTest = () => {
-    setActionUpdated(false);
-    if (props.field.id === 'generation') {
-      props.field.actions = adjustActionsForDNS(props.field.actions);
+    if (refProgress.current >= 100) {
+      return;
     }
-    let action = getAction();
-    let test = action.action;
+    let currentAction = {
+      ...actionsList.current[actionIndex.current]
+    };
+    if (!currentAction) return;
+    let test = currentAction.action;
+    if (startedTests.current.includes(test)) {
+      return;
+    }
+    startedTests.current.push(test);
     const startTime = new Date();
-    maxAttempts.current = action.attempts;
+    setMaxAttempts(currentAction.attempts);
     _utils_api__WEBPACK_IMPORTED_MODULE_1__.runLetsEncryptTest(test, props.field.id).then(response => {
       const endTime = new Date();
       let timeDiff = endTime - startTime; //in ms
       const elapsedTime = Math.round(timeDiff);
-      let action = getAction();
-      action.status = response.status ? response.status : 'inactive';
-      action.hide = false;
-      action.description = response.message;
-      action.do = response.action;
-      action.output = response.output ? response.output : false;
+      currentAction.status = response.status ? response.status : 'inactive';
+      currentAction.hide = false;
+      currentAction.description = response.message;
+      currentAction.do = response.action;
+      currentAction.output = response.output ? response.output : false;
       sleep.current = 500;
       if (elapsedTime < 1500) {
         sleep.current = 1500 - elapsedTime;
       }
+      action.current = currentAction;
+      actionsList.current[actionIndex.current] = currentAction;
     }).then((0,_utils_sleeper__WEBPACK_IMPORTED_MODULE_2__["default"])(sleep.current)).then(() => {
-      processTestResult(action);
+      processTestResult(currentAction);
     });
   };
   const getStyles = () => {
@@ -17148,28 +17190,13 @@ const LetsEncrypt = props => {
   if (!props.field.actions) {
     return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null);
   }
-  // keep current action, before it is filtered. The actionindex doesn't match anymore after filtering
-  let currentAction = props.field.actions[actionIndex.current];
+
   //filter out skipped actions
-  let actions = props.field.actions.filter(action => action.hide !== true);
-  const statuses = {
-    'inactive': {
-      'icon': 'circle-times',
-      'color': 'grey'
-    },
-    'warning': {
-      'icon': 'circle-times',
-      'color': 'orange'
-    },
-    'error': {
-      'icon': 'circle-times',
-      'color': 'red'
-    },
-    'success': {
-      'icon': 'circle-check',
-      'color': 'green'
-    }
-  };
+  let actionsOutput = actionsList.current.filter(action => action.hide !== true);
+  refProgress.current = progress;
+  if (maxIndex.current === actionIndex.current + 1) {
+    refProgress.current = 100;
+  }
   return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "rsssl-lets-encrypt-tests"
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
@@ -17181,61 +17208,91 @@ const LetsEncrypt = props => {
     style: getStyles()
   }))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "rsssl_letsencrypt_container rsssl-progress-container field-group"
-  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("ul", null, actions.map((action, i) => (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("li", {
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("ul", null, actionsOutput.map((action, i) => (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("li", {
     key: i
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_utils_Icon__WEBPACK_IMPORTED_MODULE_9__["default"], {
     name: getStatusIcon(action),
     color: getStatusColor(action)
-  }), action.do === 'retry' && action.attemptCount >= 1 && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_8__.__)("Attempt %s.", "really-simple-ssl").replace('%s', action.attemptCount), " "), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
+  }), action.do === 'retry' && attemptCount >= 1 && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_8__.__)("Attempt %s.", "really-simple-ssl").replace('%s', attemptCount), " "), "\xA0", (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
     dangerouslySetInnerHTML: {
       __html: action.description
     }
   }))))), props.field.id === 'directories' && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_Directories__WEBPACK_IMPORTED_MODULE_3__["default"], {
-    save: props.save,
-    selectMenu: props.selectMenu,
     field: props.field,
-    updateField: props.updateField,
-    addHelp: props.addHelp,
-    progress: progress,
-    action: currentAction
+    action: actionsList.current[actionIndex.current]
   }), props.field.id === 'dns-verification' && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_DnsVerification__WEBPACK_IMPORTED_MODULE_4__["default"], {
-    save: props.save,
-    selectMenu: props.selectMenu,
     field: props.field,
-    updateField: props.updateField,
-    addHelp: props.addHelp,
-    progress: progress,
-    action: currentAction
+    action: actionsList.current[actionIndex.current]
   }), props.field.id === 'generation' && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_Generation__WEBPACK_IMPORTED_MODULE_5__["default"], {
-    restartTests: restartTests,
-    save: props.save,
-    selectMenu: props.selectMenu,
     field: props.field,
-    updateField: props.updateField,
-    addHelp: props.addHelp,
-    progress: progress,
-    action: currentAction
+    action: actionsList.current[actionIndex.current]
   }), props.field.id === 'installation' && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_Installation__WEBPACK_IMPORTED_MODULE_7__["default"], {
-    restartTests: restartTests,
-    save: props.save,
-    selectMenu: props.selectMenu,
     field: props.field,
-    updateField: props.updateField,
-    addHelp: props.addHelp,
-    progress: progress,
-    action: currentAction
+    action: actionsList.current[actionIndex.current]
   }), props.field.id === 'activate' && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_Activate__WEBPACK_IMPORTED_MODULE_6__["default"], {
-    restartTests: restartTests,
-    save: props.save,
-    selectMenu: props.selectMenu,
     field: props.field,
-    updateField: props.updateField,
-    addHelp: props.addHelp,
-    progress: progress,
-    action: currentAction
+    action: actionsList.current[actionIndex.current]
   })));
 };
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (LetsEncrypt);
+
+/***/ }),
+
+/***/ "./src/LetsEncrypt/letsEncryptData.js":
+/*!********************************************!*\
+  !*** ./src/LetsEncrypt/letsEncryptData.js ***!
+  \********************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var zustand__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! zustand */ "./node_modules/zustand/esm/index.mjs");
+
+const useLetsEncryptData = (0,zustand__WEBPACK_IMPORTED_MODULE_0__.create)((set, get) => ({
+  actionIndex: false,
+  progress: 0,
+  maxIndex: 1,
+  attemptCount: 0,
+  maxAttempts: 1,
+  refreshTests: false,
+  actions: [],
+  setAttemptCount: attemptCount => {
+    set(state => ({
+      attemptCount
+    }));
+  },
+  setProgress: progress => {
+    set(state => ({
+      progress
+    }));
+  },
+  setActions: actions => {
+    let maxIndex = actions.length;
+    set(state => ({
+      actions,
+      maxIndex
+    }));
+  },
+  setRefreshTests: refreshTests => {
+    set(state => ({
+      refreshTests
+    }));
+  },
+  setActionIndex: actionIndex => {
+    set(state => ({
+      actionIndex
+    }));
+  },
+  setMaxAttempts: maxAttempts => {
+    set(state => ({
+      maxAttempts
+    }));
+  }
+}));
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (useLetsEncryptData);
 
 /***/ }),
 
@@ -17343,12 +17400,20 @@ const useMenu = (0,zustand__WEBPACK_IMPORTED_MODULE_1__.create)((set, get) => ({
     title: ' ',
     menu_items: []
   },
-  setSelectedSubMenuItem: selectedSubMenuItem => set(state => ({
-    selectedSubMenuItem
-  })),
-  setSelectedMainMenuItem: selectedMainMenuItem => set(state => ({
-    selectedMainMenuItem
-  })),
+  setSelectedSubMenuItem: async selectedSubMenuItem => {
+    let selectedMainMenuItem = getMainMenuForSubMenu(selectedSubMenuItem);
+    set(state => ({
+      selectedSubMenuItem,
+      selectedMainMenuItem
+    }));
+    window.location.href = rsssl_settings.dashboard_url + '#' + selectedMainMenuItem + '/' + selectedSubMenuItem;
+  },
+  setSelectedMainMenuItem: selectedMainMenuItem => {
+    set(state => ({
+      selectedMainMenuItem
+    }));
+    window.location.href = rsssl_settings.dashboard_url + '#' + selectedMainMenuItem;
+  },
   //we need to get the main menu item directly from the anchor, otherwise we have to wait for the menu to load in page.js
   fetchSelectedMainMenuItem: () => {
     let selectedMainMenuItem = (0,_utils_getAnchor__WEBPACK_IMPORTED_MODULE_0__["default"])('main') || 'dashboard';
@@ -17366,14 +17431,15 @@ const useMenu = (0,zustand__WEBPACK_IMPORTED_MODULE_1__.create)((set, get) => ({
     let menu = rsssl_settings.menu;
     menu = Object.values(menu);
     const selectedMainMenuItem = (0,_utils_getAnchor__WEBPACK_IMPORTED_MODULE_0__["default"])('main') || 'dashboard';
+    menu = menu.filter(item => !item.default_hidden || selectedMainMenuItem === item.id);
     if (typeof fields !== 'undefined') {
       let subMenu = getSubMenu(menu, selectedMainMenuItem);
       const selectedSubMenuItem = getSelectedSubMenuItem(subMenu, fields);
+      subMenu.menu_items = dropEmptyMenuItems(subMenu.menu_items, fields, selectedSubMenuItem);
       const {
         nextMenuItem,
         previousMenuItem
-      } = getPreviousAndNextMenuItems(menu, selectedSubMenuItem);
-      subMenu.menu_items = dropEmptyMenuItems(subMenu.menu_items, fields, selectedSubMenuItem);
+      } = getPreviousAndNextMenuItems(menu, selectedSubMenuItem, fields);
       const hasPremiumItems = subMenu.menu_items.filter(item => {
         return item.premium === true;
       }).length > 0;
@@ -17393,27 +17459,46 @@ const useMenu = (0,zustand__WEBPACK_IMPORTED_MODULE_1__.create)((set, get) => ({
         selectedMainMenuItem: selectedMainMenuItem
       }));
     }
+  },
+  getDefaultSubMenuItem: async fields => {
+    let subMenuLoaded = get().subMenuLoaded;
+    if (!subMenuLoaded) {
+      await get().fetchMenuData(fields);
+    }
+    let subMenu = get().subMenu;
+    let fallBackMenuItem = subMenuLoaded && subMenu.hasOwnProperty(0) ? subMenu[0].id : 'general';
+    let anchor = (0,_utils_getAnchor__WEBPACK_IMPORTED_MODULE_0__["default"])('menu');
+    let foundAnchorInMenu = false;
+    //check if this anchor actually exists in our current submenu. If not, clear it
+    for (const key in undefined.menu.menu_items) {
+      if (subMenu.hasOwnProperty(key) && subMenu[key].id === anchor) {
+        foundAnchorInMenu = true;
+      }
+    }
+    if (!foundAnchorInMenu) anchor = false;
+    return anchor ? anchor : fallBackMenuItem;
   }
 }));
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (useMenu);
 
 // Parses menu items and nested items in single array
-const menuItemParser = (parsedMenuItems, menuItems) => {
+const menuItemParser = (parsedMenuItems, menuItems, fields) => {
   menuItems.forEach(menuItem => {
     if (menuItem.visible) {
       parsedMenuItems.push(menuItem.id);
       if (menuItem.hasOwnProperty('menu_items')) {
-        menuItemParser(parsedMenuItems, menuItem.menu_items);
+        menuItem.menu_items = dropEmptyMenuItems(menuItem.menu_items, fields);
+        menuItemParser(parsedMenuItems, menuItem.menu_items, fields);
       }
     }
   });
   return parsedMenuItems;
 };
-const getPreviousAndNextMenuItems = (menu, selectedSubMenuItem) => {
+const getPreviousAndNextMenuItems = (menu, selectedSubMenuItem, fields) => {
   let previousMenuItem;
   let nextMenuItem;
   const parsedMenuItems = [];
-  menuItemParser(parsedMenuItems, menu);
+  menuItemParser(parsedMenuItems, menu, fields);
   // Finds current menu item index
   const currentMenuItemIndex = parsedMenuItems.findIndex(menuItem => menuItem === selectedSubMenuItem);
   if (currentMenuItemIndex !== -1) {
@@ -17432,18 +17517,21 @@ const getPreviousAndNextMenuItems = (menu, selectedSubMenuItem) => {
     previousMenuItem
   };
 };
-const dropEmptyMenuItems = (menuItems, fields, selectedSubMenuItem) => {
+const dropEmptyMenuItems = (menuItems, fields) => {
   const newMenuItems = menuItems;
   for (const [index, menuItem] of menuItems.entries()) {
-    const menuItemFields = fields.filter(field => {
-      return field.menu_id === menuItem.id && field.visible && !field.conditionallyDisabled;
+    let menuItemFields = fields.filter(field => {
+      return field.menu_id === menuItem.id;
+    });
+    menuItemFields = menuItemFields.filter(field => {
+      return field.visible;
     });
     if (menuItemFields.length === 0 && !menuItem.hasOwnProperty('menu_items')) {
       newMenuItems[index].visible = false;
     } else {
       newMenuItems[index].visible = true;
       if (menuItem.hasOwnProperty('menu_items')) {
-        newMenuItems[index].menu_items = dropEmptyMenuItems(menuItem.menu_items, fields, selectedSubMenuItem);
+        newMenuItems[index].menu_items = dropEmptyMenuItems(menuItem.menu_items, fields);
       }
     }
   }
@@ -17462,6 +17550,36 @@ const getSubMenu = (menu, selectedMainMenuItem) => {
   }
   subMenu = addVisibleToMenuItems(subMenu);
   return subMenu;
+};
+
+/*
+* Get the main menu item for a submenu item
+*/
+const getMainMenuForSubMenu = findMenuItem => {
+  let menu = rsssl_settings.menu;
+  for (const mainKey in menu) {
+    let mainMenuItem = menu[mainKey];
+    if (mainMenuItem.id === findMenuItem) {
+      return mainMenuItem.id;
+    }
+    if (mainMenuItem.menu_items) {
+      for (const subKey in mainMenuItem.menu_items) {
+        let subMenuItem = mainMenuItem.menu_items[subKey];
+        if (subMenuItem.id === findMenuItem) {
+          return mainMenuItem.id;
+        }
+        if (subMenuItem.menu_items) {
+          for (const sub2Key in subMenuItem.menu_items) {
+            let sub2MenuItem = subMenuItem.menu_items[sub2Key];
+            if (sub2MenuItem.id === findMenuItem) {
+              return mainMenuItem.id;
+            }
+          }
+        }
+      }
+    }
+  }
+  return false;
 };
 
 /**
@@ -17820,9 +17938,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react_use__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! react-use */ "./node_modules/react-use/esm/useUpdateEffect.js");
 /* harmony import */ var _utils_Icon__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../utils/Icon */ "./src/utils/Icon.js");
 /* harmony import */ var _Placeholder_Placeholder__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../Placeholder/Placeholder */ "./src/Placeholder/Placeholder.js");
-/* harmony import */ var _OnboardingData__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./OnboardingData */ "./src/Onboarding/OnboardingData.js");
-/* harmony import */ var _Menu_MenuData__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../Menu/MenuData */ "./src/Menu/MenuData.js");
-/* harmony import */ var _Settings_FieldsData__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../Settings/FieldsData */ "./src/Settings/FieldsData.js");
+/* harmony import */ var _Menu_MenuData__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../Menu/MenuData */ "./src/Menu/MenuData.js");
+/* harmony import */ var _Settings_FieldsData__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../Settings/FieldsData */ "./src/Settings/FieldsData.js");
+/* harmony import */ var _OnboardingData__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./OnboardingData */ "./src/Onboarding/OnboardingData.js");
 
 
 
@@ -17836,27 +17954,21 @@ __webpack_require__.r(__webpack_exports__);
 
 const Onboarding = props => {
   const {
-    showOnboardingModal,
-    setShowOnBoardingModal,
-    dismissModal
-  } = (0,_OnboardingData__WEBPACK_IMPORTED_MODULE_6__["default"])();
-  const {
-    fields,
-    changedFields,
     fetchFieldsData,
     updateField,
     saveFields,
-    setChangedFields
-  } = (0,_Settings_FieldsData__WEBPACK_IMPORTED_MODULE_8__["default"])();
+    setChangedField
+  } = (0,_Settings_FieldsData__WEBPACK_IMPORTED_MODULE_7__["default"])();
+  const {
+    dismissModal
+  } = (0,_OnboardingData__WEBPACK_IMPORTED_MODULE_8__["default"])();
   const {
     setSelectedMainMenuItem
-  } = (0,_Menu_MenuData__WEBPACK_IMPORTED_MODULE_7__["default"])();
+  } = (0,_Menu_MenuData__WEBPACK_IMPORTED_MODULE_6__["default"])();
   const [steps, setSteps] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)([]);
   const [error, setError] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)(false);
   const [overrideSSL, setOverrideSSL] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)(false);
   const [certificateValid, setCertificateValid] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)(false);
-  const [sslActivated, setsslActivated] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)(false);
-  const [activateSSLDisabled, setActivateSSLDisabled] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)(true);
   const [stepsChanged, setStepsChanged] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)('');
   const [networkwide, setNetworkwide] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)(false);
   const [networkActivationStatus, setNetworkActivationStatus] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)(false);
@@ -17884,9 +17996,7 @@ const Onboarding = props => {
         let steps = response.steps;
         setNetworkwide(response.networkwide);
         setOverrideSSL(response.ssl_detection_overridden);
-        setActivateSSLDisabled(!response.ssl_detection_overridden);
         setCertificateValid(response.certificate_valid);
-        setsslActivated(response.ssl_enabled);
         steps[0].visible = true;
         //if ssl is already enabled, the server will send only one step. In that case we can skip the below.
         //it's only needed when SSL is activated just now, client side.
@@ -17924,18 +18034,16 @@ const Onboarding = props => {
 
   const activateSSL = () => {
     setStepsChanged(false);
-    let sslUrl = window.location.href.replace("http://", "https://");
-    _utils_api__WEBPACK_IMPORTED_MODULE_2__.runTest('activate_ssl').then(response => {
+    _utils_api__WEBPACK_IMPORTED_MODULE_2__.runTest('activate_ssl').then(async response => {
       steps[0].visible = false;
       steps[1].visible = true;
       //change url to https, after final check
       if (response.success) {
         setSteps(steps);
         setStepsChanged(true);
-        setsslActivated(response.success);
         updateField('ssl_enabled', true);
-        setChangedFields('ssl_enabled', true);
-        saveFields(true, false);
+        setChangedField('ssl_enabled', true);
+        await saveFields(true, false);
         if (response.site_url_changed) {
           window.location.reload();
         } else {
@@ -17967,11 +18075,11 @@ const Onboarding = props => {
     let data = {};
     data.id = id;
     updateActionForItem(id, action, false);
-    _utils_api__WEBPACK_IMPORTED_MODULE_2__.doAction(action, data).then(response => {
+    _utils_api__WEBPACK_IMPORTED_MODULE_2__.doAction(action, data).then(async response => {
       if (response.success) {
         if (action === 'activate_setting') {
           //ensure all fields are updated, and progress is retrieved again
-          fetchFieldsData();
+          await fetchFieldsData('general');
         }
         let nextAction = response.next_action;
         if (nextAction !== 'none' && nextAction !== 'completed') {
@@ -18017,7 +18125,7 @@ const Onboarding = props => {
       const statuses = {
         'inactive': {
           'icon': 'info',
-          'color': 'grey'
+          'color': 'orange'
         },
         'warning': {
           'icon': 'circle-times',
@@ -18062,7 +18170,6 @@ const Onboarding = props => {
         name: statusIcon,
         color: statusColor
       }), title, id === 'ssl_enabled' && networkwide && networkActivationStatus === 'main_site_activated' && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, "\xA0-\xA0", networkProgress < 100 && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)("working", "really-simple-ssl"), "\xA0", networkProgress, "%"), networkProgress >= 100 && (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)("completed", "really-simple-ssl")), button && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, "\xA0-\xA0", showLink && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Button, {
-        className: "button button-secondary",
         isLink: true,
         onClick: () => itemButtonHandler(id, action)
       }, buttonTitle), !showLink && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, buttonTitle)));
@@ -18101,9 +18208,7 @@ const Onboarding = props => {
           setOverrideSSL(value);
           let data = {};
           data.overrideSSL = value;
-          _utils_api__WEBPACK_IMPORTED_MODULE_2__.doAction('override_ssl_detection', data).then(response => {
-            setActivateSSLDisabled(!value);
-          });
+          _utils_api__WEBPACK_IMPORTED_MODULE_2__.doAction('override_ssl_detection', data);
         }
       }));
     }
@@ -18121,13 +18226,16 @@ const Onboarding = props => {
   };
   if (error) {
     return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_Placeholder_Placeholder__WEBPACK_IMPORTED_MODULE_5__["default"], {
-      lines: "12",
+      lines: "3",
       error: error
     });
   }
-  return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, !stepsChanged && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_Placeholder_Placeholder__WEBPACK_IMPORTED_MODULE_5__["default"], {
-    lines: "12"
-  }), stepsChanged && steps.map((step, index) => {
+  return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, !stepsChanged && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("ul", null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("li", null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_utils_Icon__WEBPACK_IMPORTED_MODULE_4__["default"], {
+    name: "file-download",
+    color: "grey"
+  }), (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)("Fetching next step...", "really-simple-ssl"))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_Placeholder_Placeholder__WEBPACK_IMPORTED_MODULE_5__["default"], {
+    lines: "3"
+  })), stepsChanged && steps.map((step, index) => {
     const {
       title,
       subtitle,
@@ -18286,7 +18394,7 @@ const OnboardingModal = props => {
     name: "file-download",
     color: "orange"
   }), (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_4__.__)("Please wait while we detect your setup", "really-simple-ssl"))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_Placeholder_Placeholder__WEBPACK_IMPORTED_MODULE_3__["default"], {
-    lines: "10"
+    lines: "3"
   })), fieldsLoaded && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_Onboarding__WEBPACK_IMPORTED_MODULE_2__["default"], {
     isModal: true
   })), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
@@ -18352,6 +18460,7 @@ const Page = props => {
       fetchMenuData(fields);
     }
     window.addEventListener('hashchange', () => {
+      console.log("fetch menu data on hash change");
       fetchMenuData(fields);
     });
   }, [fields]);
@@ -18477,6 +18586,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _utils_Hyperlink__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../utils/Hyperlink */ "./src/utils/Hyperlink.js");
 /* harmony import */ var _utils_api__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../utils/api */ "./src/utils/api.js");
+/* harmony import */ var _FieldsData__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./FieldsData */ "./src/Settings/FieldsData.js");
+
 
 
 
@@ -18486,14 +18597,16 @@ __webpack_require__.r(__webpack_exports__);
  * Render a help notice in the sidebar
  */
 const Button = props => {
+  const {
+    addHelpNotice
+  } = (0,_FieldsData__WEBPACK_IMPORTED_MODULE_4__["default"])();
   const onClickHandler = action => {
     let data = {};
     _utils_api__WEBPACK_IMPORTED_MODULE_3__.doAction(action, data).then(response => {
-      let help = {};
-      help.label = response.success ? 'success' : 'warning';
-      help.title = (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Test notification by email", 'really-simple-ssl');
-      help.text = response.message;
-      props.addNotice(props.field.id, help);
+      let label = response.success ? 'success' : 'warning';
+      let title = (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Test notification by email", 'really-simple-ssl');
+      let text = response.message;
+      addHelpNotice(props.field.id, label, text, title, false);
     });
   };
   return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, props.field.url && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_utils_Hyperlink__WEBPACK_IMPORTED_MODULE_2__["default"], {
@@ -18522,9 +18635,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _utils_Icon__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../utils/Icon */ "./src/utils/Icon.js");
-
-
 
 /*
 * The tooltip can't be included in the native toggleControl, so we have to build our own.
@@ -18551,7 +18661,8 @@ const CheckboxControl = props => {
     className: "components-form-toggle__input",
     onChange: e => onChangeHandler(e),
     id: field.id,
-    type: "checkbox"
+    type: "checkbox",
+    disabled: props.disabled
   }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
     className: "components-form-toggle__track"
   }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
@@ -18617,15 +18728,16 @@ __webpack_require__.r(__webpack_exports__);
 const Field = props => {
   let scrollAnchor = React.createRef();
   const {
-    fields,
     updateField,
     setChangedField,
-    highLightField,
-    saveFields
+    highLightField
   } = (0,_FieldsData__WEBPACK_IMPORTED_MODULE_16__["default"])();
   (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
-    if (props.highLightedField === props.field.id && scrollAnchor.current) {
-      scrollAnchor.current.scrollIntoView();
+    if (highLightField === props.field.id && scrollAnchor.current) {
+      scrollAnchor.current.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start'
+      });
     }
   });
   const onChangeHandler = fieldValue => {
@@ -18697,6 +18809,7 @@ const Field = props => {
     }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_CheckboxControl__WEBPACK_IMPORTED_MODULE_11__["default"], {
       label: labelWrap(field),
       field: field,
+      disabled: disabled,
       onChangeHandler: fieldValue => onChangeHandler(fieldValue)
     }), field.comment && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
       className: "rsssl-comment",
@@ -18881,14 +18994,16 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var zustand__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! zustand */ "./node_modules/zustand/esm/index.mjs");
-/* harmony import */ var immer__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! immer */ "./node_modules/immer/dist/immer.esm.mjs");
+/* harmony import */ var zustand__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! zustand */ "./node_modules/zustand/esm/index.mjs");
+/* harmony import */ var immer__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! immer */ "./node_modules/immer/dist/immer.esm.mjs");
 /* harmony import */ var _utils_api__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../utils/api */ "./src/utils/api.js");
 /* harmony import */ var _utils_sleeper_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../utils/sleeper.js */ "./src/utils/sleeper.js");
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__);
 /* harmony import */ var _wordpress_data__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @wordpress/data */ "@wordpress/data");
 /* harmony import */ var _wordpress_data__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_wordpress_data__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var _utils_lib__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../utils/lib */ "./src/utils/lib.js");
+
 
 
 
@@ -18909,7 +19024,7 @@ const fetchFields = () => {
     console.error(error);
   });
 };
-const useFields = (0,zustand__WEBPACK_IMPORTED_MODULE_4__.create)((set, get) => ({
+const useFields = (0,zustand__WEBPACK_IMPORTED_MODULE_5__.create)((set, get) => ({
   fieldsLoaded: false,
   error: false,
   fields: [],
@@ -18918,9 +19033,11 @@ const useFields = (0,zustand__WEBPACK_IMPORTED_MODULE_4__.create)((set, get) => 
   nextButtonDisabled: false,
   refreshTests: false,
   highLightField: '',
-  setHighLightField: highLightField => set(state => ({
-    highLightField
-  })),
+  setHighLightField: highLightField => {
+    set(state => ({
+      highLightField
+    }));
+  },
   setRefreshTests: refreshTests => set(state => ({
     refreshTests
   })),
@@ -18928,7 +19045,7 @@ const useFields = (0,zustand__WEBPACK_IMPORTED_MODULE_4__.create)((set, get) => 
     nextButtonDisabled
   })),
   setChangedField: (id, value) => {
-    set((0,immer__WEBPACK_IMPORTED_MODULE_5__.produce)(state => {
+    set((0,immer__WEBPACK_IMPORTED_MODULE_6__.produce)(state => {
       //remove current reference
       const existingFieldIndex = state.changedFields.findIndex(field => {
         return field.id === id;
@@ -18948,7 +19065,7 @@ const useFields = (0,zustand__WEBPACK_IMPORTED_MODULE_4__.create)((set, get) => 
     handleShowSavedSettingsNotice(text);
   },
   updateField: (id, value) => {
-    set((0,immer__WEBPACK_IMPORTED_MODULE_5__.produce)(state => {
+    set((0,immer__WEBPACK_IMPORTED_MODULE_6__.produce)(state => {
       let index = state.fields.findIndex(fieldItem => fieldItem.id === id);
       if (index !== -1) {
         state.fields[index].value = value;
@@ -18956,7 +19073,7 @@ const useFields = (0,zustand__WEBPACK_IMPORTED_MODULE_4__.create)((set, get) => 
     }));
   },
   updateSubField: (id, subItemId, value) => {
-    set((0,immer__WEBPACK_IMPORTED_MODULE_5__.produce)(state => {
+    set((0,immer__WEBPACK_IMPORTED_MODULE_6__.produce)(state => {
       let index = state.fields.findIndex(fieldItem => fieldItem.id === id);
       let itemValue = state.fields[index].value;
       if (!Array.isArray(itemValue)) {
@@ -19042,7 +19159,7 @@ const useFields = (0,zustand__WEBPACK_IMPORTED_MODULE_4__.create)((set, get) => 
       _utils_api__WEBPACK_IMPORTED_MODULE_0__.setFields(saveFields).then(response => {
         progress = response.progress;
         fields = response.fields;
-        set((0,immer__WEBPACK_IMPORTED_MODULE_5__.produce)(state => {
+        set((0,immer__WEBPACK_IMPORTED_MODULE_6__.produce)(state => {
           state.changedFields = [];
           state.fields = fields;
           state.progress = progress;
@@ -19058,7 +19175,7 @@ const useFields = (0,zustand__WEBPACK_IMPORTED_MODULE_4__.create)((set, get) => 
     let fields = get().fields;
     fields = updateFieldsListWithConditions(fields);
     const nextButtonDisabled = isNextButtonDisabled(fields, selectedSubMenuItem);
-    set((0,immer__WEBPACK_IMPORTED_MODULE_5__.produce)(state => {
+    set((0,immer__WEBPACK_IMPORTED_MODULE_6__.produce)(state => {
       state.fields = fields;
       state.nextButtonDisabled = nextButtonDisabled;
     }));
@@ -19098,12 +19215,18 @@ const updateFieldsListWithConditions = fields => {
   let newFields = [];
   fields.forEach(function (field, i) {
     let enabled = !(field.hasOwnProperty('react_conditions') && !validateConditions(field.react_conditions, fields, field.id));
+    let previouslyEnabled = !field.conditionallyDisabled;
     //we want to update the changed fields if this field has just become visible. Otherwise the new field won't get saved.
     const newField = {
       ...field
     };
     newField.conditionallyDisabled = !enabled;
+    newField.visible = !(!enabled && (newField.type === 'letsencrypt' || newField.condition_action === 'hide'));
     newFields.push(newField);
+    //if this is a learning mode field, do not add it to the changed fields list
+    if (!previouslyEnabled && newField.enabled && field.type !== 'learningmode') {
+      set().setChangedField(field.id, field.value);
+    }
   });
   return newFields;
 };
@@ -19140,9 +19263,9 @@ const validateConditions = (conditions, fields, fieldId) => {
               let field = conditionFields[0];
               let actualValue = field.value;
               if (field.type === 'text_checkbox') {
-                thisConditionApplies = actualValue.hasOwnProperty('show') && actualValue['show'] === conditionValue;
+                thisConditionApplies = actualValue.hasOwnProperty('show') && actualValue['show'] == conditionValue; //can be 1/true or 0/false
               } else if (field.type === 'checkbox') {
-                thisConditionApplies = actualValue === conditionValue;
+                thisConditionApplies = actualValue == conditionValue; //can be 1/true or 0/false
               } else if (field.type === 'multicheckbox') {
                 //multicheckbox conditions
                 //loop through objects
@@ -19270,29 +19393,29 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/components */ "@wordpress/components");
 /* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _utils_api__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../utils/api */ "./src/utils/api.js");
+/* harmony import */ var _FieldsData__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./FieldsData */ "./src/Settings/FieldsData.js");
 
 
 
 
 const Host = props => {
+  const {
+    updateField,
+    setChangedField,
+    saveFields,
+    handleNextButtonDisabled
+  } = (0,_FieldsData__WEBPACK_IMPORTED_MODULE_2__["default"])();
   const disabled = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useRef)(false);
-  const onChangeHandler = fieldValue => {
-    let fields = props.fields;
+  const onChangeHandler = async fieldValue => {
     let field = props.field;
-    field.value = fieldValue;
-    fields[props.index]['value'] = fieldValue;
-
     //force update, and get new fields.
+    handleNextButtonDisabled(true);
     disabled.current = true;
-    let saveFields = [];
-    props.handleNextButtonDisabled(true);
-    saveFields.push(field);
-    _utils_api__WEBPACK_IMPORTED_MODULE_2__.setFields(saveFields).then(response => {
-      props.updateFields(response.fields);
-      disabled.current = false;
-      props.handleNextButtonDisabled(false);
-    });
+    updateField(field.id, fieldValue);
+    setChangedField(field.id, fieldValue);
+    await saveFields(true, false);
+    handleNextButtonDisabled(false);
+    disabled.current = false;
   };
   let fieldValue = props.field.value;
   let field = props.field;
@@ -19684,8 +19807,6 @@ const UseLearningMode = (0,zustand__WEBPACK_IMPORTED_MODULE_1__.create)((set, ge
     if (!Array.isArray(learningModeData)) {
       learningModeData = [];
     }
-    console.log("response state ");
-    console.log(learningModeData);
     set({
       learningModeData: learningModeData,
       dataLoaded: true
@@ -19717,8 +19838,6 @@ const UseLearningMode = (0,zustand__WEBPACK_IMPORTED_MODULE_1__.create)((set, ge
     if (!Array.isArray(learningModeData)) {
       learningModeData = [];
     }
-    console.log("response state ");
-    console.log(learningModeData);
     set({
       learningModeData: learningModeData,
       dataLoaded: true
@@ -19748,8 +19867,6 @@ const UseLearningMode = (0,zustand__WEBPACK_IMPORTED_MODULE_1__.create)((set, ge
     if (!Array.isArray(learningModeData)) {
       learningModeData = [];
     }
-    console.log("response state ");
-    console.log(learningModeData);
     set({
       learningModeData: learningModeData,
       dataLoaded: true
@@ -19919,7 +20036,6 @@ const UseMixedContent = (0,zustand__WEBPACK_IMPORTED_MODULE_1__.create)((set, ge
     set({
       scanStatus: 'running'
     });
-    console.log("fetch initial data with scanStatus false ");
     const {
       data,
       progress,
@@ -19928,7 +20044,6 @@ const UseMixedContent = (0,zustand__WEBPACK_IMPORTED_MODULE_1__.create)((set, ge
       nonce,
       completed_status
     } = await getScanIteration(false);
-    console.log(data);
     set({
       scanStatus: state,
       mixedContentData: data,
@@ -19963,7 +20078,6 @@ const UseMixedContent = (0,zustand__WEBPACK_IMPORTED_MODULE_1__.create)((set, ge
     if (currentState === 'stop') {
       return;
     }
-    console.log("in run function state " + currentState);
     const {
       data,
       progress,
@@ -19972,7 +20086,6 @@ const UseMixedContent = (0,zustand__WEBPACK_IMPORTED_MODULE_1__.create)((set, ge
       nonce,
       completed_status
     } = await getScanIteration(currentState);
-    console.log("response state " + state);
     if (get().scanStatus !== 'stop') {
       set({
         scanStatus: state,
@@ -20041,7 +20154,6 @@ const getScanIteration = async state => {
     }
     response.data = data;
     if (state === 'stop') {
-      console.log("current state in get iteration is stop");
       response.state = 'stop';
     }
     return response;
@@ -20523,6 +20635,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _Menu_MenuData__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../Menu/MenuData */ "./src/Menu/MenuData.js");
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_7__);
+/* harmony import */ var _LetsEncrypt_letsEncryptData__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../LetsEncrypt/letsEncryptData */ "./src/LetsEncrypt/letsEncryptData.js");
+
 
 
 
@@ -20554,11 +20668,29 @@ const Settings = () => {
     nextMenuItem,
     previousMenuItem
   } = (0,_Menu_MenuData__WEBPACK_IMPORTED_MODULE_6__["default"])();
+  const {
+    setRefreshTests
+  } = (0,_LetsEncrypt_letsEncryptData__WEBPACK_IMPORTED_MODULE_8__["default"])();
   const toggleNotices = () => {
     setNoticesExpanded(!noticesExpanded);
   };
-  const saveData = async () => {
-    await saveFields();
+  const isTestsOnlyMenu = () => {
+    const {
+      menu_items: menuItems
+    } = subMenu;
+    for (const menuItem of menuItems) {
+      if (menuItem.id === selectedSubMenuItem && menuItem.tests_only) {
+        return true;
+      }
+    }
+    return false;
+  };
+  const saveData = async isSaveAndContinueButton => {
+    if (!isSaveAndContinueButton && isTestsOnlyMenu()) {
+      setRefreshTests(true);
+    } else {
+      await saveFields(true, true);
+    }
   };
   const {
     menu_items: menuItems
@@ -20621,6 +20753,7 @@ const Settings = () => {
     }
   }
   let continueLink = nextButtonDisabled ? `#${selectedMainMenuItem}/${selectedSubMenuItem}` : `#${selectedMainMenuItem}/${nextMenuItem}`;
+  // let btnSaveText = isTestsOnlyMenu() ? __('Refresh', 'really-simple-ssl') : __('Save', 'really-simple-ssl');
   let btnSaveText = (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_7__.__)('Save', 'really-simple-ssl');
   for (const menuItem of menuItems) {
     if (menuItem.id === selectedSubMenuItem && menuItem.tests_only) {
@@ -20641,12 +20774,12 @@ const Settings = () => {
     href: `#${selectedMainMenuItem}/${previousMenuItem}`
   }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_7__.__)('Previous', 'complianz-gdpr')), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
     className: "button button-primary",
-    onClick: e => saveData(e)
+    onClick: e => saveData(false)
   }, btnSaveText), selectedSubMenuItem !== menuItems[menuItems.length - 1].id && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
     disabled: nextButtonDisabled,
     className: "button button-primary",
     href: continueLink,
-    onClick: e => saveData()
+    onClick: e => saveData(true)
   }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_7__.__)('Save and Continue', 'complianz-gdpr'))))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "rsssl-wizard-help"
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
@@ -20687,6 +20820,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_4__);
 /* harmony import */ var _utils_api__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../utils/api */ "./src/utils/api.js");
+/* harmony import */ var _Settings_FieldsData__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../Settings/FieldsData */ "./src/Settings/FieldsData.js");
+/* harmony import */ var _Menu_MenuData__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../Menu/MenuData */ "./src/Menu/MenuData.js");
+/* harmony import */ var _License_LicenseData__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./License/LicenseData */ "./src/Settings/License/LicenseData.js");
+
+
 
 
 
@@ -20698,158 +20836,130 @@ __webpack_require__.r(__webpack_exports__);
 /**
  * Render a grouped block of settings
  */
-class SettingsGroup extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Component {
-  constructor() {
-    super(...arguments);
-    this.state = {
-      fields: this.props.fields,
-      isAPILoaded: this.props.isAPILoaded
-    };
-    this.upgrade = 'https://really-simple-ssl.com/pro/?mtm_campaign=fallback&mtm_source=free&mtm_content=upgrade';
-    this.fields = this.props.fields;
-  }
-  componentDidMount() {
-    this.getLicenseStatus = this.getLicenseStatus.bind(this);
-    this.handleLetsEncryptReset = this.handleLetsEncryptReset.bind(this);
-  }
-  getLicenseStatus() {
-    if (this.props.pageProps.hasOwnProperty('licenseStatus')) {
-      return this.props.pageProps['licenseStatus'];
-    }
-    return 'invalid';
-  }
+const SettingsGroup = props => {
+  const {
+    fields
+  } = (0,_Settings_FieldsData__WEBPACK_IMPORTED_MODULE_6__["default"])();
+  const {
+    licenseStatus
+  } = (0,_License_LicenseData__WEBPACK_IMPORTED_MODULE_8__["default"])();
+  const {
+    selectedSubMenuItem,
+    subMenu
+  } = (0,_Menu_MenuData__WEBPACK_IMPORTED_MODULE_7__["default"])();
+  let upgrade = 'https://really-simple-ssl.com/pro/?mtm_campaign=fallback&mtm_source=free&mtm_content=upgrade';
 
   /*
   * On reset of LE, send this info to the back-end, and redirect to the first step.
   * reload to ensure that.
   */
-  handleLetsEncryptReset(e) {
+  const handleLetsEncryptReset = e => {
     e.preventDefault();
     _utils_api__WEBPACK_IMPORTED_MODULE_5__.runLetsEncryptTest('reset').then(response => {
-      let url = window.location.href.replace(/#letsencrypt.*/, '&r=' + +new Date() + '#letsencrypt/le-system-status');
-      window.location.href = url;
+      window.location.href = window.location.href.replace(/#letsencrypt.*/, '&r=' + +new Date() + '#letsencrypt/le-system-status');
     });
+  };
+  let selectedFields = [];
+  //get all fields with group_id props.group_id
+  for (const selectedField of fields) {
+    if (selectedField.group_id === props.group) {
+      selectedFields.push(selectedField);
+    }
   }
-  render() {
-    let selectedMenuItem = this.props.selectedMenuItem;
-    let selectedFields = [];
-    //get all fields with group_id this.props.group_id
-    for (const selectedField of this.props.fields) {
-      if (selectedField.group_id === this.props.group) {
-        selectedFields.push(selectedField);
-      }
+  let activeGroup;
+  //first, set the selected menu item as activate group, so we have a default in case there are no groups
+  for (const item of subMenu.menu_items) {
+    if (item.id === selectedSubMenuItem) {
+      activeGroup = item;
+    } else if (item.menu_items) {
+      activeGroup = item.menu_items.filter(menuItem => menuItem.id === selectedSubMenuItem)[0];
     }
-    let activeGroup;
-    //first, set the selected menu item as activate group, so we have a default in case there are no groups
-    for (const item of this.props.menu.menu_items) {
-      if (item.id === selectedMenuItem) {
-        activeGroup = item;
-      } else if (item.menu_items) {
-        activeGroup = item.menu_items.filter(menuItem => menuItem.id === selectedMenuItem)[0];
-      }
-      if (activeGroup) {
-        break;
-      }
+    if (activeGroup) {
+      break;
     }
+  }
 
-    //now check if we have actual groups
-    for (const item of this.props.menu.menu_items) {
-      if (item.id === selectedMenuItem && item.hasOwnProperty('groups')) {
-        let currentGroup = item.groups.filter(group => group.id === this.props.group);
-        if (currentGroup.length > 0) {
-          activeGroup = currentGroup[0];
-        }
+  //now check if we have actual groups
+  for (const item of subMenu.menu_items) {
+    if (item.id === selectedSubMenuItem && item.hasOwnProperty('groups')) {
+      let currentGroup = item.groups.filter(group => group.id === props.group);
+      if (currentGroup.length > 0) {
+        activeGroup = currentGroup[0];
       }
     }
-    let status = 'invalid';
-    let msg = activeGroup.premium_text ? activeGroup.premium_text : (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_4__.__)("Learn more about %sPremium%s", "really-simple-ssl");
-    if (rsssl_settings.pro_plugin_active) {
-      status = this.getLicenseStatus();
-      if (status === 'empty' || status === 'deactivated') {
-        msg = rsssl_settings.messageInactive;
-      } else {
-        msg = rsssl_settings.messageInvalid;
-      }
-    }
-    let disabled = status !== 'valid' && activeGroup.premium;
-    //if a feature can only be used on networkwide or single site setups, pass that info here.
-    let networkwide_error = !rsssl_settings.networkwide_active && activeGroup.networkwide_required;
-    this.upgrade = activeGroup.upgrade ? activeGroup.upgrade : this.upgrade;
-    let helplinkText = activeGroup.helpLink_text ? activeGroup.helpLink_text : (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_4__.__)("Instructions", "really-simple-ssl");
-    let anchor = (0,_utils_getAnchor__WEBPACK_IMPORTED_MODULE_3__["default"])('main');
-    let disabledClass = disabled || networkwide_error ? 'rsssl-disabled' : '';
-    return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-      className: "rsssl-grid-item rsssl-" + activeGroup.id + ' ' + disabledClass
-    }, activeGroup.title && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-      className: "rsssl-grid-item-header"
-    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("h3", {
-      className: "rsssl-h4"
-    }, activeGroup.title), activeGroup.helpLink && anchor !== 'letsencrypt' && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-      className: "rsssl-grid-item-controls"
-    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_utils_Hyperlink__WEBPACK_IMPORTED_MODULE_2__["default"], {
-      target: "_blank",
-      className: "rsssl-helplink",
-      text: helplinkText,
-      url: activeGroup.helpLink
-    })), anchor === 'letsencrypt' && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-      className: "rsssl-grid-item-controls"
-    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
-      href: "#",
-      className: "rsssl-helplink",
-      onClick: e => this.handleLetsEncryptReset(e)
-    }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_4__.__)("Reset Let's Encrypt", "really-simple-ssl")))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-      className: "rsssl-grid-item-content"
-    }, activeGroup.intro && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-      className: "rsssl-settings-block-intro"
-    }, activeGroup.intro), selectedFields.map((field, i) => (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_Field__WEBPACK_IMPORTED_MODULE_1__["default"], {
-      key: i,
-      index: i,
-      updateFields: this.props.updateFields,
-      addNotice: this.props.addNotice,
-      selectMenu: this.props.selectMenu,
-      selectMainMenu: this.props.selectMainMenu,
-      dropItemFromModal: this.props.dropItemFromModal,
-      handleNextButtonDisabled: this.props.handleNextButtonDisabled,
-      handleModal: this.props.handleModal,
-      showSavedSettingsNotice: this.props.showSavedSettingsNotice,
-      updateField: this.props.updateField,
-      getFieldValue: this.props.getFieldValue,
-      refreshTests: this.props.refreshTests,
-      resetRefreshTests: this.props.resetRefreshTests,
-      addHelp: this.props.addHelp,
-      setPageProps: this.props.setPageProps,
-      fieldsUpdateComplete: this.props.fieldsUpdateComplete,
-      highLightField: this.props.highLightField,
-      highLightedField: this.props.highLightedField,
-      saveChangedFields: this.props.saveChangedFields,
-      field: field,
-      fields: selectedFields
-    }))), disabled && !networkwide_error && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-      className: "rsssl-locked"
-    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-      className: "rsssl-locked-overlay"
-    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
-      className: "rsssl-task-status rsssl-premium"
-    }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_4__.__)("Upgrade", "really-simple-ssl")), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", null, rsssl_settings.pro_plugin_active && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", null, msg, "\xA0", (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
-      className: "rsssl-locked-link",
-      href: "#settings/license"
-    }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_4__.__)("Check license", "really-simple-ssl"))), !rsssl_settings.pro_plugin_active && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_utils_Hyperlink__WEBPACK_IMPORTED_MODULE_2__["default"], {
-      target: "_blank",
-      text: msg,
-      url: this.upgrade
-    })))), networkwide_error && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-      className: "rsssl-locked"
-    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-      className: "rsssl-locked-overlay"
-    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
-      className: "rsssl-task-status rsssl-warning"
-    }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_4__.__)("Network feature", "really-simple-ssl")), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_4__.__)("This feature is only available networkwide.", "really-simple-ssl"), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_utils_Hyperlink__WEBPACK_IMPORTED_MODULE_2__["default"], {
-      target: "_blank",
-      text: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_4__.__)("Network settings", "really-simple-ssl"),
-      url: rsssl_settings.network_link
-    })))));
   }
-}
+  let status = 'invalid';
+  if (!activeGroup) {
+    return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null);
+  }
+  let msg = activeGroup.premium_text ? activeGroup.premium_text : (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_4__.__)("Learn more about %sPremium%s", "really-simple-ssl");
+  if (rsssl_settings.pro_plugin_active) {
+    if (licenseStatus === 'empty' || licenseStatus === 'deactivated') {
+      msg = rsssl_settings.messageInactive;
+    } else {
+      msg = rsssl_settings.messageInvalid;
+    }
+  }
+  let disabled = licenseStatus !== 'valid' && activeGroup.premium;
+  //if a feature can only be used on networkwide or single site setups, pass that info here.
+  let networkwide_error = !rsssl_settings.networkwide_active && activeGroup.networkwide_required;
+  upgrade = activeGroup.upgrade ? activeGroup.upgrade : upgrade;
+  let helplinkText = activeGroup.helpLink_text ? activeGroup.helpLink_text : (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_4__.__)("Instructions", "really-simple-ssl");
+  let anchor = (0,_utils_getAnchor__WEBPACK_IMPORTED_MODULE_3__["default"])('main');
+  let disabledClass = disabled || networkwide_error ? 'rsssl-disabled' : '';
+  return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "rsssl-grid-item rsssl-" + activeGroup.id + ' ' + disabledClass
+  }, activeGroup.title && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "rsssl-grid-item-header"
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("h3", {
+    className: "rsssl-h4"
+  }, activeGroup.title), activeGroup.helpLink && anchor !== 'letsencrypt' && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "rsssl-grid-item-controls"
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_utils_Hyperlink__WEBPACK_IMPORTED_MODULE_2__["default"], {
+    target: "_blank",
+    className: "rsssl-helplink",
+    text: helplinkText,
+    url: activeGroup.helpLink
+  })), anchor === 'letsencrypt' && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "rsssl-grid-item-controls"
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
+    href: "#",
+    className: "rsssl-helplink",
+    onClick: e => handleLetsEncryptReset(e)
+  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_4__.__)("Reset Let's Encrypt", "really-simple-ssl")))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "rsssl-grid-item-content"
+  }, activeGroup.intro && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "rsssl-settings-block-intro"
+  }, activeGroup.intro), selectedFields.map((field, i) => (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_Field__WEBPACK_IMPORTED_MODULE_1__["default"], {
+    key: i,
+    index: i,
+    field: field,
+    fields: selectedFields
+  }))), disabled && !networkwide_error && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "rsssl-locked"
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "rsssl-locked-overlay"
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
+    className: "rsssl-task-status rsssl-premium"
+  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_4__.__)("Upgrade", "really-simple-ssl")), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", null, rsssl_settings.pro_plugin_active && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", null, msg, "\xA0", (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
+    className: "rsssl-locked-link",
+    href: "#settings/license"
+  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_4__.__)("Check license", "really-simple-ssl"))), !rsssl_settings.pro_plugin_active && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_utils_Hyperlink__WEBPACK_IMPORTED_MODULE_2__["default"], {
+    target: "_blank",
+    text: msg,
+    url: upgrade
+  })))), networkwide_error && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "rsssl-locked"
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "rsssl-locked-overlay"
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
+    className: "rsssl-task-status rsssl-warning"
+  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_4__.__)("Network feature", "really-simple-ssl")), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_4__.__)("This feature is only available networkwide.", "really-simple-ssl"), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_utils_Hyperlink__WEBPACK_IMPORTED_MODULE_2__["default"], {
+    target: "_blank",
+    text: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_4__.__)("Network settings", "really-simple-ssl"),
+    url: rsssl_settings.network_link
+  })))));
+};
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (SettingsGroup);
 
 /***/ }),
@@ -20871,62 +20981,37 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var _Placeholder_Placeholder__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../Placeholder/Placeholder */ "./src/Placeholder/Placeholder.js");
-/* harmony import */ var _utils_api__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../utils/api */ "./src/utils/api.js");
+/* harmony import */ var _utils_api__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../utils/api */ "./src/utils/api.js");
 
 
 
 
 
-
-class Support extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Component {
-  constructor() {
-    super(...arguments);
-    this.state = {
-      message: '',
-      sending: false
-    };
-  }
-  componentDidMount() {
-    this.onChangeHandler = this.onChangeHandler.bind(this);
-    this.onClickHandler = this.onClickHandler.bind(this);
-  }
-  onChangeHandler(message) {
-    this.setState({
-      message: message
-    });
-  }
-  onClickHandler(event) {
-    this.setState({
-      sending: true
-    });
-    return _utils_api__WEBPACK_IMPORTED_MODULE_4__.runTest('supportData', 'refresh').then(response => {
-      const {
-        message
-      } = this.state;
+const Support = () => {
+  const [message, setMessage] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)('');
+  const [sending, setSending] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)(false);
+  const onChangeHandler = message => {
+    setMessage(message);
+  };
+  const onClickHandler = () => {
+    setSending(true);
+    return _utils_api__WEBPACK_IMPORTED_MODULE_3__.runTest('supportData', 'refresh').then(response => {
       let encodedMessage = message.replace(/(?:\r\n|\r|\n)/g, '--br--');
       let url = 'https://really-simple-ssl.com/support' + '?customername=' + encodeURIComponent(response.customer_name) + '&email=' + response.email + '&domain=' + response.domain + '&scanresults=' + encodeURIComponent(response.scan_results) + '&licensekey=' + encodeURIComponent(response.license_key) + '&supportrequest=' + encodeURIComponent(encodedMessage) + '&htaccesscontents=' + response.htaccess_contents + '&debuglog=' + response.system_status;
       window.location.assign(url);
     });
-  }
-  render() {
-    const {
-      message,
-      sending
-    } = this.state;
-    let disabled = sending || message.length == 0;
-    let textAreaDisabled = sending;
-    return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.TextareaControl, {
-      disabled: textAreaDisabled,
-      placeholder: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Type your question here", "really-simple-ssl"),
-      onChange: message => this.onChangeHandler(message)
-    }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Button, {
-      disabled: disabled,
-      variant: "secondary",
-      onClick: e => this.onClickHandler(e)
-    }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Send', 'really-simple-ssl')));
-  }
-}
+  };
+  let disabled = sending || message.length === 0;
+  return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.TextareaControl, {
+    disabled: sending,
+    placeholder: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Type your question here", "really-simple-ssl"),
+    onChange: message => onChangeHandler(message)
+  }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Button, {
+    disabled: disabled,
+    variant: "secondary",
+    onClick: e => onClickHandler(e)
+  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Send', 'really-simple-ssl')));
+};
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Support);
 
 /***/ }),
@@ -21002,31 +21087,25 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__);
 
-
-class Hyperlink extends _wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Component {
-  constructor() {
-    super(...arguments);
+const Hyperlink = props => {
+  let label_pre = '';
+  let label_post = '';
+  let link_text = '';
+  if (props.text.indexOf('%s') !== -1) {
+    let parts = props.text.split(/%s/);
+    label_pre = parts[0];
+    link_text = parts[1];
+    label_post = parts[2];
+  } else {
+    link_text = props.text;
   }
-  render() {
-    let label_pre = '';
-    let label_post = '';
-    let link_text = '';
-    if (this.props.text.indexOf('%s') !== -1) {
-      let parts = this.props.text.split(/%s/);
-      label_pre = parts[0];
-      link_text = parts[1];
-      label_post = parts[2];
-    } else {
-      link_text = this.props.text;
-    }
-    let className = this.props.className ? this.props.className : 'rsssl-link';
-    return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, label_pre, " ", (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
-      className: className,
-      target: this.props.target,
-      href: this.props.url
-    }, link_text), label_post);
-  }
-}
+  let className = props.className ? props.className : 'rsssl-link';
+  return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, label_pre, " ", (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
+    className: className,
+    target: props.target,
+    href: props.url
+  }, link_text), label_post);
+};
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Hyperlink);
 
 /***/ }),
@@ -22255,267 +22334,6 @@ exports.typeOf = typeOf;
 
 if (false) {} else {
   module.exports = __webpack_require__(/*! ./cjs/react-is.development.js */ "./node_modules/hoist-non-react-statics/node_modules/react-is/cjs/react-is.development.js");
-}
-
-
-/***/ }),
-
-/***/ "./node_modules/immutability-helper/index.js":
-/*!***************************************************!*\
-  !*** ./node_modules/immutability-helper/index.js ***!
-  \***************************************************/
-/***/ ((module, exports) => {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-function stringifiable(obj) {
-    // Safely stringify Object.create(null)
-    /* istanbul ignore next */
-    return typeof obj === 'object' && !('toString' in obj) ?
-        Object.prototype.toString.call(obj).slice(8, -1) :
-        obj;
-}
-var isProduction = typeof process === 'object' && "development" === 'production';
-function invariant(condition, message) {
-    if (!condition) {
-        /* istanbul ignore next */
-        if (isProduction) {
-            throw new Error('Invariant failed');
-        }
-        throw new Error(message());
-    }
-}
-exports.invariant = invariant;
-var hasOwnProperty = Object.prototype.hasOwnProperty;
-var splice = Array.prototype.splice;
-var toString = Object.prototype.toString;
-function type(obj) {
-    return toString.call(obj).slice(8, -1);
-}
-var assign = Object.assign || /* istanbul ignore next */ (function (target, source) {
-    getAllKeys(source).forEach(function (key) {
-        if (hasOwnProperty.call(source, key)) {
-            target[key] = source[key];
-        }
-    });
-    return target;
-});
-var getAllKeys = typeof Object.getOwnPropertySymbols === 'function'
-    ? function (obj) { return Object.keys(obj).concat(Object.getOwnPropertySymbols(obj)); }
-    /* istanbul ignore next */
-    : function (obj) { return Object.keys(obj); };
-function copy(object) {
-    return Array.isArray(object)
-        ? assign(object.constructor(object.length), object)
-        : (type(object) === 'Map')
-            ? new Map(object)
-            : (type(object) === 'Set')
-                ? new Set(object)
-                : (object && typeof object === 'object')
-                    ? assign(Object.create(Object.getPrototypeOf(object)), object)
-                    /* istanbul ignore next */
-                    : object;
-}
-var Context = /** @class */ (function () {
-    function Context() {
-        this.commands = assign({}, defaultCommands);
-        this.update = this.update.bind(this);
-        // Deprecated: update.extend, update.isEquals and update.newContext
-        this.update.extend = this.extend = this.extend.bind(this);
-        this.update.isEquals = function (x, y) { return x === y; };
-        this.update.newContext = function () { return new Context().update; };
-    }
-    Object.defineProperty(Context.prototype, "isEquals", {
-        get: function () {
-            return this.update.isEquals;
-        },
-        set: function (value) {
-            this.update.isEquals = value;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Context.prototype.extend = function (directive, fn) {
-        this.commands[directive] = fn;
-    };
-    Context.prototype.update = function (object, $spec) {
-        var _this = this;
-        var spec = (typeof $spec === 'function') ? { $apply: $spec } : $spec;
-        if (!(Array.isArray(object) && Array.isArray(spec))) {
-            invariant(!Array.isArray(spec), function () { return "update(): You provided an invalid spec to update(). The spec may " +
-                "not contain an array except as the value of $set, $push, $unshift, " +
-                "$splice or any custom command allowing an array value."; });
-        }
-        invariant(typeof spec === 'object' && spec !== null, function () { return "update(): You provided an invalid spec to update(). The spec and " +
-            "every included key path must be plain objects containing one of the " +
-            ("following commands: " + Object.keys(_this.commands).join(', ') + "."); });
-        var nextObject = object;
-        getAllKeys(spec).forEach(function (key) {
-            if (hasOwnProperty.call(_this.commands, key)) {
-                var objectWasNextObject = object === nextObject;
-                nextObject = _this.commands[key](spec[key], nextObject, spec, object);
-                if (objectWasNextObject && _this.isEquals(nextObject, object)) {
-                    nextObject = object;
-                }
-            }
-            else {
-                var nextValueForKey = type(object) === 'Map'
-                    ? _this.update(object.get(key), spec[key])
-                    : _this.update(object[key], spec[key]);
-                var nextObjectValue = type(nextObject) === 'Map'
-                    ? nextObject.get(key)
-                    : nextObject[key];
-                if (!_this.isEquals(nextValueForKey, nextObjectValue)
-                    || typeof nextValueForKey === 'undefined'
-                        && !hasOwnProperty.call(object, key)) {
-                    if (nextObject === object) {
-                        nextObject = copy(object);
-                    }
-                    if (type(nextObject) === 'Map') {
-                        nextObject.set(key, nextValueForKey);
-                    }
-                    else {
-                        nextObject[key] = nextValueForKey;
-                    }
-                }
-            }
-        });
-        return nextObject;
-    };
-    return Context;
-}());
-exports.Context = Context;
-var defaultCommands = {
-    $push: function (value, nextObject, spec) {
-        invariantPushAndUnshift(nextObject, spec, '$push');
-        return value.length ? nextObject.concat(value) : nextObject;
-    },
-    $unshift: function (value, nextObject, spec) {
-        invariantPushAndUnshift(nextObject, spec, '$unshift');
-        return value.length ? value.concat(nextObject) : nextObject;
-    },
-    $splice: function (value, nextObject, spec, originalObject) {
-        invariantSplices(nextObject, spec);
-        value.forEach(function (args) {
-            invariantSplice(args);
-            if (nextObject === originalObject && args.length) {
-                nextObject = copy(originalObject);
-            }
-            splice.apply(nextObject, args);
-        });
-        return nextObject;
-    },
-    $set: function (value, _nextObject, spec) {
-        invariantSet(spec);
-        return value;
-    },
-    $toggle: function (targets, nextObject) {
-        invariantSpecArray(targets, '$toggle');
-        var nextObjectCopy = targets.length ? copy(nextObject) : nextObject;
-        targets.forEach(function (target) {
-            nextObjectCopy[target] = !nextObject[target];
-        });
-        return nextObjectCopy;
-    },
-    $unset: function (value, nextObject, _spec, originalObject) {
-        invariantSpecArray(value, '$unset');
-        value.forEach(function (key) {
-            if (Object.hasOwnProperty.call(nextObject, key)) {
-                if (nextObject === originalObject) {
-                    nextObject = copy(originalObject);
-                }
-                delete nextObject[key];
-            }
-        });
-        return nextObject;
-    },
-    $add: function (values, nextObject, _spec, originalObject) {
-        invariantMapOrSet(nextObject, '$add');
-        invariantSpecArray(values, '$add');
-        if (type(nextObject) === 'Map') {
-            values.forEach(function (_a) {
-                var key = _a[0], value = _a[1];
-                if (nextObject === originalObject && nextObject.get(key) !== value) {
-                    nextObject = copy(originalObject);
-                }
-                nextObject.set(key, value);
-            });
-        }
-        else {
-            values.forEach(function (value) {
-                if (nextObject === originalObject && !nextObject.has(value)) {
-                    nextObject = copy(originalObject);
-                }
-                nextObject.add(value);
-            });
-        }
-        return nextObject;
-    },
-    $remove: function (value, nextObject, _spec, originalObject) {
-        invariantMapOrSet(nextObject, '$remove');
-        invariantSpecArray(value, '$remove');
-        value.forEach(function (key) {
-            if (nextObject === originalObject && nextObject.has(key)) {
-                nextObject = copy(originalObject);
-            }
-            nextObject.delete(key);
-        });
-        return nextObject;
-    },
-    $merge: function (value, nextObject, _spec, originalObject) {
-        invariantMerge(nextObject, value);
-        getAllKeys(value).forEach(function (key) {
-            if (value[key] !== nextObject[key]) {
-                if (nextObject === originalObject) {
-                    nextObject = copy(originalObject);
-                }
-                nextObject[key] = value[key];
-            }
-        });
-        return nextObject;
-    },
-    $apply: function (value, original) {
-        invariantApply(value);
-        return value(original);
-    },
-};
-var defaultContext = new Context();
-exports.isEquals = defaultContext.update.isEquals;
-exports.extend = defaultContext.extend;
-exports["default"] = defaultContext.update;
-// @ts-ignore
-exports["default"]["default"] = module.exports = assign(exports.default, exports);
-// invariants
-function invariantPushAndUnshift(value, spec, command) {
-    invariant(Array.isArray(value), function () { return "update(): expected target of " + stringifiable(command) + " to be an array; got " + stringifiable(value) + "."; });
-    invariantSpecArray(spec[command], command);
-}
-function invariantSpecArray(spec, command) {
-    invariant(Array.isArray(spec), function () { return "update(): expected spec of " + stringifiable(command) + " to be an array; got " + stringifiable(spec) + ". " +
-        "Did you forget to wrap your parameter in an array?"; });
-}
-function invariantSplices(value, spec) {
-    invariant(Array.isArray(value), function () { return "Expected $splice target to be an array; got " + stringifiable(value); });
-    invariantSplice(spec.$splice);
-}
-function invariantSplice(value) {
-    invariant(Array.isArray(value), function () { return "update(): expected spec of $splice to be an array of arrays; got " + stringifiable(value) + ". " +
-        "Did you forget to wrap your parameters in an array?"; });
-}
-function invariantApply(fn) {
-    invariant(typeof fn === 'function', function () { return "update(): expected spec of $apply to be a function; got " + stringifiable(fn) + "."; });
-}
-function invariantSet(spec) {
-    invariant(Object.keys(spec).length === 1, function () { return "Cannot have more than one key in an object with $set"; });
-}
-function invariantMerge(target, specValue) {
-    invariant(specValue && typeof specValue === 'object', function () { return "update(): $merge expects a spec of type 'object'; got " + stringifiable(specValue); });
-    invariant(target && typeof target === 'object', function () { return "update(): $merge expects a target of type 'object'; got " + stringifiable(target); });
-}
-function invariantMapOrSet(target, command) {
-    var typeOfTarget = type(target);
-    invariant(typeOfTarget === 'Map' || typeOfTarget === 'Set', function () { return "update(): " + stringifiable(command) + " expects a target of type Set or Map; got " + stringifiable(typeOfTarget); });
 }
 
 

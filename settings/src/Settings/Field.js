@@ -24,11 +24,11 @@ import useFields from "./FieldsData";
 
 const Field = (props) => {
     let scrollAnchor = React.createRef();
-    const {fields, updateField, setChangedField, highLightField, saveFields} = useFields();
+    const {updateField, setChangedField, highLightField} = useFields();
 
     useEffect( () => {
-        if ( props.highLightedField===props.field.id && scrollAnchor.current ) {
-            scrollAnchor.current.scrollIntoView()
+        if ( highLightField===props.field.id && scrollAnchor.current ) {
+            scrollAnchor.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
     });
 
@@ -93,7 +93,6 @@ const Field = (props) => {
     if ( field.conditionallyDisabled ) {
         disabled = true;
     }
-
     if ( !field.visible ) {
         return (
             <></>
@@ -106,6 +105,7 @@ const Field = (props) => {
                 <CheckboxControl
                   label={labelWrap(field)}
                   field={field}
+                  disabled={disabled}
                   onChangeHandler={ ( fieldValue ) => onChangeHandler(fieldValue) }
                 />
 

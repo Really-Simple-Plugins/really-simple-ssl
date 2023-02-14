@@ -1,42 +1,19 @@
-import {
-    Button,
-    TextareaControl,
-} from '@wordpress/components';
-import { __ } from '@wordpress/i18n';
-
-import {
-    Component,
-} from '@wordpress/element';
-import Placeholder from '../Placeholder/Placeholder';
+import {Button, TextareaControl,} from '@wordpress/components';
+import {__} from '@wordpress/i18n';
 import * as rsssl_api from "../utils/api";
+import {useState} from "@wordpress/element";
 
-class Support extends Component {
-    constructor() {
-        super( ...arguments );
-                this.state = {
-                    message :'',
-                    sending :false,
-                };
-    }
-    componentDidMount() {
-        this.onChangeHandler = this.onChangeHandler.bind(this);
-        this.onClickHandler = this.onClickHandler.bind(this);
+const Support = () => {
+    const [message, setMessage] = useState('');
+    const [sending, setSending] = useState(false);
+
+    const onChangeHandler = (message) => {
+        setMessage(message);
     }
 
-    onChangeHandler(message) {
-        this.setState({
-            message :message,
-        });
-    }
-
-    onClickHandler(event) {
-            this.setState({
-                sending :true,
-            });
+    const onClickHandler = () => {
+        setSending(true);
         return rsssl_api.runTest('supportData', 'refresh').then( ( response ) => {
-            const {
-                message,
-            } = this.state;
             let encodedMessage = message.replace(/(?:\r\n|\r|\n)/g, '--br--');
             let url = 'https://really-simple-ssl.com/support'
             +'?customername=' + encodeURIComponent(response.customer_name)
@@ -51,30 +28,23 @@ class Support extends Component {
         });
     }
 
-    render(){
-        const {
-            message,
-            sending,
-        } = this.state;
-        let disabled = sending || message.length==0;
-        let textAreaDisabled = sending;
-        return (
-            <>
-                <TextareaControl
-                        disabled={textAreaDisabled}
-                        placeholder={__("Type your question here","really-simple-ssl")}
-                        onChange={ ( message ) => this.onChangeHandler(message) }
-                />
-                <Button
-                    disabled={disabled}
-                    variant="secondary"
-                    onClick={ ( e ) => this.onClickHandler(e) }>
-                    { __( 'Send', 'really-simple-ssl' ) }
-                </Button>
-            </>
-        );
+    let disabled = sending || message.length===0;
+    return (
+        <>
+            <TextareaControl
+                    disabled={sending}
+                    placeholder={__("Type your question here","really-simple-ssl")}
+                    onChange={ ( message ) => onChangeHandler(message) }
+            />
+            <Button
+                disabled={disabled}
+                variant="secondary"
+                onClick={ ( e ) => onClickHandler(e) }>
+                { __( 'Send', 'really-simple-ssl' ) }
+            </Button>
+        </>
+    );
 
-    }
 }
 
 export default Support;

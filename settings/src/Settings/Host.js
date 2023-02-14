@@ -1,28 +1,25 @@
 import {
     SelectControl,
 } from '@wordpress/components';
-import * as rsssl_api from "../utils/api";
 import {useRef} from "@wordpress/element";
+import useFields from "./FieldsData";
 
 const Host = (props) => {
+    const {updateField, setChangedField, saveFields, handleNextButtonDisabled} = useFields();
     const disabled = useRef(false);
 
-    const onChangeHandler = (fieldValue) => {
-        let fields = props.fields;
+    const onChangeHandler = async (fieldValue) => {
         let field = props.field;
-        field.value = fieldValue;
-        fields[props.index]['value'] = fieldValue;
-
         //force update, and get new fields.
+        handleNextButtonDisabled(true);
         disabled.current = true;
-        let saveFields = [];
-        props.handleNextButtonDisabled(true);
-        saveFields.push(field);
-        rsssl_api.setFields(saveFields).then(( response ) => {
-            props.updateFields(response.fields);
-            disabled.current = false;
-            props.handleNextButtonDisabled(false);
-        });
+        updateField(field.id, fieldValue);
+        setChangedField(field.id, fieldValue);
+
+        await saveFields(true, false);
+
+        handleNextButtonDisabled(false);
+        disabled.current = false;
     }
 
     let fieldValue = props.field.value;

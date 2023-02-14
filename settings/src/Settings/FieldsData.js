@@ -4,6 +4,7 @@ import * as rsssl_api from "../utils/api";
 import sleeper from "../utils/sleeper.js";
 import {__} from '@wordpress/i18n';
 import {dispatch} from '@wordpress/data';
+import {in_array} from "../utils/lib";
 
 const fetchFields = () => {
     return rsssl_api.getFields().then((response) => {
@@ -25,7 +26,10 @@ const useFields = create(( set, get ) => ({
     nextButtonDisabled:false,
     refreshTests:false,
     highLightField: '',
-    setHighLightField: (highLightField) => set(state => ({ highLightField })),
+    setHighLightField: (highLightField) => {
+        set(state => ({ highLightField }))
+    },
+
     setRefreshTests: (refreshTests) => set(state => ({ refreshTests })),
     handleNextButtonDisabled: (nextButtonDisabled) => set(state => ({ nextButtonDisabled })),
     setChangedField: (id, value) => {
@@ -196,16 +200,21 @@ const isNextButtonDisabled = (fields, selectedMenuItem) => {
     return requiredFields.length > 0;
 }
 
-
-
 const updateFieldsListWithConditions = (fields) => {
     let newFields = [];
     fields.forEach(function(field, i) {
         let enabled = !( field.hasOwnProperty('react_conditions') && !validateConditions(field.react_conditions, fields, field.id) );
+        let previouslyEnabled = !field.conditionallyDisabled;
         //we want to update the changed fields if this field has just become visible. Otherwise the new field won't get saved.
         const newField = {...field};
         newField.conditionallyDisabled = !enabled;
+        newField.visible = !(!enabled && (newField.type === 'letsencrypt' || newField.condition_action === 'hide'));
+
         newFields.push(newField);
+        //if this is a learning mode field, do not add it to the changed fields list
+        if ( !previouslyEnabled && newField.enabled && field.type!=='learningmode') {
+            set().setChangedField(field.id, field.value);
+        }
     });
     return newFields;
 }
@@ -250,9 +259,9 @@ const validateConditions = (conditions, fields, fieldId) => {
                             let field = conditionFields[0];
                             let actualValue = field.value;
                             if ( field.type==='text_checkbox' ) {
-                                thisConditionApplies = actualValue.hasOwnProperty('show') && actualValue['show'] === conditionValue;
+                                thisConditionApplies = actualValue.hasOwnProperty('show') && actualValue['show'] == conditionValue;//can be 1/true or 0/false
                             } else if ( field.type==='checkbox' ) {
-                                thisConditionApplies = actualValue === conditionValue;
+                                thisConditionApplies = actualValue == conditionValue;//can be 1/true or 0/false
                             } else if ( field.type==='multicheckbox' ) {
                                 //multicheckbox conditions
                                 //loop through objects

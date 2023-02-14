@@ -4,12 +4,18 @@ import {dispatch,} from '@wordpress/data';
 import * as rsssl_api from "../utils/api";
 import sleeper from "../utils/sleeper";
 import useFields from "../Settings/FieldsData";
+import useProgress from "./Progress/ProgressData";
+import useMenu from "../Menu/MenuData";
 
 const TaskElement = (props) => {
-    const {setHighLightField, updateFieldsData} = useFields();
+    const {dismissNotice} = useProgress();
+    const {getField, setHighLightField, fetchFieldsData} = useFields();
+    const {setSelectedSubMenuItem} = useMenu();
 
-    const handleClick = () => {
+    const handleClick = async () => {
         setHighLightField(props.notice.output.highlight_field_id);
+        let highlightField = getField(props.notice.output.highlight_field_id);
+        await setSelectedSubMenuItem(highlightField.menu_id);
     }
 
     const handleClearCache = (cache_id) => {
@@ -28,7 +34,7 @@ const TaskElement = (props) => {
             ).then(sleeper(3000)).then(( response ) => {
                 dispatch('core/notices').removeNotice('rsssl_clear_cache');
             });
-            updateFieldsData();
+            fetchFieldsData();
         });
     }
 
@@ -43,11 +49,11 @@ const TaskElement = (props) => {
             {urlIsExternal && notice.output.url && <a target="_blank" href={notice.output.url}>{__("More info", "really-simple-ssl")}</a> }
             {notice.output.clear_cache_id && <span className="rsssl-task-enable button button-secondary" onClick={ () => handleClearCache(notice.output.clear_cache_id ) }>{__("Re-check", "really-simple-ssl")}</span> }
             {!premium && !urlIsExternal && notice.output.url && <a className="rsssl-task-enable button button-secondary" href={notice.output.url}>{__("Fix", "really-simple-ssl")}</a> }
-            {!premium && notice.output.highlight_field_id && <span className="rsssl-task-enable button button-secondary" onClick={handleClick}>{__("Fix", "really-simple-ssl")}</span> }
+            {!premium && notice.output.highlight_field_id && <span className="rsssl-task-enable button button-secondary" onClick={() => handleClick()}>{__("Fix", "really-simple-ssl")}</span> }
             {notice.output.plusone && <span className='rsssl-plusone'>1</span>}
             {notice.output.dismissible && notice.output.status!=='completed' &&
                 <div className="rsssl-task-dismiss">
-                  <button type='button' data-id={notice.id} onClick={props.onCloseTaskHandler}>
+                  <button type='button' onClick={(e) => dismissNotice(notice.id) }>
                          <Icon name='times' />
                   </button>
                 </div>

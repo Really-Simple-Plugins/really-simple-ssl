@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2023-02-06T14:13:09+00:00\n"
+"POT-Creation-Date: 2023-02-08T14:08:56+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.6.0\n"
 "X-Domain: really-simple-ssl\n"
@@ -59,13 +59,13 @@ msgstr ""
 
 #: class-admin.php:501
 #: settings/build/index.js:382
-#: settings/src/Onboarding/Onboarding.js:275
+#: settings/src/Onboarding/Onboarding.js:283
 msgid "Dismiss"
 msgstr ""
 
 #: class-admin.php:503
 #: settings/build/index.js:382
-#: settings/src/Dashboard/TaskElement.js:54
+#: settings/src/Dashboard/TaskElement.js:49
 #: settings/src/Settings/Help.js:23
 msgid "More info"
 msgstr ""
@@ -96,7 +96,7 @@ msgstr ""
 
 #: class-admin.php:1814
 #: settings/build/index.js:382
-#: settings/src/Settings/MixedContentScan.js:198
+#: settings/src/Settings/MixedContentScan/MixedContentScan.js:47
 msgid "Warning"
 msgstr ""
 
@@ -107,7 +107,7 @@ msgstr ""
 #: class-admin.php:1816
 #: settings/build/index.js:382
 #: settings/src/Dashboard/OtherPlugins.js:91
-#: settings/src/Settings/SettingsGroup.js:134
+#: settings/src/Settings/SettingsGroup.js:101
 msgid "Upgrade"
 msgstr ""
 
@@ -221,7 +221,7 @@ msgstr ""
 
 #: class-admin.php:2022
 #: settings/build/index.js:382
-#: settings/src/Dashboard/TaskElement.js:55
+#: settings/src/Dashboard/TaskElement.js:50
 msgid "Re-check"
 msgstr ""
 
@@ -399,14 +399,14 @@ msgstr ""
 #: class-multisite.php:216
 #: settings/config/config.php:17
 #: settings/build/index.js:382
-#: settings/src/Dashboard/SecurityFeaturesBlock/SecurityFeaturesFooter.js:14
+#: settings/src/Dashboard/SecurityFeaturesBlock/SecurityFeaturesFooter.js:4
 msgid "Settings"
 msgstr ""
 
 #: class-admin.php:2715
 #: class-multisite.php:219
 #: settings/build/index.js:382
-#: settings/src/Header.js:48
+#: settings/src/Header.js:38
 msgid "Support"
 msgstr ""
 
@@ -525,8 +525,8 @@ msgstr ""
 
 #: class-site-health.php:201
 #: settings/build/index.js:382
-#: settings/src/Dashboard/ProgressFooter.js:42
-#: settings/src/Onboarding/Onboarding.js:248
+#: settings/src/Dashboard/Progress/ProgressFooter.js:26
+#: settings/src/Onboarding/Onboarding.js:256
 msgid "Activate SSL"
 msgstr ""
 
@@ -902,7 +902,7 @@ msgid "I don't know, or not listed, proceed with installation"
 msgstr ""
 
 #: lets-encrypt/config/fields.php:8
-#: settings/config/config.php:207
+#: settings/config/config.php:202
 msgid "System Status"
 msgstr ""
 
@@ -911,7 +911,7 @@ msgid "General settings"
 msgstr ""
 
 #: lets-encrypt/config/fields.php:17
-#: settings/config/config.php:225
+#: settings/config/config.php:220
 msgid "Directories"
 msgstr ""
 
@@ -920,238 +920,238 @@ msgid "DNS Verification"
 msgstr ""
 
 #: lets-encrypt/config/fields.php:25
-#: settings/config/config.php:235
+#: settings/config/config.php:230
 msgid "Generation"
 msgstr ""
 
 #: lets-encrypt/config/fields.php:29
-#: settings/config/config.php:240
+#: settings/config/config.php:235
 msgid "Installation"
 msgstr ""
 
-#: lets-encrypt/config/fields.php:46
+#: lets-encrypt/config/fields.php:47
 msgid "Detected status of your setup."
 msgstr ""
 
-#: lets-encrypt/config/fields.php:51
+#: lets-encrypt/config/fields.php:52
 msgid "Checking SSL certificate..."
 msgstr ""
 
-#: lets-encrypt/config/fields.php:57
+#: lets-encrypt/config/fields.php:58
 msgid "Checking if CURL is available..."
 msgstr ""
 
-#: lets-encrypt/config/fields.php:63
+#: lets-encrypt/config/fields.php:64
 msgid "Checking server software..."
 msgstr ""
 
-#: lets-encrypt/config/fields.php:69
+#: lets-encrypt/config/fields.php:70
 msgid "Checking alias domain..."
 msgstr ""
 
-#: lets-encrypt/config/fields.php:75
+#: lets-encrypt/config/fields.php:76
 msgid "Checking for website configuration..."
 msgstr ""
 
-#: lets-encrypt/config/fields.php:91
 #: lets-encrypt/config/fields.php:94
-#: settings/config/config.php:375
+#: lets-encrypt/config/fields.php:97
+#: settings/config/config.php:364
 msgid "Email address"
 msgstr ""
 
-#: lets-encrypt/config/fields.php:95
+#: lets-encrypt/config/fields.php:98
 msgid "This email address is used to create a Let's Encrypt account. This is also where you will receive renewal notifications."
 msgstr ""
 
-#: lets-encrypt/config/fields.php:106
+#: lets-encrypt/config/fields.php:110
 msgid "I agree to the Terms & Conditions from Let's Encrypt."
 msgstr ""
 
-#: lets-encrypt/config/fields.php:107
+#: lets-encrypt/config/fields.php:111
 msgid "Terms & Conditions."
 msgstr ""
 
-#: lets-encrypt/config/fields.php:118
+#: lets-encrypt/config/fields.php:123
 msgid "Disable OCSP stapling"
 msgstr ""
 
-#: lets-encrypt/config/fields.php:119
+#: lets-encrypt/config/fields.php:124
 msgid "OCSP stapling is configured as enabled by default. You can disable this option if this is not supported by your hosting provider."
 msgstr ""
 
-#: lets-encrypt/config/fields.php:121
+#: lets-encrypt/config/fields.php:126
 msgid "Disable OCSP Stapling"
 msgstr ""
 
-#: lets-encrypt/config/fields.php:128
+#: lets-encrypt/config/fields.php:134
 #: lets-encrypt/config/notices.php:50
 msgid "Domain"
 msgstr ""
 
-#: lets-encrypt/config/fields.php:138
-#: lets-encrypt/config/fields.php:141
+#: lets-encrypt/config/fields.php:145
+#: lets-encrypt/config/fields.php:148
 msgid "Include alias"
 msgstr ""
 
-#: lets-encrypt/config/fields.php:142
+#: lets-encrypt/config/fields.php:149
 msgid "This will include both the www. and non-www. version of your domain."
 msgstr ""
 
-#: lets-encrypt/config/fields.php:143
+#: lets-encrypt/config/fields.php:150
 msgid "You should have the www domain pointed to the same website as the non-www domain."
 msgstr ""
 
-#: lets-encrypt/config/fields.php:160
+#: lets-encrypt/config/fields.php:168
 msgid "Hosting Provider"
 msgstr ""
 
-#: lets-encrypt/config/fields.php:161
+#: lets-encrypt/config/fields.php:169
 msgid "By selecting your hosting provider we can tell you if your hosting provider already supports free SSL, and/or where you can activate it."
 msgstr ""
 
-#: lets-encrypt/config/fields.php:163
+#: lets-encrypt/config/fields.php:171
 msgid "If your hosting provider is not listed, and there's an SSL activation/installation link, please let us %sknow%s."
 msgstr ""
 
-#: lets-encrypt/config/fields.php:167
+#: lets-encrypt/config/fields.php:175
 msgid "Hosting provider"
 msgstr ""
 
-#: lets-encrypt/config/fields.php:176
-#: lets-encrypt/config/fields.php:179
+#: lets-encrypt/config/fields.php:185
+#: lets-encrypt/config/fields.php:188
 msgid "CPanel host"
 msgstr ""
 
-#: lets-encrypt/config/fields.php:180
+#: lets-encrypt/config/fields.php:189
 msgid "The URL you use to access your cPanel dashboard. Ends on :2083."
 msgstr ""
 
-#: lets-encrypt/config/fields.php:199
+#: lets-encrypt/config/fields.php:209
 msgid "CPanel username"
 msgstr ""
 
-#: lets-encrypt/config/fields.php:217
+#: lets-encrypt/config/fields.php:228
 msgid "CPanel password"
 msgstr ""
 
-#: lets-encrypt/config/fields.php:235
+#: lets-encrypt/config/fields.php:247
 msgid "DirectAdmin host"
 msgstr ""
 
-#: lets-encrypt/config/fields.php:238
+#: lets-encrypt/config/fields.php:250
 msgid "Direct Admin URL"
 msgstr ""
 
-#: lets-encrypt/config/fields.php:239
+#: lets-encrypt/config/fields.php:251
 msgid "The URL you use to access your DirectAdmin dashboard. Ends on :2222."
 msgstr ""
 
-#: lets-encrypt/config/fields.php:258
+#: lets-encrypt/config/fields.php:271
 msgid "DirectAdmin username"
 msgstr ""
 
-#: lets-encrypt/config/fields.php:276
+#: lets-encrypt/config/fields.php:290
 msgid "DirectAdmin password"
 msgstr ""
 
-#: lets-encrypt/config/fields.php:295
+#: lets-encrypt/config/fields.php:310
 msgid "CloudWays user email"
 msgstr ""
 
-#: lets-encrypt/config/fields.php:310
+#: lets-encrypt/config/fields.php:326
 msgid "CloudWays api key"
 msgstr ""
 
-#: lets-encrypt/config/fields.php:315
+#: lets-encrypt/config/fields.php:331
 msgid "CloudWays API key"
 msgstr ""
 
-#: lets-encrypt/config/fields.php:316
+#: lets-encrypt/config/fields.php:332
 msgid "You can find your api key %shere%s (make sure you're logged in with your main account)."
 msgstr ""
 
-#: lets-encrypt/config/fields.php:331
+#: lets-encrypt/config/fields.php:348
 msgid "Plesk host"
 msgstr ""
 
-#: lets-encrypt/config/fields.php:334
+#: lets-encrypt/config/fields.php:351
 msgid "Plesk admin URL"
 msgstr ""
 
-#: lets-encrypt/config/fields.php:335
+#: lets-encrypt/config/fields.php:352
 msgid "The URL you use to access your Plesk dashboard. Ends on :8443."
 msgstr ""
 
-#: lets-encrypt/config/fields.php:354
+#: lets-encrypt/config/fields.php:372
 msgid "Plesk username"
 msgstr ""
 
-#: lets-encrypt/config/fields.php:357
+#: lets-encrypt/config/fields.php:375
 msgid "Plesk username and password"
 msgstr ""
 
-#: lets-encrypt/config/fields.php:358
+#: lets-encrypt/config/fields.php:376
 msgid "You can find your Plesk username and password in %s"
 msgstr ""
 
-#: lets-encrypt/config/fields.php:377
+#: lets-encrypt/config/fields.php:396
 msgid "Plesk password"
 msgstr ""
 
-#: lets-encrypt/config/fields.php:395
+#: lets-encrypt/config/fields.php:415
 msgid "Do you want to store these credentials for renewal purposes?"
 msgstr ""
 
-#: lets-encrypt/config/fields.php:399
+#: lets-encrypt/config/fields.php:419
 msgid "Store for renewal purposes. If not stored, renewal may need to be done manually."
 msgstr ""
 
-#: lets-encrypt/config/fields.php:428
+#: lets-encrypt/config/fields.php:450
 msgid "Checking host..."
 msgstr ""
 
-#: lets-encrypt/config/fields.php:434
+#: lets-encrypt/config/fields.php:456
 msgid "Checking challenge directory..."
 msgstr ""
 
-#: lets-encrypt/config/fields.php:440
+#: lets-encrypt/config/fields.php:462
 msgid "Checking key directory..."
 msgstr ""
 
-#: lets-encrypt/config/fields.php:446
+#: lets-encrypt/config/fields.php:468
 msgid "Checking certs directory..."
 msgstr ""
 
-#: lets-encrypt/config/fields.php:452
+#: lets-encrypt/config/fields.php:474
 msgid "Checking permissions..."
 msgstr ""
 
-#: lets-encrypt/config/fields.php:459
+#: lets-encrypt/config/fields.php:481
 msgid "Checking challenge directory reachable over http..."
 msgstr ""
 
-#: lets-encrypt/config/fields.php:478
-#: lets-encrypt/config/fields.php:515
+#: lets-encrypt/config/fields.php:502
+#: lets-encrypt/config/fields.php:540
 msgid "Creating account..."
 msgstr ""
 
-#: lets-encrypt/config/fields.php:484
+#: lets-encrypt/config/fields.php:508
 msgid "Retrieving DNS verification token..."
 msgstr ""
 
-#: lets-encrypt/config/fields.php:509
+#: lets-encrypt/config/fields.php:534
 msgid "Checking if Terms & Conditions are accepted..."
 msgstr ""
 
-#: lets-encrypt/config/fields.php:521
+#: lets-encrypt/config/fields.php:546
 msgid "Generating SSL certificate..."
 msgstr ""
 
-#: lets-encrypt/config/fields.php:534
+#: lets-encrypt/config/fields.php:560
 msgid "Searching for link to SSL installation page on your server..."
 msgstr ""
 
-#: lets-encrypt/config/fields.php:551
+#: lets-encrypt/config/fields.php:578
 msgid "Checking for subdomain setup..."
 msgstr ""
 
@@ -1219,8 +1219,8 @@ msgstr ""
 #: lets-encrypt/functions.php:350
 #: lets-encrypt/functions.php:351
 #: settings/build/index.js:382
-#: settings/src/Dashboard/GridBlock.js:93
-#: settings/src/Settings/SettingsGroup.js:93
+#: settings/src/Dashboard/GridBlock.js:57
+#: settings/src/Settings/SettingsGroup.js:81
 msgid "Instructions"
 msgstr ""
 
@@ -1455,7 +1455,7 @@ msgid "Burst Statistics - Self-hosted, Privacy-friendly analytics tool"
 msgstr ""
 
 #: onboarding/config.php:77
-#: settings/settings.php:427
+#: settings/settings.php:428
 msgid "Complianz - Cookie Consent Management as it should be"
 msgstr ""
 
@@ -1493,10 +1493,10 @@ msgid "Activate our plugin %s"
 msgstr ""
 
 #: onboarding/config.php:138
-#: settings/config/config.php:245
+#: settings/config/config.php:240
 #: settings/build/index.js:382
 #: settings/src/Dashboard/OtherPlugins.js:75
-#: settings/src/Settings/License.js:134
+#: settings/src/Settings/License/License.js:73
 msgid "Activate"
 msgstr ""
 
@@ -1528,57 +1528,57 @@ msgstr ""
 msgid "Please refresh the SSL status if a certificate has been installed recently."
 msgstr ""
 
-#: placeholders/class-placeholder.php:97
+#: placeholders/class-placeholder.php:149
 msgid "Mixed content in PHP file in %s"
 msgstr ""
 
-#: placeholders/class-placeholder.php:101
-#: placeholders/class-placeholder.php:118
-#: placeholders/class-placeholder.php:142
-#: placeholders/class-placeholder.php:159
-#: placeholders/class-placeholder.php:185
-#: placeholders/class-placeholder.php:210
-#: settings/config/config.php:968
+#: placeholders/class-placeholder.php:153
+#: placeholders/class-placeholder.php:170
+#: placeholders/class-placeholder.php:194
+#: placeholders/class-placeholder.php:211
+#: placeholders/class-placeholder.php:237
+#: placeholders/class-placeholder.php:262
+#: settings/config/config.php:955
 #: settings/build/index.js:382
-#: settings/src/Settings/MixedContentScan.js:227
+#: settings/src/Settings/MixedContentScan/MixedContentScan.js:79
 msgid "Details"
 msgstr ""
 
-#: placeholders/class-placeholder.php:113
+#: placeholders/class-placeholder.php:165
 msgid "Mixed content in %s"
 msgstr ""
 
-#: placeholders/class-placeholder.php:126
-#: placeholders/class-placeholder.php:167
-#: placeholders/class-placeholder.php:193
-#: placeholders/class-placeholder.php:218
+#: placeholders/class-placeholder.php:178
+#: placeholders/class-placeholder.php:219
+#: placeholders/class-placeholder.php:245
+#: placeholders/class-placeholder.php:270
 msgid "Import and insert file"
 msgstr ""
 
-#: placeholders/class-placeholder.php:127
-#: placeholders/class-placeholder.php:168
-#: placeholders/class-placeholder.php:194
-#: placeholders/class-placeholder.php:219
+#: placeholders/class-placeholder.php:179
+#: placeholders/class-placeholder.php:220
+#: placeholders/class-placeholder.php:246
+#: placeholders/class-placeholder.php:271
 msgid "Copyright warning!"
 msgstr ""
 
-#: placeholders/class-placeholder.php:138
+#: placeholders/class-placeholder.php:190
 msgid "Mixed content in CSS/JS file from other domain"
 msgstr ""
 
-#: placeholders/class-placeholder.php:155
+#: placeholders/class-placeholder.php:207
 msgid "Mixed content in post: "
 msgstr ""
 
-#: placeholders/class-placeholder.php:180
+#: placeholders/class-placeholder.php:232
 msgid "Mixed content in the postmeta table"
 msgstr ""
 
-#: placeholders/class-placeholder.php:201
+#: placeholders/class-placeholder.php:253
 msgid "Widget area"
 msgstr ""
 
-#: placeholders/class-placeholder.php:206
+#: placeholders/class-placeholder.php:258
 msgid "Widget with mixed content"
 msgstr ""
 
@@ -1612,15 +1612,15 @@ msgstr ""
 msgid "Really Simple SSL cannot be activated. The plugin requires WordPress 5.7 or higher"
 msgstr ""
 
-#: rlrsssl-really-simple-ssl.php:198
+#: rlrsssl-really-simple-ssl.php:193
 msgid "Update Really Simple SSL Pro: the plugin needs to be updated to the latest version to be compatible."
 msgstr ""
 
-#: rlrsssl-really-simple-ssl.php:202
+#: rlrsssl-really-simple-ssl.php:197
 msgid "%sUpdate%s or %srenew your license%s."
 msgstr ""
 
-#: rlrsssl-really-simple-ssl.php:204
+#: rlrsssl-really-simple-ssl.php:199
 msgid "Visit the plugins overview or %srenew your license%s."
 msgstr ""
 
@@ -1830,574 +1830,570 @@ msgstr ""
 msgid "Get Premium Support with %sReally Simple SSL Pro%s"
 msgstr ""
 
-#: settings/config/config.php:39
+#: settings/config/config.php:38
 msgid "Debugging with Really Simple SSL"
 msgstr ""
 
-#: settings/config/config.php:45
-#: settings/config/config.php:51
-#: settings/config/config.php:1236
+#: settings/config/config.php:44
+#: settings/config/config.php:50
+#: settings/config/config.php:1222
 msgid "Hardening"
 msgstr ""
 
-#: settings/config/config.php:58
+#: settings/config/config.php:56
 msgid "Advanced Hardening"
 msgstr ""
 
-#: settings/config/config.php:59
+#: settings/config/config.php:57
 msgid "Get Advanced Hardening with %sReally Simple SSL Pro%s"
 msgstr ""
 
-#: settings/config/config.php:66
-#: settings/config/config.php:700
+#: settings/config/config.php:63
+#: settings/config/config.php:689
 msgid "XML-RPC"
 msgstr ""
 
-#: settings/config/config.php:67
+#: settings/config/config.php:64
 msgid "Get XML-RPC with %sReally Simple SSL Pro%s"
 msgstr ""
 
-#: settings/config/config.php:73
-#: settings/config/config.php:81
+#: settings/config/config.php:70
+#: settings/config/config.php:77
 msgid "Mixed Content Scan"
 msgstr ""
 
-#: settings/config/config.php:77
-#: settings/config/config.php:85
+#: settings/config/config.php:73
+#: settings/config/config.php:80
 msgid "Get the Mixed Content Scan with %sReally Simple SSL Pro%s"
 msgstr ""
 
-#: settings/config/config.php:102
+#: settings/config/config.php:97
 msgid "Recommended Security Headers"
 msgstr ""
 
-#: settings/config/config.php:109
+#: settings/config/config.php:104
 msgid "Get Recommended Security Headers with %sReally Simple SSL Pro%s"
 msgstr ""
 
-#: settings/config/config.php:111
+#: settings/config/config.php:106
 msgid "Recommended Security Headers "
 msgstr ""
 
-#: settings/config/config.php:125
+#: settings/config/config.php:120
 msgid "Get HTTP Strict Transport Security with %sReally Simple SSL Pro%s"
 msgstr ""
 
-#: settings/config/config.php:127
+#: settings/config/config.php:122
 msgid "HTTP Strict Transport Security"
 msgstr ""
 
-#: settings/config/config.php:139
+#: settings/config/config.php:134
 msgid "Get the Permissions Policy with %sReally Simple SSL Pro%s"
 msgstr ""
 
-#: settings/config/config.php:157
+#: settings/config/config.php:152
 msgid "Get Upgrade Insecure Requests with %sReally Simple SSL Pro%s"
 msgstr ""
 
-#: settings/config/config.php:166
+#: settings/config/config.php:161
 msgid "Get Frame Ancestors with %sReally Simple SSL Pro%s"
 msgstr ""
 
-#: settings/config/config.php:176
+#: settings/config/config.php:171
 msgid "Get Source Directives with %sReally Simple SSL Pro%s"
 msgstr ""
 
-#: settings/config/config.php:186
+#: settings/config/config.php:181
 msgid "Get Cross Origin Policy Headers with %sReally Simple SSL Pro%s"
 msgstr ""
 
-#: settings/config/config.php:198
+#: settings/config/config.php:193
 msgid "We have tried to make our Wizard as simple and fast as possible. Although these questions are all necessary, if there’s any way you think we can improve the plugin, please let us %sknow%s!"
 msgstr ""
 
-#: settings/config/config.php:200
+#: settings/config/config.php:195
 msgid " Please note that you can always save and finish the wizard later, use our %sdocumentation%s for additional information or log a %ssupport ticket%s if you need our assistance."
 msgstr ""
 
-#: settings/config/config.php:208
+#: settings/config/config.php:203
 msgid "Letʼs Encrypt is a free, automated and open certificate authority brought to you by the nonprofit Internet Security Research Group (ISRG)."
 msgstr ""
 
-#: settings/config/config.php:215
+#: settings/config/config.php:210
 msgid "General Settings"
 msgstr ""
 
-#: settings/config/config.php:219
+#: settings/config/config.php:214
 msgid "Hosting"
 msgstr ""
 
-#: settings/config/config.php:220
+#: settings/config/config.php:215
 msgid "Below you will find the instructions for different hosting environments and configurations. If you start the process with the necessary instructions and credentials the next view steps will be done in no time."
 msgstr ""
 
-#: settings/config/config.php:230
+#: settings/config/config.php:225
 msgid "DNS verification"
 msgstr ""
 
-#: settings/config/config.php:292
+#: settings/config/config.php:287
 msgid "Changing redirect methods should be done with caution. Please make sure you have read our instructions beforehand at the right-hand side."
 msgstr ""
 
-#: settings/config/config.php:293
-#: settings/config/config.php:304
+#: settings/config/config.php:288
+#: settings/config/config.php:297
 #: settings/config/disable-fields-filter.php:18
 msgid "Redirect method"
 msgstr ""
 
-#: settings/config/config.php:296
+#: settings/config/config.php:291
 msgid "No redirect"
 msgstr ""
 
-#: settings/config/config.php:297
+#: settings/config/config.php:292
 msgid "301 PHP redirect"
 msgstr ""
 
-#: settings/config/config.php:298
+#: settings/config/config.php:293
 msgid "301 .htaccess redirect (read instructions first)"
 msgstr ""
 
-#: settings/config/config.php:301
-msgid "Redirects all requests over HTTP to HTTPS."
-msgstr ""
-
-#: settings/config/config.php:305
+#: settings/config/config.php:298
 #: settings/config/disable-fields-filter.php:19
 msgid "Redirects your site to https with a SEO friendly 301 redirect if it is requested over http."
 msgstr ""
 
-#: settings/config/config.php:320
+#: settings/config/config.php:313
 msgid "Mixed content fixer"
 msgstr ""
 
-#: settings/config/config.php:334
-#: settings/config/config.php:337
+#: settings/config/config.php:323
+#: settings/config/config.php:326
 msgid "Mixed content fixer - init hook"
 msgstr ""
 
-#: settings/config/config.php:338
+#: settings/config/config.php:327
 msgid "If this option is set to true, the mixed content fixer will fire on the init hook instead of the template_redirect hook. Only use this option when you experience problems with the mixed content fixer."
 msgstr ""
 
-#: settings/config/config.php:356
+#: settings/config/config.php:345
 msgid "Mixed content fixer - back-end"
 msgstr ""
 
-#: settings/config/config.php:365
+#: settings/config/config.php:354
 msgid "Notifications by email"
 msgstr ""
 
-#: settings/config/config.php:366
+#: settings/config/config.php:355
 msgid "Get notified of important changes, updates and settings. Recommended when using security features."
 msgstr ""
 
-#: settings/config/config.php:392
+#: settings/config/config.php:381
 #: settings/build/index.js:382
-#: settings/src/Settings/Support.js:72
+#: settings/src/Settings/Support.js:43
 msgid "Send"
 msgstr ""
 
-#: settings/config/config.php:393
+#: settings/config/config.php:382
 msgid "Send test notification by email"
 msgstr ""
 
-#: settings/config/config.php:409
+#: settings/config/config.php:398
 msgid "Dismiss all notifications"
 msgstr ""
 
-#: settings/config/config.php:419
+#: settings/config/config.php:408
 #: settings/build/index.js:382
-#: settings/src/LetsEncrypt/Installation.js:103
-#: settings/src/LetsEncrypt/Installation.js:108
-#: settings/src/LetsEncrypt/Installation.js:112
+#: settings/src/LetsEncrypt/Installation.js:96
+#: settings/src/LetsEncrypt/Installation.js:101
+#: settings/src/LetsEncrypt/Installation.js:105
 msgid "Download"
 msgstr ""
 
-#: settings/config/config.php:420
+#: settings/config/config.php:409
 msgid "System status"
 msgstr ""
 
-#: settings/config/config.php:429
+#: settings/config/config.php:418
 msgid "Delete all data on plugin deletion"
 msgstr ""
 
-#: settings/config/config.php:437
+#: settings/config/config.php:426
 msgid "Stop editing the .htaccess file"
 msgstr ""
 
-#: settings/config/config.php:454
+#: settings/config/config.php:443
 msgid "Premium support"
 msgstr ""
 
-#: settings/config/config.php:467
+#: settings/config/config.php:456
 msgid "Disable \"anyone can register\""
 msgstr ""
 
-#: settings/config/config.php:473
+#: settings/config/config.php:462
 msgid "About Hardening"
 msgstr ""
 
-#: settings/config/config.php:474
+#: settings/config/config.php:463
 msgid "Hardening features limit the possibility of potential weaknesses and vulnerabilities which can be misused."
 msgstr ""
 
-#: settings/config/config.php:477
+#: settings/config/config.php:466
 msgid "User registration is restricted"
 msgstr ""
 
-#: settings/config/config.php:478
+#: settings/config/config.php:467
 msgid "User registration is not restricted"
 msgstr ""
 
-#: settings/config/config.php:487
+#: settings/config/config.php:476
 msgid "Disable the built-in file editors"
 msgstr ""
 
-#: settings/config/config.php:491
+#: settings/config/config.php:480
 msgid "File editing is disabled"
 msgstr ""
 
-#: settings/config/config.php:492
+#: settings/config/config.php:481
 msgid "File editing is enabled"
 msgstr ""
 
-#: settings/config/config.php:501
+#: settings/config/config.php:490
 msgid "Prevent code execution in the public 'Uploads' folder"
 msgstr ""
 
-#: settings/config/config.php:505
+#: settings/config/config.php:494
 msgid "Code execution is restricted"
 msgstr ""
 
-#: settings/config/config.php:506
+#: settings/config/config.php:495
 msgid "Code execution is not restricted"
 msgstr ""
 
-#: settings/config/config.php:515
+#: settings/config/config.php:504
 msgid "Hide your WordPress version"
 msgstr ""
 
-#: settings/config/config.php:524
+#: settings/config/config.php:513
 msgid "By default, WordPress shows if a username or email address exists when a login fails. This will change it to generic feedback."
 msgstr ""
 
-#: settings/config/config.php:525
+#: settings/config/config.php:514
 msgid "Prevent login feedback"
 msgstr ""
 
-#: settings/config/config.php:534
+#: settings/config/config.php:523
 msgid "Disable directory browsing"
 msgstr ""
 
-#: settings/config/config.php:538
+#: settings/config/config.php:527
 msgid "Browsing directories is blocked"
 msgstr ""
 
-#: settings/config/config.php:539
+#: settings/config/config.php:528
 msgid "Browsing directories is possible"
 msgstr ""
 
-#: settings/config/config.php:548
+#: settings/config/config.php:537
 msgid "Disable user enumeration"
 msgstr ""
 
-#: settings/config/config.php:552
+#: settings/config/config.php:541
 msgid "User enumeration is restricted"
 msgstr ""
 
-#: settings/config/config.php:553
+#: settings/config/config.php:542
 msgid "User enumeration is possible"
 msgstr ""
 
-#: settings/config/config.php:563
+#: settings/config/config.php:552
 msgid "Block the username 'admin'"
 msgstr ""
 
-#: settings/config/config.php:565
+#: settings/config/config.php:554
 msgid "Settings update: Username 'admin' renamed"
 msgstr ""
 
-#: settings/config/config.php:566
+#: settings/config/config.php:555
 msgid "As a security precaution, the username ‘admin’ has been changed on %s. From now on, you can login with '%s' or an email address."
 msgstr ""
 
-#: settings/config/config.php:569
+#: settings/config/config.php:558
 msgid "If the username 'admin' currently exists, you can rename it here. Please note that you can no longer use this username, and should use the new username or an email address"
 msgstr ""
 
-#: settings/config/config.php:574
+#: settings/config/config.php:563
 msgid "Username 'Admin' is not allowed"
 msgstr ""
 
-#: settings/config/config.php:575
+#: settings/config/config.php:564
 msgid "Username 'Admin' is allowed"
 msgstr ""
 
-#: settings/config/config.php:584
+#: settings/config/config.php:573
 msgid "Choose new username to replace 'admin'"
 msgstr ""
 
-#: settings/config/config.php:608
+#: settings/config/config.php:597
 msgid "Disable XML-RPC"
 msgstr ""
 
-#: settings/config/config.php:617
+#: settings/config/config.php:606
 msgid "Block user registrations when login and display name are the same"
 msgstr ""
 
-#: settings/config/config.php:626
+#: settings/config/config.php:615
 msgid "This will limit or fully disable HTTP requests that are not needed, but could be used with malicious intent."
 msgstr ""
 
-#: settings/config/config.php:627
+#: settings/config/config.php:616
 msgid "Disable HTTP methods"
 msgstr ""
 
-#: settings/config/config.php:636
+#: settings/config/config.php:625
 msgid "Settings update: Database prefix changed"
 msgstr ""
 
-#: settings/config/config.php:637
+#: settings/config/config.php:626
 msgid "Security through obscurity. Your site is no longer using the default wp_ prefix for database tables. The process has been designed to only complete and replace the tables after all wp_ tables are successfully renamed. In the unlikely event that this does lead to database issues on your site, please navigate to our troubleshooting article."
 msgstr ""
 
-#: settings/config/config.php:640
+#: settings/config/config.php:629
 msgid "This will permanently change your database prefixes and you can NOT rollback this feature. Please make sure you have a back-up."
 msgstr ""
 
-#: settings/config/config.php:643
+#: settings/config/config.php:632
 msgid "Rename and randomize your database prefix"
 msgstr ""
 
-#: settings/config/config.php:652
+#: settings/config/config.php:641
 msgid "A debug.log is publicly accessibile and has a standard location. This will change the location to a randomly named folder in /wp-content/"
 msgstr ""
 
-#: settings/config/config.php:654
+#: settings/config/config.php:643
 msgid "Settings update: Debug.log file relocated"
 msgstr ""
 
-#: settings/config/config.php:655
+#: settings/config/config.php:644
 msgid "From now on, the debug.log won’t be publicly accessible whenever wp-debugging is enabled. The debug log will be stored in a randomly named folder in /wp-content/. This prevents possible leakage of sensitive debugging information."
 msgstr ""
 
-#: settings/config/config.php:658
+#: settings/config/config.php:647
 msgid "Change debug.log file location"
 msgstr ""
 
-#: settings/config/config.php:662
+#: settings/config/config.php:651
 msgid "Debug log not publicly accessible"
 msgstr ""
 
-#: settings/config/config.php:663
+#: settings/config/config.php:652
 msgid "Debug log is now public"
 msgstr ""
 
-#: settings/config/config.php:672
+#: settings/config/config.php:661
 msgid "Disable application passwords"
 msgstr ""
 
-#: settings/config/config.php:712
+#: settings/config/config.php:700
 msgid "Method"
 msgstr ""
 
-#: settings/config/config.php:717
+#: settings/config/config.php:705
 msgid "Login status"
 msgstr ""
 
-#: settings/config/config.php:722
+#: settings/config/config.php:710
 msgid "Count"
 msgstr ""
 
-#: settings/config/config.php:727
-#: settings/config/config.php:1171
+#: settings/config/config.php:715
+#: settings/config/config.php:1157
 msgid "Action"
 msgstr ""
 
-#: settings/config/config.php:732
+#: settings/config/config.php:720
 msgid "Delete"
 msgstr ""
 
-#: settings/config/config.php:745
+#: settings/config/config.php:733
 msgid "disabled"
 msgstr ""
 
-#: settings/config/config.php:746
+#: settings/config/config.php:734
 msgid "(recommended)"
 msgstr ""
 
-#: settings/config/config.php:755
+#: settings/config/config.php:743
 msgid "About Recommended Security Headers"
 msgstr ""
 
-#: settings/config/config.php:756
+#: settings/config/config.php:744
 msgid "These security headers are the fundamental security measures to protect your website visitors while visiting your website."
 msgstr ""
 
-#: settings/config/config.php:774
-#: settings/config/config.php:788
-#: settings/config/config.php:888
-#: settings/config/config.php:910
-#: settings/config/config.php:925
+#: settings/config/config.php:762
+#: settings/config/config.php:776
+#: settings/config/config.php:876
+#: settings/config/config.php:898
+#: settings/config/config.php:913
 msgid "Off"
 msgstr ""
 
-#: settings/config/config.php:789
+#: settings/config/config.php:777
 msgid "recommended"
 msgstr ""
 
-#: settings/config/config.php:813
+#: settings/config/config.php:801
 msgid "About HTTP Strict Transport Security"
 msgstr ""
 
-#: settings/config/config.php:814
+#: settings/config/config.php:802
 msgid "Leveraging your SSL certificate with HSTS is a staple for every website. Force your website over SSL, mitigating risks of malicious counterfeit websites in your name."
 msgstr ""
 
-#: settings/config/config.php:868
+#: settings/config/config.php:856
 msgid "One day (for testing only)"
 msgstr ""
 
-#: settings/config/config.php:869
+#: settings/config/config.php:857
 msgid "One year"
 msgstr ""
 
-#: settings/config/config.php:870
+#: settings/config/config.php:858
 msgid "Two years (required for preload)"
 msgstr ""
 
-#: settings/config/config.php:896
+#: settings/config/config.php:884
 msgid "About Cross Origin Policies"
 msgstr ""
 
-#: settings/config/config.php:897
+#: settings/config/config.php:885
 msgid "One of the most powerful features, and therefore the most complex are the Cross-Origin headers that can isolate your website so any data leaks are minimized."
 msgstr ""
 
-#: settings/config/config.php:944
+#: settings/config/config.php:931
 msgid "About the Mixed Content Scan"
 msgstr ""
 
-#: settings/config/config.php:945
+#: settings/config/config.php:932
 msgid "The extensive mixed content scan will list all current and future issues and provide a fix, or instructions to fix manually."
 msgstr ""
 
-#: settings/config/config.php:949
+#: settings/config/config.php:936
 msgid "Type"
 msgstr ""
 
-#: settings/config/config.php:955
+#: settings/config/config.php:942
 msgid "Description"
 msgstr ""
 
-#: settings/config/config.php:961
-#: settings/config/config.php:1156
+#: settings/config/config.php:948
+#: settings/config/config.php:1142
 msgid "Location"
 msgstr ""
 
-#: settings/config/config.php:974
+#: settings/config/config.php:961
 #: settings/build/index.js:382
-#: settings/src/Dashboard/TaskElement.js:56
-#: settings/src/Dashboard/TaskElement.js:57
-#: settings/src/Modal/Modal.js:80
-#: settings/src/Settings/MixedContentScan.js:233
+#: settings/src/Dashboard/TaskElement.js:51
+#: settings/src/Dashboard/TaskElement.js:52
+#: settings/src/Modal/Modal.js:66
+#: settings/src/Settings/MixedContentScan/MixedContentScan.js:87
 msgid "Fix"
 msgstr ""
 
-#: settings/config/config.php:989
+#: settings/config/config.php:976
 #: settings/build/index.js:382
-#: settings/src/Settings/ChangeStatus.js:4
+#: settings/src/Settings/LearningMode/ChangeStatus.js:7
 msgid "Allow"
 msgstr ""
 
-#: settings/config/config.php:989
+#: settings/config/config.php:976
 #: settings/build/index.js:382
-#: settings/src/Settings/LearningMode.js:260
-#: settings/src/Settings/PermissionsPolicy.js:149
+#: settings/src/Settings/LearningMode/LearningMode.js:179
+#: settings/src/Settings/PermissionsPolicy.js:118
 msgid "Disable"
 msgstr ""
 
-#: settings/config/config.php:989
+#: settings/config/config.php:976
 msgid "Self (Default)"
 msgstr ""
 
-#: settings/config/config.php:990
+#: settings/config/config.php:977
 msgid "Permissions Policy"
 msgstr ""
 
-#: settings/config/config.php:995
+#: settings/config/config.php:982
 msgid "About the Permission Policy"
 msgstr ""
 
-#: settings/config/config.php:996
+#: settings/config/config.php:983
 msgid "Browser features are plentiful, but most are not needed on your website."
 msgstr ""
 
-#: settings/config/config.php:996
+#: settings/config/config.php:983
 msgid "They might be misused if you don’t actively tell the browser to disable these features."
 msgstr ""
 
-#: settings/config/config.php:1000
+#: settings/config/config.php:987
 msgid "Feature"
 msgstr ""
 
-#: settings/config/config.php:1005
+#: settings/config/config.php:992
 msgid "Options"
 msgstr ""
 
-#: settings/config/config.php:1078
+#: settings/config/config.php:1065
 msgid "Enable Permissions Policy"
 msgstr ""
 
-#: settings/config/config.php:1087
+#: settings/config/config.php:1074
 msgid "Serve encrypted and authenticated responses"
 msgstr ""
 
-#: settings/config/config.php:1093
+#: settings/config/config.php:1080
 msgid "About the Content Security Policy"
 msgstr ""
 
-#: settings/config/config.php:1094
+#: settings/config/config.php:1081
 msgid "The content security policy has many options, so we always recommend starting in ‘learning mode’ to see what files and scripts are loaded."
 msgstr ""
 
-#: settings/config/config.php:1109
+#: settings/config/config.php:1096
 msgid "Disable (Default)"
 msgstr ""
 
-#: settings/config/config.php:1113
+#: settings/config/config.php:1100
 msgid "Allow your domain to be embedded"
 msgstr ""
 
-#: settings/config/config.php:1122
+#: settings/config/config.php:1109
 msgid "Add additional domains which can embed your website, if needed. Comma seperated."
 msgstr ""
 
-#: settings/config/config.php:1161
+#: settings/config/config.php:1147
 msgid "Directive"
 msgstr ""
 
-#: settings/config/config.php:1166
+#: settings/config/config.php:1152
 msgid "Source"
 msgstr ""
 
-#: settings/config/config.php:1213
+#: settings/config/config.php:1199
 msgid "Progress"
 msgstr ""
 
-#: settings/config/config.php:1226
+#: settings/config/config.php:1212
 msgid "Powered by Qualys"
 msgstr ""
 
-#: settings/config/config.php:1228
+#: settings/config/config.php:1214
 msgid "Status"
 msgstr ""
 
-#: settings/config/config.php:1244
+#: settings/config/config.php:1230
 msgid "Tips & Tricks"
 msgstr ""
 
-#: settings/config/config.php:1255
+#: settings/config/config.php:1241
 msgid "Other Plugins"
 msgstr ""
 
@@ -2417,25 +2413,25 @@ msgstr ""
 msgid "The .htaccess redirect has been enabled on your site. If the server configuration is non-standard, this might cause issues. Please check if all pages on your site are functioning properly. ."
 msgstr ""
 
-#: settings/settings.php:104
+#: settings/settings.php:105
 msgid "SSL settings"
 msgstr ""
 
-#: settings/settings.php:105
+#: settings/settings.php:106
 msgid "SSL"
 msgstr ""
 
-#: settings/settings.php:419
+#: settings/settings.php:420
 msgid "Self-hosted, Privacy-friendly analytics tool"
 msgstr ""
 
-#: settings/settings.php:434
+#: settings/settings.php:435
 msgid "Terms and Conditions"
 msgstr ""
 
 #: settings/templates/tips-tricks-footer.php:3
 #: settings/build/index.js:382
-#: settings/src/Header.js:41
+#: settings/src/Header.js:31
 msgid "Documentation"
 msgstr ""
 
@@ -2596,15 +2592,20 @@ msgid "Your license key has reached its activation limit."
 msgstr ""
 
 #: settings/build/index.js:382
-#: settings/src/Header.js:43
+#: settings/src/Header.js:33
 msgid "Let's Encrypt"
 msgstr ""
 
 #: settings/build/index.js:382
-#: settings/src/Dashboard/ProgressFooter.js:44
-#: settings/src/Header.js:53
-#: settings/src/Menu/Menu.js:40
+#: settings/src/Dashboard/Progress/ProgressFooter.js:28
+#: settings/src/Header.js:43
+#: settings/src/Menu/Menu.js:34
 msgid "Go Pro"
+msgstr ""
+
+#: settings/build/index.js:382
+#: settings/src/Settings/FieldsData.js:224
+msgid "Settings Saved"
 msgstr ""
 
 #: settings/build/index.js:382
@@ -2613,155 +2614,155 @@ msgid "Re-started test"
 msgstr ""
 
 #: settings/build/index.js:382
-#: settings/src/utils/Error.js:11
+#: settings/src/utils/Error.js:12
 msgid "Please check if security settings on the server or a plugin is blocking the requests from Really Simple SSL."
 msgstr ""
 
 #: settings/build/index.js:382
-#: settings/src/utils/Error.js:19
+#: settings/src/utils/Error.js:20
 msgid "The Really Simple SSL Rest API is disabled."
 msgstr ""
 
 #: settings/build/index.js:382
-#: settings/src/utils/Error.js:21
+#: settings/src/utils/Error.js:22
 msgid "The Really Simple SSL Rest API returned a not found."
 msgstr ""
 
 #: settings/build/index.js:382
-#: settings/src/utils/Error.js:23
+#: settings/src/utils/Error.js:24
 msgid "The Really Simple SSL Rest API returned a 403 forbidden error."
 msgstr ""
 
 #: settings/build/index.js:382
-#: settings/src/utils/Error.js:34
+#: settings/src/utils/Error.js:35
 msgid "A problem was detected during the loading of the settings"
 msgstr ""
 
 #: settings/build/index.js:382
-#: settings/src/utils/Error.js:40
+#: settings/src/utils/Error.js:41
 msgid "The request returned the following errors:"
 msgstr ""
 
 #: settings/build/index.js:382
-#: settings/src/utils/Error.js:42
+#: settings/src/utils/Error.js:43
 msgid "Response code: "
 msgstr ""
 
 #: settings/build/index.js:382
-#: settings/src/utils/Error.js:43
+#: settings/src/utils/Error.js:44
 msgid "Status code: "
 msgstr ""
 
 #: settings/build/index.js:382
-#: settings/src/utils/Error.js:44
+#: settings/src/utils/Error.js:45
 msgid "Server response: "
 msgstr ""
 
 #: settings/build/index.js:382
-#: settings/src/utils/Error.js:47
+#: settings/src/utils/Error.js:48
 msgid "More information"
 msgstr ""
 
 #: settings/build/index.js:382
-#: settings/src/Dashboard/ProgressBlockHeader.js:51
-msgid "All tasks"
-msgstr ""
-
-#: settings/build/index.js:382
-#: settings/src/Dashboard/ProgressBlockHeader.js:55
-msgid "Remaining tasks"
-msgstr ""
-
-#: settings/build/index.js:382
-#: settings/src/Dashboard/SecurityFeaturesBlock/SecurityFeatureBullet.js:27
+#: settings/src/Dashboard/SecurityFeaturesBlock/SecurityFeatureBullet.js:14
 msgid "%sRead more%s"
 msgstr ""
 
 #: settings/build/index.js:382
-#: settings/src/Dashboard/SecurityFeaturesBlock/SecurityFeaturesBlock.js:38
+#: settings/src/Dashboard/SecurityFeaturesBlock/SecurityFeaturesBlock.js:23
 msgid "Improve WordPress security."
 msgstr ""
 
 #: settings/build/index.js:382
-#: settings/src/Dashboard/SecurityFeaturesBlock/SecurityFeaturesBlock.js:39
+#: settings/src/Dashboard/SecurityFeaturesBlock/SecurityFeaturesBlock.js:24
 msgid "Check our %sdocumentation%s"
 msgstr ""
 
 #: settings/build/index.js:382
-#: settings/src/Dashboard/SecurityFeaturesBlock/SecurityFeaturesBlock.js:40
+#: settings/src/Dashboard/SecurityFeaturesBlock/SecurityFeaturesBlock.js:25
 msgid "or use the %sWordPress forum%s."
 msgstr ""
 
 #: settings/build/index.js:382
-#: settings/src/Dashboard/ProgressFooter.js:32
+#: settings/src/Dashboard/Progress/ProgressBlockHeader.js:32
+msgid "All tasks"
+msgstr ""
+
+#: settings/build/index.js:382
+#: settings/src/Dashboard/Progress/ProgressBlockHeader.js:36
+msgid "Remaining tasks"
+msgstr ""
+
+#: settings/build/index.js:382
+#: settings/src/Dashboard/Progress/ProgressFooter.js:17
 msgid "SSL Activated"
 msgstr ""
 
 #: settings/build/index.js:382
-#: settings/src/Dashboard/ProgressFooter.js:32
+#: settings/src/Dashboard/Progress/ProgressFooter.js:17
 msgid "SSL not activated"
 msgstr ""
 
 #: settings/build/index.js:382
-#: settings/src/Dashboard/ProgressFooter.js:52
+#: settings/src/Dashboard/Progress/ProgressFooter.js:36
 msgid "Mixed content"
 msgstr ""
 
 #: settings/build/index.js:382
-#: settings/src/Dashboard/ProgressFooter.js:56
+#: settings/src/Dashboard/Progress/ProgressFooter.js:40
 msgid "301 redirect"
 msgstr ""
 
 #: settings/build/index.js:382
-#: settings/src/Dashboard/SslLabs.js:347
+#: settings/src/Dashboard/SslLabs/SslLabs.js:351
 msgid "No test started yet"
 msgstr ""
 
 #: settings/build/index.js:382
-#: settings/src/Dashboard/SslLabs.js:375
+#: settings/src/Dashboard/SslLabs/SslLabs.js:378
 msgid "Not available on localhost"
 msgstr ""
 
 #: settings/build/index.js:382
-#: settings/src/Dashboard/SslLabs.js:266
+#: settings/src/Dashboard/SslLabs/SslLabs.js:270
 msgid "Cipher strength"
 msgstr ""
 
 #: settings/build/index.js:382
-#: settings/src/Dashboard/SslLabs.js:409
+#: settings/src/Dashboard/SslLabs/SslLabs.js:412
 msgid "What does my score mean?"
 msgstr ""
 
 #: settings/build/index.js:382
-#: settings/src/Dashboard/SslLabs.js:409
-#: settings/src/LetsEncrypt/DnsVerification.js:60
+#: settings/src/Dashboard/SslLabs/SslLabs.js:412
+#: settings/src/LetsEncrypt/DnsVerification.js:54
 msgid "Read more"
 msgstr ""
 
 #: settings/build/index.js:382
-#: settings/src/Dashboard/SslLabs.js:415
+#: settings/src/Dashboard/SslLabs/SslLabs.js:418
 msgid "Last check:"
 msgstr ""
 
 #: settings/build/index.js:382
-#: settings/src/Dashboard/SslLabs.js:421
+#: settings/src/Dashboard/SslLabs/SslLabs.js:424
 msgid "View detailed report on Qualys SSL Labs"
 msgstr ""
 
 #: settings/build/index.js:382
-#: settings/src/Dashboard/SslLabsFooter.js:14
+#: settings/src/Dashboard/SslLabs/SslLabsFooter.js:13
 msgid "Continue SSL Health check"
 msgstr ""
 
 #: settings/build/index.js:382
-#: settings/src/Dashboard/SslLabsFooter.js:15
+#: settings/src/Dashboard/SslLabs/SslLabsFooter.js:14
 msgid "Check SSL Health"
 msgstr ""
 
 #: settings/build/index.js:382
 #: settings/src/Dashboard/OtherPlugins.js:76
-#: settings/src/Onboarding/Onboarding.js:200
-#: settings/src/Onboarding/Onboarding.js:201
+#: settings/src/Onboarding/Onboarding.js:208
+#: settings/src/Onboarding/Onboarding.js:209
 msgid "Activating..."
 msgstr ""
 
@@ -2772,583 +2773,569 @@ msgid "Downloading..."
 msgstr ""
 
 #: settings/build/index.js:382
-#: settings/src/Menu/MenuItem.js:29
+#: settings/src/Menu/MenuItem.js:28
 msgid "New"
 msgstr ""
 
 #: settings/build/index.js:382
-#: settings/src/Settings/License.js:133
+#: settings/src/Settings/License/License.js:72
 msgid "Deactivate"
 msgstr ""
 
 #: settings/build/index.js:382
-#: settings/src/LetsEncrypt/Directories.js:22
-#: settings/src/LetsEncrypt/DnsVerification.js:23
+#: settings/src/LetsEncrypt/Directories.js:24
+#: settings/src/LetsEncrypt/DnsVerification.js:25
 msgid "The challenge directory is used to verify the domain ownership."
 msgstr ""
 
 #: settings/build/index.js:382
-#: settings/src/LetsEncrypt/Directories.js:30
+#: settings/src/LetsEncrypt/Directories.js:32
 msgid "The key directory is needed to store the generated keys."
 msgstr ""
 
 #: settings/build/index.js:382
-#: settings/src/LetsEncrypt/Directories.js:30
-#: settings/src/LetsEncrypt/Directories.js:38
+#: settings/src/LetsEncrypt/Directories.js:32
+#: settings/src/LetsEncrypt/Directories.js:40
 msgid "By placing it outside the root folder, it is not publicly accessible."
 msgstr ""
 
 #: settings/build/index.js:382
-#: settings/src/LetsEncrypt/Directories.js:38
+#: settings/src/LetsEncrypt/Directories.js:40
 msgid "The certificate will get stored in this directory."
 msgstr ""
 
 #: settings/build/index.js:382
-#: settings/src/LetsEncrypt/Directories.js:55
+#: settings/src/LetsEncrypt/Directories.js:56
 msgid "Switched to DNS"
 msgstr ""
 
 #: settings/build/index.js:382
-#: settings/src/LetsEncrypt/Directories.js:70
-#: settings/src/LetsEncrypt/DnsVerification.js:58
-#: settings/src/LetsEncrypt/Installation.js:99
+#: settings/src/LetsEncrypt/Directories.js:71
+#: settings/src/LetsEncrypt/DnsVerification.js:52
+#: settings/src/LetsEncrypt/Installation.js:92
 msgid "Next step"
 msgstr ""
 
 #: settings/build/index.js:382
-#: settings/src/LetsEncrypt/Directories.js:75
+#: settings/src/LetsEncrypt/Directories.js:76
 msgid "If the challenge directory cannot be created, or is not reachable, you can either remove the server limitation, or change to DNS verification."
 msgstr ""
 
 #: settings/build/index.js:382
-#: settings/src/LetsEncrypt/Directories.js:81
-#: settings/src/LetsEncrypt/Directories.js:94
-#: settings/src/LetsEncrypt/Directories.js:123
+#: settings/src/LetsEncrypt/Directories.js:82
+#: settings/src/LetsEncrypt/Directories.js:96
+#: settings/src/LetsEncrypt/Directories.js:125
 msgid "Switch to DNS verification"
 msgstr ""
 
 #: settings/build/index.js:382
-#: settings/src/LetsEncrypt/Directories.js:87
+#: settings/src/LetsEncrypt/Directories.js:89
 msgid "If you also want to secure subdomains like mail.domain.com, cpanel.domain.com, you have to use the %sDNS%s challenge."
 msgstr ""
 
 #: settings/build/index.js:382
-#: settings/src/LetsEncrypt/Directories.js:89
+#: settings/src/LetsEncrypt/Directories.js:91
 msgid "Please note that auto-renewal with a DNS challenge might not be possible."
 msgstr ""
 
 #: settings/build/index.js:382
-#: settings/src/LetsEncrypt/Directories.js:99
+#: settings/src/LetsEncrypt/Directories.js:101
 msgid "Create a challenge directory"
 msgstr ""
 
 #: settings/build/index.js:382
-#: settings/src/LetsEncrypt/Directories.js:102
+#: settings/src/LetsEncrypt/Directories.js:104
 msgid "Navigate in FTP or File Manager to the root of your WordPress installation:"
 msgstr ""
 
 #: settings/build/index.js:382
-#: settings/src/LetsEncrypt/Directories.js:106
+#: settings/src/LetsEncrypt/Directories.js:108
 msgid "Create a folder called “.well-known”"
 msgstr ""
 
 #: settings/build/index.js:382
-#: settings/src/LetsEncrypt/Directories.js:109
+#: settings/src/LetsEncrypt/Directories.js:111
 msgid "Inside the folder called “.well-known” create a new folder called “acme-challenge”, with 644 writing permissions."
 msgstr ""
 
 #: settings/build/index.js:382
-#: settings/src/LetsEncrypt/Directories.js:112
-#: settings/src/LetsEncrypt/Directories.js:144
-#: settings/src/LetsEncrypt/Directories.js:166
+#: settings/src/LetsEncrypt/Directories.js:114
+#: settings/src/LetsEncrypt/Directories.js:146
+#: settings/src/LetsEncrypt/Directories.js:168
 msgid "Click the refresh button."
 msgstr ""
 
 #: settings/build/index.js:382
-#: settings/src/LetsEncrypt/Directories.js:116
+#: settings/src/LetsEncrypt/Directories.js:118
 msgid "Or you can switch to DNS verification"
 msgstr ""
 
 #: settings/build/index.js:382
-#: settings/src/LetsEncrypt/Directories.js:118
+#: settings/src/LetsEncrypt/Directories.js:120
 msgid "If the challenge directory cannot be created, you can either remove the server limitation, or change to DNS verification."
 msgstr ""
 
 #: settings/build/index.js:382
-#: settings/src/LetsEncrypt/Directories.js:131
+#: settings/src/LetsEncrypt/Directories.js:133
 msgid "Create a key directory"
 msgstr ""
 
 #: settings/build/index.js:382
-#: settings/src/LetsEncrypt/Directories.js:134
-#: settings/src/LetsEncrypt/Directories.js:156
+#: settings/src/LetsEncrypt/Directories.js:136
+#: settings/src/LetsEncrypt/Directories.js:158
 msgid "Navigate in FTP or File Manager to one level above the root of your WordPress installation:"
 msgstr ""
 
 #: settings/build/index.js:382
-#: settings/src/LetsEncrypt/Directories.js:138
-#: settings/src/LetsEncrypt/Directories.js:160
+#: settings/src/LetsEncrypt/Directories.js:140
+#: settings/src/LetsEncrypt/Directories.js:162
 msgid "Create a folder called “ssl”"
 msgstr ""
 
 #: settings/build/index.js:382
-#: settings/src/LetsEncrypt/Directories.js:141
+#: settings/src/LetsEncrypt/Directories.js:143
 msgid "Inside the folder called “ssl” create a new folder called “keys”, with 644 writing permissions."
 msgstr ""
 
 #: settings/build/index.js:382
-#: settings/src/LetsEncrypt/Directories.js:153
+#: settings/src/LetsEncrypt/Directories.js:155
 msgid "Create a certs directory"
 msgstr ""
 
 #: settings/build/index.js:382
-#: settings/src/LetsEncrypt/Directories.js:163
+#: settings/src/LetsEncrypt/Directories.js:165
 msgid "Inside the folder called “ssl” create a new folder called “certs”, with 644 writing permissions."
 msgstr ""
 
 #: settings/build/index.js:382
-#: settings/src/LetsEncrypt/DnsVerification.js:59
+#: settings/src/LetsEncrypt/DnsVerification.js:53
 msgid "Add the following token as text record to your DNS records. We recommend to use a short TTL during installation, in case you need to change it."
 msgstr ""
 
 #: settings/build/index.js:382
-#: settings/src/LetsEncrypt/DnsVerification.js:65
+#: settings/src/LetsEncrypt/DnsVerification.js:59
 msgid "domain"
 msgstr ""
 
 #: settings/build/index.js:382
-#: settings/src/LetsEncrypt/DnsVerification.js:66
+#: settings/src/LetsEncrypt/DnsVerification.js:60
 msgid "Value"
 msgstr ""
 
 #: settings/build/index.js:382
-#: settings/src/LetsEncrypt/DnsVerification.js:79
+#: settings/src/LetsEncrypt/DnsVerification.js:73
 msgid "DNS verification active. You can switch back to directory verification here."
 msgstr ""
 
 #: settings/build/index.js:382
-#: settings/src/LetsEncrypt/DnsVerification.js:41
-msgid "Switched to directory"
-msgstr ""
-
-#: settings/build/index.js:382
-#: settings/src/LetsEncrypt/DnsVerification.js:83
+#: settings/src/LetsEncrypt/DnsVerification.js:77
 msgid "Switch to directory verification"
 msgstr ""
 
 #: settings/build/index.js:382
-#: settings/src/LetsEncrypt/Generation.js:44
+#: settings/src/LetsEncrypt/Generation.js:41
 msgid "We could not check the DNS records. If you just added the record, please check in a few minutes."
 msgstr ""
 
 #: settings/build/index.js:382
-#: settings/src/LetsEncrypt/Generation.js:45
+#: settings/src/LetsEncrypt/Generation.js:42
 msgid "You can manually check the DNS records in an %sonline tool%s."
 msgstr ""
 
 #: settings/build/index.js:382
-#: settings/src/LetsEncrypt/Generation.js:47
+#: settings/src/LetsEncrypt/Generation.js:44
 msgid "If you're sure it's set correctly, you can click the button to skip the DNS check."
 msgstr ""
 
 #: settings/build/index.js:382
-#: settings/src/LetsEncrypt/Generation.js:27
+#: settings/src/LetsEncrypt/Generation.js:24
 msgid "Skip DNS verification "
 msgstr ""
 
 #: settings/build/index.js:382
-#: settings/src/LetsEncrypt/Generation.js:53
+#: settings/src/LetsEncrypt/Generation.js:50
 msgid "Skip DNS check"
 msgstr ""
 
 #: settings/build/index.js:382
-#: settings/src/Onboarding/Onboarding.js:169
+#: settings/src/Onboarding/Onboarding.js:177
 msgid "SSL has been activated network wide"
 msgstr ""
 
 #: settings/build/index.js:382
-#: settings/src/Onboarding/Onboarding.js:172
+#: settings/src/Onboarding/Onboarding.js:180
 msgid "Processing activation of subsites networkwide"
 msgstr ""
 
 #: settings/build/index.js:382
-#: settings/src/Onboarding/Onboarding.js:202
+#: settings/src/Onboarding/Onboarding.js:210
 msgid "Installing..."
 msgstr ""
 
 #: settings/build/index.js:382
-#: settings/src/Onboarding/Onboarding.js:203
+#: settings/src/Onboarding/Onboarding.js:211
 msgid "Failed"
 msgstr ""
 
 #: settings/build/index.js:382
-#: settings/src/Onboarding/Onboarding.js:204
+#: settings/src/Onboarding/Onboarding.js:212
 msgid "Finished"
 msgstr ""
 
 #: settings/build/index.js:382
-#: settings/src/Onboarding/Onboarding.js:225
+#: settings/src/Onboarding/Onboarding.js:233
 msgid "working"
 msgstr ""
 
 #: settings/build/index.js:382
-#: settings/src/Onboarding/Onboarding.js:226
+#: settings/src/Onboarding/Onboarding.js:234
 msgid "completed"
 msgstr ""
 
 #: settings/build/index.js:382
-#: settings/src/Onboarding/Onboarding.js:75
+#: settings/src/Onboarding/Onboarding.js:82
 msgid "Re-checking SSL certificate, please wait..."
 msgstr ""
 
 #: settings/build/index.js:382
-#: settings/src/Onboarding/Onboarding.js:303
+#: settings/src/Onboarding/Onboarding.js:311
 msgid "Refresh SSL status"
 msgstr ""
 
 #: settings/build/index.js:382
-#: settings/src/Onboarding/Onboarding.js:304
+#: settings/src/Onboarding/Onboarding.js:312
 msgid "The SSL detection method is not 100% accurate."
 msgstr ""
 
 #: settings/build/index.js:382
-#: settings/src/Onboarding/Onboarding.js:305
+#: settings/src/Onboarding/Onboarding.js:313
 msgid "If you’re certain an SSL certificate is present, and refresh SSL status does not work, please check “Override SSL detection” to continue activating SSL."
 msgstr ""
 
 #: settings/build/index.js:382
-#: settings/src/Onboarding/Onboarding.js:248
+#: settings/src/Onboarding/Onboarding.js:256
 msgid "Activate SSL networkwide"
 msgstr ""
 
 #: settings/build/index.js:382
-#: settings/src/Onboarding/Onboarding.js:253
+#: settings/src/Onboarding/Onboarding.js:261
 msgid "Improve Security with PRO"
 msgstr ""
 
 #: settings/build/index.js:382
-#: settings/src/Onboarding/Onboarding.js:254
+#: settings/src/Onboarding/Onboarding.js:262
 msgid "Install SSL"
 msgstr ""
 
 #: settings/build/index.js:382
-#: settings/src/Onboarding/Onboarding.js:256
+#: settings/src/Onboarding/Onboarding.js:264
 msgid "Override SSL detection"
 msgstr ""
 
 #: settings/build/index.js:382
-#: settings/src/Onboarding/Onboarding.js:274
+#: settings/src/Onboarding/Onboarding.js:282
 msgid "Go to Dashboard"
 msgstr ""
 
 #: settings/build/index.js:382
-#: settings/src/LetsEncrypt/Installation.js:24
+#: settings/src/LetsEncrypt/Installation.js:17
 msgid "This is the certificate, which you need to install in your hosting dashboard."
 msgstr ""
 
 #: settings/build/index.js:382
-#: settings/src/LetsEncrypt/Installation.js:25
-#: settings/src/LetsEncrypt/Installation.js:101
+#: settings/src/LetsEncrypt/Installation.js:18
+#: settings/src/LetsEncrypt/Installation.js:94
 msgid "Certificate (CRT)"
 msgstr ""
 
 #: settings/build/index.js:382
-#: settings/src/LetsEncrypt/Installation.js:31
+#: settings/src/LetsEncrypt/Installation.js:24
 msgid "The private key can be uploaded or pasted in the appropriate field on your hosting dashboard."
 msgstr ""
 
 #: settings/build/index.js:382
-#: settings/src/LetsEncrypt/Installation.js:32
-#: settings/src/LetsEncrypt/Installation.js:106
+#: settings/src/LetsEncrypt/Installation.js:25
+#: settings/src/LetsEncrypt/Installation.js:99
 msgid "Private Key (KEY)"
 msgstr ""
 
 #: settings/build/index.js:382
-#: settings/src/LetsEncrypt/Installation.js:38
+#: settings/src/LetsEncrypt/Installation.js:31
 msgid "The CA Bundle will sometimes be automatically detected. If not, you can use this file."
 msgstr ""
 
 #: settings/build/index.js:382
-#: settings/src/LetsEncrypt/Installation.js:39
-#: settings/src/LetsEncrypt/Installation.js:110
+#: settings/src/LetsEncrypt/Installation.js:32
+#: settings/src/LetsEncrypt/Installation.js:103
 msgid "Certificate Authority Bundle (CABUNDLE)"
 msgstr ""
 
 #: settings/build/index.js:382
-#: settings/src/LetsEncrypt/Installation.js:73
+#: settings/src/LetsEncrypt/Installation.js:66
 msgid "Copied!"
 msgstr ""
 
 #: settings/build/index.js:382
-#: settings/src/LetsEncrypt/Installation.js:95
+#: settings/src/LetsEncrypt/Installation.js:88
 msgid "The certificate is not generated by Really Simple SSL, so there are no installation files here"
 msgstr ""
 
 #: settings/build/index.js:382
-#: settings/src/LetsEncrypt/Installation.js:100
+#: settings/src/LetsEncrypt/Installation.js:93
 msgid "Install your certificate."
 msgstr ""
 
 #: settings/build/index.js:382
-#: settings/src/LetsEncrypt/Installation.js:104
-#: settings/src/LetsEncrypt/Installation.js:109
-#: settings/src/LetsEncrypt/Installation.js:113
+#: settings/src/LetsEncrypt/Installation.js:97
+#: settings/src/LetsEncrypt/Installation.js:102
+#: settings/src/LetsEncrypt/Installation.js:106
 msgid "Copy content"
 msgstr ""
 
 #: settings/build/index.js:382
-#: settings/src/LetsEncrypt/LetsEncrypt.js:96
+#: settings/src/LetsEncrypt/LetsEncrypt.js:157
 msgid "Verifying DNS records..."
 msgstr ""
 
 #: settings/build/index.js:382
-#: settings/src/LetsEncrypt/LetsEncrypt.js:249
+#: settings/src/LetsEncrypt/LetsEncrypt.js:298
 msgid "Attempt %s."
 msgstr ""
 
 #: settings/build/index.js:382
-#: settings/src/Settings/MixedContentScan.js:220
+#: settings/src/Settings/MixedContentScan/MixedContentScan.js:69
 msgid "View"
 msgstr ""
 
 #: settings/build/index.js:382
-#: settings/src/Settings/MixedContentScan.js:284
+#: settings/src/Settings/MixedContentScan/MixedContentScan.js:137
 msgid "No results. Start your first scan"
 msgstr ""
 
 #: settings/build/index.js:382
-#: settings/src/Settings/MixedContentScan.js:285
+#: settings/src/Settings/MixedContentScan/MixedContentScan.js:138
 msgid "Everything is now served over SSL"
 msgstr ""
 
 #: settings/build/index.js:382
-#: settings/src/Settings/LearningMode.js:251
-#: settings/src/Settings/MixedContentScan.js:301
+#: settings/src/Settings/LearningMode/LearningMode.js:170
+#: settings/src/Settings/MixedContentScan/MixedContentScan.js:154
 msgid "No results"
 msgstr ""
 
 #: settings/build/index.js:382
-#: settings/src/Settings/ChangeStatus.js:4
-msgid "Revoke"
+#: settings/src/Settings/MixedContentScan/MixedContentScan.js:159
+msgid "Start scan"
 msgstr ""
 
 #: settings/build/index.js:382
-#: settings/src/Settings/LearningMode.js:259
-#: settings/src/Settings/PermissionsPolicy.js:140
+#: settings/src/Settings/MixedContentScan/MixedContentScan.js:160
+msgid "Stop"
+msgstr ""
+
+#: settings/build/index.js:382
+#: settings/src/Settings/MixedContentScan/MixedContentScan.js:165
+msgid "Show ignored URLs"
+msgstr ""
+
+#: settings/build/index.js:382
+#: settings/src/Settings/LearningMode/LearningMode.js:178
+#: settings/src/Settings/PermissionsPolicy.js:109
 msgid "Enforce"
 msgstr ""
 
 #: settings/build/index.js:382
-#: settings/src/Settings/LearningMode.js:275
-#: settings/src/Settings/LearningMode.js:297
-#: settings/src/Settings/PermissionsPolicy.js:146
+#: settings/src/Settings/LearningMode/LearningMode.js:194
+#: settings/src/Settings/LearningMode/LearningMode.js:216
+#: settings/src/Settings/PermissionsPolicy.js:115
 msgid "Enforced"
 msgstr ""
 
 #: settings/build/index.js:382
-#: settings/src/Settings/PermissionsPolicy.js:147
+#: settings/src/Settings/PermissionsPolicy.js:116
 msgid "Permissions Policy is set outside Really Simple SSL."
 msgstr ""
 
 #: settings/build/index.js:382
-#: settings/src/Settings/PermissionsPolicy.js:148
+#: settings/src/Settings/PermissionsPolicy.js:117
 msgid "Permissions Policy is enforced."
 msgstr ""
 
 #: settings/build/index.js:382
-#: settings/src/Settings/LearningMode.js:296
-#: settings/src/Settings/PermissionsPolicy.js:154
+#: settings/src/Settings/LearningMode/LearningMode.js:215
+#: settings/src/Settings/PermissionsPolicy.js:123
 msgid "Disabled "
 msgstr ""
 
 #: settings/build/index.js:382
-#: settings/src/Settings/PermissionsPolicy.js:155
+#: settings/src/Settings/PermissionsPolicy.js:124
 msgid "The Permissions Policy has been disabled."
 msgstr ""
 
 #: settings/build/index.js:382
-#: settings/src/Settings/Support.js:65
+#: settings/src/Settings/Support.js:36
 msgid "Type your question here"
 msgstr ""
 
 #: settings/build/index.js:382
-#: settings/src/Settings/LearningMode.js:158
+#: settings/src/Settings/LearningMode/ChangeStatus.js:7
+msgid "Revoke"
+msgstr ""
+
+#: settings/build/index.js:382
+#: settings/src/Settings/LearningMode/LearningMode.js:124
 msgid " The %s is now in report-only mode and will collect directives. This might take a while. Afterwards you can Exit, Edit and Enforce these Directives."
 msgstr ""
 
 #: settings/build/index.js:382
-#: settings/src/Settings/LearningMode.js:159
+#: settings/src/Settings/LearningMode/LearningMode.js:125
 msgid "%s has been disabled."
 msgstr ""
 
 #: settings/build/index.js:382
-#: settings/src/Settings/LearningMode.js:160
+#: settings/src/Settings/LearningMode/LearningMode.js:126
 msgid "%s is enforced."
 msgstr ""
 
 #: settings/build/index.js:382
-#: settings/src/Settings/LearningMode.js:170
+#: settings/src/Settings/LearningMode/LearningMode.js:128
 msgid "%s is already set outside Really Simple SSL."
 msgstr ""
 
 #: settings/build/index.js:382
-#: settings/src/Settings/LearningMode.js:205
+#: settings/src/Settings/LearningMode/LearningMode.js:151
 msgid "success"
 msgstr ""
 
 #: settings/build/index.js:382
-#: settings/src/Settings/LearningMode.js:205
+#: settings/src/Settings/LearningMode/LearningMode.js:151
 msgid "failed"
 msgstr ""
 
 #: settings/build/index.js:382
-#: settings/src/Settings/LearningMode.js:268
+#: settings/src/Settings/LearningMode/LearningMode.js:187
 msgid "Enable Learning Mode to configure automatically"
 msgstr ""
 
 #: settings/build/index.js:382
-#: settings/src/Settings/LearningMode.js:277
+#: settings/src/Settings/LearningMode/LearningMode.js:196
 msgid "Disable to configure"
 msgstr ""
 
 #: settings/build/index.js:382
-#: settings/src/Settings/LearningMode.js:282
-#: settings/src/Settings/LearningMode.js:289
+#: settings/src/Settings/LearningMode/LearningMode.js:201
+#: settings/src/Settings/LearningMode/LearningMode.js:208
 msgid "Learning Mode"
 msgstr ""
 
 #: settings/build/index.js:382
-#: settings/src/Settings/LearningMode.js:284
+#: settings/src/Settings/LearningMode/LearningMode.js:203
 msgid "Exit"
 msgstr ""
 
 #: settings/build/index.js:382
-#: settings/src/Settings/LearningMode.js:290
+#: settings/src/Settings/LearningMode/LearningMode.js:209
 msgid "We finished the configuration."
 msgstr ""
 
 #: settings/build/index.js:382
-#: settings/src/Settings/LearningMode.js:291
+#: settings/src/Settings/LearningMode/LearningMode.js:210
 msgid "Review the settings and enforce the policy"
 msgstr ""
 
 #: settings/build/index.js:382
-#: settings/src/Settings/LearningMode.js:175
+#: settings/src/Settings/LearningMode/LearningMode.js:116
 msgid "All"
 msgstr ""
 
 #: settings/build/index.js:382
-#: settings/src/Settings/LearningMode.js:176
+#: settings/src/Settings/LearningMode/LearningMode.js:117
 msgid "Allowed"
 msgstr ""
 
 #: settings/build/index.js:382
-#: settings/src/Settings/LearningMode.js:177
+#: settings/src/Settings/LearningMode/LearningMode.js:118
 msgid "Blocked"
 msgstr ""
 
 #: settings/build/index.js:382
-#: settings/src/Settings/Button.js:14
+#: settings/src/Settings/Button.js:16
 msgid "Test notification by email"
 msgstr ""
 
 #: settings/build/index.js:382
-#: settings/src/Settings/Field.js:124
-#: settings/src/Settings/SettingsGroup.js:144
+#: settings/src/Settings/Field.js:88
+#: settings/src/Settings/SettingsGroup.js:111
 msgid "This feature is only available networkwide."
 msgstr ""
 
 #: settings/build/index.js:382
-#: settings/src/Settings/Field.js:124
-#: settings/src/Settings/SettingsGroup.js:144
+#: settings/src/Settings/Field.js:89
+#: settings/src/Settings/SettingsGroup.js:111
 msgid "Network settings"
 msgstr ""
 
 #: settings/build/index.js:382
-#: settings/src/Settings/SettingsGroup.js:80
+#: settings/src/Settings/SettingsGroup.js:68
 msgid "Learn more about %sPremium%s"
 msgstr ""
 
 #: settings/build/index.js:382
-#: settings/src/Settings/SettingsGroup.js:103
+#: settings/src/Settings/SettingsGroup.js:91
 msgid "Reset Let's Encrypt"
 msgstr ""
 
 #: settings/build/index.js:382
-#: settings/src/Settings/SettingsGroup.js:136
+#: settings/src/Settings/SettingsGroup.js:103
 msgid "Check license"
 msgstr ""
 
 #: settings/build/index.js:382
-#: settings/src/Settings/SettingsGroup.js:143
+#: settings/src/Settings/SettingsGroup.js:110
 msgid "Network feature"
 msgstr ""
 
 #: settings/build/index.js:382
-#: settings/src/Settings/Settings.js:72
+#: settings/src/Settings/Settings.js:102
 msgid "Save"
 msgstr ""
 
 #: settings/build/index.js:382
-#: settings/src/Settings/Settings.js:75
+#: settings/src/Settings/Settings.js:105
 msgid "Refresh"
 msgstr ""
 
 #: settings/build/index.js:382
-#: settings/src/Settings/Settings.js:145
-msgid "Previous"
-msgstr ""
-
-#: settings/build/index.js:382
-#: settings/src/Settings/Settings.js:157
-msgid "Save and Continue"
-msgstr ""
-
-#: settings/build/index.js:382
-#: settings/src/Settings/Settings.js:166
+#: settings/src/Settings/Settings.js:139
 msgid "Notifications"
 msgstr ""
 
 #: settings/build/index.js:382
-#: settings/src/Settings/Settings.js:169
+#: settings/src/Settings/Settings.js:142
 msgid "Expand all"
 msgstr ""
 
 #: settings/build/index.js:382
-#: settings/src/Settings/Settings.js:170
+#: settings/src/Settings/Settings.js:143
 msgid "Collapse all"
 msgstr ""
 
 #: settings/build/index.js:382
-#: settings/src/Settings/SettingsPage.js:182
-msgid "Settings Saved"
-msgstr ""
-
-#: settings/build/index.js:382
-#: settings/src/Modal/Modal.js:77
+#: settings/src/Modal/Modal.js:63
 msgid "Edit"
 msgstr ""
 
 #: settings/build/index.js:382
-#: settings/src/Modal/Modal.js:78
+#: settings/src/Modal/Modal.js:64
 msgid "Help"
 msgstr ""
 
 #: settings/build/index.js:382
-#: settings/src/Modal/Modal.js:79
+#: settings/src/Modal/Modal.js:65
 msgid "Ignore"
 msgstr ""
 
 #: settings/build/index.js:382
-#: settings/src/Onboarding/OnboardingModal.js:54
+#: settings/src/Onboarding/OnboardingModal.js:52
 msgid "Please wait while we detect your setup"
-msgstr ""
-
-#: settings/src/Settings/MixedContentScan.js:19
-#: settings/src/Settings/MixedContentScan.js:21
-msgid "All results"
-msgstr ""
-
-#: settings/src/Settings/MixedContentScan.js:20
-msgid "Show"
 msgstr ""
