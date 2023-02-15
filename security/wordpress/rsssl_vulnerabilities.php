@@ -403,6 +403,10 @@ if (!class_exists("rsssl_vulnerabilities")) {
                 if ($vulnerability->rss_severity === null) {
                     continue;
                 }
+
+                if(!isset($risk_levels[$vulnerability->rss_severity])){
+                    continue;
+                }
                 if ($risk_levels[$vulnerability->rss_severity] > $highest_risk_level) {
                     $highest_risk_level = $risk_levels[$vulnerability->rss_severity];
                 }
