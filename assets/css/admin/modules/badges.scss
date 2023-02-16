@@ -1,0 +1,29 @@
+.rsssl {
+  .rsssl-badge {
+    padding: 2px 5px;
+    border-radius: 3px;
+    color: var(--rsp-white);
+    margin: 3px;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
+
+    &.rsp-dark {
+      background-color: var(--rsp-black);
+    }
+
+    &.rsp-low {
+      background-color: var(--rsp-yellow);
+    }
+
+    &.rsp-medium {
+      background-color: var(--rsp-orange);
+    }
+
+    &.rsp-high {
+      background-color: var(--rsp-dark-orange);
+    }
+
+    &.rsp-critical {
+      background-color: var(--rsp-red);
+    }
+  }
+}

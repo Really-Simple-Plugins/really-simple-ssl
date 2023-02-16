@@ -23,6 +23,25 @@ if (!class_exists("rsssl_vulnerabilities")) {
         const RSS_SECURITY_API = 'https://api.really-simple-security.com/storage/downloads/';
         public $workable_plugins;
 
+        private array $notices = [];
+        private array $risk_naming = [
+            'l' => 'low',
+            'm' => 'medium',
+            'h' => 'high',
+            'c' => 'critical',
+        ];
+
+        public function get_vulnerabilities()
+        {
+            //we loop through the plugins and check if there are any vulnerabilities. and place a notice
+            foreach ($this->workable_plugins as $plugin) {
+                if (isset($plugin['vulnerable']) && $plugin['vulnerable']) {
+                    $this->add_notice($plugin);
+                }
+
+            }
+        }
+
         /**
          * Initiate the class
          *
@@ -30,27 +49,64 @@ if (!class_exists("rsssl_vulnerabilities")) {
          */
         public function init()
         {
+            //we check if the vulnerability scanner is enabled and then the fun happens.
             if ( rsssl_get_option('enable_vulnerability_scanner') ) {
-	            add_action( 'rsssl_daily_cron', array($this, 'daily_cron') );
-                //also when a plugin is installed or updated we check for vulnerabilities
-                add_action('upgrader_process_complete', array($this, 'reload_files_on_update'), 10, 2);
-                add_action('activate_plugin', array($this, 'reload_files_on_update'), 10, 2);
+                $this->check_files();
+                //first we need to make sure we update the files every day. So we add a daily cron.
+	            add_filter( 'rsssl_daily_cron', array($this, 'daily_cron'));
 
-                //we cache the plugins in the class.
+                //we cache the plugins in the class. Since we need quite some info from the plugins.
                 $this->cache_installed_plugins();
+                $this->get_vulnerabilities();
                 //we check the rsssl options if the enable_feedback_in_plugin is set to true
                 if (rsssl_get_option('enable_feedback_in_plugin')) {
+                    // we enable the feedback in the plugin
                     $this->enable_feedback_in_plugin();
+
+                    //Since we have enabled the feedback in the plugin, we need to check if the user has dismissed the notice.
+                    add_action('upgrader_process_complete', array($this, 'reload_files_on_update'), 10, 2);
+                    add_action('activate_plugin', array($this, 'reload_files_on_update'), 10, 2);
                 }
             }
+        }
+
+        public static function add_plugin_notices($notices) {
+            $object = new self();
+            $object->cache_installed_plugins();
+            $object->get_vulnerabilities();
+            return array_merge($notices, $object->notices);
+        }
+
+        public static function add_startup_notices($notices)
+        {
+            //we add a notice to the dashboard if the vulnerability scanner is enabled.
+            $notices['rsssl_vulnerabilies'] = array(
+                'callback' => 'rsssl_vulnerabilities_enabled',
+                'score' => 3,
+                'output' => array(
+                    'true' => array(
+                        'msg' => __("Vulnerability check is on, configure notifications.", "really-simple-ssl"),
+                        'icon' => 'success',
+                        'url' => 'https://really-simple-ssl.com/instructions/about-vulnerabilities',
+                        'dismissible' => true,
+                        'highlight_field_id' => 'vulnerability_notification_dashboard',
+                    ),
+                    'false' => array(
+                        'msg' => __("Plugin, core and theme vulnerabilities are not checked.", "really-simple-ssl"),
+                        'icon' => 'open',
+                        'url' => 'https://really-simple-ssl.com/instructions/about-vulnerabilities',
+                        'dismissible' => true,
+                        'highlight_field_id' => 'enable_vulnerability_scanner',
+                    ),
+                ),
+            );
+            //we now check for vulnerabilities in the core, plugins and themes. and add a notice if there are any.
+            return $notices;
         }
 
 		public function daily_cron() {
 			//we check the files on age and download if needed TODO: if premium this will be 4 hours
 			$this->check_files();
-
-
-
 		}
 
         /**
@@ -177,6 +233,81 @@ if (!class_exists("rsssl_vulnerabilities")) {
             $this->cache_installed_plugins();
         }
 
+        public function add_dashboard_notification(array $notices)
+        {
+            $notices['rsssl_vulnerabilities_risk'] = array(
+                'callback' => 'some_callback_function',
+                'score' => 4,
+                'output' => array(
+                    'true' => array(
+                        'msg' => '<span class="rsssl-badge rsp-high">'.__("critical", "really-simple-ssl").
+                            '</span><span class="rsssl-badge rsp-dark">Askimet</span>' . __("has vulnerabilities.", "really-simple-ssl"),
+                        'icon' => 'warning',
+                        'url' => 'https://really-simple-ssl.com/instructions/about-vulnerabilities#notifications',
+                        'dismissible' => true,
+                    ),
+                ),
+            );
+            return $notices;
+            //first we get the option for the vulnerability notification
+            $vulnerability_notification = get_option('rsssl_vulnerability_notification_dashboard');
+            //if the option is not set, we return
+            if ($vulnerability_notification === false) {
+                return $notices;
+            }
+            //if the option is set, we add the vulnerability notification
+            switch ($vulnerability_notification) {
+                case 'low_risk':
+                    $notices['rsssl_vulnerabilities_risk'] = array(
+                        'score' => 2,
+                        'output' => array(
+                            'true' => array(
+                                'msg' => __("Example of a low risk warning.", "really-simple-ssl"),
+                                'icon' => 'warning',
+                                'url' => 'https://really-simple-ssl.com/instructions/about-vulnerabilities#notifications',
+                                'dismissible' => true,
+                            ),
+                        ),
+                    );
+                    break;
+                case 'medium_risk':
+                    $notices['rsssl_vulnerabilities_risk'] = array(
+                        'score' => 3,
+                        'output' => array(
+                            'true' => array(
+                                'msg' => __("Example of medium warning.", "really-simple-ssl"),
+                                'icon' => 'warning',
+                                'url' => 'https://really-simple-ssl.com/instructions/about-vulnerabilities#notifications',
+                                'dismissible' => true,
+                            ),
+                        ),
+                    );
+                    break;
+                case 'high_risk':
+                    $notices['rsssl_vulnerabilities_risk'] = array(
+                        'score' => 4,
+                        'msg' => __("Example of high warning.", "really-simple-ssl"),
+                        'icon' => 'error',
+                        'url' => 'https://really-simple-ssl.com/definition/what-are-application-passwords/',
+                        'dismissible' => true,
+                    );
+                    break;
+            }
+            return $notices;
+        }
+
+        public function test_vulnerability_notification()
+        {
+            //we add the option vulnerability test notification to true
+            add_option('rsssl_test_vulnerability_notification', 'true');
+
+            //Everything went according to plan
+            return [
+                'success' => true,
+                'message' => __('Please validate your settings.', "really-simple-ssl")
+            ];
+        }
+
         /**
          * Checks if the file is valid
          *
@@ -212,7 +343,7 @@ if (!class_exists("rsssl_vulnerabilities")) {
         private function download_core_vulnerabilities(): void
         {
             global $wp_version;
-            $wp_version = '6.0.1';
+            $wp_version = '6.0.1'; //TODO: remove this line
             $url = self::RSS_SECURITY_API . 'core/wp-core_' . $wp_version . '.json';
             $data = $this->download($url);
 
@@ -388,7 +519,13 @@ if (!class_exists("rsssl_vulnerabilities")) {
             return $this->workable_plugins[$plugin_file]['risk_level'];
         }
 
-        private function get_highest_vulnerability($vulnerabilities)
+        /**
+         * This function adds the vulnerability with the highest risk to the plugins page
+         *
+         * @param $vulnerabilities
+         * @return string
+         */
+        private function get_highest_vulnerability($vulnerabilities):string
         {
             //first we scale our risk levels
             $risk_levels = array(
@@ -417,36 +554,76 @@ if (!class_exists("rsssl_vulnerabilities")) {
                     return $key;
                 }
             }
+            return '';
         }
 
-        public function test_vulnerability_notification()
+        private function add_notice($plugin)
         {
-            //we add the notification to the dashboard
-            add_action('admin_notices', array($this, 'show_vulnerability_notification'));
-            //Mistakes were made
-            return [
-                'success' => false,
-                'message' => __('Something is not right.', "really-simple-ssl")
-            ];
+            $riskSetting = rsssl_get_option('vulnerability_notification_dashboard');
+            if (!$riskSetting) {
+                $risk = 'low';
+            } else {
+                if($plugin['risk_level'] === ''){
+                    $risk = 'medium';
+                } else {
+                    $risk = $this->risk_naming[$plugin['risk_level']];
+                }
 
-            //Everything went according to plan
-            return [
-                'success' => true,
-                'message' => __('Please validate your settings.', "really-simple-ssl")
-            ];
+            }
+
+            //we then build the notice
+            $this->notices[$plugin['TextDomain'].'-'.$plugin['Version']] = array(
+                'callback' => 'some_callback_function',
+                'score' => 1,
+                'output' => array(
+                    'true' => array(
+                        'msg' => '<span class="rsssl-badge rsp-'.$risk.'">'.__($risk, "really-simple-ssl").
+                            '</span><span class="rsssl-badge rsp-dark">'.$plugin['Name'].'</span>' . __("has vulnerabilities.", "really-simple-ssl"),
+                        'icon' => 'open',
+                        'url' => 'https://really-simple-ssl.com/instructions/about-vulnerabilities', //TODO: add link to vulnerability page
+                        'dismissible' => true,
+                    ),
+                ),
+            );
         }
     }
 }
+//add_filter('rsssl_notices', ['rsssl_vulnerabilities', 'add_startup_notices']);
 
-add_action('admin_init', 'rsssl_vulnerabilities');
+//if the function rsssl_vulnerabilities does not exist, we create it
+if (!function_exists('rsssl_vulnerabilities')) {
+    /**
+     * Returns the RSSSL_Vulnerabilities instance
+     *
+     * @return RSSSL_Vulnerabilities
+     */
+    function rsssl_vulnerabilities()
+    {
+        global $rsssl_vulnerabilities;
+        if (!isset($rsssl_vulnerabilities)) {
+            $rsssl_vulnerabilities = new rsssl_vulnerabilities();
+        }
 
-function rsssl_vulnerabilities()
-{
-    global $rsssl_vulnerabilities;
-    if (!isset($rsssl_vulnerabilities)) {
-        $rsssl_vulnerabilities = new RSSSL_Vulnerabilities();
+        $rsssl_vulnerabilities->init();
+
+
     }
+    add_action('admin_init', 'rsssl_vulnerabilities');
+}
+//we now check add notifications onboarding and vulnerability
+add_filter('rsssl_notices', array(rsssl_vulnerabilities::class, 'add_startup_notices'));
+add_filter('rsssl_notices', array(rsssl_vulnerabilities::class, 'add_plugin_notices'));
+function rsssl_vulnerabilities_enabled()
+{
+    return rsssl_get_option('enable_vulnerability_scanner');
+}
 
-    $rsssl_vulnerabilities->init();
-    return $rsssl_vulnerabilities;
+
+function rsssl_vulnerabilities_enabled_dashboard()
+{
+    return false;
+}
+
+function some_callback_function() {
+    return true;
 }

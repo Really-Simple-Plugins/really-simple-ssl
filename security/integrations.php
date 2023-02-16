@@ -87,7 +87,7 @@ $rsssl_integrations_list = apply_filters( 'rsssl_integrations', array(
         'label'                => 'Vulnerabilities',
         'folder'               => 'wordpress',
         'impact'               => 'medium',
-        'risk'                 => 'low',
+        'risk'                 => 'medium',
         'option_id'            => 'enable_vulnerability_scanner',
         'always_include'       => true,
     ),
