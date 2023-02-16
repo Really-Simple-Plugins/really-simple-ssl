@@ -5,5 +5,8 @@
         "wp-cli/wp-cli-bundle": "^2.7",
         "php": ">=7.2",
         "composer": "^2.4"
-    }
+    },
+  "require": {
+    "ext-json": "*"
+  }
 }

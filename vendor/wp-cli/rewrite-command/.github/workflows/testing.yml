@@ -1,0 +1,14 @@
+name: Testing
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+      - master
+  schedule:
+    - cron:  '17 1 * * *' # Run every day on a seemly random time.
+
+jobs:
+  test:
+    uses: wp-cli/.github/.github/workflows/reusable-testing.yml@main

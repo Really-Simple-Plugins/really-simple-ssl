@@ -1700,6 +1700,8 @@ class rsssl_admin
         if ( !rsssl_user_can_manage() ){
             return;
         }
+        require_once(ABSPATH . 'wp-admin/includes/screen.php'); //temp fix for WordPress until it gets fixed in core
+
 	    //prevent showing the review on edit screen, as gutenberg removes the class which makes it editable.
 	    $screen = get_current_screen();
 	    if ( $screen && $screen->base === 'post' ) {
