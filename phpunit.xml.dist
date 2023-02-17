@@ -10,7 +10,8 @@
 	<testsuites>
 		<testsuite name="really-simple-ssl">
 			<directory prefix="test-" suffix=".php">./tests/</directory>
-			<exclude>./tests/test-sample.php</exclude>
+			<exclude>vendor</exclude>
+			<exclude>node_modules</exclude>
 		</testsuite>
 	</testsuites>
 </phpunit>
