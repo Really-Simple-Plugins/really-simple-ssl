@@ -18970,6 +18970,15 @@ const Field = props => {
       field: props.field
     }));
   }
+  if (field.type === 'vulnerablemeasures') {
+    return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+      className: highLightClass,
+      ref: scrollAnchor
+    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_VulnerableMeasures_VulnerableMeasures__WEBPACK_IMPORTED_MODULE_14__["default"], {
+      disabled: disabled,
+      field: props.field
+    }));
+  }
   if (field.type === 'mixedcontentscan') {
     return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
       className: highLightClass,
@@ -21040,8 +21049,137 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-const VulnerableMeasures = props => {};
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var react_data_table_component__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react-data-table-component */ "./node_modules/react-data-table-component/dist/index.cjs.js");
+/* harmony import */ var _VulnerableMeasuresData__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./VulnerableMeasuresData */ "./src/Settings/VulnerableMeasures/VulnerableMeasuresData.js");
+/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @wordpress/components */ "@wordpress/components");
+/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_wordpress_components__WEBPACK_IMPORTED_MODULE_4__);
+
+
+
+
+
+
+const VulnerableMeasures = props => {
+  const {
+    fetchMeasuresData,
+    measuresData,
+    dataLoaded
+  } = (0,_VulnerableMeasuresData__WEBPACK_IMPORTED_MODULE_3__["default"])();
+  const measures = props.field.value;
+  let field = props.field;
+  let columns = [];
+  field.columns.forEach(function (item, i) {
+    let newItem = buildColumn(item);
+    columns.push(newItem);
+  });
+
+  //now we get the options for the select control
+  let options = props.field.options;
+  //we divide the key into label and the value into value
+  options = Object.entries(options).map(item => {
+    return {
+      label: item[1],
+      value: item[0]
+    };
+  });
+  //and we add the select control to the data
+  measures.forEach(item => {
+    item.riskSelection = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_4__.SelectControl, {
+      value: item.value,
+      options: options,
+      label: "",
+      onChange: fieldValue => undefined.onChangeHandler(fieldValue, item, 'value')
+    });
+  });
+  console.log(columns);
+  return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_data_table_component__WEBPACK_IMPORTED_MODULE_2__["default"], {
+    columns: columns,
+    data: measures
+  }));
+};
+function buildColumn(column) {
+  return {
+    name: column.name,
+    sortable: column.sortable,
+    width: column.width,
+    selector: row => row[column.column]
+  };
+}
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (VulnerableMeasures);
+
+/***/ }),
+
+/***/ "./src/Settings/VulnerableMeasures/VulnerableMeasuresData.js":
+/*!*******************************************************************!*\
+  !*** ./src/Settings/VulnerableMeasures/VulnerableMeasuresData.js ***!
+  \*******************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var zustand__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! zustand */ "./node_modules/zustand/esm/index.mjs");
+/* harmony import */ var _utils_api__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../utils/api */ "./src/utils/api.js");
+
+
+const UseMeasuresData = (0,zustand__WEBPACK_IMPORTED_MODULE_1__.create)((set, get) => ({
+  measuresData: [],
+  dataLoaded: false,
+  fixedItemId: false,
+  action: "",
+  nonce: "",
+  completedStatus: "never",
+  progress: 0,
+  scanStatus: false,
+  fetchMeasuresData: async () => {
+    set({
+      scanStatus: "running"
+    });
+    const {
+      data,
+      progress,
+      state,
+      action,
+      nonce,
+      completed_status
+    } = await getScanIteration(false);
+    set({
+      scanStatus: state,
+      measuresData: data,
+      progress: progress,
+      action: action,
+      nonce: nonce,
+      completedStatus: completed_status,
+      dataLoaded: true
+    });
+  },
+  start: async () => {
+    const {
+      data,
+      progress,
+      state,
+      action,
+      nonce,
+      completed_status
+    } = await getScanIteration("start");
+    set({
+      scanStatus: state,
+      measuresData: data,
+      progress: progress,
+      action: action,
+      nonce: nonce,
+      completedStatus: completed_status,
+      dataLoaded: true
+    });
+  }
+}));
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (UseMeasuresData);
 
 /***/ }),
 

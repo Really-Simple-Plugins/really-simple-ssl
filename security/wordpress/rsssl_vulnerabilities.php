@@ -22,6 +22,11 @@ if (!class_exists("rsssl_vulnerabilities")) {
         const RSS_SECURITY_API = 'https://api.really-simple-security.com/storage/downloads/';
         public array $workable_plugins = [];
 
+        /**
+         * interval every 24 hours
+         */
+        public int $interval = 86400;
+
         private array $notices = [];
 
         private array $admin_notices = [];
@@ -41,6 +46,12 @@ if (!class_exists("rsssl_vulnerabilities")) {
             'h' => 3,
             'c' => 4,
         ];
+
+
+        public function __construct()
+        {
+
+        }
 
 
         /* Public Section 1: Class Build-up initialization and instancing */
@@ -524,7 +535,7 @@ if (!class_exists("rsssl_vulnerabilities")) {
         /**
          * This combines the vulnerabilities with the installed plugins
          */
-        private function cache_installed_plugins(): void
+        public function cache_installed_plugins(): void
         {
             //first we get all installed plugins
             $installed_plugins = get_plugins();
@@ -544,6 +555,8 @@ if (!class_exists("rsssl_vulnerabilities")) {
                             $plugin['vulnerable'] = true;
                             $plugin['risk_level'] = $this->get_highest_vulnerability($component->vulnerabilities);
                             $plugin['closed'] = $component->closed;
+                            $plugin['quarantine'] = $component->quarantine;
+                            $plugin['force_update'] = $component->force_update;
                         }
                     }
                 }
@@ -663,12 +676,17 @@ if (!function_exists('rsssl_vulnerabilities')) {
         global $rsssl_vulnerabilities;
         if (!isset($rsssl_vulnerabilities)) {
             $rsssl_vulnerabilities = new rsssl_vulnerabilities();
+            $rsssl_vulnerabilities = rsssl_vulnerabilities::instance();
         }
-
         $rsssl_vulnerabilities->init();
-
-
     }
+
+    function rsssl_pro_addon_is_licensed()
+    {
+        return true;
+    }
+
+    add_action('admin_init', 'rsssl_vulnerabilities');
 }
 
 //we now check add notifications onboarding and vulnerability TODO: check if this is the best place for this please convey with Mark, Rogier.

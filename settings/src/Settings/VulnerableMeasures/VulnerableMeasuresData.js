@@ -36,3 +36,5 @@ const UseMeasuresData = create((set, get) => ({
         });
     }
 }));
+
+export default UseMeasuresData;

@@ -275,6 +275,14 @@ const Field = (props) => {
         )
     }
 
+    if ( field.type==='vulnerablemeasures' ) {
+        return(
+            <div className={highLightClass} ref={scrollAnchor}>
+                <VulnerableMeasures disabled={disabled} field={props.field}/>
+            </div>
+        )
+    }
+
     if ( field.type === 'mixedcontentscan' ) {
         return (
             <div className={highLightClass} ref={scrollAnchor}>
