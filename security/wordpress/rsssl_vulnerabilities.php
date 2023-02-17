@@ -557,6 +557,7 @@ if (!class_exists("rsssl_vulnerabilities")) {
                             $plugin['closed'] = $component->closed;
                             $plugin['quarantine'] = $component->quarantine;
                             $plugin['force_update'] = $component->force_update;
+                            $plugin['file'] = $key;
                         }
                     }
                 }
@@ -610,7 +611,7 @@ if (!class_exists("rsssl_vulnerabilities")) {
          *
          * @param $plugin
          */
-        private function add_notice($plugin): void
+        protected function add_notice($plugin): void
         {
             $riskSetting = rsssl_get_option('vulnerability_notification_dashboard');
             if (!$riskSetting) {
@@ -644,7 +645,7 @@ if (!class_exists("rsssl_vulnerabilities")) {
         /**
          * This functions adds a notice for the admin page
          */
-        private function add_admin_notice($plugin): string
+        protected function add_admin_notice($plugin): string
         {
             //first we get the setting from options
             $riskSetting = rsssl_get_option('vulnerability_notification_sitewide');
