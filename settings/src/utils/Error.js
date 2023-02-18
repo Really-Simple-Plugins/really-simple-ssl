@@ -40,9 +40,9 @@ const Error = (props) => {
                 <div>
                     <p>{__("The request returned the following errors:", "really-simple-ssl")}</p>
                     <ul>
-                        {props.error.code && <li>{__("Response code: ", "really-simple-ssl")}{props.error.code}</li>}
-                        {props.error.data.status && <li>{__("Status code: ", "really-simple-ssl")}{props.error.data.status}</li>}
-                        {message && <li>{__("Server response: ", "really-simple-ssl")}{message}</li>}
+                        {props.error.code && <li>{__("Response code:", "really-simple-ssl")}&nbsp;{props.error.code}</li>}
+                        {props.error.data.status && <li>{__("Status code:", "really-simple-ssl")}&nbsp;{props.error.data.status}</li>}
+                        {message && <li>{__("Server response:", "really-simple-ssl")}&nbsp;{message}</li>}
                     </ul>
                 </div>
                 <Hyperlink className="button button-default" target="_blank" text={__("More information","really-simple-ssl")} url={url}/>

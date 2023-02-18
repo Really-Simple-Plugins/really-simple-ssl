@@ -120,7 +120,7 @@ const PermissionsPolicy = (props) => {
                 </div>}
                 { props.disabled && enablePermissionsPolicy!=1 && <div className="rsssl-locked">
                     <div className="rsssl-locked-overlay">
-                        <span className="rsssl-progress-status rsssl-disabled">{__("Disabled ","really-simple-ssl")}</span>
+                        <span className="rsssl-progress-status rsssl-disabled">{__("Disabled","really-simple-ssl")}</span>
                         {__("The Permissions Policy has been disabled.", "really-simple-ssl")}
                     </div>
                 </div>}

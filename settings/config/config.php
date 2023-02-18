@@ -103,7 +103,7 @@ function rsssl_menu() {
 							'premium'              => true,
 							'premium_text'         => __( "Get Recommended Security Headers with %sReally Simple SSL Pro%s", 'really-simple-ssl' ),
 							'upgrade'              => 'https://really-simple-ssl.com/pro/?mtm_campaign=recommendedheaders&mtm_source=free&mtm_content=upgrade',
-							'title'                => __( 'Recommended Security Headers ', 'really-simple-ssl' ),
+							'title'                => __( 'Recommended Security Headers', 'really-simple-ssl' ),
 							'helpLink'             => 'https://really-simple-ssl.com/instructions/about-recommended-security-headers/?mtm_campaign=instructions&mtm_source=free',
 						],
 					],
