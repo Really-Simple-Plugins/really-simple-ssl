@@ -157,12 +157,13 @@ class REALLY_SIMPLE_SSL
 		if ( is_admin() ) {
 			add_action('admin_notices', array( $this, 'admin_notices'));
             if ( is_multisite() ) {
-	            add_action('network_admin_notices', array( $this, 'admin_notices'));
+	           add_action('network_admin_notices', array( $this, 'admin_notices'));
             }
 		}
 
 		add_action('wp_loaded', array(self::$instance->front_end, 'force_ssl'), 20);
-		if ( is_admin() ) {
+
+        if ( is_admin() && rsssl_admin_logged_in() ) {
 			add_action('plugins_loaded', array(self::$instance->admin, 'init'), 10);
 		}
 	}
