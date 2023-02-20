@@ -163,7 +163,7 @@ class REALLY_SIMPLE_SSL
 
 		add_action('wp_loaded', array(self::$instance->front_end, 'force_ssl'), 20);
 
-        if ( is_admin() && rsssl_admin_logged_in() ) {
+        if ( rsssl_admin_logged_in() ) { //TODO: @Rogier check if this is needed this was is_admin() before but broke the /wp-admin redirect to login
 			add_action('plugins_loaded', array(self::$instance->admin, 'init'), 10);
 		}
 	}
