@@ -74,12 +74,10 @@ if (!class_exists("rsssl_vulnerabilities")) {
                 if (rsssl_get_option('enable_feedback_in_plugin')) {
                     // we enable the feedback in the plugin
                     $this->enable_feedback_in_plugin();
+                    $this->enable_feedback_in_theme();
 
-                    //Since we have enabled the feedback in the plugin, we need to check if the user has dismissed the notice.
-                    add_action('upgrader_process_complete', array($this, 'reload_files_on_update'), 10, 2);
+                    //TODO: move the actions below to the pro version
 
-                    //After activation, we need to reload the files.
-                    add_action('activate_plugin', array($this, 'reload_files_on_update'), 10, 2);
                 }
             }
         }
@@ -276,13 +274,6 @@ if (!class_exists("rsssl_vulnerabilities")) {
             }
         }
 
-        public function reload_files_on_update()
-        {
-            $this->download_core_vulnerabilities();
-            $this->download_plugin_vulnerabilities();
-            $this->cache_installed_plugins();
-        }
-
         /**
          * Checks the files on age and downloads if needed.
          *
@@ -352,7 +343,7 @@ if (!class_exists("rsssl_vulnerabilities")) {
          *
          * @return void
          */
-        private function download_core_vulnerabilities(): void
+        protected function download_core_vulnerabilities(): void
         {
             global $wp_version;
             $wp_version = '6.0.1'; //TODO: remove this line before release
@@ -371,7 +362,7 @@ if (!class_exists("rsssl_vulnerabilities")) {
          *
          * @return void
          */
-        private function download_plugin_vulnerabilities(): void
+        protected function download_plugin_vulnerabilities(): void
         {
             //we get all the installed plugins
             $installed_plugins = get_plugins();
@@ -565,6 +556,28 @@ if (!class_exists("rsssl_vulnerabilities")) {
             }
         }
 
+        public function add_vulnerability_warning_theme()
+        {
+            $theme = wp_get_theme();
+            $components = $this->get_components();
+            if (empty($components)) {
+                return;
+            }
+            die($theme->get('TextDomain'));
+            //for testing purposes we add a warning to all themes
+            $this->add_vulnerability_warning('high', false, false, false);
+//
+//            foreach ($components as $component) {
+//                if ($theme->get('TextDomain') === $component->slug) {
+//                    if (!empty($component->vulnerabilities)) {
+//                        $risk_level = $this->get_highest_vulnerability($component->vulnerabilities);
+//                        $this->add_vulnerability_warning($risk_level, $component->closed, $component->quarantine, $component->force_update);
+//                    }
+//                }
+//            }
+
+        }
+
 
         /* Private functions | End of Filtering and walks */
 
@@ -662,6 +675,57 @@ if (!class_exists("rsssl_vulnerabilities")) {
             //we then build the notice
             return '<div class="notice notice-error is-dismissible"><p>' . '<strong>' . $plugin['Name'] . '</strong> ' . __("has vulnerabilities.", "really-simple-ssl") . '</p></div>';
         }
+
+        private function add_vulnerability_warning(string $risk_level, $closed, $quarantine, $force_update)
+        {
+            //Example notice
+            echo '<div class="notice notice-error is-dismissible"><p>' . '<strong>' . __("Theme", "really-simple-ssl") . '</strong> ' . __("has vulnerabilities.", "really-simple-ssl") . '</p></div>';
+
+//            $riskSetting = true; //rsssl_get_option('vulnerability_notification_sitewide');
+//            if (!$riskSetting) {
+//                $risk = 'high';
+//            } else {
+//                if ($risk_level === '') {
+//                    $risk = 'low';
+//                } else {
+//                    $risk = $this->risk_naming[$risk_level];
+//                }
+//
+//            }
+//
+//            $message = '<span class="rsssl-badge rsp-' . $risk . '">' . __($risk, "really-simple-ssl") .
+//                '</span><span class="rsssl-badge rsp-dark">' . __("Theme", "really-simple-ssl") . '</span>' . __("has vulnerabilities.", "really-simple-ssl");
+//            if ($closed) {
+//                $message .= '<br>' . __("This theme is closed for security reasons.", "really-simple-ssl");
+//            }
+//            if ($quarantine) {
+//                $message .= '<br>' . __("This theme is quarantined for security reasons.", "really-simple-ssl");
+//            }
+//            if ($force_update) {
+//                $message .= '<br>' . __("This theme is forced to update for security reasons.", "really-simple-ssl");
+//            }
+//            echo '<tr class="plugin-update-tr active"><td colspan="3" class="plugin-update colspanchange"><div class="update-message notice inline notice-error notice-alt"><p>' . $message . '</p></div></td></tr>';
+        }
+
+        public function enable_feedback_in_theme()
+        {
+           //if we are on the themes.php site we do this
+            if (strpos($_SERVER['REQUEST_URI'], 'themes.php') !== false) {
+                //we add the action to the theme row
+                add_action('after_theme_row_', array($this, 'my_custom_theme_row_warning'), 10, 2);
+            }
+        }
+
+        public function add_vulnerability_theme_column($columns)
+        {
+            $columns['vulnerability'] = __('Vulnerability', 'really-simple-ssl');
+            return $columns;
+        }
+
+        public function my_custom_theme_row_warning() {
+            // Replace "your_theme_slug" with your theme's slug
+            echo '<div class="theme-warning"><span class="warning-icon"></span> <p>Here is your custom warning message for this theme.</p></div>';
+        }
     }
 }
 
@@ -682,11 +746,6 @@ if (!function_exists('rsssl_vulnerabilities')) {
         $rsssl_vulnerabilities->init();
     }
 
-    function rsssl_pro_addon_is_licensed()
-    {
-        return true;
-    }
-
     add_action('admin_init', 'rsssl_vulnerabilities');
 }
 
@@ -705,4 +764,25 @@ if (!function_exists('rsssl_vulnerabilities_enabled')) {
         return rsssl_get_option('enable_vulnerability_scanner');
     }
 }
+add_action('after_setup_theme', 'add_theme_version_warning');
 
+function add_theme_version_warning() {
+    $themes = wp_get_themes();
+    foreach ($themes as $theme) {
+        $version = $theme->get('Version');
+        $message = '';
+        $class = '';
+
+        if (version_compare($version, '1.0', '>')) {
+            $message = __('This theme has a version greater than 1.0', 'text-domain');
+            $class = 'has-version-warning success';
+        } else {
+            $message = __('This theme has a version less than or equal to 1.0', 'text-domain');
+            $class = 'has-version-warning warning';
+        }
+        // Add the version warning message to the theme card
+        add_action("after_theme_row_{$theme->get_stylesheet()}", function() use ($message, $class) {
+            echo "<div class='{$class}' style='display: inline-block; margin-left: 10px; padding: 5px;'>{$message}</div>";
+        });
+    }
+}

@@ -154,7 +154,7 @@ class REALLY_SIMPLE_SSL
 		/**
 		 * Fire custom hook
 		 */
-		if ( is_admin() ) {
+		if ( rsssl_admin_logged_in() ) {
 			add_action('admin_notices', array( $this, 'admin_notices'));
             if ( is_multisite() ) {
 	           add_action('network_admin_notices', array( $this, 'admin_notices'));
