@@ -16,7 +16,7 @@ class SettingsGroup extends Component {
             fields:this.props.fields,
             isAPILoaded: this.props.isAPILoaded,
         };
-        this.upgrade='https://really-simple-ssl.com/pro/';
+        this.upgrade='https://really-simple-ssl.com/pro/?mtm_campaign=fallback&mtm_source=free&mtm_content=upgrade';
         this.fields = this.props.fields;
     }
 
@@ -108,6 +108,7 @@ class SettingsGroup extends Component {
                     {selectedFields.map((field, i) =>
                         <Field key={i} index={i}
                             updateFields={this.props.updateFields}
+                            addNotice={this.props.addNotice}
                             selectMenu={this.props.selectMenu}
                             selectMainMenu={this.props.selectMainMenu}
                             dropItemFromModal={this.props.dropItemFromModal}

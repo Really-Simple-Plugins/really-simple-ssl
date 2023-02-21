@@ -138,8 +138,8 @@ class SettingsPage extends Component {
 
     updateFieldsListWithConditions(){
         for (const field of this.props.fields){
-          let enabled = !(field.hasOwnProperty('react_conditions') && !this.validateConditions(field.react_conditions, this.props.fields));
 
+          let enabled = !(field.hasOwnProperty('react_conditions') && !this.validateConditions(field.react_conditions, this.props.fields));
           //we want to update the changed fields if this field has just become visible. Otherwise the new field won't get saved.
           let previouslyDisabled = this.props.fields[this.props.fields.indexOf(field)].conditionallyDisabled;
           this.props.fields[this.props.fields.indexOf(field)].conditionallyDisabled = !enabled;
@@ -313,6 +313,7 @@ class SettingsPage extends Component {
                 />
                 <Settings
                     updateFields={this.props.updateFields}
+                    addNotice={this.props.addNotice}
                     dropItemFromModal={this.props.dropItemFromModal}
                     selectMenu={this.props.selectMenu}
                     selectMainMenu={this.props.selectMainMenu}

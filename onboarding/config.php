@@ -48,6 +48,7 @@ function rsssl_rest_api_onboarding($request) {
 		delete_transient('rsssl_certinfo');
 	}
 	return [
+		"request_success" =>true,
 		"steps" => $steps,
 		"ssl_enabled" => rsssl_get_option("ssl_enabled"),
 		"ssl_detection_overridden" => get_option('rsssl_ssl_detection_overridden'),

@@ -23,39 +23,31 @@ class rsssl_onboarding {
 		add_action( 'admin_init', array( $this, 'maybe_redirect_to_settings_page'), 40);
 		add_filter("rsssl_run_test", array($this, 'handle_onboarding_request'), 10, 3);
 		add_filter("rsssl_do_action", array($this, 'handle_onboarding_action'), 10, 3);
-
 	}
 
 	static function this() {
 		return self::$_this;
 	}
 
-	public function handle_onboarding_request($data, $test, $request){
+	public function handle_onboarding_request($response, $test, $data){
 		if ( ! rsssl_user_can_manage() ) {
 			return false;
 		}
 //		delete_option('rsssl_network_activation_status');
 //		delete_option("rsssl_onboarding_dismissed");
 		switch( $test ){
-			case 'override_ssl_detection':
-				$data = $this->override_ssl_detection($request);
-				break;
 			case 'activate_ssl':
-				$data = RSSSL()->admin->activate_ssl($request);
+				$data['is_rest_request'] = true;
+				$response = RSSSL()->admin->activate_ssl($data);
 				break;
 			case 'activate_ssl_networkwide':
-				$data = RSSSL()->multisite->process_ssl_activation_step();
+				$response = RSSSL()->multisite->process_ssl_activation_step();
 				break;
-			case 'get_modal_status':
-				$data =  ["dismissed" => !$this->show_onboarding_modal()];
-				break;
-			case 'dismiss_modal':
-				$this->dismiss_modal($request);
-				$data = ['success'=>true];
-				break;
+			default:
+				return $response;
 		}
 
-		return $data;
+		return $response;
 	}
 
 	/**
@@ -65,31 +57,36 @@ class rsssl_onboarding {
 	 *
 	 * @return array|bool[]|false|mixed
 	 */
-	public function handle_onboarding_action($data, $action, $request){
+	public function handle_onboarding_action($response, $action, $data){
 		if ( ! rsssl_user_can_manage() ) {
 			return false;
 		}
 		$error = false;
-		$request_data = $request->get_json_params();
 		$next_action = 'none';
 		switch( $action ){
+			case 'get_modal_status':
+				$response =  ["dismissed" => !$this->show_onboarding_modal()];
+				break;
+			case 'dismiss_modal':
+				$this->dismiss_modal($data);
+				break;
 			case 'override_ssl_detection':
-				$data = $this->override_ssl_detection($request);
+				$response = $this->override_ssl_detection($data);
 				break;
 			case 'install_plugin':
 				require_once(rsssl_path . 'class-installer.php');
-				$plugin = new rsssl_installer(sanitize_title($request_data['id']));
+				$plugin = new rsssl_installer(sanitize_title($data['id']));
 				$success = $plugin->download_plugin();
-				$data = [
+				$response = [
 					'next_action' => 'activate',
 					'success' => $success
 				];
 				break;
 			case 'activate':
 				require_once(rsssl_path . 'class-installer.php');
-				$plugin = new rsssl_installer(sanitize_title($request_data['id']));
+				$plugin = new rsssl_installer(sanitize_title($data['id']));
 				$success = $plugin->activate_plugin();
-				$data = [
+				$response = [
 					'next_action' => 'completed',
 					'success' => $success
 				];
@@ -98,29 +95,30 @@ class rsssl_onboarding {
 				foreach ($this->hardening as $h ){
 					rsssl_update_option($h, true);
 				}
-				$data = [
+				$response = [
 					'next_action' => 'none',
 					'success' => true,
 				];
+				break;
+			default:
+				return $response;
 		}
 
-		return $data;
+		return $response;
 	}
 
 	/**
 	 * Toggle modal status
 	 *
-	 * @param $request
+	 * @param array $data
 	 *
 	 * @return void
 	 */
-	public function dismiss_modal($request){
+	public function dismiss_modal($data){
 		if (!rsssl_user_can_manage()) return;
-		$data = json_decode($request['data']);
-		$dismiss = boolval($data->dismiss);
-		update_option("rsssl_onboarding_dismissed", $dismiss, false);
+		$dismiss =  $data['dismiss'] ?? false;
+		update_option("rsssl_onboarding_dismissed", (bool) $dismiss, false);
 	}
-
 
 	public function maybe_redirect_to_settings_page() {
 		if ( get_transient('rsssl_redirect_to_settings_page' ) ) {

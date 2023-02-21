@@ -13,6 +13,14 @@ $animation-duration: 1.6s;
   background-size: 600px;
 }
 
+.rsssl-rest-error-message {
+  margin:30px;
+  ul {
+    list-style:disc;
+    margin:20px;
+  }
+}
+
 .rsssl-placeholder {
   box-sizing: border-box;
   width: 100%;

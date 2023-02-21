@@ -1367,6 +1367,15 @@
     background: var(--rsp-green);
 }
 
+.rsssl-rest-error-message {
+    margin: 30px;
+}
+
+.rsssl-rest-error-message ul {
+    list-style: disc;
+    margin: 20px;
+}
+
 .rsssl-placeholder {
     box-sizing: border-box;
     width: 100%;
@@ -1397,79 +1406,79 @@
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(1) {
-    width: 83%;
+    width: 78%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(2) {
-    width: 78%;
+    width: 99%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(3) {
-    width: 76%;
+    width: 93%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(4) {
-    width: 88%;
+    width: 62%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(5) {
-    width: 82%;
-}
-
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(6) {
-    width: 87%;
-}
-
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(7) {
-    width: 95%;
-}
-
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(8) {
-    width: 82%;
-}
-
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(9) {
-    width: 66%;
-}
-
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(10) {
-    width: 96%;
-}
-
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(11) {
-    width: 86%;
-}
-
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(12) {
-    width: 78%;
-}
-
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(13) {
-    width: 76%;
-}
-
-.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(14) {
     width: 73%;
 }
 
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(6) {
+    width: 62%;
+}
+
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(7) {
+    width: 67%;
+}
+
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(8) {
+    width: 100%;
+}
+
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(9) {
+    width: 82%;
+}
+
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(10) {
+    width: 75%;
+}
+
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(11) {
+    width: 98%;
+}
+
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(12) {
+    width: 63%;
+}
+
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(13) {
+    width: 100%;
+}
+
+.rsssl-placeholder .rsssl-placeholder-line:nth-of-type(14) {
+    width: 94%;
+}
+
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(15) {
-    width: 69%;
+    width: 89%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(16) {
-    width: 85%;
+    width: 67%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(17) {
-    width: 80%;
+    width: 96%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(18) {
-    width: 88%;
+    width: 81%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(19) {
-    width: 70%;
+    width: 65%;
 }
 
 .rsssl-placeholder .rsssl-placeholder-line:nth-of-type(20) {
@@ -1964,6 +1973,10 @@ html {
     margin: 0;
 }
 
+.rsssl div[class^=rsssl-wizard-] .components-flex .rsssl-tooltip {
+    flex-grow: 1;
+}
+
 .rsssl div[class^=rsssl-wizard-] .components-flex .components-input-control__container {
     max-width: max-content;
 }
@@ -1991,6 +2004,7 @@ html {
     flex-direction: row-reverse;
     align-items: center;
     justify-content: space-between;
+    width: 100%;
 }
 
 .rsssl div[class^=rsssl-wizard-] .components-toggle-control .components-base-control__field .components-form-toggle, .rsssl div[class^=rsssl-wizard-] .components-toggle-control .components-flex .components-form-toggle {
@@ -2454,206 +2468,20 @@ nav.rdt_Pagination > div > svg {
     font-size: var(--rsp-fs-300);
 }
 
-/* rsssl-rsssl-tooltip for settings page */
-/* Base styles for the element that has a rsssl-tooltip */
-[data-rsssl-tooltip],
-.rsssl-tooltip {
-    position: relative;
-    cursor: pointer;
-}
-
-/* Base styles for the entire tooltip */
-[data-rsssl-tooltip]:before,
-[data-rsssl-tooltip]:after,
-.rsssl-tooltip:before,
-.rsssl-tooltip:after {
-    position: absolute;
-    visibility: hidden;
-    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
-    filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=0);
-    opacity: 0;
-    -webkit-transition: opacity 0.2s ease-in-out, visibility 0.2s ease-in-out, -webkit-transform 0.2s cubic-bezier(0.71, 1.7, 0.77, 1.24);
-    -moz-transition: opacity 0.2s ease-in-out, visibility 0.2s ease-in-out, -moz-transform 0.2s cubic-bezier(0.71, 1.7, 0.77, 1.24);
-    transition: opacity 0.2s ease-in-out, visibility 0.2s ease-in-out, transform 0.2s cubic-bezier(0.71, 1.7, 0.77, 1.24);
-    -webkit-transform: translate3d(0, 0, 0);
-    -moz-transform: translate3d(0, 0, 0);
-    transform: translate3d(0, 0, 0);
-    pointer-events: none;
-}
-
-/* Show the entire rsssl-tooltip on hover and focus */
-[data-rsssl-tooltip]:hover:before,
-[data-rsssl-tooltip]:hover:after,
-[data-rsssl-tooltip]:focus:before,
-[data-rsssl-tooltip]:focus:after,
-.rsssl-tooltip:hover:before,
-.rsssl-tooltip:hover:after,
-.rsssl-tooltip:focus:before,
-.rsssl-tooltip:focus:after {
-    visibility: visible;
-    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=100)";
-    filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=100);
-    opacity: 1;
-}
-
-/* Base styles for the rsssl-tooltip's directional arrow */
-.rsssl-tooltip:before,
-[data-rsssl-tooltip]:before {
-  z-index: 1001;
-  border: 6px solid transparent;
-  background: transparent;
-  content: "";
-}
-
-/* Base styles for the rsssl-tooltip's content area */
-.rsssl-tooltip:after,
-[data-rsssl-tooltip]:after {
-    z-index: 1000;
-    padding: 8px;
-    width: 220px;
+.rsssl div[class^=rsssl-wizard-] .rsssl-field-wrap .MuiTooltip-popper {
     background-color: #000;
-    background-color: hsla(0deg, 0%, 20%, 0.9);
-    color: #fff;
-    content: attr(data-rsssl-tooltip);
-    font-size: 14px;
-    line-height: 1.2;
 }
 
-/* Directions */
-/* Top (default) */
-.rsssl-tooltip-right {
-    font-weight: normal;
+.rsssl div[class^=rsssl-wizard-] .rsssl-field-wrap label {
+    display: flex;
 }
 
-[data-rsssl-tooltip]:before,
-[data-rsssl-tooltip]:after,
-.rsssl-tooltip:before,
-.rsssl-tooltip:after,
-.rsssl-tooltip-top:before,
-.rsssl-tooltip-top:after {
-    bottom: 100%;
-    left: 50%;
+.rsssl div[class^=rsssl-wizard-] .rsssl-field-wrap label .cmplz-label-text {
+    margin-right: 10px;
 }
 
-[data-rsssl-tooltip]:before,
-.rsssl-tooltip:before,
-.rsssl-tooltip-top:before {
-    margin-left: -6px;
-    margin-bottom: -12px;
-    border-top-color: #000;
-    border-top-color: hsla(0deg, 0%, 20%, 0.9);
-}
-
-/* Horizontally align top/bottom rsssl-tooltips */
-[data-rsssl-tooltip]:after,
-.rsssl-tooltip:after,
-.rsssl-tooltip-top:after {
-    margin-left: -80px;
-}
-
-[data-rsssl-tooltip]:hover:before,
-[data-rsssl-tooltip]:hover:after,
-[data-rsssl-tooltip]:focus:before,
-[data-rsssl-tooltip]:focus:after,
-.rsssl-tooltip:hover:before,
-.rsssl-tooltip:hover:after,
-.rsssl-tooltip:focus:before,
-.rsssl-tooltip:focus:after,
-.rsssl-tooltip-top:hover:before,
-.rsssl-tooltip-top:hover:after,
-.rsssl-tooltip-top:focus:before,
-.rsssl-tooltip-top:focus:after {
-    -webkit-transform: translateY(-12px);
-    -moz-transform: translateY(-12px);
-    transform: translateY(-12px);
-}
-
-/* Left */
-.rsssl-tooltip-left:before,
-.rsssl-tooltip-left:after {
-    right: 100%;
-  /*bottom: 50%;*/
-    left: auto;
-}
-
-.rsssl-tooltip-left:before {
-    margin-left: 0;
-    margin-right: -12px;
-    margin-bottom: 0;
-    border-top-color: transparent;
-    border-left-color: #000;
-    border-left-color: hsla(0deg, 0%, 20%, 0.9);
-}
-
-.rsssl-tooltip-left:hover:before,
-.rsssl-tooltip-left:hover:after,
-.rsssl-tooltip-left:focus:before,
-.rsssl-tooltip-left:focus:after {
-    -webkit-transform: translateX(-12px);
-    -moz-transform: translateX(-12px);
-    transform: translateX(-12px);
-}
-
-/* Bottom */
-.rsssl-tooltip-bottom:before,
-.rsssl-tooltip-bottom:after {
-    top: 100%;
-    bottom: auto;
-    left: 50%;
-}
-
-.rsssl-tooltip-bottom:before {
-    margin-top: -12px;
-    margin-bottom: 0;
-    border-top-color: transparent;
-    border-bottom-color: #000;
-    border-bottom-color: hsla(0deg, 0%, 20%, 0.9);
-}
-
-.rsssl-tooltip-bottom:hover:before,
-.rsssl-tooltip-bottom:hover:after,
-.rsssl-tooltip-bottom:focus:before,
-.rsssl-tooltip-bottom:focus:after {
-    -webkit-transform: translateY(12px);
-    -moz-transform: translateY(12px);
-    transform: translateY(12px);
-}
-
-/* Right */
-.rsssl-tooltip-right:before,
-.rsssl-tooltip-right:after {
-    bottom: 50%;
-    left: 100%;
-}
-
-.rsssl-tooltip-right:before {
-    margin-bottom: 0;
-    margin-left: -12px;
-    border-top-color: transparent;
-    border-right-color: #000;
-    border-right-color: hsla(0deg, 0%, 20%, 0.9);
-}
-
-.rsssl-tooltip-right:hover:before,
-.rsssl-tooltip-right:hover:after,
-.rsssl-tooltip-right:focus:before,
-.rsssl-tooltip-right:focus:after {
-    -webkit-transform: translateX(12px);
-    -moz-transform: translateX(12px);
-    transform: translateX(12px);
-}
-
-/* Move directional arrows down a bit for left/right rsssl-tooltips */
-.rsssl-tooltip-left:before,
-.rsssl-tooltip-right:before {
-    top: 3px;
-}
-
-/* Vertically center rsssl-tooltip content for left/right rsssl-tooltips */
-.rsssl-tooltip-left:after,
-.rsssl-tooltip-right:after {
-    margin-left: 0;
-    margin-bottom: -25px;
+.rsssl div[class^=rsssl-wizard-] .rsssl-field-wrap .rsssl-icon {
+    cursor: pointer;
 }
 
 .rsssl {

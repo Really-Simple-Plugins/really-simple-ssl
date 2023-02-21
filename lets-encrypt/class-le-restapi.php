@@ -37,11 +37,11 @@ if ( ! class_exists( "rsssl_le_restapi" ) ) {
 
 		/**
          * Switch to DNS verification
-         * @param WP_REST_Request $request
+         * @param array $data
 		 * @return []
 		 */
-        public function update_verification_type($request){
-	        $type = $request->get_param('id');
+        public function update_verification_type($data){
+	        $type = $data['id'];
             $type = $type === 'dns' ? 'dns' : 'dir';
 	        rsssl_update_option('verification_type', $type );
             if ($type==='dns') {
@@ -163,13 +163,13 @@ if ( ! class_exists( "rsssl_le_restapi" ) ) {
 		/**
          * Process a Let's Encrypt test request
          *
-		 * @param array $data
+		 * @param array $response
 		 * @param string $test
 		 * @param WP_REST_Request $request
 		 *
 		 * @return RSSSL_RESPONSE|array
 		 */
-        public function handle_lets_encrypt_request($data, $test, $request){
+        public function handle_lets_encrypt_request($response, $test, $data){
 	        if ( ! current_user_can('manage_security') ) {
 		        return new RSSSL_RESPONSE(
 			        'error',
@@ -177,12 +177,11 @@ if ( ! class_exists( "rsssl_le_restapi" ) ) {
 			        __( "Permission denied.", 'really-simple-ssl' )
 		        );
 	        }
-
 	        switch( $test ){
                 case 'reset':
 	                return $this->reset();
 		        case 'update_verification_type':
-                    return $this->update_verification_type($request);
+                    return $this->update_verification_type($data);
 		        case 'skip_dns_check':
 			        return $this->skip_dns_check();
 		        case 'skip_challenge_directory_request':
@@ -216,22 +215,22 @@ if ( ! class_exists( "rsssl_le_restapi" ) ) {
 		        case 'rsssl_install_directadmin':
 		        case 'rsssl_plesk_install':
 		        case 'cleanup_on_ssl_activation':
-                    return $this->get_installation_progress($data, $test, $request);
+                    return $this->get_installation_progress($response, $test, $data);
                 default:
-                    return $data;
+                    return $response;
             }
         }
 
 		/**
          * Run a LE test
-		 * @param $data
+		 * @param $response
 		 * @param $function
-		 * @param $request
+		 * @param $data
 		 *
 		 * @return RSSSL_RESPONSE
 		 */
-		public function get_installation_progress( $data, $function, $request ){
-			$id = $request->get_param('id');
+		public function get_installation_progress( $response, $function, $data ){
+			$id = $data['id'];
 			if ( ! current_user_can('manage_security') ) {
 				return new RSSSL_RESPONSE(
 					'error',

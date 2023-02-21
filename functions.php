@@ -36,6 +36,10 @@ function rsssl_get_option( string $name, $default=false ) {
 		$value = $default;
 	}
 
+	if ($value===1) {
+		$value = true;
+	}
+
 	return apply_filters("rsssl_option_$name", $value, $name);
 }
 
