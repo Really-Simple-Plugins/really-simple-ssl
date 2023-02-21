@@ -545,7 +545,7 @@ function rsssl_le_add_fields($fields) {
 			],
 		]);
 
-	if ( is_multisite() ) {
+	if ( is_multisite() && ! defined('rsssl_pro_version') ) {
 		$index           = array_search( 'system-status', array_column( $fields, 'id' ) );
 		$new_test        = [
 			'description' => __( "Checking for subdomain setup...", "really-simple-ssl" ),
