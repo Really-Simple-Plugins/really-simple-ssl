@@ -2,35 +2,35 @@
 import {create} from 'zustand';
 import {__} from "@wordpress/i18n";
 import * as rsssl_api from "../../utils/api";
-import {immer} from "zustand/middleware/immer";
 
-/*
-    * Creates A Store For Risk Data using Zustand
-    * we also implement immer here, so we can mutate the state
- */
 const UseRiskData = create((set, get) => ({
     riskData: [],
     dataLoaded: false,
-
+    setData: (data) => set({riskData: data, dataLoaded: true}),
     //fetch Risk Data
     fetchRiskData: async () => {
         let data = {};
         data.risk_action = 'get';
-        let riskData = await rsssl_api.doAction('risk_vulnerabilities_data', data).then((response) => {
-            return response;
-        })
-        if (typeof riskData === 'object') {
-            riskData = Object.values(riskData);
+        try {
+            const riskData = await rsssl_api.doAction('risk_vulnerabilities_data', data);
+            //we convert the data to an array
+            set({riskData: riskData, dataLoaded: true});
+        } catch (e) {
+            console.error(e);
         }
-        if (!Array.isArray(riskData)) {
-            riskData = [];
+    },
+    //update Risk Data
+    updateRiskData: async (field, value) => {
+        try {
+            const riskData = await rsssl_api.doAction('risk_vulnerabilities_data_save', {
+                field: field,
+                value: value,
+            });
+            set({riskData: riskData, dataLoaded: true});
+        } catch (e) {
+            console.error(e);
         }
-        set({
-            riskData: riskData,
-            dataLoaded: true,
-        });
     }
-
 }));
 
 export default UseRiskData;

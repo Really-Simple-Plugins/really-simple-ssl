@@ -20671,39 +20671,63 @@ __webpack_require__.r(__webpack_exports__);
 
 
 const RiskComponent = props => {
-  let {
+  //first we put the data in a state
+  const {
     riskData,
     dataLoaded,
-    fetchRiskData
+    fetchRiskData,
+    setData,
+    updateRiskData
   } = (0,_RiskData__WEBPACK_IMPORTED_MODULE_2__["default"])();
-  if (riskData.length === 0) {
-    if (!dataLoaded) {
-      fetchRiskData().then(response => {
-        dataLoaded = true;
-      }).catch(error => {
-        console.log('error', error);
-      });
-    }
+  (0,react__WEBPACK_IMPORTED_MODULE_1__.useEffect)(() => {
+    fetchRiskData();
+  }, []);
+
+  //we only proceed if the data is loaded
+  if (!dataLoaded) {
+    return null;
   }
-  let field = props.field;
+
+  //we create the columns
   let columns = [];
+  //getting the fields from the props
+  let field = props.field;
+  //we loop through the fields
   field.columns.forEach(function (item, i) {
     let newItem = buildColumn(item);
     columns.push(newItem);
   });
+
+  //now we get the options for the select control
   let options = props.field.options;
-  //and we add the select control to the data
-  riskData.forEach(item => {
-    //only when the item is an object
-    if (typeof item === 'object') {
-      item.riskSelection = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_4__.SelectControl, {
-        value: item.value,
-        options: options,
-        label: "",
-        onChange: fieldValue => onChangeHandler(fieldValue)
-      });
-    }
+
+  //we divide the key into label and the value into value
+  options = Object.entries(options).map(item => {
+    return {
+      label: item[1],
+      value: item[0]
+    };
   });
+
+  //we check if the property request_success exists if so we remove it
+  if (riskData.hasOwnProperty('request_success')) {
+    delete riskData.request_success;
+  }
+
+  //and we add the select control to the data
+  Object.keys(riskData).forEach(item => {
+    riskData[item].riskSelection = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_4__.SelectControl, {
+      id: riskData[item].id,
+      value: riskData[item].value,
+      options: options,
+      label: "",
+      onChange: fieldValue => onChangeHandler(fieldValue, riskData[item])
+    });
+  });
+  return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_data_table_component__WEBPACK_IMPORTED_MODULE_3__["default"], {
+    columns: columns,
+    data: Object.values(riskData)
+  }));
   function buildColumn(column) {
     return {
       name: column.name,
@@ -20713,17 +20737,8 @@ const RiskComponent = props => {
       grow: column.grow
     };
   }
-  function onChangeHandler(fieldValue) {
-    alert('i have come this far');
-  }
-  console.log('riskData', riskData);
-  if (riskData.length !== 0) {
-    return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_data_table_component__WEBPACK_IMPORTED_MODULE_3__["default"], {
-      columns: columns,
-      data: riskData
-    }));
-  } else {
-    return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", null, "Loading..."));
+  function onChangeHandler(fieldValue, item) {
+    updateRiskData(item.id, fieldValue);
   }
 };
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (RiskComponent);
@@ -20749,32 +20764,42 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-
-
-/*
-    * Creates A Store For Risk Data using Zustand
-    * we also implement immer here, so we can mutate the state
- */
 const UseRiskData = (0,zustand__WEBPACK_IMPORTED_MODULE_2__.create)((set, get) => ({
   riskData: [],
   dataLoaded: false,
+  setData: data => set({
+    riskData: data,
+    dataLoaded: true
+  }),
   //fetch Risk Data
   fetchRiskData: async () => {
     let data = {};
     data.risk_action = 'get';
-    let riskData = await _utils_api__WEBPACK_IMPORTED_MODULE_1__.doAction('risk_vulnerabilities_data', data).then(response => {
-      return response;
-    });
-    if (typeof riskData === 'object') {
-      riskData = Object.values(riskData);
+    try {
+      const riskData = await _utils_api__WEBPACK_IMPORTED_MODULE_1__.doAction('risk_vulnerabilities_data', data);
+      //we convert the data to an array
+      set({
+        riskData: riskData,
+        dataLoaded: true
+      });
+    } catch (e) {
+      console.error(e);
     }
-    if (!Array.isArray(riskData)) {
-      riskData = [];
+  },
+  //update Risk Data
+  updateRiskData: async (field, value) => {
+    try {
+      const riskData = await _utils_api__WEBPACK_IMPORTED_MODULE_1__.doAction('risk_vulnerabilities_data_save', {
+        field: field,
+        value: value
+      });
+      set({
+        riskData: riskData,
+        dataLoaded: true
+      });
+    } catch (e) {
+      console.error(e);
     }
-    set({
-      riskData: riskData,
-      dataLoaded: true
-    });
   }
 }));
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (UseRiskData);
