@@ -273,8 +273,8 @@ function rsssl_do_action($request, $ajax_data=false){
 	}
 
 	switch($action){
-		case 'ssl_status_data':
-			$response = rsssl_ssl_status_data();
+		case 'ssltest_get':
+			$response = ['data' => get_option('rsssl_ssl_labs_data') ];
 			break;
 		case 'ssltest_run':
 			$response = rsssl_ssltest_run($data);
@@ -377,12 +377,6 @@ function rsssl_run_test($request, $ajax_data=false){
     $state = $request->get_param('state');
 	$state =  $state !== 'undefined' && $state !== 'false' ? $state : false;
 	switch($test){
-        case 'ssl_status_data':
-            $response = rsssl_ssl_status_data();
-            break;
-        case 'ssltest_get':
-	        $response = get_option('rsssl_ssl_labs_data');
-            break;
         case 'progressdata':
 	        $response = RSSSL()->progress->get();
             break;
@@ -395,8 +389,7 @@ function rsssl_run_test($request, $ajax_data=false){
         default:
 	        $response = apply_filters("rsssl_run_test",[], $test, $data);
 	}
-
-	if ( is_array($response)) {
+	if ( is_array($response) ) {
 		$response['request_success'] = true;
 	}
 	return $response;
@@ -462,21 +455,6 @@ function rsssl_other_plugins_data($slug=false){
     }
     return ['plugins'=>$plugins];
 
-}
-
-/**
- * Get activation data
- * @return array
- */
-function rsssl_ssl_status_data(){
-	if ( !rsssl_user_can_manage() ) {
-		return [];
-	}
-
-	return [
-		'certificate_is_valid' => RSSSL()->certificate->is_valid() || ( defined( 'RSSSL_FORCE_ACTIVATE' ) && RSSSL_FORCE_ACTIVATE ),
-		'ssl_enabled' => rsssl_get_option('ssl_enabled'),
-	];
 }
 
 /**
