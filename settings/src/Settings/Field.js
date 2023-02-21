@@ -17,8 +17,6 @@ import PermissionsPolicy from "./PermissionsPolicy";
 import CheckboxControl from "./CheckboxControl";
 import Support from "./Support";
 import LearningMode from "./LearningMode/LearningMode";
-import VulnerableMeasures from "./VulnerableMeasures/VulnerableMeasures";
-import VulnerableMeasuresTest from "./VulnerableMeasures/VulnerableMeasuresTest";
 import RiskComponent from "./RiskConfiguration/RiskComponent";
 import Button from "./Button";
 import Icon from "../utils/Icon";
@@ -265,22 +263,6 @@ const Field = (props) => {
         return(
             <div className={highLightClass} ref={scrollAnchor}>
               <LearningMode disabled={disabled} field={props.field}/>
-            </div>
-        )
-    }
-
-    if ( field.type==='vulnerablemeasurestest' ) {
-        return(
-            <div className={highLightClass} ref={scrollAnchor}>
-              <VulnerableMeasuresTest disabled={disabled} field={props.field}/>
-            </div>
-        )
-    }
-
-    if ( field.type==='vulnerablemeasures' ) {
-        return(
-            <div className={highLightClass} ref={scrollAnchor}>
-                <VulnerableMeasures disabled={disabled} field={props.field}/>
             </div>
         )
     }

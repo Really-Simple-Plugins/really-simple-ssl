@@ -18704,14 +18704,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _CheckboxControl__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./CheckboxControl */ "./src/Settings/CheckboxControl.js");
 /* harmony import */ var _Support__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./Support */ "./src/Settings/Support.js");
 /* harmony import */ var _LearningMode_LearningMode__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ./LearningMode/LearningMode */ "./src/Settings/LearningMode/LearningMode.js");
-/* harmony import */ var _VulnerableMeasures_VulnerableMeasures__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ./VulnerableMeasures/VulnerableMeasures */ "./src/Settings/VulnerableMeasures/VulnerableMeasures.js");
-/* harmony import */ var _VulnerableMeasures_VulnerableMeasuresTest__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ./VulnerableMeasures/VulnerableMeasuresTest */ "./src/Settings/VulnerableMeasures/VulnerableMeasuresTest.js");
-/* harmony import */ var _RiskConfiguration_RiskComponent__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ./RiskConfiguration/RiskComponent */ "./src/Settings/RiskConfiguration/RiskComponent.js");
-/* harmony import */ var _Button__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! ./Button */ "./src/Settings/Button.js");
-/* harmony import */ var _utils_Icon__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! ../utils/Icon */ "./src/utils/Icon.js");
-/* harmony import */ var _FieldsData__WEBPACK_IMPORTED_MODULE_19__ = __webpack_require__(/*! ./FieldsData */ "./src/Settings/FieldsData.js");
-
-
+/* harmony import */ var _RiskConfiguration_RiskComponent__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ./RiskConfiguration/RiskComponent */ "./src/Settings/RiskConfiguration/RiskComponent.js");
+/* harmony import */ var _Button__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ./Button */ "./src/Settings/Button.js");
+/* harmony import */ var _utils_Icon__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ../utils/Icon */ "./src/utils/Icon.js");
+/* harmony import */ var _FieldsData__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! ./FieldsData */ "./src/Settings/FieldsData.js");
 
 
 
@@ -18737,7 +18733,7 @@ const Field = props => {
     updateField,
     setChangedField,
     highLightField
-  } = (0,_FieldsData__WEBPACK_IMPORTED_MODULE_19__["default"])();
+  } = (0,_FieldsData__WEBPACK_IMPORTED_MODULE_17__["default"])();
   (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
     if (highLightField === props.field.id && scrollAnchor.current) {
       scrollAnchor.current.scrollIntoView({
@@ -18768,7 +18764,7 @@ const Field = props => {
     let tooltipColor = field.warning ? 'red' : 'black';
     return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
       className: "cmplz-label-text"
-    }, field.label), field.tooltip && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_utils_Icon__WEBPACK_IMPORTED_MODULE_18__["default"], {
+    }, field.label), field.tooltip && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_utils_Icon__WEBPACK_IMPORTED_MODULE_16__["default"], {
       name: "info-open",
       tooltip: field.tooltip,
       color: tooltipColor
@@ -18858,7 +18854,7 @@ const Field = props => {
     return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
       className: 'rsssl-field-button ' + highLightClass,
       ref: scrollAnchor
-    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("label", null, field.label), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_Button__WEBPACK_IMPORTED_MODULE_17__["default"], {
+    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("label", null, field.label), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_Button__WEBPACK_IMPORTED_MODULE_15__["default"], {
       field: field
     }));
   }
@@ -18963,29 +18959,11 @@ const Field = props => {
       field: props.field
     }));
   }
-  if (field.type === 'vulnerablemeasurestest') {
-    return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-      className: highLightClass,
-      ref: scrollAnchor
-    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_VulnerableMeasures_VulnerableMeasuresTest__WEBPACK_IMPORTED_MODULE_15__["default"], {
-      disabled: disabled,
-      field: props.field
-    }));
-  }
-  if (field.type === 'vulnerablemeasures') {
-    return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-      className: highLightClass,
-      ref: scrollAnchor
-    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_VulnerableMeasures_VulnerableMeasures__WEBPACK_IMPORTED_MODULE_14__["default"], {
-      disabled: disabled,
-      field: props.field
-    }));
-  }
   if (field.type === 'riskcomponent') {
     return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
       className: highLightClass,
       ref: scrollAnchor
-    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_RiskConfiguration_RiskComponent__WEBPACK_IMPORTED_MODULE_16__["default"], {
+    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_RiskConfiguration_RiskComponent__WEBPACK_IMPORTED_MODULE_14__["default"], {
       field: props.field
     }));
   }
@@ -21205,159 +21183,6 @@ const Support = () => {
   }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Send', 'really-simple-ssl')));
 };
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Support);
-
-/***/ }),
-
-/***/ "./src/Settings/VulnerableMeasures/VulnerableMeasures.js":
-/*!***************************************************************!*\
-  !*** ./src/Settings/VulnerableMeasures/VulnerableMeasures.js ***!
-  \***************************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
-/* harmony export */ });
-/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
-/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var react_data_table_component__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-data-table-component */ "./node_modules/react-data-table-component/dist/index.cjs.js");
-/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @wordpress/components */ "@wordpress/components");
-/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var _VulnerableMeasuresData__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./VulnerableMeasuresData */ "./src/Settings/VulnerableMeasures/VulnerableMeasuresData.js");
-
-
-
-
-const VulnerableMeasures = props => {
-  //first we put the data in a state
-  const {
-    measuresData
-  } = (0,_VulnerableMeasuresData__WEBPACK_IMPORTED_MODULE_3__.UseRiskDetection)();
-
-  //we create the columns
-  let columns = [];
-  //getting the fields from the props
-  let field = props.field;
-  //we loop through the fields
-  field.columns.forEach(function (item, i) {
-    let newItem = buildColumn(item);
-    columns.push(newItem);
-  });
-  //now we get the options for the select control
-  let options = props.field.options;
-
-  //we divide the key into label and the value into value
-  options = Object.entries(options).map(item => {
-    return {
-      label: item[1],
-      value: item[0]
-    };
-  });
-
-  //and we add the select control to the data
-  UseMeasuresData().getMeasuresData.forEach(item => {
-    item.riskSelection = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__.SelectControl, {
-      risk: item.risk,
-      value: item.value,
-      options: options,
-      label: "",
-      onChange: fieldValue => onChangeHandler(fieldValue, item.value, item.risk)
-    });
-  });
-  return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_data_table_component__WEBPACK_IMPORTED_MODULE_1__["default"], {
-    columns: columns,
-    data: measuresData
-  }));
-};
-function buildColumn(column) {
-  return {
-    name: column.name,
-    sortable: column.sortable,
-    width: column.width,
-    selector: row => row[column.column],
-    grow: column.grow
-  };
-}
-function onChangeHandler(fieldValue, clickedItem, risk) {
-  let measuresData = UseMeasuresData().measuresData;
-  let index = measuresData.findIndex(i => i.value === clickedItem);
-  console.log(measuresData[index]);
-}
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (VulnerableMeasures);
-
-/***/ }),
-
-/***/ "./src/Settings/VulnerableMeasures/VulnerableMeasuresData.js":
-/*!*******************************************************************!*\
-  !*** ./src/Settings/VulnerableMeasures/VulnerableMeasuresData.js ***!
-  \*******************************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "UseRiskDetection": () => (/* binding */ UseRiskDetection)
-/* harmony export */ });
-/* harmony import */ var zustand__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! zustand */ "./node_modules/zustand/esm/index.mjs");
-/* harmony import */ var zustand_middleware_immer__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! zustand/middleware/immer */ "./node_modules/zustand/esm/middleware/immer.mjs");
-/* harmony import */ var _utils_api__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../utils/api */ "./src/utils/api.js");
-/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
-/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__);
-
-
-
-
-const UseRiskDetection = (0,zustand__WEBPACK_IMPORTED_MODULE_2__.create)((0,zustand_middleware_immer__WEBPACK_IMPORTED_MODULE_3__.immer)((set, get) => ({
-  riskDetectionData: [],
-  //setting the data
-  setRiskDetectionData: data => {
-    set(state => {
-      state.riskDetectionData = data;
-    });
-  }
-})));
-
-/***/ }),
-
-/***/ "./src/Settings/VulnerableMeasures/VulnerableMeasuresTest.js":
-/*!*******************************************************************!*\
-  !*** ./src/Settings/VulnerableMeasures/VulnerableMeasuresTest.js ***!
-  \*******************************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
-/* harmony export */ });
-/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
-/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/components */ "@wordpress/components");
-/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__);
-
-/*
-    * This file is part of Really Simple SSL.
-    * Really Simple SSL
-    *
-    * @package Really Simple SSL
-    * @author Marcel Santing
-    *
-    * @link https://really-simple-ssl.com/
-    * This function is a test button to test if the notifications is working.
- */
-
-const VulnerableMeasuresTest = props => {
-  //when run it tests the notification
-  const testNotification = () => {};
-  return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "textright"
-  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("label", null, props.field.label), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Button, {
-    isSecondary: true,
-    onClick: e => testNotification(e)
-  }, props.field.button_text));
-};
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (VulnerableMeasuresTest);
 
 /***/ }),
 
@@ -28426,34 +28251,6 @@ var react = (createState) => {
   }
   return create(createState);
 };
-
-
-
-
-/***/ }),
-
-/***/ "./node_modules/zustand/esm/middleware/immer.mjs":
-/*!*******************************************************!*\
-  !*** ./node_modules/zustand/esm/middleware/immer.mjs ***!
-  \*******************************************************/
-/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "immer": () => (/* binding */ immer)
-/* harmony export */ });
-/* harmony import */ var immer__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! immer */ "./node_modules/immer/dist/immer.esm.mjs");
-
-
-const immerImpl = (initializer) => (set, get, store) => {
-  store.setState = (updater, replace, ...a) => {
-    const nextState = typeof updater === "function" ? (0,immer__WEBPACK_IMPORTED_MODULE_0__.produce)(updater) : updater;
-    return set(nextState, replace, ...a);
-  };
-  return initializer(store.setState, get, store);
-};
-const immer = immerImpl;
 
 
 
