@@ -19,10 +19,12 @@ import Support from "./Support";
 import LearningMode from "./LearningMode/LearningMode";
 import VulnerableMeasures from "./VulnerableMeasures/VulnerableMeasures";
 import VulnerableMeasuresTest from "./VulnerableMeasures/VulnerableMeasuresTest";
+import RiskComponent from "./RiskConfiguration/RiskComponent";
 import Button from "./Button";
 import Icon from "../utils/Icon";
 import { useEffect} from "@wordpress/element";
 import useFields from "./FieldsData";
+
 
 const Field = (props) => {
     let scrollAnchor = React.createRef();
@@ -283,10 +285,16 @@ const Field = (props) => {
         )
     }
 
+    if ( field.type==='riskcomponent' ) {
+        return (<div className={highLightClass} ref={scrollAnchor}>
+            <RiskComponent field={props.field}/>
+        </div>)
+    }
+
     if ( field.type === 'mixedcontentscan' ) {
         return (
             <div className={highLightClass} ref={scrollAnchor}>
-              <MixedContentScan  field={props.field}/>
+              <MixedContentScan field={props.field}/>
             </div>
         )
     }

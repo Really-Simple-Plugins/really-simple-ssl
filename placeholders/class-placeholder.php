@@ -11,6 +11,7 @@ if ( ! class_exists( 'rsssl_placeholder' ) ) {
 
 			add_filter( "rsssl_run_test", array( $this, 'mixed_content_scan' ), 9, 3 );
 			add_filter( 'rsssl_do_action', array( $this, 'learningmode_table_data' ), 10, 3 );
+			add_filter( 'rsssl_do_action', array( $this, 'risk_vulnerabilities_data' ), 10, 3 );
 			self::$_this = $this;
 
 		}
@@ -55,6 +56,20 @@ if ( ! class_exists( 'rsssl_placeholder' ) ) {
 			}
 			return $response;
 		}
+
+        /**
+         * Sets Data for Risk_vulnerabilities_data
+         */
+        public function risk_vulnerabilities_data(array $response, string $action, $data): array {
+            if (!rsssl_user_can_manage()) {
+                return $response;
+            }
+
+            if ($action === 'risk_vulnerabilities_data') {
+                return $this->measures_data();
+            }
+            return $response;
+        }
 
 		/**
 		 * Set some placeholder data for CSP
@@ -106,27 +121,28 @@ if ( ! class_exists( 'rsssl_placeholder' ) ) {
 			return $output;
 		}
 
-        public function measures_data() {
+        public function measures_data(): array
+        {
             $data[] = [
-                'id' => 1,
+                'id' => 'low_risk',
                 'risk' => __('Low-risk', 'really-simple-ssl'),
                 'value' => 'none',
                 'description' => __('Low risk vulnerabilities', 'really-simple-ssl'),
             ];
             $data[] = [
-                'id' => 2,
+                'id' => 'medium_risk',
                 'risk' => __('Medium-risk', 'really-simple-ssl'),
                 'value' => 'notify_admin',
                 'description' => __('Medium risk vulnerabilities', 'really-simple-ssl'),
             ];
             $data[] = [
-                'id' => 3,
+                'id' => 'high_risk',
                 'risk' => __('High-risk', 'really-simple-ssl'),
                 'value' => 'email',
                 'description' => __('High risk vulnerabilities', 'really-simple-ssl'),
             ];
             $data[] = [
-                'id' => 4,
+                'id' => 'critical_risk',
                 'risk' => __('Critical-risk', 'really-simple-ssl'),
                 'value' => 'force_update',
                 'description' => __('Critical risk vulnerabilities', 'really-simple-ssl'),

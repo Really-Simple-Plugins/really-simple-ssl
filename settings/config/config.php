@@ -839,22 +839,16 @@ function rsssl_fields( $load_values = true ) {
             'id'               => 'vulnerabilities_measures',
             'menu_id'          => 'vulnerabilities',
             'group_id'         => 'vulnerabilities_measures',
-            'type'             => 'vulnerablemeasures',
+            'type'             => 'riskcomponent',
             'options'          => [
                 'none' => __( 'None', 'really-simple-ssl' ),
                 'notify_admin' => __( 'Admin notification', 'really-simple-ssl' ),
-                'email' => __( 'Email', 'really-simple-ssl' ),
+                'notify_admin_email' => __( 'Email', 'really-simple-ssl' ),
                 'force_update' => __( 'Force update', 'really-simple-ssl' ),
+                'quarantine_component' => __( 'Quarantine Component', 'really-simple-ssl' ),
             ],
             'disabled'         => false,
             'default'          => false,
-            'data_source'      => [ 'RSSSL', 'placeholder', 'measures_data' ],
-            'react_conditions' => [
-                'vul_action' => 'AND',
-                [
-                    'disable_measures_data' => false,
-                ]
-            ],
             'columns'          => [
                 [
                     'name'     => __( 'Risk', 'really-simple-ssl' ),
@@ -865,7 +859,6 @@ function rsssl_fields( $load_values = true ) {
                 [
                     'name'     => __( 'Action', 'really-simple-ssl' ),
                     'sortable' => false,
-                    'id'       => 'vul_action',
                     'column'   => 'riskSelection',
                     'width'         => '30%',
                 ],
@@ -876,6 +869,17 @@ function rsssl_fields( $load_values = true ) {
                     'type'   => 'text',
                     'width'     => '50%',
                     'minWidth'  => '300px',
+                ],
+                [
+                    //TODO: remove this column added because of annoying bug in table
+                    'name'     => __( 'Component', 'really-simple-ssl' ),
+                    'sortable' => false,
+                    'visible'  => false,
+                    'column'   => 'component',
+                    'type'   => 'hidden',
+                    'hidden' => true,
+                    'width'     => '0',
+                    'minWidth'  => '0',
                 ],
             ],
         ],
