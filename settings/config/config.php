@@ -1377,6 +1377,17 @@ function rsssl_blocks() {
 			'footer'   => [ 'type' => 'react', 'data' => 'SslLabsFooter' ],
 			'class'    => '',
 		],
+        [
+            'id'       => 'vulnerabilities',
+            'controls' => [
+                'type' => 'html',
+                'data' => __( "Powered by WPVulnerability", 'really-simple-ssl' ),
+            ],
+            'title'    => __( "Vulnerabilities", 'really-simple-ssl' ),
+            'content'  => [ 'type' => 'react', 'data' => 'WPVul' ],
+            'footer'   => [ 'type' => 'react', 'data' => 'WPVulFooter' ],
+            'class'    => '',
+        ],
 		[
 			'id'       => 'new-features-block',
 			'controls' => false,

@@ -5,6 +5,9 @@ import ProgressFooter from "./Progress/ProgressFooter";
 import SslLabs from "./SslLabs/SslLabs";
 import SslLabsFooter from "./SslLabs/SslLabsFooter";
 
+import WPVul from "./Vulnerabilities/WPVul";
+import WPVulFooter from "./Vulnerabilities/WPVulData";
+
 import UseFields from "../Settings/FieldsData";
 import OtherPlugins from "./OtherPlugins";
 import SecurityFeaturesBlock from './SecurityFeaturesBlock/SecurityFeaturesBlock';
@@ -25,6 +28,8 @@ var dynamicComponents = {
     "SslLabs": SslLabs,
     "SslLabsFooter": SslLabsFooter,
     "OtherPlugins": OtherPlugins,
+    "WPVul": WPVul,
+    "WPVulFooter": WPVulFooter,
 };
 
 const GridBlock = (props) => {
