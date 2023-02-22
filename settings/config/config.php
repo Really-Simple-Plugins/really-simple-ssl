@@ -1378,7 +1378,7 @@ function rsssl_blocks() {
 			'class'    => '',
 		],
         [
-            'id'       => 'vulnerabilities',
+            'id'       => 'wpvul',
             'controls' => [
                 'type' => 'html',
                 'data' => __( "Powered by WPVulnerability", 'really-simple-ssl' ),

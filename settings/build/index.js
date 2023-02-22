@@ -15170,7 +15170,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _SslLabs_SslLabs__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./SslLabs/SslLabs */ "./src/DashBoard/SslLabs/SslLabs.js");
 /* harmony import */ var _SslLabs_SslLabsFooter__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./SslLabs/SslLabsFooter */ "./src/DashBoard/SslLabs/SslLabsFooter.js");
 /* harmony import */ var _Vulnerabilities_WPVul__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./Vulnerabilities/WPVul */ "./src/DashBoard/Vulnerabilities/WPVul.js");
-/* harmony import */ var _Vulnerabilities_WPVulData__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./Vulnerabilities/WPVulData */ "./src/DashBoard/Vulnerabilities/WPVulData.js");
+/* harmony import */ var _Vulnerabilities_WPVulFooter__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./Vulnerabilities/WPVulFooter */ "./src/DashBoard/Vulnerabilities/WPVulFooter.js");
 /* harmony import */ var _Settings_FieldsData__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../Settings/FieldsData */ "./src/Settings/FieldsData.js");
 /* harmony import */ var _OtherPlugins__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./OtherPlugins */ "./src/DashBoard/OtherPlugins.js");
 /* harmony import */ var _SecurityFeaturesBlock_SecurityFeaturesBlock__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./SecurityFeaturesBlock/SecurityFeaturesBlock */ "./src/DashBoard/SecurityFeaturesBlock/SecurityFeaturesBlock.js");
@@ -15206,7 +15206,7 @@ var dynamicComponents = {
   "SslLabsFooter": _SslLabs_SslLabsFooter__WEBPACK_IMPORTED_MODULE_6__["default"],
   "OtherPlugins": _OtherPlugins__WEBPACK_IMPORTED_MODULE_10__["default"],
   "WPVul": _Vulnerabilities_WPVul__WEBPACK_IMPORTED_MODULE_7__["default"],
-  "WPVulFooter": _Vulnerabilities_WPVulData__WEBPACK_IMPORTED_MODULE_8__["default"]
+  "WPVulFooter": _Vulnerabilities_WPVulFooter__WEBPACK_IMPORTED_MODULE_8__["default"]
 };
 const GridBlock = props => {
   const [footerHtml, setFooterHtml] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)(props.block.footer.data);
@@ -16437,8 +16437,8 @@ __webpack_require__.r(__webpack_exports__);
 
 const WPVul = props => {
   const vulClass = 'rsssl-inactive';
-  const gradeClass = 'inactive';
   const hasErrors = false;
+  const grade = 'A+';
   const scoreSnippet = (className, content) => {
     return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
       className: "rsssl-score-container"
@@ -16449,7 +16449,7 @@ const WPVul = props => {
   let vulStatusColor = 'black';
   const getStyles = () => {
     let progress = 0;
-    let vulScanStatus = 'active';
+    let vulScanStatus = 'disabled';
     if (vulScanStatus === 'active') progress = 50;
     if (vulScanStatus === 'paused') progress = 100;
     return Object.assign({}, {
@@ -16463,6 +16463,7 @@ const WPVul = props => {
   function neverScannedYet() {
     return true;
   }
+  let gradeClass = neverScannedYet() ? 'inactive' : '?';
   return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: vulClass
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
@@ -16477,8 +16478,11 @@ const WPVul = props => {
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "rsssl-ssl-test-information"
   }, enabledVul()), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "rsssl-ssl-test-grade rsssl-grade-" + gradeClass
-  }, neverScannedYet() && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", null, "cool")))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "rsssl-ssl-test-grade red"
+  }, !neverScannedYet() && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", null, grade), neverScannedYet() && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_utils_Icon__WEBPACK_IMPORTED_MODULE_1__["default"], {
+    color: 'red',
+    name: "sync-error"
+  }))))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "rsssl-details"
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "rsssl-detail-icon"
@@ -16487,8 +16491,8 @@ const WPVul = props => {
     color: vulStatusColor
   })), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "rsssl-detail rsssl-status-" + vulStatusColor
-  }, hasErrors && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, vulStatusColor), !hasErrors && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, " ", (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("What does my score mean?", "really-simple-ssl"), "\xA0", (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
-    href: "https://really-simple-ssl.com/instructions/about-ssl-labs/",
+  }, hasErrors && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, vulStatusColor), !hasErrors && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, " ", (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("What are vulnerabilities", "really-simple-ssl"), "\xA0", (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
+    href: "https://really-simple-ssl.com/instructions/about-vulnerabilities/",
     target: "_blank"
   }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Read more", "really-simple-ssl"))))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "rsssl-details"
@@ -16499,7 +16503,7 @@ const WPVul = props => {
     color: "black"
   })), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "rsssl-detail"
-  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Last check:", "really-simple-ssl"), "\xA0", 'today')), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Last check:", "really-simple-ssl"), "\xA0", 'never')), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "rsssl-details"
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "rsssl-detail-icon"
@@ -16509,18 +16513,18 @@ const WPVul = props => {
   })), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "rsssl-detail"
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
-    href: '#',
+    href: 'https://vulnerability.wpsysadmin.com/',
     target: "_blank"
-  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("View detailed report on Qualys SSL Labs", "really-simple-ssl")))));
+  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("View all about WPVulnerability", "really-simple-ssl")))));
 };
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (WPVul);
 
 /***/ }),
 
-/***/ "./src/DashBoard/Vulnerabilities/WPVulData.js":
-/*!****************************************************!*\
-  !*** ./src/DashBoard/Vulnerabilities/WPVulData.js ***!
-  \****************************************************/
+/***/ "./src/DashBoard/Vulnerabilities/WPVulFooter.js":
+/*!******************************************************!*\
+  !*** ./src/DashBoard/Vulnerabilities/WPVulFooter.js ***!
+  \******************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -16532,7 +16536,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__);
 
 const WPVulFooter = props => {
-  return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, "hi");
+  return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
+    className: 'button button-default',
+    disabled: true
+  }, "Some ffing nice button"));
 };
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (WPVulFooter);
 

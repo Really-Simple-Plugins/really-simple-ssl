@@ -3,8 +3,8 @@ import {__} from "@wordpress/i18n";
 
 const WPVul = ( props ) => {
     const vulClass = 'rsssl-inactive';
-    const gradeClass = 'inactive';
     const hasErrors = false;
+    const grade = 'A+';
 
     const scoreSnippet = (className, content) => {
         return (
@@ -16,7 +16,7 @@ const WPVul = ( props ) => {
 
     const getStyles = () => {
         let progress = 0;
-        let vulScanStatus = 'active';
+        let vulScanStatus = 'disabled';
           if (vulScanStatus==='active') progress=50;
           if (vulScanStatus==='paused') progress=100;
 
@@ -39,6 +39,8 @@ const WPVul = ( props ) => {
         return true;
     }
 
+    let gradeClass = neverScannedYet() ? 'inactive' : '?';
+
     return (
         <div className={vulClass}>
             <div className={"rsssl-gridblock-progress-container " + vulClass}>
@@ -49,8 +51,9 @@ const WPVul = ( props ) => {
                     <div className="rsssl-ssl-test-information">
                         {enabledVul()}
                     </div>
-                    <div className={"rsssl-ssl-test-grade rsssl-grade-" + gradeClass}>
-                        {neverScannedYet() && <span>cool</span>}
+                    <div className={"rsssl-ssl-test-grade red"}>
+                        {!neverScannedYet() && <span>{grade}</span>}
+                        {neverScannedYet() && <span><Icon color={'red'} name = "sync-error"></Icon></span>}
                     </div>
                 </div>
             </div>
@@ -58,22 +61,22 @@ const WPVul = ( props ) => {
                 <div className="rsssl-detail-icon"><Icon name="info" color={vulStatusColor}/></div>
                 <div className={"rsssl-detail rsssl-status-" + vulStatusColor}>
                     {hasErrors && <>{vulStatusColor}</>}
-                    {!hasErrors && <> {__("What does my score mean?", "really-simple-ssl")}&nbsp;<a
-                        href="https://really-simple-ssl.com/instructions/about-ssl-labs/"
+                    {!hasErrors && <> {__("What are vulnerabilities", "really-simple-ssl")}&nbsp;<a
+                        href="https://really-simple-ssl.com/instructions/about-vulnerabilities/"
                         target="_blank">{__("Read more", "really-simple-ssl")}</a></>}
                 </div>
             </div>
             <div className="rsssl-details">
                 <div className="rsssl-detail-icon"><Icon name="list" color='black'/></div>
                 <div className="rsssl-detail">
-                    {__("Last check:", "really-simple-ssl")}&nbsp;{'today'}
+                    {__("Last check:", "really-simple-ssl")}&nbsp;{'never'}
                 </div>
             </div>
             <div className="rsssl-details">
                 <div className="rsssl-detail-icon"><Icon name="external-link" color='black'/></div>
                 <div className="rsssl-detail">
-                    <a href={'#'}
-                       target="_blank">{__("View detailed report on Qualys SSL Labs", "really-simple-ssl")}</a>
+                    <a href={'https://vulnerability.wpsysadmin.com/'}
+                       target="_blank">{__("View all about WPVulnerability", "really-simple-ssl")}</a>
                 </div>
             </div>
 
